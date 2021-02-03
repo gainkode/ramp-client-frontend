@@ -1,0 +1,43 @@
+.login-logo-field {
+    margin: auto;
+    margin-top: 4em;
+    text-align: center;
+    background-color: rgb(81, 199, 235);
+    width: 10em;
+}
+
+.login-form-box {
+    margin: auto;
+    margin-top: 8em;
+    padding: 2em;
+    position: relative;
+    border-radius: 1em;
+    background-color: rgb(247, 254, 255);
+    width: 40em;
+}
+
+.login-form-box-transparent {
+    margin: auto;
+    padding: 2em;
+    position: relative;
+    width: 40em;
+    color: ivory;
+}
+
+.login-form-field {
+    position: relative;
+
+    h2 {
+        color: rgb(40, 35, 61);
+        font-size: large;
+    }
+}
+
+.login-form {
+    margin: 0em;
+}
+
+.login-full-width {
+    width: 100%;
+    margin-bottom: 0.5em;
+}
