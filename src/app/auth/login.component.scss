@@ -8,36 +8,80 @@
 
 .login-form-box {
     margin: auto;
-    margin-top: 8em;
+    margin-top: 5em;
     padding: 2em;
+    padding-top: 1em;
+    padding-bottom: 1.5em;
+    text-align: center;
     position: relative;
     border-radius: 1em;
     background-color: rgb(247, 254, 255);
     width: 40em;
 }
 
-.login-form-box-transparent {
+.login-tab-box {
     margin: auto;
-    padding: 2em;
+    padding-top: 1em;
+    padding-bottom: 0.25em;
     position: relative;
     width: 40em;
-    color: ivory;
 }
 
-.login-form-field {
-    position: relative;
+.login-form-element {
+    width: 100%;
+    margin-top: 0.5em;
+    margin-bottom: 0em;
 
-    h2 {
-        color: rgb(40, 35, 61);
-        font-size: large;
+    span {
+        color: rgb(61, 59, 78);
     }
 }
 
-.login-form {
-    margin: 0em;
+.login-form-button-box {
+    display: flex;
+    margin: auto;
+    margin-top: 1em;
 }
 
-.login-full-width {
+.login-form-extra-box {
+    margin: auto;
+    flex: 1 1 0;
+    width: 0;
+}
+
+.login-form-google-box {
+    margin-right: 1em;
+}
+
+.login-form-facebook-box {
+    margin-left: 1em;
+}
+
+.login-form-google-button {
     width: 100%;
-    margin-bottom: 0.5em;
+    background-color: #DE4B38;
+    color: ivory;
+}
+
+.login-form-facebook-button {
+    width: 100%;
+    background-color: #3B599A;
+    color: ivory;
+}
+
+.login-form-password1-box {
+    margin-right: 1em;
+}
+
+.login-form-password2-box {
+    margin-left: 1em;
+}
+
+a {
+    color: rgb(14, 26, 190);
+}
+
+::ng-deep .mat-tab-label .mat-tab-label-content {
+    font-size: large;
+    color: rgb(14, 26, 190);
 }

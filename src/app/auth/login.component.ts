@@ -11,6 +11,9 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 export class LoginComponent {
     login: string | null = null;
     password: string | null = null;
+    hideSignInPassword: boolean = true;
+    hideSignUp1Password: boolean = true;
+    hideSignUp2Password: boolean = true;
 
     constructor(private auth: AuthService, private router: Router) { }
     
