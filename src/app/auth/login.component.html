@@ -11,7 +11,7 @@
                         <input matInput placeholder="User name" value="">
                     </mat-form-field>
     
-                    <mat-form-field class="login-form-element">
+                    <mat-form-field appearance="fill" class="login-form-element">
                         <mat-label>Password</mat-label>
                         <input [type]="hideSignInPassword ? 'password' : 'text'" matInput 
                         placeholder="Password" value="">
@@ -83,7 +83,7 @@
                     <div class="login-form-element login-form-checkbox">
                         <mat-checkbox color="primary" [checked]="agreementChecked"
                         (change)="checkAgreement()">
-                            <span>I agree to the terms and conditions</span>
+                            <span>I agree to the <a href="#">terms and conditions</a></span>
                         </mat-checkbox>
                     </div>
 
