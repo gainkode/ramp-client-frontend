@@ -25,6 +25,5 @@ export class LoginComponent {
 
     checkAgreement() {
         this.agreementChecked = !this.agreementChecked;
-        console.log(`Checked: ${this.agreementChecked}`);
     }
 }

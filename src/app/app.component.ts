@@ -6,5 +6,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'cm-ewallet';
+  title = 'cm-eWallet';
+  version = '0.1.1';
+  copyrightYears = "2021";
 }
