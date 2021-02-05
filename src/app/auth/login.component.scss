@@ -77,11 +77,15 @@
     margin-left: 1em;
 }
 
+.login-form-checkbox {
+    text-align: left;
+}
+
 a {
-    color: rgb(14, 26, 190);
+    color: rgb(18, 27, 151);
 }
 
 ::ng-deep .mat-tab-label .mat-tab-label-content {
     font-size: large;
-    color: rgb(14, 26, 190);
+    color: rgb(18, 27, 151);
 }

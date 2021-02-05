@@ -80,7 +80,16 @@
                         </div>
                     </div>
     
-                    <button class="login-form-element" mat-raised-button color="primary">Sign up</button>
+                    <div class="login-form-element login-form-checkbox">
+                        <mat-checkbox color="primary" [checked]="agreementChecked"
+                        (change)="checkAgreement()">
+                            <span>I agree to the terms and conditions</span>
+                        </mat-checkbox>
+                    </div>
+
+                    <button class="login-form-element" mat-raised-button color="primary" [disabled]="!agreementChecked">
+                        Sign up
+                    </button>
                 </form>
                 <br>
                 <div class="login-form-element">

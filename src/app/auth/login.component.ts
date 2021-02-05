@@ -14,10 +14,17 @@ export class LoginComponent {
     hideSignInPassword: boolean = true;
     hideSignUp1Password: boolean = true;
     hideSignUp2Password: boolean = true;
+    agreementChecked: boolean = false;
+    wrongPasswordCounter: number = 0;
 
     constructor(private auth: AuthService, private router: Router) { }
     
     isAuthenticated(): boolean {
         return this.auth.authenticated;
+    }
+
+    checkAgreement() {
+        this.agreementChecked = !this.agreementChecked;
+        console.log(`Checked: ${this.agreementChecked}`);
     }
 }
