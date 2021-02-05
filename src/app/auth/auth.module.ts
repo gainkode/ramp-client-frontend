@@ -1,6 +1,6 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { CommonModule } from '@angular/common';
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { MatTabsModule } from '@angular/material/tabs'; 
 import { MatFormFieldModule } from '@angular/material/form-field'; 
@@ -34,7 +34,7 @@ export class MaterialModule {};
   
 @NgModule({
     imports: [
-        CommonModule, FormsModule, routing, MaterialModule
+        CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule
     ],
     declarations: [LoginComponent, RegisterComponent],
     schemas: [
