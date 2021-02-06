@@ -26,6 +26,26 @@ export class LoginComponent {
             ], updateOn: "change" }
         ]
     });
+    signupForm = this.formBuilder.group({
+        email: [, 
+            { validators: [Validators.required], updateOn: "change" }
+        ],
+        login: [, 
+            { validators: [Validators.required], updateOn: "change" }
+        ],
+        password1: [, 
+            { validators: [
+                Validators.required, 
+                Validators.minLength(8)
+            ], updateOn: "change" }
+        ],
+        password2: [, 
+            { validators: [
+                Validators.required, 
+                Validators.minLength(8)
+            ], updateOn: "change" }
+        ]
+    });
 
     constructor(private auth: AuthService, private formBuilder: FormBuilder, private router: Router) { }
     

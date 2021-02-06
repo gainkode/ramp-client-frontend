@@ -1,121 +1,131 @@
-<div class="login-logo-field">Logo placeholder</div>
+<div class="page-container">
+    <div class="login-form-leftpane">
+        <div style="padding: 2em;color: aliceblue;">
+            Placeholder for some long information
+        </div>
+    </div>
 
-<div class="login-form-box">
+    <div class="login-form-rightpane">
+        <div class="login-logo-field">Logo placeholder</div>
 
-    <mat-tab-group mat-stretch-tabs animationDuration="0ms">
-        <mat-tab label="Login">
-            <div class="login-tab-box">
-                <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()">
-                    <!-- Login -->
-                    <mat-form-field class="login-form-element">
-                        <mat-label>User name</mat-label>
-                        <input matInput formControlName="login" maxlength="30" 
-                        placeholder="User login name" required/>
-                        <mat-error *ngIf="this.loginForm.get('login')?.hasError('required')">
-                            Please specify your login
-                        </mat-error>
-                    </mat-form-field>
+        <div class="login-form-box">
+            <mat-tab-group mat-stretch-tabs animationDuration="0ms">
+                <mat-tab label="Login">
+                    <div class="login-tab-box">
+                        <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()">
+                            <!-- Login -->
+                            <mat-form-field class="login-form-element">
+                                <mat-label>User name</mat-label>
+                                <input matInput formControlName="login" maxlength="30" 
+                                placeholder="User login name" required/>
+                                <mat-error *ngIf="this.loginForm.get('login')?.hasError('required')">
+                                    Please specify your login
+                                </mat-error>
+                            </mat-form-field>
     
-                    <!-- Password -->
-                    <mat-form-field class="login-form-element">
-                        <mat-label>Password</mat-label>
-                        <input [type]="hideSignInPassword ? 'password' : 'text'" matInput 
-                        formControlName="password" maxlength="30" placeholder="Password" required>
-                        <button mat-icon-button matSuffix (click)="hideSignInPassword = !hideSignInPassword" 
-                        [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideSignInPassword">
-                            <mat-icon>{{hideSignInPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-                        </button>
-                        <mat-error *ngIf="this.loginForm.get('password')?.hasError('required')">
-                            Please specify your password
-                        </mat-error>
-                        <mat-error *ngIf="this.loginForm.get('password')?.hasError('minlength')">
-                            Password must contain at least 8 symbols
-                        </mat-error>
-                    </mat-form-field>
-    
-                    <button class="login-form-element" type="submit" mat-raised-button color="primary">Log in</button>
-                </form>
-                <div class="login-form-element">
-                    <a mat-button href="#" target="_blank">Forgot password?</a>
-                </div>
-                <br>
-                <div class="login-form-element">
-                    <span>Login with your social network account</span>
-                </div>
-                <div class="login-form-element">
-                    <div class="login-form-button-box">
-                        <div class="login-form-extra-box login-form-google-box">
-                            <button class="login-form-google-button" mat-raised-button>Google</button>
-                        </div>
-                        <div class="login-form-extra-box login-form-facebook-box">
-                            <button class="login-form-facebook-button" mat-raised-button>Facebook</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </mat-tab>
-        <mat-tab label="Sign up">
-            <div class="login-tab-box">
-                <form>
-                    <mat-form-field class="login-form-element">
-                        <mat-label>Email</mat-label>
-                        <input type="email" matInput placeholder="Email" value="">
-                    </mat-form-field>
-    
-                    <mat-form-field class="login-form-element">
-                        <mat-label>User name</mat-label>
-                        <input matInput placeholder="User name" value="">
-                    </mat-form-field>
-
-                    <div class="login-form-element login-form-button-box">
-                        <div class="login-form-extra-box login-form-password1-box">
+                            <!-- Password -->
                             <mat-form-field class="login-form-element">
                                 <mat-label>Password</mat-label>
-                                <input [type]="hideSignUp1Password ? 'password' : 'text'" matInput 
-                                placeholder="Password" value="">
-                                <button mat-icon-button matSuffix (click)="hideSignUp1Password = !hideSignUp1Password" 
-                                [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideSignUp1Password">
-                                    <mat-icon>{{hideSignUp1Password ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                <input [type]="hideSignInPassword ? 'password' : 'text'" matInput 
+                                formControlName="password" maxlength="30" placeholder="Password" required>
+                                <button mat-icon-button matSuffix (click)="hideSignInPassword = !hideSignInPassword" 
+                                [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideSignInPassword">
+                                    <mat-icon>{{hideSignInPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
                                 </button>
+                                <mat-error *ngIf="this.loginForm.get('password')?.hasError('required')">
+                                    Please specify your password
+                                </mat-error>
+                                <mat-error *ngIf="this.loginForm.get('password')?.hasError('minlength')">
+                                    Password must contain at least 8 symbols
+                                </mat-error>
                             </mat-form-field>
+                            <button class="login-form-element" type="submit" mat-flat-button color="primary">Log in</button>
+                        </form>
+                        <div class="login-form-element">
+                            <a mat-button href="#" target="_blank">Forgot password?</a>
                         </div>
-                        <div class="login-form-extra-box login-form-password2-box">
+                        <br>
+                        <div class="login-form-element">
+                            <span>Login with your social network account</span>
+                        </div>
+                        <div class="login-form-element">
+                            <button class="login-form-social-button login-form-google-button" 
+                            mat-flat-button>Google</button>
+                        </div>
+                        <div class="login-form-element">
+                            <button class="login-form-social-button login-form-facebook-button" 
+                            mat-flat-button>Facebook</button>
+                        </div>
+                    </div>
+                </mat-tab>
+                <mat-tab label="Sign up">
+                    <div class="login-tab-box">
+                        <form>
                             <mat-form-field class="login-form-element">
-                                <mat-label>Confirm password</mat-label>
-                                <input [type]="hideSignUp2Password ? 'password' : 'text'" matInput 
-                                placeholder="Confirm password" value="">
-                                <button mat-icon-button matSuffix (click)="hideSignUp2Password = !hideSignUp2Password" 
-                                [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideSignUp2Password">
-                                    <mat-icon>{{hideSignUp2Password ? 'visibility_off' : 'visibility'}}</mat-icon>
-                                </button>
+                                <mat-label>Email</mat-label>
+                                <input type="email" matInput formControlName="email" maxlength="40" 
+                                placeholder="Email address" required/>
+                                <mat-error *ngIf="this.signupForm.get('email')?.hasError('required')">
+                                    Please specify email address
+                                </mat-error>
                             </mat-form-field>
+    
+                            <mat-form-field class="login-form-element">
+                                <mat-label>User name</mat-label>
+                                <input matInput placeholder="User name" value="">
+                            </mat-form-field>
+
+                            <div class="login-form-element">
+                                <div class="login-form-extra-box login-form-password1-box">
+                                    <mat-form-field class="login-form-element">
+                                        <mat-label>Password</mat-label>
+                                        <input [type]="hideSignUp1Password ? 'password' : 'text'" matInput 
+                                        placeholder="Password" value="">
+                                        <button mat-icon-button matSuffix (click)="hideSignUp1Password = !hideSignUp1Password" 
+                                        [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideSignUp1Password">
+                                            <mat-icon>{{hideSignUp1Password ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                        </button>
+                                    </mat-form-field>
+                                </div>
+                                <div class="login-form-extra-box login-form-password2-box">
+                                    <mat-form-field class="login-form-element">
+                                        <mat-label>Confirm password</mat-label>
+                                        <input [type]="hideSignUp2Password ? 'password' : 'text'" matInput 
+                                        placeholder="Confirm password" value="">
+                                        <button mat-icon-button matSuffix (click)="hideSignUp2Password = !hideSignUp2Password" 
+                                        [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideSignUp2Password">
+                                            <mat-icon>{{hideSignUp2Password ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                        </button>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+    
+                            <div class="login-form-element login-form-checkbox">
+                                <mat-checkbox color="primary" [checked]="agreementChecked"
+                                (change)="checkAgreement()">
+                                    <span>I agree to the <a href="#">terms and conditions</a></span>
+                                </mat-checkbox>
+                            </div>
+
+                            <button class="login-form-element" mat-flat-button color="primary" [disabled]="!agreementChecked">
+                                Sign up
+                            </button>
+                        </form>
+                        <br>
+                        <div class="login-form-element">
+                            <span>Sign up with your social network account</span>
+                        </div>
+                        <div class="login-form-element">
+                            <button class="login-form-social-button login-form-google-button" 
+                            mat-flat-button>Google</button>
+                        </div>
+                        <div class="login-form-element">
+                            <button class="login-form-social-button login-form-facebook-button" 
+                            mat-flat-button>Facebook</button>
                         </div>
                     </div>
-    
-                    <div class="login-form-element login-form-checkbox">
-                        <mat-checkbox color="primary" [checked]="agreementChecked"
-                        (change)="checkAgreement()">
-                            <span>I agree to the <a href="#">terms and conditions</a></span>
-                        </mat-checkbox>
-                    </div>
-
-                    <button class="login-form-element" mat-raised-button color="primary" [disabled]="!agreementChecked">
-                        Sign up
-                    </button>
-                </form>
-                <br>
-                <div class="login-form-element">
-                    <span>Sign up with your social network account</span>
-                </div>
-                <div class="login-form-element login-form-button-box">
-                    <div class="login-form-extra-box login-form-google-box">
-                        <button class="login-form-google-button" mat-raised-button>Google</button>
-                    </div>
-                    <div class="login-form-extra-box login-form-facebook-box">
-                        <button class="login-form-facebook-button" mat-raised-button>Facebook</button>
-                    </div>
-                </div>
-            </div>
-        </mat-tab>
-    </mat-tab-group>
+                </mat-tab>
+            </mat-tab-group>
+        </div>
+    </div>
 </div>

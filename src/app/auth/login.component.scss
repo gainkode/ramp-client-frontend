@@ -1,3 +1,20 @@
+.login-form-leftpane {
+    width: 30%;
+    height: 100%;
+    float: left;
+    background-color: #2c2c3d;
+    border-collapse: collapse;
+}
+
+.login-form-rightpane {
+    width: 70%;
+    //min-width: 60em;
+    height: 100%;
+    float: left;
+    background-color:#ebecf3;
+    border-collapse: collapse;
+}
+
 .login-logo-field {
     margin: auto;
     margin-top: 4em;
@@ -37,36 +54,18 @@
     }
 }
 
-.login-form-button-box {
-    display: flex;
-    margin: auto;
-    margin-top: 1em;
-}
-
-.login-form-extra-box {
-    margin: auto;
-    flex: 1 1 0;
-    width: 0;
-}
-
-.login-form-google-box {
-    margin-right: 1em;
-}
-
-.login-form-facebook-box {
-    margin-left: 1em;
+.login-form-social-button {
+    margin-bottom: 1.0em;
+    width: 100%;
+    color: ivory;
 }
 
 .login-form-google-button {
-    width: 100%;
     background-color: #DE4B38;
-    color: ivory;
 }
 
 .login-form-facebook-button {
-    width: 100%;
     background-color: #3B599A;
-    color: ivory;
 }
 
 .login-form-password1-box {
