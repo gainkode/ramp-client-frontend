@@ -5,21 +5,32 @@
     <mat-tab-group mat-stretch-tabs animationDuration="0ms">
         <mat-tab label="Login">
             <div class="login-tab-box">
-                <form>
+                <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()">
+                    <!-- Login -->
                     <mat-form-field class="login-form-element">
                         <mat-label>User name</mat-label>
-                        <input matInput placeholder="User name" [value]="login" maxlength="30" [formControl]="loginControl" required>
-                        <mat-error *ngIf="loginControl.invalid">{{getErrorMessage()}}</mat-error>
+                        <input matInput formControlName="login" maxlength="30" 
+                        placeholder="User login name" required/>
+                        <mat-error *ngIf="this.loginForm.get('login')?.hasError('required')">
+                            Please specify your login
+                        </mat-error>
                     </mat-form-field>
     
+                    <!-- Password -->
                     <mat-form-field class="login-form-element">
                         <mat-label>Password</mat-label>
                         <input [type]="hideSignInPassword ? 'password' : 'text'" matInput 
-                        placeholder="Password" [value]="password" required>
+                        formControlName="password" maxlength="30" placeholder="Password" required>
                         <button mat-icon-button matSuffix (click)="hideSignInPassword = !hideSignInPassword" 
                         [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideSignInPassword">
                             <mat-icon>{{hideSignInPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
                         </button>
+                        <mat-error *ngIf="this.loginForm.get('password')?.hasError('required')">
+                            Please specify your password
+                        </mat-error>
+                        <mat-error *ngIf="this.loginForm.get('password')?.hasError('minlength')">
+                            Password must contain at least 8 symbols
+                        </mat-error>
                     </mat-form-field>
     
                     <button class="login-form-element" type="submit" mat-raised-button color="primary">Log in</button>

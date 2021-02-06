@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { FormControl, Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { Validators, FormBuilder } from '@angular/forms';
 
 @Component({
     templateUrl: 'login.component.html',
@@ -9,36 +9,37 @@ import { FormControl, Validators, FormBuilder, FormGroup } from '@angular/forms'
 })
 
 export class LoginComponent {
-    login: string | null = null;
-    password: string | null = null;
     hideSignInPassword: boolean = true;
     hideSignUp1Password: boolean = true;
     hideSignUp2Password: boolean = true;
     agreementChecked: boolean = false;
     wrongPasswordCounter: number = 0;
 
-    loginControl = new FormControl('', [Validators.required, Validators.maxLength(30)]);
+    loginForm = this.formBuilder.group({
+        login: [, 
+            { validators: [Validators.required], updateOn: "change" }
+        ],
+        password: [, 
+            { validators: [
+                Validators.required, 
+                Validators.minLength(8)
+            ], updateOn: "change" }
+        ]
+    });
 
-    constructor(private auth: AuthService, private router: Router) {
-        this.login = "abcd";
-    }
+    constructor(private auth: AuthService, private formBuilder: FormBuilder, private router: Router) { }
     
     isAuthenticated(): boolean {
         return this.auth.authenticated;
     }
 
-    getErrorMessage() {
-        if (this.loginControl.hasError('required')) {
-            return 'Please specify your login';
-        }
-        return '';
-      }
-
     checkAgreement() {
         this.agreementChecked = !this.agreementChecked;
     }
 
-    // loginAction(form: NgForm) {
-    //     //this.router.navigateByUrl("/admin/alloys");
-    // }
+    onLoginSubmit(): void {
+        if (this.loginForm.valid) {
+            console.log("OK");
+        }
+    }
 }
