@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox'; 
 import { MatIconModule } from '@angular/material/icon'; 
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { LoginComponent } from "./login.component";
 import { RegisterComponent } from "./register.component";
 
@@ -23,7 +24,8 @@ const modules = [
     MatFormFieldModule,
     MatInputModule,
     MatCheckboxModule,
-    MatIconModule
+    MatIconModule,
+    MatProgressBarModule
 ];
   
 @NgModule({

@@ -9,6 +9,7 @@ import { UserLogin } from '../model/user.model';
     styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
+    inProgress: boolean = false;
     errorMessage: string = '';
     hideSignInPassword: boolean = true;
     hideSignUp1Password: boolean = true;
@@ -59,6 +60,7 @@ export class LoginComponent {
     }
 
     onLoginSubmit(): void {
+        this.inProgress = true;
         this.errorMessage = '';
         if (this.loginForm.valid) {
             console.log("Valid login data");
@@ -66,9 +68,11 @@ export class LoginComponent {
                 this.loginForm.get('login')?.value,
                 this.loginForm.get('password')?.value)
                 .subscribe(({ data }) => {
+                    this.inProgress = false;
                     this.auth.setLoginUser(data.login as UserLogin);
                     console.log('Success login');
                 },(error) => {
+                    this.inProgress = false;
                     this.errorMessage = 'Incorrect login or password';
                 });
         }
