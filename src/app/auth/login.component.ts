@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { Validators, FormBuilder } from '@angular/forms';
+import { UserLogin } from '../model/user.model';
 
 @Component({
     templateUrl: 'login.component.html',
@@ -61,7 +62,13 @@ export class LoginComponent {
             console.log("Valid login data");
             this.auth.authenticate(
                 this.loginForm.get('login')?.value,
-                this.loginForm.get('password')?.value);
+                this.loginForm.get('password')?.value)
+                .subscribe(({ data }) => {
+                    this.auth.setLoginUser(data.login as UserLogin);
+                    console.log('Success login');
+                },(error) => {
+                    console.log('Query error', error.message);
+                });
         }
     }
 }
