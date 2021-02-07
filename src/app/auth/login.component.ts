@@ -15,7 +15,6 @@ export class LoginComponent {
     hideSignUp1Password: boolean = true;
     hideSignUp2Password: boolean = true;
     agreementChecked: boolean = false;
-    wrongPasswordCounter: number = 0;
 
     loginForm = this.formBuilder.group({
         login: [, 
@@ -74,6 +73,9 @@ export class LoginComponent {
                 },(error) => {
                     this.inProgress = false;
                     this.errorMessage = 'Incorrect login or password';
+                    if (!this.auth.registerLoginError()) {
+                        this.router.navigateByUrl("/");
+                    }
                 });
         }
     }

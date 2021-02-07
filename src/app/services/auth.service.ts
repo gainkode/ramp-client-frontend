@@ -25,8 +25,6 @@ const LOGIN_POST = gql`
 
 @Injectable()
 export class AuthService {
-    private error: string = '';
-
     constructor(private apollo: Apollo) { }
 
     authenticate(username: string, userpassword: string): Observable<any> {
@@ -43,6 +41,21 @@ export class AuthService {
     setLoginUser(login: UserLogin) {
         sessionStorage.setItem("currentUser", JSON.stringify(login.user));
         sessionStorage.setItem("currentToken", login.authToken);
+        sessionStorage.removeItem("loginErrorCounter");
+    }
+
+    registerLoginError(): boolean {
+        let counter = sessionStorage.getItem("loginErrorCounter");
+        let counterInt = 0;
+        if (counter != null) {
+            counterInt = Number(counter) || 0;
+            if (counterInt > 4) {
+                return false;
+            }
+        }
+        counterInt++;
+        sessionStorage.setItem("loginErrorCounter", counterInt.toString());
+        return true;
     }
 
     get authenticated(): boolean {
