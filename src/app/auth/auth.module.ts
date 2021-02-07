@@ -7,6 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox'; 
+import { MatRadioModule } from '@angular/material/radio'; 
 import { MatIconModule } from '@angular/material/icon'; 
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { LoginComponent } from "./login.component";
@@ -24,6 +25,7 @@ const modules = [
     MatFormFieldModule,
     MatInputModule,
     MatCheckboxModule,
+    MatRadioModule,
     MatIconModule,
     MatProgressBarModule
 ];

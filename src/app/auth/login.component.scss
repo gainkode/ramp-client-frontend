@@ -8,7 +8,6 @@
 
 .login-form-rightpane {
     width: 70%;
-    //min-width: 60em;
     height: 100%;
     float: left;
     background-color:#ebecf3;
@@ -79,11 +78,25 @@
 }
 
 .login-form-checkbox {
+    margin-top: 1em;
     text-align: left;
 }
 
 a {
     color: rgb(18, 27, 151);
+}
+
+.login-form-radio-group-title {
+    text-align: left;
+}
+
+.login-form-radio-group {
+    display: flex;
+    flex-direction: column;
+}
+  
+.login-form-radio-button {
+    margin: 5px 0px 5px 0px;
 }
 
 ::ng-deep .mat-tab-label .mat-tab-label-content {

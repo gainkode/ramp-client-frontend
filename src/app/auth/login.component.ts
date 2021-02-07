@@ -41,6 +41,7 @@ export class LoginComponent {
         username: [, 
             { validators: [Validators.required], updateOn: "change" }
         ],
+        userType: ['User'],
         password1: [, 
             { validators: [
                 Validators.required, 
