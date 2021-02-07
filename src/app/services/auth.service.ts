@@ -63,18 +63,12 @@ export class AuthService {
     }
 
     get token(): string {
-        let userData: string | null = localStorage.getItem('currentUser');
-        if (userData !== null) {
-            if (userData !== "") {
-                let user = JSON.parse(userData);
-                return (user.token === null) ? "" : user.token;
-            }
-        }
-        return "";
+        let tokenData: string | null = sessionStorage.getItem('currentToken');
+        return (tokenData === null) ? "" : tokenData;
     }
 
     logout() {
-        // remove user from local storage to log user out
-        localStorage.removeItem('currentUser');
+        sessionStorage.removeItem("currentUser");
+        sessionStorage.removeItem("currentToken");
     }
 }
