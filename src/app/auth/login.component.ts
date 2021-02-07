@@ -7,7 +7,6 @@ import { Validators, FormBuilder } from '@angular/forms';
     templateUrl: 'login.component.html',
     styleUrls: ['./login.component.scss']
 })
-
 export class LoginComponent {
     hideSignInPassword: boolean = true;
     hideSignUp1Password: boolean = true;
@@ -59,7 +58,10 @@ export class LoginComponent {
 
     onLoginSubmit(): void {
         if (this.loginForm.valid) {
-            console.log("OK");
+            console.log("Valid login data");
+            this.auth.authenticate(
+                this.loginForm.get('login')?.value,
+                this.loginForm.get('password')?.value);
         }
     }
 }

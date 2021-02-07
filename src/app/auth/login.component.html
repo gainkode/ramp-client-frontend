@@ -60,7 +60,7 @@
                 </mat-tab>
                 <mat-tab label="Sign up">
                     <div class="login-tab-box">
-                        <form>
+                        <form [formGroup]="signupForm">
                             <mat-form-field class="login-form-element">
                                 <mat-label>Email</mat-label>
                                 <input type="email" matInput formControlName="email" maxlength="40" 
