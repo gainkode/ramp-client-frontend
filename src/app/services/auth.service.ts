@@ -45,6 +45,7 @@ export class AuthService {
     }
 
     registerLoginError(): boolean {
+        this.logout();
         let counter = sessionStorage.getItem("loginErrorCounter");
         let counterInt = 0;
         if (counter != null) {

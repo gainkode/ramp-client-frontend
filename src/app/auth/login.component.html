@@ -15,15 +15,15 @@
                 <mat-tab label="Login">
                     <div class="login-tab-box">
                         <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()">
-                            <!-- Login -->
+                            <!-- Email -->
                             <mat-form-field class="login-form-element">
                                 <mat-label>Email</mat-label>
-                                <input type="email" matInput formControlName="login" maxlength="30" 
+                                <input type="email" matInput formControlName="email" maxlength="30" 
                                 placeholder="User login name" required/>
-                                <mat-error *ngIf="this.loginForm.get('login')?.hasError('required')">
+                                <mat-error *ngIf="this.loginForm.get('email')?.hasError('required')">
                                     Please specify your email
                                 </mat-error>
-                                <mat-error *ngIf="this.loginForm.get('login')?.hasError('pattern')">
+                                <mat-error *ngIf="this.loginForm.get('email')?.hasError('pattern')">
                                     Email has incorrect format
                                 </mat-error>
                             </mat-form-field>
@@ -44,13 +44,14 @@
                                     Password must contain at least 8 symbols
                                 </mat-error>
                             </mat-form-field>
+
                             <button class="login-form-element" type="submit" mat-flat-button color="primary">Log in</button>
                         </form>
                         <div class="login-form-element">
                             <a mat-button href="#" target="_blank">Forgot password?</a>
                         </div>
-                        <div class="login-form-error-box" *ngIf="errorMessage!=''">
-                            {{errorMessage}}
+                        <div class="login-form-error-box" *ngIf="loginErrorMessage!=''">
+                            {{loginErrorMessage}}
                         </div>
                         <br>
                         <div class="login-form-element">
@@ -68,45 +69,63 @@
                 </mat-tab>
                 <mat-tab label="Sign up">
                     <div class="login-tab-box">
-                        <form [formGroup]="signupForm">
+                        <form [formGroup]="signupForm" (ngSubmit)="onSignupSubmit()">
+                            <!-- Email -->
                             <mat-form-field class="login-form-element">
                                 <mat-label>Email</mat-label>
-                                <input type="email" matInput formControlName="email" maxlength="40" 
-                                placeholder="Email address" required/>
+                                <input type="email" matInput formControlName="email" maxlength="30" 
+                                placeholder="User login name" required/>
                                 <mat-error *ngIf="this.signupForm.get('email')?.hasError('required')">
-                                    Please specify email address
+                                    Please specify your email
+                                </mat-error>
+                                <mat-error *ngIf="this.signupForm.get('email')?.hasError('pattern')">
+                                    Email has incorrect format
                                 </mat-error>
                             </mat-form-field>
     
+                            <!-- User name -->
                             <mat-form-field class="login-form-element">
                                 <mat-label>User name</mat-label>
-                                <input matInput placeholder="User name" value="">
+                                <input matInput formControlName="username" maxlength="30" 
+                                placeholder="User name" required>
+                                <mat-error *ngIf="this.signupForm.get('username')?.hasError('required')">
+                                    Please specify your name
+                                </mat-error>
                             </mat-form-field>
 
-                            <div class="login-form-element">
-                                <div class="login-form-extra-box login-form-password1-box">
-                                    <mat-form-field class="login-form-element">
-                                        <mat-label>Password</mat-label>
-                                        <input [type]="hideSignUp1Password ? 'password' : 'text'" matInput 
-                                        placeholder="Password" value="">
-                                        <button mat-icon-button matSuffix (click)="hideSignUp1Password = !hideSignUp1Password" 
-                                        [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideSignUp1Password">
-                                            <mat-icon>{{hideSignUp1Password ? 'visibility_off' : 'visibility'}}</mat-icon>
-                                        </button>
-                                    </mat-form-field>
-                                </div>
-                                <div class="login-form-extra-box login-form-password2-box">
-                                    <mat-form-field class="login-form-element">
-                                        <mat-label>Confirm password</mat-label>
-                                        <input [type]="hideSignUp2Password ? 'password' : 'text'" matInput 
-                                        placeholder="Confirm password" value="">
-                                        <button mat-icon-button matSuffix (click)="hideSignUp2Password = !hideSignUp2Password" 
-                                        [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideSignUp2Password">
-                                            <mat-icon>{{hideSignUp2Password ? 'visibility_off' : 'visibility'}}</mat-icon>
-                                        </button>
-                                    </mat-form-field>
-                                </div>
-                            </div>
+                            <!-- Password -->
+                            <mat-form-field class="login-form-element">
+                                <mat-label>Password</mat-label>
+                                <input [type]="hideSignUp1Password ? 'password' : 'text'" matInput 
+                                formControlName="password1" maxlength="30" placeholder="Password" required>
+                                <button mat-icon-button matSuffix (click)="hideSignUp1Password = !hideSignUp1Password" 
+                                [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideSignUp1Password">
+                                    <mat-icon>{{hideSignUp1Password ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                </button>
+                                <mat-error *ngIf="this.signupForm.get('password1')?.hasError('required')">
+                                    Please specify your password
+                                </mat-error>
+                                <mat-error *ngIf="this.signupForm.get('password1')?.hasError('minlength')">
+                                    Password must contain at least 8 symbols
+                                </mat-error>
+                            </mat-form-field>
+
+                            <!-- Confirm password -->
+                            <mat-form-field class="login-form-element">
+                                <mat-label>Confirm Password</mat-label>
+                                <input [type]="hideSignUp2Password ? 'password' : 'text'" matInput 
+                                formControlName="password2" maxlength="30" placeholder="Confirm Password" required>
+                                <button mat-icon-button matSuffix (click)="hideSignUp2Password = !hideSignUp2Password" 
+                                [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideSignUp2Password">
+                                    <mat-icon>{{hideSignUp2Password ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                </button>
+                                <mat-error *ngIf="this.signupForm.get('password2')?.hasError('required')">
+                                    Please specify your password
+                                </mat-error>
+                                <mat-error *ngIf="this.signupForm.get('password2')?.hasError('minlength')">
+                                    Password must contain at least 8 symbols
+                                </mat-error>
+                            </mat-form-field>
     
                             <div class="login-form-element login-form-checkbox">
                                 <mat-checkbox color="primary" [checked]="agreementChecked"
@@ -115,10 +134,14 @@
                                 </mat-checkbox>
                             </div>
 
-                            <button class="login-form-element" mat-flat-button color="primary" [disabled]="!agreementChecked">
+                            <button class="login-form-element" mat-flat-button color="primary" 
+                            [disabled]="!agreementChecked">
                                 Sign up
                             </button>
                         </form>
+                        <div class="login-form-error-box" *ngIf="signupErrorMessage!=''">
+                            {{signupErrorMessage}}
+                        </div>
                         <br>
                         <div class="login-form-element">
                             <span>Sign up with your social network account</span>

@@ -10,14 +10,15 @@ import { UserLogin } from '../model/user.model';
 })
 export class LoginComponent {
     inProgress: boolean = false;
-    errorMessage: string = '';
+    loginErrorMessage: string = '';
+    signupErrorMessage: string = '';
     hideSignInPassword: boolean = true;
     hideSignUp1Password: boolean = true;
     hideSignUp2Password: boolean = true;
     agreementChecked: boolean = false;
 
     loginForm = this.formBuilder.group({
-        login: [, 
+        email: [, 
             { validators: [
                 Validators.required,
                 Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$')
@@ -32,9 +33,12 @@ export class LoginComponent {
     });
     signupForm = this.formBuilder.group({
         email: [, 
-            { validators: [Validators.required], updateOn: "change" }
+            { validators: [
+                Validators.required,
+                Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$')
+            ], updateOn: "change" }
         ],
-        login: [, 
+        username: [, 
             { validators: [Validators.required], updateOn: "change" }
         ],
         password1: [, 
@@ -61,12 +65,18 @@ export class LoginComponent {
         this.agreementChecked = !this.agreementChecked;
     }
 
+    passwordsEqual(): boolean {
+        let p1 = this.signupForm.get('password1')?.value;
+        let p2 = this.signupForm.get('password2')?.value;
+        return (p1 == p2);
+    }
+
     onLoginSubmit(): void {
-        this.errorMessage = '';
+        this.loginErrorMessage = '';
         if (this.loginForm.valid) {
             this.inProgress = true;
             this.auth.authenticate(
-                this.loginForm.get('login')?.value,
+                this.loginForm.get('email')?.value,
                 this.loginForm.get('password')?.value)
                 .subscribe(({ data }) => {
                     this.inProgress = false;
@@ -74,11 +84,22 @@ export class LoginComponent {
                     this.auth.setLoginUser(userData);
                 },(error) => {
                     this.inProgress = false;
-                    this.errorMessage = 'Incorrect login or password';
+                    this.loginErrorMessage = 'Incorrect login or password';
                     if (!this.auth.registerLoginError()) {
                         this.router.navigateByUrl("/");
                     }
                 });
+        }
+    }
+
+    onSignupSubmit() {
+        this.signupErrorMessage = '';
+        if (this.signupForm.valid) {
+            if (!this.passwordsEqual()) {
+                this.signupErrorMessage = 'Passwords are not equal';
+                return;
+            }
+            this.inProgress = true;
         }
     }
 }
