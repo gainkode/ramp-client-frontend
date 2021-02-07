@@ -9,6 +9,7 @@ import { UserLogin } from '../model/user.model';
     styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
+    errorMessage: string = '';
     hideSignInPassword: boolean = true;
     hideSignUp1Password: boolean = true;
     hideSignUp2Password: boolean = true;
@@ -67,7 +68,7 @@ export class LoginComponent {
                     this.auth.setLoginUser(data.login as UserLogin);
                     console.log('Success login');
                 },(error) => {
-                    console.log('Query error', error.message);
+                    this.errorMessage = 'Incorrect login or password';
                 });
         }
     }

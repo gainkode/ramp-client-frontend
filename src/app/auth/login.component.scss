@@ -44,6 +44,15 @@
     width: 40em;
 }
 
+.login-form-error-box {
+    padding: 2em;
+    background-color: #f8d4d4;
+    color: #b10808;
+    border: #b10808;
+    border-style: solid;
+    border-width: 0px 0px 2px 0px;
+}
+
 .login-form-element {
     width: 100%;
     margin-top: 0.5em;
