@@ -13,11 +13,8 @@ const LOGIN_POST = gql`
       authToken
       user {
         userId
-        termsOfUse
         email
         name
-        birthday
-        created
         userType
         roles
       }
@@ -44,7 +41,7 @@ export class AuthService {
     }
 
     setLoginUser(login: UserLogin) {
-        sessionStorage.setItem("currentUser", JSON.stringify(login));
+        sessionStorage.setItem("currentUser", JSON.stringify(login.user));
         sessionStorage.setItem("currentToken", login.authToken);
     }
 

@@ -7,10 +7,7 @@ export class UserLogin {
 export class User {
     userId: string = '';
     userType: string = '';
-    termsOfUse: boolean = false;
     email: string = '';
     name: string = '';
-    birthday: string = '';
-    created: string = '';
     roles: string[] = [];
 }

@@ -59,6 +59,7 @@ export class LoginComponent {
     }
 
     onLoginSubmit(): void {
+        this.errorMessage = '';
         if (this.loginForm.valid) {
             console.log("Valid login data");
             this.auth.authenticate(
