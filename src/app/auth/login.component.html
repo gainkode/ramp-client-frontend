@@ -17,11 +17,14 @@
                         <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()">
                             <!-- Login -->
                             <mat-form-field class="login-form-element">
-                                <mat-label>User name</mat-label>
-                                <input matInput formControlName="login" maxlength="30" 
+                                <mat-label>Email</mat-label>
+                                <input type="email" matInput formControlName="login" maxlength="30" 
                                 placeholder="User login name" required/>
                                 <mat-error *ngIf="this.loginForm.get('login')?.hasError('required')">
-                                    Please specify your login
+                                    Please specify your email
+                                </mat-error>
+                                <mat-error *ngIf="this.loginForm.get('login')?.hasError('pattern')">
+                                    Email has incorrect format
                                 </mat-error>
                             </mat-form-field>
     

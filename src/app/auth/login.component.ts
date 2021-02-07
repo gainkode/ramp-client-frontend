@@ -18,7 +18,10 @@ export class LoginComponent {
 
     loginForm = this.formBuilder.group({
         login: [, 
-            { validators: [Validators.required], updateOn: "change" }
+            { validators: [
+                Validators.required,
+                Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$')
+            ], updateOn: "change" }
         ],
         password: [, 
             { validators: [
@@ -59,17 +62,16 @@ export class LoginComponent {
     }
 
     onLoginSubmit(): void {
-        this.inProgress = true;
         this.errorMessage = '';
         if (this.loginForm.valid) {
-            console.log("Valid login data");
+            this.inProgress = true;
             this.auth.authenticate(
                 this.loginForm.get('login')?.value,
                 this.loginForm.get('password')?.value)
                 .subscribe(({ data }) => {
                     this.inProgress = false;
-                    this.auth.setLoginUser(data.login as UserLogin);
-                    console.log('Success login');
+                    let userData = data.login as UserLogin;
+                    this.auth.setLoginUser(userData);
                 },(error) => {
                     this.inProgress = false;
                     this.errorMessage = 'Incorrect login or password';
