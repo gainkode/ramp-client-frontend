@@ -1,11 +1,18 @@
 @import './assets/material-theme';
 
-html, body { height: 100%; }
+@font-face {
+    font-family: "Bahnschrift";
+    src: url(assets/12002.ttf) format("truetype");
+}
+
+html, body {
+    height: 100%;
+}
 
 body {
     background-color: #ebecf3;
     margin: 0; 
-    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-family: Bahnschrift, Roboto, "Helvetica Neue", sans-serif;
 }
 
 .page-container {
