@@ -48,7 +48,9 @@
                 </mat-form-field>
 
                 <div class="form-element">
-                    <button type="submit" mat-flat-button color="primary">Log in</button>
+                    <button class="form-button" type="submit" mat-flat-button color="primary">
+                        Log in
+                    </button>
                 </div>
             </form>
             <div class="form-error-box" *ngIf="errorMessage!=''">
@@ -59,8 +61,14 @@
                 <span>If you want to get logged in with your social newtork account, please use:</span>
             </div>
             <div class="form-element">
-                <button class="inline-button" mat-flat-button color="primary">Google</button>
-                <button class="inline-button" mat-flat-button color="primary">Facebook</button>
+                <button class="form-button inline-button" mat-flat-button color="primary">
+                    <img src="assets/icon-google.svg" alt="G"/>
+                    Google
+                </button>
+                <button class="form-button inline-button" mat-flat-button color="primary">
+                    <img src="assets/icon-facebook.svg" alt="f"/>
+                    Facebook
+                </button>
             </div>
             <br>
             <div class="form-element">

@@ -95,6 +95,17 @@ body {
     margin-bottom: 0.5em;
 }
 
+.form-button {
+    width: 9em;
+    height: 2.5em;
+
+    img {
+        width: 1.15em;
+        height: 1.15em;
+        margin-right: 0.4em;
+    }
+}
+
 footer {
     position: fixed;
     left: 0;
