@@ -13,6 +13,88 @@ body {
     height: 100%;
 }
 
+.action-page-split {
+    height: 100%;
+    position: fixed;
+    z-index: 1;
+    overflow-x: hidden;
+}
+
+.action-page-left-panel {
+    left: 0;
+    background-color: rgb(155, 155, 155);
+}
+  
+.action-page-right-panel {
+    right: 0;
+}
+
+.info-page-split {
+    height: 100%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    overflow-x: hidden;
+}
+
+.info-page-left-panel {
+    left: 0;
+    background-color: rgb(155, 155, 155);
+}
+  
+.info-page-right-panel {
+    right: 0;
+}
+
+.split-page-20 {
+    width: 20%;
+}
+
+.split-page-30 {
+    width: 30%;
+}
+
+.split-page-40 {
+    width: 40%;
+}
+
+.split-page-50 {
+    width: 50%;
+}
+
+.split-page-60 {
+    width: 60%;
+}
+
+.split-page-70 {
+    width: 70%;
+}
+
+.split-page-80 {
+    width: 80%;
+}
+
+.split-panel-content {
+    position: relative;
+    margin: 3em;
+}
+
+.form-error-box {
+    margin-top: 1em;
+    padding: 1em;
+    background-color: #f8d4d4;
+    color: #b10808;
+    border: #b10808;
+    border-style: solid;
+    border-width: 0px 0px 2px 0px;
+}
+
+.form-element {
+    width: 100%;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
 footer {
     position: fixed;
     left: 0;
