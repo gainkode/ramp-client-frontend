@@ -1,1 +1,123 @@
-Register
+<div class="action-page-split action-page-left-panel split-page-40">
+    <div class="split-panel-content">
+        <div style="height: 5em;width: 10em;background-color: white;vertical-align: middle;text-align: center;">
+            <h1>Logo placeholder</h1>
+        </div>
+        <div style="text-align: left;margin-top: 1em;">
+            <h3>Information placeholder</h3>
+        </div>
+    </div>
+</div>
+
+<div class="action-page-split action-page-right-panel split-page-60">
+    <div class="split-panel-content">
+        <div class="login-form-box">
+            <h2>Register</h2>
+
+            <mat-progress-bar *ngIf="inProgress" mode="indeterminate"></mat-progress-bar>
+            
+            <form [formGroup]="signupForm" (ngSubmit)="onSignupSubmit()">
+                <!-- Email -->
+                <mat-form-field class="form-element">
+                    <mat-label>Email</mat-label>
+                    <input type="email" matInput formControlName="email" maxlength="30" 
+                    placeholder="User login name" required/>
+                    <mat-error *ngIf="this.signupForm.get('email')?.hasError('required')">
+                        Please specify your email
+                    </mat-error>
+                    <mat-error *ngIf="this.signupForm.get('email')?.hasError('pattern')">
+                        Email has incorrect format
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- User name -->
+                <mat-form-field class="form-element">
+                    <mat-label>User name</mat-label>
+                    <input matInput formControlName="username" maxlength="30" 
+                    placeholder="User name" required>
+                    <mat-error *ngIf="this.signupForm.get('username')?.hasError('required')">
+                        Please specify your name
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- User type -->
+                <div class="form-element">
+                    <label id="usertype-radio-group-label">
+                        Account type
+                    </label>
+                </div>
+                <mat-radio-group aria-labelledby="usertype-radio-group-label"
+                class="login-form-radio-group" formControlName="userType">
+                    <mat-radio-button class="login-form-radio-button" color="primary" value="User">
+                        User
+                    </mat-radio-button>
+                    <mat-radio-button class="login-form-radio-button" color="primary" value="Merchant">
+                        Merchant
+                    </mat-radio-button>
+                </mat-radio-group>
+                <br>
+                
+                <!-- Password -->
+                <mat-form-field class="form-element">
+                    <mat-label>Password</mat-label>
+                    <input [type]="hidePassword1 ? 'password' : 'text'" matInput 
+                    formControlName="password1" maxlength="30" placeholder="Password" required>
+                    <button mat-icon-button matSuffix (click)="hidePassword1 = !hidePassword1" 
+                    [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword1">
+                        <mat-icon>{{hidePassword1 ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
+                    <mat-error *ngIf="this.signupForm.get('password1')?.hasError('required')">
+                        Please specify your password
+                    </mat-error>
+                    <mat-error *ngIf="this.signupForm.get('password1')?.hasError('minlength')">
+                        Password must contain at least 8 symbols
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- Confirm password -->
+                <mat-form-field class="form-element">
+                    <mat-label>Confirm Password</mat-label>
+                    <input [type]="hidePassword2 ? 'password' : 'text'" matInput 
+                    formControlName="password2" maxlength="30" placeholder="Confirm Password" required>
+                    <button mat-icon-button matSuffix (click)="hidePassword2 = !hidePassword2" 
+                    [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword2">
+                        <mat-icon>{{hidePassword2 ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
+                    <mat-error *ngIf="this.signupForm.get('password2')?.hasError('required')">
+                        Please specify your password
+                    </mat-error>
+                    <mat-error *ngIf="this.signupForm.get('password2')?.hasError('minlength')">
+                        Password must contain at least 8 symbols
+                    </mat-error>
+                </mat-form-field>
+
+                <div class="form-element">
+                    <mat-checkbox color="primary" [checked]="agreementChecked" (change)="checkAgreement()">
+                        <span>I agree to the <a href="#">terms and conditions</a></span>
+                    </mat-checkbox>
+                </div>
+
+                <div class="form-element">
+                    <button type="submit" mat-flat-button color="primary" [disabled]="!agreementChecked">
+                        Sign up
+                    </button>
+                </div>
+            </form>
+            <div class="form-error-box" *ngIf="errorMessage!=''">
+                {{errorMessage}}
+            </div>
+            <br>
+            <div class="form-element">
+                <span>If you want to sign up with your social newtork account, please use:</span>
+            </div>
+            <div class="form-element">
+                <button class="inline-button" mat-flat-button color="primary">Google</button>
+                <button class="inline-button" mat-flat-button color="primary">Facebook</button>
+            </div>
+            <br>
+            <div class="form-element">
+                <span>Alreadu have an account?&nbsp;<a href="/auth/login">Sign in</a></span>
+            </div>
+        </div>
+    </div>
+</div>

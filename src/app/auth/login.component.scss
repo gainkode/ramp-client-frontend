@@ -11,3 +11,12 @@
 .inline-button {
     margin-right: 1em;
 }
+
+.login-form-radio-group {
+    display: flex;
+    flex-direction: column;
+}
+  
+.login-form-radio-button {
+    margin: 5px 0px 5px 0px;
+}
