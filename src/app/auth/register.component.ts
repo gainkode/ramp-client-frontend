@@ -29,7 +29,8 @@ export class RegisterComponent {
         password1: [, 
             { validators: [
                 Validators.required, 
-                Validators.minLength(8)
+                Validators.minLength(8),
+                Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%_*?&])[A-Za-z\d$@$!%_*?&].{7,30}')
             ], updateOn: "change" }
         ],
         password2: [, 
@@ -50,6 +51,17 @@ export class RegisterComponent {
         let p1 = this.signupForm.get('password1')?.value;
         let p2 = this.signupForm.get('password2')?.value;
         return (p1 == p2);
+    }
+
+    getPasswordValidation(): string {
+        if (this.signupForm.get('password1')?.hasError('required')) {
+            return 'Please specify your password';
+        } else if (this.signupForm.get('password1')?.hasError('minlength')) {
+            return 'Password must contain at least 8 symbols';
+        } else if (this.signupForm.get('password1')?.hasError('pattern')) {
+            return 'Password must contain lowercase and uppercase symbols, digits, and special symbols';
+        }
+        return '';
     }
 
     onSignupSubmit() {
