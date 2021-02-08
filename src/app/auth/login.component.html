@@ -118,11 +118,8 @@
                                 [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideSignUp1Password">
                                     <mat-icon>{{hideSignUp1Password ? 'visibility_off' : 'visibility'}}</mat-icon>
                                 </button>
-                                <mat-error *ngIf="this.signupForm.get('password1')?.hasError('required')">
-                                    Please specify your password
-                                </mat-error>
-                                <mat-error *ngIf="this.signupForm.get('password1')?.hasError('minlength')">
-                                    Password must contain at least 8 symbols
+                                <mat-error *ngIf="signupPasswordValid()!=''">
+                                    {{signupPasswordValid()}}
                                 </mat-error>
                             </mat-form-field>
 
