@@ -2,6 +2,10 @@
 
 Client application for CM eWallet
 
+## Install and deploy
+
+Run `npm rebuild` to download and install all necessary packages.
+
 ## Development server
 
 Run `ng serve --port 4200 --open` for a dev server. The app will automatically reload if you change any of the source files.

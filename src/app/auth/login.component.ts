@@ -41,11 +41,12 @@ export class LoginComponent {
                     this.inProgress = false;
                     let userData = data.login as UserLogin;
                     this.auth.setLoginUser(userData);
+                    this.router.navigateByUrl("/");
                 },(error) => {
                     this.inProgress = false;
                     this.errorMessage = 'Incorrect login or password';
                     if (!this.auth.registerLoginError()) {
-                        this.router.navigateByUrl("/");
+                        this.router.navigateByUrl("/auth/recaptcha");
                     }
                 });
         }
