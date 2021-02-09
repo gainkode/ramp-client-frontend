@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { Validators, FormBuilder } from '@angular/forms';
-import { UserLogin } from '../model/user.model';
 
 @Component({
     templateUrl: 'register.component.html',
