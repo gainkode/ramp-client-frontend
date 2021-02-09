@@ -26,7 +26,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
       useFactory: (httpLink: HttpLink) => {
         return {
           cache: new InMemoryCache(),
-          link: httpLink.create({ uri: 'http://localhost:3001/gql/api' }),
+          link: httpLink.create({ uri: 'http://localhost:3001/gql/api' })
+          //link: httpLink.create({ uri: 'http://192.168.1.100:3001/gql/api' })
         };
       },
       deps: [HttpLink],
