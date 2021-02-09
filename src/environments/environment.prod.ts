@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: true,
+  API_SERVER: 'http://localhost:3001/gql/api'
 };

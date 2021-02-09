@@ -8,6 +8,7 @@ import { HttpLink } from 'apollo-angular/http';
 import { InMemoryCache } from '@apollo/client/core';
 import { AuthService } from "./services/auth.service";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [
@@ -26,8 +27,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
       useFactory: (httpLink: HttpLink) => {
         return {
           cache: new InMemoryCache(),
-          link: httpLink.create({ uri: 'http://localhost:3001/gql/api' })
-          //link: httpLink.create({ uri: 'http://192.168.1.100:3001/gql/api' })
+          link: httpLink.create({ uri: environment.API_SERVER })
         };
       },
       deps: [HttpLink],
