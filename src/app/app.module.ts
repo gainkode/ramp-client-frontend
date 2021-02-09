@@ -27,7 +27,7 @@ import { environment } from 'src/environments/environment';
       useFactory: (httpLink: HttpLink) => {
         return {
           cache: new InMemoryCache(),
-          link: httpLink.create({ uri: environment.API_SERVER })
+          link: httpLink.create({ uri: environment.api_server })
         };
       },
       deps: [HttpLink],

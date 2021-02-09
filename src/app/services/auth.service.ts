@@ -2,8 +2,8 @@ import { Injectable } from "@angular/core";
 import { Apollo, gql } from 'apollo-angular';
 import { Observable } from 'rxjs';
 import { UserLogin } from '../model/user.model';
+import { environment } from 'src/environments/environment';
 
-const recaptchaId = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
 const LOGIN_POST = gql`
   mutation Login($recaptcha: String!, $email: String!, $password: String!) {
     login(
@@ -52,7 +52,7 @@ export class AuthService {
         return this.apollo.mutate({
             mutation: LOGIN_POST,
             variables: {
-                recaptcha: recaptchaId,
+                recaptcha: environment.recaptchaId,
                 email: username,
                 password: userpassword
             }
@@ -63,7 +63,7 @@ export class AuthService {
         return this.apollo.mutate({
             mutation: SIGNUP_POST,
             variables: {
-                recaptcha: recaptchaId,
+                recaptcha: environment.recaptchaId,
                 name: username,
                 email: usermail,
                 password: userpassword,
