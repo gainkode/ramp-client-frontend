@@ -25,12 +25,12 @@ export class RegisterComponent {
         username: [, 
             { validators: [Validators.required], updateOn: "change" }
         ],
-        userType: ['User'],
+        userType: ['Customer'],
         password1: [, 
             { validators: [
                 Validators.required, 
                 Validators.minLength(8),
-                Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%_*?&])[A-Za-z\d$@$!%_*?&].{7,30}')
+                Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$#!%_*?&])[A-Za-z\d$@$#!%_*?&].{7,30}')
             ], updateOn: "change" }
         ],
         password2: [, 
@@ -72,6 +72,18 @@ export class RegisterComponent {
                 return;
             }
             this.inProgress = true;
+            this.auth.register(
+                this.signupForm.get('username')?.value,
+                this.signupForm.get('email')?.value,
+                this.signupForm.get('password1')?.value,
+                this.signupForm.get('userType')?.value)
+                .subscribe(({ data }) => {
+                    this.inProgress = false;
+                    this.router.navigateByUrl("/auth/reg-success");
+                },(error) => {
+                    this.inProgress = false;
+                    this.errorMessage = 'Unable to register new account';
+                });
         }
     }
 }

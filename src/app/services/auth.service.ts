@@ -10,13 +10,34 @@ const LOGIN_POST = gql`
         recaptcha: $recaptcha, 
         email: $email, 
         password: $password) {
-      authToken
+            authToken
+            user {
+                userId
+                email
+                name
+                userType
+                roles
+            }
+            authTokenAction
+        }
+    }
+`;
+
+const SIGNUP_POST = gql`
+  mutation Signup($recaptcha: String!, $name: String!, $email: String!, $password: String!, $userType: UserType!) {
+    signup(
+        recaptcha: $recaptcha, 
+        email: $email,
+        password: $password,
+        name: $name,
+        type: $userType,
+        termsOfUse: true
+    ) {
+      authToken    
       user {
-        userId
-        email
+        userId,
+        email,
         name
-        userType
-        roles
       }
       authTokenAction
     }
@@ -38,25 +59,22 @@ export class AuthService {
         })
     }
 
+    register(username: string, usermail: string, userpassword: string, usertype: string): Observable<any> {
+        return this.apollo.mutate({
+            mutation: SIGNUP_POST,
+            variables: {
+                recaptcha: recaptchaId,
+                name: username,
+                email: usermail,
+                password: userpassword,
+                userType: usertype
+            }
+        })
+    }
+
     setLoginUser(login: UserLogin) {
         sessionStorage.setItem("currentUser", JSON.stringify(login.user));
         sessionStorage.setItem("currentToken", login.authToken);
-        sessionStorage.removeItem("loginErrorCounter");
-    }
-
-    registerLoginError(): boolean {
-        this.logout();
-        let counter = sessionStorage.getItem("loginErrorCounter");
-        let counterInt = 0;
-        if (counter != null) {
-            counterInt = Number(counter) || 0;
-            if (counterInt > 4) {
-                return false;
-            }
-        }
-        counterInt++;
-        sessionStorage.setItem("loginErrorCounter", counterInt.toString());
-        return true;
     }
 
     get authenticated(): boolean {

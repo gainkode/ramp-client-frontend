@@ -45,9 +45,6 @@ export class LoginComponent {
                 },(error) => {
                     this.inProgress = false;
                     this.errorMessage = 'Incorrect login or password';
-                    if (!this.auth.registerLoginError()) {
-                        this.router.navigateByUrl("/auth/recaptcha");
-                    }
                 });
         }
     }
