@@ -6,7 +6,6 @@ export class UserLogin {
 
 export class User {
     userId: string = '';
-    userType: string = '';
     email: string = '';
     name: string = '';
     roles: string[] = [];

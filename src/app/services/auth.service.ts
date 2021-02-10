@@ -15,7 +15,6 @@ const LOGIN_POST = gql`
                 userId
                 email
                 name
-                userType
                 roles
             }
             authTokenAction
