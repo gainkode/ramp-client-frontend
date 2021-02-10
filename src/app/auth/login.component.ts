@@ -41,7 +41,11 @@ export class LoginComponent {
                     this.inProgress = false;
                     let userData = data.login as UserLogin;
                     this.auth.setLoginUser(userData);
-                    this.router.navigateByUrl("/");
+                    if (userData.user?.userType == 'Merchant') {
+                        this.router.navigateByUrl("/merchant/");
+                    } else {
+                        this.router.navigateByUrl("/customer/");
+                    }
                 },(error) => {
                     this.inProgress = false;
                     this.errorMessage = 'Incorrect login or password';

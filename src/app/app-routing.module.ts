@@ -1,13 +1,16 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { LoginComponent } from './auth/login.component';
 
 const routes: Routes = [
   //{ path: "catalog", component: CatalogComponent },
-  //{ path: 'categories', component: CategoriesComponent },
-  //{ path: 'exchange', component: ExchangeComponent },
   {
     path: "auth", loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)
+  },
+  {
+    path: "customer", loadChildren: () => import('./customer/customer.module').then(m => m.CustomerModule)
+  },
+  {
+    path: "merchant", loadChildren: () => import('./merchant/merchant.module').then(m => m.MerchantModule)
   },
   { path: "**", redirectTo: "/" }
 ];
