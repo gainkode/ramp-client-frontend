@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Apollo, gql } from 'apollo-angular';
 import { Observable } from 'rxjs';
-import { UserLogin, User } from '../model/user.model';
+import { LoginResult, User } from '../model/generated-models';
 import { environment } from 'src/environments/environment';
 
 const LOGIN_POST = gql`
@@ -85,9 +85,9 @@ export class AuthService {
     //     })
     // }
 
-    setLoginUser(login: UserLogin) {
+    setLoginUser(login: LoginResult) {
         sessionStorage.setItem("currentUser", JSON.stringify(login.user));
-        sessionStorage.setItem("currentToken", login.authToken);
+        sessionStorage.setItem("currentToken", login.authToken as string);
     }
 
     get authenticated(): boolean {

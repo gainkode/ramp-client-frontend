@@ -1,0 +1,7 @@
+overwrite: true
+schema: http://localhost:3001/gql/api
+documents: null
+generates:
+  ./src/app/model/generated-models.ts:
+    plugins:
+      - typescript

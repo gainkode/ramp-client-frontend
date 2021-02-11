@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { Validators, FormBuilder } from '@angular/forms';
-import { UserLogin } from '../model/user.model';
+import { LoginResult } from '../model/generated-models';
 
 @Component({
     templateUrl: 'login.component.html',
@@ -39,7 +39,7 @@ export class LoginComponent {
                 this.loginForm.get('password')?.value)
                 .subscribe(({ data }) => {
                     this.inProgress = false;
-                    let userData = data.login as UserLogin;
+                    let userData = data.login as LoginResult;
                     this.auth.setLoginUser(userData);
                     if (userData.user?.type == 'Merchant') {
                         this.router.navigateByUrl("/merchant/");
