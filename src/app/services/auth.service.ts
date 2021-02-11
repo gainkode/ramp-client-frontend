@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Apollo, gql } from 'apollo-angular';
 import { Observable } from 'rxjs';
-import { UserLogin } from '../model/user.model';
+import { UserLogin, User } from '../model/user.model';
 import { environment } from 'src/environments/environment';
 
 const LOGIN_POST = gql`
@@ -79,6 +79,25 @@ export class AuthService {
 
     get authenticated(): boolean {
         return this.token != "";
+    }
+
+    private getAuthenticatedUser(): User | null {
+        let result: User | null = null;
+        let userData: string | null = sessionStorage.getItem('currentUser');
+        if (userData != null) {
+            console.log(userData);
+            result = JSON.parse(userData as string) as User;
+        }
+        return result;
+    }
+
+    isAuthenticatedUserType(type: string): boolean {
+        let result: boolean = false;
+        let user: User | null = this.getAuthenticatedUser();
+        if (user != null) {
+            result = (user.type == type);
+        }
+        return result;
     }
 
     get token(): string {
