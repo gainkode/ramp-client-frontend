@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Component({
     templateUrl: 'confirm-email.component.html',
@@ -10,13 +11,16 @@ export class ConfirmEmailComponent {
     validated: boolean = false;
     valid: boolean = false;
 
-    constructor(private router: Router, activeRoute: ActivatedRoute) {
+    constructor(private auth: AuthService, private router: Router, activeRoute: ActivatedRoute) {
         this.token = activeRoute.snapshot.params["token"];
-        setTimeout(p => {
-            this.validated = true;
-            if (this.token == 'valid') {
-                this.valid = true;
-            }
-        }, 2000);
+        if (this.token!=undefined) {
+            this.auth.confirmEmail(this.token)
+                .subscribe(({ data }) => {
+                    this.validated = true;
+                    this.valid = true;
+                },(error) => {
+                    this.validated = true;
+                });
+        }
     }
 }

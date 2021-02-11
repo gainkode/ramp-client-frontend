@@ -50,6 +50,12 @@ const FORGOTPASSWORD_POST = gql`
   }
 `;
 
+const CONFIRMEMAIL_POST = gql`
+  mutation ConfirmEmail($token: String!, $recaptcha: String!) {
+    confirmEmail(recaptcha: $recaptcha, token: $token)
+  }
+`;
+
 @Injectable()
 export class AuthService {
     constructor(private apollo: Apollo) { }
@@ -84,6 +90,16 @@ export class AuthService {
             variables: {
                 recaptcha: environment.recaptchaId,
                 email: usermail
+            }
+        })
+    }
+
+    confirmEmail(token: string): Observable<any> {
+        return this.apollo.mutate({
+            mutation: CONFIRMEMAIL_POST,
+            variables: {
+                recaptcha: environment.recaptchaId,
+                token: token
             }
         })
     }
