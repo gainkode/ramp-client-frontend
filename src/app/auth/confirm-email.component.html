@@ -1,0 +1,59 @@
+<div class="action-page-split action-page-left-panel split-page-40">
+    <div class="split-panel-content">
+        <div style="height: 5em;width: 10em;background-color: white;vertical-align: middle;text-align: center;">
+            <h1>Logo placeholder</h1>
+        </div>
+        <div style="text-align: left;margin-top: 1em;">
+            <h3>Information placeholder</h3>
+        </div>
+    </div>
+</div>
+
+<div class="action-page-split action-page-right-panel split-page-60">
+    <div class="split-panel-content">
+        <div *ngIf="token==undefined" class="login-form-box">
+            <br><br><br>
+
+            <div class="form-element">
+                <span>You need email validation token to continue.</span>
+            </div>
+
+            <div class="form-element">
+                <span>Back to the <a href="/">home page</a>.</span>
+            </div>
+        </div>
+        <div *ngIf="token!=undefined" class="login-form-box">
+            <br><br><br>
+            <div *ngIf="!validated">
+                <h2>Token validation</h2>
+                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            </div>
+            <div *ngIf="validated">
+                <div *ngIf="valid">
+                    <h2>Validation complete</h2>
+                    <div class="form-element">
+                        <span>Your email address is successfully confirmed.</span>
+                    </div>
+                    <br>
+                    <div class="form-element">
+                        <span>Now you can <a href="/">sign in</a> with your password.</span>
+                    </div>
+                </div>
+                <div *ngIf="!valid">
+                    <div class="form-element">
+                        <span>Can't confirm email.</span>
+                    </div>
+                    <div class="form-element">
+                        <span>Make sure you're using the latest received confirmation email.</span>
+                    </div>
+                    <br>
+                    <div class="form-element">
+                        <span>Back to the <a href="/">home page</a>.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
+
+  

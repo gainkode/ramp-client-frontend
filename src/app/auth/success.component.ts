@@ -7,7 +7,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class SuccessComponent {
     successType: string = '';
-    pageTitle: string = '';
 
     constructor(private router: Router, activeRoute: ActivatedRoute) {
         this.successType = activeRoute.snapshot.params["type"];
