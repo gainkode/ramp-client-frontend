@@ -30,7 +30,7 @@ export class LoginComponent {
 
     constructor(private auth: AuthService, private formBuilder: FormBuilder, private router: Router) { }
 
-    onLoginSubmit(): void {
+    onSubmit(): void {
         this.errorMessage = '';
         if (this.loginForm.valid) {
             this.inProgress = true;

@@ -63,7 +63,7 @@ export class RegisterComponent {
         return '';
     }
 
-    onSignupSubmit() {
+    onSubmit() {
         this.errorMessage = '';
         if (this.signupForm.valid) {
             if (!this.passwordsEqual()) {

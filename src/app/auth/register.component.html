@@ -16,7 +16,7 @@
 
             <mat-progress-bar *ngIf="inProgress" mode="indeterminate"></mat-progress-bar>
             
-            <form [formGroup]="signupForm" (ngSubmit)="onSignupSubmit()">
+            <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
                 <!-- Email -->
                 <mat-form-field class="form-element">
                     <mat-label>Email</mat-label>

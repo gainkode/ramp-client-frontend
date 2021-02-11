@@ -72,6 +72,19 @@ export class AuthService {
         })
     }
 
+    // restore(usermail: string): Observable<any> {
+    //     return this.apollo.mutate({
+    //         mutation: SIGNUP_POST,
+    //         variables: {
+    //             recaptcha: environment.recaptchaId,
+    //             name: username,
+    //             email: usermail,
+    //             password: userpassword,
+    //             userType: usertype
+    //         }
+    //     })
+    // }
+
     setLoginUser(login: UserLogin) {
         sessionStorage.setItem("currentUser", JSON.stringify(login.user));
         sessionStorage.setItem("currentToken", login.authToken);
