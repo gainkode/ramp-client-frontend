@@ -9,6 +9,7 @@ import { Validators, FormBuilder } from '@angular/forms';
 })
 export class RestoreComponent {
     inProgress: boolean = false;
+    errorMessage: string = '';
     
     restoreForm = this.formBuilder.group({
         email: [, 
@@ -23,17 +24,16 @@ export class RestoreComponent {
     
     onSubmit() {
         if (this.restoreForm.valid) {
-            //this.inProgress = true;
-            
-            // this.auth.restore(
-            //     this.restoreForm.get('email')?.value)
-            //     .subscribe(({ data }) => {
-            //         this.inProgress = false;
-            //         this.router.navigateByUrl("/auth/reg-success");
-            //     },(error) => {
-            //         this.inProgress = false;
-            //         this.errorMessage = 'Unable to register new account';
-            //     });
+            this.inProgress = true;
+            this.auth.forgotPassword(
+                this.restoreForm.get('email')?.value)
+                .subscribe(({ data }) => {
+                    this.inProgress = false;
+                    this.router.navigateByUrl("/auth/success/restore");
+                },(error) => {
+                    this.inProgress = false;
+                    this.errorMessage = 'Unable to restore password';
+                });
         }
     }
 }

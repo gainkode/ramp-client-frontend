@@ -44,6 +44,12 @@ const SIGNUP_POST = gql`
   }
 `;
 
+const FORGOTPASSWORD_POST = gql`
+  mutation ForgotPassword($email: String!, $recaptcha: String!) {
+    forgotPassword(recaptcha: $recaptcha, email: $email)
+  }
+`;
+
 @Injectable()
 export class AuthService {
     constructor(private apollo: Apollo) { }
@@ -72,18 +78,15 @@ export class AuthService {
         })
     }
 
-    // restore(usermail: string): Observable<any> {
-    //     return this.apollo.mutate({
-    //         mutation: SIGNUP_POST,
-    //         variables: {
-    //             recaptcha: environment.recaptchaId,
-    //             name: username,
-    //             email: usermail,
-    //             password: userpassword,
-    //             userType: usertype
-    //         }
-    //     })
-    // }
+    forgotPassword(usermail: string): Observable<any> {
+        return this.apollo.mutate({
+            mutation: FORGOTPASSWORD_POST,
+            variables: {
+                recaptcha: environment.recaptchaId,
+                email: usermail
+            }
+        })
+    }
 
     setLoginUser(login: LoginResult) {
         sessionStorage.setItem("currentUser", JSON.stringify(login.user));

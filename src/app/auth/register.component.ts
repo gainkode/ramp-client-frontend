@@ -78,7 +78,7 @@ export class RegisterComponent {
                 this.signupForm.get('userType')?.value)
                 .subscribe(({ data }) => {
                     this.inProgress = false;
-                    this.router.navigateByUrl("/auth/reg-success");
+                    this.router.navigateByUrl("/auth/success/signup");
                 },(error) => {
                     this.inProgress = false;
                     this.errorMessage = 'Unable to register new account';

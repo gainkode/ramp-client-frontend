@@ -20,8 +20,8 @@
                 <!-- Email -->
                 <mat-form-field class="form-element">
                     <mat-label>Email</mat-label>
-                    <input type="email" matInput formControlName="email" maxlength="30" 
-                    placeholder="User login name" required/>
+                    <input type="email" matInput formControlName="email" maxlength="60" 
+                    placeholder="User email" required/>
                     <mat-error *ngIf="this.signupForm.get('email')?.hasError('required')">
                         Please specify your email
                     </mat-error>

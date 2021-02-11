@@ -11,7 +11,7 @@
 
 <div class="action-page-split action-page-right-panel split-page-60">
     <div class="split-panel-content">
-        <div class="login-form-box">
+        <div *ngIf="successType=='signup'" class="login-form-box">
             <br><br><br>
             <h2>Registration</h2>
 
@@ -23,6 +23,28 @@
                 <span>Confirmation letter was sent to your email.</span>
                 <br>
                 <span>Please, follow the link in the letter to complete your registration.</span>
+            </div>
+
+            <br>
+            <div class="form-element">
+                <span>Click <a href="/auth/login">here</a> to sign in.</span>
+            </div>
+        </div>
+        <div *ngIf="successType=='restore'" class="login-form-box">
+            <br><br><br><br>
+            <h2>Restore password</h2>
+
+            <div class="form-element">
+                <span>Temporary password was generated and sent to your email address.</span>
+            </div>
+
+            <div class="form-element">
+                <span>Please, follow the link in the letter to complete the process.</span>
+            </div>
+
+            <br>
+            <div class="form-element">
+                <span>Click <a href="/auth/login">here</a> to sign in.</span>
             </div>
         </div>
     </div>

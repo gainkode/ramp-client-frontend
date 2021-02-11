@@ -11,14 +11,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { LoginComponent } from "./login.component";
 import { RegisterComponent } from "./register.component";
-import { SignupSuccessComponent } from './signup-success.component';
+import { SuccessComponent } from './success.component';
 import { RestoreComponent } from './restore.component';
 import { TermsComponent } from './terms.component';
 
 const routing = RouterModule.forChild([
     { path: "login", component: LoginComponent },
     { path: 'register', component: RegisterComponent },
-    { path: 'reg-success', component: SignupSuccessComponent },
+    { path: 'success/:type', component: SuccessComponent },
     { path: 'restore', component: RestoreComponent },
     { path: 'terms', component: TermsComponent },
     { path: "**", redirectTo: "login" }
@@ -45,7 +45,7 @@ export class MaterialModule {};
         CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule
     ],
     declarations: [
-        LoginComponent, RegisterComponent, SignupSuccessComponent, RestoreComponent, 
+        LoginComponent, RegisterComponent, SuccessComponent, RestoreComponent, 
         TermsComponent],
     schemas: [
       CUSTOM_ELEMENTS_SCHEMA
