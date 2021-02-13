@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
 import { Observable } from 'rxjs';
 import { LoginResult, User } from '../model/generated-models';
@@ -7,8 +7,8 @@ import { environment } from 'src/environments/environment';
 const LOGIN_POST = gql`
   mutation Login($recaptcha: String!, $email: String!, $password: String!) {
     login(
-        recaptcha: $recaptcha, 
-        email: $email, 
+        recaptcha: $recaptcha,
+        email: $email,
         password: $password) {
             authToken
             user {
@@ -28,7 +28,7 @@ const SIGNUP_POST = gql`
     $mode: UserMode!, $termsOfUse: Boolean!, $firstName: String!, $lastName: String!,
     $countryCode: String!, $phone: String!) {
     signup(
-        recaptcha: $recaptcha, 
+        recaptcha: $recaptcha,
         email: $email,
         password: $password,
         name: $name,
@@ -40,7 +40,7 @@ const SIGNUP_POST = gql`
         countryCode: $countryCode,
         phone: $phone
     ) {
-      authToken    
+      authToken
       user {
         userId,
         email,
@@ -50,9 +50,6 @@ const SIGNUP_POST = gql`
     }
   }
 `;
-
-// merchantId?: Maybe<Scalars['String']>;
-// birthday?: Maybe<Scalars['DateTime']>;
 
 const FORGOTPASSWORD_POST = gql`
   mutation ForgotPassword($email: String!, $recaptcha: String!) {
@@ -82,7 +79,7 @@ export class AuthService {
     }
 
     register(username: string, usermail: string, userpassword: string, usertype: string,
-        firstname: string, lastname: string, countrycode: string, phone: string): Observable<any> {
+        firstname: string, lastname: string, countrycode: string, phoneNumber: string): Observable<any> {
         return this.apollo.mutate({
             mutation: SIGNUP_POST,
             variables: {
@@ -96,7 +93,7 @@ export class AuthService {
                 firstName: firstname,
                 lastName: lastname,
                 countryCode: countrycode,
-                phone: phone,
+                phone: phoneNumber,
                 oAuthToken: '',
                 oAuthProvider: ''
             }
@@ -113,29 +110,29 @@ export class AuthService {
         });
     }
 
-    confirmEmail(token: string): Observable<any> {
+    confirmEmail(tokenValue: string): Observable<any> {
         return this.apollo.mutate({
             mutation: CONFIRMEMAIL_POST,
             variables: {
                 recaptcha: environment.recaptchaId,
-                token: token
+                token: tokenValue
             }
         });
     }
 
-    setLoginUser(login: LoginResult) {
+    setLoginUser(login: LoginResult): void {
         console.log(login.user);
-        sessionStorage.setItem("currentUser", JSON.stringify(login.user));
-        sessionStorage.setItem("currentToken", login.authToken as string);
+        sessionStorage.setItem('currentUser', JSON.stringify(login.user));
+        sessionStorage.setItem('currentToken', login.authToken as string);
     }
 
     get authenticated(): boolean {
-        return this.token != "";
+        return this.token !== '';
     }
 
     private getAuthenticatedUser(): User | null {
         let result: User | null = null;
-        let userData: string | null = sessionStorage.getItem('currentUser');
+        const userData: string | null = sessionStorage.getItem('currentUser');
         if (userData != null) {
             result = JSON.parse(userData as string) as User;
         }
@@ -143,21 +140,21 @@ export class AuthService {
     }
 
     isAuthenticatedUserType(type: string): boolean {
-        let result: boolean = false;
-        let user: User | null = this.getAuthenticatedUser();
+        let result = false;
+        const user: User | null = this.getAuthenticatedUser();
         if (user != null) {
-            result = (user.type == type);
+            result = (user.type === type);
         }
         return result;
     }
 
     get token(): string {
-        let tokenData: string | null = sessionStorage.getItem('currentToken');
-        return (tokenData === null) ? "" : tokenData;
+        const tokenData: string | null = sessionStorage.getItem('currentToken');
+        return (tokenData === null) ? '' : tokenData;
     }
 
-    logout() {
-        sessionStorage.removeItem("currentUser");
-        sessionStorage.removeItem("currentToken");
+    logout(): void {
+        sessionStorage.removeItem('currentUser');
+        sessionStorage.removeItem('currentToken');
     }
 }

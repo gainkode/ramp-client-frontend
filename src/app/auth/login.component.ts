@@ -9,22 +9,22 @@ import { LoginResult } from '../model/generated-models';
     styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-    inProgress: boolean = false;
-    errorMessage: string = '';
-    hidePassword: boolean = true;
+    inProgress = false;
+    errorMessage = '';
+    hidePassword = true;
 
     loginForm = this.formBuilder.group({
-        email: [, 
+        email: [,
             { validators: [
                 Validators.required,
                 Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$')
-            ], updateOn: "change" }
+            ], updateOn: 'change' }
         ],
-        password: [, 
+        password: [,
             { validators: [
-                Validators.required, 
+                Validators.required,
                 Validators.minLength(8)
-            ], updateOn: "change" }
+            ], updateOn: 'change' }
         ]
     });
 
@@ -39,15 +39,15 @@ export class LoginComponent {
                 this.loginForm.get('password')?.value)
                 .subscribe(({ data }) => {
                     this.inProgress = false;
-                    let userData = data.login as LoginResult;
+                    const userData = data.login as LoginResult;
                     this.auth.setLoginUser(userData);
                     this.loginForm.reset();
-                    if (userData.user?.type == 'Merchant') {
-                        this.router.navigateByUrl("/merchant/");
+                    if (userData.user?.type === 'Merchant') {
+                        this.router.navigateByUrl('/merchant/');
                     } else {
-                        this.router.navigateByUrl("/personal/");
+                        this.router.navigateByUrl('/personal/');
                     }
-                },(error) => {
+                }, (error) => {
                     this.inProgress = false;
                     this.errorMessage = 'Incorrect login or password';
                 });

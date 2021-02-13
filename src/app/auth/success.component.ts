@@ -6,12 +6,12 @@ import { Router, ActivatedRoute } from '@angular/router';
     styleUrls: ['./login.component.scss']
 })
 export class SuccessComponent {
-    successType: string = '';
+    successType = '';
 
     constructor(private router: Router, activeRoute: ActivatedRoute) {
-        this.successType = activeRoute.snapshot.params["type"];
-        if (this.successType != 'signup' && this.successType != 'restore') {
-            this.router.navigateByUrl("/auth/login");
+        this.successType = activeRoute.snapshot.params['type'];
+        if (this.successType !== 'signup' && this.successType !== 'restore') {
+            this.router.navigateByUrl('/auth/login');
         }
     }
 }

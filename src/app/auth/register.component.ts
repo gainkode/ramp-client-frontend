@@ -6,89 +6,83 @@ import { AuthService } from '../services/auth.service';
 import { Validators, FormBuilder, AbstractControl } from '@angular/forms';
 import { CountryCode, CountryCodes } from '../model/country-code.model';
 
-export interface Book {
-    id: number;
-    name: string;
-    writer: string
-} 
-
 @Component({
     templateUrl: 'register.component.html',
     styleUrls: ['./login.component.scss']
 })
 export class RegisterComponent implements OnInit {
-    inProgress: boolean = false;
-    errorMessage: string = '';
-    hidePassword1: boolean = true;
-    hidePassword2: boolean = true;
-    agreementChecked: boolean = false;
-    selectedUserType: string = 'Personal';
+    inProgress = false;
+    errorMessage = '';
+    hidePassword1 = true;
+    hidePassword2 = true;
+    agreementChecked = false;
+    selectedUserType = 'Personal';
     countries: CountryCode[] = CountryCodes;
     filteredCountries: Observable<CountryCode[]> | undefined;
 
     signupForm = this.formBuilder.group({
-        email: [, 
+        email: [,
             { validators: [
                 Validators.required,
                 Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$')
-            ], updateOn: "change" }
+            ], updateOn: 'change' }
         ],
-        username: [, 
-            { validators: [Validators.required], updateOn: "change" }
+        username: [,
+            { validators: [Validators.required], updateOn: 'change' }
         ],
         userType: ['Personal'],
         firstName: [''],
         lastName: [''],
         companyName: [''],
         country: ['', Validators.required],
-        phoneCode: ['', 
+        phoneCode: ['',
             { validators: [
-                Validators.required, 
+                Validators.required,
                 Validators.pattern('^[\+](?:[0-9]?){0,3}[0-9]$')
-            ], updateOn: "change" }
+            ], updateOn: 'change' }
         ],
-        phoneNumber: ['', 
+        phoneNumber: ['',
             { validators: [
-                Validators.required, 
+                Validators.required,
                 Validators.pattern('^(?:[0-9]?){6,9}[0-9]$')
-            ], updateOn: "change" }
+            ], updateOn: 'change' }
         ],
-        password1: [, 
+        password1: [,
             { validators: [
-                Validators.required, 
+                Validators.required,
                 Validators.minLength(8),
                 Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$#!%_*?&])[A-Za-z\d$@$#!%_*?&].{7,30}')
-            ], updateOn: "change" }
+            ], updateOn: 'change' }
         ],
-        password2: [, 
+        password2: [,
             { validators: [
-                Validators.required, 
+                Validators.required,
                 Validators.minLength(8)
-            ], updateOn: "change" }
+            ], updateOn: 'change' }
         ]
     });
 
     constructor(private auth: AuthService, private formBuilder: FormBuilder, private router: Router) { }
-    
-    ngOnInit() {
+
+    ngOnInit(): void {
         this.filteredCountries = this.countryField?.valueChanges.pipe(
             startWith(''),
             map(value => this.filterCountries(value)));
         this.countryField?.valueChanges.subscribe(val => {
-            let code = this.getCountryPhoneCode(val);
-            if (code != '') {
+            const code = this.getCountryPhoneCode(val);
+            if (code !== '') {
                 this.phoneCodeField?.setValue(code);
             }
         });
         this.setUserCategoryValidators();
     }
 
-    setUserCategoryValidators() {
+    setUserCategoryValidators(): void {
         const userTypeField = this.signupForm.get('userType');
         const firstNameField = this.signupForm.get('firstName');
         const lastNameField = this.signupForm.get('lastName');
         const companyNameField = this.signupForm.get('companyName');
-    
+
         userTypeField?.valueChanges.subscribe(userType => {
             this.selectedUserType = userType;
             this.resetValidator(firstNameField);
@@ -106,21 +100,21 @@ export class RegisterComponent implements OnInit {
         });
     }
 
-    resetValidator(control: AbstractControl | null) {
+    resetValidator(control: AbstractControl | null): void {
         control?.clearValidators();
         control?.reset();
         control?.markAsUntouched();
     }
 
-    get countryField() {
+    get countryField(): AbstractControl | null {
         return this.signupForm.get('country');
     }
 
-    get phoneCodeField() {
+    get phoneCodeField(): AbstractControl | null {
         return this.signupForm.get('phoneCode');
     }
 
-    get phoneNumberField() {
+    get phoneNumberField(): AbstractControl | null {
         return this.signupForm.get('phoneNumber');
     }
 
@@ -139,33 +133,37 @@ export class RegisterComponent implements OnInit {
     }
 
     getCountryPhoneCode(searchText: string): string {
-        if(!searchText) return '';
+        if (!searchText) {
+            return '';
+        }
         searchText = searchText.toLowerCase();
-        let found = this.countries.filter(code => code.name.toLowerCase() == searchText);
-        if (found.length == 1) {
+        const found = this.countries.filter(code => code.name.toLowerCase() === searchText);
+        if (found.length === 1) {
             return found[0].dial_code;
         }
         return '';
     }
 
     getCountryCode(searchText: string): string {
-        if(!searchText) return '';
+        if (!searchText) {
+            return '';
+        }
         searchText = searchText.toLowerCase();
-        let found = this.countries.filter(code => code.name.toLowerCase() == searchText);
-        if (found.length == 1) {
+        const found = this.countries.filter(code => code.name.toLowerCase() === searchText);
+        if (found.length === 1) {
             return found[0].code;
         }
         return '';
     }
 
-    checkAgreement() {
+    checkAgreement(): void {
         this.agreementChecked = !this.agreementChecked;
     }
 
     passwordsEqual(): boolean {
-        let p1 = this.signupForm.get('password1')?.value;
-        let p2 = this.signupForm.get('password2')?.value;
-        return (p1 == p2);
+        const p1 = this.signupForm.get('password1')?.value;
+        const p2 = this.signupForm.get('password2')?.value;
+        return (p1 === p2);
     }
 
     getPasswordValidation(): string {
@@ -179,11 +177,11 @@ export class RegisterComponent implements OnInit {
         return '';
     }
 
-    onSubmit() {
+    onSubmit(): void {
         this.errorMessage = '';
         if (this.signupForm.valid) {
-            let countryCode = this.getCountryCode(this.countryField?.value);
-            if (countryCode == '') {
+            const countryCode = this.getCountryCode(this.countryField?.value);
+            if (countryCode === '') {
                 this.errorMessage = `Unable to recognize country: ${this.countryField?.value}`;
                 return;
             }
@@ -194,13 +192,13 @@ export class RegisterComponent implements OnInit {
             this.inProgress = true;
             let firstName = '';
             let lastName = '';
-            if (this.selectedUserType == 'Merchant') {
+            if (this.selectedUserType === 'Merchant') {
                 firstName = this.signupForm.get('companyName')?.value;
-            } else if (this.selectedUserType == 'Personal') {
+            } else if (this.selectedUserType === 'Personal') {
                 firstName = this.signupForm.get('firstName')?.value;
                 lastName = this.signupForm.get('lastName')?.value;
             }
-            let phone = this.phoneCodeField?.value + ' ' + this.phoneNumberField?.value;
+            const phone = this.phoneCodeField?.value + ' ' + this.phoneNumberField?.value;
             this.auth.register(
                 this.signupForm.get('username')?.value,
                 this.signupForm.get('email')?.value,
@@ -212,8 +210,8 @@ export class RegisterComponent implements OnInit {
                 phone)
                 .subscribe(({ data }) => {
                     this.inProgress = false;
-                    this.router.navigateByUrl("/auth/success/signup");
-                },(error) => {
+                    this.router.navigateByUrl('/auth/success/signup');
+                }, (error) => {
                     this.inProgress = false;
                     this.errorMessage = 'Unable to register new account';
                 });

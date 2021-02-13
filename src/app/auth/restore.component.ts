@@ -8,29 +8,29 @@ import { Validators, FormBuilder } from '@angular/forms';
     styleUrls: ['./login.component.scss']
 })
 export class RestoreComponent {
-    inProgress: boolean = false;
-    errorMessage: string = '';
-    
+    inProgress = false;
+    errorMessage = '';
+
     restoreForm = this.formBuilder.group({
-        email: [, 
+        email: [,
             { validators: [
                 Validators.required,
                 Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$')
-            ], updateOn: "change" }
+            ], updateOn: 'change' }
         ]
     });
 
     constructor(private auth: AuthService, private formBuilder: FormBuilder, private router: Router) { }
-    
-    onSubmit() {
+
+    onSubmit(): void {
         if (this.restoreForm.valid) {
             this.inProgress = true;
             this.auth.forgotPassword(
                 this.restoreForm.get('email')?.value)
                 .subscribe(({ data }) => {
                     this.inProgress = false;
-                    this.router.navigateByUrl("/auth/success/restore");
-                },(error) => {
+                    this.router.navigateByUrl('/auth/success/restore');
+                }, (error) => {
                     this.inProgress = false;
                     this.errorMessage = 'Unable to restore password';
                 });

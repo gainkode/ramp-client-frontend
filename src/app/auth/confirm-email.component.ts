@@ -7,18 +7,18 @@ import { AuthService } from '../services/auth.service';
     styleUrls: ['./login.component.scss']
 })
 export class ConfirmEmailComponent {
-    token: string = '';
-    validated: boolean = false;
-    valid: boolean = false;
+    token = '';
+    validated = false;
+    valid = false;
 
     constructor(private auth: AuthService, private router: Router, activeRoute: ActivatedRoute) {
-        this.token = activeRoute.snapshot.params["token"];
-        if (this.token!=undefined) {
+        this.token = activeRoute.snapshot.params['token'];
+        if (this.token !== undefined) {
             this.auth.confirmEmail(this.token)
                 .subscribe(({ data }) => {
                     this.validated = true;
                     this.valid = true;
-                },(error) => {
+                }, (error) => {
                     this.validated = true;
                 });
         }

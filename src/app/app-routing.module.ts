@@ -2,17 +2,16 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 const routes: Routes = [
-  //{ path: "catalog", component: CatalogComponent },
   {
-    path: "auth", loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)
+    path: 'auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)
   },
   {
-    path: "personal", loadChildren: () => import('./personal/personal.module').then(m => m.PersonalModule)
+    path: 'personal', loadChildren: () => import('./personal/personal.module').then(m => m.PersonalModule)
   },
   {
-    path: "merchant", loadChildren: () => import('./merchant/merchant.module').then(m => m.MerchantModule)
+    path: 'merchant', loadChildren: () => import('./merchant/merchant.module').then(m => m.MerchantModule)
   },
-  { path: "**", redirectTo: "/" }
+  { path: '**', redirectTo: '/' }
 ];
 
 @NgModule({

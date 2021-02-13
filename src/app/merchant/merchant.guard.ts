@@ -1,6 +1,6 @@
-import { Injectable } from "@angular/core";
-import { ActivatedRouteSnapshot, RouterStateSnapshot, Router } from "@angular/router";
-import { AuthService } from "../services/auth.service";
+import { Injectable } from '@angular/core';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Injectable()
 export class MerchantGuard {
@@ -8,7 +8,7 @@ export class MerchantGuard {
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
         if (!this.auth.isAuthenticatedUserType('Merchant')) {
-            this.router.navigateByUrl("/auth/login");
+            this.router.navigateByUrl('/auth/login');
             return false;
         }
         return true;
