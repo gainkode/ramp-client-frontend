@@ -64,7 +64,7 @@
                     formControlName="country" [matAutocomplete]="auto" required>
                     <mat-autocomplete #auto="matAutocomplete">
                         <mat-option *ngFor="let c of filteredCountries | async" [value]="c.name">
-                            <img class="country-flag" src="assets/svg-country-flags/svg/{{getCountryFlag(c.code)}}" alt="F"/>
+                            <img class="country-flag" src="assets/svg-country-flags/{{getCountryFlag(c.code)}}" alt="F"/>
                             {{c.name}}
                         </mat-option>
                     </mat-autocomplete>
