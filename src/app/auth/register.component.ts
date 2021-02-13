@@ -36,7 +36,19 @@ export class RegisterComponent implements OnInit {
             { validators: [Validators.required], updateOn: "change" }
         ],
         userType: ['Personal'],
-        country: [null, Validators.required],
+        country: ['', Validators.required],
+        phoneCode: ['', 
+            { validators: [
+                Validators.required, 
+                Validators.pattern('^[\+](?:[0-9]?){0,3}[0-9]$')
+            ], updateOn: "change" }
+        ],
+        phoneNumber: ['', 
+            { validators: [
+                Validators.required, 
+                Validators.pattern('^(?:[0-9]?){6,9}[0-9]$')
+            ], updateOn: "change" }
+        ],
         password1: [, 
             { validators: [
                 Validators.required, 
@@ -60,15 +72,22 @@ export class RegisterComponent implements OnInit {
             map(value => this.filterCountries(value)));
         this.countryField?.valueChanges.subscribe(val => {
             let code = this.getCountryPhoneCode(val);
-            if (code != '')
-                console.log(`Phone code for ${val} is ${code}.`);
-            else
-                console.log(`Phone code for ${val} is not found.`);
+            if (code != '') {
+                this.phoneCodeField?.setValue(code);
+            }
         });
     }
 
     get countryField() {
         return this.signupForm.get('country');
+    }
+
+    get phoneCodeField() {
+        return this.signupForm.get('phoneCode');
+    }
+
+    get phoneNumberField() {
+        return this.signupForm.get('phoneNumber');
     }
 
     getCountryFlag(code: string): string {

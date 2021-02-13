@@ -20,3 +20,17 @@
 .login-form-radio-button {
     margin: 5px 0px 5px 0px;
 }
+
+.phone-box-split {
+    display: flex;
+}
+
+.phone-box-left-panel {
+    flex: 10%;
+    min-width: 100px;
+    margin-right: 0.5em;
+}
+  
+.phone-box-right-panel {
+    flex: 100%;
+}

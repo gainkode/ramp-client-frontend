@@ -41,6 +41,7 @@ export class LoginComponent {
                     this.inProgress = false;
                     let userData = data.login as LoginResult;
                     this.auth.setLoginUser(userData);
+                    this.loginForm.reset();
                     if (userData.user?.type == 'Merchant') {
                         this.router.navigateByUrl("/merchant/");
                     } else {

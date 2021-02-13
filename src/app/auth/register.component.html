@@ -30,16 +30,6 @@
                     </mat-error>
                 </mat-form-field>
 
-                <!-- User name -->
-                <mat-form-field class="form-element">
-                    <mat-label>User name</mat-label>
-                    <input matInput formControlName="username" maxlength="30" 
-                    placeholder="User name" required>
-                    <mat-error *ngIf="this.signupForm.get('username')?.hasError('required')">
-                        Please specify your name
-                    </mat-error>
-                </mat-form-field>
-
                 <!-- User type -->
                 <div class="form-element">
                     <label id="usertype-radio-group-label">
@@ -55,11 +45,21 @@
                         Merchant
                     </mat-radio-button>
                 </mat-radio-group>
-     
+                
+                <!-- User name -->
+                <mat-form-field class="form-element">
+                    <mat-label>User name</mat-label>
+                    <input matInput formControlName="username" maxlength="30" 
+                    placeholder="User name" required>
+                    <mat-error *ngIf="this.signupForm.get('username')?.hasError('required')">
+                        Please specify your name
+                    </mat-error>
+                </mat-form-field>
+
                 <!-- Country -->
                 <mat-form-field class="form-element" appearance="standard">
                     <mat-label>Country</mat-label>
-                    <input type="country" placeholder="Pick one" aria-label="Country" matInput
+                    <input type="country" placeholder="Country" aria-label="Country" matInput
                     formControlName="country" [matAutocomplete]="auto" maxlength="40" required>
                     <mat-autocomplete #auto="matAutocomplete">
                         <mat-option *ngFor="let c of filteredCountries | async" [value]="c.name">
@@ -71,6 +71,34 @@
                         Please specify country
                     </mat-error>
                 </mat-form-field>
+
+                <div class="form-element phone-box-split">
+                    <!-- Phone code -->
+                    <mat-form-field class="phone-box-left-panel" appearance="standard">
+                        <mat-label>Code</mat-label>
+                        <input matInput formControlName="phoneCode" maxlength="5" type="search"
+                        placeholder="Code" required>
+                        <mat-error *ngIf="this.phoneCodeField?.hasError('required')">
+                            Code is required
+                        </mat-error>
+                        <mat-error *ngIf="this.phoneCodeField?.hasError('pattern')">
+                            Bad code format
+                        </mat-error>
+                    </mat-form-field>
+                    
+                    <!-- Phone number -->
+                    <mat-form-field class="phone-box-right-panel" appearance="standard">
+                        <mat-label>Phone number</mat-label>
+                        <input matInput formControlName="phoneNumber" maxlength="10" type="search"
+                        placeholder="Number" required>
+                        <mat-error *ngIf="this.phoneNumberField?.hasError('required')">
+                            Please specify your phone number
+                        </mat-error>
+                        <mat-error *ngIf="this.phoneNumberField?.hasError('pattern')">
+                            Bad phone format
+                        </mat-error>
+                    </mat-form-field>
+                </div>
 
                 <!-- Password -->
                 <mat-form-field class="form-element">
