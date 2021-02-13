@@ -22,6 +22,7 @@ export class RegisterComponent implements OnInit {
     hidePassword1: boolean = true;
     hidePassword2: boolean = true;
     agreementChecked: boolean = false;
+    selectedUserType: string = 'Personal';
     countries: CountryCode[] = CountryCodes;
     filteredCountries: Observable<CountryCode[]> | undefined;
 
@@ -36,6 +37,9 @@ export class RegisterComponent implements OnInit {
             { validators: [Validators.required], updateOn: "change" }
         ],
         userType: ['Personal'],
+        firstName: [''],
+        lastName: [''],
+        companyName: [''],
         country: ['', Validators.required],
         phoneCode: ['', 
             { validators: [
@@ -74,6 +78,27 @@ export class RegisterComponent implements OnInit {
             let code = this.getCountryPhoneCode(val);
             if (code != '') {
                 this.phoneCodeField?.setValue(code);
+            }
+        });
+        this.setUserCategoryValidators();
+    }
+
+    setUserCategoryValidators() {
+        const userTypeField = this.signupForm.get('userType');
+        const firstNameField = this.signupForm.get('firstName');
+        const lastNameField = this.signupForm.get('lastName');
+        const companyNameField = this.signupForm.get('companyName');
+    
+        userTypeField?.valueChanges.subscribe(userType => {
+            this.selectedUserType = userType;
+            if (userType === 'Merchant') {
+                firstNameField?.setValidators(null);
+                lastNameField?.setValidators(null);
+                companyNameField?.setValidators([Validators.required]);
+            } else if (userType === 'Personal') {
+                firstNameField?.setValidators([Validators.required]);
+                lastNameField?.setValidators([Validators.required]);
+                companyNameField?.setValidators(null);
             }
         });
     }
@@ -136,7 +161,6 @@ export class RegisterComponent implements OnInit {
     }
 
     onSubmit() {
-        console.log(JSON.stringify(this.countryField?.value));
         this.errorMessage = '';
         if (this.signupForm.valid) {
             if (!this.passwordsEqual()) {
@@ -156,6 +180,6 @@ export class RegisterComponent implements OnInit {
                     this.inProgress = false;
                     this.errorMessage = 'Unable to register new account';
                 });
-        }
+        } else console.log("Invalid");
     }
 }

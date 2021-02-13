@@ -30,7 +30,17 @@
                     </mat-error>
                 </mat-form-field>
 
-                <!-- User type -->
+                <!-- Nick name -->
+                <mat-form-field class="form-element">
+                    <mat-label>Nick name</mat-label>
+                    <input matInput formControlName="username" maxlength="30" 
+                    placeholder="Nick name" required>
+                    <mat-error *ngIf="this.signupForm.get('username')?.hasError('required')">
+                        Please specify your nick name
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- Account type -->
                 <div class="form-element">
                     <label id="usertype-radio-group-label">
                         Account type
@@ -45,14 +55,34 @@
                         Merchant
                     </mat-radio-button>
                 </mat-radio-group>
-                
-                <!-- User name -->
-                <mat-form-field class="form-element">
-                    <mat-label>User name</mat-label>
-                    <input matInput formControlName="username" maxlength="30" 
-                    placeholder="User name" required>
-                    <mat-error *ngIf="this.signupForm.get('username')?.hasError('required')">
-                        Please specify your name
+
+                <!-- Company name -->
+                <mat-form-field *ngIf="selectedUserType=='Merchant'" class="form-element">
+                    <mat-label>Company name</mat-label>
+                    <input matInput formControlName="companyName" maxlength="50" 
+                    placeholder="Company name" required>
+                    <mat-error *ngIf="this.signupForm.get('companyName')?.hasError('required')">
+                        Please specify a company name
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- First name -->
+                <mat-form-field *ngIf="selectedUserType=='Personal'" class="form-element">
+                    <mat-label>First name</mat-label>
+                    <input matInput formControlName="firstName" maxlength="30" 
+                    placeholder="First name" required>
+                    <mat-error *ngIf="this.signupForm.get('firstName')?.hasError('required')">
+                        Please specify your first name
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- Last name -->
+                <mat-form-field *ngIf="selectedUserType=='Personal'" class="form-element">
+                    <mat-label>Last name</mat-label>
+                    <input matInput formControlName="lastName" maxlength="50" 
+                    placeholder="Last name" required>
+                    <mat-error *ngIf="this.signupForm.get('lastName')?.hasError('required')">
+                        Please specify your last name
                     </mat-error>
                 </mat-form-field>
 
@@ -154,7 +184,7 @@
                 {{errorMessage}}
             </div>
             <br>
-            <div class="form-element">
+            <!-- <div class="form-element">
                 <span>If you want to sign up with your social newtork account, please use:</span>
             </div>
             <div class="form-element">
@@ -167,7 +197,7 @@
                     Facebook
                 </button>
             </div>
-            <br>
+            <br> -->
             <div class="form-element">
                 <span>Already have an account?&nbsp;<a href="/auth/login">Sign in</a></span>
             </div>
