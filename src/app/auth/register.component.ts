@@ -35,7 +35,7 @@ export class RegisterComponent implements OnInit {
         username: [, 
             { validators: [Validators.required], updateOn: "change" }
         ],
-        userType: ['Customer'],
+        userType: ['Personal'],
         country: [null, Validators.required],
         password1: [, 
             { validators: [

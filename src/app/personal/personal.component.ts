@@ -4,8 +4,8 @@ import { AuthService } from '../services/auth.service';
 import { Validators, FormBuilder } from '@angular/forms';
 
 @Component({
-    templateUrl: 'customer.component.html'
+    templateUrl: 'personal.component.html'
 })
-export class CustomerComponent {
+export class PersonalComponent {
     constructor(private auth: AuthService, private formBuilder: FormBuilder, private router: Router) { }
 }

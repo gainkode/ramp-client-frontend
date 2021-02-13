@@ -3,11 +3,11 @@ import { ActivatedRouteSnapshot, RouterStateSnapshot, Router } from "@angular/ro
 import { AuthService } from "../services/auth.service";
 
 @Injectable()
-export class CustomerGuard {
+export class PersonalGuard {
     constructor(private router: Router, private auth: AuthService) { }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-        if (!this.auth.isAuthenticatedUserType('Customer')) {
+        if (!this.auth.isAuthenticatedUserType('Personal')) {
             this.router.navigateByUrl("/auth/login");
             return false;
         }

@@ -44,7 +44,7 @@ export class LoginComponent {
                     if (userData.user?.type == 'Merchant') {
                         this.router.navigateByUrl("/merchant/");
                     } else {
-                        this.router.navigateByUrl("/customer/");
+                        this.router.navigateByUrl("/personal/");
                     }
                 },(error) => {
                     this.inProgress = false;

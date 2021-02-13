@@ -7,7 +7,7 @@ const routes: Routes = [
     path: "auth", loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)
   },
   {
-    path: "customer", loadChildren: () => import('./customer/customer.module').then(m => m.CustomerModule)
+    path: "personal", loadChildren: () => import('./personal/personal.module').then(m => m.PersonalModule)
   },
   {
     path: "merchant", loadChildren: () => import('./merchant/merchant.module').then(m => m.MerchantModule)

@@ -10,11 +10,11 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio'; 
 import { MatIconModule } from '@angular/material/icon'; 
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { CustomerGuard } from './customer.guard';
-import { CustomerComponent } from "./customer.component";
+import { PersonalGuard } from './personal.guard';
+import { PersonalComponent } from "./personal.component";
 
 const routing = RouterModule.forChild([
-    { path: "main", component: CustomerComponent, canActivate: [CustomerGuard] },
+    { path: "main", component: PersonalComponent, canActivate: [PersonalGuard] },
     { path: "**", redirectTo: "main" }
 ]);
 
@@ -39,10 +39,10 @@ export class MaterialModule {};
     imports: [
         CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule
     ],
-    declarations: [CustomerComponent],
-    providers: [CustomerGuard],
+    declarations: [PersonalComponent],
+    providers: [PersonalGuard],
     schemas: [
       CUSTOM_ELEMENTS_SCHEMA
     ]
 })
-export class CustomerModule { }
+export class PersonalModule { }
