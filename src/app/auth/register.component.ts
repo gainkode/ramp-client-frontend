@@ -1,18 +1,29 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { filter, startWith, map, switchMap } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 import { Validators, FormBuilder } from '@angular/forms';
+import { CountryCode, CountryCodes } from '../model/country-code.model';
+
+export interface Book {
+    id: number;
+    name: string;
+    writer: string
+} 
 
 @Component({
     templateUrl: 'register.component.html',
     styleUrls: ['./login.component.scss']
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit {
     inProgress: boolean = false;
     errorMessage: string = '';
     hidePassword1: boolean = true;
     hidePassword2: boolean = true;
     agreementChecked: boolean = false;
+    countries: CountryCode[] = CountryCodes;
+    filteredCountries: Observable<CountryCode[]> | undefined;
 
     signupForm = this.formBuilder.group({
         email: [, 
@@ -25,6 +36,7 @@ export class RegisterComponent {
             { validators: [Validators.required], updateOn: "change" }
         ],
         userType: ['Customer'],
+        country: [null, Validators.required],
         password1: [, 
             { validators: [
                 Validators.required, 
@@ -42,6 +54,26 @@ export class RegisterComponent {
 
     constructor(private auth: AuthService, private formBuilder: FormBuilder, private router: Router) { }
     
+    ngOnInit() {
+        this.filteredCountries = this.countryField?.valueChanges.pipe(
+            startWith(''),
+            map(value => this.filterCountries(value)));
+    }
+
+    private get countryField() {
+        return this.signupForm.get('country');
+    }
+
+    private filterCountries(value: string | CountryCode): CountryCode[] {
+        let filterValue = '';
+        if (value) {
+            filterValue = typeof value === 'string' ? value.toLowerCase() : value.name.toLowerCase();
+            return this.countries.filter(c => c.name.toLowerCase().includes(filterValue));
+        } else {
+            return this.countries;
+        }
+    }
+
     checkAgreement() {
         this.agreementChecked = !this.agreementChecked;
     }

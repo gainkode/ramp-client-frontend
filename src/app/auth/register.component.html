@@ -56,7 +56,20 @@
                     </mat-radio-button>
                 </mat-radio-group>
                 <br>
-                
+     
+                <!-- Country -->
+                <mat-form-field class="form-element" appearance="standard">
+                    <mat-label>Country</mat-label>
+                    <input type="country" placeholder="Pick one" aria-label="Country" matInput
+                    formControlName="country" [matAutocomplete]="auto" required>
+                    <mat-autocomplete #auto="matAutocomplete">
+                        <mat-option *ngFor="let c of filteredCountries | async" [value]="c.name">
+                            <img width="30px" height="25px" src="assets/svg-country-flags/svg/ru.svg" alt="F"/>
+                            {{c.name}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+
                 <!-- Password -->
                 <mat-form-field class="form-element">
                     <mat-label>Password</mat-label>

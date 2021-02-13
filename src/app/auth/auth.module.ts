@@ -9,6 +9,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio'; 
 import { MatIconModule } from '@angular/material/icon'; 
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { LoginComponent } from "./login.component";
 import { RegisterComponent } from "./register.component";
 import { SuccessComponent } from './success.component';
@@ -33,6 +34,7 @@ const modules = [
     MatInputModule,
     MatCheckboxModule,
     MatRadioModule,
+    MatAutocompleteModule,
     MatIconModule,
     MatProgressBarModule
 ];
