@@ -64,6 +64,10 @@ export class RegisterComponent implements OnInit {
         return this.signupForm.get('country');
     }
 
+    getCountryFlag(code: string): string {
+        return `${code.toLowerCase()}.svg`;
+    }
+
     private filterCountries(value: string | CountryCode): CountryCode[] {
         let filterValue = '';
         if (value) {
