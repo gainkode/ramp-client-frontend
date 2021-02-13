@@ -58,9 +58,16 @@ export class RegisterComponent implements OnInit {
         this.filteredCountries = this.countryField?.valueChanges.pipe(
             startWith(''),
             map(value => this.filterCountries(value)));
+        this.countryField?.valueChanges.subscribe(val => {
+            let code = this.getCountryPhoneCode(val);
+            if (code != '')
+                console.log(`Phone code for ${val} is ${code}.`);
+            else
+                console.log(`Phone code for ${val} is not found.`);
+        });
     }
 
-    private get countryField() {
+    get countryField() {
         return this.signupForm.get('country');
     }
 
@@ -76,6 +83,16 @@ export class RegisterComponent implements OnInit {
         } else {
             return this.countries;
         }
+    }
+
+    getCountryPhoneCode(searchText: string): string {
+        if(!searchText) return '';
+        searchText = searchText.toLowerCase();
+        let found = this.countries.filter(code => code.name.toLowerCase().includes(searchText));
+        if (found.length == 1) {
+            return found[0].dial_code;
+        }
+        return '';
     }
 
     checkAgreement() {
@@ -100,6 +117,7 @@ export class RegisterComponent implements OnInit {
     }
 
     onSubmit() {
+        console.log(JSON.stringify(this.countryField?.value));
         this.errorMessage = '';
         if (this.signupForm.valid) {
             if (!this.passwordsEqual()) {

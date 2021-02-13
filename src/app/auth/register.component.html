@@ -61,13 +61,16 @@
                 <mat-form-field class="form-element" appearance="standard">
                     <mat-label>Country</mat-label>
                     <input type="country" placeholder="Pick one" aria-label="Country" matInput
-                    formControlName="country" [matAutocomplete]="auto" required>
+                    formControlName="country" [matAutocomplete]="auto" maxlength="40" required>
                     <mat-autocomplete #auto="matAutocomplete">
                         <mat-option *ngFor="let c of filteredCountries | async" [value]="c.name">
                             <img class="country-flag" src="assets/svg-country-flags/{{getCountryFlag(c.code)}}" alt="F"/>
                             {{c.name}}
                         </mat-option>
                     </mat-autocomplete>
+                    <mat-error *ngIf="this.countryField?.hasError('required')">
+                        Please specify country
+                    </mat-error>
                 </mat-form-field>
 
                 <!-- Password -->
