@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { filter, startWith, map, switchMap } from 'rxjs/operators';
+import { startWith, map } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
-import { Validators, FormBuilder } from '@angular/forms';
+import { Validators, FormBuilder, AbstractControl } from '@angular/forms';
 import { CountryCode, CountryCodes } from '../model/country-code.model';
 
 export interface Book {
@@ -91,6 +91,9 @@ export class RegisterComponent implements OnInit {
     
         userTypeField?.valueChanges.subscribe(userType => {
             this.selectedUserType = userType;
+            this.resetValidator(firstNameField);
+            this.resetValidator(lastNameField);
+            this.resetValidator(companyNameField);
             if (userType === 'Merchant') {
                 firstNameField?.setValidators(null);
                 lastNameField?.setValidators(null);
@@ -101,6 +104,12 @@ export class RegisterComponent implements OnInit {
                 companyNameField?.setValidators(null);
             }
         });
+    }
+
+    resetValidator(control: AbstractControl | null) {
+        control?.clearValidators();
+        control?.reset();
+        control?.markAsUntouched();
     }
 
     get countryField() {
@@ -132,9 +141,19 @@ export class RegisterComponent implements OnInit {
     getCountryPhoneCode(searchText: string): string {
         if(!searchText) return '';
         searchText = searchText.toLowerCase();
-        let found = this.countries.filter(code => code.name.toLowerCase().includes(searchText));
+        let found = this.countries.filter(code => code.name.toLowerCase() == searchText);
         if (found.length == 1) {
             return found[0].dial_code;
+        }
+        return '';
+    }
+
+    getCountryCode(searchText: string): string {
+        if(!searchText) return '';
+        searchText = searchText.toLowerCase();
+        let found = this.countries.filter(code => code.name.toLowerCase() == searchText);
+        if (found.length == 1) {
+            return found[0].code;
         }
         return '';
     }
@@ -163,16 +182,34 @@ export class RegisterComponent implements OnInit {
     onSubmit() {
         this.errorMessage = '';
         if (this.signupForm.valid) {
+            let countryCode = this.getCountryCode(this.countryField?.value);
+            if (countryCode == '') {
+                this.errorMessage = `Unable to recognize country: ${this.countryField?.value}`;
+                return;
+            }
             if (!this.passwordsEqual()) {
                 this.errorMessage = 'Passwords are not equal';
                 return;
             }
             this.inProgress = true;
+            let firstName = '';
+            let lastName = '';
+            if (this.selectedUserType == 'Merchant') {
+                firstName = this.signupForm.get('companyName')?.value;
+            } else if (this.selectedUserType == 'Personal') {
+                firstName = this.signupForm.get('firstName')?.value;
+                lastName = this.signupForm.get('lastName')?.value;
+            }
+            let phone = this.phoneCodeField?.value + ' ' + this.phoneNumberField?.value;
             this.auth.register(
                 this.signupForm.get('username')?.value,
                 this.signupForm.get('email')?.value,
                 this.signupForm.get('password1')?.value,
-                this.signupForm.get('userType')?.value)
+                this.signupForm.get('userType')?.value,
+                firstName,
+                lastName,
+                countryCode,
+                phone)
                 .subscribe(({ data }) => {
                     this.inProgress = false;
                     this.router.navigateByUrl("/auth/success/signup");
@@ -180,6 +217,6 @@ export class RegisterComponent implements OnInit {
                     this.inProgress = false;
                     this.errorMessage = 'Unable to register new account';
                 });
-        } else console.log("Invalid");
+        }
     }
 }

@@ -24,14 +24,21 @@ const LOGIN_POST = gql`
 `;
 
 const SIGNUP_POST = gql`
-  mutation Signup($recaptcha: String!, $name: String!, $email: String!, $password: String!, $userType: UserType!) {
+  mutation Signup($recaptcha: String!, $name: String!, $email: String!, $password: String!, $userType: UserType!,
+    $mode: UserMode!, $termsOfUse: Boolean!, $firstName: String!, $lastName: String!,
+    $countryCode: String!, $phone: String!) {
     signup(
         recaptcha: $recaptcha, 
         email: $email,
         password: $password,
         name: $name,
         type: $userType,
-        termsOfUse: true
+        mode: $mode,
+        termsOfUse: $termsOfUse,
+        firstName: $firstName,
+        lastName: $lastName,
+        countryCode: $countryCode,
+        phone: $phone
     ) {
       authToken    
       user {
@@ -43,6 +50,9 @@ const SIGNUP_POST = gql`
     }
   }
 `;
+
+// merchantId?: Maybe<Scalars['String']>;
+// birthday?: Maybe<Scalars['DateTime']>;
 
 const FORGOTPASSWORD_POST = gql`
   mutation ForgotPassword($email: String!, $recaptcha: String!) {
@@ -68,10 +78,11 @@ export class AuthService {
                 email: username,
                 password: userpassword
             }
-        })
+        });
     }
 
-    register(username: string, usermail: string, userpassword: string, usertype: string): Observable<any> {
+    register(username: string, usermail: string, userpassword: string, usertype: string,
+        firstname: string, lastname: string, countrycode: string, phone: string): Observable<any> {
         return this.apollo.mutate({
             mutation: SIGNUP_POST,
             variables: {
@@ -79,9 +90,17 @@ export class AuthService {
                 name: username,
                 email: usermail,
                 password: userpassword,
-                userType: usertype
+                userType: usertype,
+                mode: 'ExternalWallet',
+                termsOfUse: true,
+                firstName: firstname,
+                lastName: lastname,
+                countryCode: countrycode,
+                phone: phone,
+                oAuthToken: '',
+                oAuthProvider: ''
             }
-        })
+        });
     }
 
     forgotPassword(usermail: string): Observable<any> {
@@ -91,7 +110,7 @@ export class AuthService {
                 recaptcha: environment.recaptchaId,
                 email: usermail
             }
-        })
+        });
     }
 
     confirmEmail(token: string): Observable<any> {
@@ -101,10 +120,11 @@ export class AuthService {
                 recaptcha: environment.recaptchaId,
                 token: token
             }
-        })
+        });
     }
 
     setLoginUser(login: LoginResult) {
+        console.log(login.user);
         sessionStorage.setItem("currentUser", JSON.stringify(login.user));
         sessionStorage.setItem("currentToken", login.authToken as string);
     }
@@ -117,7 +137,6 @@ export class AuthService {
         let result: User | null = null;
         let userData: string | null = sessionStorage.getItem('currentUser');
         if (userData != null) {
-            console.log(userData);
             result = JSON.parse(userData as string) as User;
         }
         return result;

@@ -74,15 +74,19 @@ export type QueryUsersArgs = {
 
 export type User = {
   __typename?: 'User';
-  userId?: Maybe<Scalars['ID']>;
-  email?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
+  userId: Scalars['ID'];
+  email: Scalars['String'];
+  name: Scalars['String'];
   type?: Maybe<UserType>;
-  merchantId?: Maybe<Scalars['String']>;
+  mode?: Maybe<UserMode>;
+  merchantIds?: Maybe<Array<Scalars['String']>>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   avatar?: Maybe<Scalars['String']>;
   birthday?: Maybe<Scalars['DateTime']>;
+  countryCode: Scalars['String'];
+  phone?: Maybe<Scalars['String']>;
+  defaultCurrency?: Maybe<Scalars['String']>;
   termsOfUse?: Maybe<Scalars['Boolean']>;
   created?: Maybe<Scalars['DateTime']>;
   updated?: Maybe<Scalars['DateTime']>;
@@ -108,7 +112,12 @@ export type UserStateArgs = {
 
 export enum UserType {
   Merchant = 'Merchant',
-  Customer = 'Customer'
+  Personal = 'Personal'
+}
+
+export enum UserMode {
+  InternalWallet = 'InternalWallet',
+  ExternalWallet = 'ExternalWallet'
 }
 
 
@@ -183,7 +192,14 @@ export type Mutation = {
 export type MutationUpdateMeArgs = {
   email?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
+  type?: Maybe<UserType>;
+  mode?: Maybe<UserMode>;
+  merchantIds?: Maybe<Array<Scalars['String']>>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
   birthday?: Maybe<Scalars['DateTime']>;
+  countryCode?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
   avatar?: Maybe<Scalars['String']>;
   termsOfUse?: Maybe<Scalars['Boolean']>;
 };
@@ -193,7 +209,14 @@ export type MutationUpdateUserArgs = {
   userId: Scalars['ID'];
   email?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
+  type?: Maybe<UserType>;
+  mode?: Maybe<UserMode>;
+  merchantIds?: Maybe<Array<Scalars['String']>>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
   birthday?: Maybe<Scalars['DateTime']>;
+  countryCode?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
   avatar?: Maybe<Scalars['String']>;
   roles?: Maybe<Array<Scalars['String']>>;
   termsOfUse?: Maybe<Scalars['Boolean']>;
@@ -208,14 +231,21 @@ export type MutationDeleteUserArgs = {
 
 
 export type MutationSignupArgs = {
-  email?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  type?: Maybe<UserType>;
+  email: Scalars['String'];
+  name: Scalars['String'];
+  type: UserType;
+  mode: UserMode;
+  merchantId?: Maybe<Scalars['String']>;
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  birthday?: Maybe<Scalars['DateTime']>;
+  countryCode: Scalars['String'];
+  phone: Scalars['String'];
   password?: Maybe<Scalars['String']>;
   oAuthProvider?: Maybe<OAuthProvider>;
   oAuthToken?: Maybe<Scalars['String']>;
   recaptcha: Scalars['String'];
-  termsOfUse?: Maybe<Scalars['Boolean']>;
+  termsOfUse: Scalars['Boolean'];
 };
 
 
@@ -243,6 +273,12 @@ export type MutationConfirmDeviceArgs = {
 export type MutationConfirmNameArgs = {
   token: Scalars['String'];
   name: Scalars['String'];
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  type: UserType;
+  mode: UserMode;
+  countryCode: Scalars['String'];
+  phone: Scalars['String'];
   recaptcha: Scalars['String'];
 };
 
@@ -361,12 +397,27 @@ export type UserLogin = {
 
 export type UserShort = {
   __typename?: 'UserShort';
-  email?: Maybe<Scalars['String']>;
+  email: Scalars['String'];
   name?: Maybe<Scalars['String']>;
   type?: Maybe<UserType>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   avatar?: Maybe<Scalars['String']>;
+  birthday?: Maybe<Scalars['DateTime']>;
+  countryCode: Scalars['String'];
   valid?: Maybe<Scalars['Boolean']>;
   validationDate?: Maybe<Scalars['DateTime']>;
 };
+
+export enum LiquidityProvider {
+  Trustology = 'Trustology',
+  Fireblocks = 'Fireblocks'
+}
+
+export enum PaymentProvider {
+  Bitstamp = 'Bitstamp',
+  Skrill = 'Skrill',
+  Totalprocessing = 'Totalprocessing',
+  Sofort = 'Sofort',
+  Bank = 'Bank'
+}

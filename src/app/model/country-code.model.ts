@@ -27,7 +27,7 @@ export const CountryCodes: Array<CountryCode> = [
 },
 {
 "name": "American Samoa",
-"dial_code": "+1 684",
+"dial_code": "+1684",
 "code": "AS"
 },
 {
@@ -42,7 +42,7 @@ export const CountryCodes: Array<CountryCode> = [
 },
 {
 "name": "Anguilla",
-"dial_code": "+1 264",
+"dial_code": "+1264",
 "code": "AI"
 },
 {
@@ -87,7 +87,7 @@ export const CountryCodes: Array<CountryCode> = [
 },
 {
 "name": "Bahamas",
-"dial_code": "+1 242",
+"dial_code": "+1242",
 "code": "BS"
 },
 {
@@ -102,7 +102,7 @@ export const CountryCodes: Array<CountryCode> = [
 },
 {
 "name": "Barbados",
-"dial_code": "+1 246",
+"dial_code": "+1246",
 "code": "BB"
 },
 {
@@ -127,7 +127,7 @@ export const CountryCodes: Array<CountryCode> = [
 },
 {
 "name": "Bermuda",
-"dial_code": "+1 441",
+"dial_code": "+1441",
 "code": "BM"
 },
 {
@@ -202,7 +202,7 @@ export const CountryCodes: Array<CountryCode> = [
 },
 {
 "name": "Cayman Islands",
-"dial_code": "+ 345",
+"dial_code": "+345",
 "code": "KY"
 },
 {
@@ -302,12 +302,12 @@ export const CountryCodes: Array<CountryCode> = [
 },
 {
 "name": "Dominica",
-"dial_code": "+1 767",
+"dial_code": "+1767",
 "code": "DM"
 },
 {
 "name": "Dominican Republic",
-"dial_code": "+1 849",
+"dial_code": "+1849",
 "code": "DO"
 },
 {
@@ -422,7 +422,7 @@ export const CountryCodes: Array<CountryCode> = [
 },
 {
 "name": "Grenada",
-"dial_code": "+1 473",
+"dial_code": "+1473",
 "code": "GD"
 },
 {
@@ -432,7 +432,7 @@ export const CountryCodes: Array<CountryCode> = [
 },
 {
 "name": "Guam",
-"dial_code": "+1 671",
+"dial_code": "+1671",
 "code": "GU"
 },
 {
@@ -466,7 +466,7 @@ export const CountryCodes: Array<CountryCode> = [
 "code": "HT"
 },
 {
-"name": "Holy See (Vatican City State)",
+"name": "Vatican City",
 "dial_code": "+379",
 "code": "VA"
 },
@@ -532,7 +532,7 @@ export const CountryCodes: Array<CountryCode> = [
 },
 {
 "name": "Jamaica",
-"dial_code": "+1 876",
+"dial_code": "+1876",
 "code": "JM"
 },
 {
@@ -552,7 +552,7 @@ export const CountryCodes: Array<CountryCode> = [
 },
 {
 "name": "Kazakhstan",
-"dial_code": "+7 7",
+"dial_code": "+7",
 "code": "KZ"
 },
 {
@@ -807,7 +807,7 @@ export const CountryCodes: Array<CountryCode> = [
 },
 {
 "name": "Northern Mariana Islands",
-"dial_code": "+1 670",
+"dial_code": "+1670",
 "code": "MP"
 },
 {
@@ -877,7 +877,7 @@ export const CountryCodes: Array<CountryCode> = [
 },
 {
 "name": "Puerto Rico",
-"dial_code": "+1 939",
+"dial_code": "+1939",
 "code": "PR"
 },
 {
@@ -917,12 +917,12 @@ export const CountryCodes: Array<CountryCode> = [
 },
 {
 "name": "Saint Kitts and Nevis",
-"dial_code": "+1 869",
+"dial_code": "+1869",
 "code": "KN"
 },
 {
 "name": "Saint Lucia",
-"dial_code": "+1 758",
+"dial_code": "+1758",
 "code": "LC"
 },
 {
@@ -937,7 +937,7 @@ export const CountryCodes: Array<CountryCode> = [
 },
 {
 "name": "Saint Vincent and the Grenadines",
-"dial_code": "+1 784",
+"dial_code": "+1784",
 "code": "VC"
 },
 {
@@ -1102,7 +1102,7 @@ export const CountryCodes: Array<CountryCode> = [
 },
 {
 "name": "Trinidad and Tobago",
-"dial_code": "+1 868",
+"dial_code": "+1868",
 "code": "TT"
 },
 {
@@ -1122,7 +1122,7 @@ export const CountryCodes: Array<CountryCode> = [
 },
 {
 "name": "Turks and Caicos Islands",
-"dial_code": "+1 649",
+"dial_code": "+1649",
 "code": "TC"
 },
 {
@@ -1182,12 +1182,12 @@ export const CountryCodes: Array<CountryCode> = [
 },
 {
 "name": "Virgin Islands, British",
-"dial_code": "+1 284",
+"dial_code": "+1284",
 "code": "VG"
 },
 {
 "name": "Virgin Islands, U.S.",
-"dial_code": "+1 340",
+"dial_code": "+1340",
 "code": "VI"
 },
 {
