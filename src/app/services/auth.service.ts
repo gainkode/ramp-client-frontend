@@ -148,6 +148,16 @@ export class AuthService {
         return result;
     }
 
+    isAuthenticatedUserRole(role: string): boolean {
+        let result = false;
+        const user: User | null = this.getAuthenticatedUser();
+        if (user != null) {
+            console.log(user.roles);
+            result = (user.roles?.includes(role)) as boolean;
+        }
+        return result;
+    }
+
     get token(): string {
         const tokenData: string | null = sessionStorage.getItem('currentToken');
         return (tokenData === null) ? '' : tokenData;

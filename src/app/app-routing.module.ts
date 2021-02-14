@@ -11,6 +11,9 @@ const routes: Routes = [
   {
     path: 'merchant', loadChildren: () => import('./merchant/merchant.module').then(m => m.MerchantModule)
   },
+  {
+    path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)
+  },
   { path: '**', redirectTo: '/' }
 ];
 
