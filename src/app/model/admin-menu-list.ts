@@ -1,31 +1,38 @@
 export interface AdminMenuItem {
+    id: string;
     name: string;
     url: string;
 }
 
 export const AdminMenuItems: Array<AdminMenuItem> = [
     {
+        id: 'dashboard',
         name: 'Dashboard',
-        url: '/admin/dashboard'
+        url: '/admin/main/dashboard'
     },
     {
+        id: 'transactions',
         name: 'Transactions',
-        url: '/admin/transactions'
+        url: '/admin/main/transactions'
     },
     {
+        id: 'customers',
         name: 'Customers',
-        url: '/admin/customers'
+        url: '/admin/main/customers'
     },
     {
+        id: 'wallets',
         name: 'Wallets',
-        url: '/admin/wallets'
+        url: '/admin/main/wallets'
     },
     {
+        id: 'fee-scheme',
         name: 'Fee scheme',
-        url: '/admin/fee-scheme'
+        url: '/admin/main/fee-scheme'
     },
     {
+        id: 'notifications',
         name: 'Notifications',
-        url: '/admin/notifications'
+        url: '/admin/main/notifications'
     }
 ];

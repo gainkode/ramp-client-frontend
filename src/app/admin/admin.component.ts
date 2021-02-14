@@ -10,11 +10,20 @@ import { MatSelectionListChange } from '@angular/material/list/selection-list';
 })
 export class AdminComponent {
     menuItems: AdminMenuItem[] = AdminMenuItems;
+    selectedMenu = 'dashboard';
 
-    constructor(private auth: AuthService, private formBuilder: FormBuilder, private router: Router) { }
+    constructor(private auth: AuthService, private formBuilder: FormBuilder, private router: Router) {
+        const routeTree = router.parseUrl(router.url);
+        const segments = routeTree.root.children['primary'].segments;
+        if (segments.length > 2) {
+            this.selectedMenu = segments[2].path;
+        } else {
+            this.router.navigateByUrl(this.menuItems[0].url);
+        }
+    }
 
     menuChanged(e: MatSelectionListChange): void {
-        let selection = e.options[0].value;
-        console.log(selection);
+        let item = e.options[0].value as AdminMenuItem;
+        this.router.navigateByUrl(item.url);
     }
 }

@@ -13,10 +13,26 @@ import { MatButtonModule } from '@angular/material/button';
 //import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { AdminGuard } from './admin.guard';
 import { AdminComponent } from './admin.component';
+import { DashboardComponent } from './dashboard.component';
+import { FeeSchemeComponent } from './fee-scheme.component';
 
 const routing = RouterModule.forChild([
-    { path: 'main', component: AdminComponent, canActivate: [AdminGuard] },
-    { path: '**', redirectTo: 'main' }
+    {
+        path: 'main',
+        component: AdminComponent,
+        children: [
+            {
+                path: 'dashboard',
+                component: DashboardComponent
+            },
+            {
+                path: 'fee-scheme',
+                component: FeeSchemeComponent
+            },
+        ],
+        canActivate: [AdminGuard]
+    },
+    { path: '**', redirectTo: 'main/dashboard' }
 ]);
 
 const modules = [

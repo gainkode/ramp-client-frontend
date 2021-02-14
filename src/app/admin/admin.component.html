@@ -5,7 +5,8 @@
         </div>
         
         <mat-selection-list [multiple]="false" (selectionChange)="menuChanged($event)">
-            <mat-list-option *ngFor="let item of menuItems" [value]="item">
+            <mat-list-option *ngFor="let item of menuItems" [value]="item" 
+            [selected]="selectedMenu===item.id">
                 {{item.name}}
             </mat-list-option>
         </mat-selection-list>
@@ -14,8 +15,6 @@
 
 <div class="action-page-split action-page-right-panel split-page-90">
     <div class="split-panel-content">
-        <div style="margin: auto;text-align: center;color: darkblue;">
-            <h2>Admin main page</h2>
-        </div>        
+        <router-outlet></router-outlet>
     </div>
 </div>
