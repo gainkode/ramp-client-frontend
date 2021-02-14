@@ -14,21 +14,15 @@ import { MatButtonModule } from '@angular/material/button';
 import { AdminGuard } from './admin.guard';
 import { AdminComponent } from './admin.component';
 import { DashboardComponent } from './dashboard.component';
-import { FeeSchemeComponent } from './fee-scheme.component';
+import { FeesComponent } from './fees.component';
 
 const routing = RouterModule.forChild([
     {
         path: 'main',
         component: AdminComponent,
         children: [
-            {
-                path: 'dashboard',
-                component: DashboardComponent
-            },
-            {
-                path: 'fee-scheme',
-                component: FeeSchemeComponent
-            },
+            { path: 'dashboard', component: DashboardComponent },
+            { path: 'fees', component: FeesComponent }
         ],
         canActivate: [AdminGuard]
     },
@@ -59,8 +53,6 @@ export class MaterialModule { }
     ],
     declarations: [AdminComponent],
     providers: [AdminGuard],
-    schemas: [
-      CUSTOM_ELEMENTS_SCHEMA
-    ]
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AdminModule { }

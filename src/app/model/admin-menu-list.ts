@@ -26,13 +26,38 @@ export const AdminMenuItems: Array<AdminMenuItem> = [
         url: '/admin/main/wallets'
     },
     {
-        id: 'fee-scheme',
-        name: 'Fee scheme',
-        url: '/admin/main/fee-scheme'
+        id: 'fees',
+        name: 'Fees',
+        url: '/admin/main/fees'
     },
     {
         id: 'notifications',
         name: 'Notifications',
         url: '/admin/main/notifications'
+    },
+    {
+        id: 'costs',
+        name: 'Costs',
+        url: '/admin/main/costs'
+    },
+    {
+        id: 'reconciliation',
+        name: 'Reconciliation',
+        url: '/admin/main/reconciliation'
+    },
+    {
+        id: 'system-users',
+        name: 'System Users',
+        url: '/admin/main/system-users'
+    },
+    {
+        id: 'risk-center',
+        name: 'Resk Center',
+        url: '/admin/main/risk-center'
+    },
+    {
+        id: 'affiliates',
+        name: 'Affiliates',
+        url: '/admin/main/affiliates'
     }
 ];

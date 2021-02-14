@@ -3,8 +3,8 @@ import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
 @Component({
-    templateUrl: 'fee-scheme.component.html'
+    templateUrl: 'fees.component.html'
 })
-export class FeeSchemeComponent {
+export class FeesComponent {
     constructor(private auth: AuthService, private router: Router) { }
 }
