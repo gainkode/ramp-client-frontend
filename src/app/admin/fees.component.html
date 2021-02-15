@@ -1,3 +1,64 @@
 <h1>
-    Fee scheme
+  Fee schemes
 </h1>
+
+<div>
+  <table mat-table [dataSource]="schemes" class="data-table">
+    <!-- Position Column -->
+    <ng-container matColumnDef="isDefault">
+      <th mat-header-cell *matHeaderCellDef class="mat-column-fee-table mat-column-fee-table-is-default"></th>
+      <td mat-cell *matCellDef="let element">
+        <mat-icon *ngIf="element.isDefault" style="font-size: large;">assistant_photo</mat-icon>
+      </td>
+    </ng-container>
+    
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef class="mat-column-fee-table mat-column-fee-table-name">Name</th>
+      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+    </ng-container>
+    
+    <!-- Target Column -->
+    <ng-container matColumnDef="target">
+      <th mat-header-cell *matHeaderCellDef class="mat-column-fee-table mat-column-fee-table-target">Target</th>
+      <td mat-cell *matCellDef="let element"> {{element.target}} </td>
+    </ng-container>
+
+    <!-- Transaction type Column -->
+    <ng-container matColumnDef="trxType">
+      <th mat-header-cell *matHeaderCellDef class="mat-column-fee-table mat-column-fee-table-trx-type">
+        Transaction type
+      </th>
+      <td mat-cell *matCellDef="let element"> {{element.trxType}} </td>
+    </ng-container>
+
+    <!-- Instrument Column -->
+    <ng-container matColumnDef="instrument">
+      <th mat-header-cell *matHeaderCellDef class="mat-column-fee-table mat-column-fee-table-instrument">
+        Instrument
+      </th>
+      <td mat-cell *matCellDef="let element"> {{element.instrument}} </td>
+    </ng-container>
+
+    <!-- Provider Column -->
+    <ng-container matColumnDef="provider">
+      <th mat-header-cell *matHeaderCellDef class="mat-column-fee-table mat-column-fee-table-provider">
+        Provider
+      </th>
+      <td mat-cell *matCellDef="let element"> {{element.provider}} </td>
+    </ng-container>
+
+    <!-- Details Column -->
+    <ng-container matColumnDef="details">
+      <th mat-header-cell *matHeaderCellDef class="mat-column-fee-table mat-column-fee-table-details"></th>
+      <td mat-cell *matCellDef="let element">
+        <a href="#">
+          <mat-icon style="font-size: large;">description</mat-icon>
+        </a>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>      
+</div>

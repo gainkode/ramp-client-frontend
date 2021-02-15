@@ -153,7 +153,10 @@ export class AuthService {
         const user: User | null = this.getAuthenticatedUser();
         if (user != null) {
             console.log(user.roles);
-            result = (user.roles?.includes(role)) as boolean;
+            const roleItem = (user.roles?.find(x => x.toLowerCase() == role));
+            if (roleItem !== undefined) {
+                result = true;
+            }
         }
         return result;
     }

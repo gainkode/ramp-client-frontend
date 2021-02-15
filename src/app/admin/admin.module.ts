@@ -4,12 +4,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 //import { MatTabsModule } from '@angular/material/tabs';
 import { MatListModule } from '@angular/material/list';
+import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 //import { MatCheckboxModule } from '@angular/material/checkbox';
 //import { MatRadioModule } from '@angular/material/radio';
-//import { MatIconModule } from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
 //import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { AdminGuard } from './admin.guard';
 import { AdminComponent } from './admin.component';
@@ -32,12 +33,13 @@ const routing = RouterModule.forChild([
 const modules = [
     //MatTabsModule,
     MatListModule,
+    MatTableModule,
     MatButtonModule,
     MatFormFieldModule,
-    MatInputModule//,
+    MatInputModule,
     // MatCheckboxModule,
     // MatRadioModule,
-    // MatIconModule,
+    MatIconModule,
     // MatProgressBarModule
 ];
 
@@ -51,7 +53,7 @@ export class MaterialModule { }
     imports: [
         CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule
     ],
-    declarations: [AdminComponent],
+    declarations: [AdminComponent, DashboardComponent, FeesComponent],
     providers: [AdminGuard],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

@@ -8,6 +8,11 @@
     width: 40em;
 }
 
+.auth-panel-content {
+    position: relative;
+    margin: 3em;
+}
+
 .inline-button {
     margin-right: 1em;
 }
@@ -30,7 +35,7 @@
     min-width: 100px;
     margin-right: 0.5em;
 }
-  
+
 .phone-box-right-panel {
     flex: 100%;
 }
