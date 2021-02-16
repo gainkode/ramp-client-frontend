@@ -62,11 +62,13 @@
                 <span>If you want to get logged in with your social newtork account, please use:</span>
             </div>
             <div class="form-element">
-                <button class="form-button inline-button" mat-flat-button color="primary">
+                <button class="form-button inline-button" mat-flat-button color="primary" 
+                (click)='socialSignIn("Google")'>
                     <img src="assets/icon-google.svg" alt="G"/>
                     Google
                 </button>
-                <button class="form-button inline-button" mat-flat-button color="primary">
+                <button class="form-button inline-button" mat-flat-button color="primary" 
+                (click)='socialSignIn("Facebook")'>
                     <img src="assets/icon-facebook.svg" alt="f"/>
                     Facebook
                 </button>

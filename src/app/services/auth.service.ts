@@ -1,15 +1,35 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
-import { Observable } from 'rxjs';
+import { from, Observable } from 'rxjs';
+import { SocialAuthService, FacebookLoginProvider, GoogleLoginProvider, SocialUser } from "angularx-social-login";
 import { LoginResult, User } from '../model/generated-models';
 import { environment } from 'src/environments/environment';
 
 const LOGIN_POST = gql`
   mutation Login($recaptcha: String!, $email: String!, $password: String!) {
+      login(
+          recaptcha: $recaptcha,
+          email: $email,
+          password: $password) {
+              authToken
+              user {
+                  userId
+                  email
+                  name
+                  roles
+                  type
+            }
+            authTokenAction
+        }
+    }
+`;
+
+const SOCIAL_LOGIN_POST = gql`
+  mutation SocialLogin($recaptcha: String!, $oauthtoken: String!, $oauthprovider: OAuthProvider!) {
     login(
         recaptcha: $recaptcha,
-        email: $email,
-        password: $password) {
+        oAuthProvider: $oauthprovider,
+        oAuthToken: $oauthtoken) {
             authToken
             user {
                 userId
@@ -65,7 +85,7 @@ const CONFIRMEMAIL_POST = gql`
 
 @Injectable()
 export class AuthService {
-    constructor(private apollo: Apollo) { }
+    constructor(private apollo: Apollo, private socialAuth: SocialAuthService) { }
 
     authenticate(username: string, userpassword: string): Observable<any> {
         return this.apollo.mutate({
@@ -76,6 +96,33 @@ export class AuthService {
                 password: userpassword
             }
         });
+    }
+
+    authenticateSocial(provider: string, token: string): Observable<any> {
+        return this.apollo.mutate({
+            mutation: SOCIAL_LOGIN_POST,
+            variables: {
+                recaptcha: environment.recaptchaId,
+                oauthprovider: provider,
+                oauthtoken: token
+            }
+        });
+    }
+
+    socialSignIn(provider: string): Observable<any> {
+        let providerId = '';
+        if (provider.toLowerCase() === 'google') {
+            providerId = GoogleLoginProvider.PROVIDER_ID;
+        } else if (provider.toLowerCase() === 'facebook') {
+            providerId = FacebookLoginProvider.PROVIDER_ID;
+        }
+        return from(
+            this.socialAuth.signIn(providerId)
+            .then(function(data) {
+                return { user: data, error: undefined };
+            }).catch(function(data) {
+                return { user: undefined, error: data };
+            }));
     }
 
     register(username: string, usermail: string, userpassword: string, usertype: string,
@@ -166,6 +213,11 @@ export class AuthService {
     }
 
     logout(): void {
+        this.socialAuth.signOut().then(function(data) {
+            //console.log(data);
+        }).catch(function(error) {
+            console.log(error);
+        });
         sessionStorage.removeItem('currentUser');
         sessionStorage.removeItem('currentToken');
     }

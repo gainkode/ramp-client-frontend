@@ -51,9 +51,10 @@ export class MaterialModule { }
     ],
     declarations: [
         LoginComponent, RegisterComponent, SuccessComponent, RestoreComponent, ConfirmEmailComponent,
-        TermsComponent],
+        TermsComponent
+    ],
     schemas: [
-      CUSTOM_ELEMENTS_SCHEMA
+        CUSTOM_ELEMENTS_SCHEMA
     ]
 })
 export class AuthModule { }
