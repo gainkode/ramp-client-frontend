@@ -3,13 +3,19 @@
         <div style="margin: 0.5em;margin-bottom: 2em;height: 5em;width: 10em;background-color: white;vertical-align: middle;text-align: center;">
             <h1>Logo placeholder</h1>
         </div>
-        
+
         <mat-selection-list [multiple]="false" (selectionChange)="menuChanged($event)">
             <mat-list-option *ngFor="let item of menuItems" [value]="item" 
             [selected]="selectedMenu===item.id">
                 {{item.name}}
             </mat-list-option>
         </mat-selection-list>
+
+        <br>
+        <br>
+        <a href="/admin" (click)="logout()" style="margin-left: 1em;">
+            <mat-icon>logout</mat-icon>
+        </a>
     </div>
 </div>
 

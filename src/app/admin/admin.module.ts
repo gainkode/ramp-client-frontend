@@ -22,8 +22,8 @@ const routing = RouterModule.forChild([
         path: 'main',
         component: AdminComponent,
         children: [
-            { path: 'dashboard', component: DashboardComponent },
-            { path: 'fees', component: FeesComponent }
+            { path: 'dashboard', component: DashboardComponent, canActivate: [AdminGuard] },
+            { path: 'fees', component: FeesComponent, canActivate: [AdminGuard] }
         ],
         canActivate: [AdminGuard]
     },

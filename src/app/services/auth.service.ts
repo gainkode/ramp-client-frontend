@@ -133,7 +133,7 @@ export class AuthService {
     private getAuthenticatedUser(): User | null {
         let result: User | null = null;
         const userData: string | null = sessionStorage.getItem('currentUser');
-        if (userData != null) {
+        if (userData !== null) {
             result = JSON.parse(userData as string) as User;
         }
         return result;
@@ -142,7 +142,7 @@ export class AuthService {
     isAuthenticatedUserType(type: string): boolean {
         let result = false;
         const user: User | null = this.getAuthenticatedUser();
-        if (user != null) {
+        if (user !== null) {
             result = (user.type === type);
         }
         return result;
@@ -152,7 +152,6 @@ export class AuthService {
         let result = false;
         const user: User | null = this.getAuthenticatedUser();
         if (user != null) {
-            console.log(user.roles);
             const roleItem = (user.roles?.find(x => x.toLowerCase() == role));
             if (roleItem !== undefined) {
                 result = true;

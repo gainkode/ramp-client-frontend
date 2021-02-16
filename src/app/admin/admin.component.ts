@@ -26,4 +26,8 @@ export class AdminComponent {
         let item = e.options[0].value as AdminMenuItem;
         this.router.navigateByUrl(item.url);
     }
+
+    logout(): void {
+        this.auth.logout();
+    }
 }

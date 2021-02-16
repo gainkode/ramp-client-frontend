@@ -8,4 +8,8 @@ import { Validators, FormBuilder } from '@angular/forms';
 })
 export class PersonalComponent {
     constructor(private auth: AuthService, private formBuilder: FormBuilder, private router: Router) { }
+
+    logout(): void {
+        this.auth.logout();
+    }
 }
