@@ -48,25 +48,28 @@ export class LoginComponent {
         this.auth.socialSignIn(name).subscribe((data) => {
             if (data.user !== undefined) {
                 const user = data.user as SocialUser;
-                this.auth.authenticateSocial(
-                    name.toLowerCase(),
-                    user.authToken)
-                    .subscribe(({ data }) => {
-                        this.inProgress = false;
-                        const userData = data.login as LoginResult;
-                        this.auth.setLoginUser(userData);
-                        this.auth.socialSignOut();
-                        this.loginForm.reset();
-                        if (userData.user?.type === 'Merchant') {
-                            this.router.navigateByUrl('/merchant/');
-                        } else {
-                            this.router.navigateByUrl('/personal/');
-                        }
-                    }, (error) => {
-                        this.auth.socialSignOut();
-                        this.inProgress = false;
-                        this.errorMessage = `Invalid authentication via ${name}`;
-                    });
+                let token = '';
+                if (name === 'Google') {
+                    token = user.idToken;
+                } else if (name === 'Facebook') {
+                    token = user.authToken;
+                }
+                this.auth.authenticateSocial(name.toLowerCase(), token).subscribe(({ data }) => {
+                    this.inProgress = false;
+                    const userData = data.login as LoginResult;
+                    this.auth.setLoginUser(userData);
+                    this.auth.socialSignOut();
+                    this.loginForm.reset();
+                    if (userData.user?.type === 'Merchant') {
+                        this.router.navigateByUrl('/merchant/');
+                    } else {
+                        this.router.navigateByUrl('/personal/');
+                    }
+                }, (error) => {
+                    this.auth.socialSignOut();
+                    this.inProgress = false;
+                    this.errorMessage = `Invalid authentication via ${name}`;
+                });
             } else {
                 this.inProgress = false;
             }
