@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { ErrorService } from '../services/error.service';
 
 @Component({
     templateUrl: 'confirm-email.component.html',
@@ -11,7 +12,8 @@ export class ConfirmEmailComponent {
     validated = false;
     valid = false;
 
-    constructor(private auth: AuthService, private router: Router, activeRoute: ActivatedRoute) {
+    constructor(private auth: AuthService, private errorHandler: ErrorService,
+        private router: Router, activeRoute: ActivatedRoute) {
         this.token = activeRoute.snapshot.params['token'];
         if (this.token !== undefined) {
             this.auth.confirmEmail(this.token)
@@ -20,6 +22,10 @@ export class ConfirmEmailComponent {
                     this.valid = true;
                 }, (error) => {
                     this.validated = true;
+                    // this.inProgress = false;
+                    // this.errorMessage = this.errorHandler.getError(
+                    //     error.message, 
+                    //     'Incorrect login or password');
                 });
         }
     }
