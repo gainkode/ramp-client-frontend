@@ -55,6 +55,7 @@ export class LoginComponent {
                         this.inProgress = false;
                         const userData = data.login as LoginResult;
                         this.auth.setLoginUser(userData);
+                        this.auth.socialSignOut();
                         this.loginForm.reset();
                         if (userData.user?.type === 'Merchant') {
                             this.router.navigateByUrl('/merchant/');
@@ -62,6 +63,7 @@ export class LoginComponent {
                             this.router.navigateByUrl('/personal/');
                         }
                     }, (error) => {
+                        this.auth.socialSignOut();
                         this.inProgress = false;
                         this.errorMessage = `Invalid authentication via ${name}`;
                     });

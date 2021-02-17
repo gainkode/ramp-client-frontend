@@ -122,7 +122,8 @@ export class AuthService {
                 return { user: data, error: undefined };
             }).catch(function(data) {
                 return { user: undefined, error: data };
-            }));
+            })
+        );
     }
 
     register(username: string, usermail: string, userpassword: string, usertype: string,
@@ -212,12 +213,15 @@ export class AuthService {
         return (tokenData === null) ? '' : tokenData;
     }
 
-    logout(): void {
+    socialSignOut(): void {
         this.socialAuth.signOut().then(function(data) {
             //console.log(data);
         }).catch(function(error) {
             console.log(error);
         });
+    }
+
+    logout(): void {
         sessionStorage.removeItem('currentUser');
         sessionStorage.removeItem('currentToken');
     }
