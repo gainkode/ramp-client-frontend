@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { ErrorService } from '../services/error.service';
 import { Validators, FormBuilder } from '@angular/forms';
 import { SocialUser } from "angularx-social-login";
 import { LoginResult } from '../model/generated-models';
@@ -33,7 +34,8 @@ export class LoginComponent {
         ]
     });
 
-    constructor(private auth: AuthService, private formBuilder: FormBuilder, private router: Router) { }
+    constructor(private auth: AuthService, private errorHandler: ErrorService,
+        private formBuilder: FormBuilder, private router: Router) { }
 
     googleSignIn(): void {
         this.socialSignIn('Google');
@@ -68,7 +70,9 @@ export class LoginComponent {
                 }, (error) => {
                     this.auth.socialSignOut();
                     this.inProgress = false;
-                    this.errorMessage = `Invalid authentication via ${name}`;
+                    this.errorMessage = this.errorHandler.getError(
+                        error.message, 
+                        `Invalid authentication via ${name}`)
                 });
             } else {
                 this.inProgress = false;
@@ -95,7 +99,9 @@ export class LoginComponent {
                     }
                 }, (error) => {
                     this.inProgress = false;
-                    this.errorMessage = 'Incorrect login or password';
+                    this.errorMessage = this.errorHandler.getError(
+                        error.message, 
+                        'Incorrect login or password');
                 });
         }
     }

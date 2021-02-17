@@ -119,7 +119,6 @@ export class AuthService {
         return from(
             this.socialAuth.signIn(providerId)
             .then(function(data) {
-                console.log(data);
                 return { user: data, error: undefined };
             }).catch(function(data) {
                 return { user: undefined, error: data };

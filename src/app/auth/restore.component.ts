@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { ErrorService } from '../services/error.service';
 import { Validators, FormBuilder } from '@angular/forms';
 
 @Component({
@@ -20,7 +21,8 @@ export class RestoreComponent {
         ]
     });
 
-    constructor(private auth: AuthService, private formBuilder: FormBuilder, private router: Router) { }
+    constructor(private auth: AuthService, private errorHandler: ErrorService,
+        private formBuilder: FormBuilder, private router: Router) { }
 
     onSubmit(): void {
         if (this.restoreForm.valid) {
@@ -32,7 +34,9 @@ export class RestoreComponent {
                     this.router.navigateByUrl('/auth/success/restore');
                 }, (error) => {
                     this.inProgress = false;
-                    this.errorMessage = 'Unable to restore password';
+                    this.errorMessage = this.errorHandler.getError(
+                        error.message, 
+                        'Unable to restore password');
                 });
         }
     }

@@ -4,15 +4,32 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { APOLLO_OPTIONS } from 'apollo-angular';
-import { HttpLink } from 'apollo-angular/http';
-import { InMemoryCache } from '@apollo/client/core';
+import { HttpLink, HttpLinkHandler } from 'apollo-angular/http';
+import { onError } from 'apollo-link-error';
+import { ApolloLink, InMemoryCache, RequestHandler } from '@apollo/client/core';
 import {
   SocialLoginModule, SocialAuthServiceConfig,
   GoogleLoginProvider, FacebookLoginProvider
 } from 'angularx-social-login';
 import { AuthService } from './services/auth.service';
+import { ErrorService } from './services/error.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { environment } from 'src/environments/environment';
+
+const errorLink = onError(({ graphQLErrors, networkError, response }) => {
+  if (graphQLErrors) {
+    for (let err of graphQLErrors) {
+      if (err.extensions !== null) {
+        err.message = err.extensions?.code;
+      } else {
+        err.message = 'no_code';
+      }
+    }
+  }
+  if (networkError) {
+    console.log(networkError);
+  };
+});
 
 @NgModule({
   declarations: [
@@ -31,7 +48,10 @@ import { environment } from 'src/environments/environment';
       useFactory: (httpLink: HttpLink) => {
         return {
           cache: new InMemoryCache(),
-          link: httpLink.create({ uri: environment.api_server })
+          link: ApolloLink.from([
+            errorLink as any, 
+            httpLink.create({ uri: environment.api_server })
+          ])
         };
       },
       deps: [HttpLink],
@@ -52,7 +72,8 @@ import { environment } from 'src/environments/environment';
           ]
       } as SocialAuthServiceConfig
     },
-    AuthService
+    AuthService,
+    ErrorService
   ],
   bootstrap: [AppComponent]
 })

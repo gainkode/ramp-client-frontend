@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
+import { ErrorService } from '../services/error.service';
 import { Validators, FormBuilder, AbstractControl } from '@angular/forms';
 import { CountryCode, CountryCodes } from '../model/country-code.model';
 
@@ -51,7 +52,7 @@ export class RegisterComponent implements OnInit {
             { validators: [
                 Validators.required,
                 Validators.minLength(8),
-                Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$#!%_*?&])[A-Za-z\d$@$#!%_*?&].{7,30}')
+                Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[`~$@#!%^_*?&+=<|>])[A-Za-z\d`~$@#!%^_*?&+=<|>].{7,30}')
             ], updateOn: 'change' }
         ],
         password2: [,
@@ -62,7 +63,8 @@ export class RegisterComponent implements OnInit {
         ]
     });
 
-    constructor(private auth: AuthService, private formBuilder: FormBuilder, private router: Router) { }
+    constructor(private auth: AuthService, private errorHandler: ErrorService,
+        private formBuilder: FormBuilder, private router: Router) { }
 
     ngOnInit(): void {
         this.filteredCountries = this.countryField?.valueChanges.pipe(
@@ -213,7 +215,9 @@ export class RegisterComponent implements OnInit {
                     this.router.navigateByUrl('/auth/success/signup');
                 }, (error) => {
                     this.inProgress = false;
-                    this.errorMessage = 'Unable to register new account';
+                    this.errorMessage = this.errorHandler.getError(
+                        error.message, 
+                        'Unable to register new account');
                 });
         }
     }
