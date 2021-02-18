@@ -12,7 +12,6 @@
 <div class="action-page-split action-page-right-panel split-page-40">
     <div class="auth-panel-content">
         <div *ngIf="successType=='signup'" class="login-form-box">
-            <br><br><br>
             <h2>Registration</h2>
             <div class="form-element">
                 <span>Thank you for your registration.</span>
@@ -24,13 +23,22 @@
             </div>
         </div>
         <div *ngIf="successType=='restore'" class="login-form-box">
-            <br><br><br><br>
             <h2>Restore password</h2>
             <div class="form-element">
                 <span>Temporary password was generated and sent to your email address.</span>
             </div>
             <div class="form-element">
                 <span>Please, follow the link in the letter to complete the process.</span>
+            </div>
+        </div>
+        <div *ngIf="successType=='reset'" class="login-form-box">
+            <h2>Complete</h2>
+            <div class="form-element">
+                <span>Your password has been successfully changed.</span>
+            </div>
+            <br>
+            <div class="form-element">
+                <span>Now you can <a href="/auth/login">sign in</a> with your new password.</span>
             </div>
         </div>
     </div>

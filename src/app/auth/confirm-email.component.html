@@ -11,19 +11,7 @@
 
 <div class="action-page-split action-page-right-panel split-page-40">
     <div class="auth-panel-content">
-        <div *ngIf="token==undefined" class="login-form-box">
-            <br><br><br>
-
-            <div class="form-element">
-                <span>You need email validation token to continue.</span>
-            </div>
-
-            <div class="form-element">
-                <span>Back to the <a href="/auth/login">login page</a>.</span>
-            </div>
-        </div>
-        <div *ngIf="token!=undefined" class="login-form-box">
-            <br><br><br>
+        <div class="login-form-box">
             <div *ngIf="!validated">
                 <h2>Token validation</h2>
                 <mat-progress-bar mode="indeterminate"></mat-progress-bar>
@@ -48,8 +36,9 @@
                     </div>
                 </div>
             </div>
+            <div class="form-error-box" *ngIf="errorMessage!=''">
+                {{errorMessage}}
+            </div>
         </div>
     </div>
 </div> 
-
-  

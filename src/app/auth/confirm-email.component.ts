@@ -11,6 +11,7 @@ export class ConfirmEmailComponent {
     token = '';
     validated = false;
     valid = false;
+    errorMessage = '';
 
     constructor(private auth: AuthService, private errorHandler: ErrorService,
         private router: Router, activeRoute: ActivatedRoute) {
@@ -22,10 +23,9 @@ export class ConfirmEmailComponent {
                     this.valid = true;
                 }, (error) => {
                     this.validated = true;
-                    // this.inProgress = false;
-                    // this.errorMessage = this.errorHandler.getError(
-                    //     error.message, 
-                    //     'Incorrect login or password');
+                    this.errorMessage = this.errorHandler.getError(
+                        error.message, 
+                        'Unable to validate email');
                 });
         }
     }
