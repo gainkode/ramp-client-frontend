@@ -77,6 +77,12 @@ const FORGOTPASSWORD_POST = gql`
   }
 `;
 
+const SETPASSWORD_POST = gql`
+  mutation SetPassword($token: String!, $password: String!, $recaptcha: String!) {
+    setPassword(recaptcha: $recaptcha, password: $password, token: $token)
+  }
+`;
+  
 const CONFIRMEMAIL_POST = gql`
   mutation ConfirmEmail($token: String!, $recaptcha: String!) {
     confirmEmail(recaptcha: $recaptcha, token: $token)
@@ -154,6 +160,17 @@ export class AuthService {
             variables: {
                 recaptcha: environment.recaptchaId,
                 email: usermail
+            }
+        });
+    }
+
+    setPassword(usertoken: string, userpassword: string): Observable<any> {
+        return this.apollo.mutate({
+            mutation: SETPASSWORD_POST,
+            variables: {
+                recaptcha: environment.recaptchaId,
+                token: usertoken,
+                password: userpassword
             }
         });
     }

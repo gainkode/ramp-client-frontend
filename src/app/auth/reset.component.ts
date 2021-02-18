@@ -34,17 +34,6 @@ export class ResetComponent {
     constructor(private auth: AuthService, private errorHandler: ErrorService,
         private formBuilder: FormBuilder, private router: Router, activeRoute: ActivatedRoute) {
         this.token = activeRoute.snapshot.params['token'];
-        // if (this.token !== undefined) {
-        //     this.auth.confirmEmail(this.token)
-        //         .subscribe(({ data }) => {
-        //             this.inProgress = false;
-        //         }, (error) => {
-        //             this.inProgress = false;
-        //             this.errorMessage = this.errorHandler.getError(
-        //                 error.message, 
-        //                 'Unable to validate token');
-        //         });
-        // }
     }
 
     passwordsEqual(): boolean {
@@ -72,18 +61,18 @@ export class ResetComponent {
                 return;
             }
             this.inProgress = true;
-            // this.auth.resetPassword(
-            //     this.token,
-            //     this.passwordForm.get('password1')?.value)
-            //     .subscribe(({ data }) => {
-            //         this.inProgress = false;
-            //         this.router.navigateByUrl('/auth/success/reset');
-            //     }, (error) => {
-            //         this.inProgress = false;
-            //         this.errorMessage = this.errorHandler.getError(
-            //             error.message, 
-            //             'Unable to reset password');
-            //     });
+            this.auth.setPassword(
+                this.token,
+                this.passwordForm.get('password1')?.value)
+                .subscribe(({ data }) => {
+                    this.inProgress = false;
+                    this.router.navigateByUrl('/auth/success/reset');
+                }, (error) => {
+                    this.inProgress = false;
+                    this.errorMessage = this.errorHandler.getError(
+                        error.message, 
+                        'Unable to reset password');
+                });
         }
     }
 }
