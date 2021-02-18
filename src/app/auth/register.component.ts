@@ -25,7 +25,7 @@ export class RegisterComponent implements OnInit {
         email: [,
             { validators: [
                 Validators.required,
-                Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$')
+                Validators.pattern('^[a-zA-Z0-9_.+\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-\.]+$')
             ], updateOn: 'change' }
         ],
         username: [,
@@ -52,7 +52,7 @@ export class RegisterComponent implements OnInit {
             { validators: [
                 Validators.required,
                 Validators.minLength(8),
-                Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[`~$@#!%^_*?&+=<|>])[A-Za-z\d`~$@#!%^_*?&+=<|>].{7,30}')
+                Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[`~$@#!%^_*?&+=<|>])[A-Za-z0-9\d`~$@#!%^_*?&+=<|>].{7,30}')
             ], updateOn: 'change' }
         ],
         password2: [,
@@ -174,7 +174,7 @@ export class RegisterComponent implements OnInit {
         } else if (this.signupForm.get('password1')?.hasError('minlength')) {
             return 'Password must contain at least 8 symbols';
         } else if (this.signupForm.get('password1')?.hasError('pattern')) {
-            return 'Password must contain lowercase and uppercase symbols, digits, and special symbols';
+            return 'Password must contain latin lowercase and uppercase symbols, digits, and special symbols';
         }
         return '';
     }

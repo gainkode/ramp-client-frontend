@@ -20,7 +20,7 @@ export class LoginComponent {
             {
                 validators: [
                     Validators.required,
-                    Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$')
+                    Validators.pattern('^[a-zA-Z0-9_.+\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-\.]+$')
                 ], updateOn: 'change'
             }
         ],
