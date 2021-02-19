@@ -22,10 +22,10 @@ import { TermsComponent } from './terms.component';
 const routing = RouterModule.forChild([
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
-    { path: 'signup', component: SignupComponent },
+    { path: 'signup/:token', component: SignupComponent },
     { path: 'success/:type', component: SuccessComponent },
     { path: 'confirm-email/:token', component: ConfirmEmailComponent },
-    { path: 'reset/:token', component: ResetComponent },
+    { path: 'new-password/:token', component: ResetComponent },
     { path: 'restore', component: RestoreComponent },
     { path: 'terms', component: TermsComponent },
     { path: '**', redirectTo: 'login' }

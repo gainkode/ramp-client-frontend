@@ -5,7 +5,7 @@ import { FeeSheme, FeeShemes } from '../model/fake-fee-schemes.model';
 
 @Component({
     templateUrl: 'fees.component.html',
-    styleUrls: ['fees.component.scss']
+    styleUrls: ['admin.scss', 'fees.component.scss']
 })
 export class FeesComponent {
     displayedColumns: string[] = [

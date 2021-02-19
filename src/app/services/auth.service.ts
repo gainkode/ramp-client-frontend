@@ -89,6 +89,32 @@ const CONFIRMEMAIL_POST = gql`
   }
 `;
 
+const CONFIRMNAME_POST = gql`
+  mutation ConfirmName($token: String!, $recaptcha: String!, $name: String!, 
+    $userType: UserType!, $mode: UserMode!, $firstName: String!, $lastName: String!,
+    $countryCode: String!, $phone: String!) {
+    confirmName(
+        recaptcha: $recaptcha,
+        token: $token,
+        name: $name,
+        type: $userType,
+        mode: $mode,
+        firstName: $firstName,
+        lastName: $lastName,
+        countryCode: $countryCode,
+        phone: $phone
+    ) {
+      authToken
+      user {
+        userId,
+        email,
+        name
+      }
+      authTokenAction
+    }
+  }
+`;
+
 @Injectable()
 export class AuthService {
     constructor(private apollo: Apollo, private socialAuth: SocialAuthService) { }
@@ -147,9 +173,25 @@ export class AuthService {
                 firstName: firstname,
                 lastName: lastname,
                 countryCode: countrycode,
-                phone: phoneNumber,
-                oAuthToken: '',
-                oAuthProvider: ''
+                phone: phoneNumber
+            }
+        });
+    }
+
+    confirmName(tokenId: string, username: string, usertype: string, firstname: string, lastname: string, 
+        countrycode: string, phoneNumber: string): Observable<any> {
+        return this.apollo.mutate({
+            mutation: CONFIRMNAME_POST,
+            variables: {
+                token: tokenId,
+                recaptcha: environment.recaptchaId,
+                name: username,
+                userType: usertype,
+                mode: 'ExternalWallet',
+                firstName: firstname,
+                lastName: lastname,
+                countryCode: countrycode,
+                phone: phoneNumber
             }
         });
     }
@@ -186,7 +228,6 @@ export class AuthService {
     }
 
     setLoginUser(login: LoginResult): void {
-        console.log(login.user);
         sessionStorage.setItem('currentUser', JSON.stringify(login.user));
         sessionStorage.setItem('currentToken', login.authToken as string);
     }

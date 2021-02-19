@@ -6,7 +6,8 @@ import { AdminMenuItem, AdminMenuItems } from '../model/admin-menu-list';
 import { MatSelectionListChange } from '@angular/material/list/selection-list';
 
 @Component({
-    templateUrl: 'admin.component.html'
+    templateUrl: 'admin.component.html',
+    styleUrls: ['admin.scss']
 })
 export class AdminComponent {
     menuItems: AdminMenuItem[] = AdminMenuItems;

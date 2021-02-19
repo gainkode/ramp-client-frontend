@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 import { ErrorService } from '../services/error.service';
+import { LoginResult } from '../model/generated-models';
 import { CountryCode, CountryCodes } from '../model/country-code.model';
 
 @Component({
@@ -12,6 +13,7 @@ import { CountryCode, CountryCodes } from '../model/country-code.model';
     styleUrls: ['./login.component.scss']
 })
 export class SignupComponent implements OnInit {
+    token = '';
     inProgress = false;
     errorMessage = '';
     agreementChecked = false;
@@ -44,6 +46,7 @@ export class SignupComponent implements OnInit {
 
     constructor(private auth: AuthService, private errorHandler: ErrorService,
         private formBuilder: FormBuilder, private router: Router, activeRoute: ActivatedRoute) {
+        this.token = activeRoute.snapshot.params['token'];
     }
 
     ngOnInit(): void {
@@ -160,23 +163,33 @@ export class SignupComponent implements OnInit {
                 lastName = this.signupForm.get('lastName')?.value;
             }
             const phone = this.phoneCodeField?.value + ' ' + this.phoneNumberField?.value;
-            // this.auth.register(
-            //     this.signupForm.get('username')?.value,
-            //     this.signupForm.get('password1')?.value,
-            //     this.signupForm.get('userType')?.value,
-            //     firstName,
-            //     lastName,
-            //     countryCode,
-            //     phone)
-            //     .subscribe(({ data }) => {
-            //         this.inProgress = false;
-            //         this.router.navigateByUrl('/auth/success/signup');
-            //     }, (error) => {
-            //         this.inProgress = false;
-            //         this.errorMessage = this.errorHandler.getError(
-            //             error.message, 
-            //             'Unable to register new account');
-            //     });
+            this.auth.confirmName(
+                this.token,
+                this.signupForm.get('username')?.value,
+                this.signupForm.get('userType')?.value,
+                firstName,
+                lastName,
+                countryCode,
+                phone)
+                .subscribe(({ data }) => {
+                    this.inProgress = false;
+                    const userData = data.login as LoginResult;
+                    if (userData.authTokenAction === 'Default') {
+                        this.auth.setLoginUser(userData);
+                        if (userData.user?.type === 'Merchant') {
+                            this.router.navigateByUrl('/merchant/');
+                        } else {
+                            this.router.navigateByUrl('/personal/');
+                        }
+                    } else {
+                        this.errorMessage = 'Unable to sign in';
+                    }
+                }, (error) => {
+                    this.inProgress = false;
+                    this.errorMessage = this.errorHandler.getError(
+                        error.message, 
+                        'Unable to register new account');
+                });
         }
     }
 }

@@ -59,19 +59,26 @@ export class LoginComponent {
                 this.auth.authenticateSocial(name.toLowerCase(), token).subscribe(({ data }) => {
                     this.inProgress = false;
                     const userData = data.login as LoginResult;
-                    this.auth.setLoginUser(userData);
-                    this.auth.socialSignOut();
-                    this.loginForm.reset();
-                    if (userData.user?.type === 'Merchant') {
-                        this.router.navigateByUrl('/merchant/');
+                    if (userData.authTokenAction === 'Default') {
+                        this.auth.setLoginUser(userData);
+                        this.auth.socialSignOut();
+                        this.loginForm.reset();
+                        if (userData.user?.type === 'Merchant') {
+                            this.router.navigateByUrl('/merchant/');
+                        } else {
+                            this.router.navigateByUrl('/personal/');
+                        }
+                    } else if (userData.authTokenAction === 'ConfirmName') {
+                        console.log(`/auth/signup/${userData.authToken}`);
+                        this.router.navigateByUrl(`/auth/signup/${userData.authToken}`);
                     } else {
-                        this.router.navigateByUrl('/personal/');
+                        this.errorMessage = `Invalid authentication via ${name}`;
                     }
                 }, (error) => {
                     this.auth.socialSignOut();
                     this.inProgress = false;
                     this.errorMessage = this.errorHandler.getError(
-                        error.message, 
+                        error.message,
                         `Invalid authentication via ${name}`)
                 });
             } else {
@@ -90,17 +97,21 @@ export class LoginComponent {
                 .subscribe(({ data }) => {
                     this.inProgress = false;
                     const userData = data.login as LoginResult;
-                    this.auth.setLoginUser(userData);
-                    this.loginForm.reset();
-                    if (userData.user?.type === 'Merchant') {
-                        this.router.navigateByUrl('/merchant/');
+                    if (userData.authTokenAction === 'Default') {
+                        this.auth.setLoginUser(userData);
+                        this.loginForm.reset();
+                        if (userData.user?.type === 'Merchant') {
+                            this.router.navigateByUrl('/merchant/');
+                        } else {
+                            this.router.navigateByUrl('/personal/');
+                        }
                     } else {
-                        this.router.navigateByUrl('/personal/');
+                        this.errorMessage = 'Unable to sign in';
                     }
                 }, (error) => {
                     this.inProgress = false;
                     this.errorMessage = this.errorHandler.getError(
-                        error.message, 
+                        error.message,
                         'Incorrect login or password');
                 });
         }
