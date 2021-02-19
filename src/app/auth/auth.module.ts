@@ -12,6 +12,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { LoginComponent } from './login.component';
 import { RegisterComponent } from './register.component';
+import { SignupComponent } from './signup.component';
 import { SuccessComponent } from './success.component';
 import { RestoreComponent } from './restore.component';
 import { ConfirmEmailComponent } from './confirm-email.component';
@@ -21,6 +22,7 @@ import { TermsComponent } from './terms.component';
 const routing = RouterModule.forChild([
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
+    { path: 'signup', component: SignupComponent },
     { path: 'success/:type', component: SuccessComponent },
     { path: 'confirm-email/:token', component: ConfirmEmailComponent },
     { path: 'reset/:token', component: ResetComponent },
@@ -51,7 +53,7 @@ export class MaterialModule { }
         CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule
     ],
     declarations: [
-        LoginComponent, RegisterComponent, SuccessComponent, RestoreComponent,
+        LoginComponent, RegisterComponent, SignupComponent, SuccessComponent, RestoreComponent,
         ConfirmEmailComponent, ResetComponent, TermsComponent
     ],
     schemas: [

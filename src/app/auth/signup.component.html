@@ -17,19 +17,6 @@
             <mat-progress-bar *ngIf="inProgress" mode="indeterminate"></mat-progress-bar>
             
             <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
-                <!-- Email -->
-                <mat-form-field class="form-element">
-                    <mat-label>Email</mat-label>
-                    <input type="email" matInput formControlName="email" maxlength="60" 
-                    placeholder="User email" required/>
-                    <mat-error *ngIf="this.signupForm.get('email')?.hasError('required')">
-                        Please specify your email
-                    </mat-error>
-                    <mat-error *ngIf="this.signupForm.get('email')?.hasError('pattern')">
-                        Email has incorrect format
-                    </mat-error>
-                </mat-form-field>
-
                 <!-- Nick name -->
                 <mat-form-field class="form-element">
                     <mat-label>Nick name</mat-label>
@@ -131,42 +118,6 @@
                 </div>
 
                 <br>
-                <!-- Password -->
-                <mat-form-field class="form-element">
-                    <mat-label>Password</mat-label>
-                    <input [type]="hidePassword1 ? 'password' : 'text'" matInput 
-                    formControlName="password1" maxlength="30" placeholder="Password" required>
-                    <button mat-icon-button matSuffix type="button" 
-                    (click)="hidePassword1 = !hidePassword1" 
-                    [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword1">
-                        <mat-icon>{{hidePassword1 ? 'visibility_off' : 'visibility'}}</mat-icon>
-                    </button>
-                    <mat-error *ngIf="this.getPasswordValidation()!=''">
-                        {{getPasswordValidation()}}
-                    </mat-error>
-                </mat-form-field>
-
-                <br><br>
-                
-                <!-- Confirm password -->
-                <mat-form-field class="form-element">
-                    <mat-label>Confirm Password</mat-label>
-                    <input [type]="hidePassword2 ? 'password' : 'text'" matInput 
-                    formControlName="password2" maxlength="30" placeholder="Confirm Password" required>
-                    <button mat-icon-button matSuffix type="button" 
-                    (click)="hidePassword2 = !hidePassword2" 
-                    [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword2">
-                        <mat-icon>{{hidePassword2 ? 'visibility_off' : 'visibility'}}</mat-icon>
-                    </button>
-                    <mat-error *ngIf="this.signupForm.get('password2')?.hasError('required')">
-                        Please specify your password
-                    </mat-error>
-                    <mat-error *ngIf="this.signupForm.get('password2')?.hasError('minlength')">
-                        Password must contain at least 8 symbols
-                    </mat-error>
-                </mat-form-field>
-
-                <br>
                 <div class="form-element">
                     <mat-checkbox color="primary" [checked]="agreementChecked" (change)="checkAgreement()">
                         <span>I agree to the 
@@ -186,10 +137,6 @@
             </form>
             <div class="form-error-box" *ngIf="errorMessage!=''">
                 {{errorMessage}}
-            </div>
-            <br>
-            <div class="form-element">
-                <span>Already have an account?&nbsp;<a href="/auth/login">Sign in</a></span>
             </div>
         </div>
     </div>
