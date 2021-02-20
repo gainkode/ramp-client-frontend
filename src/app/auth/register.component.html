@@ -21,7 +21,7 @@
                 <mat-form-field class="form-element">
                     <mat-label>Email</mat-label>
                     <input type="email" matInput formControlName="email" maxlength="60" 
-                    placeholder="User email" required/>
+                    placeholder="User email" autocomplete="off" required/>
                     <mat-error *ngIf="this.signupForm.get('email')?.hasError('required')">
                         Please specify your email
                     </mat-error>
@@ -33,7 +33,7 @@
                 <!-- Nick name -->
                 <mat-form-field class="form-element">
                     <mat-label>Nick name</mat-label>
-                    <input matInput formControlName="username" maxlength="30" 
+                    <input matInput formControlName="username" maxlength="30" type="search"
                     placeholder="Nick name" required>
                     <mat-error *ngIf="this.signupForm.get('username')?.hasError('required')">
                         Please specify your nick name
@@ -59,7 +59,7 @@
                 <!-- Company name -->
                 <mat-form-field *ngIf="selectedUserType=='Merchant'" class="form-element">
                     <mat-label>Company name</mat-label>
-                    <input matInput formControlName="companyName" maxlength="50" 
+                    <input matInput formControlName="companyName" maxlength="50" type="search"
                     placeholder="Company name" required>
                     <mat-error *ngIf="this.signupForm.get('companyName')?.hasError('required')">
                         Please specify a company name
@@ -69,7 +69,7 @@
                 <!-- First name -->
                 <mat-form-field *ngIf="selectedUserType=='Personal'" class="form-element">
                     <mat-label>First name</mat-label>
-                    <input matInput formControlName="firstName" maxlength="30" 
+                    <input matInput formControlName="firstName" maxlength="30" type="search"
                     placeholder="First name" required>
                     <mat-error *ngIf="this.signupForm.get('firstName')?.hasError('required')">
                         Please specify your first name
@@ -79,7 +79,7 @@
                 <!-- Last name -->
                 <mat-form-field *ngIf="selectedUserType=='Personal'" class="form-element">
                     <mat-label>Last name</mat-label>
-                    <input matInput formControlName="lastName" maxlength="50" 
+                    <input matInput formControlName="lastName" maxlength="50" type="search"
                     placeholder="Last name" required>
                     <mat-error *ngIf="this.signupForm.get('lastName')?.hasError('required')">
                         Please specify your last name
@@ -87,7 +87,7 @@
                 </mat-form-field>
 
                 <!-- Country -->
-                <mat-form-field class="form-element" appearance="standard">
+                <mat-form-field class="form-element">
                     <mat-label>Country</mat-label>
                     <input type="country" placeholder="Country" aria-label="Country" matInput
                     formControlName="country" [matAutocomplete]="auto" maxlength="40" required>
@@ -104,20 +104,20 @@
 
                 <div class="form-element phone-box-split">
                     <!-- Phone code -->
-                    <mat-form-field class="phone-box-left-panel" appearance="standard">
+                    <mat-form-field class="phone-box-left-panel">
                         <mat-label>Code</mat-label>
                         <input matInput formControlName="phoneCode" maxlength="5" type="search"
                         placeholder="Code" required>
                         <mat-error *ngIf="this.phoneCodeField?.hasError('required')">
-                            Code is required
+                            Required
                         </mat-error>
                         <mat-error *ngIf="this.phoneCodeField?.hasError('pattern')">
-                            Bad code format
+                            Bad code
                         </mat-error>
                     </mat-form-field>
                     
                     <!-- Phone number -->
-                    <mat-form-field class="phone-box-right-panel" appearance="standard">
+                    <mat-form-field class="phone-box-right-panel">
                         <mat-label>Phone number</mat-label>
                         <input matInput formControlName="phoneNumber" maxlength="10" type="search"
                         placeholder="Number" required>
@@ -130,32 +130,35 @@
                     </mat-form-field>
                 </div>
 
-                <br>
                 <!-- Password -->
                 <mat-form-field class="form-element">
                     <mat-label>Password</mat-label>
-                    <input [type]="hidePassword1 ? 'password' : 'text'" matInput 
+                    <input [type]="hidePassword1 ? 'password' : 'text'" matInput autocomplete="off" 
                     formControlName="password1" maxlength="30" placeholder="Password" required>
                     <button mat-icon-button matSuffix type="button" 
                     (click)="hidePassword1 = !hidePassword1" 
-                    [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword1">
+                    [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword1"
+                    [matTooltip]="hidePassword1 ? 'Show password' : 'Hide password'">
                         <mat-icon>{{hidePassword1 ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
+                    <button mat-icon-button matSuffix type="button" [attr.aria-label]="'Info'"
+                    matTooltip="Password must be at least 8 symbols long, and must contain latin lowercase and uppercase symbols, digits, and special symbols">
+                        <mat-icon>info_outline</mat-icon>
                     </button>
                     <mat-error *ngIf="this.getPasswordValidation()!=''">
                         {{getPasswordValidation()}}
                     </mat-error>
                 </mat-form-field>
 
-                <br><br>
-                
                 <!-- Confirm password -->
                 <mat-form-field class="form-element">
                     <mat-label>Confirm Password</mat-label>
-                    <input [type]="hidePassword2 ? 'password' : 'text'" matInput 
+                    <input [type]="hidePassword2 ? 'password' : 'text'" matInput autocomplete="off" 
                     formControlName="password2" maxlength="30" placeholder="Confirm Password" required>
                     <button mat-icon-button matSuffix type="button" 
                     (click)="hidePassword2 = !hidePassword2" 
-                    [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword2">
+                    [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword2"
+                    [matTooltip]="hidePassword2 ? 'Show password' : 'Hide password'">
                         <mat-icon>{{hidePassword2 ? 'visibility_off' : 'visibility'}}</mat-icon>
                     </button>
                     <mat-error *ngIf="this.signupForm.get('password2')?.hasError('required')">
@@ -166,7 +169,6 @@
                     </mat-error>
                 </mat-form-field>
 
-                <br>
                 <div class="form-element">
                     <mat-checkbox color="primary" [checked]="agreementChecked" (change)="checkAgreement()">
                         <span>I agree to the 

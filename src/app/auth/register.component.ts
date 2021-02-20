@@ -174,7 +174,7 @@ export class RegisterComponent implements OnInit {
         } else if (this.signupForm.get('password1')?.hasError('minlength')) {
             return 'Password must contain at least 8 symbols';
         } else if (this.signupForm.get('password1')?.hasError('pattern')) {
-            return 'Password must contain latin lowercase and uppercase symbols, digits, and special symbols';
+            return 'Password is not strong enough';
         }
         return '';
     }
