@@ -173,7 +173,6 @@ export class SignupComponent implements OnInit {
                 phone)
                 .subscribe(({ data }) => {
                     this.inProgress = false;
-                    console.log(data);
                     const userData = data.confirmName as LoginResult;
                     if (userData.authTokenAction === 'ConfirmName' ||
                     userData.authTokenAction === 'Default') {

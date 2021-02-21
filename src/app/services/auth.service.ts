@@ -108,7 +108,9 @@ const CONFIRMNAME_POST = gql`
       user {
         userId,
         email,
-        name
+        name,
+        type,
+        roles
       }
       authTokenAction
     }
@@ -180,6 +182,7 @@ export class AuthService {
 
     confirmName(tokenId: string, username: string, usertype: string, firstname: string, lastname: string, 
         countrycode: string, phoneNumber: string): Observable<any> {
+        console.log(`Type: ${usertype}`);
         return this.apollo.mutate({
             mutation: CONFIRMNAME_POST,
             variables: {
@@ -228,6 +231,7 @@ export class AuthService {
     }
 
     setLoginUser(login: LoginResult): void {
+        console.log(login);
         sessionStorage.setItem('currentUser', JSON.stringify(login.user));
         sessionStorage.setItem('currentToken', login.authToken as string);
     }
