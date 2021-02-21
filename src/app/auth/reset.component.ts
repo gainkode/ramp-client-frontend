@@ -48,7 +48,7 @@ export class ResetComponent {
         } else if (this.passwordForm.get('password1')?.hasError('minlength')) {
             return 'Password must contain at least 8 symbols';
         } else if (this.passwordForm.get('password1')?.hasError('pattern')) {
-            return 'Password is not strong enough';
+            return 'Invalid password format';
         }
         return '';
     }
