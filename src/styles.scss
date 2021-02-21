@@ -28,6 +28,10 @@ input:-webkit-autofill:active  {
     -webkit-box-shadow: 0 0 0 30px white inset !important;
 }
 
+input:-webkit-autofill::first-line {
+    font-size: large;
+}
+
 .mat-input-element {
     background: white;
 }

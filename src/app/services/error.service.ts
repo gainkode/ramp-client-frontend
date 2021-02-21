@@ -32,7 +32,7 @@ export class ErrorService {
                 result = 'Token value is invalid';
                 break;
             case 'auth.access_denied':
-                result = 'Wrong login or password';
+                result = 'Incorrect login or password';
                 break;
             case 'auth.unconfirmed_email':
                 result = 'User email is not confirmed';
@@ -47,10 +47,10 @@ export class ErrorService {
                 result = 'This alias already exists';
                 break;
             case 'auth.password_invalid':
-                result = 'Wrong password format';
+                result = 'Invalid password format';
                 break;
             case 'auth.login_invalid':
-                result = 'Wrong login format';
+                result = 'Invalid login format';
                 break;
             case 'auth.referral_code_invalid':
                 result = 'Referral code is invalid';
