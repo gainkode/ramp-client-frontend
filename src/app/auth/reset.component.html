@@ -24,11 +24,13 @@
                     <button mat-icon-button matSuffix type="button" 
                     (click)="hidePassword1 = !hidePassword1" 
                     [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword1"
-                    [matTooltip]="hidePassword1 ? 'Show password' : 'Hide password'">
+                    [matTooltip]="hidePassword1 ? 'Show password' : 'Hide password'"
+                    matTooltipClass="info-tooltip">
                         <mat-icon>{{hidePassword1 ? 'visibility_off' : 'visibility'}}</mat-icon>
                     </button>
                     <button mat-icon-button matSuffix type="button" [attr.aria-label]="'Info'"
-                    matTooltip="Password must be at least 8 symbols long, and must contain latin lowercase and uppercase symbols, digits, and special symbols">
+                    matTooltip="Password must be at least 8 symbols long, and must contain latin lowercase and uppercase symbols, digits, and special symbols"
+                    matTooltipClass="info-tooltip">
                         <mat-icon>info_outline</mat-icon>
                     </button>
                     <mat-error *ngIf="this.getPasswordValidation()!=''">
@@ -44,7 +46,8 @@
                     <button mat-icon-button matSuffix type="button" 
                     (click)="hidePassword2 = !hidePassword2" 
                     [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword2"
-                    [matTooltip]="hidePassword2 ? 'Show password' : 'Hide password'">
+                    [matTooltip]="hidePassword2 ? 'Show password' : 'Hide password'"
+                    matTooltipClass="info-tooltip">
                         <mat-icon>{{hidePassword2 ? 'visibility_off' : 'visibility'}}</mat-icon>
                     </button>
                     <mat-error *ngIf="this.passwordForm.get('password2')?.hasError('required')">

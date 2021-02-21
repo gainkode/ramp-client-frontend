@@ -69,7 +69,6 @@ export class LoginComponent {
                             this.router.navigateByUrl('/personal/');
                         }
                     } else if (userData.authTokenAction === 'ConfirmName') {
-                        console.log(`/auth/signup/${userData.authToken}`);
                         this.router.navigateByUrl(`/auth/signup/${userData.authToken}`);
                     } else {
                         this.errorMessage = `Invalid authentication via ${name}`;

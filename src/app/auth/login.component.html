@@ -38,7 +38,8 @@
                     <button mat-icon-button matSuffix type="button" 
                     (click)="hidePassword = !hidePassword" 
                     [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword"
-                    [matTooltip]="hidePassword ? 'Show password' : 'Hide password'">
+                    [matTooltip]="hidePassword ? 'Show password' : 'Hide password'"
+                    matTooltipClass="info-tooltip">
                         <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
                     </button>
                     <mat-error *ngIf="this.loginForm.get('password')?.hasError('required')">

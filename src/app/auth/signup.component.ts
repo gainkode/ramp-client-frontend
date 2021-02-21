@@ -173,8 +173,10 @@ export class SignupComponent implements OnInit {
                 phone)
                 .subscribe(({ data }) => {
                     this.inProgress = false;
-                    const userData = data.login as LoginResult;
-                    if (userData.authTokenAction === 'Default') {
+                    console.log(data);
+                    const userData = data.confirmName as LoginResult;
+                    if (userData.authTokenAction === 'ConfirmName' ||
+                    userData.authTokenAction === 'Default') {
                         this.auth.setLoginUser(userData);
                         if (userData.user?.type === 'Merchant') {
                             this.router.navigateByUrl('/merchant/');
