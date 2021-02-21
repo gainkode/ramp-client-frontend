@@ -1,9 +1,5 @@
-.data-table-full {
+.data-table {
     width: 100%;
-}
-
-.data-table-detailed {
-    width: 50%;
 }
 
 .link-block {
@@ -25,4 +21,31 @@ th.mat-header-cell {
 
 .details-icon {
     font-size: medium;
+}
+
+.detailed-table-split {
+    display: flex;
+}
+
+.detailed-table-left-panel-full {
+    flex: 100%;
+    min-width: 40em;
+    margin: 0;
+}
+
+.detailed-table-right-panel-full {
+    flex: 0%;
+    margin: 0;
+    visibility: collapse;
+}
+
+.detailed-table-left-panel-details {
+    flex: 60%;
+    min-width: 20em;
+    margin: 0;
+}
+
+.detailed-table-right-panel-details {
+    flex: 40%;
+    margin: 0;
 }

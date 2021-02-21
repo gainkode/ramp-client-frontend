@@ -12,7 +12,7 @@ import { MatButtonModule } from '@angular/material/button';
 //import { MatCheckboxModule } from '@angular/material/checkbox';
 //import { MatRadioModule } from '@angular/material/radio';
 import { MatIconModule } from '@angular/material/icon';
-//import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { AdminGuard } from './admin.guard';
 import { AdminComponent } from './admin.component';
 import { DashboardComponent } from './dashboard.component';
@@ -42,7 +42,7 @@ const modules = [
     // MatCheckboxModule,
     // MatRadioModule,
     MatIconModule,
-    // MatProgressBarModule
+    MatProgressBarModule
 ];
 
 @NgModule({
