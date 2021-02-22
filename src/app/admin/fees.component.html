@@ -58,9 +58,8 @@
       <ng-container *ngIf="!showDetailed" matColumnDef="details">
         <th mat-header-cell *matHeaderCellDef class="mat-column-fee-table mat-column-fee-table-details"></th>
         <td mat-cell *matCellDef="let element">
-          <button mat-icon-button type="button" (click)="toggleDetails(element)"
-            [attr.aria-label]="'Show details'" [attr.aria-pressed]="showDetailed"
-            matTooltip="Show details" matTooltipClass="info-tooltip">
+          <button mat-icon-button type="button" (click)="toggleDetails(element)" [attr.aria-label]="'Show details'"
+            [attr.aria-pressed]="showDetailed" matTooltip="Show details" matTooltipClass="info-tooltip">
             <mat-icon class="details-icon">description</mat-icon>
           </button>
         </td>
@@ -77,10 +76,71 @@
       <!-- Email -->
       <mat-form-field class="form-element">
         <mat-label>Scheme name</mat-label>
-        <input type="text" matInput formControlName="name" maxlength="50" placeholder="Fee scheme name" 
-        required/>
+        <input type="text" matInput formControlName="name" maxlength="50" placeholder="Fee scheme name" required />
         <mat-error *ngIf="this.schemeForm.get('name')?.hasError('required')">
           Please specify a scheme name
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Target -->
+      <mat-form-field class="form-element">
+        <mat-label>Target</mat-label>
+        <mat-select formControlName="target">
+          <mat-option value="AffiliateId">Affiliate Id</mat-option>
+          <mat-option value="Country">Country</mat-option>
+          <mat-option value="AccountId">Account Id</mat-option>
+          <mat-option value="AccountType">Account Type</mat-option>
+          <mat-option value="Initiate from widget">initiate from widget</mat-option>
+          <mat-option value="Initiate from checkout">initiate from checkout</mat-option>
+          <mat-option value="Initiate from wallet">initiate from wallet</mat-option>
+        </mat-select>
+        <mat-error *ngIf="this.schemeForm.get('target')?.hasError('required')">
+          Please specify a target
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Transaction type -->
+      <mat-form-field class="form-element">
+        <mat-label>Transaction type</mat-label>
+        <mat-select formControlName="trxType">
+          <mat-option value="Deposits">Deposits</mat-option>
+          <mat-option value="Transfer">Transfer</mat-option>
+          <mat-option value="System">System</mat-option>
+          <mat-option value="Withdrawals">Withdrawals</mat-option>
+          <mat-option value="Exchange">Exchange</mat-option>
+        </mat-select>
+        <mat-error *ngIf="this.schemeForm.get('trxType')?.hasError('required')">
+          Please specify an transaction type
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Instrument -->
+      <mat-form-field class="form-element">
+        <mat-label>Instrument</mat-label>
+        <mat-select formControlName="instrument">
+          <mat-option value="Credit Card">Credit Card</mat-option>
+          <mat-option value="APM">APM</mat-option>
+          <mat-option value="Wire Transfer">Wire Transfer</mat-option>
+          <mat-option value="Received">Received</mat-option>
+          <mat-option value="Sent">Sent</mat-option>
+          <mat-option value="Bitstamp">Bitstamp</mat-option>
+        </mat-select>
+        <mat-error *ngIf="this.schemeForm.get('instrument')?.hasError('required')">
+          Please specify an instrument
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Payment provider -->
+      <mat-form-field class="form-element">
+        <mat-label>Payment provider</mat-label>
+        <mat-select formControlName="provider">
+          <mat-option value="Fibonatix">Fibonatix</mat-option>
+          <mat-option value="SecureTrading">SecureTrading</mat-option>
+          <mat-option value="Sofort">Sofort</mat-option>
+          <mat-option value="Poli">Poli</mat-option>
+        </mat-select>
+        <mat-error *ngIf="this.schemeForm.get('provider')?.hasError('required')">
+          Please specify a payment provider
         </mat-error>
       </mat-form-field>
     </form>

@@ -23,7 +23,11 @@ export class FeesComponent {
     name: ['',
       {
         validators: [Validators.required], updateOn: 'change'
-      }]
+      }],
+      target: ['', { validators: [Validators.required], updateOn: 'change' }],
+      instrument: ['', { validators: [Validators.required], updateOn: 'change' }],
+      trxType: ['', { validators: [Validators.required], updateOn: 'change' }],
+      provider: ['', { validators: [Validators.required], updateOn: 'change' }]
   });
 
   schemes = FeeShemes;
@@ -43,7 +47,15 @@ export class FeesComponent {
       },
       {
         validators: [Validators.required], updateOn: 'change'
-      }]
+      }],
+      target: [scheme === null ? '' : scheme?.target, 
+      { validators: [Validators.required], updateOn: 'change' }],
+      instrument: [scheme === null ? '' : scheme?.instrument, 
+      { validators: [Validators.required], updateOn: 'change' }],
+      trxType: [scheme === null ? '' : scheme?.trxType, 
+      { validators: [Validators.required], updateOn: 'change' }],
+      provider: [scheme === null ? '' : scheme?.provider, 
+      { validators: [Validators.required], updateOn: 'change' }]
     });
   }
 

@@ -13,10 +13,10 @@ export const FeeShemes: Array<FeeSheme> = [
         id: 'id0',
         isDefault: true,
         name: 'Default',
-        target: 'Account',
+        target: 'AccountId',
         trxType: 'Transfer',
         instrument: 'Credit Card',
-        provider: 'sofort'
+        provider: 'Sofort'
     },
     {
         id: 'id1',
@@ -25,13 +25,13 @@ export const FeeShemes: Array<FeeSheme> = [
         target: 'Country',
         trxType: 'Exchange',
         instrument: 'APM',
-        provider: 'poli'
+        provider: 'Poli'
     },
     {
         id: 'id2',
         isDefault: false,
         name: 'Wallet',
-        target: 'Initiat from wallet',
+        target: 'Initiate from wallet',
         trxType: 'Deposits',
         instrument: 'Bitstamp',
         provider: 'Fibonatix'
