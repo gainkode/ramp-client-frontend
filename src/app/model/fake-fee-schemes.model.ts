@@ -6,6 +6,7 @@ export interface FeeSheme {
     trxType: string;
     instrument: string;
     provider: string;
+    transactionFees: number;
 }
 
 export const FeeShemes: Array<FeeSheme> = [
@@ -16,7 +17,8 @@ export const FeeShemes: Array<FeeSheme> = [
         target: 'AccountId',
         trxType: 'Transfer',
         instrument: 'Credit Card',
-        provider: 'Sofort'
+        provider: 'Sofort',
+        transactionFees: 5
     },
     {
         id: 'id1',
@@ -25,7 +27,8 @@ export const FeeShemes: Array<FeeSheme> = [
         target: 'Country',
         trxType: 'Exchange',
         instrument: 'APM',
-        provider: 'Poli'
+        provider: 'Poli',
+        transactionFees: 3
     },
     {
         id: 'id2',
@@ -34,6 +37,7 @@ export const FeeShemes: Array<FeeSheme> = [
         target: 'Initiate from wallet',
         trxType: 'Deposits',
         instrument: 'Bitstamp',
-        provider: 'Fibonatix'
+        provider: 'Fibonatix',
+        transactionFees: 4.5
     }
 ];
