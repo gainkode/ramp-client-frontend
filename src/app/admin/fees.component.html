@@ -92,13 +92,31 @@
           <mat-option value="Country">Country</mat-option>
           <mat-option value="AccountId">Account Id</mat-option>
           <mat-option value="AccountType">Account Type</mat-option>
-          <mat-option value="Initiate from widget">initiate from widget</mat-option>
-          <mat-option value="Initiate from checkout">initiate from checkout</mat-option>
-          <mat-option value="Initiate from wallet">initiate from wallet</mat-option>
+          <mat-option value="Initiate from widget">Initiate from widget</mat-option>
+          <mat-option value="Initiate from checkout">Initiate from checkout</mat-option>
+          <mat-option value="Initiate from wallet">Initiate from wallet</mat-option>
         </mat-select>
         <mat-error *ngIf="this.schemeForm.get('target')?.hasError('required')">
           Please specify a target
         </mat-error>
+      </mat-form-field>
+
+      <mat-form-field *ngIf="targetValueParams.title!==''" class="form-element">
+        <mat-label>{{targetValueParams.title}}</mat-label>
+        <mat-chip-list #chipList aria-label="Target selection">
+          <mat-chip *ngFor="let val of targetValues" (removed)="removeTargetValue(val)">
+            {{val}}
+            <mat-icon matChipRemove matTooltip="Remove" matTooltipClass="info-tooltip">cancel</mat-icon>
+          </mat-chip>
+          <input [placeholder]="targetValueParams.inputPlaceholder" #targetValueInput formControlName="targetValues"
+            [matAutocomplete]="auto" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            (matChipInputTokenEnd)="addTargetValue($event)">
+        </mat-chip-list>
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="targetItemSelected($event)">
+          <mat-option *ngFor="let item of filteredTargetValues | async" [value]="item">
+            {{item}}
+          </mat-option>
+        </mat-autocomplete>
       </mat-form-field>
 
       <!-- Transaction type -->
@@ -168,8 +186,8 @@
       <!-- Min transaction fee -->
       <mat-form-field class="form-element">
         <mat-label>Min. transaction fee, euro</mat-label>
-        <input type="text" matInput formControlName="minTransactionFee" maxlength="10" 
-        placeholder="&#8364;5" required />
+        <input type="text" matInput formControlName="minTransactionFee" maxlength="10" placeholder="&#8364;5"
+          required />
         <mat-error *ngIf="this.schemeForm.get('minTransactionFee')?.hasError('required')">
           Please specify minimal transaction fee
         </mat-error>
@@ -263,8 +281,8 @@
       <!-- Beneficiary name -->
       <mat-form-field class="form-element">
         <mat-label>Beneficiary name</mat-label>
-        <input type="text" matInput formControlName="beneficiaryName" maxlength="50" 
-        placeholder="Beneficiary name" required />
+        <input type="text" matInput formControlName="beneficiaryName" maxlength="50" placeholder="Beneficiary name"
+          required />
         <mat-error *ngIf="this.schemeForm.get('beneficiaryName')?.hasError('required')">
           Please specify beneficiary name
         </mat-error>

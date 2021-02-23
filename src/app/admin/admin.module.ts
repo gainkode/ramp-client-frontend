@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 //import { MatTabsModule } from '@angular/material/tabs';
+import { MatChipsModule } from '@angular/material/chips'; 
 import { MatTooltipModule } from '@angular/material/tooltip'; 
 import { MatListModule } from '@angular/material/list';
 import { MatTableModule } from '@angular/material/table';
@@ -10,6 +11,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 //import { MatCheckboxModule } from '@angular/material/checkbox';
 //import { MatRadioModule } from '@angular/material/radio';
 import { MatIconModule } from '@angular/material/icon';
@@ -33,6 +35,7 @@ const routing = RouterModule.forChild([
 ]);
 
 const modules = [
+    MatChipsModule,
     MatTooltipModule,
     //MatTabsModule,
     MatListModule,
@@ -41,6 +44,7 @@ const modules = [
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
+    MatAutocompleteModule,
     // MatCheckboxModule,
     // MatRadioModule,
     MatIconModule,
