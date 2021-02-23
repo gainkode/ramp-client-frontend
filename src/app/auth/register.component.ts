@@ -22,44 +22,52 @@ export class RegisterComponent implements OnInit {
     filteredCountries: Observable<CountryCode[]> | undefined;
 
     signupForm = this.formBuilder.group({
-        email: [,
-            { validators: [
-                Validators.required,
-                Validators.pattern('^[a-zA-Z0-9_.+\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-\.]+$')
-            ], updateOn: 'change' }
+        email: ['',
+            {
+                validators: [
+                    Validators.required,
+                    Validators.pattern('^[a-zA-Z0-9_.+\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-\.]+$')
+                ], updateOn: 'change'
+            }
         ],
-        username: [,
-            { validators: [Validators.required], updateOn: 'change' }
-        ],
+        username: ['', { validators: [Validators.required], updateOn: 'change' } ],
         userType: ['Personal'],
         firstName: [''],
         lastName: [''],
         companyName: [''],
-        country: ['', Validators.required],
+        country: ['', { validators: [Validators.required], updateOn: 'change' } ],
         phoneCode: ['',
-            { validators: [
-                Validators.required,
-                Validators.pattern('^[\+](?:[0-9]?){0,3}[0-9]$')
-            ], updateOn: 'change' }
+            {
+                validators: [
+                    Validators.required,
+                    Validators.pattern('^[\+](?:[0-9]?){0,3}[0-9]$')
+                ], updateOn: 'change'
+            }
         ],
         phoneNumber: ['',
-            { validators: [
-                Validators.required,
-                Validators.pattern('^(?:[0-9]?){6,9}[0-9]$')
-            ], updateOn: 'change' }
+            {
+                validators: [
+                    Validators.required,
+                    Validators.pattern('^(?:[0-9]?){6,9}[0-9]$')
+                ], updateOn: 'change'
+            }
         ],
         password1: [,
-            { validators: [
-                Validators.required,
-                Validators.minLength(8),
-                Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[`~$@#!%^_*?&+=<|>])[A-Za-z0-9\d`~$@#!%^_*?&+=<|>].{7,30}')
-            ], updateOn: 'change' }
+            {
+                validators: [
+                    Validators.required,
+                    Validators.minLength(8),
+                    Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[`~$@#!%^_*?&+=<|>])[A-Za-z0-9\d`~$@#!%^_*?&+=<|>].{7,30}')
+                ], updateOn: 'change'
+            }
         ],
         password2: [,
-            { validators: [
-                Validators.required,
-                Validators.minLength(8)
-            ], updateOn: 'change' }
+            {
+                validators: [
+                    Validators.required,
+                    Validators.minLength(8)
+                ], updateOn: 'change'
+            }
         ]
     });
 
@@ -216,7 +224,7 @@ export class RegisterComponent implements OnInit {
                 }, (error) => {
                     this.inProgress = false;
                     this.errorMessage = this.errorHandler.getError(
-                        error.message, 
+                        error.message,
                         'Unable to register new account');
                 });
         }

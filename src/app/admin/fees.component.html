@@ -101,6 +101,7 @@
         </mat-error>
       </mat-form-field>
 
+      <!-- Target values -->
       <mat-form-field *ngIf="targetValueParams.title!==''" class="form-element">
         <mat-label>{{targetValueParams.title}}</mat-label>
         <mat-chip-list #chipList aria-label="Target selection">
@@ -122,12 +123,10 @@
       <!-- Transaction type -->
       <mat-form-field class="form-element">
         <mat-label>Transaction type</mat-label>
-        <mat-select formControlName="trxType" required>
-          <mat-option value="Deposits">Deposits</mat-option>
-          <mat-option value="Transfer">Transfer</mat-option>
-          <mat-option value="System">System</mat-option>
-          <mat-option value="Withdrawals">Withdrawals</mat-option>
-          <mat-option value="Exchange">Exchange</mat-option>
+        <mat-select formControlName="trxType" multiple required>
+          <mat-option *ngFor="let item of transactionTypes" [value]="item">
+            {{item}}
+          </mat-option>
         </mat-select>
         <mat-error *ngIf="this.schemeForm.get('trxType')?.hasError('required')">
           Please specify an transaction type
@@ -137,13 +136,10 @@
       <!-- Instrument -->
       <mat-form-field class="form-element">
         <mat-label>Instrument</mat-label>
-        <mat-select formControlName="instrument" required>
-          <mat-option value="Credit Card">Credit Card</mat-option>
-          <mat-option value="APM">APM</mat-option>
-          <mat-option value="Wire Transfer">Wire Transfer</mat-option>
-          <mat-option value="Received">Received</mat-option>
-          <mat-option value="Sent">Sent</mat-option>
-          <mat-option value="Bitstamp">Bitstamp</mat-option>
+        <mat-select formControlName="instrument" multiple required>
+          <mat-option *ngFor="let item of instruments" [value]="item">
+            {{item}}
+          </mat-option>
         </mat-select>
         <mat-error *ngIf="this.schemeForm.get('instrument')?.hasError('required')">
           Please specify an instrument
@@ -153,11 +149,10 @@
       <!-- Payment provider -->
       <mat-form-field class="form-element">
         <mat-label>Payment provider</mat-label>
-        <mat-select formControlName="provider" required>
-          <mat-option value="Fibonatix">Fibonatix</mat-option>
-          <mat-option value="SecureTrading">SecureTrading</mat-option>
-          <mat-option value="Sofort">Sofort</mat-option>
-          <mat-option value="Poli">Poli</mat-option>
+        <mat-select formControlName="provider" multiple required>
+          <mat-option *ngFor="let item of providers" [value]="item">
+            {{item}}
+          </mat-option>
         </mat-select>
         <mat-error *ngIf="this.schemeForm.get('provider')?.hasError('required')">
           Please specify a payment provider
@@ -329,7 +324,7 @@
 
       <div class="form-element">
         <button class="form-button" type="submit" mat-flat-button color="primary">
-          Change
+          Save
         </button>
       </div>
     </form>

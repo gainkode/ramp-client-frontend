@@ -32,14 +32,17 @@ export class FeesComponent {
   displayedColumns: string[] = [
     'isDefault', 'name', 'target', 'trxType', 'instrument', 'provider', 'details'
   ];
+  transactionTypes: string[] = ['Deposits', 'Transfer', 'System', 'Withdrawals', 'Exchange'];
+  instruments: string[] = ['Credit Card', 'APM', 'Wire Transfer', 'Received', 'Sent', 'Bitstamp'];
+  providers: string[] = ['Fibonatix', 'SecureTrading', 'Sofort', 'Poli'];
 
   schemeForm = this.formBuilder.group({
     name: ['', { validators: [Validators.required], updateOn: 'change' }],
     target: ['', { validators: [Validators.required], updateOn: 'change' }],
     targetValues: [''],
-    instrument: ['', { validators: [Validators.required], updateOn: 'change' }],
-    trxType: ['', { validators: [Validators.required], updateOn: 'change' }],
-    provider: ['', { validators: [Validators.required], updateOn: 'change' }],
+    instrument: [[], { validators: [Validators.required], updateOn: 'change' }],
+    trxType: [[], { validators: [Validators.required], updateOn: 'change' }],
+    provider: [[], { validators: [Validators.required], updateOn: 'change' }],
     transactionFees: ['',
       { validators: [Validators.required, Validators.min(0), Validators.max(100)], updateOn: 'change' }],
     minTransactionFee: ['',
@@ -158,10 +161,16 @@ export class FeesComponent {
       },
         { validators: [Validators.required], updateOn: 'change' }
       ));
+      const trxTypeValues = [];
+      const instrumentValues = [];
+      const providerValues = [];
+      trxTypeValues.push(this.transactionTypes.find(trx => trx === scheme?.trxType));
+      instrumentValues.push(this.instruments.find(i => i === scheme?.instrument));
+      providerValues.push(this.providers.find(p => p === scheme?.provider));
       this.schemeForm.get('target')?.setValue(scheme?.target);
-      this.schemeForm.get('instrument')?.setValue(scheme?.instrument);
-      this.schemeForm.get('trxType')?.setValue(scheme?.trxType);
-      this.schemeForm.get('provider')?.setValue(scheme?.provider);
+      this.schemeForm.get('instrument')?.setValue(instrumentValues);
+      this.schemeForm.get('trxType')?.setValue(trxTypeValues);
+      this.schemeForm.get('provider')?.setValue(providerValues);
       this.schemeForm.get('transactionFees')?.setValue(scheme?.transactionFees);
       this.schemeForm.get('minTransactionFee')?.setValue(scheme?.minTransactionFee);
       this.schemeForm.get('rollingReserves')?.setValue(scheme?.rollingReserves);
