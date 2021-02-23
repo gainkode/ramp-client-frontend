@@ -70,7 +70,9 @@
     </table>
   </div>
   <div [ngClass]="showDetailed ? 'detailed-table-right-panel-details' : 'detailed-table-right-panel-full'">
-    <h3>Change scheme</h3>
+    <div class="form-section-title-box">
+      <h1>Change scheme</h1>
+    </div>
 
     <form [formGroup]="schemeForm" (ngSubmit)="onSubmit()">
       <!-- Email -->
@@ -85,7 +87,7 @@
       <!-- Target -->
       <mat-form-field class="form-element">
         <mat-label>Target</mat-label>
-        <mat-select formControlName="target">
+        <mat-select formControlName="target" required>
           <mat-option value="AffiliateId">Affiliate Id</mat-option>
           <mat-option value="Country">Country</mat-option>
           <mat-option value="AccountId">Account Id</mat-option>
@@ -102,7 +104,7 @@
       <!-- Transaction type -->
       <mat-form-field class="form-element">
         <mat-label>Transaction type</mat-label>
-        <mat-select formControlName="trxType">
+        <mat-select formControlName="trxType" required>
           <mat-option value="Deposits">Deposits</mat-option>
           <mat-option value="Transfer">Transfer</mat-option>
           <mat-option value="System">System</mat-option>
@@ -117,7 +119,7 @@
       <!-- Instrument -->
       <mat-form-field class="form-element">
         <mat-label>Instrument</mat-label>
-        <mat-select formControlName="instrument">
+        <mat-select formControlName="instrument" required>
           <mat-option value="Credit Card">Credit Card</mat-option>
           <mat-option value="APM">APM</mat-option>
           <mat-option value="Wire Transfer">Wire Transfer</mat-option>
@@ -133,7 +135,7 @@
       <!-- Payment provider -->
       <mat-form-field class="form-element">
         <mat-label>Payment provider</mat-label>
-        <mat-select formControlName="provider">
+        <mat-select formControlName="provider" required>
           <mat-option value="Fibonatix">Fibonatix</mat-option>
           <mat-option value="SecureTrading">SecureTrading</mat-option>
           <mat-option value="Sofort">Sofort</mat-option>
@@ -143,6 +145,179 @@
           Please specify a payment provider
         </mat-error>
       </mat-form-field>
+
+      <div class="form-section-title-box">
+        <h2>Terms</h2>
+      </div>
+
+      <!-- Transaction fees -->
+      <mat-form-field class="form-element">
+        <mat-label>Transaction fees, %</mat-label>
+        <input type="text" matInput formControlName="transactionFees" maxlength="7" placeholder="5%" required />
+        <mat-error *ngIf="this.schemeForm.get('transactionFees')?.hasError('required')">
+          Please specify transaction fee
+        </mat-error>
+        <mat-error *ngIf="this.schemeForm.get('transactionFees')?.hasError('min')">
+          Minimal transaction fee is 0%
+        </mat-error>
+        <mat-error *ngIf="this.schemeForm.get('transactionFees')?.hasError('max')">
+          Maximal transaction fee is 100%
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Min transaction fee -->
+      <mat-form-field class="form-element">
+        <mat-label>Min. transaction fee, euro</mat-label>
+        <input type="text" matInput formControlName="minTransactionFee" maxlength="10" 
+        placeholder="&#8364;5" required />
+        <mat-error *ngIf="this.schemeForm.get('minTransactionFee')?.hasError('required')">
+          Please specify minimal transaction fee
+        </mat-error>
+        <mat-error *ngIf="this.schemeForm.get('minTransactionFee')?.hasError('min')">
+          Minimal value of minimal transaction fee is &#8364;0
+        </mat-error>
+        <mat-error *ngIf="this.schemeForm.get('minTransactionFee')?.hasError('max')">
+          Maximal value of minimal transaction fee is &#8364;1000
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Rolling Reserves -->
+      <mat-form-field class="form-element">
+        <mat-label>Rolling reserves, %</mat-label>
+        <input type="text" matInput formControlName="rollingReserves" maxlength="7" placeholder="5%" required />
+        <mat-error *ngIf="this.schemeForm.get('rollingReserves')?.hasError('required')">
+          Please specify rolling reserves value
+        </mat-error>
+        <mat-error *ngIf="this.schemeForm.get('rollingReserves')?.hasError('min')">
+          Maximal value of rolling reserves value is 0%
+        </mat-error>
+        <mat-error *ngIf="this.schemeForm.get('rollingReserves')?.hasError('max')">
+          Maximal value of rolling reserves value is 100%
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Rolling reserves days -->
+      <mat-form-field class="form-element">
+        <mat-label>Rolling reserves days</mat-label>
+        <input type="text" matInput formControlName="rollingReservesDays" maxlength="7" placeholder="5%" required />
+        <mat-error *ngIf="this.schemeForm.get('rollingReservesDays')?.hasError('required')">
+          Please specify number of rolling reserves days
+        </mat-error>
+        <mat-error *ngIf="this.schemeForm.get('rollingReservesDays')?.hasError('min')">
+          Maximal value of rolling reserves days is 0%
+        </mat-error>
+        <mat-error *ngIf="this.schemeForm.get('rollingReservesDays')?.hasError('max')">
+          Maximal value of rolling reserves days is 100%
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Chargeback fees -->
+      <mat-form-field class="form-element">
+        <mat-label>Chargeback fees, %</mat-label>
+        <input type="text" matInput formControlName="chargebackFees" maxlength="7" placeholder="5%" required />
+        <mat-error *ngIf="this.schemeForm.get('chargebackFees')?.hasError('required')">
+          Please specify chargeback fee
+        </mat-error>
+        <mat-error *ngIf="this.schemeForm.get('chargebackFees')?.hasError('min')">
+          Minimal chargeback fee is 0%
+        </mat-error>
+        <mat-error *ngIf="this.schemeForm.get('chargebackFees')?.hasError('max')">
+          Maximal chargeback fee is 100%
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Monthly fees -->
+      <mat-form-field class="form-element">
+        <mat-label>Monthly fees<span style="font-style: italic;"> (only in system)</span></mat-label>
+        <input type="text" matInput formControlName="monthlyFees" maxlength="7" placeholder="5" required />
+        <mat-error *ngIf="this.schemeForm.get('monthlyFees')?.hasError('required')">
+          Please specify monthly fee
+        </mat-error>
+        <mat-error *ngIf="this.schemeForm.get('monthlyFees')?.hasError('min')">
+          Minimal monthly fee is 0
+        </mat-error>
+        <mat-error *ngIf="this.schemeForm.get('monthlyFees')?.hasError('max')">
+          Maximal monthly fee is 100
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Transaction fees -->
+      <mat-form-field class="form-element">
+        <mat-label>Min. monthly fees<span style="font-style: italic;"> (in system)</span></mat-label>
+        <input type="text" matInput formControlName="minMonthlyFees" maxlength="7" placeholder="5" required />
+        <mat-error *ngIf="this.schemeForm.get('minMonthlyFees')?.hasError('required')">
+          Please specify minimal monthly fee
+        </mat-error>
+        <mat-error *ngIf="this.schemeForm.get('minMonthlyFees')?.hasError('min')">
+          Minimal value of minimal monthly fee is 0
+        </mat-error>
+        <mat-error *ngIf="this.schemeForm.get('minMonthlyFees')?.hasError('max')">
+          Maximal value of minimal monthly fee is 100
+        </mat-error>
+      </mat-form-field>
+
+      <div class="form-section-title-box">
+        <h2>Wire details</h2>
+      </div>
+
+      <!-- Beneficiary name -->
+      <mat-form-field class="form-element">
+        <mat-label>Beneficiary name</mat-label>
+        <input type="text" matInput formControlName="beneficiaryName" maxlength="50" 
+        placeholder="Beneficiary name" required />
+        <mat-error *ngIf="this.schemeForm.get('beneficiaryName')?.hasError('required')">
+          Please specify beneficiary name
+        </mat-error>
+      </mat-form-field>
+
+      <!-- IBAN -->
+      <mat-form-field class="form-element">
+        <mat-label>IBAN</mat-label>
+        <input type="text" matInput formControlName="iban" maxlength="30" placeholder="IBAN" required />
+        <mat-error *ngIf="this.schemeForm.get('iban')?.hasError('required')">
+          Please specify IBAN
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Bank name -->
+      <mat-form-field class="form-element">
+        <mat-label>Bank name</mat-label>
+        <input type="text" matInput formControlName="bankName" maxlength="30" placeholder="Bank name" required />
+        <mat-error *ngIf="this.schemeForm.get('bankName')?.hasError('required')">
+          Please specify a bank name
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Bank address -->
+      <mat-form-field class="form-element">
+        <mat-label>Bank address</mat-label>
+        <input type="text" matInput formControlName="bankAddress" maxlength="30" placeholder="Bank address" required />
+        <mat-error *ngIf="this.schemeForm.get('bankAddress')?.hasError('required')">
+          Please specify a bank address
+        </mat-error>
+      </mat-form-field>
+
+      <!-- SWIFT -->
+      <mat-form-field class="form-element">
+        <mat-label>SWIFT</mat-label>
+        <input type="text" matInput formControlName="swift" maxlength="11" minlength="8" placeholder="SWIFT" required />
+        <mat-error *ngIf="this.schemeForm.get('swift')?.hasError('required')">
+          Please specify SWIFT
+        </mat-error>
+        <mat-error *ngIf="this.schemeForm.get('swift')?.hasError('minlength')">
+          Minimal length of SWIFT is 8 symbols
+        </mat-error>
+      </mat-form-field>
+
+      <div class="form-element">
+        <button class="form-button" type="submit" mat-flat-button color="primary">
+          Change
+        </button>
+      </div>
     </form>
+
+    <div class="form-error-box" *ngIf="errorMessage!=''">
+      {{errorMessage}}
+    </div>
   </div>
 </div>

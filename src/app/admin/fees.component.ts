@@ -20,16 +20,31 @@ export class FeesComponent {
   ];
 
   schemeForm = this.formBuilder.group({
-    name: ['',
-      {
-        validators: [Validators.required], updateOn: 'change'
-      }],
-      target: ['', { validators: [Validators.required], updateOn: 'change' }],
-      instrument: ['', { validators: [Validators.required], updateOn: 'change' }],
-      trxType: ['', { validators: [Validators.required], updateOn: 'change' }],
-      provider: ['', { validators: [Validators.required], updateOn: 'change' }],
-      transactionFees: ['', 
-      { validators: [Validators.required, Validators.min(0), Validators.max(100)], updateOn: 'change' }]
+    name: ['', { validators: [Validators.required], updateOn: 'change' }],
+    target: ['', { validators: [Validators.required], updateOn: 'change' }],
+    instrument: ['', { validators: [Validators.required], updateOn: 'change' }],
+    trxType: ['', { validators: [Validators.required], updateOn: 'change' }],
+    provider: ['', { validators: [Validators.required], updateOn: 'change' }],
+    transactionFees: ['',
+      { validators: [Validators.required, Validators.min(0), Validators.max(100)], updateOn: 'change' }],
+    minTransactionFee: ['',
+      { validators: [Validators.required, Validators.min(0), Validators.max(100)], updateOn: 'change' }],
+    rollingReserves: ['',
+      { validators: [Validators.required, Validators.min(0), Validators.max(10000)], updateOn: 'change' }],
+    rollingReservesDays: ['',
+      { validators: [Validators.required, Validators.min(0), Validators.max(365)], updateOn: 'change' }],
+    chargebackFees: ['',
+      { validators: [Validators.required, Validators.min(0), Validators.max(100)], updateOn: 'change' }],
+    monthlyFees: ['',
+      { validators: [Validators.required, Validators.min(0), Validators.max(100)], updateOn: 'change' }],
+    minMonthlyFees: ['',
+      { validators: [Validators.required, Validators.min(0), Validators.max(100)], updateOn: 'change' }],
+    beneficiaryName: ['', { validators: [Validators.required], updateOn: 'change' }],
+    beneficiaryAddress: ['', { validators: [Validators.required], updateOn: 'change' }],
+    iban: ['', { validators: [Validators.required], updateOn: 'change' }],
+    bankName: ['', { validators: [Validators.required], updateOn: 'change' }],
+    bankAddress: ['', { validators: [Validators.required], updateOn: 'change' }],
+    swift: ['', { validators: [Validators.required], updateOn: 'change' }]
   });
 
   schemes = FeeShemes;
@@ -47,19 +62,41 @@ export class FeesComponent {
         value: scheme === null ? '' : scheme?.name,
         disabled: scheme === null ? false : scheme.isDefault
       },
-      {
-        validators: [Validators.required], updateOn: 'change'
-      }],
-      target: [scheme === null ? '' : scheme?.target, 
       { validators: [Validators.required], updateOn: 'change' }],
-      instrument: [scheme === null ? '' : scheme?.instrument, 
+      target: [scheme === null ? '' : scheme?.target,
       { validators: [Validators.required], updateOn: 'change' }],
-      trxType: [scheme === null ? '' : scheme?.trxType, 
+      instrument: [scheme === null ? '' : scheme?.instrument,
+      { validators: [Validators.required], updateOn: 'change' }],
+      trxType: [scheme === null ? '' : scheme?.trxType,
       { validators: [Validators.required], updateOn: 'change' }],
       provider: [scheme === null ? '' : scheme?.provider,
       { validators: [Validators.required], updateOn: 'change' }],
       transactionFees: [scheme === null ? '' : scheme?.transactionFees,
-      { validators: [Validators.required, Validators.min(0), Validators.max(100)], updateOn: 'change' }]
+      { validators: [Validators.required, Validators.min(0), Validators.max(100)], updateOn: 'change' }],
+      minTransactionFee: [scheme === null ? '' : scheme?.minTransactionFee,
+      { validators: [Validators.required, Validators.min(0), Validators.max(1000)], updateOn: 'change' }],
+      rollingReserves: [scheme === null ? '' : scheme?.rollingReserves,
+      { validators: [Validators.required, Validators.min(0), Validators.max(10000)], updateOn: 'change' }],
+      rollingReservesDays: [scheme === null ? '' : scheme?.rollingReservesDays,
+      { validators: [Validators.required, Validators.min(0), Validators.max(365)], updateOn: 'change' }],
+      chargebackFees: [scheme === null ? '' : scheme?.chargebackFees,
+      { validators: [Validators.required, Validators.min(0), Validators.max(100)], updateOn: 'change' }],
+      monthlyFees: [scheme === null ? '' : scheme?.monthlyFees,
+      { validators: [Validators.required, Validators.min(0), Validators.max(100)], updateOn: 'change' }],
+      minMonthlyFees: [scheme === null ? '' : scheme?.minMonthlyFees,
+      { validators: [Validators.required, Validators.min(0), Validators.max(100)], updateOn: 'change' }],
+      beneficiaryName: [scheme === null ? '' : scheme?.beneficiaryName,
+      { validators: [Validators.required], updateOn: 'change' }],
+      beneficiaryAddress: [scheme === null ? '' : scheme?.beneficiaryAddress,
+      { validators: [Validators.required], updateOn: 'change' }],
+      iban: [scheme === null ? '' : scheme?.iban,
+      { validators: [Validators.required], updateOn: 'change' }],
+      bankName: [scheme === null ? '' : scheme?.bankName,
+      { validators: [Validators.required], updateOn: 'change' }],
+      bankAddress: [scheme === null ? '' : scheme?.bankAddress,
+      { validators: [Validators.required], updateOn: 'change' }],
+      swift: [scheme === null ? '' : scheme?.swift,
+      { validators: [Validators.required], updateOn: 'change' }]
     });
   }
 
