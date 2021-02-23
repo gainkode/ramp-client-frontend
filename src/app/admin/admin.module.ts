@@ -16,6 +16,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 //import { MatRadioModule } from '@angular/material/radio';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { ComponentsModule } from '../components/components.module';
 import { AdminGuard } from './admin.guard';
 import { AdminComponent } from './admin.component';
 import { DashboardComponent } from './dashboard.component';
@@ -48,7 +49,8 @@ const modules = [
     // MatCheckboxModule,
     // MatRadioModule,
     MatIconModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    ComponentsModule
 ];
 
 @NgModule({

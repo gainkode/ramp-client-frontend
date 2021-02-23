@@ -11,6 +11,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { ComponentsModule } from '../components/components.module';
 import { LoginComponent } from './login.component';
 import { RegisterComponent } from './register.component';
 import { SignupComponent } from './signup.component';
@@ -41,7 +42,8 @@ const modules = [
     MatRadioModule,
     MatAutocompleteModule,
     MatIconModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    ComponentsModule
 ];
 
 @NgModule({

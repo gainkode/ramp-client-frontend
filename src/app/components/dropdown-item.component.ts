@@ -1,0 +1,11 @@
+import { Component, Input } from '@angular/core';
+
+@Component({
+  selector: 'dropdown-item',
+  templateUrl: 'dropdown-item.component.html'
+})
+export class DropdownItemComponent {
+    @Input() itemValue: string | null = null;
+    @Input() imageSource: string | null = null;
+    @Input() imageClass: string = '';
+}
