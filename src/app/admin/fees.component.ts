@@ -4,16 +4,23 @@ import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { ErrorService } from '../services/error.service';
 import { Validators, FormBuilder, FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { FeeSheme, FeeShemes } from '../model/fake-fee-schemes.model';
+import { CountryCode, CountryCodes } from '../model/country-code.model';
 
 class TargetParams {
   title: string = '';
   inputPlaceholder: string = '';
-  dataList: string[] = [];
+  dataList: CommonTargetValue[] = [];
+}
+
+class CommonTargetValue {
+  title: string = '';
+  imgClass: string = '';
+  imgSource: string = '';
 }
 
 @Component({
@@ -26,11 +33,25 @@ export class FeesComponent {
   errorMessage = '';
   targetValues: string[] = [];
   separatorKeysCodes: number[] = [ENTER, COMMA];
-  filteredTargetValues: Observable<string[]> | undefined;
+  countries: CommonTargetValue[] = CountryCodes.map(c => {
+    let item = new CommonTargetValue();
+    item.imgClass = "country-flag";
+    item.imgSource = `assets/svg-country-flags/${c.code.toLowerCase()}.svg`;
+    item.title = c.name;
+    return item;
+  });
+  filteredTargetValues: Observable<CommonTargetValue[]> | undefined;
 
   detailsColumnIndex = 6;
-  displayedColumns: string[] = [
-    'isDefault', 'name', 'target', 'trxType', 'instrument', 'provider', 'details'
+  displayedColumns: string[] = ['isDefault', 'name', 'target', 'trxType', 'instrument', 'provider', 'details'];
+  targets: string[] = [
+    'AffiliateId',
+    'Country',
+    'AccountId',
+    'AccountType',
+    'Initiate from widget',
+    'Initiate from checkout',
+    'Initiate from wallet'
   ];
   transactionTypes: string[] = ['Deposits', 'Transfer', 'System', 'Withdrawals', 'Exchange'];
   instruments: string[] = ['Credit Card', 'APM', 'Wire Transfer', 'Received', 'Sent', 'Bitstamp'];
@@ -67,13 +88,41 @@ export class FeesComponent {
 
   // temp
   schemes = FeeShemes;
-  affiliateIds: string[] = ['fb4598gbf38d73', 'ce98g6g7fb80g4', 'ee3f78f4358g74', 'abab90ag59bedb'];
-  accountIds: string[] = ['37d83fbg8954bf', '4g08bf7g6g89ec', '47g8534f87f3ee', 'bdeb95gaabab90'];
-  accountTypes: string[] = ['Personal', 'Merchant'];
-  widgets: string[] = ['Widget A', 'Widget B', 'Widget C', 'Widget D'];
-  checkouts: string[] = ['Checkout 001', 'Checkout 002', 'Checkout 003', 'Checkout 004'];
-  wallets: string[] = ['Wallet 001', 'Wallet 002', 'Wallet 003', 'Wallet 004'];
-  countrues: string[] = ['America', 'Mordor'];
+
+  affiliateIds: CommonTargetValue[] = [
+    { title: 'fb4598gbf38d73', imgClass: '', imgSource: '' },
+    { title: 'ce98g6g7fb80g4', imgClass: '', imgSource: '' },
+    { title: 'ee3f78f4358g74', imgClass: '', imgSource: '' },
+    { title: 'abab90ag59bedb', imgClass: '', imgSource: '' }
+  ];
+  accountIds: CommonTargetValue[] = [
+    { title: '37d83fbg8954bf', imgClass: '', imgSource: '' },
+    { title: '4g08bf7g6g89ec', imgClass: '', imgSource: '' },
+    { title: '47g8534f87f3ee', imgClass: '', imgSource: '' },
+    { title: 'bdeb95gaabab90', imgClass: '', imgSource: '' }
+  ];
+  accountTypes: CommonTargetValue[] = [
+    { title: 'Personal', imgClass: '', imgSource: '' },
+    { title: 'Merchant', imgClass: '', imgSource: '' }
+  ];
+  widgets: CommonTargetValue[] = [
+    { title: 'Widget A', imgClass: '', imgSource: '' },
+    { title: 'Widget B', imgClass: '', imgSource: '' },
+    { title: 'Widget C', imgClass: '', imgSource: '' },
+    { title: 'Widget D', imgClass: '', imgSource: '' }
+  ];
+  checkouts: CommonTargetValue[] = [
+    { title: 'Checkout 001', imgClass: '', imgSource: '' },
+    { title: 'Checkout 002', imgClass: '', imgSource: '' },
+    { title: 'Checkout 003', imgClass: '', imgSource: '' },
+    { title: 'Checkout 004', imgClass: '', imgSource: '' }
+  ];
+  wallets: CommonTargetValue[] = [
+    { title: 'Wallet 001', imgClass: '', imgSource: '' },
+    { title: 'Wallet 002', imgClass: '', imgSource: '' },
+    { title: 'Wallet 003', imgClass: '', imgSource: '' },
+    { title: 'Wallet 004', imgClass: '', imgSource: '' }
+  ];
   // temp
 
   get showDetailed(): boolean {
@@ -93,7 +142,7 @@ export class FeesComponent {
       case 'Country': {
         params.title = 'List of countries';
         params.inputPlaceholder = 'New country...';
-        params.dataList = this.countrues;
+        params.dataList = this.countries;
         break;
       }
       case 'AccountId': {
@@ -138,16 +187,21 @@ export class FeesComponent {
   }
 
   ngOnInit(): void {
-    this.filteredTargetValues = this.schemeForm.get('targetValues')?.valueChanges.pipe(
-      startWith(''),
-      map(value => this.filterTargetValues(value)));
+    this.schemeForm.get('target')?.valueChanges.subscribe(val => {
+      this.filteredTargetValues = this.schemeForm.get('targetValues')?.valueChanges.pipe(
+        startWith(''),
+        map(value => this.filterTargetValues(value)));
+    });
+    // this.filteredTargetValues = this.schemeForm.get('targetValues')?.valueChanges.pipe(
+    //   startWith(''),
+    //   map(value => this.filterTargetValues(value)));
   }
 
-  private filterTargetValues(value: string): string[] {
+  private filterTargetValues(value: string): CommonTargetValue[] {
     let filterValue = '';
     if (value) {
       filterValue = value.toLowerCase();
-      return this.targetValueParams.dataList.filter(c => c.toLowerCase().includes(filterValue));
+      return this.targetValueParams.dataList.filter(c => c.title.toLowerCase().includes(filterValue));
     } else {
       return this.targetValueParams.dataList;
     }

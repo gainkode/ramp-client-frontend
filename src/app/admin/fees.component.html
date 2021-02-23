@@ -88,13 +88,9 @@
       <mat-form-field class="form-element">
         <mat-label>Target</mat-label>
         <mat-select formControlName="target" required>
-          <mat-option value="AffiliateId">Affiliate Id</mat-option>
-          <mat-option value="Country">Country</mat-option>
-          <mat-option value="AccountId">Account Id</mat-option>
-          <mat-option value="AccountType">Account Type</mat-option>
-          <mat-option value="Initiate from widget">Initiate from widget</mat-option>
-          <mat-option value="Initiate from checkout">Initiate from checkout</mat-option>
-          <mat-option value="Initiate from wallet">Initiate from wallet</mat-option>
+          <mat-option *ngFor="let item of targets" [value]="item">
+            {{item}}
+          </mat-option>
         </mat-select>
         <mat-error *ngIf="this.schemeForm.get('target')?.hasError('required')">
           Please specify a target
@@ -114,8 +110,9 @@
             (matChipInputTokenEnd)="addTargetValue($event)">
         </mat-chip-list>
         <mat-autocomplete #auto="matAutocomplete" (optionSelected)="targetItemSelected($event)">
-          <mat-option *ngFor="let item of filteredTargetValues | async" [value]="item">
-            {{item}}
+          <mat-option *ngFor="let item of filteredTargetValues | async" [value]="item.title">
+            <dropdown-item itemValue="{{item.title}}" imageClass="{{item.imgClass}}"
+            imageSource="{{item.imgSource}}"></dropdown-item>
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
