@@ -14,8 +14,10 @@ const routes: Routes = [
   {
     path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)
   },
-  //{ path: '**', redirectTo: '/' }
-  { path: '**', redirectTo: '/auth/login' }  // temporary
+  {
+    path: '', loadChildren: () => import('./intro/intro.module').then(m => m.IntroModule)
+  },
+  { path: '**', redirectTo: '/' }
 ];
 
 @NgModule({
