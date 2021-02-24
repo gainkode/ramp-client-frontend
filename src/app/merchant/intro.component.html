@@ -1,0 +1,23 @@
+<div class="menu-bar">
+    <div class="menu-content-bar">
+        <div class="menu-box">
+            <button mat-icon-button (click)="routeTo('/')">
+                <mat-icon>attractions</mat-icon>
+            </button>
+            <button mat-button color="primary" class="menu-button-auxiliary" (click)="routeTo('/personal/intro')">
+                Personal
+            </button>
+            <button mat-button color="primary" class="menu-button-selected" (click)="routeTo('/auth/login')">
+                Merchant
+            </button>
+        </div>
+        <div class="menu-box">
+            <button mat-button color="primary" class="menu-button-selected" (click)="routeTo('/auth/login')">
+                Log in
+            </button>
+            <button mat-flat-button color="primary" (click)="routeTo('/auth/register')">
+                Sign up
+            </button>
+        </div>
+    </div>
+</div>

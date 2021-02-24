@@ -3,9 +3,9 @@ import { Router } from '@angular/router';
 
 @Component({
     templateUrl: 'intro.component.html',
-    styleUrls: ['intro.component.scss']
+    styleUrls: ['../menu.scss']
 })
-export class IntroComponent {
+export class IntroPersonalComponent {
     constructor(private router: Router) { }
 
     routeTo(link: string): void {
