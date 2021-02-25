@@ -8,7 +8,7 @@ export class MerchantGuard {
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
         if (!this.auth.isAuthenticatedUserType('Merchant')) {
-            this.router.navigateByUrl('/auth/login');
+            this.router.navigateByUrl('/auth/merchant-login');
             return false;
         }
         return true;

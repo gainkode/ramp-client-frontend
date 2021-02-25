@@ -2,35 +2,36 @@
 
 @font-face {
     font-family: Bahnschrift;
-    src: url(assets/12002.ttf) format("truetype");
+    src        : url(assets/12002.ttf) format("truetype");
 }
 
 * {
     font-family: Bahnschrift, sans-serif;
-    font-size: medium;
+    font-size  : medium;
 }
 
-html, body {
+html,
+body {
     height: 100%;
 }
 
 body {
     background-color: white;
-    padding: 0;
-    margin: 0; 
-    font-family: Bahnschrift, Roboto, "Helvetica Neue", sans-serif;
+    padding         : 0;
+    margin          : 0;
+    font-family     : Bahnschrift, Roboto, "Helvetica Neue", sans-serif;
 }
 
 input:-webkit-autofill,
-input:-webkit-autofill:hover, 
-input:-webkit-autofill:focus, 
-input:-webkit-autofill:active  {
-    box-shadow: 0 0 0 30px white inset !important;
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    box-shadow        : 0 0 0 30px white inset !important;
     -webkit-box-shadow: 0 0 0 30px white inset !important;
 }
 
 input:-webkit-autofill::first-line {
-    font-size: medium;
+    font-size  : medium;
     font-family: Bahnschrift, sans-serif;
 }
 
@@ -39,40 +40,50 @@ input:-webkit-autofill::first-line {
 }
 
 .page-container {
-    width: 100%;
+    width : 100%;
     height: 100%;
 }
 
-.action-page-split {
-    height: 100%;
+.back-box {
     position: fixed;
-    z-index: 1;
+    top     : 2em;
+    left    : 3.5em;
+    margin: 0;
+    color: #7a7a7a;
+    font-weight: 100;
+}
+
+.action-page-split {
+    height    : 100%;
+    position  : fixed;
+    z-index   : 1;
     overflow-x: hidden;
 }
 
 .action-page-left-panel {
-    left: 0;
-    background-color: #b9b9b9;
+    left              : 0;
+    //background-color: #b9b9b9;
+    background-color  : white;
 }
-  
+
 .action-page-right-panel {
     right: 0;
 }
 
 .info-page-split {
-    height: 100%;
-    position: fixed;
-    z-index: 1;
-    top: 0;
+    height    : 100%;
+    position  : fixed;
+    z-index   : 1;
+    top       : 0;
     overflow-x: hidden;
 }
 
 .info-page-left-panel {
     left: 0;
 }
-  
+
 .info-page-right-panel {
-    right: 0;
+    right           : 0;
     background-color: #b9b9b9;
 }
 
@@ -122,60 +133,60 @@ input:-webkit-autofill::first-line {
 
 .split-panel-content {
     position: relative;
-    margin: 1em;
+    margin  : 1em;
 }
 
 .split-panel-menu {
     position: relative;
-    margin: 0;
+    margin  : 0;
 }
 
 .form-error-box {
-    margin-top: 1em;
-    padding: 1em;
+    margin-top      : 1em;
+    padding         : 1em;
     background-color: #f8d4d4;
-    color: #b10808;
-    border: #b10808;
-    border-style: solid;
-    border-width: 0px 0px 2px 0px;
+    color           : #b10808;
+    border          : #b10808;
+    border-style    : solid;
+    border-width    : 0px 0px 2px 0px;
 }
 
 .form-section-title-box {
-    margin: 0;
-    margin-bottom: 0.25em;
-    padding: 0.1em;
+    margin          : 0;
+    margin-bottom   : 0.25em;
+    padding         : 0.1em;
     background-color: #dbdbdb;
-    color: #000000;
-    border: #000000;
-    border-style: solid;
-    border-width: 0px 0px 2px 0px;
+    color           : #000000;
+    border          : #000000;
+    border-style    : solid;
+    border-width    : 0px 0px 2px 0px;
 
     h1 {
-        margin: auto;
+        margin     : auto;
         margin-left: 0.2em;
-        font-size: large;
+        font-size  : large;
     }
 
     h2 {
-        margin: auto;
+        margin     : auto;
         margin-left: 0.2em;
-        font-size: medium;
+        font-size  : medium;
     }
 }
 
 .form-element {
-    width: 100%;
-    margin-top: 0.5em;
+    width        : 100%;
+    margin-top   : 0.5em;
     margin-bottom: 0.5em;
 }
 
 .form-button {
-    width: 10em;
+    width : 10em;
     height: 2.75em;
 
     img {
-        width: 1.15em;
-        height: 1.15em;
+        width       : 1.15em;
+        height      : 1.15em;
         margin-right: 0.4em;
     }
 }
@@ -185,22 +196,22 @@ input:-webkit-autofill::first-line {
 }
 
 footer {
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    color: #15162c;
+    position  : fixed;
+    left      : 0;
+    bottom    : 0;
+    width     : 100%;
+    color     : #15162c;
     text-align: center;
-    padding: 7px;
+    padding   : 7px;
 }
 
 img.country-flag {
-    position: relative;
-    margin: auto;
+    position    : relative;
+    margin      : auto;
     margin-right: 5px;
-    left: 0px;
-    top: 3px;
-    width: 20px;
-    height: 15px;
-    border: 1px solid #000000;
+    left        : 0px;
+    top         : 3px;
+    width       : 20px;
+    height      : 15px;
+    border      : 1px solid #000000;
 }

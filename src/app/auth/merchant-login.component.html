@@ -1,10 +1,15 @@
 <div class="action-page-split action-page-left-panel split-page-60">
+    <div class="back-box">
+        <back-button></back-button>
+    </div>
     <div class="auth-panel-content">
-        <div style="height: 5em;width: 10em;background-color: white;vertical-align: middle;text-align: center;">
-            <h1>Logo placeholder</h1>
-        </div>
-        <div style="text-align: left;margin-top: 1em;">
-            <h3>Information placeholder</h3>
+        <div class="login-form-box">
+            <button mat-icon-button>
+                <mat-icon>attractions</mat-icon>
+            </button>
+            <div style="text-align: left;margin-top: 1em;">
+                <h3>Information placeholder (merchant)</h3>
+            </div>
         </div>
     </div>
 </div>
@@ -15,13 +20,13 @@
             <h2>Login</h2>
 
             <mat-progress-bar *ngIf="inProgress" mode="indeterminate"></mat-progress-bar>
-            
+
             <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
                 <!-- Email -->
                 <mat-form-field class="form-element">
                     <mat-label>Email</mat-label>
-                    <input type="email" matInput formControlName="email" maxlength="60" 
-                    placeholder="User login name" required/>
+                    <input type="email" matInput formControlName="email" maxlength="60" placeholder="User login name"
+                        required />
                     <mat-error *ngIf="this.loginForm.get('email')?.hasError('required')">
                         Please specify your email
                     </mat-error>
@@ -33,13 +38,11 @@
                 <!-- Password -->
                 <mat-form-field class="form-element">
                     <mat-label>Password</mat-label>
-                    <input [type]="hidePassword ? 'password' : 'text'" matInput 
-                    formControlName="password" maxlength="30" placeholder="Password" required>
-                    <button mat-icon-button matSuffix type="button" 
-                    (click)="hidePassword = !hidePassword" 
-                    [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword"
-                    [matTooltip]="hidePassword ? 'Show password' : 'Hide password'"
-                    matTooltipClass="info-tooltip">
+                    <input [type]="hidePassword ? 'password' : 'text'" matInput formControlName="password"
+                        maxlength="30" placeholder="Password" required>
+                    <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword"
+                        [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword"
+                        [matTooltip]="hidePassword ? 'Show password' : 'Hide password'" matTooltipClass="info-tooltip">
                         <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
                     </button>
                     <mat-error *ngIf="this.loginForm.get('password')?.hasError('required')">
@@ -64,14 +67,14 @@
                 <span>If you want to get logged in with your social newtork account, please use:</span>
             </div>
             <div class="form-element">
-                <button class="form-button inline-button" mat-flat-button color="primary" 
-                (click)='socialSignIn("Google")'>
-                    <img src="assets/icon-google.svg" alt="G"/>
+                <button class="form-button inline-button" mat-flat-button color="primary"
+                    (click)='socialSignIn("Google")'>
+                    <img src="assets/icon-google.svg" alt="G" />
                     Google
                 </button>
-                <button class="form-button inline-button" mat-flat-button color="primary" 
-                (click)='socialSignIn("Facebook")'>
-                    <img src="assets/icon-facebook.svg" alt="f"/>
+                <button class="form-button inline-button" mat-flat-button color="primary"
+                    (click)='socialSignIn("Facebook")'>
+                    <img src="assets/icon-facebook.svg" alt="f" />
                     Facebook
                 </button>
             </div>
@@ -84,4 +87,4 @@
             </div>
         </div>
     </div>
-</div> 
+</div>

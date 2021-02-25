@@ -12,7 +12,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ComponentsModule } from '../components/components.module';
-import { LoginComponent } from './login.component';
+import { PersonalLoginComponent } from './personal-login.component';
+import { MerchantLoginComponent } from './merchant-login.component';
 import { RegisterComponent } from './register.component';
 import { SignupComponent } from './signup.component';
 import { SuccessComponent } from './success.component';
@@ -22,7 +23,8 @@ import { ResetComponent } from './reset.component';
 import { TermsComponent } from './terms.component';
 
 const routing = RouterModule.forChild([
-    { path: 'login', component: LoginComponent },
+    { path: 'personal-login', component: PersonalLoginComponent },
+    { path: 'merchant-login', component: MerchantLoginComponent },
     { path: 'register', component: RegisterComponent },
     { path: 'signup/:token', component: SignupComponent },
     { path: 'success/:type', component: SuccessComponent },
@@ -57,7 +59,8 @@ export class MaterialModule { }
         CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule
     ],
     declarations: [
-        LoginComponent, RegisterComponent, SignupComponent, SuccessComponent, RestoreComponent,
+        PersonalLoginComponent, MerchantLoginComponent, RegisterComponent,
+        SignupComponent, SuccessComponent, RestoreComponent,
         ConfirmEmailComponent, ResetComponent, TermsComponent
     ],
     schemas: [

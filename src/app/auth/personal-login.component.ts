@@ -7,10 +7,10 @@ import { SocialUser } from "angularx-social-login";
 import { LoginResult } from '../model/generated-models';
 
 @Component({
-    templateUrl: 'login.component.html',
+    templateUrl: 'personal-login.component.html',
     styleUrls: ['./login.component.scss']
 })
-export class LoginComponent {
+export class PersonalLoginComponent {
     inProgress = false;
     errorMessage = '';
     hidePassword = true;
@@ -60,13 +60,14 @@ export class LoginComponent {
                     this.inProgress = false;
                     const userData = data.login as LoginResult;
                     if (userData.authTokenAction === 'Default') {
-                        this.auth.setLoginUser(userData);
-                        this.auth.socialSignOut();
-                        this.loginForm.reset();
-                        if (userData.user?.type === 'Merchant') {
-                            this.router.navigateByUrl('/merchant/');
-                        } else {
+                        const typeCheck = userData.user?.type === 'Personal';
+                        if (typeCheck) {
+                            this.auth.setLoginUser(userData);
+                            this.auth.socialSignOut();
                             this.router.navigateByUrl('/personal/');
+                        } else {
+                            this.loginForm.reset();
+                            this.errorMessage = 'Wrong account type. Try to sign in as a merchant';
                         }
                     } else if (userData.authTokenAction === 'ConfirmName') {
                         this.router.navigateByUrl(`/auth/signup/${userData.authToken}`);
@@ -97,12 +98,13 @@ export class LoginComponent {
                     this.inProgress = false;
                     const userData = data.login as LoginResult;
                     if (userData.authTokenAction === 'Default') {
-                        this.auth.setLoginUser(userData);
-                        this.loginForm.reset();
-                        if (userData.user?.type === 'Merchant') {
-                            this.router.navigateByUrl('/merchant/');
-                        } else {
+                        const typeCheck = userData.user?.type === 'Personal';
+                        if (typeCheck) {
+                            this.auth.setLoginUser(userData);
                             this.router.navigateByUrl('/personal/');
+                        } else {
+                            this.loginForm.reset();
+                            this.errorMessage = 'Wrong account type. Try to sign in as a merchant';
                         }
                     } else {
                         this.errorMessage = 'Unable to sign in';
