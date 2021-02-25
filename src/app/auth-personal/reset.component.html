@@ -1,0 +1,73 @@
+<div class="action-page-split action-page-left-panel split-page-60">
+    <div class="auth-panel-content">
+        <div style="height: 5em;width: 10em;background-color: white;vertical-align: middle;text-align: center;">
+            <h1>Logo placeholder</h1>
+        </div>
+        <div style="text-align: left;margin-top: 1em;">
+            <h3>Information placeholder</h3>
+        </div>
+    </div>
+</div>
+
+<div class="action-page-split action-page-right-panel split-page-40">
+    <div class="auth-panel-content">
+        <div class="login-form-box">
+            <h2>New password</h2>
+            <mat-progress-bar *ngIf="inProgress" mode="indeterminate"></mat-progress-bar>
+            
+            <form [formGroup]="passwordForm" (ngSubmit)="onSubmit()">
+                <!-- Password -->
+                <mat-form-field class="form-element">
+                    <mat-label>Password</mat-label>
+                    <input [type]="hidePassword1 ? 'password' : 'text'" matInput 
+                    formControlName="password1" maxlength="30" placeholder="Password" required>
+                    <button mat-icon-button matSuffix type="button" 
+                    (click)="hidePassword1 = !hidePassword1" 
+                    [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword1"
+                    [matTooltip]="hidePassword1 ? 'Show password' : 'Hide password'"
+                    matTooltipClass="info-tooltip">
+                        <mat-icon>{{hidePassword1 ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
+                    <button mat-icon-button matSuffix type="button" [attr.aria-label]="'Info'"
+                    matTooltip="Password must be at least 8 symbols long, and must contain latin lowercase and uppercase symbols, digits, and special symbols"
+                    matTooltipClass="info-tooltip">
+                        <mat-icon>info_outline</mat-icon>
+                    </button>
+                    <mat-error *ngIf="this.getPasswordValidation()!=''">
+                        {{getPasswordValidation()}}
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- Confirm password -->
+                <mat-form-field class="form-element">
+                    <mat-label>Confirm Password</mat-label>
+                    <input [type]="hidePassword2 ? 'password' : 'text'" matInput 
+                    formControlName="password2" maxlength="30" placeholder="Confirm Password" required>
+                    <button mat-icon-button matSuffix type="button" 
+                    (click)="hidePassword2 = !hidePassword2" 
+                    [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword2"
+                    [matTooltip]="hidePassword2 ? 'Show password' : 'Hide password'"
+                    matTooltipClass="info-tooltip">
+                        <mat-icon>{{hidePassword2 ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
+                    <mat-error *ngIf="this.passwordForm.get('password2')?.hasError('required')">
+                        Please specify your password
+                    </mat-error>
+                    <mat-error *ngIf="this.passwordForm.get('password2')?.hasError('minlength')">
+                        Password must contain at least 8 symbols
+                    </mat-error>
+                </mat-form-field>
+
+                <div class="form-element">
+                    <button class="form-button" type="submit" mat-flat-button color="primary">
+                        Change
+                    </button>
+                </div>
+            </form>
+            
+            <div class="form-error-box" *ngIf="errorMessage!=''">
+                {{errorMessage}}
+            </div>
+        </div>
+    </div>
+</div> 

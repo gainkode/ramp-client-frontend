@@ -7,10 +7,10 @@ import { SocialUser } from "angularx-social-login";
 import { LoginResult } from '../model/generated-models';
 
 @Component({
-    templateUrl: 'merchant-login.component.html',
+    templateUrl: 'login.component.html',
     styleUrls: ['./login.component.scss']
 })
-export class MerchantLoginComponent {
+export class LoginComponent {
     inProgress = false;
     errorMessage = '';
     hidePassword = true;

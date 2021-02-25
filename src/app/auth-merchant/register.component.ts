@@ -8,10 +8,10 @@ import { Validators, FormBuilder, AbstractControl } from '@angular/forms';
 import { CountryCode, CountryCodes } from '../model/country-code.model';
 
 @Component({
-    templateUrl: 'personal-register.component.html',
+    templateUrl: 'register.component.html',
     styleUrls: ['./login.component.scss']
 })
-export class PersonalRegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit {
     inProgress = false;
     errorMessage = '';
     hidePassword1 = true;
@@ -30,8 +30,7 @@ export class PersonalRegisterComponent implements OnInit {
             }
         ],
         username: ['', { validators: [Validators.required], updateOn: 'change' } ],
-        firstName: ['', { validators: [Validators.required], updateOn: 'change' } ],
-        lastName: ['', { validators: [Validators.required], updateOn: 'change' } ],
+        companyName: ['', { validators: [Validators.required], updateOn: 'change' } ],
         country: ['', { validators: [Validators.required], updateOn: 'change' } ],
         phoneCode: ['',
             {
@@ -172,9 +171,9 @@ export class PersonalRegisterComponent implements OnInit {
                 this.signupForm.get('username')?.value,
                 this.signupForm.get('email')?.value,
                 this.signupForm.get('password1')?.value,
-                'Personal',
-                this.signupForm.get('firstName')?.value,
-                this.signupForm.get('lastName')?.value,
+                'Merchant',
+                this.signupForm.get('companyName')?.value,
+                '',  // last name
                 countryCode,
                 phone)
                 .subscribe(({ data }) => {

@@ -1,74 +1,53 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Validators, FormBuilder, AbstractControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 import { ErrorService } from '../services/error.service';
-import { Validators, FormBuilder, AbstractControl } from '@angular/forms';
+import { LoginResult } from '../model/generated-models';
 import { CountryCode, CountryCodes } from '../model/country-code.model';
 
 @Component({
-    templateUrl: 'merchant-register.component.html',
+    templateUrl: 'signup.component.html',
     styleUrls: ['./login.component.scss']
 })
-export class MerchantRegisterComponent implements OnInit {
+export class SignupComponent implements OnInit {
+    token = '';
     inProgress = false;
     errorMessage = '';
-    hidePassword1 = true;
-    hidePassword2 = true;
     agreementChecked = false;
+    selectedUserType = 'Personal';
     countries: CountryCode[] = CountryCodes;
     filteredCountries: Observable<CountryCode[]> | undefined;
 
     signupForm = this.formBuilder.group({
-        email: ['',
-            {
-                validators: [
-                    Validators.required,
-                    Validators.pattern('^[a-zA-Z0-9_.+\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-\.]+$')
-                ], updateOn: 'change'
-            }
+        username: [,
+            { validators: [Validators.required], updateOn: 'change' }
         ],
-        username: ['', { validators: [Validators.required], updateOn: 'change' } ],
-        companyName: ['', { validators: [Validators.required], updateOn: 'change' } ],
-        country: ['', { validators: [Validators.required], updateOn: 'change' } ],
+        userType: ['Personal'],
+        firstName: [''],
+        lastName: [''],
+        companyName: [''],
+        country: ['', Validators.required],
         phoneCode: ['',
-            {
-                validators: [
-                    Validators.required,
-                    Validators.pattern('^[\+](?:[0-9]?){0,3}[0-9]$')
-                ], updateOn: 'change'
-            }
+            { validators: [
+                Validators.required,
+                Validators.pattern('^[\+](?:[0-9]?){0,3}[0-9]$')
+            ], updateOn: 'change' }
         ],
         phoneNumber: ['',
-            {
-                validators: [
-                    Validators.required,
-                    Validators.pattern('^(?:[0-9]?){6,9}[0-9]$')
-                ], updateOn: 'change'
-            }
-        ],
-        password1: [,
-            {
-                validators: [
-                    Validators.required,
-                    Validators.minLength(8),
-                    Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[`~$@#!%^_*?&+=<|>])[A-Za-z0-9\d`~$@#!%^_*?&+=<|>].{7,30}')
-                ], updateOn: 'change'
-            }
-        ],
-        password2: [,
-            {
-                validators: [
-                    Validators.required,
-                    Validators.minLength(8)
-                ], updateOn: 'change'
-            }
+            { validators: [
+                Validators.required,
+                Validators.pattern('^(?:[0-9]?){6,9}[0-9]$')
+            ], updateOn: 'change' }
         ]
     });
 
     constructor(private auth: AuthService, private errorHandler: ErrorService,
-        private formBuilder: FormBuilder, private router: Router) { }
+        private formBuilder: FormBuilder, private router: Router, activeRoute: ActivatedRoute) {
+        this.token = activeRoute.snapshot.params['token'];
+    }
 
     ngOnInit(): void {
         this.filteredCountries = this.countryField?.valueChanges.pipe(
@@ -80,6 +59,36 @@ export class MerchantRegisterComponent implements OnInit {
                 this.phoneCodeField?.setValue(code);
             }
         });
+        this.setUserCategoryValidators();
+    }
+
+    setUserCategoryValidators(): void {
+        const userTypeField = this.signupForm.get('userType');
+        const firstNameField = this.signupForm.get('firstName');
+        const lastNameField = this.signupForm.get('lastName');
+        const companyNameField = this.signupForm.get('companyName');
+
+        userTypeField?.valueChanges.subscribe(userType => {
+            this.selectedUserType = userType;
+            this.resetValidator(firstNameField);
+            this.resetValidator(lastNameField);
+            this.resetValidator(companyNameField);
+            if (userType === 'Merchant') {
+                firstNameField?.setValidators(null);
+                lastNameField?.setValidators(null);
+                companyNameField?.setValidators([Validators.required]);
+            } else if (userType === 'Personal') {
+                firstNameField?.setValidators([Validators.required]);
+                lastNameField?.setValidators([Validators.required]);
+                companyNameField?.setValidators(null);
+            }
+        });
+    }
+
+    resetValidator(control: AbstractControl | null): void {
+        control?.clearValidators();
+        control?.reset();
+        control?.markAsUntouched();
     }
 
     get countryField(): AbstractControl | null {
@@ -136,23 +145,6 @@ export class MerchantRegisterComponent implements OnInit {
         this.agreementChecked = !this.agreementChecked;
     }
 
-    passwordsEqual(): boolean {
-        const p1 = this.signupForm.get('password1')?.value;
-        const p2 = this.signupForm.get('password2')?.value;
-        return (p1 === p2);
-    }
-
-    getPasswordValidation(): string {
-        if (this.signupForm.get('password1')?.hasError('required')) {
-            return 'Please specify your password';
-        } else if (this.signupForm.get('password1')?.hasError('minlength')) {
-            return 'Password must contain at least 8 symbols';
-        } else if (this.signupForm.get('password1')?.hasError('pattern')) {
-            return 'Invalid password format';
-        }
-        return '';
-    }
-
     onSubmit(): void {
         this.errorMessage = '';
         if (this.signupForm.valid) {
@@ -161,28 +153,42 @@ export class MerchantRegisterComponent implements OnInit {
                 this.errorMessage = `Unable to recognize country: ${this.countryField?.value}`;
                 return;
             }
-            if (!this.passwordsEqual()) {
-                this.errorMessage = 'Passwords are not equal';
-                return;
-            }
             this.inProgress = true;
+            let firstName = '';
+            let lastName = '';
+            if (this.selectedUserType === 'Merchant') {
+                firstName = this.signupForm.get('companyName')?.value;
+            } else if (this.selectedUserType === 'Personal') {
+                firstName = this.signupForm.get('firstName')?.value;
+                lastName = this.signupForm.get('lastName')?.value;
+            }
             const phone = this.phoneCodeField?.value + ' ' + this.phoneNumberField?.value;
-            this.auth.register(
+            this.auth.confirmName(
+                this.token,
                 this.signupForm.get('username')?.value,
-                this.signupForm.get('email')?.value,
-                this.signupForm.get('password1')?.value,
-                'Merchant',
-                this.signupForm.get('companyName')?.value,
-                '',  // last name
+                this.signupForm.get('userType')?.value,
+                firstName,
+                lastName,
                 countryCode,
                 phone)
                 .subscribe(({ data }) => {
                     this.inProgress = false;
-                    this.router.navigateByUrl('/auth/success/signup');
+                    const userData = data.confirmName as LoginResult;
+                    if (userData.authTokenAction === 'ConfirmName' ||
+                    userData.authTokenAction === 'Default') {
+                        this.auth.setLoginUser(userData);
+                        if (userData.user?.type === 'Merchant') {
+                            this.router.navigateByUrl('/merchant/');
+                        } else {
+                            this.router.navigateByUrl('/personal/');
+                        }
+                    } else {
+                        this.errorMessage = 'Unable to sign in';
+                    }
                 }, (error) => {
                     this.inProgress = false;
                     this.errorMessage = this.errorHandler.getError(
-                        error.message,
+                        error.message, 
                         'Unable to register new account');
                 });
         }

@@ -12,10 +12,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ComponentsModule } from '../components/components.module';
-import { PersonalLoginComponent } from './personal-login.component';
-import { MerchantLoginComponent } from './merchant-login.component';
-import { PersonalRegisterComponent } from './personal-register.component';
-import { MerchantRegisterComponent } from './merchant-register.component';
+import { LoginComponent } from './login.component';
+import { RegisterComponent } from './register.component';
 import { SignupComponent } from './signup.component';
 import { SuccessComponent } from './success.component';
 import { RestoreComponent } from './restore.component';
@@ -24,10 +22,8 @@ import { ResetComponent } from './reset.component';
 import { TermsComponent } from './terms.component';
 
 const routing = RouterModule.forChild([
-    { path: 'login/personal', component: PersonalLoginComponent },
-    { path: 'login/merchant', component: MerchantLoginComponent },
-    { path: 'register/personal', component: PersonalRegisterComponent },
-    { path: 'register/merchant', component: MerchantRegisterComponent },
+    { path: 'login', component: LoginComponent },
+    { path: 'register', component: RegisterComponent },
     { path: 'signup/:token', component: SignupComponent },
     { path: 'success/:type', component: SuccessComponent },
     { path: 'confirm-email/:token', component: ConfirmEmailComponent },
@@ -61,12 +57,11 @@ export class MaterialModule { }
         CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule
     ],
     declarations: [
-        PersonalLoginComponent, MerchantLoginComponent, PersonalRegisterComponent, MerchantRegisterComponent,
-        SignupComponent, SuccessComponent, RestoreComponent,
+        LoginComponent, RegisterComponent, SignupComponent, SuccessComponent, RestoreComponent,
         ConfirmEmailComponent, ResetComponent, TermsComponent
     ],
     schemas: [
         CUSTOM_ELEMENTS_SCHEMA
     ]
 })
-export class AuthModule { }
+export class MerchantAuthModule { }

@@ -1,0 +1,143 @@
+<div class="action-page-split action-page-left-panel split-page-60">
+    <div class="auth-panel-content">
+        <div style="height: 5em;width: 10em;background-color: white;vertical-align: middle;text-align: center;">
+            <h1>Logo placeholder</h1>
+        </div>
+        <div style="text-align: left;margin-top: 1em;">
+            <h3>Information placeholder</h3>
+        </div>
+    </div>
+</div>
+
+<div class="action-page-split action-page-right-panel split-page-40">
+    <div class="auth-panel-content">
+        <div class="login-form-box">
+            <h2>Register</h2>
+
+            <mat-progress-bar *ngIf="inProgress" mode="indeterminate"></mat-progress-bar>
+            
+            <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+                <!-- Nick name -->
+                <mat-form-field class="form-element">
+                    <mat-label>Nick name</mat-label>
+                    <input matInput formControlName="username" maxlength="30" 
+                    placeholder="Nick name" required>
+                    <mat-error *ngIf="this.signupForm.get('username')?.hasError('required')">
+                        Please specify your nick name
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- Account type -->
+                <div class="form-element">
+                    <label id="usertype-radio-group-label">
+                        Account type
+                    </label>
+                </div>
+                <mat-radio-group aria-labelledby="usertype-radio-group-label"
+                class="login-form-radio-group" formControlName="userType">
+                    <mat-radio-button class="login-form-radio-button" color="primary" value="Personal">
+                        Personal
+                    </mat-radio-button>
+                    <mat-radio-button class="login-form-radio-button" color="primary" value="Merchant">
+                        Merchant
+                    </mat-radio-button>
+                </mat-radio-group>
+
+                <!-- Company name -->
+                <mat-form-field *ngIf="selectedUserType=='Merchant'" class="form-element">
+                    <mat-label>Company name</mat-label>
+                    <input matInput formControlName="companyName" maxlength="50" 
+                    placeholder="Company name" required>
+                    <mat-error *ngIf="this.signupForm.get('companyName')?.hasError('required')">
+                        Please specify a company name
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- First name -->
+                <mat-form-field *ngIf="selectedUserType=='Personal'" class="form-element">
+                    <mat-label>First name</mat-label>
+                    <input matInput formControlName="firstName" maxlength="30" 
+                    placeholder="First name" required>
+                    <mat-error *ngIf="this.signupForm.get('firstName')?.hasError('required')">
+                        Please specify your first name
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- Last name -->
+                <mat-form-field *ngIf="selectedUserType=='Personal'" class="form-element">
+                    <mat-label>Last name</mat-label>
+                    <input matInput formControlName="lastName" maxlength="50" 
+                    placeholder="Last name" required>
+                    <mat-error *ngIf="this.signupForm.get('lastName')?.hasError('required')">
+                        Please specify your last name
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- Country -->
+                <mat-form-field class="form-element" appearance="standard">
+                    <mat-label>Country</mat-label>
+                    <input type="country" placeholder="Country" aria-label="Country" matInput
+                    formControlName="country" [matAutocomplete]="auto" maxlength="40" required>
+                    <mat-autocomplete #auto="matAutocomplete">
+                        <mat-option *ngFor="let c of filteredCountries | async" [value]="c.name">
+                            <dropdown-item itemValue="{{c.name}}" imageClass="country-flag"
+                            imageSource="assets/svg-country-flags/{{getCountryFlag(c.code)}}"></dropdown-item>
+                        </mat-option>
+                    </mat-autocomplete>
+                    <mat-error *ngIf="this.countryField?.hasError('required')">
+                        Please specify country
+                    </mat-error>
+                </mat-form-field>
+
+                <div class="form-element phone-box-split">
+                    <!-- Phone code -->
+                    <mat-form-field class="phone-box-left-panel" appearance="standard">
+                        <mat-label>Code</mat-label>
+                        <input matInput formControlName="phoneCode" maxlength="5" type="search"
+                        placeholder="Code" required>
+                        <mat-error *ngIf="this.phoneCodeField?.hasError('required')">
+                            Code is required
+                        </mat-error>
+                        <mat-error *ngIf="this.phoneCodeField?.hasError('pattern')">
+                            Bad code format
+                        </mat-error>
+                    </mat-form-field>
+                    
+                    <!-- Phone number -->
+                    <mat-form-field class="phone-box-right-panel" appearance="standard">
+                        <mat-label>Phone number</mat-label>
+                        <input matInput formControlName="phoneNumber" maxlength="10" type="search"
+                        placeholder="Number" required>
+                        <mat-error *ngIf="this.phoneNumberField?.hasError('required')">
+                            Please specify your phone number
+                        </mat-error>
+                        <mat-error *ngIf="this.phoneNumberField?.hasError('pattern')">
+                            Bad phone format
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <br>
+                <div class="form-element">
+                    <mat-checkbox color="primary" [checked]="agreementChecked" (change)="checkAgreement()">
+                        <span>I agree to the 
+                            <a target="_blank" rel="noopener noreferrer" href="/auth/terms">
+                                terms and conditions
+                            </a>
+                        </span>
+                    </mat-checkbox>
+                </div>
+
+                <div class="form-element">
+                    <button class="form-button" type="submit" mat-flat-button color="primary" 
+                    [disabled]="!agreementChecked">
+                        Sign up
+                    </button>
+                </div>
+            </form>
+            <div class="form-error-box" *ngIf="errorMessage!=''">
+                {{errorMessage}}
+            </div>
+        </div>
+    </div>
+</div>
