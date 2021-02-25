@@ -31,7 +31,7 @@ export class RestoreComponent {
                 this.restoreForm.get('email')?.value)
                 .subscribe(({ data }) => {
                     this.inProgress = false;
-                    this.router.navigateByUrl('/auth/success/restore');
+                    this.router.navigateByUrl('/auth/personal/success/restore');
                 }, (error) => {
                     this.inProgress = false;
                     this.errorMessage = this.errorHandler.getError(

@@ -1,10 +1,15 @@
 <div class="action-page-split action-page-left-panel split-page-60">
+    <div class="back-box">
+        <back-button></back-button>
+    </div>
     <div class="auth-panel-content">
-        <div style="height: 5em;width: 10em;background-color: white;vertical-align: middle;text-align: center;">
-            <h1>Logo placeholder</h1>
-        </div>
-        <div style="text-align: left;margin-top: 1em;">
-            <h3>Information placeholder</h3>
+        <div class="login-form-box">
+            <button mat-icon-button>
+                <mat-icon>attractions</mat-icon>
+            </button>
+            <div style="text-align: left;margin-top: 1em;">
+                <h3>Information placeholder (merchant)</h3>
+            </div>
         </div>
     </div>
 </div>
@@ -27,49 +32,13 @@
                     </mat-error>
                 </mat-form-field>
 
-                <!-- Account type -->
-                <div class="form-element">
-                    <label id="usertype-radio-group-label">
-                        Account type
-                    </label>
-                </div>
-                <mat-radio-group aria-labelledby="usertype-radio-group-label"
-                class="login-form-radio-group" formControlName="userType">
-                    <mat-radio-button class="login-form-radio-button" color="primary" value="Personal">
-                        Personal
-                    </mat-radio-button>
-                    <mat-radio-button class="login-form-radio-button" color="primary" value="Merchant">
-                        Merchant
-                    </mat-radio-button>
-                </mat-radio-group>
-
                 <!-- Company name -->
-                <mat-form-field *ngIf="selectedUserType=='Merchant'" class="form-element">
+                <mat-form-field class="form-element">
                     <mat-label>Company name</mat-label>
                     <input matInput formControlName="companyName" maxlength="50" 
                     placeholder="Company name" required>
                     <mat-error *ngIf="this.signupForm.get('companyName')?.hasError('required')">
                         Please specify a company name
-                    </mat-error>
-                </mat-form-field>
-
-                <!-- First name -->
-                <mat-form-field *ngIf="selectedUserType=='Personal'" class="form-element">
-                    <mat-label>First name</mat-label>
-                    <input matInput formControlName="firstName" maxlength="30" 
-                    placeholder="First name" required>
-                    <mat-error *ngIf="this.signupForm.get('firstName')?.hasError('required')">
-                        Please specify your first name
-                    </mat-error>
-                </mat-form-field>
-
-                <!-- Last name -->
-                <mat-form-field *ngIf="selectedUserType=='Personal'" class="form-element">
-                    <mat-label>Last name</mat-label>
-                    <input matInput formControlName="lastName" maxlength="50" 
-                    placeholder="Last name" required>
-                    <mat-error *ngIf="this.signupForm.get('lastName')?.hasError('required')">
-                        Please specify your last name
                     </mat-error>
                 </mat-form-field>
 
@@ -121,7 +90,7 @@
                 <div class="form-element">
                     <mat-checkbox color="primary" [checked]="agreementChecked" (change)="checkAgreement()">
                         <span>I agree to the 
-                            <a target="_blank" rel="noopener noreferrer" href="/auth/terms">
+                            <a target="_blank" rel="noopener noreferrer" href="/auth/merchant/terms">
                                 terms and conditions
                             </a>
                         </span>

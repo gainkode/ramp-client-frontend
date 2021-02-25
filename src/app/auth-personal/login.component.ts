@@ -70,7 +70,7 @@ export class LoginComponent {
                             this.errorMessage = 'Wrong account type. Try to sign in as a merchant';
                         }
                     } else if (userData.authTokenAction === 'ConfirmName') {
-                        this.router.navigateByUrl(`/auth/signup/${userData.authToken}`);
+                        this.router.navigateByUrl(`/auth/personal/signup/${userData.authToken}`);
                     } else {
                         this.errorMessage = `Invalid authentication via ${name}`;
                     }

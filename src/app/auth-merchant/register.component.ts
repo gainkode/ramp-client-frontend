@@ -178,7 +178,7 @@ export class RegisterComponent implements OnInit {
                 phone)
                 .subscribe(({ data }) => {
                     this.inProgress = false;
-                    this.router.navigateByUrl('/auth/success/signup');
+                    this.router.navigateByUrl('/auth/merchant/success/signup');
                 }, (error) => {
                     this.inProgress = false;
                     this.errorMessage = this.errorHandler.getError(

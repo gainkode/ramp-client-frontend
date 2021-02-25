@@ -17,19 +17,13 @@ export class SignupComponent implements OnInit {
     inProgress = false;
     errorMessage = '';
     agreementChecked = false;
-    selectedUserType = 'Personal';
     countries: CountryCode[] = CountryCodes;
     filteredCountries: Observable<CountryCode[]> | undefined;
 
     signupForm = this.formBuilder.group({
-        username: [,
-            { validators: [Validators.required], updateOn: 'change' }
-        ],
-        userType: ['Personal'],
-        firstName: [''],
-        lastName: [''],
-        companyName: [''],
-        country: ['', Validators.required],
+        username: ['', { validators: [Validators.required], updateOn: 'change' } ],
+        companyName: ['', { validators: [Validators.required], updateOn: 'change' } ],
+        country: ['', { validators: [Validators.required], updateOn: 'change' } ],
         phoneCode: ['',
             { validators: [
                 Validators.required,
@@ -59,36 +53,6 @@ export class SignupComponent implements OnInit {
                 this.phoneCodeField?.setValue(code);
             }
         });
-        this.setUserCategoryValidators();
-    }
-
-    setUserCategoryValidators(): void {
-        const userTypeField = this.signupForm.get('userType');
-        const firstNameField = this.signupForm.get('firstName');
-        const lastNameField = this.signupForm.get('lastName');
-        const companyNameField = this.signupForm.get('companyName');
-
-        userTypeField?.valueChanges.subscribe(userType => {
-            this.selectedUserType = userType;
-            this.resetValidator(firstNameField);
-            this.resetValidator(lastNameField);
-            this.resetValidator(companyNameField);
-            if (userType === 'Merchant') {
-                firstNameField?.setValidators(null);
-                lastNameField?.setValidators(null);
-                companyNameField?.setValidators([Validators.required]);
-            } else if (userType === 'Personal') {
-                firstNameField?.setValidators([Validators.required]);
-                lastNameField?.setValidators([Validators.required]);
-                companyNameField?.setValidators(null);
-            }
-        });
-    }
-
-    resetValidator(control: AbstractControl | null): void {
-        control?.clearValidators();
-        control?.reset();
-        control?.markAsUntouched();
     }
 
     get countryField(): AbstractControl | null {
@@ -154,21 +118,13 @@ export class SignupComponent implements OnInit {
                 return;
             }
             this.inProgress = true;
-            let firstName = '';
-            let lastName = '';
-            if (this.selectedUserType === 'Merchant') {
-                firstName = this.signupForm.get('companyName')?.value;
-            } else if (this.selectedUserType === 'Personal') {
-                firstName = this.signupForm.get('firstName')?.value;
-                lastName = this.signupForm.get('lastName')?.value;
-            }
             const phone = this.phoneCodeField?.value + ' ' + this.phoneNumberField?.value;
             this.auth.confirmName(
                 this.token,
                 this.signupForm.get('username')?.value,
-                this.signupForm.get('userType')?.value,
-                firstName,
-                lastName,
+                'Merchant',
+                this.signupForm.get('companyName')?.value,
+                '',
                 countryCode,
                 phone)
                 .subscribe(({ data }) => {
@@ -176,11 +132,14 @@ export class SignupComponent implements OnInit {
                     const userData = data.confirmName as LoginResult;
                     if (userData.authTokenAction === 'ConfirmName' ||
                     userData.authTokenAction === 'Default') {
-                        this.auth.setLoginUser(userData);
-                        if (userData.user?.type === 'Merchant') {
+                        const typeCheck = userData.user?.type === 'Merchant';
+                        if (typeCheck) {
+                            this.auth.setLoginUser(userData);
+                            this.auth.socialSignOut();
                             this.router.navigateByUrl('/merchant/');
                         } else {
-                            this.router.navigateByUrl('/personal/');
+                            this.signupForm.reset();
+                            this.errorMessage = 'Wrong account type. Try to sign in as a personal';
                         }
                     } else {
                         this.errorMessage = 'Unable to sign in';
