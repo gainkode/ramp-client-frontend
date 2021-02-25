@@ -2,7 +2,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-//import { MatTabsModule } from '@angular/material/tabs';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatChipsModule } from '@angular/material/chips'; 
 import { MatTooltipModule } from '@angular/material/tooltip'; 
 import { MatListModule } from '@angular/material/list';
@@ -38,7 +38,7 @@ const routing = RouterModule.forChild([
 const modules = [
     MatChipsModule,
     MatTooltipModule,
-    //MatTabsModule,
+    MatTabsModule,
     MatListModule,
     MatTableModule,
     MatButtonModule,

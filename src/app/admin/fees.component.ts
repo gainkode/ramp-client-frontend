@@ -31,6 +31,7 @@ export class FeesComponent {
   private showDetails = false;
   inProgress = false;
   errorMessage = '';
+  selectedTab = 0;
   targetValues: string[] = [];
   separatorKeysCodes: number[] = [ENTER, COMMA];
   countries: CommonTargetValue[] = CountryCodes.map(c => {
@@ -158,7 +159,7 @@ export class FeesComponent {
         break;
       }
       case 'Initiate from widget': {
-        params.title = 'List widgets';
+        params.title = 'List of widgets';
         params.inputPlaceholder = 'New widget...';
         params.dataList = this.widgets;
         break;
@@ -244,8 +245,10 @@ export class FeesComponent {
   toggleDetails(scheme: FeeSheme): void {
     this.showDetails = !this.showDetails;
     if (this.showDetails) {
+      this.selectedTab = 1;
       this.displayedColumns.splice(this.detailsColumnIndex, 1);
       this.setFormData(scheme);
+      this.selectedTab = 0;
     } else {
       this.displayedColumns.push('details');
     }
