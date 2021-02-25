@@ -8,7 +8,7 @@ export class PersonalGuard {
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
         if (!this.auth.isAuthenticatedUserType('Personal')) {
-            this.router.navigateByUrl('/auth/personal-login');
+            this.router.navigateByUrl('/auth/login/personal');
             return false;
         }
         return true;
