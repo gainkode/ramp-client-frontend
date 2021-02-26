@@ -1,5 +1,5 @@
 overwrite: true
-schema: http://localhost:3001/gql/api
+schema: http://localhost:4001/gql/api
 documents: null
 generates:
   ./src/app/model/generated-models.ts:
