@@ -191,13 +191,11 @@ export class FeesComponent {
 
   ngOnInit(): void {
     this.schemeForm.get('target')?.valueChanges.subscribe(val => {
+      this.clearTargetValues();
       this.filteredTargetValues = this.schemeForm.get('targetValues')?.valueChanges.pipe(
         startWith(''),
         map(value => this.filterTargetValues(value)));
     });
-    // this.filteredTargetValues = this.schemeForm.get('targetValues')?.valueChanges.pipe(
-    //   startWith(''),
-    //   map(value => this.filterTargetValues(value)));
   }
 
   private filterTargetValues(value: string): CommonTargetValue[] {
@@ -308,6 +306,10 @@ export class FeesComponent {
     if (index >= 0) {
       this.targetValues.splice(index, 1);
     }
+  }
+
+  clearTargetValues() {
+    this.targetValues.splice(0, this.targetValues.length);
   }
 
   targetItemSelected(event: MatAutocompleteSelectedEvent): void {
