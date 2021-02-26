@@ -32,6 +32,8 @@ export class FeesComponent {
   inProgress = false;
   errorMessage = '';
   selectedTab = 0;
+  tab2HasError = false;
+  tab3HasError = false;
   targetValues: string[] = [];
   separatorKeysCodes: number[] = [ENTER, COMMA];
   countries: CommonTargetValue[] = CountryCodes.map(c => {
@@ -242,9 +244,39 @@ export class FeesComponent {
     }
   }
 
-  toggleDetails(scheme: FeeSheme): void {
-    this.showDetails = !this.showDetails;
-    if (this.showDetails) {
+  tabHasError(tab: string): boolean {
+    let valid: boolean | undefined = false;
+    if (tab == 'tab1') {
+      valid = (
+        this.schemeForm.get('target')?.valid &&
+        this.schemeForm.get('targetValues')?.valid &&
+        this.schemeForm.get('instrument')?.valid &&
+        this.schemeForm.get('trxType')?.valid &&
+        this.schemeForm.get('provider')?.valid);
+    } else if (tab == 'tab2') {
+      valid = (
+        this.schemeForm.get('transactionFees')?.valid &&
+        this.schemeForm.get('minTransactionFee')?.valid &&
+        this.schemeForm.get('rollingReserves')?.valid &&
+        this.schemeForm.get('rollingReservesDays')?.valid &&
+        this.schemeForm.get('chargebackFees')?.valid &&
+        this.schemeForm.get('monthlyFees')?.valid &&
+        this.schemeForm.get('minMonthlyFees')?.valid);
+    } else if (tab == 'tab3') {
+      valid = (
+        this.schemeForm.get('beneficiaryName')?.valid &&
+        this.schemeForm.get('beneficiaryAddress')?.valid &&
+        this.schemeForm.get('iban')?.valid &&
+        this.schemeForm.get('bankName')?.valid &&
+        this.schemeForm.get('bankAddress')?.valid &&
+        this.schemeForm.get('swift')?.valid);
+      }
+      return valid !== true;
+    }
+
+    toggleDetails(scheme: FeeSheme): void {
+      this.showDetails = !this.showDetails;
+      if(this.showDetails) {
       this.selectedTab = 1;
       this.displayedColumns.splice(this.detailsColumnIndex, 1);
       this.setFormData(scheme);

@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { DropdownItemComponent } from './dropdown-item.component';
 import { BackButtonComponent } from './backbutton.component';
+import { TabLabelComponent } from './tablabel.component';
 
 const materialModules = [
     MatButtonModule,
@@ -18,8 +19,8 @@ export class MaterialModule { }
 
 @NgModule({
     imports: [CommonModule, MaterialModule],
-    declarations: [DropdownItemComponent, BackButtonComponent],
-    exports: [DropdownItemComponent, BackButtonComponent],
+    declarations: [DropdownItemComponent, BackButtonComponent, TabLabelComponent],
+    exports: [DropdownItemComponent, BackButtonComponent, TabLabelComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 

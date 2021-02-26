@@ -85,7 +85,10 @@
       </mat-form-field>
 
       <mat-tab-group color="primary" mat-stretch-tabs animationDuration="0" [selectedIndex]="selectedTab">
-        <mat-tab label="Target">
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <tab-label [hasErrors]="tabHasError('tab1')" labelText="Targets"></tab-label>
+          </ng-template>
           <div class="target-tab-box">
             <!-- Target -->
             <mat-form-field class="form-element">
@@ -160,7 +163,10 @@
             </mat-form-field>
           </div>
         </mat-tab>
-        <mat-tab label="Terms">
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <tab-label [hasErrors]="tabHasError('tab2')" labelText="Terms"></tab-label>
+          </ng-template>
           <!-- Transaction fees -->
           <mat-form-field class="form-element">
             <mat-label>Transaction fees, %</mat-label>
@@ -267,7 +273,10 @@
             </mat-error>
           </mat-form-field>
         </mat-tab>
-        <mat-tab label="Wire details">
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <tab-label [hasErrors]="tabHasError('tab3')" labelText="Wire details"></tab-label>
+          </ng-template>
           <!-- Beneficiary name -->
           <mat-form-field class="form-element">
             <mat-label>Beneficiary name</mat-label>

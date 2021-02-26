@@ -4,18 +4,19 @@
 
 .link-block {
     color: black;
+
     a {
         color: black;
     }
 }
 
 th.mat-header-cell {
-    font-size: medium;
+    font-size  : medium;
     font-weight: bold;
 }
 
 .default-icon {
-    font-size: large;
+    font-size   : large;
     margin-right: 0.25em;
 }
 
@@ -28,27 +29,27 @@ th.mat-header-cell {
 }
 
 .detailed-table-left-panel-full {
-    flex: 100%;
+    flex     : 100%;
     min-width: 40em;
-    margin: 0;
+    margin   : 0;
 }
 
 .detailed-table-right-panel-full {
-    flex: 0%;
-    width: 0;
-    margin: 0;
+    flex      : 0%;
+    width     : 0;
+    margin    : 0;
     visibility: collapse;
 }
 
 .detailed-table-left-panel-details {
-    flex: 60%;
+    flex     : 60%;
     min-width: 20em;
-    margin: 0;
+    margin   : 0;
 }
 
 .detailed-table-right-panel-details {
-    flex: 40%;
-    margin: 0;
-    margin-left: 1em;
+    flex        : 40%;
+    margin      : 0;
+    margin-left : 1em;
     margin-right: 1em;
 }

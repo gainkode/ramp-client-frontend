@@ -1,0 +1,7 @@
+<div *ngIf="hasErrors" class="errorTab">
+    <mat-icon class="errorTabIcon">error_outline</mat-icon>
+    {{labelText}}
+</div>
+<div *ngIf="!hasErrors">
+    {{labelText}}
+</div>
