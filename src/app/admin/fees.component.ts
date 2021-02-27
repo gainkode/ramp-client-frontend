@@ -2,6 +2,7 @@ import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { AdminDataService } from '../services/admin-data.service';
 import { ErrorService } from '../services/error.service';
 import { Validators, FormBuilder, FormControl } from '@angular/forms';
 import { Observable, of } from 'rxjs';
@@ -186,6 +187,7 @@ export class FeesComponent {
   @ViewChild('auto') matAutocomplete!: MatAutocomplete;
 
   constructor(private auth: AuthService, private errorHandler: ErrorService,
+    private adminService: AdminDataService,
     private formBuilder: FormBuilder, private router: Router) {
   }
 
@@ -321,6 +323,6 @@ export class FeesComponent {
   }
 
   onSubmit(): void {
-
+    this.adminService.getFeeSettings().subscribe(data => { console.log(data); })
   }
 }

@@ -7,8 +7,7 @@ export class AdminGuard {
     constructor(private router: Router, private auth: AuthService) { }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-        //todo replace later with admin role
-        if (!this.auth.isAuthenticatedUserRole('user')) {
+        if (!this.auth.isAuthenticatedUserRole('admin')) {
             this.router.navigateByUrl('/');
             return false;
         }

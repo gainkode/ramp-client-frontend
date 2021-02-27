@@ -7,11 +7,13 @@ import { APOLLO_OPTIONS } from 'apollo-angular';
 import { HttpLink, HttpLinkHandler } from 'apollo-angular/http';
 import { onError } from 'apollo-link-error';
 import { ApolloLink, InMemoryCache, RequestHandler } from '@apollo/client/core';
+import { setContext } from '@apollo/client/link/context';
 import {
   SocialLoginModule, SocialAuthServiceConfig,
   GoogleLoginProvider, FacebookLoginProvider
 } from 'angularx-social-login';
 import { AuthService } from './services/auth.service';
+import { AdminDataService } from './services/admin-data.service';
 import { ErrorService } from './services/error.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { environment } from 'src/environments/environment';
@@ -29,6 +31,21 @@ const errorLink = onError(({ graphQLErrors, networkError, response }) => {
   if (networkError) {
     console.log(networkError);
   };
+});
+
+const headers = setContext((operation, context) => ({
+  headers: { Accept: 'charset=utf-8' }
+}));
+
+const auth = setContext((operation, context) => {
+  const token = sessionStorage.getItem('currentToken');
+  if (token === null) {
+    return {};
+  } else {
+    return {
+      headers: { Authorization: `Bearer ${token}` }
+    };
+  }
 });
 
 @NgModule({
@@ -49,7 +66,8 @@ const errorLink = onError(({ graphQLErrors, networkError, response }) => {
         return {
           cache: new InMemoryCache(),
           link: ApolloLink.from([
-            errorLink as any, 
+            errorLink as any,
+            headers, auth,
             httpLink.create({ uri: environment.api_server })
           ])
         };
@@ -73,6 +91,7 @@ const errorLink = onError(({ graphQLErrors, networkError, response }) => {
       } as SocialAuthServiceConfig
     },
     AuthService,
+    AdminDataService,
     ErrorService
   ],
   bootstrap: [AppComponent]
