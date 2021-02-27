@@ -3,6 +3,7 @@ import { Apollo, gql } from 'apollo-angular';
 import { from, Observable } from 'rxjs';
 import { LoginResult, User } from '../model/generated-models';
 import { environment } from 'src/environments/environment';
+import { map } from 'rxjs/operators';
 
 const GET_FEE_SETTINGS_POST = gql`
   query GetSettingsFee {
@@ -21,16 +22,5 @@ export class AdminDataService {
             query: GET_FEE_SETTINGS_POST//,
             //variables: { episode: 'JEDI' }
         }).valueChanges;
-
-
-
-        // return this.apollo.mutate({
-        //     mutation: LOGIN_POST,
-        //     variables: {
-        //         recaptcha: environment.recaptchaId,
-        //         email: username,
-        //         password: userpassword
-        //     }
-        // });
     }
 }

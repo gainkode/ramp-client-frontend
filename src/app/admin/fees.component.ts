@@ -9,8 +9,9 @@ import { Observable, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { FeeSheme, FeeShemes } from '../model/fake-fee-schemes.model';
+import { FeeScheme, FeeSchemes } from '../model/fee-scheme.model';
 import { CountryCode, CountryCodes } from '../model/country-code.model';
+import { SettingsFeeListResult } from '../model/generated-models';
 
 class TargetParams {
   title: string = '';
@@ -35,6 +36,7 @@ export class FeesComponent {
   selectedTab = 0;
   tab2HasError = false;
   tab3HasError = false;
+  schemes: FeeScheme[] = [];
   targetValues: string[] = [];
   separatorKeysCodes: number[] = [ENTER, COMMA];
   countries: CommonTargetValue[] = CountryCodes.map(c => {
@@ -89,9 +91,6 @@ export class FeesComponent {
     bankAddress: ['', { validators: [Validators.required], updateOn: 'change' }],
     swift: ['', { validators: [Validators.required], updateOn: 'change' }]
   });
-
-  // temp
-  schemes = FeeShemes;
 
   affiliateIds: CommonTargetValue[] = [
     { title: 'fb4598gbf38d73', imgClass: '', imgSource: '' },
@@ -192,6 +191,39 @@ export class FeesComponent {
   }
 
   ngOnInit(): void {
+    // Load settings table
+    this.inProgress = true;
+
+    // temp
+    //this.schemes = FeeSchemes;
+    // temp
+
+    this.adminService.getFeeSettings().subscribe(({ data }) => {
+      this.inProgress = false;
+      const settings = data as SettingsFeeListResult;
+      let settingsCount = 0;
+      if (settings !== null) {
+        settingsCount = settings?.count?.valueOf() as number;
+      }
+      if (settingsCount > 0) {
+        this.schemes = settings?.list?.map((val) => {
+          let scheme = new FeeScheme();
+          scheme.name = val.name;
+          scheme.terms = JSON.parse(val.terms);
+          scheme.details = JSON.parse(val.wireDetails);
+          return scheme;
+        }) as FeeScheme[];
+        console.log(this.schemes);
+      } else {
+        console.log('List is empty');
+      }
+    }, (error) => {
+      this.inProgress = false;
+      this.errorMessage = this.errorHandler.getError(
+        error.message,
+        'Incorrect login or password');
+    });
+    // field events
     this.schemeForm.get('target')?.valueChanges.subscribe(val => {
       this.clearTargetValues();
       this.filteredTargetValues = this.schemeForm.get('targetValues')?.valueChanges.pipe(
@@ -210,7 +242,7 @@ export class FeesComponent {
     }
   }
 
-  setFormData(scheme: FeeSheme | null): void {
+  setFormData(scheme: FeeScheme | null): void {
     if (scheme !== null) {
       this.schemeForm.setControl('name', new FormControl({
         value: scheme?.name,
@@ -228,19 +260,19 @@ export class FeesComponent {
       this.schemeForm.get('instrument')?.setValue(instrumentValues);
       this.schemeForm.get('trxType')?.setValue(trxTypeValues);
       this.schemeForm.get('provider')?.setValue(providerValues);
-      this.schemeForm.get('transactionFees')?.setValue(scheme?.transactionFees);
-      this.schemeForm.get('minTransactionFee')?.setValue(scheme?.minTransactionFee);
-      this.schemeForm.get('rollingReserves')?.setValue(scheme?.rollingReserves);
-      this.schemeForm.get('rollingReservesDays')?.setValue(scheme?.rollingReservesDays);
-      this.schemeForm.get('chargebackFees')?.setValue(scheme?.chargebackFees);
-      this.schemeForm.get('monthlyFees')?.setValue(scheme?.monthlyFees);
-      this.schemeForm.get('minMonthlyFees')?.setValue(scheme?.minMonthlyFees);
-      this.schemeForm.get('beneficiaryName')?.setValue(scheme?.beneficiaryName);
-      this.schemeForm.get('beneficiaryAddress')?.setValue(scheme?.beneficiaryAddress);
-      this.schemeForm.get('iban')?.setValue(scheme?.iban);
-      this.schemeForm.get('bankName')?.setValue(scheme?.bankName);
-      this.schemeForm.get('bankAddress')?.setValue(scheme?.bankAddress);
-      this.schemeForm.get('swift')?.setValue(scheme?.swift);
+      this.schemeForm.get('transactionFees')?.setValue(scheme?.terms.transactionFees);
+      this.schemeForm.get('minTransactionFee')?.setValue(scheme?.terms.minTransactionFee);
+      this.schemeForm.get('rollingReserves')?.setValue(scheme?.terms.rollingReserves);
+      this.schemeForm.get('rollingReservesDays')?.setValue(scheme?.terms.rollingReservesDays);
+      this.schemeForm.get('chargebackFees')?.setValue(scheme?.terms.chargebackFees);
+      this.schemeForm.get('monthlyFees')?.setValue(scheme?.terms.monthlyFees);
+      this.schemeForm.get('minMonthlyFees')?.setValue(scheme?.terms.minMonthlyFees);
+      this.schemeForm.get('beneficiaryName')?.setValue(scheme?.details.beneficiaryName);
+      this.schemeForm.get('beneficiaryAddress')?.setValue(scheme?.details.beneficiaryAddress);
+      this.schemeForm.get('iban')?.setValue(scheme?.details.iban);
+      this.schemeForm.get('bankName')?.setValue(scheme?.details.bankName);
+      this.schemeForm.get('bankAddress')?.setValue(scheme?.details.bankAddress);
+      this.schemeForm.get('swift')?.setValue(scheme?.details.swift);
     }
   }
 
@@ -274,7 +306,7 @@ export class FeesComponent {
     return valid !== true;
   }
 
-  toggleDetails(scheme: FeeSheme): void {
+  toggleDetails(scheme: FeeScheme): void {
     this.showDetails = !this.showDetails;
     if (this.showDetails) {
       this.displayedColumns.splice(this.detailsColumnIndex, 1);
@@ -323,6 +355,6 @@ export class FeesComponent {
   }
 
   onSubmit(): void {
-    this.adminService.getFeeSettings().subscribe(data => { console.log(data); })
+    
   }
 }

@@ -4,7 +4,11 @@
 
 <mat-progress-bar *ngIf="inProgress" mode="indeterminate"></mat-progress-bar>
 
-<div class="detailed-table-split">
+<div class="form-error-box" *ngIf="errorMessage!==''">
+  {{errorMessage}}
+</div>
+
+<div class="detailed-table-split" *ngIf="errorMessage===''">
   <div [ngClass]="showDetailed ? 'detailed-table-left-panel-details' : 'detailed-table-left-panel-full'">
     <table mat-table class="data-table" [dataSource]="schemes">
       <!-- Is Default Column -->
