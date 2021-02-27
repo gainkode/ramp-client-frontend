@@ -268,20 +268,22 @@ export class FeesComponent {
         this.schemeForm.get('bankName')?.valid &&
         this.schemeForm.get('bankAddress')?.valid &&
         this.schemeForm.get('swift')?.valid);
-      }
-      return valid !== true;
     }
+    return valid !== true;
+  }
 
-    toggleDetails(scheme: FeeSheme): void {
-      this.showDetails = !this.showDetails;
-      if(this.showDetails) {
-      this.selectedTab = 1;
+  toggleDetails(scheme: FeeSheme): void {
+    this.showDetails = !this.showDetails;
+    if (this.showDetails) {
       this.displayedColumns.splice(this.detailsColumnIndex, 1);
       this.setFormData(scheme);
-      this.selectedTab = 0;
     } else {
       this.displayedColumns.push('details');
     }
+  }
+
+  setSelectedTab(index: number): void {
+    this.selectedTab = index;
   }
 
   addTargetValue(event: MatChipInputEvent): void {
