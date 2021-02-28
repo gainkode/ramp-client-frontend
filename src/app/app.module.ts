@@ -4,9 +4,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { APOLLO_OPTIONS } from 'apollo-angular';
-import { HttpLink, HttpLinkHandler } from 'apollo-angular/http';
+import { HttpLink } from 'apollo-angular/http';
 import { onError } from 'apollo-link-error';
-import { ApolloLink, InMemoryCache, RequestHandler } from '@apollo/client/core';
+import { ApolloLink, InMemoryCache } from '@apollo/client/core';
 import { setContext } from '@apollo/client/link/context';
 import {
   SocialLoginModule, SocialAuthServiceConfig,
@@ -18,10 +18,33 @@ import { ErrorService } from './services/error.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { environment } from 'src/environments/environment';
 
-const errorLink = onError(({ graphQLErrors, networkError, response }) => {
+
+
+import { Observable } from 'apollo-link';
+
+const promiseToObservable = (promise: Promise<any>) =>
+  new Observable((subscriber: any) => {
+    promise.then(
+      value => {
+        if (subscriber.closed) {
+          return;
+        }
+        subscriber.next(value);
+        subscriber.complete();
+      },
+      err => subscriber.error(err)
+    );
+  });
+
+const errorLink = onError(({ forward, graphQLErrors, networkError, operation }) => {
   if (graphQLErrors) {
     for (let err of graphQLErrors) {
       if (err.extensions !== null) {
+        const code = err.extensions?.code as string;
+        if (code.toUpperCase() === 'UNAUTHENTICATED') {
+          console.log('Need to get new token');
+          //return promiseToObservable(authenticationService.refreshToken().toPromise()).flatMap(() => forward(operation));
+        }
         err.message = err.extensions?.code;
       } else {
         err.message = 'no_code';
@@ -68,26 +91,29 @@ const auth = setContext((operation, context) => {
           link: ApolloLink.from([
             errorLink as any,
             headers, auth,
-            httpLink.create({ uri: environment.api_server })
+            httpLink.create({
+              uri: environment.api_server,
+              withCredentials: true
+            })
           ])
         };
       },
-      deps: [HttpLink],
+      deps: [HttpLink]
     },
     {
       provide: 'SocialAuthServiceConfig',
       useValue: {
-          autoLogin: false,
-          providers: [
-            {
-              id: GoogleLoginProvider.PROVIDER_ID,
-              provider: new GoogleLoginProvider(environment.googleClientId)
-            },
-            {
-              id: FacebookLoginProvider.PROVIDER_ID,
-              provider: new FacebookLoginProvider(environment.facebookClientId)
-            }
-          ]
+        autoLogin: false,
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider(environment.googleClientId)
+          },
+          {
+            id: FacebookLoginProvider.PROVIDER_ID,
+            provider: new FacebookLoginProvider(environment.facebookClientId)
+          }
+        ]
       } as SocialAuthServiceConfig
     },
     AuthService,

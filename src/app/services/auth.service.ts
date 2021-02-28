@@ -24,6 +24,10 @@ const LOGIN_POST = gql`
     }
 `;
 
+const REFRESH_TOKEN_POST = gql`
+  mutation RefreshToken { refreshToken }
+`;
+
 const SOCIAL_LOGIN_POST = gql`
   mutation SocialLogin($recaptcha: String!, $oauthtoken: String!, $oauthprovider: OAuthProvider!) {
     login(
@@ -121,6 +125,12 @@ const CONFIRMNAME_POST = gql`
 export class AuthService {
     constructor(private apollo: Apollo, private socialAuth: SocialAuthService) { }
 
+    refreshToken(): Observable<any> {
+        return this.apollo.mutate({
+            mutation: REFRESH_TOKEN_POST
+        });
+    }
+
     authenticate(username: string, userpassword: string): Observable<any> {
         return this.apollo.mutate({
             mutation: LOGIN_POST,
@@ -182,7 +192,6 @@ export class AuthService {
 
     confirmName(tokenId: string, username: string, usertype: string, firstname: string, lastname: string, 
         countrycode: string, phoneNumber: string): Observable<any> {
-        console.log(`Type: ${usertype}`);
         return this.apollo.mutate({
             mutation: CONFIRMNAME_POST,
             variables: {
@@ -284,6 +293,7 @@ export class AuthService {
     }
 
     logout(): void {
+        this.apollo.client.resetStore();
         sessionStorage.removeItem('currentUser');
         sessionStorage.removeItem('currentToken');
     }

@@ -195,7 +195,7 @@ export class FeesComponent {
     this.inProgress = true;
 
     // temp
-    //this.schemes = FeeSchemes;
+    this.schemes = FeeSchemes;
     // temp
 
     this.adminService.getFeeSettings().subscribe(({ data }) => {
@@ -355,6 +355,10 @@ export class FeesComponent {
   }
 
   onSubmit(): void {
-    
+    this.auth.refreshToken().subscribe(({ data }) => {
+      console.log(data);
+    }, (error) => {
+      console.log(error);
+    });
   }
 }
