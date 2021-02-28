@@ -1,1213 +1,1455 @@
 export interface CountryCode {
     name: string;
     dial_code: string;
-    code: string;
+    code2: string;
+    code3: string;
 }
 
 export const CountryCodes: Array<CountryCode> = [
     {
         name: 'Afghanistan',
         dial_code: '+93',
-        code: 'AF'
+        code2: 'AF',
+        code3: 'AFG',
     },
     {
         name: 'Aland Islands',
         dial_code: '+358',
-        code: 'AX'
+        code2: 'AX',
+        code3: '',
     },
     {
         name: 'Albania',
         dial_code: '+355',
-        code: 'AL'
+        code2: 'AL',
+        code3: '',
     },
     {
         name: 'Algeria',
         dial_code: '+213',
-        code: 'DZ'
+        code2: 'DZ',
+        code3: '',
     },
     {
         name: 'American Samoa',
         dial_code: '+1684',
-        code: 'AS'
+        code2: 'AS',
+        code3: '',
     },
     {
         name: 'Andorra',
         dial_code: '+376',
-        code: 'AD'
+        code2: 'AD',
+        code3: '',
     },
     {
         name: 'Angola',
         dial_code: '+244',
-        code: 'AO'
+        code2: 'AO',
+        code3: '',
     },
     {
         name: 'Anguilla',
         dial_code: '+1264',
-        code: 'AI'
+        code2: 'AI',
+        code3: '',
     },
     {
         name: 'Antarctica',
         dial_code: '+672',
-        code: 'AQ'
+        code2: 'AQ',
+        code3: '',
     },
     {
         name: 'Antigua and Barbuda',
         dial_code: '+1268',
-        code: 'AG'
+        code2: 'AG',
+        code3: '',
     },
     {
         name: 'Argentina',
         dial_code: '+54',
-        code: 'AR'
+        code2: 'AR',
+        code3: '',
     },
     {
         name: 'Armenia',
         dial_code: '+374',
-        code: 'AM'
+        code2: 'AM',
+        code3: '',
     },
     {
         name: 'Aruba',
         dial_code: '+297',
-        code: 'AW'
+        code2: 'AW',
+        code3: '',
     },
     {
         name: 'Australia',
         dial_code: '+61',
-        code: 'AU'
+        code2: 'AU',
+        code3: '',
     },
     {
         name: 'Austria',
         dial_code: '+43',
-        code: 'AT'
+        code2: 'AT',
+        code3: '',
     },
     {
         name: 'Azerbaijan',
         dial_code: '+994',
-        code: 'AZ'
+        code2: 'AZ',
+        code3: '',
     },
     {
         name: 'Bahamas',
         dial_code: '+1242',
-        code: 'BS'
+        code2: 'BS',
+        code3: '',
     },
     {
         name: 'Bahrain',
         dial_code: '+973',
-        code: 'BH'
+        code2: 'BH',
+        code3: '',
     },
     {
         name: 'Bangladesh',
         dial_code: '+880',
-        code: 'BD'
+        code2: 'BD',
+        code3: '',
     },
     {
         name: 'Barbados',
         dial_code: '+1246',
-        code: 'BB'
+        code2: 'BB',
+        code3: '',
     },
     {
         name: 'Belarus',
         dial_code: '+375',
-        code: 'BY'
+        code2: 'BY',
+        code3: '',
     },
     {
         name: 'Belgium',
         dial_code: '+32',
-        code: 'BE'
+        code2: 'BE',
+        code3: '',
     },
     {
         name: 'Belize',
         dial_code: '+501',
-        code: 'BZ'
+        code2: 'BZ',
+        code3: '',
     },
     {
         name: 'Benin',
         dial_code: '+229',
-        code: 'BJ'
+        code2: 'BJ',
+        code3: '',
     },
     {
         name: 'Bermuda',
         dial_code: '+1441',
-        code: 'BM'
+        code2: 'BM',
+        code3: '',
     },
     {
         name: 'Bhutan',
         dial_code: '+975',
-        code: 'BT'
+        code2: 'BT',
+        code3: '',
     },
     {
         name: 'Bolivia, Plurinational State of',
         dial_code: '+591',
-        code: 'BO'
+        code2: 'BO',
+        code3: '',
     },
     {
         name: 'Bosnia and Herzegovina',
         dial_code: '+387',
-        code: 'BA'
+        code2: 'BA',
+        code3: '',
     },
     {
         name: 'Botswana',
         dial_code: '+267',
-        code: 'BW'
+        code2: 'BW',
+        code3: '',
     },
     {
         name: 'Brazil',
         dial_code: '+55',
-        code: 'BR'
+        code2: 'BR',
+        code3: '',
     },
     {
         name: 'British Indian Ocean Territory',
         dial_code: '+246',
-        code: 'IO'
+        code2: 'IO',
+        code3: '',
     },
     {
         name: 'Brunei Darussalam',
         dial_code: '+673',
-        code: 'BN'
+        code2: 'BN',
+        code3: '',
     },
     {
         name: 'Bulgaria',
         dial_code: '+359',
-        code: 'BG'
+        code2: 'BG',
+        code3: '',
     },
     {
         name: 'Burkina Faso',
         dial_code: '+226',
-        code: 'BF'
+        code2: 'BF',
+        code3: '',
     },
     {
         name: 'Burundi',
         dial_code: '+257',
-        code: 'BI'
+        code2: 'BI',
+        code3: '',
     },
     {
         name: 'Cambodia',
         dial_code: '+855',
-        code: 'KH'
+        code2: 'KH',
+        code3: '',
     },
     {
         name: 'Cameroon',
         dial_code: '+237',
-        code: 'CM'
+        code2: 'CM',
+        code3: '',
     },
     {
         name: 'Canada',
         dial_code: '+1',
-        code: 'CA'
+        code2: 'CA',
+        code3: '',
     },
     {
         name: 'Cape Verde',
         dial_code: '+238',
-        code: 'CV'
+        code2: 'CV',
+        code3: '',
     },
     {
         name: 'Cayman Islands',
         dial_code: '+345',
-        code: 'KY'
+        code2: 'KY',
+        code3: '',
     },
     {
         name: 'Central African Republic',
         dial_code: '+236',
-        code: 'CF'
+        code2: 'CF',
+        code3: '',
     },
     {
         name: 'Chad',
         dial_code: '+235',
-        code: 'TD'
+        code2: 'TD',
+        code3: '',
     },
     {
         name: 'Chile',
         dial_code: '+56',
-        code: 'CL'
+        code2: 'CL',
+        code3: '',
     },
     {
         name: 'China',
         dial_code: '+86',
-        code: 'CN'
+        code2: 'CN',
+        code3: '',
     },
     {
         name: 'Christmas Island',
         dial_code: '+61',
-        code: 'CX'
+        code2: 'CX',
+        code3: '',
     },
     {
         name: 'Cocos (Keeling) Islands',
         dial_code: '+61',
-        code: 'CC'
+        code2: 'CC',
+        code3: '',
     },
     {
         name: 'Colombia',
         dial_code: '+57',
-        code: 'CO'
+        code2: 'CO',
+        code3: '',
     },
     {
         name: 'Comoros',
         dial_code: '+269',
-        code: 'KM'
+        code2: 'KM',
+        code3: '',
     },
     {
         name: 'Congo',
         dial_code: '+242',
-        code: 'CG'
+        code2: 'CG',
+        code3: '',
     },
     {
         name: 'Congo, The Democratic Republic of the Congo',
         dial_code: '+243',
-        code: 'CD'
+        code2: 'CD',
+        code3: '',
     },
     {
         name: 'Cook Islands',
         dial_code: '+682',
-        code: 'CK'
+        code2: 'CK',
+        code3: '',
     },
     {
         name: 'Costa Rica',
         dial_code: '+506',
-        code: 'CR'
+        code2: 'CR',
+        code3: '',
     },
     {
-        name: 'Cote d\'Ivoire',
+        name: 'Cote d\',Ivoire',
         dial_code: '+225',
-        code: 'CI'
+        code2: 'CI',
+        code3: '',
     },
     {
         name: 'Croatia',
         dial_code: '+385',
-        code: 'HR'
+        code2: 'HR',
+        code3: '',
     },
     {
         name: 'Cuba',
         dial_code: '+53',
-        code: 'CU'
+        code2: 'CU',
+        code3: '',
     },
     {
         name: 'Cyprus',
         dial_code: '+357',
-        code: 'CY'
+        code2: 'CY',
+        code3: '',
     },
     {
         name: 'Czech Republic',
         dial_code: '+420',
-        code: 'CZ'
+        code2: 'CZ',
+        code3: '',
     },
     {
         name: 'Denmark',
         dial_code: '+45',
-        code: 'DK'
+        code2: 'DK',
+        code3: '',
     },
     {
         name: 'Djibouti',
         dial_code: '+253',
-        code: 'DJ'
+        code2: 'DJ',
+        code3: '',
     },
     {
         name: 'Dominica',
         dial_code: '+1767',
-        code: 'DM'
+        code2: 'DM',
+        code3: '',
     },
     {
         name: 'Dominican Republic',
         dial_code: '+1849',
-        code: 'DO'
+        code2: 'DO',
+        code3: '',
     },
     {
         name: 'Ecuador',
         dial_code: '+593',
-        code: 'EC'
+        code2: 'EC',
+        code3: '',
     },
     {
         name: 'Egypt',
         dial_code: '+20',
-        code: 'EG'
+        code2: 'EG',
+        code3: '',
     },
     {
         name: 'El Salvador',
         dial_code: '+503',
-        code: 'SV'
+        code2: 'SV',
+        code3: '',
     },
     {
         name: 'Equatorial Guinea',
         dial_code: '+240',
-        code: 'GQ'
+        code2: 'GQ',
+        code3: '',
     },
     {
         name: 'Eritrea',
         dial_code: '+291',
-        code: 'ER'
+        code2: 'ER',
+        code3: '',
     },
     {
         name: 'Estonia',
         dial_code: '+372',
-        code: 'EE'
+        code2: 'EE',
+        code3: '',
     },
     {
         name: 'Ethiopia',
         dial_code: '+251',
-        code: 'ET'
+        code2: 'ET',
+        code3: '',
     },
     {
         name: 'Falkland Islands (Malvinas)',
         dial_code: '+500',
-        code: 'FK'
+        code2: 'FK',
+        code3: '',
     },
     {
         name: 'Faroe Islands',
         dial_code: '+298',
-        code: 'FO'
+        code2: 'FO',
+        code3: '',
     },
     {
         name: 'Fiji',
         dial_code: '+679',
-        code: 'FJ'
+        code2: 'FJ',
+        code3: '',
     },
     {
         name: 'Finland',
         dial_code: '+358',
-        code: 'FI'
+        code2: 'FI',
+        code3: '',
     },
     {
         name: 'France',
         dial_code: '+33',
-        code: 'FR'
+        code2: 'FR',
+        code3: '',
     },
     {
         name: 'French Guiana',
         dial_code: '+594',
-        code: 'GF'
+        code2: 'GF',
+        code3: '',
     },
     {
         name: 'French Polynesia',
         dial_code: '+689',
-        code: 'PF'
+        code2: 'PF',
+        code3: '',
     },
     {
         name: 'Gabon',
         dial_code: '+241',
-        code: 'GA'
+        code2: 'GA',
+        code3: '',
     },
     {
         name: 'Gambia',
         dial_code: '+220',
-        code: 'GM'
+        code2: 'GM',
+        code3: '',
     },
     {
         name: 'Georgia',
         dial_code: '+995',
-        code: 'GE'
+        code2: 'GE',
+        code3: '',
     },
     {
         name: 'Germany',
         dial_code: '+49',
-        code: 'DE'
+        code2: 'DE',
+        code3: '',
     },
     {
         name: 'Ghana',
         dial_code: '+233',
-        code: 'GH'
+        code2: 'GH',
+        code3: '',
     },
     {
         name: 'Gibraltar',
         dial_code: '+350',
-        code: 'GI'
+        code2: 'GI',
+        code3: '',
     },
     {
         name: 'Greece',
         dial_code: '+30',
-        code: 'GR'
+        code2: 'GR',
+        code3: '',
     },
     {
         name: 'Greenland',
         dial_code: '+299',
-        code: 'GL'
+        code2: 'GL',
+        code3: '',
     },
     {
         name: 'Grenada',
         dial_code: '+1473',
-        code: 'GD'
+        code2: 'GD',
+        code3: '',
     },
     {
         name: 'Guadeloupe',
         dial_code: '+590',
-        code: 'GP'
+        code2: 'GP',
+        code3: '',
     },
     {
         name: 'Guam',
         dial_code: '+1671',
-        code: 'GU'
+        code2: 'GU',
+        code3: '',
     },
     {
         name: 'Guatemala',
         dial_code: '+502',
-        code: 'GT'
+        code2: 'GT',
+        code3: '',
     },
     {
         name: 'Guernsey',
         dial_code: '+44',
-        code: 'GG'
+        code2: 'GG',
+        code3: '',
     },
     {
         name: 'Guinea',
         dial_code: '+224',
-        code: 'GN'
+        code2: 'GN',
+        code3: '',
     },
     {
         name: 'Guinea-Bissau',
         dial_code: '+245',
-        code: 'GW'
+        code2: 'GW',
+        code3: '',
     },
     {
         name: 'Guyana',
         dial_code: '+595',
-        code: 'GY'
+        code2: 'GY',
+        code3: '',
     },
     {
         name: 'Haiti',
         dial_code: '+509',
-        code: 'HT'
+        code2: 'HT',
+        code3: '',
     },
     {
         name: 'Vatican City',
         dial_code: '+379',
-        code: 'VA'
+        code2: 'VA',
+        code3: '',
     },
     {
         name: 'Honduras',
         dial_code: '+504',
-        code: 'HN'
+        code2: 'HN',
+        code3: '',
     },
     {
         name: 'Hong Kong',
         dial_code: '+852',
-        code: 'HK'
+        code2: 'HK',
+        code3: '',
     },
     {
         name: 'Hungary',
         dial_code: '+36',
-        code: 'HU'
+        code2: 'HU',
+        code3: '',
     },
     {
         name: 'Iceland',
         dial_code: '+354',
-        code: 'IS'
+        code2: 'IS',
+        code3: '',
     },
     {
         name: 'India',
         dial_code: '+91',
-        code: 'IN'
+        code2: 'IN',
+        code3: '',
     },
     {
         name: 'Indonesia',
         dial_code: '+62',
-        code: 'ID'
+        code2: 'ID',
+        code3: '',
     },
     {
         name: 'Iran, Islamic Republic of Persian Gulf',
         dial_code: '+98',
-        code: 'IR'
+        code2: 'IR',
+        code3: '',
     },
     {
         name: 'Iraq',
         dial_code: '+964',
-        code: 'IQ'
+        code2: 'IQ',
+        code3: '',
     },
     {
         name: 'Ireland',
         dial_code: '+353',
-        code: 'IE'
+        code2: 'IE',
+        code3: '',
     },
     {
         name: 'Isle of Man',
         dial_code: '+44',
-        code: 'IM'
+        code2: 'IM',
+        code3: '',
     },
     {
         name: 'Israel',
         dial_code: '+972',
-        code: 'IL'
+        code2: 'IL',
+        code3: '',
     },
     {
         name: 'Italy',
         dial_code: '+39',
-        code: 'IT'
+        code2: 'IT',
+        code3: '',
     },
     {
         name: 'Jamaica',
         dial_code: '+1876',
-        code: 'JM'
+        code2: 'JM',
+        code3: '',
     },
     {
         name: 'Japan',
         dial_code: '+81',
-        code: 'JP'
+        code2: 'JP',
+        code3: '',
     },
     {
         name: 'Jersey',
         dial_code: '+44',
-        code: 'JE'
+        code2: 'JE',
+        code3: '',
     },
     {
         name: 'Jordan',
         dial_code: '+962',
-        code: 'JO'
+        code2: 'JO',
+        code3: '',
     },
     {
         name: 'Kazakhstan',
         dial_code: '+7',
-        code: 'KZ'
+        code2: 'KZ',
+        code3: '',
     },
     {
         name: 'Kenya',
         dial_code: '+254',
-        code: 'KE'
+        code2: 'KE',
+        code3: '',
     },
     {
         name: 'Kiribati',
         dial_code: '+686',
-        code: 'KI'
+        code2: 'KI',
+        code3: '',
     },
     {
-        name: 'Korea, Democratic People\'s Republic of Korea',
+        name: 'Korea, Democratic People\',s Republic of Korea',
         dial_code: '+850',
-        code: 'KP'
+        code2: 'KP',
+        code3: '',
     },
     {
         name: 'Korea, Republic of South Korea',
         dial_code: '+82',
-        code: 'KR'
+        code2: 'KR',
+        code3: '',
     },
     {
         name: 'Kuwait',
         dial_code: '+965',
-        code: 'KW'
+        code2: 'KW',
+        code3: '',
     },
     {
         name: 'Kyrgyzstan',
         dial_code: '+996',
-        code: 'KG'
+        code2: 'KG',
+        code3: '',
     },
     {
         name: 'Laos',
         dial_code: '+856',
-        code: 'LA'
+        code2: 'LA',
+        code3: '',
     },
     {
         name: 'Latvia',
         dial_code: '+371',
-        code: 'LV'
+        code2: 'LV',
+        code3: '',
     },
     {
         name: 'Lebanon',
         dial_code: '+961',
-        code: 'LB'
+        code2: 'LB',
+        code3: '',
     },
     {
         name: 'Lesotho',
         dial_code: '+266',
-        code: 'LS'
+        code2: 'LS',
+        code3: '',
     },
     {
         name: 'Liberia',
         dial_code: '+231',
-        code: 'LR'
+        code2: 'LR',
+        code3: '',
     },
     {
         name: 'Libyan Arab Jamahiriya',
         dial_code: '+218',
-        code: 'LY'
+        code2: 'LY',
+        code3: '',
     },
     {
         name: 'Liechtenstein',
         dial_code: '+423',
-        code: 'LI'
+        code2: 'LI',
+        code3: '',
     },
     {
         name: 'Lithuania',
         dial_code: '+370',
-        code: 'LT'
+        code2: 'LT',
+        code3: '',
     },
     {
         name: 'Luxembourg',
         dial_code: '+352',
-        code: 'LU'
+        code2: 'LU',
+        code3: '',
     },
     {
         name: 'Macao',
         dial_code: '+853',
-        code: 'MO'
+        code2: 'MO',
+        code3: '',
     },
     {
         name: 'Macedonia',
         dial_code: '+389',
-        code: 'MK'
+        code2: 'MK',
+        code3: '',
     },
     {
         name: 'Madagascar',
         dial_code: '+261',
-        code: 'MG'
+        code2: 'MG',
+        code3: '',
     },
     {
         name: 'Malawi',
         dial_code: '+265',
-        code: 'MW'
+        code2: 'MW',
+        code3: '',
     },
     {
         name: 'Malaysia',
         dial_code: '+60',
-        code: 'MY'
+        code2: 'MY',
+        code3: '',
     },
     {
         name: 'Maldives',
         dial_code: '+960',
-        code: 'MV'
+        code2: 'MV',
+        code3: '',
     },
     {
         name: 'Mali',
         dial_code: '+223',
-        code: 'ML'
+        code2: 'ML',
+        code3: '',
     },
     {
         name: 'Malta',
         dial_code: '+356',
-        code: 'MT'
+        code2: 'MT',
+        code3: '',
     },
     {
         name: 'Marshall Islands',
         dial_code: '+692',
-        code: 'MH'
+        code2: 'MH',
+        code3: '',
     },
     {
         name: 'Martinique',
         dial_code: '+596',
-        code: 'MQ'
+        code2: 'MQ',
+        code3: '',
     },
     {
         name: 'Mauritania',
         dial_code: '+222',
-        code: 'MR'
+        code2: 'MR',
+        code3: '',
     },
     {
         name: 'Mauritius',
         dial_code: '+230',
-        code: 'MU'
+        code2: 'MU',
+        code3: '',
     },
     {
         name: 'Mayotte',
         dial_code: '+262',
-        code: 'YT'
+        code2: 'YT',
+        code3: '',
     },
     {
         name: 'Mexico',
         dial_code: '+52',
-        code: 'MX'
+        code2: 'MX',
+        code3: '',
     },
     {
         name: 'Micronesia, Federated States of Micronesia',
         dial_code: '+691',
-        code: 'FM'
+        code2: 'FM',
+        code3: '',
     },
     {
         name: 'Moldova',
         dial_code: '+373',
-        code: 'MD'
+        code2: 'MD',
+        code3: '',
     },
     {
         name: 'Monaco',
         dial_code: '+377',
-        code: 'MC'
+        code2: 'MC',
+        code3: '',
     },
     {
         name: 'Mongolia',
         dial_code: '+976',
-        code: 'MN'
+        code2: 'MN',
+        code3: '',
     },
     {
         name: 'Montenegro',
         dial_code: '+382',
-        code: 'ME'
+        code2: 'ME',
+        code3: '',
     },
     {
         name: 'Montserrat',
         dial_code: '+1664',
-        code: 'MS'
+        code2: 'MS',
+        code3: '',
     },
     {
         name: 'Morocco',
         dial_code: '+212',
-        code: 'MA'
+        code2: 'MA',
+        code3: '',
     },
     {
         name: 'Mozambique',
         dial_code: '+258',
-        code: 'MZ'
+        code2: 'MZ',
+        code3: '',
     },
     {
         name: 'Myanmar',
         dial_code: '+95',
-        code: 'MM'
+        code2: 'MM',
+        code3: '',
     },
     {
         name: 'Namibia',
         dial_code: '+264',
-        code: 'NA'
+        code2: 'NA',
+        code3: '',
     },
     {
         name: 'Nauru',
         dial_code: '+674',
-        code: 'NR'
+        code2: 'NR',
+        code3: '',
     },
     {
         name: 'Nepal',
         dial_code: '+977',
-        code: 'NP'
+        code2: 'NP',
+        code3: '',
     },
     {
         name: 'Netherlands',
         dial_code: '+31',
-        code: 'NL'
+        code2: 'NL',
+        code3: '',
     },
     {
         name: 'Netherlands Antilles',
         dial_code: '+599',
-        code: 'AN'
+        code2: 'AN',
+        code3: '',
     },
     {
         name: 'New Caledonia',
         dial_code: '+687',
-        code: 'NC'
+        code2: 'NC',
+        code3: '',
     },
     {
         name: 'New Zealand',
         dial_code: '+64',
-        code: 'NZ'
+        code2: 'NZ',
+        code3: '',
     },
     {
         name: 'Nicaragua',
         dial_code: '+505',
-        code: 'NI'
+        code2: 'NI',
+        code3: '',
     },
     {
         name: 'Niger',
         dial_code: '+227',
-        code: 'NE'
+        code2: 'NE',
+        code3: '',
     },
     {
         name: 'Nigeria',
         dial_code: '+234',
-        code: 'NG'
+        code2: 'NG',
+        code3: '',
     },
     {
         name: 'Niue',
         dial_code: '+683',
-        code: 'NU'
+        code2: 'NU',
+        code3: '',
     },
     {
         name: 'Norfolk Island',
         dial_code: '+672',
-        code: 'NF'
+        code2: 'NF',
+        code3: '',
     },
     {
         name: 'Northern Mariana Islands',
         dial_code: '+1670',
-        code: 'MP'
+        code2: 'MP',
+        code3: '',
     },
     {
         name: 'Norway',
         dial_code: '+47',
-        code: 'NO'
+        code2: 'NO',
+        code3: '',
     },
     {
         name: 'Oman',
         dial_code: '+968',
-        code: 'OM'
+        code2: 'OM',
+        code3: '',
     },
     {
         name: 'Pakistan',
         dial_code: '+92',
-        code: 'PK'
+        code2: 'PK',
+        code3: '',
     },
     {
         name: 'Palau',
         dial_code: '+680',
-        code: 'PW'
+        code2: 'PW',
+        code3: '',
     },
     {
         name: 'Palestinian Territory, Occupied',
         dial_code: '+970',
-        code: 'PS'
+        code2: 'PS',
+        code3: '',
     },
     {
         name: 'Panama',
         dial_code: '+507',
-        code: 'PA'
+        code2: 'PA',
+        code3: '',
     },
     {
         name: 'Papua New Guinea',
         dial_code: '+675',
-        code: 'PG'
+        code2: 'PG',
+        code3: '',
     },
     {
         name: 'Paraguay',
         dial_code: '+595',
-        code: 'PY'
+        code2: 'PY',
+        code3: '',
     },
     {
         name: 'Peru',
         dial_code: '+51',
-        code: 'PE'
+        code2: 'PE',
+        code3: '',
     },
     {
         name: 'Philippines',
         dial_code: '+63',
-        code: 'PH'
+        code2: 'PH',
+        code3: '',
     },
     {
         name: 'Pitcairn',
         dial_code: '+872',
-        code: 'PN'
+        code2: 'PN',
+        code3: '',
     },
     {
         name: 'Poland',
         dial_code: '+48',
-        code: 'PL'
+        code2: 'PL',
+        code3: '',
     },
     {
         name: 'Portugal',
         dial_code: '+351',
-        code: 'PT'
+        code2: 'PT',
+        code3: '',
     },
     {
         name: 'Puerto Rico',
         dial_code: '+1939',
-        code: 'PR'
+        code2: 'PR',
+        code3: '',
     },
     {
         name: 'Qatar',
         dial_code: '+974',
-        code: 'QA'
+        code2: 'QA',
+        code3: '',
     },
     {
         name: 'Romania',
         dial_code: '+40',
-        code: 'RO'
+        code2: 'RO',
+        code3: '',
     },
     {
         name: 'Russia',
         dial_code: '+7',
-        code: 'RU'
+        code2: 'RU',
+        code3: '',
     },
     {
         name: 'Rwanda',
         dial_code: '+250',
-        code: 'RW'
+        code2: 'RW',
+        code3: '',
     },
     {
         name: 'Reunion',
         dial_code: '+262',
-        code: 'RE'
+        code2: 'RE',
+        code3: '',
     },
     {
         name: 'Saint Barthelemy',
         dial_code: '+590',
-        code: 'BL'
+        code2: 'BL',
+        code3: '',
     },
     {
         name: 'Saint Helena, Ascension and Tristan Da Cunha',
         dial_code: '+290',
-        code: 'SH'
+        code2: 'SH',
+        code3: '',
     },
     {
         name: 'Saint Kitts and Nevis',
         dial_code: '+1869',
-        code: 'KN'
+        code2: 'KN',
+        code3: '',
     },
     {
         name: 'Saint Lucia',
         dial_code: '+1758',
-        code: 'LC'
+        code2: 'LC',
+        code3: '',
     },
     {
         name: 'Saint Martin',
         dial_code: '+590',
-        code: 'MF'
+        code2: 'MF',
+        code3: '',
     },
     {
         name: 'Saint Pierre and Miquelon',
         dial_code: '+508',
-        code: 'PM'
+        code2: 'PM',
+        code3: '',
     },
     {
         name: 'Saint Vincent and the Grenadines',
         dial_code: '+1784',
-        code: 'VC'
+        code2: 'VC',
+        code3: '',
     },
     {
         name: 'Samoa',
         dial_code: '+685',
-        code: 'WS'
+        code2: 'WS',
+        code3: '',
     },
     {
         name: 'San Marino',
         dial_code: '+378',
-        code: 'SM'
+        code2: 'SM',
+        code3: '',
     },
     {
         name: 'Sao Tome and Principe',
         dial_code: '+239',
-        code: 'ST'
+        code2: 'ST',
+        code3: '',
     },
     {
         name: 'Saudi Arabia',
         dial_code: '+966',
-        code: 'SA'
+        code2: 'SA',
+        code3: '',
     },
     {
         name: 'Senegal',
         dial_code: '+221',
-        code: 'SN'
+        code2: 'SN',
+        code3: '',
     },
     {
         name: 'Serbia',
         dial_code: '+381',
-        code: 'RS'
+        code2: 'RS',
+        code3: '',
     },
     {
         name: 'Seychelles',
         dial_code: '+248',
-        code: 'SC'
+        code2: 'SC',
+        code3: '',
     },
     {
         name: 'Sierra Leone',
         dial_code: '+232',
-        code: 'SL'
+        code2: 'SL',
+        code3: '',
     },
     {
         name: 'Singapore',
         dial_code: '+65',
-        code: 'SG'
+        code2: 'SG',
+        code3: '',
     },
     {
         name: 'Slovakia',
         dial_code: '+421',
-        code: 'SK'
+        code2: 'SK',
+        code3: '',
     },
     {
         name: 'Slovenia',
         dial_code: '+386',
-        code: 'SI'
+        code2: 'SI',
+        code3: '',
     },
     {
         name: 'Solomon Islands',
         dial_code: '+677',
-        code: 'SB'
+        code2: 'SB',
+        code3: '',
     },
     {
         name: 'Somalia',
         dial_code: '+252',
-        code: 'SO'
+        code2: 'SO',
+        code3: '',
     },
     {
         name: 'South Africa',
         dial_code: '+27',
-        code: 'ZA'
+        code2: 'ZA',
+        code3: '',
     },
     {
         name: 'South Georgia and the South Sandwich Islands',
         dial_code: '+500',
-        code: 'GS'
+        code2: 'GS',
+        code3: '',
     },
     {
         name: 'Spain',
         dial_code: '+34',
-        code: 'ES'
+        code2: 'ES',
+        code3: '',
     },
     {
         name: 'Sri Lanka',
         dial_code: '+94',
-        code: 'LK'
+        code2: 'LK',
+        code3: '',
     },
     {
         name: 'Sudan',
         dial_code: '+249',
-        code: 'SD'
+        code2: 'SD',
+        code3: '',
     },
     {
         name: 'Suriname',
         dial_code: '+597',
-        code: 'SR'
+        code2: 'SR',
+        code3: '',
     },
     {
         name: 'Svalbard and Jan Mayen',
         dial_code: '+47',
-        code: 'SJ'
+        code2: 'SJ',
+        code3: '',
     },
     {
         name: 'Swaziland',
         dial_code: '+268',
-        code: 'SZ'
+        code2: 'SZ',
+        code3: '',
     },
     {
         name: 'Sweden',
         dial_code: '+46',
-        code: 'SE'
+        code2: 'SE',
+        code3: '',
     },
     {
         name: 'Switzerland',
         dial_code: '+41',
-        code: 'CH'
+        code2: 'CH',
+        code3: '',
     },
     {
         name: 'Syrian Arab Republic',
         dial_code: '+963',
-        code: 'SY'
+        code2: 'SY',
+        code3: '',
     },
     {
         name: 'Taiwan',
         dial_code: '+886',
-        code: 'TW'
+        code2: 'TW',
+        code3: '',
     },
     {
         name: 'Tajikistan',
         dial_code: '+992',
-        code: 'TJ'
+        code2: 'TJ',
+        code3: '',
     },
     {
         name: 'Tanzania, United Republic of Tanzania',
         dial_code: '+255',
-        code: 'TZ'
+        code2: 'TZ',
+        code3: '',
     },
     {
         name: 'Thailand',
         dial_code: '+66',
-        code: 'TH'
+        code2: 'TH',
+        code3: '',
     },
     {
         name: 'Timor-Leste',
         dial_code: '+670',
-        code: 'TL'
+        code2: 'TL',
+        code3: '',
     },
     {
         name: 'Togo',
         dial_code: '+228',
-        code: 'TG'
+        code2: 'TG',
+        code3: '',
     },
     {
         name: 'Tokelau',
         dial_code: '+690',
-        code: 'TK'
+        code2: 'TK',
+        code3: '',
     },
     {
         name: 'Tonga',
         dial_code: '+676',
-        code: 'TO'
+        code2: 'TO',
+        code3: '',
     },
     {
         name: 'Trinidad and Tobago',
         dial_code: '+1868',
-        code: 'TT'
+        code2: 'TT',
+        code3: '',
     },
     {
         name: 'Tunisia',
         dial_code: '+216',
-        code: 'TN'
+        code2: 'TN',
+        code3: '',
     },
     {
         name: 'Turkey',
         dial_code: '+90',
-        code: 'TR'
+        code2: 'TR',
+        code3: '',
     },
     {
         name: 'Turkmenistan',
         dial_code: '+993',
-        code: 'TM'
+        code2: 'TM',
+        code3: '',
     },
     {
         name: 'Turks and Caicos Islands',
         dial_code: '+1649',
-        code: 'TC'
+        code2: 'TC',
+        code3: '',
     },
     {
         name: 'Tuvalu',
         dial_code: '+688',
-        code: 'TV'
+        code2: 'TV',
+        code3: '',
     },
     {
         name: 'Uganda',
         dial_code: '+256',
-        code: 'UG'
+        code2: 'UG',
+        code3: '',
     },
     {
         name: 'Ukraine',
         dial_code: '+380',
-        code: 'UA'
+        code2: 'UA',
+        code3: '',
     },
     {
         name: 'United Arab Emirates',
         dial_code: '+971',
-        code: 'AE'
+        code2: 'AE',
+        code3: '',
     },
     {
         name: 'United Kingdom',
         dial_code: '+44',
-        code: 'GB'
+        code2: 'GB',
+        code3: '',
     },
     {
         name: 'United States',
         dial_code: '+1',
-        code: 'US'
+        code2: 'US',
+        code3: '',
     },
     {
         name: 'Uruguay',
         dial_code: '+598',
-        code: 'UY'
+        code2: 'UY',
+        code3: '',
     },
     {
         name: 'Uzbekistan',
         dial_code: '+998',
-        code: 'UZ'
+        code2: 'UZ',
+        code3: '',
     },
     {
         name: 'Vanuatu',
         dial_code: '+678',
-        code: 'VU'
+        code2: 'VU',
+        code3: '',
     },
     {
         name: 'Venezuela, Bolivarian Republic of Venezuela',
         dial_code: '+58',
-        code: 'VE'
+        code2: 'VE',
+        code3: '',
     },
     {
         name: 'Vietnam',
         dial_code: '+84',
-        code: 'VN'
+        code2: 'VN',
+        code3: '',
     },
     {
         name: 'Virgin Islands, British',
         dial_code: '+1284',
-        code: 'VG'
+        code2: 'VG',
+        code3: '',
     },
     {
         name: 'Virgin Islands, U.S.',
         dial_code: '+1340',
-        code: 'VI'
+        code2: 'VI',
+        code3: '',
     },
     {
         name: 'Wallis and Futuna',
         dial_code: '+681',
-        code: 'WF'
+        code2: 'WF',
+        code3: '',
     },
     {
         name: 'Yemen',
         dial_code: '+967',
-        code: 'YE'
+        code2: 'YE',
+        code3: '',
     },
     {
         name: 'Zambia',
         dial_code: '+260',
-        code: 'ZM'
+        code2: 'ZM',
+        code3: '',
     },
     {
         name: 'Zimbabwe',
         dial_code: '+263',
-        code: 'ZW'
+        code2: 'ZW',
+        code3: '',
     }
 ];

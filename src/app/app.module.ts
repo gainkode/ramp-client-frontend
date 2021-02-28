@@ -7,6 +7,7 @@ import { Apollo } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
 import { onError } from 'apollo-link-error';
 import { ApolloLink, InMemoryCache } from '@apollo/client/core';
+import { Observable } from 'apollo-link';
 import { setContext } from '@apollo/client/link/context';
 import {
   SocialLoginModule, SocialAuthServiceConfig,
@@ -17,10 +18,6 @@ import { AdminDataService } from './services/admin-data.service';
 import { ErrorService } from './services/error.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { environment } from 'src/environments/environment';
-
-
-
-import { Observable } from 'apollo-link';
 
 const promiseToObservable = (promise: Promise<any>) =>
   new Observable((subscriber: any) => {
@@ -71,7 +68,6 @@ const promiseToObservable = (promise: Promise<any>) =>
   bootstrap: [AppComponent]
 })
 export class AppModule {
-
   errorLink = onError(({ forward, graphQLErrors, networkError, operation }) => {
     if (graphQLErrors) {
       for (let err of graphQLErrors) {
@@ -99,13 +95,7 @@ export class AppModule {
     if (token === null) {
       return {};
     } else {
-      console.log('refresh token');
-      // this.authService.refreshToken().subscribe(data => {
-      //   console.log(data);
-      // });
-      return {
-        headers: { Authorization: `Bearer ${token}` }
-      };
+      return { headers: { Authorization: `Bearer ${token}` } };
     }
   });
   
