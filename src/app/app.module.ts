@@ -80,7 +80,7 @@ export class AppModule {
           console.log(code);
           if (code.toUpperCase() === 'UNAUTHENTICATED') {
             console.log('Need to get new token');
-            //return promiseToObservable(authenticationService.refreshToken().toPromise()).flatMap(() => forward(operation));
+            return promiseToObservable(this.authService.refreshToken().toPromise()).flatMap(() => forward(operation));
           }
           err.message = err.extensions?.code;
         } else {
@@ -91,6 +91,7 @@ export class AppModule {
     if (networkError) {
       console.log(networkError);
     };
+    return forward(operation);
   });
 
   authLink = setContext((operation, context) => {
