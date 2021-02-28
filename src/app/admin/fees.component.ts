@@ -5,8 +5,8 @@ import { AuthService } from '../services/auth.service';
 import { AdminDataService } from '../services/admin-data.service';
 import { ErrorService } from '../services/error.service';
 import { Validators, FormBuilder, FormControl } from '@angular/forms';
-import { Observable, of } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map, startWith, mergeMap } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { FeeScheme, FeeSchemes } from '../model/fee-scheme.model';
@@ -221,7 +221,7 @@ export class FeesComponent {
       this.inProgress = false;
       this.errorMessage = this.errorHandler.getError(
         error.message,
-        'Incorrect login or password');
+        'Unable to load fee settings');
     });
     // field events
     this.schemeForm.get('target')?.valueChanges.subscribe(val => {
