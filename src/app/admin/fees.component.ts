@@ -10,7 +10,7 @@ import { map, startWith, mergeMap } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { FeeScheme, FeeSchemes } from '../model/fee-scheme.model';
-import { CountryCode, CountryCodes } from '../model/country-code.model';
+import { CountryCodes } from '../model/country-code.model';
 import { SettingsFeeListResult } from '../model/generated-models';
 
 class TargetParams {
@@ -42,7 +42,7 @@ export class FeesComponent {
   countries: CommonTargetValue[] = CountryCodes.map(c => {
     let item = new CommonTargetValue();
     item.imgClass = "country-flag";
-    item.imgSource = `assets/svg-country-flags/${c.code.toLowerCase()}.svg`;
+    item.imgSource = `assets/svg-country-flags/${c.code2.toLowerCase()}.svg`;
     item.title = c.name;
     return item;
   });

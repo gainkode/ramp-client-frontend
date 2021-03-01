@@ -60,7 +60,7 @@
                     <mat-autocomplete #auto="matAutocomplete">
                         <mat-option *ngFor="let c of filteredCountries | async" [value]="c.name">
                             <dropdown-item itemValue="{{c.name}}" imageClass="country-flag"
-                            imageSource="assets/svg-country-flags/{{getCountryFlag(c.code)}}"></dropdown-item>
+                            imageSource="assets/svg-country-flags/{{getCountryFlag(c.code2)}}"></dropdown-item>
                         </mat-option>
                     </mat-autocomplete>
                     <mat-error *ngIf="this.countryField?.hasError('required')">

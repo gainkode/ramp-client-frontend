@@ -50,7 +50,7 @@ const SOCIAL_LOGIN_POST = gql`
 const SIGNUP_POST = gql`
   mutation Signup($recaptcha: String!, $name: String!, $email: String!, $password: String!, $userType: UserType!,
     $mode: UserMode!, $termsOfUse: Boolean!, $firstName: String!, $lastName: String!,
-    $countryCode: String!, $phone: String!) {
+    $countryCode2: String!, $countryCode3: String!, $phone: String!) {
     signup(
         recaptcha: $recaptcha,
         email: $email,
@@ -61,7 +61,8 @@ const SIGNUP_POST = gql`
         termsOfUse: $termsOfUse,
         firstName: $firstName,
         lastName: $lastName,
-        countryCode: $countryCode,
+        countryCode2: $countryCode2,
+        countryCode3: $countryCode3,
         phone: $phone
     ) {
       authToken
@@ -96,7 +97,7 @@ const CONFIRMEMAIL_POST = gql`
 const CONFIRMNAME_POST = gql`
   mutation ConfirmName($token: String!, $recaptcha: String!, $name: String!, 
     $userType: UserType!, $mode: UserMode!, $firstName: String!, $lastName: String!,
-    $countryCode: String!, $phone: String!) {
+    $countryCode2: String!, $countryCode3: String!, $phone: String!) {
     confirmName(
         recaptcha: $recaptcha,
         token: $token,
@@ -105,7 +106,8 @@ const CONFIRMNAME_POST = gql`
         mode: $mode,
         firstName: $firstName,
         lastName: $lastName,
-        countryCode: $countryCode,
+        countryCode2: $countryCode2,
+        countryCode3: $countryCode3,
         phone: $phone
     ) {
       authToken
@@ -171,7 +173,8 @@ export class AuthService {
     }
 
     register(username: string, usermail: string, userpassword: string, usertype: string,
-        firstname: string, lastname: string, countrycode: string, phoneNumber: string): Observable<any> {
+        firstname: string, lastname: string, countrycode2: string, countrycode3: string,
+        phoneNumber: string): Observable<any> {
         return this.apollo.mutate({
             mutation: SIGNUP_POST,
             variables: {
@@ -184,14 +187,15 @@ export class AuthService {
                 termsOfUse: true,
                 firstName: firstname,
                 lastName: lastname,
-                countryCode: countrycode,
+                countryCode2: countrycode2,
+                countryCode3: countrycode3,
                 phone: phoneNumber
             }
         });
     }
 
     confirmName(tokenId: string, username: string, usertype: string, firstname: string, lastname: string, 
-        countrycode: string, phoneNumber: string): Observable<any> {
+        countrycode2: string, countrycode3: string, phoneNumber: string): Observable<any> {
         return this.apollo.mutate({
             mutation: CONFIRMNAME_POST,
             variables: {
@@ -202,7 +206,8 @@ export class AuthService {
                 mode: 'ExternalWallet',
                 firstName: firstname,
                 lastName: lastname,
-                countryCode: countrycode,
+                countryCode2: countrycode2,
+                countryCode3: countrycode3,
                 phone: phoneNumber
             }
         });

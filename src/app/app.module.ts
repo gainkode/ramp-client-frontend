@@ -28,6 +28,7 @@ const promiseToObservable = (promise: Promise<any>) =>
         }
         subscriber.next(value);
         subscriber.complete();
+        console.log(value);
       },
       err => subscriber.error(err)
     );

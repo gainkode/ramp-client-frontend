@@ -6,7 +6,7 @@ import { startWith, map } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 import { ErrorService } from '../services/error.service';
 import { LoginResult } from '../model/generated-models';
-import { CountryCode, CountryCodes } from '../model/country-code.model';
+import { CountryCode, CountryCodes, getCountry, getCountryDialCode } from '../model/country-code.model';
 
 @Component({
     templateUrl: 'signup.component.html',
@@ -49,7 +49,7 @@ export class SignupComponent implements OnInit {
             startWith(''),
             map(value => this.filterCountries(value)));
         this.countryField?.valueChanges.subscribe(val => {
-            const code = this.getCountryPhoneCode(val);
+            const code = getCountryDialCode(val);
             if (code !== '') {
                 this.phoneCodeField?.setValue(code);
             }
@@ -82,30 +82,6 @@ export class SignupComponent implements OnInit {
         }
     }
 
-    getCountryPhoneCode(searchText: string): string {
-        if (!searchText) {
-            return '';
-        }
-        searchText = searchText.toLowerCase();
-        const found = this.countries.filter(code => code.name.toLowerCase() === searchText);
-        if (found.length === 1) {
-            return found[0].dial_code;
-        }
-        return '';
-    }
-
-    getCountryCode(searchText: string): string {
-        if (!searchText) {
-            return '';
-        }
-        searchText = searchText.toLowerCase();
-        const found = this.countries.filter(code => code.name.toLowerCase() === searchText);
-        if (found.length === 1) {
-            return found[0].code;
-        }
-        return '';
-    }
-
     checkAgreement(): void {
         this.agreementChecked = !this.agreementChecked;
     }
@@ -113,8 +89,8 @@ export class SignupComponent implements OnInit {
     onSubmit(): void {
         this.errorMessage = '';
         if (this.signupForm.valid) {
-            const countryCode = this.getCountryCode(this.countryField?.value);
-            if (countryCode === '') {
+            const countryCode = getCountry(this.countryField?.value);
+            if (countryCode === null) {
                 this.errorMessage = `Unable to recognize country: ${this.countryField?.value}`;
                 return;
             }
@@ -126,7 +102,8 @@ export class SignupComponent implements OnInit {
                 'Personal',
                 this.signupForm.get('firstName')?.value,
                 this.signupForm.get('lastName')?.value,
-                countryCode,
+                countryCode.code2,
+                countryCode.code3,
                 phone)
                 .subscribe(({ data }) => {
                     this.inProgress = false;

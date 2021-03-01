@@ -1453,3 +1453,23 @@ export const CountryCodes: Array<CountryCode> = [
         code3: 'ZWE',
     }
 ];
+
+export function getCountry(countryName: string): CountryCode | null {
+    if (!countryName) {
+        return null;
+    }
+    const searchText = countryName.toLowerCase();
+    const found = CountryCodes.filter(code => code.name.toLowerCase() === searchText);
+    if (found.length === 1) {
+        return found[0];
+    }
+    return null;
+}
+
+export function getCountryDialCode(countryName: string): string {
+    const found = getCountry(countryName);
+    if (found !== null) {
+        return found.dial_code;
+    }
+    return '';
+}
