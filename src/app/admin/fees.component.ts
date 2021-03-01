@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 import { map, startWith, mergeMap } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { FeeScheme, FeeSchemes } from '../model/fee-scheme.model';
+import { FeeScheme, FeeShemeTerms, FeeShemeWireDetails, FeeSchemes } from '../model/fee-scheme.model';
 import { CountryCodes } from '../model/country-code.model';
 import { SettingsFeeListResult } from '../model/generated-models';
 
@@ -207,13 +207,27 @@ export class FeesComponent {
       }
       if (settingsCount > 0) {
         this.schemes = settings?.list?.map((val) => {
-          console.log(val);
+          const terms = JSON.parse(val.terms);
+          const details = JSON.parse(val.wireDetails);
           let scheme = new FeeScheme();
           scheme.name = val.name;
           scheme.isDefault = val.default as boolean;
           scheme.description = val.description as string;
-          //scheme.terms = JSON.parse(val.terms);
-          //scheme.details = JSON.parse(val.wireDetails);
+          scheme.terms = new FeeShemeTerms();
+          scheme.details = new FeeShemeWireDetails();
+          scheme.terms.transactionFees = terms.Ttransaction_fee;
+          scheme.terms.minTransactionFee = terms.Min_transaction_fee;
+          scheme.terms.rollingReserves = terms.Rolling_reserves;
+          scheme.terms.rollingReservesDays = terms.Rolling_reserves_days;
+          scheme.terms.chargebackFees = terms.Chargeback_fees;
+          scheme.terms.monthlyFees = terms.Monthly_fees;
+          scheme.terms.minMonthlyFees = terms.Min_monthly_fees;
+          scheme.details.bankAddress = details.Bank_address;
+          scheme.details.bankName = details.Bank_name;
+          scheme.details.beneficiaryAddress = details.Beneficiary_address;
+          scheme.details.beneficiaryName = details.Beneficiary_name;
+          scheme.details.iban = details.Iban;
+          scheme.details.swift = details.Swift;
           return scheme;
         }) as FeeScheme[];
       } else {

@@ -9,7 +9,9 @@ const GET_FEE_SETTINGS_POST = gql`
       list {
         name,
         default,
-        description
+        description,
+        terms,
+        wireDetails
       }
     }
   }
