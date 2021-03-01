@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
-import { from, Observable } from 'rxjs';
-import { LoginResult, User } from '../model/generated-models';
-import { environment } from 'src/environments/environment';
-import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 const GET_FEE_SETTINGS_POST = gql`
   query GetSettingsFee {
     getSettingsFee(filter: "") {
-      count
+      count,
+      list {
+        name,
+        default
+      }
     }
   }
 `;
@@ -19,8 +20,7 @@ export class AdminDataService {
 
     getFeeSettings(): Observable<any> {
         return this.apollo.watchQuery<Response>({
-            query: GET_FEE_SETTINGS_POST//,
-            //variables: { episode: 'JEDI' }
+            query: GET_FEE_SETTINGS_POST
         }).valueChanges;
     }
 }

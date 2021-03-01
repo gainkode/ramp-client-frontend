@@ -195,25 +195,27 @@ export class FeesComponent {
     this.inProgress = true;
 
     // temp
-    this.schemes = FeeSchemes;
+    //this.schemes = FeeSchemes;
     // temp
 
     this.adminService.getFeeSettings().subscribe(({ data }) => {
       this.inProgress = false;
-      const settings = data as SettingsFeeListResult;
+      const settings = data.getSettingsFee as SettingsFeeListResult;
       let settingsCount = 0;
       if (settings !== null) {
-        settingsCount = settings?.count?.valueOf() as number;
+        settingsCount = settings?.count as number;
       }
       if (settingsCount > 0) {
         this.schemes = settings?.list?.map((val) => {
+          console.log(val);
           let scheme = new FeeScheme();
           scheme.name = val.name;
-          scheme.terms = JSON.parse(val.terms);
-          scheme.details = JSON.parse(val.wireDetails);
+          scheme.isDefault = val.default as boolean;
+
+          //scheme.terms = JSON.parse(val.terms);
+          //scheme.details = JSON.parse(val.wireDetails);
           return scheme;
         }) as FeeScheme[];
-        console.log(this.schemes);
       } else {
         console.log('List is empty');
       }
@@ -355,10 +357,6 @@ export class FeesComponent {
   }
 
   onSubmit(): void {
-    this.auth.refreshToken().subscribe(({ data }) => {
-      console.log(data.refreshToken);
-    }, (error) => {
-      console.log(error);
-    });
+    
   }
 }

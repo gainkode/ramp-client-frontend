@@ -73,7 +73,6 @@ export class AppModule {
       for (let err of graphQLErrors) {
         if (err.extensions !== null) {
           const code = err.extensions?.code as string;
-          console.log(code);
           if (code.toUpperCase() === 'UNAUTHENTICATED') {
             return promiseToObservable(this.authService.refreshToken().toPromise()).flatMap(() => forward(operation));
           }
