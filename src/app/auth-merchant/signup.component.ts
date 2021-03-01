@@ -6,7 +6,7 @@ import { startWith, map } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 import { ErrorService } from '../services/error.service';
 import { LoginResult } from '../model/generated-models';
-import { CountryCode, CountryCodes, getCountry, getCountryDialCode } from '../model/country-code.model';
+import { ICountryCode, CountryCodes, getCountry, getCountryDialCode } from '../model/country-code.model';
 
 @Component({
     templateUrl: 'signup.component.html',
@@ -17,8 +17,8 @@ export class SignupComponent implements OnInit {
     inProgress = false;
     errorMessage = '';
     agreementChecked = false;
-    countries: CountryCode[] = CountryCodes;
-    filteredCountries: Observable<CountryCode[]> | undefined;
+    countries: ICountryCode[] = CountryCodes;
+    filteredCountries: Observable<ICountryCode[]> | undefined;
 
     signupForm = this.formBuilder.group({
         username: ['', { validators: [Validators.required], updateOn: 'change' } ],
@@ -71,7 +71,7 @@ export class SignupComponent implements OnInit {
         return `${code.toLowerCase()}.svg`;
     }
 
-    private filterCountries(value: string | CountryCode): CountryCode[] {
+    private filterCountries(value: string | ICountryCode): ICountryCode[] {
         let filterValue = '';
         if (value) {
             filterValue = typeof value === 'string' ? value.toLowerCase() : value.name.toLowerCase();

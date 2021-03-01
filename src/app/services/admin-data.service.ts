@@ -8,7 +8,8 @@ const GET_FEE_SETTINGS_POST = gql`
       count,
       list {
         name,
-        default
+        default,
+        description
       }
     }
   }

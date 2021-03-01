@@ -29,7 +29,10 @@ const promiseToObservable = (promise: Promise<any>) =>
         subscriber.next(value);
         subscriber.complete();
       },
-      err => subscriber.error(err)
+      err => {
+        subscriber.error(err);
+        subscriber.complete();
+      }
     );
   });
 
@@ -74,7 +77,8 @@ export class AppModule {
         if (err.extensions !== null) {
           const code = err.extensions?.code as string;
           if (code.toUpperCase() === 'UNAUTHENTICATED') {
-            return promiseToObservable(this.authService.refreshToken().toPromise()).flatMap(() => forward(operation));
+            return promiseToObservable(this.authService.refreshToken().toPromise())
+            .flatMap(() => forward(operation));
           }
           err.message = err.extensions?.code;
         } else {
@@ -112,7 +116,7 @@ export class AppModule {
           withCredentials: true
         })
       ]),
-      cache: new InMemoryCache(),
+      cache: new InMemoryCache()
     });
   }
 }

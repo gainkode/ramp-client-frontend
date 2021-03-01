@@ -211,7 +211,7 @@ export class FeesComponent {
           let scheme = new FeeScheme();
           scheme.name = val.name;
           scheme.isDefault = val.default as boolean;
-
+          scheme.description = val.description as string;
           //scheme.terms = JSON.parse(val.terms);
           //scheme.details = JSON.parse(val.wireDetails);
           return scheme;
@@ -221,9 +221,14 @@ export class FeesComponent {
       }
     }, (error) => {
       this.inProgress = false;
-      this.errorMessage = this.errorHandler.getError(
-        error.message,
-        'Unable to load fee settings');
+      const refreshError = sessionStorage.getItem('refreshTokenError');
+      if (refreshError === '') {
+        this.errorMessage = this.errorHandler.getError(
+          error.message,
+          'Unable to load fee settings');
+      } else {
+        this.router.navigateByUrl('/');
+      }
     });
     // field events
     this.schemeForm.get('target')?.valueChanges.subscribe(val => {
@@ -357,6 +362,6 @@ export class FeesComponent {
   }
 
   onSubmit(): void {
-    
+
   }
 }

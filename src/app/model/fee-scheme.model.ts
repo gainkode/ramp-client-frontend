@@ -3,6 +3,7 @@ import { Tracing } from "trace_events";
 export class FeeScheme {
     id!: string;
     isDefault: boolean = false;
+    description!: string;
     name!: string;
     target!: string;
     trxType!: string;
@@ -36,6 +37,7 @@ export const FeeSchemes: Array<FeeScheme> = [
         id: 'id0',
         isDefault: true,
         name: 'Default',
+        description: '',
         target: 'AccountId',
         trxType: 'Transfer',
         instrument: 'Credit Card',
@@ -62,6 +64,7 @@ export const FeeSchemes: Array<FeeScheme> = [
         id: 'id1',
         isDefault: false,
         name: 'Australia',
+        description: '',
         target: 'Country',
         trxType: 'Exchange',
         instrument: 'APM',
@@ -88,6 +91,7 @@ export const FeeSchemes: Array<FeeScheme> = [
         id: 'id2',
         isDefault: false,
         name: 'Wallet',
+        description: '',
         target: 'Initiate from wallet',
         trxType: 'Deposits',
         instrument: 'Bitstamp',

@@ -5,7 +5,7 @@ import { startWith, map } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 import { ErrorService } from '../services/error.service';
 import { Validators, FormBuilder, AbstractControl } from '@angular/forms';
-import { CountryCode, CountryCodes, getCountry, getCountryDialCode } from '../model/country-code.model';
+import { ICountryCode, CountryCodes, getCountry, getCountryDialCode } from '../model/country-code.model';
 
 @Component({
     templateUrl: 'register.component.html',
@@ -17,8 +17,8 @@ export class RegisterComponent implements OnInit {
     hidePassword1 = true;
     hidePassword2 = true;
     agreementChecked = false;
-    countries: CountryCode[] = CountryCodes;
-    filteredCountries: Observable<CountryCode[]> | undefined;
+    countries: ICountryCode[] = CountryCodes;
+    filteredCountries: Observable<ICountryCode[]> | undefined;
 
     signupForm = this.formBuilder.group({
         email: ['',
@@ -99,7 +99,7 @@ export class RegisterComponent implements OnInit {
         return `${code.toLowerCase()}.svg`;
     }
 
-    private filterCountries(value: string | CountryCode): CountryCode[] {
+    private filterCountries(value: string | ICountryCode): ICountryCode[] {
         let filterValue = '';
         if (value) {
             filterValue = typeof value === 'string' ? value.toLowerCase() : value.name.toLowerCase();
