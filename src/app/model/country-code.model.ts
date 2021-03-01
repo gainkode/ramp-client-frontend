@@ -925,12 +925,6 @@ export const CountryCodes: Array<CountryCode> = [
         code3: 'NLD',
     },
     {
-        name: 'Netherlands Antilles',
-        dial_code: '+599',
-        code2: 'AN',
-        code3: '',
-    },
-    {
         name: 'New Caledonia',
         dial_code: '+687',
         code2: 'NC',
