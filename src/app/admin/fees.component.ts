@@ -356,7 +356,7 @@ export class FeesComponent {
 
   onSubmit(): void {
     this.auth.refreshToken().subscribe(({ data }) => {
-      console.log(data);
+      console.log(data.refreshToken);
     }, (error) => {
       console.log(error);
     });

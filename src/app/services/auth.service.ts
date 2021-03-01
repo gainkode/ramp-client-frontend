@@ -128,9 +128,14 @@ export class AuthService {
     constructor(private apollo: Apollo, private socialAuth: SocialAuthService) { }
 
     refreshToken(): Observable<any> {
-        return this.apollo.mutate({
+        const result = this.apollo.mutate({
             mutation: REFRESH_TOKEN_POST
         });
+        result.subscribe(x => {
+            const d = x.data as any;
+            sessionStorage.setItem('currentToken', d.refreshToken as string);
+        })
+        return result;
     }
 
     authenticate(username: string, userpassword: string): Observable<any> {

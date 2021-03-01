@@ -28,7 +28,6 @@ const promiseToObservable = (promise: Promise<any>) =>
         }
         subscriber.next(value);
         subscriber.complete();
-        console.log(value);
       },
       err => subscriber.error(err)
     );
@@ -76,7 +75,6 @@ export class AppModule {
           const code = err.extensions?.code as string;
           console.log(code);
           if (code.toUpperCase() === 'UNAUTHENTICATED') {
-            console.log('Need to get new token');
             return promiseToObservable(this.authService.refreshToken().toPromise()).flatMap(() => forward(operation));
           }
           err.message = err.extensions?.code;
