@@ -7,7 +7,7 @@ export class AdminGuard {
     constructor(private router: Router, private auth: AuthService) { }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-        if (this.auth.isPermittedObjectCode('FEES') === 0) {
+        if (!this.auth.isAuthenticatedUserRole('admin')) {
             this.router.navigateByUrl('/');
             return false;
         }
