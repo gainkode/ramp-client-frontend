@@ -16,7 +16,8 @@ const LOGIN_POST = gql`
                   userId
                   email
                   name
-                  roles
+                  roles {name, immutable}
+                  permissions { roleName, objectCode, objectName, objectDescription, fullAccess }
                   type
             }
             authTokenAction
@@ -39,7 +40,8 @@ const SOCIAL_LOGIN_POST = gql`
                 userId
                 email
                 name
-                roles
+                roles {name, immutable}
+                permissions { roleName, objectCode, objectName, objectDescription, fullAccess }
                 type
             }
             authTokenAction
@@ -116,7 +118,8 @@ const CONFIRMNAME_POST = gql`
         email,
         name,
         type,
-        roles
+        roles {name,immutable},
+        permissions { roleName, objectCode, objectName, objectDescription, fullAccess }
       }
       authTokenAction
     }
@@ -284,9 +287,26 @@ export class AuthService {
         let result = false;
         const user: User | null = this.getAuthenticatedUser();
         if (user != null) {
-            const roleItem = (user.roles?.find(x => x.toLowerCase() == role));
+            const roleItem = (user.roles?.find(x => x.name?.toLowerCase() == role));
             if (roleItem !== undefined) {
                 result = true;
+            }
+        }
+        return result;
+    }
+
+    /*
+    Get info, whether the current user has permissions to the page with specified code.
+    If permission is found, function returns access rights: 1 - read only access, 2 - full access.
+    If permissions not found, function returns 0
+     */
+    isPermittedObjectCode(code: string): number {
+        let result = 0;
+        const user: User | null = this.getAuthenticatedUser();
+        if (user != null) {
+            const permissionItem = (user.permissions?.find(x => x.objectCode == code));
+            if (permissionItem !== undefined) {
+                result = (permissionItem.fullAccess) ? 2 : 1;
             }
         }
         return result;

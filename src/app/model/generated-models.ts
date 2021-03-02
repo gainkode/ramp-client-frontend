@@ -10,8 +10,8 @@ export type Scalars = {
   Int: number;
   Float: number;
   DateTime: any;
-  Byte: any;
   Upload: any;
+  Byte: any;
 };
 
 
@@ -219,9 +219,11 @@ export type User = {
   accessFailedCount?: Maybe<Scalars['Int']>;
   nameConfirmed?: Maybe<Scalars['Boolean']>;
   emailConfirmed?: Maybe<Scalars['Boolean']>;
-  roles?: Maybe<Array<Scalars['String']>>;
+  roles?: Maybe<Array<UserRole>>;
+  permissions?: Maybe<Array<UserRolePermission>>;
   is2faEnabled?: Maybe<Scalars['Boolean']>;
   hasEmailAuth?: Maybe<Scalars['Boolean']>;
+  kycApplicantId?: Maybe<Scalars['String']>;
   state?: Maybe<UserState>;
 };
 
@@ -243,6 +245,21 @@ export enum UserMode {
   InternalWallet = 'InternalWallet',
   ExternalWallet = 'ExternalWallet'
 }
+
+export type UserRole = {
+  __typename?: 'UserRole';
+  name?: Maybe<Scalars['String']>;
+  immutable?: Maybe<Scalars['Boolean']>;
+};
+
+export type UserRolePermission = {
+  __typename?: 'UserRolePermission';
+  roleName: Scalars['String'];
+  objectCode: Scalars['String'];
+  objectName: Scalars['String'];
+  objectDescription: Scalars['String'];
+  fullAccess: Scalars['Boolean'];
+};
 
 export type UserState = {
   __typename?: 'UserState';
@@ -332,6 +349,7 @@ export type Mutation = {
   enable2fa: LoginResult;
   disable2fa: LoginResult;
   sendEmailCodePasswordChange: Scalars['Boolean'];
+  uploadMyKyc: Array<File>;
 };
 
 
@@ -478,6 +496,11 @@ export type MutationDisable2faArgs = {
   code: Scalars['String'];
 };
 
+
+export type MutationUploadMyKycArgs = {
+  uploadParams: Array<FileUploadParams>;
+};
+
 export type SettingsFeeInput = {
   name?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
@@ -489,7 +512,7 @@ export type SettingsFeeInput = {
   terms?: Maybe<Scalars['String']>;
   wireDetails?: Maybe<Scalars['String']>;
   default?: Maybe<Scalars['Boolean']>;
-  disabled?: Maybe<Scalars['DateTime']>;
+  deleted?: Maybe<Scalars['DateTime']>;
 };
 
 export type SettingsCostInput = {
@@ -502,7 +525,7 @@ export type SettingsCostInput = {
   targetPaymentProviders?: Maybe<Array<PaymentProvider>>;
   terms?: Maybe<Scalars['String']>;
   default?: Maybe<Scalars['Boolean']>;
-  disabled?: Maybe<Scalars['DateTime']>;
+  deleted?: Maybe<Scalars['DateTime']>;
 };
 
 export type UserInput = {
@@ -518,7 +541,6 @@ export type UserInput = {
   countryCode3?: Maybe<Scalars['String']>;
   phone?: Maybe<Scalars['String']>;
   avatar?: Maybe<Scalars['String']>;
-  roles?: Maybe<Array<Scalars['String']>>;
   termsOfUse?: Maybe<Scalars['Boolean']>;
   emailConfirmed?: Maybe<Scalars['DateTime']>;
   nameConfirmed?: Maybe<Scalars['DateTime']>;
@@ -541,23 +563,25 @@ export type TwoFactorAuthenticationResult = {
   qr: Scalars['String'];
 };
 
-
-export type UserDevice = {
-  __typename?: 'UserDevice';
-  userDeviceId?: Maybe<Scalars['String']>;
-  userId?: Maybe<Scalars['String']>;
-  created?: Maybe<Scalars['DateTime']>;
-  country?: Maybe<Scalars['String']>;
-  city?: Maybe<Scalars['String']>;
-  region?: Maybe<Scalars['String']>;
-  eu?: Maybe<Scalars['String']>;
-  metro?: Maybe<Scalars['Int']>;
-  area?: Maybe<Scalars['Int']>;
-  location?: Maybe<Scalars['String']>;
-  browser?: Maybe<Scalars['String']>;
-  device?: Maybe<Scalars['String']>;
-  deviceConfirmed?: Maybe<Scalars['DateTime']>;
+export type FileUploadParams = {
+  upload: Scalars['Upload'];
+  reason: FileUploadReason;
+  fileName?: Maybe<Scalars['String']>;
+  mimeType?: Maybe<Scalars['String']>;
+  size?: Maybe<Scalars['Int']>;
+  encoding?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
+  linkedId?: Maybe<Scalars['String']>;
+  linkedObjectSerialNumber?: Maybe<Scalars['Int']>;
+  order?: Maybe<Scalars['Int']>;
 };
+
+
+export enum FileUploadReason {
+  Support = 'SUPPORT',
+  Kyc = 'KYC',
+  Avatar = 'AVATAR'
+}
 
 export type File = {
   __typename?: 'File';
@@ -579,26 +603,22 @@ export type File = {
 };
 
 
-export type UploadParams = {
-  upload: Scalars['Upload'];
-  reason: FileReason;
-  fileName?: Maybe<Scalars['String']>;
-  mimeType?: Maybe<Scalars['String']>;
-  size?: Maybe<Scalars['Int']>;
-  encoding?: Maybe<Scalars['String']>;
-  type?: Maybe<Scalars['String']>;
-  linkedId?: Maybe<Scalars['String']>;
-  linkedObjectSerialNumber?: Maybe<Scalars['Int']>;
-  order?: Maybe<Scalars['Int']>;
+export type UserDevice = {
+  __typename?: 'UserDevice';
+  userDeviceId?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['String']>;
+  created?: Maybe<Scalars['DateTime']>;
+  country?: Maybe<Scalars['String']>;
+  city?: Maybe<Scalars['String']>;
+  region?: Maybe<Scalars['String']>;
+  eu?: Maybe<Scalars['String']>;
+  metro?: Maybe<Scalars['Int']>;
+  area?: Maybe<Scalars['Int']>;
+  location?: Maybe<Scalars['String']>;
+  browser?: Maybe<Scalars['String']>;
+  device?: Maybe<Scalars['String']>;
+  deviceConfirmed?: Maybe<Scalars['DateTime']>;
 };
-
-export enum FileReason {
-  Support = 'SUPPORT',
-  Blog = 'BLOG',
-  Statement = 'STATEMENT',
-  Kyc = 'KYC',
-  Avatar = 'AVATAR'
-}
 
 export enum CryptoCurrency {
   Btc = 'BTC',

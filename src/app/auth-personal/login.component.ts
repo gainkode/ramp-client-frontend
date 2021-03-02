@@ -66,7 +66,6 @@ export class LoginComponent {
                             this.auth.socialSignOut();
                             this.router.navigateByUrl('/personal/');
                         } else {
-                            this.loginForm.reset();
                             this.errorMessage = 'Wrong account type. Try to sign in as a merchant';
                         }
                     } else if (userData.authTokenAction === 'ConfirmName') {
