@@ -1,7 +1,12 @@
-import { SettingsFee, PaymentInstrument } from "./generated-models";
+import { SettingsFee, PaymentInstrument, PaymentProvider } from "./generated-models";
 
 export class PaymentInstrumentView {
     id!: PaymentInstrument;
+    name: string = '';
+}
+
+export class PaymentProviderView {
+    id!: PaymentProvider;
     name: string = '';
 }
 
@@ -14,6 +19,13 @@ export const PaymentInstrumentList: Array<PaymentInstrumentView> = [
     { id: PaymentInstrument.WireTransfer, name: 'Wire transfer' }
 ]
 
+export const PaymentProviderList: Array<PaymentProviderView> = [
+    { id: PaymentProvider.Bank, name: 'Bank' },
+    { id: PaymentProvider.Skrill, name: 'Skrill' },
+    { id: PaymentProvider.Sofort, name: 'Sofort' },
+    { id: PaymentProvider.Totalprocessing, name: 'Total processing' }
+]
+
 export class FeeScheme {
     id!: string;
     isDefault: boolean = false;
@@ -22,7 +34,7 @@ export class FeeScheme {
     target!: string;
     trxType!: string;
     instrument: Array<PaymentInstrument> = [];
-    provider!: string;
+    provider: Array<PaymentProvider> = [];
     terms!: FeeShemeTerms;
     details!: FeeShemeWireDetails;
 
@@ -34,7 +46,12 @@ export class FeeScheme {
             this.description = data.description as string;
             this.terms = new FeeShemeTerms(data.terms);
             this.details = new FeeShemeWireDetails(data.wireDetails);
-            //details.targetInstruments
+            data.targetInstruments?.forEach(x => {
+                this.instrument.push(x as PaymentInstrument);
+            });
+            data.targetPaymentProviders?.forEach(x => {
+                this.provider.push(x as PaymentProvider);
+            });
         } else {
             this.terms = new FeeShemeTerms('');
             this.details = new FeeShemeWireDetails('');

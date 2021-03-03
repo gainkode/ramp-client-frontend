@@ -12,7 +12,8 @@ const GET_FEE_SETTINGS_POST = gql`
         description,
         terms,
         wireDetails,
-        targetInstruments
+        targetInstruments,
+        targetPaymentProviders
       }
     }
   }

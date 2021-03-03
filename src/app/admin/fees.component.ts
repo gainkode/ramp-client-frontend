@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { FeeScheme, PaymentInstrumentList } from '../model/fee-scheme.model';
+import { FeeScheme, PaymentInstrumentList, PaymentProviderList } from '../model/fee-scheme.model';
 import { CountryCodes } from '../model/country-code.model';
 import { SettingsFeeListResult } from '../model/generated-models';
 
@@ -61,7 +61,7 @@ export class FeesComponent {
   ];
   transactionTypes: string[] = ['Deposits', 'Transfer', 'System', 'Withdrawals', 'Exchange'];
   instruments = PaymentInstrumentList;
-  providers: string[] = ['Fibonatix', 'SecureTrading', 'Sofort', 'Poli'];
+  providers = PaymentProviderList;
 
   schemeForm = this.formBuilder.group({
     name: ['', { validators: [Validators.required], updateOn: 'change' }],
@@ -241,13 +241,11 @@ export class FeesComponent {
         { validators: [Validators.required], updateOn: 'change' }
       ));
       const trxTypeValues = [];
-      const providerValues = [];
       trxTypeValues.push(this.transactionTypes.find(trx => trx === scheme?.trxType));
-      providerValues.push(this.providers.find(p => p === scheme?.provider));
       this.schemeForm.get('target')?.setValue(scheme?.target);
       this.schemeForm.get('instrument')?.setValue(scheme.instrument);
       this.schemeForm.get('trxType')?.setValue(trxTypeValues);
-      this.schemeForm.get('provider')?.setValue(providerValues);
+      this.schemeForm.get('provider')?.setValue(scheme?.provider);
       this.schemeForm.get('transactionFees')?.setValue(scheme?.terms.transactionFees);
       this.schemeForm.get('minTransactionFee')?.setValue(scheme?.terms.minTransactionFee);
       this.schemeForm.get('rollingReserves')?.setValue(scheme?.terms.rollingReserves);
