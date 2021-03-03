@@ -211,6 +211,7 @@ export class FeesComponent {
       this.schemeForm.get('bankName')?.setValue(scheme?.details.bankName);
       this.schemeForm.get('bankAddress')?.setValue(scheme?.details.bankAddress);
       this.schemeForm.get('swift')?.setValue(scheme?.details.swift);
+      scheme?.targetValues.forEach(x => this.targetValues.push(x));
     }
   }
 
