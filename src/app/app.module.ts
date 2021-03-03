@@ -7,7 +7,7 @@ import { Apollo } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
 import { onError } from 'apollo-link-error';
 import { ApolloLink, InMemoryCache } from '@apollo/client/core';
-import { Observable } from 'apollo-link';
+import { fromPromise } from 'apollo-link';
 import { setContext } from '@apollo/client/link/context';
 import {
   SocialLoginModule, SocialAuthServiceConfig,
@@ -18,23 +18,6 @@ import { AdminDataService } from './services/admin-data.service';
 import { ErrorService } from './services/error.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { environment } from 'src/environments/environment';
-
-const promiseToObservable = (promise: Promise<any>) =>
-  new Observable((subscriber: any) => {
-    promise.then(
-      value => {
-        if (subscriber.closed) {
-          return;
-        }
-        subscriber.next(value);
-        subscriber.complete();
-      },
-      err => {
-        subscriber.error(err);
-        subscriber.complete();
-      }
-    );
-  });
 
 @NgModule({
   declarations: [
@@ -77,10 +60,18 @@ export class AppModule {
         if (err.extensions !== null) {
           const code = err.extensions?.code as string;
           if (code.toUpperCase() === 'UNAUTHENTICATED') {
-            return promiseToObservable(this.authService.refreshToken().toPromise())
-            .flatMap(() => forward(operation));
+            const refreshToken = this.authService.refreshToken().toPromise();
+            return fromPromise(
+              refreshToken.catch(error => {
+                this.authService.logout();
+                return forward(operation);
+              })
+            ).filter(value => Boolean(value)).flatMap(accessToken => {
+              return forward(operation);
+            });
           }
           err.message = err.extensions?.code;
+          console.log(err.message);
         } else {
           err.message = 'no_code';
         }

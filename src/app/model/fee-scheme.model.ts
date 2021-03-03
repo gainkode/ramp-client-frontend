@@ -1,4 +1,18 @@
-import { Tracing } from "trace_events";
+import { SettingsFee, PaymentInstrument } from "./generated-models";
+
+export class PaymentInstrumentView {
+    id!: PaymentInstrument;
+    name: string = '';
+}
+
+export const PaymentInstrumentList: Array<PaymentInstrumentView> = [
+    { id: PaymentInstrument.Apm, name: 'APM' },
+    { id: PaymentInstrument.Bitstamp, name: 'Bitstamp' },
+    { id: PaymentInstrument.CreditCard, name: 'Credit card' },
+    { id: PaymentInstrument.Received, name: 'Received' },
+    { id: PaymentInstrument.Send, name: 'Send' },
+    { id: PaymentInstrument.WireTransfer, name: 'Wire transfer' }
+]
 
 export class FeeScheme {
     id!: string;
@@ -7,10 +21,25 @@ export class FeeScheme {
     name!: string;
     target!: string;
     trxType!: string;
-    instrument!: string;
+    instrument: Array<PaymentInstrument> = [];
     provider!: string;
     terms!: FeeShemeTerms;
     details!: FeeShemeWireDetails;
+
+    constructor(data: SettingsFee | null) {
+        console.log(data);
+        if (data !== null) {
+            this.name = data.name;
+            this.isDefault = data.default as boolean;
+            this.description = data.description as string;
+            this.terms = new FeeShemeTerms(data.terms);
+            this.details = new FeeShemeWireDetails(data.wireDetails);
+            //details.targetInstruments
+        } else {
+            this.terms = new FeeShemeTerms('');
+            this.details = new FeeShemeWireDetails('');
+        }
+    }
 }
 
 export class FeeShemeTerms {
@@ -21,6 +50,31 @@ export class FeeShemeTerms {
     chargebackFees!: number;
     monthlyFees!: number;
     minMonthlyFees!: number;
+
+    constructor(data: string) {
+        if (data !== '') {
+            const terms = JSON.parse(data);
+            this.transactionFees = terms.Ttransaction_fee;
+            this.minTransactionFee = terms.Min_transaction_fee;
+            this.rollingReserves = terms.Rolling_reserves;
+            this.rollingReservesDays = terms.Rolling_reserves_days;
+            this.chargebackFees = terms.Chargeback_fees;
+            this.monthlyFees = terms.Monthly_fees;
+            this.minMonthlyFees = terms.Min_monthly_fees;
+        }
+    }
+
+    getObject(): string {
+        return JSON.stringify({
+            Ttransaction_fee: this.transactionFees,
+            Min_transaction_fee: this.minTransactionFee,
+            Rolling_reserves: this.rollingReserves,
+            Rolling_reserves_days: this.rollingReservesDays,
+            Chargeback_fees: this.chargebackFees,
+            Monthly_fees: this.monthlyFees,
+            Min_monthly_fees: this.minMonthlyFees
+        });
+    }
 }
 
 export class FeeShemeWireDetails {
@@ -30,88 +84,27 @@ export class FeeShemeWireDetails {
     bankName!: string;
     bankAddress!: string;
     swift!: string;
-}
 
-export const FeeSchemes: Array<FeeScheme> = [
-    {
-        id: 'id0',
-        isDefault: true,
-        name: 'Default',
-        description: '',
-        target: 'AccountId',
-        trxType: 'Transfer',
-        instrument: 'Credit Card',
-        provider: 'Sofort',
-        terms: {
-            transactionFees: 5,
-            minTransactionFee: 5,
-            rollingReserves: 5,
-            rollingReservesDays: 30,
-            chargebackFees: 50,
-            monthlyFees: 100,
-            minMonthlyFees: 0
-        },
-        details: {
-            beneficiaryName: 'My name',
-            beneficiaryAddress: 'Street 2',
-            iban: 'FRTETV5456',
-            bankName: 'Fia Bank',
-            bankAddress: 'Street 16',
-            swift: 'FIABKNA3'
-        }
-    },
-    {
-        id: 'id1',
-        isDefault: false,
-        name: 'Australia',
-        description: '',
-        target: 'Country',
-        trxType: 'Exchange',
-        instrument: 'APM',
-        provider: 'Poli',
-        terms: {
-            transactionFees: 3,
-            minTransactionFee: 4,
-            rollingReserves: 51,
-            rollingReservesDays: 15,
-            chargebackFees: 50,
-            monthlyFees: 100,
-            minMonthlyFees: 12
-        },
-        details: {
-            beneficiaryName: 'Your name',
-            beneficiaryAddress: 'Street 23',
-            iban: 'IBAN1342',
-            bankName: 'Your Bank',
-            bankAddress: 'Street 106',
-            swift: 'YOURBANK'
-        }
-    },
-    {
-        id: 'id2',
-        isDefault: false,
-        name: 'Wallet',
-        description: '',
-        target: 'Initiate from wallet',
-        trxType: 'Deposits',
-        instrument: 'Bitstamp',
-        provider: 'Fibonatix',
-        terms: {
-            transactionFees: 4.5,
-            minTransactionFee: 4.23,
-            rollingReserves: 27,
-            rollingReservesDays: 18,
-            chargebackFees: 25,
-            monthlyFees: 100,
-            minMonthlyFees: 13.5
-        },
-        details: {
-            beneficiaryName: 'Just name',
-            beneficiaryAddress: 'Street 42',
-            iban: 'IBAN0000',
-            bankName: 'Bank Name',
-            bankAddress: 'Street 63',
-            swift: 'SWIFT001'
+    constructor(data: string) {
+        if (data !== '') {
+            const details = JSON.parse(data);
+            this.bankAddress = details.Bank_address;
+            this.bankName = details.Bank_name;
+            this.beneficiaryAddress = details.Beneficiary_address;
+            this.beneficiaryName = details.Beneficiary_name;
+            this.iban = details.Iban;
+            this.swift = details.Swift;
         }
     }
-];
+
+    getObject(): string {
+        return JSON.stringify({
+            Bank_address: this.bankAddress,
+            Bank_name: this.bankName,
+            Beneficiary_address: this.beneficiaryAddress,
+            Beneficiary_name: this.beneficiaryName,
+            Iban: this.iban,
+            Swift: this.swift
+        });
+    }
+}

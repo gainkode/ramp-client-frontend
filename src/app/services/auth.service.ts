@@ -131,15 +131,12 @@ export class AuthService {
     constructor(private apollo: Apollo, private socialAuth: SocialAuthService) { }
 
     refreshToken(): Observable<any> {
-        sessionStorage.setItem('refreshTokenError', '');
         const result = this.apollo.mutate({
             mutation: REFRESH_TOKEN_POST
         });
         result.subscribe(x => {
             const d = x.data as any;
             sessionStorage.setItem('currentToken', d.refreshToken as string);
-        }, error => {
-            sessionStorage.setItem('refreshTokenError', 'error');
         })
         return result;
     }

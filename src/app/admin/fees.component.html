@@ -145,8 +145,8 @@
             <mat-form-field class="form-element">
               <mat-label>Instrument</mat-label>
               <mat-select formControlName="instrument" multiple required>
-                <mat-option *ngFor="let item of instruments" [value]="item">
-                  {{item}}
+                <mat-option *ngFor="let item of instruments" [value]="item.id">
+                  {{item.name}}
                 </mat-option>
               </mat-select>
               <mat-error *ngIf="this.schemeForm.get('instrument')?.hasError('required')">

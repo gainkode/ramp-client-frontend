@@ -11,7 +11,8 @@ const GET_FEE_SETTINGS_POST = gql`
         default,
         description,
         terms,
-        wireDetails
+        wireDetails,
+        targetInstruments
       }
     }
   }

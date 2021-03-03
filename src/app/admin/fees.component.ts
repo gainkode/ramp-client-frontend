@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
@@ -6,10 +6,10 @@ import { AdminDataService } from '../services/admin-data.service';
 import { ErrorService } from '../services/error.service';
 import { Validators, FormBuilder, FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { map, startWith, mergeMap } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { FeeScheme, FeeShemeTerms, FeeShemeWireDetails, FeeSchemes } from '../model/fee-scheme.model';
+import { FeeScheme, PaymentInstrumentList } from '../model/fee-scheme.model';
 import { CountryCodes } from '../model/country-code.model';
 import { SettingsFeeListResult } from '../model/generated-models';
 
@@ -60,7 +60,7 @@ export class FeesComponent {
     'Initiate from wallet'
   ];
   transactionTypes: string[] = ['Deposits', 'Transfer', 'System', 'Withdrawals', 'Exchange'];
-  instruments: string[] = ['Credit Card', 'APM', 'Wire Transfer', 'Received', 'Sent', 'Bitstamp'];
+  instruments = PaymentInstrumentList;
   providers: string[] = ['Fibonatix', 'SecureTrading', 'Sofort', 'Poli'];
 
   schemeForm = this.formBuilder.group({
@@ -193,50 +193,19 @@ export class FeesComponent {
   ngOnInit(): void {
     // Load settings table
     this.inProgress = true;
-
-    // temp
-    //this.schemes = FeeSchemes;
-    // temp
-
     this.adminService.getFeeSettings().subscribe(({ data }) => {
       this.inProgress = false;
       const settings = data.getSettingsFee as SettingsFeeListResult;
       let settingsCount = 0;
       if (settings !== null) {
         settingsCount = settings?.count as number;
-      }
-      if (settingsCount > 0) {
-        this.schemes = settings?.list?.map((val) => {
-          const terms = JSON.parse(val.terms);
-          const details = JSON.parse(val.wireDetails);
-          let scheme = new FeeScheme();
-          scheme.name = val.name;
-          scheme.isDefault = val.default as boolean;
-          scheme.description = val.description as string;
-          scheme.terms = new FeeShemeTerms();
-          scheme.details = new FeeShemeWireDetails();
-          scheme.terms.transactionFees = terms.Ttransaction_fee;
-          scheme.terms.minTransactionFee = terms.Min_transaction_fee;
-          scheme.terms.rollingReserves = terms.Rolling_reserves;
-          scheme.terms.rollingReservesDays = terms.Rolling_reserves_days;
-          scheme.terms.chargebackFees = terms.Chargeback_fees;
-          scheme.terms.monthlyFees = terms.Monthly_fees;
-          scheme.terms.minMonthlyFees = terms.Min_monthly_fees;
-          scheme.details.bankAddress = details.Bank_address;
-          scheme.details.bankName = details.Bank_name;
-          scheme.details.beneficiaryAddress = details.Beneficiary_address;
-          scheme.details.beneficiaryName = details.Beneficiary_name;
-          scheme.details.iban = details.Iban;
-          scheme.details.swift = details.Swift;
-          return scheme;
-        }) as FeeScheme[];
-      } else {
-        console.log('List is empty');
+        if (settingsCount > 0) {
+          this.schemes = settings?.list?.map((val) => new FeeScheme(val)) as FeeScheme[];
+        }
       }
     }, (error) => {
       this.inProgress = false;
-      const refreshError = sessionStorage.getItem('refreshTokenError');
-      if (refreshError === '') {
+      if (this.auth.token !== '') {
         this.errorMessage = this.errorHandler.getError(
           error.message,
           'Unable to load fee settings');
@@ -272,13 +241,11 @@ export class FeesComponent {
         { validators: [Validators.required], updateOn: 'change' }
       ));
       const trxTypeValues = [];
-      const instrumentValues = [];
       const providerValues = [];
       trxTypeValues.push(this.transactionTypes.find(trx => trx === scheme?.trxType));
-      instrumentValues.push(this.instruments.find(i => i === scheme?.instrument));
       providerValues.push(this.providers.find(p => p === scheme?.provider));
       this.schemeForm.get('target')?.setValue(scheme?.target);
-      this.schemeForm.get('instrument')?.setValue(instrumentValues);
+      this.schemeForm.get('instrument')?.setValue(scheme.instrument);
       this.schemeForm.get('trxType')?.setValue(trxTypeValues);
       this.schemeForm.get('provider')?.setValue(providerValues);
       this.schemeForm.get('transactionFees')?.setValue(scheme?.terms.transactionFees);
@@ -297,32 +264,37 @@ export class FeesComponent {
     }
   }
 
+  private validateField(name: string): boolean {
+    let valid = true;
+    if (this.schemeForm.get(name)?.touched) {
+      valid = this.schemeForm.get(name)?.valid as boolean;
+    }
+    return valid;
+  }
+
   tabHasError(tab: string): boolean {
-    let valid: boolean | undefined = false;
+    let valid: boolean | undefined = true;
     if (tab == 'tab1') {
-      valid = (
-        this.schemeForm.get('target')?.valid &&
-        this.schemeForm.get('targetValues')?.valid &&
-        this.schemeForm.get('instrument')?.valid &&
-        this.schemeForm.get('trxType')?.valid &&
-        this.schemeForm.get('provider')?.valid);
+      valid = this.validateField('target');
+      if (valid) valid = this.validateField('targetValues');
+      if (valid) valid = this.validateField('instrument');
+      if (valid) valid = this.validateField('trxType');
+      if (valid) valid = this.validateField('provider');
     } else if (tab == 'tab2') {
-      valid = (
-        this.schemeForm.get('transactionFees')?.valid &&
-        this.schemeForm.get('minTransactionFee')?.valid &&
-        this.schemeForm.get('rollingReserves')?.valid &&
-        this.schemeForm.get('rollingReservesDays')?.valid &&
-        this.schemeForm.get('chargebackFees')?.valid &&
-        this.schemeForm.get('monthlyFees')?.valid &&
-        this.schemeForm.get('minMonthlyFees')?.valid);
+      valid = this.validateField('transactionFees');
+      if (valid) valid = this.validateField('minTransactionFee');
+      if (valid) valid = this.validateField('rollingReserves');
+      if (valid) valid = this.validateField('rollingReservesDays');
+      if (valid) valid = this.validateField('chargebackFees');
+      if (valid) valid = this.validateField('monthlyFees');
+      if (valid) valid = this.validateField('minMonthlyFees');
     } else if (tab == 'tab3') {
-      valid = (
-        this.schemeForm.get('beneficiaryName')?.valid &&
-        this.schemeForm.get('beneficiaryAddress')?.valid &&
-        this.schemeForm.get('iban')?.valid &&
-        this.schemeForm.get('bankName')?.valid &&
-        this.schemeForm.get('bankAddress')?.valid &&
-        this.schemeForm.get('swift')?.valid);
+      valid = this.validateField('beneficiaryName');
+      if (valid) valid = this.validateField('beneficiaryAddress');
+      if (valid) valid = this.validateField('iban');
+      if (valid) valid = this.validateField('bankName');
+      if (valid) valid = this.validateField('bankAddress');
+      if (valid) valid = this.validateField('swift');
     }
     return valid !== true;
   }
@@ -376,6 +348,13 @@ export class FeesComponent {
   }
 
   onSubmit(): void {
-
+    let data = new FeeScheme(null);
+    data.terms.transactionFees = this.schemeForm.get('transactionFees')?.value;
+    data.terms.minTransactionFee = this.schemeForm.get('minTransactionFee')?.value;
+    data.terms.rollingReserves = this.schemeForm.get('rollingReserves')?.value;
+    data.terms.rollingReservesDays = this.schemeForm.get('rollingReservesDays')?.value;
+    data.terms.chargebackFees = this.schemeForm.get('chargebackFees')?.value;
+    data.terms.monthlyFees = this.schemeForm.get('monthlyFees')?.value;
+    data.terms.minMonthlyFees = this.schemeForm.get('minMonthlyFees')?.value;
   }
 }
