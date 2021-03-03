@@ -1,4 +1,17 @@
-import { SettingsFee, PaymentInstrument, PaymentProvider } from "./generated-models";
+import { SettingsFee, PaymentInstrument, PaymentProvider, TransactionType } from "./generated-models";
+
+export class TargetParams {
+    title: string = '';
+    inputPlaceholder: string = '';
+    dataList: CommonTargetValue[] = [];
+}
+
+export class CommonTargetValue {
+    title: string = '';
+    imgClass: string = '';
+    imgSource: string = '';
+}
+
 
 export class PaymentInstrumentView {
     id!: PaymentInstrument;
@@ -7,6 +20,11 @@ export class PaymentInstrumentView {
 
 export class PaymentProviderView {
     id!: PaymentProvider;
+    name: string = '';
+}
+
+export class TransactionTypeView {
+    id!: TransactionType;
     name: string = '';
 }
 
@@ -26,13 +44,21 @@ export const PaymentProviderList: Array<PaymentProviderView> = [
     { id: PaymentProvider.Totalprocessing, name: 'Total processing' }
 ]
 
+export const TransactionTypeList: Array<TransactionTypeView> = [
+    { id: TransactionType.Deposit, name: 'Deposit' },
+    { id: TransactionType.Exchange, name: 'Exchange' },
+    { id: TransactionType.System, name: 'System' },
+    { id: TransactionType.Transfer, name: 'Transfer' },
+    { id: TransactionType.Withdrawal, name: 'Withdrawal' }
+]
+
 export class FeeScheme {
     id!: string;
     isDefault: boolean = false;
     description!: string;
     name!: string;
     target!: string;
-    trxType!: string;
+    trxType: Array<TransactionType> = [];
     instrument: Array<PaymentInstrument> = [];
     provider: Array<PaymentProvider> = [];
     terms!: FeeShemeTerms;
@@ -51,6 +77,9 @@ export class FeeScheme {
             });
             data.targetPaymentProviders?.forEach(x => {
                 this.provider.push(x as PaymentProvider);
+            });
+            data.targetTransactionTypes?.forEach(x => {
+                this.trxType.push(x as TransactionType);
             });
         } else {
             this.terms = new FeeShemeTerms('');

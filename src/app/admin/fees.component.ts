@@ -9,21 +9,10 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { FeeScheme, PaymentInstrumentList, PaymentProviderList } from '../model/fee-scheme.model';
+import { TargetParams, CommonTargetValue, FeeScheme,
+  PaymentInstrumentList, PaymentProviderList, TransactionTypeList } from '../model/fee-scheme.model';
 import { CountryCodes } from '../model/country-code.model';
 import { SettingsFeeListResult } from '../model/generated-models';
-
-class TargetParams {
-  title: string = '';
-  inputPlaceholder: string = '';
-  dataList: CommonTargetValue[] = [];
-}
-
-class CommonTargetValue {
-  title: string = '';
-  imgClass: string = '';
-  imgSource: string = '';
-}
 
 @Component({
   templateUrl: 'fees.component.html',
@@ -39,13 +28,6 @@ export class FeesComponent {
   schemes: FeeScheme[] = [];
   targetValues: string[] = [];
   separatorKeysCodes: number[] = [ENTER, COMMA];
-  countries: CommonTargetValue[] = CountryCodes.map(c => {
-    let item = new CommonTargetValue();
-    item.imgClass = "country-flag";
-    item.imgSource = `assets/svg-country-flags/${c.code2.toLowerCase()}.svg`;
-    item.title = c.name;
-    return item;
-  });
   filteredTargetValues: Observable<CommonTargetValue[]> | undefined;
 
   detailsColumnIndex = 6;
@@ -59,10 +41,18 @@ export class FeesComponent {
     'Initiate from checkout',
     'Initiate from wallet'
   ];
-  transactionTypes: string[] = ['Deposits', 'Transfer', 'System', 'Withdrawals', 'Exchange'];
+  transactionTypes = TransactionTypeList;
   instruments = PaymentInstrumentList;
   providers = PaymentProviderList;
 
+  countries: CommonTargetValue[] = CountryCodes.map(c => {
+    let item = new CommonTargetValue();
+    item.imgClass = "country-flag";
+    item.imgSource = `assets/svg-country-flags/${c.code2.toLowerCase()}.svg`;
+    item.title = c.name;
+    return item;
+  });
+  
   schemeForm = this.formBuilder.group({
     name: ['', { validators: [Validators.required], updateOn: 'change' }],
     target: ['', { validators: [Validators.required], updateOn: 'change' }],
@@ -92,6 +82,7 @@ export class FeesComponent {
     swift: ['', { validators: [Validators.required], updateOn: 'change' }]
   });
 
+  // temp
   affiliateIds: CommonTargetValue[] = [
     { title: 'fb4598gbf38d73', imgClass: '', imgSource: '' },
     { title: 'ce98g6g7fb80g4', imgClass: '', imgSource: '' },
@@ -240,11 +231,9 @@ export class FeesComponent {
       },
         { validators: [Validators.required], updateOn: 'change' }
       ));
-      const trxTypeValues = [];
-      trxTypeValues.push(this.transactionTypes.find(trx => trx === scheme?.trxType));
       this.schemeForm.get('target')?.setValue(scheme?.target);
       this.schemeForm.get('instrument')?.setValue(scheme.instrument);
-      this.schemeForm.get('trxType')?.setValue(trxTypeValues);
+      this.schemeForm.get('trxType')?.setValue(scheme?.trxType);
       this.schemeForm.get('provider')?.setValue(scheme?.provider);
       this.schemeForm.get('transactionFees')?.setValue(scheme?.terms.transactionFees);
       this.schemeForm.get('minTransactionFee')?.setValue(scheme?.terms.minTransactionFee);
