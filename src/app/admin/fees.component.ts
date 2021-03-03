@@ -9,10 +9,15 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { TargetParams, CommonTargetValue, FeeScheme,
-  PaymentInstrumentList, PaymentProviderList, TransactionTypeList } from '../model/fee-scheme.model';
-import { CountryCodes } from '../model/country-code.model';
-import { SettingsFeeListResult } from '../model/generated-models';
+import {
+  TargetParams, CommonTargetValue, FeeScheme, TargetFilterList,
+  PaymentInstrumentList, PaymentProviderList, TransactionTypeList,
+  AccountTypeFilterList, CountryFilterList
+} from '../model/fee-scheme.model';
+import {
+  SettingsFeeListResult, FeeSettingsTargetFilterType,
+  PaymentInstrument, PaymentProvider, TransactionType
+} from '../model/generated-models';
 
 @Component({
   templateUrl: 'fees.component.html',
@@ -23,8 +28,6 @@ export class FeesComponent {
   inProgress = false;
   errorMessage = '';
   selectedTab = 0;
-  tab2HasError = false;
-  tab3HasError = false;
   schemes: FeeScheme[] = [];
   targetValues: string[] = [];
   separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -32,29 +35,15 @@ export class FeesComponent {
 
   detailsColumnIndex = 6;
   displayedColumns: string[] = ['isDefault', 'name', 'target', 'trxType', 'instrument', 'provider', 'details'];
-  targets: string[] = [
-    'AffiliateId',
-    'Country',
-    'AccountId',
-    'AccountType',
-    'Initiate from widget',
-    'Initiate from checkout',
-    'Initiate from wallet'
-  ];
+  targets = TargetFilterList;
   transactionTypes = TransactionTypeList;
   instruments = PaymentInstrumentList;
   providers = PaymentProviderList;
 
-  countries: CommonTargetValue[] = CountryCodes.map(c => {
-    let item = new CommonTargetValue();
-    item.imgClass = "country-flag";
-    item.imgSource = `assets/svg-country-flags/${c.code2.toLowerCase()}.svg`;
-    item.title = c.name;
-    return item;
-  });
-  
   schemeForm = this.formBuilder.group({
     name: ['', { validators: [Validators.required], updateOn: 'change' }],
+    description: ['', { validators: [Validators.required], updateOn: 'change' }],
+    isDefault: [false],
     target: ['', { validators: [Validators.required], updateOn: 'change' }],
     targetValues: [''],
     instrument: [[], { validators: [Validators.required], updateOn: 'change' }],
@@ -95,27 +84,11 @@ export class FeesComponent {
     { title: '47g8534f87f3ee', imgClass: '', imgSource: '' },
     { title: 'bdeb95gaabab90', imgClass: '', imgSource: '' }
   ];
-  accountTypes: CommonTargetValue[] = [
-    { title: 'Personal', imgClass: '', imgSource: '' },
-    { title: 'Merchant', imgClass: '', imgSource: '' }
-  ];
   widgets: CommonTargetValue[] = [
     { title: 'Widget A', imgClass: '', imgSource: '' },
     { title: 'Widget B', imgClass: '', imgSource: '' },
     { title: 'Widget C', imgClass: '', imgSource: '' },
     { title: 'Widget D', imgClass: '', imgSource: '' }
-  ];
-  checkouts: CommonTargetValue[] = [
-    { title: 'Checkout 001', imgClass: '', imgSource: '' },
-    { title: 'Checkout 002', imgClass: '', imgSource: '' },
-    { title: 'Checkout 003', imgClass: '', imgSource: '' },
-    { title: 'Checkout 004', imgClass: '', imgSource: '' }
-  ];
-  wallets: CommonTargetValue[] = [
-    { title: 'Wallet 001', imgClass: '', imgSource: '' },
-    { title: 'Wallet 002', imgClass: '', imgSource: '' },
-    { title: 'Wallet 003', imgClass: '', imgSource: '' },
-    { title: 'Wallet 004', imgClass: '', imgSource: '' }
   ];
   // temp
 
@@ -127,46 +100,34 @@ export class FeesComponent {
     const val = this.schemeForm.get('target')?.value;
     let params = new TargetParams();
     switch (val) {
-      case 'AffiliateId': {
+      case FeeSettingsTargetFilterType.AffiliateId: {
         params.title = 'List of affiliate identifiers';
         params.inputPlaceholder = 'New identifier...';
         params.dataList = this.affiliateIds;
         break;
       }
-      case 'Country': {
+      case FeeSettingsTargetFilterType.Country: {
         params.title = 'List of countries';
         params.inputPlaceholder = 'New country...';
-        params.dataList = this.countries;
+        params.dataList = CountryFilterList;
         break;
       }
-      case 'AccountId': {
+      case FeeSettingsTargetFilterType.AccountId: {
         params.title = 'List of account identifiers';
         params.inputPlaceholder = 'New identifier...';
         params.dataList = this.accountIds;
         break;
       }
-      case 'AccountType': {
+      case FeeSettingsTargetFilterType.AccountType: {
         params.title = 'List of account types';
         params.inputPlaceholder = 'New account type...';
-        params.dataList = this.accountTypes;
+        params.dataList = AccountTypeFilterList;
         break;
       }
-      case 'Initiate from widget': {
+      case FeeSettingsTargetFilterType.InitiateFrom: {
         params.title = 'List of widgets';
         params.inputPlaceholder = 'New widget...';
         params.dataList = this.widgets;
-        break;
-      }
-      case 'Initiate from checkout': {
-        params.title = 'List of checkout items';
-        params.inputPlaceholder = 'New item...';
-        params.dataList = this.checkouts;
-        break;
-      }
-      case 'Initiate from wallet': {
-        params.title = 'List of wallets';
-        params.inputPlaceholder = 'New wallet...';
-        params.dataList = this.wallets;
         break;
       }
     }
@@ -231,6 +192,8 @@ export class FeesComponent {
       },
         { validators: [Validators.required], updateOn: 'change' }
       ));
+      this.schemeForm.get('description')?.setValue(scheme?.description);
+      this.schemeForm.get('isDefault')?.setValue(scheme?.isDefault);
       this.schemeForm.get('target')?.setValue(scheme?.target);
       this.schemeForm.get('instrument')?.setValue(scheme.instrument);
       this.schemeForm.get('trxType')?.setValue(scheme?.trxType);
@@ -249,6 +212,35 @@ export class FeesComponent {
       this.schemeForm.get('bankAddress')?.setValue(scheme?.details.bankAddress);
       this.schemeForm.get('swift')?.setValue(scheme?.details.swift);
     }
+  }
+
+  setSchemeData(): FeeScheme {
+    let data = new FeeScheme(null);
+    // common
+    data.name = this.schemeForm.get('name')?.value;
+    data.description = this.schemeForm.get('description')?.value;
+    data.isDefault = this.schemeForm.get('isDefault')?.value;
+    // target
+    data.setTarget(this.schemeForm.get('target')?.value, this.targetValues);
+    (this.schemeForm.get('instrument')?.value as PaymentInstrument[]).forEach(x => data.instrument.push(x));
+    (this.schemeForm.get('trxType')?.value as TransactionType[]).forEach(x => data.trxType.push(x));
+    (this.schemeForm.get('provider')?.value as PaymentProvider[]).forEach(x => data.provider.push(x));
+    // terms
+    data.terms.transactionFees = this.schemeForm.get('transactionFees')?.value;
+    data.terms.minTransactionFee = this.schemeForm.get('minTransactionFee')?.value;
+    data.terms.rollingReserves = this.schemeForm.get('rollingReserves')?.value;
+    data.terms.rollingReservesDays = this.schemeForm.get('rollingReservesDays')?.value;
+    data.terms.chargebackFees = this.schemeForm.get('chargebackFees')?.value;
+    data.terms.monthlyFees = this.schemeForm.get('monthlyFees')?.value;
+    data.terms.minMonthlyFees = this.schemeForm.get('minMonthlyFees')?.value;
+    // wire details
+    data.details.beneficiaryName = this.schemeForm.get('beneficiaryName')?.value;
+    data.details.beneficiaryAddress = this.schemeForm.get('beneficiaryAddress')?.value;
+    data.details.iban = this.schemeForm.get('iban')?.value;
+    data.details.bankName = this.schemeForm.get('bankName')?.value;
+    data.details.bankAddress = this.schemeForm.get('bankAddress')?.value;
+    data.details.swift = this.schemeForm.get('swift')?.value;
+    return data;
   }
 
   private validateField(name: string): boolean {
@@ -303,17 +295,14 @@ export class FeesComponent {
   addTargetValue(event: MatChipInputEvent): void {
     const input = event.input;
     const value = event.value;
-
     // Add new target value
     if ((value || '').trim()) {
       this.targetValues.push(value.trim());
     }
-
     // Reset the input value
     if (input) {
       input.value = '';
     }
-
     this.schemeForm.get('targetValues')?.setValue(null);
   }
 
@@ -329,19 +318,14 @@ export class FeesComponent {
   }
 
   targetItemSelected(event: MatAutocompleteSelectedEvent): void {
-    this.targetValues.push(event.option.viewValue);
+    if (!this.targetValues.includes(event.option.viewValue)) {
+      this.targetValues.push(event.option.viewValue);
+    }
     this.targetValueInput.nativeElement.value = '';
     this.schemeForm.get('targetValues')?.setValue(null);
   }
 
   onSubmit(): void {
-    let data = new FeeScheme(null);
-    data.terms.transactionFees = this.schemeForm.get('transactionFees')?.value;
-    data.terms.minTransactionFee = this.schemeForm.get('minTransactionFee')?.value;
-    data.terms.rollingReserves = this.schemeForm.get('rollingReserves')?.value;
-    data.terms.rollingReservesDays = this.schemeForm.get('rollingReservesDays')?.value;
-    data.terms.chargebackFees = this.schemeForm.get('chargebackFees')?.value;
-    data.terms.monthlyFees = this.schemeForm.get('monthlyFees')?.value;
-    data.terms.minMonthlyFees = this.schemeForm.get('minMonthlyFees')?.value;
+    const data = this.setSchemeData();
   }
 }

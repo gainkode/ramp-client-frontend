@@ -99,8 +99,8 @@
             <mat-form-field class="form-element">
               <mat-label>Target</mat-label>
               <mat-select formControlName="target" required>
-                <mat-option *ngFor="let item of targets" [value]="item">
-                  {{item}}
+                <mat-option *ngFor="let item of targets" [value]="item.id">
+                  {{item.name}}
                 </mat-option>
               </mat-select>
               <mat-error *ngIf="this.schemeForm.get('target')?.hasError('required')">

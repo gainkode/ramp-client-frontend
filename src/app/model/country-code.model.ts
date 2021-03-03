@@ -1478,6 +1478,30 @@ export function getCountry(countryName: string): ICountryCode | null {
     return null;
 }
 
+export function getCountryByCode2(code2: string): ICountryCode | null {
+    if (!code2) {
+        return null;
+    }
+    const searchCode = code2.toUpperCase();
+    const found = CountryCodes.filter(code => code.code2 === searchCode);
+    if (found.length === 1) {
+        return found[0];
+    }
+    return null;
+}
+
+export function getCountryByCode3(code3: string): ICountryCode | null {
+    if (!code3) {
+        return null;
+    }
+    const searchCode = code3.toUpperCase();
+    const found = CountryCodes.filter(code => code.code3 === searchCode);
+    if (found.length === 1) {
+        return found[0];
+    }
+    return null;
+}
+
 export function getCountryDialCode(countryName: string): string {
     const found = getCountry(countryName);
     if (found !== null) {
