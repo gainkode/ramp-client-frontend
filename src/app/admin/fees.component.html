@@ -80,16 +80,35 @@
 
     <form *ngIf="showDetailed" [formGroup]="schemeForm" (ngSubmit)="onSubmit()">
       <!-- Scheme name -->
+      <div *ngIf="defaultSchemeFlag===''">
+        <mat-form-field class="form-element">
+          <mat-label>Scheme name</mat-label>
+          <input type="text" matInput formControlName="name" maxlength="50" placeholder="Fee scheme name" required />
+          <mat-error *ngIf="this.schemeForm.get('name')?.hasError('required')">
+            Please specify a scheme name
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div *ngIf="defaultSchemeFlag!==''" class="form-element">
+        <br>
+        <mat-label>
+          <mat-icon class="default-icon">assistant_photo</mat-icon>
+          {{defaultSchemeFlag}}
+        </mat-label>
+      </div>
+
+      <!-- Description -->
       <mat-form-field class="form-element">
-        <mat-label>Scheme name</mat-label>
-        <input type="text" matInput formControlName="name" maxlength="50" placeholder="Fee scheme name" required />
-        <mat-error *ngIf="this.schemeForm.get('name')?.hasError('required')">
-          Please specify a scheme name
+        <mat-label>Description</mat-label>
+        <input type="text" matInput formControlName="description" maxlength="100" placeholder="Fee scheme description"
+          required />
+        <mat-error *ngIf="this.schemeForm.get('description')?.hasError('required')">
+          Please specify a scheme description
         </mat-error>
       </mat-form-field>
 
       <mat-tab-group color="primary" mat-stretch-tabs animationDuration="0" [selectedIndex]="selectedTab"
-      (selectedIndexChange)="setSelectedTab($event)">
+        (selectedIndexChange)="setSelectedTab($event)">
         <mat-tab>
           <ng-template mat-tab-label>
             <tab-label [hasErrors]="tabHasError('tab1')" labelText="Targets"></tab-label>

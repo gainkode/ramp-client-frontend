@@ -10,7 +10,6 @@ export type Scalars = {
   Int: number;
   Float: number;
   DateTime: any;
-  Upload: any;
   Byte: any;
 };
 
@@ -217,13 +216,22 @@ export type User = {
   updated?: Maybe<Scalars['DateTime']>;
   deleted?: Maybe<Scalars['DateTime']>;
   accessFailedCount?: Maybe<Scalars['Int']>;
-  nameConfirmed?: Maybe<Scalars['Boolean']>;
-  emailConfirmed?: Maybe<Scalars['Boolean']>;
+  nameConfirmed?: Maybe<Scalars['DateTime']>;
+  emailConfirmed?: Maybe<Scalars['DateTime']>;
   roles?: Maybe<Array<UserRole>>;
   permissions?: Maybe<Array<UserRolePermission>>;
   is2faEnabled?: Maybe<Scalars['Boolean']>;
   hasEmailAuth?: Maybe<Scalars['Boolean']>;
+  changePasswordRequired?: Maybe<Scalars['Boolean']>;
+  referralCode?: Maybe<Scalars['String']>;
+  kycProvider?: Maybe<Scalars['String']>;
   kycApplicantId?: Maybe<Scalars['String']>;
+  kycCreateApplicantDate?: Maybe<Scalars['DateTime']>;
+  kycCreateApplicantDetails?: Maybe<Scalars['String']>;
+  kycFiles?: Maybe<Array<Scalars['String']>>;
+  kycValidationTierId?: Maybe<Scalars['String']>;
+  kycValidationDate?: Maybe<Scalars['DateTime']>;
+  kycValidationDetails?: Maybe<Scalars['String']>;
   state?: Maybe<UserState>;
 };
 
@@ -349,7 +357,6 @@ export type Mutation = {
   enable2fa: LoginResult;
   disable2fa: LoginResult;
   sendEmailCodePasswordChange: Scalars['Boolean'];
-  uploadMyKyc: Array<File>;
 };
 
 
@@ -496,11 +503,6 @@ export type MutationDisable2faArgs = {
   code: Scalars['String'];
 };
 
-
-export type MutationUploadMyKycArgs = {
-  uploadParams: Array<FileUploadParams>;
-};
-
 export type SettingsFeeInput = {
   name?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
@@ -561,45 +563,6 @@ export type TwoFactorAuthenticationResult = {
   otpauthUrl: Scalars['String'];
   code: Scalars['String'];
   qr: Scalars['String'];
-};
-
-export type FileUploadParams = {
-  upload: Scalars['Upload'];
-  reason: FileUploadReason;
-  fileName?: Maybe<Scalars['String']>;
-  mimeType?: Maybe<Scalars['String']>;
-  size?: Maybe<Scalars['Int']>;
-  encoding?: Maybe<Scalars['String']>;
-  type?: Maybe<Scalars['String']>;
-  linkedId?: Maybe<Scalars['String']>;
-  linkedObjectSerialNumber?: Maybe<Scalars['Int']>;
-  order?: Maybe<Scalars['Int']>;
-};
-
-
-export enum FileUploadReason {
-  Support = 'SUPPORT',
-  Kyc = 'KYC',
-  Avatar = 'AVATAR'
-}
-
-export type File = {
-  __typename?: 'File';
-  fileId?: Maybe<Scalars['ID']>;
-  doesFileExist: Scalars['Boolean'];
-  fileName: Scalars['String'];
-  originFileName: Scalars['String'];
-  originFileNameWithoutExtension: Scalars['String'];
-  originExtension: Scalars['String'];
-  type?: Maybe<Scalars['String']>;
-  mimeType?: Maybe<Scalars['String']>;
-  encoding?: Maybe<Scalars['String']>;
-  fileSize?: Maybe<Scalars['Float']>;
-  linkedId?: Maybe<Scalars['String']>;
-  linkedObjectSerialNumber?: Maybe<Scalars['Int']>;
-  order?: Maybe<Scalars['Int']>;
-  created?: Maybe<Scalars['DateTime']>;
-  url?: Maybe<Scalars['String']>;
 };
 
 

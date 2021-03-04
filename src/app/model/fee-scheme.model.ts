@@ -98,6 +98,7 @@ export class FeeScheme {
     constructor(data: SettingsFee | null) {
         if (data !== null) {
             this.name = data.name;
+            this.id = data.settingsFeeId;
             this.isDefault = data.default as boolean;
             this.description = data.description as string;
             this.terms = new FeeShemeTerms(data.terms);

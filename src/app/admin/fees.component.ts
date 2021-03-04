@@ -25,6 +25,7 @@ import {
 })
 export class FeesComponent {
   private showDetails = false;
+  private defaultSchemeName = '';
   inProgress = false;
   errorMessage = '';
   selectedTab = 0;
@@ -41,6 +42,7 @@ export class FeesComponent {
   providers = PaymentProviderList;
 
   schemeForm = this.formBuilder.group({
+    id: [''],
     name: ['', { validators: [Validators.required], updateOn: 'change' }],
     description: ['', { validators: [Validators.required], updateOn: 'change' }],
     isDefault: [false],
@@ -94,6 +96,10 @@ export class FeesComponent {
 
   get showDetailed(): boolean {
     return this.showDetails;
+  }
+
+  get defaultSchemeFlag(): string {
+    return this.defaultSchemeName;
   }
 
   get targetValueParams(): TargetParams {
@@ -158,9 +164,7 @@ export class FeesComponent {
     }, (error) => {
       this.inProgress = false;
       if (this.auth.token !== '') {
-        this.errorMessage = this.errorHandler.getError(
-          error.message,
-          'Unable to load fee settings');
+        this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load fee settings');
       } else {
         this.router.navigateByUrl('/');
       }
@@ -186,12 +190,8 @@ export class FeesComponent {
 
   setFormData(scheme: FeeScheme | null): void {
     if (scheme !== null) {
-      this.schemeForm.setControl('name', new FormControl({
-        value: scheme?.name,
-        disabled: scheme.isDefault
-      },
-        { validators: [Validators.required], updateOn: 'change' }
-      ));
+      this.schemeForm.get('id')?.setValue(scheme?.id);
+      this.schemeForm.get('name')?.setValue(scheme?.name);
       this.schemeForm.get('description')?.setValue(scheme?.description);
       this.schemeForm.get('isDefault')?.setValue(scheme?.isDefault);
       this.schemeForm.get('target')?.setValue(scheme?.target);
@@ -221,6 +221,7 @@ export class FeesComponent {
     data.name = this.schemeForm.get('name')?.value;
     data.description = this.schemeForm.get('description')?.value;
     data.isDefault = this.schemeForm.get('isDefault')?.value;
+    data.id = this.schemeForm.get('id')?.value;
     // target
     data.setTarget(this.schemeForm.get('target')?.value, this.targetValues);
     (this.schemeForm.get('instrument')?.value as PaymentInstrument[]).forEach(x => data.instrument.push(x));
@@ -283,6 +284,7 @@ export class FeesComponent {
     this.showDetails = !this.showDetails;
     if (this.showDetails) {
       this.displayedColumns.splice(this.detailsColumnIndex, 1);
+      this.defaultSchemeName = scheme.isDefault ? scheme.name : '';
       this.setFormData(scheme);
     } else {
       this.displayedColumns.push('details');
@@ -327,6 +329,23 @@ export class FeesComponent {
   }
 
   onSubmit(): void {
-    const data = this.setSchemeData();
+    this.errorMessage = '';
+    if (this.schemeForm.valid) {
+      this.inProgress = true;
+      const scheme = this.setSchemeData();
+      this.adminService.saveFeeSettings(scheme, false).subscribe(({ data }) => {
+        this.inProgress = false;
+        this.toggleDetails(scheme);
+      }, (error) => {
+        this.inProgress = false;
+        if (this.auth.token !== '') {
+          this.errorMessage = this.errorHandler.getError(error.message, 'Unable to save fee settings');
+        } else {
+          this.router.navigateByUrl('/');
+        }
+      });
+    } else {
+      console.log('invalid data');
+    }
   }
 }
