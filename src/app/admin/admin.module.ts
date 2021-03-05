@@ -20,7 +20,8 @@ import { ComponentsModule } from '../components/components.module';
 import { AdminGuard } from './admin.guard';
 import { AdminComponent } from './admin.component';
 import { DashboardComponent } from './dashboard.component';
-import { FeesComponent } from './fees.component';
+import { FeesComponent } from './fees/fees.component';
+import { FeeEditorComponent } from './fees/fee-editor.component';
 
 const routing = RouterModule.forChild([
     {
@@ -63,7 +64,7 @@ export class MaterialModule { }
     imports: [
         CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule
     ],
-    declarations: [AdminComponent, DashboardComponent, FeesComponent],
+    declarations: [AdminComponent, DashboardComponent, FeesComponent, FeeEditorComponent],
     providers: [AdminGuard],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
