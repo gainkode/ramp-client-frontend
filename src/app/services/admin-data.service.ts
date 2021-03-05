@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Apollo, gql } from 'apollo-angular';
+import { Apollo, gql, QueryRef } from 'apollo-angular';
+import { EmptyObject } from 'apollo-angular/types';
 import { Observable } from 'rxjs';
 import { FeeScheme } from '../model/fee-scheme.model';
 
@@ -88,10 +89,17 @@ mutation UpdateSettingsFee(
 export class AdminDataService {
   constructor(private apollo: Apollo) { }
 
-  getFeeSettings(): Observable<any> {
-    return this.apollo.watchQuery<Response>({
-      query: GET_FEE_SETTINGS_POST
-    }).valueChanges;
+  // getFeeSettings(): Observable<any> {
+  //   return this.apollo.watchQuery<Response>({
+  //     query: GET_FEE_SETTINGS_POST
+  //   }).valueChanges;
+  // }
+
+  getFeeSettings(): QueryRef<any, EmptyObject> {
+    return this.apollo.watchQuery<any>({
+      query: GET_FEE_SETTINGS_POST,
+      pollInterval: 500
+    });
   }
 
   saveFeeSettings(settings: FeeScheme, create: boolean): Observable<any> {

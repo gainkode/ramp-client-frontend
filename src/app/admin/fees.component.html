@@ -89,12 +89,11 @@
           </mat-error>
         </mat-form-field>
       </div>
-      <div *ngIf="defaultSchemeFlag!==''" class="form-element">
-        <br>
-        <mat-label>
-          <mat-icon class="default-icon">assistant_photo</mat-icon>
-          {{defaultSchemeFlag}}
-        </mat-label>
+      <div *ngIf="defaultSchemeFlag!==''">
+        <mat-form-field class="form-element">
+          <mat-label>Scheme name</mat-label>
+          <input type="text" matInput [value]="defaultSchemeFlag" disabled/>
+        </mat-form-field>
       </div>
 
       <!-- Description -->

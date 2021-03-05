@@ -1,10 +1,10 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { AdminDataService } from '../services/admin-data.service';
 import { ErrorService } from '../services/error.service';
-import { Validators, FormBuilder, FormControl } from '@angular/forms';
+import { Validators, FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
@@ -18,14 +18,16 @@ import {
   SettingsFeeListResult, FeeSettingsTargetFilterType,
   PaymentInstrument, PaymentProvider, TransactionType
 } from '../model/generated-models';
+import { Subscription } from 'apollo-angular/subscription';
 
 @Component({
   templateUrl: 'fees.component.html',
   styleUrls: ['admin.scss', 'fees.component.scss']
 })
-export class FeesComponent {
+export class FeesComponent implements OnInit {
   private showDetails = false;
   private defaultSchemeName = '';
+  private settingsSubscription!: any;
   inProgress = false;
   errorMessage = '';
   selectedTab = 0;
@@ -151,13 +153,13 @@ export class FeesComponent {
   ngOnInit(): void {
     // Load settings table
     this.inProgress = true;
-    this.adminService.getFeeSettings().subscribe(({ data }) => {
+    this.settingsSubscription = this.adminService.getFeeSettings().valueChanges.subscribe(({ data }) => {
       this.inProgress = false;
       const settings = data.getSettingsFee as SettingsFeeListResult;
-      let settingsCount = 0;
+      let itemCount = 0;
       if (settings !== null) {
-        settingsCount = settings?.count as number;
-        if (settingsCount > 0) {
+        itemCount = settings?.count as number;
+        if (itemCount > 0) {
           this.schemes = settings?.list?.map((val) => new FeeScheme(val)) as FeeScheme[];
         }
       }
@@ -176,6 +178,10 @@ export class FeesComponent {
         startWith(''),
         map(value => this.filterTargetValues(value)));
     });
+  }
+
+  ngOnDestroy() {
+    this.settingsSubscription.unsubscribe();
   }
 
   private filterTargetValues(value: string): CommonTargetValue[] {
