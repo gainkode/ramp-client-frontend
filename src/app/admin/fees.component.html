@@ -8,6 +8,8 @@
   {{errorMessage}}
 </div>
 
+<button mat-flat-button>Add scheme</button>
+
 <div class="detailed-table-split" *ngIf="errorMessage===''">
   <div [ngClass]="showDetailed ? 'detailed-table-left-panel-details' : 'detailed-table-left-panel-full'">
     <table mat-table class="data-table" [dataSource]="schemes">
