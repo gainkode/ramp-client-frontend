@@ -57,15 +57,24 @@ export class FeesComponent implements OnInit, OnDestroy {
     this.settingsSubscription.unsubscribe();
   }
 
-  toggleDetails(scheme: FeeScheme): void {
-    this.showDetails = !this.showDetails;
-    if (this.showDetails) {
+  private showEditor(scheme: FeeScheme | null, createNew: boolean, visible: boolean) {
+    this.showDetails = visible;
+    if (visible) {
       this.selectedScheme = scheme;
-      this.createScheme = false;
+      this.createScheme = createNew;
       this.displayedColumns.splice(this.detailsColumnIndex, 1);
     } else {
       this.displayedColumns.push('details');
     }
+  }
+
+  toggleDetails(scheme: FeeScheme): void {
+    this.showDetails = !this.showDetails;
+    this.showEditor(scheme, false, this.showDetails);
+  }
+
+  createNewScheme(): void {
+    this.showEditor(null, true, true);
   }
 
   onSaved(scheme: FeeScheme) {

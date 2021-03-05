@@ -8,7 +8,9 @@
   {{errorMessage}}
 </div>
 
-<button mat-flat-button class="link-block">Add scheme</button>
+<button mat-flat-button class="link-block" (click)="createNewScheme()">
+  Add scheme
+</button>
 
 <div class="detailed-table-split" *ngIf="errorMessage===''">
   <div [ngClass]="showDetailed ? 'detailed-table-left-panel-details' : 'detailed-table-left-panel-full'">

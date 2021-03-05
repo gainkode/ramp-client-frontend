@@ -1,5 +1,5 @@
 <div class="form-section-title-box">
-    <h1>Change scheme</h1>
+    <h1>{{create ? "Create scheme" : "Change scheme"}}</h1>
 </div>
 
 <form [formGroup]="schemeForm" (ngSubmit)="onSubmit()">

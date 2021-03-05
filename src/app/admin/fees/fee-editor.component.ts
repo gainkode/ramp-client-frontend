@@ -20,7 +20,10 @@ import {
     styleUrls: ['../admin.scss', 'fees.component.scss']
 })
 export class FeeEditorComponent implements OnInit {
-    @Input() currentScheme: FeeScheme | null = null;
+    @Input()
+    set currentScheme(scheme: FeeScheme | null) {
+        this.setFormData(scheme);
+    }
     @Input() create: boolean = false;
     @Output() save = new EventEmitter<FeeScheme>();
     @ViewChild('targetValueInput') targetValueInput!: ElementRef<HTMLInputElement>;
@@ -159,6 +162,29 @@ export class FeeEditorComponent implements OnInit {
             this.schemeForm.get('bankAddress')?.setValue(scheme?.details.bankAddress);
             this.schemeForm.get('swift')?.setValue(scheme?.details.swift);
             scheme?.targetValues.forEach(x => this.targetValues.push(x));
+        } else {
+            this.schemeForm.get('id')?.setValue('');
+            this.schemeForm.get('name')?.setValue('');
+            this.schemeForm.get('description')?.setValue('');
+            this.schemeForm.get('isDefault')?.setValue('');
+            this.schemeForm.get('target')?.setValue('');
+            this.schemeForm.get('instrument')?.setValue('');
+            this.schemeForm.get('trxType')?.setValue('');
+            this.schemeForm.get('provider')?.setValue('');
+            this.schemeForm.get('transactionFees')?.setValue('');
+            this.schemeForm.get('minTransactionFee')?.setValue('');
+            this.schemeForm.get('rollingReserves')?.setValue('');
+            this.schemeForm.get('rollingReservesDays')?.setValue('');
+            this.schemeForm.get('chargebackFees')?.setValue('');
+            this.schemeForm.get('monthlyFees')?.setValue('');
+            this.schemeForm.get('minMonthlyFees')?.setValue('');
+            this.schemeForm.get('beneficiaryName')?.setValue('');
+            this.schemeForm.get('beneficiaryAddress')?.setValue('');
+            this.schemeForm.get('iban')?.setValue('');
+            this.schemeForm.get('bankName')?.setValue('');
+            this.schemeForm.get('bankAddress')?.setValue('');
+            this.schemeForm.get('swift')?.setValue('');
+            this.targetValues = [];
         }
     }
 
