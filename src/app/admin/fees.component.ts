@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
@@ -12,19 +12,18 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import {
   TargetParams, CommonTargetValue, FeeScheme, TargetFilterList,
   PaymentInstrumentList, PaymentProviderList, TransactionTypeList,
-  AccountTypeFilterList, CountryFilterList
+  AccountTypeFilterList, CountryFilterList, AffiliateIdFilterList, AccountIdFilterList, WidgetFilterList
 } from '../model/fee-scheme.model';
 import {
   SettingsFeeListResult, FeeSettingsTargetFilterType,
   PaymentInstrument, PaymentProvider, TransactionType
 } from '../model/generated-models';
-import { Subscription } from 'apollo-angular/subscription';
 
 @Component({
   templateUrl: 'fees.component.html',
   styleUrls: ['admin.scss', 'fees.component.scss']
 })
-export class FeesComponent implements OnInit {
+export class FeesComponent implements OnInit, OnDestroy {
   private showDetails = false;
   private defaultSchemeName = '';
   private settingsSubscription!: any;
@@ -75,27 +74,6 @@ export class FeesComponent implements OnInit {
     swift: ['', { validators: [Validators.required], updateOn: 'change' }]
   });
 
-  // temp
-  affiliateIds: CommonTargetValue[] = [
-    { title: 'fb4598gbf38d73', imgClass: '', imgSource: '' },
-    { title: 'ce98g6g7fb80g4', imgClass: '', imgSource: '' },
-    { title: 'ee3f78f4358g74', imgClass: '', imgSource: '' },
-    { title: 'abab90ag59bedb', imgClass: '', imgSource: '' }
-  ];
-  accountIds: CommonTargetValue[] = [
-    { title: '37d83fbg8954bf', imgClass: '', imgSource: '' },
-    { title: '4g08bf7g6g89ec', imgClass: '', imgSource: '' },
-    { title: '47g8534f87f3ee', imgClass: '', imgSource: '' },
-    { title: 'bdeb95gaabab90', imgClass: '', imgSource: '' }
-  ];
-  widgets: CommonTargetValue[] = [
-    { title: 'Widget A', imgClass: '', imgSource: '' },
-    { title: 'Widget B', imgClass: '', imgSource: '' },
-    { title: 'Widget C', imgClass: '', imgSource: '' },
-    { title: 'Widget D', imgClass: '', imgSource: '' }
-  ];
-  // temp
-
   get showDetailed(): boolean {
     return this.showDetails;
   }
@@ -111,7 +89,7 @@ export class FeesComponent implements OnInit {
       case FeeSettingsTargetFilterType.AffiliateId: {
         params.title = 'List of affiliate identifiers';
         params.inputPlaceholder = 'New identifier...';
-        params.dataList = this.affiliateIds;
+        params.dataList = AffiliateIdFilterList;
         break;
       }
       case FeeSettingsTargetFilterType.Country: {
@@ -123,7 +101,7 @@ export class FeesComponent implements OnInit {
       case FeeSettingsTargetFilterType.AccountId: {
         params.title = 'List of account identifiers';
         params.inputPlaceholder = 'New identifier...';
-        params.dataList = this.accountIds;
+        params.dataList = AccountIdFilterList;
         break;
       }
       case FeeSettingsTargetFilterType.AccountType: {
@@ -135,7 +113,7 @@ export class FeesComponent implements OnInit {
       case FeeSettingsTargetFilterType.InitiateFrom: {
         params.title = 'List of widgets';
         params.inputPlaceholder = 'New widget...';
-        params.dataList = this.widgets;
+        params.dataList = WidgetFilterList;
         break;
       }
     }

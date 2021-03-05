@@ -89,16 +89,11 @@ mutation UpdateSettingsFee(
 export class AdminDataService {
   constructor(private apollo: Apollo) { }
 
-  // getFeeSettings(): Observable<any> {
-  //   return this.apollo.watchQuery<Response>({
-  //     query: GET_FEE_SETTINGS_POST
-  //   }).valueChanges;
-  // }
-
   getFeeSettings(): QueryRef<any, EmptyObject> {
     return this.apollo.watchQuery<any>({
       query: GET_FEE_SETTINGS_POST,
-      pollInterval: 500
+      pollInterval: 500,
+      fetchPolicy: 'network-only'
     });
   }
 

@@ -25,6 +25,27 @@ export const CountryFilterList: CommonTargetValue[] = CountryCodes.map(c => {
     return item;
 });
 
+// temp
+export const AffiliateIdFilterList: CommonTargetValue[] = [
+    { title: 'fb4598gbf38d73', imgClass: '', imgSource: '' },
+    { title: 'ce98g6g7fb80g4', imgClass: '', imgSource: '' },
+    { title: 'ee3f78f4358g74', imgClass: '', imgSource: '' },
+    { title: 'abab90ag59bedb', imgClass: '', imgSource: '' }
+];
+export const AccountIdFilterList: CommonTargetValue[] = [
+    { title: '37d83fbg8954bf', imgClass: '', imgSource: '' },
+    { title: '4g08bf7g6g89ec', imgClass: '', imgSource: '' },
+    { title: '47g8534f87f3ee', imgClass: '', imgSource: '' },
+    { title: 'bdeb95gaabab90', imgClass: '', imgSource: '' }
+];
+export const WidgetFilterList: CommonTargetValue[] = [
+    { title: 'Widget A', imgClass: '', imgSource: '' },
+    { title: 'Widget B', imgClass: '', imgSource: '' },
+    { title: 'Widget C', imgClass: '', imgSource: '' },
+    { title: 'Widget D', imgClass: '', imgSource: '' }
+];
+// temp
+
 export const AccountTypeFilterList: CommonTargetValue[] = [
     { title: 'Personal', imgClass: '', imgSource: '' },
     { title: 'Merchant', imgClass: '', imgSource: '' }
@@ -135,6 +156,43 @@ export class FeeScheme {
                 this.targetValues.push(x);
             }
         });
+    }
+
+    get TargetName(): string {
+        return TargetFilterList.find(x => x.id === this.target)?.name as string;
+    }
+
+    get TransactionTypeList(): string {
+        let s = '';
+        let p = false;
+        this.trxType.forEach(x => {
+            const v = TransactionTypeList.find(t => t.id === x)?.name as string;
+            s = `${s}${p?', ':''}${v}`;
+            p = true;
+        })
+        return s;
+    }
+
+    get InstrumentList(): string {
+        let s = '';
+        let p = false;
+        this.instrument.forEach(x => {
+            const v = PaymentInstrumentList.find(t => t.id === x)?.name as string;
+            s = `${s}${p?', ':''}${v}`;
+            p = true;
+        })
+        return s;
+    }
+
+    get ProviderList(): string {
+        let s = '';
+        let p = false;
+        this.provider.forEach(x => {
+            const v = PaymentProviderList.find(t => t.id === x)?.name as string;
+            s = `${s}${p?', ':''}${v}`;
+            p = true;
+        })
+        return s;
     }
 }
 
