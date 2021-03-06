@@ -16,6 +16,7 @@ export class FeesComponent implements OnInit, OnDestroy {
   private settingsSubscription!: any;
   inProgress = false;
   errorMessage = '';
+  editorErrorMessage = '';
   selectedScheme: FeeScheme | null = null;
   createScheme = false;
   schemes: FeeScheme[] = [];
@@ -31,7 +32,6 @@ export class FeesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // Load settings table
     this.inProgress = true;
     this.settingsSubscription = this.adminService.getFeeSettings().valueChanges.subscribe(({ data }) => {
       this.inProgress = false;
@@ -82,7 +82,7 @@ export class FeesComponent implements OnInit, OnDestroy {
   }
 
   onDeleteScheme(id: string) {
-    this.errorMessage = '';
+    this.editorErrorMessage = '';
     this.inProgress = true;
     this.adminService.deleteFeeSettings(id).subscribe(({ data }) => {
       this.inProgress = false;
@@ -93,7 +93,7 @@ export class FeesComponent implements OnInit, OnDestroy {
       this.inProgress = false;
       console.log(error);
       if (this.auth.token !== '') {
-        this.errorMessage = this.errorHandler.getError(error.message, 'Unable to delete fee settings');
+        this.editorErrorMessage = this.errorHandler.getError(error.message, 'Unable to delete fee settings');
       } else {
         this.router.navigateByUrl('/');
       }
@@ -101,7 +101,7 @@ export class FeesComponent implements OnInit, OnDestroy {
   }
 
   onSaved(scheme: FeeScheme) {
-    this.errorMessage = '';
+    this.editorErrorMessage = '';
     this.inProgress = true;
     this.adminService.saveFeeSettings(scheme, this.createScheme).subscribe(({ data }) => {
       this.inProgress = false;
@@ -112,7 +112,7 @@ export class FeesComponent implements OnInit, OnDestroy {
       this.inProgress = false;
       console.log(error);
       if (this.auth.token !== '') {
-        this.errorMessage = this.errorHandler.getError(error.message, 'Unable to save fee settings');
+        this.editorErrorMessage = this.errorHandler.getError(error.message, 'Unable to save fee settings');
       } else {
         this.router.navigateByUrl('/');
       }

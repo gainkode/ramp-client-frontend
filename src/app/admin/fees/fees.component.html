@@ -8,6 +8,10 @@
   {{errorMessage}}
 </div>
 
+<div class="form-error-box" *ngIf="editorErrorMessage!==''">
+  {{editorErrorMessage}}
+</div>
+
 <button mat-flat-button class="link-block" *ngIf="errorMessage===''" (click)="createNewScheme()">
   Add scheme
 </button>
