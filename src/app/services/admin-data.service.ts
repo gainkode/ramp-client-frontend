@@ -85,6 +85,14 @@ mutation UpdateSettingsFee(
 }
 `;
 
+const DELETE_SETTINGS_FEE_POST = gql`
+mutation DeleteSettingsFee($settingsId: ID!) {
+  deleteSettingsFee(settingsId: $settingsId) {
+    settingsFeeId
+  }
+}
+`;
+
 @Injectable()
 export class AdminDataService {
   constructor(private apollo: Apollo) { }
@@ -129,5 +137,15 @@ export class AdminDataService {
           wireDetails: settings.details.getObject()
         }
       });
+  }
+
+  deleteFeeSettings(settingsId: string): Observable<any> {
+    console.log(settingsId);
+    return this.apollo.mutate({
+      mutation: DELETE_SETTINGS_FEE_POST,
+      variables: {
+        settingsId: settingsId
+      }
+    });
   }
 }

@@ -5,6 +5,7 @@ import { AdminDataService } from '../../services/admin-data.service';
 import { ErrorService } from '../../services/error.service';
 import { FeeScheme } from '../../model/fee-scheme.model';
 import { SettingsFeeListResult } from '../../model/generated-models';
+import { Subscription } from 'rxjs';
 
 @Component({
   templateUrl: 'fees.component.html',
@@ -54,7 +55,12 @@ export class FeesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.settingsSubscription.unsubscribe();
+    const s = this.settingsSubscription as Subscription;
+    s.unsubscribe();
+  }
+
+  refresh() {
+    this.adminService.getFeeSettings().refetch();
   }
 
   private showEditor(scheme: FeeScheme | null, createNew: boolean, visible: boolean) {
@@ -77,12 +83,33 @@ export class FeesComponent implements OnInit, OnDestroy {
     this.showEditor(null, true, true);
   }
 
+  onDeleteScheme(id: string) {
+    this.errorMessage = '';
+    this.inProgress = true;
+    this.adminService.deleteFeeSettings(id).subscribe(({ data }) => {
+      this.inProgress = false;
+      this.showDetails = false;
+      this.showEditor(null, false, this.showDetails);
+      this.refresh();
+    }, (error) => {
+      this.inProgress = false;
+      console.log(error);
+      if (this.auth.token !== '') {
+        this.errorMessage = this.errorHandler.getError(error.message, 'Unable to delete fee settings');
+      } else {
+        this.router.navigateByUrl('/');
+      }
+    });
+  }
+
   onSaved(scheme: FeeScheme) {
     this.errorMessage = '';
     this.inProgress = true;
     this.adminService.saveFeeSettings(scheme, this.createScheme).subscribe(({ data }) => {
       this.inProgress = false;
-      this.toggleDetails(scheme);
+      this.showDetails = false;
+      this.showEditor(null, false, this.showDetails);
+      this.refresh();
     }, (error) => {
       this.inProgress = false;
       console.log(error);

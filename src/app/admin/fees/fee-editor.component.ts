@@ -23,6 +23,7 @@ export class FeeEditorComponent implements OnInit {
     @Input()
     set currentScheme(scheme: FeeScheme | null) {
         this.setFormData(scheme);
+        this.settingsId = (scheme !== null) ? scheme?.id : '';
     }
     @Input() create: boolean = false;
     @Output() save = new EventEmitter<FeeScheme>();
@@ -31,6 +32,7 @@ export class FeeEditorComponent implements OnInit {
     @ViewChild('auto') matAutocomplete!: MatAutocomplete;
 
     private defaultSchemeName = '';
+    private settingsId = '';
     selectedTab = 0;
     targetValues: string[] = [];
     separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -291,7 +293,7 @@ export class FeeEditorComponent implements OnInit {
     }
 
     onDeleteScheme(): void {
-        this.delete.emit(this.currentScheme?.id);
+        this.delete.emit(this.settingsId);
     }
 
     onSubmit(): void {
