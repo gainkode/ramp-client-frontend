@@ -30,6 +30,7 @@ export class FeeEditorComponent implements OnInit {
     @Output() save = new EventEmitter<FeeScheme>();
     @Output() delete = new EventEmitter<string>();
     @Output() cancel = new EventEmitter();
+    @Output() formChanged = new EventEmitter<boolean>();
     @ViewChild('targetValueInput') targetValueInput!: ElementRef<HTMLInputElement>;
     @ViewChild('auto') matAutocomplete!: MatAutocomplete;
 
@@ -123,6 +124,13 @@ export class FeeEditorComponent implements OnInit {
     constructor(private formBuilder: FormBuilder) { }
 
     ngOnInit(): void {
+        this.schemeForm.valueChanges.subscribe({
+            next: (result: any) => {
+                if (!this.create) {
+                    this.formChanged.emit(true);
+                }
+            }
+        });
         this.schemeForm.get('target')?.valueChanges.subscribe(val => {
             this.clearTargetValues();
             this.filteredTargetValues = this.schemeForm.get('targetValues')?.valueChanges.pipe(

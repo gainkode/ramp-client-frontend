@@ -1,7 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { Validators, FormBuilder } from '@angular/forms';
 import { AdminMenuItem, AdminMenuItems } from '../model/admin-menu-list';
 import { MatSelectionListChange } from '@angular/material/list/selection-list';
 
@@ -12,8 +11,10 @@ import { MatSelectionListChange } from '@angular/material/list/selection-list';
 export class AdminComponent {
     menuItems: AdminMenuItem[] = AdminMenuItems;
     selectedMenu = 'dashboard';
+    editMode = false;
+    changeEditModeRef: any;
 
-    constructor(private auth: AuthService, private formBuilder: FormBuilder, private router: Router) {
+    constructor(private auth: AuthService, private router: Router) {
         const routeTree = router.parseUrl(router.url);
         const segments = routeTree.root.children['primary'].segments;
         if (segments.length > 2) {
@@ -24,8 +25,25 @@ export class AdminComponent {
     }
 
     menuChanged(e: MatSelectionListChange): void {
-        let item = e.options[0].value as AdminMenuItem;
-        this.router.navigateByUrl(item.url);
+        if (this.editMode == false) {
+            let item = e.options[0].value as AdminMenuItem;
+            this.router.navigateByUrl(item.url);
+        } else {
+
+        }
+    }
+
+    onActivate(component: any) {
+        this.changeEditModeRef = component.changeEditMode;
+        this.changeEditModeRef.subscribe((event: any) => {
+            const mode = event as boolean;
+            this.editMode = mode;
+            console.log(`Edit mode is ${this.editMode}`);
+        });
+    }
+
+    onDeactivate(component: any) {
+        this.changeEditModeRef.unsubscribe();
     }
 
     logout(): void {

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { AdminDataService } from '../../services/admin-data.service';
@@ -12,8 +12,10 @@ import { Subscription } from 'rxjs';
   styleUrls: ['../admin.scss', 'fees.component.scss']
 })
 export class FeesComponent implements OnInit, OnDestroy {
-  private showDetails = false;
-  private settingsSubscription!: any;
+  @Output() changeEditMode = new EventEmitter<boolean>();
+  private _showDetails = false;
+  private _settingsSubscription!: any;
+  private _editMode: boolean = false;
   inProgress = false;
   errorMessage = '';
   editorErrorMessage = '';
@@ -23,7 +25,7 @@ export class FeesComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['isDefault', 'name', 'target', 'trxType', 'instrument', 'provider', 'details'];
 
   get showDetailed(): boolean {
-    return this.showDetails;
+    return this._showDetails;
   }
 
   constructor(private auth: AuthService, private errorHandler: ErrorService,
@@ -32,7 +34,7 @@ export class FeesComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.inProgress = true;
-    this.settingsSubscription = this.adminService.getFeeSettings().valueChanges.subscribe(({ data }) => {
+    this._settingsSubscription = this.adminService.getFeeSettings().valueChanges.subscribe(({ data }) => {
       this.inProgress = false;
       const settings = data.getSettingsFee as SettingsFeeListResult;
       let itemCount = 0;
@@ -53,11 +55,16 @@ export class FeesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    (this.settingsSubscription as Subscription).unsubscribe();
+    (this._settingsSubscription as Subscription).unsubscribe();
   }
 
   refresh() {
     this.adminService.getFeeSettings().refetch();
+  }
+
+  private setEditMode(mode: boolean) {
+    this._editMode = mode;
+    this.changeEditMode.emit(mode);
   }
 
   private isSelectedScheme(schemeId: string): boolean {
@@ -87,12 +94,16 @@ export class FeesComponent implements OnInit, OnDestroy {
   }
 
   private showEditor(scheme: FeeScheme | null, createNew: boolean, visible: boolean) {
-    this.showDetails = visible;
+    this._showDetails = visible;
     if (visible) {
       this.selectedScheme = scheme;
       this.createScheme = createNew;
+      if (createNew) {
+        this.setEditMode(true);
+      }
     } else {
       this.selectedScheme = null;
+      this.setEditMode(false);
     }
   }
 
@@ -108,9 +119,14 @@ export class FeesComponent implements OnInit, OnDestroy {
     this.showEditor(null, true, true);
   }
 
+  onEditorFormChanged(mode: boolean) {
+    this.setEditMode(mode);
+  }
+
   onCancelEdit(): void {
     this.createScheme = false;
     this.showEditor(null, false, false);
+    this.setEditMode(false);
   }
 
   onDeleteScheme(id: string) {
@@ -136,7 +152,9 @@ export class FeesComponent implements OnInit, OnDestroy {
     this.inProgress = true;
     this.adminService.saveFeeSettings(scheme, this.createScheme).subscribe(({ data }) => {
       this.inProgress = false;
+      this.setEditMode(false);
       this.showEditor(null, false, false);
+      this.createScheme = false;
       this.refresh();
     }, (error) => {
       this.inProgress = false;
