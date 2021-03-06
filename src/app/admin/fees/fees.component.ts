@@ -80,11 +80,12 @@ export class FeesComponent implements OnInit, OnDestroy {
   onSaved(scheme: FeeScheme) {
     this.errorMessage = '';
     this.inProgress = true;
-    this.adminService.saveFeeSettings(scheme, false).subscribe(({ data }) => {
+    this.adminService.saveFeeSettings(scheme, this.createScheme).subscribe(({ data }) => {
       this.inProgress = false;
       this.toggleDetails(scheme);
     }, (error) => {
       this.inProgress = false;
+      console.log(error);
       if (this.auth.token !== '') {
         this.errorMessage = this.errorHandler.getError(error.message, 'Unable to save fee settings');
       } else {

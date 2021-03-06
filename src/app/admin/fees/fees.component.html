@@ -8,7 +8,7 @@
   {{errorMessage}}
 </div>
 
-<button mat-flat-button class="link-block" (click)="createNewScheme()">
+<button mat-flat-button class="link-block" *ngIf="errorMessage===''" (click)="createNewScheme()">
   Add scheme
 </button>
 
@@ -78,7 +78,7 @@
     </table>
   </div>
   <div [ngClass]="showDetailed ? 'detailed-table-right-panel-details' : 'detailed-table-right-panel-full'">
-    <fee-editor *ngIf="showDetailed" [currentScheme]="selectedScheme" [create]="createScheme"
-    (save)="onSaved($event)"></fee-editor>
+    <fee-editor *ngIf="showDetailed" [currentScheme]="selectedScheme" [create]="createScheme" (save)="onSaved($event)">
+    </fee-editor>
   </div>
 </div>

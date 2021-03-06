@@ -30,8 +30,8 @@
         </mat-error>
     </mat-form-field>
 
-    <mat-tab-group class="form-element" color="primary" mat-stretch-tabs animationDuration="0" 
-    [selectedIndex]="selectedTab" (selectedIndexChange)="setSelectedTab($event)">
+    <mat-tab-group class="form-element" color="primary" mat-stretch-tabs animationDuration="0"
+        [selectedIndex]="selectedTab" (selectedIndexChange)="setSelectedTab($event)">
         <mat-tab>
             <ng-template mat-tab-label>
                 <tab-label [hasErrors]="tabHasError('tab1')" labelText="Targets"></tab-label>
@@ -236,6 +236,16 @@
                 </mat-error>
             </mat-form-field>
 
+            <!-- Beneficiary address -->
+            <mat-form-field class="form-element">
+                <mat-label>Beneficiary address</mat-label>
+                <input type="text" matInput formControlName="beneficiaryAddress" maxlength="50"
+                    placeholder="Beneficiary address" required />
+                <mat-error *ngIf="this.schemeForm.get('beneficiaryAddress')?.hasError('required')">
+                    Please specify beneficiary address
+                </mat-error>
+            </mat-form-field>
+
             <!-- IBAN -->
             <mat-form-field class="form-element">
                 <mat-label>IBAN</mat-label>
@@ -281,8 +291,17 @@
     </mat-tab-group>
 
     <div class="form-element">
-        <button class="form-button" type="submit" mat-flat-button color="primary">
-            Save
-        </button>
+        <div class="button-form-panel">
+            <div class="button-panel-left">
+                <button class="form-button" type="submit" mat-flat-button color="primary">
+                    Save
+                </button>
+            </div>
+            <div *ngIf="defaultSchemeFlag==='' && create==false" class="button-panel-right">
+                <button class="form-button" mat-flat-button color="primary" (click)="onDeleteScheme()">
+                    Delete
+                </button>
+            </div>
+        </div>
     </div>
 </form>

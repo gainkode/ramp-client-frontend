@@ -92,7 +92,7 @@ export class AdminDataService {
   getFeeSettings(): QueryRef<any, EmptyObject> {
     return this.apollo.watchQuery<any>({
       query: GET_FEE_SETTINGS_POST,
-      pollInterval: 500,
+      pollInterval: 30000,
       fetchPolicy: 'network-only'
     });
   }

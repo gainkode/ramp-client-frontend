@@ -55,3 +55,17 @@ th.mat-header-cell {
     margin-left     : 1em;
     margin-right    : 1em;
 }
+
+.button-form-panel {
+    display: flex;
+}
+
+.button-panel-left {
+    width     : 50%;
+    text-align: left;
+}
+
+.button-panel-right {
+    width     : 50%;
+    text-align: right;
+}

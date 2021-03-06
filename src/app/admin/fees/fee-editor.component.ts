@@ -26,6 +26,7 @@ export class FeeEditorComponent implements OnInit {
     }
     @Input() create: boolean = false;
     @Output() save = new EventEmitter<FeeScheme>();
+    @Output() delete = new EventEmitter<string>();
     @ViewChild('targetValueInput') targetValueInput!: ElementRef<HTMLInputElement>;
     @ViewChild('auto') matAutocomplete!: MatAutocomplete;
 
@@ -117,7 +118,6 @@ export class FeeEditorComponent implements OnInit {
     constructor(private formBuilder: FormBuilder) { }
 
     ngOnInit(): void {
-        this.setFormData(this.currentScheme);
         this.schemeForm.get('target')?.valueChanges.subscribe(val => {
             this.clearTargetValues();
             this.filteredTargetValues = this.schemeForm.get('targetValues')?.valueChanges.pipe(
@@ -288,6 +288,10 @@ export class FeeEditorComponent implements OnInit {
         }
         this.targetValueInput.nativeElement.value = '';
         this.schemeForm.get('targetValues')?.setValue(null);
+    }
+
+    onDeleteScheme(): void {
+        this.delete.emit(this.currentScheme?.id);
     }
 
     onSubmit(): void {
