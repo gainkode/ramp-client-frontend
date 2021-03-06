@@ -48,8 +48,10 @@ th.mat-header-cell {
 }
 
 .detailed-table-right-panel-details {
-    flex        : 40%;
-    margin      : 0;
-    margin-left : 1em;
-    margin-right: 1em;
+    background-color: white;
+    flex            : 40%;
+    max-width       : 40%;
+    margin          : 0;
+    margin-left     : 1em;
+    margin-right    : 1em;
 }

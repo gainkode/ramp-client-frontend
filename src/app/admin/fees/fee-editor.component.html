@@ -30,8 +30,8 @@
         </mat-error>
     </mat-form-field>
 
-    <mat-tab-group color="primary" mat-stretch-tabs animationDuration="0" [selectedIndex]="selectedTab"
-        (selectedIndexChange)="setSelectedTab($event)">
+    <mat-tab-group class="form-element" color="primary" mat-stretch-tabs animationDuration="0" 
+    [selectedIndex]="selectedTab" (selectedIndexChange)="setSelectedTab($event)">
         <mat-tab>
             <ng-template mat-tab-label>
                 <tab-label [hasErrors]="tabHasError('tab1')" labelText="Targets"></tab-label>
