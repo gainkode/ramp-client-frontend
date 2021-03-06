@@ -29,6 +29,7 @@ export class FeeEditorComponent implements OnInit {
     @Input() create: boolean = false;
     @Output() save = new EventEmitter<FeeScheme>();
     @Output() delete = new EventEmitter<string>();
+    @Output() cancel = new EventEmitter();
     @ViewChild('targetValueInput') targetValueInput!: ElementRef<HTMLInputElement>;
     @ViewChild('auto') matAutocomplete!: MatAutocomplete;
 
@@ -304,5 +305,9 @@ export class FeeEditorComponent implements OnInit {
         if (this.schemeForm.valid) {
             this.save.emit(this.setSchemeData());
         }
+    }
+
+    onCancel(): void {
+        this.cancel.emit();
     }
 }

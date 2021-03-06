@@ -17,10 +17,9 @@ export class FeesComponent implements OnInit, OnDestroy {
   inProgress = false;
   errorMessage = '';
   editorErrorMessage = '';
-  selectedScheme: FeeScheme | null = null;
   createScheme = false;
+  selectedScheme: FeeScheme | null = null;
   schemes: FeeScheme[] = [];
-
   displayedColumns: string[] = ['isDefault', 'name', 'target', 'trxType', 'instrument', 'provider', 'details'];
 
   get showDetailed(): boolean {
@@ -54,12 +53,37 @@ export class FeesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    const s = this.settingsSubscription as Subscription;
-    s.unsubscribe();
+    (this.settingsSubscription as Subscription).unsubscribe();
   }
 
   refresh() {
     this.adminService.getFeeSettings().refetch();
+  }
+
+  private isSelectedScheme(schemeId: string): boolean {
+    let selected = false;
+    if (this.selectedScheme !== null) {
+      if (this.selectedScheme.id === schemeId) {
+        selected = true;
+      }
+    }
+    return selected;
+  }
+
+  getDetailsIcon(schemeId: string): string {
+    if (this.createScheme) {
+      return 'lock';
+    } else {
+      return (this.isSelectedScheme(schemeId)) ? 'clear' : 'description';
+    }
+  }
+
+  getDetailsTooltip(schemeId: string): string {
+    if (this.createScheme) {
+      return 'Save changes first';
+    } else {
+      return (this.isSelectedScheme(schemeId)) ? 'Close details' : 'Change scheme';
+    }
   }
 
   private showEditor(scheme: FeeScheme | null, createNew: boolean, visible: boolean) {
@@ -68,17 +92,25 @@ export class FeesComponent implements OnInit, OnDestroy {
       this.selectedScheme = scheme;
       this.createScheme = createNew;
     } else {
-
+      this.selectedScheme = null;
     }
   }
 
   toggleDetails(scheme: FeeScheme): void {
-    this.showDetails = !this.showDetails;
-    this.showEditor(scheme, false, this.showDetails);
+    let show = true;
+    if (this.isSelectedScheme(scheme.id)) {
+      show = false;
+    }
+    this.showEditor(scheme, false, show);
   }
 
   createNewScheme(): void {
     this.showEditor(null, true, true);
+  }
+
+  onCancelEdit(): void {
+    this.createScheme = false;
+    this.showEditor(null, false, false);
   }
 
   onDeleteScheme(id: string) {
@@ -86,8 +118,7 @@ export class FeesComponent implements OnInit, OnDestroy {
     this.inProgress = true;
     this.adminService.deleteFeeSettings(id).subscribe(({ data }) => {
       this.inProgress = false;
-      this.showDetails = false;
-      this.showEditor(null, false, this.showDetails);
+      this.showEditor(null, false, false);
       this.refresh();
     }, (error) => {
       this.inProgress = false;
@@ -105,8 +136,7 @@ export class FeesComponent implements OnInit, OnDestroy {
     this.inProgress = true;
     this.adminService.saveFeeSettings(scheme, this.createScheme).subscribe(({ data }) => {
       this.inProgress = false;
-      this.showDetails = false;
-      this.showEditor(null, false, this.showDetails);
+      this.showEditor(null, false, false);
       this.refresh();
     }, (error) => {
       this.inProgress = false;
