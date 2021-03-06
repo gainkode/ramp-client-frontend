@@ -22,6 +22,7 @@ import {
 export class FeeEditorComponent implements OnInit {
     @Input()
     set currentScheme(scheme: FeeScheme | null) {
+        this.forceValidate = false;
         this.setFormData(scheme);
         this.settingsId = (scheme !== null) ? scheme?.id : '';
     }
@@ -33,6 +34,7 @@ export class FeeEditorComponent implements OnInit {
 
     private defaultSchemeName = '';
     private settingsId = '';
+    private forceValidate = false;
     selectedTab = 0;
     targetValues: string[] = [];
     separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -139,6 +141,7 @@ export class FeeEditorComponent implements OnInit {
     }
 
     setFormData(scheme: FeeScheme | null): void {
+        this.schemeForm.reset();
         this.defaultSchemeName = '';
         if (scheme !== null) {
             this.defaultSchemeName = scheme.isDefault ? scheme.name : '';
@@ -222,7 +225,7 @@ export class FeeEditorComponent implements OnInit {
 
     private validateField(name: string): boolean {
         let valid = true;
-        if (this.schemeForm.get(name)?.touched) {
+        if (this.schemeForm.get(name)?.touched || this.forceValidate) {
             valid = this.schemeForm.get(name)?.valid as boolean;
         }
         return valid;
@@ -297,6 +300,7 @@ export class FeeEditorComponent implements OnInit {
     }
 
     onSubmit(): void {
+        this.forceValidate = true;
         if (this.schemeForm.valid) {
             this.save.emit(this.setSchemeData());
         }

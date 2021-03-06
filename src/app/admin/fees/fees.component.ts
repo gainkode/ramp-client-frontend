@@ -20,7 +20,6 @@ export class FeesComponent implements OnInit, OnDestroy {
   createScheme = false;
   schemes: FeeScheme[] = [];
 
-  detailsColumnIndex = 6;
   displayedColumns: string[] = ['isDefault', 'name', 'target', 'trxType', 'instrument', 'provider', 'details'];
 
   get showDetailed(): boolean {
@@ -68,9 +67,8 @@ export class FeesComponent implements OnInit, OnDestroy {
     if (visible) {
       this.selectedScheme = scheme;
       this.createScheme = createNew;
-      this.displayedColumns.splice(this.detailsColumnIndex, 1);
     } else {
-      this.displayedColumns.push('details');
+
     }
   }
 
