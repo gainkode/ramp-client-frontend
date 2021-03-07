@@ -1,21 +1,23 @@
-<h1>
-  Fee schemes
-</h1>
+<div class="admin-page-title">
+  <h1>
+    Fee schemes
+  </h1>
 
-<mat-progress-bar *ngIf="inProgress" mode="indeterminate"></mat-progress-bar>
+  <mat-progress-bar *ngIf="inProgress" mode="indeterminate"></mat-progress-bar>
 
-<div class="form-error-box" *ngIf="errorMessage!==''">
-  {{errorMessage}}
+  <div class="form-error-box" *ngIf="errorMessage!==''">
+    {{errorMessage}}
+  </div>
+
+  <div class="form-error-box" *ngIf="editorErrorMessage!==''">
+    {{editorErrorMessage}}
+  </div>
+
+  <button mat-flat-button class="link-block" *ngIf="errorMessage===''" [disabled]="createScheme"
+    (click)="createNewScheme()">
+    Add scheme
+  </button>
 </div>
-
-<div class="form-error-box" *ngIf="editorErrorMessage!==''">
-  {{editorErrorMessage}}
-</div>
-
-<button mat-flat-button class="link-block" *ngIf="errorMessage===''" [disabled]="createScheme"
-(click)="createNewScheme()">
-  Add scheme
-</button>
 
 <div class="detailed-table-split" *ngIf="errorMessage===''">
   <div [ngClass]="showDetailed ? 'detailed-table-left-panel-details' : 'detailed-table-left-panel-full'">
@@ -71,10 +73,9 @@
       <ng-container matColumnDef="details">
         <th mat-header-cell *matHeaderCellDef class="mat-column-fee-table mat-column-fee-table-details"></th>
         <td mat-cell *matCellDef="let element">
-          <button mat-icon-button type="button" (click)="toggleDetails(element)" 
-          [attr.aria-label]="'Change scheme'" [attr.aria-pressed]="showDetailed" 
-          [matTooltip]="getDetailsTooltip(element.id)" matTooltipClass="info-tooltip"
-          [disabled]="createScheme">
+          <button mat-icon-button type="button" (click)="toggleDetails(element)" [attr.aria-label]="'Change scheme'"
+            [attr.aria-pressed]="showDetailed" [matTooltip]="getDetailsTooltip(element.id)"
+            matTooltipClass="info-tooltip" [disabled]="createScheme">
             <mat-icon class="details-icon">{{getDetailsIcon(element.id)}}</mat-icon>
           </button>
         </td>
@@ -85,9 +86,8 @@
     </table>
   </div>
   <div [ngClass]="showDetailed ? 'detailed-table-right-panel-details' : 'detailed-table-right-panel-full'">
-    <fee-editor *ngIf="showDetailed" [currentScheme]="selectedScheme" [create]="createScheme" 
-    (save)="onSaved($event)" (delete)="onDeleteScheme($event)" (cancel)="onCancelEdit()"
-    (formChanged)="onEditorFormChanged($event)">
+    <fee-editor *ngIf="showDetailed" [currentScheme]="selectedScheme" [create]="createScheme" (save)="onSaved($event)"
+      (delete)="onDeleteScheme($event)" (cancel)="onCancelEdit()" (formChanged)="onEditorFormChanged($event)">
     </fee-editor>
   </div>
 </div>

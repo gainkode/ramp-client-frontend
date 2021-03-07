@@ -1,3 +1,7 @@
+.admin-page-title {
+    margin: 1em;
+}
+
 .data-table {
     width: 100%;
 }
@@ -56,7 +60,7 @@ th.mat-header-cell {
 }
 
 .detailed-table-right-panel-details {
-    z-index: 100;
+    z-index         : 100;
     background-color: white;
     flex            : 40%;
     max-width       : 40%;
