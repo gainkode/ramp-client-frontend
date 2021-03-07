@@ -172,11 +172,6 @@ input:-webkit-autofill::first-line {
     }
 }
 
-.split-panel-content {
-    position: relative;
-    margin  : 0em;
-}
-
 .split-panel-menu {
     position: relative;
     margin  : 0;
@@ -255,4 +250,31 @@ img.country-flag {
     width       : 20px;
     height      : 15px;
     border      : 1px solid #000000;
+}
+
+
+
+
+
+
+.parent-test {
+    display: flex;
+    height : 100%;
+}
+
+.child-test-60 {
+    padding: 2em;
+    width: 60%;
+    background-color: yellowgreen;
+}
+
+.child-test-40 {
+    padding: 3em;
+    width: 40%;
+    background-color: yellow;
+}
+
+.child-active-test {
+    flex-shrink: 1;
+    background-color: yellow;
 }

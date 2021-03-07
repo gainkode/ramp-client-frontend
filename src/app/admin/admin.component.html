@@ -10,7 +10,6 @@
                 {{item.name}}
             </mat-list-option>
         </mat-selection-list>
-
         <br>
         <br>
         <a href="/admin" (click)="logout()" style="margin-left: 1em;">
@@ -22,8 +21,6 @@
 </div>
 
 <div class="action-page-split action-page-right-panel split-page-90">
-    <div class="split-panel-content">
         <router-outlet (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
         </router-outlet>
-    </div>
 </div>
