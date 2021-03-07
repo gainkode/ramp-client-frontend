@@ -28,6 +28,10 @@ export class FeesComponent implements OnInit, OnDestroy {
     return this._showDetails;
   }
 
+  get editMode(): boolean {
+    return this._editMode;
+  }
+
   constructor(private auth: AuthService, private errorHandler: ErrorService,
     private adminService: AdminDataService, private router: Router) {
   }

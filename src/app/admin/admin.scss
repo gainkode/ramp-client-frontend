@@ -10,6 +10,14 @@
     }
 }
 
+.panel-dim {
+    background-color: #00000060;
+    position        : fixed;
+    left            : 0;
+    top             : 0;
+    height          : 100%;
+}
+
 th.mat-header-cell {
     font-size  : medium;
     font-weight: bold;
@@ -48,7 +56,8 @@ th.mat-header-cell {
 }
 
 .detailed-table-right-panel-details {
-    background-color: white;
+    z-index: 100;
+    background-color: yellow;
     flex            : 40%;
     max-width       : 40%;
     margin          : 0;
