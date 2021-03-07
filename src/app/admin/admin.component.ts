@@ -38,7 +38,6 @@ export class AdminComponent {
         this.changeEditModeRef.subscribe((event: any) => {
             const mode = event as boolean;
             this.editMode = mode;
-            console.log(`Edit mode is ${this.editMode}`);
         });
     }
 

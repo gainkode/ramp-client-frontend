@@ -37,6 +37,7 @@ export class FeeEditorComponent implements OnInit {
     private defaultSchemeName = '';
     private settingsId = '';
     private forceValidate = false;
+    private loadingData = false;
     selectedTab = 0;
     targetValues: string[] = [];
     separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -126,7 +127,7 @@ export class FeeEditorComponent implements OnInit {
     ngOnInit(): void {
         this.schemeForm.valueChanges.subscribe({
             next: (result: any) => {
-                if (!this.create) {
+                if (!this.create && !this.loadingData) {
                     this.formChanged.emit(true);
                 }
             }
@@ -153,6 +154,7 @@ export class FeeEditorComponent implements OnInit {
         this.schemeForm.reset();
         this.defaultSchemeName = '';
         if (scheme !== null) {
+            this.loadingData = true;
             this.defaultSchemeName = scheme.isDefault ? scheme.name : '';
             this.schemeForm.get('id')?.setValue(scheme?.id);
             this.schemeForm.get('name')?.setValue(scheme?.name);
@@ -176,6 +178,8 @@ export class FeeEditorComponent implements OnInit {
             this.schemeForm.get('bankAddress')?.setValue(scheme?.details.bankAddress);
             this.schemeForm.get('swift')?.setValue(scheme?.details.swift);
             scheme?.targetValues.forEach(x => this.targetValues.push(x));
+            this.loadingData = false;
+            this.formChanged.emit(false);
         } else {
             this.schemeForm.get('id')?.setValue('');
             this.schemeForm.get('name')?.setValue('');
