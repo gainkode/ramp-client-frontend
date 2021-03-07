@@ -298,15 +298,17 @@
                 </button>
             </div>
             <div *ngIf="defaultSchemeFlag==='' && create==false" class="button-panel-right">
-                <button class="form-button" mat-flat-button color="primary" (click)="onDeleteScheme()">
+                <button class="form-button" mat-flat-button color="warn" 
+                (click)="onDeleteScheme()">
                     Delete
                 </button>
             </div>
-            <div *ngIf="create==true" class="button-panel-right">
-                <button class="form-button" mat-flat-button color="primary" (click)="onCancel()">
-                    Cancel
-                </button>
-            </div>
+        </div>
+        <br>
+        <div>
+            <button class="form-button" mat-flat-button color="primary" (click)="onCancel()">
+                Cancel
+            </button>
         </div>
     </div>
 </form>
