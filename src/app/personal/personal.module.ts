@@ -14,10 +14,14 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { PersonalGuard } from './personal.guard';
 import { IntroPersonalComponent } from './intro.component';
 import { PersonalComponent } from './personal.component';
+import { ProfileMainPersonalComponent } from './profile/main.component';
+import { KycPersonalComponent } from './profile/kyc.component';
 
 const routing = RouterModule.forChild([
     { path: 'intro', component: IntroPersonalComponent },
     { path: 'main', component: PersonalComponent, canActivate: [PersonalGuard] },
+    { path: 'profile', component: ProfileMainPersonalComponent, canActivate: [PersonalGuard] },
+    { path: 'kyc', component: KycPersonalComponent, canActivate: [PersonalGuard] },
     { path: '**', redirectTo: 'main' }
 ]);
 
@@ -43,7 +47,8 @@ export class MaterialModule { }
     imports: [
         CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule
     ],
-    declarations: [IntroPersonalComponent, PersonalComponent],
+    declarations: [IntroPersonalComponent, PersonalComponent,
+        ProfileMainPersonalComponent, KycPersonalComponent],
     providers: [PersonalGuard],
     schemas: [
       CUSTOM_ELEMENTS_SCHEMA

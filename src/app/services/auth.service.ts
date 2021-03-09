@@ -262,6 +262,15 @@ export class AuthService {
         return this.token !== '';
     }
 
+    get user(): User | null {
+        let user: User | null = null;
+        const userStr = sessionStorage.getItem('currentUser');
+        if (userStr !== null) {
+            user = JSON.parse(userStr);
+        }
+        return user;
+    }
+
     private getAuthenticatedUser(): User | null {
         let result: User | null = null;
         const userData: string | null = sessionStorage.getItem('currentUser');

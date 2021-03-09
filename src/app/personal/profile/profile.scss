@@ -1,0 +1,24 @@
+.kyc-editor-split {
+    display: flex;
+    height : 100%;
+}
+
+.kyc-editor-left-panel {
+    padding  : 0;
+    width    : 55%;
+    min-width: 10em;
+}
+
+.kyc-editor-right-panel {
+    z-index         : 100;
+    background-color: white;
+    padding         : 0;
+    width           : 45%;
+    max-width       : 45%;
+}
+
+.kyc-editor-box {
+    margin: 2em;
+    margin-top: 6em;
+    background-color: lime;
+}
