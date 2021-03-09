@@ -1,10 +1,27 @@
 <div class="kyc-editor-split">
     <div class="kyc-editor-left-panel">
-        
+
     </div>
     <div class="kyc-editor-right-panel">
         <div class="kyc-editor-box">
             <h2>Personal data approval</h2>
         </div>
+
+        <div class="form-element upload-icon-box">
+            <button mat-icon-button color="primary" (click)="browseFile()">
+                <mat-icon class="upload-icon">cloud_upload</mat-icon>
+            </button>
+        </div>
+        <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
+            <div>
+                <input type="file" #fileUpload name="kyc" (change)="onFileSelect($event)" 
+                style="display: none;"/>
+            </div>
+            <div class="form-element">
+                <button class="form-button" type="submit" mat-flat-button color="primary">
+                    Upload
+                </button>
+            </div>
+        </form>
     </div>
 </div>

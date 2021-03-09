@@ -16,6 +16,7 @@ import {
 import { AuthService } from './services/auth.service';
 import { AdminDataService } from './services/admin-data.service';
 import { ErrorService } from './services/error.service';
+import { UploadService } from './services/upload.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { environment } from 'src/environments/environment';
 
@@ -49,7 +50,8 @@ import { environment } from 'src/environments/environment';
     },
     AuthService,
     AdminDataService,
-    ErrorService
+    ErrorService,
+    UploadService
   ],
   bootstrap: [AppComponent]
 })
@@ -103,7 +105,7 @@ export class AppModule {
         this.headersLink,
         this.authLink,
         httpLink.create({
-          uri: environment.api_server,
+          uri: `${environment.api_server}/gql/api`,
           withCredentials: true
         })
       ]),

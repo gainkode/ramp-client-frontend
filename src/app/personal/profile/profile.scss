@@ -11,19 +11,28 @@
 
 .kyc-editor-right-panel {
     z-index         : 100;
-    background-color: white;
-    padding         : 0;
+    background-color: mediumseagreen;
+    padding         : 1.2em;
     width           : 45%;
     max-width       : 45%;
 }
 
 .kyc-editor-box {
-    margin: 2em;
+    margin    : 0em;
     margin-top: 2em;
 
     h2 {
-        margin     : auto;
-        margin-left: 0.2em;
-        font-size  : medium;
+        margin   : auto;
+        font-size: medium;
     }
+}
+
+.upload-icon-box {
+    padding: 3em;
+    text-align: center;
+}
+
+.upload-icon {
+    color    : #b1b1b1;
+    font-size: 3em;
 }

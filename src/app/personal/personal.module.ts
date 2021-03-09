@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatCardModule } from '@angular/material/card'; 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip'; 
@@ -27,6 +28,7 @@ const routing = RouterModule.forChild([
 
 const modules = [
     MatTabsModule,
+    MatCardModule,
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
