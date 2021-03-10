@@ -108,18 +108,18 @@ export class SignupComponent implements OnInit {
                     this.inProgress = false;
                     const userData = data.confirmName as LoginResult;
                     if (userData.authTokenAction === 'ConfirmName' ||
-                    userData.authTokenAction === 'Default') {
+                    userData.authTokenAction === 'Default' ||
+                    userData.authTokenAction === 'KycRequired') {
                         const typeCheck = userData.user?.type === 'Merchant';
                         if (typeCheck) {
                             this.auth.setLoginUser(userData);
-                            this.auth.socialSignOut();
                             this.router.navigateByUrl('/merchant/');
                         } else {
                             this.signupForm.reset();
                             this.errorMessage = 'Wrong account type. Try to sign in as a personal';
                         }
                     } else {
-                        this.errorMessage = 'Unable to sign in';
+                        this.errorMessage = 'Unable to sign up' + ' ' + userData.authTokenAction;
                     }
                 }, (error) => {
                     this.inProgress = false;

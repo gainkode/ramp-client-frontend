@@ -119,7 +119,7 @@ export class SignupComponent implements OnInit {
                             this.errorMessage = 'Wrong account type. Try to sign in as a merchant';
                         }
                     } else {
-                        this.errorMessage = 'Unable to sign in';
+                        this.errorMessage = 'Unable to sign up';
                     }
                 }, (error) => {
                     this.inProgress = false;

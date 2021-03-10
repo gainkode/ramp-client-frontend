@@ -59,11 +59,12 @@ export class LoginComponent {
                 this.auth.authenticateSocial(name.toLowerCase(), token).subscribe(({ data }) => {
                     this.inProgress = false;
                     const userData = data.login as LoginResult;
-                    if (userData.authTokenAction === 'Default') {
+                    this.auth.socialSignOut();
+                    if (userData.authTokenAction === 'Default' ||
+                    userData.authTokenAction === 'KycRequired') {
                         const typeCheck = userData.user?.type === 'Merchant';
                         if (typeCheck) {
                             this.auth.setLoginUser(userData);
-                            this.auth.socialSignOut();
                             this.router.navigateByUrl('/merchant/');
                         } else {
                             this.loginForm.reset();
@@ -97,7 +98,8 @@ export class LoginComponent {
                 .subscribe(({ data }) => {
                     this.inProgress = false;
                     const userData = data.login as LoginResult;
-                    if (userData.authTokenAction === 'Default') {
+                    if (userData.authTokenAction === 'Default' ||
+                    userData.authTokenAction === 'KycRequired') {
                         const typeCheck = userData.user?.type === 'Merchant';
                         if (typeCheck) {
                             this.auth.setLoginUser(userData);

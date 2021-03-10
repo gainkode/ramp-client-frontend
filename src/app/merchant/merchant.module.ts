@@ -14,10 +14,12 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MerchantGuard } from './merchant.guard';
 import { MerchantComponent } from './merchant.component';
 import { IntroMerchantComponent } from './intro.component';
+import { KycMerchantComponent } from './profile/kyc.component';
 
 const routing = RouterModule.forChild([
     { path: 'intro', component: IntroMerchantComponent },
     { path: 'main', component: MerchantComponent, canActivate: [MerchantGuard] },
+    { path: 'kyc', component: KycMerchantComponent, canActivate: [MerchantGuard] },
     { path: '**', redirectTo: 'main' }
 ]);
 
@@ -43,7 +45,7 @@ export class MaterialModule { }
     imports: [
         CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule
     ],
-    declarations: [IntroMerchantComponent, MerchantComponent],
+    declarations: [IntroMerchantComponent, MerchantComponent, KycMerchantComponent],
     providers: [MerchantGuard],
     schemas: [
       CUSTOM_ELEMENTS_SCHEMA

@@ -59,11 +59,11 @@ export class LoginComponent {
                 this.auth.authenticateSocial(name.toLowerCase(), token).subscribe(({ data }) => {
                     this.inProgress = false;
                     const userData = data.login as LoginResult;
+                    this.auth.socialSignOut();
                     if (userData.authTokenAction === 'Default') {
                         const typeCheck = userData.user?.type === 'Personal';
                         if (typeCheck) {
                             this.auth.setLoginUser(userData);
-                            this.auth.socialSignOut();
                             this.router.navigateByUrl('/personal/');
                         } else {
                             this.errorMessage = 'Wrong account type. Try to sign in as a merchant';

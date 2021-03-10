@@ -18,7 +18,13 @@ const LOGIN_POST = gql`
                   name
                   roles {name, immutable}
                   permissions { roleName, objectCode, objectName, objectDescription, fullAccess }
-                  type
+                  type,
+                  defaultCurrency,
+                  firstName,
+                  lastName,
+                  phone,
+                  mode,
+                  kycApplicantId
             }
             authTokenAction
         }
@@ -42,7 +48,13 @@ const SOCIAL_LOGIN_POST = gql`
                 name
                 roles {name, immutable}
                 permissions { roleName, objectCode, objectName, objectDescription, fullAccess }
-                type
+                type,
+                defaultCurrency,
+                firstName,
+                lastName,
+                phone,
+                mode,
+                kycApplicantId
             }
             authTokenAction
         }
@@ -89,7 +101,7 @@ const SETPASSWORD_POST = gql`
     setPassword(recaptcha: $recaptcha, password: $password, token: $token)
   }
 `;
-  
+
 const CONFIRMEMAIL_POST = gql`
   mutation ConfirmEmail($token: String!, $recaptcha: String!) {
     confirmEmail(recaptcha: $recaptcha, token: $token)
@@ -119,7 +131,13 @@ const CONFIRMNAME_POST = gql`
         name,
         type,
         roles {name,immutable},
-        permissions { roleName, objectCode, objectName, objectDescription, fullAccess }
+        permissions { roleName, objectCode, objectName, objectDescription, fullAccess },
+        defaultCurrency,
+        firstName,
+        lastName,
+        phone,
+        mode,
+        kycApplicantId
       }
       authTokenAction
     }
@@ -172,11 +190,11 @@ export class AuthService {
         }
         return from(
             this.socialAuth.signIn(providerId)
-            .then(function(data) {
-                return { user: data, error: undefined };
-            }).catch(function(data) {
-                return { user: undefined, error: data };
-            })
+                .then(function (data) {
+                    return { user: data, error: undefined };
+                }).catch(function (data) {
+                    return { user: undefined, error: data };
+                })
         );
     }
 
@@ -202,7 +220,7 @@ export class AuthService {
         });
     }
 
-    confirmName(tokenId: string, username: string, usertype: string, firstname: string, lastname: string, 
+    confirmName(tokenId: string, username: string, usertype: string, firstname: string, lastname: string,
         countrycode2: string, countrycode3: string, phoneNumber: string): Observable<any> {
         return this.apollo.mutate({
             mutation: CONFIRMNAME_POST,
@@ -280,6 +298,15 @@ export class AuthService {
         return result;
     }
 
+    isMerchantApproved(): boolean {
+        let result = false;
+        const user: User | null = this.getAuthenticatedUser();
+        if (user !== null) {
+            result = (user.kycApplicantId !== null);
+        }
+        return result;
+    }
+
     isAuthenticatedUserType(type: string): boolean {
         let result = false;
         const user: User | null = this.getAuthenticatedUser();
@@ -324,9 +351,9 @@ export class AuthService {
     }
 
     socialSignOut(): void {
-        this.socialAuth.signOut().then(function(data) {
+        this.socialAuth.signOut().then(function (data) {
             //console.log(data);
-        }).catch(function(error) {
+        }).catch(function (error) {
             console.log(error);
         });
     }
