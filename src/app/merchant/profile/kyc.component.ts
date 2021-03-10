@@ -7,7 +7,8 @@ import { LoginResult } from '../../model/generated-models';
 import { SocialUser } from 'angularx-social-login';
 
 @Component({
-    templateUrl: 'kyc.component.html'
+    templateUrl: 'kyc.component.html',
+    styleUrls: ['profile.scss']
 })
 export class KycMerchantComponent {
     inProgress = false;

@@ -1,0 +1,38 @@
+.kyc-editor-split {
+    display: flex;
+    height : 100%;
+}
+
+.kyc-editor-left-panel {
+    padding  : 1.5em;
+    width    : 55%;
+    min-width: 10em;
+}
+
+.kyc-editor-right-panel {
+    z-index         : 100;
+    background-color: moccasin;
+    padding         : 1.2em;
+    width           : 45%;
+    max-width       : 45%;
+}
+
+.kyc-editor-box {
+    margin    : 0em;
+    margin-top: 2em;
+
+    h2 {
+        margin   : auto;
+        font-size: medium;
+    }
+}
+
+.upload-icon-box {
+    padding: 3em;
+    text-align: center;
+}
+
+.upload-icon {
+    color    : #b1b1b1;
+    font-size: 3em;
+}
