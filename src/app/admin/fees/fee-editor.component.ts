@@ -7,12 +7,12 @@ import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material
 import { MatChipInputEvent } from '@angular/material/chips';
 import {
     TargetParams, CommonTargetValue, FeeScheme,
-    AccountTypeFilterList, CountryFilterList, AffiliateIdFilterList, AccountIdFilterList, WidgetFilterList,
-    PaymentInstrumentList, TransactionTypeList, TargetFilterList, PaymentProviderList
+    AccountTypeFilterList, CountryFilterList, AffiliateIdFilterList, AccountIdFilterList, WidgetFilterList
 } from '../../model/fee-scheme.model';
 import {
     FeeSettingsTargetFilterType, PaymentInstrument, PaymentProvider, TransactionType
 } from '../../model/generated-models';
+import { PaymentInstrumentList, PaymentProviderList, TargetFilterList, TransactionTypeList } from 'src/app/model/payment.model';
 
 @Component({
     selector: 'fee-editor',

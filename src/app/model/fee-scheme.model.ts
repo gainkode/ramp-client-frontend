@@ -1,9 +1,10 @@
 import { CountryCodes, getCountry, getCountryByCode3 } from './country-code.model';
-
 import {
     SettingsFee, PaymentInstrument, PaymentProvider, TransactionType,
     FeeSettingsTargetFilterType
 } from "./generated-models";
+import { PaymentInstrumentList, PaymentProviderList,
+    TargetFilterList, TransactionTypeList } from './payment.model';
 
 export class TargetParams {
     title: string = '';
@@ -50,58 +51,6 @@ export const AccountTypeFilterList: CommonTargetValue[] = [
     { title: 'Personal', imgClass: '', imgSource: '' },
     { title: 'Merchant', imgClass: '', imgSource: '' }
 ];
-
-export class PaymentInstrumentView {
-    id!: PaymentInstrument;
-    name: string = '';
-}
-
-export class PaymentProviderView {
-    id!: PaymentProvider;
-    name: string = '';
-}
-
-export class TransactionTypeView {
-    id!: TransactionType;
-    name: string = '';
-}
-
-export class TargetFilterTypeView {
-    id!: FeeSettingsTargetFilterType;
-    name: string = '';
-}
-
-export const PaymentInstrumentList: Array<PaymentInstrumentView> = [
-    { id: PaymentInstrument.Apm, name: 'APM' },
-    { id: PaymentInstrument.Bitstamp, name: 'Bitstamp' },
-    { id: PaymentInstrument.CreditCard, name: 'Credit card' },
-    { id: PaymentInstrument.Received, name: 'Received' },
-    { id: PaymentInstrument.Send, name: 'Send' },
-    { id: PaymentInstrument.WireTransfer, name: 'Wire transfer' }
-]
-
-export const PaymentProviderList: Array<PaymentProviderView> = [
-    { id: PaymentProvider.Bank, name: 'Bank' },
-    { id: PaymentProvider.Skrill, name: 'Skrill' },
-    { id: PaymentProvider.Sofort, name: 'Sofort' },
-    { id: PaymentProvider.Totalprocessing, name: 'Total processing' }
-]
-
-export const TransactionTypeList: Array<TransactionTypeView> = [
-    { id: TransactionType.Deposit, name: 'Deposit' },
-    { id: TransactionType.Exchange, name: 'Exchange' },
-    { id: TransactionType.System, name: 'System' },
-    { id: TransactionType.Transfer, name: 'Transfer' },
-    { id: TransactionType.Withdrawal, name: 'Withdrawal' }
-]
-
-export const TargetFilterList: Array<TargetFilterTypeView> = [
-    { id: FeeSettingsTargetFilterType.AffiliateId, name: 'Affiliate identifier' },
-    { id: FeeSettingsTargetFilterType.AccountId, name: 'Account identifier' },
-    { id: FeeSettingsTargetFilterType.AccountType, name: 'Account type' },
-    { id: FeeSettingsTargetFilterType.Country, name: 'Country' },
-    { id: FeeSettingsTargetFilterType.InitiateFrom, name: 'Initiate from ...' }
-]
 
 export class FeeScheme {
     id!: string;
@@ -158,11 +107,11 @@ export class FeeScheme {
         });
     }
 
-    get TargetName(): string {
+    get targetName(): string {
         return TargetFilterList.find(x => x.id === this.target)?.name as string;
     }
 
-    get TransactionTypeList(): string {
+    get transactionTypeList(): string {
         let s = '';
         let p = false;
         this.trxType.forEach(x => {
@@ -173,7 +122,7 @@ export class FeeScheme {
         return s;
     }
 
-    get InstrumentList(): string {
+    get instrumentList(): string {
         let s = '';
         let p = false;
         this.instrument.forEach(x => {
@@ -184,7 +133,7 @@ export class FeeScheme {
         return s;
     }
 
-    get ProviderList(): string {
+    get providerList(): string {
         let s = '';
         let p = false;
         this.provider.forEach(x => {

@@ -6,7 +6,13 @@ import { FeeScheme } from '../model/fee-scheme.model';
 
 const GET_FEE_SETTINGS_POST = gql`
   query GetSettingsFee {
-    getSettingsFee(filter: "", orderBy: "name") {
+    getSettingsFee(
+      filter: "", 
+      orderBy: 
+      [
+        {orderBy: "default", desc: false}, 
+        {orderBy: "name", desc: false}
+      ]) {
       count,
       list {
         settingsFeeId,

@@ -35,14 +35,18 @@ export class AdminComponent {
 
     onActivate(component: any) {
         this.changeEditModeRef = component.changeEditMode;
-        this.changeEditModeRef.subscribe((event: any) => {
-            const mode = event as boolean;
-            this.editMode = mode;
-        });
+        if (this.changeEditModeRef !== undefined) {
+            this.changeEditModeRef.subscribe((event: any) => {
+                const mode = event as boolean;
+                this.editMode = mode;
+            });
+        }
     }
 
     onDeactivate(component: any) {
-        this.changeEditModeRef.unsubscribe();
+        if (this.changeEditModeRef !== undefined) {
+            this.changeEditModeRef.unsubscribe();
+        }
     }
 
     logout(): void {
