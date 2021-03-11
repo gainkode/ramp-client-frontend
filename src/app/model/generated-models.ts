@@ -35,6 +35,8 @@ export type Query = {
   userByOAuthAppId: User;
   userByReferralCode: User;
   getUsers: UserListResult;
+  myKycInfo?: Maybe<KycInfo>;
+  userKycInfo?: Maybe<KycInfo>;
 };
 
 
@@ -110,6 +112,11 @@ export type QueryGetUsersArgs = {
   orderBy?: Maybe<Array<OrderBy>>;
 };
 
+
+export type QueryUserKycInfoArgs = {
+  userId?: Maybe<Scalars['String']>;
+};
+
 export type SettingsCommon = {
   __typename?: 'SettingsCommon';
   liquidityProvider?: Maybe<Scalars['String']>;
@@ -120,17 +127,7 @@ export type SettingsCommon = {
 export type SettingsKyc = {
   __typename?: 'SettingsKyc';
   kycMaxFileSize?: Maybe<Scalars['Int']>;
-  kycDocumentTypes?: Maybe<Array<KycDocumentType>>;
   kycRejectedLabels?: Maybe<Array<KycRejectedLabel>>;
-};
-
-export type KycDocumentType = {
-  __typename?: 'KycDocumentType';
-  code?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  description?: Maybe<Scalars['String']>;
-  subTypes?: Maybe<Array<KycDocumentType>>;
-  options?: Maybe<Array<Scalars['String']>>;
 };
 
 export type KycRejectedLabel = {
@@ -259,17 +256,12 @@ export type User = {
   hasEmailAuth?: Maybe<Scalars['Boolean']>;
   changePasswordRequired?: Maybe<Scalars['Boolean']>;
   referralCode?: Maybe<Scalars['String']>;
-  kycApplicantId?: Maybe<Scalars['String']>;
-  kycCreateApplicantDate?: Maybe<Scalars['DateTime']>;
-  kycCreateApplicantDetails?: Maybe<Scalars['String']>;
-  kycFiles?: Maybe<Array<Scalars['String']>>;
-  kycType?: Maybe<Scalars['String']>;
+  kycProvider?: Maybe<Scalars['String']>;
   kycValidationTierId?: Maybe<Scalars['String']>;
-  kycValidationLastStatus?: Maybe<Scalars['String']>;
-  kycValidationResult?: Maybe<Scalars['Boolean']>;
-  kycValidationResultUpdateRequired?: Maybe<Scalars['Boolean']>;
-  kycValidationDate?: Maybe<Scalars['DateTime']>;
-  kycValidationDetails?: Maybe<Scalars['String']>;
+  kycApplicantId?: Maybe<Scalars['String']>;
+  kycValid?: Maybe<Scalars['Boolean']>;
+  kycStatus?: Maybe<KycStatus>;
+  kycStatusUpdateRequired?: Maybe<Scalars['Boolean']>;
   state?: Maybe<UserState>;
 };
 
@@ -308,6 +300,13 @@ export type UserRolePermission = {
   objectDescription: Scalars['String'];
   fullAccess: Scalars['Boolean'];
 };
+
+export enum KycStatus {
+  Unknown = 'Unknown',
+  Init = 'Init',
+  Pending = 'Pending',
+  Completed = 'Completed'
+}
 
 export type UserState = {
   __typename?: 'UserState';
@@ -368,6 +367,60 @@ export type UserListResult = {
   users?: Maybe<Array<User>>;
 };
 
+export type KycInfo = {
+  __typename?: 'KycInfo';
+  applicant?: Maybe<KycApplicant>;
+  appliedDocuments?: Maybe<Array<KycAppliedDocument>>;
+  requiredDocuments?: Maybe<Array<KycDocumentType>>;
+};
+
+export type KycApplicant = {
+  __typename?: 'KycApplicant';
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
+  countryCode3?: Maybe<Scalars['String']>;
+  kyc?: Maybe<KycReview>;
+  details?: Maybe<Array<StringMap>>;
+};
+
+export type KycReview = {
+  __typename?: 'KycReview';
+  createDate?: Maybe<Scalars['DateTime']>;
+  reviewDate?: Maybe<Scalars['DateTime']>;
+  result?: Maybe<Scalars['Boolean']>;
+  status?: Maybe<KycStatus>;
+};
+
+export type StringMap = {
+  __typename?: 'StringMap';
+  key: Scalars['String'];
+  value?: Maybe<Scalars['String']>;
+};
+
+export type KycAppliedDocument = {
+  __typename?: 'KycAppliedDocument';
+  code: Scalars['String'];
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  issuedDate?: Maybe<Scalars['String']>;
+  validUntil?: Maybe<Scalars['String']>;
+  number?: Maybe<Scalars['String']>;
+  countryCode3?: Maybe<Scalars['String']>;
+  details?: Maybe<Array<StringMap>>;
+};
+
+export type KycDocumentType = {
+  __typename?: 'KycDocumentType';
+  code?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  subTypes?: Maybe<Array<KycDocumentType>>;
+  options?: Maybe<Array<Scalars['String']>>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   foo: Scalars['String'];
@@ -380,6 +433,8 @@ export type Mutation = {
   deleteSettingsCost: SettingsCost;
   updateMe?: Maybe<User>;
   updateUser?: Maybe<User>;
+  assignRole?: Maybe<User>;
+  removeRole?: Maybe<User>;
   deleteUser?: Maybe<User>;
   signup: LoginResult;
   login: LoginResult;
@@ -446,6 +501,18 @@ export type MutationUpdateMeArgs = {
 export type MutationUpdateUserArgs = {
   userId: Scalars['ID'];
   user?: Maybe<UserInput>;
+};
+
+
+export type MutationAssignRoleArgs = {
+  userId: Scalars['ID'];
+  roleCodes?: Maybe<Array<Scalars['String']>>;
+};
+
+
+export type MutationRemoveRoleArgs = {
+  userId: Scalars['ID'];
+  roleCodes?: Maybe<Array<Scalars['String']>>;
 };
 
 
@@ -724,8 +791,7 @@ export type UserShort = {
   birthday?: Maybe<Scalars['DateTime']>;
   countryCode2?: Maybe<Scalars['String']>;
   countryCode3?: Maybe<Scalars['String']>;
-  valid?: Maybe<Scalars['Boolean']>;
-  validationDate?: Maybe<Scalars['DateTime']>;
+  kycValid?: Maybe<Scalars['Boolean']>;
 };
 
 export type SettingsResult = {

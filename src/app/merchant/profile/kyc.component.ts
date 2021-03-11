@@ -13,11 +13,17 @@ import { SocialUser } from 'angularx-social-login';
 export class KycMerchantComponent {
     inProgress = false;
     errorMessage = '';
-    
+
     constructor(private auth: AuthService, private errorHandler: ErrorService,
         private formBuilder: FormBuilder, private router: Router) { }
 
+    // temp
+    logout(): void {
+        this.auth.logout();
+    }
+    // temp
+
     onSubmit(): void {
-        
+
     }
 }

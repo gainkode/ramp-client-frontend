@@ -86,6 +86,33 @@ export class ErrorService {
             case 'user.update_user_data_error':
                 result = 'Wrong user data for update';
                 break;
+            case 'core.insufficient_funds':
+                result = 'Insufficient funds';
+                break;
+            case 'core.fetch_address_balance_error':
+                result = 'Unable to fetch balance';
+                break;
+            case 'core.liquidity_crypto_not_supported':
+                result = 'Liquidity crypto is not supported';
+                break;
+            case 'core.liquidity_create_order_error':
+                result = 'Unable to create a new order';
+                break;
+            case 'core.liquidity_fetch_crypto_rate_error':
+                result = 'Crypto rate error';
+                break;
+            case 'core.liquidity_fetch_order_status_error':
+                result = 'Unable to get order status';
+                break;
+            case 'core.kyc_create_applicant_error':
+                result = 'Unable to create a new applicant';
+                break;
+            case 'core.kyc_add_document_error':
+                result = 'Document upload error';
+                break;
+            case 'core.kyc_get_applicant_information_error':
+                result = 'Unable to get applicant information';
+                break;
         }
         return result;
     }

@@ -73,7 +73,7 @@ export class AppModule {
             });
           }
           err.message = err.extensions?.code;
-          console.log(err.message);
+          console.log(`Error code: ${err.message}`);
         } else {
           err.message = 'no_code';
         }

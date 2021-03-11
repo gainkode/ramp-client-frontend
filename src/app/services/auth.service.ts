@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
 import { from, Observable } from 'rxjs';
 import { SocialAuthService, FacebookLoginProvider, GoogleLoginProvider, SocialUser } from "angularx-social-login";
-import { LoginResult, User } from '../model/generated-models';
+import { KycStatus, LoginResult, User, UserType } from '../model/generated-models';
 import { environment } from 'src/environments/environment';
 
 const LOGIN_POST = gql`
@@ -302,7 +302,7 @@ export class AuthService {
         let result = false;
         const user: User | null = this.getAuthenticatedUser();
         if (user !== null) {
-            result = (user.kycApplicantId !== null);
+            result = (user.type === UserType.Merchant && user.kycStatus !== KycStatus.Completed);
         }
         return result;
     }

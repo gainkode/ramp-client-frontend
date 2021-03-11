@@ -11,7 +11,7 @@ export class MerchantGuard {
             this.router.navigateByUrl('/auth/login/merchant');
             return false;
         } else {
-            // If merchnat is not approved, they must be redirected to the KYC page
+            // If merchant KYC is not approved, they must be redirected to the KYC page
             if (!this.auth.isMerchantApproved()) {
                 if (route.url.length > 0) {
                     if (route.url[0].path !== 'kyc') {

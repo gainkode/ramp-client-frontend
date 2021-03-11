@@ -56,10 +56,11 @@ export class LoginComponent {
                 } else if (name === 'Facebook') {
                     token = user.authToken;
                 }
+                this.auth.socialSignOut();
                 this.auth.authenticateSocial(name.toLowerCase(), token).subscribe(({ data }) => {
                     this.inProgress = false;
                     const userData = data.login as LoginResult;
-                    this.auth.socialSignOut();
+                    console.log(userData);
                     if (userData.authTokenAction === 'Default' ||
                     userData.authTokenAction === 'KycRequired') {
                         const typeCheck = userData.user?.type === 'Merchant';
@@ -76,7 +77,7 @@ export class LoginComponent {
                         this.errorMessage = `Invalid authentication via ${name}`;
                     }
                 }, (error) => {
-                    this.auth.socialSignOut();
+                    console.log(error);
                     this.inProgress = false;
                     this.errorMessage = this.errorHandler.getError(
                         error.message,
