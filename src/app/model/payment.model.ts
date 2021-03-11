@@ -1,5 +1,5 @@
 import {
-    PaymentInstrument, PaymentProvider, TransactionType, FeeSettingsTargetFilterType
+    PaymentInstrument, PaymentProvider, TransactionType, FeeSettingsTargetFilterType, CostSettingsFilterType
 } from "./generated-models";
 
 export class PaymentInstrumentView {
@@ -17,8 +17,13 @@ export class TransactionTypeView {
     name: string = '';
 }
 
-export class TargetFilterTypeView {
+export class FeeTargetFilterTypeView {
     id!: FeeSettingsTargetFilterType;
+    name: string = '';
+}
+
+export class CostTargetFilterTypeView {
+    id!: CostSettingsFilterType;
     name: string = '';
 }
 
@@ -46,7 +51,7 @@ export const TransactionTypeList: Array<TransactionTypeView> = [
     { id: TransactionType.Withdrawal, name: 'Withdrawal' }
 ]
 
-export const TargetFilterList: Array<TargetFilterTypeView> = [
+export const FeeTargetFilterList: Array<FeeTargetFilterTypeView> = [
     { id: FeeSettingsTargetFilterType.AffiliateId, name: 'Affiliate identifier' },
     { id: FeeSettingsTargetFilterType.AccountId, name: 'Account identifier' },
     { id: FeeSettingsTargetFilterType.AccountType, name: 'Account type' },
@@ -54,3 +59,7 @@ export const TargetFilterList: Array<TargetFilterTypeView> = [
     { id: FeeSettingsTargetFilterType.InitiateFrom, name: 'Initiate from ...' }
 ]
 
+export const CostTargetFilterList: Array<CostTargetFilterTypeView> = [
+    { id: CostSettingsFilterType.Country, name: 'Country' },
+    { id: CostSettingsFilterType.Psp, name: 'PSP' }
+]

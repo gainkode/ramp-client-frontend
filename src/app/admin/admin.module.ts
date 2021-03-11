@@ -22,6 +22,7 @@ import { AdminComponent } from './admin.component';
 import { DashboardComponent } from './dashboard.component';
 import { FeesComponent } from './fees/fees.component';
 import { FeeEditorComponent } from './fees/fee-editor.component';
+import { CostsComponent } from './costs/costs.component';
 
 const routing = RouterModule.forChild([
     {
@@ -29,7 +30,8 @@ const routing = RouterModule.forChild([
         component: AdminComponent,
         children: [
             { path: 'dashboard', component: DashboardComponent, canActivate: [AdminGuard] },
-            { path: 'fees', component: FeesComponent, canActivate: [AdminGuard] }
+            { path: 'fees', component: FeesComponent, canActivate: [AdminGuard] },
+            { path: 'costs', component: CostsComponent, canActivate: [AdminGuard] }
         ],
         canActivate: [AdminGuard]
     },
@@ -64,7 +66,11 @@ export class MaterialModule { }
     imports: [
         CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule
     ],
-    declarations: [AdminComponent, DashboardComponent, FeesComponent, FeeEditorComponent],
+    declarations: [
+        AdminComponent,
+        DashboardComponent,
+        FeesComponent, FeeEditorComponent,
+        CostsComponent],
     providers: [AdminGuard],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

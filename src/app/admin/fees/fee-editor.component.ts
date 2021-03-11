@@ -6,13 +6,14 @@ import { map, startWith } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import {
-    TargetParams, CommonTargetValue, FeeScheme,
-    AccountTypeFilterList, CountryFilterList, AffiliateIdFilterList, AccountIdFilterList, WidgetFilterList
+    FeeScheme, AccountTypeFilterList, CountryFilterList, AffiliateIdFilterList,
+    AccountIdFilterList, WidgetFilterList
 } from '../../model/fee-scheme.model';
 import {
     FeeSettingsTargetFilterType, PaymentInstrument, PaymentProvider, TransactionType
 } from '../../model/generated-models';
-import { PaymentInstrumentList, PaymentProviderList, TargetFilterList, TransactionTypeList } from 'src/app/model/payment.model';
+import { PaymentInstrumentList, PaymentProviderList, FeeTargetFilterList, TransactionTypeList } from 'src/app/model/payment.model';
+import { CommonTargetValue, TargetParams } from 'src/app/model/common.model';
 
 @Component({
     selector: 'fee-editor',
@@ -43,7 +44,7 @@ export class FeeEditorComponent implements OnInit {
     separatorKeysCodes: number[] = [ENTER, COMMA];
     filteredTargetValues: Observable<CommonTargetValue[]> | undefined;
 
-    targets = TargetFilterList;
+    targets = FeeTargetFilterList;
     transactionTypes = TransactionTypeList;
     instruments = PaymentInstrumentList;
     providers = PaymentProviderList;
