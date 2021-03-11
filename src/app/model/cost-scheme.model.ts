@@ -116,36 +116,36 @@ export class CostScheme {
 }
 
 export class CostShemeTerms {
-    transactionFees!: number;
-    minTransactionFee!: number;
+    mdr!: number;
+    transactionCost!: number;
     rollingReserves!: number;
     rollingReservesDays!: number;
-    chargebackFees!: number;
-    monthlyFees!: number;
-    minMonthlyFees!: number;
+    chargebackCost!: number;
+    monthlyCost!: number;
+    minMonthlyCost!: number;
 
     constructor(data: string) {
         if (data !== '') {
             const terms = JSON.parse(data);
-            this.transactionFees = terms.Ttransaction_fee;
-            this.minTransactionFee = terms.Min_transaction_fee;
+            this.mdr = terms.Min_transaction_cost;
+            this.transactionCost = terms.Transaction_cost;
             this.rollingReserves = terms.Rolling_reserves;
             this.rollingReservesDays = terms.Rolling_reserves_days;
-            this.chargebackFees = terms.Chargeback_fees;
-            this.monthlyFees = terms.Monthly_fees;
-            this.minMonthlyFees = terms.Min_monthly_fees;
+            this.chargebackCost = terms.Chargeback_cost;
+            this.monthlyCost = terms.Monthly_cost;
+            this.minMonthlyCost = terms.Min_monthly_cost;
         }
     }
 
     getObject(): string {
         return JSON.stringify({
-            Ttransaction_fee: this.transactionFees,
-            Min_transaction_fee: this.minTransactionFee,
+            Transaction_cost: this.transactionCost,
+            mdr: this.mdr,
             Rolling_reserves: this.rollingReserves,
             Rolling_reserves_days: this.rollingReservesDays,
-            Chargeback_fees: this.chargebackFees,
-            Monthly_fees: this.monthlyFees,
-            Min_monthly_fees: this.minMonthlyFees
+            Chargeback_cost: this.chargebackCost,
+            Monthly_cost: this.monthlyCost,
+            Min_monthly_cost: this.minMonthlyCost
         });
     }
 }

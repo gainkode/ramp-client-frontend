@@ -23,6 +23,7 @@ import { DashboardComponent } from './dashboard.component';
 import { FeesComponent } from './fees/fees.component';
 import { FeeEditorComponent } from './fees/fee-editor.component';
 import { CostsComponent } from './costs/costs.component';
+import { CostEditorComponent } from './costs/cost-editor.component';
 
 const routing = RouterModule.forChild([
     {
@@ -70,7 +71,7 @@ export class MaterialModule { }
         AdminComponent,
         DashboardComponent,
         FeesComponent, FeeEditorComponent,
-        CostsComponent],
+        CostsComponent, CostEditorComponent],
     providers: [AdminGuard],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { EmptyObject } from 'apollo-angular/types';
 import { Observable } from 'rxjs';
+import { CostScheme } from '../model/cost-scheme.model';
 import { FeeScheme } from '../model/fee-scheme.model';
 
 const GET_FEE_SETTINGS_POST = gql`
@@ -126,6 +127,62 @@ const GET_COST_SETTINGS_POST = gql`
   }
 `;
 
+const ADD_SETTINGS_COST_POST = gql`
+mutation AddSettingsCost(
+  $name: String!, 
+  $description: String!, 
+  $targetFilterType: CostSettingsFilterType!,
+  $targetFilterValues: [String!],
+  $targetInstruments: [PaymentInstrument!],
+  $targetTransactionTypes: [TransactionType!],
+  $targetPaymentProviders: [PaymentProvider!],
+  $terms: String!
+) {
+  addSettingsCost(settings: {
+    name: $name,
+    description: $description,
+    targetFilterType: $targetFilterType,
+    targetFilterValues: $targetFilterValues,
+    targetInstruments: $targetInstruments,
+    targetTransactionTypes: $targetTransactionTypes,
+    targetPaymentProviders: $targetPaymentProviders,
+    terms: $terms
+  }) {
+    settingsCostId
+  }
+}
+`;
+
+const UPDATE_SETTINGS_COST_POST = gql`
+mutation UpdateSettingsCost(
+  $settingsId: ID!,
+  $name: String!, 
+  $description: String!, 
+  $targetFilterType: CostSettingsFilterType!,
+  $targetFilterValues: [String!],
+  $targetInstruments: [PaymentInstrument!],
+  $targetTransactionTypes: [TransactionType!],
+  $targetPaymentProviders: [PaymentProvider!],
+  $terms: String!
+) {
+  updateSettingsCost(
+    settingsId: $settingsId,
+    settings: {
+      name: $name,
+      description: $description,
+      targetFilterType: $targetFilterType,
+      targetFilterValues: $targetFilterValues,
+      targetInstruments: $targetInstruments,
+      targetTransactionTypes: $targetTransactionTypes,
+      targetPaymentProviders: $targetPaymentProviders,
+      terms: $terms
+    }
+  ) {
+    settingsCostId
+  }
+}
+`;
+
 const DELETE_SETTINGS_COST_POST = gql`
 mutation DeleteSettingsCost($settingsId: ID!) {
   deleteSettingsCost(settingsId: $settingsId) {
@@ -184,6 +241,38 @@ export class AdminDataService {
           targetPaymentProviders: settings.provider,
           terms: settings.terms.getObject(),
           wireDetails: settings.details.getObject()
+        }
+      });
+  }
+
+  saveCostSettings(settings: CostScheme, create: boolean): Observable<any> {
+    return create ?
+      this.apollo.mutate({
+        mutation: ADD_SETTINGS_COST_POST,
+        variables: {
+          name: settings.name,
+          description: settings.description,
+          targetFilterType: settings.target,
+          targetFilterValues: settings.targetValues,
+          targetInstruments: settings.instrument,
+          targetTransactionTypes: settings.trxType,
+          targetPaymentProviders: settings.provider,
+          terms: settings.terms.getObject()
+        }
+      })
+      :
+      this.apollo.mutate({
+        mutation: UPDATE_SETTINGS_COST_POST,
+        variables: {
+          settingsId: settings.id,
+          name: settings.name,
+          description: settings.description,
+          targetFilterType: settings.target,
+          targetFilterValues: settings.targetValues,
+          targetInstruments: settings.instrument,
+          targetTransactionTypes: settings.trxType,
+          targetPaymentProviders: settings.provider,
+          terms: settings.terms.getObject()
         }
       });
   }

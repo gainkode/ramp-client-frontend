@@ -153,21 +153,21 @@ export class CostsComponent implements OnInit, OnDestroy {
 
   onSaved(scheme: CostScheme) {
     this.editorErrorMessage = '';
-    // this.inProgress = true;
-    // this.adminService.saveCostSettings(scheme, this.createScheme).subscribe(({ data }) => {
-    //   this.inProgress = false;
-    //   this.setEditMode(false);
-    //   this.showEditor(null, false, false);
-    //   this.createScheme = false;
-    //   this.refresh();
-    // }, (error) => {
-    //   this.inProgress = false;
-    //   console.log(error);
-    //   if (this.auth.token !== '') {
-    //     this.editorErrorMessage = this.errorHandler.getError(error.message, 'Unable to save cost settings');
-    //   } else {
-    //     this.router.navigateByUrl('/');
-    //   }
-    // });
+    this.inProgress = true;
+    this.adminService.saveCostSettings(scheme, this.createScheme).subscribe(({ data }) => {
+      this.inProgress = false;
+      this.setEditMode(false);
+      this.showEditor(null, false, false);
+      this.createScheme = false;
+      this.refresh();
+    }, (error) => {
+      this.inProgress = false;
+      console.log(error);
+      if (this.auth.token !== '') {
+        this.editorErrorMessage = this.errorHandler.getError(error.message, 'Unable to save cost settings');
+      } else {
+        this.router.navigateByUrl('/');
+      }
+    });
   }
 }
