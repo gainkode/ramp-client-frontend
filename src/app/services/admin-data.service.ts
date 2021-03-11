@@ -99,6 +99,33 @@ mutation DeleteSettingsFee($settingsId: ID!) {
 }
 `;
 
+const GET_COST_SETTINGS_POST = gql`
+  query GetSettingsCost {
+    getSettingsCost(
+      filter: "", 
+      orderBy: 
+      [
+        {orderBy: "default", desc: false}, 
+        {orderBy: "name", desc: false}
+      ]) {
+      count,
+      list {
+        targetPaymentProviders,
+        settingsCostId,
+        name,
+        default,      
+        description,
+        terms,
+        targetFilterType,
+        targetFilterValues,
+        targetInstruments,
+        targetTransactionTypes,
+        targetPaymentProviders
+      }
+    }
+  }
+`;
+
 @Injectable()
 export class AdminDataService {
   constructor(private apollo: Apollo) { }
@@ -106,6 +133,14 @@ export class AdminDataService {
   getFeeSettings(): QueryRef<any, EmptyObject> {
     return this.apollo.watchQuery<any>({
       query: GET_FEE_SETTINGS_POST,
+      pollInterval: 30000,
+      fetchPolicy: 'network-only'
+    });
+  }
+
+  getCostSettings(): QueryRef<any, EmptyObject> {
+    return this.apollo.watchQuery<any>({
+      query: GET_COST_SETTINGS_POST,
       pollInterval: 30000,
       fetchPolicy: 'network-only'
     });
