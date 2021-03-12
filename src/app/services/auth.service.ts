@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Apollo, gql } from 'apollo-angular';
+import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { from, Observable } from 'rxjs';
 import { SocialAuthService, FacebookLoginProvider, GoogleLoginProvider, SocialUser } from "angularx-social-login";
 import { KycStatus, LoginResult, User, UserType } from '../model/generated-models';
 import { environment } from 'src/environments/environment';
+import { EmptyObject } from 'apollo-angular/types';
 
 const LOGIN_POST = gql`
   mutation Login($recaptcha: String!, $email: String!, $password: String!) {
@@ -24,7 +25,8 @@ const LOGIN_POST = gql`
                   lastName,
                   phone,
                   mode,
-                  kycApplicantId
+                  kycApplicantId,
+                  kycStatus
             }
             authTokenAction
         }
@@ -43,18 +45,19 @@ const SOCIAL_LOGIN_POST = gql`
         oAuthToken: $oauthtoken) {
             authToken
             user {
-                userId
-                email
-                name
-                roles {name, immutable}
-                permissions { roleName, objectCode, objectName, objectDescription, fullAccess }
+                userId,
+                email,
+                name,
+                roles {name, immutable},
+                permissions { roleName, objectCode, objectName, objectDescription, fullAccess },
                 type,
                 defaultCurrency,
                 firstName,
                 lastName,
                 phone,
                 mode,
-                kycApplicantId
+                kycApplicantId,
+                kycStatus
             }
             authTokenAction
         }
@@ -137,15 +140,55 @@ const CONFIRMNAME_POST = gql`
         lastName,
         phone,
         mode,
-        kycApplicantId
+        kycApplicantId,
+        kycStatus
       }
       authTokenAction
     }
   }
 `;
 
+const GET_MY_KYC_INFO_POST = gql`
+  query MyKycInfo {
+    myKycInfo {
+        applicant {
+            kyc { status }
+        },
+        appliedDocuments {
+            code, firstName, lastName, issuedDate, validUntil, number
+        },
+        requiredDocuments {
+            code,
+            type,
+            name,
+            description,
+            subTypes { code, type, name, description },
+            options
+        }
+    }
+  }
+`;
+
 @Injectable()
 export class AuthService {
+    get authenticated(): boolean {
+        return this.token !== '';
+    }
+
+    get user(): User | null {
+        let user: User | null = null;
+        const userStr = sessionStorage.getItem('currentUser');
+        if (userStr !== null) {
+            user = JSON.parse(userStr);
+        }
+        return user;
+    }
+
+    get token(): string {
+        const tokenData: string | null = sessionStorage.getItem('currentToken');
+        return (tokenData === null) ? '' : tokenData;
+    }
+
     constructor(private apollo: Apollo, private socialAuth: SocialAuthService) { }
 
     refreshToken(): Observable<any> {
@@ -276,19 +319,6 @@ export class AuthService {
         sessionStorage.setItem('currentToken', login.authToken as string);
     }
 
-    get authenticated(): boolean {
-        return this.token !== '';
-    }
-
-    get user(): User | null {
-        let user: User | null = null;
-        const userStr = sessionStorage.getItem('currentUser');
-        if (userStr !== null) {
-            user = JSON.parse(userStr);
-        }
-        return user;
-    }
-
     private getAuthenticatedUser(): User | null {
         let result: User | null = null;
         const userData: string | null = sessionStorage.getItem('currentUser');
@@ -302,7 +332,7 @@ export class AuthService {
         let result = false;
         const user: User | null = this.getAuthenticatedUser();
         if (user !== null) {
-            result = (user.type === UserType.Merchant && user.kycStatus !== KycStatus.Completed);
+            result = (user.type === UserType.Merchant && user.kycStatus === KycStatus.Completed);
         }
         return result;
     }
@@ -345,9 +375,12 @@ export class AuthService {
         return result;
     }
 
-    get token(): string {
-        const tokenData: string | null = sessionStorage.getItem('currentToken');
-        return (tokenData === null) ? '' : tokenData;
+    getMyKycInfo(): QueryRef<any, EmptyObject> {
+        return this.apollo.watchQuery<any>({
+            query: GET_MY_KYC_INFO_POST,
+            pollInterval: 30000,
+            fetchPolicy: 'network-only'
+        });
     }
 
     socialSignOut(): void {

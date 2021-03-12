@@ -39,7 +39,6 @@ export class FeesComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.inProgress = true;
     this._settingsSubscription = this.adminService.getFeeSettings().valueChanges.subscribe(({ data }) => {
-      this.inProgress = false;
       const settings = data.getSettingsFee as SettingsFeeListResult;
       let itemCount = 0;
       if (settings !== null) {
@@ -48,6 +47,7 @@ export class FeesComponent implements OnInit, OnDestroy {
           this.schemes = settings?.list?.map((val) => new FeeScheme(val)) as FeeScheme[];
         }
       }
+      this.inProgress = false;
     }, (error) => {
       this.inProgress = false;
       if (this.auth.token !== '') {

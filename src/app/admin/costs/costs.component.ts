@@ -39,7 +39,6 @@ export class CostsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.inProgress = true;
     this._settingsSubscription = this.adminService.getCostSettings().valueChanges.subscribe(({ data }) => {
-      this.inProgress = false;
       const settings = data.getSettingsFee as SettingsCostListResult;
       let itemCount = 0;
       if (settings !== null) {
@@ -48,6 +47,7 @@ export class CostsComponent implements OnInit, OnDestroy {
           this.schemes = settings?.list?.map((val) => new CostScheme(val)) as CostScheme[];
         }
       }
+      this.inProgress = false;
     }, (error) => {
       this.inProgress = false;
       if (this.auth.token !== '') {
@@ -150,7 +150,7 @@ export class CostsComponent implements OnInit, OnDestroy {
       }
     });
   }
-
+     
   onSaved(scheme: CostScheme) {
     this.editorErrorMessage = '';
     this.inProgress = true;

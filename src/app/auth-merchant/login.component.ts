@@ -60,7 +60,6 @@ export class LoginComponent {
                 this.auth.authenticateSocial(name.toLowerCase(), token).subscribe(({ data }) => {
                     this.inProgress = false;
                     const userData = data.login as LoginResult;
-                    console.log(userData);
                     if (userData.authTokenAction === 'Default' ||
                     userData.authTokenAction === 'KycRequired') {
                         const typeCheck = userData.user?.type === 'Merchant';
