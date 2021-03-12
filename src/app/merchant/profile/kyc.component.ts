@@ -4,8 +4,7 @@ import { AuthService } from '../../services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { Subscription } from 'rxjs';
 import { Validators, FormBuilder } from '@angular/forms';
-import { LoginResult } from '../../model/generated-models';
-import { SocialUser } from 'angularx-social-login';
+import { KycInfo } from '../../model/generated-models';
 
 @Component({
     templateUrl: 'kyc.component.html',
@@ -23,7 +22,7 @@ export class KycMerchantComponent implements OnInit, OnDestroy {
         this.inProgress = true;
         this._kycSubscription = this.auth.getMyKycInfo().valueChanges.subscribe(({ data }) => {
             console.log(data);
-            //const settings = data.myKycInfo as KycInfo;
+            const settings = data.myKycInfo as KycInfo;
             this.inProgress = false;
         }, (error) => {
             this.inProgress = false;

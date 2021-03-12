@@ -62,6 +62,7 @@ export class AppModule {
         if (err.extensions !== null) {
           const code = err.extensions?.code as string;
           if (code.toUpperCase() === 'UNAUTHENTICATED') {
+            console.log('UNAUTHENTICATED');
             const refreshToken = this.authService.refreshToken().toPromise();
             return fromPromise(
               refreshToken.catch(error => {
