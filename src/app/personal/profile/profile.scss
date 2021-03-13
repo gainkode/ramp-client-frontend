@@ -1,20 +1,25 @@
 .kyc-editor-split {
-    display: flex;
-    height : 100%;
+    display : flex;
+    height  : 100%;
+    overflow: auto;
 }
 
 .kyc-editor-left-panel {
     padding  : 0;
     width    : 55%;
     min-width: 10em;
+    height   : 100%;
+    overflow : auto;
 }
 
 .kyc-editor-right-panel {
     z-index         : 100;
-    background-color: mediumseagreen;
+    background-color: rgb(206, 219, 236);
     padding         : 1.2em;
     width           : 45%;
     max-width       : 45%;
+    height          : 100%;
+    overflow        : auto;
 }
 
 .kyc-editor-box {
@@ -28,7 +33,7 @@
 }
 
 .upload-icon-box {
-    padding: 3em;
+    padding   : 3em;
     text-align: center;
 }
 

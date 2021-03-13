@@ -152,38 +152,41 @@ const GET_MY_KYC_INFO_POST = gql`
 query {
     myKycInfo {
       applicant {
-        firstName
-        lastName
-        email
-        phone
-        countryCode3
-        kyc { createDate, reviewDate, result, status }
-        details { key, value }      
-      }
-      appliedDocuments {
-        code
-        firstName
-        lastName
-        issuedDate
-        validUntil
-        number
-        countryCode3
+        firstName,
+        lastName,
+        email,
+        phone,
+        countryCode3,
+        kyc { createDate, reviewDate, result, status },
         details { key, value }
       }
-      requiredDocuments {
-        code
-        type
-        name
-        description
-        options
-        subTypes {
-          code
-          type
-          name
-          description
-          options
-          subTypes { code, type, name, description, options }
-        }
+      appliedDocuments {
+        code,
+        firstName,
+        lastName,
+        issuedDate,
+        validUntil,
+        number,
+        countryCode3,
+        details { key, value }
+      }
+      requiredInfo {
+        documents {
+            code,
+            type,
+            name,
+            description,
+            subTypes {
+                code,
+                type,
+                name,
+                description,
+                options,
+                subTypes { code, type, name, description, options }
+            },
+            options
+        },
+        fields { name, required }
       }
     }
   }

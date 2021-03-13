@@ -127,6 +127,8 @@ export type SettingsCommon = {
 export type SettingsKyc = {
   __typename?: 'SettingsKyc';
   kycMaxFileSize?: Maybe<Scalars['Int']>;
+  kycBeneficiaryPositions?: Maybe<Array<Scalars['String']>>;
+  kycBeneficiaryTypes?: Maybe<Array<Scalars['String']>>;
   kycRejectedLabels?: Maybe<Array<KycRejectedLabel>>;
 };
 
@@ -371,7 +373,7 @@ export type KycInfo = {
   __typename?: 'KycInfo';
   applicant?: Maybe<KycApplicant>;
   appliedDocuments?: Maybe<Array<KycAppliedDocument>>;
-  requiredDocuments?: Maybe<Array<KycDocumentType>>;
+  requiredInfo?: Maybe<KycRequiredInfo>;
 };
 
 export type KycApplicant = {
@@ -411,6 +413,12 @@ export type KycAppliedDocument = {
   details?: Maybe<Array<StringMap>>;
 };
 
+export type KycRequiredInfo = {
+  __typename?: 'KycRequiredInfo';
+  documents?: Maybe<Array<KycDocumentType>>;
+  fields?: Maybe<Array<KycInfoField>>;
+};
+
 export type KycDocumentType = {
   __typename?: 'KycDocumentType';
   code?: Maybe<Scalars['String']>;
@@ -419,6 +427,12 @@ export type KycDocumentType = {
   description?: Maybe<Scalars['String']>;
   subTypes?: Maybe<Array<KycDocumentType>>;
   options?: Maybe<Array<Scalars['String']>>;
+};
+
+export type KycInfoField = {
+  __typename?: 'KycInfoField';
+  name?: Maybe<Scalars['String']>;
+  required?: Maybe<Scalars['Boolean']>;
 };
 
 export type Mutation = {
@@ -709,6 +723,21 @@ export enum PaymentInitiatorType {
   Wallet = 'Wallet'
 }
 
+
+export type RequiredUserPermission = {
+  objectCode?: Maybe<Scalars['String']>;
+  fullAccess?: Maybe<Scalars['Boolean']>;
+};
+
+export enum TokenAction {
+  Default = 'Default',
+  ConfirmEmail = 'ConfirmEmail',
+  ConfirmPasswordChange = 'ConfirmPasswordChange',
+  ConfirmName = 'ConfirmName',
+  ConfirmDevice = 'ConfirmDevice',
+  TwoFactorAuth = 'TwoFactorAuth',
+  KycRequired = 'KycRequired'
+}
 
 export type UserDevice = {
   __typename?: 'UserDevice';

@@ -4,24 +4,63 @@
     </div>
     <div class="kyc-editor-right-panel">
         <div class="kyc-editor-box">
-            <h2>Personal data approval</h2>
+            <h2>Personal identity approval</h2>
+            <div *ngIf="kycInfo.applicant?.kyc !== undefined">
+                Validation is initialized {{kycInfo.applicant?.kyc?.createDate}}
+            </div>
         </div>
 
-        <div class="form-element upload-icon-box">
+        <form [formGroup]="identityForm" (ngSubmit)="onSubmit()">
+            <div *ngIf="identityDocs!==undefined">
+                <div>
+                    <mat-label>Choose your {{identityDocs.name}}</mat-label>
+                </div>
+                <mat-radio-group aria-label="Select an option" formControlName="docType" color="primary">
+                    <mat-radio-button *ngFor="let doc of identityDocs?.subTypes" [value]="doc.type">
+                        {{doc.name}}
+                    </mat-radio-button>
+                </mat-radio-group>
+            </div>
+
+            <div *ngIf="identitySubDocs!==undefined">
+                <div *ngFor="let doc of identitySubDocs?.subTypes">
+                    <mat-label>{{doc.name}}</mat-label>
+                    <div class="upload-icon-box">
+                        <button mat-icon-button (click)="browseFile()">
+                            <mat-icon class="upload-icon">cloud_upload</mat-icon>
+                        </button>
+                    </div>
+                    <div>
+                        <input type="file" #fileUpload [name]="doc.type" (change)="onFileSelect($event)" 
+                        style="display: none;" />
+                    </div>
+                    <div class="form-element">
+                        <button class="form-button" type="submit" mat-flat-button color="primary">
+                            Upload
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <button class="form-button" type="submit" mat-flat-button color="primary">
+                Save
+            </button>
+        </form>
+
+        <!-- <div class="form-element upload-icon-box">
             <button mat-icon-button color="primary" (click)="browseFile()">
                 <mat-icon class="upload-icon">cloud_upload</mat-icon>
             </button>
-        </div>
-        <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
+        </div> -->
+        <!-- <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
             <div>
-                <input type="file" #fileUpload name="kyc" (change)="onFileSelect($event)" 
-                style="display: none;"/>
+                <input type="file" #fileUpload name="kyc" (change)="onFileSelect($event)" style="display: none;" />
             </div>
             <div class="form-element">
                 <button class="form-button" type="submit" mat-flat-button color="primary">
                     Upload
                 </button>
             </div>
-        </form>
+        </form> -->
     </div>
 </div>

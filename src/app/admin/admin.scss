@@ -20,6 +20,7 @@
     left            : 0;
     top             : 0;
     height          : 100%;
+    overflow        : auto;
 }
 
 .panel-dim-table {
@@ -27,8 +28,9 @@
     position        : absolute;
     left            : 0;
     top             : 0;
-    height          : 200%;
-    width: 60%;
+    height          : 100%;
+    width           : 60%;
+    overflow        : auto;
 }
 
 th.mat-header-cell {
@@ -51,8 +53,8 @@ th.mat-header-cell {
 }
 
 .detailed-table-left-panel-full {
-    padding         : 0;
-    width           : 100%;
+    padding  : 0;
+    width    : 100%;
     min-width: 10em;
 }
 
@@ -63,8 +65,8 @@ th.mat-header-cell {
 }
 
 .detailed-table-left-panel-details {
-    padding         : 0;
-    width           : 60%;
+    padding  : 0;
+    width    : 60%;
     min-width: 10em;
 }
 
@@ -91,6 +93,6 @@ th.mat-header-cell {
 }
 
 .details-editor {
-    margin: 2em;
+    margin    : 2em;
     margin-top: 6em;
 }
