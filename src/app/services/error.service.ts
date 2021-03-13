@@ -113,6 +113,11 @@ export class ErrorService {
             case 'core.kyc_get_applicant_information_error':
                 result = 'Unable to get applicant information';
                 break;
+            default:
+                if (code !== '') {
+                    result = code;
+                }
+                break;
         }
         return result;
     }

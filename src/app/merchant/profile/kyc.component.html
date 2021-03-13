@@ -10,7 +10,9 @@
     </div>
     <div class="kyc-editor-right-panel">
         <div class="kyc-editor-box">
-
+            <div class="form-error-box" *ngIf="errorMessage!==''">
+                {{errorMessage}}
+            </div>
         </div>
     </div>
 </div>

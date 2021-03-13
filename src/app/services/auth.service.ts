@@ -149,22 +149,42 @@ const CONFIRMNAME_POST = gql`
 `;
 
 const GET_MY_KYC_INFO_POST = gql`
-  query MyKycInfo {
+query {
     myKycInfo {
-        applicant {
-            kyc { status }
-        },
-        appliedDocuments {
-            code, firstName, lastName, issuedDate, validUntil, number
-        },
-        requiredDocuments {
-            code,
-            type,
-            name,
-            description,
-            subTypes { code, type, name, description },
-            options
+      applicant {
+        firstName
+        lastName
+        email
+        phone
+        countryCode3
+        kyc { createDate, reviewDate, result, status }
+        details { key, value }      
+      }
+      appliedDocuments {
+        code
+        firstName
+        lastName
+        issuedDate
+        validUntil
+        number
+        countryCode3
+        details { key, value }
+      }
+      requiredDocuments {
+        code
+        type
+        name
+        description
+        options
+        subTypes {
+          code
+          type
+          name
+          description
+          options
+          subTypes { code, type, name, description, options }
         }
+      }
     }
   }
 `;
