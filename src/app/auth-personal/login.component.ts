@@ -46,6 +46,7 @@ export class LoginComponent {
     }
 
     handleSuccessLogin(userData: LoginResult) {
+        console.log(userData);
         const typeCheck = userData.user?.type === 'Personal';
         if (typeCheck) {
             this.auth.setLoginUser(userData);
@@ -67,10 +68,10 @@ export class LoginComponent {
                 } else if (name === 'Facebook') {
                     token = user.authToken;
                 }
-                this.auth.authenticateSocial(name.toLowerCase(), token).subscribe(({ loginData }) => {
-                    this.inProgress = false;
-                    const userData = loginData.login as LoginResult;
+                this.auth.authenticateSocial(name.toLowerCase(), token).subscribe((loginData) => {
+                    const userData = loginData.data.login as LoginResult;
                     this.auth.socialSignOut();
+                    this.inProgress = false;
                     if (userData.authTokenAction === 'Default') {
                         this.handleSuccessLogin(userData);
                     } else if (userData.authTokenAction === 'ConfirmName') {
@@ -78,6 +79,7 @@ export class LoginComponent {
                     } else {
                         this.errorMessage = `Invalid authentication via ${name}`;
                     }
+                    
                 }, (error) => {
                     this.auth.socialSignOut();
                     this.inProgress = false;
@@ -99,13 +101,13 @@ export class LoginComponent {
                 this.loginForm.get('email')?.value,
                 this.loginForm.get('password')?.value)
                 .subscribe(({ data }) => {
-                    this.inProgress = false;
                     const userData = data.login as LoginResult;
                     if (userData.authTokenAction === 'Default') {
                         this.handleSuccessLogin(userData);
                     } else {
                         this.errorMessage = 'Unable to sign in';
                     }
+                    this.inProgress = false;
                 }, (error) => {
                     this.inProgress = false;
                     this.errorMessage = this.errorHandler.getError(

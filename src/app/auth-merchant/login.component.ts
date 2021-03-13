@@ -68,8 +68,8 @@ export class LoginComponent {
                     token = user.authToken;
                 }
                 this.auth.socialSignOut();
-                this.auth.authenticateSocial(name.toLowerCase(), token).subscribe(({ loginData }) => {
-                    const userData = loginData.login as LoginResult;
+                this.auth.authenticateSocial(name.toLowerCase(), token).subscribe((loginData) => {
+                    const userData = loginData.data.login as LoginResult;
                     if (userData.authTokenAction === 'Default' || userData.authTokenAction === 'KycRequired') {
                         this.handleSuccessLogin(userData);
                     } else if (userData.authTokenAction === 'ConfirmName') {

@@ -398,7 +398,6 @@ export class AuthService {
     getMyKycInfo(): QueryRef<any, EmptyObject> {
         return this.apollo.watchQuery<any>({
             query: GET_MY_KYC_INFO_POST,
-            pollInterval: 30000,
             fetchPolicy: 'network-only'
         });
     }

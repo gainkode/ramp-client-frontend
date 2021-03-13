@@ -53,13 +53,14 @@
                 <!-- Target values -->
                 <mat-form-field *ngIf="targetValueParams.title!==''" class="form-element">
                     <mat-label>{{targetValueParams.title}}</mat-label>
-                    <mat-chip-list #chipList aria-label="Target selection">
-                        <mat-chip *ngFor="let val of targetValues" (removed)="removeTargetValue(val)">
+                    <mat-chip-list #chipList aria-label="Target selection" formControlName="targetValues">
+                        <mat-chip *ngFor="let val of schemeForm.get('targetValues')?.value"
+                            (removed)="removeTargetValue(val)">
                             {{val}}
                             <mat-icon matChipRemove matTooltip="Remove" matTooltipClass="info-tooltip">cancel</mat-icon>
                         </mat-chip>
                         <input [placeholder]="targetValueParams.inputPlaceholder" #targetValueInput
-                            formControlName="targetValues" [matAutocomplete]="auto" [matChipInputFor]="chipList"
+                            formControlName="targetValue" [matAutocomplete]="auto" [matChipInputFor]="chipList"
                             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                             (matChipInputTokenEnd)="addTargetValue($event)">
                     </mat-chip-list>
@@ -69,6 +70,9 @@
                                 imageSource="{{item.imgSource}}"></dropdown-item>
                         </mat-option>
                     </mat-autocomplete>
+                    <mat-error *ngIf="this.schemeForm.get('targetValues')?.hasError('required')">
+                        Please specify at least one {{targetEntity}}
+                    </mat-error>
                 </mat-form-field>
 
                 <!-- Transaction type -->
@@ -133,8 +137,7 @@
             <!-- Per transaction cost -->
             <mat-form-field class="form-element">
                 <mat-label>Per transaction cost</mat-label>
-                <input type="text" matInput formControlName="transactionCost" maxlength="10" placeholder="1"
-                    required />
+                <input type="text" matInput formControlName="transactionCost" maxlength="10" placeholder="1" required />
                 <mat-error *ngIf="this.schemeForm.get('transactionCost')?.hasError('required')">
                     Please specify transaction cost
                 </mat-error>
@@ -224,6 +227,13 @@
         </mat-tab>
     </mat-tab-group>
 
+    <div class="form-element" *ngIf="errorMessage!==''">
+        <div class="form-error-box">
+            {{errorMessage}}
+        </div>
+        <br>
+    </div>
+
     <div class="form-element">
         <div class="button-form-panel">
             <div class="button-panel-left">
@@ -232,8 +242,7 @@
                 </button>
             </div>
             <div *ngIf="defaultSchemeFlag==='' && create==false" class="button-panel-right">
-                <button class="form-button" mat-flat-button color="warn" 
-                (click)="onDeleteScheme()">
+                <button class="form-button" mat-flat-button color="warn" (click)="onDeleteScheme()">
                     Delete
                 </button>
             </div>

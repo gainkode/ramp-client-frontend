@@ -12,6 +12,7 @@ import {
 import { PaymentInstrumentList, PaymentProviderList, TransactionTypeList, CostTargetFilterList } from 'src/app/model/payment.model';
 import { CommonTargetValue, TargetParams } from 'src/app/model/common.model';
 import { CountryFilterList } from 'src/app/model/fee-scheme.model';
+import { getCountry } from 'src/app/model/country-code.model';
 
 @Component({
     selector: 'cost-editor',
@@ -38,7 +39,8 @@ export class CostEditorComponent implements OnInit {
     private forceValidate = false;
     private loadingData = false;
     selectedTab = 0;
-    targetValues: string[] = [];
+    errorMessage = '';
+    targetEntity = '';
     separatorKeysCodes: number[] = [ENTER, COMMA];
     filteredTargetValues: Observable<CommonTargetValue[]> | undefined;
 
@@ -53,7 +55,8 @@ export class CostEditorComponent implements OnInit {
         description: ['', { validators: [Validators.required], updateOn: 'change' }],
         isDefault: [false],
         target: ['', { validators: [Validators.required], updateOn: 'change' }],
-        targetValues: [''],
+        targetValues: [[], { validators: [Validators.required], updateOn: 'change' }],
+        targetValue: [''],
         instrument: [[], { validators: [Validators.required], updateOn: 'change' }],
         trxType: [[], { validators: [Validators.required], updateOn: 'change' }],
         provider: [[], { validators: [Validators.required], updateOn: 'change' }],
@@ -85,12 +88,14 @@ export class CostEditorComponent implements OnInit {
                 params.title = 'List of PSP';
                 params.inputPlaceholder = 'New PSP...';
                 params.dataList = PspFilterList;
+                this.targetEntity = 'PSP value';
                 break;
             }
             case CostSettingsFilterType.Country: {
                 params.title = 'List of countries';
                 params.inputPlaceholder = 'New country...';
                 params.dataList = CountryFilterList;
+                this.targetEntity = 'country';
                 break;
             }
         }
@@ -131,12 +136,14 @@ export class CostEditorComponent implements OnInit {
         this.defaultSchemeName = '';
         if (scheme !== null) {
             this.loadingData = true;
+            this.removeIncorrectTargetValues(scheme);
             this.defaultSchemeName = scheme.isDefault ? scheme.name : '';
             this.schemeForm.get('id')?.setValue(scheme?.id);
             this.schemeForm.get('name')?.setValue(scheme?.name);
             this.schemeForm.get('description')?.setValue(scheme?.description);
             this.schemeForm.get('isDefault')?.setValue(scheme?.isDefault);
             this.schemeForm.get('target')?.setValue(scheme?.target);
+            this.schemeForm.get('targetValues')?.setValue(scheme?.targetValues);
             this.schemeForm.get('instrument')?.setValue(scheme.instrument);
             this.schemeForm.get('trxType')?.setValue(scheme?.trxType);
             this.schemeForm.get('provider')?.setValue(scheme?.provider);
@@ -147,7 +154,6 @@ export class CostEditorComponent implements OnInit {
             this.schemeForm.get('chargebackCost')?.setValue(scheme?.terms.chargebackCost);
             this.schemeForm.get('monthlyCost')?.setValue(scheme?.terms.monthlyCost);
             this.schemeForm.get('minMonthlyCost')?.setValue(scheme?.terms.minMonthlyCost);
-            scheme?.targetValues.forEach(x => this.targetValues.push(x));
             this.loadingData = false;
             this.formChanged.emit(false);
         } else {
@@ -156,6 +162,7 @@ export class CostEditorComponent implements OnInit {
             this.schemeForm.get('description')?.setValue('');
             this.schemeForm.get('isDefault')?.setValue('');
             this.schemeForm.get('target')?.setValue('');
+            this.schemeForm.get('targetValues')?.setValue([]);
             this.schemeForm.get('instrument')?.setValue('');
             this.schemeForm.get('trxType')?.setValue('');
             this.schemeForm.get('provider')?.setValue('');
@@ -166,7 +173,6 @@ export class CostEditorComponent implements OnInit {
             this.schemeForm.get('chargebackCost')?.setValue('');
             this.schemeForm.get('monthlyCost')?.setValue('');
             this.schemeForm.get('minMonthlyCost')?.setValue('');
-            this.targetValues = [];
         }
     }
 
@@ -178,7 +184,7 @@ export class CostEditorComponent implements OnInit {
         data.isDefault = this.schemeForm.get('isDefault')?.value;
         data.id = this.schemeForm.get('id')?.value;
         // target
-        data.setTarget(this.schemeForm.get('target')?.value, this.targetValues);
+        data.setTarget(this.schemeForm.get('target')?.value, this.schemeForm.get('targetValues')?.value);
         (this.schemeForm.get('instrument')?.value as PaymentInstrument[]).forEach(x => data.instrument.push(x));
         (this.schemeForm.get('trxType')?.value as TransactionType[]).forEach(x => data.trxType.push(x));
         (this.schemeForm.get('provider')?.value as PaymentProvider[]).forEach(x => data.provider.push(x));
@@ -209,6 +215,7 @@ export class CostEditorComponent implements OnInit {
             if (valid) valid = this.validateField('instrument');
             if (valid) valid = this.validateField('trxType');
             if (valid) valid = this.validateField('provider');
+            if (valid) valid = (this.errorMessage === '');
         } else if (tab == 'tab2') {
             valid = this.validateField('transactionCost');
             if (valid) valid = this.validateField('mdr');
@@ -230,41 +237,76 @@ export class CostEditorComponent implements OnInit {
         const value = event.value;
         // Add new target value
         if ((value || '').trim()) {
-            this.targetValues.push(value.trim());
+            let values = this.schemeForm.get('targetValues')?.value;
+            values.push(value.trim());
+            this.schemeForm.get('targetValues')?.setValue(values);
         }
         // Reset the input value
         if (input) {
             input.value = '';
         }
-        this.schemeForm.get('targetValues')?.setValue(null);
+        this.schemeForm.get('targetValue')?.setValue(null);
     }
 
     removeTargetValue(val: string) {
-        const index = this.targetValues.indexOf(val);
+        let values = this.schemeForm.get('targetValues')?.value;
+        const index = values.indexOf(val);
         if (index >= 0) {
-            this.targetValues.splice(index, 1);
+            values.splice(index, 1);
+            this.schemeForm.get('targetValues')?.setValue(values);
         }
     }
 
     clearTargetValues() {
-        this.targetValues.splice(0, this.targetValues.length);
+        this.schemeForm.get('targetValues')?.setValue([]);
     }
 
     targetItemSelected(event: MatAutocompleteSelectedEvent): void {
-        if (!this.targetValues.includes(event.option.viewValue)) {
-            this.targetValues.push(event.option.viewValue);
+        let values = this.schemeForm.get('targetValues')?.value;
+        if (!values.includes(event.option.viewValue)) {
+            values.push(event.option.viewValue);
+            this.schemeForm.get('targetValues')?.setValue(values);
         }
         this.targetValueInput.nativeElement.value = '';
-        this.schemeForm.get('targetValues')?.setValue(null);
+        this.schemeForm.get('targetValue')?.setValue(null);
     }
 
     onDeleteScheme(): void {
         this.delete.emit(this.settingsId);
     }
 
+    private removeIncorrectTargetValues(scheme: CostScheme): void {
+        scheme.targetValues = scheme.targetValues.filter(val => {
+            let result = true;
+            if (scheme.target == CostSettingsFilterType.Country) {
+                const c = getCountry(val);
+                result = (c !== null);
+            }
+            return result;
+        });
+    }
+
+    private validateTargetValues(): boolean {
+        let result = true;
+        const filter = this.schemeForm.get('target')?.value as CostSettingsFilterType;
+        if (filter == CostSettingsFilterType.Country) {
+            (this.schemeForm.get('targetValues')?.value as string[]).every(x => {
+                const c = getCountry(x);
+                if (c === null) {
+                    result = false;
+                    this.errorMessage = `Country ${x} is not found in a list`;
+                    this.selectedTab = 0;
+                    return false;
+                }
+                return true;
+            });
+        }
+        return result;
+    }
+
     onSubmit(): void {
         this.forceValidate = true;
-        if (this.schemeForm.valid) {
+        if (this.schemeForm.valid && this.validateTargetValues()) {
             this.save.emit(this.setSchemeData());
         }
     }
