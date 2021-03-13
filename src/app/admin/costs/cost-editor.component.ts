@@ -1,7 +1,7 @@
 import { Component, ElementRef, ViewChild, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Validators, FormBuilder } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
@@ -100,6 +100,7 @@ export class CostEditorComponent implements OnInit {
     constructor(private formBuilder: FormBuilder) { }
 
     ngOnInit(): void {
+        this.filteredTargetValues = of(this.filterTargetValues(''));
         this.schemeForm.valueChanges.subscribe({
             next: (result: any) => {
                 if (!this.create && !this.loadingData) {

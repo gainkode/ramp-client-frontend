@@ -246,6 +246,16 @@ export class AdminDataService {
   }
 
   saveCostSettings(settings: CostScheme, create: boolean): Observable<any> {
+
+    console.log(settings.name);
+    console.log(settings.description);
+    console.log(settings.target);
+    console.log(settings.targetValues);
+    console.log(settings.instrument);
+    console.log(settings.trxType);
+    console.log(settings.provider);
+    console.log(settings.terms.getObject());
+
     return create ?
       this.apollo.mutate({
         mutation: ADD_SETTINGS_COST_POST,
