@@ -21,10 +21,6 @@
       "es2018",
       "dom",
       "esnext.asynciterable"
-    ],
-    "typeRoots": [
-      "./src/types",
-      "./node_modules/@types/"
     ]
   },
   "angularCompilerOptions": {
