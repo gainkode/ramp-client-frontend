@@ -16,7 +16,6 @@ import {
 import { AuthService } from './services/auth.service';
 import { AdminDataService } from './services/admin-data.service';
 import { ErrorService } from './services/error.service';
-import { UploadService } from './services/upload.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { environment } from 'src/environments/environment';
 
@@ -50,8 +49,7 @@ import { environment } from 'src/environments/environment';
     },
     AuthService,
     AdminDataService,
-    ErrorService,
-    UploadService
+    ErrorService
   ],
   bootstrap: [AppComponent]
 })

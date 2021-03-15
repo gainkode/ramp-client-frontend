@@ -26,6 +26,7 @@ export type Query = {
   getAppropriateSettingsFee: SettingsFee;
   getSettingsCost?: Maybe<SettingsCostListResult>;
   getAppropriateSettingsCost: SettingsCost;
+  generateWebApiToken: Scalars['String'];
   me: User;
   user?: Maybe<User>;
   userCount?: Maybe<Scalars['Int']>;
@@ -129,6 +130,7 @@ export type SettingsKyc = {
   kycMaxFileSize?: Maybe<Scalars['Int']>;
   kycBeneficiaryPositions?: Maybe<Array<Scalars['String']>>;
   kycBeneficiaryTypes?: Maybe<Array<Scalars['String']>>;
+  kycSourceOfFunds?: Maybe<Array<Scalars['String']>>;
   kycRejectedLabels?: Maybe<Array<KycRejectedLabel>>;
 };
 

@@ -148,6 +148,12 @@ const CONFIRMNAME_POST = gql`
   }
 `;
 
+const GET_KYC_TOKEN_POST = gql`
+query {
+    generateWebApiToken
+}
+`;
+
 const GET_MY_KYC_INFO_POST = gql`
 query {
     myKycInfo {
@@ -405,6 +411,13 @@ export class AuthService {
         });
     }
 
+    getKycToken(): QueryRef<any, EmptyObject> {
+        return this.apollo.watchQuery<any>({
+            query: GET_KYC_TOKEN_POST,
+            fetchPolicy: 'network-only'
+        });
+    }
+    
     socialSignOut(): void {
         this.socialAuth.signOut().then(function (data) {
             //console.log(data);

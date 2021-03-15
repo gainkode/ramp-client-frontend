@@ -9,11 +9,12 @@ import { environment } from 'src/environments/environment';
 export class UploadService {
     constructor(private httpClient: HttpClient) { }
 
-    kycUpload(formData: FormData) {
+    upload(formData: FormData) {
         return this.httpClient.post<any>(
             `${environment.api_server}/rest/kyc-upload`,
             formData,
             {
+                //headers: here
                 reportProgress: true,
                 observe: 'events'
             });

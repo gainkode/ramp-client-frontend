@@ -3,17 +3,23 @@
 
     </div>
     <div class="kyc-editor-right-panel">
-        <div class="kyc-editor-box">
+
+        <div id="sumsub-websdk-container"></div>
+
+        <!-- <div class="kyc-editor-box">
             <h2>Personal identity approval</h2>
             <div *ngIf="kycInfo.applicant?.kyc !== undefined">
                 Validation is initialized {{kycInfo.applicant?.kyc?.createDate}}
             </div>
         </div>
 
-        <form [formGroup]="identityForm" (ngSubmit)="onSubmit()">
+        <form *ngIf="currentStep==='IDENTITY'" [formGroup]="identityForm" (ngSubmit)="onIdentitySubmit()">
             <div *ngIf="identityDocs!==undefined">
                 <div>
-                    <mat-label>Choose your {{identityDocs.name}}</mat-label>
+                    <label>Choose your {{identityDocs.name}}</label>
+                </div>
+                <div>
+                    <label>{{identityDocs.description}}</label>
                 </div>
                 <mat-radio-group aria-label="Select an option" formControlName="docType" color="primary">
                     <mat-radio-button *ngFor="let doc of identityDocs?.subTypes" [value]="doc.type">
@@ -24,28 +30,62 @@
 
             <div *ngIf="identitySubDocs!==undefined">
                 <div *ngFor="let doc of identitySubDocs?.subTypes">
-                    <mat-label>{{doc.name}}</mat-label>
+                    <mat-label>{{doc.description}}</mat-label>
                     <div class="upload-icon-box">
-                        <button mat-icon-button (click)="browseFile()">
+                        <button mat-icon-button type="button" (click)="browseFile()">
                             <mat-icon class="upload-icon">cloud_upload</mat-icon>
                         </button>
                     </div>
                     <div>
-                        <input type="file" #fileUpload [name]="doc.type" (change)="onFileSelect($event)" 
-                        style="display: none;" />
+                        <input type="file" #fileUpload [name]="doc.type" (change)="onFileSelect($event)"
+                            style="display: none;" />
                     </div>
                     <div class="form-element">
-                        <button class="form-button" type="submit" mat-flat-button color="primary">
+                        <button class="form-button" type="button" mat-flat-button color="primary">
                             Upload
                         </button>
                     </div>
                 </div>
             </div>
 
-            <button class="form-button" type="submit" mat-flat-button color="primary">
-                Save
+            <button class="form-button" type="submit" mat-flat-button color="primary"
+                [disabled]="identityForm.valid===false">
+                Next
             </button>
         </form>
+
+        <form *ngIf="currentStep==='SELFIE'" [formGroup]="selfieForm" (ngSubmit)="onSelfieSubmit()">
+            <div *ngIf="selfieDocs!==undefined">
+                <div>
+                    <mat-label>Choose your {{selfieDocs.name}}</mat-label>
+                </div>
+                <div>
+                    <mat-label>{{selfieDocs.description}}</mat-label>
+                </div>
+            </div>
+
+            <div *ngIf="selfieDocs!==undefined">
+                <div class="upload-icon-box">
+                    <button mat-icon-button (click)="browseFile()">
+                        <mat-icon class="upload-icon">cloud_upload</mat-icon>
+                    </button>
+                </div>
+                <div>
+                    <input type="file" #fileUpload [name]="selfieDocs.type" (change)="onFileSelect($event)"
+                        style="display: none;" />
+                </div>
+                <div class="form-element">
+                    <button class="form-button" type="submit" mat-flat-button color="primary">
+                        Upload
+                    </button>
+                </div>
+            </div>
+
+            <button class="form-button" type="submit" mat-flat-button color="primary"
+                [disabled]="selfieForm.valid===false">
+                Next
+            </button>
+        </form> -->
 
         <!-- <div class="form-element upload-icon-box">
             <button mat-icon-button color="primary" (click)="browseFile()">
