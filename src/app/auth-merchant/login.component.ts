@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { ErrorService } from '../services/error.service';
 import { Validators, FormBuilder } from '@angular/forms';
-import { SocialUser } from "angularx-social-login";
+import { SocialUser } from 'angularx-social-login';
 import { LoginResult } from '../model/generated-models';
 
 @Component({
@@ -45,7 +45,7 @@ export class LoginComponent {
         this.socialSignIn('Facebook');
     }
 
-    handleSuccessLogin(userData: LoginResult) {
+    handleSuccessLogin(userData: LoginResult): void {
         const typeCheck = userData.user?.type === 'Merchant';
         if (typeCheck) {
             this.auth.setLoginUser(userData);

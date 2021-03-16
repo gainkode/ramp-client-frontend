@@ -26,7 +26,7 @@ export class CostEditorComponent implements OnInit {
         this.setFormData(scheme);
         this.settingsId = (scheme !== null) ? scheme?.id : '';
     }
-    @Input() create: boolean = false;
+    @Input() create = false;
     @Output() save = new EventEmitter<CostScheme>();
     @Output() delete = new EventEmitter<string>();
     @Output() cancel = new EventEmitter();
@@ -82,7 +82,7 @@ export class CostEditorComponent implements OnInit {
 
     get targetValueParams(): TargetParams {
         const val = this.schemeForm.get('target')?.value;
-        let params = new TargetParams();
+        const params = new TargetParams();
         switch (val) {
             case CostSettingsFilterType.Psp: {
                 params.title = 'List of PSP';
@@ -177,7 +177,7 @@ export class CostEditorComponent implements OnInit {
     }
 
     setSchemeData(): CostScheme {
-        let data = new CostScheme(null);
+        const data = new CostScheme(null);
         // common
         data.name = this.schemeForm.get('name')?.value;
         data.description = this.schemeForm.get('description')?.value;
@@ -209,21 +209,21 @@ export class CostEditorComponent implements OnInit {
 
     tabHasError(tab: string): boolean {
         let valid: boolean | undefined = true;
-        if (tab == 'tab1') {
+        if (tab === 'tab1') {
             valid = this.validateField('target');
-            if (valid) valid = this.validateField('targetValues');
-            if (valid) valid = this.validateField('instrument');
-            if (valid) valid = this.validateField('trxType');
-            if (valid) valid = this.validateField('provider');
-            if (valid) valid = (this.errorMessage === '');
-        } else if (tab == 'tab2') {
+            if (valid) { valid = this.validateField('targetValues'); }
+            if (valid) { valid = this.validateField('instrument'); }
+            if (valid) { valid = this.validateField('trxType'); }
+            if (valid) { valid = this.validateField('provider'); }
+            if (valid) { valid = (this.errorMessage === ''); }
+        } else if (tab === 'tab2') {
             valid = this.validateField('transactionCost');
-            if (valid) valid = this.validateField('mdr');
-            if (valid) valid = this.validateField('rollingReserves');
-            if (valid) valid = this.validateField('rollingReservesDays');
-            if (valid) valid = this.validateField('chargebackCost');
-            if (valid) valid = this.validateField('monthlyCost');
-            if (valid) valid = this.validateField('minMonthlyCost');
+            if (valid) { valid = this.validateField('mdr'); }
+            if (valid) { valid = this.validateField('rollingReserves'); }
+            if (valid) { valid = this.validateField('rollingReservesDays'); }
+            if (valid) { valid = this.validateField('chargebackCost'); }
+            if (valid) { valid = this.validateField('monthlyCost'); }
+            if (valid) { valid = this.validateField('minMonthlyCost'); }
         }
         return valid !== true;
     }
@@ -237,7 +237,7 @@ export class CostEditorComponent implements OnInit {
         const value = event.value;
         // Add new target value
         if ((value || '').trim()) {
-            let values = this.schemeForm.get('targetValues')?.value;
+            const values = this.schemeForm.get('targetValues')?.value;
             values.push(value.trim());
             this.schemeForm.get('targetValues')?.setValue(values);
         }
@@ -248,8 +248,8 @@ export class CostEditorComponent implements OnInit {
         this.schemeForm.get('targetValue')?.setValue(null);
     }
 
-    removeTargetValue(val: string) {
-        let values = this.schemeForm.get('targetValues')?.value;
+    removeTargetValue(val: string): void {
+        const values = this.schemeForm.get('targetValues')?.value;
         const index = values.indexOf(val);
         if (index >= 0) {
             values.splice(index, 1);
@@ -257,12 +257,12 @@ export class CostEditorComponent implements OnInit {
         }
     }
 
-    clearTargetValues() {
+    clearTargetValues(): void {
         this.schemeForm.get('targetValues')?.setValue([]);
     }
 
     targetItemSelected(event: MatAutocompleteSelectedEvent): void {
-        let values = this.schemeForm.get('targetValues')?.value;
+        const values = this.schemeForm.get('targetValues')?.value;
         if (!values.includes(event.option.viewValue)) {
             values.push(event.option.viewValue);
             this.schemeForm.get('targetValues')?.setValue(values);
@@ -278,7 +278,7 @@ export class CostEditorComponent implements OnInit {
     private removeIncorrectTargetValues(scheme: CostScheme): void {
         scheme.targetValues = scheme.targetValues.filter(val => {
             let result = true;
-            if (scheme.target == CostSettingsFilterType.Country) {
+            if (scheme.target === CostSettingsFilterType.Country) {
                 const c = getCountry(val);
                 result = (c !== null);
             }
@@ -289,7 +289,7 @@ export class CostEditorComponent implements OnInit {
     private validateTargetValues(): boolean {
         let result = true;
         const filter = this.schemeForm.get('target')?.value as CostSettingsFilterType;
-        if (filter == CostSettingsFilterType.Country) {
+        if (filter === CostSettingsFilterType.Country) {
             (this.schemeForm.get('targetValues')?.value as string[]).every(x => {
                 const c = getCountry(x);
                 if (c === null) {

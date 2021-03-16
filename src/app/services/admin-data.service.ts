@@ -8,10 +8,10 @@ import { FeeScheme } from '../model/fee-scheme.model';
 const GET_FEE_SETTINGS_POST = gql`
   query GetSettingsFee {
     getSettingsFee(
-      filter: "", 
-      orderBy: 
+      filter: "",
+      orderBy:
       [
-        {orderBy: "default", desc: false}, 
+        {orderBy: "default", desc: false},
         {orderBy: "name", desc: false}
       ]) {
       count,
@@ -34,8 +34,8 @@ const GET_FEE_SETTINGS_POST = gql`
 
 const ADD_SETTINGS_FEE_POST = gql`
 mutation AddSettingsFee(
-  $name: String!, 
-  $description: String!, 
+  $name: String!,
+  $description: String!,
   $targetFilterType: FeeSettingsTargetFilterType!,
   $targetFilterValues: [String!],
   $targetInstruments: [PaymentInstrument!],
@@ -63,8 +63,8 @@ mutation AddSettingsFee(
 const UPDATE_SETTINGS_FEE_POST = gql`
 mutation UpdateSettingsFee(
   $settingsId: ID!,
-  $name: String!, 
-  $description: String!, 
+  $name: String!,
+  $description: String!,
   $targetFilterType: FeeSettingsTargetFilterType!,
   $targetFilterValues: [String!],
   $targetInstruments: [PaymentInstrument!],
@@ -103,10 +103,10 @@ mutation DeleteSettingsFee($settingsId: ID!) {
 const GET_COST_SETTINGS_POST = gql`
   query GetSettingsCost {
     getSettingsCost(
-      filter: "", 
-      orderBy: 
+      filter: "",
+      orderBy:
       [
-        {orderBy: "default", desc: false}, 
+        {orderBy: "default", desc: false},
         {orderBy: "name", desc: false}
       ]) {
       count,
@@ -114,7 +114,7 @@ const GET_COST_SETTINGS_POST = gql`
         targetPaymentProviders,
         settingsCostId,
         name,
-        default,      
+        default,
         description,
         terms,
         targetFilterType,
@@ -129,8 +129,8 @@ const GET_COST_SETTINGS_POST = gql`
 
 const ADD_SETTINGS_COST_POST = gql`
 mutation AddSettingsCost(
-  $name: String!, 
-  $description: String!, 
+  $name: String!,
+  $description: String!,
   $targetFilterType: CostSettingsFilterType!,
   $targetFilterValues: [String!],
   $targetInstruments: [PaymentInstrument!],
@@ -156,8 +156,8 @@ mutation AddSettingsCost(
 const UPDATE_SETTINGS_COST_POST = gql`
 mutation UpdateSettingsCost(
   $settingsId: ID!,
-  $name: String!, 
-  $description: String!, 
+  $name: String!,
+  $description: String!,
   $targetFilterType: CostSettingsFilterType!,
   $targetFilterValues: [String!],
   $targetInstruments: [PaymentInstrument!],

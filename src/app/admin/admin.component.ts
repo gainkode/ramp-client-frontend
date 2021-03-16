@@ -25,15 +25,15 @@ export class AdminComponent {
     }
 
     menuChanged(e: MatSelectionListChange): void {
-        if (this.editMode == false) {
-            let item = e.options[0].value as AdminMenuItem;
+        if (this.editMode === false) {
+            const item = e.options[0].value as AdminMenuItem;
             this.router.navigateByUrl(item.url);
         } else {
 
         }
     }
 
-    onActivate(component: any) {
+    onActivate(component: any): void {
         this.changeEditModeRef = component.changeEditMode;
         if (this.changeEditModeRef !== undefined) {
             this.changeEditModeRef.subscribe((event: any) => {
@@ -43,7 +43,7 @@ export class AdminComponent {
         }
     }
 
-    onDeactivate(component: any) {
+    onDeactivate(component: any): void {
         if (this.changeEditModeRef !== undefined) {
             this.changeEditModeRef.unsubscribe();
         }

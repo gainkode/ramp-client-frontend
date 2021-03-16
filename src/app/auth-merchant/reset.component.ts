@@ -70,7 +70,7 @@ export class ResetComponent {
                 }, (error) => {
                     this.inProgress = false;
                     this.errorMessage = this.errorHandler.getError(
-                        error.message, 
+                        error.message,
                         'Unable to reset password');
                 });
         }

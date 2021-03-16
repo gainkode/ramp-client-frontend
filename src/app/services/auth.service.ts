@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { from, Observable } from 'rxjs';
-import { SocialAuthService, FacebookLoginProvider, GoogleLoginProvider, SocialUser } from "angularx-social-login";
+import { SocialAuthService, FacebookLoginProvider, GoogleLoginProvider, SocialUser } from 'angularx-social-login';
 import { KycStatus, LoginResult, User, UserType } from '../model/generated-models';
 import { environment } from 'src/environments/environment';
 import { EmptyObject } from 'apollo-angular/types';
@@ -112,7 +112,7 @@ const CONFIRMEMAIL_POST = gql`
 `;
 
 const CONFIRMNAME_POST = gql`
-  mutation ConfirmName($token: String!, $recaptcha: String!, $name: String!, 
+  mutation ConfirmName($token: String!, $recaptcha: String!, $name: String!,
     $userType: UserType!, $mode: UserMode!, $firstName: String!, $lastName: String!,
     $countryCode2: String!, $countryCode3: String!, $phone: String!) {
     confirmName(
@@ -162,10 +162,10 @@ query {
       kycPersonalFlow
       kycMerchantLevel
       kycMerchantFlow
-      kycMaxFileSize    
+      kycMaxFileSize
       kycBeneficiaryPositions
       kycBeneficiaryTypes
-      kycSourceOfFunds    
+      kycSourceOfFunds
       kycRejectedLabels { code, type, description }
     }
   }
@@ -200,7 +200,7 @@ export class AuthService {
         result.subscribe(x => {
             const d = x.data as any;
             sessionStorage.setItem('currentToken', d.refreshToken as string);
-        })
+        });
         return result;
     }
 
@@ -235,9 +235,9 @@ export class AuthService {
         }
         return from(
             this.socialAuth.signIn(providerId)
-                .then(function (data) {
+                .then(function(data) {
                     return { user: data, error: undefined };
-                }).catch(function (data) {
+                }).catch(function(data) {
                     return { user: undefined, error: data };
                 })
         );
@@ -351,7 +351,7 @@ export class AuthService {
         let result = false;
         const user: User | null = this.getAuthenticatedUser();
         if (user != null) {
-            const roleItem = (user.roles?.find(x => x.name?.toLowerCase() == role));
+            const roleItem = (user.roles?.find(x => x.name?.toLowerCase() === role));
             if (roleItem !== undefined) {
                 result = true;
             }
@@ -368,7 +368,7 @@ export class AuthService {
         let result = 0;
         const user: User | null = this.getAuthenticatedUser();
         if (user != null) {
-            const permissionItem = (user.permissions?.find(x => x.objectCode == code));
+            const permissionItem = (user.permissions?.find(x => x.objectCode === code));
             if (permissionItem !== undefined) {
                 result = (permissionItem.fullAccess) ? 2 : 1;
             }
@@ -389,9 +389,9 @@ export class AuthService {
             fetchPolicy: 'network-only'
         });
     }
-    
+
     socialSignOut(): void {
-        this.socialAuth.signOut().then(function (data) {
+        this.socialAuth.signOut().then(function(data) {
             //console.log(data);
         }).catch(function (error) {
             console.log(error);

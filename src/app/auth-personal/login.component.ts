@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { ErrorService } from '../services/error.service';
 import { Validators, FormBuilder } from '@angular/forms';
-import { SocialUser } from "angularx-social-login";
+import { SocialUser } from 'angularx-social-login';
 import { LoginResult } from '../model/generated-models';
 
 @Component({
@@ -45,7 +45,7 @@ export class LoginComponent {
         this.socialSignIn('Facebook');
     }
 
-    handleSuccessLogin(userData: LoginResult) {
+    handleSuccessLogin(userData: LoginResult): void {
         console.log(userData);
         const typeCheck = userData.user?.type === 'Personal';
         if (typeCheck) {
@@ -79,13 +79,12 @@ export class LoginComponent {
                     } else {
                         this.errorMessage = `Invalid authentication via ${name}`;
                     }
-                    
                 }, (error) => {
                     this.auth.socialSignOut();
                     this.inProgress = false;
                     this.errorMessage = this.errorHandler.getError(
                         error.message,
-                        `Invalid authentication via ${name}`)
+                        `Invalid authentication via ${name}`);
                 });
             } else {
                 this.inProgress = false;

@@ -35,7 +35,7 @@ export class RestoreComponent {
                 }, (error) => {
                     this.inProgress = false;
                     this.errorMessage = this.errorHandler.getError(
-                        error.message, 
+                        error.message,
                         'Unable to restore password');
                 });
         }

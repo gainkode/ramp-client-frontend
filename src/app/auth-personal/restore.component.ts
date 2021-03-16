@@ -14,15 +14,17 @@ export class RestoreComponent {
 
     restoreForm = this.formBuilder.group({
         email: [,
-            { validators: [
-                Validators.required,
-                Validators.pattern('^[a-zA-Z0-9_.+\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-\.]+$')
-            ], updateOn: 'change' }
+            {
+                validators: [
+                    Validators.required,
+                    Validators.pattern('^[a-zA-Z0-9_.+\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-\.]+$')
+                ], updateOn: 'change'
+            }
         ]
     });
 
-    constructor(private auth: AuthService, private errorHandler: ErrorService,
-        private formBuilder: FormBuilder, private router: Router) { }
+    constructor(private auth: AuthService, private errorHandler: ErrorService, private formBuilder: FormBuilder,
+        private router: Router) { }
 
     onSubmit(): void {
         if (this.restoreForm.valid) {
@@ -35,7 +37,7 @@ export class RestoreComponent {
                 }, (error) => {
                     this.inProgress = false;
                     this.errorMessage = this.errorHandler.getError(
-                        error.message, 
+                        error.message,
                         'Unable to restore password');
                 });
         }

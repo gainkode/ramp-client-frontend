@@ -8,7 +8,7 @@ import { Location } from '@angular/common';
 export class BackButtonComponent {
     constructor(private location: Location) { }
 
-    goBack() {
+    goBack(): void {
         this.location.back();
     }
 }

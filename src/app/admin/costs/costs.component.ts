@@ -15,7 +15,7 @@ export class CostsComponent implements OnInit, OnDestroy {
   @Output() changeEditMode = new EventEmitter<boolean>();
   private _showDetails = false;
   private _settingsSubscription!: any;
-  private _editMode: boolean = false;
+  private _editMode = false;
   inProgress = false;
   errorMessage = '';
   editorErrorMessage = '';
@@ -59,15 +59,15 @@ export class CostsComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     (this._settingsSubscription as Subscription).unsubscribe();
   }
 
-  refresh() {
+  refresh(): void {
     this.adminService.getCostSettings().refetch();
   }
 
-  private setEditMode(mode: boolean) {
+  private setEditMode(mode: boolean): void {
     this._editMode = mode;
     this.changeEditMode.emit(mode);
   }
@@ -98,7 +98,7 @@ export class CostsComponent implements OnInit, OnDestroy {
     }
   }
 
-  private showEditor(scheme: CostScheme | null, createNew: boolean, visible: boolean) {
+  private showEditor(scheme: CostScheme | null, createNew: boolean, visible: boolean): void {
     this._showDetails = visible;
     if (visible) {
       this.selectedScheme = scheme;
@@ -124,7 +124,7 @@ export class CostsComponent implements OnInit, OnDestroy {
     this.showEditor(null, true, true);
   }
 
-  onEditorFormChanged(mode: boolean) {
+  onEditorFormChanged(mode: boolean): void {
     this.setEditMode(mode);
   }
 
@@ -134,7 +134,7 @@ export class CostsComponent implements OnInit, OnDestroy {
     this.setEditMode(false);
   }
 
-  onDeleteScheme(id: string) {
+  onDeleteScheme(id: string): void {
     this.editorErrorMessage = '';
     this.inProgress = true;
     this.adminService.deleteCostSettings(id).subscribe(({ data }) => {
@@ -152,7 +152,7 @@ export class CostsComponent implements OnInit, OnDestroy {
     });
   }
 
-  onSaved(scheme: CostScheme) {
+  onSaved(scheme: CostScheme): void {
     this.editorErrorMessage = '';
     this.inProgress = true;
     this.adminService.saveCostSettings(scheme, this.createScheme).subscribe(({ data }) => {

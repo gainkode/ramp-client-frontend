@@ -3,13 +3,13 @@ import { CountryCodes, getCountry, getCountryByCode3 } from './country-code.mode
 import {
     SettingsFee, PaymentInstrument, PaymentProvider, TransactionType,
     FeeSettingsTargetFilterType
-} from "./generated-models";
+} from './generated-models';
 import { PaymentInstrumentList, PaymentProviderList,
     FeeTargetFilterList, TransactionTypeList } from './payment.model';
 
 export const CountryFilterList: CommonTargetValue[] = CountryCodes.map(c => {
-    let item = new CommonTargetValue();
-    item.imgClass = "country-flag";
+    const item = new CommonTargetValue();
+    item.imgClass = 'country-flag';
     item.imgSource = `assets/svg-country-flags/${c.code2.toLowerCase()}.svg`;
     item.title = c.name;
     return item;
@@ -43,7 +43,7 @@ export const AccountTypeFilterList: CommonTargetValue[] = [
 
 export class FeeScheme {
     id!: string;
-    isDefault: boolean = false;
+    isDefault = false;
     description!: string;
     name!: string;
     target: FeeSettingsTargetFilterType | null = null;
@@ -105,9 +105,9 @@ export class FeeScheme {
         let p = false;
         this.trxType.forEach(x => {
             const v = TransactionTypeList.find(t => t.id === x)?.name as string;
-            s = `${s}${p?', ':''}${v}`;
+            s = `${s}${p ? ', ' : ''}${v}`;
             p = true;
-        })
+        });
         return s;
     }
 
@@ -116,9 +116,9 @@ export class FeeScheme {
         let p = false;
         this.instrument.forEach(x => {
             const v = PaymentInstrumentList.find(t => t.id === x)?.name as string;
-            s = `${s}${p?', ':''}${v}`;
+            s = `${s}${p ? ', ' : ''}${v}`;
             p = true;
-        })
+        });
         return s;
     }
 
@@ -127,9 +127,9 @@ export class FeeScheme {
         let p = false;
         this.provider.forEach(x => {
             const v = PaymentProviderList.find(t => t.id === x)?.name as string;
-            s = `${s}${p?', ':''}${v}`;
+            s = `${s}${p ? ', ' : ''}${v}`;
             p = true;
-        })
+        });
         return s;
     }
 }

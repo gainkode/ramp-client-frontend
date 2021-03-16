@@ -16,7 +16,7 @@ export class MerchantGuard {
                 if (route.url.length > 0) {
                     if (route.url[0].path !== 'kyc') {
                         this.router.navigateByUrl('/merchant/kyc');
-                        return false; 
+                        return false;
                     }
                 }
             }

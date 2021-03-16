@@ -1,12 +1,12 @@
 export class TargetParams {
-    title: string = '';
-    inputPlaceholder: string = '';
+    title = '';
+    inputPlaceholder = '';
     dataList: CommonTargetValue[] = [];
 }
 
 export class CommonTargetValue {
-    title: string = '';
-    imgClass: string = '';
-    imgSource: string = '';
+    title = '';
+    imgClass = '';
+    imgSource = '';
 }
 

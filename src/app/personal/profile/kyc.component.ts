@@ -51,7 +51,7 @@ export class KycPersonalComponent implements OnInit {
   // @param applicantPhone - applicant phone, if available (not required)
   // @param customI18nMessages - customized locale messages for current session (not required)
   launchSumSubWidget(apiUrl: string, flowName: string, accessToken: string, applicantEmail: string,
-    applicantPhone: string, customI18nMessages: string[]) {
+    applicantPhone: string, customI18nMessages: string[]): void {
     const snsWebSdkInstance = snsWebSdk.default.Builder(apiUrl, flowName)
       .withAccessToken(accessToken,
         (newAccessTokenCallback: (newToken: string) => void) => {

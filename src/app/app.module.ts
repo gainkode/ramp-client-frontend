@@ -56,7 +56,7 @@ import { environment } from 'src/environments/environment';
 export class AppModule {
   errorLink = onError(({ forward, graphQLErrors, networkError, operation }) => {
     if (graphQLErrors) {
-      for (let err of graphQLErrors) {
+      for (const err of graphQLErrors) {
         if (err.extensions !== null) {
           const code = err.extensions?.code as string;
           if (code.toUpperCase() === 'UNAUTHENTICATED') {
@@ -72,7 +72,7 @@ export class AppModule {
             });
           }
           err.message = err.extensions?.code;
-          //console.log(`Error code: ${err.message}`);
+          // console.log(`Error code: ${err.message}`);
         } else {
           err.message = 'no_code';
         }
@@ -80,7 +80,7 @@ export class AppModule {
     }
     if (networkError) {
       console.log(networkError);
-    };
+    }
     return forward(operation);
   });
 
@@ -92,11 +92,11 @@ export class AppModule {
       return { headers: { Authorization: `Bearer ${token}` } };
     }
   });
-  
+
   headersLink = setContext((operation, context) => ({
     headers: { Accept: 'charset=utf-8' }
   }));
-  
+
   constructor(private apollo: Apollo, private httpLink: HttpLink, private authService: AuthService) {
     apollo.create({
       link: ApolloLink.from([

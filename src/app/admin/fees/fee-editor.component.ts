@@ -30,7 +30,7 @@ export class FeeEditorComponent implements OnInit {
         this.setFormData(scheme);
         this.settingsId = (scheme !== null) ? scheme?.id : '';
     }
-    @Input() create: boolean = false;
+    @Input() create = false;
     @Output() save = new EventEmitter<FeeScheme>();
     @Output() delete = new EventEmitter<string>();
     @Output() cancel = new EventEmitter();
@@ -92,7 +92,7 @@ export class FeeEditorComponent implements OnInit {
 
     get targetValueParams(): TargetParams {
         const val = this.schemeForm.get('target')?.value;
-        let params = new TargetParams();
+        const params = new TargetParams();
         switch (val) {
             case FeeSettingsTargetFilterType.AffiliateId: {
                 params.title = 'List of affiliate identifiers';
@@ -220,7 +220,7 @@ export class FeeEditorComponent implements OnInit {
     }
 
     setSchemeData(): FeeScheme {
-        let data = new FeeScheme(null);
+        const data = new FeeScheme(null);
         // common
         data.name = this.schemeForm.get('name')?.value;
         data.description = this.schemeForm.get('description')?.value;
@@ -259,28 +259,28 @@ export class FeeEditorComponent implements OnInit {
 
     tabHasError(tab: string): boolean {
         let valid: boolean | undefined = true;
-        if (tab == 'tab1') {
+        if (tab === 'tab1') {
             valid = this.validateField('target');
-            if (valid) valid = this.validateField('targetValues');
-            if (valid) valid = this.validateField('instrument');
-            if (valid) valid = this.validateField('trxType');
-            if (valid) valid = this.validateField('provider');
-            if (valid) valid = (this.errorMessage === '');
-        } else if (tab == 'tab2') {
+            if (valid) { valid = this.validateField('targetValues'); }
+            if (valid) { valid = this.validateField('instrument'); }
+            if (valid) { valid = this.validateField('trxType'); }
+            if (valid) { valid = this.validateField('provider'); }
+            if (valid) { valid = (this.errorMessage === ''); }
+        } else if (tab === 'tab2') {
             valid = this.validateField('transactionFees');
-            if (valid) valid = this.validateField('minTransactionFee');
-            if (valid) valid = this.validateField('rollingReserves');
-            if (valid) valid = this.validateField('rollingReservesDays');
-            if (valid) valid = this.validateField('chargebackFees');
-            if (valid) valid = this.validateField('monthlyFees');
-            if (valid) valid = this.validateField('minMonthlyFees');
-        } else if (tab == 'tab3') {
+            if (valid) { valid = this.validateField('minTransactionFee'); }
+            if (valid) { valid = this.validateField('rollingReserves'); }
+            if (valid) { valid = this.validateField('rollingReservesDays'); }
+            if (valid) { valid = this.validateField('chargebackFees'); }
+            if (valid) { valid = this.validateField('monthlyFees'); }
+            if (valid) { valid = this.validateField('minMonthlyFees'); }
+        } else if (tab === 'tab3') {
             valid = this.validateField('beneficiaryName');
-            if (valid) valid = this.validateField('beneficiaryAddress');
-            if (valid) valid = this.validateField('iban');
-            if (valid) valid = this.validateField('bankName');
-            if (valid) valid = this.validateField('bankAddress');
-            if (valid) valid = this.validateField('swift');
+            if (valid) { valid = this.validateField('beneficiaryAddress'); }
+            if (valid) { valid = this.validateField('iban'); }
+            if (valid) { valid = this.validateField('bankName'); }
+            if (valid) { valid = this.validateField('bankAddress'); }
+            if (valid) { valid = this.validateField('swift'); }
         }
         return valid !== true;
     }
@@ -294,7 +294,7 @@ export class FeeEditorComponent implements OnInit {
         const value = event.value;
         // Add new target value
         if ((value || '').trim()) {
-            let values = this.schemeForm.get('targetValues')?.value;
+            const values = this.schemeForm.get('targetValues')?.value;
             values.push(value.trim());
             this.schemeForm.get('targetValues')?.setValue(values);
         }
@@ -305,8 +305,8 @@ export class FeeEditorComponent implements OnInit {
         this.schemeForm.get('targetValue')?.setValue(null);
     }
 
-    removeTargetValue(val: string) {
-        let values = this.schemeForm.get('targetValues')?.value;
+    removeTargetValue(val: string): void {
+        const values = this.schemeForm.get('targetValues')?.value;
         const index = values.indexOf(val);
         if (index >= 0) {
             values.splice(index, 1);
@@ -314,12 +314,12 @@ export class FeeEditorComponent implements OnInit {
         }
     }
 
-    clearTargetValues() {
+    clearTargetValues(): void {
         this.schemeForm.get('targetValues')?.setValue([]);
     }
 
     targetItemSelected(event: MatAutocompleteSelectedEvent): void {
-        let values = this.schemeForm.get('targetValues')?.value;
+        const values = this.schemeForm.get('targetValues')?.value;
         if (!values.includes(event.option.viewValue)) {
             values.push(event.option.viewValue);
             this.schemeForm.get('targetValues')?.setValue(values);
@@ -335,10 +335,10 @@ export class FeeEditorComponent implements OnInit {
     private removeIncorrectTargetValues(scheme: FeeScheme): void {
         scheme.targetValues = scheme.targetValues.filter(val => {
             let result = true;
-            if (scheme.target == FeeSettingsTargetFilterType.Country) {
+            if (scheme.target === FeeSettingsTargetFilterType.Country) {
                 const c = getCountry(val);
                 result = (c !== null);
-            } else if (scheme.target == FeeSettingsTargetFilterType.AccountType) {
+            } else if (scheme.target === FeeSettingsTargetFilterType.AccountType) {
                 const c = AccountTypeFilterList.find(x => x.title.toLowerCase() === val.toLowerCase());
                 result = (c !== undefined);
             }
@@ -349,7 +349,7 @@ export class FeeEditorComponent implements OnInit {
     private validateTargetValues(): boolean {
         let result = true;
         const filter = this.schemeForm.get('target')?.value as FeeSettingsTargetFilterType;
-        if (filter == FeeSettingsTargetFilterType.Country) {
+        if (filter === FeeSettingsTargetFilterType.Country) {
             (this.schemeForm.get('targetValues')?.value as string[]).every(x => {
                 const c = getCountry(x);
                 if (c === null) {
@@ -360,7 +360,7 @@ export class FeeEditorComponent implements OnInit {
                 }
                 return true;
             });
-        } else if (filter == FeeSettingsTargetFilterType.AccountType) {
+        } else if (filter === FeeSettingsTargetFilterType.AccountType) {
             (this.schemeForm.get('targetValues')?.value as string[]).every(x => {
                 const c = AccountTypeFilterList.find(t => t.title.toLowerCase() === x.toLowerCase());
                 if (c === undefined) {

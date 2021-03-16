@@ -1,16 +1,16 @@
-import { CommonTargetValue } from "./common.model";
-import { CountryCodes, getCountry, getCountryByCode3 } from "./country-code.model";
+import { CommonTargetValue } from './common.model';
+import { CountryCodes, getCountry, getCountryByCode3 } from './country-code.model';
 import {
     SettingsCost, PaymentInstrument, PaymentProvider, TransactionType, CostSettingsFilterType
-} from "./generated-models";
+} from './generated-models';
 import {
     PaymentInstrumentList, PaymentProviderList,
     CostTargetFilterList, TransactionTypeList
 } from './payment.model';
 
 export const CountryFilterList: CommonTargetValue[] = CountryCodes.map(c => {
-    let item = new CommonTargetValue();
-    item.imgClass = "country-flag";
+    const item = new CommonTargetValue();
+    item.imgClass = 'country-flag';
     item.imgSource = `assets/svg-country-flags/${c.code2.toLowerCase()}.svg`;
     item.title = c.name;
     return item;
@@ -27,7 +27,7 @@ export const PspFilterList: CommonTargetValue[] = [
 
 export class CostScheme {
     id!: string;
-    isDefault: boolean = false;
+    isDefault = false;
     description!: string;
     name!: string;
     target: CostSettingsFilterType | null = null;
@@ -88,7 +88,7 @@ export class CostScheme {
             const v = TransactionTypeList.find(t => t.id === x)?.name as string;
             s = `${s}${p ? ', ' : ''}${v}`;
             p = true;
-        })
+        });
         return s;
     }
 
@@ -99,7 +99,7 @@ export class CostScheme {
             const v = PaymentInstrumentList.find(t => t.id === x)?.name as string;
             s = `${s}${p ? ', ' : ''}${v}`;
             p = true;
-        })
+        });
         return s;
     }
 
@@ -110,7 +110,7 @@ export class CostScheme {
             const v = PaymentProviderList.find(t => t.id === x)?.name as string;
             s = `${s}${p ? ', ' : ''}${v}`;
             p = true;
-        })
+        });
         return s;
     }
 }

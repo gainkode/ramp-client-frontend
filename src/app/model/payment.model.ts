@@ -1,30 +1,30 @@
 import {
     PaymentInstrument, PaymentProvider, TransactionType, FeeSettingsTargetFilterType, CostSettingsFilterType
-} from "./generated-models";
+} from './generated-models';
 
 export class PaymentInstrumentView {
     id!: PaymentInstrument;
-    name: string = '';
+    name = '';
 }
 
 export class PaymentProviderView {
     id!: PaymentProvider;
-    name: string = '';
+    name = '';
 }
 
 export class TransactionTypeView {
     id!: TransactionType;
-    name: string = '';
+    name = '';
 }
 
 export class FeeTargetFilterTypeView {
     id!: FeeSettingsTargetFilterType;
-    name: string = '';
+    name = '';
 }
 
 export class CostTargetFilterTypeView {
     id!: CostSettingsFilterType;
-    name: string = '';
+    name = '';
 }
 
 export const PaymentInstrumentList: Array<PaymentInstrumentView> = [
@@ -34,14 +34,14 @@ export const PaymentInstrumentList: Array<PaymentInstrumentView> = [
     { id: PaymentInstrument.Received, name: 'Received' },
     { id: PaymentInstrument.Send, name: 'Send' },
     { id: PaymentInstrument.WireTransfer, name: 'Wire transfer' }
-]
+];
 
 export const PaymentProviderList: Array<PaymentProviderView> = [
     { id: PaymentProvider.Bank, name: 'Bank' },
     { id: PaymentProvider.Skrill, name: 'Skrill' },
     { id: PaymentProvider.Sofort, name: 'Sofort' },
     { id: PaymentProvider.Totalprocessing, name: 'Total processing' }
-]
+];
 
 export const TransactionTypeList: Array<TransactionTypeView> = [
     { id: TransactionType.Deposit, name: 'Deposit' },
@@ -49,7 +49,7 @@ export const TransactionTypeList: Array<TransactionTypeView> = [
     { id: TransactionType.System, name: 'System' },
     { id: TransactionType.Transfer, name: 'Transfer' },
     { id: TransactionType.Withdrawal, name: 'Withdrawal' }
-]
+];
 
 export const FeeTargetFilterList: Array<FeeTargetFilterTypeView> = [
     { id: FeeSettingsTargetFilterType.AffiliateId, name: 'Affiliate identifier' },
@@ -57,9 +57,9 @@ export const FeeTargetFilterList: Array<FeeTargetFilterTypeView> = [
     { id: FeeSettingsTargetFilterType.AccountType, name: 'Account type' },
     { id: FeeSettingsTargetFilterType.Country, name: 'Country' },
     { id: FeeSettingsTargetFilterType.InitiateFrom, name: 'Initiate from ...' }
-]
+];
 
 export const CostTargetFilterList: Array<CostTargetFilterTypeView> = [
     { id: CostSettingsFilterType.Country, name: 'Country' },
     { id: CostSettingsFilterType.Psp, name: 'PSP' }
-]
+];

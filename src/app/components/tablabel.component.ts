@@ -7,5 +7,5 @@ import { Component, Input } from '@angular/core';
 })
 export class TabLabelComponent {
     @Input() hasErrors: boolean | undefined = false;
-    @Input() labelText: string = '';
+    @Input() labelText = '';
 }

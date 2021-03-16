@@ -24,7 +24,7 @@ export class ConfirmEmailComponent {
                 }, (error) => {
                     this.validated = true;
                     this.errorMessage = this.errorHandler.getError(
-                        error.message, 
+                        error.message,
                         'Unable to validate email');
                 });
         }

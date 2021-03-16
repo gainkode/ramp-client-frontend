@@ -14,7 +14,5 @@ export class ProfileMainPersonalComponent implements OnInit {
     this.user = auth.user;
   }
 
-  ngOnInit(): void {
-    
-  }
+  ngOnInit(): void { }
 }
