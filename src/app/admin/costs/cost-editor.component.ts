@@ -61,7 +61,7 @@ export class CostEditorComponent implements OnInit {
         trxType: [[], { validators: [Validators.required], updateOn: 'change' }],
         provider: [[], { validators: [Validators.required], updateOn: 'change' }],
         mdr: ['',
-            { validators: [Validators.required, Validators.min(0), Validators.max(1000)], updateOn: 'change' }],
+            { validators: [Validators.required, Validators.min(0), Validators.max(100)], updateOn: 'change' }],
         transactionCost: ['',
             { validators: [Validators.required, Validators.min(0), Validators.max(100)], updateOn: 'change' }],
         rollingReserves: ['',

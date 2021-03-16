@@ -155,7 +155,6 @@ export class FeeEditorComponent implements OnInit {
     private filterTargetValues(value: string): CommonTargetValue[] {
         let filterValue = '';
         if (value) {
-            console.log(value);
             filterValue = value.toLowerCase();
             return this.targetValueParams.dataList.filter(c => c.title.toLowerCase().includes(filterValue));
         } else {

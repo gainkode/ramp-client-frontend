@@ -39,7 +39,7 @@ export class CostsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.inProgress = true;
     this._settingsSubscription = this.adminService.getCostSettings().valueChanges.subscribe(({ data }) => {
-      const settings = data.getSettingsFee as SettingsCostListResult;
+      const settings = data.getSettingsCost as SettingsCostListResult;
       let itemCount = 0;
       if (settings !== null) {
         itemCount = settings?.count as number;
@@ -64,7 +64,7 @@ export class CostsComponent implements OnInit, OnDestroy {
   }
 
   refresh() {
-    this.adminService.getFeeSettings().refetch();
+    this.adminService.getCostSettings().refetch();
   }
 
   private setEditMode(mode: boolean) {

@@ -316,7 +316,6 @@ export class AuthService {
     }
 
     setLoginUser(login: LoginResult): void {
-        console.log(login);
         sessionStorage.setItem('currentUser', JSON.stringify(login.user));
         sessionStorage.setItem('currentToken', login.authToken as string);
     }

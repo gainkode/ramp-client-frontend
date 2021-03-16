@@ -127,8 +127,8 @@ export class CostShemeTerms {
     constructor(data: string) {
         if (data !== '') {
             const terms = JSON.parse(data);
-            this.mdr = terms.Min_transaction_cost;
-            this.transactionCost = terms.Transaction_cost;
+            this.mdr = terms.MDR;
+            this.transactionCost = terms.Per_transaction_cost;
             this.rollingReserves = terms.Rolling_reserves;
             this.rollingReservesDays = terms.Rolling_reserves_days;
             this.chargebackCost = terms.Chargeback_cost;
@@ -139,8 +139,8 @@ export class CostShemeTerms {
 
     getObject(): string {
         return JSON.stringify({
-            Transaction_cost: this.transactionCost,
-            mdr: this.mdr,
+            Per_transaction_cost: this.transactionCost,
+            MDR: this.mdr,
             Rolling_reserves: this.rollingReserves,
             Rolling_reserves_days: this.rollingReservesDays,
             Chargeback_cost: this.chargebackCost,
