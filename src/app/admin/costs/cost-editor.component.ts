@@ -115,7 +115,7 @@ export class CostEditorComponent implements OnInit {
         });
         this.schemeForm.get('target')?.valueChanges.subscribe(val => {
             this.clearTargetValues();
-            this.filteredTargetValues = this.schemeForm.get('targetValues')?.valueChanges.pipe(
+            this.filteredTargetValues = this.schemeForm.get('targetValue')?.valueChanges.pipe(
                 startWith(''),
                 map(value => this.filterTargetValues(value)));
         });
@@ -124,7 +124,6 @@ export class CostEditorComponent implements OnInit {
     private filterTargetValues(value: string): CommonTargetValue[] {
         let filterValue = '';
         if (value) {
-            console.log(value);
             filterValue = value.toLowerCase();
             return this.targetValueParams.dataList.filter(c => c.title.toLowerCase().includes(filterValue));
         } else {

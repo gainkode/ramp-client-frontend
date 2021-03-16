@@ -247,6 +247,7 @@ export class AdminDataService {
 
   saveCostSettings(settings: CostScheme, create: boolean): Observable<any> {
 
+    console.log(create);
     console.log(settings.name);
     console.log(settings.description);
     console.log(settings.target);
