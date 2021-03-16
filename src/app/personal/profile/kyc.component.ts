@@ -33,6 +33,14 @@ export class KycPersonalComponent implements OnInit {
           this.user?.phone as string,
           []);
       });
+    }, (error) => {
+      this.inProgress = false;
+      console.log(error);
+      if (this.auth.token !== '') {
+        this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load settings');
+      } else {
+        this.router.navigateByUrl('/');
+      }
     });
   }
 

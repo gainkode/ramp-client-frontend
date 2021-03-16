@@ -150,7 +150,7 @@ export class CostsComponent implements OnInit, OnDestroy {
       }
     });
   }
-     
+
   onSaved(scheme: CostScheme) {
     this.editorErrorMessage = '';
     this.inProgress = true;
