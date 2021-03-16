@@ -154,46 +154,19 @@ query {
 }
 `;
 
-const GET_MY_KYC_INFO_POST = gql`
+const GET_SETTINGS_KYC_POST = gql`
 query {
-    myKycInfo {
-      applicant {
-        firstName,
-        lastName,
-        email,
-        phone,
-        countryCode3,
-        kyc { createDate, reviewDate, result, status },
-        details { key, value }
-      }
-      appliedDocuments {
-        code,
-        firstName,
-        lastName,
-        issuedDate,
-        validUntil,
-        number,
-        countryCode3,
-        details { key, value }
-      }
-      requiredInfo {
-        documents {
-            code,
-            type,
-            name,
-            description,
-            subTypes {
-                code,
-                type,
-                name,
-                description,
-                options,
-                subTypes { code, type, name, description, options }
-            },
-            options
-        },
-        fields { name, required }
-      }
+    getSettingsKyc {
+      kycBaseAddress
+      kycPersonalLevel
+      kycPersonalFlow
+      kycMerchantLevel
+      kycMerchantFlow
+      kycMaxFileSize    
+      kycBeneficiaryPositions
+      kycBeneficiaryTypes
+      kycSourceOfFunds    
+      kycRejectedLabels { code, type, description }
     }
   }
 `;
@@ -404,9 +377,9 @@ export class AuthService {
         return result;
     }
 
-    getMyKycInfo(): QueryRef<any, EmptyObject> {
+    getKycSettings(): QueryRef<any, EmptyObject> {
         return this.apollo.watchQuery<any>({
-            query: GET_MY_KYC_INFO_POST,
+            query: GET_SETTINGS_KYC_POST,
             fetchPolicy: 'network-only'
         });
     }

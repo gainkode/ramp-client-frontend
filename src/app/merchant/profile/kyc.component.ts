@@ -1,43 +1,84 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
-import { Subscription } from 'rxjs';
-import { Validators, FormBuilder } from '@angular/forms';
-import { KycInfo } from '../../model/generated-models';
+import { SettingsKyc, User } from 'src/app/model/generated-models';
+
+const snsWebSdk = require('@sumsub/websdk');
 
 @Component({
     templateUrl: 'kyc.component.html',
     styleUrls: ['profile.scss']
 })
-export class KycMerchantComponent implements OnInit, OnDestroy {
+export class KycMerchantComponent implements OnInit {
+    user: User | null = null;
     inProgress = false;
     errorMessage = '';
-    private _kycSubscription!: any;
 
-    constructor(private auth: AuthService, private errorHandler: ErrorService,
-        private formBuilder: FormBuilder, private router: Router) { }
+    constructor(private router: Router, private auth: AuthService, private errorHandler: ErrorService) {
+        this.user = auth.user;
+    }
 
     ngOnInit(): void {
         this.inProgress = true;
-        this._kycSubscription = this.auth.getMyKycInfo().valueChanges.subscribe(({ data }) => {
-            console.log(data);
-            const settings = data.myKycInfo as KycInfo;
+        this.auth.getKycSettings().valueChanges.subscribe(kyc => {
+            const settingsKyc: SettingsKyc = kyc.data.getSettingsKyc;
             this.inProgress = false;
-        }, (error) => {
-            this.inProgress = false;
-            if (this.auth.token !== '') {
-                this.errorMessage = this.errorHandler.getError(
-                    error.message, 
-                    'Unable to load approval process data');
-            } else {
-                this.router.navigateByUrl('/');
-            }
+            this.auth.getKycToken().valueChanges.subscribe(({ data }) => {
+                this.launchSumSubWidget(
+                    settingsKyc.kycBaseAddress as string,
+                    settingsKyc.kycMerchantFlow as string,
+                    data.generateWebApiToken,
+                    this.user?.email as string,
+                    this.user?.phone as string,
+                    []);
+            });
         });
     }
 
-    ngOnDestroy() {
-        (this._kycSubscription as Subscription).unsubscribe();
+    // @param apiUrl - 'https://test-api.sumsub.com' (sandbox) or 'https://api.sumsub.com' (production)
+    // @param flowName - the flow name chosen at Step 1 (e.g. 'basic-kyc')
+    // @param accessToken - access token that you generated on the backend in Step 2
+    // @param applicantEmail - applicant email (not required)
+    // @param applicantPhone - applicant phone, if available (not required)
+    // @param customI18nMessages - customized locale messages for current session (not required)
+    launchSumSubWidget(apiUrl: string, flowName: string, accessToken: string, applicantEmail: string,
+        applicantPhone: string, customI18nMessages: string[]) {
+        const snsWebSdkInstance = snsWebSdk.default.Builder(apiUrl, flowName)
+            .withAccessToken(accessToken,
+                (newAccessTokenCallback: (newToken: string) => void) => {
+                    // Access token expired
+                    // get a new one and pass it to the callback to re-initiate the WebSDK
+                    console.log('update token');
+                    this.auth.getKycToken().valueChanges.subscribe(({ data }) => {
+                        newAccessTokenCallback(data.generateWebApiToken);
+                    });
+                }
+            )
+            .withConf({
+                lang: 'en',
+                applicantEmail,
+                applicantPhone,
+                i18n: customI18nMessages,
+                onMessage: (type: any, payload: any) => {
+                    // see below what kind of messages the WebSDK generates
+                    console.log('WebSDK onMessage', type, payload);
+                },
+                // uiConf: {
+                //   customCss: "https://url.com/styles.css"
+                //   // URL to css file in case you need change it dynamically from the code
+                //   // the similar setting at Applicant flow will rewrite customCss
+                //   // you may also use to pass string with plain styles `customCssStr:`
+                // },
+                onError: (error: any) => {
+                    this.errorMessage = error;
+                    console.error('WebSDK onError', error);
+                },
+            })
+            .build();
+        // you are ready to go:
+        // just launch the WebSDK by providing the container element for it
+        snsWebSdkInstance.launch('#sumsub-websdk-container');
     }
 
     // temp
@@ -45,8 +86,4 @@ export class KycMerchantComponent implements OnInit, OnDestroy {
         this.auth.logout();
     }
     // temp
-
-    onSubmit(): void {
-
-    }
 }

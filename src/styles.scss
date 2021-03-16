@@ -257,24 +257,27 @@ img.country-flag {
 
 
 
-.parent-test {
-    display: flex;
-    height : 100%;
+
+.block-split {
+    display : flex;
+    height  : 100%;
+    overflow: auto;
 }
 
-.child-test-60 {
-    padding: 2em;
-    width: 60%;
-    background-color: yellowgreen;
+.block-split-left-panel {
+    padding  : 1em;
+    width    : 55%;
+    min-width: 10em;
+    height   : 100%;
+    overflow : auto;
 }
 
-.child-test-40 {
-    padding: 3em;
-    width: 40%;
-    background-color: yellow;
-}
-
-.child-active-test {
-    flex-shrink: 1;
-    background-color: yellow;
+.block-split-right-panel {
+    z-index         : 100;
+    background-color: rgb(206, 219, 236);
+    padding         : 1.2em;
+    width           : 45%;
+    max-width       : 45%;
+    height          : 100%;
+    overflow        : auto;
 }

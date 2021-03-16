@@ -127,7 +127,12 @@ export type SettingsCommon = {
 
 export type SettingsKyc = {
   __typename?: 'SettingsKyc';
+  kycBaseAddress?: Maybe<Scalars['String']>;
   kycMaxFileSize?: Maybe<Scalars['Int']>;
+  kycPersonalLevel?: Maybe<Scalars['String']>;
+  kycPersonalFlow?: Maybe<Scalars['String']>;
+  kycMerchantLevel?: Maybe<Scalars['String']>;
+  kycMerchantFlow?: Maybe<Scalars['String']>;
   kycBeneficiaryPositions?: Maybe<Array<Scalars['String']>>;
   kycBeneficiaryTypes?: Maybe<Array<Scalars['String']>>;
   kycSourceOfFunds?: Maybe<Array<Scalars['String']>>;
