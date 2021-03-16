@@ -49,6 +49,7 @@ export class FeesComponent implements OnInit, OnDestroy {
       }
       this.inProgress = false;
     }, (error) => {
+      this.setEditMode(false);
       this.inProgress = false;
       if (this.auth.token !== '') {
         this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load fee settings');
