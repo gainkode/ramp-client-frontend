@@ -14,23 +14,15 @@
     }
 }
 
-.panel-dim {
+.panel-dim-table {
     background-color: #00000060;
     position        : fixed;
+    z-index: 100;
     left            : 0;
     top             : 0;
     height          : 100%;
-    overflow        : auto;
-}
-
-.panel-dim-table {
-    background-color: #00000060;
-    position        : absolute;
-    left            : 0;
-    top             : 0;
-    height          : 200%;
-    width           : 60%;
-    overflow        : auto;
+    width           : 66%;
+    overflow-x        : hidden;
 }
 
 th.mat-header-cell {
@@ -76,6 +68,7 @@ th.mat-header-cell {
     padding         : 0;
     width           : 40%;
     max-width       : 40%;
+    overflow        : auto;
 }
 
 .button-form-panel {

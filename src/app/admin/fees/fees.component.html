@@ -85,6 +85,9 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
   </div>
+
+  <div *ngIf="editMode" class="panel-dim-table"></div>
+  
   <div [ngClass]="showDetailed ? 'detailed-table-right-panel-details' : 'detailed-table-right-panel-full'">
     <div class="details-editor">
       <fee-editor *ngIf="showDetailed" [currentScheme]="selectedScheme" [create]="createScheme" (save)="onSaved($event)"
@@ -93,5 +96,5 @@
     </div>
   </div>
 
-  <div *ngIf="editMode" class="panel-dim-table"></div>
+  
 </div>
