@@ -60,20 +60,41 @@ export class CostEditorComponent implements OnInit {
         instrument: [[], { validators: [Validators.required], updateOn: 'change' }],
         trxType: [[], { validators: [Validators.required], updateOn: 'change' }],
         provider: [[], { validators: [Validators.required], updateOn: 'change' }],
-        mdr: ['',
-            { validators: [Validators.required, Validators.min(0), Validators.max(100)], updateOn: 'change' }],
-        transactionCost: ['',
-            { validators: [Validators.required, Validators.min(0), Validators.max(100)], updateOn: 'change' }],
-        rollingReserves: ['',
-            { validators: [Validators.required, Validators.min(0), Validators.max(10000)], updateOn: 'change' }],
-        rollingReservesDays: ['',
-            { validators: [Validators.required, Validators.min(0), Validators.max(365)], updateOn: 'change' }],
-        chargebackCost: ['',
-            { validators: [Validators.required, Validators.min(0), Validators.max(100)], updateOn: 'change' }],
-        monthlyCost: ['',
-            { validators: [Validators.required, Validators.min(0), Validators.max(100)], updateOn: 'change' }],
-        minMonthlyCost: ['',
-            { validators: [Validators.required, Validators.min(0), Validators.max(100)], updateOn: 'change' }]
+        mdr: ['', {
+            validators: [
+                Validators.required, Validators.pattern('^[0-9.]+$')
+            ], updateOn: 'change'
+        }],
+        transactionCost: ['', {
+            validators: [
+                Validators.required, Validators.pattern('^[0-9.]+$')
+            ], updateOn: 'change'
+        }],
+        rollingReserves: ['', {
+            validators: [
+                Validators.required, Validators.pattern('^[0-9.]+$')
+            ], updateOn: 'change'
+        }],
+        rollingReservesDays: ['', {
+            validators: [
+                Validators.required, Validators.pattern('^[0-9.]+$')
+            ], updateOn: 'change'
+        }],
+        chargebackCost: ['', {
+            validators: [
+                Validators.required, Validators.pattern('^[0-9.]+$')
+            ], updateOn: 'change'
+        }],
+        monthlyCost: ['', {
+            validators: [
+                Validators.required, Validators.pattern('^[0-9.]+$')
+            ], updateOn: 'change'
+        }],
+        minMonthlyCost: ['', {
+            validators: [
+                Validators.required, Validators.pattern('^[0-9.]+$')
+            ], updateOn: 'change'
+        }]
     });
 
     get defaultSchemeFlag(): string {
@@ -189,13 +210,13 @@ export class CostEditorComponent implements OnInit {
         (this.schemeForm.get('trxType')?.value as TransactionType[]).forEach(x => data.trxType.push(x));
         (this.schemeForm.get('provider')?.value as PaymentProvider[]).forEach(x => data.provider.push(x));
         // terms
-        data.terms.mdr = this.schemeForm.get('mdr')?.value;
-        data.terms.transactionCost = this.schemeForm.get('transactionCost')?.value;
-        data.terms.rollingReserves = this.schemeForm.get('rollingReserves')?.value;
-        data.terms.rollingReservesDays = this.schemeForm.get('rollingReservesDays')?.value;
-        data.terms.chargebackCost = this.schemeForm.get('chargebackCost')?.value;
-        data.terms.monthlyCost = this.schemeForm.get('monthlyCost')?.value;
-        data.terms.minMonthlyCost = this.schemeForm.get('minMonthlyCost')?.value;
+        data.terms.mdr = Number(this.schemeForm.get('mdr')?.value);
+        data.terms.transactionCost = Number(this.schemeForm.get('transactionCost')?.value);
+        data.terms.rollingReserves = Number(this.schemeForm.get('rollingReserves')?.value);
+        data.terms.rollingReservesDays = Number(this.schemeForm.get('rollingReservesDays')?.value);
+        data.terms.chargebackCost = Number(this.schemeForm.get('chargebackCost')?.value);
+        data.terms.monthlyCost = Number(this.schemeForm.get('monthlyCost')?.value);
+        data.terms.minMonthlyCost = Number(this.schemeForm.get('minMonthlyCost')?.value);
         return data;
     }
 

@@ -64,20 +64,41 @@ export class FeeEditorComponent implements OnInit {
         instrument: [[], { validators: [Validators.required], updateOn: 'change' }],
         trxType: [[], { validators: [Validators.required], updateOn: 'change' }],
         provider: [[], { validators: [Validators.required], updateOn: 'change' }],
-        transactionFees: ['',
-            { validators: [Validators.required, Validators.min(0), Validators.max(100)], updateOn: 'change' }],
-        minTransactionFee: ['',
-            { validators: [Validators.required, Validators.min(0), Validators.max(1000)], updateOn: 'change' }],
-        rollingReserves: ['',
-            { validators: [Validators.required, Validators.min(0), Validators.max(10000)], updateOn: 'change' }],
-        rollingReservesDays: ['',
-            { validators: [Validators.required, Validators.min(0), Validators.max(365)], updateOn: 'change' }],
-        chargebackFees: ['',
-            { validators: [Validators.required, Validators.min(0), Validators.max(100)], updateOn: 'change' }],
-        monthlyFees: ['',
-            { validators: [Validators.required, Validators.min(0), Validators.max(100)], updateOn: 'change' }],
-        minMonthlyFees: ['',
-            { validators: [Validators.required, Validators.min(0), Validators.max(100)], updateOn: 'change' }],
+        transactionFees: ['', {
+            validators: [
+                Validators.required, Validators.pattern('^[0-9.]+$')
+            ], updateOn: 'change'
+        }],
+        minTransactionFee: ['', {
+            validators: [
+                Validators.required, Validators.pattern('^[0-9.]+$')
+            ], updateOn: 'change'
+        }],
+        rollingReserves: ['', {
+            validators: [
+                Validators.required, Validators.pattern('^[0-9.]+$')
+            ], updateOn: 'change'
+        }],
+        rollingReservesDays: ['', {
+            validators: [
+                Validators.required, Validators.pattern('^[0-9.]+$')
+            ], updateOn: 'change'
+        }],
+        chargebackFees: ['', {
+            validators: [
+                Validators.required, Validators.pattern('^[0-9.]+$')
+            ], updateOn: 'change'
+        }],
+        monthlyFees: ['', {
+            validators: [
+                Validators.required, Validators.pattern('^[0-9.]+$')
+            ], updateOn: 'change'
+        }],
+        minMonthlyFees: ['', {
+            validators: [
+                Validators.required, Validators.pattern('^[0-9.]+$')
+            ], updateOn: 'change'
+        }],
         beneficiaryName: ['', { validators: [Validators.required], updateOn: 'change' }],
         beneficiaryAddress: ['', { validators: [Validators.required], updateOn: 'change' }],
         iban: ['', { validators: [Validators.required], updateOn: 'change' }],
@@ -232,13 +253,13 @@ export class FeeEditorComponent implements OnInit {
         (this.schemeForm.get('trxType')?.value as TransactionType[]).forEach(x => data.trxType.push(x));
         (this.schemeForm.get('provider')?.value as PaymentProvider[]).forEach(x => data.provider.push(x));
         // terms
-        data.terms.transactionFees = this.schemeForm.get('transactionFees')?.value;
-        data.terms.minTransactionFee = this.schemeForm.get('minTransactionFee')?.value;
-        data.terms.rollingReserves = this.schemeForm.get('rollingReserves')?.value;
-        data.terms.rollingReservesDays = this.schemeForm.get('rollingReservesDays')?.value;
-        data.terms.chargebackFees = this.schemeForm.get('chargebackFees')?.value;
-        data.terms.monthlyFees = this.schemeForm.get('monthlyFees')?.value;
-        data.terms.minMonthlyFees = this.schemeForm.get('minMonthlyFees')?.value;
+        data.terms.transactionFees = Number(this.schemeForm.get('transactionFees')?.value);
+        data.terms.minTransactionFee = Number(this.schemeForm.get('minTransactionFee')?.value);
+        data.terms.rollingReserves = Number(this.schemeForm.get('rollingReserves')?.value);
+        data.terms.rollingReservesDays = Number(this.schemeForm.get('rollingReservesDays')?.value);
+        data.terms.chargebackFees = Number(this.schemeForm.get('chargebackFees')?.value);
+        data.terms.monthlyFees = Number(this.schemeForm.get('monthlyFees')?.value);
+        data.terms.minMonthlyFees = Number(this.schemeForm.get('minMonthlyFees')?.value);
         // wire details
         data.details.beneficiaryName = this.schemeForm.get('beneficiaryName')?.value;
         data.details.beneficiaryAddress = this.schemeForm.get('beneficiaryAddress')?.value;

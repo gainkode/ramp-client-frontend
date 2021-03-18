@@ -126,11 +126,8 @@
                 <mat-error *ngIf="this.schemeForm.get('transactionFees')?.hasError('required')">
                     Please specify transaction fee
                 </mat-error>
-                <mat-error *ngIf="this.schemeForm.get('transactionFees')?.hasError('min')">
-                    Minimal transaction fee is 0%
-                </mat-error>
-                <mat-error *ngIf="this.schemeForm.get('transactionFees')?.hasError('max')">
-                    Maximal transaction fee is 100%
+                <mat-error *ngIf="this.schemeForm.get('transactionFees')?.hasError('pattern')">
+                    Invalid number value
                 </mat-error>
             </mat-form-field>
 
@@ -142,11 +139,8 @@
                 <mat-error *ngIf="this.schemeForm.get('minTransactionFee')?.hasError('required')">
                     Please specify minimal transaction fee
                 </mat-error>
-                <mat-error *ngIf="this.schemeForm.get('minTransactionFee')?.hasError('min')">
-                    Minimal value of minimal transaction fee is &#8364;0
-                </mat-error>
-                <mat-error *ngIf="this.schemeForm.get('minTransactionFee')?.hasError('max')">
-                    Maximal value of minimal transaction fee is &#8364;1000
+                <mat-error *ngIf="this.schemeForm.get('minTransactionFee')?.hasError('pattern')">
+                    Invalid number value
                 </mat-error>
             </mat-form-field>
 
@@ -157,11 +151,8 @@
                 <mat-error *ngIf="this.schemeForm.get('rollingReserves')?.hasError('required')">
                     Please specify rolling reserves value
                 </mat-error>
-                <mat-error *ngIf="this.schemeForm.get('rollingReserves')?.hasError('min')">
-                    Maximal value of rolling reserves value is 0%
-                </mat-error>
-                <mat-error *ngIf="this.schemeForm.get('rollingReserves')?.hasError('max')">
-                    Maximal value of rolling reserves value is 100%
+                <mat-error *ngIf="this.schemeForm.get('rollingReserves')?.hasError('pattern')">
+                    Invalid number value
                 </mat-error>
             </mat-form-field>
 
@@ -173,11 +164,8 @@
                 <mat-error *ngIf="this.schemeForm.get('rollingReservesDays')?.hasError('required')">
                     Please specify number of rolling reserves days
                 </mat-error>
-                <mat-error *ngIf="this.schemeForm.get('rollingReservesDays')?.hasError('min')">
-                    Maximal value of rolling reserves days is 0%
-                </mat-error>
-                <mat-error *ngIf="this.schemeForm.get('rollingReservesDays')?.hasError('max')">
-                    Maximal value of rolling reserves days is 100%
+                <mat-error *ngIf="this.schemeForm.get('rollingReservesDays')?.hasError('pattern')">
+                    Invalid number value
                 </mat-error>
             </mat-form-field>
 
@@ -188,11 +176,8 @@
                 <mat-error *ngIf="this.schemeForm.get('chargebackFees')?.hasError('required')">
                     Please specify chargeback fee
                 </mat-error>
-                <mat-error *ngIf="this.schemeForm.get('chargebackFees')?.hasError('min')">
-                    Minimal chargeback fee is 0%
-                </mat-error>
-                <mat-error *ngIf="this.schemeForm.get('chargebackFees')?.hasError('max')">
-                    Maximal chargeback fee is 100%
+                <mat-error *ngIf="this.schemeForm.get('chargebackFees')?.hasError('pattern')">
+                    Invalid number value
                 </mat-error>
             </mat-form-field>
 
@@ -203,11 +188,8 @@
                 <mat-error *ngIf="this.schemeForm.get('monthlyFees')?.hasError('required')">
                     Please specify monthly fee
                 </mat-error>
-                <mat-error *ngIf="this.schemeForm.get('monthlyFees')?.hasError('min')">
-                    Minimal monthly fee is 0
-                </mat-error>
-                <mat-error *ngIf="this.schemeForm.get('monthlyFees')?.hasError('max')">
-                    Maximal monthly fee is 100
+                <mat-error *ngIf="this.schemeForm.get('monthlyFees')?.hasError('pattern')">
+                    Invalid number value
                 </mat-error>
             </mat-form-field>
 
@@ -218,11 +200,8 @@
                 <mat-error *ngIf="this.schemeForm.get('minMonthlyFees')?.hasError('required')">
                     Please specify minimal monthly fee
                 </mat-error>
-                <mat-error *ngIf="this.schemeForm.get('minMonthlyFees')?.hasError('min')">
-                    Minimal value of minimal monthly fee is 0
-                </mat-error>
-                <mat-error *ngIf="this.schemeForm.get('minMonthlyFees')?.hasError('max')">
-                    Maximal value of minimal monthly fee is 100
+                <mat-error *ngIf="this.schemeForm.get('minMonthlyFees')?.hasError('pattern')">
+                    Invalid number value
                 </mat-error>
             </mat-form-field>
         </mat-tab>
