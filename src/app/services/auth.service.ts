@@ -154,6 +154,10 @@ query {
 }
 `;
 
+const KYC_HAS_BEEN_SENT_POST = gql`
+  mutation KycHasBeenSent { kycHasBeenSent }
+`;
+
 const GET_SETTINGS_KYC_POST = gql`
 query {
     getSettingsKyc {
@@ -380,6 +384,15 @@ export class AuthService {
         return this.apollo.watchQuery<any>({
             query: GET_SETTINGS_KYC_POST,
             fetchPolicy: 'network-only'
+        });
+    }
+
+    setKycCompleted(tokenId: string): Observable<any> {
+        return this.apollo.mutate({
+            mutation: KYC_HAS_BEEN_SENT_POST,
+            variables: {
+                token: tokenId
+            }
         });
     }
 

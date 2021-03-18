@@ -44,6 +44,15 @@ export class KycPersonalComponent implements OnInit {
     });
   }
 
+  private setKycCompleted(): void {
+    console.log('KYC Completed');
+    this.auth.setKycCompleted(this.auth.token).subscribe(({ data }) => {
+      console.log('KYC Notified');
+    }, (error) => {
+      this.errorMessage = this.errorHandler.getError(error.message, 'Unable to complete validation');
+    });
+  }
+
   // @param apiUrl - 'https://test-api.sumsub.com' (sandbox) or 'https://api.sumsub.com' (production)
   // @param flowName - the flow name chosen at Step 1 (e.g. 'basic-kyc')
   // @param accessToken - access token that you generated on the backend in Step 2
@@ -59,6 +68,7 @@ export class KycPersonalComponent implements OnInit {
           // get a new one and pass it to the callback to re-initiate the WebSDK
           console.log('update token');
           this.auth.getKycToken().valueChanges.subscribe(({ data }) => {
+            console.log('new token', data.generateWebApiToken);
             newAccessTokenCallback(data.generateWebApiToken);
           });
         }
@@ -71,6 +81,9 @@ export class KycPersonalComponent implements OnInit {
         onMessage: (type: any, payload: any) => {
           // see below what kind of messages the WebSDK generates
           console.log('WebSDK onMessage', type, payload);
+          if (type === 'idCheck.onApplicantSubmitted') {
+            this.setKycCompleted();
+          }
         },
         // uiConf: {
         //   customCss: "https://url.com/styles.css"
@@ -80,7 +93,6 @@ export class KycPersonalComponent implements OnInit {
         // },
         onError: (error: any) => {
           this.errorMessage = error;
-          console.error('WebSDK onError', error);
         },
       })
       .build();
