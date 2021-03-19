@@ -56,7 +56,7 @@ export class FeeEditorComponent implements OnInit {
     schemeForm = this.formBuilder.group({
         id: [''],
         name: ['', { validators: [Validators.required], updateOn: 'change' }],
-        description: ['', { validators: [Validators.required], updateOn: 'change' }],
+        description: [''],
         isDefault: [false],
         target: ['', { validators: [Validators.required], updateOn: 'change' }],
         targetValues: [[], { validators: [Validators.required], updateOn: 'change' }],

@@ -11,7 +11,7 @@ const GET_FEE_SETTINGS_POST = gql`
       filter: "",
       orderBy:
       [
-        {orderBy: "default", desc: false},
+        {orderBy: "default", desc: true},
         {orderBy: "name", desc: false}
       ]) {
       count,
@@ -106,7 +106,7 @@ const GET_COST_SETTINGS_POST = gql`
       filter: "",
       orderBy:
       [
-        {orderBy: "default", desc: false},
+        {orderBy: "default", desc: true},
         {orderBy: "name", desc: false}
       ]) {
       count,

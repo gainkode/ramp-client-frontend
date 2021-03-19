@@ -23,11 +23,7 @@
     <!-- Description -->
     <mat-form-field class="form-element">
         <mat-label>Description</mat-label>
-        <input type="text" matInput formControlName="description" maxlength="100" placeholder="Fee scheme description"
-            required />
-        <mat-error *ngIf="this.schemeForm.get('description')?.hasError('required')">
-            Please specify a scheme description
-        </mat-error>
+        <input type="text" matInput formControlName="description" maxlength="100" placeholder="Fee scheme description"/>
     </mat-form-field>
 
     <mat-tab-group class="form-element" color="primary" mat-stretch-tabs animationDuration="0"
