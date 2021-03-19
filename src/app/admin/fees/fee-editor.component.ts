@@ -400,6 +400,8 @@ export class FeeEditorComponent implements OnInit {
         this.forceValidate = true;
         if (this.schemeForm.valid && this.validateTargetValues()) {
             this.save.emit(this.setSchemeData());
+        } else {
+            this.errorMessage = 'Input data is not completely valid. Please, check all fields are valid.';
         }
     }
 

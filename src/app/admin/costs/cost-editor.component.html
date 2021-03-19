@@ -26,6 +26,13 @@
         <input type="text" matInput formControlName="description" maxlength="100" placeholder="Fee scheme description"/>
     </mat-form-field>
 
+    <div class="form-element" *ngIf="errorMessage!==''">
+        <div class="form-error-box">
+            {{errorMessage}}
+        </div>
+        <br>
+    </div>
+
     <mat-tab-group class="form-element" color="primary" mat-stretch-tabs animationDuration="0"
         [selectedIndex]="selectedTab" (selectedIndexChange)="setSelectedTab($event)">
         <mat-tab>
@@ -201,13 +208,6 @@
             </mat-form-field>
         </mat-tab>
     </mat-tab-group>
-
-    <div class="form-element" *ngIf="errorMessage!==''">
-        <div class="form-error-box">
-            {{errorMessage}}
-        </div>
-        <br>
-    </div>
 
     <div class="form-element">
         <div class="button-form-panel">
