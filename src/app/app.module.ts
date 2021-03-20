@@ -98,6 +98,10 @@ export class AppModule {
   }));
 
   constructor(private apollo: Apollo, private httpLink: HttpLink, private authService: AuthService) {
+    const cookieName = 'cookieconsent_status';
+    const w = window as any;
+    const consentStatus = w.cookieconsent.utils.getCookie(cookieName);
+    const allowCookies = (consentStatus === 'allow');
     apollo.create({
       link: ApolloLink.from([
         this.errorLink as any,
@@ -105,7 +109,7 @@ export class AppModule {
         this.authLink,
         httpLink.create({
           uri: `${environment.api_server}/gql/api`,
-          withCredentials: true
+          withCredentials: allowCookies
         })
       ]),
       cache: new InMemoryCache()

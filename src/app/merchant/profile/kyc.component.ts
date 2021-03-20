@@ -45,9 +45,8 @@ export class KycMerchantComponent implements OnInit {
     }
 
     private setKycCompleted(): void {
-        console.log('KYC Completed');
         this.auth.setKycCompleted(this.auth.token).subscribe(({ data }) => {
-            console.log('KYC Notified');
+            
         }, (error) => {
             this.errorMessage = this.errorHandler.getError(error.message, 'Unable to complete validation');
         });
@@ -66,9 +65,7 @@ export class KycMerchantComponent implements OnInit {
                 (newAccessTokenCallback: (newToken: string) => void) => {
                     // Access token expired
                     // get a new one and pass it to the callback to re-initiate the WebSDK
-                    console.log('update token');
                     this.auth.getKycToken().valueChanges.subscribe(({ data }) => {
-                        console.log('new token', data.generateWebApiToken);
                         newAccessTokenCallback(data.generateWebApiToken);
                     });
                 }
@@ -80,7 +77,6 @@ export class KycMerchantComponent implements OnInit {
                 i18n: customI18nMessages,
                 onMessage: (type: any, payload: any) => {
                     // see below what kind of messages the WebSDK generates
-                    console.log('WebSDK onMessage', type, payload);
                     if (type === 'idCheck.onApplicantSubmitted') {
                         this.setKycCompleted();
                     }

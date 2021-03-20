@@ -46,7 +46,6 @@ export class LoginComponent {
     }
 
     handleSuccessLogin(userData: LoginResult): void {
-        console.log(userData);
         const typeCheck = userData.user?.type === 'Personal';
         if (typeCheck) {
             this.auth.setLoginUser(userData);

@@ -35,7 +35,7 @@ const GET_FEE_SETTINGS_POST = gql`
 const ADD_SETTINGS_FEE_POST = gql`
 mutation AddSettingsFee(
   $name: String!,
-  $description: String!,
+  $description: String,
   $targetFilterType: FeeSettingsTargetFilterType!,
   $targetFilterValues: [String!],
   $targetInstruments: [PaymentInstrument!],
@@ -64,7 +64,7 @@ const UPDATE_SETTINGS_FEE_POST = gql`
 mutation UpdateSettingsFee(
   $settingsId: ID!,
   $name: String!,
-  $description: String!,
+  $description: String,
   $targetFilterType: FeeSettingsTargetFilterType!,
   $targetFilterValues: [String!],
   $targetInstruments: [PaymentInstrument!],
@@ -130,7 +130,7 @@ const GET_COST_SETTINGS_POST = gql`
 const ADD_SETTINGS_COST_POST = gql`
 mutation AddSettingsCost(
   $name: String!,
-  $description: String!,
+  $description: String,
   $targetFilterType: CostSettingsFilterType!,
   $targetFilterValues: [String!],
   $targetInstruments: [PaymentInstrument!],
@@ -157,7 +157,7 @@ const UPDATE_SETTINGS_COST_POST = gql`
 mutation UpdateSettingsCost(
   $settingsId: ID!,
   $name: String!,
-  $description: String!,
+  $description: String,
   $targetFilterType: CostSettingsFilterType!,
   $targetFilterValues: [String!],
   $targetInstruments: [PaymentInstrument!],
@@ -246,16 +246,6 @@ export class AdminDataService {
   }
 
   saveCostSettings(settings: CostScheme, create: boolean): Observable<any> {
-
-    console.log(create);
-    console.log(settings.name);
-    console.log(settings.description);
-    console.log(settings.target);
-    console.log(settings.targetValues);
-    console.log(settings.instrument);
-    console.log(settings.trxType);
-    console.log(settings.provider);
-    console.log(settings.terms.getObject());
 
     return create ?
       this.apollo.mutate({
