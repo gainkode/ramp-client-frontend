@@ -34,7 +34,7 @@ export class AppComponent implements OnInit {
           text: '#ffffff'
         },
         button: {
-          background: '#f1d600',
+          background: '#c1c1c1',
           text: '#000000'
         }
       },
