@@ -101,7 +101,6 @@ export class AppModule {
     const cookieName = 'cookieconsent_status';
     const w = window as any;
     const consentStatus = w.cookieconsent.utils.getCookie(cookieName);
-    console.log(consentStatus);
     const allowCookies = (consentStatus !== 'deny');
     if (allowCookies) {
       apollo.create({

@@ -37,34 +37,45 @@ export class CostsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.inProgress = true;
-    this._settingsSubscription = this.adminService.getCostSettings().valueChanges.subscribe(({ data }) => {
-      const settings = data.getSettingsCost as SettingsCostListResult;
-      let itemCount = 0;
-      if (settings !== null) {
-        itemCount = settings?.count as number;
-        if (itemCount > 0) {
-          this.schemes = settings?.list?.map((val) => new CostScheme(val)) as CostScheme[];
+    const settingsData = this.adminService.getCostSettings();
+    if (settingsData === null) {
+      this.errorMessage = 'Cookie consent is rejected. Allow cookie in order to have access';
+    } else {
+      this.inProgress = true;
+      this._settingsSubscription = settingsData.valueChanges.subscribe(({ data }) => {
+        const settings = data.getSettingsCost as SettingsCostListResult;
+        let itemCount = 0;
+        if (settings !== null) {
+          itemCount = settings?.count as number;
+          if (itemCount > 0) {
+            this.schemes = settings?.list?.map((val) => new CostScheme(val)) as CostScheme[];
+          }
         }
-      }
-      this.inProgress = false;
-    }, (error) => {
-      this.setEditMode(false);
-      this.inProgress = false;
-      if (this.auth.token !== '') {
-        this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load cost settings');
-      } else {
-        this.router.navigateByUrl('/');
-      }
-    });
+        this.inProgress = false;
+      }, (error) => {
+        this.setEditMode(false);
+        this.inProgress = false;
+        if (this.auth.token !== '') {
+          this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load cost settings');
+        } else {
+          this.router.navigateByUrl('/');
+        }
+      });
+    }
   }
 
   ngOnDestroy(): void {
-    (this._settingsSubscription as Subscription).unsubscribe();
+    const s: Subscription = this._settingsSubscription;
+    if (s !== undefined) {
+      (this._settingsSubscription as Subscription).unsubscribe();
+    }
   }
 
   refresh(): void {
-    this.adminService.getCostSettings().refetch();
+    const settingsData = this.adminService.getCostSettings();
+    if (settingsData !== null) {
+      settingsData.refetch();
+    }
   }
 
   private setEditMode(mode: boolean): void {
@@ -136,20 +147,25 @@ export class CostsComponent implements OnInit, OnDestroy {
 
   onDeleteScheme(id: string): void {
     this.editorErrorMessage = '';
-    this.inProgress = true;
-    this.adminService.deleteCostSettings(id).subscribe(({ data }) => {
-      this.inProgress = false;
-      this.showEditor(null, false, false);
-      this.refresh();
-    }, (error) => {
-      this.inProgress = false;
-      console.log(error);
-      if (this.auth.token !== '') {
-        this.editorErrorMessage = this.errorHandler.getError(error.message, 'Unable to delete cost settings');
-      } else {
-        this.router.navigateByUrl('/');
-      }
-    });
+    const requestData = this.adminService.deleteCostSettings(id);
+    if (requestData === null) {
+      this.errorMessage = 'Cookie consent is rejected. Allow cookie in order to have access';
+    } else {
+      this.inProgress = true;
+      requestData.subscribe(({ data }) => {
+        this.inProgress = false;
+        this.showEditor(null, false, false);
+        this.refresh();
+      }, (error) => {
+        this.inProgress = false;
+        console.log(error);
+        if (this.auth.token !== '') {
+          this.editorErrorMessage = this.errorHandler.getError(error.message, 'Unable to delete cost settings');
+        } else {
+          this.router.navigateByUrl('/');
+        }
+      });
+    }
   }
 
   onSaved(scheme: CostScheme): void {

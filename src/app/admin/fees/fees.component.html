@@ -1,5 +1,7 @@
-<div class="form-error-box" *ngIf="errorMessage!==''">
-  {{errorMessage}}
+<div class="details-editor" *ngIf="errorMessage!==''">
+  <div class="form-error-box">
+    {{errorMessage}}
+  </div>
 </div>
 
 <div class="detailed-table-split" *ngIf="errorMessage===''">
@@ -9,7 +11,10 @@
         Fee schemes
       </h1>
 
-      <mat-progress-bar *ngIf="inProgress" mode="indeterminate"></mat-progress-bar>
+      <div *ngIf="inProgress">
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        <br>
+      </div>
 
       <div class="form-error-box" *ngIf="editorErrorMessage!==''">
         {{editorErrorMessage}}

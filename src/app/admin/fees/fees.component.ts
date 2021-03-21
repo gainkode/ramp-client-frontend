@@ -37,34 +37,46 @@ export class FeesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.inProgress = true;
-    this._settingsSubscription = this.adminService.getFeeSettings().valueChanges.subscribe(({ data }) => {
-      const settings = data.getSettingsFee as SettingsFeeListResult;
-      let itemCount = 0;
-      if (settings !== null) {
-        itemCount = settings?.count as number;
-        if (itemCount > 0) {
-          this.schemes = settings?.list?.map((val) => new FeeScheme(val)) as FeeScheme[];
+    const settingsData = this.adminService.getFeeSettings();
+    if (settingsData === null) {
+      this.errorMessage = 'Cookie consent is rejected. Allow cookie in order to have access';
+    } else {
+      this.inProgress = true;
+      this._settingsSubscription = settingsData.valueChanges.subscribe(({ data }) => {
+        const settings = data.getSettingsFee as SettingsFeeListResult;
+        let itemCount = 0;
+        if (settings !== null) {
+          itemCount = settings?.count as number;
+          if (itemCount > 0) {
+            this.schemes = settings?.list?.map((val) => new FeeScheme(val)) as FeeScheme[];
+          }
         }
-      }
-      this.inProgress = false;
-    }, (error) => {
-      this.setEditMode(false);
-      this.inProgress = false;
-      if (this.auth.token !== '') {
-        this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load fee settings');
-      } else {
-        this.router.navigateByUrl('/');
-      }
-    });
+        this.inProgress = false;
+      }, (error) => {
+        console.log('error');
+        this.setEditMode(false);
+        this.inProgress = false;
+        if (this.auth.token !== '') {
+          this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load fee settings');
+        } else {
+          this.router.navigateByUrl('/');
+        }
+      });
+    }
   }
 
   ngOnDestroy(): void {
-    (this._settingsSubscription as Subscription).unsubscribe();
+    const s: Subscription = this._settingsSubscription;
+    if (s !== undefined) {
+      (this._settingsSubscription as Subscription).unsubscribe();
+    }
   }
 
   refresh(): void {
-    this.adminService.getFeeSettings().refetch();
+    const settingsData = this.adminService.getFeeSettings();
+    if (settingsData !== null) {
+      settingsData.refetch();
+    }
   }
 
   private setEditMode(mode: boolean): void {
@@ -136,20 +148,24 @@ export class FeesComponent implements OnInit, OnDestroy {
 
   onDeleteScheme(id: string): void {
     this.editorErrorMessage = '';
-    this.inProgress = true;
-    this.adminService.deleteFeeSettings(id).subscribe(({ data }) => {
-      this.inProgress = false;
-      this.showEditor(null, false, false);
-      this.refresh();
-    }, (error) => {
-      this.inProgress = false;
-      console.log(error);
-      if (this.auth.token !== '') {
-        this.editorErrorMessage = this.errorHandler.getError(error.message, 'Unable to delete fee settings');
-      } else {
-        this.router.navigateByUrl('/');
-      }
-    });
+    const requestData = this.adminService.deleteFeeSettings(id);
+    if (requestData === null) {
+      this.errorMessage = 'Cookie consent is rejected. Allow cookie in order to have access';
+    } else {
+      this.inProgress = true;
+      requestData.subscribe(({ data }) => {
+        this.inProgress = false;
+        this.showEditor(null, false, false);
+        this.refresh();
+      }, (error) => {
+        this.inProgress = false;
+        if (this.auth.token !== '') {
+          this.editorErrorMessage = this.errorHandler.getError(error.message, 'Unable to delete fee settings');
+        } else {
+          this.router.navigateByUrl('/');
+        }
+      });
+    }
   }
 
   onSaved(scheme: FeeScheme): void {

@@ -195,20 +195,28 @@ mutation DeleteSettingsCost($settingsId: ID!) {
 export class AdminDataService {
   constructor(private apollo: Apollo) { }
 
-  getFeeSettings(): QueryRef<any, EmptyObject> {
-    return this.apollo.watchQuery<any>({
-      query: GET_FEE_SETTINGS_POST,
-      pollInterval: 30000,
-      fetchPolicy: 'network-only'
-    });
+  getFeeSettings(): QueryRef<any, EmptyObject> | null {
+    if (this.apollo.client !== undefined) {
+      return this.apollo.watchQuery<any>({
+        query: GET_FEE_SETTINGS_POST,
+        pollInterval: 30000,
+        fetchPolicy: 'network-only'
+      });
+    } else {
+      return null;
+    }
   }
 
-  getCostSettings(): QueryRef<any, EmptyObject> {
-    return this.apollo.watchQuery<any>({
-      query: GET_COST_SETTINGS_POST,
-      pollInterval: 30000,
-      fetchPolicy: 'network-only'
-    });
+  getCostSettings(): QueryRef<any, EmptyObject> | null {
+    if (this.apollo.client !== undefined) {
+      return this.apollo.watchQuery<any>({
+        query: GET_COST_SETTINGS_POST,
+        pollInterval: 30000,
+        fetchPolicy: 'network-only'
+      });
+    } else {
+      return null;
+    }
   }
 
   saveFeeSettings(settings: FeeScheme, create: boolean): Observable<any> {
@@ -246,7 +254,6 @@ export class AdminDataService {
   }
 
   saveCostSettings(settings: CostScheme, create: boolean): Observable<any> {
-
     return create ?
       this.apollo.mutate({
         mutation: ADD_SETTINGS_COST_POST,
@@ -278,21 +285,29 @@ export class AdminDataService {
       });
   }
 
-  deleteFeeSettings(settingsId: string): Observable<any> {
-    return this.apollo.mutate({
-      mutation: DELETE_SETTINGS_FEE_POST,
-      variables: {
-        settingsId: settingsId
-      }
-    });
+  deleteFeeSettings(settingsId: string): Observable<any> | null {
+    if (this.apollo.client !== undefined) {
+      return this.apollo.mutate({
+        mutation: DELETE_SETTINGS_FEE_POST,
+        variables: {
+          settingsId: settingsId
+        }
+      });
+    } else {
+      return null;
+    }
   }
 
-  deleteCostSettings(settingsId: string): Observable<any> {
-    return this.apollo.mutate({
-      mutation: DELETE_SETTINGS_COST_POST,
-      variables: {
-        settingsId: settingsId
-      }
-    });
+  deleteCostSettings(settingsId: string): Observable<any> | null {
+    if (this.apollo.client !== undefined) {
+      return this.apollo.mutate({
+        mutation: DELETE_SETTINGS_COST_POST,
+        variables: {
+          settingsId: settingsId
+        }
+      });
+    } else {
+      return null;
+    }
   }
 }
