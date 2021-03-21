@@ -114,7 +114,7 @@ export class ErrorService {
                 result = 'Unable to get applicant information';
                 break;
             case 'client has not been defined yet':
-                result = 'Cookie consent is rejected. Allow cookie in order to have access';
+                result = this.getRejectedCookieMessage();
                 break;
             default:
                 if (code !== '') {
@@ -123,5 +123,9 @@ export class ErrorService {
                 break;
         }
         return result;
+    }
+
+    getRejectedCookieMessage(): string {
+        return 'Cookie consent is rejected. Allow cookie in order to have access';
     }
 }

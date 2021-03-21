@@ -101,7 +101,7 @@ export class AppModule {
     const cookieName = 'cookieconsent_status';
     const w = window as any;
     const consentStatus = w.cookieconsent.utils.getCookie(cookieName);
-    const allowCookies = (consentStatus !== 'deny');
+    const allowCookies = (consentStatus === 'allow');
     if (allowCookies) {
       apollo.create({
         link: ApolloLink.from([

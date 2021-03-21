@@ -39,7 +39,7 @@ export class CostsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const settingsData = this.adminService.getCostSettings();
     if (settingsData === null) {
-      this.errorMessage = 'Cookie consent is rejected. Allow cookie in order to have access';
+      this.errorMessage = this.errorHandler.getRejectedCookieMessage();
     } else {
       this.inProgress = true;
       this._settingsSubscription = settingsData.valueChanges.subscribe(({ data }) => {
@@ -149,7 +149,7 @@ export class CostsComponent implements OnInit, OnDestroy {
     this.editorErrorMessage = '';
     const requestData = this.adminService.deleteCostSettings(id);
     if (requestData === null) {
-      this.errorMessage = 'Cookie consent is rejected. Allow cookie in order to have access';
+      this.errorMessage = this.errorHandler.getRejectedCookieMessage();
     } else {
       this.inProgress = true;
       requestData.subscribe(({ data }) => {

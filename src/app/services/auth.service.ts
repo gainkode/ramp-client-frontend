@@ -239,9 +239,9 @@ export class AuthService {
         }
         return from(
             this.socialAuth.signIn(providerId)
-                .then(function(data) {
+                .then(function (data) {
                     return { user: data, error: undefined };
-                }).catch(function(data) {
+                }).catch(function (data) {
                     return { user: undefined, error: data };
                 })
         );
@@ -380,20 +380,28 @@ export class AuthService {
         return result;
     }
 
-    getKycSettings(): QueryRef<any, EmptyObject> {
-        return this.apollo.watchQuery<any>({
-            query: GET_SETTINGS_KYC_POST,
-            fetchPolicy: 'network-only'
-        });
+    getKycSettings(): QueryRef<any, EmptyObject> | null {
+        if (this.apollo.client !== undefined) {
+            return this.apollo.watchQuery<any>({
+                query: GET_SETTINGS_KYC_POST,
+                fetchPolicy: 'network-only'
+            });
+        } else {
+            return null;
+        }
     }
 
-    setKycCompleted(tokenId: string): Observable<any> {
-        return this.apollo.mutate({
-            mutation: KYC_HAS_BEEN_SENT_POST,
-            variables: {
-                token: tokenId
-            }
-        });
+    setKycCompleted(tokenId: string): Observable<any> | null {
+        if (this.apollo.client !== undefined) {
+            return this.apollo.mutate({
+                mutation: KYC_HAS_BEEN_SENT_POST,
+                variables: {
+                    token: tokenId
+                }
+            });
+        } else {
+            return null;
+        }
     }
 
     getKycToken(): QueryRef<any, EmptyObject> {
@@ -404,7 +412,7 @@ export class AuthService {
     }
 
     socialSignOut(): void {
-        this.socialAuth.signOut().then(function(data) {
+        this.socialAuth.signOut().then(function (data) {
             //console.log(data);
         }).catch(function (error) {
             console.log(error);

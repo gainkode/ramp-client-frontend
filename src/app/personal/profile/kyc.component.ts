@@ -20,36 +20,44 @@ export class KycPersonalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.inProgress = true;
-    this.auth.getKycSettings().valueChanges.subscribe(kyc => {
-      const settingsKyc: SettingsKyc = kyc.data.getSettingsKyc;
-      this.inProgress = false;
-      this.auth.getKycToken().valueChanges.subscribe(({ data }) => {
-        this.launchSumSubWidget(
-          settingsKyc.kycBaseAddress as string,
-          settingsKyc.kycPersonalFlow as string,
-          data.generateWebApiToken,
-          this.user?.email as string,
-          this.user?.phone as string,
-          []);
+    const kycData = this.auth.getKycSettings();
+    if (kycData === null) {
+      this.errorMessage = this.errorHandler.getRejectedCookieMessage();
+    } else {
+      this.inProgress = true;
+      kycData.valueChanges.subscribe(kyc => {
+        const settingsKyc: SettingsKyc = kyc.data.getSettingsKyc;
+        this.inProgress = false;
+        this.auth.getKycToken().valueChanges.subscribe(({ data }) => {
+          this.launchSumSubWidget(
+            settingsKyc.kycBaseAddress as string,
+            settingsKyc.kycPersonalFlow as string,
+            data.generateWebApiToken,
+            this.user?.email as string,
+            this.user?.phone as string,
+            []);
+        });
+      }, (error) => {
+        this.inProgress = false;
+        console.log(error);
+        if (this.auth.token !== '') {
+          this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load settings');
+        } else {
+          this.router.navigateByUrl('/');
+        }
       });
-    }, (error) => {
-      this.inProgress = false;
-      console.log(error);
-      if (this.auth.token !== '') {
-        this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load settings');
-      } else {
-        this.router.navigateByUrl('/');
-      }
-    });
+    }
   }
 
   private setKycCompleted(): void {
-    this.auth.setKycCompleted(this.auth.token).subscribe(({ data }) => {
-      
-    }, (error) => {
-      this.errorMessage = this.errorHandler.getError(error.message, 'Unable to complete validation');
-    });
+    const requestData = this.auth.setKycCompleted(this.auth.token);
+    if (requestData !== null) {
+      requestData.subscribe(({ data }) => {
+        // do nothing
+      }, (error) => {
+        this.errorMessage = this.errorHandler.getError(error.message, 'Unable to complete validation');
+      });
+    }
   }
 
   // @param apiUrl - 'https://test-api.sumsub.com' (sandbox) or 'https://api.sumsub.com' (production)
