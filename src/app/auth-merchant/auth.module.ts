@@ -19,7 +19,6 @@ import { SuccessComponent } from './success.component';
 import { RestoreComponent } from './restore.component';
 import { ConfirmEmailComponent } from './confirm-email.component';
 import { ResetComponent } from './reset.component';
-import { TermsComponent } from './terms.component';
 
 const routing = RouterModule.forChild([
     { path: 'login', component: LoginComponent },
@@ -29,7 +28,6 @@ const routing = RouterModule.forChild([
     { path: 'confirm-email/:token', component: ConfirmEmailComponent },
     { path: 'new-password/:token', component: ResetComponent },
     { path: 'restore', component: RestoreComponent },
-    { path: 'terms', component: TermsComponent },
     { path: '**', redirectTo: 'login' }
 ]);
 
@@ -58,7 +56,7 @@ export class MaterialModule { }
     ],
     declarations: [
         LoginComponent, RegisterComponent, SignupComponent, SuccessComponent, RestoreComponent,
-        ConfirmEmailComponent, ResetComponent, TermsComponent
+        ConfirmEmailComponent, ResetComponent
     ],
     schemas: [
         CUSTOM_ELEMENTS_SCHEMA

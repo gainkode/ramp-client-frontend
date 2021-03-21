@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { TermsComponent } from './terms.component';
 
 const routes: Routes = [
   {
@@ -19,11 +20,13 @@ const routes: Routes = [
   {
     path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)
   },
+  { path: 'terms', component: TermsComponent },
   { path: '**', redirectTo: '/personal/intro' }
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
+  declarations: [TermsComponent],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
