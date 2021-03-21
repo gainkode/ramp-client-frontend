@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -11,12 +12,16 @@ export class AppComponent implements OnInit {
   version = '0.1.1';
   copyrightYears = '2021';
 
+  constructor(private router: Router) {
+
+  }
   // setCookies(status: boolean): void {
   //   console.log(status ? 'enable cookies' : 'disable cookies');
   // }
 
   ngOnInit(): void {
-    let w = window as any;
+    const w = window as any;
+    const r = this.router;
     w.cookieconsent.initialise({
       cookie: {
         domain: environment.cookieDomain
@@ -43,7 +48,7 @@ export class AppComponent implements OnInit {
         policy: 'Cookie Policy'
       },
       onStatusChange: function (status: any) {
-        //console.log(this.hasConsented() ? 'enable cookies' : 'disable cookies');
+        window.location.reload();
       }
     });
   }

@@ -113,6 +113,9 @@ export class ErrorService {
             case 'core.kyc_get_applicant_information_error':
                 result = 'Unable to get applicant information';
                 break;
+            case 'client has not been defined yet':
+                result = 'Cookie consent is rejected. Allow cookie in order to have access';
+                break;
             default:
                 if (code !== '') {
                     result = code;
