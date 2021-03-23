@@ -2,21 +2,21 @@
 
 @include mat-core();
 
-$bc-accent-palette: (
-   50: #F3F3F3,
-  100: #d4d4d4,
-  200: #9c9c9c,
-  300: #777777,
-  400: #3b3b3b,
-  500: #000000,
-  600: #000000,
-  700: #000000,
-  800: #000000,
-  900: #000000,
- A100: #000000,
- A200: #959595,
- A400: #747474,
- A700: #525252,
+$bc-primary-palette: (
+   50: #EAF0F7,
+  100: #CEDBE4,
+  200: #B2C2CF,
+  300: #94A9BA,
+  400: #7E95A9,
+  500: #678399,
+  600: #5A7487,
+  700: #4A6070,
+  800: #3B4D5A,
+  900: #293742,
+ A100: #CEDBE4,
+ A200: #B2C2CF,
+ A400: #7E95A9,
+ A700: #4A6070,
   contrast: (
     50: $dark-primary-text,
     100: $dark-primary-text,
@@ -35,9 +35,75 @@ $bc-accent-palette: (
   )
 );
 
-$primary: mat-palette($bc-accent-palette);
-$accent: mat-palette($mat-blue-grey, A200, A100, A400);
-$warn: mat-palette($mat-red);
+$bc-accent-palette: (
+   50: #E0F3F7,
+  100: #B1E0EB,
+  200: #81CBDF,
+  300: #56B7D3,
+  400: #39A9CC,
+  500: #1F9BC6,
+  600: #168EB9,
+  700: #087CA7,
+  800: #096B94,
+  900: #004D73,
+ A100: #B1E0EB,
+ A200: #81CBDF,
+ A400: #39A9CC,
+ A700: #087CA7,
+  contrast: (
+    50: $dark-primary-text,
+    100: $dark-primary-text,
+    200: $dark-primary-text,
+    300: $dark-primary-text,
+    400: $dark-primary-text,
+    500: $light-primary-text,
+    600: $light-primary-text,
+    700: $light-primary-text,
+    800: $light-primary-text,
+    900: $light-primary-text,
+    A100: $dark-primary-text,
+    A200: $dark-primary-text,
+    A400: $dark-primary-text,
+    A700: $light-primary-text,
+  )
+);
+
+$bc-warn-palette: (
+   50: #FFEBEE,
+  100: #FFCDD2,
+  200: #EF9A9A,
+  300: #E57373,
+  400: #EF5350,
+  500: #F44236,
+  600: #E53835,
+  700: #D32E2F,
+  800: #C62728,
+  900: #B71B1C,
+ A100: #FFCDD2,
+ A200: #EF9A9A,
+ A400: #EF5350,
+ A700: #D32E2F,
+  contrast: (
+    50: $dark-primary-text,
+    100: $dark-primary-text,
+    200: $dark-primary-text,
+    300: $dark-primary-text,
+    400: $dark-primary-text,
+    500: $light-primary-text,
+    600: $light-primary-text,
+    700: $light-primary-text,
+    800: $light-primary-text,
+    900: $light-primary-text,
+    A100: $dark-primary-text,
+    A200: $dark-primary-text,
+    A400: $dark-primary-text,
+    A700: $light-primary-text,
+  )
+);
+
+$primary: mat-palette($bc-primary-palette);
+$accent: mat-palette($bc-accent-palette);
+$warn: mat-palette($bc-warn-palette);
 $theme: mat-light-theme($primary, $accent, $warn);
 
 @include angular-material-theme($theme);
