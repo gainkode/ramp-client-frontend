@@ -42,34 +42,39 @@ input:-webkit-autofill::first-line {
 
 .main-button-active {
     align-items   : center;
-    padding       : 7px 12px;
+    padding       : 1x 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 
-    width   : 119px;
+    width   : 135px;
     height  : 32px;
 
     /* Light grey - 2 50 */
-    background: #EAF0F7;
+    background: #3B4D5A;
 
     /* Light Blue - 2 900 */
-    border       : 1px solid #344B74;
+    border       : 1px solid #293742;
     box-sizing   : border-box;
     border-radius: 16px;
+    color: #EAF0F7;
+    font-size: medium;
 }
 
 .main-button-active:hover {
     /* Dark grey 2 200 */
-    background: #B2C2CF;
+    background: #4A6070;
 
     /* Light Blue - 2 700 */
-    border       : 2px solid #4A6070;
+    border       : 2px solid #293742;
 }
 
 .main-button-active:active {
     /* Almost black 2 500 */
-    background: #678399;
+    background: #293742;
 
     /* Light Blue - 2 900 */
-    border       : 2px solid #344B74;
+    border       : 2px solid #4A6070;
+    color: #B2C2CF;
 }
 
 .page-container {
@@ -95,11 +100,12 @@ input:-webkit-autofill::first-line {
 
 .action-page-left-panel {
     left            : 0;
-    background-color: white;
+    background-color: #F8FAFF;
 }
 
 .action-page-right-panel {
     right: 0;
+    background-color: #DDDFE6;
 }
 
 .info-page-split {
@@ -248,13 +254,14 @@ input:-webkit-autofill::first-line {
 }
 
 .form-button {
-    width : 10em;
-    height: 2.75em;
+    //width : 10em;
+    //height: 2.75em;
 
     img {
-        width       : 1.15em;
-        height      : 1.15em;
-        margin-right: 0.4em;
+        width       : 0.85em;
+        height      : 0.85em;
+        margin-top: 5px;
+        margin-right: 5px;
     }
 }
 
