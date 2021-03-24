@@ -10,6 +10,7 @@ export type Scalars = {
   Int: number;
   Float: number;
   DateTime: any;
+  Void: any;
   Byte: any;
 };
 
@@ -21,7 +22,9 @@ export type Query = {
   __typename?: 'Query';
   serverTime: Scalars['String'];
   getSettingsCommon?: Maybe<SettingsCommon>;
-  getSettingsKyc?: Maybe<SettingsKyc>;
+  getSettingsKyc?: Maybe<SettingsKycListResult>;
+  getMySettingsKyc: SettingsKyc;
+  getAppropriateSettingsKyc: SettingsKyc;
   getSettingsFee?: Maybe<SettingsFeeListResult>;
   getAppropriateSettingsFee: SettingsFee;
   getSettingsCost?: Maybe<SettingsCostListResult>;
@@ -36,8 +39,27 @@ export type Query = {
   userByOAuthAppId: User;
   userByReferralCode: User;
   getUsers: UserListResult;
+  myActions: UserActionListResult;
+  userActions: UserActionListResult;
   myKycInfo?: Maybe<KycInfo>;
   userKycInfo?: Maybe<KycInfo>;
+};
+
+
+export type QueryGetSettingsKycArgs = {
+  filter?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OrderBy>>;
+};
+
+
+export type QueryGetAppropriateSettingsKycArgs = {
+  targetKycProvider: KycProvider;
+  targetUserType: UserType;
+  targetUserMode: UserMode;
+  filterType?: Maybe<SettingsKycTargetFilterType>;
+  filterValue?: Maybe<Scalars['String']>;
 };
 
 
@@ -53,7 +75,7 @@ export type QueryGetAppropriateSettingsFeeArgs = {
   transactionType: TransactionType;
   instrument: PaymentInstrument;
   paymentProvider: PaymentProvider;
-  filterType?: Maybe<CostSettingsFilterType>;
+  filterType?: Maybe<SettingsFeeTargetFilterType>;
   filterValue?: Maybe<Scalars['String']>;
 };
 
@@ -70,7 +92,7 @@ export type QueryGetAppropriateSettingsCostArgs = {
   transactionType: TransactionType;
   instrument: PaymentInstrument;
   paymentProvider: PaymentProvider;
-  filterType?: Maybe<CostSettingsFilterType>;
+  filterType?: Maybe<SettingsCostTargetFilterType>;
   filterValue?: Maybe<Scalars['String']>;
 };
 
@@ -114,6 +136,25 @@ export type QueryGetUsersArgs = {
 };
 
 
+export type QueryMyActionsArgs = {
+  withResult?: Maybe<UserActionResult>;
+  filter?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OrderBy>>;
+};
+
+
+export type QueryUserActionsArgs = {
+  userId?: Maybe<Scalars['String']>;
+  withResult?: Maybe<UserActionResult>;
+  filter?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OrderBy>>;
+};
+
+
 export type QueryUserKycInfoArgs = {
   userId?: Maybe<Scalars['String']>;
 };
@@ -121,35 +162,61 @@ export type QueryUserKycInfoArgs = {
 export type SettingsCommon = {
   __typename?: 'SettingsCommon';
   liquidityProvider?: Maybe<Scalars['String']>;
+  liquidityBaseAddress?: Maybe<Scalars['String']>;
   custodyProvider?: Maybe<Scalars['String']>;
+  custodyBaseAddress?: Maybe<Scalars['String']>;
   kycProvider?: Maybe<Scalars['String']>;
-};
-
-export type SettingsKyc = {
-  __typename?: 'SettingsKyc';
   kycBaseAddress?: Maybe<Scalars['String']>;
-  kycMaxFileSize?: Maybe<Scalars['Int']>;
-  kycPersonalLevel?: Maybe<Scalars['String']>;
-  kycPersonalFlow?: Maybe<Scalars['String']>;
-  kycMerchantLevel?: Maybe<Scalars['String']>;
-  kycMerchantFlow?: Maybe<Scalars['String']>;
-  kycBeneficiaryPositions?: Maybe<Array<Scalars['String']>>;
-  kycBeneficiaryTypes?: Maybe<Array<Scalars['String']>>;
-  kycSourceOfFunds?: Maybe<Array<Scalars['String']>>;
-  kycRejectedLabels?: Maybe<Array<KycRejectedLabel>>;
-};
-
-export type KycRejectedLabel = {
-  __typename?: 'KycRejectedLabel';
-  code?: Maybe<Scalars['String']>;
-  type?: Maybe<Scalars['String']>;
-  description?: Maybe<Scalars['String']>;
 };
 
 export type OrderBy = {
   orderBy: Scalars['String'];
   desc: Scalars['Boolean'];
 };
+
+export type SettingsKycListResult = {
+  __typename?: 'SettingsKycListResult';
+  count?: Maybe<Scalars['Int']>;
+  list?: Maybe<Array<SettingsKyc>>;
+};
+
+export type SettingsKyc = {
+  __typename?: 'SettingsKyc';
+  settingsKycId: Scalars['ID'];
+  name: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  targetKycProviders?: Maybe<Array<KycProvider>>;
+  targetUserTypes?: Maybe<Array<UserType>>;
+  targetUserModes?: Maybe<Array<UserMode>>;
+  targetFilterType?: Maybe<SettingsKycTargetFilterType>;
+  targetFilterValues?: Maybe<Array<Scalars['String']>>;
+  levels: Scalars['String'];
+  created: Scalars['DateTime'];
+  createdBy?: Maybe<Scalars['String']>;
+  default?: Maybe<Scalars['Boolean']>;
+  deleted?: Maybe<Scalars['DateTime']>;
+};
+
+export enum KycProvider {
+  Local = 'Local',
+  SumSub = 'SumSub'
+}
+
+export enum UserType {
+  Merchant = 'Merchant',
+  Personal = 'Personal'
+}
+
+export enum UserMode {
+  InternalWallet = 'InternalWallet',
+  ExternalWallet = 'ExternalWallet'
+}
+
+export enum SettingsKycTargetFilterType {
+  AccountId = 'AccountId',
+  Country = 'Country'
+}
+
 
 export type SettingsFeeListResult = {
   __typename?: 'SettingsFeeListResult';
@@ -162,7 +229,7 @@ export type SettingsFee = {
   settingsFeeId: Scalars['ID'];
   name: Scalars['String'];
   description?: Maybe<Scalars['String']>;
-  targetFilterType?: Maybe<FeeSettingsTargetFilterType>;
+  targetFilterType?: Maybe<SettingsFeeTargetFilterType>;
   targetFilterValues?: Maybe<Array<Scalars['String']>>;
   targetInstruments?: Maybe<Array<Scalars['String']>>;
   targetTransactionTypes?: Maybe<Array<Scalars['String']>>;
@@ -175,14 +242,13 @@ export type SettingsFee = {
   deleted?: Maybe<Scalars['DateTime']>;
 };
 
-export enum FeeSettingsTargetFilterType {
+export enum SettingsFeeTargetFilterType {
   AffiliateId = 'AffiliateId',
   AccountId = 'AccountId',
   AccountType = 'AccountType',
   Country = 'Country',
   InitiateFrom = 'InitiateFrom'
 }
-
 
 export enum TransactionType {
   Deposit = 'Deposit',
@@ -208,11 +274,6 @@ export enum PaymentProvider {
   Bank = 'Bank'
 }
 
-export enum CostSettingsFilterType {
-  Psp = 'PSP',
-  Country = 'Country'
-}
-
 export type SettingsCostListResult = {
   __typename?: 'SettingsCostListResult';
   count?: Maybe<Scalars['Int']>;
@@ -224,7 +285,7 @@ export type SettingsCost = {
   settingsCostId: Scalars['ID'];
   name: Scalars['String'];
   description?: Maybe<Scalars['String']>;
-  targetFilterType?: Maybe<CostSettingsFilterType>;
+  targetFilterType?: Maybe<SettingsCostTargetFilterType>;
   targetFilterValues?: Maybe<Array<Scalars['String']>>;
   targetInstruments?: Maybe<Array<Scalars['String']>>;
   targetTransactionTypes?: Maybe<Array<Scalars['String']>>;
@@ -235,6 +296,11 @@ export type SettingsCost = {
   default?: Maybe<Scalars['Boolean']>;
   deleted?: Maybe<Scalars['DateTime']>;
 };
+
+export enum SettingsCostTargetFilterType {
+  Psp = 'PSP',
+  Country = 'Country'
+}
 
 export type User = {
   __typename?: 'User';
@@ -282,16 +348,6 @@ export type UserStateArgs = {
   notificationOrderBy?: Maybe<Scalars['String']>;
   notificationDesc?: Maybe<Scalars['Boolean']>;
 };
-
-export enum UserType {
-  Merchant = 'Merchant',
-  Personal = 'Personal'
-}
-
-export enum UserMode {
-  InternalWallet = 'InternalWallet',
-  ExternalWallet = 'ExternalWallet'
-}
 
 export type UserRole = {
   __typename?: 'UserRole';
@@ -376,6 +432,42 @@ export type UserListResult = {
   users?: Maybe<Array<User>>;
 };
 
+export enum UserActionResult {
+  Unknown = 'unknown',
+  Success = 'success',
+  Fail = 'fail'
+}
+
+export type UserActionListResult = {
+  __typename?: 'UserActionListResult';
+  count?: Maybe<Scalars['Int']>;
+  list?: Maybe<Array<UserAction>>;
+};
+
+export type UserAction = {
+  __typename?: 'UserAction';
+  userActionId: Scalars['ID'];
+  userId: Scalars['String'];
+  objectId?: Maybe<Scalars['String']>;
+  actionType?: Maybe<UserActionType>;
+  linkedIds?: Maybe<Array<Scalars['String']>>;
+  info?: Maybe<Scalars['String']>;
+  result?: Maybe<UserActionResult>;
+  date?: Maybe<Scalars['DateTime']>;
+};
+
+export enum UserActionType {
+  Signup = 'signup',
+  Login = 'login',
+  Logout = 'logout',
+  Send = 'send',
+  Receive = 'receive',
+  Deposit = 'deposit',
+  Withdraw = 'withdraw',
+  Sell = 'sell',
+  Buy = 'buy'
+}
+
 export type KycInfo = {
   __typename?: 'KycInfo';
   applicant?: Maybe<KycApplicant>;
@@ -452,11 +544,15 @@ export type Mutation = {
   addSettingsCost: SettingsCost;
   updateSettingsCost: SettingsCost;
   deleteSettingsCost: SettingsCost;
+  addSettingsKyc: SettingsKyc;
+  updateSettingsKyc: SettingsKyc;
+  deleteSettingsKyc: SettingsKyc;
   updateMe?: Maybe<User>;
   updateUser?: Maybe<User>;
   assignRole?: Maybe<User>;
   removeRole?: Maybe<User>;
   deleteUser?: Maybe<User>;
+  kycHasBeenSent?: Maybe<Scalars['Void']>;
   signup: LoginResult;
   login: LoginResult;
   logout: Scalars['Boolean'];
@@ -514,6 +610,22 @@ export type MutationDeleteSettingsCostArgs = {
 };
 
 
+export type MutationAddSettingsKycArgs = {
+  settings: SettingsKycInput;
+};
+
+
+export type MutationUpdateSettingsKycArgs = {
+  settingsId: Scalars['ID'];
+  settings: SettingsKycInput;
+};
+
+
+export type MutationDeleteSettingsKycArgs = {
+  settingsId: Scalars['ID'];
+};
+
+
 export type MutationUpdateMeArgs = {
   user?: Maybe<UserInput>;
 };
@@ -566,6 +678,7 @@ export type MutationLoginArgs = {
   oAuthProvider?: Maybe<OAuthProvider>;
   oAuthToken?: Maybe<Scalars['String']>;
   recaptcha: Scalars['String'];
+  quickCheckout?: Maybe<Scalars['Boolean']>;
 };
 
 
@@ -639,14 +752,17 @@ export type MutationDisable2faArgs = {
 
 export type SettingsCommonInput = {
   liquidityProvider?: Maybe<Scalars['String']>;
+  liquidityBaseAddress?: Maybe<Scalars['String']>;
   custodyProvider?: Maybe<Scalars['String']>;
+  custodyBaseAddress?: Maybe<Scalars['String']>;
   kycProvider?: Maybe<Scalars['String']>;
+  kycBaseAddress?: Maybe<Scalars['String']>;
 };
 
 export type SettingsFeeInput = {
   name?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
-  targetFilterType?: Maybe<FeeSettingsTargetFilterType>;
+  targetFilterType?: Maybe<SettingsFeeTargetFilterType>;
   targetFilterValues?: Maybe<Array<Scalars['String']>>;
   targetInstruments?: Maybe<Array<PaymentInstrument>>;
   targetTransactionTypes?: Maybe<Array<TransactionType>>;
@@ -660,12 +776,25 @@ export type SettingsFeeInput = {
 export type SettingsCostInput = {
   name?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
-  targetFilterType?: Maybe<CostSettingsFilterType>;
+  targetFilterType?: Maybe<SettingsCostTargetFilterType>;
   targetFilterValues?: Maybe<Array<Scalars['String']>>;
   targetInstruments?: Maybe<Array<PaymentInstrument>>;
   targetTransactionTypes?: Maybe<Array<TransactionType>>;
   targetPaymentProviders?: Maybe<Array<PaymentProvider>>;
   terms?: Maybe<Scalars['String']>;
+  default?: Maybe<Scalars['Boolean']>;
+  deleted?: Maybe<Scalars['DateTime']>;
+};
+
+export type SettingsKycInput = {
+  name?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  targetKycProviders?: Maybe<Array<KycProvider>>;
+  targetUserTypes?: Maybe<Array<UserType>>;
+  targetUserModes?: Maybe<Array<UserMode>>;
+  targetFilterType?: Maybe<SettingsFeeTargetFilterType>;
+  targetFilterValues?: Maybe<Array<Scalars['String']>>;
+  levels: Scalars['String'];
   default?: Maybe<Scalars['Boolean']>;
   deleted?: Maybe<Scalars['DateTime']>;
 };
@@ -690,6 +819,7 @@ export type UserInput = {
   changePasswordRequired?: Maybe<Scalars['Boolean']>;
 };
 
+
 export type LoginResult = {
   __typename?: 'LoginResult';
   authToken?: Maybe<Scalars['String']>;
@@ -705,9 +835,13 @@ export type TwoFactorAuthenticationResult = {
   qr: Scalars['String'];
 };
 
-export enum CryptoCurrency {
+export enum CryptoCurrencyType {
   Btc = 'BTC',
   Usdc = 'USDC'
+}
+
+export enum FiatCurrencyType {
+  Eur = 'EUR'
 }
 
 export enum LiquidityProvider {
@@ -717,11 +851,6 @@ export enum LiquidityProvider {
 export enum CustodyProvider {
   Trustology = 'Trustology',
   Fireblocks = 'Fireblocks'
-}
-
-export enum KycProvider {
-  Local = 'Local',
-  SumSub = 'SumSub'
 }
 
 export enum PaymentInitiatorType {
@@ -761,6 +890,13 @@ export type UserDevice = {
   browser?: Maybe<Scalars['String']>;
   device?: Maybe<Scalars['String']>;
   deviceConfirmed?: Maybe<Scalars['DateTime']>;
+};
+
+export type KycRejectedLabel = {
+  __typename?: 'KycRejectedLabel';
+  code?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
 };
 
 export type CryptoRate = {

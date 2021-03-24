@@ -10,7 +10,7 @@ import {
     AccountIdFilterList, WidgetFilterList
 } from '../../model/fee-scheme.model';
 import {
-    FeeSettingsTargetFilterType, PaymentInstrument, PaymentProvider, TransactionType
+    SettingsFeeTargetFilterType, PaymentInstrument, PaymentProvider, TransactionType
 } from '../../model/generated-models';
 import {
     PaymentInstrumentList, PaymentProviderList, FeeTargetFilterList, TransactionTypeList
@@ -115,35 +115,35 @@ export class FeeEditorComponent implements OnInit {
         const val = this.schemeForm.get('target')?.value;
         const params = new TargetParams();
         switch (val) {
-            case FeeSettingsTargetFilterType.AffiliateId: {
+            case SettingsFeeTargetFilterType.AffiliateId: {
                 params.title = 'List of affiliate identifiers';
                 params.inputPlaceholder = 'New identifier...';
                 params.dataList = AffiliateIdFilterList;
                 this.targetEntity = 'affiliate identifier';
                 break;
             }
-            case FeeSettingsTargetFilterType.Country: {
+            case SettingsFeeTargetFilterType.Country: {
                 params.title = 'List of countries';
                 params.inputPlaceholder = 'New country...';
                 params.dataList = CountryFilterList;
                 this.targetEntity = 'country';
                 break;
             }
-            case FeeSettingsTargetFilterType.AccountId: {
+            case SettingsFeeTargetFilterType.AccountId: {
                 params.title = 'List of account identifiers';
                 params.inputPlaceholder = 'New identifier...';
                 params.dataList = AccountIdFilterList;
                 this.targetEntity = 'account identifier';
                 break;
             }
-            case FeeSettingsTargetFilterType.AccountType: {
+            case SettingsFeeTargetFilterType.AccountType: {
                 params.title = 'List of account types';
                 params.inputPlaceholder = 'New account type...';
                 params.dataList = AccountTypeFilterList;
                 this.targetEntity = 'account type';
                 break;
             }
-            case FeeSettingsTargetFilterType.InitiateFrom: {
+            case SettingsFeeTargetFilterType.InitiateFrom: {
                 params.title = 'List of widgets';
                 params.inputPlaceholder = 'New widget...';
                 params.dataList = WidgetFilterList;
@@ -356,10 +356,10 @@ export class FeeEditorComponent implements OnInit {
     private removeIncorrectTargetValues(scheme: FeeScheme): void {
         scheme.targetValues = scheme.targetValues.filter(val => {
             let result = true;
-            if (scheme.target === FeeSettingsTargetFilterType.Country) {
+            if (scheme.target === SettingsFeeTargetFilterType.Country) {
                 const c = getCountry(val);
                 result = (c !== null);
-            } else if (scheme.target === FeeSettingsTargetFilterType.AccountType) {
+            } else if (scheme.target === SettingsFeeTargetFilterType.AccountType) {
                 const c = AccountTypeFilterList.find(x => x.title.toLowerCase() === val.toLowerCase());
                 result = (c !== undefined);
             }
@@ -369,8 +369,8 @@ export class FeeEditorComponent implements OnInit {
 
     private validateTargetValues(): boolean {
         let result = true;
-        const filter = this.schemeForm.get('target')?.value as FeeSettingsTargetFilterType;
-        if (filter === FeeSettingsTargetFilterType.Country) {
+        const filter = this.schemeForm.get('target')?.value as SettingsFeeTargetFilterType;
+        if (filter === SettingsFeeTargetFilterType.Country) {
             (this.schemeForm.get('targetValues')?.value as string[]).every(x => {
                 const c = getCountry(x);
                 if (c === null) {
@@ -381,7 +381,7 @@ export class FeeEditorComponent implements OnInit {
                 }
                 return true;
             });
-        } else if (filter === FeeSettingsTargetFilterType.AccountType) {
+        } else if (filter === SettingsFeeTargetFilterType.AccountType) {
             (this.schemeForm.get('targetValues')?.value as string[]).every(x => {
                 const c = AccountTypeFilterList.find(t => t.title.toLowerCase() === x.toLowerCase());
                 if (c === undefined) {

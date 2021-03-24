@@ -7,7 +7,7 @@ import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material
 import { MatChipInputEvent } from '@angular/material/chips';
 import { CostScheme, PspFilterList } from '../../model/cost-scheme.model';
 import {
-    CostSettingsFilterType, PaymentInstrument, PaymentProvider, TransactionType
+    SettingsCostTargetFilterType, PaymentInstrument, PaymentProvider, TransactionType
 } from '../../model/generated-models';
 import { PaymentInstrumentList, PaymentProviderList, TransactionTypeList, CostTargetFilterList } from 'src/app/model/payment.model';
 import { CommonTargetValue, TargetParams } from 'src/app/model/common.model';
@@ -105,14 +105,14 @@ export class CostEditorComponent implements OnInit {
         const val = this.schemeForm.get('target')?.value;
         const params = new TargetParams();
         switch (val) {
-            case CostSettingsFilterType.Psp: {
+            case SettingsCostTargetFilterType.Psp: {
                 params.title = 'List of PSP';
                 params.inputPlaceholder = 'New PSP...';
                 params.dataList = PspFilterList;
                 this.targetEntity = 'PSP value';
                 break;
             }
-            case CostSettingsFilterType.Country: {
+            case SettingsCostTargetFilterType.Country: {
                 params.title = 'List of countries';
                 params.inputPlaceholder = 'New country...';
                 params.dataList = CountryFilterList;
@@ -299,7 +299,7 @@ export class CostEditorComponent implements OnInit {
     private removeIncorrectTargetValues(scheme: CostScheme): void {
         scheme.targetValues = scheme.targetValues.filter(val => {
             let result = true;
-            if (scheme.target === CostSettingsFilterType.Country) {
+            if (scheme.target === SettingsCostTargetFilterType.Country) {
                 const c = getCountry(val);
                 result = (c !== null);
             }
@@ -309,8 +309,8 @@ export class CostEditorComponent implements OnInit {
 
     private validateTargetValues(): boolean {
         let result = true;
-        const filter = this.schemeForm.get('target')?.value as CostSettingsFilterType;
-        if (filter === CostSettingsFilterType.Country) {
+        const filter = this.schemeForm.get('target')?.value as SettingsCostTargetFilterType;
+        if (filter === SettingsCostTargetFilterType.Country) {
             (this.schemeForm.get('targetValues')?.value as string[]).every(x => {
                 const c = getCountry(x);
                 if (c === null) {

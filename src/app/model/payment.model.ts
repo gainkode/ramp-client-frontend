@@ -1,5 +1,5 @@
 import {
-    PaymentInstrument, PaymentProvider, TransactionType, FeeSettingsTargetFilterType, CostSettingsFilterType
+    PaymentInstrument, PaymentProvider, TransactionType, SettingsFeeTargetFilterType, SettingsCostTargetFilterType
 } from './generated-models';
 
 export class PaymentInstrumentView {
@@ -18,12 +18,12 @@ export class TransactionTypeView {
 }
 
 export class FeeTargetFilterTypeView {
-    id!: FeeSettingsTargetFilterType;
+    id!: SettingsFeeTargetFilterType;
     name = '';
 }
 
 export class CostTargetFilterTypeView {
-    id!: CostSettingsFilterType;
+    id!: SettingsCostTargetFilterType;
     name = '';
 }
 
@@ -52,14 +52,14 @@ export const TransactionTypeList: Array<TransactionTypeView> = [
 ];
 
 export const FeeTargetFilterList: Array<FeeTargetFilterTypeView> = [
-    { id: FeeSettingsTargetFilterType.AffiliateId, name: 'Affiliate identifier' },
-    { id: FeeSettingsTargetFilterType.AccountId, name: 'Account identifier' },
-    { id: FeeSettingsTargetFilterType.AccountType, name: 'Account type' },
-    { id: FeeSettingsTargetFilterType.Country, name: 'Country' },
-    { id: FeeSettingsTargetFilterType.InitiateFrom, name: 'Initiate from ...' }
+    { id: SettingsFeeTargetFilterType.AffiliateId, name: 'Affiliate identifier' },
+    { id: SettingsFeeTargetFilterType.AccountId, name: 'Account identifier' },
+    { id: SettingsFeeTargetFilterType.AccountType, name: 'Account type' },
+    { id: SettingsFeeTargetFilterType.Country, name: 'Country' },
+    { id: SettingsFeeTargetFilterType.InitiateFrom, name: 'Initiate from ...' }
 ];
 
 export const CostTargetFilterList: Array<CostTargetFilterTypeView> = [
-    { id: CostSettingsFilterType.Country, name: 'Country' },
-    { id: CostSettingsFilterType.Psp, name: 'PSP' }
+    { id: SettingsCostTargetFilterType.Country, name: 'Country' },
+    { id: SettingsCostTargetFilterType.Psp, name: 'PSP' }
 ];

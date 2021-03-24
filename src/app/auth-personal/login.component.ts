@@ -49,7 +49,22 @@ export class LoginComponent {
         const typeCheck = userData.user?.type === 'Personal';
         if (typeCheck) {
             this.auth.setLoginUser(userData);
-            this.router.navigateByUrl('/personal/');
+            this.inProgress = true;
+            this.auth.getSettingsCommon().valueChanges.subscribe(settings => {
+                console.log(settings);
+                //const settingsKyc: SettingsKyc = kyc.data.getSettingsKyc;
+                this.inProgress = false;
+                
+                //this.router.navigateByUrl('/personal/');
+            }, (error) => {
+                this.inProgress = false;
+                console.log(error);
+                if (this.auth.token !== '') {
+                    this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load common settings');
+                } else {
+                    this.router.navigateByUrl('/');
+                }
+            });
         } else {
             this.loginForm.reset();
             this.errorMessage = 'Wrong account type. Try to sign in as a merchant';

@@ -1,8 +1,7 @@
 import { CommonTargetValue } from './common.model';
 import { CountryCodes, getCountry, getCountryByCode3 } from './country-code.model';
 import {
-    SettingsFee, PaymentInstrument, PaymentProvider, TransactionType,
-    FeeSettingsTargetFilterType
+    SettingsFee, PaymentInstrument, PaymentProvider, TransactionType, SettingsFeeTargetFilterType
 } from './generated-models';
 import { PaymentInstrumentList, PaymentProviderList,
     FeeTargetFilterList, TransactionTypeList } from './payment.model';
@@ -46,7 +45,7 @@ export class FeeScheme {
     isDefault = false;
     description!: string;
     name!: string;
-    target: FeeSettingsTargetFilterType | null = null;
+    target: SettingsFeeTargetFilterType | null = null;
     targetValues: Array<string> = [];
     trxType: Array<TransactionType> = [];
     instrument: Array<PaymentInstrument> = [];
@@ -65,8 +64,8 @@ export class FeeScheme {
             data.targetInstruments?.forEach(x => this.instrument.push(x as PaymentInstrument));
             data.targetPaymentProviders?.forEach(x => this.provider.push(x as PaymentProvider));
             data.targetTransactionTypes?.forEach(x => this.trxType.push(x as TransactionType));
-            this.target = data.targetFilterType as FeeSettingsTargetFilterType | null;
-            if (this.target === FeeSettingsTargetFilterType.Country) {
+            this.target = data.targetFilterType as SettingsFeeTargetFilterType | null;
+            if (this.target === SettingsFeeTargetFilterType.Country) {
                 data.targetFilterValues?.forEach(x => {
                     const c = getCountryByCode3(x);
                     if (c != null) {
@@ -82,10 +81,10 @@ export class FeeScheme {
         }
     }
 
-    setTarget(filter: FeeSettingsTargetFilterType, values: string[]): void {
+    setTarget(filter: SettingsFeeTargetFilterType, values: string[]): void {
         this.target = filter;
         values.forEach(x => {
-            if (filter === FeeSettingsTargetFilterType.Country) {
+            if (filter === SettingsFeeTargetFilterType.Country) {
                 const c = getCountry(x);
                 if (c !== null) {
                     this.targetValues.push(c.code3);

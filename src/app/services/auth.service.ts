@@ -148,6 +148,19 @@ const CONFIRMNAME_POST = gql`
   }
 `;
 
+const GET_SETTINGS_COMMON_POST = gql`
+query {
+    getSettingsCommon {
+        liquidityProvider
+        liquidityBaseAddress
+        custodyProvider
+        custodyBaseAddress
+        kycProvider
+        kycBaseAddress
+    }
+  }
+`;
+
 const GET_KYC_TOKEN_POST = gql`
 query {
     generateWebApiToken
@@ -378,6 +391,13 @@ export class AuthService {
             }
         }
         return result;
+    }
+
+    getSettingsCommon(): QueryRef<any, EmptyObject> {
+        return this.apollo.watchQuery<any>({
+            query: GET_SETTINGS_COMMON_POST,
+            fetchPolicy: 'network-only'
+        });
     }
 
     getKycSettings(): QueryRef<any, EmptyObject> | null {

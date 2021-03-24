@@ -30,8 +30,8 @@ export class KycPersonalComponent implements OnInit {
         this.inProgress = false;
         this.auth.getKycToken().valueChanges.subscribe(({ data }) => {
           this.launchSumSubWidget(
-            settingsKyc.kycBaseAddress as string,
-            settingsKyc.kycPersonalFlow as string,
+            '',//kycmod settingsKyc.kycBaseAddress as string,
+            '',//kycmod settingsKyc.kycPersonalFlow as string,
             data.generateWebApiToken,
             this.user?.email as string,
             this.user?.phone as string,

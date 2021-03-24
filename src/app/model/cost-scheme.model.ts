@@ -1,7 +1,7 @@
 import { CommonTargetValue } from './common.model';
 import { CountryCodes, getCountry, getCountryByCode3 } from './country-code.model';
 import {
-    SettingsCost, PaymentInstrument, PaymentProvider, TransactionType, CostSettingsFilterType
+    SettingsCost, PaymentInstrument, PaymentProvider, TransactionType, SettingsCostTargetFilterType
 } from './generated-models';
 import {
     PaymentInstrumentList, PaymentProviderList,
@@ -30,7 +30,7 @@ export class CostScheme {
     isDefault = false;
     description!: string;
     name!: string;
-    target: CostSettingsFilterType | null = null;
+    target: SettingsCostTargetFilterType | null = null;
     targetValues: Array<string> = [];
     trxType: Array<TransactionType> = [];
     instrument: Array<PaymentInstrument> = [];
@@ -47,8 +47,8 @@ export class CostScheme {
             data.targetInstruments?.forEach(x => this.instrument.push(x as PaymentInstrument));
             data.targetPaymentProviders?.forEach(x => this.provider.push(x as PaymentProvider));
             data.targetTransactionTypes?.forEach(x => this.trxType.push(x as TransactionType));
-            this.target = data.targetFilterType as CostSettingsFilterType | null;
-            if (this.target === CostSettingsFilterType.Country) {
+            this.target = data.targetFilterType as SettingsCostTargetFilterType | null;
+            if (this.target === SettingsCostTargetFilterType.Country) {
                 data.targetFilterValues?.forEach(x => {
                     const c = getCountryByCode3(x);
                     if (c != null) {
@@ -63,10 +63,10 @@ export class CostScheme {
         }
     }
 
-    setTarget(filter: CostSettingsFilterType, values: string[]): void {
+    setTarget(filter: SettingsCostTargetFilterType, values: string[]): void {
         this.target = filter;
         values.forEach(x => {
-            if (filter === CostSettingsFilterType.Country) {
+            if (filter === SettingsCostTargetFilterType.Country) {
                 const c = getCountry(x);
                 if (c !== null) {
                     this.targetValues.push(c.code3);
