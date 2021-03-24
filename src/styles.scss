@@ -27,8 +27,8 @@ input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-    box-shadow        : 0 0 0 30px white inset !important;
-    -webkit-box-shadow: 0 0 0 30px white inset !important;
+    box-shadow        : 0 0 0 30px #DDDFE6 inset !important;
+    -webkit-box-shadow: 0 0 0 30px #DDDFE6 inset !important;
 }
 
 input:-webkit-autofill::first-line {
@@ -37,12 +37,12 @@ input:-webkit-autofill::first-line {
 }
 
 .mat-input-element {
-    background: white;
+    background: #DDDFE6;
 }
 
 .main-button-active {
     align-items   : center;
-    padding       : 1x 5px;
+    padding       : 0x 0px;
     margin-top: 10px;
     margin-bottom: 10px;
 
@@ -53,11 +53,19 @@ input:-webkit-autofill::first-line {
     background: #3B4D5A;
 
     /* Light Blue - 2 900 */
-    border       : 1px solid #293742;
+    border       : 1px solid #3B4D5A;
     box-sizing   : border-box;
+    box-shadow: 0px 3px 5px #5E6066;
     border-radius: 16px;
     color: #EAF0F7;
-    font-size: medium;
+    font-size: 12px;
+
+    img {
+        width       : 10px;
+        height      : 10px;
+        margin-top: 0px;
+        margin-right: 5px;
+    }
 }
 
 .main-button-active:hover {
@@ -65,7 +73,7 @@ input:-webkit-autofill::first-line {
     background: #4A6070;
 
     /* Light Blue - 2 700 */
-    border       : 2px solid #293742;
+    //border       : 2px solid #293742;
 }
 
 .main-button-active:active {
@@ -73,8 +81,20 @@ input:-webkit-autofill::first-line {
     background: #293742;
 
     /* Light Blue - 2 900 */
-    border       : 2px solid #4A6070;
+    //border       : 2px solid #4A6070;
     color: #B2C2CF;
+}
+
+.form-button {
+    //width : 10em;
+    //height: 2.75em;
+
+    img {
+        width       : 0.85em;
+        height      : 0.85em;
+        margin-top: 5px;
+        margin-right: 5px;
+    }
 }
 
 .page-container {
@@ -251,18 +271,6 @@ input:-webkit-autofill::first-line {
     width        : 100%;
     margin-top   : 0.5em;
     margin-bottom: 0.5em;
-}
-
-.form-button {
-    //width : 10em;
-    //height: 2.75em;
-
-    img {
-        width       : 0.85em;
-        height      : 0.85em;
-        margin-top: 5px;
-        margin-right: 5px;
-    }
 }
 
 .info-tooltip {
