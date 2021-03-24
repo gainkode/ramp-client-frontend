@@ -1,24 +1,26 @@
-<div class="action-page-split action-page-left-panel split-page-10">
+<div class="action-page-split action-page-left-menu-bar split-page-10">
     <div class="split-panel-menu">
-        <div style="margin: 1.5em;margin-bottom: 2em;height: 5em;">
+        <div style="margin: 1.5em;margin-bottom: 0em;height: 5em;text-align: center;">
             <mat-icon>attractions</mat-icon>
         </div>
 
         <mat-selection-list [multiple]="false" (selectionChange)="menuChanged($event)">
-            <mat-list-option *ngFor="let item of menuItems" [value]="item" 
-            [selected]="selectedMenu===item.id">
-                {{item.name}}
+            <mat-list-option *ngFor="let item of menuItems" [value]="item" [selected]="selectedMenu===item.id">
+                <div class="panel-menu-item">
+                    <mat-icon class="panel-menu-item-icon">{{item.icon}}</mat-icon>
+                    <div class="panel-menu-item-text">{{item.name}}</div>
+                </div>
             </mat-list-option>
         </mat-selection-list>
         <br>
         <br>
-        <a href="/admin" (click)="logout()" style="margin-left: 1em;">
+        <a href="/admin" (click)="logout()" style="margin-left: 1em;color: #DDDFE6;">
             <mat-icon>logout</mat-icon>
         </a>
     </div>
 </div>
 
 <div class="action-page-split action-page-right-panel split-page-90">
-        <router-outlet (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
-        </router-outlet>
+    <router-outlet (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
+    </router-outlet>
 </div>

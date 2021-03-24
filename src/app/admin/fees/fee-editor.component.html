@@ -280,20 +280,20 @@
     <div class="form-element">
         <div class="button-form-panel">
             <div class="button-panel-left">
-                <button class="form-button" type="submit" mat-flat-button color="primary">
-                    Save
+                <button class="main-button main-button-accent" type="submit">
+                    SAVE
                 </button>
             </div>
             <div *ngIf="defaultSchemeFlag==='' && create==false" class="button-panel-right">
-                <button class="form-button" mat-flat-button color="warn" (click)="onDeleteScheme()">
-                    Delete
+                <button class="main-button main-button-warn" (click)="onDeleteScheme()">
+                    DELETE
                 </button>
             </div>
         </div>
         <br>
         <div>
-            <button class="form-button" mat-flat-button color="primary" (click)="onCancel()">
-                Cancel
+            <button class="main-button main-button-primary" (click)="onCancel()">
+                CANCEL
             </button>
         </div>
     </div>
