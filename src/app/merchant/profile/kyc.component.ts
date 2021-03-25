@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
-import { SettingsKyc, User } from 'src/app/model/generated-models';
+import { SettingsCommon, SettingsKyc, User } from 'src/app/model/generated-models';
 
 const snsWebSdk = require('@sumsub/websdk');
 
@@ -14,9 +14,33 @@ export class KycMerchantComponent implements OnInit {
     user: User | null = null;
     inProgress = false;
     errorMessage = '';
+    private settingsCommon: SettingsCommon | null = null;
 
     constructor(private router: Router, private auth: AuthService, private errorHandler: ErrorService) {
         this.user = auth.user;
+        this.settingsCommon = this.auth.getLocalSettingsCommon();
+    }
+
+    private launchKycWidget(kycUrl: string, kycFlowName: string): void {
+        this.inProgress = true;
+        this.auth.getKycToken().valueChanges.subscribe(({ data }) => {
+            this.inProgress = false;
+            this.launchSumSubWidget(
+                kycUrl,
+                kycFlowName,
+                data.generateWebApiToken,
+                this.user?.email as string,
+                this.user?.phone as string,
+                []);
+        }, (error) => {
+            this.inProgress = false;
+            console.log(error);
+            if (this.auth.token !== '') {
+                this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load settings');
+            } else {
+                this.router.navigateByUrl('/');
+            }
+        });
     }
 
     ngOnInit(): void {

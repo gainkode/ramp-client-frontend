@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { SettingsKyc, User } from 'src/app/model/generated-models';
+import { SettingsCommon, SettingsKyc, User } from 'src/app/model/generated-models';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
 
@@ -14,29 +14,68 @@ export class KycPersonalComponent implements OnInit {
   user: User | null = null;
   inProgress = false;
   errorMessage = '';
+  private settingsCommon: SettingsCommon | null = null;
 
   constructor(private router: Router, private auth: AuthService, private errorHandler: ErrorService) {
     this.user = auth.user;
+    this.settingsCommon = this.auth.getLocalSettingsCommon();
+  }
+
+  private launchKycWidget(kycUrl: string, kycFlowName: string): void {
+    this.inProgress = true;
+    this.auth.getKycToken().valueChanges.subscribe(({ data }) => {
+      this.inProgress = false;
+      this.launchSumSubWidget(
+        kycUrl,
+        kycFlowName,
+        data.generateWebApiToken,
+        this.user?.email as string,
+        this.user?.phone as string,
+        []);
+    }, (error) => {
+      this.inProgress = false;
+      console.log(error);
+      if (this.auth.token !== '') {
+        this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load settings');
+      } else {
+        this.router.navigateByUrl('/');
+      }
+    });
   }
 
   ngOnInit(): void {
-    const kycData = this.auth.getKycSettings();
+    const kycData = this.auth.getMyKycSettings();
     if (kycData === null) {
       this.errorMessage = this.errorHandler.getRejectedCookieMessage();
+    } else if (this.settingsCommon === null) {
+      this.errorMessage = 'Unable to load common settings';
     } else {
       this.inProgress = true;
-      kycData.valueChanges.subscribe(kyc => {
-        const settingsKyc: SettingsKyc = kyc.data.getSettingsKyc;
-        this.inProgress = false;
-        this.auth.getKycToken().valueChanges.subscribe(({ data }) => {
-          this.launchSumSubWidget(
-            '',//kycmod settingsKyc.kycBaseAddress as string,
-            '',//kycmod settingsKyc.kycPersonalFlow as string,
-            data.generateWebApiToken,
-            this.user?.email as string,
-            this.user?.phone as string,
-            []);
-        });
+      kycData.valueChanges.subscribe(({ data }) => {
+        const settingsKyc: SettingsKyc | null = data.getMySettingsKyc;
+        if (settingsKyc === null) {
+          this.errorMessage = 'Unable to load user settings';
+        } else {
+          const levels = JSON.parse(settingsKyc.levels);
+          if (levels === null) {
+            this.errorMessage = 'Unable to load user settings';
+          } else {
+            let flowName = '';
+            levels.every((x: { levelName: string; flowName: string }) => {
+              if (x.levelName === 'ewallet-kyc-level') {
+                flowName = x.flowName;
+                return;
+              }
+            });
+            if (flowName === '') {
+              this.errorMessage = 'Unable to load KYC identifier';
+            } else {
+                this.launchKycWidget(
+                  this.settingsCommon?.kycBaseAddress as string,
+                  flowName);
+            }
+          }
+        }
       }, (error) => {
         this.inProgress = false;
         console.log(error);

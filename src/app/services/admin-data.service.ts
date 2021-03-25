@@ -127,6 +127,31 @@ const GET_COST_SETTINGS_POST = gql`
   }
 `;
 
+const GET_KYC_SETTINGS_POST = gql`
+  query GetSettingsKyc {
+    getSettingsKyc(
+      filter: "",
+      orderBy:
+      [
+        {orderBy: "default", desc: true},
+        {orderBy: "name", desc: false}
+      ]) {
+      count,
+      list {
+        settingsKycId,
+        name,
+        description,
+        targetKycProviders,
+        targetUserTypes,
+        targetUserModes,
+        targetFilterType,
+        targetFilterValues,
+        levels
+      }
+    }
+  }
+`;
+
 const ADD_SETTINGS_COST_POST = gql`
 mutation AddSettingsCost(
   $name: String!,
@@ -211,6 +236,18 @@ export class AdminDataService {
     if (this.apollo.client !== undefined) {
       return this.apollo.watchQuery<any>({
         query: GET_COST_SETTINGS_POST,
+        pollInterval: 30000,
+        fetchPolicy: 'network-only'
+      });
+    } else {
+      return null;
+    }
+  }
+
+  getKycSettings(): QueryRef<any, EmptyObject> | null {
+    if (this.apollo.client !== undefined) {
+      return this.apollo.watchQuery<any>({
+        query: GET_KYC_SETTINGS_POST,
         pollInterval: 30000,
         fetchPolicy: 'network-only'
       });

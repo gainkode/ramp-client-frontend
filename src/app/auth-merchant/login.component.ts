@@ -4,7 +4,7 @@ import { AuthService } from '../services/auth.service';
 import { ErrorService } from '../services/error.service';
 import { Validators, FormBuilder } from '@angular/forms';
 import { SocialUser } from 'angularx-social-login';
-import { LoginResult } from '../model/generated-models';
+import { LoginResult, SettingsCommon } from '../model/generated-models';
 
 @Component({
     templateUrl: 'login.component.html',
@@ -49,7 +49,21 @@ export class LoginComponent {
         const typeCheck = userData.user?.type === 'Merchant';
         if (typeCheck) {
             this.auth.setLoginUser(userData);
-            this.router.navigateByUrl('/merchant/');
+            this.inProgress = true;
+            this.auth.getSettingsCommon().valueChanges.subscribe(settings => {
+                const settingsCommon: SettingsCommon = settings.data.getSettingsCommon;
+                this.auth.setLocalSettingsCommon(settingsCommon);
+                this.inProgress = false;
+                this.router.navigateByUrl('/merchant/');
+            }, (error) => {
+                this.inProgress = false;
+                console.log(error);
+                if (this.auth.token !== '') {
+                    this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load common settings');
+                } else {
+                    this.router.navigateByUrl('/');
+                }
+            });
         } else {
             this.loginForm.reset();
             this.errorMessage = 'Wrong account type. Try to sign in as a personal';

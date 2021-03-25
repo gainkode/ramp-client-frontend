@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { from, Observable } from 'rxjs';
 import { SocialAuthService, FacebookLoginProvider, GoogleLoginProvider, SocialUser } from 'angularx-social-login';
-import { KycStatus, LoginResult, User, UserType } from '../model/generated-models';
+import { KycStatus, LoginResult, SettingsCommon, User, UserType } from '../model/generated-models';
 import { environment } from 'src/environments/environment';
 import { EmptyObject } from 'apollo-angular/types';
 
@@ -23,10 +23,19 @@ const LOGIN_POST = gql`
                   defaultCurrency,
                   firstName,
                   lastName,
+                  birthday,
+                  countryCode2,
+                  countryCode3,
                   phone,
                   mode,
+                  changePasswordRequired,
+                  referralCode,
+                  kycProvider,
+                  kycValidationTierId,
                   kycApplicantId,
-                  kycStatus
+                  kycValid,
+                  kycStatus,
+                  kycStatusUpdateRequired
             }
             authTokenAction
         }
@@ -56,8 +65,14 @@ const SOCIAL_LOGIN_POST = gql`
                 lastName,
                 phone,
                 mode,
+                changePasswordRequired,
+                referralCode,
+                kycProvider,
+                kycValidationTierId,
                 kycApplicantId,
-                kycStatus
+                kycValid,
+                kycStatus,
+                kycStatusUpdateRequired
             }
             authTokenAction
         }
@@ -171,6 +186,24 @@ const KYC_HAS_BEEN_SENT_POST = gql`
   mutation KycHasBeenSent { kycHasBeenSent }
 `;
 
+const GET_MY_SETTINGS_KYC_POST = gql`
+query {
+    getMySettingsKyc {
+        created
+        createdBy
+        description
+        levels
+        name
+        settingsKycId
+        targetFilterType
+        targetFilterValues
+        targetKycProviders
+        targetUserModes
+        targetUserTypes
+    }
+  }
+`;
+
 const GET_SETTINGS_KYC_POST = gql`
 query {
     getSettingsKyc {
@@ -271,7 +304,7 @@ export class AuthService {
                 email: usermail,
                 password: userpassword,
                 userType: usertype,
-                mode: 'ExternalWallet',
+                mode: 'InternalWallet',
                 termsOfUse: true,
                 firstName: firstname,
                 lastName: lastname,
@@ -335,6 +368,19 @@ export class AuthService {
     setLoginUser(login: LoginResult): void {
         sessionStorage.setItem('currentUser', JSON.stringify(login.user));
         sessionStorage.setItem('currentToken', login.authToken as string);
+    }
+
+    setLocalSettingsCommon(settings: SettingsCommon): void {
+        sessionStorage.setItem('common', JSON.stringify(settings));
+    }
+
+    getLocalSettingsCommon(): SettingsCommon | null {
+        let settings: SettingsCommon | null = null;
+        const str = sessionStorage.getItem('common');
+        if (str !== null) {
+            settings = JSON.parse(str);
+        }
+        return settings;
     }
 
     private getAuthenticatedUser(): User | null {
@@ -401,9 +447,21 @@ export class AuthService {
     }
 
     getKycSettings(): QueryRef<any, EmptyObject> | null {
+        // if (this.apollo.client !== undefined) {
+        //     return this.apollo.watchQuery<any>({
+        //         query: GET_SETTINGS_KYC_POST,
+        //         fetchPolicy: 'network-only'
+        //     });
+        // } else {
+        //     return null;
+        // }
+        return null;
+    }
+
+    getMyKycSettings(): QueryRef<any, EmptyObject> | null {
         if (this.apollo.client !== undefined) {
             return this.apollo.watchQuery<any>({
-                query: GET_SETTINGS_KYC_POST,
+                query: GET_MY_SETTINGS_KYC_POST,
                 fetchPolicy: 'network-only'
             });
         } else {

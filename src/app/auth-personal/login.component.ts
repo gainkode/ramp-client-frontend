@@ -4,7 +4,7 @@ import { AuthService } from '../services/auth.service';
 import { ErrorService } from '../services/error.service';
 import { Validators, FormBuilder } from '@angular/forms';
 import { SocialUser } from 'angularx-social-login';
-import { LoginResult } from '../model/generated-models';
+import { LoginResult, SettingsCommon } from '../model/generated-models';
 
 @Component({
     templateUrl: 'login.component.html',
@@ -51,11 +51,10 @@ export class LoginComponent {
             this.auth.setLoginUser(userData);
             this.inProgress = true;
             this.auth.getSettingsCommon().valueChanges.subscribe(settings => {
-                console.log(settings);
-                //const settingsKyc: SettingsKyc = kyc.data.getSettingsKyc;
+                const settingsCommon: SettingsCommon = settings.data.getSettingsCommon;
+                this.auth.setLocalSettingsCommon(settingsCommon);
                 this.inProgress = false;
-                
-                //this.router.navigateByUrl('/personal/');
+                this.router.navigateByUrl('/personal/');
             }, (error) => {
                 this.inProgress = false;
                 console.log(error);
