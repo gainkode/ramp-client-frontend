@@ -49,6 +49,12 @@ export const AdminMenuItems: Array<AdminMenuItem> = [
         icon: 'attach_money'
     },
     {
+        id: 'identification',
+        name: 'Identification',
+        url: '/admin/main/identification',
+        icon: 'assignment_ind'
+    },
+    {
         id: 'reconciliation',
         name: 'Reconciliation',
         url: '/admin/main/reconciliation',

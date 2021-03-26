@@ -23,15 +23,14 @@ export type Query = {
   serverTime: Scalars['String'];
   getSettingsCommon?: Maybe<SettingsCommon>;
   getSettingsKyc?: Maybe<SettingsKycListResult>;
-  getMySettingsKyc: SettingsKyc;
-  getAppropriateSettingsKyc: SettingsKyc;
+  getMySettingsKyc?: Maybe<SettingsKyc>;
+  getAppropriateSettingsKyc?: Maybe<SettingsKyc>;
   getSettingsFee?: Maybe<SettingsFeeListResult>;
-  getAppropriateSettingsFee: SettingsFee;
+  getAppropriateSettingsFee?: Maybe<SettingsFee>;
   getSettingsCost?: Maybe<SettingsCostListResult>;
-  getAppropriateSettingsCost: SettingsCost;
+  getAppropriateSettingsCost?: Maybe<SettingsCost>;
   generateWebApiToken: Scalars['String'];
   me: User;
-  user?: Maybe<User>;
   userCount?: Maybe<Scalars['Int']>;
   userById: User;
   userByName: User;
@@ -43,6 +42,9 @@ export type Query = {
   userActions: UserActionListResult;
   myKycInfo?: Maybe<KycInfo>;
   userKycInfo?: Maybe<KycInfo>;
+  getMySupportTickets?: Maybe<SupportTicketListResult>;
+  getSupportTickets?: Maybe<SupportTicketListResult>;
+  getFeedbacks?: Maybe<FeedbackListResult>;
 };
 
 
@@ -94,11 +96,6 @@ export type QueryGetAppropriateSettingsCostArgs = {
   paymentProvider: PaymentProvider;
   filterType?: Maybe<SettingsCostTargetFilterType>;
   filterValue?: Maybe<Scalars['String']>;
-};
-
-
-export type QueryUserArgs = {
-  filter: Scalars['String'];
 };
 
 
@@ -157,6 +154,31 @@ export type QueryUserActionsArgs = {
 
 export type QueryUserKycInfoArgs = {
   userId?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryGetMySupportTicketsArgs = {
+  filter?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OrderBy>>;
+};
+
+
+export type QueryGetSupportTicketsArgs = {
+  userId?: Maybe<Scalars['String']>;
+  filter?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OrderBy>>;
+};
+
+
+export type QueryGetFeedbacksArgs = {
+  filter?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OrderBy>>;
 };
 
 export type SettingsCommon = {
@@ -534,6 +556,44 @@ export type KycInfoField = {
   required?: Maybe<Scalars['Boolean']>;
 };
 
+export type SupportTicketListResult = {
+  __typename?: 'SupportTicketListResult';
+  count?: Maybe<Scalars['Int']>;
+  list?: Maybe<Array<SupportTicket>>;
+};
+
+export type SupportTicket = {
+  __typename?: 'SupportTicket';
+  supportTicketId: Scalars['ID'];
+  userId?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  category?: Maybe<SupportTicketCategory>;
+  files?: Maybe<Array<Scalars['String']>>;
+  created?: Maybe<Scalars['DateTime']>;
+};
+
+export enum SupportTicketCategory {
+  Authorization = 'Authorization',
+  Transaction = 'Transaction',
+  Exchange = 'Exchange'
+}
+
+export type FeedbackListResult = {
+  __typename?: 'FeedbackListResult';
+  count?: Maybe<Scalars['Int']>;
+  list?: Maybe<Array<Feedback>>;
+};
+
+export type Feedback = {
+  __typename?: 'Feedback';
+  feedbackId: Scalars['ID'];
+  userId?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  created?: Maybe<Scalars['DateTime']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   foo: Scalars['String'];
@@ -569,6 +629,7 @@ export type Mutation = {
   enable2fa: LoginResult;
   disable2fa: LoginResult;
   sendEmailCodePasswordChange: Scalars['Boolean'];
+  addFeedback: Feedback;
 };
 
 
@@ -750,6 +811,11 @@ export type MutationDisable2faArgs = {
   code: Scalars['String'];
 };
 
+
+export type MutationAddFeedbackArgs = {
+  feedback: FeedbackInput;
+};
+
 export type SettingsCommonInput = {
   liquidityProvider?: Maybe<Scalars['String']>;
   liquidityBaseAddress?: Maybe<Scalars['String']>;
@@ -835,6 +901,11 @@ export type TwoFactorAuthenticationResult = {
   qr: Scalars['String'];
 };
 
+export type FeedbackInput = {
+  title?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+};
+
 export enum CryptoCurrencyType {
   Btc = 'BTC',
   Usdc = 'USDC'
@@ -858,6 +929,27 @@ export enum PaymentInitiatorType {
   Checkout = 'Checkout',
   Wallet = 'Wallet'
 }
+
+export enum FileType {
+  Avatar = 'Avatar',
+  SupportTicket = 'SupportTicket'
+}
+
+export type File = {
+  __typename?: 'File';
+  path: Scalars['String'];
+  originFileName: Scalars['String'];
+  type: FileType;
+  mimeType?: Maybe<Scalars['String']>;
+  encoding?: Maybe<Scalars['String']>;
+  fileSize?: Maybe<Scalars['Float']>;
+  order?: Maybe<Scalars['Int']>;
+};
+
+export type FileInfo = {
+  type?: Maybe<FileType>;
+  order?: Maybe<Scalars['Int']>;
+};
 
 
 export type RequiredUserPermission = {
