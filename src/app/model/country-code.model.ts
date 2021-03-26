@@ -1,3 +1,5 @@
+import { CommonTargetValue } from "./common.model";
+
 export interface ICountryCode {
     name: string;
     dial_code: string;
@@ -1509,3 +1511,11 @@ export function getCountryDialCode(countryName: string): string {
     }
     return '';
 }
+
+export const CountryFilterList: CommonTargetValue[] = CountryCodes.map(c => {
+    const item = new CommonTargetValue();
+    item.imgClass = 'country-flag';
+    item.imgSource = `assets/svg-country-flags/${c.code2.toLowerCase()}.svg`;
+    item.title = c.name;
+    return item;
+});

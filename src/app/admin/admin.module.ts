@@ -22,6 +22,7 @@ import { FeesComponent } from './fees/fees.component';
 import { FeeEditorComponent } from './fees/fee-editor.component';
 import { CostsComponent } from './costs/costs.component';
 import { CostEditorComponent } from './costs/cost-editor.component';
+import { IdentificationComponent } from './identification/identification.component';
 
 const routing = RouterModule.forChild([
     {
@@ -30,7 +31,8 @@ const routing = RouterModule.forChild([
         children: [
             { path: 'dashboard', component: DashboardComponent, canActivate: [AdminGuard] },
             { path: 'fees', component: FeesComponent, canActivate: [AdminGuard] },
-            { path: 'costs', component: CostsComponent, canActivate: [AdminGuard] }
+            { path: 'costs', component: CostsComponent, canActivate: [AdminGuard] },
+            { path: 'identification', component: IdentificationComponent, canActivate: [AdminGuard] }
         ],
         canActivate: [AdminGuard]
     },
@@ -69,7 +71,8 @@ export class MaterialModule { }
         AdminComponent,
         DashboardComponent,
         FeesComponent, FeeEditorComponent,
-        CostsComponent, CostEditorComponent],
+        CostsComponent, CostEditorComponent,
+        IdentificationComponent],
     providers: [AdminGuard],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

@@ -1,5 +1,5 @@
 import { CommonTargetValue } from './common.model';
-import { CountryCodes, getCountry, getCountryByCode3 } from './country-code.model';
+import { getCountry, getCountryByCode3 } from './country-code.model';
 import {
     SettingsCost, PaymentInstrument, PaymentProvider, TransactionType, SettingsCostTargetFilterType
 } from './generated-models';
@@ -7,14 +7,6 @@ import {
     PaymentInstrumentList, PaymentProviderList,
     CostTargetFilterList, TransactionTypeList
 } from './payment.model';
-
-export const CountryFilterList: CommonTargetValue[] = CountryCodes.map(c => {
-    const item = new CommonTargetValue();
-    item.imgClass = 'country-flag';
-    item.imgSource = `assets/svg-country-flags/${c.code2.toLowerCase()}.svg`;
-    item.title = c.name;
-    return item;
-});
 
 // temp
 export const PspFilterList: CommonTargetValue[] = [

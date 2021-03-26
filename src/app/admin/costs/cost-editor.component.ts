@@ -11,8 +11,7 @@ import {
 } from '../../model/generated-models';
 import { PaymentInstrumentList, PaymentProviderList, TransactionTypeList, CostTargetFilterList } from 'src/app/model/payment.model';
 import { CommonTargetValue, TargetParams } from 'src/app/model/common.model';
-import { CountryFilterList } from 'src/app/model/fee-scheme.model';
-import { getCountry } from 'src/app/model/country-code.model';
+import { CountryFilterList, getCountry } from 'src/app/model/country-code.model';
 
 @Component({
     selector: 'cost-editor',

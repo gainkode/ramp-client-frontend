@@ -1,18 +1,10 @@
 import { CommonTargetValue } from './common.model';
-import { CountryCodes, getCountry, getCountryByCode3 } from './country-code.model';
+import { getCountry, getCountryByCode3 } from './country-code.model';
 import {
     SettingsFee, PaymentInstrument, PaymentProvider, TransactionType, SettingsFeeTargetFilterType
 } from './generated-models';
 import { PaymentInstrumentList, PaymentProviderList,
     FeeTargetFilterList, TransactionTypeList } from './payment.model';
-
-export const CountryFilterList: CommonTargetValue[] = CountryCodes.map(c => {
-    const item = new CommonTargetValue();
-    item.imgClass = 'country-flag';
-    item.imgSource = `assets/svg-country-flags/${c.code2.toLowerCase()}.svg`;
-    item.title = c.name;
-    return item;
-});
 
 // temp
 export const AffiliateIdFilterList: CommonTargetValue[] = [

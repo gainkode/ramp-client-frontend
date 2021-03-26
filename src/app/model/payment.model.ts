@@ -1,5 +1,6 @@
 import {
-    PaymentInstrument, PaymentProvider, TransactionType, SettingsFeeTargetFilterType, SettingsCostTargetFilterType
+    PaymentInstrument, PaymentProvider, TransactionType,
+    SettingsFeeTargetFilterType, SettingsCostTargetFilterType, SettingsKycTargetFilterType, UserType, KycProvider, UserMode
 } from './generated-models';
 
 export class PaymentInstrumentView {
@@ -17,6 +18,21 @@ export class TransactionTypeView {
     name = '';
 }
 
+export class UserTypeView {
+    id!: UserType;
+    name = '';
+}
+
+export class UserModeView {
+    id!: UserMode;
+    name = '';
+}
+
+export class KycProviderView {
+    id!: KycProvider;
+    name = '';
+}
+
 export class FeeTargetFilterTypeView {
     id!: SettingsFeeTargetFilterType;
     name = '';
@@ -24,6 +40,11 @@ export class FeeTargetFilterTypeView {
 
 export class CostTargetFilterTypeView {
     id!: SettingsCostTargetFilterType;
+    name = '';
+}
+
+export class KycTargetFilterTypeView {
+    id!: SettingsKycTargetFilterType;
     name = '';
 }
 
@@ -53,7 +74,7 @@ export const TransactionTypeList: Array<TransactionTypeView> = [
 
 export const FeeTargetFilterList: Array<FeeTargetFilterTypeView> = [
     { id: SettingsFeeTargetFilterType.AffiliateId, name: 'Affiliate identifier' },
-    { id: SettingsFeeTargetFilterType.AccountId, name: 'Account identifier' },
+    { id: SettingsFeeTargetFilterType.AccountId, name: 'Account' },
     { id: SettingsFeeTargetFilterType.AccountType, name: 'Account type' },
     { id: SettingsFeeTargetFilterType.Country, name: 'Country' },
     { id: SettingsFeeTargetFilterType.InitiateFrom, name: 'Initiate from ...' }
@@ -62,4 +83,24 @@ export const FeeTargetFilterList: Array<FeeTargetFilterTypeView> = [
 export const CostTargetFilterList: Array<CostTargetFilterTypeView> = [
     { id: SettingsCostTargetFilterType.Country, name: 'Country' },
     { id: SettingsCostTargetFilterType.Psp, name: 'PSP' }
+];
+
+export const KycTargetFilterList: Array<KycTargetFilterTypeView> = [
+    { id: SettingsKycTargetFilterType.Country, name: 'Country' },
+    { id: SettingsKycTargetFilterType.AccountId, name: 'Account' }
+];
+
+export const UserTypeList: Array<UserTypeView> = [
+    { id: UserType.Merchant, name: 'Merchant' },
+    { id: UserType.Personal, name: 'Personal' }
+];
+
+export const UserModeList: Array<UserModeView> = [
+    { id: UserMode.InternalWallet, name: 'Internal wallet' },
+    { id: UserMode.ExternalWallet, name: 'External wallet' }
+];
+
+export const KycProviderList: Array<KycProviderView> = [
+    { id: KycProvider.Local, name: 'Local' },
+    { id: KycProvider.SumSub, name: 'Sum Sub' }
 ];

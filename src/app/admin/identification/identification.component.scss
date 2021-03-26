@@ -1,0 +1,56 @@
+.mat-column-kyc-table {
+    word-wrap: break-word;
+    white-space: unset;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+}
+
+.mat-column-kyc-table-is-default {
+    flex: 0 0 2%;
+    width: 2%;
+    min-width: 1.5em;
+}
+
+.mat-column-kyc-table-name {
+    flex: 0 0 20%;
+    width: 20%;
+    min-width: 5em;
+}
+
+.mat-column-kyc-table-target {
+    flex: 0 0 20%;
+    width: 15%;
+    min-width: 5em;
+}
+
+.mat-column-kyc-table-user-type {
+    flex: 0 0 20%;
+    width: 21%;
+    min-width: 5em;
+}
+
+.mat-column-kyc-table-user-mode {
+    flex: 0 0 18%;
+    width: 20%;
+    min-width: 5em;
+}
+
+.mat-column-kyc-table-provider {
+    flex: 0 0 18%;
+    width: 20%;
+    min-width: 5em;
+}
+
+.mat-column-kyc-table-details {
+    flex: 0 0 2%;
+    width: 2%;
+    min-width: 1.5em;
+}
+
+.target-tab-box {
+    overflow: hidden;
+}

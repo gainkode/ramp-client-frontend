@@ -6,7 +6,7 @@ import { map, startWith } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import {
-    FeeScheme, AccountTypeFilterList, CountryFilterList, AffiliateIdFilterList,
+    FeeScheme, AccountTypeFilterList, AffiliateIdFilterList,
     AccountIdFilterList, WidgetFilterList
 } from '../../model/fee-scheme.model';
 import {
@@ -16,7 +16,7 @@ import {
     PaymentInstrumentList, PaymentProviderList, FeeTargetFilterList, TransactionTypeList
 } from 'src/app/model/payment.model';
 import { CommonTargetValue, TargetParams } from 'src/app/model/common.model';
-import { getCountry } from 'src/app/model/country-code.model';
+import { CountryFilterList, getCountry } from 'src/app/model/country-code.model';
 
 @Component({
     selector: 'fee-editor',
