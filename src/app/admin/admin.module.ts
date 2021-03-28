@@ -26,6 +26,7 @@ import { IdentificationComponent } from './identification/identification.compone
 import { IdTableComponent } from './identification/id-table.component';
 import { LevelTableComponent } from './identification/level-table.component';
 import { LevelEditorComponent } from './identification/level-editor.component';
+import { KycEditorComponent } from './identification/kyc-editor.component';
 
 const routing = RouterModule.forChild([
     {
@@ -75,7 +76,7 @@ export class MaterialModule { }
         DashboardComponent,
         FeesComponent, FeeEditorComponent,
         CostsComponent, CostEditorComponent,
-        IdentificationComponent, IdTableComponent, LevelTableComponent, LevelEditorComponent],
+        IdentificationComponent, IdTableComponent, LevelTableComponent, KycEditorComponent, LevelEditorComponent],
     providers: [AdminGuard],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

@@ -72,13 +72,12 @@
 
   <div [ngClass]="showDetailed ? 'detailed-table-right-panel-details' : 'detailed-table-right-panel-full'">
     <div class="details-editor">
+      <kyc-editor *ngIf="showDetailed && selectedTab===0" [currentScheme]="selectedScheme" [create]="createScheme"
+        (save)="onSavedScheme($event)" (delete)="onDeleteScheme($event)" (cancel)="onCancelEdit()"
+        (formChanged)="onEditorFormChanged($event)"></kyc-editor>
       <level-editor *ngIf="showDetailed && selectedTab===1" [currentLevel]="selectedLevel" [create]="createLevel"
         (save)="onSavedLevel($event)" (delete)="onDeleteLevel($event)" (cancel)="onCancelEdit()"
         (formChanged)="onEditorFormChanged($event)"></level-editor>
-      <!-- <cost-editor *ngIf="showDetailed" [currentScheme]="selectedScheme" [create]="createScheme"
-          (save)="onSaved($event)" (delete)="onDeleteScheme($event)" (cancel)="onCancelEdit()"
-          (formChanged)="onEditorFormChanged($event)">
-        </cost-editor> -->
     </div>
   </div>
 </div>
