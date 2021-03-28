@@ -93,22 +93,6 @@ export class IdentificationComponent implements OnInit, OnDestroy {
     return selected;
   }
 
-  getDetailsIcon(schemeId: string): string {
-    if (this.createScheme) {
-      return 'lock';
-    } else {
-      return (this.isSelectedScheme(schemeId)) ? 'clear' : 'description';
-    }
-  }
-
-  getDetailsTooltip(schemeId: string): string {
-    if (this.createScheme) {
-      return 'Save changes first';
-    } else {
-      return (this.isSelectedScheme(schemeId)) ? 'Close details' : 'Change scheme';
-    }
-  }
-
   private showEditor(scheme: KycScheme | null, createNew: boolean, visible: boolean): void {
     this._showDetails = visible;
     if (visible) {
@@ -160,7 +144,7 @@ export class IdentificationComponent implements OnInit, OnDestroy {
     //     this.inProgress = false;
     //     console.log(error);
     //     if (this.auth.token !== '') {
-    //       this.editorErrorMessage = this.errorHandler.getError(error.message, 'Unable to delete cost settings');
+    //       this.editorErrorMessage = this.errorHandler.getError(error.message, 'Unable to delete identification settings');
     //     } else {
     //       this.router.navigateByUrl('/');
     //     }
@@ -181,7 +165,7 @@ export class IdentificationComponent implements OnInit, OnDestroy {
     //   this.inProgress = false;
     //   console.log(error);
     //   if (this.auth.token !== '') {
-    //     this.editorErrorMessage = this.errorHandler.getError(error.message, 'Unable to save cost settings');
+    //     this.editorErrorMessage = this.errorHandler.getError(error.message, 'Unable to save identification settings');
     //   } else {
     //     this.router.navigateByUrl('/');
     //   }
