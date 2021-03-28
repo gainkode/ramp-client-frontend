@@ -24,7 +24,6 @@ import { KycScheme } from 'src/app/model/identification.model';
 export class KycEditorComponent implements OnInit {
     @Input()
     set currentScheme(scheme: KycScheme | null) {
-        this.forceValidate = false;
         this.setFormData(scheme);
         this.settingsId = (scheme !== null) ? scheme?.id : '';
     }
@@ -38,7 +37,6 @@ export class KycEditorComponent implements OnInit {
 
     private defaultSchemeName = '';
     private settingsId = '';
-    private forceValidate = false;
     private loadingData = false;
     errorMessage = '';
     targetEntity = '';
@@ -236,7 +234,6 @@ export class KycEditorComponent implements OnInit {
     }
 
     onSubmit(): void {
-        this.forceValidate = true;
         if (this.schemeForm.valid && this.validateTargetValues()) {
             this.save.emit(this.setSchemeData());
         } else {
