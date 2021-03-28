@@ -29,7 +29,6 @@ export class KycScheme {
     levels: Array<SettingsKycLevel> = [];
 
     constructor(data: SettingsKyc | null) {
-        console.log(data);
         if (data !== null) {
             this.name = data.name;
             this.id = data.settingsKycId;
@@ -102,5 +101,34 @@ export class KycScheme {
             p = true;
         });
         return s;
+    }
+}
+
+export class KycLevelItem {
+    name!: string;
+    value!: string;
+    description!: string;
+}
+
+export class KycLevel {
+    id!: string;
+    name!: string;
+    levelData!: KycLevelItem;
+    flowData!: KycLevelItem;
+    created!: Date;
+    createdBy: string = '';
+
+    constructor(data: SettingsKycLevel | null) {
+        if (data !== null) {
+            this.name = data.name as string;
+            this.id = data.settingsKycLevelId;
+            this.created = data.created;
+            this.createdBy = data.createdBy as string;
+            const content = JSON.parse(data.data as string);
+            if (content !== undefined) {
+                this.levelData = content.level;
+                this.flowData = content.flow;
+            }
+        }
     }
 }

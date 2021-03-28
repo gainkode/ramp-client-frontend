@@ -3,9 +3,9 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { AdminDataService } from '../../services/admin-data.service';
 import { ErrorService } from '../../services/error.service';
-import { SettingsKycListResult } from '../../model/generated-models';
+import { SettingsKycLevelListResult, SettingsKycListResult } from '../../model/generated-models';
 import { Subscription } from 'rxjs';
-import { KycScheme } from 'src/app/model/identification.model';
+import { KycLevel, KycScheme } from 'src/app/model/identification.model';
 
 @Component({
   templateUrl: 'identification.component.html',
@@ -15,15 +15,18 @@ export class IdentificationComponent implements OnInit, OnDestroy {
   @Output() changeEditMode = new EventEmitter<boolean>();
   private _showDetails = false;
   private _settingsSubscription!: any;
+  private _levelsSubscription!: any;
   private _editMode = false;
   inProgress = false;
   errorMessage = '';
   editorErrorMessage = '';
-  selectedTab = 1;
+  selectedTab = 0;
   createScheme = false;
+  createLevel = false;
   selectedScheme: KycScheme | null = null;
+  selectedLevel: KycLevel | null = null;
   schemes: KycScheme[] = [];
-  displayedColumns: string[] = ['isDefault', 'name', 'target', 'userType', 'userMode', 'provider', 'details'];
+  levels: KycLevel[] = [];
 
   get showDetailed(): boolean {
     return this._showDetails;
@@ -42,9 +45,13 @@ export class IdentificationComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    const s: Subscription = this._settingsSubscription;
-    if (s !== undefined) {
-      (this._settingsSubscription as Subscription).unsubscribe();
+    const ss: Subscription = this._settingsSubscription;
+    const ls: Subscription = this._levelsSubscription;
+    if (ss !== undefined) {
+      ss.unsubscribe();
+    }
+    if (ls !== undefined) {
+      ls.unsubscribe();
     }
   }
 
@@ -56,6 +63,7 @@ export class IdentificationComponent implements OnInit, OnDestroy {
   refreshData() {
     this.showEditor(null, false, false);
     if (this.selectedTab == 0) {
+      // Schemes
       const s: Subscription = this._settingsSubscription;
       if (s !== undefined) {
         this.refreshSchemeList();
@@ -64,7 +72,14 @@ export class IdentificationComponent implements OnInit, OnDestroy {
         this.loadSchemeList();
       }
     } else {
-      
+      // Levels
+      const s: Subscription = this._levelsSubscription;
+      if (s !== undefined) {
+        this.refreshLevelList();
+      }
+      else {
+        this.loadLevelList();
+      }
     }
   }
 
@@ -98,6 +113,42 @@ export class IdentificationComponent implements OnInit, OnDestroy {
 
   refreshSchemeList(): void {
     const settingsData = this.adminService.getKycSettings();
+    if (settingsData !== null) {
+      settingsData.refetch();
+    }
+  }
+
+  loadLevelList(): void {
+    const settingsData = this.adminService.getKycLevels();
+    if (settingsData === null) {
+      this.errorMessage = this.errorHandler.getRejectedCookieMessage();
+    } else {
+      this.inProgress = true;
+      this._levelsSubscription = settingsData.valueChanges.subscribe(({ data }) => {
+        const settings = data.getSettingsKycLevels as SettingsKycLevelListResult;
+        let itemCount = 0;
+        if (settings !== null) {
+          itemCount = settings?.count as number;
+          if (itemCount > 0) {
+            this.levels = settings?.list?.map((val) => new KycLevel(val)) as KycLevel[];
+            console.log(this.levels);
+          }
+        }
+        this.inProgress = false;
+      }, (error) => {
+        this.setEditMode(false);
+        this.inProgress = false;
+        if (this.auth.token !== '') {
+          this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load identification levels');
+        } else {
+          this.router.navigateByUrl('/');
+        }
+      });
+    }
+  }
+
+  refreshLevelList(): void {
+    const settingsData = this.adminService.getKycLevels();
     if (settingsData !== null) {
       settingsData.refetch();
     }
