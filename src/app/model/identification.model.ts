@@ -134,4 +134,19 @@ export class KycLevel {
             this.flowData = new KycLevelItem();
         }
     }
+
+    getDataObject(): string {
+        return JSON.stringify({
+            level: {
+                name: 'Level name',
+                description: this.levelData.description,
+                value: this.levelData.value
+            },
+            flow: {
+                name: 'Flow name',
+                description: this.flowData.description,
+                value: this.flowData.value
+            }
+        });
+    }
 }

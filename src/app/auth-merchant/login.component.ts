@@ -57,7 +57,6 @@ export class LoginComponent {
                 this.router.navigateByUrl('/merchant/');
             }, (error) => {
                 this.inProgress = false;
-                console.log(error);
                 if (this.auth.token !== '') {
                     this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load common settings');
                 } else {
@@ -93,7 +92,6 @@ export class LoginComponent {
                     }
                     this.inProgress = false;
                 }, (error) => {
-                    console.log(error);
                     this.inProgress = false;
                     this.errorMessage = this.errorHandler.getError(
                         error.message,

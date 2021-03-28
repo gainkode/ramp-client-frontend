@@ -20,11 +20,12 @@
         <div class="admin-page-title">
           <div *ngIf="inProgress">
             <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-            <br>
           </div>
 
-          <div class="form-error-box" *ngIf="editorErrorMessage!==''">
-            {{editorErrorMessage}}
+          <div class="form-element" *ngIf="schemeEditorErrorMessage!==''">
+            <div class="form-error-box">
+              {{schemeEditorErrorMessage}}
+            </div>
           </div>
 
           <button class="main-button main-button-primary" *ngIf="errorMessage===''" [disabled]="createScheme"
@@ -46,11 +47,12 @@
         <div class="admin-page-title">
           <div *ngIf="inProgress">
             <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-            <br>
           </div>
 
-          <div class="form-error-box" *ngIf="editorErrorMessage!==''">
-            {{editorErrorMessage}}
+          <div class="form-element" *ngIf="levelEditorErrorMessage!==''">
+            <div class="form-error-box">
+              {{levelEditorErrorMessage}}
+            </div>
           </div>
 
           <button class="main-button main-button-primary" *ngIf="errorMessage===''" [disabled]="createLevel"

@@ -19,7 +19,8 @@ export class IdentificationComponent implements OnInit, OnDestroy {
   private _editMode = false;
   inProgress = false;
   errorMessage = '';
-  editorErrorMessage = '';
+  levelEditorErrorMessage = '';
+  schemeEditorErrorMessage = '';
   selectedTab = 0;
   createScheme = false;
   createLevel = false;
@@ -132,7 +133,6 @@ export class IdentificationComponent implements OnInit, OnDestroy {
           itemCount = settings?.count as number;
           if (itemCount > 0) {
             this.levels = settings?.list?.map((val) => new KycLevel(val)) as KycLevel[];
-            console.log(this.levels);
           }
         }
         this.inProgress = false;
@@ -245,7 +245,7 @@ export class IdentificationComponent implements OnInit, OnDestroy {
   }
 
   onDeleteScheme(id: string): void {
-    // this.editorErrorMessage = '';
+    this.schemeEditorErrorMessage = '';
     // const requestData = this.adminService.deleteCostSettings(id);
     // if (requestData === null) {
     //   this.errorMessage = this.errorHandler.getRejectedCookieMessage();
@@ -259,7 +259,7 @@ export class IdentificationComponent implements OnInit, OnDestroy {
     //     this.inProgress = false;
     //     console.log(error);
     //     if (this.auth.token !== '') {
-    //       this.editorErrorMessage = this.errorHandler.getError(error.message, 'Unable to delete identification settings');
+    //       this.schemeEditorErrorMessage = this.errorHandler.getError(error.message, 'Unable to delete identification settings');
     //     } else {
     //       this.router.navigateByUrl('/');
     //     }
@@ -268,30 +268,30 @@ export class IdentificationComponent implements OnInit, OnDestroy {
   }
 
   onDeleteLevel(id: string): void {
-    // this.editorErrorMessage = '';
-    // const requestData = this.adminService.deleteCostSettings(id);
-    // if (requestData === null) {
-    //   this.errorMessage = this.errorHandler.getRejectedCookieMessage();
-    // } else {
-    //   this.inProgress = true;
-    //   requestData.subscribe(({ data }) => {
-    //     this.inProgress = false;
-    //     this.showSchemeEditor(null, false, false);
-    //     this.refreshSchemeList();
-    //   }, (error) => {
-    //     this.inProgress = false;
-    //     console.log(error);
-    //     if (this.auth.token !== '') {
-    //       this.editorErrorMessage = this.errorHandler.getError(error.message, 'Unable to delete identification settings');
-    //     } else {
-    //       this.router.navigateByUrl('/');
-    //     }
-    //   });
-    // }
+    this.levelEditorErrorMessage = '';
+    const requestData = this.adminService.deleteKycLevelSettings(id);
+    if (requestData === null) {
+      this.errorMessage = this.errorHandler.getRejectedCookieMessage();
+    } else {
+      this.inProgress = true;
+      requestData.subscribe(({ data }) => {
+        this.inProgress = false;
+        this.showLevelEditor(null, false, false);
+        this.refreshLevelList();
+      }, (error) => {
+        this.inProgress = false;
+        console.log(error);
+        if (this.auth.token !== '') {
+          this.levelEditorErrorMessage = this.errorHandler.getError(error.message, 'Unable to delete identification level');
+        } else {
+          this.router.navigateByUrl('/');
+        }
+      });
+    }
   }
 
   onSavedScheme(scheme: KycScheme): void {
-    this.editorErrorMessage = '';
+    this.schemeEditorErrorMessage = '';
     // this.inProgress = true;
     // this.adminService.saveCostSettings(scheme, this.createScheme).subscribe(({ data }) => {
     //   this.inProgress = false;
@@ -303,7 +303,7 @@ export class IdentificationComponent implements OnInit, OnDestroy {
     //   this.inProgress = false;
     //   console.log(error);
     //   if (this.auth.token !== '') {
-    //     this.editorErrorMessage = this.errorHandler.getError(error.message, 'Unable to save identification settings');
+    //     this.schemeEditorErrorMessage = this.errorHandler.getError(error.message, 'Unable to save identification settings');
     //   } else {
     //     this.router.navigateByUrl('/');
     //   }
@@ -311,22 +311,22 @@ export class IdentificationComponent implements OnInit, OnDestroy {
   }
 
   onSavedLevel(level: KycLevel): void {
-    this.editorErrorMessage = '';
-    // this.inProgress = true;
-    // this.adminService.saveCostSettings(scheme, this.createScheme).subscribe(({ data }) => {
-    //   this.inProgress = false;
-    //   this.setEditMode(false);
-    //   this.showSchemeEditor(null, false, false);
-    //   this.createScheme = false;
-    //   this.refreshSchemeList();
-    // }, (error) => {
-    //   this.inProgress = false;
-    //   console.log(error);
-    //   if (this.auth.token !== '') {
-    //     this.editorErrorMessage = this.errorHandler.getError(error.message, 'Unable to save identification settings');
-    //   } else {
-    //     this.router.navigateByUrl('/');
-    //   }
-    // });
+    this.levelEditorErrorMessage = '';
+    this.inProgress = true;
+    this.adminService.saveKycLevelSettings(level, this.createLevel).subscribe(({ data }) => {
+      this.inProgress = false;
+      this.setEditMode(false);
+      this.showLevelEditor(null, false, false);
+      this.createLevel = false;
+      this.refreshLevelList();
+    }, (error) => {
+      this.inProgress = false;
+      console.log(error);
+      if (this.auth.token !== '') {
+        this.levelEditorErrorMessage = this.errorHandler.getError(error.message, 'Unable to save identification level');
+      } else {
+        this.router.navigateByUrl('/');
+      }
+    });
   }
 }

@@ -493,7 +493,7 @@ export class AuthService {
         this.socialAuth.signOut().then(function (data) {
             //console.log(data);
         }).catch(function (error) {
-            console.log(error);
+            //console.log(error);
         });
     }
 

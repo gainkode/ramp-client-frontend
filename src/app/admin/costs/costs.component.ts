@@ -158,7 +158,6 @@ export class CostsComponent implements OnInit, OnDestroy {
         this.refresh();
       }, (error) => {
         this.inProgress = false;
-        console.log(error);
         if (this.auth.token !== '') {
           this.editorErrorMessage = this.errorHandler.getError(error.message, 'Unable to delete cost settings');
         } else {
@@ -179,7 +178,6 @@ export class CostsComponent implements OnInit, OnDestroy {
       this.refresh();
     }, (error) => {
       this.inProgress = false;
-      console.log(error);
       if (this.auth.token !== '') {
         this.editorErrorMessage = this.errorHandler.getError(error.message, 'Unable to save cost settings');
       } else {

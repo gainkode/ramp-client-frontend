@@ -4,6 +4,7 @@ import { EmptyObject } from 'apollo-angular/types';
 import { Observable } from 'rxjs';
 import { CostScheme } from '../model/cost-scheme.model';
 import { FeeScheme } from '../model/fee-scheme.model';
+import { KycLevel } from '../model/identification.model';
 
 const GET_FEE_SETTINGS_POST = gql`
   query GetSettingsFee {
@@ -198,6 +199,38 @@ mutation AddSettingsCost(
 }
 `;
 
+const ADD_KYC_LEVEL_SETTINGS_POST = gql`
+mutation AddSettingsKycLevel(
+  $name: String!,
+  $data: String!
+) {
+  addSettingsKycLevel(settingsLevel: {
+    name: $name,
+    data: $data
+  }) {
+    settingsKycLevelId
+  }
+}
+`;
+
+const UPDATE_KYC_LEVEL_SETTINGS_POST = gql`
+mutation UpdateSettingsKycLevel(
+  $settingsId: ID!,
+  $name: String!,
+  $data: String!
+) {
+  updateSettingsKycLevel(
+    settingsLevelId: $settingsId,
+    settingsLevel: {
+      name: $name,
+      data: $data
+    }
+  ) {
+    settingsKycLevelId
+  }
+}
+`;
+
 const UPDATE_SETTINGS_COST_POST = gql`
 mutation UpdateSettingsCost(
   $settingsId: ID!,
@@ -228,10 +261,19 @@ mutation UpdateSettingsCost(
 }
 `;
 
+
 const DELETE_SETTINGS_COST_POST = gql`
 mutation DeleteSettingsCost($settingsId: ID!) {
   deleteSettingsCost(settingsId: $settingsId) {
     settingsCostId
+  }
+}
+`;
+
+const DELETE_KYC_LEVEL_SETTINGS_COST_POST = gql`
+mutation DeleteSettingsKycLevel($settingsId: ID!) {
+  deleteSettingsKycLevel(settingsId: $settingsId) {
+    settingsKycLevelId
   }
 }
 `;
@@ -354,6 +396,30 @@ export class AdminDataService {
       });
   }
 
+  // addSettingsKycLevel: SettingsKycLevel;
+  // updateSettingsKycLevel: SettingsKycLevel;
+  // deleteSettingsKycLevel: SettingsKycLevel;
+
+  saveKycLevelSettings(level: KycLevel, create: boolean): Observable<any> {
+    return create ?
+      this.apollo.mutate({
+        mutation: ADD_KYC_LEVEL_SETTINGS_POST,
+        variables: {
+          name: level.name,
+          data: level.getDataObject()
+        }
+      })
+      :
+      this.apollo.mutate({
+        mutation: UPDATE_KYC_LEVEL_SETTINGS_POST,
+        variables: {
+          settingsId: level.id,
+          name: level.name,
+          data: level.getDataObject()
+        }
+      });
+  }
+
   deleteFeeSettings(settingsId: string): Observable<any> | null {
     if (this.apollo.client !== undefined) {
       return this.apollo.mutate({
@@ -371,6 +437,19 @@ export class AdminDataService {
     if (this.apollo.client !== undefined) {
       return this.apollo.mutate({
         mutation: DELETE_SETTINGS_COST_POST,
+        variables: {
+          settingsId: settingsId
+        }
+      });
+    } else {
+      return null;
+    }
+  }
+
+  deleteKycLevelSettings(settingsId: string): Observable<any> | null {
+    if (this.apollo.client !== undefined) {
+      return this.apollo.mutate({
+        mutation: DELETE_KYC_LEVEL_SETTINGS_COST_POST,
         variables: {
           settingsId: settingsId
         }

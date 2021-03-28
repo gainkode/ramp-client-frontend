@@ -71,10 +71,9 @@ export class LevelEditorComponent implements OnInit {
         data.name = this.levelForm.get('name')?.value;
         data.levelData.description = this.levelForm.get('levelDescription')?.value;
         data.levelData.value = this.levelForm.get('levelValue')?.value;
-        data.levelData.name = 'Level name';
         data.flowData.description = this.levelForm.get('flowDescription')?.value;
         data.flowData.value = this.levelForm.get('flowValue')?.value;
-        data.flowData.name = 'Flow name';
+        data.id = this.levelForm.get('id')?.value;
         return data;
     }
 
