@@ -11,8 +11,8 @@
         Identification schemes
       </h1>
     </div>
-    <mat-tab-group class="form-element" color="primary" animationDuration="0">
-      <!-- [selectedIndex]="selectedTab" (selectedIndexChange)="setSelectedTab($event)" -->
+    <mat-tab-group class="form-element" color="primary" animationDuration="0"
+    [selectedIndex]="selectedTab" (selectedIndexChange)="setSelectedTab($event)">
       <mat-tab>
         <ng-template mat-tab-label>
           <tab-label labelText="Schemes"></tab-label>
@@ -42,6 +42,23 @@
         <ng-template mat-tab-label>
           <tab-label labelText="Levels"></tab-label>
         </ng-template>
+        <div class="admin-page-title">
+          <div *ngIf="inProgress">
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            <br>
+          </div>
+  
+          <div class="form-error-box" *ngIf="editorErrorMessage!==''">
+            {{editorErrorMessage}}
+          </div>
+  
+          <button class="main-button main-button-primary" *ngIf="errorMessage===''" [disabled]="createScheme"
+            (click)="createNewScheme()">
+            ADD LEVEL
+          </button>
+        </div>
+
+        
       </mat-tab>
     </mat-tab-group>
   </div>

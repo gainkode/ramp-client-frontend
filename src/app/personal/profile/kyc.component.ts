@@ -56,25 +56,25 @@ export class KycPersonalComponent implements OnInit {
         if (settingsKyc === null) {
           this.errorMessage = 'Unable to load user settings';
         } else {
-          const levels = JSON.parse(settingsKyc.levels);
-          if (levels === null) {
-            this.errorMessage = 'Unable to load user settings';
-          } else {
-            let flowName = '';
-            levels.every((x: { levelName: string; flowName: string }) => {
-              if (x.levelName === 'ewallet-kyc-level') {
-                flowName = x.flowName;
-                return;
-              }
-            });
-            if (flowName === '') {
-              this.errorMessage = 'Unable to load KYC identifier';
-            } else {
-                this.launchKycWidget(
-                  this.settingsCommon?.kycBaseAddress as string,
-                  flowName);
-            }
-          }
+          // const levels = JSON.parse(settingsKyc.levels);
+          // if (levels === null) {
+          //   this.errorMessage = 'Unable to load user settings';
+          // } else {
+          //   let flowName = '';
+          //   levels.every((x: { levelName: string; flowName: string }) => {
+          //     if (x.levelName === 'ewallet-kyc-level') {
+          //       flowName = x.flowName;
+          //       return;
+          //     }
+          //   });
+          //   if (flowName === '') {
+          //     this.errorMessage = 'Unable to load KYC identifier';
+          //   } else {
+          //       this.launchKycWidget(
+          //         this.settingsCommon?.kycBaseAddress as string,
+          //         flowName);
+          //   }
+          // }
         }
       }, (error) => {
         this.inProgress = false;

@@ -146,7 +146,7 @@ const GET_KYC_SETTINGS_POST = gql`
         targetUserModes,
         targetFilterType,
         targetFilterValues,
-        levels
+        levels {settingsKycLevelId, name, data}
       }
     }
   }

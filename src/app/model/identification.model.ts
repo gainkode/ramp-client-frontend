@@ -1,7 +1,7 @@
 import { CommonTargetValue } from './common.model';
 import { getCountry, getCountryByCode3 } from './country-code.model';
 import {
-    SettingsKyc, SettingsKycTargetFilterType, KycProvider, UserMode, UserType
+    SettingsKyc, SettingsKycTargetFilterType, KycProvider, UserMode, UserType, SettingsKycLevel
 } from './generated-models';
 import {
     KycTargetFilterList, UserTypeList, KycProviderList, UserModeList
@@ -26,7 +26,7 @@ export class KycScheme {
     userTypes: Array<UserType> = [];
     kycProviders: Array<KycProvider> = [];
     userModes: Array<UserMode> = [];
-    levels!: KycShemeLevels;
+    levels: Array<SettingsKycLevel> = [];
 
     constructor(data: SettingsKyc | null) {
         console.log(data);
@@ -35,7 +35,7 @@ export class KycScheme {
             this.id = data.settingsKycId;
             this.isDefault = data.default as boolean;
             this.description = data.description as string;
-            this.levels = new KycShemeLevels(data.levels);
+            data.levels?.forEach(x => this.levels.push(x as SettingsKycLevel));
             data.targetKycProviders?.forEach(x => this.kycProviders.push(x as KycProvider));
             data.targetUserModes?.forEach(x => this.userModes.push(x as UserMode));
             data.targetUserTypes?.forEach(x => this.userTypes.push(x as UserType));
@@ -50,8 +50,6 @@ export class KycScheme {
             } else {
                 data.targetFilterValues?.forEach(x => this.targetValues.push(x));
             }
-        } else {
-            this.levels = new KycShemeLevels('');
         }
     }
 
@@ -104,40 +102,5 @@ export class KycScheme {
             p = true;
         });
         return s;
-    }
-}
-
-export class KycShemeLevels {
-    // mdr!: number;
-    // transactionCost!: number;
-    // rollingReserves!: number;
-    // rollingReservesDays!: number;
-    // chargebackCost!: number;
-    // monthlyCost!: number;
-    // minMonthlyCost!: number;
-
-    constructor(data: string) {
-        if (data !== '') {
-            const levels = JSON.parse(data);
-            // this.mdr = terms.MDR;
-            // this.transactionCost = terms.Per_transaction_cost;
-            // this.rollingReserves = terms.Rolling_reserves;
-            // this.rollingReservesDays = terms.Rolling_reserves_days;
-            // this.chargebackCost = terms.Chargeback_cost;
-            // this.monthlyCost = terms.Monthly_cost;
-            // this.minMonthlyCost = terms.Min_monthly_cost;
-        }
-    }
-
-    getObject(): string {
-        return JSON.stringify({
-            // Per_transaction_cost: this.transactionCost,
-            // MDR: this.mdr,
-            // Rolling_reserves: this.rollingReserves,
-            // Rolling_reserves_days: this.rollingReservesDays,
-            // Chargeback_cost: this.chargebackCost,
-            // Monthly_cost: this.monthlyCost,
-            // Min_monthly_cost: this.minMonthlyCost
-        });
     }
 }

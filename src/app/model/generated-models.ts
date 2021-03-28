@@ -22,13 +22,17 @@ export type Query = {
   __typename?: 'Query';
   serverTime: Scalars['String'];
   getSettingsCommon?: Maybe<SettingsCommon>;
+  getSettingsKycLevels?: Maybe<SettingsKycLevelListResult>;
   getSettingsKyc?: Maybe<SettingsKycListResult>;
-  getMySettingsKyc?: Maybe<SettingsKyc>;
+  getMySettingsKyc?: Maybe<SettingsKycShort>;
+  getMySettingsKycFull?: Maybe<SettingsKyc>;
   getAppropriateSettingsKyc?: Maybe<SettingsKyc>;
   getSettingsFee?: Maybe<SettingsFeeListResult>;
-  getAppropriateSettingsFee?: Maybe<SettingsFee>;
+  getAppropriateSettingsFee?: Maybe<SettingsFeeShort>;
+  getAppropriateSettingsFeeFull?: Maybe<SettingsFee>;
   getSettingsCost?: Maybe<SettingsCostListResult>;
-  getAppropriateSettingsCost?: Maybe<SettingsCost>;
+  getAppropriateSettingsCost?: Maybe<SettingsCostShort>;
+  getAppropriateSettingsCostFull?: Maybe<SettingsCost>;
   generateWebApiToken: Scalars['String'];
   me: User;
   userCount?: Maybe<Scalars['Int']>;
@@ -45,6 +49,14 @@ export type Query = {
   getMySupportTickets?: Maybe<SupportTicketListResult>;
   getSupportTickets?: Maybe<SupportTicketListResult>;
   getFeedbacks?: Maybe<FeedbackListResult>;
+};
+
+
+export type QueryGetSettingsKycLevelsArgs = {
+  filter?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OrderBy>>;
 };
 
 
@@ -82,6 +94,15 @@ export type QueryGetAppropriateSettingsFeeArgs = {
 };
 
 
+export type QueryGetAppropriateSettingsFeeFullArgs = {
+  transactionType: TransactionType;
+  instrument: PaymentInstrument;
+  paymentProvider: PaymentProvider;
+  filterType?: Maybe<SettingsFeeTargetFilterType>;
+  filterValue?: Maybe<Scalars['String']>;
+};
+
+
 export type QueryGetSettingsCostArgs = {
   filter?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
@@ -91,6 +112,15 @@ export type QueryGetSettingsCostArgs = {
 
 
 export type QueryGetAppropriateSettingsCostArgs = {
+  transactionType: TransactionType;
+  instrument: PaymentInstrument;
+  paymentProvider: PaymentProvider;
+  filterType?: Maybe<SettingsCostTargetFilterType>;
+  filterValue?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryGetAppropriateSettingsCostFullArgs = {
   transactionType: TransactionType;
   instrument: PaymentInstrument;
   paymentProvider: PaymentProvider;
@@ -196,6 +226,22 @@ export type OrderBy = {
   desc: Scalars['Boolean'];
 };
 
+export type SettingsKycLevelListResult = {
+  __typename?: 'SettingsKycLevelListResult';
+  count?: Maybe<Scalars['Int']>;
+  list?: Maybe<Array<SettingsKycLevel>>;
+};
+
+export type SettingsKycLevel = {
+  __typename?: 'SettingsKycLevel';
+  settingsKycLevelId: Scalars['ID'];
+  name?: Maybe<Scalars['String']>;
+  data?: Maybe<Scalars['String']>;
+  created?: Maybe<Scalars['DateTime']>;
+  createdBy?: Maybe<Scalars['String']>;
+};
+
+
 export type SettingsKycListResult = {
   __typename?: 'SettingsKycListResult';
   count?: Maybe<Scalars['Int']>;
@@ -212,7 +258,7 @@ export type SettingsKyc = {
   targetUserModes?: Maybe<Array<UserMode>>;
   targetFilterType?: Maybe<SettingsKycTargetFilterType>;
   targetFilterValues?: Maybe<Array<Scalars['String']>>;
-  levels: Scalars['String'];
+  levels?: Maybe<Array<SettingsKycLevel>>;
   created: Scalars['DateTime'];
   createdBy?: Maybe<Scalars['String']>;
   default?: Maybe<Scalars['Boolean']>;
@@ -239,6 +285,17 @@ export enum SettingsKycTargetFilterType {
   Country = 'Country'
 }
 
+export type SettingsKycShort = {
+  __typename?: 'SettingsKycShort';
+  levels?: Maybe<Array<SettingsKycLevelShort>>;
+};
+
+export type SettingsKycLevelShort = {
+  __typename?: 'SettingsKycLevelShort';
+  settingsKycLevelId: Scalars['ID'];
+  name?: Maybe<Scalars['String']>;
+  data?: Maybe<Scalars['String']>;
+};
 
 export type SettingsFeeListResult = {
   __typename?: 'SettingsFeeListResult';
@@ -296,6 +353,12 @@ export enum PaymentProvider {
   Bank = 'Bank'
 }
 
+export type SettingsFeeShort = {
+  __typename?: 'SettingsFeeShort';
+  terms: Scalars['String'];
+  wireDetails: Scalars['String'];
+};
+
 export type SettingsCostListResult = {
   __typename?: 'SettingsCostListResult';
   count?: Maybe<Scalars['Int']>;
@@ -323,6 +386,11 @@ export enum SettingsCostTargetFilterType {
   Psp = 'PSP',
   Country = 'Country'
 }
+
+export type SettingsCostShort = {
+  __typename?: 'SettingsCostShort';
+  terms: Scalars['String'];
+};
 
 export type User = {
   __typename?: 'User';
@@ -604,6 +672,9 @@ export type Mutation = {
   addSettingsCost: SettingsCost;
   updateSettingsCost: SettingsCost;
   deleteSettingsCost: SettingsCost;
+  addSettingsKycLevel: SettingsKycLevel;
+  updateSettingsKycLevel: SettingsKycLevel;
+  deleteSettingsKycLevel: SettingsKycLevel;
   addSettingsKyc: SettingsKyc;
   updateSettingsKyc: SettingsKyc;
   deleteSettingsKyc: SettingsKyc;
@@ -667,6 +738,22 @@ export type MutationUpdateSettingsCostArgs = {
 
 
 export type MutationDeleteSettingsCostArgs = {
+  settingsId: Scalars['ID'];
+};
+
+
+export type MutationAddSettingsKycLevelArgs = {
+  settingsLevel: SettingsKycLevelInput;
+};
+
+
+export type MutationUpdateSettingsKycLevelArgs = {
+  settingsLevelId: Scalars['ID'];
+  settingsLevel: SettingsKycLevelInput;
+};
+
+
+export type MutationDeleteSettingsKycLevelArgs = {
   settingsId: Scalars['ID'];
 };
 
@@ -852,6 +939,11 @@ export type SettingsCostInput = {
   deleted?: Maybe<Scalars['DateTime']>;
 };
 
+export type SettingsKycLevelInput = {
+  name?: Maybe<Scalars['String']>;
+  data?: Maybe<Scalars['String']>;
+};
+
 export type SettingsKycInput = {
   name?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
@@ -860,7 +952,7 @@ export type SettingsKycInput = {
   targetUserModes?: Maybe<Array<UserMode>>;
   targetFilterType?: Maybe<SettingsFeeTargetFilterType>;
   targetFilterValues?: Maybe<Array<Scalars['String']>>;
-  levels: Scalars['String'];
+  levelIds?: Maybe<Array<Scalars['String']>>;
   default?: Maybe<Scalars['Boolean']>;
   deleted?: Maybe<Scalars['DateTime']>;
 };

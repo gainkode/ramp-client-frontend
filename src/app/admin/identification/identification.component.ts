@@ -19,6 +19,7 @@ export class IdentificationComponent implements OnInit, OnDestroy {
   inProgress = false;
   errorMessage = '';
   editorErrorMessage = '';
+  selectedTab = 1;
   createScheme = false;
   selectedScheme: KycScheme | null = null;
   schemes: KycScheme[] = [];
@@ -37,6 +38,37 @@ export class IdentificationComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.refreshData();
+  }
+
+  ngOnDestroy(): void {
+    const s: Subscription = this._settingsSubscription;
+    if (s !== undefined) {
+      (this._settingsSubscription as Subscription).unsubscribe();
+    }
+  }
+
+  setSelectedTab(index: number): void {
+    this.selectedTab = index;
+    this.refreshData();
+  }
+
+  refreshData() {
+    this.showEditor(null, false, false);
+    if (this.selectedTab == 0) {
+      const s: Subscription = this._settingsSubscription;
+      if (s !== undefined) {
+        this.refreshSchemeList();
+      }
+      else {
+        this.loadSchemeList();
+      }
+    } else {
+      
+    }
+  }
+
+  loadSchemeList(): void {
     const settingsData = this.adminService.getKycSettings();
     if (settingsData === null) {
       this.errorMessage = this.errorHandler.getRejectedCookieMessage();
@@ -64,14 +96,7 @@ export class IdentificationComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy(): void {
-    const s: Subscription = this._settingsSubscription;
-    if (s !== undefined) {
-      (this._settingsSubscription as Subscription).unsubscribe();
-    }
-  }
-
-  refresh(): void {
+  refreshSchemeList(): void {
     const settingsData = this.adminService.getKycSettings();
     if (settingsData !== null) {
       settingsData.refetch();
@@ -139,7 +164,7 @@ export class IdentificationComponent implements OnInit, OnDestroy {
     //   requestData.subscribe(({ data }) => {
     //     this.inProgress = false;
     //     this.showEditor(null, false, false);
-    //     this.refresh();
+    //     this.refreshSchemeList();
     //   }, (error) => {
     //     this.inProgress = false;
     //     console.log(error);
@@ -160,7 +185,7 @@ export class IdentificationComponent implements OnInit, OnDestroy {
     //   this.setEditMode(false);
     //   this.showEditor(null, false, false);
     //   this.createScheme = false;
-    //   this.refresh();
+    //   this.refreshSchemeList();
     // }, (error) => {
     //   this.inProgress = false;
     //   console.log(error);
