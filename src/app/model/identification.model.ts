@@ -113,7 +113,6 @@ export class KycLevelItem {
 export class KycLevel {
     id!: string;
     name!: string;
-    level!: string;
     levelData!: KycLevelItem;
     flowData!: KycLevelItem;
     created!: Date;
@@ -130,6 +129,9 @@ export class KycLevel {
                 this.levelData = content.level;
                 this.flowData = content.flow;
             }
+        } else {
+            this.levelData = new KycLevelItem();
+            this.flowData = new KycLevelItem();
         }
     }
 }

@@ -56,6 +56,7 @@ export class IdentificationComponent implements OnInit, OnDestroy {
   }
 
   setSelectedTab(index: number): void {
+    this.onCancelEdit();
     this.selectedTab = index;
     this.refreshData();
   }
@@ -131,6 +132,7 @@ export class IdentificationComponent implements OnInit, OnDestroy {
           itemCount = settings?.count as number;
           if (itemCount > 0) {
             this.levels = settings?.list?.map((val) => new KycLevel(val)) as KycLevel[];
+            console.log(this.levels);
           }
         }
         this.inProgress = false;
@@ -226,13 +228,19 @@ export class IdentificationComponent implements OnInit, OnDestroy {
     this.showSchemeEditor(null, true, true);
   }
 
+  createNewLevel(): void {
+    this.showLevelEditor(null, true, true);
+  }
+
   onEditorFormChanged(mode: boolean): void {
     this.setEditMode(mode);
   }
 
   onCancelEdit(): void {
     this.createScheme = false;
+    this.createLevel = false;
     this.showSchemeEditor(null, false, false);
+    this.showLevelEditor(null, false, false);
     this.setEditMode(false);
   }
 
@@ -259,7 +267,50 @@ export class IdentificationComponent implements OnInit, OnDestroy {
     // }
   }
 
-  onSaved(scheme: KycScheme): void {
+  onDeleteLevel(id: string): void {
+    // this.editorErrorMessage = '';
+    // const requestData = this.adminService.deleteCostSettings(id);
+    // if (requestData === null) {
+    //   this.errorMessage = this.errorHandler.getRejectedCookieMessage();
+    // } else {
+    //   this.inProgress = true;
+    //   requestData.subscribe(({ data }) => {
+    //     this.inProgress = false;
+    //     this.showSchemeEditor(null, false, false);
+    //     this.refreshSchemeList();
+    //   }, (error) => {
+    //     this.inProgress = false;
+    //     console.log(error);
+    //     if (this.auth.token !== '') {
+    //       this.editorErrorMessage = this.errorHandler.getError(error.message, 'Unable to delete identification settings');
+    //     } else {
+    //       this.router.navigateByUrl('/');
+    //     }
+    //   });
+    // }
+  }
+
+  onSavedScheme(scheme: KycScheme): void {
+    this.editorErrorMessage = '';
+    // this.inProgress = true;
+    // this.adminService.saveCostSettings(scheme, this.createScheme).subscribe(({ data }) => {
+    //   this.inProgress = false;
+    //   this.setEditMode(false);
+    //   this.showSchemeEditor(null, false, false);
+    //   this.createScheme = false;
+    //   this.refreshSchemeList();
+    // }, (error) => {
+    //   this.inProgress = false;
+    //   console.log(error);
+    //   if (this.auth.token !== '') {
+    //     this.editorErrorMessage = this.errorHandler.getError(error.message, 'Unable to save identification settings');
+    //   } else {
+    //     this.router.navigateByUrl('/');
+    //   }
+    // });
+  }
+
+  onSavedLevel(level: KycLevel): void {
     this.editorErrorMessage = '';
     // this.inProgress = true;
     // this.adminService.saveCostSettings(scheme, this.createScheme).subscribe(({ data }) => {

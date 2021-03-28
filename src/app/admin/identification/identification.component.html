@@ -11,8 +11,8 @@
         Identification schemes
       </h1>
     </div>
-    <mat-tab-group class="form-element" color="primary" animationDuration="0"
-    [selectedIndex]="selectedTab" (selectedIndexChange)="setSelectedTab($event)">
+    <mat-tab-group class="form-element" color="primary" animationDuration="0" [selectedIndex]="selectedTab"
+      (selectedIndexChange)="setSelectedTab($event)">
       <mat-tab>
         <ng-template mat-tab-label>
           <tab-label labelText="Schemes"></tab-label>
@@ -33,7 +33,8 @@
           </button>
         </div>
 
-        <identification-table [schemes]="schemes" [selectedScheme]="selectedScheme" (toggle)="toggleSchemeDetails($event)">
+        <identification-table [schemes]="schemes" [selectedScheme]="selectedScheme"
+          (toggle)="toggleSchemeDetails($event)">
         </identification-table>
 
       </mat-tab>
@@ -47,20 +48,20 @@
             <mat-progress-bar mode="indeterminate"></mat-progress-bar>
             <br>
           </div>
-  
+
           <div class="form-error-box" *ngIf="editorErrorMessage!==''">
             {{editorErrorMessage}}
           </div>
-  
-          <button class="main-button main-button-primary" *ngIf="errorMessage===''" [disabled]="createScheme"
-            (click)="createNewScheme()">
+
+          <button class="main-button main-button-primary" *ngIf="errorMessage===''" [disabled]="createLevel"
+            (click)="createNewLevel()">
             ADD LEVEL
           </button>
         </div>
 
         <level-table [levels]="levels" [selectedLevel]="selectedLevel" (toggle)="toggleLevelDetails($event)">
         </level-table>
-        
+
       </mat-tab>
     </mat-tab-group>
   </div>
@@ -69,6 +70,9 @@
 
   <div [ngClass]="showDetailed ? 'detailed-table-right-panel-details' : 'detailed-table-right-panel-full'">
     <div class="details-editor">
+      <level-editor *ngIf="showDetailed && selectedTab===1" [currentLevel]="selectedLevel" [create]="createLevel"
+        (save)="onSavedLevel($event)" (delete)="onDeleteLevel($event)" (cancel)="onCancelEdit()"
+        (formChanged)="onEditorFormChanged($event)"></level-editor>
       <!-- <cost-editor *ngIf="showDetailed" [currentScheme]="selectedScheme" [create]="createScheme"
           (save)="onSaved($event)" (delete)="onDeleteScheme($event)" (cancel)="onCancelEdit()"
           (formChanged)="onEditorFormChanged($event)">
