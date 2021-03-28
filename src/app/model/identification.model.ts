@@ -139,12 +139,12 @@ export class KycLevel {
         return JSON.stringify({
             level: {
                 name: 'Level name',
-                description: this.levelData.description,
+                description: 'KYC verification level name.',
                 value: this.levelData.value
             },
             flow: {
                 name: 'Flow name',
-                description: this.flowData.description,
+                description: 'KYC verification flow name.',
                 value: this.flowData.value
             }
         });

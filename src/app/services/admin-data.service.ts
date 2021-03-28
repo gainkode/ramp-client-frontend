@@ -33,74 +33,6 @@ const GET_FEE_SETTINGS_POST = gql`
   }
 `;
 
-const ADD_SETTINGS_FEE_POST = gql`
-mutation AddSettingsFee(
-  $name: String!,
-  $description: String,
-  $targetFilterType: FeeSettingsTargetFilterType!,
-  $targetFilterValues: [String!],
-  $targetInstruments: [PaymentInstrument!],
-  $targetTransactionTypes: [TransactionType!],
-  $targetPaymentProviders: [PaymentProvider!],
-  $terms: String!,
-  $wireDetails: String!
-) {
-  addSettingsFee(settings: {
-    name: $name,
-    description: $description,
-    targetFilterType: $targetFilterType,
-    targetFilterValues: $targetFilterValues,
-    targetInstruments: $targetInstruments,
-    targetTransactionTypes: $targetTransactionTypes,
-    targetPaymentProviders: $targetPaymentProviders,
-    terms: $terms,
-    wireDetails: $wireDetails
-  }) {
-    settingsFeeId
-  }
-}
-`;
-
-const UPDATE_SETTINGS_FEE_POST = gql`
-mutation UpdateSettingsFee(
-  $settingsId: ID!,
-  $name: String!,
-  $description: String,
-  $targetFilterType: FeeSettingsTargetFilterType!,
-  $targetFilterValues: [String!],
-  $targetInstruments: [PaymentInstrument!],
-  $targetTransactionTypes: [TransactionType!],
-  $targetPaymentProviders: [PaymentProvider!],
-  $terms: String!,
-  $wireDetails: String!
-) {
-  updateSettingsFee(
-    settingsId: $settingsId,
-    settings: {
-      name: $name,
-      description: $description,
-      targetFilterType: $targetFilterType,
-      targetFilterValues: $targetFilterValues,
-      targetInstruments: $targetInstruments,
-      targetTransactionTypes: $targetTransactionTypes,
-      targetPaymentProviders: $targetPaymentProviders,
-      terms: $terms,
-      wireDetails: $wireDetails
-    }
-  ) {
-    settingsFeeId
-  }
-}
-`;
-
-const DELETE_SETTINGS_FEE_POST = gql`
-mutation DeleteSettingsFee($settingsId: ID!) {
-  deleteSettingsFee(settingsId: $settingsId) {
-    settingsFeeId
-  }
-}
-`;
-
 const GET_COST_SETTINGS_POST = gql`
   query GetSettingsCost {
     getSettingsCost(
@@ -139,6 +71,7 @@ const GET_KYC_SETTINGS_POST = gql`
       ]) {
       count,
       list {
+        default,
         settingsKycId,
         name,
         description,
@@ -171,6 +104,34 @@ const GET_KYC_LEVELS_POST = gql`
       }
     }
   }
+`;
+
+const ADD_SETTINGS_FEE_POST = gql`
+mutation AddSettingsFee(
+  $name: String!,
+  $description: String,
+  $targetFilterType: FeeSettingsTargetFilterType!,
+  $targetFilterValues: [String!],
+  $targetInstruments: [PaymentInstrument!],
+  $targetTransactionTypes: [TransactionType!],
+  $targetPaymentProviders: [PaymentProvider!],
+  $terms: String!,
+  $wireDetails: String!
+) {
+  addSettingsFee(settings: {
+    name: $name,
+    description: $description,
+    targetFilterType: $targetFilterType,
+    targetFilterValues: $targetFilterValues,
+    targetInstruments: $targetInstruments,
+    targetTransactionTypes: $targetTransactionTypes,
+    targetPaymentProviders: $targetPaymentProviders,
+    terms: $terms,
+    wireDetails: $wireDetails
+  }) {
+    settingsFeeId
+  }
+}
 `;
 
 const ADD_SETTINGS_COST_POST = gql`
@@ -213,20 +174,34 @@ mutation AddSettingsKycLevel(
 }
 `;
 
-const UPDATE_KYC_LEVEL_SETTINGS_POST = gql`
-mutation UpdateSettingsKycLevel(
+const UPDATE_SETTINGS_FEE_POST = gql`
+mutation UpdateSettingsFee(
   $settingsId: ID!,
   $name: String!,
-  $data: String!
+  $description: String,
+  $targetFilterType: FeeSettingsTargetFilterType!,
+  $targetFilterValues: [String!],
+  $targetInstruments: [PaymentInstrument!],
+  $targetTransactionTypes: [TransactionType!],
+  $targetPaymentProviders: [PaymentProvider!],
+  $terms: String!,
+  $wireDetails: String!
 ) {
-  updateSettingsKycLevel(
-    settingsLevelId: $settingsId,
-    settingsLevel: {
+  updateSettingsFee(
+    settingsId: $settingsId,
+    settings: {
       name: $name,
-      data: $data
+      description: $description,
+      targetFilterType: $targetFilterType,
+      targetFilterValues: $targetFilterValues,
+      targetInstruments: $targetInstruments,
+      targetTransactionTypes: $targetTransactionTypes,
+      targetPaymentProviders: $targetPaymentProviders,
+      terms: $terms,
+      wireDetails: $wireDetails
     }
   ) {
-    settingsKycLevelId
+    settingsFeeId
   }
 }
 `;
@@ -261,6 +236,31 @@ mutation UpdateSettingsCost(
 }
 `;
 
+const UPDATE_KYC_LEVEL_SETTINGS_POST = gql`
+mutation UpdateSettingsKycLevel(
+  $settingsId: ID!,
+  $name: String!,
+  $data: String!
+) {
+  updateSettingsKycLevel(
+    settingsLevelId: $settingsId,
+    settingsLevel: {
+      name: $name,
+      data: $data
+    }
+  ) {
+    settingsKycLevelId
+  }
+}
+`;
+
+const DELETE_SETTINGS_FEE_POST = gql`
+mutation DeleteSettingsFee($settingsId: ID!) {
+  deleteSettingsFee(settingsId: $settingsId) {
+    settingsFeeId
+  }
+}
+`;
 
 const DELETE_SETTINGS_COST_POST = gql`
 mutation DeleteSettingsCost($settingsId: ID!) {
@@ -270,7 +270,7 @@ mutation DeleteSettingsCost($settingsId: ID!) {
 }
 `;
 
-const DELETE_KYC_LEVEL_SETTINGS_COST_POST = gql`
+const DELETE_KYC_LEVEL_SETTINGS_POST = gql`
 mutation DeleteSettingsKycLevel($settingsId: ID!) {
   deleteSettingsKycLevel(settingsId: $settingsId) {
     settingsKycLevelId
@@ -396,10 +396,6 @@ export class AdminDataService {
       });
   }
 
-  // addSettingsKycLevel: SettingsKycLevel;
-  // updateSettingsKycLevel: SettingsKycLevel;
-  // deleteSettingsKycLevel: SettingsKycLevel;
-
   saveKycLevelSettings(level: KycLevel, create: boolean): Observable<any> {
     return create ?
       this.apollo.mutate({
@@ -449,7 +445,7 @@ export class AdminDataService {
   deleteKycLevelSettings(settingsId: string): Observable<any> | null {
     if (this.apollo.client !== undefined) {
       return this.apollo.mutate({
-        mutation: DELETE_KYC_LEVEL_SETTINGS_COST_POST,
+        mutation: DELETE_KYC_LEVEL_SETTINGS_POST,
         variables: {
           settingsId: settingsId
         }

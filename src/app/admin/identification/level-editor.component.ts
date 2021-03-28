@@ -26,10 +26,8 @@ export class LevelEditorComponent implements OnInit {
     levelForm = this.formBuilder.group({
         id: [''],
         name: ['', { validators: [Validators.required], updateOn: 'change' }],
-        levelDescription: [''],
-        levelValue: ['', { validators: [Validators.required], updateOn: 'change' }],
-        flowDescription: [''],
-        flowValue: ['', { validators: [Validators.required], updateOn: 'change' }],
+        level: ['', { validators: [Validators.required], updateOn: 'change' }],
+        flow: ['', { validators: [Validators.required], updateOn: 'change' }],
     });
 
     ngOnInit(): void {
@@ -50,29 +48,23 @@ export class LevelEditorComponent implements OnInit {
             this.loadingData = true;
             this.levelForm.get('id')?.setValue(level?.id);
             this.levelForm.get('name')?.setValue(level?.name);
-            this.levelForm.get('levelDescription')?.setValue(level?.levelData.description);
-            this.levelForm.get('levelValue')?.setValue(level?.levelData.value);
-            this.levelForm.get('flowDescription')?.setValue(level?.flowData.description);
-            this.levelForm.get('flowValue')?.setValue(level?.flowData.value);
+            this.levelForm.get('level')?.setValue(level?.levelData.value);
+            this.levelForm.get('flow')?.setValue(level?.flowData.value);
             this.loadingData = false;
             this.formChanged.emit(false);
         } else {
             this.levelForm.get('id')?.setValue('');
             this.levelForm.get('name')?.setValue('');
-            this.levelForm.get('levelDescription')?.setValue('');
-            this.levelForm.get('levelValue')?.setValue('');
-            this.levelForm.get('flowDescription')?.setValue('');
-            this.levelForm.get('flowValue')?.setValue([]);
+            this.levelForm.get('level')?.setValue('');
+            this.levelForm.get('flow')?.setValue([]);
         }
     }
 
     setLevelData(): KycLevel {
         const data = new KycLevel(null);
         data.name = this.levelForm.get('name')?.value;
-        data.levelData.description = this.levelForm.get('levelDescription')?.value;
-        data.levelData.value = this.levelForm.get('levelValue')?.value;
-        data.flowData.description = this.levelForm.get('flowDescription')?.value;
-        data.flowData.value = this.levelForm.get('flowValue')?.value;
+        data.levelData.value = this.levelForm.get('level')?.value;
+        data.flowData.value = this.levelForm.get('flow')?.value;
         data.id = this.levelForm.get('id')?.value;
         return data;
     }

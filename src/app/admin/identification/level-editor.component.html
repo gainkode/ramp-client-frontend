@@ -10,7 +10,7 @@
         <br>
     </div>
 
-    <!-- Level name -->
+    <!-- Name -->
     <mat-form-field class="form-element">
         <mat-label>Level name</mat-label>
         <input type="text" matInput formControlName="name" maxlength="50" placeholder="Level name" required />
@@ -19,41 +19,21 @@
         </mat-error>
     </mat-form-field>
 
-    <!-- Level Description -->
-    <mat-form-field class="form-element">
-        <mat-label>Level description</mat-label>
-        <input type="text" matInput formControlName="levelDescription" maxlength="100" placeholder="Level description"
-            required />
-        <mat-error *ngIf="this.levelForm.get('levelDescription')?.hasError('required')">
-            Please specify a level description
-        </mat-error>
-    </mat-form-field>
-
-    <!-- Level Value -->
+    <!-- Level -->
     <mat-form-field class="form-element">
         <mat-label>Level value</mat-label>
-        <input type="text" matInput formControlName="levelValue" maxlength="100" placeholder="Level value" required />
-        <mat-error *ngIf="this.levelForm.get('levelValue')?.hasError('required')">
+        <input type="text" matInput formControlName="level" maxlength="100" placeholder="Level value" required />
+        <mat-error *ngIf="this.levelForm.get('level')?.hasError('required')">
             Please specify a level value
         </mat-error>
     </mat-form-field>
 
-    <!-- Flow Description -->
+    <!-- Flow -->
     <mat-form-field class="form-element">
-        <mat-label>Flow description</mat-label>
-        <input type="text" matInput formControlName="flowDescription" maxlength="100" placeholder="Flow description"
-            required />
-        <mat-error *ngIf="this.levelForm.get('flowDescription')?.hasError('required')">
-            Please specify a flow description
-        </mat-error>
-    </mat-form-field>
-
-    <!-- Flow Value -->
-    <mat-form-field class="form-element">
-        <mat-label>Flow value</mat-label>
-        <input type="text" matInput formControlName="flowValue" maxlength="100" placeholder="Flow value" required />
-        <mat-error *ngIf="this.levelForm.get('flowValue')?.hasError('required')">
-            Please specify a flow value
+        <mat-label>Flow</mat-label>
+        <input type="text" matInput formControlName="flow" maxlength="100" placeholder="Flow" required />
+        <mat-error *ngIf="this.levelForm.get('flow')?.hasError('required')">
+            Please specify flow
         </mat-error>
     </mat-form-field>
 
