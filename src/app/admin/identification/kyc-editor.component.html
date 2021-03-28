@@ -49,13 +49,13 @@
     <!-- Target values -->
     <mat-form-field *ngIf="targetValueParams.title!==''" class="form-element">
         <mat-label>{{targetValueParams.title}}</mat-label>
-        <mat-chip-list #chipList aria-label="Target selection" formControlName="targetValues">
+        <mat-chip-list #targetChipList aria-label="Target selection" formControlName="targetValues">
             <mat-chip *ngFor="let val of schemeForm.get('targetValues')?.value" (removed)="removeTargetValue(val)">
                 {{val}}
                 <mat-icon matChipRemove matTooltip="Remove" matTooltipClass="info-tooltip">cancel</mat-icon>
             </mat-chip>
             <input [placeholder]="targetValueParams.inputPlaceholder" #targetValueInput formControlName="targetValue"
-                [matAutocomplete]="auto" [matChipInputFor]="chipList"
+                [matAutocomplete]="auto" [matChipInputFor]="targetChipList"
                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="addTargetValue($event)">
         </mat-chip-list>
         <mat-autocomplete #auto="matAutocomplete" (optionSelected)="targetItemSelected($event)">
@@ -105,6 +105,30 @@
         </mat-select>
         <mat-error *ngIf="this.schemeForm.get('provider')?.hasError('required')">
             Please specify a KYC provider
+        </mat-error>
+    </mat-form-field>
+
+    <!-- Levels -->
+    <mat-form-field class="form-element">
+        <mat-label>Levels of identification</mat-label>
+        <mat-chip-list #levelChipList class="mat-chip-list-stacked level-chip" aria-label="Level selection" formControlName="levelValues"
+            cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="drop($event)">
+            <mat-chip cdkDrag class="level-box" *ngFor="let val of schemeForm.get('levelValues')?.value"
+                (removed)="removeLevelValue(val)">
+                {{val}}
+                <mat-icon matChipRemove matTooltip="Remove" matTooltipClass="info-tooltip">cancel</mat-icon>
+            </mat-chip>
+            <input placeholder="Add one more level" #levelValueInput formControlName="levelValue"
+                [matAutocomplete]="auto" [matChipInputFor]="levelChipList"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="addLevelValue($event)">
+        </mat-chip-list>
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="levelItemSelected($event)">
+            <mat-option *ngFor="let item of filteredLevelValues" [value]="item.title">
+                <dropdown-item itemValue="{{item.title}}"></dropdown-item>
+            </mat-option>
+        </mat-autocomplete>
+        <mat-error *ngIf="this.schemeForm.get('levelValues')?.hasError('required')">
+            Please specify at least one level of identification
         </mat-error>
     </mat-form-field>
 

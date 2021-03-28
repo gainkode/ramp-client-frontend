@@ -5,9 +5,10 @@ import { Observable, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { AccountIdFilterList } from '../../model/identification.model';
 import {
-    SettingsKycTargetFilterType, KycProvider, UserType, UserMode
+    SettingsKycTargetFilterType, KycProvider, UserType, UserMode, SettingsKycLevelListResult
 } from '../../model/generated-models';
 import {
     KycTargetFilterList, UserTypeList, UserModeList, KycProviderList
@@ -15,6 +16,11 @@ import {
 import { CommonTargetValue, TargetParams } from 'src/app/model/common.model';
 import { CountryFilterList, getCountry } from 'src/app/model/country-code.model';
 import { KycScheme } from 'src/app/model/identification.model';
+import { AdminDataService } from 'src/app/services/admin-data.service';
+
+export interface Vegetable {
+    name: string;
+}
 
 @Component({
     selector: 'kyc-editor',
@@ -33,7 +39,8 @@ export class KycEditorComponent implements OnInit {
     @Output() cancel = new EventEmitter();
     @Output() formChanged = new EventEmitter<boolean>();
     @ViewChild('targetValueInput') targetValueInput!: ElementRef<HTMLInputElement>;
-    @ViewChild('auto') matAutocomplete!: MatAutocomplete;
+    @ViewChild('levelValueInput') levelValueInput!: ElementRef<HTMLInputElement>;
+    //@ViewChild('auto') matAutocomplete!: MatAutocomplete;
 
     private defaultSchemeName = '';
     private settingsId = '';
@@ -42,6 +49,7 @@ export class KycEditorComponent implements OnInit {
     targetEntity = '';
     separatorKeysCodes: number[] = [ENTER, COMMA];
     filteredTargetValues: Observable<CommonTargetValue[]> | undefined;
+    filteredLevelValues: CommonTargetValue[] = [];
 
     targets = KycTargetFilterList;
     userTypes = UserTypeList;
@@ -56,6 +64,8 @@ export class KycEditorComponent implements OnInit {
         target: ['', { validators: [Validators.required], updateOn: 'change' }],
         targetValues: [[], { validators: [Validators.required], updateOn: 'change' }],
         targetValue: [''],
+        levelValues: [[], { validators: [Validators.required], updateOn: 'change' }],
+        levelValue: [''],
         userMode: [[], { validators: [Validators.required], updateOn: 'change' }],
         userType: [[], { validators: [Validators.required], updateOn: 'change' }],
         provider: [[], { validators: [Validators.required], updateOn: 'change' }]
@@ -87,10 +97,11 @@ export class KycEditorComponent implements OnInit {
         return params;
     }
 
-    constructor(private formBuilder: FormBuilder) { }
+    constructor(private adminService: AdminDataService, private formBuilder: FormBuilder) { }
 
     ngOnInit(): void {
         this.filteredTargetValues = of(this.filterTargetValues(''));
+        this.filterLevelValues('');
         this.schemeForm.valueChanges.subscribe({
             next: (result: any) => {
                 if (!this.create && !this.loadingData) {
@@ -104,6 +115,9 @@ export class KycEditorComponent implements OnInit {
                 startWith(''),
                 map(value => this.filterTargetValues(value)));
         });
+        this.schemeForm.get('levelValue')?.valueChanges.subscribe(val => {
+            this.filterLevelValues(val);
+        });
     }
 
     private filterTargetValues(value: string): CommonTargetValue[] {
@@ -114,6 +128,32 @@ export class KycEditorComponent implements OnInit {
         } else {
             return this.targetValueParams.dataList;
         }
+    }
+
+    private filterLevelValues(value: string): void {
+        let filterValue = (value === null) ? '' : value.toLowerCase();
+        this.adminService.getKycLevels()?.valueChanges.subscribe(({ data }) => {
+            const levelData = data.getSettingsKycLevels as SettingsKycLevelListResult;
+            let itemCount = 0;
+            if (levelData !== null) {
+                itemCount = levelData?.count as number;
+                if (itemCount > 0) {
+                    if (value) {
+                        this.filteredLevelValues = levelData?.list?.map((val) => {
+                            const c = new CommonTargetValue();
+                            c.title = val.name as string;
+                            return c;
+                        }).filter(c => c.title.toLowerCase().includes(filterValue)) as CommonTargetValue[];
+                    } else {
+                        this.filteredLevelValues = levelData?.list?.map((val) => {
+                            const c = new CommonTargetValue();
+                            c.title = val.name as string;
+                            return c;
+                        }) as CommonTargetValue[];
+                    }
+                }
+            }
+        });
     }
 
     setFormData(scheme: KycScheme | null): void {
@@ -132,6 +172,7 @@ export class KycEditorComponent implements OnInit {
             this.schemeForm.get('userMode')?.setValue(scheme.userModes);
             this.schemeForm.get('userType')?.setValue(scheme?.userTypes);
             this.schemeForm.get('provider')?.setValue(scheme?.kycProviders);
+            this.schemeForm.get('levelValues')?.setValue(scheme?.targetValues);
             this.loadingData = false;
             this.formChanged.emit(false);
         } else {
@@ -144,6 +185,7 @@ export class KycEditorComponent implements OnInit {
             this.schemeForm.get('userMode')?.setValue('');
             this.schemeForm.get('userType')?.setValue('');
             this.schemeForm.get('provider')?.setValue('');
+            this.schemeForm.get('levelValues')?.setValue([]);
         }
     }
 
@@ -199,6 +241,72 @@ export class KycEditorComponent implements OnInit {
         }
         this.targetValueInput.nativeElement.value = '';
         this.schemeForm.get('targetValue')?.setValue(null);
+    }
+
+    addLevelValue(event: MatChipInputEvent): void {
+        const input = event.input;
+        const value = event.value;
+        // Add new level value
+        if ((value || '').trim()) {
+            const values = this.schemeForm.get('levelValues')?.value;
+            values.push(value.trim());
+            this.schemeForm.get('levelValues')?.setValue(values);
+        }
+        // Reset the input value
+        if (input) {
+            input.value = '';
+        }
+        this.schemeForm.get('levelValue')?.setValue(null);
+    }
+
+    removeLevelValue(val: string): void {
+        const values = this.schemeForm.get('levelValues')?.value;
+        const index = values.indexOf(val);
+        if (index >= 0) {
+            values.splice(index, 1);
+            this.schemeForm.get('levelValues')?.setValue(values);
+        }
+    }
+
+    clearLevelValues(): void {
+        this.schemeForm.get('levelValues')?.setValue([]);
+    }
+
+    vegetables: Vegetable[] = [
+        { name: 'apple' },
+        { name: 'banana' },
+        { name: 'strawberry' },
+        { name: 'orange' },
+        { name: 'kiwi' },
+        { name: 'cherry' },
+    ];
+
+    movies = [
+        'Episode I - The Phantom Menace',
+        'Episode II - Attack of the Clones',
+        'Episode III - Revenge of the Sith',
+        'Episode IV - A New Hope',
+        'Episode V - The Empire Strikes Back',
+        'Episode VI - Return of the Jedi',
+        'Episode VII - The Force Awakens',
+        'Episode VIII - The Last Jedi',
+        'Episode IX – The Rise of Skywalker'
+      ];
+
+    levelItemSelected(event: MatAutocompleteSelectedEvent): void {
+        const values = this.schemeForm.get('levelValues')?.value;
+        if (!values.includes(event.option.viewValue)) {
+            values.push(event.option.viewValue);
+            this.schemeForm.get('levelValues')?.setValue(values);
+        }
+        this.levelValueInput.nativeElement.value = '';
+        this.schemeForm.get('levelValue')?.setValue(null);
+    }
+
+    drop(event: CdkDragDrop<string[]>) {
+        const values = this.schemeForm.get('levelValues')?.value;
+        moveItemInArray(values, event.previousIndex, event.currentIndex);
+        this.schemeForm.get('levelValues')?.setValue(values);
     }
 
     onDeleteScheme(): void {

@@ -27,6 +27,7 @@ import { IdTableComponent } from './identification/id-table.component';
 import { LevelTableComponent } from './identification/level-table.component';
 import { LevelEditorComponent } from './identification/level-editor.component';
 import { KycEditorComponent } from './identification/kyc-editor.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 const routing = RouterModule.forChild([
     {
@@ -58,6 +59,7 @@ const modules = [
     // MatRadioModule,
     MatIconModule,
     MatProgressBarModule,
+    DragDropModule,
     ComponentsModule
 ];
 
