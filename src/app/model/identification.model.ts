@@ -113,6 +113,7 @@ export class KycLevelItem {
 export class KycLevel {
     id!: string;
     name!: string;
+    level!: string;
     levelData!: KycLevelItem;
     flowData!: KycLevelItem;
     created!: Date;

@@ -33,7 +33,7 @@
           </button>
         </div>
 
-        <identification-table [schemes]="schemes" [selectedScheme]="selectedScheme" (toggle)="toggleDetails($event)">
+        <identification-table [schemes]="schemes" [selectedScheme]="selectedScheme" (toggle)="toggleSchemeDetails($event)">
         </identification-table>
 
       </mat-tab>
@@ -58,6 +58,8 @@
           </button>
         </div>
 
+        <level-table [levels]="levels" [selectedLevel]="selectedLevel" (toggle)="toggleLevelDetails($event)">
+        </level-table>
         
       </mat-tab>
     </mat-tab-group>

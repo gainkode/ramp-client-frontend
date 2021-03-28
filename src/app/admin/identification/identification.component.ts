@@ -61,7 +61,7 @@ export class IdentificationComponent implements OnInit, OnDestroy {
   }
 
   refreshData() {
-    this.showEditor(null, false, false);
+    this.showSchemeEditor(null, false, false);
     if (this.selectedTab == 0) {
       // Schemes
       const s: Subscription = this._settingsSubscription;
@@ -131,7 +131,6 @@ export class IdentificationComponent implements OnInit, OnDestroy {
           itemCount = settings?.count as number;
           if (itemCount > 0) {
             this.levels = settings?.list?.map((val) => new KycLevel(val)) as KycLevel[];
-            console.log(this.levels);
           }
         }
         this.inProgress = false;
@@ -169,7 +168,17 @@ export class IdentificationComponent implements OnInit, OnDestroy {
     return selected;
   }
 
-  private showEditor(scheme: KycScheme | null, createNew: boolean, visible: boolean): void {
+  private isSelectedLevel(levelId: string): boolean {
+    let selected = false;
+    if (this.selectedLevel !== null) {
+      if (this.selectedLevel.id === levelId) {
+        selected = true;
+      }
+    }
+    return selected;
+  }
+
+  private showSchemeEditor(scheme: KycScheme | null, createNew: boolean, visible: boolean): void {
     this._showDetails = visible;
     if (visible) {
       this.selectedScheme = scheme;
@@ -183,16 +192,38 @@ export class IdentificationComponent implements OnInit, OnDestroy {
     }
   }
 
-  toggleDetails(scheme: KycScheme): void {
+  private showLevelEditor(level: KycLevel | null, createNew: boolean, visible: boolean): void {
+    this._showDetails = visible;
+    if (visible) {
+      this.selectedLevel = level;
+      this.createLevel = createNew;
+      if (createNew) {
+        this.setEditMode(true);
+      }
+    } else {
+      this.selectedLevel = null;
+      this.setEditMode(false);
+    }
+  }
+
+  toggleSchemeDetails(scheme: KycScheme): void {
     let show = true;
     if (this.isSelectedScheme(scheme.id)) {
       show = false;
     }
-    this.showEditor(scheme, false, show);
+    this.showSchemeEditor(scheme, false, show);
+  }
+
+  toggleLevelDetails(level: KycLevel): void {
+    let show = true;
+    if (this.isSelectedLevel(level.id)) {
+      show = false;
+    }
+    this.showLevelEditor(level, false, show);
   }
 
   createNewScheme(): void {
-    this.showEditor(null, true, true);
+    this.showSchemeEditor(null, true, true);
   }
 
   onEditorFormChanged(mode: boolean): void {
@@ -201,7 +232,7 @@ export class IdentificationComponent implements OnInit, OnDestroy {
 
   onCancelEdit(): void {
     this.createScheme = false;
-    this.showEditor(null, false, false);
+    this.showSchemeEditor(null, false, false);
     this.setEditMode(false);
   }
 
@@ -214,7 +245,7 @@ export class IdentificationComponent implements OnInit, OnDestroy {
     //   this.inProgress = true;
     //   requestData.subscribe(({ data }) => {
     //     this.inProgress = false;
-    //     this.showEditor(null, false, false);
+    //     this.showSchemeEditor(null, false, false);
     //     this.refreshSchemeList();
     //   }, (error) => {
     //     this.inProgress = false;
@@ -234,7 +265,7 @@ export class IdentificationComponent implements OnInit, OnDestroy {
     // this.adminService.saveCostSettings(scheme, this.createScheme).subscribe(({ data }) => {
     //   this.inProgress = false;
     //   this.setEditMode(false);
-    //   this.showEditor(null, false, false);
+    //   this.showSchemeEditor(null, false, false);
     //   this.createScheme = false;
     //   this.refreshSchemeList();
     // }, (error) => {

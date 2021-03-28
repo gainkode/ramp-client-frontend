@@ -51,6 +51,24 @@
     min-width: 1.5em;
 }
 
+.mat-column-level-table-name {
+    flex: 0 0 49%;
+    width: 49%;
+    min-width: 10em;
+}
+
+.mat-column-level-table-flow {
+    flex: 0 0 49%;
+    width: 49%;
+    min-width: 10em;
+}
+
+.mat-column-level-table-details {
+    flex: 0 0 2%;
+    width: 2%;
+    min-width: 1.5em;
+}
+
 .target-tab-box {
     overflow: hidden;
 }

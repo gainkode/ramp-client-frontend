@@ -68,7 +68,7 @@ export const AdminMenuItems: Array<AdminMenuItem> = [
     },
     {
         id: 'risk-center',
-        name: 'Resk Center',
+        name: 'Risk Center',
         url: '/admin/main/risk-center',
         icon: 'bolt'
     },
