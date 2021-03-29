@@ -110,13 +110,18 @@
 
     <!-- Levels -->
     <mat-form-field class="form-element">
-        <mat-label>Levels of identification *</mat-label>
+        <button mat-icon-button matSuffix type="button" [attr.aria-label]="'Info'" matTooltipClass="info-tooltip"
+            matTooltip="User has to provide identification documents in order of levels from this list. You can change the order manually">
+            <mat-icon>info_outline</mat-icon>
+        </button>
+        <mat-label matTooltip="Hide password" matTooltipClass="info-tooltip">
+            Levels of identification *
+        </mat-label>
         <mat-autocomplete #auto="matAutocomplete" (optionSelected)="levelItemSelected($event)">
             <mat-option *ngFor="let item of filteredLevelValues | async" [value]="item.title">
                 <dropdown-item itemValue="{{item.title}}"></dropdown-item>
             </mat-option>
         </mat-autocomplete>
-
         <mat-chip-list #levelChipList class="level-chip" aria-label="Level selection" aria-orientation="vertical"
             formControlName="levelValues" cdkDropList cdkDropListOrientation="horizontal"
             (cdkDropListDropped)="drop($event)">
