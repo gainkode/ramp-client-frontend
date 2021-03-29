@@ -151,14 +151,14 @@ export class KycEditorComponent implements OnInit {
                         c.title = val.name as string;
                         return c;
                     }) as CommonTargetValue[];
-                    this.schemeForm.get('levelValues')?.setValue(this.getSelectedLevels(levels));
+                    this.schemeForm.get('levelValues')?.setValue(this.getLevels(levels));
                     this.filteredLevelValues = of(this.filterLevelValues(''));
                 }
             }
         });
     }
 
-    private getSelectedLevels(levels: SettingsKycLevel[]): string[] {
+    private getLevels(levels: SettingsKycLevel[]): string[] {
         if (levels !== null) {
             const dataList: string[] = [];
             levels.forEach(d => {
@@ -171,6 +171,18 @@ export class KycEditorComponent implements OnInit {
         } else {
             return [];
         }
+    }
+
+    private getSelectedLevels(): string[] {
+        const values: string[] = this.schemeForm.get('levelValues')?.value;
+        const dataList: string[] = [];
+        values.forEach(i => {
+            const level = this.levelValues.find(v => v.title.toLowerCase() === i.toLowerCase());
+            if (level !== undefined) {
+                dataList.push(level.id);
+            }
+        })
+        return dataList;
     }
 
     setFormData(scheme: KycScheme | null): void {
@@ -218,6 +230,7 @@ export class KycEditorComponent implements OnInit {
         (this.schemeForm.get('userMode')?.value as UserMode[]).forEach(x => data.userModes.push(x));
         (this.schemeForm.get('userType')?.value as UserType[]).forEach(x => data.userTypes.push(x));
         (this.schemeForm.get('provider')?.value as KycProvider[]).forEach(x => data.kycProviders.push(x));
+        data.levelsToSave = this.getSelectedLevels();
         return data;
     }
 
@@ -288,27 +301,6 @@ export class KycEditorComponent implements OnInit {
     clearLevelValues(): void {
         this.schemeForm.get('levelValues')?.setValue([]);
     }
-
-    vegetables: Vegetable[] = [
-        { name: 'apple' },
-        { name: 'banana' },
-        { name: 'strawberry' },
-        { name: 'orange' },
-        { name: 'kiwi' },
-        { name: 'cherry' },
-    ];
-
-    movies = [
-        'Episode I - The Phantom Menace',
-        'Episode II - Attack of the Clones',
-        'Episode III - Revenge of the Sith',
-        'Episode IV - A New Hope',
-        'Episode V - The Empire Strikes Back',
-        'Episode VI - Return of the Jedi',
-        'Episode VII - The Force Awakens',
-        'Episode VIII - The Last Jedi',
-        'Episode IX – The Rise of Skywalker'
-    ];
 
     levelItemSelected(event: MatAutocompleteSelectedEvent): void {
         const values = this.schemeForm.get('levelValues')?.value;

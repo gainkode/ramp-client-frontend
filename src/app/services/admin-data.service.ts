@@ -4,7 +4,7 @@ import { EmptyObject } from 'apollo-angular/types';
 import { Observable } from 'rxjs';
 import { CostScheme } from '../model/cost-scheme.model';
 import { FeeScheme } from '../model/fee-scheme.model';
-import { KycLevel } from '../model/identification.model';
+import { KycLevel, KycScheme } from '../model/identification.model';
 
 const GET_FEE_SETTINGS_POST = gql`
   query GetSettingsFee {
@@ -160,6 +160,32 @@ mutation AddSettingsCost(
 }
 `;
 
+const ADD_SETTINGS_KYC_POST = gql`
+mutation AddSettingsKyc(
+  $name: String!,
+  $description: String,
+  $targetKycProviders: [KycProvider!],
+  $targetUserTypes: [UserType!],
+  $targetUserModes: [UserMode!],
+  $targetFilterType: SettingsKycTargetFilterType!,
+  $targetFilterValues: [String!],
+  $levelIds: [String!]
+) {
+  addSettingsKyc(settings: {
+    name: $name,
+    description: $description,
+    targetKycProviders: $targetKycProviders,
+    targetUserTypes: $targetUserTypes,
+    targetUserModes: $targetUserModes,
+    targetFilterType: $targetFilterType,
+    targetFilterValues: $targetFilterValues,
+    levelIds: $levelIds
+  }) {
+    settingsKycId
+  }
+}
+`;
+
 const ADD_KYC_LEVEL_SETTINGS_POST = gql`
 mutation AddSettingsKycLevel(
   $name: String!,
@@ -236,6 +262,36 @@ mutation UpdateSettingsCost(
 }
 `;
 
+const UPDATE_SETTINGS_KYC_POST = gql`
+mutation UpdateSettingsKyc(
+  $settingsId: ID!,
+  $name: String!,
+  $description: String,
+  $targetKycProviders: [KycProvider!],
+  $targetUserTypes: [UserType!],
+  $targetUserModes: [UserMode!],
+  $targetFilterType: SettingsKycTargetFilterType!,
+  $targetFilterValues: [String!],
+  $levelIds: [String!]
+) {
+  updateSettingsKyc(
+    settingsId: $settingsId,
+    settings: {
+      name: $name,
+      description: $description,
+      targetKycProviders: $targetKycProviders,
+      targetUserTypes: $targetUserTypes,
+      targetUserModes: $targetUserModes,
+      targetFilterType: $targetFilterType,
+      targetFilterValues: $targetFilterValues,
+      levelIds: $levelIds
+    }
+  ) {
+    settingsKycId
+  }
+}
+`;
+
 const UPDATE_KYC_LEVEL_SETTINGS_POST = gql`
 mutation UpdateSettingsKycLevel(
   $settingsId: ID!,
@@ -266,6 +322,14 @@ const DELETE_SETTINGS_COST_POST = gql`
 mutation DeleteSettingsCost($settingsId: ID!) {
   deleteSettingsCost(settingsId: $settingsId) {
     settingsCostId
+  }
+}
+`;
+
+const DELETE_SETTINGS_KYC_POST = gql`
+mutation DeleteSettingsKyc($settingsId: ID!) {
+  deleteSettingsKyc(settingsId: $settingsId) {
+    settingsKycId
   }
 }
 `;
@@ -396,6 +460,38 @@ export class AdminDataService {
       });
   }
 
+  saveKycSettings(settings: KycScheme, create: boolean): Observable<any> {
+    return create ?
+      this.apollo.mutate({
+        mutation: ADD_SETTINGS_KYC_POST,
+        variables: {
+          name: settings.name,
+          description: settings.description,
+          targetFilterType: settings.target,
+          targetFilterValues: settings.targetValues,
+          targetKycProviders: settings.kycProviders,
+          targetUserTypes: settings.userTypes,
+          targetUserModes: settings.userModes,
+          levelIds: settings.levelsToSave
+        }
+      })
+      :
+      this.apollo.mutate({
+        mutation: UPDATE_SETTINGS_KYC_POST,
+        variables: {
+          settingsId: settings.id,
+          name: settings.name,
+          description: settings.description,
+          targetFilterType: settings.target,
+          targetFilterValues: settings.targetValues,
+          targetKycProviders: settings.kycProviders,
+          targetUserTypes: settings.userTypes,
+          targetUserModes: settings.userModes,
+          levelIds: settings.levelsToSave
+        }
+      });
+  }
+
   saveKycLevelSettings(level: KycLevel, create: boolean): Observable<any> {
     return create ?
       this.apollo.mutate({
@@ -433,6 +529,19 @@ export class AdminDataService {
     if (this.apollo.client !== undefined) {
       return this.apollo.mutate({
         mutation: DELETE_SETTINGS_COST_POST,
+        variables: {
+          settingsId: settingsId
+        }
+      });
+    } else {
+      return null;
+    }
+  }
+
+  deleteKycSettings(settingsId: string): Observable<any> | null {
+    if (this.apollo.client !== undefined) {
+      return this.apollo.mutate({
+        mutation: DELETE_SETTINGS_KYC_POST,
         variables: {
           settingsId: settingsId
         }

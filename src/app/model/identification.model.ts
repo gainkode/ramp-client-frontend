@@ -27,6 +27,7 @@ export class KycScheme {
     kycProviders: Array<KycProvider> = [];
     userModes: Array<UserMode> = [];
     levels: Array<SettingsKycLevel> = [];
+    levelsToSave: Array<string> = [];
 
     constructor(data: SettingsKyc | null) {
         if (data !== null) {

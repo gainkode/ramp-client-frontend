@@ -99,7 +99,6 @@ export class IdentificationComponent implements OnInit, OnDestroy {
           if (itemCount > 0) {
             this.schemes = settings?.list?.map((val) => new KycScheme(val)) as KycScheme[];
           }
-          console.log(settings?.list);
         }
         this.inProgress = false;
       }, (error) => {
@@ -247,25 +246,24 @@ export class IdentificationComponent implements OnInit, OnDestroy {
 
   onDeleteScheme(id: string): void {
     this.schemeEditorErrorMessage = '';
-    // const requestData = this.adminService.deleteCostSettings(id);
-    // if (requestData === null) {
-    //   this.errorMessage = this.errorHandler.getRejectedCookieMessage();
-    // } else {
-    //   this.inProgress = true;
-    //   requestData.subscribe(({ data }) => {
-    //     this.inProgress = false;
-    //     this.showSchemeEditor(null, false, false);
-    //     this.refreshSchemeList();
-    //   }, (error) => {
-    //     this.inProgress = false;
-    //     console.log(error);
-    //     if (this.auth.token !== '') {
-    //       this.schemeEditorErrorMessage = this.errorHandler.getError(error.message, 'Unable to delete identification settings');
-    //     } else {
-    //       this.router.navigateByUrl('/');
-    //     }
-    //   });
-    // }
+    const requestData = this.adminService.deleteKycSettings(id);
+    if (requestData === null) {
+      this.errorMessage = this.errorHandler.getRejectedCookieMessage();
+    } else {
+      this.inProgress = true;
+      requestData.subscribe(({ data }) => {
+        this.inProgress = false;
+        this.showSchemeEditor(null, false, false);
+        this.refreshSchemeList();
+      }, (error) => {
+        this.inProgress = false;
+        if (this.auth.token !== '') {
+          this.schemeEditorErrorMessage = this.errorHandler.getError(error.message, 'Unable to delete identification settings');
+        } else {
+          this.router.navigateByUrl('/');
+        }
+      });
+    }
   }
 
   onDeleteLevel(id: string): void {
@@ -293,22 +291,22 @@ export class IdentificationComponent implements OnInit, OnDestroy {
 
   onSavedScheme(scheme: KycScheme): void {
     this.schemeEditorErrorMessage = '';
-    // this.inProgress = true;
-    // this.adminService.saveCostSettings(scheme, this.createScheme).subscribe(({ data }) => {
-    //   this.inProgress = false;
-    //   this.setEditMode(false);
-    //   this.showSchemeEditor(null, false, false);
-    //   this.createScheme = false;
-    //   this.refreshSchemeList();
-    // }, (error) => {
-    //   this.inProgress = false;
-    //   console.log(error);
-    //   if (this.auth.token !== '') {
-    //     this.schemeEditorErrorMessage = this.errorHandler.getError(error.message, 'Unable to save identification settings');
-    //   } else {
-    //     this.router.navigateByUrl('/');
-    //   }
-    // });
+    console.log(scheme);
+    this.inProgress = true;
+    this.adminService.saveKycSettings(scheme, this.createScheme).subscribe(({ data }) => {
+      this.inProgress = false;
+      this.setEditMode(false);
+      this.showSchemeEditor(null, false, false);
+      this.createScheme = false;
+      this.refreshSchemeList();
+    }, (error) => {
+      this.inProgress = false;
+      if (this.auth.token !== '') {
+        this.schemeEditorErrorMessage = this.errorHandler.getError(error.message, 'Unable to save identification settings');
+      } else {
+        this.router.navigateByUrl('/');
+      }
+    });
   }
 
   onSavedLevel(level: KycLevel): void {
