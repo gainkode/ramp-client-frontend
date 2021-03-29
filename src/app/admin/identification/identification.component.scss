@@ -73,6 +73,12 @@
     overflow: hidden;
 }
 
+.level-box {
+    min-width: 35em;
+    // background-color: greenyellow;
+    // color: indigo;
+}
+
 .level-box.cdk-drag-animating {
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }

@@ -110,10 +110,17 @@
 
     <!-- Levels -->
     <mat-form-field class="form-element">
-        <mat-label>Levels of identification</mat-label>
-        <mat-chip-list #levelChipList class="mat-chip-list-stacked level-chip" aria-label="Level selection" formControlName="levelValues"
-            cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="drop($event)">
-            <mat-chip cdkDrag class="level-box" *ngFor="let val of schemeForm.get('levelValues')?.value"
+        <mat-label>Levels of identification *</mat-label>
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="levelItemSelected($event)">
+            <mat-option *ngFor="let item of filteredLevelValues | async" [value]="item.title">
+                <dropdown-item itemValue="{{item.title}}"></dropdown-item>
+            </mat-option>
+        </mat-autocomplete>
+
+        <mat-chip-list #levelChipList class="level-chip" aria-label="Level selection" aria-orientation="vertical"
+            formControlName="levelValues" cdkDropList cdkDropListOrientation="horizontal"
+            (cdkDropListDropped)="drop($event)">
+            <mat-chip cdkDrag color="primary" class="level-box" *ngFor="let val of schemeForm.get('levelValues')?.value"
                 (removed)="removeLevelValue(val)">
                 {{val}}
                 <mat-icon matChipRemove matTooltip="Remove" matTooltipClass="info-tooltip">cancel</mat-icon>
@@ -122,11 +129,6 @@
                 [matAutocomplete]="auto" [matChipInputFor]="levelChipList"
                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="addLevelValue($event)">
         </mat-chip-list>
-        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="levelItemSelected($event)">
-            <mat-option *ngFor="let item of filteredLevelValues" [value]="item.title">
-                <dropdown-item itemValue="{{item.title}}"></dropdown-item>
-            </mat-option>
-        </mat-autocomplete>
         <mat-error *ngIf="this.schemeForm.get('levelValues')?.hasError('required')">
             Please specify at least one level of identification
         </mat-error>

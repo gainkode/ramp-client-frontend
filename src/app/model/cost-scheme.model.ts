@@ -10,10 +10,10 @@ import {
 
 // temp
 export const PspFilterList: CommonTargetValue[] = [
-    { title: 'psp 1', imgClass: '', imgSource: '' },
-    { title: 'psp 2', imgClass: '', imgSource: '' },
-    { title: 'psp 3', imgClass: '', imgSource: '' },
-    { title: 'psp 4', imgClass: '', imgSource: '' }
+    { title: 'psp 1', imgClass: '', imgSource: '', id: '' },
+    { title: 'psp 2', imgClass: '', imgSource: '', id: '' },
+    { title: 'psp 3', imgClass: '', imgSource: '', id: '' },
+    { title: 'psp 4', imgClass: '', imgSource: '', id: '' }
 ];
 // temp
 

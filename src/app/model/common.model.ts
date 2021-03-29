@@ -5,6 +5,7 @@ export class TargetParams {
 }
 
 export class CommonTargetValue {
+    id = '';
     title = '';
     imgClass = '';
     imgSource = '';

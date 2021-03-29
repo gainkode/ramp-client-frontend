@@ -8,28 +8,28 @@ import { PaymentInstrumentList, PaymentProviderList,
 
 // temp
 export const AffiliateIdFilterList: CommonTargetValue[] = [
-    { title: 'fb4598gbf38d73', imgClass: '', imgSource: '' },
-    { title: 'ce98g6g7fb80g4', imgClass: '', imgSource: '' },
-    { title: 'ee3f78f4358g74', imgClass: '', imgSource: '' },
-    { title: 'abab90ag59bedb', imgClass: '', imgSource: '' }
+    { title: 'fb4598gbf38d73', imgClass: '', imgSource: '', id: '' },
+    { title: 'ce98g6g7fb80g4', imgClass: '', imgSource: '', id: '' },
+    { title: 'ee3f78f4358g74', imgClass: '', imgSource: '', id: '' },
+    { title: 'abab90ag59bedb', imgClass: '', imgSource: '', id: '' }
 ];
 export const AccountIdFilterList: CommonTargetValue[] = [
-    { title: '37d83fbg8954bf', imgClass: '', imgSource: '' },
-    { title: '4g08bf7g6g89ec', imgClass: '', imgSource: '' },
-    { title: '47g8534f87f3ee', imgClass: '', imgSource: '' },
-    { title: 'bdeb95gaabab90', imgClass: '', imgSource: '' }
+    { title: '37d83fbg8954bf', imgClass: '', imgSource: '', id: '' },
+    { title: '4g08bf7g6g89ec', imgClass: '', imgSource: '', id: '' },
+    { title: '47g8534f87f3ee', imgClass: '', imgSource: '', id: '' },
+    { title: 'bdeb95gaabab90', imgClass: '', imgSource: '', id: '' }
 ];
 export const WidgetFilterList: CommonTargetValue[] = [
-    { title: 'Widget A', imgClass: '', imgSource: '' },
-    { title: 'Widget B', imgClass: '', imgSource: '' },
-    { title: 'Widget C', imgClass: '', imgSource: '' },
-    { title: 'Widget D', imgClass: '', imgSource: '' }
+    { title: 'Widget A', imgClass: '', imgSource: '', id: '' },
+    { title: 'Widget B', imgClass: '', imgSource: '', id: '' },
+    { title: 'Widget C', imgClass: '', imgSource: '', id: '' },
+    { title: 'Widget D', imgClass: '', imgSource: '', id: '' }
 ];
 // temp
 
 export const AccountTypeFilterList: CommonTargetValue[] = [
-    { title: 'Personal', imgClass: '', imgSource: '' },
-    { title: 'Merchant', imgClass: '', imgSource: '' }
+    { title: 'Personal', imgClass: '', imgSource: '', id: '' },
+    { title: 'Merchant', imgClass: '', imgSource: '', id: '' }
 ];
 
 export class FeeScheme {

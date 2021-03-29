@@ -99,6 +99,7 @@ export class IdentificationComponent implements OnInit, OnDestroy {
           if (itemCount > 0) {
             this.schemes = settings?.list?.map((val) => new KycScheme(val)) as KycScheme[];
           }
+          console.log(settings?.list);
         }
         this.inProgress = false;
       }, (error) => {

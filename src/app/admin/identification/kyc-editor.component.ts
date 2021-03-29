@@ -8,7 +8,7 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { AccountIdFilterList } from '../../model/identification.model';
 import {
-    SettingsKycTargetFilterType, KycProvider, UserType, UserMode, SettingsKycLevelListResult
+    SettingsKycTargetFilterType, KycProvider, UserType, UserMode, SettingsKycLevelListResult, SettingsKycLevel
 } from '../../model/generated-models';
 import {
     KycTargetFilterList, UserTypeList, UserModeList, KycProviderList
@@ -49,7 +49,8 @@ export class KycEditorComponent implements OnInit {
     targetEntity = '';
     separatorKeysCodes: number[] = [ENTER, COMMA];
     filteredTargetValues: Observable<CommonTargetValue[]> | undefined;
-    filteredLevelValues: CommonTargetValue[] = [];
+    filteredLevelValues: Observable<CommonTargetValue[]> | undefined;
+    levelValues: CommonTargetValue[] = [];
 
     targets = KycTargetFilterList;
     userTypes = UserTypeList;
@@ -80,14 +81,14 @@ export class KycEditorComponent implements OnInit {
         const params = new TargetParams();
         switch (val) {
             case SettingsKycTargetFilterType.Country: {
-                params.title = 'List of countries';
+                params.title = 'List of countries *';
                 params.inputPlaceholder = 'New country...';
                 params.dataList = CountryFilterList;
                 this.targetEntity = 'country';
                 break;
             }
             case SettingsKycTargetFilterType.AccountId: {
-                params.title = 'List of account identifiers';
+                params.title = 'List of account identifiers *';
                 params.inputPlaceholder = 'New identifier...';
                 params.dataList = AccountIdFilterList;
                 this.targetEntity = 'account identifier';
@@ -101,7 +102,6 @@ export class KycEditorComponent implements OnInit {
 
     ngOnInit(): void {
         this.filteredTargetValues = of(this.filterTargetValues(''));
-        this.filterLevelValues('');
         this.schemeForm.valueChanges.subscribe({
             next: (result: any) => {
                 if (!this.create && !this.loadingData) {
@@ -115,45 +115,62 @@ export class KycEditorComponent implements OnInit {
                 startWith(''),
                 map(value => this.filterTargetValues(value)));
         });
-        this.schemeForm.get('levelValue')?.valueChanges.subscribe(val => {
-            this.filterLevelValues(val);
-        });
+        this.filteredLevelValues = this.schemeForm.get('levelValue')?.valueChanges.pipe(
+            startWith(''),
+            map(value => this.filterLevelValues(value)));
     }
 
     private filterTargetValues(value: string): CommonTargetValue[] {
-        let filterValue = '';
+        let filterValue = (value === null) ? '' : value.toLowerCase();
         if (value) {
-            filterValue = value.toLowerCase();
             return this.targetValueParams.dataList.filter(c => c.title.toLowerCase().includes(filterValue));
         } else {
             return this.targetValueParams.dataList;
         }
     }
 
-    private filterLevelValues(value: string): void {
+    private filterLevelValues(value: string): CommonTargetValue[] {
         let filterValue = (value === null) ? '' : value.toLowerCase();
+        if (value) {
+            return this.levelValues.filter(c => c.title.toLowerCase().includes(filterValue));
+        } else {
+            return this.levelValues;
+        }
+    }
+
+    private loadLevelValues(levels: SettingsKycLevel[]): void {
         this.adminService.getKycLevels()?.valueChanges.subscribe(({ data }) => {
             const levelData = data.getSettingsKycLevels as SettingsKycLevelListResult;
             let itemCount = 0;
             if (levelData !== null) {
                 itemCount = levelData?.count as number;
                 if (itemCount > 0) {
-                    if (value) {
-                        this.filteredLevelValues = levelData?.list?.map((val) => {
-                            const c = new CommonTargetValue();
-                            c.title = val.name as string;
-                            return c;
-                        }).filter(c => c.title.toLowerCase().includes(filterValue)) as CommonTargetValue[];
-                    } else {
-                        this.filteredLevelValues = levelData?.list?.map((val) => {
-                            const c = new CommonTargetValue();
-                            c.title = val.name as string;
-                            return c;
-                        }) as CommonTargetValue[];
-                    }
+                    this.levelValues = levelData?.list?.map((val) => {
+                        const c = new CommonTargetValue();
+                        c.id = val.settingsKycLevelId;
+                        c.title = val.name as string;
+                        return c;
+                    }) as CommonTargetValue[];
+                    this.schemeForm.get('levelValues')?.setValue(this.getSelectedLevels(levels));
+                    this.filteredLevelValues = of(this.filterLevelValues(''));
                 }
             }
         });
+    }
+
+    private getSelectedLevels(levels: SettingsKycLevel[]): string[] {
+        if (levels !== null) {
+            const dataList: string[] = [];
+            levels.forEach(d => {
+                const level = this.levelValues.find(v => v.id === d.settingsKycLevelId);
+                if (level !== undefined) {
+                    dataList.push(level.title);
+                }
+            })
+            return dataList;
+        } else {
+            return [];
+        }
     }
 
     setFormData(scheme: KycScheme | null): void {
@@ -172,7 +189,7 @@ export class KycEditorComponent implements OnInit {
             this.schemeForm.get('userMode')?.setValue(scheme.userModes);
             this.schemeForm.get('userType')?.setValue(scheme?.userTypes);
             this.schemeForm.get('provider')?.setValue(scheme?.kycProviders);
-            this.schemeForm.get('levelValues')?.setValue(scheme?.targetValues);
+            this.loadLevelValues(scheme?.levels);
             this.loadingData = false;
             this.formChanged.emit(false);
         } else {
@@ -291,7 +308,7 @@ export class KycEditorComponent implements OnInit {
         'Episode VII - The Force Awakens',
         'Episode VIII - The Last Jedi',
         'Episode IX – The Rise of Skywalker'
-      ];
+    ];
 
     levelItemSelected(event: MatAutocompleteSelectedEvent): void {
         const values = this.schemeForm.get('levelValues')?.value;
