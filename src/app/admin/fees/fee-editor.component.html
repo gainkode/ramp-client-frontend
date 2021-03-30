@@ -216,7 +216,7 @@
             <!-- Beneficiary name -->
             <mat-form-field class="form-element">
                 <mat-label>Beneficiary name</mat-label>
-                <input type="text" matInput formControlName="beneficiaryName" maxlength="50"
+                <input type="text" matInput formControlName="beneficiaryName" maxlength="100"
                     placeholder="Beneficiary name" required />
                 <mat-error *ngIf="this.schemeForm.get('beneficiaryName')?.hasError('required')">
                     Please specify beneficiary name
@@ -226,7 +226,7 @@
             <!-- Beneficiary address -->
             <mat-form-field class="form-element">
                 <mat-label>Beneficiary address</mat-label>
-                <input type="text" matInput formControlName="beneficiaryAddress" maxlength="50"
+                <input type="text" matInput formControlName="beneficiaryAddress" maxlength="100"
                     placeholder="Beneficiary address" required />
                 <mat-error *ngIf="this.schemeForm.get('beneficiaryAddress')?.hasError('required')">
                     Please specify beneficiary address
@@ -245,7 +245,7 @@
             <!-- Bank name -->
             <mat-form-field class="form-element">
                 <mat-label>Bank name</mat-label>
-                <input type="text" matInput formControlName="bankName" maxlength="30" placeholder="Bank name"
+                <input type="text" matInput formControlName="bankName" maxlength="100" placeholder="Bank name"
                     required />
                 <mat-error *ngIf="this.schemeForm.get('bankName')?.hasError('required')">
                     Please specify a bank name
@@ -255,7 +255,7 @@
             <!-- Bank address -->
             <mat-form-field class="form-element">
                 <mat-label>Bank address</mat-label>
-                <input type="text" matInput formControlName="bankAddress" maxlength="30" placeholder="Bank address"
+                <input type="text" matInput formControlName="bankAddress" maxlength="100" placeholder="Bank address"
                     required />
                 <mat-error *ngIf="this.schemeForm.get('bankAddress')?.hasError('required')">
                     Please specify a bank address
