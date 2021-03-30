@@ -60,6 +60,10 @@ input:-webkit-autofill::first-line {
     }
 }
 
+.main-button:focus {
+    outline:none;
+}
+
 .main-button-primary {
     /* Grey - 2 800 */
     background: #3B4D5A;
@@ -79,6 +83,11 @@ input:-webkit-autofill::first-line {
     background: #293742;
     /* 2 200 */
     color: #B2C2CF;
+}
+
+.main-button-primary:focus {
+    /* Grey - 5 900 */
+    border    : 1px solid #1E2025;
 }
 
 .main-button-accent {
@@ -102,6 +111,11 @@ input:-webkit-autofill::first-line {
     color: #E0F3F7;
 }
 
+.main-button-accent:focus {
+    /* Grey - 2 900 */
+    border    : 1px solid #293742;
+}
+
 .main-button-warn {
     /* Grey - 4 800 */
     background: #C62728;
@@ -121,6 +135,10 @@ input:-webkit-autofill::first-line {
     background: #B71B1C;
     /* 4 50 */
     color: #FFEBEE;
+}
+
+.main-button-warn:focus {
+    border    : 1px solid #5f0202;
 }
 
 .form-button {
