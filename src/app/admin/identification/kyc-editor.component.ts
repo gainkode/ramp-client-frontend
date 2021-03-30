@@ -40,7 +40,6 @@ export class KycEditorComponent implements OnInit {
     @Output() formChanged = new EventEmitter<boolean>();
     @ViewChild('targetValueInput') targetValueInput!: ElementRef<HTMLInputElement>;
     @ViewChild('levelValueInput') levelValueInput!: ElementRef<HTMLInputElement>;
-    //@ViewChild('auto') matAutocomplete!: MatAutocomplete;
 
     private defaultSchemeName = '';
     private settingsId = '';
@@ -214,7 +213,7 @@ export class KycEditorComponent implements OnInit {
             this.schemeForm.get('userMode')?.setValue('');
             this.schemeForm.get('userType')?.setValue('');
             this.schemeForm.get('provider')?.setValue('');
-            this.schemeForm.get('levelValues')?.setValue([]);
+            this.loadLevelValues([]);
         }
     }
 
