@@ -5,6 +5,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { DropdownItemComponent } from './dropdown-item.component';
 import { BackButtonComponent } from './backbutton.component';
 import { TabLabelComponent } from './tablabel.component';
+import { KycPanelComponent } from './kyc-panel.component';
+import { LineBreakPipe } from '../utils/line-break.pipe';
 
 const materialModules = [
     MatButtonModule,
@@ -19,8 +21,9 @@ export class MaterialModule { }
 
 @NgModule({
     imports: [CommonModule, MaterialModule],
-    declarations: [DropdownItemComponent, BackButtonComponent, TabLabelComponent],
-    exports: [DropdownItemComponent, BackButtonComponent, TabLabelComponent],
+    declarations: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
+        LineBreakPipe],
+    exports: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 

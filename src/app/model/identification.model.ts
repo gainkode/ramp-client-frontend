@@ -1,7 +1,7 @@
 import { CommonTargetValue } from './common.model';
 import { getCountry, getCountryByCode3 } from './country-code.model';
 import {
-    SettingsKyc, SettingsKycTargetFilterType, KycProvider, UserMode, UserType, SettingsKycLevel
+    SettingsKyc, SettingsKycTargetFilterType, KycProvider, UserMode, UserType, SettingsKycLevel, SettingsKycLevelShort
 } from './generated-models';
 import {
     KycTargetFilterList, UserTypeList, KycProviderList, UserModeList
@@ -127,6 +127,45 @@ export class KycLevel {
             this.description = data.description as string;
             this.created = data.created;
             this.createdBy = data.createdBy as string;
+            const content = JSON.parse(data.data as string);
+            if (content !== undefined) {
+                this.levelData = content.level;
+                this.flowData = content.flow;
+            }
+        } else {
+            this.levelData = new KycLevelItem();
+            this.flowData = new KycLevelItem();
+        }
+    }
+
+    getDataObject(): string {
+        return JSON.stringify({
+            level: {
+                name: 'Level name',
+                description: 'KYC verification level name.',
+                value: this.levelData.value
+            },
+            flow: {
+                name: 'Flow name',
+                description: 'KYC verification flow name.',
+                value: this.flowData.value
+            }
+        });
+    }
+}
+
+export class KycLevelShort {
+    id!: string;
+    name!: string;
+    description!: string;
+    levelData!: KycLevelItem;
+    flowData!: KycLevelItem;
+
+    constructor(data: SettingsKycLevelShort | null) {
+        if (data !== null) {
+            this.name = data.name as string;
+            this.id = data.settingsKycLevelId;
+            this.description = data.description as string;
             const content = JSON.parse(data.data as string);
             if (content !== undefined) {
                 this.levelData = content.level;

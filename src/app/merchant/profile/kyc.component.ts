@@ -43,32 +43,32 @@ export class KycMerchantComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        const kycData = this.auth.getKycSettings();
-        if (kycData === null) {
-            this.errorMessage = this.errorHandler.getRejectedCookieMessage();
-        } else {
-            this.inProgress = true;
-            kycData.valueChanges.subscribe(kyc => {
-                const settingsKyc: SettingsKyc = kyc.data.getSettingsKyc;
-                this.inProgress = false;
-                this.auth.getKycToken().valueChanges.subscribe(({ data }) => {
-                    this.launchSumSubWidget(
-                        '',//kycmod settingsKyc.kycBaseAddress as string,
-                        '',//kycmod settingsKyc.kycMerchantFlow as string,
-                        data.generateWebApiToken,
-                        this.user?.email as string,
-                        this.user?.phone as string,
-                        []);
-                });
-            }, (error) => {
-                this.inProgress = false;
-                if (this.auth.token !== '') {
-                    this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load settings');
-                } else {
-                    this.router.navigateByUrl('/');
-                }
-            });
-        }
+        // const kycData = this.auth.getKycSettings();
+        // if (kycData === null) {
+        //     this.errorMessage = this.errorHandler.getRejectedCookieMessage();
+        // } else {
+        //     this.inProgress = true;
+        //     kycData.valueChanges.subscribe(kyc => {
+        //         const settingsKyc: SettingsKyc = kyc.data.getSettingsKyc;
+        //         this.inProgress = false;
+        //         this.auth.getKycToken().valueChanges.subscribe(({ data }) => {
+        //             this.launchSumSubWidget(
+        //                 '',//kycmod settingsKyc.kycBaseAddress as string,
+        //                 '',//kycmod settingsKyc.kycMerchantFlow as string,
+        //                 data.generateWebApiToken,
+        //                 this.user?.email as string,
+        //                 this.user?.phone as string,
+        //                 []);
+        //         });
+        //     }, (error) => {
+        //         this.inProgress = false;
+        //         if (this.auth.token !== '') {
+        //             this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load settings');
+        //         } else {
+        //             this.router.navigateByUrl('/');
+        //         }
+        //     });
+        // }
     }
 
     private setKycCompleted(): void {

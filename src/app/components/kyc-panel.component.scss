@@ -1,0 +1,41 @@
+.kyc-panel-split {
+    display   : flex;
+    //height  : 100%;
+    //overflow: auto;
+}
+
+.kyc-panel-left-panel {
+    padding      : 0em;
+    padding-top  : 0.5em;
+    padding-right: 1em;
+    width        : 35%;
+    min-width    : 5em;
+    //height   : 100%;
+    //overflow : auto;
+}
+
+.kyc-panel-right-panel {
+    background-color  : greenyellow;
+    padding           : 0em;
+    width             : 65%;
+    max-width         : 65%;
+    //height          : 100%;
+    //overflow        : auto;
+}
+
+.kyc-panel-title {
+    font-size: 18px;
+    font-weight: bolder;
+    color: #293742;
+}
+
+.kyc-panel-title-line {
+    // 2 900
+    background-color: #005694;
+    width           : 100%;
+    height          : 2px;
+}
+
+.kyc-panel-info-block {
+    padding           : 0.25em;
+}

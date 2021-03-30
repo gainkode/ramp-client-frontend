@@ -189,34 +189,12 @@ const KYC_HAS_BEEN_SENT_POST = gql`
 const GET_MY_SETTINGS_KYC_POST = gql`
 query {
     getMySettingsKyc {
-        created
-        createdBy
-        description
-        levels
-        name
-        settingsKycId
-        targetFilterType
-        targetFilterValues
-        targetKycProviders
-        targetUserModes
-        targetUserTypes
-    }
-  }
-`;
-
-const GET_SETTINGS_KYC_POST = gql`
-query {
-    getSettingsKyc {
-      kycBaseAddress
-      kycPersonalLevel
-      kycPersonalFlow
-      kycMerchantLevel
-      kycMerchantFlow
-      kycMaxFileSize
-      kycBeneficiaryPositions
-      kycBeneficiaryTypes
-      kycSourceOfFunds
-      kycRejectedLabels { code, type, description }
+        levels {
+            settingsKycLevelId,
+            name,
+            data,
+            description
+        }
     }
   }
 `;
@@ -444,18 +422,6 @@ export class AuthService {
             query: GET_SETTINGS_COMMON_POST,
             fetchPolicy: 'network-only'
         });
-    }
-
-    getKycSettings(): QueryRef<any, EmptyObject> | null {
-        // if (this.apollo.client !== undefined) {
-        //     return this.apollo.watchQuery<any>({
-        //         query: GET_SETTINGS_KYC_POST,
-        //         fetchPolicy: 'network-only'
-        //     });
-        // } else {
-        //     return null;
-        // }
-        return null;
     }
 
     getMyKycSettings(): QueryRef<any, EmptyObject> | null {

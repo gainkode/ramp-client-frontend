@@ -17,6 +17,7 @@ import { IntroPersonalComponent } from './intro.component';
 import { PersonalComponent } from './personal.component';
 import { ProfileMainPersonalComponent } from './profile/main.component';
 import { KycPersonalComponent } from './profile/kyc.component';
+import { ComponentsModule } from '../components/components.module';
 
 const routing = RouterModule.forChild([
     { path: 'intro', component: IntroPersonalComponent },
@@ -36,7 +37,8 @@ const modules = [
     MatCheckboxModule,
     MatRadioModule,
     MatIconModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    ComponentsModule
 ];
 
 @NgModule({

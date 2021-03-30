@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { SettingsCommon, SettingsKyc, User } from 'src/app/model/generated-models';
+import { SettingsCommon, SettingsKyc, SettingsKycShort, User } from 'src/app/model/generated-models';
+import { KycLevelShort } from 'src/app/model/identification.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
 
@@ -14,6 +15,7 @@ export class KycPersonalComponent implements OnInit {
   user: User | null = null;
   inProgress = false;
   errorMessage = '';
+  levels: KycLevelShort[] = [];
   private settingsCommon: SettingsCommon | null = null;
 
   constructor(private router: Router, private auth: AuthService, private errorHandler: ErrorService) {
@@ -51,10 +53,13 @@ export class KycPersonalComponent implements OnInit {
     } else {
       this.inProgress = true;
       kycData.valueChanges.subscribe(({ data }) => {
-        const settingsKyc: SettingsKyc | null = data.getMySettingsKyc;
+        const settingsKyc: SettingsKycShort | null = data.getMySettingsKyc;
         if (settingsKyc === null) {
-          this.errorMessage = 'Unable to load user settings';
+          this.errorMessage = 'Unable to load user identification settings';
         } else {
+          this.levels = settingsKyc.levels?.map((val) => new KycLevelShort(val)) as KycLevelShort[];
+          this.inProgress = false;
+          console.log(this.levels);
           // const levels = JSON.parse(settingsKyc.levels);
           // if (levels === null) {
           //   this.errorMessage = 'Unable to load user settings';

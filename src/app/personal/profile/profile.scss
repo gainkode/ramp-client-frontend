@@ -6,7 +6,7 @@
 
 .kyc-editor-left-panel {
     padding  : 1em;
-    width    : 55%;
+    width    : 40%;
     min-width: 10em;
     height   : 100%;
     overflow : auto;
@@ -14,10 +14,10 @@
 
 .kyc-editor-right-panel {
     z-index         : 100;
-    background-color: rgb(206, 219, 236);
+    background-color: #DDDFE6;
     padding         : 1.2em;
-    width           : 45%;
-    max-width       : 45%;
+    width           : 60%;
+    max-width       : 60%;
     height          : 100%;
     overflow        : auto;
 }
