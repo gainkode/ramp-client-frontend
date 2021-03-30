@@ -65,15 +65,6 @@ export class IdentificationComponent implements OnInit, OnDestroy {
   refreshData() {
     this.showSchemeEditor(null, false, false);
     if (this.selectedTab == 0) {
-      // Schemes
-      const s: Subscription = this._settingsSubscription;
-      if (s !== undefined) {
-        this.refreshSchemeList();
-      }
-      else {
-        this.loadSchemeList();
-      }
-    } else {
       // Levels
       const s: Subscription = this._levelsSubscription;
       if (s !== undefined) {
@@ -81,6 +72,15 @@ export class IdentificationComponent implements OnInit, OnDestroy {
       }
       else {
         this.loadLevelList();
+      }
+    } else {
+      // Schemes
+      const s: Subscription = this._settingsSubscription;
+      if (s !== undefined) {
+        this.refreshSchemeList();
+      }
+      else {
+        this.loadSchemeList();
       }
     }
   }

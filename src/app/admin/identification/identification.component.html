@@ -8,11 +8,38 @@
   <div [ngClass]="showDetailed ? 'detailed-table-left-panel-details' : 'detailed-table-left-panel-full'">
     <div class="admin-page-title">
       <h1>
-        Identification schemes
+        KYC / KYB schemes
       </h1>
     </div>
     <mat-tab-group class="form-element" color="primary" animationDuration="0" [selectedIndex]="selectedTab"
       (selectedIndexChange)="setSelectedTab($event)">
+      <!-- Levels tab -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <tab-label labelText="Levels"></tab-label>
+        </ng-template>
+        <div class="admin-page-title">
+          <div *ngIf="inProgress">
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+          </div>
+
+          <div class="form-element" *ngIf="levelEditorErrorMessage!==''">
+            <div class="form-error-box">
+              {{levelEditorErrorMessage}}
+            </div>
+          </div>
+
+          <button class="main-button main-button-primary" *ngIf="errorMessage===''" [disabled]="createLevel"
+            (click)="createNewLevel()">
+            ADD LEVEL
+          </button>
+        </div>
+
+        <level-table [levels]="levels" [selectedLevel]="selectedLevel" (toggle)="toggleLevelDetails($event)">
+        </level-table>
+      </mat-tab>
+
+      <!-- Schemes -->
       <mat-tab>
         <ng-template mat-tab-label>
           <tab-label labelText="Schemes"></tab-label>
@@ -37,33 +64,6 @@
         <identification-table [schemes]="schemes" [selectedScheme]="selectedScheme"
           (toggle)="toggleSchemeDetails($event)">
         </identification-table>
-
-      </mat-tab>
-
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <tab-label labelText="Levels"></tab-label>
-        </ng-template>
-        <div class="admin-page-title">
-          <div *ngIf="inProgress">
-            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-          </div>
-
-          <div class="form-element" *ngIf="levelEditorErrorMessage!==''">
-            <div class="form-error-box">
-              {{levelEditorErrorMessage}}
-            </div>
-          </div>
-
-          <button class="main-button main-button-primary" *ngIf="errorMessage===''" [disabled]="createLevel"
-            (click)="createNewLevel()">
-            ADD LEVEL
-          </button>
-        </div>
-
-        <level-table [levels]="levels" [selectedLevel]="selectedLevel" (toggle)="toggleLevelDetails($event)">
-        </level-table>
-
       </mat-tab>
     </mat-tab-group>
   </div>
@@ -72,12 +72,12 @@
 
   <div [ngClass]="showDetailed ? 'detailed-table-right-panel-details' : 'detailed-table-right-panel-full'">
     <div class="details-editor">
-      <kyc-editor *ngIf="showDetailed && selectedTab===0" [currentScheme]="selectedScheme" [create]="createScheme"
-        (save)="onSavedScheme($event)" (delete)="onDeleteScheme($event)" (cancel)="onCancelEdit()"
-        (formChanged)="onEditorFormChanged($event)"></kyc-editor>
-      <level-editor *ngIf="showDetailed && selectedTab===1" [currentLevel]="selectedLevel" [create]="createLevel"
+      <level-editor *ngIf="showDetailed && selectedTab===0" [currentLevel]="selectedLevel" [create]="createLevel"
         (save)="onSavedLevel($event)" (delete)="onDeleteLevel($event)" (cancel)="onCancelEdit()"
         (formChanged)="onEditorFormChanged($event)"></level-editor>
+      <kyc-editor *ngIf="showDetailed && selectedTab===1" [currentScheme]="selectedScheme" [create]="createScheme"
+        (save)="onSavedScheme($event)" (delete)="onDeleteScheme($event)" (cancel)="onCancelEdit()"
+        (formChanged)="onEditorFormChanged($event)"></kyc-editor>
     </div>
   </div>
 </div>

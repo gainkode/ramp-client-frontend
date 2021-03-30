@@ -102,5 +102,5 @@ export const UserModeList: Array<UserModeView> = [
 
 export const KycProviderList: Array<KycProviderView> = [
     { id: KycProvider.Local, name: 'Local' },
-    { id: KycProvider.SumSub, name: 'Sum Sub' }
+    { id: KycProvider.SumSub, name: 'Sumsub' }
 ];

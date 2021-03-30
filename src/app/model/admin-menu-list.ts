@@ -49,8 +49,8 @@ export const AdminMenuItems: Array<AdminMenuItem> = [
         icon: 'attach_money'
     },
     {
-        id: 'identification',
-        name: 'Identification',
+        id: 'kyckyb',
+        name: 'KYC / KYB',
         url: '/admin/main/identification',
         icon: 'assignment_ind'
     },
