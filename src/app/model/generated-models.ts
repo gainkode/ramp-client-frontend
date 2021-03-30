@@ -239,6 +239,7 @@ export type SettingsKycLevel = {
   data?: Maybe<Scalars['String']>;
   created?: Maybe<Scalars['DateTime']>;
   createdBy?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
 };
 
 
@@ -281,6 +282,7 @@ export enum UserMode {
 }
 
 export enum SettingsKycTargetFilterType {
+  None = 'None',
   AccountId = 'AccountId',
   Country = 'Country'
 }
@@ -295,6 +297,7 @@ export type SettingsKycLevelShort = {
   settingsKycLevelId: Scalars['ID'];
   name?: Maybe<Scalars['String']>;
   data?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
 };
 
 export type SettingsFeeListResult = {
@@ -322,6 +325,7 @@ export type SettingsFee = {
 };
 
 export enum SettingsFeeTargetFilterType {
+  None = 'None',
   AffiliateId = 'AffiliateId',
   AccountId = 'AccountId',
   AccountType = 'AccountType',
@@ -383,6 +387,7 @@ export type SettingsCost = {
 };
 
 export enum SettingsCostTargetFilterType {
+  None = 'None',
   Psp = 'PSP',
   Country = 'Country'
 }
@@ -942,6 +947,7 @@ export type SettingsCostInput = {
 export type SettingsKycLevelInput = {
   name?: Maybe<Scalars['String']>;
   data?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
 };
 
 export type SettingsKycInput = {
@@ -950,7 +956,7 @@ export type SettingsKycInput = {
   targetKycProviders?: Maybe<Array<KycProvider>>;
   targetUserTypes?: Maybe<Array<UserType>>;
   targetUserModes?: Maybe<Array<UserMode>>;
-  targetFilterType?: Maybe<SettingsFeeTargetFilterType>;
+  targetFilterType?: Maybe<SettingsKycTargetFilterType>;
   targetFilterValues?: Maybe<Array<Scalars['String']>>;
   levelIds?: Maybe<Array<Scalars['String']>>;
   default?: Maybe<Scalars['Boolean']>;

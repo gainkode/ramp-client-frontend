@@ -19,6 +19,17 @@
         </mat-error>
     </mat-form-field>
 
+    <!-- Description -->
+    <mat-form-field class="form-element">
+        <mat-label>Description</mat-label>
+        <textarea type="text" matInput formControlName="description" maxlength="500" placeholder="Level description"
+            required>
+        </textarea>
+        <mat-error *ngIf="this.levelForm.get('description')?.hasError('required')">
+            Please specify a level description
+        </mat-error>
+    </mat-form-field>
+
     <!-- Level -->
     <mat-form-field class="form-element">
         <mat-label>Level value</mat-label>

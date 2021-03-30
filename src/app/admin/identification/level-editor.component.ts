@@ -26,6 +26,7 @@ export class LevelEditorComponent implements OnInit {
     levelForm = this.formBuilder.group({
         id: [''],
         name: ['', { validators: [Validators.required], updateOn: 'change' }],
+        description: ['', { validators: [Validators.required], updateOn: 'change' }],
         level: ['', { validators: [Validators.required], updateOn: 'change' }],
         flow: ['', { validators: [Validators.required], updateOn: 'change' }],
     });
@@ -48,6 +49,7 @@ export class LevelEditorComponent implements OnInit {
             this.loadingData = true;
             this.levelForm.get('id')?.setValue(level?.id);
             this.levelForm.get('name')?.setValue(level?.name);
+            this.levelForm.get('description')?.setValue(level?.description);
             this.levelForm.get('level')?.setValue(level?.levelData.value);
             this.levelForm.get('flow')?.setValue(level?.flowData.value);
             this.loadingData = false;
@@ -55,6 +57,7 @@ export class LevelEditorComponent implements OnInit {
         } else {
             this.levelForm.get('id')?.setValue('');
             this.levelForm.get('name')?.setValue('');
+            this.levelForm.get('description')?.setValue('');
             this.levelForm.get('level')?.setValue('');
             this.levelForm.get('flow')?.setValue([]);
         }
@@ -63,6 +66,7 @@ export class LevelEditorComponent implements OnInit {
     setLevelData(): KycLevel {
         const data = new KycLevel(null);
         data.name = this.levelForm.get('name')?.value;
+        data.description = this.levelForm.get('description')?.value;
         data.levelData.value = this.levelForm.get('level')?.value;
         data.flowData.value = this.levelForm.get('flow')?.value;
         data.id = this.levelForm.get('id')?.value;

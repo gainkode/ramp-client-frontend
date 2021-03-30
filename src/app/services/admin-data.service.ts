@@ -98,6 +98,7 @@ const GET_KYC_LEVELS_POST = gql`
       list {
         settingsKycLevelId,
         name,
+        description,
         data,
         created,
         createdBy
@@ -189,10 +190,12 @@ mutation AddSettingsKyc(
 const ADD_KYC_LEVEL_SETTINGS_POST = gql`
 mutation AddSettingsKycLevel(
   $name: String!,
+  $description: String,
   $data: String!
 ) {
   addSettingsKycLevel(settingsLevel: {
     name: $name,
+    description: $description,
     data: $data
   }) {
     settingsKycLevelId
@@ -296,12 +299,14 @@ const UPDATE_KYC_LEVEL_SETTINGS_POST = gql`
 mutation UpdateSettingsKycLevel(
   $settingsId: ID!,
   $name: String!,
+  $description: String,
   $data: String!
 ) {
   updateSettingsKycLevel(
     settingsLevelId: $settingsId,
     settingsLevel: {
       name: $name,
+      description: $description,
       data: $data
     }
   ) {
@@ -498,6 +503,7 @@ export class AdminDataService {
         mutation: ADD_KYC_LEVEL_SETTINGS_POST,
         variables: {
           name: level.name,
+          description: level.description,
           data: level.getDataObject()
         }
       })
@@ -507,6 +513,7 @@ export class AdminDataService {
         variables: {
           settingsId: level.id,
           name: level.name,
+          description: level.description,
           data: level.getDataObject()
         }
       });
