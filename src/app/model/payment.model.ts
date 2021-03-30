@@ -73,6 +73,7 @@ export const TransactionTypeList: Array<TransactionTypeView> = [
 ];
 
 export const FeeTargetFilterList: Array<FeeTargetFilterTypeView> = [
+    { id: SettingsFeeTargetFilterType.None, name: 'None' },
     { id: SettingsFeeTargetFilterType.AffiliateId, name: 'Affiliate identifier' },
     { id: SettingsFeeTargetFilterType.AccountId, name: 'Account' },
     { id: SettingsFeeTargetFilterType.AccountType, name: 'Account type' },
@@ -81,11 +82,13 @@ export const FeeTargetFilterList: Array<FeeTargetFilterTypeView> = [
 ];
 
 export const CostTargetFilterList: Array<CostTargetFilterTypeView> = [
+    { id: SettingsCostTargetFilterType.None, name: 'None' },
     { id: SettingsCostTargetFilterType.Country, name: 'Country' },
     { id: SettingsCostTargetFilterType.Psp, name: 'PSP' }
 ];
 
 export const KycTargetFilterList: Array<KycTargetFilterTypeView> = [
+    { id: SettingsKycTargetFilterType.None, name: 'None' },
     { id: SettingsKycTargetFilterType.Country, name: 'Country' },
     { id: SettingsKycTargetFilterType.AccountId, name: 'Account' }
 ];

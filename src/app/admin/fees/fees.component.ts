@@ -53,7 +53,6 @@ export class FeesComponent implements OnInit, OnDestroy {
         }
         this.inProgress = false;
       }, (error) => {
-        console.log('error');
         this.setEditMode(false);
         this.inProgress = false;
         if (this.auth.token !== '') {

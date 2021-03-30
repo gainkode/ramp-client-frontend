@@ -279,7 +279,6 @@ export class IdentificationComponent implements OnInit, OnDestroy {
         this.refreshLevelList();
       }, (error) => {
         this.inProgress = false;
-        console.log(error);
         if (this.auth.token !== '') {
           this.levelEditorErrorMessage = this.errorHandler.getError(error.message, 'Unable to delete identification level');
         } else {
@@ -291,7 +290,6 @@ export class IdentificationComponent implements OnInit, OnDestroy {
 
   onSavedScheme(scheme: KycScheme): void {
     this.schemeEditorErrorMessage = '';
-    console.log(scheme);
     this.inProgress = true;
     this.adminService.saveKycSettings(scheme, this.createScheme).subscribe(({ data }) => {
       this.inProgress = false;
@@ -320,7 +318,6 @@ export class IdentificationComponent implements OnInit, OnDestroy {
       this.refreshLevelList();
     }, (error) => {
       this.inProgress = false;
-      console.log(error);
       if (this.auth.token !== '') {
         this.levelEditorErrorMessage = this.errorHandler.getError(error.message, 'Unable to save identification level');
       } else {

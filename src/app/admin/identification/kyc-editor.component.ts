@@ -79,6 +79,13 @@ export class KycEditorComponent implements OnInit {
         const val = this.schemeForm.get('target')?.value;
         const params = new TargetParams();
         switch (val) {
+            case SettingsKycTargetFilterType.None: {
+                params.title = '';
+                params.inputPlaceholder = '';
+                params.dataList = [];
+                this.targetEntity = '';
+                break;
+            }
             case SettingsKycTargetFilterType.Country: {
                 params.title = 'List of countries *';
                 params.inputPlaceholder = 'New country...';
@@ -110,6 +117,7 @@ export class KycEditorComponent implements OnInit {
         });
         this.schemeForm.get('target')?.valueChanges.subscribe(val => {
             this.clearTargetValues();
+            this.setTargetValidator();
             this.filteredTargetValues = this.schemeForm.get('targetValue')?.valueChanges.pipe(
                 startWith(''),
                 map(value => this.filterTargetValues(value)));
@@ -119,12 +127,26 @@ export class KycEditorComponent implements OnInit {
             map(value => this.filterLevelValues(value)));
     }
 
-    private filterTargetValues(value: string): CommonTargetValue[] {
-        let filterValue = (value === null) ? '' : value.toLowerCase();
-        if (value) {
-            return this.targetValueParams.dataList.filter(c => c.title.toLowerCase().includes(filterValue));
+    private setTargetValidator(): void {
+        const val = this.schemeForm.get('target')?.value;
+        if (val === SettingsKycTargetFilterType.None) {
+            this.schemeForm.get('targetValues')?.clearValidators();
         } else {
-            return this.targetValueParams.dataList;
+            this.schemeForm.get('targetValues')?.setValidators([Validators.required]);
+        }
+        this.schemeForm.get('targetValues')?.updateValueAndValidity();
+    }
+
+    private filterTargetValues(value: string): CommonTargetValue[] {
+        if (this.targetEntity !== '') {
+            let filterValue = (value === null) ? '' : value.toLowerCase();
+            if (value) {
+                return this.targetValueParams.dataList.filter(c => c.title.toLowerCase().includes(filterValue));
+            } else {
+                return this.targetValueParams.dataList;
+            }
+        } else {
+            return [];
         }
     }
 
@@ -208,13 +230,14 @@ export class KycEditorComponent implements OnInit {
             this.schemeForm.get('name')?.setValue('');
             this.schemeForm.get('description')?.setValue('');
             this.schemeForm.get('isDefault')?.setValue('');
-            this.schemeForm.get('target')?.setValue('');
+            this.schemeForm.get('target')?.setValue(SettingsKycTargetFilterType.None);
             this.schemeForm.get('targetValues')?.setValue([]);
             this.schemeForm.get('userMode')?.setValue('');
             this.schemeForm.get('userType')?.setValue('');
             this.schemeForm.get('provider')?.setValue('');
             this.loadLevelValues([]);
         }
+        this.setTargetValidator();
     }
 
     setSchemeData(): KycScheme {

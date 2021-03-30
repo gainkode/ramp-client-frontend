@@ -115,36 +115,43 @@ export class FeeEditorComponent implements OnInit {
         const val = this.schemeForm.get('target')?.value;
         const params = new TargetParams();
         switch (val) {
+            case SettingsFeeTargetFilterType.None: {
+                params.title = '';
+                params.inputPlaceholder = '';
+                params.dataList = [];
+                this.targetEntity = '';
+                break;
+            }
             case SettingsFeeTargetFilterType.AffiliateId: {
-                params.title = 'List of affiliate identifiers';
+                params.title = 'List of affiliate identifiers *';
                 params.inputPlaceholder = 'New identifier...';
                 params.dataList = AffiliateIdFilterList;
                 this.targetEntity = 'affiliate identifier';
                 break;
             }
             case SettingsFeeTargetFilterType.Country: {
-                params.title = 'List of countries';
+                params.title = 'List of countries *';
                 params.inputPlaceholder = 'New country...';
                 params.dataList = CountryFilterList;
                 this.targetEntity = 'country';
                 break;
             }
             case SettingsFeeTargetFilterType.AccountId: {
-                params.title = 'List of account identifiers';
+                params.title = 'List of account identifiers *';
                 params.inputPlaceholder = 'New identifier...';
                 params.dataList = AccountIdFilterList;
                 this.targetEntity = 'account identifier';
                 break;
             }
             case SettingsFeeTargetFilterType.AccountType: {
-                params.title = 'List of account types';
+                params.title = 'List of account types *';
                 params.inputPlaceholder = 'New account type...';
                 params.dataList = AccountTypeFilterList;
                 this.targetEntity = 'account type';
                 break;
             }
             case SettingsFeeTargetFilterType.InitiateFrom: {
-                params.title = 'List of widgets';
+                params.title = 'List of widgets *';
                 params.inputPlaceholder = 'New widget...';
                 params.dataList = WidgetFilterList;
                 this.targetEntity = 'widget';
@@ -167,19 +174,34 @@ export class FeeEditorComponent implements OnInit {
         });
         this.schemeForm.get('target')?.valueChanges.subscribe(val => {
             this.clearTargetValues();
+            this.setTargetValidator();
             this.filteredTargetValues = this.schemeForm.get('targetValue')?.valueChanges.pipe(
                 startWith(''),
                 map(value => this.filterTargetValues(value)));
         });
     }
 
-    private filterTargetValues(value: string): CommonTargetValue[] {
-        let filterValue = '';
-        if (value) {
-            filterValue = value.toLowerCase();
-            return this.targetValueParams.dataList.filter(c => c.title.toLowerCase().includes(filterValue));
+    private setTargetValidator(): void {
+        const val = this.schemeForm.get('target')?.value;
+        if (val === SettingsFeeTargetFilterType.None) {
+            this.schemeForm.get('targetValues')?.clearValidators();
         } else {
-            return this.targetValueParams.dataList;
+            this.schemeForm.get('targetValues')?.setValidators([Validators.required]);
+        }
+        this.schemeForm.get('targetValues')?.updateValueAndValidity();
+    }
+
+    private filterTargetValues(value: string): CommonTargetValue[] {
+        if (this.targetEntity !== '') {
+            let filterValue = '';
+            if (value) {
+                filterValue = value.toLowerCase();
+                return this.targetValueParams.dataList.filter(c => c.title.toLowerCase().includes(filterValue));
+            } else {
+                return this.targetValueParams.dataList;
+            }
+        } else {
+            return [];
         }
     }
 
@@ -219,7 +241,7 @@ export class FeeEditorComponent implements OnInit {
             this.schemeForm.get('name')?.setValue('');
             this.schemeForm.get('description')?.setValue('');
             this.schemeForm.get('isDefault')?.setValue('');
-            this.schemeForm.get('target')?.setValue('');
+            this.schemeForm.get('target')?.setValue(SettingsFeeTargetFilterType.None);
             this.schemeForm.get('targetValues')?.setValue([]);
             this.schemeForm.get('instrument')?.setValue('');
             this.schemeForm.get('trxType')?.setValue('');
@@ -238,6 +260,7 @@ export class FeeEditorComponent implements OnInit {
             this.schemeForm.get('bankAddress')?.setValue('');
             this.schemeForm.get('swift')?.setValue('');
         }
+        this.setTargetValidator();
     }
 
     setSchemeData(): FeeScheme {
