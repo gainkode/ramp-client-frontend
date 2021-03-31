@@ -80,7 +80,7 @@ const GET_KYC_SETTINGS_POST = gql`
         targetUserModes,
         targetFilterType,
         targetFilterValues,
-        levels {settingsKycLevelId, name, data}
+        levels {settingsKycLevelId, name, data, description, order}
       }
     }
   }
@@ -92,7 +92,7 @@ const GET_KYC_LEVELS_POST = gql`
       filter: "",
       orderBy:
       [
-        {orderBy: "name", desc: false}
+        {orderBy: "order", desc: false}
       ]) {
       count,
       list {
@@ -100,6 +100,7 @@ const GET_KYC_LEVELS_POST = gql`
         name,
         description,
         data,
+        order,
         created,
         createdBy
       }

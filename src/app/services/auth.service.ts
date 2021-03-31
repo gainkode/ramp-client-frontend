@@ -193,7 +193,8 @@ query {
             settingsKycLevelId,
             name,
             data,
-            description
+            description,
+            order
         }
     }
   }
