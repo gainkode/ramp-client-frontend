@@ -18,12 +18,17 @@ import { PersonalComponent } from './personal.component';
 import { ProfileMainPersonalComponent } from './profile/main.component';
 import { KycPersonalComponent } from './profile/kyc.component';
 import { ComponentsModule } from '../components/components.module';
+import { LineBreakPipe } from '../utils/line-break.pipe';
+import { KycPanelComponent } from '../components/kyc-panel.component';
 
 const routing = RouterModule.forChild([
     { path: 'intro', component: IntroPersonalComponent },
     { path: 'main', component: PersonalComponent, canActivate: [PersonalGuard] },
     { path: 'profile', component: ProfileMainPersonalComponent, canActivate: [PersonalGuard] },
-    { path: 'kyc', component: KycPersonalComponent, canActivate: [PersonalGuard] },
+    { path: 'kyc', component: KycPersonalComponent, canActivate: [PersonalGuard],
+    children: [
+        { path: 'wizard', component: KycPanelComponent, canActivate: [PersonalGuard] }
+    ] },
     { path: '**', redirectTo: 'main' }
 ]);
 

@@ -1,22 +1,43 @@
-<div class="kyc-editor-split">
-    <div class="kyc-editor-left-panel">
-        <div class="kyc-editor-box">
+<div class="kyc-page-split">
+    <div class="kyc-page-left-panel">
+        <div class="kyc-page-box">
             <h2>Personal profile - data approval</h2>
         </div>
     </div>
-    <div class="kyc-editor-right-panel">
-        <div class="kyc-editor-box">
+    <div class="kyc-page-right-panel">
+        <div class="kyc-page-box">
             <div class="form-error-box" *ngIf="errorMessage!==''">
                 {{errorMessage}}
             </div>
             <mat-progress-bar *ngIf="inProgress" mode="indeterminate"></mat-progress-bar>
-
+            <div class="kyc-levels-split">
+                <div class="kyc-levels-left-panel">
+                    <div *ngFor="let level of levels">
+                        <div *ngIf="level?.id===selectedLevel" class="kyc-level-selected-block">
+                            <div class="kyc-level-title-selected">
+                                {{level?.name}}
+                            </div>
+                            <div class="kyc-level-title-line"></div>
+                            <div class="kyc-level-info-block"
+                                [innerHTML]="getDescription(level?.description) | linebreak"></div>
+                        </div>
+                        <div *ngIf="level?.id!==selectedLevel" class="kyc-level-selected-block">
+                            <div class="kyc-level-title">
+                                <a href="/personal/kyc" (click)="selectLevel(level?.id)">{{level?.name}}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="kyc-levels-right-panel">
+                    Test
+                </div>
+            </div>
+            <!-- <mat-progress-bar *ngIf="inProgress" mode="indeterminate"></mat-progress-bar>
             <div>
                 <kyc-panel class="kyc-level-item" *ngFor="let level of levels" 
                 [level]="level" [url]="settingsCommon?.kycBaseAddress">
-
                 </kyc-panel>
-            </div>
+            </div> -->
         </div>
         <!-- <div id="sumsub-websdk-container"></div> -->
     </div>

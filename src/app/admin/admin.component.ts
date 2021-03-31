@@ -28,8 +28,6 @@ export class AdminComponent {
         if (this.editMode === false) {
             const item = e.options[0].value as AdminMenuItem;
             this.router.navigateByUrl(item.url);
-        } else {
-
         }
     }
 

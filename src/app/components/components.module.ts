@@ -25,7 +25,7 @@ export class MaterialModule { }
     declarations: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
         LineBreakPipe],
     exports: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
-        MatProgressBarModule],
+        MatProgressBarModule, LineBreakPipe],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 

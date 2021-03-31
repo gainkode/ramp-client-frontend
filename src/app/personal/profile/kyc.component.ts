@@ -17,6 +17,12 @@ export class KycPersonalComponent implements OnInit {
   errorMessage = '';
   levels: KycLevelShort[] = [];
   settingsCommon: SettingsCommon | null = null;
+  selectedLevel = '';
+
+  getDescription(description: string | undefined): string
+  {
+    return description as string;
+  }
 
   constructor(private router: Router, private auth: AuthService, private errorHandler: ErrorService) {
     this.user = auth.user;
@@ -58,6 +64,9 @@ export class KycPersonalComponent implements OnInit {
           this.errorMessage = 'Unable to load user identification settings';
         } else {
           this.levels = settingsKyc.levels?.map((val) => new KycLevelShort(val)) as KycLevelShort[];
+          if (this.levels.length > 0) {
+            this.selectLevel(this.levels[0].id);
+          }
           this.inProgress = false;
           // const levels = JSON.parse(settingsKyc.levels);
           // if (levels === null) {
@@ -88,6 +97,11 @@ export class KycPersonalComponent implements OnInit {
         }
       });
     }
+  }
+
+  selectLevel(id: string | undefined): void {
+    this.selectedLevel = id as string;
+
   }
 
   private setKycCompleted(): void {

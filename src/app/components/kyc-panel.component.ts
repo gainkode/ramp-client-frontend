@@ -12,11 +12,11 @@ const snsWebSdk = require('@sumsub/websdk');
     styleUrls: ['kyc-panel.component.scss']
 })
 export class KycPanelComponent implements OnInit {
-    @Input() level: KycLevelShort | null = null;
-    @Input() url: string | null | undefined = '';
+    //@Input() level: KycLevelShort | null = null;
+    //@Input() url: string | null | undefined = '';
     inProgress = false;
     errorMessage = '';
-    description = '';
+    //description = '';
 
     constructor(private router: Router, private auth: AuthService, private errorHandler: ErrorService) {
 
@@ -24,26 +24,34 @@ export class KycPanelComponent implements OnInit {
 
     ngOnInit(): void {
         // load description value here because html cannot apply linebreak pipe to the type string | undefined
-        this.description = this.level?.description as string;
+        //this.description = this.level?.description as string;
+        //this.loadSumSub(this.level?.flowData.value as string);
+    }
+
+    loadSumSub(flow: string): void {
         // load sumsub widget
-        this.inProgress = true;
-        this.auth.getKycToken().valueChanges.subscribe(({ data }) => {
-            this.inProgress = false;
-            this.launchSumSubWidget(
-                this.url as string,
-                this.level?.flowData?.value as string,
-                data.generateWebApiToken,
-                '',
-                '',
-                []);
-        }, (error) => {
-            this.inProgress = false;
-            if (this.auth.token !== '') {
-                this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load settings');
-            } else {
-                this.router.navigateByUrl('/');
-            }
-        });
+        // this.inProgress = true;
+        // this.auth.getKycToken().valueChanges.subscribe(({ data }) => {
+        //     this.inProgress = false;
+        //     this.launchSumSubWidget(
+        //         this.url as string,
+        //         flow as string,
+        //         data.generateWebApiToken,
+        //         '',
+        //         '',
+        //         []);
+        // }, (error) => {
+        //     this.inProgress = false;
+        //     if (this.auth.token !== '') {
+        //         this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load settings');
+        //     } else {
+        //         this.router.navigateByUrl('/');
+        //     }
+        // });
+    }
+
+    load(flow: string | undefined) {
+        this.loadSumSub(flow as string);
     }
 
     // @param apiUrl - 'https://test-api.sumsub.com' (sandbox) or 'https://api.sumsub.com' (production)

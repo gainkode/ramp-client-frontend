@@ -1,30 +1,31 @@
-.kyc-editor-split {
+.kyc-page-split {
     display : flex;
     height  : 100%;
     overflow: auto;
 }
 
-.kyc-editor-left-panel {
-    padding  : 1em;
+.kyc-page-left-panel {
+    padding  : 0em;
     width    : 40%;
     min-width: 10em;
     height   : 100%;
     overflow : auto;
 }
 
-.kyc-editor-right-panel {
+.kyc-page-right-panel {
     z-index         : 100;
     background-color: #DDDFE6;
-    padding         : 1.2em;
+    padding         : 0;
     width           : 60%;
     max-width       : 60%;
     height          : 100%;
     overflow        : auto;
 }
 
-.kyc-editor-box {
+.kyc-page-box {
+    padding: 1em;
     margin    : 0em;
-    margin-top: 2em;
+    margin-top: 1em;
 
     h2 {
         margin   : auto;
@@ -32,8 +33,53 @@
     }
 }
 
-.kyc-level-item {
-    padding: 0.5em;
+.kyc-levels-split {
+    display : flex;
+    height  : 100%;
+    overflow: auto;
+}
+
+.kyc-levels-left-panel {
+    width    : 30%;
+    min-width: 5em;
+    height   : 100%;
+    overflow : auto;
+}
+
+.kyc-levels-right-panel {
+    background-color: greenyellow;
+    width           : 70%;
+    max-width       : 70%;
+    height          : 100%;
+    overflow        : auto;
+}
+
+.kyc-level-selected-block {
+    margin-top      : 0.5em;
+    margin-bottom   : 0.5em;
+}
+
+.kyc-level-title-selected {
+    font-size  : 18px;
+    font-weight: bolder;
+    color      : #293742;
+}
+
+.kyc-level-title {
+    font-size  : 16px;
+    font-weight: lighter;
+    color      : #293742;
+}
+
+.kyc-level-title-line {
+    // 2 900
+    background-color: #005694;
+    width           : 100%;
+    height          : 2px;
+}
+
+.kyc-level-info-block {
+    padding: 0.25em;
 }
 
 .upload-icon-box {
