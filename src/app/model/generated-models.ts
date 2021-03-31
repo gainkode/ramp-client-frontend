@@ -236,10 +236,11 @@ export type SettingsKycLevel = {
   __typename?: 'SettingsKycLevel';
   settingsKycLevelId: Scalars['ID'];
   name?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  order?: Maybe<Scalars['Int']>;
   data?: Maybe<Scalars['String']>;
   created?: Maybe<Scalars['DateTime']>;
   createdBy?: Maybe<Scalars['String']>;
-  description?: Maybe<Scalars['String']>;
 };
 
 
@@ -296,8 +297,9 @@ export type SettingsKycLevelShort = {
   __typename?: 'SettingsKycLevelShort';
   settingsKycLevelId: Scalars['ID'];
   name?: Maybe<Scalars['String']>;
-  data?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
+  order?: Maybe<Scalars['Int']>;
+  data?: Maybe<Scalars['String']>;
 };
 
 export type SettingsFeeListResult = {
@@ -948,6 +950,7 @@ export type SettingsKycLevelInput = {
   name?: Maybe<Scalars['String']>;
   data?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
+  order?: Maybe<Scalars['Int']>;
 };
 
 export type SettingsKycInput = {

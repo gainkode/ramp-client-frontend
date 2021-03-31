@@ -12,7 +12,10 @@
             <mat-progress-bar *ngIf="inProgress" mode="indeterminate"></mat-progress-bar>
 
             <div>
-                <kyc-panel *ngFor="let level of levels" [level]="level"></kyc-panel>
+                <kyc-panel class="kyc-level-item" *ngFor="let level of levels" 
+                [level]="level" [url]="settingsCommon?.kycBaseAddress">
+
+                </kyc-panel>
             </div>
         </div>
         <!-- <div id="sumsub-websdk-container"></div> -->

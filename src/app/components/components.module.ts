@@ -7,6 +7,7 @@ import { BackButtonComponent } from './backbutton.component';
 import { TabLabelComponent } from './tablabel.component';
 import { KycPanelComponent } from './kyc-panel.component';
 import { LineBreakPipe } from '../utils/line-break.pipe';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 const materialModules = [
     MatButtonModule,
@@ -20,10 +21,11 @@ const materialModules = [
 export class MaterialModule { }
 
 @NgModule({
-    imports: [CommonModule, MaterialModule],
+    imports: [CommonModule, MaterialModule, MatProgressBarModule],
     declarations: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
         LineBreakPipe],
-    exports: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent],
+    exports: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
+        MatProgressBarModule],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 
