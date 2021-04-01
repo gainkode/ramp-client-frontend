@@ -88,6 +88,5 @@ export class KycPersonalComponent implements OnInit, OnDestroy {
     const url = (id === undefined) ? path : `${path}/${id}`;
     this.router.navigateByUrl('/', { skipLocationChange: true }).then(() =>
       this.router.navigate([url]));
-    //window.location.reload();
   }
 }
