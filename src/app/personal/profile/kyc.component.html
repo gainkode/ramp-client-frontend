@@ -13,7 +13,7 @@
             <div class="kyc-levels-split">
                 <div class="kyc-levels-left-panel">
                     <div *ngFor="let level of levels">
-                        <div *ngIf="level?.id===selectedLevel" class="kyc-level-selected-block">
+                        <div *ngIf="level?.id===selectedLevelId" class="kyc-level-selected-block">
                             <div class="kyc-level-title-selected">
                                 {{level?.name}}
                             </div>
@@ -21,7 +21,7 @@
                             <div class="kyc-level-info-block"
                                 [innerHTML]="getDescription(level?.description) | linebreak"></div>
                         </div>
-                        <div *ngIf="level?.id!==selectedLevel" class="kyc-level-selected-block">
+                        <div *ngIf="level?.id!==selectedLevelId" class="kyc-level-selected-block">
                             <div class="kyc-level-title">
                                 <a [routerLink]="['wizard', level?.id]" 
                                 (click)="selectLevel(level?.id)">

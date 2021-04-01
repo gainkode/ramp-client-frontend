@@ -1,5 +1,7 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { SettingsKycShort } from '../model/generated-models';
 import { KycLevelShort } from '../model/identification.model';
 import { AuthService } from '../services/auth.service';
 import { ErrorService } from '../services/error.service';
@@ -11,14 +13,15 @@ const snsWebSdk = require('@sumsub/websdk');
     templateUrl: 'kyc-panel.component.html',
     styleUrls: ['kyc-panel.component.scss']
 })
-export class KycPanelComponent implements OnInit {
+export class KycPanelComponent implements OnInit, OnDestroy {
     @Output() setLevelId = new EventEmitter<string>();
-    //@Input() level: KycLevelShort | null = null;
-    //@Input() url: string | null | undefined = '';
+    @Input() url: string | null | undefined = '';
+    private _settingsSubscription!: any;
+    private _tokenSubscription!: any;
+    flow: string = '';
     inProgress = false;
     errorMessage = '';
     levelId: string | null = '';
-    //description = '';
 
     constructor(private route: ActivatedRoute, private router: Router,
         private auth: AuthService, private errorHandler: ErrorService) {
@@ -28,35 +31,67 @@ export class KycPanelComponent implements OnInit {
     ngOnInit(): void {
         this.levelId = this.route.snapshot.paramMap.get('id');
         this.setLevelId.emit(this.levelId as string);
-        // load description value here because html cannot apply linebreak pipe to the type string | undefined
-        //this.description = this.level?.description as string;
-        //this.loadSumSub(this.level?.flowData.value as string);
+        const kycData = this.auth.getMyKycSettings();
+        if (kycData === null) {
+            this.errorMessage = this.errorHandler.getRejectedCookieMessage();
+        } else {
+            this.inProgress = true;
+            this._settingsSubscription = kycData.valueChanges.subscribe(({ data }) => {
+                const settingsKyc: SettingsKycShort | null = data.getMySettingsKyc;
+                if (settingsKyc === null) {
+                    this.errorMessage = 'Unable to load user identification settings';
+                } else {
+                    const level = settingsKyc.levels?.
+                        map((val) => new KycLevelShort(val)).
+                        find(x => x.id === this.levelId);
+                    if (level !== undefined) {
+                        this.flow = level.flowData.value;
+                    }
+                    this.inProgress = false;
+                    this.loadSumSub();
+                 }
+            }, (error) => {
+                this.inProgress = false;
+                if (this.auth.token !== '') {
+                    this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load settings');
+                } else {
+                    this.router.navigateByUrl('/');
+                }
+            });
+        }
     }
 
-    loadSumSub(flow: string): void {
+    ngOnDestroy(): void {
+        const s: Subscription = this._settingsSubscription;
+        const t: Subscription = this._tokenSubscription;
+        if (s !== undefined) {
+            (this._settingsSubscription as Subscription).unsubscribe();
+        }
+        if (t !== undefined) {
+            (this._tokenSubscription as Subscription).unsubscribe();
+        }
+    }
+
+    loadSumSub(): void {
         // load sumsub widget
-        // this.inProgress = true;
-        // this.auth.getKycToken().valueChanges.subscribe(({ data }) => {
-        //     this.inProgress = false;
-        //     this.launchSumSubWidget(
-        //         this.url as string,
-        //         flow as string,
-        //         data.generateWebApiToken,
-        //         '',
-        //         '',
-        //         []);
-        // }, (error) => {
-        //     this.inProgress = false;
-        //     if (this.auth.token !== '') {
-        //         this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load settings');
-        //     } else {
-        //         this.router.navigateByUrl('/');
-        //     }
-        // });
-    }
-
-    load(flow: string | undefined) {
-        this.loadSumSub(flow as string);
+        this.inProgress = true;
+        this._tokenSubscription = this.auth.getKycToken().valueChanges.subscribe(({ data }) => {
+            this.inProgress = false;
+            this.launchSumSubWidget(
+                this.url as string,
+                this.flow as string,
+                data.generateWebApiToken,
+                '',
+                '',
+                []);
+        }, (error) => {
+            this.inProgress = false;
+            if (this.auth.token !== '') {
+                this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load settings');
+            } else {
+                this.router.navigateByUrl('/');
+            }
+        });
     }
 
     // @param apiUrl - 'https://test-api.sumsub.com' (sandbox) or 'https://api.sumsub.com' (production)
