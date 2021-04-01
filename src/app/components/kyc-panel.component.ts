@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { KycLevelShort } from '../model/identification.model';
 import { AuthService } from '../services/auth.service';
 import { ErrorService } from '../services/error.service';
@@ -12,17 +12,22 @@ const snsWebSdk = require('@sumsub/websdk');
     styleUrls: ['kyc-panel.component.scss']
 })
 export class KycPanelComponent implements OnInit {
+    @Output() setLevelId = new EventEmitter<string>();
     //@Input() level: KycLevelShort | null = null;
     //@Input() url: string | null | undefined = '';
     inProgress = false;
     errorMessage = '';
+    levelId: string | null = '';
     //description = '';
 
-    constructor(private router: Router, private auth: AuthService, private errorHandler: ErrorService) {
+    constructor(private route: ActivatedRoute, private router: Router,
+        private auth: AuthService, private errorHandler: ErrorService) {
 
     }
 
     ngOnInit(): void {
+        this.levelId = this.route.snapshot.paramMap.get('id');
+        this.setLevelId.emit(this.levelId as string);
         // load description value here because html cannot apply linebreak pipe to the type string | undefined
         //this.description = this.level?.description as string;
         //this.loadSumSub(this.level?.flowData.value as string);

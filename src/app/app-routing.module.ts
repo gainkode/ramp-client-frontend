@@ -5,11 +5,11 @@ import { TermsComponent } from './terms.component';
 const routes: Routes = [
   {
     path: 'auth/personal', loadChildren: () => import('./auth-personal/auth.module').
-    then(m => m.PersonalAuthModule)
+      then(m => m.PersonalAuthModule)
   },
   {
     path: 'auth/merchant', loadChildren: () => import('./auth-merchant/auth.module').
-    then(m => m.MerchantAuthModule)
+      then(m => m.MerchantAuthModule)
   },
   {
     path: 'personal', loadChildren: () => import('./personal/personal.module').then(m => m.PersonalModule)

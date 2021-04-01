@@ -23,13 +23,18 @@
                         </div>
                         <div *ngIf="level?.id!==selectedLevel" class="kyc-level-selected-block">
                             <div class="kyc-level-title">
-                                <a href="/personal/kyc" (click)="selectLevel(level?.id)">{{level?.name}}</a>
+                                <a [routerLink]="['wizard', level?.id]" 
+                                (click)="selectLevel(level?.id)">
+                                    {{level?.name}}
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="kyc-levels-right-panel">
-                    Test
+                    <router-outlet (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
+
+                    </router-outlet>
                 </div>
             </div>
             <!-- <mat-progress-bar *ngIf="inProgress" mode="indeterminate"></mat-progress-bar>
@@ -38,6 +43,8 @@
                 [level]="level" [url]="settingsCommon?.kycBaseAddress">
                 </kyc-panel>
             </div> -->
+            
+
         </div>
         <!-- <div id="sumsub-websdk-container"></div> -->
     </div>

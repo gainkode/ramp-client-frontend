@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { SettingsCommon, SettingsKycShort, User } from 'src/app/model/generated-models';
 import { KycLevelShort } from 'src/app/model/identification.model';
 import { AuthService } from 'src/app/services/auth.service';
@@ -18,13 +18,14 @@ export class KycPersonalComponent implements OnInit {
   levels: KycLevelShort[] = [];
   settingsCommon: SettingsCommon | null = null;
   selectedLevel = '';
+  changeEditModeRef: any;
 
-  getDescription(description: string | undefined): string
-  {
+  getDescription(description: string | undefined): string {
     return description as string;
   }
 
-  constructor(private router: Router, private auth: AuthService, private errorHandler: ErrorService) {
+  constructor(private router: Router,
+    private auth: AuthService, private errorHandler: ErrorService) {
     this.user = auth.user;
     this.settingsCommon = this.auth.getLocalSettingsCommon();
   }
@@ -64,7 +65,7 @@ export class KycPersonalComponent implements OnInit {
           this.errorMessage = 'Unable to load user identification settings';
         } else {
           this.levels = settingsKyc.levels?.map((val) => new KycLevelShort(val)) as KycLevelShort[];
-          if (this.levels.length > 0) {
+          if (this.levels.length > 0 && this.selectedLevel === '') {
             this.selectLevel(this.levels[0].id);
           }
           this.inProgress = false;
@@ -99,9 +100,26 @@ export class KycPersonalComponent implements OnInit {
     }
   }
 
-  selectLevel(id: string | undefined): void {
-    this.selectedLevel = id as string;
+  onActivate(component: any): void {
+    this.changeEditModeRef = component.setLevelId;
+    if (this.changeEditModeRef !== undefined) {
+      this.changeEditModeRef.subscribe((event: any) => {
+        this.selectedLevel = event as string;
+      });
+    }
+  }
 
+  onDeactivate(component: any): void {
+    if (this.changeEditModeRef !== undefined) {
+      this.changeEditModeRef.unsubscribe();
+    }
+  }
+
+  selectLevel(id: string | undefined): void {
+    const path = 'personal/kyc/wizard';
+    const url = (id === undefined) ? path : `${path}/${id}`;
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() =>
+      this.router.navigate([url]));
   }
 
   private setKycCompleted(): void {
