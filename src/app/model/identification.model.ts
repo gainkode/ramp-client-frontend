@@ -21,13 +21,13 @@ export class KycScheme {
     isDefault = false;
     description!: string;
     name!: string;
+    userType!: UserType;
     target: SettingsKycTargetFilterType | null = null;
     targetValues: Array<string> = [];
-    userTypes: Array<UserType> = [];
     kycProviders: Array<KycProvider> = [];
     userModes: Array<UserMode> = [];
-    levels: Array<SettingsKycLevel> = [];
-    levelsToSave: Array<string> = [];
+    level!: SettingsKycLevel;
+    levelId!: string;
 
     constructor(data: SettingsKyc | null) {
         if (data !== null) {
@@ -35,10 +35,15 @@ export class KycScheme {
             this.id = data.settingsKycId;
             this.isDefault = data.default as boolean;
             this.description = data.description as string;
-            data.levels?.forEach(x => this.levels.push(x as SettingsKycLevel));
+            this.userType = data.targetUserType;
+            if (data.levels) {
+                if (data.levels?.length > 0) {
+                    this.level = data.levels[0];
+                    this.levelId = this.level.settingsKycLevelId;
+                }
+            }
             data.targetKycProviders?.forEach(x => this.kycProviders.push(x as KycProvider));
             data.targetUserModes?.forEach(x => this.userModes.push(x as UserMode));
-            data.targetUserTypes?.forEach(x => this.userTypes.push(x as UserType));
             this.target = data.targetFilterType as SettingsKycTargetFilterType | null;
             if (this.target === SettingsKycTargetFilterType.Country) {
                 data.targetFilterValues?.forEach(x => {
@@ -76,17 +81,6 @@ export class KycScheme {
         let p = false;
         this.kycProviders.forEach(x => {
             const v = KycProviderList.find(t => t.id === x)?.name as string;
-            s = `${s}${p ? ', ' : ''}${v}`;
-            p = true;
-        });
-        return s;
-    }
-
-    get userTypeList(): string {
-        let s = '';
-        let p = false;
-        this.userTypes.forEach(x => {
-            const v = UserTypeList.find(t => t.id === x)?.name as string;
             s = `${s}${p ? ', ' : ''}${v}`;
             p = true;
         });

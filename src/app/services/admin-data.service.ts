@@ -76,7 +76,7 @@ const GET_KYC_SETTINGS_POST = gql`
         name,
         description,
         targetKycProviders,
-        targetUserTypes,
+        targetUserType,
         targetUserModes,
         targetFilterType,
         targetFilterValues,
@@ -167,7 +167,7 @@ mutation AddSettingsKyc(
   $name: String!,
   $description: String,
   $targetKycProviders: [KycProvider!],
-  $targetUserTypes: [UserType!],
+  $targetUserType: UserType!,
   $targetUserModes: [UserMode!],
   $targetFilterType: SettingsKycTargetFilterType!,
   $targetFilterValues: [String!],
@@ -177,7 +177,7 @@ mutation AddSettingsKyc(
     name: $name,
     description: $description,
     targetKycProviders: $targetKycProviders,
-    targetUserTypes: $targetUserTypes,
+    targetUserType: $targetUserType,
     targetUserModes: $targetUserModes,
     targetFilterType: $targetFilterType,
     targetFilterValues: $targetFilterValues,
@@ -272,7 +272,7 @@ mutation UpdateSettingsKyc(
   $name: String!,
   $description: String,
   $targetKycProviders: [KycProvider!],
-  $targetUserTypes: [UserType!],
+  $targetUserType: UserType!,
   $targetUserModes: [UserMode!],
   $targetFilterType: SettingsKycTargetFilterType!,
   $targetFilterValues: [String!],
@@ -284,7 +284,7 @@ mutation UpdateSettingsKyc(
       name: $name,
       description: $description,
       targetKycProviders: $targetKycProviders,
-      targetUserTypes: $targetUserTypes,
+      targetUserType: $targetUserType,
       targetUserModes: $targetUserModes,
       targetFilterType: $targetFilterType,
       targetFilterValues: $targetFilterValues,
@@ -476,9 +476,9 @@ export class AdminDataService {
           targetFilterType: settings.target,
           targetFilterValues: settings.targetValues,
           targetKycProviders: settings.kycProviders,
-          targetUserTypes: settings.userTypes,
+          targetUserType: settings.userType,
           targetUserModes: settings.userModes,
-          levelIds: settings.levelsToSave
+          levelIds: [settings.levelId]
         }
       })
       :
@@ -491,9 +491,9 @@ export class AdminDataService {
           targetFilterType: settings.target,
           targetFilterValues: settings.targetValues,
           targetKycProviders: settings.kycProviders,
-          targetUserTypes: settings.userTypes,
+          targetUserType: settings.userType,
           targetUserModes: settings.userModes,
-          levelIds: settings.levelsToSave
+          levelIds: [settings.levelId]
         }
       });
   }

@@ -48,6 +48,12 @@ export class KycTargetFilterTypeView {
     name = '';
 }
 
+export class KycLevelView {
+    id!: string;
+    name = '';
+    description = '';
+}
+
 export const PaymentInstrumentList: Array<PaymentInstrumentView> = [
     { id: PaymentInstrument.Apm, name: 'APM' },
     { id: PaymentInstrument.Bitstamp, name: 'Bitstamp' },

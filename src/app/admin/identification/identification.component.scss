@@ -22,26 +22,32 @@
 }
 
 .mat-column-kyc-table-target {
-    flex     : 0 0 20%;
+    flex     : 0 0 15%;
     width    : 15%;
     min-width: 5em;
 }
 
 .mat-column-kyc-table-user-type {
-    flex     : 0 0 20%;
-    width    : 21%;
+    flex     : 0 0 10%;
+    width    : 10%;
     min-width: 5em;
 }
 
 .mat-column-kyc-table-user-mode {
-    flex     : 0 0 18%;
-    width    : 20%;
+    flex     : 0 0 17%;
+    width    : 17%;
     min-width: 5em;
 }
 
 .mat-column-kyc-table-provider {
-    flex     : 0 0 18%;
-    width    : 20%;
+    flex     : 0 0 17%;
+    width    : 17%;
+    min-width: 5em;
+}
+
+.mat-column-kyc-table-level {
+    flex     : 0 0 17%;
+    width    : 17%;
     min-width: 5em;
 }
 

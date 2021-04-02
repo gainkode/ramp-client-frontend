@@ -22,6 +22,7 @@ export type Query = {
   __typename?: 'Query';
   serverTime: Scalars['String'];
   getSettingsCommon?: Maybe<SettingsCommon>;
+  getSettingsCurrency?: Maybe<SettingsCurrencyListResult>;
   getSettingsKycLevels?: Maybe<SettingsKycLevelListResult>;
   getSettingsKyc?: Maybe<SettingsKycListResult>;
   getMySettingsKyc?: Maybe<SettingsKycShort>;
@@ -49,6 +50,15 @@ export type Query = {
   getMySupportTickets?: Maybe<SupportTicketListResult>;
   getSupportTickets?: Maybe<SupportTicketListResult>;
   getFeedbacks?: Maybe<FeedbackListResult>;
+  getRates?: Maybe<Array<Rate>>;
+};
+
+
+export type QueryGetSettingsCurrencyArgs = {
+  filter?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OrderBy>>;
 };
 
 
@@ -211,8 +221,15 @@ export type QueryGetFeedbacksArgs = {
   orderBy?: Maybe<Array<OrderBy>>;
 };
 
+
+export type QueryGetRatesArgs = {
+  currenciesFrom: Array<Scalars['String']>;
+  currencyTo: Scalars['String'];
+};
+
 export type SettingsCommon = {
   __typename?: 'SettingsCommon';
+  settingsCommonId?: Maybe<Scalars['String']>;
   liquidityProvider?: Maybe<Scalars['String']>;
   liquidityBaseAddress?: Maybe<Scalars['String']>;
   custodyProvider?: Maybe<Scalars['String']>;
@@ -226,6 +243,22 @@ export type OrderBy = {
   desc: Scalars['Boolean'];
 };
 
+export type SettingsCurrencyListResult = {
+  __typename?: 'SettingsCurrencyListResult';
+  count?: Maybe<Scalars['Int']>;
+  list?: Maybe<Array<SettingsCurrency>>;
+};
+
+export type SettingsCurrency = {
+  __typename?: 'SettingsCurrency';
+  symbol: Scalars['ID'];
+  name: Scalars['String'];
+  precision: Scalars['Int'];
+  minAmount: Scalars['Float'];
+  rateFactor: Scalars['Float'];
+  validateAsSymbol?: Maybe<Scalars['String']>;
+};
+
 export type SettingsKycLevelListResult = {
   __typename?: 'SettingsKycLevelListResult';
   count?: Maybe<Scalars['Int']>;
@@ -237,11 +270,17 @@ export type SettingsKycLevel = {
   settingsKycLevelId: Scalars['ID'];
   name?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
+  userType?: Maybe<UserType>;
   order?: Maybe<Scalars['Int']>;
   data?: Maybe<Scalars['String']>;
   created?: Maybe<Scalars['DateTime']>;
   createdBy?: Maybe<Scalars['String']>;
 };
+
+export enum UserType {
+  Merchant = 'Merchant',
+  Personal = 'Personal'
+}
 
 
 export type SettingsKycListResult = {
@@ -256,7 +295,7 @@ export type SettingsKyc = {
   name: Scalars['String'];
   description?: Maybe<Scalars['String']>;
   targetKycProviders?: Maybe<Array<KycProvider>>;
-  targetUserTypes?: Maybe<Array<UserType>>;
+  targetUserType: UserType;
   targetUserModes?: Maybe<Array<UserMode>>;
   targetFilterType?: Maybe<SettingsKycTargetFilterType>;
   targetFilterValues?: Maybe<Array<Scalars['String']>>;
@@ -270,11 +309,6 @@ export type SettingsKyc = {
 export enum KycProvider {
   Local = 'Local',
   SumSub = 'SumSub'
-}
-
-export enum UserType {
-  Merchant = 'Merchant',
-  Personal = 'Personal'
 }
 
 export enum UserMode {
@@ -298,6 +332,7 @@ export type SettingsKycLevelShort = {
   settingsKycLevelId: Scalars['ID'];
   name?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
+  userType?: Maybe<UserType>;
   order?: Maybe<Scalars['Int']>;
   data?: Maybe<Scalars['String']>;
 };
@@ -669,6 +704,15 @@ export type Feedback = {
   created?: Maybe<Scalars['DateTime']>;
 };
 
+export type Rate = {
+  __typename?: 'Rate';
+  currencyFrom: Scalars['String'];
+  currencyTo: Scalars['String'];
+  originalRate: Scalars['Float'];
+  depositRate: Scalars['Float'];
+  withdrawRate: Scalars['Float'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   foo: Scalars['String'];
@@ -708,6 +752,8 @@ export type Mutation = {
   disable2fa: LoginResult;
   sendEmailCodePasswordChange: Scalars['Boolean'];
   addFeedback: Feedback;
+  createQuickCheckout?: Maybe<Scalars['String']>;
+  executeQuickCheckout?: Maybe<Transaction>;
 };
 
 
@@ -910,6 +956,17 @@ export type MutationAddFeedbackArgs = {
   feedback: FeedbackInput;
 };
 
+
+export type MutationCreateQuickCheckoutArgs = {
+  transaction?: Maybe<TransactionInput>;
+};
+
+
+export type MutationExecuteQuickCheckoutArgs = {
+  transactionId?: Maybe<Scalars['String']>;
+  code?: Maybe<Scalars['Int']>;
+};
+
 export type SettingsCommonInput = {
   liquidityProvider?: Maybe<Scalars['String']>;
   liquidityBaseAddress?: Maybe<Scalars['String']>;
@@ -947,9 +1004,10 @@ export type SettingsCostInput = {
 };
 
 export type SettingsKycLevelInput = {
-  name?: Maybe<Scalars['String']>;
-  data?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+  data: Scalars['String'];
   description?: Maybe<Scalars['String']>;
+  userType: UserType;
   order?: Maybe<Scalars['Int']>;
 };
 
@@ -957,7 +1015,7 @@ export type SettingsKycInput = {
   name?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
   targetKycProviders?: Maybe<Array<KycProvider>>;
-  targetUserTypes?: Maybe<Array<UserType>>;
+  targetUserType: UserType;
   targetUserModes?: Maybe<Array<UserMode>>;
   targetFilterType?: Maybe<SettingsKycTargetFilterType>;
   targetFilterValues?: Maybe<Array<Scalars['String']>>;
@@ -1007,14 +1065,27 @@ export type FeedbackInput = {
   description?: Maybe<Scalars['String']>;
 };
 
-export enum CryptoCurrencyType {
-  Btc = 'BTC',
-  Usdc = 'USDC'
-}
+export type TransactionInput = {
+  transactionType: TransactionType;
+  currencyToSpend: Scalars['String'];
+  currencyToReceive: Scalars['String'];
+  amount: Scalars['Float'];
+  rate: Scalars['Float'];
+  data?: Maybe<Scalars['String']>;
+};
 
-export enum FiatCurrencyType {
-  Eur = 'EUR'
-}
+export type Transaction = {
+  __typename?: 'Transaction';
+  transactionId: Scalars['ID'];
+  userId: Scalars['String'];
+  created: Scalars['DateTime'];
+  transactionType: TransactionType;
+  currencyToSpend: Scalars['String'];
+  currencyToReceive: Scalars['String'];
+  amount: Scalars['Float'];
+  rate: Scalars['Float'];
+  data?: Maybe<Scalars['String']>;
+};
 
 export enum LiquidityProvider {
   Bitstamp = 'Bitstamp'
@@ -1090,11 +1161,6 @@ export type KycRejectedLabel = {
   code?: Maybe<Scalars['String']>;
   type?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
-};
-
-export type CryptoRate = {
-  __typename?: 'CryptoRate';
-  rate?: Maybe<Scalars['Float']>;
 };
 
 export enum LiquidityOrderState {

@@ -10,7 +10,8 @@ export class IdTableComponent {
     @Input() schemes: KycScheme[] = [];
     @Input() selectedScheme: KycScheme | null = null;
     @Output() toggle = new EventEmitter<KycScheme>();
-    displayedColumns: string[] = ['isDefault', 'name', 'target', 'userType', 'userMode', 'provider', 'details'];
+    displayedColumns: string[] = [
+        'isDefault', 'name', 'target', 'userType', 'userMode', 'provider', 'level', 'details'];
 
     constructor() { }
 
