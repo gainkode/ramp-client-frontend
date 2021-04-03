@@ -4,6 +4,7 @@ import { EmptyObject } from 'apollo-angular/types';
 import { Observable } from 'rxjs';
 import { CostScheme } from '../model/cost-scheme.model';
 import { FeeScheme } from '../model/fee-scheme.model';
+import { UserType } from '../model/generated-models';
 import { KycLevel, KycScheme } from '../model/identification.model';
 
 const GET_FEE_SETTINGS_POST = gql`
@@ -393,7 +394,7 @@ export class AdminDataService {
     }
   }
 
-  getKycLevels(): QueryRef<any, EmptyObject> | null {
+  getKycLevels(userType: UserType | null): QueryRef<any, EmptyObject> | null {
     if (this.apollo.client !== undefined) {
       return this.apollo.watchQuery<any>({
         query: GET_KYC_LEVELS_POST,

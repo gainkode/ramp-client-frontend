@@ -1,7 +1,7 @@
-import { Component, ElementRef, ViewChild, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, ElementRef, ViewChild, Input, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Validators, FormBuilder } from '@angular/forms';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
@@ -22,7 +22,7 @@ import { AdminDataService } from 'src/app/services/admin-data.service';
     templateUrl: 'kyc-editor.component.html',
     styleUrls: ['../admin.scss', 'identification.component.scss']
 })
-export class KycEditorComponent implements OnInit {
+export class KycEditorComponent implements OnInit, OnDestroy {
     @Input()
     set currentScheme(scheme: KycScheme | null) {
         this.setFormData(scheme);
@@ -39,11 +39,12 @@ export class KycEditorComponent implements OnInit {
     private defaultSchemeName = '';
     private settingsId = '';
     private loadingData = false;
+    private _levelsSubscription!: any;
     errorMessage = '';
     targetEntity = '';
     separatorKeysCodes: number[] = [ENTER, COMMA];
     filteredTargetValues: Observable<CommonTargetValue[]> | undefined;
-    
+
     targets = KycTargetFilterList;
     userTypes = UserTypeList;
     userModes = UserModeList;
@@ -116,8 +117,15 @@ export class KycEditorComponent implements OnInit {
                 map(value => this.filterTargetValues(value)));
         });
         this.schemeForm.get('userType')?.valueChanges.subscribe(val => {
-            this.loadLevelValues(val);
+            this.loadLevels(val);
         });
+    }
+
+    ngOnDestroy(): void {
+        const ls: Subscription = this._levelsSubscription;
+        if (ls !== undefined) {
+            ls.unsubscribe();
+        }
     }
 
     private setTargetValidator(): void {
@@ -143,23 +151,47 @@ export class KycEditorComponent implements OnInit {
         }
     }
 
+    private loadLevels(userType: UserType): void {
+        const s: Subscription = this._levelsSubscription;
+        if (s !== undefined) {
+            console.log('update');
+            this.refreshLevelValues(userType);
+        }
+        else {
+            console.log('load');
+            this.loadLevelValues(userType);
+        }
+    }
+
     private loadLevelValues(userType: UserType): void {
-        this.adminService.getKycLevels()?.valueChanges.subscribe(({ data }) => {
-            const levelData = data.getSettingsKycLevels as SettingsKycLevelListResult;
-            let itemCount = 0;
-            if (levelData !== null) {
-                itemCount = levelData?.count as number;
-                if (itemCount > 0) {
-                    this.levels = levelData?.list?.map((val) => {
-                        const c = new KycLevelView();
-                        c.id = val.settingsKycLevelId;
-                        c.name = val.name as string;
-                        c.description = val.description as string;
-                        return c;
-                    }) as KycLevelView[];
+        const levelsData = this.adminService.getKycLevels(userType);
+        if (levelsData !== null) {
+            this._levelsSubscription = levelsData.valueChanges.subscribe(({ data }) => {
+                const levelData = data.getSettingsKycLevels as SettingsKycLevelListResult;
+                let itemCount = 0;
+                if (levelData !== null) {
+                    itemCount = levelData?.count as number;
+                    console.log(levelData);
+                    if (itemCount > 0) {
+                        this.levels = levelData?.list?.map((val) => {
+                            const c = new KycLevelView();
+                            c.id = val.settingsKycLevelId;
+                            c.name = val.name as string;
+                            c.description = val.description as string;
+                            return c;
+                        }) as KycLevelView[];
+                    }
                 }
-            }
-        });
+            });
+        }
+    }
+
+    refreshLevelValues(userType: UserType): void {
+        const settingsData = this.adminService.getKycLevels(userType);
+        console.log(settingsData);
+        if (settingsData !== null) {
+            settingsData.refetch();
+        }
     }
 
     setFormData(scheme: KycScheme | null): void {
@@ -180,7 +212,7 @@ export class KycEditorComponent implements OnInit {
             this.schemeForm.get('userType')?.setValue(scheme?.userType);
             this.schemeForm.get('provider')?.setValue(scheme?.kycProviders);
             this.loadingData = false;
-            this.loadLevelValues(scheme?.userType);
+            this.loadLevels(scheme?.userType);
             this.formChanged.emit(false);
         } else {
             this.schemeForm.get('id')?.setValue('');

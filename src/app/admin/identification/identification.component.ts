@@ -121,7 +121,7 @@ export class IdentificationComponent implements OnInit, OnDestroy {
   }
 
   loadLevelList(): void {
-    const settingsData = this.adminService.getKycLevels();
+    const settingsData = this.adminService.getKycLevels(null);
     if (settingsData === null) {
       this.errorMessage = this.errorHandler.getRejectedCookieMessage();
     } else {
@@ -149,7 +149,7 @@ export class IdentificationComponent implements OnInit, OnDestroy {
   }
 
   refreshLevelList(): void {
-    const settingsData = this.adminService.getKycLevels();
+    const settingsData = this.adminService.getKycLevels(null);
     if (settingsData !== null) {
       settingsData.refetch();
     }
