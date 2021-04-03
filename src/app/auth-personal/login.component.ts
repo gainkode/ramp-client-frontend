@@ -4,7 +4,9 @@ import { AuthService } from '../services/auth.service';
 import { ErrorService } from '../services/error.service';
 import { Validators, FormBuilder } from '@angular/forms';
 import { SocialUser } from 'angularx-social-login';
-import { LoginResult, SettingsCommon } from '../model/generated-models';
+import { LoginResult, SettingsCommon, UserType } from '../model/generated-models';
+import { MatDialog } from '@angular/material/dialog';
+import { CommonDialogBox } from '../components/common-box.dialog';
 
 @Component({
     templateUrl: 'login.component.html',
@@ -35,7 +37,7 @@ export class LoginComponent {
     });
 
     constructor(private auth: AuthService, private errorHandler: ErrorService,
-        private formBuilder: FormBuilder, private router: Router) { }
+        private formBuilder: FormBuilder, private router: Router, public dialog: MatDialog) { }
 
     googleSignIn(): void {
         this.socialSignIn('Google');
@@ -43,6 +45,19 @@ export class LoginComponent {
 
     facebookSignIn(): void {
         this.socialSignIn('Facebook');
+    }
+
+    showWrongUserTypeRedirectDialog(userType: UserType): void {
+        const dialogRef = this.dialog.open(CommonDialogBox, {
+            width: '550px',
+            data: {
+                title: 'Authentication',
+                message: `You are signing in as a ${userType.toLowerCase()} in the personal section. You will be redirected to the merchant section.`
+            }
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            this.router.navigateByUrl('/auth/merchant/login');
+        });
     }
 
     handleSuccessLogin(userData: LoginResult): void {
@@ -93,7 +108,11 @@ export class LoginComponent {
                             this.errorMessage = `Invalid authentication via ${name}`;
                         }
                     } else {
-                        this.router.navigateByUrl('/auth/merchant/login');
+                        let u = UserType.Merchant;
+                        if (userData.user?.type) {
+                            u = userData.user?.type;
+                        }
+                        this.showWrongUserTypeRedirectDialog(u);
                     }
                 }, (error) => {
                     this.inProgress = false;
@@ -124,7 +143,11 @@ export class LoginComponent {
                             this.errorMessage = 'Unable to sign in';
                         }
                     } else {
-                        this.router.navigateByUrl('/auth/merchant/login');
+                        let u = UserType.Merchant;
+                        if (userData.user?.type) {
+                            u = userData.user?.type;
+                        }
+                        this.showWrongUserTypeRedirectDialog(u);
                     }
                 }, (error) => {
                     this.inProgress = false;

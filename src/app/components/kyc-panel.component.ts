@@ -1,9 +1,7 @@
 import { Component, Input, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { SettingsKycShort } from '../model/generated-models';
-import { KycLevelShort } from '../model/identification.model';
 import { AuthService } from '../services/auth.service';
 import { ErrorService } from '../services/error.service';
 import { CommonDialogBox } from './common-box.dialog';
@@ -22,7 +20,7 @@ export class KycPanelComponent implements OnInit, OnDestroy {
     inProgress = false;
     errorMessage = '';
 
-    constructor(private route: ActivatedRoute, private router: Router, public dialog: MatDialog,
+    constructor(private router: Router, public dialog: MatDialog,
         private auth: AuthService, private errorHandler: ErrorService) {
 
     }
