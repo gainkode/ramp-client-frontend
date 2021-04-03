@@ -24,14 +24,7 @@ const routing = RouterModule.forChild([
     { path: 'intro', component: IntroPersonalComponent },
     { path: 'main', component: PersonalComponent, canActivate: [PersonalGuard] },
     { path: 'profile', component: ProfileMainPersonalComponent, canActivate: [PersonalGuard] },
-    { path: 'kyc', component: KycPersonalComponent, canActivate: [PersonalGuard],
-    children: [
-        {
-            path: 'wizard/:id', 
-            component: KycPanelComponent, 
-            canActivate: [PersonalGuard]
-        }
-    ] },
+    { path: 'kyc', component: KycPersonalComponent, canActivate: [PersonalGuard] },
     { path: '**', redirectTo: 'main' }
 ]);
 

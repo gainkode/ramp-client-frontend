@@ -15,8 +15,10 @@ export class KycPersonalComponent implements OnInit, OnDestroy {
   user: User | null = null;
   inProgress = false;
   errorMessage = '';
-  flow: string = '';
+  levels: KycLevelShort[] = [];
   settingsCommon: SettingsCommon | null = null;
+  selectedLevelId = '';
+  changeEditModeRef: any;
 
   getDescription(description: string | undefined): string {
     return description as string;
@@ -27,7 +29,7 @@ export class KycPersonalComponent implements OnInit, OnDestroy {
     this.user = auth.user;
     this.settingsCommon = this.auth.getLocalSettingsCommon();
   }
-
+  
   ngOnInit(): void {
     const kycData = this.auth.getMyKycSettings();
     if (kycData === null) {
@@ -41,10 +43,9 @@ export class KycPersonalComponent implements OnInit, OnDestroy {
         if (settingsKyc === null) {
           this.errorMessage = 'Unable to load user identification settings';
         } else {
-          const levels = settingsKyc.levels?.map((val) => new KycLevelShort(val)) as KycLevelShort[];
-          if (levels.length > 0) {
-            const level = levels[0];
-            this.flow = level.flowData.value;
+          this.levels = settingsKyc.levels?.map((val) => new KycLevelShort(val)) as KycLevelShort[];
+          if (this.levels.length > 0 && this.selectedLevelId === '') {
+            this.selectLevel(this.levels[0].id);
           }
           this.inProgress = false;
         }
@@ -66,7 +67,26 @@ export class KycPersonalComponent implements OnInit, OnDestroy {
     }
   }
 
-  getUserMainPage(): string {
-    return this.auth.getUserMainPage();
+  onActivate(component: any): void {
+    this.changeEditModeRef = component.setLevelId;
+    if (this.changeEditModeRef !== undefined) {
+      this.changeEditModeRef.subscribe((event: any) => {
+        this.selectedLevelId = event as string;
+        component.url = this.settingsCommon?.kycBaseAddress as string;
+      });
+    }
+  }
+
+  onDeactivate(component: any): void {
+    if (this.changeEditModeRef !== undefined) {
+      this.changeEditModeRef.unsubscribe();
+    }
+  }
+
+  selectLevel(id: string | undefined): void {
+    const path = 'personal/kyc/wizard';
+    const url = (id === undefined) ? path : `${path}/${id}`;
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() =>
+      this.router.navigate([url]));
   }
 }

@@ -1,0 +1,83 @@
+.kyc-page-split {
+    display : flex;
+    height  : 100%;
+    overflow: auto;
+}
+
+.kyc-page-left-panel {
+    padding  : 0em;
+    width    : 40%;
+    min-width: 10em;
+    height   : 100%;
+    overflow : auto;
+}
+
+.kyc-page-right-panel {
+    z-index         : 100;
+    background-color: #DDDFE6;
+    padding         : 0;
+    width           : 60%;
+    max-width       : 60%;
+    height          : 100%;
+    overflow        : auto;
+}
+
+.kyc-page-box {
+    padding: 1em;
+    margin    : 0em;
+    margin-top: 1em;
+
+    h2 {
+        margin   : auto;
+        font-size: medium;
+    }
+}
+
+.kyc-levels-split {
+    display : flex;
+    height  : 100%;
+    overflow: auto;
+}
+
+.kyc-levels-left-panel {
+    margin-right: 0.5em;
+    width    : 30%;
+    min-width: 5em;
+    height   : 100%;
+    overflow : auto;
+}
+
+.kyc-levels-right-panel {
+    width           : 70%;
+    max-width       : 70%;
+    height          : 100%;
+    overflow        : auto;
+}
+
+.kyc-level-selected-block {
+    margin-top      : 0.5em;
+    margin-bottom   : 0.5em;
+}
+
+.kyc-level-title-selected {
+    font-size  : 18px;
+    font-weight: bolder;
+    color      : #293742;
+}
+
+.kyc-level-title {
+    font-size  : 16px;
+    font-weight: lighter;
+    color      : #293742;
+}
+
+.kyc-level-title-line {
+    // 2 900
+    background-color: #005694;
+    width           : 100%;
+    height          : 2px;
+}
+
+.kyc-level-info-block {
+    padding: 0.25em;
+}

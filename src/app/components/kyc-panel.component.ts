@@ -14,14 +14,11 @@ const snsWebSdk = require('@sumsub/websdk');
     styleUrls: ['kyc-panel.component.scss']
 })
 export class KycPanelComponent implements OnInit, OnDestroy {
-    @Output() setLevelId = new EventEmitter<string>();
+    @Input() flow: string | null | undefined = '';
     @Input() url: string | null | undefined = '';
-    private _settingsSubscription!: any;
     private _tokenSubscription!: any;
-    flow: string = '';
     inProgress = false;
     errorMessage = '';
-    levelId: string | null = '';
 
     constructor(private route: ActivatedRoute, private router: Router,
         private auth: AuthService, private errorHandler: ErrorService) {
@@ -29,44 +26,11 @@ export class KycPanelComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.levelId = this.route.snapshot.paramMap.get('id');
-        this.setLevelId.emit(this.levelId as string);
-        const kycData = this.auth.getMyKycSettings();
-        if (kycData === null) {
-            this.errorMessage = this.errorHandler.getRejectedCookieMessage();
-        } else {
-            this.inProgress = true;
-            this._settingsSubscription = kycData.valueChanges.subscribe(({ data }) => {
-                const settingsKyc: SettingsKycShort | null = data.getMySettingsKyc;
-                if (settingsKyc === null) {
-                    this.errorMessage = 'Unable to load user identification settings';
-                } else {
-                    const level = settingsKyc.levels?.
-                        map((val) => new KycLevelShort(val)).
-                        find(x => x.id === this.levelId);
-                    if (level !== undefined) {
-                        this.flow = level.flowData.value;
-                    }
-                    this.inProgress = false;
-                    this.loadSumSub();
-                 }
-            }, (error) => {
-                this.inProgress = false;
-                if (this.auth.token !== '') {
-                    this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load settings');
-                } else {
-                    this.router.navigateByUrl('/');
-                }
-            });
-        }
+        this.loadSumSub();
     }
 
     ngOnDestroy(): void {
-        const s: Subscription = this._settingsSubscription;
         const t: Subscription = this._tokenSubscription;
-        if (s !== undefined) {
-            (this._settingsSubscription as Subscription).unsubscribe();
-        }
         if (t !== undefined) {
             (this._tokenSubscription as Subscription).unsubscribe();
         }
@@ -118,9 +82,10 @@ export class KycPanelComponent implements OnInit, OnDestroy {
                 applicantPhone,
                 i18n: customI18nMessages,
                 onMessage: (type: any, payload: any) => {
-                    // see below what kind of messages the WebSDK generates
                     if (type === 'idCheck.onApplicantSubmitted') {
                         //this.setKycCompleted();
+                    } else if (type === 'idCheck.applicantStatus') {
+                        console.log('Get status');
                     }
                 },
                 // uiConf: {
