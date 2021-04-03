@@ -103,11 +103,14 @@ export class LoginComponent {
                         if (userData.authTokenAction === 'Default') {
                             this.handleSuccessLogin(userData);
                         } else if (userData.authTokenAction === 'ConfirmName') {
+                            this.auth.logout();
                             this.router.navigateByUrl(`/auth/personal/signup/${userData.authToken}`);
                         } else {
+                            this.auth.logout();
                             this.errorMessage = `Invalid authentication via ${name}`;
                         }
                     } else {
+                        this.auth.logout();
                         let u = UserType.Merchant;
                         if (userData.user?.type) {
                             u = userData.user?.type;
@@ -140,9 +143,11 @@ export class LoginComponent {
                         if (userData.authTokenAction === 'Default') {
                             this.handleSuccessLogin(userData);
                         } else {
+                            this.auth.logout();
                             this.errorMessage = 'Unable to sign in';
                         }
                     } else {
+                        this.auth.logout();
                         let u = UserType.Merchant;
                         if (userData.user?.type) {
                             u = userData.user?.type;
