@@ -5,6 +5,7 @@ import { SocialAuthService, FacebookLoginProvider, GoogleLoginProvider, SocialUs
 import { KycStatus, LoginResult, SettingsCommon, User, UserType } from '../model/generated-models';
 import { environment } from 'src/environments/environment';
 import { EmptyObject } from 'apollo-angular/types';
+import { resultKeyNameFromField } from '@apollo/client/utilities';
 
 const LOGIN_POST = gql`
   mutation Login($recaptcha: String!, $email: String!, $password: String!) {
@@ -233,6 +234,19 @@ export class AuthService {
         return result;
     }
 
+    getUserMainPage(): string {
+        let result = '';
+        const u = this.user;
+        if (u !== null) {
+            if (u.type === 'Personal') {
+                result = '/personal/main';
+            } else if (u.type === 'Merchant') {
+                result = '/merchant/main';
+            }
+        }
+        return result;
+    }
+    
     authenticate(username: string, userpassword: string): Observable<any> {
         return this.apollo.mutate({
             mutation: LOGIN_POST,

@@ -1,7 +1,9 @@
 <div class="action-page-split action-page-left-menu-bar split-page-10">
     <div class="split-panel-menu">
         <div style="margin: 1.5em;margin-bottom: 0em;height: 5em;text-align: center;">
-            <mat-icon>attractions</mat-icon>
+            <a [href]="getUserMainPage()" style="margin-left: 1em;color: #DDDFE6;">
+                <mat-icon>attractions</mat-icon>
+            </a>
         </div>
 
         <mat-selection-list [multiple]="false" (selectionChange)="menuChanged($event)">

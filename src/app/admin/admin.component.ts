@@ -3,18 +3,21 @@ import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { AdminMenuItem, AdminMenuItems } from '../model/admin-menu-list';
 import { MatSelectionListChange } from '@angular/material/list/selection-list';
+import { User } from '../model/generated-models';
 
 @Component({
     templateUrl: 'admin.component.html',
     styleUrls: ['admin.scss']
 })
 export class AdminComponent {
+    user: User | null = null;
     menuItems: AdminMenuItem[] = AdminMenuItems;
     selectedMenu = 'dashboard';
     editMode = false;
     changeEditModeRef: any;
 
     constructor(private auth: AuthService, private router: Router) {
+        this.user = auth.user;
         const routeTree = router.parseUrl(router.url);
         const segments = routeTree.root.children['primary'].segments;
         if (segments.length > 2) {
@@ -49,5 +52,9 @@ export class AdminComponent {
 
     logout(): void {
         this.auth.logout();
+    }
+
+    getUserMainPage(): string {
+        return this.auth.getUserMainPage();
     }
 }
