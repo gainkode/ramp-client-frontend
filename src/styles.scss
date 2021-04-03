@@ -64,6 +64,24 @@ input:-webkit-autofill::first-line {
     outline:none;
 }
 
+.link-button {
+    align-items  : center;
+    padding      : 0px 0px;
+    margin-top   : 5px;
+    margin-bottom: 5px;
+    width        : 100px;
+    height       : 32px;
+    box-sizing   : unset;
+    box-shadow   : 0px 0px 0px transparent;
+    background: transparent;
+    border    : 0px;
+    font-size    : 14px;
+}
+
+.link-button:focus {
+    outline:none;
+}
+
 .main-button-primary {
     /* Grey - 2 800 */
     background: #3B4D5A;
@@ -88,6 +106,16 @@ input:-webkit-autofill::first-line {
 .main-button-primary:focus {
     /* Grey - 5 900 */
     border    : 1px solid #1E2025;
+}
+
+.main-button-primary:disabled {
+    /* Grey - 2 100 */
+    background: #CEDBE4;
+    /* Grey - 2 400 */
+    border    : 1px solid #7E95A9;
+    /* Light grey - 2 400 */
+    color     : #7E95A9;
+    box-shadow   : 0px 0px 0px;
 }
 
 .main-button-accent {
@@ -116,6 +144,16 @@ input:-webkit-autofill::first-line {
     border    : 1px solid #293742;
 }
 
+.main-button-accent:disabled {
+    /* Grey - 2 100 */
+    background: #CEDBE4;
+    /* Grey - 2 400 */
+    border    : 1px solid #7E95A9;
+    /* Light grey - 2 400 */
+    color     : #7E95A9;
+    box-shadow   : 0px 0px 0px;
+}
+
 .main-button-warn {
     /* Grey - 4 800 */
     background: #C62728;
@@ -141,21 +179,74 @@ input:-webkit-autofill::first-line {
     border    : 1px solid #5f0202;
 }
 
-.form-button {
-    //width : 10em;
-    //height: 2.75em;
-
-    img {
-        width       : 0.85em;
-        height      : 0.85em;
-        margin-top  : 5px;
-        margin-right: 5px;
-    }
+.main-button-warn:disabled {
+    /* Grey - 4 100 */
+    background: #FFCDD2;
+    /* Grey - 4 400 */
+    border    : 1px solid #EF5350;
+    /* Light grey - 4 400 */
+    color     : #EF5350;
+    box-shadow   : 0px 0px 0px;
 }
 
-.page-container {
-    width : 100%;
-    height: 100%;
+.link-button-primary {
+    /* Light grey - 5 900 */
+    color     : #1E2025;
+    font-weight: lighter;
+}
+
+.link-button-primary:hover {
+    /* Light grey 1 900 */
+    color: #005694;
+    font-weight: lighter;
+}
+
+.link-button-primary:active {
+    /* 2 800 */
+    color: #3B4D5A;
+    font-weight: lighter;
+}
+
+.link-button-primary:focus {
+    /* Grey - 4 900 */
+    color: #004D73;
+    font-weight: lighter;
+}
+
+.link-button-primary:disabled {
+    /* 5 600*/
+    color     : #72747A;
+    font-weight: lighter;
+}
+
+.link-button-accent {
+    /* Light grey - 5 900 */
+    color     : #1E2025;
+    font-weight: bolder;
+}
+
+.link-button-accent:hover {
+    /* Light grey 1 900 */
+    color: #005694;
+    font-weight: bolder;
+}
+
+.link-button-accent:active {
+    /* 2 800 */
+    color: #3B4D5A;
+    font-weight: bolder;
+}
+
+.link-button-accent:focus {
+    /* Grey - 4 900 */
+    color: #004D73;
+    font-weight: bolder;
+}
+
+.link-button-accent:disabled {
+    /* 5 600*/
+    color     : #72747A;
+    font-weight: bolder;
 }
 
 .back-box {
@@ -375,7 +466,7 @@ img.country-flag {
 
 .block-split-right-panel {
     z-index         : 100;
-    background-color: rgb(206, 219, 236);
+    background-color: #DDDFE6;
     padding         : 1.2em;
     width           : 45%;
     max-width       : 45%;
