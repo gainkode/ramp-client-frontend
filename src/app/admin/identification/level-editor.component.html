@@ -30,6 +30,19 @@
         </mat-error>
     </mat-form-field>
 
+    <!-- User type -->
+    <mat-form-field class="form-element">
+        <mat-label>User type</mat-label>
+        <mat-select formControlName="userType" required>
+            <mat-option *ngFor="let item of userTypes" [value]="item.id">
+                {{item.name}}
+            </mat-option>
+        </mat-select>
+        <mat-error *ngIf="this.levelForm.get('userType')?.hasError('required')">
+            Please specify a user type appropriate for the level
+        </mat-error>
+    </mat-form-field>
+
     <!-- Level -->
     <mat-form-field class="form-element">
         <mat-label>Level value</mat-label>

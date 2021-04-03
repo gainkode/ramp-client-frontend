@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { Validators, FormBuilder } from '@angular/forms';
 import { KycLevel } from 'src/app/model/identification.model';
+import { UserTypeList } from 'src/app/model/payment.model';
 
 @Component({
     selector: 'level-editor',
@@ -23,10 +24,13 @@ export class LevelEditorComponent implements OnInit {
     private loadingData = false;
     errorMessage = '';
 
+    userTypes = UserTypeList;
+
     levelForm = this.formBuilder.group({
         id: [''],
         name: ['', { validators: [Validators.required], updateOn: 'change' }],
         description: ['', { validators: [Validators.required], updateOn: 'change' }],
+        userType: ['', { validators: [Validators.required], updateOn: 'change' }],
         level: ['', { validators: [Validators.required], updateOn: 'change' }],
         flow: ['', { validators: [Validators.required], updateOn: 'change' }],
     });
@@ -45,11 +49,13 @@ export class LevelEditorComponent implements OnInit {
 
     setFormData(level: KycLevel | null): void {
         this.levelForm.reset();
+        console.log(level);
         if (level !== null) {
             this.loadingData = true;
             this.levelForm.get('id')?.setValue(level?.id);
             this.levelForm.get('name')?.setValue(level?.name);
             this.levelForm.get('description')?.setValue(level?.description);
+            this.levelForm.get('userType')?.setValue(level?.userType);
             this.levelForm.get('level')?.setValue(level?.levelData.value);
             this.levelForm.get('flow')?.setValue(level?.flowData.value);
             this.loadingData = false;
@@ -58,6 +64,7 @@ export class LevelEditorComponent implements OnInit {
             this.levelForm.get('id')?.setValue('');
             this.levelForm.get('name')?.setValue('');
             this.levelForm.get('description')?.setValue('');
+            this.levelForm.get('userType')?.setValue('');
             this.levelForm.get('level')?.setValue('');
             this.levelForm.get('flow')?.setValue([]);
         }
@@ -67,6 +74,7 @@ export class LevelEditorComponent implements OnInit {
         const data = new KycLevel(null);
         data.name = this.levelForm.get('name')?.value;
         data.description = this.levelForm.get('description')?.value;
+        data.userType = this.levelForm.get('userType')?.value;
         data.levelData.value = this.levelForm.get('level')?.value;
         data.flowData.value = this.levelForm.get('flow')?.value;
         data.id = this.levelForm.get('id')?.value;

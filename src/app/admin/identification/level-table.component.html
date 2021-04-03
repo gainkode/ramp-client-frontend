@@ -13,6 +13,14 @@
         <td mat-cell *matCellDef="let element"> {{element.flowData.value}} </td>
     </ng-container>
 
+    <!-- User type Column -->
+    <ng-container matColumnDef="userType">
+        <th mat-header-cell *matHeaderCellDef class="mat-column-kyc-table mat-column-level-table-user-type">
+            User type
+        </th>
+        <td mat-cell *matCellDef="let element"> {{element.userType}} </td>
+    </ng-container>
+
     <!-- Details Column -->
     <ng-container matColumnDef="details">
         <th mat-header-cell *matHeaderCellDef class="mat-column-kyc-table mat-column-level-table-details"></th>

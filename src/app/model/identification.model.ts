@@ -109,6 +109,7 @@ export class KycLevel {
     id!: string;
     name!: string;
     description!: string;
+    userType!: UserType;
     levelData!: KycLevelItem;
     flowData!: KycLevelItem;
     created!: Date;
@@ -119,6 +120,7 @@ export class KycLevel {
             this.name = data.name as string;
             this.id = data.settingsKycLevelId;
             this.description = data.description as string;
+            this.userType = data.userType as UserType;
             this.created = data.created;
             this.createdBy = data.createdBy as string;
             const content = JSON.parse(data.data as string);

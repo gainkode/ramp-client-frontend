@@ -10,7 +10,7 @@ export class LevelTableComponent {
     @Input() levels: KycLevel[] = [];
     @Input() selectedLevel: KycLevel | null = null;
     @Output() toggle = new EventEmitter<KycLevel>();
-    displayedColumns: string[] = ['name', 'flow', 'details'];
+    displayedColumns: string[] = ['name', 'flow', 'userType', 'details'];
 
     constructor() { }
 
