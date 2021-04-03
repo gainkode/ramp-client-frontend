@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { SettingsCommon, SettingsKycShort, User } from 'src/app/model/generated-models';
+import { SettingsCommon, SettingsKycShort } from 'src/app/model/generated-models';
 import { KycLevelShort } from 'src/app/model/identification.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
@@ -12,19 +12,13 @@ import { ErrorService } from 'src/app/services/error.service';
 })
 export class KycPersonalComponent implements OnInit, OnDestroy {
   private _settingsSubscription!: any;
-  user: User | null = null;
   inProgress = false;
   errorMessage = '';
   flow: string = '';
   settingsCommon: SettingsCommon | null = null;
 
-  getDescription(description: string | undefined): string {
-    return description as string;
-  }
-
   constructor(private router: Router,
     private auth: AuthService, private errorHandler: ErrorService) {
-    this.user = auth.user;
     this.settingsCommon = this.auth.getLocalSettingsCommon();
   }
 

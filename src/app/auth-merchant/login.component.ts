@@ -54,7 +54,7 @@ export class LoginComponent {
                 const settingsCommon: SettingsCommon = settings.data.getSettingsCommon;
                 this.auth.setLocalSettingsCommon(settingsCommon);
                 this.inProgress = false;
-                this.router.navigateByUrl('/merchant/');
+                this.router.navigateByUrl(this.auth.getUserMainPage());
             }, (error) => {
                 this.inProgress = false;
                 if (this.auth.token !== '') {
@@ -83,16 +83,21 @@ export class LoginComponent {
                 this.auth.socialSignOut();
                 this.auth.authenticateSocial(name.toLowerCase(), token).subscribe((loginData) => {
                     const userData = loginData.data.login as LoginResult;
-                    if (userData.authTokenAction === 'Default' || userData.authTokenAction === 'KycRequired') {
-                        this.handleSuccessLogin(userData);
-                    } else if (userData.authTokenAction === 'ConfirmName') {
-                        this.router.navigateByUrl(`/auth/merchant/signup/${userData.authToken}`);
-                    } else {
-                        this.errorMessage = `Invalid authentication via ${name}`;
-                    }
                     this.inProgress = false;
+                    if (userData.user?.type === 'Merchant') {
+                        if (userData.authTokenAction === 'Default' || userData.authTokenAction === 'KycRequired') {
+                            this.handleSuccessLogin(userData);
+                        } else if (userData.authTokenAction === 'ConfirmName') {
+                            this.router.navigateByUrl(`/auth/merchant/signup/${userData.authToken}`);
+                        } else {
+                            this.errorMessage = `Invalid authentication via ${name}`;
+                        }
+                    } else {
+                        this.router.navigateByUrl('/auth/personal/login');
+                    }
                 }, (error) => {
                     this.inProgress = false;
+                    console.log(error.message);
                     this.errorMessage = this.errorHandler.getError(
                         error.message,
                         `Invalid authentication via ${name}`);
@@ -112,12 +117,16 @@ export class LoginComponent {
                 this.loginForm.get('password')?.value)
                 .subscribe(({ data }) => {
                     const userData = data.login as LoginResult;
-                    if (userData.authTokenAction === 'Default' || userData.authTokenAction === 'KycRequired') {
-                        this.handleSuccessLogin(userData);
-                    } else {
-                        this.errorMessage = 'Unable to sign in';
-                    }
                     this.inProgress = false;
+                    if (userData.user?.type === 'Merchant') {
+                        if (userData.authTokenAction === 'Default' || userData.authTokenAction === 'KycRequired') {
+                            this.handleSuccessLogin(userData);
+                        } else {
+                            this.errorMessage = 'Unable to sign in';
+                        }
+                    } else {
+                        this.router.navigateByUrl('/auth/personal/login');
+                    }
                 }, (error) => {
                     this.inProgress = false;
                     this.errorMessage = this.errorHandler.getError(

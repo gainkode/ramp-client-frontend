@@ -8,9 +8,12 @@ import { TabLabelComponent } from './tablabel.component';
 import { KycPanelComponent } from './kyc-panel.component';
 import { LineBreakPipe } from '../utils/line-break.pipe';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatDialogModule } from '@angular/material/dialog'; 
+import { CommonDialogBox } from './common-box.dialog';
 
 const materialModules = [
     MatButtonModule,
+    MatDialogModule,
     MatIconModule
 ];
 
@@ -23,9 +26,9 @@ export class MaterialModule { }
 @NgModule({
     imports: [CommonModule, MaterialModule, MatProgressBarModule],
     declarations: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
-        LineBreakPipe],
+        LineBreakPipe, CommonDialogBox],
     exports: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
-        MatProgressBarModule, LineBreakPipe],
+        MatProgressBarModule, LineBreakPipe, CommonDialogBox],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 

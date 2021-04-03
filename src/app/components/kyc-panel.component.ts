@@ -1,10 +1,12 @@
 import { Component, Input, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { SettingsKycShort } from '../model/generated-models';
 import { KycLevelShort } from '../model/identification.model';
 import { AuthService } from '../services/auth.service';
 import { ErrorService } from '../services/error.service';
+import { CommonDialogBox } from './common-box.dialog';
 
 const snsWebSdk = require('@sumsub/websdk');
 
@@ -20,7 +22,7 @@ export class KycPanelComponent implements OnInit, OnDestroy {
     inProgress = false;
     errorMessage = '';
 
-    constructor(private route: ActivatedRoute, private router: Router,
+    constructor(private route: ActivatedRoute, private router: Router, public dialog: MatDialog,
         private auth: AuthService, private errorHandler: ErrorService) {
 
     }
@@ -34,6 +36,19 @@ export class KycPanelComponent implements OnInit, OnDestroy {
         if (t !== undefined) {
             (this._tokenSubscription as Subscription).unsubscribe();
         }
+    }
+
+    showSuccessDialog(): void {
+        const dialogRef = this.dialog.open(CommonDialogBox, {
+            width: '550px',
+            data: {
+                title: 'Success',
+                message: 'Process of identification sucessfully finished.'
+            }
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            //this.animal = result;
+        });
     }
 
     loadSumSub(): void {
@@ -83,9 +98,7 @@ export class KycPanelComponent implements OnInit, OnDestroy {
                 i18n: customI18nMessages,
                 onMessage: (type: any, payload: any) => {
                     if (type === 'idCheck.onApplicantSubmitted') {
-                        //this.setKycCompleted();
-                    } else if (type === 'idCheck.applicantStatus') {
-                        console.log('Get status');
+                        this.showSuccessDialog();
                     }
                 },
                 // uiConf: {

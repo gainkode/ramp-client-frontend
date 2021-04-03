@@ -49,9 +49,7 @@ const modules = [
 export class MaterialModule { }
 
 @NgModule({
-    imports: [
-        CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule
-    ],
+    imports: [ CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule ],
     declarations: [IntroPersonalComponent, PersonalComponent,
         ProfileMainPersonalComponent, KycPersonalComponent],
     providers: [PersonalGuard],

@@ -2,134 +2,65 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
-import { SettingsCommon, SettingsKyc, User } from 'src/app/model/generated-models';
-
-const snsWebSdk = require('@sumsub/websdk');
+import { SettingsCommon, SettingsKycShort } from 'src/app/model/generated-models';
+import { KycLevelShort } from 'src/app/model/identification.model';
+import { Subscription } from 'rxjs';
 
 @Component({
     templateUrl: 'kyc.component.html',
     styleUrls: ['profile.scss']
 })
 export class KycMerchantComponent implements OnInit {
-    user: User | null = null;
+    private _settingsSubscription!: any;
     inProgress = false;
     errorMessage = '';
-    private settingsCommon: SettingsCommon | null = null;
+    flow: string = '';
+    settingsCommon: SettingsCommon | null = null;
 
-    constructor(private router: Router, private auth: AuthService, private errorHandler: ErrorService) {
-        this.user = auth.user;
+    constructor(private router: Router,
+        private auth: AuthService, private errorHandler: ErrorService) {
         this.settingsCommon = this.auth.getLocalSettingsCommon();
     }
 
-    private launchKycWidget(kycUrl: string, kycFlowName: string): void {
-        this.inProgress = true;
-        this.auth.getKycToken().valueChanges.subscribe(({ data }) => {
-            this.inProgress = false;
-            this.launchSumSubWidget(
-                kycUrl,
-                kycFlowName,
-                data.generateWebApiToken,
-                this.user?.email as string,
-                this.user?.phone as string,
-                []);
-        }, (error) => {
-            this.inProgress = false;
-            if (this.auth.token !== '') {
-                this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load settings');
-            } else {
-                this.router.navigateByUrl('/');
-            }
-        });
-    }
-
     ngOnInit(): void {
-        // const kycData = this.auth.getKycSettings();
-        // if (kycData === null) {
-        //     this.errorMessage = this.errorHandler.getRejectedCookieMessage();
-        // } else {
-        //     this.inProgress = true;
-        //     kycData.valueChanges.subscribe(kyc => {
-        //         const settingsKyc: SettingsKyc = kyc.data.getSettingsKyc;
-        //         this.inProgress = false;
-        //         this.auth.getKycToken().valueChanges.subscribe(({ data }) => {
-        //             this.launchSumSubWidget(
-        //                 '',//kycmod settingsKyc.kycBaseAddress as string,
-        //                 '',//kycmod settingsKyc.kycMerchantFlow as string,
-        //                 data.generateWebApiToken,
-        //                 this.user?.email as string,
-        //                 this.user?.phone as string,
-        //                 []);
-        //         });
-        //     }, (error) => {
-        //         this.inProgress = false;
-        //         if (this.auth.token !== '') {
-        //             this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load settings');
-        //         } else {
-        //             this.router.navigateByUrl('/');
-        //         }
-        //     });
-        // }
-    }
-
-    private setKycCompleted(): void {
-        const requestData = this.auth.setKycCompleted(this.auth.token);
-        if (requestData !== null) {
-            requestData.subscribe(({ data }) => {
-                // do nothing
+        const kycData = this.auth.getMyKycSettings();
+        if (kycData === null) {
+            this.errorMessage = this.errorHandler.getRejectedCookieMessage();
+        } else if (this.settingsCommon === null) {
+            this.errorMessage = 'Unable to load common settings';
+        } else {
+            this.inProgress = true;
+            this._settingsSubscription = kycData.valueChanges.subscribe(({ data }) => {
+                const settingsKyc: SettingsKycShort | null = data.getMySettingsKyc;
+                if (settingsKyc === null) {
+                    this.errorMessage = 'Unable to load user identification settings';
+                } else {
+                    const levels = settingsKyc.levels?.map((val) => new KycLevelShort(val)) as KycLevelShort[];
+                    if (levels.length > 0) {
+                        const level = levels[0];
+                        this.flow = level.flowData.value;
+                    }
+                    this.inProgress = false;
+                }
             }, (error) => {
-                this.errorMessage = this.errorHandler.getError(error.message, 'Unable to complete validation');
+                this.inProgress = false;
+                if (this.auth.token !== '') {
+                    this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load settings');
+                } else {
+                    this.router.navigateByUrl('/');
+                }
             });
         }
     }
 
-    // @param apiUrl - 'https://test-api.sumsub.com' (sandbox) or 'https://api.sumsub.com' (production)
-    // @param flowName - the flow name chosen at Step 1 (e.g. 'basic-kyc')
-    // @param accessToken - access token that you generated on the backend in Step 2
-    // @param applicantEmail - applicant email (not required)
-    // @param applicantPhone - applicant phone, if available (not required)
-    // @param customI18nMessages - customized locale messages for current session (not required)
-    launchSumSubWidget(apiUrl: string, flowName: string, accessToken: string, applicantEmail: string,
-        applicantPhone: string, customI18nMessages: string[]): void {
-        const snsWebSdkInstance = snsWebSdk.default.Builder(apiUrl, flowName)
-            .withAccessToken(accessToken,
-                (newAccessTokenCallback: (newToken: string) => void) => {
-                    // Access token expired
-                    // get a new one and pass it to the callback to re-initiate the WebSDK
-                    this.auth.getKycToken().valueChanges.subscribe(({ data }) => {
-                        newAccessTokenCallback(data.generateWebApiToken);
-                    });
-                }
-            )
-            .withConf({
-                lang: 'en',
-                applicantEmail,
-                applicantPhone,
-                i18n: customI18nMessages,
-                onMessage: (type: any, payload: any) => {
-                    // see below what kind of messages the WebSDK generates
-                    if (type === 'idCheck.onApplicantSubmitted') {
-                        this.setKycCompleted();
-                    }
-                },
-                // uiConf: {
-                //   customCss: "https://url.com/styles.css"
-                //   // URL to css file in case you need change it dynamically from the code
-                //   // the similar setting at Applicant flow will rewrite customCss
-                //   // you may also use to pass string with plain styles `customCssStr:`
-                // },
-                onError: (error: any) => {
-                    this.errorMessage = error;
-                },
-            })
-            .build();
-        // you are ready to go:
-        // just launch the WebSDK by providing the container element for it
-        snsWebSdkInstance.launch('#sumsub-websdk-container');
+    ngOnDestroy(): void {
+        const s: Subscription = this._settingsSubscription;
+        if (s !== undefined) {
+            (this._settingsSubscription as Subscription).unsubscribe();
+        }
     }
 
-    // temp
-    logout(): void {
-        this.auth.logout();
+    getUserMainPage(): string {
+        return this.auth.getUserMainPage();
     }
-    // temp
 }

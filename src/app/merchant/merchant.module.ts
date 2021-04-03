@@ -15,6 +15,7 @@ import { MerchantGuard } from './merchant.guard';
 import { MerchantComponent } from './merchant.component';
 import { IntroMerchantComponent } from './intro.component';
 import { KycMerchantComponent } from './profile/kyc.component';
+import { ComponentsModule } from '../components/components.module';
 
 const routing = RouterModule.forChild([
     { path: 'intro', component: IntroMerchantComponent },
@@ -32,7 +33,8 @@ const modules = [
     MatCheckboxModule,
     MatRadioModule,
     MatIconModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    ComponentsModule
 ];
 
 @NgModule({
@@ -42,9 +44,7 @@ const modules = [
 export class MaterialModule { }
 
 @NgModule({
-    imports: [
-        CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule
-    ],
+    imports: [ CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule ],
     declarations: [IntroMerchantComponent, MerchantComponent, KycMerchantComponent],
     providers: [MerchantGuard],
     schemas: [

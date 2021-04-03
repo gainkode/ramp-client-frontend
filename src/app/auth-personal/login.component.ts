@@ -54,7 +54,7 @@ export class LoginComponent {
                 const settingsCommon: SettingsCommon = settings.data.getSettingsCommon;
                 this.auth.setLocalSettingsCommon(settingsCommon);
                 this.inProgress = false;
-                this.router.navigateByUrl('/personal/');
+                this.router.navigateByUrl(this.auth.getUserMainPage());
             }, (error) => {
                 this.inProgress = false;
                 if (this.auth.token !== '') {
@@ -80,19 +80,22 @@ export class LoginComponent {
                 } else if (name === 'Facebook') {
                     token = user.authToken;
                 }
+                this.auth.socialSignOut();
                 this.auth.authenticateSocial(name.toLowerCase(), token).subscribe((loginData) => {
                     const userData = loginData.data.login as LoginResult;
-                    this.auth.socialSignOut();
                     this.inProgress = false;
-                    if (userData.authTokenAction === 'Default') {
-                        this.handleSuccessLogin(userData);
-                    } else if (userData.authTokenAction === 'ConfirmName') {
-                        this.router.navigateByUrl(`/auth/personal/signup/${userData.authToken}`);
+                    if (userData.user?.type === 'Personal') {
+                        if (userData.authTokenAction === 'Default') {
+                            this.handleSuccessLogin(userData);
+                        } else if (userData.authTokenAction === 'ConfirmName') {
+                            this.router.navigateByUrl(`/auth/personal/signup/${userData.authToken}`);
+                        } else {
+                            this.errorMessage = `Invalid authentication via ${name}`;
+                        }
                     } else {
-                        this.errorMessage = `Invalid authentication via ${name}`;
+                        this.router.navigateByUrl('/auth/merchant/login');
                     }
                 }, (error) => {
-                    this.auth.socialSignOut();
                     this.inProgress = false;
                     this.errorMessage = this.errorHandler.getError(
                         error.message,
@@ -113,12 +116,16 @@ export class LoginComponent {
                 this.loginForm.get('password')?.value)
                 .subscribe(({ data }) => {
                     const userData = data.login as LoginResult;
-                    if (userData.authTokenAction === 'Default') {
-                        this.handleSuccessLogin(userData);
-                    } else {
-                        this.errorMessage = 'Unable to sign in';
-                    }
                     this.inProgress = false;
+                    if (userData.user?.type === 'Personal') {
+                        if (userData.authTokenAction === 'Default') {
+                            this.handleSuccessLogin(userData);
+                        } else {
+                            this.errorMessage = 'Unable to sign in';
+                        }
+                    } else {
+                        this.router.navigateByUrl('/auth/merchant/login');
+                    }
                 }, (error) => {
                     this.inProgress = false;
                     this.errorMessage = this.errorHandler.getError(

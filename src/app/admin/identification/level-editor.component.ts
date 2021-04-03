@@ -49,7 +49,6 @@ export class LevelEditorComponent implements OnInit {
 
     setFormData(level: KycLevel | null): void {
         this.levelForm.reset();
-        console.log(level);
         if (level !== null) {
             this.loadingData = true;
             this.levelForm.get('id')?.setValue(level?.id);
