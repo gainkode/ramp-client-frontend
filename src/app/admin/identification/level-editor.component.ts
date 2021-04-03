@@ -29,7 +29,7 @@ export class LevelEditorComponent implements OnInit {
     levelForm = this.formBuilder.group({
         id: [''],
         name: ['', { validators: [Validators.required], updateOn: 'change' }],
-        description: ['', { validators: [Validators.required], updateOn: 'change' }],
+        description: [''],
         userType: ['', { validators: [Validators.required], updateOn: 'change' }],
         level: ['', { validators: [Validators.required], updateOn: 'change' }],
         flow: ['', { validators: [Validators.required], updateOn: 'change' }],

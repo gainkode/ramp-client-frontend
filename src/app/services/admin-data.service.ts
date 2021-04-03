@@ -92,7 +92,7 @@ const GET_KYC_LEVELS_POST = gql`
       filter: "",
       orderBy:
       [
-        {orderBy: "order", desc: false}
+        {orderBy: "name", desc: false}
       ]) {
       count,
       list {
