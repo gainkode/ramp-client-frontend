@@ -39,7 +39,6 @@ export class KycEditorComponent implements OnInit, OnDestroy {
     private defaultSchemeName = '';
     private settingsId = '';
     private loadingData = false;
-    private _levelsSubscription!: any;
     errorMessage = '';
     targetEntity = '';
     separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -117,16 +116,11 @@ export class KycEditorComponent implements OnInit, OnDestroy {
                 map(value => this.filterTargetValues(value)));
         });
         this.schemeForm.get('userType')?.valueChanges.subscribe(val => {
-            this.loadLevels(val);
+            this.loadLevelValues(val);
         });
     }
 
-    ngOnDestroy(): void {
-        const ls: Subscription = this._levelsSubscription;
-        if (ls !== undefined) {
-            ls.unsubscribe();
-        }
-    }
+    ngOnDestroy(): void {}
 
     private setTargetValidator(): void {
         const val = this.schemeForm.get('target')?.value;
@@ -151,27 +145,14 @@ export class KycEditorComponent implements OnInit, OnDestroy {
         }
     }
 
-    private loadLevels(userType: UserType): void {
-        const s: Subscription = this._levelsSubscription;
-        if (s !== undefined) {
-            console.log('update');
-            this.refreshLevelValues(userType);
-        }
-        else {
-            console.log('load');
-            this.loadLevelValues(userType);
-        }
-    }
-
     private loadLevelValues(userType: UserType): void {
         const levelsData = this.adminService.getKycLevels(userType);
         if (levelsData !== null) {
-            this._levelsSubscription = levelsData.valueChanges.subscribe(({ data }) => {
+            const s = levelsData.valueChanges.subscribe(({ data }) => {
                 const levelData = data.getSettingsKycLevels as SettingsKycLevelListResult;
                 let itemCount = 0;
                 if (levelData !== null) {
                     itemCount = levelData?.count as number;
-                    console.log(levelData);
                     if (itemCount > 0) {
                         this.levels = levelData?.list?.map((val) => {
                             const c = new KycLevelView();
@@ -180,17 +161,10 @@ export class KycEditorComponent implements OnInit, OnDestroy {
                             c.description = val.description as string;
                             return c;
                         }) as KycLevelView[];
+                        s.unsubscribe();
                     }
                 }
             });
-        }
-    }
-
-    refreshLevelValues(userType: UserType): void {
-        const settingsData = this.adminService.getKycLevels(userType);
-        console.log(settingsData);
-        if (settingsData !== null) {
-            settingsData.refetch();
         }
     }
 
@@ -211,8 +185,9 @@ export class KycEditorComponent implements OnInit, OnDestroy {
             this.schemeForm.get('userMode')?.setValue(scheme.userModes);
             this.schemeForm.get('userType')?.setValue(scheme?.userType);
             this.schemeForm.get('provider')?.setValue(scheme?.kycProviders);
+            this.loadLevelValues(scheme?.userType);
+            this.setTargetValidator();
             this.loadingData = false;
-            this.loadLevels(scheme?.userType);
             this.formChanged.emit(false);
         } else {
             this.schemeForm.get('id')?.setValue('');
@@ -225,8 +200,8 @@ export class KycEditorComponent implements OnInit, OnDestroy {
             this.schemeForm.get('userMode')?.setValue([]);
             this.schemeForm.get('userType')?.setValue('');
             this.schemeForm.get('provider')?.setValue([]);
+            this.setTargetValidator();
         }
-        this.setTargetValidator();
     }
 
     setSchemeData(): KycScheme {

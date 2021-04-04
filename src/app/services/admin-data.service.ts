@@ -88,9 +88,11 @@ const GET_KYC_SETTINGS_POST = gql`
 `;
 
 const GET_KYC_LEVELS_POST = gql`
-  query GetSettingsKycLevels {
+  query GetSettingsKycLevels(
+    $filter: String
+  ) {
     getSettingsKycLevels(
-      filter: "",
+      filter: $filter,
       orderBy:
       [
         {orderBy: "name", desc: false}
@@ -395,9 +397,11 @@ export class AdminDataService {
   }
 
   getKycLevels(userType: UserType | null): QueryRef<any, EmptyObject> | null {
+    const userTypeFilter = (userType === null) ? '' : userType?.toString();
     if (this.apollo.client !== undefined) {
       return this.apollo.watchQuery<any>({
         query: GET_KYC_LEVELS_POST,
+        variables: { filter: userTypeFilter },
         pollInterval: 30000,
         fetchPolicy: 'network-only'
       });

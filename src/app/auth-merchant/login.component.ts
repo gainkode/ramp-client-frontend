@@ -119,7 +119,6 @@ export class LoginComponent {
                     }
                 }, (error) => {
                     this.inProgress = false;
-                    console.log(error.message);
                     this.errorMessage = this.errorHandler.getError(
                         error.message,
                         `Invalid authentication via ${name}`);
