@@ -4,6 +4,10 @@ import { TermsComponent } from './terms.component';
 
 const routes: Routes = [
   {
+    path: 'quickcheckout', loadChildren: () => import('./quick-checkout/quick-checkout.module').
+      then(m => m.QuickCheckOutModule)
+  },
+  {
     path: 'auth/personal', loadChildren: () => import('./auth-personal/auth.module').
       then(m => m.PersonalAuthModule)
   },
