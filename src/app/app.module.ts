@@ -18,6 +18,7 @@ import { AdminDataService } from './services/admin-data.service';
 import { ErrorService } from './services/error.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { environment } from 'src/environments/environment';
+import { QuickCheckoutDataService } from './services/quick-checkout.service';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { environment } from 'src/environments/environment';
     },
     AuthService,
     AdminDataService,
+    QuickCheckoutDataService,
     ErrorService
   ],
   bootstrap: [AppComponent]
