@@ -1,13 +1,66 @@
-<div style="height: 6em;background-color: #DDDFE6;">
+<div style="height: 5em;background-color: #DDDFE6;">
     <div style="margin: 1.5em;margin-bottom: 0em;height: 5em;text-align: center;">
         <a href="/" style="margin-left: 1em;color: #000000;">
             <mat-icon>attractions</mat-icon>
         </a>
-        <span style="padding-left: 2em;font-size: x-large;">Quick checkout</span>
+        <span style="padding-left: 1em;font-size: x-large;">Quick checkout</span>
     </div>
 </div>
-<div style="height: 100%;background-color: #DDDFE6;">
-    <div style="width: 80em;max-width:100%;height:100% ;margin: auto;background-color: #DDDFE6;">
-        Content
+<div class="checkout-page">
+    <div class="wizard-panel-split">
+        <div class="wizard-panel-stepper">
+            <mat-horizontal-stepper linear #stepper style="background-color: #DDDFE6;">
+                <!-- Order details -->
+                <mat-step [stepControl]="firstFormGroup" editable="true">
+                    <form [formGroup]="firstFormGroup">
+                        <ng-template matStepLabel>Order details</ng-template>
+                        <mat-form-field>
+                            <mat-label>Name</mat-label>
+                            <input matInput formControlName="firstCtrl" placeholder="Last name, First name" required>
+                        </mat-form-field>
+                        <div>
+                            <button matStepperNext>Next</button>
+                        </div>
+                    </form>
+                </mat-step>
+                <!-- Payment info -->
+                <mat-step [stepControl]="secondFormGroup" editable="true">
+                    <form [formGroup]="secondFormGroup">
+                        <ng-template matStepLabel>Payment info</ng-template>
+                        <mat-form-field>
+                            <mat-label>Address</mat-label>
+                            <input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY"
+                                required>
+                        </mat-form-field>
+                        <div>
+                            <button matStepperPrevious>Back</button>
+                            <button matStepperNext>Next</button>
+                        </div>
+                    </form>
+                </mat-step>
+                <!-- Verification -->
+                <mat-step>
+                    <ng-template matStepLabel>Verification</ng-template>
+                    <p>You are now done.</p>
+                    <div>
+                        <button matStepperPrevious>Back</button>
+                        <button (click)="stepper.reset()">Reset</button>
+                    </div>
+                </mat-step>
+                <!-- Order status -->
+                <mat-step>
+                    <ng-template matStepLabel>Order status</ng-template>
+                    <p>You are now done.</p>
+                    <div>
+                        <button matStepperPrevious>Back</button>
+                        <button (click)="stepper.reset()">Reset</button>
+                    </div>
+                </mat-step>
+            </mat-horizontal-stepper>
+        </div>
+        <div class="wizard-panel-summary">
+
+        </div>
+
     </div>
 </div>

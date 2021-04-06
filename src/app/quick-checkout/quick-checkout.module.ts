@@ -14,6 +14,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatStepperModule } from '@angular/material/stepper';
 import { ComponentsModule } from '../components/components.module';
 import { QuuckCheckoutComponent } from './quick-checkout.component';
 
@@ -38,6 +39,7 @@ const modules = [
     MatAutocompleteModule,
     MatIconModule,
     MatProgressBarModule,
+    MatStepperModule,
     ComponentsModule
 ];
 

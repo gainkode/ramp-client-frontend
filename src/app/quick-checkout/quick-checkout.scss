@@ -1,0 +1,23 @@
+.checkout-page {
+    height: 100%;
+    background-color: #DDDFE6;
+}
+
+.wizard-panel-split {
+    display  : flex;
+    margin   : auto;
+    width    : 80em;
+    max-width: 100%;
+}
+
+.wizard-panel-stepper {
+    padding  : 0;
+    width    : 75%;
+    min-width: 10em;
+}
+
+.wizard-panel-summary {
+    padding: 0;
+    width  : 25%;
+    background-color: gold;
+}
