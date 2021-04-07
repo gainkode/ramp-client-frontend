@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { EmptyObject } from 'apollo-angular/types';
+import { environment } from 'src/environments/environment';
 
 const GET_SETTINGS_CURRENCY_POST = gql`
-  query GetSettingsCurrency {
-    getSettingsCurrency {
+  query GetSettingsCurrency($recaptcha: String!) {
+    getSettingsCurrency(recaptcha: $recaptcha) {
       count
       list {
         symbol
@@ -52,6 +53,9 @@ export class QuickCheckoutDataService {
     if (this.apollo.client !== undefined) {
       return this.apollo.watchQuery<any>({
         query: GET_SETTINGS_CURRENCY_POST,
+        variables: {
+          recaptcha: environment.recaptchaId,
+        },
         pollInterval: 30000,
         fetchPolicy: 'network-only'
       });

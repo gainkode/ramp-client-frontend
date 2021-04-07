@@ -54,6 +54,11 @@ export class KycLevelView {
     description = '';
 }
 
+export class CurrencyView {
+    id!: string;
+    name = '';
+}
+
 export const PaymentInstrumentList: Array<PaymentInstrumentView> = [
     { id: PaymentInstrument.Apm, name: 'APM' },
     { id: PaymentInstrument.Bitstamp, name: 'Bitstamp' },

@@ -51,6 +51,8 @@ export type Query = {
   getSupportTickets?: Maybe<SupportTicketListResult>;
   getFeedbacks?: Maybe<FeedbackListResult>;
   getRates?: Maybe<Array<Rate>>;
+  getMyTransactions?: Maybe<TransactionShortListResult>;
+  getTransactions?: Maybe<TransactionListResult>;
 };
 
 
@@ -59,6 +61,7 @@ export type QueryGetSettingsCurrencyArgs = {
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
   orderBy?: Maybe<Array<OrderBy>>;
+  recaptcha: Scalars['String'];
 };
 
 
@@ -98,9 +101,9 @@ export type QueryGetSettingsFeeArgs = {
 export type QueryGetAppropriateSettingsFeeArgs = {
   transactionType: TransactionType;
   instrument: PaymentInstrument;
-  paymentProvider: PaymentProvider;
-  filterType?: Maybe<SettingsFeeTargetFilterType>;
-  filterValue?: Maybe<Scalars['String']>;
+  source: TransactionSource;
+  paymentProvider?: Maybe<PaymentProvider>;
+  affiliateId?: Maybe<Scalars['String']>;
 };
 
 
@@ -225,6 +228,26 @@ export type QueryGetFeedbacksArgs = {
 export type QueryGetRatesArgs = {
   currenciesFrom: Array<Scalars['String']>;
   currencyTo: Scalars['String'];
+  recaptcha: Scalars['String'];
+};
+
+
+export type QueryGetMyTransactionsArgs = {
+  quickCheckoutOnly?: Maybe<Scalars['Boolean']>;
+  filter?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OrderBy>>;
+};
+
+
+export type QueryGetTransactionsArgs = {
+  userId?: Maybe<Scalars['String']>;
+  quickCheckoutOnly?: Maybe<Scalars['Boolean']>;
+  filter?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OrderBy>>;
 };
 
 export type SettingsCommon = {
@@ -385,6 +408,12 @@ export enum PaymentInstrument {
   Apm = 'APM',
   Received = 'Received',
   Send = 'Send'
+}
+
+export enum TransactionSource {
+  QuickCheckout = 'QuickCheckout',
+  Widget = 'Widget',
+  Wallet = 'Wallet'
 }
 
 export enum PaymentProvider {
@@ -713,6 +742,76 @@ export type Rate = {
   withdrawRate: Scalars['Float'];
 };
 
+export type TransactionShortListResult = {
+  __typename?: 'TransactionShortListResult';
+  count?: Maybe<Scalars['Int']>;
+  list?: Maybe<Array<TransactionShort>>;
+};
+
+export type TransactionShort = {
+  __typename?: 'TransactionShort';
+  transactionId: Scalars['ID'];
+  transactionCode?: Maybe<Scalars['String']>;
+  affiliateId?: Maybe<Scalars['String']>;
+  created: Scalars['DateTime'];
+  executed?: Maybe<Scalars['DateTime']>;
+  transactionType: TransactionType;
+  fee: Scalars['Float'];
+  feePercent: Scalars['Float'];
+  feeMinEuro: Scalars['Float'];
+  currencyToSpend: Scalars['String'];
+  amountToSpend: Scalars['Float'];
+  amountToSpendWithoutFee: Scalars['Float'];
+  currencyToReceive: Scalars['String'];
+  amountToReceive: Scalars['Float'];
+  amountToReceiveWithoutFee: Scalars['Float'];
+  rate: Scalars['Float'];
+  source: TransactionSource;
+  instrument: PaymentInstrument;
+  paymentProvider?: Maybe<PaymentProvider>;
+  data?: Maybe<Scalars['String']>;
+};
+
+export type TransactionListResult = {
+  __typename?: 'TransactionListResult';
+  count?: Maybe<Scalars['Int']>;
+  list?: Maybe<Array<Transaction>>;
+};
+
+export type Transaction = {
+  __typename?: 'Transaction';
+  transactionId: Scalars['ID'];
+  transactionCode?: Maybe<Scalars['String']>;
+  userId: Scalars['String'];
+  affiliateId?: Maybe<Scalars['String']>;
+  created: Scalars['DateTime'];
+  executed?: Maybe<Scalars['DateTime']>;
+  transactionType: TransactionType;
+  fee: Scalars['Float'];
+  feePercent: Scalars['Float'];
+  feeMinEuro: Scalars['Float'];
+  feeDetails: Scalars['String'];
+  currencyToSpend: Scalars['String'];
+  amountToSpend: Scalars['Float'];
+  amountToSpendWithoutFee: Scalars['Float'];
+  currencyToReceive: Scalars['String'];
+  amountToReceive: Scalars['Float'];
+  amountToReceiveWithoutFee: Scalars['Float'];
+  rate: Scalars['Float'];
+  source: TransactionSource;
+  orderId?: Maybe<Scalars['String']>;
+  liquidityProvider: LiquidityProvider;
+  instrument: PaymentInstrument;
+  paymentProvider?: Maybe<PaymentProvider>;
+  originalOrderId?: Maybe<Scalars['String']>;
+  order?: Maybe<Scalars['String']>;
+  data?: Maybe<Scalars['String']>;
+};
+
+export enum LiquidityProvider {
+  Bitstamp = 'Bitstamp'
+}
+
 export type Mutation = {
   __typename?: 'Mutation';
   foo: Scalars['String'];
@@ -752,8 +851,8 @@ export type Mutation = {
   disable2fa: LoginResult;
   sendEmailCodePasswordChange: Scalars['Boolean'];
   addFeedback: Feedback;
-  createQuickCheckout?: Maybe<Scalars['String']>;
-  executeQuickCheckout?: Maybe<Transaction>;
+  createQuickCheckout?: Maybe<TransactionShort>;
+  executeQuickCheckout?: Maybe<TransactionShort>;
 };
 
 
@@ -959,12 +1058,14 @@ export type MutationAddFeedbackArgs = {
 
 export type MutationCreateQuickCheckoutArgs = {
   transaction?: Maybe<TransactionInput>;
+  recaptcha: Scalars['String'];
 };
 
 
 export type MutationExecuteQuickCheckoutArgs = {
   transactionId?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['Int']>;
+  recaptcha: Scalars['String'];
 };
 
 export type SettingsCommonInput = {
@@ -1068,28 +1169,14 @@ export type FeedbackInput = {
 export type TransactionInput = {
   transactionType: TransactionType;
   currencyToSpend: Scalars['String'];
+  affiliateId?: Maybe<Scalars['String']>;
   currencyToReceive: Scalars['String'];
-  amount: Scalars['Float'];
+  amountFiat: Scalars['Float'];
   rate: Scalars['Float'];
+  instrument: PaymentInstrument;
+  paymentProvider?: Maybe<PaymentProvider>;
   data?: Maybe<Scalars['String']>;
 };
-
-export type Transaction = {
-  __typename?: 'Transaction';
-  transactionId: Scalars['ID'];
-  userId: Scalars['String'];
-  created: Scalars['DateTime'];
-  transactionType: TransactionType;
-  currencyToSpend: Scalars['String'];
-  currencyToReceive: Scalars['String'];
-  amount: Scalars['Float'];
-  rate: Scalars['Float'];
-  data?: Maybe<Scalars['String']>;
-};
-
-export enum LiquidityProvider {
-  Bitstamp = 'Bitstamp'
-}
 
 export enum CustodyProvider {
   Trustology = 'Trustology',
