@@ -4,6 +4,9 @@ import { AuthService } from '../services/auth.service';
 import { User } from '../model/generated-models';
 import { QuickCheckoutDataService } from '../services/quick-checkout.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { WalletValidator } from '../utils/wallet.validator';
+
+//const WAValidator = require('multicoin-address-validator');
 
 @Component({
     templateUrl: 'quick-checkout.component.html',
@@ -11,8 +14,19 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class QuuckCheckoutComponent implements OnInit {
     user: User | null = null;
-    firstFormGroup!: FormGroup;
     secondFormGroup!: FormGroup;
+    detailsForm = this.formBuilder.group({
+        email: ['', {
+            validators: [
+                Validators.required,
+                Validators.pattern('^[a-zA-Z0-9_.+\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-\.]+$')
+            ], updateOn: 'change'
+        }],
+        //currencyFrom: ['', { validators: [Validators.required], updateOn: 'change' }],
+        //currencyTo: ['', { validators: [Validators.required], updateOn: 'change' }],
+        address: ['', { validators: [Validators.required], updateOn: 'change' }]
+    }, { validators: [WalletValidator.addressValidator('address', 'currencyTo')], updateOn: 'change'
+    });
 
     constructor(private auth: AuthService, private dataService: QuickCheckoutDataService,
         private formBuilder: FormBuilder, private router: Router) {
@@ -20,9 +34,6 @@ export class QuuckCheckoutComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.firstFormGroup = this.formBuilder.group({
-            firstCtrl: ['', Validators.required]
-        });
         this.secondFormGroup = this.formBuilder.group({
             secondCtrl: ['', Validators.required]
         });

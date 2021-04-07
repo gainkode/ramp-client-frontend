@@ -26,8 +26,10 @@
     "angularx-social-login": "^3.5.4",
     "apollo-angular": "^2.2.0",
     "apollo-link-error": "^1.1.13",
+    "buffer": "^6.0.3",
     "cookieconsent": "^3.1.1",
     "graphql": "^15.5.0",
+    "multicoin-address-validator": "^0.4.16",
     "rxjs": "~6.6.3",
     "tslib": "^2.1.0",
     "zone.js": "~0.11.3"

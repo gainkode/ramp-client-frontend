@@ -11,15 +11,42 @@
         <div class="wizard-panel-stepper">
             <mat-horizontal-stepper linear #stepper style="background-color: #DDDFE6;">
                 <!-- Order details -->
-                <mat-step [stepControl]="firstFormGroup" editable="true">
-                    <form [formGroup]="firstFormGroup">
+                <mat-step [stepControl]="detailsForm" editable="true">
+                    <form [formGroup]="detailsForm">
                         <ng-template matStepLabel>Order details</ng-template>
-                        <mat-form-field>
-                            <mat-label>Name</mat-label>
-                            <input matInput formControlName="firstCtrl" placeholder="Last name, First name" required>
-                        </mat-form-field>
                         <div>
-                            <button matStepperNext>Next</button>
+                            <div>
+                                <h2>Choose your order details</h2>
+                            </div>
+                            <!-- Email -->
+                            <mat-form-field class="form-element">
+                                <mat-label>Email</mat-label>
+                                <input type="email" matInput formControlName="email" maxlength="60" 
+                                placeholder="Type your email address" required />
+                                <mat-error *ngIf="this.detailsForm.get('email')?.hasError('required')">
+                                    Please specify your email
+                                </mat-error>
+                                <mat-error *ngIf="this.detailsForm.get('email')?.hasError('pattern')">
+                                    Email has incorrect format
+                                </mat-error>
+                            </mat-form-field>
+                            <!-- Wallet address -->
+                            <mat-form-field class="form-element">
+                                <mat-label>address</mat-label>
+                                <input type="text" matInput formControlName="address" maxlength="60" 
+                                placeholder="Valid wallet address" required />
+                                <mat-error *ngIf="this.detailsForm.get('address')?.hasError('required')">
+                                    Please specify your wallet address
+                                </mat-error>
+                                <mat-error *ngIf="this.detailsForm.get('address')?.hasError('walletAddress')">
+                                    Wallet address is not valid
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="form-element">
+                            <button matStepperNext class="main-button main-button-primary">
+                                NEXT
+                            </button>
                         </div>
                     </form>
                 </mat-step>
