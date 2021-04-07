@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { SettingsCurrencyListResult, User } from '../model/generated-models';
+import { SettingsCurrencyListResult, TransactionType, User } from '../model/generated-models';
 import { QuickCheckoutDataService } from '../services/quick-checkout.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { WalletValidator } from '../utils/wallet.validator';
 import { ErrorService } from '../services/error.service';
-import { CurrencyView } from '../model/payment.model';
+import { CurrencyView, QuickCheckoutTransactionTypeList } from '../model/payment.model';
 
 //const WAValidator = require('multicoin-address-validator');
 
@@ -20,9 +20,9 @@ export class QuuckCheckoutComponent implements OnInit {
     inProgress = false;
     walletAddressName = '';
     private _settingsSubscription!: any;
-
     sourceCurrencies: CurrencyView[] = [];
     destinationCurrencies: CurrencyView[] = [];
+    transactionList = QuickCheckoutTransactionTypeList;
 
     secondFormGroup!: FormGroup;
     detailsForm = this.formBuilder.group({
@@ -36,7 +36,8 @@ export class QuuckCheckoutComponent implements OnInit {
         currencyFrom: ['', { validators: [Validators.required], updateOn: 'change' }],
         amountTo: ['0', { validators: [Validators.required], updateOn: 'change' }],
         currencyTo: ['', { validators: [Validators.required], updateOn: 'change' }],
-        address: ['', { validators: [Validators.required], updateOn: 'change' }]
+        address: ['', { validators: [Validators.required], updateOn: 'change' }],
+        transaction: [TransactionType.Deposit, { validators: [Validators.required], updateOn: 'change' }]
     }, {
         validators: [WalletValidator.addressValidator('address', 'currencyTo')], updateOn: 'change'
     });

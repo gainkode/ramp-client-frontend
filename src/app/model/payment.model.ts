@@ -83,6 +83,11 @@ export const TransactionTypeList: Array<TransactionTypeView> = [
     { id: TransactionType.Withdrawal, name: 'Withdrawal' }
 ];
 
+export const QuickCheckoutTransactionTypeList: Array<TransactionTypeView> = [
+    { id: TransactionType.Deposit, name: 'Deposit' },
+    { id: TransactionType.Withdrawal, name: 'Withdrawal' }
+];
+
 export const FeeTargetFilterList: Array<FeeTargetFilterTypeView> = [
     { id: SettingsFeeTargetFilterType.None, name: 'None' },
     { id: SettingsFeeTargetFilterType.AffiliateId, name: 'Affiliate identifier' },

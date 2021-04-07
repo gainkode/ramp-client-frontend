@@ -11,12 +11,16 @@ export class WalletValidator {
             if (!addressControl) {
                 return null;
             }
-            const address = addressControl.value;
+            const address = addressControl.value as string;
+            let currency = currencyControl.value as string;
             if (address === '') {
                 return null;
             }
+            currency = currency.toLowerCase();
+
+            let valid = true;
         
-            if (address === 'addr') {
+            if (valid) {
                 return null;
             } else {
                 addressControl.setErrors({

@@ -94,6 +94,18 @@
                                     Wallet address is not valid
                                 </mat-error>
                             </mat-form-field>
+                            <!-- Transaction type -->
+                            <mat-form-field class="form-element">
+                                <mat-label>Transaction</mat-label>
+                                <mat-select formControlName="transaction">
+                                    <mat-option *ngFor="let item of transactionList" [value]="item.id">
+                                        {{item.name}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="this.detailsForm.get('transaction')?.hasError('required')">
+                                    Please specify your transaction type
+                                </mat-error>
+                            </mat-form-field>
                         </div>
                         <div class="form-element">
                             <button matStepperNext class="main-button main-button-primary">
