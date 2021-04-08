@@ -52,13 +52,12 @@
                                                 </mat-select>
                                             </div>
                                         </div>
-                                        <mat-error
-                                                    *ngIf="this.detailsForm.get('amountFrom')?.hasError('required')">
-                                                    Please specify source amount
-                                                </mat-error>
-                                                <mat-error *ngIf="this.detailsForm.get('amountFrom')?.hasError('pattern')">
-                                                    Amount must be a valid number
-                                                </mat-error>
+                                        <mat-error *ngIf="this.detailsForm.get('amountFrom')?.hasError('required')">
+                                            Please specify source amount
+                                        </mat-error>
+                                        <mat-error *ngIf="this.detailsForm.get('amountFrom')?.hasError('pattern')">
+                                            Amount must be a valid number
+                                        </mat-error>
                                     </mat-form-field>
                                 </div>
                                 <!-- Amount to -->
@@ -69,19 +68,22 @@
                                             <div class="currency-transfer-amount-box">
                                                 <input type="text" matInput formControlName="amountTo" maxlength="20"
                                                     placeholder="0" required />
-                                                <mat-error
-                                                    *ngIf="this.detailsForm.get('amountTo')?.hasError('required')">
-                                                    Please specify amount to receive
-                                                </mat-error>
                                             </div>
                                             <div class="currency-transfer-currency-box">
                                                 <mat-select formControlName="currencyTo">
-                                                    <mat-option *ngFor="let item of destinationCurrencies" [value]="item.id">
+                                                    <mat-option *ngFor="let item of destinationCurrencies"
+                                                        [value]="item.id">
                                                         {{item.name}}
                                                     </mat-option>
                                                 </mat-select>
                                             </div>
                                         </div>
+                                        <mat-error *ngIf="this.detailsForm.get('amountTo')?.hasError('required')">
+                                            Please specify amount to receive
+                                        </mat-error>
+                                        <mat-error *ngIf="this.detailsForm.get('amountTo')?.hasError('pattern')">
+                                            Amount must be a valid number
+                                        </mat-error>
                                     </mat-form-field>
                                 </div>
                             </div>

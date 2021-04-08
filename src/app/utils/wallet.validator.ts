@@ -16,10 +16,9 @@ export class WalletValidator {
             if (address === '') {
                 return null;
             }
+            // valid BTC wallet: 1KFzzGtDdnq5hrwxXGjwVnKzRbvf8WVxck
             currency = currency.toLowerCase();
-
-            let valid = true;
-        
+            let valid = WAValidator.validate(address, currency);
             if (valid) {
                 return null;
             } else {
