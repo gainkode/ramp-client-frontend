@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { SettingsCurrencyListResult, TransactionType, User } from '../model/generated-models';
+import { Rate, SettingsCurrencyListResult, TransactionType, User } from '../model/generated-models';
 import { QuickCheckoutDataService } from '../services/quick-checkout.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { WalletValidator } from '../utils/wallet.validator';
@@ -23,10 +23,12 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
     transactionList = QuickCheckoutTransactionTypeList;
     currentSourceCurrency: CurrencyView | null = null;
     currentDestinationCurrency: CurrencyView | null = null;
+    currentRate: Rate | null = null;
 
     private currencies: CurrencyView[] = [];
     private numberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
     private _settingsSubscription!: any;
+    private _rateSubscription!: any;
 
     secondFormGroup!: FormGroup;
     detailsForm = this.formBuilder.group({
@@ -89,30 +91,7 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
                 this.walletAddressName = 'Wallet address';
             }
         });
-        const currencyData = this.dataService.getSettingsCurrency();
-        if (currencyData === null) {
-            this.errorMessage = this.errorHandler.getRejectedCookieMessage();;
-        } else {
-            this.inProgress = true;
-            this._settingsSubscription = currencyData.valueChanges.subscribe(({ data }) => {
-                const currencySettings = data.getSettingsCurrency as SettingsCurrencyListResult;
-                let itemCount = 0;
-                if (currencySettings !== null) {
-                    itemCount = currencySettings.count as number;
-                    if (itemCount > 0) {
-                        this.loadCurrencies(currencySettings);
-                    }
-                }
-                this.inProgress = false;
-            }, (error) => {
-                this.inProgress = false;
-                if (this.auth.token !== '') {
-                    this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load fee settings');
-                } else {
-                    this.router.navigateByUrl('/');
-                }
-            });
-        }
+        this.loadDetailsForm();
         this.secondFormGroup = this.formBuilder.group({
             secondCtrl: ['', Validators.required]
         });
@@ -133,7 +112,30 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
         return this.getAmountMinError(this.currentSourceCurrency);
     }
 
-    private loadCurrencies(settings: SettingsCurrencyListResult) {
+    private loadDetailsForm(): void {
+        const currencyData = this.dataService.getSettingsCurrency();
+        if (currencyData === null) {
+            this.errorMessage = this.errorHandler.getRejectedCookieMessage();;
+        } else {
+            this.inProgress = true;
+            this._settingsSubscription = currencyData.valueChanges.subscribe(({ data }) => {
+                const currencySettings = data.getSettingsCurrency as SettingsCurrencyListResult;
+                let itemCount = 0;
+                if (currencySettings !== null) {
+                    itemCount = currencySettings.count as number;
+                    if (itemCount > 0) {
+                        this.loadCurrencies(currencySettings);
+                        this.loadRates();
+                    }
+                }
+            }, (error) => {
+                this.inProgress = false;
+                this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load settings');
+            });
+        }
+    }
+
+    private loadCurrencies(settings: SettingsCurrencyListResult): void {
         this.currencies = settings.list?.map((val) => new CurrencyView(val)) as CurrencyView[];
         this.sourceCurrencies = this.currencies.filter(c => c.id !== 'BTC' && c.id !== 'USDC');
         this.destinationCurrencies = this.currencies.filter(c => c.id !== 'EUR' && c.id !== 'USDC');
@@ -145,6 +147,47 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
         }
         if (this.destinationCurrencies.length > 0) {
             this.detailsForm.get('currencyTo')?.setValue(this.destinationCurrencies[0].id);
+        }
+    }
+
+    private loadRates(): void {
+        const currencyFrom = this.currentSourceCurrency?.id as string;
+        const currencyTo = this.currentDestinationCurrency?.id as string;
+        const ratesData = this.dataService.getRates(currencyFrom, currencyTo);
+        if (ratesData === null) {
+            this.errorMessage = this.errorHandler.getRejectedCookieMessage();;
+        } else {
+            this.inProgress = true;
+            this._rateSubscription = ratesData.valueChanges.subscribe(({ data }) => {
+                const rates = data.getRates as Rate[];
+                if (rates.length > 0) {
+                    this.currentRate = rates[0];
+                    this.updateAmounts();
+                }
+                this.inProgress = false;
+            }, (error) => {
+                this.inProgress = false;
+                this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load exchange rate');
+            });
+        }
+    }
+
+    private updateAmounts() {
+        const transaction = this.detailsForm.get('transaction')?.value as TransactionType;
+        if (this.currentRate) {
+            let rate = 0;
+            if (transaction === TransactionType.Deposit) {
+                rate = this.currentRate.depositRate;
+            } else if (transaction === TransactionType.Withdrawal) {
+                rate = this.currentRate.withdrawRate;
+            }
+            if (rate > 0) {
+                const fieldFrom = this.detailsForm.get('amountFrom');
+                const fieldTo = this.detailsForm.get('amountTo');
+                const valueFrom = parseFloat(fieldFrom?.value);
+                const valueTo = valueFrom / rate;
+                fieldTo?.setValue(valueTo);
+            }
         }
     }
 

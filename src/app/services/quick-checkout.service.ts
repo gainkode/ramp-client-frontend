@@ -19,6 +19,22 @@ const GET_SETTINGS_CURRENCY_POST = gql`
   }
 `;
 
+const GET_RATES_POST = gql`
+query GetRates($recaptcha: String!, $currenciesFrom: [String!]!, $currencyTo: String!) {
+  getRates(
+    currenciesFrom: $currenciesFrom,
+    currencyTo: $currencyTo,
+    recaptcha: $recaptcha
+  ) {
+    currencyFrom
+    currencyTo
+    originalRate
+    depositRate
+    withdrawRate
+  }
+}
+`;
+
 // const ADD_SETTINGS_COST_POST = gql`
 // mutation AddSettingsCost(
 //   $name: String!,
@@ -54,9 +70,25 @@ export class QuickCheckoutDataService {
       return this.apollo.watchQuery<any>({
         query: GET_SETTINGS_CURRENCY_POST,
         variables: {
-          recaptcha: environment.recaptchaId,
+          recaptcha: environment.recaptchaId
         },
-        pollInterval: 30000,
+        fetchPolicy: 'network-only'
+      });
+    } else {
+      return null;
+    }
+  }
+
+  getRates(fromValue: string, toValue: string): QueryRef<any, EmptyObject> | null {
+    if (this.apollo.client !== undefined) {
+      return this.apollo.watchQuery<any>({
+        query: GET_RATES_POST,
+        variables: {
+          recaptcha: environment.recaptchaId,
+          currenciesFrom: [fromValue],
+          currencyTo: toValue
+        },
+        pollInterval: 60000,
         fetchPolicy: 'network-only'
       });
     } else {
