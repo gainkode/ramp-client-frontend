@@ -36,8 +36,7 @@
               "./node_modules/cookieconsent/build/cookieconsent.min.css"
             ],
             "scripts": [
-              "./node_modules/cookieconsent/build/cookieconsent.min.js",
-              "./node_modules/multicoin-address-validator/dist/wallet-address-validator.min.js"
+              "./node_modules/cookieconsent/build/cookieconsent.min.js"
             ]
           },
           "configurations": {

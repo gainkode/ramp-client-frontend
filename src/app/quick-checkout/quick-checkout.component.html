@@ -43,10 +43,6 @@
                                             <div class="currency-transfer-amount-box">
                                                 <input type="text" matInput formControlName="amountFrom" maxlength="20"
                                                     placeholder="200" required />
-                                                <mat-error
-                                                    *ngIf="this.detailsForm.get('amountFrom')?.hasError('required')">
-                                                    Please specify source amount
-                                                </mat-error>
                                             </div>
                                             <div class="currency-transfer-currency-box">
                                                 <mat-select formControlName="currencyFrom">
@@ -56,6 +52,13 @@
                                                 </mat-select>
                                             </div>
                                         </div>
+                                        <mat-error
+                                                    *ngIf="this.detailsForm.get('amountFrom')?.hasError('required')">
+                                                    Please specify source amount
+                                                </mat-error>
+                                                <mat-error *ngIf="this.detailsForm.get('amountFrom')?.hasError('pattern')">
+                                                    Amount must be a valid number
+                                                </mat-error>
                                     </mat-form-field>
                                 </div>
                                 <!-- Amount to -->

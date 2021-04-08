@@ -24,6 +24,7 @@ export class QuuckCheckoutComponent implements OnInit {
     destinationCurrencies: CurrencyView[] = [];
     transactionList = QuickCheckoutTransactionTypeList;
 
+    numberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
     secondFormGroup!: FormGroup;
     detailsForm = this.formBuilder.group({
         email: ['', {
@@ -32,9 +33,15 @@ export class QuuckCheckoutComponent implements OnInit {
                 Validators.pattern('^[a-zA-Z0-9_.+\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-\.]+$')
             ], updateOn: 'change'
         }],
-        amountFrom: ['200', { validators: [Validators.required], updateOn: 'change' }],
+        amountFrom: ['200', { validators: [
+            Validators.required,
+            Validators.pattern(this.numberPattern)
+        ], updateOn: 'change' }],
         currencyFrom: ['', { validators: [Validators.required], updateOn: 'change' }],
-        amountTo: ['0', { validators: [Validators.required], updateOn: 'change' }],
+        amountTo: ['0', { validators: [
+            Validators.required,
+            Validators.pattern(this.numberPattern)
+        ], updateOn: 'change' }],
         currencyTo: ['', { validators: [Validators.required], updateOn: 'change' }],
         address: ['', { validators: [Validators.required], updateOn: 'change' }],
         transaction: [TransactionType.Deposit, { validators: [Validators.required], updateOn: 'change' }]

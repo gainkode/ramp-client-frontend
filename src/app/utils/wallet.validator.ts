@@ -1,6 +1,10 @@
 import { AbstractControl, FormGroup, ValidationErrors, ValidatorFn } from "@angular/forms";
 
+//import walletAddressValidatorMinJs from '@swyftx/api-crypto-address-validator/dist/wallet-address-validator.min.js'
+
 //const WAValidator = require('multicoin-address-validator');
+
+//const { Readable } = require('stream');
 
 export class WalletValidator {
     static addressValidator(addressField: string, currencyField: string) {
