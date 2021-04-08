@@ -1,6 +1,6 @@
 import {
     PaymentInstrument, PaymentProvider, TransactionType,
-    SettingsFeeTargetFilterType, SettingsCostTargetFilterType, SettingsKycTargetFilterType, UserType, KycProvider, UserMode
+    SettingsFeeTargetFilterType, SettingsCostTargetFilterType, SettingsKycTargetFilterType, UserType, KycProvider, UserMode, SettingsCurrency
 } from './generated-models';
 
 export class PaymentInstrumentView {
@@ -56,7 +56,22 @@ export class KycLevelView {
 
 export class CurrencyView {
     id!: string;
+    title = '';
     name = '';
+    precision = 0;
+    minAmount = 0;
+    rateFactor = 0;
+    validateAsSymbol: string | null = null;
+
+    constructor(data: SettingsCurrency) {
+        this.id = data.symbol;
+        this.title = data.symbol;
+        this.name = data.name;
+        this.precision = data.precision;
+        this.minAmount = data.minAmount;
+        this.rateFactor = data.rateFactor;
+        this.validateAsSymbol = data.validateAsSymbol as string | null;
+    }
 }
 
 export const PaymentInstrumentList: Array<PaymentInstrumentView> = [
