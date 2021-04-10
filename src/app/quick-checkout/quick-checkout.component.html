@@ -124,7 +124,8 @@
                             </mat-form-field>
                         </div>
                         <div class="form-element">
-                            <button matStepperNext class="main-button main-button-primary">
+                            <button matStepperNext type="button" class="main-button main-button-primary"
+                            (click)="detailsCompleted()">
                                 NEXT
                             </button>
                         </div>
@@ -166,7 +167,10 @@
             </mat-horizontal-stepper>
         </div>
         <div class="wizard-panel-summary">
-
+            <div>
+                Exchange rate placeholder
+            </div>
+            <checkout-summary [summary]="summary"></checkout-summary>
         </div>
 
     </div>

@@ -17,9 +17,9 @@
 }
 
 .wizard-panel-summary {
-    padding         : 0;
-    width           : 25%;
-    background-color: gold;
+    margin-top: 2em;
+    padding   : 0;
+    width     : 25%;
 }
 
 .currency-transfer-box {
@@ -27,12 +27,12 @@
 }
 
 .currency-transfer-source-box {
-    width: 50%;
+    width       : 50%;
     margin-right: 0.5em;
 }
 
 .currency-transfer-destination-box {
-    width: 50%;
+    width      : 50%;
     margin-left: 0.5em;
 }
 
@@ -41,6 +41,6 @@
 }
 
 .currency-transfer-currency-box {
-    width       : 20%;
-    min-width   : 2em;
+    width    : 20%;
+    min-width: 2em;
 }

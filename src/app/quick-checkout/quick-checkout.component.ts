@@ -6,7 +6,7 @@ import { QuickCheckoutDataService } from '../services/quick-checkout.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { WalletValidator } from '../utils/wallet.validator';
 import { ErrorService } from '../services/error.service';
-import { CurrencyView, QuickCheckoutTransactionTypeList } from '../model/payment.model';
+import { CheckoutSummary, CurrencyView, QuickCheckoutTransactionTypeList } from '../model/payment.model';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -24,6 +24,7 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
     currentSourceCurrency: CurrencyView | null = null;
     currentDestinationCurrency: CurrencyView | null = null;
     currentRate: Rate | null = null;
+    summary!: CheckoutSummary;
 
     private currencies: CurrencyView[] = [];
     private numberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
@@ -32,6 +33,7 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
 
     secondFormGroup!: FormGroup;
     detailsForm = this.formBuilder.group({
+        orderId: ['', { validators: [Validators.required], updateOn: 'change' }],
         email: ['', {
             validators: [
                 Validators.required,
@@ -61,6 +63,18 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
     constructor(private auth: AuthService, private dataService: QuickCheckoutDataService,
         private errorHandler: ErrorService, private formBuilder: FormBuilder, private router: Router) {
         this.user = auth.user;
+        this.summary = new CheckoutSummary();
+
+        // temp
+        // this.summary.orderId = 'order-id';
+        // this.summary.email = 'mail@mail.mail';
+        // this.summary.currencyFrom = 'EUR';
+        // this.summary.currencyTo = 'BTC';
+        // this.summary.amountFrom = 10;
+        // this.summary.amountTo = 0.21515;
+        // this.summary.address = '1KFzzGtDdnq5hrwxXGjwVnKzRbvf8WVxck';
+        // this.summary.fees = 1.5;
+        // temp
     }
 
     ngOnInit(): void {
@@ -188,6 +202,12 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
                 const valueTo = valueFrom / rate;
                 fieldTo?.setValue(valueTo);
             }
+        }
+    }
+
+    detailsCompleted(): void {
+        if (this.detailsForm.valid) {
+            console.log('detailsCompleted');
         }
     }
 

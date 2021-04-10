@@ -10,6 +10,7 @@ import { LineBreakPipe } from '../utils/line-break.pipe';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDialogModule } from '@angular/material/dialog'; 
 import { CommonDialogBox } from './common-box.dialog';
+import { CheckoutSummaryComponent } from './checkout-summary.component';
 
 const materialModules = [
     MatButtonModule,
@@ -26,9 +27,9 @@ export class MaterialModule { }
 @NgModule({
     imports: [CommonModule, MaterialModule, MatProgressBarModule],
     declarations: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
-        LineBreakPipe, CommonDialogBox],
+        CheckoutSummaryComponent, LineBreakPipe, CommonDialogBox],
     exports: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
-        MatProgressBarModule, LineBreakPipe, CommonDialogBox],
+        CheckoutSummaryComponent, MatProgressBarModule, LineBreakPipe, CommonDialogBox],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 

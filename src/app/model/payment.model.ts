@@ -138,3 +138,15 @@ export const KycProviderList: Array<KycProviderView> = [
     { id: KycProvider.Local, name: 'Local' },
     { id: KycProvider.SumSub, name: 'SumSub' }
 ];
+
+export class CheckoutSummary {
+    initialized = false;
+    orderId: string = '';
+    email: string = '';
+    currencyFrom: string = '';
+    currencyTo: string = '';
+    amountFrom: number = 0;
+    amountTo: number = 0;
+    address: string = '';
+    fees: number = 0;
+}
