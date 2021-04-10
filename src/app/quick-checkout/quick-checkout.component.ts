@@ -8,6 +8,7 @@ import { WalletValidator } from '../utils/wallet.validator';
 import { ErrorService } from '../services/error.service';
 import { CheckoutSummary, CurrencyView, QuickCheckoutTransactionTypeList } from '../model/payment.model';
 import { Subscription } from 'rxjs';
+import { MatStepper } from '@angular/material/stepper';
 
 @Component({
     templateUrl: 'quick-checkout.component.html',
@@ -83,12 +84,12 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
         this.detailsCurrencyFromControl?.valueChanges.subscribe((val) => {
             this.currentSourceCurrency = this.getCurrency(val);
             if (this.currentSourceCurrency !== null) {
-                this.detailsCurrencyFromControl?.setValidators([
+                this.detailsAmountFromControl?.setValidators([
                     Validators.required,
                     Validators.pattern(this.numberPattern),
                     Validators.min(this.currentSourceCurrency.minAmount)
                 ]);
-                this.detailsCurrencyFromControl?.updateValueAndValidity();
+                this.detailsAmountFromControl?.updateValueAndValidity();
                 this.summary.currencyFrom = this.currentSourceCurrency.id;
             }
         });
@@ -96,12 +97,12 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
             this.currentDestinationCurrency = this.getCurrency(val);
             if (this.currentDestinationCurrency !== null) {
                 this.walletAddressName = `${this.currentDestinationCurrency.name} wallet address`;
-                this.detailsCurrencyToControl?.setValidators([
+                this.detailsAmountToControl?.setValidators([
                     Validators.required,
                     Validators.pattern(this.numberPattern),
                     Validators.min(this.currentDestinationCurrency.minAmount)
                 ]);
-                this.detailsCurrencyToControl?.updateValueAndValidity();
+                this.detailsAmountToControl?.updateValueAndValidity();
                 this.summary.currencyTo = this.currentDestinationCurrency.id;
             } else {
                 this.walletAddressName = 'Wallet address';
@@ -240,10 +241,11 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
         }
     }
 
-    detailsCompleted(): void {
+    detailsCompleted(stepper: MatStepper): void {
         console.log('login');
         if (this.detailsForm.valid) {
             console.log('detailsCompleted');
+            stepper.next();
         }
     }
 
