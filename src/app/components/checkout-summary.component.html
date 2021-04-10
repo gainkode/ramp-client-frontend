@@ -1,12 +1,16 @@
-<div *ngIf="summary?.initialized" class="checkout-summary-box">
+<div class="checkout-summary-box">
     <h2>Summary</h2>
-    <label class="checkout-summary-lable">Order Id</label>
-    <div class="checkout-summary-value">
-        {{summary?.orderId}}
+    <div *ngIf="summary?.orderId!==''">
+        <label class="checkout-summary-lable">Order Id</label>
+        <div class="checkout-summary-value">
+            {{summary?.orderId}}
+        </div>
     </div>
-    <label class="checkout-summary-lable">Email</label>
-    <div class="checkout-summary-value">
-        {{summary?.email}}
+    <div *ngIf="summary?.email!==''">
+        <label class="checkout-summary-lable">Email</label>
+        <div class="checkout-summary-value">
+            {{summary?.email}}
+        </div>
     </div>
     <label class="checkout-summary-lable">{{summary?.currencyFrom}} amount</label>
     <div class="checkout-summary-value">
@@ -16,12 +20,16 @@
     <div class="checkout-summary-value">
         {{summary?.amountTo}}
     </div>
-    <label class="checkout-summary-lable">{{summary?.currencyTo}} wallet</label>
-    <div class="checkout-summary-value">
-        {{summary?.address}}
+    <div *ngIf="summary?.address!==''">
+        <label class="checkout-summary-lable">{{summary?.currencyTo}} wallet</label>
+        <div class="checkout-summary-value">
+            {{summary?.address}}
+        </div>
     </div>
-    <label class="checkout-summary-lable">Fees</label>
-    <div class="checkout-summary-value">
-        {{summary?.fees}}%
+    <div *ngIf="summary?.fees!==0">
+        <label class="checkout-summary-lable">Fees</label>
+        <div class="checkout-summary-value">
+            {{summary?.fees}}%
+        </div>
     </div>
 </div>

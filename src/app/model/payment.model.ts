@@ -140,7 +140,6 @@ export const KycProviderList: Array<KycProviderView> = [
 ];
 
 export class CheckoutSummary {
-    initialized = false;
     orderId: string = '';
     email: string = '';
     currencyFrom: string = '';

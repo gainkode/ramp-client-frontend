@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { Rate, SettingsCurrencyListResult, TransactionType, User } from '../model/generated-models';
 import { QuickCheckoutDataService } from '../services/quick-checkout.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { WalletValidator } from '../utils/wallet.validator';
 import { ErrorService } from '../services/error.service';
 import { CheckoutSummary, CurrencyView, QuickCheckoutTransactionTypeList } from '../model/payment.model';
@@ -33,7 +33,6 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
 
     secondFormGroup!: FormGroup;
     detailsForm = this.formBuilder.group({
-        orderId: ['', { validators: [Validators.required], updateOn: 'change' }],
         email: ['', {
             validators: [
                 Validators.required,
@@ -59,51 +58,66 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
     }, {
         validators: [WalletValidator.addressValidator('address', 'currencyTo')], updateOn: 'change'
     });
+    detailsEmailControl: AbstractControl | null = null;
+    detailsAmountFromControl: AbstractControl | null = null;
+    detailsCurrencyFromControl: AbstractControl | null = null;
+    detailsAmountToControl: AbstractControl | null = null;
+    detailsCurrencyToControl: AbstractControl | null = null;
+    detailsAddressControl: AbstractControl | null = null;
+    detailsTransactionControl: AbstractControl | null = null;
 
     constructor(private auth: AuthService, private dataService: QuickCheckoutDataService,
         private errorHandler: ErrorService, private formBuilder: FormBuilder, private router: Router) {
         this.user = auth.user;
         this.summary = new CheckoutSummary();
-
-        // temp
-        // this.summary.orderId = 'order-id';
-        // this.summary.email = 'mail@mail.mail';
-        // this.summary.currencyFrom = 'EUR';
-        // this.summary.currencyTo = 'BTC';
-        // this.summary.amountFrom = 10;
-        // this.summary.amountTo = 0.21515;
-        // this.summary.address = '1KFzzGtDdnq5hrwxXGjwVnKzRbvf8WVxck';
-        // this.summary.fees = 1.5;
-        // temp
+        this.detailsEmailControl = this.detailsForm.get('email');
+        this.detailsAmountFromControl = this.detailsForm.get('amountFrom');
+        this.detailsCurrencyFromControl = this.detailsForm.get('currencyFrom');
+        this.detailsAmountToControl = this.detailsForm.get('amountTo');
+        this.detailsCurrencyToControl = this.detailsForm.get('currencyTo');
+        this.detailsAddressControl = this.detailsForm.get('address');
+        this.detailsTransactionControl = this.detailsForm.get('transaction');
     }
 
     ngOnInit(): void {
-        this.detailsForm.get('currencyFrom')?.valueChanges.subscribe((val) => {
+        this.detailsCurrencyFromControl?.valueChanges.subscribe((val) => {
             this.currentSourceCurrency = this.getCurrency(val);
             if (this.currentSourceCurrency !== null) {
-                const c = this.detailsForm.get('amountFrom');
-                c?.setValidators([
+                this.detailsCurrencyFromControl?.setValidators([
                     Validators.required,
                     Validators.pattern(this.numberPattern),
                     Validators.min(this.currentSourceCurrency.minAmount)
                 ]);
-                c?.updateValueAndValidity();
+                this.detailsCurrencyFromControl?.updateValueAndValidity();
+                this.summary.currencyFrom = this.currentSourceCurrency.id;
             }
         });
-        this.detailsForm.get('currencyTo')?.valueChanges.subscribe((val) => {
+        this.detailsCurrencyToControl?.valueChanges.subscribe((val) => {
             this.currentDestinationCurrency = this.getCurrency(val);
             if (this.currentDestinationCurrency !== null) {
                 this.walletAddressName = `${this.currentDestinationCurrency.name} wallet address`;
-                const c = this.detailsForm.get('amountTo');
-                c?.setValidators([
+                this.detailsCurrencyToControl?.setValidators([
                     Validators.required,
                     Validators.pattern(this.numberPattern),
                     Validators.min(this.currentDestinationCurrency.minAmount)
                 ]);
-                c?.updateValueAndValidity();
+                this.detailsCurrencyToControl?.updateValueAndValidity();
+                this.summary.currencyTo = this.currentDestinationCurrency.id;
             } else {
                 this.walletAddressName = 'Wallet address';
             }
+        });
+        this.detailsAmountFromControl?.valueChanges.subscribe((val) => {
+            this.setSummuryAmountFrom(val);
+        });
+        this.detailsAmountToControl?.valueChanges.subscribe((val) => {
+            this.setSummuryAmountTo(val);
+        });
+        this.detailsEmailControl?.valueChanges.subscribe((val) => {
+            this.setSummuryEmail(val);
+        });
+        this.detailsAddressControl?.valueChanges.subscribe((val) => {
+            this.setSummuryAddress(val);
         });
         this.loadDetailsForm();
         this.secondFormGroup = this.formBuilder.group({
@@ -154,13 +168,13 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
         this.sourceCurrencies = this.currencies.filter(c => c.id !== 'BTC' && c.id !== 'USDC');
         this.destinationCurrencies = this.currencies.filter(c => c.id !== 'EUR' && c.id !== 'USDC');
         if (this.sourceCurrencies.length > 0) {
-            this.detailsForm.get('currencyFrom')?.setValue(this.sourceCurrencies[0].id);
+            this.detailsCurrencyFromControl?.setValue(this.sourceCurrencies[0].id);
             if (this.currentSourceCurrency) {
-                this.detailsForm.get('amountFrom')?.setValue(this.currentSourceCurrency.minAmount);
+                this.detailsAmountFromControl?.setValue(this.currentSourceCurrency.minAmount);
             }
         }
         if (this.destinationCurrencies.length > 0) {
-            this.detailsForm.get('currencyTo')?.setValue(this.destinationCurrencies[0].id);
+            this.detailsCurrencyToControl?.setValue(this.destinationCurrencies[0].id);
         }
     }
 
@@ -187,7 +201,7 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
     }
 
     private updateAmounts() {
-        const transaction = this.detailsForm.get('transaction')?.value as TransactionType;
+        const transaction = this.detailsTransactionControl?.value as TransactionType;
         if (this.currentRate) {
             let rate = 0;
             if (transaction === TransactionType.Deposit) {
@@ -196,16 +210,38 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
                 rate = this.currentRate.withdrawRate;
             }
             if (rate > 0) {
-                const fieldFrom = this.detailsForm.get('amountFrom');
-                const fieldTo = this.detailsForm.get('amountTo');
-                const valueFrom = parseFloat(fieldFrom?.value);
-                const valueTo = valueFrom / rate;
-                fieldTo?.setValue(valueTo);
+                const valueFrom = parseFloat(this.detailsAmountFromControl?.value);
+                this.detailsAmountToControl?.setValue(valueFrom / rate);
             }
         }
     }
 
+    private setSummuryAmountFrom(val: any) {
+        if (this.detailsAmountFromControl?.valid) {
+            this.summary.amountFrom = val;
+        }
+    }
+
+    private setSummuryAmountTo(val: any) {
+        if (this.detailsAmountToControl?.valid) {
+            this.summary.amountTo = val;
+        }
+    }
+
+    private setSummuryEmail(val: any) {
+        if (this.detailsEmailControl?.valid) {
+            this.summary.email = val;
+        }
+    }
+
+    private setSummuryAddress(val: any) {
+        if (this.detailsAddressControl?.valid) {
+            this.summary.address = val;
+        }
+    }
+
     detailsCompleted(): void {
+        console.log('login');
         if (this.detailsForm.valid) {
             console.log('detailsCompleted');
         }
