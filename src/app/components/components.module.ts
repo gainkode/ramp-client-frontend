@@ -9,13 +9,16 @@ import { KycPanelComponent } from './kyc-panel.component';
 import { LineBreakPipe } from '../utils/line-break.pipe';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDialogModule } from '@angular/material/dialog'; 
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'; 
 import { CommonDialogBox } from './common-box.dialog';
 import { CheckoutSummaryComponent } from './checkout-summary.component';
+import { ExchangeRateComponent } from './exchange-rate.component';
 
 const materialModules = [
     MatButtonModule,
     MatDialogModule,
-    MatIconModule
+    MatIconModule,
+    MatProgressSpinnerModule
 ];
 
 @NgModule({
@@ -27,9 +30,9 @@ export class MaterialModule { }
 @NgModule({
     imports: [CommonModule, MaterialModule, MatProgressBarModule],
     declarations: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
-        CheckoutSummaryComponent, LineBreakPipe, CommonDialogBox],
+        CheckoutSummaryComponent, ExchangeRateComponent, LineBreakPipe, CommonDialogBox],
     exports: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
-        CheckoutSummaryComponent, MatProgressBarModule, LineBreakPipe, CommonDialogBox],
+        CheckoutSummaryComponent, ExchangeRateComponent, MatProgressBarModule, LineBreakPipe, CommonDialogBox],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 

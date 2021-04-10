@@ -167,9 +167,7 @@
             </mat-horizontal-stepper>
         </div>
         <div class="wizard-panel-summary">
-            <div>
-                Exchange rate placeholder
-            </div>
+            <app-exchange-rate [summary]="summary" (update)="onUpdateRate($event)"></app-exchange-rate>
             <checkout-summary [summary]="summary"></checkout-summary>
         </div>
 

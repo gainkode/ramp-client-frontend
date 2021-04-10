@@ -30,7 +30,6 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
     private currencies: CurrencyView[] = [];
     private numberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
     private _settingsSubscription!: any;
-    private _rateSubscription!: any;
 
     secondFormGroup!: FormGroup;
     detailsForm = this.formBuilder.group({
@@ -133,6 +132,11 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
         }
     }
 
+    onUpdateRate(rate: Rate): void {
+        this.currentRate = rate;
+        this.updateAmounts();
+    }
+
     getDestinationAmountMinError(): string {
         return this.getAmountMinError(this.currentDestinationCurrency);
     }
@@ -154,9 +158,9 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
                     itemCount = currencySettings.count as number;
                     if (itemCount > 0) {
                         this.loadCurrencies(currencySettings);
-                        this.loadRates();
                     }
                 }
+                this.inProgress = false;
             }, (error) => {
                 this.inProgress = false;
                 this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load settings');
@@ -179,28 +183,6 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
         }
     }
 
-    private loadRates(): void {
-        const currencyFrom = this.currentSourceCurrency?.id as string;
-        const currencyTo = this.currentDestinationCurrency?.id as string;
-        const ratesData = this.dataService.getRates(currencyFrom, currencyTo);
-        if (ratesData === null) {
-            this.errorMessage = this.errorHandler.getRejectedCookieMessage();;
-        } else {
-            this.inProgress = true;
-            this._rateSubscription = ratesData.valueChanges.subscribe(({ data }) => {
-                const rates = data.getRates as Rate[];
-                if (rates.length > 0) {
-                    this.currentRate = rates[0];
-                    this.updateAmounts();
-                }
-                this.inProgress = false;
-            }, (error) => {
-                this.inProgress = false;
-                this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load exchange rate');
-            });
-        }
-    }
-
     private updateAmounts() {
         const transaction = this.detailsTransactionControl?.value as TransactionType;
         if (this.currentRate) {
@@ -220,6 +202,7 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
     private setSummuryAmountFrom(val: any) {
         if (this.detailsAmountFromControl?.valid) {
             this.summary.amountFrom = val;
+            this.updateAmounts();
         }
     }
 

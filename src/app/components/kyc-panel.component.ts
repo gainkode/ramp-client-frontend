@@ -45,7 +45,7 @@ export class KycPanelComponent implements OnInit, OnDestroy {
             }
         });
         dialogRef.afterClosed().subscribe(result => {
-            //this.animal = result;
+            
         });
     }
 
