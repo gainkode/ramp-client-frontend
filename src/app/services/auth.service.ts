@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
 import { EmptyObject } from 'apollo-angular/types';
 
 const LOGIN_POST = gql`
-  mutation Login($recaptcha: String!, $email: String!, $password: String!, $quickCheckout: Boolean) {
+  mutation Login($recaptcha: String!, $email: String!, $password: String, $quickCheckout: Boolean) {
       login(
           recaptcha: $recaptcha,
           email: $email,
@@ -253,7 +253,7 @@ export class AuthService {
             variables: {
                 recaptcha: environment.recaptchaId,
                 email: username,
-                password: userpassword,
+                password: quickCheckout ? null : userpassword,
                 quickCheckout: quickCheckout
             }
         });

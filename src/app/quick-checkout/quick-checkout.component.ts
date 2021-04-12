@@ -229,6 +229,7 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
 
     detailsCompleted(stepper: MatStepper): void {
         if (this.detailsForm.valid) {
+            console.log('login');
             this.auth.authenticate(this.detailsEmailControl?.value, '', true).subscribe(({ data }) => {
                 console.log(data);
             });
