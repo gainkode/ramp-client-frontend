@@ -1,14 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
-import { Rate, SettingsCurrencyListResult, TransactionType, User } from '../model/generated-models';
-import { QuickCheckoutDataService } from '../services/quick-checkout.service';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { WalletValidator } from '../utils/wallet.validator';
-import { ErrorService } from '../services/error.service';
-import { CheckoutSummary, CurrencyView, QuickCheckoutTransactionTypeList } from '../model/payment.model';
-import { Subscription } from 'rxjs';
 import { MatStepper } from '@angular/material/stepper';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { Rate, SettingsCurrencyListResult, TransactionType, User } from '../model/generated-models';
+import { CheckoutSummary, CurrencyView, QuickCheckoutTransactionTypeList } from '../model/payment.model';
+import { AuthService } from '../services/auth.service';
+import { ErrorService } from '../services/error.service';
+import { QuickCheckoutDataService } from '../services/quick-checkout.service';
+import { WalletValidator } from '../utils/wallet.validator';
 
 @Component({
     templateUrl: 'quick-checkout.component.html',
@@ -225,10 +225,11 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
     }
 
     detailsCompleted(stepper: MatStepper): void {
-        console.log('login');
         if (this.detailsForm.valid) {
-            console.log('detailsCompleted');
-            stepper.next();
+            this.auth.authenticate(this.detailsEmailControl?.value, '', true).subscribe(({ data }) => {
+                console.log(data);
+            });
+            //stepper.next();
         }
     }
 
