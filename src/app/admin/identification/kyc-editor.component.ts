@@ -187,6 +187,7 @@ export class KycEditorComponent implements OnInit, OnDestroy {
             this.schemeForm.get('provider')?.setValue(scheme?.kycProviders);
             this.loadLevelValues(scheme?.userType);
             this.setTargetValidator();
+            const p = this.targetValueParams;
             this.loadingData = false;
             this.formChanged.emit(false);
         } else {

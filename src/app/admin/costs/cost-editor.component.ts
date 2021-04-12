@@ -196,6 +196,7 @@ export class CostEditorComponent implements OnInit {
             this.schemeForm.get('chargebackCost')?.setValue(scheme?.terms.chargebackCost);
             this.schemeForm.get('monthlyCost')?.setValue(scheme?.terms.monthlyCost);
             this.schemeForm.get('minMonthlyCost')?.setValue(scheme?.terms.minMonthlyCost);
+            const p = this.targetValueParams;
             this.loadingData = false;
             this.formChanged.emit(false);
         } else {
