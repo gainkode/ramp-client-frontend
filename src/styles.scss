@@ -61,7 +61,7 @@ input:-webkit-autofill::first-line {
 }
 
 .main-button:focus {
-    outline:none;
+    outline: none;
 }
 
 .link-button {
@@ -73,13 +73,13 @@ input:-webkit-autofill::first-line {
     height       : 32px;
     box-sizing   : unset;
     box-shadow   : 0px 0px 0px transparent;
-    background: transparent;
-    border    : 0px;
+    background   : transparent;
+    border       : 0px;
     font-size    : 14px;
 }
 
 .link-button:focus {
-    outline:none;
+    outline: none;
 }
 
 .main-button-primary {
@@ -100,12 +100,12 @@ input:-webkit-autofill::first-line {
     /* Almost black 2 900 */
     background: #293742;
     /* 2 200 */
-    color: #B2C2CF;
+    color     : #B2C2CF;
 }
 
 .main-button-primary:focus {
     /* Grey - 5 900 */
-    border    : 1px solid #1E2025;
+    border: 1px solid #1E2025;
 }
 
 .main-button-primary:disabled {
@@ -115,7 +115,7 @@ input:-webkit-autofill::first-line {
     border    : 1px solid #7E95A9;
     /* Light grey - 2 400 */
     color     : #7E95A9;
-    box-shadow   : 0px 0px 0px;
+    box-shadow: 0px 0px 0px;
 }
 
 .main-button-accent {
@@ -136,12 +136,12 @@ input:-webkit-autofill::first-line {
     /* Almost black 1 900 */
     background: #004D73;
     /* 1 50 */
-    color: #E0F3F7;
+    color     : #E0F3F7;
 }
 
 .main-button-accent:focus {
     /* Grey - 2 900 */
-    border    : 1px solid #293742;
+    border: 1px solid #293742;
 }
 
 .main-button-accent:disabled {
@@ -151,7 +151,7 @@ input:-webkit-autofill::first-line {
     border    : 1px solid #7E95A9;
     /* Light grey - 2 400 */
     color     : #7E95A9;
-    box-shadow   : 0px 0px 0px;
+    box-shadow: 0px 0px 0px;
 }
 
 .main-button-warn {
@@ -172,11 +172,11 @@ input:-webkit-autofill::first-line {
     /* Almost black 4 900 */
     background: #B71B1C;
     /* 4 50 */
-    color: #FFEBEE;
+    color     : #FFEBEE;
 }
 
 .main-button-warn:focus {
-    border    : 1px solid #5f0202;
+    border: 1px solid #5f0202;
 }
 
 .main-button-warn:disabled {
@@ -186,66 +186,66 @@ input:-webkit-autofill::first-line {
     border    : 1px solid #EF5350;
     /* Light grey - 4 400 */
     color     : #EF5350;
-    box-shadow   : 0px 0px 0px;
+    box-shadow: 0px 0px 0px;
 }
 
 .link-button-primary {
     /* Light grey - 5 900 */
-    color     : #1E2025;
+    color      : #1E2025;
     font-weight: lighter;
 }
 
 .link-button-primary:hover {
     /* Light grey 1 900 */
-    color: #005694;
+    color      : #005694;
     font-weight: lighter;
 }
 
 .link-button-primary:active {
     /* 2 800 */
-    color: #3B4D5A;
+    color      : #3B4D5A;
     font-weight: lighter;
 }
 
 .link-button-primary:focus {
     /* Grey - 4 900 */
-    color: #004D73;
+    color      : #004D73;
     font-weight: lighter;
 }
 
 .link-button-primary:disabled {
     /* 5 600*/
-    color     : #72747A;
+    color      : #72747A;
     font-weight: lighter;
 }
 
 .link-button-accent {
     /* Light grey - 5 900 */
-    color     : #1E2025;
+    color      : #1E2025;
     font-weight: bolder;
 }
 
 .link-button-accent:hover {
     /* Light grey 1 900 */
-    color: #005694;
+    color      : #005694;
     font-weight: bolder;
 }
 
 .link-button-accent:active {
     /* 2 800 */
-    color: #3B4D5A;
+    color      : #3B4D5A;
     font-weight: bolder;
 }
 
 .link-button-accent:focus {
     /* Grey - 4 900 */
-    color: #004D73;
+    color      : #004D73;
     font-weight: bolder;
 }
 
 .link-button-accent:disabled {
     /* 5 600*/
-    color     : #72747A;
+    color      : #72747A;
     font-weight: bolder;
 }
 
@@ -270,12 +270,6 @@ input:-webkit-autofill::first-line {
     background-color: #F8FAFF;
 }
 
-.action-page-left-menu-bar {
-    left            : 0;
-    background-color: #3F4147;
-    color           : #EAF0F7;
-}
-
 .action-page-right-panel {
     right           : 0;
     background-color: #DDDFE6;
@@ -296,6 +290,34 @@ input:-webkit-autofill::first-line {
 .info-page-right-panel {
     right           : 0;
     background-color: #b9b9b9;
+}
+
+.admin-side-nav {
+    height          : 100%;
+    /* Full-height  : remove this if you want "auto" height */
+    width           : 11em;
+    /* Set the width of the sidebar */
+    position        : fixed;
+    /* Fixed Sidebar (stay in place on scroll) */
+    z-index         : 1;
+    /* Stay on top */
+    top             : 0;
+    /* Stay at the top */
+    left            : 0;
+    background-color: #3F4147;
+    color           : #EAF0F7;
+    /* Black */
+    overflow-x      : hidden;
+    /* Disable horizontal scroll */
+    padding-top     : 20px;
+}
+
+.admin-content-block {
+    height          : 100%;
+    margin-left     : 11em;
+    /* Same as the width of the sidebar */
+    //padding    : 0px 10px;
+    background-color: #DDDFE6;
 }
 
 .split-page-menu-panel {
@@ -390,21 +412,21 @@ input:-webkit-autofill::first-line {
 .form-error-box {
     margin-top      : 1em;
     padding         : 1em;
-    background-color: #FFCDD2;  // 4 200
-    color           : #B00020;  // 
+    background-color: #FFCDD2; // 4 200
+    color           : #B00020; // 
     border          : #B00020;
     border-style    : solid;
     border-width    : 0px 0px 2px 0px;
 }
 
 .form-section-title-box {
-    margin          : 0;
-    margin-bottom   : 0.25em;
-    padding         : 0.1em;
-    color           : #1E2025;
-    border          : #004D73;
-    border-style    : solid;
-    border-width    : 0px 0px 2px 0px;
+    margin       : 0;
+    margin-bottom: 0.25em;
+    padding      : 0.1em;
+    color        : #1E2025;
+    border       : #004D73;
+    border-style : solid;
+    border-width : 0px 0px 2px 0px;
 
     h1 {
         margin     : auto;

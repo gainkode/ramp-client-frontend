@@ -234,6 +234,7 @@ export class FeeEditorComponent implements OnInit {
             this.schemeForm.get('bankName')?.setValue(scheme?.details.bankName);
             this.schemeForm.get('bankAddress')?.setValue(scheme?.details.bankAddress);
             this.schemeForm.get('swift')?.setValue(scheme?.details.swift);
+            const p = this.targetValueParams;
             this.loadingData = false;
             this.formChanged.emit(false);
         } else {
