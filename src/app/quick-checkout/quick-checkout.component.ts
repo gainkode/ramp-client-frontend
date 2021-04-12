@@ -8,6 +8,7 @@ import { CheckoutSummary, CurrencyView, QuickCheckoutTransactionTypeList } from 
 import { AuthService } from '../services/auth.service';
 import { ErrorService } from '../services/error.service';
 import { QuickCheckoutDataService } from '../services/quick-checkout.service';
+import { round } from '../utils/utils';
 import { WalletValidator } from '../utils/wallet.validator';
 
 @Component({
@@ -194,7 +195,9 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
             }
             if (rate > 0) {
                 const valueFrom = parseFloat(this.detailsAmountFromControl?.value);
-                this.detailsAmountToControl?.setValue(valueFrom / rate);
+                const amount = valueFrom / rate;
+                this.detailsAmountToControl?.setValue(
+                    round(amount, this.currentDestinationCurrency?.precision));
             }
         }
     }
