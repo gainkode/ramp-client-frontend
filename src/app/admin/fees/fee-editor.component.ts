@@ -235,6 +235,7 @@ export class FeeEditorComponent implements OnInit {
             this.schemeForm.get('bankAddress')?.setValue(scheme?.details.bankAddress);
             this.schemeForm.get('swift')?.setValue(scheme?.details.swift);
             const p = this.targetValueParams;
+            this.setTargetValidator();
             this.loadingData = false;
             this.formChanged.emit(false);
         } else {
@@ -260,8 +261,8 @@ export class FeeEditorComponent implements OnInit {
             this.schemeForm.get('bankName')?.setValue('');
             this.schemeForm.get('bankAddress')?.setValue('');
             this.schemeForm.get('swift')?.setValue('');
+            this.setTargetValidator();
         }
-        this.setTargetValidator();
     }
 
     setSchemeData(): FeeScheme {

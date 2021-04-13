@@ -197,6 +197,7 @@ export class CostEditorComponent implements OnInit {
             this.schemeForm.get('monthlyCost')?.setValue(scheme?.terms.monthlyCost);
             this.schemeForm.get('minMonthlyCost')?.setValue(scheme?.terms.minMonthlyCost);
             const p = this.targetValueParams;
+            this.setTargetValidator();
             this.loadingData = false;
             this.formChanged.emit(false);
         } else {
@@ -216,8 +217,8 @@ export class CostEditorComponent implements OnInit {
             this.schemeForm.get('chargebackCost')?.setValue('');
             this.schemeForm.get('monthlyCost')?.setValue('');
             this.schemeForm.get('minMonthlyCost')?.setValue('');
+            this.setTargetValidator();
         }
-        this.setTargetValidator();
     }
 
     setSchemeData(): CostScheme {
