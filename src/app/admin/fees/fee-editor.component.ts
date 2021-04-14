@@ -10,10 +10,10 @@ import {
     AccountIdFilterList, WidgetFilterList
 } from '../../model/fee-scheme.model';
 import {
-    SettingsFeeTargetFilterType, PaymentInstrument, PaymentProvider, TransactionType
+    SettingsFeeTargetFilterType, PaymentInstrument, PaymentProvider, TransactionType, UserType, UserMode
 } from '../../model/generated-models';
 import {
-    PaymentInstrumentList, PaymentProviderList, FeeTargetFilterList, TransactionTypeList
+    PaymentInstrumentList, PaymentProviderList, FeeTargetFilterList, TransactionTypeList, UserTypeList, UserModeList
 } from 'src/app/model/payment.model';
 import { CommonTargetValue, TargetParams } from 'src/app/model/common.model';
 import { CountryFilterList, getCountry } from 'src/app/model/country-code.model';
@@ -52,6 +52,8 @@ export class FeeEditorComponent implements OnInit {
     transactionTypes = TransactionTypeList;
     instruments = PaymentInstrumentList;
     providers = PaymentProviderList;
+    userTypes = UserTypeList;
+    userModes = UserModeList;
 
     schemeForm = this.formBuilder.group({
         id: [''],
@@ -62,6 +64,8 @@ export class FeeEditorComponent implements OnInit {
         targetValues: [[], { validators: [Validators.required], updateOn: 'change' }],
         targetValue: [''],
         instrument: [[], { validators: [Validators.required], updateOn: 'change' }],
+        userType: [[], { validators: [Validators.required], updateOn: 'change' }],
+        userMode: [[], { validators: [Validators.required], updateOn: 'change' }],
         trxType: [[], { validators: [Validators.required], updateOn: 'change' }],
         provider: [[], { validators: [Validators.required], updateOn: 'change' }],
         transactionFees: ['', {
@@ -219,6 +223,8 @@ export class FeeEditorComponent implements OnInit {
             this.schemeForm.get('target')?.setValue(scheme?.target);
             this.schemeForm.get('targetValues')?.setValue(scheme?.targetValues);
             this.schemeForm.get('instrument')?.setValue(scheme.instrument);
+            this.schemeForm.get('userType')?.setValue(scheme?.userType);
+            this.schemeForm.get('userMode')?.setValue(scheme?.userMode);
             this.schemeForm.get('trxType')?.setValue(scheme?.trxType);
             this.schemeForm.get('provider')?.setValue(scheme?.provider);
             this.schemeForm.get('transactionFees')?.setValue(scheme?.terms.transactionFees);
@@ -246,6 +252,8 @@ export class FeeEditorComponent implements OnInit {
             this.schemeForm.get('target')?.setValue(SettingsFeeTargetFilterType.None);
             this.schemeForm.get('targetValues')?.setValue([]);
             this.schemeForm.get('instrument')?.setValue('');
+            this.schemeForm.get('userType')?.setValue([]);
+            this.schemeForm.get('userMode')?.setValue([]);
             this.schemeForm.get('trxType')?.setValue('');
             this.schemeForm.get('provider')?.setValue('');
             this.schemeForm.get('transactionFees')?.setValue('');
@@ -277,6 +285,8 @@ export class FeeEditorComponent implements OnInit {
         (this.schemeForm.get('instrument')?.value as PaymentInstrument[]).forEach(x => data.instrument.push(x));
         (this.schemeForm.get('trxType')?.value as TransactionType[]).forEach(x => data.trxType.push(x));
         (this.schemeForm.get('provider')?.value as PaymentProvider[]).forEach(x => data.provider.push(x));
+        (this.schemeForm.get('userType')?.value as UserType[]).forEach(x => data.userType.push(x));
+        (this.schemeForm.get('userMode')?.value as UserMode[]).forEach(x => data.userMode.push(x));
         // terms
         data.terms.transactionFees = Number(this.schemeForm.get('transactionFees')?.value);
         data.terms.minTransactionFee = Number(this.schemeForm.get('minTransactionFee')?.value);
@@ -309,6 +319,8 @@ export class FeeEditorComponent implements OnInit {
             valid = this.validateField('target');
             if (valid) { valid = this.validateField('targetValues'); }
             if (valid) { valid = this.validateField('instrument'); }
+            if (valid) { valid = this.validateField('userType'); }
+            if (valid) { valid = this.validateField('userMode'); }
             if (valid) { valid = this.validateField('trxType'); }
             if (valid) { valid = this.validateField('provider'); }
             if (valid) { valid = (this.errorMessage === ''); }

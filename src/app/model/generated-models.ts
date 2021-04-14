@@ -29,8 +29,9 @@ export type Query = {
   getMySettingsKycFull?: Maybe<SettingsKyc>;
   getAppropriateSettingsKyc?: Maybe<SettingsKyc>;
   getSettingsFee?: Maybe<SettingsFeeListResult>;
-  getAppropriateSettingsFee?: Maybe<SettingsFeeShort>;
-  getAppropriateSettingsFeeFull?: Maybe<SettingsFee>;
+  getMySettingsFee?: Maybe<SettingsFeeShort>;
+  getMySettingsFeeFull?: Maybe<SettingsFee>;
+  getAppropriateSettingsFee?: Maybe<SettingsFee>;
   getSettingsCost?: Maybe<SettingsCostListResult>;
   getAppropriateSettingsCost?: Maybe<SettingsCostShort>;
   getAppropriateSettingsCostFull?: Maybe<SettingsCost>;
@@ -98,17 +99,24 @@ export type QueryGetSettingsFeeArgs = {
 };
 
 
-export type QueryGetAppropriateSettingsFeeArgs = {
+export type QueryGetMySettingsFeeArgs = {
   transactionType: TransactionType;
   instrument: PaymentInstrument;
-  source: TransactionSource;
   paymentProvider?: Maybe<PaymentProvider>;
-  affiliateId?: Maybe<Scalars['String']>;
 };
 
 
-export type QueryGetAppropriateSettingsFeeFullArgs = {
+export type QueryGetMySettingsFeeFullArgs = {
   transactionType: TransactionType;
+  instrument: PaymentInstrument;
+  paymentProvider?: Maybe<PaymentProvider>;
+};
+
+
+export type QueryGetAppropriateSettingsFeeArgs = {
+  transactionType: TransactionType;
+  targetUserType: UserType;
+  targetUserMode: UserMode;
   instrument: PaymentInstrument;
   paymentProvider: PaymentProvider;
   filterType?: Maybe<SettingsFeeTargetFilterType>;
@@ -342,7 +350,10 @@ export enum UserMode {
 export enum SettingsKycTargetFilterType {
   None = 'None',
   AccountId = 'AccountId',
-  Country = 'Country'
+  AffiliateId = 'AffiliateId',
+  Country = 'Country',
+  AccountType = 'AccountType',
+  InitiateFrom = 'InitiateFrom'
 }
 
 export type SettingsKycShort = {
@@ -374,6 +385,8 @@ export type SettingsFee = {
   targetFilterType?: Maybe<SettingsFeeTargetFilterType>;
   targetFilterValues?: Maybe<Array<Scalars['String']>>;
   targetInstruments?: Maybe<Array<Scalars['String']>>;
+  targetUserType?: Maybe<Array<UserType>>;
+  targetUserModes?: Maybe<Array<UserMode>>;
   targetTransactionTypes?: Maybe<Array<Scalars['String']>>;
   targetPaymentProviders?: Maybe<Array<Scalars['String']>>;
   terms: Scalars['String'];
@@ -386,10 +399,10 @@ export type SettingsFee = {
 
 export enum SettingsFeeTargetFilterType {
   None = 'None',
-  AffiliateId = 'AffiliateId',
   AccountId = 'AccountId',
-  AccountType = 'AccountType',
+  AffiliateId = 'AffiliateId',
   Country = 'Country',
+  AccountType = 'AccountType',
   InitiateFrom = 'InitiateFrom'
 }
 
@@ -408,12 +421,6 @@ export enum PaymentInstrument {
   Apm = 'APM',
   Received = 'Received',
   Send = 'Send'
-}
-
-export enum TransactionSource {
-  QuickCheckout = 'QuickCheckout',
-  Widget = 'Widget',
-  Wallet = 'Wallet'
 }
 
 export enum PaymentProvider {
@@ -772,6 +779,12 @@ export type TransactionShort = {
   data?: Maybe<Scalars['String']>;
 };
 
+export enum TransactionSource {
+  QuickCheckout = 'QuickCheckout',
+  Widget = 'Widget',
+  Wallet = 'Wallet'
+}
+
 export type TransactionListResult = {
   __typename?: 'TransactionListResult';
   count?: Maybe<Scalars['Int']>;
@@ -1083,6 +1096,8 @@ export type SettingsFeeInput = {
   targetFilterType?: Maybe<SettingsFeeTargetFilterType>;
   targetFilterValues?: Maybe<Array<Scalars['String']>>;
   targetInstruments?: Maybe<Array<PaymentInstrument>>;
+  targetUserType?: Maybe<Array<UserType>>;
+  targetUserModes?: Maybe<Array<UserMode>>;
   targetTransactionTypes?: Maybe<Array<TransactionType>>;
   targetPaymentProviders?: Maybe<Array<PaymentProvider>>;
   terms?: Maybe<Scalars['String']>;

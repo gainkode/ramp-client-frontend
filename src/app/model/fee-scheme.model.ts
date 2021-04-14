@@ -1,7 +1,7 @@
 import { CommonTargetValue } from './common.model';
 import { getCountry, getCountryByCode3 } from './country-code.model';
 import {
-    SettingsFee, PaymentInstrument, PaymentProvider, TransactionType, SettingsFeeTargetFilterType
+    SettingsFee, PaymentInstrument, PaymentProvider, TransactionType, SettingsFeeTargetFilterType, UserType, UserMode
 } from './generated-models';
 import { PaymentInstrumentList, PaymentProviderList,
     FeeTargetFilterList, TransactionTypeList } from './payment.model';
@@ -41,6 +41,8 @@ export class FeeScheme {
     targetValues: Array<string> = [];
     trxType: Array<TransactionType> = [];
     instrument: Array<PaymentInstrument> = [];
+    userType: Array<UserType> = [];
+    userMode: Array<UserMode> = [];
     provider: Array<PaymentProvider> = [];
     terms!: FeeShemeTerms;
     details!: FeeShemeWireDetails;
@@ -56,6 +58,8 @@ export class FeeScheme {
             data.targetInstruments?.forEach(x => this.instrument.push(x as PaymentInstrument));
             data.targetPaymentProviders?.forEach(x => this.provider.push(x as PaymentProvider));
             data.targetTransactionTypes?.forEach(x => this.trxType.push(x as TransactionType));
+            data.targetUserType?.forEach(x => this.userType.push(x as UserType));
+            data.targetUserModes?.forEach(x => this.userMode.push(x as UserMode));
             this.target = data.targetFilterType as SettingsFeeTargetFilterType | null;
             if (this.target === SettingsFeeTargetFilterType.Country) {
                 data.targetFilterValues?.forEach(x => {

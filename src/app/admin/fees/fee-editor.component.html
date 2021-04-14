@@ -117,6 +117,32 @@
                         Please specify a payment provider
                     </mat-error>
                 </mat-form-field>
+
+                <!-- User type -->
+                <mat-form-field class="form-element">
+                    <mat-label>User type</mat-label>
+                    <mat-select formControlName="userType" multiple required>
+                        <mat-option *ngFor="let item of userTypes" [value]="item.id">
+                            {{item.name}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="this.schemeForm.get('userType')?.hasError('required')">
+                        Please specify a user type
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- User mode -->
+                <mat-form-field class="form-element">
+                    <mat-label>User mode</mat-label>
+                    <mat-select formControlName="userMode" multiple required>
+                        <mat-option *ngFor="let item of userModes" [value]="item.id">
+                            {{item.name}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="this.schemeForm.get('userMode')?.hasError('required')">
+                        Please specify a user mode
+                    </mat-error>
+                </mat-form-field>
             </div>
         </mat-tab>
         <mat-tab>
