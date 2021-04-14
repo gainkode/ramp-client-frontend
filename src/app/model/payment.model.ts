@@ -120,8 +120,10 @@ export const CostTargetFilterList: Array<CostTargetFilterTypeView> = [
 
 export const KycTargetFilterList: Array<KycTargetFilterTypeView> = [
     { id: SettingsKycTargetFilterType.None, name: 'None' },
+    { id: SettingsKycTargetFilterType.AffiliateId, name: 'Affiliate identifier' },
     { id: SettingsKycTargetFilterType.Country, name: 'Country' },
-    { id: SettingsKycTargetFilterType.AccountId, name: 'Account' }
+    { id: SettingsKycTargetFilterType.AccountId, name: 'Account' },
+    { id: SettingsKycTargetFilterType.InitiateFrom, name: 'Initiate from ...' }
 ];
 
 export const UserTypeList: Array<UserTypeView> = [

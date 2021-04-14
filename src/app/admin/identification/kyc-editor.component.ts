@@ -16,6 +16,7 @@ import { CommonTargetValue, TargetParams } from 'src/app/model/common.model';
 import { CountryFilterList, getCountry } from 'src/app/model/country-code.model';
 import { KycScheme } from 'src/app/model/identification.model';
 import { AdminDataService } from 'src/app/services/admin-data.service';
+import { AccountTypeFilterList, AffiliateIdFilterList, WidgetFilterList } from 'src/app/model/fee-scheme.model';
 
 @Component({
     selector: 'kyc-editor',
@@ -93,6 +94,27 @@ export class KycEditorComponent implements OnInit, OnDestroy {
                 this.targetEntity = 'account identifier';
                 break;
             }
+            case SettingsKycTargetFilterType.AffiliateId: {
+                params.title = 'List of affiliate identifiers *';
+                params.inputPlaceholder = 'New identifier...';
+                params.dataList = AffiliateIdFilterList;
+                this.targetEntity = 'affiliate identifier';
+                break;
+            }
+            case SettingsKycTargetFilterType.AccountType: {
+                params.title = 'List of account types *';
+                params.inputPlaceholder = 'New account type...';
+                params.dataList = AccountTypeFilterList;
+                this.targetEntity = 'account type';
+                break;
+            }
+            case SettingsKycTargetFilterType.InitiateFrom: {
+                params.title = 'List of widgets *';
+                params.inputPlaceholder = 'New widget...';
+                params.dataList = WidgetFilterList;
+                this.targetEntity = 'widget';
+                break;
+            }
         }
         return params;
     }
@@ -120,7 +142,7 @@ export class KycEditorComponent implements OnInit, OnDestroy {
         });
     }
 
-    ngOnDestroy(): void {}
+    ngOnDestroy(): void { }
 
     private setTargetValidator(): void {
         const val = this.schemeForm.get('target')?.value;
