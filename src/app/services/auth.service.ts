@@ -390,7 +390,7 @@ export class AuthService {
         let result = false;
         const user: User | null = this.getAuthenticatedUser();
         if (user !== null) {
-            result = (user.type === UserType.Merchant && user.kycStatus === 'Completed');
+            result = (user.type === UserType.Merchant && user.kycValid === true);
         }
         return result;
     }
