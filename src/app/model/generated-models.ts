@@ -10,8 +10,8 @@ export type Scalars = {
   Int: number;
   Float: number;
   DateTime: any;
-  Void: any;
   Byte: any;
+  Void: any;
 };
 
 
@@ -352,7 +352,6 @@ export enum SettingsKycTargetFilterType {
   AccountId = 'AccountId',
   AffiliateId = 'AffiliateId',
   Country = 'Country',
-  AccountType = 'AccountType',
   InitiateFrom = 'InitiateFrom'
 }
 
@@ -385,7 +384,7 @@ export type SettingsFee = {
   targetFilterType?: Maybe<SettingsFeeTargetFilterType>;
   targetFilterValues?: Maybe<Array<Scalars['String']>>;
   targetInstruments?: Maybe<Array<Scalars['String']>>;
-  targetUserType?: Maybe<Array<UserType>>;
+  targetUserTypes?: Maybe<Array<UserType>>;
   targetUserModes?: Maybe<Array<UserMode>>;
   targetTransactionTypes?: Maybe<Array<Scalars['String']>>;
   targetPaymentProviders?: Maybe<Array<Scalars['String']>>;
@@ -503,7 +502,14 @@ export type User = {
   kycValidationTierId?: Maybe<Scalars['String']>;
   kycApplicantId?: Maybe<Scalars['String']>;
   kycValid?: Maybe<Scalars['Boolean']>;
-  kycStatus?: Maybe<KycStatus>;
+  kycReviewDate?: Maybe<Scalars['DateTime']>;
+  kycStatus?: Maybe<Scalars['String']>;
+  kycStatusDate?: Maybe<Scalars['DateTime']>;
+  kycReviewComment?: Maybe<Scalars['String']>;
+  kycPrivateComment?: Maybe<Scalars['String']>;
+  kycReviewRejectedType?: Maybe<Scalars['String']>;
+  kycReviewRejectedLabels?: Maybe<Array<Scalars['String']>>;
+  kycReviewResult?: Maybe<Scalars['String']>;
   kycStatusUpdateRequired?: Maybe<Scalars['Boolean']>;
   state?: Maybe<UserState>;
 };
@@ -533,13 +539,6 @@ export type UserRolePermission = {
   objectDescription: Scalars['String'];
   fullAccess: Scalars['Boolean'];
 };
-
-export enum KycStatus {
-  Unknown = 'Unknown',
-  Init = 'Init',
-  Pending = 'Pending',
-  Completed = 'Completed'
-}
 
 export type UserState = {
   __typename?: 'UserState';
@@ -650,16 +649,7 @@ export type KycApplicant = {
   email?: Maybe<Scalars['String']>;
   phone?: Maybe<Scalars['String']>;
   countryCode3?: Maybe<Scalars['String']>;
-  kyc?: Maybe<KycReview>;
   details?: Maybe<Array<StringMap>>;
-};
-
-export type KycReview = {
-  __typename?: 'KycReview';
-  createDate?: Maybe<Scalars['DateTime']>;
-  reviewDate?: Maybe<Scalars['DateTime']>;
-  result?: Maybe<Scalars['Boolean']>;
-  status?: Maybe<KycStatus>;
 };
 
 export type StringMap = {
@@ -794,12 +784,14 @@ export type TransactionListResult = {
 export type Transaction = {
   __typename?: 'Transaction';
   transactionId: Scalars['ID'];
-  transactionCode?: Maybe<Scalars['String']>;
+  code?: Maybe<Scalars['String']>;
   userId: Scalars['String'];
   affiliateId?: Maybe<Scalars['String']>;
   created: Scalars['DateTime'];
   executed?: Maybe<Scalars['DateTime']>;
-  transactionType: TransactionType;
+  type: TransactionType;
+  source: TransactionSource;
+  status: TransactionStatus;
   fee: Scalars['Float'];
   feePercent: Scalars['Float'];
   feeMinEuro: Scalars['Float'];
@@ -811,7 +803,6 @@ export type Transaction = {
   amountToReceive: Scalars['Float'];
   amountToReceiveWithoutFee: Scalars['Float'];
   rate: Scalars['Float'];
-  source: TransactionSource;
   orderId?: Maybe<Scalars['String']>;
   liquidityProvider: LiquidityProvider;
   instrument: PaymentInstrument;
@@ -820,6 +811,21 @@ export type Transaction = {
   order?: Maybe<Scalars['String']>;
   data?: Maybe<Scalars['String']>;
 };
+
+export enum TransactionStatus {
+  New = 'New',
+  Pending = 'Pending',
+  Processing = 'Processing',
+  Paid = 'Paid',
+  PaymentDeclined = 'PaymentDeclined',
+  ConfirmingOrder = 'ConfirmingOrder',
+  SendingToAddress = 'SendingToAddress',
+  Completed = 'Completed',
+  KycRejected = 'KycRejected',
+  Abounded = 'Abounded',
+  Canceled = 'Canceled',
+  Chargeback = 'Chargeback'
+}
 
 export enum LiquidityProvider {
   Bitstamp = 'Bitstamp'
@@ -846,7 +852,6 @@ export type Mutation = {
   assignRole?: Maybe<User>;
   removeRole?: Maybe<User>;
   deleteUser?: Maybe<User>;
-  kycHasBeenSent?: Maybe<Scalars['Void']>;
   signup: LoginResult;
   login: LoginResult;
   logout: Scalars['Boolean'];
@@ -1096,7 +1101,7 @@ export type SettingsFeeInput = {
   targetFilterType?: Maybe<SettingsFeeTargetFilterType>;
   targetFilterValues?: Maybe<Array<Scalars['String']>>;
   targetInstruments?: Maybe<Array<PaymentInstrument>>;
-  targetUserType?: Maybe<Array<UserType>>;
+  targetUserTypes?: Maybe<Array<UserType>>;
   targetUserModes?: Maybe<Array<UserMode>>;
   targetTransactionTypes?: Maybe<Array<TransactionType>>;
   targetPaymentProviders?: Maybe<Array<PaymentProvider>>;
@@ -1159,7 +1164,6 @@ export type UserInput = {
   deleted?: Maybe<Scalars['DateTime']>;
   changePasswordRequired?: Maybe<Scalars['Boolean']>;
 };
-
 
 export type LoginResult = {
   __typename?: 'LoginResult';
@@ -1224,6 +1228,7 @@ export type FileInfo = {
   type?: Maybe<FileType>;
   order?: Maybe<Scalars['Int']>;
 };
+
 
 
 export type RequiredUserPermission = {
@@ -1313,6 +1318,47 @@ export type UserLogin = {
   userDeviceId?: Maybe<Scalars['String']>;
 };
 
+export type UserNotificationSubscription = {
+  __typename?: 'UserNotificationSubscription';
+  user_notification_subscription_id: Scalars['ID'];
+  name: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  code: Scalars['String'];
+  site_notification_default?: Maybe<Scalars['Boolean']>;
+  site_notification_immutable?: Maybe<Scalars['Boolean']>;
+  email_notification_default?: Maybe<Scalars['Boolean']>;
+  email_notification_immutable?: Maybe<Scalars['Boolean']>;
+};
+
+export type UserNotificationSubscriptionInput = {
+  user_id?: Maybe<Scalars['String']>;
+  notification_type_code?: Maybe<Scalars['String']>;
+  site_notification?: Maybe<Scalars['Boolean']>;
+  email_notification?: Maybe<Scalars['Boolean']>;
+};
+
+export type UserNotificationType = {
+  __typename?: 'UserNotificationType';
+  user_notification_type_id: Scalars['ID'];
+  name: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  code: Scalars['String'];
+  site_notification?: Maybe<Scalars['Boolean']>;
+  site_notification_immutable?: Maybe<Scalars['Boolean']>;
+  email_notification?: Maybe<Scalars['Boolean']>;
+  email_notification_immutable?: Maybe<Scalars['Boolean']>;
+};
+
+export type UserNotificationTypeInput = {
+  name: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  code: Scalars['String'];
+  site_notification?: Maybe<Scalars['Boolean']>;
+  site_notification_immutable?: Maybe<Scalars['Boolean']>;
+  email_notification?: Maybe<Scalars['Boolean']>;
+  email_notification_immutable?: Maybe<Scalars['Boolean']>;
+};
+
 export type UserShort = {
   __typename?: 'UserShort';
   email: Scalars['String'];
@@ -1325,6 +1371,8 @@ export type UserShort = {
   countryCode2?: Maybe<Scalars['String']>;
   countryCode3?: Maybe<Scalars['String']>;
   kycValid?: Maybe<Scalars['Boolean']>;
+  kycStatus?: Maybe<Scalars['String']>;
+  kycReviewComment?: Maybe<Scalars['String']>;
 };
 
 export type SettingsResult = {

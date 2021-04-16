@@ -58,7 +58,7 @@ export class FeeScheme {
             data.targetInstruments?.forEach(x => this.instrument.push(x as PaymentInstrument));
             data.targetPaymentProviders?.forEach(x => this.provider.push(x as PaymentProvider));
             data.targetTransactionTypes?.forEach(x => this.trxType.push(x as TransactionType));
-            data.targetUserType?.forEach(x => this.userType.push(x as UserType));
+            data.targetUserTypes?.forEach(x => this.userType.push(x as UserType));
             data.targetUserModes?.forEach(x => this.userMode.push(x as UserMode));
             this.target = data.targetFilterType as SettingsFeeTargetFilterType | null;
             if (this.target === SettingsFeeTargetFilterType.Country) {

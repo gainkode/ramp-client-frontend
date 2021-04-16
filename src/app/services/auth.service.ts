@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { from, Observable } from 'rxjs';
 import { SocialAuthService, FacebookLoginProvider, GoogleLoginProvider, SocialUser } from 'angularx-social-login';
-import { KycStatus, LoginResult, SettingsCommon, User, UserType } from '../model/generated-models';
+import { LoginResult, SettingsCommon, User, UserType } from '../model/generated-models';
 import { environment } from 'src/environments/environment';
 import { EmptyObject } from 'apollo-angular/types';
 
@@ -390,7 +390,7 @@ export class AuthService {
         let result = false;
         const user: User | null = this.getAuthenticatedUser();
         if (user !== null) {
-            result = (user.type === UserType.Merchant && user.kycStatus === KycStatus.Completed);
+            result = (user.type === UserType.Merchant && user.kycStatus === 'Completed');
         }
         return result;
     }

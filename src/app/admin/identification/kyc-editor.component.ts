@@ -101,13 +101,6 @@ export class KycEditorComponent implements OnInit, OnDestroy {
                 this.targetEntity = 'affiliate identifier';
                 break;
             }
-            case SettingsKycTargetFilterType.AccountType: {
-                params.title = 'List of account types *';
-                params.inputPlaceholder = 'New account type...';
-                params.dataList = AccountTypeFilterList;
-                this.targetEntity = 'account type';
-                break;
-            }
             case SettingsKycTargetFilterType.InitiateFrom: {
                 params.title = 'List of widgets *';
                 params.inputPlaceholder = 'New widget...';
