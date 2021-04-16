@@ -1,9 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { Rate, SettingsCurrencyListResult, TransactionType, User } from '../model/generated-models';
+import { LoginResult, Rate, SettingsCommon, SettingsCurrencyListResult, TransactionType, User } from '../model/generated-models';
 import { CheckoutSummary, CurrencyView, QuickCheckoutTransactionTypeList } from '../model/payment.model';
 import { AuthService } from '../services/auth.service';
 import { ErrorService } from '../services/error.service';
@@ -16,10 +16,12 @@ import { WalletValidator } from '../utils/wallet.validator';
     styleUrls: ['quick-checkout.scss']
 })
 export class QuuckCheckoutComponent implements OnInit, OnDestroy {
+    @ViewChild('checkoutStepper') private stepper: MatStepper | undefined = undefined;
     user: User | null = null;
     errorMessage = '';
     inProgress = false;
     walletAddressName = '';
+    needToLogin = false;
     sourceCurrencies: CurrencyView[] = [];
     destinationCurrencies: CurrencyView[] = [];
     transactionList = QuickCheckoutTransactionTypeList;
@@ -138,12 +140,62 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
         this.updateAmounts();
     }
 
+    onError(error: string): void {
+        this.errorMessage = error;
+    }
+
+    onProgressChange(status: boolean): void {
+        this.inProgress = status;
+    }
+
+    onAuthenticated(userData: LoginResult): void {
+        if (userData.authTokenAction === 'Default' || userData.authTokenAction === 'KycRequired') {
+            this.handleSuccessLogin(userData);
+        } else if (userData.authTokenAction === 'ConfirmName') {
+            this.auth.logout();
+            this.router.navigateByUrl(`/auth/personal/signup/${userData.authToken}`);
+        } else {
+            this.auth.logout();
+            this.errorMessage = `Invalid authentication via ${name}`;
+        }
+    }
+
+    onSocialAuthenticated(userData: LoginResult): void {
+        if (userData.authTokenAction === 'Default' || userData.authTokenAction === 'KycRequired') {
+            this.handleSuccessLogin(userData);
+        } else {
+            this.auth.logout();
+            this.errorMessage = 'Unable to sign in';
+        }
+    }
+
     getDestinationAmountMinError(): string {
         return this.getAmountMinError(this.currentDestinationCurrency);
     }
 
     getSourceAmountMinError(): string {
         return this.getAmountMinError(this.currentSourceCurrency);
+    }
+
+    private handleSuccessLogin(userData: LoginResult): void {
+        this.auth.setLoginUser(userData);
+        this.inProgress = true;
+        this.auth.getSettingsCommon().valueChanges.subscribe(settings => {
+            const settingsCommon: SettingsCommon = settings.data.getSettingsCommon;
+            this.auth.setLocalSettingsCommon(settingsCommon);
+            this.inProgress = false;
+            this.needToLogin = false;
+
+            // register order here
+            this.stepper?.next();
+        }, (error) => {
+            this.inProgress = false;
+            if (this.auth.token !== '') {
+                this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load common settings');
+            } else {
+                this.errorMessage = this.errorHandler.getError(error.message, 'Unable to authenticate user');
+            }
+        });
     }
 
     private loadDetailsForm(): void {
@@ -228,13 +280,14 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
     }
 
     detailsCompleted(stepper: MatStepper): void {
-        if (this.detailsForm.valid) {
-            console.log('login');
-            this.auth.authenticate(this.detailsEmailControl?.value, '', true).subscribe(({ data }) => {
-                console.log(data);
-            });
-            //stepper.next();
-        }
+        this.needToLogin = true;
+        // if (this.detailsForm.valid) {
+        //     console.log('login');
+        //     this.auth.authenticate(this.detailsEmailControl?.value, '', true).subscribe(({ data }) => {
+        //         console.log(data);
+        //     });
+        //     //stepper.next();
+        // }
     }
 
     private getCurrency(id: string): CurrencyView | null {

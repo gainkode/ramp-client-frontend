@@ -11,10 +11,10 @@
 <div class="checkout-page">
     <div class="wizard-panel-split">
         <div class="wizard-panel-stepper">
-            <mat-horizontal-stepper linear #stepper style="background-color: #DDDFE6;">
+            <mat-horizontal-stepper linear #checkoutStepper class="stepper">
                 <!-- Order details -->
                 <mat-step [stepControl]="detailsForm" editable="true">
-                    <form [formGroup]="detailsForm">
+                    <form [formGroup]="detailsForm" *ngIf="!needToLogin">
                         <ng-template matStepLabel>Order details</ng-template>
                         <div>
                             <div *ngIf="inProgress" class="form-element">
@@ -125,11 +125,23 @@
                         </div>
                         <div class="form-element">
                             <button type="button" class="main-button main-button-primary"
-                            (click)="detailsCompleted(stepper)">
+                            (click)="detailsCompleted(checkoutStepper)">
                                 NEXT
                             </button>
                         </div>
                     </form>
+
+                    <div *ngIf="needToLogin">
+                        <h2>Sign in</h2>
+                        <span>Your account seems to be registered. Please, authenticate</span>
+                        <mat-progress-bar *ngIf="inProgress" mode="indeterminate"></mat-progress-bar>
+                        <div class="form-error-box" *ngIf="errorMessage!==''">
+                            {{errorMessage}}
+                        </div>
+                        <app-login-panel (error)="onError($event)" (progressChange)="onProgressChange($event)"
+                            (authenticated)="onAuthenticated($event)" (socialAuthenticated)="onSocialAuthenticated($event)">
+                        </app-login-panel>
+                    </div>
                 </mat-step>
                 <!-- Payment info -->
                 <mat-step [stepControl]="secondFormGroup" editable="true">
@@ -152,7 +164,7 @@
                     <p>You are now done.</p>
                     <div>
                         <button matStepperPrevious>Back</button>
-                        <button (click)="stepper.reset()">Reset</button>
+                        <button (click)="checkoutStepper.reset()">Reset</button>
                     </div>
                 </mat-step>
                 <!-- Order status -->
@@ -161,7 +173,7 @@
                     <p>You are now done.</p>
                     <div>
                         <button matStepperPrevious>Back</button>
-                        <button (click)="stepper.reset()">Reset</button>
+                        <button (click)="checkoutStepper.reset()">Reset</button>
                     </div>
                 </mat-step>
             </mat-horizontal-stepper>
