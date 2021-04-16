@@ -88,7 +88,6 @@ export class QuickCheckoutDataService {
           currenciesFrom: [fromValue],
           currencyTo: toValue
         },
-        pollInterval: 60000,
         fetchPolicy: 'network-only'
       });
     } else {
