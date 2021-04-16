@@ -13,12 +13,21 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonDialogBox } from './common-box.dialog';
 import { CheckoutSummaryComponent } from './checkout-summary.component';
 import { ExchangeRateComponent } from './exchange-rate.component';
+import { LoginPanelComponent } from './login-panel.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 const materialModules = [
     MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatTooltipModule,
     MatDialogModule,
     MatIconModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatProgressBarModule
 ];
 
 @NgModule({
@@ -28,11 +37,12 @@ const materialModules = [
 export class MaterialModule { }
 
 @NgModule({
-    imports: [CommonModule, MaterialModule, MatProgressBarModule],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, MaterialModule],
     declarations: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
-        CheckoutSummaryComponent, ExchangeRateComponent, LineBreakPipe, CommonDialogBox],
+        CheckoutSummaryComponent, ExchangeRateComponent, LoginPanelComponent, LineBreakPipe, CommonDialogBox],
     exports: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
-        CheckoutSummaryComponent, ExchangeRateComponent, MatProgressBarModule, LineBreakPipe, CommonDialogBox],
+        CheckoutSummaryComponent, ExchangeRateComponent, LoginPanelComponent,
+        MatProgressBarModule, LineBreakPipe, CommonDialogBox],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 

@@ -21,63 +21,13 @@
 
             <mat-progress-bar *ngIf="inProgress" mode="indeterminate"></mat-progress-bar>
 
-            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-                <!-- Email -->
-                <mat-form-field class="form-element">
-                    <mat-label>Email</mat-label>
-                    <input type="email" matInput formControlName="email" maxlength="60" placeholder="User login name"
-                        required />
-                    <mat-error *ngIf="this.loginForm.get('email')?.hasError('required')">
-                        Please specify your email
-                    </mat-error>
-                    <mat-error *ngIf="this.loginForm.get('email')?.hasError('pattern')">
-                        Email has incorrect format
-                    </mat-error>
-                </mat-form-field>
-
-                <!-- Password -->
-                <mat-form-field class="form-element">
-                    <mat-label>Password</mat-label>
-                    <input [type]="hidePassword ? 'password' : 'text'" matInput formControlName="password"
-                        maxlength="30" placeholder="Password" required>
-                    <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword"
-                        [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword"
-                        [matTooltip]="hidePassword ? 'Show password' : 'Hide password'" matTooltipClass="info-tooltip">
-                        <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-                    </button>
-                    <mat-error *ngIf="this.loginForm.get('password')?.hasError('required')">
-                        Please specify your password
-                    </mat-error>
-                    <mat-error *ngIf="this.loginForm.get('password')?.hasError('minlength')">
-                        Password must contain at least 8 symbols
-                    </mat-error>
-                </mat-form-field>
-
-                <div class="form-element">
-                    <button class="main-button main-button-primary" type="submit">
-                        LOG IN
-                    </button>
-                </div>
-            </form>
             <div class="form-error-box" *ngIf="errorMessage!==''">
                 {{errorMessage}}
             </div>
-            <br>
-            <div class="form-element">
-                <span>If you want to get logged in with your social newtork account, please use:</span>
-            </div>
-            <div class="form-element">
-                <button class="main-button main-button-primary inline-button" 
-                    (click)='socialSignIn("Google")'>
-                    <img src="assets/icon-google.svg" alt="G" />
-                    Google
-                </button>
-                <button class="main-button main-button-primary inline-button" 
-                    (click)='socialSignIn("Facebook")'>
-                    <img src="assets/icon-facebook.svg" alt="f" />
-                    Facebook
-                </button>
-            </div>
+            
+            <app-login-panel (error)="onError($event)" (progressChange)="onProgressChange($event)"
+                (authenticated)="onAuthenticated($event)" (socialAuthenticated)="onSocialAuthenticated($event)">
+            </app-login-panel>
             <br>
             <div class="form-element">
                 <span>Forgot your password? Please, click&nbsp;<a href="/auth/personal/restore">here</a></span>

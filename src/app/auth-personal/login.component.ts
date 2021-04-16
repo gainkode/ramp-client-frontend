@@ -1,53 +1,24 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { ErrorService } from '../services/error.service';
-import { Validators, FormBuilder } from '@angular/forms';
-import { SocialUser } from 'angularx-social-login';
 import { LoginResult, SettingsCommon, UserType } from '../model/generated-models';
 import { MatDialog } from '@angular/material/dialog';
 import { CommonDialogBox } from '../components/common-box.dialog';
+import { ErrorService } from '../services/error.service';
 
 @Component({
     templateUrl: 'login.component.html',
     styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
+    userType = UserType.Personal;
     inProgress = false;
     errorMessage = '';
-    hidePassword = true;
-
-    loginForm = this.formBuilder.group({
-        email: [,
-            {
-                validators: [
-                    Validators.required,
-                    Validators.pattern('^[a-zA-Z0-9_.+\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-\.]+$')
-                ], updateOn: 'change'
-            }
-        ],
-        password: [,
-            {
-                validators: [
-                    Validators.required,
-                    Validators.minLength(8)
-                ], updateOn: 'change'
-            }
-        ]
-    });
 
     constructor(private auth: AuthService, private errorHandler: ErrorService,
-        private formBuilder: FormBuilder, private router: Router, public dialog: MatDialog) { }
+        private router: Router, public dialog: MatDialog) { }
 
-    googleSignIn(): void {
-        this.socialSignIn('Google');
-    }
-
-    facebookSignIn(): void {
-        this.socialSignIn('Facebook');
-    }
-
-    showWrongUserTypeRedirectDialog(userType: UserType): void {
+    private showWrongUserTypeRedirectDialog(userType: UserType): void {
         const dialogRef = this.dialog.open(CommonDialogBox, {
             width: '550px',
             data: {
@@ -60,106 +31,68 @@ export class LoginComponent {
         });
     }
 
-    handleSuccessLogin(userData: LoginResult): void {
-        const typeCheck = userData.user?.type === 'Personal';
-        if (typeCheck) {
-            this.auth.setLoginUser(userData);
-            this.inProgress = true;
-            this.auth.getSettingsCommon().valueChanges.subscribe(settings => {
-                const settingsCommon: SettingsCommon = settings.data.getSettingsCommon;
-                this.auth.setLocalSettingsCommon(settingsCommon);
-                this.inProgress = false;
-                this.router.navigateByUrl(this.auth.getUserMainPage());
-            }, (error) => {
-                this.inProgress = false;
-                if (this.auth.token !== '') {
-                    this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load common settings');
-                } else {
-                    this.router.navigateByUrl('/');
-                }
-            });
-        } else {
-            this.loginForm.reset();
-            this.errorMessage = 'Wrong account type. Try to sign in as a merchant';
-        }
-    }
-
-    socialSignIn(name: string): void {
+    private handleSuccessLogin(userData: LoginResult): void {
+        this.auth.setLoginUser(userData);
         this.inProgress = true;
-        this.auth.socialSignIn(name).subscribe((data) => {
-            if (data.user !== undefined) {
-                const user = data.user as SocialUser;
-                let token = '';
-                if (name === 'Google') {
-                    token = user.idToken;
-                } else if (name === 'Facebook') {
-                    token = user.authToken;
-                }
-                this.auth.socialSignOut();
-                this.auth.authenticateSocial(name.toLowerCase(), token).subscribe((loginData) => {
-                    const userData = loginData.data.login as LoginResult;
-                    this.inProgress = false;
-                    if (userData.user?.type === 'Personal') {
-                        if (userData.authTokenAction === 'Default') {
-                            this.handleSuccessLogin(userData);
-                        } else if (userData.authTokenAction === 'ConfirmName') {
-                            this.auth.logout();
-                            this.router.navigateByUrl(`/auth/personal/signup/${userData.authToken}`);
-                        } else {
-                            this.auth.logout();
-                            this.errorMessage = `Invalid authentication via ${name}`;
-                        }
-                    } else {
-                        this.auth.logout();
-                        let u = UserType.Merchant;
-                        if (userData.user?.type) {
-                            u = userData.user?.type;
-                        }
-                        this.showWrongUserTypeRedirectDialog(u);
-                    }
-                }, (error) => {
-                    this.inProgress = false;
-                    this.errorMessage = this.errorHandler.getError(
-                        error.message,
-                        `Invalid authentication via ${name}`);
-                });
+        this.auth.getSettingsCommon().valueChanges.subscribe(settings => {
+            const settingsCommon: SettingsCommon = settings.data.getSettingsCommon;
+            this.auth.setLocalSettingsCommon(settingsCommon);
+            this.inProgress = false;
+            this.router.navigateByUrl(this.auth.getUserMainPage());
+        }, (error) => {
+            this.inProgress = false;
+            if (this.auth.token !== '') {
+                this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load common settings');
             } else {
-                this.inProgress = false;
+                this.router.navigateByUrl('/');
             }
         });
     }
 
-    onSubmit(): void {
-        this.errorMessage = '';
-        if (this.loginForm.valid) {
-            this.inProgress = true;
-            this.auth.authenticate(
-                this.loginForm.get('email')?.value,
-                this.loginForm.get('password')?.value)
-                .subscribe(({ data }) => {
-                    const userData = data.login as LoginResult;
-                    this.inProgress = false;
-                    if (userData.user?.type === 'Personal') {
-                        if (userData.authTokenAction === 'Default') {
-                            this.handleSuccessLogin(userData);
-                        } else {
-                            this.auth.logout();
-                            this.errorMessage = 'Unable to sign in';
-                        }
-                    } else {
-                        this.auth.logout();
-                        let u = UserType.Merchant;
-                        if (userData.user?.type) {
-                            u = userData.user?.type;
-                        }
-                        this.showWrongUserTypeRedirectDialog(u);
-                    }
-                }, (error) => {
-                    this.inProgress = false;
-                    this.errorMessage = this.errorHandler.getError(
-                        error.message,
-                        'Incorrect login or password');
-                });
+    onError(error: string): void {
+        this.errorMessage = error;
+    }
+
+    onProgressChange(status: boolean): void {
+        this.inProgress = status;
+    }
+
+    onAuthenticated(userData: LoginResult): void {
+        if (userData.user?.type === UserType.Personal) {
+            if (userData.authTokenAction === 'Default') {
+                this.handleSuccessLogin(userData);
+            } else if (userData.authTokenAction === 'ConfirmName') {
+                this.auth.logout();
+                this.router.navigateByUrl(`/auth/personal/signup/${userData.authToken}`);
+            } else {
+                this.auth.logout();
+                this.errorMessage = `Invalid authentication via ${name}`;
+            }
+        } else {
+            this.auth.logout();
+            let u = UserType.Merchant;
+            if (userData.user?.type) {
+                u = userData.user?.type;
+            }
+            this.showWrongUserTypeRedirectDialog(u);
+        }
+    }
+
+    onSocialAuthenticated(userData: LoginResult): void {
+        if (userData.user?.type === UserType.Personal) {
+            if (userData.authTokenAction === 'Default') {
+                this.handleSuccessLogin(userData);
+            } else {
+                this.auth.logout();
+                this.errorMessage = 'Unable to sign in';
+            }
+        } else {
+            this.auth.logout();
+            let u = UserType.Merchant;
+            if (userData.user?.type) {
+                u = userData.user?.type;
+            }
+            this.showWrongUserTypeRedirectDialog(u);
         }
     }
 }
