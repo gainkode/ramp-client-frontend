@@ -58,6 +58,7 @@ import { QuickCheckoutDataService } from './services/quick-checkout.service';
 export class AppModule {
   errorLink = onError(({ forward, graphQLErrors, networkError, operation }) => {
     if (graphQLErrors) {
+      sessionStorage.setItem('currentError', '');
       for (const err of graphQLErrors) {
         if (err.extensions !== null) {
           const code = err.extensions?.code as string;
@@ -73,11 +74,10 @@ export class AppModule {
               return forward(operation);
             });
           }
-          err.message = err.extensions?.code;
-          // console.log(`Error code: ${err.message}`);
-        } else {
-          err.message = 'no_code';
+          sessionStorage.setItem('currentError', err.extensions?.code);
+          console.log(err.extensions?.code);
         }
+        // console.log(`Error code: ${err.message}`);
       }
     }
     if (networkError) {

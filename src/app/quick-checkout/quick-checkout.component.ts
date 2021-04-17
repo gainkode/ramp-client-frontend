@@ -186,7 +186,12 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
             this.inProgress = false;
             this.needToLogin = false;
 
+
+
             // register order here
+
+
+
             this.stepper?.next();
         }, (error) => {
             this.inProgress = false;
@@ -280,14 +285,17 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
     }
 
     detailsCompleted(stepper: MatStepper): void {
-        this.needToLogin = true;
-        // if (this.detailsForm.valid) {
-        //     console.log('login');
-        //     this.auth.authenticate(this.detailsEmailControl?.value, '', true).subscribe(({ data }) => {
-        //         console.log(data);
-        //     });
-        //     //stepper.next();
-        // }
+        if (this.detailsForm.valid) {
+            this.auth.authenticate(this.detailsEmailControl?.value, '', true).subscribe(({ data }) => {
+                const userData = data.login as LoginResult;
+                this.handleSuccessLogin(userData);
+                stepper.next();
+            }, (error) => {
+                if (this.errorHandler.getCurrentError() == 'auth.password_null_or_empty') {
+                    this.needToLogin = true;
+                }
+            });
+        }
     }
 
     private getCurrency(id: string): CurrencyView | null {

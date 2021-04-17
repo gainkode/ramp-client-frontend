@@ -4,6 +4,11 @@ import { Injectable } from '@angular/core';
 export class ErrorService {
     getError(code: string, defaultMessage: string): string {
         let result = defaultMessage;
+        const sessionCode = sessionStorage.getItem('currentError');
+        console.log(sessionCode);
+        if (sessionCode !== '') {
+            code = sessionCode as string;
+        }
         switch (code.toLowerCase()) {
             // Common error codes (0 - 50)
             case 'success':
@@ -70,6 +75,9 @@ export class ErrorService {
             case 'auth.terms_of_use_are_not_accepted':
                 result = 'Terms of use are not accepted';
                 break;
+            case 'auth.password_null_or_empty':
+                result = 'Need to login';
+                break;
             // User error codes (101 - 150)
             case 'user.not_found':
                 result = 'Specified user is not found';
@@ -127,5 +135,10 @@ export class ErrorService {
 
     getRejectedCookieMessage(): string {
         return 'Cookie consent is rejected. Allow cookie in order to have access';
+    }
+
+    getCurrentError(): string {
+        const sessionCode = sessionStorage.getItem('currentError');
+        return (sessionCode) ? sessionCode as string : '';
     }
 }
