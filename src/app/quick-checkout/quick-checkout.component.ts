@@ -179,20 +179,14 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
 
     private handleSuccessLogin(userData: LoginResult): void {
         this.auth.setLoginUser(userData);
+        this.detailsEmailControl?.setValue(userData.user?.email);
         this.inProgress = true;
         this.auth.getSettingsCommon().valueChanges.subscribe(settings => {
             const settingsCommon: SettingsCommon = settings.data.getSettingsCommon;
             this.auth.setLocalSettingsCommon(settingsCommon);
             this.inProgress = false;
             this.needToLogin = false;
-
-
-
-            // register order here
-
-
-
-            this.stepper?.next();
+            this.registerOrder();
         }, (error) => {
             this.inProgress = false;
             if (this.auth.token !== '') {
@@ -203,7 +197,17 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
         });
     }
 
+    private registerOrder(): void {
+        this.stepper?.next();
+    }
+
     private loadDetailsForm(): void {
+        if (this.auth.authenticated) {
+            const user = this.auth.user;
+            if (user) {
+                this.detailsEmailControl?.setValue(user.email);
+            }
+        }
         const currencyData = this.dataService.getSettingsCurrency();
         if (currencyData === null) {
             this.errorMessage = this.errorHandler.getRejectedCookieMessage();;
@@ -286,15 +290,26 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
 
     detailsCompleted(stepper: MatStepper): void {
         if (this.detailsForm.valid) {
-            this.auth.authenticate(this.detailsEmailControl?.value, '', true).subscribe(({ data }) => {
-                const userData = data.login as LoginResult;
-                this.handleSuccessLogin(userData);
-                stepper.next();
-            }, (error) => {
-                if (this.errorHandler.getCurrentError() == 'auth.password_null_or_empty') {
-                    this.needToLogin = true;
+            let authenticated = false;
+            const user = this.auth.user;
+            if (user) {
+                if (user.email === this.detailsEmailControl?.value) {
+                    authenticated = true;
                 }
-            });
+            }
+            if (authenticated) {
+                this.registerOrder();
+            } else {
+                this.auth.authenticate(this.detailsEmailControl?.value, '', true).subscribe(({ data }) => {
+                    const userData = data.login as LoginResult;
+                    this.handleSuccessLogin(userData);
+                    stepper.next();
+                }, (error) => {
+                    if (this.errorHandler.getCurrentError() == 'auth.password_null_or_empty') {
+                        this.needToLogin = true;
+                    }
+                });
+            }
         }
     }
 
