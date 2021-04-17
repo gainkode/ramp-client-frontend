@@ -186,7 +186,7 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
             this.auth.setLocalSettingsCommon(settingsCommon);
             this.inProgress = false;
             this.needToLogin = false;
-            this.registerOrder();
+            this.stepper?.next();
         }, (error) => {
             this.inProgress = false;
             if (this.auth.token !== '') {
@@ -198,7 +198,28 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
     }
 
     private registerOrder(): void {
-        this.stepper?.next();
+        this.inProgress = true;
+        let rate = this.currentRate?.originalRate;
+        if (this.detailsTransactionControl?.value === TransactionType.Deposit) {
+            rate = this.currentRate?.depositRate;
+        } else if (this.detailsTransactionControl?.value === TransactionType.Withdrawal) {
+            rate = this.currentRate?.withdrawRate;
+        }
+        this.dataService.createQuickCheckout(
+            this.detailsTransactionControl?.value,
+            this.detailsCurrencyFromControl?.value,
+            this.detailsCurrencyToControl?.value,
+            this.detailsAmountFromControl?.value,
+            rate as number,
+            this.detailsAddressControl?.value).subscribe(({ data }) => {
+                console.log(data);
+                this.stepper?.next();
+            }, (error) => {
+                this.inProgress = false;
+                if (this.errorHandler.getCurrentError() == 'auth.password_null_or_empty') {
+                    this.needToLogin = true;
+                }
+            });
     }
 
     private loadDetailsForm(): void {
@@ -298,13 +319,15 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
                 }
             }
             if (authenticated) {
-                this.registerOrder();
+                stepper.next();
             } else {
+                this.inProgress = true;
                 this.auth.authenticate(this.detailsEmailControl?.value, '', true).subscribe(({ data }) => {
                     const userData = data.login as LoginResult;
                     this.handleSuccessLogin(userData);
                     stepper.next();
                 }, (error) => {
+                    this.inProgress = false;
                     if (this.errorHandler.getCurrentError() == 'auth.password_null_or_empty') {
                         this.needToLogin = true;
                     }

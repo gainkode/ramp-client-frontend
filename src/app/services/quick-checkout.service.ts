@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { EmptyObject } from 'apollo-angular/types';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { TransactionType } from '../model/generated-models';
 
 const GET_SETTINGS_CURRENCY_POST = gql`
   query GetSettingsCurrency($recaptcha: String!) {
@@ -35,31 +37,28 @@ query GetRates($recaptcha: String!, $currenciesFrom: [String!]!, $currencyTo: St
 }
 `;
 
-// const ADD_SETTINGS_COST_POST = gql`
-// mutation AddSettingsCost(
-//   $name: String!,
-//   $description: String,
-//   $targetFilterType: SettingsCostTargetFilterType!,
-//   $targetFilterValues: [String!],
-//   $targetInstruments: [PaymentInstrument!],
-//   $targetTransactionTypes: [TransactionType!],
-//   $targetPaymentProviders: [PaymentProvider!],
-//   $terms: String!
-// ) {
-//   addSettingsCost(settings: {
-//     name: $name,
-//     description: $description,
-//     targetFilterType: $targetFilterType,
-//     targetFilterValues: $targetFilterValues,
-//     targetInstruments: $targetInstruments,
-//     targetTransactionTypes: $targetTransactionTypes,
-//     targetPaymentProviders: $targetPaymentProviders,
-//     terms: $terms
-//   }) {
-//     settingsCostId
-//   }
-// }
-// `;
+const CREATE_QUICK_CHECKOUT_POST = gql`
+mutation CreateQuickCheckout(
+  $transactionType: TransactionType!,
+  $currencyToSpend: String!,
+  $currencyToReceive: String!,
+  $amountFiat: Float!,
+  $rate: Float!,
+  $data: String!,
+  $recaptcha: String!
+) {
+  createQuickCheckout(transaction: {
+    transactionType: $transactionType
+    currencyToSpend: $currencyToSpend
+    currencyToReceive: $currencyToReceive
+    amountFiat: $amountFiat
+    rate: $rate
+    data: $data
+  }, recaptcha: $recaptcha) {
+    data
+  }
+}
+`;
 
 @Injectable()
 export class QuickCheckoutDataService {
@@ -95,37 +94,19 @@ export class QuickCheckoutDataService {
     }
   }
 
-//   saveFeeSettings(settings: FeeScheme, create: boolean): Observable<any> {
-//     return create ?
-//       this.apollo.mutate({
-//         mutation: ADD_SETTINGS_FEE_POST,
-//         variables: {
-//           name: settings.name,
-//           description: settings.description,
-//           targetFilterType: settings.target,
-//           targetFilterValues: settings.targetValues,
-//           targetInstruments: settings.instrument,
-//           targetTransactionTypes: settings.trxType,
-//           targetPaymentProviders: settings.provider,
-//           terms: settings.terms.getObject(),
-//           wireDetails: settings.details.getObject()
-//         }
-//       })
-//       :
-//       this.apollo.mutate({
-//         mutation: UPDATE_SETTINGS_FEE_POST,
-//         variables: {
-//           settingsId: settings.id,
-//           name: settings.name,
-//           description: settings.description,
-//           targetFilterType: settings.target,
-//           targetFilterValues: settings.targetValues,
-//           targetInstruments: settings.instrument,
-//           targetTransactionTypes: settings.trxType,
-//           targetPaymentProviders: settings.provider,
-//           terms: settings.terms.getObject(),
-//           wireDetails: settings.details.getObject()
-//         }
-//       });
-//   }
+  createQuickCheckout(transactionType: TransactionType, currencyToSpend: string,
+    currencyToReceive: string, amountFiat: number, rate: number, walletAddress: string): Observable<any> {
+    return this.apollo.mutate({
+      mutation: CREATE_QUICK_CHECKOUT_POST,
+      variables: {
+        recaptcha: environment.recaptchaId,
+        transactionType,
+        currencyToSpend,
+        currencyToReceive,
+        amountFiat,
+        rate,
+        data: JSON.stringify({ userAddress: walletAddress })
+      }
+    });
+  }
 }
