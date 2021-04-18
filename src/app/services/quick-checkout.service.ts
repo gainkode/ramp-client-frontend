@@ -3,7 +3,7 @@ import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { EmptyObject } from 'apollo-angular/types';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { TransactionType } from '../model/generated-models';
+import { PaymentInstrument, PaymentProvider, TransactionType } from '../model/generated-models';
 
 const GET_SETTINGS_CURRENCY_POST = gql`
   query GetSettingsCurrency($recaptcha: String!) {
@@ -43,6 +43,8 @@ mutation CreateQuickCheckout(
   $currencyToSpend: String!,
   $currencyToReceive: String!,
   $amountFiat: Float!,
+  $instrument: PaymentInstrument!,
+  $paymentProvider: PaymentProvider!,
   $rate: Float!,
   $data: String!,
   $recaptcha: String!
@@ -52,10 +54,13 @@ mutation CreateQuickCheckout(
     currencyToSpend: $currencyToSpend
     currencyToReceive: $currencyToReceive
     amountFiat: $amountFiat
+    instrument: $instrument
+    paymentProvider: $paymentProvider
     rate: $rate
     data: $data
   }, recaptcha: $recaptcha) {
-    data
+    data,
+    transactionId
   }
 }
 `;
@@ -95,7 +100,8 @@ export class QuickCheckoutDataService {
   }
 
   createQuickCheckout(transactionType: TransactionType, currencyToSpend: string,
-    currencyToReceive: string, amountFiat: number, rate: number, walletAddress: string): Observable<any> {
+    currencyToReceive: string, amountFiat: number, instrument: PaymentInstrument, provider: PaymentProvider,
+    rate: number, walletAddress: string): Observable<any> {
     return this.apollo.mutate({
       mutation: CREATE_QUICK_CHECKOUT_POST,
       variables: {
@@ -104,6 +110,8 @@ export class QuickCheckoutDataService {
         currencyToSpend,
         currencyToReceive,
         amountFiat,
+        instrument: instrument,
+        paymentProvider: provider,
         rate,
         data: JSON.stringify({ userAddress: walletAddress })
       }

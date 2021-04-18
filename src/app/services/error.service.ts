@@ -5,9 +5,10 @@ export class ErrorService {
     getError(code: string, defaultMessage: string): string {
         let result = defaultMessage;
         const sessionCode = sessionStorage.getItem('currentError');
-        console.log(sessionCode);
-        if (sessionCode !== '') {
-            code = sessionCode as string;
+        if (sessionCode) {
+            if (code !== '') {
+                code = sessionCode as string;
+            }
         }
         switch (code.toLowerCase()) {
             // Common error codes (0 - 50)

@@ -3,8 +3,8 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { MatStepper } from '@angular/material/stepper';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { LoginResult, Rate, SettingsCommon, SettingsCurrencyListResult, TransactionType, User } from '../model/generated-models';
-import { CheckoutSummary, CurrencyView, QuickCheckoutTransactionTypeList } from '../model/payment.model';
+import { LoginResult, PaymentInstrument, PaymentProvider, Rate, SettingsCommon, SettingsCurrencyListResult, TransactionShort, TransactionType, User } from '../model/generated-models';
+import { CheckoutSummary, CurrencyView, PaymentProviderList, QuickCheckoutPaymentInstrumentList, QuickCheckoutTransactionTypeList } from '../model/payment.model';
 import { AuthService } from '../services/auth.service';
 import { ErrorService } from '../services/error.service';
 import { QuickCheckoutDataService } from '../services/quick-checkout.service';
@@ -22,9 +22,12 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
     inProgress = false;
     walletAddressName = '';
     needToLogin = false;
+    isApmSelected = false;
     sourceCurrencies: CurrencyView[] = [];
     destinationCurrencies: CurrencyView[] = [];
     transactionList = QuickCheckoutTransactionTypeList;
+    paymentInstrumentList = QuickCheckoutPaymentInstrumentList;
+    paymentProviderList = PaymentProviderList;
     currentSourceCurrency: CurrencyView | null = null;
     currentDestinationCurrency: CurrencyView | null = null;
     currentRate: Rate | null = null;
@@ -34,7 +37,6 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
     private numberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
     private _settingsSubscription!: any;
 
-    secondFormGroup!: FormGroup;
     detailsForm = this.formBuilder.group({
         email: ['', {
             validators: [
@@ -68,6 +70,12 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
     detailsCurrencyToControl: AbstractControl | null = null;
     detailsAddressControl: AbstractControl | null = null;
     detailsTransactionControl: AbstractControl | null = null;
+    paymentForm = this.formBuilder.group({
+        instrument: [PaymentInstrument.CreditCard, { validators: [Validators.required], updateOn: 'change' }],
+        provider: ['', { validators: [], updateOn: 'change' }]
+    });
+    paymentInstrumentControl: AbstractControl | null = null;
+    paymentProviderControl: AbstractControl | null = null;
 
     constructor(private auth: AuthService, private dataService: QuickCheckoutDataService,
         private errorHandler: ErrorService, private formBuilder: FormBuilder, private router: Router) {
@@ -80,6 +88,8 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
         this.detailsCurrencyToControl = this.detailsForm.get('currencyTo');
         this.detailsAddressControl = this.detailsForm.get('address');
         this.detailsTransactionControl = this.detailsForm.get('transaction');
+        this.paymentInstrumentControl = this.paymentForm.get('instrument');
+        this.paymentProviderControl = this.paymentForm.get('provider');
     }
 
     ngOnInit(): void {
@@ -122,10 +132,20 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
         this.detailsAddressControl?.valueChanges.subscribe((val) => {
             this.setSummuryAddress(val);
         });
-        this.loadDetailsForm();
-        this.secondFormGroup = this.formBuilder.group({
-            secondCtrl: ['', Validators.required]
+        this.isApmSelected = false;
+        this.paymentInstrumentControl?.valueChanges.subscribe((val) => {
+            if (val === PaymentInstrument.Apm) {
+                this.isApmSelected = true;
+                this.paymentProviderControl?.setValidators([
+                    Validators.required
+                ]);
+            } else {
+                this.isApmSelected = false;
+                this.paymentProviderControl?.setValidators([]);
+            }
+            this.paymentProviderControl?.updateValueAndValidity();
         });
+        this.loadDetailsForm();
     }
 
     ngOnDestroy(): void {
@@ -210,15 +230,18 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
             this.detailsCurrencyFromControl?.value,
             this.detailsCurrencyToControl?.value,
             this.detailsAmountFromControl?.value,
+            this.paymentInstrumentControl?.value,
+            this.paymentProviderControl?.value,
             rate as number,
             this.detailsAddressControl?.value).subscribe(({ data }) => {
-                console.log(data);
+                const order = data.createQuickCheckout as TransactionShort;
+                if (order.transactionId) {
+                    this.summary.orderId = order.transactionId;
+                }
                 this.stepper?.next();
             }, (error) => {
                 this.inProgress = false;
-                if (this.errorHandler.getCurrentError() == 'auth.password_null_or_empty') {
-                    this.needToLogin = true;
-                }
+                this.errorMessage = this.errorHandler.getError(error.message, 'Unable to register a new order');
             });
     }
 
@@ -333,6 +356,12 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
                     }
                 });
             }
+        }
+    }
+
+    paymentCompleted(stepper: MatStepper): void {
+        if (this.paymentForm.valid) {
+            this.registerOrder();
         }
     }
 

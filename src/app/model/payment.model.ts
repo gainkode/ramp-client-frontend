@@ -83,6 +83,11 @@ export const PaymentInstrumentList: Array<PaymentInstrumentView> = [
     { id: PaymentInstrument.WireTransfer, name: 'Wire transfer' }
 ];
 
+export const QuickCheckoutPaymentInstrumentList: Array<PaymentInstrumentView> = [
+    { id: PaymentInstrument.CreditCard, name: 'Credit card' },
+    { id: PaymentInstrument.Apm, name: 'APM' }
+];
+
 export const PaymentProviderList: Array<PaymentProviderView> = [
     { id: PaymentProvider.Bank, name: 'Bank' },
     { id: PaymentProvider.Skrill, name: 'Skrill' },

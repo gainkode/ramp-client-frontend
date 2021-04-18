@@ -144,17 +144,47 @@
                     </div>
                 </mat-step>
                 <!-- Payment info -->
-                <mat-step [stepControl]="secondFormGroup" editable="true">
-                    <form [formGroup]="secondFormGroup">
+                <mat-step [stepControl]="paymentForm" editable="true">
+                    <form [formGroup]="paymentForm">
                         <ng-template matStepLabel>Payment info</ng-template>
-                        <mat-form-field>
-                            <mat-label>Address</mat-label>
-                            <input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY"
-                                required>
-                        </mat-form-field>
+                        <div *ngIf="inProgress" class="form-element">
+                            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                        </div>
                         <div>
-                            <button matStepperPrevious>Back</button>
-                            <button matStepperNext>Next</button>
+                            <h2>Choose payment details</h2>
+                        </div>
+                        <div *ngIf="errorMessage!==''" class="form-error-box">
+                            {{errorMessage}}
+                        </div>
+                        <!-- Instrument -->
+                        <mat-form-field class="form-element">
+                            <mat-label>Payment</mat-label>
+                            <mat-select formControlName="instrument">
+                                <mat-option *ngFor="let item of paymentInstrumentList" [value]="item.id">
+                                    {{item.name}}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="this.paymentForm.get('instrument')?.hasError('required')">
+                                Please specify payment method
+                            </mat-error>
+                        </mat-form-field>
+                        <!-- Provider -->
+                        <mat-form-field class="form-element" *ngIf="isApmSelected">
+                            <mat-label>Provider</mat-label>
+                            <mat-select formControlName="provider">
+                                <mat-option *ngFor="let item of paymentProviderList" [value]="item.id">
+                                    {{item.name}}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="this.paymentForm.get('provider')?.hasError('required')">
+                                Please specify payment provider
+                            </mat-error>
+                        </mat-form-field>
+                        <div class="form-element">
+                            <button type="submit" class="main-button main-button-primary"
+                            (click)="paymentCompleted(checkoutStepper)">
+                                NEXT
+                            </button>
                         </div>
                     </form>
                 </mat-step>
@@ -162,10 +192,7 @@
                 <mat-step>
                     <ng-template matStepLabel>Verification</ng-template>
                     <p>You are now done.</p>
-                    <div>
-                        <button matStepperPrevious>Back</button>
-                        <button (click)="checkoutStepper.reset()">Reset</button>
-                    </div>
+                    
                 </mat-step>
                 <!-- Order status -->
                 <mat-step>

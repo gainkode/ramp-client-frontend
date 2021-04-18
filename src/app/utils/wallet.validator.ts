@@ -1,9 +1,9 @@
-import { FormGroup } from "@angular/forms";
+import { FormGroup, ValidationErrors } from "@angular/forms";
 
 const WAValidator = require('multicoin-address-validator');
 
 export class WalletValidator {
-    static addressValidator(addressField: string, currencyField: string) {
+    static addressValidator(addressField: string, currencyField: string): ValidationErrors | null {
         return (fg: FormGroup) => {
             const addressControl = fg.controls[addressField];
             const currencyControl = fg.controls[currencyField];
