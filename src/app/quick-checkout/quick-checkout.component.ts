@@ -44,14 +44,14 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
                 Validators.pattern('^[a-zA-Z0-9_.+\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-\.]+$')
             ], updateOn: 'change'
         }],
-        amountFrom: ['200', {
+        amountFrom: [200, {
             validators: [
                 Validators.required,
                 Validators.pattern(this.numberPattern)
             ], updateOn: 'change'
         }],
         currencyFrom: ['', { validators: [Validators.required], updateOn: 'change' }],
-        amountTo: ['0', {
+        amountTo: [0, {
             validators: [
                 Validators.required,
                 Validators.pattern(this.numberPattern)
@@ -226,11 +226,13 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
         } else if (this.detailsTransactionControl?.value === TransactionType.Withdrawal) {
             rate = this.currentRate?.withdrawRate;
         }
+        const amountVal = this.detailsAmountFromControl?.value;
+        const amount = parseFloat(amountVal);
         this.dataService.createQuickCheckout(
             this.detailsTransactionControl?.value,
             this.detailsCurrencyFromControl?.value,
             this.detailsCurrencyToControl?.value,
-            this.detailsAmountFromControl?.value,
+            amount,
             this.paymentInstrumentControl?.value,
             this.paymentProviderControl?.value,
             rate as number,
@@ -242,6 +244,7 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
                     this.summary.feeMinEuro = order.feeMinEuro;
                     this.summary.feePercent = order.feePercent;
                 }
+                this.inProgress = false;
                 this.stepper?.next();
             }, (error) => {
                 this.inProgress = false;

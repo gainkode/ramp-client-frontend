@@ -106,7 +106,6 @@ export class QuickCheckoutDataService {
   createQuickCheckout(transactionType: TransactionType, currencyToSpend: string,
     currencyToReceive: string, amountFiat: number, instrument: PaymentInstrument, provider: PaymentProvider,
     rate: number, walletAddress: string): Observable<any> {
-    console.log(provider);
     return this.apollo.mutate({
       mutation: CREATE_QUICK_CHECKOUT_POST,
       variables: {
