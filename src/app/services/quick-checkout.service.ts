@@ -44,7 +44,7 @@ mutation CreateQuickCheckout(
   $currencyToReceive: String!,
   $amountFiat: Float!,
   $instrument: PaymentInstrument!,
-  $paymentProvider: PaymentProvider!,
+  $paymentProvider: PaymentProvider,
   $rate: Float!,
   $data: String!,
   $recaptcha: String!
@@ -111,7 +111,7 @@ export class QuickCheckoutDataService {
         currencyToReceive,
         amountFiat,
         instrument: instrument,
-        paymentProvider: provider,
+        paymentProvider: (provider) ? provider : null,
         rate,
         data: JSON.stringify({ userAddress: walletAddress })
       }
