@@ -191,7 +191,15 @@
                 <!-- Verification -->
                 <mat-step>
                     <ng-template matStepLabel>Verification</ng-template>
-                    <p>You are now done.</p>
+                    <div *ngIf="inProgress" class="form-element">
+                        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                    </div>
+                    <div>
+                        <h2>Provide your documents</h2>
+                    </div>
+                    <div *ngIf="errorMessage!==''" class="form-error-box">
+                        {{errorMessage}}
+                    </div>
                     
                 </mat-step>
                 <!-- Order status -->
