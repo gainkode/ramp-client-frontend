@@ -36,7 +36,10 @@ const LOGIN_POST = gql`
                   kycApplicantId,
                   kycValid,
                   kycStatus,
-                  kycStatusUpdateRequired
+                  kycStatusUpdateRequired,
+                  notificationSubscriptions {
+                      name, description
+                  }
             }
             authTokenAction
         }
@@ -73,7 +76,10 @@ const SOCIAL_LOGIN_POST = gql`
                 kycApplicantId,
                 kycValid,
                 kycStatus,
-                kycStatusUpdateRequired
+                kycStatusUpdateRequired,
+                notificationSubscriptions {
+                    name, description
+                }
             }
             authTokenAction
         }
@@ -246,7 +252,7 @@ export class AuthService {
         }
         return result;
     }
-    
+
     authenticate(username: string, userpassword: string, quickCheckout: boolean = false): Observable<any> {
         return this.apollo.mutate({
             mutation: LOGIN_POST,

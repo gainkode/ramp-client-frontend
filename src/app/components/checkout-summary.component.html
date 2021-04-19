@@ -26,10 +26,10 @@
             {{summary?.address}}
         </div>
     </div>
-    <div *ngIf="summary?.fees!==0">
-        <label class="checkout-summary-lable">Fees</label>
+    <div *ngIf="fee!==''">
+        <label class="checkout-summary-lable">{{feeTitle}}</label>
         <div class="checkout-summary-value">
-            {{summary?.fees}}%
+            {{fee}}%
         </div>
     </div>
 </div>

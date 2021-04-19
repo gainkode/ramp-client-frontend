@@ -1,7 +1,8 @@
+import { stringify } from '@angular/compiler/src/util';
 import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { EmptyObject } from 'apollo-angular/types';
-import { Observable } from 'rxjs';
+import { empty, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { PaymentInstrument, PaymentProvider, TransactionType } from '../model/generated-models';
 
@@ -59,8 +60,11 @@ mutation CreateQuickCheckout(
     rate: $rate
     data: $data
   }, recaptcha: $recaptcha) {
-    data,
-    transactionId
+    transactionId,
+    transactionCode,
+    fee,
+    feePercent,
+    feeMinEuro
   }
 }
 `;
@@ -102,6 +106,7 @@ export class QuickCheckoutDataService {
   createQuickCheckout(transactionType: TransactionType, currencyToSpend: string,
     currencyToReceive: string, amountFiat: number, instrument: PaymentInstrument, provider: PaymentProvider,
     rate: number, walletAddress: string): Observable<any> {
+    console.log(provider);
     return this.apollo.mutate({
       mutation: CREATE_QUICK_CHECKOUT_POST,
       variables: {
@@ -111,7 +116,7 @@ export class QuickCheckoutDataService {
         currencyToReceive,
         amountFiat,
         instrument: instrument,
-        paymentProvider: (provider) ? provider : null,
+        paymentProvider: null,
         rate,
         data: JSON.stringify({ userAddress: walletAddress })
       }

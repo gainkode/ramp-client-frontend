@@ -122,6 +122,9 @@ export class ErrorService {
             case 'core.kyc_get_applicant_information_error':
                 result = 'Unable to get applicant information';
                 break;
+            case 'core.transaction_handling_error':
+                result = 'Transaction handling error';
+                break;
             case 'client has not been defined yet':
                 result = this.getRejectedCookieMessage();
                 break;

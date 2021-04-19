@@ -134,6 +134,7 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
         });
         this.isApmSelected = false;
         this.paymentInstrumentControl?.valueChanges.subscribe((val) => {
+            this.paymentProviderControl?.setValue('');
             if (val === PaymentInstrument.Apm) {
                 this.isApmSelected = true;
                 this.paymentProviderControl?.setValidators([
@@ -236,7 +237,10 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
             this.detailsAddressControl?.value).subscribe(({ data }) => {
                 const order = data.createQuickCheckout as TransactionShort;
                 if (order.transactionId) {
-                    this.summary.orderId = order.transactionId;
+                    this.summary.orderId = order.transactionCode as string;
+                    this.summary.fee = order.fee;
+                    this.summary.feeMinEuro = order.feeMinEuro;
+                    this.summary.feePercent = order.feePercent;
                 }
                 this.stepper?.next();
             }, (error) => {

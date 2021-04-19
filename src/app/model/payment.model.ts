@@ -154,5 +154,7 @@ export class CheckoutSummary {
     amountFrom: number = 0;
     amountTo: number = 0;
     address: string = '';
-    fees: number = 0;
+    fee: number = 0;
+    feePercent: number = 0;
+    feeMinEuro: number = 0;
 }
