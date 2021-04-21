@@ -3,7 +3,8 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { MatStepper } from '@angular/material/stepper';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { LoginResult, PaymentInstrument, PaymentProvider, Rate, SettingsCommon, SettingsCurrencyListResult, TransactionShort, TransactionType, User } from '../model/generated-models';
+import { LoginResult, PaymentInstrument, Rate, SettingsCommon, SettingsCurrencyListResult, SettingsKycShort, TransactionShort, TransactionType, User } from '../model/generated-models';
+import { KycLevelShort } from '../model/identification.model';
 import { CheckoutSummary, CurrencyView, PaymentProviderList, QuickCheckoutPaymentInstrumentList, QuickCheckoutTransactionTypeList } from '../model/payment.model';
 import { AuthService } from '../services/auth.service';
 import { ErrorService } from '../services/error.service';
@@ -23,6 +24,9 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
     walletAddressName = '';
     needToLogin = false;
     isApmSelected = false;
+    flow: string = '';
+    showKycValidator = false;
+    settingsCommon: SettingsCommon | null = null;
     sourceCurrencies: CurrencyView[] = [];
     destinationCurrencies: CurrencyView[] = [];
     transactionList = QuickCheckoutTransactionTypeList;
@@ -36,6 +40,7 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
     private currencies: CurrencyView[] = [];
     private numberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
     private _settingsSubscription!: any;
+    private _kycSettingsSubscription!: any;
 
     detailsForm = this.formBuilder.group({
         email: ['', {
@@ -151,8 +156,12 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         const s = this._settingsSubscription as Subscription;
+        const k = this._kycSettingsSubscription as Subscription;
         if (s) {
             s.unsubscribe();
+        }
+        if (k) {
+            k.unsubscribe();
         }
     }
 
@@ -200,6 +209,7 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
 
     private handleSuccessLogin(userData: LoginResult): void {
         this.auth.setLoginUser(userData);
+        this.user = this.auth.user;
         this.detailsEmailControl?.setValue(userData.user?.email);
         this.inProgress = true;
         this.auth.getSettingsCommon().valueChanges.subscribe(settings => {
@@ -244,12 +254,49 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
                     this.summary.feeMinEuro = order.feeMinEuro;
                     this.summary.feePercent = order.feePercent;
                 }
-                this.inProgress = false;
-                this.stepper?.next();
+                this.getKycSettings();
             }, (error) => {
                 this.inProgress = false;
                 this.errorMessage = this.errorHandler.getError(error.message, 'Unable to register a new order');
             });
+    }
+
+    private getKycSettings(): void {
+        this.inProgress = true;
+        this.settingsCommon = this.auth.getLocalSettingsCommon();
+        const kycData = this.auth.getMyKycSettings();
+        if (kycData === null) {
+            this.inProgress = false;
+            this.errorMessage = this.errorHandler.getRejectedCookieMessage();
+        } else if (this.settingsCommon === null) {
+            this.inProgress = false;
+            this.errorMessage = 'Unable to load common settings';
+        } else {
+            this._kycSettingsSubscription = kycData.valueChanges.subscribe(({ data }) => {
+                const settingsKyc: SettingsKycShort | null = data.getMySettingsKyc;
+                if (settingsKyc === null) {
+                    this.errorMessage = 'Unable to load user identification settings';
+                } else {
+                    const levels = settingsKyc.levels?.map((val) => new KycLevelShort(val)) as KycLevelShort[];
+                    if (levels.length > 0) {
+                        const level = levels[0];
+                        this.flow = level.flowData.value;
+                    }
+                    this.inProgress = false;
+                    if (this.user?.kycValid) {
+                        this.stepper?.next();
+                    } else {
+                        this.showKycValidator = true;
+                    }
+                    this.stepper?.next();
+                }
+            }, (error) => {
+                this.inProgress = false;
+                if (this.auth.token !== '') {
+                    this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load settings');
+                }
+            });
+        }
     }
 
     private loadDetailsForm(): void {

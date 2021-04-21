@@ -125,12 +125,12 @@
                         </div>
                         <div class="form-element">
                             <button type="submit" class="main-button main-button-primary"
-                            (click)="detailsCompleted(checkoutStepper)">
+                                (click)="detailsCompleted(checkoutStepper)">
                                 NEXT
                             </button>
                         </div>
                     </form>
-
+                    <!-- Login -->
                     <div *ngIf="needToLogin">
                         <h2>Sign in</h2>
                         <span>Your account seems to be registered. Please, authenticate</span>
@@ -139,7 +139,8 @@
                             {{errorMessage}}
                         </div>
                         <app-login-panel (error)="onError($event)" (progressChange)="onProgressChange($event)"
-                            (authenticated)="onAuthenticated($event)" (socialAuthenticated)="onSocialAuthenticated($event)">
+                            (authenticated)="onAuthenticated($event)"
+                            (socialAuthenticated)="onSocialAuthenticated($event)">
                         </app-login-panel>
                     </div>
                 </mat-step>
@@ -182,7 +183,7 @@
                         </mat-form-field>
                         <div class="form-element">
                             <button type="submit" class="main-button main-button-primary"
-                            (click)="paymentCompleted(checkoutStepper)">
+                                (click)="paymentCompleted(checkoutStepper)">
                                 NEXT
                             </button>
                         </div>
@@ -200,7 +201,15 @@
                     <div *ngIf="errorMessage!==''" class="form-error-box">
                         {{errorMessage}}
                     </div>
-                    
+                    <div *ngIf="showKycValidator">
+                        <kyc-panel [url]="settingsCommon?.kycBaseAddress" [flow]="flow">
+                        </kyc-panel>
+                    </div>
+                    <div class="form-element">
+                        <button type="submit" class="main-button main-button-primary">
+                            NEXT
+                        </button>
+                    </div>
                 </mat-step>
                 <!-- Order status -->
                 <mat-step editable="false">
