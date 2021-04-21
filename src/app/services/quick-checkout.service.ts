@@ -51,7 +51,7 @@ mutation CreateQuickCheckout(
   $recaptcha: String!
 ) {
   createQuickCheckout(transaction: {
-    transactionType: $transactionType
+    type: $transactionType
     currencyToSpend: $currencyToSpend
     currencyToReceive: $currencyToReceive
     amountFiat: $amountFiat
@@ -60,8 +60,7 @@ mutation CreateQuickCheckout(
     rate: $rate
     data: $data
   }, recaptcha: $recaptcha) {
-    transactionId,
-    transactionCode,
+    code,
     fee,
     feePercent,
     feeMinEuro

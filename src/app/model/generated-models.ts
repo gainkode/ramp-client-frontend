@@ -776,14 +776,17 @@ export type TransactionShortListResult = {
 export type TransactionShort = {
   __typename?: 'TransactionShort';
   transactionId: Scalars['ID'];
-  transactionCode?: Maybe<Scalars['String']>;
+  code?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['String']>;
   affiliateId?: Maybe<Scalars['String']>;
   created: Scalars['DateTime'];
   executed?: Maybe<Scalars['DateTime']>;
-  transactionType: TransactionType;
+  type: TransactionType;
+  status: TransactionStatus;
   fee: Scalars['Float'];
   feePercent: Scalars['Float'];
   feeMinEuro: Scalars['Float'];
+  feeDetails?: Maybe<Scalars['String']>;
   currencyToSpend: Scalars['String'];
   amountToSpend: Scalars['Float'];
   amountToSpendWithoutFee: Scalars['Float'];
@@ -794,13 +797,36 @@ export type TransactionShort = {
   source: TransactionSource;
   instrument: PaymentInstrument;
   paymentProvider?: Maybe<PaymentProvider>;
+  paymentOrderId?: Maybe<Scalars['String']>;
+  liquidityProvider?: Maybe<LiquidityProvider>;
+  liquidityOrderId?: Maybe<Scalars['String']>;
+  transferOrderId?: Maybe<Scalars['String']>;
   data?: Maybe<Scalars['String']>;
 };
+
+export enum TransactionStatus {
+  New = 'New',
+  Pending = 'Pending',
+  Processing = 'Processing',
+  Paid = 'Paid',
+  PaymentDeclined = 'PaymentDeclined',
+  ConfirmingOrder = 'ConfirmingOrder',
+  SendingToAddress = 'SendingToAddress',
+  Completed = 'Completed',
+  KycRejected = 'KycRejected',
+  Abounded = 'Abounded',
+  Canceled = 'Canceled',
+  Chargeback = 'Chargeback'
+}
 
 export enum TransactionSource {
   QuickCheckout = 'QuickCheckout',
   Widget = 'Widget',
   Wallet = 'Wallet'
+}
+
+export enum LiquidityProvider {
+  Bitstamp = 'Bitstamp'
 }
 
 export type TransactionListResult = {
@@ -839,25 +865,6 @@ export type Transaction = {
   order?: Maybe<Scalars['String']>;
   data?: Maybe<Scalars['String']>;
 };
-
-export enum TransactionStatus {
-  New = 'New',
-  Pending = 'Pending',
-  Processing = 'Processing',
-  Paid = 'Paid',
-  PaymentDeclined = 'PaymentDeclined',
-  ConfirmingOrder = 'ConfirmingOrder',
-  SendingToAddress = 'SendingToAddress',
-  Completed = 'Completed',
-  KycRejected = 'KycRejected',
-  Abounded = 'Abounded',
-  Canceled = 'Canceled',
-  Chargeback = 'Chargeback'
-}
-
-export enum LiquidityProvider {
-  Bitstamp = 'Bitstamp'
-}
 
 export type Mutation = {
   __typename?: 'Mutation';
@@ -1214,7 +1221,7 @@ export type FeedbackInput = {
 };
 
 export type TransactionInput = {
-  transactionType: TransactionType;
+  type: TransactionType;
   currencyToSpend: Scalars['String'];
   affiliateId?: Maybe<Scalars['String']>;
   currencyToReceive: Scalars['String'];
@@ -1222,6 +1229,7 @@ export type TransactionInput = {
   rate: Scalars['Float'];
   instrument: PaymentInstrument;
   paymentProvider?: Maybe<PaymentProvider>;
+  liquidityProvider?: Maybe<LiquidityProvider>;
   data?: Maybe<Scalars['String']>;
 };
 
@@ -1359,6 +1367,7 @@ export type LiquidityOrder = {
   __typename?: 'LiquidityOrder';
   orderId?: Maybe<Scalars['String']>;
   userId?: Maybe<Scalars['String']>;
+  transactionId?: Maybe<Scalars['String']>;
   provider: LiquidityProvider;
   created: Scalars['DateTime'];
   published?: Maybe<Scalars['DateTime']>;
@@ -1416,10 +1425,33 @@ export type PaymentOrder = {
   __typename?: 'PaymentOrder';
   orderId?: Maybe<Scalars['String']>;
   userId?: Maybe<Scalars['String']>;
+  transactionId?: Maybe<Scalars['String']>;
   provider: PaymentProvider;
   created: Scalars['DateTime'];
   published?: Maybe<Scalars['DateTime']>;
   publishingResult?: Maybe<Scalars['String']>;
   status: Scalars['String'];
   originalOrderId?: Maybe<Scalars['String']>;
+};
+
+export type TransferOrder = {
+  __typename?: 'TransferOrder';
+  orderId: Scalars['ID'];
+  userId: Scalars['String'];
+  transactionId?: Maybe<Scalars['String']>;
+  provider?: Maybe<Scalars['String']>;
+  created: Scalars['DateTime'];
+  published?: Maybe<Scalars['DateTime']>;
+  executed?: Maybe<Scalars['DateTime']>;
+  amount?: Maybe<Scalars['Float']>;
+  currency?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  transactionHash?: Maybe<Scalars['String']>;
+  transactionDetails?: Maybe<Scalars['String']>;
+};
+
+export type TransferListResult = {
+  __typename?: 'TransferListResult';
+  count?: Maybe<Scalars['Int']>;
+  list?: Maybe<Array<TransferOrder>>;
 };

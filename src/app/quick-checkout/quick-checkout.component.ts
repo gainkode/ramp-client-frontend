@@ -238,8 +238,8 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
             rate as number,
             this.detailsAddressControl?.value).subscribe(({ data }) => {
                 const order = data.createQuickCheckout as TransactionShort;
-                if (order.transactionId) {
-                    this.summary.orderId = order.transactionCode as string;
+                if (order.code) {
+                    this.summary.orderId = order.code as string;
                     this.summary.fee = order.fee;
                     this.summary.feeMinEuro = order.feeMinEuro;
                     this.summary.feePercent = order.feePercent;
