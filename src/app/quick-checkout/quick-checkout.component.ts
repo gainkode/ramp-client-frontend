@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, ɵɵtrustConstantResourceUrl } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { Router } from '@angular/router';
@@ -341,10 +341,11 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
 
     detailsCompleted(stepper: MatStepper): void {
         if (this.detailsForm.valid) {
+            const userEmail = this.detailsEmailControl?.value;
             let authenticated = false;
             const user = this.auth.user;
             if (user) {
-                if (user.email === this.detailsEmailControl?.value) {
+                if (user.email === userEmail) {
                     authenticated = true;
                 }
             }
@@ -352,14 +353,15 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
                 stepper.next();
             } else {
                 this.inProgress = true;
-                this.auth.authenticate(this.detailsEmailControl?.value, '', true).subscribe(({ data }) => {
+                this.auth.authenticate(userEmail, '', true).subscribe(({ data }) => {
                     const userData = data.login as LoginResult;
                     this.handleSuccessLogin(userData);
-                    stepper.next();
                 }, (error) => {
                     this.inProgress = false;
                     if (this.errorHandler.getCurrentError() == 'auth.password_null_or_empty') {
                         this.needToLogin = true;
+                    } else {
+                        this.errorMessage = this.errorHandler.getError(error.message, 'Unable to authenticate user');
                     }
                 });
             }

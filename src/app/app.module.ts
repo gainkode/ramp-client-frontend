@@ -75,9 +75,7 @@ export class AppModule {
             });
           }
           sessionStorage.setItem('currentError', err.extensions?.code);
-          console.log(err.extensions?.code);
         }
-        // console.log(`Error code: ${err.message}`);
       }
     }
     if (networkError) {

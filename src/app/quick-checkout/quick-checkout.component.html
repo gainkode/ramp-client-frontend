@@ -13,9 +13,9 @@
         <div class="wizard-panel-stepper">
             <mat-horizontal-stepper linear #checkoutStepper class="stepper">
                 <!-- Order details -->
-                <mat-step [stepControl]="detailsForm" editable="true">
+                <mat-step [stepControl]="detailsForm" editable="false">
+                    <ng-template matStepLabel>Order details</ng-template>
                     <form [formGroup]="detailsForm" *ngIf="!needToLogin">
-                        <ng-template matStepLabel>Order details</ng-template>
                         <div>
                             <div *ngIf="inProgress" class="form-element">
                                 <mat-progress-bar mode="indeterminate"></mat-progress-bar>
@@ -144,9 +144,9 @@
                     </div>
                 </mat-step>
                 <!-- Payment info -->
-                <mat-step [stepControl]="paymentForm" editable="true">
+                <mat-step [stepControl]="paymentForm" editable="false">
+                    <ng-template matStepLabel>Payment info</ng-template>
                     <form [formGroup]="paymentForm">
-                        <ng-template matStepLabel>Payment info</ng-template>
                         <div *ngIf="inProgress" class="form-element">
                             <mat-progress-bar mode="indeterminate"></mat-progress-bar>
                         </div>
@@ -189,7 +189,7 @@
                     </form>
                 </mat-step>
                 <!-- Verification -->
-                <mat-step>
+                <mat-step editable="false">
                     <ng-template matStepLabel>Verification</ng-template>
                     <div *ngIf="inProgress" class="form-element">
                         <mat-progress-bar mode="indeterminate"></mat-progress-bar>
@@ -203,7 +203,7 @@
                     
                 </mat-step>
                 <!-- Order status -->
-                <mat-step>
+                <mat-step editable="false">
                     <ng-template matStepLabel>Order status</ng-template>
                     <p>You are now done.</p>
                     <div>
