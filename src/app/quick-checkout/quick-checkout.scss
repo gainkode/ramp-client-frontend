@@ -1,10 +1,12 @@
 .checkout-page {
-    height          : 100%;
+    height          : auto;
+    min-height      : 95%;
     background-color: #DDDFE6;
 }
 
 .stepper {
     background-color: #DDDFE6;
+    margin-right: 1em;
 }
 
 .wizard-panel-split {

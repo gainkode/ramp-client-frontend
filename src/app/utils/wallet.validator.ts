@@ -8,7 +8,10 @@ export class WalletValidator {
             const addressControl = fg.controls[addressField];
             const currencyControl = fg.controls[currencyField];
 
-            if (!addressControl) {
+            if (!addressControl || !currencyControl) {
+                return null;
+            }
+            if (!addressControl.value || !currencyControl.value) {
                 return null;
             }
             const address = addressControl.value as string;
