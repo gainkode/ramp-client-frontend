@@ -12,13 +12,13 @@
             {{summary?.email}}
         </div>
     </div>
-    <label class="checkout-summary-lable">{{summary?.currencyFrom}} amount</label>
+    <label class="checkout-summary-lable">Amount to spend</label>
     <div class="checkout-summary-value">
-        {{summary?.amountFrom}}
+        {{summary?.amountFrom}} {{summary?.currencyFrom}}
     </div>
-    <label class="checkout-summary-lable">{{summary?.currencyTo}} amount</label>
+    <label class="checkout-summary-lable">Amount to receive</label>
     <div class="checkout-summary-value">
-        {{summary?.amountTo}}
+        {{summary?.amountTo}} {{summary?.currencyTo}}
     </div>
     <div *ngIf="summary?.address!==''">
         <label class="checkout-summary-lable">{{summary?.currencyTo}} wallet</label>

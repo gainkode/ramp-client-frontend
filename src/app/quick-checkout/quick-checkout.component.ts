@@ -26,6 +26,7 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
     isApmSelected = false;
     flow: string = '';
     showKycValidator = false;
+    showKycSubmit = false;
     settingsCommon: SettingsCommon | null = null;
     sourceCurrencies: CurrencyView[] = [];
     destinationCurrencies: CurrencyView[] = [];
@@ -419,6 +420,15 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
         if (this.paymentForm.valid) {
             this.registerOrder();
         }
+    }
+
+    kycProcessCompleted(stepper: MatStepper): void {
+        this.showKycSubmit = true;
+        stepper.next();
+    }
+
+    kycCompleted(): void {
+        this.showKycValidator = false;
     }
 
     private getCurrency(id: string): CurrencyView | null {

@@ -16,6 +16,8 @@ const snsWebSdk = require('@sumsub/websdk');
 export class KycPanelComponent implements OnInit, OnDestroy {
     @Input() flow: string | null | undefined = '';
     @Input() url: string | null | undefined = '';
+    @Input() notifyCompleted: boolean | null | undefined = false;
+    @Output() completed = new EventEmitter();
     private _tokenSubscription!: any;
     inProgress = false;
     errorMessage = '';
@@ -45,7 +47,7 @@ export class KycPanelComponent implements OnInit, OnDestroy {
             }
         });
         dialogRef.afterClosed().subscribe(result => {
-            
+
         });
     }
 
@@ -100,7 +102,11 @@ export class KycPanelComponent implements OnInit, OnDestroy {
                 i18n: customI18nMessages,
                 onMessage: (type: any, payload: any) => {
                     if (type === 'idCheck.onApplicantSubmitted') {
-                        this.showSuccessDialog();
+                        if (this.notifyCompleted) {
+                            this.completed.emit();
+                        } else {
+                            this.showSuccessDialog();
+                        }
                     }
                 },
                 // uiConf: {

@@ -15,7 +15,7 @@ export class CheckoutSummaryComponent {
         const amountTo = this.summary?.amountTo as number;
         const val = Math.max(feeMinEuro, amountTo * feePercent / 100);
         if (val !== 0) {
-            return `€${val}`;
+            return `${val} EUR`;
         } else {
             return '';
         }
@@ -24,6 +24,6 @@ export class CheckoutSummaryComponent {
     get feeTitle(): string {
         const feeMinEuro = this.summary?.feeMinEuro as number;
         const feePercent = this.summary?.feePercent as number;
-        return `Transaction fee (${feePercent}%, min €${feeMinEuro})`;
+        return `Transaction fee (${feePercent}%, min ${feeMinEuro} EUR)`;
     }
 }

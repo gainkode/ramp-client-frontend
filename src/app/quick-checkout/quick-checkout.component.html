@@ -202,11 +202,13 @@
                         {{errorMessage}}
                     </div>
                     <div *ngIf="showKycValidator">
-                        <kyc-panel [url]="settingsCommon?.kycBaseAddress" [flow]="flow">
+                        <kyc-panel [url]="settingsCommon?.kycBaseAddress" [flow]="flow"
+                        (completed)="kycCompleted()">
                         </kyc-panel>
                     </div>
-                    <div class="form-element">
-                        <button type="submit" class="main-button main-button-primary">
+                    <div *ngIf="showKycSubmit" class="form-element">
+                        <button type="submit" class="main-button main-button-primary"
+                            (click)="kycProcessCompleted(checkoutStepper)">
                             NEXT
                         </button>
                     </div>
