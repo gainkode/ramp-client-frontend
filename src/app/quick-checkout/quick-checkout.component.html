@@ -11,9 +11,10 @@
 <div class="checkout-page">
     <div class="wizard-panel-split">
         <div class="wizard-panel-stepper">
-            <mat-horizontal-stepper linear #checkoutStepper class="stepper">
+            <mat-horizontal-stepper linear #checkoutStepper class="stepper"
+            (selectionChange)="stepChanged($event)">
                 <!-- Order details -->
-                <mat-step [stepControl]="detailsForm" editable="false" [completed]="false">
+                <mat-step [stepControl]="detailsForm" label="details" editable="false" [completed]="false">
                     <ng-template matStepLabel>Order details</ng-template>
                     <form [formGroup]="detailsForm" #details="ngForm" *ngIf="!needToLogin">
                         <div>
@@ -125,7 +126,7 @@
                         </div>
                         <div class="form-element">
                             <button type="submit" class="main-button main-button-accent"
-                                (click)="detailsCompleted(checkoutStepper)">
+                                (click)="detailsCompleted()">
                                 NEXT
                             </button>
                         </div>
@@ -145,7 +146,7 @@
                     </div>
                 </mat-step>
                 <!-- Payment info -->
-                <mat-step [stepControl]="paymentForm" editable="false" completed="false">
+                <mat-step [stepControl]="paymentForm" label="payment" editable="false" completed="false">
                     <ng-template matStepLabel>Payment info</ng-template>
                     <form [formGroup]="paymentForm" #payment="ngForm">
                         <div *ngIf="inProgress" class="form-element">
@@ -183,7 +184,7 @@
                         </mat-form-field>
                         <div class="form-element">
                             <button type="submit" class="main-button main-button-accent inline-button"
-                                (click)="paymentCompleted(checkoutStepper)">
+                                (click)="paymentCompleted()">
                                 NEXT
                             </button>
                             <button type="submit" class="main-button main-button-primary inline-button"
@@ -194,7 +195,7 @@
                     </form>
                 </mat-step>
                 <!-- Verification -->
-                <mat-step *ngIf="showKycStep" editable="false" completed="false">
+                <mat-step *ngIf="showKycStep" label="verification" editable="false" completed="false">
                     <ng-template matStepLabel>Verification</ng-template>
                     <div *ngIf="inProgress" class="form-element">
                         <mat-progress-bar mode="indeterminate"></mat-progress-bar>
@@ -213,7 +214,7 @@
                     <div class="form-element">
                         <div *ngIf="showKycSubmit">
                             <button type="submit" class="main-button main-button-accent inline-button"
-                                (click)="kycProcessCompleted(checkoutStepper)">
+                                (click)="kycProcessCompleted()">
                                 NEXT
                             </button>
                         </div>
@@ -224,7 +225,7 @@
                     </div>
                 </mat-step>
                 <!-- Order status -->
-                <mat-step editable="false" completed="false">
+                <mat-step label="complete" editable="false" completed="false">
                     <ng-template matStepLabel>Order status</ng-template>
                     <p>You are now done.</p>
                 </mat-step>

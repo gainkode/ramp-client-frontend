@@ -1,3 +1,4 @@
+import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { Component, OnDestroy, OnInit, ViewChild, ɵɵtrustConstantResourceUrl } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
@@ -213,12 +214,6 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
 
     private handleSuccessLogin(userData: LoginResult): void {
         this.auth.setLoginUser(userData);
-        this.user = this.auth.user;
-        if (this.user?.kycValid) {
-            this.showKycStep = false;
-        } else {
-            this.showKycStep = true;
-        }
         this.detailsEmailControl?.setValue(userData.user?.email);
         this.inProgress = true;
         this.auth.getSettingsCommon().valueChanges.subscribe(settings => {
@@ -227,7 +222,6 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
             this.inProgress = false;
             this.needToLogin = false;
             if (this.stepper) {
-                //this.stepper.selected.completed = true;
                 this.stepper?.next();
             }
         }, (error) => {
@@ -266,15 +260,8 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
                     this.summary.feeMinEuro = order.feeMinEuro;
                     this.summary.feePercent = order.feePercent;
                 }
-                if (this.showKycStep) {
-                    console.log('kyc not valid');
-                    this.getKycSettings();
-                } else {
-                    console.log('kyc valid');
-                    if (this.stepper) {
-                        //this.stepper.selected.completed = true;
-                        this.stepper?.next();
-                    }
+                if (this.stepper) {
+                    this.stepper?.next();
                 }
             }, (error) => {
                 this.inProgress = false;
@@ -305,10 +292,6 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
                     }
                     this.inProgress = false;
                     this.showKycValidator = true;
-                    if (this.stepper) {
-                        //this.stepper.selected.completed = true;
-                        this.stepper?.next();
-                    }
                 }
             }, (error) => {
                 this.inProgress = false;
@@ -406,6 +389,21 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
         }
     }
 
+    stepChanged(step: StepperSelectionEvent): void {
+        // Details
+        console.log(step.selectedStep.label);
+        if (step.selectedStep.label === 'payment') {
+            this.user = this.auth.user;
+            if (this.user?.kycValid) {
+                this.showKycStep = false;
+            } else {
+                this.showKycStep = true;
+            }
+        } else if (step.selectedStep.label === 'verification') {
+            this.getKycSettings();
+        }
+    }
+
     resetStepper(): void {
         this.inProgress = false;
         this.errorMessage = '';
@@ -446,7 +444,7 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
         this.paymentInstrumentControl?.setValue(PaymentInstrument.CreditCard);
     }
 
-    detailsCompleted(stepper: MatStepper): void {
+    detailsCompleted(): void {
         if (this.detailsForm.valid) {
             const userEmail = this.detailsEmailControl?.value;
             let authenticated = false;
@@ -455,15 +453,9 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
                 if (user.email === userEmail) {
                     authenticated = true;
                 }
-                if (user.kycValid) {
-                    this.showKycStep = false;
-                } else {
-                    this.showKycStep = true;
-                }
             }
             if (authenticated) {
                 if (this.stepper) {
-                    //this.stepper.selected.completed = true;
                     this.stepper?.next();
                 }
             } else {
@@ -483,13 +475,13 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
         }
     }
 
-    paymentCompleted(stepper: MatStepper): void {
+    paymentCompleted(): void {
         if (this.paymentForm.valid) {
             this.registerOrder();
         }
     }
 
-    kycProcessCompleted(stepper: MatStepper): void {
+    kycProcessCompleted(): void {
         this.showKycSubmit = true;
         if (this.stepper) {
             //this.stepper.selected.completed = true;

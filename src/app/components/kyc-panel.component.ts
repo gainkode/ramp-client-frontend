@@ -54,10 +54,7 @@ export class KycPanelComponent implements OnInit, OnDestroy {
     loadSumSub(): void {
         // load sumsub widget
         this.inProgress = true;
-        console.log('url --> ', this.url as string);
-        console.log('flow --> ', this.flow as string);
         this._tokenSubscription = this.auth.getKycToken().valueChanges.subscribe(({ data }) => {
-            console.log('web token --> ', data.generateWebApiToken);
             this.inProgress = false;
             this.launchSumSubWidget(
                 this.url as string,
@@ -68,7 +65,6 @@ export class KycPanelComponent implements OnInit, OnDestroy {
                 []);
         }, (error) => {
             this.inProgress = false;
-            console.log('token --> ', this.auth.token);
             if (this.auth.token !== '') {
                 this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load settings');
             } else {
