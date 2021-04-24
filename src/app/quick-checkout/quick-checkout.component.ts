@@ -31,6 +31,7 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
     showKycStep = false;
     showKycValidator = false;
     showKycSubmit = false;
+    showSummary = true;
     settingsCommon: SettingsCommon | null = null;
     sourceCurrencies: CurrencyView[] = [];
     destinationCurrencies: CurrencyView[] = [];
@@ -390,7 +391,6 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
     }
 
     stepChanged(step: StepperSelectionEvent): void {
-        console.log(step.selectedStep.label);
         if (this.errorMessage !== '' && this.stepper !== undefined) {
             setTimeout(() => {
                 if (this.stepper !== undefined) {
@@ -418,6 +418,8 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
                 }
             } else if (step.selectedStep.label === 'verification') {
                 this.getKycSettings();
+            } else if (step.selectedStep.label === 'complete') {
+                this.showSummary = false;
             }
         }
     }
@@ -432,6 +434,7 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
         this.showKycStep = false;
         this.showKycValidator = false;
         this.showKycSubmit = false;
+        this.showSummary = true;
         this.summary.address = '';
         this.summary.email = '';
         if (this.stepper) {
