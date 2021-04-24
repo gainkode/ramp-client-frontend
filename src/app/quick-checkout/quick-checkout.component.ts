@@ -400,9 +400,9 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
                 }
             }, 500);
         }
-        if (step.selectedStep.label === 'payment') {
-            const kycStatusData = this.auth.getMyKycStatus();
-            if (this.errorMessage === '') {
+        if (this.errorMessage === '') {
+            if (step.selectedStep.label === 'payment') {
+                const kycStatusData = this.auth.getMyKycStatus();
                 if (kycStatusData === null) {
                     this.errorMessage = this.errorHandler.getRejectedCookieMessage();;
                 } else {
@@ -416,9 +416,9 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
                         this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load your identification status');
                     });
                 }
+            } else if (step.selectedStep.label === 'verification') {
+                this.getKycSettings();
             }
-        } else if (step.selectedStep.label === 'verification') {
-            this.getKycSettings();
         }
     }
 
