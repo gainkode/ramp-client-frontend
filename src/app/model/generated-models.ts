@@ -37,6 +37,8 @@ export type Query = {
   getAppropriateSettingsCostFull?: Maybe<SettingsCost>;
   generateWebApiToken: Scalars['String'];
   me: User;
+  myKycStatus: Scalars['String'];
+  userKycInfo: KycInfo;
   userCount?: Maybe<Scalars['Int']>;
   userById: User;
   userByName: User;
@@ -47,7 +49,6 @@ export type Query = {
   myActions: UserActionListResult;
   userActions: UserActionListResult;
   myKycInfo?: Maybe<KycInfo>;
-  userKycInfo?: Maybe<KycInfo>;
   getMySupportTickets?: Maybe<SupportTicketListResult>;
   getSupportTickets?: Maybe<SupportTicketListResult>;
   getFeedbacks?: Maybe<FeedbackListResult>;
@@ -150,6 +151,11 @@ export type QueryGetAppropriateSettingsCostFullArgs = {
 };
 
 
+export type QueryUserKycInfoArgs = {
+  userId: Scalars['String'];
+};
+
+
 export type QueryUserByIdArgs = {
   userId?: Maybe<Scalars['String']>;
 };
@@ -200,11 +206,6 @@ export type QueryUserActionsArgs = {
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
   orderBy?: Maybe<Array<OrderBy>>;
-};
-
-
-export type QueryUserKycInfoArgs = {
-  userId?: Maybe<Scalars['String']>;
 };
 
 
@@ -614,55 +615,6 @@ export type UserNotification = {
   params?: Maybe<Scalars['String']>;
 };
 
-export enum OAuthProvider {
-  Google = 'google',
-  Facebook = 'facebook',
-  Twitter = 'twitter',
-  Microsoft = 'microsoft'
-}
-
-export type UserListResult = {
-  __typename?: 'UserListResult';
-  count?: Maybe<Scalars['Int']>;
-  list?: Maybe<Array<User>>;
-};
-
-export enum UserActionResult {
-  Unknown = 'unknown',
-  Success = 'success',
-  Fail = 'fail'
-}
-
-export type UserActionListResult = {
-  __typename?: 'UserActionListResult';
-  count?: Maybe<Scalars['Int']>;
-  list?: Maybe<Array<UserAction>>;
-};
-
-export type UserAction = {
-  __typename?: 'UserAction';
-  userActionId: Scalars['ID'];
-  userId: Scalars['String'];
-  objectId?: Maybe<Scalars['String']>;
-  actionType?: Maybe<UserActionType>;
-  linkedIds?: Maybe<Array<Scalars['String']>>;
-  info?: Maybe<Scalars['String']>;
-  result?: Maybe<UserActionResult>;
-  date?: Maybe<Scalars['DateTime']>;
-};
-
-export enum UserActionType {
-  Signup = 'signup',
-  Login = 'login',
-  Logout = 'logout',
-  Send = 'send',
-  Receive = 'receive',
-  Deposit = 'deposit',
-  Withdraw = 'withdraw',
-  Sell = 'sell',
-  Buy = 'buy'
-}
-
 export type KycInfo = {
   __typename?: 'KycInfo';
   applicant?: Maybe<KycApplicant>;
@@ -719,6 +671,55 @@ export type KycInfoField = {
   name?: Maybe<Scalars['String']>;
   required?: Maybe<Scalars['Boolean']>;
 };
+
+export enum OAuthProvider {
+  Google = 'google',
+  Facebook = 'facebook',
+  Twitter = 'twitter',
+  Microsoft = 'microsoft'
+}
+
+export type UserListResult = {
+  __typename?: 'UserListResult';
+  count?: Maybe<Scalars['Int']>;
+  list?: Maybe<Array<User>>;
+};
+
+export enum UserActionResult {
+  Unknown = 'unknown',
+  Success = 'success',
+  Fail = 'fail'
+}
+
+export type UserActionListResult = {
+  __typename?: 'UserActionListResult';
+  count?: Maybe<Scalars['Int']>;
+  list?: Maybe<Array<UserAction>>;
+};
+
+export type UserAction = {
+  __typename?: 'UserAction';
+  userActionId: Scalars['ID'];
+  userId: Scalars['String'];
+  objectId?: Maybe<Scalars['String']>;
+  actionType?: Maybe<UserActionType>;
+  linkedIds?: Maybe<Array<Scalars['String']>>;
+  info?: Maybe<Scalars['String']>;
+  result?: Maybe<UserActionResult>;
+  date?: Maybe<Scalars['DateTime']>;
+};
+
+export enum UserActionType {
+  Signup = 'signup',
+  Login = 'login',
+  Logout = 'logout',
+  Send = 'send',
+  Receive = 'receive',
+  Deposit = 'deposit',
+  Withdraw = 'withdraw',
+  Sell = 'sell',
+  Buy = 'buy'
+}
 
 export type SupportTicketListResult = {
   __typename?: 'SupportTicketListResult';

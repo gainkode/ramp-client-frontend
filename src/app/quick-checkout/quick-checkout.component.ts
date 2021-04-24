@@ -390,14 +390,32 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
     }
 
     stepChanged(step: StepperSelectionEvent): void {
-        // Details
         console.log(step.selectedStep.label);
+        if (this.errorMessage !== '' && this.stepper !== undefined) {
+            setTimeout(() => {
+                if (this.stepper !== undefined) {
+                    step.previouslySelectedStep.editable = true;
+                    this.stepper.previous();
+                    step.previouslySelectedStep.editable = false;
+                }
+            }, 500);
+        }
         if (step.selectedStep.label === 'payment') {
-            this.user = this.auth.user;
-            if (this.user?.kycValid) {
-                this.showKycStep = false;
-            } else {
-                this.showKycStep = true;
+            const kycStatusData = this.auth.getMyKycStatus();
+            if (this.errorMessage === '') {
+                if (kycStatusData === null) {
+                    this.errorMessage = this.errorHandler.getRejectedCookieMessage();;
+                } else {
+                    this.inProgress = true;
+                    kycStatusData.valueChanges.subscribe(({ data }) => {
+                        const kycStatus = data.myKycStatus as string;
+                        this.showKycStep = (kycStatus === 'init' || kycStatus === 'not found');
+                        this.inProgress = false;
+                    }, (error) => {
+                        this.inProgress = false;
+                        this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load your identification status');
+                    });
+                }
             }
         } else if (step.selectedStep.label === 'verification') {
             this.getKycSettings();
@@ -484,13 +502,16 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
     kycProcessCompleted(): void {
         this.showKycSubmit = true;
         if (this.stepper) {
-            //this.stepper.selected.completed = true;
             this.stepper?.next();
         }
     }
 
     kycCompleted(): void {
         this.showKycValidator = false;
+    }
+
+    done(): void {
+        this.router.navigateByUrl(this.auth.getUserMainPage());
     }
 
     private getCurrency(id: string): CurrencyView | null {

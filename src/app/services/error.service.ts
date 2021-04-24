@@ -95,6 +95,9 @@ export class ErrorService {
             case 'user.update_user_data_error':
                 result = 'Wrong user data for update';
                 break;
+            case 'user.kyc_get_applicant_information_error':
+                result = 'Unable to get the user identification information';
+                break;
             case 'core.insufficient_funds':
                 result = 'Insufficient funds';
                 break;

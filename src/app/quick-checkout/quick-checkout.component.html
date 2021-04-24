@@ -11,8 +11,7 @@
 <div class="checkout-page">
     <div class="wizard-panel-split">
         <div class="wizard-panel-stepper">
-            <mat-horizontal-stepper linear #checkoutStepper class="stepper"
-            (selectionChange)="stepChanged($event)">
+            <mat-horizontal-stepper linear #checkoutStepper class="stepper" (selectionChange)="stepChanged($event)">
                 <!-- Order details -->
                 <mat-step [stepControl]="detailsForm" label="details" editable="false" [completed]="false">
                     <ng-template matStepLabel>Order details</ng-template>
@@ -125,7 +124,7 @@
                             </mat-form-field>
                         </div>
                         <div class="form-element">
-                            <button type="submit" class="main-button main-button-accent"
+                            <button type="submit" class="main-button main-button-accent" [disabled]="errorMessage!==''"
                                 (click)="detailsCompleted()">
                                 NEXT
                             </button>
@@ -184,7 +183,7 @@
                         </mat-form-field>
                         <div class="form-element">
                             <button type="submit" class="main-button main-button-accent inline-button"
-                                (click)="paymentCompleted()">
+                                [disabled]="errorMessage!==''" (click)="paymentCompleted()">
                                 NEXT
                             </button>
                             <button type="submit" class="main-button main-button-primary inline-button"
@@ -214,7 +213,7 @@
                     <div class="form-element">
                         <div *ngIf="showKycSubmit">
                             <button type="submit" class="main-button main-button-accent inline-button"
-                                (click)="kycProcessCompleted()">
+                                [disabled]="errorMessage!==''" (click)="kycProcessCompleted()">
                                 NEXT
                             </button>
                         </div>
@@ -228,6 +227,14 @@
                 <mat-step label="complete" editable="false" completed="false">
                     <ng-template matStepLabel>Order status</ng-template>
                     <p>You are now done.</p>
+                    <button type="submit" class="main-button main-button-accent inline-button"
+                        [disabled]="errorMessage!==''" (click)="done()">
+                        DONE
+                    </button>
+                    <button type="submit" class="main-button main-button-primary inline-button"
+                        (click)="resetStepper()">
+                        RESET
+                    </button>
                 </mat-step>
             </mat-horizontal-stepper>
         </div>

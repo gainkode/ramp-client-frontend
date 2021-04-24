@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { from, Observable } from 'rxjs';
 import { SocialAuthService, FacebookLoginProvider, GoogleLoginProvider, SocialUser } from 'angularx-social-login';
-import { LoginResult, SettingsCommon, User, UserType } from '../model/generated-models';
+import { LoginResult, SettingsCommon, User, UserMode, UserType } from '../model/generated-models';
 import { environment } from 'src/environments/environment';
 import { EmptyObject } from 'apollo-angular/types';
 
@@ -184,13 +184,11 @@ query {
 `;
 
 const GET_KYC_TOKEN_POST = gql`
-query {
-    generateWebApiToken
-}
+query { generateWebApiToken }
 `;
 
-const KYC_HAS_BEEN_SENT_POST = gql`
-  mutation KycHasBeenSent { kycHasBeenSent }
+const MY_KYC_STATUS_POST = gql`
+query { myKycStatus }
 `;
 
 const GET_MY_SETTINGS_KYC_POST = gql`
@@ -241,13 +239,15 @@ export class AuthService {
     }
 
     getUserMainPage(): string {
-        let result = '';
+        let result = '/';
         const u = this.user;
         if (u !== null) {
-            if (u.type === 'Personal') {
-                result = '/personal/main';
-            } else if (u.type === 'Merchant') {
-                result = '/merchant/main';
+            if (u.mode === UserMode.InternalWallet) {
+                if (u.type === 'Personal') {
+                    result = '/personal/main';
+                } else if (u.type === 'Merchant') {
+                    result = '/merchant/main';
+                }
             }
         }
         return result;
@@ -457,19 +457,6 @@ export class AuthService {
         }
     }
 
-    setKycCompleted(tokenId: string): Observable<any> | null {
-        if (this.apollo.client !== undefined) {
-            return this.apollo.mutate({
-                mutation: KYC_HAS_BEEN_SENT_POST,
-                variables: {
-                    token: tokenId
-                }
-            });
-        } else {
-            return null;
-        }
-    }
-
     getKycToken(): QueryRef<any, EmptyObject> {
         return this.apollo.watchQuery<any>({
             query: GET_KYC_TOKEN_POST,
@@ -477,11 +464,16 @@ export class AuthService {
         });
     }
 
+    getMyKycStatus(): QueryRef<any, EmptyObject> {
+        return this.apollo.watchQuery<any>({
+            query: MY_KYC_STATUS_POST,
+            fetchPolicy: 'network-only'
+        });
+    }
+
     socialSignOut(): void {
         this.socialAuth.signOut().then(function (data) {
-            //console.log(data);
         }).catch(function (error) {
-            //console.log(error);
         });
     }
 
