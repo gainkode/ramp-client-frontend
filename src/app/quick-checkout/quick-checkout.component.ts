@@ -4,7 +4,7 @@ import { AbstractControl, FormBuilder, FormGroup, NgForm, Validators } from '@an
 import { MatStepper } from '@angular/material/stepper';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { LoginResult, PaymentInstrument, Rate, SettingsCommon, SettingsCurrencyListResult, SettingsKycShort, TransactionShort, TransactionType, User } from '../model/generated-models';
+import { KycStatus, LoginResult, PaymentInstrument, Rate, SettingsCommon, SettingsCurrencyListResult, SettingsKycShort, TransactionShort, TransactionType, User } from '../model/generated-models';
 import { KycLevelShort } from '../model/identification.model';
 import { CheckoutSummary, CurrencyView, PaymentProviderList, QuickCheckoutPaymentInstrumentList, QuickCheckoutTransactionTypeList } from '../model/payment.model';
 import { AuthService } from '../services/auth.service';
@@ -408,8 +408,8 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
                 } else {
                     this.inProgress = true;
                     kycStatusData.valueChanges.subscribe(({ data }) => {
-                        const kycStatus = data.myKycStatus as string;
-                        this.showKycStep = (kycStatus === 'init' || kycStatus === 'not found');
+                        const kycStatus = data.myKycStatus as KycStatus;
+                        this.showKycStep = (kycStatus === KycStatus.Init || kycStatus === KycStatus.NotFound);
                         this.inProgress = false;
                     }, (error) => {
                         this.inProgress = false;
