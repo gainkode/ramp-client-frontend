@@ -18,6 +18,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { CheckoutDoneComponent } from './checkout-done.component';
 
 const materialModules = [
     MatButtonModule,
@@ -39,9 +40,10 @@ export class MaterialModule { }
 @NgModule({
     imports: [CommonModule, FormsModule, ReactiveFormsModule, MaterialModule],
     declarations: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
-        CheckoutSummaryComponent, ExchangeRateComponent, LoginPanelComponent, LineBreakPipe, CommonDialogBox],
+        CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, LoginPanelComponent,
+        LineBreakPipe, CommonDialogBox],
     exports: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
-        CheckoutSummaryComponent, ExchangeRateComponent, LoginPanelComponent,
+        CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, LoginPanelComponent,
         MatProgressBarModule, LineBreakPipe, CommonDialogBox],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

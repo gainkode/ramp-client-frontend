@@ -1,0 +1,54 @@
+<div class="checkout-summary-box">
+    <h2>Make a Payment with Bank Transfer</h2>
+    <div>
+        <p>
+            <span>
+                <mat-icon class="icon-block">info</mat-icon>
+            </span>
+            Please send your deposit amount using the bank details below:
+        </p>
+    </div>
+    <div>
+        <label class="checkout-summary-label">Bank Name</label>
+        <div class="checkout-summary-value">
+            Bank name
+        </div>
+    </div>
+    <div>
+        <label class="checkout-summary-label">Bank Address</label>
+        <div class="checkout-summary-value">
+            Bank address
+        </div>
+    </div>
+    <div>
+        <label class="checkout-summary-label">SWIFT Code</label>
+        <div class="checkout-summary-value">
+            MIEGLT21
+        </div>
+    </div>
+    <div>
+        <label class="checkout-summary-label">Beneficiary</label>
+        <div class="checkout-summary-value">
+            Deck Labs OU
+        </div>
+    </div>
+    <div>
+        <label class="checkout-summary-label">Account Number</label>
+        <div class="checkout-summary-value">
+            LT156461651847986461
+        </div>
+    </div>
+    <div>
+        <label class="checkout-summary-label">Add Reference</label>
+        <div class="checkout-summary-value">
+            Cryptocurrency Pruchase {{summary?.orderId}}
+        </div>
+    </div>
+    <div>
+        <label class="checkout-summary-label">Deposit Amount</label>
+        <div class="checkout-summary-value">
+            {{summary?.amountTo}} {{summary?.currencyTo}}
+        </div>
+    </div>
+
+</div>

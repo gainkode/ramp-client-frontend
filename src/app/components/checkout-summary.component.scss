@@ -6,7 +6,21 @@
     }
 }
 
-.checkout-summary-lable {
+.icon-block {
+    color: #3B4D5A;
+    font-size     : 18px;
+    vertical-align: middle;
+}
+
+.checkout-done-box {
+    margin-top: 0.5em;
+
+    h2 {
+        margin-bottom: 0.5em;
+    }
+}
+
+.checkout-summary-label {
     margin-left: 0.1em;
     font-size: 12px;
     /* Grey 2 800 */
