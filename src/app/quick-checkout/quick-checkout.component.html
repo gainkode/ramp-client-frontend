@@ -71,7 +71,7 @@
                                 <!-- Amount to -->
                                 <div class="currency-transfer-source-box">
                                     <mat-form-field class="form-element">
-                                        <mat-label>Coins To Receive</mat-label>
+                                        <mat-label>Amount To Receive</mat-label>
                                         <div class="currency-transfer-box">
                                             <div class="currency-transfer-amount-box">
                                                 <input type="text" matInput formControlName="amountTo" maxlength="20"
@@ -99,7 +99,7 @@
                                 </div>
                             </div>
                             <!-- Wallet address -->
-                            <mat-form-field class="form-element">
+                            <mat-form-field *ngIf="isDeposit" class="form-element">
                                 <mat-label>{{walletAddressName}}</mat-label>
                                 <input type="text" matInput formControlName="address" maxlength="60"
                                     placeholder="Valid wallet address" required />

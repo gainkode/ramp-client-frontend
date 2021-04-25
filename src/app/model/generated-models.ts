@@ -629,8 +629,19 @@ export type KycApplicant = {
   email?: Maybe<Scalars['String']>;
   phone?: Maybe<Scalars['String']>;
   countryCode3?: Maybe<Scalars['String']>;
+  status?: Maybe<KycStatus>;
   details?: Maybe<Array<StringMap>>;
 };
+
+export enum KycStatus {
+  Unknown = 'unknown',
+  NotFound = 'notFound',
+  Init = 'init',
+  Pending = 'pending',
+  Queued = 'queued',
+  Completed = 'completed',
+  OnHold = 'onHold'
+}
 
 export type StringMap = {
   __typename?: 'StringMap';

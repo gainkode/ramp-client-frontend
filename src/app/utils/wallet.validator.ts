@@ -1,14 +1,19 @@
 import { FormGroup, ValidationErrors } from "@angular/forms";
+import { TransactionType } from "../model/generated-models";
 
 const WAValidator = require('multicoin-address-validator');
 
 export class WalletValidator {
-    static addressValidator(addressField: string, currencyField: string): ValidationErrors | null {
+    static addressValidator(addressField: string, currencyField: string, transactionField: string): ValidationErrors | null {
         return (fg: FormGroup) => {
             const addressControl = fg.controls[addressField];
             const currencyControl = fg.controls[currencyField];
+            const transactionControl = fg.controls[transactionField];
 
-            if (!addressControl || !currencyControl) {
+            if (!addressControl || !currencyControl || !transactionControl) {
+                return null;
+            }
+            if (transactionControl.value !== TransactionType.Deposit) {
                 return null;
             }
             if (!addressControl.value || !currencyControl.value) {

@@ -29,7 +29,7 @@
     <div *ngIf="fee!==''">
         <label class="checkout-summary-lable">{{feeTitle}}</label>
         <div class="checkout-summary-value">
-            {{fee}}
+            {{fee | number: '1.0-5'}} EUR
         </div>
     </div>
 </div>
