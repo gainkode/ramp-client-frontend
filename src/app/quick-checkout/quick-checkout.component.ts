@@ -31,7 +31,7 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
     showKycStep = false;
     showKycValidator = false;
     showKycSubmit = false;
-    showSummary = true;
+    processDone = false;
     settingsCommon: SettingsCommon | null = null;
     sourceCurrencies: CurrencyView[] = [];
     destinationCurrencies: CurrencyView[] = [];
@@ -234,9 +234,6 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
         this.detailsEmailControl?.setValue(userData.user?.email);
         this.inProgress = true;
         this.auth.getSettingsCommon().valueChanges.subscribe(settings => {
-
-            console.log(settings);
-
             const settingsCommon: SettingsCommon = settings.data.getSettingsCommon;
             this.auth.setLocalSettingsCommon(settingsCommon);
             this.inProgress = false;
@@ -450,7 +447,7 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
             } else if (step.selectedStep.label === 'verification') {
                 this.getKycSettings();
             } else if (step.selectedStep.label === 'complete') {
-                this.showSummary = false;
+                this.processDone = true;
             }
         }
     }
@@ -465,9 +462,12 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
         this.showKycStep = false;
         this.showKycValidator = false;
         this.showKycSubmit = false;
-        this.showSummary = true;
+        this.processDone = false;
         this.summary.address = '';
         this.summary.email = '';
+        this.summary.feeMinEuro = 0;
+        this.summary.feePercent = 0;
+        this.summary.orderId = '';
         if (this.stepper) {
             this.stepper.reset();
             this.stepper.steps.forEach(x => {
