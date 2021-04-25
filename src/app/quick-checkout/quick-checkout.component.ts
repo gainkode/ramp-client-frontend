@@ -40,6 +40,7 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
     currentSourceCurrency: CurrencyView | null = null;
     currentDestinationCurrency: CurrencyView | null = null;
     currentRate: Rate | null = null;
+    currentTransaction = TransactionType.Deposit;
     summary!: CheckoutSummary;
 
     private currencies: CurrencyView[] = [];
@@ -71,7 +72,7 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
         address: ['', { validators: [Validators.required], updateOn: 'change' }],
         transaction: [TransactionType.Deposit, { validators: [Validators.required], updateOn: 'change' }]
     }, {
-        validators: [WalletValidator.addressValidator('address', 'currencyTo')], updateOn: 'change'
+        validators: [WalletValidator.addressValidator('address', 'currencyTo', 'transaction')], updateOn: 'change'
     });
     detailsEmailControl: AbstractControl | null = null;
     detailsAmountFromControl: AbstractControl | null = null;
@@ -87,6 +88,10 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
     paymentInstrumentControl: AbstractControl | null = null;
     paymentProviderControl: AbstractControl | null = null;
 
+    get isDeposit(): boolean {
+        return this.currentTransaction === TransactionType.Deposit;
+    }
+
     constructor(private auth: AuthService, private dataService: QuickCheckoutDataService,
         private errorHandler: ErrorService, private formBuilder: FormBuilder, private router: Router) {
         this.user = auth.user;
@@ -100,6 +105,7 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
         this.detailsTransactionControl = this.detailsForm.get('transaction');
         this.paymentInstrumentControl = this.paymentForm.get('instrument');
         this.paymentProviderControl = this.paymentForm.get('provider');
+        this.currentTransaction = TransactionType.Deposit;
     }
 
     ngOnInit(): void {
@@ -142,14 +148,24 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
         this.detailsAddressControl?.valueChanges.subscribe((val) => {
             this.setSummuryAddress(val);
         });
+        this.detailsTransactionControl?.valueChanges.subscribe((val) => {
+            this.currentTransaction = val as TransactionType;
+            this.setCurrencyValues();
+            this.updateAmounts();
+            if (this.currentTransaction === TransactionType.Deposit) {
+                this.detailsAddressControl?.setValidators([Validators.required]);
+            } else {
+                this.detailsAddressControl?.setValue('');
+                this.detailsAddressControl?.setValidators([]);
+            }
+            this.detailsAddressControl?.updateValueAndValidity();
+        });
         this.isApmSelected = false;
         this.paymentInstrumentControl?.valueChanges.subscribe((val) => {
             this.paymentProviderControl?.setValue('');
             if (val === PaymentInstrument.Apm) {
                 this.isApmSelected = true;
-                this.paymentProviderControl?.setValidators([
-                    Validators.required
-                ]);
+                this.paymentProviderControl?.setValidators([Validators.required]);
             } else {
                 this.isApmSelected = false;
                 this.paymentProviderControl?.setValidators([]);
@@ -217,6 +233,9 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
         this.detailsEmailControl?.setValue(userData.user?.email);
         this.inProgress = true;
         this.auth.getSettingsCommon().valueChanges.subscribe(settings => {
+
+            console.log(settings);
+
             const settingsCommon: SettingsCommon = settings.data.getSettingsCommon;
             this.auth.setLocalSettingsCommon(settingsCommon);
             this.inProgress = false;
@@ -333,8 +352,17 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
 
     private loadCurrencies(settings: SettingsCurrencyListResult): void {
         this.currencies = settings.list?.map((val) => new CurrencyView(val)) as CurrencyView[];
-        this.sourceCurrencies = this.currencies.filter(c => c.id !== 'BTC' && c.id !== 'USDC');
-        this.destinationCurrencies = this.currencies.filter(c => c.id !== 'EUR' && c.id !== 'USDC');
+        this.setCurrencyValues();
+    }
+
+    private setCurrencyValues(): void {
+        if (this.currentTransaction === TransactionType.Deposit) {
+            this.sourceCurrencies = this.currencies.filter(c => c.id !== 'BTC' && c.id !== 'USDC');
+            this.destinationCurrencies = this.currencies.filter(c => c.id !== 'EUR' && c.id !== 'USDC');
+        } else if (this.currentTransaction === TransactionType.Withdrawal) {
+            this.destinationCurrencies = this.currencies.filter(c => c.id !== 'BTC' && c.id !== 'USDC');
+            this.sourceCurrencies = this.currencies.filter(c => c.id !== 'EUR' && c.id !== 'USDC');
+        }
         if (this.sourceCurrencies.length > 0) {
             this.detailsCurrencyFromControl?.setValue(this.sourceCurrencies[0].id);
             if (this.currentSourceCurrency) {
@@ -347,20 +375,23 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
     }
 
     private updateAmounts() {
-        const transaction = this.detailsTransactionControl?.value as TransactionType;
         if (this.currentRate) {
             let rate = 0;
-            if (transaction === TransactionType.Deposit) {
+            if (this.currentTransaction === TransactionType.Deposit) {
                 rate = this.currentRate.depositRate;
-            } else if (transaction === TransactionType.Withdrawal) {
+            } else if (this.currentTransaction === TransactionType.Withdrawal) {
                 rate = this.currentRate.withdrawRate;
             }
+            let amount = 0;
             if (rate > 0) {
                 const valueFrom = parseFloat(this.detailsAmountFromControl?.value);
-                const amount = valueFrom / rate;
-                this.detailsAmountToControl?.setValue(
-                    round(amount, this.currentDestinationCurrency?.precision));
+                if (this.currentTransaction === TransactionType.Deposit) {
+                    amount = valueFrom / rate;
+                } else if (this.currentTransaction === TransactionType.Withdrawal) {
+                    amount = valueFrom * rate;
+                }
             }
+            this.detailsAmountToControl?.setValue(round(amount, this.currentDestinationCurrency?.precision));
         }
     }
 
@@ -449,16 +480,6 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
             }
         }
         this.detailsTransactionControl?.setValue(TransactionType.Deposit);
-        if (this.sourceCurrencies.length > 0) {
-            this.detailsCurrencyFromControl?.setValue(this.sourceCurrencies[0].id);
-            if (this.currentSourceCurrency) {
-                this.detailsAmountFromControl?.setValue(this.currentSourceCurrency.minAmount);
-            }
-        }
-        if (this.destinationCurrencies.length > 0) {
-            this.detailsCurrencyToControl?.setValue(this.destinationCurrencies[0].id);
-        }
-        this.updateAmounts();
         this.paymentInstrumentControl?.setValue(PaymentInstrument.CreditCard);
     }
 

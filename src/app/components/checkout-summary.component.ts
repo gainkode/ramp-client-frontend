@@ -15,7 +15,7 @@ export class CheckoutSummaryComponent {
         const amountTo = this.summary?.amountTo as number;
         const val = Math.max(feeMinEuro, amountTo * feePercent / 100);
         if (val !== 0) {
-            return `${val} EUR`;
+            return `${val}`;
         } else {
             return '';
         }
