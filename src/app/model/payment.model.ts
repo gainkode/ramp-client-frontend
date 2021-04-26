@@ -157,4 +157,5 @@ export class CheckoutSummary {
     fee: number = 0;
     feePercent: number = 0;
     feeMinEuro: number = 0;
+    transactionDate: string = '';
 }

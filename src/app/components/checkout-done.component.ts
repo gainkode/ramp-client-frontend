@@ -25,5 +25,5 @@ export class CheckoutDoneComponent {
         const feeMinEuro = this.summary?.feeMinEuro as number;
         const feePercent = this.summary?.feePercent as number;
         return `Transaction fee (${feePercent}%, min ${feeMinEuro} EUR)`;
-    }
+    }    
 }

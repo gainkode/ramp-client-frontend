@@ -41,7 +41,7 @@
     <div>
         <label class="checkout-summary-label">Add Reference</label>
         <div class="checkout-summary-value">
-            Cryptocurrency Pruchase {{summary?.orderId}}
+            Cryptocurrency Purchase {{summary?.orderId}}
         </div>
     </div>
     <div>
@@ -51,4 +51,74 @@
         </div>
     </div>
 
+    <div style="display: flex;background-color: #B2C2CF;margin-top: 1em;margin-bottom: 1em;padding: 0.5em;">
+        <div style="width: 2em;">
+            <mat-icon class="icon-block">report_problem</mat-icon>
+        </div>
+        <div>
+            <p>Above you will find all the details you need to complete your purchase.</p>
+            <p>Remember,</p>
+            <ul>
+                <li>The name on your bank account must match the name on your Coindeck account.</li>
+                <li>
+                    Transfer fees (charged by your bank) are your responsibility. Some banks deduct the fees from the
+                    amount being transferred so it is important you insist the exact amount be transferred.
+                </li>
+                <li>
+                    Cryptocurrency rates can change radically so it is important that you send your transfer as soon as
+                    possible to keep your rate. The exact exchange rate will be calculated when the transfer is
+                    received.
+                </li>
+            </ul>
+            <div>
+                It is very important you include your Coindeck Order ID number as a descriptor or reference with your
+                wire. Your Order ID number: {{summary?.orderId}}
+            </div>
+        </div>
+    </div>
+
+    <h2>Order confirmation {{summary?.orderId}}</h2>
+    <div>
+        <label class="checkout-summary-label">Status</label>
+        <div class="checkout-summary-value">
+            Pending
+        </div>
+    </div>
+    <div>
+        <label class="checkout-summary-label">Date</label>
+        <div class="checkout-summary-value">
+            {{summary?.transactionDate}}
+        </div>
+    </div>
+    <div>
+        <label class="checkout-summary-label">Exchange Rate</label>
+        <div class="checkout-summary-value">
+            1 {{summary?.currencyFrom}} = 10000 {{summary?.currencyTo}}
+        </div>
+    </div>
+    <div>
+        <label class="checkout-summary-label">Processing Fee</label>
+        <div class="checkout-summary-value">
+            {{fee}} EUR
+        </div>
+    </div>
+    <div>
+        <label class="checkout-summary-label">Total Received</label>
+        <div class="checkout-summary-value">
+            ~{{summary?.amountTo}} {{summary?.currencyTo}}
+        </div>
+    </div>
+    <div>
+        <label class="checkout-summary-label">Total Spent</label>
+        <div class="checkout-summary-value">
+            {{summary?.amountFrom}} {{summary?.currencyFrom}}
+        </div>
+    </div>
+    <h2>Payment</h2>
+    <div>
+        <label class="checkout-summary-label">Bank Transfer</label>
+        <div class="checkout-summary-value">
+            UAB Mistertango
+        </div>
+    </div>
 </div>

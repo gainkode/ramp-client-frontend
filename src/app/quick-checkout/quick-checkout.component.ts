@@ -276,6 +276,7 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
                     this.summary.fee = order.fee;
                     this.summary.feeMinEuro = order.feeMinEuro;
                     this.summary.feePercent = order.feePercent;
+                    this.summary.transactionDate = new Date().toLocaleString();
                 }
                 if (this.stepper) {
                     this.stepper?.next();
