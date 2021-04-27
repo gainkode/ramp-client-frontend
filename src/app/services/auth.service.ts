@@ -479,8 +479,8 @@ export class AuthService {
 
     logout(): void {
         this.apollo.client.resetStore();
-        sessionStorage.removeItem('common');
-        sessionStorage.removeItem('currentUser');
         sessionStorage.removeItem('currentToken');
+        sessionStorage.removeItem('currentUser');
+        sessionStorage.removeItem('common');
     }
 }

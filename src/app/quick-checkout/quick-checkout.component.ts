@@ -235,12 +235,15 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
         this.detailsEmailControl?.setValue(userData.user?.email);
         this.inProgress = true;
         this.auth.getSettingsCommon().valueChanges.subscribe(settings => {
-            const settingsCommon: SettingsCommon = settings.data.getSettingsCommon;
-            this.auth.setLocalSettingsCommon(settingsCommon);
+            console.log('getSettingsCommon');
             this.inProgress = false;
-            this.needToLogin = false;
-            if (this.stepper) {
-                this.stepper?.next();
+            if (this.auth.user !== null) {
+                const settingsCommon: SettingsCommon = settings.data.getSettingsCommon;
+                this.auth.setLocalSettingsCommon(settingsCommon);
+                this.needToLogin = false;
+                if (this.stepper) {
+                    this.stepper?.next();
+                }
             }
         }, (error) => {
             this.inProgress = false;
@@ -421,7 +424,7 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
     }
 
     stepChanged(step: StepperSelectionEvent): void {
-        if (this.errorMessage !== '' && this.stepper !== undefined) {
+        if (this.errorMessage !== '') {
             setTimeout(() => {
                 if (this.stepper !== undefined) {
                     step.previouslySelectedStep.editable = true;

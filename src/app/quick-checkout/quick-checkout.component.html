@@ -142,6 +142,10 @@
                             (progressChange)="onProgressChange($event)" (authenticated)="onAuthenticated($event)"
                             (socialAuthenticated)="onSocialAuthenticated($event)">
                         </app-login-panel>
+                        <button type="submit" class="main-button main-button-primary inline-button"
+                            (click)="resetStepper()">
+                            RESET
+                        </button>
                     </div>
                 </mat-step>
                 <!-- Payment info -->
@@ -226,7 +230,7 @@
                 <!-- Order status -->
                 <mat-step label="complete" editable="false" completed="false">
                     <ng-template matStepLabel>Order status</ng-template>
-                    <app-checkout-done [summary]="summary"></app-checkout-done>
+                    <app-checkout-done *ngIf="processDone" [summary]="summary"></app-checkout-done>
                     <br>
                     <button type="submit" class="main-button main-button-accent inline-button"
                         [disabled]="errorMessage!==''" (click)="done()">
