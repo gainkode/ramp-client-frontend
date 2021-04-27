@@ -26,6 +26,7 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
     inProgress = false;
     walletAddressName = '';
     needToLogin = false;
+    defaultUserName = '';
     isApmSelected = false;
     flow: string = '';
     showKycStep = false;
@@ -509,7 +510,9 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
                 }, (error) => {
                     this.inProgress = false;
                     if (this.errorHandler.getCurrentError() == 'auth.password_null_or_empty') {
+                        this.auth.logout();
                         this.needToLogin = true;
+                        this.defaultUserName = this.detailsEmailControl?.value;
                     } else {
                         this.errorMessage = this.errorHandler.getError(error.message, 'Unable to authenticate user');
                     }

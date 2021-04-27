@@ -138,8 +138,8 @@
                         <div class="form-error-box" *ngIf="errorMessage!==''">
                             {{errorMessage}}
                         </div>
-                        <app-login-panel (error)="onError($event)" (progressChange)="onProgressChange($event)"
-                            (authenticated)="onAuthenticated($event)"
+                        <app-login-panel [userName]="defaultUserName" (error)="onError($event)"
+                            (progressChange)="onProgressChange($event)" (authenticated)="onAuthenticated($event)"
                             (socialAuthenticated)="onSocialAuthenticated($event)">
                         </app-login-panel>
                     </div>

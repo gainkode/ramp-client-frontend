@@ -1,5 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { ErrorService } from '../services/error.service';
 import { Validators, FormBuilder } from '@angular/forms';
@@ -11,7 +10,8 @@ import { LoginResult } from '../model/generated-models';
     templateUrl: 'login-panel.component.html',
     styleUrls: ['./login-panel.component.scss']
 })
-export class LoginPanelComponent {
+export class LoginPanelComponent implements OnInit {
+    @Input() userName: string | undefined = '';
     @Output() error = new EventEmitter<string>();
     @Output() progressChange = new EventEmitter<boolean>();
     @Output() authenticated = new EventEmitter<LoginResult>();
@@ -35,7 +35,11 @@ export class LoginPanelComponent {
     });
 
     constructor(private auth: AuthService, private errorHandler: ErrorService,
-        private formBuilder: FormBuilder, private router: Router) { }
+        private formBuilder: FormBuilder) { }
+
+    ngOnInit(): void {
+        this.loginForm.get('email')?.setValue((this.userName) ? this.userName : '');
+    }
 
     googleSignIn(): void {
         this.socialSignIn('Google');
