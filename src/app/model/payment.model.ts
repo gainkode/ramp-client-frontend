@@ -1,6 +1,7 @@
 import {
-    PaymentInstrument, PaymentProvider, TransactionType,
-    SettingsFeeTargetFilterType, SettingsCostTargetFilterType, SettingsKycTargetFilterType, UserType, KycProvider, UserMode, SettingsCurrency
+    PaymentInstrument, PaymentProvider, TransactionType, TransactionStatus,
+    SettingsFeeTargetFilterType, SettingsCostTargetFilterType, SettingsKycTargetFilterType,
+    UserType, KycProvider, UserMode, SettingsCurrency, Rate
 } from './generated-models';
 
 export class PaymentInstrumentView {
@@ -157,5 +158,25 @@ export class CheckoutSummary {
     fee: number = 0;
     feePercent: number = 0;
     feeMinEuro: number = 0;
+    exchangeRate: Rate | null = null;
     transactionDate: string = '';
+    transactionType: TransactionType = TransactionType.Deposit;
+    status: TransactionStatus = TransactionStatus.Pending;
+
+    reset(): void {
+        this.orderId = '';
+        this.email = '';
+        this.currencyFrom = '';
+        this.currencyTo = '';
+        this.amountFrom = 0;
+        this.amountTo = 0;
+        this.address = '';
+        this.fee = 0;
+        this.feePercent = 0;
+        this.feeMinEuro = 0;
+        this.exchangeRate = null;
+        this.transactionDate = '';
+        this.transactionType = TransactionType.Deposit;
+        status = TransactionStatus.Pending;
+    }
 }

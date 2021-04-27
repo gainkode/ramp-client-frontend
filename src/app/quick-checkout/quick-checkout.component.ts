@@ -235,7 +235,6 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
         this.detailsEmailControl?.setValue(userData.user?.email);
         this.inProgress = true;
         this.auth.getSettingsCommon().valueChanges.subscribe(settings => {
-            console.log('getSettingsCommon');
             this.inProgress = false;
             if (this.auth.user !== null) {
                 const settingsCommon: SettingsCommon = settings.data.getSettingsCommon;
@@ -280,7 +279,9 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
                     this.summary.fee = order.fee;
                     this.summary.feeMinEuro = order.feeMinEuro;
                     this.summary.feePercent = order.feePercent;
+                    this.summary.exchangeRate = this.currentRate;
                     this.summary.transactionDate = new Date().toLocaleString();
+                    this.summary.transactionType = this.currentTransaction;
                 }
                 if (this.stepper) {
                     this.stepper?.next();
@@ -468,16 +469,10 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
         this.showKycValidator = false;
         this.showKycSubmit = false;
         this.processDone = false;
-        this.summary.address = '';
-        this.summary.email = '';
-        this.summary.feeMinEuro = 0;
-        this.summary.feePercent = 0;
-        this.summary.orderId = '';
+        this.summary.reset();
         if (this.stepper) {
             this.stepper.reset();
-            this.stepper.steps.forEach(x => {
-                x.completed = false;
-            })
+            this.stepper.steps.forEach(x => x.completed = false);
         }
         this._detailsForm?.resetForm();
         this._paymentForm?.resetForm();
