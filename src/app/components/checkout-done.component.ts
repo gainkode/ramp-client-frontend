@@ -44,10 +44,10 @@ export class CheckoutDoneComponent {
         if (this.summary !== null && this.summary?.exchangeRate !== null) {
             if (this.summary?.transactionType === TransactionType.Deposit) {
                 const rateValue = round(this.summary.exchangeRate.depositRate, 5);
-                data = `1 ${this.summary.currencyTo} = ${rateValue} ${this.summary.currencyFrom}`;
+                data = `1 ${this.summary.exchangeRate.currencyTo} = ${rateValue} ${this.summary.exchangeRate.currencyFrom}`;
             } else if (this.summary?.transactionType === TransactionType.Withdrawal) {
                 const rateValue = round(this.summary.exchangeRate.withdrawRate, 5);
-                data = `1 ${this.summary.currencyFrom} = ${rateValue} ${this.summary.currencyTo}`;
+                data = `1 ${this.summary.exchangeRate.currencyFrom} = ${rateValue} ${this.summary.exchangeRate.currencyTo}`;
             }
         }
         return data;
