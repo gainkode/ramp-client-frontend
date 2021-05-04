@@ -7,7 +7,7 @@ export interface DialogData {
 }
 
 @Component({
-    selector: 'common-dialog-box',
+    selector: 'app-common-dialog-box',
     templateUrl: 'common-box.dialog.html',
 })
 export class CommonDialogBox {

@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'dropdown-item',
+  selector: 'app-dropdown-item',
   templateUrl: 'dropdown-item.component.html'
 })
 export class DropdownItemComponent {

@@ -1,6 +1,6 @@
 <div class="action-page-split action-page-left-panel split-page-60">
     <div class="back-box">
-        <back-button></back-button>
+        <app-back-button></app-back-button>
     </div>
     <div class="auth-panel-content">
         <div class="login-form-box">
@@ -62,8 +62,8 @@
                     formControlName="country" [matAutocomplete]="auto" maxlength="40" required>
                     <mat-autocomplete #auto="matAutocomplete">
                         <mat-option *ngFor="let c of filteredCountries | async" [value]="c.name">
-                            <dropdown-item itemValue="{{c.name}}" imageClass="country-flag"
-                            imageSource="assets/svg-country-flags/{{getCountryFlag(c.code2)}}"></dropdown-item>
+                            <app-dropdown-item itemValue="{{c.name}}" imageClass="country-flag"
+                            imageSource="assets/svg-country-flags/{{getCountryFlag(c.code2)}}"></app-dropdown-item>
                         </mat-option>
                     </mat-autocomplete>
                     <mat-error *ngIf="this.countryField?.hasError('required')">

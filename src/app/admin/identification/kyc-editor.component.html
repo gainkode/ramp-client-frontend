@@ -73,8 +73,8 @@
         </mat-chip-list>
         <mat-autocomplete #auto="matAutocomplete" (optionSelected)="targetItemSelected($event)">
             <mat-option *ngFor="let item of filteredTargetValues | async" [value]="item.title">
-                <dropdown-item itemValue="{{item.title}}" imageClass="{{item.imgClass}}"
-                    imageSource="{{item.imgSource}}"></dropdown-item>
+                <app-dropdown-item itemValue="{{item.title}}" imageClass="{{item.imgClass}}"
+                    imageSource="{{item.imgSource}}"></app-dropdown-item>
             </mat-option>
         </mat-autocomplete>
         <mat-error *ngIf="this.schemeForm.get('targetValues')?.hasError('required')">

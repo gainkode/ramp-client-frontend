@@ -38,7 +38,7 @@
         [selectedIndex]="selectedTab" (selectedIndexChange)="setSelectedTab($event)">
         <mat-tab>
             <ng-template mat-tab-label>
-                <tab-label [hasErrors]="tabHasError('tab1')" labelText="Targets"></tab-label>
+                <app-tab-label [hasErrors]="tabHasError('tab1')" labelText="Targets"></app-tab-label>
             </ng-template>
             <div class="target-tab-box">
                 <!-- Target -->
@@ -70,8 +70,8 @@
                     </mat-chip-list>
                     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="targetItemSelected($event)">
                         <mat-option *ngFor="let item of filteredTargetValues | async" [value]="item.title">
-                            <dropdown-item itemValue="{{item.title}}" imageClass="{{item.imgClass}}"
-                                imageSource="{{item.imgSource}}"></dropdown-item>
+                            <app-dropdown-item itemValue="{{item.title}}" imageClass="{{item.imgClass}}"
+                                imageSource="{{item.imgSource}}"></app-dropdown-item>
                         </mat-option>
                     </mat-autocomplete>
                     <mat-error *ngIf="this.schemeForm.get('targetValues')?.hasError('required')">
@@ -147,7 +147,7 @@
         </mat-tab>
         <mat-tab>
             <ng-template mat-tab-label>
-                <tab-label [hasErrors]="tabHasError('tab2')" labelText="Terms"></tab-label>
+                <app-tab-label [hasErrors]="tabHasError('tab2')" labelText="Terms"></app-tab-label>
             </ng-template>
             <!-- Transaction fees -->
             <mat-form-field class="form-element">
@@ -237,7 +237,7 @@
         </mat-tab>
         <mat-tab>
             <ng-template mat-tab-label>
-                <tab-label [hasErrors]="tabHasError('tab3')" labelText="Wire details"></tab-label>
+                <app-tab-label [hasErrors]="tabHasError('tab3')" labelText="Wire details"></app-tab-label>
             </ng-template>
             <!-- Beneficiary name -->
             <mat-form-field class="form-element">

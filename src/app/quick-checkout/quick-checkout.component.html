@@ -210,9 +210,9 @@
                         {{errorMessage}}
                     </div>
                     <div *ngIf="showKycValidator">
-                        <kyc-panel [url]="settingsCommon?.kycBaseAddress" [flow]="flow" [notifyCompleted]="true"
+                        <app-kyc-panel [url]="settingsCommon?.kycBaseAddress" [flow]="flow" [notifyCompleted]="true"
                             (completed)="kycCompleted()">
-                        </kyc-panel>
+                        </app-kyc-panel>
                     </div>
                     <div class="form-element">
                         <div *ngIf="showKycSubmit">
@@ -245,7 +245,7 @@
         </div>
         <div *ngIf="!processDone" class="wizard-panel-summary">
             <app-exchange-rate [summary]="summary" (update)="onUpdateRate($event)"></app-exchange-rate>
-            <checkout-summary [summary]="summary"></checkout-summary>
+            <app-checkout-summary [summary]="summary"></app-checkout-summary>
         </div>
         <div *ngIf="processDone" class="wizard-panel-summary">
             <div class="wizard-panel-done">

@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { Location } from '@angular/common';
 
 @Component({
-    selector: 'back-button',
+    selector: 'app-back-button',
     templateUrl: 'backbutton.component.html'
 })
 export class BackButtonComponent {

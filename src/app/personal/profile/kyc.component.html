@@ -13,8 +13,8 @@
                 {{errorMessage}}
             </div>
             <mat-progress-bar *ngIf="inProgress" mode="indeterminate"></mat-progress-bar>
-            <kyc-panel [url]="settingsCommon?.kycBaseAddress" [flow]="flow">
-            </kyc-panel>
+            <app-kyc-panel [url]="settingsCommon?.kycBaseAddress" [flow]="flow">
+            </app-kyc-panel>
         </div>
     </div>
 </div>

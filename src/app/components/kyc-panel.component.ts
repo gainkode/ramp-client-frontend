@@ -9,7 +9,7 @@ import { CommonDialogBox } from './common-box.dialog';
 const snsWebSdk = require('@sumsub/websdk');
 
 @Component({
-    selector: 'kyc-panel',
+    selector: 'app-kyc-panel',
     templateUrl: 'kyc-panel.component.html',
     styleUrls: ['kyc-panel.component.scss']
 })

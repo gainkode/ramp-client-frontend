@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { CheckoutSummary } from '../model/payment.model';
 
 @Component({
-    selector: 'checkout-summary',
+    selector: 'app-checkout-summary',
     templateUrl: 'checkout-summary.component.html',
     styleUrls: ['checkout-summary.component.scss']
 })
