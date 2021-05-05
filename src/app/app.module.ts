@@ -5,6 +5,7 @@ import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { Apollo } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
+import { WebSocketLink } from '@apollo/client/link/ws';
 import { onError } from 'apollo-link-error';
 import { ApolloLink, InMemoryCache } from '@apollo/client/core';
 import { fromPromise } from 'apollo-link';
@@ -19,6 +20,7 @@ import { ErrorService } from './services/error.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { environment } from 'src/environments/environment';
 import { QuickCheckoutDataService } from './services/quick-checkout.service';
+import { NotificationService } from './services/notification.service';
 
 @NgModule({
   declarations: [
@@ -51,6 +53,7 @@ import { QuickCheckoutDataService } from './services/quick-checkout.service';
     AuthService,
     AdminDataService,
     QuickCheckoutDataService,
+    NotificationService,
     ErrorService
   ],
   bootstrap: [AppComponent]
@@ -97,6 +100,13 @@ export class AppModule {
     headers: { Accept: 'charset=utf-8' }
   }));
 
+  wsClient = new WebSocketLink({
+    uri: `${environment.ws_server}/subscriptions`,
+    options: {
+      reconnect: true,
+    },
+  });
+
   constructor(private apollo: Apollo, private httpLink: HttpLink, private authService: AuthService) {
     const cookieName = 'cookieconsent_status';
     const w = window as any;
@@ -111,7 +121,8 @@ export class AppModule {
           httpLink.create({
             uri: `${environment.api_server}/gql/api`,
             withCredentials: allowCookies
-          })
+          }),
+          this.wsClient
         ]),
         cache: new InMemoryCache()
       });

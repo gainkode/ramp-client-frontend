@@ -10,8 +10,8 @@ export type Scalars = {
   Int: number;
   Float: number;
   DateTime: any;
-  Byte: any;
   Void: any;
+  Byte: any;
 };
 
 
@@ -881,6 +881,7 @@ export type Transaction = {
 export type Mutation = {
   __typename?: 'Mutation';
   foo: Scalars['String'];
+  createPaymentOrder: PaymentOrder;
   updateSettingsCommon: SettingsCommon;
   addSettingsFee: SettingsFee;
   updateSettingsFee: SettingsFee;
@@ -916,8 +917,14 @@ export type Mutation = {
   disable2fa: LoginResult;
   sendEmailCodePasswordChange: Scalars['Boolean'];
   addFeedback: Feedback;
+  sendTestNotification?: Maybe<Scalars['Void']>;
   createQuickCheckout?: Maybe<TransactionShort>;
   executeQuickCheckout?: Maybe<TransactionShort>;
+};
+
+
+export type MutationCreatePaymentOrderArgs = {
+  orderParams: PaymentOrderInput;
 };
 
 
@@ -1133,6 +1140,44 @@ export type MutationExecuteQuickCheckoutArgs = {
   recaptcha: Scalars['String'];
 };
 
+export type PaymentOrderInput = {
+  transactionId: Scalars['String'];
+  instrument: PaymentInstrument;
+  provider: PaymentProvider;
+  amount: Scalars['Float'];
+  currency: Scalars['String'];
+  card?: Maybe<PaymentCard>;
+};
+
+export type PaymentCard = {
+  number?: Maybe<Scalars['String']>;
+  expireMonth?: Maybe<Scalars['Int']>;
+  expireYear?: Maybe<Scalars['Int']>;
+  cvv2?: Maybe<Scalars['Int']>;
+  holder?: Maybe<Scalars['String']>;
+};
+
+export type PaymentOrder = {
+  __typename?: 'PaymentOrder';
+  orderId?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['String']>;
+  code?: Maybe<Scalars['String']>;
+  transactionId?: Maybe<Scalars['String']>;
+  provider: PaymentProvider;
+  created: Scalars['DateTime'];
+  amount: Scalars['Float'];
+  currency: Scalars['String'];
+  preauth?: Maybe<Scalars['DateTime']>;
+  preauthResult?: Maybe<Scalars['String']>;
+  capture?: Maybe<Scalars['DateTime']>;
+  captureResult?: Maybe<Scalars['String']>;
+  status: Scalars['String'];
+  originalOrderId?: Maybe<Scalars['String']>;
+  executed?: Maybe<Scalars['DateTime']>;
+  executingResult?: Maybe<Scalars['String']>;
+  providerSpecificParams?: Maybe<Array<StringMap>>;
+};
+
 export type SettingsCommonInput = {
   liquidityProvider?: Maybe<Scalars['String']>;
   liquidityBaseAddress?: Maybe<Scalars['String']>;
@@ -1232,6 +1277,7 @@ export type FeedbackInput = {
   description?: Maybe<Scalars['String']>;
 };
 
+
 export type TransactionInput = {
   type: TransactionType;
   currencyToSpend: Scalars['String'];
@@ -1245,12 +1291,18 @@ export type TransactionInput = {
   data?: Maybe<Scalars['String']>;
 };
 
+export type Subscription = {
+  __typename?: 'Subscription';
+  newNotification?: Maybe<Scalars['Void']>;
+};
+
 export enum CustodyProvider {
   Trustology = 'Trustology',
   Fireblocks = 'Fireblocks'
 }
 
 export enum UserNotificationCodes {
+  TestNotification = 'TEST_NOTIFICATION',
   TransactionConfirmation = 'TRANSACTION_CONFIRMATION',
   TransactionStatusChanged = 'TRANSACTION_STATUS_CHANGED',
   KycStatusChanged = 'KYC_STATUS_CHANGED'
@@ -1276,7 +1328,6 @@ export type FileInfo = {
   type?: Maybe<FileType>;
   order?: Maybe<Scalars['Int']>;
 };
-
 
 
 export type RequiredUserPermission = {
@@ -1394,6 +1445,7 @@ export type LiquidityOrder = {
   state: LiquidityOrderState;
   status: Scalars['String'];
   originalOrderId?: Maybe<Scalars['String']>;
+  providerSpecificParams?: Maybe<Array<StringMap>>;
 };
 
 export type UserLogin = {
@@ -1431,19 +1483,6 @@ export type CommonSettings = {
   __typename?: 'CommonSettings';
   maxFileSize?: Maybe<Scalars['Int']>;
   maxFiles?: Maybe<Scalars['Int']>;
-};
-
-export type PaymentOrder = {
-  __typename?: 'PaymentOrder';
-  orderId?: Maybe<Scalars['String']>;
-  userId?: Maybe<Scalars['String']>;
-  transactionId?: Maybe<Scalars['String']>;
-  provider: PaymentProvider;
-  created: Scalars['DateTime'];
-  published?: Maybe<Scalars['DateTime']>;
-  publishingResult?: Maybe<Scalars['String']>;
-  status: Scalars['String'];
-  originalOrderId?: Maybe<Scalars['String']>;
 };
 
 export type TransferOrder = {

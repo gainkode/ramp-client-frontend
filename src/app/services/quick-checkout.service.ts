@@ -1,8 +1,7 @@
-import { stringify } from '@angular/compiler/src/util';
 import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { EmptyObject } from 'apollo-angular/types';
-import { empty, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { PaymentInstrument, PaymentProvider, TransactionType } from '../model/generated-models';
 
