@@ -114,6 +114,57 @@ const GET_KYC_LEVELS_POST = gql`
   }
 `;
 
+const GET_TRANSACTIONS_POST = gql`
+  query GetTransactions(
+    $userId: String,
+    $quickCheckoutOnly: Boolean,
+    $filter: String,
+    $skip: Int,
+    $first: Int
+    $orderBy: [OrderBy!]
+  ) {
+    getTransactions(
+      userId: $userId,
+      quickCheckoutOnly: $quickCheckoutOnly,
+      filter: $filter,
+      skip: $skip,
+      first: $first,
+      orderBy: $orderBy
+    ) {
+      count,
+      list {
+        transactionId,
+        code,
+        userId,
+        affiliateId,
+        created,
+        executed,
+        type,
+        source,
+        status,
+        fee,
+        feePercent,
+        feeMinEuro,
+        feeDetails,
+        currencyToSpend,
+        amountToSpend,
+        amountToSpendWithoutFee,
+        currencyToReceive,
+        amountToReceive,
+        amountToReceiveWithoutFee,
+        rate,
+        orderId,
+        liquidityProvider,
+        instrument,
+        paymentProvider,
+        originalOrderId,
+        order,
+        data
+      }
+    }
+  }
+`;
+
 const ADD_SETTINGS_FEE_POST = gql`
 mutation AddSettingsFee(
   $name: String!,
@@ -412,6 +463,26 @@ export class AdminDataService {
       return this.apollo.watchQuery<any>({
         query: GET_KYC_LEVELS_POST,
         variables: { filter: userTypeFilter },
+        pollInterval: 30000,
+        fetchPolicy: 'network-only'
+      });
+    } else {
+      return null;
+    }
+  }
+
+  getTransactions(): QueryRef<any, EmptyObject> | null {
+    if (this.apollo.client !== undefined) {
+      return this.apollo.watchQuery<any>({
+        query: GET_TRANSACTIONS_POST,
+        variables: {
+          userId: '',
+          quickCheckoutOnly: false,
+          filter: '',
+          skip: 0,
+          first: 100000,
+          orderBy: []
+        },
         pollInterval: 30000,
         fetchPolicy: 'network-only'
       });
