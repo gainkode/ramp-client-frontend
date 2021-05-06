@@ -10,16 +10,13 @@
       <h1>
         Fee schemes
       </h1>
-
       <div *ngIf="inProgress">
         <mat-progress-bar mode="indeterminate"></mat-progress-bar>
         <br>
       </div>
-
       <div class="form-error-box" *ngIf="editorErrorMessage!==''">
         {{editorErrorMessage}}
       </div>
-
       <button class="main-button main-button-primary" *ngIf="errorMessage===''" [disabled]="createScheme"
         (click)="createNewScheme()">
         ADD SCHEME

@@ -283,13 +283,24 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
                     this.summary.transactionDate = new Date().toLocaleString();
                     this.summary.transactionType = this.currentTransaction;
                 }
-                if (this.stepper) {
-                    this.stepper?.next();
-                }
+                this.executeOrder(order.transactionId, order.code as string);
             }, (error) => {
                 this.inProgress = false;
                 this.errorMessage = this.errorHandler.getError(error.message, 'Unable to register a new order');
             });
+    }
+
+    private executeOrder(transactionId: string, code: string): void {
+        this.inProgress = true;
+        this.dataService.executeQuickCheckout(transactionId, code).subscribe(({ data }) => {
+            this.inProgress = false;
+            if (this.stepper) {
+                this.stepper?.next();
+            }
+        }, (error) => {
+            this.inProgress = false;
+            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to execute your order');
+        });
     }
 
     private getKycSettings(): void {

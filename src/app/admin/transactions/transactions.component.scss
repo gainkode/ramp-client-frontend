@@ -1,0 +1,22 @@
+.mat-column-transaction-table {
+    word-wrap: break-word;
+    white-space: unset;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+}
+
+.mat-column-transaction-table-code {
+    flex: 0 0 20%;
+    width: 20%;
+    min-width: 1.5em;
+}
+
+.mat-column-transaction-table-details {
+    flex: 0 0 2%;
+    width: 2%;
+    min-width: 1.5em;
+}

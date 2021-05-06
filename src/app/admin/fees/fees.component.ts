@@ -105,7 +105,7 @@ export class FeesComponent implements OnInit, OnDestroy {
     if (this.createScheme) {
       return 'Save changes first';
     } else {
-      return (this.isSelectedScheme(schemeId)) ? 'Close details' : 'Change scheme';
+      return (this.isSelectedScheme(schemeId)) ? 'Hide details' : 'Change scheme';
     }
   }
 

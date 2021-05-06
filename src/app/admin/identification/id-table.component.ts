@@ -30,7 +30,7 @@ export class IdTableComponent {
     }
 
     getDetailsTooltip(schemeId: string): string {
-        return (this.isSelectedScheme(schemeId)) ? 'Close details' : 'Change scheme';
+        return (this.isSelectedScheme(schemeId)) ? 'Hide details' : 'Change scheme';
     }
 
     toggleDetails(scheme: KycScheme): void {

@@ -37,6 +37,22 @@ query GetRates($recaptcha: String!, $currenciesFrom: [String!]!, $currencyTo: St
 }
 `;
 
+const EXECUTE_QUICK_CHECKOUT_POST = gql`
+mutation ExecuteQuickCheckout(
+  $transactionId: String!,
+  $code: Int!,
+  $recaptcha: String!
+) {
+  executeQuickCheckout(
+    transactionId: $transactionId,
+    code: $code,
+    recaptcha: $recaptcha
+  ) {
+    transactionId
+  }
+}
+`;
+
 const CREATE_QUICK_CHECKOUT_POST = gql`
 mutation CreateQuickCheckout(
   $transactionType: TransactionType!,
@@ -59,6 +75,7 @@ mutation CreateQuickCheckout(
     rate: $rate
     data: $data
   }, recaptcha: $recaptcha) {
+    transactionId,
     code,
     fee,
     feePercent,
@@ -116,6 +133,17 @@ export class QuickCheckoutDataService {
         paymentProvider: null,
         rate,
         data: JSON.stringify({ userAddress: walletAddress })
+      }
+    });
+  }
+
+  executeQuickCheckout(id: string, code: string): Observable<any> {
+    return this.apollo.mutate({
+      mutation: EXECUTE_QUICK_CHECKOUT_POST,
+      variables: {
+        recaptcha: environment.recaptchaId,
+        transactionId: id,
+        code
       }
     });
   }

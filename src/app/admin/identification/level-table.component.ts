@@ -29,7 +29,7 @@ export class LevelTableComponent {
     }
 
     getDetailsTooltip(levelId: string): string {
-        return (this.isSelectedLevel(levelId)) ? 'Close details' : 'Change level';
+        return (this.isSelectedLevel(levelId)) ? 'Hide details' : 'Change level';
     }
 
     toggleDetails(level: KycLevel): void {
