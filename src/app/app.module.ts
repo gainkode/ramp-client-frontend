@@ -104,6 +104,9 @@ export class AppModule {
     uri: `${environment.ws_server}/subscriptions`,
     options: {
       reconnect: true,
+      connectionParams: {
+        headers: { Authorization: `Bearer ${sessionStorage.getItem('currentToken')}` }
+      }
     },
   });
 

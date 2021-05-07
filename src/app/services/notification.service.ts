@@ -23,4 +23,11 @@ export class NotificationService {
       mutation: SEND_TEST_NOTIFICATION_POST
     });
   }
+
+  subscribeToNotifications(): Observable<any> {
+    return this.apollo.subscribe({
+      query: SUBSCRIBE_NOTIFICATIONS,
+      fetchPolicy: "no-cache"
+    })
+  }
 }

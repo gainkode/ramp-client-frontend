@@ -1,15 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { FormBuilder } from '@angular/forms';
 import { NotificationService } from '../services/notification.service';
 
 @Component({
     templateUrl: 'personal.component.html'
 })
-export class PersonalComponent {
+export class PersonalComponent implements OnInit {
     constructor(private auth: AuthService, private notification: NotificationService,
-        private formBuilder: FormBuilder, private router: Router) { }
+        private router: Router) { }
+
+    ngOnInit(): void {
+        this.notification.subscribeToNotifications().subscribe(({ data }) => {
+            console.log('got data ', data);
+        }, (error) => {
+            console.log('there was an error sending the query', error);
+        });
+    }
 
     logout(): void {
         this.auth.logout();
@@ -18,8 +25,8 @@ export class PersonalComponent {
     notificationTest(): void {
         this.notification.sendTestNotification().subscribe(({ data }) => {
             console.log(data);
-          }, (error) => {
+        }, (error) => {
             console.log(error);
-          });
+        });
     }
 }
