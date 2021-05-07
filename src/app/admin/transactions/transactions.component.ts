@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { AdminDataService } from '../../services/admin-data.service';
 import { ErrorService } from '../../services/error.service';
-import { TransactionItem } from 'src/app/model/transaction.model';
+import { TransactionItem } from '../../model/transaction.model';
 
 @Component({
   templateUrl: 'transactions.component.html',

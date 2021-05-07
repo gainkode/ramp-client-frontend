@@ -292,6 +292,8 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
 
     private executeOrder(transactionId: string, code: string): void {
         this.inProgress = true;
+        console.log(transactionId);
+        console.log(code);
         this.dataService.executeQuickCheckout(transactionId, code).subscribe(({ data }) => {
             this.inProgress = false;
             if (this.stepper) {

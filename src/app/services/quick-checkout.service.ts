@@ -40,7 +40,7 @@ query GetRates($recaptcha: String!, $currenciesFrom: [String!]!, $currencyTo: St
 const EXECUTE_QUICK_CHECKOUT_POST = gql`
 mutation ExecuteQuickCheckout(
   $transactionId: String!,
-  $code: Int!,
+  $code: String!,
   $recaptcha: String!
 ) {
   executeQuickCheckout(

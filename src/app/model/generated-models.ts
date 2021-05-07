@@ -1136,7 +1136,7 @@ export type MutationCreateQuickCheckoutArgs = {
 
 export type MutationExecuteQuickCheckoutArgs = {
   transactionId?: Maybe<Scalars['String']>;
-  code?: Maybe<Scalars['Int']>;
+  code?: Maybe<Scalars['String']>;
   recaptcha: Scalars['String'];
 };
 
