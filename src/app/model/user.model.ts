@@ -1,11 +1,4 @@
-import {
-    PaymentInstrument, PaymentProvider, User, TransactionSource,
-    TransactionStatus, TransactionType
-} from './generated-models';
-import {
-    TransactionTypeList, PaymentInstrumentList, PaymentProviderList,
-    TransactionSourceList, TransactionStatusList
-} from './payment.model';
+import { User } from './generated-models';
 import { getCountryByCode2 } from './country-code.model';
 import { CommonTargetValue } from './common.model';
 
@@ -35,24 +28,4 @@ export class UserItem {
             }
         }
     }
-
-    // get transactionTypeName(): string {
-    //     return TransactionTypeList.find(t => t.id === this.type)?.name as string;
-    // }
-
-    // get transactionSourceName(): string {
-    //     return TransactionSourceList.find(t => t.id === this.source)?.name as string;
-    // }
-
-    // get transactionStatusName(): string {
-    //     return TransactionStatusList.find(t => t.id === this.status)?.name as string;
-    // }
-
-    // get instrumentName(): string {
-    //     return PaymentInstrumentList.find(i => i.id === this.instrument)?.name as string;
-    // }
-
-    // get paymentProviderName(): string {
-    //     return PaymentProviderList.find(p => p.id === this.paymentProvider)?.name as string;
-    // }
 }

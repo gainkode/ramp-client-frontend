@@ -58,16 +58,98 @@
 
         <div *ngIf="currentUser?.street!==''">
             <label class="transaction-details-label">Street</label>
-            <div class="transaction-details-value">
+            <div class="transaction-details-value" style="color: darkred;">
                 {{currentUser?.street}}
             </div>
         </div>
 
         <div *ngIf="currentUser?.zip!==''">
             <label class="transaction-details-label">ZIP code</label>
-            <div class="transaction-details-value">
+            <div class="transaction-details-value" style="color: darkred;">
                 {{currentUser?.zip}}
             </div>
+        </div>
+    </div>
+
+    <div *ngIf="transaction?.type!==undefined">
+        <label class="transaction-details-label">Transaction Type</label>
+        <div class="transaction-details-value">
+            {{transaction?.transactionTypeName}}
+        </div>
+    </div>
+
+    <div *ngIf="transaction?.instrument!==undefined">
+        <label class="transaction-details-label">Instrument</label>
+        <div class="transaction-details-value">
+            {{transaction?.instrumentName}}
+        </div>
+    </div>
+
+    <div *ngIf="transaction?.instrumentDetails!==null">
+        <label class="transaction-details-label">Instrument Details</label>
+        <div class="transaction-details-value" style="color: darkred;">
+            <app-dropdown-item itemValue="{{transaction?.instrumentDetails?.title}}"
+                imageClass="{{transaction?.instrumentDetails?.imgClass}}" imageSource="{{transaction?.instrumentDetails?.imgSource}}">
+            </app-dropdown-item>
+        </div>
+    </div>
+
+    <div *ngIf="transaction?.address!==''">
+        <label class="transaction-details-label">Wallet Address</label>
+        <div class="transaction-details-value" style="color: darkred;">
+            {{transaction?.address}}
+        </div>
+    </div>
+
+    <div *ngIf="transaction?.currencyToReceive!==''">
+        <label class="transaction-details-label">Wallet amount</label>
+        <div class="transaction-details-value">
+            {{transaction?.amountToReceive | number: '1.0-5'}} {{transaction?.currencyToReceive}}
+        </div>
+    </div>
+
+    <div *ngIf="transaction?.currencyToSpend!==''">
+        <label class="transaction-details-label">Base amount</label>
+        <div class="transaction-details-value">
+            {{transaction?.amountToSpend | number: '1.0-5'}} {{transaction?.currencyToSpend}}
+        </div>
+    </div>
+
+    <label class="transaction-details-label">Exchange rate</label>
+    <div class="transaction-details-value">
+        {{transaction?.rate | number: '1.0-5'}}
+    </div>
+
+    <div *ngIf="transaction?.status!==undefined">
+        <label class="transaction-details-label">Transaction status</label>
+        <div class="transaction-details-value">
+            {{transaction?.transactionStatusName}}
+        </div>
+    </div>
+
+    <label class="transaction-details-label">Transaction fees</label>
+    <div class="transaction-details-value">
+        {{transaction?.fees | number: '1.0-5'}} EUR
+    </div>
+
+    <div *ngIf="transaction?.ip!==''">
+        <label class="transaction-details-label">IP Address</label>
+        <div class="transaction-details-value" style="color: darkred;">
+            {{transaction?.ip}}
+        </div>
+    </div>
+
+    <div *ngIf="transaction?.source!==undefined">
+        <label class="transaction-details-label">Initiated from</label>
+        <div class="transaction-details-value">
+            {{transaction?.transactionSourceName}}
+        </div>
+    </div>
+
+    <div *ngIf="transaction?.walletSource!==''">
+        <label class="transaction-details-label">Wallet type</label>
+        <div class="transaction-details-value" style="color: darkred;">
+            {{transaction?.walletSource}}
         </div>
     </div>
 </div>

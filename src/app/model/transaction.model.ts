@@ -1,7 +1,12 @@
-import { PaymentInstrument, PaymentProvider, Transaction, TransactionSource,
-    TransactionStatus, TransactionType } from "./generated-models";
-import { TransactionTypeList, PaymentInstrumentList, PaymentProviderList,
-    TransactionSourceList, TransactionStatusList } from './payment.model';
+import { CommonTargetValue } from "./common.model";
+import {
+    PaymentInstrument, PaymentProvider, Transaction, TransactionSource,
+    TransactionStatus, TransactionType
+} from "./generated-models";
+import {
+    TransactionTypeList, PaymentInstrumentList, PaymentProviderList,
+    TransactionSourceList, TransactionStatusList
+} from './payment.model';
 
 export class TransactionItem {
     id: string = '';
@@ -11,6 +16,7 @@ export class TransactionItem {
     email: string = '';
     type: TransactionType | undefined = undefined;
     instrument: PaymentInstrument | undefined = undefined;
+    instrumentDetails: CommonTargetValue | null = null;
     paymentProvider: PaymentProvider | undefined = undefined;
     paymentProviderResponse: string = '';
     source: TransactionSource | undefined = undefined;
@@ -20,8 +26,10 @@ export class TransactionItem {
     amountToSpend: number = 0;
     amountToReceive: number = 0;
     address: string = '';
+    ip: string = '';
     euro: number = 0;
     fees: number = 0;
+    rate: number = 0;
     status: TransactionStatus | undefined = undefined;
 
     constructor(data: Transaction | null) {
@@ -34,6 +42,13 @@ export class TransactionItem {
             this.paymentProviderResponse = 'Response';
             this.walletSource = 'Wallet source';
             this.address = 'Wallet address';
+            this.ip = '149.18.236.101';
+
+            this.instrumentDetails = new CommonTargetValue();
+            this.instrumentDetails.imgClass = 'payment-logo';
+            this.instrumentDetails.imgSource = `assets/svg-payment-systems/visa.svg`;
+            this.instrumentDetails.title = '6461 **** **** 1654';
+
             this.euro = 100;
             this.type = data.type;
             this.instrument = data.instrument;
@@ -43,6 +58,7 @@ export class TransactionItem {
             this.currencyToReceive = data.currencyToReceive;
             this.amountToSpend = data.amountToSpend;
             this.amountToReceive = data.amountToReceive;
+            this.rate = data.rate;
             this.fees = data.fee;
             this.status = data.status;
         }

@@ -49,7 +49,7 @@ export class TransactionsComponent implements OnInit, OnDestroy {
       feePercent: 0.15,
       feeMinEuro: 5,
       feeDetails: 'Fee details',
-      currencyToSpend: 'EOR',
+      currencyToSpend: 'EUR',
       amountToSpend: 2974.25,
       amountToSpendWithoutFee: 2944.36,
       currencyToReceive: 'BTC',
