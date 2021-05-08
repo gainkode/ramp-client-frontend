@@ -1,7 +1,7 @@
 import {
     PaymentInstrument, PaymentProvider, TransactionType, TransactionStatus,
     SettingsFeeTargetFilterType, SettingsCostTargetFilterType, SettingsKycTargetFilterType,
-    UserType, KycProvider, UserMode, SettingsCurrency, Rate
+    UserType, KycProvider, UserMode, SettingsCurrency, Rate, TransactionSource
 } from './generated-models';
 
 export class PaymentInstrumentView {
@@ -16,6 +16,16 @@ export class PaymentProviderView {
 
 export class TransactionTypeView {
     id!: TransactionType;
+    name = '';
+}
+
+export class TransactionSourceView {
+    id!: TransactionSource;
+    name = '';
+}
+
+export class TransactionStatusView {
+    id!: TransactionStatus;
     name = '';
 }
 
@@ -91,6 +101,7 @@ export const QuickCheckoutPaymentInstrumentList: Array<PaymentInstrumentView> = 
 
 export const PaymentProviderList: Array<PaymentProviderView> = [
     { id: PaymentProvider.Bank, name: 'Bank' },
+    { id: PaymentProvider.Fibonatix, name: 'Fibonatix' },
     { id: PaymentProvider.Skrill, name: 'Skrill' },
     { id: PaymentProvider.Sofort, name: 'Sofort' },
     { id: PaymentProvider.Totalprocessing, name: 'Total processing' }
@@ -107,6 +118,27 @@ export const TransactionTypeList: Array<TransactionTypeView> = [
 export const QuickCheckoutTransactionTypeList: Array<TransactionTypeView> = [
     { id: TransactionType.Deposit, name: 'Deposit' },
     { id: TransactionType.Withdrawal, name: 'Withdrawal' }
+];
+
+export const TransactionSourceList: Array<TransactionSourceView> = [
+    { id: TransactionSource.QuickCheckout, name: 'Checkout' },
+    { id: TransactionSource.Widget, name: 'Widget' },
+    { id: TransactionSource.Wallet, name: 'Wallet' }
+];
+
+export const TransactionStatusList: Array<TransactionStatusView> = [
+    { id: TransactionStatus.New, name: 'New' },
+    { id: TransactionStatus.Pending, name: 'Pending' },
+    { id: TransactionStatus.Processing, name: 'Processing' },
+    { id: TransactionStatus.Paid, name: 'Paid' },
+    { id: TransactionStatus.PaymentDeclined, name: 'Payment declined' },
+    { id: TransactionStatus.ConfirmingOrder, name: 'Confirming order' },
+    { id: TransactionStatus.SendingToAddress, name: 'Sending to address' },
+    { id: TransactionStatus.Completed, name: 'Completed' },
+    { id: TransactionStatus.KycRejected, name: 'KYC rejected' },
+    { id: TransactionStatus.Abounded, name: 'Abounded' },
+    { id: TransactionStatus.Canceled, name: 'Canceled' },
+    { id: TransactionStatus.Chargeback, name: 'Chargeback' }
 ];
 
 export const FeeTargetFilterList: Array<FeeTargetFilterTypeView> = [
