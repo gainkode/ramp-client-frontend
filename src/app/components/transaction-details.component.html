@@ -89,7 +89,8 @@
         <label class="transaction-details-label">Instrument Details</label>
         <div class="transaction-details-value" style="color: darkred;">
             <app-dropdown-item itemValue="{{transaction?.instrumentDetails?.title}}"
-                imageClass="{{transaction?.instrumentDetails?.imgClass}}" imageSource="{{transaction?.instrumentDetails?.imgSource}}">
+                imageClass="{{transaction?.instrumentDetails?.imgClass}}"
+                imageSource="{{transaction?.instrumentDetails?.imgSource}}">
             </app-dropdown-item>
         </div>
     </div>
@@ -150,6 +151,23 @@
         <label class="transaction-details-label">Wallet type</label>
         <div class="transaction-details-value" style="color: darkred;">
             {{transaction?.walletSource}}
+        </div>
+    </div>
+
+    <h2>AML Checks</h2>
+    <div *ngIf="currentUser!==null">
+        <div *ngIf="currentUser?.id!==''">
+            <label class="transaction-details-label">Account ID</label>
+            <div class="transaction-details-value">
+                {{currentUser?.id}}
+            </div>
+        </div>
+
+        <div *ngIf="currentUser?.kycStatus!==''">
+            <label class="transaction-details-label">KYC Status</label>
+            <div class="transaction-details-value">
+                {{currentUser?.kycStatus}}
+            </div>
         </div>
     </div>
 </div>

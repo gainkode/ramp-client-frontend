@@ -10,6 +10,7 @@ export class UserItem {
     country: CommonTargetValue | null = null;
     street: string = '';
     zip: string = '';
+    kycStatus: string = '';
 
     constructor(data: User | null) {
         if (data !== null) {
@@ -19,6 +20,7 @@ export class UserItem {
             this.email = data.email;
             this.zip = 'FL123456';
             this.street = 'Home Street';
+            this.kycStatus = data.kycStatus as string;
             const countryObject = getCountryByCode2(data.countryCode2 as string);
             if (countryObject !== null) {
                 this.country = new CommonTargetValue();
