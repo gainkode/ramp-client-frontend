@@ -6,7 +6,7 @@ import { TransactionTypeList, PaymentInstrumentList, PaymentProviderList,
 export class TransactionItem {
     id: string = '';
     code: string = '';
-    executed!: any;
+    executed: Date | null = null;
     accountId: string = '';
     email: string = '';
     type: TransactionType | undefined = undefined;
@@ -34,7 +34,7 @@ export class TransactionItem {
             this.paymentProviderResponse = 'Response';
             this.walletSource = 'Wallet source';
             this.address = 'Wallet address';
-            this.euro = 0;
+            this.euro = 100;
             this.type = data.type;
             this.instrument = data.instrument;
             this.paymentProvider = data.paymentProvider as PaymentProvider | undefined;

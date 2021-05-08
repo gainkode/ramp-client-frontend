@@ -21,6 +21,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { environment } from 'src/environments/environment';
 import { QuickCheckoutDataService } from './services/quick-checkout.service';
 import { NotificationService } from './services/notification.service';
+import { CommonDataService } from './services/common-data.service';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { NotificationService } from './services/notification.service';
     },
     AuthService,
     AdminDataService,
+    CommonDataService,
     QuickCheckoutDataService,
     NotificationService,
     ErrorService

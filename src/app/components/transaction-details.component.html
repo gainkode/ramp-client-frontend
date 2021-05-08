@@ -1,0 +1,73 @@
+<div class="transaction-details-box">
+    <div *ngIf="inProgress">
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        <br>
+    </div>
+    <div class="form-element" *ngIf="errorMessage!==''">
+        <div class="form-error-box">
+            {{errorMessage}}
+        </div>
+        <br>
+    </div>
+
+    <h2>Transaction</h2>
+    <div *ngIf="transaction?.id!==''">
+        <label class="transaction-details-label">Transaction Id</label>
+        <div class="transaction-details-value">
+            {{transaction?.id}}
+        </div>
+    </div>
+
+    <div *ngIf="transaction?.executed!==null">
+        <label class="transaction-details-label">Transaction Date</label>
+        <div class="transaction-details-value">
+            {{transaction?.executed}}
+        </div>
+    </div>
+
+    <div *ngIf="transaction?.accountId!==''">
+        <label class="transaction-details-label">Account Id</label>
+        <div class="transaction-details-value">
+            {{transaction?.accountId}}
+        </div>
+    </div>
+
+    <div *ngIf="currentUser!==null">
+        <div *ngIf="currentUser?.firstName!==''">
+            <label class="transaction-details-label">First Name</label>
+            <div class="transaction-details-value">
+                {{currentUser?.firstName}}
+            </div>
+        </div>
+
+        <div *ngIf="currentUser?.lastName!==''">
+            <label class="transaction-details-label">Last Name</label>
+            <div class="transaction-details-value">
+                {{currentUser?.lastName}}
+            </div>
+        </div>
+
+        <div *ngIf="currentUser?.country!==null">
+            <label class="transaction-details-label">Country</label>
+            <div class="transaction-details-value">
+                <app-dropdown-item itemValue="{{currentUser?.country?.title}}"
+                    imageClass="{{currentUser?.country?.imgClass}}" imageSource="{{currentUser?.country?.imgSource}}">
+                </app-dropdown-item>
+            </div>
+        </div>
+
+        <div *ngIf="currentUser?.street!==''">
+            <label class="transaction-details-label">Street</label>
+            <div class="transaction-details-value">
+                {{currentUser?.street}}
+            </div>
+        </div>
+
+        <div *ngIf="currentUser?.zip!==''">
+            <label class="transaction-details-label">ZIP code</label>
+            <div class="transaction-details-value">
+                {{currentUser?.zip}}
+            </div>
+        </div>
+    </div>
+</div>

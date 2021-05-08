@@ -38,7 +38,7 @@ export class TransactionsComponent implements OnInit, OnDestroy {
     const dt: Transaction = {
       transactionId: '67b1def1-d17e-4dfd-8787-2eefef84cebe',
       code: 'M-1651631-1568416',
-      userId: '04910fed-8929-4d59-a28f-9ad0e8d50279',
+      userId: 'd05169d2-c131-4119-acc9-30f02a298ef6',
       affiliateId: '7af592aa-dd6b-45d4-983c-c983f2a65d5c',
       created: '2021/05/05 15:14:49',
       executed: '2021/05/05 15:15:02',

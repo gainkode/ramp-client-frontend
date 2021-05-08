@@ -143,9 +143,8 @@
 
   <div [ngClass]="showDetailed ? 'detailed-table-right-panel-details-sm' : 'detailed-table-right-panel-full'">
     <div class="details-editor">
-
+      <app-transaction-details *ngIf="showDetailed" [transaction]="selectedTransaction">
+      </app-transaction-details>
     </div>
   </div>
-
-
 </div>
