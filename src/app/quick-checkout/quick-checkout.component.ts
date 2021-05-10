@@ -15,7 +15,7 @@ import { WalletValidator } from '../utils/wallet.validator';
 
 @Component({
     templateUrl: 'quick-checkout.component.html',
-    styleUrls: ['quick-checkout.scss']
+    styleUrls: ['quick-checkout.component.scss']
 })
 export class QuuckCheckoutComponent implements OnInit, OnDestroy {
     @ViewChild('checkoutStepper') private stepper: MatStepper | undefined = undefined;
@@ -44,7 +44,6 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
     currentDestinationCurrency: CurrencyView | null = null;
     currentRate: Rate | null = null;
     currentTransaction = TransactionType.Deposit;
-    currentTransactionId = '';
     summary!: CheckoutSummary;
 
     private currencies: CurrencyView[] = [];
@@ -87,14 +86,18 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
     detailsTransactionControl: AbstractControl | null = null;
     paymentForm = this.formBuilder.group({
         instrument: [PaymentInstrument.CreditCard, { validators: [Validators.required], updateOn: 'change' }],
-        provider: ['', { validators: [], updateOn: 'change' }]
+        provider: ['', { validators: [], updateOn: 'change' }],
+        transactionId: ['', { validators: [Validators.required], updateOn: 'change' }]
     });
     paymentInstrumentControl: AbstractControl | null = null;
     paymentProviderControl: AbstractControl | null = null;
+    paymentTransactionIdControl: AbstractControl | null = null;
     confirmationForm = this.formBuilder.group({
-        code: ['', { validators: [Validators.required], updateOn: 'change' }]
+        code: ['', { validators: [Validators.required], updateOn: 'change' }],
+        complete: ['', { validators: [Validators.required], updateOn: 'change' }]
     });
     confirmationCodeControl: AbstractControl | null = null;
+    confirmationCompleteControl: AbstractControl | null = null;
 
     get isDeposit(): boolean {
         return this.currentTransaction === TransactionType.Deposit;
@@ -113,7 +116,9 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
         this.detailsTransactionControl = this.detailsForm.get('transaction');
         this.paymentInstrumentControl = this.paymentForm.get('instrument');
         this.paymentProviderControl = this.paymentForm.get('provider');
+        this.paymentTransactionIdControl = this.paymentForm.get('transactionId');
         this.confirmationCodeControl = this.confirmationForm.get('code');
+        this.confirmationCompleteControl = this.confirmationForm.get('complete');
         this.currentTransaction = TransactionType.Deposit;
     }
 
@@ -180,6 +185,9 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
                 this.paymentProviderControl?.setValidators([]);
             }
             this.paymentProviderControl?.updateValueAndValidity();
+        });
+        this.confirmationCodeControl?.valueChanges.subscribe((val) => {
+            this.errorMessage = '';
         });
         this.loadDetailsForm();
     }
@@ -290,7 +298,7 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
                     this.summary.exchangeRate = this.currentRate;
                     this.summary.transactionDate = new Date().toLocaleString();
                     this.summary.transactionType = this.currentTransaction;
-                    this.currentTransactionId = order.transactionId as string;
+                    this.paymentTransactionIdControl?.setValue(order.transactionId as string);
                     if (this.stepper) {
                         this.stepper?.next();
                     }
@@ -436,16 +444,15 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
     }
 
     stepChanged(step: StepperSelectionEvent): void {
-        if (this.errorMessage !== '') {
-            setTimeout(() => {
-                if (this.stepper !== undefined) {
-                    step.previouslySelectedStep.editable = true;
-                    this.stepper.previous();
-                    step.previouslySelectedStep.editable = false;
-                }
-            }, 500);
-        }
-        console.log('page: currentTransactionId', this.currentTransactionId);
+        // if (this.errorMessage !== '') {
+        //     setTimeout(() => {
+        //         if (this.stepper !== undefined) {
+        //             step.previouslySelectedStep.editable = true;
+        //             this.stepper.previous();
+        //             step.previouslySelectedStep.editable = false;
+        //         }
+        //     }, 500);
+        // }
         if (this.errorMessage === '') {
             if (step.selectedStep.label === 'payment') {
                 const kycStatusData = this.auth.getMyKycStatus();
@@ -481,7 +488,6 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
         this.showKycValidator = false;
         this.showKycSubmit = false;
         this.processDone = false;
-        this.currentTransactionId = '';
         this.summary.reset();
         if (this.stepper) {
             this.stepper.reset();
@@ -534,18 +540,19 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
     }
 
     paymentCompleted(): void {
+        this.paymentTransactionIdControl?.setValue('ready');
         if (this.paymentForm.valid) {
             this.registerOrder();
         }
     }
 
     executePayment(): void {
+        this.confirmationCompleteControl?.setValue('ready');
         if (this.confirmationForm.valid) {
             this.inProgress = true;
             const code = this.confirmationCodeControl?.value;
-            console.log('currentTransactionId', this.currentTransactionId);
-            console.log('code', code);
-            this.dataService.executeQuickCheckout(this.currentTransactionId, code).subscribe(({ data }) => {
+            const transaction = this.paymentTransactionIdControl?.value;
+            this.dataService.executeQuickCheckout(transaction, code).subscribe(({ data }) => {
                 this.inProgress = false;
                 if (this.stepper) {
                     this.stepper?.next();

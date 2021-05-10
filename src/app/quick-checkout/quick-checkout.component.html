@@ -240,7 +240,10 @@
                         <div *ngIf="errorMessage!==''" class="form-error-box">
                             {{errorMessage}}
                         </div>
-                        <div class="form-element">
+                        <div class="form-element" class="quick-checkout-info-label">
+                            <span>
+                                <mat-icon class="icon-block">info</mat-icon>
+                            </span>
                             Please type the confirmation code from the letter you have received on your email
                         </div>
                         <!-- Code -->
@@ -254,7 +257,7 @@
                         <div class="form-element">
                             <button type="submit" class="main-button main-button-accent inline-button"
                                 [disabled]="errorMessage!==''" (click)="executePayment()">
-                                EXECUTE
+                                CONFIRM
                             </button>
                             <button type="submit" class="main-button main-button-primary inline-button"
                                 (click)="resetStepper()">
