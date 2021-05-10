@@ -32,7 +32,7 @@ export class ErrorService {
                 break;
             // Authentication error codes (51 - 100)
             case 'auth.recaptcha_invalid':
-                result = 'INvalid recaptcha data';
+                result = 'Invalid recaptcha data';
                 break;
             case 'auth.token_invalid':
                 result = 'Token value is invalid';

@@ -313,8 +313,12 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
                 }
             }, (error) => {
                 this.inProgress = false;
-                this.paymentTransactionIdControl?.reset();
-                this.errorMessage = this.errorHandler.getError(error.message, 'Unable to register a new order');
+                if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
+                    this.resetStepper();
+                } else {
+                    this.paymentTransactionIdControl?.reset();
+                    this.errorMessage = this.errorHandler.getError(error.message, 'Unable to register a new order');
+                }
             });
     }
 
@@ -468,7 +472,11 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
                         this.inProgress = false;
                     }, (error) => {
                         this.inProgress = false;
-                        this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load your identification status');
+                        if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
+                            this.resetStepper();
+                        } else {
+                            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load your identification status');
+                        }
                     });
                 }
             } else if (step.selectedStep.label === 'verification') {
@@ -570,8 +578,12 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
                 }
             }, (error) => {
                 this.inProgress = false;
-                this.confirmationCompleteControl?.reset();
-                this.errorMessage = this.errorHandler.getError(error.message, 'Unable to execute your order');
+                if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
+                    this.resetStepper();
+                } else {
+                    this.confirmationCompleteControl?.reset();
+                    this.errorMessage = this.errorHandler.getError(error.message, 'Unable to execute your order');
+                }
             });
         }
     }
