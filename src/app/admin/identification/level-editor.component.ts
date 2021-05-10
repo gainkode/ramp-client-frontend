@@ -1,5 +1,7 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { CdkTextareaAutosize } from '@angular/cdk/text-field';
+import { Component, Input, Output, EventEmitter, OnInit, ViewChild, NgZone } from '@angular/core';
 import { Validators, FormBuilder } from '@angular/forms';
+import { take } from 'rxjs/operators';
 import { KycLevel } from 'src/app/model/identification.model';
 import { UserTypeList } from 'src/app/model/payment.model';
 
@@ -19,6 +21,7 @@ export class LevelEditorComponent implements OnInit {
     @Output() delete = new EventEmitter<string>();
     @Output() cancel = new EventEmitter();
     @Output() formChanged = new EventEmitter<boolean>();
+    @ViewChild('descriptionInput') descriptionInput!: CdkTextareaAutosize;
 
     private settingsId = '';
     private loadingData = false;
@@ -45,7 +48,13 @@ export class LevelEditorComponent implements OnInit {
         });
     }
 
-    constructor(private formBuilder: FormBuilder) { }
+    constructor(private formBuilder: FormBuilder, private _ngZone: NgZone) { }
+
+    triggerResize() {
+        // Wait for changes to be applied, then trigger textarea resize.
+        this._ngZone.onStable.pipe(take(1))
+            .subscribe(() => this.descriptionInput.resizeToFitContent(true));
+    }
 
     setFormData(level: KycLevel | null): void {
         this.levelForm.reset();
