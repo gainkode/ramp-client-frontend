@@ -121,19 +121,34 @@ export class QuickCheckoutDataService {
   createQuickCheckout(transactionType: TransactionType, currencyToSpend: string,
     currencyToReceive: string, amountFiat: number, instrument: PaymentInstrument, provider: PaymentProvider,
     rate: number, walletAddress: string): Observable<any> {
-    return this.apollo.mutate({
-      mutation: CREATE_QUICK_CHECKOUT_POST,
-      variables: {
+    let vars = {};
+    if (provider as string === '') {
+      vars = {
         recaptcha: environment.recaptchaId,
         transactionType,
         currencyToSpend,
         currencyToReceive,
         amountFiat,
         instrument: instrument,
-        paymentProvider: null,
         rate,
         data: JSON.stringify({ userAddress: walletAddress })
-      }
+      };
+    } else {
+      vars = {
+        recaptcha: environment.recaptchaId,
+        transactionType,
+        currencyToSpend,
+        currencyToReceive,
+        amountFiat,
+        instrument: instrument,
+        paymentProvider: provider,
+        rate,
+        data: JSON.stringify({ userAddress: walletAddress })
+      };
+    }
+    return this.apollo.mutate({
+      mutation: CREATE_QUICK_CHECKOUT_POST,
+      variables: vars
     });
   }
 
