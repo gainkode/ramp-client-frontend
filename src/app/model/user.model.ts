@@ -18,8 +18,6 @@ export class UserItem {
             this.firstName = data.firstName as string;
             this.lastName = data.lastName as string;
             this.email = data.email;
-            this.zip = 'FL123456';
-            this.street = 'Home Street';
             this.kycStatus = data.kycStatus as string;
             const countryObject = getCountryByCode2(data.countryCode2 as string);
             if (countryObject !== null) {

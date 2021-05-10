@@ -197,7 +197,7 @@
                         </div>
                     </form>
                 </mat-step>
-                <!-- Verification -->
+                <!-- KYC Verification -->
                 <mat-step *ngIf="showKycStep" label="verification" editable="false" completed="false">
                     <ng-template matStepLabel>Verification</ng-template>
                     <div *ngIf="inProgress" class="form-element">
@@ -226,6 +226,42 @@
                             RESET
                         </button>
                     </div>
+                </mat-step>
+                <!-- Code Confirmation -->
+                <mat-step [stepControl]="confirmationForm" label="confirmation" editable="false" completed="false">
+                    <ng-template matStepLabel>Confirmation</ng-template>
+                    <form [formGroup]="confirmationForm" #confirmation="ngForm">
+                        <div *ngIf="inProgress" class="form-element">
+                            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                        </div>
+                        <div>
+                            <h2>Confirm your payment</h2>
+                        </div>
+                        <div *ngIf="errorMessage!==''" class="form-error-box">
+                            {{errorMessage}}
+                        </div>
+                        <div class="form-element">
+                            Please type the confirmation code from the letter you have received on your email
+                        </div>
+                        <!-- Code -->
+                        <mat-form-field class="form-element">
+                            <mat-label>Code</mat-label>
+                            <input type="text" matInput formControlName="code" maxlength="10" placeholder="Confirmation code" required />
+                            <mat-error *ngIf="this.confirmationForm.get('address')?.hasError('required')">
+                                Please specify the confirmation code
+                            </mat-error>
+                        </mat-form-field>
+                        <div class="form-element">
+                            <button type="submit" class="main-button main-button-accent inline-button"
+                                [disabled]="errorMessage!==''" (click)="executePayment()">
+                                EXECUTE
+                            </button>
+                            <button type="submit" class="main-button main-button-primary inline-button"
+                                (click)="resetStepper()">
+                                RESET
+                            </button>
+                        </div>
+                    </form>
                 </mat-step>
                 <!-- Order status -->
                 <mat-step label="complete" editable="false" completed="false">

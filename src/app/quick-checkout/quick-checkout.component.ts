@@ -21,6 +21,7 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
     @ViewChild('checkoutStepper') private stepper: MatStepper | undefined = undefined;
     @ViewChild('details') private _detailsForm: NgForm | undefined = undefined;
     @ViewChild('payment') private _paymentForm: NgForm | undefined = undefined;
+    @ViewChild('confirmation') private _confirmationForm: NgForm | undefined = undefined;
     user: User | null = null;
     errorMessage = '';
     inProgress = false;
@@ -43,6 +44,7 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
     currentDestinationCurrency: CurrencyView | null = null;
     currentRate: Rate | null = null;
     currentTransaction = TransactionType.Deposit;
+    currentTransactionId = '';
     summary!: CheckoutSummary;
 
     private currencies: CurrencyView[] = [];
@@ -89,6 +91,10 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
     });
     paymentInstrumentControl: AbstractControl | null = null;
     paymentProviderControl: AbstractControl | null = null;
+    confirmationForm = this.formBuilder.group({
+        code: ['', { validators: [Validators.required], updateOn: 'change' }]
+    });
+    confirmationCodeControl: AbstractControl | null = null;
 
     get isDeposit(): boolean {
         return this.currentTransaction === TransactionType.Deposit;
@@ -107,6 +113,7 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
         this.detailsTransactionControl = this.detailsForm.get('transaction');
         this.paymentInstrumentControl = this.paymentForm.get('instrument');
         this.paymentProviderControl = this.paymentForm.get('provider');
+        this.confirmationCodeControl = this.confirmationForm.get('code');
         this.currentTransaction = TransactionType.Deposit;
     }
 
@@ -274,6 +281,7 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
             rate as number,
             this.detailsAddressControl?.value).subscribe(({ data }) => {
                 const order = data.createQuickCheckout as TransactionShort;
+                this.inProgress = false;
                 if (order.code) {
                     this.summary.orderId = order.code as string;
                     this.summary.fee = order.fee;
@@ -282,27 +290,17 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
                     this.summary.exchangeRate = this.currentRate;
                     this.summary.transactionDate = new Date().toLocaleString();
                     this.summary.transactionType = this.currentTransaction;
+                    this.currentTransactionId = order.transactionId as string;
+                    if (this.stepper) {
+                        this.stepper?.next();
+                    }
+                } else {
+                    this.errorMessage = 'Order code is invalid';
                 }
-                this.executeOrder(order.transactionId, order.code as string);
             }, (error) => {
                 this.inProgress = false;
                 this.errorMessage = this.errorHandler.getError(error.message, 'Unable to register a new order');
             });
-    }
-
-    private executeOrder(transactionId: string, code: string): void {
-        this.inProgress = true;
-        console.log(transactionId);
-        console.log(code);
-        this.dataService.executeQuickCheckout(transactionId, code).subscribe(({ data }) => {
-            this.inProgress = false;
-            if (this.stepper) {
-                this.stepper?.next();
-            }
-        }, (error) => {
-            this.inProgress = false;
-            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to execute your order');
-        });
     }
 
     private getKycSettings(): void {
@@ -447,6 +445,7 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
                 }
             }, 500);
         }
+        console.log('page: currentTransactionId', this.currentTransactionId);
         if (this.errorMessage === '') {
             if (step.selectedStep.label === 'payment') {
                 const kycStatusData = this.auth.getMyKycStatus();
@@ -482,6 +481,7 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
         this.showKycValidator = false;
         this.showKycSubmit = false;
         this.processDone = false;
+        this.currentTransactionId = '';
         this.summary.reset();
         if (this.stepper) {
             this.stepper.reset();
@@ -489,6 +489,7 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
         }
         this._detailsForm?.resetForm();
         this._paymentForm?.resetForm();
+        this._confirmationForm?.resetForm();
         if (this.auth.authenticated) {
             const user = this.auth.user;
             if (user) {
@@ -535,6 +536,24 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
     paymentCompleted(): void {
         if (this.paymentForm.valid) {
             this.registerOrder();
+        }
+    }
+
+    executePayment(): void {
+        if (this.confirmationForm.valid) {
+            this.inProgress = true;
+            const code = this.confirmationCodeControl?.value;
+            console.log('currentTransactionId', this.currentTransactionId);
+            console.log('code', code);
+            this.dataService.executeQuickCheckout(this.currentTransactionId, code).subscribe(({ data }) => {
+                this.inProgress = false;
+                if (this.stepper) {
+                    this.stepper?.next();
+                }
+            }, (error) => {
+                this.inProgress = false;
+                this.errorMessage = this.errorHandler.getError(error.message, 'Unable to execute your order');
+            });
         }
     }
 
