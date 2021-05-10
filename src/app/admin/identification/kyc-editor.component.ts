@@ -1,7 +1,7 @@
 import { Component, ElementRef, ViewChild, Input, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Validators, FormBuilder } from '@angular/forms';
-import { Observable, of, Subscription } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
@@ -16,10 +16,10 @@ import { CommonTargetValue, TargetParams } from 'src/app/model/common.model';
 import { CountryFilterList, getCountry } from 'src/app/model/country-code.model';
 import { KycScheme } from 'src/app/model/identification.model';
 import { AdminDataService } from 'src/app/services/admin-data.service';
-import { AccountTypeFilterList, AffiliateIdFilterList, WidgetFilterList } from 'src/app/model/fee-scheme.model';
+import { AffiliateIdFilterList, WidgetFilterList } from 'src/app/model/fee-scheme.model';
 
 @Component({
-    selector: 'kyc-editor',
+    selector: 'app-kyc-editor',
     templateUrl: 'kyc-editor.component.html',
     styleUrls: ['../admin.scss', 'identification.component.scss']
 })
@@ -149,7 +149,7 @@ export class KycEditorComponent implements OnInit, OnDestroy {
 
     private filterTargetValues(value: string): CommonTargetValue[] {
         if (this.targetEntity !== '') {
-            let filterValue = (value === null) ? '' : value.toLowerCase();
+            const filterValue = (value === null) ? '' : value.toLowerCase();
             if (value) {
                 return this.targetValueParams.dataList.filter(c => c.title.toLowerCase().includes(filterValue));
             } else {

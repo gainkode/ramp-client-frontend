@@ -35,8 +35,8 @@
           </button>
         </div>
 
-        <level-table [levels]="levels" [selectedLevel]="selectedLevel" (toggle)="toggleLevelDetails($event)">
-        </level-table>
+        <app-level-table [levels]="levels" [selectedLevel]="selectedLevel" (toggle)="toggleLevelDetails($event)">
+        </app-level-table>
       </mat-tab>
 
       <!-- Schemes -->
@@ -61,9 +61,9 @@
           </button>
         </div>
 
-        <identification-table [schemes]="schemes" [selectedScheme]="selectedScheme"
+        <app-identification-table [schemes]="schemes" [selectedScheme]="selectedScheme"
           (toggle)="toggleSchemeDetails($event)">
-        </identification-table>
+        </app-identification-table>
       </mat-tab>
     </mat-tab-group>
   </div>
@@ -72,12 +72,12 @@
 
   <div [ngClass]="showDetailed ? 'detailed-table-right-panel-details' : 'detailed-table-right-panel-full'">
     <div class="details-editor">
-      <level-editor *ngIf="showDetailed && selectedTab===0" [currentLevel]="selectedLevel" [create]="createLevel"
+      <app-level-editor *ngIf="showDetailed && selectedTab===0" [currentLevel]="selectedLevel" [create]="createLevel"
         (save)="onSavedLevel($event)" (delete)="onDeleteLevel($event)" (cancel)="onCancelEdit()"
-        (formChanged)="onEditorFormChanged($event)"></level-editor>
-      <kyc-editor *ngIf="showDetailed && selectedTab===1" [currentScheme]="selectedScheme" [create]="createScheme"
+        (formChanged)="onEditorFormChanged($event)"></app-level-editor>
+      <app-kyc-editor *ngIf="showDetailed && selectedTab===1" [currentScheme]="selectedScheme" [create]="createScheme"
         (save)="onSavedScheme($event)" (delete)="onDeleteScheme($event)" (cancel)="onCancelEdit()"
-        (formChanged)="onEditorFormChanged($event)"></kyc-editor>
+        (formChanged)="onEditorFormChanged($event)"></app-kyc-editor>
     </div>
   </div>
 </div>

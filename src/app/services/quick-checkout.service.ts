@@ -129,7 +129,7 @@ export class QuickCheckoutDataService {
         currencyToSpend,
         currencyToReceive,
         amountFiat,
-        instrument: instrument,
+        instrument,
         rate,
         data: JSON.stringify({ userAddress: walletAddress })
       };
@@ -140,7 +140,7 @@ export class QuickCheckoutDataService {
         currencyToSpend,
         currencyToReceive,
         amountFiat,
-        instrument: instrument,
+        instrument,
         paymentProvider: provider,
         rate,
         data: JSON.stringify({ userAddress: walletAddress })

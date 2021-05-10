@@ -61,12 +61,9 @@ export class LoginComponent {
         if (userData.user?.type === UserType.Personal) {
             if (userData.authTokenAction === 'Default') {
                 this.handleSuccessLogin(userData);
-            } else if (userData.authTokenAction === 'ConfirmName') {
-                this.auth.logout();
-                this.router.navigateByUrl(`/auth/personal/signup/${userData.authToken}`);
             } else {
                 this.auth.logout();
-                this.errorMessage = `Invalid authentication via ${name}`;
+                this.errorMessage = 'Unable to sign in';
             }
         } else {
             this.auth.logout();
@@ -82,9 +79,12 @@ export class LoginComponent {
         if (userData.user?.type === UserType.Personal) {
             if (userData.authTokenAction === 'Default') {
                 this.handleSuccessLogin(userData);
+            } else if (userData.authTokenAction === 'ConfirmName') {
+                this.auth.logout();
+                this.router.navigateByUrl(`/auth/personal/signup/${userData.authToken}`);
             } else {
                 this.auth.logout();
-                this.errorMessage = 'Unable to sign in';
+                this.errorMessage = `Invalid authentication via social media`;
             }
         } else {
             this.auth.logout();

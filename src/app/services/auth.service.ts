@@ -260,7 +260,7 @@ export class AuthService {
                 recaptcha: environment.recaptchaId,
                 email: username,
                 password: quickCheckout ? null : userpassword,
-                quickCheckout: quickCheckout
+                quickCheckout
             }
         });
     }
@@ -284,12 +284,11 @@ export class AuthService {
             providerId = FacebookLoginProvider.PROVIDER_ID;
         }
         return from(
-            this.socialAuth.signIn(providerId)
-                .then(function (data) {
-                    return { user: data, error: undefined };
-                }).catch(function (data) {
-                    return { user: undefined, error: data };
-                })
+            this.socialAuth.signIn(providerId).then(function (data) {
+                return { user: data, error: undefined };
+            }).catch(function (data) {
+                return { user: undefined, error: data };
+            })
         );
     }
 
@@ -472,9 +471,7 @@ export class AuthService {
     }
 
     socialSignOut(): void {
-        this.socialAuth.signOut().then(function (data) {
-        }).catch(function (error) {
-        });
+        this.socialAuth.signOut().then(function(data) {}).catch(function (error) {});
     }
 
     logout(): void {

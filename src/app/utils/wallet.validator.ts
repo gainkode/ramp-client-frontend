@@ -1,5 +1,5 @@
-import { FormGroup, ValidationErrors } from "@angular/forms";
-import { TransactionType } from "../model/generated-models";
+import { FormGroup, ValidationErrors } from '@angular/forms';
+import { TransactionType } from '../model/generated-models';
 
 const WAValidator = require('multicoin-address-validator');
 
@@ -26,7 +26,7 @@ export class WalletValidator {
             }
             // valid BTC wallet: 1KFzzGtDdnq5hrwxXGjwVnKzRbvf8WVxck
             currency = currency.toLowerCase();
-            let valid = WAValidator.validate(address, currency);
+            const valid = WAValidator.validate(address, currency);
             if (valid) {
                 return null;
             } else {
@@ -36,6 +36,6 @@ export class WalletValidator {
                 });
                 return { walletAddress: true };
             }
-        }
+        };
     }
 }

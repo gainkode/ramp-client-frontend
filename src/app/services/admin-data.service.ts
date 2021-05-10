@@ -622,7 +622,7 @@ export class AdminDataService {
       return this.apollo.mutate({
         mutation: DELETE_SETTINGS_FEE_POST,
         variables: {
-          settingsId: settingsId
+          settingsId
         }
       });
     } else {
@@ -635,7 +635,7 @@ export class AdminDataService {
       return this.apollo.mutate({
         mutation: DELETE_SETTINGS_COST_POST,
         variables: {
-          settingsId: settingsId
+          settingsId
         }
       });
     } else {
@@ -648,7 +648,7 @@ export class AdminDataService {
       return this.apollo.mutate({
         mutation: DELETE_SETTINGS_KYC_POST,
         variables: {
-          settingsId: settingsId
+          settingsId
         }
       });
     } else {
@@ -661,7 +661,7 @@ export class AdminDataService {
       return this.apollo.mutate({
         mutation: DELETE_KYC_LEVEL_SETTINGS_POST,
         variables: {
-          settingsId: settingsId
+          settingsId
         }
       });
     } else {

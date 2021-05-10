@@ -113,7 +113,7 @@ export class KycLevel {
     levelData!: KycLevelItem;
     flowData!: KycLevelItem;
     created!: Date;
-    createdBy: string = '';
+    createdBy = '';
 
     constructor(data: SettingsKycLevel | null) {
         if (data !== null) {

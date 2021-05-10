@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 import { Subscription, timer } from 'rxjs';
 import { Rate } from '../model/generated-models';
@@ -11,7 +11,7 @@ import { QuickCheckoutDataService } from '../services/quick-checkout.service';
     templateUrl: 'exchange-rate.component.html',
     styleUrls: ['exchange-rate.component.scss']
 })
-export class ExchangeRateComponent implements OnInit {
+export class ExchangeRateComponent implements OnInit, OnDestroy {
     @Input() summary: CheckoutSummary | null | undefined = null;
     @Output() update = new EventEmitter<Rate>();
 
@@ -20,8 +20,8 @@ export class ExchangeRateComponent implements OnInit {
     countDown = 0;
     countDownInit = false;
     errorMessage = '';
-    private _rateSubscription!: any;
-    private _timerSubscription!: any;
+    private pRateSubscription!: any;
+    private pTimerSubscription!: any;
     updatingTimer = timer(0, 1000);
 
     constructor(private dataService: QuickCheckoutDataService, private errorHandler: ErrorService) { }
@@ -31,8 +31,8 @@ export class ExchangeRateComponent implements OnInit {
     }
 
     ngOnDestroy(): void {
-        const s = this._rateSubscription as Subscription;
-        const t = this._timerSubscription as Subscription;
+        const s = this.pRateSubscription as Subscription;
+        const t = this.pTimerSubscription as Subscription;
         if (s) {
             s.unsubscribe();
         }
@@ -42,7 +42,7 @@ export class ExchangeRateComponent implements OnInit {
     }
 
     private subscribeTimer(): void {
-        this._timerSubscription = this.updatingTimer.subscribe(val => {
+        this.pTimerSubscription = this.updatingTimer.subscribe(val => {
             if (this.countDownInit) {
                 if (this.countDown > 0) {
                     this.countDown -= 1;
@@ -63,10 +63,10 @@ export class ExchangeRateComponent implements OnInit {
             if (currencyFrom && currencyTo) {
                 const ratesData = this.dataService.getRates(currencyFrom, currencyTo);
                 if (ratesData === null) {
-                    this.errorMessage = this.errorHandler.getRejectedCookieMessage();;
+                    this.errorMessage = this.errorHandler.getRejectedCookieMessage();
                 } else {
                     this.spinnerMode = 'indeterminate';
-                    this._rateSubscription = ratesData.valueChanges.subscribe(({ data }) => {
+                    this.pRateSubscription = ratesData.valueChanges.subscribe(({ data }) => {
                         const rates = data.getRates as Rate[];
                         if (rates.length > 0) {
                             this.update.emit(rates[0]);
@@ -87,14 +87,14 @@ export class ExchangeRateComponent implements OnInit {
         }
     }
 
-    private temp() {
+    private temp(): void {
         const rate = {
             currencyFrom: 'EUR',
             currencyTo: 'BTC',
             originalRate: 2,
             depositRate: 2,
             withdrawRate: 2
-        }
+        };
         this.update.emit(rate);
     }
 

@@ -1,35 +1,35 @@
-import { CommonTargetValue } from "./common.model";
+import { CommonTargetValue } from './common.model';
 import {
     PaymentInstrument, PaymentProvider, Transaction, TransactionSource,
     TransactionStatus, TransactionType
-} from "./generated-models";
+} from './generated-models';
 import {
     TransactionTypeList, PaymentInstrumentList, PaymentProviderList,
     TransactionSourceList, TransactionStatusList
 } from './payment.model';
 
 export class TransactionItem {
-    id: string = '';
-    code: string = '';
+    id = '';
+    code = '';
     executed: Date | null = null;
-    accountId: string = '';
-    email: string = '';
+    accountId = '';
+    email = '';
     type: TransactionType | undefined = undefined;
     instrument: PaymentInstrument | undefined = undefined;
     instrumentDetails: CommonTargetValue | null = null;
     paymentProvider: PaymentProvider | undefined = undefined;
-    paymentProviderResponse: string = '';
+    paymentProviderResponse = '';
     source: TransactionSource | undefined = undefined;
-    walletSource: string = '';
-    currencyToSpend: string = '';
-    currencyToReceive: string = '';
-    amountToSpend: number = 0;
-    amountToReceive: number = 0;
-    address: string = '';
-    ip: string = '';
-    euro: number = 0;
-    fees: number = 0;
-    rate: number = 0;
+    walletSource = '';
+    currencyToSpend = '';
+    currencyToReceive = '';
+    amountToSpend = 0;
+    amountToReceive = 0;
+    address = '';
+    ip = '';
+    euro = 0;
+    fees = 0;
+    rate = 0;
     status: TransactionStatus | undefined = undefined;
 
     constructor(data: Transaction | null) {

@@ -92,9 +92,9 @@
 
   <div [ngClass]="showDetailed ? 'detailed-table-right-panel-details' : 'detailed-table-right-panel-full'">
     <div class="details-editor">
-      <fee-editor *ngIf="showDetailed" [currentScheme]="selectedScheme" [create]="createScheme" (save)="onSaved($event)"
+      <app-fee-editor *ngIf="showDetailed" [currentScheme]="selectedScheme" [create]="createScheme" (save)="onSaved($event)"
         (delete)="onDeleteScheme($event)" (cancel)="onCancelEdit()" (formChanged)="onEditorFormChanged($event)">
-      </fee-editor>
+      </app-fee-editor>
     </div>
   </div>
 </div>

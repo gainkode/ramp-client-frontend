@@ -38,7 +38,7 @@ export class AppComponent implements OnInit {
         href: '/terms',
         policy: 'Cookie Policy'
       },
-      onStatusChange: function (status: any) {
+      onStatusChange: function(status: any) {
         window.location.reload();
       }
     });

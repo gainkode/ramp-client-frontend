@@ -2,7 +2,7 @@ import { Component, Output, EventEmitter, Input } from '@angular/core';
 import { KycLevel } from 'src/app/model/identification.model';
 
 @Component({
-    selector: 'level-table',
+    selector: 'app-level-table',
     templateUrl: 'level-table.component.html',
     styleUrls: ['../admin.scss', 'identification.component.scss']
 })

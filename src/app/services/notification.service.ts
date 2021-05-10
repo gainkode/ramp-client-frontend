@@ -27,7 +27,7 @@ export class NotificationService {
   subscribeToNotifications(): Observable<any> {
     return this.apollo.subscribe({
       query: SUBSCRIBE_NOTIFICATIONS,
-      fetchPolicy: "no-cache"
-    })
+      fetchPolicy: 'no-cache'
+    });
   }
 }

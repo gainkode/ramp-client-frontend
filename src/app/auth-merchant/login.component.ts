@@ -84,7 +84,7 @@ export class LoginComponent {
                 this.router.navigateByUrl(`/auth/merchant/signup/${userData.authToken}`);
             } else {
                 this.auth.logout();
-                this.errorMessage = `Invalid authentication via ${name}`;
+                this.errorMessage = `Invalid authentication via social media`;
             }
         } else {
             this.auth.logout();

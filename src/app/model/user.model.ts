@@ -3,14 +3,14 @@ import { getCountryByCode2 } from './country-code.model';
 import { CommonTargetValue } from './common.model';
 
 export class UserItem {
-    id: string = '';
-    firstName: string = '';
-    lastName: string = '';
-    email: string = '';
+    id = '';
+    firstName = '';
+    lastName = '';
+    email = '';
     country: CommonTargetValue | null = null;
-    street: string = '';
-    zip: string = '';
-    kycStatus: string = '';
+    street = '';
+    zip = '';
+    kycStatus = '';
 
     constructor(data: User | null) {
         if (data !== null) {

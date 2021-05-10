@@ -1,4 +1,4 @@
-import { CommonTargetValue } from "./common.model";
+import { CommonTargetValue } from './common.model';
 
 export interface ICountryCode {
     name: string;

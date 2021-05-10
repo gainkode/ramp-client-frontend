@@ -18,7 +18,7 @@ export class KycPanelComponent implements OnInit, OnDestroy {
     @Input() url: string | null | undefined = '';
     @Input() notifyCompleted: boolean | null | undefined = false;
     @Output() completed = new EventEmitter();
-    private _tokenSubscription!: any;
+    private pTokenSubscription!: any;
     inProgress = false;
     errorMessage = '';
 
@@ -32,9 +32,9 @@ export class KycPanelComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        const t: Subscription = this._tokenSubscription;
+        const t: Subscription = this.pTokenSubscription;
         if (t !== undefined) {
-            (this._tokenSubscription as Subscription).unsubscribe();
+            (this.pTokenSubscription as Subscription).unsubscribe();
         }
     }
 
@@ -54,7 +54,7 @@ export class KycPanelComponent implements OnInit, OnDestroy {
     loadSumSub(): void {
         // load sumsub widget
         this.inProgress = true;
-        this._tokenSubscription = this.auth.getKycToken().valueChanges.subscribe(({ data }) => {
+        this.pTokenSubscription = this.auth.getKycToken().valueChanges.subscribe(({ data }) => {
             this.inProgress = false;
             this.launchSumSubWidget(
                 this.url as string,

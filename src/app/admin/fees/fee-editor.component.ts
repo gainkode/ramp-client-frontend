@@ -19,7 +19,7 @@ import { CommonTargetValue, TargetParams } from 'src/app/model/common.model';
 import { CountryFilterList, getCountry } from 'src/app/model/country-code.model';
 
 @Component({
-    selector: 'fee-editor',
+    selector: 'app-fee-editor',
     templateUrl: 'fee-editor.component.html',
     styleUrls: ['../admin.scss', 'fees.component.scss']
 })

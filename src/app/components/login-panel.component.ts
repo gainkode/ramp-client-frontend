@@ -49,26 +49,26 @@ export class LoginPanelComponent implements OnInit {
         this.socialSignIn('Facebook');
     }
 
-    socialSignIn(name: string): void {
+    socialSignIn(providerName: string): void {
         this.progressChange.emit(true);
         this.error.emit('');
-        this.auth.socialSignIn(name).subscribe((data) => {
+        this.auth.socialSignIn(providerName).subscribe((data) => {
             if (data.user !== undefined) {
                 const user = data.user as SocialUser;
                 let token = '';
-                if (name === 'Google') {
+                if (providerName === 'Google') {
                     token = user.idToken;
-                } else if (name === 'Facebook') {
+                } else if (providerName === 'Facebook') {
                     token = user.authToken;
                 }
                 this.auth.socialSignOut();
-                this.auth.authenticateSocial(name.toLowerCase(), token).subscribe((loginData) => {
+                this.auth.authenticateSocial(providerName.toLowerCase(), token).subscribe((loginData) => {
                     const userData = loginData.data.login as LoginResult;
                     this.progressChange.emit(false);
                     this.socialAuthenticated.emit(userData);
                 }, (error) => {
                     this.progressChange.emit(false);
-                    this.error.emit(this.errorHandler.getError(error.message, `Invalid authentication via ${name}`));
+                    this.error.emit(this.errorHandler.getError(error.message, `Invalid authentication via ${providerName}`));
                 });
             } else {
                 this.progressChange.emit(false);

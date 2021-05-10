@@ -14,7 +14,7 @@ import { CommonTargetValue, TargetParams } from 'src/app/model/common.model';
 import { CountryFilterList, getCountry } from 'src/app/model/country-code.model';
 
 @Component({
-    selector: 'cost-editor',
+    selector: 'app-cost-editor',
     templateUrl: 'cost-editor.component.html',
     styleUrls: ['../admin.scss', 'costs.component.scss']
 })

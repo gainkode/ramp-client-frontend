@@ -4,9 +4,11 @@ import { AbstractControl, FormBuilder, NgForm, Validators } from '@angular/forms
 import { MatStepper } from '@angular/material/stepper';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { KycStatus, LoginResult, PaymentInstrument, Rate, SettingsCommon, SettingsCurrencyListResult, SettingsKycShort, TransactionShort, TransactionType, User } from '../model/generated-models';
+import { KycStatus, LoginResult, PaymentInstrument, Rate, SettingsCommon, SettingsCurrencyListResult,
+    SettingsKycShort, TransactionShort, TransactionType, User } from '../model/generated-models';
 import { KycLevelShort } from '../model/identification.model';
-import { CheckoutSummary, CurrencyView, PaymentProviderList, QuickCheckoutPaymentInstrumentList, QuickCheckoutTransactionTypeList } from '../model/payment.model';
+import { CheckoutSummary, CurrencyView, PaymentProviderList, QuickCheckoutPaymentInstrumentList,
+    QuickCheckoutTransactionTypeList } from '../model/payment.model';
 import { AuthService } from '../services/auth.service';
 import { ErrorService } from '../services/error.service';
 import { QuickCheckoutDataService } from '../services/quick-checkout.service';
@@ -19,14 +21,14 @@ import { WalletValidator } from '../utils/wallet.validator';
 })
 export class QuickCheckoutComponent implements OnInit, OnDestroy {
     @ViewChild('checkoutStepper') private stepper: MatStepper | undefined = undefined;
-    @ViewChild('details') private _detailsForm: NgForm | undefined = undefined;
-    @ViewChild('payment') private _paymentForm: NgForm | undefined = undefined;
-    @ViewChild('confirmation') private _confirmationForm: NgForm | undefined = undefined;
-    @ViewChild('emailinput') _emailElement: ElementRef | undefined = undefined;
-    @ViewChild('paymentnext') _paymentNextElement: ElementRef | undefined = undefined;
-    @ViewChild('verificationreset') _verificationResetElement: ElementRef | undefined = undefined;
-    @ViewChild('codeinput') _codeElement: ElementRef | undefined = undefined;
-    @ViewChild('checkoutdone') _checkoutDoneElement: ElementRef | undefined = undefined;
+    @ViewChild('details') private ngDetailsForm: NgForm | undefined = undefined;
+    @ViewChild('payment') private ngPaymentForm: NgForm | undefined = undefined;
+    @ViewChild('confirmation') private ngConfirmationForm: NgForm | undefined = undefined;
+    @ViewChild('emailinput') emailElement: ElementRef | undefined = undefined;
+    @ViewChild('paymentnext') paymentNextElement: ElementRef | undefined = undefined;
+    @ViewChild('verificationreset') verificationResetElement: ElementRef | undefined = undefined;
+    @ViewChild('codeinput') codeElement: ElementRef | undefined = undefined;
+    @ViewChild('checkoutdone') checkoutDoneElement: ElementRef | undefined = undefined;
     user: User | null = null;
     errorMessage = '';
     inProgress = false;
@@ -34,7 +36,7 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
     needToLogin = false;
     defaultUserName = '';
     isApmSelected = false;
-    flow: string = '';
+    flow = '';
     showKycStep = false;
     showKycValidator = false;
     showKycSubmit = false;
@@ -51,10 +53,10 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
     currentTransaction = TransactionType.Deposit;
     summary!: CheckoutSummary;
 
-    private currencies: CurrencyView[] = [];
-    private numberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
-    private _settingsSubscription!: any;
-    private _kycSettingsSubscription!: any;
+    private pCurrencies: CurrencyView[] = [];
+    private pNumberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
+    private pSettingsSubscription!: any;
+    private pKycSettingsSubscription!: any;
 
     detailsForm = this.formBuilder.group({
         email: ['', {
@@ -66,14 +68,14 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
         amountFrom: [200, {
             validators: [
                 Validators.required,
-                Validators.pattern(this.numberPattern)
+                Validators.pattern(this.pNumberPattern)
             ], updateOn: 'change'
         }],
         currencyFrom: ['', { validators: [Validators.required], updateOn: 'change' }],
         amountTo: [0, {
             validators: [
                 Validators.required,
-                Validators.pattern(this.numberPattern)
+                Validators.pattern(this.pNumberPattern)
             ], updateOn: 'change'
         }],
         currencyTo: ['', { validators: [Validators.required], updateOn: 'change' }],
@@ -133,7 +135,7 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
             if (this.currentSourceCurrency !== null) {
                 this.detailsAmountFromControl?.setValidators([
                     Validators.required,
-                    Validators.pattern(this.numberPattern),
+                    Validators.pattern(this.pNumberPattern),
                     Validators.min(this.currentSourceCurrency.minAmount)
                 ]);
                 this.detailsAmountFromControl?.updateValueAndValidity();
@@ -146,7 +148,7 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
                 this.walletAddressName = `${this.currentDestinationCurrency.name} wallet address`;
                 this.detailsAmountToControl?.setValidators([
                     Validators.required,
-                    Validators.pattern(this.numberPattern),
+                    Validators.pattern(this.pNumberPattern),
                     Validators.min(this.currentDestinationCurrency.minAmount)
                 ]);
                 this.detailsAmountToControl?.updateValueAndValidity();
@@ -198,8 +200,8 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        const s = this._settingsSubscription as Subscription;
-        const k = this._kycSettingsSubscription as Subscription;
+        const s = this.pSettingsSubscription as Subscription;
+        const k = this.pKycSettingsSubscription as Subscription;
         if (s) {
             s.unsubscribe();
         }
@@ -224,21 +226,21 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
     onAuthenticated(userData: LoginResult): void {
         if (userData.authTokenAction === 'Default' || userData.authTokenAction === 'KycRequired') {
             this.handleSuccessLogin(userData);
-        } else if (userData.authTokenAction === 'ConfirmName') {
-            this.auth.logout();
-            this.router.navigateByUrl(`/auth/personal/signup/${userData.authToken}`);
         } else {
             this.auth.logout();
-            this.errorMessage = `Invalid authentication via ${name}`;
+            this.errorMessage = 'Unable to sign in';
         }
     }
 
     onSocialAuthenticated(userData: LoginResult): void {
         if (userData.authTokenAction === 'Default' || userData.authTokenAction === 'KycRequired') {
             this.handleSuccessLogin(userData);
+        } else if (userData.authTokenAction === 'ConfirmName') {
+            this.auth.logout();
+            this.router.navigateByUrl(`/auth/personal/signup/${userData.authToken}`);
         } else {
             this.auth.logout();
-            this.errorMessage = 'Unable to sign in';
+            this.errorMessage = `Invalid authentication via ${name}`;
         }
     }
 
@@ -333,7 +335,7 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
             this.inProgress = false;
             this.errorMessage = 'Unable to load common settings';
         } else {
-            this._kycSettingsSubscription = kycData.valueChanges.subscribe(({ data }) => {
+            this.pKycSettingsSubscription = kycData.valueChanges.subscribe(({ data }) => {
                 const settingsKyc: SettingsKycShort | null = data.getMySettingsKyc;
                 if (settingsKyc === null) {
                     this.errorMessage = 'Unable to load user identification settings';
@@ -367,7 +369,7 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
             this.errorMessage = this.errorHandler.getRejectedCookieMessage();
         } else {
             this.inProgress = true;
-            this._settingsSubscription = currencyData.valueChanges.subscribe(({ data }) => {
+            this.pSettingsSubscription = currencyData.valueChanges.subscribe(({ data }) => {
                 const currencySettings = data.getSettingsCurrency as SettingsCurrencyListResult;
                 let itemCount = 0;
                 if (currencySettings !== null) {
@@ -385,17 +387,17 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
     }
 
     private loadCurrencies(settings: SettingsCurrencyListResult): void {
-        this.currencies = settings.list?.map((val) => new CurrencyView(val)) as CurrencyView[];
+        this.pCurrencies = settings.list?.map((val) => new CurrencyView(val)) as CurrencyView[];
         this.setCurrencyValues();
     }
 
     private setCurrencyValues(): void {
         if (this.currentTransaction === TransactionType.Deposit) {
-            this.sourceCurrencies = this.currencies.filter(c => c.id !== 'BTC' && c.id !== 'USDC');
-            this.destinationCurrencies = this.currencies.filter(c => c.id !== 'EUR' && c.id !== 'USDC');
+            this.sourceCurrencies = this.pCurrencies.filter(c => c.id !== 'BTC' && c.id !== 'USDC');
+            this.destinationCurrencies = this.pCurrencies.filter(c => c.id !== 'EUR' && c.id !== 'USDC');
         } else if (this.currentTransaction === TransactionType.Withdrawal) {
-            this.destinationCurrencies = this.currencies.filter(c => c.id !== 'BTC' && c.id !== 'USDC');
-            this.sourceCurrencies = this.currencies.filter(c => c.id !== 'EUR' && c.id !== 'USDC');
+            this.destinationCurrencies = this.pCurrencies.filter(c => c.id !== 'BTC' && c.id !== 'USDC');
+            this.sourceCurrencies = this.pCurrencies.filter(c => c.id !== 'EUR' && c.id !== 'USDC');
         }
         if (this.sourceCurrencies.length > 0) {
             this.detailsCurrencyFromControl?.setValue(this.sourceCurrencies[0].id);
@@ -408,7 +410,7 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
         }
     }
 
-    private updateAmounts() {
+    private updateAmounts(): void {
         if (this.currentRate) {
             let rate = 0;
             if (this.currentTransaction === TransactionType.Deposit) {
@@ -429,26 +431,26 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
         }
     }
 
-    private setSummuryAmountFrom(val: any) {
+    private setSummuryAmountFrom(val: any): void {
         if (this.detailsAmountFromControl?.valid) {
             this.summary.amountFrom = val;
             this.updateAmounts();
         }
     }
 
-    private setSummuryAmountTo(val: any) {
+    private setSummuryAmountTo(val: any): void {
         if (this.detailsAmountToControl?.valid) {
             this.summary.amountTo = val;
         }
     }
 
-    private setSummuryEmail(val: any) {
+    private setSummuryEmail(val: any): void {
         if (this.detailsEmailControl?.valid) {
             this.summary.email = val;
         }
     }
 
-    private setSummuryAddress(val: any) {
+    private setSummuryAddress(val: any): void {
         if (this.detailsAddressControl?.valid) {
             this.summary.address = val;
         }
@@ -456,14 +458,14 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
 
     stepChanged(step: StepperSelectionEvent): void {
         if (this.errorMessage === '') {
-            let focusInput: HTMLInputElement | undefined = undefined;
+            let focusInput: HTMLInputElement | undefined;
             if (step.selectedStep.label === 'details') {
-                focusInput = this._emailElement?.nativeElement as HTMLInputElement;
+                focusInput = this.emailElement?.nativeElement as HTMLInputElement;
             } else if (step.selectedStep.label === 'payment') {
-                focusInput = this._paymentNextElement?.nativeElement as HTMLInputElement;
+                focusInput = this.paymentNextElement?.nativeElement as HTMLInputElement;
                 const kycStatusData = this.auth.getMyKycStatus();
                 if (kycStatusData === null) {
-                    this.errorMessage = this.errorHandler.getRejectedCookieMessage();;
+                    this.errorMessage = this.errorHandler.getRejectedCookieMessage();
                 } else {
                     this.inProgress = true;
                     kycStatusData.valueChanges.subscribe(({ data }) => {
@@ -480,12 +482,12 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
                     });
                 }
             } else if (step.selectedStep.label === 'verification') {
-                focusInput = this._verificationResetElement?.nativeElement as HTMLInputElement;
+                focusInput = this.verificationResetElement?.nativeElement as HTMLInputElement;
                 this.getKycSettings();
             } else if (step.selectedStep.label === 'confirmation') {
-                focusInput = this._codeElement?.nativeElement as HTMLInputElement;
+                focusInput = this.codeElement?.nativeElement as HTMLInputElement;
             } else if (step.selectedStep.label === 'complete') {
-                focusInput = this._checkoutDoneElement?.nativeElement as HTMLInputElement;
+                focusInput = this.checkoutDoneElement?.nativeElement as HTMLInputElement;
                 this.processDone = true;
             }
             if (focusInput !== undefined) {
@@ -512,9 +514,9 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
             this.stepper.reset();
             this.stepper.steps.forEach(x => x.completed = false);
         }
-        this._detailsForm?.resetForm();
-        this._paymentForm?.resetForm();
-        this._confirmationForm?.resetForm();
+        this.ngDetailsForm?.resetForm();
+        this.ngPaymentForm?.resetForm();
+        this.ngConfirmationForm?.resetForm();
         if (this.auth.authenticated) {
             const user = this.auth.user;
             if (user) {
@@ -546,7 +548,7 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
                     this.handleSuccessLogin(userData);
                 }, (error) => {
                     this.inProgress = false;
-                    if (this.errorHandler.getCurrentError() == 'auth.password_null_or_empty') {
+                    if (this.errorHandler.getCurrentError() === 'auth.password_null_or_empty') {
                         this.auth.logout();
                         this.needToLogin = true;
                         this.defaultUserName = this.detailsEmailControl?.value;
@@ -604,7 +606,7 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
     }
 
     private getCurrency(id: string): CurrencyView | null {
-        const c = this.currencies.find(x => x.id === id);
+        const c = this.pCurrencies.find(x => x.id === id);
         return (c === undefined) ? null : c;
     }
 

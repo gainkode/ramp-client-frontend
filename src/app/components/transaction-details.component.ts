@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { User } from '../model/generated-models';
@@ -13,10 +13,10 @@ import { ErrorService } from '../services/error.service';
     templateUrl: 'transaction-details.component.html',
     styleUrls: ['transaction-details.component.scss']
 })
-export class TransactionDetailsComponent implements OnInit {
+export class TransactionDetailsComponent implements OnInit, OnDestroy {
     @Input() transaction: TransactionItem | null | undefined = null;
 
-    private _userSubscription!: any;
+    private pUserSubscription!: any;
 
     inProgress = false;
     errorMessage = '';
@@ -32,10 +32,10 @@ export class TransactionDetailsComponent implements OnInit {
             const id = this.transaction?.accountId as string;
             const userData = this.dataService.getUserById(id);
             if (userData === null) {
-                this.errorMessage = this.errorHandler.getRejectedCookieMessage();;
+                this.errorMessage = this.errorHandler.getRejectedCookieMessage();
             } else {
                 this.inProgress = true;
-                this._userSubscription = userData.valueChanges.subscribe(({ data }) => {
+                this.pUserSubscription = userData.valueChanges.subscribe(({ data }) => {
                     const user = data.userById as User;
                     this.currentUser = new UserItem(user);
                     this.inProgress = false;
@@ -53,7 +53,7 @@ export class TransactionDetailsComponent implements OnInit {
 
     ngOnDestroy(): void {
         console.log('destroy');
-        const s: Subscription = this._userSubscription;
+        const s: Subscription = this.pUserSubscription;
         if (s !== undefined) {
             s.unsubscribe();
         }

@@ -2,7 +2,7 @@ import { Component, Output, EventEmitter, Input } from '@angular/core';
 import { KycScheme } from 'src/app/model/identification.model';
 
 @Component({
-    selector: 'identification-table',
+    selector: 'app-identification-table',
     templateUrl: 'id-table.component.html',
     styleUrls: ['../admin.scss', 'identification.component.scss']
 })

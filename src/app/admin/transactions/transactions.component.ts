@@ -4,8 +4,7 @@ import { AuthService } from '../../services/auth.service';
 import { AdminDataService } from '../../services/admin-data.service';
 import { ErrorService } from '../../services/error.service';
 import { TransactionItem } from '../../model/transaction.model';
-import { TransactionListResult } from "../../model/generated-models";
-import { Transaction, TransactionType, TransactionSource, TransactionStatus, LiquidityProvider, PaymentInstrument, PaymentProvider } from "../../model/generated-models";
+import { TransactionListResult } from '../../model/generated-models';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -14,8 +13,8 @@ import { Subscription } from 'rxjs';
 })
 export class TransactionsComponent implements OnInit, OnDestroy {
   @Output() changeEditMode = new EventEmitter<boolean>();
-  private _showDetails = false;
-  private _transactionsSubscription!: any;
+  private pShowDetails = false;
+  private pTransactionsSubscription!: any;
   inProgress = false;
   errorMessage = '';
   selectedTransaction: TransactionItem | null = null;
@@ -27,7 +26,7 @@ export class TransactionsComponent implements OnInit, OnDestroy {
   ];
 
   get showDetailed(): boolean {
-    return this._showDetails;
+    return this.pShowDetails;
   }
 
   constructor(private auth: AuthService, private errorHandler: ErrorService,
@@ -35,45 +34,12 @@ export class TransactionsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // const dt: Transaction = {
-    //   transactionId: '67b1def1-d17e-4dfd-8787-2eefef84cebe',
-    //   code: 'M-1651631-1568416',
-    //   userId: 'd05169d2-c131-4119-acc9-30f02a298ef6',
-    //   affiliateId: '7af592aa-dd6b-45d4-983c-c983f2a65d5c',
-    //   created: '2021/05/05 15:14:49',
-    //   executed: '2021/05/05 15:15:02',
-    //   type: TransactionType.Deposit,
-    //   source: TransactionSource.QuickCheckout,
-    //   status: TransactionStatus.Completed,
-    //   fee: 0.2389,
-    //   feePercent: 0.15,
-    //   feeMinEuro: 5,
-    //   feeDetails: 'Fee details',
-    //   currencyToSpend: 'EUR',
-    //   amountToSpend: 2974.25,
-    //   amountToSpendWithoutFee: 2944.36,
-    //   currencyToReceive: 'BTC',
-    //   amountToReceive: 0.24859,
-    //   amountToReceiveWithoutFee: 0.24833,
-    //   rate: 9745.8,
-    //   orderId: 'd156e0da-616d-417b-92bd-4a182b1d075c',
-    //   liquidityProvider: LiquidityProvider.Bitstamp,
-    //   instrument: PaymentInstrument.Bitstamp,
-    //   paymentProvider: PaymentProvider.Fibonatix,
-    //   originalOrderId: 'd156e0da-616d-417b-92bd-4a182b1d075c',
-    //   order: 'Order',
-    //   data: 'Data'
-    // };
-    // const item: TransactionItem = new TransactionItem(dt);
-    // this.transactions.push(item);
-    
-
     const transactionsData = this.adminService.getTransactions();
     if (transactionsData === null) {
-      this.errorMessage = this.errorHandler.getRejectedCookieMessage();;
+      this.errorMessage = this.errorHandler.getRejectedCookieMessage();
     } else {
       this.inProgress = true;
-      this._transactionsSubscription = transactionsData.valueChanges.subscribe(({ data }) => {
+      this.pTransactionsSubscription = transactionsData.valueChanges.subscribe(({ data }) => {
         const dataList = data.getTransactions as TransactionListResult;
         let itemCount = 0;
         if (dataList !== null) {
@@ -95,7 +61,7 @@ export class TransactionsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    const s: Subscription = this._transactionsSubscription;
+    const s: Subscription = this.pTransactionsSubscription;
     if (s !== undefined) {
       s.unsubscribe();
     }
@@ -112,7 +78,7 @@ export class TransactionsComponent implements OnInit, OnDestroy {
   }
 
   private showEditor(transaction: TransactionItem | null, visible: boolean): void {
-    this._showDetails = visible;
+    this.pShowDetails = visible;
     if (visible) {
       this.selectedTransaction = transaction;
     } else {

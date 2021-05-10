@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
@@ -10,11 +10,11 @@ import { Subscription } from 'rxjs';
     templateUrl: 'kyc.component.html',
     styleUrls: ['profile.scss']
 })
-export class KycMerchantComponent implements OnInit {
-    private _settingsSubscription!: any;
+export class KycMerchantComponent implements OnInit, OnDestroy {
+    private pSettingsSubscription!: any;
     inProgress = false;
     errorMessage = '';
-    flow: string = '';
+    flow = '';
     settingsCommon: SettingsCommon | null = null;
 
     constructor(private router: Router,
@@ -30,7 +30,7 @@ export class KycMerchantComponent implements OnInit {
             this.errorMessage = 'Unable to load common settings';
         } else {
             this.inProgress = true;
-            this._settingsSubscription = kycData.valueChanges.subscribe(({ data }) => {
+            this.pSettingsSubscription = kycData.valueChanges.subscribe(({ data }) => {
                 const settingsKyc: SettingsKycShort | null = data.getMySettingsKyc;
                 if (settingsKyc === null) {
                     this.errorMessage = 'Unable to load user identification settings';
@@ -54,9 +54,9 @@ export class KycMerchantComponent implements OnInit {
     }
 
     ngOnDestroy(): void {
-        const s: Subscription = this._settingsSubscription;
+        const s: Subscription = this.pSettingsSubscription;
         if (s !== undefined) {
-            (this._settingsSubscription as Subscription).unsubscribe();
+            (this.pSettingsSubscription as Subscription).unsubscribe();
         }
     }
 

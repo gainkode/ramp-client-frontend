@@ -6,7 +6,7 @@ import { KycLevel } from 'src/app/model/identification.model';
 import { UserTypeList } from 'src/app/model/payment.model';
 
 @Component({
-    selector: 'level-editor',
+    selector: 'app-level-editor',
     templateUrl: 'level-editor.component.html',
     styleUrls: ['../admin.scss', 'identification.component.scss']
 })
@@ -48,11 +48,11 @@ export class LevelEditorComponent implements OnInit {
         });
     }
 
-    constructor(private formBuilder: FormBuilder, private _ngZone: NgZone) { }
+    constructor(private formBuilder: FormBuilder, private ngZone: NgZone) { }
 
-    triggerResize() {
+    triggerResize(): void {
         // Wait for changes to be applied, then trigger textarea resize.
-        this._ngZone.onStable.pipe(take(1))
+        this.ngZone.onStable.pipe(take(1))
             .subscribe(() => this.descriptionInput.resizeToFitContent(true));
     }
 

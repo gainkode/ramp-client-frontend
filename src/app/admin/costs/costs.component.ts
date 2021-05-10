@@ -13,9 +13,9 @@ import { Subscription } from 'rxjs';
 })
 export class CostsComponent implements OnInit, OnDestroy {
   @Output() changeEditMode = new EventEmitter<boolean>();
-  private _showDetails = false;
-  private _settingsSubscription!: any;
-  private _editMode = false;
+  private pShowDetails = false;
+  private pSettingsSubscription!: any;
+  private pEditMode = false;
   inProgress = false;
   errorMessage = '';
   editorErrorMessage = '';
@@ -25,11 +25,11 @@ export class CostsComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['isDefault', 'name', 'target', 'trxType', 'instrument', 'provider', 'details'];
 
   get showDetailed(): boolean {
-    return this._showDetails;
+    return this.pShowDetails;
   }
 
   get editMode(): boolean {
-    return this._editMode;
+    return this.pEditMode;
   }
 
   constructor(private auth: AuthService, private errorHandler: ErrorService,
@@ -42,7 +42,7 @@ export class CostsComponent implements OnInit, OnDestroy {
       this.errorMessage = this.errorHandler.getRejectedCookieMessage();
     } else {
       this.inProgress = true;
-      this._settingsSubscription = settingsData.valueChanges.subscribe(({ data }) => {
+      this.pSettingsSubscription = settingsData.valueChanges.subscribe(({ data }) => {
         const settings = data.getSettingsCost as SettingsCostListResult;
         let itemCount = 0;
         if (settings !== null) {
@@ -65,9 +65,9 @@ export class CostsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    const s: Subscription = this._settingsSubscription;
+    const s: Subscription = this.pSettingsSubscription;
     if (s !== undefined) {
-      (this._settingsSubscription as Subscription).unsubscribe();
+      (this.pSettingsSubscription as Subscription).unsubscribe();
     }
   }
 
@@ -79,7 +79,7 @@ export class CostsComponent implements OnInit, OnDestroy {
   }
 
   private setEditMode(mode: boolean): void {
-    this._editMode = mode;
+    this.pEditMode = mode;
     this.changeEditMode.emit(mode);
   }
 
@@ -110,7 +110,7 @@ export class CostsComponent implements OnInit, OnDestroy {
   }
 
   private showEditor(scheme: CostScheme | null, createNew: boolean, visible: boolean): void {
-    this._showDetails = visible;
+    this.pShowDetails = visible;
     if (visible) {
       this.selectedScheme = scheme;
       this.createScheme = createNew;

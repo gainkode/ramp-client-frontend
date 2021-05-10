@@ -145,7 +145,7 @@ export class CommonDataService {
             return this.apollo.watchQuery<any>({
                 query: GET_USER_BY_ID_POST,
                 variables: { userId: id },
-                //pollInterval: 30000,
+                // pollInterval: 30000,
                 fetchPolicy: 'network-only'
             });
         } else {

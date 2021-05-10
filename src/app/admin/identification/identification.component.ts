@@ -13,10 +13,10 @@ import { KycLevel, KycScheme } from 'src/app/model/identification.model';
 })
 export class IdentificationComponent implements OnInit, OnDestroy {
   @Output() changeEditMode = new EventEmitter<boolean>();
-  private _showDetails = false;
-  private _settingsSubscription!: any;
-  private _levelsSubscription!: any;
-  private _editMode = false;
+  private pShowDetails = false;
+  private pSettingsSubscription!: any;
+  private pLevelsSubscription!: any;
+  private pEditMode = false;
   inProgress = false;
   errorMessage = '';
   levelEditorErrorMessage = '';
@@ -30,11 +30,11 @@ export class IdentificationComponent implements OnInit, OnDestroy {
   levels: KycLevel[] = [];
 
   get showDetailed(): boolean {
-    return this._showDetails;
+    return this.pShowDetails;
   }
 
   get editMode(): boolean {
-    return this._editMode;
+    return this.pEditMode;
   }
 
   constructor(private auth: AuthService, private errorHandler: ErrorService,
@@ -46,8 +46,8 @@ export class IdentificationComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    const ss: Subscription = this._settingsSubscription;
-    const ls: Subscription = this._levelsSubscription;
+    const ss: Subscription = this.pSettingsSubscription;
+    const ls: Subscription = this.pLevelsSubscription;
     if (ss !== undefined) {
       ss.unsubscribe();
     }
@@ -62,11 +62,11 @@ export class IdentificationComponent implements OnInit, OnDestroy {
     this.refreshData();
   }
 
-  refreshData() {
+  refreshData(): void {
     this.showSchemeEditor(null, false, false);
-    if (this.selectedTab == 0) {
+    if (this.selectedTab === 0) {
       // Levels
-      const s: Subscription = this._levelsSubscription;
+      const s: Subscription = this.pLevelsSubscription;
       if (s !== undefined) {
         this.refreshLevelList();
       }
@@ -75,7 +75,7 @@ export class IdentificationComponent implements OnInit, OnDestroy {
       }
     } else {
       // Schemes
-      const s: Subscription = this._settingsSubscription;
+      const s: Subscription = this.pSettingsSubscription;
       if (s !== undefined) {
         this.refreshSchemeList();
       }
@@ -91,7 +91,7 @@ export class IdentificationComponent implements OnInit, OnDestroy {
       this.errorMessage = this.errorHandler.getRejectedCookieMessage();
     } else {
       this.inProgress = true;
-      this._settingsSubscription = settingsData.valueChanges.subscribe(({ data }) => {
+      this.pSettingsSubscription = settingsData.valueChanges.subscribe(({ data }) => {
         const settings = data.getSettingsKyc as SettingsKycListResult;
         let itemCount = 0;
         if (settings !== null) {
@@ -126,7 +126,7 @@ export class IdentificationComponent implements OnInit, OnDestroy {
       this.errorMessage = this.errorHandler.getRejectedCookieMessage();
     } else {
       this.inProgress = true;
-      this._levelsSubscription = settingsData.valueChanges.subscribe(({ data }) => {
+      this.pLevelsSubscription = settingsData.valueChanges.subscribe(({ data }) => {
         const settings = data.getSettingsKycLevels as SettingsKycLevelListResult;
         let itemCount = 0;
         if (settings !== null) {
@@ -156,7 +156,7 @@ export class IdentificationComponent implements OnInit, OnDestroy {
   }
 
   private setEditMode(mode: boolean): void {
-    this._editMode = mode;
+    this.pEditMode = mode;
     this.changeEditMode.emit(mode);
   }
 
@@ -181,7 +181,7 @@ export class IdentificationComponent implements OnInit, OnDestroy {
   }
 
   private showSchemeEditor(scheme: KycScheme | null, createNew: boolean, visible: boolean): void {
-    this._showDetails = visible;
+    this.pShowDetails = visible;
     if (visible) {
       this.selectedScheme = scheme;
       this.createScheme = createNew;
@@ -195,7 +195,7 @@ export class IdentificationComponent implements OnInit, OnDestroy {
   }
 
   private showLevelEditor(level: KycLevel | null, createNew: boolean, visible: boolean): void {
-    this._showDetails = visible;
+    this.pShowDetails = visible;
     if (visible) {
       this.selectedLevel = level;
       this.createLevel = createNew;

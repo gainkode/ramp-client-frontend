@@ -11,10 +11,10 @@ import { ErrorService } from 'src/app/services/error.service';
   styleUrls: ['./profile.scss']
 })
 export class KycPersonalComponent implements OnInit, OnDestroy {
-  private _settingsSubscription!: any;
+  private pSettingsSubscription!: any;
   inProgress = false;
   errorMessage = '';
-  flow: string = '';
+  flow = '';
   settingsCommon: SettingsCommon | null = null;
 
   constructor(private router: Router,
@@ -30,7 +30,7 @@ export class KycPersonalComponent implements OnInit, OnDestroy {
       this.errorMessage = 'Unable to load common settings';
     } else {
       this.inProgress = true;
-      this._settingsSubscription = kycData.valueChanges.subscribe(({ data }) => {
+      this.pSettingsSubscription = kycData.valueChanges.subscribe(({ data }) => {
         const settingsKyc: SettingsKycShort | null = data.getMySettingsKyc;
         if (settingsKyc === null) {
           this.errorMessage = 'Unable to load user identification settings';
@@ -54,9 +54,9 @@ export class KycPersonalComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    const s: Subscription = this._settingsSubscription;
+    const s: Subscription = this.pSettingsSubscription;
     if (s !== undefined) {
-      (this._settingsSubscription as Subscription).unsubscribe();
+      (this.pSettingsSubscription as Subscription).unsubscribe();
     }
   }
 

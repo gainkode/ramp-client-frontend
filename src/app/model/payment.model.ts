@@ -180,18 +180,18 @@ export const KycProviderList: Array<KycProviderView> = [
 ];
 
 export class CheckoutSummary {
-    orderId: string = '';
-    email: string = '';
-    currencyFrom: string = '';
-    currencyTo: string = '';
-    amountFrom: number = 0;
-    amountTo: number = 0;
-    address: string = '';
-    fee: number = 0;
-    feePercent: number = 0;
-    feeMinEuro: number = 0;
+    orderId = '';
+    email = '';
+    currencyFrom = '';
+    currencyTo = '';
+    amountFrom = 0;
+    amountTo = 0;
+    address = '';
+    fee = 0;
+    feePercent = 0;
+    feeMinEuro = 0;
     exchangeRate: Rate | null = null;
-    transactionDate: string = '';
+    transactionDate = '';
     transactionType: TransactionType = TransactionType.Deposit;
     status: TransactionStatus = TransactionStatus.Pending;
 
