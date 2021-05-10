@@ -11,7 +11,8 @@
 <div class="checkout-page">
     <div class="wizard-panel-split">
         <div class="wizard-panel-stepper">
-            <mat-horizontal-stepper linear #checkoutStepper class="stepper" (selectionChange)="stepChanged($event)">
+            <mat-horizontal-stepper linear #checkoutStepper class="stepper" [disableRipple]="true"
+                (selectionChange)="stepChanged($event)">
                 <!-- Order details -->
                 <mat-step [stepControl]="detailsForm" label="details" editable="false" [completed]="false">
                     <ng-template matStepLabel>Order details</ng-template>
@@ -29,7 +30,7 @@
                             <!-- Email -->
                             <mat-form-field class="form-element">
                                 <mat-label>Email</mat-label>
-                                <input type="email" matInput formControlName="email" maxlength="60"
+                                <input type="email" #emailinput matInput formControlName="email" maxlength="60"
                                     placeholder="Type your email address" required />
                                 <mat-error *ngIf="this.detailsForm.get('email')?.hasError('required')">
                                     Please specify your email
@@ -186,7 +187,7 @@
                             </mat-error>
                         </mat-form-field>
                         <div class="form-element">
-                            <button type="submit" class="main-button main-button-accent inline-button"
+                            <button type="submit" #paymentnext class="main-button main-button-accent inline-button"
                                 [disabled]="errorMessage!==''" (click)="paymentCompleted()">
                                 NEXT
                             </button>
@@ -221,7 +222,7 @@
                                 NEXT
                             </button>
                         </div>
-                        <button type="submit" class="main-button main-button-primary inline-button"
+                        <button type="submit" #verificationreset class="main-button main-button-primary inline-button"
                             (click)="resetStepper()">
                             RESET
                         </button>
@@ -249,7 +250,8 @@
                         <!-- Code -->
                         <mat-form-field class="form-element">
                             <mat-label>Code</mat-label>
-                            <input type="text" matInput formControlName="code" maxlength="10" placeholder="Confirmation code" required />
+                            <input type="text" #codeinput matInput formControlName="code" maxlength="10"
+                                placeholder="Confirmation code" required />
                             <mat-error *ngIf="this.confirmationForm.get('address')?.hasError('required')">
                                 Please specify the confirmation code
                             </mat-error>
@@ -272,7 +274,7 @@
                     <app-checkout-done *ngIf="processDone" [summary]="summary"></app-checkout-done>
                     <br>
                     <button type="submit" class="main-button main-button-accent inline-button"
-                        [disabled]="errorMessage!==''" (click)="done()">
+                        #checkoutdone [disabled]="errorMessage!==''" (click)="done()">
                         DONE
                     </button>
                     <button type="submit" class="main-button main-button-primary inline-button"

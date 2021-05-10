@@ -1,6 +1,6 @@
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
-import { Component, OnDestroy, OnInit, ViewChild, ɵɵtrustConstantResourceUrl } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AbstractControl, FormBuilder, NgForm, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -17,11 +17,16 @@ import { WalletValidator } from '../utils/wallet.validator';
     templateUrl: 'quick-checkout.component.html',
     styleUrls: ['quick-checkout.component.scss']
 })
-export class QuuckCheckoutComponent implements OnInit, OnDestroy {
+export class QuickCheckoutComponent implements OnInit, OnDestroy {
     @ViewChild('checkoutStepper') private stepper: MatStepper | undefined = undefined;
     @ViewChild('details') private _detailsForm: NgForm | undefined = undefined;
     @ViewChild('payment') private _paymentForm: NgForm | undefined = undefined;
     @ViewChild('confirmation') private _confirmationForm: NgForm | undefined = undefined;
+    @ViewChild('emailinput') _emailElement: ElementRef | undefined = undefined;
+    @ViewChild('paymentnext') _paymentNextElement: ElementRef | undefined = undefined;
+    @ViewChild('verificationreset') _verificationResetElement: ElementRef | undefined = undefined;
+    @ViewChild('codeinput') _codeElement: ElementRef | undefined = undefined;
+    @ViewChild('checkoutdone') _checkoutDoneElement: ElementRef | undefined = undefined;
     user: User | null = null;
     errorMessage = '';
     inProgress = false;
@@ -304,9 +309,11 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
                     }
                 } else {
                     this.errorMessage = 'Order code is invalid';
+                    this.paymentTransactionIdControl?.reset();
                 }
             }, (error) => {
                 this.inProgress = false;
+                this.paymentTransactionIdControl?.reset();
                 this.errorMessage = this.errorHandler.getError(error.message, 'Unable to register a new order');
             });
     }
@@ -353,7 +360,7 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
         }
         const currencyData = this.dataService.getSettingsCurrency();
         if (currencyData === null) {
-            this.errorMessage = this.errorHandler.getRejectedCookieMessage();;
+            this.errorMessage = this.errorHandler.getRejectedCookieMessage();
         } else {
             this.inProgress = true;
             this._settingsSubscription = currencyData.valueChanges.subscribe(({ data }) => {
@@ -444,17 +451,12 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
     }
 
     stepChanged(step: StepperSelectionEvent): void {
-        // if (this.errorMessage !== '') {
-        //     setTimeout(() => {
-        //         if (this.stepper !== undefined) {
-        //             step.previouslySelectedStep.editable = true;
-        //             this.stepper.previous();
-        //             step.previouslySelectedStep.editable = false;
-        //         }
-        //     }, 500);
-        // }
         if (this.errorMessage === '') {
-            if (step.selectedStep.label === 'payment') {
+            let focusInput: HTMLInputElement | undefined = undefined;
+            if (step.selectedStep.label === 'details') {
+                focusInput = this._emailElement?.nativeElement as HTMLInputElement;
+            } else if (step.selectedStep.label === 'payment') {
+                focusInput = this._paymentNextElement?.nativeElement as HTMLInputElement;
                 const kycStatusData = this.auth.getMyKycStatus();
                 if (kycStatusData === null) {
                     this.errorMessage = this.errorHandler.getRejectedCookieMessage();;
@@ -470,9 +472,18 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
                     });
                 }
             } else if (step.selectedStep.label === 'verification') {
+                focusInput = this._verificationResetElement?.nativeElement as HTMLInputElement;
                 this.getKycSettings();
+            } else if (step.selectedStep.label === 'confirmation') {
+                focusInput = this._codeElement?.nativeElement as HTMLInputElement;
             } else if (step.selectedStep.label === 'complete') {
+                focusInput = this._checkoutDoneElement?.nativeElement as HTMLInputElement;
                 this.processDone = true;
+            }
+            if (focusInput !== undefined) {
+                setTimeout(() => {
+                    focusInput?.focus();
+                }, 100);
             }
         }
     }
@@ -559,6 +570,7 @@ export class QuuckCheckoutComponent implements OnInit, OnDestroy {
                 }
             }, (error) => {
                 this.inProgress = false;
+                this.confirmationCompleteControl?.reset();
                 this.errorMessage = this.errorHandler.getError(error.message, 'Unable to execute your order');
             });
         }

@@ -16,12 +16,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatStepperModule } from '@angular/material/stepper';
 import { ComponentsModule } from '../components/components.module';
-import { QuuckCheckoutComponent } from './quick-checkout.component';
+import { QuickCheckoutComponent } from './quick-checkout.component';
 
 const routing = RouterModule.forChild([
     {
         path: 'payment',
-        component: QuuckCheckoutComponent
+        component: QuickCheckoutComponent
     },
     { path: '**', redirectTo: 'payment' }
 ]);
@@ -51,7 +51,7 @@ export class MaterialModule { }
 
 @NgModule({
     imports: [ CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule ],
-    declarations: [ QuuckCheckoutComponent ],
+    declarations: [ QuickCheckoutComponent ],
     providers: [],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
