@@ -25,48 +25,42 @@
         </div>
     </div>
 
-    <div *ngIf="transaction?.accountId!==''">
-        <label class="transaction-details-label">Account Id</label>
-        <div class="transaction-details-value">
-            {{transaction?.accountId}}
-        </div>
-    </div>
-
-    <div *ngIf="currentUser!==null">
-        <div *ngIf="currentUser?.firstName!==''">
+    <div *ngIf="transaction?.user!==null">
+        <div *ngIf="transaction?.user?.firstName!==''">
             <label class="transaction-details-label">First Name</label>
             <div class="transaction-details-value">
-                {{currentUser?.firstName}}
+                {{transaction?.user?.firstName}}
             </div>
         </div>
 
-        <div *ngIf="currentUser?.lastName!==''">
+        <div *ngIf="transaction?.user?.lastName!==''">
             <label class="transaction-details-label">Last Name</label>
             <div class="transaction-details-value">
-                {{currentUser?.lastName}}
+                {{transaction?.user?.lastName}}
             </div>
         </div>
 
-        <div *ngIf="currentUser?.country!==null">
+        <div *ngIf="transaction?.user?.country!==null">
             <label class="transaction-details-label">Country</label>
             <div class="transaction-details-value">
-                <app-dropdown-item itemValue="{{currentUser?.country?.title}}"
-                    imageClass="{{currentUser?.country?.imgClass}}" imageSource="{{currentUser?.country?.imgSource}}">
+                <app-dropdown-item itemValue="{{transaction?.user?.country?.title}}"
+                    imageClass="{{transaction?.user?.country?.imgClass}}"
+                    imageSource="{{transaction?.user?.country?.imgSource}}">
                 </app-dropdown-item>
             </div>
         </div>
 
-        <div *ngIf="currentUser?.street!==''">
+        <div *ngIf="transaction?.user?.street!==''">
             <label class="transaction-details-label">Street</label>
             <div class="transaction-details-value" style="color: darkred;">
-                {{currentUser?.street}}
+                {{transaction?.user?.street}}
             </div>
         </div>
 
-        <div *ngIf="currentUser?.zip!==''">
+        <div *ngIf="transaction?.user?.zip!==''">
             <label class="transaction-details-label">ZIP code</label>
             <div class="transaction-details-value" style="color: darkred;">
-                {{currentUser?.zip}}
+                {{transaction?.user?.zip}}
             </div>
         </div>
     </div>
@@ -155,18 +149,18 @@
     </div>
 
     <h2>AML Checks</h2>
-    <div *ngIf="currentUser!==null">
-        <div *ngIf="currentUser?.id!==''">
+    <div *ngIf="transaction?.user!==null">
+        <div *ngIf="transaction?.user?.id!==''">
             <label class="transaction-details-label">Account ID</label>
             <div class="transaction-details-value">
-                {{currentUser?.id}}
+                {{transaction?.user?.id}}
             </div>
         </div>
 
-        <div *ngIf="currentUser?.kycStatus!==''">
+        <div *ngIf="transaction?.user?.kycStatus!==''">
             <label class="transaction-details-label">KYC Status</label>
             <div class="transaction-details-value">
-                {{currentUser?.kycStatus}}
+                {{transaction?.user?.kycStatus}}
             </div>
         </div>
     </div>

@@ -1,19 +1,19 @@
 import { CommonTargetValue } from './common.model';
 import {
     PaymentInstrument, PaymentProvider, Transaction, TransactionSource,
-    TransactionStatus, TransactionType
+    TransactionStatus, TransactionType, User
 } from './generated-models';
 import {
     TransactionTypeList, PaymentInstrumentList, PaymentProviderList,
     TransactionSourceList, TransactionStatusList
 } from './payment.model';
+import { UserItem } from './user.model';
 
 export class TransactionItem {
     id = '';
     code = '';
     executed: Date | null = null;
     accountId = '';
-    email = '';
     type: TransactionType | undefined = undefined;
     instrument: PaymentInstrument | undefined = undefined;
     instrumentDetails: CommonTargetValue | null = null;
@@ -31,6 +31,7 @@ export class TransactionItem {
     fees = 0;
     rate = 0;
     status: TransactionStatus | undefined = undefined;
+    user: UserItem | undefined;
 
     constructor(data: Transaction | null) {
         if (data !== null) {
@@ -38,11 +39,11 @@ export class TransactionItem {
             this.id = data.transactionId;
             this.executed = data.executed;
             this.accountId = data.userId;
-            this.email = 'email@email.com';
+            this.user = new UserItem(data.user as User);
             this.paymentProviderResponse = 'Response';
             this.walletSource = 'Wallet source';
             this.address = 'Wallet address';
-            this.ip = '149.18.236.101';
+            this.ip = data.userIp as string;
 
             this.instrumentDetails = new CommonTargetValue();
             this.instrumentDetails.imgClass = 'payment-logo';

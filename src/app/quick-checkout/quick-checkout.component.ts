@@ -240,7 +240,7 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
             this.router.navigateByUrl(`/auth/personal/signup/${userData.authToken}`);
         } else {
             this.auth.logout();
-            this.errorMessage = `Invalid authentication via ${name}`;
+            this.errorMessage = `Invalid authentication via social media`;
         }
     }
 

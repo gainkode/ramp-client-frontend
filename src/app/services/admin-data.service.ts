@@ -136,6 +136,8 @@ const GET_TRANSACTIONS_POST = gql`
         transactionId,
         code,
         userId,
+        userIp,
+        user {email, firstName, lastName, countryCode2, kycStatus},
         affiliateId,
         created,
         executed,
@@ -153,12 +155,9 @@ const GET_TRANSACTIONS_POST = gql`
         amountToReceive,
         amountToReceiveWithoutFee,
         rate,
-        orderId,
         liquidityProvider,
         instrument,
         paymentProvider,
-        originalOrderId,
-        order,
         data
       }
     }

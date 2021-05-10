@@ -20,7 +20,7 @@ export class TransactionsComponent implements OnInit, OnDestroy {
   selectedTransaction: TransactionItem | null = null;
   transactions: TransactionItem[] = [];
   displayedColumns: string[] = [
-    'id', 'executed', 'accountId', 'email', 'type', 'instrument', 'paymentProvider', 'paymentProviderResponse',
+    'id', 'executed', 'email', 'type', 'instrument', 'paymentProvider', 'paymentProviderResponse',
     'source', 'walletSource', 'currencyToSpend', 'amountToSpend', 'currencyToReceive', 'amountToReceive',
     'address', 'euro', 'fees', 'status', 'details'
   ];

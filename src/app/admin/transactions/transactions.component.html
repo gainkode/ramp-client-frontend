@@ -15,7 +15,7 @@
 
     <div class="table-responsive">
       <table mat-table *ngIf="errorMessage===''" class="data-table" [dataSource]="transactions">
-        <!-- TRansaction ID Column -->
+        <!-- Transaction ID Column -->
         <ng-container matColumnDef="id">
           <th mat-header-cell *matHeaderCellDef>Transaction ID</th>
           <td mat-cell *matCellDef="let element"> {{element.id}} </td>
@@ -27,16 +27,10 @@
           <td mat-cell *matCellDef="let element"> {{element.executed}} </td>
         </ng-container>
 
-        <!-- Account Id Column -->
-        <ng-container matColumnDef="accountId">
-          <th mat-header-cell *matHeaderCellDef>Account ID</th>
-          <td mat-cell *matCellDef="let element"> {{element.accountId}} </td>
-        </ng-container>
-
         <!-- Email Column -->
         <ng-container matColumnDef="email">
           <th mat-header-cell *matHeaderCellDef>Email</th>
-          <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+          <td mat-cell *matCellDef="let element"> {{element.user?.email}} </td>
         </ng-container>
 
         <!-- Transaction Type Column -->

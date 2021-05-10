@@ -15,47 +15,18 @@ import { ErrorService } from '../services/error.service';
 })
 export class TransactionDetailsComponent implements OnInit, OnDestroy {
     @Input() transaction: TransactionItem | null | undefined = null;
-
-    private pUserSubscription!: any;
-
     inProgress = false;
     errorMessage = '';
-    currentUser: UserItem | null = null;
 
     constructor(private auth: AuthService, private errorHandler: ErrorService,
         private dataService: CommonDataService, private router: Router) {
     }
 
     ngOnInit(): void {
-        this.currentUser = null;
-        if (this.transaction?.accountId !== null) {
-            const id = this.transaction?.accountId as string;
-            const userData = this.dataService.getUserById(id);
-            if (userData === null) {
-                this.errorMessage = this.errorHandler.getRejectedCookieMessage();
-            } else {
-                this.inProgress = true;
-                this.pUserSubscription = userData.valueChanges.subscribe(({ data }) => {
-                    const user = data.userById as User;
-                    this.currentUser = new UserItem(user);
-                    this.inProgress = false;
-                }, (error) => {
-                    this.inProgress = false;
-                    if (this.auth.token !== '') {
-                        this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load user data');
-                    } else {
-                        this.router.navigateByUrl('/');
-                    }
-                });
-            }
-        }
+        
     }
 
     ngOnDestroy(): void {
-        console.log('destroy');
-        const s: Subscription = this.pUserSubscription;
-        if (s !== undefined) {
-            s.unsubscribe();
-        }
+        
     }
 }
