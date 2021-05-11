@@ -35,7 +35,6 @@ export class TransactionItem {
 
     constructor(data: Transaction | null) {
         if (data !== null) {
-            console.log(data);
             this.code = data.code as string;
             this.id = data.transactionId;
             this.executed = data.executed;
