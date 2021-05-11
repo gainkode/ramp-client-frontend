@@ -61,6 +61,7 @@ mutation CreateQuickCheckout(
   $amountFiat: Float!,
   $instrument: PaymentInstrument!,
   $paymentProvider: PaymentProvider,
+  $cryptoAddress: String,
   $rate: Float!,
   $data: String!,
   $recaptcha: String!
@@ -72,6 +73,7 @@ mutation CreateQuickCheckout(
     amountFiat: $amountFiat
     instrument: $instrument
     paymentProvider: $paymentProvider
+    cryptoAddress: $cryptoAddress
     rate: $rate
     data: $data
   }, recaptcha: $recaptcha) {
@@ -121,34 +123,22 @@ export class QuickCheckoutDataService {
   createQuickCheckout(transactionType: TransactionType, currencyToSpend: string,
     currencyToReceive: string, amountFiat: number, instrument: PaymentInstrument, provider: PaymentProvider,
     rate: number, walletAddress: string): Observable<any> {
-    let vars = {};
-    if (provider as string === '') {
-      vars = {
-        recaptcha: environment.recaptchaId,
-        transactionType,
-        currencyToSpend,
-        currencyToReceive,
-        amountFiat,
-        instrument,
-        rate,
-        data: JSON.stringify({ userAddress: walletAddress })
-      };
-    } else {
-      vars = {
-        recaptcha: environment.recaptchaId,
-        transactionType,
-        currencyToSpend,
-        currencyToReceive,
-        amountFiat,
-        instrument,
-        paymentProvider: provider,
-        rate,
-        data: JSON.stringify({ userAddress: walletAddress })
-      };
-    }
+    const paymentPrvdr = (provider as string === '') ? undefined : provider;
+    const wallet = (walletAddress === '') ? undefined : walletAddress;
     return this.apollo.mutate({
       mutation: CREATE_QUICK_CHECKOUT_POST,
-      variables: vars
+      variables: {
+        recaptcha: environment.recaptchaId,
+        transactionType,
+        currencyToSpend,
+        currencyToReceive,
+        amountFiat,
+        instrument,
+        paymentProvider: paymentPrvdr,
+        rate,
+        cryptoAddress: wallet,
+        data: JSON.stringify({ userAddress: walletAddress })
+      }
     });
   }
 

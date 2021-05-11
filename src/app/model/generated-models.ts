@@ -514,6 +514,8 @@ export type User = {
   kycReviewRejectedLabels?: Maybe<Array<Scalars['String']>>;
   kycReviewResult?: Maybe<Scalars['String']>;
   kycStatusUpdateRequired?: Maybe<Scalars['Boolean']>;
+  walletIds?: Maybe<Array<Scalars['String']>>;
+  externalWalletIds?: Maybe<Array<Scalars['String']>>;
   state?: Maybe<UserState>;
 };
 
@@ -559,10 +561,23 @@ export type UserNotificationSubscription = {
 export type UserState = {
   __typename?: 'UserState';
   date?: Maybe<Scalars['DateTime']>;
-  walletName?: Maybe<Scalars['String']>;
-  customerRefId?: Maybe<Scalars['String']>;
-  vaultAccounts?: Maybe<Array<UserVaultAccount>>;
+  internalWallets?: Maybe<Array<InternalWallet>>;
+  externalWallets?: Maybe<Array<ExternalWallet>>;
   notifications?: Maybe<UserNotificationListResult>;
+};
+
+
+export type UserStateInternalWalletsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OrderBy>>;
+};
+
+
+export type UserStateExternalWalletsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OrderBy>>;
 };
 
 
@@ -572,28 +587,48 @@ export type UserStateNotificationsArgs = {
   orderBy?: Maybe<Array<OrderBy>>;
 };
 
-export type UserVaultAccount = {
-  __typename?: 'UserVaultAccount';
-  userVaultAccountId?: Maybe<Scalars['ID']>;
-  userId?: Maybe<Scalars['String']>;
-  custodyProvider?: Maybe<Scalars['String']>;
-  originalVaultAccountId?: Maybe<Scalars['String']>;
-  created?: Maybe<Scalars['DateTime']>;
+export type InternalWallet = {
+  __typename?: 'InternalWallet';
+  id?: Maybe<Scalars['ID']>;
   name?: Maybe<Scalars['String']>;
-  hiddenOnUI?: Maybe<Scalars['Boolean']>;
   customerRefId?: Maybe<Scalars['String']>;
-  autoFuel?: Maybe<Scalars['Boolean']>;
-  deleted?: Maybe<Scalars['DateTime']>;
-  assets?: Maybe<Array<UserVaultAccountAsset>>;
+  assets?: Maybe<Array<InternalWalletAsset>>;
 };
 
-export type UserVaultAccountAsset = {
-  __typename?: 'UserVaultAccountAsset';
+export type InternalWalletAsset = {
+  __typename?: 'InternalWalletAsset';
   id?: Maybe<Scalars['String']>;
-  total?: Maybe<Scalars['Float']>;
-  available?: Maybe<Scalars['Float']>;
-  pending?: Maybe<Scalars['String']>;
+  status?: Maybe<WalletAssetStatus>;
+  balance?: Maybe<Scalars['String']>;
   lockedAmount?: Maybe<Scalars['String']>;
+  activationTime?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  tag?: Maybe<Scalars['String']>;
+};
+
+export enum WalletAssetStatus {
+  WaitingForApproval = 'WAITING_FOR_APPROVAL',
+  Approved = 'APPROVED',
+  Cancelled = 'CANCELLED',
+  Rejected = 'REJECTED',
+  Failed = 'FAILED'
+}
+
+export type ExternalWallet = {
+  __typename?: 'ExternalWallet';
+  id?: Maybe<Scalars['ID']>;
+  name?: Maybe<Scalars['String']>;
+  customerRefId?: Maybe<Scalars['String']>;
+  assets?: Maybe<Array<ExternalWalletAsset>>;
+};
+
+export type ExternalWalletAsset = {
+  __typename?: 'ExternalWalletAsset';
+  id?: Maybe<Scalars['String']>;
+  status?: Maybe<WalletAssetStatus>;
+  activationTime?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  tag?: Maybe<Scalars['String']>;
 };
 
 export type UserNotificationListResult = {
@@ -806,6 +841,7 @@ export type TransactionShort = {
   amountToReceive: Scalars['Float'];
   amountToReceiveWithoutFee: Scalars['Float'];
   rate: Scalars['Float'];
+  cryptoAddress?: Maybe<Scalars['String']>;
   source: TransactionSource;
   instrument: PaymentInstrument;
   paymentProvider?: Maybe<PaymentProvider>;
@@ -867,6 +903,7 @@ export type Transaction = {
   amountToReceive: Scalars['Float'];
   amountToReceiveWithoutFee: Scalars['Float'];
   rate: Scalars['Float'];
+  cryptoAddress?: Maybe<Scalars['String']>;
   source: TransactionSource;
   instrument: PaymentInstrument;
   paymentProvider?: Maybe<PaymentProvider>;
@@ -1343,6 +1380,7 @@ export type TransactionInput = {
   currencyToReceive: Scalars['String'];
   amountFiat: Scalars['Float'];
   rate: Scalars['Float'];
+  cryptoAddress?: Maybe<Scalars['String']>;
   instrument: PaymentInstrument;
   paymentProvider?: Maybe<PaymentProvider>;
   liquidityProvider?: Maybe<LiquidityProvider>;
@@ -1418,6 +1456,63 @@ export type UserDevice = {
   browser?: Maybe<Scalars['String']>;
   device?: Maybe<Scalars['String']>;
   deviceConfirmed?: Maybe<Scalars['DateTime']>;
+};
+
+export type VaultAccount = {
+  __typename?: 'VaultAccount';
+  id?: Maybe<Scalars['ID']>;
+  name?: Maybe<Scalars['String']>;
+  hiddenOnUI?: Maybe<Scalars['Boolean']>;
+  customerRefId?: Maybe<Scalars['String']>;
+  autoFuel?: Maybe<Scalars['Boolean']>;
+  assets?: Maybe<Array<VaultAccountAsset>>;
+};
+
+export type VaultAccountAsset = {
+  __typename?: 'VaultAccountAsset';
+  id?: Maybe<Scalars['String']>;
+  total?: Maybe<Scalars['Float']>;
+  available?: Maybe<Scalars['Float']>;
+  pending?: Maybe<Scalars['String']>;
+  lockedAmount?: Maybe<Scalars['String']>;
+  totalStakedCPU?: Maybe<Scalars['String']>;
+  totalStakedNetwork?: Maybe<Scalars['String']>;
+  selfStakedCPU?: Maybe<Scalars['String']>;
+  selfStakedNetwork?: Maybe<Scalars['String']>;
+  pendingRefundCPU?: Maybe<Scalars['String']>;
+  pendingRefundNetwork?: Maybe<Scalars['String']>;
+};
+
+export type InternalWalletAssetShort = {
+  __typename?: 'InternalWalletAssetShort';
+  status?: Maybe<WalletAssetStatus>;
+  balance?: Maybe<Scalars['String']>;
+  lockedAmount?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+};
+
+export type ExternalWalletAssetShort = {
+  __typename?: 'ExternalWalletAssetShort';
+  status?: Maybe<WalletAssetStatus>;
+  address?: Maybe<Scalars['String']>;
+};
+
+export type NewAddress = {
+  __typename?: 'NewAddress';
+  address: Scalars['String'];
+  tag?: Maybe<Scalars['String']>;
+  legacyAddress?: Maybe<Scalars['String']>;
+};
+
+export type DepositAddress = {
+  __typename?: 'DepositAddress';
+  assetId: Scalars['String'];
+  address: Scalars['String'];
+  tag?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
+  customerRefId?: Maybe<Scalars['String']>;
+  addressFormat?: Maybe<Scalars['String']>;
 };
 
 export type UserNotificationSubscriptionInput = {

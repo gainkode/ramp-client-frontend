@@ -35,6 +35,7 @@ export class TransactionItem {
 
     constructor(data: Transaction | null) {
         if (data !== null) {
+            console.log(data);
             this.code = data.code as string;
             this.id = data.transactionId;
             this.executed = data.executed;
@@ -42,7 +43,12 @@ export class TransactionItem {
             this.user = new UserItem(data.user as User);
             this.paymentProviderResponse = 'Response';
             this.walletSource = 'Wallet source';
-            this.address = 'Wallet address';
+            if (data.data) {
+                const transactionData = JSON.parse(data.data as string);
+                if (transactionData) {
+                    this.address = transactionData.userAddress;
+                }
+            }
             this.ip = data.userIp as string;
 
             this.instrumentDetails = new CommonTargetValue();
