@@ -3,7 +3,7 @@ import { AuthService } from '../services/auth.service';
 import { ErrorService } from '../services/error.service';
 import { Validators, FormBuilder } from '@angular/forms';
 import { SocialUser } from 'angularx-social-login';
-import { LoginResult } from '../model/generated-models';
+import { LoginResult, UserMode } from '../model/generated-models';
 
 @Component({
     selector: 'app-login-panel',
@@ -65,7 +65,12 @@ export class LoginPanelComponent implements OnInit {
                 this.auth.authenticateSocial(providerName.toLowerCase(), token).subscribe((loginData) => {
                     const userData = loginData.data.login as LoginResult;
                     this.progressChange.emit(false);
-                    this.socialAuthenticated.emit(userData);
+                    console.log(userData.user?.mode);
+                    if (userData.user?.mode === UserMode.InternalWallet) {
+                        this.socialAuthenticated.emit(userData);
+                    } else {
+                        this.error.emit(`Unable to authorise with the login "${user.email}". Please sign up`);
+                    }
                 }, (error) => {
                     this.progressChange.emit(false);
                     this.error.emit(this.errorHandler.getError(error.message, `Invalid authentication via ${providerName}`));
@@ -80,10 +85,15 @@ export class LoginPanelComponent implements OnInit {
         if (this.loginForm.valid) {
             this.progressChange.emit(true);
             this.error.emit('');
-            this.auth.authenticate(this.loginForm.get('email')?.value, this.loginForm.get('password')?.value).subscribe(({ data }) => {
+            const login = this.loginForm.get('email')?.value;
+            this.auth.authenticate(login, this.loginForm.get('password')?.value).subscribe(({ data }) => {
                 const userData = data.login as LoginResult;
                 this.progressChange.emit(false);
-                this.authenticated.emit(userData);
+                if (userData.user?.mode === UserMode.InternalWallet) {
+                    this.authenticated.emit(userData);
+                } else {
+                    this.error.emit(`Unable to authorise with the login "${login}". Please sign up`);
+                }
             }, (error) => {
                 this.progressChange.emit(false);
                 this.error.emit(this.errorHandler.getError(error.message, 'Incorrect login or password'));
