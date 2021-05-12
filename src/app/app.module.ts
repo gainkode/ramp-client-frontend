@@ -7,7 +7,7 @@ import { Apollo } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { onError } from 'apollo-link-error';
-import { ApolloLink, InMemoryCache } from '@apollo/client/core';
+import { ApolloLink, InMemoryCache, split } from '@apollo/client/core';
 import { fromPromise } from 'apollo-link';
 import { setContext } from '@apollo/client/link/context';
 import {
@@ -22,6 +22,7 @@ import { environment } from 'src/environments/environment';
 import { QuickCheckoutDataService } from './services/quick-checkout.service';
 import { NotificationService } from './services/notification.service';
 import { CommonDataService } from './services/common-data.service';
+import { getMainDefinition } from '@apollo/client/utilities';
 
 @NgModule({
   declarations: [
@@ -117,18 +118,28 @@ export class AppModule {
     const w = window as any;
     const consentStatus = w.cookieconsent.utils.getCookie(cookieName);
     const allowCookies = (consentStatus === 'allow');
+    const http = httpLink.create({
+      uri: `${environment.api_server}/gql/api`,
+      withCredentials: allowCookies
+    });
+    const transaportLink: ApolloLink = split(
+      // split based on operation type
+      ({ query }) => {
+        let definition = getMainDefinition(query);
+        return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
+      },
+      this.wsClient,
+      http
+    );
+    const apolloLink = ApolloLink.from([
+      this.errorLink as any,
+      this.headersLink,
+      this.authLink,
+      transaportLink
+    ]);
     if (allowCookies) {
       apollo.create({
-        link: ApolloLink.from([
-          this.errorLink as any,
-          this.headersLink,
-          this.authLink,
-          httpLink.create({
-            uri: `${environment.api_server}/gql/api`,
-            withCredentials: allowCookies
-          }),
-          this.wsClient
-        ]),
+        link: apolloLink,
         cache: new InMemoryCache()
       });
     }

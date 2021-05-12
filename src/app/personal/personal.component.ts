@@ -12,9 +12,9 @@ export class PersonalComponent implements OnInit {
 
     ngOnInit(): void {
         this.notification.subscribeToNotifications().subscribe(({ data }) => {
-            console.log('got data ', data);
+            console.log('got data', data);
         }, (error) => {
-            console.log('there was an error sending the query', error);
+            console.log('there was an error subscribing to notifications', error);
         });
     }
 

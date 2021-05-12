@@ -40,7 +40,6 @@ const LOGIN_POST = gql`
                   notificationSubscriptions {
                       name, description
                   },
-                  walletIds,
                   externalWalletIds
             }
             authTokenAction
@@ -82,7 +81,6 @@ const SOCIAL_LOGIN_POST = gql`
                 notificationSubscriptions {
                     name, description
                 },
-                walletIds,
                 externalWalletIds
             }
             authTokenAction
