@@ -102,8 +102,13 @@
                             <!-- Wallet address -->
                             <mat-form-field *ngIf="isDeposit" class="form-element">
                                 <mat-label>{{walletAddressName}}</mat-label>
-                                <input type="text" matInput formControlName="address" maxlength="60"
-                                    placeholder="Valid wallet address" required />
+                                <input type="text" placeholder="Valid wallet address" aria-label=walletAddressName
+                                    matInput formControlName="address" [matAutocomplete]="auto" maxlength="60" required>
+                                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                                    <mat-option *ngFor="let wallet of userWalletsFiltered | async" [value]="wallet">
+                                        {{wallet}}
+                                    </mat-option>
+                                </mat-autocomplete>
                                 <mat-error *ngIf="this.detailsForm.get('address')?.hasError('required')">
                                     Please specify your wallet address
                                 </mat-error>
@@ -273,8 +278,8 @@
                     <ng-template matStepLabel>Order status</ng-template>
                     <app-checkout-done *ngIf="processDone" [summary]="summary"></app-checkout-done>
                     <br>
-                    <button type="submit" class="main-button main-button-accent inline-button"
-                        #checkoutdone [disabled]="errorMessage!==''" (click)="done()">
+                    <button type="submit" class="main-button main-button-accent inline-button" #checkoutdone
+                        [disabled]="errorMessage!==''" (click)="done()">
                         DONE
                     </button>
                     <button type="submit" class="main-button main-button-primary inline-button"

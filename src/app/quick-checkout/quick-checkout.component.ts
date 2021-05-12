@@ -3,12 +3,17 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { AbstractControl, FormBuilder, NgForm, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { KycStatus, LoginResult, PaymentInstrument, Rate, SettingsCommon, SettingsCurrencyListResult,
-    SettingsKycShort, TransactionShort, TransactionType, User } from '../model/generated-models';
+import { Subscription, Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+import {
+    KycStatus, LoginResult, PaymentInstrument, Rate, SettingsCommon, SettingsCurrencyListResult,
+    SettingsKycShort, TransactionShort, TransactionType, User
+} from '../model/generated-models';
 import { KycLevelShort } from '../model/identification.model';
-import { CheckoutSummary, CurrencyView, PaymentProviderList, QuickCheckoutPaymentInstrumentList,
-    QuickCheckoutTransactionTypeList } from '../model/payment.model';
+import {
+    CheckoutSummary, CurrencyView, PaymentProviderList, QuickCheckoutPaymentInstrumentList,
+    QuickCheckoutTransactionTypeList
+} from '../model/payment.model';
 import { AuthService } from '../services/auth.service';
 import { ErrorService } from '../services/error.service';
 import { QuickCheckoutDataService } from '../services/quick-checkout.service';
@@ -44,6 +49,8 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
     settingsCommon: SettingsCommon | null = null;
     sourceCurrencies: CurrencyView[] = [];
     destinationCurrencies: CurrencyView[] = [];
+    userWallets: string[] = [];
+    userWalletsFiltered: Observable<string[]> | undefined = undefined;
     transactionList = QuickCheckoutTransactionTypeList;
     paymentInstrumentList = QuickCheckoutPaymentInstrumentList;
     paymentProviderList = PaymentProviderList;
@@ -169,6 +176,10 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
         this.detailsAddressControl?.valueChanges.subscribe((val) => {
             this.setSummuryAddress(val);
         });
+        this.userWalletsFiltered = this.detailsAddressControl?.valueChanges.pipe(
+            startWith(''),
+            map(value => this.filterUserWallets(value))
+        );
         this.detailsTransactionControl?.valueChanges.subscribe((val) => {
             this.currentTransaction = val as TransactionType;
             this.setCurrencyValues();
@@ -250,6 +261,11 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
 
     getSourceAmountMinError(): string {
         return this.getAmountMinError(this.currentSourceCurrency);
+    }
+
+    private filterUserWallets(value: string): string[] {
+        const walletFilter = value.toLowerCase();
+        return this.userWallets.filter(option => option.toLowerCase().indexOf(walletFilter) === 0);
     }
 
     private handleSuccessLogin(userData: LoginResult): void {
@@ -358,10 +374,13 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
     }
 
     private loadDetailsForm(): void {
+        this.userWallets = [];
         if (this.auth.authenticated) {
             const user = this.auth.user;
             if (user) {
                 this.detailsEmailControl?.setValue(user.email);
+                user.externalWalletIds?.forEach(x => this.userWallets.push(x));
+                this.userWallets.push('1KFzzGtDdnq5hrwxXGjwVnKzRbvf8WVxck');
             }
         }
         const currencyData = this.dataService.getSettingsCurrency();

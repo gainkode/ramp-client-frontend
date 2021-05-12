@@ -39,7 +39,9 @@ const LOGIN_POST = gql`
                   kycStatusUpdateRequired,
                   notificationSubscriptions {
                       name, description
-                  }
+                  },
+                  walletIds,
+                  externalWalletIds
             }
             authTokenAction
         }
@@ -79,7 +81,9 @@ const SOCIAL_LOGIN_POST = gql`
                 kycStatusUpdateRequired,
                 notificationSubscriptions {
                     name, description
-                }
+                },
+                walletIds,
+                externalWalletIds
             }
             authTokenAction
         }
