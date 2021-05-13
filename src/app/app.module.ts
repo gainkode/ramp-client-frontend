@@ -108,7 +108,8 @@ export class AppModule {
     options: {
       reconnect: true,
       connectionParams: {
-        headers: { Authorization: `Bearer ${sessionStorage.getItem('currentToken')}` }
+        headers: { Authorization: `${sessionStorage.getItem('currentToken')}` }
+        //headers: { Authorization: `Bearer ${sessionStorage.getItem('currentToken')}` }
       }
     },
   });

@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
+import { PageEvent } from '@angular/material/paginator';
 import { AuthService } from '../../services/auth.service';
 import { AdminDataService } from '../../services/admin-data.service';
 import { ErrorService } from '../../services/error.service';
@@ -19,6 +20,9 @@ export class TransactionsComponent implements OnInit, OnDestroy {
   errorMessage = '';
   selectedTransaction: TransactionItem | null = null;
   transactions: TransactionItem[] = [];
+  transactionCount = 0;
+  pageSize = 10;
+  pageIndex = 0;
   displayedColumns: string[] = [
     'id', 'executed', 'email', 'type', 'instrument', 'paymentProvider', 'paymentProviderResponse',
     'source', 'walletSource', 'currencyToSpend', 'amountToSpend', 'currencyToReceive', 'amountToReceive',
@@ -34,17 +38,28 @@ export class TransactionsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    const transactionsData = this.adminService.getTransactions();
+    this.loadTransactions();
+  }
+
+  ngOnDestroy(): void {
+    const s: Subscription = this.pTransactionsSubscription;
+    if (s !== undefined) {
+      s.unsubscribe();
+    }
+  }
+
+  private loadTransactions(): void {
+    this.transactionCount = 0;
+    const transactionsData = this.adminService.getTransactions(this.pageIndex, this.pageSize);
     if (transactionsData === null) {
       this.errorMessage = this.errorHandler.getRejectedCookieMessage();
     } else {
       this.inProgress = true;
       this.pTransactionsSubscription = transactionsData.valueChanges.subscribe(({ data }) => {
         const dataList = data.getTransactions as TransactionListResult;
-        let itemCount = 0;
         if (dataList !== null) {
-          itemCount = dataList?.count as number;
-          if (itemCount > 0) {
+          this.transactionCount = dataList?.count as number;
+          if (this.transactionCount > 0) {
             this.transactions = dataList?.list?.map((val) => new TransactionItem(val)) as TransactionItem[];
           }
         }
@@ -60,11 +75,12 @@ export class TransactionsComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy(): void {
+  private refresh(): void {
     const s: Subscription = this.pTransactionsSubscription;
     if (s !== undefined) {
       s.unsubscribe();
     }
+    this.loadTransactions();
   }
 
   private isSelectedTransaction(transactionId: string): boolean {
@@ -84,6 +100,13 @@ export class TransactionsComponent implements OnInit, OnDestroy {
     } else {
       this.selectedTransaction = null;
     }
+  }
+
+  handlePage(event: PageEvent): PageEvent {
+    this.pageSize = event.pageSize;
+    this.pageIndex = event.pageIndex;
+    this.refresh();
+    return event;
   }
 
   toggleDetails(transaction: TransactionItem): void {

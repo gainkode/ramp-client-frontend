@@ -132,9 +132,11 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       </table>
-
-      <mat-paginator [pageSizeOptions]="[3, 10, 25, 100]"></mat-paginator>
     </div>
+
+    <mat-paginator class="data-table" [length]="transactionCount" [pageSize]="pageSize"
+      [pageSizeOptions]="[10, 50, 100]" showFirstLastButtons (page)="handlePage($event)">
+    </mat-paginator>
   </div>
 
   <div [ngClass]="showDetailed ? 'detailed-table-right-panel-details-sm' : 'detailed-table-right-panel-full'">

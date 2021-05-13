@@ -470,7 +470,7 @@ export class AdminDataService {
     }
   }
 
-  getTransactions(): QueryRef<any, EmptyObject> | null {
+  getTransactions(pageIndex: number, takeItems: number): QueryRef<any, EmptyObject> | null {
     if (this.apollo.client !== undefined) {
       return this.apollo.watchQuery<any>({
         query: GET_TRANSACTIONS_POST,
@@ -478,8 +478,8 @@ export class AdminDataService {
           userId: '',
           quickCheckoutOnly: false,
           filter: '',
-          skip: 0,
-          first: 100000,
+          skip: pageIndex * takeItems,
+          first: takeItems,
           orderBy: []
         },
         pollInterval: 30000,

@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { CommonTargetValue } from './common.model';
 import {
     PaymentInstrument, PaymentProvider, Transaction, TransactionSource,
@@ -12,7 +13,7 @@ import { UserItem } from './user.model';
 export class TransactionItem {
     id = '';
     code = '';
-    executed: Date | null = null;
+    executed: string = '';
     accountId = '';
     type: TransactionType | undefined = undefined;
     instrument: PaymentInstrument | undefined = undefined;
@@ -37,7 +38,8 @@ export class TransactionItem {
         if (data !== null) {
             this.code = data.code as string;
             this.id = data.transactionId;
-            this.executed = data.executed;
+            const datepipe: DatePipe = new DatePipe('en-US');
+            this.executed = datepipe.transform(data.executed, 'dd-MM-YYYY HH:mm:ss') as string;
             this.accountId = data.userId;
             this.user = new UserItem(data.user as User);
             this.paymentProviderResponse = 'Response';
@@ -49,12 +51,7 @@ export class TransactionItem {
                 }
             }
             this.ip = data.userIp as string;
-
-            this.instrumentDetails = new CommonTargetValue();
-            this.instrumentDetails.imgClass = 'payment-logo';
-            this.instrumentDetails.imgSource = `assets/svg-payment-systems/visa.svg`;
-            this.instrumentDetails.title = '6461 **** **** 1654';
-
+            
             this.euro = 100;
             this.type = data.type;
             this.instrument = data.instrument;
@@ -67,6 +64,11 @@ export class TransactionItem {
             this.rate = data.rate;
             this.fees = data.fee;
             this.status = data.status;
+
+            this.instrumentDetails = new CommonTargetValue();
+            this.instrumentDetails.imgClass = 'payment-logo';
+            this.instrumentDetails.imgSource = `assets/svg-payment-systems/visa.svg`;
+            this.instrumentDetails.title = '6461 **** **** 1654';
         }
     }
 
