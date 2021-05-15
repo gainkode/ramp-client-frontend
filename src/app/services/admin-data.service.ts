@@ -470,8 +470,11 @@ export class AdminDataService {
     }
   }
 
-  getTransactions(pageIndex: number, takeItems: number): QueryRef<any, EmptyObject> | null {
+  getTransactions(pageIndex: number, takeItems: number, orderField: string, orderDesc: boolean): QueryRef<any, EmptyObject> | null {
     if (this.apollo.client !== undefined) {
+      const orderFields = [
+        { orderBy: orderField, desc: orderDesc }
+      ];
       return this.apollo.watchQuery<any>({
         query: GET_TRANSACTIONS_POST,
         variables: {
@@ -480,7 +483,7 @@ export class AdminDataService {
           filter: '',
           skip: pageIndex * takeItems,
           first: takeItems,
-          orderBy: []
+          orderBy: orderFields
         },
         pollInterval: 30000,
         fetchPolicy: 'network-only'

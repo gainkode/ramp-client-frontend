@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, EventEmitter, ViewChild, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { PageEvent } from '@angular/material/paginator';
 import { AuthService } from '../../services/auth.service';
@@ -7,13 +7,15 @@ import { ErrorService } from '../../services/error.service';
 import { TransactionItem } from '../../model/transaction.model';
 import { TransactionListResult } from '../../model/generated-models';
 import { Subscription } from 'rxjs';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   templateUrl: 'transactions.component.html',
   styleUrls: ['../admin.scss', 'transactions.component.scss']
 })
-export class TransactionsComponent implements OnInit, OnDestroy {
+export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
   @Output() changeEditMode = new EventEmitter<boolean>();
+  @ViewChild(MatSort) sort!: MatSort;
   private pShowDetails = false;
   private pTransactionsSubscription!: any;
   inProgress = false;
@@ -23,6 +25,9 @@ export class TransactionsComponent implements OnInit, OnDestroy {
   transactionCount = 0;
   pageSize = 10;
   pageIndex = 0;
+  sortedField = 'executed';
+  sortedDesc = true;
+
   displayedColumns: string[] = [
     'id', 'executed', 'email', 'type', 'instrument', 'paymentProvider', 'paymentProviderResponse',
     'source', 'walletSource', 'currencyToSpend', 'amountToSpend', 'currencyToReceive', 'amountToReceive',
@@ -48,9 +53,17 @@ export class TransactionsComponent implements OnInit, OnDestroy {
     }
   }
 
+  ngAfterViewInit(): void {
+    this.sort.sortChange.subscribe(() => {
+      this.sortedDesc = (this.sort.direction === 'desc');
+      this.sortedField = this.sort.active;
+      this.loadTransactions();
+    });
+  }
+
   private loadTransactions(): void {
     this.transactionCount = 0;
-    const transactionsData = this.adminService.getTransactions(this.pageIndex, this.pageSize);
+    const transactionsData = this.adminService.getTransactions(this.pageIndex, this.pageSize, this.sortedField, this.sortedDesc);
     if (transactionsData === null) {
       this.errorMessage = this.errorHandler.getRejectedCookieMessage();
     } else {

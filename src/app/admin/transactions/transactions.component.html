@@ -14,7 +14,8 @@
     </div>
 
     <div class="table-responsive">
-      <table mat-table *ngIf="errorMessage===''" class="data-table" [dataSource]="transactions">
+      <table mat-table matSort [matSortActive]="sortedField" matSortDirection="desc" matSortDisableClear
+        *ngIf="errorMessage===''" class="data-table" [dataSource]="transactions">
         <!-- Transaction ID Column -->
         <ng-container matColumnDef="id">
           <th mat-header-cell *matHeaderCellDef>Transaction ID</th>
@@ -23,7 +24,7 @@
 
         <!-- Executed Column -->
         <ng-container matColumnDef="executed">
-          <th mat-header-cell *matHeaderCellDef>Date</th>
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>Date</th>
           <td mat-cell *matCellDef="let element"> {{element.executed}} </td>
         </ng-container>
 
@@ -35,13 +36,13 @@
 
         <!-- Transaction Type Column -->
         <ng-container matColumnDef="type">
-          <th mat-header-cell *matHeaderCellDef>Type</th>
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>Type</th>
           <td mat-cell *matCellDef="let element"> {{element.transactionTypeName}} </td>
         </ng-container>
 
         <!-- Instrument Column -->
         <ng-container matColumnDef="instrument">
-          <th mat-header-cell *matHeaderCellDef>Instrument</th>
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>Instrument</th>
           <td mat-cell *matCellDef="let element"> {{element.instrumentName}} </td>
         </ng-container>
 
