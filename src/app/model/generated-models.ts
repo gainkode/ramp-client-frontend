@@ -514,8 +514,8 @@ export type User = {
   kycReviewRejectedLabels?: Maybe<Array<Scalars['String']>>;
   kycReviewResult?: Maybe<Scalars['String']>;
   kycStatusUpdateRequired?: Maybe<Scalars['Boolean']>;
-  walletIds?: Maybe<Array<Scalars['String']>>;
-  externalWalletIds?: Maybe<Array<Scalars['String']>>;
+  custodyProvider?: Maybe<Scalars['String']>;
+  vaultAccountId?: Maybe<Scalars['String']>;
   state?: Maybe<UserState>;
 };
 
@@ -561,13 +561,13 @@ export type UserNotificationSubscription = {
 export type UserState = {
   __typename?: 'UserState';
   date?: Maybe<Scalars['DateTime']>;
-  internalWallets?: Maybe<Array<InternalWallet>>;
+  assets?: Maybe<Array<VaultAccountAsset>>;
   externalWallets?: Maybe<Array<ExternalWallet>>;
   notifications?: Maybe<UserNotificationListResult>;
 };
 
 
-export type UserStateInternalWalletsArgs = {
+export type UserStateAssetsArgs = {
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
   orderBy?: Maybe<Array<OrderBy>>;
@@ -587,32 +587,20 @@ export type UserStateNotificationsArgs = {
   orderBy?: Maybe<Array<OrderBy>>;
 };
 
-export type InternalWallet = {
-  __typename?: 'InternalWallet';
-  id?: Maybe<Scalars['ID']>;
-  name?: Maybe<Scalars['String']>;
-  customerRefId?: Maybe<Scalars['String']>;
-  assets?: Maybe<Array<InternalWalletAsset>>;
-};
-
-export type InternalWalletAsset = {
-  __typename?: 'InternalWalletAsset';
+export type VaultAccountAsset = {
+  __typename?: 'VaultAccountAsset';
   id?: Maybe<Scalars['String']>;
-  status?: Maybe<WalletAssetStatus>;
-  balance?: Maybe<Scalars['String']>;
+  total?: Maybe<Scalars['Float']>;
+  available?: Maybe<Scalars['Float']>;
+  pending?: Maybe<Scalars['String']>;
   lockedAmount?: Maybe<Scalars['String']>;
-  activationTime?: Maybe<Scalars['String']>;
-  address?: Maybe<Scalars['String']>;
-  tag?: Maybe<Scalars['String']>;
+  totalStakedCPU?: Maybe<Scalars['String']>;
+  totalStakedNetwork?: Maybe<Scalars['String']>;
+  selfStakedCPU?: Maybe<Scalars['String']>;
+  selfStakedNetwork?: Maybe<Scalars['String']>;
+  pendingRefundCPU?: Maybe<Scalars['String']>;
+  pendingRefundNetwork?: Maybe<Scalars['String']>;
 };
-
-export enum WalletAssetStatus {
-  WaitingForApproval = 'WAITING_FOR_APPROVAL',
-  Approved = 'APPROVED',
-  Cancelled = 'CANCELLED',
-  Rejected = 'REJECTED',
-  Failed = 'FAILED'
-}
 
 export type ExternalWallet = {
   __typename?: 'ExternalWallet';
@@ -630,6 +618,14 @@ export type ExternalWalletAsset = {
   address?: Maybe<Scalars['String']>;
   tag?: Maybe<Scalars['String']>;
 };
+
+export enum WalletAssetStatus {
+  WaitingForApproval = 'WAITING_FOR_APPROVAL',
+  Approved = 'APPROVED',
+  Cancelled = 'CANCELLED',
+  Rejected = 'REJECTED',
+  Failed = 'FAILED'
+}
 
 export type UserNotificationListResult = {
   __typename?: 'UserNotificationListResult';
@@ -844,6 +840,8 @@ export type TransactionShort = {
   cryptoAddress?: Maybe<Scalars['String']>;
   source: TransactionSource;
   instrument: PaymentInstrument;
+  custodyProvider?: Maybe<CustodyProvider>;
+  custodyDetails?: Maybe<Scalars['String']>;
   paymentProvider?: Maybe<PaymentProvider>;
   liquidityProvider?: Maybe<LiquidityProvider>;
   data?: Maybe<Scalars['String']>;
@@ -851,6 +849,7 @@ export type TransactionShort = {
 
 export enum TransactionStatus {
   New = 'New',
+  Prepared = 'Prepared',
   Pending = 'Pending',
   Processing = 'Processing',
   Paid = 'Paid',
@@ -868,6 +867,11 @@ export enum TransactionSource {
   QuickCheckout = 'QuickCheckout',
   Widget = 'Widget',
   Wallet = 'Wallet'
+}
+
+export enum CustodyProvider {
+  Trustology = 'Trustology',
+  Fireblocks = 'Fireblocks'
 }
 
 export enum LiquidityProvider {
@@ -906,6 +910,8 @@ export type Transaction = {
   cryptoAddress?: Maybe<Scalars['String']>;
   source: TransactionSource;
   instrument: PaymentInstrument;
+  custodyProvider?: Maybe<CustodyProvider>;
+  custodyDetails?: Maybe<Scalars['String']>;
   paymentProvider?: Maybe<PaymentProvider>;
   paymentOrderId?: Maybe<Scalars['String']>;
   paymentOrder?: Maybe<PaymentOrder>;
@@ -1392,11 +1398,6 @@ export type Subscription = {
   newNotification?: Maybe<Scalars['Void']>;
 };
 
-export enum CustodyProvider {
-  Trustology = 'Trustology',
-  Fireblocks = 'Fireblocks'
-}
-
 export enum UserNotificationCodes {
   TestNotification = 'TEST_NOTIFICATION',
   TransactionConfirmation = 'TRANSACTION_CONFIRMATION',
@@ -1468,19 +1469,23 @@ export type VaultAccount = {
   assets?: Maybe<Array<VaultAccountAsset>>;
 };
 
-export type VaultAccountAsset = {
-  __typename?: 'VaultAccountAsset';
+export type InternalWallet = {
+  __typename?: 'InternalWallet';
+  id?: Maybe<Scalars['ID']>;
+  name?: Maybe<Scalars['String']>;
+  customerRefId?: Maybe<Scalars['String']>;
+  assets?: Maybe<Array<InternalWalletAsset>>;
+};
+
+export type InternalWalletAsset = {
+  __typename?: 'InternalWalletAsset';
   id?: Maybe<Scalars['String']>;
-  total?: Maybe<Scalars['Float']>;
-  available?: Maybe<Scalars['Float']>;
-  pending?: Maybe<Scalars['String']>;
+  status?: Maybe<WalletAssetStatus>;
+  balance?: Maybe<Scalars['String']>;
   lockedAmount?: Maybe<Scalars['String']>;
-  totalStakedCPU?: Maybe<Scalars['String']>;
-  totalStakedNetwork?: Maybe<Scalars['String']>;
-  selfStakedCPU?: Maybe<Scalars['String']>;
-  selfStakedNetwork?: Maybe<Scalars['String']>;
-  pendingRefundCPU?: Maybe<Scalars['String']>;
-  pendingRefundNetwork?: Maybe<Scalars['String']>;
+  activationTime?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  tag?: Maybe<Scalars['String']>;
 };
 
 export type InternalWalletAssetShort = {

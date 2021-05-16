@@ -379,8 +379,8 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
             const user = this.auth.user;
             if (user) {
                 this.detailsEmailControl?.setValue(user.email);
-                user.externalWalletIds?.forEach(x => this.userWallets.push(x));
-                this.userWallets.push('1KFzzGtDdnq5hrwxXGjwVnKzRbvf8WVxck');
+                user.state?.externalWallets?.forEach(x => this.userWallets.push(x.name as string));
+                //this.userWallets.push('1KFzzGtDdnq5hrwxXGjwVnKzRbvf8WVxck');
             }
         }
         const currencyData = this.dataService.getSettingsCurrency();

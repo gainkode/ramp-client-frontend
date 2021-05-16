@@ -66,12 +66,12 @@ export class AppModule {
   errorLink = onError(({ forward, graphQLErrors, networkError, operation }) => {
     if (graphQLErrors) {
       sessionStorage.setItem('currentError', '');
+      console.log(operation);
       for (const err of graphQLErrors) {
         if (err.extensions !== null) {
           const code = err.extensions?.code as string;
           if (code.toUpperCase() === 'UNAUTHENTICATED') {
             console.log('UNAUTHENTICATED');
-            console.log(operation);
             const refreshToken = this.authService.refreshToken().toPromise();
             return fromPromise(
               refreshToken.catch(error => {
