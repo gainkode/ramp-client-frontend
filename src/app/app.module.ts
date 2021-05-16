@@ -23,6 +23,7 @@ import { QuickCheckoutDataService } from './services/quick-checkout.service';
 import { NotificationService } from './services/notification.service';
 import { CommonDataService } from './services/common-data.service';
 import { getMainDefinition } from '@apollo/client/utilities';
+import { OperationDefinitionNode } from 'graphql';
 
 @NgModule({
   declarations: [
@@ -70,6 +71,7 @@ export class AppModule {
           const code = err.extensions?.code as string;
           if (code.toUpperCase() === 'UNAUTHENTICATED') {
             console.log('UNAUTHENTICATED');
+            console.log(operation);
             const refreshToken = this.authService.refreshToken().toPromise();
             return fromPromise(
               refreshToken.catch(error => {
@@ -108,10 +110,9 @@ export class AppModule {
     options: {
       reconnect: true,
       connectionParams: {
-        headers: { Authorization: `${sessionStorage.getItem('currentToken')}` }
-        //headers: { Authorization: `Bearer ${sessionStorage.getItem('currentToken')}` }
+        authToken: `Bearer ${sessionStorage.getItem('currentToken')}`
       }
-    },
+    }
   });
 
   constructor(private apollo: Apollo, private httpLink: HttpLink, private authService: AuthService) {
@@ -123,20 +124,19 @@ export class AppModule {
       uri: `${environment.api_server}/gql/api`,
       withCredentials: allowCookies
     });
-    const transaportLink: ApolloLink = split(
+    const transportLink: ApolloLink = split(
       // split based on operation type
-      ({ query }) => {
+      ({query}) => {
         let definition = getMainDefinition(query);
         return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
       },
       this.wsClient,
-      http
+      ApolloLink.from([ this.authLink, http ])
     );
     const apolloLink = ApolloLink.from([
       this.errorLink as any,
       this.headersLink,
-      this.authLink,
-      transaportLink
+      transportLink
     ]);
     if (allowCookies) {
       apollo.create({
