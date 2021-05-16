@@ -609,14 +609,20 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
         }
     }
 
+    /*
+    This method invokes when a user presses the NEXT button
+    */
     kycProcessCompleted(): void {
-        this.showKycSubmit = true;
         if (this.stepper) {
             this.stepper?.next();
         }
     }
 
+    /*
+    This method invokes by the KYC widget when a user finishes KYC process
+     */
     kycCompleted(): void {
+        this.showKycSubmit = true;
         this.showKycValidator = false;
     }
 
