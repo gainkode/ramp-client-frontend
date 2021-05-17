@@ -32,7 +32,6 @@ const LOGIN_POST = gql`
                   changePasswordRequired,
                   referralCode,
                   kycProvider,
-                  kycValidationTierId,
                   kycApplicantId,
                   kycValid,
                   kycStatus,
@@ -72,15 +71,13 @@ const SOCIAL_LOGIN_POST = gql`
                 changePasswordRequired,
                 referralCode,
                 kycProvider,
-                kycValidationTierId,
                 kycApplicantId,
                 kycValid,
                 kycStatus,
                 kycStatusUpdateRequired,
                 notificationSubscriptions {
                     name, description
-                },
-                state { assets {id, total} }
+                }
             }
             authTokenAction
         }

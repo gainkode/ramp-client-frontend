@@ -7,7 +7,7 @@ import { Apollo } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { onError } from 'apollo-link-error';
-import { ApolloLink, InMemoryCache, split } from '@apollo/client/core';
+import { ApolloLink, InMemoryCache, Operation, split } from '@apollo/client/core';
 import { fromPromise } from 'apollo-link';
 import { setContext } from '@apollo/client/link/context';
 import {
@@ -24,6 +24,8 @@ import { NotificationService } from './services/notification.service';
 import { CommonDataService } from './services/common-data.service';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { OperationDefinitionNode } from 'graphql';
+import { concat } from 'rxjs';
+import { SubscriptionClient } from 'subscriptions-transport-ws';
 
 @NgModule({
   declarations: [
@@ -66,7 +68,6 @@ export class AppModule {
   errorLink = onError(({ forward, graphQLErrors, networkError, operation }) => {
     if (graphQLErrors) {
       sessionStorage.setItem('currentError', '');
-      console.log(operation);
       for (const err of graphQLErrors) {
         if (err.extensions !== null) {
           const code = err.extensions?.code as string;
@@ -79,6 +80,7 @@ export class AppModule {
                 return forward(operation);
               })
             ).filter(value => Boolean(value)).flatMap(accessToken => {
+              console.log('access', accessToken.refreshToken);
               return forward(operation);
             });
           }
@@ -105,16 +107,6 @@ export class AppModule {
     headers: { Accept: 'charset=utf-8' }
   }));
 
-  wsClient = new WebSocketLink({
-    uri: `${environment.ws_server}/subscriptions`,
-    options: {
-      reconnect: true,
-      connectionParams: {
-        authToken: `Bearer ${sessionStorage.getItem('currentToken')}`
-      }
-    }
-  });
-
   constructor(private apollo: Apollo, private httpLink: HttpLink, private authService: AuthService) {
     const cookieName = 'cookieconsent_status';
     const w = window as any;
@@ -124,14 +116,27 @@ export class AppModule {
       uri: `${environment.api_server}/gql/api`,
       withCredentials: allowCookies
     });
+
+    const webSocketClient: SubscriptionClient = new SubscriptionClient(`${environment.ws_server}/subscriptions`, {
+			lazy: true,
+			reconnect: true,
+			connectionParams: () => {
+        console.log('ws', sessionStorage.getItem('currentToken'));
+        return {
+          authToken: `Bearer ${sessionStorage.getItem('currentToken')}`
+        };
+      }
+		});
+    const webSocketLink = new WebSocketLink(webSocketClient);
+
     const transportLink: ApolloLink = split(
       // split based on operation type
-      ({query}) => {
+      ({ query }) => {
         let definition = getMainDefinition(query);
         return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
       },
-      this.wsClient,
-      ApolloLink.from([ this.authLink, http ])
+      webSocketLink,
+      ApolloLink.from([this.authLink, http])
     );
     const apolloLink = ApolloLink.from([
       this.errorLink as any,

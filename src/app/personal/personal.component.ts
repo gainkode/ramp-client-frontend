@@ -14,7 +14,6 @@ export class PersonalComponent implements OnInit {
         this.notification.subscribeToNotifications().subscribe(({ data }) => {
             console.log('got data', data);
         }, (error) => {
-            //console.log('there was an error subscribing to notifications', error);
             console.log('there was an error subscribing to notifications');
         });
     }
