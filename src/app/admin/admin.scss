@@ -3,19 +3,28 @@
 }
 
 .data-table {
-    width: 100%;
+    width           : 100%;
     background-color: #DDDFE6;
 }
 
 .panel-dim-table {
     background-color: #00000060;
     position        : fixed;
-    z-index: 100;
+    z-index         : 100;
     left            : 0;
     top             : 0;
     height          : 100%;
     width           : 66%;
-    overflow-x        : hidden;
+    overflow-x      : hidden;
+}
+
+.mat-list-option[aria-selected="true"] {
+    background: #1E2025;
+    color: #B2C2CF !important;
+}
+
+.panel-menu {
+    color: #CEDBE4;
 }
 
 th.mat-header-cell {
@@ -94,7 +103,7 @@ th.mat-header-cell {
 }
 
 .details-editor {
-    margin    : 2em;
-    margin-top: 6em;
+    margin        : 2em;
+    margin-top    : 6em;
     padding-bottom: 2em;
 }

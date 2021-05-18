@@ -7,7 +7,8 @@
         </div>
 
         <mat-selection-list [multiple]="false" (selectionChange)="menuChanged($event)">
-            <mat-list-option *ngFor="let item of menuItems" [value]="item" [selected]="selectedMenu===item.id">
+            <mat-list-option *ngFor="let item of menuItems" [value]="item" [selected]="selectedMenu===item.id"
+            class="panel-menu">
                 <div class="panel-menu-item">
                     <mat-icon class="panel-menu-item-icon">{{item.icon}}</mat-icon>
                     <div class="panel-menu-item-text">{{item.name}}</div>

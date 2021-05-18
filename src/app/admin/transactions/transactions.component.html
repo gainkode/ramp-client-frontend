@@ -135,8 +135,8 @@
       </table>
     </div>
 
-    <mat-paginator class="data-table" [length]="transactionCount" [pageSize]="pageSize"
-      [pageSizeOptions]="[10, 50, 100]" showFirstLastButtons (page)="handlePage($event)">
+    <mat-paginator *ngIf="errorMessage===''" class="data-table" [length]="transactionCount" [pageSize]="pageSize"
+      [pageSizeOptions]="[25, 50, 100]" showFirstLastButtons (page)="handlePage($event)">
     </mat-paginator>
   </div>
 

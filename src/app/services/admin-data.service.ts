@@ -164,6 +164,38 @@ const GET_TRANSACTIONS_POST = gql`
   }
 `;
 
+const GET_CUSTOMERS_POST = gql`
+  query GetUsers(
+    $filter: String,
+    $skip: Int,
+    $first: Int
+    $orderBy: [OrderBy!]
+  ) {
+    getUsers(
+      filter: $filter,
+      skip: $skip,
+      first: $first,
+      orderBy: $orderBy) {
+      count,
+      list {
+        userId,
+        email,
+        name,
+        firstName,
+        lastName,
+        type,
+        mode,
+        countryCode2,
+        countryCode3,
+        created,
+        defaultCurrency,
+        kycStatus,
+        phone
+      }
+    }
+  }
+`;
+
 const ADD_SETTINGS_FEE_POST = gql`
 mutation AddSettingsFee(
   $name: String!,
@@ -480,6 +512,27 @@ export class AdminDataService {
         variables: {
           userId: '',
           quickCheckoutOnly: false,
+          filter: '',
+          skip: pageIndex * takeItems,
+          first: takeItems,
+          orderBy: orderFields
+        },
+        pollInterval: 30000,
+        fetchPolicy: 'network-only'
+      });
+    } else {
+      return null;
+    }
+  }
+
+  getCustomers(pageIndex: number, takeItems: number, orderField: string, orderDesc: boolean): QueryRef<any, EmptyObject> | null {
+    if (this.apollo.client !== undefined) {
+      const orderFields = [
+        { orderBy: orderField, desc: orderDesc }
+      ];
+      return this.apollo.watchQuery<any>({
+        query: GET_CUSTOMERS_POST,
+        variables: {
           filter: '',
           skip: pageIndex * takeItems,
           first: takeItems,

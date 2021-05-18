@@ -31,6 +31,7 @@ import { LevelEditorComponent } from './identification/level-editor.component';
 import { KycEditorComponent } from './identification/kyc-editor.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { TransactionsComponent } from './transactions/transactions.component';
+import { CustomersComponent } from './customers/customers.component';
 
 const routing = RouterModule.forChild([
     {
@@ -39,6 +40,7 @@ const routing = RouterModule.forChild([
         children: [
             { path: 'dashboard', component: DashboardComponent, canActivate: [AdminGuard] },
             { path: 'transactions', component: TransactionsComponent, canActivate: [AdminGuard] },
+            { path: 'customers', component: CustomersComponent, canActivate: [AdminGuard] },
             { path: 'fees', component: FeesComponent, canActivate: [AdminGuard] },
             { path: 'costs', component: CostsComponent, canActivate: [AdminGuard] },
             { path: 'identification', component: IdentificationComponent, canActivate: [AdminGuard] }
@@ -81,6 +83,7 @@ export class MaterialModule { }
         AdminComponent,
         DashboardComponent,
         TransactionsComponent,
+        CustomersComponent,
         FeesComponent, FeeEditorComponent,
         CostsComponent, CostEditorComponent,
         IdentificationComponent, IdTableComponent, LevelTableComponent, KycEditorComponent, LevelEditorComponent],

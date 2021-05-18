@@ -174,6 +174,11 @@ export const UserModeList: Array<UserModeView> = [
     { id: UserMode.ExternalWallet, name: 'External wallet' }
 ];
 
+export const UserModeShortList: Array<UserModeView> = [
+    { id: UserMode.InternalWallet, name: 'Internal' },
+    { id: UserMode.ExternalWallet, name: 'External' }
+];
+
 export const KycProviderList: Array<KycProviderView> = [
     { id: KycProvider.Local, name: 'Local' },
     { id: KycProvider.SumSub, name: 'SumSub' }
