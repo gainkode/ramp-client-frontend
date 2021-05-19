@@ -513,11 +513,14 @@ img.payment-logo {
 
 .panel-menu-item {
     display: flex;
+    justify-content:baseline;
+    align-items:center;
 }
 
 .panel-menu-item-icon {
     font-size: 18px;
     padding  : 0px;
+    padding-top: 5px;
 }
 
 .panel-menu-item-text {

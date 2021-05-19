@@ -7,7 +7,7 @@ import { Apollo } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { onError } from 'apollo-link-error';
-import { ApolloLink, InMemoryCache, Operation, split } from '@apollo/client/core';
+import { ApolloLink, InMemoryCache, split } from '@apollo/client/core';
 import { fromPromise } from 'apollo-link';
 import { setContext } from '@apollo/client/link/context';
 import {
@@ -23,8 +23,6 @@ import { QuickCheckoutDataService } from './services/quick-checkout.service';
 import { NotificationService } from './services/notification.service';
 import { CommonDataService } from './services/common-data.service';
 import { getMainDefinition } from '@apollo/client/utilities';
-import { OperationDefinitionNode } from 'graphql';
-import { concat } from 'rxjs';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
 
 @NgModule({
@@ -151,13 +149,3 @@ export class AppModule {
     }
   }
 }
-
-
-// 1. У меня контракт. Могу ли я претендовать на ВНЖ и какой минимальный срок контракта нужен для этого? Какие еще требования к контракту для ВНЖ
-// 2. Моей семье в первое время не полагается мед.страховка. Сколько примерно стоит страховка? (4, 8, 17 лет и жена 46 лет без работы)
-// 3. Есть ли в андорре какие-то социальные выплаты на детей?
-// 4. Можем ли мы отдать детей в школу? Указать школу
-// 5. Есть какие-то языковые курсы для мигрантов?
-// 6. На будущее, сколько будет стоить оформление документов для переезда?
-// 7. Обязаны ли мы, имея контракт и ВНЖ в андорре, платить налоги в россии с дохода, полученного в андорре?
-// Х. Сколько мы должны вам за данную консультацию?

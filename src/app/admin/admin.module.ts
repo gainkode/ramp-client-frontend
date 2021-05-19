@@ -32,6 +32,7 @@ import { KycEditorComponent } from './identification/kyc-editor.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { TransactionsComponent } from './transactions/transactions.component';
 import { CustomersComponent } from './customers/customers.component';
+import { CustomerDetailsComponent } from './customers/customer-details.component';
 
 const routing = RouterModule.forChild([
     {
@@ -83,7 +84,7 @@ export class MaterialModule { }
         AdminComponent,
         DashboardComponent,
         TransactionsComponent,
-        CustomersComponent,
+        CustomersComponent, CustomerDetailsComponent,
         FeesComponent, FeeEditorComponent,
         CostsComponent, CostEditorComponent,
         IdentificationComponent, IdTableComponent, LevelTableComponent, KycEditorComponent, LevelEditorComponent],
