@@ -50,6 +50,7 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
     showCodeConfirm = false;
     processDone = false;
     paymentTitle = '';
+    paymentCreditCard = false;
     settingsCommon: SettingsCommon | null = null;
     sourceCurrencies: CurrencyView[] = [];
     destinationCurrencies: CurrencyView[] = [];
@@ -534,6 +535,7 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
                 const instrument = this.paymentInfoInstrumentControl?.value;
                 if (instrument === PaymentInstrument.CreditCard) {
                     this.paymentTitle = 'Payment by credit card';
+                    this.paymentCreditCard = true;
                     this.paymentCompleteControl?.setValue('creditcard');
                 } else {
                     this.paymentTitle = 'Payment is not implemented';
@@ -567,6 +569,7 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
         this.showKycSubmit = false;
         this.showCodeConfirm = this.showCodeConfirm = this.needToShowCodeConfirmation();
         this.processDone = false;
+        this.paymentCreditCard = false;
         this.summary.reset();
         if (this.stepper) {
             this.stepper.reset();

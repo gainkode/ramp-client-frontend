@@ -8,6 +8,7 @@
         <span style="color:darkblue;">1KFzzGtDdnq5hrwxXGjwVnKzRbvf8WVxck</span>
     </div>
 </div>
+
 <div class="checkout-page">
     <div class="wizard-panel-split">
         <div class="wizard-panel-stepper">
@@ -16,6 +17,16 @@
                 <!-- Order details -->
                 <mat-step [stepControl]="detailsForm" label="details" editable="false" [completed]="false">
                     <ng-template matStepLabel>Order details</ng-template>
+                    
+                    
+                    
+                    
+                    <app-credit-card class="form-element" style="width: 50%;">
+                    </app-credit-card>
+
+
+
+
                     <form [formGroup]="detailsForm" #details="ngForm" *ngIf="!needToLogin">
                         <div>
                             <div *ngIf="inProgress" class="form-element">
@@ -286,6 +297,9 @@
                         <div *ngIf="errorMessage!==''" class="form-error-box">
                             {{errorMessage}}
                         </div>
+                        <app-credit-card *ngIf="paymentCreditCard" class="form-element">
+                        </app-credit-card>
+                        <br>
                         <div class="form-element">
                             <button type="submit" #paymentnext class="main-button main-button-accent inline-button"
                                 [disabled]="errorMessage!==''" (click)="paymentCompleted()">

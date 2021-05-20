@@ -20,12 +20,16 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { CheckoutDoneComponent } from './checkout-done.component';
 import { TransactionDetailsComponent } from './transaction-details.component';
+import { CreditCardComponent } from './credit-card.component';
+import { MatSelectModule } from '@angular/material/select';
+import { NumberFillPipe } from '../utils/number-fill.pipe';
 
 
 const materialModules = [
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
+    MatSelectModule,
     MatTooltipModule,
     MatDialogModule,
     MatIconModule,
@@ -43,10 +47,12 @@ export class MaterialModule { }
     imports: [CommonModule, FormsModule, ReactiveFormsModule, MaterialModule],
     declarations: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
         CheckoutSummaryComponent, TransactionDetailsComponent, CheckoutDoneComponent, ExchangeRateComponent,
-        LoginPanelComponent, LineBreakPipe, CommonDialogBox],
+        LoginPanelComponent, CommonDialogBox, CreditCardComponent,
+        LineBreakPipe, NumberFillPipe],
     exports: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
         CheckoutSummaryComponent, TransactionDetailsComponent, CheckoutDoneComponent, ExchangeRateComponent,
-        LoginPanelComponent, MatProgressBarModule, LineBreakPipe, CommonDialogBox],
+        LoginPanelComponent, MatProgressBarModule, CommonDialogBox, CreditCardComponent,
+        LineBreakPipe, NumberFillPipe],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 
