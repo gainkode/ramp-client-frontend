@@ -188,7 +188,7 @@ export class QuickCheckoutDataService {
     });
   }
 
-  executeQuickCheckout(id: string, code: string): Observable<any> {
+  confirmQuickCheckout(id: string, code: string): Observable<any> {
     return this.apollo.mutate({
       mutation: EXECUTE_QUICK_CHECKOUT_POST,
       variables: {

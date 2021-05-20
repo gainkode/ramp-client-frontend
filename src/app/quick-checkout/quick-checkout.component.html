@@ -155,9 +155,9 @@
                     </div>
                 </mat-step>
                 <!-- Payment info -->
-                <mat-step [stepControl]="paymentForm" label="payment" editable="false" completed="false">
+                <mat-step [stepControl]="paymentInfoForm" label="paymentInfo" editable="false" completed="false">
                     <ng-template matStepLabel>Payment info</ng-template>
-                    <form [formGroup]="paymentForm" #payment="ngForm">
+                    <form [formGroup]="paymentInfoForm" #paymentinfo="ngForm">
                         <div *ngIf="inProgress" class="form-element">
                             <mat-progress-bar mode="indeterminate"></mat-progress-bar>
                         </div>
@@ -175,7 +175,7 @@
                                     {{item.name}}
                                 </mat-option>
                             </mat-select>
-                            <mat-error *ngIf="this.paymentForm.get('instrument')?.hasError('required')">
+                            <mat-error *ngIf="this.paymentInfoForm.get('instrument')?.hasError('required')">
                                 Please specify payment method
                             </mat-error>
                         </mat-form-field>
@@ -187,13 +187,13 @@
                                     {{item.name}}
                                 </mat-option>
                             </mat-select>
-                            <mat-error *ngIf="this.paymentForm.get('provider')?.hasError('required')">
+                            <mat-error *ngIf="this.paymentInfoForm.get('provider')?.hasError('required')">
                                 Please specify payment provider
                             </mat-error>
                         </mat-form-field>
                         <div class="form-element">
-                            <button type="submit" #paymentnext class="main-button main-button-accent inline-button"
-                                [disabled]="errorMessage!==''" (click)="paymentCompleted()">
+                            <button type="submit" #paymentinfonext class="main-button main-button-accent inline-button"
+                                [disabled]="errorMessage!==''" (click)="paymentInfoCompleted()">
                                 NEXT
                             </button>
                             <button type="submit" class="main-button main-button-primary inline-button"
@@ -234,7 +234,7 @@
                     </div>
                 </mat-step>
                 <!-- Code Confirmation -->
-                <mat-step [stepControl]="confirmationForm" label="confirmation" editable="false" completed="false">
+                <mat-step [stepControl]="confirmationForm" *ngIf="showCodeConfirm" label="confirmation" editable="false" completed="false">
                     <ng-template matStepLabel>Confirmation</ng-template>
                     <form [formGroup]="confirmationForm" #confirmation="ngForm">
                         <div *ngIf="inProgress" class="form-element">
@@ -263,8 +263,33 @@
                         </mat-form-field>
                         <div class="form-element">
                             <button type="submit" class="main-button main-button-accent inline-button"
-                                [disabled]="errorMessage!==''" (click)="executePayment()">
+                                [disabled]="errorMessage!==''" (click)="confirmPayment()">
                                 CONFIRM
+                            </button>
+                            <button type="submit" class="main-button main-button-primary inline-button"
+                                (click)="resetStepper()">
+                                RESET
+                            </button>
+                        </div>
+                    </form>
+                </mat-step>
+                <!-- Payment -->
+                <mat-step [stepControl]="paymentForm" label="payment" editable="false" completed="false">
+                    <ng-template matStepLabel>Payment</ng-template>
+                    <form [formGroup]="paymentForm" #payment="ngForm">
+                        <div *ngIf="inProgress" class="form-element">
+                            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                        </div>
+                        <div>
+                            <h2>{{paymentTitle}}</h2>
+                        </div>
+                        <div *ngIf="errorMessage!==''" class="form-error-box">
+                            {{errorMessage}}
+                        </div>
+                        <div class="form-element">
+                            <button type="submit" #paymentnext class="main-button main-button-accent inline-button"
+                                [disabled]="errorMessage!==''" (click)="paymentCompleted()">
+                                NEXT
                             </button>
                             <button type="submit" class="main-button main-button-primary inline-button"
                                 (click)="resetStepper()">
