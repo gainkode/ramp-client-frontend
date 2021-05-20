@@ -4,6 +4,7 @@ import { EmptyObject } from 'apollo-angular/types';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { PaymentInstrument, PaymentProvider, TransactionType } from '../model/generated-models';
+import { CardView } from '../model/payment.model';
 
 const GET_SETTINGS_CURRENCY_POST = gql`
   query GetSettingsCurrency($recaptcha: String!) {
@@ -86,6 +87,51 @@ mutation CreateQuickCheckout(
 }
 `;
 
+const PRE_AUTH_POST = gql`
+mutation PreAuth(
+  $transactionId: String!,
+  $instrument: PaymentInstrument!,
+  $paymentProvider: PaymentProvider!,
+  $cardNumber: String!,
+  $expiredMonth: Int!,
+  $expiredYear: Int!,
+  $cvv: Int!,
+  $holder: String!
+) {
+  preauth(
+    orderParams: {
+      transactionId: $transactionId
+      instrument: $instrument
+      provider: $paymentProvider
+      amount: 5
+      currency: "EUR"
+      card: {
+        number: $cardNumber
+        expireMonth: $expiredMonth
+        expireYear: $expiredYear
+        cvv2: $cvv
+        holder: $holder
+      }
+    }
+  ) {
+    order {
+      transactionId
+      orderId
+      userId
+      code
+      provider
+      created
+      amount
+      currency
+      preauth
+      capture
+      status
+    }
+    html
+  }
+}
+`;
+
 @Injectable()
 export class QuickCheckoutDataService {
   constructor(private apollo: Apollo) { }
@@ -149,6 +195,22 @@ export class QuickCheckoutDataService {
         recaptcha: environment.recaptchaId,
         transactionId: id,
         code
+      }
+    });
+  }
+
+  preAuth(id: string, paymentInstrument: PaymentInstrument, paymentProvider: PaymentProvider, card: CardView): Observable<any> {
+    return this.apollo.mutate({
+      mutation: PRE_AUTH_POST,
+      variables: {
+        transactionId: id,
+        instrument: paymentInstrument,
+        paymentProvider,
+        cardNumber: card.cardNumber,
+        expiredMonth: card.monthExpired,
+        expiredYear: card.yearExpired,
+        cvv: card.cvv,
+        holder: card.holderName
       }
     });
   }

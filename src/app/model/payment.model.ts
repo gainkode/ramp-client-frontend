@@ -85,6 +85,14 @@ export class CurrencyView {
     }
 }
 
+export class CardView {
+    cardNumber = '';
+    monthExpired = 0;
+    yearExpired = 0;
+    cvv = 0;
+    holderName = '';
+}
+
 export const PaymentInstrumentList: Array<PaymentInstrumentView> = [
     { id: PaymentInstrument.Apm, name: 'APM' },
     { id: PaymentInstrument.Bitstamp, name: 'Bitstamp' },
