@@ -17,16 +17,6 @@
                 <!-- Order details -->
                 <mat-step [stepControl]="detailsForm" label="details" editable="false" [completed]="false">
                     <ng-template matStepLabel>Order details</ng-template>
-                    
-                    
-                    
-                    
-                    <app-credit-card class="form-element" style="width: 50%;">
-                    </app-credit-card>
-
-
-
-
                     <form [formGroup]="detailsForm" #details="ngForm" *ngIf="!needToLogin">
                         <div>
                             <div *ngIf="inProgress" class="form-element">
