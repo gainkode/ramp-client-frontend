@@ -24,6 +24,7 @@ import { NotificationService } from './services/notification.service';
 import { CommonDataService } from './services/common-data.service';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
+import { DirectiveModule } from './directives/directives.module';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { SubscriptionClient } from 'subscriptions-transport-ws';
     AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    SocialLoginModule
+    SocialLoginModule,
+    DirectiveModule
   ],
   providers: [
     {

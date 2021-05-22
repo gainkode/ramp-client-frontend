@@ -23,6 +23,7 @@ import { TransactionDetailsComponent } from './transaction-details.component';
 import { CreditCardComponent } from './credit-card.component';
 import { MatSelectModule } from '@angular/material/select';
 import { NumberFillPipe } from '../utils/number-fill.pipe';
+import { DirectiveModule } from '../directives/directives.module';
 
 
 const materialModules = [
@@ -44,7 +45,7 @@ const materialModules = [
 export class MaterialModule { }
 
 @NgModule({
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, MaterialModule],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, MaterialModule, DirectiveModule],
     declarations: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
         CheckoutSummaryComponent, TransactionDetailsComponent, CheckoutDoneComponent, ExchangeRateComponent,
         LoginPanelComponent, CommonDialogBox, CreditCardComponent,

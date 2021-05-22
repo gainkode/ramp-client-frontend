@@ -18,7 +18,7 @@ import { PersonalComponent } from './personal.component';
 import { ProfileMainPersonalComponent } from './profile/main.component';
 import { KycPersonalComponent } from './profile/kyc.component';
 import { ComponentsModule } from '../components/components.module';
-import { KycPanelComponent } from '../components/kyc-panel.component';
+import { DirectiveModule } from '../directives/directives.module';
 
 const routing = RouterModule.forChild([
     { path: 'intro', component: IntroPersonalComponent },
@@ -49,7 +49,7 @@ const modules = [
 export class MaterialModule { }
 
 @NgModule({
-    imports: [ CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule ],
+    imports: [ CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule, DirectiveModule ],
     declarations: [IntroPersonalComponent, PersonalComponent,
         ProfileMainPersonalComponent, KycPersonalComponent],
     providers: [PersonalGuard],

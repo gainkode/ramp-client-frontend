@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, HostListener } from "@angular/core";
 import { AbstractControl, FormBuilder, Validators } from "@angular/forms";
 
 @Component({
@@ -21,6 +21,73 @@ export class CreditCardComponent {
     cardValidMonthControl: AbstractControl | null = null;
     cardValidYearControl: AbstractControl | null = null;
     cardCvvControl: AbstractControl | null = null;
+
+    get cardNumberValue(): string {
+        const val = this.cardNumberControl?.value;
+        let result = '1111 2222 3333 4444';
+        if (val) {
+            if (val !== '') {
+                let s = '';
+                const cardNum = val as string;
+                const len = cardNum.length;
+                for (let i = 0; i < len; i++) {
+                    s += cardNum[i];
+                    if (i === 3 || i === 7 || i === 11) {
+                        s += ' ';
+                    }
+                }
+                result = s;
+            }
+        }
+        return result;
+    }
+
+    get cardHolderValue(): string {
+        const val = this.cardHolderControl?.value;
+        let result = 'Mr. Cardholder';
+        if (val) {
+            if (val !== '') {
+                result = val;
+            }
+        }
+        return result.toUpperCase().slice(0, 20);
+    }
+
+    get cardValidMonthValue(): string {
+        const val = this.cardValidMonthControl?.value;
+        let result: string = '01';
+        if (val) {
+            if (val !== '') {
+                result = val.toString();
+                if (result.length < 2) {
+                    result = '0' + result;
+                }
+            }
+        }
+        return result;
+    }
+
+    get cardValidYearValue(): string {
+        const val = this.cardValidYearControl?.value;
+        let year = new Date().getFullYear();
+        if (val) {
+            if (val !== '') {
+                year = val;
+            }
+        }
+        return year.toString().slice(2, 4);
+    }
+
+    get cardCvvValue(): string {
+        const val = this.cardCvvControl?.value;
+        let result = '985';
+        if (val) {
+            if (val !== '') {
+                result = val.toString();
+            }
+        }
+        return result;
+    }
 
     constructor(private formBuilder: FormBuilder) {
         this.cardNumberControl = this.cardForm.get('card');
