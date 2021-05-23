@@ -1,20 +1,28 @@
-import { Component, HostListener } from "@angular/core";
+import { Component, EventEmitter, OnInit, Output } from "@angular/core";
 import { AbstractControl, FormBuilder, Validators } from "@angular/forms";
+import { CardView } from "../model/payment.model";
+
+var cardValid = require("card-validator");
+var creditCardType = require("credit-card-type");
 
 @Component({
     selector: 'app-credit-card',
     templateUrl: 'credit-card.component.html',
     styleUrls: ['credit-card.component.scss']
 })
-export class CreditCardComponent {
+export class CreditCardComponent implements OnInit {
+    @Output() cardDetails = new EventEmitter<CardView>();
+    codeName = 'CVV';
+    cvvLength = 3;
+    cardNumberGaps: number[] = [];
     monthList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
     yearList: number[] = [];
     cardForm = this.formBuilder.group({
-        card: ['', { validators: [Validators.required], updateOn: 'change' }],
+        card: ['', { validators: [Validators.required, Validators.minLength(16)], updateOn: 'change' }],
         holder: ['', { validators: [Validators.required], updateOn: 'change' }],
         validMonth: [0, { validators: [Validators.required], updateOn: 'change' }],
         validYear: [0, { validators: [Validators.required], updateOn: 'change' }],
-        cvv: ['', { validators: [Validators.required], updateOn: 'change' }]
+        cvv: ['', { validators: [Validators.required, Validators.minLength(3)], updateOn: 'change' }]
     });
     cardNumberControl: AbstractControl | null = null;
     cardHolderControl: AbstractControl | null = null;
@@ -30,10 +38,14 @@ export class CreditCardComponent {
                 let s = '';
                 const cardNum = val as string;
                 const len = cardNum.length;
-                for (let i = 0; i < len; i++) {
-                    s += cardNum[i];
-                    if (i === 3 || i === 7 || i === 11) {
-                        s += ' ';
+                for (let v = 0; v < len; v++) {
+                    s += cardNum[v];
+                    const len = this.cardNumberGaps.length;
+                    for (var i = 0; i < len; i++) {
+                        const g = this.cardNumberGaps[i];
+                        if (v === g - 1) {
+                            s += ' ';
+                        }
                     }
                 }
                 result = s;
@@ -99,5 +111,32 @@ export class CreditCardComponent {
         for (let i = 0; i < 6; i++) {
             this.yearList.push(currentYear + i);
         }
+    }
+
+    ngOnInit(): void {
+        this.cardForm.valueChanges.subscribe({
+            next: (result: any) => {
+                const card = new CardView();
+                if (this.cardForm.valid) {
+                    card.cardNumber = this.cardNumberControl?.value;
+                    card.holderName = this.cardHolderControl?.value;
+                    card.monthExpired = this.cardValidMonthControl?.value;
+                    card.yearExpired = this.cardValidYearControl?.value;
+                    card.cvv = this.cardCvvControl?.value;
+                }
+                this.cardDetails.emit(card);
+            }
+        });
+        this.cardNumberControl?.valueChanges.subscribe((val) => {
+            var cardInfo = creditCardType(val);
+            if (cardInfo.length === 1) {
+                this.codeName = cardInfo[0].code.name;
+                this.cvvLength = cardInfo[0].code.size;
+                this.cardNumberGaps = cardInfo[0].gaps;
+            } else {
+                this.cardNumberGaps = [];
+            }
+            console.log(cardInfo);
+        });
     }
 }

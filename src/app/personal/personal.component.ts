@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { CardView } from '../model/payment.model';
 import { AuthService } from '../services/auth.service';
 import { NotificationService } from '../services/notification.service';
 
@@ -28,5 +29,13 @@ export class PersonalComponent implements OnInit {
         }, (error) => {
             console.log(error);
         });
+    }
+
+
+
+
+
+    cardDetails(card: CardView) {
+        //console.log(card.cardNumber);
     }
 }

@@ -28,6 +28,7 @@
     "apollo-link-error": "^1.1.13",
     "apollo-link-ws": "^1.0.20",
     "buffer": "^6.0.3",
+    "card-validator": "^8.1.1",
     "cookieconsent": "^3.1.1",
     "graphql": "^15.5.0",
     "multicoin-address-validator": "^0.4.16",

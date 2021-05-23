@@ -15,7 +15,7 @@
             <mat-icon>logout</mat-icon>
         </a>
 
-        <app-credit-card class="form-element">
+        <app-credit-card class="form-element" (cardDetails)="cardDetails($event)">
         </app-credit-card>
     </div>
 </div>

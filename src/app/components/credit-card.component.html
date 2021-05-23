@@ -9,6 +9,9 @@
                 <mat-error *ngIf="cardNumberControl?.hasError('required')">
                     Please specify your card number
                 </mat-error>
+                <mat-error *ngIf="cardNumberControl?.hasError('minlength')">
+                    Card number length must be 16 symbols
+                </mat-error>
             </mat-form-field>
             <!-- Card holder -->
             <mat-form-field class="form-element">
@@ -48,11 +51,14 @@
             </div>
             <!-- CVC -->
             <mat-form-field class="form-element">
-                <mat-label>CVC</mat-label>
-                <input type="text" #cvv matInput onlyNumber formControlName="cvv" maxlength="4" placeholder="CVV"
+                <mat-label>{{codeName}}</mat-label>
+                <input type="text" #cvv matInput onlyNumber formControlName="cvv" [maxlength]="cvvLength" placeholder="CVV"
                     required />
                 <mat-error *ngIf="cardCvvControl?.hasError('required')">
-                    Please specify CVC/CVV code
+                    Please specify {{codeName}} code
+                </mat-error>
+                <mat-error *ngIf="cardCvvControl?.hasError('minlength')">
+                    Minimal code length is 3 symbols
                 </mat-error>
             </mat-form-field>
         </form>

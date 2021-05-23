@@ -16,9 +16,7 @@ export class OnlyNumberDirective implements ControlValueAccessor {
     private onTouched!: () => void;
     private value: string = '';
 
-    constructor(private elementRef: ElementRef, private renderer: Renderer2) {
-        console.log('Yes!');
-    }
+    constructor(private elementRef: ElementRef, private renderer: Renderer2) {}
 
     @HostListener('input', ['$event.target.value'])
     onInputChange(value: string): void {
