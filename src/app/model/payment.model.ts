@@ -86,6 +86,7 @@ export class CurrencyView {
 }
 
 export class CardView {
+    valid = false;
     cardNumber = '';
     monthExpired = 0;
     yearExpired = 0;

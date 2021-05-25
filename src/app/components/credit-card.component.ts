@@ -81,7 +81,7 @@ export class CreditCardComponent implements OnInit {
 
     get cardValidYearValue(): string {
         const val = this.cardValidYearControl?.value;
-        let year = new Date().getFullYear();
+        let year = new Date().getFullYear() + 1;
         if (val) {
             if (val !== '') {
                 year = val;
@@ -117,12 +117,14 @@ export class CreditCardComponent implements OnInit {
         this.cardForm.valueChanges.subscribe({
             next: (result: any) => {
                 const card = new CardView();
+                card.valid = this.cardForm.valid;
                 if (this.cardForm.valid) {
                     card.cardNumber = this.cardNumberControl?.value;
                     card.holderName = this.cardHolderControl?.value;
                     card.monthExpired = this.cardValidMonthControl?.value;
                     card.yearExpired = this.cardValidYearControl?.value;
-                    card.cvv = this.cardCvvControl?.value;
+                    card.cvv = parseInt(this.cardCvvControl?.value);
+                    console.log(card);
                 }
                 this.cardDetails.emit(card);
             }
@@ -136,7 +138,6 @@ export class CreditCardComponent implements OnInit {
             } else {
                 this.cardNumberGaps = [];
             }
-            console.log(cardInfo);
         });
     }
 }

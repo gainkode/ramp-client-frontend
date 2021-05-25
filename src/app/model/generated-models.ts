@@ -937,10 +937,14 @@ export type PaymentOrder = {
   preauthResult?: Maybe<Scalars['String']>;
   capture?: Maybe<Scalars['DateTime']>;
   captureResult?: Maybe<Scalars['String']>;
+  refund?: Maybe<Scalars['DateTime']>;
+  refundResult?: Maybe<Scalars['String']>;
   status: Scalars['String'];
   originalOrderId?: Maybe<Scalars['String']>;
-  executed?: Maybe<Scalars['DateTime']>;
-  executingResult?: Maybe<Scalars['String']>;
+  originalOrderSn?: Maybe<Scalars['String']>;
+  paymentInfo?: Maybe<Scalars['String']>;
+  errorCode?: Maybe<Scalars['String']>;
+  errorMessage?: Maybe<Scalars['String']>;
   providerSpecificParams?: Maybe<Array<StringMap>>;
 };
 
@@ -1003,7 +1007,9 @@ export type TransferOrder = {
 export type Mutation = {
   __typename?: 'Mutation';
   foo: Scalars['String'];
-  createPaymentOrder: PaymentOrder;
+  preauthFull: PaymentPreauthResult;
+  preauth: PaymentPreauthResultShort;
+  captureFull: PaymentOrder;
   updateSettingsCommon: SettingsCommon;
   addSettingsFee: SettingsFee;
   updateSettingsFee: SettingsFee;
@@ -1045,8 +1051,18 @@ export type Mutation = {
 };
 
 
-export type MutationCreatePaymentOrderArgs = {
-  orderParams: PaymentOrderInput;
+export type MutationPreauthFullArgs = {
+  orderParams: PaymentPreauthInput;
+};
+
+
+export type MutationPreauthArgs = {
+  orderParams: PaymentPreauthInput;
+};
+
+
+export type MutationCaptureFullArgs = {
+  orderParams: PaymentCaptureInput;
 };
 
 
@@ -1262,7 +1278,7 @@ export type MutationExecuteQuickCheckoutArgs = {
   recaptcha: Scalars['String'];
 };
 
-export type PaymentOrderInput = {
+export type PaymentPreauthInput = {
   transactionId: Scalars['String'];
   instrument: PaymentInstrument;
   provider: PaymentProvider;
@@ -1277,6 +1293,44 @@ export type PaymentCard = {
   expireYear?: Maybe<Scalars['Int']>;
   cvv2?: Maybe<Scalars['Int']>;
   holder?: Maybe<Scalars['String']>;
+};
+
+export type PaymentPreauthResult = {
+  __typename?: 'PaymentPreauthResult';
+  order?: Maybe<PaymentOrder>;
+  html?: Maybe<Scalars['String']>;
+};
+
+export type PaymentPreauthResultShort = {
+  __typename?: 'PaymentPreauthResultShort';
+  order?: Maybe<PaymentOrderShort>;
+  html?: Maybe<Scalars['String']>;
+};
+
+export type PaymentOrderShort = {
+  __typename?: 'PaymentOrderShort';
+  orderId?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['String']>;
+  code?: Maybe<Scalars['String']>;
+  transactionId?: Maybe<Scalars['String']>;
+  provider: PaymentProvider;
+  created: Scalars['DateTime'];
+  amount: Scalars['Float'];
+  currency: Scalars['String'];
+  preauth?: Maybe<Scalars['DateTime']>;
+  capture?: Maybe<Scalars['DateTime']>;
+  refund?: Maybe<Scalars['DateTime']>;
+  status: Scalars['String'];
+  errorCode?: Maybe<Scalars['String']>;
+  errorMessage?: Maybe<Scalars['String']>;
+  paymentInfo?: Maybe<Scalars['String']>;
+};
+
+export type PaymentCaptureInput = {
+  orderId: Scalars['String'];
+  instrument: PaymentInstrument;
+  provider: PaymentProvider;
+  amount?: Maybe<Scalars['Float']>;
 };
 
 export type SettingsCommonInput = {

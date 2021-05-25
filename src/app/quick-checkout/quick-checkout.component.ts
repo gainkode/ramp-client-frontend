@@ -6,11 +6,12 @@ import { Router } from '@angular/router';
 import { Subscription, Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import {
-    KycStatus, LoginResult, PaymentInstrument, Rate, SettingsCommon, SettingsCurrencyListResult,
+    KycStatus, LoginResult, PaymentInstrument, PaymentOrderShort, PaymentPreauthResultShort, PaymentProvider, Rate, SettingsCommon, SettingsCurrencyListResult,
     SettingsKycShort, TransactionShort, TransactionType, User, UserMode, UserType
 } from '../model/generated-models';
 import { KycLevelShort } from '../model/identification.model';
 import {
+    CardView,
     CheckoutSummary, CurrencyView, PaymentProviderList, QuickCheckoutPaymentInstrumentList,
     QuickCheckoutTransactionTypeList
 } from '../model/payment.model';
@@ -63,6 +64,7 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
     currentDestinationCurrency: CurrencyView | null = null;
     currentRate: Rate | null = null;
     currentTransaction = TransactionType.Deposit;
+    currentCard: CardView = new CardView();
     summary!: CheckoutSummary;
 
     private pCurrencies: CurrencyView[] = [];
@@ -105,7 +107,7 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
     detailsTransactionControl: AbstractControl | null = null;
     paymentInfoForm = this.formBuilder.group({
         instrument: [PaymentInstrument.CreditCard, { validators: [Validators.required], updateOn: 'change' }],
-        provider: ['', { validators: [], updateOn: 'change' }],
+        provider: ['', { validators: [Validators.required], updateOn: 'change' }],
         transactionId: ['', { validators: [Validators.required], updateOn: 'change' }]
     });
     paymentInfoInstrumentControl: AbstractControl | null = null;
@@ -118,10 +120,8 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
     confirmationCodeControl: AbstractControl | null = null;
     confirmationCompleteControl: AbstractControl | null = null;
     paymentForm = this.formBuilder.group({
-        instrument: ['', { validators: [Validators.required], updateOn: 'change' }],
         complete: ['', { validators: [Validators.required], updateOn: 'change' }]
     });
-    paymentInstrumentControl: AbstractControl | null = null;
     paymentCompleteControl: AbstractControl | null = null;
 
     get isDeposit(): boolean {
@@ -144,7 +144,6 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
         this.paymentInfoTransactionIdControl = this.paymentInfoForm.get('transactionId');
         this.confirmationCodeControl = this.confirmationForm.get('code');
         this.confirmationCompleteControl = this.confirmationForm.get('complete');
-        this.paymentInstrumentControl = this.paymentForm.get('instrument');
         this.paymentCompleteControl = this.paymentForm.get('complete');
         this.currentTransaction = TransactionType.Deposit;
     }
@@ -210,12 +209,10 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
             this.paymentInfoProviderControl?.setValue('');
             if (val === PaymentInstrument.Apm) {
                 this.isApmSelected = true;
-                this.paymentInfoProviderControl?.setValidators([Validators.required]);
             } else {
                 this.isApmSelected = false;
-                this.paymentInfoProviderControl?.setValidators([]);
+                this.paymentInfoProviderControl?.setValue(PaymentProvider.Fibonatix);
             }
-            this.paymentInfoProviderControl?.updateValueAndValidity();
         });
         this.confirmationCodeControl?.valueChanges.subscribe((val) => {
             this.errorMessage = '';
@@ -507,6 +504,7 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
                 focusInput = this.emailElement?.nativeElement as HTMLInputElement;
             } else if (step.selectedStep.label === 'paymentInfo') {
                 focusInput = this.paymentInfoNextElement?.nativeElement as HTMLInputElement;
+                this.paymentInfoProviderControl?.setValue(PaymentProvider.Fibonatix);
                 const kycStatusData = this.auth.getMyKycStatus();
                 if (kycStatusData === null) {
                     this.errorMessage = this.errorHandler.getRejectedCookieMessage();
@@ -575,6 +573,7 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
             this.stepper.reset();
             this.stepper.steps.forEach(x => x.completed = false);
         }
+        this.currentCard = new CardView();
         this.ngDetailsForm?.resetForm();
         this.ngPaymentInfoForm?.resetForm();
         this.ngConfirmationForm?.resetForm();
@@ -656,10 +655,32 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
         }
     }
 
+    cardDetails(card: CardView) {
+        this.currentCard = card;
+    }
+
     paymentCompleted(): void {
         this.paymentCompleteControl?.setValue('ready');
-        if (this.paymentForm.valid) {
-
+        if (this.paymentForm.valid && this.currentCard.valid) {
+            const transaction = this.paymentInfoTransactionIdControl?.value;
+            const instrument = this.paymentInfoInstrumentControl?.value;
+            const payment = this.paymentInfoProviderControl?.value;
+            this.dataService.preAuth(transaction, instrument, payment, this.currentCard).subscribe(({ data }) => {
+                const preAuthResult = data.preauth as PaymentPreauthResultShort;
+                const order = preAuthResult as PaymentOrderShort;
+                console.log(preAuthResult.html);
+                this.inProgress = false;
+                if (this.stepper) {
+                    this.stepper?.next();
+                }
+            }, (error) => {
+                this.inProgress = false;
+                if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
+                    this.resetStepper();
+                } else {
+                    this.errorMessage = this.errorHandler.getError(error.message, 'Unable to confirm your order');
+                }
+            });
         }
     }
 
