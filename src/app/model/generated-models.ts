@@ -930,23 +930,39 @@ export type PaymentOrder = {
   code?: Maybe<Scalars['String']>;
   transactionId?: Maybe<Scalars['String']>;
   provider: PaymentProvider;
-  created: Scalars['DateTime'];
+  created?: Maybe<Scalars['DateTime']>;
   amount: Scalars['Float'];
   currency: Scalars['String'];
-  preauth?: Maybe<Scalars['DateTime']>;
-  preauthResult?: Maybe<Scalars['String']>;
-  capture?: Maybe<Scalars['DateTime']>;
-  captureResult?: Maybe<Scalars['String']>;
-  refund?: Maybe<Scalars['DateTime']>;
-  refundResult?: Maybe<Scalars['String']>;
-  status: Scalars['String'];
+  operations?: Maybe<Array<PaymentOperation>>;
   originalOrderId?: Maybe<Scalars['String']>;
-  originalOrderSn?: Maybe<Scalars['String']>;
+  preauthOperationSn?: Maybe<Scalars['String']>;
   paymentInfo?: Maybe<Scalars['String']>;
+  providerSpecificParams?: Maybe<Array<StringMap>>;
+};
+
+export type PaymentOperation = {
+  __typename?: 'PaymentOperation';
+  operationId?: Maybe<Scalars['String']>;
+  transactionId?: Maybe<Scalars['String']>;
+  orderId?: Maybe<Scalars['String']>;
+  orderCode?: Maybe<Scalars['String']>;
+  originalOrderId?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['String']>;
+  created?: Maybe<Scalars['DateTime']>;
+  type: PaymentOperationType;
+  sn: Scalars['String'];
+  status?: Maybe<Scalars['String']>;
+  details?: Maybe<Scalars['String']>;
   errorCode?: Maybe<Scalars['String']>;
   errorMessage?: Maybe<Scalars['String']>;
   providerSpecificParams?: Maybe<Array<StringMap>>;
 };
+
+export enum PaymentOperationType {
+  Preauth = 'preauth',
+  Capture = 'capture',
+  Refund = 'refund'
+}
 
 export type LiquidityOrder = {
   __typename?: 'LiquidityOrder';
@@ -1010,6 +1026,7 @@ export type Mutation = {
   preauthFull: PaymentPreauthResult;
   preauth: PaymentPreauthResultShort;
   captureFull: PaymentOrder;
+  status: Scalars['String'];
   updateSettingsCommon: SettingsCommon;
   addSettingsFee: SettingsFee;
   updateSettingsFee: SettingsFee;
@@ -1062,7 +1079,13 @@ export type MutationPreauthArgs = {
 
 
 export type MutationCaptureFullArgs = {
-  orderParams: PaymentCaptureInput;
+  orderId: Scalars['String'];
+};
+
+
+export type MutationStatusArgs = {
+  orderId: Scalars['String'];
+  amount?: Maybe<Scalars['Float']>;
 };
 
 
@@ -1314,23 +1337,21 @@ export type PaymentOrderShort = {
   code?: Maybe<Scalars['String']>;
   transactionId?: Maybe<Scalars['String']>;
   provider: PaymentProvider;
-  created: Scalars['DateTime'];
+  created?: Maybe<Scalars['DateTime']>;
   amount: Scalars['Float'];
   currency: Scalars['String'];
-  preauth?: Maybe<Scalars['DateTime']>;
-  capture?: Maybe<Scalars['DateTime']>;
-  refund?: Maybe<Scalars['DateTime']>;
-  status: Scalars['String'];
-  errorCode?: Maybe<Scalars['String']>;
-  errorMessage?: Maybe<Scalars['String']>;
+  operations?: Maybe<Array<PaymentOperationShort>>;
   paymentInfo?: Maybe<Scalars['String']>;
 };
 
-export type PaymentCaptureInput = {
-  orderId: Scalars['String'];
-  instrument: PaymentInstrument;
-  provider: PaymentProvider;
-  amount?: Maybe<Scalars['Float']>;
+export type PaymentOperationShort = {
+  __typename?: 'PaymentOperationShort';
+  operationId?: Maybe<Scalars['String']>;
+  created?: Maybe<Scalars['DateTime']>;
+  type: PaymentOperationType;
+  status?: Maybe<Scalars['String']>;
+  errorCode?: Maybe<Scalars['String']>;
+  errorMessage?: Maybe<Scalars['String']>;
 };
 
 export type SettingsCommonInput = {
@@ -1618,6 +1639,13 @@ export type KycRejectedLabel = {
   code?: Maybe<Scalars['String']>;
   type?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
+};
+
+export type PaymentCaptureInput = {
+  orderId: Scalars['String'];
+  instrument: PaymentInstrument;
+  provider: PaymentProvider;
+  amount?: Maybe<Scalars['Float']>;
 };
 
 export type UserLogin = {

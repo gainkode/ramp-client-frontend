@@ -123,9 +123,7 @@ mutation PreAuth(
       created
       amount
       currency
-      preauth
-      capture
-      status
+      paymentInfo
     }
     html
   }
