@@ -12,9 +12,11 @@ var creditCardType = require("credit-card-type");
 })
 export class CreditCardComponent implements OnInit {
     @Output() cardDetails = new EventEmitter<CardView>();
+    cardType = '';
     codeName = 'CVV';
     cvvLength = 3;
     cardNumberGaps: number[] = [];
+    cardNumberLengths: number[] = [];
     monthList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
     yearList: number[] = [];
     cardForm = this.formBuilder.group({
@@ -135,8 +137,12 @@ export class CreditCardComponent implements OnInit {
                 this.codeName = cardInfo[0].code.name;
                 this.cvvLength = cardInfo[0].code.size;
                 this.cardNumberGaps = cardInfo[0].gaps;
+                this.cardType = cardInfo[0].type;
+                this.cardNumberLengths = cardInfo[0].lengths;
             } else {
                 this.cardNumberGaps = [];
+                this.cardNumberLengths = [];
+                this.cardType = '';
             }
         });
     }

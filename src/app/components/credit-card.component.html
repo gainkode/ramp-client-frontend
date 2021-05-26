@@ -52,8 +52,8 @@
             <!-- CVC -->
             <mat-form-field class="form-element">
                 <mat-label>{{codeName}}</mat-label>
-                <input type="text" #cvv matInput onlyNumber formControlName="cvv" [maxlength]="cvvLength" placeholder="CVV"
-                    required />
+                <input type="text" #cvv matInput onlyNumber formControlName="cvv" [maxlength]="cvvLength"
+                    placeholder="CVV" required />
                 <mat-error *ngIf="cardCvvControl?.hasError('required')">
                     Please specify {{codeName}} code
                 </mat-error>
@@ -136,6 +136,11 @@
                             </g>
                             <g id="cchip">
                                 <g>
+                                    <rect class="st2" x="570" y="57" width="124" height="87" rx="15" />
+                                </g>
+                            </g>
+                            <g id="cchip">
+                                <g>
                                     <path class="st2" d="M168.1,143.6H82.9c-10.2,0-18.5-8.3-18.5-18.5V74.9c0-10.2,8.3-18.5,18.5-18.5h85.3
                                     c10.2,0,18.5,8.3,18.5,18.5v50.2C186.6,135.3,178.3,143.6,168.1,143.6z" />
                                 </g>
@@ -171,6 +176,8 @@
                         <g id="Back">
                         </g>
                     </svg>
+                    <img *ngIf="cardType!==''" class="payment-icon" src="assets/svg-payment-systems/{{cardType}}.svg"
+                        width="49" height="40" alt="icon">
                 </div>
             </div>
         </div>
