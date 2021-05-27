@@ -235,7 +235,8 @@
                     </div>
                 </mat-step>
                 <!-- Code Confirmation -->
-                <mat-step [stepControl]="confirmationForm" *ngIf="showCodeConfirm" label="confirmation" editable="false" completed="false">
+                <mat-step [stepControl]="confirmationForm" *ngIf="showCodeConfirm" label="confirmation" editable="false"
+                    completed="false">
                     <ng-template matStepLabel>Confirmation</ng-template>
                     <form [formGroup]="confirmationForm" #confirmation="ngForm">
                         <div *ngIf="inProgress" class="form-element">
@@ -287,7 +288,8 @@
                         <div *ngIf="errorMessage!==''" class="form-error-box">
                             {{errorMessage}}
                         </div>
-                        <app-credit-card *ngIf="paymentCreditCard" class="form-element" (cardDetails)="cardDetails($event)">
+                        <app-credit-card *ngIf="paymentCreditCard" class="form-element"
+                            (cardDetails)="cardDetails($event)">
                         </app-credit-card>
                         <br>
                         <div class="form-element">
@@ -307,6 +309,17 @@
                     <ng-template matStepLabel>Order status</ng-template>
                     <app-checkout-done *ngIf="processDone" [summary]="summary"></app-checkout-done>
                     <br>
+
+
+
+                    <br>
+                    <div>{{htmlTest}}</div>
+                    <br>
+
+
+
+
+
                     <button type="submit" class="main-button main-button-accent inline-button" #checkoutdone
                         [disabled]="errorMessage!==''" (click)="done()">
                         DONE

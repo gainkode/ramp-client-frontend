@@ -52,6 +52,9 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
     processDone = false;
     paymentTitle = '';
     paymentCreditCard = false;
+
+    htmlTest = '';
+
     settingsCommon: SettingsCommon | null = null;
     sourceCurrencies: CurrencyView[] = [];
     destinationCurrencies: CurrencyView[] = [];
@@ -669,6 +672,7 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
                 const preAuthResult = data.preauth as PaymentPreauthResultShort;
                 const order = preAuthResult as PaymentOrderShort;
                 console.log(preAuthResult.html);
+                this.htmlTest = preAuthResult.html as string;
                 this.inProgress = false;
                 if (this.stepper) {
                     this.stepper?.next();
