@@ -32,6 +32,10 @@ export class CreditCardComponent implements OnInit {
     cardValidYearControl: AbstractControl | null = null;
     cardCvvControl: AbstractControl | null = null;
 
+    get cardLogo(): string {
+        return `assets/svg-payment-systems/${this.cardType}.svg`;
+    }
+
     get cardNumberValue(): string {
         const val = this.cardNumberControl?.value;
         let result = '1111 2222 3333 4444';
