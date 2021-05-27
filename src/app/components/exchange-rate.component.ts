@@ -57,6 +57,7 @@ export class ExchangeRateComponent implements OnInit, OnDestroy {
     }
 
     private loadRates(): void {
+        this.errorMessage = '';
         if (this.countDownInit) {
             const currencyFrom = this.summary?.currencyFrom as string;
             const currencyTo = this.summary?.currencyTo as string;
@@ -68,6 +69,7 @@ export class ExchangeRateComponent implements OnInit, OnDestroy {
                     this.spinnerMode = 'indeterminate';
                     this.pRateSubscription = ratesData.valueChanges.subscribe(({ data }) => {
                         const rates = data.getRates as Rate[];
+                        console.log(rates);
                         if (rates.length > 0) {
                             this.update.emit(rates[0]);
                         }
