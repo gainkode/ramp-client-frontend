@@ -927,7 +927,6 @@ export type PaymentOrder = {
   __typename?: 'PaymentOrder';
   orderId?: Maybe<Scalars['String']>;
   userId?: Maybe<Scalars['String']>;
-  code?: Maybe<Scalars['String']>;
   transactionId?: Maybe<Scalars['String']>;
   provider: PaymentProvider;
   created?: Maybe<Scalars['DateTime']>;
@@ -945,7 +944,6 @@ export type PaymentOperation = {
   operationId?: Maybe<Scalars['String']>;
   transactionId?: Maybe<Scalars['String']>;
   orderId?: Maybe<Scalars['String']>;
-  orderCode?: Maybe<Scalars['String']>;
   originalOrderId?: Maybe<Scalars['String']>;
   userId?: Maybe<Scalars['String']>;
   created?: Maybe<Scalars['DateTime']>;
@@ -1016,8 +1014,8 @@ export type TransferOrder = {
   amount?: Maybe<Scalars['Float']>;
   currency?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
-  transactionHash?: Maybe<Scalars['String']>;
-  transactionDetails?: Maybe<Scalars['String']>;
+  transferHash?: Maybe<Scalars['String']>;
+  transferDetails?: Maybe<Scalars['String']>;
 };
 
 export type Mutation = {
@@ -1334,7 +1332,6 @@ export type PaymentOrderShort = {
   __typename?: 'PaymentOrderShort';
   orderId?: Maybe<Scalars['String']>;
   userId?: Maybe<Scalars['String']>;
-  code?: Maybe<Scalars['String']>;
   transactionId?: Maybe<Scalars['String']>;
   provider: PaymentProvider;
   created?: Maybe<Scalars['DateTime']>;

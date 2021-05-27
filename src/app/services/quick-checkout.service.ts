@@ -118,7 +118,6 @@ mutation PreAuth(
       transactionId
       orderId
       userId
-      code
       provider
       created
       amount
