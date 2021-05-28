@@ -29,6 +29,7 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
     @ViewChild('checkoutStepper') private stepper: MatStepper | undefined = undefined;
     @ViewChild('details') private ngDetailsForm: NgForm | undefined = undefined;
     @ViewChild('paymentinfo') private ngPaymentInfoForm: NgForm | undefined = undefined;
+    @ViewChild('verification') private ngVerificationForm: NgForm | undefined = undefined;
     @ViewChild('confirmation') private ngConfirmationForm: NgForm | undefined = undefined;
     @ViewChild('payment') private ngPaymentForm: NgForm | undefined = undefined;
     @ViewChild('emailinput') emailElement: ElementRef | undefined = undefined;
@@ -116,6 +117,10 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
     paymentInfoInstrumentControl: AbstractControl | null = null;
     paymentInfoProviderControl: AbstractControl | null = null;
     paymentInfoTransactionIdControl: AbstractControl | null = null;
+    verificationForm = this.formBuilder.group({
+        complete: ['', { validators: [Validators.required], updateOn: 'change' }]
+    });
+    verificationCompleteControl: AbstractControl | null = null;
     confirmationForm = this.formBuilder.group({
         code: ['', { validators: [Validators.required], updateOn: 'change' }],
         complete: ['', { validators: [Validators.required], updateOn: 'change' }]
@@ -145,6 +150,7 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
         this.paymentInfoInstrumentControl = this.paymentInfoForm.get('instrument');
         this.paymentInfoProviderControl = this.paymentInfoForm.get('provider');
         this.paymentInfoTransactionIdControl = this.paymentInfoForm.get('transactionId');
+        this.verificationCompleteControl = this.verificationForm.get('complete');
         this.confirmationCodeControl = this.confirmationForm.get('code');
         this.confirmationCompleteControl = this.confirmationForm.get('complete');
         this.paymentCompleteControl = this.paymentForm.get('complete');
@@ -579,6 +585,7 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
         this.currentCard = new CardView();
         this.ngDetailsForm?.resetForm();
         this.ngPaymentInfoForm?.resetForm();
+        this.ngVerificationForm?.resetForm();
         this.ngConfirmationForm?.resetForm();
         this.ngPaymentForm?.resetForm();
         if (this.auth.authenticated) {
@@ -671,8 +678,20 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
             this.dataService.preAuth(transaction, instrument, payment, this.currentCard).subscribe(({ data }) => {
                 const preAuthResult = data.preauth as PaymentPreauthResultShort;
                 const order = preAuthResult as PaymentOrderShort;
-                console.log(preAuthResult.html);
+                
+
+
+
+
+
                 this.htmlTest = preAuthResult.html as string;
+                console.log(this.htmlTest);
+
+
+                
+
+
+
                 this.inProgress = false;
                 if (this.stepper) {
                     this.stepper?.next();
@@ -689,20 +708,15 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
     }
 
     /*
-    This method is invoked when a user presses the NEXT button
-    */
-    kycProcessCompleted(): void {
-        if (this.stepper) {
-            this.stepper?.next();
-        }
-    }
-
-    /*
-    This method is invoked by the KYC widget when a user finishes KYC process
+    This method is invoked by the KYC widget when a user completes their KYC process
      */
     kycCompleted(): void {
         this.showKycSubmit = true;
         this.showKycValidator = false;
+        this.verificationCompleteControl?.setValue('ready');
+        if (this.stepper) {
+            this.stepper?.next();
+        }
     }
 
     done(): void {
