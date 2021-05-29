@@ -33,7 +33,11 @@ export class CreditCardComponent implements OnInit {
     cardCvvControl: AbstractControl | null = null;
 
     get cardLogo(): string {
-        return `assets/svg-payment-systems/${this.cardType}.svg`;
+        if (this.cardType !== '') {
+            return `assets/svg-payment-systems/${this.cardType}.svg`;
+        } else {
+            return '';
+        }
     }
 
     get cardNumberValue(): string {

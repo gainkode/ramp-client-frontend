@@ -306,20 +306,6 @@
                     <ng-template matStepLabel>Order status</ng-template>
                     <app-checkout-done *ngIf="processDone" [summary]="summary"></app-checkout-done>
                     <br>
-
-
-
-                    <br>
-                    <!-- <iframe title="Inline Frame Example" width="500" height="400"
-                        [srcdoc]="htmlTest">
-                    </iframe> -->
-                    <div>{{htmlTest}}</div>
-                    <br>
-
-
-
-
-
                     <button type="submit" class="main-button main-button-accent inline-button" #checkoutdone
                         [disabled]="errorMessage!==''" (click)="done()">
                         DONE

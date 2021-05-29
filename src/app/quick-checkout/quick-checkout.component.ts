@@ -561,6 +561,18 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
                     focusInput?.focus();
                 }, 100);
             }
+            if (this.processDone) {
+                setTimeout(() => {
+                    const url = this.router.serializeUrl(
+                        this.router.createUrlTree(['/quickcheckout/done-redirect'])
+                    );
+                    console.log(url);
+                    window.open(
+                        url,
+                        '_blank',
+                        'toolbar=no,scrollbars=no,resizable=no,top=100,left=500,width=600,height=400');
+                }, 150);
+            }
         }
     }
 
@@ -672,26 +684,14 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
     paymentCompleted(): void {
         this.paymentCompleteControl?.setValue('ready');
         if (this.paymentForm.valid && this.currentCard.valid) {
+            this.inProgress = true;
             const transaction = this.paymentInfoTransactionIdControl?.value;
             const instrument = this.paymentInfoInstrumentControl?.value;
             const payment = this.paymentInfoProviderControl?.value;
             this.dataService.preAuth(transaction, instrument, payment, this.currentCard).subscribe(({ data }) => {
                 const preAuthResult = data.preauth as PaymentPreauthResultShort;
                 const order = preAuthResult as PaymentOrderShort;
-                
-
-
-
-
-
-                this.htmlTest = preAuthResult.html as string;
-                console.log(this.htmlTest);
-
-
-                
-
-
-
+                sessionStorage.setItem('paymentDone', preAuthResult.html as string);
                 this.inProgress = false;
                 if (this.stepper) {
                     this.stepper?.next();
@@ -736,67 +736,3 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
         return error;
     }
 }
-
-
-
-
-
-
-
-
-// <!DOCTYPE html>
-// <html lang="en">
-// <head>
-//     <meta http-equiv="content-type" content="text/html; charset=UTF-8" >     
-//     <meta http-equiv="refresh" content="10;URL='https://channel.paragon.online/payment-form/logs/e8M9iKQA'" />    
-
-//     <title>Redirecting ...</title>
-// </head>
-// <body>
-//     Redirecting...
-//     <form name="returnform" action="https://channel.paragon.online/payment-redirect/e8M9iKQA" method="get">
-        
-//         <noscript>
-//                 <input type="submit" name="submit" value="Press this button to continue"/>
-//         </noscript>
-//     </form>
-
-//     <script>
-        
-//     function run(){
-//             try {
-
-//             var a = window.screen.height,
-//             r = window.screen.width,
-//             s = window.screen.colorDepth,
-//             i = navigator.javaEnabled(),
-//             o = navigator.userAgent,
-//             c = new Date().getTimezoneOffset(),
-//             d = (navigator.browserLanguage !== undefined) ? navigator.browserLanguage : navigator.language;
-//             var fingerprintUrl = "".concat("https://channel.paragon.online/", "fingerprint/").concat("e8M9iKQA");
-
-//             var fingerprintClient = new XMLHttpRequest();
-//             fingerprintClient.open("POST", fingerprintUrl, true);
-
-//             fingerprintClient.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-//             fingerprintClient.onreadystatechange = function() { 
-//                 if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-//                     console.log("submit form");
-//                     document.returnform.submit();
-//                 }
-//             };
-
-//         fingerprintClient.send("time_zone_offset=" + c + "&screen_height=" + a + "&screen_width=" + r + "&color_depth=" + s + "&java_enabled=" + i + "&user_agent=" + o + "&language=" + d);
-//     } catch (ex) {
-//         console.log("There was an error in code");
-//         var xhr = new XMLHttpRequest();
-//         xhr.open("POST", "https://channel.paragon.online/" + "payment-form/logs");
-//         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-//         xhr.send("Error=" + ex.message + "&SerialNumber=".concat("e8M9iKQA")); 
-//     }
-// }
-// run();
-//     </script>
-// </body>
-// </html>
