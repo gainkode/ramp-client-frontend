@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from "@angular/core";
+import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from "@angular/core";
 import { AbstractControl, FormBuilder, Validators } from "@angular/forms";
 import { CardView } from "../model/payment.model";
 
@@ -12,6 +12,7 @@ var creditCardType = require("credit-card-type");
 })
 export class CreditCardComponent implements OnInit {
     @Output() cardDetails = new EventEmitter<CardView>();
+    @ViewChild('cardnumber') cardNumberElement: ElementRef | undefined = undefined;
     cardType = '';
     codeName = 'CVV';
     cvvLength = 3;
@@ -22,8 +23,8 @@ export class CreditCardComponent implements OnInit {
     cardForm = this.formBuilder.group({
         card: ['', { validators: [Validators.required, Validators.minLength(16)], updateOn: 'change' }],
         holder: ['', { validators: [Validators.required], updateOn: 'change' }],
-        validMonth: [0, { validators: [Validators.required], updateOn: 'change' }],
-        validYear: [0, { validators: [Validators.required], updateOn: 'change' }],
+        validMonth: [0, { validators: [Validators.required, Validators.min(1)], updateOn: 'change' }],
+        validYear: [0, { validators: [Validators.required, Validators.min(1)], updateOn: 'change' }],
         cvv: ['', { validators: [Validators.required, Validators.minLength(3)], updateOn: 'change' }]
     });
     cardNumberControl: AbstractControl | null = null;
@@ -153,5 +154,13 @@ export class CreditCardComponent implements OnInit {
                 this.cardType = '';
             }
         });
+    }
+
+    ngAfterViewInit(): void {
+        const focusInput = this.cardNumberElement?.nativeElement as HTMLInputElement;
+        console.log(focusInput);
+        setTimeout(() => {
+            focusInput?.focus();
+        }, 100);
     }
 }

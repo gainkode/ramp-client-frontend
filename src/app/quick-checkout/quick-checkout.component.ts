@@ -34,7 +34,6 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
     @ViewChild('payment') private ngPaymentForm: NgForm | undefined = undefined;
     @ViewChild('emailinput') emailElement: ElementRef | undefined = undefined;
     @ViewChild('paymentinfonext') paymentInfoNextElement: ElementRef | undefined = undefined;
-    @ViewChild('paymentnext') paymentNextElement: ElementRef | undefined = undefined;
     @ViewChild('verificationreset') verificationResetElement: ElementRef | undefined = undefined;
     @ViewChild('codeinput') codeElement: ElementRef | undefined = undefined;
     @ViewChild('checkoutdone') checkoutDoneElement: ElementRef | undefined = undefined;
@@ -547,7 +546,6 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
                 } else {
                     this.paymentTitle = 'Payment is not implemented';
                 }
-                focusInput = this.paymentNextElement?.nativeElement as HTMLInputElement;
             } else if (step.selectedStep.label === 'complete') {
                 // we can't set focus to the button as it causes scroll to this button.
                 // So, the step header box stays here after last page appearing as the objective evil
@@ -566,14 +564,7 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
                     const url = this.router.serializeUrl(
                         this.router.createUrlTree(['/quickcheckout/done-redirect'])
                     );
-                    console.log(url);
-                    // window.open(
-                    //     url,
-                    //     '_blank',
-                    //     'toolbar=no,scrollbars=no,resizable=no,top=100,left=500,width=600,height=400');
-                    window.open(
-                        url,
-                        '_blank');
+                    window.open(url, '_blank');
                 }, 150);
             }
         }
