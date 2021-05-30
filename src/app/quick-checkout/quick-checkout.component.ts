@@ -567,10 +567,13 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
                         this.router.createUrlTree(['/quickcheckout/done-redirect'])
                     );
                     console.log(url);
+                    // window.open(
+                    //     url,
+                    //     '_blank',
+                    //     'toolbar=no,scrollbars=no,resizable=no,top=100,left=500,width=600,height=400');
                     window.open(
                         url,
-                        '_blank',
-                        'toolbar=no,scrollbars=no,resizable=no,top=100,left=500,width=600,height=400');
+                        '_blank');
                 }, 150);
             }
         }
