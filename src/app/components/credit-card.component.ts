@@ -13,20 +13,22 @@ var creditCardType = require("credit-card-type");
 export class CreditCardComponent implements OnInit {
     @Output() cardDetails = new EventEmitter<CardView>();
     @ViewChild('cardnumber') cardNumberElement: ElementRef | undefined = undefined;
-    cardType = '';
     codeName = 'CVV';
     cvvLength = 3;
+    cardNumberLength = 16;
     cardNumberGaps: number[] = [];
-    cardNumberLengths: number[] = [];
+    cardNumberLengths: number[] = [16];
     monthList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
     yearList: number[] = [];
     cardForm = this.formBuilder.group({
+        cardType: ['', { validators: [Validators.required], updateOn: 'change' }],
         card: ['', { validators: [Validators.required, Validators.minLength(16)], updateOn: 'change' }],
         holder: ['', { validators: [Validators.required], updateOn: 'change' }],
         validMonth: [0, { validators: [Validators.required, Validators.min(1)], updateOn: 'change' }],
         validYear: [0, { validators: [Validators.required, Validators.min(1)], updateOn: 'change' }],
         cvv: ['', { validators: [Validators.required, Validators.minLength(3)], updateOn: 'change' }]
     });
+    cardTypeControl: AbstractControl | null = null;
     cardNumberControl: AbstractControl | null = null;
     cardHolderControl: AbstractControl | null = null;
     cardValidMonthControl: AbstractControl | null = null;
@@ -34,8 +36,9 @@ export class CreditCardComponent implements OnInit {
     cardCvvControl: AbstractControl | null = null;
 
     get cardLogo(): string {
-        if (this.cardType !== '') {
-            return `assets/svg-payment-systems/${this.cardType}.svg`;
+        const cardType = this.cardTypeControl?.value;
+        if (cardType !== '') {
+            return `assets/svg-payment-systems/${cardType}.svg`;
         } else {
             return '';
         }
@@ -43,7 +46,7 @@ export class CreditCardComponent implements OnInit {
 
     get cardNumberValue(): string {
         const val = this.cardNumberControl?.value;
-        let result = '1111 2222 3333 4444';
+        let result = '1111 **** **** 4444';
         if (val) {
             if (val !== '') {
                 let s = '';
@@ -103,7 +106,7 @@ export class CreditCardComponent implements OnInit {
 
     get cardCvvValue(): string {
         const val = this.cardCvvControl?.value;
-        let result = '985';
+        let result = '***';
         if (val) {
             if (val !== '') {
                 result = val.toString();
@@ -113,6 +116,7 @@ export class CreditCardComponent implements OnInit {
     }
 
     constructor(private formBuilder: FormBuilder) {
+        this.cardTypeControl = this.cardForm.get('cardType');
         this.cardNumberControl = this.cardForm.get('card');
         this.cardHolderControl = this.cardForm.get('holder');
         this.cardValidMonthControl = this.cardForm.get('validMonth');
@@ -135,30 +139,32 @@ export class CreditCardComponent implements OnInit {
                     card.monthExpired = this.cardValidMonthControl?.value;
                     card.yearExpired = this.cardValidYearControl?.value;
                     card.cvv = parseInt(this.cardCvvControl?.value);
-                    console.log(card);
                 }
                 this.cardDetails.emit(card);
             }
         });
         this.cardNumberControl?.valueChanges.subscribe((val) => {
             var cardInfo = creditCardType(val);
+            // If there is one card type found (no ambigous options)
             if (cardInfo.length === 1) {
                 this.codeName = cardInfo[0].code.name;
                 this.cvvLength = cardInfo[0].code.size;
                 this.cardNumberGaps = cardInfo[0].gaps;
-                this.cardType = cardInfo[0].type;
+                this.cardTypeControl?.setValue(cardInfo[0].type);
                 this.cardNumberLengths = cardInfo[0].lengths;
-            } else {
+                if (this.cardNumberLengths.length > 0) {
+                    this.cardNumberLength = this.cardNumberLengths[this.cardNumberLengths.length - 1];
+                }
+            } else {  // no card type or a few card types found
                 this.cardNumberGaps = [];
                 this.cardNumberLengths = [];
-                this.cardType = '';
+                this.cardTypeControl?.setValue('');
             }
         });
     }
 
     ngAfterViewInit(): void {
         const focusInput = this.cardNumberElement?.nativeElement as HTMLInputElement;
-        console.log(focusInput);
         setTimeout(() => {
             focusInput?.focus();
         }, 100);

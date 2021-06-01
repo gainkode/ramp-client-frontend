@@ -18,6 +18,3 @@ export class PaymentRedirectComponent implements OnInit {
         }
     }
 }
-
-
-
