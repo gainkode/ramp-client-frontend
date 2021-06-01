@@ -52,9 +52,7 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
     processDone = false;
     paymentTitle = '';
     paymentCreditCard = false;
-
-    htmlTest = '';
-
+    priceEdit = false;
     settingsCommon: SettingsCommon | null = null;
     sourceCurrencies: CurrencyView[] = [];
     destinationCurrencies: CurrencyView[] = [];
@@ -203,7 +201,9 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
         this.detailsTransactionControl?.valueChanges.subscribe((val) => {
             this.currentTransaction = val as TransactionType;
             this.setCurrencyValues();
-            this.updateAmounts();
+            this.priceEdit = true;
+            this.updateAmountTo();
+            this.priceEdit = false;
             if (this.currentTransaction === TransactionType.Deposit) {
                 this.detailsAddressControl?.setValidators([Validators.required]);
             } else {
@@ -241,7 +241,8 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
 
     onUpdateRate(rate: Rate): void {
         this.currentRate = rate;
-        this.updateAmounts();
+        this.priceEdit = false;
+        this.updateAmountTo();
     }
 
     onError(error: string): void {
@@ -451,7 +452,7 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
         }
     }
 
-    private updateAmounts(): void {
+    private updateAmountTo(): void {
         if (this.currentRate) {
             let rate = 0;
             if (this.currentTransaction === TransactionType.Deposit) {
@@ -472,16 +473,46 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
         }
     }
 
+    private updateAmountFrom(): void {
+        if (this.currentRate) {
+            let rate = 0;
+            if (this.currentTransaction === TransactionType.Deposit) {
+                rate = this.currentRate.depositRate;
+            } else if (this.currentTransaction === TransactionType.Withdrawal) {
+                rate = this.currentRate.withdrawRate;
+            }
+            let amount = 0;
+            if (rate > 0) {
+                const valueFrom = parseFloat(this.detailsAmountToControl?.value);
+                if (this.currentTransaction === TransactionType.Deposit) {
+                    amount = valueFrom * rate;
+                } else if (this.currentTransaction === TransactionType.Withdrawal) {
+                    amount = valueFrom / rate;
+                }
+            }
+            this.detailsAmountFromControl?.setValue(round(amount, this.currentSourceCurrency?.precision));
+        }
+    }
+
     private setSummuryAmountFrom(val: any): void {
         if (this.detailsAmountFromControl?.valid) {
             this.summary.amountFrom = val;
-            this.updateAmounts();
+            if (!this.priceEdit) {
+                this.priceEdit = true;
+                this.updateAmountTo();
+                this.priceEdit = false;
+            }
         }
     }
 
     private setSummuryAmountTo(val: any): void {
         if (this.detailsAmountToControl?.valid) {
             this.summary.amountTo = val;
+            if (!this.priceEdit) {
+                this.priceEdit = true;
+                this.updateAmountFrom();
+                this.priceEdit = false;
+            }
         }
     }
 
