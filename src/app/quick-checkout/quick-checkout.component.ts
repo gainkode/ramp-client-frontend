@@ -715,7 +715,8 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
             const payment = this.paymentInfoProviderControl?.value;
             this.dataService.preAuth(transaction, instrument, payment, this.currentCard).subscribe(({ data }) => {
                 const preAuthResult = data.preauth as PaymentPreauthResultShort;
-                const order = preAuthResult as PaymentOrderShort;
+                const order = preAuthResult.order;
+                this.summary.setPaymentInfo(order?.paymentInfo as string);
                 sessionStorage.setItem('paymentDone', preAuthResult.html as string);
                 this.inProgress = false;
                 if (this.stepper) {

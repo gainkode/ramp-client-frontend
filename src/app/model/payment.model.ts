@@ -88,10 +88,29 @@ export class CurrencyView {
 export class CardView {
     valid = false;
     cardNumber = '';
+    cardType = '';
     monthExpired = 0;
     yearExpired = 0;
     cvv = 0;
     holderName = '';
+    bankName = '';
+    processor = '';
+    bin = '';
+    lastDigits = '';
+
+    setPaymentInfo(info: string): void {
+        if (info) {
+            const data = JSON.parse(info);
+            this.bankName = data.bankName;
+            this.cardType = data.cardType.toLowerCase();
+            this.monthExpired = data.cardExpMonth;
+            this.yearExpired = data.cardExpYear;
+            this.holderName = data.cardholderName;
+            this.processor = data.processorName;
+            this.bin = data.bin;
+            this.lastDigits = data.lastFourDigits;
+        }
+    }
 }
 
 export const PaymentInstrumentList: Array<PaymentInstrumentView> = [
@@ -208,6 +227,7 @@ export class CheckoutSummary {
     transactionDate = '';
     transactionType: TransactionType = TransactionType.Deposit;
     status: TransactionStatus = TransactionStatus.Pending;
+    card: CardView | null = null;
 
     reset(): void {
         this.orderId = '';
@@ -223,6 +243,14 @@ export class CheckoutSummary {
         this.exchangeRate = null;
         this.transactionDate = '';
         this.transactionType = TransactionType.Deposit;
-        status = TransactionStatus.Pending;
+        this.status = TransactionStatus.Pending;
+        this.card = null;
+    }
+
+    setPaymentInfo(info: string): void {
+        if (info) {
+            this.card = new CardView();
+            this.card.setPaymentInfo(info);
+        }
     }
 }

@@ -30,12 +30,4 @@ export class PersonalComponent implements OnInit {
             console.log(error);
         });
     }
-
-
-
-
-
-    cardDetails(card: CardView) {
-        //console.log(card.cardNumber);
-    }
 }
