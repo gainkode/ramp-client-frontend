@@ -2,8 +2,9 @@
     margin-left: 0.25em;
     margin-right: 0.25em;
     display   : block;
-    width     : 100%;
+    width     : 99%;
     overflow-x: auto;
+    min-height: 80%;
 
     .mat-table {
         width          : 100%;
