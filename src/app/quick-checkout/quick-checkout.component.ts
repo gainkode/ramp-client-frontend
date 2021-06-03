@@ -531,6 +531,22 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
         }
     }
 
+    private needToRequestKyc(kyc: User): boolean | null {
+        let result = true;
+        if (kyc.kycStatus === 'completed') {
+            result = false;
+        } else {
+            if (kyc.kycValid === true) {
+                result = false;
+            } else if (kyc.kycValid === false) {
+                if (kyc.kycReviewRejectedType === 'final') {
+                    return null;
+                }
+            }
+        }
+        return result;
+    }
+
     private needToShowCodeConfirmation(): boolean {
         let isInternalUser = false;
         if (this.auth.user) {
@@ -547,24 +563,34 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
             } else if (step.selectedStep.label === 'paymentInfo') {
                 focusInput = this.paymentInfoNextElement?.nativeElement as HTMLInputElement;
                 this.paymentInfoProviderControl?.setValue(PaymentProvider.Fibonatix);
-                const kycStatusData = this.auth.getMyKycStatus();
-                if (kycStatusData === null) {
-                    this.errorMessage = this.errorHandler.getRejectedCookieMessage();
+                const userId = this.user?.userId;
+                if (userId) {
+                    const kycStatusData = this.auth.getUserKycData(userId);
+                    if (kycStatusData === null) {
+                        this.errorMessage = this.errorHandler.getRejectedCookieMessage();
+                    } else {
+                        this.inProgress = true;
+                        kycStatusData.valueChanges.subscribe(({ data }) => {
+                            const userKyc = data.userById as User;
+                            const requestKyc = this.needToRequestKyc(userKyc);
+                            this.inProgress = false;
+                            if (requestKyc === null) {
+                                this.errorMessage = 'We cannot proceed your payment because your identity is rejected';
+                            } else {
+                                this.showKycStep = requestKyc;
+                            }
+                            this.showCodeConfirm = this.needToShowCodeConfirmation();
+                        }, (error) => {
+                            this.inProgress = false;
+                            if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
+                                this.resetStepper();
+                            } else {
+                                this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load your identification status');
+                            }
+                        });
+                    }
                 } else {
-                    this.inProgress = true;
-                    kycStatusData.valueChanges.subscribe(({ data }) => {
-                        const kycStatus = data.myKycStatus as KycStatus;
-                        this.showKycStep = (kycStatus === KycStatus.Init || kycStatus === KycStatus.NotFound);
-                        this.showCodeConfirm = this.needToShowCodeConfirmation();
-                        this.inProgress = false;
-                    }, (error) => {
-                        this.inProgress = false;
-                        if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
-                            this.resetStepper();
-                        } else {
-                            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load your identification status');
-                        }
-                    });
+                    this.resetStepper();
                 }
             } else if (step.selectedStep.label === 'verification') {
                 focusInput = this.verificationResetElement?.nativeElement as HTMLInputElement;

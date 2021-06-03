@@ -849,15 +849,14 @@ export type TransactionShort = {
 
 export enum TransactionStatus {
   New = 'New',
-  Prepared = 'Prepared',
   Pending = 'Pending',
   Processing = 'Processing',
   Paid = 'Paid',
+  AddressDeclined = 'AddressDeclined',
   PaymentDeclined = 'PaymentDeclined',
-  ConfirmingOrder = 'ConfirmingOrder',
-  SendingToAddress = 'SendingToAddress',
+  Sending = 'Sending',
+  Sent = 'Sent',
   Completed = 'Completed',
-  KycRejected = 'KycRejected',
   Abounded = 'Abounded',
   Canceled = 'Canceled',
   Chargeback = 'Chargeback'
@@ -896,6 +895,7 @@ export type Transaction = {
   executed?: Maybe<Scalars['DateTime']>;
   type: TransactionType;
   status: TransactionStatus;
+  kycStatus: TransactionKycStatus;
   fee: Scalars['Float'];
   feePercent: Scalars['Float'];
   feeMinEuro: Scalars['Float'];
@@ -923,6 +923,12 @@ export type Transaction = {
   data?: Maybe<Scalars['String']>;
 };
 
+export enum TransactionKycStatus {
+  KycWaiting = 'KycWaiting',
+  KycRejecyed = 'KycRejecyed',
+  KycApproved = 'KycApproved'
+}
+
 export type PaymentOrder = {
   __typename?: 'PaymentOrder';
   orderId?: Maybe<Scalars['String']>;
@@ -935,6 +941,8 @@ export type PaymentOrder = {
   operations?: Maybe<Array<PaymentOperation>>;
   originalOrderId?: Maybe<Scalars['String']>;
   preauthOperationSn?: Maybe<Scalars['String']>;
+  captureOperationSn?: Maybe<Scalars['String']>;
+  refundOperationSn?: Maybe<Scalars['String']>;
   paymentInfo?: Maybe<Scalars['String']>;
   providerSpecificParams?: Maybe<Array<StringMap>>;
 };
@@ -951,6 +959,7 @@ export type PaymentOperation = {
   sn: Scalars['String'];
   status?: Maybe<Scalars['String']>;
   details?: Maybe<Scalars['String']>;
+  callbackDetails?: Maybe<Scalars['String']>;
   errorCode?: Maybe<Scalars['String']>;
   errorMessage?: Maybe<Scalars['String']>;
   providerSpecificParams?: Maybe<Array<StringMap>>;
