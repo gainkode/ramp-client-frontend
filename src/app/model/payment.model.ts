@@ -199,12 +199,14 @@ export const UserTypeList: Array<UserTypeView> = [
 
 export const UserModeList: Array<UserModeView> = [
     { id: UserMode.InternalWallet, name: 'Internal wallet' },
-    { id: UserMode.ExternalWallet, name: 'External wallet' }
+    { id: UserMode.ExternalWallet, name: 'External wallet' },
+    { id: UserMode.OneTimeWallet, name: 'One Time wallet' }
 ];
 
 export const UserModeShortList: Array<UserModeView> = [
     { id: UserMode.InternalWallet, name: 'Internal' },
-    { id: UserMode.ExternalWallet, name: 'External' }
+    { id: UserMode.ExternalWallet, name: 'External' },
+    { id: UserMode.OneTimeWallet, name: 'One Time wallet' }
 ];
 
 export const KycProviderList: Array<KycProviderView> = [

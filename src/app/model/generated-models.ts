@@ -345,7 +345,8 @@ export enum KycProvider {
 
 export enum UserMode {
   InternalWallet = 'InternalWallet',
-  ExternalWallet = 'ExternalWallet'
+  ExternalWallet = 'ExternalWallet',
+  OneTimeWallet = 'OneTimeWallet'
 }
 
 export enum SettingsKycTargetFilterType {

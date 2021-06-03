@@ -336,7 +336,7 @@ export class AuthService {
                 recaptcha: environment.recaptchaId,
                 name: username,
                 userType: usertype,
-                mode: 'ExternalWallet',
+                mode: 'InternalWallet',
                 firstName: firstname,
                 lastName: lastname,
                 countryCode2: countrycode2,
