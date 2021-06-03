@@ -10,7 +10,9 @@
         <br>
     </div>
 
-    <h2>Transaction</h2>
+    <div class="transaction-details-title">
+        <h2>Transaction</h2>
+    </div>
     <div *ngIf="transaction?.id!==''">
         <label class="transaction-details-label">Transaction Id</label>
         <div class="transaction-details-value">
@@ -148,7 +150,9 @@
         </div>
     </div>
 
-    <h2>AML Checks</h2>
+    <div class="transaction-details-title">
+        <h2>AML Checks</h2>
+    </div>
     <div *ngIf="transaction?.user!==null">
         <div *ngIf="transaction?.user?.id!==''">
             <label class="transaction-details-label">Account ID</label>

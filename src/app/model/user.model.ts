@@ -10,6 +10,7 @@ export class UserItem {
     firstName = '';
     lastName = '';
     email = '';
+    phone = '';
     country: CommonTargetValue | null = null;
     street = '';
     zip = '';
@@ -26,6 +27,7 @@ export class UserItem {
             this.firstName = data.firstName as string;
             this.lastName = data.lastName as string;
             this.email = data.email;
+            this.phone = (data.phone) ? data.phone as string : '';
             const datepipe: DatePipe = new DatePipe('en-US');
             this.created = datepipe.transform(data.created, 'dd-MM-YYYY HH:mm:ss') as string;
             this.kycStatus = data.kycStatus as string;
@@ -36,7 +38,7 @@ export class UserItem {
                 this.country.imgSource = `assets/svg-country-flags/${countryObject.code2.toLowerCase()}.svg`;
                 this.country.title = countryObject.name;
             }
-            this.currency = data.defaultCurrency as string;
+            this.currency = (data.defaultCurrency) ? data.defaultCurrency as string : '';
             this.userType = UserTypeList.find(x => x.id === data.type) as UserTypeView;
             this.userMode = UserModeShortList.find(x => x.id === data.mode) as UserModeView;
         }

@@ -34,6 +34,7 @@ import { TransactionsComponent } from './transactions/transactions.component';
 import { CustomersComponent } from './customers/customers.component';
 import { CustomerDetailsComponent } from './customers/customer-details.component';
 import { TransactionDetailsComponent } from './transactions/transaction-details.component';
+import { CustomerInfoComponent } from './customers/customer-info.component';
 
 const routing = RouterModule.forChild([
     {
@@ -85,7 +86,7 @@ export class MaterialModule { }
         AdminComponent,
         DashboardComponent,
         TransactionsComponent, TransactionDetailsComponent,
-        CustomersComponent, CustomerDetailsComponent,
+        CustomersComponent, CustomerDetailsComponent, CustomerInfoComponent,
         FeesComponent, FeeEditorComponent,
         CostsComponent, CostEditorComponent,
         IdentificationComponent, IdTableComponent, LevelTableComponent, KycEditorComponent, LevelEditorComponent],
