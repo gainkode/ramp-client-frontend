@@ -36,6 +36,7 @@ const LOGIN_POST = gql`
                   kycValid,
                   kycStatus,
                   kycStatusUpdateRequired,
+                  kycReviewRejectedType,
                   notificationSubscriptions {
                       name, description
                   }
@@ -75,6 +76,7 @@ const SOCIAL_LOGIN_POST = gql`
                 kycValid,
                 kycStatus,
                 kycStatusUpdateRequired,
+                kycReviewRejectedType,
                 notificationSubscriptions {
                     name, description
                 }
@@ -187,6 +189,19 @@ query { generateWebApiToken }
 
 const MY_KYC_STATUS_POST = gql`
 query { myKycStatus }
+`;
+
+const GET_USER_KYC_POST = gql`
+  query GetUserById(
+    $userId: String
+  ) {
+    userById(
+      userId: $userId) {
+        kycValid,
+        kycStatus,
+        kycReviewRejectedType
+      }
+    }
 `;
 
 const GET_MY_SETTINGS_KYC_POST = gql`
@@ -321,7 +336,7 @@ export class AuthService {
                 recaptcha: environment.recaptchaId,
                 name: username,
                 userType: usertype,
-                mode: 'ExternalWallet',
+                mode: 'InternalWallet',
                 firstName: firstname,
                 lastName: lastname,
                 countryCode2: countrycode2,
@@ -466,6 +481,18 @@ export class AuthService {
             query: MY_KYC_STATUS_POST,
             fetchPolicy: 'network-only'
         });
+    }
+
+    getUserKycData(id: string): QueryRef<any, EmptyObject> | null {
+        if (this.apollo.client !== undefined) {
+            return this.apollo.watchQuery<any>({
+                query: GET_USER_KYC_POST,
+                variables: { userId: id },
+                fetchPolicy: 'network-only'
+            });
+        } else {
+            return null;
+        }
     }
 
     socialSignOut(): void {
