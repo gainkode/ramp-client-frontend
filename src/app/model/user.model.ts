@@ -1,4 +1,4 @@
-import { User } from './generated-models';
+import { User, UserType } from './generated-models';
 import { UserModeShortList, UserModeView, UserTypeList, UserTypeView } from './payment.model';
 import { getCountryByCode2 } from './country-code.model';
 import { CommonTargetValue } from './common.model';
@@ -7,6 +7,7 @@ import { DatePipe } from '@angular/common';
 export class UserItem {
     id = '';
     name = '';
+    company = '';
     firstName = '';
     lastName = '';
     email = '';
@@ -26,6 +27,9 @@ export class UserItem {
             this.name = data.name;
             this.firstName = data.firstName as string;
             this.lastName = data.lastName as string;
+            if (data.type === UserType.Merchant) {
+                this.company = (data.firstName) ? data.firstName as string : '';    
+            }
             this.email = data.email;
             this.phone = (data.phone) ? data.phone as string : '';
             const datepipe: DatePipe = new DatePipe('en-US');

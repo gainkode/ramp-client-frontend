@@ -9,10 +9,10 @@
         </div>
     </div>
 
-    <div *ngIf="customer?.id!==''">
+    <div *ngIf="customer?.company!==''">
         <label class="customer-details-label">Company</label>
         <div class="customer-details-value">
-            <div style="color: brown;">{{customer?.id}}</div>
+            {{customer?.company}}
         </div>
     </div>
 
