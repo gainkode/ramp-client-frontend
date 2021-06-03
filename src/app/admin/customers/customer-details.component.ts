@@ -8,4 +8,6 @@ import { UserItem } from "src/app/model/user.model";
 })
 export class CustomerDetailsComponent {
     @Input() customer: UserItem | null = null;
+    inProgress = false;
+    errorMessage = '';
 }

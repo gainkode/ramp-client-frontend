@@ -72,7 +72,7 @@ export class AppModule {
         if (err.extensions !== null) {
           const code = err.extensions?.code as string;
           if (code.toUpperCase() === 'UNAUTHENTICATED') {
-            console.log('UNAUTHENTICATED');
+            // console.log('UNAUTHENTICATED');
             const refreshToken = this.authService.refreshToken().toPromise();
             return fromPromise(
               refreshToken.catch(error => {
@@ -80,7 +80,6 @@ export class AppModule {
                 return forward(operation);
               })
             ).filter(value => Boolean(value)).flatMap(accessToken => {
-              console.log('access', accessToken.refreshToken);
               return forward(operation);
             });
           }
@@ -121,7 +120,6 @@ export class AppModule {
 			lazy: true,
 			reconnect: true,
 			connectionParams: () => {
-        console.log('ws', sessionStorage.getItem('currentToken'));
         return {
           authToken: `Bearer ${sessionStorage.getItem('currentToken')}`
         };

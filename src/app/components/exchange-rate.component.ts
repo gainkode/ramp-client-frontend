@@ -69,7 +69,6 @@ export class ExchangeRateComponent implements OnInit, OnDestroy {
                     this.spinnerMode = 'indeterminate';
                     this.pRateSubscription = ratesData.valueChanges.subscribe(({ data }) => {
                         const rates = data.getRates as Rate[];
-                        console.log(rates);
                         if (rates.length > 0) {
                             this.update.emit(rates[0]);
                         }

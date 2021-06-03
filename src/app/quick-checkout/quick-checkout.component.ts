@@ -294,6 +294,9 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
     private handleSuccessLogin(userData: LoginResult): void {
         this.auth.setLoginUser(userData);
         this.detailsEmailControl?.setValue(userData.user?.email);
+        console.log('kycApplicantId', userData.user?.kycApplicantId);
+        console.log('kycStatus', userData.user?.kycStatus);
+        console.log('kycValid', userData.user?.kycValid);
         this.inProgress = true;
         this.auth.getSettingsCommon().valueChanges.subscribe(settings => {
             this.inProgress = false;

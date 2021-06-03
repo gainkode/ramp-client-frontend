@@ -158,7 +158,8 @@ const GET_TRANSACTIONS_POST = gql`
         liquidityProvider,
         instrument,
         paymentProvider,
-        data
+        data,
+        cryptoAddress
       }
     }
   }

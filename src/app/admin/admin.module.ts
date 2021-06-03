@@ -33,6 +33,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { TransactionsComponent } from './transactions/transactions.component';
 import { CustomersComponent } from './customers/customers.component';
 import { CustomerDetailsComponent } from './customers/customer-details.component';
+import { TransactionDetailsComponent } from './transactions/transaction-details.component';
 
 const routing = RouterModule.forChild([
     {
@@ -83,7 +84,7 @@ export class MaterialModule { }
     declarations: [
         AdminComponent,
         DashboardComponent,
-        TransactionsComponent,
+        TransactionsComponent, TransactionDetailsComponent,
         CustomersComponent, CustomerDetailsComponent,
         FeesComponent, FeeEditorComponent,
         CostsComponent, CostEditorComponent,

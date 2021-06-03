@@ -1,8 +1,20 @@
+<div class="transaction-details-box">
+    <div *ngIf="inProgress">
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        <br>
+    </div>
+    <div class="form-element" *ngIf="errorMessage!==''">
+        <div class="form-error-box">
+            {{errorMessage}}
+        </div>
+        <br>
+    </div>
 
-<div>
-    Customer component
+    <h2>Transaction</h2>
+    <div *ngIf="customer?.id!==''">
+        <label class="customer-details-label">Transaction Id</label>
+        <div class="customer-details-value">
+            {{customer?.id}}
+        </div>
+    </div>
 </div>
-
-<p>
-    {{customer?.firstName}}
-</p>

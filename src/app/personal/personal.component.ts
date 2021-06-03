@@ -13,9 +13,9 @@ export class PersonalComponent implements OnInit {
 
     ngOnInit(): void {
         this.notification.subscribeToNotifications().subscribe(({ data }) => {
-            console.log('got data', data);
+            // got data
         }, (error) => {
-            console.log('there was an error subscribing to notifications');
+            // there was an error subscribing to notifications
         });
     }
 
@@ -25,9 +25,9 @@ export class PersonalComponent implements OnInit {
 
     notificationTest(): void {
         this.notification.sendTestNotification().subscribe(({ data }) => {
-            console.log(data);
+            // data
         }, (error) => {
-            console.log(error);
+            // error
         });
     }
 }
