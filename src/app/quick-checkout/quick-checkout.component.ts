@@ -294,9 +294,6 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
     private handleSuccessLogin(userData: LoginResult): void {
         this.auth.setLoginUser(userData);
         this.detailsEmailControl?.setValue(userData.user?.email);
-        console.log('kycApplicantId', userData.user?.kycApplicantId);
-        console.log('kycStatus', userData.user?.kycStatus);
-        console.log('kycValid', userData.user?.kycValid);
         this.inProgress = true;
         this.auth.getSettingsCommon().valueChanges.subscribe(settings => {
             this.inProgress = false;
@@ -328,6 +325,10 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
         }
         const amountVal = this.detailsAmountFromControl?.value;
         const amount = parseFloat(amountVal);
+
+        console.log(this.detailsAmountFromControl?.value);
+        console.log(this.detailsAddressControl?.value);
+
         this.dataService.createQuickCheckout(
             this.detailsTransactionControl?.value,
             this.detailsCurrencyFromControl?.value,
@@ -565,13 +566,15 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
                 this.paymentInfoProviderControl?.setValue(PaymentProvider.Fibonatix);
                 const userId = this.user?.userId;
                 if (userId) {
-                    const kycStatusData = this.auth.getUserKycData(userId);
+                    const kycStatusData = this.auth.getMyKycData();
                     if (kycStatusData === null) {
                         this.errorMessage = this.errorHandler.getRejectedCookieMessage();
                     } else {
                         this.inProgress = true;
+                        console.log('get kyc');
                         kycStatusData.valueChanges.subscribe(({ data }) => {
-                            const userKyc = data.userById as User;
+                            const userKyc = data.me as User;
+                            console.log(userKyc);
                             const requestKyc = this.needToRequestKyc(userKyc);
                             this.inProgress = false;
                             if (requestKyc === null) {
@@ -581,6 +584,7 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
                             }
                             this.showCodeConfirm = this.needToShowCodeConfirmation();
                         }, (error) => {
+                            console.log('Error', this.errorHandler.getCurrentError());
                             this.inProgress = false;
                             if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
                                 this.resetStepper();

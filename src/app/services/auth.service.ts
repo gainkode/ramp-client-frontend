@@ -191,17 +191,14 @@ const MY_KYC_STATUS_POST = gql`
 query { myKycStatus }
 `;
 
-const GET_USER_KYC_POST = gql`
-  query GetUserById(
-    $userId: String
-  ) {
-    userById(
-      userId: $userId) {
+const ME_KYC_POST = gql`
+query {
+    me {
         kycValid,
         kycStatus,
         kycReviewRejectedType
-      }
     }
+}
 `;
 
 const GET_MY_SETTINGS_KYC_POST = gql`
@@ -483,11 +480,10 @@ export class AuthService {
         });
     }
 
-    getUserKycData(id: string): QueryRef<any, EmptyObject> | null {
+    getMyKycData(): QueryRef<any, EmptyObject> | null {
         if (this.apollo.client !== undefined) {
             return this.apollo.watchQuery<any>({
-                query: GET_USER_KYC_POST,
-                variables: { userId: id },
+                query: ME_KYC_POST,
                 fetchPolicy: 'network-only'
             });
         } else {
@@ -496,7 +492,7 @@ export class AuthService {
     }
 
     socialSignOut(): void {
-        this.socialAuth.signOut().then(function(data) {}).catch(function (error) {});
+        this.socialAuth.signOut().then(function (data) { }).catch(function (error) { });
     }
 
     logout(): void {
