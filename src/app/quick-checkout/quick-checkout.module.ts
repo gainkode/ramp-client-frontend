@@ -17,14 +17,12 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { ComponentsModule } from '../components/components.module';
 import { QuickCheckoutComponent } from './quick-checkout.component';
 import { PaymentRedirectComponent } from './payment-redirect.component';
+import { PaymentCompleteComponent } from './payment-complete.component';
 
 const routing = RouterModule.forChild([
-    {
-        path: 'payment', component: QuickCheckoutComponent
-    },
-    {
-        path: 'done-redirect', component: PaymentRedirectComponent
-    },
+    { path: 'payment', component: QuickCheckoutComponent },
+    { path: 'done-redirect', component: PaymentRedirectComponent },
+    { path: 'complete', component: PaymentCompleteComponent },
     { path: '**', redirectTo: 'payment' }
 ]);
 
@@ -52,7 +50,7 @@ export class MaterialModule { }
 
 @NgModule({
     imports: [ CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule ],
-    declarations: [ QuickCheckoutComponent, PaymentRedirectComponent ],
+    declarations: [ QuickCheckoutComponent, PaymentRedirectComponent, PaymentCompleteComponent ],
     providers: [],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
