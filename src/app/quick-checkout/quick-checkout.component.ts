@@ -325,9 +325,6 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
         }
         const amountVal = this.detailsAmountFromControl?.value;
         const amount = parseFloat(amountVal);
-
-        console.log('register order address', this.detailsAddressControl?.value);
-
         this.dataService.createQuickCheckout(
             this.detailsTransactionControl?.value,
             this.detailsCurrencyFromControl?.value,
@@ -358,6 +355,7 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
             }, (error) => {
                 this.inProgress = false;
                 if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
+                    console.log('createQuickCheckout error');
                     this.resetStepper();
                 } else {
                     this.paymentInfoTransactionIdControl?.reset();
@@ -526,7 +524,6 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
     }
 
     private setSummuryAddress(val: any): void {
-        console.log('setSummuryAddress', val);
         if (this.detailsAddressControl?.valid) {
             this.summary.address = val;
         }
@@ -534,7 +531,7 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
 
     private needToRequestKyc(kyc: User): boolean | null {
         let result = true;
-        if (kyc.kycStatus === 'completed') {
+        if (kyc.kycStatus === 'completed' || kyc.kycStatus === 'pending') {
             result = false;
         } else {
             if (kyc.kycValid === true) {
@@ -564,34 +561,30 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
             } else if (step.selectedStep.label === 'paymentInfo') {
                 focusInput = this.paymentInfoNextElement?.nativeElement as HTMLInputElement;
                 this.paymentInfoProviderControl?.setValue(PaymentProvider.Fibonatix);
-                const userId = this.user?.userId;
-                if (userId) {
-                    const kycStatusData = this.auth.getMyKycData();
-                    if (kycStatusData === null) {
-                        this.errorMessage = this.errorHandler.getRejectedCookieMessage();
-                    } else {
-                        this.inProgress = true;
-                        kycStatusData.valueChanges.subscribe(({ data }) => {
-                            const userKyc = data.me as User;
-                            const requestKyc = this.needToRequestKyc(userKyc);
-                            this.inProgress = false;
-                            if (requestKyc === null) {
-                                this.errorMessage = 'We cannot proceed your payment because your identity is rejected';
-                            } else {
-                                this.showKycStep = requestKyc;
-                            }
-                            this.showCodeConfirm = this.needToShowCodeConfirmation();
-                        }, (error) => {
-                            this.inProgress = false;
-                            if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
-                                this.resetStepper();
-                            } else {
-                                this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load your identification status');
-                            }
-                        });
-                    }
+                const kycStatusData = this.auth.getMyKycData();
+                if (kycStatusData === null) {
+                    this.errorMessage = this.errorHandler.getRejectedCookieMessage();
                 } else {
-                    this.resetStepper();
+                    this.inProgress = true;
+                    kycStatusData.valueChanges.subscribe(({ data }) => {
+                        const userKyc = data.me as User;
+                        const requestKyc = this.needToRequestKyc(userKyc);
+                        this.inProgress = false;
+                        if (requestKyc === null) {
+                            this.errorMessage = 'We cannot proceed your payment because your identity is rejected';
+                        } else {
+                            this.showKycStep = requestKyc;
+                        }
+                        this.showCodeConfirm = this.needToShowCodeConfirmation();
+                    }, (error) => {
+                        this.inProgress = false;
+                        if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
+                            console.log('stepChanged on paymentInfo error');
+                            this.resetStepper();
+                        } else {
+                            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load your identification status');
+                        }
+                    });
                 }
             } else if (step.selectedStep.label === 'verification') {
                 focusInput = this.verificationResetElement?.nativeElement as HTMLInputElement;
@@ -723,6 +716,7 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
             }, (error) => {
                 this.inProgress = false;
                 if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
+                    console.log('confirmPayment error');
                     this.resetStepper();
                 } else {
                     this.confirmationCompleteControl?.reset();
@@ -755,6 +749,7 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
             }, (error) => {
                 this.inProgress = false;
                 if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
+                    console.log('paymentCompleted error');
                     this.resetStepper();
                 } else {
                     this.errorMessage = this.errorHandler.getError(error.message, 'Unable to confirm your order');
