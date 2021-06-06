@@ -23,13 +23,13 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
   selectedTransaction: TransactionItem | null = null;
   transactions: TransactionItem[] = [];
   transactionCount = 0;
-  pageSize = 10;
+  pageSize = 25;
   pageIndex = 0;
-  sortedField = 'executed';
+  sortedField = 'created';
   sortedDesc = true;
 
   displayedColumns: string[] = [
-    'id', 'executed', 'email', 'type', 'instrument', 'paymentProvider', 'paymentProviderResponse',
+    'id', 'created', 'executed', 'email', 'type', 'instrument', 'paymentProvider', 'paymentProviderResponse',
     'source', 'walletSource', 'currencyToSpend', 'amountToSpend', 'currencyToReceive', 'amountToReceive',
     'address', 'euro', 'fees', 'status', 'details'
   ];

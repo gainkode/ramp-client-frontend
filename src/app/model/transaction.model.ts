@@ -13,6 +13,7 @@ import { UserItem } from './user.model';
 export class TransactionItem {
     id = '';
     code = '';
+    created: string = '';
     executed: string = '';
     accountId = '';
     type: TransactionType | undefined = undefined;
@@ -36,21 +37,13 @@ export class TransactionItem {
 
     constructor(data: Transaction | null) {
         if (data !== null) {
-            console.log(data);
             this.code = data.code as string;
             this.id = data.transactionId;
             const datepipe: DatePipe = new DatePipe('en-US');
+            this.created = datepipe.transform(data.created, 'dd-MM-YYYY HH:mm:ss') as string;
             this.executed = datepipe.transform(data.executed, 'dd-MM-YYYY HH:mm:ss') as string;
             this.accountId = data.userId;
             this.user = new UserItem(data.user as User);
-            // this.paymentProviderResponse = 'Response';
-            // this.walletSource = 'Wallet source';
-            // if (data.data) {
-            //     const transactionData = JSON.parse(data.data as string);
-            //     if (transactionData) {
-            //         this.address = transactionData.userAddress;
-            //     }
-            // }
             this.address = data.cryptoAddress as string;
             this.ip = data.userIp as string;
             

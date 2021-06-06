@@ -22,9 +22,15 @@
           <td mat-cell *matCellDef="let element"> {{element.id}} </td>
         </ng-container>
 
+        <!-- Created Column -->
+        <ng-container matColumnDef="created">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>Created</th>
+          <td mat-cell *matCellDef="let element"> {{element.created}} </td>
+        </ng-container>
+
         <!-- Executed Column -->
         <ng-container matColumnDef="executed">
-          <th mat-header-cell mat-sort-header *matHeaderCellDef>Date</th>
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>Executed</th>
           <td mat-cell *matCellDef="let element"> {{element.executed}} </td>
         </ng-container>
 

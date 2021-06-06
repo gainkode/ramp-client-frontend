@@ -20,8 +20,15 @@
         </div>
     </div>
 
+    <div *ngIf="transaction?.created!==null">
+        <label class="transaction-details-label">Transaction Created</label>
+        <div class="transaction-details-value">
+            {{transaction?.created}}
+        </div>
+    </div>
+
     <div *ngIf="transaction?.executed!==null">
-        <label class="transaction-details-label">Transaction Date</label>
+        <label class="transaction-details-label">Transaction Executed</label>
         <div class="transaction-details-value">
             {{transaction?.executed}}
         </div>
