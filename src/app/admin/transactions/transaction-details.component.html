@@ -42,6 +42,13 @@
             </div>
         </div>
 
+        <div *ngIf="transaction?.user?.company!==''">
+            <label class="transaction-details-label">Company</label>
+            <div class="transaction-details-value">
+                {{transaction?.user?.company}}
+            </div>
+        </div>
+
         <div *ngIf="transaction?.user?.country!==null">
             <label class="transaction-details-label">Country</label>
             <div class="transaction-details-value">

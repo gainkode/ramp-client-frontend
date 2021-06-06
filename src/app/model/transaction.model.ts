@@ -54,7 +54,7 @@ export class TransactionItem {
             this.address = data.cryptoAddress as string;
             this.ip = data.userIp as string;
             
-            this.euro = 100;
+            //this.euro = 100;
             this.type = data.type;
             this.instrument = data.instrument;
             this.paymentProvider = data.paymentProvider as PaymentProvider | undefined;
@@ -74,6 +74,7 @@ export class TransactionItem {
 
             this.paymentProviderResponse = 'Response';
             this.walletSource = 'Wallet source';
+            this.euro = 100;
         }
     }
 

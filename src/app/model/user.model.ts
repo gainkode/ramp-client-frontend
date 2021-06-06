@@ -27,8 +27,11 @@ export class UserItem {
             this.name = data.name;
             this.firstName = data.firstName as string;
             this.lastName = data.lastName as string;
+            console.log(data.type);
             if (data.type === UserType.Merchant) {
                 this.company = (data.firstName) ? data.firstName as string : '';    
+                this.firstName = '';
+                this.lastName = '';
             }
             this.email = data.email;
             this.phone = (data.phone) ? data.phone as string : '';

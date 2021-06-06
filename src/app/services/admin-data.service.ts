@@ -137,7 +137,7 @@ const GET_TRANSACTIONS_POST = gql`
         code,
         userId,
         userIp,
-        user {userId, email, firstName, lastName, countryCode2, kycStatus},
+        user {userId, email, firstName, lastName, countryCode2, type, kycStatus},
         affiliateId,
         created,
         executed,
