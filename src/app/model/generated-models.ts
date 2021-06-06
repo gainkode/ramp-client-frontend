@@ -661,19 +661,9 @@ export type KycApplicant = {
   email?: Maybe<Scalars['String']>;
   phone?: Maybe<Scalars['String']>;
   countryCode3?: Maybe<Scalars['String']>;
-  status?: Maybe<KycStatus>;
+  status?: Maybe<Scalars['String']>;
   details?: Maybe<Array<StringMap>>;
 };
-
-export enum KycStatus {
-  Unknown = 'unknown',
-  NotFound = 'notFound',
-  Init = 'init',
-  Pending = 'pending',
-  Queued = 'queued',
-  Completed = 'completed',
-  OnHold = 'onHold'
-}
 
 export type StringMap = {
   __typename?: 'StringMap';
@@ -1640,6 +1630,16 @@ export type UserNotificationTypeListResult = {
   count?: Maybe<Scalars['Int']>;
   list?: Maybe<Array<UserNotificationType>>;
 };
+
+export enum KycStatus {
+  Unknown = 'unknown',
+  NotFound = 'notFound',
+  Init = 'init',
+  Pending = 'pending',
+  Queued = 'queued',
+  Completed = 'completed',
+  OnHold = 'onHold'
+}
 
 export type KycRejectedLabel = {
   __typename?: 'KycRejectedLabel';
