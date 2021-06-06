@@ -232,7 +232,6 @@ export class CheckoutSummary {
     card: CardView | null = null;
 
     reset(): void {
-        console.log('reset summury');
         this.orderId = '';
         this.email = '';
         this.currencyFrom = '';

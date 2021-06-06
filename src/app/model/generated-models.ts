@@ -828,7 +828,8 @@ export type TransactionShort = {
   amountToReceive: Scalars['Float'];
   amountToReceiveWithoutFee: Scalars['Float'];
   rate: Scalars['Float'];
-  cryptoAddress?: Maybe<Scalars['String']>;
+  destinationType?: Maybe<TransactionDestinationType>;
+  destination?: Maybe<Scalars['String']>;
   source: TransactionSource;
   instrument: PaymentInstrument;
   custodyProvider?: Maybe<CustodyProvider>;
@@ -851,6 +852,11 @@ export enum TransactionStatus {
   Abounded = 'Abounded',
   Canceled = 'Canceled',
   Chargeback = 'Chargeback'
+}
+
+export enum TransactionDestinationType {
+  User = 'USER',
+  Address = 'ADDRESS'
 }
 
 export enum TransactionSource {
@@ -898,7 +904,8 @@ export type Transaction = {
   amountToReceive: Scalars['Float'];
   amountToReceiveWithoutFee: Scalars['Float'];
   rate: Scalars['Float'];
-  cryptoAddress?: Maybe<Scalars['String']>;
+  destinationType?: Maybe<TransactionDestinationType>;
+  destination?: Maybe<Scalars['String']>;
   source: TransactionSource;
   instrument: PaymentInstrument;
   custodyProvider?: Maybe<CustodyProvider>;
@@ -1061,8 +1068,8 @@ export type Mutation = {
   sendEmailCodePasswordChange: Scalars['Boolean'];
   addFeedback: Feedback;
   sendTestNotification?: Maybe<Scalars['Void']>;
-  createQuickCheckout?: Maybe<TransactionShort>;
-  executeQuickCheckout?: Maybe<TransactionShort>;
+  createTransaction?: Maybe<TransactionShort>;
+  executeTransaction?: Maybe<TransactionShort>;
 };
 
 
@@ -1287,13 +1294,13 @@ export type MutationAddFeedbackArgs = {
 };
 
 
-export type MutationCreateQuickCheckoutArgs = {
+export type MutationCreateTransactionArgs = {
   transaction?: Maybe<TransactionInput>;
   recaptcha: Scalars['String'];
 };
 
 
-export type MutationExecuteQuickCheckoutArgs = {
+export type MutationExecuteTransactionArgs = {
   transactionId?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
   recaptcha: Scalars['String'];
@@ -1458,7 +1465,8 @@ export type TransactionInput = {
   currencyToReceive: Scalars['String'];
   amountFiat: Scalars['Float'];
   rate: Scalars['Float'];
-  cryptoAddress?: Maybe<Scalars['String']>;
+  destinationType?: Maybe<TransactionDestinationType>;
+  destination?: Maybe<Scalars['String']>;
   instrument: PaymentInstrument;
   paymentProvider?: Maybe<PaymentProvider>;
   liquidityProvider?: Maybe<LiquidityProvider>;
@@ -1591,6 +1599,30 @@ export type DepositAddress = {
   customerRefId?: Maybe<Scalars['String']>;
   addressFormat?: Maybe<Scalars['String']>;
 };
+
+export type TransferResult = {
+  __typename?: 'TransferResult';
+  id?: Maybe<Scalars['String']>;
+  result?: Maybe<Scalars['String']>;
+};
+
+export enum FireblocksTransactionStatus {
+  Submitted = 'SUBMITTED',
+  Queued = 'QUEUED',
+  PendingAuthorization = 'PENDING_AUTHORIZATION',
+  PendingSignature = 'PENDING_SIGNATURE',
+  Broadcasting = 'BROADCASTING',
+  Pending_3RdPartyManualApproval = 'PENDING_3RD_PARTY_MANUAL_APPROVAL',
+  Pending_3RdParty = 'PENDING_3RD_PARTY',
+  Confirming = 'CONFIRMING',
+  PartiallyCompleted = 'PARTIALLY_COMPLETED',
+  PendingAmlScreening = 'PENDING_AML_SCREENING',
+  Completed = 'COMPLETED',
+  Cancelled = 'CANCELLED',
+  Rejected = 'REJECTED',
+  Blocked = 'BLOCKED',
+  Failed = 'FAILED'
+}
 
 export type UserNotificationSubscriptionInput = {
   userId?: Maybe<Scalars['String']>;

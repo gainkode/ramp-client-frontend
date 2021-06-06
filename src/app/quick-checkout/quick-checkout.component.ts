@@ -7,7 +7,7 @@ import { Subscription, Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import {
     LoginResult, PaymentInstrument, PaymentPreauthResultShort, PaymentProvider, Rate, SettingsCommon,
-    SettingsCurrencyListResult, SettingsKycShort, TransactionShort, TransactionType, User, UserMode
+    SettingsCurrencyListResult, SettingsKycShort, TransactionDestinationType, TransactionShort, TransactionType, User, UserMode
 } from '../model/generated-models';
 import { KycLevelShort } from '../model/identification.model';
 import {
@@ -333,6 +333,7 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
             this.paymentInfoInstrumentControl?.value,
             this.paymentInfoProviderControl?.value,
             rate as number,
+            TransactionDestinationType.Address,
             this.detailsAddressControl?.value).subscribe(({ data }) => {
                 const order = data.createQuickCheckout as TransactionShort;
                 this.inProgress = false;

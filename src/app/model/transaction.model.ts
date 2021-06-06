@@ -44,7 +44,7 @@ export class TransactionItem {
             this.executed = datepipe.transform(data.executed, 'dd-MM-YYYY HH:mm:ss') as string;
             this.accountId = data.userId;
             this.user = new UserItem(data.user as User);
-            this.address = data.cryptoAddress as string;
+            this.address = data.destination as string;
             this.ip = data.userIp as string;
             
             //this.euro = 100;

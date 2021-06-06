@@ -159,7 +159,8 @@ const GET_TRANSACTIONS_POST = gql`
         instrument,
         paymentProvider,
         data,
-        cryptoAddress
+        destinationType,
+        destination
       }
     }
   }
