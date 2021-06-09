@@ -335,7 +335,7 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
             rate as number,
             TransactionDestinationType.Address,
             this.detailsAddressControl?.value).subscribe(({ data }) => {
-                const order = data.createQuickCheckout as TransactionShort;
+                const order = data.createTransaction as TransactionShort;
                 this.inProgress = false;
                 if (order.code) {
                     this.summary.orderId = order.code as string;
@@ -531,6 +531,7 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
     }
 
     private needToRequestKyc(kyc: User): boolean | null {
+        console.log(kyc);
         let result = true;
         if (kyc.kycStatus === 'completed' || kyc.kycStatus === 'pending') {
             result = false;
