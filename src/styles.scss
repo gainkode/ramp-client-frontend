@@ -329,8 +329,12 @@ input:-webkit-autofill::first-line {
 .admin-content-block {
     height          : 100%;
     margin-left     : 11em;
-    /* Same as the width of the sidebar */
-    //padding    : 0px 10px;
+    background-color: #DDDFE6;
+}
+
+.profile-content-block {
+    height            : 100%;
+    padding           : 1em;
     background-color: #DDDFE6;
 }
 
@@ -522,14 +526,14 @@ img.payment-logo {
 }
 
 .panel-menu-item {
-    display: flex;
-    justify-content:baseline;
-    align-items:center;
+    display        : flex;
+    justify-content: baseline;
+    align-items    : center;
 }
 
 .panel-menu-item-icon {
-    font-size: 18px;
-    padding  : 0px;
+    font-size  : 18px;
+    padding    : 0px;
     padding-top: 5px;
 }
 
