@@ -91,6 +91,11 @@ input:-webkit-autofill::first-line {
     outline: none;
 }
 
+.link-button-menu {
+    width        : auto;
+    padding-right: 15px;
+}
+
 .main-button-primary {
     /* Grey - 2 800 */
     background: #3B4D5A;

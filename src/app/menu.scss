@@ -1,5 +1,5 @@
 .menu-bar {
-    box-sizing: border-box;
+    box-sizing      : border-box;
     -moz-box-align  : center;
     align-items     : center;
     -moz-box-pack   : justify;
@@ -9,21 +9,25 @@
     outline-color   : #dbdbdb;
     outline-width   : 0.125em;
     outline-style   : solid;
-    padding: 1.25em;
+    padding         : 1.25em;
+}
+
+.menu-bar-large {
+    height: 6em;
 }
 
 .menu-content-bar {
-    margin: auto;
-    display         : flex;
-    flex-direction  : row;
-    justify-content : space-between;
-    width           : 80%;
-    height: 2em;
-    max-width: 90em;
+    margin         : auto;
+    display        : flex;
+    flex-direction : row;
+    justify-content: space-between;
+    width          : 80%;
+    height         : 2em;
+    max-width      : 90em;
 }
 
 .menu-box {
-    margin    : 0 4em;
+    margin: 0 4em;
 }
 
 .menu-delimiter {
