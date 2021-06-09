@@ -496,6 +496,7 @@ export type User = {
   nameConfirmed?: Maybe<Scalars['DateTime']>;
   emailConfirmed?: Maybe<Scalars['DateTime']>;
   roles?: Maybe<Array<UserRole>>;
+  contacts?: Maybe<Array<UserContact>>;
   permissions?: Maybe<Array<UserRolePermission>>;
   is2faEnabled?: Maybe<Scalars['Boolean']>;
   hasEmailAuth?: Maybe<Scalars['Boolean']>;
@@ -533,6 +534,15 @@ export type UserRole = {
   name: Scalars['String'];
   code: Scalars['String'];
   immutable?: Maybe<Scalars['Boolean']>;
+};
+
+export type UserContact = {
+  __typename?: 'UserContact';
+  userContactId?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['String']>;
+  contactId?: Maybe<Scalars['String']>;
+  displayName?: Maybe<Scalars['String']>;
+  created: Scalars['DateTime'];
 };
 
 export type UserRolePermission = {
@@ -720,8 +730,9 @@ export type UserListResult = {
 
 export enum UserActionResult {
   Unknown = 'unknown',
-  Success = 'success',
-  Fail = 'fail'
+  Succeeded = 'succeeded',
+  Failed = 'failed',
+  Canceled = 'canceled'
 }
 
 export type UserActionListResult = {
@@ -739,6 +750,7 @@ export type UserAction = {
   linkedIds?: Maybe<Array<Scalars['String']>>;
   info?: Maybe<Scalars['String']>;
   result?: Maybe<UserActionResult>;
+  status?: Maybe<Scalars['String']>;
   date?: Maybe<Scalars['DateTime']>;
 };
 
@@ -750,8 +762,9 @@ export enum UserActionType {
   Receive = 'receive',
   Deposit = 'deposit',
   Withdraw = 'withdraw',
-  Sell = 'sell',
-  Buy = 'buy'
+  Transfer = 'transfer',
+  Exchange = 'exchange',
+  System = 'system'
 }
 
 export type SupportTicketListResult = {
@@ -923,7 +936,7 @@ export type Transaction = {
 
 export enum TransactionKycStatus {
   KycWaiting = 'KycWaiting',
-  KycRejecyed = 'KycRejecyed',
+  KycRejected = 'KycRejected',
   KycApproved = 'KycApproved'
 }
 
@@ -1050,6 +1063,8 @@ export type Mutation = {
   assignRole?: Maybe<User>;
   removeRole?: Maybe<User>;
   deleteUser?: Maybe<User>;
+  addMyContact?: Maybe<User>;
+  deleteMyContact?: Maybe<User>;
   signup: LoginResult;
   login: LoginResult;
   logout: Scalars['Boolean'];
@@ -1189,6 +1204,17 @@ export type MutationRemoveRoleArgs = {
 
 export type MutationDeleteUserArgs = {
   userId: Scalars['ID'];
+};
+
+
+export type MutationAddMyContactArgs = {
+  contactUserId: Scalars['ID'];
+  displayName?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationDeleteMyContactArgs = {
+  contactId: Scalars['ID'];
 };
 
 
@@ -1722,6 +1748,20 @@ export type CommonSettings = {
   __typename?: 'CommonSettings';
   maxFileSize?: Maybe<Scalars['Int']>;
   maxFiles?: Maybe<Scalars['Int']>;
+};
+
+export type ApiKey = {
+  __typename?: 'ApiKey';
+  apiKeyId: Scalars['ID'];
+  userId: Scalars['String'];
+  secret?: Maybe<Scalars['String']>;
+  created: Scalars['DateTime'];
+};
+
+export type ApiKeyListResult = {
+  __typename?: 'ApiKeyListResult';
+  count?: Maybe<Scalars['Int']>;
+  list?: Maybe<Array<ApiKey>>;
 };
 
 export type TransferListResult = {
