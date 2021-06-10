@@ -242,7 +242,7 @@ export type QueryGetRatesArgs = {
 
 
 export type QueryGetMyTransactionsArgs = {
-  quickCheckoutOnly?: Maybe<Scalars['Boolean']>;
+  sourcesOnly?: Maybe<Array<TransactionSource>>;
   filter?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
@@ -252,7 +252,7 @@ export type QueryGetMyTransactionsArgs = {
 
 export type QueryGetTransactionsArgs = {
   userId?: Maybe<Scalars['String']>;
-  quickCheckoutOnly?: Maybe<Scalars['Boolean']>;
+  sourcesOnly?: Maybe<Array<TransactionSource>>;
   filter?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
@@ -814,6 +814,12 @@ export type Rate = {
   withdrawRate: Scalars['Float'];
 };
 
+export enum TransactionSource {
+  QuickCheckout = 'QuickCheckout',
+  Widget = 'Widget',
+  Wallet = 'Wallet'
+}
+
 export type TransactionShortListResult = {
   __typename?: 'TransactionShortListResult';
   count?: Maybe<Scalars['Int']>;
@@ -870,12 +876,6 @@ export enum TransactionStatus {
 export enum TransactionDestinationType {
   User = 'USER',
   Address = 'ADDRESS'
-}
-
-export enum TransactionSource {
-  QuickCheckout = 'QuickCheckout',
-  Widget = 'Widget',
-  Wallet = 'Wallet'
 }
 
 export enum CustodyProvider {

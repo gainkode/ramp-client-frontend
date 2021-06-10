@@ -5,7 +5,7 @@ import { AuthService } from '../../services/auth.service';
 import { AdminDataService } from '../../services/admin-data.service';
 import { ErrorService } from '../../services/error.service';
 import { TransactionItem } from '../../model/transaction.model';
-import { TransactionListResult } from '../../model/generated-models';
+import { TransactionListResult, TransactionSource } from '../../model/generated-models';
 import { Subscription } from 'rxjs';
 import { MatSort } from '@angular/material/sort';
 
@@ -63,7 +63,8 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private loadTransactions(): void {
     this.transactionCount = 0;
-    const transactionsData = this.adminService.getTransactions(this.pageIndex, this.pageSize, this.sortedField, this.sortedDesc);
+    const transactionsData = this.adminService.getTransactions(
+      this.pageIndex, this.pageSize, [TransactionSource.QuickCheckout], this.sortedField, this.sortedDesc);
     if (transactionsData === null) {
       this.errorMessage = this.errorHandler.getRejectedCookieMessage();
     } else {

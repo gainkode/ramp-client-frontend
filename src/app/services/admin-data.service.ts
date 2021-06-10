@@ -4,7 +4,7 @@ import { EmptyObject } from 'apollo-angular/types';
 import { Observable } from 'rxjs';
 import { CostScheme } from '../model/cost-scheme.model';
 import { FeeScheme } from '../model/fee-scheme.model';
-import { UserType } from '../model/generated-models';
+import { TransactionSource, UserType } from '../model/generated-models';
 import { KycLevel, KycScheme } from '../model/identification.model';
 
 const GET_FEE_SETTINGS_POST = gql`
@@ -117,7 +117,7 @@ const GET_KYC_LEVELS_POST = gql`
 const GET_TRANSACTIONS_POST = gql`
   query GetTransactions(
     $userId: String,
-    $quickCheckoutOnly: Boolean,
+    $sourcesOnly: [TransactionSource!],
     $filter: String,
     $skip: Int,
     $first: Int
@@ -125,7 +125,7 @@ const GET_TRANSACTIONS_POST = gql`
   ) {
     getTransactions(
       userId: $userId,
-      quickCheckoutOnly: $quickCheckoutOnly,
+      sourcesOnly: $sourcesOnly,
       filter: $filter,
       skip: $skip,
       first: $first,
@@ -504,7 +504,8 @@ export class AdminDataService {
     }
   }
 
-  getTransactions(pageIndex: number, takeItems: number, orderField: string, orderDesc: boolean): QueryRef<any, EmptyObject> | null {
+  getTransactions(pageIndex: number, takeItems: number, sources: TransactionSource[],
+    orderField: string, orderDesc: boolean): QueryRef<any, EmptyObject> | null {
     if (this.apollo.client !== undefined) {
       const orderFields = [
         { orderBy: orderField, desc: orderDesc }
@@ -513,7 +514,7 @@ export class AdminDataService {
         query: GET_TRANSACTIONS_POST,
         variables: {
           userId: '',
-          quickCheckoutOnly: false,
+          sourcesOnly: sources,
           filter: '',
           skip: pageIndex * takeItems,
           first: takeItems,
