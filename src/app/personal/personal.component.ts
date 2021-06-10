@@ -27,6 +27,7 @@ export class PersonalComponent implements OnInit {
         }, (error) => {
             // there was an error subscribing to notifications
         });
+        //this.routeTo('/home');
     }
 
     routeTo(link: string): void {
