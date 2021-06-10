@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserType } from '../model/generated-models';
 import { AuthService } from '../services/auth.service';
 import { NotificationService } from '../services/notification.service';
 
@@ -9,8 +8,12 @@ import { NotificationService } from '../services/notification.service';
     styleUrls: ['../menu.scss']
 })
 export class PersonalComponent implements OnInit {
+    _selectedSection = '';
+
     constructor(private auth: AuthService, private notification: NotificationService,
-        private router: Router) { }
+        private router: Router) {
+        this._selectedSection = 'home';
+    }
 
     get userName(): string {
         let name = '';
@@ -19,6 +22,10 @@ export class PersonalComponent implements OnInit {
             name = `${user.firstName} ${user.lastName}`;
         }
         return name;
+    }
+
+    get selectedSection(): string {
+        return this._selectedSection;
     }
 
     ngOnInit(): void {
@@ -31,6 +38,13 @@ export class PersonalComponent implements OnInit {
     }
 
     routeTo(link: string): void {
+        const urlBlocks = link.split('/');
+        if (urlBlocks.length > 0) {
+            const s = urlBlocks[urlBlocks.length - 1];
+            if (s === 'home' || s === 'myaccount' || s === 'mycontacts' || s === 'transactions' || s === 'exchanger') {
+                this._selectedSection = s;
+            }
+        }
         this.router.navigateByUrl(link);
     }
 

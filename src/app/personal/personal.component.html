@@ -27,19 +27,24 @@
     </div>
     <div class="menu-content-bar">
         <div class="menu-box">
-            <button class="link-button link-button-menu link-button-accent" (click)="routeTo('/home')">
+            <button class="link-button link-button-menu" [class.link-button-accent]="selectedSection==='home'"
+                [class.link-button-primary]="selectedSection!=='home'" (click)="routeTo('/personal/main/home')">
                 Home
             </button>
-            <button class="link-button link-button-menu link-button-primary" (click)="routeTo('/myaccount')">
+            <button class="link-button link-button-menu" [class.link-button-accent]="selectedSection==='myaccount'"
+            [class.link-button-primary]="selectedSection!=='myaccount'" (click)="routeTo('/personal/main/myaccount')">
                 My Account
             </button>
-            <button class="link-button link-button-menu link-button-primary" (click)="routeTo('/mycontacts')">
+            <button class="link-button link-button-menu" [class.link-button-accent]="selectedSection==='mycontacts'"
+            [class.link-button-primary]="selectedSection!=='mycontacts'" (click)="routeTo('/personal/main/mycontacts')">
                 My Contacts
             </button>
-            <button class="link-button link-button-menu link-button-primary" (click)="routeTo('/transactions')">
+            <button class="link-button link-button-menu" [class.link-button-accent]="selectedSection==='transactions'"
+            [class.link-button-primary]="selectedSection!=='transactions'" (click)="routeTo('/personal/main/transactions')">
                 Transactions
             </button>
-            <button class="link-button link-button-menu link-button-primary" (click)="routeTo('/exchanger')">
+            <button class="link-button link-button-menu" [class.link-button-accent]="selectedSection==='exchanger'"
+            [class.link-button-primary]="selectedSection!=='exchanger'" (click)="routeTo('/personal/main/exchanger')"> 
                 Exchanger
             </button>
             <span class="menu-delimiter"></span>
