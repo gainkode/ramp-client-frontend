@@ -23,6 +23,19 @@ import { CreditCardComponent } from './credit-card.component';
 import { MatSelectModule } from '@angular/material/select';
 import { NumberFillPipe } from '../utils/number-fill.pipe';
 import { DirectiveModule } from '../directives/directives.module';
+import { ProfileAccountBalanceComponent } from './profile/profile-account-balance.component';
+import { ProfileExchangeComponent } from './profile/profile-exchange.component';
+import { ProfileNotificationsComponent } from './profile/profile-notifications.component';
+import { ProfileQuickTransferComponent } from './profile/profile-quick-transfer.component';
+import { ProfileTransactionsComponent } from './profile/profile-transactions.component';
+import { ProfileInfoComponent } from './profile/profile-info.component';
+import { ProfileTwoFAComponent } from './profile/profile-two-FA.component';
+import { ProfilePasswordComponent } from './profile/profile-password.component';
+import { ProfileVerificationComponent } from './profile/profile-verification.component';
+import { ProfileContactsComponent } from './profile/profile-contacts.component';
+import { ProfileWithdrawalComponent } from './profile/profile-withdrawal.component';
+import { ProfileAssetsComponent } from './profile/profile-assets.component';
+import { ProfileLastExchangesComponent } from './profile/profile-last-exchanges.component';
 
 
 const materialModules = [
@@ -48,11 +61,19 @@ export class MaterialModule { }
     declarations: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
         CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent,
         LoginPanelComponent, CommonDialogBox, CreditCardComponent,
-        LineBreakPipe, NumberFillPipe],
+        LineBreakPipe, NumberFillPipe, ProfileAccountBalanceComponent, ProfileExchangeComponent,
+        ProfileNotificationsComponent, ProfileQuickTransferComponent, ProfileTransactionsComponent,
+        ProfileInfoComponent, ProfileTwoFAComponent, ProfilePasswordComponent, 
+        ProfileVerificationComponent, ProfileContactsComponent, ProfileWithdrawalComponent,
+        ProfileAssetsComponent, ProfileLastExchangesComponent],
     exports: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
         CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent,
         LoginPanelComponent, MatProgressBarModule, CommonDialogBox, CreditCardComponent,
-        LineBreakPipe, NumberFillPipe],
+        LineBreakPipe, NumberFillPipe, ProfileAccountBalanceComponent, ProfileExchangeComponent,
+        ProfileNotificationsComponent, ProfileQuickTransferComponent, ProfileTransactionsComponent,
+        ProfileInfoComponent, ProfileTwoFAComponent, ProfilePasswordComponent, 
+        ProfileVerificationComponent, ProfileContactsComponent, ProfileWithdrawalComponent,
+        ProfileAssetsComponent, ProfileLastExchangesComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 
