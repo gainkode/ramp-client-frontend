@@ -105,9 +105,9 @@ export class CardView {
             const data = JSON.parse(info);
             this.bankName = data.bankName;
             this.cardType = data.cardType.toLowerCase();
-            this.monthExpired = data.cardExpMonth;
-            this.yearExpired = data.cardExpYear;
-            this.holderName = data.cardholderName;
+            this.monthExpired = parseInt(data.cardExpMonth, 10);
+            this.yearExpired = parseInt(data.cardExpYear, 10);
+            this.holderName = (data.cardholderName as string).toUpperCase();
             this.processor = data.processorName;
             this.bin = data.bin;
             this.lastDigits = data.lastFourDigits;
