@@ -8,13 +8,44 @@
             Please send your deposit amount using the bank details below:
         </p>
     </div>
-    <div>
-        <label class="checkout-summary-label">Bank Name</label>
-        <div class="checkout-summary-value">
-            {{summary?.card?.bankName}}
+    <div *ngIf="summary?.card!==null">
+        <div>
+            <label class="checkout-summary-label">Bank Name</label>
+            <div class="checkout-summary-value">
+                {{summary?.card?.bankName}}
+            </div>
+        </div>
+        <div>
+            <label class="checkout-summary-label">Card Number</label>
+            <div class="checkout-summary-value">
+                <div style="display: inline;">
+                    <img class="country-flag" [src]="summary?.card?.cardInfo?.imgSource"/>
+                    {{summary?.card?.secureCardNumber}}
+                </div>
+            </div>
+        </div>
+        <div>
+            <label class="checkout-summary-label">Cardholder Name</label>
+            <div class="checkout-summary-value">
+                {{summary?.card?.holderName}}
+            </div>
+        </div>
+        <div>
+            <label class="checkout-summary-label">Card expired</label>
+            <div class="checkout-summary-value">
+                {{summary?.card?.cardExpired}}
+            </div>
+        </div>
+        <div>
+            <label class="checkout-summary-label">Processor Name</label>
+            <div class="checkout-summary-value">
+                {{summary?.card?.processor}}
+            </div>
         </div>
     </div>
-    <div>
+
+    
+    <!-- <div>
         <label class="checkout-summary-label">Bank Address</label>
         <div class="checkout-summary-value">
             <div style="color: darkred;">Bank address</div>
@@ -37,7 +68,7 @@
         <div class="checkout-summary-value">
             <div style="color: darkred;">LT156461651847986461</div>
         </div>
-    </div>
+    </div> -->
     <div>
         <label class="checkout-summary-label">Add Reference</label>
         <div class="checkout-summary-value">
@@ -114,11 +145,11 @@
             {{summary?.amountFrom}} {{summary?.currencyFrom}}
         </div>
     </div>
-    <h2>Payment</h2>
+    <!-- <h2>Payment</h2>
     <div>
         <label class="checkout-summary-label">Bank Transfer</label>
         <div class="checkout-summary-value">
             <div style="color: darkred;">UAB Mistertango</div>
         </div>
-    </div>
+    </div> -->
 </div>

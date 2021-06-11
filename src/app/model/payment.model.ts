@@ -1,3 +1,4 @@
+import { CommonTargetValue } from './common.model';
 import {
     PaymentInstrument, PaymentProvider, TransactionType, TransactionStatus,
     SettingsFeeTargetFilterType, SettingsCostTargetFilterType, SettingsKycTargetFilterType,
@@ -97,6 +98,7 @@ export class CardView {
     processor = '';
     bin = '';
     lastDigits = '';
+    cardInfo: CommonTargetValue | null = null;
 
     setPaymentInfo(info: string): void {
         if (info) {
@@ -109,7 +111,21 @@ export class CardView {
             this.processor = data.processorName;
             this.bin = data.bin;
             this.lastDigits = data.lastFourDigits;
+            if (this.cardType !== '') {
+                this.cardInfo = new CommonTargetValue();
+                this.cardInfo.imgClass = 'country-flag';
+                this.cardInfo.imgSource = `assets/svg-payment-systems/${this.cardType.toLowerCase()}.svg`;
+                this.cardInfo.title = this.cardType;
+            }
         }
+    }
+
+    get cardExpired(): string {
+        return `${this.monthExpired < 10 ? '0' : ''}${this.monthExpired}/${this.yearExpired}`;
+    }
+
+    get secureCardNumber(): string {
+        return `${this.bin.substr(0, 4)} **** **** ${this.lastDigits}`;
     }
 }
 
@@ -230,6 +246,7 @@ export class CheckoutSummary {
     transactionType: TransactionType = TransactionType.Deposit;
     status: TransactionStatus = TransactionStatus.Pending;
     card: CardView | null = null;
+    provider: PaymentProvider | null = null;
 
     reset(): void {
         this.orderId = '';
@@ -246,13 +263,17 @@ export class CheckoutSummary {
         this.transactionDate = '';
         this.transactionType = TransactionType.Deposit;
         this.status = TransactionStatus.Pending;
+        this.provider = null;
         this.card = null;
     }
 
-    setPaymentInfo(info: string): void {
+    setPaymentInfo(provider: PaymentProvider, instrument: PaymentInstrument, info: string): void {
         if (info) {
-            this.card = new CardView();
-            this.card.setPaymentInfo(info);
+            this.provider = provider;
+            if (this.provider === PaymentProvider.Fibonatix || instrument === PaymentInstrument.CreditCard) {
+                this.card = new CardView();
+                this.card.setPaymentInfo(info);
+            }
         }
     }
 }

@@ -214,6 +214,7 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
         });
         this.isApmSelected = false;
         this.paymentInfoInstrumentControl?.valueChanges.subscribe((val) => {
+            this.errorMessage = '';
             this.paymentInfoProviderControl?.setValue('');
             if (val === PaymentInstrument.Apm) {
                 this.isApmSelected = true;
@@ -742,7 +743,8 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
             this.dataService.preAuth(transaction, instrument, payment, this.currentCard).subscribe(({ data }) => {
                 const preAuthResult = data.preauth as PaymentPreauthResultShort;
                 const order = preAuthResult.order;
-                this.summary.setPaymentInfo(order?.paymentInfo as string);
+                this.summary.setPaymentInfo(
+                    order?.provider as PaymentProvider, instrument as PaymentInstrument, order?.paymentInfo as string);
                 sessionStorage.setItem('paymentDone', preAuthResult.html as string);
                 this.inProgress = false;
                 if (this.stepper) {
