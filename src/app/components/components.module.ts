@@ -18,6 +18,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
 import { CheckoutDoneComponent } from './checkout-done.component';
 import { CreditCardComponent } from './credit-card.component';
 import { MatSelectModule } from '@angular/material/select';
@@ -37,7 +40,6 @@ import { ProfileWithdrawalComponent } from './profile/profile-withdrawal.compone
 import { ProfileAssetsComponent } from './profile/profile-assets.component';
 import { ProfileLastExchangesComponent } from './profile/profile-last-exchanges.component';
 
-
 const materialModules = [
     MatButtonModule,
     MatFormFieldModule,
@@ -47,7 +49,10 @@ const materialModules = [
     MatDialogModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule
 ];
 
 @NgModule({

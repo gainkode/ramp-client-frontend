@@ -1,3 +1,81 @@
-<div style="color: lightcyan;background-color: midnightblue;height: 45px;padding: 15px;margin: auto;text-align: center;">
-    <h2>Transactions</h2>
+<h3>Recent Transactions</h3>
+<div *ngIf="inProgress">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    <br>
+</div>
+<div class="form-error-box" *ngIf="errorMessage!==''">
+    {{errorMessage}}
+</div>
+
+<div class="table-responsive">
+    <table mat-table *ngIf="errorMessage===''" class="data-table" [dataSource]="transactions">
+        <!-- Transaction ID Column -->
+        <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef>Transaction ID</th>
+            <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+        </ng-container>
+
+        <!-- Created Column -->
+        <ng-container matColumnDef="created">
+            <th mat-header-cell *matHeaderCellDef>Created</th>
+            <td mat-cell *matCellDef="let element"> {{element.created}} </td>
+        </ng-container>
+
+        <!-- Executed Column -->
+        <ng-container matColumnDef="executed">
+            <th mat-header-cell *matHeaderCellDef>Executed</th>
+            <td mat-cell *matCellDef="let element"> {{element.executed}} </td>
+        </ng-container>
+
+        <!-- Transaction Type Column -->
+        <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef>Type</th>
+            <td mat-cell *matCellDef="let element"> {{element.transactionTypeName}} </td>
+        </ng-container>
+
+        <!-- Instrument Column -->
+        <ng-container matColumnDef="instrument">
+            <th mat-header-cell *matHeaderCellDef>Instrument</th>
+            <td mat-cell *matCellDef="let element"> {{element.instrumentName}} </td>
+        </ng-container>
+
+        <!-- Payment Provider Column -->
+        <ng-container matColumnDef="payment">
+            <th mat-header-cell *matHeaderCellDef>Details</th>
+            <td style="color: darkred;" mat-cell *matCellDef="let element"> {{element.payment}} </td>
+        </ng-container>
+
+        <!-- Base Currency Column -->
+        <ng-container matColumnDef="currencyToSpend">
+            <th mat-header-cell *matHeaderCellDef>Base coin</th>
+            <td mat-cell *matCellDef="let element"> {{element.currencyToSpend}} </td>
+        </ng-container>
+
+        <!-- Base Amount Column -->
+        <ng-container matColumnDef="amountToSpend">
+            <th mat-header-cell *matHeaderCellDef>Base value</th>
+            <td mat-cell *matCellDef="let element"> {{element.amountToSpend}} </td>
+        </ng-container>
+
+        <!-- Fee Value Column -->
+        <ng-container matColumnDef="fees">
+            <th mat-header-cell *matHeaderCellDef>Fees</th>
+            <td mat-cell *matCellDef="let element"> {{element.fees}} </td>
+        </ng-container>
+
+        <!-- Balance Value Column -->
+        <ng-container matColumnDef="balance">
+            <th mat-header-cell *matHeaderCellDef>Balance</th>
+            <td style="color: darkred;" mat-cell *matCellDef="let element"> {{element.balance}} </td>
+        </ng-container>
+
+        <!-- Status Column -->
+        <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>Status</th>
+            <td mat-cell *matCellDef="let element"> {{element.transactionStatusName}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
 </div>

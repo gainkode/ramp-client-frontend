@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { CommonTargetValue } from './common.model';
 import {
-    PaymentInstrument, PaymentProvider, Transaction, TransactionSource,
+    PaymentInstrument, PaymentProvider, Transaction, TransactionShort, TransactionShortListResult, TransactionSource,
     TransactionStatus, TransactionType, User
 } from './generated-models';
 import {
@@ -34,19 +34,25 @@ export class TransactionItem {
     rate = 0;
     status: TransactionStatus | undefined = undefined;
     user: UserItem | undefined;
+    balance: number = 74.1254;
+    payment = '4111 **** **** 1111';
 
-    constructor(data: Transaction | null) {
+    constructor(data: Transaction | TransactionShort | null) {
         if (data !== null) {
+
             this.code = data.code as string;
             this.id = data.transactionId;
             const datepipe: DatePipe = new DatePipe('en-US');
             this.created = datepipe.transform(data.created, 'dd-MM-YYYY HH:mm:ss') as string;
             this.executed = datepipe.transform(data.executed, 'dd-MM-YYYY HH:mm:ss') as string;
-            this.accountId = data.userId;
-            this.user = new UserItem(data.user as User);
             this.address = data.destination as string;
-            this.ip = data.userIp as string;
-            
+            this.accountId = data.userId as string;
+            const transactionData = data as Transaction;
+            if (transactionData.user) {
+                this.user = new UserItem(transactionData.user as User);
+                this.ip = transactionData.userIp as string;
+            }
+
             //this.euro = 100;
             this.type = data.type;
             this.instrument = data.instrument;

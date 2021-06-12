@@ -4,14 +4,18 @@ import { EmptyObject } from 'apollo-angular/types';
 import { TransactionSource } from '../model/generated-models';
 
 const GET_MY_TRANSACTIONS_POST = gql`
-  query GetMyTransactions {
+  query GetMyTransactions(
+    $sourcesOnly: [TransactionSource!],
+    $filter: String,
+    $skip: Int,
+    $first: Int,
+    $orderBy: [OrderBy!]) {
       getMyTransactions(
-          $userId: String,
-          $sourcesOnly: [TransactionSource!],
-          $filter: String,
-          $skip: Int,
-          $first: Int,
-          $orderBy: [OrderBy!]
+        sourcesOnly: $sourcesOnly,
+        filter: $filter,
+        skip: $skip,
+        first: $first,
+        orderBy: $orderBy
     ) {
       count,
       list {
@@ -59,7 +63,6 @@ export class ProfileDataService {
             return this.apollo.watchQuery<any>({
                 query: GET_MY_TRANSACTIONS_POST,
                 variables: {
-                    userId: '',
                     sourcesOnly: sources,
                     filter: '',
                     skip: pageIndex * takeItems,

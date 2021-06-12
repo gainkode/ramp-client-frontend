@@ -25,6 +25,7 @@ import { CommonDataService } from './services/common-data.service';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
 import { DirectiveModule } from './directives/directives.module';
+import { ProfileDataService } from './services/profile.service';
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import { DirectiveModule } from './directives/directives.module';
     },
     AuthService,
     AdminDataService,
+    ProfileDataService,
     CommonDataService,
     QuickCheckoutDataService,
     NotificationService,
