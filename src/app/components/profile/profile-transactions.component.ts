@@ -84,7 +84,6 @@ export class ProfileTransactionsComponent implements OnInit, OnDestroy, AfterVie
             this.pTransactionsSubscription = transactionsData.valueChanges.subscribe(({ data }) => {
                 const dataList = data.getMyTransactions as TransactionShortListResult;
                 if (dataList !== null) {
-                    console.log(dataList);
                     this.transactionCount = dataList?.count as number;
                     if (this.transactionCount > 0) {
                         this.transactions = dataList?.list?.map((val) => new TransactionItem(val)) as TransactionItem[];
