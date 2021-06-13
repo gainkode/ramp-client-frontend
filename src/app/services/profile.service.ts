@@ -50,6 +50,61 @@ const GET_MY_TRANSACTIONS_POST = gql`
   }
 `;
 
+const GET_ME_POST = gql`
+  query Me {
+    me {
+      userId,
+      email,
+      name,
+      type,
+      mode,
+      merchantIds,
+      firstName,
+      lastName,
+      avatar,
+      birthday,
+      countryCode2,
+      countryCode3,
+      phone,
+      defaultCurrency,
+      termsOfUse,
+      created,
+      updated,
+      contacts {userContactId, userId, contactId, displayName, created},
+      is2faEnabled,
+      hasEmailAuth,
+      changePasswordRequired,
+      referralCode,
+      kycProvider,
+      kycValid,
+      kycStatus,
+      kycReviewComment,
+      kycReviewRejectedType,
+      kycReviewRejectedLabels,
+      kycStatusUpdateRequired,
+      custodyProvider,
+      vaultAccountId,
+      state {
+        date,
+        assets {id, total, available, pending, lockedAmount, totalStakedCPU, totalStakedNetwork, selfStakedCPU, selfStakedNetwork, pendingRefundCPU, pendingRefundNetwork},
+        externalWallets {
+          id,
+          name,
+          customerRefId,
+          assets {
+            id, status, activationTime, address, tag}
+          },
+        notifications {
+          count,
+          list {
+            userNotificationId, userId, userNotificationTypeCode, created, viewed, text, linkedId, linkedTable, params
+          }
+        }
+      }
+    }
+  }
+`;
+
 @Injectable()
 export class ProfileDataService {
     constructor(private apollo: Apollo) { }
@@ -76,4 +131,15 @@ export class ProfileDataService {
             return null;
         }
     }
+
+    getMe(): QueryRef<any, EmptyObject> | null {
+      if (this.apollo.client !== undefined) {
+          return this.apollo.watchQuery<any>({
+              query: GET_ME_POST,
+              fetchPolicy: 'network-only'
+          });
+      } else {
+          return null;
+      }
+  }
 }

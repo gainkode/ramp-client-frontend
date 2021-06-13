@@ -118,10 +118,6 @@ const GET_USER_BY_ID_POST = gql`
     }
 `;
 
-// export type QueryUserByIdArgs = {
-//     userId?: Maybe<Scalars['String']>;
-//   };
-
 @Injectable()
 export class CommonDataService {
     constructor(private apollo: Apollo) { }
