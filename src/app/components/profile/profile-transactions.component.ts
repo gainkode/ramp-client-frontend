@@ -1,4 +1,5 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -13,7 +14,8 @@ import { ProfileDataService } from 'src/app/services/profile.service';
     templateUrl: './profile-transactions.component.html',
     styleUrls: ['profile.scss', 'profile-transactions.component.scss']
 })
-export class ProfileTransactionsComponent implements OnInit, OnDestroy {
+export class ProfileTransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
+    @Input() recent = false;
     @ViewChild(MatSort) sort!: MatSort;
     private pTransactionsSubscription!: any;
     inProgress = false;
@@ -22,6 +24,8 @@ export class ProfileTransactionsComponent implements OnInit, OnDestroy {
     transactionCount = 0;
     pageSize = 10;
     pageIndex = 0;
+    sortedField = 'created';
+    sortedDesc = true;
 
     displayedColumns: string[] = [
         'id', 'created', 'executed', 'type', 'instrument', 'payment',
@@ -32,6 +36,7 @@ export class ProfileTransactionsComponent implements OnInit, OnDestroy {
         private profileService: ProfileDataService, private router: Router) { }
 
     ngOnInit(): void {
+        this.pageSize = (this.recent) ? 10 : 25;
         this.loadTransactions();
     }
 
@@ -42,14 +47,27 @@ export class ProfileTransactionsComponent implements OnInit, OnDestroy {
         }
     }
 
+    ngAfterViewInit(): void {
+        if (this.sort) {
+            this.sort.sortChange.subscribe(() => {
+                this.sortedDesc = (this.sort.direction === 'desc');
+                this.sortedField = this.sort.active;
+                this.loadTransactions();
+            });
+        }
+    }
+
+    get pageTitle(): string {
+        return (this.recent) ? 'Recent Transactions' : 'Transaction History';
+    }
+
     private loadTransactions(): void {
         this.transactionCount = 0;
         const transactionsData = this.profileService.getMyTransactions(
             this.pageIndex,
             this.pageSize,
             [TransactionSource.QuickCheckout, TransactionSource.Wallet, TransactionSource.Widget],
-            'created',
-            true);
+            this.sortedField, this.sortedDesc);
         if (transactionsData === null) {
             this.errorMessage = this.errorHandler.getRejectedCookieMessage();
         } else {
@@ -73,5 +91,20 @@ export class ProfileTransactionsComponent implements OnInit, OnDestroy {
                 }
             });
         }
+    }
+
+    private refresh(): void {
+        const s: Subscription = this.pTransactionsSubscription;
+        if (s !== undefined) {
+            s.unsubscribe();
+        }
+        this.loadTransactions();
+    }
+
+    handlePage(event: PageEvent): PageEvent {
+        this.pageSize = event.pageSize;
+        this.pageIndex = event.pageIndex;
+        this.refresh();
+        return event;
     }
 }

@@ -1,4 +1,4 @@
-<h3>Recent Transactions</h3>
+<h3>{{pageTitle}}</h3>
 <div *ngIf="inProgress">
     <mat-progress-bar mode="indeterminate"></mat-progress-bar>
     <br>
@@ -8,7 +8,8 @@
 </div>
 
 <div class="table-responsive">
-    <table mat-table *ngIf="errorMessage===''" class="data-table" [dataSource]="transactions">
+    <table mat-table *ngIf="errorMessage===''" class="data-table" [dataSource]="transactions"
+    matSort [matSortActive]="sortedField" matSortDirection="desc" matSortDisableClear>
         <!-- Transaction ID Column -->
         <ng-container matColumnDef="id">
             <th mat-header-cell *matHeaderCellDef>Transaction ID</th>
@@ -17,25 +18,25 @@
 
         <!-- Created Column -->
         <ng-container matColumnDef="created">
-            <th mat-header-cell *matHeaderCellDef>Created</th>
+            <th mat-header-cell mat-sort-header [disabled]="recent" *matHeaderCellDef>Created</th>
             <td mat-cell *matCellDef="let element"> {{element.created}} </td>
         </ng-container>
 
         <!-- Executed Column -->
         <ng-container matColumnDef="executed">
-            <th mat-header-cell *matHeaderCellDef>Executed</th>
+            <th mat-header-cell mat-sort-header [disabled]="recent" *matHeaderCellDef>Executed</th>
             <td mat-cell *matCellDef="let element"> {{element.executed}} </td>
         </ng-container>
 
         <!-- Transaction Type Column -->
         <ng-container matColumnDef="type">
-            <th mat-header-cell *matHeaderCellDef>Type</th>
+            <th mat-header-cell mat-sort-header [disabled]="recent" *matHeaderCellDef>Type</th>
             <td mat-cell *matCellDef="let element"> {{element.transactionTypeName}} </td>
         </ng-container>
 
         <!-- Instrument Column -->
         <ng-container matColumnDef="instrument">
-            <th mat-header-cell *matHeaderCellDef>Instrument</th>
+            <th mat-header-cell mat-sort-header [disabled]="recent" *matHeaderCellDef>Instrument</th>
             <td mat-cell *matCellDef="let element"> {{element.instrumentName}} </td>
         </ng-container>
 
@@ -47,13 +48,13 @@
 
         <!-- Base Currency Column -->
         <ng-container matColumnDef="currencyToSpend">
-            <th mat-header-cell *matHeaderCellDef>Base coin</th>
+            <th mat-header-cell mat-sort-header [disabled]="recent" *matHeaderCellDef>Base coin</th>
             <td mat-cell *matCellDef="let element"> {{element.currencyToSpend}} </td>
         </ng-container>
 
         <!-- Base Amount Column -->
         <ng-container matColumnDef="amountToSpend">
-            <th mat-header-cell *matHeaderCellDef>Base value</th>
+            <th mat-header-cell mat-sort-header [disabled]="recent" *matHeaderCellDef>Base value</th>
             <td mat-cell *matCellDef="let element"> {{element.amountToSpend}} </td>
         </ng-container>
 
@@ -71,11 +72,15 @@
 
         <!-- Status Column -->
         <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef>Status</th>
+            <th mat-header-cell mat-sort-header [disabled]="recent" *matHeaderCellDef>Status</th>
             <td mat-cell *matCellDef="let element"> {{element.transactionStatusName}} </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
+
+    <mat-paginator *ngIf="errorMessage==='' && recent===false" class="data-table" [length]="transactionCount" [pageSize]="pageSize"
+        [pageSizeOptions]="[25, 50, 100]" showFirstLastButtons (page)="handlePage($event)">
+    </mat-paginator>
 </div>
