@@ -1,3 +1,4 @@
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -12,7 +13,14 @@ import { ProfileDataService } from 'src/app/services/profile.service';
 @Component({
     selector: 'app-transactions',
     templateUrl: './profile-transactions.component.html',
-    styleUrls: ['profile.scss', 'profile-transactions.component.scss']
+    styleUrls: ['profile.scss', 'profile-transactions.component.scss'],
+    animations: [
+        trigger('detailExpand', [
+            state('collapsed', style({ height: '0px', minHeight: '0' })),
+            state('expanded', style({ height: '*' })),
+            transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+        ]),
+    ],
 })
 export class ProfileTransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
     @Input() recent = false;
@@ -22,6 +30,7 @@ export class ProfileTransactionsComponent implements OnInit, OnDestroy, AfterVie
     errorMessage = '';
     transactions: TransactionItem[] = [];
     transactionCount = 0;
+    selectedTransaction: TransactionItem | null = null;
     pageSize = 10;
     pageIndex = 0;
     sortedField = 'created';

@@ -1,10 +1,10 @@
 .table-responsive {
-    margin-left: 0.25em;
+    margin-left : 0.25em;
     margin-right: 0.25em;
-    display   : block;
-    width     : 99%;
-    overflow-x: auto;
-    min-height: 80%;
+    display     : block;
+    width       : 99%;
+    overflow-x  : auto;
+    min-height  : 80%;
 
     .mat-table {
         width          : 100%;
@@ -30,5 +30,49 @@
         white-space   : nowrap;
         overflow      : hidden;
         vertical-align: middle;
+    }
+
+    tr.transaction-detail-row {
+        height: 0;
+    }
+
+    tr.transaction-element-row:not(.transaction-expanded-row):hover {
+        background: #d6d7da;
+    }
+
+    tr.transaction-element-row:not(.transaction-expanded-row):active {
+        background: #BABCC3;
+    }
+
+    .transaction-element-row td {
+        border-bottom-width: 0;
+    }
+
+    .transaction-element-detail {
+        overflow   : hidden;
+        display    : flex;
+        font-weight: lighter;
+    }
+
+    .transaction-element-amounts {
+        min-width       : 80px;
+        padding         : 4px;
+        margin          : 0;
+        min-height      : 1em;
+    }
+
+    .transaction-element-amount-lines {
+        font-size  : 14px;
+    }
+
+    .transaction-element-amount-values {
+        font-weight: bold;
+        font-size  : 14px;
+    }
+
+    .transaction-element-payment {
+        padding         : 4px;
+        margin          : 0 30px;
+        color: darkred;
     }
 }
