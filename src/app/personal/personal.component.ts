@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { User, UserNotification } from '../model/generated-models';
 import { AuthService } from '../services/auth.service';
 import { ErrorService } from '../services/error.service';
 import { NotificationService } from '../services/notification.service';
@@ -13,6 +14,7 @@ export class PersonalComponent implements OnInit {
     inProgress = false;
     errorMessage = '';
     _selectedSection = '';
+    notifications: UserNotification[] = [];
 
     constructor(private auth: AuthService, private notification: NotificationService,
         private profile: ProfileDataService, private errorHandler: ErrorService, private router: Router) {
@@ -69,11 +71,22 @@ export class PersonalComponent implements OnInit {
     private loadMe(): void {
         this.errorMessage = '';
         this.inProgress = true;
+        let notificationCount = 0;
+        this.notifications = [];
         const meQuery = this.profile.getMe();
         if (meQuery) {
             meQuery.valueChanges.subscribe(({ data }) => {
-                const u = data.me;
-                console.log(u);
+                const userData = data.me as User;
+                if (userData) {
+                    if (userData.state) {
+                        notificationCount = userData.state.notifications?.count as number;
+                        if (notificationCount > 0) {
+                            this.notifications = userData.state.notifications?.list?.map(
+                                (val) => val) as UserNotification[];
+                        }
+                    }
+                }
+                console.log(this.notifications);
                 this.inProgress = false;
             }, (error) => {
                 this.inProgress = false;
