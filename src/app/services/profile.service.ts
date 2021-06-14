@@ -42,6 +42,17 @@ const GET_MY_TRANSACTIONS_POST = gql`
         liquidityProvider,
         instrument,
         paymentProvider,
+        paymentOrder {
+          orderId,
+          amount,
+          currency,
+          operations {operationId, created, type, sn, status, details, callbackDetails, errorCode, errorMessage},
+          originalOrderId,
+          preauthOperationSn,
+          captureOperationSn,
+          refundOperationSn,
+          paymentInfo,
+        }
         data,
         destinationType,
         destination
