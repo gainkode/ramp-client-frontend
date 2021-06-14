@@ -1,3 +1,10 @@
+<div *ngIf="inProgress">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    <br>
+</div>
+<div class="form-error-box" *ngIf="errorMessage!==''">
+    {{errorMessage}}
+</div>
 <div style="display: flex;">
     <div style="width: 50%;margin: 0.5em;">
         <app-account-balance></app-account-balance>
@@ -11,7 +18,7 @@
         <app-exchange></app-exchange>
     </div>
     <div style="width: 50%;margin: 0.5em;">
-        <app-notifications></app-notifications>
+        <app-notifications [notifications]="notifications"></app-notifications>
     </div>
 </div>
 <div style="margin: 0.5em;">

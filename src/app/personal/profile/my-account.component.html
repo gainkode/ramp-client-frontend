@@ -1,6 +1,13 @@
+<div *ngIf="inProgress">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    <br>
+</div>
+<div class="form-error-box" *ngIf="errorMessage!==''">
+    {{errorMessage}}
+</div>
 <div style="display: flex;">
     <div style="width: 50%;margin: 0.5em;">
-        <app-info></app-info>
+        <app-info [user]="user"></app-info>
     </div>
     <div style="width: 50%;margin: 0.5em;">
         <app-two-FA></app-two-FA>

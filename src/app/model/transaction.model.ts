@@ -66,6 +66,8 @@ export class TransactionItem {
             this.fees = data.fee;
             this.status = data.status;
 
+            console.log(data.paymentOrder);
+            
             this.instrumentDetails = new CommonTargetValue();
             this.instrumentDetails.imgClass = 'payment-logo';
             this.instrumentDetails.imgSource = `assets/svg-payment-systems/visa.svg`;
