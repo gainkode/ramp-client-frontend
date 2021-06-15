@@ -21,6 +21,8 @@ export type Scalars = {
 export type Query = {
   __typename?: 'Query';
   serverTime: Scalars['String'];
+  getMyApiKeys?: Maybe<ApiKeyListResult>;
+  getApiKeys?: Maybe<ApiKeyListResult>;
   getSettingsCommon?: Maybe<SettingsCommon>;
   getSettingsCurrency?: Maybe<SettingsCurrencyListResult>;
   getSettingsKycLevels?: Maybe<SettingsKycLevelListResult>;
@@ -55,6 +57,22 @@ export type Query = {
   getRates?: Maybe<Array<Rate>>;
   getMyTransactions?: Maybe<TransactionShortListResult>;
   getTransactions?: Maybe<TransactionListResult>;
+};
+
+
+export type QueryGetMyApiKeysArgs = {
+  filter?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OrderBy>>;
+};
+
+
+export type QueryGetApiKeysArgs = {
+  filter?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OrderBy>>;
 };
 
 
@@ -259,6 +277,25 @@ export type QueryGetTransactionsArgs = {
   orderBy?: Maybe<Array<OrderBy>>;
 };
 
+export type OrderBy = {
+  orderBy: Scalars['String'];
+  desc: Scalars['Boolean'];
+};
+
+export type ApiKeyListResult = {
+  __typename?: 'ApiKeyListResult';
+  count?: Maybe<Scalars['Int']>;
+  list?: Maybe<Array<ApiKey>>;
+};
+
+export type ApiKey = {
+  __typename?: 'ApiKey';
+  apiKeyId: Scalars['ID'];
+  created: Scalars['DateTime'];
+  disabled?: Maybe<Scalars['DateTime']>;
+};
+
+
 export type SettingsCommon = {
   __typename?: 'SettingsCommon';
   settingsCommonId?: Maybe<Scalars['String']>;
@@ -268,11 +305,6 @@ export type SettingsCommon = {
   custodyBaseAddress?: Maybe<Scalars['String']>;
   kycProvider?: Maybe<Scalars['String']>;
   kycBaseAddress?: Maybe<Scalars['String']>;
-};
-
-export type OrderBy = {
-  orderBy: Scalars['String'];
-  desc: Scalars['Boolean'];
 };
 
 export type SettingsCurrencyListResult = {
@@ -313,7 +345,6 @@ export enum UserType {
   Merchant = 'Merchant',
   Personal = 'Personal'
 }
-
 
 export type SettingsKycListResult = {
   __typename?: 'SettingsKycListResult';
@@ -518,6 +549,8 @@ export type User = {
   kycStatusUpdateRequired?: Maybe<Scalars['Boolean']>;
   custodyProvider?: Maybe<Scalars['String']>;
   vaultAccountId?: Maybe<Scalars['String']>;
+  defaultFiatCurrency?: Maybe<Scalars['String']>;
+  defaultCryptoCurrency?: Maybe<Scalars['String']>;
   state?: Maybe<UserState>;
 };
 
@@ -1064,6 +1097,10 @@ export enum TransactionKycStatus {
 export type Mutation = {
   __typename?: 'Mutation';
   foo: Scalars['String'];
+  createMyApiKey?: Maybe<ApiKeySecret>;
+  deleteMyApiKey?: Maybe<Scalars['Void']>;
+  createApiKey?: Maybe<ApiKeySecret>;
+  deleteApiKey?: Maybe<Scalars['Void']>;
   preauthFull: PaymentPreauthResult;
   preauth: PaymentPreauthResultShort;
   captureFull: PaymentOrder;
@@ -1108,6 +1145,21 @@ export type Mutation = {
   sendTestNotification?: Maybe<Scalars['Void']>;
   createTransaction?: Maybe<TransactionShort>;
   executeTransaction?: Maybe<TransactionShort>;
+};
+
+
+export type MutationDeleteMyApiKeyArgs = {
+  apiKeyId?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationCreateApiKeyArgs = {
+  userId?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationDeleteApiKeyArgs = {
+  apiKeyId?: Maybe<Scalars['String']>;
 };
 
 
@@ -1345,15 +1397,23 @@ export type MutationAddFeedbackArgs = {
 
 export type MutationCreateTransactionArgs = {
   transaction?: Maybe<TransactionInput>;
-  recaptcha: Scalars['String'];
 };
 
 
 export type MutationExecuteTransactionArgs = {
   transactionId?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
-  recaptcha: Scalars['String'];
 };
+
+export type ApiKeySecret = {
+  __typename?: 'ApiKeySecret';
+  apiKeyId: Scalars['ID'];
+  userId: Scalars['String'];
+  secret: Scalars['String'];
+  created: Scalars['DateTime'];
+  disabled?: Maybe<Scalars['DateTime']>;
+};
+
 
 export type PaymentPreauthInput = {
   transactionId: Scalars['String'];
@@ -1484,6 +1544,8 @@ export type UserInput = {
   nameConfirmed?: Maybe<Scalars['DateTime']>;
   deleted?: Maybe<Scalars['DateTime']>;
   changePasswordRequired?: Maybe<Scalars['Boolean']>;
+  defaultFiatCurrency?: Maybe<Scalars['String']>;
+  defaultCryptoCurrency?: Maybe<Scalars['String']>;
 };
 
 export type LoginResult = {
@@ -1505,7 +1567,6 @@ export type FeedbackInput = {
   title?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
 };
-
 
 export type TransactionInput = {
   type: TransactionType;
@@ -1568,7 +1629,8 @@ export enum TokenAction {
   ConfirmName = 'ConfirmName',
   ConfirmDevice = 'ConfirmDevice',
   TwoFactorAuth = 'TwoFactorAuth',
-  KycRequired = 'KycRequired'
+  KycRequired = 'KycRequired',
+  ApiKey = 'ApiKey'
 }
 
 export type UserDevice = {
@@ -1760,6 +1822,8 @@ export type UserShort = {
   kycValid?: Maybe<Scalars['Boolean']>;
   kycStatus?: Maybe<Scalars['String']>;
   kycReviewComment?: Maybe<Scalars['String']>;
+  defaultFiatCurrency?: Maybe<Scalars['String']>;
+  defaultCryptoCurrency?: Maybe<Scalars['String']>;
 };
 
 export type SettingsResult = {
@@ -1771,20 +1835,6 @@ export type CommonSettings = {
   __typename?: 'CommonSettings';
   maxFileSize?: Maybe<Scalars['Int']>;
   maxFiles?: Maybe<Scalars['Int']>;
-};
-
-export type ApiKey = {
-  __typename?: 'ApiKey';
-  apiKeyId: Scalars['ID'];
-  userId: Scalars['String'];
-  secret?: Maybe<Scalars['String']>;
-  created: Scalars['DateTime'];
-};
-
-export type ApiKeyListResult = {
-  __typename?: 'ApiKeyListResult';
-  count?: Maybe<Scalars['Int']>;
-  list?: Maybe<Array<ApiKey>>;
 };
 
 export type TransferListResult = {

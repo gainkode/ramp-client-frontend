@@ -41,13 +41,11 @@ query GetRates($recaptcha: String!, $currenciesFrom: [String!]!, $currencyTo: St
 const EXECUTE_TRANSACTION_POST = gql`
 mutation ExecuteTransaction(
   $transactionId: String!,
-  $code: String!,
-  $recaptcha: String!
+  $code: String!
 ) {
   executeTransaction(
     transactionId: $transactionId,
-    code: $code,
-    recaptcha: $recaptcha
+    code: $code
   ) {
     transactionId
   }
@@ -64,8 +62,7 @@ mutation CreateTransaction(
   $paymentProvider: PaymentProvider,
   $destinationType: TransactionDestinationType!,
   $destination: String,
-  $rate: Float!,
-  $recaptcha: String!
+  $rate: Float!
 ) {
   createTransaction(transaction: {
     type: $transactionType
@@ -77,7 +74,7 @@ mutation CreateTransaction(
     destinationType: $destinationType
     destination: $destination
     rate: $rate
-  }, recaptcha: $recaptcha) {
+  }) {
     transactionId,
     code,
     fee,
@@ -171,7 +168,6 @@ export class QuickCheckoutDataService {
     return this.apollo.mutate({
       mutation: CREATE_TRANSACTION_POST,
       variables: {
-        recaptcha: environment.recaptchaId,
         transactionType,
         currencyToSpend,
         currencyToReceive,
@@ -189,7 +185,6 @@ export class QuickCheckoutDataService {
     return this.apollo.mutate({
       mutation: EXECUTE_TRANSACTION_POST,
       variables: {
-        recaptcha: environment.recaptchaId,
         transactionId: id,
         code
       }
