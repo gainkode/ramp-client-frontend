@@ -6,22 +6,6 @@ import { environment } from 'src/environments/environment';
 import { PaymentInstrument, PaymentProvider, TransactionDestinationType, TransactionType } from '../model/generated-models';
 import { CardView } from '../model/payment.model';
 
-const GET_SETTINGS_CURRENCY_POST = gql`
-  query GetSettingsCurrency($recaptcha: String!) {
-    getSettingsCurrency(recaptcha: $recaptcha) {
-      count
-      list {
-        symbol
-        name
-        precision
-        minAmount
-        rateFactor
-        validateAsSymbol
-      }
-    }
-  }
-`;
-
 const GET_RATES_POST = gql`
 query GetRates($recaptcha: String!, $currenciesFrom: [String!]!, $currencyTo: String!) {
   getRates(
@@ -129,20 +113,6 @@ mutation PreAuth(
 @Injectable()
 export class QuickCheckoutDataService {
   constructor(private apollo: Apollo) { }
-
-  getSettingsCurrency(): QueryRef<any, EmptyObject> | null {
-    if (this.apollo.client !== undefined) {
-      return this.apollo.watchQuery<any>({
-        query: GET_SETTINGS_CURRENCY_POST,
-        variables: {
-          recaptcha: environment.recaptchaId
-        },
-        fetchPolicy: 'network-only'
-      });
-    } else {
-      return null;
-    }
-  }
 
   getRates(fromValue: string, toValue: string): QueryRef<any, EmptyObject> | null {
     if (this.apollo.client !== undefined) {

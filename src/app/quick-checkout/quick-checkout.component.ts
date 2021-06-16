@@ -16,6 +16,7 @@ import {
     QuickCheckoutTransactionTypeList
 } from '../model/payment.model';
 import { AuthService } from '../services/auth.service';
+import { CommonDataService } from '../services/common-data.service';
 import { ErrorService } from '../services/error.service';
 import { QuickCheckoutDataService } from '../services/quick-checkout.service';
 import { round } from '../utils/utils';
@@ -134,7 +135,8 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
     }
 
     constructor(private auth: AuthService, private dataService: QuickCheckoutDataService,
-        private errorHandler: ErrorService, private formBuilder: FormBuilder, private router: Router) {
+        private commonService: CommonDataService, private errorHandler: ErrorService,
+        private formBuilder: FormBuilder, private router: Router) {
         this.user = auth.user;
         this.summary = new CheckoutSummary();
         this.detailsEmailControl = this.detailsForm.get('email');
@@ -409,7 +411,7 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
                 //this.userWallets.push('1KFzzGtDdnq5hrwxXGjwVnKzRbvf8WVxck');
             }
         }
-        const currencyData = this.dataService.getSettingsCurrency();
+        const currencyData = this.commonService.getSettingsCurrency();
         if (currencyData === null) {
             this.errorMessage = this.errorHandler.getRejectedCookieMessage();
         } else {
@@ -532,7 +534,6 @@ export class QuickCheckoutComponent implements OnInit, OnDestroy {
     }
 
     private needToRequestKyc(kyc: User): boolean | null {
-        console.log(kyc);
         let result = true;
         if (kyc.kycStatus === 'completed' || kyc.kycStatus === 'pending') {
             result = false;

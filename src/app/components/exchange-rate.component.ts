@@ -67,6 +67,10 @@ export class ExchangeRateComponent implements OnInit, OnDestroy {
                     this.errorMessage = this.errorHandler.getRejectedCookieMessage();
                 } else {
                     this.spinnerMode = 'indeterminate';
+                    if (this.pRateSubscription) {
+                        const s = this.pRateSubscription as Subscription;
+                        s.unsubscribe();
+                    }
                     this.pRateSubscription = ratesData.valueChanges.subscribe(({ data }) => {
                         const rates = data.getRates as Rate[];
                         if (rates.length > 0) {
@@ -82,6 +86,7 @@ export class ExchangeRateComponent implements OnInit, OnDestroy {
                     });
                 }
             } else {
+                console.log(this.summary);
                 this.errorMessage = 'Currency is not specified';
                 this.restartCountDown();
             }

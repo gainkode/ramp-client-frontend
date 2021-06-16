@@ -1,6 +1,23 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { EmptyObject } from 'apollo-angular/types';
+import { environment } from 'src/environments/environment';
+
+const GET_SETTINGS_CURRENCY_POST = gql`
+  query GetSettingsCurrency($recaptcha: String!) {
+    getSettingsCurrency(recaptcha: $recaptcha) {
+      count
+      list {
+        symbol
+        name
+        precision
+        minAmount
+        rateFactor
+        validateAsSymbol
+      }
+    }
+  }
+`;
 
 const GET_USERS_POST = gql`
   query GetUsers {
@@ -121,6 +138,20 @@ const GET_USER_BY_ID_POST = gql`
 @Injectable()
 export class CommonDataService {
     constructor(private apollo: Apollo) { }
+
+    getSettingsCurrency(): QueryRef<any, EmptyObject> | null {
+      if (this.apollo.client !== undefined) {
+        return this.apollo.watchQuery<any>({
+          query: GET_SETTINGS_CURRENCY_POST,
+          variables: {
+            recaptcha: environment.recaptchaId
+          },
+          fetchPolicy: 'network-only'
+        });
+      } else {
+        return null;
+      }
+    }
 
     getUsers(): QueryRef<any, EmptyObject> | null {
         if (this.apollo.client !== undefined) {

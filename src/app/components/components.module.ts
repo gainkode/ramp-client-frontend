@@ -39,11 +39,13 @@ import { ProfileContactsComponent } from './profile/profile-contacts.component';
 import { ProfileWithdrawalComponent } from './profile/profile-withdrawal.component';
 import { ProfileAssetsComponent } from './profile/profile-assets.component';
 import { ProfileLastExchangesComponent } from './profile/profile-last-exchanges.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 const materialModules = [
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
+    MatAutocompleteModule,
     MatSelectModule,
     MatTooltipModule,
     MatDialogModule,
