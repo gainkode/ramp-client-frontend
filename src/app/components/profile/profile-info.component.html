@@ -21,13 +21,7 @@
   <!-- Address -->
   <mat-form-field class="form-element-disabled">
     <mat-label>Address</mat-label>
-    <input
-      type="text"
-      matInput
-      [value]="address"
-      disabled
-      style="color: darkred"
-    />
+    <input type="text" matInput [value]="address" disabled />
   </mat-form-field>
 
   <div *ngIf="kycCompleted()">

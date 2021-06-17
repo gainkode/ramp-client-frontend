@@ -66,17 +66,10 @@
             </div>
         </div>
 
-        <div *ngIf="transaction?.user?.street!==''">
-            <label class="transaction-details-label">Street</label>
-            <div class="transaction-details-value" style="color: darkred;">
-                {{transaction?.user?.street}}
-            </div>
-        </div>
-
-        <div *ngIf="transaction?.user?.zip!==''">
-            <label class="transaction-details-label">ZIP code</label>
-            <div class="transaction-details-value" style="color: darkred;">
-                {{transaction?.user?.zip}}
+        <div *ngIf="transaction?.user?.address!==''">
+            <label class="transaction-details-label">Address</label>
+            <div class="transaction-details-value">
+                {{transaction?.user?.address}}
             </div>
         </div>
     </div>

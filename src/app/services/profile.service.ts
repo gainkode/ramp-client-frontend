@@ -236,6 +236,14 @@ const GET_PROFILE_ACCOUNT_POST = gql`
       countryCode2
       countryCode3
       phone
+      postCode
+      town
+      street
+      subStreet
+      stateName
+      buildingName
+      buildingNumber
+      flatNumber
       defaultFiatCurrency
       termsOfUse
       created
@@ -289,10 +297,10 @@ const UPDATE_ME_INFO_POST = gql`
   ) {
     updateMe(
       user: {
-        firstName: $firstName,
-        lastName: $lastName,
-        countryCode3: $countryCode3,
-        phone: $phone,
+        firstName: $firstName
+        lastName: $lastName
+        countryCode3: $countryCode3
+        phone: $phone
         defaultFiatCurrency: $defaultFiatCurrency
       }
     ) {
@@ -378,7 +386,7 @@ export class ProfileDataService {
         lastName,
         countryCode3: country,
         phone,
-        defaultFiatCurrency: currency
+        defaultFiatCurrency: currency,
       },
     });
   }

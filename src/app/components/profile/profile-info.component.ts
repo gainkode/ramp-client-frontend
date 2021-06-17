@@ -15,6 +15,7 @@ import {
   SettingsCurrencyListResult,
   User,
 } from "src/app/model/generated-models";
+import { UserItem } from "src/app/model/user.model";
 import { AuthService } from "src/app/services/auth.service";
 import { CommonDataService } from "src/app/services/common-data.service";
 import { ErrorService } from "src/app/services/error.service";
@@ -141,12 +142,13 @@ export class ProfileInfoComponent implements OnInit, OnDestroy {
     if (selectedCountry) {
       this.userForm.get("country")?.setValue(selectedCountry.name);
     }
+    const userItem = new UserItem(this._user);
     this.userForm.get("email")?.setValue(this._user?.email);
     this.userForm.get("phone")?.setValue(this._user?.phone);
     this.userForm.get("currency")?.setValue(this._user?.defaultFiatCurrency);
     this.accountId = this._user?.userId;
     this.email = this._user?.email;
-    this.address = "address";
+    this.address = userItem.address;
     this.userName = this._user?.name;
     this.countryName = getCountryByCode3(this._user?.countryCode3 as string)?.name as string;
   }

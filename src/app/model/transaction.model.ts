@@ -2,6 +2,7 @@ import { DatePipe } from "@angular/common";
 import { CommonTargetValue } from "./common.model";
 import {
   PaymentInstrument,
+  PaymentOperationType,
   PaymentProvider,
   Transaction,
   TransactionShort,
@@ -115,8 +116,17 @@ export class TransactionItem {
         }
         if (data.paymentOrder.operations) {
           if (data.paymentOrder.operations.length > 0) {
+            // take the latest operation
             const operation = data.paymentOrder.operations.sort(
-              (x) => x.created
+              (a, b) => {
+                if (a.created > b.created) {
+                  return -1;
+                }
+                if (a.created < b.created) {
+                  return 1;
+                }
+                return 0;
+              }
             )[0];
             this.paymentProviderResponse = `${operation.type}: ${operation.status}`;
           }
