@@ -179,7 +179,6 @@ export class ProfileInfoComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    this.userForm.get("currency")?.setValue("AAA");
     if (this.userForm.valid) {
       this.errorMessage = "";
       this.inProgress = true;

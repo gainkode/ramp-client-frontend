@@ -14,6 +14,7 @@ const GET_SETTINGS_CURRENCY_POST = gql`
         minAmount
         rateFactor
         validateAsSymbol
+        fiat
       }
     }
   }

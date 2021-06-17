@@ -97,7 +97,7 @@
 
     <div *ngIf="transaction?.instrumentDetails!==null">
         <label class="transaction-details-label">Instrument Details</label>
-        <div class="transaction-details-value" style="color: darkred;">
+        <div class="transaction-details-value">
             <app-dropdown-item itemValue="{{transaction?.instrumentDetails?.title}}"
                 imageClass="{{transaction?.instrumentDetails?.imgClass}}"
                 imageSource="{{transaction?.instrumentDetails?.imgSource}}">

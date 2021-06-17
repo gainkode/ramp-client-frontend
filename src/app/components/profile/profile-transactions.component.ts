@@ -86,6 +86,7 @@ export class ProfileTransactionsComponent implements OnInit, OnDestroy, AfterVie
                 if (dataList !== null) {
                     this.transactionCount = dataList?.count as number;
                     if (this.transactionCount > 0) {
+                        console.log(dataList?.list);
                         this.transactions = dataList?.list?.map((val) => new TransactionItem(val)) as TransactionItem[];
                     }
                 }

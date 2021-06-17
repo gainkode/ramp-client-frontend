@@ -371,7 +371,6 @@ export class ProfileDataService {
     phone: string,
     currency: string
   ): Observable<any> {
-    console.log(currency);
     return this.apollo.mutate({
       mutation: UPDATE_ME_INFO_POST,
       variables: {
