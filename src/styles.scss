@@ -466,6 +466,12 @@ input:-webkit-autofill::first-line {
     margin-bottom: 0.5em;
 }
 
+.form-element-disabled {
+    width        : 100%;
+    margin-top   : 0em;
+    margin-bottom: 0em;
+}
+
 .info-tooltip {
     font-size: small;
 }

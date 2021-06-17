@@ -1,10 +1,16 @@
 import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { Validators, FormBuilder, AbstractControl } from "@angular/forms";
+import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { Subscription, Observable } from "rxjs";
 import { map, startWith } from "rxjs/operators";
 import { CommonTargetValue } from "src/app/model/common.model";
-import { CountryCodes, getCountryByCode3, ICountryCode } from "src/app/model/country-code.model";
+import {
+  CountryCodes,
+  getCountry,
+  getCountryByCode3,
+  ICountryCode,
+} from "src/app/model/country-code.model";
 import {
   SettingsCurrencyListResult,
   User,
@@ -13,6 +19,7 @@ import { AuthService } from "src/app/services/auth.service";
 import { CommonDataService } from "src/app/services/common-data.service";
 import { ErrorService } from "src/app/services/error.service";
 import { ProfileDataService } from "src/app/services/profile.service";
+import { CommonDialogBox } from "../common-box.dialog";
 
 @Component({
   selector: "app-info",
@@ -30,16 +37,17 @@ export class ProfileInfoComponent implements OnInit, OnDestroy {
   errorMessage = "";
   accountId = "";
   email = "";
+  address = "";
+  userName = "";
+  countryName = "";
   currencies: CommonTargetValue[] = [];
   countries: ICountryCode[] = CountryCodes;
   filteredCountries: Observable<ICountryCode[]> | undefined;
 
   userForm = this.formBuilder.group({
-    id: [""],
-    userName: ["", { validators: [Validators.required], updateOn: "change" }],
-    address: ["", { validators: [Validators.required], updateOn: "change" }],
+    firstName: ["", { validators: [Validators.required], updateOn: "change" }],
+    lastName: ["", { validators: [Validators.required], updateOn: "change" }],
     country: ["", { validators: [Validators.required], updateOn: "change" }],
-    email: [""],
     phone: ["", { validators: [Validators.required], updateOn: "change" }],
     currency: ["", { validators: [Validators.required], updateOn: "change" }],
   });
@@ -50,7 +58,8 @@ export class ProfileInfoComponent implements OnInit, OnDestroy {
     private commonService: CommonDataService,
     private errorHandler: ErrorService,
     private formBuilder: FormBuilder,
-    private router: Router
+    private router: Router,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -84,6 +93,7 @@ export class ProfileInfoComponent implements OnInit, OnDestroy {
   }
 
   private loadCurrencies(): void {
+    this.errorMessage = "";
     const currencyData = this.commonService.getSettingsCurrency();
     if (currencyData === null) {
       this.errorMessage = this.errorHandler.getRejectedCookieMessage();
@@ -97,13 +107,15 @@ export class ProfileInfoComponent implements OnInit, OnDestroy {
           if (currencySettings !== null) {
             itemCount = currencySettings.count as number;
             if (itemCount > 0) {
-              this.currencies = currencySettings.list?.map(
-                (val) =>
-                  <CommonTargetValue>{
-                    id: val.symbol,
-                    title: val.name,
-                  }
-              ) as CommonTargetValue[];
+              this.currencies = currencySettings.list
+                ?.filter((x) => x.fiat)
+                .map(
+                  (val) =>
+                    <CommonTargetValue>{
+                      id: val.symbol,
+                      title: val.name,
+                    }
+                ) as CommonTargetValue[];
               this.loadForm();
             }
           }
@@ -121,18 +133,32 @@ export class ProfileInfoComponent implements OnInit, OnDestroy {
   }
 
   private loadForm(): void {
-    this.userForm.get("id")?.setValue(this._user?.userId);
-    this.userForm.get("userName")?.setValue(this._user?.name);
-    this.userForm.get("address")?.setValue("");
-    const selectedCountry = getCountryByCode3(this._user?.countryCode3 as string);
+    this.userForm.get("firstName")?.setValue(this._user?.firstName);
+    this.userForm.get("lastName")?.setValue(this._user?.lastName);
+    const selectedCountry = getCountryByCode3(
+      this._user?.countryCode3 as string
+    );
     if (selectedCountry) {
-        this.userForm.get("country")?.setValue(selectedCountry.name);
+      this.userForm.get("country")?.setValue(selectedCountry.name);
     }
     this.userForm.get("email")?.setValue(this._user?.email);
     this.userForm.get("phone")?.setValue(this._user?.phone);
-    this.userForm.get("currency")?.setValue(this._user?.defaultCurrency);
+    this.userForm.get("currency")?.setValue(this._user?.defaultFiatCurrency);
     this.accountId = this._user?.userId;
     this.email = this._user?.email;
+    this.address = "address";
+    this.userName = this._user?.name;
+    this.countryName = getCountryByCode3(this._user?.countryCode3 as string)?.name as string;
+  }
+
+  private showSuccessMessageDialog(): void {
+    this.dialog.open(CommonDialogBox, {
+      width: "450px",
+      data: {
+        title: "Profile saving",
+        message: "Personal information has been saved successfully.",
+      },
+    });
   }
 
   get countryField(): AbstractControl | null {
@@ -141,5 +167,53 @@ export class ProfileInfoComponent implements OnInit, OnDestroy {
 
   getCountryFlag(code: string): string {
     return `${code.toLowerCase()}.svg`;
+  }
+
+  kycCompleted(): boolean {
+    let result = false;
+    if (this._user) {
+      result = 
+        this._user.kycStatus === "completed" && this._user.kycValid === true;
+    }
+    return result;
+  }
+
+  onSubmit(): void {
+    this.userForm.get("currency")?.setValue("AAA");
+    if (this.userForm.valid) {
+      this.errorMessage = "";
+      this.inProgress = true;
+      let countryCode = "";
+      const country = getCountry(this.userForm.get("country")?.value);
+      if (country) {
+        countryCode = country.code3;
+      }
+      this.profile
+        .saveUserInfo(
+          this.userForm.get("firstName")?.value,
+          this.userForm.get("lastName")?.value,
+          countryCode,
+          this.userForm.get("phone")?.value,
+          this.userForm.get("currency")?.value
+        )
+        .subscribe(
+          ({ data }) => {
+            this.inProgress = false;
+            const userData = data.updateMe as User;
+            if (userData.email === this.email) {
+              this.showSuccessMessageDialog();
+            } else {
+              this.errorMessage = "Personal settings was not saved";
+            }
+          },
+          (error) => {
+            this.inProgress = false;
+            this.errorMessage = this.errorHandler.getError(
+              error.message,
+              "Unable to save personal settings"
+            );
+          }
+        );
+    }
   }
 }

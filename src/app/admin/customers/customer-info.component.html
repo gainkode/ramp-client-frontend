@@ -16,6 +16,13 @@
         </div>
     </div>
 
+    <div *ngIf="customer?.company===''">
+        <label class="customer-details-label">Name</label>
+        <div class="customer-details-value">
+            {{customer?.name}}
+        </div>
+    </div>
+
     <div *ngIf="customer?.street!==''">
         <label class="customer-details-label">Address</label>
         <div class="customer-details-value">
@@ -47,10 +54,10 @@
         </div>
     </div>
 
-    <div *ngIf="customer?.currency!==''">
+    <div *ngIf="customer?.fiatCurrency!==''">
         <label class="customer-details-label">Account Currency</label>
         <div class="customer-details-value">
-            {{customer?.currency}}
+            {{customer?.fiatCurrency}}
         </div>
     </div>
 </div>

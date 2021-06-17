@@ -19,7 +19,7 @@ export class UserItem {
     userType: UserTypeView | null = null;
     userMode: UserModeView | null = null;
     created = '';
-    currency = '';
+    fiatCurrency = '';
 
     constructor(data: User | null) {
         if (data !== null) {
@@ -44,7 +44,7 @@ export class UserItem {
                 this.country.imgSource = `assets/svg-country-flags/${countryObject.code2.toLowerCase()}.svg`;
                 this.country.title = countryObject.name;
             }
-            this.currency = (data.defaultCurrency) ? data.defaultCurrency as string : '';
+            this.fiatCurrency = (data.defaultFiatCurrency) ? data.defaultFiatCurrency as string : '';
             this.userType = UserTypeList.find(x => x.id === data.type) as UserTypeView;
             this.userMode = UserModeShortList.find(x => x.id === data.mode) as UserModeView;
         }

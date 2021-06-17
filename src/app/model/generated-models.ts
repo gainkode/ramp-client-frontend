@@ -321,6 +321,7 @@ export type SettingsCurrency = {
   minAmount: Scalars['Float'];
   rateFactor: Scalars['Float'];
   validateAsSymbol?: Maybe<Scalars['String']>;
+  fiat?: Maybe<Scalars['Boolean']>;
 };
 
 export type SettingsKycLevelListResult = {
@@ -518,7 +519,6 @@ export type User = {
   countryCode2?: Maybe<Scalars['String']>;
   countryCode3?: Maybe<Scalars['String']>;
   phone?: Maybe<Scalars['String']>;
-  defaultCurrency?: Maybe<Scalars['String']>;
   termsOfUse?: Maybe<Scalars['Boolean']>;
   created?: Maybe<Scalars['DateTime']>;
   updated?: Maybe<Scalars['DateTime']>;

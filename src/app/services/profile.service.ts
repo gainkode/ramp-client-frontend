@@ -1,60 +1,72 @@
-import { Injectable } from '@angular/core';
-import { Apollo, gql, QueryRef } from 'apollo-angular';
-import { EmptyObject } from 'apollo-angular/types';
-import { TransactionSource } from '../model/generated-models';
+import { Injectable } from "@angular/core";
+import { Apollo, gql, QueryRef } from "apollo-angular";
+import { Observable } from "rxjs";
+import { EmptyObject } from "apollo-angular/types";
+import { TransactionSource } from "../model/generated-models";
 
 const GET_MY_TRANSACTIONS_POST = gql`
   query GetMyTransactions(
-    $sourcesOnly: [TransactionSource!],
-    $filter: String,
-    $skip: Int,
-    $first: Int,
-    $orderBy: [OrderBy!]) {
-      getMyTransactions(
-        sourcesOnly: $sourcesOnly,
-        filter: $filter,
-        skip: $skip,
-        first: $first,
-        orderBy: $orderBy
+    $sourcesOnly: [TransactionSource!]
+    $filter: String
+    $skip: Int
+    $first: Int
+    $orderBy: [OrderBy!]
+  ) {
+    getMyTransactions(
+      sourcesOnly: $sourcesOnly
+      filter: $filter
+      skip: $skip
+      first: $first
+      orderBy: $orderBy
     ) {
-      count,
+      count
       list {
-        transactionId,
-        code,
-        userId,
-        affiliateId,
-        created,
-        executed,
-        type,
-        source,
-        status,
-        fee,
-        feePercent,
-        feeMinEuro,
-        feeDetails,
-        currencyToSpend,
-        amountToSpend,
-        amountToSpendWithoutFee,
-        currencyToReceive,
-        amountToReceive,
-        amountToReceiveWithoutFee,
-        rate,
-        liquidityProvider,
-        instrument,
-        paymentProvider,
+        transactionId
+        code
+        userId
+        affiliateId
+        created
+        executed
+        type
+        source
+        status
+        fee
+        feePercent
+        feeMinEuro
+        feeDetails
+        currencyToSpend
+        amountToSpend
+        amountToSpendWithoutFee
+        currencyToReceive
+        amountToReceive
+        amountToReceiveWithoutFee
+        rate
+        liquidityProvider
+        instrument
+        paymentProvider
         paymentOrder {
-          orderId,
-          amount,
-          currency,
-          operations {operationId, created, type, sn, status, details, callbackDetails, errorCode, errorMessage},
-          originalOrderId,
-          preauthOperationSn,
-          captureOperationSn,
-          refundOperationSn,
-          paymentInfo,
+          orderId
+          amount
+          currency
+          operations {
+            operationId
+            created
+            type
+            sn
+            status
+            details
+            callbackDetails
+            errorCode
+            errorMessage
+          }
+          originalOrderId
+          preauthOperationSn
+          captureOperationSn
+          refundOperationSn
+          paymentInfo
         }
-        data,
-        destinationType,
+        data
+        destinationType
         destination
       }
     }
@@ -64,51 +76,82 @@ const GET_MY_TRANSACTIONS_POST = gql`
 const GET_ME_POST = gql`
   query Me {
     me {
-      userId,
-      email,
-      name,
-      type,
-      mode,
-      merchantIds,
-      firstName,
-      lastName,
-      avatar,
-      birthday,
-      countryCode2,
-      countryCode3,
-      phone,
-      defaultCurrency,
-      termsOfUse,
-      created,
-      updated,
-      contacts {userContactId, userId, contactId, displayName, created},
-      is2faEnabled,
-      hasEmailAuth,
-      changePasswordRequired,
-      referralCode,
-      kycProvider,
-      kycValid,
-      kycStatus,
-      kycReviewComment,
-      kycReviewRejectedType,
-      kycReviewRejectedLabels,
-      kycStatusUpdateRequired,
-      custodyProvider,
-      vaultAccountId,
+      userId
+      email
+      name
+      type
+      mode
+      merchantIds
+      firstName
+      lastName
+      avatar
+      birthday
+      countryCode2
+      countryCode3
+      phone
+      defaultFiatCurrency
+      termsOfUse
+      created
+      updated
+      contacts {
+        userContactId
+        userId
+        contactId
+        displayName
+        created
+      }
+      is2faEnabled
+      hasEmailAuth
+      changePasswordRequired
+      referralCode
+      kycProvider
+      kycValid
+      kycStatus
+      kycReviewComment
+      kycReviewRejectedType
+      kycReviewRejectedLabels
+      kycStatusUpdateRequired
+      custodyProvider
+      vaultAccountId
       state {
-        date,
-        assets {id, total, available, pending, lockedAmount, totalStakedCPU, totalStakedNetwork, selfStakedCPU, selfStakedNetwork, pendingRefundCPU, pendingRefundNetwork},
+        date
+        assets {
+          id
+          total
+          available
+          pending
+          lockedAmount
+          totalStakedCPU
+          totalStakedNetwork
+          selfStakedCPU
+          selfStakedNetwork
+          pendingRefundCPU
+          pendingRefundNetwork
+        }
         externalWallets {
-          id,
-          name,
-          customerRefId,
+          id
+          name
+          customerRefId
           assets {
-            id, status, activationTime, address, tag}
-          },
+            id
+            status
+            activationTime
+            address
+            tag
+          }
+        }
         notifications {
-          count,
+          count
           list {
-            userNotificationId, userId, userNotificationTypeCode, created, viewed, text, linkedId, linkedTable, params
+            userNotificationId
+            userId
+            userNotificationTypeCode
+            created
+            viewed
+            text
+            linkedId
+            linkedTable
+            params
           }
         }
       }
@@ -119,32 +162,57 @@ const GET_ME_POST = gql`
 const GET_PROFILE_HOME_POST = gql`
   query Me {
     me {
-      userId,
-      defaultCurrency,
-      referralCode,
-      kycProvider,
-      kycValid,
-      kycStatus,
-      kycReviewComment,
-      kycReviewRejectedType,
-      kycReviewRejectedLabels,
-      kycStatusUpdateRequired,
-      custodyProvider,
-      vaultAccountId,
+      userId
+      defaultFiatCurrency
+      referralCode
+      kycProvider
+      kycValid
+      kycStatus
+      kycReviewComment
+      kycReviewRejectedType
+      kycReviewRejectedLabels
+      kycStatusUpdateRequired
+      custodyProvider
+      vaultAccountId
       state {
-        date,
-        assets {id, total, available, pending, lockedAmount, totalStakedCPU, totalStakedNetwork, selfStakedCPU, selfStakedNetwork, pendingRefundCPU, pendingRefundNetwork},
+        date
+        assets {
+          id
+          total
+          available
+          pending
+          lockedAmount
+          totalStakedCPU
+          totalStakedNetwork
+          selfStakedCPU
+          selfStakedNetwork
+          pendingRefundCPU
+          pendingRefundNetwork
+        }
         externalWallets {
-          id,
-          name,
-          customerRefId,
+          id
+          name
+          customerRefId
           assets {
-            id, status, activationTime, address, tag}
-          },
+            id
+            status
+            activationTime
+            address
+            tag
+          }
+        }
         notifications {
-          count,
+          count
           list {
-            userNotificationId, userId, userNotificationTypeCode, created, viewed, text, linkedId, linkedTable, params
+            userNotificationId
+            userId
+            userNotificationTypeCode
+            created
+            viewed
+            text
+            linkedId
+            linkedTable
+            params
           }
         }
       }
@@ -155,41 +223,55 @@ const GET_PROFILE_HOME_POST = gql`
 const GET_PROFILE_ACCOUNT_POST = gql`
   query Me {
     me {
-      userId,
-      email,
-      name,
-      type,
-      mode,
-      merchantIds,
-      firstName,
-      lastName,
-      avatar,
-      birthday,
-      countryCode2,
-      countryCode3,
-      phone,
-      defaultCurrency,
-      termsOfUse,
-      created,
-      updated,
-      contacts {userContactId, userId, contactId, displayName, created},
-      is2faEnabled,
-      hasEmailAuth,
-      changePasswordRequired,
-      referralCode,
-      kycProvider,
-      kycValid,
-      kycStatus,
-      kycReviewComment,
-      kycReviewRejectedType,
-      kycReviewRejectedLabels,
-      kycStatusUpdateRequired,
+      userId
+      email
+      name
+      type
+      mode
+      merchantIds
+      firstName
+      lastName
+      avatar
+      birthday
+      countryCode2
+      countryCode3
+      phone
+      defaultFiatCurrency
+      termsOfUse
+      created
+      updated
+      contacts {
+        userContactId
+        userId
+        contactId
+        displayName
+        created
+      }
+      is2faEnabled
+      hasEmailAuth
+      changePasswordRequired
+      referralCode
+      kycProvider
+      kycValid
+      kycStatus
+      kycReviewComment
+      kycReviewRejectedType
+      kycReviewRejectedLabels
+      kycStatusUpdateRequired
       state {
-        date,
+        date
         notifications {
-          count,
+          count
           list {
-            userNotificationId, userId, userNotificationTypeCode, created, viewed, text, linkedId, linkedTable, params
+            userNotificationId
+            userId
+            userNotificationTypeCode
+            created
+            viewed
+            text
+            linkedId
+            linkedTable
+            params
           }
         }
       }
@@ -197,27 +279,52 @@ const GET_PROFILE_ACCOUNT_POST = gql`
   }
 `;
 
+const UPDATE_ME_INFO_POST = gql`
+  mutation UpdateMe(
+    $firstName: String!
+    $lastName: String!
+    $countryCode3: String!
+    $phone: String!
+    $defaultFiatCurrency: String!
+  ) {
+    updateMe(
+      user: {
+        firstName: $firstName,
+        lastName: $lastName,
+        countryCode3: $countryCode3,
+        phone: $phone,
+        defaultFiatCurrency: $defaultFiatCurrency
+      }
+    ) {
+      email
+    }
+  }
+`;
+
 @Injectable()
 export class ProfileDataService {
-  constructor(private apollo: Apollo) { }
+  constructor(private apollo: Apollo) {}
 
-  getMyTransactions(pageIndex: number, takeItems: number, sources: TransactionSource[],
-    orderField: string, orderDesc: boolean): QueryRef<any, EmptyObject> | null {
+  getMyTransactions(
+    pageIndex: number,
+    takeItems: number,
+    sources: TransactionSource[],
+    orderField: string,
+    orderDesc: boolean
+  ): QueryRef<any, EmptyObject> | null {
     if (this.apollo.client !== undefined) {
-      const orderFields = [
-        { orderBy: orderField, desc: orderDesc }
-      ];
+      const orderFields = [{ orderBy: orderField, desc: orderDesc }];
       return this.apollo.watchQuery<any>({
         query: GET_MY_TRANSACTIONS_POST,
         variables: {
           sourcesOnly: sources,
-          filter: '',
+          filter: "",
           skip: pageIndex * takeItems,
           first: takeItems,
-          orderBy: orderFields
+          orderBy: orderFields,
         },
         pollInterval: 30000,
-        fetchPolicy: 'network-only'
+        fetchPolicy: "network-only",
       });
     } else {
       return null;
@@ -228,7 +335,7 @@ export class ProfileDataService {
     if (this.apollo.client !== undefined) {
       return this.apollo.watchQuery<any>({
         query: GET_ME_POST,
-        fetchPolicy: 'network-only'
+        fetchPolicy: "network-only",
       });
     } else {
       return null;
@@ -239,7 +346,7 @@ export class ProfileDataService {
     if (this.apollo.client !== undefined) {
       return this.apollo.watchQuery<any>({
         query: GET_PROFILE_HOME_POST,
-        fetchPolicy: 'network-only'
+        fetchPolicy: "network-only",
       });
     } else {
       return null;
@@ -250,10 +357,30 @@ export class ProfileDataService {
     if (this.apollo.client !== undefined) {
       return this.apollo.watchQuery<any>({
         query: GET_PROFILE_ACCOUNT_POST,
-        fetchPolicy: 'network-only'
+        fetchPolicy: "network-only",
       });
     } else {
       return null;
     }
+  }
+
+  saveUserInfo(
+    firstName: string,
+    lastName: string,
+    country: string,
+    phone: string,
+    currency: string
+  ): Observable<any> {
+    console.log(currency);
+    return this.apollo.mutate({
+      mutation: UPDATE_ME_INFO_POST,
+      variables: {
+        firstName,
+        lastName,
+        countryCode3: country,
+        phone,
+        defaultFiatCurrency: currency
+      },
+    });
   }
 }

@@ -190,7 +190,7 @@ const GET_CUSTOMERS_POST = gql`
         countryCode2,
         countryCode3,
         created,
-        defaultCurrency,
+        defaultFiatCurrency,
         kycStatus,
         phone
       }

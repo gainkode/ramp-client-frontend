@@ -21,7 +21,7 @@ const LOGIN_POST = gql`
                   roles {name, immutable}
                   permissions { roleName, objectCode, objectName, objectDescription, fullAccess }
                   type,
-                  defaultCurrency,
+                  defaultFiatCurrency,
                   firstName,
                   lastName,
                   birthday,
@@ -64,7 +64,7 @@ const SOCIAL_LOGIN_POST = gql`
                 roles {name, immutable},
                 permissions { roleName, objectCode, objectName, objectDescription, fullAccess },
                 type,
-                defaultCurrency,
+                defaultFiatCurrency,
                 firstName,
                 lastName,
                 phone,
@@ -157,7 +157,7 @@ const CONFIRMNAME_POST = gql`
         type,
         roles {name,immutable},
         permissions { roleName, objectCode, objectName, objectDescription, fullAccess },
-        defaultCurrency,
+        defaultFiatCurrency,
         firstName,
         lastName,
         phone,
