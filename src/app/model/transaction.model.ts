@@ -5,11 +5,11 @@ import {
   PaymentProvider,
   Transaction,
   TransactionShort,
-  TransactionShortListResult,
   TransactionSource,
   TransactionStatus,
   TransactionType,
   User,
+  UserMode,
 } from "./generated-models";
 import {
   TransactionTypeList,
@@ -18,6 +18,7 @@ import {
   TransactionSourceList,
   TransactionStatusList,
   CardView,
+  UserModeShortList,
 } from "./payment.model";
 import { UserItem } from "./user.model";
 
@@ -28,12 +29,12 @@ export class TransactionItem {
   executed: string = "";
   accountId = "";
   type: TransactionType | undefined = undefined;
+  userMode: UserMode | undefined = undefined;
   instrument: PaymentInstrument | undefined = undefined;
   instrumentDetails: CommonTargetValue | null = null;
   paymentProvider: PaymentProvider | undefined = undefined;
   paymentProviderResponse = "";
   source: TransactionSource | undefined = undefined;
-  walletSource = "";
   currencyToSpend = "";
   currencyToReceive = "";
   amountToSpend = 0;
@@ -46,7 +47,6 @@ export class TransactionItem {
   status: TransactionStatus | undefined = undefined;
   user: UserItem | undefined;
   balance: number = 74.1254;
-  payment = "4111 **** **** 1111";
 
   constructor(data: Transaction | TransactionShort | null) {
     if (data !== null) {
@@ -67,9 +67,9 @@ export class TransactionItem {
       if (transactionData.user) {
         this.user = new UserItem(transactionData.user as User);
         this.ip = transactionData.userIp as string;
+        this.userMode = transactionData.user?.mode as UserMode | undefined;
       }
 
-      //this.euro = 100;
       this.type = data.type;
       this.instrument = data.instrument;
       this.paymentProvider = data.paymentProvider as
@@ -80,6 +80,18 @@ export class TransactionItem {
       this.currencyToReceive = data.currencyToReceive;
       this.amountToSpend = data.amountToSpend;
       this.amountToReceive = data.amountToReceive;
+
+      if (
+        transactionData.amountToSpendInEur ||
+        transactionData.amountToReceiveInEur
+      ) {
+        if (transactionData.amountToSpendInEur) {
+          this.euro = transactionData.amountToSpendInEur;
+        } else {
+          this.euro = transactionData.amountToReceiveInEur;
+        }
+      }
+
       this.rate = data.rate;
       this.fees = data.fee;
       this.status = data.status;
@@ -101,11 +113,15 @@ export class TransactionItem {
             }
           }
         }
+        if (data.paymentOrder.operations) {
+          if (data.paymentOrder.operations.length > 0) {
+            const operation = data.paymentOrder.operations.sort(
+              (x) => x.created
+            )[0];
+            this.paymentProviderResponse = `${operation.type}: ${operation.status}`;
+          }
+        }
       }
-
-      this.paymentProviderResponse = "Response";
-      this.walletSource = "Wallet source";
-      this.euro = 100;
     }
   }
 
@@ -131,5 +147,13 @@ export class TransactionItem {
   get paymentProviderName(): string {
     return PaymentProviderList.find((p) => p.id === this.paymentProvider)
       ?.name as string;
+  }
+
+  get userModeName(): string {
+    if (this.userMode) {
+      return UserModeShortList.find((p) => p.id === this.userMode)
+        ?.name as string;
+    }
+    return "";
   }
 }

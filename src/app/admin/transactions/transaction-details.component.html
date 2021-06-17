@@ -157,10 +157,10 @@
         </div>
     </div>
 
-    <div *ngIf="transaction?.walletSource!==''">
+    <div *ngIf="transaction?.userMode">
         <label class="transaction-details-label">Wallet type</label>
-        <div class="transaction-details-value" style="color: darkred;">
-            {{transaction?.walletSource}}
+        <div class="transaction-details-value">
+            {{transaction?.userModeName}}
         </div>
     </div>
 

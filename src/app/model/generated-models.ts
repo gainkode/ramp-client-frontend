@@ -518,6 +518,16 @@ export type User = {
   birthday?: Maybe<Scalars['DateTime']>;
   countryCode2?: Maybe<Scalars['String']>;
   countryCode3?: Maybe<Scalars['String']>;
+  postCode?: Maybe<Scalars['String']>;
+  town?: Maybe<Scalars['String']>;
+  street?: Maybe<Scalars['String']>;
+  subStreet?: Maybe<Scalars['String']>;
+  stateName?: Maybe<Scalars['String']>;
+  buildingName?: Maybe<Scalars['String']>;
+  buildingNumber?: Maybe<Scalars['String']>;
+  flatNumber?: Maybe<Scalars['String']>;
+  addressStartDate?: Maybe<Scalars['DateTime']>;
+  addressEndDate?: Maybe<Scalars['DateTime']>;
   phone?: Maybe<Scalars['String']>;
   termsOfUse?: Maybe<Scalars['Boolean']>;
   created?: Maybe<Scalars['DateTime']>;
