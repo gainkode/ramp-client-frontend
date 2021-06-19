@@ -13,7 +13,7 @@ import {
   Validators,
 } from "@angular/forms";
 import { MatStepper } from "@angular/material/stepper";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription, Observable } from "rxjs";
 import { map, startWith } from "rxjs/operators";
 import {
@@ -71,6 +71,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
   @ViewChild("codeinput") codeElement: ElementRef | undefined = undefined;
   @ViewChild("checkoutdone") checkoutDoneElement: ElementRef | undefined =
     undefined;
+  internalPayment = false;
   user: User | null = null;
   errorMessage = "";
   inProgress = false;
@@ -213,8 +214,10 @@ export class ContainerComponent implements OnInit, OnDestroy {
     private commonService: CommonDataService,
     private errorHandler: ErrorService,
     private formBuilder: FormBuilder,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
+    this.internalPayment = route.snapshot.params["internal"] === "internal";
     this.user = auth.user;
     this.summary = new CheckoutSummary();
     this.detailsEmailControl = this.detailsForm.get("email");

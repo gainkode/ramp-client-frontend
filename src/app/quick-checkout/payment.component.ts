@@ -10,9 +10,9 @@ import {
 import { Router } from "@angular/router";
 
 @Component({
-  templateUrl: "quick-checkout.component.html",
-  styleUrls: ["quick-checkout.component.scss"],
+  templateUrl: "payment.component.html",
+  styleUrls: ["payment.component.scss"],
 })
-export class QuickCheckoutComponent {
+export class PaymentComponent {
   constructor(private router: Router) {}
 }
