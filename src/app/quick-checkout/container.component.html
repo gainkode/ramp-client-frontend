@@ -474,6 +474,44 @@
             </div>
           </form>
         </mat-step>
+        <!-- Payment complete -->
+        <mat-step
+          [stepControl]="redirectForm"
+          label="redirect"
+          editable="false"
+          completed="false"
+        >
+          <ng-template matStepLabel>Complete</ng-template>
+          <form [formGroup]="redirectForm" #redirect="ngForm">
+            <div *ngIf="inProgress" class="form-element">
+              <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            </div>
+            <div>
+              <h2>Confirm your payment</h2>
+            </div>
+            <div *ngIf="errorMessage !== ''" class="form-error-box">
+              {{ errorMessage }}
+            </div>
+            <div class="redirect-frame-container">
+              <iframe
+                id="iframe"
+                class="redirect-frame-box"
+                (load)="onLoadRedirect()"
+              ></iframe>
+            </div>
+            <div class="form-element" *ngIf="redirectForm?.valid">
+              <button
+                type="submit"
+                #redirectnext
+                class="main-button main-button-accent inline-button"
+                (click)="confirmRedirect()"
+              >
+                NEXT
+              </button>
+            </div>
+          </form>
+        </mat-step>
+
         <!-- Order status -->
         <mat-step label="complete" editable="false" completed="false">
           <ng-template matStepLabel>Order status</ng-template>
@@ -524,12 +562,4 @@
       </div>
     </div>
   </div>
-
-  <iframe
-    id="iframe"
-    width="700px"
-    height="700px"
-    (load)="onLoad()"
-    srcdoc="<div>Redirect...</div>"
-  ></iframe>
 </div>

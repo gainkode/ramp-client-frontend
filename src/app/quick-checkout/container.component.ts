@@ -62,6 +62,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
   @ViewChild("confirmation") private ngConfirmationForm: NgForm | undefined =
     undefined;
   @ViewChild("payment") private ngPaymentForm: NgForm | undefined = undefined;
+  @ViewChild("redirect") private ngRedirectForm: NgForm | undefined = undefined;
   @ViewChild("emailinput") emailElement: ElementRef | undefined = undefined;
   @ViewChild("paymentinfonext") paymentInfoNextElement: ElementRef | undefined =
     undefined;
@@ -69,6 +70,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
     | ElementRef
     | undefined = undefined;
   @ViewChild("codeinput") codeElement: ElementRef | undefined = undefined;
+  @ViewChild("redirectnext") redirectNextElement: ElementRef | undefined = undefined;
   @ViewChild("checkoutdone") checkoutDoneElement: ElementRef | undefined =
     undefined;
   internalPayment = false;
@@ -101,8 +103,9 @@ export class ContainerComponent implements OnInit, OnDestroy {
   currentRate: Rate | null = null;
   currentTransaction = TransactionType.Deposit;
   currentCard: CardView = new CardView();
-  summary!: CheckoutSummary;
   iframedoc: any;
+  iframeContent = '';
+  summary!: CheckoutSummary;
 
   private pCurrencies: CurrencyView[] = [];
   private pNumberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
@@ -156,6 +159,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
         TransactionType.Deposit,
         { validators: [Validators.required], updateOn: "change" },
       ],
+      complete: ["", { validators: [Validators.required], updateOn: "change" }]
     },
     {
       validators: [
@@ -175,6 +179,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
   detailsCurrencyToControl: AbstractControl | null = null;
   detailsAddressControl: AbstractControl | null = null;
   detailsTransactionControl: AbstractControl | null = null;
+  detailsCompleteControl: AbstractControl | null = null;
   paymentInfoForm = this.formBuilder.group({
     instrument: [
       PaymentInstrument.CreditCard,
@@ -203,6 +208,10 @@ export class ContainerComponent implements OnInit, OnDestroy {
     complete: ["", { validators: [Validators.required], updateOn: "change" }],
   });
   paymentCompleteControl: AbstractControl | null = null;
+  redirectForm = this.formBuilder.group({
+    complete: ["", { validators: [Validators.required], updateOn: "change" }],
+  });
+  redirectCompleteControl: AbstractControl | null = null;
 
   get isDeposit(): boolean {
     return this.currentTransaction === TransactionType.Deposit;
@@ -227,6 +236,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
     this.detailsCurrencyToControl = this.detailsForm.get("currencyTo");
     this.detailsAddressControl = this.detailsForm.get("address");
     this.detailsTransactionControl = this.detailsForm.get("transaction");
+    this.detailsCompleteControl = this.detailsForm.get("complete");
     this.paymentInfoInstrumentControl = this.paymentInfoForm.get("instrument");
     this.paymentInfoProviderControl = this.paymentInfoForm.get("provider");
     this.paymentInfoTransactionIdControl =
@@ -235,6 +245,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
     this.confirmationCodeControl = this.confirmationForm.get("code");
     this.confirmationCompleteControl = this.confirmationForm.get("complete");
     this.paymentCompleteControl = this.paymentForm.get("complete");
+    this.redirectCompleteControl = this.redirectForm.get("complete");
     this.currentTransaction = TransactionType.Deposit;
   }
 
@@ -704,6 +715,11 @@ export class ContainerComponent implements OnInit, OnDestroy {
   }
 
   stepChanged(step: StepperSelectionEvent): void {
+
+
+    console.log('complaete', this.paymentCompleteControl?.value);
+    console.log('form', this.paymentForm.valid);
+
     if (this.errorMessage === "") {
       let focusInput: HTMLInputElement | undefined;
       if (step.selectedStep.label === "details") {
@@ -757,10 +773,18 @@ export class ContainerComponent implements OnInit, OnDestroy {
         if (instrument === PaymentInstrument.CreditCard) {
           this.paymentTitle = "Payment by credit card";
           this.paymentCreditCard = true;
-          this.paymentCompleteControl?.setValue("creditcard");
         } else {
           this.paymentTitle = "Payment is not implemented";
         }
+      } else if (step.selectedStep.label === "redirect") {
+        focusInput = this.codeElement?.nativeElement as HTMLInputElement;
+        if (this.iframedoc) {
+          this.iframedoc.open();
+          const content = this.iframeContent;
+          this.iframedoc.write(content);
+          this.iframedoc.close();
+        }
+        this.redirectCompleteControl?.setValue('ready');
       } else if (step.selectedStep.label === "complete") {
         // we can't set focus to the button as it causes scroll to this button.
         // So, the step header box stays here after last page appearing as the objective evil
@@ -774,21 +798,21 @@ export class ContainerComponent implements OnInit, OnDestroy {
           focusInput?.focus();
         }, 100);
       }
-      if (this.processDone) {
-        setTimeout(() => {
-          //   const url = this.router.serializeUrl(
-          //     this.router.createUrlTree(["/quickcheckout/done-redirect"])
-          //   );
-          //   window.open(url, "_blank");
+      // if (this.processDone) {
+      //   setTimeout(() => {
+      //     //   const url = this.router.serializeUrl(
+      //     //     this.router.createUrlTree(["/quickcheckout/done-redirect"])
+      //     //   );
+      //     //   window.open(url, "_blank");
 
-          if (this.iframedoc) {
-            this.iframedoc.open();
-            const content = sessionStorage.getItem("paymentDone");
-            this.iframedoc.write(content);
-            this.iframedoc.close();
-          }
-        }, 150);
-      }
+      //     if (this.iframedoc) {
+      //       this.iframedoc.open();
+      //       const content = sessionStorage.getItem("paymentDone");
+      //       this.iframedoc.write(content);
+      //       this.iframedoc.close();
+      //     }
+      //   }, 150);
+      // }
     }
   }
 
@@ -817,6 +841,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
     this.ngVerificationForm?.resetForm();
     this.ngConfirmationForm?.resetForm();
     this.ngPaymentForm?.resetForm();
+    this.ngRedirectForm?.resetForm();
     if (this.auth.authenticated) {
       const user = this.auth.user;
       if (user) {
@@ -825,9 +850,11 @@ export class ContainerComponent implements OnInit, OnDestroy {
     }
     this.detailsTransactionControl?.setValue(TransactionType.Deposit);
     this.paymentInfoInstrumentControl?.setValue(PaymentInstrument.CreditCard);
+    this.iframeContent = '';
   }
 
   detailsCompleted(): void {
+    this.detailsCompleteControl?.setValue('ready');
     if (this.detailsForm.valid) {
       const userEmail = this.detailsEmailControl?.value;
       let authenticated = false;
@@ -915,7 +942,9 @@ export class ContainerComponent implements OnInit, OnDestroy {
   }
 
   paymentCompleted(): void {
-    this.paymentCompleteControl?.setValue("ready");
+    if (this.paymentCreditCard) {
+      this.paymentCompleteControl?.setValue("ready");
+    }
     if (this.paymentForm.valid && this.currentCard.valid) {
       this.inProgress = true;
       const transaction = this.paymentInfoTransactionIdControl?.value;
@@ -932,7 +961,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
               instrument as PaymentInstrument,
               order?.paymentInfo as string
             );
-            sessionStorage.setItem("paymentDone", preAuthResult.html as string);
+            this.iframeContent = preAuthResult.html as string;
             this.inProgress = false;
             if (this.stepper) {
               this.stepper?.next();
@@ -966,6 +995,18 @@ export class ContainerComponent implements OnInit, OnDestroy {
     }
   }
 
+  onLoadRedirect(): void {
+    var iframe = document.getElementById("iframe");
+    var iWindow = (<HTMLIFrameElement>iframe).contentWindow;
+    this.iframedoc = iWindow?.document;
+  }
+
+  confirmRedirect(): void {
+    if (this.stepper) {
+      this.stepper?.next();
+    }
+  }
+
   done(): void {
     this.router.navigateByUrl(this.auth.getUserMainPage());
   }
@@ -981,11 +1022,5 @@ export class ContainerComponent implements OnInit, OnDestroy {
       error = `Value must be greater than ${c.minAmount}`;
     }
     return error;
-  }
-
-  onLoad() {
-    var iframe = document.getElementById("iframe");
-    var iWindow = (<HTMLIFrameElement>iframe).contentWindow;
-    this.iframedoc = iWindow?.document;
   }
 }
