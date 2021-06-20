@@ -479,7 +479,6 @@ export class ContainerComponent implements OnInit, OnDestroy {
         (error) => {
           this.inProgress = false;
           if (this.errorHandler.getCurrentError() === "auth.token_invalid") {
-            console.log("createQuickCheckout error");
             this.resetStepper();
           } else {
             this.paymentInfoTransactionIdControl?.reset();
@@ -715,11 +714,6 @@ export class ContainerComponent implements OnInit, OnDestroy {
   }
 
   stepChanged(step: StepperSelectionEvent): void {
-
-
-    console.log('complaete', this.paymentCompleteControl?.value);
-    console.log('form', this.paymentForm.valid);
-
     if (this.errorMessage === "") {
       let focusInput: HTMLInputElement | undefined;
       if (step.selectedStep.label === "details") {
@@ -751,7 +745,6 @@ export class ContainerComponent implements OnInit, OnDestroy {
               if (
                 this.errorHandler.getCurrentError() === "auth.token_invalid"
               ) {
-                console.log("stepChanged on paymentInfo error");
                 this.resetStepper();
               } else {
                 this.errorMessage = this.errorHandler.getError(
@@ -804,15 +797,6 @@ export class ContainerComponent implements OnInit, OnDestroy {
       //     //     this.router.createUrlTree(["/quickcheckout/done-redirect"])
       //     //   );
       //     //   window.open(url, "_blank");
-
-      //     if (this.iframedoc) {
-      //       this.iframedoc.open();
-      //       const content = sessionStorage.getItem("paymentDone");
-      //       this.iframedoc.write(content);
-      //       this.iframedoc.close();
-      //     }
-      //   }, 150);
-      // }
     }
   }
 
@@ -923,7 +907,6 @@ export class ContainerComponent implements OnInit, OnDestroy {
         (error) => {
           this.inProgress = false;
           if (this.errorHandler.getCurrentError() === "auth.token_invalid") {
-            console.log("confirmPayment error");
             this.resetStepper();
           } else {
             this.confirmationCompleteControl?.reset();
@@ -970,7 +953,6 @@ export class ContainerComponent implements OnInit, OnDestroy {
           (error) => {
             this.inProgress = false;
             if (this.errorHandler.getCurrentError() === "auth.token_invalid") {
-              console.log("paymentCompleted error");
               this.resetStepper();
             } else {
               this.errorMessage = this.errorHandler.getError(

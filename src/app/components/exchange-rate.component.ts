@@ -78,7 +78,7 @@ export class ExchangeRateComponent implements OnInit, OnDestroy {
                         }
                         this.restartCountDown();
                     }, (error) => {
-                        this.temp();
+                        this.setDefaultRate();
                         this.errorMessage = this.errorHandler.getError(
                             error.message,
                             'Unable to load exchange rate');
@@ -87,13 +87,15 @@ export class ExchangeRateComponent implements OnInit, OnDestroy {
                 }
             } else {
                 console.log(this.summary);
-                this.errorMessage = 'Currency is not specified';
+                console.log(this.summary?.currencyFrom);
+                console.log(this.summary?.currencyTo);
+                this.errorMessage = `Currency is not specified. From <${currencyFrom}> to <${currencyTo}>`;
                 this.restartCountDown();
             }
         }
     }
 
-    private temp(): void {
+    private setDefaultRate(): void {
         const rate = {
             currencyFrom: 'EUR',
             currencyTo: 'BTC',

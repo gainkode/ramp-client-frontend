@@ -49,7 +49,6 @@ export class PersonalHomeComponent implements OnInit, OnDestroy {
                                 (val) => val) as UserNotification[];
                         }
                     }
-                    console.log(userData);
                 }
                 this.inProgress = false;
             }, (error) => {

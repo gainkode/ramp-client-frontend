@@ -41,7 +41,6 @@ export class PersonalMyAccountComponent implements OnInit, OnDestroy {
                 const userData = data.me as User;
                 if (userData) {
                     this.user = userData;
-                    console.log(userData);
                 }
                 this.inProgress = false;
             }, (error) => {
