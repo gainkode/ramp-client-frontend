@@ -84,8 +84,6 @@ mutation PreAuth(
       transactionId: $transactionId
       instrument: $instrument
       provider: $paymentProvider
-      amount: 5
-      currency: "EUR"
       card: {
         number: $cardNumber
         expireMonth: $expiredMonth

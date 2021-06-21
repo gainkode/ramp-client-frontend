@@ -177,6 +177,8 @@ export const TransactionStatusList: Array<TransactionStatusView> = [
     { id: TransactionStatus.Paid, name: 'Paid' },
     { id: TransactionStatus.AddressDeclined, name: 'Address declined' },
     { id: TransactionStatus.PaymentDeclined, name: 'Payment declined' },
+    { id: TransactionStatus.ExchangeDeclined, name: 'Exchange Declined' },
+    { id: TransactionStatus.TransferDeclined, name: 'Transfer Declined' },
     { id: TransactionStatus.Sending, name: 'Sending' },
     { id: TransactionStatus.Sent, name: 'Sent' },
     { id: TransactionStatus.Completed, name: 'Completed' },

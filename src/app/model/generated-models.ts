@@ -900,9 +900,11 @@ export type TransactionShort = {
   feeDetails?: Maybe<Scalars['String']>;
   currencyToSpend: Scalars['String'];
   amountToSpend: Scalars['Float'];
+  amountToSpendInEur: Scalars['Float'];
   amountToSpendWithoutFee: Scalars['Float'];
   currencyToReceive: Scalars['String'];
   amountToReceive: Scalars['Float'];
+  amountToReceiveInEur: Scalars['Float'];
   amountToReceiveWithoutFee: Scalars['Float'];
   rate: Scalars['Float'];
   destinationType?: Maybe<TransactionDestinationType>;
@@ -926,6 +928,8 @@ export enum TransactionStatus {
   Paid = 'Paid',
   AddressDeclined = 'AddressDeclined',
   PaymentDeclined = 'PaymentDeclined',
+  ExchangeDeclined = 'ExchangeDeclined',
+  TransferDeclined = 'TransferDeclined',
   Exchanging = 'Exchanging',
   Exchanged = 'Exchanged',
   Sending = 'Sending',
@@ -1429,8 +1433,6 @@ export type PaymentPreauthInput = {
   transactionId: Scalars['String'];
   instrument: PaymentInstrument;
   provider: PaymentProvider;
-  amount: Scalars['Float'];
-  currency: Scalars['String'];
   card?: Maybe<PaymentCard>;
 };
 
@@ -1596,6 +1598,17 @@ export type TransactionInput = {
 export type Subscription = {
   __typename?: 'Subscription';
   newNotification?: Maybe<Scalars['Void']>;
+  transactionServiceNotification?: Maybe<Scalars['Void']>;
+};
+
+
+export type SubscriptionNewNotificationArgs = {
+  userId?: Maybe<Scalars['String']>;
+};
+
+
+export type SubscriptionTransactionServiceNotificationArgs = {
+  userId?: Maybe<Scalars['String']>;
 };
 
 export enum UserNotificationCodes {
@@ -1805,7 +1818,6 @@ export type PaymentCaptureInput = {
   orderId: Scalars['String'];
   instrument: PaymentInstrument;
   provider: PaymentProvider;
-  amount?: Maybe<Scalars['Float']>;
 };
 
 export type UserLogin = {
