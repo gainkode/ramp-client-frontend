@@ -42,7 +42,7 @@ export class ExchangeRateComponent implements OnInit, OnDestroy {
     }
 
     private subscribeTimer(): void {
-        this.pTimerSubscription = this.updatingTimer.subscribe(val => {
+        let test = val => {
             if (this.countDownInit) {
                 if (this.countDown > 0) {
                     this.countDown -= 1;
@@ -53,7 +53,8 @@ export class ExchangeRateComponent implements OnInit, OnDestroy {
             } else {
                 this.countDownInit = true;
             }
-        });
+        };
+        this.pTimerSubscription = this.updatingTimer.subscribe(test.bind(this));
     }
 
     private loadRates(): void {
