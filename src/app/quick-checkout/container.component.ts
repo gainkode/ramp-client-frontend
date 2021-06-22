@@ -49,7 +49,7 @@ import { round } from "../utils/utils";
 import { WalletValidator } from "../utils/wallet.validator";
 
 @Component({
-  selector: 'app-quick-checkout',
+  selector: "app-quick-checkout",
   templateUrl: "container.component.html",
   styleUrls: ["container.component.scss"],
 })
@@ -72,9 +72,11 @@ export class ContainerComponent implements OnInit, OnDestroy {
     | ElementRef
     | undefined = undefined;
   @ViewChild("codeinput") codeElement: ElementRef | undefined = undefined;
-  @ViewChild("redirectnext") redirectNextElement: ElementRef | undefined = undefined;
+  @ViewChild("redirectnext") redirectNextElement: ElementRef | undefined =
+    undefined;
   @ViewChild("checkoutdone") checkoutDoneElement: ElementRef | undefined =
     undefined;
+  @ViewChild("iframe") iframe!: ElementRef;
   @Input() set internal(val: boolean) {
     this.internalPayment = val;
   }
@@ -109,7 +111,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
   currentTransaction = TransactionType.Deposit;
   currentCard: CardView = new CardView();
   iframedoc: any;
-  iframeContent = '';
+  iframeContent = "";
   summary!: CheckoutSummary;
 
   private pCurrencies: CurrencyView[] = [];
@@ -164,7 +166,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
         TransactionType.Deposit,
         { validators: [Validators.required], updateOn: "change" },
       ],
-      complete: ["", { validators: [Validators.required], updateOn: "change" }]
+      complete: ["", { validators: [Validators.required], updateOn: "change" }],
     },
     {
       validators: [
@@ -782,7 +784,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
           this.iframedoc.write(content);
           this.iframedoc.close();
         }
-        this.redirectCompleteControl?.setValue('ready');
+        this.redirectCompleteControl?.setValue("ready");
       } else if (step.selectedStep.label === "complete") {
         // we can't set focus to the button as it causes scroll to this button.
         // So, the step header box stays here after last page appearing as the objective evil
@@ -839,11 +841,15 @@ export class ContainerComponent implements OnInit, OnDestroy {
     }
     this.detailsTransactionControl?.setValue(TransactionType.Deposit);
     this.paymentInfoInstrumentControl?.setValue(PaymentInstrument.CreditCard);
-    this.iframeContent = '';
+    this.iframeContent = "";
+    const iframe = document.getElementById("iframe");
+    if (iframe) {
+      (<HTMLIFrameElement>iframe).srcdoc = '';
+    }
   }
 
   detailsCompleted(): void {
-    this.detailsCompleteControl?.setValue('ready');
+    this.detailsCompleteControl?.setValue("ready");
     if (this.detailsForm.valid) {
       const userEmail = this.detailsEmailControl?.value;
       let authenticated = false;
