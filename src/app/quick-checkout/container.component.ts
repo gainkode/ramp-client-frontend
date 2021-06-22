@@ -1,4 +1,5 @@
 import { StepperSelectionEvent } from "@angular/cdk/stepper";
+import { Input } from "@angular/core";
 import {
   Component,
   ElementRef,
@@ -48,6 +49,7 @@ import { round } from "../utils/utils";
 import { WalletValidator } from "../utils/wallet.validator";
 
 @Component({
+  selector: 'app-quick-checkout',
   templateUrl: "container.component.html",
   styleUrls: ["container.component.scss"],
 })
@@ -73,6 +75,9 @@ export class ContainerComponent implements OnInit, OnDestroy {
   @ViewChild("redirectnext") redirectNextElement: ElementRef | undefined = undefined;
   @ViewChild("checkoutdone") checkoutDoneElement: ElementRef | undefined =
     undefined;
+  @Input() set internal(val: boolean) {
+    this.internalPayment = val;
+  }
   internalPayment = false;
   user: User | null = null;
   errorMessage = "";
