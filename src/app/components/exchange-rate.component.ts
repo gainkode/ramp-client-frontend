@@ -48,7 +48,10 @@ export class ExchangeRateComponent implements OnInit, OnDestroy {
                     this.countDown -= 1;
                     this.spinnerValue = (60 - this.countDown) / 60 * 100;
                 } else {
-                    this.loadRates();
+                    const success = this.loadRates();
+                    if (!success) {
+                        this.countDown = 1;
+                    }
                 }
             } else {
                 this.countDownInit = true;
@@ -57,7 +60,8 @@ export class ExchangeRateComponent implements OnInit, OnDestroy {
         this.pTimerSubscription = this.updatingTimer.subscribe(test.bind(this));
     }
 
-    private loadRates(): void {
+    private loadRates(): boolean {
+        let result = true;
         this.errorMessage = '';
         if (this.countDownInit) {
             const currencyFrom = this.summary?.currencyFrom as string;
@@ -87,13 +91,10 @@ export class ExchangeRateComponent implements OnInit, OnDestroy {
                     });
                 }
             } else {
-                console.log(this.summary);
-                console.log(this.summary?.currencyFrom);
-                console.log(this.summary?.currencyTo);
-                this.errorMessage = `Currency is not specified. From <${currencyFrom}> to <${currencyTo}>`;
-                this.restartCountDown();
+                result = false;
             }
         }
+        return result;
     }
 
     private setDefaultRate(): void {
