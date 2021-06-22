@@ -119,54 +119,69 @@ export class ContainerComponent implements OnInit, OnDestroy {
   private pSettingsSubscription!: any;
   private pKycSettingsSubscription!: any;
 
-  detailsForm = this.formBuilder.group(
+  detailsForm = this.formBuilder.group({
+    email: [
+      "",
+      {
+        validators: [
+          Validators.required,
+          Validators.pattern("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$"),
+        ],
+        updateOn: "change",
+      },
+    ],
+    amountFrom: [
+      200,
+      {
+        validators: [
+          Validators.required,
+          Validators.pattern(this.pNumberPattern),
+        ],
+        updateOn: "change",
+      },
+    ],
+    currencyFrom: [
+      "",
+      { validators: [Validators.required], updateOn: "change" },
+    ],
+    amountTo: [
+      0,
+      {
+        validators: [
+          Validators.required,
+          Validators.pattern(this.pNumberPattern),
+        ],
+        updateOn: "change",
+      },
+    ],
+    currencyTo: ["", { validators: [Validators.required], updateOn: "change" }],
+    transaction: [
+      TransactionType.Deposit,
+      { validators: [Validators.required], updateOn: "change" },
+    ],
+    complete: ["", { validators: [Validators.required], updateOn: "change" }],
+  });
+  detailsEmailControl: AbstractControl | null = null;
+  detailsAmountFromControl: AbstractControl | null = null;
+  detailsCurrencyFromControl: AbstractControl | null = null;
+  detailsAmountToControl: AbstractControl | null = null;
+  detailsCurrencyToControl: AbstractControl | null = null;
+  detailsTransactionControl: AbstractControl | null = null;
+  detailsCompleteControl: AbstractControl | null = null;
+  paymentInfoForm = this.formBuilder.group(
     {
-      email: [
-        "",
-        {
-          validators: [
-            Validators.required,
-            Validators.pattern(
-              "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$"
-            ),
-          ],
-          updateOn: "change",
-        },
-      ],
-      amountFrom: [
-        200,
-        {
-          validators: [
-            Validators.required,
-            Validators.pattern(this.pNumberPattern),
-          ],
-          updateOn: "change",
-        },
-      ],
-      currencyFrom: [
-        "",
+      instrument: [
+        PaymentInstrument.CreditCard,
         { validators: [Validators.required], updateOn: "change" },
       ],
-      amountTo: [
-        0,
-        {
-          validators: [
-            Validators.required,
-            Validators.pattern(this.pNumberPattern),
-          ],
-          updateOn: "change",
-        },
-      ],
-      currencyTo: [
-        "",
-        { validators: [Validators.required], updateOn: "change" },
-      ],
+      provider: ["", { validators: [Validators.required], updateOn: "change" }],
+      currencyTo: [""],
       address: ["", { validators: [Validators.required], updateOn: "change" }],
-      transaction: [
-        TransactionType.Deposit,
+      transaction: [TransactionType.Deposit],
+      transactionId: [
+        "",
         { validators: [Validators.required], updateOn: "change" },
       ],
-      complete: ["", { validators: [Validators.required], updateOn: "change" }],
     },
     {
       validators: [
@@ -179,27 +194,11 @@ export class ContainerComponent implements OnInit, OnDestroy {
       updateOn: "change",
     }
   );
-  detailsEmailControl: AbstractControl | null = null;
-  detailsAmountFromControl: AbstractControl | null = null;
-  detailsCurrencyFromControl: AbstractControl | null = null;
-  detailsAmountToControl: AbstractControl | null = null;
-  detailsCurrencyToControl: AbstractControl | null = null;
-  detailsAddressControl: AbstractControl | null = null;
-  detailsTransactionControl: AbstractControl | null = null;
-  detailsCompleteControl: AbstractControl | null = null;
-  paymentInfoForm = this.formBuilder.group({
-    instrument: [
-      PaymentInstrument.CreditCard,
-      { validators: [Validators.required], updateOn: "change" },
-    ],
-    provider: ["", { validators: [Validators.required], updateOn: "change" }],
-    transactionId: [
-      "",
-      { validators: [Validators.required], updateOn: "change" },
-    ],
-  });
   paymentInfoInstrumentControl: AbstractControl | null = null;
   paymentInfoProviderControl: AbstractControl | null = null;
+  paymentInfoAddressControl: AbstractControl | null = null;
+  paymentInfoCurrencyToControl: AbstractControl | null = null;
+  paymentInfoTransactionControl: AbstractControl | null = null;
   paymentInfoTransactionIdControl: AbstractControl | null = null;
   verificationForm = this.formBuilder.group({
     complete: ["", { validators: [Validators.required], updateOn: "change" }],
@@ -241,11 +240,14 @@ export class ContainerComponent implements OnInit, OnDestroy {
     this.detailsCurrencyFromControl = this.detailsForm.get("currencyFrom");
     this.detailsAmountToControl = this.detailsForm.get("amountTo");
     this.detailsCurrencyToControl = this.detailsForm.get("currencyTo");
-    this.detailsAddressControl = this.detailsForm.get("address");
     this.detailsTransactionControl = this.detailsForm.get("transaction");
     this.detailsCompleteControl = this.detailsForm.get("complete");
     this.paymentInfoInstrumentControl = this.paymentInfoForm.get("instrument");
     this.paymentInfoProviderControl = this.paymentInfoForm.get("provider");
+    this.paymentInfoAddressControl = this.paymentInfoForm.get("address");
+    this.paymentInfoCurrencyToControl = this.paymentInfoForm.get("currencyTo");
+    this.paymentInfoTransactionControl =
+      this.paymentInfoForm.get("transaction");
     this.paymentInfoTransactionIdControl =
       this.paymentInfoForm.get("transactionId");
     this.verificationCompleteControl = this.verificationForm.get("complete");
@@ -293,26 +295,12 @@ export class ContainerComponent implements OnInit, OnDestroy {
     this.detailsEmailControl?.valueChanges.subscribe((val) => {
       this.setSummuryEmail(val);
     });
-    this.detailsAddressControl?.valueChanges.subscribe((val) => {
-      this.setSummuryAddress(val);
-    });
-    this.userWalletsFiltered = this.detailsAddressControl?.valueChanges.pipe(
-      startWith(""),
-      map((value) => this.filterUserWallets(value))
-    );
     this.detailsTransactionControl?.valueChanges.subscribe((val) => {
       this.currentTransaction = val as TransactionType;
       this.setCurrencyValues();
       this.priceEdit = true;
       this.updateAmountTo();
       this.priceEdit = false;
-      if (this.currentTransaction === TransactionType.Deposit) {
-        this.detailsAddressControl?.setValidators([Validators.required]);
-      } else {
-        this.detailsAddressControl?.setValue("");
-        this.detailsAddressControl?.setValidators([]);
-      }
-      this.detailsAddressControl?.updateValueAndValidity();
     });
     this.isApmSelected = false;
     this.paymentInfoInstrumentControl?.valueChanges.subscribe((val) => {
@@ -325,6 +313,14 @@ export class ContainerComponent implements OnInit, OnDestroy {
         this.paymentInfoProviderControl?.setValue(PaymentProvider.Fibonatix);
       }
     });
+    this.paymentInfoAddressControl?.valueChanges.subscribe((val) => {
+      this.setSummuryAddress(val);
+    });
+    this.userWalletsFiltered =
+      this.paymentInfoAddressControl?.valueChanges.pipe(
+        startWith(""),
+        map((value) => this.filterUserWallets(value))
+      );
     this.confirmationCodeControl?.valueChanges.subscribe((val) => {
       this.errorMessage = "";
     });
@@ -458,7 +454,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
         this.paymentInfoProviderControl?.value,
         rate as number,
         TransactionDestinationType.Address,
-        this.detailsAddressControl?.value
+        this.paymentInfoAddressControl?.value
       )
       .subscribe(
         ({ data }) => {
@@ -691,7 +687,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
   }
 
   private setSummuryAddress(val: any): void {
-    if (this.detailsAddressControl?.valid) {
+    if (this.paymentInfoAddressControl?.valid) {
       this.summary.address = val;
     }
   }
@@ -728,6 +724,19 @@ export class ContainerComponent implements OnInit, OnDestroy {
       } else if (step.selectedStep.label === "paymentInfo") {
         focusInput = this.paymentInfoNextElement
           ?.nativeElement as HTMLInputElement;
+        this.paymentInfoCurrencyToControl?.setValue(
+          this.detailsCurrencyToControl?.value
+        );
+        this.paymentInfoTransactionControl?.setValue(
+          this.detailsTransactionControl?.value
+        );
+        if (this.currentTransaction === TransactionType.Deposit) {
+          this.paymentInfoAddressControl?.setValidators([Validators.required]);
+        } else {
+          this.paymentInfoAddressControl?.setValue("");
+          this.paymentInfoAddressControl?.setValidators([]);
+        }
+        this.paymentInfoAddressControl?.updateValueAndValidity();
         this.paymentInfoProviderControl?.setValue(PaymentProvider.Fibonatix);
         const kycStatusData = this.auth.getMyKycData();
         if (kycStatusData === null) {
@@ -844,7 +853,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
     this.iframeContent = "";
     const iframe = document.getElementById("iframe");
     if (iframe) {
-      (<HTMLIFrameElement>iframe).srcdoc = '';
+      (<HTMLIFrameElement>iframe).srcdoc = "";
     }
   }
 
