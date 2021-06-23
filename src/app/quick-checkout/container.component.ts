@@ -44,6 +44,7 @@ import {
 import { AuthService } from "../services/auth.service";
 import { CommonDataService } from "../services/common-data.service";
 import { ErrorService } from "../services/error.service";
+import { NotificationService } from "../services/notification.service";
 import { QuickCheckoutDataService } from "../services/quick-checkout.service";
 import { round } from "../utils/utils";
 import { WalletValidator } from "../utils/wallet.validator";
@@ -112,6 +113,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
   currentCard: CardView = new CardView();
   iframedoc: any;
   iframeContent = "";
+  transactionApproved = false;
   summary!: CheckoutSummary;
 
   private pCurrencies: CurrencyView[] = [];
@@ -226,6 +228,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
   constructor(
     private auth: AuthService,
     private dataService: QuickCheckoutDataService,
+    private notification: NotificationService,
     private commonService: CommonDataService,
     private errorHandler: ErrorService,
     private formBuilder: FormBuilder,
@@ -259,6 +262,17 @@ export class ContainerComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.notification.subscribeToTransactionNotifications().subscribe(
+      ({ data }) => {
+        // got data
+        console.log(data);
+        this.transactionApproved = true;
+      },
+      (error) => {
+        // there was an error subscribing to notifications
+        console.log(error);
+      }
+    );
     this.detailsCurrencyFromControl?.valueChanges.subscribe((val) => {
       this.currentSourceCurrency = this.getCurrency(val);
       if (this.currentSourceCurrency !== null) {
@@ -482,7 +496,9 @@ export class ContainerComponent implements OnInit, OnDestroy {
         (error) => {
           this.inProgress = false;
           if (this.errorHandler.getCurrentError() === "auth.token_invalid") {
+            const email = this.summary.email;
             this.resetStepper();
+            this.detailsEmailControl?.setValue(email);
           } else {
             this.paymentInfoTransactionIdControl?.reset();
             this.errorMessage = this.errorHandler.getError(
@@ -850,6 +866,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
     }
     this.detailsTransactionControl?.setValue(TransactionType.Deposit);
     this.paymentInfoInstrumentControl?.setValue(PaymentInstrument.CreditCard);
+    this.transactionApproved = false;
     this.iframeContent = "";
     const iframe = document.getElementById("iframe");
     if (iframe) {

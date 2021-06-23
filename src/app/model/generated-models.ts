@@ -951,7 +951,8 @@ export enum CustodyProvider {
 }
 
 export enum LiquidityProvider {
-  Bitstamp = 'Bitstamp'
+  Bitstamp = 'Bitstamp',
+  Binance = 'Binance'
 }
 
 export type PaymentOrder = {
@@ -1599,16 +1600,6 @@ export type Subscription = {
   __typename?: 'Subscription';
   newNotification?: Maybe<Scalars['Void']>;
   transactionServiceNotification?: Maybe<Scalars['Void']>;
-};
-
-
-export type SubscriptionNewNotificationArgs = {
-  userId?: Maybe<Scalars['String']>;
-};
-
-
-export type SubscriptionTransactionServiceNotificationArgs = {
-  userId?: Maybe<Scalars['String']>;
 };
 
 export enum UserNotificationCodes {

@@ -8,6 +8,12 @@ subscription onNewNotification {
 }
 `;
 
+const SUBSCRIBE_TRANSACTION_NOTIFICATIONS = gql`
+subscription onTransactionServiceNotification {
+  transactionServiceNotification
+}
+`;
+
 const SEND_TEST_NOTIFICATION_POST = gql`
 mutation SendTestNotification {
   sendTestNotification
@@ -21,6 +27,13 @@ export class NotificationService {
   sendTestNotification(): Observable<any> {
     return this.apollo.mutate({
       mutation: SEND_TEST_NOTIFICATION_POST
+    });
+  }
+
+  subscribeToTransactionNotifications(): Observable<any> {
+    return this.apollo.subscribe({
+      query: SUBSCRIBE_TRANSACTION_NOTIFICATIONS,
+      fetchPolicy: 'no-cache'
     });
   }
 
