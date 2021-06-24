@@ -26,7 +26,7 @@ export class UserItem {
   fiatCurrency = "";
 
   constructor(data: User | null) {
-    if (data !== null) {
+    if (data) {
       this.id = data.userId;
       this.name = data.name;
       this.firstName = data.firstName as string;
