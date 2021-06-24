@@ -40,6 +40,7 @@ import { ProfileWithdrawalComponent } from './profile/profile-withdrawal.compone
 import { ProfileAssetsComponent } from './profile/profile-assets.component';
 import { ProfileLastExchangesComponent } from './profile/profile-last-exchanges.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { NotificationComponent } from './notification.component';
 
 const materialModules = [
     MatButtonModule,
@@ -66,7 +67,7 @@ export class MaterialModule { }
 @NgModule({
     imports: [CommonModule, FormsModule, ReactiveFormsModule, MaterialModule, DirectiveModule],
     declarations: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
-        CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent,
+        CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, NotificationComponent,
         LoginPanelComponent, CommonDialogBox, CreditCardComponent,
         LineBreakPipe, NumberFillPipe, ProfileAccountBalanceComponent, ProfileExchangeComponent,
         ProfileNotificationsComponent, ProfileQuickTransferComponent, ProfileTransactionsComponent,
@@ -74,7 +75,7 @@ export class MaterialModule { }
         ProfileVerificationComponent, ProfileContactsComponent, ProfileWithdrawalComponent,
         ProfileAssetsComponent, ProfileLastExchangesComponent],
     exports: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
-        CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent,
+        CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, NotificationComponent,
         LoginPanelComponent, MatProgressBarModule, CommonDialogBox, CreditCardComponent,
         LineBreakPipe, NumberFillPipe, ProfileAccountBalanceComponent, ProfileExchangeComponent,
         ProfileNotificationsComponent, ProfileQuickTransferComponent, ProfileTransactionsComponent,

@@ -116,9 +116,11 @@ export class TransactionItem {
         }
         if (data.paymentOrder.operations) {
           if (data.paymentOrder.operations.length > 0) {
+            console.log(data.paymentOrder.operations);
+            let operations = data.paymentOrder.operations.slice();
             // take the latest operation
-            const operation = data.paymentOrder.operations.sort(
-              (a, b) => {
+            if (operations.length > 1) {
+              operations = operations.sort((a, b) => {
                 if (a.created > b.created) {
                   return -1;
                 }
@@ -126,9 +128,9 @@ export class TransactionItem {
                   return 1;
                 }
                 return 0;
-              }
-            )[0];
-            this.paymentProviderResponse = `${operation.type}: ${operation.status}`;
+              });
+            }
+            this.paymentProviderResponse = `${operations[0].type}: ${operations[0].status}`;
           }
         }
       }
