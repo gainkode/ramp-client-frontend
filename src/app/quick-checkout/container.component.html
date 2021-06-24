@@ -499,10 +499,11 @@
                 (load)="onLoadRedirect()"
               ></iframe>
             </div>
-            <div class="form-element" *ngIf="redirectForm?.valid && transactionApproved">
+            <div class="form-element">
               <button
                 type="submit"
                 #redirectnext
+                [disabled]="!transactionApproved"
                 class="main-button main-button-accent inline-button"
                 (click)="confirmRedirect()"
               >

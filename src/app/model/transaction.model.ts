@@ -116,7 +116,6 @@ export class TransactionItem {
         }
         if (data.paymentOrder.operations) {
           if (data.paymentOrder.operations.length > 0) {
-            console.log(data.paymentOrder.operations);
             let operations = data.paymentOrder.operations.slice();
             // take the latest operation
             if (operations.length > 1) {

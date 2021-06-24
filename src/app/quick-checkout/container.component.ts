@@ -264,9 +264,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.notification.subscribeToTransactionNotifications().subscribe(
       ({ data }) => {
-        // got data
-        console.log(data);
-        this.transactionApproved = true;
+        this.handleTransactionSubscription(data);
       },
       (error) => {
         // there was an error subscribing to notifications
@@ -399,6 +397,53 @@ export class ContainerComponent implements OnInit, OnDestroy {
 
   getSourceAmountMinError(): string {
     return this.getAmountMinError(this.currentSourceCurrency);
+  }
+
+  private handleTransactionSubscription(data: any): void {
+    let res = this.redirectForm.valid;
+    if (!res) {
+      console.log("transactionApproved: form is invalid");
+    }
+    if (res) {
+      if (
+        data.transactionServiceNotification.type === "PaymentStatusChanged"
+      ) {
+        res = true;
+      } else {
+        console.log(
+          "transactionApproved: unexpected type",
+          data.transactionServiceNotification.type
+        );
+      }
+    }
+    if (res) {
+      if (
+        data.transactionServiceNotification.userId === this.user?.userId
+      ) {
+        res = true;
+      } else {
+        console.log(
+          "transactionApproved: unexpected userId",
+          data.transactionServiceNotification.userId
+        );
+      }
+    }
+    if (res) {
+      if (
+        data.transactionServiceNotification.operationType === "preauth" ||
+        data.transactionServiceNotification.operationType === "approved"
+      ) {
+        res = true;
+      } else {
+        console.log(
+          "transactionApproved: unexpected operationType",
+          data.transactionServiceNotification.operationType
+        );
+      }
+    }
+    if (res) {
+      this.transactionApproved = true;
+    }
   }
 
   private filterUserWallets(value: string): string[] {
