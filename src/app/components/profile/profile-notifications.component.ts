@@ -6,5 +6,4 @@ import { UserNotification } from 'src/app/model/generated-models';
     templateUrl: './profile-notifications.component.html'
 })
 export class ProfileNotificationsComponent {
-    @Input() notifications: UserNotification[] = [];
 }

@@ -140,20 +140,6 @@ const GET_ME_POST = gql`
             tag
           }
         }
-        notifications {
-          count
-          list {
-            userNotificationId
-            userId
-            userNotificationTypeCode
-            created
-            viewed
-            text
-            linkedId
-            linkedTable
-            params
-          }
-        }
       }
     }
   }
@@ -199,20 +185,6 @@ const GET_PROFILE_HOME_POST = gql`
             activationTime
             address
             tag
-          }
-        }
-        notifications {
-          count
-          list {
-            userNotificationId
-            userId
-            userNotificationTypeCode
-            created
-            viewed
-            text
-            linkedId
-            linkedTable
-            params
           }
         }
       }
@@ -265,23 +237,8 @@ const GET_PROFILE_ACCOUNT_POST = gql`
       kycReviewComment
       kycReviewRejectedType
       kycReviewRejectedLabels
-      kycStatusUpdateRequired
-      state {
+      kycStatusUpdateRequiredstate {
         date
-        notifications {
-          count
-          list {
-            userNotificationId
-            userId
-            userNotificationTypeCode
-            created
-            viewed
-            text
-            linkedId
-            linkedTable
-            params
-          }
-        }
       }
     }
   }

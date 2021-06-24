@@ -12,7 +12,6 @@ import { ProfileDataService } from 'src/app/services/profile.service';
 })
 export class PersonalHomeComponent implements OnInit, OnDestroy {
     private pUserSubscription!: any;
-    notifications: UserNotification[] = [];
     inProgress = false;
     errorMessage = '';
 
@@ -33,23 +32,12 @@ export class PersonalHomeComponent implements OnInit, OnDestroy {
     private loadData(): void {
         this.errorMessage = '';
         this.inProgress = true;
-        this.notifications = [];
-        let notificationCount = 0;
         const meQuery = this.profile.getProfileHomeData();
         if (meQuery === null) {
             this.errorMessage = this.errorHandler.getRejectedCookieMessage();
         } else {
             this.pUserSubscription = meQuery.valueChanges.subscribe(({ data }) => {
                 const userData = data.me as User;
-                if (userData) {
-                    if (userData.state) {
-                        notificationCount = userData.state.notifications?.count as number;
-                        if (notificationCount > 0) {
-                            this.notifications = userData.state.notifications?.list?.map(
-                                (val) => val) as UserNotification[];
-                        }
-                    }
-                }
                 this.inProgress = false;
             }, (error) => {
                 this.inProgress = false;
