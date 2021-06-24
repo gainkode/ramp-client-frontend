@@ -10,6 +10,7 @@ import { LineBreakPipe } from '../utils/line-break.pipe';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBarModule } from '@angular/material/snack-bar'; 
 import { CommonDialogBox } from './common-box.dialog';
 import { CheckoutSummaryComponent } from './checkout-summary.component';
 import { ExchangeRateComponent } from './exchange-rate.component';
@@ -40,7 +41,7 @@ import { ProfileWithdrawalComponent } from './profile/profile-withdrawal.compone
 import { ProfileAssetsComponent } from './profile/profile-assets.component';
 import { ProfileLastExchangesComponent } from './profile/profile-last-exchanges.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { NotificationComponent } from './notification.component';
+import { NotificationIconComponent } from './notification-bar/notification.component';
 
 const materialModules = [
     MatButtonModule,
@@ -53,6 +54,7 @@ const materialModules = [
     MatIconModule,
     MatProgressSpinnerModule,
     MatProgressBarModule,
+    MatSnackBarModule,
     MatTableModule,
     MatPaginatorModule,
     MatSortModule
@@ -67,7 +69,7 @@ export class MaterialModule { }
 @NgModule({
     imports: [CommonModule, FormsModule, ReactiveFormsModule, MaterialModule, DirectiveModule],
     declarations: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
-        CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, NotificationComponent,
+        CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, NotificationIconComponent,
         LoginPanelComponent, CommonDialogBox, CreditCardComponent,
         LineBreakPipe, NumberFillPipe, ProfileAccountBalanceComponent, ProfileExchangeComponent,
         ProfileNotificationsComponent, ProfileQuickTransferComponent, ProfileTransactionsComponent,
@@ -75,7 +77,7 @@ export class MaterialModule { }
         ProfileVerificationComponent, ProfileContactsComponent, ProfileWithdrawalComponent,
         ProfileAssetsComponent, ProfileLastExchangesComponent],
     exports: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
-        CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, NotificationComponent,
+        CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, NotificationIconComponent,
         LoginPanelComponent, MatProgressBarModule, CommonDialogBox, CreditCardComponent,
         LineBreakPipe, NumberFillPipe, ProfileAccountBalanceComponent, ProfileExchangeComponent,
         ProfileNotificationsComponent, ProfileQuickTransferComponent, ProfileTransactionsComponent,
