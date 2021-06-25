@@ -333,8 +333,9 @@ input:-webkit-autofill::first-line {
 }
 
 .profile-content-block {
-    height            : 100%;
-    padding           : 1em;
+    height          : auto;
+    min-height      : 100%;
+    padding         : 1em;
     background-color: #DDDFE6;
 }
 

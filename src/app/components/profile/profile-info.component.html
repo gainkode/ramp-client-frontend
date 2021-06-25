@@ -42,13 +42,19 @@
     <!-- First Name -->
     <mat-form-field class="form-element">
       <mat-label>First Name</mat-label>
-      <input type="text" matInput formControlName="firstName" />
+      <input type="text" matInput formControlName="firstName" placeholder="Type your first name" />
+      <mat-error *ngIf="this.userForm.get('firstName')?.hasError('required')">
+        Please specify your First Name
+      </mat-error>
     </mat-form-field>
 
     <!-- Last Name -->
     <mat-form-field class="form-element">
       <mat-label>Last Name</mat-label>
-      <input type="text" matInput formControlName="lastName" />
+      <input type="text" matInput formControlName="lastName" placeholder="Type your last name" />
+      <mat-error *ngIf="this.userForm.get('lastName')?.hasError('required')">
+        Please specify your Last Name
+      </mat-error>
     </mat-form-field>
 
     <!-- Country -->
@@ -62,6 +68,7 @@
         formControlName="country"
         [matAutocomplete]="auto"
         maxlength="40"
+        placeholder="Select your country" 
         required
       />
       <mat-autocomplete #auto="matAutocomplete">
@@ -91,6 +98,7 @@
       formControlName="phone"
       maxlength="50"
       placeholder=""
+      placeholder="Type your phone number" 
       required
     />
     <mat-error *ngIf="this.userForm.get('phone')?.hasError('required')">
