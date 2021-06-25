@@ -266,6 +266,22 @@ const UPDATE_ME_INFO_POST = gql`
   }
 `;
 
+const CHANGE_PASSWORD_POST = gql`
+  mutation ChangePassword(
+    $code2fa: String
+    $oldPassword: String!
+    $newPassword: String!
+  ) {
+    changePassword(
+      code2fa: $code2fa
+      oldPassword: $oldPassword
+      newPassword: $newPassword
+    ) {
+      result
+    }
+  }
+`;
+
 @Injectable()
 export class ProfileDataService {
   constructor(private apollo: Apollo) {}
@@ -344,6 +360,25 @@ export class ProfileDataService {
         countryCode3: country,
         phone,
         defaultFiatCurrency: currency,
+      },
+    });
+  }
+
+  changePassword(
+    code2fa: string,
+    oldPassword: string,
+    newPassword: string
+  ): Observable<any> {
+    let code: string | undefined = undefined;
+    if (code2fa) {
+      code = (code2fa !== '') ? code2fa : undefined;
+    }
+    return this.apollo.mutate({
+      mutation: CHANGE_PASSWORD_POST,
+      variables: {
+        code2fa: code,
+        oldPassword,
+        newPassword
       },
     });
   }

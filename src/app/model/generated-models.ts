@@ -23,6 +23,8 @@ export type Query = {
   serverTime: Scalars['String'];
   getMyApiKeys?: Maybe<ApiKeyListResult>;
   getApiKeys?: Maybe<ApiKeyListResult>;
+  myNotifications?: Maybe<UserNotificationListResult>;
+  getNotifications?: Maybe<UserNotificationListResult>;
   getSettingsCommon?: Maybe<SettingsCommon>;
   getSettingsCurrency?: Maybe<SettingsCurrencyListResult>;
   getSettingsKycLevels?: Maybe<SettingsKycLevelListResult>;
@@ -69,6 +71,25 @@ export type QueryGetMyApiKeysArgs = {
 
 
 export type QueryGetApiKeysArgs = {
+  filter?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OrderBy>>;
+};
+
+
+export type QueryMyNotificationsArgs = {
+  unreadOnly?: Maybe<Scalars['Boolean']>;
+  filter?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OrderBy>>;
+};
+
+
+export type QueryGetNotificationsArgs = {
+  userId?: Maybe<Scalars['String']>;
+  unreadOnly?: Maybe<Scalars['Boolean']>;
   filter?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
@@ -296,15 +317,31 @@ export type ApiKey = {
 };
 
 
+export type UserNotificationListResult = {
+  __typename?: 'UserNotificationListResult';
+  count?: Maybe<Scalars['Int']>;
+  list?: Maybe<Array<UserNotification>>;
+};
+
+export type UserNotification = {
+  __typename?: 'UserNotification';
+  userNotificationId: Scalars['ID'];
+  userId?: Maybe<Scalars['String']>;
+  userNotificationTypeCode: Scalars['String'];
+  created?: Maybe<Scalars['DateTime']>;
+  viewed?: Maybe<Scalars['DateTime']>;
+  text?: Maybe<Scalars['String']>;
+  linkedId?: Maybe<Scalars['String']>;
+  linkedTable?: Maybe<Scalars['String']>;
+  params?: Maybe<Scalars['String']>;
+};
+
 export type SettingsCommon = {
   __typename?: 'SettingsCommon';
   settingsCommonId?: Maybe<Scalars['String']>;
   liquidityProvider?: Maybe<Scalars['String']>;
-  liquidityBaseAddress?: Maybe<Scalars['String']>;
   custodyProvider?: Maybe<Scalars['String']>;
-  custodyBaseAddress?: Maybe<Scalars['String']>;
   kycProvider?: Maybe<Scalars['String']>;
-  kycBaseAddress?: Maybe<Scalars['String']>;
 };
 
 export type SettingsCurrencyListResult = {
@@ -542,7 +579,8 @@ export type User = {
   is2faEnabled?: Maybe<Scalars['Boolean']>;
   hasEmailAuth?: Maybe<Scalars['Boolean']>;
   changePasswordRequired?: Maybe<Scalars['Boolean']>;
-  referralCode?: Maybe<Scalars['String']>;
+  referralCode?: Maybe<Scalars['Int']>;
+  affiliateCode?: Maybe<Scalars['String']>;
   notificationSubscriptions?: Maybe<Array<UserNotificationSubscription>>;
   kycProvider?: Maybe<Scalars['String']>;
   kycValidationTierId?: Maybe<Scalars['String']>;
@@ -669,6 +707,16 @@ export type VaultAccountAsset = {
   selfStakedNetwork?: Maybe<Scalars['String']>;
   pendingRefundCPU?: Maybe<Scalars['String']>;
   pendingRefundNetwork?: Maybe<Scalars['String']>;
+  addresses?: Maybe<Array<VaultAccountAssetAddress>>;
+};
+
+export type VaultAccountAssetAddress = {
+  __typename?: 'VaultAccountAssetAddress';
+  address?: Maybe<Scalars['String']>;
+  legacyAddress?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
+  addressFormat?: Maybe<Scalars['String']>;
 };
 
 export type ExternalWallet = {
@@ -695,25 +743,6 @@ export enum WalletAssetStatus {
   Rejected = 'REJECTED',
   Failed = 'FAILED'
 }
-
-export type UserNotificationListResult = {
-  __typename?: 'UserNotificationListResult';
-  count?: Maybe<Scalars['Int']>;
-  list?: Maybe<Array<UserNotification>>;
-};
-
-export type UserNotification = {
-  __typename?: 'UserNotification';
-  userNotificationId: Scalars['ID'];
-  userId?: Maybe<Scalars['String']>;
-  userNotificationTypeCode: Scalars['String'];
-  created?: Maybe<Scalars['DateTime']>;
-  viewed?: Maybe<Scalars['DateTime']>;
-  text?: Maybe<Scalars['String']>;
-  linkedId?: Maybe<Scalars['String']>;
-  linkedTable?: Maybe<Scalars['String']>;
-  params?: Maybe<Scalars['String']>;
-};
 
 export type KycInfo = {
   __typename?: 'KycInfo';
@@ -1482,11 +1511,8 @@ export type PaymentOperationShort = {
 
 export type SettingsCommonInput = {
   liquidityProvider?: Maybe<Scalars['String']>;
-  liquidityBaseAddress?: Maybe<Scalars['String']>;
   custodyProvider?: Maybe<Scalars['String']>;
-  custodyBaseAddress?: Maybe<Scalars['String']>;
   kycProvider?: Maybe<Scalars['String']>;
-  kycBaseAddress?: Maybe<Scalars['String']>;
 };
 
 export type SettingsFeeInput = {

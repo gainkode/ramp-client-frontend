@@ -14,6 +14,7 @@ export class PersonalMyAccountComponent implements OnInit, OnDestroy {
     private pUserSubscription!: any;
     inProgress = false;
     errorMessage = '';
+    passwordCanBeChanged = false;
     user!: User;
 
     constructor(private auth: AuthService, private profile: ProfileDataService,
@@ -41,6 +42,7 @@ export class PersonalMyAccountComponent implements OnInit, OnDestroy {
                 const userData = data.me as User;
                 if (userData) {
                     this.user = userData;
+                    this.passwordCanBeChanged = this.user.hasEmailAuth as boolean;
                 }
                 this.inProgress = false;
             }, (error) => {

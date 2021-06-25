@@ -138,44 +138,44 @@ const GET_USER_BY_ID_POST = gql`
 
 @Injectable()
 export class CommonDataService {
-    constructor(private apollo: Apollo) { }
+  constructor(private apollo: Apollo) { }
 
-    getSettingsCurrency(): QueryRef<any, EmptyObject> | null {
-      if (this.apollo.client !== undefined) {
-        return this.apollo.watchQuery<any>({
-          query: GET_SETTINGS_CURRENCY_POST,
-          variables: {
-            recaptcha: environment.recaptchaId
-          },
-          fetchPolicy: 'network-only'
-        });
-      } else {
-        return null;
-      }
+  getSettingsCurrency(): QueryRef<any, EmptyObject> | null {
+    if (this.apollo.client !== undefined) {
+      return this.apollo.watchQuery<any>({
+        query: GET_SETTINGS_CURRENCY_POST,
+        variables: {
+          recaptcha: environment.recaptchaId
+        },
+        fetchPolicy: 'network-only'
+      });
+    } else {
+      return null;
     }
+  }
 
-    getUsers(): QueryRef<any, EmptyObject> | null {
-        if (this.apollo.client !== undefined) {
-            return this.apollo.watchQuery<any>({
-                query: GET_USERS_POST,
-                pollInterval: 30000,
-                fetchPolicy: 'network-only'
-            });
-        } else {
-            return null;
-        }
+  getUsers(): QueryRef<any, EmptyObject> | null {
+    if (this.apollo.client !== undefined) {
+      return this.apollo.watchQuery<any>({
+        query: GET_USERS_POST,
+        pollInterval: 30000,
+        fetchPolicy: 'network-only'
+      });
+    } else {
+      return null;
     }
+  }
 
-    getUserById(id: string): QueryRef<any, EmptyObject> | null {
-        if (this.apollo.client !== undefined) {
-            return this.apollo.watchQuery<any>({
-                query: GET_USER_BY_ID_POST,
-                variables: { userId: id },
-                // pollInterval: 30000,
-                fetchPolicy: 'network-only'
-            });
-        } else {
-            return null;
-        }
+  getUserById(id: string): QueryRef<any, EmptyObject> | null {
+    if (this.apollo.client !== undefined) {
+      return this.apollo.watchQuery<any>({
+        query: GET_USER_BY_ID_POST,
+        variables: { userId: id },
+        // pollInterval: 30000,
+        fetchPolicy: 'network-only'
+      });
+    } else {
+      return null;
     }
+  }
 }

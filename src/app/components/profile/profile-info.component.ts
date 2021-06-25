@@ -1,7 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { Validators, FormBuilder, AbstractControl } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
-import { Router } from "@angular/router";
 import { Subscription, Observable } from "rxjs";
 import { map, startWith } from "rxjs/operators";
 import { CommonTargetValue } from "src/app/model/common.model";
@@ -16,7 +15,6 @@ import {
   User,
 } from "src/app/model/generated-models";
 import { UserItem } from "src/app/model/user.model";
-import { AuthService } from "src/app/services/auth.service";
 import { CommonDataService } from "src/app/services/common-data.service";
 import { ErrorService } from "src/app/services/error.service";
 import { ProfileDataService } from "src/app/services/profile.service";
@@ -54,12 +52,10 @@ export class ProfileInfoComponent implements OnInit, OnDestroy {
   });
 
   constructor(
-    private auth: AuthService,
     private profile: ProfileDataService,
     private commonService: CommonDataService,
     private errorHandler: ErrorService,
     private formBuilder: FormBuilder,
-    private router: Router,
     public dialog: MatDialog
   ) {}
 

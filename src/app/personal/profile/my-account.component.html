@@ -15,7 +15,7 @@
 </div>
 <div style="display: flex;">
     <div style="width: 50%;margin: 0.5em;">
-        <app-password></app-password>
+        <app-password *ngIf="passwordCanBeChanged"></app-password>
     </div>
     <div style="width: 50%;margin: 0.5em;">
         <app-verification></app-verification>
