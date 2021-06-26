@@ -237,9 +237,6 @@ const GET_PROFILE_ACCOUNT_POST = gql`
       kycReviewComment
       kycReviewRejectedType
       kycReviewRejectedLabels
-      kycStatusUpdateRequiredstate {
-        date
-      }
     }
   }
 `;
@@ -276,9 +273,7 @@ const CHANGE_PASSWORD_POST = gql`
       code2fa: $code2fa
       oldPassword: $oldPassword
       newPassword: $newPassword
-    ) {
-      result
-    }
+    )
   }
 `;
 

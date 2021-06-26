@@ -342,6 +342,7 @@ export type SettingsCommon = {
   liquidityProvider?: Maybe<Scalars['String']>;
   custodyProvider?: Maybe<Scalars['String']>;
   kycProvider?: Maybe<Scalars['String']>;
+  kycBaseAddress?: Maybe<Scalars['String']>;
 };
 
 export type SettingsCurrencyListResult = {
@@ -1513,6 +1514,7 @@ export type SettingsCommonInput = {
   liquidityProvider?: Maybe<Scalars['String']>;
   custodyProvider?: Maybe<Scalars['String']>;
   kycProvider?: Maybe<Scalars['String']>;
+  kycBaseAddress?: Maybe<Scalars['String']>;
 };
 
 export type SettingsFeeInput = {

@@ -15,7 +15,7 @@
 </div>
 <div style="display: flex;">
     <div style="width: 50%;margin: 0.5em;">
-        <app-password *ngIf="passwordCanBeChanged"></app-password>
+        <app-password [twoFaEnabled]="twoFaEnabled" *ngIf="passwordCanBeChanged"></app-password>
     </div>
     <div style="width: 50%;margin: 0.5em;">
         <app-verification></app-verification>

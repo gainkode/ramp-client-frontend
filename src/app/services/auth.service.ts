@@ -174,9 +174,7 @@ const GET_SETTINGS_COMMON_POST = gql`
 query {
     getSettingsCommon {
         liquidityProvider
-        liquidityBaseAddress
         custodyProvider
-        custodyBaseAddress
         kycProvider
         kycBaseAddress
     }

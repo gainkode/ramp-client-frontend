@@ -15,6 +15,7 @@ export class PersonalMyAccountComponent implements OnInit, OnDestroy {
     inProgress = false;
     errorMessage = '';
     passwordCanBeChanged = false;
+    twoFaEnabled = false;
     user!: User;
 
     constructor(private auth: AuthService, private profile: ProfileDataService,
@@ -43,6 +44,7 @@ export class PersonalMyAccountComponent implements OnInit, OnDestroy {
                 if (userData) {
                     this.user = userData;
                     this.passwordCanBeChanged = this.user.hasEmailAuth as boolean;
+                    this.twoFaEnabled = this.user.is2faEnabled as boolean;
                 }
                 this.inProgress = false;
             }, (error) => {
