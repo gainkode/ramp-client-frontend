@@ -18,6 +18,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { assertScalarType } from "graphql";
 import { Subscription, Observable } from "rxjs";
 import { map, startWith } from "rxjs/operators";
+import { environment } from "src/environments/environment";
 import { CommonGroupValue, CommonTargetValue } from "../model/common.model";
 import {
   LoginResult,
@@ -339,6 +340,9 @@ export class ContainerComponent implements OnInit, OnDestroy {
       this.errorMessage = "";
     });
     this.loadDetailsForm();
+    if (environment.testWallet) {
+      this.paymentInfoForm.setValidators([]);
+    }
   }
 
   ngOnDestroy(): void {
@@ -457,7 +461,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
   private filterUserWallets(value: string): CommonGroupValue[] {
     if (value !== null) {
       return this.userWallets
-        .map(group => ({id: group.id, values: this.filterUserWalletGroupItem(group.values, value)}))
+        .map(group => ({ id: group.id, values: this.filterUserWalletGroupItem(group.values, value) }))
         .filter(group => group.values.length > 0);
     } else {
       return [];
@@ -778,7 +782,6 @@ export class ContainerComponent implements OnInit, OnDestroy {
   }
 
   private loadWallets() {
-    console.log('loadWallets');
     this.userWallets = [];
     if (this.auth.authenticated && this.summary.transactionType === TransactionType.Deposit) {
       const user = this.auth.user;
@@ -786,11 +789,14 @@ export class ContainerComponent implements OnInit, OnDestroy {
         const vaultAssets: string[] = [];
         const externalWallets: string[] = [];
 
-        vaultAssets.push('1KFzzGtDdnq5hrwxXGjwVnKzRbvf8WVxck');
-        externalWallets.push('1DDBCjmy3zpkNu3rfAFX2ucrRbPiunn1SB');
+        if (environment.testWallet) {
+          // temp
+          externalWallets.push('1DDBCjmy3zpkNu3rfAFX2ucrRbPiunn1SB');
+          // temp
+        }
 
         user.state?.assets?.forEach((x) => {
-          if (x.id === this.summary.currencyFrom) {
+          if (x.id === this.summary.currencyTo) {
             x.addresses?.forEach((a) => vaultAssets.push(a.address as string));
           }
         });
@@ -802,7 +808,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
         }
         user.state?.externalWallets?.forEach((x) => {
           x.assets?.forEach((a) => {
-            if (a.id === this.summary.currencyFrom) {
+            if (a.id === this.summary.currencyTo) {
               externalWallets.push(a.address as string);
             }
           });
@@ -832,10 +838,10 @@ export class ContainerComponent implements OnInit, OnDestroy {
         this.paymentInfoTransactionControl?.setValue(
           this.detailsTransactionControl?.value
         );
+        this.paymentInfoAddressControl?.setValue('');
         if (this.currentTransaction === TransactionType.Deposit) {
           this.paymentInfoAddressControl?.setValidators([Validators.required]);
         } else {
-          this.paymentInfoAddressControl?.setValue("");
           this.paymentInfoAddressControl?.setValidators([]);
         }
         this.paymentInfoAddressControl?.updateValueAndValidity();
@@ -910,12 +916,6 @@ export class ContainerComponent implements OnInit, OnDestroy {
           focusInput?.focus();
         }, 100);
       }
-      // if (this.processDone) {
-      //   setTimeout(() => {
-      //     //   const url = this.router.serializeUrl(
-      //     //     this.router.createUrlTree(["/quickcheckout/done-redirect"])
-      //     //   );
-      //     //   window.open(url, "_blank");
     }
   }
 
@@ -929,8 +929,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
     this.showKycStep = false;
     this.showKycValidator = false;
     this.showKycSubmit = false;
-    this.showCodeConfirm = this.showCodeConfirm =
-      this.needToShowCodeConfirmation();
+    this.showCodeConfirm = this.showCodeConfirm = this.needToShowCodeConfirmation();
     this.processDone = false;
     this.paymentCreditCard = false;
     this.summary.reset();

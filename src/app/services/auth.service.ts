@@ -37,9 +37,12 @@ const LOGIN_POST = gql`
                   kycStatus,
                   kycStatusUpdateRequired,
                   kycReviewRejectedType,
-                  notificationSubscriptions {
-                      name, description
-                  }
+                  state {
+                    assets {
+                      id, total, addresses { address }
+                    },
+                    externalWallets { id, address }
+                }
             }
             authTokenAction
         }
@@ -51,39 +54,47 @@ const REFRESH_TOKEN_POST = gql`
 `;
 
 const SOCIAL_LOGIN_POST = gql`
-  mutation SocialLogin($recaptcha: String!, $oauthtoken: String!, $oauthprovider: OAuthProvider!) {
-    login(
-        recaptcha: $recaptcha,
-        oAuthProvider: $oauthprovider,
-        oAuthToken: $oauthtoken) {
-            authToken
-            user {
-                userId,
-                email,
-                name,
-                roles {name, immutable},
-                permissions { roleName, objectCode, objectName, objectDescription, fullAccess },
-                type,
-                defaultFiatCurrency,
-                firstName,
-                lastName,
-                phone,
-                mode,
-                changePasswordRequired,
-                referralCode,
-                kycProvider,
-                kycApplicantId,
-                kycValid,
-                kycStatus,
-                kycStatusUpdateRequired,
-                kycReviewRejectedType,
-                notificationSubscriptions {
-                    name, description
-                }
-            }
-            authTokenAction
-        }
-    }
+  mutation SocialLogin(
+      $recaptcha: String!,
+      $oauthtoken: String!,
+      $oauthprovider: OAuthProvider!) {
+          login(
+              recaptcha: $recaptcha,
+              oAuthProvider: $oauthprovider,
+              oAuthToken: $oauthtoken) {
+                  authToken
+                  user {
+                      userId,
+                      email,
+                      name,
+                      roles {name, immutable},
+                      permissions { roleName, objectCode, objectName, objectDescription, fullAccess },
+                      type,
+                      defaultFiatCurrency,
+                      firstName,
+                      lastName,
+                      phone,
+                      mode,
+                      changePasswordRequired,
+                      referralCode,
+                      kycProvider,
+                      kycApplicantId,
+                      kycValid,
+                      kycStatus,
+                      kycStatusUpdateRequired,
+                      kycReviewRejectedType,
+                      state {
+                          assets {
+                            id, total, addresses { address }
+                          },
+                          externalWallets {
+                              assets { id, address }
+                          }
+                      }
+                  }
+                  authTokenAction
+          }
+  }
 `;
 
 const SIGNUP_POST = gql`
