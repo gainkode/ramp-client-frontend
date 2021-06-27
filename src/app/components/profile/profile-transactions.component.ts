@@ -82,7 +82,7 @@ export class ProfileTransactionsComponent implements OnInit, OnDestroy, AfterVie
         } else {
             this.inProgress = true;
             this.pTransactionsSubscription = transactionsData.valueChanges.subscribe(({ data }) => {
-                const dataList = data.getMyTransactions as TransactionShortListResult;
+                const dataList = data.myTransactions as TransactionShortListResult;
                 if (dataList !== null) {
                     this.transactionCount = dataList?.count as number;
                     if (this.transactionCount > 0) {

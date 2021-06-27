@@ -39,7 +39,7 @@ export class KycPersonalComponent implements OnInit, OnDestroy {
     } else {
       this.inProgress = true;
       this._settingsSubscription = kycData.valueChanges.subscribe(({ data }) => {
-        const settingsKyc: SettingsKycShort | null = data.getMySettingsKyc;
+        const settingsKyc: SettingsKycShort | null = data.mySettingsKyc;
         if (settingsKyc === null) {
           this.errorMessage = 'Unable to load user identification settings';
         } else {

@@ -5,14 +5,14 @@ import { EmptyObject } from "apollo-angular/types";
 import { TransactionSource } from "../model/generated-models";
 
 const GET_MY_TRANSACTIONS_POST = gql`
-  query GetMyTransactions(
+  query MyTransactions(
     $sourcesOnly: [TransactionSource!]
     $filter: String
     $skip: Int
     $first: Int
     $orderBy: [OrderBy!]
   ) {
-    getMyTransactions(
+    myTransactions(
       sourcesOnly: $sourcesOnly
       filter: $filter
       skip: $skip

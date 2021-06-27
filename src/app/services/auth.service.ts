@@ -201,7 +201,7 @@ query {
 
 const GET_MY_SETTINGS_KYC_POST = gql`
 query {
-    getMySettingsKyc {
+    mySettingsKyc {
         levels {
             settingsKycLevelId,
             name,

@@ -15,8 +15,10 @@ import {
 } from "@angular/forms";
 import { MatStepper } from "@angular/material/stepper";
 import { ActivatedRoute, Router } from "@angular/router";
+import { assertScalarType } from "graphql";
 import { Subscription, Observable } from "rxjs";
 import { map, startWith } from "rxjs/operators";
+import { CommonGroupValue, CommonTargetValue } from "../model/common.model";
 import {
   LoginResult,
   PaymentInstrument,
@@ -68,15 +70,15 @@ export class ContainerComponent implements OnInit, OnDestroy {
   @ViewChild("redirect") private ngRedirectForm: NgForm | undefined = undefined;
   @ViewChild("emailinput") emailElement: ElementRef | undefined = undefined;
   @ViewChild("paymentinfonext") paymentInfoNextElement: ElementRef | undefined =
-    undefined;
+  undefined;
   @ViewChild("verificationreset") verificationResetElement:
     | ElementRef
     | undefined = undefined;
   @ViewChild("codeinput") codeElement: ElementRef | undefined = undefined;
   @ViewChild("redirectnext") redirectNextElement: ElementRef | undefined =
-    undefined;
+  undefined;
   @ViewChild("checkoutdone") checkoutDoneElement: ElementRef | undefined =
-    undefined;
+  undefined;
   @ViewChild("iframe") iframe!: ElementRef;
   @Input() set internal(val: boolean) {
     this.internalPayment = val;
@@ -101,8 +103,8 @@ export class ContainerComponent implements OnInit, OnDestroy {
   settingsCommon: SettingsCommon | null = null;
   sourceCurrencies: CurrencyView[] = [];
   destinationCurrencies: CurrencyView[] = [];
-  userWallets: string[] = [];
-  userWalletsFiltered: Observable<string[]> | undefined = undefined;
+  userWallets: CommonGroupValue[] = [];
+  userWalletsFiltered: Observable<CommonGroupValue[]> | undefined = undefined;
   transactionList = QuickCheckoutTransactionTypeList;
   paymentInstrumentList = QuickCheckoutPaymentInstrumentList;
   paymentProviderList = PaymentProviderList;
@@ -402,7 +404,8 @@ export class ContainerComponent implements OnInit, OnDestroy {
   private handleTransactionSubscription(data: any): void {
     let res = this.redirectForm.valid;
     if (!res) {
-      console.log("transactionApproved: form is invalid");
+      const ready = this.redirectCompleteControl?.value;
+      console.log("transactionApproved: form is invalid", ready);
     }
     if (res) {
       if (
@@ -446,12 +449,16 @@ export class ContainerComponent implements OnInit, OnDestroy {
     }
   }
 
-  private filterUserWallets(value: string): string[] {
+  private filterUserWalletGroupItem = (opt: string[], value: string): string[] => {
+    const filterValue = value.toLowerCase();
+    return opt.filter(item => item.toLowerCase().includes(filterValue));
+  };
+
+  private filterUserWallets(value: string): CommonGroupValue[] {
     if (value !== null) {
-      const walletFilter = value.toLowerCase();
-      return this.userWallets.filter(
-        (option) => option.toLowerCase().indexOf(walletFilter) === 0
-      );
+      return this.userWallets
+        .map(group => ({id: group.id, values: this.filterUserWalletGroupItem(group.values, value)}))
+        .filter(group => group.values.length > 0);
     } else {
       return [];
     }
@@ -568,7 +575,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
     } else {
       this.pKycSettingsSubscription = kycData.valueChanges.subscribe(
         ({ data }) => {
-          const settingsKyc: SettingsKycShort | null = data.getMySettingsKyc;
+          const settingsKyc: SettingsKycShort | null = data.mySettingsKyc;
           if (settingsKyc === null) {
             this.errorMessage = "Unable to load user identification settings";
           } else {
@@ -597,22 +604,15 @@ export class ContainerComponent implements OnInit, OnDestroy {
   }
 
   private loadDetailsForm(): void {
-    this.userWallets = [];
-    if (this.auth.authenticated) {
-      const user = this.auth.user;
-      if (user) {
-        this.detailsEmailControl?.setValue(user.email);
-        user.state?.externalWallets?.forEach((x) =>
-          this.userWallets.push(x.name as string)
-        );
-        //this.userWallets.push('1KFzzGtDdnq5hrwxXGjwVnKzRbvf8WVxck');
-      }
-    }
     const currencyData = this.commonService.getSettingsCurrency();
     if (currencyData === null) {
       this.errorMessage = this.errorHandler.getRejectedCookieMessage();
     } else {
       this.inProgress = true;
+      const user = this.auth.user;
+      if (user) {
+        this.detailsEmailControl?.setValue(user.email);
+      }
       this.pSettingsSubscription = currencyData.valueChanges.subscribe(
         ({ data }) => {
           const currencySettings =
@@ -777,12 +777,53 @@ export class ContainerComponent implements OnInit, OnDestroy {
     return !isInternalUser;
   }
 
+  private loadWallets() {
+    console.log('loadWallets');
+    this.userWallets = [];
+    if (this.auth.authenticated && this.summary.transactionType === TransactionType.Deposit) {
+      const user = this.auth.user;
+      if (user) {
+        const vaultAssets: string[] = [];
+        const externalWallets: string[] = [];
+
+        vaultAssets.push('1KFzzGtDdnq5hrwxXGjwVnKzRbvf8WVxck');
+        externalWallets.push('1DDBCjmy3zpkNu3rfAFX2ucrRbPiunn1SB');
+
+        user.state?.assets?.forEach((x) => {
+          if (x.id === this.summary.currencyFrom) {
+            x.addresses?.forEach((a) => vaultAssets.push(a.address as string));
+          }
+        });
+        if (vaultAssets.length > 0) {
+          const v = new CommonGroupValue();
+          v.id = 'Vault Assets';
+          v.values = vaultAssets;
+          this.userWallets.push(v);
+        }
+        user.state?.externalWallets?.forEach((x) => {
+          x.assets?.forEach((a) => {
+            if (a.id === this.summary.currencyFrom) {
+              externalWallets.push(a.address as string);
+            }
+          });
+        });
+        if (externalWallets.length > 0) {
+          const v = new CommonGroupValue();
+          v.id = 'External Wallets';
+          v.values = externalWallets;
+          this.userWallets.push(v);
+        }
+      }
+    }
+  }
+
   stepChanged(step: StepperSelectionEvent): void {
     if (this.errorMessage === "") {
       let focusInput: HTMLInputElement | undefined;
       if (step.selectedStep.label === "details") {
         focusInput = this.emailElement?.nativeElement as HTMLInputElement;
       } else if (step.selectedStep.label === "paymentInfo") {
+        this.loadWallets();
         focusInput = this.paymentInfoNextElement
           ?.nativeElement as HTMLInputElement;
         this.paymentInfoCurrencyToControl?.setValue(
@@ -849,6 +890,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
       } else if (step.selectedStep.label === "redirect") {
         focusInput = this.codeElement?.nativeElement as HTMLInputElement;
         if (this.iframedoc) {
+          this.redirectCompleteControl?.setValue("ready");
           this.iframedoc.open();
           const content = this.iframeContent;
           this.iframedoc.write(content);

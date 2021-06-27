@@ -11,3 +11,7 @@ export class CommonTargetValue {
     imgSource = '';
 }
 
+export class CommonGroupValue {
+    id = '';
+    values: string[] = [];
+}
