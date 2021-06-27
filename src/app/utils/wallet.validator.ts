@@ -1,4 +1,5 @@
 import { FormGroup, ValidationErrors } from '@angular/forms';
+import { environment } from 'src/environments/environment';
 import { TransactionType } from '../model/generated-models';
 
 const WAValidator = require('multicoin-address-validator');
@@ -26,7 +27,8 @@ export class WalletValidator {
             }
             // valid BTC wallet: 1KFzzGtDdnq5hrwxXGjwVnKzRbvf8WVxck
             currency = currency.toLowerCase();
-            const valid = WAValidator.validate(address, currency);
+            const networkType = environment.production ? 'prod' : 'both';
+            const valid = WAValidator.validate(address, currency, networkType);
             if (valid) {
                 return null;
             } else {

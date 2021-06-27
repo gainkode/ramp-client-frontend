@@ -340,9 +340,6 @@ export class ContainerComponent implements OnInit, OnDestroy {
       this.errorMessage = "";
     });
     this.loadDetailsForm();
-    if (environment.testWallet) {
-      this.paymentInfoForm.setValidators([]);
-    }
   }
 
   ngOnDestroy(): void {
@@ -789,11 +786,9 @@ export class ContainerComponent implements OnInit, OnDestroy {
         const vaultAssets: string[] = [];
         const externalWallets: string[] = [];
 
-        if (environment.testWallet) {
-          // temp
-          externalWallets.push('1DDBCjmy3zpkNu3rfAFX2ucrRbPiunn1SB');
-          // temp
-        }
+        // temp
+        externalWallets.push('1DDBCjmy3zpkNu3rfAFX2ucrRbPiunn1SB');
+        // temp
 
         user.state?.assets?.forEach((x) => {
           if (x.id === this.summary.currencyTo) {

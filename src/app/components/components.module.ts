@@ -41,6 +41,7 @@ import { ProfileWithdrawalComponent } from './profile/profile-withdrawal.compone
 import { ProfileAssetsComponent } from './profile/profile-assets.component';
 import { ProfileLastExchangesComponent } from './profile/profile-last-exchanges.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle'; 
 import { NotificationIconComponent } from './notification-bar/notification.component';
 
 const materialModules = [
@@ -48,6 +49,7 @@ const materialModules = [
     MatFormFieldModule,
     MatInputModule,
     MatAutocompleteModule,
+    MatSlideToggleModule,
     MatSelectModule,
     MatTooltipModule,
     MatDialogModule,

@@ -1,20 +1,20 @@
-import { AfterViewInit, Component, Input, OnInit } from "@angular/core";
-import { FormBuilder, Validators } from "@angular/forms";
-import { MatDialog } from "@angular/material/dialog";
-import { ErrorService } from "src/app/services/error.service";
-import { ProfileDataService } from "src/app/services/profile.service";
-import { PasswordValidator } from "src/app/utils/password.validator";
-import { CommonDialogBox } from "../common-box.dialog";
+import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { ErrorService } from 'src/app/services/error.service';
+import { ProfileDataService } from 'src/app/services/profile.service';
+import { PasswordValidator } from 'src/app/utils/password.validator';
+import { CommonDialogBox } from '../common-box.dialog';
 
 @Component({
-  selector: "app-password",
-  templateUrl: "./profile-password.component.html",
+  selector: 'app-password',
+  templateUrl: './profile-password.component.html',
 })
 export class ProfilePasswordComponent implements AfterViewInit {
   @Input() twoFaEnabled = false;
 
   inProgress = false;
-  errorMessage = "";
+  errorMessage = '';
   hidePassword1 = true;
   hidePassword2 = true;
   hidePassword3 = true;
@@ -22,42 +22,42 @@ export class ProfilePasswordComponent implements AfterViewInit {
   passwordForm = this.formBuilder.group(
     {
       twofaCode: [
-        "",
+        '',
         {
           validators: [Validators.required],
-          updateOn: "change",
+          updateOn: 'change',
         },
       ],
       currentPassword: [
-        "",
-        { validators: [Validators.required], updateOn: "change" },
+        '',
+        { validators: [Validators.required], updateOn: 'change' },
       ],
       newPassword: [
-        "",
+        '',
         {
           validators: [
             Validators.required,
             Validators.minLength(8),
             Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[`~$@#!%^_*?&+=<|>])[A-Za-z0-9\d`~$@#!%^_*?&+=<|>].{7,30}')
-          ], updateOn: "change"
+          ], updateOn: 'change'
         },
       ],
       confirmPassword: [
-        "",
+        '',
         {
           validators: [
             Validators.required,
             Validators.minLength(8),
             Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[`~$@#!%^_*?&+=<|>])[A-Za-z0-9\d`~$@#!%^_*?&+=<|>].{7,30}')
-          ], updateOn: "change"
+          ], updateOn: 'change'
         },
       ],
     },
     {
       validators: [
-        PasswordValidator.equalityValidator("newPassword", "confirmPassword"),
+        PasswordValidator.equalityValidator('newPassword', 'confirmPassword'),
       ],
-      updateOn: "change",
+      updateOn: 'change',
     }
   );
 
@@ -80,7 +80,7 @@ export class ProfilePasswordComponent implements AfterViewInit {
     } else if (this.passwordForm.get('newPassword')?.errors?.minlength) {
       return 'Password must contain at least 8 symbols';
     }
-    return "";
+    return '';
   }
 
   getConfirmPasswordValidation(): string {

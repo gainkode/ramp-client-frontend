@@ -9,8 +9,7 @@ export const environment = {
   ws_server: 'ws://localhost:4001',
   recaptchaId: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI',
   googleClientId: '683937471887-u8r2tuvcvibnsnc41grnvcer9tv5bpm6.apps.googleusercontent.com',
-  facebookClientId: '522193095423714',
-  testWallet: true
+  facebookClientId: '522193095423714'
 };
 
 /*

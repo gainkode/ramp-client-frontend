@@ -6,7 +6,7 @@ import { LoginResult, SettingsCommon, User, UserMode, UserType } from '../model/
 import { environment } from 'src/environments/environment';
 import { EmptyObject } from 'apollo-angular/types';
 
-const LOGIN_POST = gql`
+const LOGIN = gql`
   mutation Login($recaptcha: String!, $email: String!, $password: String, $quickCheckout: Boolean) {
       login(
           recaptcha: $recaptcha,
@@ -41,7 +41,9 @@ const LOGIN_POST = gql`
                     assets {
                       id, total, addresses { address }
                     },
-                    externalWallets { id, address }
+                    externalWallets {
+                        assets { id, address }
+                    }
                 }
             }
             authTokenAction
@@ -49,11 +51,11 @@ const LOGIN_POST = gql`
     }
 `;
 
-const REFRESH_TOKEN_POST = gql`
+const REFRESH_TOKEN = gql`
   mutation RefreshToken { refreshToken }
 `;
 
-const SOCIAL_LOGIN_POST = gql`
+const SOCIAL_LOGIN = gql`
   mutation SocialLogin(
       $recaptcha: String!,
       $oauthtoken: String!,
@@ -97,7 +99,7 @@ const SOCIAL_LOGIN_POST = gql`
   }
 `;
 
-const SIGNUP_POST = gql`
+const SIGNUP = gql`
   mutation Signup($recaptcha: String!, $name: String!, $email: String!, $password: String!, $userType: UserType!,
     $mode: UserMode!, $termsOfUse: Boolean!, $firstName: String!, $lastName: String!,
     $countryCode2: String!, $countryCode3: String!, $phone: String!) {
@@ -126,25 +128,25 @@ const SIGNUP_POST = gql`
   }
 `;
 
-const FORGOTPASSWORD_POST = gql`
+const FORGOT_PASSWORD = gql`
   mutation ForgotPassword($email: String!, $recaptcha: String!) {
     forgotPassword(recaptcha: $recaptcha, email: $email)
   }
 `;
 
-const SETPASSWORD_POST = gql`
+const SET_PASSWORD = gql`
   mutation SetPassword($token: String!, $password: String!, $recaptcha: String!) {
     setPassword(recaptcha: $recaptcha, password: $password, token: $token)
   }
 `;
 
-const CONFIRMEMAIL_POST = gql`
+const CONFIRM_EMAIL = gql`
   mutation ConfirmEmail($token: String!, $recaptcha: String!) {
     confirmEmail(recaptcha: $recaptcha, token: $token)
   }
 `;
 
-const CONFIRMNAME_POST = gql`
+const CONFIRM_NAME = gql`
   mutation ConfirmName($token: String!, $recaptcha: String!, $name: String!,
     $userType: UserType!, $mode: UserMode!, $firstName: String!, $lastName: String!,
     $countryCode2: String!, $countryCode3: String!, $phone: String!) {
@@ -181,7 +183,15 @@ const CONFIRMNAME_POST = gql`
   }
 `;
 
-const GET_SETTINGS_COMMON_POST = gql`
+const GENERATE_2FA_CODE = gql`
+mutation Generate2faCode {
+    generate2faCode {
+        otpauthUrl, code, qr
+    }
+}
+`;
+
+const GET_SETTINGS_COMMON = gql`
 query {
     getSettingsCommon {
         liquidityProvider
@@ -192,15 +202,15 @@ query {
   }
 `;
 
-const GET_KYC_TOKEN_POST = gql`
+const GET_KYC_TOKEN = gql`
 query { generateWebApiToken }
 `;
 
-const MY_KYC_STATUS_POST = gql`
+const MY_KYC_STATUS = gql`
 query { myKycStatus }
 `;
 
-const ME_KYC_POST = gql`
+const ME_KYC = gql`
 query {
     me {
         kycValid,
@@ -210,7 +220,7 @@ query {
 }
 `;
 
-const GET_MY_SETTINGS_KYC_POST = gql`
+const GET_MY_SETTINGS_KYC = gql`
 query {
     mySettingsKyc {
         levels {
@@ -248,7 +258,7 @@ export class AuthService {
 
     refreshToken(): Observable<any> {
         const result = this.apollo.mutate({
-            mutation: REFRESH_TOKEN_POST
+            mutation: REFRESH_TOKEN
         });
         result.subscribe(x => {
             const d = x.data as any;
@@ -274,7 +284,7 @@ export class AuthService {
 
     authenticate(username: string, userpassword: string, quickCheckout: boolean = false): Observable<any> {
         return this.apollo.mutate({
-            mutation: LOGIN_POST,
+            mutation: LOGIN,
             variables: {
                 recaptcha: environment.recaptchaId,
                 email: username,
@@ -286,7 +296,7 @@ export class AuthService {
 
     authenticateSocial(provider: string, token: string): Observable<any> {
         return this.apollo.mutate({
-            mutation: SOCIAL_LOGIN_POST,
+            mutation: SOCIAL_LOGIN,
             variables: {
                 recaptcha: environment.recaptchaId,
                 oauthprovider: provider,
@@ -315,7 +325,7 @@ export class AuthService {
         firstname: string, lastname: string, countrycode2: string, countrycode3: string,
         phoneNumber: string): Observable<any> {
         return this.apollo.mutate({
-            mutation: SIGNUP_POST,
+            mutation: SIGNUP,
             variables: {
                 recaptcha: environment.recaptchaId,
                 name: username,
@@ -336,7 +346,7 @@ export class AuthService {
     confirmName(tokenId: string, username: string, usertype: string, firstname: string, lastname: string,
         countrycode2: string, countrycode3: string, phoneNumber: string): Observable<any> {
         return this.apollo.mutate({
-            mutation: CONFIRMNAME_POST,
+            mutation: CONFIRM_NAME,
             variables: {
                 token: tokenId,
                 recaptcha: environment.recaptchaId,
@@ -354,7 +364,7 @@ export class AuthService {
 
     forgotPassword(usermail: string): Observable<any> {
         return this.apollo.mutate({
-            mutation: FORGOTPASSWORD_POST,
+            mutation: FORGOT_PASSWORD,
             variables: {
                 recaptcha: environment.recaptchaId,
                 email: usermail
@@ -364,7 +374,7 @@ export class AuthService {
 
     setPassword(usertoken: string, userpassword: string): Observable<any> {
         return this.apollo.mutate({
-            mutation: SETPASSWORD_POST,
+            mutation: SET_PASSWORD,
             variables: {
                 recaptcha: environment.recaptchaId,
                 token: usertoken,
@@ -375,7 +385,7 @@ export class AuthService {
 
     confirmEmail(tokenValue: string): Observable<any> {
         return this.apollo.mutate({
-            mutation: CONFIRMEMAIL_POST,
+            mutation: CONFIRM_EMAIL,
             variables: {
                 recaptcha: environment.recaptchaId,
                 token: tokenValue
@@ -383,6 +393,12 @@ export class AuthService {
         });
     }
 
+    generate2FaCode(): Observable<any> {
+        return this.apollo.mutate({
+            mutation: GENERATE_2FA_CODE
+        });
+    }
+    
     setLoginUser(login: LoginResult): void {
         sessionStorage.setItem('currentUser', JSON.stringify(login.user));
         sessionStorage.setItem('currentToken', login.authToken as string);
@@ -459,7 +475,7 @@ export class AuthService {
 
     getSettingsCommon(): QueryRef<any, EmptyObject> {
         return this.apollo.watchQuery<any>({
-            query: GET_SETTINGS_COMMON_POST,
+            query: GET_SETTINGS_COMMON,
             fetchPolicy: 'network-only'
         });
     }
@@ -467,7 +483,7 @@ export class AuthService {
     getMyKycSettings(): QueryRef<any, EmptyObject> | null {
         if (this.apollo.client !== undefined) {
             return this.apollo.watchQuery<any>({
-                query: GET_MY_SETTINGS_KYC_POST,
+                query: GET_MY_SETTINGS_KYC,
                 fetchPolicy: 'network-only'
             });
         } else {
@@ -477,14 +493,14 @@ export class AuthService {
 
     getKycToken(): QueryRef<any, EmptyObject> {
         return this.apollo.watchQuery<any>({
-            query: GET_KYC_TOKEN_POST,
+            query: GET_KYC_TOKEN,
             fetchPolicy: 'network-only'
         });
     }
 
     getMyKycStatus(): QueryRef<any, EmptyObject> {
         return this.apollo.watchQuery<any>({
-            query: MY_KYC_STATUS_POST,
+            query: MY_KYC_STATUS,
             fetchPolicy: 'network-only'
         });
     }
@@ -492,7 +508,7 @@ export class AuthService {
     getMyKycData(): QueryRef<any, EmptyObject> | null {
         if (this.apollo.client !== undefined) {
             return this.apollo.watchQuery<any>({
-                query: ME_KYC_POST,
+                query: ME_KYC,
                 fetchPolicy: 'network-only'
             });
         } else {
