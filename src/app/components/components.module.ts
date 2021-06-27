@@ -42,9 +42,13 @@ import { ProfileAssetsComponent } from './profile/profile-assets.component';
 import { ProfileLastExchangesComponent } from './profile/profile-last-exchanges.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle'; 
+import { ClipboardModule } from '@angular/cdk/clipboard'; 
 import { NotificationIconComponent } from './notification-bar/notification.component';
+import { TwoFaCodeComponent } from './two-fa-code.component';
+import { QRCodeModule } from 'angularx-qrcode';
 
 const materialModules = [
+    ClipboardModule,
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
@@ -69,10 +73,10 @@ const materialModules = [
 export class MaterialModule { }
 
 @NgModule({
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, MaterialModule, DirectiveModule],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, MaterialModule, DirectiveModule, QRCodeModule],
     declarations: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
         CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, NotificationIconComponent,
-        LoginPanelComponent, CommonDialogBox, CreditCardComponent,
+        LoginPanelComponent, CommonDialogBox, CreditCardComponent, TwoFaCodeComponent,
         LineBreakPipe, NumberFillPipe, ProfileAccountBalanceComponent, ProfileExchangeComponent,
         ProfileNotificationsComponent, ProfileQuickTransferComponent, ProfileTransactionsComponent,
         ProfileInfoComponent, ProfileTwoFAComponent, ProfilePasswordComponent, 
@@ -80,7 +84,7 @@ export class MaterialModule { }
         ProfileAssetsComponent, ProfileLastExchangesComponent],
     exports: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
         CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, NotificationIconComponent,
-        LoginPanelComponent, MatProgressBarModule, CommonDialogBox, CreditCardComponent,
+        LoginPanelComponent, MatProgressBarModule, CommonDialogBox, CreditCardComponent, TwoFaCodeComponent,
         LineBreakPipe, NumberFillPipe, ProfileAccountBalanceComponent, ProfileExchangeComponent,
         ProfileNotificationsComponent, ProfileQuickTransferComponent, ProfileTransactionsComponent,
         ProfileInfoComponent, ProfileTwoFAComponent, ProfilePasswordComponent, 

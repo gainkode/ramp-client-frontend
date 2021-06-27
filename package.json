@@ -23,6 +23,7 @@
     "@angular/platform-browser-dynamic": "~11.1.2",
     "@angular/router": "~11.1.2",
     "@apollo/client": "^3.3.11",
+    "angularx-qrcode": "^11.0.0",
     "angularx-social-login": "^3.5.4",
     "apollo-angular": "^2.2.0",
     "apollo-link-error": "^1.1.13",

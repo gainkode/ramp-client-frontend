@@ -15,3 +15,9 @@ export class CommonGroupValue {
     id = '';
     values: string[] = [];
 }
+
+export class QrCodeData {
+    code: string = '';
+    symbols: string = '';
+    url: string = '';
+}
