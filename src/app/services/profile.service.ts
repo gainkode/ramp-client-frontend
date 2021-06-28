@@ -96,7 +96,7 @@ const GET_ME_POST = gql`
       contacts {
         userContactId
         userId
-        contactId
+        contactEmail
         displayName
         created
       }
@@ -223,7 +223,7 @@ const GET_PROFILE_ACCOUNT_POST = gql`
       contacts {
         userContactId
         userId
-        contactId
+        contactEmail
         displayName
         created
       }

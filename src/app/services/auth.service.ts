@@ -29,6 +29,7 @@ const LOGIN = gql`
                   countryCode3,
                   phone,
                   mode,
+                  is2faEnabled,
                   changePasswordRequired,
                   referralCode,
                   kycProvider,
@@ -77,6 +78,7 @@ const SOCIAL_LOGIN = gql`
                       lastName,
                       phone,
                       mode,
+                      is2faEnabled,
                       changePasswordRequired,
                       referralCode,
                       kycProvider,
@@ -187,6 +189,26 @@ const GENERATE_2FA_CODE = gql`
 mutation Generate2faCode {
     generate2faCode {
         otpauthUrl, code, qr
+    }
+}
+`;
+
+const ENABLE_2FA = gql`
+mutation Enable2fa($password: String!, $code: String!) {
+    enable2fa(password: $password, code: $code) {
+        user {
+            is2faEnabled
+        }
+    }
+}
+`;
+
+const DISABLE_2FA = gql`
+mutation Disable2fa($password: String!, $code: String!) {
+    disable2fa(password: $password, code: $code) {
+        user {
+            is2faEnabled
+        }
     }
 }
 `;
@@ -398,7 +420,27 @@ export class AuthService {
             mutation: GENERATE_2FA_CODE
         });
     }
+
+    enable2Fa(authCode: string): Observable<any> {
+        return this.apollo.mutate({
+            mutation: ENABLE_2FA,
+            variables: {
+                password: 'ignored',
+                code: authCode
+            }
+        });
+    }
     
+    disable2Fa(authCode: string): Observable<any> {
+        return this.apollo.mutate({
+            mutation: DISABLE_2FA,
+            variables: {
+                password: 'ignored',
+                code: authCode
+            }
+        });
+    }
+
     setLoginUser(login: LoginResult): void {
         sessionStorage.setItem('currentUser', JSON.stringify(login.user));
         sessionStorage.setItem('currentToken', login.authToken as string);

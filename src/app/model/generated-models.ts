@@ -59,6 +59,7 @@ export type Query = {
   getRates?: Maybe<Array<Rate>>;
   myTransactions?: Maybe<TransactionShortListResult>;
   getTransactions?: Maybe<TransactionListResult>;
+  getDashboardStats?: Maybe<DashboardStats>;
 };
 
 
@@ -296,6 +297,16 @@ export type QueryGetTransactionsArgs = {
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
   orderBy?: Maybe<Array<OrderBy>>;
+};
+
+
+export type QueryGetDashboardStatsArgs = {
+  userIdOnly?: Maybe<Array<Scalars['String']>>;
+  affiliateIdOnly?: Maybe<Array<Scalars['String']>>;
+  sourcesOnly?: Maybe<Array<TransactionSource>>;
+  countriesOnly?: Maybe<Array<Scalars['String']>>;
+  countryCodeType?: Maybe<CountryCodeType>;
+  accountTypesOnly?: Maybe<Array<UserType>>;
 };
 
 export type OrderBy = {
@@ -576,6 +587,7 @@ export type User = {
   emailConfirmed?: Maybe<Scalars['DateTime']>;
   roles?: Maybe<Array<UserRole>>;
   contacts?: Maybe<Array<UserContact>>;
+  bankAccounts?: Maybe<Array<UserBankAccount>>;
   permissions?: Maybe<Array<UserRolePermission>>;
   is2faEnabled?: Maybe<Scalars['Boolean']>;
   hasEmailAuth?: Maybe<Scalars['Boolean']>;
@@ -622,8 +634,24 @@ export type UserContact = {
   __typename?: 'UserContact';
   userContactId?: Maybe<Scalars['String']>;
   userId?: Maybe<Scalars['String']>;
-  contactId?: Maybe<Scalars['String']>;
+  contactEmail?: Maybe<Scalars['String']>;
   displayName?: Maybe<Scalars['String']>;
+  created: Scalars['DateTime'];
+};
+
+export type UserBankAccount = {
+  __typename?: 'UserBankAccount';
+  userBankAccountId?: Maybe<Scalars['String']>;
+  userId: Scalars['String'];
+  beneficiaryName?: Maybe<Scalars['String']>;
+  beneficiaryAddress?: Maybe<Scalars['String']>;
+  bankName?: Maybe<Scalars['String']>;
+  bankAddress?: Maybe<Scalars['String']>;
+  swiftBic?: Maybe<Scalars['String']>;
+  iban?: Maybe<Scalars['String']>;
+  currency?: Maybe<Scalars['String']>;
+  displayName?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
   created: Scalars['DateTime'];
 };
 
@@ -940,6 +968,9 @@ export type TransactionShort = {
   rate: Scalars['Float'];
   destinationType?: Maybe<TransactionDestinationType>;
   destination?: Maybe<Scalars['String']>;
+  countryCode2?: Maybe<Scalars['String']>;
+  countryCode3?: Maybe<Scalars['String']>;
+  accountType?: Maybe<Scalars['String']>;
   source: TransactionSource;
   instrument: PaymentInstrument;
   custodyProvider?: Maybe<CustodyProvider>;
@@ -1139,6 +1170,9 @@ export type Transaction = {
   rate: Scalars['Float'];
   destinationType?: Maybe<TransactionDestinationType>;
   destination?: Maybe<Scalars['String']>;
+  countryCode2?: Maybe<Scalars['String']>;
+  countryCode3?: Maybe<Scalars['String']>;
+  accountType?: Maybe<Scalars['String']>;
   source: TransactionSource;
   instrument: PaymentInstrument;
   custodyProvider?: Maybe<CustodyProvider>;
@@ -1159,6 +1193,79 @@ export enum TransactionKycStatus {
   KycRejected = 'KycRejected',
   KycApproved = 'KycApproved'
 }
+
+export enum CountryCodeType {
+  Code2 = 'code2',
+  Code3 = 'code3'
+}
+
+export type DashboardStats = {
+  __typename?: 'DashboardStats';
+  deposits?: Maybe<DepositOrWithdrawalStats>;
+  withdrawals?: Maybe<DepositOrWithdrawalStats>;
+  transfers?: Maybe<TransferStats>;
+  exchanges?: Maybe<ExchangeStats>;
+  balances?: Maybe<Array<BalanceStats>>;
+};
+
+export type DepositOrWithdrawalStats = {
+  __typename?: 'DepositOrWithdrawalStats';
+  ratio?: Maybe<Scalars['Float']>;
+  approved?: Maybe<TransactionStatsVolume>;
+  declined?: Maybe<TransactionStatsVolume>;
+  abounded?: Maybe<TransactionStatsVolume>;
+  inProcess?: Maybe<TransactionStatsVolume>;
+  byStatus?: Maybe<Array<TransactionStatsByStatus>>;
+  fee?: Maybe<TransactionStatsVolume>;
+  byInstruments?: Maybe<Array<InstrumentStats>>;
+};
+
+export type TransactionStatsVolume = {
+  __typename?: 'TransactionStatsVolume';
+  count?: Maybe<Scalars['Int']>;
+  volume?: Maybe<Scalars['Float']>;
+};
+
+export type TransactionStatsByStatus = {
+  __typename?: 'TransactionStatsByStatus';
+  status?: Maybe<TransactionStatus>;
+  volume?: Maybe<TransactionStatsVolume>;
+};
+
+export type InstrumentStats = {
+  __typename?: 'InstrumentStats';
+  instrument?: Maybe<PaymentInstrument>;
+  approved?: Maybe<TransactionStatsVolume>;
+  declined?: Maybe<TransactionStatsVolume>;
+  abounded?: Maybe<TransactionStatsVolume>;
+  inProcess?: Maybe<TransactionStatsVolume>;
+  byStatus?: Maybe<Array<TransactionStatsByStatus>>;
+  fee?: Maybe<TransactionStatsVolume>;
+};
+
+export type TransferStats = {
+  __typename?: 'TransferStats';
+  ratio?: Maybe<Scalars['Float']>;
+  byStatus?: Maybe<Array<TransactionStatsByStatus>>;
+  toMerchant?: Maybe<Array<Maybe<Array<TransactionStatsByStatus>>>>;
+  toCustomer?: Maybe<Array<Maybe<Array<TransactionStatsByStatus>>>>;
+  fee?: Maybe<TransactionStatsVolume>;
+};
+
+export type ExchangeStats = {
+  __typename?: 'ExchangeStats';
+  ratio?: Maybe<Scalars['Int']>;
+  byStatus?: Maybe<Array<TransactionStatsByStatus>>;
+  toMerchant?: Maybe<Array<Maybe<Array<TransactionStatsByStatus>>>>;
+  toCustomer?: Maybe<Array<Maybe<Array<TransactionStatsByStatus>>>>;
+  fee?: Maybe<TransactionStatsVolume>;
+};
+
+export type BalanceStats = {
+  __typename?: 'BalanceStats';
+  currency?: Maybe<Scalars['String']>;
+  volume?: Maybe<TransactionStatsVolume>;
+};
 
 export type Mutation = {
   __typename?: 'Mutation';
@@ -1191,6 +1298,10 @@ export type Mutation = {
   deleteUser?: Maybe<User>;
   addMyContact?: Maybe<User>;
   deleteMyContact?: Maybe<User>;
+  addMyBankAccount?: Maybe<User>;
+  deleteMyBankAccount?: Maybe<User>;
+  addBankAccount?: Maybe<User>;
+  deleteBankAccount?: Maybe<User>;
   signup: LoginResult;
   login: LoginResult;
   logout: Scalars['Boolean'];
@@ -1349,13 +1460,34 @@ export type MutationDeleteUserArgs = {
 
 
 export type MutationAddMyContactArgs = {
-  contactUserId: Scalars['ID'];
+  contactEmail: Scalars['String'];
   displayName?: Maybe<Scalars['String']>;
 };
 
 
 export type MutationDeleteMyContactArgs = {
   contactId: Scalars['ID'];
+};
+
+
+export type MutationAddMyBankAccountArgs = {
+  bankAccount?: Maybe<UserBankAccountInput>;
+};
+
+
+export type MutationDeleteMyBankAccountArgs = {
+  bankAccountId: Scalars['ID'];
+};
+
+
+export type MutationAddBankAccountArgs = {
+  userId?: Maybe<Scalars['String']>;
+  bankAccount?: Maybe<UserBankAccountInput>;
+};
+
+
+export type MutationDeleteBankAccountArgs = {
+  bankAccountId: Scalars['ID'];
 };
 
 
@@ -1608,6 +1740,18 @@ export type UserInput = {
   changePasswordRequired?: Maybe<Scalars['Boolean']>;
   defaultFiatCurrency?: Maybe<Scalars['String']>;
   defaultCryptoCurrency?: Maybe<Scalars['String']>;
+};
+
+export type UserBankAccountInput = {
+  beneficiaryName?: Maybe<Scalars['String']>;
+  beneficiaryAddress?: Maybe<Scalars['String']>;
+  bankName?: Maybe<Scalars['String']>;
+  bankAddress?: Maybe<Scalars['String']>;
+  swiftBic?: Maybe<Scalars['String']>;
+  iban?: Maybe<Scalars['String']>;
+  currency?: Maybe<Scalars['String']>;
+  displayName?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
 };
 
 export type LoginResult = {

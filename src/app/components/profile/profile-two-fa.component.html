@@ -1,25 +1,11 @@
 <h3>Two-Factor Authentication</h3>
-<div *ngIf="inProgress">
-    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-    <br />
-</div>
-<div class="form-element" *ngIf="errorMessage !== ''">
-    <div class="form-error-box">
-        {{ errorMessage }}
-    </div>
-    <br />
-</div>
 
 <div class="form-element">
-    <mat-slide-toggle color="primary" [checked]="twoFaEnabled" (change)="enabledChange($event)">
+    <mat-slide-toggle color="primary" [checked]="twoFaEnabled" (change)="enabledChange($event)" [disabled]="enabled">
         Enable Two-Factor Authentication
     </mat-slide-toggle>
 </div>
 
-<div class="form-element" *ngIf="!enabled && twoFaEnabled">
-    <app-two-fa-code [data]="qrCode"></app-two-fa-code>
-</div>
-
-<div class="form-element" *ngIf="enabled && !twoFaEnabled">
-    <button class="main-button main-button-accent" >SAVE</button>
+<div class="form-element" *ngIf="enabled || twoFaEnabled">
+    <app-two-fa-code [activated]="enabled"></app-two-fa-code>
 </div>
