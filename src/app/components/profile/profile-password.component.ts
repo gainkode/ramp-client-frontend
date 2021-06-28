@@ -19,40 +19,39 @@ export class ProfilePasswordComponent implements AfterViewInit {
   hidePassword2 = true;
   hidePassword3 = true;
 
-  passwordForm = this.formBuilder.group(
-    {
-      twofaCode: [
-        '',
-        {
-          validators: [Validators.required],
-          updateOn: 'change',
-        },
-      ],
-      currentPassword: [
-        '',
-        { validators: [Validators.required], updateOn: 'change' },
-      ],
-      newPassword: [
-        '',
-        {
-          validators: [
-            Validators.required,
-            Validators.minLength(8),
-            Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[`~$@#!%^_*?&+=<|>])[A-Za-z0-9\d`~$@#!%^_*?&+=<|>].{7,30}')
-          ], updateOn: 'change'
-        },
-      ],
-      confirmPassword: [
-        '',
-        {
-          validators: [
-            Validators.required,
-            Validators.minLength(8),
-            Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[`~$@#!%^_*?&+=<|>])[A-Za-z0-9\d`~$@#!%^_*?&+=<|>].{7,30}')
-          ], updateOn: 'change'
-        },
-      ],
-    },
+  passwordForm = this.formBuilder.group({
+    twofaCode: [
+      '',
+      {
+        validators: [Validators.required],
+        updateOn: 'change',
+      },
+    ],
+    currentPassword: [
+      '',
+      { validators: [Validators.required], updateOn: 'change' },
+    ],
+    newPassword: [
+      '',
+      {
+        validators: [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[`~$@#!%^_*?&+=<|>])[A-Za-z0-9\d`~$@#!%^_*?&+=<|>].{7,30}')
+        ], updateOn: 'change'
+      },
+    ],
+    confirmPassword: [
+      '',
+      {
+        validators: [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[`~$@#!%^_*?&+=<|>])[A-Za-z0-9\d`~$@#!%^_*?&+=<|>].{7,30}')
+        ], updateOn: 'change'
+      },
+    ],
+  },
     {
       validators: [
         PasswordValidator.equalityValidator('newPassword', 'confirmPassword'),

@@ -42,3 +42,17 @@
         Enter the generated code in the input below
     </span>
 </div>
+
+<form [formGroup]="codeForm" (ngSubmit)="onSubmit()">
+    <mat-form-field class="form-element">
+        <mat-label>Confirmation Code</mat-label>
+        <input type="text" matInput formControlName="code" />
+        <mat-error *ngIf="this.codeForm.get('code')?.hasError('required')">
+            Please enter your Confirmation Code
+        </mat-error>
+    </mat-form-field>
+
+    <div class="form-element">
+        <button class="main-button main-button-accent" type="submit">SEND</button>
+    </div>
+</form>

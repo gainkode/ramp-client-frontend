@@ -33,7 +33,7 @@ import { ProfileNotificationsComponent } from './profile/profile-notifications.c
 import { ProfileQuickTransferComponent } from './profile/profile-quick-transfer.component';
 import { ProfileTransactionsComponent } from './profile/profile-transactions.component';
 import { ProfileInfoComponent } from './profile/profile-info.component';
-import { ProfileTwoFAComponent } from './profile/profile-two-FA.component';
+import { ProfileTwoFAComponent } from './profile/profile-two-fa.component';
 import { ProfilePasswordComponent } from './profile/profile-password.component';
 import { ProfileVerificationComponent } from './profile/profile-verification.component';
 import { ProfileContactsComponent } from './profile/profile-contacts.component';
