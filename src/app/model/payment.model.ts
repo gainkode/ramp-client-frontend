@@ -2,7 +2,7 @@ import { CommonTargetValue } from './common.model';
 import {
     PaymentInstrument, PaymentProvider, TransactionType, TransactionStatus,
     SettingsFeeTargetFilterType, SettingsCostTargetFilterType, SettingsKycTargetFilterType,
-    UserType, KycProvider, UserMode, SettingsCurrency, Rate, TransactionSource
+    UserType, KycProvider, UserMode, SettingsCurrency, Rate, TransactionSource, UserNotificationCodes
 } from './generated-models';
 
 export class PaymentInstrumentView {
@@ -42,6 +42,11 @@ export class UserModeView {
 
 export class KycProviderView {
     id!: KycProvider;
+    name = '';
+}
+
+export class UserNotificationCodeView {
+    id!: UserNotificationCodes;
     name = '';
 }
 
@@ -232,6 +237,13 @@ export const UserModeShortList: Array<UserModeView> = [
 export const KycProviderList: Array<KycProviderView> = [
     { id: KycProvider.Local, name: 'Local' },
     { id: KycProvider.SumSub, name: 'SumSub' }
+];
+
+export const UserNotificationCodeList: Array<UserNotificationCodeView> = [
+    { id: UserNotificationCodes.KycStatusChanged, name: 'KYC Status Changed' },
+    { id: UserNotificationCodes.TestNotification, name: 'Test' },
+    { id: UserNotificationCodes.TransactionConfirmation, name: 'Transaction Confirmed' },
+    { id: UserNotificationCodes.TransactionStatusChanged, name: 'Transaction Status Changed' }
 ];
 
 export class CheckoutSummary {

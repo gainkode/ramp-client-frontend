@@ -4,7 +4,7 @@ import { Observable } from "rxjs";
 import { EmptyObject } from "apollo-angular/types";
 import { TransactionSource } from "../model/generated-models";
 
-const GET_MY_TRANSACTIONS_POST = gql`
+const GET_MY_TRANSACTIONS = gql`
   query MyTransactions(
     $sourcesOnly: [TransactionSource!]
     $filter: String
@@ -73,7 +73,33 @@ const GET_MY_TRANSACTIONS_POST = gql`
   }
 `;
 
-const GET_ME_POST = gql`
+const GET_MY_NOTIFICATIONS = gql`
+  query MyNotifications(
+    $filter: String
+    $skip: Int
+    $first: Int
+    $orderBy: [OrderBy!]
+  ) {
+    myNotifications(
+      filter: $filter
+      skip: $skip
+      first: $first
+      orderBy: $orderBy
+    ) {
+      count
+      list {
+        userNotificationId
+        created
+        viewed
+        userId
+        text
+        userNotificationTypeCode
+      }
+    }
+  }
+`;
+
+const GET_ME = gql`
   query Me {
     me {
       userId
@@ -145,7 +171,7 @@ const GET_ME_POST = gql`
   }
 `;
 
-const GET_PROFILE_HOME_POST = gql`
+const GET_PROFILE_HOME = gql`
   query Me {
     me {
       userId
@@ -192,7 +218,7 @@ const GET_PROFILE_HOME_POST = gql`
   }
 `;
 
-const GET_PROFILE_ACCOUNT_POST = gql`
+const GET_PROFILE_ACCOUNT = gql`
   query Me {
     me {
       userId
@@ -241,7 +267,7 @@ const GET_PROFILE_ACCOUNT_POST = gql`
   }
 `;
 
-const UPDATE_ME_INFO_POST = gql`
+const UPDATE_ME_INFO = gql`
   mutation UpdateMe(
     $firstName: String!
     $lastName: String!
@@ -263,7 +289,7 @@ const UPDATE_ME_INFO_POST = gql`
   }
 `;
 
-const CHANGE_PASSWORD_POST = gql`
+const CHANGE_PASSWORD = gql`
   mutation ChangePassword(
     $code2fa: String
     $oldPassword: String!
@@ -291,7 +317,7 @@ export class ProfileDataService {
     if (this.apollo.client !== undefined) {
       const orderFields = [{ orderBy: orderField, desc: orderDesc }];
       return this.apollo.watchQuery<any>({
-        query: GET_MY_TRANSACTIONS_POST,
+        query: GET_MY_TRANSACTIONS,
         variables: {
           sourcesOnly: sources,
           filter: "",
@@ -310,7 +336,7 @@ export class ProfileDataService {
   getMe(): QueryRef<any, EmptyObject> | null {
     if (this.apollo.client !== undefined) {
       return this.apollo.watchQuery<any>({
-        query: GET_ME_POST,
+        query: GET_ME,
         fetchPolicy: "network-only",
       });
     } else {
@@ -321,7 +347,7 @@ export class ProfileDataService {
   getProfileHomeData(): QueryRef<any, EmptyObject> | null {
     if (this.apollo.client !== undefined) {
       return this.apollo.watchQuery<any>({
-        query: GET_PROFILE_HOME_POST,
+        query: GET_PROFILE_HOME,
         fetchPolicy: "network-only",
       });
     } else {
@@ -332,7 +358,31 @@ export class ProfileDataService {
   getProfileAccountData(): QueryRef<any, EmptyObject> | null {
     if (this.apollo.client !== undefined) {
       return this.apollo.watchQuery<any>({
-        query: GET_PROFILE_ACCOUNT_POST,
+        query: GET_PROFILE_ACCOUNT,
+        fetchPolicy: "network-only",
+      });
+    } else {
+      return null;
+    }
+  }
+
+  getMyNotifications(
+    pageIndex: number,
+    takeItems: number,
+    orderField: string,
+    orderDesc: boolean
+  ): QueryRef<any, EmptyObject> | null {
+    if (this.apollo.client !== undefined) {
+      const orderFields = [{ orderBy: orderField, desc: orderDesc }];
+      return this.apollo.watchQuery<any>({
+        query: GET_MY_NOTIFICATIONS,
+        variables: {
+          filter: "",
+          skip: pageIndex * takeItems,
+          first: takeItems,
+          orderBy: orderFields,
+        },
+        pollInterval: 30000,
         fetchPolicy: "network-only",
       });
     } else {
@@ -348,7 +398,7 @@ export class ProfileDataService {
     currency: string
   ): Observable<any> {
     return this.apollo.mutate({
-      mutation: UPDATE_ME_INFO_POST,
+      mutation: UPDATE_ME_INFO,
       variables: {
         firstName,
         lastName,
@@ -369,7 +419,7 @@ export class ProfileDataService {
       code = (code2fa !== '') ? code2fa : undefined;
     }
     return this.apollo.mutate({
-      mutation: CHANGE_PASSWORD_POST,
+      mutation: CHANGE_PASSWORD,
       variables: {
         code2fa: code,
         oldPassword,

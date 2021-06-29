@@ -8,17 +8,8 @@
 </div>
 
 <div class="table-responsive">
-  <table
-    mat-table
-    *ngIf="errorMessage === ''"
-    class="data-table"
-    [dataSource]="transactions"
-    matSort
-    [matSortActive]="sortedField"
-    matSortDirection="desc"
-    matSortDisableClear
-    multiTemplateDataRows
-  >
+  <table mat-table *ngIf="errorMessage === ''" class="data-table" [dataSource]="transactions" matSort
+    [matSortActive]="sortedField" matSortDirection="desc" matSortDisableClear multiTemplateDataRows>
     <!-- Transaction ID Column -->
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef>Transaction ID</th>
@@ -63,11 +54,9 @@
     <ng-container matColumnDef="payment">
       <th mat-header-cell *matHeaderCellDef>Details</th>
       <td mat-cell *matCellDef="let element">
-        <app-dropdown-item
-          itemValue="{{ element?.instrumentDetails?.title }}"
+        <app-dropdown-item itemValue="{{ element?.instrumentDetails?.title }}"
           imageClass="{{ element?.instrumentDetails?.imgClass }}"
-          imageSource="{{ element?.instrumentDetails?.imgSource }}"
-        >
+          imageSource="{{ element?.instrumentDetails?.imgSource }}">
         </app-dropdown-item>
       </td>
     </ng-container>
@@ -114,17 +103,10 @@
 
     <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
     <ng-container matColumnDef="expandedDetail">
-      <td
-        mat-cell
-        *matCellDef="let element"
-        [attr.colspan]="displayedColumns.length"
-      >
-        <div
-          class="transaction-element-detail"
-          [@detailExpand]="
+      <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
+        <div class="transaction-element-detail" [@detailExpand]="
             element == selectedTransaction ? 'expanded' : 'collapsed'
-          "
-        >
+          ">
           <div class="transaction-element-amounts">
             <div class="transaction-element-amount-lines">
               Spent:
@@ -142,11 +124,9 @@
             </div>
           </div>
           <div class="transaction-element-payment">
-            <app-dropdown-item
-              itemValue="{{ element?.instrumentDetails?.title }}"
+            <app-dropdown-item itemValue="{{ element?.instrumentDetails?.title }}"
               imageClass="{{ element?.instrumentDetails?.imgClass }}"
-              imageSource="{{ element?.instrumentDetails?.imgSource }}"
-            >
+              imageSource="{{ element?.instrumentDetails?.imgSource }}">
             </app-dropdown-item>
           </div>
         </div>
@@ -154,28 +134,13 @@
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr
-      mat-row
-      *matRowDef="let row; columns: displayedColumns"
-      class="transaction-element-row"
+    <tr mat-row *matRowDef="let row; columns: displayedColumns" class="transaction-element-row"
       [class.transaction-expanded-row]="selectedTransaction === row"
-      (click)="selectedTransaction = selectedTransaction === row ? null : row"
-    ></tr>
-    <tr
-      mat-row
-      *matRowDef="let row; columns: ['expandedDetail']"
-      class="transaction-detail-row"
-    ></tr>
+      (click)="selectedTransaction = selectedTransaction === row ? null : row"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="transaction-detail-row"></tr>
   </table>
 
-  <mat-paginator
-    *ngIf="errorMessage === '' && recent === false"
-    class="data-table"
-    [length]="transactionCount"
-    [pageSize]="pageSize"
-    [pageSizeOptions]="[25, 50, 100]"
-    showFirstLastButtons
-    (page)="handlePage($event)"
-  >
+  <mat-paginator *ngIf="errorMessage === '' && recent === false" class="data-table" [length]="transactionCount"
+    [pageSize]="pageSize" [pageSizeOptions]="[25, 50, 100]" showFirstLastButtons (page)="handlePage($event)">
   </mat-paginator>
 </div>

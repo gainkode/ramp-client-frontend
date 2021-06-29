@@ -70,10 +70,15 @@ export class TwoFaCodeComponent {
             }
         }, (error) => {
             this.inProgress = false;
-            this.errorMessage = this.errorHandler.getError(
-                error.message,
-                'Unable to enable Two Factor Authentication'
-            );
+            const err = this.errorHandler.getCurrentError();
+            if (err === 'auth.access_denied') {
+                this.errorMessage = 'Incorrect confirmation code';
+            } else {
+                this.errorMessage = this.errorHandler.getError(
+                    error.message,
+                    'Unable to activate Two Factor Authentication'
+                );
+            }
         });
     }
 
@@ -88,10 +93,15 @@ export class TwoFaCodeComponent {
             }
         }, (error) => {
             this.inProgress = false;
-            this.errorMessage = this.errorHandler.getError(
-                error.message,
-                'Unable to disable Two Factor Authentication'
-            );
+            const err = this.errorHandler.getCurrentError();
+            if (err === 'auth.access_denied') {
+                this.errorMessage = 'Incorrect confirmation code';
+            } else {
+                this.errorMessage = this.errorHandler.getError(
+                    error.message,
+                    'Unable to deactivate Two Factor Authentication'
+                );
+            }
         });
     }
 

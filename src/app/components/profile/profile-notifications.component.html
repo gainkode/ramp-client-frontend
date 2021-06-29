@@ -1,3 +1,72 @@
-<div style="color: lightcyan;background-color: midnightblue;height: 45px;padding: 15px;margin: auto;text-align: center;">
-    <h2>Notifications</h2>
+<h3>{{ pageTitle }}</h3>
+<div *ngIf="inProgress">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    <br />
+</div>
+<div class="form-error-box" *ngIf="errorMessage !== ''">
+    {{ errorMessage }}
+</div>
+
+<div class="table-responsive">
+    <table mat-table *ngIf="errorMessage === ''" class="data-table" [dataSource]="notifications" matSort
+        [matSortActive]="sortedField" matSortDirection="desc" matSortDisableClear multiTemplateDataRows>
+
+        <!-- Message Column -->
+        <ng-container matColumnDef="text">
+            <th mat-header-cell mat-sort-header [disabled]="recent" *matHeaderCellDef
+            class="mat-column-notification-table mat-column-notification-table-text">
+                Message
+            </th>
+            <td mat-cell *matCellDef="let element">{{ element.getShortText(messageLengthLimit) }}</td>
+        </ng-container>
+
+        <!-- Notification Type Column -->
+        <ng-container matColumnDef="userNotificationTypeCode">
+            <th mat-header-cell mat-sort-header [disabled]="recent" *matHeaderCellDef
+            class="mat-column-notification-table mat-column-notification-table-type">
+                Type
+            </th>
+            <td mat-cell *matCellDef="let element">{{ element.notificationCode }}</td>
+        </ng-container>
+
+        <!-- Created Column -->
+        <ng-container matColumnDef="created">
+            <th mat-header-cell mat-sort-header [disabled]="recent" *matHeaderCellDef
+            class="mat-column-notification-table mat-column-notification-table-created">
+                Created
+            </th>
+            <td mat-cell *matCellDef="let element">{{ element.created }}</td>
+        </ng-container>
+
+        <!-- Viewed Column -->
+        <ng-container matColumnDef="viewed">
+            <th mat-header-cell mat-sort-header [disabled]="recent" *matHeaderCellDef
+            class="mat-column-notification-table mat-column-notification-table-viewed">
+                Viewed
+            </th>
+            <td mat-cell *matCellDef="let element">{{ element.viewed }}</td>
+        </ng-container>
+
+        <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+        <ng-container matColumnDef="expandedDetail">
+            <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
+                <div class="notification-element-detail"
+                    [@detailExpand]="element == selectedNotification ? 'expanded' : 'collapsed'">
+                    <div class="notification-element-text">
+                        {{ element?.text }}
+                    </div>
+                </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns" class="notification-element-row"
+            [class.notification-expanded-row]="selectedNotification === row"
+            (click)="selectedNotification = selectedNotification === row ? null : row"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="notification-detail-row"></tr>
+    </table>
+
+    <mat-paginator *ngIf="errorMessage === '' && recent === false" class="data-table" [length]="notificationCount"
+        [pageSize]="pageSize" [pageSizeOptions]="[25, 50, 100]" showFirstLastButtons (page)="handlePage($event)">
+    </mat-paginator>
 </div>

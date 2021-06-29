@@ -2,7 +2,6 @@ import { DatePipe } from "@angular/common";
 import { CommonTargetValue } from "./common.model";
 import {
   PaymentInstrument,
-  PaymentOperationType,
   PaymentProvider,
   Transaction,
   TransactionShort,
