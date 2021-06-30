@@ -37,15 +37,7 @@ const LOGIN = gql`
                   kycValid,
                   kycStatus,
                   kycStatusUpdateRequired,
-                  kycReviewRejectedType,
-                  state {
-                    assets {
-                      id, total, addresses { address }
-                    },
-                    externalWallets {
-                        assets { id, address }
-                    }
-                }
+                  kycReviewRejectedType
             }
             authTokenAction
         }
@@ -87,14 +79,6 @@ const SOCIAL_LOGIN = gql`
                       kycStatus,
                       kycStatusUpdateRequired,
                       kycReviewRejectedType,
-                      state {
-                          assets {
-                            id, total, addresses { address }
-                          },
-                          externalWallets {
-                              assets { id, address }
-                          }
-                      }
                   }
                   authTokenAction
           }

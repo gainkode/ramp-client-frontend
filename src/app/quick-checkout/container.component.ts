@@ -15,11 +15,9 @@ import {
 } from "@angular/forms";
 import { MatStepper } from "@angular/material/stepper";
 import { ActivatedRoute, Router } from "@angular/router";
-import { assertScalarType } from "graphql";
 import { Subscription, Observable } from "rxjs";
 import { map, startWith } from "rxjs/operators";
-import { environment } from "src/environments/environment";
-import { CommonGroupValue, CommonTargetValue } from "../model/common.model";
+import { CommonGroupValue } from "../model/common.model";
 import {
   LoginResult,
   PaymentInstrument,
@@ -34,6 +32,7 @@ import {
   TransactionType,
   User,
   UserMode,
+  UserState,
 } from "../model/generated-models";
 import { KycLevelShort } from "../model/identification.model";
 import {
@@ -123,6 +122,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
   private pNumberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
   private pSettingsSubscription!: any;
   private pKycSettingsSubscription!: any;
+  private pStateSubscription!: any;
 
   detailsForm = this.formBuilder.group({
     email: [
@@ -345,11 +345,15 @@ export class ContainerComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     const s = this.pSettingsSubscription as Subscription;
     const k = this.pKycSettingsSubscription as Subscription;
+    const t = this.pStateSubscription as Subscription;
     if (s) {
       s.unsubscribe();
     }
     if (k) {
       k.unsubscribe();
+    }
+    if (t) {
+      t.unsubscribe();
     }
   }
 
@@ -778,43 +782,102 @@ export class ContainerComponent implements OnInit, OnDestroy {
     return !isInternalUser;
   }
 
-  private loadWallets() {
+  private loadWallets(): void {
     this.userWallets = [];
     if (this.auth.authenticated && this.summary.transactionType === TransactionType.Deposit) {
-      const user = this.auth.user;
-      if (user) {
-        const vaultAssets: string[] = [];
-        const externalWallets: string[] = [];
-
-        // temp
-        externalWallets.push('1DDBCjmy3zpkNu3rfAFX2ucrRbPiunn1SB');
-        // temp
-
-        user.state?.assets?.forEach((x) => {
-          if (x.id === this.summary.currencyTo) {
-            x.addresses?.forEach((a) => vaultAssets.push(a.address as string));
-          }
-        });
-        if (vaultAssets.length > 0) {
-          const v = new CommonGroupValue();
-          v.id = 'Vault Assets';
-          v.values = vaultAssets;
-          this.userWallets.push(v);
+      const stateData = this.dataService.getState();
+      if (stateData === null) {
+        this.errorMessage = this.errorHandler.getRejectedCookieMessage();
+      } else {
+        this.inProgress = true;
+        if (this.pStateSubscription) {
+          const s = this.pStateSubscription as Subscription;
+          s.unsubscribe();
         }
-        user.state?.externalWallets?.forEach((x) => {
-          x.assets?.forEach((a) => {
-            if (a.id === this.summary.currencyTo) {
-              externalWallets.push(a.address as string);
+        this.pStateSubscription = stateData.valueChanges.subscribe(({ data }) => {
+          const vaultAssets: string[] = [];
+          const externalWallets: string[] = [];
+
+          // temp
+          externalWallets.push('1DDBCjmy3zpkNu3rfAFX2ucrRbPiunn1SB');
+          // temp
+
+
+          const state = data.myState as UserState;
+          state.assets?.forEach((x) => {
+            if (x.id === this.summary.currencyTo) {
+              x.addresses?.forEach((a) => vaultAssets.push(a.address as string));
             }
           });
+          if (vaultAssets.length > 0) {
+            const v = new CommonGroupValue();
+            v.id = 'Vault Assets';
+            v.values = vaultAssets;
+            this.userWallets.push(v);
+          }
+          state.externalWallets?.forEach((x) => {
+            x.assets?.forEach((a) => {
+              if (a.id === this.summary.currencyTo) {
+                externalWallets.push(a.address as string);
+              }
+            });
+          });
+          if (externalWallets.length > 0) {
+            const v = new CommonGroupValue();
+            v.id = 'External Wallets';
+            v.values = externalWallets;
+            this.userWallets.push(v);
+          }
+          this.paymentInfoAddressControl?.setValue('');
+          if (this.currentTransaction === TransactionType.Deposit) {
+            this.paymentInfoAddressControl?.setValidators([Validators.required]);
+          } else {
+            this.paymentInfoAddressControl?.setValidators([]);
+          }
+          this.paymentInfoAddressControl?.updateValueAndValidity();
+          this.inProgress = false;
+          this.getKycStatus();
+        }, (error) => {
+          this.inProgress = false;
+          this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load wallet list');
         });
-        if (externalWallets.length > 0) {
-          const v = new CommonGroupValue();
-          v.id = 'External Wallets';
-          v.values = externalWallets;
-          this.userWallets.push(v);
-        }
       }
+    }
+  }
+
+  private getKycStatus(): void {
+    const kycStatusData = this.auth.getMyKycData();
+    if (kycStatusData === null) {
+      this.errorMessage = this.errorHandler.getRejectedCookieMessage();
+    } else {
+      this.inProgress = true;
+      kycStatusData.valueChanges.subscribe(
+        ({ data }) => {
+          const userKyc = data.me as User;
+          const requestKyc = this.needToRequestKyc(userKyc);
+          this.inProgress = false;
+          if (requestKyc === null) {
+            this.errorMessage =
+              "We cannot proceed your payment because your identity is rejected";
+          } else {
+            this.showKycStep = requestKyc;
+          }
+          this.showCodeConfirm = this.needToShowCodeConfirmation();
+        },
+        (error) => {
+          this.inProgress = false;
+          if (
+            this.errorHandler.getCurrentError() === "auth.token_invalid"
+          ) {
+            this.resetStepper();
+          } else {
+            this.errorMessage = this.errorHandler.getError(
+              error.message,
+              "Unable to load your identification status"
+            );
+          }
+        }
+      );
     }
   }
 
@@ -825,55 +888,10 @@ export class ContainerComponent implements OnInit, OnDestroy {
         focusInput = this.emailElement?.nativeElement as HTMLInputElement;
       } else if (step.selectedStep.label === "paymentInfo") {
         this.loadWallets();
-        focusInput = this.paymentInfoNextElement
-          ?.nativeElement as HTMLInputElement;
-        this.paymentInfoCurrencyToControl?.setValue(
-          this.detailsCurrencyToControl?.value
-        );
-        this.paymentInfoTransactionControl?.setValue(
-          this.detailsTransactionControl?.value
-        );
-        this.paymentInfoAddressControl?.setValue('');
-        if (this.currentTransaction === TransactionType.Deposit) {
-          this.paymentInfoAddressControl?.setValidators([Validators.required]);
-        } else {
-          this.paymentInfoAddressControl?.setValidators([]);
-        }
-        this.paymentInfoAddressControl?.updateValueAndValidity();
+        focusInput = this.paymentInfoNextElement?.nativeElement as HTMLInputElement;
+        this.paymentInfoCurrencyToControl?.setValue(this.detailsCurrencyToControl?.value);
+        this.paymentInfoTransactionControl?.setValue(this.detailsTransactionControl?.value);
         this.paymentInfoProviderControl?.setValue(PaymentProvider.Fibonatix);
-        const kycStatusData = this.auth.getMyKycData();
-        if (kycStatusData === null) {
-          this.errorMessage = this.errorHandler.getRejectedCookieMessage();
-        } else {
-          this.inProgress = true;
-          kycStatusData.valueChanges.subscribe(
-            ({ data }) => {
-              const userKyc = data.me as User;
-              const requestKyc = this.needToRequestKyc(userKyc);
-              this.inProgress = false;
-              if (requestKyc === null) {
-                this.errorMessage =
-                  "We cannot proceed your payment because your identity is rejected";
-              } else {
-                this.showKycStep = requestKyc;
-              }
-              this.showCodeConfirm = this.needToShowCodeConfirmation();
-            },
-            (error) => {
-              this.inProgress = false;
-              if (
-                this.errorHandler.getCurrentError() === "auth.token_invalid"
-              ) {
-                this.resetStepper();
-              } else {
-                this.errorMessage = this.errorHandler.getError(
-                  error.message,
-                  "Unable to load your identification status"
-                );
-              }
-            }
-          );
-        }
       } else if (step.selectedStep.label === "verification") {
         focusInput = this.verificationResetElement
           ?.nativeElement as HTMLInputElement;

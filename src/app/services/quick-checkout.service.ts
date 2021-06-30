@@ -6,7 +6,7 @@ import { environment } from 'src/environments/environment';
 import { PaymentInstrument, PaymentProvider, TransactionDestinationType, TransactionType } from '../model/generated-models';
 import { CardView } from '../model/payment.model';
 
-const GET_RATES_POST = gql`
+const GET_RATES = gql`
 query GetRates($recaptcha: String!, $currenciesFrom: [String!]!, $currencyTo: String!) {
   getRates(
     currenciesFrom: $currenciesFrom,
@@ -22,7 +22,20 @@ query GetRates($recaptcha: String!, $currenciesFrom: [String!]!, $currencyTo: St
 }
 `;
 
-const EXECUTE_TRANSACTION_POST = gql`
+const MY_STATE = gql`
+query MyState {
+  myState {
+    assets {
+      id, total, addresses { address }
+    },
+    externalWallets {
+        assets { id, address }
+    }
+  }
+}
+`;
+
+const EXECUTE_TRANSACTION = gql`
 mutation ExecuteTransaction(
   $transactionId: String!,
   $code: String!
@@ -36,7 +49,7 @@ mutation ExecuteTransaction(
 }
 `;
 
-const CREATE_TRANSACTION_POST = gql`
+const CREATE_TRANSACTION = gql`
 mutation CreateTransaction(
   $transactionType: TransactionType!,
   $currencyToSpend: String!,
@@ -68,7 +81,7 @@ mutation CreateTransaction(
 }
 `;
 
-const PRE_AUTH_POST = gql`
+const PRE_AUTH = gql`
 mutation PreAuth(
   $transactionId: String!,
   $instrument: PaymentInstrument!,
@@ -115,12 +128,23 @@ export class QuickCheckoutDataService {
   getRates(fromValue: string, toValue: string): QueryRef<any, EmptyObject> | null {
     if (this.apollo.client !== undefined) {
       return this.apollo.watchQuery<any>({
-        query: GET_RATES_POST,
+        query: GET_RATES,
         variables: {
           recaptcha: environment.recaptchaId,
           currenciesFrom: [fromValue],
           currencyTo: toValue
         },
+        fetchPolicy: 'network-only'
+      });
+    } else {
+      return null;
+    }
+  }
+
+  getState(): QueryRef<any, EmptyObject> | null {
+    if (this.apollo.client !== undefined) {
+      return this.apollo.watchQuery<any>({
+        query: MY_STATE,
         fetchPolicy: 'network-only'
       });
     } else {
@@ -134,7 +158,7 @@ export class QuickCheckoutDataService {
     const paymentPrvdr = (provider as string === '') ? undefined : provider;
     const wallet = (walletAddress === '') ? undefined : walletAddress;
     return this.apollo.mutate({
-      mutation: CREATE_TRANSACTION_POST,
+      mutation: CREATE_TRANSACTION,
       variables: {
         transactionType,
         currencyToSpend,
@@ -151,7 +175,7 @@ export class QuickCheckoutDataService {
 
   confirmQuickCheckout(id: string, code: string): Observable<any> {
     return this.apollo.mutate({
-      mutation: EXECUTE_TRANSACTION_POST,
+      mutation: EXECUTE_TRANSACTION,
       variables: {
         transactionId: id,
         code
@@ -161,7 +185,7 @@ export class QuickCheckoutDataService {
 
   preAuth(id: string, paymentInstrument: PaymentInstrument, paymentProvider: PaymentProvider, card: CardView): Observable<any> {
     return this.apollo.mutate({
-      mutation: PRE_AUTH_POST,
+      mutation: PRE_AUTH,
       variables: {
         transactionId: id,
         instrument: paymentInstrument,

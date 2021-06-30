@@ -139,34 +139,6 @@ const GET_ME = gql`
       kycStatusUpdateRequired
       custodyProvider
       vaultAccountId
-      state {
-        date
-        assets {
-          id
-          total
-          available
-          pending
-          lockedAmount
-          totalStakedCPU
-          totalStakedNetwork
-          selfStakedCPU
-          selfStakedNetwork
-          pendingRefundCPU
-          pendingRefundNetwork
-        }
-        externalWallets {
-          id
-          name
-          customerRefId
-          assets {
-            id
-            status
-            activationTime
-            address
-            tag
-          }
-        }
-      }
     }
   }
 `;
@@ -186,34 +158,6 @@ const GET_PROFILE_HOME = gql`
       kycStatusUpdateRequired
       custodyProvider
       vaultAccountId
-      state {
-        date
-        assets {
-          id
-          total
-          available
-          pending
-          lockedAmount
-          totalStakedCPU
-          totalStakedNetwork
-          selfStakedCPU
-          selfStakedNetwork
-          pendingRefundCPU
-          pendingRefundNetwork
-        }
-        externalWallets {
-          id
-          name
-          customerRefId
-          assets {
-            id
-            status
-            activationTime
-            address
-            tag
-          }
-        }
-      }
     }
   }
 `;
