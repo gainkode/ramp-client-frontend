@@ -7,5 +7,5 @@
 </div>
 
 <div class="form-element" *ngIf="enabled || twoFaEnabled">
-    <app-two-fa-code [activated]="enabled"></app-two-fa-code>
+    <app-two-fa-code [activated]="enabled" (twoFaUpdated)="twoFaUpdated()"></app-two-fa-code>
 </div>

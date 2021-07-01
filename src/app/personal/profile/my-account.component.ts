@@ -32,6 +32,10 @@ export class PersonalMyAccountComponent implements OnInit, OnDestroy {
         }
     }
 
+    twoFaChanged(): void {
+        this.loadData();
+    }
+
     private loadData(): void {
         this.errorMessage = '';
         this.inProgress = true;
@@ -39,6 +43,9 @@ export class PersonalMyAccountComponent implements OnInit, OnDestroy {
         if (meQuery === null) {
             this.errorMessage = this.errorHandler.getRejectedCookieMessage();
         } else {
+            if (this.pUserSubscription) {
+                (this.pUserSubscription as Subscription).unsubscribe();
+            }
             this.pUserSubscription = meQuery.valueChanges.subscribe(({ data }) => {
                 const userData = data.me as User;
                 if (userData) {

@@ -39,15 +39,12 @@ export class KycPanelComponent implements OnInit, OnDestroy {
     }
 
     showSuccessDialog(): void {
-        const dialogRef = this.dialog.open(CommonDialogBox, {
+        this.dialog.open(CommonDialogBox, {
             width: '550px',
             data: {
                 title: 'Success',
                 message: 'Process of identification sucessfully finished.'
             }
-        });
-        dialogRef.afterClosed().subscribe(result => {
-
         });
     }
 

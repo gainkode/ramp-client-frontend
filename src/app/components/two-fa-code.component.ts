@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { FormBuilder, NgForm, Validators } from '@angular/forms';
 import { LoginResult, TwoFactorAuthenticationResult } from '../model/generated-models';
 import { AuthService } from '../services/auth.service';
 import { ErrorService } from '../services/error.service';
@@ -11,12 +11,15 @@ import { ErrorService } from '../services/error.service';
 })
 export class TwoFaCodeComponent {
     @Input() set activated(val: boolean) {
+        console.log('activated', val);
         this.twoFaEnabled = val;
         this.setButtonTitle();
         if (!this.twoFaEnabled) {
             this.generateCode();
         }
     }
+    @Output() twoFaUpdated = new EventEmitter<void>();
+    @ViewChild("codeform") private ngCodeForm: NgForm | undefined = undefined;
 
     GA_APP_STORE_URL = 'https://apps.apple.com/us/app/google-authenticator/id388497605';
     GA_GOOGLE_PLAY_URL = 'https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en';
@@ -25,6 +28,7 @@ export class TwoFaCodeComponent {
     buttonTitle = '';
     twoFaEnabled = false;
     qr = '';
+    symbols = '';
 
     codeForm = this.formBuilder.group({
         code: ['', { validators: [Validators.required], updateOn: 'change' }]
@@ -42,21 +46,22 @@ export class TwoFaCodeComponent {
         this.auth.generate2FaCode().subscribe(({ data }) => {
             this.inProgress = false;
             const resultData = data.generate2faCode as TwoFactorAuthenticationResult;
-            this.qr = resultData.code;
+            this.symbols = resultData.code;
+            this.qr = resultData.otpauthUrl;
             this.setButtonTitle();
-        },
-            (error) => {
-                this.inProgress = false;
-                this.errorMessage = this.errorHandler.getError(
-                    error.message,
-                    'Unable to generate a code'
-                );
-            }
-        );
+        }, (error) => {
+            this.inProgress = false;
+            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to generate a code');
+        });
     }
 
     private setButtonTitle(): void {
         this.buttonTitle = (this.twoFaEnabled) ? 'DISABLE' : 'ENABLE';
+    }
+
+    private resetForm(): void {
+        this.codeForm.reset();
+        this.ngCodeForm?.resetForm();
     }
 
     private enable2Fa(code: string): void {
@@ -64,9 +69,14 @@ export class TwoFaCodeComponent {
         this.inProgress = true;
         this.auth.enable2Fa(code).subscribe(({ data }) => {
             this.inProgress = false;
-            const resultData = data.enable2Fa as LoginResult;
+            const resultData = data.enable2fa as LoginResult;
+            console.log(resultData);
+            console.log(resultData.user);
             if (resultData.user?.is2faEnabled) {
+                this.resetForm();
+                this.activated = true;
                 // inform a parent
+                this.twoFaUpdated.emit();
             }
         }, (error) => {
             this.inProgress = false;
@@ -87,9 +97,13 @@ export class TwoFaCodeComponent {
         this.inProgress = true;
         this.auth.disable2Fa(code).subscribe(({ data }) => {
             this.inProgress = false;
-            const resultData = data.enable2Fa as LoginResult;
+            const resultData = data.disable2fa as LoginResult;
             if (resultData.user?.is2faEnabled === false) {
+                this.resetForm();
+                this.activated = false;
+                this.qr = '';
                 // inform a parent
+                this.twoFaUpdated.emit();
             }
         }, (error) => {
             this.inProgress = false;

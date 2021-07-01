@@ -172,7 +172,7 @@ const CONFIRM_NAME = gql`
 const GENERATE_2FA_CODE = gql`
 mutation Generate2faCode {
     generate2faCode {
-        otpauthUrl, code, qr
+        otpauthUrl, code
     }
 }
 `;
@@ -193,6 +193,37 @@ mutation Disable2fa($password: String!, $code: String!) {
         user {
             is2faEnabled
         }
+    }
+}
+`;
+
+const VERIFY_2FA = gql`
+mutation Verify2faCode($token: String!, $code: String!) {
+    verify2faCode(token: $token, code: $code) {
+        authToken
+        user {
+            userId,
+            email,
+            name,
+                roles {name, immutable},
+                permissions { roleName, objectCode, objectName, objectDescription, fullAccess },
+                type,
+                defaultFiatCurrency,
+                firstName,
+                lastName,
+                phone,
+                mode,
+                is2faEnabled,
+                changePasswordRequired,
+                referralCode,
+                kycProvider,
+                kycApplicantId,
+                kycValid,
+                kycStatus,
+                kycStatusUpdateRequired,
+                kycReviewRejectedType,
+            }
+            authTokenAction
     }
 }
 `;
@@ -421,6 +452,16 @@ export class AuthService {
             variables: {
                 password: 'ignored',
                 code: authCode
+            }
+        });
+    }
+
+    verify2Fa(token: string, code: string): Observable<any> {
+        return this.apollo.mutate({
+            mutation: VERIFY_2FA,
+            variables: {
+                token,
+                code
             }
         });
     }

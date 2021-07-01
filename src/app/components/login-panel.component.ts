@@ -17,6 +17,9 @@ export class LoginPanelComponent implements OnInit {
     @Output() authenticated = new EventEmitter<LoginResult>();
     @Output() socialAuthenticated = new EventEmitter<LoginResult>();
     hidePassword = true;
+    twoFa = false;
+    private socilaLogin = false;
+    private twoFaToken = '';
 
     loginForm = this.formBuilder.group({
         email: ['',
@@ -32,6 +35,9 @@ export class LoginPanelComponent implements OnInit {
                 validators: [Validators.required, Validators.minLength(8)], updateOn: 'change'
             }
         ]
+    });
+    twoFaForm = this.formBuilder.group({
+        code: ['', { validators: [Validators.required], updateOn: 'change' }]
     });
 
     constructor(private auth: AuthService, private errorHandler: ErrorService,
@@ -63,10 +69,17 @@ export class LoginPanelComponent implements OnInit {
                 }
                 this.auth.socialSignOut();
                 this.auth.authenticateSocial(providerName.toLowerCase(), token).subscribe((loginData) => {
+                    console.log(loginData);
                     const userData = loginData.data.login as LoginResult;
                     this.progressChange.emit(false);
                     if (userData.user?.mode === UserMode.InternalWallet) {
-                        this.socialAuthenticated.emit(userData);
+                        if (userData.authTokenAction === 'TwoFactorAuth') {
+                            this.twoFa = true;
+                            this.socilaLogin = true;
+                            this.twoFaToken = userData.authToken as string;
+                        } else {
+                            this.socialAuthenticated.emit(userData);
+                        }
                     } else {
                         this.error.emit(`Unable to authorise with the login "${user.email}". Please sign up`);
                     }
@@ -89,9 +102,38 @@ export class LoginPanelComponent implements OnInit {
                 const userData = data.login as LoginResult;
                 this.progressChange.emit(false);
                 if (userData.user?.mode === UserMode.InternalWallet) {
-                    this.authenticated.emit(userData);
+                    if (userData.authTokenAction === 'TwoFactorAuth') {
+                        this.twoFa = true;
+                        this.twoFaToken = userData.authToken as string;
+                    } else {
+                        this.authenticated.emit(userData);
+                    }
                 } else {
                     this.error.emit(`Unable to authorise with the login "${login}". Please sign up`);
+                }
+            }, (error) => {
+                this.progressChange.emit(false);
+                this.error.emit(this.errorHandler.getError(error.message, 'Incorrect login or password'));
+            });
+        }
+    }
+
+    onTwoFaSubmit(): void {
+        if (this.twoFaForm.valid) {
+            this.progressChange.emit(true);
+            this.error.emit('');
+            const code = this.twoFaForm.get('code')?.value;
+            this.auth.verify2Fa(this.twoFaToken, code).subscribe(({ data }) => {
+                const userData = data.verify2faCode as LoginResult;
+                this.progressChange.emit(false);
+                if (userData.user?.mode === UserMode.InternalWallet) {
+                    if (this.socilaLogin) {
+                        this.socialAuthenticated.emit(userData);
+                    } else {
+                        this.authenticated.emit(userData);
+                    }
+                } else {
+                    this.error.emit('Unable to authorise. Please sign up');
                 }
             }, (error) => {
                 this.progressChange.emit(false);

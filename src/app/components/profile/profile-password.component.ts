@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, NgForm, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ErrorService } from 'src/app/services/error.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
@@ -12,6 +12,7 @@ import { CommonDialogBox } from '../common-box.dialog';
 })
 export class ProfilePasswordComponent implements AfterViewInit {
   @Input() twoFaEnabled = false;
+  @ViewChild("passwordform") private ngPasswordForm: NgForm | undefined = undefined;
 
   inProgress = false;
   errorMessage = '';
@@ -68,9 +69,8 @@ export class ProfilePasswordComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    if (!this.twoFaEnabled) {
-      this.passwordForm.get('twofaCode')?.setValue('code');
-    }
+    const defaultCode = (this.twoFaEnabled) ? '' : 'code';
+    this.passwordForm.get('twofaCode')?.setValue(defaultCode);
   }
 
   getNewPasswordValidation(): string {
@@ -115,6 +115,7 @@ export class ProfilePasswordComponent implements AfterViewInit {
         this.inProgress = false;
         const resultData = data.changePassword as boolean;
         if (resultData) {
+          this.ngPasswordForm?.resetForm();
           this.showSuccessMessageDialog();
         } else {
           this.errorMessage = 'Password is not changed';
