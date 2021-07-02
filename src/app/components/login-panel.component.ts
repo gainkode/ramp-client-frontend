@@ -7,8 +7,7 @@ import { LoginResult, UserMode } from '../model/generated-models';
 
 @Component({
     selector: 'app-login-panel',
-    templateUrl: 'login-panel.component.html',
-    styleUrls: ['./login-panel.component.scss']
+    templateUrl: 'login-panel.component.html'
 })
 export class LoginPanelComponent implements OnInit {
     @Input() userName: string | undefined = '';
@@ -30,11 +29,7 @@ export class LoginPanelComponent implements OnInit {
                 ], updateOn: 'change'
             }
         ],
-        password: ['',
-            {
-                validators: [Validators.required, Validators.minLength(8)], updateOn: 'change'
-            }
-        ]
+        password: ['', {validators: [Validators.required, Validators.minLength(8)], updateOn: 'change'} ]
     });
     twoFaForm = this.formBuilder.group({
         code: ['', { validators: [Validators.required], updateOn: 'change' }]
@@ -94,9 +89,9 @@ export class LoginPanelComponent implements OnInit {
     }
 
     onSubmit(): void {
+        this.progressChange.emit(true);
+        this.error.emit('');
         if (this.loginForm.valid) {
-            this.progressChange.emit(true);
-            this.error.emit('');
             const login = this.loginForm.get('email')?.value;
             this.auth.authenticate(login, this.loginForm.get('password')?.value).subscribe(({ data }) => {
                 const userData = data.login as LoginResult;
