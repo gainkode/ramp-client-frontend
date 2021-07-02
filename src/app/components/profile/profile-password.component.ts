@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
 import { FormBuilder, NgForm, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ErrorService } from 'src/app/services/error.service';
@@ -10,7 +10,7 @@ import { CommonDialogBox } from '../common-box.dialog';
   selector: 'app-password',
   templateUrl: './profile-password.component.html',
 })
-export class ProfilePasswordComponent implements AfterViewInit {
+export class ProfilePasswordComponent {
   @Input() twoFaEnabled = false;
   @ViewChild("passwordform") private ngPasswordForm: NgForm | undefined = undefined;
 
@@ -68,11 +68,6 @@ export class ProfilePasswordComponent implements AfterViewInit {
     public dialog: MatDialog) {
   }
 
-  ngAfterViewInit(): void {
-    const defaultCode = (this.twoFaEnabled) ? '' : 'code';
-    this.passwordForm.get('twofaCode')?.setValue(defaultCode);
-  }
-
   getNewPasswordValidation(): string {
     if (this.passwordForm.get('newPassword')?.errors?.required) {
       return 'Please specify your password';
@@ -104,11 +99,16 @@ export class ProfilePasswordComponent implements AfterViewInit {
   }
 
   onSubmit(): void {
+    if (!this.twoFaEnabled) {
+      this.passwordForm.get('twofaCode')?.setValue('code');
+    }
     if (this.passwordForm.valid) {
       this.errorMessage = '';
       this.inProgress = true;
+      const code = (this.twoFaEnabled) ? this.passwordForm.get('twofaCode')?.value : undefined;
+      this.passwordForm.get('twofaCode')?.setValue('');
       this.profile.changePassword(
-        (this.twoFaEnabled) ? this.passwordForm.get('twofaCode')?.value : undefined,
+        code,
         this.passwordForm.get('currentPassword')?.value,
         this.passwordForm.get('newPassword')?.value
       ).subscribe(({ data }) => {
@@ -120,15 +120,10 @@ export class ProfilePasswordComponent implements AfterViewInit {
         } else {
           this.errorMessage = 'Password is not changed';
         }
-      },
-        (error) => {
-          this.inProgress = false;
-          this.errorMessage = this.errorHandler.getError(
-            error.message,
-            'Unable to change a password'
-          );
-        }
-      );
+      }, (error) => {
+        this.inProgress = false;
+        this.errorMessage = this.errorHandler.getError(error.message, 'Unable to change a password');
+      });
     }
   }
 }
