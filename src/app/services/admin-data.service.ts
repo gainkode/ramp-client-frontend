@@ -218,7 +218,6 @@ const GET_CUSTOMERS_POST = gql`
       list {
         userId
         email
-        name
         firstName
         lastName
         type
