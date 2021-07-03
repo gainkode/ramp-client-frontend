@@ -11,7 +11,6 @@ import { DatePipe } from "@angular/common";
 
 export class UserItem {
   id = "";
-  name = "";
   company = "";
   firstName = "";
   lastName = "";
@@ -28,7 +27,6 @@ export class UserItem {
   constructor(data: User | null) {
     if (data) {
       this.id = data.userId;
-      this.name = data.name;
       this.firstName = data.firstName as string;
       this.lastName = data.lastName as string;
       if (data.type === UserType.Merchant) {

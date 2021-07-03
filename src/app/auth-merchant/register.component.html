@@ -35,16 +35,6 @@
                     </mat-error>
                 </mat-form-field>
 
-                <!-- Nick name -->
-                <mat-form-field class="form-element">
-                    <mat-label>Nick name</mat-label>
-                    <input matInput formControlName="username" maxlength="30" type="search"
-                    placeholder="Nick name" required>
-                    <mat-error *ngIf="this.signupForm.get('username')?.hasError('required')">
-                        Please specify your nick name
-                    </mat-error>
-                </mat-form-field>
-
                 <!-- Company name -->
                 <mat-form-field class="form-element">
                     <mat-label>Company name</mat-label>

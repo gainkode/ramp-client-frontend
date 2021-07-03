@@ -365,7 +365,6 @@ export type User = {
   __typename?: 'User';
   userId: Scalars['ID'];
   email: Scalars['String'];
-  name: Scalars['String'];
   type?: Maybe<UserType>;
   mode?: Maybe<UserMode>;
   merchantIds?: Maybe<Array<Scalars['String']>>;
@@ -391,7 +390,6 @@ export type User = {
   updated?: Maybe<Scalars['DateTime']>;
   deleted?: Maybe<Scalars['DateTime']>;
   accessFailedCount?: Maybe<Scalars['Int']>;
-  nameConfirmed?: Maybe<Scalars['DateTime']>;
   emailConfirmed?: Maybe<Scalars['DateTime']>;
   roles?: Maybe<Array<UserRole>>;
   contacts?: Maybe<Array<UserContact>>;
@@ -550,6 +548,11 @@ export type SettingsKyc = {
   targetFilterType?: Maybe<SettingsKycTargetFilterType>;
   targetFilterValues?: Maybe<Array<Scalars['String']>>;
   levels?: Maybe<Array<SettingsKycLevel>>;
+  requireUserFullName?: Maybe<Scalars['Boolean']>;
+  requireUserPhone?: Maybe<Scalars['Boolean']>;
+  requireUserBirthday?: Maybe<Scalars['Boolean']>;
+  requireUserAddress?: Maybe<Scalars['Boolean']>;
+  requireUserFlatNumber?: Maybe<Scalars['Boolean']>;
   created: Scalars['DateTime'];
   createdBy?: Maybe<Scalars['String']>;
   default?: Maybe<Scalars['Boolean']>;
@@ -992,7 +995,6 @@ export type TransactionShort = {
 export type UserShort = {
   __typename?: 'UserShort';
   email: Scalars['String'];
-  name: Scalars['String'];
   type?: Maybe<UserType>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
@@ -1314,7 +1316,8 @@ export type Mutation = {
   refreshToken: Scalars['String'];
   confirmEmail: Scalars['Boolean'];
   confirmDevice: Scalars['Boolean'];
-  confirmName: LoginResult;
+  setMyInfo: LoginResult;
+  setUserInfo: LoginResult;
   forgotPassword: Scalars['Boolean'];
   setPassword: Scalars['Boolean'];
   changePassword: Scalars['Boolean'];
@@ -1499,16 +1502,16 @@ export type MutationDeleteBankAccountArgs = {
 
 export type MutationSignupArgs = {
   email: Scalars['String'];
-  name: Scalars['String'];
   type: UserType;
   mode: UserMode;
   merchantId?: Maybe<Scalars['String']>;
-  firstName: Scalars['String'];
-  lastName: Scalars['String'];
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
   birthday?: Maybe<Scalars['DateTime']>;
-  countryCode2: Scalars['String'];
-  countryCode3: Scalars['String'];
-  phone: Scalars['String'];
+  countryCode2?: Maybe<Scalars['String']>;
+  countryCode3?: Maybe<Scalars['String']>;
+  address?: Maybe<PostAddress>;
+  phone?: Maybe<Scalars['String']>;
   password?: Maybe<Scalars['String']>;
   recaptcha: Scalars['String'];
   termsOfUse: Scalars['Boolean'];
@@ -1537,17 +1540,22 @@ export type MutationConfirmDeviceArgs = {
 };
 
 
-export type MutationConfirmNameArgs = {
+export type MutationSetMyInfoArgs = {
   token: Scalars['String'];
-  name: Scalars['String'];
-  firstName: Scalars['String'];
-  lastName: Scalars['String'];
-  type: UserType;
-  mode: UserMode;
-  countryCode2: Scalars['String'];
-  countryCode3: Scalars['String'];
-  phone: Scalars['String'];
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  address?: Maybe<PostAddress>;
+  phone?: Maybe<Scalars['String']>;
   recaptcha: Scalars['String'];
+};
+
+
+export type MutationSetUserInfoArgs = {
+  userId: Scalars['String'];
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  address?: Maybe<PostAddress>;
+  phone?: Maybe<Scalars['String']>;
 };
 
 
@@ -1722,13 +1730,15 @@ export type SettingsKycInput = {
   targetFilterType?: Maybe<SettingsKycTargetFilterType>;
   targetFilterValues?: Maybe<Array<Scalars['String']>>;
   levelIds?: Maybe<Array<Scalars['String']>>;
+  requireUserFullName?: Maybe<Scalars['Boolean']>;
+  requireUserPhone?: Maybe<Scalars['Boolean']>;
+  requireUserBirthday?: Maybe<Scalars['Boolean']>;
   default?: Maybe<Scalars['Boolean']>;
   deleted?: Maybe<Scalars['DateTime']>;
 };
 
 export type UserInput = {
   email?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
   type?: Maybe<UserType>;
   mode?: Maybe<UserMode>;
   merchantIds?: Maybe<Array<Scalars['String']>>;
@@ -1737,11 +1747,20 @@ export type UserInput = {
   birthday?: Maybe<Scalars['DateTime']>;
   countryCode2?: Maybe<Scalars['String']>;
   countryCode3?: Maybe<Scalars['String']>;
+  postCode?: Maybe<Scalars['String']>;
+  town?: Maybe<Scalars['String']>;
+  street?: Maybe<Scalars['String']>;
+  subStreet?: Maybe<Scalars['String']>;
+  stateName?: Maybe<Scalars['String']>;
+  buildingName?: Maybe<Scalars['String']>;
+  buildingNumber?: Maybe<Scalars['String']>;
+  flatNumber?: Maybe<Scalars['String']>;
+  addressStartDate?: Maybe<Scalars['DateTime']>;
+  addressEndDate?: Maybe<Scalars['DateTime']>;
   phone?: Maybe<Scalars['String']>;
   avatar?: Maybe<Scalars['String']>;
   termsOfUse?: Maybe<Scalars['Boolean']>;
   emailConfirmed?: Maybe<Scalars['DateTime']>;
-  nameConfirmed?: Maybe<Scalars['DateTime']>;
   deleted?: Maybe<Scalars['DateTime']>;
   changePasswordRequired?: Maybe<Scalars['Boolean']>;
   defaultFiatCurrency?: Maybe<Scalars['String']>;
@@ -1758,6 +1777,19 @@ export type UserBankAccountInput = {
   currency?: Maybe<Scalars['String']>;
   displayName?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
+};
+
+export type PostAddress = {
+  postCode?: Maybe<Scalars['String']>;
+  town?: Maybe<Scalars['String']>;
+  street?: Maybe<Scalars['String']>;
+  subStreet?: Maybe<Scalars['String']>;
+  stateName?: Maybe<Scalars['String']>;
+  buildingName?: Maybe<Scalars['String']>;
+  buildingNumber?: Maybe<Scalars['String']>;
+  flatNumber?: Maybe<Scalars['String']>;
+  addressStartDate?: Maybe<Scalars['DateTime']>;
+  addressEndDate?: Maybe<Scalars['DateTime']>;
 };
 
 export type LoginResult = {
@@ -1925,7 +1957,8 @@ export type UserDevice = {
   userDeviceId?: Maybe<Scalars['String']>;
   userId?: Maybe<Scalars['String']>;
   created?: Maybe<Scalars['DateTime']>;
-  country?: Maybe<Scalars['String']>;
+  countryCode2?: Maybe<Scalars['String']>;
+  countryCode3?: Maybe<Scalars['String']>;
   city?: Maybe<Scalars['String']>;
   region?: Maybe<Scalars['String']>;
   eu?: Maybe<Scalars['String']>;
@@ -1943,6 +1976,7 @@ export type UserLogin = {
   userId?: Maybe<Scalars['String']>;
   date: Scalars['DateTime'];
   result: Scalars['Int'];
+  resultTokenAction?: Maybe<Scalars['String']>;
   ip?: Maybe<Scalars['String']>;
   userDeviceId?: Maybe<Scalars['String']>;
 };
@@ -1990,7 +2024,10 @@ export enum TokenAction {
   Default = 'Default',
   ConfirmEmail = 'ConfirmEmail',
   ConfirmPasswordChange = 'ConfirmPasswordChange',
-  ConfirmName = 'ConfirmName',
+  UserFullNameRequired = 'UserFullNameRequired',
+  UserBirthdayRequired = 'UserBirthdayRequired',
+  UserPhoneRequired = 'UserPhoneRequired',
+  UserAddressRequired = 'UserAddressRequired',
   ConfirmDevice = 'ConfirmDevice',
   TwoFactorAuth = 'TwoFactorAuth',
   KycRequired = 'KycRequired',

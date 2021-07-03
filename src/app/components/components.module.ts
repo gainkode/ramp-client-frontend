@@ -84,7 +84,7 @@ export class MaterialModule { }
         ProfileAssetsComponent, ProfileLastExchangesComponent],
     exports: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
         CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, NotificationIconComponent,
-        LoginPanelComponent, MatProgressBarModule, CommonDialogBox, CreditCardComponent, TwoFaCodeComponent,
+        LoginPanelComponent, CommonDialogBox, CreditCardComponent, TwoFaCodeComponent,
         LineBreakPipe, NumberFillPipe, ProfileAccountBalanceComponent, ProfileExchangeComponent,
         ProfileNotificationsComponent, ProfileQuickTransferComponent, ProfileTransactionsComponent,
         ProfileInfoComponent, ProfileTwoFAComponent, ProfilePasswordComponent, 

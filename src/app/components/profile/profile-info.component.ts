@@ -37,7 +37,6 @@ export class ProfileInfoComponent implements OnInit, OnDestroy {
   accountId = "";
   email = "";
   address = "";
-  userName = "";
   countryName = "";
   currencies: CommonTargetValue[] = [];
   countries: ICountryCode[] = CountryCodes;
@@ -145,7 +144,6 @@ export class ProfileInfoComponent implements OnInit, OnDestroy {
     this.accountId = this._user?.userId;
     this.email = this._user?.email;
     this.address = userItem.address;
-    this.userName = this._user?.name;
     this.countryName = getCountryByCode3(this._user?.countryCode3 as string)?.name as string;
   }
 

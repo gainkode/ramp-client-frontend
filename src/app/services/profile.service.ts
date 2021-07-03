@@ -104,7 +104,6 @@ const GET_ME = gql`
     me {
       userId
       email
-      name
       type
       mode
       merchantIds
@@ -167,7 +166,6 @@ const GET_PROFILE_ACCOUNT = gql`
     me {
       userId
       email
-      name
       type
       mode
       merchantIds

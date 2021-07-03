@@ -29,7 +29,6 @@ export class RegisterComponent implements OnInit {
                 ], updateOn: 'change'
             }
         ],
-        username: ['', { validators: [Validators.required], updateOn: 'change' } ],
         companyName: ['', { validators: [Validators.required], updateOn: 'change' } ],
         country: ['', { validators: [Validators.required], updateOn: 'change' } ],
         phoneCode: ['',
@@ -144,7 +143,6 @@ export class RegisterComponent implements OnInit {
             this.inProgress = true;
             const phone = this.phoneCodeField?.value + ' ' + this.phoneNumberField?.value;
             this.auth.register(
-                this.signupForm.get('username')?.value,
                 this.signupForm.get('email')?.value,
                 this.signupForm.get('password1')?.value,
                 'Merchant',

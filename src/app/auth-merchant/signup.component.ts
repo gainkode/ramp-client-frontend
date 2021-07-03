@@ -21,7 +21,6 @@ export class SignupComponent implements OnInit {
     filteredCountries: Observable<ICountryCode[]> | undefined;
 
     signupForm = this.formBuilder.group({
-        username: ['', { validators: [Validators.required], updateOn: 'change' } ],
         companyName: ['', { validators: [Validators.required], updateOn: 'change' } ],
         country: ['', { validators: [Validators.required], updateOn: 'change' } ],
         phoneCode: ['',
@@ -97,7 +96,6 @@ export class SignupComponent implements OnInit {
             const phone = this.phoneCodeField?.value + ' ' + this.phoneNumberField?.value;
             this.auth.confirmName(
                 this.token,
-                this.signupForm.get('username')?.value,
                 'Merchant',
                 this.signupForm.get('companyName')?.value,
                 '',

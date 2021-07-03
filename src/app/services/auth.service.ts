@@ -17,7 +17,6 @@ const LOGIN = gql`
               user {
                   userId
                   email
-                  name
                   roles {name, immutable}
                   permissions { roleName, objectCode, objectName, objectDescription, fullAccess }
                   type,
@@ -61,7 +60,6 @@ const SOCIAL_LOGIN = gql`
                   user {
                       userId,
                       email,
-                      name,
                       roles {name, immutable},
                       permissions { roleName, objectCode, objectName, objectDescription, fullAccess },
                       type,
@@ -86,14 +84,13 @@ const SOCIAL_LOGIN = gql`
 `;
 
 const SIGNUP = gql`
-  mutation Signup($recaptcha: String!, $name: String!, $email: String!, $password: String!, $userType: UserType!,
+  mutation Signup($recaptcha: String!, $email: String!, $password: String!, $userType: UserType!,
     $mode: UserMode!, $termsOfUse: Boolean!, $firstName: String!, $lastName: String!,
     $countryCode2: String!, $countryCode3: String!, $phone: String!) {
     signup(
         recaptcha: $recaptcha,
         email: $email,
         password: $password,
-        name: $name,
         type: $userType,
         mode: $mode,
         termsOfUse: $termsOfUse,
@@ -106,8 +103,7 @@ const SIGNUP = gql`
       authToken
       user {
         userId,
-        email,
-        name
+        email
       }
       authTokenAction
     }
@@ -133,13 +129,12 @@ const CONFIRM_EMAIL = gql`
 `;
 
 const CONFIRM_NAME = gql`
-  mutation ConfirmName($token: String!, $recaptcha: String!, $name: String!,
+  mutation ConfirmName($token: String!, $recaptcha: String!, 
     $userType: UserType!, $mode: UserMode!, $firstName: String!, $lastName: String!,
     $countryCode2: String!, $countryCode3: String!, $phone: String!) {
     confirmName(
         recaptcha: $recaptcha,
         token: $token,
-        name: $name,
         type: $userType,
         mode: $mode,
         firstName: $firstName,
@@ -152,7 +147,6 @@ const CONFIRM_NAME = gql`
       user {
         userId,
         email,
-        name,
         type,
         roles {name,immutable},
         permissions { roleName, objectCode, objectName, objectDescription, fullAccess },
@@ -204,26 +198,25 @@ mutation Verify2faCode($token: String!, $code: String!) {
         user {
             userId,
             email,
-            name,
-                roles {name, immutable},
-                permissions { roleName, objectCode, objectName, objectDescription, fullAccess },
-                type,
-                defaultFiatCurrency,
-                firstName,
-                lastName,
-                phone,
-                mode,
-                is2faEnabled,
-                changePasswordRequired,
-                referralCode,
-                kycProvider,
-                kycApplicantId,
-                kycValid,
-                kycStatus,
-                kycStatusUpdateRequired,
-                kycReviewRejectedType,
-            }
-            authTokenAction
+            roles {name, immutable},
+            permissions { roleName, objectCode, objectName, objectDescription, fullAccess },
+            type,
+            defaultFiatCurrency,
+            firstName,
+            lastName,
+            phone,
+            mode,
+            is2faEnabled,
+            changePasswordRequired,
+            referralCode,
+            kycProvider,
+            kycApplicantId,
+            kycValid,
+            kycStatus,
+            kycStatusUpdateRequired,
+            kycReviewRejectedType
+        }
+        authTokenAction
     }
 }
 `;
@@ -358,14 +351,13 @@ export class AuthService {
         );
     }
 
-    register(username: string, usermail: string, userpassword: string, usertype: string,
+    register(usermail: string, userpassword: string, usertype: string,
         firstname: string, lastname: string, countrycode2: string, countrycode3: string,
         phoneNumber: string): Observable<any> {
         return this.apollo.mutate({
             mutation: SIGNUP,
             variables: {
                 recaptcha: environment.recaptchaId,
-                name: username,
                 email: usermail,
                 password: userpassword,
                 userType: usertype,
@@ -380,14 +372,13 @@ export class AuthService {
         });
     }
 
-    confirmName(tokenId: string, username: string, usertype: string, firstname: string, lastname: string,
+    confirmName(tokenId: string, usertype: string, firstname: string, lastname: string,
         countrycode2: string, countrycode3: string, phoneNumber: string): Observable<any> {
         return this.apollo.mutate({
             mutation: CONFIRM_NAME,
             variables: {
                 token: tokenId,
                 recaptcha: environment.recaptchaId,
-                name: username,
                 userType: usertype,
                 mode: 'InternalWallet',
                 firstName: firstname,
