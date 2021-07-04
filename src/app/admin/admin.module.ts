@@ -35,6 +35,7 @@ import { CustomersComponent } from './customers/customers.component';
 import { CustomerDetailsComponent } from './customers/customer-details.component';
 import { TransactionDetailsComponent } from './transactions/transaction-details.component';
 import { CustomerInfoComponent } from './customers/customer-info.component';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 const routing = RouterModule.forChild([
     {
@@ -67,6 +68,7 @@ const modules = [
     MatSelectModule,
     MatAutocompleteModule,
     MatIconModule,
+    MatSlideToggleModule,
     MatProgressBarModule,
     DragDropModule,
     ComponentsModule

@@ -1733,6 +1733,8 @@ export type SettingsKycInput = {
   requireUserFullName?: Maybe<Scalars['Boolean']>;
   requireUserPhone?: Maybe<Scalars['Boolean']>;
   requireUserBirthday?: Maybe<Scalars['Boolean']>;
+  requireUserAddress?: Maybe<Scalars['Boolean']>;
+  requireUserFlatNumber?: Maybe<Scalars['Boolean']>;
   default?: Maybe<Scalars['Boolean']>;
   deleted?: Maybe<Scalars['DateTime']>;
 };
@@ -2024,10 +2026,7 @@ export enum TokenAction {
   Default = 'Default',
   ConfirmEmail = 'ConfirmEmail',
   ConfirmPasswordChange = 'ConfirmPasswordChange',
-  UserFullNameRequired = 'UserFullNameRequired',
-  UserBirthdayRequired = 'UserBirthdayRequired',
-  UserPhoneRequired = 'UserPhoneRequired',
-  UserAddressRequired = 'UserAddressRequired',
+  UserInfoRequired = 'UserInfoRequired',
   ConfirmDevice = 'ConfirmDevice',
   TwoFactorAuth = 'TwoFactorAuth',
   KycRequired = 'KycRequired',

@@ -28,6 +28,11 @@ export class KycScheme {
     userModes: Array<UserMode> = [];
     level!: SettingsKycLevel;
     levelId!: string;
+    requireUserFullName = false;
+    requireUserPhone = false;
+    requireUserBirthday = false;
+    requireUserAddress = false;
+    requireUserFlatNumber = false;
 
     constructor(data: SettingsKyc | null) {
         if (data !== null) {
@@ -36,6 +41,11 @@ export class KycScheme {
             this.isDefault = data.default as boolean;
             this.description = data.description as string;
             this.userType = data.targetUserType;
+            this.requireUserFullName = data.requireUserFullName as boolean;
+            this.requireUserPhone = data.requireUserPhone as boolean;
+            this.requireUserBirthday = data.requireUserBirthday as boolean;
+            this.requireUserAddress = data.requireUserAddress as boolean;
+            this.requireUserFlatNumber = data.requireUserFlatNumber as boolean;
             if (data.levels) {
                 if (data.levels?.length > 0) {
                     this.level = data.levels[0];

@@ -62,7 +62,12 @@ export class KycEditorComponent implements OnInit, OnDestroy {
         level: ['', { validators: [Validators.required], updateOn: 'change' }],
         userMode: [[], { validators: [Validators.required], updateOn: 'change' }],
         userType: ['', { validators: [Validators.required], updateOn: 'change' }],
-        provider: [[], { validators: [Validators.required], updateOn: 'change' }]
+        provider: [[], { validators: [Validators.required], updateOn: 'change' }],
+        requireUserFullName: [false],
+        requireUserPhone: [false],
+        requireUserBirthday: [false],
+        requireUserAddress: [false],
+        requireUserFlatNumber: [false]
     });
 
     get defaultSchemeFlag(): string {
@@ -200,6 +205,11 @@ export class KycEditorComponent implements OnInit, OnDestroy {
             this.schemeForm.get('userMode')?.setValue(scheme.userModes);
             this.schemeForm.get('userType')?.setValue(scheme?.userType);
             this.schemeForm.get('provider')?.setValue(scheme?.kycProviders);
+            this.schemeForm.get('requireUserFullName')?.setValue(scheme?.requireUserFullName);
+            this.schemeForm.get('requireUserPhone')?.setValue(scheme?.requireUserPhone);
+            this.schemeForm.get('requireUserBirthday')?.setValue(scheme?.requireUserBirthday);
+            this.schemeForm.get('requireUserAddress')?.setValue(scheme?.requireUserAddress);
+            this.schemeForm.get('requireUserFlatNumber')?.setValue(scheme?.requireUserFlatNumber);
             this.loadLevelValues(scheme?.userType);
             this.setTargetValidator();
             const p = this.targetValueParams;
@@ -216,6 +226,11 @@ export class KycEditorComponent implements OnInit, OnDestroy {
             this.schemeForm.get('userMode')?.setValue([]);
             this.schemeForm.get('userType')?.setValue('');
             this.schemeForm.get('provider')?.setValue([]);
+            this.schemeForm.get('requireUserFullName')?.setValue(false);
+            this.schemeForm.get('requireUserPhone')?.setValue(false);
+            this.schemeForm.get('requireUserBirthday')?.setValue(false);
+            this.schemeForm.get('requireUserAddress')?.setValue(false);
+            this.schemeForm.get('requireUserFlatNumber')?.setValue(false);
             this.setTargetValidator();
         }
     }
@@ -233,6 +248,11 @@ export class KycEditorComponent implements OnInit, OnDestroy {
         data.levelId = this.schemeForm.get('level')?.value;
         (this.schemeForm.get('userMode')?.value as UserMode[]).forEach(x => data.userModes.push(x));
         (this.schemeForm.get('provider')?.value as KycProvider[]).forEach(x => data.kycProviders.push(x));
+        data.requireUserFullName = this.schemeForm.get('requireUserFullName')?.value;
+        data.requireUserPhone = this.schemeForm.get('requireUserPhone')?.value;
+        data.requireUserBirthday = this.schemeForm.get('requireUserBirthday')?.value;
+        data.requireUserAddress = this.schemeForm.get('requireUserAddress')?.value;
+        data.requireUserFlatNumber = this.schemeForm.get('requireUserFlatNumber')?.value;
         return data;
     }
 
@@ -283,8 +303,7 @@ export class KycEditorComponent implements OnInit, OnDestroy {
         scheme.targetValues = scheme.targetValues.filter(val => {
             let result = true;
             if (scheme.target === SettingsKycTargetFilterType.Country) {
-                const c = getCountry(val);
-                result = (c !== null);
+                result = (getCountry(val) !== null);
             }
             return result;
         });

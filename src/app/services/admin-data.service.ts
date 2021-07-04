@@ -83,6 +83,11 @@ const GET_KYC_SETTINGS_POST = gql`
         targetUserModes
         targetFilterType
         targetFilterValues
+        requireUserFullName
+        requireUserPhone
+        requireUserBirthday
+        requireUserAddress
+        requireUserFlatNumber
         levels {
           settingsKycLevelId
           name
@@ -313,6 +318,11 @@ const ADD_SETTINGS_KYC_POST = gql`
     $targetFilterType: SettingsKycTargetFilterType!
     $targetFilterValues: [String!]
     $levelIds: [String!]
+    $requireUserFullName: Boolean
+    $requireUserPhone: Boolean
+    $requireUserBirthday: Boolean
+    $requireUserAddress: Boolean
+    $requireUserFlatNumber: Boolean
   ) {
     addSettingsKyc(
       settings: {
@@ -323,6 +333,11 @@ const ADD_SETTINGS_KYC_POST = gql`
         targetUserModes: $targetUserModes
         targetFilterType: $targetFilterType
         targetFilterValues: $targetFilterValues
+        requireUserFullName: $requireUserFullName
+        requireUserPhone: $requireUserPhone
+        requireUserBirthday: $requireUserBirthday
+        requireUserAddress: $requireUserAddress
+        requireUserFlatNumber: $requireUserFlatNumber
         levelIds: $levelIds
       }
     ) {
@@ -427,6 +442,11 @@ const UPDATE_SETTINGS_KYC_POST = gql`
     $targetUserModes: [UserMode!]
     $targetFilterType: SettingsKycTargetFilterType!
     $targetFilterValues: [String!]
+    $requireUserFullName: Boolean
+    $requireUserPhone: Boolean
+    $requireUserBirthday: Boolean
+    $requireUserAddress: Boolean
+    $requireUserFlatNumber: Boolean
     $levelIds: [String!]
   ) {
     updateSettingsKyc(
@@ -439,6 +459,11 @@ const UPDATE_SETTINGS_KYC_POST = gql`
         targetUserModes: $targetUserModes
         targetFilterType: $targetFilterType
         targetFilterValues: $targetFilterValues
+        requireUserFullName: $requireUserFullName
+        requireUserPhone: $requireUserPhone
+        requireUserBirthday: $requireUserBirthday
+        requireUserAddress: $requireUserAddress
+        requireUserFlatNumber: $requireUserFlatNumber
         levelIds: $levelIds
       }
     ) {
@@ -503,7 +528,7 @@ const DELETE_KYC_LEVEL_SETTINGS_POST = gql`
 
 @Injectable()
 export class AdminDataService {
-  constructor(private apollo: Apollo) {}
+  constructor(private apollo: Apollo) { }
 
   getFeeSettings(): QueryRef<any, EmptyObject> | null {
     if (this.apollo.client !== undefined) {
@@ -609,123 +634,133 @@ export class AdminDataService {
   saveFeeSettings(settings: FeeScheme, create: boolean): Observable<any> {
     return create
       ? this.apollo.mutate({
-          mutation: ADD_SETTINGS_FEE_POST,
-          variables: {
-            name: settings.name,
-            description: settings.description,
-            targetFilterType: settings.target,
-            targetFilterValues: settings.targetValues,
-            targetInstruments: settings.instrument,
-            targetUserTypes: settings.userType,
-            targetUserModes: settings.userMode,
-            targetTransactionTypes: settings.trxType,
-            targetPaymentProviders: settings.provider,
-            terms: settings.terms.getObject(),
-            wireDetails: settings.details.getObject(),
-          },
-        })
+        mutation: ADD_SETTINGS_FEE_POST,
+        variables: {
+          name: settings.name,
+          description: settings.description,
+          targetFilterType: settings.target,
+          targetFilterValues: settings.targetValues,
+          targetInstruments: settings.instrument,
+          targetUserTypes: settings.userType,
+          targetUserModes: settings.userMode,
+          targetTransactionTypes: settings.trxType,
+          targetPaymentProviders: settings.provider,
+          terms: settings.terms.getObject(),
+          wireDetails: settings.details.getObject(),
+        },
+      })
       : this.apollo.mutate({
-          mutation: UPDATE_SETTINGS_FEE_POST,
-          variables: {
-            settingsId: settings.id,
-            name: settings.name,
-            description: settings.description,
-            targetFilterType: settings.target,
-            targetFilterValues: settings.targetValues,
-            targetInstruments: settings.instrument,
-            targetUserTypes: settings.userType,
-            targetUserModes: settings.userMode,
-            targetTransactionTypes: settings.trxType,
-            targetPaymentProviders: settings.provider,
-            terms: settings.terms.getObject(),
-            wireDetails: settings.details.getObject(),
-          },
-        });
+        mutation: UPDATE_SETTINGS_FEE_POST,
+        variables: {
+          settingsId: settings.id,
+          name: settings.name,
+          description: settings.description,
+          targetFilterType: settings.target,
+          targetFilterValues: settings.targetValues,
+          targetInstruments: settings.instrument,
+          targetUserTypes: settings.userType,
+          targetUserModes: settings.userMode,
+          targetTransactionTypes: settings.trxType,
+          targetPaymentProviders: settings.provider,
+          terms: settings.terms.getObject(),
+          wireDetails: settings.details.getObject(),
+        },
+      });
   }
 
   saveCostSettings(settings: CostScheme, create: boolean): Observable<any> {
     return create
       ? this.apollo.mutate({
-          mutation: ADD_SETTINGS_COST_POST,
-          variables: {
-            name: settings.name,
-            description: settings.description,
-            targetFilterType: settings.target,
-            targetFilterValues: settings.targetValues,
-            targetInstruments: settings.instrument,
-            targetTransactionTypes: settings.trxType,
-            targetPaymentProviders: settings.provider,
-            terms: settings.terms.getObject(),
-          },
-        })
+        mutation: ADD_SETTINGS_COST_POST,
+        variables: {
+          name: settings.name,
+          description: settings.description,
+          targetFilterType: settings.target,
+          targetFilterValues: settings.targetValues,
+          targetInstruments: settings.instrument,
+          targetTransactionTypes: settings.trxType,
+          targetPaymentProviders: settings.provider,
+          terms: settings.terms.getObject(),
+        },
+      })
       : this.apollo.mutate({
-          mutation: UPDATE_SETTINGS_COST_POST,
-          variables: {
-            settingsId: settings.id,
-            name: settings.name,
-            description: settings.description,
-            targetFilterType: settings.target,
-            targetFilterValues: settings.targetValues,
-            targetInstruments: settings.instrument,
-            targetTransactionTypes: settings.trxType,
-            targetPaymentProviders: settings.provider,
-            terms: settings.terms.getObject(),
-          },
-        });
+        mutation: UPDATE_SETTINGS_COST_POST,
+        variables: {
+          settingsId: settings.id,
+          name: settings.name,
+          description: settings.description,
+          targetFilterType: settings.target,
+          targetFilterValues: settings.targetValues,
+          targetInstruments: settings.instrument,
+          targetTransactionTypes: settings.trxType,
+          targetPaymentProviders: settings.provider,
+          terms: settings.terms.getObject(),
+        },
+      });
   }
 
   saveKycSettings(settings: KycScheme, create: boolean): Observable<any> {
     return create
       ? this.apollo.mutate({
-          mutation: ADD_SETTINGS_KYC_POST,
-          variables: {
-            name: settings.name,
-            description: settings.description,
-            targetFilterType: settings.target,
-            targetFilterValues: settings.targetValues,
-            targetKycProviders: settings.kycProviders,
-            targetUserType: settings.userType,
-            targetUserModes: settings.userModes,
-            levelIds: [settings.levelId],
-          },
-        })
+        mutation: ADD_SETTINGS_KYC_POST,
+        variables: {
+          name: settings.name,
+          description: settings.description,
+          targetFilterType: settings.target,
+          targetFilterValues: settings.targetValues,
+          targetKycProviders: settings.kycProviders,
+          targetUserType: settings.userType,
+          targetUserModes: settings.userModes,
+          requireUserFullName: settings.requireUserFullName,
+          requireUserPhone: settings.requireUserPhone,
+          requireUserBirthday: settings.requireUserBirthday,
+          requireUserAddress: settings.requireUserAddress,
+          requireUserFlatNumber: settings.requireUserFlatNumber,
+          levelIds: [settings.levelId],
+        },
+      })
       : this.apollo.mutate({
-          mutation: UPDATE_SETTINGS_KYC_POST,
-          variables: {
-            settingsId: settings.id,
-            name: settings.name,
-            description: settings.description,
-            targetFilterType: settings.target,
-            targetFilterValues: settings.targetValues,
-            targetKycProviders: settings.kycProviders,
-            targetUserType: settings.userType,
-            targetUserModes: settings.userModes,
-            levelIds: [settings.levelId],
-          },
-        });
+        mutation: UPDATE_SETTINGS_KYC_POST,
+        variables: {
+          settingsId: settings.id,
+          name: settings.name,
+          description: settings.description,
+          targetFilterType: settings.target,
+          targetFilterValues: settings.targetValues,
+          targetKycProviders: settings.kycProviders,
+          targetUserType: settings.userType,
+          targetUserModes: settings.userModes,
+          requireUserFullName: settings.requireUserFullName,
+          requireUserPhone: settings.requireUserPhone,
+          requireUserBirthday: settings.requireUserBirthday,
+          requireUserAddress: settings.requireUserAddress,
+          requireUserFlatNumber: settings.requireUserFlatNumber,
+          levelIds: [settings.levelId],
+        },
+      });
   }
 
   saveKycLevelSettings(level: KycLevel, create: boolean): Observable<any> {
     return create
       ? this.apollo.mutate({
-          mutation: ADD_KYC_LEVEL_SETTINGS_POST,
-          variables: {
-            name: level.name,
-            description: level.description,
-            userType: level.userType,
-            data: level.getDataObject(),
-          },
-        })
+        mutation: ADD_KYC_LEVEL_SETTINGS_POST,
+        variables: {
+          name: level.name,
+          description: level.description,
+          userType: level.userType,
+          data: level.getDataObject(),
+        },
+      })
       : this.apollo.mutate({
-          mutation: UPDATE_KYC_LEVEL_SETTINGS_POST,
-          variables: {
-            settingsId: level.id,
-            name: level.name,
-            description: level.description,
-            userType: level.userType,
-            data: level.getDataObject(),
-          },
-        });
+        mutation: UPDATE_KYC_LEVEL_SETTINGS_POST,
+        variables: {
+          settingsId: level.id,
+          name: level.name,
+          description: level.description,
+          userType: level.userType,
+          data: level.getDataObject(),
+        },
+      });
   }
 
   deleteFeeSettings(settingsId: string): Observable<any> | null {
