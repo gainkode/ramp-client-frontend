@@ -239,7 +239,8 @@ export class ContainerComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute
   ) {
-    this.affiliateCode = route.snapshot.params['affiliateCode'];
+    const affiliateCodeInput = route.snapshot.params['affiliateCode'];
+    this.affiliateCode = parseInt(affiliateCodeInput, 10);
     this.user = auth.user;
     this.summary = new CheckoutSummary();
     this.detailsEmailControl = this.detailsForm.get("email");
@@ -523,7 +524,8 @@ export class ContainerComponent implements OnInit, OnDestroy {
       this.paymentInfoProviderControl?.value,
       rate as number,
       TransactionDestinationType.Address,
-      this.paymentInfoAddressControl?.value
+      this.paymentInfoAddressControl?.value,
+      this.affiliateCode
     )
       .subscribe(
         ({ data }) => {
