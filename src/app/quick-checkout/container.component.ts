@@ -84,6 +84,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
     this.internalPayment = val;
   }
   internalPayment = false;
+  affiliateCode = 0;
   user: User | null = null;
   errorMessage = "";
   inProgress = false;
@@ -238,7 +239,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute
   ) {
-    this.internalPayment = route.snapshot.params["internal"] === "internal";
+    this.affiliateCode = route.snapshot.params['affiliateCode'];
     this.user = auth.user;
     this.summary = new CheckoutSummary();
     this.detailsEmailControl = this.detailsForm.get("email");
@@ -252,10 +253,8 @@ export class ContainerComponent implements OnInit, OnDestroy {
     this.paymentInfoProviderControl = this.paymentInfoForm.get("provider");
     this.paymentInfoAddressControl = this.paymentInfoForm.get("address");
     this.paymentInfoCurrencyToControl = this.paymentInfoForm.get("currencyTo");
-    this.paymentInfoTransactionControl =
-      this.paymentInfoForm.get("transaction");
-    this.paymentInfoTransactionIdControl =
-      this.paymentInfoForm.get("transactionId");
+    this.paymentInfoTransactionControl = this.paymentInfoForm.get("transaction");
+    this.paymentInfoTransactionIdControl = this.paymentInfoForm.get("transactionId");
     this.verificationCompleteControl = this.verificationForm.get("complete");
     this.confirmationCodeControl = this.confirmationForm.get("code");
     this.confirmationCompleteControl = this.confirmationForm.get("complete");
@@ -515,18 +514,17 @@ export class ContainerComponent implements OnInit, OnDestroy {
     }
     const amountVal = this.detailsAmountFromControl?.value;
     const amount = parseFloat(amountVal);
-    this.dataService
-      .createQuickCheckout(
-        this.detailsTransactionControl?.value,
-        this.detailsCurrencyFromControl?.value,
-        this.detailsCurrencyToControl?.value,
-        amount,
-        this.paymentInfoInstrumentControl?.value,
-        this.paymentInfoProviderControl?.value,
-        rate as number,
-        TransactionDestinationType.Address,
-        this.paymentInfoAddressControl?.value
-      )
+    this.dataService.createQuickCheckout(
+      this.detailsTransactionControl?.value,
+      this.detailsCurrencyFromControl?.value,
+      this.detailsCurrencyToControl?.value,
+      amount,
+      this.paymentInfoInstrumentControl?.value,
+      this.paymentInfoProviderControl?.value,
+      rate as number,
+      TransactionDestinationType.Address,
+      this.paymentInfoAddressControl?.value
+    )
       .subscribe(
         ({ data }) => {
           const order = data.createTransaction as TransactionShort;

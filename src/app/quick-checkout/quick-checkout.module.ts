@@ -22,7 +22,7 @@ import { ContainerComponent } from './container.component';
 const routing = RouterModule.forChild([
     { path: 'payment', component: PaymentComponent },
     { path: 'complete', component: CompleteComponent },
-    { path: 'container/:internal', component: ContainerComponent },
+    { path: 'container/:affiliateCode', component: ContainerComponent },
     { path: 'container', component: ContainerComponent },
     { path: '**', redirectTo: 'payment' }
 ]);
