@@ -659,25 +659,23 @@ export class ContainerComponent implements OnInit, OnDestroy {
   private setCurrencyValues(): void {
     if (this.currentTransaction === TransactionType.Deposit) {
       this.sourceCurrencies = this.pCurrencies.filter(
-        (c) => c.id !== "BTC" && c.id !== "USDC"
+        (c) => c.fial
       );
       this.destinationCurrencies = this.pCurrencies.filter(
-        (c) => c.id !== "EUR" && c.id !== "USDC"
+        (c) => !c.fial
       );
     } else if (this.currentTransaction === TransactionType.Withdrawal) {
       this.destinationCurrencies = this.pCurrencies.filter(
-        (c) => c.id !== "BTC" && c.id !== "USDC"
+        (c) => c.fial
       );
       this.sourceCurrencies = this.pCurrencies.filter(
-        (c) => c.id !== "EUR" && c.id !== "USDC"
+        (c) => !c.fial
       );
     }
     if (this.sourceCurrencies.length > 0) {
       this.detailsCurrencyFromControl?.setValue(this.sourceCurrencies[0].id);
       if (this.currentSourceCurrency) {
-        this.detailsAmountFromControl?.setValue(
-          this.currentSourceCurrency.minAmount
-        );
+        this.detailsAmountFromControl?.setValue(this.currentSourceCurrency.minAmount);
       }
     }
     if (this.destinationCurrencies.length > 0) {
@@ -696,15 +694,27 @@ export class ContainerComponent implements OnInit, OnDestroy {
       let amount = 0;
       if (rate > 0) {
         const valueFrom = parseFloat(this.detailsAmountFromControl?.value);
-        if (this.currentTransaction === TransactionType.Deposit) {
-          amount = valueFrom / rate;
-        } else if (this.currentTransaction === TransactionType.Withdrawal) {
-          amount = valueFrom * rate;
+        if (!isNaN(valueFrom)) {
+          if (this.currentTransaction === TransactionType.Deposit) {
+            amount = valueFrom / rate;
+          } else if (this.currentTransaction === TransactionType.Withdrawal) {
+            amount = valueFrom * rate;
+          }
+          this.summary.amountFrom = valueFrom;
+        } else {
+          amount = 0;
+          this.summary.amountFrom = 0;
         }
       }
-      this.detailsAmountToControl?.setValue(
-        round(amount, this.currentDestinationCurrency?.precision)
-      );
+      const precision = this.currentDestinationCurrency?.precision ?? 2;
+      let val = round(amount, precision);
+      const minValue = Math.pow(10, -1 * precision);
+      console.log('to', val, minValue);
+      if (val < minValue) {
+        val = 0;
+      }
+      this.detailsAmountToControl?.setValue(val);
+      this.summary.amountTo = val;
     }
   }
 
@@ -718,39 +728,56 @@ export class ContainerComponent implements OnInit, OnDestroy {
       }
       let amount = 0;
       if (rate > 0) {
-        const valueFrom = parseFloat(this.detailsAmountToControl?.value);
-        if (this.currentTransaction === TransactionType.Deposit) {
-          amount = valueFrom * rate;
-        } else if (this.currentTransaction === TransactionType.Withdrawal) {
-          amount = valueFrom / rate;
+        const valueTo = parseFloat(this.detailsAmountToControl?.value);
+        if (!isNaN(valueTo)) {
+          if (this.currentTransaction === TransactionType.Deposit) {
+            amount = valueTo * rate;
+          } else if (this.currentTransaction === TransactionType.Withdrawal) {
+            amount = valueTo / rate;
+          }
+          this.summary.amountTo = valueTo;
+        } else {
+          amount = 0;
+          this.summary.amountTo = 0;
         }
       }
-      this.detailsAmountFromControl?.setValue(
-        round(amount, this.currentSourceCurrency?.precision)
-      );
+      const precision = this.currentSourceCurrency?.precision ?? 2;
+      let val = round(amount, precision);
+      const minValue = Math.pow(10, -1 * precision);
+      console.log('from', val, minValue);
+      if (val < minValue) {
+        val = 0;
+      }
+      this.detailsAmountFromControl?.setValue(val);
+      this.summary.amountFrom = val;
     }
   }
 
   private setSummuryAmountFrom(val: any): void {
-    if (this.detailsAmountFromControl?.valid) {
-      this.summary.amountFrom = val;
-      if (!this.priceEdit) {
-        this.priceEdit = true;
-        this.updateAmountTo();
-        this.priceEdit = false;
-      }
+    if (!this.priceEdit) {
+      this.priceEdit = true;
+      this.updateAmountTo();
+      this.priceEdit = false;
     }
+    // if (this.detailsAmountFromControl?.valid) {
+    //   this.summary.amountFrom = val;
+    //   if (!this.priceEdit) {
+    //     this.priceEdit = true;
+    //     this.updateAmountTo();
+    //     this.priceEdit = false;
+    //   }
+    // }
   }
 
   private setSummuryAmountTo(val: any): void {
-    if (this.detailsAmountToControl?.valid) {
-      this.summary.amountTo = val;
-      if (!this.priceEdit) {
-        this.priceEdit = true;
-        this.updateAmountFrom();
-        this.priceEdit = false;
-      }
+    if (!this.priceEdit) {
+      this.priceEdit = true;
+      this.updateAmountFrom();
+      this.priceEdit = false;
     }
+    // if (this.detailsAmountToControl?.valid) {
+    //   this.summary.amountTo = val;
+    // }
   }
 
   private setSummuryEmail(val: any): void {
