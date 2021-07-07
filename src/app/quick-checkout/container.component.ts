@@ -709,7 +709,6 @@ export class ContainerComponent implements OnInit, OnDestroy {
       const precision = this.currentDestinationCurrency?.precision ?? 2;
       let val = round(amount, precision);
       const minValue = Math.pow(10, -1 * precision);
-      console.log('to', val, minValue);
       if (val < minValue) {
         val = 0;
       }
@@ -744,7 +743,6 @@ export class ContainerComponent implements OnInit, OnDestroy {
       const precision = this.currentSourceCurrency?.precision ?? 2;
       let val = round(amount, precision);
       const minValue = Math.pow(10, -1 * precision);
-      console.log('from', val, minValue);
       if (val < minValue) {
         val = 0;
       }
