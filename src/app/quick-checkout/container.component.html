@@ -151,7 +151,7 @@
               {{ errorMessage }}
             </div>
             <!-- Wallet address -->
-            <mat-form-field *ngIf="isDeposit" class="form-element">
+            <mat-form-field *ngIf="isWalletVisible" class="form-element">
               <mat-label>{{ walletAddressName }}</mat-label>
               <input type="text" placeholder="Valid wallet address" aria-label="walletAddressName" matInput
                 formControlName="address" [matAutocomplete]="auto" maxlength="60" required />

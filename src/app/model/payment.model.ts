@@ -79,6 +79,7 @@ export class CurrencyView {
     minAmount = 0;
     rateFactor = 0;
     validateAsSymbol: string | null = null;
+    fial = false;
 
     constructor(data: SettingsCurrency) {
         this.id = data.symbol;
@@ -88,6 +89,7 @@ export class CurrencyView {
         this.minAmount = data.minAmount;
         this.rateFactor = data.rateFactor;
         this.validateAsSymbol = data.validateAsSymbol as string | null;
+        this.fial = data.fiat as boolean;
     }
 }
 

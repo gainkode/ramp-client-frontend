@@ -59,7 +59,8 @@ mutation CreateTransaction(
   $paymentProvider: PaymentProvider,
   $destinationType: TransactionDestinationType!,
   $destination: String,
-  $rate: Float!
+  $rate: Float!,
+  $affiliateCode: Int
 ) {
   createTransaction(transaction: {
     type: $transactionType
@@ -71,6 +72,7 @@ mutation CreateTransaction(
     destinationType: $destinationType
     destination: $destination
     rate: $rate
+    affiliateCode: $affiliateCode
   }) {
     transactionId,
     code,
@@ -154,9 +156,11 @@ export class QuickCheckoutDataService {
 
   createQuickCheckout(transactionType: TransactionType, currencyToSpend: string,
     currencyToReceive: string, amountFiat: number, instrument: PaymentInstrument, provider: PaymentProvider,
-    rate: number, destinationType: TransactionDestinationType, walletAddress: string): Observable<any> {
+    rate: number, destinationType: TransactionDestinationType, walletAddress: string,
+    affiliateCode: number = 0): Observable<any> {
     const paymentPrvdr = (provider as string === '') ? undefined : provider;
     const wallet = (walletAddress === '') ? undefined : walletAddress;
+    const affiliate = (affiliateCode != 0) ? affiliateCode : undefined;
     return this.apollo.mutate({
       mutation: CREATE_TRANSACTION,
       variables: {
@@ -168,7 +172,8 @@ export class QuickCheckoutDataService {
         paymentProvider: paymentPrvdr,
         rate,
         destinationType,
-        destination: wallet
+        destination: wallet,
+        affiliateCode: affiliate
       }
     });
   }

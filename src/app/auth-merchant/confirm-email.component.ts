@@ -17,16 +17,13 @@ export class ConfirmEmailComponent {
         private router: Router, activeRoute: ActivatedRoute) {
         this.token = activeRoute.snapshot.params['token'];
         if (this.token !== undefined) {
-            this.auth.confirmEmail(this.token)
-                .subscribe(({ data }) => {
-                    this.validated = true;
-                    this.valid = true;
-                }, (error) => {
-                    this.validated = true;
-                    this.errorMessage = this.errorHandler.getError(
-                        error.message,
-                        'Unable to validate email');
-                });
+            this.auth.confirmEmail(this.token).subscribe(({ data }) => {
+                this.validated = true;
+                this.valid = true;
+            }, (error) => {
+                this.validated = true;
+                this.errorMessage = this.errorHandler.getError(error.message, 'Unable to validate email');
+            });
         }
     }
 }

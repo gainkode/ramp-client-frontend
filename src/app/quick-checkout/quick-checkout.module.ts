@@ -16,15 +16,14 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatStepperModule } from '@angular/material/stepper';
 import { ComponentsModule } from '../components/components.module';
 import { PaymentComponent } from './payment.component';
-import { CompleteComponent } from './complete.component';
 import { ContainerComponent } from './container.component';
 
 const routing = RouterModule.forChild([
-    { path: 'payment', component: PaymentComponent },
-    { path: 'complete', component: CompleteComponent },
-    { path: 'container/:internal', component: ContainerComponent },
+    { path: 'quickcheckout', component: PaymentComponent },
+    { path: 'container/:affiliateCode', component: ContainerComponent },
+    { path: 'widget/:affiliateCode', component: ContainerComponent },
     { path: 'container', component: ContainerComponent },
-    { path: '**', redirectTo: 'payment' }
+    { path: '**', redirectTo: 'quickcheckout' }
 ]);
 
 const modules = [
@@ -51,7 +50,7 @@ export class MaterialModule { }
 
 @NgModule({
     imports: [ CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule ],
-    declarations: [ PaymentComponent, CompleteComponent, ContainerComponent ],
+    declarations: [ PaymentComponent, ContainerComponent ],
     providers: [],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

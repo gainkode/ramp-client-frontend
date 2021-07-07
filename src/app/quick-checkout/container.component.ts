@@ -84,6 +84,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
     this.internalPayment = val;
   }
   internalPayment = false;
+  affiliateCode = 0;
   user: User | null = null;
   errorMessage = "";
   inProgress = false;
@@ -224,8 +225,15 @@ export class ContainerComponent implements OnInit, OnDestroy {
   });
   redirectCompleteControl: AbstractControl | null = null;
 
-  get isDeposit(): boolean {
-    return this.currentTransaction === TransactionType.Deposit;
+  get isWalletVisible(): boolean {
+    let result = false;
+    if (this.currentTransaction === TransactionType.Deposit) {
+      result = true;
+      if (this.affiliateCode > 0) {
+        result = false;
+      }
+    }
+    return result;
   }
 
   constructor(
@@ -238,7 +246,8 @@ export class ContainerComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute
   ) {
-    this.internalPayment = route.snapshot.params["internal"] === "internal";
+    const affiliateCodeInput = route.snapshot.params['affiliateCode'];
+    this.affiliateCode = parseInt(affiliateCodeInput, 10);
     this.user = auth.user;
     this.summary = new CheckoutSummary();
     this.detailsEmailControl = this.detailsForm.get("email");
@@ -252,10 +261,8 @@ export class ContainerComponent implements OnInit, OnDestroy {
     this.paymentInfoProviderControl = this.paymentInfoForm.get("provider");
     this.paymentInfoAddressControl = this.paymentInfoForm.get("address");
     this.paymentInfoCurrencyToControl = this.paymentInfoForm.get("currencyTo");
-    this.paymentInfoTransactionControl =
-      this.paymentInfoForm.get("transaction");
-    this.paymentInfoTransactionIdControl =
-      this.paymentInfoForm.get("transactionId");
+    this.paymentInfoTransactionControl = this.paymentInfoForm.get("transaction");
+    this.paymentInfoTransactionIdControl = this.paymentInfoForm.get("transactionId");
     this.verificationCompleteControl = this.verificationForm.get("complete");
     this.confirmationCodeControl = this.confirmationForm.get("code");
     this.confirmationCompleteControl = this.confirmationForm.get("complete");
@@ -515,18 +522,18 @@ export class ContainerComponent implements OnInit, OnDestroy {
     }
     const amountVal = this.detailsAmountFromControl?.value;
     const amount = parseFloat(amountVal);
-    this.dataService
-      .createQuickCheckout(
-        this.detailsTransactionControl?.value,
-        this.detailsCurrencyFromControl?.value,
-        this.detailsCurrencyToControl?.value,
-        amount,
-        this.paymentInfoInstrumentControl?.value,
-        this.paymentInfoProviderControl?.value,
-        rate as number,
-        TransactionDestinationType.Address,
-        this.paymentInfoAddressControl?.value
-      )
+    this.dataService.createQuickCheckout(
+      this.detailsTransactionControl?.value,
+      this.detailsCurrencyFromControl?.value,
+      this.detailsCurrencyToControl?.value,
+      amount,
+      this.paymentInfoInstrumentControl?.value,
+      this.paymentInfoProviderControl?.value,
+      rate as number,
+      TransactionDestinationType.Address,
+      this.paymentInfoAddressControl?.value,
+      this.affiliateCode
+    )
       .subscribe(
         ({ data }) => {
           const order = data.createTransaction as TransactionShort;
@@ -652,25 +659,23 @@ export class ContainerComponent implements OnInit, OnDestroy {
   private setCurrencyValues(): void {
     if (this.currentTransaction === TransactionType.Deposit) {
       this.sourceCurrencies = this.pCurrencies.filter(
-        (c) => c.id !== "BTC" && c.id !== "USDC"
+        (c) => c.fial
       );
       this.destinationCurrencies = this.pCurrencies.filter(
-        (c) => c.id !== "EUR" && c.id !== "USDC"
+        (c) => !c.fial
       );
     } else if (this.currentTransaction === TransactionType.Withdrawal) {
       this.destinationCurrencies = this.pCurrencies.filter(
-        (c) => c.id !== "BTC" && c.id !== "USDC"
+        (c) => c.fial
       );
       this.sourceCurrencies = this.pCurrencies.filter(
-        (c) => c.id !== "EUR" && c.id !== "USDC"
+        (c) => !c.fial
       );
     }
     if (this.sourceCurrencies.length > 0) {
       this.detailsCurrencyFromControl?.setValue(this.sourceCurrencies[0].id);
       if (this.currentSourceCurrency) {
-        this.detailsAmountFromControl?.setValue(
-          this.currentSourceCurrency.minAmount
-        );
+        this.detailsAmountFromControl?.setValue(this.currentSourceCurrency.minAmount);
       }
     }
     if (this.destinationCurrencies.length > 0) {
@@ -689,15 +694,26 @@ export class ContainerComponent implements OnInit, OnDestroy {
       let amount = 0;
       if (rate > 0) {
         const valueFrom = parseFloat(this.detailsAmountFromControl?.value);
-        if (this.currentTransaction === TransactionType.Deposit) {
-          amount = valueFrom / rate;
-        } else if (this.currentTransaction === TransactionType.Withdrawal) {
-          amount = valueFrom * rate;
+        if (!isNaN(valueFrom)) {
+          if (this.currentTransaction === TransactionType.Deposit) {
+            amount = valueFrom / rate;
+          } else if (this.currentTransaction === TransactionType.Withdrawal) {
+            amount = valueFrom * rate;
+          }
+          this.summary.amountFrom = valueFrom;
+        } else {
+          amount = 0;
+          this.summary.amountFrom = 0;
         }
       }
-      this.detailsAmountToControl?.setValue(
-        round(amount, this.currentDestinationCurrency?.precision)
-      );
+      const precision = this.currentDestinationCurrency?.precision ?? 2;
+      let val = round(amount, precision);
+      const minValue = Math.pow(10, -1 * precision);
+      if (val < minValue) {
+        val = 0;
+      }
+      this.detailsAmountToControl?.setValue(val);
+      this.summary.amountTo = val;
     }
   }
 
@@ -711,39 +727,55 @@ export class ContainerComponent implements OnInit, OnDestroy {
       }
       let amount = 0;
       if (rate > 0) {
-        const valueFrom = parseFloat(this.detailsAmountToControl?.value);
-        if (this.currentTransaction === TransactionType.Deposit) {
-          amount = valueFrom * rate;
-        } else if (this.currentTransaction === TransactionType.Withdrawal) {
-          amount = valueFrom / rate;
+        const valueTo = parseFloat(this.detailsAmountToControl?.value);
+        if (!isNaN(valueTo)) {
+          if (this.currentTransaction === TransactionType.Deposit) {
+            amount = valueTo * rate;
+          } else if (this.currentTransaction === TransactionType.Withdrawal) {
+            amount = valueTo / rate;
+          }
+          this.summary.amountTo = valueTo;
+        } else {
+          amount = 0;
+          this.summary.amountTo = 0;
         }
       }
-      this.detailsAmountFromControl?.setValue(
-        round(amount, this.currentSourceCurrency?.precision)
-      );
+      const precision = this.currentSourceCurrency?.precision ?? 2;
+      let val = round(amount, precision);
+      const minValue = Math.pow(10, -1 * precision);
+      if (val < minValue) {
+        val = 0;
+      }
+      this.detailsAmountFromControl?.setValue(val);
+      this.summary.amountFrom = val;
     }
   }
 
   private setSummuryAmountFrom(val: any): void {
-    if (this.detailsAmountFromControl?.valid) {
-      this.summary.amountFrom = val;
-      if (!this.priceEdit) {
-        this.priceEdit = true;
-        this.updateAmountTo();
-        this.priceEdit = false;
-      }
+    if (!this.priceEdit) {
+      this.priceEdit = true;
+      this.updateAmountTo();
+      this.priceEdit = false;
     }
+    // if (this.detailsAmountFromControl?.valid) {
+    //   this.summary.amountFrom = val;
+    //   if (!this.priceEdit) {
+    //     this.priceEdit = true;
+    //     this.updateAmountTo();
+    //     this.priceEdit = false;
+    //   }
+    // }
   }
 
   private setSummuryAmountTo(val: any): void {
-    if (this.detailsAmountToControl?.valid) {
-      this.summary.amountTo = val;
-      if (!this.priceEdit) {
-        this.priceEdit = true;
-        this.updateAmountFrom();
-        this.priceEdit = false;
-      }
+    if (!this.priceEdit) {
+      this.priceEdit = true;
+      this.updateAmountFrom();
+      this.priceEdit = false;
     }
+    // if (this.detailsAmountToControl?.valid) {
+    //   this.summary.amountTo = val;
+    // }
   }
 
   private setSummuryEmail(val: any): void {
@@ -829,7 +861,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
             this.userWallets.push(v);
           }
           this.paymentInfoAddressControl?.setValue('');
-          if (this.currentTransaction === TransactionType.Deposit) {
+          if (this.isWalletVisible) {
             this.paymentInfoAddressControl?.setValidators([Validators.required]);
           } else {
             this.paymentInfoAddressControl?.setValidators([]);
