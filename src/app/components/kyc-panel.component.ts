@@ -109,7 +109,7 @@ export class KycPanelComponent implements OnInit, OnDestroy {
                 //   // you may also use to pass string with plain styles `customCssStr:`
                 // },
                 onError: (error: any) => {
-                    this.errorMessage = error;
+                    this.errorMessage = error.error;
                 },
             })
             .build();

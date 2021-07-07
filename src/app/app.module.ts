@@ -104,9 +104,11 @@ export class AppModule {
     }
   });
 
-  headersLink = setContext((operation, context) => ({
-    headers: { Accept: 'charset=utf-8' }
-  }));
+  headersLink = setContext((operation, context) => {
+    const headers = new Headers();
+    headers.append('Accept', 'charset=utf-8');
+    headers.append('Feature-Policy', 'camera: \'self\'');
+  });
 
   constructor(private apollo: Apollo, private httpLink: HttpLink, private authService: AuthService) {
     const cookieName = 'cookieconsent_status';
