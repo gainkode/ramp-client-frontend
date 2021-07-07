@@ -4,7 +4,7 @@ import { TermsComponent } from './terms.component';
 
 const routes: Routes = [
   {
-    path: 'quickcheckout', loadChildren: () => import('./quick-checkout/quick-checkout.module').
+    path: 'payment', loadChildren: () => import('./quick-checkout/quick-checkout.module').
       then(m => m.QuickCheckOutModule)
   },
   {

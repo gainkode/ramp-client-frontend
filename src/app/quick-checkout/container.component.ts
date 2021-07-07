@@ -225,8 +225,15 @@ export class ContainerComponent implements OnInit, OnDestroy {
   });
   redirectCompleteControl: AbstractControl | null = null;
 
-  get isDeposit(): boolean {
-    return this.currentTransaction === TransactionType.Deposit;
+  get isWalletVisible(): boolean {
+    let result = false;
+    if (this.currentTransaction === TransactionType.Deposit) {
+      result = true;
+      if (this.affiliateCode > 0) {
+        result = false;
+      }
+    }
+    return result;
   }
 
   constructor(
@@ -829,7 +836,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
             this.userWallets.push(v);
           }
           this.paymentInfoAddressControl?.setValue('');
-          if (this.currentTransaction === TransactionType.Deposit) {
+          if (this.isWalletVisible) {
             this.paymentInfoAddressControl?.setValidators([Validators.required]);
           } else {
             this.paymentInfoAddressControl?.setValidators([]);
