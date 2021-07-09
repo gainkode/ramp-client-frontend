@@ -25,8 +25,10 @@ query GetRates($recaptcha: String!, $currenciesFrom: [String!]!, $currencyTo: St
 const MY_STATE = gql`
 query MyState {
   myState {
-    assets {
-      id, total, addresses { address }
+    vault {
+      assets {
+        id, total, addresses { address }
+      }
     },
     externalWallets {
         assets { id, address }
@@ -54,25 +56,21 @@ mutation CreateTransaction(
   $transactionType: TransactionType!,
   $currencyToSpend: String!,
   $currencyToReceive: String!,
-  $amountFiat: Float!,
+  $amountToSpend: Float!,
   $instrument: PaymentInstrument!,
   $paymentProvider: PaymentProvider,
   $destinationType: TransactionDestinationType!,
-  $destination: String,
-  $rate: Float!,
-  $affiliateCode: Int
+  $destination: String
 ) {
   createTransaction(transaction: {
     type: $transactionType
     currencyToSpend: $currencyToSpend
     currencyToReceive: $currencyToReceive
-    amountFiat: $amountFiat
+    amountToSpend: $amountToSpend
     instrument: $instrument
     paymentProvider: $paymentProvider
     destinationType: $destinationType
     destination: $destination
-    rate: $rate
-    affiliateCode: $affiliateCode
   }) {
     transactionId,
     code,
@@ -155,26 +153,27 @@ export class QuickCheckoutDataService {
   }
 
   createQuickCheckout(transactionType: TransactionType, currencyToSpend: string,
-    currencyToReceive: string, amountFiat: number, instrument: PaymentInstrument, provider: PaymentProvider,
-    rate: number, destinationType: TransactionDestinationType, walletAddress: string,
-    affiliateCode: number = 0): Observable<any> {
+    currencyToReceive: string, amount: number, instrument: PaymentInstrument, provider: PaymentProvider,
+    destinationType: TransactionDestinationType, walletAddress: string): Observable<any> {
     const paymentPrvdr = (provider as string === '') ? undefined : provider;
     const wallet = (walletAddress === '') ? undefined : walletAddress;
-    const affiliate = (affiliateCode != 0) ? affiliateCode : undefined;
+
+
+    const vars = {
+      transactionType,
+      currencyToSpend,
+      currencyToReceive,
+      amountToSpend: amount,
+      instrument,
+      paymentProvider: paymentPrvdr,
+      destinationType,
+      destination: wallet
+    };
+    console.log(vars);
+
     return this.apollo.mutate({
       mutation: CREATE_TRANSACTION,
-      variables: {
-        transactionType,
-        currencyToSpend,
-        currencyToReceive,
-        amountFiat,
-        instrument,
-        paymentProvider: paymentPrvdr,
-        rate,
-        destinationType,
-        destination: wallet,
-        affiliateCode: affiliate
-      }
+      variables: vars
     });
   }
 

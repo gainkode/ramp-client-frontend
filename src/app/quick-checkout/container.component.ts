@@ -512,16 +512,14 @@ export class ContainerComponent implements OnInit, OnDestroy {
 
   private registerOrder(): void {
     this.inProgress = true;
-    let rate = this.currentRate?.originalRate;
-    if (this.detailsTransactionControl?.value === TransactionType.Deposit) {
-      rate = this.currentRate?.depositRate;
-    } else if (
-      this.detailsTransactionControl?.value === TransactionType.Withdrawal
-    ) {
-      rate = this.currentRate?.withdrawRate;
-    }
     const amountVal = this.detailsAmountFromControl?.value;
     const amount = parseFloat(amountVal);
+    let destinationType = TransactionDestinationType.Address;
+    let destination = this.paymentInfoAddressControl?.value;
+    if (this.affiliateCode > 0) {
+      destinationType = TransactionDestinationType.Affiliate;
+      destination = this.affiliateCode.toString();
+    }
     this.dataService.createQuickCheckout(
       this.detailsTransactionControl?.value,
       this.detailsCurrencyFromControl?.value,
@@ -529,49 +527,42 @@ export class ContainerComponent implements OnInit, OnDestroy {
       amount,
       this.paymentInfoInstrumentControl?.value,
       this.paymentInfoProviderControl?.value,
-      rate as number,
-      TransactionDestinationType.Address,
-      this.paymentInfoAddressControl?.value,
-      this.affiliateCode
-    )
-      .subscribe(
-        ({ data }) => {
-          const order = data.createTransaction as TransactionShort;
-          this.inProgress = false;
-          if (order.code) {
-            this.summary.orderId = order.code as string;
-            this.summary.fee = order.fee;
-            this.summary.feeMinEuro = order.feeMinEuro;
-            this.summary.feePercent = order.feePercent;
-            this.summary.exchangeRate = this.currentRate;
-            this.summary.transactionDate = new Date().toLocaleString();
-            this.summary.transactionType = this.currentTransaction;
-            this.paymentInfoTransactionIdControl?.setValue(
-              order.transactionId as string
-            );
-            if (this.stepper) {
-              this.stepper?.next();
-            }
-          } else {
-            this.errorMessage = "Order code is invalid";
-            this.paymentInfoTransactionIdControl?.reset();
-          }
-        },
-        (error) => {
-          this.inProgress = false;
-          if (this.errorHandler.getCurrentError() === "auth.token_invalid") {
-            const email = this.summary.email;
-            this.resetStepper();
-            this.detailsEmailControl?.setValue(email);
-          } else {
-            this.paymentInfoTransactionIdControl?.reset();
-            this.errorMessage = this.errorHandler.getError(
-              error.message,
-              "Unable to register a new order"
-            );
-          }
+      destinationType,
+      destination
+    ).subscribe(({ data }) => {
+      const order = data.createTransaction as TransactionShort;
+      this.inProgress = false;
+      if (order.code) {
+        this.summary.orderId = order.code as string;
+        this.summary.fee = order.fee;
+        this.summary.feeMinEuro = order.feeMinEuro;
+        this.summary.feePercent = order.feePercent;
+        this.summary.exchangeRate = this.currentRate;
+        this.summary.transactionDate = new Date().toLocaleString();
+        this.summary.transactionType = this.currentTransaction;
+        this.paymentInfoTransactionIdControl?.setValue(order.transactionId as string);
+        if (this.stepper) {
+          this.stepper?.next();
         }
-      );
+      } else {
+        this.errorMessage = "Order code is invalid";
+        this.paymentInfoTransactionIdControl?.reset();
+      }
+    }, (error) => {
+      this.inProgress = false;
+      if (this.errorHandler.getCurrentError() === "auth.token_invalid") {
+        const email = this.summary.email;
+        this.resetStepper();
+        this.detailsEmailControl?.setValue(email);
+      } else {
+        this.paymentInfoTransactionIdControl?.reset();
+        this.errorMessage = this.errorHandler.getError(
+          error.message,
+          "Unable to register a new order"
+        );
+      }
+    }
+    );
   }
 
   private getKycSettings(): void {
@@ -834,9 +825,8 @@ export class ContainerComponent implements OnInit, OnDestroy {
           externalWallets.push('1DDBCjmy3zpkNu3rfAFX2ucrRbPiunn1SB');
           // temp
 
-
           const state = data.myState as UserState;
-          state.assets?.forEach((x) => {
+          state.vault?.assets?.forEach((x) => {
             if (x.id === this.summary.currencyTo) {
               x.addresses?.forEach((a) => vaultAssets.push(a.address as string));
             }
