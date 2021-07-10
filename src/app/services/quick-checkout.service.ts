@@ -76,7 +76,7 @@ mutation CreateTransaction(
     code,
     fee,
     feePercent,
-    feeMinEuro
+    feeMinEur
   }
 }
 `;
@@ -127,13 +127,16 @@ export class QuickCheckoutDataService {
 
   getRates(fromValue: string, toValue: string): QueryRef<any, EmptyObject> | null {
     if (this.apollo.client !== undefined) {
+      const vars = {
+        recaptcha: environment.recaptchaId,
+        currenciesFrom: [fromValue],
+        currencyTo: toValue
+      };
+      console.log(GET_RATES);
+      console.log(vars);
       return this.apollo.watchQuery<any>({
         query: GET_RATES,
-        variables: {
-          recaptcha: environment.recaptchaId,
-          currenciesFrom: [fromValue],
-          currencyTo: toValue
-        },
+        variables: vars,
         fetchPolicy: 'network-only'
       });
     } else {

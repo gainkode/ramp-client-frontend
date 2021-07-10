@@ -977,7 +977,7 @@ export type TransactionShort = {
   status: TransactionStatus;
   fee: Scalars['Float'];
   feePercent: Scalars['Float'];
-  feeMinEuro: Scalars['Float'];
+  feeMinEur: Scalars['Float'];
   feeDetails?: Maybe<Scalars['String']>;
   currencyToSpend: Scalars['String'];
   amountToSpend: Scalars['Float'];
