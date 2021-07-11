@@ -31,6 +31,8 @@ const GET_FEE_SETTINGS_POST = gql`
         targetTransactionTypes
         targetFilterType
         targetFilterValues
+        currency
+        rateToEur
       }
     }
   }

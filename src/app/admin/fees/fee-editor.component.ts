@@ -28,6 +28,7 @@ export class FeeEditorComponent implements OnInit {
     set currentScheme(scheme: FeeScheme | null) {
         this.forceValidate = false;
         this.setFormData(scheme);
+        this.currency = scheme?.currency as string;
         this.settingsId = (scheme !== null) ? scheme?.id : '';
     }
     @Input() create = false;
@@ -45,6 +46,7 @@ export class FeeEditorComponent implements OnInit {
     errorMessage = '';
     selectedTab = 0;
     targetEntity = '';
+    currency = '';
     separatorKeysCodes: number[] = [ENTER, COMMA];
     filteredTargetValues: Observable<CommonTargetValue[]> | undefined;
 

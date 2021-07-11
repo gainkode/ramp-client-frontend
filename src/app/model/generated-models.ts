@@ -147,6 +147,7 @@ export type QueryMySettingsFeeArgs = {
   transactionType: TransactionType;
   instrument: PaymentInstrument;
   paymentProvider?: Maybe<PaymentProvider>;
+  currency?: Maybe<Scalars['String']>;
 };
 
 
@@ -154,6 +155,7 @@ export type QueryMySettingsFeeFullArgs = {
   transactionType: TransactionType;
   instrument: PaymentInstrument;
   paymentProvider?: Maybe<PaymentProvider>;
+  currency?: Maybe<Scalars['String']>;
 };
 
 
@@ -163,6 +165,7 @@ export type QueryGetAppropriateSettingsFeeArgs = {
   targetUserMode: UserMode;
   instrument: PaymentInstrument;
   paymentProvider?: Maybe<PaymentProvider>;
+  currency?: Maybe<Scalars['String']>;
   filterType?: Maybe<SettingsFeeTargetFilterType>;
   filterValue?: Maybe<Scalars['String']>;
 };
@@ -180,6 +183,7 @@ export type QueryGetAppropriateSettingsCostArgs = {
   transactionType: TransactionType;
   instrument: PaymentInstrument;
   paymentProvider?: Maybe<PaymentProvider>;
+  currency?: Maybe<Scalars['String']>;
   filterType?: Maybe<SettingsCostTargetFilterType>;
   filterValue?: Maybe<Scalars['String']>;
 };
@@ -189,6 +193,7 @@ export type QueryGetAppropriateSettingsCostFullArgs = {
   transactionType: TransactionType;
   instrument: PaymentInstrument;
   paymentProvider?: Maybe<PaymentProvider>;
+  currency?: Maybe<Scalars['String']>;
   filterType?: Maybe<SettingsCostTargetFilterType>;
   filterValue?: Maybe<Scalars['String']>;
 };
@@ -611,6 +616,8 @@ export type SettingsFee = {
   createdBy?: Maybe<Scalars['String']>;
   default?: Maybe<Scalars['Boolean']>;
   deleted?: Maybe<Scalars['DateTime']>;
+  currency?: Maybe<Scalars['String']>;
+  rateToEur?: Maybe<Scalars['Float']>;
 };
 
 export enum SettingsFeeTargetFilterType {
@@ -651,6 +658,8 @@ export type SettingsFeeShort = {
   __typename?: 'SettingsFeeShort';
   terms: Scalars['String'];
   wireDetails: Scalars['String'];
+  currency?: Maybe<Scalars['String']>;
+  rateToEur?: Maybe<Scalars['Float']>;
 };
 
 export type SettingsCostListResult = {

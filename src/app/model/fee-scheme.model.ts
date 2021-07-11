@@ -46,6 +46,8 @@ export class FeeScheme {
     provider: Array<PaymentProvider> = [];
     terms!: FeeShemeTerms;
     details!: FeeShemeWireDetails;
+    currency!: string;
+    rateToEur!: number;
 
     constructor(data: SettingsFee | null) {
         if (data !== null) {
@@ -55,6 +57,8 @@ export class FeeScheme {
             this.description = data.description as string;
             this.terms = new FeeShemeTerms(data.terms);
             this.details = new FeeShemeWireDetails(data.wireDetails);
+            this.currency = data.currency as string ?? 'euro';
+            this.rateToEur = data.rateToEur as number;
             data.targetInstruments?.forEach(x => this.instrument.push(x as PaymentInstrument));
             data.targetPaymentProviders?.forEach(x => this.provider.push(x as PaymentProvider));
             data.targetTransactionTypes?.forEach(x => this.trxType.push(x as TransactionType));

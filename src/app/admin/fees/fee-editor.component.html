@@ -163,7 +163,7 @@
 
             <!-- Min transaction fee -->
             <mat-form-field class="form-element">
-                <mat-label>Min. transaction fee, euro</mat-label>
+                <mat-label>Min. transaction fee, {{currency}}</mat-label>
                 <input type="text" matInput formControlName="minTransactionFee" maxlength="10" placeholder="&#8364;5"
                     required />
                 <mat-error *ngIf="this.schemeForm.get('minTransactionFee')?.hasError('required')">
