@@ -17,6 +17,7 @@ import { MatStepper } from "@angular/material/stepper";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription, Observable } from "rxjs";
 import { map, startWith } from "rxjs/operators";
+import { ExchangeRateComponent } from "../components/exchange-rate.component";
 import { CommonGroupValue } from "../model/common.model";
 import {
   LoginResult,
@@ -57,28 +58,20 @@ import { WalletValidator } from "../utils/wallet.validator";
   styleUrls: ["container.component.scss"],
 })
 export class ContainerComponent implements OnInit, OnDestroy {
-  @ViewChild("checkoutStepper") private stepper: MatStepper | undefined =
-    undefined;
+  @ViewChild("checkoutStepper") private stepper: MatStepper | undefined = undefined;
+  @ViewChild("exchangerate") private exchangeRateComponent: ExchangeRateComponent | undefined = undefined;
   @ViewChild("details") private ngDetailsForm: NgForm | undefined = undefined;
-  @ViewChild("paymentinfo") private ngPaymentInfoForm: NgForm | undefined =
-    undefined;
-  @ViewChild("verification") private ngVerificationForm: NgForm | undefined =
-    undefined;
-  @ViewChild("confirmation") private ngConfirmationForm: NgForm | undefined =
-    undefined;
+  @ViewChild("paymentinfo") private ngPaymentInfoForm: NgForm | undefined = undefined;
+  @ViewChild("verification") private ngVerificationForm: NgForm | undefined = undefined;
+  @ViewChild("confirmation") private ngConfirmationForm: NgForm | undefined = undefined;
   @ViewChild("payment") private ngPaymentForm: NgForm | undefined = undefined;
   @ViewChild("redirect") private ngRedirectForm: NgForm | undefined = undefined;
   @ViewChild("emailinput") emailElement: ElementRef | undefined = undefined;
-  @ViewChild("paymentinfonext") paymentInfoNextElement: ElementRef | undefined =
-  undefined;
-  @ViewChild("verificationreset") verificationResetElement:
-    | ElementRef
-    | undefined = undefined;
+  @ViewChild("paymentinfonext") paymentInfoNextElement: ElementRef | undefined = undefined;
+  @ViewChild("verificationreset") verificationResetElement: | ElementRef | undefined = undefined;
   @ViewChild("codeinput") codeElement: ElementRef | undefined = undefined;
-  @ViewChild("redirectnext") redirectNextElement: ElementRef | undefined =
-  undefined;
-  @ViewChild("checkoutdone") checkoutDoneElement: ElementRef | undefined =
-  undefined;
+  @ViewChild("redirectnext") redirectNextElement: ElementRef | undefined = undefined;
+  @ViewChild("checkoutdone") checkoutDoneElement: ElementRef | undefined = undefined;
   @ViewChild("iframe") iframe!: ElementRef;
   @Input() set internal(val: boolean) {
     this.internalPayment = val;
@@ -101,6 +94,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
   paymentTitle = "";
   paymentCreditCard = false;
   priceEdit = false;
+  transactionTypeEdit = false;
   settingsCommon: SettingsCommon | null = null;
   sourceCurrencies: CurrencyView[] = [];
   destinationCurrencies: CurrencyView[] = [];
@@ -292,6 +286,9 @@ export class ContainerComponent implements OnInit, OnDestroy {
         this.detailsAmountFromControl?.updateValueAndValidity();
         this.summary.currencyFrom = this.currentSourceCurrency.id;
       }
+      if (this.transactionTypeEdit === false) {
+        this.exchangeRateComponent?.updateRate();
+      }
     });
     this.detailsCurrencyToControl?.valueChanges.subscribe((val) => {
       this.currentDestinationCurrency = this.getCurrency(val);
@@ -307,6 +304,9 @@ export class ContainerComponent implements OnInit, OnDestroy {
       } else {
         this.walletAddressName = "Wallet address";
       }
+      if (this.transactionTypeEdit === false) {
+        this.exchangeRateComponent?.updateRate();
+      }
     });
     this.detailsAmountFromControl?.valueChanges.subscribe((val) => {
       this.setSummuryAmountFrom(val);
@@ -318,11 +318,19 @@ export class ContainerComponent implements OnInit, OnDestroy {
       this.setSummuryEmail(val);
     });
     this.detailsTransactionControl?.valueChanges.subscribe((val) => {
+      const currencyFrom = this.detailsCurrencyFromControl?.value;
+      const currencyTo = this.detailsCurrencyToControl?.value;
+      const amountFrom = this.detailsAmountFromControl?.value;
+      const amountTo = this.detailsAmountToControl?.value;
+      this.transactionTypeEdit = true;
       this.currentTransaction = val as TransactionType;
-      this.setCurrencyValues();
+      this.summary.transactionType = this.currentTransaction;
+      this.setCurrencyValues(currencyTo, currencyFrom, amountTo, amountFrom);
       this.priceEdit = true;
       this.updateAmountTo();
       this.priceEdit = false;
+      this.transactionTypeEdit = false;
+      this.exchangeRateComponent?.updateRate();
     });
     this.isApmSelected = false;
     this.paymentInfoInstrumentControl?.valueChanges.subscribe((val) => {
@@ -417,12 +425,9 @@ export class ContainerComponent implements OnInit, OnDestroy {
     let res = this.redirectForm.valid;
     if (!res) {
       const ready = this.redirectCompleteControl?.value;
-      console.log("transactionApproved: form is invalid", ready);
     }
     if (res) {
-      if (
-        data.transactionServiceNotification.type === "PaymentStatusChanged"
-      ) {
+      if (data.transactionServiceNotification.type === "PaymentStatusChanged") {
         res = true;
       } else {
         console.log(
@@ -432,9 +437,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
       }
     }
     if (res) {
-      if (
-        data.transactionServiceNotification.userId === this.user?.userId
-      ) {
+      if (data.transactionServiceNotification.userId === this.user?.userId) {
         res = true;
       } else {
         console.log(
@@ -647,30 +650,35 @@ export class ContainerComponent implements OnInit, OnDestroy {
     this.setCurrencyValues();
   }
 
-  private setCurrencyValues(): void {
+  private setCurrencyValues(defaultSrcCurrency: string = '', defaultDstCurrency: string = '',
+    defaultSrcAmount: number = 0, defaultDstAmount: number = 0): void {
     if (this.currentTransaction === TransactionType.Deposit) {
-      this.sourceCurrencies = this.pCurrencies.filter(
-        (c) => c.fial
-      );
-      this.destinationCurrencies = this.pCurrencies.filter(
-        (c) => !c.fial
-      );
+      this.sourceCurrencies = this.pCurrencies.filter((c) => c.fiat);
+      this.destinationCurrencies = this.pCurrencies.filter((c) => !c.fiat);
     } else if (this.currentTransaction === TransactionType.Withdrawal) {
-      this.destinationCurrencies = this.pCurrencies.filter(
-        (c) => c.fial
-      );
-      this.sourceCurrencies = this.pCurrencies.filter(
-        (c) => !c.fial
-      );
+      this.destinationCurrencies = this.pCurrencies.filter((c) => c.fiat);
+      this.sourceCurrencies = this.pCurrencies.filter((c) => !c.fiat);
     }
     if (this.sourceCurrencies.length > 0) {
-      this.detailsCurrencyFromControl?.setValue(this.sourceCurrencies[0].id);
-      if (this.currentSourceCurrency) {
-        this.detailsAmountFromControl?.setValue(this.currentSourceCurrency.minAmount);
+      if (defaultSrcCurrency === '') {
+        defaultSrcCurrency = this.sourceCurrencies[0].id;
       }
+      this.detailsCurrencyFromControl?.setValue(defaultSrcCurrency);
+      if (this.currentSourceCurrency) {
+        if (defaultSrcAmount === 0) {
+          defaultSrcAmount = this.currentSourceCurrency.minAmount;
+        }
+      }
+      this.detailsAmountFromControl?.setValue(defaultSrcAmount);
     }
     if (this.destinationCurrencies.length > 0) {
-      this.detailsCurrencyToControl?.setValue(this.destinationCurrencies[0].id);
+      if (defaultDstCurrency === '') {
+        defaultDstCurrency = this.destinationCurrencies[0].id;
+      }
+      this.detailsCurrencyToControl?.setValue(defaultDstCurrency);
+      if (defaultDstAmount !== 0) {
+        this.detailsAmountToControl?.setValue(defaultDstAmount);
+      }
     }
   }
 

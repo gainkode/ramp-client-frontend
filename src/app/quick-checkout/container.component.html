@@ -342,7 +342,7 @@
       </mat-horizontal-stepper>
     </div>
     <div *ngIf="!processDone" class="wizard-panel-summary">
-      <app-exchange-rate [summary]="summary" (update)="onUpdateRate($event)"></app-exchange-rate>
+      <app-exchange-rate #exchangerate [summary]="summary" (update)="onUpdateRate($event)"></app-exchange-rate>
       <app-checkout-summary [summary]="summary"></app-checkout-summary>
     </div>
     <div *ngIf="processDone" class="wizard-panel-summary">

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 import { Subscription, timer } from 'rxjs';
-import { Rate } from '../model/generated-models';
+import { Rate, TransactionType } from '../model/generated-models';
 import { CheckoutSummary } from '../model/payment.model';
 import { ErrorService } from '../services/error.service';
 import { QuickCheckoutDataService } from '../services/quick-checkout.service';
@@ -63,8 +63,15 @@ export class ExchangeRateComponent implements OnInit, OnDestroy {
         let result = true;
         this.errorMessage = '';
         if (this.countDownInit) {
-            const currencyFrom = this.summary?.currencyFrom as string;
-            const currencyTo = this.summary?.currencyTo as string;
+            let currencyFrom = '';
+            let currencyTo = '';
+            if (this.summary?.transactionType === TransactionType.Withdrawal) {
+                currencyTo = this.summary?.currencyTo as string;
+                currencyFrom = this.summary?.currencyFrom as string;
+            } else if (this.summary?.transactionType === TransactionType.Deposit) {
+                currencyFrom = this.summary?.currencyTo as string;
+                currencyTo = this.summary?.currencyFrom as string;
+            }
             if (currencyFrom && currencyTo) {
                 const ratesData = this.dataService.getRates(currencyFrom, currencyTo);
                 if (ratesData === null) {
@@ -98,11 +105,11 @@ export class ExchangeRateComponent implements OnInit, OnDestroy {
 
     private setDefaultRate(): void {
         const rate = {
-            currencyFrom: 'EUR',
-            currencyTo: 'BTC',
-            originalRate: 2,
-            depositRate: 2,
-            withdrawRate: 2
+            currencyFrom: 'BTC',
+            currencyTo: 'EUR',
+            originalRate: 1,
+            depositRate: 1,
+            withdrawRate: 1
         };
         this.update.emit(rate);
     }
@@ -111,6 +118,11 @@ export class ExchangeRateComponent implements OnInit, OnDestroy {
         this.spinnerMode = 'determinate';
         this.countDown = 60;
         this.spinnerValue = 0;
+    }
+
+    updateRate() {
+        this.loadRates();
+        this.restartCountDown();
     }
 
     getCountDownValue(): string {

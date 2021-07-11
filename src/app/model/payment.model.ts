@@ -79,7 +79,7 @@ export class CurrencyView {
     minAmount = 0;
     rateFactor = 0;
     validateAsSymbol: string | null = null;
-    fial = false;
+    fiat = false;
 
     constructor(data: SettingsCurrency) {
         this.id = data.symbol;
@@ -89,7 +89,7 @@ export class CurrencyView {
         this.minAmount = data.minAmount;
         this.rateFactor = data.rateFactor;
         this.validateAsSymbol = data.validateAsSymbol as string | null;
-        this.fial = data.fiat as boolean;
+        this.fiat = data.fiat as boolean;
     }
 }
 
@@ -265,6 +265,27 @@ export class CheckoutSummary {
     status: TransactionStatus = TransactionStatus.Pending;
     card: CardView | null = null;
     provider: PaymentProvider | null = null;
+
+    private fromCrypto = false;
+    private toCrypto = true;
+
+    get isFromCrypto(): boolean {
+        let result = false;
+        switch (this.transactionType) {
+            case TransactionType.Withdrawal:
+                result = true;
+        }
+        return result;
+    }
+
+    get isToCrypto(): boolean {
+        let result = false;
+        switch (this.transactionType) {
+            case TransactionType.Deposit:
+                result = true;
+        }
+        return result;
+    }
 
     reset(): void {
         this.orderId = '';

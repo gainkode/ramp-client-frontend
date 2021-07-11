@@ -64,7 +64,6 @@ export class LoginPanelComponent implements OnInit {
                 }
                 this.auth.socialSignOut();
                 this.auth.authenticateSocial(providerName.toLowerCase(), token).subscribe((loginData) => {
-                    console.log(loginData);
                     const userData = loginData.data.login as LoginResult;
                     this.progressChange.emit(false);
                     if (userData.user?.mode === UserMode.InternalWallet) {

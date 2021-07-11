@@ -11,7 +11,6 @@ import { ErrorService } from '../services/error.service';
 })
 export class TwoFaCodeComponent {
     @Input() set activated(val: boolean) {
-        console.log('activated', val);
         this.twoFaEnabled = val;
         this.setButtonTitle();
         if (!this.twoFaEnabled) {
@@ -70,8 +69,6 @@ export class TwoFaCodeComponent {
         this.auth.enable2Fa(code).subscribe(({ data }) => {
             this.inProgress = false;
             const resultData = data.enable2fa as LoginResult;
-            console.log(resultData);
-            console.log(resultData.user);
             if (resultData.user?.is2faEnabled) {
                 this.resetForm();
                 this.activated = true;

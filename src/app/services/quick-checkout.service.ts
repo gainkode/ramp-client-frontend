@@ -132,7 +132,6 @@ export class QuickCheckoutDataService {
         currenciesFrom: [fromValue],
         currencyTo: toValue
       };
-      console.log(GET_RATES);
       console.log(vars);
       return this.apollo.watchQuery<any>({
         query: GET_RATES,
@@ -160,8 +159,6 @@ export class QuickCheckoutDataService {
     destinationType: TransactionDestinationType, walletAddress: string): Observable<any> {
     const paymentPrvdr = (provider as string === '') ? undefined : provider;
     const wallet = (walletAddress === '') ? undefined : walletAddress;
-
-
     const vars = {
       transactionType,
       currencyToSpend,
@@ -172,8 +169,6 @@ export class QuickCheckoutDataService {
       destinationType,
       destination: wallet
     };
-    console.log(vars);
-
     return this.apollo.mutate({
       mutation: CREATE_TRANSACTION,
       variables: vars
