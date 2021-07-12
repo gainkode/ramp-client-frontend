@@ -172,7 +172,7 @@ const GET_TRANSACTIONS_POST = gql`
         status
         fee
         feePercent
-        feeMinEuro
+        feeMinEur
         feeDetails
         currencyToSpend
         amountToSpend
