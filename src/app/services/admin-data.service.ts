@@ -7,7 +7,7 @@ import { FeeScheme } from "../model/fee-scheme.model";
 import { TransactionSource, UserType } from "../model/generated-models";
 import { KycLevel, KycScheme } from "../model/identification.model";
 
-const GET_FEE_SETTINGS_POST = gql`
+const GET_FEE_SETTINGS = gql`
   query GetSettingsFee {
     getSettingsFee(
       filter: ""
@@ -38,7 +38,7 @@ const GET_FEE_SETTINGS_POST = gql`
   }
 `;
 
-const GET_COST_SETTINGS_POST = gql`
+const GET_COST_SETTINGS = gql`
   query GetSettingsCost {
     getSettingsCost(
       filter: ""
@@ -65,7 +65,7 @@ const GET_COST_SETTINGS_POST = gql`
   }
 `;
 
-const GET_KYC_SETTINGS_POST = gql`
+const GET_KYC_SETTINGS = gql`
   query GetSettingsKyc {
     getSettingsKyc(
       filter: ""
@@ -102,7 +102,7 @@ const GET_KYC_SETTINGS_POST = gql`
   }
 `;
 
-const GET_KYC_LEVELS_POST = gql`
+const GET_KYC_LEVELS = gql`
   query GetSettingsKycLevels($filter: String) {
     getSettingsKycLevels(
       filter: $filter
@@ -123,7 +123,7 @@ const GET_KYC_LEVELS_POST = gql`
   }
 `;
 
-const GET_TRANSACTIONS_POST = gql`
+const GET_TRANSACTIONS = gql`
   query GetTransactions(
     $userId: String
     $sourcesOnly: [TransactionSource!]
@@ -213,7 +213,7 @@ const GET_TRANSACTIONS_POST = gql`
   }
 `;
 
-const GET_CUSTOMERS_POST = gql`
+const GET_CUSTOMERS = gql`
   query GetUsers(
     $filter: String
     $skip: Int
@@ -248,7 +248,7 @@ const GET_CUSTOMERS_POST = gql`
   }
 `;
 
-const ADD_SETTINGS_FEE_POST = gql`
+const ADD_SETTINGS_FEE = gql`
   mutation AddSettingsFee(
     $name: String!
     $description: String
@@ -282,7 +282,7 @@ const ADD_SETTINGS_FEE_POST = gql`
   }
 `;
 
-const ADD_SETTINGS_COST_POST = gql`
+const ADD_SETTINGS_COST = gql`
   mutation AddSettingsCost(
     $name: String!
     $description: String
@@ -310,7 +310,7 @@ const ADD_SETTINGS_COST_POST = gql`
   }
 `;
 
-const ADD_SETTINGS_KYC_POST = gql`
+const ADD_SETTINGS_KYC = gql`
   mutation AddSettingsKyc(
     $name: String!
     $description: String
@@ -348,7 +348,7 @@ const ADD_SETTINGS_KYC_POST = gql`
   }
 `;
 
-const ADD_KYC_LEVEL_SETTINGS_POST = gql`
+const ADD_KYC_LEVEL_SETTINGS = gql`
   mutation AddSettingsKycLevel(
     $name: String!
     $description: String
@@ -368,7 +368,7 @@ const ADD_KYC_LEVEL_SETTINGS_POST = gql`
   }
 `;
 
-const UPDATE_SETTINGS_FEE_POST = gql`
+const UPDATE_SETTINGS_FEE = gql`
   mutation UpdateSettingsFee(
     $settingsId: ID!
     $name: String!
@@ -404,7 +404,7 @@ const UPDATE_SETTINGS_FEE_POST = gql`
   }
 `;
 
-const UPDATE_SETTINGS_COST_POST = gql`
+const UPDATE_SETTINGS_COST = gql`
   mutation UpdateSettingsCost(
     $settingsId: ID!
     $name: String!
@@ -434,7 +434,7 @@ const UPDATE_SETTINGS_COST_POST = gql`
   }
 `;
 
-const UPDATE_SETTINGS_KYC_POST = gql`
+const UPDATE_SETTINGS_KYC = gql`
   mutation UpdateSettingsKyc(
     $settingsId: ID!
     $name: String!
@@ -474,7 +474,7 @@ const UPDATE_SETTINGS_KYC_POST = gql`
   }
 `;
 
-const UPDATE_KYC_LEVEL_SETTINGS_POST = gql`
+const UPDATE_KYC_LEVEL_SETTINGS = gql`
   mutation UpdateSettingsKycLevel(
     $settingsId: ID!
     $name: String!
@@ -496,7 +496,7 @@ const UPDATE_KYC_LEVEL_SETTINGS_POST = gql`
   }
 `;
 
-const DELETE_SETTINGS_FEE_POST = gql`
+const DELETE_SETTINGS_FEE = gql`
   mutation DeleteSettingsFee($settingsId: ID!) {
     deleteSettingsFee(settingsId: $settingsId) {
       settingsFeeId
@@ -504,7 +504,7 @@ const DELETE_SETTINGS_FEE_POST = gql`
   }
 `;
 
-const DELETE_SETTINGS_COST_POST = gql`
+const DELETE_SETTINGS_COST = gql`
   mutation DeleteSettingsCost($settingsId: ID!) {
     deleteSettingsCost(settingsId: $settingsId) {
       settingsCostId
@@ -512,7 +512,7 @@ const DELETE_SETTINGS_COST_POST = gql`
   }
 `;
 
-const DELETE_SETTINGS_KYC_POST = gql`
+const DELETE_SETTINGS_KYC = gql`
   mutation DeleteSettingsKyc($settingsId: ID!) {
     deleteSettingsKyc(settingsId: $settingsId) {
       settingsKycId
@@ -520,7 +520,7 @@ const DELETE_SETTINGS_KYC_POST = gql`
   }
 `;
 
-const DELETE_KYC_LEVEL_SETTINGS_POST = gql`
+const DELETE_KYC_LEVEL_SETTINGS = gql`
   mutation DeleteSettingsKycLevel($settingsId: ID!) {
     deleteSettingsKycLevel(settingsId: $settingsId) {
       settingsKycLevelId
@@ -535,7 +535,7 @@ export class AdminDataService {
   getFeeSettings(): QueryRef<any, EmptyObject> | null {
     if (this.apollo.client !== undefined) {
       return this.apollo.watchQuery<any>({
-        query: GET_FEE_SETTINGS_POST,
+        query: GET_FEE_SETTINGS,
         pollInterval: 30000,
         fetchPolicy: "network-only",
       });
@@ -547,7 +547,7 @@ export class AdminDataService {
   getCostSettings(): QueryRef<any, EmptyObject> | null {
     if (this.apollo.client !== undefined) {
       return this.apollo.watchQuery<any>({
-        query: GET_COST_SETTINGS_POST,
+        query: GET_COST_SETTINGS,
         pollInterval: 30000,
         fetchPolicy: "network-only",
       });
@@ -559,7 +559,7 @@ export class AdminDataService {
   getKycSettings(): QueryRef<any, EmptyObject> | null {
     if (this.apollo.client !== undefined) {
       return this.apollo.watchQuery<any>({
-        query: GET_KYC_SETTINGS_POST,
+        query: GET_KYC_SETTINGS,
         pollInterval: 30000,
         fetchPolicy: "network-only",
       });
@@ -572,7 +572,7 @@ export class AdminDataService {
     const userTypeFilter = userType === null ? "" : userType?.toString();
     if (this.apollo.client !== undefined) {
       return this.apollo.watchQuery<any>({
-        query: GET_KYC_LEVELS_POST,
+        query: GET_KYC_LEVELS,
         variables: { filter: userTypeFilter },
         pollInterval: 30000,
         fetchPolicy: "network-only",
@@ -592,7 +592,7 @@ export class AdminDataService {
     if (this.apollo.client !== undefined) {
       const orderFields = [{ orderBy: orderField, desc: orderDesc }];
       return this.apollo.watchQuery<any>({
-        query: GET_TRANSACTIONS_POST,
+        query: GET_TRANSACTIONS,
         variables: {
           userId: "",
           sourcesOnly: sources,
@@ -618,7 +618,7 @@ export class AdminDataService {
     if (this.apollo.client !== undefined) {
       const orderFields = [{ orderBy: orderField, desc: orderDesc }];
       return this.apollo.watchQuery<any>({
-        query: GET_CUSTOMERS_POST,
+        query: GET_CUSTOMERS,
         variables: {
           filter: "",
           skip: pageIndex * takeItems,
@@ -636,7 +636,7 @@ export class AdminDataService {
   saveFeeSettings(settings: FeeScheme, create: boolean): Observable<any> {
     return create
       ? this.apollo.mutate({
-        mutation: ADD_SETTINGS_FEE_POST,
+        mutation: ADD_SETTINGS_FEE,
         variables: {
           name: settings.name,
           description: settings.description,
@@ -652,7 +652,7 @@ export class AdminDataService {
         },
       })
       : this.apollo.mutate({
-        mutation: UPDATE_SETTINGS_FEE_POST,
+        mutation: UPDATE_SETTINGS_FEE,
         variables: {
           settingsId: settings.id,
           name: settings.name,
@@ -673,7 +673,7 @@ export class AdminDataService {
   saveCostSettings(settings: CostScheme, create: boolean): Observable<any> {
     return create
       ? this.apollo.mutate({
-        mutation: ADD_SETTINGS_COST_POST,
+        mutation: ADD_SETTINGS_COST,
         variables: {
           name: settings.name,
           description: settings.description,
@@ -686,7 +686,7 @@ export class AdminDataService {
         },
       })
       : this.apollo.mutate({
-        mutation: UPDATE_SETTINGS_COST_POST,
+        mutation: UPDATE_SETTINGS_COST,
         variables: {
           settingsId: settings.id,
           name: settings.name,
@@ -704,7 +704,7 @@ export class AdminDataService {
   saveKycSettings(settings: KycScheme, create: boolean): Observable<any> {
     return create
       ? this.apollo.mutate({
-        mutation: ADD_SETTINGS_KYC_POST,
+        mutation: ADD_SETTINGS_KYC,
         variables: {
           name: settings.name,
           description: settings.description,
@@ -722,7 +722,7 @@ export class AdminDataService {
         },
       })
       : this.apollo.mutate({
-        mutation: UPDATE_SETTINGS_KYC_POST,
+        mutation: UPDATE_SETTINGS_KYC,
         variables: {
           settingsId: settings.id,
           name: settings.name,
@@ -745,7 +745,7 @@ export class AdminDataService {
   saveKycLevelSettings(level: KycLevel, create: boolean): Observable<any> {
     return create
       ? this.apollo.mutate({
-        mutation: ADD_KYC_LEVEL_SETTINGS_POST,
+        mutation: ADD_KYC_LEVEL_SETTINGS,
         variables: {
           name: level.name,
           description: level.description,
@@ -754,7 +754,7 @@ export class AdminDataService {
         },
       })
       : this.apollo.mutate({
-        mutation: UPDATE_KYC_LEVEL_SETTINGS_POST,
+        mutation: UPDATE_KYC_LEVEL_SETTINGS,
         variables: {
           settingsId: level.id,
           name: level.name,
@@ -768,7 +768,7 @@ export class AdminDataService {
   deleteFeeSettings(settingsId: string): Observable<any> | null {
     if (this.apollo.client !== undefined) {
       return this.apollo.mutate({
-        mutation: DELETE_SETTINGS_FEE_POST,
+        mutation: DELETE_SETTINGS_FEE,
         variables: {
           settingsId,
         },
@@ -781,7 +781,7 @@ export class AdminDataService {
   deleteCostSettings(settingsId: string): Observable<any> | null {
     if (this.apollo.client !== undefined) {
       return this.apollo.mutate({
-        mutation: DELETE_SETTINGS_COST_POST,
+        mutation: DELETE_SETTINGS_COST,
         variables: {
           settingsId,
         },
@@ -794,7 +794,7 @@ export class AdminDataService {
   deleteKycSettings(settingsId: string): Observable<any> | null {
     if (this.apollo.client !== undefined) {
       return this.apollo.mutate({
-        mutation: DELETE_SETTINGS_KYC_POST,
+        mutation: DELETE_SETTINGS_KYC,
         variables: {
           settingsId,
         },
@@ -807,7 +807,7 @@ export class AdminDataService {
   deleteKycLevelSettings(settingsId: string): Observable<any> | null {
     if (this.apollo.client !== undefined) {
       return this.apollo.mutate({
-        mutation: DELETE_KYC_LEVEL_SETTINGS_POST,
+        mutation: DELETE_KYC_LEVEL_SETTINGS,
         variables: {
           settingsId,
         },
