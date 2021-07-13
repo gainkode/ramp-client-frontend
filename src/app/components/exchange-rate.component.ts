@@ -4,7 +4,7 @@ import { Subscription, timer } from 'rxjs';
 import { Rate, TransactionType } from '../model/generated-models';
 import { CheckoutSummary } from '../model/payment.model';
 import { ErrorService } from '../services/error.service';
-import { QuickCheckoutDataService } from '../services/quick-checkout.service';
+import { PaymentDataService } from '../services/payment.service';
 
 @Component({
     selector: 'app-exchange-rate',
@@ -25,7 +25,7 @@ export class ExchangeRateComponent implements OnInit, OnDestroy {
     private pTimerSubscription!: any;
     updatingTimer = timer(0, 1000);
 
-    constructor(private dataService: QuickCheckoutDataService, private errorHandler: ErrorService) { }
+    constructor(private dataService: PaymentDataService, private errorHandler: ErrorService) { }
 
     ngOnInit(): void {
         this.subscribeTimer();

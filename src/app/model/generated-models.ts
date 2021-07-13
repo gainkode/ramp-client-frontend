@@ -997,6 +997,10 @@ export type TransactionShort = {
   amountToReceiveInEur: Scalars['Float'];
   amountToReceiveWithoutFee: Scalars['Float'];
   rate: Scalars['Float'];
+  rateFiat: Scalars['Float'];
+  rateEur: Scalars['Float'];
+  defaultFiatToEurRate: Scalars['Float'];
+  defaultCryptoToEurRate: Scalars['Float'];
   destinationType?: Maybe<TransactionDestinationType>;
   destination?: Maybe<Scalars['String']>;
   countryCode2?: Maybe<Scalars['String']>;

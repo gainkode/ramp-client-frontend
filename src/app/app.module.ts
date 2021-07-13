@@ -19,7 +19,7 @@ import { AdminDataService } from './services/admin-data.service';
 import { ErrorService } from './services/error.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { environment } from 'src/environments/environment';
-import { QuickCheckoutDataService } from './services/quick-checkout.service';
+import { PaymentDataService } from './services/payment.service';
 import { NotificationService } from './services/notification.service';
 import { CommonDataService } from './services/common-data.service';
 import { getMainDefinition } from '@apollo/client/utilities';
@@ -60,7 +60,7 @@ import { ProfileDataService } from './services/profile.service';
     AdminDataService,
     ProfileDataService,
     CommonDataService,
-    QuickCheckoutDataService,
+    PaymentDataService,
     NotificationService,
     ErrorService
   ],

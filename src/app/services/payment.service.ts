@@ -76,7 +76,8 @@ mutation CreateTransaction(
     code,
     fee,
     feePercent,
-    feeMinEur
+    feeMinEur,
+    data
   }
 }
 `;
@@ -122,7 +123,7 @@ mutation PreAuth(
 `;
 
 @Injectable()
-export class QuickCheckoutDataService {
+export class PaymentDataService {
   constructor(private apollo: Apollo) { }
 
   getRates(fromValue: string, toValue: string): QueryRef<any, EmptyObject> | null {
@@ -132,7 +133,6 @@ export class QuickCheckoutDataService {
         currenciesFrom: [fromValue],
         currencyTo: toValue
       };
-      console.log(vars);
       return this.apollo.watchQuery<any>({
         query: GET_RATES,
         variables: vars,
@@ -169,6 +169,7 @@ export class QuickCheckoutDataService {
       destinationType,
       destination: wallet
     };
+    console.log(vars);
     return this.apollo.mutate({
       mutation: CREATE_TRANSACTION,
       variables: vars

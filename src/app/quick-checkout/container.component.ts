@@ -34,6 +34,7 @@ import {
   User,
   UserMode,
   UserState,
+  UserType,
 } from "../model/generated-models";
 import { KycLevelShort } from "../model/identification.model";
 import {
@@ -48,7 +49,7 @@ import { AuthService } from "../services/auth.service";
 import { CommonDataService } from "../services/common-data.service";
 import { ErrorService } from "../services/error.service";
 import { NotificationService } from "../services/notification.service";
-import { QuickCheckoutDataService } from "../services/quick-checkout.service";
+import { PaymentDataService } from "../services/payment.service";
 import { round } from "../utils/utils";
 import { WalletValidator } from "../utils/wallet.validator";
 
@@ -78,7 +79,6 @@ export class ContainerComponent implements OnInit, OnDestroy {
   }
   internalPayment = false;
   affiliateCode = 0;
-  user: User | null = null;
   errorMessage = "";
   inProgress = false;
   walletAddressName = "";
@@ -118,6 +118,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
   private pSettingsSubscription!: any;
   private pKycSettingsSubscription!: any;
   private pStateSubscription!: any;
+  private pNotificationsSubscription!: any;
 
   detailsForm = this.formBuilder.group({
     email: [
@@ -232,7 +233,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
 
   constructor(
     private auth: AuthService,
-    private dataService: QuickCheckoutDataService,
+    private dataService: PaymentDataService,
     private notification: NotificationService,
     private commonService: CommonDataService,
     private errorHandler: ErrorService,
@@ -242,7 +243,6 @@ export class ContainerComponent implements OnInit, OnDestroy {
   ) {
     const affiliateCodeInput = route.snapshot.params['affiliateCode'];
     this.affiliateCode = parseInt(affiliateCodeInput, 10);
-    this.user = auth.user;
     this.summary = new CheckoutSummary();
     this.detailsEmailControl = this.detailsForm.get("email");
     this.detailsAmountFromControl = this.detailsForm.get("amountFrom");
@@ -266,16 +266,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.notification.subscribeToTransactionNotifications().subscribe(
-      ({ data }) => {
-        console.log('transaction notification', data);
-        this.handleTransactionSubscription(data);
-      },
-      (error) => {
-        // there was an error subscribing to notifications
-        console.log(error);
-      }
-    );
+    this.startNotificationListener();
     this.detailsCurrencyFromControl?.valueChanges.subscribe((val) => {
       this.currentSourceCurrency = this.getCurrency(val);
       if (this.currentSourceCurrency !== null) {
@@ -371,6 +362,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
     if (t) {
       t.unsubscribe();
     }
+    this.stopNotificationListener();
   }
 
   onUpdateRate(rate: Rate): void {
@@ -400,10 +392,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
   }
 
   onSocialAuthenticated(userData: LoginResult): void {
-    if (
-      userData.authTokenAction === "Default" ||
-      userData.authTokenAction === "KycRequired"
-    ) {
+    if (userData.authTokenAction === "Default" || userData.authTokenAction === "KycRequired") {
       this.handleSuccessLogin(userData);
     } else if (userData.authTokenAction === "ConfirmName") {
       this.auth.logout();
@@ -422,10 +411,34 @@ export class ContainerComponent implements OnInit, OnDestroy {
     return this.getAmountMinError(this.currentSourceCurrency);
   }
 
+  private startNotificationListener(): void {
+    console.log('transaction notification start');
+    this.pSettingsSubscription = this.notification.subscribeToTransactionNotifications().subscribe(
+      ({ data }) => {
+        console.log('transaction notification', data);
+        this.handleTransactionSubscription(data);
+      },
+      (error) => {
+        // there was an error subscribing to notifications
+        console.log('Notifications', error);
+      }
+    );
+  }
+
+  private stopNotificationListener(): void {
+    const s = this.pNotificationsSubscription as Subscription;
+    if (s) {
+      s.unsubscribe();
+    }
+  }
+
   private handleTransactionSubscription(data: any): void {
     let res = this.redirectForm.valid;
     if (!res) {
       const ready = this.redirectCompleteControl?.value;
+      if (!ready) {
+        console.log('transactionApproved: invalid form');
+      }
     }
     if (res) {
       if (data.transactionServiceNotification.type === "PaymentStatusChanged") {
@@ -435,26 +448,18 @@ export class ContainerComponent implements OnInit, OnDestroy {
       }
     }
     if (res) {
-      if (data.transactionServiceNotification.userId === this.user?.userId) {
+      if (data.transactionServiceNotification.userId === this.auth.user?.userId) {
         res = true;
       } else {
-        console.log(
-          "transactionApproved: unexpected userId",
-          data.transactionServiceNotification.userId
-        );
+        console.log('transactionApproved: unexpected userId', data.transactionServiceNotification.userId);
       }
     }
     if (res) {
-      if (
-        data.transactionServiceNotification.operationType === "preauth" ||
-        data.transactionServiceNotification.operationType === "approved"
-      ) {
+      if (data.transactionServiceNotification.operationType === "preauth" ||
+        data.transactionServiceNotification.operationType === "approved") {
         res = true;
       } else {
-        console.log(
-          "transactionApproved: unexpected operationType",
-          data.transactionServiceNotification.operationType
-        );
+        console.log('transactionApproved: unexpected operationType', data.transactionServiceNotification.operationType);
       }
     }
     if (res) {
@@ -481,34 +486,26 @@ export class ContainerComponent implements OnInit, OnDestroy {
     this.auth.setLoginUser(userData);
     this.detailsEmailControl?.setValue(userData.user?.email);
     this.inProgress = true;
-    this.auth.getSettingsCommon().valueChanges.subscribe(
-      (settings) => {
-        this.inProgress = false;
-        if (this.auth.user !== null) {
-          const settingsCommon: SettingsCommon =
-            settings.data.getSettingsCommon;
-          this.auth.setLocalSettingsCommon(settingsCommon);
-          this.needToLogin = false;
-          if (this.stepper) {
-            this.stepper?.next();
-          }
-        }
-      },
-      (error) => {
-        this.inProgress = false;
-        if (this.auth.token !== "") {
-          this.errorMessage = this.errorHandler.getError(
-            error.message,
-            "Unable to load common settings"
-          );
-        } else {
-          this.errorMessage = this.errorHandler.getError(
-            error.message,
-            "Unable to authenticate user"
-          );
+    this.auth.getSettingsCommon().valueChanges.subscribe((settings) => {
+      this.inProgress = false;
+      if (this.auth.user !== null) {
+        const settingsCommon: SettingsCommon = settings.data.getSettingsCommon;
+        this.auth.setLocalSettingsCommon(settingsCommon);
+        this.needToLogin = false;
+        this.stopNotificationListener();
+        this.startNotificationListener();
+        if (this.stepper) {
+          this.stepper?.next();
         }
       }
-    );
+    }, (error) => {
+      this.inProgress = false;
+      if (this.auth.token !== "") {
+        this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load common settings');
+      } else {
+        this.errorMessage = this.errorHandler.getError(error.message, 'Unable to authenticate user');
+      }
+    });
   }
 
   private registerOrder(): void {
@@ -531,6 +528,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
       destinationType,
       destination
     ).subscribe(({ data }) => {
+      console.log(data);
       const order = data.createTransaction as TransactionShort;
       this.inProgress = false;
       if (order.code) {
@@ -551,10 +549,8 @@ export class ContainerComponent implements OnInit, OnDestroy {
       }
     }, (error) => {
       this.inProgress = false;
-      if (this.errorHandler.getCurrentError() === "auth.token_invalid") {
-        const email = this.summary.email;
+      if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
         this.resetStepper();
-        this.detailsEmailControl?.setValue(email);
       } else {
         this.paymentInfoTransactionIdControl?.reset();
         this.errorMessage = this.errorHandler.getError(
@@ -597,10 +593,14 @@ export class ContainerComponent implements OnInit, OnDestroy {
         (error) => {
           this.inProgress = false;
           if (this.auth.token !== "") {
-            this.errorMessage = this.errorHandler.getError(
-              error.message,
-              "Unable to load settings"
-            );
+            if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
+              this.resetStepper();
+            } else {
+              this.errorMessage = this.errorHandler.getError(
+                error.message,
+                "Unable to load settings"
+              );
+            }
           }
         }
       );
@@ -632,10 +632,11 @@ export class ContainerComponent implements OnInit, OnDestroy {
         },
         (error) => {
           this.inProgress = false;
-          this.errorMessage = this.errorHandler.getError(
-            error.message,
-            "Unable to load settings"
-          );
+          if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
+            this.resetStepper();
+          } else {
+            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load settings');
+          }
         }
       );
     }
@@ -813,62 +814,72 @@ export class ContainerComponent implements OnInit, OnDestroy {
 
   private loadWallets(): void {
     this.userWallets = [];
-    if (this.auth.authenticated && this.summary.transactionType === TransactionType.Deposit) {
-      const stateData = this.dataService.getState();
-      if (stateData === null) {
-        this.errorMessage = this.errorHandler.getRejectedCookieMessage();
-      } else {
-        this.inProgress = true;
-        if (this.pStateSubscription) {
-          const s = this.pStateSubscription as Subscription;
-          s.unsubscribe();
-        }
-        this.pStateSubscription = stateData.valueChanges.subscribe(({ data }) => {
-          const vaultAssets: string[] = [];
-          const externalWallets: string[] = [];
-
-          // temp
-          externalWallets.push('1DDBCjmy3zpkNu3rfAFX2ucrRbPiunn1SB');
-          // temp
-
-          const state = data.myState as UserState;
-          state.vault?.assets?.forEach((x) => {
-            if (x.id === this.summary.currencyTo) {
-              x.addresses?.forEach((a) => vaultAssets.push(a.address as string));
-            }
-          });
-          if (vaultAssets.length > 0) {
-            const v = new CommonGroupValue();
-            v.id = 'Vault Assets';
-            v.values = vaultAssets;
-            this.userWallets.push(v);
+    // if the user is one time user, no reason to request kyc status and wallets. Just require KYC verification and go on
+    if (this.auth.user?.mode === UserMode.OneTimeWallet) {
+      //this.showKycStep = true;
+      this.getKycStatus();
+    } else {
+      if (this.auth.authenticated && this.summary.transactionType === TransactionType.Deposit) {
+        const stateData = this.dataService.getState();
+        if (stateData === null) {
+          this.errorMessage = this.errorHandler.getRejectedCookieMessage();
+        } else {
+          this.inProgress = true;
+          if (this.pStateSubscription) {
+            const s = this.pStateSubscription as Subscription;
+            s.unsubscribe();
           }
-          state.externalWallets?.forEach((x) => {
-            x.assets?.forEach((a) => {
-              if (a.id === this.summary.currencyTo) {
-                externalWallets.push(a.address as string);
+          this.pStateSubscription = stateData.valueChanges.subscribe(({ data }) => {
+            const vaultAssets: string[] = [];
+            const externalWallets: string[] = [];
+
+            // temp
+            externalWallets.push('1DDBCjmy3zpkNu3rfAFX2ucrRbPiunn1SB');
+            // temp
+
+            const state = data.myState as UserState;
+            state.vault?.assets?.forEach((x) => {
+              if (x.id === this.summary.currencyTo) {
+                x.addresses?.forEach((a) => vaultAssets.push(a.address as string));
               }
             });
+            if (vaultAssets.length > 0) {
+              const v = new CommonGroupValue();
+              v.id = 'Vault Assets';
+              v.values = vaultAssets;
+              this.userWallets.push(v);
+            }
+            state.externalWallets?.forEach((x) => {
+              x.assets?.forEach((a) => {
+                if (a.id === this.summary.currencyTo) {
+                  externalWallets.push(a.address as string);
+                }
+              });
+            });
+            if (externalWallets.length > 0) {
+              const v = new CommonGroupValue();
+              v.id = 'External Wallets';
+              v.values = externalWallets;
+              this.userWallets.push(v);
+            }
+            this.paymentInfoAddressControl?.setValue('');
+            if (this.isWalletVisible) {
+              this.paymentInfoAddressControl?.setValidators([Validators.required]);
+            } else {
+              this.paymentInfoAddressControl?.setValidators([]);
+            }
+            this.paymentInfoAddressControl?.updateValueAndValidity();
+            this.inProgress = false;
+            this.getKycStatus();
+          }, (error) => {
+            this.inProgress = false;
+            if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
+              this.resetStepper();
+            } else {
+              this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load wallet list');
+            }
           });
-          if (externalWallets.length > 0) {
-            const v = new CommonGroupValue();
-            v.id = 'External Wallets';
-            v.values = externalWallets;
-            this.userWallets.push(v);
-          }
-          this.paymentInfoAddressControl?.setValue('');
-          if (this.isWalletVisible) {
-            this.paymentInfoAddressControl?.setValidators([Validators.required]);
-          } else {
-            this.paymentInfoAddressControl?.setValidators([]);
-          }
-          this.paymentInfoAddressControl?.updateValueAndValidity();
-          this.inProgress = false;
-          this.getKycStatus();
-        }, (error) => {
-          this.inProgress = false;
-          this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load wallet list');
-        });
+        }
       }
     }
   }
@@ -894,15 +905,10 @@ export class ContainerComponent implements OnInit, OnDestroy {
         },
         (error) => {
           this.inProgress = false;
-          if (
-            this.errorHandler.getCurrentError() === "auth.token_invalid"
-          ) {
+          if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
             this.resetStepper();
           } else {
-            this.errorMessage = this.errorHandler.getError(
-              error.message,
-              "Unable to load your identification status"
-            );
+            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load your identification status');
           }
         }
       );
@@ -966,6 +972,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
     const defaultCurrencyFrom = this.detailsCurrencyFromControl?.value;
     const defaultCurrencyTo = this.detailsCurrencyToControl?.value;
     const defaultTransaction = this.detailsTransactionControl?.value;
+    const defaultEmail = this.summary.email;
     this.inProgress = false;
     this.errorMessage = "";
     this.walletAddressName = "";
@@ -995,6 +1002,8 @@ export class ContainerComponent implements OnInit, OnDestroy {
       if (user) {
         this.detailsEmailControl?.setValue(user.email);
       }
+    } else {
+      this.detailsEmailControl?.setValue(defaultEmail);
     }
     if (defaultTransaction) {
       this.detailsTransactionControl?.setValue(defaultTransaction);
@@ -1074,14 +1083,11 @@ export class ContainerComponent implements OnInit, OnDestroy {
         },
         (error) => {
           this.inProgress = false;
-          if (this.errorHandler.getCurrentError() === "auth.token_invalid") {
+          if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
             this.resetStepper();
           } else {
             this.confirmationCompleteControl?.reset();
-            this.errorMessage = this.errorHandler.getError(
-              error.message,
-              "Unable to confirm your order"
-            );
+            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to confirm your order');
           }
         }
       );
@@ -1101,35 +1107,29 @@ export class ContainerComponent implements OnInit, OnDestroy {
       const transaction = this.paymentInfoTransactionIdControl?.value;
       const instrument = this.paymentInfoInstrumentControl?.value;
       const payment = this.paymentInfoProviderControl?.value;
-      this.dataService
-        .preAuth(transaction, instrument, payment, this.currentCard)
-        .subscribe(
-          ({ data }) => {
-            const preAuthResult = data.preauth as PaymentPreauthResultShort;
-            const order = preAuthResult.order;
-            this.summary.setPaymentInfo(
-              order?.provider as PaymentProvider,
-              instrument as PaymentInstrument,
-              order?.paymentInfo as string
-            );
-            this.iframeContent = preAuthResult.html as string;
-            this.inProgress = false;
-            if (this.stepper) {
-              this.stepper?.next();
-            }
-          },
-          (error) => {
-            this.inProgress = false;
-            if (this.errorHandler.getCurrentError() === "auth.token_invalid") {
-              this.resetStepper();
-            } else {
-              this.errorMessage = this.errorHandler.getError(
-                error.message,
-                "Unable to confirm your order"
-              );
-            }
+      this.dataService.preAuth(transaction, instrument, payment, this.currentCard).subscribe(
+        ({ data }) => {
+          const preAuthResult = data.preauth as PaymentPreauthResultShort;
+          const order = preAuthResult.order;
+          this.summary.setPaymentInfo(
+            order?.provider as PaymentProvider,
+            instrument as PaymentInstrument,
+            order?.paymentInfo as string
+          );
+          this.iframeContent = preAuthResult.html as string;
+          this.inProgress = false;
+          if (this.stepper) {
+            this.stepper?.next();
           }
-        );
+        }, (error) => {
+          this.inProgress = false;
+          if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
+            this.resetStepper();
+          } else {
+            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to confirm your order');
+          }
+        }
+      );
     }
   }
 
