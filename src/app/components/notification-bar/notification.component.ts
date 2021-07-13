@@ -32,7 +32,7 @@ export class NotificationIconComponent implements OnInit {
     this.notification.subscribeToNotifications().subscribe(
       ({ data }) => {
         // got data
-        console.log(data);
+        console.log('user notification', data);
         if (this.user) {
           if (this.user.userId === data.newNotification?.userId) {
             this.openSnackBar(data.newNotification);

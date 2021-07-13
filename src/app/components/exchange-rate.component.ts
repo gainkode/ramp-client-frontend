@@ -19,6 +19,7 @@ export class ExchangeRateComponent implements OnInit, OnDestroy {
     spinnerValue = 0;
     countDown = 0;
     countDownInit = false;
+    lastChanceError = false;
     errorMessage = '';
     private pRateSubscription!: any;
     private pTimerSubscription!: any;
@@ -47,10 +48,16 @@ export class ExchangeRateComponent implements OnInit, OnDestroy {
                 if (this.countDown > 0) {
                     this.countDown -= 1;
                     this.spinnerValue = (60 - this.countDown) / 60 * 100;
+                    this.lastChanceError = false;
                 } else {
                     const success = this.loadRates();
                     if (!success) {
-                        this.countDown = 1;
+                        if (!this.lastChanceError) {
+                            this.countDown = 1;
+                        }
+                        this.lastChanceError = true;
+                    } else {
+                        this.lastChanceError = false;
                     }
                 }
             } else {
@@ -118,6 +125,7 @@ export class ExchangeRateComponent implements OnInit, OnDestroy {
         this.spinnerMode = 'determinate';
         this.countDown = 60;
         this.spinnerValue = 0;
+        this.lastChanceError = false;
     }
 
     updateRate() {

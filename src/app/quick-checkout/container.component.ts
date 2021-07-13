@@ -268,6 +268,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.notification.subscribeToTransactionNotifications().subscribe(
       ({ data }) => {
+        console.log('transaction notification', data);
         this.handleTransactionSubscription(data);
       },
       (error) => {
@@ -430,10 +431,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
       if (data.transactionServiceNotification.type === "PaymentStatusChanged") {
         res = true;
       } else {
-        console.log(
-          "transactionApproved: unexpected type",
-          data.transactionServiceNotification.type
-        );
+        console.log('transactionApproved: unexpected type', data.transactionServiceNotification.type);
       }
     }
     if (res) {
@@ -963,6 +961,11 @@ export class ContainerComponent implements OnInit, OnDestroy {
   }
 
   resetStepper(): void {
+    const defaultAmountFrom = this.detailsAmountFromControl?.value;
+    const defaultAmountTo = this.detailsAmountToControl?.value;
+    const defaultCurrencyFrom = this.detailsCurrencyFromControl?.value;
+    const defaultCurrencyTo = this.detailsCurrencyToControl?.value;
+    const defaultTransaction = this.detailsTransactionControl?.value;
     this.inProgress = false;
     this.errorMessage = "";
     this.walletAddressName = "";
@@ -993,18 +996,23 @@ export class ContainerComponent implements OnInit, OnDestroy {
         this.detailsEmailControl?.setValue(user.email);
       }
     }
-    this.detailsTransactionControl?.setValue(TransactionType.Deposit);
+    if (defaultTransaction) {
+      this.detailsTransactionControl?.setValue(defaultTransaction);
+    } else {
+      this.detailsTransactionControl?.setValue(TransactionType.Deposit);
+    }
     this.paymentInfoInstrumentControl?.setValue(PaymentInstrument.CreditCard);
+    this.setCurrencyValues(defaultCurrencyFrom, defaultCurrencyTo, defaultAmountFrom, defaultAmountTo);
     this.transactionApproved = false;
     this.iframeContent = "";
-    const iframe = document.getElementById("iframe");
+    const iframe = document.getElementById('iframe');
     if (iframe) {
-      (<HTMLIFrameElement>iframe).srcdoc = "";
+      (<HTMLIFrameElement>iframe).srcdoc = '';
     }
   }
 
   detailsCompleted(): void {
-    this.detailsCompleteControl?.setValue("ready");
+    this.detailsCompleteControl?.setValue('ready');
     if (this.detailsForm.valid) {
       const userEmail = this.detailsEmailControl?.value;
       let authenticated = false;
@@ -1022,27 +1030,21 @@ export class ContainerComponent implements OnInit, OnDestroy {
       } else {
         this.inProgress = true;
         // try to authorised a user
-        this.auth.authenticate(userEmail, "", true).subscribe(
+        this.auth.authenticate(userEmail, '', true).subscribe(
           ({ data }) => {
             const userData = data.login as LoginResult;
             this.handleSuccessLogin(userData);
           },
           (error) => {
             this.inProgress = false;
-            if (
-              this.errorHandler.getCurrentError() ===
-              "auth.password_null_or_empty"
-            ) {
+            if (this.errorHandler.getCurrentError() === 'auth.password_null_or_empty') {
               // Internal user cannot be authorised without a password, so need to
               //  show the authorisation form to fill
               this.auth.logout();
               this.needToLogin = true;
               this.defaultUserName = this.detailsEmailControl?.value;
             } else {
-              this.errorMessage = this.errorHandler.getError(
-                error.message,
-                "Unable to authenticate user"
-              );
+              this.errorMessage = this.errorHandler.getError(error.message, 'Unable to authenticate user');
             }
           }
         );
