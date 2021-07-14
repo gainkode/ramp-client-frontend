@@ -814,71 +814,77 @@ export class ContainerComponent implements OnInit, OnDestroy {
 
   private loadWallets(): void {
     this.userWallets = [];
-    // if the user is one time user, no reason to request kyc status and wallets. Just require KYC verification and go on
-    if (this.auth.user?.mode === UserMode.OneTimeWallet) {
-      //this.showKycStep = true;
-      this.getKycStatus();
-    } else {
-      if (this.auth.authenticated && this.summary.transactionType === TransactionType.Deposit) {
-        const stateData = this.dataService.getState();
-        if (stateData === null) {
-          this.errorMessage = this.errorHandler.getRejectedCookieMessage();
-        } else {
-          this.inProgress = true;
-          if (this.pStateSubscription) {
-            const s = this.pStateSubscription as Subscription;
-            s.unsubscribe();
-          }
-          this.pStateSubscription = stateData.valueChanges.subscribe(({ data }) => {
-            const vaultAssets: string[] = [];
-            const externalWallets: string[] = [];
-
-            // temp
-            externalWallets.push('1DDBCjmy3zpkNu3rfAFX2ucrRbPiunn1SB');
-            // temp
-
-            const state = data.myState as UserState;
-            state.vault?.assets?.forEach((x) => {
-              if (x.id === this.summary.currencyTo) {
-                x.addresses?.forEach((a) => vaultAssets.push(a.address as string));
-              }
-            });
-            if (vaultAssets.length > 0) {
-              const v = new CommonGroupValue();
-              v.id = 'Vault Assets';
-              v.values = vaultAssets;
-              this.userWallets.push(v);
+    this.paymentInfoAddressControl?.setValue('');
+    this.paymentInfoAddressControl?.setValidators([]);
+    this.paymentInfoAddressControl?.updateValueAndValidity();
+    if (this.auth.authenticated) {
+      // if the user is one time user, no reason to request kyc status and wallets. Just require KYC verification and go on
+      if (this.auth.user?.mode === UserMode.OneTimeWallet) {
+        this.getKycStatus();
+      } else {
+        if (this.summary.transactionType === TransactionType.Deposit) {
+          const stateData = this.dataService.getState();
+          if (stateData === null) {
+            this.errorMessage = this.errorHandler.getRejectedCookieMessage();
+          } else {
+            this.inProgress = true;
+            if (this.pStateSubscription) {
+              const s = this.pStateSubscription as Subscription;
+              s.unsubscribe();
             }
-            state.externalWallets?.forEach((x) => {
-              x.assets?.forEach((a) => {
-                if (a.id === this.summary.currencyTo) {
-                  externalWallets.push(a.address as string);
+            this.pStateSubscription = stateData.valueChanges.subscribe(({ data }) => {
+              const vaultAssets: string[] = [];
+              const externalWallets: string[] = [];
+
+              // temp
+              externalWallets.push('1DDBCjmy3zpkNu3rfAFX2ucrRbPiunn1SB');
+              // temp
+
+              const state = data.myState as UserState;
+              state.vault?.assets?.forEach((x) => {
+                if (x.id === this.summary.currencyTo) {
+                  x.addresses?.forEach((a) => vaultAssets.push(a.address as string));
                 }
               });
+              if (vaultAssets.length > 0) {
+                const v = new CommonGroupValue();
+                v.id = 'Vault Assets';
+                v.values = vaultAssets;
+                this.userWallets.push(v);
+              }
+              state.externalWallets?.forEach((x) => {
+                x.assets?.forEach((a) => {
+                  if (a.id === this.summary.currencyTo) {
+                    externalWallets.push(a.address as string);
+                  }
+                });
+              });
+              if (externalWallets.length > 0) {
+                const v = new CommonGroupValue();
+                v.id = 'External Wallets';
+                v.values = externalWallets;
+                this.userWallets.push(v);
+              }
+              this.paymentInfoAddressControl?.setValue('');
+              if (this.isWalletVisible) {
+                this.paymentInfoAddressControl?.setValidators([Validators.required]);
+              } else {
+                this.paymentInfoAddressControl?.setValidators([]);
+              }
+              this.paymentInfoAddressControl?.updateValueAndValidity();
+              this.inProgress = false;
+              this.getKycStatus();
+            }, (error) => {
+              this.inProgress = false;
+              if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
+                this.resetStepper();
+              } else {
+                this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load wallet list');
+              }
             });
-            if (externalWallets.length > 0) {
-              const v = new CommonGroupValue();
-              v.id = 'External Wallets';
-              v.values = externalWallets;
-              this.userWallets.push(v);
-            }
-            this.paymentInfoAddressControl?.setValue('');
-            if (this.isWalletVisible) {
-              this.paymentInfoAddressControl?.setValidators([Validators.required]);
-            } else {
-              this.paymentInfoAddressControl?.setValidators([]);
-            }
-            this.paymentInfoAddressControl?.updateValueAndValidity();
-            this.inProgress = false;
-            this.getKycStatus();
-          }, (error) => {
-            this.inProgress = false;
-            if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
-              this.resetStepper();
-            } else {
-              this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load wallet list');
-            }
-          });
+          }
+        } else {
+          this.getKycStatus();
         }
       }
     }
