@@ -90,7 +90,7 @@ export class AppModule {
       }
     }
     if (networkError) {
-      console.log(networkError);
+      console.log('network error', networkError);
     }
     return forward(operation);
   });

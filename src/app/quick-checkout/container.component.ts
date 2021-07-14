@@ -266,7 +266,6 @@ export class ContainerComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.startNotificationListener();
     this.detailsCurrencyFromControl?.valueChanges.subscribe((val) => {
       this.currentSourceCurrency = this.getCurrency(val);
       if (this.currentSourceCurrency !== null) {
@@ -412,6 +411,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
   }
 
   private startNotificationListener(): void {
+    this.stopNotificationListener();
     console.log('transaction notification start');
     this.pSettingsSubscription = this.notification.subscribeToTransactionNotifications().subscribe(
       ({ data }) => {
@@ -420,7 +420,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
       },
       (error) => {
         // there was an error subscribing to notifications
-        console.log('Notifications', error);
+        console.log('Notifications error', error);
       }
     );
   }
@@ -492,8 +492,6 @@ export class ContainerComponent implements OnInit, OnDestroy {
         const settingsCommon: SettingsCommon = settings.data.getSettingsCommon;
         this.auth.setLocalSettingsCommon(settingsCommon);
         this.needToLogin = false;
-        this.stopNotificationListener();
-        this.startNotificationListener();
         if (this.stepper) {
           this.stepper?.next();
         }
@@ -528,7 +526,6 @@ export class ContainerComponent implements OnInit, OnDestroy {
       destinationType,
       destination
     ).subscribe(({ data }) => {
-      console.log(data);
       const order = data.createTransaction as TransactionShort;
       this.inProgress = false;
       if (order.code) {
@@ -947,6 +944,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
           this.paymentTitle = "Payment is not implemented";
         }
       } else if (step.selectedStep.label === "redirect") {
+        this.startNotificationListener();
         focusInput = this.codeElement?.nativeElement as HTMLInputElement;
         if (this.iframedoc) {
           this.redirectCompleteControl?.setValue("ready");
