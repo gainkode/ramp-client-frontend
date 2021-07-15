@@ -999,6 +999,8 @@ export type TransactionShort = {
   rate: Scalars['Float'];
   rateFiat: Scalars['Float'];
   rateEur: Scalars['Float'];
+  fiatToEurRate: Scalars['Float'];
+  eurToFiatRate: Scalars['Float'];
   defaultFiatToEurRate: Scalars['Float'];
   defaultCryptoToEurRate: Scalars['Float'];
   destinationType?: Maybe<TransactionDestinationType>;
@@ -1210,6 +1212,8 @@ export type Transaction = {
   rate: Scalars['Float'];
   rateFiat: Scalars['Float'];
   rateEur: Scalars['Float'];
+  rateFiatToEur: Scalars['Float'];
+  rateEurToFiat: Scalars['Float'];
   defaultFiatToEurRate: Scalars['Float'];
   defaultCryptoToEurRate: Scalars['Float'];
   destinationType?: Maybe<TransactionDestinationType>;
