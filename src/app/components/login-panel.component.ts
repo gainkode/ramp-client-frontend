@@ -88,9 +88,9 @@ export class LoginPanelComponent implements OnInit {
     }
 
     onSubmit(): void {
-        this.progressChange.emit(true);
         this.error.emit('');
         if (this.loginForm.valid) {
+            this.progressChange.emit(true);
             const login = this.loginForm.get('email')?.value;
             this.auth.authenticate(login, this.loginForm.get('password')?.value).subscribe(({ data }) => {
                 const userData = data.login as LoginResult;

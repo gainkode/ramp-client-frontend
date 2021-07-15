@@ -1,24 +1,24 @@
-import { StepperSelectionEvent } from "@angular/cdk/stepper";
-import { Input } from "@angular/core";
+import { StepperSelectionEvent } from '@angular/cdk/stepper';
+import { Input } from '@angular/core';
 import {
   Component,
   ElementRef,
   OnDestroy,
   OnInit,
   ViewChild,
-} from "@angular/core";
+} from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
   NgForm,
   Validators,
-} from "@angular/forms";
-import { MatStepper } from "@angular/material/stepper";
-import { ActivatedRoute, Router } from "@angular/router";
-import { Subscription, Observable } from "rxjs";
-import { map, startWith } from "rxjs/operators";
-import { ExchangeRateComponent } from "../components/exchange-rate.component";
-import { CommonGroupValue } from "../model/common.model";
+} from '@angular/forms';
+import { MatStepper } from '@angular/material/stepper';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription, Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+import { ExchangeRateComponent } from '../components/exchange-rate.component';
+import { CommonGroupValue } from '../model/common.model';
 import {
   LoginResult,
   PaymentInstrument,
@@ -35,8 +35,8 @@ import {
   UserMode,
   UserState,
   UserType,
-} from "../model/generated-models";
-import { KycLevelShort } from "../model/identification.model";
+} from '../model/generated-models';
+import { KycLevelShort } from '../model/identification.model';
 import {
   CardView,
   CheckoutSummary,
@@ -44,54 +44,54 @@ import {
   PaymentProviderList,
   QuickCheckoutPaymentInstrumentList,
   QuickCheckoutTransactionTypeList,
-} from "../model/payment.model";
-import { AuthService } from "../services/auth.service";
-import { CommonDataService } from "../services/common-data.service";
-import { ErrorService } from "../services/error.service";
-import { NotificationService } from "../services/notification.service";
-import { PaymentDataService } from "../services/payment.service";
-import { round } from "../utils/utils";
-import { WalletValidator } from "../utils/wallet.validator";
+} from '../model/payment.model';
+import { AuthService } from '../services/auth.service';
+import { CommonDataService } from '../services/common-data.service';
+import { ErrorService } from '../services/error.service';
+import { NotificationService } from '../services/notification.service';
+import { PaymentDataService } from '../services/payment.service';
+import { round } from '../utils/utils';
+import { WalletValidator } from '../utils/wallet.validator';
 
 @Component({
-  selector: "app-quick-checkout",
-  templateUrl: "container.component.html",
-  styleUrls: ["container.component.scss"],
+  selector: 'app-quick-checkout',
+  templateUrl: 'container.component.html',
+  styleUrls: ['container.component.scss'],
 })
 export class ContainerComponent implements OnInit, OnDestroy {
-  @ViewChild("checkoutStepper") private stepper: MatStepper | undefined = undefined;
-  @ViewChild("exchangerate") private exchangeRateComponent: ExchangeRateComponent | undefined = undefined;
-  @ViewChild("details") private ngDetailsForm: NgForm | undefined = undefined;
-  @ViewChild("paymentinfo") private ngPaymentInfoForm: NgForm | undefined = undefined;
-  @ViewChild("verification") private ngVerificationForm: NgForm | undefined = undefined;
-  @ViewChild("confirmation") private ngConfirmationForm: NgForm | undefined = undefined;
-  @ViewChild("payment") private ngPaymentForm: NgForm | undefined = undefined;
-  @ViewChild("redirect") private ngRedirectForm: NgForm | undefined = undefined;
-  @ViewChild("emailinput") emailElement: ElementRef | undefined = undefined;
-  @ViewChild("paymentinfonext") paymentInfoNextElement: ElementRef | undefined = undefined;
-  @ViewChild("verificationreset") verificationResetElement: | ElementRef | undefined = undefined;
-  @ViewChild("codeinput") codeElement: ElementRef | undefined = undefined;
-  @ViewChild("redirectnext") redirectNextElement: ElementRef | undefined = undefined;
-  @ViewChild("checkoutdone") checkoutDoneElement: ElementRef | undefined = undefined;
-  @ViewChild("iframe") iframe!: ElementRef;
+  @ViewChild('checkoutStepper') private stepper: MatStepper | undefined = undefined;
+  @ViewChild('exchangerate') private exchangeRateComponent: ExchangeRateComponent | undefined = undefined;
+  @ViewChild('details') private ngDetailsForm: NgForm | undefined = undefined;
+  @ViewChild('paymentinfo') private ngPaymentInfoForm: NgForm | undefined = undefined;
+  @ViewChild('verification') private ngVerificationForm: NgForm | undefined = undefined;
+  @ViewChild('confirmation') private ngConfirmationForm: NgForm | undefined = undefined;
+  @ViewChild('payment') private ngPaymentForm: NgForm | undefined = undefined;
+  @ViewChild('redirect') private ngRedirectForm: NgForm | undefined = undefined;
+  @ViewChild('emailinput') emailElement: ElementRef | undefined = undefined;
+  @ViewChild('paymentinfonext') paymentInfoNextElement: ElementRef | undefined = undefined;
+  @ViewChild('verificationreset') verificationResetElement: | ElementRef | undefined = undefined;
+  @ViewChild('codeinput') codeElement: ElementRef | undefined = undefined;
+  @ViewChild('redirectnext') redirectNextElement: ElementRef | undefined = undefined;
+  @ViewChild('checkoutdone') checkoutDoneElement: ElementRef | undefined = undefined;
+  @ViewChild('iframe') iframe!: ElementRef;
   @Input() set internal(val: boolean) {
     this.internalPayment = val;
   }
   internalPayment = false;
   affiliateCode = 0;
-  errorMessage = "";
+  errorMessage = '';
   inProgress = false;
-  walletAddressName = "";
+  walletAddressName = '';
   needToLogin = false;
-  defaultUserName = "";
+  defaultUserName = '';
   isApmSelected = false;
-  flow = "";
+  flow = '';
   showKycStep = false;
   showKycValidator = false;
   showKycSubmit = false;
   showCodeConfirm = false;
   processDone = false;
-  paymentTitle = "";
+  paymentTitle = '';
   paymentCreditCard = false;
   priceEdit = false;
   transactionTypeEdit = false;
@@ -108,8 +108,12 @@ export class ContainerComponent implements OnInit, OnDestroy {
   currentRate: Rate | null = null;
   currentTransaction = TransactionType.Deposit;
   currentCard: CardView = new CardView();
+  currentAmountFrom = 0;
+  currentAmountTo = 0;
+  currentCurrencyFrom = '';
+  currentCurrencyTo = '';
   iframedoc: any;
-  iframeContent = "";
+  iframeContent = '';
   transactionApproved = false;
   summary!: CheckoutSummary;
 
@@ -122,13 +126,13 @@ export class ContainerComponent implements OnInit, OnDestroy {
 
   detailsForm = this.formBuilder.group({
     email: [
-      "",
+      '',
       {
         validators: [
           Validators.required,
-          Validators.pattern("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$"),
+          Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$'),
         ],
-        updateOn: "change",
+        updateOn: 'change',
       },
     ],
     amountFrom: [
@@ -138,13 +142,10 @@ export class ContainerComponent implements OnInit, OnDestroy {
           Validators.required,
           Validators.pattern(this.pNumberPattern),
         ],
-        updateOn: "change",
+        updateOn: 'change',
       },
     ],
-    currencyFrom: [
-      "",
-      { validators: [Validators.required], updateOn: "change" },
-    ],
+    currencyFrom: ['', { validators: [Validators.required], updateOn: 'change' }],
     amountTo: [
       0,
       {
@@ -152,15 +153,12 @@ export class ContainerComponent implements OnInit, OnDestroy {
           Validators.required,
           Validators.pattern(this.pNumberPattern),
         ],
-        updateOn: "change",
+        updateOn: 'change',
       },
     ],
-    currencyTo: ["", { validators: [Validators.required], updateOn: "change" }],
-    transaction: [
-      TransactionType.Deposit,
-      { validators: [Validators.required], updateOn: "change" },
-    ],
-    complete: ["", { validators: [Validators.required], updateOn: "change" }],
+    currencyTo: ['', { validators: [Validators.required], updateOn: 'change' }],
+    transaction: [TransactionType.Deposit, { validators: [Validators.required], updateOn: 'change' }],
+    complete: ['', { validators: [Validators.required], updateOn: 'change' }],
   });
   detailsEmailControl: AbstractControl | null = null;
   detailsAmountFromControl: AbstractControl | null = null;
@@ -171,28 +169,23 @@ export class ContainerComponent implements OnInit, OnDestroy {
   detailsCompleteControl: AbstractControl | null = null;
   paymentInfoForm = this.formBuilder.group(
     {
-      instrument: [
-        PaymentInstrument.CreditCard,
-        { validators: [Validators.required], updateOn: "change" },
-      ],
-      provider: ["", { validators: [Validators.required], updateOn: "change" }],
-      currencyTo: [""],
-      address: ["", { validators: [Validators.required], updateOn: "change" }],
+      instrument: [PaymentInstrument.CreditCard, { validators: [Validators.required], updateOn: 'change' }],
+      provider: ['', { validators: [Validators.required], updateOn: 'change' }],
+      currencyTo: [''],
+      address: ['', { validators: [Validators.required], updateOn: 'change' }],
       transaction: [TransactionType.Deposit],
-      transactionId: [
-        "",
-        { validators: [Validators.required], updateOn: "change" },
+      transactionId: ['', { validators: [Validators.required], updateOn: 'change' },
       ],
     },
     {
       validators: [
         WalletValidator.addressValidator(
-          "address",
-          "currencyTo",
-          "transaction"
+          'address',
+          'currencyTo',
+          'transaction'
         ),
       ],
-      updateOn: "change",
+      updateOn: 'change',
     }
   );
   paymentInfoInstrumentControl: AbstractControl | null = null;
@@ -202,21 +195,21 @@ export class ContainerComponent implements OnInit, OnDestroy {
   paymentInfoTransactionControl: AbstractControl | null = null;
   paymentInfoTransactionIdControl: AbstractControl | null = null;
   verificationForm = this.formBuilder.group({
-    complete: ["", { validators: [Validators.required], updateOn: "change" }],
+    complete: ['', { validators: [Validators.required], updateOn: 'change' }],
   });
   verificationCompleteControl: AbstractControl | null = null;
   confirmationForm = this.formBuilder.group({
-    code: ["", { validators: [Validators.required], updateOn: "change" }],
-    complete: ["", { validators: [Validators.required], updateOn: "change" }],
+    code: ['', { validators: [Validators.required], updateOn: 'change' }],
+    complete: ['', { validators: [Validators.required], updateOn: 'change' }],
   });
   confirmationCodeControl: AbstractControl | null = null;
   confirmationCompleteControl: AbstractControl | null = null;
   paymentForm = this.formBuilder.group({
-    complete: ["", { validators: [Validators.required], updateOn: "change" }],
+    complete: ['', { validators: [Validators.required], updateOn: 'change' }],
   });
   paymentCompleteControl: AbstractControl | null = null;
   redirectForm = this.formBuilder.group({
-    complete: ["", { validators: [Validators.required], updateOn: "change" }],
+    complete: ['', { validators: [Validators.required], updateOn: 'change' }],
   });
   redirectCompleteControl: AbstractControl | null = null;
 
@@ -244,24 +237,24 @@ export class ContainerComponent implements OnInit, OnDestroy {
     const affiliateCodeInput = route.snapshot.params['affiliateCode'];
     this.affiliateCode = parseInt(affiliateCodeInput, 10);
     this.summary = new CheckoutSummary();
-    this.detailsEmailControl = this.detailsForm.get("email");
-    this.detailsAmountFromControl = this.detailsForm.get("amountFrom");
-    this.detailsCurrencyFromControl = this.detailsForm.get("currencyFrom");
-    this.detailsAmountToControl = this.detailsForm.get("amountTo");
-    this.detailsCurrencyToControl = this.detailsForm.get("currencyTo");
-    this.detailsTransactionControl = this.detailsForm.get("transaction");
-    this.detailsCompleteControl = this.detailsForm.get("complete");
-    this.paymentInfoInstrumentControl = this.paymentInfoForm.get("instrument");
-    this.paymentInfoProviderControl = this.paymentInfoForm.get("provider");
-    this.paymentInfoAddressControl = this.paymentInfoForm.get("address");
-    this.paymentInfoCurrencyToControl = this.paymentInfoForm.get("currencyTo");
-    this.paymentInfoTransactionControl = this.paymentInfoForm.get("transaction");
-    this.paymentInfoTransactionIdControl = this.paymentInfoForm.get("transactionId");
-    this.verificationCompleteControl = this.verificationForm.get("complete");
-    this.confirmationCodeControl = this.confirmationForm.get("code");
-    this.confirmationCompleteControl = this.confirmationForm.get("complete");
-    this.paymentCompleteControl = this.paymentForm.get("complete");
-    this.redirectCompleteControl = this.redirectForm.get("complete");
+    this.detailsEmailControl = this.detailsForm.get('email');
+    this.detailsAmountFromControl = this.detailsForm.get('amountFrom');
+    this.detailsCurrencyFromControl = this.detailsForm.get('currencyFrom');
+    this.detailsAmountToControl = this.detailsForm.get('amountTo');
+    this.detailsCurrencyToControl = this.detailsForm.get('currencyTo');
+    this.detailsTransactionControl = this.detailsForm.get('transaction');
+    this.detailsCompleteControl = this.detailsForm.get('complete');
+    this.paymentInfoInstrumentControl = this.paymentInfoForm.get('instrument');
+    this.paymentInfoProviderControl = this.paymentInfoForm.get('provider');
+    this.paymentInfoAddressControl = this.paymentInfoForm.get('address');
+    this.paymentInfoCurrencyToControl = this.paymentInfoForm.get('currencyTo');
+    this.paymentInfoTransactionControl = this.paymentInfoForm.get('transaction');
+    this.paymentInfoTransactionIdControl = this.paymentInfoForm.get('transactionId');
+    this.verificationCompleteControl = this.verificationForm.get('complete');
+    this.confirmationCodeControl = this.confirmationForm.get('code');
+    this.confirmationCompleteControl = this.confirmationForm.get('complete');
+    this.paymentCompleteControl = this.paymentForm.get('complete');
+    this.redirectCompleteControl = this.redirectForm.get('complete');
     this.currentTransaction = TransactionType.Deposit;
   }
 
@@ -293,7 +286,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
         this.detailsAmountToControl?.updateValueAndValidity();
         this.summary.currencyTo = this.currentDestinationCurrency.id;
       } else {
-        this.walletAddressName = "Wallet address";
+        this.walletAddressName = 'Wallet address';
       }
       if (this.transactionTypeEdit === false) {
         this.exchangeRateComponent?.updateRate();
@@ -325,8 +318,8 @@ export class ContainerComponent implements OnInit, OnDestroy {
     });
     this.isApmSelected = false;
     this.paymentInfoInstrumentControl?.valueChanges.subscribe((val) => {
-      this.errorMessage = "";
-      this.paymentInfoProviderControl?.setValue("");
+      this.errorMessage = '';
+      this.paymentInfoProviderControl?.setValue('');
       if (val === PaymentInstrument.Apm) {
         this.isApmSelected = true;
       } else {
@@ -339,11 +332,11 @@ export class ContainerComponent implements OnInit, OnDestroy {
     });
     this.userWalletsFiltered =
       this.paymentInfoAddressControl?.valueChanges.pipe(
-        startWith(""),
+        startWith(''),
         map((value) => this.filterUserWallets(value))
       );
     this.confirmationCodeControl?.valueChanges.subscribe((val) => {
-      this.errorMessage = "";
+      this.errorMessage = '';
     });
     this.loadDetailsForm();
   }
@@ -380,20 +373,20 @@ export class ContainerComponent implements OnInit, OnDestroy {
 
   onAuthenticated(userData: LoginResult): void {
     if (
-      userData.authTokenAction === "Default" ||
-      userData.authTokenAction === "KycRequired"
+      userData.authTokenAction === 'Default' ||
+      userData.authTokenAction === 'KycRequired'
     ) {
       this.handleSuccessLogin(userData);
     } else {
       this.auth.logout();
-      this.errorMessage = "Unable to sign in";
+      this.errorMessage = 'Unable to sign in';
     }
   }
 
   onSocialAuthenticated(userData: LoginResult): void {
-    if (userData.authTokenAction === "Default" || userData.authTokenAction === "KycRequired") {
+    if (userData.authTokenAction === 'Default' || userData.authTokenAction === 'KycRequired') {
       this.handleSuccessLogin(userData);
-    } else if (userData.authTokenAction === "ConfirmName") {
+    } else if (userData.authTokenAction === 'ConfirmName') {
       this.auth.logout();
       this.router.navigateByUrl(`/auth/personal/signup/${userData.authToken}`);
     } else {
@@ -413,7 +406,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
   private startNotificationListener(): void {
     this.stopNotificationListener();
     console.log('transaction notification start');
-    this.pSettingsSubscription = this.notification.subscribeToTransactionNotifications().subscribe(
+    this.pNotificationsSubscription = this.notification.subscribeToTransactionNotifications().subscribe(
       ({ data }) => {
         console.log('transaction notification', data);
         this.handleTransactionSubscription(data);
@@ -430,6 +423,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
     if (s) {
       s.unsubscribe();
     }
+    this.pNotificationsSubscription = undefined;
   }
 
   private handleTransactionSubscription(data: any): void {
@@ -441,7 +435,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
       }
     }
     if (res) {
-      if (data.transactionServiceNotification.type === "PaymentStatusChanged") {
+      if (data.transactionServiceNotification.type === 'PaymentStatusChanged') {
         res = true;
       } else {
         console.log('transactionApproved: unexpected type', data.transactionServiceNotification.type);
@@ -455,8 +449,8 @@ export class ContainerComponent implements OnInit, OnDestroy {
       }
     }
     if (res) {
-      if (data.transactionServiceNotification.operationType === "preauth" ||
-        data.transactionServiceNotification.operationType === "approved") {
+      if (data.transactionServiceNotification.operationType === 'preauth' ||
+        data.transactionServiceNotification.operationType === 'approved') {
         res = true;
       } else {
         console.log('transactionApproved: unexpected operationType', data.transactionServiceNotification.operationType);
@@ -498,7 +492,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
       }
     }, (error) => {
       this.inProgress = false;
-      if (this.auth.token !== "") {
+      if (this.auth.token !== '') {
         this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load common settings');
       } else {
         this.errorMessage = this.errorHandler.getError(error.message, 'Unable to authenticate user');
@@ -541,7 +535,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
           this.stepper?.next();
         }
       } else {
-        this.errorMessage = "Order code is invalid";
+        this.errorMessage = 'Order code is invalid';
         this.paymentInfoTransactionIdControl?.reset();
       }
     }, (error) => {
@@ -552,7 +546,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
         this.paymentInfoTransactionIdControl?.reset();
         this.errorMessage = this.errorHandler.getError(
           error.message,
-          "Unable to register a new order"
+          'Unable to register a new order'
         );
       }
     }
@@ -568,13 +562,13 @@ export class ContainerComponent implements OnInit, OnDestroy {
       this.errorMessage = this.errorHandler.getRejectedCookieMessage();
     } else if (this.settingsCommon === null) {
       this.inProgress = false;
-      this.errorMessage = "Unable to load common settings";
+      this.errorMessage = 'Unable to load common settings';
     } else {
       this.pKycSettingsSubscription = kycData.valueChanges.subscribe(
         ({ data }) => {
           const settingsKyc: SettingsKycShort | null = data.mySettingsKyc;
           if (settingsKyc === null) {
-            this.errorMessage = "Unable to load user identification settings";
+            this.errorMessage = 'Unable to load user identification settings';
           } else {
             const levels = settingsKyc.levels?.map(
               (val) => new KycLevelShort(val)
@@ -589,13 +583,13 @@ export class ContainerComponent implements OnInit, OnDestroy {
         },
         (error) => {
           this.inProgress = false;
-          if (this.auth.token !== "") {
+          if (this.auth.token !== '') {
             if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
               this.resetStepper();
             } else {
               this.errorMessage = this.errorHandler.getError(
                 error.message,
-                "Unable to load settings"
+                'Unable to load settings'
               );
             }
           }
@@ -614,36 +608,34 @@ export class ContainerComponent implements OnInit, OnDestroy {
       if (user) {
         this.detailsEmailControl?.setValue(user.email);
       }
-      this.pSettingsSubscription = currencyData.valueChanges.subscribe(
-        ({ data }) => {
-          const currencySettings =
-            data.getSettingsCurrency as SettingsCurrencyListResult;
-          let itemCount = 0;
-          if (currencySettings !== null) {
-            itemCount = currencySettings.count as number;
-            if (itemCount > 0) {
-              this.loadCurrencies(currencySettings);
-            }
-          }
-          this.inProgress = false;
-        },
-        (error) => {
-          this.inProgress = false;
-          if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
-            this.resetStepper();
-          } else {
-            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load settings');
+      this.pSettingsSubscription = currencyData.valueChanges.subscribe(({ data }) => {
+        const currencySettings = data.getSettingsCurrency as SettingsCurrencyListResult;
+        let itemCount = 0;
+        if (currencySettings !== null) {
+          itemCount = currencySettings.count as number;
+          if (itemCount > 0) {
+            this.loadCurrencies(currencySettings);
           }
         }
-      );
+        this.inProgress = false;
+      }, (error) => {
+        this.inProgress = false;
+        if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
+          this.resetStepper();
+        } else {
+          this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load settings');
+        }
+      });
     }
   }
 
   private loadCurrencies(settings: SettingsCurrencyListResult): void {
-    this.pCurrencies = settings.list?.map(
-      (val) => new CurrencyView(val)
-    ) as CurrencyView[];
-    this.setCurrencyValues();
+    this.pCurrencies = settings.list?.map((val) => new CurrencyView(val)) as CurrencyView[];
+    this.setCurrencyValues(this.currentCurrencyFrom, this.currentCurrencyTo, this.currentAmountFrom, this.currentAmountTo);
+    this.currentCurrencyFrom = '';
+    this.currentCurrencyTo = '';
+    this.currentAmountFrom = 0;
+    this.currentAmountTo = 0;
   }
 
   private setCurrencyValues(defaultSrcCurrency: string = '', defaultDstCurrency: string = '',
@@ -787,13 +779,13 @@ export class ContainerComponent implements OnInit, OnDestroy {
 
   private needToRequestKyc(kyc: User): boolean | null {
     let result = true;
-    if (kyc.kycStatus === "completed" || kyc.kycStatus === "pending") {
+    if (kyc.kycStatus === 'completed' || kyc.kycStatus === 'pending') {
       result = false;
     } else {
       if (kyc.kycValid === true) {
         result = false;
       } else if (kyc.kycValid === false) {
-        if (kyc.kycReviewRejectedType === "final") {
+        if (kyc.kycReviewRejectedType === 'final') {
           return null;
         }
       }
@@ -832,11 +824,6 @@ export class ContainerComponent implements OnInit, OnDestroy {
             this.pStateSubscription = stateData.valueChanges.subscribe(({ data }) => {
               const vaultAssets: string[] = [];
               const externalWallets: string[] = [];
-
-              // temp
-              externalWallets.push('1DDBCjmy3zpkNu3rfAFX2ucrRbPiunn1SB');
-              // temp
-
               const state = data.myState as UserState;
               state.vault?.assets?.forEach((x) => {
                 if (x.id === this.summary.currencyTo) {
@@ -900,7 +887,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
           this.inProgress = false;
           if (requestKyc === null) {
             this.errorMessage =
-              "We cannot proceed your payment because your identity is rejected";
+              'We cannot proceed your payment because your identity is rejected';
           } else {
             this.showKycStep = requestKyc;
           }
@@ -919,42 +906,42 @@ export class ContainerComponent implements OnInit, OnDestroy {
   }
 
   stepChanged(step: StepperSelectionEvent): void {
-    if (this.errorMessage === "") {
+    if (this.errorMessage === '') {
       let focusInput: HTMLInputElement | undefined;
-      if (step.selectedStep.label === "details") {
+      if (step.selectedStep.label === 'details') {
         focusInput = this.emailElement?.nativeElement as HTMLInputElement;
-      } else if (step.selectedStep.label === "paymentInfo") {
+      } else if (step.selectedStep.label === 'paymentInfo') {
         this.loadWallets();
         focusInput = this.paymentInfoNextElement?.nativeElement as HTMLInputElement;
         this.paymentInfoCurrencyToControl?.setValue(this.detailsCurrencyToControl?.value);
         this.paymentInfoTransactionControl?.setValue(this.detailsTransactionControl?.value);
         this.paymentInfoProviderControl?.setValue(PaymentProvider.Fibonatix);
-      } else if (step.selectedStep.label === "verification") {
+      } else if (step.selectedStep.label === 'verification') {
         focusInput = this.verificationResetElement
           ?.nativeElement as HTMLInputElement;
         this.getKycSettings();
-      } else if (step.selectedStep.label === "confirmation") {
+      } else if (step.selectedStep.label === 'confirmation') {
         focusInput = this.codeElement?.nativeElement as HTMLInputElement;
-      } else if (step.selectedStep.label === "payment") {
+      } else if (step.selectedStep.label === 'payment') {
         const instrument = this.paymentInfoInstrumentControl?.value;
         if (instrument === PaymentInstrument.CreditCard) {
-          this.paymentTitle = "Payment by credit card";
+          this.paymentTitle = 'Payment by credit card';
           this.paymentCreditCard = true;
         } else {
-          this.paymentTitle = "Payment is not implemented";
+          this.paymentTitle = 'Payment is not implemented';
         }
-      } else if (step.selectedStep.label === "redirect") {
+      } else if (step.selectedStep.label === 'redirect') {
         this.startNotificationListener();
         focusInput = this.codeElement?.nativeElement as HTMLInputElement;
         if (this.iframedoc) {
-          this.redirectCompleteControl?.setValue("ready");
+          this.redirectCompleteControl?.setValue('ready');
           this.iframedoc.open();
           const content = this.iframeContent;
           this.iframedoc.write(content);
           this.iframedoc.close();
         }
-        this.redirectCompleteControl?.setValue("ready");
-      } else if (step.selectedStep.label === "complete") {
+        this.redirectCompleteControl?.setValue('ready');
+      } else if (step.selectedStep.label === 'complete') {
         // we can't set focus to the button as it causes scroll to this button.
         // So, the step header box stays here after last page appearing as the objective evil
         // If there will be introdused some other element closer to the top of the page to be able to get focus, we can set focus there
@@ -978,11 +965,11 @@ export class ContainerComponent implements OnInit, OnDestroy {
     const defaultTransaction = this.detailsTransactionControl?.value;
     const defaultEmail = this.summary.email;
     this.inProgress = false;
-    this.errorMessage = "";
-    this.walletAddressName = "";
+    this.errorMessage = '';
+    this.walletAddressName = '';
     this.needToLogin = false;
     this.isApmSelected = false;
-    this.flow = "";
+    this.flow = '';
     this.showKycStep = false;
     this.showKycValidator = false;
     this.showKycSubmit = false;
@@ -1017,7 +1004,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
     this.paymentInfoInstrumentControl?.setValue(PaymentInstrument.CreditCard);
     this.setCurrencyValues(defaultCurrencyFrom, defaultCurrencyTo, defaultAmountFrom, defaultAmountTo);
     this.transactionApproved = false;
-    this.iframeContent = "";
+    this.iframeContent = '';
     const iframe = document.getElementById('iframe');
     if (iframe) {
       (<HTMLIFrameElement>iframe).srcdoc = '';
@@ -1042,38 +1029,39 @@ export class ContainerComponent implements OnInit, OnDestroy {
         }
       } else {
         this.inProgress = true;
+        this.currentAmountFrom = this.detailsAmountFromControl?.value;
+        this.currentAmountTo = this.detailsAmountToControl?.value;
+        this.currentCurrencyFrom = this.detailsCurrencyFromControl?.value;
+        this.currentCurrencyTo = this.detailsCurrencyToControl?.value;
         // try to authorised a user
-        this.auth.authenticate(userEmail, '', true).subscribe(
-          ({ data }) => {
-            const userData = data.login as LoginResult;
-            this.handleSuccessLogin(userData);
-          },
-          (error) => {
-            this.inProgress = false;
-            if (this.errorHandler.getCurrentError() === 'auth.password_null_or_empty') {
-              // Internal user cannot be authorised without a password, so need to
-              //  show the authorisation form to fill
-              this.auth.logout();
-              this.needToLogin = true;
-              this.defaultUserName = this.detailsEmailControl?.value;
-            } else {
-              this.errorMessage = this.errorHandler.getError(error.message, 'Unable to authenticate user');
-            }
+        this.auth.authenticate(userEmail, '', true).subscribe(({ data }) => {
+          const userData = data.login as LoginResult;
+          this.handleSuccessLogin(userData);
+        }, (error) => {
+          this.inProgress = false;
+          if (this.errorHandler.getCurrentError() === 'auth.password_null_or_empty') {
+            // Internal user cannot be authorised without a password, so need to
+            //  show the authorisation form to fill
+            this.auth.logout();
+            this.needToLogin = true;
+            this.defaultUserName = this.detailsEmailControl?.value;
+          } else {
+            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to authenticate user');
           }
-        );
+        });
       }
     }
   }
 
   paymentInfoCompleted(): void {
-    this.paymentInfoTransactionIdControl?.setValue("ready");
+    this.paymentInfoTransactionIdControl?.setValue('ready');
     if (this.paymentInfoForm.valid) {
       this.registerOrder();
     }
   }
 
   confirmPayment(): void {
-    this.confirmationCompleteControl?.setValue("ready");
+    this.confirmationCompleteControl?.setValue('ready');
     if (this.confirmationForm.valid) {
       this.inProgress = true;
       const code = this.confirmationCodeControl?.value;
@@ -1104,7 +1092,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
 
   paymentCompleted(): void {
     if (this.paymentCreditCard) {
-      this.paymentCompleteControl?.setValue("ready");
+      this.paymentCompleteControl?.setValue('ready');
     }
     if (this.paymentForm.valid && this.currentCard.valid) {
       this.inProgress = true;
@@ -1143,14 +1131,14 @@ export class ContainerComponent implements OnInit, OnDestroy {
   kycCompleted(): void {
     this.showKycSubmit = true;
     this.showKycValidator = false;
-    this.verificationCompleteControl?.setValue("ready");
+    this.verificationCompleteControl?.setValue('ready');
     if (this.stepper) {
       this.stepper?.next();
     }
   }
 
   onLoadRedirect(): void {
-    var iframe = document.getElementById("iframe");
+    var iframe = document.getElementById('iframe');
     var iWindow = (<HTMLIFrameElement>iframe).contentWindow;
     this.iframedoc = iWindow?.document;
   }
@@ -1171,7 +1159,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
   }
 
   private getAmountMinError(c: CurrencyView | null): string {
-    let error = "Invalid value of amount";
+    let error = 'Invalid value of amount';
     if (c) {
       error = `Value must be greater than ${c.minAmount}`;
     }
