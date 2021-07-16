@@ -258,16 +258,13 @@ export class CheckoutSummary {
     address = '';
     fee = 0;
     feePercent = 0;
-    feeMinEuro = 0;
+    feeMinFiat = 0;
     exchangeRate: Rate | null = null;
     transactionDate = '';
     transactionType: TransactionType = TransactionType.Deposit;
     status: TransactionStatus = TransactionStatus.Pending;
     card: CardView | null = null;
     provider: PaymentProvider | null = null;
-
-    private fromCrypto = false;
-    private toCrypto = true;
 
     get isFromCrypto(): boolean {
         let result = false;
@@ -287,6 +284,32 @@ export class CheckoutSummary {
         return result;
     }
 
+    get transactionFee(): string {
+        const val = this.fee;
+        if (val !== 0) {
+            return `${val}`;
+        } else {
+            return '';
+        }
+    }
+
+    get transactionFeeTitle(): string {
+        const feeMinFiat = this.feeMinFiat as number;
+        console.log(feeMinFiat);
+        const feePercent = this.feePercent as number;
+        return `Transaction fee (${feePercent}%, min ${feeMinFiat} ${this.transactionFeeCurrency})`;
+    }
+
+    get transactionFeeCurrency(): string {
+        let result = '';
+        if (this.isFromCrypto) {
+            result = this.currencyTo;
+        } else {
+            result = this.currencyFrom as string;
+        }
+        return result;
+    }
+
     reset(): void {
         this.orderId = '';
         this.email = '';
@@ -297,7 +320,7 @@ export class CheckoutSummary {
         this.address = '';
         this.fee = 0;
         this.feePercent = 0;
-        this.feeMinEuro = 0;
+        this.feeMinFiat = 0;
         this.exchangeRate = null;
         this.transactionDate = '';
         this.transactionType = TransactionType.Deposit;

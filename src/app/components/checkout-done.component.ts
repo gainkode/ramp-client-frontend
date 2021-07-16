@@ -11,24 +11,6 @@ import { round } from '../utils/utils';
 export class CheckoutDoneComponent {
     @Input() summary: CheckoutSummary | null | undefined = null;
 
-    get fee(): string {
-        const feeMinEuro = this.summary?.feeMinEuro as number;
-        const feePercent = this.summary?.feePercent as number;
-        const amountTo = this.summary?.amountTo as number;
-        const val = Math.max(feeMinEuro, amountTo * feePercent / 100);
-        if (val !== 0) {
-            return `${round(val, 4)}`;
-        } else {
-            return '';
-        }
-    }
-
-    get feeTitle(): string {
-        const feeMinEuro = this.summary?.feeMinEuro as number;
-        const feePercent = this.summary?.feePercent as number;
-        return `Transaction fee (${feePercent}%, min ${feeMinEuro} EUR)`;
-    }
-
     get amountTitle(): string {
         let title = '';
         if (this.summary?.transactionType === TransactionType.Deposit) {

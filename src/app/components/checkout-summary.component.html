@@ -26,10 +26,10 @@
             {{summary?.address}}
         </div>
     </div>
-    <div *ngIf="fee!==''">
-        <label class="checkout-summary-label">{{feeTitle}}</label>
+    <div *ngIf="summary?.fee!==0">
+        <label class="checkout-summary-label">{{summary?.transactionFeeTitle}}</label>
         <div class="checkout-summary-value">
-            {{fee | number: '1.0-5'}} EUR
+            {{summary?.transactionFee | number: '1.0-9'}} {{summary?.transactionFeeCurrency}}
         </div>
     </div>
 </div>

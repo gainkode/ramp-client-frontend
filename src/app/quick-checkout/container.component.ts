@@ -525,7 +525,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
       if (order.code) {
         this.summary.orderId = order.code as string;
         this.summary.fee = order.fee;
-        this.summary.feeMinEuro = order.feeMinEur;
+        this.summary.feeMinFiat = order.feeMinFiat;
         this.summary.feePercent = order.feePercent;
         this.summary.exchangeRate = this.currentRate;
         this.summary.transactionDate = new Date().toLocaleString();

@@ -76,7 +76,7 @@ mutation CreateTransaction(
     code,
     fee,
     feePercent,
-    feeMinEur,
+    feeMinFiat,
     data
   }
 }
