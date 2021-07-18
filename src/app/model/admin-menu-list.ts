@@ -1,11 +1,6 @@
-export interface AdminMenuItem {
-    id: string;
-    name: string;
-    url: string;
-    icon: string;
-}
+import { MenuItem } from './common.model';
 
-export const AdminMenuItems: Array<AdminMenuItem> = [
+export const AdminMenuItems: Array<MenuItem> = [
     {
         id: 'dashboard',
         name: 'Dashboard',

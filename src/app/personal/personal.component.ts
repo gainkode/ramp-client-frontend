@@ -1,19 +1,27 @@
 import { Component, OnInit } from '@angular/core';
+import { MatSelectionListChange } from '@angular/material/list';
 import { Router } from '@angular/router';
+import { MenuItem } from '../model/common.model';
+import { PersonalProfileMenuItems } from '../model/profile-menu.model';
 import { AuthService } from '../services/auth.service';
-import { ErrorService } from '../services/error.service';
 import { NotificationService } from '../services/notification.service';
 
 @Component({
     templateUrl: 'personal.component.html',
-    styleUrls: ['../menu.scss']
+    styleUrls: ['../menu.scss', 'personal.component.scss']
 })
 export class PersonalComponent implements OnInit {
-    _selectedSection = '';
+    menuItems: MenuItem[] = PersonalProfileMenuItems;
+    selectedMenu = 'home';
 
-    constructor(private auth: AuthService, private notification: NotificationService,
-        private errorHandler: ErrorService, private router: Router) {
-        this._selectedSection = 'home';
+    constructor(private auth: AuthService, private notification: NotificationService, private router: Router) {
+        const routeTree = router.parseUrl(router.url);
+        const segments = routeTree.root.children['primary'].segments;
+        if (segments.length > 2) {
+            this.selectedMenu = segments[2].path;
+        } else {
+            this.router.navigateByUrl(this.menuItems[0].url);
+        }
     }
 
     get userName(): string {
@@ -26,7 +34,7 @@ export class PersonalComponent implements OnInit {
     }
 
     get selectedSection(): string {
-        return this._selectedSection;
+        return this.selectedMenu;
     }
 
     ngOnInit(): void {
@@ -35,7 +43,11 @@ export class PersonalComponent implements OnInit {
         }, (error) => {
             // there was an error subscribing to notifications
         });
-        this.routeTo(`/personal/main/${this._selectedSection}`);
+    }
+
+    menuChanged(e: MatSelectionListChange): void {
+        const item = e.options[0].value as MenuItem;
+        this.router.navigateByUrl(item.url);
     }
 
     routeTo(link: string): void {
@@ -43,7 +55,7 @@ export class PersonalComponent implements OnInit {
         if (urlBlocks.length > 0) {
             const s = urlBlocks[urlBlocks.length - 1];
             if (s === 'home' || s === 'myaccount' || s === 'mycontacts' || s === 'transactions' || s === 'exchanger') {
-                this._selectedSection = s;
+                this.selectedMenu = s;
             }
         }
         this.router.navigateByUrl(link);
@@ -52,6 +64,10 @@ export class PersonalComponent implements OnInit {
     logout(): void {
         this.auth.logout();
         this.router.navigateByUrl('/');
+    }
+
+    getUserMainPage(): string {
+        return this.auth.getUserMainPage();
     }
 
     notificationTest(): void {

@@ -18,13 +18,13 @@
     overflow-x      : hidden;
 }
 
+.mat-list-option {
+    color: #DDDFE6 !important;
+}
+
 .mat-list-option[aria-selected="true"] {
     background: #1E2025;
     color: #B2C2CF !important;
-}
-
-.panel-menu {
-    color: #CEDBE4;
 }
 
 th.mat-header-cell {

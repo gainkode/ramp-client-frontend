@@ -12,6 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatListModule } from '@angular/material/list';
 import { PersonalGuard } from './personal.guard';
 import { IntroPersonalComponent } from './intro.component';
 import { PersonalComponent } from './personal.component';
@@ -54,6 +55,7 @@ const modules = [
     MatCheckboxModule,
     MatRadioModule,
     MatIconModule,
+    MatListModule,
     MatProgressBarModule,
     ComponentsModule
 ];

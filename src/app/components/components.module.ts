@@ -12,6 +12,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar'; 
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatListModule } from '@angular/material/list';
 import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -65,6 +66,7 @@ const materialModules = [
     MatTooltipModule,
     MatDialogModule,
     MatIconModule,
+    MatListModule,
     MatProgressSpinnerModule,
     MatProgressBarModule,
     MatSnackBarModule,

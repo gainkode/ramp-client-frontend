@@ -1,7 +1,7 @@
 <div class="menu-bar menu-bar-large">
     <div class="menu-content-bar">
         <div class="menu-box">
-            <button mat-icon-button (click)="routeTo('/')">
+            <button mat-icon-button (click)="routeTo(getUserMainPage())">
                 <mat-icon>attractions</mat-icon>
             </button>
             <button class="link-button link-button-menu link-button-primary" (click)="routeTo('/merchant/intro')">
@@ -15,6 +15,9 @@
             </button>
         </div>
         <div class="menu-box">
+            <button class="link-button link-button-menu link-button-primary" (click)="routeTo('/admin/main')">
+                Administration
+            </button>
             <app-notification-icon></app-notification-icon>
             <button mat-icon-button (click)="notificationTest()">
                 <mat-icon>notifications</mat-icon>
@@ -26,33 +29,19 @@
             </button>
         </div>
     </div>
-    <div class="menu-content-bar">
-        <div class="menu-box">
-            <button class="link-button link-button-menu" [class.link-button-accent]="selectedSection==='home'"
-                [class.link-button-primary]="selectedSection!=='home'" (click)="routeTo('/personal/main/home')">
-                Home
-            </button>
-            <button class="link-button link-button-menu" [class.link-button-accent]="selectedSection==='myaccount'"
-            [class.link-button-primary]="selectedSection!=='myaccount'" (click)="routeTo('/personal/main/myaccount')">
-                My Account
-            </button>
-            <button class="link-button link-button-menu" [class.link-button-accent]="selectedSection==='mycontacts'"
-            [class.link-button-primary]="selectedSection!=='mycontacts'" (click)="routeTo('/personal/main/mycontacts')">
-                My Contacts
-            </button>
-            <button class="link-button link-button-menu" [class.link-button-accent]="selectedSection==='transactions'"
-            [class.link-button-primary]="selectedSection!=='transactions'" (click)="routeTo('/personal/main/transactions')">
-                Transactions
-            </button>
-            <button class="link-button link-button-menu" [class.link-button-accent]="selectedSection==='exchanger'"
-            [class.link-button-primary]="selectedSection!=='exchanger'" (click)="routeTo('/personal/main/exchanger')"> 
-                Exchanger
-            </button>
-            <span class="menu-delimiter"></span>
-            <button class="link-button link-button-menu link-button-primary" (click)="routeTo('/admin/main')">
-                Administration
-            </button>
-        </div>
+</div>
+
+<div class="profile-side-nav">
+    <div class="split-panel-menu">
+        <mat-selection-list [multiple]="false" (selectionChange)="menuChanged($event)">
+            <mat-list-option *ngFor="let item of menuItems" [value]="item" [selected]="selectedMenu===item.id"
+            class="panel-menu">
+                <div class="panel-menu-item">
+                    <mat-icon class="panel-menu-item-icon">{{item.icon}}</mat-icon>
+                    <div class="panel-menu-item-text">{{item.name}}</div>
+                </div>
+            </mat-list-option>
+        </mat-selection-list>
     </div>
 </div>
 

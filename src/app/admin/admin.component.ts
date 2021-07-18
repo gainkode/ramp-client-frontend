@@ -1,9 +1,10 @@
-import { Component, ElementRef } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { AdminMenuItem, AdminMenuItems } from '../model/admin-menu-list';
+import { AdminMenuItems } from '../model/admin-menu-list';
 import { MatSelectionListChange } from '@angular/material/list/selection-list';
 import { User } from '../model/generated-models';
+import { MenuItem } from '../model/common.model';
 
 @Component({
     templateUrl: 'admin.component.html',
@@ -11,7 +12,7 @@ import { User } from '../model/generated-models';
 })
 export class AdminComponent {
     user: User | null = null;
-    menuItems: AdminMenuItem[] = AdminMenuItems;
+    menuItems: MenuItem[] = AdminMenuItems;
     selectedMenu = 'dashboard';
     editMode = false;
     changeEditModeRef: any;
@@ -29,7 +30,7 @@ export class AdminComponent {
 
     menuChanged(e: MatSelectionListChange): void {
         if (this.editMode === false) {
-            const item = e.options[0].value as AdminMenuItem;
+            const item = e.options[0].value as MenuItem;
             this.router.navigateByUrl(item.url);
         }
     }

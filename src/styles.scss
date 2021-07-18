@@ -327,14 +327,36 @@ input:-webkit-autofill::first-line {
 }
 
 .admin-content-block {
-    height          : 100%;
+    height          : auto;
+    min-height      : 100%;
     margin-left     : 11em;
     background-color: #DDDFE6;
+}
+
+.profile-side-nav {
+    height          : 100%;
+    /* Full-height  : remove this if you want "auto" height */
+    width           : 11em;
+    /* Set the width of the sidebar */
+    position        : fixed;
+    /* Fixed Sidebar (stay in place on scroll) */
+    z-index         : 1;
+    /* Stay on top */
+    top             : 0;
+    /* Stay at the top */
+    left            : 0;
+    background-color: #3F4147;
+    color           : #EAF0F7;
+    /* Black */
+    overflow-x      : hidden;
+    /* Disable horizontal scroll */
+    padding-top     : 20px;
 }
 
 .profile-content-block {
     height          : auto;
     min-height      : 100%;
+    margin-left     : 11em;
     padding         : 1em;
     background-color: #DDDFE6;
 }
@@ -426,6 +448,10 @@ input:-webkit-autofill::first-line {
 .split-panel-menu {
     position: relative;
     margin  : 0;
+}
+
+.panel-menu {
+    color: #CEDBE4;
 }
 
 .form-error-box {

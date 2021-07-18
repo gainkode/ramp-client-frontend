@@ -15,3 +15,10 @@ export class CommonGroupValue {
     id = '';
     values: string[] = [];
 }
+
+export interface MenuItem {
+    id: string;
+    name: string;
+    url: string;
+    icon: string;
+}
