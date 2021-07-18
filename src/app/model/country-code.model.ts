@@ -699,7 +699,7 @@ export const CountryCodes: Array<ICountryCode> = [
         code3: 'KIR'
     },
     {
-        name: 'Korea, Democratic People\',s Republic of Korea',
+        name: 'Korea, Democratic People\'s Republic of Korea',
         dial_code: '+850',
         code2: 'KP',
         code3: 'PRK'

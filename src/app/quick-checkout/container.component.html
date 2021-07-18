@@ -6,7 +6,7 @@
         <!-- Order details -->
         <mat-step [stepControl]="detailsForm" label="details" editable="false" completed="false">
           <ng-template matStepLabel>Order details</ng-template>
-          <form [formGroup]="detailsForm" #details="ngForm" *ngIf="!needToLogin">
+          <form [formGroup]="detailsForm" #details="ngForm" *ngIf="!needToLogin && !needToRegister">
             <div>
               <div *ngIf="inProgress" class="form-element">
                 <mat-progress-bar mode="indeterminate"></mat-progress-bar>
@@ -29,6 +29,8 @@
                   Email has incorrect format
                 </mat-error>
               </mat-form-field>
+              <p><mat-checkbox formControlName="createAccount" color="primary">Register an account</mat-checkbox></p>
+
               <!-- Currencies -->
               <div class="currency-transfer-box">
                 <!-- Amount from -->
@@ -48,19 +50,13 @@
                         </mat-select>
                       </div>
                     </div>
-                    <mat-error *ngIf="
-                        this.detailsForm.get('amountFrom')?.hasError('required')
-                      ">
+                    <mat-error *ngIf="this.detailsForm.get('amountFrom')?.hasError('required')">
                       Please specify source amount
                     </mat-error>
-                    <mat-error *ngIf="
-                        this.detailsForm.get('amountFrom')?.hasError('pattern')
-                      ">
+                    <mat-error *ngIf="this.detailsForm.get('amountFrom')?.hasError('pattern')">
                       Amount must be a valid number
                     </mat-error>
-                    <mat-error *ngIf="
-                        this.detailsForm.get('amountFrom')?.hasError('min')
-                      ">
+                    <mat-error *ngIf="this.detailsForm.get('amountFrom')?.hasError('min')">
                       {{ getSourceAmountMinError() }}
                     </mat-error>
                   </mat-form-field>
@@ -82,14 +78,10 @@
                         </mat-select>
                       </div>
                     </div>
-                    <mat-error *ngIf="
-                        this.detailsForm.get('amountTo')?.hasError('required')
-                      ">
+                    <mat-error *ngIf="this.detailsForm.get('amountTo')?.hasError('required')">
                       Please specify amount to receive
                     </mat-error>
-                    <mat-error *ngIf="
-                        this.detailsForm.get('amountTo')?.hasError('pattern')
-                      ">
+                    <mat-error *ngIf="this.detailsForm.get('amountTo')?.hasError('pattern')">
                       Amount must be a valid number
                     </mat-error>
                     <mat-error *ngIf="this.detailsForm.get('amountTo')?.hasError('min')">
@@ -106,9 +98,7 @@
                     {{ item.name }}
                   </mat-option>
                 </mat-select>
-                <mat-error *ngIf="
-                    this.detailsForm.get('transaction')?.hasError('required')
-                  ">
+                <mat-error *ngIf="this.detailsForm.get('transaction')?.hasError('required')">
                   Please specify your transaction type
                 </mat-error>
               </mat-form-field>
@@ -132,6 +122,21 @@
               (progressChange)="onProgressChange($event)" (authenticated)="onAuthenticated($event)"
               (socialAuthenticated)="onSocialAuthenticated($event)">
             </app-login-panel>
+            <button type="submit" class="main-button main-button-primary inline-button" (click)="resetStepper()">
+              RESET
+            </button>
+          </div>
+          <!-- Sign Up -->
+          <div *ngIf="needToRegister">
+            <h2>Sign up</h2>
+            <span>Please, type your data to register a new account</span>
+            <mat-progress-bar *ngIf="inProgress" mode="indeterminate"></mat-progress-bar>
+            <div class="form-error-box" *ngIf="errorMessage !== ''">
+              {{ errorMessage }}
+            </div>
+            <app-signup-panel [userName]="detailsEmailControl?.value" (error)="onError($event)"
+              (progressChange)="onProgressChange($event)" (registered)="onRegistered()">
+            </app-signup-panel>
             <button type="submit" class="main-button main-button-primary inline-button" (click)="resetStepper()">
               RESET
             </button>

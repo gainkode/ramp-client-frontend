@@ -83,6 +83,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
   inProgress = false;
   walletAddressName = '';
   needToLogin = false;
+  needToRegister = false;
   defaultUserName = '';
   isApmSelected = false;
   flow = '';
@@ -135,6 +136,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
         updateOn: 'change',
       },
     ],
+    createAccount: [false],
     amountFrom: [
       200,
       {
@@ -161,6 +163,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
     complete: ['', { validators: [Validators.required], updateOn: 'change' }],
   });
   detailsEmailControl: AbstractControl | null = null;
+  detailsRegisterControl: AbstractControl | null = null;
   detailsAmountFromControl: AbstractControl | null = null;
   detailsCurrencyFromControl: AbstractControl | null = null;
   detailsAmountToControl: AbstractControl | null = null;
@@ -238,6 +241,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
     this.affiliateCode = parseInt(affiliateCodeInput, 10);
     this.summary = new CheckoutSummary();
     this.detailsEmailControl = this.detailsForm.get('email');
+    this.detailsRegisterControl = this.detailsForm.get('createAccount');
     this.detailsAmountFromControl = this.detailsForm.get('amountFrom');
     this.detailsCurrencyFromControl = this.detailsForm.get('currencyFrom');
     this.detailsAmountToControl = this.detailsForm.get('amountTo');
@@ -393,6 +397,11 @@ export class ContainerComponent implements OnInit, OnDestroy {
       this.auth.logout();
       this.errorMessage = `Invalid authentication via social media`;
     }
+  }
+
+  onRegistered(): void {
+    this.needToRegister = false;
+    this.needToLogin = true;
   }
 
   getDestinationAmountMinError(): string {
@@ -968,6 +977,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
     this.errorMessage = '';
     this.walletAddressName = '';
     this.needToLogin = false;
+    this.needToRegister = false;
     this.isApmSelected = false;
     this.flow = '';
     this.showKycStep = false;
@@ -1028,27 +1038,31 @@ export class ContainerComponent implements OnInit, OnDestroy {
           this.stepper?.next();
         }
       } else {
-        this.inProgress = true;
-        this.currentAmountFrom = this.detailsAmountFromControl?.value;
-        this.currentAmountTo = this.detailsAmountToControl?.value;
-        this.currentCurrencyFrom = this.detailsCurrencyFromControl?.value;
-        this.currentCurrencyTo = this.detailsCurrencyToControl?.value;
-        // try to authorised a user
-        this.auth.authenticate(userEmail, '', true).subscribe(({ data }) => {
-          const userData = data.login as LoginResult;
-          this.handleSuccessLogin(userData);
-        }, (error) => {
-          this.inProgress = false;
-          if (this.errorHandler.getCurrentError() === 'auth.password_null_or_empty') {
-            // Internal user cannot be authorised without a password, so need to
-            //  show the authorisation form to fill
-            this.auth.logout();
-            this.needToLogin = true;
-            this.defaultUserName = this.detailsEmailControl?.value;
-          } else {
-            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to authenticate user');
-          }
-        });
+        if (this.detailsRegisterControl?.value === true) {
+          this.needToRegister = true;
+        } else {
+          this.inProgress = true;
+          this.currentAmountFrom = this.detailsAmountFromControl?.value;
+          this.currentAmountTo = this.detailsAmountToControl?.value;
+          this.currentCurrencyFrom = this.detailsCurrencyFromControl?.value;
+          this.currentCurrencyTo = this.detailsCurrencyToControl?.value;
+          // try to authorised a user
+          this.auth.authenticate(userEmail, '', true).subscribe(({ data }) => {
+            const userData = data.login as LoginResult;
+            this.handleSuccessLogin(userData);
+          }, (error) => {
+            this.inProgress = false;
+            if (this.errorHandler.getCurrentError() === 'auth.password_null_or_empty') {
+              // Internal user cannot be authorised without a password, so need to
+              //  show the authorisation form to fill
+              this.auth.logout();
+              this.needToLogin = true;
+              this.defaultUserName = this.detailsEmailControl?.value;
+            } else {
+              this.errorMessage = this.errorHandler.getError(error.message, 'Unable to authenticate user');
+            }
+          });
+        }
       }
     }
   }

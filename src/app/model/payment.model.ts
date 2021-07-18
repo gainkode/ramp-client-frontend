@@ -295,7 +295,6 @@ export class CheckoutSummary {
 
     get transactionFeeTitle(): string {
         const feeMinFiat = this.feeMinFiat as number;
-        console.log(feeMinFiat);
         const feePercent = this.feePercent as number;
         return `Transaction fee (${feePercent}%, min ${feeMinFiat} ${this.transactionFeeCurrency})`;
     }

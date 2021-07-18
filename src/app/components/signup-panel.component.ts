@@ -1,19 +1,22 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { startWith, map } from 'rxjs/operators';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { ErrorService } from '../services/error.service';
+import { Observable } from 'rxjs';
 import { Validators, FormBuilder, AbstractControl } from '@angular/forms';
-import { ICountryCode, CountryCodes, getCountry, getCountryDialCode } from '../model/country-code.model';
+import { CountryCodes, getCountry, getCountryDialCode, ICountryCode } from '../model/country-code.model';
+import { map, startWith } from 'rxjs/operators';
 
 @Component({
-    templateUrl: 'register.component.html',
-    styleUrls: ['./login.component.scss']
+    selector: 'app-signup-panel',
+    templateUrl: 'signup-panel.component.html'
 })
-export class RegisterComponent implements OnInit {
-    inProgress = false;
-    errorMessage = '';
+export class SignUpPanelComponent implements OnInit {
+    @Input() set userName(val: string) {
+        this.emailField?.setValue(val);
+    }
+    @Output() error = new EventEmitter<string>();
+    @Output() progressChange = new EventEmitter<boolean>();
+    @Output() registered = new EventEmitter<void>();
     hidePassword1 = true;
     hidePassword2 = true;
     agreementChecked = false;
@@ -68,7 +71,7 @@ export class RegisterComponent implements OnInit {
     });
 
     constructor(private auth: AuthService, private errorHandler: ErrorService,
-        private formBuilder: FormBuilder, private router: Router) { }
+        private formBuilder: FormBuilder) { }
 
     ngOnInit(): void {
         this.filteredCountries = this.countryField?.valueChanges.pipe(
@@ -80,6 +83,10 @@ export class RegisterComponent implements OnInit {
                 this.phoneCodeField?.setValue(code);
             }
         });
+    }
+
+    get emailField(): AbstractControl | null {
+        return this.signupForm.get('email');
     }
 
     get countryField(): AbstractControl | null {
@@ -130,21 +137,22 @@ export class RegisterComponent implements OnInit {
     }
 
     onSubmit(): void {
-        this.errorMessage = '';
+        this.error.emit('');
+        console.log(this.countryField?.errors);
         if (this.signupForm.valid) {
             const countryCode = getCountry(this.countryField?.value);
             if (countryCode === null) {
-                this.errorMessage = `Unable to recognize country: ${this.countryField?.value}`;
+                this.error.emit(`Unable to recognize country: ${this.countryField?.value}`);
                 return;
             }
             if (!this.passwordsEqual()) {
-                this.errorMessage = 'Passwords are not equal';
+                this.error.emit('Passwords are not equal');
                 return;
             }
-            this.inProgress = true;
+            this.progressChange.emit(true);
             const phone = this.phoneCodeField?.value + ' ' + this.phoneNumberField?.value;
             this.auth.register(
-                this.signupForm.get('email')?.value,
+                this.emailField?.value,
                 this.signupForm.get('password1')?.value,
                 'Personal',
                 this.signupForm.get('firstName')?.value,
@@ -152,13 +160,11 @@ export class RegisterComponent implements OnInit {
                 countryCode.code2,
                 countryCode.code3,
                 phone).subscribe(({ data }) => {
-                    this.inProgress = false;
-                    this.router.navigateByUrl('/auth/personal/success/signup');
+                    this.progressChange.emit(false);
+                    this.registered.emit();
                 }, (error) => {
-                    this.inProgress = false;
-                    this.errorMessage = this.errorHandler.getError(
-                        error.message,
-                        'Unable to register new account');
+                    this.progressChange.emit(false);
+                    this.error.emit(this.errorHandler.getError(error.message, 'Unable to register new account'));
                 });
         }
     }
