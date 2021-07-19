@@ -135,7 +135,7 @@
               {{ errorMessage }}
             </div>
             <app-signup-panel [userName]="detailsEmailControl?.value" (error)="onError($event)"
-              (progressChange)="onProgressChange($event)" (registered)="onRegistered()">
+              (progressChange)="onProgressChange($event)" (registered)="onRegistered($event)">
             </app-signup-panel>
             <button type="submit" class="main-button main-button-primary inline-button" (click)="resetStepper()">
               RESET

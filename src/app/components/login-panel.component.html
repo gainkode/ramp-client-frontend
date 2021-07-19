@@ -1,4 +1,4 @@
-<div *ngIf=!twoFa>
+<div *ngIf="!twoFa && !extraData">
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <!-- Email -->
         <mat-form-field class="form-element">
@@ -52,6 +52,8 @@
         </button>
     </div>
 </div>
+
+<app-signup-info-panel #signupInfo *ngIf="extraData" buttonTitle="SAVE"></app-signup-info-panel>
 
 <div *ngIf=twoFa>
     <form [formGroup]="twoFaForm" (ngSubmit)="onTwoFaSubmit()">

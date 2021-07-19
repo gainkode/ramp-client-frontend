@@ -1,0 +1,66 @@
+<h2>
+    Please, specify your extra data
+</h2>
+<form [formGroup]="infoForm" (ngSubmit)="onSubmit()">
+    <!-- Full name -->
+    <mat-form-field class="form-element">
+        <mat-label>Full Name</mat-label>
+        <input type="text" matInput formControlName="fullName" maxlength="80" placeholder="Full user name" required />
+        <mat-error *ngIf="this.infoForm.get('fullName')?.hasError('required')">
+            Please specify your full name
+        </mat-error>
+    </mat-form-field>
+
+    <div class="form-element phone-box-split">
+        <!-- Phone code -->
+        <mat-form-field class="phone-box-left-panel">
+            <mat-label>Code</mat-label>
+            <input matInput formControlName="phoneCode" maxlength="5" type="search" placeholder="Code" required>
+            <mat-error *ngIf="this.infoForm.get('phoneCode')?.hasError('required')">
+                Required
+            </mat-error>
+            <mat-error *ngIf="this.infoForm.get('phoneCode')?.hasError('pattern')">
+                Bad code
+            </mat-error>
+        </mat-form-field>
+
+        <!-- Phone number -->
+        <mat-form-field class="phone-box-right-panel">
+            <mat-label>Phone number</mat-label>
+            <input matInput formControlName="phoneNumber" maxlength="10" type="search" placeholder="Number" required>
+            <mat-error *ngIf="this.infoForm.get('phoneNumber')?.hasError('required')">
+                Please specify your phone number
+            </mat-error>
+            <mat-error *ngIf="this.infoForm.get('phoneNumber')?.hasError('pattern')">
+                Bad phone format
+            </mat-error>
+        </mat-form-field>
+    </div>
+
+
+
+
+    <!-- Address -->
+    <mat-form-field class="form-element">
+        <mat-label>Address</mat-label>
+        <input type="text" matInput formControlName="address" maxlength="150" placeholder="Address" required />
+        <mat-error *ngIf="this.infoForm.get('address')?.hasError('required')">
+            Please specify your address
+        </mat-error>
+    </mat-form-field>
+
+    <!-- Flat Number -->
+    <mat-form-field class="form-element">
+        <mat-label>Flat Number</mat-label>
+        <input type="text" matInput formControlName="flatNumber" maxlength="7" placeholder="Flat number" required />
+        <mat-error *ngIf="this.infoForm.get('flatNumber')?.hasError('required')">
+            Please specify your flat number
+        </mat-error>
+    </mat-form-field>
+
+    <div class="form-element">
+        <button class="main-button main-button-primary" type="submit">
+            {{buttonTitle}}
+        </button>
+    </div>
+</form>

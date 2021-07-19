@@ -261,7 +261,19 @@ query {
             order
         }
     }
-  }
+}
+`;
+
+const GET_SIGNUP_REQUIRED_FIELDS = gql`
+query {
+    mySettingsKycFull {
+        requireUserFullName
+        requireUserPhone
+        requireUserBirthday
+        requireUserAddress
+        requireUserFlatNumber
+    }
+}
 `;
 
 @Injectable()
@@ -538,10 +550,22 @@ export class AuthService {
         });
     }
 
+
     getMyKycSettings(): QueryRef<any, EmptyObject> | null {
         if (this.apollo.client !== undefined) {
             return this.apollo.watchQuery<any>({
                 query: GET_MY_SETTINGS_KYC,
+                fetchPolicy: 'network-only'
+            });
+        } else {
+            return null;
+        }
+    }
+
+    getSignupRequiredFields(): QueryRef<any, EmptyObject> | null {
+        if (this.apollo.client !== undefined) {
+            return this.apollo.watchQuery<any>({
+                query: GET_SIGNUP_REQUIRED_FIELDS,
                 fetchPolicy: 'network-only'
             });
         } else {

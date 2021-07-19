@@ -53,6 +53,7 @@ import { ProfileWithdrawalComponent } from './profile/profile-withdrawal.compone
 import { ProfileAssetsComponent } from './profile/profile-assets.component';
 import { ProfileLastExchangesComponent } from './profile/profile-last-exchanges.component';
 import { SignUpPanelComponent } from './signup-panel.component';
+import { SignupInfoPanelComponent } from './signup-info.component';
 
 const materialModules = [
     ClipboardModule,
@@ -85,19 +86,19 @@ export class MaterialModule { }
     imports: [CommonModule, FormsModule, ReactiveFormsModule, MaterialModule, DirectiveModule, QRCodeModule],
     declarations: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
         CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, NotificationIconComponent,
-        LoginPanelComponent, SignUpPanelComponent, CommonDialogBox, CreditCardComponent, TwoFaCodeComponent,
-        LineBreakPipe, NumberFillPipe, ProfileAccountBalanceComponent, ProfileExchangeComponent,
-        ProfileNotificationsComponent, ProfileQuickTransferComponent, ProfileTransactionsComponent,
-        ProfileInfoComponent, ProfileTwoFAComponent, ProfilePasswordComponent, 
-        ProfileVerificationComponent, ProfileContactsComponent, ProfileWithdrawalComponent,
+        LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, CommonDialogBox, 
+        CreditCardComponent, TwoFaCodeComponent, LineBreakPipe, NumberFillPipe,
+        ProfileAccountBalanceComponent, ProfileExchangeComponent, ProfileNotificationsComponent,
+        ProfileQuickTransferComponent, ProfileTransactionsComponent, ProfileInfoComponent, ProfileTwoFAComponent,
+        ProfilePasswordComponent, ProfileVerificationComponent, ProfileContactsComponent, ProfileWithdrawalComponent,
         ProfileAssetsComponent, ProfileLastExchangesComponent],
     exports: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
         CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, NotificationIconComponent,
-        LoginPanelComponent, SignUpPanelComponent, CommonDialogBox, CreditCardComponent, TwoFaCodeComponent,
-        LineBreakPipe, NumberFillPipe, ProfileAccountBalanceComponent, ProfileExchangeComponent,
-        ProfileNotificationsComponent, ProfileQuickTransferComponent, ProfileTransactionsComponent,
-        ProfileInfoComponent, ProfileTwoFAComponent, ProfilePasswordComponent, 
-        ProfileVerificationComponent, ProfileContactsComponent, ProfileWithdrawalComponent,
+        LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, CommonDialogBox, CreditCardComponent,
+        TwoFaCodeComponent, LineBreakPipe, NumberFillPipe,
+        ProfileAccountBalanceComponent, ProfileExchangeComponent, ProfileNotificationsComponent,
+        ProfileQuickTransferComponent, ProfileTransactionsComponent, ProfileInfoComponent, ProfileTwoFAComponent,
+        ProfilePasswordComponent, ProfileVerificationComponent, ProfileContactsComponent, ProfileWithdrawalComponent,
         ProfileAssetsComponent, ProfileLastExchangesComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

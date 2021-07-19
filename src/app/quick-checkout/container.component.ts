@@ -399,9 +399,11 @@ export class ContainerComponent implements OnInit, OnDestroy {
     }
   }
 
-  onRegistered(): void {
+  onRegistered(email: string): void {
     this.needToRegister = false;
     this.needToLogin = true;
+    this.detailsEmailControl?.setValue(email);
+    this.defaultUserName = email;
   }
 
   getDestinationAmountMinError(): string {

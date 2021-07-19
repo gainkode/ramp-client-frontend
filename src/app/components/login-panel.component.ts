@@ -1,9 +1,10 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { ErrorService } from '../services/error.service';
 import { Validators, FormBuilder } from '@angular/forms';
 import { SocialUser } from 'angularx-social-login';
 import { LoginResult, UserMode } from '../model/generated-models';
+import { SignupInfoPanelComponent } from './signup-info.component';
 
 @Component({
     selector: 'app-login-panel',
@@ -15,8 +16,18 @@ export class LoginPanelComponent implements OnInit {
     @Output() progressChange = new EventEmitter<boolean>();
     @Output() authenticated = new EventEmitter<LoginResult>();
     @Output() socialAuthenticated = new EventEmitter<LoginResult>();
+
+    private signupInfoPanel!: SignupInfoPanelComponent;
+    @ViewChild('signupInfo') set signupInfo(panel: SignupInfoPanelComponent) {
+        if (panel) {
+            this.signupInfoPanel = panel;
+            panel.init();
+        }
+    }
+
     hidePassword = true;
     twoFa = false;
+    extraData = false;
     private socilaLogin = false;
     private twoFaToken = '';
 
@@ -29,7 +40,7 @@ export class LoginPanelComponent implements OnInit {
                 ], updateOn: 'change'
             }
         ],
-        password: ['', {validators: [Validators.required, Validators.minLength(8)], updateOn: 'change'} ]
+        password: ['', { validators: [Validators.required, Validators.minLength(8)], updateOn: 'change' }]
     });
     twoFaForm = this.formBuilder.group({
         code: ['', { validators: [Validators.required], updateOn: 'change' }]
@@ -50,6 +61,15 @@ export class LoginPanelComponent implements OnInit {
         this.socialSignIn('Facebook');
     }
 
+    showSignupPanel(userData: LoginResult) {
+        this.auth.setLoginUser(userData);
+        const signupPanelReady = (this.signupInfoPanel) ? true : false;
+        this.extraData = true;
+        if (signupPanelReady) {
+            this.signupInfoPanel.init();
+        }
+    }
+        
     socialSignIn(providerName: string): void {
         this.progressChange.emit(true);
         this.error.emit('');
@@ -65,12 +85,15 @@ export class LoginPanelComponent implements OnInit {
                 this.auth.socialSignOut();
                 this.auth.authenticateSocial(providerName.toLowerCase(), token).subscribe((loginData) => {
                     const userData = loginData.data.login as LoginResult;
+                    console.log(userData);
                     this.progressChange.emit(false);
                     if (userData.user?.mode === UserMode.InternalWallet) {
                         if (userData.authTokenAction === 'TwoFactorAuth') {
                             this.twoFa = true;
                             this.socilaLogin = true;
                             this.twoFaToken = userData.authToken as string;
+                        } else if (userData.authTokenAction === 'UserInfoRequired') {
+                            this.showSignupPanel(userData);
                         } else {
                             this.socialAuthenticated.emit(userData);
                         }
@@ -99,6 +122,8 @@ export class LoginPanelComponent implements OnInit {
                     if (userData.authTokenAction === 'TwoFactorAuth') {
                         this.twoFa = true;
                         this.twoFaToken = userData.authToken as string;
+                    } else if (userData.authTokenAction === 'UserInfoRequired') {
+                        this.showSignupPanel(userData);
                     } else {
                         this.authenticated.emit(userData);
                     }
