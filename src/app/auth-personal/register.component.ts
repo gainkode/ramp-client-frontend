@@ -6,6 +6,7 @@ import { AuthService } from '../services/auth.service';
 import { ErrorService } from '../services/error.service';
 import { Validators, FormBuilder, AbstractControl } from '@angular/forms';
 import { ICountryCode, CountryCodes, getCountry, getCountryDialCode } from '../model/country-code.model';
+import { UserType } from '../model/generated-models';
 
 @Component({
     templateUrl: 'register.component.html',
@@ -146,12 +147,7 @@ export class RegisterComponent implements OnInit {
             this.auth.register(
                 this.signupForm.get('email')?.value,
                 this.signupForm.get('password1')?.value,
-                'Personal',
-                this.signupForm.get('firstName')?.value,
-                this.signupForm.get('lastName')?.value,
-                countryCode.code2,
-                countryCode.code3,
-                phone).subscribe(({ data }) => {
+                UserType.Personal).subscribe(({ data }) => {
                     this.inProgress = false;
                     this.router.navigateByUrl('/auth/personal/success/signup');
                 }, (error) => {

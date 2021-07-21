@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { from, Observable } from 'rxjs';
 import { SocialAuthService, FacebookLoginProvider, GoogleLoginProvider, SocialUser } from 'angularx-social-login';
-import { LoginResult, SettingsCommon, User, UserMode, UserType } from '../model/generated-models';
+import { LoginResult, PostAddress, SettingsCommon, User, UserMode, UserType } from '../model/generated-models';
 import { environment } from 'src/environments/environment';
 import { EmptyObject } from 'apollo-angular/types';
 
@@ -27,6 +27,16 @@ const LOGIN = gql`
                   countryCode2,
                   countryCode3,
                   phone,
+                  postCode,
+                  town,
+                  street,
+                  subStreet,
+                  stateName,
+                  buildingName,
+                  buildingNumber,
+                  flatNumber,
+                  addressStartDate,
+                  addressEndDate,
                   mode,
                   is2faEnabled,
                   changePasswordRequired,
@@ -48,39 +58,52 @@ const REFRESH_TOKEN = gql`
 `;
 
 const SOCIAL_LOGIN = gql`
-  mutation SocialLogin(
-      $recaptcha: String!,
-      $oauthtoken: String!,
-      $oauthprovider: OAuthProvider!) {
-          login(
-              recaptcha: $recaptcha,
-              oAuthProvider: $oauthprovider,
-              oAuthToken: $oauthtoken) {
-                  authToken
-                  user {
-                      userId,
-                      email,
-                      roles {name, immutable},
-                      permissions { roleName, objectCode, objectName, objectDescription, fullAccess },
-                      type,
-                      defaultFiatCurrency,
-                      firstName,
-                      lastName,
-                      phone,
-                      mode,
-                      is2faEnabled,
-                      changePasswordRequired,
-                      referralCode,
-                      kycProvider,
-                      kycApplicantId,
-                      kycValid,
-                      kycStatus,
-                      kycStatusUpdateRequired,
-                      kycReviewRejectedType,
-                  }
-                  authTokenAction
-          }
-  }
+mutation SocialLogin(
+    $recaptcha: String!,
+    $oauthtoken: String!,
+    $oauthprovider: OAuthProvider!) {
+        login(
+            recaptcha: $recaptcha,
+            oAuthProvider: $oauthprovider,
+            oAuthToken: $oauthtoken) {
+                authToken
+                user {
+                    userId,
+                    email,
+                    roles {name, immutable},
+                    permissions { roleName, objectCode, objectName, objectDescription, fullAccess },
+                    type,
+                    defaultFiatCurrency,
+                    firstName,
+                    lastName,
+                    birthday,
+                    countryCode2,
+                    countryCode3,
+                    phone,
+                    postCode,
+                    town,
+                    street,
+                    subStreet,
+                    stateName,
+                    buildingName,
+                    buildingNumber,
+                    flatNumber,
+                    addressStartDate,
+                    addressEndDate,
+                    mode,
+                    is2faEnabled,
+                    changePasswordRequired,
+                    referralCode,
+                    kycProvider,
+                    kycApplicantId,
+                    kycValid,
+                    kycStatus,
+                    kycStatusUpdateRequired,
+                    kycReviewRejectedType,
+                }
+                authTokenAction
+            }
+    }
 `;
 
 const SIGNUP = gql`
@@ -93,17 +116,14 @@ const SIGNUP = gql`
         password: $password,
         type: $userType,
         mode: $mode,
-        termsOfUse: $termsOfUse,
-        firstName: $firstName,
-        lastName: $lastName,
-        countryCode2: $countryCode2,
-        countryCode3: $countryCode3,
-        phone: $phone
+        termsOfUse: $termsOfUse
     ) {
       authToken
       user {
         userId,
-        email
+        email,
+        countryCode2,
+        countryCode3
       }
       authTokenAction
     }
@@ -161,6 +181,25 @@ const CONFIRM_NAME = gql`
       authTokenAction
     }
   }
+`;
+
+const SET_MY_INFO = gql`
+mutation SetMyInfo(
+    $token: String!,
+    $recaptcha: String!,
+    $firstName: String
+    $lastName: String,
+    $phone: String,
+    $address: PostAddress) {
+    setMyInfo(recaptcha: $recaptcha, token: $token, firstName: $firstName, lastName: $lastName, phone: $phone, address: $address) {
+        authToken
+        user {
+            userId,
+            email
+        }
+        authTokenAction
+    }
+}
 `;
 
 const GENERATE_2FA_CODE = gql`
@@ -266,7 +305,7 @@ query {
 
 const GET_SIGNUP_REQUIRED_FIELDS = gql`
 query {
-    mySettingsKycFull {
+    mySettingsKyc {
         requireUserFullName
         requireUserPhone
         requireUserBirthday
@@ -363,9 +402,7 @@ export class AuthService {
         );
     }
 
-    register(usermail: string, userpassword: string, usertype: string,
-        firstname: string, lastname: string, countrycode2: string, countrycode3: string,
-        phoneNumber: string): Observable<any> {
+    register(usermail: string, userpassword: string, usertype: UserType): Observable<any> {
         return this.apollo.mutate({
             mutation: SIGNUP,
             variables: {
@@ -374,12 +411,7 @@ export class AuthService {
                 password: userpassword,
                 userType: usertype,
                 mode: 'InternalWallet',
-                termsOfUse: true,
-                firstName: firstname,
-                lastName: lastname,
-                countryCode2: countrycode2,
-                countryCode3: countrycode3,
-                phone: phoneNumber
+                termsOfUse: true
             }
         });
     }
@@ -430,6 +462,21 @@ export class AuthService {
                 recaptcha: environment.recaptchaId,
                 token: tokenValue
             }
+        });
+    }
+
+    setMyInfo(tokenValue: string, firstNameValue: string, lastNameValue: string, phoneValue: string, addressValue: PostAddress | undefined): Observable<any> {
+        const vars = {
+            recaptcha: environment.recaptchaId,
+            firstName: (firstNameValue === '') ? undefined : firstNameValue,
+            lastName: (lastNameValue === '') ? undefined : lastNameValue,
+            phone: (phoneValue === '') ? undefined : phoneValue,
+            address: addressValue,
+            token: tokenValue
+        };
+        return this.apollo.mutate({
+            mutation: SET_MY_INFO,
+            variables: vars
         });
     }
 

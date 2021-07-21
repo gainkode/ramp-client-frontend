@@ -6,6 +6,7 @@ import { AuthService } from '../services/auth.service';
 import { ErrorService } from '../services/error.service';
 import { Validators, FormBuilder, AbstractControl } from '@angular/forms';
 import { ICountryCode, CountryCodes, getCountry, getCountryDialCode } from '../model/country-code.model';
+import { UserType } from '../model/generated-models';
 
 @Component({
     templateUrl: 'register.component.html',
@@ -29,8 +30,8 @@ export class RegisterComponent implements OnInit {
                 ], updateOn: 'change'
             }
         ],
-        companyName: ['', { validators: [Validators.required], updateOn: 'change' } ],
-        country: ['', { validators: [Validators.required], updateOn: 'change' } ],
+        companyName: ['', { validators: [Validators.required], updateOn: 'change' }],
+        country: ['', { validators: [Validators.required], updateOn: 'change' }],
         phoneCode: ['',
             {
                 validators: [
@@ -145,13 +146,7 @@ export class RegisterComponent implements OnInit {
             this.auth.register(
                 this.signupForm.get('email')?.value,
                 this.signupForm.get('password1')?.value,
-                'Merchant',
-                this.signupForm.get('companyName')?.value,
-                '',  // last name
-                countryCode.code2,
-                countryCode.code3,
-                phone)
-                .subscribe(({ data }) => {
+                UserType.Merchant).subscribe(({ data }) => {
                     this.inProgress = false;
                     this.router.navigateByUrl('/auth/merchant/success/signup');
                 }, (error) => {

@@ -513,6 +513,7 @@ export type SettingsCurrency = {
   name: Scalars['String'];
   precision: Scalars['Int'];
   minAmount: Scalars['Float'];
+  maxAmount: Scalars['Float'];
   rateFactor: Scalars['Float'];
   validateAsSymbol?: Maybe<Scalars['String']>;
   fiat?: Maybe<Scalars['Boolean']>;
@@ -579,6 +580,11 @@ export enum SettingsKycTargetFilterType {
 
 export type SettingsKycShort = {
   __typename?: 'SettingsKycShort';
+  requireUserFullName?: Maybe<Scalars['Boolean']>;
+  requireUserPhone?: Maybe<Scalars['Boolean']>;
+  requireUserBirthday?: Maybe<Scalars['Boolean']>;
+  requireUserAddress?: Maybe<Scalars['Boolean']>;
+  requireUserFlatNumber?: Maybe<Scalars['Boolean']>;
   levels?: Maybe<Array<SettingsKycLevelShort>>;
 };
 
@@ -2009,6 +2015,16 @@ export enum FireblocksTransactionStatus {
   Blocked = 'BLOCKED',
   Failed = 'FAILED'
 }
+
+export type UserBalanceHistory = {
+  __typename?: 'UserBalanceHistory';
+  userBalanceId: Scalars['String'];
+  userId: Scalars['String'];
+  date: Scalars['DateTime'];
+  asset: Scalars['String'];
+  balance: Scalars['Float'];
+  transactionId?: Maybe<Scalars['String']>;
+};
 
 export type UserDevice = {
   __typename?: 'UserDevice';

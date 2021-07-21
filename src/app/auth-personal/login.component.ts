@@ -14,6 +14,7 @@ export class LoginComponent {
     userType = UserType.Personal;
     inProgress = false;
     errorMessage = '';
+    showExtraOptions = true;
 
     constructor(private auth: AuthService, private errorHandler: ErrorService,
         private router: Router, public dialog: MatDialog) { }
@@ -94,5 +95,9 @@ export class LoginComponent {
             }
             this.showWrongUserTypeRedirectDialog(u);
         }
+    }
+
+    onLoginExtraData(visible: boolean): void {
+        this.showExtraOptions = !visible;
     }
 }

@@ -16,6 +16,7 @@ export class LoginPanelComponent implements OnInit {
     @Output() progressChange = new EventEmitter<boolean>();
     @Output() authenticated = new EventEmitter<LoginResult>();
     @Output() socialAuthenticated = new EventEmitter<LoginResult>();
+    @Output() extraDataVisible = new EventEmitter<boolean>();
 
     private signupInfoPanel!: SignupInfoPanelComponent;
     @ViewChild('signupInfo') set signupInfo(panel: SignupInfoPanelComponent) {
@@ -65,11 +66,12 @@ export class LoginPanelComponent implements OnInit {
         this.auth.setLoginUser(userData);
         const signupPanelReady = (this.signupInfoPanel) ? true : false;
         this.extraData = true;
+        this.extraDataVisible.emit(this.extraData);
         if (signupPanelReady) {
             this.signupInfoPanel.init();
         }
     }
-        
+
     socialSignIn(providerName: string): void {
         this.progressChange.emit(true);
         this.error.emit('');

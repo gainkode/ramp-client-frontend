@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { Validators, FormBuilder, AbstractControl } from '@angular/forms';
 import { CountryCodes, getCountry, getCountryDialCode, ICountryCode } from '../model/country-code.model';
 import { map, startWith } from 'rxjs/operators';
-import { LoginResult } from '../model/generated-models';
+import { LoginResult, UserMode, UserType } from '../model/generated-models';
 
 @Component({
     selector: 'app-signup-panel',
@@ -22,8 +22,6 @@ export class SignUpPanelComponent implements OnInit {
     hidePassword1 = true;
     hidePassword2 = true;
     agreementChecked = false;
-    countries: ICountryCode[] = CountryCodes;
-    filteredCountries: Observable<ICountryCode[]> | undefined;
 
     signupForm = this.formBuilder.group({
         email: ['',
@@ -31,25 +29,6 @@ export class SignUpPanelComponent implements OnInit {
                 validators: [
                     Validators.required,
                     Validators.pattern('^[a-zA-Z0-9_.+\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-\.]+$')
-                ], updateOn: 'change'
-            }
-        ],
-        firstName: ['', { validators: [Validators.required], updateOn: 'change' }],
-        lastName: ['', { validators: [Validators.required], updateOn: 'change' }],
-        country: ['', { validators: [Validators.required], updateOn: 'change' }],
-        phoneCode: ['',
-            {
-                validators: [
-                    Validators.required,
-                    Validators.pattern('^[\+](?:[0-9]?){0,3}[0-9]$')
-                ], updateOn: 'change'
-            }
-        ],
-        phoneNumber: ['',
-            {
-                validators: [
-                    Validators.required,
-                    Validators.pattern('^(?:[0-9]?){6,9}[0-9]$')
                 ], updateOn: 'change'
             }
         ],
@@ -76,45 +55,11 @@ export class SignUpPanelComponent implements OnInit {
         private formBuilder: FormBuilder) { }
 
     ngOnInit(): void {
-        this.filteredCountries = this.countryField?.valueChanges.pipe(
-            startWith(''),
-            map(value => this.filterCountries(value)));
-        this.countryField?.valueChanges.subscribe(val => {
-            const code = getCountryDialCode(val);
-            if (code !== '') {
-                this.phoneCodeField?.setValue(code);
-            }
-        });
+        
     }
 
     get emailField(): AbstractControl | null {
         return this.signupForm.get('email');
-    }
-
-    get countryField(): AbstractControl | null {
-        return this.signupForm.get('country');
-    }
-
-    get phoneCodeField(): AbstractControl | null {
-        return this.signupForm.get('phoneCode');
-    }
-
-    get phoneNumberField(): AbstractControl | null {
-        return this.signupForm.get('phoneNumber');
-    }
-
-    getCountryFlag(code: string): string {
-        return `${code.toLowerCase()}.svg`;
-    }
-
-    private filterCountries(value: string | ICountryCode): ICountryCode[] {
-        let filterValue = '';
-        if (value) {
-            filterValue = typeof value === 'string' ? value.toLowerCase() : value.name.toLowerCase();
-            return this.countries.filter(c => c.name.toLowerCase().includes(filterValue));
-        } else {
-            return this.countries;
-        }
     }
 
     checkAgreement(): void {
@@ -141,32 +86,17 @@ export class SignUpPanelComponent implements OnInit {
     onSubmit(): void {
         this.error.emit('');
         if (this.signupForm.valid) {
-            const countryCode = getCountry(this.countryField?.value);
-            if (countryCode === null) {
-                this.error.emit(`Unable to recognize country: ${this.countryField?.value}`);
-                return;
-            }
             if (!this.passwordsEqual()) {
                 this.error.emit('Passwords are not equal');
                 return;
             }
             this.progressChange.emit(true);
-            const phone = this.phoneCodeField?.value + ' ' + this.phoneNumberField?.value;
-            this.registerAccount(
-                this.emailField?.value,
-                this.signupForm.get('password1')?.value,
-                this.signupForm.get('firstName')?.value,
-                this.signupForm.get('lastName')?.value,
-                countryCode.code2,
-                countryCode.code3,
-                phone);
+            this.registerAccount(this.emailField?.value, this.signupForm.get('password1')?.value);
         }
     }
 
-    registerAccount(email: string, password: string, firstName: string, lastName: string,
-        code2: string, code3: string, phone: string): void {
-        this.auth.register(
-            email, password, 'Personal', firstName, lastName, code2, code3, phone).subscribe((signupData) => {
+    registerAccount(email: string, password: string): void {
+        this.auth.register(email, password, UserType.Personal).subscribe((signupData) => {
                 const userData = signupData.data.signup as LoginResult;
                 this.progressChange.emit(false);
                 if (!userData.authTokenAction) {
