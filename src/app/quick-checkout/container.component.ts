@@ -78,7 +78,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
     this.internalPayment = val;
   }
   internalPayment = false;
-  affiliateCode = 0;
+  affiliateCode = '';
   errorMessage = '';
   inProgress = false;
   walletAddressName = '';
@@ -220,7 +220,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
     let result = false;
     if (this.currentTransaction === TransactionType.Deposit) {
       result = true;
-      if (this.affiliateCode > 0) {
+      if (this.affiliateCode !== '') {
         result = false;
       }
     }
@@ -237,8 +237,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute
   ) {
-    const affiliateCodeInput = route.snapshot.params['affiliateCode'];
-    this.affiliateCode = parseInt(affiliateCodeInput, 10);
+    this.affiliateCode = route.snapshot.params['affiliateCode'];
     this.summary = new CheckoutSummary();
     this.detailsEmailControl = this.detailsForm.get('email');
     this.detailsRegisterControl = this.detailsForm.get('createAccount');
@@ -517,9 +516,9 @@ export class ContainerComponent implements OnInit, OnDestroy {
     const amount = parseFloat(amountVal);
     let destinationType = TransactionDestinationType.Address;
     let destination = this.paymentInfoAddressControl?.value;
-    if (this.affiliateCode > 0) {
-      destinationType = TransactionDestinationType.Affiliate;
-      destination = this.affiliateCode.toString();
+    if (this.affiliateCode !== '') {
+      destinationType = TransactionDestinationType.Widget;
+      destination = this.affiliateCode;
     }
     this.dataService.createQuickCheckout(
       this.detailsTransactionControl?.value,

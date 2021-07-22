@@ -37,8 +37,6 @@ export class SignupInfoPanelComponent implements OnDestroy {
     stateNameControl: AbstractControl | null = null;
     buildingNameControl: AbstractControl | null = null;
     buildingNumberControl: AbstractControl | null = null;
-    addressStartDateControl: AbstractControl | null = null;
-    addressEndDateControl: AbstractControl | null = null;
     flatNumberControl: AbstractControl | null = null;
 
     private pSettingsSubscription!: any;
@@ -48,7 +46,7 @@ export class SignupInfoPanelComponent implements OnDestroy {
         lastName: ['', { validators: [], updateOn: 'change' }],
         phoneCode: ['', { validators: [], updateOn: 'change' }],
         phoneNumber: ['', { validators: [], updateOn: 'change' }],
-        birthday: ['', { validators: [], updateOn: 'change' }],
+        birthday: [new Date(), { validators: [], updateOn: 'change' }],
         postCode: ['', { validators: [], updateOn: 'change' }],
         town: ['', { validators: [], updateOn: 'change' }],
         street: ['', { validators: [], updateOn: 'change' }],
@@ -56,8 +54,6 @@ export class SignupInfoPanelComponent implements OnDestroy {
         stateName: ['', { validators: [], updateOn: 'change' }],
         buildingName: ['', { validators: [], updateOn: 'change' }],
         buildingNumber: ['', { validators: [], updateOn: 'change' }],
-        addressStartDate: ['', { validators: [], updateOn: 'change' }],
-        addressEndDate: ['', { validators: [], updateOn: 'change' }],
         flatNumber: ['', { validators: [], updateOn: 'change' }]
     });
 
@@ -75,8 +71,6 @@ export class SignupInfoPanelComponent implements OnDestroy {
         this.stateNameControl = this.infoForm.get('stateName');
         this.buildingNameControl = this.infoForm.get('buildingName');
         this.buildingNumberControl = this.infoForm.get('buildingNumber');
-        this.addressStartDateControl = this.infoForm.get('addressStartDate');
-        this.addressEndDateControl = this.infoForm.get('addressEndDate');
         this.flatNumberControl = this.infoForm.get('flatNumber');
     }
 
@@ -164,10 +158,6 @@ export class SignupInfoPanelComponent implements OnDestroy {
             this.stateNameControl?.setValue(user.stateName);
             this.buildingNameControl?.setValue(user.buildingName);
             this.buildingNumberControl?.setValue(user.buildingNumber);
-
-            this.addressStartDateControl?.setValue(user.flatNumber);
-            this.addressEndDateControl?.setValue(user.flatNumber);
-
             this.postCodeControl?.setValidators([Validators.required]);
             this.townControl?.setValidators([Validators.required]);
             this.streetControl?.setValidators([Validators.required]);
@@ -179,10 +169,6 @@ export class SignupInfoPanelComponent implements OnDestroy {
             this.stateNameControl?.setValue('');
             this.buildingNameControl?.setValue('');
             this.buildingNumberControl?.setValue('');
-
-            this.addressStartDateControl?.setValue('');
-            this.addressEndDateControl?.setValue('');
-
             this.postCodeControl?.setValidators([]);
             this.townControl?.setValidators([]);
             this.streetControl?.setValidators([]);
@@ -213,8 +199,6 @@ export class SignupInfoPanelComponent implements OnDestroy {
         this.stateNameControl?.updateValueAndValidity();
         this.buildingNameControl?.updateValueAndValidity();
         this.buildingNumberControl?.updateValueAndValidity();
-        this.addressStartDateControl?.updateValueAndValidity();
-        this.addressEndDateControl?.updateValueAndValidity();
         this.flatNumberControl?.updateValueAndValidity();
     }
 
@@ -244,11 +228,11 @@ export class SignupInfoPanelComponent implements OnDestroy {
                 }
             }
             this.auth.setMyInfo(
-                this.auth.token,
                 this.firstNameControl?.value as string,
                 this.lastNameControl?.value as string,
                 phone,
-                address
+                address,
+                this.birthdayControl?.value as Date
             ).subscribe(({ data }) => {
                 const userData = data.setMyInfo as LoginResult;
                 this.progressChange.emit(false);

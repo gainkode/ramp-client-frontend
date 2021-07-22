@@ -185,13 +185,12 @@ const CONFIRM_NAME = gql`
 
 const SET_MY_INFO = gql`
 mutation SetMyInfo(
-    $token: String!,
     $recaptcha: String!,
     $firstName: String
     $lastName: String,
     $phone: String,
     $address: PostAddress) {
-    setMyInfo(recaptcha: $recaptcha, token: $token, firstName: $firstName, lastName: $lastName, phone: $phone, address: $address) {
+    setMyInfo(recaptcha: $recaptcha, firstName: $firstName, lastName: $lastName, phone: $phone, address: $address) {
         authToken
         user {
             userId,
@@ -465,14 +464,13 @@ export class AuthService {
         });
     }
 
-    setMyInfo(tokenValue: string, firstNameValue: string, lastNameValue: string, phoneValue: string, addressValue: PostAddress | undefined): Observable<any> {
+    setMyInfo(firstNameValue: string, lastNameValue: string, phoneValue: string, addressValue: PostAddress | undefined, birthday: Date | undefined): Observable<any> {
         const vars = {
             recaptcha: environment.recaptchaId,
             firstName: (firstNameValue === '') ? undefined : firstNameValue,
             lastName: (lastNameValue === '') ? undefined : lastNameValue,
             phone: (phoneValue === '') ? undefined : phoneValue,
-            address: addressValue,
-            token: tokenValue
+            address: addressValue
         };
         return this.apollo.mutate({
             mutation: SET_MY_INFO,
@@ -506,11 +504,10 @@ export class AuthService {
         });
     }
 
-    verify2Fa(token: string, code: string): Observable<any> {
+    verify2Fa(code: string): Observable<any> {
         return this.apollo.mutate({
             mutation: VERIFY_2FA,
             variables: {
-                token,
                 code
             }
         });

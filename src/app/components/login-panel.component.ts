@@ -30,7 +30,6 @@ export class LoginPanelComponent implements OnInit {
     twoFa = false;
     extraData = false;
     private socilaLogin = false;
-    private twoFaToken = '';
 
     loginForm = this.formBuilder.group({
         email: ['',
@@ -93,7 +92,6 @@ export class LoginPanelComponent implements OnInit {
                         if (userData.authTokenAction === 'TwoFactorAuth') {
                             this.twoFa = true;
                             this.socilaLogin = true;
-                            this.twoFaToken = userData.authToken as string;
                         } else if (userData.authTokenAction === 'UserInfoRequired') {
                             this.showSignupPanel(userData);
                         } else {
@@ -123,7 +121,6 @@ export class LoginPanelComponent implements OnInit {
                 if (userData.user?.mode === UserMode.InternalWallet) {
                     if (userData.authTokenAction === 'TwoFactorAuth') {
                         this.twoFa = true;
-                        this.twoFaToken = userData.authToken as string;
                     } else if (userData.authTokenAction === 'UserInfoRequired') {
                         this.showSignupPanel(userData);
                     } else {
@@ -144,7 +141,7 @@ export class LoginPanelComponent implements OnInit {
             this.progressChange.emit(true);
             this.error.emit('');
             const code = this.twoFaForm.get('code')?.value;
-            this.auth.verify2Fa(this.twoFaToken, code).subscribe(({ data }) => {
+            this.auth.verify2Fa(code).subscribe(({ data }) => {
                 const userData = data.verify2faCode as LoginResult;
                 this.progressChange.emit(false);
                 if (userData.user?.mode === UserMode.InternalWallet) {
