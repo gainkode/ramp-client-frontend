@@ -1455,6 +1455,8 @@ export type Mutation = {
   sendTestNotification?: Maybe<Scalars['Void']>;
   createTransaction?: Maybe<TransactionShort>;
   executeTransaction?: Maybe<TransactionShort>;
+  cancelMyTransaction?: Maybe<TransactionShort>;
+  cancelTransaction?: Maybe<Transaction>;
   createMyWidget?: Maybe<Widget>;
   createWidget?: Maybe<Widget>;
   deleteMyWidget?: Maybe<Widget>;
@@ -1671,6 +1673,7 @@ export type MutationConfirmDeviceArgs = {
 export type MutationSetMyInfoArgs = {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
+  birthday?: Maybe<Scalars['DateTime']>;
   address?: Maybe<PostAddress>;
   phone?: Maybe<Scalars['String']>;
   recaptcha: Scalars['String'];
@@ -1742,6 +1745,16 @@ export type MutationCreateTransactionArgs = {
 export type MutationExecuteTransactionArgs = {
   transactionId?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationCancelMyTransactionArgs = {
+  transactionId?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationCancelTransactionArgs = {
+  transactionId?: Maybe<Scalars['String']>;
 };
 
 
