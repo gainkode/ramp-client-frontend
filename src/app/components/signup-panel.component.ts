@@ -55,7 +55,7 @@ export class SignUpPanelComponent implements OnInit {
         private formBuilder: FormBuilder) { }
 
     ngOnInit(): void {
-        
+
     }
 
     get emailField(): AbstractControl | null {
@@ -97,19 +97,19 @@ export class SignUpPanelComponent implements OnInit {
 
     registerAccount(email: string, password: string): void {
         this.auth.register(email, password, UserType.Personal).subscribe((signupData) => {
-                const userData = signupData.data.signup as LoginResult;
-                this.progressChange.emit(false);
-                if (!userData.authTokenAction) {
-                    this.registered.emit(email);
-                } else if (userData.authTokenAction === 'UserInfoRequired') {
-                    this.auth.setLoginUser(userData);
-                } else {
-                    this.error.emit('Unable to recognize the registration action');
-                    console.log('Unable to recognize the registration action', userData.authTokenAction);
-                }
-            }, (error) => {
-                this.progressChange.emit(false);
-                this.error.emit(this.errorHandler.getError(error.message, 'Unable to register new account'));
-            });
+            const userData = signupData.data.signup as LoginResult;
+            this.progressChange.emit(false);
+            if (!userData.authTokenAction) {
+                this.registered.emit(email);
+            } else if (userData.authTokenAction === 'UserInfoRequired') {
+                this.auth.setLoginUser(userData);
+            } else {
+                this.error.emit('Unable to recognize the registration action');
+                console.log('Unable to recognize the registration action', userData.authTokenAction);
+            }
+        }, (error) => {
+            this.progressChange.emit(false);
+            this.error.emit(this.errorHandler.getError(error.message, 'Unable to register new account'));
+        });
     }
 }

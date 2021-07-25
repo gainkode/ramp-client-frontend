@@ -15,7 +15,7 @@ export class SignupInfoPanelComponent implements OnDestroy {
     @Input() buttonTitle = 'OK';
     @Output() error = new EventEmitter<string>();
     @Output() progressChange = new EventEmitter<boolean>();
-    @Output() done = new EventEmitter<string>();
+    @Output() done = new EventEmitter<LoginResult>();
 
     requireUserFullName = false;
     requireUserPhone = false;
@@ -161,6 +161,7 @@ export class SignupInfoPanelComponent implements OnDestroy {
             this.postCodeControl?.setValidators([Validators.required]);
             this.townControl?.setValidators([Validators.required]);
             this.streetControl?.setValidators([Validators.required]);
+            this.flatNumberControl?.setValue(user.flatNumber);
         } else {
             this.postCodeControl?.setValue('');
             this.townControl?.setValue('');
@@ -169,9 +170,11 @@ export class SignupInfoPanelComponent implements OnDestroy {
             this.stateNameControl?.setValue('');
             this.buildingNameControl?.setValue('');
             this.buildingNumberControl?.setValue('');
+            this.flatNumberControl?.setValue('');
             this.postCodeControl?.setValidators([]);
             this.townControl?.setValidators([]);
             this.streetControl?.setValidators([]);
+            this.flatNumberControl?.setValidators([]);
         }
         if (this.requireUserFlatNumber && user) {
             this.flatNumberControl?.setValue(user.flatNumber);
@@ -222,6 +225,7 @@ export class SignupInfoPanelComponent implements OnDestroy {
                     address.stateName = this.stateNameControl?.value;
                     address.buildingName = this.buildingNameControl?.value;
                     address.buildingNumber = this.buildingNumberControl?.value;
+                    address.flatNumber = this.flatNumberControl?.value;
                 }
                 if (this.requireUserFlatNumber) {
                     address.flatNumber = this.flatNumberControl?.value;
@@ -234,19 +238,8 @@ export class SignupInfoPanelComponent implements OnDestroy {
                 address,
                 this.birthdayControl?.value as Date
             ).subscribe(({ data }) => {
-                const userData = data.setMyInfo as LoginResult;
                 this.progressChange.emit(false);
-                console.log(userData);
-                //     if (userData.user?.mode === UserMode.InternalWallet) {
-                //         if (userData.authTokenAction === 'TwoFactorAuth') {
-                //             this.twoFa = true;
-                //             this.twoFaToken = userData.authToken as string;
-                //         } else {
-                //             this.authenticated.emit(userData);
-                //         }
-                //     } else {
-                //         this.error.emit(`Unable to authorise with the login "${login}". Please sign up`);
-                //     }
+                this.done.emit(data.setMyInfo as LoginResult);
             }, (error) => {
                 this.progressChange.emit(false);
                 this.error.emit(this.errorHandler.getError(error.message, 'Incorrect personal data'));

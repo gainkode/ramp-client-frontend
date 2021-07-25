@@ -189,12 +189,43 @@ mutation SetMyInfo(
     $firstName: String
     $lastName: String,
     $phone: String,
-    $address: PostAddress) {
-    setMyInfo(recaptcha: $recaptcha, firstName: $firstName, lastName: $lastName, phone: $phone, address: $address) {
+    $address: PostAddress,
+    $birthday: DateTime) {
+    setMyInfo(recaptcha: $recaptcha, firstName: $firstName, lastName: $lastName, phone: $phone, address: $address, birthday: $birthday) {
         authToken
         user {
             userId,
-            email
+            email,
+            roles {name, immutable},
+            permissions { roleName, objectCode, objectName, objectDescription, fullAccess },
+            type,
+            defaultFiatCurrency,
+            firstName,
+            lastName,
+            birthday,
+            countryCode2,
+            countryCode3,
+            phone,
+            postCode,
+            town,
+            street,
+            subStreet,
+            stateName,
+            buildingName,
+            buildingNumber,
+            flatNumber,
+            addressStartDate,
+            addressEndDate,
+            mode,
+            is2faEnabled,
+            changePasswordRequired,
+            referralCode,
+            kycProvider,
+            kycApplicantId,
+            kycValid,
+            kycStatus,
+            kycStatusUpdateRequired,
+            kycReviewRejectedType,
         }
         authTokenAction
     }
@@ -230,8 +261,8 @@ mutation Disable2fa($password: String!, $code: String!) {
 `;
 
 const VERIFY_2FA = gql`
-mutation Verify2faCode($token: String!, $code: String!) {
-    verify2faCode(token: $token, code: $code) {
+mutation Verify2faCode($code: String!) {
+    verify2faCode(code: $code) {
         authToken
         user {
             userId,
@@ -464,13 +495,14 @@ export class AuthService {
         });
     }
 
-    setMyInfo(firstNameValue: string, lastNameValue: string, phoneValue: string, addressValue: PostAddress | undefined, birthday: Date | undefined): Observable<any> {
+    setMyInfo(firstNameValue: string, lastNameValue: string, phoneValue: string, addressValue: PostAddress | undefined, birthdayValue: Date | undefined): Observable<any> {
         const vars = {
             recaptcha: environment.recaptchaId,
             firstName: (firstNameValue === '') ? undefined : firstNameValue,
             lastName: (lastNameValue === '') ? undefined : lastNameValue,
             phone: (phoneValue === '') ? undefined : phoneValue,
-            address: addressValue
+            address: addressValue,
+            birthday: birthdayValue
         };
         return this.apollo.mutate({
             mutation: SET_MY_INFO,
@@ -505,6 +537,7 @@ export class AuthService {
     }
 
     verify2Fa(code: string): Observable<any> {
+        console.log(code);
         return this.apollo.mutate({
             mutation: VERIFY_2FA,
             variables: {

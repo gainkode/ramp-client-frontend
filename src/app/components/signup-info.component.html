@@ -113,9 +113,9 @@
     </div>
 
     <!-- Flat Number -->
-    <mat-form-field class="form-element" *ngIf="requireUserFlatNumber">
+    <mat-form-field class="form-element" *ngIf="requireUserFlatNumber || requireUserAddress">
         <mat-label>Flat Number</mat-label>
-        <input type="text" matInput formControlName="flatNumber" maxlength="7" placeholder="Flat number" required />
+        <input type="text" matInput formControlName="flatNumber" maxlength="7" placeholder="Flat number" [required]="requireUserFlatNumber" />
         <mat-error *ngIf="this.infoForm.get('flatNumber')?.hasError('required')">
             Please specify your flat number
         </mat-error>

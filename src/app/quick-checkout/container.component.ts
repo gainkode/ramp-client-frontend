@@ -238,7 +238,6 @@ export class ContainerComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute
   ) {
     this.affiliateCode = route.snapshot.params['affiliateCode'] ?? '';
-    console.log(this.affiliateCode);
     this.summary = new CheckoutSummary();
     this.detailsEmailControl = this.detailsForm.get('email');
     this.detailsRegisterControl = this.detailsForm.get('createAccount');
@@ -521,7 +520,6 @@ export class ContainerComponent implements OnInit, OnDestroy {
       destinationType = TransactionDestinationType.Widget;
       destination = this.affiliateCode;
     }
-    console.log(destinationType);
     this.dataService.createQuickCheckout(
       this.detailsTransactionControl?.value,
       this.detailsCurrencyFromControl?.value,

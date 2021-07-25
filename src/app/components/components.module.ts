@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar'; 
@@ -66,7 +67,7 @@ const materialModules = [
     MatCheckboxModule,
     MatSelectModule,
     MatTooltipModule,
-    MatDatepickerModule,
+    MatDatepickerModule, MatNativeDateModule,
     MatDialogModule,
     MatIconModule,
     MatListModule,

@@ -29,7 +29,7 @@ export class LoginPanelComponent implements OnInit {
     hidePassword = true;
     twoFa = false;
     extraData = false;
-    private socilaLogin = false;
+    private socialLogin = false;
 
     loginForm = this.formBuilder.group({
         email: ['',
@@ -91,7 +91,7 @@ export class LoginPanelComponent implements OnInit {
                     if (userData.user?.mode === UserMode.InternalWallet) {
                         if (userData.authTokenAction === 'TwoFactorAuth') {
                             this.twoFa = true;
-                            this.socilaLogin = true;
+                            this.socialLogin = true;
                         } else if (userData.authTokenAction === 'UserInfoRequired') {
                             this.showSignupPanel(userData);
                         } else {
@@ -145,7 +145,7 @@ export class LoginPanelComponent implements OnInit {
                 const userData = data.verify2faCode as LoginResult;
                 this.progressChange.emit(false);
                 if (userData.user?.mode === UserMode.InternalWallet) {
-                    if (this.socilaLogin) {
+                    if (this.socialLogin) {
                         this.socialAuthenticated.emit(userData);
                     } else {
                         this.authenticated.emit(userData);
@@ -157,6 +157,26 @@ export class LoginPanelComponent implements OnInit {
                 this.progressChange.emit(false);
                 this.error.emit(this.errorHandler.getError(error.message, 'Incorrect login or password'));
             });
+        }
+    }
+
+    onSignupError(error: string): void {
+        this.error.emit(error);
+    }
+
+    onSignupProgress(visible: boolean): void {
+        this.progressChange.emit(visible);
+    }
+
+    onSignupDone(userData: LoginResult): void {
+        if (!userData.authTokenAction || userData.authTokenAction === 'Default'|| userData.authTokenAction === 'KycRequired') {
+            if (this.socialLogin) {
+                this.socialAuthenticated.emit(userData);
+            } else {
+                this.authenticated.emit(userData);
+            }
+        } else {
+            this.error.emit('Unable to update personal data');
         }
     }
 }
