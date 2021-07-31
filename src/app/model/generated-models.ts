@@ -388,6 +388,7 @@ export type UserNotification = {
   text?: Maybe<Scalars['String']>;
   linkedId?: Maybe<Scalars['String']>;
   linkedTable?: Maybe<Scalars['String']>;
+  level?: Maybe<UserNotificationLevel>;
   params?: Maybe<Scalars['String']>;
 };
 
@@ -516,6 +517,12 @@ export type UserNotificationSubscription = {
   emailNotificationDefault?: Maybe<Scalars['Boolean']>;
   emailNotificationImmutable?: Maybe<Scalars['Boolean']>;
 };
+
+export enum UserNotificationLevel {
+  Info = 'Info',
+  Warning = 'Warning',
+  Error = 'Error'
+}
 
 export type SettingsCommon = {
   __typename?: 'SettingsCommon';
@@ -909,7 +916,8 @@ export enum UserActionResult {
   Unknown = 'unknown',
   Succeeded = 'succeeded',
   Failed = 'failed',
-  Canceled = 'canceled'
+  Canceled = 'canceled',
+  Error = 'error'
 }
 
 export type UserActionListResult = {
@@ -941,7 +949,8 @@ export enum UserActionType {
   Withdraw = 'withdraw',
   Transfer = 'transfer',
   Exchange = 'exchange',
-  System = 'system'
+  System = 'system',
+  CancelTransaction = 'cancelTransaction'
 }
 
 export type SupportTicketListResult = {

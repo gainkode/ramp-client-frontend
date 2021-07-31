@@ -373,7 +373,10 @@ export class AuthService {
         });
         result.subscribe(x => {
             const d = x.data as any;
+            console.log('refresh token: ', d.refreshToken);
             sessionStorage.setItem('currentToken', d.refreshToken as string);
+        }, (error) => {
+            console.log('refresh token error: ', error);
         });
         return result;
     }
@@ -537,7 +540,6 @@ export class AuthService {
     }
 
     verify2Fa(code: string): Observable<any> {
-        console.log(code);
         return this.apollo.mutate({
             mutation: VERIFY_2FA,
             variables: {
@@ -626,7 +628,6 @@ export class AuthService {
             fetchPolicy: 'network-only'
         });
     }
-
 
     getMyKycSettings(): QueryRef<any, EmptyObject> | null {
         if (this.apollo.client !== undefined) {
