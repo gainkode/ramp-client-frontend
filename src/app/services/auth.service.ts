@@ -108,8 +108,7 @@ mutation SocialLogin(
 
 const SIGNUP = gql`
   mutation Signup($recaptcha: String!, $email: String!, $password: String!, $userType: UserType!,
-    $mode: UserMode!, $termsOfUse: Boolean!, $firstName: String!, $lastName: String!,
-    $countryCode2: String!, $countryCode3: String!, $phone: String!) {
+    $mode: UserMode!, $termsOfUse: Boolean!) {
     signup(
         recaptcha: $recaptcha,
         email: $email,
