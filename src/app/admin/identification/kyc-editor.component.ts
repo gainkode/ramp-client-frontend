@@ -138,6 +138,16 @@ export class KycEditorComponent implements OnInit, OnDestroy {
         this.schemeForm.get('userType')?.valueChanges.subscribe(val => {
             this.loadLevelValues(val);
         });
+        this.schemeForm.get('requireUserFlatNumber')?.valueChanges.subscribe(val => {
+            if (val === true) {
+                this.schemeForm.get('requireUserAddress')?.setValue(true);
+            }
+        });
+        this.schemeForm.get('requireUserAddress')?.valueChanges.subscribe(val => {
+            if (val === false) {
+                this.schemeForm.get('requireUserFlatNumber')?.setValue(false);
+            }
+        });
     }
 
     ngOnDestroy(): void { }

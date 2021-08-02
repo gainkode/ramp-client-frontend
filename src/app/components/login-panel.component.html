@@ -53,7 +53,8 @@
     </div>
 </div>
 
-<app-signup-info-panel #signupInfo *ngIf="extraData" buttonTitle="SAVE"></app-signup-info-panel>
+<app-signup-info-panel #signupInfo *ngIf="extraData" buttonTitle="SAVE" (error)="onSignupError($event)"
+    (progressChange)="onSignupProgress($event)" (done)="onSignupDone($event)"></app-signup-info-panel>
 
 <div *ngIf=twoFa>
     <form [formGroup]="twoFaForm" (ngSubmit)="onTwoFaSubmit()">

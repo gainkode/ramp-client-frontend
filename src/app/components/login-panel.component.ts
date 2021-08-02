@@ -86,15 +86,16 @@ export class LoginPanelComponent implements OnInit {
                 this.auth.socialSignOut();
                 this.auth.authenticateSocial(providerName.toLowerCase(), token).subscribe((loginData) => {
                     const userData = loginData.data.login as LoginResult;
-                    console.log(userData);
-                    this.progressChange.emit(false);
+                    console.log('login:', userData);
                     if (userData.user?.mode === UserMode.InternalWallet) {
                         if (userData.authTokenAction === 'TwoFactorAuth') {
                             this.twoFa = true;
                             this.socialLogin = true;
+                            this.progressChange.emit(false);
                         } else if (userData.authTokenAction === 'UserInfoRequired') {
                             this.showSignupPanel(userData);
                         } else {
+                            this.progressChange.emit(false);
                             this.socialAuthenticated.emit(userData);
                         }
                     } else {
@@ -121,9 +122,12 @@ export class LoginPanelComponent implements OnInit {
                 if (userData.user?.mode === UserMode.InternalWallet) {
                     if (userData.authTokenAction === 'TwoFactorAuth') {
                         this.twoFa = true;
+                        this.socialLogin = true;
+                        this.progressChange.emit(false);
                     } else if (userData.authTokenAction === 'UserInfoRequired') {
                         this.showSignupPanel(userData);
                     } else {
+                        this.progressChange.emit(false);
                         this.authenticated.emit(userData);
                     }
                 } else {
@@ -169,7 +173,7 @@ export class LoginPanelComponent implements OnInit {
     }
 
     onSignupDone(userData: LoginResult): void {
-        if (!userData.authTokenAction || userData.authTokenAction === 'Default'|| userData.authTokenAction === 'KycRequired') {
+        if (!userData.authTokenAction || userData.authTokenAction === 'Default' || userData.authTokenAction === 'KycRequired') {
             if (this.socialLogin) {
                 this.socialAuthenticated.emit(userData);
             } else {
