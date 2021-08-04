@@ -1,11 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { ErrorService } from '../services/error.service';
-import { Observable } from 'rxjs';
 import { Validators, FormBuilder, AbstractControl } from '@angular/forms';
-import { CountryCodes, getCountry, getCountryDialCode, ICountryCode } from '../model/country-code.model';
-import { map, startWith } from 'rxjs/operators';
-import { LoginResult, UserMode, UserType } from '../model/generated-models';
+import { LoginResult, UserType } from '../model/generated-models';
 
 @Component({
     selector: 'app-signup-panel',
