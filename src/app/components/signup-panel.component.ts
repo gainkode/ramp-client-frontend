@@ -1,8 +1,9 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { ErrorService } from '../services/error.service';
 import { Validators, FormBuilder, AbstractControl } from '@angular/forms';
 import { LoginResult, UserType } from '../model/generated-models';
+import { SignupInfoPanelComponent } from './signup-info.component';
 
 @Component({
     selector: 'app-signup-panel',
@@ -16,9 +17,19 @@ export class SignUpPanelComponent implements OnInit {
     @Output() error = new EventEmitter<string>();
     @Output() progressChange = new EventEmitter<boolean>();
     @Output() registered = new EventEmitter<string>();
+
+    private signupInfoPanel!: SignupInfoPanelComponent;
+    @ViewChild('signupInfo') set signupInfo(panel: SignupInfoPanelComponent) {
+        if (panel) {
+            this.signupInfoPanel = panel;
+            panel.init();
+        }
+    }
+
     hidePassword1 = true;
     hidePassword2 = true;
     agreementChecked = false;
+    extraData = false;
 
     signupForm = this.formBuilder.group({
         email: ['',
@@ -95,12 +106,13 @@ export class SignUpPanelComponent implements OnInit {
     registerAccount(email: string, password: string): void {
         this.auth.register(email, password, UserType.Personal).subscribe((signupData) => {
             const userData = signupData.data.signup as LoginResult;
-            this.progressChange.emit(false);
             if (!userData.authTokenAction) {
+                this.progressChange.emit(false);
                 this.registered.emit(email);
             } else if (userData.authTokenAction === 'UserInfoRequired') {
-                this.auth.setLoginUser(userData);
+                this.showSignupPanel(userData);
             } else {
+                this.progressChange.emit(false);
                 this.error.emit('Unable to recognize the registration action');
                 console.log('Unable to recognize the registration action', userData.authTokenAction);
             }
@@ -108,5 +120,30 @@ export class SignUpPanelComponent implements OnInit {
             this.progressChange.emit(false);
             this.error.emit(this.errorHandler.getError(error.message, 'Unable to register new account'));
         });
+    }
+
+    showSignupPanel(userData: LoginResult) {
+        this.auth.setLoginUser(userData);
+        const signupPanelReady = (this.signupInfoPanel) ? true : false;
+        this.extraData = true;
+        if (signupPanelReady) {
+            this.signupInfoPanel.init();
+        }
+    }
+
+    onSignupError(error: string): void {
+        this.error.emit(error);
+    }
+
+    onSignupProgress(visible: boolean): void {
+        this.progressChange.emit(visible);
+    }
+
+    onSignupDone(userData: LoginResult): void {
+        if (!userData.authTokenAction || userData.authTokenAction === 'Default' || userData.authTokenAction === 'KycRequired') {
+            this.registered.emit(userData?.user?.email);
+        } else {
+            this.error.emit('Unable to update personal data');
+        }
     }
 }

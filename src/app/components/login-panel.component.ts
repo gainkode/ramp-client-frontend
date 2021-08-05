@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { ErrorService } from '../services/error.service';
 import { Validators, FormBuilder } from '@angular/forms';
@@ -118,7 +118,6 @@ export class LoginPanelComponent implements OnInit {
             const login = this.loginForm.get('email')?.value;
             this.auth.authenticate(login, this.loginForm.get('password')?.value).subscribe(({ data }) => {
                 const userData = data.login as LoginResult;
-                this.progressChange.emit(false);
                 if (userData.user?.mode === UserMode.InternalWallet) {
                     if (userData.authTokenAction === 'TwoFactorAuth') {
                         this.twoFa = true;

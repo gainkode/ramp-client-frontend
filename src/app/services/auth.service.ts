@@ -506,6 +506,9 @@ export class AuthService {
             address: addressValue,
             birthday: birthdayValue
         };
+        console.log('birthdayValue', birthdayValue);
+        console.log('vars', vars);
+            
         return this.apollo.mutate({
             mutation: SET_MY_INFO,
             variables: vars

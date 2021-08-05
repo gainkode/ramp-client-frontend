@@ -83,6 +83,7 @@ export class SignupInfoPanelComponent implements OnDestroy {
 
     init(): void {
         const fieldsData = this.auth.getSignupRequiredFields();
+        console.log(fieldsData);
         if (fieldsData === null) {
             this.error.emit(this.errorHandler.getRejectedCookieMessage());
         } else {
@@ -209,12 +210,12 @@ export class SignupInfoPanelComponent implements OnDestroy {
         this.error.emit('');
         if (this.infoForm.valid) {
             this.progressChange.emit(true);
-            const token = '';
             let address: PostAddress | undefined = undefined;
             let phone = '';
             if (this.requireUserPhone) {
                 phone = `${this.phoneCodeControl?.value} ${this.phoneNumberControl?.value}`;
             }
+            const birthday = (this.birthdayControl?.value) ? this.birthdayControl?.value as Date : undefined;
             if (this.requireUserAddress || this.requireUserFlatNumber) {
                 address = {} as PostAddress;
                 if (this.requireUserAddress) {
@@ -236,7 +237,7 @@ export class SignupInfoPanelComponent implements OnDestroy {
                 this.lastNameControl?.value as string,
                 phone,
                 address,
-                this.birthdayControl?.value as Date
+                birthday
             ).subscribe(({ data }) => {
                 this.progressChange.emit(false);
                 this.done.emit(data.setMyInfo as LoginResult);
