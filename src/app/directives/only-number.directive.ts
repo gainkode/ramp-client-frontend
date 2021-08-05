@@ -14,7 +14,7 @@ export const CUSTOM_INPUT_DATE_PICKER_CONTROL_VALUE_ACCESSOR: StaticProvider = {
 export class OnlyNumberDirective implements ControlValueAccessor {
     private onChange!: (val: string) => void;
     private onTouched!: () => void;
-    private value: string = '';
+    private value = '';
 
     constructor(private elementRef: ElementRef, private renderer: Renderer2) {}
 

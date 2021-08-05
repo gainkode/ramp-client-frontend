@@ -13,7 +13,7 @@ export class ProfileTwoFAComponent {
   @Output() twoFaChanged = new EventEmitter<void>();
 
   twoFaEnabled = false;
-  
+
   private globalEnabled = false;
 
   get enabled(): boolean {

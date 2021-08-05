@@ -1,9 +1,9 @@
-import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from "@angular/core";
-import { AbstractControl, FormBuilder, Validators } from "@angular/forms";
-import { CardView } from "../model/payment.model";
+import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { CardView } from '../model/payment.model';
 
-var cardValid = require("card-validator");
-var creditCardType = require("credit-card-type");
+const cardValid = require('card-validator');
+const creditCardType = require('credit-card-type');
 
 @Component({
     selector: 'app-credit-card',
@@ -51,11 +51,11 @@ export class CreditCardComponent implements OnInit {
             if (val !== '') {
                 let s = '';
                 const cardNum = val as string;
-                const len = cardNum.length;
-                for (let v = 0; v < len; v++) {
+                const cardLen = cardNum.length;
+                for (let v = 0; v < cardLen; v++) {
                     s += cardNum[v];
-                    const len = this.cardNumberGaps.length;
-                    for (var i = 0; i < len; i++) {
+                    const gapLen = this.cardNumberGaps.length;
+                    for (var i = 0; i < gapLen; i++) {
                         const g = this.cardNumberGaps[i];
                         if (v === g - 1) {
                             s += ' ';
@@ -81,7 +81,7 @@ export class CreditCardComponent implements OnInit {
 
     get cardValidMonthValue(): string {
         const val = this.cardValidMonthControl?.value;
-        let result: string = '01';
+        let result = '01';
         if (val) {
             if (val !== '') {
                 result = val.toString();
@@ -138,13 +138,13 @@ export class CreditCardComponent implements OnInit {
                     card.holderName = this.cardHolderControl?.value;
                     card.monthExpired = this.cardValidMonthControl?.value;
                     card.yearExpired = this.cardValidYearControl?.value;
-                    card.cvv = parseInt(this.cardCvvControl?.value);
+                    card.cvv = parseInt(this.cardCvvControl?.value, 10);
                 }
                 this.cardDetails.emit(card);
             }
         });
         this.cardNumberControl?.valueChanges.subscribe((val) => {
-            var cardInfo = creditCardType(val);
+            const cardInfo = creditCardType(val);
             // If there is one card type found (no ambigous options)
             if (cardInfo.length === 1) {
                 this.codeName = cardInfo[0].code.name;

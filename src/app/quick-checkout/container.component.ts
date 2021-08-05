@@ -474,7 +474,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
   private filterUserWalletGroupItem = (opt: string[], value: string): string[] => {
     const filterValue = value.toLowerCase();
     return opt.filter(item => item.toLowerCase().includes(filterValue));
-  };
+  }
 
   private filterUserWallets(value: string): CommonGroupValue[] {
     if (value !== null) {
@@ -648,8 +648,11 @@ export class ContainerComponent implements OnInit, OnDestroy {
     this.currentAmountTo = 0;
   }
 
-  private setCurrencyValues(defaultSrcCurrency: string = '', defaultDstCurrency: string = '',
-    defaultSrcAmount: number = 0, defaultDstAmount: number = 0): void {
+  private setCurrencyValues(
+    defaultSrcCurrency: string = '',
+    defaultDstCurrency: string = '',
+    defaultSrcAmount: number = 0,
+    defaultDstAmount: number = 0): void {
     if (this.currentTransaction === TransactionType.Deposit) {
       this.sourceCurrencies = this.pCurrencies.filter((c) => c.fiat);
       this.destinationCurrencies = this.pCurrencies.filter((c) => !c.fiat);
@@ -1018,7 +1021,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
     this.iframeContent = '';
     const iframe = document.getElementById('iframe');
     if (iframe) {
-      (<HTMLIFrameElement>iframe).srcdoc = '';
+      (iframe as HTMLIFrameElement).srcdoc = '';
     }
   }
 
@@ -1101,7 +1104,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
     }
   }
 
-  cardDetails(card: CardView) {
+  cardDetails(card: CardView): void {
     this.currentCard = card;
   }
 
@@ -1153,8 +1156,8 @@ export class ContainerComponent implements OnInit, OnDestroy {
   }
 
   onLoadRedirect(): void {
-    var iframe = document.getElementById('iframe');
-    var iWindow = (<HTMLIFrameElement>iframe).contentWindow;
+    const iframe = document.getElementById('iframe');
+    const iWindow = (iframe as HTMLIFrameElement).contentWindow;
     this.iframedoc = iWindow?.document;
   }
 

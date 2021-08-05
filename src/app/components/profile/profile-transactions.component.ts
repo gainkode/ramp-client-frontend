@@ -41,8 +41,11 @@ export class ProfileTransactionsComponent implements OnInit, OnDestroy, AfterVie
         'currencyToSpend', 'amountToSpend', 'fees', 'balance', 'status'
     ];
 
-    constructor(private auth: AuthService, private errorHandler: ErrorService,
-        private profileService: ProfileDataService, private router: Router) { }
+    constructor(
+        private auth: AuthService,
+        private errorHandler: ErrorService,
+        private profileService: ProfileDataService,
+        private router: Router) { }
 
     ngOnInit(): void {
         this.pageSize = (this.recent) ? 10 : 25;

@@ -1,8 +1,8 @@
-import { Injectable } from "@angular/core";
-import { Apollo, gql, QueryRef } from "apollo-angular";
-import { Observable } from "rxjs";
-import { EmptyObject } from "apollo-angular/types";
-import { TransactionSource } from "../model/generated-models";
+import { Injectable } from '@angular/core';
+import { Apollo, gql, QueryRef } from 'apollo-angular';
+import { Observable } from 'rxjs';
+import { EmptyObject } from 'apollo-angular/types';
+import { TransactionSource } from '../model/generated-models';
 
 const GET_MY_TRANSACTIONS = gql`
   query MyTransactions(
@@ -262,13 +262,13 @@ export class ProfileDataService {
         query: GET_MY_TRANSACTIONS,
         variables: {
           sourcesOnly: sources,
-          filter: "",
+          filter: '',
           skip: pageIndex * takeItems,
           first: takeItems,
           orderBy: orderFields,
         },
         pollInterval: 30000,
-        fetchPolicy: "network-only",
+        fetchPolicy: 'network-only',
       });
     } else {
       return null;
@@ -279,7 +279,7 @@ export class ProfileDataService {
     if (this.apollo.client !== undefined) {
       return this.apollo.watchQuery<any>({
         query: GET_ME,
-        fetchPolicy: "network-only",
+        fetchPolicy: 'network-only',
       });
     } else {
       return null;
@@ -290,7 +290,7 @@ export class ProfileDataService {
     if (this.apollo.client !== undefined) {
       return this.apollo.watchQuery<any>({
         query: GET_PROFILE_HOME,
-        fetchPolicy: "network-only",
+        fetchPolicy: 'network-only',
       });
     } else {
       return null;
@@ -301,7 +301,7 @@ export class ProfileDataService {
     if (this.apollo.client !== undefined) {
       return this.apollo.watchQuery<any>({
         query: GET_PROFILE_ACCOUNT,
-        fetchPolicy: "network-only",
+        fetchPolicy: 'network-only',
       });
     } else {
       return null;
@@ -319,13 +319,13 @@ export class ProfileDataService {
       return this.apollo.watchQuery<any>({
         query: GET_MY_NOTIFICATIONS,
         variables: {
-          filter: "",
+          filter: '',
           skip: pageIndex * takeItems,
           first: takeItems,
           orderBy: orderFields,
         },
         pollInterval: 30000,
-        fetchPolicy: "network-only",
+        fetchPolicy: 'network-only',
       });
     } else {
       return null;
@@ -356,7 +356,7 @@ export class ProfileDataService {
     oldPassword: string,
     newPassword: string
   ): Observable<any> {
-    let code: string | undefined = undefined;
+    let code: string | undefined;
     if (code2fa) {
       code = (code2fa !== '') ? code2fa : undefined;
     }

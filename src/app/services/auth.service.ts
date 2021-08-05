@@ -148,7 +148,7 @@ const CONFIRM_EMAIL = gql`
 `;
 
 const CONFIRM_NAME = gql`
-  mutation ConfirmName($token: String!, $recaptcha: String!, 
+  mutation ConfirmName($token: String!, $recaptcha: String!,
     $userType: UserType!, $mode: UserMode!, $firstName: String!, $lastName: String!,
     $countryCode2: String!, $countryCode3: String!, $phone: String!) {
     confirmName(
@@ -448,8 +448,14 @@ export class AuthService {
         });
     }
 
-    confirmName(tokenId: string, usertype: string, firstname: string, lastname: string,
-        countrycode2: string, countrycode3: string, phoneNumber: string): Observable<any> {
+    confirmName(
+        tokenId: string,
+        usertype: string,
+        firstname: string,
+        lastname: string,
+        countrycode2: string,
+        countrycode3: string,
+        phoneNumber: string): Observable<any> {
         return this.apollo.mutate({
             mutation: CONFIRM_NAME,
             variables: {
@@ -497,7 +503,12 @@ export class AuthService {
         });
     }
 
-    setMyInfo(firstNameValue: string, lastNameValue: string, phoneValue: string, addressValue: PostAddress | undefined, birthdayValue: Date | undefined): Observable<any> {
+    setMyInfo(
+        firstNameValue: string,
+        lastNameValue: string,
+        phoneValue: string,
+        addressValue: PostAddress | undefined,
+        birthdayValue: Date | undefined): Observable<any> {
         const vars = {
             recaptcha: environment.recaptchaId,
             firstName: (firstNameValue === '') ? undefined : firstNameValue,

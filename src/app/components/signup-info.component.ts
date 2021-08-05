@@ -57,7 +57,9 @@ export class SignupInfoPanelComponent implements OnDestroy {
         flatNumber: ['', { validators: [], updateOn: 'change' }]
     });
 
-    constructor(private auth: AuthService, private errorHandler: ErrorService,
+    constructor(
+        private auth: AuthService,
+        private errorHandler: ErrorService,
         private formBuilder: FormBuilder) {
         this.firstNameControl = this.infoForm.get('firstName');
         this.lastNameControl = this.infoForm.get('lastName');
@@ -210,7 +212,7 @@ export class SignupInfoPanelComponent implements OnDestroy {
         this.error.emit('');
         if (this.infoForm.valid) {
             this.progressChange.emit(true);
-            let address: PostAddress | undefined = undefined;
+            let address: PostAddress | undefined;
             let phone = '';
             if (this.requireUserPhone) {
                 phone = `${this.phoneCodeControl?.value} ${this.phoneNumberControl?.value}`;

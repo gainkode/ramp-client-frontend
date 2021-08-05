@@ -1,5 +1,5 @@
-import { DatePipe } from "@angular/common";
-import { CommonTargetValue } from "./common.model";
+import { DatePipe } from '@angular/common';
+import { CommonTargetValue } from './common.model';
 import {
   PaymentInstrument,
   PaymentProvider,
@@ -10,7 +10,7 @@ import {
   TransactionType,
   User,
   UserMode,
-} from "./generated-models";
+} from './generated-models';
 import {
   TransactionTypeList,
   PaymentInstrumentList,
@@ -19,47 +19,47 @@ import {
   TransactionStatusList,
   CardView,
   UserModeShortList,
-} from "./payment.model";
-import { UserItem } from "./user.model";
+} from './payment.model';
+import { UserItem } from './user.model';
 
 export class TransactionItem {
-  id = "";
-  code = "";
-  created: string = "";
-  executed: string = "";
-  accountId = "";
+  id = '';
+  code = '';
+  created = '';
+  executed = '';
+  accountId = '';
   type: TransactionType | undefined = undefined;
   userMode: UserMode | undefined = undefined;
   instrument: PaymentInstrument | undefined = undefined;
   instrumentDetails: CommonTargetValue | null = null;
   paymentProvider: PaymentProvider | undefined = undefined;
-  paymentProviderResponse = "";
+  paymentProviderResponse = '';
   source: TransactionSource | undefined = undefined;
-  currencyToSpend = "";
-  currencyToReceive = "";
+  currencyToSpend = '';
+  currencyToReceive = '';
   amountToSpend = 0;
   amountToReceive = 0;
-  address = "";
-  ip = "";
+  address = '';
+  ip = '';
   euro = 0;
   fees = 0;
   rate = 0;
   status: TransactionStatus | undefined = undefined;
   user: UserItem | undefined;
-  balance: number = 74.1254;
+  balance = 74.1254;
 
   constructor(data: Transaction | TransactionShort | null) {
     if (data !== null) {
       this.code = data.code as string;
       this.id = data.transactionId;
-      const datepipe: DatePipe = new DatePipe("en-US");
+      const datepipe: DatePipe = new DatePipe('en-US');
       this.created = datepipe.transform(
         data.created,
-        "dd-MM-YYYY HH:mm:ss"
+        'dd-MM-YYYY HH:mm:ss'
       ) as string;
       this.executed = datepipe.transform(
         data.executed,
-        "dd-MM-YYYY HH:mm:ss"
+        'dd-MM-YYYY HH:mm:ss'
       ) as string;
       this.address = data.destination as string;
       this.accountId = data.userId as string;
@@ -101,7 +101,7 @@ export class TransactionItem {
           let payment = JSON.parse(data.paymentOrder.paymentInfo);
           // sometimes it comes as a string with escape symbols.
           //  In this case parse returns a stringified JSON, which has to be parsed again
-          if (typeof payment === "string") {
+          if (typeof payment === 'string') {
             payment = JSON.parse(payment);
           }
           if (this.instrument === PaymentInstrument.CreditCard) {
@@ -164,6 +164,6 @@ export class TransactionItem {
       return UserModeShortList.find((p) => p.id === this.userMode)
         ?.name as string;
     }
-    return "";
+    return '';
   }
 }

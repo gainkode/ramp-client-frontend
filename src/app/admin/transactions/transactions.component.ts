@@ -38,8 +38,11 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
     return this.pShowDetails;
   }
 
-  constructor(private auth: AuthService, private errorHandler: ErrorService,
-    private adminService: AdminDataService, private router: Router) {
+  constructor(
+    private auth: AuthService,
+    private errorHandler: ErrorService,
+    private adminService: AdminDataService,
+    private router: Router) {
   }
 
   ngOnInit(): void {

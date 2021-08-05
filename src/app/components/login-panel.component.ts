@@ -46,7 +46,9 @@ export class LoginPanelComponent implements OnInit {
         code: ['', { validators: [Validators.required], updateOn: 'change' }]
     });
 
-    constructor(private auth: AuthService, private errorHandler: ErrorService,
+    constructor(
+        private auth: AuthService,
+        private errorHandler: ErrorService,
         private formBuilder: FormBuilder) { }
 
     ngOnInit(): void {
@@ -61,7 +63,7 @@ export class LoginPanelComponent implements OnInit {
         this.socialSignIn('Facebook');
     }
 
-    showSignupPanel(userData: LoginResult) {
+    showSignupPanel(userData: LoginResult): void {
         this.auth.setLoginUser(userData);
         const signupPanelReady = (this.signupInfoPanel) ? true : false;
         this.extraData = true;
@@ -99,7 +101,7 @@ export class LoginPanelComponent implements OnInit {
                             this.socialAuthenticated.emit(userData);
                         }
                     } else {
-                        this.error.emit(`Unable to authorise with the login "${user.email}". Please sign up`);
+                        this.error.emit(`Unable to authorise with the login '${user.email}'. Please sign up`);
                     }
                 }, (error) => {
                     this.progressChange.emit(false);
@@ -130,7 +132,7 @@ export class LoginPanelComponent implements OnInit {
                         this.authenticated.emit(userData);
                     }
                 } else {
-                    this.error.emit(`Unable to authorise with the login "${login}". Please sign up`);
+                    this.error.emit(`Unable to authorise with the login '${login}'. Please sign up`);
                 }
             }, (error) => {
                 this.progressChange.emit(false);

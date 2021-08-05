@@ -1,6 +1,6 @@
-import { DatePipe } from "@angular/common";
-import { UserNotification } from "./generated-models";
-import { UserNotificationCodeList } from "./payment.model";
+import { DatePipe } from '@angular/common';
+import { UserNotification } from './generated-models';
+import { UserNotificationCodeList } from './payment.model';
 
 export class NotificationItem {
     id = '';
@@ -14,7 +14,7 @@ export class NotificationItem {
     constructor(data: UserNotification | null) {
         if (data !== null) {
             this.id = data.userNotificationId;
-            const datepipe: DatePipe = new DatePipe("en-US");
+            const datepipe: DatePipe = new DatePipe('en-US');
             this.created = datepipe.transform(data.created, 'dd-MM-YYYY HH:mm:ss') as string;
             this.viewed = datepipe.transform(data.viewed, 'dd-MM-YYYY HH:mm:ss') as string;
             this.userId = data.userId as string;

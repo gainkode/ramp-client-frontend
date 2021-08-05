@@ -15,8 +15,11 @@ export class PersonalHomeComponent implements OnInit, OnDestroy {
     inProgress = false;
     errorMessage = '';
 
-    constructor(private auth: AuthService, private profile: ProfileDataService,
-        private errorHandler: ErrorService, private router: Router) {}
+    constructor(
+        private auth: AuthService,
+        private profile: ProfileDataService,
+        private errorHandler: ErrorService,
+        private router: Router) {}
 
     ngOnInit(): void {
         this.loadData();

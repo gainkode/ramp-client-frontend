@@ -21,8 +21,11 @@ export class RestoreComponent {
         ]
     });
 
-    constructor(private auth: AuthService, private errorHandler: ErrorService,
-        private formBuilder: FormBuilder, private router: Router) { }
+    constructor(
+        private auth: AuthService,
+        private errorHandler: ErrorService,
+        private formBuilder: FormBuilder,
+        private router: Router) { }
 
     onSubmit(): void {
         if (this.restoreForm.valid) {

@@ -16,8 +16,11 @@ export class LoginComponent {
     errorMessage = '';
     showExtraOptions = true;
 
-    constructor(private auth: AuthService, private errorHandler: ErrorService,
-        private router: Router, public dialog: MatDialog) { }
+    constructor(
+        private auth: AuthService,
+        private errorHandler: ErrorService,
+        private router: Router,
+        public dialog: MatDialog) { }
 
     private showWrongUserTypeRedirectDialog(userType: UserType): void {
         const dialogRef = this.dialog.open(CommonDialogBox, {

@@ -17,8 +17,10 @@ export class KycPersonalComponent implements OnInit, OnDestroy {
   flow = '';
   settingsCommon: SettingsCommon | null = null;
 
-  constructor(private router: Router,
-    private auth: AuthService, private errorHandler: ErrorService) {
+  constructor(
+    private router: Router,
+    private auth: AuthService,
+    private errorHandler: ErrorService) {
     this.settingsCommon = this.auth.getLocalSettingsCommon();
   }
 

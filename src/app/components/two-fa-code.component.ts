@@ -18,7 +18,7 @@ export class TwoFaCodeComponent {
         }
     }
     @Output() twoFaUpdated = new EventEmitter<void>();
-    @ViewChild("codeform") private ngCodeForm: NgForm | undefined = undefined;
+    @ViewChild('codeform') private ngCodeForm: NgForm | undefined = undefined;
 
     GA_APP_STORE_URL = 'https://apps.apple.com/us/app/google-authenticator/id388497605';
     GA_GOOGLE_PLAY_URL = 'https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en';
@@ -39,7 +39,7 @@ export class TwoFaCodeComponent {
         private formBuilder: FormBuilder) {
     }
 
-    private generateCode() {
+    private generateCode(): void {
         this.errorMessage = '';
         this.inProgress = true;
         this.auth.generate2FaCode().subscribe(({ data }) => {
@@ -116,7 +116,7 @@ export class TwoFaCodeComponent {
         });
     }
 
-    onSubmit() {
+    onSubmit(): void {
         if (this.codeForm.valid) {
             if (this.twoFaEnabled) {
                 this.disable2Fa(this.codeForm.get('code')?.value);

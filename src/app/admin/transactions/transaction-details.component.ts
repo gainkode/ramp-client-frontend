@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { TransactionItem } from 'src/app/model/transaction.model';
 import { AuthService } from 'src/app/services/auth.service';
@@ -10,20 +10,15 @@ import { ErrorService } from 'src/app/services/error.service';
     templateUrl: 'transaction-details.component.html',
     styleUrls: ['transaction-details.component.scss']
 })
-export class TransactionDetailsComponent implements OnInit, OnDestroy {
+export class TransactionDetailsComponent {
     @Input() transaction: TransactionItem | null | undefined = null;
     inProgress = false;
     errorMessage = '';
 
-    constructor(private auth: AuthService, private errorHandler: ErrorService,
-        private dataService: CommonDataService, private router: Router) {
-    }
-
-    ngOnInit(): void {
-        
-    }
-
-    ngOnDestroy(): void {
-        
+    constructor(
+        private auth: AuthService,
+        private errorHandler: ErrorService,
+        private dataService: CommonDataService,
+        private router: Router) {
     }
 }

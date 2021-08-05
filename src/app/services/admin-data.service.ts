@@ -1,11 +1,11 @@
-import { Injectable } from "@angular/core";
-import { Apollo, gql, QueryRef } from "apollo-angular";
-import { EmptyObject } from "apollo-angular/types";
-import { Observable } from "rxjs";
-import { CostScheme } from "../model/cost-scheme.model";
-import { FeeScheme } from "../model/fee-scheme.model";
-import { TransactionSource, UserType } from "../model/generated-models";
-import { KycLevel, KycScheme } from "../model/identification.model";
+import { Injectable } from '@angular/core';
+import { Apollo, gql, QueryRef } from 'apollo-angular';
+import { EmptyObject } from 'apollo-angular/types';
+import { Observable } from 'rxjs';
+import { CostScheme } from '../model/cost-scheme.model';
+import { FeeScheme } from '../model/fee-scheme.model';
+import { TransactionSource, UserType } from '../model/generated-models';
+import { KycLevel, KycScheme } from '../model/identification.model';
 
 const GET_FEE_SETTINGS = gql`
   query GetSettingsFee {
@@ -537,7 +537,7 @@ export class AdminDataService {
       return this.apollo.watchQuery<any>({
         query: GET_FEE_SETTINGS,
         pollInterval: 30000,
-        fetchPolicy: "network-only",
+        fetchPolicy: 'network-only',
       });
     } else {
       return null;
@@ -549,7 +549,7 @@ export class AdminDataService {
       return this.apollo.watchQuery<any>({
         query: GET_COST_SETTINGS,
         pollInterval: 30000,
-        fetchPolicy: "network-only",
+        fetchPolicy: 'network-only',
       });
     } else {
       return null;
@@ -561,7 +561,7 @@ export class AdminDataService {
       return this.apollo.watchQuery<any>({
         query: GET_KYC_SETTINGS,
         pollInterval: 30000,
-        fetchPolicy: "network-only",
+        fetchPolicy: 'network-only',
       });
     } else {
       return null;
@@ -569,13 +569,13 @@ export class AdminDataService {
   }
 
   getKycLevels(userType: UserType | null): QueryRef<any, EmptyObject> | null {
-    const userTypeFilter = userType === null ? "" : userType?.toString();
+    const userTypeFilter = userType === null ? '' : userType?.toString();
     if (this.apollo.client !== undefined) {
       return this.apollo.watchQuery<any>({
         query: GET_KYC_LEVELS,
         variables: { filter: userTypeFilter },
         pollInterval: 30000,
-        fetchPolicy: "network-only",
+        fetchPolicy: 'network-only',
       });
     } else {
       return null;
@@ -594,15 +594,15 @@ export class AdminDataService {
       return this.apollo.watchQuery<any>({
         query: GET_TRANSACTIONS,
         variables: {
-          userId: "",
+          userId: '',
           sourcesOnly: sources,
-          filter: "",
+          filter: '',
           skip: pageIndex * takeItems,
           first: takeItems,
           orderBy: orderFields,
         },
         pollInterval: 30000,
-        fetchPolicy: "network-only",
+        fetchPolicy: 'network-only',
       });
     } else {
       return null;
@@ -620,13 +620,13 @@ export class AdminDataService {
       return this.apollo.watchQuery<any>({
         query: GET_CUSTOMERS,
         variables: {
-          filter: "",
+          filter: '',
           skip: pageIndex * takeItems,
           first: takeItems,
           orderBy: orderFields,
         },
         pollInterval: 30000,
-        fetchPolicy: "network-only",
+        fetchPolicy: 'network-only',
       });
     } else {
       return null;

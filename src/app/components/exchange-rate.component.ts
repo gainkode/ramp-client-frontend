@@ -128,7 +128,7 @@ export class ExchangeRateComponent implements OnInit, OnDestroy {
         this.lastChanceError = false;
     }
 
-    updateRate() {
+    updateRate(): void {
         this.loadRates();
         this.restartCountDown();
     }

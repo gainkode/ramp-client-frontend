@@ -154,9 +154,15 @@ export class PaymentDataService {
     }
   }
 
-  createQuickCheckout(transactionType: TransactionType, currencyToSpend: string,
-    currencyToReceive: string, amount: number, instrument: PaymentInstrument, provider: PaymentProvider,
-    destinationType: TransactionDestinationType, walletAddress: string): Observable<any> {
+  createQuickCheckout(
+    transactionType: TransactionType,
+    currencyToSpend: string,
+    currencyToReceive: string,
+    amount: number,
+    instrument: PaymentInstrument,
+    provider: PaymentProvider,
+    destinationType: TransactionDestinationType,
+    walletAddress: string): Observable<any> {
     const paymentPrvdr = (provider as string === '') ? undefined : provider;
     const wallet = (walletAddress === '') ? undefined : walletAddress;
     const vars = {

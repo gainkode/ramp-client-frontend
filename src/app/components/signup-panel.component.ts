@@ -59,7 +59,9 @@ export class SignUpPanelComponent implements OnInit {
         ]
     });
 
-    constructor(private auth: AuthService, private errorHandler: ErrorService,
+    constructor(
+        private auth: AuthService,
+        private errorHandler: ErrorService,
         private formBuilder: FormBuilder) { }
 
     ngOnInit(): void {
@@ -122,7 +124,7 @@ export class SignUpPanelComponent implements OnInit {
         });
     }
 
-    showSignupPanel(userData: LoginResult) {
+    showSignupPanel(userData: LoginResult): void {
         this.auth.setLoginUser(userData);
         const signupPanelReady = (this.signupInfoPanel) ? true : false;
         this.extraData = true;

@@ -18,8 +18,11 @@ export class PersonalMyAccountComponent implements OnInit, OnDestroy {
     twoFaEnabled = false;
     user!: User;
 
-    constructor(private auth: AuthService, private profile: ProfileDataService,
-        private errorHandler: ErrorService, private router: Router) {}
+    constructor(
+        private auth: AuthService,
+        private profile: ProfileDataService,
+        private errorHandler: ErrorService,
+        private router: Router) {}
 
     ngOnInit(): void {
         this.loadData();

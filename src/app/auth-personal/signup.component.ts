@@ -38,8 +38,12 @@ export class SignupComponent implements OnInit {
         ]
     });
 
-    constructor(private auth: AuthService, private errorHandler: ErrorService,
-        private formBuilder: FormBuilder, private router: Router, activeRoute: ActivatedRoute) {
+    constructor(
+        private auth: AuthService,
+        private errorHandler: ErrorService,
+        private formBuilder: FormBuilder,
+        private router: Router,
+        activeRoute: ActivatedRoute) {
         this.token = activeRoute.snapshot.params['token'];
     }
 

@@ -22,8 +22,11 @@ export class KycPanelComponent implements OnInit, OnDestroy {
     inProgress = false;
     errorMessage = '';
 
-    constructor(private router: Router, public dialog: MatDialog,
-        private auth: AuthService, private errorHandler: ErrorService) {
+    constructor(
+        private router: Router,
+        public dialog: MatDialog,
+        private auth: AuthService,
+        private errorHandler: ErrorService) {
 
     }
 
@@ -76,43 +79,46 @@ export class KycPanelComponent implements OnInit, OnDestroy {
     // @param applicantEmail - applicant email (not required)
     // @param applicantPhone - applicant phone, if available (not required)
     // @param customI18nMessages - customized locale messages for current session (not required)
-    launchSumSubWidget(apiUrl: string, flowName: string, accessToken: string, applicantEmail: string,
-        applicantPhone: string, customI18nMessages: string[]): void {
-        const snsWebSdkInstance = snsWebSdk.default.Builder(apiUrl, flowName)
-            .withAccessToken(accessToken,
-                (newAccessTokenCallback: (newToken: string) => void) => {
-                    // Access token expired
-                    // get a new one and pass it to the callback to re-initiate the WebSDK
-                    this.auth.getKycToken().valueChanges.subscribe(({ data }) => {
-                        newAccessTokenCallback(data.generateWebApiToken);
-                    });
-                }
-            )
-            .withConf({
-                lang: 'en',
-                applicantEmail,
-                applicantPhone,
-                i18n: customI18nMessages,
-                onMessage: (type: any, payload: any) => {
-                    if (type === 'idCheck.onApplicantSubmitted') {
-                        if (this.notifyCompleted) {
-                            this.completed.emit();
-                        } else {
-                            this.showSuccessDialog();
-                        }
+    launchSumSubWidget(
+        apiUrl: string,
+        flowName: string,
+        accessToken: string,
+        applicantEmail: string,
+        applicantPhone: string,
+        customI18nMessages: string[]): void {
+        const snsWebSdkInstance = snsWebSdk.default.Builder(apiUrl, flowName).withAccessToken(
+            accessToken,
+            (newAccessTokenCallback: (newToken: string) => void) => {
+                // Access token expired
+                // get a new one and pass it to the callback to re-initiate the WebSDK
+                this.auth.getKycToken().valueChanges.subscribe(({ data }) => {
+                    newAccessTokenCallback(data.generateWebApiToken);
+                });
+            }
+        ).withConf({
+            lang: 'en',
+            applicantEmail,
+            applicantPhone,
+            i18n: customI18nMessages,
+            onMessage: (type: any, payload: any) => {
+                if (type === 'idCheck.onApplicantSubmitted') {
+                    if (this.notifyCompleted) {
+                        this.completed.emit();
+                    } else {
+                        this.showSuccessDialog();
                     }
-                },
-                // uiConf: {
-                //   customCss: "https://url.com/styles.css"
-                //   // URL to css file in case you need change it dynamically from the code
-                //   // the similar setting at Applicant flow will rewrite customCss
-                //   // you may also use to pass string with plain styles `customCssStr:`
-                // },
-                onError: (error: any) => {
-                    this.errorMessage = error.error;
-                },
-            })
-            .build();
+                }
+            },
+            // uiConf: {
+            //   customCss: "https://url.com/styles.css"
+            //   // URL to css file in case you need change it dynamically from the code
+            //   // the similar setting at Applicant flow will rewrite customCss
+            //   // you may also use to pass string with plain styles `customCssStr:`
+            // },
+            onError: (error: any) => {
+                this.errorMessage = error.error;
+            },
+        }).build();
         // you are ready to go:
         // just launch the WebSDK by providing the container element for it
         snsWebSdkInstance.launch('#sumsub-websdk-container');

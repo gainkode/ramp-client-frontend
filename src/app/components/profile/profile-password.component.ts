@@ -12,7 +12,7 @@ import { CommonDialogBox } from '../common-box.dialog';
 })
 export class ProfilePasswordComponent {
   @Input() twoFaEnabled = false;
-  @ViewChild("passwordform") private ngPasswordForm: NgForm | undefined = undefined;
+  @ViewChild('passwordform') private ngPasswordForm: NgForm | undefined = undefined;
 
   inProgress = false;
   errorMessage = '';

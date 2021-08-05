@@ -23,7 +23,10 @@ export class RestoreComponent {
         ]
     });
 
-    constructor(private auth: AuthService, private errorHandler: ErrorService, private formBuilder: FormBuilder,
+    constructor(
+        private auth: AuthService,
+        private errorHandler: ErrorService,
+        private formBuilder: FormBuilder,
         private router: Router) { }
 
     onSubmit(): void {

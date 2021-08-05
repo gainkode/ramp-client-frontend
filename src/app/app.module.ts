@@ -120,21 +120,23 @@ export class AppModule {
       withCredentials: allowCookies
     });
 
-    const webSocketClient: SubscriptionClient = new SubscriptionClient(`${environment.ws_server}/subscriptions`, {
-			lazy: true,
-			reconnect: true,
-			connectionParams: () => {
-        return {
-          authToken: `Bearer ${sessionStorage.getItem('currentToken')}`
-        };
-      }
-		});
+    const webSocketClient: SubscriptionClient = new SubscriptionClient(
+      `${environment.ws_server}/subscriptions`,
+      {
+        lazy: true,
+        reconnect: true,
+        connectionParams: () => {
+          return {
+            authToken: `Bearer ${sessionStorage.getItem('currentToken')}`
+          };
+        }
+      });
     const webSocketLink = new WebSocketLink(webSocketClient);
 
     const transportLink: ApolloLink = split(
       // split based on operation type
       ({ query }) => {
-        let definition = getMainDefinition(query);
+        const definition = getMainDefinition(query);
         return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
       },
       webSocketLink,

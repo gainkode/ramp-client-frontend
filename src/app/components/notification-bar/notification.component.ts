@@ -1,24 +1,23 @@
-import { Component, Inject, Input, OnInit } from "@angular/core";
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import {
   MatSnackBar,
   MatSnackBarHorizontalPosition,
   MatSnackBarRef,
   MatSnackBarVerticalPosition,
   MAT_SNACK_BAR_DATA,
-} from "@angular/material/snack-bar";
-import { User } from "../../model/generated-models";
-import { AuthService } from "../../services/auth.service";
-import { ErrorService } from "../../services/error.service";
-import { NotificationService } from "../../services/notification.service";
+} from '@angular/material/snack-bar';
+import { User } from '../../model/generated-models';
+import { AuthService } from '../../services/auth.service';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
-  selector: "app-notification-icon",
-  templateUrl: "notification.component.html",
-  styleUrls: ["notification.component.scss"],
+  selector: 'app-notification-icon',
+  templateUrl: 'notification.component.html',
+  styleUrls: ['notification.component.scss'],
 })
 export class NotificationIconComponent implements OnInit {
-  barHorizontalPosition: MatSnackBarHorizontalPosition = "right";
-  barVerticalPosition: MatSnackBarVerticalPosition = "top";
+  barHorizontalPosition: MatSnackBarHorizontalPosition = 'right';
+  barVerticalPosition: MatSnackBarVerticalPosition = 'top';
   user: User | null = null;
 
   constructor(
@@ -45,11 +44,11 @@ export class NotificationIconComponent implements OnInit {
     );
   }
 
-  private openSnackBar(data: any) {
+  private openSnackBar(data: any): void {
     this.snackBar.openFromComponent(NotificationBarComponent, {
       duration: 10000,
       data: { message: data.text },
-      panelClass: ["snackbar-box"],
+      panelClass: ['snackbar-box'],
       horizontalPosition: this.barHorizontalPosition,
       verticalPosition: this.barVerticalPosition,
     });
@@ -57,9 +56,9 @@ export class NotificationIconComponent implements OnInit {
 }
 
 @Component({
-  selector: "app-notification-bar",
-  templateUrl: "notification-bar.html",
-  styleUrls: ["notification.component.scss"],
+  selector: 'app-notification-bar',
+  templateUrl: 'notification-bar.html',
+  styleUrls: ['notification.component.scss'],
 })
 export class NotificationBarComponent {
   constructor(

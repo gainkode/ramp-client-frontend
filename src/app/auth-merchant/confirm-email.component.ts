@@ -13,8 +13,11 @@ export class ConfirmEmailComponent {
     valid = false;
     errorMessage = '';
 
-    constructor(private auth: AuthService, private errorHandler: ErrorService,
-        private router: Router, activeRoute: ActivatedRoute) {
+    constructor(
+        private auth: AuthService,
+        private errorHandler: ErrorService,
+        private router: Router,
+        activeRoute: ActivatedRoute) {
         this.token = activeRoute.snapshot.params['token'];
         if (this.token !== undefined) {
             this.auth.confirmEmail(this.token).subscribe(({ data }) => {
