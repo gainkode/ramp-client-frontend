@@ -553,6 +553,7 @@ export class AuthService {
     }
 
     verify2Fa(code: string): Observable<any> {
+        console.log('current token', this.token);
         return this.apollo.mutate({
             mutation: VERIFY_2FA,
             variables: {

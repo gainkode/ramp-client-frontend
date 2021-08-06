@@ -91,6 +91,7 @@ export class LoginPanelComponent implements OnInit {
                     console.log('login:', userData);
                     if (userData.user?.mode === UserMode.InternalWallet) {
                         if (userData.authTokenAction === 'TwoFactorAuth') {
+                            this.auth.setLoginUser(userData);
                             this.twoFa = true;
                             this.socialLogin = true;
                             this.progressChange.emit(false);
@@ -122,6 +123,7 @@ export class LoginPanelComponent implements OnInit {
                 const userData = data.login as LoginResult;
                 if (userData.user?.mode === UserMode.InternalWallet) {
                     if (userData.authTokenAction === 'TwoFactorAuth') {
+                        this.auth.setLoginUser(userData);
                         this.twoFa = true;
                         this.socialLogin = true;
                         this.progressChange.emit(false);
