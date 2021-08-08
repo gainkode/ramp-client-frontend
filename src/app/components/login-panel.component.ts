@@ -89,6 +89,7 @@ export class LoginPanelComponent implements OnInit {
                 this.auth.authenticateSocial(providerName.toLowerCase(), token).subscribe((loginData) => {
                     const userData = loginData.data.login as LoginResult;
                     console.log('login:', userData);
+                    console.log('authTokenAction:', userData.authTokenAction);
                     if (userData.user?.mode === UserMode.InternalWallet) {
                         if (userData.authTokenAction === 'TwoFactorAuth') {
                             this.auth.setLoginUser(userData);

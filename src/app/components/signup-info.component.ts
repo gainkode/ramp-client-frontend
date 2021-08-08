@@ -85,12 +85,13 @@ export class SignupInfoPanelComponent implements OnDestroy {
 
     init(): void {
         const fieldsData = this.auth.getSignupRequiredFields();
-        console.log(fieldsData);
         if (fieldsData === null) {
             this.error.emit(this.errorHandler.getRejectedCookieMessage());
         } else {
+            console.log('init', this.auth.token);
             this.progressChange.emit(true);
             this.pSettingsSubscription = fieldsData.valueChanges.subscribe(({ data }) => {
+                console.log('fields', data);
                 const fields: SettingsKyc = data.mySettingsKyc;
                 this.requireUserFullName = fields.requireUserFullName as boolean;
                 this.requireUserPhone = fields.requireUserPhone as boolean;
@@ -100,6 +101,7 @@ export class SignupInfoPanelComponent implements OnDestroy {
                 this.setFields();
                 this.progressChange.emit(false);
             }, (error) => {
+                console.log(error);
                 this.progressChange.emit(false);
             });
         }
