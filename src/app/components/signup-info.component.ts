@@ -101,7 +101,7 @@ export class SignupInfoPanelComponent implements OnDestroy {
                 this.setFields();
                 this.progressChange.emit(false);
             }, (error) => {
-                console.log(error);
+                this.error.emit(this.errorHandler.getError('error', 'Unable to specify required data'));
                 this.progressChange.emit(false);
             });
         }
