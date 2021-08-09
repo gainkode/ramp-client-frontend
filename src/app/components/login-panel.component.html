@@ -58,13 +58,13 @@
 
 <div *ngIf=twoFa>
     <form [formGroup]="twoFaForm" (ngSubmit)="onTwoFaSubmit()">
-        <!-- Email -->
+        <!-- 2FA code -->
         <mat-form-field class="form-element">
-            <mat-label>Confirmation code</mat-label>
-            <input type="text" matInput formControlName="code" maxlength="10" placeholder="Confirmation code"
-                required />
+            <mat-label>2FA Confirmation code</mat-label>
+            <input type="text" matInput formControlName="code" maxlength="10"
+                placeholder="Confirmation code from Google Authenticator or similar app" required />
             <mat-error *ngIf="this.twoFaForm.get('code')?.hasError('required')">
-                Please specify the code
+                Please specify the code from Google Authenticator or similar app
             </mat-error>
         </mat-form-field>
 
