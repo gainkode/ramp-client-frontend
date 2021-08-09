@@ -181,13 +181,16 @@ export class LoginPanelComponent implements OnInit {
     }
 
     onSignupDone(userData: LoginResult): void {
-        if (!userData.authTokenAction || userData.authTokenAction === 'Default' || userData.authTokenAction === 'KycRequired') {
+        if (!userData.authTokenAction ||
+            userData.authTokenAction === 'Default' ||
+            userData.authTokenAction === 'KycRequired') {
             if (this.socialLogin) {
                 this.socialAuthenticated.emit(userData);
             } else {
                 this.authenticated.emit(userData);
             }
         } else {
+            console.log('onSignupDone. Wrong token action:', userData.authTokenAction);
             this.error.emit('Unable to update personal data');
         }
     }

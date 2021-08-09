@@ -148,6 +148,7 @@ export class SignUpPanelComponent implements OnInit {
             userData.authTokenAction === 'KycRequired') {
             this.registered.emit(userData?.user?.email);
         } else {
+            console.log('onSignupDone. Wrong token action:', userData.authTokenAction);
             this.error.emit('Unable to update personal data');
         }
     }

@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { AuthService } from '../services/auth.service';
 import { ErrorService } from '../services/error.service';
 import { Validators, FormBuilder, AbstractControl } from '@angular/forms';
-import { LoginResult, PostAddress, SettingsKyc, UserMode } from '../model/generated-models';
+import { LoginResult, PostAddress, SettingsKyc, UserMode, UserType } from '../model/generated-models';
 import { Subscription } from 'rxjs';
 import { getCountryByCode3 } from '../model/country-code.model';
 
@@ -22,6 +22,7 @@ export class SignupInfoPanelComponent implements OnDestroy {
     requireUserBirthday = false;
     requireUserAddress = false;
     requireUserFlatNumber = false;
+    isMerchant = false;
 
     startBirthday = new Date(1980, 0, 1);
 
@@ -107,11 +108,16 @@ export class SignupInfoPanelComponent implements OnDestroy {
 
     private setFields(): void {
         const user = this.auth.user;
+        this.isMerchant = (user?.type === UserType.Merchant);
         if (this.requireUserFullName && user) {
             this.firstNameControl?.setValue(user.firstName);
             this.lastNameControl?.setValue(user.lastName);
             this.firstNameControl?.setValidators([Validators.required]);
-            this.lastNameControl?.setValidators([Validators.required]);
+            if (this.isMerchant) {
+                this.lastNameControl?.setValidators([]);
+            } else {
+                this.lastNameControl?.setValidators([Validators.required]);
+            }
         } else {
             this.firstNameControl?.setValue('');
             this.lastNameControl?.setValue('');

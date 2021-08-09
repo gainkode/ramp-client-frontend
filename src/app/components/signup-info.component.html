@@ -2,8 +2,8 @@
     Please, specify your personal data
 </h2>
 <form [formGroup]="infoForm" (ngSubmit)="onSubmit()">
-    <!-- Full name -->
-    <div *ngIf="requireUserFullName">
+    <!-- Full name (Personal) -->
+    <div *ngIf="requireUserFullName && !isMerchant">
         <mat-form-field class="form-element">
             <mat-label>First Name</mat-label>
             <input type="text" matInput formControlName="firstName" maxlength="80" placeholder="First user name" required />
@@ -17,6 +17,17 @@
             <input type="text" matInput formControlName="lastName" maxlength="80" placeholder="Last user name" required />
             <mat-error *ngIf="this.infoForm.get('lastName')?.hasError('required')">
                 Please specify your last name
+            </mat-error>
+        </mat-form-field>
+    </div>
+    
+    <!-- Company name (Merchant) -->
+    <div *ngIf="requireUserFullName && isMerchant">
+        <mat-form-field class="form-element">
+            <mat-label>Company Name</mat-label>
+            <input type="text" matInput formControlName="firstName" maxlength="80" placeholder="Company name" required />
+            <mat-error *ngIf="this.infoForm.get('fullName')?.hasError('required')">
+                Please specify your company name
             </mat-error>
         </mat-form-field>
     </div>
