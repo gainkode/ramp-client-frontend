@@ -7,7 +7,9 @@ export class PersonalGuard {
     constructor(private router: Router, private auth: AuthService) { }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-        if (!this.auth.isAuthenticatedUserType('Personal')) {
+        const authAction = this.auth.getAuthAction();
+        const authValid = (authAction === '' || authAction === 'Default' || authAction === 'KycRequired');
+        if (!this.auth.isAuthenticatedUserType('Personal') || !authValid) {
             this.router.navigateByUrl('/auth/login/personal');
             return false;
         }

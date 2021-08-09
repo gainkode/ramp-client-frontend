@@ -565,6 +565,7 @@ export class AuthService {
     setLoginUser(login: LoginResult): void {
         sessionStorage.setItem('currentUser', JSON.stringify(login.user));
         sessionStorage.setItem('currentToken', login.authToken as string);
+        sessionStorage.setItem('currentAction', login.authTokenAction as string);
     }
 
     setLocalSettingsCommon(settings: SettingsCommon): void {
@@ -587,6 +588,11 @@ export class AuthService {
             result = JSON.parse(userData as string) as User;
         }
         return result;
+    }
+
+    getAuthAction(): string {
+        let result = sessionStorage.getItem('currentAction');
+        return result ?? '';
     }
 
     isMerchantApproved(): boolean {
@@ -698,6 +704,7 @@ export class AuthService {
         this.apollo.client.resetStore();
         sessionStorage.removeItem('currentToken');
         sessionStorage.removeItem('currentUser');
+        sessionStorage.removeItem('currentAction');
         sessionStorage.removeItem('common');
     }
 }
