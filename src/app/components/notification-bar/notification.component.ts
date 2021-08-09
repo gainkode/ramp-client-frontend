@@ -39,6 +39,7 @@ export class NotificationIconComponent implements OnInit {
         }
       },
       (error) => {
+        console.log('notification error', error);
         // there was an error subscribing to notifications
       }
     );

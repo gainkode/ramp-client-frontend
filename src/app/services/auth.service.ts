@@ -372,10 +372,9 @@ export class AuthService {
         });
         result.subscribe(x => {
             const d = x.data as any;
-            console.log('refresh token: ', d.refreshToken);
             sessionStorage.setItem('currentToken', d.refreshToken as string);
         }, (error) => {
-            console.log('refresh token error: ', error);
+            // error
         });
         return result;
     }
@@ -517,9 +516,6 @@ export class AuthService {
             address: addressValue,
             birthday: birthdayValue
         };
-        console.log('birthdayValue', birthdayValue);
-        console.log('vars', vars);
-            
         return this.apollo.mutate({
             mutation: SET_MY_INFO,
             variables: vars
@@ -553,7 +549,6 @@ export class AuthService {
     }
 
     verify2Fa(code: string): Observable<any> {
-        console.log('current token', this.token);
         return this.apollo.mutate({
             mutation: VERIFY_2FA,
             variables: {

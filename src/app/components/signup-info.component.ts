@@ -90,7 +90,6 @@ export class SignupInfoPanelComponent implements OnDestroy {
         } else {
             this.progressChange.emit(true);
             this.pSettingsSubscription = fieldsData.valueChanges.subscribe(({ data }) => {
-                console.log('fields', data);
                 const fields: SettingsKyc = data.mySettingsKyc;
                 this.requireUserFullName = fields.requireUserFullName as boolean;
                 this.requireUserPhone = fields.requireUserPhone as boolean;

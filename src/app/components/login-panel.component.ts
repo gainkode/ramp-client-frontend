@@ -89,8 +89,6 @@ export class LoginPanelComponent implements OnInit {
                 this.auth.socialSignOut();
                 this.auth.authenticateSocial(providerName.toLowerCase(), token).subscribe((loginData) => {
                     const userData = loginData.data.login as LoginResult;
-                    console.log('login:', userData);
-                    console.log('authTokenAction:', userData.authTokenAction);
                     if (userData.user?.mode === UserMode.InternalWallet) {
                         if (userData.authTokenAction === 'TwoFactorAuth') {
                             this.auth.setLoginUser(userData);
@@ -100,7 +98,6 @@ export class LoginPanelComponent implements OnInit {
                         } else if (userData.authTokenAction === 'UserInfoRequired') {
                             this.showSignupPanel(userData);
                         } else {
-                            console.log('--> social login');
                             this.progressChange.emit(false);
                             this.socialAuthenticated.emit(userData);
                         }
@@ -184,7 +181,6 @@ export class LoginPanelComponent implements OnInit {
     }
 
     onSignupDone(userData: LoginResult): void {
-        console.log('onSignupDone', userData.authTokenAction);
         if (!userData.authTokenAction || userData.authTokenAction === 'Default' || userData.authTokenAction === 'KycRequired') {
             if (this.socialLogin) {
                 this.socialAuthenticated.emit(userData);

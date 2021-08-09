@@ -80,7 +80,6 @@ export class LoginComponent {
     }
 
     onSocialAuthenticated(userData: LoginResult): void {
-        console.log('on social login: ', userData.authTokenAction);
         if (userData.user?.type === UserType.Personal) {
             if (userData.authTokenAction === 'Default') {
                 this.handleSuccessLogin(userData);
