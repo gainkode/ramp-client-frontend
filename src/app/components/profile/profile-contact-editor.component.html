@@ -1,0 +1,55 @@
+<div class="form-section-title-box">
+    <h1>{{create ? "Create contact" : "Change contact"}}</h1>
+</div>
+
+<div class="form-element" *ngIf="errorMessage!==''">
+    <div class="form-error-box">
+        {{errorMessage}}
+    </div>
+    <br>
+</div>
+
+<form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+    <!-- Display Name -->
+    <mat-form-field class="form-element">
+        <mat-label>Contact Name</mat-label>
+        <input type="text" matInput formControlName="displayName" maxlength="100" placeholder="Contact Name" />
+        <mat-error *ngIf="this.contactForm.get('displayName')?.hasError('required')">
+            Please specify the contact name
+        </mat-error>
+    </mat-form-field>
+
+    <!-- Email -->
+    <mat-form-field class="form-element">
+        <mat-label>Contact email</mat-label>
+        <input type="text" matInput formControlName="contactEmail" maxlength="30" placeholder="Contact Email"
+            required />
+        <mat-error *ngIf="this.contactForm.get('contactEmail')?.hasError('required')">
+            Please specify the contact email
+        </mat-error>
+        <mat-error *ngIf="this.contactForm.get('contactEmail')?.hasError('pattern')">
+            Incorrect email format
+        </mat-error>
+    </mat-form-field>
+
+    <div class="form-element">
+        <div class="button-form-panel">
+            <div class="button-panel-left">
+                <button class="main-button main-button-accent" type="submit">
+                    SAVE
+                </button>
+            </div>
+            <div *ngIf="create==false" class="button-panel-right">
+                <button class="main-button main-button-warn" (click)="onDeleteScheme()">
+                    DELETE
+                </button>
+            </div>
+        </div>
+        <br>
+        <div>
+            <button class="main-button main-button-primary" (click)="onCancel()">
+                CANCEL
+            </button>
+        </div>
+    </div>
+</form>

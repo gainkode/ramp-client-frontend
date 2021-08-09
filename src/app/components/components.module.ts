@@ -56,6 +56,7 @@ import { ProfileAssetsComponent } from './profile/profile-assets.component';
 import { ProfileLastExchangesComponent } from './profile/profile-last-exchanges.component';
 import { SignUpPanelComponent } from './signup-panel.component';
 import { SignupInfoPanelComponent } from './signup-info.component';
+import { ProfileContactEditorComponent } from './profile/profile-contact-editor.component';
 
 const materialModules = [
     ClipboardModule,
@@ -93,7 +94,8 @@ export class MaterialModule { }
         CreditCardComponent, TwoFaCodeComponent, LineBreakPipe, NumberFillPipe,
         ProfileAccountBalanceComponent, ProfileExchangeComponent, ProfileNotificationsComponent,
         ProfileQuickTransferComponent, ProfileTransactionsComponent, ProfileInfoComponent, ProfileTwoFAComponent,
-        ProfilePasswordComponent, ProfileVerificationComponent, ProfileContactsComponent, ProfileWithdrawalComponent,
+        ProfilePasswordComponent, ProfileVerificationComponent, ProfileContactsComponent, 
+        ProfileContactEditorComponent, ProfileWithdrawalComponent,
         ProfileAssetsComponent, ProfileLastExchangesComponent],
     exports: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
         CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, NotificationIconComponent,
@@ -101,7 +103,8 @@ export class MaterialModule { }
         TwoFaCodeComponent, LineBreakPipe, NumberFillPipe,
         ProfileAccountBalanceComponent, ProfileExchangeComponent, ProfileNotificationsComponent,
         ProfileQuickTransferComponent, ProfileTransactionsComponent, ProfileInfoComponent, ProfileTwoFAComponent,
-        ProfilePasswordComponent, ProfileVerificationComponent, ProfileContactsComponent, ProfileWithdrawalComponent,
+        ProfilePasswordComponent, ProfileVerificationComponent, ProfileContactsComponent,
+        ProfileContactEditorComponent, ProfileWithdrawalComponent,
         ProfileAssetsComponent, ProfileLastExchangesComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

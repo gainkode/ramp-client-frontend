@@ -75,10 +75,10 @@
 
     <div [ngClass]="showDetailed ? 'profile-detailed-table-panel-details' : 'profile-detailed-table-panel-hidden'">
         <div class="profile-details-editor">
-            <!-- <app-cost-editor *ngIf="showDetailed" [currentScheme]="selectedScheme" [create]="createScheme"
-                (save)="onSaved($event)" (delete)="onDeleteScheme($event)" (cancel)="onCancelEdit()"
+            <app-profile-contact-editor *ngIf="showDetailed" [currentContact]="selectedContact" [create]="createContact"
+                (save)="onSaved($event)" (delete)="onDeleteContact($event)" (cancel)="onCancelEdit()"
                 (formChanged)="onEditorFormChanged($event)">
-            </app-cost-editor> -->
+            </app-profile-contact-editor>
         </div>
     </div>
 </div>
