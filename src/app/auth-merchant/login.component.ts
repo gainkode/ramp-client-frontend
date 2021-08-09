@@ -16,8 +16,11 @@ export class LoginComponent {
     errorMessage = '';
     showExtraOptions = true;
 
-    constructor(private auth: AuthService, private errorHandler: ErrorService,
-        private router: Router, public dialog: MatDialog) { }
+    constructor(
+        private auth: AuthService,
+        private errorHandler: ErrorService,
+        private router: Router,
+        public dialog: MatDialog) { }
 
     private showWrongUserTypeRedirectDialog(userType: UserType): void {
         const dialogRef = this.dialog.open(CommonDialogBox, {
@@ -33,15 +36,18 @@ export class LoginComponent {
     }
 
     private handleSuccessLogin(userData: LoginResult): void {
+        console.log('handleSuccessLogin');
         this.auth.setLoginUser(userData);
         this.inProgress = true;
         this.auth.getSettingsCommon().valueChanges.subscribe(settings => {
+            console.log('handleSuccessLogin:', settings);
             const settingsCommon: SettingsCommon = settings.data.getSettingsCommon;
             this.auth.setLocalSettingsCommon(settingsCommon);
             this.inProgress = false;
             this.router.navigateByUrl(this.auth.getUserMainPage());
         }, (error) => {
             this.inProgress = false;
+            console.log('getSettingsCommon:', error);
             if (this.auth.token !== '') {
                 this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load common settings');
             } else {

@@ -14,6 +14,7 @@ export class SignUpPanelComponent implements OnInit {
     @Input() set userName(val: string) {
         this.emailField?.setValue(val);
     }
+    @Input() userType: UserType = UserType.Personal;
     @Output() error = new EventEmitter<string>();
     @Output() progressChange = new EventEmitter<boolean>();
     @Output() registered = new EventEmitter<string>();
@@ -106,7 +107,7 @@ export class SignUpPanelComponent implements OnInit {
     }
 
     registerAccount(email: string, password: string): void {
-        this.auth.register(email, password, UserType.Personal).subscribe((signupData) => {
+        this.auth.register(email, password, this.userType).subscribe((signupData) => {
             const userData = signupData.data.signup as LoginResult;
             if (!userData.authTokenAction) {
                 this.progressChange.emit(false);
@@ -142,7 +143,9 @@ export class SignUpPanelComponent implements OnInit {
     }
 
     onSignupDone(userData: LoginResult): void {
-        if (!userData.authTokenAction || userData.authTokenAction === 'Default' || userData.authTokenAction === 'KycRequired') {
+        if (!userData.authTokenAction ||
+            userData.authTokenAction === 'Default' ||
+            userData.authTokenAction === 'KycRequired') {
             this.registered.emit(userData?.user?.email);
         } else {
             this.error.emit('Unable to update personal data');

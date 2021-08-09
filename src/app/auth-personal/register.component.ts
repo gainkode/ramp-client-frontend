@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoginResult } from '../model/generated-models';
 
 @Component({
     templateUrl: 'register.component.html',
