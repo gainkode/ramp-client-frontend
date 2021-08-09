@@ -113,7 +113,7 @@
           <!-- Login -->
           <div *ngIf="needToLogin">
             <h2>Sign in</h2>
-            <span>Your account seems to be registered. Please, authenticate</span>
+            <span>{{loginTitle}}</span>
             <mat-progress-bar *ngIf="inProgress" mode="indeterminate"></mat-progress-bar>
             <div class="form-error-box" *ngIf="errorMessage !== ''">
               {{ errorMessage }}

@@ -84,6 +84,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
   walletAddressName = '';
   needToLogin = false;
   needToRegister = false;
+  loginTitle = '';
   defaultUserName = '';
   isApmSelected = false;
   flow = '';
@@ -262,6 +263,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.loginTitle = 'Your account seems to be registered. Please, authenticate';
     this.detailsCurrencyFromControl?.valueChanges.subscribe((val) => {
       this.currentSourceCurrency = this.getCurrency(val);
       if (this.currentSourceCurrency !== null) {
@@ -401,6 +403,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
   onRegistered(email: string): void {
     this.needToRegister = false;
     this.needToLogin = true;
+    this.loginTitle = 'Please, follow the link in the letter we have sent to your email to complete your registration, and authenticate';
     this.detailsEmailControl?.setValue(email);
     this.defaultUserName = email;
   }
@@ -1061,6 +1064,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
               //  show the authorisation form to fill
               this.auth.logout();
               this.needToLogin = true;
+              this.loginTitle = 'Your account seems to be registered. Please, authenticate';              
               this.defaultUserName = this.detailsEmailControl?.value;
             } else {
               this.errorMessage = this.errorHandler.getError(error.message, 'Unable to authenticate user');
