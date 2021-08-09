@@ -88,7 +88,6 @@ export class SignupInfoPanelComponent implements OnDestroy {
         if (fieldsData === null) {
             this.error.emit(this.errorHandler.getRejectedCookieMessage());
         } else {
-            console.log('init', this.auth.token);
             this.progressChange.emit(true);
             this.pSettingsSubscription = fieldsData.valueChanges.subscribe(({ data }) => {
                 console.log('fields', data);
@@ -219,7 +218,13 @@ export class SignupInfoPanelComponent implements OnDestroy {
             if (this.requireUserPhone) {
                 phone = `${this.phoneCodeControl?.value} ${this.phoneNumberControl?.value}`;
             }
-            const birthday = (this.birthdayControl?.value) ? this.birthdayControl?.value as Date : undefined;
+            const rawBirthday = (this.birthdayControl?.value) ? this.birthdayControl?.value as Date : undefined;
+            const birthday = (rawBirthday) ?
+                new Date(Date.UTC(
+                    rawBirthday.getFullYear(),
+                    rawBirthday.getMonth(),
+                    rawBirthday.getDate(),
+                    0, 0, 0, 0)) : undefined;
             if (this.requireUserAddress || this.requireUserFlatNumber) {
                 address = {} as PostAddress;
                 if (this.requireUserAddress) {

@@ -148,7 +148,7 @@ export class ProfileContactsComponent {
         this.setEditMode(false);
     }
 
-    onDeleteScheme(id: string): void {
+    onDeleteContact(id: string): void {
         this.editorErrorMessage = '';
         // const requestData = this.adminService.deleteCostSettings(id);
         // if (requestData === null) {
@@ -170,7 +170,7 @@ export class ProfileContactsComponent {
         // }
     }
 
-    onSaved(scheme: ContactItem): void {
+    onSaved(contact: ContactItem): void {
         this.editorErrorMessage = '';
         this.inProgress = true;
         // this.adminService.saveCostSettings(scheme, this.createScheme).subscribe(({ data }) => {

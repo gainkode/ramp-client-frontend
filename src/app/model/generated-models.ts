@@ -52,6 +52,10 @@ export type Query = {
   userByOAuthAppId: User;
   userByReferralCode: User;
   getUsers: UserListResult;
+  myContacts: UserContactListResult;
+  getUserContacts: UserContactListResult;
+  myBankAccounts: UserContactListResult;
+  getUserBankAccounts: UserContactListResult;
   myActions: UserActionListResult;
   getUserActions: UserActionListResult;
   myKycInfo?: Maybe<KycInfo>;
@@ -239,6 +243,40 @@ export type QueryUserByReferralCodeArgs = {
 
 
 export type QueryGetUsersArgs = {
+  filter?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OrderBy>>;
+};
+
+
+export type QueryMyContactsArgs = {
+  filter?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OrderBy>>;
+};
+
+
+export type QueryGetUserContactsArgs = {
+  userId?: Maybe<Scalars['String']>;
+  filter?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OrderBy>>;
+};
+
+
+export type QueryMyBankAccountsArgs = {
+  filter?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OrderBy>>;
+};
+
+
+export type QueryGetUserBankAccountsArgs = {
+  userId?: Maybe<Scalars['String']>;
   filter?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
@@ -528,6 +566,8 @@ export type SettingsCommon = {
   __typename?: 'SettingsCommon';
   settingsCommonId?: Maybe<Scalars['String']>;
   liquidityProvider?: Maybe<Scalars['String']>;
+  liquidityProviderWithdrawalAddress?: Maybe<Scalars['String']>;
+  liquidityProviderWithdrawalBenchmark?: Maybe<Scalars['Float']>;
   custodyProvider?: Maybe<Scalars['String']>;
   kycProvider?: Maybe<Scalars['String']>;
   kycBaseAddress?: Maybe<Scalars['String']>;
@@ -912,6 +952,12 @@ export type UserListResult = {
   list?: Maybe<Array<User>>;
 };
 
+export type UserContactListResult = {
+  __typename?: 'UserContactListResult';
+  count?: Maybe<Scalars['Int']>;
+  list?: Maybe<Array<UserContact>>;
+};
+
 export enum UserActionResult {
   Unknown = 'unknown',
   Succeeded = 'succeeded',
@@ -1089,6 +1135,7 @@ export enum TransactionStatus {
   TransferDeclined = 'TransferDeclined',
   Exchanging = 'Exchanging',
   Exchanged = 'Exchanged',
+  TransferBenchmarkWaiting = 'TransferBenchmarkWaiting',
   Sending = 'Sending',
   Sent = 'Sent',
   Completed = 'Completed',
@@ -1111,7 +1158,8 @@ export enum CustodyProvider {
 
 export enum LiquidityProvider {
   Bitstamp = 'Bitstamp',
-  Binance = 'Binance'
+  Binance = 'Binance',
+  Kraken = 'Kraken'
 }
 
 export type PaymentOrder = {
@@ -1849,6 +1897,8 @@ export type PaymentOperationShort = {
 
 export type SettingsCommonInput = {
   liquidityProvider?: Maybe<Scalars['String']>;
+  liquidityProviderWithdrawalAddress?: Maybe<Scalars['String']>;
+  liquidityProviderWithdrawalBenchmark?: Maybe<Scalars['Float']>;
   custodyProvider?: Maybe<Scalars['String']>;
   kycProvider?: Maybe<Scalars['String']>;
   kycBaseAddress?: Maybe<Scalars['String']>;
