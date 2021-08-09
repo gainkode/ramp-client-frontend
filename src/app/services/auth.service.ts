@@ -119,6 +119,7 @@ const SIGNUP = gql`
     ) {
       authToken
       user {
+        type,
         userId,
         email,
         countryCode2,
@@ -558,6 +559,7 @@ export class AuthService {
     }
 
     setLoginUser(login: LoginResult): void {
+        console.log('Authenticated:', login.user);
         sessionStorage.setItem('currentUser', JSON.stringify(login.user));
         sessionStorage.setItem('currentToken', login.authToken as string);
         sessionStorage.setItem('currentAction', login.authTokenAction as string);

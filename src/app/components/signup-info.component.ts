@@ -108,6 +108,7 @@ export class SignupInfoPanelComponent implements OnDestroy {
 
     private setFields(): void {
         const user = this.auth.user;
+        console.log('User type:', user?.type);
         this.isMerchant = (user?.type === UserType.Merchant);
         if (this.requireUserFullName && user) {
             this.firstNameControl?.setValue(user.firstName);
