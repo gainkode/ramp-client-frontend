@@ -1,8 +1,77 @@
 .data-table {
-    background-color: #DDDFE6;
+    background-color: #dddfe6;
+}
+
+.profile-page-title {
+    margin: 1em;
+}
+
+.profile-data-table {
+    width: 100%;
+    background-color: #dddfe6;
+}
+
+.profile-details-editor {
+    margin: 2em;
+    margin-top: 6em;
+    padding-bottom: 2em;
+}
+
+.profile-panel-dim-table {
+    background-color: #00000060;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 th.mat-header-cell {
-    font-size  : medium;
+    font-size: medium;
     font-weight: bold;
+}
+
+.profile-details-editor {
+    margin: 2em;
+    margin-top: 6em;
+    padding-bottom: 2em;
+}
+
+.profile-detailed-table-split {
+    display: flex;
+    height: 100%;
+}
+
+.profile-detailed-table-panel-details {
+    z-index: 100;
+    background-color: #dddfe6;
+    padding: 0;
+    width: 40%;
+    top: 0;
+    right: 0;
+    max-width: 40%;
+    height: 110%;
+    min-height: 100%;
+    overflow: auto;
+    position: absolute;
+}
+
+.profile-detailed-table-panel-hidden {
+    width: 0;
+    margin: 0;
+    visibility: collapse;
+}
+
+.profile-detailed-table-panel-full {
+    padding: 0;
+    width: 100%;
+    min-width: 10em;
+}
+
+.profile-detailed-table-panel-narrow {
+    padding: 0;
+    width: 60%;
+    min-width: 10em;
 }

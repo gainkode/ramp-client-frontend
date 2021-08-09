@@ -67,6 +67,7 @@ export class LoginPanelComponent implements OnInit {
         this.auth.setLoginUser(userData);
         const signupPanelReady = (this.signupInfoPanel) ? true : false;
         this.extraData = true;
+        this.twoFa = false;
         this.extraDataVisible.emit(this.extraData);
         if (signupPanelReady) {
             this.signupInfoPanel.init();
@@ -99,6 +100,7 @@ export class LoginPanelComponent implements OnInit {
                         } else if (userData.authTokenAction === 'UserInfoRequired') {
                             this.showSignupPanel(userData);
                         } else {
+                            console.log('--> social login');
                             this.progressChange.emit(false);
                             this.socialAuthenticated.emit(userData);
                         }
@@ -151,14 +153,19 @@ export class LoginPanelComponent implements OnInit {
             const code = this.twoFaForm.get('code')?.value;
             this.auth.verify2Fa(code).subscribe(({ data }) => {
                 const userData = data.verify2faCode as LoginResult;
-                this.progressChange.emit(false);
                 if (userData.user?.mode === UserMode.InternalWallet) {
-                    if (this.socialLogin) {
-                        this.socialAuthenticated.emit(userData);
+                    if (userData.authTokenAction === 'UserInfoRequired') {
+                        this.showSignupPanel(userData);
                     } else {
-                        this.authenticated.emit(userData);
+                        this.progressChange.emit(false);
+                        if (this.socialLogin) {
+                            this.socialAuthenticated.emit(userData);
+                        } else {
+                            this.authenticated.emit(userData);
+                        }
                     }
                 } else {
+                    this.progressChange.emit(false);
                     this.error.emit('Unable to authorise. Please sign up');
                 }
             }, (error) => {
@@ -177,6 +184,7 @@ export class LoginPanelComponent implements OnInit {
     }
 
     onSignupDone(userData: LoginResult): void {
+        console.log('onSignupDone', userData.authTokenAction);
         if (!userData.authTokenAction || userData.authTokenAction === 'Default' || userData.authTokenAction === 'KycRequired') {
             if (this.socialLogin) {
                 this.socialAuthenticated.emit(userData);

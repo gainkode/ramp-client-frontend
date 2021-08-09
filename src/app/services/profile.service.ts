@@ -118,13 +118,6 @@ const GET_ME = gql`
       termsOfUse
       created
       updated
-      contacts {
-        userContactId
-        userId
-        contactEmail
-        displayName
-        created
-      }
       is2faEnabled
       hasEmailAuth
       changePasswordRequired
@@ -188,13 +181,6 @@ const GET_PROFILE_ACCOUNT = gql`
       termsOfUse
       created
       updated
-      contacts {
-        userContactId
-        userId
-        contactEmail
-        displayName
-        created
-      }
       is2faEnabled
       hasEmailAuth
       changePasswordRequired
@@ -205,6 +191,21 @@ const GET_PROFILE_ACCOUNT = gql`
       kycReviewComment
       kycReviewRejectedType
       kycReviewRejectedLabels
+    }
+  }
+`;
+
+const GET_PROFILE_CONTACTS = gql`
+  query Me {
+    me {
+      userId
+      contacts {
+        userContactId
+        userId
+        contactEmail
+        displayName
+        created
+      }
     }
   }
 `;
@@ -301,6 +302,17 @@ export class ProfileDataService {
     if (this.apollo.client !== undefined) {
       return this.apollo.watchQuery<any>({
         query: GET_PROFILE_ACCOUNT,
+        fetchPolicy: 'network-only',
+      });
+    } else {
+      return null;
+    }
+  }
+
+  getProfileContacts(): QueryRef<any, EmptyObject> | null {
+    if (this.apollo.client !== undefined) {
+      return this.apollo.watchQuery<any>({
+        query: GET_PROFILE_CONTACTS,
         fetchPolicy: 'network-only',
       });
     } else {

@@ -1,4 +1,4 @@
-import { User, UserType } from './generated-models';
+import { User, UserContact, UserType } from './generated-models';
 import {
   UserModeShortList,
   UserModeView,
@@ -83,5 +83,25 @@ export class UserItem {
     const flatValue = user.flatNumber ? `${user.flatNumber}, ` : '';
 
     return `${flatValue}${buildingNameValue}${buildingValue}${fullStreetValue}${townValue}${stateValue}${postCodeValue}`;
+  }
+}
+
+export class ContactItem {
+  id = '';
+  userId = '';
+  contactEmail = '';
+  displayName = '';
+  created = '';
+  
+  constructor(data: UserContact | null) {
+    this.id = data?.userContactId as string;
+    this.userId = data?.userId as string;
+    this.contactEmail = data?.contactEmail as string;
+    this.displayName = data?.displayName as string;
+    const datepipe: DatePipe = new DatePipe('en-US');
+    this.created = datepipe.transform(
+      data?.created,
+      'dd-MM-YYYY HH:mm:ss'
+    ) as string;
   }
 }
