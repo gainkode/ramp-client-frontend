@@ -581,6 +581,15 @@ export class AuthService {
         return settings;
     }
 
+    setUserName(firstName: string, lastName: string): void {
+        const userData = this.user;
+        if (userData) {
+            userData.firstName = firstName;
+            userData.lastName = lastName;
+            sessionStorage.setItem('currentUser', JSON.stringify(userData));
+        }
+    }
+
     private getAuthenticatedUser(): User | null {
         let result: User | null = null;
         const userData: string | null = sessionStorage.getItem('currentUser');

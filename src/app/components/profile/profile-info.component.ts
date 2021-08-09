@@ -15,6 +15,7 @@ import {
   User,
 } from 'src/app/model/generated-models';
 import { UserItem } from 'src/app/model/user.model';
+import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
@@ -51,6 +52,7 @@ export class ProfileInfoComponent implements OnInit, OnDestroy {
   });
 
   constructor(
+    private auth: AuthService,
     private profile: ProfileDataService,
     private commonService: CommonDataService,
     private errorHandler: ErrorService,
@@ -181,26 +183,28 @@ export class ProfileInfoComponent implements OnInit, OnDestroy {
       if (country) {
         countryCode = country.code3;
       }
+      const firstName = this.userForm.get('firstName')?.value;
+      const lastName = this.userForm.get('lastName')?.value;
       this.profile.saveUserInfo(
-        this.userForm.get('firstName')?.value,
-        this.userForm.get('lastName')?.value,
+        firstName,
+        lastName,
         countryCode,
         this.userForm.get('phone')?.value,
         this.userForm.get('currency')?.value
-      ).subscribe(
-        ({ data }) => {
+      ).subscribe(({ data }) => {
           this.inProgress = false;
           const userData = data.updateMe as User;
           if (userData.email === this.email) {
+            this.auth.setUserName(firstName, lastName);
             this.showSuccessMessageDialog();
           } else {
-            this.errorMessage = 'Personal settings was not saved';
+            this.errorMessage = 'Personal data was not saved';
           }
         }, (error) => {
           this.inProgress = false;
           this.errorMessage = this.errorHandler.getError(
             error.message,
-            'Unable to save personal settings'
+            'Unable to save personal data'
           );
         }
       );

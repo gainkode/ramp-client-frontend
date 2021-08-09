@@ -28,7 +28,10 @@ export class PersonalComponent implements OnInit {
         let name = '';
         const user = this.auth.user;
         if (user) {
-            name = `${user.firstName} ${user.lastName}`;
+            name = `${user.firstName ?? ''} ${user.lastName ?? ''}`;
+        }
+        if (name === ' ') {
+            name = 'No name';
         }
         return name;
     }

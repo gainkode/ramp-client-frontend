@@ -9,9 +9,10 @@ export class MerchantGuard {
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
         const authAction = this.auth.getAuthAction();
         const authValid = (authAction === '' || authAction === 'Default' || authAction === 'KycRequired');
-        if (!authValid) {
-            return false;
-        }
+        console.log('Merchant auth action:', authAction);
+        // if (!authValid) {
+        //     return false;
+        // }
         if (!this.auth.isAuthenticatedUserType('Merchant')) {
             this.router.navigateByUrl('/auth/login/merchant');
             return false;
