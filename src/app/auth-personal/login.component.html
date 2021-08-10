@@ -25,7 +25,7 @@
                 {{errorMessage}}
             </div>
 
-            <app-login-panel (error)="onError($event)" (progressChange)="onProgressChange($event)"
+            <app-login-panel [socialButtons]="true" (error)="onError($event)" (progressChange)="onProgressChange($event)"
                 (authenticated)="onAuthenticated($event)" (socialAuthenticated)="onSocialAuthenticated($event)"
                 (extraDataVisible)="onLoginExtraData($event)">
             </app-login-panel>

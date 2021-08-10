@@ -12,6 +12,7 @@ import { SignupInfoPanelComponent } from './signup-info.component';
 })
 export class LoginPanelComponent implements OnInit {
     @Input() userName: string | undefined = '';
+    @Input() socialButtons: boolean = false;
     @Output() error = new EventEmitter<string>();
     @Output() progressChange = new EventEmitter<boolean>();
     @Output() authenticated = new EventEmitter<LoginResult>();
