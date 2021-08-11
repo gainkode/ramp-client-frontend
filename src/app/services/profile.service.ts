@@ -256,9 +256,35 @@ const CHANGE_PASSWORD = gql`
   }
 `;
 
+const ADD_MY_CONTACT = gql`
+  mutation AddMyContact(
+    $contactEmail: String!
+    $displayName: String!
+  ) {
+    addMyContact(
+      contactEmail: $contactEmail
+      displayName: $displayName
+    ) {
+      userId
+    }
+  }
+`;
+
+const DELETE_MY_CONTACT = gql`
+  mutation DeleteMyContact(
+    $contactId: ID!
+  ) {
+    deleteMyContact(
+      contactId: $contactId
+    ) {
+      userId
+    }
+  }
+`;
+
 @Injectable()
 export class ProfileDataService {
-  constructor(private apollo: Apollo) {}
+  constructor(private apollo: Apollo) { }
 
   getMyTransactions(
     pageIndex: number,
@@ -401,6 +427,26 @@ export class ProfileDataService {
         code2fa: code,
         oldPassword,
         newPassword
+      },
+    });
+  }
+
+  addContact(name: string, email: string): Observable<any> {
+    return this.apollo.mutate({
+      mutation: ADD_MY_CONTACT,
+      variables: {
+        contactEmail: email,
+        displayName: name
+      },
+    });
+  }
+
+  deleteContact(id: string): Observable<any> {
+    console.log(id);
+    return this.apollo.mutate({
+      mutation: DELETE_MY_CONTACT,
+      variables: {
+        contactId: id
       },
     });
   }

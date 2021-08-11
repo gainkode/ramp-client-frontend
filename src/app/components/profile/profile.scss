@@ -75,3 +75,17 @@ th.mat-header-cell {
     width: 60%;
     min-width: 10em;
 }
+
+.profile-button-form-panel {
+    display: flex;
+}
+
+.profile-button-panel-left {
+    width     : 50%;
+    text-align: left;
+}
+
+.profile-button-panel-right {
+    width     : 50%;
+    text-align: right;
+}
