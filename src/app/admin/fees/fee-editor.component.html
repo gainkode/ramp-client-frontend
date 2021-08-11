@@ -311,14 +311,14 @@
                 </button>
             </div>
             <div *ngIf="defaultSchemeFlag==='' && create==false" class="button-panel-right">
-                <button class="main-button main-button-warn" (click)="onDeleteScheme()">
+                <button class="main-button main-button-warn" type="button" (click)="onDeleteScheme()">
                     DELETE
                 </button>
             </div>
         </div>
         <br>
         <div>
-            <button class="main-button main-button-primary" (click)="onCancel()">
+            <button class="main-button main-button-primary" type="button" (click)="onCancel()">
                 CANCEL
             </button>
         </div>

@@ -3,6 +3,7 @@ import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { Observable } from 'rxjs';
 import { EmptyObject } from 'apollo-angular/types';
 import { TransactionSource } from '../model/generated-models';
+import { exception } from 'node:console';
 
 const GET_MY_TRANSACTIONS = gql`
   query MyTransactions(
@@ -431,14 +432,25 @@ export class ProfileDataService {
     });
   }
 
-  addContact(name: string, email: string): Observable<any> {
-    return this.apollo.mutate({
-      mutation: ADD_MY_CONTACT,
-      variables: {
-        contactEmail: email,
-        displayName: name
-      },
-    });
+  saveContact(id: string, name: string, email: string): Observable<any> {
+    if (id === '') {
+      return this.apollo.mutate({
+        mutation: ADD_MY_CONTACT,
+        variables: {
+          contactEmail: email,
+          displayName: name
+        },
+      });
+    } else {
+      console.log('not implemented');
+      return this.apollo.mutate({
+        mutation: ADD_MY_CONTACT,
+        variables: {
+          contactEmail: email,
+          displayName: name
+        },
+      });
+    }
   }
 
   deleteContact(id: string): Observable<any> {

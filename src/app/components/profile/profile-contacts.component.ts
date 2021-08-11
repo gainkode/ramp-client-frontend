@@ -202,7 +202,10 @@ export class ProfileContactsComponent {
     onSaved(contact: ContactItem): void {
         this.editorErrorMessage = '';
         this.inProgress = true;
-        this.profileService.addContact(contact.displayName, contact.contactEmail).subscribe(({ data }) => {
+        this.profileService.saveContact(
+            contact.id,
+            contact.displayName,
+            contact.contactEmail).subscribe(({ data }) => {
             this.inProgress = false;
             this.setEditMode(false);
             this.showEditor(null, false, false);
