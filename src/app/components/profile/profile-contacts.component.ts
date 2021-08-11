@@ -1,10 +1,13 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { ContactItem } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
+import { UserContactListResult } from 'src/app/model/generated-models';
+import { PageEvent } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
     selector: 'app-contacts',
@@ -13,6 +16,7 @@ import { ProfileDataService } from 'src/app/services/profile.service';
 })
 export class ProfileContactsComponent {
     @Output() changeEditMode = new EventEmitter<boolean>();
+    @ViewChild(MatSort) sort!: MatSort;
     private pShowDetails = false;
     private pContactsSubscription!: any;
     private pEditMode = false;
@@ -22,7 +26,12 @@ export class ProfileContactsComponent {
     createContact = false;
     selectedContact: ContactItem | null = null;
     contacts: ContactItem[] = [];
-    displayedColumns: string[] = ['created', 'displayName', 'contactEmail', 'details'];
+    contactCount = 0;
+    pageSize = 25;
+    pageIndex = 0;
+    sortedField = 'created';
+    sortedDesc = true;
+    displayedColumns: string[] = ['displayName', 'contactEmail', 'created', 'details'];
 
     get showDetailed(): boolean {
         return this.pShowDetails;
@@ -40,20 +49,45 @@ export class ProfileContactsComponent {
     }
 
     ngOnInit(): void {
-        const contactsData = this.profileService.getProfileContacts();
+        this.loadContacts();
+    }
+
+    ngOnDestroy(): void {
+        const s: Subscription = this.pContactsSubscription;
+        if (s !== undefined) {
+            (this.pContactsSubscription as Subscription).unsubscribe();
+        }
+    }
+
+    ngAfterViewInit(): void {
+        if (this.sort) {
+            this.sort.sortChange.subscribe(() => {
+                this.sortedDesc = (this.sort.direction === 'desc');
+                this.sortedField = this.sort.active;
+                this.loadContacts();
+            });
+        }
+    }
+
+    private loadContacts(): void {
+        this.contactCount = 0;
+        const contactsData = this.profileService.getProfileContacts(
+            this.pageIndex,
+            this.pageSize,
+            this.sortedField,
+            this.sortedDesc);
         if (contactsData === null) {
             this.errorMessage = this.errorHandler.getRejectedCookieMessage();
         } else {
             this.inProgress = true;
             this.pContactsSubscription = contactsData.valueChanges.subscribe(({ data }) => {
-                // const settings = data.getSettingsCost as SettingsCostListResult;
-                // let itemCount = 0;
-                // if (settings !== null) {
-                //     itemCount = settings?.count as number;
-                //     if (itemCount > 0) {
-                //         this.schemes = settings?.list?.map((val) => new CostScheme(val)) as CostScheme[];
-                //     }
-                // }
+                const contactsItems = data.myContacts as UserContactListResult;
+                if (contactsItems !== null) {
+                    this.contactCount = contactsItems?.count as number;
+                    if (this.contactCount > 0) {
+                        this.contacts = contactsItems?.list?.map((val) => new ContactItem(val)) as ContactItem[];
+                    }
+                }
                 this.inProgress = false;
             }, (error) => {
                 this.setEditMode(false);
@@ -67,18 +101,16 @@ export class ProfileContactsComponent {
         }
     }
 
-    ngOnDestroy(): void {
+    refresh(): void {
         const s: Subscription = this.pContactsSubscription;
-        if (s !== undefined) {
-            (this.pContactsSubscription as Subscription).unsubscribe();
-        }
+        this.loadContacts();
     }
 
-    refresh(): void {
-        const contactsData = this.profileService.getProfileContacts();
-        if (contactsData !== null) {
-            contactsData.refetch();
-        }
+    handlePage(event: PageEvent): PageEvent {
+        this.pageSize = event.pageSize;
+        this.pageIndex = event.pageIndex;
+        this.refresh();
+        return event;
     }
 
     private setEditMode(mode: boolean): void {

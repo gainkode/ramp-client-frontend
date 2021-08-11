@@ -196,10 +196,20 @@ const GET_PROFILE_ACCOUNT = gql`
 `;
 
 const GET_PROFILE_CONTACTS = gql`
-  query Me {
-    me {
-      userId
-      contacts {
+  query MyContacts(
+    $filter: String
+    $skip: Int
+    $first: Int
+    $orderBy: [OrderBy!]
+  ) {
+    myContacts(
+      filter: $filter
+      skip: $skip
+      first: $first
+      orderBy: $orderBy
+    ) {
+      count
+      list {
         userContactId
         userId
         contactEmail
@@ -309,10 +319,23 @@ export class ProfileDataService {
     }
   }
 
-  getProfileContacts(): QueryRef<any, EmptyObject> | null {
+  getProfileContacts(
+    pageIndex: number,
+    takeItems: number,
+    orderField: string,
+    orderDesc: boolean
+  ): QueryRef<any, EmptyObject> | null {
     if (this.apollo.client !== undefined) {
+      const orderFields = [{ orderBy: orderField, desc: orderDesc }];
       return this.apollo.watchQuery<any>({
         query: GET_PROFILE_CONTACTS,
+        variables: {
+          filter: '',
+          skip: pageIndex * takeItems,
+          first: takeItems,
+          orderBy: orderFields,
+        },
+        pollInterval: 30000,
         fetchPolicy: 'network-only',
       });
     } else {
