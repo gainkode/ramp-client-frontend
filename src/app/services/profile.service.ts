@@ -271,6 +271,22 @@ const ADD_MY_CONTACT = gql`
   }
 `;
 
+const UPDATE_MY_CONTACT = gql`
+  mutation UpdateMyContact(
+    $contactId: String!
+    $contactEmail: String!
+    $displayName: String!
+  ) {
+    updateMyContact(
+      contactId: $contactId
+      contactEmail: $contactEmail
+      displayName: $displayName
+    ) {
+      userId
+    }
+  }
+`;
+
 const DELETE_MY_CONTACT = gql`
   mutation DeleteMyContact(
     $contactId: ID!
@@ -444,8 +460,9 @@ export class ProfileDataService {
     } else {
       console.log('not implemented');
       return this.apollo.mutate({
-        mutation: ADD_MY_CONTACT,
+        mutation: UPDATE_MY_CONTACT,
         variables: {
+          contactId: id,
           contactEmail: email,
           displayName: name
         },

@@ -58,6 +58,8 @@ export type Query = {
   getUserBankAccounts: UserContactListResult;
   myActions: UserActionListResult;
   getUserActions: UserActionListResult;
+  myBalanceHistory: UserBalanceHistoryListResult;
+  getUserBalanceHistory: UserBalanceHistoryListResult;
   myKycInfo?: Maybe<KycInfo>;
   getUserKycInfo?: Maybe<KycInfo>;
   mySupportTickets?: Maybe<SupportTicketListResult>;
@@ -296,6 +298,27 @@ export type QueryMyActionsArgs = {
 export type QueryGetUserActionsArgs = {
   userId?: Maybe<Scalars['String']>;
   withResult?: Maybe<UserActionResult>;
+  filter?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OrderBy>>;
+};
+
+
+export type QueryMyBalanceHistoryArgs = {
+  asset?: Maybe<Scalars['String']>;
+  period?: Maybe<UserBalanceHistoryPeriod>;
+  filter?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OrderBy>>;
+};
+
+
+export type QueryGetUserBalanceHistoryArgs = {
+  userId?: Maybe<Scalars['String']>;
+  asset?: Maybe<Scalars['String']>;
+  period?: Maybe<UserBalanceHistoryPeriod>;
   filter?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
@@ -999,6 +1022,31 @@ export enum UserActionType {
   CancelTransaction = 'cancelTransaction'
 }
 
+export enum UserBalanceHistoryPeriod {
+  Dayly = 'Dayly',
+  Weekly = 'Weekly',
+  Monthly = 'Monthly',
+  Yearly = 'Yearly'
+}
+
+export type UserBalanceHistoryListResult = {
+  __typename?: 'UserBalanceHistoryListResult';
+  count?: Maybe<Scalars['Int']>;
+  list?: Maybe<Array<UserBalanceHistory>>;
+};
+
+export type UserBalanceHistory = {
+  __typename?: 'UserBalanceHistory';
+  userBalanceId?: Maybe<Scalars['String']>;
+  userId: Scalars['String'];
+  date: Scalars['DateTime'];
+  asset: Scalars['String'];
+  balance: Scalars['Float'];
+  balanceFiat: Scalars['Float'];
+  balanceEur: Scalars['Float'];
+  transactionId?: Maybe<Scalars['String']>;
+};
+
 export type SupportTicketListResult = {
   __typename?: 'SupportTicketListResult';
   count?: Maybe<Scalars['Int']>;
@@ -1486,10 +1534,13 @@ export type Mutation = {
   removeRole?: Maybe<User>;
   deleteUser?: Maybe<User>;
   addMyContact?: Maybe<User>;
+  updateMyContact?: Maybe<User>;
   deleteMyContact?: Maybe<User>;
   addMyBankAccount?: Maybe<User>;
+  updateMyBankAccount?: Maybe<User>;
   deleteMyBankAccount?: Maybe<User>;
   addBankAccount?: Maybe<User>;
+  updateBankAccount?: Maybe<User>;
   deleteBankAccount?: Maybe<User>;
   signup: LoginResult;
   login: LoginResult;
@@ -1661,6 +1712,13 @@ export type MutationAddMyContactArgs = {
 };
 
 
+export type MutationUpdateMyContactArgs = {
+  contactId: Scalars['String'];
+  contactEmail?: Maybe<Scalars['String']>;
+  displayName?: Maybe<Scalars['String']>;
+};
+
+
 export type MutationDeleteMyContactArgs = {
   contactId: Scalars['ID'];
 };
@@ -1671,13 +1729,26 @@ export type MutationAddMyBankAccountArgs = {
 };
 
 
+export type MutationUpdateMyBankAccountArgs = {
+  bankAccountId: Scalars['String'];
+  bankAccount?: Maybe<UserBankAccountInput>;
+};
+
+
 export type MutationDeleteMyBankAccountArgs = {
   bankAccountId: Scalars['ID'];
 };
 
 
 export type MutationAddBankAccountArgs = {
-  userId?: Maybe<Scalars['String']>;
+  userId: Scalars['String'];
+  bankAccount?: Maybe<UserBankAccountInput>;
+};
+
+
+export type MutationUpdateBankAccountArgs = {
+  userId: Scalars['String'];
+  bankAccountId: Scalars['String'];
   bankAccount?: Maybe<UserBankAccountInput>;
 };
 
@@ -2191,16 +2262,6 @@ export enum FireblocksTransactionStatus {
   Blocked = 'BLOCKED',
   Failed = 'FAILED'
 }
-
-export type UserBalanceHistory = {
-  __typename?: 'UserBalanceHistory';
-  userBalanceId: Scalars['String'];
-  userId: Scalars['String'];
-  date: Scalars['DateTime'];
-  asset: Scalars['String'];
-  balance: Scalars['Float'];
-  transactionId?: Maybe<Scalars['String']>;
-};
 
 export type UserDevice = {
   __typename?: 'UserDevice';
