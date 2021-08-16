@@ -7,6 +7,81 @@ import { FeeScheme } from '../model/fee-scheme.model';
 import { TransactionSource, UserType } from '../model/generated-models';
 import { KycLevel, KycScheme } from '../model/identification.model';
 
+const GET_DASHBOARD_STATS = gql`
+  query GetDashboardStats(
+    $userIdOnly: [String],
+    $affiliateIdOnly: [String],
+    $sourcesOnly: [TransactionSource],
+    $countriesOnly: [String],
+    $countryCodeType: CountryCodeType,
+    $accountTypesOnly: [UserType]
+  ) {
+    getDashboardStats(
+      userIdOnly: $userIdOnly
+      affiliateIdOnly: $affiliateIdOnly
+      sourcesOnly: $sourcesOnly
+      countriesOnly: $countriesOnly
+      countryCodeType: $countryCodeType
+      accountTypesOnly: $accountTypesOnly
+    ) {
+      deposits {
+        ratio,
+        approved {count, volume},
+        declined {count, volume},
+        abounded {count, volume},
+        inProcess {count, volume},
+        byStatus {status, volume},
+        fee {count, volume},
+        byInstruments {
+          instrument,
+          approved {count, volume},
+          declined {count, volume},
+          abounded {count, volume},
+          inProcess {count, volume},
+          byStatus {status, volume},
+          fee {count, volume}
+        }
+      }
+      withdrawals {
+        ratio,
+        approved {count, volume},
+        declined {count, volume},
+        abounded {count, volume},
+        inProcess {count, volume},
+        byStatus {status, volume},
+        fee {count, volume},
+        byInstruments {
+          instrument,
+          approved {count, volume},
+          declined {count, volume},
+          abounded {count, volume},
+          inProcess {count, volume},
+          byStatus {status, volume},
+          fee {count, volume}
+        }
+      }
+      transfers {
+        ratio,
+        byStatus {status, volume},
+        toMerchant {status, volume},
+        toCustomer {status, volume},
+        fee {count, volume}
+      }
+      exchanges {
+        ratio,
+        byStatus {status, volume},
+        toMerchant {status, volume},
+        toCustomer {status, volume},
+        fee {count, volume}
+      }
+      balances {
+        currency,
+        volume {count, volume}
+      }
+    }
+  }
+`;
+
 const GET_FEE_SETTINGS = gql`
   query GetSettingsFee {
     getSettingsFee(
@@ -531,6 +606,27 @@ const DELETE_KYC_LEVEL_SETTINGS = gql`
 @Injectable()
 export class AdminDataService {
   constructor(private apollo: Apollo) { }
+
+  getDashboardStats(): QueryRef<any, EmptyObject> | null {
+    if (this.apollo.client !== undefined) {
+      const vars = {
+        userIdOnly: [],
+        affiliateIdOnly: [],
+        sourcesOnly: [],
+        countriesOnly: [],
+        countryCodeType: '',
+        accountTypesOnly: []
+      };
+      return this.apollo.watchQuery<any>({
+        query: GET_DASHBOARD_STATS,
+        variables: vars,
+        pollInterval: 30000,
+        fetchPolicy: 'network-only',
+      });
+    } else {
+      return null;
+    }
+  }
 
   getFeeSettings(): QueryRef<any, EmptyObject> | null {
     if (this.apollo.client !== undefined) {
