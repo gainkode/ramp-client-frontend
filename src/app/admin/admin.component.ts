@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
+import { Event as NavigationEvent } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { AdminMenuItems } from '../model/admin-menu-list';
 import { MatSelectionListChange } from '@angular/material/list/selection-list';
@@ -19,7 +20,19 @@ export class AdminComponent {
 
     constructor(private auth: AuthService, private router: Router) {
         this.user = auth.user;
-        const routeTree = router.parseUrl(router.url);
+        this.getSectionName();
+
+        this.router.events.subscribe(
+            (event: NavigationEvent): void => {
+                if (event instanceof NavigationEnd) {
+                    this.getSectionName();
+                }
+            }
+        );
+    }
+
+    private getSectionName(): void {
+        const routeTree = this.router.parseUrl(this.router.url);
         const segments = routeTree.root.children['primary'].segments;
         if (segments.length > 2) {
             this.selectedMenu = segments[2].path;

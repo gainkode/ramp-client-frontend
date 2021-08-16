@@ -36,11 +36,13 @@ import { CustomerDetailsComponent } from './customers/customer-details.component
 import { TransactionDetailsComponent } from './transactions/transaction-details.component';
 import { CustomerInfoComponent } from './customers/customer-info.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { AdminSectionGuard } from './admin-section.guard';
 
 const routing = RouterModule.forChild([
     {
         path: 'main',
         component: AdminComponent,
+        canActivateChild: [AdminSectionGuard],
         children: [
             { path: 'dashboard', component: DashboardComponent, canActivate: [AdminGuard] },
             { path: 'transactions', component: TransactionsComponent, canActivate: [AdminGuard] },
@@ -92,7 +94,7 @@ export class MaterialModule { }
         FeesComponent, FeeEditorComponent,
         CostsComponent, CostEditorComponent,
         IdentificationComponent, IdTableComponent, LevelTableComponent, KycEditorComponent, LevelEditorComponent],
-    providers: [AdminGuard],
+    providers: [AdminGuard, AdminSectionGuard],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AdminModule { }

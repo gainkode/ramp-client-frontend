@@ -44,7 +44,6 @@ export class PersonalComponent implements OnInit {
     }
 
     private getSectionName(): void {
-        let result = '';
         const routeTree = this.router.parseUrl(this.router.url);
         const segments = routeTree.root.children['primary'].segments;
         if (segments.length > 2) {
