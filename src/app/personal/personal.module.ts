@@ -25,12 +25,14 @@ import { PersonalHomeComponent } from './profile/home.component';
 import { PersonalMyAccountComponent } from './profile/my-account.component';
 import { PersonalMyContactsComponent } from './profile/my-contacts.component';
 import { PersonalTransactionsComponent } from './profile/transactions.component';
+import { PersonalProfileSectionGuard } from './personal-section.guard';
 
 const routing = RouterModule.forChild([
     { path: 'intro', component: IntroPersonalComponent },
     {
         path: 'main',
         component: PersonalComponent,
+        canActivateChild: [PersonalProfileSectionGuard],
         children: [
             { path: 'home', component: PersonalHomeComponent, canActivate: [PersonalGuard] },
             { path: 'myaccount', component: PersonalMyAccountComponent, canActivate: [PersonalGuard] },
@@ -72,7 +74,7 @@ export class MaterialModule { }
         ProfileMainPersonalComponent, KycPersonalComponent, PersonalHomeComponent,
         PersonalMyAccountComponent, PersonalMyContactsComponent, PersonalTransactionsComponent,
         PersonalExchangerComponent],
-    providers: [PersonalGuard],
+    providers: [PersonalGuard, PersonalProfileSectionGuard],
     schemas: [
         CUSTOM_ELEMENTS_SCHEMA
     ]
