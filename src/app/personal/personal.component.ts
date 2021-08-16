@@ -16,20 +16,13 @@ export class PersonalComponent implements OnInit {
     selectedMenu = 'home';
 
     constructor(private auth: AuthService, private notification: NotificationService, private router: Router) {
-        this.selectedMenu = this.getSectionName();
-        if (this.selectedMenu === '') {
-            this.router.navigateByUrl(this.menuItems[0].url);
-        }
-
+        this.getSectionName();
+        
         this.router.events.subscribe(
             (event: NavigationEvent): void => {
                 if (event instanceof NavigationEnd) {
-                    this.selectedMenu = this.getSectionName();
-                    if (this.selectedMenu === '') {
-                        this.router.navigateByUrl(this.menuItems[0].url);
-                    }
+                    this.getSectionName();
                 }
-
             }
         );
     }
@@ -50,16 +43,15 @@ export class PersonalComponent implements OnInit {
         return this.selectedMenu;
     }
 
-    private getSectionName(): string {
+    private getSectionName(): void {
         let result = '';
         const routeTree = this.router.parseUrl(this.router.url);
         const segments = routeTree.root.children['primary'].segments;
         if (segments.length > 2) {
-            result = segments[2].path;
+            this.selectedMenu = segments[2].path;
         } else {
-            result = '';
+            this.router.navigateByUrl(this.menuItems[0].url);
         }
-        return result;
     }
 
     ngOnInit(): void {
