@@ -19,7 +19,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ComponentsModule } from '../components/components.module';
 import { AdminGuard } from './admin.guard';
 import { AdminComponent } from './admin.component';
-import { DashboardComponent } from './dashboard.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 import { FeesComponent } from './fees/fees.component';
 import { FeeEditorComponent } from './fees/fee-editor.component';
 import { CostsComponent } from './costs/costs.component';

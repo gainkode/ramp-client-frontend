@@ -4,17 +4,17 @@ import { EmptyObject } from 'apollo-angular/types';
 import { Observable } from 'rxjs';
 import { CostScheme } from '../model/cost-scheme.model';
 import { FeeScheme } from '../model/fee-scheme.model';
-import { TransactionSource, UserType } from '../model/generated-models';
+import { CountryCodeType, TransactionSource, UserType } from '../model/generated-models';
 import { KycLevel, KycScheme } from '../model/identification.model';
 
 const GET_DASHBOARD_STATS = gql`
   query GetDashboardStats(
-    $userIdOnly: [String],
-    $affiliateIdOnly: [String],
-    $sourcesOnly: [TransactionSource],
-    $countriesOnly: [String],
+    $userIdOnly: [String!],
+    $affiliateIdOnly: [String!],
+    $sourcesOnly: [TransactionSource!],
+    $countriesOnly: [String!],
     $countryCodeType: CountryCodeType,
-    $accountTypesOnly: [UserType]
+    $accountTypesOnly: [UserType!]
   ) {
     getDashboardStats(
       userIdOnly: $userIdOnly
@@ -30,7 +30,7 @@ const GET_DASHBOARD_STATS = gql`
         declined {count, volume},
         abounded {count, volume},
         inProcess {count, volume},
-        byStatus {status, volume},
+        byStatus {status, volume {count, volume}},
         fee {count, volume},
         byInstruments {
           instrument,
@@ -38,7 +38,7 @@ const GET_DASHBOARD_STATS = gql`
           declined {count, volume},
           abounded {count, volume},
           inProcess {count, volume},
-          byStatus {status, volume},
+          byStatus {status, volume {count, volume}},
           fee {count, volume}
         }
       }
@@ -48,7 +48,7 @@ const GET_DASHBOARD_STATS = gql`
         declined {count, volume},
         abounded {count, volume},
         inProcess {count, volume},
-        byStatus {status, volume},
+        byStatus {status, volume {count, volume}},
         fee {count, volume},
         byInstruments {
           instrument,
@@ -56,22 +56,22 @@ const GET_DASHBOARD_STATS = gql`
           declined {count, volume},
           abounded {count, volume},
           inProcess {count, volume},
-          byStatus {status, volume},
+          byStatus {status, volume {count, volume}},
           fee {count, volume}
         }
       }
       transfers {
         ratio,
-        byStatus {status, volume},
-        toMerchant {status, volume},
-        toCustomer {status, volume},
+        byStatus {status, volume {count, volume}},
+        toMerchant {status, volume {count, volume}},
+        toCustomer {status, volume {count, volume}},
         fee {count, volume}
       }
       exchanges {
         ratio,
-        byStatus {status, volume},
-        toMerchant {status, volume},
-        toCustomer {status, volume},
+        byStatus {status, volume {count, volume}},
+        toMerchant {status, volume {count, volume}},
+        toCustomer {status, volume {count, volume}},
         fee {count, volume}
       }
       balances {
@@ -614,8 +614,8 @@ export class AdminDataService {
         affiliateIdOnly: [],
         sourcesOnly: [],
         countriesOnly: [],
-        countryCodeType: '',
-        accountTypesOnly: []
+        countryCodeType: CountryCodeType.Code3,
+        accountTypesOnly: [UserType.Merchant, UserType.Personal]
       };
       return this.apollo.watchQuery<any>({
         query: GET_DASHBOARD_STATS,
