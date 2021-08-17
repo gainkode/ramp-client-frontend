@@ -37,6 +37,7 @@ import { TransactionDetailsComponent } from './transactions/transaction-details.
 import { CustomerInfoComponent } from './customers/customer-info.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { AdminSectionGuard } from './admin-section.guard';
+import { DefaultComponent } from './default.component';
 
 const routing = RouterModule.forChild([
     {
@@ -44,6 +45,7 @@ const routing = RouterModule.forChild([
         component: AdminComponent,
         canActivateChild: [AdminSectionGuard],
         children: [
+            { path: 'default', component: DefaultComponent, canActivate: [AdminGuard] },
             { path: 'dashboard', component: DashboardComponent, canActivate: [AdminGuard] },
             { path: 'transactions', component: TransactionsComponent, canActivate: [AdminGuard] },
             { path: 'customers', component: CustomersComponent, canActivate: [AdminGuard] },
@@ -53,7 +55,8 @@ const routing = RouterModule.forChild([
         ],
         canActivate: [AdminGuard]
     },
-    { path: '**', redirectTo: 'main/dashboard' }
+    { path: '**', redirectTo: 'main/default' }
+    //{ path: '**', redirectTo: 'main/dashboard' }
 ]);
 
 const modules = [
@@ -88,6 +91,7 @@ export class MaterialModule { }
     ],
     declarations: [
         AdminComponent,
+        DefaultComponent,  // to be removed
         DashboardComponent,
         TransactionsComponent, TransactionDetailsComponent,
         CustomersComponent, CustomerDetailsComponent, CustomerInfoComponent,

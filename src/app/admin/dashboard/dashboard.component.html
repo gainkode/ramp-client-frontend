@@ -1,3 +1,40 @@
-<h1>
-    Dashboard
-</h1>
+<div style="padding: 0.25em;">
+    <div class="details-editor" *ngIf="errorMessage!==''">
+        <div class="form-error-box">
+            {{errorMessage}}
+        </div>
+    </div>
+
+    <div style="margin: 0.75em;">
+        <h1>
+            Dashboard
+        </h1>
+    </div>
+    <div style="margin: 0.25em;background-color: burlywood;">
+        Filters
+    </div>
+    <div style="display: flex;">
+        <div style="width: 70%;margin: 0.25em;background-color: salmon;">
+            <div style="margin: 0.25em; background-color: lightslategrey;">
+                Total volume in EUR
+            </div>
+            <div style="margin: 0.25em; background-color: lightseagreen;">
+                Deposits
+            </div>
+            <div style="margin: 0.25em; background-color: mediumaquamarine;">
+                Transfers
+            </div>
+            <div style="margin: 0.25em; background-color: yellow;">
+                Withdrawals
+            </div>
+        </div>
+        <div style="width: 30%;margin: 0.25em;background-color: cyan;">
+            <div style="margin: 0.25em; background-color: darkkhaki;">
+                Fees collected
+            </div>
+            <div style="margin: 0.25em; background-color:lightcoral;">
+                Balances in all eWallets
+            </div>
+        </div>
+    </div>
+</div>
