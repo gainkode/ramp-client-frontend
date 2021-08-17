@@ -589,9 +589,11 @@ export type SettingsCommon = {
   __typename?: 'SettingsCommon';
   settingsCommonId?: Maybe<Scalars['String']>;
   liquidityProvider?: Maybe<Scalars['String']>;
-  liquidityProviderWithdrawalAddress?: Maybe<Scalars['String']>;
   liquidityProviderWithdrawalBenchmark?: Maybe<Scalars['Float']>;
+  liquidityProviderRemains?: Maybe<Scalars['Float']>;
   custodyProvider?: Maybe<Scalars['String']>;
+  custodyProviderWithdrawalVaultAccountId?: Maybe<Scalars['String']>;
+  custodyProviderWithdrawalAddress?: Maybe<Scalars['String']>;
   kycProvider?: Maybe<Scalars['String']>;
   kycBaseAddress?: Maybe<Scalars['String']>;
 };
@@ -1184,6 +1186,8 @@ export enum TransactionStatus {
   Exchanging = 'Exchanging',
   Exchanged = 'Exchanged',
   TransferBenchmarkWaiting = 'TransferBenchmarkWaiting',
+  BenchmarkTransfering = 'BenchmarkTransfering',
+  BenchmarkTransfered = 'BenchmarkTransfered',
   Sending = 'Sending',
   Sent = 'Sent',
   Completed = 'Completed',
@@ -1304,9 +1308,11 @@ export type TransferOrder = {
   executed?: Maybe<Scalars['DateTime']>;
   amount?: Maybe<Scalars['Float']>;
   currency?: Maybe<Scalars['String']>;
-  address?: Maybe<Scalars['String']>;
+  destination?: Maybe<Scalars['String']>;
+  destinationType?: Maybe<TransactionDestinationType>;
   transferHash?: Maybe<Scalars['String']>;
   transferDetails?: Maybe<Scalars['String']>;
+  status?: Maybe<Scalars['String']>;
 };
 
 export type TransactionListResult = {
@@ -1370,6 +1376,8 @@ export type Transaction = {
   liquidityOrder?: Maybe<LiquidityOrder>;
   transferOrderId?: Maybe<Scalars['String']>;
   transferOrder?: Maybe<TransferOrder>;
+  benchmarkTransferOrderId?: Maybe<Scalars['String']>;
+  benchmarkTransferOrder?: Maybe<TransferOrder>;
   userBalanceTotalBefore?: Maybe<Scalars['Float']>;
   userBalanceAvailableBefore?: Maybe<Scalars['Float']>;
   userBalanceTotalEurBefore?: Maybe<Scalars['Float']>;
@@ -1382,6 +1390,7 @@ export type Transaction = {
   userBalanceAvailableEurAfter?: Maybe<Scalars['Float']>;
   userBalanceTotalFiatAfter?: Maybe<Scalars['Float']>;
   userBalanceAvailableFiatAfter?: Maybe<Scalars['Float']>;
+  hasBeenBenchmarked?: Maybe<Scalars['Boolean']>;
   data?: Maybe<Scalars['String']>;
 };
 
@@ -1968,9 +1977,11 @@ export type PaymentOperationShort = {
 
 export type SettingsCommonInput = {
   liquidityProvider?: Maybe<Scalars['String']>;
-  liquidityProviderWithdrawalAddress?: Maybe<Scalars['String']>;
   liquidityProviderWithdrawalBenchmark?: Maybe<Scalars['Float']>;
+  liquidityProviderRemains?: Maybe<Scalars['Float']>;
   custodyProvider?: Maybe<Scalars['String']>;
+  custodyProviderWithdrawalVaultAccountId?: Maybe<Scalars['String']>;
+  custodyProviderWithdrawalAddress?: Maybe<Scalars['String']>;
   kycProvider?: Maybe<Scalars['String']>;
   kycBaseAddress?: Maybe<Scalars['String']>;
 };

@@ -620,7 +620,6 @@ export class AdminDataService {
       return this.apollo.watchQuery<any>({
         query: GET_DASHBOARD_STATS,
         variables: vars,
-        pollInterval: 30000,
         fetchPolicy: 'network-only',
       });
     } else {

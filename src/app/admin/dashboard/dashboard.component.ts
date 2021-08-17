@@ -31,9 +31,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         } else {
             this.inProgress = true;
             this.pStatsSubscription = statsData.valueChanges.subscribe(({ data }) => {
-                console.log(data.getDashboardStats);
                 this.stats = new DashboardModel(data.getDashboardStats);
-                console.log(this.stats);
                 this.inProgress = false;
             }, (error) => {
                 this.inProgress = false;
@@ -51,5 +49,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
         if (s !== undefined) {
             (this.pStatsSubscription as Subscription).unsubscribe();
         }
+    }
+
+    refresh(): void {
+        const statsData = this.adminService.getDashboardStats();
+        if (statsData !== null) {
+            statsData.refetch();
+        }
+    }
+
+    test() {
+        this.refresh();
     }
 }
