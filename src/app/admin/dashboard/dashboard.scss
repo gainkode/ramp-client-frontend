@@ -1,0 +1,28 @@
+.mat-column-balances-table {
+    word-wrap: break-word;
+    white-space: unset;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+}
+
+.mat-column-balances-table-currency {
+    flex: 0 0 30%;
+    width: 30%;
+    min-width: 5em;
+}
+
+.mat-column-balances-table-count {
+    flex: 0 0 30%;
+    width: 30%;
+    min-width: 5em;
+}
+
+.mat-column-balances-table-volume {
+    flex: 0 0 40%;
+    width: 40%;
+    min-width: 5em;
+}

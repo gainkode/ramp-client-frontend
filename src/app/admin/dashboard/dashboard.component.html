@@ -9,12 +9,15 @@
         <h1>
             Dashboard
         </h1>
+        <div *ngIf="inProgress">
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        </div>
     </div>
-    <div style="margin: 0.25em;background-color: burlywood;">
+    <div style="margin: 0.5em;background-color: burlywood;">
         Filters
     </div>
     <div style="display: flex;">
-        <div style="width: 70%;margin: 0.25em;background-color: salmon;">
+        <div style="width: 70%;margin: 0.25em;">
             <div style="margin: 0.25em; background-color: lightslategrey;">
                 Total volume in EUR
             </div>
@@ -28,13 +31,11 @@
                 Withdrawals
             </div>
         </div>
-        <div style="width: 30%;margin: 0.25em;background-color: cyan;">
+        <div style="width: 30%;margin: 0.25em;">
             <div style="margin: 0.25em; background-color: darkkhaki;">
                 Fees collected
             </div>
-            <div style="margin: 0.25em; background-color:lightcoral;">
-                Balances in all eWallets
-            </div>
+            <app-dashboard-balances [balances]="stats.balances"></app-dashboard-balances>
         </div>
     </div>
 </div>

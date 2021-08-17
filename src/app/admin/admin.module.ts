@@ -38,6 +38,7 @@ import { CustomerInfoComponent } from './customers/customer-info.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { AdminSectionGuard } from './admin-section.guard';
 import { DefaultComponent } from './default.component';
+import { DashboardBalancesComponent } from './dashboard/dashboard-balances.component';
 
 const routing = RouterModule.forChild([
     {
@@ -92,7 +93,7 @@ export class MaterialModule { }
     declarations: [
         AdminComponent,
         DefaultComponent,  // to be removed
-        DashboardComponent,
+        DashboardComponent, DashboardBalancesComponent,
         TransactionsComponent, TransactionDetailsComponent,
         CustomersComponent, CustomerDetailsComponent, CustomerInfoComponent,
         FeesComponent, FeeEditorComponent,

@@ -5,6 +5,7 @@ import { ErrorService } from '../../services/error.service';
 import { AuthService } from '../../services/auth.service';
 import { DashboardStats } from 'src/app/model/generated-models';
 import { Subscription } from 'rxjs';
+import { DashboardModel } from 'src/app/model/dashboard.model';
 
 @Component({
     templateUrl: 'dashboard.component.html'
@@ -12,13 +13,16 @@ import { Subscription } from 'rxjs';
 export class DashboardComponent implements OnInit, OnDestroy {
     inProgress = false;
     errorMessage = '';
+    stats!: DashboardModel;
     private pStatsSubscription!: any;
 
     constructor(
         private auth: AuthService,
         private errorHandler: ErrorService,
         private adminService: AdminDataService,
-        private router: Router) { }
+        private router: Router) {
+        this.stats = new DashboardModel(null);
+    }
 
     ngOnInit(): void {
         const statsData = this.adminService.getDashboardStats();
@@ -27,14 +31,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
         } else {
             this.inProgress = true;
             this.pStatsSubscription = statsData.valueChanges.subscribe(({ data }) => {
-                const stats = data.getDashboardStats as DashboardStats;
-                console.log(stats);
+                console.log(data.getDashboardStats);
+                this.stats = new DashboardModel(data.getDashboardStats);
+                console.log(this.stats);
                 this.inProgress = false;
             }, (error) => {
                 this.inProgress = false;
-                console.log(error);
                 if (this.auth.token !== '') {
-                    this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load data');
+                    this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load dashboard data');
                 } else {
                     this.router.navigateByUrl('/');
                 }
