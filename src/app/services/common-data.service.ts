@@ -158,7 +158,6 @@ export class CommonDataService {
     if (this.apollo.client !== undefined) {
       return this.apollo.watchQuery<any>({
         query: GET_USERS_POST,
-        pollInterval: 30000,
         fetchPolicy: 'network-only'
       });
     } else {
@@ -171,7 +170,6 @@ export class CommonDataService {
       return this.apollo.watchQuery<any>({
         query: GET_USER_BY_ID_POST,
         variables: { userId: id },
-        // pollInterval: 30000,
         fetchPolicy: 'network-only'
       });
     } else {

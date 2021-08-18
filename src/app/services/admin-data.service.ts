@@ -631,7 +631,6 @@ export class AdminDataService {
     if (this.apollo.client !== undefined) {
       return this.apollo.watchQuery<any>({
         query: GET_FEE_SETTINGS,
-        pollInterval: 30000,
         fetchPolicy: 'network-only',
       });
     } else {
@@ -643,7 +642,6 @@ export class AdminDataService {
     if (this.apollo.client !== undefined) {
       return this.apollo.watchQuery<any>({
         query: GET_COST_SETTINGS,
-        pollInterval: 30000,
         fetchPolicy: 'network-only',
       });
     } else {
@@ -655,7 +653,6 @@ export class AdminDataService {
     if (this.apollo.client !== undefined) {
       return this.apollo.watchQuery<any>({
         query: GET_KYC_SETTINGS,
-        pollInterval: 30000,
         fetchPolicy: 'network-only',
       });
     } else {
@@ -669,7 +666,6 @@ export class AdminDataService {
       return this.apollo.watchQuery<any>({
         query: GET_KYC_LEVELS,
         variables: { filter: userTypeFilter },
-        pollInterval: 30000,
         fetchPolicy: 'network-only',
       });
     } else {
@@ -696,7 +692,6 @@ export class AdminDataService {
           first: takeItems,
           orderBy: orderFields,
         },
-        pollInterval: 30000,
         fetchPolicy: 'network-only',
       });
     } else {
@@ -720,7 +715,6 @@ export class AdminDataService {
           first: takeItems,
           orderBy: orderFields,
         },
-        pollInterval: 30000,
         fetchPolicy: 'network-only',
       });
     } else {

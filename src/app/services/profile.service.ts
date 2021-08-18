@@ -321,7 +321,6 @@ export class ProfileDataService {
           first: takeItems,
           orderBy: orderFields,
         },
-        pollInterval: 30000,
         fetchPolicy: 'network-only',
       });
     } else {
@@ -378,7 +377,6 @@ export class ProfileDataService {
           first: takeItems,
           orderBy: orderFields,
         },
-        pollInterval: 30000,
         fetchPolicy: 'network-only',
       });
     } else {
@@ -402,7 +400,6 @@ export class ProfileDataService {
           first: takeItems,
           orderBy: orderFields,
         },
-        pollInterval: 30000,
         fetchPolicy: 'network-only',
       });
     } else {
