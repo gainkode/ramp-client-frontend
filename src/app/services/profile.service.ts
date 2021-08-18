@@ -381,7 +381,6 @@ export class ProfileDataService {
         },
       });
     } else {
-      console.log('not implemented');
       return this.apollo.mutate({
         mutation: UPDATE_MY_CONTACT,
         variables: {
@@ -394,7 +393,6 @@ export class ProfileDataService {
   }
 
   deleteContact(id: string): Observable<any> {
-    console.log(id);
     return this.apollo.mutate({
       mutation: DELETE_MY_CONTACT,
       variables: {

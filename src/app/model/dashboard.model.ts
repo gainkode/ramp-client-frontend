@@ -23,19 +23,6 @@ export class DashboardTransactionVolumeModel {
     }
 };
 
-export class DashboardTransactionStatusModel {
-    status = '';
-    volume = new DashboardTransactionVolumeModel(undefined);
-
-    constructor(data: TransactionStatsByStatus | undefined) {
-        const transactionStatus = TransactionStatusList.find((x) => x.id === data?.status);
-        if (transactionStatus) {
-            this.status = transactionStatus.name;
-        }
-        this.volume = new DashboardTransactionVolumeModel(data?.volume as TransactionStatsVolume | undefined);
-    }
-};
-
 export class DashboardTransactionItemModel {
     title = '';
     ratio = 0;
@@ -63,16 +50,12 @@ export class DashboardTransactionItemModel {
 export class DashboardTransactionModel {
     total?: DashboardTransactionItemModel;
     byInstruments: DashboardTransactionItemModel[] = [];
-    byStatus: DashboardTransactionStatusModel[] = [];
 
     constructor(data: DepositOrWithdrawalStats | undefined) {
         if (data) {
             this.total = new DashboardTransactionItemModel(data);
             data.byInstruments?.forEach(x => {
                 this.byInstruments.push(new DashboardTransactionItemModel(x));
-            });
-            data.byStatus?.forEach(x => {
-                this.byStatus.push(new DashboardTransactionStatusModel(x));
             });
         }
     }

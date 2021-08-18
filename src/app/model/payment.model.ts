@@ -141,7 +141,7 @@ export const PaymentInstrumentList: Array<PaymentInstrumentView> = [
     { id: PaymentInstrument.Bitstamp, name: 'Bitstamp' },
     { id: PaymentInstrument.CreditCard, name: 'Credit card' },
     { id: PaymentInstrument.Received, name: 'Received' },
-    { id: PaymentInstrument.Send, name: 'Send' },
+    { id: PaymentInstrument.Send, name: 'Sent' },
     { id: PaymentInstrument.WireTransfer, name: 'Wire transfer' }
 ];
 

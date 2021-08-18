@@ -74,7 +74,6 @@ export class ProfileContactEditorComponent implements OnInit {
 
     onSubmit(): void {
         if (this.contactForm.valid) {
-            console.log('submit');
             this.save.emit(this.setContactData());
         } else {
             this.errorMessage = 'Input data is not completely valid. Please, check all fields are valid.';

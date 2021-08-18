@@ -94,7 +94,6 @@ export class LevelEditorComponent implements OnInit {
     }
 
     onSubmit(): void {
-        console.log('level submit');
         if (this.levelForm.valid) {
             this.save.emit(this.setLevelData());
         } else {
