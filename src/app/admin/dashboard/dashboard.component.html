@@ -19,23 +19,14 @@
     </div>
     <div style="display: flex;">
         <div style="width: 70%;margin: 0.25em;">
-            <div style="margin: 0.25em; background-color: lightslategrey;">
-                Total volume in EUR
-            </div>
-            <div style="margin: 0.25em; background-color: lightseagreen;">
-                Deposits
-            </div>
-            <div style="margin: 0.25em; background-color: mediumaquamarine;">
-                Transfers
-            </div>
-            <div style="margin: 0.25em; background-color: yellow;">
-                Withdrawals
-            </div>
+            <app-dashboard-total></app-dashboard-total>
+            <app-dashboard-deposits></app-dashboard-deposits>
+            <app-dashboard-transfers></app-dashboard-transfers>
+            <app-dashboard-withdrawals></app-dashboard-withdrawals>
+            <app-dashboard-exchanges></app-dashboard-exchanges>
         </div>
         <div style="width: 30%;margin: 0.25em;">
-            <div style="margin: 0.25em; background-color: darkkhaki;">
-                Fees collected
-            </div>
+            <app-dashboard-fees></app-dashboard-fees>
             <app-dashboard-balances [balances]="stats.balances"></app-dashboard-balances>
         </div>
     </div>

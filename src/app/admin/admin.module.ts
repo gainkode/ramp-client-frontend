@@ -38,6 +38,12 @@ import { CustomerInfoComponent } from './customers/customer-info.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { DefaultComponent } from './default.component';
 import { DashboardBalancesComponent } from './dashboard/dashboard-balances.component';
+import { DashboardDepositsComponent } from './dashboard/dashboard-deposits.component';
+import { DashboardExchangesComponent } from './dashboard/dashboard-exchanges.component';
+import { DashboardFeesComponent } from './dashboard/dashboard-fees.component';
+import { DashboardTotalComponent } from './dashboard/dashboard-total.component';
+import { DashboardTransfersComponent } from './dashboard/dashboard-transfers.component';
+import { DashboardWithdrawalsComponent } from './dashboard/dashboard-withdrawals.component';
 
 const routing = RouterModule.forChild([
     {
@@ -92,7 +98,8 @@ export class MaterialModule { }
     declarations: [
         AdminComponent,
         DefaultComponent,  // to be removed
-        DashboardComponent, DashboardBalancesComponent,
+        DashboardComponent, DashboardBalancesComponent, DashboardDepositsComponent, DashboardExchangesComponent,
+        DashboardFeesComponent, DashboardTotalComponent, DashboardTransfersComponent, DashboardWithdrawalsComponent,
         TransactionsComponent, TransactionDetailsComponent,
         CustomersComponent, CustomerDetailsComponent, CustomerInfoComponent,
         FeesComponent, FeeEditorComponent,
