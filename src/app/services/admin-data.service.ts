@@ -38,7 +38,6 @@ const GET_DASHBOARD_STATS = gql`
           declined {count, volume},
           abounded {count, volume},
           inProcess {count, volume},
-          byStatus {status, volume {count, volume}},
           fee {count, volume}
         }
       }
@@ -56,20 +55,17 @@ const GET_DASHBOARD_STATS = gql`
           declined {count, volume},
           abounded {count, volume},
           inProcess {count, volume},
-          byStatus {status, volume {count, volume}},
           fee {count, volume}
         }
       }
       transfers {
         ratio,
-        byStatus {status, volume {count, volume}},
         toMerchant {status, volume {count, volume}},
         toCustomer {status, volume {count, volume}},
         fee {count, volume}
       }
       exchanges {
         ratio,
-        byStatus {status, volume {count, volume}},
         toMerchant {status, volume {count, volume}},
         toCustomer {status, volume {count, volume}},
         fee {count, volume}
