@@ -36,7 +36,6 @@ import { CustomerDetailsComponent } from './customers/customer-details.component
 import { TransactionDetailsComponent } from './transactions/transaction-details.component';
 import { CustomerInfoComponent } from './customers/customer-info.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { AdminSectionGuard } from './admin-section.guard';
 import { DefaultComponent } from './default.component';
 import { DashboardBalancesComponent } from './dashboard/dashboard-balances.component';
 
@@ -44,7 +43,6 @@ const routing = RouterModule.forChild([
     {
         path: 'main',
         component: AdminComponent,
-        canActivateChild: [AdminSectionGuard],
         children: [
             { path: 'default', component: DefaultComponent, canActivate: [AdminGuard] },
             { path: 'dashboard', component: DashboardComponent, canActivate: [AdminGuard] },
@@ -52,7 +50,8 @@ const routing = RouterModule.forChild([
             { path: 'customers', component: CustomersComponent, canActivate: [AdminGuard] },
             { path: 'fees', component: FeesComponent, canActivate: [AdminGuard] },
             { path: 'costs', component: CostsComponent, canActivate: [AdminGuard] },
-            { path: 'identification', component: IdentificationComponent, canActivate: [AdminGuard] }
+            { path: 'identification', component: IdentificationComponent, canActivate: [AdminGuard] },
+            { path: '**', redirectTo: 'dashboard' }
         ],
         canActivate: [AdminGuard]
     },
@@ -99,7 +98,7 @@ export class MaterialModule { }
         FeesComponent, FeeEditorComponent,
         CostsComponent, CostEditorComponent,
         IdentificationComponent, IdTableComponent, LevelTableComponent, KycEditorComponent, LevelEditorComponent],
-    providers: [AdminGuard, AdminSectionGuard],
+    providers: [AdminGuard],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AdminModule { }

@@ -17,7 +17,7 @@ export class PersonalComponent implements OnInit {
 
     constructor(private auth: AuthService, private notification: NotificationService, private router: Router) {
         this.getSectionName();
-        
+
         this.router.events.subscribe(
             (event: NavigationEvent): void => {
                 if (event instanceof NavigationEnd) {
@@ -47,9 +47,21 @@ export class PersonalComponent implements OnInit {
         const routeTree = this.router.parseUrl(this.router.url);
         const segments = routeTree.root.children['primary'].segments;
         if (segments.length > 2) {
-            this.selectedMenu = segments[2].path;
-        } else {
-            this.router.navigateByUrl(this.menuItems[0].url);
+            const path1 = segments[0].path;
+            const path2 = segments[1].path;
+            const section = segments[2].path;
+            if (path1 === 'personal' && path2 === 'main') {
+                if (
+                    section === 'home' ||
+                    section === 'myaccount' ||
+                    section === 'mycontacts' ||
+                    section === 'transactions' ||
+                    section === 'exchanger') {
+                    this.selectedMenu = section;
+                } else {
+                    this.router.navigateByUrl(this.menuItems[0].url);
+                }
+            }
         }
     }
 

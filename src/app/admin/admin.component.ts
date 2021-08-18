@@ -35,9 +35,11 @@ export class AdminComponent {
         const routeTree = this.router.parseUrl(this.router.url);
         const segments = routeTree.root.children['primary'].segments;
         if (segments.length > 2) {
-            this.selectedMenu = segments[2].path;
-        } else {
-            this.router.navigateByUrl(this.menuItems[0].url);
+            const path1 = segments[0].path;
+            const path2 = segments[1].path;
+            if (path1 === 'admin' && path2 === 'main') {
+                this.selectedMenu = segments[2].path;
+            }
         }
     }
 

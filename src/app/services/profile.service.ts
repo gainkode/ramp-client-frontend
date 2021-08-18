@@ -100,44 +100,8 @@ const GET_MY_NOTIFICATIONS = gql`
   }
 `;
 
-const GET_ME = gql`
-  query Me {
-    me {
-      userId
-      email
-      type
-      mode
-      merchantIds
-      firstName
-      lastName
-      avatar
-      birthday
-      countryCode2
-      countryCode3
-      phone
-      defaultFiatCurrency
-      termsOfUse
-      created
-      updated
-      is2faEnabled
-      hasEmailAuth
-      changePasswordRequired
-      referralCode
-      kycProvider
-      kycValid
-      kycStatus
-      kycReviewComment
-      kycReviewRejectedType
-      kycReviewRejectedLabels
-      kycStatusUpdateRequired
-      custodyProvider
-      vaultAccountId
-    }
-  }
-`;
-
-const GET_PROFILE_HOME = gql`
-  query Me {
+const GET_PROFILE_ME = gql`
+  query MeHome {
     me {
       userId
       defaultFiatCurrency
@@ -151,14 +115,6 @@ const GET_PROFILE_HOME = gql`
       kycStatusUpdateRequired
       custodyProvider
       vaultAccountId
-    }
-  }
-`;
-
-const GET_PROFILE_ACCOUNT = gql`
-  query Me {
-    me {
-      userId
       email
       type
       mode
@@ -178,20 +134,12 @@ const GET_PROFILE_ACCOUNT = gql`
       buildingName
       buildingNumber
       flatNumber
-      defaultFiatCurrency
       termsOfUse
       created
       updated
       is2faEnabled
       hasEmailAuth
       changePasswordRequired
-      referralCode
-      kycProvider
-      kycValid
-      kycStatus
-      kycReviewComment
-      kycReviewRejectedType
-      kycReviewRejectedLabels
     }
   }
 `;
@@ -328,32 +276,10 @@ export class ProfileDataService {
     }
   }
 
-  getMe(): QueryRef<any, EmptyObject> | null {
+  getProfileData(): QueryRef<any, EmptyObject> | null {
     if (this.apollo.client !== undefined) {
       return this.apollo.watchQuery<any>({
-        query: GET_ME,
-        fetchPolicy: 'network-only',
-      });
-    } else {
-      return null;
-    }
-  }
-
-  getProfileHomeData(): QueryRef<any, EmptyObject> | null {
-    if (this.apollo.client !== undefined) {
-      return this.apollo.watchQuery<any>({
-        query: GET_PROFILE_HOME,
-        fetchPolicy: 'network-only',
-      });
-    } else {
-      return null;
-    }
-  }
-
-  getProfileAccountData(): QueryRef<any, EmptyObject> | null {
-    if (this.apollo.client !== undefined) {
-      return this.apollo.watchQuery<any>({
-        query: GET_PROFILE_ACCOUNT,
+        query: GET_PROFILE_ME,
         fetchPolicy: 'network-only',
       });
     } else {

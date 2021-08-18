@@ -35,7 +35,7 @@ export class PersonalHomeComponent implements OnInit, OnDestroy {
     private loadData(): void {
         this.errorMessage = '';
         this.inProgress = true;
-        const meQuery = this.profile.getProfileHomeData();
+        const meQuery = this.profile.getProfileData();
         if (meQuery === null) {
             this.errorMessage = this.errorHandler.getRejectedCookieMessage();
         } else {
