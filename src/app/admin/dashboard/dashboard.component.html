@@ -1,32 +1,33 @@
-<div style="padding: 0.25em;">
+<div style="padding: 0.5em;">
     <div class="details-editor" *ngIf="errorMessage!==''">
         <div class="form-error-box">
             {{errorMessage}}
         </div>
     </div>
 
-    <div style="margin: 0.75em;">
+    <div style="margin: 0.5em;">
         <h1>
-            Dashboard
+            Transactions
+            <!-- Dashboard -->
         </h1>
         <div *ngIf="inProgress">
             <mat-progress-bar mode="indeterminate"></mat-progress-bar>
         </div>
     </div>
-    <div style="margin: 0.5em;background-color: burlywood;">
+    <div style="margin: 0.5em 0;background-color: burlywood;">
         Filters
         <button (click)="test()">Update</button>
     </div>
-    <div style="display: flex;">
-        <div style="width: 70%;margin: 0.25em;">
-            <app-dashboard-total></app-dashboard-total>
-            <app-dashboard-deposits></app-dashboard-deposits>
+    <div style="display: flex;margin: 0.5em 0;">
+        <div style="width: 70%;margin: 0 0.5em 0 0">
+            <app-dashboard-total [totals]="stats.totals"></app-dashboard-total>
+            <app-dashboard-deposits-withdrawals [transactions]="stats.deposits.details" title="Deposits"></app-dashboard-deposits-withdrawals>
             <app-dashboard-transfers></app-dashboard-transfers>
-            <app-dashboard-withdrawals></app-dashboard-withdrawals>
+            <app-dashboard-deposits-withdrawals [transactions]="stats.withdrawals.details" title="Withdrawals"></app-dashboard-deposits-withdrawals>
             <app-dashboard-exchanges></app-dashboard-exchanges>
         </div>
-        <div style="width: 30%;margin: 0.25em;">
-            <app-dashboard-fees></app-dashboard-fees>
+        <div style="width: 30%;">
+            <app-dashboard-fees [totals]="stats.totals"></app-dashboard-fees>
             <app-dashboard-balances [balances]="stats.balances"></app-dashboard-balances>
         </div>
     </div>

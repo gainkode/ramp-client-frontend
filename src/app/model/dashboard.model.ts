@@ -1,3 +1,4 @@
+import { DecimalPipe } from "@angular/common";
 import { BalanceStats, DashboardStats, DepositOrWithdrawalStats, InstrumentStats, TransactionStatsByStatus, TransactionStatsVolume } from "./generated-models";
 import { PaymentInstrumentList, TransactionStatusList } from "./payment.model";
 
@@ -31,6 +32,31 @@ export class DashboardTransactionItemModel {
     abounded?: DashboardTransactionVolumeModel;
     inProcess?: DashboardTransactionVolumeModel;
     fee?: DashboardTransactionVolumeModel;
+    numberPipe: DecimalPipe = new DecimalPipe('en-US');
+
+    get ratioValue(): string {
+        return `${this.ratio}%`;
+    }
+
+    get approvedValue(): string {
+        return (this.approved) ? `(${this.approved.count}) ${this.numberPipe.transform(this.approved.volume, '1.0-3')}` : '';
+    }
+
+    get declinedValue(): string {
+        return (this.declined) ? `(${this.declined.count}) ${this.numberPipe.transform(this.declined.volume, '1.0-3')}` : '';
+    }
+
+    get aboundedValue(): string {
+        return (this.abounded) ? `(${this.abounded.count}) ${this.numberPipe.transform(this.abounded.volume, '1.0-3')}` : '';
+    }
+
+    get inProcessValue(): string {
+        return (this.inProcess) ? `(${this.inProcess.count}) ${this.numberPipe.transform(this.inProcess.volume, '1.0-3')}` : '';
+    }
+
+    get feeValue(): string {
+        return (this.fee) ? `(${this.fee.count}) ${this.numberPipe.transform(this.fee.volume, '1.0-3')}` : '';
+    }
 
     constructor(data: DepositOrWithdrawalStats | InstrumentStats | null) {
         this.approved = new DashboardTransactionVolumeModel(data?.abounded as TransactionStatsVolume | undefined);
@@ -49,22 +75,23 @@ export class DashboardTransactionItemModel {
 
 export class DashboardTransactionModel {
     total?: DashboardTransactionItemModel;
-    byInstruments: DashboardTransactionItemModel[] = [];
+    details: DashboardTransactionItemModel[] = [];
 
     constructor(data: DepositOrWithdrawalStats | undefined) {
         if (data) {
             this.total = new DashboardTransactionItemModel(data);
             data.byInstruments?.forEach(x => {
-                this.byInstruments.push(new DashboardTransactionItemModel(x));
+                this.details.push(new DashboardTransactionItemModel(x));
             });
         }
     }
 }
 
 export class DashboardModel {
+    totals: DashboardTransactionItemModel[] = [];
     balances: DashboardBalanceModel[] = [];
-    deposits?: DashboardTransactionModel;
-    withdrawals?: DashboardTransactionModel;
+    deposits = new DashboardTransactionModel(undefined);
+    withdrawals = new DashboardTransactionModel(undefined);
 
     constructor(data: DashboardStats | null) {
         if (data !== null) {
@@ -78,7 +105,14 @@ export class DashboardModel {
             this.deposits = new DashboardTransactionModel(data.deposits as DepositOrWithdrawalStats | undefined);
             this.withdrawals = new DashboardTransactionModel(data.withdrawals as DepositOrWithdrawalStats | undefined);
 
-
+            if (this.deposits.total) {
+                this.deposits.total.title = 'Deposits';
+                this.totals.push(this.deposits.total);
+            }
+            if (this.withdrawals.total) {
+                this.withdrawals.total.title = 'Withdrawals';
+                this.totals.push(this.withdrawals.total);
+            }
 
             console.log(this);
         }

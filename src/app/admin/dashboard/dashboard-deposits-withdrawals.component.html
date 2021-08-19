@@ -1,18 +1,18 @@
 <div class="dashboard-block">
-    <h3>Total volume in EUR</h3>
+    <h3>{{title}}</h3>
 
-    <table mat-table class="data-table" [dataSource]="totals">
+    <table mat-table class="data-table" [dataSource]="transactions">
         <!-- Title Column -->
         <ng-container matColumnDef="title">
-            <th mat-header-cell *matHeaderCellDef class="mat-column-totals-table mat-column-totals-table-title">
-                Transaction type
+            <th mat-header-cell *matHeaderCellDef class="mat-column-transactions-table mat-column-transactions-table-title">
+                Instrument
             </th>
             <td mat-cell *matCellDef="let element"> {{element.title}} </td>
         </ng-container>
 
         <!-- Approved Column -->
         <ng-container matColumnDef="approved">
-            <th mat-header-cell *matHeaderCellDef class="mat-column-totals-table mat-column-totals-table-approved">
+            <th mat-header-cell *matHeaderCellDef class="mat-column-transactions-table mat-column-transactions-table-approved">
                 Approved
             </th>
             <td mat-cell *matCellDef="let element"> {{element.approvedValue}} </td>
@@ -20,7 +20,7 @@
 
         <!-- Declined Column -->
         <ng-container matColumnDef="declined">
-            <th mat-header-cell *matHeaderCellDef class="mat-column-totals-table mat-column-totals-table-declined">
+            <th mat-header-cell *matHeaderCellDef class="mat-column-transactions-table mat-column-transactions-table-declined">
                 Declined
             </th>
             <td mat-cell *matCellDef="let element"> {{element.declinedValue}} </td>
@@ -28,7 +28,7 @@
 
         <!-- Abounded Column -->
         <ng-container matColumnDef="abounded">
-            <th mat-header-cell *matHeaderCellDef class="mat-column-totals-table mat-column-totals-table-abounded">
+            <th mat-header-cell *matHeaderCellDef class="mat-column-transactions-table mat-column-transactions-table-abounded">
                 Abounded
             </th>
             <td mat-cell *matCellDef="let element"> {{element.aboundedValue}} </td>
@@ -36,7 +36,7 @@
 
         <!-- In Process Column -->
         <ng-container matColumnDef="inProcess">
-            <th mat-header-cell *matHeaderCellDef class="mat-column-totals-table mat-column-totals-table-inProcess">
+            <th mat-header-cell *matHeaderCellDef class="mat-column-transactions-table mat-column-transactions-table-inProcess">
                 Processing
             </th>
             <td mat-cell *matCellDef="let element"> {{element.inProcessValue}} </td>
@@ -44,10 +44,18 @@
 
         <!-- Ratio Column -->
         <ng-container matColumnDef="ratio">
-            <th mat-header-cell *matHeaderCellDef class="mat-column-totals-table mat-column-totals-table-ratio">
+            <th mat-header-cell *matHeaderCellDef class="mat-column-transactions-table mat-column-transactions-table-ratio">
                 Ratio
             </th>
             <td mat-cell *matCellDef="let element"> {{element.ratioValue}} </td>
+        </ng-container>
+
+        <!-- Fee Column -->
+        <ng-container matColumnDef="fee">
+            <th mat-header-cell *matHeaderCellDef class="mat-column-transactions-table mat-column-transactions-table-fee">
+                Fee
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.feeValue}} </td>
         </ng-container>
         
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

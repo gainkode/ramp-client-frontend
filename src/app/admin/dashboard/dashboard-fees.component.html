@@ -1,3 +1,31 @@
-<div style="color: lightcyan;background-color:rgb(47, 231, 255);height: 45px;padding: 15px;margin: auto;text-align: center;">
-    <h2>Fees colected</h2>
+<div class="dashboard-block">
+    <h3>Fees colected in EUR</h3>
+
+    <table mat-table class="data-table" [dataSource]="totals">
+        <!-- Title Column -->
+        <ng-container matColumnDef="title">
+            <th mat-header-cell *matHeaderCellDef class="mat-column-fees-table mat-column-fees-table-title">
+                From
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.title}} </td>
+        </ng-container>
+
+        <!-- Approved Column -->
+        <ng-container matColumnDef="fee">
+            <th mat-header-cell *matHeaderCellDef class="mat-column-fees-table mat-column-fees-table-value">
+                Value
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.feeValue}} </td>
+        </ng-container>
+
+        <!-- Declined Column -->
+        <ng-container matColumnDef="show">
+            <th mat-header-cell *matHeaderCellDef class="mat-column-fees-table mat-column-fees-table-show">
+            </th>
+            <td mat-cell *matCellDef="let element"> ... </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
 </div>

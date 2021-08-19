@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { AdminDataService } from 'src/app/services/admin-data.service';
 import { ErrorService } from '../../services/error.service';
 import { AuthService } from '../../services/auth.service';
-import { DashboardStats } from 'src/app/model/generated-models';
 import { Subscription } from 'rxjs';
 import { DashboardModel } from 'src/app/model/dashboard.model';
 
