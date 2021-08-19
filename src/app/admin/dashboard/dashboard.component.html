@@ -7,17 +7,13 @@
 
     <div style="margin: 0.5em;">
         <h1>
-            Transactions
-            <!-- Dashboard -->
+            Dashboard
         </h1>
         <div *ngIf="inProgress">
             <mat-progress-bar mode="indeterminate"></mat-progress-bar>
         </div>
     </div>
-    <div style="margin: 0.5em 0;background-color: burlywood;">
-        Filters
-        <button (click)="test()">Update</button>
-    </div>
+    <app-dashboard-filter (update)="loadDashboard($event)"></app-dashboard-filter>
     <div style="display: flex;margin: 0.5em 0;">
         <div style="width: 70%;margin: 0 0.5em 0 0">
             <app-dashboard-total [totals]="stats.totals"></app-dashboard-total>

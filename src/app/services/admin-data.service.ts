@@ -3,6 +3,7 @@ import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { EmptyObject } from 'apollo-angular/types';
 import { Observable } from 'rxjs';
 import { CostScheme } from '../model/cost-scheme.model';
+import { DashboardFilter } from '../model/dashboard.model';
 import { FeeScheme } from '../model/fee-scheme.model';
 import { CountryCodeType, TransactionSource, UserType } from '../model/generated-models';
 import { KycLevel, KycScheme } from '../model/identification.model';
@@ -603,15 +604,15 @@ const DELETE_KYC_LEVEL_SETTINGS = gql`
 export class AdminDataService {
   constructor(private apollo: Apollo) { }
 
-  getDashboardStats(): QueryRef<any, EmptyObject> | null {
+  getDashboardStats(filter: DashboardFilter): QueryRef<any, EmptyObject> | null {
     if (this.apollo.client !== undefined) {
       const vars = {
-        userIdOnly: [],
-        affiliateIdOnly: [],
-        sourcesOnly: [],
-        countriesOnly: [],
+        userIdOnly: filter.userIdOnly,
+        affiliateIdOnly: filter.affiliateIdOnly,
+        sourcesOnly: filter.sourcesOnly,
+        countriesOnly: filter.countriesOnly,
         countryCodeType: CountryCodeType.Code3,
-        accountTypesOnly: [UserType.Merchant, UserType.Personal]
+        accountTypesOnly: filter.accountTypesOnly
       };
       return this.apollo.watchQuery<any>({
         query: GET_DASHBOARD_STATS,

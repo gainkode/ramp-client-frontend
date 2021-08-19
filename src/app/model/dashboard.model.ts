@@ -1,6 +1,14 @@
 import { DecimalPipe } from "@angular/common";
-import { BalanceStats, DashboardStats, DepositOrWithdrawalStats, InstrumentStats, TransactionStatsByStatus, TransactionStatsVolume } from "./generated-models";
+import { BalanceStats, DashboardStats, DepositOrWithdrawalStats, InstrumentStats, TransactionStatsByStatus, TransactionStatsVolume, UserType } from "./generated-models";
 import { PaymentInstrumentList, TransactionStatusList } from "./payment.model";
+
+export class DashboardFilter {
+    userIdOnly = [];
+    affiliateIdOnly = [];
+    sourcesOnly = [];
+    countriesOnly = [];  // code3
+    accountTypesOnly: UserType[] = [];
+}
 
 export class DashboardBalanceModel {
     currency = '';
@@ -25,6 +33,7 @@ export class DashboardTransactionVolumeModel {
 };
 
 export class DashboardTransactionItemModel {
+    isNull = true;
     title = '';
     ratio = 0;
     approved?: DashboardTransactionVolumeModel;
@@ -59,6 +68,7 @@ export class DashboardTransactionItemModel {
     }
 
     constructor(data: DepositOrWithdrawalStats | InstrumentStats | null) {
+        this.isNull = (data === null);
         this.approved = new DashboardTransactionVolumeModel(data?.abounded as TransactionStatsVolume | undefined);
         this.declined = new DashboardTransactionVolumeModel(data?.declined as TransactionStatsVolume | undefined);
         this.abounded = new DashboardTransactionVolumeModel(data?.abounded as TransactionStatsVolume | undefined);
@@ -105,13 +115,19 @@ export class DashboardModel {
             this.deposits = new DashboardTransactionModel(data.deposits as DepositOrWithdrawalStats | undefined);
             this.withdrawals = new DashboardTransactionModel(data.withdrawals as DepositOrWithdrawalStats | undefined);
 
+            data.exchanges?.toCustomer
+
             if (this.deposits.total) {
                 this.deposits.total.title = 'Deposits';
-                this.totals.push(this.deposits.total);
+                if (!this.deposits.total.isNull) {
+                    this.totals.push(this.deposits.total);
+                }
             }
             if (this.withdrawals.total) {
                 this.withdrawals.total.title = 'Withdrawals';
-                this.totals.push(this.withdrawals.total);
+                if (!this.withdrawals.total.isNull) {
+                    this.totals.push(this.withdrawals.total);
+                }
             }
 
             console.log(this);

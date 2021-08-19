@@ -4,10 +4,11 @@ import { AdminDataService } from 'src/app/services/admin-data.service';
 import { ErrorService } from '../../services/error.service';
 import { AuthService } from '../../services/auth.service';
 import { Subscription } from 'rxjs';
-import { DashboardModel } from 'src/app/model/dashboard.model';
+import { DashboardFilter, DashboardModel } from 'src/app/model/dashboard.model';
 
 @Component({
-    templateUrl: 'dashboard.component.html'
+    templateUrl: 'dashboard.component.html',
+    styleUrls: ['../admin.scss', 'dashboard.scss']
 })
 export class DashboardComponent implements OnInit, OnDestroy {
     inProgress = false;
@@ -24,7 +25,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        const statsData = this.adminService.getDashboardStats();
+        this.loadDashboard(new DashboardFilter());
+    }
+
+    loadDashboard(filter: DashboardFilter): void {
+        const statsData = this.adminService.getDashboardStats(filter);
         if (statsData === null) {
             this.errorMessage = this.errorHandler.getRejectedCookieMessage();
         } else {
@@ -48,16 +53,5 @@ export class DashboardComponent implements OnInit, OnDestroy {
         if (s !== undefined) {
             (this.pStatsSubscription as Subscription).unsubscribe();
         }
-    }
-
-    refresh(): void {
-        const statsData = this.adminService.getDashboardStats();
-        if (statsData !== null) {
-            statsData.refetch();
-        }
-    }
-
-    test() {
-        this.refresh();
     }
 }

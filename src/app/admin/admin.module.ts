@@ -43,6 +43,7 @@ import { DashboardFeesComponent } from './dashboard/dashboard-fees.component';
 import { DashboardTotalComponent } from './dashboard/dashboard-total.component';
 import { DashboardTransfersComponent } from './dashboard/dashboard-transfers.component';
 import { DashboardDepositsWithdrawalsComponent } from './dashboard/dashboard-deposits-withdrawals.component';
+import { DashboardFilterComponent } from './dashboard/dashboard-filter.component';
 
 const routing = RouterModule.forChild([
     {
@@ -98,7 +99,7 @@ export class MaterialModule { }
         AdminComponent,
         DefaultComponent,  // to be removed
         DashboardComponent, DashboardBalancesComponent, DashboardDepositsWithdrawalsComponent, DashboardExchangesComponent,
-        DashboardFeesComponent, DashboardTotalComponent, DashboardTransfersComponent,
+        DashboardFeesComponent, DashboardTotalComponent, DashboardTransfersComponent, DashboardFilterComponent,
         TransactionsComponent, TransactionDetailsComponent,
         CustomersComponent, CustomerDetailsComponent, CustomerInfoComponent,
         FeesComponent, FeeEditorComponent,
