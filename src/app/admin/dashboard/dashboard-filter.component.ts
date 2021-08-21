@@ -21,16 +21,17 @@ export class DashboardFilterComponent implements OnInit {
     sources = TransactionSourceList;
     userTypes = UserTypeList;
     countries: ICountryCode[] = CountryCodes;
+    selectedCountries: ICountryCode[] = [];
     separatorKeysCodes: number[] = [ENTER, COMMA];
     filteredCountries: Observable<ICountryCode[]> | undefined;
 
     filterForm = this.formBuilder.group({
-        accountType: [],
+        accountType: [[]],
         users: [[]],
         user: [''],
         countries: [[]],
         country: [''],
-        source: []
+        source: [[]]
     });
 
     constructor(private formBuilder: FormBuilder) { }
@@ -49,16 +50,8 @@ export class DashboardFilterComponent implements OnInit {
         return this.filterForm.get('user');
     }
 
-    get usersField(): AbstractControl | null {
-        return this.filterForm.get('users');
-    }
-
     get countryField(): AbstractControl | null {
         return this.filterForm.get('country');
-    }
-
-    get countriesField(): AbstractControl | null {
-        return this.filterForm.get('countries');
     }
 
     get sourceField(): AbstractControl | null {
@@ -70,39 +63,27 @@ export class DashboardFilterComponent implements OnInit {
     }
 
     addCountry(event: MatChipInputEvent): void {
-        const input = event.input;
-        const value = event.value;
-        // Add new country value
-        if ((value || '').trim()) {
-            const values = this.countriesField?.value;
-            values.push(value.trim());
-            this.countriesField?.setValue(values);
-        }
-        // Reset the input value
-        if (input) {
-            input.value = '';
-        }
         this.countryField?.setValue(null);
     }
 
-    removeCountry(val: string): void {
-        const values = this.countriesField?.value;
-        const index = values.indexOf(val);
+    removeCountry(val: ICountryCode, index: number): void {
         if (index >= 0) {
-            values.splice(index, 1);
-            this.countriesField?.setValue(values);
+            this.selectedCountries.splice(index, 1);
         }
     }
 
     clearCountries(): void {
-        this.countriesField?.setValue([]);
+        this.selectedCountries = [];
     }
 
     countrySelected(event: MatAutocompleteSelectedEvent): void {
-        const values = this.countriesField?.value;
-        if (!values.includes(event.option.viewValue)) {
-            values.push(event.option.viewValue);
-            this.countriesField?.setValue(values);
+        console.log(event.option.viewValue, event.option.id);
+        const item = this.selectedCountries.find(x => x.code3 === event.option.id);
+        if (!item) {
+            const newCountry = this.countries.find(x => x.code3 === event.option.id);
+            if (newCountry) {
+                this.selectedCountries.push(newCountry);
+            }
         }
         this.countryInput.nativeElement.value = '';
         this.countryField?.setValue(null);
@@ -119,31 +100,26 @@ export class DashboardFilterComponent implements OnInit {
     }
 
     resetFilter(): void {
-        this.accountTypeField?.setValue(null);
+        this.accountTypeField?.setValue([]);
         this.countryField?.setValue(null);
-        this.countriesField?.setValue([]);
-        this.sourceField?.setValue(null);
+        this.selectedCountries = [];
+        this.sourceField?.setValue([]);
         this.update.emit(new DashboardFilter());
     }
 
     onSubmit(): void {
         const filter = new DashboardFilter();
         // account types
-        filter.accountTypesOnly = this.filterForm.get('accountType')?.value;
+        filter.accountTypesOnly = this.accountTypeField?.value;
         // transaction sources
-        filter.sourcesOnly = this.filterForm.get('source')?.value;
+        filter.sourcesOnly = this.sourceField?.value;
         // countries
-        const countryCodes: string[] = [];
-        (this.countriesField?.value as string[]).forEach(x => {
-            const c = getCountry(x);
-            if (c !== null) {
-                console.log(c);
-                countryCodes.push(c.code3);
-            }
+        filter.countriesOnly = [];
+        this.selectedCountries.forEach(c => {
+            filter.countriesOnly.push(c.code3);
         });
-        filter.countriesOnly = countryCodes;
 
-        //console.log(filter);
+        console.log(filter);
 
         this.update.emit(filter);
     }
