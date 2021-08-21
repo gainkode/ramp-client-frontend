@@ -1,5 +1,5 @@
 import { DecimalPipe } from "@angular/common";
-import { BalanceStats, DashboardStats, DepositOrWithdrawalStats, ExchangeStats, InstrumentStats, TransactionStatsByStatus, TransactionStatsVolume, TransferStats, UserType } from "./generated-models";
+import { BalanceStats, DashboardStats, DepositOrWithdrawalStats, ExchangeStats, InstrumentStats, TransactionSource, TransactionStatsByStatus, TransactionStatsVolume, TransferStats, UserType } from "./generated-models";
 import { PaymentInstrumentList } from "./payment.model";
 
 const isDepositOrWithdrawalStats = (variableToCheck: any): variableToCheck is DepositOrWithdrawalStats =>
@@ -17,8 +17,8 @@ const isInstrumentStats = (variableToCheck: any): variableToCheck is InstrumentS
 export class DashboardFilter {
     userIdOnly = [];
     affiliateIdOnly = [];
-    sourcesOnly = [];
-    countriesOnly = [];  // code3
+    sourcesOnly: TransactionSource[] = [];
+    countriesOnly: string[] = [];  // code3
     accountTypesOnly: UserType[] = [];
 }
 
