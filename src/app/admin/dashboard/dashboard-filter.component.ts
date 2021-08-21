@@ -26,6 +26,8 @@ export class DashboardFilterComponent implements OnInit {
 
     filterForm = this.formBuilder.group({
         accountType: [],
+        users: [[]],
+        user: [''],
         countries: [[]],
         country: [''],
         source: []
@@ -41,6 +43,14 @@ export class DashboardFilterComponent implements OnInit {
 
     get accountTypeField(): AbstractControl | null {
         return this.filterForm.get('accountType');
+    }
+
+    get userField(): AbstractControl | null {
+        return this.filterForm.get('user');
+    }
+
+    get usersField(): AbstractControl | null {
+        return this.filterForm.get('users');
     }
 
     get countryField(): AbstractControl | null {
@@ -113,6 +123,7 @@ export class DashboardFilterComponent implements OnInit {
         this.countryField?.setValue(null);
         this.countriesField?.setValue([]);
         this.sourceField?.setValue(null);
+        this.update.emit(new DashboardFilter());
     }
 
     onSubmit(): void {
