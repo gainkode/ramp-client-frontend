@@ -3,7 +3,6 @@ import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { Observable } from 'rxjs';
 import { EmptyObject } from 'apollo-angular/types';
 import { TransactionSource } from '../model/generated-models';
-import { exception } from 'node:console';
 
 const GET_MY_TRANSACTIONS = gql`
   query MyTransactions(

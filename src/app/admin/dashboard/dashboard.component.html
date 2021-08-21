@@ -17,10 +17,18 @@
     <div style="display: flex;margin: 0.5em 0;">
         <div style="width: 70%;margin: 0 0.5em 0 0">
             <app-dashboard-total [totals]="stats.totals"></app-dashboard-total>
-            <app-dashboard-deposits-withdrawals [transactions]="stats.deposits.details" title="Deposits"></app-dashboard-deposits-withdrawals>
-            <app-dashboard-transfers></app-dashboard-transfers>
-            <app-dashboard-deposits-withdrawals [transactions]="stats.withdrawals.details" title="Withdrawals"></app-dashboard-deposits-withdrawals>
-            <app-dashboard-exchanges></app-dashboard-exchanges>
+            <app-dashboard-transactions *ngIf="!stats.deposits.isNull" [transactions]="stats.deposits.details"
+                title="Deposits">
+            </app-dashboard-transactions>
+            <app-dashboard-transactions *ngIf="!stats.transfers.isNull" [transactions]="stats.transfers.details"
+                title="Transfers">
+            </app-dashboard-transactions>
+            <app-dashboard-transactions *ngIf="!stats.withdrawals.isNull" [transactions]="stats.withdrawals.details"
+                title="Withdrawals">
+            </app-dashboard-transactions>
+            <app-dashboard-transactions *ngIf="!stats.exchanges.isNull" [transactions]="stats.exchanges.details"
+                title="Exchanges">
+            </app-dashboard-transactions>
         </div>
         <div style="width: 30%;">
             <app-dashboard-fees [totals]="stats.totals"></app-dashboard-fees>

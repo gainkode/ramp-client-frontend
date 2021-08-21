@@ -1,3 +1,43 @@
 <div class="dashboard-filter-block">
-    <button (click)="test()">Update</button>
+    <h3>Filters</h3>
+
+
+    <form [formGroup]="filterForm" (ngSubmit)="onSubmit()">
+        <div class="dashboard-filter-field">
+            <div class="dashboard-filter-item">
+                <!-- Account type filter -->
+                <mat-form-field class="form-element">
+                    <mat-label>Account type</mat-label>
+                    <mat-select formControlName="accountType" multiple>
+                        <mat-option *ngFor="let item of userTypes" [value]="item.id">
+                            {{item.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="dashboard-filter-item">User filter</div>
+            <div class="dashboard-filter-item">Affiliate filter</div>
+            <div class="dashboard-filter-item">Country filter</div>
+            <div class="dashboard-filter-item">
+                <!-- Source type filter -->
+                <mat-form-field class="form-element">
+                    <mat-label>Source</mat-label>
+                    <mat-select formControlName="source" multiple>
+                        <mat-option *ngFor="let item of sources" [value]="item.id">
+                            {{item.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <button class="main-button main-button-accent" type="submit">
+            APPLY
+        </button>
+    </form>
+
+
+
+
+
 </div>

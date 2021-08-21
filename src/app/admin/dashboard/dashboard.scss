@@ -6,6 +6,16 @@
     margin: 0.5em;
 }
 
+.dashboard-filter-field {
+    display: flex;
+}
+
+.dashboard-filter-item {
+    width: 20%;
+    margin: 0 0.2em 0 0;
+    background-color: #a8c2e9;
+}
+
 .mat-column-balances-table {
     word-wrap: break-word;
     white-space: unset;

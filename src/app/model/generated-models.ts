@@ -1452,18 +1452,26 @@ export type InstrumentStats = {
 export type TransferStats = {
   __typename?: 'TransferStats';
   ratio?: Maybe<Scalars['Float']>;
+  approved?: Maybe<TransactionStatsVolume>;
+  declined?: Maybe<TransactionStatsVolume>;
+  abounded?: Maybe<TransactionStatsVolume>;
+  inProcess?: Maybe<TransactionStatsVolume>;
   byStatus?: Maybe<Array<TransactionStatsByStatus>>;
-  toMerchant?: Maybe<Array<Maybe<Array<TransactionStatsByStatus>>>>;
-  toCustomer?: Maybe<Array<Maybe<Array<TransactionStatsByStatus>>>>;
+  toMerchant?: Maybe<Array<TransactionStatsByStatus>>;
+  toCustomer?: Maybe<Array<TransactionStatsByStatus>>;
   fee?: Maybe<TransactionStatsVolume>;
 };
 
 export type ExchangeStats = {
   __typename?: 'ExchangeStats';
   ratio?: Maybe<Scalars['Int']>;
+  approved?: Maybe<TransactionStatsVolume>;
+  declined?: Maybe<TransactionStatsVolume>;
+  abounded?: Maybe<TransactionStatsVolume>;
+  inProcess?: Maybe<TransactionStatsVolume>;
   byStatus?: Maybe<Array<TransactionStatsByStatus>>;
-  toMerchant?: Maybe<Array<Maybe<Array<TransactionStatsByStatus>>>>;
-  toCustomer?: Maybe<Array<Maybe<Array<TransactionStatsByStatus>>>>;
+  toMerchant?: Maybe<Array<TransactionStatsByStatus>>;
+  toCustomer?: Maybe<Array<TransactionStatsByStatus>>;
   fee?: Maybe<TransactionStatsVolume>;
 };
 
