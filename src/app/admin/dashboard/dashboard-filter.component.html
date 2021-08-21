@@ -1,7 +1,5 @@
 <div class="dashboard-filter-block">
     <h3>Filters</h3>
-
-
     <form [formGroup]="filterForm" (ngSubmit)="onSubmit()">
         <div class="dashboard-filter-field">
             <div class="dashboard-filter-item">
@@ -54,13 +52,13 @@
             </div>
         </div>
 
-        <button class="main-button main-button-accent" type="submit">
-            APPLY
-        </button>
+        <div class="dashboard-filter-field">
+            <button class="main-button main-button-accent dashboard-filter-button" type="submit">
+                APPLY
+            </button>
+            <button class="main-button main-button-primary dashboard-filter-button" type="button" (click)="resetFilter()">
+                RESET
+            </button>
+        </div>
     </form>
-
-
-
-
-
 </div>

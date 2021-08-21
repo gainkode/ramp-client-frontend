@@ -39,12 +39,20 @@ export class DashboardFilterComponent implements OnInit {
             map(value => this.filterCountries(value)));
     }
 
+    get accountTypeField(): AbstractControl | null {
+        return this.filterForm.get('accountType');
+    }
+
     get countryField(): AbstractControl | null {
         return this.filterForm.get('country');
     }
 
     get countriesField(): AbstractControl | null {
         return this.filterForm.get('countries');
+    }
+
+    get sourceField(): AbstractControl | null {
+        return this.filterForm.get('source');
     }
 
     getCountryFlag(code: string): string {
@@ -100,7 +108,14 @@ export class DashboardFilterComponent implements OnInit {
         }
     }
 
-    onSubmit() {
+    resetFilter(): void {
+        this.accountTypeField?.setValue(null);
+        this.countryField?.setValue(null);
+        this.countriesField?.setValue([]);
+        this.sourceField?.setValue(null);
+    }
+
+    onSubmit(): void {
         const filter = new DashboardFilter();
         // account types
         filter.accountTypesOnly = this.filterForm.get('accountType')?.value;
