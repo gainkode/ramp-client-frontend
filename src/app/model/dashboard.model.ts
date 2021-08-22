@@ -16,7 +16,7 @@ const isInstrumentStats = (variableToCheck: any): variableToCheck is InstrumentS
 
 export class DashboardFilter {
     userIdOnly: string[] = [];
-    affiliateIdOnly = [];
+    affiliateIdOnly: string[] = [];
     sourcesOnly: TransactionSource[] = [];
     countriesOnly: string[] = [];  // code3
     accountTypesOnly: UserType[] = [];

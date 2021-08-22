@@ -20,6 +20,7 @@ export class DashboardFilterComponent implements OnInit {
     @Output() update = new EventEmitter<DashboardFilter>();
     @ViewChild('countryInput') countryInput!: ElementRef<HTMLInputElement>;
     @ViewChild('userInput') userInput!: ElementRef<HTMLInputElement>;
+    @ViewChild('affiliateInput') affiliateInput!: ElementRef<HTMLInputElement>;
 
     inProgress = false;
     sources = TransactionSourceList;
@@ -27,14 +28,18 @@ export class DashboardFilterComponent implements OnInit {
     countries: ICountryCode[] = CountryCodes;
     selectedCountries: ICountryCode[] = [];
     selectedUsers: User[] = [];
+    selectedAffiliates: string[] = [];
     separatorKeysCodes: number[] = [ENTER, COMMA];
     filteredCountries: Observable<ICountryCode[]> | undefined;
     filteredUsers: Observable<User[]> | undefined;
+    filteredAffiliates: Observable<string[]> | undefined;
 
     filterForm = this.formBuilder.group({
         accountType: [[]],
         users: [[]],
         user: [''],
+        affiliates: [[]],
+        affiliate: [''],
         countries: [[]],
         country: [''],
         source: [[]]
@@ -54,6 +59,13 @@ export class DashboardFilterComponent implements OnInit {
         ).subscribe(val => {
             this.filterUsers(val);
         });
+        this.affiliateField?.valueChanges.pipe(
+            distinctUntilChanged(),
+            debounceTime(1000),
+            filter((value) => !!value)
+        ).subscribe(val => {
+            this.filterAffiliates(val);
+        });
     }
 
     get accountTypeField(): AbstractControl | null {
@@ -62,6 +74,10 @@ export class DashboardFilterComponent implements OnInit {
 
     get userField(): AbstractControl | null {
         return this.filterForm.get('user');
+    }
+
+    get affiliateField(): AbstractControl | null {
+        return this.filterForm.get('affiliate');
     }
 
     get countryField(): AbstractControl | null {
@@ -156,11 +172,61 @@ export class DashboardFilterComponent implements OnInit {
         }
     }
 
+    addAffiliate(event: MatChipInputEvent): void {
+        this.affiliateField?.setValue(null);
+    }
+
+    removeAffiliate(val: string, index: number): void {
+        if (index >= 0) {
+            this.selectedAffiliates.splice(index, 1);
+        }
+    }
+
+    clearAffiliates(): void {
+        this.selectedAffiliates = [];
+    }
+
+    affiliateSelected(event: MatAutocompleteSelectedEvent): void {
+        const item = this.selectedAffiliates.find(x => x === event.option.value);
+        if (!item) {
+            this.selectedAffiliates.push(event.option.value);
+        }
+        this.affiliateInput.nativeElement.value = '';
+        this.affiliateField?.setValue(null);
+    }
+
+    private filterAffiliates(value: string): void {
+        if (value && value !== '') {
+            this.inProgress = true;
+            const userData = this.adminService.getCustomers(value, 0, 1000, 'referralCode', false);
+            if (userData !== null) {
+                userData.valueChanges.subscribe(({ data }) => {
+                    const dataList = data.getUsers as UserListResult;
+                    if (dataList !== null) {
+                        const userCount = dataList?.count as number;
+                        if (userCount > 0) {
+                            this.filteredAffiliates = of(dataList?.list?.map((val) => val.referralCode?.toString()) as string[]);
+                        }
+                    }
+                    this.inProgress = false;
+                }, (error) => {
+                    this.inProgress = false;
+                    this.filteredUsers = of([]);
+                });
+            }
+        } else {
+            this.filteredUsers = of([]);
+        }
+    }
+
     resetFilter(): void {
         this.accountTypeField?.setValue([]);
         this.userInput.nativeElement.value = '';
         this.userField?.setValue(null);
         this.selectedUsers = [];
+        this.affiliateInput.nativeElement.value = '';
+        this.affiliateField?.setValue(null);
+        this.selectedAffiliates = [];
         this.countryInput.nativeElement.value = '';
         this.countryField?.setValue(null);
         this.selectedCountries = [];
@@ -177,6 +243,8 @@ export class DashboardFilterComponent implements OnInit {
         this.selectedUsers.forEach(u => {
             filter.userIdOnly.push(u.userId);
         });
+        // affiliates
+        filter.affiliateIdOnly = this.selectedAffiliates;
         // countries
         filter.countriesOnly = [];
         this.selectedCountries.forEach(c => {

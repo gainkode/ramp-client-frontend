@@ -38,7 +38,25 @@
                 </mat-form-field>
             </div>
             <div class="dashboard-filter-item">
-                Affiliate filter
+                <!-- Affiliate filter -->
+                <mat-form-field class="form-element">
+                    <mat-label>Affiliates</mat-label>
+                    <mat-chip-list #affiliateChipList aria-label="Affiliate selection" formControlName="affiliates">
+                        <mat-chip *ngFor="let a of selectedAffiliates;let i=index;" (removed)="removeAffiliate(a, i)">
+                            {{a}}
+                            <mat-icon matChipRemove matTooltip="Remove affiliate" matTooltipClass="info-tooltip">cancel</mat-icon>
+                        </mat-chip>
+                        <input placeholder="Affiliates" #userInput
+                            formControlName="affiliate" [matAutocomplete]="autoAffiliate" [matChipInputFor]="affiliateChipList"
+                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                            (matChipInputTokenEnd)="addAffiliate($event)">
+                    </mat-chip-list>
+                    <mat-autocomplete #autoAffiliate="matAutocomplete" (optionSelected)="affiliateSelected($event)">
+                        <mat-option *ngFor="let item of filteredAffiliates | async" [value]="item">
+                            <app-dropdown-item itemValue="{{item}}"></app-dropdown-item>
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
             </div>
             <div class="dashboard-filter-item">
                 <!-- Country filter-->
