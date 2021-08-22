@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, ɵɵtrustConstantResourceUrl } from '@angular/core';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { EmptyObject } from 'apollo-angular/types';
 import { Observable } from 'rxjs';
@@ -697,6 +697,7 @@ export class AdminDataService {
   }
 
   getCustomers(
+    userFilter: string,
     pageIndex: number,
     takeItems: number,
     orderField: string,
@@ -704,14 +705,17 @@ export class AdminDataService {
   ): QueryRef<any, EmptyObject> | null {
     if (this.apollo.client !== undefined) {
       const orderFields = [{ orderBy: orderField, desc: orderDesc }];
+      const customerFilter = userFilter === null ? '' : userFilter?.toString();
+      const vars = {
+        filter: customerFilter,
+        skip: pageIndex * takeItems,
+        first: takeItems,
+        orderBy: orderFields,
+      };
+      console.log(vars);
       return this.apollo.watchQuery<any>({
         query: GET_CUSTOMERS,
-        variables: {
-          filter: '',
-          skip: pageIndex * takeItems,
-          first: takeItems,
-          orderBy: orderFields,
-        },
+        variables: vars,
         fetchPolicy: 'network-only',
       });
     } else {

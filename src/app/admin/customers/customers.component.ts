@@ -64,7 +64,7 @@ export class CustomersComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private loadCustomers(): void {
     this.customerCount = 0;
-    const customersData = this.adminService.getCustomers(this.pageIndex, this.pageSize, this.sortedField, this.sortedDesc);
+    const customersData = this.adminService.getCustomers('', this.pageIndex, this.pageSize, this.sortedField, this.sortedDesc);
     if (customersData === null) {
       this.errorMessage = this.errorHandler.getRejectedCookieMessage();
     } else {

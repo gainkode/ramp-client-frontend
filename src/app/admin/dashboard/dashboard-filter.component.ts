@@ -4,10 +4,12 @@ import { AbstractControl, FormBuilder } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { Observable, of } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
-import { CountryCodes, getCountry, ICountryCode } from 'src/app/model/country-code.model';
+import { debounceTime, distinctUntilChanged, filter, map, startWith, switchMap } from 'rxjs/operators';
+import { CountryCodes, ICountryCode } from 'src/app/model/country-code.model';
 import { DashboardFilter } from 'src/app/model/dashboard.model';
+import { User, UserListResult } from 'src/app/model/generated-models';
 import { TransactionSourceList, UserTypeList } from 'src/app/model/payment.model';
+import { AdminDataService } from 'src/app/services/admin-data.service';
 
 @Component({
     selector: 'app-dashboard-filter',
@@ -17,13 +19,16 @@ import { TransactionSourceList, UserTypeList } from 'src/app/model/payment.model
 export class DashboardFilterComponent implements OnInit {
     @Output() update = new EventEmitter<DashboardFilter>();
     @ViewChild('countryInput') countryInput!: ElementRef<HTMLInputElement>;
+    @ViewChild('userInput') userInput!: ElementRef<HTMLInputElement>;
 
     sources = TransactionSourceList;
     userTypes = UserTypeList;
     countries: ICountryCode[] = CountryCodes;
     selectedCountries: ICountryCode[] = [];
+    selectedUsers: User[] = [];
     separatorKeysCodes: number[] = [ENTER, COMMA];
     filteredCountries: Observable<ICountryCode[]> | undefined;
+    filteredUsers: Observable<User[]> | undefined;
 
     filterForm = this.formBuilder.group({
         accountType: [[]],
@@ -34,12 +39,20 @@ export class DashboardFilterComponent implements OnInit {
         source: [[]]
     });
 
-    constructor(private formBuilder: FormBuilder) { }
+    constructor(private formBuilder: FormBuilder, private adminService: AdminDataService) { }
 
     ngOnInit(): void {
         this.filteredCountries = this.countryField?.valueChanges.pipe(
             startWith(''),
-            map(value => this.filterCountries(value)));
+            map(value => this.filterCountries(value))
+        );
+        this.userField?.valueChanges.pipe(
+            distinctUntilChanged(),
+            debounceTime(1000),
+            filter((value) => !!value)
+        ).subscribe(val => {
+            this.filterUsers(val);
+        });
     }
 
     get accountTypeField(): AbstractControl | null {
@@ -77,13 +90,9 @@ export class DashboardFilterComponent implements OnInit {
     }
 
     countrySelected(event: MatAutocompleteSelectedEvent): void {
-        console.log(event.option.viewValue, event.option.id);
         const item = this.selectedCountries.find(x => x.code3 === event.option.id);
         if (!item) {
-            const newCountry = this.countries.find(x => x.code3 === event.option.id);
-            if (newCountry) {
-                this.selectedCountries.push(newCountry);
-            }
+            this.selectedCountries.push(event.option.value);
         }
         this.countryInput.nativeElement.value = '';
         this.countryField?.setValue(null);
@@ -99,28 +108,80 @@ export class DashboardFilterComponent implements OnInit {
         }
     }
 
+    addUser(event: MatChipInputEvent): void {
+        this.userField?.setValue(null);
+    }
+
+    removeUser(val: User, index: number): void {
+        if (index >= 0) {
+            this.selectedUsers.splice(index, 1);
+        }
+    }
+
+    clearUsers(): void {
+        this.selectedUsers = [];
+    }
+
+    userSelected(event: MatAutocompleteSelectedEvent): void {
+        const item = this.selectedUsers.find(x => x.userId === event.option.id);
+        if (!item) {
+            this.selectedUsers.push(event.option.value);
+        }
+        this.userInput.nativeElement.value = '';
+        this.userField?.setValue(null);
+    }
+
+    private filterUsers(value: string): void {
+        if (value && value !== '') {
+            const userData = this.adminService.getCustomers(value, 0, 1000, 'email', false);
+            if (userData !== null) {
+                userData.valueChanges.subscribe(({ data }) => {
+                    const dataList = data.getUsers as UserListResult;
+                    if (dataList !== null) {
+                        const userCount = dataList?.count as number;
+                        if (userCount > 0) {
+                            this.filteredUsers = of(dataList?.list?.map((val) => val) as User[]);
+                        }
+                    }
+                }, (error) => {
+                    this.filteredUsers = of([]);
+                });
+            }
+        } else {
+            this.filteredUsers = of([]);
+        }
+    }
+
     resetFilter(): void {
+        console.log(this.userField);
         this.accountTypeField?.setValue([]);
+        this.userInput.nativeElement.value = '';
+        this.userField?.setValue(null);
+        this.selectedUsers = [];
+        this.countryInput.nativeElement.value = '';
         this.countryField?.setValue(null);
         this.selectedCountries = [];
         this.sourceField?.setValue([]);
         this.update.emit(new DashboardFilter());
+        console.log(this.userField);
     }
 
     onSubmit(): void {
         const filter = new DashboardFilter();
         // account types
         filter.accountTypesOnly = this.accountTypeField?.value;
-        // transaction sources
-        filter.sourcesOnly = this.sourceField?.value;
+        // users
+        filter.userIdOnly = [];
+        this.selectedUsers.forEach(u => {
+            filter.userIdOnly.push(u.userId);
+        });
         // countries
         filter.countriesOnly = [];
         this.selectedCountries.forEach(c => {
             filter.countriesOnly.push(c.code3);
         });
-
-        console.log(filter);
-
+        // transaction sources
+        filter.sourcesOnly = this.sourceField?.value;
         this.update.emit(filter);
     }
 }
