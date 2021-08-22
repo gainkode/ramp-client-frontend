@@ -1,5 +1,8 @@
 <div class="dashboard-filter-block">
     <h3>Filters</h3>
+    <div *ngIf="inProgress">
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    </div>
     <form [formGroup]="filterForm" (ngSubmit)="onSubmit()">
         <div class="dashboard-filter-field">
             <div class="dashboard-filter-item">

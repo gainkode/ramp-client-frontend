@@ -21,6 +21,7 @@ export class DashboardFilterComponent implements OnInit {
     @ViewChild('countryInput') countryInput!: ElementRef<HTMLInputElement>;
     @ViewChild('userInput') userInput!: ElementRef<HTMLInputElement>;
 
+    inProgress = false;
     sources = TransactionSourceList;
     userTypes = UserTypeList;
     countries: ICountryCode[] = CountryCodes;
@@ -133,6 +134,7 @@ export class DashboardFilterComponent implements OnInit {
 
     private filterUsers(value: string): void {
         if (value && value !== '') {
+            this.inProgress = true;
             const userData = this.adminService.getCustomers(value, 0, 1000, 'email', false);
             if (userData !== null) {
                 userData.valueChanges.subscribe(({ data }) => {
@@ -143,7 +145,9 @@ export class DashboardFilterComponent implements OnInit {
                             this.filteredUsers = of(dataList?.list?.map((val) => val) as User[]);
                         }
                     }
+                    this.inProgress = false;
                 }, (error) => {
+                    this.inProgress = false;
                     this.filteredUsers = of([]);
                 });
             }
@@ -153,7 +157,6 @@ export class DashboardFilterComponent implements OnInit {
     }
 
     resetFilter(): void {
-        console.log(this.userField);
         this.accountTypeField?.setValue([]);
         this.userInput.nativeElement.value = '';
         this.userField?.setValue(null);
@@ -163,7 +166,6 @@ export class DashboardFilterComponent implements OnInit {
         this.selectedCountries = [];
         this.sourceField?.setValue([]);
         this.update.emit(new DashboardFilter());
-        console.log(this.userField);
     }
 
     onSubmit(): void {
@@ -182,6 +184,9 @@ export class DashboardFilterComponent implements OnInit {
         });
         // transaction sources
         filter.sourcesOnly = this.sourceField?.value;
+
+        console.log(filter);
+
         this.update.emit(filter);
     }
 }
