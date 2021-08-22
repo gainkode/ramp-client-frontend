@@ -568,15 +568,10 @@ export type UserRolePermission = {
 export type UserNotificationSubscription = {
   __typename?: 'UserNotificationSubscription';
   userNotificationSubscriptionId: Scalars['ID'];
+  userId?: Maybe<Scalars['String']>;
   userNotificationTypeCode: Scalars['String'];
-  name: Scalars['String'];
-  description?: Maybe<Scalars['String']>;
   siteNotification?: Maybe<Scalars['Boolean']>;
-  siteNotificationDefault?: Maybe<Scalars['Boolean']>;
-  siteNotificationImmutable?: Maybe<Scalars['Boolean']>;
   emailNotification?: Maybe<Scalars['Boolean']>;
-  emailNotificationDefault?: Maybe<Scalars['Boolean']>;
-  emailNotificationImmutable?: Maybe<Scalars['Boolean']>;
 };
 
 export enum UserNotificationLevel {
@@ -1414,7 +1409,7 @@ export type DashboardStats = {
   balances?: Maybe<Array<BalanceStats>>;
 };
 
-export type DepositOrWithdrawalStats = {
+export type DepositOrWithdrawalStats = BaseStat & {
   __typename?: 'DepositOrWithdrawalStats';
   ratio?: Maybe<Scalars['Float']>;
   approved?: Maybe<TransactionStatsVolume>;
@@ -1424,6 +1419,15 @@ export type DepositOrWithdrawalStats = {
   byStatus?: Maybe<Array<TransactionStatsByStatus>>;
   fee?: Maybe<TransactionStatsVolume>;
   byInstruments?: Maybe<Array<InstrumentStats>>;
+};
+
+export type BaseStat = {
+  ratio?: Maybe<Scalars['Float']>;
+  approved?: Maybe<TransactionStatsVolume>;
+  declined?: Maybe<TransactionStatsVolume>;
+  abounded?: Maybe<TransactionStatsVolume>;
+  inProcess?: Maybe<TransactionStatsVolume>;
+  byStatus?: Maybe<Array<TransactionStatsByStatus>>;
 };
 
 export type TransactionStatsVolume = {
@@ -1438,9 +1442,10 @@ export type TransactionStatsByStatus = {
   volume?: Maybe<TransactionStatsVolume>;
 };
 
-export type InstrumentStats = {
+export type InstrumentStats = BaseStat & {
   __typename?: 'InstrumentStats';
   instrument?: Maybe<PaymentInstrument>;
+  ratio?: Maybe<Scalars['Float']>;
   approved?: Maybe<TransactionStatsVolume>;
   declined?: Maybe<TransactionStatsVolume>;
   abounded?: Maybe<TransactionStatsVolume>;
@@ -1449,7 +1454,7 @@ export type InstrumentStats = {
   fee?: Maybe<TransactionStatsVolume>;
 };
 
-export type TransferStats = {
+export type TransferStats = BaseStat & {
   __typename?: 'TransferStats';
   ratio?: Maybe<Scalars['Float']>;
   approved?: Maybe<TransactionStatsVolume>;
@@ -1457,21 +1462,33 @@ export type TransferStats = {
   abounded?: Maybe<TransactionStatsVolume>;
   inProcess?: Maybe<TransactionStatsVolume>;
   byStatus?: Maybe<Array<TransactionStatsByStatus>>;
-  toMerchant?: Maybe<Array<TransactionStatsByStatus>>;
-  toCustomer?: Maybe<Array<TransactionStatsByStatus>>;
+  toMerchant?: Maybe<MerchantOrCustomerStats>;
+  toCustomer?: Maybe<MerchantOrCustomerStats>;
   fee?: Maybe<TransactionStatsVolume>;
 };
 
-export type ExchangeStats = {
-  __typename?: 'ExchangeStats';
-  ratio?: Maybe<Scalars['Int']>;
+export type MerchantOrCustomerStats = BaseStat & {
+  __typename?: 'MerchantOrCustomerStats';
+  instrument?: Maybe<PaymentInstrument>;
+  ratio?: Maybe<Scalars['Float']>;
   approved?: Maybe<TransactionStatsVolume>;
   declined?: Maybe<TransactionStatsVolume>;
   abounded?: Maybe<TransactionStatsVolume>;
   inProcess?: Maybe<TransactionStatsVolume>;
   byStatus?: Maybe<Array<TransactionStatsByStatus>>;
-  toMerchant?: Maybe<Array<TransactionStatsByStatus>>;
-  toCustomer?: Maybe<Array<TransactionStatsByStatus>>;
+  fee?: Maybe<TransactionStatsVolume>;
+};
+
+export type ExchangeStats = BaseStat & {
+  __typename?: 'ExchangeStats';
+  ratio?: Maybe<Scalars['Float']>;
+  approved?: Maybe<TransactionStatsVolume>;
+  declined?: Maybe<TransactionStatsVolume>;
+  abounded?: Maybe<TransactionStatsVolume>;
+  inProcess?: Maybe<TransactionStatsVolume>;
+  byStatus?: Maybe<Array<TransactionStatsByStatus>>;
+  toMerchant?: Maybe<MerchantOrCustomerStats>;
+  toCustomer?: Maybe<MerchantOrCustomerStats>;
   fee?: Maybe<TransactionStatsVolume>;
 };
 

@@ -1,4 +1,4 @@
-import { Injectable, ɵɵtrustConstantResourceUrl } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { EmptyObject } from 'apollo-angular/types';
 import { Observable } from 'rxjs';
@@ -31,10 +31,10 @@ const GET_DASHBOARD_STATS = gql`
         declined {count, volume},
         abounded {count, volume},
         inProcess {count, volume},
-        byStatus {status, volume {count, volume}},
         fee {count, volume},
         byInstruments {
           instrument,
+          ratio,
           approved {count, volume},
           declined {count, volume},
           abounded {count, volume},
@@ -48,10 +48,10 @@ const GET_DASHBOARD_STATS = gql`
         declined {count, volume},
         abounded {count, volume},
         inProcess {count, volume},
-        byStatus {status, volume {count, volume}},
         fee {count, volume},
         byInstruments {
           instrument,
+          ratio,
           approved {count, volume},
           declined {count, volume},
           abounded {count, volume},
@@ -61,14 +61,54 @@ const GET_DASHBOARD_STATS = gql`
       }
       transfers {
         ratio,
-        toMerchant {status, volume {count, volume}},
-        toCustomer {status, volume {count, volume}},
+        approved {count, volume},
+        declined {count, volume},
+        abounded {count, volume},
+        inProcess {count, volume},
+        toMerchant {
+          instrument,
+          ratio,
+          approved {count, volume},
+          declined {count, volume},
+          abounded {count, volume},
+          inProcess {count, volume},
+          fee {count, volume}
+        },
+        toCustomer {
+          instrument,
+          ratio,
+          approved {count, volume},
+          declined {count, volume},
+          abounded {count, volume},
+          inProcess {count, volume},
+          fee {count, volume}
+        },
         fee {count, volume}
       }
       exchanges {
         ratio,
-        toMerchant {status, volume {count, volume}},
-        toCustomer {status, volume {count, volume}},
+        approved {count, volume},
+        declined {count, volume},
+        abounded {count, volume},
+        inProcess {count, volume},
+        toMerchant {
+          instrument,
+          ratio,
+          approved {count, volume},
+          declined {count, volume},
+          abounded {count, volume},
+          inProcess {count, volume},
+          fee {count, volume}
+        },
+        toCustomer {
+          instrument,
+          ratio,
+          approved {count, volume},
+          declined {count, volume},
+          abounded {count, volume},
+          inProcess {count, volume},
+          fee {count, volume}
+        },
         fee {count, volume}
       }
       balances {
