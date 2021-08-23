@@ -355,6 +355,7 @@ const GET_CUSTOMERS = gql`
         buildingName
         buildingNumber
         flatNumber
+        referralCode
       }
     }
   }

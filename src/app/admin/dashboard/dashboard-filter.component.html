@@ -23,16 +23,21 @@
                     <mat-chip-list #userChipList aria-label="User selection" formControlName="users">
                         <mat-chip *ngFor="let u of selectedUsers;let i=index;" (removed)="removeUser(u, i)">
                             {{u.email}}
-                            <mat-icon matChipRemove matTooltip="Remove user" matTooltipClass="info-tooltip">cancel</mat-icon>
+                            <mat-icon matChipRemove matTooltip="Remove user" matTooltipClass="info-tooltip">cancel
+                            </mat-icon>
                         </mat-chip>
-                        <input placeholder="Users" #userInput
-                            formControlName="user" [matAutocomplete]="autoUser" [matChipInputFor]="userChipList"
-                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                        <input placeholder="Users" #userInput formControlName="user" [matAutocomplete]="autoUser"
+                            [matChipInputFor]="userChipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                             (matChipInputTokenEnd)="addUser($event)">
                     </mat-chip-list>
                     <mat-autocomplete #autoUser="matAutocomplete" (optionSelected)="userSelected($event)">
-                        <mat-option *ngFor="let item of filteredUsers | async" [value]="item" [id]="item.userId">
-                            <app-dropdown-item itemValue="{{item.email}}"></app-dropdown-item>
+                        <mat-option *ngFor="let item of filteredUsers | async" [value]="item" [id]="item.id">
+                            <span>
+                                {{item.email}}
+                            </span>
+                            <span class="dashboard-filter-item-sm">
+                                {{item.fullName}}
+                            </span>
                         </mat-option>
                     </mat-autocomplete>
                 </mat-form-field>
@@ -44,16 +49,17 @@
                     <mat-chip-list #affiliateChipList aria-label="Affiliate selection" formControlName="affiliates">
                         <mat-chip *ngFor="let a of selectedAffiliates;let i=index;" (removed)="removeAffiliate(a, i)">
                             {{a}}
-                            <mat-icon matChipRemove matTooltip="Remove affiliate" matTooltipClass="info-tooltip">cancel</mat-icon>
+                            <mat-icon matChipRemove matTooltip="Remove affiliate" matTooltipClass="info-tooltip">cancel
+                            </mat-icon>
                         </mat-chip>
-                        <input placeholder="Affiliates" #userInput
-                            formControlName="affiliate" [matAutocomplete]="autoAffiliate" [matChipInputFor]="affiliateChipList"
+                        <input placeholder="Affiliates" #affiliateInput formControlName="affiliate"
+                            [matAutocomplete]="autoAffiliate" [matChipInputFor]="affiliateChipList"
                             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                             (matChipInputTokenEnd)="addAffiliate($event)">
                     </mat-chip-list>
                     <mat-autocomplete #autoAffiliate="matAutocomplete" (optionSelected)="affiliateSelected($event)">
                         <mat-option *ngFor="let item of filteredAffiliates | async" [value]="item">
-                            <app-dropdown-item itemValue="{{item}}"></app-dropdown-item>
+                            {{item}}
                         </mat-option>
                     </mat-autocomplete>
                 </mat-form-field>
@@ -65,10 +71,11 @@
                     <mat-chip-list #countryChipList aria-label="Country selection" formControlName="countries">
                         <mat-chip *ngFor="let c of selectedCountries;let i=index;" (removed)="removeCountry(c, i)">
                             {{c.name}}
-                            <mat-icon matChipRemove matTooltip="Remove country" matTooltipClass="info-tooltip">cancel</mat-icon>
+                            <mat-icon matChipRemove matTooltip="Remove country" matTooltipClass="info-tooltip">cancel
+                            </mat-icon>
                         </mat-chip>
-                        <input placeholder="Countries" #countryInput
-                            formControlName="country" [matAutocomplete]="autoCountry" [matChipInputFor]="countryChipList"
+                        <input placeholder="Countries" #countryInput formControlName="country"
+                            [matAutocomplete]="autoCountry" [matChipInputFor]="countryChipList"
                             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                             (matChipInputTokenEnd)="addCountry($event)">
                     </mat-chip-list>
@@ -98,7 +105,8 @@
             <button class="main-button main-button-accent dashboard-filter-button" type="submit">
                 APPLY
             </button>
-            <button class="main-button main-button-primary dashboard-filter-button" type="button" (click)="resetFilter()">
+            <button class="main-button main-button-primary dashboard-filter-button" type="button"
+                (click)="resetFilter()">
                 RESET
             </button>
         </div>

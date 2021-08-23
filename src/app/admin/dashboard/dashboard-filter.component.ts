@@ -7,8 +7,9 @@ import { Observable, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, startWith, switchMap } from 'rxjs/operators';
 import { CountryCodes, ICountryCode } from 'src/app/model/country-code.model';
 import { DashboardFilter } from 'src/app/model/dashboard.model';
-import { User, UserListResult } from 'src/app/model/generated-models';
+import { UserListResult } from 'src/app/model/generated-models';
 import { TransactionSourceList, UserTypeList } from 'src/app/model/payment.model';
+import { UserItem } from 'src/app/model/user.model';
 import { AdminDataService } from 'src/app/services/admin-data.service';
 
 @Component({
@@ -27,11 +28,11 @@ export class DashboardFilterComponent implements OnInit {
     userTypes = UserTypeList;
     countries: ICountryCode[] = CountryCodes;
     selectedCountries: ICountryCode[] = [];
-    selectedUsers: User[] = [];
+    selectedUsers: UserItem[] = [];
     selectedAffiliates: string[] = [];
     separatorKeysCodes: number[] = [ENTER, COMMA];
     filteredCountries: Observable<ICountryCode[]> | undefined;
-    filteredUsers: Observable<User[]> | undefined;
+    filteredUsers: Observable<UserItem[]> | undefined;
     filteredAffiliates: Observable<string[]> | undefined;
 
     filterForm = this.formBuilder.group({
@@ -126,10 +127,12 @@ export class DashboardFilterComponent implements OnInit {
     }
 
     addUser(event: MatChipInputEvent): void {
+        this.userInput.nativeElement.value = '';
         this.userField?.setValue(null);
+        this.filteredUsers = of([]);
     }
 
-    removeUser(val: User, index: number): void {
+    removeUser(val: UserItem, index: number): void {
         if (index >= 0) {
             this.selectedUsers.splice(index, 1);
         }
@@ -140,12 +143,13 @@ export class DashboardFilterComponent implements OnInit {
     }
 
     userSelected(event: MatAutocompleteSelectedEvent): void {
-        const item = this.selectedUsers.find(x => x.userId === event.option.id);
+        const item = this.selectedUsers.find(x => x.id === event.option.id);
         if (!item) {
             this.selectedUsers.push(event.option.value);
         }
         this.userInput.nativeElement.value = '';
         this.userField?.setValue(null);
+        this.filteredUsers = of([]);
     }
 
     private filterUsers(value: string): void {
@@ -158,7 +162,7 @@ export class DashboardFilterComponent implements OnInit {
                     if (dataList !== null) {
                         const userCount = dataList?.count as number;
                         if (userCount > 0) {
-                            this.filteredUsers = of(dataList?.list?.map((val) => val) as User[]);
+                            this.filteredUsers = of(dataList?.list?.map((val) => new UserItem(val)) as UserItem[]);
                         }
                     }
                     this.inProgress = false;
@@ -173,7 +177,9 @@ export class DashboardFilterComponent implements OnInit {
     }
 
     addAffiliate(event: MatChipInputEvent): void {
+        this.affiliateInput.nativeElement.value = '';
         this.affiliateField?.setValue(null);
+        this.filteredAffiliates = of([]);
     }
 
     removeAffiliate(val: string, index: number): void {
@@ -193,6 +199,7 @@ export class DashboardFilterComponent implements OnInit {
         }
         this.affiliateInput.nativeElement.value = '';
         this.affiliateField?.setValue(null);
+        this.filteredAffiliates = of([]);
     }
 
     private filterAffiliates(value: string): void {
@@ -241,7 +248,7 @@ export class DashboardFilterComponent implements OnInit {
         // users
         filter.userIdOnly = [];
         this.selectedUsers.forEach(u => {
-            filter.userIdOnly.push(u.userId);
+            filter.userIdOnly.push(u.id);
         });
         // affiliates
         filter.affiliateIdOnly = this.selectedAffiliates;

@@ -24,6 +24,16 @@ export class UserItem {
   created = '';
   fiatCurrency = '';
 
+  get fullName(): string {
+    let result = '';
+    if (this.userType?.id === UserType.Merchant) {
+      result = this.company;
+    } else {
+      result = `${this.firstName} ${this.lastName}`;
+    }
+    return result;
+  }
+
   constructor(data: User | null) {
     if (data) {
       this.id = data.userId;
