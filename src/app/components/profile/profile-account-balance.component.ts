@@ -4,4 +4,8 @@ import { Component } from '@angular/core';
     selector: 'app-account-balance',
     templateUrl: './profile-account-balance.component.html'
 })
-export class ProfileAccountBalanceComponent { }
+export class ProfileAccountBalanceComponent {
+    errorMessage = '';
+    inProgress = false;
+    
+}

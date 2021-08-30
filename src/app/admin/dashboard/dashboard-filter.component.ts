@@ -258,7 +258,7 @@ export class DashboardFilterComponent implements OnInit {
         // transaction sources
         filter.sourcesOnly = this.sourceField?.value;
 
-        console.log(filter);
+        //console.log(filter);
 
         this.update.emit(filter);
     }
