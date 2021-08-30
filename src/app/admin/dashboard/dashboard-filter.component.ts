@@ -4,7 +4,7 @@ import { AbstractControl, FormBuilder } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { Observable, of } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, map, startWith, switchMap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, startWith } from 'rxjs/operators';
 import { CountryCodes, ICountryCode } from 'src/app/model/country-code.model';
 import { DashboardFilter } from 'src/app/model/dashboard.model';
 import { UserListResult, WidgetListResult } from 'src/app/model/generated-models';
@@ -55,15 +55,13 @@ export class DashboardFilterComponent implements OnInit {
         );
         this.userField?.valueChanges.pipe(
             distinctUntilChanged(),
-            debounceTime(1000),
-            filter((value) => !!value)
+            debounceTime(1000)
         ).subscribe(val => {
             this.filterUsers(val);
         });
         this.affiliateField?.valueChanges.pipe(
             distinctUntilChanged(),
-            debounceTime(1000),
-            filter((value) => !!value)
+            debounceTime(1000)
         ).subscribe(val => {
             this.filterAffiliates(val);
         });
