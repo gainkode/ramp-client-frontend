@@ -125,6 +125,9 @@ export class ErrorService {
             case 'core.kyc_get_applicant_information_error':
                 result = 'Unable to get applicant information';
                 break;
+            case 'core.payment_preauth_order_error':
+                result = 'Order handling error';
+                break;
             case 'core.transaction_handling_error':
                 result = 'Transaction handling error';
                 break;

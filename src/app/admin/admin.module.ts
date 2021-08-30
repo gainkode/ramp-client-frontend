@@ -36,31 +36,40 @@ import { CustomerDetailsComponent } from './customers/customer-details.component
 import { TransactionDetailsComponent } from './transactions/transaction-details.component';
 import { CustomerInfoComponent } from './customers/customer-info.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { DefaultComponent } from './default.component';
 import { DashboardBalancesComponent } from './dashboard/dashboard-balances.component';
 import { DashboardFeesComponent } from './dashboard/dashboard-fees.component';
 import { DashboardTotalComponent } from './dashboard/dashboard-total.component';
 import { DashboardTransactionsComponent } from './dashboard/dashboard-transactions.component';
 import { DashboardFilterComponent } from './dashboard/dashboard-filter.component';
+import { WalletsComponent } from './wallets/wallets.component';
+import { NotificationsComponent } from './notifications/notifications.component';
+import { ReconciliationComponent } from './reconciliation/reconciliation.component';
+import { SystemUsersComponent } from './system-users/system-users.component';
+import { RiskCenterComponent } from './risk-center/risk-center.component';
+import { AffiliatesComponent } from './affiliates/affiliates.component';
 
 const routing = RouterModule.forChild([
     {
         path: 'main',
         component: AdminComponent,
         children: [
-            { path: 'default', component: DefaultComponent, canActivate: [AdminGuard] },
             { path: 'dashboard', component: DashboardComponent, canActivate: [AdminGuard] },
             { path: 'transactions', component: TransactionsComponent, canActivate: [AdminGuard] },
             { path: 'customers', component: CustomersComponent, canActivate: [AdminGuard] },
+            { path: 'wallets', component: WalletsComponent, canActivate: [AdminGuard] },
             { path: 'fees', component: FeesComponent, canActivate: [AdminGuard] },
+            { path: 'notifications', component: NotificationsComponent, canActivate: [AdminGuard] },
             { path: 'costs', component: CostsComponent, canActivate: [AdminGuard] },
             { path: 'identification', component: IdentificationComponent, canActivate: [AdminGuard] },
+            { path: 'reconciliation', component: ReconciliationComponent, canActivate: [AdminGuard] },
+            { path: 'system-users', component: SystemUsersComponent, canActivate: [AdminGuard] },
+            { path: 'risk-center', component: RiskCenterComponent, canActivate: [AdminGuard] },
+            { path: 'affiliates', component: AffiliatesComponent, canActivate: [AdminGuard] },
             { path: '**', redirectTo: 'dashboard' }
         ],
         canActivate: [AdminGuard]
     },
-    { path: '**', redirectTo: 'main/default' }
-    //{ path: '**', redirectTo: 'main/dashboard' }
+    { path: '**', redirectTo: 'main/dashboard' }
 ]);
 
 const modules = [
@@ -95,14 +104,19 @@ export class MaterialModule { }
     ],
     declarations: [
         AdminComponent,
-        DefaultComponent,  // to be removed
         DashboardComponent, DashboardTotalComponent, DashboardFilterComponent,
-        DashboardBalancesComponent, DashboardTransactionsComponent, DashboardFeesComponent, 
+        DashboardBalancesComponent, DashboardTransactionsComponent, DashboardFeesComponent,
         TransactionsComponent, TransactionDetailsComponent,
         CustomersComponent, CustomerDetailsComponent, CustomerInfoComponent,
+        WalletsComponent,
         FeesComponent, FeeEditorComponent,
+        NotificationsComponent,
         CostsComponent, CostEditorComponent,
-        IdentificationComponent, IdTableComponent, LevelTableComponent, KycEditorComponent, LevelEditorComponent],
+        IdentificationComponent, IdTableComponent, LevelTableComponent, KycEditorComponent, LevelEditorComponent,
+        ReconciliationComponent,
+        SystemUsersComponent,
+        RiskCenterComponent,
+        AffiliatesComponent],
     providers: [AdminGuard],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

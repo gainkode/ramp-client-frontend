@@ -203,14 +203,14 @@ export class DashboardFilterComponent implements OnInit {
     private filterAffiliates(value: string): void {
         if (value && value !== '') {
             this.inProgress = true;
-            const userData = this.adminService.getWidgets(value, 0, 1000, 'destinationAddress', false);
+            const userData = this.adminService.getWidgets(value, 0, 1000, 'widgetId', false);
             if (userData !== null) {
                 userData.valueChanges.subscribe(({ data }) => {
-                    const dataList = data.getUsers as WidgetListResult;
+                    const dataList = data.getWidgets as WidgetListResult;
                     if (dataList !== null) {
                         const userCount = dataList?.count as number;
                         if (userCount > 0) {
-                            this.filteredAffiliates = of(dataList?.list?.map((val) => val.destinationAddress?.toString()) as string[]);
+                            this.filteredAffiliates = of(dataList?.list?.map((val) => val.widgetId?.toString()) as string[]);
                         }
                     }
                     this.inProgress = false;
