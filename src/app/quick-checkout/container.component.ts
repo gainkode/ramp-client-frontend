@@ -33,8 +33,7 @@ import {
   TransactionType,
   User,
   UserMode,
-  UserState,
-  UserType,
+  UserState
 } from '../model/generated-models';
 import { KycLevelShort } from '../model/identification.model';
 import {
