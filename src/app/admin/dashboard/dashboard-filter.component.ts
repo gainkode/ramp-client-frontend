@@ -7,7 +7,7 @@ import { Observable, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, startWith, switchMap } from 'rxjs/operators';
 import { CountryCodes, ICountryCode } from 'src/app/model/country-code.model';
 import { DashboardFilter } from 'src/app/model/dashboard.model';
-import { UserListResult } from 'src/app/model/generated-models';
+import { UserListResult, WidgetListResult } from 'src/app/model/generated-models';
 import { TransactionSourceList, UserTypeList } from 'src/app/model/payment.model';
 import { UserItem } from 'src/app/model/user.model';
 import { AdminDataService } from 'src/app/services/admin-data.service';
@@ -205,14 +205,14 @@ export class DashboardFilterComponent implements OnInit {
     private filterAffiliates(value: string): void {
         if (value && value !== '') {
             this.inProgress = true;
-            const userData = this.adminService.getCustomers(value, 0, 1000, 'referralCode', false);
+            const userData = this.adminService.getWidgets(value, 0, 1000, 'destinationAddress', false);
             if (userData !== null) {
                 userData.valueChanges.subscribe(({ data }) => {
-                    const dataList = data.getUsers as UserListResult;
+                    const dataList = data.getUsers as WidgetListResult;
                     if (dataList !== null) {
                         const userCount = dataList?.count as number;
                         if (userCount > 0) {
-                            this.filteredAffiliates = of(dataList?.list?.map((val) => val.referralCode?.toString()) as string[]);
+                            this.filteredAffiliates = of(dataList?.list?.map((val) => val.destinationAddress?.toString()) as string[]);
                         }
                     }
                     this.inProgress = false;

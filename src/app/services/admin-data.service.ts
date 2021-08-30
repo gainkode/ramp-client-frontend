@@ -361,6 +361,37 @@ const GET_CUSTOMERS = gql`
   }
 `;
 
+const GET_WIDGETS = gql`
+  query GetWidgets(
+    $userId: String
+    $filter: String
+    $skip: Int
+    $first: Int
+    $orderBy: [OrderBy!]
+  ) {
+    getWidgets(userId: $userId, filter: $filter, skip: $skip, first: $first, orderBy: $orderBy) {
+      count
+      list {
+        widgetId
+        userId
+        created
+        transactionType
+        currenciesFrom
+        currenciesTo
+        destinationAddress
+        minAmountFrom
+        maxAmountFrom
+        fixAmountFrom
+        countriesCode2
+        instruments
+        paymentProviders
+        liquidityProvider
+        data
+      }
+    }
+  }
+`;
+
 const ADD_SETTINGS_FEE = gql`
   mutation AddSettingsFee(
     $name: String!
@@ -753,9 +784,36 @@ export class AdminDataService {
         first: takeItems,
         orderBy: orderFields,
       };
-      console.log(vars);
       return this.apollo.watchQuery<any>({
         query: GET_CUSTOMERS,
+        variables: vars,
+        fetchPolicy: 'network-only',
+      });
+    } else {
+      return null;
+    }
+  }
+
+  getWidgets(
+    userFilter: string,
+    pageIndex: number,
+    takeItems: number,
+    orderField: string,
+    orderDesc: boolean
+  ): QueryRef<any, EmptyObject> | null {
+    if (this.apollo.client !== undefined) {
+      const orderFields = [{ orderBy: orderField, desc: orderDesc }];
+      const customerFilter = userFilter === null ? '' : userFilter?.toString();
+      const vars = {
+        userId: null,
+        filter: customerFilter,
+        skip: pageIndex * takeItems,
+        first: takeItems,
+        orderBy: orderFields
+      };
+      console.log(vars);
+      return this.apollo.watchQuery<any>({
+        query: GET_WIDGETS,
         variables: vars,
         fetchPolicy: 'network-only',
       });
