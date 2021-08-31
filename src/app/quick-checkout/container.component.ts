@@ -123,7 +123,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
   private pSettingsSubscription!: any;
   private pKycSettingsSubscription!: any;
   private pStateSubscription!: any;
-  private pNotificationsSubscription!: any;
+  private pNotificationsSubscription!: Subscription | undefined;
 
   detailsForm = this.formBuilder.group({
     email: [
@@ -431,9 +431,9 @@ export class ContainerComponent implements OnInit, OnDestroy {
   }
 
   private stopNotificationListener(): void {
-    const s = this.pNotificationsSubscription as Subscription;
-    if (s) {
-      s.unsubscribe();
+    if (this.pNotificationsSubscription) {
+      console.log('transaction notification stop');
+      this.pNotificationsSubscription.unsubscribe();
     }
     this.pNotificationsSubscription = undefined;
   }
