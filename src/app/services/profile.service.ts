@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { Observable } from 'rxjs';
 import { EmptyObject } from 'apollo-angular/types';
-import { TransactionSource } from '../model/generated-models';
+import { TransactionSource, UserBalanceHistoryPeriod } from '../model/generated-models';
 
 const GET_MY_TRANSACTIONS = gql`
   query MyTransactions(
@@ -71,6 +71,36 @@ const GET_MY_TRANSACTIONS = gql`
       }
     }
   }
+`;
+
+const GET_MY_BALANCE_HISTORY = gql`
+query MyBalanceHistory(
+  $asset: String
+  $period: UserBalanceHistoryPeriod
+  $filter: String
+  $skip: Int
+  $first: Int
+  $orderBy: [OrderBy!]
+) {
+  myBalanceHistory(
+    asset: $asset
+    period: $period
+    filter: $filter
+    skip: $skip
+    first: $first
+    orderBy: $orderBy
+  ) {
+    count
+    list {
+      userBalanceId,
+      date,
+      balance,
+      balanceFiat,
+      balanceEur,
+      transactionId
+    }
+  }
+}
 `;
 
 const GET_MY_NOTIFICATIONS = gql`
@@ -300,6 +330,29 @@ export class ProfileDataService {
           filter: '',
           skip: pageIndex * takeItems,
           first: takeItems,
+          orderBy: orderFields,
+        },
+        fetchPolicy: 'network-only',
+      });
+    } else {
+      return null;
+    }
+  }
+
+  getBalanceHistory(
+    assetName: string,
+    chartPeriod: UserBalanceHistoryPeriod
+  ): QueryRef<any, EmptyObject> | null {
+    if (this.apollo.client !== undefined) {
+      const orderFields = [{ orderBy: 'date', desc: true }];
+      return this.apollo.watchQuery<any>({
+        query: GET_MY_BALANCE_HISTORY,
+        variables: {
+          asset: assetName,
+          period: chartPeriod,
+          filter: '',
+          skip: 0,
+          first: 1000,
           orderBy: orderFields,
         },
         fetchPolicy: 'network-only',
