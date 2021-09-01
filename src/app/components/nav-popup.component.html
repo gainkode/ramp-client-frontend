@@ -1,0 +1,9 @@
+<button class="main-button main-button-primary" type="button" [matMenuTriggerFor]="menu" #menuTrigger>
+    <mat-icon>more_vert</mat-icon>
+</button>
+<mat-menu #menu="matMenu">
+    <button *ngFor="let item of items" mat-menu-item (click)="clickItem(item)">
+        {{item.name}}
+    </button>
+    <!-- <button mat-menu-item (click)="openDialog()">Open dialog</button> -->
+</mat-menu>

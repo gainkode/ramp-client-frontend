@@ -8,5 +8,5 @@ import { DashboardTransactionItemModel } from 'src/app/model/dashboard.model';
 })
 export class DashboardTotalComponent {
     @Input() totals: DashboardTransactionItemModel[] = [];
-    displayedColumns: string[] = ['title', 'approved', 'declined', 'abounded', 'inProcess', 'ratio'];
+    displayedColumns: string[] = ['title', 'approved', 'declined', 'abandoned', 'inProcess', 'ratio'];
 }

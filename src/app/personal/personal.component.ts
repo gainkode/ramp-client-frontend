@@ -3,7 +3,7 @@ import { MatSelectionListChange } from '@angular/material/list';
 import { NavigationEnd, Router } from '@angular/router';
 import { Event as NavigationEvent } from '@angular/router';
 import { MenuItem } from '../model/common.model';
-import { PersonalProfileMenuItems } from '../model/profile-menu.model';
+import { PersonalProfileMenuItems, PersonalProfilePopupMenuItems } from '../model/profile-menu.model';
 import { AuthService } from '../services/auth.service';
 import { NotificationService } from '../services/notification.service';
 
@@ -13,6 +13,7 @@ import { NotificationService } from '../services/notification.service';
 })
 export class PersonalComponent implements OnInit {
     menuItems: MenuItem[] = PersonalProfileMenuItems;
+    popupItems: MenuItem[] = PersonalProfilePopupMenuItems;
     selectedMenu = 'home';
 
     constructor(private auth: AuthService, private notification: NotificationService, private router: Router) {
@@ -34,7 +35,7 @@ export class PersonalComponent implements OnInit {
             name = `${user.firstName ?? ''} ${user.lastName ?? ''}`;
         }
         if (name === ' ') {
-            name = 'No name';
+            name = user?.email ?? 'No name';
         }
         return name;
     }
@@ -78,6 +79,12 @@ export class PersonalComponent implements OnInit {
         this.router.navigateByUrl(item.url);
     }
 
+    popupMenuClick(item: MenuItem): void {
+        if (item.id === 'logout') {
+            this.logout();
+        }
+    }
+
     routeTo(link: string): void {
         const urlBlocks = link.split('/');
         if (urlBlocks.length > 0) {
@@ -87,6 +94,7 @@ export class PersonalComponent implements OnInit {
     }
 
     logout(): void {
+        console.log('logout');
         this.auth.logout();
         this.router.navigateByUrl('/');
     }

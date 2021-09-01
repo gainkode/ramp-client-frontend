@@ -1,4 +1,4 @@
-<div class="menu-bar menu-bar-large">
+<div class="menu-bar">
     <div class="menu-content-bar">
         <div class="menu-box">
             <button mat-icon-button (click)="routeTo(getUserMainPage())">
@@ -22,11 +22,12 @@
             <button mat-icon-button (click)="notificationTest()">
                 <mat-icon>notifications</mat-icon>
             </button>
-            <!-- <span class="menu-delimiter"></span> -->
             <span>{{userName}}</span>
             <button mat-icon-button (click)="logout()">
                 <mat-icon>exit_to_app</mat-icon>
             </button>
+
+            <app-nav-popup-item [items]="popupItems" (onMenuClick)="popupMenuClick($event)"></app-nav-popup-item>
         </div>
     </div>
 </div>

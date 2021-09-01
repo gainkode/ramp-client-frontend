@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { Event as NavigationEvent } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { AdminMenuItems } from '../model/admin-menu-list';
+import { AdminMenuItems } from '../model/admin-menu-model';
 import { MatSelectionListChange } from '@angular/material/list/selection-list';
 import { User } from '../model/generated-models';
 import { MenuItem } from '../model/common.model';

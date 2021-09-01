@@ -32,3 +32,30 @@ export const PersonalProfileMenuItems: Array<MenuItem> = [
         icon: 'forward_10'
     }
 ];
+
+export const PersonalProfilePopupMenuItems: Array<MenuItem> = [
+    {
+        id: 'notifications',
+        name: 'Notifications',
+        url: '',
+        icon: 'home'
+    },
+    {
+        id: 'settings',
+        name: 'Settings',
+        url: '',
+        icon: ''
+    },
+    {
+        id: 'verification',
+        name: 'Verification',
+        url: '',
+        icon: ''
+    },
+    {
+        id: 'logout',
+        name: 'Log out',
+        url: '',
+        icon: ''
+    }
+];

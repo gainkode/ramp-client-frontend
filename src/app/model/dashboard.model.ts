@@ -50,7 +50,7 @@ export class DashboardTransactionItemModel {
     ratio = 0;
     approved?: DashboardTransactionVolumeModel;
     declined?: DashboardTransactionVolumeModel;
-    abounded?: DashboardTransactionVolumeModel;
+    abandoned?: DashboardTransactionVolumeModel;
     inProcess?: DashboardTransactionVolumeModel;
     fee?: DashboardTransactionVolumeModel;
     private numberPipe: DecimalPipe = new DecimalPipe('en-US');
@@ -67,8 +67,8 @@ export class DashboardTransactionItemModel {
         return (this.declined) ? `(${this.declined.count}) ${this.numberPipe.transform(this.declined.volume, '1.0-3')}` : '\u2014';
     }
 
-    get aboundedValue(): string {
-        return (this.abounded) ? `(${this.abounded.count}) ${this.numberPipe.transform(this.abounded.volume, '1.0-3')}` : '\u2014';
+    get abandonedValue(): string {
+        return (this.abandoned) ? `(${this.abandoned.count}) ${this.numberPipe.transform(this.abandoned.volume, '1.0-3')}` : '\u2014';
     }
 
     get inProcessValue(): string {
@@ -86,7 +86,7 @@ export class DashboardTransactionItemModel {
             this.ratio = data.ratio as number;
             this.approved = new DashboardTransactionVolumeModel(data?.approved as TransactionStatsVolume | undefined);
             this.declined = new DashboardTransactionVolumeModel(data?.declined as TransactionStatsVolume | undefined);
-            this.abounded = new DashboardTransactionVolumeModel(data?.abounded as TransactionStatsVolume | undefined);
+            this.abandoned = new DashboardTransactionVolumeModel(data?.abounded as TransactionStatsVolume | undefined);
             this.inProcess = new DashboardTransactionVolumeModel(data?.inProcess as TransactionStatsVolume | undefined);
             this.fee = new DashboardTransactionVolumeModel(data?.fee as TransactionStatsVolume | undefined);
             if (isInstrumentStats(data)) {

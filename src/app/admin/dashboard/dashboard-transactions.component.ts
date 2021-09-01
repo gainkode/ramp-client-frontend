@@ -9,5 +9,5 @@ import { DashboardTransactionItemModel } from 'src/app/model/dashboard.model';
 export class DashboardTransactionsComponent {
     @Input() title = '';
     @Input() transactions: DashboardTransactionItemModel[] = [];
-    displayedColumns: string[] = ['title', 'approved', 'declined', 'abounded', 'inProcess', 'ratio', 'fee'];
+    displayedColumns: string[] = ['title', 'approved', 'declined', 'abandoned', 'inProcess', 'ratio', 'fee'];
 }
