@@ -59,3 +59,10 @@ export const PersonalProfilePopupMenuItems: Array<MenuItem> = [
         icon: ''
     }
 ];
+
+export const PersonalProfilePopupAdministrationMenuItem: MenuItem = {
+    id: 'administration',
+    name: 'Administration',
+    url: '',
+    icon: 'home'
+};

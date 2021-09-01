@@ -3,7 +3,7 @@ import { MatSelectionListChange } from '@angular/material/list';
 import { NavigationEnd, Router } from '@angular/router';
 import { Event as NavigationEvent } from '@angular/router';
 import { MenuItem } from '../model/common.model';
-import { PersonalProfileMenuItems, PersonalProfilePopupMenuItems } from '../model/profile-menu.model';
+import { PersonalProfileMenuItems, PersonalProfilePopupAdministrationMenuItem, PersonalProfilePopupMenuItems } from '../model/profile-menu.model';
 import { AuthService } from '../services/auth.service';
 import { NotificationService } from '../services/notification.service';
 
@@ -67,6 +67,14 @@ export class PersonalComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        console.log(this.auth.user?.roles);
+        const adminRole = this.auth.user?.roles?.find(r => r.name === 'ADMIN');
+        if (adminRole) {
+            const adminMenu = this.popupItems.find(x => x.id === PersonalProfilePopupAdministrationMenuItem.id);
+            if (!adminMenu) {
+                this.popupItems.splice(0, 0, PersonalProfilePopupAdministrationMenuItem);
+            }
+        }
         this.notification.subscribeToNotifications().subscribe(({ data }) => {
             // got data
         }, (error) => {
@@ -82,6 +90,8 @@ export class PersonalComponent implements OnInit {
     popupMenuClick(item: MenuItem): void {
         if (item.id === 'logout') {
             this.logout();
+        } else if (item.id === 'administration') {
+            this.routeTo('/admin/main');
         }
     }
 

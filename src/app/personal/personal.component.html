@@ -19,17 +19,11 @@
             </button>
         </div>
         <div class="menu-box">
-            <button class="link-button link-button-menu link-button-primary" (click)="routeTo('/admin/main')">
-                Administration
-            </button>
             <app-notification-icon></app-notification-icon>
             <button mat-icon-button (click)="notificationTest()">
                 <mat-icon>notifications</mat-icon>
             </button>
             <span>{{userName}}</span>
-            <button mat-icon-button (click)="logout()">
-                <mat-icon>exit_to_app</mat-icon>
-            </button>
 
             <app-nav-popup [items]="popupItems" (onMenuClick)="popupMenuClick($event)"></app-nav-popup>
         </div>
