@@ -1,3 +1,21 @@
+@import "./fonts.scss";
+@import "./colors.scss";
+
+$top-menu-height: 64px;
+
+// .__top-menu-bar {
+//     position        : fixed;
+//     box-sizing      : border-box;
+//     -moz-box-align  : center;
+//     align-items     : center;
+//     -moz-box-pack   : justify;
+//     width           : 1366px;
+//     height          : 96px;
+//     background-color: #E5E5E5;
+//     padding         : 24px;
+//     z-index: 100;
+// }
+
 .menu-bar {
     position: fixed;
     box-sizing      : border-box;
@@ -6,7 +24,7 @@
     -moz-box-pack   : justify;
     width           : 1366px;
     height          : 96px;
-    background-color: #E5E5E5;
+    background-color: $color_white;
     padding         : 24px;
     z-index: 100;
 }

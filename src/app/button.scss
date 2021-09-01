@@ -1,0 +1,108 @@
+@import "fonts.scss";
+@import "colors.scss";
+
+.__main-button {
+    justify-content: center;
+    align-items: center;
+    padding: 8px 16px;
+    height: 31px;
+
+    background: $color_main_blue_800;
+    box-shadow: 0px 3px 3px rgba(208, 207, 207, 0.2), 0px 3px 4px rgba(208, 207, 207, 0.14), 0px 1px 8px rgba(208, 207, 207, 0.12);
+    border-radius: 50px;
+    border: none;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 15px;
+    color: $color_white;
+    text-transform: uppercase;
+}
+
+.__main-button:focus {
+    outline: none;
+}
+
+.__main-button:hover {
+    background: $color_main_blue_600;
+    box-shadow: 0px 4px 5px rgba(208, 207, 207, 0.2), 0px 7px 10px rgba(208, 207, 207, 0.14), 0px 2px 16px rgba(208, 207, 207, 0.12);
+}
+
+.__main-button:disabled {
+    background: $color_purple_50;
+    box-shadow: none;
+    color: $color_purple_200;
+}
+
+.__borderless-button {
+    justify-content: center;
+    align-items: center;
+    padding: 9px 16px 9px 12px;
+    height: 36px;
+
+    background: transparent;
+    box-shadow: 0px 3px 5px rgba(208, 207, 207, 0.2), 0px 5px 8px rgba(208, 207, 207, 0.14), 0px 1px 14px rgba(208, 207, 207, 0.12);
+    border-radius: 50px;
+    border: none;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 15px;
+    color: $color_main_blue_800;
+}
+
+.__borderless-button:focus {
+    outline: none;
+}
+
+.__borderless-button:hover {
+    box-shadow: 0px 3px 5px rgba(208, 207, 207, 0.2), 0px 5px 8px rgba(208, 207, 207, 0.14), 0px 1px 14px rgba(208, 207, 207, 0.12);
+    color: $color_main_blue_600;
+}
+
+.__borderless-button:disabled {
+    background: $color_purple_50;
+    box-shadow: none;
+    color: $color_purple_200;
+}
+
+.__outlined-button {
+    justify-content: center;
+    align-items: center;
+    padding: 8px 16px;
+    height: 31px;
+    
+    background: transparent;
+    border: 1px solid $color_main_blue_800;
+    box-sizing: border-box;
+    border-radius: 50px;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 15px;
+    color: $color_main_blue_800;
+}
+
+.__outlined-button:focus {
+    outline: none;
+}
+
+.__outlined-button:hover {
+    border: 1px solid $color_main_blue_600;
+    color: $color_main_blue_600;
+}
+
+.__outlined-button:disabled {
+    border: 1px solid $color_purple_200;
+    color: $color_purple_200;
+}
+
+.__button_separator {
+    margin-left: 10px;
+}

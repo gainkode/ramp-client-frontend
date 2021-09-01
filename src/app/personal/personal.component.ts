@@ -9,7 +9,7 @@ import { NotificationService } from '../services/notification.service';
 
 @Component({
     templateUrl: 'personal.component.html',
-    styleUrls: ['../menu.scss', 'personal.component.scss']
+    styleUrls: ['../menu.scss', '../button.scss', 'personal.component.scss']
 })
 export class PersonalComponent implements OnInit {
     menuItems: MenuItem[] = PersonalProfileMenuItems;

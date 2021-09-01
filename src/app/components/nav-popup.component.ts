@@ -3,9 +3,9 @@ import { MenuItem } from '../model/common.model';
 import { MatMenuTrigger } from '@angular/material/menu';
 
 @Component({
-  selector: 'app-nav-popup-item',
+  selector: 'app-nav-popup',
   templateUrl: 'nav-popup.component.html',
-  styleUrls: ['../menu.scss']
+  styleUrls: ['../menu.scss', '../button.scss']
 })
 export class NavPopupComponent {
     @ViewChild('menuTrigger') menuTrigger!: MatMenuTrigger;

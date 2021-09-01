@@ -4,13 +4,17 @@
             <button mat-icon-button (click)="routeTo(getUserMainPage())">
                 <mat-icon>attractions</mat-icon>
             </button>
-            <button class="link-button link-button-menu link-button-primary" (click)="routeTo('/merchant/intro')">
-                Top Up
+
+
+
+
+            <button class="__outlined-button __button_separator" type="button" disabled>
+                + Button
             </button>
-            <button class="link-button link-button-menu link-button-primary" (click)="routeTo('/merchant/intro')">
-                Withdraw
-            </button>
-            <button class="link-button link-button-menu link-button-primary" (click)="routeTo('/payment')">
+
+
+
+            <button class="__borderless-button" (click)="routeTo('/payment')">
                 Quick Checkout
             </button>
         </div>
@@ -27,7 +31,7 @@
                 <mat-icon>exit_to_app</mat-icon>
             </button>
 
-            <app-nav-popup-item [items]="popupItems" (onMenuClick)="popupMenuClick($event)"></app-nav-popup-item>
+            <app-nav-popup [items]="popupItems" (onMenuClick)="popupMenuClick($event)"></app-nav-popup>
         </div>
     </div>
 </div>

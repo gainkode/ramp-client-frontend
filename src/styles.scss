@@ -1,21 +1,10 @@
 @import './assets/material-theme';
+@import "./app/fonts.scss";
+@import "./app/colors.scss";
 
-@import url(https://fonts.googleapis.com/css?family=Ubuntu:300,300italic,regular,italic,500,500italic,700,700italic);
-
-@font-face {
-    font-family: Bahnschrift;
-    src        : url(assets/12002.ttf) format("truetype");
-}
-
-@font-face {
-    font-family: Rock Salt;
-    src        : url(assets/RockSalt-Regular.ttf) format("truetype");
-}
-
-$fontFamily: "Ubuntu";
 
 * {
-    font-family           : Bahnschrift, sans-serif;
+    font-family           : $font_main, sans-serif;
     font-size             : medium;
     -webkit-font-smoothing: antialiased;
 }
@@ -25,10 +14,10 @@ html, body {
 }
 
 body {
-    background-color: #E5E5E5;
+    background-color: $color_white;
     padding         : 0;
     margin          : 0;
-    font-family     : $fontFamily, Bahnschrift, Roboto, "Helvetica Neue", sans-serif;
+    font-family     : $font_main, Roboto, "Helvetica Neue", sans-serif;
     min-width       : 1366px;
 }
 
@@ -50,17 +39,17 @@ input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-    box-shadow        : 0 0 0 30px #DDDFE6 inset !important;
-    -webkit-box-shadow: 0 0 0 30px #DDDFE6 inset !important;
+    box-shadow        : 0 0 0 30px $color_white inset !important;
+    -webkit-box-shadow: 0 0 0 30px $color_white inset !important;
 }
 
 input:-webkit-autofill::first-line {
     font-size  : medium;
-    font-family: Bahnschrift, sans-serif;
+    font-family: $font_main, sans-serif;
 }
 
 .mat-input-element {
-    background: #DDDFE6;
+    background: $color_white;
 }
 
 .inline-button {
