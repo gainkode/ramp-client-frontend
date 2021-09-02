@@ -1,20 +1,19 @@
 @import "./fonts.scss";
 @import "./colors.scss";
 
-$top-menu-height: 64px;
+$top-menu-height: 64;
 
-// .__top-menu-bar {
-//     position        : fixed;
-//     box-sizing      : border-box;
-//     -moz-box-align  : center;
-//     align-items     : center;
-//     -moz-box-pack   : justify;
-//     width           : 1366px;
-//     height          : 96px;
-//     background-color: #E5E5E5;
-//     padding         : 24px;
-//     z-index: 100;
-// }
+.__top-menu-bar {
+    display: flex;
+    justify-content: flex-end;
+    box-sizing      : border-box;
+    -moz-box-align  : center;
+    align-items     : center;
+    -moz-box-pack   : justify;
+    height          : $top-menu-height + px;
+    padding         : 24px;
+    background-color: $color_white;
+}
 
 .menu-bar {
     position: fixed;

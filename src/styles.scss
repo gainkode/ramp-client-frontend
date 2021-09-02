@@ -2,6 +2,18 @@
 @import "./app/fonts.scss";
 @import "./app/colors.scss";
 
+$min_width: 1024;
+$max_width: 1920;
+$max_width_container: 1920;
+$mid_width_container: 1366;
+$min_width_container: 1024;
+$out_width_container: 320;
+$max_height: 1080;
+$min_height: 768;
+
+$md1: $max_width_container - 12;
+$md2: $mid_width_container - 12;
+$md3: $min_width_container - 12;
 
 * {
     font-family           : $font_main, sans-serif;
@@ -17,22 +29,51 @@ body {
     background-color: $color_white;
     padding         : 0;
     margin          : 0;
-    font-family     : $font_main, Roboto, "Helvetica Neue", sans-serif;
-    min-width       : 1366px;
-}
-
-.content-wrapper {
-    display: flex;
-    min-height: 100%;
-    overflow: hidden;
-    flex-direction: column;
+    font-family     : $font_main, sans-serif;
     background-color: cornflowerblue;
 }
 
-.body-container {
-    width: 1366px;
-    min-height: 1080px;
+.__container {
+    max-width: $max_width_container + px;
+    min-height: $max_height + px;
     margin: 0px auto;
+    background-color: #70e2c9;
+
+    @media (max-width: $md1 + px) {
+        max-width: $mid_width_container + px;
+        min-height: $min_height + px;
+    }
+    
+    @media (max-width: $md2 + px) {
+        max-width: $mid_width_container + px;
+        min-width: $mid_width_container + px;
+        min-height: $min_height + px;
+    }
+
+    @media (max-width: $md3 + px) {
+        max-width: $out_width_container + px;
+        min-width: $out_width_container + px;
+    }
+}
+
+.__header-container {
+    position: fixed;
+    width: $max_width_container + px;
+    z-index: 100;
+
+    @media (max-width: $md1 + px) {
+        width: $mid_width_container + px;
+    }
+    
+    @media (max-width: $md2 + px) {
+        width: $mid_width_container + px;
+        min-width: $mid_width_container + px;
+    }
+
+    @media (max-width: $md3 + px) {
+        width: $out_width_container + px;
+        min-width: $out_width_container + px;
+    }
 }
 
 input:-webkit-autofill,

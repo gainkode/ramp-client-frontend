@@ -1,4 +1,9 @@
-<div class="menu-bar">
+<div class="__header-container">
+    <div class="__top-menu-bar">
+        <app-nav-popup [items]="popupItems" (onMenuClick)="popupMenuClick($event)"></app-nav-popup>
+    </div>
+</div>
+<!-- <div class="__top-menu-bar">
     <div class="menu-content-bar">
         <div class="menu-box">
             <button mat-icon-button (click)="routeTo(getUserMainPage())">
@@ -28,9 +33,9 @@
             <app-nav-popup [items]="popupItems" (onMenuClick)="popupMenuClick($event)"></app-nav-popup>
         </div>
     </div>
-</div>
+</div> -->
 
-<div class="profile-side-nav">
+<!-- <div class="profile-side-nav">
     <div class="split-panel-menu">
         <mat-selection-list [multiple]="false" (selectionChange)="menuChanged($event)">
             <mat-list-option *ngFor="let item of menuItems" [value]="item" [selected]="selectedMenu===item.id"
@@ -42,7 +47,7 @@
             </mat-list-option>
         </mat-selection-list>
     </div>
-</div>
+</div> -->
 
 <div class="profile-content-block">
     <router-outlet></router-outlet>
