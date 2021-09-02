@@ -1,52 +1,37 @@
-<div class="__header-container">
-    <div class="__top-menu-bar">
-        <div class="__top-menu-content-bar">
-            <div class="__profile-top-menu-logo-box">
-                    <button mat-icon-button (click)="routeTo(getUserMainPage())">
-                        eWallet
-                    </button>
-            </div>
-            <div class="__top-menu-content-box">
-
-
-
-
-                <button class="__borderless-button" (click)="routeTo('/payment')">
-                    Quick Checkout
-                </button>
-                <app-nav-popup class="__button-separator" [items]="popupItems" (onMenuClick)="popupMenuClick($event)">
-                </app-nav-popup>
-            </div>
+<div class="__top-menu-bar">
+    <div class="__top-menu-content-bar">
+        <div class="__profile-top-menu-logo-box">
+            <button mat-icon-button style="width: 150px;color: darkblue;" (click)="routeTo(getUserMainPage())">
+                eWallet Logo
+            </button>
         </div>
-    </div>
-    <div class="__profile-container">
-        <div class="__profile-side-menu">
-            test
-        </div>
-        <div class="__profile-content">
-            <router-outlet></router-outlet>
+        <div class="__top-menu-content-box">
+            <button class="__borderless-button" (click)="routeTo('/payment')">
+                Quick Checkout
+            </button>
+            <app-nav-popup class="__button-separator" [items]="popupItems" [userName]="userName" (onMenuClick)="popupMenuClick($event)">
+            </app-nav-popup>
         </div>
     </div>
 </div>
+<div class="__profile-container">
+    <div class="__profile-side-menu">
+        
+    </div>
+    <div class="__profile-content">
+        <router-outlet></router-outlet>
+    </div>
+</div>
+
+
+
 <!-- <div class="__top-menu-bar">
     <div class="menu-content-bar">
-        <div class="menu-box">
-            <button mat-icon-button (click)="routeTo(getUserMainPage())">
-                <mat-icon>attractions</mat-icon>
-            </button>
-
-
-
-
-        </div>
         <div class="menu-box">
             <app-notification-icon></app-notification-icon>
             <button mat-icon-button (click)="notificationTest()">
                 <mat-icon>notifications</mat-icon>
             </button>
-            <span>{{userName}}</span>
-
-            
         </div>
     </div>
 </div> -->

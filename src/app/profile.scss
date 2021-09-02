@@ -1,5 +1,6 @@
 @import "./fonts.scss";
 @import "./colors.scss";
+@import "./menu.scss";
 @import "../styles.scss";
 
 $side_menu_width_sm: 244;
@@ -10,8 +11,6 @@ $side_menu_width_lg: 336;
 }
 
 .__profile-side-menu {
-    height          : auto;
-    min-height      : 100%;
     width           : $side_menu_width_lg + px;
     background-color: $color_orange_300;
 
@@ -29,8 +28,6 @@ $side_menu_width_lg: 336;
 }
 
 .__profile-content {
-    height          : auto;
-    min-height      : 100%;
     background-color: $color_green_300;
     width           : ($max_width_container - $side_menu_width_lg) + px;
 
@@ -48,7 +45,7 @@ $side_menu_width_lg: 336;
 }
 
 .__profile-top-menu-logo-box {
-    text-align: center;
+    text-align      : center;
     width           : ($side_menu_width_lg - 48) + px;
 
     @media (max-width: $md1 + px) {

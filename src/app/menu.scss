@@ -1,9 +1,12 @@
 @import "./fonts.scss";
 @import "./colors.scss";
+@import "../styles.scss";
 
 $top-menu-height: 64;
 
 .__top-menu-bar {
+    position: sticky;
+    top: 0px;
     display: flex;
     box-sizing      : border-box;
     -moz-box-align  : center;
@@ -12,6 +15,22 @@ $top-menu-height: 64;
     height          : $top-menu-height + px;
     padding         : 0px 24px;
     background-color: $color_white;
+    width: $max_width_container + px;
+    z-index: 100;
+
+    @media (max-width: $md1 + px) {
+        width: $mid_width_container + px;
+    }
+    
+    @media (max-width: $md2 + px) {
+        width: $mid_width_container + px;
+        min-width: $mid_width_container + px;
+    }
+
+    @media (max-width: $md3 + px) {
+        width: $out_width_container + px;
+        min-width: $out_width_container + px;
+    }
 }
 
 .__top-menu-content-bar {
@@ -23,7 +42,16 @@ $top-menu-height: 64;
 
 .__top-menu-content-box {
     display         : flex;
+    align-items     : center;
 }
+
+
+
+
+
+
+
+
 
 .menu-bar {
     position: fixed;
@@ -35,7 +63,7 @@ $top-menu-height: 64;
     height          : 96px;
     background-color: $color_white;
     padding         : 24px;
-    z-index: 100;
+    z-index         : 100;
 }
 
 .menu-content-bar {
@@ -48,7 +76,6 @@ $top-menu-height: 64;
 
 .menu-box {
     margin: 0 0em;
-
 }
 
 .menu-delimiter {

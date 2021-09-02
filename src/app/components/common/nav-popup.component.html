@@ -1,8 +1,13 @@
-<button class="__main-button" type="button" [matMenuTriggerFor]="menu" #menuTrigger>
-    Text
-</button>
-<mat-menu #menu="matMenu">
-    <button *ngFor="let item of items" mat-menu-item (click)="clickItem(item)">
-        {{item.name}}
+<div style="height: 48px;background-color: coral;">
+    <div>
+        {{userName}}
+    </div>
+    <button class="__main-button" type="button" [matMenuTriggerFor]="menu" #menuTrigger>
+        Text
     </button>
-</mat-menu>
+    <mat-menu #menu="matMenu">
+        <button *ngFor="let item of items" mat-menu-item (click)="clickItem(item)">
+            {{item.name}}
+        </button>
+    </mat-menu>
+</div>

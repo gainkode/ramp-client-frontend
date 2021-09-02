@@ -11,6 +11,7 @@ export class NavPopupComponent {
     @ViewChild('menuTrigger') menuTrigger!: MatMenuTrigger;
     @Output() onMenuClick = new EventEmitter<MenuItem>();
     @Input() items: MenuItem[] | undefined = undefined;
+    @Input() userName: string = '';
 
     clickItem(item: MenuItem): void {
         if (this.onMenuClick) {
