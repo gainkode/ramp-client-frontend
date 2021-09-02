@@ -5,14 +5,24 @@ $top-menu-height: 64;
 
 .__top-menu-bar {
     display: flex;
-    justify-content: flex-end;
     box-sizing      : border-box;
     -moz-box-align  : center;
     align-items     : center;
     -moz-box-pack   : justify;
     height          : $top-menu-height + px;
-    padding         : 24px;
+    padding         : 0px 24px;
     background-color: $color_white;
+}
+
+.__top-menu-content-bar {
+    width           : 100%;
+    display         : flex;
+    justify-content : space-between;
+    align-items     : center;
+}
+
+.__top-menu-content-box {
+    display         : flex;
 }
 
 .menu-bar {

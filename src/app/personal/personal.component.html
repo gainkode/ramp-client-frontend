@@ -1,6 +1,31 @@
 <div class="__header-container">
     <div class="__top-menu-bar">
-        <app-nav-popup [items]="popupItems" (onMenuClick)="popupMenuClick($event)"></app-nav-popup>
+        <div class="__top-menu-content-bar">
+            <div class="__profile-top-menu-logo-box">
+                    <button mat-icon-button (click)="routeTo(getUserMainPage())">
+                        eWallet
+                    </button>
+            </div>
+            <div class="__top-menu-content-box">
+
+
+
+
+                <button class="__borderless-button" (click)="routeTo('/payment')">
+                    Quick Checkout
+                </button>
+                <app-nav-popup class="__button-separator" [items]="popupItems" (onMenuClick)="popupMenuClick($event)">
+                </app-nav-popup>
+            </div>
+        </div>
+    </div>
+    <div class="__profile-container">
+        <div class="__profile-side-menu">
+            test
+        </div>
+        <div class="__profile-content">
+            <router-outlet></router-outlet>
+        </div>
     </div>
 </div>
 <!-- <div class="__top-menu-bar">
@@ -13,15 +38,6 @@
 
 
 
-            <button class="__outlined-button __button_separator" type="button" disabled>
-                + Button
-            </button>
-
-
-
-            <button class="__borderless-button" (click)="routeTo('/payment')">
-                Quick Checkout
-            </button>
         </div>
         <div class="menu-box">
             <app-notification-icon></app-notification-icon>
@@ -30,7 +46,7 @@
             </button>
             <span>{{userName}}</span>
 
-            <app-nav-popup [items]="popupItems" (onMenuClick)="popupMenuClick($event)"></app-nav-popup>
+            
         </div>
     </div>
 </div> -->
@@ -48,7 +64,3 @@
         </mat-selection-list>
     </div>
 </div> -->
-
-<div class="profile-content-block">
-    <router-outlet></router-outlet>
-</div>

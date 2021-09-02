@@ -3,13 +3,17 @@ import { MatSelectionListChange } from '@angular/material/list';
 import { NavigationEnd, Router } from '@angular/router';
 import { Event as NavigationEvent } from '@angular/router';
 import { MenuItem } from '../model/common.model';
-import { PersonalProfileMenuItems, PersonalProfilePopupAdministrationMenuItem, PersonalProfilePopupMenuItems } from '../model/profile-menu.model';
+import {
+    PersonalProfileMenuItems,
+    PersonalProfilePopupAdministrationMenuItem,
+    PersonalProfilePopupMenuItems
+} from '../model/profile-menu.model';
 import { AuthService } from '../services/auth.service';
 import { NotificationService } from '../services/notification.service';
 
 @Component({
     templateUrl: 'personal.component.html',
-    styleUrls: ['../menu.scss', '../button.scss', 'personal.component.scss']
+    styleUrls: ['../menu.scss', '../button.scss', '../profile.scss', 'personal.component.scss']
 })
 export class PersonalComponent implements OnInit {
     menuItems: MenuItem[] = PersonalProfileMenuItems;
@@ -67,7 +71,6 @@ export class PersonalComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        console.log(this.auth.user?.roles);
         const adminRole = this.auth.user?.roles?.find(r => r.name === 'ADMIN');
         if (adminRole) {
             const adminMenu = this.popupItems.find(x => x.id === PersonalProfilePopupAdministrationMenuItem.id);

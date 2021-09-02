@@ -1,0 +1,65 @@
+@import "./fonts.scss";
+@import "./colors.scss";
+@import "../styles.scss";
+
+$side_menu_width_sm: 244;
+$side_menu_width_lg: 336;
+
+.__profile-container {
+    display: flex;
+}
+
+.__profile-side-menu {
+    height          : auto;
+    min-height      : 100%;
+    width           : $side_menu_width_lg + px;
+    background-color: $color_orange_300;
+
+    @media (max-width: $md1 + px) {
+        width: $side_menu_width_sm + px;
+    }
+    
+    @media (max-width: $md2 + px) {
+        width: $side_menu_width_sm + px;
+    }
+
+    @media (max-width: $md3 + px) {
+        width: 0px;
+    }
+}
+
+.__profile-content {
+    height          : auto;
+    min-height      : 100%;
+    background-color: $color_green_300;
+    width           : ($max_width_container - $side_menu_width_lg) + px;
+
+    @media (max-width: $md1 + px) {
+        width: ($mid_width_container - $side_menu_width_sm) + px;
+    }
+    
+    @media (max-width: $md2 + px) {
+        width: ($mid_width_container - $side_menu_width_sm) + px;
+    }
+
+    @media (max-width: $md3 + px) {
+        width: $out_width_container + px;
+    }
+}
+
+.__profile-top-menu-logo-box {
+    text-align: center;
+    width           : ($side_menu_width_lg - 48) + px;
+
+    @media (max-width: $md1 + px) {
+        width: ($side_menu_width_sm - 48) + px;
+    }
+    
+    @media (max-width: $md2 + px) {
+        width: ($side_menu_width_sm - 48) + px;
+    }
+
+    @media (max-width: $md3 + px) {
+        width: 0px;
+    }
+}

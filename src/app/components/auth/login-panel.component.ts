@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { AuthService } from '../services/auth.service';
-import { ErrorService } from '../services/error.service';
+import { AuthService } from '../../services/auth.service';
+import { ErrorService } from '../../services/error.service';
 import { Validators, FormBuilder } from '@angular/forms';
 import { SocialUser } from 'angularx-social-login';
-import { LoginResult, UserMode } from '../model/generated-models';
+import { LoginResult, UserMode } from '../../model/generated-models';
 import { SignupInfoPanelComponent } from './signup-info.component';
 
 @Component({

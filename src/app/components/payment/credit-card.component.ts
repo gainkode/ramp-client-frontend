@@ -1,6 +1,6 @@
 import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
-import { CardView } from '../model/payment.model';
+import { CardView } from '../../model/payment.model';
 
 const cardValid = require('card-validator');
 const creditCardType = require('credit-card-type');

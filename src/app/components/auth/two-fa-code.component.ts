@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { FormBuilder, NgForm, Validators } from '@angular/forms';
-import { LoginResult, TwoFactorAuthenticationResult } from '../model/generated-models';
-import { AuthService } from '../services/auth.service';
-import { ErrorService } from '../services/error.service';
+import { LoginResult, TwoFactorAuthenticationResult } from '../../model/generated-models';
+import { AuthService } from '../../services/auth.service';
+import { ErrorService } from '../../services/error.service';
 
 @Component({
     selector: 'app-two-fa-code',

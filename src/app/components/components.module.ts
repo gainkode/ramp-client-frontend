@@ -29,18 +29,21 @@ import { DirectiveModule } from '../directives/directives.module';
 import { LineBreakPipe } from '../utils/line-break.pipe';
 import { NumberFillPipe } from '../utils/number-fill.pipe';
 
-import { DropdownItemComponent } from './dropdown-item.component';
-import { BackButtonComponent } from './backbutton.component';
-import { TabLabelComponent } from './tablabel.component';
+import { DropdownItemComponent } from './common/dropdown-item.component';
+import { BackButtonComponent } from './common/backbutton.component';
+import { TabLabelComponent } from './common/tablabel.component';
 import { KycPanelComponent } from './kyc-panel.component';
-import { CommonDialogBox } from './common-box.dialog';
-import { CheckoutSummaryComponent } from './checkout-summary.component';
-import { ExchangeRateComponent } from './exchange-rate.component';
-import { LoginPanelComponent } from './login-panel.component';
-import { CheckoutDoneComponent } from './checkout-done.component';
-import { CreditCardComponent } from './credit-card.component';
+import { CommonDialogBox } from './common/common-box.dialog';
+import { CheckoutSummaryComponent } from './payment/checkout-summary.component';
+import { ExchangeRateComponent } from './payment/exchange-rate.component';
+import { LoginPanelComponent } from './auth/login-panel.component';
+import { CheckoutDoneComponent } from './payment/checkout-done.component';
+import { CreditCardComponent } from './payment/credit-card.component';
 import { NotificationIconComponent } from './notification-bar/notification.component';
-import { TwoFaCodeComponent } from './two-fa-code.component';
+import { TwoFaCodeComponent } from './auth/two-fa-code.component';
+import { NavPopupComponent } from './common/nav-popup.component';
+import { SignUpPanelComponent } from './auth/signup-panel.component';
+import { SignupInfoPanelComponent } from './auth/signup-info.component';
 
 import { ProfileAccountBalanceComponent } from './profile/profile-account-balance.component';
 import { ProfileExchangeComponent } from './profile/profile-exchange.component';
@@ -55,10 +58,7 @@ import { ProfileContactsComponent } from './profile/profile-contacts.component';
 import { ProfileWithdrawalComponent } from './profile/profile-withdrawal.component';
 import { ProfileAssetsComponent } from './profile/profile-assets.component';
 import { ProfileLastExchangesComponent } from './profile/profile-last-exchanges.component';
-import { SignUpPanelComponent } from './signup-panel.component';
-import { SignupInfoPanelComponent } from './signup-info.component';
 import { ProfileContactEditorComponent } from './profile/profile-contact-editor.component';
-import { NavPopupComponent } from './nav-popup.component';
 
 const materialModules = [
     ClipboardModule,

@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ErrorService } from 'src/app/services/error.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
 import { PasswordValidator } from 'src/app/utils/password.validator';
-import { CommonDialogBox } from '../common-box.dialog';
+import { CommonDialogBox } from '../common/common-box.dialog';
 
 @Component({
   selector: 'app-password',

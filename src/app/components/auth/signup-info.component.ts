@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { AuthService } from '../services/auth.service';
-import { ErrorService } from '../services/error.service';
+import { AuthService } from '../../services/auth.service';
+import { ErrorService } from '../../services/error.service';
 import { Validators, FormBuilder, AbstractControl } from '@angular/forms';
-import { LoginResult, PostAddress, SettingsKyc, UserMode, UserType } from '../model/generated-models';
+import { LoginResult, PostAddress, SettingsKyc, UserMode, UserType } from '../../model/generated-models';
 import { Subscription } from 'rxjs';
-import { getCountryByCode3 } from '../model/country-code.model';
+import { getCountryByCode3 } from '../../model/country-code.model';
 
 @Component({
     selector: 'app-signup-info-panel',

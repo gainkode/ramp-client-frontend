@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { LoginResult, SettingsCommon, UserType } from '../model/generated-models';
 import { MatDialog } from '@angular/material/dialog';
-import { CommonDialogBox } from '../components/common-box.dialog';
+import { CommonDialogBox } from '../components/common/common-box.dialog';
 import { ErrorService } from '../services/error.service';
 
 @Component({
