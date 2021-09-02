@@ -1,9 +1,10 @@
-<div style="height: 48px;background-color: coral;">
-    <div>
+<div class="__nav-popup-content-block">
+    <div class="__nav-popup-user-name">
         {{userName}}
     </div>
-    <button class="__main-button" type="button" [matMenuTriggerFor]="menu" #menuTrigger>
-        Text
+    <button class="__nav-popup-button_box" type="button" [matMenuTriggerFor]="menu" #menuTrigger>
+        <img class="__nav-popup-user-icon" src="img_avatar.png" alt="Avatar">
+        <img class="__nav-popup-arrow-down" src="../../../assets/navigation/plain_arrow_down.svg">
     </button>
     <mat-menu #menu="matMenu">
         <button *ngFor="let item of items" mat-menu-item (click)="clickItem(item)">

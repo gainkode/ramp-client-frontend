@@ -5,7 +5,7 @@ import { MatMenuTrigger } from '@angular/material/menu';
 @Component({
   selector: 'app-nav-popup',
   templateUrl: 'nav-popup.component.html',
-  styleUrls: ['../../menu.scss', '../../button.scss']
+  styleUrls: ['nav-popup.component.scss', '../../fonts.scss', '../../colors.scss']
 })
 export class NavPopupComponent {
     @ViewChild('menuTrigger') menuTrigger!: MatMenuTrigger;

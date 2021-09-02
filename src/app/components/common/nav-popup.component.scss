@@ -1,0 +1,40 @@
+@import "../../fonts.scss";
+@import "../../colors.scss";
+
+.__nav-popup-content-block {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 48px;
+}
+
+.__nav-popup-button_box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
+    height: 48px;
+    border: none;
+}
+
+.__nav-popup-user-icon {
+    width: 48px;
+    height: 48px;
+    background-color: limegreen;
+    border-radius: 50%;
+}
+
+.__nav-popup-arrow-down {
+    margin-left: 24px;
+    margin-right: 6px;
+}
+
+.__nav-popup-user-name {
+    margin: 0px 18px;
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 21px;
+    line-height: 28px;
+    color: $color_purple_900;
+}

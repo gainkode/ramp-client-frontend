@@ -9,7 +9,7 @@
             <button class="__borderless-button" (click)="routeTo('/payment')">
                 Quick Checkout
             </button>
-            <app-nav-popup class="__button-separator" [items]="popupItems" [userName]="userName" (onMenuClick)="popupMenuClick($event)">
+            <app-nav-popup [items]="popupItems" [userName]="userName" (onMenuClick)="popupMenuClick($event)">
             </app-nav-popup>
         </div>
     </div>
