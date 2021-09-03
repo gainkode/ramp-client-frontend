@@ -103,6 +103,42 @@
     color: $color_purple_200;
 }
 
+.__tool-button {
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
+    width: 24px;
+    height: 24px;
+
+    background: $color_white;
+    border: none;
+
+    font-size: 4px;
+    color: $color_purple_900;
+}
+
+.__tool-button:focus {
+    outline: none;
+}
+
+.__tool-button:hover {
+    color: $color_main_blue_600;
+}
+
+.__tool-button:disabled {
+    box-shadow: none;
+    color: $color_purple_200;
+}
+
+.__tool-button-icon {
+    margin: auto;
+}
+
+.__tool-button-icon-rotated {
+    margin: auto;
+    transform: rotate(180deg);
+}
+
 .__button-separator {
     margin-left: 10px;
 }

@@ -3,7 +3,9 @@
 @import "./menu.scss";
 @import "../styles.scss";
 
+$side_menu_narrow_width_sm: 134;
 $side_menu_width_sm: 244;
+$side_menu_narrow_width_lg: 140;
 $side_menu_width_lg: 336;
 
 .__profile-container {
@@ -11,8 +13,42 @@ $side_menu_width_lg: 336;
 }
 
 .__profile-side-menu {
+    width           : $side_menu_narrow_width_lg + px;
+        background-color: $color_white;
+
+    @media (max-width: $md1 + px) {
+        width: $side_menu_narrow_width_sm + px;
+    }
+    
+    @media (max-width: $md2 + px) {
+        width: $side_menu_narrow_width_sm + px;
+    }
+
+    @media (max-width: $md3 + px) {
+        width: 0px;
+    }
+}
+
+.__profile-content {
+    background-color: $color_green_300;
+    width           : ($max_width_container - $side_menu_narrow_width_lg) + px;
+
+    @media (max-width: $md1 + px) {
+        width: ($mid_width_container - $side_menu_narrow_width_sm) + px;
+    }
+    
+    @media (max-width: $md2 + px) {
+        width: ($mid_width_container - $side_menu_narrow_width_sm) + px;
+    }
+
+    @media (max-width: $md3 + px) {
+        width: $out_width_container + px;
+    }
+}
+
+.__profile-side-menu-expanded {
     width           : $side_menu_width_lg + px;
-    background-color: $color_orange_300;
+    background-color: $color_white;
 
     @media (max-width: $md1 + px) {
         width: $side_menu_width_sm + px;
@@ -27,7 +63,7 @@ $side_menu_width_lg: 336;
     }
 }
 
-.__profile-content {
+.__profile-content-expanded {
     background-color: $color_green_300;
     width           : ($max_width_container - $side_menu_width_lg) + px;
 

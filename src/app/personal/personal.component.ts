@@ -18,6 +18,7 @@ import { NotificationService } from '../services/notification.service';
 export class PersonalComponent implements OnInit {
     menuItems: MenuItem[] = PersonalProfileMenuItems;
     popupItems: MenuItem[] = PersonalProfilePopupMenuItems;
+    expandedManu = false;
     selectedMenu = 'home';
 
     constructor(private auth: AuthService, private notification: NotificationService, private router: Router) {
@@ -71,6 +72,10 @@ export class PersonalComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        // side menu expanded state
+        const expandedVal = localStorage.getItem('sideMenuExpanded');
+        this.expandedManu = (expandedVal === 'true');
+        // Administration menu item
         const adminRole = this.auth.user?.roles?.find(r => r.name === 'ADMIN');
         if (adminRole) {
             const adminMenu = this.popupItems.find(x => x.id === PersonalProfilePopupAdministrationMenuItem.id);
@@ -78,11 +83,21 @@ export class PersonalComponent implements OnInit {
                 this.popupItems.splice(0, 0, PersonalProfilePopupAdministrationMenuItem);
             }
         }
+        // Notifications
         this.notification.subscribeToNotifications().subscribe(({ data }) => {
             // got data
         }, (error) => {
             // there was an error subscribing to notifications
         });
+    }
+
+    sideMenuExpanded(state: boolean): void {
+        this.expandedManu = state;
+        if (state === true) {
+            localStorage.setItem('sideMenuExpanded', 'true');
+        } else {
+            localStorage.setItem('sideMenuExpanded', 'false');
+        }
     }
 
     menuChanged(e: MatSelectionListChange): void {
@@ -107,7 +122,6 @@ export class PersonalComponent implements OnInit {
     }
 
     logout(): void {
-        console.log('logout');
         this.auth.logout();
         this.router.navigateByUrl('/');
     }

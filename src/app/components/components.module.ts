@@ -59,6 +59,7 @@ import { ProfileWithdrawalComponent } from './profile/profile-withdrawal.compone
 import { ProfileAssetsComponent } from './profile/profile-assets.component';
 import { ProfileLastExchangesComponent } from './profile/profile-last-exchanges.component';
 import { ProfileContactEditorComponent } from './profile/profile-contact-editor.component';
+import { SideExpanderComponent } from './common/side-expander.component';
 
 const materialModules = [
     ClipboardModule,
@@ -93,7 +94,7 @@ export class MaterialModule { }
     imports: [CommonModule, FormsModule, ReactiveFormsModule, MaterialModule, DirectiveModule, QRCodeModule],
     declarations: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
         CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, NotificationIconComponent,
-        LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, CommonDialogBox,
+        LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, CommonDialogBox, SideExpanderComponent,
         CreditCardComponent, TwoFaCodeComponent, NavPopupComponent, LineBreakPipe, NumberFillPipe,
         ProfileAccountBalanceComponent, ProfileExchangeComponent, ProfileNotificationsComponent,
         ProfileQuickTransferComponent, ProfileTransactionsComponent, ProfileInfoComponent, ProfileTwoFAComponent,
@@ -102,8 +103,8 @@ export class MaterialModule { }
         ProfileAssetsComponent, ProfileLastExchangesComponent],
     exports: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
         CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, NotificationIconComponent,
-        LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, CommonDialogBox, CreditCardComponent,
-        TwoFaCodeComponent, NavPopupComponent, LineBreakPipe, NumberFillPipe,
+        LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, CommonDialogBox, SideExpanderComponent,
+        CreditCardComponent, TwoFaCodeComponent, NavPopupComponent, LineBreakPipe, NumberFillPipe,
         ProfileAccountBalanceComponent, ProfileExchangeComponent, ProfileNotificationsComponent,
         ProfileQuickTransferComponent, ProfileTransactionsComponent, ProfileInfoComponent, ProfileTwoFAComponent,
         ProfilePasswordComponent, ProfileVerificationComponent, ProfileContactsComponent,

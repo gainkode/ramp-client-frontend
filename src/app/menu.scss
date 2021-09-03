@@ -85,6 +85,35 @@
     margin-right: 16px;
 }
 
+.__side-menu-container {
+    display: flex;
+    flex-direction: column;
+    margin: 0px;
+    height: 100%;
+}
+
+.__side-menu-header-container {
+    background-color: darkseagreen;
+    height: 400px;
+}
+
+.__side-menu-footer-container {
+    flex-grow: 1;
+    position:relative;
+}
+
+.__side-menu-expand-control {
+    position: absolute;
+    bottom: 24px;
+    left: 24px;
+}
+
+
+
+
+
+
+
 
 
 .menu-bar {
