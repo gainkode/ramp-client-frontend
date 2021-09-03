@@ -6,3 +6,18 @@
         </button>
     </div>
 </div>
+<div *ngIf="!expanded">
+    <div *ngFor="let item of items">
+        <button [ngClass]="(selectedItem===item.id) ? '__side-menu-selected-button-sm' : '__side-menu-button-sm'"
+            (click)="clickItem(item)">
+            <div class="__side-menu-button-container-sm">
+                <mat-icon id="button_icon">
+                    {{item.icon}}
+                </mat-icon>
+                <div>
+                    {{item.name}}
+                </div>
+            </div>
+        </button>
+    </div>
+</div>

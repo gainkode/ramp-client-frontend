@@ -57,7 +57,7 @@
     padding: 0px;
     border: none;
     background-color: $color_white;
-    color: $color_purple_900;
+    color: $color_purple_900_text;
 
     font-family: $font_main;
     font-style: normal;
@@ -83,6 +83,7 @@
 .__popup-menu-button-icon {
     font-size: 32px;
     margin-right: 16px;
+    color: $color_purple_900_icons;
 }
 
 .__side-menu-container {

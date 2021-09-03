@@ -11,26 +11,26 @@ export const PersonalProfileMenuItems: Array<MenuItem> = [
         id: 'wallets',
         name: 'My Wallets',
         url: '/personal/main/wallets',
-        icon: 'account_circle'
+        icon: 'account_balance_wallet'
     },
     {
         id: 'transactions',
         name: 'Transactions',
         url: '/personal/main/transactions',
-        icon: 'compare_arrows'
+        icon: 'circle'
     },
     {
         id: 'contactlist',
         name: 'Contact List',
         url: '/personal/main/contactlist',
-        icon: 'contacts'
+        icon: 'group'
     },
     
     {
         id: 'swap',
         name: 'Swap',
         url: '/personal/main/swap',
-        icon: 'forward_10'
+        icon: 'sync_alt'
     }
 ];
 

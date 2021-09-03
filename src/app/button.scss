@@ -114,7 +114,7 @@
     border: none;
 
     font-size: 4px;
-    color: $color_purple_900;
+    color: $color_purple_900_icons;
 }
 
 .__tool-button:focus {
@@ -153,7 +153,7 @@
     font-weight: normal;
     font-size: 21px;
     line-height: 15px;
-    color: $color_purple_900;
+    color: $color_purple_900_text;
 
     text-align: left;
 }
@@ -199,12 +199,96 @@
     color: $color_purple_300;
 }
 
+.__side-menu-button-sm {
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
+    width: 100%;
+    height: 92px;
+    margin: 6px auto;
 
+    border: none;
 
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 28px;
+    color: $color_purple_900_text;
 
+    #button_icon {
+        font-size: 48px;
+        margin: auto;
+        width: 48px;
+        height: 48px;
+        color: $color_purple_900_icons;
+    }
+}
 
+.__side-menu-button-sm:focus {
+    outline: none;
+}
 
+.__side-menu-button-sm:hover {
+    color: $color_main_blue_600;
 
+    #button_icon {
+        color: $color_main_blue_600;
+    }
+}
+
+.__side-menu-button-sm:disabled {
+    color: $color_purple_300;
+
+    #button_icon {
+        color: $color_purple_300;
+    }
+}
+
+.__side-menu-selected-button-sm {
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
+    width: 100%;
+    height: 92px;
+    margin: 6px auto;
+
+    border: none;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 28px;
+    color: $color_main_blue_800;
+
+    #button_icon {
+        font-size: 48px;
+        margin: auto;
+        width: 48px;
+        height: 48px;
+        color: $color_main_blue_800;
+    }
+}
+
+.__side-menu-selected-button-sm:focus {
+    outline: none;
+}
+
+.__side-menu-button-sm:disabled {
+    color: $color_purple_300;
+
+    #button_icon {
+        color: $color_purple_300;
+    }
+}
+
+.__side-menu-button-container-sm {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
 
 .__button-separator {
     margin-left: 10px;
