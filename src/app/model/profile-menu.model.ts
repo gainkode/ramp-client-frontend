@@ -38,25 +38,25 @@ export const PersonalProfilePopupMenuItems: Array<MenuItem> = [
         id: 'notifications',
         name: 'Notifications',
         url: '',
-        icon: 'home'
+        icon: 'notifications'
     },
     {
         id: 'settings',
         name: 'Settings',
         url: '',
-        icon: ''
+        icon: 'construction'
     },
     {
         id: 'verification',
         name: 'Verification',
         url: '',
-        icon: ''
+        icon: 'person_outline'
     },
     {
         id: 'logout',
         name: 'Log out',
         url: '',
-        icon: ''
+        icon: 'logout'
     }
 ];
 
@@ -64,5 +64,5 @@ export const PersonalProfilePopupAdministrationMenuItem: MenuItem = {
     id: 'administration',
     name: 'Administration',
     url: '',
-    icon: 'home'
+    icon: 'admin_panel_settings'
 };

@@ -1,19 +1,7 @@
 @import './assets/material-theme';
 @import "./app/fonts.scss";
 @import "./app/colors.scss";
-
-$min_width: 1024;
-$max_width: 1920;
-$max_width_container: 1920;
-$mid_width_container: 1366;
-$min_width_container: 1024;
-$out_width_container: 320;
-$max_height: 1080;
-$min_height: 768;
-
-$md1: $max_width_container - 12;
-$md2: $mid_width_container - 12;
-$md3: $min_width_container - 12;
+@import "./app/consts.scss";
 
 * {
     font-family           : $font_main, sans-serif;
@@ -70,6 +58,14 @@ input:-webkit-autofill::first-line {
 
 .mat-input-element {
     background: $color_white;
+}
+
+.__popup-menu-panel {
+    padding: 12px 16px;
+    background: $color_white;
+    box-shadow: 0px 4px 5px rgba(208, 207, 207, 0.2), 0px 7px 10px rgba(208, 207, 207, 0.14), 0px 2px 16px rgba(208, 207, 207, 0.12);
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 .inline-button {
@@ -604,3 +600,6 @@ img.payment-logo {
 .snackbar-box {
     background-color: #B2C2CF;
 }
+
+
+
