@@ -20,11 +20,12 @@ import { ProfileMainPersonalComponent } from './profile/main.component';
 import { KycPersonalComponent } from './profile/kyc.component';
 import { ComponentsModule } from '../components/components.module';
 import { DirectiveModule } from '../directives/directives.module';
-import { PersonalExchangerComponent } from './profile/exchanger.component';
+import { PersonalSwapComponent } from './profile/swap.component';
 import { PersonalHomeComponent } from './profile/home.component';
 import { PersonalMyAccountComponent } from './profile/my-account.component';
 import { PersonalMyContactsComponent } from './profile/my-contacts.component';
 import { PersonalTransactionsComponent } from './profile/transactions.component';
+import { PersonalMyWalletsComponent } from './profile/my-wallets.component';
 
 const routing = RouterModule.forChild([
     { path: 'intro', component: IntroPersonalComponent },
@@ -33,10 +34,11 @@ const routing = RouterModule.forChild([
         component: PersonalComponent,
         children: [
             { path: 'home', component: PersonalHomeComponent, canActivate: [PersonalGuard] },
+            { path: 'wallets', component: PersonalMyWalletsComponent, canActivate: [PersonalGuard] },
             { path: 'myaccount', component: PersonalMyAccountComponent, canActivate: [PersonalGuard] },
-            { path: 'mycontacts', component: PersonalMyContactsComponent, canActivate: [PersonalGuard] },
+            { path: 'contactlist', component: PersonalMyContactsComponent, canActivate: [PersonalGuard] },
             { path: 'transactions', component: PersonalTransactionsComponent, canActivate: [PersonalGuard] },
-            { path: 'exchanger', component: PersonalExchangerComponent, canActivate: [PersonalGuard] },
+            { path: 'swap', component: PersonalSwapComponent, canActivate: [PersonalGuard] },
             { path: '**', redirectTo: 'home' }
         ],
         canActivate: [PersonalGuard]
@@ -69,10 +71,10 @@ export class MaterialModule { }
 
 @NgModule({
     imports: [CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule, DirectiveModule],
-    declarations: [IntroPersonalComponent, PersonalComponent,
-        ProfileMainPersonalComponent, KycPersonalComponent, PersonalHomeComponent,
-        PersonalMyAccountComponent, PersonalMyContactsComponent, PersonalTransactionsComponent,
-        PersonalExchangerComponent],
+    declarations: [
+        IntroPersonalComponent, PersonalComponent, ProfileMainPersonalComponent, 
+        PersonalHomeComponent, PersonalMyWalletsComponent, PersonalMyContactsComponent, PersonalTransactionsComponent, PersonalSwapComponent,
+        KycPersonalComponent, PersonalMyAccountComponent],
     providers: [PersonalGuard],
     schemas: [
         CUSTOM_ELEMENTS_SCHEMA

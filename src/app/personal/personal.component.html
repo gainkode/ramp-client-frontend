@@ -17,8 +17,10 @@
 <div class="__profile-container">
     <div [ngClass]="expandedManu ? '__profile-side-menu-expanded' : '__profile-side-menu'">
         <div class="__side-menu-container">
-            <div class="__side-menu-header-container">
-            </div>
+            <app-side-menu class="__side-menu-header-container"
+            [items]="menuItems" [selectedItem]="selectedMenu" [expanded]="expandedManu"
+            (onMenuClick)="sideMenuClick($event)">
+            </app-side-menu>
             <div class="__side-menu-footer-container">
                 <app-side-expander-button class="__side-menu-expand-control" [expanded]="expandedManu" (stateChanged)="sideMenuExpanded($event)">
                 </app-side-expander-button>
@@ -40,19 +42,5 @@
                 <mat-icon>notifications</mat-icon>
             </button>
         </div>
-    </div>
-</div> -->
-
-<!-- <div class="profile-side-nav">
-    <div class="split-panel-menu">
-        <mat-selection-list [multiple]="false" (selectionChange)="menuChanged($event)">
-            <mat-list-option *ngFor="let item of menuItems" [value]="item" [selected]="selectedMenu===item.id"
-            class="panel-menu">
-                <div class="panel-menu-item">
-                    <mat-icon class="panel-menu-item-icon">{{item.icon}}</mat-icon>
-                    <div class="panel-menu-item-text">{{item.name}}</div>
-                </div>
-            </mat-list-option>
-        </mat-selection-list>
     </div>
 </div> -->

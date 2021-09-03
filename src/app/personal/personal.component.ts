@@ -59,10 +59,10 @@ export class PersonalComponent implements OnInit {
             if (path1 === 'personal' && path2 === 'main') {
                 if (
                     section === 'home' ||
-                    section === 'myaccount' ||
-                    section === 'mycontacts' ||
+                    section === 'wallets' ||
+                    section === 'contactlist' ||
                     section === 'transactions' ||
-                    section === 'exchanger') {
+                    section === 'swap') {
                     this.selectedMenu = section;
                 } else {
                     this.router.navigateByUrl(this.menuItems[0].url);
@@ -100,17 +100,17 @@ export class PersonalComponent implements OnInit {
         }
     }
 
-    menuChanged(e: MatSelectionListChange): void {
-        const item = e.options[0].value as MenuItem;
-        this.router.navigateByUrl(item.url);
-    }
-
     popupMenuClick(item: MenuItem): void {
         if (item.id === 'logout') {
             this.logout();
         } else if (item.id === 'administration') {
             this.routeTo('/admin/main');
         }
+    }
+
+    sideMenuClick(item: MenuItem): void {
+        console.log(item.name);
+        this.router.navigateByUrl(item.url);
     }
 
     routeTo(link: string): void {

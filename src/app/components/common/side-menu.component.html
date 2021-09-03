@@ -1,0 +1,8 @@
+<div *ngIf="expanded">
+    <div *ngFor="let item of items">
+        <button [ngClass]="(selectedItem===item.id) ? '__side-menu-selected-button' : '__side-menu-button'"
+            (click)="clickItem(item)">
+            {{item.name}}
+        </button>
+    </div>
+</div>

@@ -8,16 +8,10 @@ export const PersonalProfileMenuItems: Array<MenuItem> = [
         icon: 'home'
     },
     {
-        id: 'myaccount',
-        name: 'My Account',
-        url: '/personal/main/myaccount',
+        id: 'wallets',
+        name: 'My Wallets',
+        url: '/personal/main/wallets',
         icon: 'account_circle'
-    },
-    {
-        id: 'mycontacts',
-        name: 'My Contacts',
-        url: '/personal/main/mycontacts',
-        icon: 'contacts'
     },
     {
         id: 'transactions',
@@ -26,9 +20,16 @@ export const PersonalProfileMenuItems: Array<MenuItem> = [
         icon: 'compare_arrows'
     },
     {
-        id: 'exchanger',
-        name: 'Exchanger',
-        url: '/personal/main/exchanger',
+        id: 'contactlist',
+        name: 'Contact List',
+        url: '/personal/main/contactlist',
+        icon: 'contacts'
+    },
+    
+    {
+        id: 'swap',
+        name: 'Swap',
+        url: '/personal/main/swap',
         icon: 'forward_10'
     }
 ];

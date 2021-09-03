@@ -42,6 +42,8 @@ import { CreditCardComponent } from './payment/credit-card.component';
 import { NotificationIconComponent } from './notification-bar/notification.component';
 import { TwoFaCodeComponent } from './auth/two-fa-code.component';
 import { NavPopupComponent } from './common/nav-popup.component';
+import { SideExpanderComponent } from './common/side-expander.component';
+import { SideMenuComponent } from './common/side-menu.component';
 import { SignUpPanelComponent } from './auth/signup-panel.component';
 import { SignupInfoPanelComponent } from './auth/signup-info.component';
 
@@ -59,7 +61,7 @@ import { ProfileWithdrawalComponent } from './profile/profile-withdrawal.compone
 import { ProfileAssetsComponent } from './profile/profile-assets.component';
 import { ProfileLastExchangesComponent } from './profile/profile-last-exchanges.component';
 import { ProfileContactEditorComponent } from './profile/profile-contact-editor.component';
-import { SideExpanderComponent } from './common/side-expander.component';
+
 
 const materialModules = [
     ClipboardModule,
@@ -95,7 +97,7 @@ export class MaterialModule { }
     declarations: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
         CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, NotificationIconComponent,
         LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, CommonDialogBox, SideExpanderComponent,
-        CreditCardComponent, TwoFaCodeComponent, NavPopupComponent, LineBreakPipe, NumberFillPipe,
+        CreditCardComponent, TwoFaCodeComponent, NavPopupComponent, SideMenuComponent, LineBreakPipe, NumberFillPipe,
         ProfileAccountBalanceComponent, ProfileExchangeComponent, ProfileNotificationsComponent,
         ProfileQuickTransferComponent, ProfileTransactionsComponent, ProfileInfoComponent, ProfileTwoFAComponent,
         ProfilePasswordComponent, ProfileVerificationComponent, ProfileContactsComponent, 
@@ -104,7 +106,7 @@ export class MaterialModule { }
     exports: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
         CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, NotificationIconComponent,
         LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, CommonDialogBox, SideExpanderComponent,
-        CreditCardComponent, TwoFaCodeComponent, NavPopupComponent, LineBreakPipe, NumberFillPipe,
+        CreditCardComponent, TwoFaCodeComponent, NavPopupComponent, SideMenuComponent, LineBreakPipe, NumberFillPipe,
         ProfileAccountBalanceComponent, ProfileExchangeComponent, ProfileNotificationsComponent,
         ProfileQuickTransferComponent, ProfileTransactionsComponent, ProfileInfoComponent, ProfileTwoFAComponent,
         ProfilePasswordComponent, ProfileVerificationComponent, ProfileContactsComponent,

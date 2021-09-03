@@ -90,16 +90,17 @@
     flex-direction: column;
     margin: 0px;
     height: 100%;
+    margin: 24px 0px;
 }
 
 .__side-menu-header-container {
-    background-color: darkseagreen;
-    height: 400px;
+    background-color: $color_white;
 }
 
 .__side-menu-footer-container {
     flex-grow: 1;
     position:relative;
+    margin: 48px 0px 0px 0px;
 }
 
 .__side-menu-expand-control {

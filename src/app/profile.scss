@@ -30,7 +30,7 @@ $side_menu_width_lg: 336;
 }
 
 .__profile-content {
-    background-color: $color_green_300;
+    background-color: $color_white;
     width           : ($max_width_container - $side_menu_narrow_width_lg) + px;
 
     @media (max-width: $md1 + px) {
@@ -64,7 +64,7 @@ $side_menu_width_lg: 336;
 }
 
 .__profile-content-expanded {
-    background-color: $color_green_300;
+    background-color: $color_white;
     width           : ($max_width_container - $side_menu_width_lg) + px;
 
     @media (max-width: $md1 + px) {

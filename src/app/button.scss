@@ -126,7 +126,6 @@
 }
 
 .__tool-button:disabled {
-    box-shadow: none;
     color: $color_purple_200;
 }
 
@@ -138,6 +137,74 @@
     margin: auto;
     transform: rotate(180deg);
 }
+
+.__side-menu-button {
+    justify-content: center;
+    align-items: center;
+    padding: 0px 10px 0px 48px;
+    width: 100%;
+    height: 56px;
+    margin: 12px auto;
+
+    border: none;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 21px;
+    line-height: 15px;
+    color: $color_purple_900;
+
+    text-align: left;
+}
+
+.__side-menu-button:focus {
+    outline: none;
+}
+
+.__side-menu-button:hover {
+    color: $color_main_blue_600;
+}
+
+.__side-menu-button:disabled {
+    color: $color_purple_300;
+}
+
+.__side-menu-selected-button {
+    justify-content: center;
+    align-items: center;
+    padding: 0px 10px 0px 48px;
+    width: 100%;
+    height: 56px;
+    margin: 12px auto;
+
+    border: 4px solid $color_main_blue_800;
+    border-style: none solid none none;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 21px;
+    line-height: 15px;
+    color: $color_main_blue_800;
+
+    text-align: left;
+}
+
+.__side-menu-selected-button:focus {
+    outline: none;
+}
+
+.__side-menu-button:disabled {
+    color: $color_purple_300;
+}
+
+
+
+
+
+
+
 
 .__button-separator {
     margin-left: 10px;
