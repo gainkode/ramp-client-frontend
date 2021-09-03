@@ -17,7 +17,7 @@
         <div *ngFor="let item of items;let i=index;">
             <button class="__popup-menu-button" (click)="clickItem(item)">
                 <div class="__popup-menu-button-content">
-                    <span class="__popup-menu-button-icon">
+                    <span id="button-icon">
                         <mat-icon>{{item.icon}}</mat-icon>
                     </span>
                     <span>

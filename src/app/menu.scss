@@ -64,6 +64,12 @@
     font-weight: normal;
     font-size: 14px;
     line-height: 28px;
+
+    #button-icon {
+        font-size: 32px;
+        margin-right: 16px;
+        color: $color_purple_900_icons;
+    }
 }
 
 .__popup-menu-button:focus {
@@ -72,18 +78,18 @@
 
 .__popup-menu-button:hover {
     color: $color_main_blue_600;
+
+    #button-icon {
+        font-size: 32px;
+        margin-right: 16px;
+        color: $color_main_blue_600;
+    }
 }
 
 .__popup-menu-button-content {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.__popup-menu-button-icon {
-    font-size: 32px;
-    margin-right: 16px;
-    color: $color_purple_900_icons;
 }
 
 .__side-menu-container {
