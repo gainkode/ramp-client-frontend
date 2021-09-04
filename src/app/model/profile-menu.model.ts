@@ -17,7 +17,7 @@ export const PersonalProfileMenuItems: Array<MenuItem> = [
         id: 'transactions',
         name: 'Transactions',
         url: '/personal/main/transactions',
-        icon: 'circle'
+        icon: 'monetization_on'
     },
     {
         id: 'contactlist',
