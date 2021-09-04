@@ -119,9 +119,86 @@
 
 .__tool-bar-container {
     margin: 16px 24px 24px 24px;
-    background-color: cyan;
+    // background-color: cyan;
     height: 28px;
+    display: flex;
+    flex-direction: row;
 }
+
+.__tool-bar-label {
+    margin: 0px 16px 0px 0px;
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 28px;
+    color: $color_purple_900_text;
+}
+
+
+input.__tool-bar-text-box {
+    width: 120px;
+    border: 0px solid $color_purple_300;
+    border-bottom-width: 0.5px;
+    background-color: transparent;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    color: $color_purple_900_text;
+}
+
+input.__tool-bar-text-box:hover {
+    border: 0px solid $color_main_blue_600;
+    border-bottom-width: 1px;
+}
+
+input.__tool-bar-text-box:focus {
+    outline: none;
+    border: 0px solid $color_main_blue_800;
+    border-bottom-width: 2px;
+}
+
+input.__tool-bar-text-box-error {
+    border: 0px solid $color_pink_300;
+    border-bottom-width: 0.5px;
+}
+
+input.__tool-bar-text-box-error:hover {
+    border: 0px solid $color_pink_700;
+    border-bottom-width: 1px;
+}
+
+input.__tool-bar-text-box-error:focus {
+    border: 0px solid $color_pink_500;
+    border-bottom-width: 2px;
+}
+
+
+
+
+
+
+// TEMP STYLES
+.__temp__tool-bar-combo {
+    display: flex;
+    flex-direction: row;
+    margin: 0px 3px 0px 0px;
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 28px;
+    color: $color_main_blue_800;
+    vertical-align: middle;
+}
+
+.__temp__tool-bar-combo-expander {
+    font-size: 14px;
+    margin-top: 7px;
+}
+// TEMP STYLES
 
 
 

@@ -1,7 +1,6 @@
 @import "./fonts.scss";
 @import "./colors.scss";
 @import "./menu.scss";
-@import "../styles.scss";
 
 $side_menu_narrow_width_sm: 134;
 $side_menu_width_sm: 244;
@@ -33,16 +32,20 @@ $side_menu_width_lg: 336;
 .__profile-content {
     background-color: $color_white;
     width           : ($max_width_container - $side_menu_narrow_width_lg) + px;
+    padding         : 0px 16px;
 
     @media (max-width: $md1 + px) {
         width: ($mid_width_container - $side_menu_narrow_width_sm) + px;
+        padding: 0px;
     }
     
     @media (max-width: $md2 + px) {
         width: ($mid_width_container - $side_menu_narrow_width_sm) + px;
+        padding: 0px;
     }
 
     @media (max-width: $md3 + px) {
+        padding         : 0px;
         width           : 0px;
         visibility      : hidden;
     }
@@ -69,16 +72,20 @@ $side_menu_width_lg: 336;
 .__profile-content-expanded {
     background-color: $color_white;
     width           : ($max_width_container - $side_menu_width_lg) + px;
+    padding         : 0px 16px;
 
     @media (max-width: $md1 + px) {
+        padding: 0px;
         width: ($mid_width_container - $side_menu_width_sm) + px;
     }
     
     @media (max-width: $md2 + px) {
+        padding: 0px;
         width: ($mid_width_container - $side_menu_width_sm) + px;
     }
 
     @media (max-width: $md3 + px) {
+        padding         : 0px;
         width           : 0px;
         visibility      : hidden;
     }
@@ -129,3 +136,14 @@ $side_menu_width_lg: 336;
     
     color: $color_purple_900_text;
 }
+
+// input.__test {
+//     border: 0px solid #af3434;
+//     border-bottom-width: 1px;
+//     background-color: transparent;
+// }
+
+// input.__test:hover {
+//    border-color: #000066;
+//    background-color: #FFFFF7;
+// }
