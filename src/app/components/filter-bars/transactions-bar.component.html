@@ -1,0 +1,40 @@
+<form [formGroup]="filterForm" (ngSubmit)="onSubmit()">
+    <div class="__tool-bar-container">
+        <!-- Wallet type filter -->
+        <div class="__tool-bar-label">
+            Wallet
+        </div>
+        <div class="__temp__tool-bar-combo">
+            <span style="font-size: 14px;">ALL</span>
+            <span>&nbsp;</span>
+            <mat-icon class="__temp__tool-bar-combo-expander">expand_more</mat-icon>
+        </div>
+        <!-- Transaction type filter -->
+        <div class="__tool-bar-label">
+            Transaction type
+        </div>
+        <div class="__temp__tool-bar-combo">
+            <span style="font-size: 14px;">ALL</span>
+            <span>&nbsp;</span>
+            <mat-icon class="__temp__tool-bar-combo-expander">expand_more</mat-icon>
+        </div>
+        <!-- Transaction date filter -->
+        <div class="__tool-bar-label">
+            Transaction date
+        </div>
+        <!-- <input class="__tool-bar-text-box __tool-bar-text-box-error" type="text"/> -->
+        <input class="__tool-bar-text-box" type="text" mask="d0/M0/0000" placeholder="DD/MM/YYYY"
+            [dropSpecialCharacters]="false" formControlName="transactionDate" />
+        <div class="__tool-bar-label"></div> <!-- Space -->
+        <!-- Sender / Recipient filter -->
+        <div class="__tool-bar-label">
+            Sender / Recipient
+        </div>
+        <input class="__tool-bar-text-box" type="text" formControlName="sender" />
+        <div class="__tool-bar-label"></div> <!-- Space -->
+        <!-- Search button -->
+        <button class="__toggle-button" type="submit">Search</button>
+        <div class="__tool-bar-label"></div> <!-- Space -->
+        <button class="__toggle-button" type="button" (click)="resetFilter()">Clear all</button>
+    </div>
+</form>

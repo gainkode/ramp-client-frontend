@@ -60,7 +60,10 @@ import { ProfileWithdrawalComponent } from './profile/profile-withdrawal.compone
 import { ProfileAssetsComponent } from './profile/profile-assets.component';
 import { ProfileLastExchangesComponent } from './profile/profile-last-exchanges.component';
 import { ProfileContactEditorComponent } from './profile/profile-contact-editor.component';
+import { TransactionsFilterBarComponent } from './filter-bars/transactions-bar.component';
+import { NgxMaskModule, IConfig } from 'ngx-mask'
 
+export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
 const materialModules = [
     ClipboardModule,
@@ -72,7 +75,8 @@ const materialModules = [
     MatCheckboxModule,
     MatSelectModule,
     MatTooltipModule,
-    MatDatepickerModule, MatNativeDateModule,
+    MatDatepickerModule, 
+    MatNativeDateModule,
     MatDialogModule,
     MatIconModule,
     MatListModule,
@@ -92,11 +96,12 @@ const materialModules = [
 export class MaterialModule { }
 
 @NgModule({
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, MaterialModule, DirectiveModule, QRCodeModule],
+    imports: [NgxMaskModule.forRoot(), CommonModule, FormsModule, ReactiveFormsModule, MaterialModule, DirectiveModule, QRCodeModule],
     declarations: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
         CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, 
         LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, CommonDialogBox, SideExpanderComponent,
         CreditCardComponent, TwoFaCodeComponent, NavPopupComponent, SideMenuComponent, LineBreakPipe, NumberFillPipe,
+        TransactionsFilterBarComponent,
         ProfileAccountBalanceComponent, ProfileExchangeComponent, ProfileNotificationsComponent,
         ProfileQuickTransferComponent, ProfileTransactionsComponent, ProfileInfoComponent, ProfileTwoFAComponent,
         ProfilePasswordComponent, ProfileVerificationComponent, ProfileContactsComponent, 
@@ -106,6 +111,7 @@ export class MaterialModule { }
         CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, 
         LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, CommonDialogBox, SideExpanderComponent,
         CreditCardComponent, TwoFaCodeComponent, NavPopupComponent, SideMenuComponent, LineBreakPipe, NumberFillPipe,
+        TransactionsFilterBarComponent,
         ProfileAccountBalanceComponent, ProfileExchangeComponent, ProfileNotificationsComponent,
         ProfileQuickTransferComponent, ProfileTransactionsComponent, ProfileInfoComponent, ProfileTwoFAComponent,
         ProfilePasswordComponent, ProfileVerificationComponent, ProfileContactsComponent,
