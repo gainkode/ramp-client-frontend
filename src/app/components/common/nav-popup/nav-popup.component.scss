@@ -1,5 +1,5 @@
-@import "../../fonts.scss";
-@import "../../colors.scss";
+@import "../../../fonts.scss";
+@import "../../../colors.scss";
 
 .__nav-popup-content-block {
     display: flex;
@@ -63,5 +63,14 @@
     font-weight: normal;
     font-size: 21px;
     line-height: 28px;
+    color: $color_purple_900_text;
+}
+
+.__notification-box {
+    margin: auto;
+    //background-color: $color_secondary_blue_100;
+}
+
+.__notification-message {
     color: $color_purple_900_text;
 }

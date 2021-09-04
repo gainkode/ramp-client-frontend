@@ -26,8 +26,9 @@
     }
 
     @media (max-width: $md3 + px) {
-        width: $out_width_container + px;
-        min-width: $out_width_container + px;
+        width: 0px;
+        min-width: 0px;
+        visibility: hidden;
     }
 }
 
@@ -116,7 +117,11 @@
     left: 24px;
 }
 
-
+.__tool-bar-container {
+    margin: 16px 24px 24px 24px;
+    background-color: cyan;
+    height: 28px;
+}
 
 
 

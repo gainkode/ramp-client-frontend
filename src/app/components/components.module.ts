@@ -39,9 +39,8 @@ import { ExchangeRateComponent } from './payment/exchange-rate.component';
 import { LoginPanelComponent } from './auth/login-panel.component';
 import { CheckoutDoneComponent } from './payment/checkout-done.component';
 import { CreditCardComponent } from './payment/credit-card.component';
-import { NotificationIconComponent } from './notification-bar/notification.component';
 import { TwoFaCodeComponent } from './auth/two-fa-code.component';
-import { NavPopupComponent } from './common/nav-popup.component';
+import { NavPopupComponent } from './common/nav-popup/nav-popup.component';
 import { SideExpanderComponent } from './common/side-expander.component';
 import { SideMenuComponent } from './common/side-menu.component';
 import { SignUpPanelComponent } from './auth/signup-panel.component';
@@ -95,7 +94,7 @@ export class MaterialModule { }
 @NgModule({
     imports: [CommonModule, FormsModule, ReactiveFormsModule, MaterialModule, DirectiveModule, QRCodeModule],
     declarations: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
-        CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, NotificationIconComponent,
+        CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, 
         LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, CommonDialogBox, SideExpanderComponent,
         CreditCardComponent, TwoFaCodeComponent, NavPopupComponent, SideMenuComponent, LineBreakPipe, NumberFillPipe,
         ProfileAccountBalanceComponent, ProfileExchangeComponent, ProfileNotificationsComponent,
@@ -104,7 +103,7 @@ export class MaterialModule { }
         ProfileContactEditorComponent, ProfileWithdrawalComponent,
         ProfileAssetsComponent, ProfileLastExchangesComponent],
     exports: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
-        CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, NotificationIconComponent,
+        CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, 
         LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, CommonDialogBox, SideExpanderComponent,
         CreditCardComponent, TwoFaCodeComponent, NavPopupComponent, SideMenuComponent, LineBreakPipe, NumberFillPipe,
         ProfileAccountBalanceComponent, ProfileExchangeComponent, ProfileNotificationsComponent,

@@ -14,7 +14,7 @@ $side_menu_width_lg: 336;
 
 .__profile-side-menu {
     width           : $side_menu_narrow_width_lg + px;
-        background-color: $color_white;
+    background-color: $color_white;
 
     @media (max-width: $md1 + px) {
         width: $side_menu_narrow_width_sm + px;
@@ -26,6 +26,7 @@ $side_menu_width_lg: 336;
 
     @media (max-width: $md3 + px) {
         width: 0px;
+        visibility: hidden;
     }
 }
 
@@ -60,6 +61,7 @@ $side_menu_width_lg: 336;
 
     @media (max-width: $md3 + px) {
         width: 0px;
+        visibility: hidden;
     }
 }
 
@@ -94,5 +96,6 @@ $side_menu_width_lg: 336;
 
     @media (max-width: $md3 + px) {
         width: 0px;
+        visibility: hidden;
     }
 }

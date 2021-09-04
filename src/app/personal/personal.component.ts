@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { MatSelectionListChange } from '@angular/material/list';
 import { NavigationEnd, Router } from '@angular/router';
 import { Event as NavigationEvent } from '@angular/router';
 import { MenuItem } from '../model/common.model';
@@ -13,7 +12,7 @@ import { NotificationService } from '../services/notification.service';
 
 @Component({
     templateUrl: 'personal.component.html',
-    styleUrls: ['../menu.scss', '../button.scss', '../profile.scss', 'personal.component.scss']
+    styleUrls: ['../menu.scss', '../button.scss', '../profile.scss']
 })
 export class PersonalComponent implements OnInit {
     menuItems: MenuItem[] = PersonalProfileMenuItems;
@@ -83,12 +82,6 @@ export class PersonalComponent implements OnInit {
                 this.popupItems.splice(0, 0, PersonalProfilePopupAdministrationMenuItem);
             }
         }
-        // Notifications
-        this.notification.subscribeToNotifications().subscribe(({ data }) => {
-            // got data
-        }, (error) => {
-            // there was an error subscribing to notifications
-        });
     }
 
     sideMenuExpanded(state: boolean): void {
@@ -105,6 +98,8 @@ export class PersonalComponent implements OnInit {
             this.logout();
         } else if (item.id === 'administration') {
             this.routeTo('/admin/main');
+        } else if (item.id === 'notifications') {
+            this.notificationTest();
         }
     }
 
