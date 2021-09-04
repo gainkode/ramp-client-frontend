@@ -43,7 +43,8 @@ $side_menu_width_lg: 336;
     }
 
     @media (max-width: $md3 + px) {
-        width: $out_width_container + px;
+        width           : 0px;
+        visibility      : hidden;
     }
 }
 
@@ -78,7 +79,8 @@ $side_menu_width_lg: 336;
     }
 
     @media (max-width: $md3 + px) {
-        width: $out_width_container + px;
+        width           : 0px;
+        visibility      : hidden;
     }
 }
 
@@ -98,4 +100,32 @@ $side_menu_width_lg: 336;
         width: 0px;
         visibility: hidden;
     }
+}
+
+.__profile-unsupported-device {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    text-align      : center;
+    background-color: $color_white;
+    width           : 0px;
+    visibility      : hidden;
+
+    @media (max-width: $md3 + px) {
+        width: 100%;
+        visibility: visible;
+    }
+}
+
+.__profile-unsupported-device-title {
+    margin: 48px;
+    text-align: center;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 28px;
+    
+    color: $color_purple_900_text;
 }

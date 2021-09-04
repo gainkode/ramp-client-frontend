@@ -1,12 +1,12 @@
 <div class="__top-menu-bar">
     <div class="__top-menu-content-bar">
         <div class="__profile-top-menu-logo-box">
-            <button *ngIf="expandedManu" mat-icon-button style="width: 150px;color: darkblue;" (click)="routeTo(getUserMainPage())">
+            <button *ngIf="expandedManu" mat-icon-button style="width: 150px;color: darkblue;"
+                (click)="routeTo(getUserMainPage())">
                 eWallet Logo
             </button>
         </div>
         <div class="__top-menu-content-box">
-            <!-- <app-notification-icon></app-notification-icon> -->
             <button class="__borderless-button" (click)="routeTo('/payment')">
                 Quick Checkout
             </button>
@@ -18,17 +18,24 @@
 <div class="__profile-container">
     <div [ngClass]="expandedManu ? '__profile-side-menu-expanded' : '__profile-side-menu'">
         <div class="__side-menu-container">
-            <app-side-menu class="__side-menu-header-container"
-            [items]="menuItems" [selectedItem]="selectedMenu" [expanded]="expandedManu"
-            (onMenuClick)="sideMenuClick($event)">
+            <app-side-menu class="__side-menu-header-container" [items]="menuItems" [selectedItem]="selectedMenu"
+                [expanded]="expandedManu" (onMenuClick)="sideMenuClick($event)">
             </app-side-menu>
             <div class="__side-menu-footer-container">
-                <app-side-expander-button class="__side-menu-expand-control" [expanded]="expandedManu" (stateChanged)="sideMenuExpanded($event)">
+                <app-side-expander-button class="__side-menu-expand-control" [expanded]="expandedManu"
+                    (stateChanged)="sideMenuExpanded($event)">
                 </app-side-expander-button>
             </div>
         </div>
     </div>
     <div [ngClass]="expandedManu ? '__profile-content-expanded' : '__profile-content'">
         <router-outlet></router-outlet>
+    </div>
+</div>
+<div class="__profile-unsupported-device">
+    <div class="__profile-unsupported-device-title">
+        The screen size of your device is not supported.
+        <br><br>
+        Please, install our application <a class="__link" href="#">here</a>.
     </div>
 </div>

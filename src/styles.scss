@@ -21,6 +21,26 @@ body {
     background-color: cornflowerblue;
 }
 
+a:link {
+    color: $color_main_blue_900;
+    text-decoration: none;
+}
+
+a:hover {
+    color: $color_main_blue_600;
+    text-decoration: underline;
+}
+
+a:visited {
+    color: $color_main_blue_800;
+    text-decoration: none;
+}
+
+a:active {
+    color: $color_purple_800;
+    text-decoration: underline;
+}
+
 .__container {
     max-width: $max_width_container + px;
     min-height: $max_height + px;
@@ -67,6 +87,11 @@ input:-webkit-autofill::first-line {
     border-radius: 8px;
     overflow: hidden;
 }
+
+
+
+
+
 
 .inline-button {
     margin-right: 1em;
