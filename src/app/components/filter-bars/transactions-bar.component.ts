@@ -2,7 +2,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { TransactionsFilter } from 'src/app/model/filter.model';
 import { TransactionSource, TransactionType } from 'src/app/model/generated-models';
-import { TransactionSourceList, TransactionSourceView, UserTransactionTypeList } from 'src/app/model/payment.model';
+import { TransactionSourceList, TransactionSourceView, TransactionTypeView, UserTransactionTypeList } from 'src/app/model/payment.model';
 import { getFormattedUtcDate } from 'src/app/utils/utils';
 
 @Component({
@@ -74,6 +74,15 @@ export class TransactionsFilterBarComponent implements OnInit {
         }
     }
 
+    get selectedTransactionTypesExtra(): string {
+        const selected = this.transactionTypesField?.value as TransactionType[];
+        if (selected.length > 1 && selected.length < this.transactionTypes.length) {
+            return ' +';
+        } else {
+            return '';
+        }
+    }
+
     get selectedWalletTypes(): string {
         const selected = this.walletTypesField?.value as TransactionSource[];
         if (selected.length === this.walletTypes.length) {
@@ -87,6 +96,15 @@ export class TransactionsFilterBarComponent implements OnInit {
                 let result =  this.walletTypes[index].name;
                 return result;
             }
+        }
+    }
+
+    get selectedWalletTypesExtra(): string {
+        const selected = this.walletTypesField?.value as TransactionSource[];
+        if (selected.length > 1 && selected.length < this.walletTypes.length) {
+            return ' +';
+        } else {
+            return '';
         }
     }
 

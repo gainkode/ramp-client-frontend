@@ -10,7 +10,7 @@
             <mat-select formControlName="walletTypes" multiple>
                 <mat-select-trigger>
                     <span class="__mat-select-item">
-                        {{selectedWalletTypes}}
+                        {{selectedWalletTypes}}{{selectedWalletTypesExtra}}
                     </span>
                 </mat-select-trigger>
                 <mat-option *ngFor="let item of walletTypes" [value]="item.id" style="height: 36px;">
@@ -31,7 +31,7 @@
             <mat-select formControlName="transactionTypes" multiple>
                 <mat-select-trigger>
                     <span class="__mat-select-item">
-                        {{selectedTransactionTypes}}
+                        {{selectedTransactionTypes}}{{selectedTransactionTypesExtra}}
                     </span>
                 </mat-select-trigger>
                 <mat-option *ngFor="let item of transactionTypes" [value]="item.id" style="height: 36px;">
