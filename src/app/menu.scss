@@ -119,9 +119,13 @@
 
 .__tool-bar-container {
     margin: 16px 24px 24px 24px;
-    height: 28px;
     display: flex;
     flex-direction: row;
+    align-items: baseline;
+}
+
+.__tool-bar-block {
+    height: 28px;
 }
 
 .__tool-bar-label {
@@ -132,6 +136,16 @@
     font-size: 14px;
     line-height: 28px;
     color: $color_purple_900_text;
+}
+
+.__tool-bar-error {
+    display: block;
+    width: 120px;
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 11px;
+    color: $color_pink_600;
 }
 
 input.__tool-bar-text-box {

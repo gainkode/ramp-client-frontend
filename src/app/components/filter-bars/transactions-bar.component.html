@@ -1,39 +1,62 @@
 <form [formGroup]="filterForm" (ngSubmit)="onSubmit()">
     <div class="__tool-bar-container">
         <!-- Wallet type filter -->
-        <div class="__tool-bar-label">
-            Wallet
+        <div class="__tool-bar-block">
+            <div class="__tool-bar-label">
+                Wallet
+            </div>
         </div>
-        <div class="__temp__tool-bar-combo">
-            <span style="font-size: 14px;">ALL</span>
-            <span>&nbsp;</span>
-            <mat-icon class="__temp__tool-bar-combo-expander">expand_more</mat-icon>
+        <div class="__tool-bar-block">
+            <div class="__temp__tool-bar-combo">
+                <span style="font-size: 14px;">ALL</span>
+                <span>&nbsp;</span>
+                <mat-icon class="__temp__tool-bar-combo-expander">expand_more</mat-icon>
+            </div>
         </div>
         <!-- Transaction type filter -->
-        <div class="__tool-bar-label">
-            Transaction type
+        <div class="__tool-bar-block">
+            <div class="__tool-bar-label">
+                Transaction type
+            </div>
         </div>
-        <div class="__temp__tool-bar-combo">
-            <span style="font-size: 14px;">ALL</span>
-            <span>&nbsp;</span>
-            <mat-icon class="__temp__tool-bar-combo-expander">expand_more</mat-icon>
+        <div class="__tool-bar-block">
+            <div class="__temp__tool-bar-combo">
+                <span style="font-size: 14px;">ALL</span>
+                <span>&nbsp;</span>
+                <mat-icon class="__temp__tool-bar-combo-expander">expand_more</mat-icon>
+            </div>
         </div>
         <!-- Transaction date filter -->
-        <div class="__tool-bar-label">
-            Transaction date
+        <div class="__tool-bar-block">
+            <div class="__tool-bar-label">
+                Transaction date
+            </div>
         </div>
-        <!-- <input class="__tool-bar-text-box __tool-bar-text-box-error" type="text"/> -->
-        <input class="__tool-bar-text-box" type="text" mask="d0/M0/0000" placeholder="DD/MM/YYYY"
-            [dropSpecialCharacters]="false" formControlName="transactionDate" />
+        <div>
+            <div class="__tool-bar-block">
+                <!-- <input class="__tool-bar-text-box __tool-bar-text-box-error" type="text"/> -->
+                <input [ngClass]="{'__tool-bar-text-box': true, '__tool-bar-text-box-error': transactionDateField?.errors}"
+                    type="text" mask="d0/M0/0000" placeholder="DD/MM/YYYY" [dropSpecialCharacters]="false"
+                    formControlName="transactionDate" />
+            </div>
+            <div *ngIf="transactionDateField?.errors?.pattern && (transactionDateField?.dirty || transactionDateField?.touched)"
+                class="__tool-bar-error">
+                Invalid date format
+            </div>    
+        </div>
         <div class="__tool-bar-label"></div> <!-- Space -->
         <!-- Sender / Recipient filter -->
-        <div class="__tool-bar-label">
-            Sender / Recipient
+        <div class="__tool-bar-block">
+            <div class="__tool-bar-label">
+                Sender / Recipient
+            </div>
         </div>
-        <input class="__tool-bar-text-box" type="text" formControlName="sender" />
+        <div class="__tool-bar-block">
+            <input class="__tool-bar-text-box" type="text" formControlName="sender" maxlength="50" />
+        </div>
         <div class="__tool-bar-label"></div> <!-- Space -->
         <!-- Search button -->
-        <button class="__toggle-button" type="submit">Search</button>
+        <button class="__toggle-button" type="submit" [disabled]="filterForm.invalid">Search</button>
         <div class="__tool-bar-label"></div> <!-- Space -->
         <button class="__toggle-button" type="button" (click)="resetFilter()">Clear all</button>
     </div>

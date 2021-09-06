@@ -47,15 +47,22 @@ export class TransactionsFilterBarComponent {
     }
 
     onSubmit(): void {
-        const filter = new TransactionsFilter();
-
         if (this.transactionDateField?.valid) {
-            console.log(this.transactionDateField?.value, 'valid');
-        } else {
-            console.log(this.transactionDateField?.value, 'invalid');
+            const filter = new TransactionsFilter();
+            filter.sender = this.senderField?.value;
+            const dateFilter = this.transactionDateField?.value ?? '';
+            if (dateFilter !== '') {
+                const dateParts = dateFilter.split('/');
+                const d = parseInt(dateParts[0]);
+                const m = parseInt(dateParts[1]);
+                let y = parseInt(dateParts[2]);
+                if (y < 100) {
+                    y += 2000;
+                }
+                filter.transactionDate = new Date(Date.UTC(y, m - 1, d, 0, 0, 0, 0));
+            }
+            console.log(filter);
+            this.update.emit(filter);
         }
-        // form filter here
-
-        this.update.emit(filter);
     }
 }

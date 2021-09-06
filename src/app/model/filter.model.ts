@@ -1,6 +1,6 @@
 export class TransactionsFilter {
     walletTypes: string[] = [];
     transactionTypes: string[] = [];
-    transactionDate: string = '';
+    transactionDate: Date | undefined = undefined;
     sender: string = '';
 }
