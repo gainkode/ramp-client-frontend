@@ -101,6 +101,30 @@ input:-webkit-autofill::first-line {
     overflow: hidden;
 }
 
+.__mat-select-item {
+    font-family: $font_main;
+    font-size: 14px;
+    color: $color_main_blue_800;
+}
+
+.__mat-select-option {
+    height: 14px;
+}
+
+.mat-select-panel {
+    background: $color_white;
+}
+
+.mat-select-arrow-wrapper {
+    background-image: url("./assets/navigation/plain_arrow_down_blue.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 8px;
+}
+
+.mat-select-arrow {
+    opacity: 0;
+}
 
 
 

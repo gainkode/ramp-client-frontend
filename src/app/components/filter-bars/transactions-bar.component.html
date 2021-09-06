@@ -6,26 +6,42 @@
                 Wallet
             </div>
         </div>
-        <div class="__tool-bar-block">
-            <div class="__temp__tool-bar-combo">
-                <span style="font-size: 14px;">ALL</span>
-                <span>&nbsp;</span>
-                <mat-icon class="__temp__tool-bar-combo-expander">expand_more</mat-icon>
-            </div>
+        <div class="__tool-bar-block __tool-bar-data-block">
+            <mat-select formControlName="walletTypes" multiple>
+                <mat-select-trigger>
+                    <span class="__mat-select-item">
+                        {{selectedWalletTypes}}
+                    </span>
+                </mat-select-trigger>
+                <mat-option *ngFor="let item of walletTypes" [value]="item.id" style="height: 36px;">
+                    <span class="__mat-select-item">
+                        {{item.name}}
+                    </span>
+                </mat-option>
+            </mat-select>
         </div>
+        <div class="__tool-bar-label"></div> <!-- Space -->
         <!-- Transaction type filter -->
         <div class="__tool-bar-block">
             <div class="__tool-bar-label">
                 Transaction type
             </div>
         </div>
-        <div class="__tool-bar-block">
-            <div class="__temp__tool-bar-combo">
-                <span style="font-size: 14px;">ALL</span>
-                <span>&nbsp;</span>
-                <mat-icon class="__temp__tool-bar-combo-expander">expand_more</mat-icon>
-            </div>
+        <div class="__tool-bar-block __tool-bar-data-block">
+            <mat-select formControlName="transactionTypes" multiple>
+                <mat-select-trigger>
+                    <span class="__mat-select-item">
+                        {{selectedTransactionTypes}}
+                    </span>
+                </mat-select-trigger>
+                <mat-option *ngFor="let item of transactionTypes" [value]="item.id" style="height: 36px;">
+                    <span class="__mat-select-item">
+                        {{item.name}}
+                    </span>
+                </mat-option>
+            </mat-select>
         </div>
+        <div class="__tool-bar-label"></div> <!-- Space -->
         <!-- Transaction date filter -->
         <div class="__tool-bar-block">
             <div class="__tool-bar-label">
@@ -35,14 +51,15 @@
         <div>
             <div class="__tool-bar-block">
                 <!-- <input class="__tool-bar-text-box __tool-bar-text-box-error" type="text"/> -->
-                <input [ngClass]="{'__tool-bar-text-box': true, '__tool-bar-text-box-error': transactionDateField?.errors}"
+                <input
+                    [ngClass]="{'__tool-bar-text-box': true, '__tool-bar-text-box-error': transactionDateField?.errors}"
                     type="text" mask="d0/M0/0000" placeholder="DD/MM/YYYY" [dropSpecialCharacters]="false"
                     formControlName="transactionDate" />
             </div>
             <div *ngIf="transactionDateField?.errors?.pattern && (transactionDateField?.dirty || transactionDateField?.touched)"
                 class="__tool-bar-error">
                 Invalid date format
-            </div>    
+            </div>
         </div>
         <div class="__tool-bar-label"></div> <!-- Space -->
         <!-- Sender / Recipient filter -->
@@ -61,3 +78,36 @@
         <button class="__toggle-button" type="button" (click)="resetFilter()">Clear all</button>
     </div>
 </form>
+
+
+
+
+<!-- 
+
+.market-country-select {
+    margin: 10px;
+  }
+  
+  .example-additional-selection {
+    opacity: 0.75;
+    font-size: 0.75em;
+  }
+  
+  .bold {
+    font-weight: bold;
+  }
+
+  
+  <mat-form-field class="market-country-select">
+    <mat-label class="market-label">Country</mat-label>
+    <mat-select [value]="currentMarket.code" 
+        (selectionChange)="onMarketChange($event)">
+      <mat-select-trigger>
+        {{currentMarket.name}}
+        <span class="bold">{{currentMarket?.count | parenthesize}}</span>
+      </mat-select-trigger>
+      <mat-option *ngFor="let market of markets" [value]="market.code">
+        {{market.name}} <span class="bold">{{market.count | parenthesize}}</span>
+      </mat-option>
+    </mat-select>
+  </mat-form-field> -->

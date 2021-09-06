@@ -128,6 +128,11 @@
     height: 28px;
 }
 
+.__tool-bar-data-block {
+    width: 60px;
+    font-size: 8px !important;
+}
+
 .__tool-bar-label {
     margin: 0px 16px 0px 0px;
     font-family: $font_main;
@@ -189,28 +194,6 @@ input.__tool-bar-text-box-error:focus {
 
 
 
-
-
-
-// TEMP STYLES
-.__temp__tool-bar-combo {
-    display: flex;
-    flex-direction: row;
-    margin: 0px 3px 0px 0px;
-    font-family: $font_main;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 28px;
-    color: $color_main_blue_800;
-    vertical-align: middle;
-}
-
-.__temp__tool-bar-combo-expander {
-    font-size: 14px;
-    margin-top: 7px;
-}
-// TEMP STYLES
 
 
 

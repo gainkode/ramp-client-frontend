@@ -1,15 +1,20 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { TransactionsFilter } from 'src/app/model/filter.model';
-import { ProfileDataService } from 'src/app/services/profile.service';
+import { TransactionSource, TransactionType } from 'src/app/model/generated-models';
+import { TransactionSourceList, TransactionSourceView, UserTransactionTypeList } from 'src/app/model/payment.model';
+import { getFormattedUtcDate } from 'src/app/utils/utils';
 
 @Component({
     selector: 'app-transactions-filter',
     templateUrl: './transactions-bar.component.html',
     styleUrls: ['../../menu.scss', '../../button.scss']
 })
-export class TransactionsFilterBarComponent {
+export class TransactionsFilterBarComponent implements OnInit {
     @Output() update = new EventEmitter<TransactionsFilter>();
+
+    transactionTypes = UserTransactionTypeList;
+    walletTypes = TransactionSourceList;
 
     filterForm = this.formBuilder.group({
         walletTypes: [[]],
@@ -34,8 +39,55 @@ export class TransactionsFilterBarComponent {
         return this.filterForm.get('sender');
     }
 
-    constructor(private formBuilder: FormBuilder, private profileService: ProfileDataService) {
+    constructor(private formBuilder: FormBuilder) {
 
+    }
+
+    ngOnInit(): void {
+        this.transactionTypesField?.setValue(this.transactionTypes.map(x => x.id));
+        this.walletTypesField?.setValue(this.walletTypes.map(x => x.id));
+        this.transactionTypesField?.valueChanges.subscribe(val => {
+            if ((val as []).length < 1) {
+                this.transactionTypesField?.setValue(this.transactionTypes.map(x => x.id));
+            }
+        });
+        this.walletTypesField?.valueChanges.subscribe(val => {
+            if ((val as []).length < 1) {
+                this.walletTypesField?.setValue(this.walletTypes.map(x => x.id));
+            }
+        });
+    }
+
+    get selectedTransactionTypes(): string {
+        const selected = this.transactionTypesField?.value as TransactionType[];
+        if (selected.length === this.transactionTypes.length) {
+            return 'ALL';
+        } else {
+            if (selected.length === 0) {
+                return '';
+            } else {
+                const firstItem = selected[0];
+                const index = this.transactionTypes.findIndex(x => x.id === firstItem);
+                let result =  this.transactionTypes[index].name;
+                return result;
+            }
+        }
+    }
+
+    get selectedWalletTypes(): string {
+        const selected = this.walletTypesField?.value as TransactionSource[];
+        if (selected.length === this.walletTypes.length) {
+            return 'ALL';
+        } else {
+            if (selected.length === 0) {
+                return '';
+            } else {
+                const firstItem = selected[0];
+                const index = this.walletTypes.findIndex(x => x.id === firstItem);
+                let result =  this.walletTypes[index].name;
+                return result;
+            }
+        }
     }
 
     resetFilter(): void {
@@ -50,18 +102,9 @@ export class TransactionsFilterBarComponent {
         if (this.transactionDateField?.valid) {
             const filter = new TransactionsFilter();
             filter.sender = this.senderField?.value;
-            const dateFilter = this.transactionDateField?.value ?? '';
-            if (dateFilter !== '') {
-                const dateParts = dateFilter.split('/');
-                const d = parseInt(dateParts[0]);
-                const m = parseInt(dateParts[1]);
-                let y = parseInt(dateParts[2]);
-                if (y < 100) {
-                    y += 2000;
-                }
-                filter.transactionDate = new Date(Date.UTC(y, m - 1, d, 0, 0, 0, 0));
-            }
-            console.log(filter);
+            filter.transactionDate = getFormattedUtcDate(this.transactionDateField?.value ?? '');
+            filter.walletTypes = this.walletTypesField?.value;
+            filter.transactionTypes = this.transactionTypesField?.value;
             this.update.emit(filter);
         }
     }
