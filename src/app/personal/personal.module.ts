@@ -12,6 +12,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
 import { MatListModule } from '@angular/material/list';
 import { PersonalGuard } from './personal.guard';
 import { IntroPersonalComponent } from './intro.component';
@@ -60,6 +63,9 @@ const modules = [
     MatIconModule,
     MatListModule,
     MatProgressBarModule,
+    MatPaginatorModule,
+    MatTableModule,
+    MatSortModule,
     ComponentsModule
 ];
 

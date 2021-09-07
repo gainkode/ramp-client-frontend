@@ -5,7 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { TransactionShortListResult, TransactionSource } from 'src/app/model/generated-models';
-import { TransactionItem } from 'src/app/model/transaction.model';
+import { TransactionItemDeprecated } from 'src/app/model/transaction.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
@@ -28,9 +28,9 @@ export class ProfileTransactionsComponent implements OnInit, OnDestroy, AfterVie
     private pTransactionsSubscription!: any;
     inProgress = false;
     errorMessage = '';
-    transactions: TransactionItem[] = [];
+    transactions: TransactionItemDeprecated[] = [];
     transactionCount = 0;
-    selectedTransaction: TransactionItem | null = null;
+    selectedTransaction: TransactionItemDeprecated | null = null;
     pageSize = 10;
     pageIndex = 0;
     sortedField = 'created';
@@ -89,7 +89,7 @@ export class ProfileTransactionsComponent implements OnInit, OnDestroy, AfterVie
                 if (dataList !== null) {
                     this.transactionCount = dataList?.count as number;
                     if (this.transactionCount > 0) {
-                        this.transactions = dataList?.list?.map((val) => new TransactionItem(val)) as TransactionItem[];
+                        this.transactions = dataList?.list?.map((val) => new TransactionItemDeprecated(val)) as TransactionItemDeprecated[];
                     }
                 }
                 this.inProgress = false;

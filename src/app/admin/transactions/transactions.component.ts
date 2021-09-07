@@ -4,7 +4,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { AuthService } from '../../services/auth.service';
 import { AdminDataService } from '../../services/admin-data.service';
 import { ErrorService } from '../../services/error.service';
-import { TransactionItem } from '../../model/transaction.model';
+import { TransactionItemDeprecated } from '../../model/transaction.model';
 import { TransactionListResult, TransactionSource } from '../../model/generated-models';
 import { Subscription } from 'rxjs';
 import { MatSort } from '@angular/material/sort';
@@ -20,8 +20,8 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
   private pTransactionsSubscription!: any;
   inProgress = false;
   errorMessage = '';
-  selectedTransaction: TransactionItem | null = null;
-  transactions: TransactionItem[] = [];
+  selectedTransaction: TransactionItemDeprecated | null = null;
+  transactions: TransactionItemDeprecated[] = [];
   transactionCount = 0;
   pageSize = 25;
   pageIndex = 0;
@@ -77,7 +77,7 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
         if (dataList !== null) {
           this.transactionCount = dataList?.count as number;
           if (this.transactionCount > 0) {
-            this.transactions = dataList?.list?.map((val) => new TransactionItem(val)) as TransactionItem[];
+            this.transactions = dataList?.list?.map((val) => new TransactionItemDeprecated(val)) as TransactionItemDeprecated[];
           }
         }
         this.inProgress = false;
@@ -110,7 +110,7 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
     return selected;
   }
 
-  private showEditor(transaction: TransactionItem | null, visible: boolean): void {
+  private showEditor(transaction: TransactionItemDeprecated | null, visible: boolean): void {
     this.pShowDetails = visible;
     if (visible) {
       this.selectedTransaction = transaction;
@@ -126,7 +126,7 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
     return event;
   }
 
-  toggleDetails(transaction: TransactionItem): void {
+  toggleDetails(transaction: TransactionItemDeprecated): void {
     let show = true;
     if (this.isSelectedTransaction(transaction.id)) {
       show = false;

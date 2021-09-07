@@ -1,14 +1,121 @@
 <app-transactions-filter (update)="onFilterUpdate($event)"></app-transactions-filter>
 
+<div class="__profile-data-container">
+    <mat-progress-bar *ngIf="inProgress" color="accent" mode="indeterminate"></mat-progress-bar>
 
-<!-- <div style="display: flex;">
-    <div style="width: 50%;margin: 0.5em;">
-        <app-quick-transfer></app-quick-transfer>
-    </div>
-    <div style="width: 50%;margin: 0.5em;">
-        <app-withdrawal></app-withdrawal>
-    </div>
+    <table mat-table class="__profile-data-table" [dataSource]="transactions" matSort [matSortActive]="sortedField"
+        matSortDirection="desc" matSortDisableClear>
+        <!-- Transaction type and date Column -->
+        <ng-container matColumnDef="transaction">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef
+                class="__profile-table-column __profile-transactions-table-column-transaction">
+                <span class="__profile-table-header">
+                    Transaction
+                </span>
+            </th>
+            <td mat-cell *matCellDef="let element">
+                {{element.typeName}} {{element.date}}
+            </td>
+        </ng-container>
+
+        <!-- Sender Column -->
+        <ng-container matColumnDef="sender">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef
+                class="__profile-table-column __profile-transactions-table-column-sender">
+                <span class="__profile-table-header">
+                    Sender
+                </span>
+            </th>
+            <td mat-cell *matCellDef="let element">
+                Bitcoin HODL
+            </td>
+        </ng-container>
+
+        <!-- Recipient Column -->
+        <ng-container matColumnDef="recipient">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef
+                class="__profile-table-column __profile-transactions-table-column-recipient">
+                <span class="__profile-table-header">
+                    Recipient
+                </span>
+            </th>
+            <td mat-cell *matCellDef="let element">
+                Bitcoin HODL
+            </td>
+        </ng-container>
+
+        <!-- Sent Column -->
+        <ng-container matColumnDef="sent">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef
+                class="__profile-table-column __profile-transactions-table-column-sent">
+                <span class="__profile-table-header">
+                    Sent
+                </span>
+            </th>
+            <td mat-cell *matCellDef="let element">
+                {{element.currencyToSpend}}{{element.amountToSpend}}
+            </td>
+        </ng-container>
+
+        <!-- Received Column -->
+        <ng-container matColumnDef="received">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef
+                class="__profile-table-column __profile-transactions-table-column-received">
+                <span class="__profile-table-header">
+                    Received
+                </span>
+            </th>
+            <td mat-cell *matCellDef="let element">
+                {{element.currencyToReceive}}{{element.amountToReceive}}
+            </td>
+        </ng-container>
+
+        <!-- Fees Column -->
+        <ng-container matColumnDef="fees">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef
+                class="__profile-table-column __profile-transactions-table-column-fees">
+                <span class="__profile-table-header">
+                    Fees
+                </span>
+            </th>
+            <td mat-cell *matCellDef="let element">
+                {{element.fees}}
+            </td>
+        </ng-container>
+
+        <!-- Status Column -->
+        <ng-container matColumnDef="status">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef
+                class="__profile-table-column __profile-transactions-table-column-status">
+                <span class="__profile-table-header">
+                    Status
+                </span>
+            </th>
+            <td mat-cell *matCellDef="let element">
+                {{element.statusName}}
+            </td>
+        </ng-container>
+
+        <!-- Details Column -->
+        <ng-container matColumnDef="details">
+            <th mat-header-cell *matHeaderCellDef
+                class="__profile-table-column __profile-transactions-table-column-details">
+            </th>
+            <td mat-cell *matCellDef="let element">
+                <!-- <button mat-icon-button type="button" (click)="toggleDetails(element)"
+                    [attr.aria-label]="'Change contact'" [attr.aria-pressed]="showDetailed"
+                    [matTooltip]="getDetailsTooltip(element.id)" matTooltipClass="info-tooltip"
+                    [disabled]="createContact">
+                    <mat-icon class="details-icon">{{getDetailsIcon(element.id)}}</mat-icon>
+                </button> -->
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <mat-paginator *ngIf="errorMessage === ''" class="__profile-data-table" [length]="transactionCount"
+        [pageSize]="pageSize" [pageSizeOptions]="[25, 50, 100]" showFirstLastButtons (page)="handlePage($event)">
+    </mat-paginator>
 </div>
-<div style="margin: 0.5em;">
-    <app-transactions></app-transactions>
-</div> -->

@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { TransactionItem } from 'src/app/model/transaction.model';
+import { TransactionItemDeprecated } from 'src/app/model/transaction.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
 import { ErrorService } from 'src/app/services/error.service';
@@ -11,7 +11,7 @@ import { ErrorService } from 'src/app/services/error.service';
     styleUrls: ['transaction-details.component.scss']
 })
 export class TransactionDetailsComponent {
-    @Input() transaction: TransactionItem | null | undefined = null;
+    @Input() transaction: TransactionItemDeprecated | null | undefined = null;
     inProgress = false;
     errorMessage = '';
 

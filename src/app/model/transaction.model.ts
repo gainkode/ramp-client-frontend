@@ -22,7 +22,7 @@ import {
 } from './payment.model';
 import { UserItem } from './user.model';
 
-export class TransactionItem {
+export class TransactionItemDeprecated {
   id = '';
   code = '';
   created = '';
@@ -165,5 +165,43 @@ export class TransactionItem {
         ?.name as string;
     }
     return '';
+  }
+}
+
+export class TransactionItem {
+  id = '';
+  date = '';
+  type: TransactionType | undefined = undefined;
+  sender = '';
+  recipient = '';
+  currencyToSpend = '';
+  currencyToReceive = '';
+  amountToSpend = 0;
+  amountToReceive = 0;
+  fees = 0;
+  status: TransactionStatus | undefined = undefined;
+
+  constructor(data: Transaction | TransactionShort | null) {
+    if (data !== null) {
+      this.id = data.transactionId;
+      const datepipe = new DatePipe('en-US');
+      this.date = datepipe.transform(data.executed, 'd MMM YYYY') as string;
+      this.type = data.type;
+      this.currencyToSpend = data.currencyToSpend;
+      this.currencyToReceive = data.currencyToReceive;
+      this.amountToSpend = data.amountToSpend;
+      this.amountToReceive = data.amountToReceive;
+      this.fees = data.fee;
+      this.status = data.status;
+    }
+  }
+
+  get typeName(): string {
+    return TransactionTypeList.find((t) => t.id === this.type)?.name as string;
+  }
+
+  get statusName(): string {
+    return TransactionStatusList.find((t) => t.id === this.status)
+      ?.name as string;
   }
 }

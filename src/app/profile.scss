@@ -136,3 +136,36 @@ $side_menu_width_lg: 336;
     
     color: $color_purple_900_text;
 }
+
+.__profile-data-container {
+    display: block;
+    margin: 0px 24px 24px 24px;
+}
+
+.__profile-data-table {
+    width: 100%;
+    background-color: $color_white;
+}
+
+.__profile-table-column {
+    word-wrap: break-word;
+    white-space: unset;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    height: 48px;
+    padding: 0px !important;
+}
+
+.__profile-table-header {
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px !important;
+    line-height: 14px;
+    color: $color_purple_200;
+    margin-left: 4px;
+}
