@@ -171,6 +171,38 @@
     transform: rotate(180deg);
 }
 
+.__small-button {
+    justify-content: center;
+    align-items: center;
+    padding: 4px 12px;
+    height: 22px;
+    min-width: 46px;
+
+    background: $color_main_blue_800;
+    border-radius: 20px;
+    border: none;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 14px;
+    color: $color_white;
+}
+
+.__small-button:focus {
+    outline: none;
+}
+
+.__small-button:hover {
+    background: $color_main_blue_600;
+}
+
+.__small-button:disabled {
+    background: $color_purple_50;
+    color: $color_purple_200;
+}
+
 .__side-menu-button {
     justify-content: center;
     align-items: center;
@@ -327,3 +359,6 @@
     margin-left: 10px;
 }
 
+.__button-separator-sm {
+    margin-left: 8px;
+}

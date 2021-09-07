@@ -169,3 +169,8 @@ $side_menu_width_lg: 336;
     color: $color_purple_200;
     margin-left: 4px;
 }
+
+.__profile-table-details-table {
+    display: flex;
+    justify-content: end;
+}
