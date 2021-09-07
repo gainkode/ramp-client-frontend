@@ -1,3 +1,6 @@
+@import "../../fonts.scss";
+@import "../../colors.scss";
+
 .__profile-transactions-table-column-transaction {
     flex: 0 0 12%;
     width: 12%;
@@ -44,4 +47,58 @@
     flex: 0 0 10%;
     width: 10%;
     min-width: 59px;
+}
+
+.__profile-transactions-table-cell-data {
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 28px;
+    color: $color_purple_900_text;
+}
+
+.__profile-transactions-table-cell-transaction {
+    padding: 2px 0px 2px 4px !important;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.__profile-transactions-table-cell-transaction-icon {
+    width: 18px;
+    height: 18px;
+    margin: 0px 16px 0px 7px;
+}
+
+.__profile-transactions-table-cell-transaction-date {
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 14px;
+    color: $color_purple_200;
+}
+
+.__profile-transactions-table-cell-sender {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.__profile-transactions-table-cell-sender-icon {
+    width: 18px;
+    height: 18px;
+    margin: 0px 8px 0px 4px;
+}
+
+.__profile-transactions-table-cell-plain {
+    padding: 0px 0px 0px 4px !important;
+}
+
+.__profile-transactions-table-cell-details {
+    padding: 0px 0px 0px 0px !important;
+    display: flex;
+    justify-content: flex-end;
+    align-items: stretch;
 }

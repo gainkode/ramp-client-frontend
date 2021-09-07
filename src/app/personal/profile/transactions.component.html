@@ -13,8 +13,17 @@
                     Transaction
                 </span>
             </th>
-            <td mat-cell *matCellDef="let element">
-                {{element.typeName}} {{element.date}}
+            <td mat-cell *matCellDef="let element" class="__profile-transactions-table-cell-transaction">
+                <img class="__profile-transactions-table-cell-transaction-icon"
+                    src="../../../assets/navigation/__temp_send_icon.svg">
+                <div>
+                    <div class="__profile-transactions-table-cell-data">
+                        {{element.typeName}}
+                    </div>
+                    <div class="__profile-transactions-table-cell-transaction-date">
+                        {{element.date}}
+                    </div>
+                </div>
             </td>
         </ng-container>
 
@@ -27,7 +36,11 @@
                 </span>
             </th>
             <td mat-cell *matCellDef="let element">
-                Bitcoin HODL
+                <div class="__profile-transactions-table-cell-sender">
+                    <img class="__profile-transactions-table-cell-sender-icon"
+                        src="../../../assets/svg-payment-systems/bitcoin.svg">
+                    <div class="__profile-transactions-table-cell-data">Bitcoin HODL</div>
+                </div>
             </td>
         </ng-container>
 
@@ -40,7 +53,11 @@
                 </span>
             </th>
             <td mat-cell *matCellDef="let element">
-                Bitcoin HODL
+                <div class="__profile-transactions-table-cell-sender">
+                    <img class="__profile-transactions-table-cell-sender-icon"
+                        src="../../../assets/svg-payment-systems/bitcoin.svg">
+                    <div class="__profile-transactions-table-cell-data">Bitcoin HODL</div>
+                </div>
             </td>
         </ng-container>
 
@@ -49,11 +66,11 @@
             <th mat-header-cell mat-sort-header *matHeaderCellDef
                 class="__profile-table-column __profile-transactions-table-column-sent">
                 <span class="__profile-table-header">
-                    Sent
+                    Amount Sent
                 </span>
             </th>
-            <td mat-cell *matCellDef="let element">
-                {{element.currencyToSpend}}{{element.amountToSpend}}
+            <td mat-cell *matCellDef="let element" class="__profile-transactions-table-cell-plain">
+                <div class="__profile-transactions-table-cell-data">{{element.amountSent}}</div>
             </td>
         </ng-container>
 
@@ -62,11 +79,11 @@
             <th mat-header-cell mat-sort-header *matHeaderCellDef
                 class="__profile-table-column __profile-transactions-table-column-received">
                 <span class="__profile-table-header">
-                    Received
+                    Amount Received
                 </span>
             </th>
-            <td mat-cell *matCellDef="let element">
-                {{element.currencyToReceive}}{{element.amountToReceive}}
+            <td mat-cell *matCellDef="let element" class="__profile-transactions-table-cell-plain">
+                <div class="__profile-transactions-table-cell-data">{{element.amountReceived}}</div>
             </td>
         </ng-container>
 
@@ -75,11 +92,11 @@
             <th mat-header-cell mat-sort-header *matHeaderCellDef
                 class="__profile-table-column __profile-transactions-table-column-fees">
                 <span class="__profile-table-header">
-                    Fees
+                    Network Fees
                 </span>
             </th>
-            <td mat-cell *matCellDef="let element">
-                {{element.fees}}
+            <td mat-cell *matCellDef="let element" class="__profile-transactions-table-cell-plain">
+                <div class="__profile-transactions-table-cell-data">{{element.systemFees}}</div>
             </td>
         </ng-container>
 
@@ -91,8 +108,8 @@
                     Status
                 </span>
             </th>
-            <td mat-cell *matCellDef="let element">
-                {{element.statusName}}
+            <td mat-cell *matCellDef="let element" class="__profile-transactions-table-cell-plain">
+                <div class="__profile-transactions-table-cell-data">{{element.statusName}}</div>
             </td>
         </ng-container>
 
@@ -111,12 +128,11 @@
                 </div>
             </th>
             <td mat-cell *matCellDef="let element">
-                <!-- <button mat-icon-button type="button" (click)="toggleDetails(element)"
-                    [attr.aria-label]="'Change contact'" [attr.aria-pressed]="showDetailed"
-                    [matTooltip]="getDetailsTooltip(element.id)" matTooltipClass="info-tooltip"
-                    [disabled]="createContact">
-                    <mat-icon class="details-icon">{{getDetailsIcon(element.id)}}</mat-icon>
-                </button> -->
+                <div class="__profile-transactions-table-cell-details">
+                    <button type="button" class="__table-button">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                </div>
             </td>
         </ng-container>
 
@@ -124,7 +140,8 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
 
-    <mat-paginator *ngIf="errorMessage === ''" class="__profile-data-table" [length]="transactionCount"
-        [pageSize]="pageSize" [pageSizeOptions]="[25, 50, 100]" showFirstLastButtons (page)="handlePage($event)">
+    <mat-paginator *ngIf="errorMessage === '' && paginatorVisible" class="__profile-data-table"
+        [length]="transactionCount" [pageSize]="pageSize" [pageSizeOptions]="pageCounts" showFirstLastButtons
+        (page)="handlePage($event)">
     </mat-paginator>
 </div>

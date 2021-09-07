@@ -171,6 +171,32 @@
     transform: rotate(180deg);
 }
 
+.__table-button {
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
+    width: 24px;
+    height: 24px;
+
+    background: $color_white;
+    border: none;
+
+    font-size: 4px;
+    color: $color_main_blue_800;
+}
+
+.__table-button:focus {
+    outline: none;
+}
+
+.__table-button:hover {
+    color: $color_main_blue_600;
+}
+
+.__table-button:disabled {
+    color: $color_purple_200;
+}
+
 .__small-button {
     justify-content: center;
     align-items: center;

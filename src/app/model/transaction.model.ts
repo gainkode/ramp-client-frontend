@@ -185,7 +185,8 @@ export class TransactionItem {
     if (data !== null) {
       this.id = data.transactionId;
       const datepipe = new DatePipe('en-US');
-      this.date = datepipe.transform(data.executed, 'd MMM YYYY') as string;
+      this.date = (datepipe.transform(data.created, 'd MMM YYYY') as string).toUpperCase();
+      //this.date = datepipe.transform(data.executed, 'd MMM YYYY') as string;
       this.type = data.type;
       this.currencyToSpend = data.currencyToSpend;
       this.currencyToReceive = data.currencyToReceive;
@@ -201,7 +202,56 @@ export class TransactionItem {
   }
 
   get statusName(): string {
-    return TransactionStatusList.find((t) => t.id === this.status)
-      ?.name as string;
+    return TransactionStatusList.find((t) => t.id === this.status)?.name as string;
+  }
+
+  get systemFees(): string {
+    return this.fees.toFixed(6).toString();
+  }
+
+  get amountSent(): string {
+    if (this.isFiatCurrency(this.currencyToSpend)) {
+      return `${this.getCurrencySign(this.currencyToSpend)}${this.amountToSpend.toFixed(this.getFixedNumber(this.currencyToSpend))}`;
+    } else {
+      return `${this.amountToSpend.toFixed(this.getFixedNumber(this.currencyToSpend))} ${this.getCurrencySign(this.currencyToSpend)}`;
+    }
+  }
+
+  get amountReceived(): string {
+    if (this.isFiatCurrency(this.currencyToReceive)) {
+      return `${this.getCurrencySign(this.currencyToReceive)}${this.amountToReceive.toFixed(this.getFixedNumber(this.currencyToReceive))}`;
+    } else {
+      return `${this.amountToReceive.toFixed(this.getFixedNumber(this.currencyToReceive))} ${this.getCurrencySign(this.currencyToReceive)}`;
+    }
+  }
+
+  isFiatCurrency(currency: string): boolean {
+    return (currency === 'USD' || currency === 'EUR');
+  }
+
+  getCurrencySign(currency: string): string {
+    let result = currency;
+    switch (currency) {
+      case 'EUR':
+        result = '\u20AC';
+        break;
+      case 'USD':
+        result = '$';
+        break;
+    }
+    return result;
+  }
+
+  getFixedNumber(currency: string): number {
+    let result = 4;
+    switch (currency) {
+      case 'EUR':
+        result = 2;
+        break;
+      case 'USD':
+        result = 2;
+        break;
+    }
+    return result;
   }
 }
