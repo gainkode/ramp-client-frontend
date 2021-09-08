@@ -125,7 +125,9 @@ input:-webkit-autofill::first-line {
     color: $color_main_blue_600;
 }
 
-
+.mat-row:hover {
+    background-color: $color_main_blue_50;
+}
 
 
 
