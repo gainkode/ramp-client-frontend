@@ -1,10 +1,11 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { TransactionsFilter } from 'src/app/model/filter.model';
 import { TransactionShortListResult } from 'src/app/model/generated-models';
+import { ProfileItemContainer, ProfileItemContainerType } from 'src/app/model/profile-item.model';
 import { TransactionItem } from 'src/app/model/transaction.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
@@ -16,6 +17,7 @@ import { ProfileDataService } from 'src/app/services/profile.service';
     styleUrls: ['../../menu.scss', '../../button.scss', '../../profile.scss', './transactions.component.scss']
 })
 export class PersonalTransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
+    @Output() showDetails = new EventEmitter<ProfileItemContainer>();
     @ViewChild(MatSort) sort!: MatSort;
     private pTransactionsSubscription: Subscription | undefined = undefined;
     filter = new TransactionsFilter();
@@ -144,7 +146,10 @@ export class PersonalTransactionsComponent implements OnInit, OnDestroy, AfterVi
         return event;
     }
 
-    showDetails(id: string): void {
-        alert(id);
+    showDetailsPanel(item: TransactionItem): void {
+        const c = new ProfileItemContainer();
+        c.container = ProfileItemContainerType.Transaction;
+        c.transaction = item;
+        this.showDetails.emit(c);
     }
 }

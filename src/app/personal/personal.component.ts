@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { Event as NavigationEvent } from '@angular/router';
 import { MenuItem } from '../model/common.model';
+import { ProfileItemContainer, ProfileItemContainerType } from '../model/profile-item.model';
 import {
     PersonalProfileMenuItems,
     PersonalProfilePopupAdministrationMenuItem,
@@ -19,7 +20,8 @@ export class PersonalComponent implements OnInit {
     popupItems: MenuItem[] = PersonalProfilePopupMenuItems;
     expandedMenu = false;
     selectedMenu = 'home';
-    showDetails = true;
+    showDetails = false;
+    showDetailsRef: any;
 
     constructor(private auth: AuthService, private notification: NotificationService, private router: Router) {
         this.getSectionName();
@@ -71,6 +73,12 @@ export class PersonalComponent implements OnInit {
         }
     }
 
+    private initializeDetailsPanel(container: ProfileItemContainer): void {
+        if (container.container === ProfileItemContainerType.Transaction) {
+            
+        }
+    }
+
     ngOnInit(): void {
         // side menu expanded state
         const expandedVal = localStorage.getItem('sideMenuExpanded');
@@ -82,6 +90,24 @@ export class PersonalComponent implements OnInit {
             if (!adminMenu) {
                 this.popupItems.splice(0, 0, PersonalProfilePopupAdministrationMenuItem);
             }
+        }
+    }
+
+    onActivatePage(component: any): void {
+        this.showDetailsRef = component.showDetails;
+        if (this.showDetailsRef !== undefined) {
+            this.showDetailsRef.subscribe((event: any) => {
+                const container = event as ProfileItemContainer;
+                this.initializeDetailsPanel(container);
+                this.showDetails = true;
+            });
+        }
+    }
+
+    onDeactivatePage(component: any): void {
+        if (this.showDetailsRef !== undefined) {
+            this.showDetailsRef.unsubscribe();
+            this.showDetailsRef = undefined;
         }
     }
 

@@ -30,7 +30,7 @@
             </div>
         </div>
         <div [ngClass]="expandedMenu ? '__profile-content-expanded' : '__profile-content'">
-            <router-outlet></router-outlet>
+            <router-outlet (activate)="onActivatePage($event)" (deactivate)="onDeactivatePage($event)"></router-outlet>
         </div>
     </div>
 </div>
