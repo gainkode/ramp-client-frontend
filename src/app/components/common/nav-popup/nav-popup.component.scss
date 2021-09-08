@@ -15,6 +15,7 @@
     padding: 0px;
     height: 48px;
     border: none;
+    background-color: $color_white;
 }
 
 .__nav-popup-button-box:focus {
@@ -60,8 +61,8 @@
     font-family: $font_main;
     font-style: normal;
     font-weight: normal;
-    font-size: 21px;
-    line-height: 28px;
+    font-size: 16px;
+    line-height: 19px;
     color: $color_purple_900_text;
 }
 

@@ -1,11 +1,7 @@
 @import "./fonts.scss";
 @import "./colors.scss";
 @import "./menu.scss";
-
-$side_menu_narrow_width_sm: 134;
-$side_menu_width_sm: 244;
-$side_menu_narrow_width_lg: 140;
-$side_menu_width_lg: 336;
+@import "./consts.scss";
 
 .__profile-container {
     display: flex;
@@ -13,34 +9,37 @@ $side_menu_width_lg: 336;
 
 .__profile-side-menu {
     width           : $side_menu_narrow_width_lg + px;
+    min-height      : ($max_height - $top_menu_height - 10) + px;
     background-color: $color_white;
-
-    @media (max-width: $md1 + px) {
-        width: $side_menu_narrow_width_sm + px;
-    }
     
+    @media (max-width: $md1 + px) {
+        width     : $side_menu_narrow_width_sm + px;
+        min-height: ($min_height - $top_menu_height) + px;
+    }
+
     @media (max-width: $md2 + px) {
-        width: $side_menu_narrow_width_sm + px;
+        width     : $side_menu_narrow_width_sm + px;
+        min-height: $min_height + px;
     }
 
     @media (max-width: $md3 + px) {
-        width: 0px;
+        width     : 0px;
         visibility: hidden;
     }
 }
 
 .__profile-content {
     background-color: $color_white;
-    width           : ($max_width_container - $side_menu_narrow_width_lg) + px;
+    width           : 100%;
     padding         : 0px 16px;
 
     @media (max-width: $md1 + px) {
-        width: ($mid_width_container - $side_menu_narrow_width_sm) + px;
+        width           : 100%;
         padding: 0px;
     }
     
     @media (max-width: $md2 + px) {
-        width: ($mid_width_container - $side_menu_narrow_width_sm) + px;
+        width           : 100%;
         padding: 0px;
     }
 
@@ -53,14 +52,17 @@ $side_menu_width_lg: 336;
 
 .__profile-side-menu-expanded {
     width           : $side_menu_width_lg + px;
+    min-height      : ($max_height - $top_menu_height - 10) + px;
     background-color: $color_white;
 
     @media (max-width: $md1 + px) {
         width: $side_menu_width_sm + px;
+        min-height: ($min_height - $top_menu_height) + px;
     }
     
     @media (max-width: $md2 + px) {
         width: $side_menu_width_sm + px;
+        min-height: $min_height + px;
     }
 
     @media (max-width: $md3 + px) {
@@ -71,17 +73,17 @@ $side_menu_width_lg: 336;
 
 .__profile-content-expanded {
     background-color: $color_white;
-    width           : ($max_width_container - $side_menu_width_lg) + px;
+    width           : 100%;
     padding         : 0px 16px;
 
     @media (max-width: $md1 + px) {
         padding: 0px;
-        width: ($mid_width_container - $side_menu_width_sm) + px;
+        width: 100%;
     }
     
     @media (max-width: $md2 + px) {
         padding: 0px;
-        width: ($mid_width_container - $side_menu_width_sm) + px;
+        width: 100%;
     }
 
     @media (max-width: $md3 + px) {
@@ -107,6 +109,26 @@ $side_menu_width_lg: 336;
         width: 0px;
         visibility: hidden;
     }
+}
+
+.__profile-details-block {
+    position: fixed;
+    top:0px;
+    left: 0px;
+    height: 100%;
+    width: 100%;
+    z-index: 200;
+    padding: 0px;
+    display: flex;
+    justify-content: right;
+    align-items: baseline;
+}
+
+.__profile-details-container {
+    width: $details_pane_width + px;
+    height: 100%;
+    background-color: $color_white;
+    box-shadow: 0px 8px 11px rgba(208, 207, 207, 0.2), 0px 17px 26px rgba(208, 207, 207, 0.14), 0px 6px 32px rgba(0, 0, 0, 0.12);
 }
 
 .__profile-unsupported-device {
@@ -174,3 +196,16 @@ $side_menu_width_lg: 336;
     display: flex;
     justify-content: end;
 }
+
+.__profile-disabled-block {
+    opacity: 0.6;
+}
+
+// .__profile-details-container {
+//     position: relative;
+//     left: 100px;
+//     width: 400px;
+//     height: 100%;
+//     background-color: $color_white;
+//     box-shadow: 0px 8px 11px rgba(208, 207, 207, 0.2), 0px 17px 26px rgba(208, 207, 207, 0.14), 0px 6px 32px rgba(0, 0, 0, 0.12);
+// }

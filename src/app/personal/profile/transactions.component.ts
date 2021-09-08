@@ -41,7 +41,6 @@ export class PersonalTransactionsComponent implements OnInit, OnDestroy, AfterVi
         private profileService: ProfileDataService,
         private router: Router,
         private activeRoute: ActivatedRoute) {
-        console.log('create');
         this.filter.setData(
             this.activeRoute.snapshot.params['wallets'],
             this.activeRoute.snapshot.params['types'],
@@ -51,7 +50,6 @@ export class PersonalTransactionsComponent implements OnInit, OnDestroy, AfterVi
     }
 
     ngOnInit(): void {
-        console.log('init');
         this.loadTransactions();
     }
 
@@ -144,5 +142,9 @@ export class PersonalTransactionsComponent implements OnInit, OnDestroy, AfterVi
         this.pageIndex = event.pageIndex;
         this.refresh();
         return event;
+    }
+
+    showDetails(id: string): void {
+        alert(id);
     }
 }

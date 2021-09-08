@@ -17,8 +17,9 @@ import { NotificationService } from '../services/notification.service';
 export class PersonalComponent implements OnInit {
     menuItems: MenuItem[] = PersonalProfileMenuItems;
     popupItems: MenuItem[] = PersonalProfilePopupMenuItems;
-    expandedManu = false;
+    expandedMenu = false;
     selectedMenu = 'home';
+    showDetails = true;
 
     constructor(private auth: AuthService, private notification: NotificationService, private router: Router) {
         this.getSectionName();
@@ -73,7 +74,7 @@ export class PersonalComponent implements OnInit {
     ngOnInit(): void {
         // side menu expanded state
         const expandedVal = localStorage.getItem('sideMenuExpanded');
-        this.expandedManu = (expandedVal === 'true');
+        this.expandedMenu = (expandedVal === 'true');
         // Administration menu item
         const adminRole = this.auth.user?.roles?.find(r => r.name === 'ADMIN');
         if (adminRole) {
@@ -85,7 +86,7 @@ export class PersonalComponent implements OnInit {
     }
 
     sideMenuExpanded(state: boolean): void {
-        this.expandedManu = state;
+        this.expandedMenu = state;
         if (state === true) {
             localStorage.setItem('sideMenuExpanded', 'true');
         } else {
@@ -122,6 +123,10 @@ export class PersonalComponent implements OnInit {
 
     getUserMainPage(): string {
         return this.auth.getUserMainPage();
+    }
+
+    closeDetails(): void {
+        this.showDetails = false;
     }
 
     notificationTest(): void {

@@ -118,18 +118,18 @@
             <th mat-header-cell *matHeaderCellDef
                 class="__profile-table-column __profile-transactions-table-column-details">
                 <div class="__profile-table-details-table">
-                    <button class="__small-button" type="button">
+                    <button class="__small-button" type="button" disabled>
                         .pdf
                     </button>
                     <div class="__button-separator-sm"></div>
-                    <button class="__small-button" type="button">
+                    <button class="__small-button" type="button" disabled>
                         .csv
                     </button>
                 </div>
             </th>
             <td mat-cell *matCellDef="let element">
                 <div class="__profile-transactions-table-cell-details">
-                    <button type="button" class="__table-button">
+                    <button type="button" class="__table-button" (click)="showDetails(element.id)">
                         <mat-icon>more_vert</mat-icon>
                     </button>
                 </div>

@@ -1,37 +1,52 @@
-<div class="__top-menu-bar">
-    <div class="__top-menu-content-bar">
-        <div class="__profile-top-menu-logo-box">
-            <button *ngIf="expandedManu" mat-icon-button style="width: 150px;color: darkblue;"
-                (click)="routeTo(getUserMainPage())">
-                eWallet Logo
-            </button>
-        </div>
-        <div class="__top-menu-content-box">
-            <button class="__borderless-button" (click)="routeTo('/payment')">
-                Quick Checkout
-            </button>
-            <app-nav-popup [items]="popupItems" [userName]="userName" (onMenuClick)="popupMenuClick($event)">
-            </app-nav-popup>
-        </div>
-    </div>
-</div>
-<div class="__profile-container">
-    <div [ngClass]="expandedManu ? '__profile-side-menu-expanded' : '__profile-side-menu'">
-        <div class="__side-menu-container">
-            <app-side-menu class="__side-menu-header-container" [items]="menuItems" [selectedItem]="selectedMenu"
-                [expanded]="expandedManu" (onMenuClick)="sideMenuClick($event)">
-            </app-side-menu>
-            <div class="__side-menu-footer-container">
-                <app-side-expander-button class="__side-menu-expand-control" [expanded]="expandedManu"
-                    (stateChanged)="sideMenuExpanded($event)">
-                </app-side-expander-button>
+<div [ngClass]="{'__profile-disabled-block': showDetails}">
+    <div class="__top-menu-bar">
+        <div class="__top-menu-content-bar">
+            <div class="__profile-top-menu-logo-box">
+                <button *ngIf="expandedMenu" mat-icon-button style="width: 150px;color: darkblue;"
+                    (click)="routeTo(getUserMainPage())">
+                    eWallet Logo
+                </button>
+            </div>
+            <div class="__top-menu-content-box">
+                <button class="__borderless-button" (click)="routeTo('/payment')">
+                    Quick Checkout
+                </button>
+                <app-nav-popup [items]="popupItems" [userName]="userName" (onMenuClick)="popupMenuClick($event)">
+                </app-nav-popup>
             </div>
         </div>
     </div>
-    <div [ngClass]="expandedManu ? '__profile-content-expanded' : '__profile-content'">
-        <router-outlet></router-outlet>
+    <div class="__profile-container">
+        <div [ngClass]="expandedMenu ? '__profile-side-menu-expanded' : '__profile-side-menu'">
+            <div class="__side-menu-container">
+                <app-side-menu class="__side-menu-header-container" [items]="menuItems" [selectedItem]="selectedMenu"
+                    [expanded]="expandedMenu" (onMenuClick)="sideMenuClick($event)">
+                </app-side-menu>
+                <div class="__side-menu-footer-container">
+                    <app-side-expander-button class="__side-menu-expand-control" [expanded]="expandedMenu"
+                        (stateChanged)="sideMenuExpanded($event)">
+                    </app-side-expander-button>
+                </div>
+            </div>
+        </div>
+        <div [ngClass]="expandedMenu ? '__profile-content-expanded' : '__profile-content'">
+            <router-outlet></router-outlet>
+        </div>
     </div>
 </div>
+
+<div *ngIf="showDetails" class="__profile-details-block">
+    <div class="__profile-details-container">
+        <div style="width: 100%;height: 40px;display: flex;justify-content: right;">
+            <div style="margin: 8px;">
+                <button class="__tool-button" (click)="closeDetails()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="__profile-unsupported-device">
     <div class="__profile-unsupported-device-title">
         The screen size of your device is not supported.
