@@ -1,4 +1,4 @@
-<app-transactions-filter (update)="onFilterUpdate($event)"></app-transactions-filter>
+<app-transactions-filter [data]="filter" (update)="onFilterUpdate($event)"></app-transactions-filter>
 
 <div class="__profile-data-container">
     <mat-progress-bar *ngIf="inProgress" color="accent" mode="indeterminate"></mat-progress-bar>

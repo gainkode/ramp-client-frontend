@@ -811,7 +811,6 @@ export class AdminDataService {
         first: takeItems,
         orderBy: orderFields
       };
-      console.log(vars);
       return this.apollo.watchQuery<any>({
         query: GET_WIDGETS,
         variables: vars,

@@ -104,7 +104,6 @@ export class PersonalComponent implements OnInit {
     }
 
     sideMenuClick(item: MenuItem): void {
-        console.log(item.name);
         this.router.navigateByUrl(item.url);
     }
 

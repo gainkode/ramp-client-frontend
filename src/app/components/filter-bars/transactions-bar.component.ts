@@ -1,8 +1,8 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { TransactionsFilter } from 'src/app/model/filter.model';
 import { TransactionSource, TransactionType } from 'src/app/model/generated-models';
-import { TransactionSourceList, TransactionSourceView, TransactionTypeView, UserTransactionTypeList } from 'src/app/model/payment.model';
+import { TransactionSourceList, UserTransactionTypeList } from 'src/app/model/payment.model';
 import { getFormattedUtcDate } from 'src/app/utils/utils';
 
 @Component({
@@ -11,6 +11,7 @@ import { getFormattedUtcDate } from 'src/app/utils/utils';
     styleUrls: ['../../menu.scss', '../../button.scss']
 })
 export class TransactionsFilterBarComponent implements OnInit {
+    @Input() data: TransactionsFilter | undefined = undefined;
     @Output() update = new EventEmitter<TransactionsFilter>();
 
     transactionTypes = UserTransactionTypeList;
@@ -44,8 +45,23 @@ export class TransactionsFilterBarComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.transactionTypesField?.setValue(this.transactionTypes.map(x => x.id));
-        this.walletTypesField?.setValue(this.walletTypes.map(x => x.id));
+        if (this.data && this.data.transactionTypes.length > 0) {
+            this.transactionTypesField?.setValue(this.data.transactionTypes.map(x => x));
+        } else {
+            this.transactionTypesField?.setValue(this.transactionTypes.map(x => x.id));
+        }
+        if (this.data && this.data.transactionTypes.length > 0) {
+            this.walletTypesField?.setValue(this.data.walletTypes.map(x => x));
+        } else {
+            this.walletTypesField?.setValue(this.walletTypes.map(x => x.id));
+        }
+        if (this.data && this.data.transactionDate) {
+            const d = `${this.data.transactionDate.getDate()}/${this.data.transactionDate.getMonth() + 1}/${this.data.transactionDate.getFullYear()}`;
+            this.transactionDateField?.setValue(d);
+        }
+        if (this.data && this.data.sender) {
+            this.senderField?.setValue(this.data.sender);
+        }
         this.transactionTypesField?.valueChanges.subscribe(val => {
             if ((val as []).length < 1) {
                 this.transactionTypesField?.setValue(this.transactionTypes.map(x => x.id));

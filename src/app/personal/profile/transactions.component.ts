@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { TransactionsFilter } from 'src/app/model/filter.model';
 import { TransactionShortListResult } from 'src/app/model/generated-models';
@@ -18,7 +18,7 @@ import { ProfileDataService } from 'src/app/services/profile.service';
 export class PersonalTransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild(MatSort) sort!: MatSort;
     private pTransactionsSubscription: Subscription | undefined = undefined;
-    private pFilter = new TransactionsFilter();
+    filter = new TransactionsFilter();
     inProgress = false;
     errorMessage = '';
     transactions: TransactionItem[] = [];
@@ -39,9 +39,19 @@ export class PersonalTransactionsComponent implements OnInit, OnDestroy, AfterVi
         private auth: AuthService,
         private errorHandler: ErrorService,
         private profileService: ProfileDataService,
-        private router: Router) { }
+        private router: Router,
+        private activeRoute: ActivatedRoute) {
+        console.log('create');
+        this.filter.setData(
+            this.activeRoute.snapshot.params['wallets'],
+            this.activeRoute.snapshot.params['types'],
+            this.activeRoute.snapshot.params['date'],
+            this.activeRoute.snapshot.params['sender']
+        );
+    }
 
     ngOnInit(): void {
+        console.log('init');
         this.loadTransactions();
     }
 
@@ -85,7 +95,7 @@ export class PersonalTransactionsComponent implements OnInit, OnDestroy, AfterVi
         const transactionsData = this.profileService.getMyTransactions(
             this.pageIndex,
             this.pageSize,
-            this.pFilter.walletTypes,
+            this.filter.walletTypes,
             this.getSortedField(),
             this.sortedDesc);
         if (transactionsData === null) {
@@ -121,8 +131,12 @@ export class PersonalTransactionsComponent implements OnInit, OnDestroy, AfterVi
     }
 
     onFilterUpdate(filter: TransactionsFilter): void {
-        this.pFilter = filter;
-        this.refresh();
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() =>
+            this.router.navigate([
+                `${this.auth.getUserMainPage()}/transactions`,
+                filter.getParameters()
+            ])
+        );
     }
 
     handlePage(event: PageEvent): PageEvent {
