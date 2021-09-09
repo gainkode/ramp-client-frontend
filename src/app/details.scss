@@ -1,0 +1,119 @@
+@import "./fonts.scss";
+@import "./colors.scss";
+
+.__profile-details-container {
+    display: flex;
+    flex-direction: column;
+    width: 100;
+    height:100%;
+    //border    : 1px solid #29c743;
+}
+
+.__profile-details-title {
+    margin: 0px 16px;
+    width: 100;
+    height:28px;
+    
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 21px;
+    line-height: 28px;
+    color: $color_purple_900_text;
+}
+        
+.__profile-details-data-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    width: 100;
+    height:100%;
+    margin: 24px 0px 0px 0px;
+}
+
+.__profile-details-data-area {
+    margin: 0px 16px 24px 16px;
+    height: 100%;
+}
+
+.__profile-details-item-block {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    margin: 8px 0px;
+}
+
+.__profile-details-item-title {
+    width: 140px;
+    min-width: 140px;
+    height: 28px;
+    
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 28px;
+    color: $color_purple_900_text;
+}
+
+.__profile-details-item-value {
+    margin-left: 8px;
+    height: 28px;
+    
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 28px;
+    color: $color_purple_900_text;
+}
+
+.__profile-details-button-container {
+    margin: 24px;
+    display: flex;
+    justify-content: center;
+}
+
+.__profile-details-footer {
+    width: 100%;
+    height: 28px;
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.__profile-details-footer-caption {
+    margin: auto 18px;
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 14px;
+    text-align: right;
+    color: $color_purple_900_text;
+}
+
+a.__profile-details-footer-link:link {
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 28px;
+    text-align: right;
+    color: $color_pink_500;
+    text-decoration: none;
+}
+    
+a.__profile-details-footer-link:hover {
+    color: $color_pink_700;
+    text-decoration: underline;
+}
+
+a.__profile-details-footer-link:visited {
+    color: $color_pink_500;
+    text-decoration: none;
+}
+
+a.__profile-details-footer-link:active {
+    color: $color_pink_900;
+    text-decoration: underline;
+}    

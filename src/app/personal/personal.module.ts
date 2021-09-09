@@ -29,6 +29,7 @@ import { PersonalMyAccountComponent } from './profile/my-account.component';
 import { PersonalMyContactsComponent } from './profile/my-contacts.component';
 import { PersonalTransactionsComponent } from './profile/transactions.component';
 import { PersonalMyWalletsComponent } from './profile/my-wallets.component';
+import { PersonalTransactionDetailsComponent } from './profile/details/transaction-details.component';
 
 const routing = RouterModule.forChild([
     { path: 'intro', component: IntroPersonalComponent },
@@ -79,7 +80,11 @@ export class MaterialModule { }
     imports: [CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule, DirectiveModule],
     declarations: [
         IntroPersonalComponent, PersonalComponent, ProfileMainPersonalComponent, 
-        PersonalHomeComponent, PersonalMyWalletsComponent, PersonalMyContactsComponent, PersonalTransactionsComponent, PersonalSwapComponent,
+        PersonalHomeComponent,
+        PersonalMyWalletsComponent,
+        PersonalMyContactsComponent,
+        PersonalTransactionsComponent, PersonalTransactionDetailsComponent,
+        PersonalSwapComponent,
         KycPersonalComponent, PersonalMyAccountComponent],
     providers: [PersonalGuard],
     schemas: [

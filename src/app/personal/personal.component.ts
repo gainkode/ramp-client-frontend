@@ -22,6 +22,8 @@ export class PersonalComponent implements OnInit {
     selectedMenu = 'home';
     showDetails = false;
     showDetailsRef: any;
+    detailsType = '';
+    detailsContainer!: ProfileItemContainer;
 
     constructor(private auth: AuthService, private notification: NotificationService, private router: Router) {
         this.getSectionName();
@@ -74,8 +76,9 @@ export class PersonalComponent implements OnInit {
     }
 
     private initializeDetailsPanel(container: ProfileItemContainer): void {
+        this.detailsContainer = container;
         if (container.container === ProfileItemContainerType.Transaction) {
-            
+            this.detailsType = 'transaction';
         }
     }
 

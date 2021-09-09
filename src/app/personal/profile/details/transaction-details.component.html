@@ -1,0 +1,123 @@
+<!-- Transaction Details -->
+<div class="__profile-details-container">
+    <div class="__profile-details-title">
+        Transaction Details
+    </div>
+    <div class="__profile-details-data-container">
+        <div class="__profile-details-data-area">
+            <!-- Date -->
+            <div class="__profile-details-item-block">
+                <div class="__profile-details-item-title">
+                    Date:
+                </div>
+                <div class="__profile-details-item-value">
+                    {{transaction?.dateLong}}
+                </div>
+            </div>
+            <!-- Type -->
+            <div class="__profile-details-item-block">
+                <div class="__profile-details-item-title">
+                    Type:
+                </div>
+                <div class="__profile-details-item-value">
+                    {{transaction?.typeName}}
+                </div>
+            </div>
+
+            <!-- Sender -->
+            <div class="__profile-details-item-block">
+                <div class="__profile-details-item-title">
+                    Sender:
+                </div>
+                <div class="__profile-details-item-value">
+                    {{transaction?.sender}}
+                </div>
+            </div>
+
+            <!-- Amount sent -->
+            <div class="__profile-details-item-block">
+                <div class="__profile-details-item-title">
+                    Amount Sent:
+                </div>
+                <div class="__profile-details-item-value">
+                    {{transaction?.amountSent}}
+                </div>
+            </div>
+
+            <!-- Recipient -->
+            <div class="__profile-details-item-block">
+                <div class="__profile-details-item-title">
+                    Recipient:
+                </div>
+                <div class="__profile-details-item-value">
+                    {{transaction?.recipient}}
+                </div>
+            </div>
+
+            <!-- Amount received -->
+            <div class="__profile-details-item-block">
+                <div class="__profile-details-item-title">
+                    Amount Received:
+                </div>
+                <div class="__profile-details-item-value">
+                    {{transaction?.amountReceived}}
+                </div>
+            </div>
+
+            <!-- Rate -->
+            <div class="__profile-details-item-block">
+                <div class="__profile-details-item-title">
+                    Rate:
+                </div>
+                <div class="__profile-details-item-value">
+                    {{transaction?.rate}}
+                </div>
+            </div>
+
+            <!-- Network Fee -->
+            <div class="__profile-details-item-block">
+                <div class="__profile-details-item-title">
+                    Network Fee:
+                </div>
+                <div class="__profile-details-item-value">
+                    {{transaction?.systemFees}}
+                </div>
+            </div>
+
+            <!-- Status -->
+            <div class="__profile-details-item-block">
+                <div class="__profile-details-item-title">
+                    Status:
+                </div>
+                <div class="__profile-details-item-value">
+                    {{transaction?.statusName}}
+                </div>
+            </div>
+
+            <!-- IP -->
+            <div class="__profile-details-item-block">
+                <div class="__profile-details-item-title">
+                    IP Address:
+                </div>
+                <div class="__profile-details-item-value">
+                    {{transaction?.ip}}
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="__profile-details-button-container">
+                <button type="button" class="__main-button">
+                    repeat
+                </button>
+            </div>
+        </div>
+        <div class="__profile-details-footer">
+            <a href="#" class="__profile-details-footer-link">
+                report transaction
+            </a>
+            <div class="__profile-details-footer-caption">
+                don't recognize?
+            </div>
+        </div>
+    </div>
+</div>

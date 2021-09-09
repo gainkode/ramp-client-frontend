@@ -170,31 +170,44 @@ export class TransactionItemDeprecated {
 
 export class TransactionItem {
   id = '';
-  date = '';
   type: TransactionType | undefined = undefined;
-  sender = '';
-  recipient = '';
+  sender = 'Bitcoin HODL';
+  recipient = 'Bitcoin HODL';
   currencyToSpend = '';
   currencyToReceive = '';
   amountToSpend = 0;
   amountToReceive = 0;
   fees = 0;
+  rate = 0;
+  ip = '';
   status: TransactionStatus | undefined = undefined;
+  private created!: Date;
+  private executed!: Date;
+  private datepipe = new DatePipe('en-US');
 
   constructor(data: Transaction | TransactionShort | null) {
     if (data !== null) {
       this.id = data.transactionId;
-      const datepipe = new DatePipe('en-US');
-      this.date = (datepipe.transform(data.created, 'd MMM YYYY') as string).toUpperCase();
-      //this.date = datepipe.transform(data.executed, 'd MMM YYYY') as string;
+      this.created = data.created;
+      this.executed = data.executed;
       this.type = data.type;
       this.currencyToSpend = data.currencyToSpend;
       this.currencyToReceive = data.currencyToReceive;
       this.amountToSpend = data.amountToSpend;
       this.amountToReceive = data.amountToReceive;
       this.fees = data.fee;
+      this.rate = data.rate;
       this.status = data.status;
+      this.ip = '82.15.249.66';
     }
+  }
+
+  get dateShort(): string {
+    return (this.datepipe.transform(this.created, 'd MMM YYYY') as string).toUpperCase();
+  }
+
+  get dateLong(): string {
+    return (this.datepipe.transform(this.created, 'd MMM YYYY HH:mm:ss') as string).toUpperCase();
   }
 
   get typeName(): string {
