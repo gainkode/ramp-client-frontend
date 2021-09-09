@@ -68,6 +68,7 @@ export type Query = {
   getRates?: Maybe<Array<Rate>>;
   myTransactions?: Maybe<TransactionShortListResult>;
   getTransactions?: Maybe<TransactionListResult>;
+  getTransactionStatuses?: Maybe<Array<TransactionStatusDescriptorMap>>;
   getDashboardStats?: Maybe<DashboardStats>;
   myWidgets?: Maybe<WidgetListResult>;
   getWidgets?: Maybe<WidgetListResult>;
@@ -1399,6 +1400,33 @@ export enum TransactionKycStatus {
   KycWaiting = 'KycWaiting',
   KycRejected = 'KycRejected',
   KycApproved = 'KycApproved'
+}
+
+export type TransactionStatusDescriptorMap = {
+  __typename?: 'TransactionStatusDescriptorMap';
+  key: TransactionStatus;
+  value: TransactionStatusDescriptor;
+};
+
+export type TransactionStatusDescriptor = {
+  __typename?: 'TransactionStatusDescriptor';
+  notifyUser: Scalars['Boolean'];
+  canBeCancelled: Scalars['Boolean'];
+  description: Scalars['String'];
+  userStatus: UserTransactionStatus;
+};
+
+export enum UserTransactionStatus {
+  Pending = 'Pending',
+  Processing = 'Processing',
+  Paid = 'Paid',
+  Declined = 'Declined',
+  Delivering = 'Delivering',
+  Delivered = 'Delivered',
+  Completed = 'Completed',
+  Abandoned = 'Abandoned',
+  Canceled = 'Canceled',
+  Chargeback = 'Chargeback'
 }
 
 export enum CountryCodeType {
