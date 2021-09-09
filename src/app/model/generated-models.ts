@@ -444,12 +444,12 @@ export type UserNotification = {
   userId?: Maybe<Scalars['String']>;
   user?: Maybe<User>;
   userNotificationTypeCode: Scalars['String'];
+  userNotificationLevel?: Maybe<UserNotificationLevel>;
   created?: Maybe<Scalars['DateTime']>;
   viewed?: Maybe<Scalars['DateTime']>;
   text?: Maybe<Scalars['String']>;
   linkedId?: Maybe<Scalars['String']>;
   linkedTable?: Maybe<Scalars['String']>;
-  level?: Maybe<UserNotificationLevel>;
   params?: Maybe<Scalars['String']>;
 };
 
@@ -508,6 +508,7 @@ export type User = {
   kycStatusUpdateRequired?: Maybe<Scalars['Boolean']>;
   custodyProvider?: Maybe<Scalars['String']>;
   vaultAccountId?: Maybe<Scalars['String']>;
+  additionalVaultAccountIds?: Maybe<Array<Scalars['String']>>;
   defaultFiatCurrency?: Maybe<Scalars['String']>;
   defaultCryptoCurrency?: Maybe<Scalars['String']>;
 };
@@ -799,6 +800,7 @@ export type UserState = {
   date?: Maybe<Scalars['DateTime']>;
   transactionSummary?: Maybe<Array<UserTransactionSummary>>;
   vault?: Maybe<UserVault>;
+  additionalVaults?: Maybe<Array<UserVault>>;
   externalWallets?: Maybe<Array<ExternalWallet>>;
   notifications?: Maybe<UserNotificationListResult>;
 };
@@ -1115,16 +1117,19 @@ export type TransactionShort = {
   type: TransactionType;
   status: TransactionStatus;
   fee: Scalars['Float'];
+  feeInFiat: Scalars['Float'];
   feePercent: Scalars['Float'];
   feeMinFiat: Scalars['Float'];
   feeMinEur: Scalars['Float'];
   feeDetails?: Maybe<Scalars['String']>;
   currencyToSpend: Scalars['String'];
   amountToSpend: Scalars['Float'];
+  amountToSpendInFiat: Scalars['Float'];
   amountToSpendInEur: Scalars['Float'];
   amountToSpendWithoutFee: Scalars['Float'];
   currencyToReceive: Scalars['String'];
   amountToReceive: Scalars['Float'];
+  amountToReceiveInFiat: Scalars['Float'];
   amountToReceiveInEur: Scalars['Float'];
   amountToReceiveWithoutFee: Scalars['Float'];
   rate: Scalars['Float'];
@@ -1132,7 +1137,7 @@ export type TransactionShort = {
   rateEur: Scalars['Float'];
   fiatToEurRate: Scalars['Float'];
   eurToFiatRate: Scalars['Float'];
-  defaultFiatToEurRate: Scalars['Float'];
+  defaultCryptoToFiatRate: Scalars['Float'];
   defaultCryptoToEurRate: Scalars['Float'];
   destinationType?: Maybe<TransactionDestinationType>;
   destination?: Maybe<Scalars['String']>;
@@ -1186,7 +1191,7 @@ export enum TransactionStatus {
   Sending = 'Sending',
   Sent = 'Sent',
   Completed = 'Completed',
-  Abounded = 'Abounded',
+  Abandoned = 'Abandoned',
   Canceled = 'Canceled',
   Chargeback = 'Chargeback'
 }
@@ -1331,6 +1336,7 @@ export type Transaction = {
   status: TransactionStatus;
   kycStatus: TransactionKycStatus;
   fee: Scalars['Float'];
+  feeInFiat: Scalars['Float'];
   feePercent: Scalars['Float'];
   feeMinFiat: Scalars['Float'];
   feeMinEur: Scalars['Float'];
@@ -1352,7 +1358,7 @@ export type Transaction = {
   rateEur: Scalars['Float'];
   rateFiatToEur: Scalars['Float'];
   rateEurToFiat: Scalars['Float'];
-  defaultFiatToEurRate: Scalars['Float'];
+  defaultCryptoToFiatRate: Scalars['Float'];
   defaultCryptoToEurRate: Scalars['Float'];
   destinationType?: Maybe<TransactionDestinationType>;
   destination?: Maybe<Scalars['String']>;
@@ -1414,7 +1420,7 @@ export type DepositOrWithdrawalStats = BaseStat & {
   ratio?: Maybe<Scalars['Float']>;
   approved?: Maybe<TransactionStatsVolume>;
   declined?: Maybe<TransactionStatsVolume>;
-  abounded?: Maybe<TransactionStatsVolume>;
+  abandoned?: Maybe<TransactionStatsVolume>;
   inProcess?: Maybe<TransactionStatsVolume>;
   byStatus?: Maybe<Array<TransactionStatsByStatus>>;
   fee?: Maybe<TransactionStatsVolume>;
@@ -1425,7 +1431,7 @@ export type BaseStat = {
   ratio?: Maybe<Scalars['Float']>;
   approved?: Maybe<TransactionStatsVolume>;
   declined?: Maybe<TransactionStatsVolume>;
-  abounded?: Maybe<TransactionStatsVolume>;
+  abandoned?: Maybe<TransactionStatsVolume>;
   inProcess?: Maybe<TransactionStatsVolume>;
   byStatus?: Maybe<Array<TransactionStatsByStatus>>;
 };
@@ -1448,7 +1454,7 @@ export type InstrumentStats = BaseStat & {
   ratio?: Maybe<Scalars['Float']>;
   approved?: Maybe<TransactionStatsVolume>;
   declined?: Maybe<TransactionStatsVolume>;
-  abounded?: Maybe<TransactionStatsVolume>;
+  abandoned?: Maybe<TransactionStatsVolume>;
   inProcess?: Maybe<TransactionStatsVolume>;
   byStatus?: Maybe<Array<TransactionStatsByStatus>>;
   fee?: Maybe<TransactionStatsVolume>;
@@ -1459,7 +1465,7 @@ export type TransferStats = BaseStat & {
   ratio?: Maybe<Scalars['Float']>;
   approved?: Maybe<TransactionStatsVolume>;
   declined?: Maybe<TransactionStatsVolume>;
-  abounded?: Maybe<TransactionStatsVolume>;
+  abandoned?: Maybe<TransactionStatsVolume>;
   inProcess?: Maybe<TransactionStatsVolume>;
   byStatus?: Maybe<Array<TransactionStatsByStatus>>;
   toMerchant?: Maybe<MerchantOrCustomerStats>;
@@ -1473,7 +1479,7 @@ export type MerchantOrCustomerStats = BaseStat & {
   ratio?: Maybe<Scalars['Float']>;
   approved?: Maybe<TransactionStatsVolume>;
   declined?: Maybe<TransactionStatsVolume>;
-  abounded?: Maybe<TransactionStatsVolume>;
+  abandoned?: Maybe<TransactionStatsVolume>;
   inProcess?: Maybe<TransactionStatsVolume>;
   byStatus?: Maybe<Array<TransactionStatsByStatus>>;
   fee?: Maybe<TransactionStatsVolume>;
@@ -1484,7 +1490,7 @@ export type ExchangeStats = BaseStat & {
   ratio?: Maybe<Scalars['Float']>;
   approved?: Maybe<TransactionStatsVolume>;
   declined?: Maybe<TransactionStatsVolume>;
-  abounded?: Maybe<TransactionStatsVolume>;
+  abandoned?: Maybe<TransactionStatsVolume>;
   inProcess?: Maybe<TransactionStatsVolume>;
   byStatus?: Maybe<Array<TransactionStatsByStatus>>;
   toMerchant?: Maybe<MerchantOrCustomerStats>;
@@ -1564,6 +1570,10 @@ export type Mutation = {
   deleteSettingsKyc: SettingsKyc;
   updateMe?: Maybe<User>;
   updateUser?: Maybe<User>;
+  addMyVault?: Maybe<UserVault>;
+  deleteMyVault?: Maybe<UserVault>;
+  addUserVault?: Maybe<UserVault>;
+  deleteUserVault?: Maybe<UserVault>;
   assignRole?: Maybe<User>;
   removeRole?: Maybe<User>;
   deleteUser?: Maybe<User>;
@@ -1720,6 +1730,22 @@ export type MutationUpdateMeArgs = {
 export type MutationUpdateUserArgs = {
   userId: Scalars['ID'];
   user?: Maybe<UserInput>;
+};
+
+
+export type MutationDeleteMyVaultArgs = {
+  vaultId?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationAddUserVaultArgs = {
+  userId: Scalars['ID'];
+};
+
+
+export type MutationDeleteUserVaultArgs = {
+  userId: Scalars['ID'];
+  vaultId?: Maybe<Scalars['String']>;
 };
 
 
@@ -2298,6 +2324,15 @@ export enum FireblocksTransactionStatus {
   Blocked = 'BLOCKED',
   Failed = 'FAILED'
 }
+
+export type DeletedVaultAccount = {
+  __typename?: 'DeletedVaultAccount';
+  deletedVaultAccountId?: Maybe<Scalars['ID']>;
+  userId: Scalars['String'];
+  vaultAccountId: Scalars['String'];
+  deleted?: Maybe<Scalars['DateTime']>;
+  custodyProvider: Scalars['String'];
+};
 
 export type UserDevice = {
   __typename?: 'UserDevice';

@@ -201,7 +201,7 @@ export const TransactionStatusList: Array<TransactionStatusView> = [
     { id: TransactionStatus.Sending, name: 'Sending' },
     { id: TransactionStatus.Sent, name: 'Sent' },
     { id: TransactionStatus.Completed, name: 'Completed' },
-    { id: TransactionStatus.Abounded, name: 'Abandoned' },
+    { id: TransactionStatus.Abandoned, name: 'Abandoned' },
     { id: TransactionStatus.Canceled, name: 'Canceled' },
     { id: TransactionStatus.Chargeback, name: 'Chargeback' }
 ];
