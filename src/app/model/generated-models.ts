@@ -1111,6 +1111,7 @@ export type TransactionShort = {
   transactionId: Scalars['ID'];
   code?: Maybe<Scalars['String']>;
   userId?: Maybe<Scalars['String']>;
+  userIp?: Maybe<Scalars['String']>;
   affiliateId?: Maybe<Scalars['String']>;
   affiliateUser?: Maybe<UserShort>;
   created?: Maybe<Scalars['DateTime']>;
@@ -1414,6 +1415,7 @@ export type TransactionStatusDescriptor = {
   canBeCancelled: Scalars['Boolean'];
   description: Scalars['String'];
   userStatus: UserTransactionStatus;
+  level: TransactionStatusLevel;
 };
 
 export enum UserTransactionStatus {
@@ -1427,6 +1429,11 @@ export enum UserTransactionStatus {
   Abandoned = 'Abandoned',
   Canceled = 'Canceled',
   Chargeback = 'Chargeback'
+}
+
+export enum TransactionStatusLevel {
+  Info = 'info',
+  Error = 'error'
 }
 
 export enum CountryCodeType {
@@ -2231,6 +2238,7 @@ export type Subscription = {
 
 export enum UserNotificationCodes {
   TestNotification = 'TEST_NOTIFICATION',
+  AdminNotification = 'ADMIN_NOTIFICATION',
   TransactionConfirmation = 'TRANSACTION_CONFIRMATION',
   TransactionStatusChanged = 'TRANSACTION_STATUS_CHANGED',
   KycStatusChanged = 'KYC_STATUS_CHANGED'
