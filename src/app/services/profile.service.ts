@@ -24,6 +24,7 @@ const GET_MY_TRANSACTIONS = gql`
         transactionId
         code
         userId
+        userIp
         affiliateId
         created
         executed
@@ -71,6 +72,21 @@ const GET_MY_TRANSACTIONS = gql`
       }
     }
   }
+`;
+
+const GET_TRANSACTION_STATUSES = gql`
+query GetTransactionStatuses {
+  getTransactionStatuses{
+    key
+    value {
+      notifyUser
+      canBeCancelled
+      description
+      userStatus
+      level
+    }
+  }    
+}
 `;
 
 const GET_MY_BALANCE_HISTORY = gql`
@@ -298,6 +314,17 @@ export class ProfileDataService {
           first: takeItems,
           orderBy: orderFields,
         },
+        fetchPolicy: 'network-only',
+      });
+    } else {
+      return null;
+    }
+  }
+
+  getTransactionStatuses(): QueryRef<any, EmptyObject> | null {
+    if (this.apollo.client !== undefined) {
+      return this.apollo.watchQuery<any>({
+        query: GET_TRANSACTION_STATUSES,
         fetchPolicy: 'network-only',
       });
     } else {

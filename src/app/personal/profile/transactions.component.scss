@@ -92,6 +92,10 @@
     margin: 0px 8px 0px 4px;
 }
 
+.__profile-transactions-table-cell-status-error {
+    color: $color_pink_500
+}
+
 .__profile-transactions-table-cell-plain {
     padding: 0px 0px 0px 4px !important;
 }

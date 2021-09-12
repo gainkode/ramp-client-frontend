@@ -7,6 +7,7 @@ import {
   TransactionShort,
   TransactionSource,
   TransactionStatus,
+  TransactionStatusDescriptorMap,
   TransactionType,
   User,
   UserMode,
@@ -180,12 +181,13 @@ export class TransactionItem {
   fees = 0;
   rate = 0;
   ip = '';
-  status: TransactionStatus | undefined = undefined;
+  status: TransactionStatusDescriptorMap | undefined = undefined;
   private created!: Date;
   private executed!: Date;
   private datepipe = new DatePipe('en-US');
 
-  constructor(data: Transaction | TransactionShort | null) {
+  constructor(data: Transaction | TransactionShort | null,
+    userStatus: TransactionStatusDescriptorMap | undefined = undefined) {
     if (data !== null) {
       this.id = data.transactionId;
       this.created = data.created;
@@ -197,8 +199,8 @@ export class TransactionItem {
       this.amountToReceive = data.amountToReceive;
       this.fees = data.fee;
       this.rate = data.rate;
-      this.status = data.status;
-      this.ip = '82.15.249.66';
+      this.status = userStatus;
+      this.ip = data.userIp as string;
     }
   }
 
@@ -215,7 +217,11 @@ export class TransactionItem {
   }
 
   get statusName(): string {
-    return TransactionStatusList.find((t) => t.id === this.status)?.name as string;
+    return (this.status) ? this.status.value.userStatus as string : '-';
+  }
+
+  get statusLevel(): string {
+    return (this.status) ? this.status.value.level as string : '';
   }
 
   get systemFees(): string {

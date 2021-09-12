@@ -119,7 +119,7 @@
                 </span>
             </th>
             <td mat-cell *matCellDef="let element" class="__profile-transactions-table-cell-plain">
-                <div class="__profile-transactions-table-cell-data">
+                <div [ngClass]="{'__profile-transactions-table-cell-data': true, '__profile-transactions-table-cell-status-error': element.statusLevel === 'error'}">
                     {{element.statusName}}
                 </div>
             </td>
