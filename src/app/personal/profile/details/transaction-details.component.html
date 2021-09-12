@@ -89,7 +89,7 @@
                 <div class="__profile-details-item-title">
                     Status:
                 </div>
-                <div class="__profile-details-item-value">
+                <div [ngClass]="{'__profile-details-item-value': true, '__profile-details-item-error': transaction?.statusLevel === 'error'}">
                     {{transaction?.statusName}}
                 </div>
             </div>
