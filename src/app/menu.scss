@@ -110,9 +110,19 @@
 
 .__tool-bar-container {
     margin: 16px 24px 24px 24px;
+}
+
+.__tool-bar-filter-container {
     display: flex;
     flex-direction: row;
     align-items: baseline;
+}
+
+.__tool-bar-filter-cloud {
+    width: 100%;
+
+    height: 45px;
+    background-color: darkseagreen;
 }
 
 .__tool-bar-block {
