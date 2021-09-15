@@ -50,7 +50,7 @@ export class DashboardTransactionItemModel {
     ratio = 0;
     approved?: DashboardTransactionVolumeModel;
     declined?: DashboardTransactionVolumeModel;
-    abounded?: DashboardTransactionVolumeModel;
+    abandoned?: DashboardTransactionVolumeModel;
     inProcess?: DashboardTransactionVolumeModel;
     fee?: DashboardTransactionVolumeModel;
     private numberPipe: DecimalPipe = new DecimalPipe('en-US');
@@ -67,8 +67,8 @@ export class DashboardTransactionItemModel {
         return (this.declined) ? `(${this.declined.count}) ${this.numberPipe.transform(this.declined.volume, '1.0-3')}` : '\u2014';
     }
 
-    get aboundedValue(): string {
-        return (this.abounded) ? `(${this.abounded.count}) ${this.numberPipe.transform(this.abounded.volume, '1.0-3')}` : '\u2014';
+    get abandonedValue(): string {
+        return (this.abandoned) ? `(${this.abandoned.count}) ${this.numberPipe.transform(this.abandoned.volume, '1.0-3')}` : '\u2014';
     }
 
     get inProcessValue(): string {
@@ -86,7 +86,7 @@ export class DashboardTransactionItemModel {
             this.ratio = data.ratio as number;
             this.approved = new DashboardTransactionVolumeModel(data?.approved as TransactionStatsVolume | undefined);
             this.declined = new DashboardTransactionVolumeModel(data?.declined as TransactionStatsVolume | undefined);
-            this.abounded = new DashboardTransactionVolumeModel(data?.abounded as TransactionStatsVolume | undefined);
+            this.abandoned = new DashboardTransactionVolumeModel(data?.abandoned as TransactionStatsVolume | undefined);
             this.inProcess = new DashboardTransactionVolumeModel(data?.inProcess as TransactionStatsVolume | undefined);
             this.fee = new DashboardTransactionVolumeModel(data?.fee as TransactionStatsVolume | undefined);
             if (isInstrumentStats(data)) {
@@ -165,7 +165,7 @@ export class DashboardModel {
             //         count: 8,
             //         volume: 18.81
             //     },
-            //     abounded: {
+            //     abandoned: {
             //         __typename: 'TransactionStatsVolume',
             //         count: 9,
             //         volume: 19.91
@@ -187,7 +187,7 @@ export class DashboardModel {
             //             count: 33,
             //             volume: 33.93
             //         },
-            //         abounded: {
+            //         abandoned: {
             //             __typename: 'TransactionStatsVolume',
             //             count: 34,
             //             volume: 34.94
@@ -215,7 +215,7 @@ export class DashboardModel {
             //             count: 43,
             //             volume: 43.93
             //         },
-            //         abounded: {
+            //         abandoned: {
             //             __typename: 'TransactionStatsVolume',
             //             count: 44,
             //             volume: 44.94
@@ -250,7 +250,7 @@ export class DashboardModel {
             //         count: 18,
             //         volume: 118.81
             //     },
-            //     abounded: {
+            //     abandoned: {
             //         __typename: 'TransactionStatsVolume',
             //         count: 19,
             //         volume: 119.91
@@ -272,7 +272,7 @@ export class DashboardModel {
             //             count: 53,
             //             volume: 53.93
             //         },
-            //         abounded: {
+            //         abandoned: {
             //             __typename: 'TransactionStatsVolume',
             //             count: 54,
             //             volume: 54.94
@@ -300,7 +300,7 @@ export class DashboardModel {
             //             count: 63,
             //             volume: 63.93
             //         },
-            //         abounded: {
+            //         abandoned: {
             //             __typename: 'TransactionStatsVolume',
             //             count: 64,
             //             volume: 64.94

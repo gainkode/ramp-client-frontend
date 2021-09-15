@@ -29,7 +29,7 @@ const GET_DASHBOARD_STATS = gql`
         ratio,
         approved {count, volume},
         declined {count, volume},
-        abounded {count, volume},
+        abandoned {count, volume},
         inProcess {count, volume},
         fee {count, volume},
         byInstruments {
@@ -37,7 +37,7 @@ const GET_DASHBOARD_STATS = gql`
           ratio,
           approved {count, volume},
           declined {count, volume},
-          abounded {count, volume},
+          abandoned {count, volume},
           inProcess {count, volume},
           fee {count, volume}
         }
@@ -46,7 +46,7 @@ const GET_DASHBOARD_STATS = gql`
         ratio,
         approved {count, volume},
         declined {count, volume},
-        abounded {count, volume},
+        abandoned {count, volume},
         inProcess {count, volume},
         fee {count, volume},
         byInstruments {
@@ -54,7 +54,7 @@ const GET_DASHBOARD_STATS = gql`
           ratio,
           approved {count, volume},
           declined {count, volume},
-          abounded {count, volume},
+          abandoned {count, volume},
           inProcess {count, volume},
           fee {count, volume}
         }
@@ -63,14 +63,14 @@ const GET_DASHBOARD_STATS = gql`
         ratio,
         approved {count, volume},
         declined {count, volume},
-        abounded {count, volume},
+        abandoned {count, volume},
         inProcess {count, volume},
         toMerchant {
           instrument,
           ratio,
           approved {count, volume},
           declined {count, volume},
-          abounded {count, volume},
+          abandoned {count, volume},
           inProcess {count, volume},
           fee {count, volume}
         },
@@ -79,7 +79,7 @@ const GET_DASHBOARD_STATS = gql`
           ratio,
           approved {count, volume},
           declined {count, volume},
-          abounded {count, volume},
+          abandoned {count, volume},
           inProcess {count, volume},
           fee {count, volume}
         },
@@ -89,14 +89,14 @@ const GET_DASHBOARD_STATS = gql`
         ratio,
         approved {count, volume},
         declined {count, volume},
-        abounded {count, volume},
+        abandoned {count, volume},
         inProcess {count, volume},
         toMerchant {
           instrument,
           ratio,
           approved {count, volume},
           declined {count, volume},
-          abounded {count, volume},
+          abandoned {count, volume},
           inProcess {count, volume},
           fee {count, volume}
         },
@@ -105,7 +105,7 @@ const GET_DASHBOARD_STATS = gql`
           ratio,
           approved {count, volume},
           declined {count, volume},
-          abounded {count, volume},
+          abandoned {count, volume},
           inProcess {count, volume},
           fee {count, volume}
         },
