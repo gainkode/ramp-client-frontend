@@ -2,6 +2,14 @@ import { TransactionSource, TransactionType } from "./generated-models";
 import { TransactionSourceList, UserTransactionTypeList } from "./payment.model";
 import { getFormattedUtcDate } from 'src/app/utils/utils';
 
+export enum TransactionsFilterType {
+    None = 'None',
+    Wallet = 'Wallet',
+    Transaction = 'Transaction',
+    Date = 'Date',
+    Sender = 'Sender'
+}
+
 export class TransactionsFilter {
     walletTypes: TransactionSource[] = [];
     transactionTypes: TransactionType[] = [];
@@ -74,4 +82,10 @@ export class TransactionsFilter {
             };
         }
     }
+}
+
+export class TransactionsFilterChip {
+    filterType: TransactionsFilterType = TransactionsFilterType.None;
+    name = '';
+    value = '';
 }

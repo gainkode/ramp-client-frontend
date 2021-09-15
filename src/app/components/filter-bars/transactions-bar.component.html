@@ -11,7 +11,7 @@
                 <mat-select formControlName="walletTypes" multiple>
                     <mat-select-trigger>
                         <span class="__mat-select-item">
-                            {{selectedWalletTypes}}{{selectedWalletTypesExtra}}
+                            {{selectedWalletTypes}}
                         </span>
                     </mat-select-trigger>
                     <mat-option *ngFor="let item of walletTypes" [value]="item.id" style="height: 36px;">
@@ -32,7 +32,7 @@
                 <mat-select formControlName="transactionTypes" multiple>
                     <mat-select-trigger>
                         <span class="__mat-select-item">
-                            {{selectedTransactionTypes}}{{selectedTransactionTypesExtra}}
+                            {{selectedTransactionTypes}}
                         </span>
                     </mat-select-trigger>
                     <mat-option *ngFor="let item of transactionTypes" [value]="item.id" style="height: 36px;">
@@ -79,6 +79,13 @@
             <button class="__toggle-button" type="button" (click)="resetFilter()">Clear all</button>
         </div>
 
-        <div class="__tool-bar-filter-cloud"></div>
+        <div class="__tool-bar-filter-cloud">
+            <mat-chip-list aria-label="Transaction filter cloud">
+                <mat-chip style="font-size: 14px;" *ngFor="let chip of chips" selectable="false" removable="true" (removed)="removeChip(chip)">
+                    {{chip.name}}
+                    <mat-icon matChipRemove>cancel</mat-icon>
+                </mat-chip>
+            </mat-chip-list>
+        </div>
     </div>
 </form>

@@ -62,6 +62,7 @@ import { ProfileLastExchangesComponent } from './profile/profile-last-exchanges.
 import { ProfileContactEditorComponent } from './profile/profile-contact-editor.component';
 import { TransactionsFilterBarComponent } from './filter-bars/transactions-bar.component';
 import { NgxMaskModule, IConfig } from 'ngx-mask'
+import { MatChipsModule } from '@angular/material/chips';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -75,6 +76,7 @@ const materialModules = [
     MatCheckboxModule,
     MatSelectModule,
     MatTooltipModule,
+    MatChipsModule,
     MatDatepickerModule, 
     MatNativeDateModule,
     MatDialogModule,
