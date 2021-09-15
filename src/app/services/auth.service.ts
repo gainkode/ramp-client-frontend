@@ -5,6 +5,7 @@ import { SocialAuthService, FacebookLoginProvider, GoogleLoginProvider, SocialUs
 import { LoginResult, PostAddress, SettingsCommon, User, UserMode, UserType } from '../model/generated-models';
 import { environment } from 'src/environments/environment';
 import { EmptyObject } from 'apollo-angular/types';
+import { INotificationObserver } from './notification.observer';
 
 const LOGIN = gql`
   mutation Login($recaptcha: String!, $email: String!, $password: String, $quickCheckout: Boolean) {
@@ -347,6 +348,8 @@ query {
 
 @Injectable()
 export class AuthService {
+    private notificationObservers: INotificationObserver[] = [];
+
     get authenticated(): boolean {
         return this.token !== '';
     }
@@ -372,12 +375,41 @@ export class AuthService {
             mutation: REFRESH_TOKEN
         });
         result.subscribe(x => {
+            console.log('Token is refreshed');
             const d = x.data as any;
             sessionStorage.setItem('currentToken', d.refreshToken as string);
+            this.notifyTokenRefresh();
         }, (error) => {
             // error
         });
         return result;
+    }
+
+    attachRefreshTokenNotification(observer: INotificationObserver): void {
+        const isExist = this.notificationObservers.includes(observer);
+        if (isExist) {
+            return console.log('Subject: Observer has been attached already.');
+        }
+
+        console.log('Subject: Attached an observer.');
+        this.notificationObservers.push(observer);
+    }
+
+    detachRefreshTokenNotification(observer: INotificationObserver): void {
+        const observerIndex = this.notificationObservers.indexOf(observer);
+        if (observerIndex === -1) {
+            return console.log('Subject: Nonexistent observer.');
+        }
+
+        this.notificationObservers.splice(observerIndex, 1);
+        console.log('Subject: Detached an observer.');
+    }
+
+    private notifyTokenRefresh(): void {
+        console.log('Subject: Refresh token...');
+        for (const observer of this.notificationObservers) {
+            observer.refreshToken();
+        }
     }
 
     getUserMainPage(): string {
