@@ -9,6 +9,7 @@ import { WebSocketLink } from '@apollo/client/link/ws';
 import { onError } from 'apollo-link-error';
 import { ApolloLink, InMemoryCache, split } from '@apollo/client/core';
 import { fromPromise } from 'apollo-link';
+import ApolloLinkTimeout from 'apollo-link-timeout';
 import { setContext } from '@apollo/client/link/context';
 import {
   SocialLoginModule, SocialAuthServiceConfig,
@@ -119,6 +120,8 @@ export class AppModule {
       uri: `${environment.api_server}/gql/api`,
       withCredentials: allowCookies
     });
+    const timeoutLink = new ApolloLinkTimeout(environment.api_timeout ?? 10000); // 10 second timeout
+    const timeoutHttp = timeoutLink.concat(http);
 
     const webSocketClient: SubscriptionClient = new SubscriptionClient(
       `${environment.ws_server}/subscriptions`,
@@ -140,7 +143,7 @@ export class AppModule {
         return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
       },
       webSocketLink,
-      ApolloLink.from([this.authLink, http])
+      ApolloLink.from([this.authLink, timeoutHttp])
     );
     const apolloLink = ApolloLink.from([
       this.errorLink as any,

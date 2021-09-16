@@ -27,6 +27,7 @@
     "angularx-social-login": "^3.5.4",
     "apollo-angular": "^2.2.0",
     "apollo-link-error": "^1.1.13",
+    "apollo-link-timeout": "^4.0.0",
     "apollo-link-ws": "^1.0.20",
     "buffer": "^6.0.3",
     "card-validator": "^8.1.1",
