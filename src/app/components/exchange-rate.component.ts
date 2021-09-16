@@ -79,7 +79,9 @@ export class ExchangeRateComponent implements OnInit, OnDestroy {
                 currencyFrom = this.summary?.currencyTo as string;
                 currencyTo = this.summary?.currencyFrom as string;
             }
+            console.log(`Need to get rate from ${currencyFrom} to ${currencyTo}`);
             if (currencyFrom && currencyTo) {
+                console.log(`Get rate from ${currencyFrom} to ${currencyTo}`);
                 const ratesData = this.dataService.getRates(currencyFrom, currencyTo);
                 if (ratesData === null) {
                     this.errorMessage = this.errorHandler.getRejectedCookieMessage();
