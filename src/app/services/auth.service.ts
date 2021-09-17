@@ -149,6 +149,12 @@ const CONFIRM_EMAIL = gql`
   }
 `;
 
+const CONFIRM_DEVICE = gql`
+  mutation ConfirmDevice($token: String!, $recaptcha: String!) {
+    confirmDevice(recaptcha: $recaptcha, token: $token)
+  }
+`;
+
 const CONFIRM_NAME = gql`
   mutation ConfirmName($token: String!, $recaptcha: String!,
     $userType: UserType!, $mode: UserMode!, $firstName: String!, $lastName: String!,
@@ -528,6 +534,16 @@ export class AuthService {
     confirmEmail(tokenValue: string): Observable<any> {
         return this.apollo.mutate({
             mutation: CONFIRM_EMAIL,
+            variables: {
+                recaptcha: environment.recaptchaId,
+                token: tokenValue
+            }
+        });
+    }
+
+    confirmDevice(tokenValue: string): Observable<any> {
+        return this.apollo.mutate({
+            mutation: CONFIRM_DEVICE,
             variables: {
                 recaptcha: environment.recaptchaId,
                 token: tokenValue

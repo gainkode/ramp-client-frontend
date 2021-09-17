@@ -1,0 +1,49 @@
+<div class="action-page-split action-page-left-panel split-page-60">
+    <div class="back-box">
+        <app-back-button></app-back-button>
+    </div>
+    <div class="auth-panel-content">
+        <div class="login-form-box">
+            <button mat-icon-button>
+                <mat-icon>attractions</mat-icon>
+            </button>
+            <div style="text-align: left;margin-top: 1em;">
+                <h3>Information placeholder (personal)</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="action-page-split action-page-right-panel split-page-40">
+    <div class="auth-panel-content">
+        <div class="login-form-box">
+            <div *ngIf="!validated">
+                <h2>Token validation</h2>
+                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            </div>
+            <div *ngIf="validated">
+                <div *ngIf="valid">
+                    <h2>Validation complete</h2>
+                    <div class="form-element">
+                        <span>Your device is successfully confirmed.</span>
+                    </div>
+                    <br>
+                    <div class="form-element">
+                        <span>Now you can <a href="/auth/personal/login">sign in</a> with your password.</span>
+                    </div>
+                </div>
+                <div *ngIf="!valid">
+                    <div class="form-element">
+                        <span>Can't confirm device.</span>
+                    </div>
+                    <div class="form-element">
+                        <span>Make sure you're using the latest received confirmation email.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-error-box" *ngIf="errorMessage!=''">
+                {{errorMessage}}
+            </div>
+        </div>
+    </div>
+</div> 
