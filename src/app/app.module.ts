@@ -93,7 +93,7 @@ export class AppModule {
     if (networkError) {
       console.log('network error', networkError);
     }
-    return forward(operation);
+    return undefined;
   });
 
   authLink = setContext((operation, context) => {
@@ -140,6 +140,7 @@ export class AppModule {
       // split based on operation type
       ({ query }) => {
         const definition = getMainDefinition(query);
+        console.log('definition', definition);
         return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
       },
       webSocketLink,

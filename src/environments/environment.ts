@@ -5,8 +5,10 @@
 export const environment = {
   production: false,
   cookieDomain: 'localhost',
-  api_server: 'http://localhost:4001',
-  ws_server: 'ws://localhost:4001',
+  // api_server: 'http://localhost:4001',
+  // ws_server: 'ws://localhost:4001',
+  api_server: 'https://merx-ewallet.semirolab.com',
+  ws_server: 'https://merx-ewallet.semirolab.com/gql',
   api_timeout: 10000,
   recaptchaId: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI',
   googleClientId: '683937471887-u8r2tuvcvibnsnc41grnvcer9tv5bpm6.apps.googleusercontent.com',
