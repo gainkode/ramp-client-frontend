@@ -64,6 +64,10 @@ export class TransactionsFilterBarComponent implements OnInit, OnDestroy {
         if (this.data && this.data.sender) {
             this.senderField?.setValue(this.data.sender);
         }
+        this.updateChips(TransactionsFilterType.Transaction);
+        this.updateChips(TransactionsFilterType.Wallet);
+        this.updateChips(TransactionsFilterType.Date);
+        this.updateChips(TransactionsFilterType.Sender);
         this.subscriptions.add(
             this.transactionTypesField?.valueChanges.subscribe(val => {
                 if ((val as []).length < 1) {
@@ -126,7 +130,7 @@ export class TransactionsFilterBarComponent implements OnInit, OnDestroy {
                 selectedWallets.forEach(w => {
                     this.chips.push({
                         filterType: chipType,
-                        name: w as string,
+                        name: TransactionSourceList.find(x => x.id === w)?.name ?? w as string,
                         value: w
                     } as TransactionsFilterChip);
                 });
@@ -137,7 +141,7 @@ export class TransactionsFilterBarComponent implements OnInit, OnDestroy {
                 selectedTransactions.forEach(t => {
                     this.chips.push({
                         filterType: chipType,
-                        name: t as string,
+                        name: UserTransactionTypeList.find(x => x.id === t)?.name ?? t as string,
                         value: t
                     } as TransactionsFilterChip);
                 });

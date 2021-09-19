@@ -40,7 +40,7 @@
                     <img class="__profile-transactions-table-cell-sender-icon"
                         src="../../../assets/svg-payment-systems/bitcoin.svg">
                     <div class="__profile-transactions-table-cell-data">
-                        {{element.sender}}
+                        {{element.senderData}}
                     </div>
                 </div>
             </td>
@@ -59,7 +59,7 @@
                     <img class="__profile-transactions-table-cell-sender-icon"
                         src="../../../assets/svg-payment-systems/bitcoin.svg">
                     <div class="__profile-transactions-table-cell-data">
-                        {{element.recipient}}
+                        {{element.recipientData}}
                     </div>
                 </div>
             </td>
@@ -105,7 +105,7 @@
             </th>
             <td mat-cell *matCellDef="let element" class="__profile-transactions-table-cell-plain">
                 <div class="__profile-transactions-table-cell-data">
-                    {{element.systemFees}}
+                    {{element.networkFees}}
                 </div>
             </td>
         </ng-container>

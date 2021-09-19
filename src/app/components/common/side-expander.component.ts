@@ -10,7 +10,6 @@ export class SideExpanderComponent {
     @Output() stateChanged = new EventEmitter<boolean>();
 
     onClick(): void {
-        console.log('sideMenuExpanded click');
         this.stateChanged.emit(!this.expanded);
     }
 }

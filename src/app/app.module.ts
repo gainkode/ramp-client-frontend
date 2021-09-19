@@ -140,7 +140,6 @@ export class AppModule {
       // split based on operation type
       ({ query }) => {
         const definition = getMainDefinition(query);
-        console.log('definition', definition);
         return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
       },
       webSocketLink,

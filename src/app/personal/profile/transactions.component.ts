@@ -119,7 +119,6 @@ export class PersonalTransactionsComponent implements OnInit, OnDestroy, AfterVi
                     if (this.transactionCount > 0) {
                         this.transactions = dataList?.list?.map((val) => {
                             const status = this.userStatuses.find(x => x.key === val.status);
-                            console.log(status);
                             return new TransactionItem(val, status);
                         }) as TransactionItem[];
                     }

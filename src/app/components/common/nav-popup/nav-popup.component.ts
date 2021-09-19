@@ -45,7 +45,6 @@ export class NavPopupComponent implements OnInit, OnDestroy {
         this.s = this.notification.subscribeToNotifications().subscribe(
             ({ data }) => {
                 // got data
-                console.log('popup user notification', data);
                 if (this.userId) {
                     if (this.userId === data.newNotification?.userId) {
                         this.openSnackBar(data.newNotification);

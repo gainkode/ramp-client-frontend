@@ -381,7 +381,6 @@ export class AuthService {
             mutation: REFRESH_TOKEN
         });
         result.subscribe(x => {
-            console.log('Token is refreshed');
             const d = x.data as any;
             sessionStorage.setItem('currentToken', d.refreshToken as string);
             this.notifyTokenRefresh();
@@ -393,26 +392,19 @@ export class AuthService {
 
     attachRefreshTokenNotification(observer: INotificationObserver): void {
         const isExist = this.notificationObservers.includes(observer);
-        if (isExist) {
-            return console.log('Subject: Observer has been attached already.');
+        if (!isExist) {
+            this.notificationObservers.push(observer);
         }
-
-        console.log('Subject: Attached an observer.');
-        this.notificationObservers.push(observer);
     }
 
     detachRefreshTokenNotification(observer: INotificationObserver): void {
         const observerIndex = this.notificationObservers.indexOf(observer);
-        if (observerIndex === -1) {
-            return console.log('Subject: Nonexistent observer.');
+        if (observerIndex >= 0) {
+            this.notificationObservers.splice(observerIndex, 1);
         }
-
-        this.notificationObservers.splice(observerIndex, 1);
-        console.log('Subject: Detached an observer.');
     }
 
     private notifyTokenRefresh(): void {
-        console.log('Subject: Refresh token...');
         for (const observer of this.notificationObservers) {
             observer.refreshToken();
         }
@@ -586,7 +578,7 @@ export class AuthService {
             }
         });
     }
-    
+
     disable2Fa(authCode: string): Observable<any> {
         return this.apollo.mutate({
             mutation: DISABLE_2FA,
@@ -607,7 +599,6 @@ export class AuthService {
     }
 
     setLoginUser(login: LoginResult): void {
-        console.log('Authenticated:', login.user);
         sessionStorage.setItem('currentUser', JSON.stringify(login.user));
         sessionStorage.setItem('currentToken', login.authToken as string);
         sessionStorage.setItem('currentAction', login.authTokenAction as string);

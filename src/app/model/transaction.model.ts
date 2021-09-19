@@ -172,8 +172,8 @@ export class TransactionItemDeprecated {
 export class TransactionItem {
   id = '';
   type: TransactionType | undefined = undefined;
-  sender = 'Bitcoin HODL';
-  recipient = 'Bitcoin HODL';
+  sender = 'Default Vault BTC';
+  recipient = 'Default Vault BTC';
   currencyToSpend = '';
   currencyToReceive = '';
   amountToSpend = 0;
@@ -193,11 +193,19 @@ export class TransactionItem {
       this.created = data.created;
       this.executed = data.executed;
       this.type = data.type;
-      this.currencyToSpend = data.currencyToSpend;
-      this.currencyToReceive = data.currencyToReceive;
-      this.amountToSpend = data.amountToSpend;
-      this.amountToReceive = data.amountToReceive;
-      this.fees = data.fee;
+      if (this.type === TransactionType.Deposit) {
+        this.currencyToSpend = data.currencyToSpend;
+        this.currencyToReceive = data.currencyToReceive;
+        this.amountToSpend = data.amountToSpend;
+        this.amountToReceive = data.amountToReceive;
+        this.fees = data.fee;
+      } else {
+        this.currencyToSpend = '-X-';
+        this.currencyToReceive = '-X-';
+        this.amountToSpend = 42;
+        this.amountToReceive = 42;
+        this.fees = 42;
+      }
       this.rate = data.rate;
       this.status = userStatus;
       this.ip = data.userIp as string;
@@ -212,6 +220,14 @@ export class TransactionItem {
     return (this.datepipe.transform(this.created, 'd MMM YYYY HH:mm:ss') as string).toUpperCase();
   }
 
+  get senderData(): string {
+    return this.sender;
+  }
+
+  get recipientData(): string {
+    return this.recipient;
+  }
+
   get typeName(): string {
     return TransactionTypeList.find((t) => t.id === this.type)?.name as string;
   }
@@ -224,8 +240,8 @@ export class TransactionItem {
     return (this.status) ? this.status.value.level as string : '';
   }
 
-  get systemFees(): string {
-    return this.fees.toFixed(6).toString();
+  get networkFees(): string {
+    return `${this.getCurrencySign('EUR')}${this.fees.toFixed(6)}`;
   }
 
   get amountSent(): string {
