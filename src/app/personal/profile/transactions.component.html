@@ -1,11 +1,159 @@
-<div style="display: flex;">
-    <div style="width: 50%;margin: 0.5em;">
-        <app-quick-transfer></app-quick-transfer>
-    </div>
-    <div style="width: 50%;margin: 0.5em;">
-        <app-withdrawal></app-withdrawal>
-    </div>
-</div>
-<div style="margin: 0.5em;">
-    <app-transactions></app-transactions>
+<app-transactions-filter [data]="filter" (update)="onFilterUpdate($event)"></app-transactions-filter>
+
+<div class="__profile-data-container">
+    <mat-progress-bar *ngIf="inProgress" color="accent" mode="indeterminate"></mat-progress-bar>
+
+    <table mat-table class="__profile-data-table" [dataSource]="transactions" matSort [matSortActive]="sortedField"
+        matSortDirection="desc" matSortDisableClear>
+        <!-- Transaction type and date Column -->
+        <ng-container matColumnDef="transaction">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef
+                class="__profile-table-column __profile-transactions-table-column-transaction">
+                <span class="__profile-table-header">
+                    Transaction
+                </span>
+            </th>
+            <td mat-cell *matCellDef="let element" class="__profile-transactions-table-cell-transaction">
+                <img class="__profile-transactions-table-cell-transaction-icon"
+                    src="../../../assets/navigation/__temp_send_icon.svg">
+                <div>
+                    <div class="__profile-transactions-table-cell-data">
+                        {{element.typeName}}
+                    </div>
+                    <div class="__profile-transactions-table-cell-transaction-date">
+                        {{element.dateShort}}
+                    </div>
+                </div>
+            </td>
+        </ng-container>
+
+        <!-- Sender Column -->
+        <ng-container matColumnDef="sender">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef
+                class="__profile-table-column __profile-transactions-table-column-sender">
+                <span class="__profile-table-header">
+                    Sender
+                </span>
+            </th>
+            <td mat-cell *matCellDef="let element">
+                <div class="__profile-transactions-table-cell-sender">
+                    <img class="__profile-transactions-table-cell-sender-icon"
+                        src="../../../assets/svg-payment-systems/bitcoin.svg">
+                    <div class="__profile-transactions-table-cell-data">
+                        {{element.sender}}
+                    </div>
+                </div>
+            </td>
+        </ng-container>
+
+        <!-- Recipient Column -->
+        <ng-container matColumnDef="recipient">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef
+                class="__profile-table-column __profile-transactions-table-column-recipient">
+                <span class="__profile-table-header">
+                    Recipient
+                </span>
+            </th>
+            <td mat-cell *matCellDef="let element">
+                <div class="__profile-transactions-table-cell-sender">
+                    <img class="__profile-transactions-table-cell-sender-icon"
+                        src="../../../assets/svg-payment-systems/bitcoin.svg">
+                    <div class="__profile-transactions-table-cell-data">
+                        {{element.recipient}}
+                    </div>
+                </div>
+            </td>
+        </ng-container>
+
+        <!-- Sent Column -->
+        <ng-container matColumnDef="sent">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef
+                class="__profile-table-column __profile-transactions-table-column-sent">
+                <span class="__profile-table-header">
+                    Amount Sent
+                </span>
+            </th>
+            <td mat-cell *matCellDef="let element" class="__profile-transactions-table-cell-plain">
+                <div class="__profile-transactions-table-cell-data">
+                    {{element.amountSent}}
+                </div>
+            </td>
+        </ng-container>
+
+        <!-- Received Column -->
+        <ng-container matColumnDef="received">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef
+                class="__profile-table-column __profile-transactions-table-column-received">
+                <span class="__profile-table-header">
+                    Amount Received
+                </span>
+            </th>
+            <td mat-cell *matCellDef="let element" class="__profile-transactions-table-cell-plain">
+                <div class="__profile-transactions-table-cell-data">
+                    {{element.amountReceived}}
+                </div>
+            </td>
+        </ng-container>
+
+        <!-- Fees Column -->
+        <ng-container matColumnDef="fees">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef
+                class="__profile-table-column __profile-transactions-table-column-fees">
+                <span class="__profile-table-header">
+                    Network Fees
+                </span>
+            </th>
+            <td mat-cell *matCellDef="let element" class="__profile-transactions-table-cell-plain">
+                <div class="__profile-transactions-table-cell-data">
+                    {{element.systemFees}}
+                </div>
+            </td>
+        </ng-container>
+
+        <!-- Status Column -->
+        <ng-container matColumnDef="status">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef
+                class="__profile-table-column __profile-transactions-table-column-status">
+                <span class="__profile-table-header">
+                    Status
+                </span>
+            </th>
+            <td mat-cell *matCellDef="let element" class="__profile-transactions-table-cell-plain">
+                <div [ngClass]="{'__profile-transactions-table-cell-data': true, '__profile-transactions-table-cell-status-error': element.statusLevel === 'error'}">
+                    {{element.statusName}}
+                </div>
+            </td>
+        </ng-container>
+
+        <!-- Details Column -->
+        <ng-container matColumnDef="details">
+            <th mat-header-cell *matHeaderCellDef
+                class="__profile-table-column __profile-transactions-table-column-details">
+                <div class="__profile-table-details-table">
+                    <button class="__small-button" type="button" disabled>
+                        .pdf
+                    </button>
+                    <div class="__button-separator-sm"></div>
+                    <button class="__small-button" type="button" disabled>
+                        .csv
+                    </button>
+                </div>
+            </th>
+            <td mat-cell *matCellDef="let element">
+                <div class="__profile-transactions-table-cell-details">
+                    <button type="button" class="__table-button" (click)="showDetailsPanel(element)">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <mat-paginator color="accent" *ngIf="errorMessage === '' && paginatorVisible" class="__profile-data-table"
+        [length]="transactionCount" [pageSize]="pageSize" [pageSizeOptions]="pageCounts" showFirstLastButtons
+        (page)="handlePage($event)">
+    </mat-paginator>
 </div>

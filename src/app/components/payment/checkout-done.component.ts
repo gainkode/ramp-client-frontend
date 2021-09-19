@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { TransactionType } from '../model/generated-models';
-import { CheckoutSummary } from '../model/payment.model';
-import { round } from '../utils/utils';
+import { TransactionType } from '../../model/generated-models';
+import { CheckoutSummary } from '../../model/payment.model';
+import { round } from '../../utils/utils';
 
 @Component({
     selector: 'app-checkout-done',

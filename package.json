@@ -34,9 +34,10 @@
     "cookieconsent": "^3.1.1",
     "graphql": "^15.5.0",
     "multicoin-address-validator": "^0.4.16",
+    "ngx-mask": "^12.0.0",
     "rxjs": "~6.6.3",
     "stream": "0.0.2",
-    "subscriptions-transport-ws": "^0.9.18",
+    "subscriptions-transport-ws": "^0.10.0",
     "tslib": "^2.1.0",
     "zone.js": "~0.11.3"
   },

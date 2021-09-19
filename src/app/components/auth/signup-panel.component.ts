@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { AuthService } from '../services/auth.service';
-import { ErrorService } from '../services/error.service';
+import { AuthService } from '../../services/auth.service';
+import { ErrorService } from '../../services/error.service';
 import { Validators, FormBuilder, AbstractControl } from '@angular/forms';
-import { LoginResult, UserType } from '../model/generated-models';
+import { LoginResult, UserType } from '../../model/generated-models';
 import { SignupInfoPanelComponent } from './signup-info.component';
 
 @Component({

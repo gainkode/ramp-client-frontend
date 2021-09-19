@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 import { Subscription, timer } from 'rxjs';
-import { Rate, TransactionType } from '../model/generated-models';
-import { CheckoutSummary } from '../model/payment.model';
-import { ErrorService } from '../services/error.service';
-import { PaymentDataService } from '../services/payment.service';
+import { Rate, TransactionType } from '../../model/generated-models';
+import { CheckoutSummary } from '../../model/payment.model';
+import { ErrorService } from '../../services/error.service';
+import { PaymentDataService } from '../../services/payment.service';
 
 @Component({
     selector: 'app-exchange-rate',

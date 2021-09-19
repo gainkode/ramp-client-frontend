@@ -1,0 +1,31 @@
+<div class="__nav-popup-content-block">
+    <div class="__nav-popup-user-name">
+        {{userName}}
+    </div>
+    <button class="__nav-popup-button-box" type="button" [matMenuTriggerFor]="menu" #menuTrigger
+        (click)="onMenuOpened()">
+        <div>
+            <!-- <img class="__nav-popup-user-icon" src="img_avatar.png" alt="Avatar"> -->
+            <div class="__nav-popup-nouser-icon">
+                <img src="../../../assets/navigation/__temp_user_icon.svg" alt="Avatar">
+            </div>
+        </div>
+        <img [ngClass]="menuOpened ? '__nav-popup-arrow-up' : '__nav-popup-arrow-down'"
+            src="../../../assets/navigation/plain_arrow_down.svg">
+    </button>
+    <mat-menu #menu="matMenu" class="__popup-menu-panel" (closed)="onMenuClosed($event)">
+        <div *ngFor="let item of items;let i=index;">
+            <button class="__popup-menu-button" (click)="clickItem(item)">
+                <div class="__popup-menu-button-content">
+                    <span id="button-icon">
+                        <mat-icon>{{item.icon}}</mat-icon>
+                    </span>
+                    <span>
+                        {{item.name}}
+                    </span>
+                </div>
+            </button>
+            <div *ngIf="isItemSeparatorVisible(i)" class="__popup-menu-separator"></div>
+        </div>
+    </mat-menu>
+</div>

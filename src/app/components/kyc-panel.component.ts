@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { ErrorService } from '../services/error.service';
-import { CommonDialogBox } from './common-box.dialog';
+import { CommonDialogBox } from './common/common-box.dialog';
 
 const snsWebSdk = require('@sumsub/websdk');
 

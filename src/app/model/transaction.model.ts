@@ -7,6 +7,7 @@ import {
   TransactionShort,
   TransactionSource,
   TransactionStatus,
+  TransactionStatusDescriptorMap,
   TransactionType,
   User,
   UserMode,
@@ -22,7 +23,7 @@ import {
 } from './payment.model';
 import { UserItem } from './user.model';
 
-export class TransactionItem {
+export class TransactionItemDeprecated {
   id = '';
   code = '';
   created = '';
@@ -165,5 +166,111 @@ export class TransactionItem {
         ?.name as string;
     }
     return '';
+  }
+}
+
+export class TransactionItem {
+  id = '';
+  type: TransactionType | undefined = undefined;
+  sender = 'Bitcoin HODL';
+  recipient = 'Bitcoin HODL';
+  currencyToSpend = '';
+  currencyToReceive = '';
+  amountToSpend = 0;
+  amountToReceive = 0;
+  fees = 0;
+  rate = 0;
+  ip = '';
+  status: TransactionStatusDescriptorMap | undefined = undefined;
+  private created!: Date;
+  private executed!: Date;
+  private datepipe = new DatePipe('en-US');
+
+  constructor(data: Transaction | TransactionShort | null,
+    userStatus: TransactionStatusDescriptorMap | undefined = undefined) {
+    if (data !== null) {
+      this.id = data.transactionId;
+      this.created = data.created;
+      this.executed = data.executed;
+      this.type = data.type;
+      this.currencyToSpend = data.currencyToSpend;
+      this.currencyToReceive = data.currencyToReceive;
+      this.amountToSpend = data.amountToSpend;
+      this.amountToReceive = data.amountToReceive;
+      this.fees = data.fee;
+      this.rate = data.rate;
+      this.status = userStatus;
+      this.ip = data.userIp as string;
+    }
+  }
+
+  get dateShort(): string {
+    return (this.datepipe.transform(this.created, 'd MMM YYYY') as string).toUpperCase();
+  }
+
+  get dateLong(): string {
+    return (this.datepipe.transform(this.created, 'd MMM YYYY HH:mm:ss') as string).toUpperCase();
+  }
+
+  get typeName(): string {
+    return TransactionTypeList.find((t) => t.id === this.type)?.name as string;
+  }
+
+  get statusName(): string {
+    return (this.status) ? this.status.value.userStatus as string : '-';
+  }
+
+  get statusLevel(): string {
+    return (this.status) ? this.status.value.level as string : '';
+  }
+
+  get systemFees(): string {
+    return this.fees.toFixed(6).toString();
+  }
+
+  get amountSent(): string {
+    if (this.isFiatCurrency(this.currencyToSpend)) {
+      return `${this.getCurrencySign(this.currencyToSpend)}${this.amountToSpend.toFixed(this.getFixedNumber(this.currencyToSpend))}`;
+    } else {
+      return `${this.amountToSpend.toFixed(this.getFixedNumber(this.currencyToSpend))} ${this.getCurrencySign(this.currencyToSpend)}`;
+    }
+  }
+
+  get amountReceived(): string {
+    if (this.isFiatCurrency(this.currencyToReceive)) {
+      return `${this.getCurrencySign(this.currencyToReceive)}${this.amountToReceive.toFixed(this.getFixedNumber(this.currencyToReceive))}`;
+    } else {
+      return `${this.amountToReceive.toFixed(this.getFixedNumber(this.currencyToReceive))} ${this.getCurrencySign(this.currencyToReceive)}`;
+    }
+  }
+
+  isFiatCurrency(currency: string): boolean {
+    return (currency === 'USD' || currency === 'EUR');
+  }
+
+  getCurrencySign(currency: string): string {
+    let result = currency;
+    switch (currency) {
+      case 'EUR':
+        result = '\u20AC';
+        break;
+      case 'USD':
+        result = '$';
+        break;
+    }
+    return result;
+  }
+
+  getFixedNumber(currency: string): number {
+    let result = 4;
+    switch (currency) {
+      case 'EUR':
+        result = 2;
+        break;
+      case 'USD':
+        result = 2;
+        break;
+    }
+    return result;
   }
 }

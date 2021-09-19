@@ -17,7 +17,7 @@ import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { ExchangeRateComponent } from '../components/exchange-rate.component';
+import { ExchangeRateComponent } from '../components/payment/exchange-rate.component';
 import { CommonGroupValue } from '../model/common.model';
 import {
   LoginResult,

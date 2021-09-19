@@ -15,6 +15,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -28,18 +29,22 @@ import { DirectiveModule } from '../directives/directives.module';
 import { LineBreakPipe } from '../utils/line-break.pipe';
 import { NumberFillPipe } from '../utils/number-fill.pipe';
 
-import { DropdownItemComponent } from './dropdown-item.component';
-import { BackButtonComponent } from './backbutton.component';
-import { TabLabelComponent } from './tablabel.component';
+import { DropdownItemComponent } from './common/dropdown-item.component';
+import { BackButtonComponent } from './common/backbutton.component';
+import { TabLabelComponent } from './common/tablabel.component';
 import { KycPanelComponent } from './kyc-panel.component';
-import { CommonDialogBox } from './common-box.dialog';
-import { CheckoutSummaryComponent } from './checkout-summary.component';
-import { ExchangeRateComponent } from './exchange-rate.component';
-import { LoginPanelComponent } from './login-panel.component';
-import { CheckoutDoneComponent } from './checkout-done.component';
-import { CreditCardComponent } from './credit-card.component';
-import { NotificationIconComponent } from './notification-bar/notification.component';
-import { TwoFaCodeComponent } from './two-fa-code.component';
+import { CommonDialogBox } from './common/common-box.dialog';
+import { CheckoutSummaryComponent } from './payment/checkout-summary.component';
+import { ExchangeRateComponent } from './payment/exchange-rate.component';
+import { LoginPanelComponent } from './auth/login-panel.component';
+import { CheckoutDoneComponent } from './payment/checkout-done.component';
+import { CreditCardComponent } from './payment/credit-card.component';
+import { TwoFaCodeComponent } from './auth/two-fa-code.component';
+import { NavPopupComponent } from './common/nav-popup/nav-popup.component';
+import { SideExpanderComponent } from './common/side-expander.component';
+import { SideMenuComponent } from './common/side-menu.component';
+import { SignUpPanelComponent } from './auth/signup-panel.component';
+import { SignupInfoPanelComponent } from './auth/signup-info.component';
 
 import { ProfileAccountBalanceComponent } from './profile/profile-account-balance.component';
 import { ProfileExchangeComponent } from './profile/profile-exchange.component';
@@ -54,9 +59,12 @@ import { ProfileContactsComponent } from './profile/profile-contacts.component';
 import { ProfileWithdrawalComponent } from './profile/profile-withdrawal.component';
 import { ProfileAssetsComponent } from './profile/profile-assets.component';
 import { ProfileLastExchangesComponent } from './profile/profile-last-exchanges.component';
-import { SignUpPanelComponent } from './signup-panel.component';
-import { SignupInfoPanelComponent } from './signup-info.component';
 import { ProfileContactEditorComponent } from './profile/profile-contact-editor.component';
+import { TransactionsFilterBarComponent } from './filter-bars/transactions-bar.component';
+import { NgxMaskModule, IConfig } from 'ngx-mask'
+import { MatChipsModule } from '@angular/material/chips';
+
+export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
 const materialModules = [
     ClipboardModule,
@@ -68,10 +76,13 @@ const materialModules = [
     MatCheckboxModule,
     MatSelectModule,
     MatTooltipModule,
-    MatDatepickerModule, MatNativeDateModule,
+    MatChipsModule,
+    MatDatepickerModule, 
+    MatNativeDateModule,
     MatDialogModule,
     MatIconModule,
     MatListModule,
+    MatMenuModule,
     MatProgressSpinnerModule,
     MatProgressBarModule,
     MatSnackBarModule,
@@ -87,20 +98,22 @@ const materialModules = [
 export class MaterialModule { }
 
 @NgModule({
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, MaterialModule, DirectiveModule, QRCodeModule],
+    imports: [NgxMaskModule.forRoot(), CommonModule, FormsModule, ReactiveFormsModule, MaterialModule, DirectiveModule, QRCodeModule],
     declarations: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
-        CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, NotificationIconComponent,
-        LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, CommonDialogBox,
-        CreditCardComponent, TwoFaCodeComponent, LineBreakPipe, NumberFillPipe,
+        CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, 
+        LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, CommonDialogBox, SideExpanderComponent,
+        CreditCardComponent, TwoFaCodeComponent, NavPopupComponent, SideMenuComponent, LineBreakPipe, NumberFillPipe,
+        TransactionsFilterBarComponent,
         ProfileAccountBalanceComponent, ProfileExchangeComponent, ProfileNotificationsComponent,
         ProfileQuickTransferComponent, ProfileTransactionsComponent, ProfileInfoComponent, ProfileTwoFAComponent,
         ProfilePasswordComponent, ProfileVerificationComponent, ProfileContactsComponent, 
         ProfileContactEditorComponent, ProfileWithdrawalComponent,
         ProfileAssetsComponent, ProfileLastExchangesComponent],
     exports: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
-        CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, NotificationIconComponent,
-        LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, CommonDialogBox, CreditCardComponent,
-        TwoFaCodeComponent, LineBreakPipe, NumberFillPipe,
+        CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, 
+        LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, CommonDialogBox, SideExpanderComponent,
+        CreditCardComponent, TwoFaCodeComponent, NavPopupComponent, SideMenuComponent, LineBreakPipe, NumberFillPipe,
+        TransactionsFilterBarComponent,
         ProfileAccountBalanceComponent, ProfileExchangeComponent, ProfileNotificationsComponent,
         ProfileQuickTransferComponent, ProfileTransactionsComponent, ProfileInfoComponent, ProfileTwoFAComponent,
         ProfilePasswordComponent, ProfileVerificationComponent, ProfileContactsComponent,

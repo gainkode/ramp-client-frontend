@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { CheckoutSummary } from '../model/payment.model';
+import { CheckoutSummary } from '../../model/payment.model';
 
 @Component({
     selector: 'app-checkout-summary',

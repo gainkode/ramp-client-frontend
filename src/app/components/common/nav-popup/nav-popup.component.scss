@@ -1,0 +1,76 @@
+@import "../../../fonts.scss";
+@import "../../../colors.scss";
+
+.__nav-popup-content-block {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 48px;
+}
+
+.__nav-popup-button-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
+    height: 48px;
+    border: none;
+    background-color: $color_white;
+}
+
+.__nav-popup-button-box:focus {
+    outline: none;
+}
+
+.__nav-popup-user-icon {
+    width: 48px;
+    height: 48px;
+    background-color: $color_main_blue_500;
+    border-radius: 50%;
+}
+
+.__nav-popup-nouser-icon {
+    width: 48px;
+    height: 48px;
+    background-color: $color_main_blue_500;
+    border-radius: 50%;
+    display: block;
+    overflow: hidden;
+
+    img {
+        width: 40px;
+        height: 40px;
+        display: block;
+        margin: 7px auto auto auto;
+    }
+}
+
+.__nav-popup-arrow-down {
+    margin-left: 24px;
+    margin-right: 6px;
+}
+
+.__nav-popup-arrow-up {
+    margin-left: 24px;
+    margin-right: 6px;
+    transform: rotate(180deg);
+}
+
+.__nav-popup-user-name {
+    margin: 0px 18px;
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 19px;
+    color: $color_purple_900_text;
+}
+
+.__notification-box {
+    margin: auto;
+    //background-color: $color_secondary_blue_100;
+}
+
+.__notification-message {
+    color: $color_purple_900_text;
+}

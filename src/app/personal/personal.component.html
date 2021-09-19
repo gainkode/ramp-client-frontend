@@ -1,50 +1,60 @@
-<div class="menu-bar menu-bar-large">
-    <div class="menu-content-bar">
-        <div class="menu-box">
-            <button mat-icon-button (click)="routeTo(getUserMainPage())">
-                <mat-icon>attractions</mat-icon>
-            </button>
-            <button class="link-button link-button-menu link-button-primary" (click)="routeTo('/merchant/intro')">
-                Top Up
-            </button>
-            <button class="link-button link-button-menu link-button-primary" (click)="routeTo('/merchant/intro')">
-                Withdraw
-            </button>
-            <button class="link-button link-button-menu link-button-primary" (click)="routeTo('/payment')">
-                Quick Checkout
-            </button>
-        </div>
-        <div class="menu-box">
-            <button class="link-button link-button-menu link-button-primary" (click)="routeTo('/admin/main')">
-                Administration
-            </button>
-            <app-notification-icon></app-notification-icon>
-            <button mat-icon-button (click)="notificationTest()">
-                <mat-icon>notifications</mat-icon>
-            </button>
-            <!-- <span class="menu-delimiter"></span> -->
-            <span>{{userName}}</span>
-            <button mat-icon-button (click)="logout()">
-                <mat-icon>exit_to_app</mat-icon>
-            </button>
+<div [ngClass]="{'__profile-disabled-block': showDetails}">
+    <div class="__top-menu-bar">
+        <div class="__top-menu-content-bar">
+            <div class="__profile-top-menu-logo-box">
+                <button *ngIf="expandedMenu" mat-icon-button style="width: 150px;color: darkblue;"
+                    (click)="routeTo(getUserMainPage())">
+                    eWallet Logo
+                </button>
+            </div>
+            <div class="__top-menu-content-box">
+                <button class="__borderless-button" (click)="routeTo('/payment')">
+                    Quick Checkout
+                </button>
+                <app-nav-popup [items]="popupItems" [userName]="userName" (onMenuClick)="popupMenuClick($event)">
+                </app-nav-popup>
+            </div>
         </div>
     </div>
-</div>
-
-<div class="profile-side-nav">
-    <div class="split-panel-menu">
-        <mat-selection-list [multiple]="false" (selectionChange)="menuChanged($event)">
-            <mat-list-option *ngFor="let item of menuItems" [value]="item" [selected]="selectedMenu===item.id"
-            class="panel-menu">
-                <div class="panel-menu-item">
-                    <mat-icon class="panel-menu-item-icon">{{item.icon}}</mat-icon>
-                    <div class="panel-menu-item-text">{{item.name}}</div>
+    <div class="__profile-container">
+        <div [ngClass]="expandedMenu ? '__profile-side-menu-expanded' : '__profile-side-menu'">
+            <div class="__side-menu-container">
+                <app-side-menu class="__side-menu-header-container" [items]="menuItems" [selectedItem]="selectedMenu"
+                    [expanded]="expandedMenu" (onMenuClick)="sideMenuClick($event)">
+                </app-side-menu>
+                <div class="__side-menu-footer-container">
+                    <app-side-expander-button class="__side-menu-expand-control" [expanded]="expandedMenu"
+                        (stateChanged)="sideMenuExpanded($event)">
+                    </app-side-expander-button>
                 </div>
-            </mat-list-option>
-        </mat-selection-list>
+            </div>
+        </div>
+        <div [ngClass]="expandedMenu ? '__profile-content-expanded' : '__profile-content'">
+            <router-outlet (activate)="onActivatePage($event)" (deactivate)="onDeactivatePage($event)"></router-outlet>
+        </div>
     </div>
 </div>
 
-<div class="profile-content-block">
-    <router-outlet></router-outlet>
+<div *ngIf="showDetails" class="__profile-details-block">
+    <div class="__profile-details-panel">
+        <div class="__profile-details-title-bar">
+            <div class="__profile-details-close-button">
+                <button class="__tool-button" (click)="closeDetails()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </div>
+        </div>
+        <div class="__profile-details-container">
+            <app-personal-transaction-details *ngIf="detailsType==='transaction'" [transaction]="detailsContainer?.transaction">
+            </app-personal-transaction-details>
+        </div>
+    </div>
+</div>
+
+<div class="__profile-unsupported-device">
+    <div class="__profile-unsupported-device-title">
+        The screen size of your device is not supported.
+        <br><br>
+        Please, install our application <a style="font-size: 14px;" href="#">here</a>.
+    </div>
 </div>

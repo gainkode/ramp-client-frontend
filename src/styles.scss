@@ -1,49 +1,140 @@
 @import './assets/material-theme';
-
-@font-face {
-    font-family: Bahnschrift;
-    src        : url(assets/12002.ttf) format("truetype");
-}
-
-@font-face {
-    font-family: Rock Salt;
-    src        : url(assets/RockSalt-Regular.ttf) format("truetype");
-}
+@import "./app/fonts.scss";
+@import "./app/colors.scss";
+@import "./app/consts.scss";
 
 * {
-    font-family           : Bahnschrift, sans-serif;
+    font-family           : $font_main, sans-serif;
     font-size             : medium;
     -webkit-font-smoothing: antialiased;
 }
 
-html,
-body {
+html, body {
     height: 100%;
 }
 
 body {
-    background-color: white;
+    background-color: $color_white;
     padding         : 0;
     margin          : 0;
-    font-family     : Bahnschrift, Roboto, "Helvetica Neue", sans-serif;
+    font-family     : $font_main, sans-serif;
+}
+
+a:link {
+    color: $color_main_blue_900;
+    text-decoration: none;
+}
+
+a:hover {
+    color: $color_main_blue_600;
+    text-decoration: underline;
+}
+
+a:visited {
+    color: $color_main_blue_800;
+    text-decoration: none;
+}
+
+a:active {
+    color: $color_purple_800;
+    text-decoration: underline;
+}
+
+.__container {
+    width: 100%;
+    min-height: ($max_height - $top_menu_height - 10) + px;
+
+    @media (max-width: $md1 + px) {
+        min-height: $min_height + px;
+    }
+    
+    @media (max-width: $md2 + px) {
+        min-width: $mid_width_container + px;
+        min-height: $min_height + px;
+    }
+
+    @media (max-width: $md3 + px) {
+        min-width: $out_width_container + px;
+    }
 }
 
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-    box-shadow        : 0 0 0 30px #DDDFE6 inset !important;
-    -webkit-box-shadow: 0 0 0 30px #DDDFE6 inset !important;
+    box-shadow        : 0 0 0 30px $color_white inset !important;
+    -webkit-box-shadow: 0 0 0 30px $color_white inset !important;
 }
 
 input:-webkit-autofill::first-line {
     font-size  : medium;
-    font-family: Bahnschrift, sans-serif;
+    font-family: $font_main, sans-serif;
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: $color_purple_200;
+    opacity: 1; /* Firefox */
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: $color_purple_200;
+}
+
+::-ms-input-placeholder { /* Microsoft Edge */
+    color: $color_purple_200;
 }
 
 .mat-input-element {
-    background: #DDDFE6;
+    background: $color_white;
 }
+
+.__popup-menu-panel {
+    padding: 12px 16px;
+    background: $color_white;
+    box-shadow: 0px 4px 5px rgba(208, 207, 207, 0.2), 0px 7px 10px rgba(208, 207, 207, 0.14), 0px 2px 16px rgba(208, 207, 207, 0.12);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.__mat-select-item {
+    font-family: $font_main;
+    font-size: 14px;
+    color: $color_main_blue_800;
+}
+
+.__mat-select-option {
+    height: 14px;
+}
+
+.mat-select-panel {
+    background: $color_white;
+}
+
+.mat-select-arrow-wrapper {
+    background-image: url("./assets/navigation/plain_arrow_down_blue.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 8px;
+}
+
+.mat-select-arrow {
+    opacity: 0;
+}
+
+.mat-sort-header-arrow.ng-trigger.ng-trigger-arrowPosition {
+    color: $color_main_blue_600;
+}
+
+.mat-row:hover {
+    background-color: $color_main_blue_50;
+}
+
+
+
+
+
+
+
 
 .inline-button {
     margin-right: 1em;
@@ -577,3 +668,6 @@ img.payment-logo {
 .snackbar-box {
     background-color: #B2C2CF;
 }
+
+
+

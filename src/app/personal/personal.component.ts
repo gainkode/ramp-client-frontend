@@ -1,19 +1,29 @@
 import { Component, OnInit } from '@angular/core';
-import { MatSelectionListChange } from '@angular/material/list';
 import { NavigationEnd, Router } from '@angular/router';
 import { Event as NavigationEvent } from '@angular/router';
 import { MenuItem } from '../model/common.model';
-import { PersonalProfileMenuItems } from '../model/profile-menu.model';
+import { ProfileItemContainer, ProfileItemContainerType } from '../model/profile-item.model';
+import {
+    PersonalProfileMenuItems,
+    PersonalProfilePopupAdministrationMenuItem,
+    PersonalProfilePopupMenuItems
+} from '../model/profile-menu.model';
 import { AuthService } from '../services/auth.service';
 import { NotificationService } from '../services/notification.service';
 
 @Component({
     templateUrl: 'personal.component.html',
-    styleUrls: ['../menu.scss', 'personal.component.scss']
+    styleUrls: ['../menu.scss', '../button.scss', '../profile.scss']
 })
 export class PersonalComponent implements OnInit {
     menuItems: MenuItem[] = PersonalProfileMenuItems;
+    popupItems: MenuItem[] = PersonalProfilePopupMenuItems;
+    expandedMenu = false;
     selectedMenu = 'home';
+    showDetails = false;
+    showDetailsRef: any;
+    detailsType = '';
+    detailsContainer!: ProfileItemContainer;
 
     constructor(private auth: AuthService, private notification: NotificationService, private router: Router) {
         this.getSectionName();
@@ -34,7 +44,7 @@ export class PersonalComponent implements OnInit {
             name = `${user.firstName ?? ''} ${user.lastName ?? ''}`;
         }
         if (name === ' ') {
-            name = 'No name';
+            name = user?.email ?? 'No name';
         }
         return name;
     }
@@ -53,10 +63,10 @@ export class PersonalComponent implements OnInit {
             if (path1 === 'personal' && path2 === 'main') {
                 if (
                     section === 'home' ||
-                    section === 'myaccount' ||
-                    section === 'mycontacts' ||
+                    section === 'wallets' ||
+                    section === 'contactlist' ||
                     section === 'transactions' ||
-                    section === 'exchanger') {
+                    section === 'swap') {
                     this.selectedMenu = section;
                 } else {
                     this.router.navigateByUrl(this.menuItems[0].url);
@@ -65,16 +75,65 @@ export class PersonalComponent implements OnInit {
         }
     }
 
-    ngOnInit(): void {
-        this.notification.subscribeToNotifications().subscribe(({ data }) => {
-            // got data
-        }, (error) => {
-            // there was an error subscribing to notifications
-        });
+    private initializeDetailsPanel(container: ProfileItemContainer): void {
+        this.detailsContainer = container;
+        if (container.container === ProfileItemContainerType.Transaction) {
+            this.detailsType = 'transaction';
+        }
     }
 
-    menuChanged(e: MatSelectionListChange): void {
-        const item = e.options[0].value as MenuItem;
+    ngOnInit(): void {
+        // side menu expanded state
+        const expandedVal = localStorage.getItem('sideMenuExpanded');
+        this.expandedMenu = (expandedVal === 'true');
+        // Administration menu item
+        const adminRole = this.auth.user?.roles?.find(r => r.name === 'ADMIN');
+        if (adminRole) {
+            const adminMenu = this.popupItems.find(x => x.id === PersonalProfilePopupAdministrationMenuItem.id);
+            if (!adminMenu) {
+                this.popupItems.splice(0, 0, PersonalProfilePopupAdministrationMenuItem);
+            }
+        }
+    }
+
+    onActivatePage(component: any): void {
+        this.showDetailsRef = component.showDetails;
+        if (this.showDetailsRef !== undefined) {
+            this.showDetailsRef.subscribe((event: any) => {
+                const container = event as ProfileItemContainer;
+                this.initializeDetailsPanel(container);
+                this.showDetails = true;
+            });
+        }
+    }
+
+    onDeactivatePage(component: any): void {
+        if (this.showDetailsRef !== undefined) {
+            this.showDetailsRef.unsubscribe();
+            this.showDetailsRef = undefined;
+        }
+    }
+
+    sideMenuExpanded(state: boolean): void {
+        this.expandedMenu = state;
+        if (state === true) {
+            localStorage.setItem('sideMenuExpanded', 'true');
+        } else {
+            localStorage.setItem('sideMenuExpanded', 'false');
+        }
+    }
+
+    popupMenuClick(item: MenuItem): void {
+        if (item.id === 'logout') {
+            this.logout();
+        } else if (item.id === 'administration') {
+            this.routeTo('/admin/main');
+        } else if (item.id === 'notifications') {
+            this.notificationTest();
+        }
+    }
+
+    sideMenuClick(item: MenuItem): void {
         this.router.navigateByUrl(item.url);
     }
 
@@ -93,6 +152,10 @@ export class PersonalComponent implements OnInit {
 
     getUserMainPage(): string {
         return this.auth.getUserMainPage();
+    }
+
+    closeDetails(): void {
+        this.showDetails = false;
     }
 
     notificationTest(): void {
