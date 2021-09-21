@@ -172,7 +172,12 @@ export class TransactionItemDeprecated {
 export class TransactionItem {
   id = '';
   type: TransactionType | undefined = undefined;
-  sender = 'Default Vault BTC';
+  sender: CommonTargetValue = {
+    id: '',
+    title: '-sender-',
+    imgClass: '',
+    imgSource: ''
+  };
   recipient = 'Default Vault BTC';
   currencyToSpend = '';
   currencyToReceive = '';
@@ -188,7 +193,7 @@ export class TransactionItem {
 
   constructor(data: Transaction | TransactionShort | null,
     userStatus: TransactionStatusDescriptorMap | undefined = undefined) {
-    if (data !== null) {
+    if (data) {
       this.id = data.transactionId;
       this.created = data.created;
       this.executed = data.executed;
@@ -209,6 +214,33 @@ export class TransactionItem {
       this.rate = data.rate;
       this.status = userStatus;
       this.ip = data.userIp as string;
+
+      if (data.paymentOrder) {
+        if (data.paymentOrder.paymentInfo) {
+          let payment = JSON.parse(data.paymentOrder.paymentInfo);
+          // sometimes it comes as a string with escape symbols.
+          //  In this case parse returns a stringified JSON, which has to be parsed again
+          if (typeof payment === 'string') {
+            payment = JSON.parse(payment);
+          }
+          if (data.instrument === PaymentInstrument.CreditCard) {
+            const card = new CardView();
+            card.setPaymentInfo(JSON.stringify(payment));
+            if (card.cardInfo) {
+              if (this.type === TransactionType.Deposit) {
+                this.sender = card.cardInfo;
+                if (this.sender) {
+                  this.sender.title = card.secureCardNumber;
+                }
+              }
+            }
+          }
+        }
+        // } else {
+        //   this.sender.imgClass = '__table-cell-payment-icon';
+        //   this.sender.imgSource = `assets/svg-payment-systems/visa.svg`;
+        //   this.sender.title = '1234 **** **** 5678';
+      }
     }
   }
 
@@ -218,10 +250,6 @@ export class TransactionItem {
 
   get dateLong(): string {
     return (this.datepipe.transform(this.created, 'd MMM YYYY HH:mm:ss') as string).toUpperCase();
-  }
-
-  get senderData(): string {
-    return this.sender;
   }
 
   get recipientData(): string {
@@ -246,17 +274,17 @@ export class TransactionItem {
 
   get amountSent(): string {
     if (this.isFiatCurrency(this.currencyToSpend)) {
-      return `${this.getCurrencySign(this.currencyToSpend)}${this.amountToSpend.toFixed(this.getFixedNumber(this.currencyToSpend))}`;
+      return `${this.getCurrencySign(this.currencyToSpend)}${this.amountToSpend}`;
     } else {
-      return `${this.amountToSpend.toFixed(this.getFixedNumber(this.currencyToSpend))} ${this.getCurrencySign(this.currencyToSpend)}`;
+      return `${this.amountToSpend} ${this.getCurrencySign(this.currencyToSpend)}`;
     }
   }
 
   get amountReceived(): string {
     if (this.isFiatCurrency(this.currencyToReceive)) {
-      return `${this.getCurrencySign(this.currencyToReceive)}${this.amountToReceive.toFixed(this.getFixedNumber(this.currencyToReceive))}`;
+      return `${this.getCurrencySign(this.currencyToReceive)}${this.amountToReceive}`;
     } else {
-      return `${this.amountToReceive.toFixed(this.getFixedNumber(this.currencyToReceive))} ${this.getCurrencySign(this.currencyToReceive)}`;
+      return `${this.amountToReceive} ${this.getCurrencySign(this.currencyToReceive)}`;
     }
   }
 
@@ -272,19 +300,6 @@ export class TransactionItem {
         break;
       case 'USD':
         result = '$';
-        break;
-    }
-    return result;
-  }
-
-  getFixedNumber(currency: string): number {
-    let result = 4;
-    switch (currency) {
-      case 'EUR':
-        result = 2;
-        break;
-      case 'USD':
-        result = 2;
         break;
     }
     return result;

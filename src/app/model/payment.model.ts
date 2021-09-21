@@ -120,7 +120,7 @@ export class CardView {
             this.lastDigits = data.lastFourDigits;
             if (this.cardType !== '') {
                 this.cardInfo = new CommonTargetValue();
-                this.cardInfo.imgClass = 'payment-logo';
+                this.cardInfo.imgClass = '__table-cell-payment-icon';
                 this.cardInfo.imgSource = `assets/svg-payment-systems/${this.cardType.toLowerCase()}.svg`;
                 this.cardInfo.title = this.cardType;
             }

@@ -73,6 +73,7 @@ export type Query = {
   myWidgets?: Maybe<WidgetListResult>;
   getWidgets?: Maybe<WidgetListResult>;
   getWidget?: Maybe<WidgetShort>;
+  getFakeError?: Maybe<Scalars['Void']>;
 };
 
 
@@ -538,7 +539,9 @@ export type UserContact = {
   userId?: Maybe<Scalars['String']>;
   contactEmail?: Maybe<Scalars['String']>;
   displayName?: Maybe<Scalars['String']>;
-  created: Scalars['DateTime'];
+  assetId?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  created?: Maybe<Scalars['DateTime']>;
 };
 
 export type UserBankAccount = {
@@ -577,6 +580,7 @@ export type UserNotificationSubscription = {
 };
 
 export enum UserNotificationLevel {
+  Debug = 'Debug',
   Info = 'Info',
   Warning = 'Warning',
   Error = 'Error'
@@ -841,6 +845,7 @@ export type UserVault = {
   availableBalanceEur: Scalars['Float'];
   totalBalanceFiat: Scalars['Float'];
   availableBalanceFiat: Scalars['Float'];
+  name?: Maybe<Scalars['String']>;
   assets?: Maybe<Array<VaultAccountAsset>>;
 };
 
@@ -1579,13 +1584,17 @@ export type WidgetShort = {
   data?: Maybe<Scalars['String']>;
 };
 
+
 export type Mutation = {
   __typename?: 'Mutation';
   foo: Scalars['String'];
   createMyApiKey?: Maybe<ApiKeySecret>;
-  deleteMyApiKey?: Maybe<Scalars['Void']>;
-  createApiKey?: Maybe<ApiKeySecret>;
-  deleteApiKey?: Maybe<Scalars['Void']>;
+  deleteMyApiKey?: Maybe<ApiKey>;
+  createUserApiKey?: Maybe<ApiKeySecret>;
+  deleteUserApiKey?: Maybe<ApiKey>;
+  sendAdminNotification?: Maybe<UserNotification>;
+  deleteMyNotification?: Maybe<UserNotification>;
+  deleteUserNotification?: Maybe<UserNotification>;
   preauthFull: PaymentPreauthResult;
   preauth: PaymentPreauthResultShort;
   captureFull: PaymentOrder;
@@ -1606,8 +1615,10 @@ export type Mutation = {
   updateMe?: Maybe<User>;
   updateUser?: Maybe<User>;
   addMyVault?: Maybe<UserVault>;
+  updateMyVault?: Maybe<UserVault>;
   deleteMyVault?: Maybe<UserVault>;
   addUserVault?: Maybe<UserVault>;
+  updateUserVault?: Maybe<UserVault>;
   deleteUserVault?: Maybe<UserVault>;
   assignRole?: Maybe<User>;
   removeRole?: Maybe<User>;
@@ -1656,13 +1667,30 @@ export type MutationDeleteMyApiKeyArgs = {
 };
 
 
-export type MutationCreateApiKeyArgs = {
+export type MutationCreateUserApiKeyArgs = {
   userId?: Maybe<Scalars['String']>;
 };
 
 
-export type MutationDeleteApiKeyArgs = {
+export type MutationDeleteUserApiKeyArgs = {
   apiKeyId?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationSendAdminNotificationArgs = {
+  notifiedUserId?: Maybe<Scalars['String']>;
+  message?: Maybe<Scalars['String']>;
+  level?: Maybe<UserNotificationLevel>;
+};
+
+
+export type MutationDeleteMyNotificationArgs = {
+  notificationId: Scalars['ID'];
+};
+
+
+export type MutationDeleteUserNotificationArgs = {
+  notificationId: Scalars['ID'];
 };
 
 
@@ -1768,6 +1796,17 @@ export type MutationUpdateUserArgs = {
 };
 
 
+export type MutationAddMyVaultArgs = {
+  vaultName: Scalars['String'];
+};
+
+
+export type MutationUpdateMyVaultArgs = {
+  vaultId?: Maybe<Scalars['String']>;
+  vaultName: Scalars['String'];
+};
+
+
 export type MutationDeleteMyVaultArgs = {
   vaultId?: Maybe<Scalars['String']>;
 };
@@ -1775,6 +1814,14 @@ export type MutationDeleteMyVaultArgs = {
 
 export type MutationAddUserVaultArgs = {
   userId: Scalars['ID'];
+  vaultName: Scalars['String'];
+};
+
+
+export type MutationUpdateUserVaultArgs = {
+  userId: Scalars['ID'];
+  vaultId?: Maybe<Scalars['String']>;
+  vaultName: Scalars['String'];
 };
 
 
@@ -1802,15 +1849,13 @@ export type MutationDeleteUserArgs = {
 
 
 export type MutationAddMyContactArgs = {
-  contactEmail: Scalars['String'];
-  displayName?: Maybe<Scalars['String']>;
+  contact?: Maybe<UserContactInput>;
 };
 
 
 export type MutationUpdateMyContactArgs = {
   contactId: Scalars['String'];
-  contactEmail?: Maybe<Scalars['String']>;
-  displayName?: Maybe<Scalars['String']>;
+  contact?: Maybe<UserContactInput>;
 };
 
 
@@ -2010,7 +2055,6 @@ export type ApiKeySecret = {
   disabled?: Maybe<Scalars['DateTime']>;
 };
 
-
 export type PaymentPreauthInput = {
   transactionId: Scalars['String'];
   instrument: PaymentInstrument;
@@ -2069,7 +2113,6 @@ export type SettingsCommonInput = {
   custodyProviderWithdrawalVaultAccountId?: Maybe<Scalars['String']>;
   custodyProviderWithdrawalAddress?: Maybe<Scalars['String']>;
   kycProvider?: Maybe<Scalars['String']>;
-  kycBaseAddress?: Maybe<Scalars['String']>;
 };
 
 export type SettingsFeeInput = {
@@ -2155,6 +2198,13 @@ export type UserInput = {
   changePasswordRequired?: Maybe<Scalars['Boolean']>;
   defaultFiatCurrency?: Maybe<Scalars['String']>;
   defaultCryptoCurrency?: Maybe<Scalars['String']>;
+};
+
+export type UserContactInput = {
+  contactEmail?: Maybe<Scalars['String']>;
+  displayName?: Maybe<Scalars['String']>;
+  assetId?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
 };
 
 export type UserBankAccountInput = {
@@ -2280,9 +2330,7 @@ export type VaultAccount = {
   __typename?: 'VaultAccount';
   id?: Maybe<Scalars['ID']>;
   name?: Maybe<Scalars['String']>;
-  hiddenOnUI?: Maybe<Scalars['Boolean']>;
-  customerRefId?: Maybe<Scalars['String']>;
-  autoFuel?: Maybe<Scalars['Boolean']>;
+  rawData?: Maybe<Scalars['String']>;
   assets?: Maybe<Array<VaultAccountAsset>>;
 };
 

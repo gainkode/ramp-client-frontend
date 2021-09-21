@@ -37,10 +37,9 @@
             </th>
             <td mat-cell *matCellDef="let element">
                 <div class="__profile-transactions-table-cell-sender">
-                    <img class="__profile-transactions-table-cell-sender-icon"
-                        src="../../../assets/svg-payment-systems/bitcoin.svg">
+                    <img [ngClass]="element.sender?.imgClass" [src]="element.sender?.imgSource">
                     <div class="__profile-transactions-table-cell-data">
-                        {{element.senderData}}
+                        {{element.sender?.title}}
                     </div>
                 </div>
             </td>
