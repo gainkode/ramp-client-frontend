@@ -17,13 +17,16 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatStepperModule } from '@angular/material/stepper';
 import { ComponentsModule } from '../components/components.module';
 import { PaymentComponent } from './payment.component';
-import { ContainerComponent } from './container.component';
+import { ContainerComponentDeprecated } from './container.component';
+import { QuickCheckoutComponent } from './quickcheckout.component';
+import { WidgetComponent } from './widget/widget.component';
 
 const routing = RouterModule.forChild([
     { path: 'quickcheckout', component: PaymentComponent },
-    { path: 'container/:affiliateCode', component: ContainerComponent },
-    { path: 'widget/:affiliateCode', component: ContainerComponent },
-    { path: 'container', component: ContainerComponent },
+    { path: 'qc', component: QuickCheckoutComponent },
+    { path: 'container/:affiliateCode', component: ContainerComponentDeprecated },
+    { path: 'container', component: ContainerComponentDeprecated },
+    { path: 'widget/:affiliateCode', component: ContainerComponentDeprecated },
     { path: '**', redirectTo: 'quickcheckout' }
 ]);
 
@@ -52,8 +55,9 @@ export class MaterialModule { }
 
 @NgModule({
     imports: [ CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule ],
-    declarations: [ PaymentComponent, ContainerComponent ],
+    declarations: [ PaymentComponent, QuickCheckoutComponent, ContainerComponentDeprecated,
+        WidgetComponent ],
     providers: [],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class QuickCheckOutModule { }
+export class PaymentModule { }

@@ -4,8 +4,8 @@ import { TermsComponent } from './terms.component';
 
 const routes: Routes = [
   {
-    path: 'payment', loadChildren: () => import('./quick-checkout/quick-checkout.module').
-      then(m => m.QuickCheckOutModule)
+    path: 'payment', loadChildren: () => import('./payment/payment.module').
+      then(m => m.PaymentModule)
   },
   {
     path: 'auth/personal', loadChildren: () => import('./auth-personal/auth.module').

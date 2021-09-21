@@ -57,7 +57,7 @@ import { WalletValidator } from '../utils/wallet.validator';
   templateUrl: 'container.component.html',
   styleUrls: ['container.component.scss'],
 })
-export class ContainerComponent implements OnInit, OnDestroy {
+export class ContainerComponentDeprecated implements OnInit, OnDestroy {
   @ViewChild('checkoutStepper') private stepper: MatStepper | undefined = undefined;
   @ViewChild('exchangerate') private exchangeRateComponent: ExchangeRateComponent | undefined = undefined;
   @ViewChild('details') private ngDetailsForm: NgForm | undefined = undefined;
