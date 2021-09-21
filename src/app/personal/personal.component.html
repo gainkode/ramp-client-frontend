@@ -19,12 +19,11 @@
     <div class="__profile-container">
         <div [ngClass]="expandedMenu ? '__profile-side-menu-expanded' : '__profile-side-menu'">
             <div class="__side-menu-container">
-                <app-side-menu class="__side-menu-header-container" [items]="menuItems" [selectedItem]="selectedMenu"
-                    [expanded]="expandedMenu" (onMenuClick)="sideMenuClick($event)">
+                <app-side-menu [items]="menuItems" [selectedItem]="selectedMenu" [expanded]="expandedMenu"
+                    (onMenuClick)="sideMenuClick($event)">
                 </app-side-menu>
                 <div class="__side-menu-footer-container">
-                    <app-side-expander-button class="__side-menu-expand-control" [expanded]="expandedMenu"
-                        (stateChanged)="sideMenuExpanded($event)">
+                    <app-side-expander-button [expanded]="expandedMenu" (stateChanged)="sideMenuExpanded($event)">
                     </app-side-expander-button>
                 </div>
             </div>
@@ -44,8 +43,9 @@
                 </button>
             </div>
         </div>
-        <div class="__profile-details-container">
-            <app-personal-transaction-details *ngIf="detailsType==='transaction'" [transaction]="detailsContainer?.transaction">
+        <div class="__profile-details-data-block">
+            <app-personal-transaction-details *ngIf="detailsType==='transaction'"
+                [transaction]="detailsContainer?.transaction">
             </app-personal-transaction-details>
         </div>
     </div>

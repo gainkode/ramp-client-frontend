@@ -87,25 +87,21 @@
 .__side-menu-container {
     display: flex;
     flex-direction: column;
-    margin: 0px;
-    height: 100%;
-    margin: 24px 0px;
-}
-
-.__side-menu-header-container {
-    background-color: $color_white;
+    justify-content: space-between;
+    height: 80%;
+    width: 100%;
 }
 
 .__side-menu-footer-container {
-    flex-grow: 1;
-    position:relative;
-    margin: 48px 0px 24px 0px;
-}
+    margin-left: 48px;
 
-.__side-menu-expand-control {
-    position: absolute;
-    bottom: 24px;
-    left: 24px;
+    @media (max-width: $md1 + px) {
+        margin-left: 24px;
+    }
+
+    @media (max-width: $md2 + px) {
+        margin-left: 24px;
+    }
 }
 
 .__tool-bar-container {
