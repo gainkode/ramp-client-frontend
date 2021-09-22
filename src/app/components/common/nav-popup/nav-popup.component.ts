@@ -18,7 +18,7 @@ export class NavPopupComponent implements OnInit, OnDestroy {
     @Input() items: MenuItem[] | undefined = undefined;
     @Input() userName: string = '';
 
-    private s: Subscription | undefined = undefined;
+    private pNotificationSubscription: Subscription | undefined = undefined;
 
     menuOpened = false;
     barHorizontalPosition: MatSnackBarHorizontalPosition = 'right';
@@ -42,7 +42,7 @@ export class NavPopupComponent implements OnInit, OnDestroy {
 
     private startNotifications(): void {
         console.log('start popup user notification subscrption: ', this.auth.token);
-        this.s = this.notification.subscribeToNotifications().subscribe(
+        this.pNotificationSubscription = this.notification.subscribeToNotifications().subscribe(
             ({ data }) => {
                 // got data
                 if (this.userId) {
@@ -59,10 +59,9 @@ export class NavPopupComponent implements OnInit, OnDestroy {
     }
 
     private stopNotifications(): void {
-        if (this.s) {
-            console.log('stop popup user notification subscrption: ');
-            this.s.unsubscribe();
-            this.s = undefined;
+        if (this.pNotificationSubscription) {
+            this.pNotificationSubscription.unsubscribe();
+            this.pNotificationSubscription = undefined;
         }
     }
 

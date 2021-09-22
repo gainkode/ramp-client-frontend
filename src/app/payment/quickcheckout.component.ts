@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 @Component({
   templateUrl: 'quickcheckout.component.html',
-  styleUrls: ['../payment.scss'],
+  styleUrls: ['../../assets/payment.scss'],
 })
 export class QuickCheckoutComponent {
   constructor() {}
