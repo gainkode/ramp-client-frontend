@@ -9,7 +9,7 @@ import { getFormattedUtcDate } from 'src/app/utils/utils';
 @Component({
     selector: 'app-transactions-filter',
     templateUrl: './transactions-bar.component.html',
-    styleUrls: ['../../menu.scss', '../../button.scss']
+    styleUrls: ['../../../assets/menu.scss', '../../../assets/button.scss']
 })
 export class TransactionsFilterBarComponent implements OnInit, OnDestroy {
     @Input() data: TransactionsFilter | undefined = undefined;

@@ -4,8 +4,7 @@ import { User } from 'src/app/model/generated-models';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
-  templateUrl: './main.component.html',
-  styleUrls: ['./profile.scss']
+  templateUrl: './main.component.html'
 })
 export class ProfileMainPersonalComponent implements OnInit {
   user: User | null = null;

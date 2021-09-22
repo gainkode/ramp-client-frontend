@@ -14,7 +14,7 @@ import { ProfileDataService } from 'src/app/services/profile.service';
 @Component({
     selector: 'app-personal-transactions',
     templateUrl: './transactions.component.html',
-    styleUrls: ['../../menu.scss', '../../button.scss', '../../profile.scss', './transactions.component.scss']
+    styleUrls: ['../../../assets/menu.scss', '../../../assets/button.scss', '../../../assets/profile.scss', './transactions.component.scss']
 })
 export class PersonalTransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
     @Output() showDetails = new EventEmitter<ProfileItemContainer>();

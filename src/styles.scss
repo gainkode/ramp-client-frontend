@@ -1,7 +1,7 @@
-@import './assets/material-theme';
-@import "./app/fonts.scss";
-@import "./app/colors.scss";
-@import "./app/consts.scss";
+@import './assets/material-theme.scss';
+@import "./assets/fonts.scss";
+@import "./assets/colors.scss";
+@import "./assets/consts.scss";
 
 * {
     font-family           : $font_main, sans-serif;

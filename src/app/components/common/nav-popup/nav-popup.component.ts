@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
 @Component({
     selector: 'app-nav-popup',
     templateUrl: 'nav-popup.component.html',
-    styleUrls: ['nav-popup.component.scss', '../../../fonts.scss', '../../../colors.scss', '../../../menu.scss']
+    styleUrls: ['nav-popup.component.scss', '../../../../assets/fonts.scss', '../../../../assets/colors.scss', '../../../../assets/menu.scss']
 })
 export class NavPopupComponent implements OnInit, OnDestroy {
     @ViewChild('menuTrigger') menuTrigger!: MatMenuTrigger;

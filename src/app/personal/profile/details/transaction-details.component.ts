@@ -4,7 +4,7 @@ import { TransactionItem } from "src/app/model/transaction.model";
 @Component({
     selector: 'app-personal-transaction-details',
     templateUrl: './transaction-details.component.html',
-    styleUrls: ['../../../button.scss', '../../../details.scss']
+    styleUrls: ['../../../../assets/button.scss', '../../../../assets/details.scss']
 })
 export class PersonalTransactionDetailsComponent {
     @Input() transaction: TransactionItem | undefined;
