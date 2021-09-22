@@ -11,6 +11,8 @@ export class WidgetComponent {
   }
 
   internalPayment = false;
+  title = 'Order details';
+  step = 1;
 
   constructor() {}
 }
