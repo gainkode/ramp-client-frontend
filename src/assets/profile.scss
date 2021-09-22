@@ -19,6 +19,7 @@
     background-color: $color_white;
     border: 1px solid $color_purple_50;
     border-style: none solid none none;
+    z-index: 250;
 
     @media (max-width: $md1 + px) {
         width     : $side_menu_narrow_width_sm + px;
@@ -46,6 +47,7 @@
     background-color: $color_white;
     border: 1px solid $color_purple_50;
     border-style: none solid none none;
+    z-index: 250;
 
     @media (max-width: $md1 + px) {
         width: $side_menu_width_sm + px;
@@ -112,15 +114,22 @@
 }
 
 .__profile-top-menu-logo-box {
-    text-align      : center;
-    width           : ($side_menu_width_lg - 48) + px;
+    position: fixed;
+    display: flex;
+    left: 0px;
+    top: 0px;
+    height: $top_menu_height + px;
+    width: $side_menu_width_lg + px;
+    text-align: center;
+    align-items: center;
+    z-index: 200;
 
     @media (max-width: $md1 + px) {
-        width: ($side_menu_width_sm - 48) + px;
+        width: $side_menu_width_sm + px;
     }
     
     @media (max-width: $md2 + px) {
-        width: ($side_menu_width_sm - 48) + px;
+        width: $side_menu_width_sm + px;
     }
 
     @media (max-width: $md3 + px) {

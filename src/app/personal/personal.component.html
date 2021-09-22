@@ -1,12 +1,6 @@
 <div [ngClass]="{'__profile-disabled-block': showDetails}">
     <div class="__top-menu-bar">
         <div class="__top-menu-content-bar">
-            <div class="__profile-top-menu-logo-box">
-                <button *ngIf="expandedMenu" mat-icon-button style="width: 150px;color: darkblue;"
-                    (click)="routeTo(getUserMainPage())">
-                    eWallet Logo
-                </button>
-            </div>
             <div class="__top-menu-content-box">
                 <button class="__borderless-button" (click)="routeTo('/payment')">
                     Quick Checkout
@@ -14,6 +8,11 @@
                 <app-nav-popup [items]="popupItems" [userName]="userName" (onMenuClick)="popupMenuClick($event)">
                 </app-nav-popup>
             </div>
+        </div>
+    </div>
+    <div class="__profile-top-menu-logo-box">
+        <div *ngIf="expandedMenu" style="color: mediumslateblue;margin: auto;background-color: mediumspringgreen;">
+            eWallet Logo
         </div>
     </div>
     <div class="__profile-container">
