@@ -8,5 +8,17 @@
     <app-widget-progress [step]="step" [title]="title"></app-widget-progress>
   </div>
 
+  <div class="__widget-data-container">
+    <div [ngClass]="{'__widget-wizard-container': true, '__widget-wizard-container-single': initState}">
+      <div class="__widget-data-box">
+        Components here
+      </div>
+    </div>
+    <div *ngIf="!initState" class="__widget-summary-container">
+      <div class="__widget-data-box">
+        Summary here
+      </div>
+    </div>
+  </div>
 
 </div>

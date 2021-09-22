@@ -6,9 +6,11 @@
     border: none;
     display: flex;
     justify-content: center;
+    padding: 0px;
 }
 
 .__widget-container {
+    padding: 0px;
     min-height: 720px;
     width: $widget_max_width + px;
     
@@ -17,11 +19,11 @@
     border-radius: 8px;
 
     @media (max-width: $widget_max_width + px) {
-        width     : $widget_min_width + px;
+        width: $widget_min_width + px;
     }
 
     @media (max-width: $widget_min_width + px) {
-        width     : 0px;
+        width: 0px;
         visibility: hidden;
     }
 }
@@ -96,4 +98,46 @@
 
 .__widget-progress-indicator-step-6 {
     width: 100%;
+}
+
+.__widget-data-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0px 0px 24px 24px;
+    align-items: flex-start;
+    justify-content: center;
+
+    @media (max-width: $widget_max_width + px) {
+        flex-direction: column;
+    }
+
+    @media (max-width: $widget_min_width + px) {
+        width     : 0px;
+        visibility: hidden;
+    }
+}
+
+.__widget-wizard-container {
+    min-height: 544px;
+    width: 100%;
+    max-width: 264px;
+
+    background-color: $color_white;
+    box-shadow: 0px 5px 6px rgba(153, 140, 149, 0.2), 0px 9px 12px rgba(153, 140, 149, 0.14), 0px 3px 16px rgba(153, 140, 149, 0.12);
+    border-radius: 8px;
+}
+
+.__widget-wizard-container-single {
+    max-width: 400px;
+}
+
+.__widget-data-box {
+    margin: 24px;
+}
+
+.__widget-summary-container {
+    min-height: 244px;
+    width: 100%;
+    max-width: 312px;
 }
