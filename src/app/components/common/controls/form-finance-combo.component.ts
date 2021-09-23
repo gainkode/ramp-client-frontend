@@ -61,5 +61,9 @@ export class FormFinanceComboComponent {
         return result;
     }
 
+    get selectedComboValue(): CommonTargetValue | undefined {
+        return this.comboList.find(x => x.id === this.comboField?.value);
+    }
+
     constructor() { }
 }

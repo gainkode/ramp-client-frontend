@@ -5,11 +5,13 @@
         </app-form-textbox>
 
         <app-form-finance-combo [label]="'Amount to spend'" [placeholder]="'...'" [boxFieldName]="'amountSpend'"
-            [boxField]="amountSpendField" [comboList]="spendCurrencyList" [errorMessages]="amountSpendErrorMessages" [separator]="true">
+            [boxField]="amountSpendField" [comboField]="currencySpendField" [comboFieldName]="'currencySpend'" [comboList]="spendCurrencyList" [errorMessages]="amountSpendErrorMessages"
+            [separator]="true">
         </app-form-finance-combo>
 
         <app-form-finance-combo [label]="'Amount to receive'" [placeholder]="'...'" [boxFieldName]="'amountReceive'"
-            [boxField]="amountReceiveField" [comboList]="receiveCurrencyList" [errorMessages]="amountReceiveErrorMessages">
+            [boxField]="amountReceiveField" [comboField]="currencyReceiveField" [comboFieldName]="'currencyReceive'"
+            [comboList]="receiveCurrencyList" [errorMessages]="amountReceiveErrorMessages">
         </app-form-finance-combo>
 
         <div class="__widget-buttons-area">
