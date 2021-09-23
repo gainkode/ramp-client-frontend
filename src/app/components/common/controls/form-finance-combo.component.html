@@ -1,0 +1,29 @@
+<div *ngIf="label!==''" [ngClass]="{'__form-label': true, '__form-label-disabled': active===false}">
+    {{label}}
+</div>
+<input [ngClass]="invalidForm ? '__form-finance-text-combo-error' : '__form-finance-text-combo'" type="text"
+    [placeholder]="placeholder" [formControlName]="boxFieldName" />
+
+<div class="__form-finiance-combo-container">
+    <div class="__form-finance-combo-error-icon-container">
+        <mat-icon *ngIf="invalidForm" class="__form-finance-combo-error-icon">
+            error
+        </mat-icon>
+    </div>
+    <div class="__form-finance-combo-separator"></div>
+    <div class="__form-finiance-combo-block">
+        <mat-select [formControlName]="comboFieldName">
+            <mat-option *ngFor="let item of comboList" [value]="item.id">
+                <span class="__mat-select-item">
+                    {{item.title}}
+                </span>
+            </mat-option>
+        </mat-select>
+    </div>
+</div>
+
+<div *ngIf="assist!=='' || invalidForm"
+    [ngClass]="{'__form-assist': true, '__form-assist-disabled': active===false, '__form-assist-error': invalidForm}">
+    {{invalidForm ? errorAssist : assist}}
+</div>
+<div *ngIf="separator" class="__form-separator"></div>

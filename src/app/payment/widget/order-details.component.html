@@ -1,9 +1,16 @@
 <div class="__widget-data-box">
     <form [formGroup]="dataForm" (ngSubmit)="onSubmit()">
-        <app-form-textbox [label]="'Email'" [active]="false" [boxType]="'email'" [placeholder]="'...'" [maxlength]="50"
-        [fieldName]="'email'" [field]="emailField" [errorMessages]="emailErrorMessages">
+        <app-form-textbox [label]="'Email'" [boxType]="'email'" [placeholder]="'...'" [maxlength]="50"
+            [fieldName]="'email'" [field]="emailField" [errorMessages]="emailErrorMessages" [separator]="true">
         </app-form-textbox>
 
+        <app-form-finance-combo [label]="'Amount to spend'" [placeholder]="'...'" [boxFieldName]="'amountSpend'"
+            [boxField]="amountSpendField" [comboList]="spendCurrencyList" [errorMessages]="amountSpendErrorMessages" [separator]="true">
+        </app-form-finance-combo>
+
+        <app-form-finance-combo [label]="'Amount to receive'" [placeholder]="'...'" [boxFieldName]="'amountReceive'"
+            [boxField]="amountReceiveField" [comboList]="receiveCurrencyList" [errorMessages]="amountReceiveErrorMessages">
+        </app-form-finance-combo>
 
         <div class="__widget-buttons-area">
             <button class="__main-button" type="submit">next</button>

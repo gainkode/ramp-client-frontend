@@ -64,6 +64,7 @@ import { TransactionsFilterBarComponent } from './filter-bars/transactions-bar.c
 import { NgxMaskModule, IConfig } from 'ngx-mask'
 import { MatChipsModule } from '@angular/material/chips';
 import { FormTextBoxComponent } from './common/controls/form-textbox.component';
+import { FormFinanceComboComponent } from './common/controls/form-finance-combo.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -101,7 +102,7 @@ export class MaterialModule { }
 @NgModule({
     imports: [NgxMaskModule.forRoot(), CommonModule, FormsModule, ReactiveFormsModule, MaterialModule, DirectiveModule, QRCodeModule],
     declarations: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
-        FormTextBoxComponent,
+        FormTextBoxComponent, FormFinanceComboComponent,
         CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, 
         LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, CommonDialogBox, SideExpanderComponent,
         CreditCardComponent, TwoFaCodeComponent, NavPopupComponent, SideMenuComponent, LineBreakPipe, NumberFillPipe,
@@ -112,7 +113,7 @@ export class MaterialModule { }
         ProfileContactEditorComponent, ProfileWithdrawalComponent,
         ProfileAssetsComponent, ProfileLastExchangesComponent],
     exports: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
-        FormTextBoxComponent,
+        FormTextBoxComponent, FormFinanceComboComponent,
         CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, 
         LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, CommonDialogBox, SideExpanderComponent,
         CreditCardComponent, TwoFaCodeComponent, NavPopupComponent, SideMenuComponent, LineBreakPipe, NumberFillPipe,
