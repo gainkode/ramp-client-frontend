@@ -34,12 +34,15 @@ export class TransactionsFilterBarComponent implements OnInit, OnDestroy {
     get walletTypesField(): AbstractControl | null {
         return this.filterForm.get('walletTypes');
     }
+
     get transactionTypesField(): AbstractControl | null {
         return this.filterForm.get('transactionTypes');
     }
+
     get transactionDateField(): AbstractControl | null {
         return this.filterForm.get('transactionDate');
     }
+    
     get senderField(): AbstractControl | null {
         return this.filterForm.get('sender');
     }

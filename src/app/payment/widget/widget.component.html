@@ -10,9 +10,7 @@
 
   <div class="__widget-data-container">
     <div [ngClass]="{'__widget-wizard-container': true, '__widget-wizard-container-single': initState}">
-      <div class="__widget-data-box">
-        Components here
-      </div>
+      <app-widget-order-details *ngIf="isStageActive('order_details')"></app-widget-order-details>
     </div>
     <div *ngIf="!initState" class="__widget-summary-container">
       <div class="__widget-data-box">

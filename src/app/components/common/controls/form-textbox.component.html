@@ -1,0 +1,12 @@
+<div *ngIf="label!==''" [ngClass]="{'__form-label': true, '__form-label-disabled': active===false}">
+    {{label}}
+</div>
+<input [ngClass]="field?.errors ? '__form-text-box-error' : '__form-text-box'" [type]="boxType" 
+    [placeholder]="placeholder" [formControlName]="fieldName" [maxlength]="maxlength"/>
+<mat-icon *ngIf="field?.errors" class="__form-text-error-icon">
+    error
+</mat-icon>
+<div *ngIf="assist!=='' || field?.errors"
+[ngClass]="{'__form-assist': true, '__form-assist-disabled': active===false, '__form-assist-error': field?.errors}">
+    {{field?.errors ? errorAssist : assist}}
+</div>

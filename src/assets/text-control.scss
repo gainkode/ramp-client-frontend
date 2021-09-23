@@ -1,0 +1,103 @@
+@import "./fonts.scss";
+@import "./colors.scss";
+@import "./consts.scss";
+
+.__form-label {
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 28px;
+    color: $color_purple_900_text;
+}
+
+.__form-label-disabled {
+    color: $color_purple_200;
+}
+
+.__form-assist {
+    display: block;
+    margin-left: 16px;
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 14px;    
+    color: $color_purple_900_text;
+}
+
+.__form-assist-disabled {
+    color: $color_purple_200;
+}
+
+.__form-assist-error {
+    margin-top: -24px;
+    color: $color_pink_500;
+}
+
+input.__form-text-box {
+    height: 32px;
+    width: 100%;
+    padding: 0px 16px;
+
+    border: 1px solid $color_purple_50;
+    box-sizing: border-box;
+    border-radius: 4px;
+    background-color: transparent;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 28px;
+    color: $color_purple_900_text;
+}
+
+input.__form-text-box:hover {
+    border: 1px solid $color_main_blue_400;
+}
+
+input.__form-text-box:focus {
+    outline: none;
+    border: 1px solid $color_main_blue_600;
+}
+
+input.__form-text-box:disabled {
+    color: $color_purple_200;
+}
+
+input.__form-text-box-error {
+    height: 32px;
+    width: 100%;
+    padding: 0px 16px;
+
+    border: 1px solid $color_purple_50;
+    box-sizing: border-box;
+    border-radius: 4px;
+    background-color: transparent;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 28px;
+    color: $color_pink_500;
+}
+
+input.__form-text-box-error:hover {
+    border: 1px solid $color_pink_300;
+}
+
+input.__form-text-box-error:focus {
+    outline: none;
+    border: 1px solid $color_pink_500;
+}
+
+.__form-text-error-icon {
+    position: relative;
+    top: -24px;
+    left: calc(100% - 24px);
+    
+    font-size: 18px;
+    color: $color_pink_500;
+}

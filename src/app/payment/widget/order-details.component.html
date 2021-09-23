@@ -1,0 +1,12 @@
+<div class="__widget-data-box">
+    <form [formGroup]="dataForm" (ngSubmit)="onSubmit()">
+        <app-form-textbox [label]="'Email'" [active]="false" [boxType]="'email'" [placeholder]="'...'" [maxlength]="50"
+        [fieldName]="'email'" [field]="emailField" [errorMessages]="emailErrorMessages">
+        </app-form-textbox>
+
+
+        <div class="__widget-buttons-area">
+            <button class="__main-button" type="submit">next</button>
+        </div>
+    </form>
+</div>

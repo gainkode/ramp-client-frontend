@@ -15,5 +15,13 @@ export class WidgetComponent {
   title = 'Order details';
   step = 1;
 
-  constructor() {}
+  constructor() { }
+
+  isStageActive(stageId: string): boolean {
+    let result = false;
+    if (stageId === 'order_details') {
+      result = true;
+    }
+    return result;
+  }
 }
