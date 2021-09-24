@@ -72,9 +72,10 @@ export class KycLevelView {
 }
 
 export class CurrencyView {
-    id!: string;
+    id: string = '';
     title = '';
     name = '';
+    img = '';
     precision = 0;
     minAmount = 0;
     rateFactor = 0;
@@ -90,6 +91,9 @@ export class CurrencyView {
         this.rateFactor = data.rateFactor;
         this.validateAsSymbol = data.validateAsSymbol as string | null;
         this.fiat = data.fiat as boolean;
+        if (!this.fiat) {
+            this.img = `assets/svg-crypto/${data.symbol.toLowerCase()}.svg`;
+        }
     }
 }
 

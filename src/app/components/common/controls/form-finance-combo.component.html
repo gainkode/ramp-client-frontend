@@ -12,16 +12,24 @@
     </div>
     <div class="__form-finance-combo-separator"></div>
     <div class="__form-finance-combo-block">
-        <mat-select [formControlName]="comboFieldName" style="margin: 6px 2px 6px 6px;">
+        <mat-select [formControlName]="comboFieldName" style="margin: 8px 2px 0px 0px;">
             <mat-select-trigger>
-                <span class="__form-finance-combo-item">
-                    {{selectedComboValue?.title}}
-                </span>
+                <div class="__form-finance-combo-item">
+                    <img *ngIf="!selectedComboValue?.fiat" class="__form-finance-combo-item-img" [src]="selectedComboValue?.img">
+                    <div *ngIf="selectedComboValue?.fiat" class="__form-finance-combo-item-img"></div>
+                    <span class="__form-finance-combo-item-text">
+                        {{selectedComboValue?.title}}
+                    </span>
+                </div>
             </mat-select-trigger>
             <mat-option *ngFor="let item of comboList" [value]="item.id" style="height: 42px;">
-                <span class="__form-finance-combo-item">
-                    {{item.title}}
-                </span>
+                <div class="__form-finance-combo-item">
+                    <img *ngIf="!item.fiat" class="__form-finance-combo-item-img" [src]="item.img">
+                    <!-- <div *ngIf="item.fiat" class="__form-finance-combo-item-img"></div> -->
+                    <span class="__form-finance-combo-item-text">
+                        {{item.title}}
+                    </span>
+                </div>
             </mat-option>
         </mat-select>
     </div>

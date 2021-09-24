@@ -1,6 +1,6 @@
 import { Component, Input, SkipSelf } from '@angular/core';
-import { AbstractControl, ControlContainer, FormGroupDirective } from '@angular/forms';
-import { CommonTargetValue } from 'src/app/model/common.model';
+import { AbstractControl, ControlContainer } from '@angular/forms';
+import { CurrencyView } from 'src/app/model/payment.model';
 
 @Component({
     selector: 'app-form-finance-combo',
@@ -20,7 +20,7 @@ export class FormFinanceComboComponent {
     @Input() comboFieldName = '';
     @Input() boxField: AbstractControl | null = null;
     @Input() comboField: AbstractControl | null = null;
-    @Input() comboList: CommonTargetValue[] = [];
+    @Input() comboList: CurrencyView[] = [];
     @Input() errorMessages: {
         [key: string]: string;
     } = {};
@@ -61,7 +61,7 @@ export class FormFinanceComboComponent {
         return result;
     }
 
-    get selectedComboValue(): CommonTargetValue | undefined {
+    get selectedComboValue(): CurrencyView | undefined {
         return this.comboList.find(x => x.id === this.comboField?.value);
     }
 
