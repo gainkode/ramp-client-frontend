@@ -179,7 +179,9 @@
 
 .__widget-summary-item {
     height: 44px;
-    
+    display: flex;
+    align-items: center;
+
     font-family: $font_main;
     font-style: normal;
     font-weight: 300;
@@ -187,4 +189,48 @@
     line-height: 28px;
 
     color: $color_purple_900_text;
+}
+
+.__widget-rate-container {
+    margin: 8px 0px 18px 0px;
+}
+
+.__widget-rate-line {
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 14px;
+    
+    display: flex;
+    align-items: center;
+
+    color: $color_purple_900_text;
+}
+
+.__widget-rate-line {
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 14px;
+    
+    display: flex;
+    align-items: center;
+
+    color: $color_purple_900_text;
+}
+
+.__widget-rate-countdown {
+    display: flex;
+    align-items: center;
+    margin: 0px 0px 0px 4px;
+    
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 14px;
+    
+    color: $color_main_blue_800;
 }

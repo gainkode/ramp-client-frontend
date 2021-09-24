@@ -1,19 +1,42 @@
 <div class="__widget-data-box">
     <form [formGroup]="dataForm" (ngSubmit)="onSubmit()">
+        <!-- Email -->
         <app-form-textbox [label]="'Email'" [boxType]="'email'" [placeholder]="'...'" [maxlength]="50"
             [fieldName]="'email'" [field]="emailField" [errorMessages]="emailErrorMessages" [separator]="true">
         </app-form-textbox>
 
+        <!-- Send -->
         <app-form-finance-combo [label]="'Amount to spend'" [placeholder]="'...'" [boxFieldName]="'amountSpend'"
-            [boxField]="amountSpendField" [comboField]="currencySpendField" [comboFieldName]="'currencySpend'" [comboList]="spendCurrencyList" [errorMessages]="amountSpendErrorMessages"
-            [separator]="true">
+            [boxField]="amountSpendField" [comboField]="currencySpendField" [comboFieldName]="'currencySpend'"
+            [comboList]="spendCurrencyList" [errorMessages]="amountSpendErrorMessages" [separator]="true">
         </app-form-finance-combo>
 
+        <!-- Receive -->
         <app-form-finance-combo [label]="'Amount to receive'" [placeholder]="'...'" [boxFieldName]="'amountReceive'"
             [boxField]="amountReceiveField" [comboField]="currencyReceiveField" [comboFieldName]="'currencyReceive'"
             [comboList]="receiveCurrencyList" [errorMessages]="amountReceiveErrorMessages">
         </app-form-finance-combo>
 
+
+        <div class="__form-label">
+            Transaction
+        </div>
+        <div class="__form-text-border">
+            <mat-select formControlName="transaction">
+                <mat-select-trigger>
+                    <div class="__form-combo-item">
+                        {{transactionField?.value}}
+                    </div>
+                </mat-select-trigger>
+                <mat-option *ngFor="let item of transactionList" [value]="item.id" style="height: 32px;">
+                    <div class="__form-combo-item">
+                        {{item.name}}
+                    </div>
+                </mat-option>
+            </mat-select>
+        </div>
+
+        <!-- Buttons -->
         <div class="__widget-buttons-area">
             <button class="__main-button" type="submit" [disabled]="!initialized">next</button>
         </div>

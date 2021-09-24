@@ -16,12 +16,10 @@
     <div *ngIf="!initState" class="__widget-summary-container">
       <div class="__widget-summary-box">
         <div class="__widget-summary-title">Order Summary</div>
-        <div style="margin: 8px 0px 18px 0px;height: 18px;background-color: aqua;font-size: 14px;">
-          The price will be updated in 23 seconds
-        </div>
+        <app-widget-rate class="__widget-rate-container" #exchangerate [summary]="summary" (update)="onUpdateRate($event)">
+        </app-widget-rate>
         <app-widget-summary class="__widget-summary-data" [summary]="summary"></app-widget-summary>
       </div>
     </div>
   </div>
-
 </div>

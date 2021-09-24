@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { Rate } from 'src/app/model/generated-models';
 import { CheckoutSummary } from 'src/app/model/payment.model';
 
 @Component({
@@ -25,6 +26,12 @@ export class WidgetComponent {
       result = true;
     }
     return result;
+  }
+
+  onUpdateRate(rate: Rate): void {
+    this.summary.exchangeRate = rate;
+    // this.priceEdit = false;
+    // this.updateAmountTo();
   }
 
   orderDetailsChanged(data: CheckoutSummary): void {

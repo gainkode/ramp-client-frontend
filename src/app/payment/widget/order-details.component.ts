@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { SettingsCurrencyListResult, TransactionType } from 'src/app/model/generated-models';
-import { CheckoutSummary, CurrencyView } from 'src/app/model/payment.model';
+import { CheckoutSummary, CurrencyView, QuickCheckoutTransactionTypeList } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
 import { ErrorService } from 'src/app/services/error.service';
@@ -12,7 +12,7 @@ import { PaymentDataService } from 'src/app/services/payment.service';
 @Component({
   selector: 'app-widget-order-details',
   templateUrl: 'order-details.component.html',
-  styleUrls: ['../../../assets/payment.scss', '../../../assets/button.scss']
+  styleUrls: ['../../../assets/payment.scss', '../../../assets/button.scss', '../../../assets/text-control.scss']
 })
 export class WidgetOrderDetailsComponent implements OnInit, OnDestroy {
   @Input() initialized = false;
@@ -33,6 +33,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy {
   currentTransaction = TransactionType.Deposit;
   spendCurrencyList: CurrencyView[] = [];
   receiveCurrencyList: CurrencyView[] = [];
+  transactionList = QuickCheckoutTransactionTypeList;
 
   emailErrorMessages: { [key: string]: string; } = {
     ['email']: 'Email is not valid',

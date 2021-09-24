@@ -35,6 +35,17 @@
     color: $color_pink_500;
 }
 
+.__form-text-border {
+    height: 32px;
+    width: 100%;
+    padding: 0px 4px 0px 16px;
+
+    border: 1px solid $color_purple_50;
+    box-sizing: border-box;
+    border-radius: 4px;
+    background-color: transparent;
+}
+
 input.__form-text-box {
     height: 32px;
     width: 100%;
@@ -210,5 +221,18 @@ input.__form-finance-text-combo-error:focus {
     font-weight: normal;
     font-size: 14px;
     line-height: 15px;
+    color: $color_purple_900_text;
+}
+
+.__form-combo-item {
+    height: 32px;
+    width: 100%;
+    padding: 2px 0px;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 28px;
     color: $color_purple_900_text;
 }

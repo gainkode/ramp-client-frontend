@@ -22,10 +22,9 @@
                     </span>
                 </div>
             </mat-select-trigger>
-            <mat-option *ngFor="let item of comboList" [value]="item.id" style="height: 42px;">
+            <mat-option *ngFor="let item of comboList" [value]="item.id" style="height: 32px;">
                 <div class="__form-finance-combo-item">
                     <img *ngIf="!item.fiat" class="__form-finance-combo-item-img" [src]="item.img">
-                    <!-- <div *ngIf="item.fiat" class="__form-finance-combo-item-img"></div> -->
                     <span class="__form-finance-combo-item-text">
                         {{item.title}}
                     </span>
