@@ -74,6 +74,10 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy {
     return this.dataForm.get('currencyReceive');
   }
 
+  get transactionField(): AbstractControl | null {
+    return this.dataForm.get('transaction');
+  }
+
   constructor(
     private auth: AuthService,
     private dataService: PaymentDataService,

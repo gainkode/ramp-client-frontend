@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { CheckoutSummary } from 'src/app/model/payment.model';
 
 @Component({
   selector: 'app-widget',
@@ -14,6 +15,7 @@ export class WidgetComponent {
   initState = true;
   title = 'Order details';
   step = 1;
+  summary = new CheckoutSummary();
 
   constructor() { }
 
@@ -23,5 +25,15 @@ export class WidgetComponent {
       result = true;
     }
     return result;
+  }
+
+  orderDetailsChanged(data: CheckoutSummary): void {
+    this.initState = false;
+    this.summary.email = data.email;
+    this.summary.amountFrom = data.amountFrom;
+    this.summary.amountTo = data.amountTo;
+    this.summary.currencyFrom = data.currencyFrom;
+    this.summary.currencyTo = data.currencyTo;
+    this.summary.transactionType = data.transactionType;
   }
 }

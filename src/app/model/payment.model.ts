@@ -323,6 +323,27 @@ export class CheckoutSummary {
         return result;
     }
 
+    get rate(): string {
+        let result = '';
+        switch (this.transactionType) {
+            case TransactionType.Deposit:
+                result = this.exchangeRate?.depositRate?.toString() ?? '';
+                break;
+            case TransactionType.Withdrawal:
+                result = this.exchangeRate?.withdrawRate?.toString() ?? '';
+                break;
+        }
+        return result;
+    }
+
+    get transaction(): string {
+        return TransactionTypeList.find(x => x.id === this.transactionType)?.name ?? '';
+    }
+
+    get validAmounts(): boolean {
+        return this.amountFrom > 0 && this.amountTo > 0;
+    }
+
     reset(): void {
         this.orderId = '';
         this.email = '';

@@ -1,0 +1,38 @@
+<div *ngIf="summary?.orderId!==''">
+    <label class="checkout-summary-label">Order Id</label>
+    <div class="checkout-summary-value">
+        {{summary?.orderId}}
+    </div>
+</div>
+<div *ngIf="summary?.email!==''" class="__widget-summary-grid">
+    <div class="__widget-summary-item">
+        Email:
+    </div>
+    <div class="__widget-summary-item">
+        {{summary?.email}}
+    </div>
+    <div *ngIf="summary?.validAmounts" class="__widget-summary-item">
+        Spend:
+    </div>
+    <div *ngIf="summary?.validAmounts" class="__widget-summary-item">
+        {{summary?.amountFrom}} {{summary?.currencyFrom}}
+    </div>
+    <div *ngIf="summary?.validAmounts" class="__widget-summary-item">
+        Receive:
+    </div>
+    <div *ngIf="summary?.validAmounts" class="__widget-summary-item">
+        {{summary?.amountTo}} {{summary?.currencyTo}}
+    </div>
+    <div *ngIf="summary?.rate !== ''" class="__widget-summary-item">
+        Exchange rate:
+    </div>
+    <div *ngIf="summary?.rate !== ''" class="__widget-summary-item">
+        {{summary?.rate}}
+    </div>
+    <div class="__widget-summary-item">
+        Transaction:
+    </div>
+    <div class="__widget-summary-item">
+        {{summary?.transaction}}
+    </div>
+</div>
