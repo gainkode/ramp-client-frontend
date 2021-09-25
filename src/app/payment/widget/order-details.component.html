@@ -14,10 +14,10 @@
         <!-- Receive -->
         <app-form-finance-combo [label]="'Amount to receive'" [placeholder]="'...'" [boxFieldName]="'amountReceive'"
             [boxField]="amountReceiveField" [comboField]="currencyReceiveField" [comboFieldName]="'currencyReceive'"
-            [comboList]="receiveCurrencyList" [errorMessages]="amountReceiveErrorMessages">
+            [comboList]="receiveCurrencyList" [errorMessages]="amountReceiveErrorMessages" [separator]="true">
         </app-form-finance-combo>
 
-
+        <!-- Transaction -->
         <div class="__form-label">
             Transaction
         </div>

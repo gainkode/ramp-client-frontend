@@ -1,21 +1,21 @@
 <div *ngIf="label!==''" [ngClass]="{'__form-label': true, '__form-label-disabled': active===false}">
     {{label}}
 </div>
-<input [ngClass]="invalidForm ? '__form-finance-text-combo-error' : '__form-finance-text-combo'" type="text"
-    [placeholder]="placeholder" [formControlName]="boxFieldName" />
 
-<div class="__form-finance-combo-container">
-    <div class="__form-finance-combo-error-icon-container">
-        <mat-icon *ngIf="invalidForm" class="__form-finance-combo-error-icon">
+<div class="__form-combo-border">
+    <input [ngClass]="invalidForm ? '__form-finance-text-combo-error' : '__form-finance-text-combo'" type="text"
+        [placeholder]="placeholder" [formControlName]="boxFieldName" maxlength="14"/>
+    <div *ngIf="invalidForm" class="__form-finance-combo-error-icon-container">
+        <mat-icon class="__form-finance-combo-error-icon">
             error
         </mat-icon>
     </div>
-    <div class="__form-finance-combo-separator"></div>
     <div class="__form-finance-combo-block">
-        <mat-select [formControlName]="comboFieldName" style="margin: 8px 2px 0px 0px;">
+        <mat-select [formControlName]="comboFieldName" style="margin: 8px 0px 0px 0px;">
             <mat-select-trigger>
                 <div class="__form-finance-combo-item">
-                    <img *ngIf="!selectedComboValue?.fiat" class="__form-finance-combo-item-img" [src]="selectedComboValue?.img">
+                    <img *ngIf="!selectedComboValue?.fiat" class="__form-finance-combo-item-img"
+                        [src]="selectedComboValue?.img">
                     <div *ngIf="selectedComboValue?.fiat" class="__form-finance-combo-item-img"></div>
                     <span class="__form-finance-combo-item-text">
                         {{selectedComboValue?.title}}
