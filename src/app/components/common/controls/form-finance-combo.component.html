@@ -5,8 +5,8 @@
 <div class="__form-combo-border">
     <input [ngClass]="invalidForm ? '__form-finance-text-combo-error' : '__form-finance-text-combo'" type="text"
         [placeholder]="placeholder" [formControlName]="boxFieldName" maxlength="14"/>
-    <div *ngIf="invalidForm" class="__form-finance-combo-error-icon-container">
-        <mat-icon class="__form-finance-combo-error-icon">
+    <div *ngIf="invalidForm" class="__form-input-error-icon-container">
+        <mat-icon class="__form-input-error-icon">
             error
         </mat-icon>
     </div>
