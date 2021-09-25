@@ -129,8 +129,12 @@ export class WidgetRateComponent implements OnInit, OnDestroy {
         this.restartCountDown();
     }
 
+    getTitle(): string {
+        return (this.countDown > 0) ? 'The price will be updated in' : 'The price is';
+    }
+
     getCountDownValue(): string {
         const sec = this.countDown === 1 ? 'second' : 'seconds';
-        return `${this.countDown} ${sec}`;
+        return (this.countDown > 0) ? `${this.countDown} ${sec}` : 'updating';
     }
 }

@@ -125,6 +125,16 @@ input:-webkit-autofill::first-line {
     background-color: $color_main_blue_50;
 }
 
+.mat-checkbox-label {
+    margin-left: 16px;
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 28px;
+    color: $color_purple_900_text;
+}
+
 .__table-cell-payment-icon {
     width: 25px;
     height: 15px;
