@@ -25,7 +25,7 @@
                     </span>
                 </div>
             </button>
-            <div *ngIf="isItemSeparatorVisible(i)" class="__popup-menu-separator"></div>
+            <div *ngIf="(items) ? i<items.length-1 : false" class="__popup-menu-separator"></div>
         </div>
     </mat-menu>
 </div>

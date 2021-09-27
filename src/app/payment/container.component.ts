@@ -106,7 +106,7 @@ export class ContainerComponentDeprecated implements OnInit, OnDestroy {
   paymentProviderList = PaymentProviderList;
   currentSourceCurrency: CurrencyView | null = null;
   currentDestinationCurrency: CurrencyView | null = null;
-  currentRate: Rate | null = null;
+  currentRate: Rate | undefined = undefined;
   currentTransaction = TransactionType.Deposit;
   currentCard: CardView = new CardView();
   currentAmountFrom = 0;

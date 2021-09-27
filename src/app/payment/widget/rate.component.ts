@@ -16,6 +16,8 @@ export class WidgetRateComponent implements OnInit, OnDestroy {
     @Output() update = new EventEmitter<Rate>();
 
     countDown = 0;
+    countDownTitle = '';
+    countDownValue = '';
     countDownInit = false;
     lastChanceError = false;
     errorMessage = '';
@@ -46,11 +48,13 @@ export class WidgetRateComponent implements OnInit, OnDestroy {
                 if (this.countDown > 0) {
                     this.countDown -= 1;
                     this.lastChanceError = false;
+                    this.updateCountDown();
                 } else {
                     const success = this.loadRates();
                     if (!success) {
                         if (!this.lastChanceError) {
                             this.countDown = 1;
+                            this.updateCountDown();
                         }
                         this.lastChanceError = true;
                     } else {
@@ -122,6 +126,7 @@ export class WidgetRateComponent implements OnInit, OnDestroy {
     private restartCountDown(): void {
         this.countDown = 60;
         this.lastChanceError = false;
+        this.updateCountDown();
     }
 
     updateRate(): void {
@@ -129,12 +134,9 @@ export class WidgetRateComponent implements OnInit, OnDestroy {
         this.restartCountDown();
     }
 
-    getTitle(): string {
-        return (this.countDown > 0) ? 'The price will be updated in' : 'The price is';
-    }
-
-    getCountDownValue(): string {
+    updateCountDown(): void {
+        this.countDownTitle = (this.countDown > 0 && this.countDown < 60) ? 'The price will be updated in' : 'The price is';
         const sec = this.countDown === 1 ? 'second' : 'seconds';
-        return (this.countDown > 0) ? `${this.countDown} ${sec}` : 'updating';
+        this.countDownValue = (this.countDown > 0 && this.countDown < 60) ? `${this.countDown} ${sec}` : 'updating';
     }
 }

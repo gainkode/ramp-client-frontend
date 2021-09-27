@@ -273,7 +273,7 @@ export class CheckoutSummary {
     fee = 0;
     feePercent = 0;
     feeMinFiat = 0;
-    exchangeRate: Rate | null = null;
+    exchangeRate: Rate | undefined = undefined;
     transactionDate = '';
     transactionType: TransactionType = TransactionType.Deposit;
     status: TransactionStatus = TransactionStatus.Pending;
@@ -355,7 +355,7 @@ export class CheckoutSummary {
         this.fee = 0;
         this.feePercent = 0;
         this.feeMinFiat = 0;
-        this.exchangeRate = null;
+        this.exchangeRate = undefined;
         this.transactionDate = '';
         this.transactionType = TransactionType.Deposit;
         this.status = TransactionStatus.Pending;

@@ -88,14 +88,6 @@ export class NavPopupComponent implements OnInit, OnDestroy {
     onMenuClosed(reason: MenuCloseReason): void {
         this.menuOpened = false;
     }
-
-    isItemSeparatorVisible(itemIndex: number): boolean {
-        let result = false;
-        if (this.items) {
-            result = (itemIndex < this.items.length - 1);
-        }
-        return result;
-    }
 }
 
 @Component({
