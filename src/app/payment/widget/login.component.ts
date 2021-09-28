@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-    selector: 'app-widget-register',
-    templateUrl: 'register.component.html',
+    selector: 'app-widget-login',
+    templateUrl: 'login.component.html',
     styleUrls: ['../../../assets/payment.scss', '../../../assets/button.scss']
 })
-export class WidgetRegisterComponent {
+export class WidgetLoginComponent {
     @Input() email = '';
     @Output() onError = new EventEmitter<string>();
     @Output() onProgress = new EventEmitter<boolean>();

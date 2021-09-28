@@ -10,11 +10,16 @@
 
   <div class="__widget-data-container">
     <div [ngClass]="{'__widget-wizard-container': true, '__widget-wizard-container-single': initState}">
+      <!-- Order details -->
       <app-widget-order-details *ngIf="stageId === 'order_details'" [initialized]="!initState"
         [rate]="summary.exchangeRate" (onDataUpdated)="orderDetailsChanged($event)" (onComplete)="orderDetailsComplete($event)">
       </app-widget-order-details>
+      <!-- Register -->
       <app-widget-register *ngIf="stageId === 'register'" [email]="summary.email">
       </app-widget-register>
+      <!-- Login -->
+      <app-widget-login *ngIf="stageId === 'login'" [email]="summary.email">
+      </app-widget-login>
     </div>
     <div *ngIf="!initState" class="__widget-summary-container">
       <div class="__widget-summary-box">

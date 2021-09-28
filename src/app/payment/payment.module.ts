@@ -25,6 +25,7 @@ import { WidgetOrderDetailsComponent } from './widget/order-details.component';
 import { WidgetSummaryComponent } from './widget/summary.component';
 import { WidgetRateComponent } from './widget/rate.component';
 import { WidgetRegisterComponent } from './widget/register.component';
+import { WidgetLoginComponent } from './widget/login.component';
 
 const routing = RouterModule.forChild([
     { path: 'quickcheckout', component: PaymentComponent },
@@ -62,7 +63,7 @@ export class MaterialModule { }
     imports: [ CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule ],
     declarations: [ PaymentComponent, QuickCheckoutComponent, ContainerComponentDeprecated,
         WidgetComponent, WidgetProgressComponent, WidgetSummaryComponent, WidgetRateComponent,
-        WidgetRegisterComponent,
+        WidgetRegisterComponent, WidgetLoginComponent,
         WidgetOrderDetailsComponent ],
     providers: [],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]

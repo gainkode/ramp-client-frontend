@@ -136,6 +136,16 @@
     margin: 24px;
 }
 
+
+.__widget-page-header {
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 28px;
+    color: $color_purple_900_text;
+}
+
 .__widget-buttons-area {
     display: flex;
     flex-direction: row;
