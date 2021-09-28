@@ -35,13 +35,12 @@
                 </mat-option>
             </mat-select>
         </div>
-        <!-- <p><mat-checkbox formControlName="createAccount" color="primary">Register an account</mat-checkbox></p> -->
         <div class="__form-separator"></div>
-        <mat-checkbox color="primary" class="__widget-checkout">Register an account</mat-checkbox>
+        <mat-checkbox color="primary" formControlName="register" class="__widget-checkout">Register an account</mat-checkbox>
 
         <!-- Buttons -->
         <div class="__widget-buttons-area">
-            <button class="__main-button" type="submit" [disabled]="!initialized">next</button>
+            <button class="__main-button" type="submit" [disabled]="!initialized || !validData">next</button>
         </div>
     </form>
 </div>

@@ -327,10 +327,14 @@ export class CheckoutSummary {
         let result = '';
         switch (this.transactionType) {
             case TransactionType.Deposit:
-                result = this.exchangeRate?.depositRate?.toString() ?? '';
+                if (this.exchangeRate?.depositRate) {
+                    result = (this.exchangeRate.depositRate > 0) ? this.exchangeRate.depositRate.toString() : '';
+                }
                 break;
             case TransactionType.Withdrawal:
-                result = this.exchangeRate?.withdrawRate?.toString() ?? '';
+                if (this.exchangeRate?.withdrawRate) {
+                    result = (this.exchangeRate.withdrawRate > 0) ? this.exchangeRate.withdrawRate.toString() : '';
+                }
                 break;
         }
         return result;

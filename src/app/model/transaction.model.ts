@@ -80,21 +80,21 @@ export class TransactionItemDeprecated {
       this.currencyToSpend = data.currencyToSpend;
       this.currencyToReceive = data.currencyToReceive;
       this.amountToSpend = data.amountToSpend;
-      this.amountToReceive = data.amountToReceive;
+      this.amountToReceive = data.amountToReceive ?? 0;
 
-      if (
-        transactionData.amountToSpendInEur ||
-        transactionData.amountToReceiveInEur
-      ) {
-        if (transactionData.amountToSpendInEur) {
-          this.euro = transactionData.amountToSpendInEur;
-        } else {
-          this.euro = transactionData.amountToReceiveInEur;
-        }
-      }
+      // if (
+      //   transactionData.amountToSpendInEur ||
+      //   transactionData.amountToReceiveInEur
+      // ) {
+      //   if (transactionData.amountToSpendInEur) {
+      //     this.euro = transactionData.amountToSpendInEur;
+      //   } else {
+      //     this.euro = transactionData.amountToReceiveInEur;
+      //   }
+      // }
 
-      this.rate = data.rate;
-      this.fees = data.fee;
+      this.rate = data.rate ?? 0;
+      this.fees = data.feeFiat;
       this.status = data.status;
 
       if (data.paymentOrder) {
@@ -202,8 +202,8 @@ export class TransactionItem {
         this.currencyToSpend = data.currencyToSpend;
         this.currencyToReceive = data.currencyToReceive;
         this.amountToSpend = data.amountToSpend;
-        this.amountToReceive = data.amountToReceive;
-        this.fees = data.fee;
+        this.amountToReceive = data.amountToReceive ?? 0;
+        this.fees = data.feeFiat;
       } else {
         this.currencyToSpend = '-X-';
         this.currencyToReceive = '-X-';
@@ -211,7 +211,7 @@ export class TransactionItem {
         this.amountToReceive = 42;
         this.fees = 42;
       }
-      this.rate = data.rate;
+      this.rate = data.rate ?? 0;
       this.status = userStatus;
       this.ip = data.userIp as string;
 

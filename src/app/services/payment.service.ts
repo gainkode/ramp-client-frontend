@@ -74,7 +74,7 @@ mutation CreateTransaction(
   }) {
     transactionId,
     code,
-    fee,
+    feeFiat,
     feePercent,
     feeMinFiat,
     data
@@ -175,6 +175,7 @@ export class PaymentDataService {
       destinationType,
       destination: wallet
     };
+    console.log(vars);
     return this.apollo.mutate({
       mutation: CREATE_TRANSACTION,
       variables: vars

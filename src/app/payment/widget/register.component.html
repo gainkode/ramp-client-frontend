@@ -1,0 +1,23 @@
+<div class="__widget-data-box">
+    <form [formGroup]="dataForm" (ngSubmit)="onSubmit()">
+        <!-- Email -->
+        <app-form-textbox [label]="'Email'" [boxType]="'email'" [placeholder]="'...'" [maxlength]="50"
+            [fieldName]="'email'" [field]="emailField" [errorMessages]="loginErrorMessages" [separator]="true">
+        </app-form-textbox>
+
+        <!-- Password1 -->
+        <app-form-textbox [label]="'Password'" [boxType]="'password1'" [placeholder]="'...'" [maxlength]="50"
+            [fieldName]="'password1'" [field]="password1Field" [errorMessages]="password1ErrorMessages" [separator]="true">
+        </app-form-textbox>
+
+        <!-- Password2 -->
+        <app-form-textbox [label]="'Confirm Password'" [boxType]="'password2'" [placeholder]="'...'" [maxlength]="50"
+            [fieldName]="'password2'" [field]="password2Field" [errorMessages]="password2ErrorMessages" [separator]="true">
+        </app-form-textbox>
+
+        <!-- Buttons -->
+        <div class="__widget-buttons-area">
+            <button class="__main-button" type="submit" [disabled]="!validData">register</button>
+        </div>
+    </form>
+</div>

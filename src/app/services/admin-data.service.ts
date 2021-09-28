@@ -282,9 +282,9 @@ const GET_TRANSACTIONS = gql`
         type
         source
         status
-        fee
+        feeFiat
+        feeMinFiat
         feePercent
-        feeMinEur
         feeDetails
         currencyToSpend
         amountToSpend

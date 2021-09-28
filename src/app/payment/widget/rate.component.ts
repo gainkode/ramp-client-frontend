@@ -114,17 +114,17 @@ export class WidgetRateComponent implements OnInit, OnDestroy {
 
     private setDefaultRate(): void {
         const rate = {
-            currencyFrom: 'BTC',
-            currencyTo: 'EUR',
-            originalRate: 1,
-            depositRate: 1,
-            withdrawRate: 1
+            currencyFrom: '',
+            currencyTo: '',
+            originalRate: 0,
+            depositRate: 0,
+            withdrawRate: 0
         };
         this.update.emit(rate);
     }
 
     private restartCountDown(): void {
-        this.countDown = 60;
+        this.countDown = 30;
         this.lastChanceError = false;
         this.updateCountDown();
     }
@@ -135,8 +135,8 @@ export class WidgetRateComponent implements OnInit, OnDestroy {
     }
 
     updateCountDown(): void {
-        this.countDownTitle = (this.countDown > 0 && this.countDown < 60) ? 'The price will be updated in' : 'The price is';
+        this.countDownTitle = (this.countDown > 0 && this.countDown < 30) ? 'The price will be updated in' : 'The price is';
         const sec = this.countDown === 1 ? 'second' : 'seconds';
-        this.countDownValue = (this.countDown > 0 && this.countDown < 60) ? `${this.countDown} ${sec}` : 'updating';
+        this.countDownValue = (this.countDown > 0 && this.countDown < 30) ? `${this.countDown} ${sec}` : 'updating';
     }
 }

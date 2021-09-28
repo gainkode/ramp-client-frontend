@@ -536,7 +536,7 @@ export class ContainerComponentDeprecated implements OnInit, OnDestroy {
       this.inProgress = false;
       if (order.code) {
         this.summary.orderId = order.code as string;
-        this.summary.fee = order.fee;
+        this.summary.fee = order.feeFiat;
         this.summary.feeMinFiat = order.feeMinFiat;
         this.summary.feePercent = order.feePercent;
         this.summary.exchangeRate = this.currentRate;

@@ -835,8 +835,7 @@ export type UserTransactionSummary = {
 export type UserTransactionStats = {
   __typename?: 'UserTransactionStats';
   transactionCount?: Maybe<Scalars['Int']>;
-  assetAmount?: Maybe<Scalars['Float']>;
-  eurAmount?: Maybe<Scalars['Float']>;
+  amount?: Maybe<Scalars['Float']>;
 };
 
 export type UserVault = {
@@ -859,6 +858,7 @@ export type UserVaultAssetsArgs = {
 export type VaultAccountAsset = {
   __typename?: 'VaultAccountAsset';
   id?: Maybe<Scalars['String']>;
+  originalId?: Maybe<Scalars['String']>;
   total?: Maybe<Scalars['Float']>;
   available?: Maybe<Scalars['Float']>;
   pending?: Maybe<Scalars['String']>;
@@ -1047,7 +1047,6 @@ export type UserBalanceHistory = {
   date: Scalars['DateTime'];
   asset: Scalars['String'];
   balance: Scalars['Float'];
-  balanceFiat: Scalars['Float'];
   balanceEur: Scalars['Float'];
   transactionId?: Maybe<Scalars['String']>;
 };
@@ -1123,29 +1122,21 @@ export type TransactionShort = {
   executed?: Maybe<Scalars['DateTime']>;
   type: TransactionType;
   status: TransactionStatus;
-  fee: Scalars['Float'];
-  feeInFiat: Scalars['Float'];
+  feeFiat: Scalars['Float'];
   feePercent: Scalars['Float'];
   feeMinFiat: Scalars['Float'];
-  feeMinEur: Scalars['Float'];
-  feeDetails?: Maybe<Scalars['String']>;
+  feeDetails: Scalars['String'];
   currencyToSpend: Scalars['String'];
   amountToSpend: Scalars['Float'];
-  amountToSpendInFiat: Scalars['Float'];
-  amountToSpendInEur: Scalars['Float'];
   amountToSpendWithoutFee: Scalars['Float'];
   currencyToReceive: Scalars['String'];
-  amountToReceive: Scalars['Float'];
-  amountToReceiveInFiat: Scalars['Float'];
-  amountToReceiveInEur: Scalars['Float'];
-  amountToReceiveWithoutFee: Scalars['Float'];
-  rate: Scalars['Float'];
-  rateFiat: Scalars['Float'];
-  rateEur: Scalars['Float'];
-  fiatToEurRate: Scalars['Float'];
-  eurToFiatRate: Scalars['Float'];
-  defaultCryptoToFiatRate: Scalars['Float'];
-  defaultCryptoToEurRate: Scalars['Float'];
+  initialAmountToReceive: Scalars['Float'];
+  initialAmountToReceiveWithoutFee: Scalars['Float'];
+  amountToReceive?: Maybe<Scalars['Float']>;
+  amountToReceiveWithoutFee?: Maybe<Scalars['Float']>;
+  initialRate: Scalars['Float'];
+  rate?: Maybe<Scalars['Float']>;
+  rateFiatToEur: Scalars['Float'];
   destinationType?: Maybe<TransactionDestinationType>;
   destination?: Maybe<Scalars['String']>;
   countryCode2?: Maybe<Scalars['String']>;
@@ -1195,6 +1186,7 @@ export enum TransactionStatus {
   TransferBenchmarkWaiting = 'TransferBenchmarkWaiting',
   BenchmarkTransfering = 'BenchmarkTransfering',
   BenchmarkTransfered = 'BenchmarkTransfered',
+  BenchmarkTransferDeclined = 'BenchmarkTransferDeclined',
   Sending = 'Sending',
   Sent = 'Sent',
   Completed = 'Completed',
@@ -1312,14 +1304,18 @@ export type TransferOrder = {
   provider?: Maybe<Scalars['String']>;
   created: Scalars['DateTime'];
   published?: Maybe<Scalars['DateTime']>;
+  publishingResult?: Maybe<Scalars['String']>;
   executed?: Maybe<Scalars['DateTime']>;
+  executingResult?: Maybe<Scalars['String']>;
   amount?: Maybe<Scalars['Float']>;
   currency?: Maybe<Scalars['String']>;
   destination?: Maybe<Scalars['String']>;
   destinationType?: Maybe<TransactionDestinationType>;
+  originalOrderId?: Maybe<Scalars['String']>;
   transferHash?: Maybe<Scalars['String']>;
   transferDetails?: Maybe<Scalars['String']>;
   status?: Maybe<Scalars['String']>;
+  feeCurrency?: Maybe<Scalars['Float']>;
 };
 
 export type TransactionListResult = {
@@ -1342,31 +1338,23 @@ export type Transaction = {
   type: TransactionType;
   status: TransactionStatus;
   kycStatus: TransactionKycStatus;
-  fee: Scalars['Float'];
-  feeInFiat: Scalars['Float'];
+  feeFiat: Scalars['Float'];
   feePercent: Scalars['Float'];
   feeMinFiat: Scalars['Float'];
-  feeMinEur: Scalars['Float'];
   feeDetails: Scalars['String'];
   userDefaultFiatCurrency: Scalars['String'];
   userDefaultCryptoCurrency: Scalars['String'];
   currencyToSpend: Scalars['String'];
   amountToSpend: Scalars['Float'];
   amountToSpendWithoutFee: Scalars['Float'];
-  amountToSpendInFiat: Scalars['Float'];
-  amountToSpendInEur: Scalars['Float'];
   currencyToReceive: Scalars['String'];
-  amountToReceive: Scalars['Float'];
-  amountToReceiveWithoutFee: Scalars['Float'];
-  amountToReceiveInFiat: Scalars['Float'];
-  amountToReceiveInEur: Scalars['Float'];
-  rate: Scalars['Float'];
-  rateFiat: Scalars['Float'];
-  rateEur: Scalars['Float'];
+  initialAmountToReceive: Scalars['Float'];
+  initialAmountToReceiveWithoutFee: Scalars['Float'];
+  amountToReceive?: Maybe<Scalars['Float']>;
+  amountToReceiveWithoutFee?: Maybe<Scalars['Float']>;
+  initialRate: Scalars['Float'];
+  rate?: Maybe<Scalars['Float']>;
   rateFiatToEur: Scalars['Float'];
-  rateEurToFiat: Scalars['Float'];
-  defaultCryptoToFiatRate: Scalars['Float'];
-  defaultCryptoToEurRate: Scalars['Float'];
   destinationType?: Maybe<TransactionDestinationType>;
   destination?: Maybe<Scalars['String']>;
   countryCode2?: Maybe<Scalars['String']>;
@@ -1388,16 +1376,8 @@ export type Transaction = {
   benchmarkTransferOrder?: Maybe<TransferOrder>;
   userBalanceTotalBefore?: Maybe<Scalars['Float']>;
   userBalanceAvailableBefore?: Maybe<Scalars['Float']>;
-  userBalanceTotalEurBefore?: Maybe<Scalars['Float']>;
-  userBalanceAvailableEurBefore?: Maybe<Scalars['Float']>;
-  userBalanceTotalFiatBefore?: Maybe<Scalars['Float']>;
-  userBalanceAvailableFiatBefore?: Maybe<Scalars['Float']>;
   userBalanceTotalAfter?: Maybe<Scalars['Float']>;
   userBalanceAvailableAfter?: Maybe<Scalars['Float']>;
-  userBalanceTotalEurAfter?: Maybe<Scalars['Float']>;
-  userBalanceAvailableEurAfter?: Maybe<Scalars['Float']>;
-  userBalanceTotalFiatAfter?: Maybe<Scalars['Float']>;
-  userBalanceAvailableFiatAfter?: Maybe<Scalars['Float']>;
   hasBeenBenchmarked?: Maybe<Scalars['Boolean']>;
   data?: Maybe<Scalars['String']>;
 };
@@ -2388,6 +2368,7 @@ export type DepositAddress = {
 export type TransferResult = {
   __typename?: 'TransferResult';
   id?: Maybe<Scalars['String']>;
+  status?: Maybe<Scalars['String']>;
   result?: Maybe<Scalars['String']>;
 };
 
