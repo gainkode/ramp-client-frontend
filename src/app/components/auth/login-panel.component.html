@@ -1,7 +1,16 @@
 <div *ngIf="!twoFa && !extraData">
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+
+
+        <app-form-textbox [label]="'Email'" [boxType]="'email'" [placeholder]="'...'" [maxlength]="50"
+            formControlName="email" [errorMessages]="emailErrorMessages" [separator]="true">
+        </app-form-textbox>
+
+        <!-- <resettable-input formControlName="email"></resettable-input> -->
+
         <!-- Email -->
-        <mat-form-field class="form-element">
+        <!-- <mat-form-field class="form-element">
             <mat-label>Email</mat-label>
             <input type="email" matInput formControlName="email" maxlength="60" placeholder="User login name"
                 required />
@@ -11,7 +20,7 @@
             <mat-error *ngIf="this.loginForm.get('email')?.hasError('pattern')">
                 Email has incorrect format
             </mat-error>
-        </mat-form-field>
+        </mat-form-field> -->
 
         <!-- Password -->
         <mat-form-field class="form-element">

@@ -1,47 +1,48 @@
-import { Component, Input, SkipSelf } from '@angular/core';
-import { AbstractControl, ControlContainer, FormGroupDirective } from '@angular/forms';
+import { Component, Host, Input, OnInit, Optional, SkipSelf, ViewChild } from '@angular/core';
+import { ControlContainer, ControlValueAccessor, FormControl, FormControlDirective, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
     selector: 'app-form-textbox',
     templateUrl: 'form-textbox.component.html',
     styleUrls: ['../../../../assets/text-control.scss'],
-    viewProviders: [{
-        provide: ControlContainer,
-        useFactory: (controlContainer: ControlContainer) => controlContainer,
-        deps: [[new SkipSelf(), ControlContainer]]
+    providers: [{
+        provide: NG_VALUE_ACCESSOR,
+        useExisting: FormTextBoxComponent,
+        multi: true
     }]
 })
-export class FormTextBoxComponent {
+export class FormTextBoxComponent implements ControlValueAccessor, OnInit {
+    @ViewChild(FormControlDirective, { static: true })
+    formControlDirective!: FormControlDirective;
     @Input() label = '';
     @Input() assist = '';
     @Input() boxType = '';
     @Input() placeholder = '';
     @Input() maxlength = 0;
-    @Input() fieldName = '';
-    @Input() field: AbstractControl | null = null;
     @Input() errorMessages: {
         [key: string]: string;
     } = {};
-    @Input() set active(val: boolean) {
-        this.textBoxEnabled = val;
-        if (val === false) {
-            this.field?.disable();
-        } else {
-            this.field?.enable();
-        }
-    }
+    @Input() formControl!: FormControl;
+    @Input() formControlName!: string;
     @Input() separator = false;
 
-    get active(): boolean {
-        return this.textBoxEnabled;
+    initialized = false;
+    active = true;
+    errorMessage = '';
+
+    get control() {
+        return this.formControl || this.controlContainer.control?.get(this.formControlName);
     }
 
-    private textBoxEnabled = true;
+    constructor(
+        @Optional() @Host() @SkipSelf()
+        private controlContainer: ControlContainer) {
+    }
 
-    get errorAssist(): string {
+    private getError(): string {
         let result = '';
-        const errors = this.field?.errors;
-        if (errors != null) {
+        const errors = this.control?.errors;
+        if (errors) {
             Object.keys(errors).forEach(error => {
                 const msg = this.errorMessages[error];
                 if (msg) {
@@ -53,5 +54,26 @@ export class FormTextBoxComponent {
         return result;
     }
 
-    constructor() { }
+    ngOnInit(): void {
+        this.control.valueChanges.subscribe(val => {
+            this.initialized = true;
+            this.errorMessage = this.getError();
+        });
+    }
+
+    registerOnTouched(fn: any): void {
+        this.formControlDirective.valueAccessor?.registerOnTouched(fn);
+    }
+
+    registerOnChange(fn: any): void {
+        this.formControlDirective.valueAccessor?.registerOnChange(fn);
+    }
+
+    writeValue(obj: any): void {
+        this.formControlDirective.valueAccessor?.writeValue(obj);
+    }
+
+    setDisabledState(isDisabled: boolean): void {
+        this.active = !isDisabled;
+    }
 }

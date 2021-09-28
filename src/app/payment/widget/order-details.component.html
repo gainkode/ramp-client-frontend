@@ -2,7 +2,7 @@
     <form [formGroup]="dataForm" (ngSubmit)="onSubmit()">
         <!-- Email -->
         <app-form-textbox [label]="'Email'" [boxType]="'email'" [placeholder]="'...'" [maxlength]="50"
-            [fieldName]="'email'" [field]="emailField" [errorMessages]="emailErrorMessages" [separator]="true">
+            formControlName="email" [errorMessages]="emailErrorMessages" [separator]="true">
         </app-form-textbox>
 
         <!-- Send -->

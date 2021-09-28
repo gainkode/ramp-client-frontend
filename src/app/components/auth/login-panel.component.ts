@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { ErrorService } from '../../services/error.service';
-import { Validators, FormBuilder } from '@angular/forms';
+import { Validators, FormBuilder, AbstractControl } from '@angular/forms';
 import { SocialUser } from 'angularx-social-login';
 import { LoginResult, UserMode } from '../../model/generated-models';
 import { SignupInfoPanelComponent } from './signup-info.component';
@@ -47,13 +47,32 @@ export class LoginPanelComponent implements OnInit {
         code: ['', { validators: [Validators.required], updateOn: 'change' }]
     });
 
+    emailErrorMessages: { [key: string]: string; } = {
+        ['pattern']: 'Email is not valid',
+        ['required']: 'Email is required'
+    };
+    emailErrorMessage = '';
+
     constructor(
         private auth: AuthService,
         private errorHandler: ErrorService,
         private formBuilder: FormBuilder) { }
 
     ngOnInit(): void {
-        this.loginForm.get('email')?.setValue((this.userName) ? this.userName : '');
+        this.emailField?.valueChanges.subscribe(val => {
+            this.emailErrorMessage = '';
+            if (this.emailField?.hasError('pattern')) {
+                this.emailErrorMessage = this.emailErrorMessages['pattern'];
+            } else if (this.emailField?.hasError('required')) {
+                this.emailErrorMessage = this.emailErrorMessages['required'];
+            }
+        });
+        this.emailField?.setValue((this.userName) ? this.userName : '');
+        this.emailField?.updateValueAndValidity();
+    }
+
+    get emailField(): AbstractControl | null {
+        return this.loginForm.get('email');
     }
 
     googleSignIn(): void {

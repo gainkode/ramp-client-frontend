@@ -56,7 +56,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy {
   };
 
   dataForm = this.formBuilder.group({
-    email: [null, { validators: [Validators.email], updateOn: 'change' }],
+    email: [null, { validators: [Validators.required, Validators.email], updateOn: 'change' }],
     amountSpend: [0, { validators: [], updateOn: 'change' }],
     currencySpend: [null, { validators: [], updateOn: 'change' }],
     amountReceive: [0, { validators: [], updateOn: 'change' }],
@@ -323,9 +323,6 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    this.emailField?.setValidators([Validators.email, Validators.required]);
-    this.emailField?.updateValueAndValidity();
-
     console.log('email', this.emailField?.value, this.emailField?.valid ? 'valid' : 'invalid');
     console.log('spend', this.amountSpendField?.value, this.amountSpendField?.valid ? 'valid' : 'invalid');
     console.log('spend currency', this.currencySpendField?.value, this.currencySpendField?.valid ? 'valid' : 'invalid');
