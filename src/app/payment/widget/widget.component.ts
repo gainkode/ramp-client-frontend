@@ -20,7 +20,8 @@ export class WidgetComponent implements OnInit {
 
   internalPayment = false;
   initState = true;
-  stageId = 'order_details';
+  //stageId = 'order_details';
+  stageId = 'login';
   title = 'Order details';
   step = 1;
   summary = new CheckoutSummary();
@@ -41,7 +42,6 @@ export class WidgetComponent implements OnInit {
   }
 
   orderDetailsChanged(data: CheckoutSummary): void {
-    console.log(this.initState, data.email);
     if (this.initState && data.email && data.email !== '') {
       this.initState = false;
     }

@@ -1,5 +1,6 @@
-import { Component, Host, Input, OnInit, Optional, SkipSelf, ViewChild } from '@angular/core';
-import { ControlContainer, ControlValueAccessor, FormControl, FormControlDirective, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Component, Host, Input, OnDestroy, OnInit, Optional, SkipSelf, ViewChild } from '@angular/core';
+import { AbstractControl, ControlContainer, ControlValueAccessor, FormControl, FormControlDirective, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-form-textbox',
@@ -11,7 +12,7 @@ import { ControlContainer, ControlValueAccessor, FormControl, FormControlDirecti
         multi: true
     }]
 })
-export class FormTextBoxComponent implements ControlValueAccessor, OnInit {
+export class FormTextBoxComponent implements ControlValueAccessor, OnInit, OnDestroy {
     @ViewChild(FormControlDirective, { static: true })
     formControlDirective!: FormControlDirective;
     @Input() label = '';
@@ -26,11 +27,12 @@ export class FormTextBoxComponent implements ControlValueAccessor, OnInit {
     @Input() formControlName!: string;
     @Input() separator = false;
 
+    private controlSubscription: Subscription | undefined = undefined;
     initialized = false;
     active = true;
     errorMessage = '';
 
-    get control() {
+    get control(): FormControl {
         return this.formControl || this.controlContainer.control?.get(this.formControlName);
     }
 
@@ -38,7 +40,7 @@ export class FormTextBoxComponent implements ControlValueAccessor, OnInit {
         @Optional() @Host() @SkipSelf()
         private controlContainer: ControlContainer) {
     }
-
+    
     private getError(): string {
         let result = '';
         const errors = this.control?.errors;
@@ -55,10 +57,17 @@ export class FormTextBoxComponent implements ControlValueAccessor, OnInit {
     }
 
     ngOnInit(): void {
-        this.control.valueChanges.subscribe(val => {
+        this.controlSubscription = this.control?.valueChanges.subscribe(val => {
             this.initialized = true;
             this.errorMessage = this.getError();
         });
+    }
+
+    ngOnDestroy(): void {
+        if (this.controlSubscription) {
+            this.controlSubscription.unsubscribe();
+            this.controlSubscription = undefined;
+        }
     }
 
     registerOnTouched(fn: any): void {

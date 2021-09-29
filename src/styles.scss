@@ -67,8 +67,11 @@ input:-webkit-autofill:active {
 }
 
 input:-webkit-autofill::first-line {
-    font-size  : medium;
-    font-family: $font_main, sans-serif;
+    font-size  : 14px;
+    font-style: normal;
+    font-weight: 300;
+    font-family: $font_main;
+    color: $color_purple_900_text;
 }
 
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */

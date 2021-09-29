@@ -8,10 +8,14 @@ import { SignupInfoPanelComponent } from './signup-info.component';
 
 @Component({
     selector: 'app-login-panel',
-    templateUrl: 'login-panel.component.html'
+    templateUrl: 'login-panel.component.html',
+    styleUrls: ['../../../assets/button.scss', '../../../assets/text-control.scss']
 })
 export class LoginPanelComponent implements OnInit {
-    @Input() userName: string | undefined = '';
+    @Input() set userName(val: string) {
+        this.userMail = val;
+        this.emailField?.setValue(this.userMail);
+    }
     @Input() socialButtons: boolean = false;
     @Output() error = new EventEmitter<string>();
     @Output() progressChange = new EventEmitter<boolean>();
@@ -31,6 +35,7 @@ export class LoginPanelComponent implements OnInit {
     twoFa = false;
     extraData = false;
     private socialLogin = false;
+    private userMail = '';
 
     loginForm = this.formBuilder.group({
         email: ['',
@@ -51,7 +56,6 @@ export class LoginPanelComponent implements OnInit {
         ['pattern']: 'Email is not valid',
         ['required']: 'Email is required'
     };
-    emailErrorMessage = '';
 
     constructor(
         private auth: AuthService,
@@ -59,16 +63,7 @@ export class LoginPanelComponent implements OnInit {
         private formBuilder: FormBuilder) { }
 
     ngOnInit(): void {
-        this.emailField?.valueChanges.subscribe(val => {
-            this.emailErrorMessage = '';
-            if (this.emailField?.hasError('pattern')) {
-                this.emailErrorMessage = this.emailErrorMessages['pattern'];
-            } else if (this.emailField?.hasError('required')) {
-                this.emailErrorMessage = this.emailErrorMessages['required'];
-            }
-        });
-        this.emailField?.setValue((this.userName) ? this.userName : '');
-        this.emailField?.updateValueAndValidity();
+        this.emailField?.setValue(this.userMail);
     }
 
     get emailField(): AbstractControl | null {

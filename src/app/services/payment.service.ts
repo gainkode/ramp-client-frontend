@@ -175,7 +175,6 @@ export class PaymentDataService {
       destinationType,
       destination: wallet
     };
-    console.log(vars);
     return this.apollo.mutate({
       mutation: CREATE_TRANSACTION,
       variables: vars
