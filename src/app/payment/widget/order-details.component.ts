@@ -15,6 +15,7 @@ import { PaymentDataService } from 'src/app/services/payment.service';
 })
 export class WidgetOrderDetailsComponent implements OnInit, OnDestroy {
   @Input() initialized = false;
+  @Input() email = '';
   @Input() set rate(val: Rate | undefined) {
     this.pRate = val;
     this.updateAmounts();
@@ -146,9 +147,13 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy {
       this.onError.emit(this.errorHandler.getRejectedCookieMessage());
     } else {
       this.onProgress.emit(true);
-      const user = this.auth.user;
-      if (user) {
-        this.emailField?.setValue(user.email);
+      if (this.email === '') {
+        const user = this.auth.user;
+        if (user) {
+          this.emailField?.setValue(user.email);
+        }
+      } else {
+        this.emailField?.setValue(this.email);
       }
       this.pSubscriptions.add(
         currencyData.valueChanges.subscribe(({ data }) => {

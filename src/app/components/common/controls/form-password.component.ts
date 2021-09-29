@@ -1,23 +1,22 @@
-import { Component, ElementRef, Host, Input, OnDestroy, OnInit, Optional, SkipSelf, ViewChild } from '@angular/core';
+import { Component, Host, Input, OnDestroy, OnInit, Optional, SkipSelf, ViewChild } from '@angular/core';
 import { ControlContainer, ControlValueAccessor, FormControl, FormControlDirective, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 @Component({
-    selector: 'app-form-textbox',
-    templateUrl: 'form-textbox.component.html',
+    selector: 'app-form-password',
+    templateUrl: 'form-password.component.html',
     styleUrls: ['../../../../assets/text-control.scss'],
     providers: [{
         provide: NG_VALUE_ACCESSOR,
-        useExisting: FormTextBoxComponent,
+        useExisting: FormPasswordBoxComponent,
         multi: true
     }]
 })
-export class FormTextBoxComponent implements ControlValueAccessor, OnInit, OnDestroy {
+export class FormPasswordBoxComponent implements ControlValueAccessor, OnInit, OnDestroy {
     @ViewChild(FormControlDirective, { static: true })
     formControlDirective!: FormControlDirective;
     @Input() label = '';
     @Input() assist = '';
-    @Input() boxType = '';
     @Input() placeholder = '';
     @Input() maxlength = 0;
     @Input() errorMessages: {
@@ -31,6 +30,8 @@ export class FormTextBoxComponent implements ControlValueAccessor, OnInit, OnDes
     initialized = false;
     active = true;
     errorMessage = '';
+    boxType = 'password';
+    hidePassword = true;
 
     get control(): FormControl {
         return this.formControl || this.controlContainer.control?.get(this.formControlName);

@@ -8,7 +8,7 @@ import { ErrorService } from '../services/error.service';
 
 @Component({
     templateUrl: 'login.component.html',
-    styleUrls: ['./login.component.scss']
+    styleUrls: ['../../assets/auth.scss']
 })
 export class LoginComponent {
     userType = UserType.Personal;

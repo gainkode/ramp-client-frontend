@@ -1,15 +1,16 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { ErrorService } from '../../services/error.service';
 import { Validators, FormBuilder, AbstractControl } from '@angular/forms';
 import { SocialUser } from 'angularx-social-login';
 import { LoginResult, UserMode } from '../../model/generated-models';
 import { SignupInfoPanelComponent } from './signup-info.component';
+import { FormTextBoxComponent } from '../common/controls/form-textbox.component';
 
 @Component({
     selector: 'app-login-panel',
     templateUrl: 'login-panel.component.html',
-    styleUrls: ['../../../assets/button.scss', '../../../assets/text-control.scss']
+    styleUrls: ['../../../assets/button.scss', '../../../assets/text-control.scss', '../../../assets/auth.scss']
 })
 export class LoginPanelComponent implements OnInit {
     @Input() set userName(val: string) {
@@ -17,11 +18,13 @@ export class LoginPanelComponent implements OnInit {
         this.emailField?.setValue(this.userMail);
     }
     @Input() socialButtons: boolean = false;
+    @Input() wizardButtons: boolean = false;
     @Output() error = new EventEmitter<string>();
     @Output() progressChange = new EventEmitter<boolean>();
     @Output() authenticated = new EventEmitter<LoginResult>();
     @Output() socialAuthenticated = new EventEmitter<LoginResult>();
     @Output() extraDataVisible = new EventEmitter<boolean>();
+    @Output() onBack = new EventEmitter();
 
     private signupInfoPanel!: SignupInfoPanelComponent;
     @ViewChild('signupInfo') set signupInfo(panel: SignupInfoPanelComponent) {
@@ -56,6 +59,10 @@ export class LoginPanelComponent implements OnInit {
         ['pattern']: 'Email is not valid',
         ['required']: 'Email is required'
     };
+    passwordErrorMessages: { [key: string]: string; } = {
+        ['required']: 'Password is required',
+        ['minlength']: 'Password must contain at least 8 symbols'
+    }
 
     constructor(
         private auth: AuthService,
@@ -64,10 +71,15 @@ export class LoginPanelComponent implements OnInit {
 
     ngOnInit(): void {
         this.emailField?.setValue(this.userMail);
+        this.loginForm.updateValueAndValidity();
     }
 
     get emailField(): AbstractControl | null {
         return this.loginForm.get('email');
+    }
+
+    get passwordField(): AbstractControl | null {
+        return this.loginForm.get('password');
     }
 
     googleSignIn(): void {
@@ -133,8 +145,8 @@ export class LoginPanelComponent implements OnInit {
         this.error.emit('');
         if (this.loginForm.valid) {
             this.progressChange.emit(true);
-            const login = this.loginForm.get('email')?.value;
-            this.auth.authenticate(login, this.loginForm.get('password')?.value).subscribe(({ data }) => {
+            const login = this.emailField?.value;
+            this.auth.authenticate(login, this.passwordField?.value).subscribe(({ data }) => {
                 const userData = data.login as LoginResult;
                 if (userData.user?.mode === UserMode.InternalWallet) {
                     if (userData.authTokenAction === 'TwoFactorAuth') {

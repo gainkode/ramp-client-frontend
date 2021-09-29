@@ -1,4 +1,21 @@
-<div class="action-page-split action-page-left-panel split-page-60">
+<div class="__auth-frame-box">
+    <div class="__auth-container">
+        <div class="__auth-title-container">
+            <div style="color: mediumslateblue;margin: auto;font-size: 20px;">
+                eWallet Logo
+            </div>
+        </div>
+        <div class="__auth-data-container">
+            <app-login-panel [socialButtons]="true" (error)="onError($event)" (progressChange)="onProgressChange($event)"
+                (authenticated)="onAuthenticated($event)" (socialAuthenticated)="onSocialAuthenticated($event)"
+                (extraDataVisible)="onLoginExtraData($event)">
+            </app-login-panel>
+        </div>
+    </div>
+</div>
+
+
+<!-- <div class="action-page-split action-page-left-panel split-page-60">
     <div class="back-box">
         <app-back-button></app-back-button>
     </div>
@@ -41,4 +58,4 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->

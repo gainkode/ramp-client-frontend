@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormControl } from '@angular/forms';
 
 @Component({
     selector: 'app-widget-login',
@@ -10,14 +9,24 @@ export class WidgetLoginComponent {
     @Input() email = '';
     @Output() onError = new EventEmitter<string>();
     @Output() onProgress = new EventEmitter<boolean>();
-    @Output() onReset = new EventEmitter<void>();
+    @Output() onBack = new EventEmitter();
     @Output() onComplete = new EventEmitter<void>();
-
-    fc = new FormControl('Value');
 
     constructor() { }
 
+    loginError(error: string): void {
+        this.onError.emit(error);
+    }
+
+    loginProgress(val: boolean): void {
+        this.onProgress.emit(val);
+    }
+
     onSubmit(): void {
-        
+
+    }
+
+    goBack(): void {
+        this.onBack.emit();
     }
 }

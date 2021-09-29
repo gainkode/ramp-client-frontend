@@ -1,0 +1,90 @@
+@import "./fonts.scss";
+@import "./colors.scss";
+@import "./consts.scss";
+
+.__auth-frame-box {
+    border: none;
+    display: flex;
+    justify-content: center;
+    padding: 0px;
+}
+
+.__auth-container {
+    padding: 0px 24px;
+    width: $widget_max_width + px;
+    background-color: $color_white;
+}
+
+.__auth-title-container {
+    height: 96px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+}
+
+.__auth-data-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 36px 0px 0px 0px;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.__auth-buttons-wizard-area {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 0px 24px;
+}
+
+.__auth-buttons-area {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 0px 0px;
+}
+
+.__auth-social-delimitter {
+    margin: 24px 0px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto 18px auto;
+    grid-template-rows: 28px;
+}
+
+.__auth-social-delimitter-line-container {
+    grid-row: 1;
+    grid-column: 1 / 4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.__auth-social-delimitter-line {
+    background-color: $color_purple_50;
+    height: 1px;
+    width: 100%;
+}
+
+.__auth-social-delimitter-title-container {
+    grid-row: 1;
+    grid-column: 2 / 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: $color_white;
+}
+
+.__auth-social-delimitter-title {
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 28px;
+    
+    color: $color_purple_900_text;
+}

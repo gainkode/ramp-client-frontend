@@ -20,8 +20,8 @@ export class WidgetComponent implements OnInit {
 
   internalPayment = false;
   initState = true;
-  //stageId = 'order_details';
-  stageId = 'login';
+  stageId = 'order_details';
+  //stageId = 'login';
   title = 'Order details';
   step = 1;
   summary = new CheckoutSummary();
@@ -99,5 +99,10 @@ export class WidgetComponent implements OnInit {
         });
       }
     }
+  }
+
+  loginBack(): void {
+    this.stageId = 'order_details';
+    this.title = 'Order details';
   }
 }
