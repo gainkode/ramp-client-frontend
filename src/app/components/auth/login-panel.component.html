@@ -20,30 +20,29 @@
         <div *ngIf="!wizardButtons" class="__auth-buttons-area">
             <button class="__main-button __button-wide" type="submit" [disabled]="!loginForm?.valid">login</button>
             <div class="__button-wide-separator">
-                <a href="#">Forgot your password?</a>
+                <a href="/auth/personal/restore">Forgot your password?</a>
             </div>
         </div>
     </form>
-    <div class="__auth-social-delimitter">
-        <div class="__auth-social-delimitter-line-container">
-            <div class="__auth-social-delimitter-line"></div>
-        </div>
-        <div class="__auth-social-delimitter-title-container">
-            <span class="__auth-social-delimitter-title">or</span>
-        </div>
-    </div>
     <div *ngIf="socialButtons">
-        <div class="form-element">
-            <span>If you want to get logged in with your social newtork account, please use:</span>
+        <div class="__auth-social-delimitter">
+            <div class="__auth-social-delimitter-line-container">
+                <div class="__auth-social-delimitter-line"></div>
+            </div>
+            <div class="__auth-social-delimitter-title-container">
+                <span class="__auth-social-delimitter-title">or</span>
+            </div>
         </div>
-        <div class="form-element">
-            <button class="main-button main-button-primary inline-button" (click)='socialSignIn("Google")'>
-                <img src="assets/icon-google.svg" alt="G" />
-                Google
+        <div class="__auth-buttons-wizard-area">
+            <button class="__google-button" (click)="socialSignIn('Google')">
+                <div class="__google-button-icon"></div>
+                <span class="__google-button-title">Log in with Google</span>
             </button>
-            <button class="main-button main-button-primary inline-button" (click)='socialSignIn("Facebook")'>
-                <img src="assets/icon-facebook.svg" alt="f" />
-                Facebook
+        </div>
+        <div class="__auth-buttons-wizard-area">
+            <button class="__facebook-button" (click)="socialSignIn('Facebook')">
+                <div class="__facebook-button-icon"></div>
+                <span class="__facebook-button-title">Log in with Facebook</span>
             </button>
         </div>
     </div>
@@ -64,10 +63,6 @@
             </mat-error>
         </mat-form-field>
 
-        <div class="form-element">
-            <button class="main-button main-button-primary" type="submit">
-                SEND
-            </button>
-        </div>
+        <button class="__main-button __button-wide" type="submit">send</button>
     </form>
 </div>

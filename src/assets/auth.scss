@@ -24,12 +24,15 @@
 }
 
 .__auth-data-container {
+    padding: 36px 0px 0px 0px;
+}
+
+.__auth-footer-area {
     display: flex;
     flex-direction: row;
-    align-items: center;
-    padding: 36px 0px 0px 0px;
-    align-items: flex-start;
     justify-content: center;
+    align-items: center;
+    margin: 40px 24px;
 }
 
 .__auth-buttons-wizard-area {
@@ -86,5 +89,15 @@
     font-size: 14px;
     line-height: 28px;
     
+    color: $color_purple_900_text;
+}
+
+.__auth-footer-text {
+    margin: 0px 18px;
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 21px;
+    line-height: 28px;
     color: $color_purple_900_text;
 }

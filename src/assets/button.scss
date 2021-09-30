@@ -366,6 +366,74 @@
     }
 }
 
+.__google-button {
+    align-items  : center;
+    padding      : 0px;
+    width        : 276px;
+    background-color: #4285f4;
+    border: 0px;
+    display: grid;
+    grid-template-columns: 38px auto;
+    grid-template-rows: 38px;
+    margin: 9px;
+
+    div.__google-button-icon {
+        grid-row: 1;
+        grid-column: 1 / 2;
+        width: 38px;
+        height: 38px;
+        background-image: url("./svg-social/btn_google_dark_normal_ios.svg");
+        background-repeat: no-repeat;
+        background-size: 38px;
+    }
+
+    span.__google-button-title {
+        grid-row: 1;
+        grid-column: 2 / 3;
+        font-family  : Roboto;
+        font-weight: 700;
+        color: $color_white;
+    }
+}
+
+.__google-button:focus {
+    outline: none;
+}
+
+.__facebook-button {
+    align-items  : center;
+    padding      : 7px 0px 7px 11px;
+    width        : 276px;
+    background-color: #1977f3;
+    border: 0px;
+    display: grid;
+    grid-template-columns: 26px auto;
+    grid-template-rows: 26px;
+    margin: 9px;
+
+    div.__facebook-button-icon {
+        grid-row: 1;
+        grid-column: 1 / 2;
+        width: 26px;
+        height: 26px;
+        background-image: url("./svg-social/btn_facebook_dark.svg");
+        background-repeat: no-repeat;
+        background-size: 26px;
+    }
+
+    span.__facebook-button-title {
+        grid-row: 1;
+        grid-column: 2 / 3;
+        font-family  : Helvetica;
+        font-weight: 700;
+        color: $color_white;
+    }
+}
+
+.__facebook-button:focus {
+    outline: none;
+}
+
 .__side-menu-selected-button-sm:focus {
     outline: none;
 }
