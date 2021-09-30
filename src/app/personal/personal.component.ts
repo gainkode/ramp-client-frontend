@@ -130,6 +130,8 @@ export class PersonalComponent implements OnInit {
             this.routeTo('/admin/main');
         } else if (item.id === 'notifications') {
             this.notificationTest();
+        } else if (item.id === 'settings') {
+            this.routeTo('/personal/myaccount');
         }
     }
 

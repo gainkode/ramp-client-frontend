@@ -41,7 +41,6 @@ const routing = RouterModule.forChild([
         children: [
             { path: 'home', component: PersonalHomeComponent, canActivate: [PersonalGuard] },
             { path: 'wallets', component: PersonalMyWalletsComponent, canActivate: [PersonalGuard] },
-            { path: 'myaccount', component: PersonalMyAccountComponent, canActivate: [PersonalGuard] },
             { path: 'contactlist', component: PersonalMyContactsComponent, canActivate: [PersonalGuard] },
             { path: 'transactions', component: PersonalTransactionsComponent, canActivate: [PersonalGuard] },
             { path: 'swap', component: PersonalSwapComponent, canActivate: [PersonalGuard] },
@@ -52,6 +51,7 @@ const routing = RouterModule.forChild([
     { path: 'auth/login', component: PersonalLoginComponent },
     { path: 'auth/restore', component: PersonalRestoreComponent },
     { path: 'profile', component: ProfileMainPersonalComponent, canActivate: [PersonalGuard] },
+    { path: 'myaccount', component: PersonalMyAccountComponent, canActivate: [PersonalGuard] },
     { path: 'kyc', component: KycPersonalComponent, canActivate: [PersonalGuard] },
     { path: '**', redirectTo: 'main' }
 ]);

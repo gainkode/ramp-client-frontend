@@ -1,17 +1,18 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { ErrorService } from '../../services/error.service';
 import { Validators, FormBuilder, AbstractControl } from '@angular/forms';
 import { SocialUser } from 'angularx-social-login';
 import { LoginResult, UserMode } from '../../model/generated-models';
 import { SignupInfoPanelComponent } from './signup-info.component';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-login-panel',
     templateUrl: 'login-panel.component.html',
     styleUrls: ['../../../assets/button.scss', '../../../assets/text-control.scss', '../../../assets/auth.scss']
 })
-export class LoginPanelComponent implements OnInit {
+export class LoginPanelComponent implements OnInit, OnDestroy {
     @Input() set userName(val: string) {
         this.userMail = val;
         this.emailField?.setValue(this.userMail);
@@ -38,6 +39,7 @@ export class LoginPanelComponent implements OnInit {
     extraData = false;
     private socialLogin = false;
     private userMail = '';
+    private subscriptions: Subscription = new Subscription();
 
     loginForm = this.formBuilder.group({
         email: ['',
@@ -61,7 +63,10 @@ export class LoginPanelComponent implements OnInit {
     passwordErrorMessages: { [key: string]: string; } = {
         ['required']: 'Password is required',
         ['minlength']: 'Password must contain at least 8 symbols'
-    }
+    };
+    twoFaErrorMessages: { [key: string]: string; } = {
+        ['required']: 'Please specify the code from Google Authenticator or similar app'
+    };
 
     constructor(
         private auth: AuthService,
@@ -71,6 +76,10 @@ export class LoginPanelComponent implements OnInit {
     ngOnInit(): void {
         this.emailField?.setValue(this.userMail);
         this.loginForm.updateValueAndValidity();
+    }
+
+    ngOnDestroy(): void {
+        this.subscriptions.unsubscribe();
     }
 
     get emailField(): AbstractControl | null {
@@ -103,18 +112,56 @@ export class LoginPanelComponent implements OnInit {
     socialSignIn(providerName: string): void {
         this.progressChange.emit(true);
         this.error.emit('');
-        this.auth.socialSignIn(providerName).subscribe((data) => {
-            if (data.user !== undefined) {
-                const user = data.user as SocialUser;
-                let token = '';
-                if (providerName === 'Google') {
-                    token = user.idToken;
-                } else if (providerName === 'Facebook') {
-                    token = user.authToken;
+        this.subscriptions.add(
+            this.auth.socialSignIn(providerName).subscribe((data) => {
+                if (data.user !== undefined) {
+                    const user = data.user as SocialUser;
+                    let token = '';
+                    if (providerName === 'Google') {
+                        token = user.idToken;
+                    } else if (providerName === 'Facebook') {
+                        token = user.authToken;
+                    }
+                    this.auth.socialSignOut();
+                    this.auth.authenticateSocial(providerName.toLowerCase(), token).subscribe((loginData) => {
+                        const userData = loginData.data.login as LoginResult;
+                        if (userData.user?.mode === UserMode.InternalWallet) {
+                            if (userData.authTokenAction === 'TwoFactorAuth') {
+                                this.auth.setLoginUser(userData);
+                                this.twoFa = true;
+                                this.socialLogin = true;
+                                this.progressChange.emit(false);
+                            } else if (userData.authTokenAction === 'UserInfoRequired') {
+                                this.showSignupPanel(userData);
+                            } else {
+                                this.progressChange.emit(false);
+                                this.socialAuthenticated.emit(userData);
+                            }
+                        } else {
+                            this.error.emit(`Unable to authorise with the login '${user.email}'. Please sign up`);
+                        }
+                    }, (error) => {
+                        this.progressChange.emit(false);
+                        this.error.emit(this.errorHandler.getError(error.message, `Invalid authentication via ${providerName}`));
+                    });
+                } else {
+                    this.progressChange.emit(false);
                 }
-                this.auth.socialSignOut();
-                this.auth.authenticateSocial(providerName.toLowerCase(), token).subscribe((loginData) => {
-                    const userData = loginData.data.login as LoginResult;
+            }, (error) => {
+                this.progressChange.emit(false);
+                this.error.emit(this.errorHandler.getError(error.message, `Unable to authenticate using ${providerName}`));
+            })
+        );
+    }
+
+    onSubmit(): void {
+        this.error.emit('');
+        if (this.loginForm.valid) {
+            this.progressChange.emit(true);
+            const login = this.emailField?.value;
+            this.subscriptions.add(
+                this.auth.authenticate(login, this.passwordField?.value).subscribe(({ data }) => {
+                    const userData = data.login as LoginResult;
                     if (userData.user?.mode === UserMode.InternalWallet) {
                         if (userData.authTokenAction === 'TwoFactorAuth') {
                             this.auth.setLoginUser(userData);
@@ -125,47 +172,16 @@ export class LoginPanelComponent implements OnInit {
                             this.showSignupPanel(userData);
                         } else {
                             this.progressChange.emit(false);
-                            this.socialAuthenticated.emit(userData);
+                            this.authenticated.emit(userData);
                         }
                     } else {
-                        this.error.emit(`Unable to authorise with the login '${user.email}'. Please sign up`);
+                        this.error.emit(`Unable to authorise with the login '${login}'. Please sign up`);
                     }
                 }, (error) => {
                     this.progressChange.emit(false);
-                    this.error.emit(this.errorHandler.getError(error.message, `Invalid authentication via ${providerName}`));
-                });
-            } else {
-                this.progressChange.emit(false);
-            }
-        });
-    }
-
-    onSubmit(): void {
-        this.error.emit('');
-        if (this.loginForm.valid) {
-            this.progressChange.emit(true);
-            const login = this.emailField?.value;
-            this.auth.authenticate(login, this.passwordField?.value).subscribe(({ data }) => {
-                const userData = data.login as LoginResult;
-                if (userData.user?.mode === UserMode.InternalWallet) {
-                    if (userData.authTokenAction === 'TwoFactorAuth') {
-                        this.auth.setLoginUser(userData);
-                        this.twoFa = true;
-                        this.socialLogin = true;
-                        this.progressChange.emit(false);
-                    } else if (userData.authTokenAction === 'UserInfoRequired') {
-                        this.showSignupPanel(userData);
-                    } else {
-                        this.progressChange.emit(false);
-                        this.authenticated.emit(userData);
-                    }
-                } else {
-                    this.error.emit(`Unable to authorise with the login '${login}'. Please sign up`);
-                }
-            }, (error) => {
-                this.progressChange.emit(false);
-                this.error.emit(this.errorHandler.getError(error.message, 'Incorrect login or password'));
-            });
+                    this.error.emit(this.errorHandler.getError(error.message, 'Incorrect login or password'));
+                })
+            );
         }
     }
 
@@ -174,27 +190,29 @@ export class LoginPanelComponent implements OnInit {
             this.progressChange.emit(true);
             this.error.emit('');
             const code = this.twoFaForm.get('code')?.value;
-            this.auth.verify2Fa(code).subscribe(({ data }) => {
-                const userData = data.verify2faCode as LoginResult;
-                if (userData.user?.mode === UserMode.InternalWallet) {
-                    if (userData.authTokenAction === 'UserInfoRequired') {
-                        this.showSignupPanel(userData);
+            this.subscriptions.add(
+                this.auth.verify2Fa(code).subscribe(({ data }) => {
+                    const userData = data.verify2faCode as LoginResult;
+                    if (userData.user?.mode === UserMode.InternalWallet) {
+                        if (userData.authTokenAction === 'UserInfoRequired') {
+                            this.showSignupPanel(userData);
+                        } else {
+                            this.progressChange.emit(false);
+                            if (this.socialLogin) {
+                                this.socialAuthenticated.emit(userData);
+                            } else {
+                                this.authenticated.emit(userData);
+                            }
+                        }
                     } else {
                         this.progressChange.emit(false);
-                        if (this.socialLogin) {
-                            this.socialAuthenticated.emit(userData);
-                        } else {
-                            this.authenticated.emit(userData);
-                        }
+                        this.error.emit('Unable to authorise. Please sign up');
                     }
-                } else {
+                }, (error) => {
                     this.progressChange.emit(false);
-                    this.error.emit('Unable to authorise. Please sign up');
-                }
-            }, (error) => {
-                this.progressChange.emit(false);
-                this.error.emit(this.errorHandler.getError(error.message, 'Incorrect login or password'));
-            });
+                    this.error.emit(this.errorHandler.getError(error.message, 'Incorrect login or password'));
+                })
+            );
         }
     }
 
