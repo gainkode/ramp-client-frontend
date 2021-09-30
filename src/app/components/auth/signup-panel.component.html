@@ -1,70 +1,35 @@
 <div *ngIf="!extraData">
     <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
         <!-- Email -->
-        <mat-form-field class="form-element">
-            <mat-label>Email</mat-label>
-            <input type="email" matInput formControlName="email" maxlength="60" placeholder="User email"
-                autocomplete="off" required />
-            <mat-error *ngIf="this.signupForm.get('email')?.hasError('required')">
-                Please specify your email
-            </mat-error>
-            <mat-error *ngIf="this.signupForm.get('email')?.hasError('pattern')">
-                Email has incorrect format
-            </mat-error>
-        </mat-form-field>
+        <app-form-textbox [label]="'Email'" [boxType]="'email'" [placeholder]="'Enter your email here'" [maxlength]="50"
+            formControlName="email" [errorMessages]="emailErrorMessages" [separator]="true">
+        </app-form-textbox>
 
-        <!-- Password -->
-        <mat-form-field class="form-element">
-            <mat-label>Password</mat-label>
-            <input [type]="hidePassword1 ? 'password' : 'text'" matInput autocomplete="off" formControlName="password1"
-                maxlength="30" placeholder="Password" required>
-            <button mat-icon-button matSuffix type="button" [attr.aria-label]="'Info'"
-                matTooltip="Password must be at least 8 symbols long, and must contain latin lowercase and uppercase symbols, digits, and special symbols"
-                matTooltipClass="info-tooltip">
-                <mat-icon>info_outline</mat-icon>
-            </button>
-            <button mat-icon-button matSuffix type="button" (click)="hidePassword1 = !hidePassword1"
-                [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword1"
-                [matTooltip]="hidePassword1 ? 'Show password' : 'Hide password'" matTooltipClass="info-tooltip">
-                <mat-icon>{{hidePassword1 ? 'visibility_off' : 'visibility'}}</mat-icon>
-            </button>
-            <mat-error *ngIf="this.getPasswordValidation()!=''">
-                {{getPasswordValidation()}}
-            </mat-error>
-        </mat-form-field>
+        <!-- Password 1 -->
+        <app-form-password [label]="'Password'" [placeholder]="'Enter your password here'" [maxlength]="50"
+            formControlName="password1" [errorMessages]="password1ErrorMessages" [separator]="true">
+        </app-form-password>
 
         <!-- Confirm password -->
-        <mat-form-field class="form-element">
-            <mat-label>Confirm Password</mat-label>
-            <input [type]="hidePassword2 ? 'password' : 'text'" matInput autocomplete="off" formControlName="password2"
-                maxlength="30" placeholder="Confirm Password" required>
-            <button mat-icon-button matSuffix type="button" (click)="hidePassword2 = !hidePassword2"
-                [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword2"
-                [matTooltip]="hidePassword2 ? 'Show password' : 'Hide password'" matTooltipClass="info-tooltip">
-                <mat-icon>{{hidePassword2 ? 'visibility_off' : 'visibility'}}</mat-icon>
-            </button>
-            <mat-error *ngIf="this.signupForm.get('password2')?.hasError('required')">
-                Please specify your password
-            </mat-error>
-            <mat-error *ngIf="this.signupForm.get('password2')?.hasError('minlength')">
-                Password must contain at least 8 symbols
-            </mat-error>
-        </mat-form-field>
+        <app-form-password [label]="'Password confirmation'" [placeholder]="'Repeat your password here'" [maxlength]="50"
+            formControlName="password2" [errorMessages]="password2ErrorMessages" [separator]="true">
+        </app-form-password>
 
-        <div class="form-element">
-            <mat-checkbox color="primary" [checked]="agreementChecked" (change)="checkAgreement()">
-                <span>I agree to the
-                    <a target="_blank" rel="noopener noreferrer" href="/terms">
-                        terms and conditions
-                    </a>
-                </span>
-            </mat-checkbox>
-        </div>
+        <!-- Agreement -->
+        <mat-checkbox color="primary" formControlName="agreement" class="__widget-checkout">
+            I agree to the
+            <a target="_blank" rel="noopener noreferrer" href="/terms">
+                Terms & Conditions
+            </a>
+        </mat-checkbox>
+        <div class="__form-separator"></div>
 
-        <div class="form-element">
-            <button class="main-button main-button-primary" type="submit" [disabled]="!agreementChecked">
-                SIGN UP
-            </button>
+        <!-- Buttons -->
+        <div class="__widget-buttons-area">
+            <button class="__main-button __button-wide" type="submit" [disabled]="!validData">create account</button>
+            <a class="__button-wide-separator" href="/personal/auth/login">
+                Already member?
+            </a>
         </div>
     </form>
 </div>
@@ -72,4 +37,3 @@
 <app-signup-info-panel #signupInfo *ngIf="extraData" buttonTitle="SAVE" (error)="onSignupError($event)"
     (progressChange)="onSignupProgress($event)" (done)="onSignupDone($event)">
 </app-signup-info-panel>
-

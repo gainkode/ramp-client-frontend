@@ -3,9 +3,9 @@ import { Router } from '@angular/router';
 
 @Component({
     templateUrl: 'register.component.html',
-    styleUrls: ['./login.component.scss']
+    styleUrls: ['../../../assets/auth.scss']
 })
-export class RegisterComponent {
+export class PersonalRegisterComponent {
     inProgress = false;
     errorMessage = '';
 

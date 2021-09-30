@@ -1,16 +1,17 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { ErrorService } from '../../services/error.service';
 import { Validators, FormBuilder, AbstractControl } from '@angular/forms';
 import { LoginResult, UserType } from '../../model/generated-models';
 import { SignupInfoPanelComponent } from './signup-info.component';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-signup-panel',
     templateUrl: 'signup-panel.component.html',
-    styleUrls: ['signup-panel.component.scss']
+    styleUrls: ['../../../assets/button.scss', '../../../assets/text-control.scss', '../../../assets/auth.scss']
 })
-export class SignUpPanelComponent implements OnInit {
+export class SignUpPanelComponent implements OnInit, OnDestroy {
     @Input() set userName(val: string) {
         this.emailField?.setValue(val);
     }
@@ -18,8 +19,6 @@ export class SignUpPanelComponent implements OnInit {
     @Output() error = new EventEmitter<string>();
     @Output() progressChange = new EventEmitter<boolean>();
     @Output() registered = new EventEmitter<string>();
-
-    private signupInfoPanel!: SignupInfoPanelComponent;
     @ViewChild('signupInfo') set signupInfo(panel: SignupInfoPanelComponent) {
         if (panel) {
             this.signupInfoPanel = panel;
@@ -27,10 +26,8 @@ export class SignUpPanelComponent implements OnInit {
         }
     }
 
-    hidePassword1 = true;
-    hidePassword2 = true;
-    agreementChecked = false;
     extraData = false;
+    validData = false;
 
     signupForm = this.formBuilder.group({
         email: ['',
@@ -57,8 +54,33 @@ export class SignUpPanelComponent implements OnInit {
                     Validators.minLength(8)
                 ], updateOn: 'change'
             }
-        ]
+        ],
+        agreement: [false]
     });
+
+    emailErrorMessages: { [key: string]: string; } = {
+        ['pattern']: 'Email is not valid',
+        ['required']: 'Email is required'
+    };
+    password1ErrorMessages: { [key: string]: string; } = {
+        ['required']: 'Please specify your password',
+        ['minlength']: 'Password must contain at least 8 symbols',
+        ['pattern']: 'Invalid password format'
+    };
+    password2ErrorMessages: { [key: string]: string; } = {
+        ['required']: 'Please specify your password',
+        ['minlength']: 'Password must contain at least 8 symbols'
+    };
+
+    private signupInfoPanel!: SignupInfoPanelComponent;
+    private subscriptions: Subscription = new Subscription();
+
+    private validateForm(): void {
+        this.validData = (this.emailField?.valid ?? false) &&
+            (this.signupForm.get('password1')?.valid ?? false) &&
+            (this.signupForm.get('password2')?.valid ?? false) &&
+            (this.signupForm.get('agreement')?.value === true);
+    }
 
     constructor(
         private auth: AuthService,
@@ -66,32 +88,32 @@ export class SignUpPanelComponent implements OnInit {
         private formBuilder: FormBuilder) { }
 
     ngOnInit(): void {
+        this.subscriptions.add(this.emailField?.valueChanges.subscribe(val => {
+            this.validateForm();
+        }));
+        this.subscriptions.add(this.signupForm.get('password1')?.valueChanges.subscribe(val => {
+            this.validateForm();
+        }));
+        this.subscriptions.add(this.signupForm.get('password2')?.valueChanges.subscribe(val => {
+            this.validateForm();
+        }));
+        this.subscriptions.add(this.signupForm.get('agreement')?.valueChanges.subscribe(val => {
+            this.validateForm();
+        }));
+    }
 
+    ngOnDestroy(): void {
+        this.subscriptions.unsubscribe();
     }
 
     get emailField(): AbstractControl | null {
         return this.signupForm.get('email');
     }
 
-    checkAgreement(): void {
-        this.agreementChecked = !this.agreementChecked;
-    }
-
     passwordsEqual(): boolean {
         const p1 = this.signupForm.get('password1')?.value;
         const p2 = this.signupForm.get('password2')?.value;
         return (p1 === p2);
-    }
-
-    getPasswordValidation(): string {
-        if (this.signupForm.get('password1')?.hasError('required')) {
-            return 'Please specify your password';
-        } else if (this.signupForm.get('password1')?.hasError('minlength')) {
-            return 'Password must contain at least 8 symbols';
-        } else if (this.signupForm.get('password1')?.hasError('pattern')) {
-            return 'Invalid password format';
-        }
-        return '';
     }
 
     onSubmit(): void {
@@ -107,22 +129,24 @@ export class SignUpPanelComponent implements OnInit {
     }
 
     registerAccount(email: string, password: string): void {
-        this.auth.register(email, password, this.userType).subscribe((signupData) => {
-            const userData = signupData.data.signup as LoginResult;
-            if (!userData.authTokenAction) {
+        this.subscriptions.add(
+            this.auth.register(email, password, this.userType).subscribe((signupData) => {
+                const userData = signupData.data.signup as LoginResult;
+                if (!userData.authTokenAction) {
+                    this.progressChange.emit(false);
+                    this.registered.emit(email);
+                } else if (userData.authTokenAction === 'UserInfoRequired') {
+                    this.showSignupPanel(userData);
+                } else {
+                    this.progressChange.emit(false);
+                    this.error.emit('Unable to recognize the registration action');
+                    console.log('Unable to recognize the registration action', userData.authTokenAction);
+                }
+            }, (error) => {
                 this.progressChange.emit(false);
-                this.registered.emit(email);
-            } else if (userData.authTokenAction === 'UserInfoRequired') {
-                this.showSignupPanel(userData);
-            } else {
-                this.progressChange.emit(false);
-                this.error.emit('Unable to recognize the registration action');
-                console.log('Unable to recognize the registration action', userData.authTokenAction);
-            }
-        }, (error) => {
-            this.progressChange.emit(false);
-            this.error.emit(this.errorHandler.getError(error.message, 'Unable to register new account'));
-        });
+                this.error.emit(this.errorHandler.getError(error.message, 'Unable to register new account'));
+            })
+        );
     }
 
     showSignupPanel(userData: LoginResult): void {

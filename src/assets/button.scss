@@ -417,24 +417,24 @@
 
 .__facebook-button {
     align-items  : center;
-    padding      : 8px 0px 8px 11px;
+    padding      : 9px 0px 9px 12px;
     width        : 276px;
     background-color: #1977f3;
     border: 0px;
     border-radius: 5px;
     display: grid;
-    grid-template-columns: 28px auto;
-    grid-template-rows: 28px;
+    grid-template-columns: 26px auto;
+    grid-template-rows: 26px;
     margin: 9px;
 
     div.__facebook-button-icon {
         grid-row: 1;
         grid-column: 1 / 2;
-        width: 28px;
-        height: 28px;
+        width: 26px;
+        height: 26px;
         background-image: url("svg-social/btn_facebook_dark.svg");
         background-repeat: no-repeat;
-        background-size: 28px;
+        background-size: 26px;
     }
 
     span.__facebook-button-title {

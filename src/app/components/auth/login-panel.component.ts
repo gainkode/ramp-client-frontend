@@ -34,7 +34,6 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
         }
     }
 
-    hidePassword = true;
     twoFa = false;
     extraData = false;
     private socialLogin = false;

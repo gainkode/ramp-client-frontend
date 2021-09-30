@@ -55,9 +55,8 @@
     <form [formGroup]="twoFaForm" (ngSubmit)="onTwoFaSubmit()">
         <!-- 2FA code -->
         <app-form-textbox [label]="'2FA Confirmation code'" [boxType]="'text'" [placeholder]="'Enter your confirmation code'" [maxlength]="20"
-            formControlName="code" [errorMessages]="twoFaErrorMessages" [separator]="false">
+            formControlName="code" [errorMessages]="twoFaErrorMessages" [separator]="true">
         </app-form-textbox>
-        <div class="__form-separator"></div>
         <button class="__main-button __button-wide" type="submit">send</button>
     </form>
 </div>
