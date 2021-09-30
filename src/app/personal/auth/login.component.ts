@@ -1,26 +1,33 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
-import { LoginResult, SettingsCommon, UserType } from '../model/generated-models';
+import { AuthService } from '../../services/auth.service';
+import { LoginResult, SettingsCommon, UserType } from '../../model/generated-models';
 import { MatDialog } from '@angular/material/dialog';
-import { CommonDialogBox } from '../components/common/common-box.dialog';
-import { ErrorService } from '../services/error.service';
+import { CommonDialogBox } from '../../components/common/common-box.dialog';
+import { ErrorService } from '../../services/error.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     templateUrl: 'login.component.html',
-    styleUrls: ['../../assets/auth.scss']
+    styleUrls: ['../../../assets/auth.scss']
 })
-export class LoginComponent {
+export class PersonalLoginComponent implements OnDestroy {
     userType = UserType.Personal;
     inProgress = false;
     errorMessage = '';
     showExtraOptions = true;
+
+    private subscriptions: Subscription = new Subscription();
 
     constructor(
         private auth: AuthService,
         private errorHandler: ErrorService,
         private router: Router,
         public dialog: MatDialog) { }
+
+    ngOnDestroy(): void {
+        this.subscriptions.unsubscribe();
+    }
 
     private showWrongUserTypeRedirectDialog(userType: UserType): void {
         const dialogRef = this.dialog.open(CommonDialogBox, {
@@ -30,27 +37,31 @@ export class LoginComponent {
                 message: `You are signing in as a ${userType.toLowerCase()} in the personal section. You will be redirected to the merchant section.`
             }
         });
-        dialogRef.afterClosed().subscribe(result => {
-            this.router.navigateByUrl('/auth/merchant/login');
-        });
+        this.subscriptions.add(
+            dialogRef.afterClosed().subscribe(result => {
+                this.router.navigateByUrl('/auth/merchant/login');
+            })
+        );
     }
 
     private handleSuccessLogin(userData: LoginResult): void {
         this.auth.setLoginUser(userData);
         this.inProgress = true;
-        this.auth.getSettingsCommon().valueChanges.subscribe(settings => {
-            const settingsCommon: SettingsCommon = settings.data.getSettingsCommon;
-            this.auth.setLocalSettingsCommon(settingsCommon);
-            this.inProgress = false;
-            this.router.navigateByUrl(this.auth.getUserMainPage());
-        }, (error) => {
-            this.inProgress = false;
-            if (this.auth.token !== '') {
-                this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load common settings');
-            } else {
-                this.router.navigateByUrl('/');
-            }
-        });
+        this.subscriptions.add(
+            this.auth.getSettingsCommon().valueChanges.subscribe(settings => {
+                const settingsCommon: SettingsCommon = settings.data.getSettingsCommon;
+                this.auth.setLocalSettingsCommon(settingsCommon);
+                this.inProgress = false;
+                this.router.navigateByUrl(this.auth.getUserMainPage());
+            }, (error) => {
+                this.inProgress = false;
+                if (this.auth.token !== '') {
+                    this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load common settings');
+                } else {
+                    this.router.navigateByUrl('/');
+                }
+            })
+        );
     }
 
     onError(error: string): void {
@@ -85,7 +96,7 @@ export class LoginComponent {
                 this.handleSuccessLogin(userData);
             } else if (userData.authTokenAction === 'ConfirmName') {
                 this.auth.logout();
-                this.router.navigateByUrl(`/auth/personal/signup/${userData.authToken}`);
+                this.router.navigateByUrl(`/personal/auth/signup/${userData.authToken}`);
             } else {
                 this.auth.logout();
                 this.errorMessage = `Invalid authentication via social media`;

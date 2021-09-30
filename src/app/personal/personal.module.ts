@@ -30,6 +30,8 @@ import { PersonalMyContactsComponent } from './profile/my-contacts.component';
 import { PersonalTransactionsComponent } from './profile/transactions.component';
 import { PersonalMyWalletsComponent } from './profile/my-wallets.component';
 import { PersonalTransactionDetailsComponent } from './profile/details/transaction-details.component';
+import { PersonalLoginComponent } from './auth/login.component';
+import { PersonalRestoreComponent } from './auth/restore.component';
 
 const routing = RouterModule.forChild([
     { path: 'intro', component: IntroPersonalComponent },
@@ -47,6 +49,8 @@ const routing = RouterModule.forChild([
         ],
         canActivate: [PersonalGuard]
     },
+    { path: 'auth/login', component: PersonalLoginComponent },
+    { path: 'auth/restore', component: PersonalRestoreComponent },
     { path: 'profile', component: ProfileMainPersonalComponent, canActivate: [PersonalGuard] },
     { path: 'kyc', component: KycPersonalComponent, canActivate: [PersonalGuard] },
     { path: '**', redirectTo: 'main' }
@@ -79,13 +83,15 @@ export class MaterialModule { }
 @NgModule({
     imports: [CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule, DirectiveModule],
     declarations: [
-        IntroPersonalComponent, PersonalComponent, ProfileMainPersonalComponent, 
+        IntroPersonalComponent, PersonalComponent,
+        PersonalLoginComponent, PersonalRestoreComponent,
         PersonalHomeComponent,
         PersonalMyWalletsComponent,
         PersonalMyContactsComponent,
         PersonalTransactionsComponent, PersonalTransactionDetailsComponent,
         PersonalSwapComponent,
-        KycPersonalComponent, PersonalMyAccountComponent],
+
+        ProfileMainPersonalComponent, KycPersonalComponent, PersonalMyAccountComponent],
     providers: [PersonalGuard],
     schemas: [
         CUSTOM_ELEMENTS_SCHEMA

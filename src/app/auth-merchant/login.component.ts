@@ -31,7 +31,7 @@ export class LoginComponent {
             }
         });
         dialogRef.afterClosed().subscribe(result => {
-            this.router.navigateByUrl('/auth/personal/login');
+            this.router.navigateByUrl('/personal/auth/login');
         });
     }
 

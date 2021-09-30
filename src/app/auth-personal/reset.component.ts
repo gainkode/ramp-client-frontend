@@ -66,7 +66,7 @@ export class ResetComponent {
                 this.passwordForm.get('password1')?.value)
                 .subscribe(({ data }) => {
                     this.inProgress = false;
-                    this.router.navigateByUrl('/auth/personal/success/reset');
+                    this.router.navigateByUrl('/personal/auth/success/reset');
                 }, (error) => {
                     this.inProgress = false;
                     this.errorMessage = this.errorHandler.getError(

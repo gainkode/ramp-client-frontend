@@ -20,6 +20,6 @@ export class RegisterComponent {
     }
 
     onRegistered(email: string): void {
-        this.router.navigateByUrl('/auth/personal/success/signup');
+        this.router.navigateByUrl('/personal/auth/success/signup');
     }
 }

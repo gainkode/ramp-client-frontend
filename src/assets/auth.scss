@@ -35,6 +35,14 @@
     margin: 40px 24px;
 }
 
+.__auth-footer-area-small {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 24px 0px;
+}
+
 .__auth-buttons-wizard-area {
     display: flex;
     flex-direction: row;
@@ -98,6 +106,16 @@
     font-style: normal;
     font-weight: normal;
     font-size: 21px;
+    line-height: 28px;
+    color: $color_purple_900_text;
+}
+
+.__auth-footer-common-text {
+    margin: 0px 18px 0px 0px;
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
     line-height: 28px;
     color: $color_purple_900_text;
 }

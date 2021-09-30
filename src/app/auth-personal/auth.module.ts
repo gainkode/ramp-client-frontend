@@ -12,25 +12,23 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ComponentsModule } from '../components/components.module';
-import { LoginComponent } from './login.component';
 import { RegisterComponent } from './register.component';
 import { SignupComponent } from './signup.component';
 import { SuccessComponent } from './success.component';
-import { RestoreComponent } from './restore.component';
 import { ConfirmEmailComponent } from './confirm-email.component';
 import { ResetComponent } from './reset.component';
 import { ConfirmDeviceComponent } from './confirm-device.component';
 
 const routing = RouterModule.forChild([
-    { path: 'login', component: LoginComponent },
+    { path: 'login', redirectTo: '/personal/auth/login' },
     { path: 'register', component: RegisterComponent },
     { path: 'signup/:token', component: SignupComponent },
     { path: 'success/:type', component: SuccessComponent },
     { path: 'confirm-email/:token', component: ConfirmEmailComponent },
     { path: 'confirm-device/:token', component: ConfirmDeviceComponent },
     { path: 'new-password/:token', component: ResetComponent },
-    { path: 'restore', component: RestoreComponent },
-    { path: '**', redirectTo: 'login' }
+    { path: 'restore', redirectTo: '/personal/auth/restore' },
+    { path: '**', redirectTo: '/personal/auth/login' }
 ]);
 
 const modules = [
@@ -57,7 +55,7 @@ export class MaterialModule { }
         CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule
     ],
     declarations: [
-        LoginComponent, RegisterComponent, SignupComponent, SuccessComponent, RestoreComponent,
+        RegisterComponent, SignupComponent, SuccessComponent,
         ConfirmEmailComponent, ConfirmDeviceComponent, ResetComponent
     ],
     schemas: [

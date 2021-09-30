@@ -392,7 +392,7 @@ export class ContainerComponentDeprecated implements OnInit, OnDestroy {
       this.handleSuccessLogin(userData);
     } else if (userData.authTokenAction === 'ConfirmName') {
       this.auth.logout();
-      this.router.navigateByUrl(`/auth/personal/signup/${userData.authToken}`);
+      this.router.navigateByUrl(`/personal/auth/signup/${userData.authToken}`);
     } else {
       this.auth.logout();
       this.errorMessage = `Invalid authentication via social media`;
