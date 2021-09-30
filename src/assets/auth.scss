@@ -9,22 +9,22 @@
     padding: 0px;
 }
 
-.__auth-container {
-    padding: 0px 24px;
+.__auth-body {
     width: $widget_max_width + px;
     background-color: $color_white;
 }
 
-.__auth-title-container {
-    height: 96px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: auto;
+.__auth-container {
+    margin: 0px 24px;
 }
 
 .__auth-data-container {
     padding: 36px 0px 0px 0px;
+}
+
+.__auth-title-container {
+    display: flex;
+    margin: 24px;
 }
 
 .__auth-footer-area {

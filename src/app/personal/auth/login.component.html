@@ -1,20 +1,22 @@
 <div class="__auth-frame-box">
-    <div class="__auth-container">
-        <div class="__auth-title-container">
-            <div style="color: mediumslateblue;margin: auto;font-size: 20px;">
-                eWallet Logo
+    <div class="__auth-body">
+        <div class="__auth-container">
+            <div class="__auth-title-container">
+                <div style="color: mediumslateblue;margin: auto;font-size: 20px;">
+                    eWallet Logo
+                </div>
             </div>
-        </div>
-        <div class="__auth-data-container">
-            <app-login-panel [socialButtons]="true" (error)="onError($event)" (progressChange)="onProgressChange($event)"
-                (authenticated)="onAuthenticated($event)" (socialAuthenticated)="onSocialAuthenticated($event)"
-                (extraDataVisible)="onLoginExtraData($event)">
-            </app-login-panel>
-        </div>
+            <div class="__auth-data-container">
+                <app-login-panel [socialButtons]="true" (error)="onError($event)"
+                    (progressChange)="onProgressChange($event)" (authenticated)="onAuthenticated($event)"
+                    (socialAuthenticated)="onSocialAuthenticated($event)" (extraDataVisible)="onLoginExtraData($event)">
+                </app-login-panel>
+            </div>
 
-        <div class="__auth-footer-area">
-            <span class="__auth-footer-text">Not a member yet?</span>
-            <a href="/personal/auth/register">Create an account</a>
+            <div class="__auth-footer-area">
+                <span class="__auth-footer-text">Not a member yet?</span>
+                <a href="/personal/auth/register">Create an account</a>
+            </div>
         </div>
     </div>
 </div>

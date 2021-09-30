@@ -1,28 +1,32 @@
 <div class="__auth-frame-box">
-    <div class="__auth-container">
-        <div class="__auth-title-container">
-            <div style="color: mediumslateblue;margin: auto;font-size: 20px;">
-                eWallet Logo
-            </div>
-        </div>
-        <div class="__auth-data-container">
-            <form [formGroup]="restoreForm" (ngSubmit)="onSubmit()">
-                <!-- Email -->
-                <app-form-textbox [label]="'Email'" [boxType]="'email'" [placeholder]="'Enter your email here'" [maxlength]="50"
-                    formControlName="email" [errorMessages]="emailErrorMessages" [separator]="true">
-                </app-form-textbox>
-        
-                <div class="__form-separator"></div>
-
-                <!-- Button -->
-                <div class="__auth-buttons-area">
-                    <button class="__main-button __button-wide" type="submit" [disabled]="!restoreForm?.valid">send</button>
+    <div class="__auth-body">
+        <div class="__auth-container">
+            <div class="__auth-title-container">
+                <div style="color: mediumslateblue;margin: auto;font-size: 20px;">
+                    eWallet Logo
                 </div>
-            </form>
-        </div>
-        <div class="__auth-footer-area-small">
-            <span class="__auth-footer-text">Don’t remember your email?</span>
-            <a href="#">Contact customer service</a>
+            </div>
+            <div class="__auth-data-container">
+                <form [formGroup]="restoreForm" (ngSubmit)="onSubmit()">
+                    <!-- Email -->
+                    <app-form-textbox [label]="'Email'" [boxType]="'email'" [placeholder]="'Enter your email here'"
+                        [maxlength]="50" formControlName="email" [errorMessages]="emailErrorMessages"
+                        [separator]="true">
+                    </app-form-textbox>
+
+                    <div class="__form-separator"></div>
+
+                    <!-- Button -->
+                    <div class="__auth-buttons-area">
+                        <button class="__main-button __button-wide" type="submit"
+                            [disabled]="!restoreForm?.valid">send</button>
+                    </div>
+                </form>
+            </div>
+            <div class="__auth-footer-area-small">
+                <span class="__auth-footer-text">Don’t remember your email?</span>
+                <a href="#">Contact customer service</a>
+            </div>
         </div>
     </div>
 </div>
