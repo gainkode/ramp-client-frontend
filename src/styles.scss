@@ -21,7 +21,7 @@ body {
 }
 
 a:link {
-    color: $color_main_blue_900;
+    color: $color_main_blue_800;
     text-decoration: none;
     font-family: $font_main;
     font-style: normal;
@@ -40,32 +40,7 @@ a:visited {
 }
 
 a:active {
-    color: $color_purple_800;
-    text-decoration: underline;
-}
-
-a.__grand-link:link {
     color: $color_main_blue_900;
-    text-decoration: none;
-    font-family: $font_main;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 21px;
-    line-height: 28px;
-}
-
-a.__grand-link:hover {
-    color: $color_main_blue_600;
-    text-decoration: underline;
-}
-
-a.__grand-link:visited {
-    color: $color_main_blue_800;
-    text-decoration: none;
-}
-
-a.__grand-link:active {
-    color: $color_purple_800;
     text-decoration: underline;
 }
 

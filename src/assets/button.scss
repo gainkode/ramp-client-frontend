@@ -28,6 +28,7 @@
 .__main-button:hover {
     background: $color_main_blue_600;
     box-shadow: 0px 4px 5px rgba(208, 207, 207, 0.2), 0px 7px 10px rgba(208, 207, 207, 0.14), 0px 2px 16px rgba(208, 207, 207, 0.12);
+    cursor: pointer;
 }
 
 .__main-button:disabled {
@@ -62,6 +63,7 @@
 .__borderless-button:hover {
     box-shadow: 0px 3px 5px rgba(208, 207, 207, 0.2), 0px 5px 8px rgba(208, 207, 207, 0.14), 0px 1px 14px rgba(208, 207, 207, 0.12);
     color: $color_main_blue_600;
+    cursor: pointer;
 }
 
 .__borderless-button:disabled {
@@ -96,6 +98,7 @@
 .__outlined-button:hover {
     border: 1px solid $color_main_blue_600;
     color: $color_main_blue_600;
+    cursor: pointer;
 }
 
 .__outlined-button:disabled {
@@ -129,6 +132,7 @@
 .__toggle-button:hover {
     border: 1px solid $color_main_blue_600;
     color: $color_main_blue_600;
+    cursor: pointer;
 }
 
 .__toggle-button:disabled {
@@ -156,6 +160,7 @@
 
 .__tool-button:hover {
     color: $color_main_blue_600;
+    cursor: pointer;
 }
 
 .__tool-button:disabled {
@@ -191,6 +196,7 @@
 
 .__table-button:hover {
     color: $color_main_blue_600;
+    cursor: pointer;
 }
 
 .__table-button:disabled {
@@ -222,6 +228,7 @@
 
 .__small-button:hover {
     background: $color_main_blue_600;
+    cursor: pointer;
 }
 
 .__small-button:disabled {
@@ -256,6 +263,7 @@
 
 .__side-menu-button:hover {
     color: $color_main_blue_600;
+    cursor: pointer;
 }
 
 .__side-menu-button:disabled {
@@ -325,6 +333,7 @@
 
 .__side-menu-button-sm:hover {
     color: $color_main_blue_600;
+    cursor: pointer;
 
     #button_icon {
         color: $color_main_blue_600;
@@ -370,30 +379,36 @@
     align-items  : center;
     padding      : 0px;
     width        : 276px;
-    background-color: #4285f4;
-    border: 0px;
+    background-color: $color_white;
+    border-radius: 5px;
+    border: thin solid #888;
+    box-shadow: 1px 1px 1px grey;
     display: grid;
-    grid-template-columns: 38px auto;
-    grid-template-rows: 38px;
+    grid-template-columns: 42px auto;
+    grid-template-rows: 42px;
     margin: 9px;
 
     div.__google-button-icon {
         grid-row: 1;
         grid-column: 1 / 2;
-        width: 38px;
-        height: 38px;
-        background-image: url("./svg-social/btn_google_dark_normal_ios.svg");
+        width: 42px;
+        height: 42px;
+        background-image: url("svg-social/btn_google_light_normal_ios.svg");
         background-repeat: no-repeat;
-        background-size: 38px;
+        background-size: 42px;
     }
 
     span.__google-button-title {
         grid-row: 1;
         grid-column: 2 / 3;
-        font-family  : Roboto;
-        font-weight: 700;
-        color: $color_white;
+        font-family  : 'Roboto';
+        font-weight: 500;
+        color: $color_purple_900_text;
     }
+}
+
+.__google-button:hover {
+    cursor: pointer;
 }
 
 .__google-button:focus {
@@ -402,32 +417,37 @@
 
 .__facebook-button {
     align-items  : center;
-    padding      : 7px 0px 7px 11px;
+    padding      : 8px 0px 8px 11px;
     width        : 276px;
     background-color: #1977f3;
     border: 0px;
+    border-radius: 5px;
     display: grid;
-    grid-template-columns: 26px auto;
-    grid-template-rows: 26px;
+    grid-template-columns: 28px auto;
+    grid-template-rows: 28px;
     margin: 9px;
 
     div.__facebook-button-icon {
         grid-row: 1;
         grid-column: 1 / 2;
-        width: 26px;
-        height: 26px;
-        background-image: url("./svg-social/btn_facebook_dark.svg");
+        width: 28px;
+        height: 28px;
+        background-image: url("svg-social/btn_facebook_dark.svg");
         background-repeat: no-repeat;
-        background-size: 26px;
+        background-size: 28px;
     }
 
     span.__facebook-button-title {
         grid-row: 1;
         grid-column: 2 / 3;
-        font-family  : Helvetica;
-        font-weight: 700;
+        font-family  : 'Helvetica';
+        font-weight: 400;
         color: $color_white;
     }
+}
+
+.__facebook-button:hover {
+    cursor: pointer;
 }
 
 .__facebook-button:focus {
