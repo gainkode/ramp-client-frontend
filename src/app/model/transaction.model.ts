@@ -174,7 +174,7 @@ export class TransactionItem {
   type: TransactionType | undefined = undefined;
   sender: CommonTargetValue = {
     id: '',
-    title: '-sender-',
+    title: '',
     imgClass: '',
     imgSource: ''
   };

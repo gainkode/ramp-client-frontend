@@ -113,6 +113,7 @@ export class PersonalTransactionsComponent implements OnInit, OnDestroy, AfterVi
         } else {
             this.inProgress = true;
             this.pTransactionsSubscription = transactionsData.valueChanges.subscribe(({ data }) => {
+                console.log(data);
                 const dataList = data.myTransactions as TransactionShortListResult;
                 if (dataList !== null) {
                     this.transactionCount = dataList?.count as number;
@@ -125,6 +126,7 @@ export class PersonalTransactionsComponent implements OnInit, OnDestroy, AfterVi
                 }
                 this.inProgress = false;
             }, (error) => {
+                console.log('transaction error');
                 this.inProgress = false;
                 if (this.auth.token !== '') {
                     this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load transactions');
