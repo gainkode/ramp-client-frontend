@@ -9,7 +9,7 @@ import { WidgetRateComponent } from './rate.component';
 @Component({
   selector: 'app-widget',
   templateUrl: 'widget.component.html',
-  styleUrls: ['../../../assets/payment.scss'],
+  styleUrls: ['../../../assets/button.scss', '../../../assets/payment.scss'],
 })
 export class WidgetComponent implements OnInit {
   @ViewChild('exchangerate') private exchangeRateComponent: WidgetRateComponent | undefined = undefined;
@@ -20,6 +20,7 @@ export class WidgetComponent implements OnInit {
 
   internalPayment = false;
   initState = true;
+  mobileSummary = false;
   stageId = 'order_details';
   //stageId = 'login';
   title = 'Order details';

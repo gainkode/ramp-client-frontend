@@ -176,6 +176,39 @@
     transform: rotate(180deg);
 }
 
+.__menu-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 48px;
+    height: 48px;
+
+    background: $color_white;
+    box-shadow: 0px 3px 5px rgba(208, 207, 207, 0.2), 0px 5px 8px rgba(208, 207, 207, 0.14), 0px 1px 14px rgba(208, 207, 207, 0.12);
+    border-radius: 8px;
+    border: none;
+
+    color: $color_purple_900_icons;
+}
+
+.__menu-button:focus {
+    outline: none;
+}
+
+.__menu-button:hover {
+    color: $color_main_blue_600;
+    cursor: pointer;
+}
+
+.__menu-button:disabled {
+    color: $color_purple_200;
+}
+
+.__menu-button-icon {
+    margin: auto;
+}
+
 .__table-button {
     justify-content: center;
     align-items: center;

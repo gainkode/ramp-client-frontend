@@ -1,7 +1,12 @@
 <div class="__widget-container">
   <div class="__widget-title-container">
-    <div style="color: mediumslateblue;margin: auto;font-size: 20px;">
+    <div class="__widget-title-logo-container">
       eWallet Logo
+    </div>
+    <div *ngIf="!initState" class="__widget-title-button-container">
+      <button class="__menu-button" type="button" (click)="mobileSummary = !mobileSummary">
+        <mat-icon>more_vert</mat-icon>
+      </button>
     </div>
   </div>
   <div class="__widget-progress-container">
@@ -9,10 +14,12 @@
   </div>
 
   <div class="__widget-data-container">
-    <div [ngClass]="{'__widget-wizard-container': true, '__widget-wizard-container-single': initState}" [ngSwitch]="stageId">
+    <div [ngClass]="{'__widget-wizard-container': true, '__widget-wizard-container-single': initState}"
+      [ngSwitch]="stageId">
       <!-- Order details -->
       <app-widget-order-details *ngSwitchCase="'order_details'" [initialized]="!initState" [email]="summary.email"
-        [rate]="summary.exchangeRate" (onDataUpdated)="orderDetailsChanged($event)" (onComplete)="orderDetailsComplete($event)">
+        [rate]="summary.exchangeRate" (onDataUpdated)="orderDetailsChanged($event)"
+        (onComplete)="orderDetailsComplete($event)">
       </app-widget-order-details>
       <!-- Register -->
       <app-widget-register *ngSwitchCase="'register'" [email]="summary.email">
@@ -29,6 +36,23 @@
         </app-widget-rate>
         <app-widget-summary class="__widget-summary-data" [summary]="summary"></app-widget-summary>
       </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="mobileSummary" class="__widget-mobile-summary-container">
+  <div class="__widget-mobile-summary-box">
+    <div class="__widget-mobile-summary-data-box">
+      <div class="__widget-summary-title">Order Summary</div>
+      <app-widget-rate class="__widget-rate-container" #exchangerate [summary]="summary"
+        (update)="onUpdateRate($event)">
+      </app-widget-rate>
+      <app-widget-summary class="__widget-summary-data" [summary]="summary"></app-widget-summary>
+    </div>
+    <div class="__widget-mobile-summary-button-box">
+      <button type="button" class="__widget-summary-close-button" (click)="mobileSummary = !mobileSummary">
+        <mat-icon>close</mat-icon>
+      </button>
     </div>
   </div>
 </div>
