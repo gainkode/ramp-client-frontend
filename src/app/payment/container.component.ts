@@ -532,6 +532,7 @@ export class ContainerComponentDeprecated implements OnInit, OnDestroy {
       destinationType,
       destination
     ).subscribe(({ data }) => {
+      this.startNotificationListener();
       const order = data.createTransaction as TransactionShort;
       this.inProgress = false;
       if (order.code) {
@@ -946,7 +947,7 @@ export class ContainerComponentDeprecated implements OnInit, OnDestroy {
           this.paymentTitle = 'Payment is not implemented';
         }
       } else if (step.selectedStep.label === 'redirect') {
-        this.startNotificationListener();
+        //this.startNotificationListener();
         focusInput = this.codeElement?.nativeElement as HTMLInputElement;
         if (this.iframedoc) {
           this.redirectCompleteControl?.setValue('ready');
