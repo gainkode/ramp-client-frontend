@@ -303,7 +303,10 @@ export class ProfileDataService {
     orderDesc: boolean
   ): QueryRef<any, EmptyObject> | null {
     if (this.apollo.client !== undefined) {
-      const orderFields = [{ orderBy: orderField, desc: orderDesc }];
+      const orderFields = [
+        { orderBy: orderField, desc: orderDesc },
+        { orderBy: 'created', desc: orderDesc }
+      ];
       return this.apollo.watchQuery<any>({
         query: GET_MY_TRANSACTIONS,
         variables: {

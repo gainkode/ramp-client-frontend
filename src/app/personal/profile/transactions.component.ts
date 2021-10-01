@@ -95,7 +95,7 @@ export class PersonalTransactionsComponent implements OnInit, OnDestroy, AfterVi
         } else if (this.sortedField === 'received') {
             result = 'amountToReceive';
         } else if (this.sortedField === 'fees') {
-            result = 'fee';
+            result = 'feeFiat';
         }
         return result;
     }
