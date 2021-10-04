@@ -9,7 +9,7 @@ import { getCountryByCode3 } from '../../model/country-code.model';
 @Component({
     selector: 'app-signup-info-panel',
     templateUrl: 'signup-info.component.html',
-    styleUrls: ['signup-panel.component.scss']
+    styleUrls: ['../../../assets/button.scss', '../../../assets/text-control.scss', '../../../assets/auth.scss']
 })
 export class SignupInfoPanelComponent implements OnDestroy {
     @Input() buttonTitle = 'OK';
@@ -40,7 +40,7 @@ export class SignupInfoPanelComponent implements OnDestroy {
     buildingNumberControl: AbstractControl | null = null;
     flatNumberControl: AbstractControl | null = null;
 
-    private pSettingsSubscription!: any;
+    private subscriptions: Subscription = new Subscription();
 
     infoForm = this.formBuilder.group({
         firstName: ['', { validators: [], updateOn: 'change' }],
@@ -78,10 +78,7 @@ export class SignupInfoPanelComponent implements OnDestroy {
     }
 
     ngOnDestroy(): void {
-        const s: Subscription = this.pSettingsSubscription;
-        if (s !== undefined) {
-            (this.pSettingsSubscription as Subscription).unsubscribe();
-        }
+        this.subscriptions.unsubscribe();
     }
 
     init(): void {
@@ -90,19 +87,21 @@ export class SignupInfoPanelComponent implements OnDestroy {
             this.error.emit(this.errorHandler.getRejectedCookieMessage());
         } else {
             this.progressChange.emit(true);
-            this.pSettingsSubscription = fieldsData.valueChanges.subscribe(({ data }) => {
-                const fields: SettingsKyc = data.mySettingsKyc;
-                this.requireUserFullName = fields.requireUserFullName as boolean;
-                this.requireUserPhone = fields.requireUserPhone as boolean;
-                this.requireUserBirthday = fields.requireUserBirthday as boolean;
-                this.requireUserAddress = fields.requireUserAddress as boolean;
-                this.requireUserFlatNumber = fields.requireUserFlatNumber as boolean;
-                this.setFields();
-                this.progressChange.emit(false);
-            }, (error) => {
-                this.error.emit(this.errorHandler.getError('error', 'Unable to specify required data'));
-                this.progressChange.emit(false);
-            });
+            this.subscriptions.add(
+                fieldsData.valueChanges.subscribe(({ data }) => {
+                    const fields: SettingsKyc = data.mySettingsKyc;
+                    this.requireUserFullName = fields.requireUserFullName as boolean;
+                    this.requireUserPhone = fields.requireUserPhone as boolean;
+                    this.requireUserBirthday = fields.requireUserBirthday as boolean;
+                    this.requireUserAddress = fields.requireUserAddress as boolean;
+                    this.requireUserFlatNumber = fields.requireUserFlatNumber as boolean;
+                    this.setFields();
+                    this.progressChange.emit(false);
+                }, (error) => {
+                    this.error.emit(this.errorHandler.getError('error', 'Unable to specify required data'));
+                    this.progressChange.emit(false);
+                })
+            );
         }
     }
 
@@ -246,19 +245,21 @@ export class SignupInfoPanelComponent implements OnDestroy {
                     address.flatNumber = this.flatNumberControl?.value;
                 }
             }
-            this.auth.setMyInfo(
-                this.firstNameControl?.value as string,
-                this.lastNameControl?.value as string,
-                phone,
-                address,
-                birthday
-            ).subscribe(({ data }) => {
-                this.progressChange.emit(false);
-                this.done.emit(data.setMyInfo as LoginResult);
-            }, (error) => {
-                this.progressChange.emit(false);
-                this.error.emit(this.errorHandler.getError(error.message, 'Incorrect personal data'));
-            });
+            this.subscriptions.add(
+                this.auth.setMyInfo(
+                    this.firstNameControl?.value as string,
+                    this.lastNameControl?.value as string,
+                    phone,
+                    address,
+                    birthday
+                ).subscribe(({ data }) => {
+                    this.progressChange.emit(false);
+                    this.done.emit(data.setMyInfo as LoginResult);
+                }, (error) => {
+                    this.progressChange.emit(false);
+                    this.error.emit(this.errorHandler.getError(error.message, 'Incorrect personal data'));
+                })
+            );
         }
     }
 }
