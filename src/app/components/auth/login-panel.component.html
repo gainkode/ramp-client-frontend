@@ -9,7 +9,12 @@
         <app-form-password [label]="'Password'" [placeholder]="'Enter your password here'" [maxlength]="50"
             formControlName="password" [errorMessages]="passwordErrorMessages" [separator]="true">
         </app-form-password>
-
+        <!-- Errors -->
+        <div *ngIf="errorMessage!==''">
+            <span class="__auth-error-line">
+                {{errorMessage}}
+            </span>
+        </div>
         <div class="__form-separator"></div>
         <!-- Buttons for a wizard -->
         <div *ngIf="wizardButtons" class="__auth-buttons-wizard-area">
@@ -48,15 +53,23 @@
     </div>
 </div>
 
-<app-signup-info-panel #signupInfo *ngIf="extraData" buttonTitle="SAVE" (error)="onSignupError($event)"
+<app-signup-info-panel #signupInfo *ngIf="extraData" buttonTitle="SAVE" (error)="registerError($event)"
     (progressChange)="onSignupProgress($event)" (done)="onSignupDone($event)"></app-signup-info-panel>
 
 <div *ngIf=twoFa>
     <form [formGroup]="twoFaForm" (ngSubmit)="onTwoFaSubmit()">
         <!-- 2FA code -->
-        <app-form-textbox [label]="'2FA Confirmation code'" [boxType]="'text'" [placeholder]="'Enter your confirmation code'" [maxlength]="20"
-            formControlName="code" [errorMessages]="twoFaErrorMessages" [separator]="true">
+        <app-form-textbox [label]="'2FA Confirmation code'" [boxType]="'text'"
+            [placeholder]="'Enter your confirmation code'" [maxlength]="20" formControlName="code"
+            [errorMessages]="twoFaErrorMessages" [separator]="true">
         </app-form-textbox>
+        <!-- Errors -->
+        <div *ngIf="errorMessage!==''">
+            <span class="__auth-error-line">
+                {{errorMessage}}
+            </span>
+            <div class="__form-separator"></div>
+        </div>
         <button class="__main-button __button-wide" type="submit">send</button>
     </form>
 </div>

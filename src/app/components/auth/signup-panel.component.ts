@@ -16,6 +16,7 @@ export class SignUpPanelComponent implements OnInit, OnDestroy {
         this.emailField?.setValue(val);
     }
     @Input() userType: UserType = UserType.Personal;
+    @Input() errorMessage = '';
     @Output() error = new EventEmitter<string>();
     @Output() progressChange = new EventEmitter<boolean>();
     @Output() registered = new EventEmitter<string>();
@@ -117,10 +118,10 @@ export class SignUpPanelComponent implements OnInit, OnDestroy {
     }
 
     onSubmit(): void {
-        this.error.emit('');
+        this.registerError('');
         if (this.signupForm.valid) {
             if (!this.passwordsEqual()) {
-                this.error.emit('Passwords are not equal');
+                this.registerError('Passwords are not equal');
                 return;
             }
             this.progressChange.emit(true);
@@ -139,12 +140,12 @@ export class SignUpPanelComponent implements OnInit, OnDestroy {
                     this.showSignupPanel(userData);
                 } else {
                     this.progressChange.emit(false);
-                    this.error.emit('Unable to recognize the registration action');
+                    this.registerError('Unable to recognize the registration action');
                     console.log('Unable to recognize the registration action', userData.authTokenAction);
                 }
             }, (error) => {
                 this.progressChange.emit(false);
-                this.error.emit(this.errorHandler.getError(error.message, 'Unable to register new account'));
+                this.registerError(this.errorHandler.getError(error.message, 'Unable to register new account'));
             })
         );
     }
@@ -158,7 +159,7 @@ export class SignUpPanelComponent implements OnInit, OnDestroy {
         }
     }
 
-    onSignupError(error: string): void {
+    registerError(error: string): void {
         this.error.emit(error);
     }
 
@@ -173,7 +174,7 @@ export class SignUpPanelComponent implements OnInit, OnDestroy {
             this.registered.emit(userData?.user?.email);
         } else {
             console.log('onSignupDone. Wrong token action:', userData.authTokenAction);
-            this.error.emit('Unable to update personal data');
+            this.registerError('Unable to update personal data');
         }
     }
 }

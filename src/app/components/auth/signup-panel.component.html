@@ -24,6 +24,14 @@
         </mat-checkbox>
         <div class="__form-separator"></div>
 
+        <!-- Errors -->
+        <div *ngIf="errorMessage!==''">
+            <span class="__auth-error-line">
+                {{errorMessage}}
+            </span>
+            <div class="__form-separator"></div>
+        </div>
+
         <!-- Buttons -->
         <div class="__widget-buttons-area">
             <button class="__main-button __button-wide" type="submit" [disabled]="!validData">create account</button>
@@ -34,6 +42,6 @@
     </form>
 </div>
 
-<app-signup-info-panel #signupInfo *ngIf="extraData" buttonTitle="SAVE" (error)="onSignupError($event)"
+<app-signup-info-panel #signupInfo *ngIf="extraData" buttonTitle="SAVE" (error)="registerError($event)"
     (progressChange)="onSignupProgress($event)" (done)="onSignupDone($event)">
 </app-signup-info-panel>

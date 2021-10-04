@@ -3,8 +3,8 @@
         Your account seems to be registered. Please, authenticate
     </div>
 
-    <app-login-panel [socialButtons]="false" [wizardButtons]="true" [userName]="email" (error)="loginError($event)"
-        (progressChange)="loginProgress($event)" (onBack)="goBack()">
+    <app-login-panel [socialButtons]="false" [wizardButtons]="true" [userName]="email" [errorMessage]="errorMessage"
+        (error)="loginError($event)" (progressChange)="loginProgress($event)" (onBack)="goBack()">
     </app-login-panel>
 
     <!-- <app-login-panel [socialButtons]="true" (error)="onError($event)" (progressChange)="onProgressChange($event)"

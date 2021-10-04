@@ -7,15 +7,16 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class WidgetLoginComponent {
     @Input() email = '';
-    @Output() onError = new EventEmitter<string>();
     @Output() onProgress = new EventEmitter<boolean>();
     @Output() onBack = new EventEmitter();
     @Output() onComplete = new EventEmitter<void>();
 
+    errorMessage = '';
+
     constructor() { }
 
     loginError(error: string): void {
-        this.onError.emit(error);
+        this.errorMessage = error;
     }
 
     loginProgress(val: boolean): void {

@@ -2,12 +2,13 @@
     <div class="__auth-body">
         <div class="__auth-container">
             <div class="__auth-title-container">
-                <div style="color: mediumslateblue;margin: auto;font-size: 20px;">
+                <a style="font-size: 20px;margin: auto;color: mediumslateblue;" href="/">
                     eWallet Logo
-                </div>
+                </a>
             </div>
+            <mat-progress-bar *ngIf="inProgress" color="accent" mode="indeterminate"></mat-progress-bar>
             <div class="__auth-data-container">
-                <app-login-panel [socialButtons]="true" (error)="onError($event)"
+                <app-login-panel [socialButtons]="true" [errorMessage]="errorMessage" (error)="onError($event)"
                     (progressChange)="onProgressChange($event)" (authenticated)="onAuthenticated($event)"
                     (socialAuthenticated)="onSocialAuthenticated($event)" (extraDataVisible)="onLoginExtraData($event)">
                 </app-login-panel>

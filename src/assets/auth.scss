@@ -81,6 +81,20 @@
     color: $color_purple_900_text;
 }
 
+.__auth-error-area {
+    margin: 0px;
+}
+
+.__auth-error-line {
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 28px;
+
+    color: $color_pink_500;
+}
+
 .__auth-title {
     margin: 0px 16px 24px 0px;
     width: 100%;

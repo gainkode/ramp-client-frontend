@@ -19,6 +19,7 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
     }
     @Input() socialButtons: boolean = false;
     @Input() wizardButtons: boolean = false;
+    @Input() errorMessage = '';
     @Output() error = new EventEmitter<string>();
     @Output() progressChange = new EventEmitter<boolean>();
     @Output() authenticated = new EventEmitter<LoginResult>();
@@ -110,7 +111,7 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
 
     socialSignIn(providerName: string): void {
         this.progressChange.emit(true);
-        this.error.emit('');
+        this.registerError('');
         this.subscriptions.add(
             this.auth.socialSignIn(providerName).subscribe((data) => {
                 if (data.user !== undefined) {
@@ -137,24 +138,24 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
                                 this.socialAuthenticated.emit(userData);
                             }
                         } else {
-                            this.error.emit(`Unable to authorise with the login '${user.email}'. Please sign up`);
+                            this.registerError(`Unable to authorise with the login '${user.email}'. Please sign up`);
                         }
                     }, (error) => {
                         this.progressChange.emit(false);
-                        this.error.emit(this.errorHandler.getError(error.message, `Invalid authentication via ${providerName}`));
+                        this.registerError(this.errorHandler.getError(error.message, `Invalid authentication via ${providerName}`));
                     });
                 } else {
                     this.progressChange.emit(false);
                 }
             }, (error) => {
                 this.progressChange.emit(false);
-                this.error.emit(this.errorHandler.getError(error.message, `Unable to authenticate using ${providerName}`));
+                this.registerError(this.errorHandler.getError(error.message, `Unable to authenticate using ${providerName}`));
             })
         );
     }
 
     onSubmit(): void {
-        this.error.emit('');
+        this.registerError('');
         if (this.loginForm.valid) {
             this.progressChange.emit(true);
             const login = this.emailField?.value;
@@ -174,11 +175,11 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
                             this.authenticated.emit(userData);
                         }
                     } else {
-                        this.error.emit(`Unable to authorise with the login '${login}'. Please sign up`);
+                        this.registerError(`Unable to authorise with the login '${login}'. Please sign up`);
                     }
                 }, (error) => {
                     this.progressChange.emit(false);
-                    this.error.emit(this.errorHandler.getError(error.message, 'Incorrect login or password'));
+                    this.registerError(this.errorHandler.getError(error.message, 'Incorrect login or password'));
                 })
             );
         }
@@ -187,7 +188,7 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
     onTwoFaSubmit(): void {
         if (this.twoFaForm.valid) {
             this.progressChange.emit(true);
-            this.error.emit('');
+            this.registerError('');
             const code = this.twoFaForm.get('code')?.value;
             this.subscriptions.add(
                 this.auth.verify2Fa(code).subscribe(({ data }) => {
@@ -209,13 +210,13 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
                     }
                 }, (error) => {
                     this.progressChange.emit(false);
-                    this.error.emit(this.errorHandler.getError(error.message, 'Incorrect login or password'));
+                    this.registerError(this.errorHandler.getError(error.message, 'Incorrect login or password'));
                 })
             );
         }
     }
 
-    onSignupError(error: string): void {
+    registerError(error: string): void {
         this.error.emit(error);
     }
 
@@ -234,7 +235,7 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
             }
         } else {
             console.log('onSignupDone. Wrong token action:', userData.authTokenAction);
-            this.error.emit('Unable to update personal data');
+            this.registerError('Unable to update personal data');
         }
     }
 }

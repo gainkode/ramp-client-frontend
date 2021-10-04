@@ -34,9 +34,13 @@ import { PersonalLoginComponent } from './auth/login.component';
 import { PersonalRestoreComponent } from './auth/restore.component';
 import { PersonalRegisterComponent } from './auth/register.component';
 import { PersonalSuccessComponent } from './auth/success.component';
+import { PersonalConfirmDeviceComponent } from './auth/confirm-device.component';
+import { PersonalConfirmEmailComponent } from './auth/confirm-email.component';
 
 const routing = RouterModule.forChild([
+    // Main page
     { path: 'intro', component: IntroPersonalComponent },
+    // Authenticated profile
     {
         path: 'main',
         component: PersonalComponent,
@@ -50,13 +54,18 @@ const routing = RouterModule.forChild([
         ],
         canActivate: [PersonalGuard]
     },
+    // Auth pages
     { path: 'auth/login', component: PersonalLoginComponent },
     { path: 'auth/register', component: PersonalRegisterComponent },
     { path: 'auth/restore', component: PersonalRestoreComponent },
+    { path: 'auth/confirm-email/:token', component: PersonalConfirmEmailComponent },
+    { path: 'auth/confirm-device/:token', component: PersonalConfirmDeviceComponent },
     { path: 'auth/success/:type', component: PersonalSuccessComponent },
+    // Obsolete and temporary
     { path: 'profile', component: ProfileMainPersonalComponent, canActivate: [PersonalGuard] },
     { path: 'myaccount', component: PersonalMyAccountComponent, canActivate: [PersonalGuard] },
     { path: 'kyc', component: KycPersonalComponent, canActivate: [PersonalGuard] },
+    // ======================
     { path: '**', redirectTo: 'main' }
 ]);
 
@@ -90,7 +99,8 @@ export class MaterialModule { }
         // Intro
         IntroPersonalComponent,
         // Auth
-        PersonalLoginComponent, PersonalRegisterComponent, PersonalRestoreComponent, PersonalSuccessComponent,
+        PersonalLoginComponent, PersonalRegisterComponent, PersonalRestoreComponent,
+        PersonalConfirmEmailComponent, PersonalConfirmDeviceComponent, PersonalSuccessComponent,
         // Profile
         PersonalComponent,
         PersonalHomeComponent,

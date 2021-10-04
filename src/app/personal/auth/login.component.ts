@@ -64,7 +64,7 @@ export class PersonalLoginComponent implements OnDestroy {
         );
     }
 
-    onError(error: string): void {
+    onError(error: string) {
         this.errorMessage = error;
     }
 

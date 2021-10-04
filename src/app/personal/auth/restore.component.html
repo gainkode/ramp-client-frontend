@@ -2,9 +2,9 @@
     <div class="__auth-body">
         <div class="__auth-container">
             <div class="__auth-title-container">
-                <div style="color: mediumslateblue;margin: auto;font-size: 20px;">
+                <a style="font-size: 20px;margin: auto;color: mediumslateblue;" href="/">
                     eWallet Logo
-                </div>
+                </a>
             </div>
             <div class="__auth-data-container">
                 <form [formGroup]="restoreForm" (ngSubmit)="onSubmit()">
@@ -13,6 +13,13 @@
                         [maxlength]="50" formControlName="email" [errorMessages]="emailErrorMessages"
                         [separator]="true">
                     </app-form-textbox>
+
+                    <!-- Errors -->
+                    <div *ngIf="errorMessage!==''">
+                        <span class="__auth-error-line">
+                            {{errorMessage}}
+                        </span>
+                    </div>
 
                     <div class="__form-separator"></div>
 

@@ -2,15 +2,15 @@
     <div class="__auth-body">
         <div class="__auth-container">
             <div class="__auth-title-container">
-                <div style="color: mediumslateblue;margin: auto;font-size: 20px;">
+                <a style="font-size: 20px;margin: auto;color: mediumslateblue;" href="/">
                     eWallet Logo
-                </div>
+                </a>
             </div>
             <div class="__auth-data-container">
                 <div *ngIf="successType=='signup'" class="__auth-disclaimer-area">
-                    <div class="__auth-title">
+                    <h2 class="__auth-title">
                         Registration complete
-                    </div>
+                    </h2>
                     <div class="__auth-disclaimer-container">
                         <span class="__auth-disclaimer-line">
                             Thank you for your registration.
@@ -27,9 +27,9 @@
                     </div>
                 </div>
                 <div *ngIf="successType=='restore'" class="__auth-disclaimer-area">
-                    <div class="__auth-title">
+                    <h2 class="__auth-title">
                         Restore Password
-                    </div>
+                    </h2>
                     <div class="__auth-disclaimer-container">
                         <span class="__auth-disclaimer-line">
                             Temporary password was generated and sent to your email address.
@@ -42,9 +42,9 @@
                     </div>
                 </div>
                 <div *ngIf="successType=='reset'" class="__auth-disclaimer-area">
-                    <div class="__auth-title">
+                    <h2 class="__auth-title">
                         Password Reset Complete
-                    </div>
+                    </h2>
                     <div class="__auth-disclaimer-container">
                         <span class="__auth-disclaimer-line">
                             Your password has been successfully changed.
