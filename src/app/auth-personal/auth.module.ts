@@ -13,7 +13,6 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ComponentsModule } from '../components/components.module';
 import { SignupComponent } from './signup.component';
-import { SuccessComponent } from './success.component';
 import { ConfirmEmailComponent } from './confirm-email.component';
 import { ResetComponent } from './reset.component';
 import { ConfirmDeviceComponent } from './confirm-device.component';
@@ -22,7 +21,7 @@ const routing = RouterModule.forChild([
     { path: 'login', redirectTo: '/personal/auth/login' },
     { path: 'register', redirectTo: '/personal/auth/register' },
     { path: 'signup/:token', component: SignupComponent },
-    { path: 'success/:type', component: SuccessComponent },
+    { path: 'success/:type', redirectTo: '/personal/auth/success/:type' },
     { path: 'confirm-email/:token', component: ConfirmEmailComponent },
     { path: 'confirm-device/:token', component: ConfirmDeviceComponent },
     { path: 'new-password/:token', component: ResetComponent },
@@ -54,8 +53,7 @@ export class MaterialModule { }
         CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule
     ],
     declarations: [
-        SignupComponent, SuccessComponent,
-        ConfirmEmailComponent, ConfirmDeviceComponent, ResetComponent
+        SignupComponent, ConfirmEmailComponent, ConfirmDeviceComponent, ResetComponent
     ],
     schemas: [
         CUSTOM_ELEMENTS_SCHEMA

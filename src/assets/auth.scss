@@ -59,6 +59,41 @@
     margin: 0px 0px;
 }
 
+.__auth-disclaimer-area {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.__auth-disclaimer-container {
+    margin: 0px 0px 12px 0px;
+}
+
+.__auth-disclaimer-line {
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 28px;
+
+    color: $color_purple_900_text;
+}
+
+.__auth-title {
+    margin: 0px 16px 24px 0px;
+    width: 100%;
+    height:28px;
+    
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 21px;
+    line-height: 28px;
+    color: $color_purple_900_text;
+}
+
 .__auth-social-delimitter {
     margin: 24px 0px;
     width: 100%;

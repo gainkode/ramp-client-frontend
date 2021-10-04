@@ -33,6 +33,7 @@ import { PersonalTransactionDetailsComponent } from './profile/details/transacti
 import { PersonalLoginComponent } from './auth/login.component';
 import { PersonalRestoreComponent } from './auth/restore.component';
 import { PersonalRegisterComponent } from './auth/register.component';
+import { PersonalSuccessComponent } from './auth/success.component';
 
 const routing = RouterModule.forChild([
     { path: 'intro', component: IntroPersonalComponent },
@@ -52,6 +53,7 @@ const routing = RouterModule.forChild([
     { path: 'auth/login', component: PersonalLoginComponent },
     { path: 'auth/register', component: PersonalRegisterComponent },
     { path: 'auth/restore', component: PersonalRestoreComponent },
+    { path: 'auth/success/:type', component: PersonalSuccessComponent },
     { path: 'profile', component: ProfileMainPersonalComponent, canActivate: [PersonalGuard] },
     { path: 'myaccount', component: PersonalMyAccountComponent, canActivate: [PersonalGuard] },
     { path: 'kyc', component: KycPersonalComponent, canActivate: [PersonalGuard] },
@@ -88,7 +90,7 @@ export class MaterialModule { }
         // Intro
         IntroPersonalComponent,
         // Auth
-        PersonalLoginComponent, PersonalRegisterComponent, PersonalRestoreComponent,
+        PersonalLoginComponent, PersonalRegisterComponent, PersonalRestoreComponent, PersonalSuccessComponent,
         // Profile
         PersonalComponent,
         PersonalHomeComponent,
