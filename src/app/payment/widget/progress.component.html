@@ -2,6 +2,15 @@
     <div class="__widget-progress-title">
         {{title}}
     </div>
-    <div class="__widget-progress-line"></div>
-    <div [ngClass]="getIndicatorStyle()"></div>
+    <div class="__widget-progress-line">
+        <mat-progress-bar *ngIf="progress" color="accent" mode="indeterminate"></mat-progress-bar>
+    </div>
+    <div *ngIf="!progress" [ngClass]="{'__widget-progress-indicator': true,
+    '__widget-progress-indicator-step-1': position === 1,
+    '__widget-progress-indicator-step-2': position === 2,
+    '__widget-progress-indicator-step-3': position === 3,
+    '__widget-progress-indicator-step-4': position === 4,
+    '__widget-progress-indicator-step-5': position === 5,
+    '__widget-progress-indicator-step-6': position === 6}">
+    </div>
 </div>

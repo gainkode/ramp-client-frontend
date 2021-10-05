@@ -4,11 +4,11 @@
         {{summary?.orderId}}
     </div>
 </div>
-<div *ngIf="summary?.email!==''" class="__widget-summary-grid">
-    <div class="__widget-summary-item">
+<div class="__widget-summary-grid">
+    <div *ngIf="summary?.email !== ''" class="__widget-summary-item">
         Email:
     </div>
-    <div class="__widget-summary-item">
+    <div *ngIf="summary?.email !== ''" class="__widget-summary-item">
         {{summary?.email}}
     </div>
     <div *ngIf="summary?.validAmounts" class="__widget-summary-item">

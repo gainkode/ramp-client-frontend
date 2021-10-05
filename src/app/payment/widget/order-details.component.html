@@ -1,10 +1,5 @@
 <div class="__widget-data-box">
     <form [formGroup]="dataForm" (ngSubmit)="onSubmit()">
-        <!-- Email -->
-        <app-form-textbox [label]="'Email'" [boxType]="'email'" [placeholder]="'...'" [maxlength]="50"
-            formControlName="email" [errorMessages]="emailErrorMessages" [separator]="true">
-        </app-form-textbox>
-
         <!-- Send -->
         <app-form-finance-combo [label]="'Amount to spend'" [placeholder]="'...'" [boxFieldName]="'amountSpend'"
             [boxField]="amountSpendField" [comboField]="currencySpendField" [comboFieldName]="'currencySpend'"
@@ -35,8 +30,6 @@
                 </mat-option>
             </mat-select>
         </div>
-        <div class="__form-separator"></div>
-        <mat-checkbox color="primary" formControlName="register" class="__widget-checkout">Register an account</mat-checkbox>
 
         <!-- Buttons -->
         <div class="__widget-buttons-area">

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { Rate, SettingsCurrencyListResult, TransactionType } from 'src/app/model/generated-models';
+import { SettingsCurrencyListResult, TransactionType } from 'src/app/model/generated-models';
 import { CheckoutSummary, CurrencyView, QuickCheckoutTransactionTypeList } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
@@ -15,21 +15,34 @@ import { PaymentDataService } from 'src/app/services/payment.service';
 })
 export class WidgetOrderDetailsComponent implements OnInit, OnDestroy {
   @Input() initialized = false;
-  @Input() email = '';
-  @Input() set rate(val: Rate | undefined) {
-    this.pRate = val;
-    this.updateAmounts();
+  @Input() set summary(val: CheckoutSummary | undefined) {
+    this.pSummary = val;
+  }
+  @Input() set withdrawalRate(val: number | undefined) {
+    this.pSpendChanged = true;
+    this.pWithdrawalRate = val;
+    this.updateCurrentAmounts();
+  }
+  @Input() set depositRate(val: number | undefined) {
+    this.pSpendChanged = true;
+    this.pDepositRate = val;
+    this.updateCurrentAmounts();
   }
   @Output() onError = new EventEmitter<string>();
   @Output() onProgress = new EventEmitter<boolean>();
   @Output() onReset = new EventEmitter<void>();
   @Output() onDataUpdated = new EventEmitter<CheckoutSummary>();
-  @Output() onComplete = new EventEmitter<boolean>();
+  @Output() onComplete = new EventEmitter();
 
   private pSubscriptions: Subscription = new Subscription();
   private pCurrencies: CurrencyView[] = [];
-  private pRate: Rate | undefined = undefined;
-  private pReceiveUpdated = false;
+  private pSummary: CheckoutSummary | undefined = undefined;
+  private pSpendChanged = false;
+  private pReceiveChanged = false;
+  private pSpendAutoUpdated = false;
+  private pReceiveAutoUpdated = false;
+  private pWithdrawalRate: number | undefined = undefined;
+  private pDepositRate: number | undefined = undefined;
   private pNumberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
 
   validData = false;
@@ -41,10 +54,6 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy {
   receiveCurrencyList: CurrencyView[] = [];
   transactionList = QuickCheckoutTransactionTypeList;
 
-  emailErrorMessages: { [key: string]: string; } = {
-    ['email']: 'Email is not valid',
-    ['required']: 'Email is required'
-  };
   amountSpendErrorMessages: { [key: string]: string; } = {
     ['required']: 'Amount is required',
     ['pattern']: 'Amount must be a valid number',
@@ -57,18 +66,12 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy {
   };
 
   dataForm = this.formBuilder.group({
-    email: [null, { validators: [Validators.required, Validators.email], updateOn: 'change' }],
-    amountSpend: [0, { validators: [], updateOn: 'change' }],
+    amountSpend: [undefined, { validators: [], updateOn: 'change' }],
     currencySpend: [null, { validators: [], updateOn: 'change' }],
-    amountReceive: [0, { validators: [], updateOn: 'change' }],
+    amountReceive: [undefined, { validators: [], updateOn: 'change' }],
     currencyReceive: [null, { validators: [], updateOn: 'change' }],
-    transaction: [TransactionType.Deposit, { validators: [], updateOn: 'change' }],
-    register: [false]
+    transaction: [TransactionType.Deposit, { validators: [], updateOn: 'change' }]
   });
-
-  get emailField(): AbstractControl | null {
-    return this.dataForm.get('email');
-  }
 
   get amountSpendField(): AbstractControl | null {
     return this.dataForm.get('amountSpend');
@@ -88,10 +91,6 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy {
 
   get transactionField(): AbstractControl | null {
     return this.dataForm.get('transaction');
-  }
-
-  get registerField(): AbstractControl | null {
-    return this.dataForm.get('register');
   }
 
   constructor(
@@ -131,9 +130,10 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy {
 
 
     this.loadDetailsForm();
-    this.pSubscriptions.add(this.emailField?.valueChanges.subscribe(val => this.sendData()));
     this.pSubscriptions.add(this.currencySpendField?.valueChanges.subscribe(val => this.onCurrencySpendUpdated(val)));
     this.pSubscriptions.add(this.currencyReceiveField?.valueChanges.subscribe(val => this.onCurrencyReceiveUpdated(val)));
+    this.pSubscriptions.add(this.amountSpendField?.valueChanges.subscribe(val => this.onAmountSpendUpdated(val)));
+    this.pSubscriptions.add(this.amountReceiveField?.valueChanges.subscribe(val => this.onAmountReceiveUpdated(val)));
   }
 
   ngOnDestroy(): void {
@@ -147,14 +147,6 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy {
       this.onError.emit(this.errorHandler.getRejectedCookieMessage());
     } else {
       this.onProgress.emit(true);
-      if (this.email === '') {
-        const user = this.auth.user;
-        if (user) {
-          this.emailField?.setValue(user.email);
-        }
-      } else {
-        this.emailField?.setValue(this.email);
-      }
       this.pSubscriptions.add(
         currencyData.valueChanges.subscribe(({ data }) => {
           const currencySettings = data.getSettingsCurrency as SettingsCurrencyListResult;
@@ -162,16 +154,24 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy {
           if (currencySettings !== null) {
             itemCount = currencySettings.count as number;
             if (itemCount > 0) {
-              let currentCurrencySpendId = '';
-              let currentCurrencyReceiveId = '';
-              let currentAmountSpend = 0;
-              let currentAmountReceive = 0;
+              let currentCurrencySpendId = this.pSummary?.currencyFrom ?? '';
+              let currentCurrencyReceiveId = this.pSummary?.currencyTo ?? '';
+              let currentAmountSpend = this.pSummary?.amountFrom;
+              let currentAmountReceive = this.pSummary?.amountTo;
               if (this.currentTransaction === TransactionType.Deposit) {
-                currentCurrencySpendId = this.auth.user?.defaultFiatCurrency ?? '';
-                currentCurrencyReceiveId = this.auth.user?.defaultCryptoCurrency ?? '';
+                if (currentCurrencySpendId === '') {
+                  currentCurrencySpendId = this.auth.user?.defaultFiatCurrency ?? '';
+                }
+                if (currentCurrencyReceiveId === '') {
+                  currentCurrencyReceiveId = this.auth.user?.defaultCryptoCurrency ?? '';
+                }
               } else if (this.currentTransaction === TransactionType.Withdrawal) {
-                currentCurrencyReceiveId = this.auth.user?.defaultFiatCurrency ?? '';
-                currentCurrencySpendId = this.auth.user?.defaultCryptoCurrency ?? '';
+                if (currentCurrencySpendId === '') {
+                  currentCurrencyReceiveId = this.auth.user?.defaultFiatCurrency ?? '';
+                }
+                if (currentCurrencyReceiveId === '') {
+                  currentCurrencySpendId = this.auth.user?.defaultCryptoCurrency ?? '';
+                }
               }
               this.pCurrencies = currencySettings.list?.map((val) => new CurrencyView(val)) as CurrencyView[];
               this.setCurrencyValues(
@@ -197,8 +197,8 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy {
   private setCurrencyValues(
     defaultSpendCurrency: string = '',
     defaultReceiveCurrency: string = '',
-    defaultSpendAmount: number = 0,
-    defaultReceiveAmount: number = 0): void {
+    defaultSpendAmount: number | undefined = undefined,
+    defaultReceiveAmount: number | undefined = undefined): void {
     if (this.currentTransaction === TransactionType.Deposit) {
       this.spendCurrencyList = this.pCurrencies.filter((c) => c.fiat);
       this.receiveCurrencyList = this.pCurrencies.filter((c) => !c.fiat);
@@ -211,11 +211,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy {
         defaultSpendCurrency = this.spendCurrencyList[0].id;
       }
       this.currencySpendField?.setValue(defaultSpendCurrency);
-      if (this.currentCurrencySpend) {
-        if (defaultSpendAmount === 0) {
-          defaultSpendAmount = this.currentCurrencySpend.minAmount;
-        }
-      }
+      this.pSpendAutoUpdated = true;
       this.amountSpendField?.setValue(defaultSpendAmount);
     }
     if (this.receiveCurrencyList.length > 0) {
@@ -223,23 +219,18 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy {
         defaultReceiveCurrency = this.receiveCurrencyList[0].id;
       }
       this.currencyReceiveField?.setValue(defaultReceiveCurrency);
-      if (defaultReceiveAmount !== 0) {
-        this.amountReceiveField?.setValue(defaultReceiveAmount);
-      }
+      this.pReceiveAutoUpdated = true;
+      this.amountReceiveField?.setValue(defaultReceiveAmount);
+    }
+    if (this.pSpendChanged || this.pReceiveChanged) {
+      this.updateCurrentAmounts();
     }
   }
 
-  private sendData(): void {
+  private sendData(spend: number | undefined, receive: number | undefined): void {
     const data = new CheckoutSummary();
-    if (this.emailField?.valid) {
-      data.email = this.emailField?.value;
-    }
-    if (this.amountSpendField?.valid) {
-      data.amountFrom = this.amountSpendField?.value;
-    }
-    if (this.amountReceiveField?.valid) {
-      data.amountTo = this.amountReceiveField?.value;
-    }
+    data.amountFrom = spend;
+    data.amountTo = receive;
     if (this.currencySpendField?.valid) {
       data.currencyFrom = this.currencySpendField?.value;
     }
@@ -254,7 +245,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy {
 
   private onCurrencySpendUpdated(currency: string): void {
     this.currentCurrencySpend = this.pCurrencies.find((x) => x.id === currency);
-    if (this.currentCurrencySpend) {
+    if (this.currentCurrencySpend && this.amountSpendField?.value) {
       this.amountSpendErrorMessages['min'] = `Minimal amount is ${this.currentCurrencySpend.minAmount} ${this.currentCurrencySpend.title}`;
       this.amountSpendField?.setValidators([
         Validators.required,
@@ -262,13 +253,14 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy {
         Validators.min(this.currentCurrencySpend.minAmount),
       ]);
       this.amountSpendField?.updateValueAndValidity();
-      this.sendData();
     }
+    this.pSpendChanged = true;
+    this.updateCurrentAmounts();
   }
 
   private onCurrencyReceiveUpdated(currency: string): void {
     this.currentCurrencyReceive = this.pCurrencies.find((x) => x.id === currency);
-    if (this.currentCurrencyReceive) {
+    if (this.currentCurrencyReceive && this.amountReceiveField?.value) {
       this.amountReceiveErrorMessages['min'] = `Minimal amount is ${this.currentCurrencyReceive.minAmount} ${this.currentCurrencyReceive.title}`;
       this.amountReceiveField?.setValidators([
         Validators.required,
@@ -276,66 +268,140 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy {
         Validators.min(this.currentCurrencyReceive.minAmount),
       ]);
       this.amountReceiveField?.updateValueAndValidity();
-      // if (this.amountReceiveField?.valid) {
-      //   this.pReceiveUpdated = true;
-      // }
-      this.sendData();
     }
+    this.pReceiveChanged = true;
+    this.updateCurrentAmounts();
   }
 
-  private updateAmounts(): void {
+  private onAmountSpendUpdated(val: any) {
+    if (val && !this.pSpendAutoUpdated) {
+      this.pSpendAutoUpdated = false;
+      if (this.hasValidators(this.amountSpendField as AbstractControl) === false) {
+        if (this.currentCurrencySpend) {
+          this.amountSpendErrorMessages['min'] = `Minimal amount is ${this.currentCurrencySpend.minAmount} ${this.currentCurrencySpend.title}`;
+          this.amountSpendField?.setValidators([
+            Validators.required,
+            Validators.pattern(this.pNumberPattern),
+            Validators.min(this.currentCurrencySpend.minAmount),
+          ]);
+          this.amountSpendField?.updateValueAndValidity();
+        }
+      }
+      this.pSpendChanged = true;
+      this.updateCurrentAmounts();
+    }
+    this.pSpendAutoUpdated = false;
+  }
+
+  private onAmountReceiveUpdated(val: any) {
+    if (val && !this.pReceiveAutoUpdated) {
+      this.pReceiveAutoUpdated = false;
+      if (this.hasValidators(this.amountReceiveField as AbstractControl) === false) {
+        if (this.currentCurrencyReceive) {
+          this.amountReceiveErrorMessages['min'] = `Minimal amount is ${this.currentCurrencyReceive.minAmount} ${this.currentCurrencyReceive.title}`;
+          this.amountReceiveField?.setValidators([
+            Validators.required,
+            Validators.pattern(this.pNumberPattern),
+            Validators.min(this.currentCurrencyReceive.minAmount),
+          ]);
+          this.amountReceiveField?.updateValueAndValidity();
+        }
+      }
+      this.pReceiveChanged = true;
+      this.updateCurrentAmounts();
+    }
+    this.pReceiveAutoUpdated = false;
+  }
+
+  private hasValidators(control: AbstractControl) {
+    if (!control) {
+      return false;
+    }
+    if (control.validator) {
+      const validator = control.validator({} as AbstractControl);
+      if (validator && validator.required) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private updateCurrentAmounts(): void {
+    let spend: number | undefined = undefined;
+    let receive: number | undefined = undefined;
+    if (this.amountSpendField?.value && this.amountSpendField?.valid) {
+      spend = parseFloat(this.amountSpendField?.value);
+    }
+    if (this.amountReceiveField?.value && this.amountReceiveField?.valid) {
+      receive = parseFloat(this.amountReceiveField?.value);
+    }
+    this.updateAmounts(spend, receive);
+  }
+
+  private updateAmounts(spend: number | undefined, receive: number | undefined): void {
     this.validData = false;
     let dst = 0;
-    console.log(this.pRate);
-    if (this.pReceiveUpdated) {
+    if (this.pReceiveChanged) {
       if (this.currentTransaction === TransactionType.Deposit) {
-        if (this.amountReceiveField?.valid && this.pRate?.depositRate) {
-          const src = parseInt(this.amountReceiveField?.value);
-          dst = src * this.pRate?.depositRate;
+        if (receive && this.pDepositRate) {
+          dst = receive * this.pDepositRate;
           this.validData = true;
         }
       } else if (this.currentTransaction === TransactionType.Withdrawal) {
-        if (this.amountReceiveField?.valid && this.pRate?.depositRate) {
-          const src = parseInt(this.amountReceiveField?.value);
-          dst = src / this.pRate?.withdrawRate;
+        if (receive && this.pWithdrawalRate) {
+          const rate = this.pWithdrawalRate;
+          if (rate === 0) {
+            dst = 0;
+          } else {
+            dst = receive / rate;
+          }
           this.validData = true;
         }
       }
       if (this.validData === true) {
+        spend = dst;
         const val = dst.toFixed(this.currentCurrencySpend?.precision);
+        this.pSpendAutoUpdated = true;
         this.amountSpendField?.setValue(val);
       }
-      this.pReceiveUpdated = false;
-    } else {
+    }
+    if (this.pSpendChanged) {
       if (this.currentTransaction === TransactionType.Deposit) {
-        if (this.amountSpendField?.valid && this.pRate?.depositRate) {
-          const src = parseInt(this.amountSpendField?.value);
-          dst = src / this.pRate?.depositRate;
+        if (spend && this.pDepositRate) {
+          const rate = this.pDepositRate;
+          if (rate === 0) {
+            dst = 0;
+          } else {
+            dst = spend / rate;
+          }
           this.validData = true;
         }
       } else if (this.currentTransaction === TransactionType.Withdrawal) {
-        if (this.amountSpendField?.valid && this.pRate?.withdrawRate) {
-          const src = parseInt(this.amountSpendField?.value);
-          dst = src * this.pRate?.withdrawRate;
+        if (spend && this.pWithdrawalRate) {
+          dst = spend * this.pWithdrawalRate;
           this.validData = true;
         }
       }
       if (this.validData === true) {
+        receive = dst;
         const val = dst.toFixed(this.currentCurrencyReceive?.precision);
+        this.pReceiveAutoUpdated = true;
         this.amountReceiveField?.setValue(val);
       }
     }
+    this.pSpendChanged = false;
+    this.pReceiveChanged = false;
+    this.sendData(spend, receive);
   }
 
   onSubmit(): void {
-    console.log('email', this.emailField?.value, this.emailField?.valid ? 'valid' : 'invalid');
     console.log('spend', this.amountSpendField?.value, this.amountSpendField?.valid ? 'valid' : 'invalid');
     console.log('spend currency', this.currencySpendField?.value, this.currencySpendField?.valid ? 'valid' : 'invalid');
     console.log('receive', this.amountReceiveField?.value, this.amountReceiveField?.valid ? 'valid' : 'invalid');
     console.log('receive currency', this.currencyReceiveField?.value, this.currencyReceiveField?.valid ? 'valid' : 'invalid');
 
     if (this.dataForm.valid) {
-      this.onComplete.emit(this.registerField?.value);
+      this.onComplete.emit();
     }
   }
 }

@@ -7,6 +7,7 @@ import { Component, Input } from '@angular/core';
 })
 export class WidgetProgressComponent {
   @Input() title = '';
+  @Input() progress = false;
   @Input() set step(val: number) {
     this.position = val;
     if (this.position < 1) {

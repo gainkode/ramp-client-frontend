@@ -267,8 +267,8 @@ export class CheckoutSummary {
     email = '';
     currencyFrom = '';
     currencyTo = '';
-    amountFrom = 0;
-    amountTo = 0;
+    amountFrom: number | undefined = undefined;
+    amountTo: number | undefined = undefined;
     address = '';
     fee = 0;
     feePercent = 0;
@@ -279,7 +279,7 @@ export class CheckoutSummary {
     status: TransactionStatus = TransactionStatus.Pending;
     card: CardView | null = null;
     provider: PaymentProvider | null = null;
-
+    
     get isFromCrypto(): boolean {
         let result = false;
         switch (this.transactionType) {
@@ -345,7 +345,9 @@ export class CheckoutSummary {
     }
 
     get validAmounts(): boolean {
-        return this.amountFrom > 0 && this.amountTo > 0;
+        const validFrom = (this.amountFrom) ? (this.amountFrom > 0) : false;
+        const validTo = (this.amountTo) ? (this.amountTo > 0) : false;
+        return validFrom && validTo;
     }
 
     reset(): void {
@@ -353,8 +355,8 @@ export class CheckoutSummary {
         this.email = '';
         this.currencyFrom = '';
         this.currencyTo = '';
-        this.amountFrom = 0;
-        this.amountTo = 0;
+        this.amountFrom = undefined;
+        this.amountTo = undefined;
         this.address = '';
         this.fee = 0;
         this.feePercent = 0;
