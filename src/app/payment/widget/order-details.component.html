@@ -1,6 +1,28 @@
 <div class="__widget-data-box">
     <form [formGroup]="dataForm" (ngSubmit)="onSubmit()">
-        <!-- Send -->
+        <div>
+            <!-- Transaction -->
+            <div class="__form-label">
+                Transaction
+            </div>
+            <div class="__form-text-border">
+                <mat-select formControlName="transaction">
+                    <mat-select-trigger>
+                        <div class="__form-combo-item">
+                            {{transactionField?.value}}
+                        </div>
+                    </mat-select-trigger>
+                    <mat-option *ngFor="let item of transactionList" [value]="item.id" style="height: 32px;">
+                        <div class="__form-combo-item">
+                            {{item.name}}
+                        </div>
+                    </mat-option>
+                </mat-select>
+            </div>
+            <div class="__form-separator"></div>
+        </div>
+
+        <!-- Spend -->
         <app-form-finance-combo [label]="'Amount to spend'" [placeholder]="'...'" [boxFieldName]="'amountSpend'"
             [boxField]="amountSpendField" [comboField]="currencySpendField" [comboFieldName]="'currencySpend'"
             [comboList]="spendCurrencyList" [errorMessages]="amountSpendErrorMessages" [separator]="true">
@@ -11,25 +33,6 @@
             [boxField]="amountReceiveField" [comboField]="currencyReceiveField" [comboFieldName]="'currencyReceive'"
             [comboList]="receiveCurrencyList" [errorMessages]="amountReceiveErrorMessages" [separator]="true">
         </app-form-finance-combo>
-
-        <!-- Transaction -->
-        <div class="__form-label">
-            Transaction
-        </div>
-        <div class="__form-text-border">
-            <mat-select formControlName="transaction">
-                <mat-select-trigger>
-                    <div class="__form-combo-item">
-                        {{transactionField?.value}}
-                    </div>
-                </mat-select-trigger>
-                <mat-option *ngFor="let item of transactionList" [value]="item.id" style="height: 32px;">
-                    <div class="__form-combo-item">
-                        {{item.name}}
-                    </div>
-                </mat-option>
-            </mat-select>
-        </div>
 
         <!-- Buttons -->
         <div class="__widget-buttons-area">

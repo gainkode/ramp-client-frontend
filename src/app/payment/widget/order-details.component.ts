@@ -39,6 +39,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy {
   private pSummary: CheckoutSummary | undefined = undefined;
   private pSpendChanged = false;
   private pReceiveChanged = false;
+  private pTransactionChanged = false;
   private pSpendAutoUpdated = false;
   private pReceiveAutoUpdated = false;
   private pWithdrawalRate: number | undefined = undefined;
@@ -101,39 +102,12 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
-    // this.pSubscriptions.add(this.currencySpendField?.valueChanges.subscribe(val => this.onCurrencySpendUpdated(val)));
-    // this.pSubscriptions.add(this.currencyReceiveField?.valueChanges.subscribe(val => this.onCurrencyReceiveUpdated(val)));
-
-    // this.detailsAmountFromControl?.valueChanges.subscribe((val) => {
-    //   this.setSummuryAmountFrom(val);
-    // });
-    // this.detailsAmountToControl?.valueChanges.subscribe((val) => {
-    //   this.setSummuryAmountTo(val);
-    // });
-    // this.detailsTransactionControl?.valueChanges.subscribe((val) => {
-    //   const currencyFrom = this.detailsCurrencyFromControl?.value;
-    //   const currencyTo = this.detailsCurrencyToControl?.value;
-    //   const amountFrom = this.detailsAmountFromControl?.value;
-    //   const amountTo = this.detailsAmountToControl?.value;
-    //   this.transactionTypeEdit = true;
-    //   this.currentTransaction = val as TransactionType;
-    //   this.summary.transactionType = this.currentTransaction;
-    //   this.setCurrencyValues(currencyTo, currencyFrom, amountTo, amountFrom);
-    //   this.priceEdit = true;
-    //   this.updateAmountTo();
-    //   this.priceEdit = false;
-    //   this.transactionTypeEdit = false;
-    //   this.exchangeRateComponent?.updateRate();
-    // });
-
-
-
-
     this.loadDetailsForm();
     this.pSubscriptions.add(this.currencySpendField?.valueChanges.subscribe(val => this.onCurrencySpendUpdated(val)));
     this.pSubscriptions.add(this.currencyReceiveField?.valueChanges.subscribe(val => this.onCurrencyReceiveUpdated(val)));
     this.pSubscriptions.add(this.amountSpendField?.valueChanges.subscribe(val => this.onAmountSpendUpdated(val)));
     this.pSubscriptions.add(this.amountReceiveField?.valueChanges.subscribe(val => this.onAmountReceiveUpdated(val)));
+    this.pSubscriptions.add(this.transactionField?.valueChanges.subscribe(val => this.onTransactionUpdated(val)));
   }
 
   ngOnDestroy(): void {
@@ -199,13 +173,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy {
     defaultReceiveCurrency: string = '',
     defaultSpendAmount: number | undefined = undefined,
     defaultReceiveAmount: number | undefined = undefined): void {
-    if (this.currentTransaction === TransactionType.Deposit) {
-      this.spendCurrencyList = this.pCurrencies.filter((c) => c.fiat);
-      this.receiveCurrencyList = this.pCurrencies.filter((c) => !c.fiat);
-    } else if (this.currentTransaction === TransactionType.Withdrawal) {
-      this.spendCurrencyList = this.pCurrencies.filter((c) => c.fiat);
-      this.receiveCurrencyList = this.pCurrencies.filter((c) => !c.fiat);
-    }
+    this.setCurrencyLists();
     if (this.spendCurrencyList.length > 0) {
       if (defaultSpendCurrency === '') {
         defaultSpendCurrency = this.spendCurrencyList[0].id;
@@ -227,6 +195,16 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
+  private setCurrencyLists(): void {
+    if (this.currentTransaction === TransactionType.Deposit) {
+      this.spendCurrencyList = this.pCurrencies.filter((c) => c.fiat);
+      this.receiveCurrencyList = this.pCurrencies.filter((c) => !c.fiat);
+    } else if (this.currentTransaction === TransactionType.Withdrawal) {
+      this.spendCurrencyList = this.pCurrencies.filter((c) => !c.fiat);
+      this.receiveCurrencyList = this.pCurrencies.filter((c) => c.fiat);
+    }
+  }
+
   private sendData(spend: number | undefined, receive: number | undefined): void {
     const data = new CheckoutSummary();
     data.amountFrom = spend;
@@ -243,49 +221,53 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy {
     this.onDataUpdated.emit(data);
   }
 
+  private setSpendValidators(): void {
+    this.amountSpendErrorMessages['min'] = `Minimal amount is ${this.currentCurrencySpend?.minAmount} ${this.currentCurrencySpend?.title}`;
+    this.amountSpendField?.setValidators([
+      Validators.required,
+      Validators.pattern(this.pNumberPattern),
+      Validators.min(this.currentCurrencySpend?.minAmount ?? 0),
+    ]);
+    this.amountSpendField?.updateValueAndValidity();
+  }
+
+  private setReceiveValidators(): void {
+    this.amountReceiveErrorMessages['min'] = `Minimal amount is ${this.currentCurrencyReceive?.minAmount} ${this.currentCurrencyReceive?.title}`;
+    this.amountReceiveField?.setValidators([
+      Validators.required,
+      Validators.pattern(this.pNumberPattern),
+      Validators.min(this.currentCurrencyReceive?.minAmount ?? 0),
+    ]);
+    this.amountReceiveField?.updateValueAndValidity();
+  }
+
   private onCurrencySpendUpdated(currency: string): void {
-    this.currentCurrencySpend = this.pCurrencies.find((x) => x.id === currency);
-    if (this.currentCurrencySpend && this.amountSpendField?.value) {
-      this.amountSpendErrorMessages['min'] = `Minimal amount is ${this.currentCurrencySpend.minAmount} ${this.currentCurrencySpend.title}`;
-      this.amountSpendField?.setValidators([
-        Validators.required,
-        Validators.pattern(this.pNumberPattern),
-        Validators.min(this.currentCurrencySpend.minAmount),
-      ]);
-      this.amountSpendField?.updateValueAndValidity();
+    if (!this.pTransactionChanged) {
+      this.currentCurrencySpend = this.pCurrencies.find((x) => x.id === currency);
+      if (this.currentCurrencySpend && this.amountSpendField?.value) {
+        this.setSpendValidators();
+      }
+      this.pSpendChanged = true;
+      this.updateCurrentAmounts();
     }
-    this.pSpendChanged = true;
-    this.updateCurrentAmounts();
   }
 
   private onCurrencyReceiveUpdated(currency: string): void {
-    this.currentCurrencyReceive = this.pCurrencies.find((x) => x.id === currency);
-    if (this.currentCurrencyReceive && this.amountReceiveField?.value) {
-      this.amountReceiveErrorMessages['min'] = `Minimal amount is ${this.currentCurrencyReceive.minAmount} ${this.currentCurrencyReceive.title}`;
-      this.amountReceiveField?.setValidators([
-        Validators.required,
-        Validators.pattern(this.pNumberPattern),
-        Validators.min(this.currentCurrencyReceive.minAmount),
-      ]);
-      this.amountReceiveField?.updateValueAndValidity();
+    if (!this.pTransactionChanged) {
+      this.currentCurrencyReceive = this.pCurrencies.find((x) => x.id === currency);
+      if (this.currentCurrencyReceive && this.amountReceiveField?.value) {
+        this.setReceiveValidators();
+      }
+      this.pReceiveChanged = true;
+      this.updateCurrentAmounts();
     }
-    this.pReceiveChanged = true;
-    this.updateCurrentAmounts();
   }
 
   private onAmountSpendUpdated(val: any) {
     if (val && !this.pSpendAutoUpdated) {
       this.pSpendAutoUpdated = false;
-      if (this.hasValidators(this.amountSpendField as AbstractControl) === false) {
-        if (this.currentCurrencySpend) {
-          this.amountSpendErrorMessages['min'] = `Minimal amount is ${this.currentCurrencySpend.minAmount} ${this.currentCurrencySpend.title}`;
-          this.amountSpendField?.setValidators([
-            Validators.required,
-            Validators.pattern(this.pNumberPattern),
-            Validators.min(this.currentCurrencySpend.minAmount),
-          ]);
-          this.amountSpendField?.updateValueAndValidity();
-        }
+      if (this.hasValidators(this.amountSpendField as AbstractControl) === false && this.currentCurrencySpend) {
+        this.setSpendValidators();
       }
       this.pSpendChanged = true;
       this.updateCurrentAmounts();
@@ -296,21 +278,32 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy {
   private onAmountReceiveUpdated(val: any) {
     if (val && !this.pReceiveAutoUpdated) {
       this.pReceiveAutoUpdated = false;
-      if (this.hasValidators(this.amountReceiveField as AbstractControl) === false) {
-        if (this.currentCurrencyReceive) {
-          this.amountReceiveErrorMessages['min'] = `Minimal amount is ${this.currentCurrencyReceive.minAmount} ${this.currentCurrencyReceive.title}`;
-          this.amountReceiveField?.setValidators([
-            Validators.required,
-            Validators.pattern(this.pNumberPattern),
-            Validators.min(this.currentCurrencyReceive.minAmount),
-          ]);
-          this.amountReceiveField?.updateValueAndValidity();
-        }
+      if (this.hasValidators(this.amountReceiveField as AbstractControl) === false && this.currentCurrencyReceive) {
+        this.setReceiveValidators();
       }
       this.pReceiveChanged = true;
       this.updateCurrentAmounts();
     }
     this.pReceiveAutoUpdated = false;
+  }
+
+  private onTransactionUpdated(val: TransactionType): void {
+    this.currentTransaction = val;
+    this.pSpendAutoUpdated = true;
+    this.pReceiveAutoUpdated = true;
+    this.pTransactionChanged = true;
+    const currencySpend = this.currentCurrencySpend?.id;
+    const currencyReceive = this.currentCurrencyReceive?.id;
+    this.currentCurrencySpend = this.pCurrencies.find((x) => x.id === currencyReceive);
+    this.currentCurrencyReceive = this.pCurrencies.find((x) => x.id === currencySpend);
+    this.setSpendValidators();
+    this.setReceiveValidators();
+    this.setCurrencyLists();
+    this.currencySpendField?.setValue(this.currentCurrencySpend?.id);
+    this.currencyReceiveField?.setValue(this.currentCurrencyReceive?.id);
+    this.amountSpendField?.setValue(this.amountReceiveField?.value);
+
+    this.pTransactionChanged = false;
   }
 
   private hasValidators(control: AbstractControl) {
