@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { SettingsCurrencyListResult, TransactionType } from 'src/app/model/generated-models';
@@ -12,12 +12,10 @@ import { ErrorService } from 'src/app/services/error.service';
   templateUrl: 'order-details.component.html',
   styleUrls: ['../../../assets/payment.scss', '../../../assets/button.scss', '../../../assets/text-control.scss']
 })
-export class WidgetOrderDetailsComponent implements OnInit, OnDestroy {
+export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() initialized = false;
   @Input() settings: WidgetSettings = new WidgetSettings();
-  @Input() set summary(val: CheckoutSummary | undefined) {
-    this.pSummary = val;
-  }
+  @Input() summary: CheckoutSummary | undefined = undefined;
   @Input() set withdrawalRate(val: number | undefined) {
     this.pSpendChanged = true;
     this.pWithdrawalRate = val;
@@ -34,9 +32,9 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy {
   @Output() onDataUpdated = new EventEmitter<CheckoutSummary>();
   @Output() onComplete = new EventEmitter();
 
+  private initState = true;
   private pSubscriptions: Subscription = new Subscription();
   private pCurrencies: CurrencyView[] = [];
-  private pSummary: CheckoutSummary | undefined = undefined;
   private pSpendChanged = false;
   private pReceiveChanged = false;
   private pTransactionChanged = false;
@@ -105,7 +103,11 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy {
       this.currentTransaction = this.settings.transaction;
       this.transactionField?.setValue(this.currentTransaction);
     }
-    this.loadDetailsForm();
+    if (this.summary?.initialized) {
+      this.currentTransaction = this.summary.transactionType;
+      this.transactionField?.setValue(this.summary.transactionType);
+    }
+    this.loadDetailsForm(this.summary?.initialized ?? false);
     this.pSubscriptions.add(this.currencySpendField?.valueChanges.subscribe(val => this.onCurrencySpendUpdated(val)));
     this.pSubscriptions.add(this.currencyReceiveField?.valueChanges.subscribe(val => this.onCurrencyReceiveUpdated(val)));
     this.pSubscriptions.add(this.amountSpendField?.valueChanges.subscribe(val => this.onAmountSpendUpdated(val)));
@@ -113,11 +115,15 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy {
     this.pSubscriptions.add(this.transactionField?.valueChanges.subscribe(val => this.onTransactionUpdated(val)));
   }
 
+  ngAfterViewInit(): void {
+    this.initState = false;
+  }
+
   ngOnDestroy(): void {
     this.pSubscriptions.unsubscribe();
   }
 
-  private loadDetailsForm(): void {
+  private loadDetailsForm(initState: boolean): void {
     this.onError.emit('');
     const currencyData = this.commonService.getSettingsCurrency();
     if (currencyData === null) {
@@ -126,7 +132,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy {
       this.onProgress.emit(true);
       this.pSubscriptions.add(
         currencyData.valueChanges.subscribe(
-          ({ data }) => this.loadCurrencyList(data.getSettingsCurrency as SettingsCurrencyListResult),
+          ({ data }) => this.loadCurrencyList(data.getSettingsCurrency as SettingsCurrencyListResult, initState),
           (error) => {
             this.onProgress.emit(false);
             if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
@@ -139,15 +145,15 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  private loadCurrencyList(currencySettings: SettingsCurrencyListResult) {
+  private loadCurrencyList(currencySettings: SettingsCurrencyListResult, initState: boolean) {
     let itemCount = 0;
     if (currencySettings !== null) {
       itemCount = currencySettings.count as number;
       if (itemCount > 0) {
-        let currentCurrencySpendId = this.pSummary?.currencyFrom ?? '';
-        let currentCurrencyReceiveId = this.pSummary?.currencyTo ?? '';
-        let currentAmountSpend = this.pSummary?.amountFrom;
-        let currentAmountReceive = this.pSummary?.amountTo;
+        let currentCurrencySpendId = this.summary?.currencyFrom ?? '';
+        let currentCurrencyReceiveId = this.summary?.currencyTo ?? '';
+        let currentAmountSpend = this.summary?.amountFrom;
+        let currentAmountReceive = this.summary?.amountTo;
         if (this.currentTransaction === TransactionType.Deposit) {
           if (currentCurrencySpendId === '') {
             currentCurrencySpendId = this.auth.user?.defaultFiatCurrency ?? '';
@@ -165,6 +171,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy {
         }
         this.pCurrencies = currencySettings.list?.map((val) => new CurrencyView(val)) as CurrencyView[];
         this.setCurrencyValues(
+          initState,
           currentCurrencySpendId,
           currentCurrencyReceiveId,
           currentAmountSpend,
@@ -175,6 +182,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy {
   }
 
   private setCurrencyValues(
+    initState: boolean,
     defaultSpendCurrency: string = '',
     defaultReceiveCurrency: string = '',
     defaultSpendAmount: number | undefined = undefined,
@@ -196,6 +204,9 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy {
       this.pReceiveAutoUpdated = true;
       this.amountReceiveField?.setValue(defaultReceiveAmount);
     }
+    if (initState === true) {
+      this.pSpendChanged = true;
+    }
     if (this.pSpendChanged || this.pReceiveChanged) {
       this.updateCurrentAmounts();
     }
@@ -212,21 +223,23 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy {
   }
 
   private sendData(spend: number | undefined, receive: number | undefined): void {
-    const data = new CheckoutSummary();
-    data.amountFrom = spend;
-    data.amountTo = receive;
-    if (this.currencySpendField?.valid) {
-      data.currencyFrom = this.currencySpendField?.value;
-      data.amountFromPrecision = this.currentCurrencySpend?.precision ?? 2;
+    if (this.initState === false) {
+      const data = new CheckoutSummary();
+      data.amountFrom = spend;
+      data.amountTo = receive;
+      if (this.currencySpendField?.valid) {
+        data.currencyFrom = this.currencySpendField?.value;
+        data.amountFromPrecision = this.currentCurrencySpend?.precision ?? 2;
+      }
+      if (this.currencyReceiveField?.valid) {
+        data.currencyTo = this.currencyReceiveField?.value;
+        data.amountToPrecision = this.currentCurrencyReceive?.precision ?? 2;
+      }
+      if (this.transactionField?.valid) {
+        data.transactionType = this.transactionField?.value;
+      }
+      this.onDataUpdated.emit(data);
     }
-    if (this.currencyReceiveField?.valid) {
-      data.currencyTo = this.currencyReceiveField?.value;
-      data.amountToPrecision = this.currentCurrencyReceive?.precision ?? 2;
-    }
-    if (this.transactionField?.valid) {
-      data.transactionType = this.transactionField?.value;
-    }
-    this.onDataUpdated.emit(data);
   }
 
   private setSpendValidators(): void {

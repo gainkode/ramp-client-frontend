@@ -16,7 +16,7 @@
   </div>
 
   <div class="__widget-data-container">
-    <div [ngClass]="{'__widget-wizard-container': true, '__widget-wizard-container-single': initState}"
+    <div [ngClass]="{'__widget-wizard-container': true, '__widget-wizard-container-single': initState || stageId==='disclaimer'}"
       [ngSwitch]="stageId">
       <!-- Order details -->
       <app-widget-order-details *ngSwitchCase="'order_details'" [initialized]="!initState" 
@@ -35,7 +35,7 @@
       <app-widget-login *ngSwitchCase="'login'" [email]="summary.email" (onBack)="loginBack()">
       </app-widget-login>
     </div>
-    <div *ngIf="!initState" class="__widget-summary-container">
+    <div *ngIf="!initState && stageId!=='disclaimer'" class="__widget-summary-container">
       <div class="__widget-summary-box">
         <h3 class="__widget-summary-title">Order Summary</h3>
         <app-widget-rate class="__widget-rate-container" [title]="exchangeRateCountDownTitle" [countDown]="exchangeRateCountDownValue">

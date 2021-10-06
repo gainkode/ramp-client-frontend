@@ -62,28 +62,29 @@ export class WidgetComponent implements OnInit {
 
   // == Exchange rate ==
   private startExchangeRateTimer(): void {
-    this.pSubscriptions.add(this.exchangeRateTimer.subscribe(val => {
-      if (this.exchangeRateCountDownInit) {
-        if (this.exchangeRateCountDown > 0) {
-          this.exchangeRateCountDown -= 1;
-          this.lastChanceError = false;
-          this.updateExchangeRateCountDown();
-        } else {
-          const success = this.loadExchangeRates();
-          if (!success) {
-            if (!this.lastChanceError) {
-              this.exchangeRateCountDown = 1;
-              this.updateExchangeRateCountDown();
-            }
-            this.lastChanceError = true;
-          } else {
+    this.pSubscriptions.add(
+      this.exchangeRateTimer.subscribe(val => {
+        if (this.exchangeRateCountDownInit) {
+          if (this.exchangeRateCountDown > 0) {
+            this.exchangeRateCountDown -= 1;
             this.lastChanceError = false;
+            this.updateExchangeRateCountDown();
+          } else {
+            const success = this.loadExchangeRates();
+            if (!success) {
+              if (!this.lastChanceError) {
+                this.exchangeRateCountDown = 1;
+                this.updateExchangeRateCountDown();
+              }
+              this.lastChanceError = true;
+            } else {
+              this.lastChanceError = false;
+            }
           }
+        } else {
+          this.exchangeRateCountDownInit = true;
         }
-      } else {
-        this.exchangeRateCountDownInit = true;
-      }
-    })
+      })
     );
   }
 
@@ -100,9 +101,8 @@ export class WidgetComponent implements OnInit {
         currencyFrom = this.summary?.currencyTo as string;
         currencyTo = this.summary?.currencyFrom as string;
       }
-      console.log(`Need to get rate from ${currencyFrom} to ${currencyTo}`);
+      console.log(`Get rate ${currencyFrom}->${currencyTo}`);
       if (currencyFrom && currencyTo) {
-        console.log(`Get rate from ${currencyFrom} to ${currencyTo}`);
         const ratesData = this.dataService.getRates(currencyFrom, currencyTo);
         if (ratesData === null) {
           this.errorMessage = this.errorHandler.getRejectedCookieMessage();
@@ -168,8 +168,11 @@ export class WidgetComponent implements OnInit {
     if (this.initState && (data.amountFrom || data.amountTo)) {
       this.initState = false;
     }
-    this.summary.amountFrom = data.amountFrom;
-    this.summary.amountTo = data.amountTo;
+    this.summary.initialized = true;
+    const amountFromTemp = (data.amountFrom) ? data.amountFrom?.toFixed(8) : undefined;
+    this.summary.amountFrom = (amountFromTemp) ? parseFloat(amountFromTemp) : undefined;
+    const amountToTemp = (data.amountTo) ? data.amountTo?.toFixed(8) : undefined;
+    this.summary.amountTo = (amountToTemp) ? parseFloat(amountToTemp) : undefined;
     this.summary.amountFromPrecision = data.amountFromPrecision;
     this.summary.amountToPrecision = data.amountToPrecision;
     const currencyFromChanged = (this.summary.currencyFrom !== data.currencyFrom);
@@ -220,7 +223,6 @@ export class WidgetComponent implements OnInit {
   // == Disclaimer ==
 
   desclaimerBack(): void {
-    console.log('desclaimerBack');
     if (this.stages.length > 0) {
       const lastStage = this.stages.splice(this.stages.length - 1, 1)[0];
       this.stageId = lastStage.id;
@@ -230,7 +232,6 @@ export class WidgetComponent implements OnInit {
   }
 
   desclaimerNext(): void {
-    console.log('desclaimerNext');
     this.stages.push({
       id: this.stageId,
       title: this.title,

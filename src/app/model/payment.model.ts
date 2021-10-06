@@ -263,6 +263,7 @@ export const UserNotificationCodeList: Array<UserNotificationCodeView> = [
 ];
 
 export class CheckoutSummary {
+    initialized = false;
     orderId = '';
     email = '';
     currencyFrom = '';
