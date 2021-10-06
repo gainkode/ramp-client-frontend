@@ -237,6 +237,7 @@ export class WidgetComponent implements OnInit {
       title: this.title,
       step: this.step
     } as WidgetStage);
+    this.summary.agreementChecked = true;
     this.stageId = 'payment_info';
     this.title = 'Payment Info';
     this.step = 3;

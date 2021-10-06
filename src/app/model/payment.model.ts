@@ -266,6 +266,7 @@ export class CheckoutSummary {
     initialized = false;
     orderId = '';
     email = '';
+    agreementChecked = false;
     currencyFrom = '';
     currencyTo = '';
     amountFrom: number | undefined = undefined;
