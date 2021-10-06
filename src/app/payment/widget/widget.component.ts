@@ -1,11 +1,9 @@
-import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { timer, Subscription } from 'rxjs';
 import { Rate, TransactionType } from 'src/app/model/generated-models';
-import { CheckoutSummary } from 'src/app/model/payment.model';
-import { AuthService } from 'src/app/services/auth.service';
+import { CheckoutSummary, WidgetSettings } from 'src/app/model/payment.model';
 import { ErrorService } from 'src/app/services/error.service';
 import { PaymentDataService } from 'src/app/services/payment.service';
-import { WidgetRateComponent } from './rate.component';
 
 @Component({
   selector: 'app-widget',
@@ -27,24 +25,25 @@ export class WidgetComponent implements OnInit {
   title = 'Order details';
   step = 1;
   summary = new CheckoutSummary();
-  countDownTitle = '';
-  countDownValue = '';
+  widget = new WidgetSettings();
+  exchangeRateCountDownTitle = '';
+  exchangeRateCountDownValue = '';
 
   private pSubscriptions: Subscription = new Subscription();
   private pRateSubscription: Subscription | undefined = undefined;
   private exchangeRateTimer = timer(0, 1000);
-  private countDown = 0;
-  private countDownInit = false;
+  private exchangeRateCountDown = 0;
+  private exchangeRateCountDownInit = false;
   private lastChanceError = false;
 
   constructor(
     private changeDetector: ChangeDetectorRef,
-    private auth: AuthService,
     private dataService: PaymentDataService,
     private errorHandler: ErrorService) { }
 
   ngOnInit(): void {
-    this.startRateTimer();
+    this.widget.transaction = TransactionType.Deposit;
+    this.startExchangeRateTimer();
   }
 
   ngOnDestroy(): void {
@@ -60,19 +59,20 @@ export class WidgetComponent implements OnInit {
     this.changeDetector.detectChanges();
   }
 
-  private startRateTimer(): void {
+  // == Exchange rate ==
+  private startExchangeRateTimer(): void {
     this.pSubscriptions.add(this.exchangeRateTimer.subscribe(val => {
-      if (this.countDownInit) {
-        if (this.countDown > 0) {
-          this.countDown -= 1;
+      if (this.exchangeRateCountDownInit) {
+        if (this.exchangeRateCountDown > 0) {
+          this.exchangeRateCountDown -= 1;
           this.lastChanceError = false;
-          this.updateCountDown();
+          this.updateExchangeRateCountDown();
         } else {
-          const success = this.loadRates();
+          const success = this.loadExchangeRates();
           if (!success) {
             if (!this.lastChanceError) {
-              this.countDown = 1;
-              this.updateCountDown();
+              this.exchangeRateCountDown = 1;
+              this.updateExchangeRateCountDown();
             }
             this.lastChanceError = true;
           } else {
@@ -80,16 +80,16 @@ export class WidgetComponent implements OnInit {
           }
         }
       } else {
-        this.countDownInit = true;
+        this.exchangeRateCountDownInit = true;
       }
     })
     );
   }
 
-  private loadRates(): boolean {
+  private loadExchangeRates(): boolean {
     let result = true;
     this.errorMessage = '';
-    if (this.countDownInit) {
+    if (this.exchangeRateCountDownInit) {
       let currencyFrom = '';
       let currencyTo = '';
       if (this.summary?.transactionType === TransactionType.Withdrawal) {
@@ -115,11 +115,11 @@ export class WidgetComponent implements OnInit {
             if (rates.length > 0) {
               this.summary.exchangeRate = rates[0];
             }
-            this.restartCountDown();
+            this.restartExchangeRateCountDown();
           }, (error) => {
-            this.setDefaultRate();
+            this.setDefaultExchangeRate();
             this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load exchange rate');
-            this.restartCountDown();
+            this.restartExchangeRateCountDown();
           });
         }
       } else {
@@ -129,7 +129,7 @@ export class WidgetComponent implements OnInit {
     return result;
   }
 
-  private setDefaultRate(): void {
+  private setDefaultExchangeRate(): void {
     const rate = {
       currencyFrom: '',
       currencyTo: '',
@@ -140,75 +140,75 @@ export class WidgetComponent implements OnInit {
     this.summary.exchangeRate = rate;
   }
 
-  private restartCountDown(): void {
-    this.countDown = 30;
+  private restartExchangeRateCountDown(): void {
+    this.exchangeRateCountDown = 30;
     this.lastChanceError = false;
-    this.updateCountDown();
+    this.updateExchangeRateCountDown();
   }
 
-  private updateRate(): void {
-    this.loadRates();
-    this.restartCountDown();
+  private updateExchangeRate(): void {
+    this.loadExchangeRates();
+    this.restartExchangeRateCountDown();
   }
 
-  private updateCountDown(): void {
-    this.countDownTitle = (this.countDown > 0 && this.countDown < 30) ? 'The price will be updated in' : 'The price is';
-    const sec = this.countDown === 1 ? 'second' : 'seconds';
-    this.countDownValue = (this.countDown > 0 && this.countDown < 30) ? `${this.countDown} ${sec}` : 'updating';
+  private updateExchangeRateCountDown(): void {
+    this.exchangeRateCountDownTitle = (this.exchangeRateCountDown > 0 && this.exchangeRateCountDown < 30) ?
+      'The price will be updated in' :
+      'The price is';
+    const sec = this.exchangeRateCountDown === 1 ? 'second' : 'seconds';
+    this.exchangeRateCountDownValue = (this.exchangeRateCountDown > 0 && this.exchangeRateCountDown < 30) ?
+      `${this.exchangeRateCountDown} ${sec}` :
+      'updating';
   }
+  // =============================
 
+  // == Order details page ==
   orderDetailsChanged(data: CheckoutSummary): void {
     if (this.initState && (data.amountFrom || data.amountTo)) {
       this.initState = false;
     }
     this.summary.amountFrom = data.amountFrom;
     this.summary.amountTo = data.amountTo;
+    this.summary.amountFromPrecision = data.amountFromPrecision;
+    this.summary.amountToPrecision = data.amountToPrecision;
     const currencyFromChanged = (this.summary.currencyFrom !== data.currencyFrom);
     const currencyToChanged = (this.summary.currencyTo !== data.currencyTo);
     this.summary.currencyFrom = data.currencyFrom;
     this.summary.currencyTo = data.currencyTo;
     this.summary.transactionType = data.transactionType;
     if (currencyFromChanged || currencyToChanged) {
-      this.updateRate();
+      this.updateExchangeRate();
     }
   }
 
   orderDetailsComplete(): void {
-    let authenticated = false;
-    const user = this.auth.user;
-    if (user) {
-      if (user.email === this.summary.email) {
-        authenticated = true;
-      }
-    }
-    if (authenticated) {
-      // user is already authorised
-      this.stageId = 'payment_info';
-      this.title = 'Payment Info';
-    } else {
-      // this.inProgress = true;
-      // // try to authorised a user
-      // this.auth.authenticate(this.summary.email, '', true).subscribe(({ data }) => {
-      //   const userData = data.login as LoginResult;
-      //   this.handleSuccessLogin(userData);
-      //   this.stageId = 'payment_info';
-      //   this.title = 'Payment Info';
-      // }, (error) => {
-      //    this.inProgress = false;
-      //   if (this.errorHandler.getCurrentError() === 'auth.password_null_or_empty') {
-      //     // Internal user cannot be authorised without a password, so need to show the authorisation form to fill
-      //     this.auth.logout();
-      //     this.stageId = 'login';
-      //     this.title = 'Login';
-      //     this.needToLogin = true;
-      //     this.loginTitle = 'Your account seems to be registered. Please, authenticate';
-      //     this.defaultUserName = this.detailsEmailControl?.value;
-      //   } else {
-      //     this.errorMessage = this.errorHandler.getError(error.message, 'Unable to authenticate user');
-      //    }
-      // });
-    }
+    this.stageId = 'payment_info';
+    this.title = 'Payment Info';
+    // } else {
+    // this.inProgress = true;
+    // // try to authorised a user
+    // this.auth.authenticate(this.summary.email, '', true).subscribe(({ data }) => {
+    //   const userData = data.login as LoginResult;
+    //   this.handleSuccessLogin(userData);
+    //   this.stageId = 'payment_info';
+    //   this.title = 'Payment Info';
+    // }, (error) => {
+    //    this.inProgress = false;
+    //   if (this.errorHandler.getCurrentError() === 'auth.password_null_or_empty') {
+    //     // Internal user cannot be authorised without a password, so need to show the authorisation form to fill
+    //     this.auth.logout();
+    //     this.stageId = 'login';
+    //     this.title = 'Login';
+    //     this.needToLogin = true;
+    //     this.loginTitle = 'Your account seems to be registered. Please, authenticate';
+    //     this.defaultUserName = this.detailsEmailControl?.value;
+    //   } else {
+    //     this.errorMessage = this.errorHandler.getError(error.message, 'Unable to authenticate user');
+    //    }
+    // });
+    // }
   }
+  // =======================
 
   loginBack(): void {
     this.stageId = 'order_details';

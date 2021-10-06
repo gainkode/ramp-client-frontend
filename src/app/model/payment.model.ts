@@ -269,6 +269,8 @@ export class CheckoutSummary {
     currencyTo = '';
     amountFrom: number | undefined = undefined;
     amountTo: number | undefined = undefined;
+    amountFromPrecision: number = 2;
+    amountToPrecision: number = 2;
     address = '';
     fee = 0;
     feePercent = 0;
@@ -378,4 +380,9 @@ export class CheckoutSummary {
             }
         }
     }
+}
+
+export class WidgetSettings {
+    transaction: TransactionType | undefined = undefined;
+    walletAddress = '';
 }

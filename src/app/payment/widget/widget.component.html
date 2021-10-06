@@ -20,7 +20,7 @@
       [ngSwitch]="stageId">
       <!-- Order details -->
       <app-widget-order-details *ngSwitchCase="'order_details'" [initialized]="!initState" 
-        [summary]="summary" 
+        [summary]="summary" [settings]="widget"
         [withdrawalRate]="summary?.exchangeRate?.withdrawRate"
         [depositRate]="summary?.exchangeRate?.depositRate"
         (onProgress)="progressChanged($event)" (onDataUpdated)="orderDetailsChanged($event)"
@@ -36,7 +36,7 @@
     <div *ngIf="!initState" class="__widget-summary-container">
       <div class="__widget-summary-box">
         <div class="__widget-summary-title">Order Summary</div>
-        <app-widget-rate class="__widget-rate-container" [title]="countDownTitle" [countDown]="countDownValue">
+        <app-widget-rate class="__widget-rate-container" [title]="exchangeRateCountDownTitle" [countDown]="exchangeRateCountDownValue">
         </app-widget-rate>
         <app-widget-summary class="__widget-summary-data" [summary]="summary"></app-widget-summary>
       </div>
@@ -48,7 +48,7 @@
   <div class="__widget-mobile-summary-box">
     <div class="__widget-mobile-summary-data-box">
       <div class="__widget-summary-title">Order Summary</div>
-      <app-widget-rate class="__widget-rate-container" [title]="countDownTitle" [countDown]="countDownValue">
+      <app-widget-rate class="__widget-rate-container" [title]="exchangeRateCountDownTitle" [countDown]="exchangeRateCountDownValue">
       </app-widget-rate>
       <app-widget-summary class="__widget-summary-data" [summary]="summary"></app-widget-summary>
     </div>

@@ -15,13 +15,13 @@
         Spend:
     </div>
     <div *ngIf="summary?.validAmounts" class="__widget-summary-item">
-        {{summary?.amountFrom}} {{summary?.currencyFrom}}
+        {{summary?.amountFrom?.toFixed(summary?.amountFromPrecision)}} {{summary?.currencyFrom}}
     </div>
     <div *ngIf="summary?.validAmounts" class="__widget-summary-item">
         Receive:
     </div>
     <div *ngIf="summary?.validAmounts" class="__widget-summary-item">
-        {{summary?.amountTo}} {{summary?.currencyTo}}
+        {{summary?.amountTo?.toFixed(summary?.amountToPrecision)}} {{summary?.currencyTo}}
     </div>
     <div *ngIf="summary?.rate !== ''" class="__widget-summary-item">
         Exchange rate:

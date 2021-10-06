@@ -1,6 +1,6 @@
 <div class="__widget-data-box">
     <form [formGroup]="dataForm" (ngSubmit)="onSubmit()">
-        <div>
+        <div *ngIf="settings.transaction===undefined">
             <!-- Transaction -->
             <div class="__form-label">
                 Transaction
