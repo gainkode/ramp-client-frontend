@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { timer, Subscription } from 'rxjs';
 import { Rate, TransactionType } from 'src/app/model/generated-models';
-import { CheckoutSummary, WidgetSettings } from 'src/app/model/payment.model';
+import { CheckoutSummary, WidgetSettings, WidgetStage } from 'src/app/model/payment.model';
 import { ErrorService } from 'src/app/services/error.service';
 import { PaymentDataService } from 'src/app/services/payment.service';
 
@@ -26,6 +26,7 @@ export class WidgetComponent implements OnInit {
   step = 1;
   summary = new CheckoutSummary();
   widget = new WidgetSettings();
+  stages: WidgetStage[] = [];
   exchangeRateCountDownTitle = '';
   exchangeRateCountDownValue = '';
 
@@ -182,8 +183,14 @@ export class WidgetComponent implements OnInit {
   }
 
   orderDetailsComplete(): void {
-    this.stageId = 'payment_info';
-    this.title = 'Payment Info';
+    this.stages.push({
+      id: this.stageId,
+      title: this.title,
+      step: this.step
+    } as WidgetStage);
+    this.stageId = 'disclaimer';
+    this.title = 'Disclaimer';
+    this.step = 2;
     // } else {
     // this.inProgress = true;
     // // try to authorised a user
@@ -210,8 +217,38 @@ export class WidgetComponent implements OnInit {
   }
   // =======================
 
+  // == Disclaimer ==
+
+  desclaimerBack(): void {
+    console.log('desclaimerBack');
+    if (this.stages.length > 0) {
+      const lastStage = this.stages.splice(this.stages.length - 1, 1)[0];
+      this.stageId = lastStage.id;
+      this.title = lastStage.title;
+      this.step = lastStage.step;
+    }
+  }
+
+  desclaimerNext(): void {
+    console.log('desclaimerNext');
+    this.stages.push({
+      id: this.stageId,
+      title: this.title,
+      step: this.step
+    } as WidgetStage);
+    this.stageId = 'payment_info';
+    this.title = 'Payment Info';
+    this.step = 3;
+  }
+
+  // ================
+
   loginBack(): void {
-    this.stageId = 'order_details';
-    this.title = 'Order details';
+    if (this.stages.length > 0) {
+      const lastStage = this.stages.splice(this.stages.length - 1, 1)[0];
+      this.stageId = lastStage.id;
+      this.title = lastStage.title;
+      this.step = lastStage.step;
+    }
   }
 }

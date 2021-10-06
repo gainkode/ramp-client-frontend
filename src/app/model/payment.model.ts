@@ -386,3 +386,9 @@ export class WidgetSettings {
     transaction: TransactionType | undefined = undefined;
     walletAddress = '';
 }
+
+export class WidgetStage {
+    id = '';
+    title = '';
+    step = 0;
+}

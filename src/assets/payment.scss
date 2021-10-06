@@ -300,6 +300,28 @@
     color: $color_purple_900_text;
 }
 
+.__widget-disclaimer-area {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.__widget-disclaimer-container {
+    margin: 0px 0px 12px 0px;
+}
+
+.__widget-disclaimer-line {
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 28px;
+
+    color: $color_purple_900_text;
+}
+
 .__widget-rate-container {
     margin: 8px 0px 18px 0px;
 }
