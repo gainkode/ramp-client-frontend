@@ -11,23 +11,30 @@
       </button>
     </div>
   </div>
+
+  <div class="__widget-mobile-rate-container">
+    <app-widget-rate class="__widget-rate-container" [title]="exchangeRateCountDownTitle"
+      [countDown]="exchangeRateCountDownValue" [rate]="summary?.rate">
+    </app-widget-rate>
+  </div>
+
   <div class="__widget-progress-container">
     <app-widget-progress [step]="step" [title]="title" [progress]="inProgress"></app-widget-progress>
   </div>
 
   <div class="__widget-data-container">
-    <div [ngClass]="{'__widget-wizard-container': true, '__widget-wizard-container-single': initState || stageId==='disclaimer'}"
+    <div
+      [ngClass]="{'__widget-wizard-container': true, '__widget-wizard-container-single': initState || stageId==='disclaimer'}"
       [ngSwitch]="stageId">
       <!-- Order details -->
-      <app-widget-order-details *ngSwitchCase="'order_details'" [initialized]="!initState" 
-        [summary]="summary" [settings]="widget"
-        [withdrawalRate]="summary?.exchangeRate?.withdrawRate"
-        [depositRate]="summary?.exchangeRate?.depositRate"
-        (onProgress)="progressChanged($event)" (onDataUpdated)="orderDetailsChanged($event)"
-        (onComplete)="orderDetailsComplete()">
+      <app-widget-order-details *ngSwitchCase="'order_details'" [initialized]="!initState" [summary]="summary"
+        [settings]="widget" [withdrawalRate]="summary?.exchangeRate?.withdrawRate"
+        [depositRate]="summary?.exchangeRate?.depositRate" (onProgress)="progressChanged($event)"
+        (onDataUpdated)="orderDetailsChanged($event)" (onComplete)="orderDetailsComplete()">
       </app-widget-order-details>
       <!-- Disclaimer -->
-      <app-widget-disclaimer *ngSwitchCase="'disclaimer'" (onBack)="desclaimerBack()" (onNext)="desclaimerNext()"></app-widget-disclaimer>
+      <app-widget-disclaimer *ngSwitchCase="'disclaimer'" (onBack)="desclaimerBack()" (onNext)="desclaimerNext()">
+      </app-widget-disclaimer>
       <!-- Register -->
       <app-widget-register *ngSwitchCase="'register'" [email]="summary.email">
       </app-widget-register>
@@ -38,7 +45,8 @@
     <div *ngIf="!initState && stageId!=='disclaimer'" class="__widget-summary-container">
       <div class="__widget-summary-box">
         <h3 class="__widget-summary-title">Order Summary</h3>
-        <app-widget-rate class="__widget-rate-container" [title]="exchangeRateCountDownTitle" [countDown]="exchangeRateCountDownValue">
+        <app-widget-rate class="__widget-rate-container" [title]="exchangeRateCountDownTitle"
+          [countDown]="exchangeRateCountDownValue">
         </app-widget-rate>
         <app-widget-summary class="__widget-summary-data" [summary]="summary"></app-widget-summary>
       </div>
@@ -50,8 +58,6 @@
   <div class="__widget-mobile-summary-box">
     <div class="__widget-mobile-summary-data-box">
       <h3 class="__widget-summary-title">Order Summary</h3>
-      <app-widget-rate class="__widget-rate-container" [title]="exchangeRateCountDownTitle" [countDown]="exchangeRateCountDownValue">
-      </app-widget-rate>
       <app-widget-summary class="__widget-summary-data" [summary]="summary"></app-widget-summary>
     </div>
     <div class="__widget-mobile-summary-button-box">

@@ -8,6 +8,7 @@ import { Component, Input } from '@angular/core';
 export class WidgetRateComponent {
     @Input() title = '';
     @Input() countDown = '';
+    @Input() rate: string | undefined = undefined;
 
     constructor() { }
 }

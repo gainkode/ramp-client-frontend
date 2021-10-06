@@ -149,6 +149,19 @@
     }
 }
 
+.__widget-mobile-rate-container {
+    visibility: hidden;
+    display: none;
+
+    @media (max-width: $widget_max_width + px) {
+        display: flex;
+        visibility: visible;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+    }
+}
+
 .__widget-wizard-container {
     min-height: 544px;
     width: 100%;
@@ -326,16 +339,14 @@
     margin: 8px 0px 18px 0px;
 }
 
-.__widget-rate-line {
+.__widget-rate-title {
     font-family: $font_main;
     font-style: normal;
     font-weight: normal;
-    font-size: 12px;
-    line-height: 14px;
+    font-size: 14px;
+    line-height: 28px;
     
-    display: flex;
-    align-items: center;
-
+    text-align: center;
     color: $color_purple_900_text;
 }
 
@@ -347,7 +358,9 @@
     line-height: 14px;
     
     display: flex;
+    flex-direction: row;
     align-items: center;
+    justify-content: center;
 
     color: $color_purple_900_text;
 }
