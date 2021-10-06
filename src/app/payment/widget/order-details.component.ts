@@ -28,7 +28,6 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   }
   @Output() onError = new EventEmitter<string>();
   @Output() onProgress = new EventEmitter<boolean>();
-  @Output() onReset = new EventEmitter<void>();
   @Output() onDataUpdated = new EventEmitter<CheckoutSummary>();
   @Output() onComplete = new EventEmitter();
 
@@ -135,11 +134,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
           ({ data }) => this.loadCurrencyList(data.getSettingsCurrency as SettingsCurrencyListResult, initState),
           (error) => {
             this.onProgress.emit(false);
-            if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
-              this.onReset.emit();
-            } else {
-              this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load available list of currency types'));
-            }
+            this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load available list of currency types'));
           })
       );
     }

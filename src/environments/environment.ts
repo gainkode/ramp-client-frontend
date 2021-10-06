@@ -12,7 +12,8 @@ export const environment = {
   api_timeout: 10000,
   recaptchaId: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI',
   googleClientId: '683937471887-u8r2tuvcvibnsnc41grnvcer9tv5bpm6.apps.googleusercontent.com',
-  facebookClientId: '522193095423714'
+  facebookClientId: '522193095423714',
+  support_email: 'support@ewallet.com'
 };
 
 /*

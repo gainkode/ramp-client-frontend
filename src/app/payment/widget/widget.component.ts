@@ -21,7 +21,6 @@ export class WidgetComponent implements OnInit {
   initState = true;
   mobileSummary = false;
   stageId = 'order_details';
-  //stageId = 'login';
   title = 'Order details';
   step = 1;
   summary = new CheckoutSummary();
@@ -55,7 +54,11 @@ export class WidgetComponent implements OnInit {
     }
   }
 
-  progressChanged(visible: boolean) {
+  handleError(message: string): void {
+
+  }
+
+  progressChanged(visible: boolean): void {
     this.inProgress = visible;
     this.changeDetector.detectChanges();
   }
@@ -238,9 +241,9 @@ export class WidgetComponent implements OnInit {
       step: this.step
     } as WidgetStage);
     this.summary.agreementChecked = true;
-    this.stageId = 'payment_info';
-    this.title = 'Payment Info';
-    this.step = 3;
+    this.stageId = 'complete';
+    this.title = 'Complete';
+    this.step = 6;
   }
 
   // ================

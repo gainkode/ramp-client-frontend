@@ -250,6 +250,17 @@
     background-color: cornflowerblue;
 }
 
+.__widget-title {
+    text-align: center;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 21px;
+    line-height: 28px;
+    color: $color_main_blue_800;
+}
+
 .__widget-summary-close-button {
     display: flex;
     justify-content: center;
@@ -286,7 +297,7 @@
     font-weight: normal;
     font-size: 21px;
     line-height: 28px;
-    color: $color_purple_900_text;
+    color: $color_purple_900_icons;
 }
 
 .__widget-summary-data {
