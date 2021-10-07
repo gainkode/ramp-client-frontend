@@ -5,8 +5,7 @@ import { AuthService } from '../services/auth.service';
 import { ErrorService } from '../services/error.service';
 
 @Component({
-    templateUrl: 'reset.component.html',
-    styleUrls: ['./login.component.scss']
+    templateUrl: 'reset.component.html'
 })
 export class ResetComponent {
     token = '';

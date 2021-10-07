@@ -7,6 +7,6 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['../../../assets/payment.scss', '../../../assets/button.scss']
 })
 export class WidgetCompleteComponent {
-  supportEmail = environment.support_email;
-  supportEmailLink = `mailto: ${environment.support_email}`;
+  supportEmail = environment.support_email ?? 'support@test.com';
+  supportEmailLink = `mailto: ${environment.support_email}` ?? 'mailto: support@test.com';
 }

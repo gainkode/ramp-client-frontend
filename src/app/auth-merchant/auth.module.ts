@@ -14,7 +14,6 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ComponentsModule } from '../components/components.module';
 import { LoginComponent } from './login.component';
 import { RegisterComponent } from './register.component';
-import { SignupComponent } from './signup.component';
 import { SuccessComponent } from './success.component';
 import { RestoreComponent } from './restore.component';
 import { ConfirmEmailComponent } from './confirm-email.component';
@@ -23,7 +22,6 @@ import { ResetComponent } from './reset.component';
 const routing = RouterModule.forChild([
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
-    { path: 'signup/:token', component: SignupComponent },
     { path: 'success/:type', component: SuccessComponent },
     { path: 'confirm-email/:token', component: ConfirmEmailComponent },
     { path: 'new-password/:token', component: ResetComponent },
@@ -55,7 +53,7 @@ export class MaterialModule { }
         CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule
     ],
     declarations: [
-        LoginComponent, RegisterComponent, SignupComponent, SuccessComponent, RestoreComponent,
+        LoginComponent, RegisterComponent, SuccessComponent, RestoreComponent,
         ConfirmEmailComponent, ResetComponent
     ],
     schemas: [

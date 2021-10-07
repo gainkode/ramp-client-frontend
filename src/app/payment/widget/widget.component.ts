@@ -43,6 +43,7 @@ export class WidgetComponent implements OnInit {
 
   ngOnInit(): void {
     this.widget.transaction = TransactionType.Deposit;
+    this.widget.walletAddress = 'mkBUjw37y46goULToq6b7y6ciJc3Qi32YM';
     this.startExchangeRateTimer();
   }
 
@@ -170,6 +171,9 @@ export class WidgetComponent implements OnInit {
   orderDetailsChanged(data: CheckoutSummary): void {
     if (this.initState && (data.amountFrom || data.amountTo)) {
       this.initState = false;
+      if (this.widget.walletAddress) {
+        this.summary.address = this.widget.walletAddress;
+      }
     }
     this.summary.initialized = true;
     const amountFromTemp = (data.amountFrom) ? data.amountFrom?.toFixed(8) : undefined;

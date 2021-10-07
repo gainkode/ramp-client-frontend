@@ -306,12 +306,27 @@
 
 .__widget-summary-grid {
     display: grid;
-    grid-template-columns: 2fr 3fr;
+    grid-template-columns: 100px auto;
     place-items: center start;
 }
 
 .__widget-summary-item {
-    height: 44px;
+    margin: 8px 0px;
+    display: flex;
+    align-items: center;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 28px;
+
+    color: $color_purple_900_text;
+}
+
+.__widget-summary-double-item {
+    grid-column: 1 / 3;
+    margin: 8px 0px;
     display: flex;
     align-items: center;
 
