@@ -40,6 +40,10 @@
       <app-widget-disclaimer *ngSwitchCase="'disclaimer'" [agreementChecked]="summary.agreementChecked"
         (onBack)="desclaimerBack()" (onNext)="desclaimerNext()">
       </app-widget-disclaimer>
+      <!-- User identification -->
+      <app-widget-identification *ngSwitchCase="'identification'" [email]="summary.email"
+        (onComplete)="identificationComplete($event)" (onError)="handleError($event)" (onProgress)="progressChanged($event)">
+      </app-widget-identification>
       <!-- Register -->
       <app-widget-register *ngSwitchCase="'register'" [email]="summary.email">
       </app-widget-register>

@@ -1,0 +1,21 @@
+<div class="__widget-data-box">
+    <form [formGroup]="dataForm" (ngSubmit)="onSubmit()">
+        <!-- Code (not 5 digits) -->
+        <app-form-textbox [label]="'Email'" [maxlength]="50" formControlName="email"
+            [errorMessages]="emailErrorMessages" [separator]="true">
+        </app-form-textbox>
+
+        <div class="__widget-disclaimer-container">
+            <mat-checkbox color="accent" (change)="register=!register">
+                Register an account
+            </mat-checkbox>
+        </div>
+
+        <!-- Buttons -->
+        <div class="__widget-buttons-area">
+            <button class="__outlined-button" type="button" (click)="onBack.emit()">BACK</button>
+            <button class="__main-button __button-wide-separator" type="submit"
+                [disabled]="!validData && !register">next</button>
+        </div>
+    </form>
+</div>

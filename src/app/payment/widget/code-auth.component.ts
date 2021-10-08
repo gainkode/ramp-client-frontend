@@ -22,7 +22,8 @@ export class WidgetCodeAuthComponent implements OnInit, OnDestroy, AfterViewInit
     @Output() onError = new EventEmitter<string>();
     @Output() onProgress = new EventEmitter<boolean>();
     @Output() onBack = new EventEmitter();
-    @Output() onComplete = new EventEmitter<LoginResult | undefined>();
+    @Output() onRegister = new EventEmitter<string>();
+    @Output() onComplete = new EventEmitter<LoginResult>();
 
     private pSubscriptions: Subscription = new Subscription();
 
@@ -98,7 +99,7 @@ export class WidgetCodeAuthComponent implements OnInit, OnDestroy, AfterViewInit
 
     onSubmit(): void {
         if (this.register) {
-            this.onComplete.emit(undefined);
+            this.onRegister.emit(this.email);
         } else {
             const code = parseInt(this.codeField?.value) as number;
             this.pSubscriptions.add(

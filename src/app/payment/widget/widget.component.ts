@@ -21,7 +21,8 @@ export class WidgetComponent implements OnInit {
   initState = true;
   showSummary = true;
   mobileSummary = false;
-  stageId = 'order_details';
+  //stageId = 'order_details';
+  stageId = 'identification';
   title = 'Order details';
   step = 1;
   summary = new CheckoutSummary();
@@ -77,6 +78,16 @@ export class WidgetComponent implements OnInit {
   progressChanged(visible: boolean): void {
     this.inProgress = visible;
     this.changeDetector.detectChanges();
+  }
+
+  private stageBack(): void {
+    if (this.stages.length > 0) {
+      const lastStage = this.stages.splice(this.stages.length - 1, 1)[0];
+      this.stageId = lastStage.id;
+      this.title = lastStage.title;
+      this.step = lastStage.step;
+      this.showSummary = lastStage.summary;
+    }
   }
 
   // == Exchange rate ==
@@ -254,13 +265,7 @@ export class WidgetComponent implements OnInit {
   // == Disclaimer =========
 
   desclaimerBack(): void {
-    if (this.stages.length > 0) {
-      const lastStage = this.stages.splice(this.stages.length - 1, 1)[0];
-      this.stageId = lastStage.id;
-      this.title = lastStage.title;
-      this.step = lastStage.step;
-      this.showSummary = lastStage.summary;
-    }
+    this.stageBack();
   }
 
   desclaimerNext(): void {
@@ -286,7 +291,23 @@ export class WidgetComponent implements OnInit {
 
   // ================
 
-  loginComplete(data: LoginResult | undefined): void {
+  onRegister(email: string): void {
+
+  }
+
+  // == Identification ==
+
+  identificationComplete(data: LoginResult): void {
+
+  }
+
+  identificationBack(): void {
+    this.stageBack();
+  }
+
+  // ====================
+
+  loginComplete(data: LoginResult): void {
     if (data) {
       // auth success
     } else {
@@ -295,12 +316,6 @@ export class WidgetComponent implements OnInit {
   }
 
   loginBack(): void {
-    if (this.stages.length > 0) {
-      const lastStage = this.stages.splice(this.stages.length - 1, 1)[0];
-      this.stageId = lastStage.id;
-      this.title = lastStage.title;
-      this.step = lastStage.step;
-      this.showSummary = lastStage.summary;
-    }
+    this.stageBack();
   }
 }

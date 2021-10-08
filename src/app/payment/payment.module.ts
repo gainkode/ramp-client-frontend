@@ -32,6 +32,7 @@ import { WidgetCompleteComponent } from './widget/complete.component';
 import { WidgetPaymentComponent } from './widget/payment.component';
 import { WidgetCreditCardComponent } from './widget/credit-card.component';
 import { WidgetCodeAuthComponent } from './widget/code-auth.component';
+import { WidgetidentificationComponent } from './widget/identification.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -71,7 +72,7 @@ export class MaterialModule { }
     imports: [ NgxMaskModule.forRoot(), CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule ],
     declarations: [ PaymentComponent, QuickCheckoutComponent, ContainerComponentDeprecated,
         WidgetComponent, WidgetProgressComponent, WidgetSummaryComponent, WidgetRateComponent, WidgetCreditCardComponent,
-        WidgetRegisterComponent, WidgetLoginAuthComponent, WidgetCodeAuthComponent,
+        WidgetidentificationComponent, WidgetRegisterComponent, WidgetLoginAuthComponent, WidgetCodeAuthComponent,
         WidgetOrderDetailsComponent, WidgetDisclaimerComponent, WidgetPaymentComponent, WidgetCompleteComponent ],
     providers: [],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
