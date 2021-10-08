@@ -17,8 +17,10 @@ export class SignUpPanelComponent implements OnInit, OnDestroy {
     }
     @Input() userType: UserType = UserType.Personal;
     @Input() errorMessage = '';
+    @Input() wizardButtons = false;
     @Output() error = new EventEmitter<string>();
     @Output() progressChange = new EventEmitter<boolean>();
+    @Output() onBack = new EventEmitter();
     @Output() registered = new EventEmitter<string>();
     @ViewChild('signupInfo') set signupInfo(panel: SignupInfoPanelComponent) {
         if (panel) {

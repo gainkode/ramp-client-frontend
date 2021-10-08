@@ -22,7 +22,10 @@
     <app-widget-progress [step]="step" [title]="title" [progress]="inProgress"></app-widget-progress>
   </div>
 
-  <div style="color: crimson;margin: 24px;">
+  <div *ngIf="rateErrorMessage!==''" style="color: crimson;margin: 24px;">
+    {{rateErrorMessage}}
+  </div>
+  <div *ngIf="errorMessage!==''" style="color: crimson;margin: 24px;">
     {{errorMessage}}
   </div>
 
@@ -47,10 +50,12 @@
         (onProgress)="progressChanged($event)" (onBack)="identificationBack()" (onRegister)="onRegister($event)">
       </app-widget-identification>
       <!-- Register -->
-      <app-widget-register *ngSwitchCase="'register'" [email]="summary.email">
+      <app-widget-register *ngSwitchCase="'register'" [email]="summary.email" (onBack)="registerBack()"
+        (onProgress)="progressChanged($event)" (onComplete)="registerComplete($event)">
       </app-widget-register>
       <!-- Login Authentication -->
-      <app-widget-login-auth *ngSwitchCase="'login_auth'" [email]="summary.email" (onBack)="loginBack()">
+      <app-widget-login-auth *ngSwitchCase="'login_auth'" [email]="summary.email" (onBack)="loginBack()"
+        (onProgress)="progressChanged($event)" (onComplete)="loginComplete($event)">
       </app-widget-login-auth>
       <!-- Code Authentication -->
       <app-widget-code-auth *ngSwitchCase="'code_auth'" [email]="summary.email" [codeLength]="5"

@@ -70,7 +70,6 @@ import { ProfileDataService } from './services/profile.service';
 export class AppModule {
   errorLink = onError(({ forward, graphQLErrors, networkError, operation }) => {
     if (graphQLErrors) {
-      sessionStorage.setItem('currentError', '');
       for (const err of graphQLErrors) {
         if (err.extensions !== null) {
           const code = err.extensions?.code as string;
@@ -86,7 +85,11 @@ export class AppModule {
               return forward(operation);
             });
           }
-          sessionStorage.setItem('currentError', err.extensions?.code);
+          if (operation.operationName === 'GetRates') {
+            sessionStorage.setItem('currentRateError', err.extensions?.code);
+          } else {
+            sessionStorage.setItem('currentError', err.extensions?.code);
+          }
         }
       }
     }
@@ -97,6 +100,11 @@ export class AppModule {
   });
 
   authLink = setContext((operation, context) => {
+    if (operation.operationName === 'GetRates') {
+      sessionStorage.setItem('currentRateError', '');
+    } else {
+      sessionStorage.setItem('currentError', '');
+    }
     const token = sessionStorage.getItem('currentToken');
     if (token === null) {
       return {};

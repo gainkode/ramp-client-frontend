@@ -4,11 +4,7 @@
     </div>
 
     <app-login-panel [socialButtons]="false" [wizardButtons]="true" [userName]="email" [errorMessage]="errorMessage"
-        (error)="loginError($event)" (progressChange)="loginProgress($event)" (onBack)="goBack()">
+        (error)="loginError($event)" (progressChange)="onProgress.emit($event)" (onBack)="onBack.emit()"
+        (authenticated)="onComplete.emit($event)">
     </app-login-panel>
-
-    <!-- <app-login-panel [socialButtons]="true" (error)="onError($event)" (progressChange)="onProgressChange($event)"
-        (authenticated)="onAuthenticated($event)" (socialAuthenticated)="onSocialAuthenticated($event)"
-        (extraDataVisible)="onLoginExtraData($event)">
-    </app-login-panel> -->
 </div>

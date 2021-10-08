@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { LoginResult } from 'src/app/model/generated-models';
 
 @Component({
     selector: 'app-widget-login-auth',
@@ -9,7 +10,7 @@ export class WidgetLoginAuthComponent {
     @Input() email = '';
     @Output() onProgress = new EventEmitter<boolean>();
     @Output() onBack = new EventEmitter();
-    @Output() onComplete = new EventEmitter<void>();
+    @Output() onComplete = new EventEmitter<LoginResult>();
 
     errorMessage = '';
 
@@ -17,17 +18,5 @@ export class WidgetLoginAuthComponent {
 
     loginError(error: string): void {
         this.errorMessage = error;
-    }
-
-    loginProgress(val: boolean): void {
-        this.onProgress.emit(val);
-    }
-
-    onSubmit(): void {
-
-    }
-
-    goBack(): void {
-        this.onBack.emit();
     }
 }

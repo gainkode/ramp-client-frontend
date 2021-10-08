@@ -148,7 +148,12 @@ export class ErrorService {
     }
 
     getCurrentError(): string {
+        const sessionRateCode = sessionStorage.getItem('currentRateError');
         const sessionCode = sessionStorage.getItem('currentError');
-        return (sessionCode) ? sessionCode as string : '';
+        let result = (sessionCode) ? sessionCode ?? '' : '';
+        if (result === '') {
+            result = (sessionRateCode) ? sessionRateCode ?? '' : '';
+        }
+        return result;
     }
 }

@@ -17,6 +17,7 @@ export class WidgetComponent implements OnInit {
   }
 
   errorMessage = '';
+  rateErrorMessage = '';
   inProgress = false;
   internalPayment = false;
   initState = true;
@@ -81,14 +82,28 @@ export class WidgetComponent implements OnInit {
     this.changeDetector.detectChanges();
   }
 
+  private removeLastStage(): WidgetStage {
+    return this.stages.splice(this.stages.length - 1, 1)[0];
+  }
+
   private stageBack(): void {
     if (this.stages.length > 0) {
-      const lastStage = this.stages.splice(this.stages.length - 1, 1)[0];
+      const lastStage = this.removeLastStage();
+      this.errorMessage = '';
       this.stageId = lastStage.id;
       this.title = lastStage.title;
       this.step = lastStage.step;
       this.showSummary = lastStage.summary;
     }
+  }
+
+  private registerStage(): void {
+    this.stages.push({
+      id: this.stageId,
+      title: this.title,
+      step: this.step,
+      summary: this.showSummary
+    } as WidgetStage);
   }
 
   // == Exchange rate ==
@@ -121,7 +136,7 @@ export class WidgetComponent implements OnInit {
 
   private loadExchangeRates(): boolean {
     let result = true;
-    this.errorMessage = '';
+    this.rateErrorMessage = '';
     if (this.exchangeRateCountDownInit) {
       let currencyFrom = '';
       let currencyTo = '';
@@ -136,7 +151,7 @@ export class WidgetComponent implements OnInit {
       if (currencyFrom && currencyTo) {
         const ratesData = this.dataService.getRates(currencyFrom, currencyTo);
         if (ratesData === null) {
-          this.errorMessage = this.errorHandler.getRejectedCookieMessage();
+          this.rateErrorMessage = this.errorHandler.getRejectedCookieMessage();
         } else {
           if (this.pRateSubscription) {
             this.pRateSubscription.unsubscribe();
@@ -150,7 +165,7 @@ export class WidgetComponent implements OnInit {
             this.restartExchangeRateCountDown();
           }, (error) => {
             this.setDefaultExchangeRate();
-            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load exchange rate');
+            this.rateErrorMessage = this.errorHandler.getError(error.message, 'Unable to load exchange rate');
             this.restartExchangeRateCountDown();
           });
         }
@@ -217,12 +232,8 @@ export class WidgetComponent implements OnInit {
   }
 
   orderDetailsComplete(): void {
-    this.stages.push({
-      id: this.stageId,
-      title: this.title,
-      step: this.step,
-      summary: this.showSummary
-    } as WidgetStage);
+    this.registerStage();
+    this.errorMessage = '';
     this.stageId = 'disclaimer';
     this.title = 'Disclaimer';
     this.step = 2;
@@ -270,13 +281,9 @@ export class WidgetComponent implements OnInit {
   }
 
   desclaimerNext(): void {
-    this.stages.push({
-      id: this.stageId,
-      title: this.title,
-      step: this.step,
-      summary: this.showSummary
-    } as WidgetStage);
+    this.registerStage();
     this.summary.agreementChecked = true;
+    this.errorMessage = '';
     if (this.widget.email) {
       this.stageId = 'identification';
       this.title = 'Autorization';
@@ -293,15 +300,39 @@ export class WidgetComponent implements OnInit {
   // ================
 
   onRegister(email: string): void {
+    this.summary.email = email;
+    this.errorMessage = '';
+    this.stageId = 'register';
+    this.title = 'Autorization';
+    this.step = 3;
+    this.showSummary = true;
+  }
 
+  registerComplete(email: string): void {
+    this.summary.email = email;
+    this.errorMessage = '';
+    this.stageId = 'login_auth';
+    this.title = 'Autorization';
+    this.step = 3;
+    this.showSummary = true;
+  }
+
+  registerBack(): void {
+    this.stageBack();
   }
 
   onLoginRequired(email: string): void {
-
+    this.summary.email = email;
+    this.errorMessage = '';
+    this.stageId = 'login_auth';
+    this.title = 'Autorization';
+    this.step = 3;
+    this.showSummary = true;
   }
 
   onConfirmRequired(email: string): void {
     this.summary.email = email;
+    this.errorMessage = '';
     this.stageId = 'code_auth';
     this.title = 'Autorization';
     this.step = 3;
@@ -345,6 +376,7 @@ export class WidgetComponent implements OnInit {
   loginComplete(data: LoginResult): void {
     if (data) {
       // auth success
+      this.removeLastStage();
     } else {
       // need to register
     }

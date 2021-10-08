@@ -1,5 +1,31 @@
 <div class="__widget-data-box">
-    <span class="__widget-page-header">
-        Please, type your data to register a new account
-    </span>
+    <div *ngIf="!success">
+        <span class="__widget-page-header">
+            Please, type your data to register a new account
+        </span>
+        <app-signup-panel [userType]="userType" [userName]="email" [wizardButtons]="true"
+            [errorMessage]="errorMessage" (error)="registerError($event)" (progressChange)="onProgress.emit($event)"
+            (onBack)="onBack.emit()" (registered)="registerComplete($event)">
+        </app-signup-panel>
+    </div>
+    
+    <div *ngIf="success" class="__auth-disclaimer-area">
+        <div class="__auth-disclaimer-container">
+            <span class="__auth-disclaimer-line">
+                Thank you for your registration.
+            </span>
+        </div>
+        <div class="__auth-disclaimer-container">
+            <span class="__auth-disclaimer-line">
+                Confirmation letter was sent to your email <span class="__widget-fake-link">{{email}}</span>.
+            </span>
+            <br>
+            <span class="__auth-disclaimer-line">
+                Please, follow the link in the letter to complete your registration.
+            </span>
+        </div>
+    </div>
+    <div *ngIf="success" class="__widget-buttons-area">
+        <button class="__main-button" type="button" (click)="onComplete.emit(email)">next</button>
+    </div>
 </div>
