@@ -22,9 +22,12 @@
     <app-widget-progress [step]="step" [title]="title" [progress]="inProgress"></app-widget-progress>
   </div>
 
+  <div style="color: crimson;margin: 24px;">
+    {{errorMessage}}
+  </div>
+
   <div class="__widget-data-container">
-    <div
-      [ngClass]="{'__widget-wizard-container': true, '__widget-wizard-container-single': initState || !showSummary}"
+    <div [ngClass]="{'__widget-wizard-container': true, '__widget-wizard-container-single': initState || !showSummary}"
       [ngSwitch]="stageId">
       <!-- Order details -->
       <app-widget-order-details *ngSwitchCase="'order_details'" [initialized]="!initState" [summary]="summary"
@@ -44,8 +47,9 @@
       <app-widget-login-auth *ngSwitchCase="'login_auth'" [email]="summary.email" (onBack)="loginBack()">
       </app-widget-login-auth>
       <!-- Code Authentication -->
-      <app-widget-code-auth *ngSwitchCase="'code_auth'" [email]="summary.email" [codeLength]="5" (onComplete)="loginComplete($event)"
-        (onError)="handleError($event)" (onProgress)="progressChanged($event)" (onBack)="loginBack()">
+      <app-widget-code-auth *ngSwitchCase="'code_auth'" [email]="summary.email" [codeLength]="5"
+        (onComplete)="loginComplete($event)" (onError)="handleError($event)" (onProgress)="progressChanged($event)"
+        (onBack)="loginBack()">
       </app-widget-code-auth>
       <!-- Payment -->
       <app-widget-payment *ngSwitchCase="'payment'"></app-widget-payment>

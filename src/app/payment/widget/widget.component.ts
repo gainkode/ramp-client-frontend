@@ -71,7 +71,7 @@ export class WidgetComponent implements OnInit {
   }
 
   handleError(message: string): void {
-
+    this.errorMessage = message;
   }
 
   progressChanged(visible: boolean): void {

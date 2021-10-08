@@ -106,6 +106,7 @@ export class WidgetCodeAuthComponent implements OnInit, OnDestroy, AfterViewInit
                     this.login();
                 }, (error) => {
                     this.errorMessage = this.errorHandler.getError(error.message, 'Incorrect confirmation code');
+                    this.onError.emit(this.errorMessage);
                 })
             );
         }
