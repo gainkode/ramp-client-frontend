@@ -18,12 +18,10 @@ export class WidgetComponent implements OnInit {
   errorMessage = '';
   inProgress = false;
   internalPayment = false;
-  //initState = true;
-  initState = false;
+  initState = true;
   showSummary = true;
   mobileSummary = false;
-  //stageId = 'order_details';
-  stageId = 'payment';
+  stageId = 'order_details';
   title = 'Order details';
   step = 1;
   summary = new CheckoutSummary();

@@ -32,12 +32,14 @@
     <div *ngIf="summary?.address !== ''" class="__widget-summary-double-item">
         Wallet:
         <br>
-        {{summary?.address}}
+        <span class="__widget-summary-wallet">
+            {{summary?.address}}
+        </span>
     </div>
     <div *ngIf="summary?.email !== ''" class="__widget-summary-item">
         Email:
     </div>
     <div *ngIf="summary?.email !== ''" class="__widget-summary-item">
         {{summary?.email}}
-    </div>    
+    </div>
 </div>

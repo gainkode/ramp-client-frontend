@@ -100,8 +100,9 @@ export class WidgetCodeAuthComponent implements OnInit, OnDestroy, AfterViewInit
         if (this.register) {
             this.onComplete.emit(undefined);
         } else {
+            const code = parseInt(this.codeField?.value) as number;
             this.pSubscriptions.add(
-                this.auth.confirmCode(this.codeField?.value).subscribe(({ data }) => {
+                this.auth.confirmCode(code).subscribe(({ data }) => {
                     this.login();
                 }, (error) => {
                     this.errorMessage = this.errorHandler.getError(error.message, 'Incorrect confirmation code');

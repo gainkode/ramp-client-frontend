@@ -24,7 +24,7 @@
 
   <div class="__widget-data-container">
     <div
-      [ngClass]="{'__widget-wizard-container': true, '__widget-wizard-container-single': initState || showSummary}"
+      [ngClass]="{'__widget-wizard-container': true, '__widget-wizard-container-single': initState || !showSummary}"
       [ngSwitch]="stageId">
       <!-- Order details -->
       <app-widget-order-details *ngSwitchCase="'order_details'" [initialized]="!initState" [summary]="summary"
