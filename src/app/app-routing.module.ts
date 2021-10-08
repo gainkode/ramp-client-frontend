@@ -7,10 +7,9 @@ const routes: Routes = [
     path: 'payment', loadChildren: () => import('./payment/payment.module').
       then(m => m.PaymentModule)
   },
-  {
-    path: 'auth/personal', loadChildren: () => import('./auth-personal/auth.module').
-      then(m => m.PersonalAuthModule)
-  },
+  { path: 'auth/confirm-email/:token', redirectTo: '/personal/auth/confirm-email/:token' },
+  { path: 'auth/confirm-device/:token', redirectTo: '/personal/auth/confirm-device/:token' },
+  // new-password must be here
   {
     path: 'auth/merchant', loadChildren: () => import('./auth-merchant/auth.module').
       then(m => m.MerchantAuthModule)

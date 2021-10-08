@@ -1,0 +1,56 @@
+<div class="__widget-data-box">
+    <form [formGroup]="dataForm" (ngSubmit)="onSubmit()">
+        <!-- Instrument -->
+        <div class="__form-label">
+            Payment
+        </div>
+        <div class="__form-text-border">
+            <mat-select formControlName="instrument">
+                <mat-select-trigger>
+                    <div class="__form-combo-item">
+                        {{currentInstrument?.name}}
+                    </div>
+                </mat-select-trigger>
+                <mat-option *ngFor="let item of instrumentList" [value]="item.id" style="height: 32px;">
+                    <div class="__form-combo-item">
+                        {{item.name}}
+                    </div>
+                </mat-option>
+            </mat-select>
+        </div>
+        <div class="__form-separator"></div>
+
+        <div *ngIf="showCreditCard">
+            <app-widget-credit-card (onUpdate)="updateCardInfo($event)">
+            </app-widget-credit-card>
+            <div class="__form-separator"></div>
+        </div>
+
+        <div *ngIf="!showCreditCard">
+            <!-- Provider -->
+            <div class="__form-label">
+                Provider
+            </div>
+            <div class="__form-text-border">
+                <mat-select formControlName="provider">
+                    <mat-select-trigger>
+                        <div class="__form-combo-item">
+                            {{currentProvider?.name}}
+                        </div>
+                    </mat-select-trigger>
+                    <mat-option *ngFor="let item of providerList" [value]="item.id" style="height: 32px;">
+                        <div class="__form-combo-item">
+                            {{item.name}}
+                        </div>
+                    </mat-option>
+                </mat-select>
+            </div>
+            <div class="__form-separator"></div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="__widget-buttons-area">
+            <button class="__main-button" type="submit" [disabled]="!validData || !dataForm.valid">next</button>
+        </div>
+    </form>
+</div>

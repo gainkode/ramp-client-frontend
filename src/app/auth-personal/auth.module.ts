@@ -15,13 +15,7 @@ import { ComponentsModule } from '../components/components.module';
 import { ResetComponent } from './reset.component';
 
 const routing = RouterModule.forChild([
-    { path: 'login', redirectTo: '/personal/auth/login' },
-    { path: 'register', redirectTo: '/personal/auth/register' },
-    { path: 'success/:type', redirectTo: '/personal/auth/success/:type' },
-    { path: 'confirm-email/:token', redirectTo: '/personal/auth/confirm-email/:token' },
-    { path: 'confirm-device/:token', redirectTo: '/personal/auth/confirm-device/:token' },
     { path: 'new-password/:token', component: ResetComponent },
-    { path: 'restore', redirectTo: '/personal/auth/restore' },
     { path: '**', redirectTo: '/personal/auth/login' }
 ]);
 

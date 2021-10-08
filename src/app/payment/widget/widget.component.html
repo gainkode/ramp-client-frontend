@@ -41,6 +41,8 @@
       <!-- Login -->
       <app-widget-login *ngSwitchCase="'login'" [email]="summary.email" (onBack)="loginBack()">
       </app-widget-login>
+      <!-- Payment -->
+      <app-widget-payment *ngSwitchCase="'payment'" ></app-widget-payment>
       <!-- Complete -->
       <app-widget-complete *ngSwitchCase="'complete'"></app-widget-complete>
     </div>

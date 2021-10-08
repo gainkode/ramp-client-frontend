@@ -2,6 +2,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { NgxMaskModule, IConfig } from 'ngx-mask'
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -28,6 +29,10 @@ import { WidgetRegisterComponent } from './widget/register.component';
 import { WidgetLoginComponent } from './widget/login.component';
 import { WidgetDisclaimerComponent } from './widget/disclaimer.component';
 import { WidgetCompleteComponent } from './widget/complete.component';
+import { WidgetPaymentComponent } from './widget/payment.component';
+import { WidgetCreditCardComponent } from './widget/credit-card.component';
+
+export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
 const routing = RouterModule.forChild([
     { path: 'quickcheckout', component: PaymentComponent },
@@ -62,11 +67,11 @@ const modules = [
 export class MaterialModule { }
 
 @NgModule({
-    imports: [ CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule ],
+    imports: [ NgxMaskModule.forRoot(), CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule ],
     declarations: [ PaymentComponent, QuickCheckoutComponent, ContainerComponentDeprecated,
-        WidgetComponent, WidgetProgressComponent, WidgetSummaryComponent, WidgetRateComponent,
+        WidgetComponent, WidgetProgressComponent, WidgetSummaryComponent, WidgetRateComponent, WidgetCreditCardComponent,
         WidgetRegisterComponent, WidgetLoginComponent,
-        WidgetOrderDetailsComponent, WidgetDisclaimerComponent, WidgetCompleteComponent ],
+        WidgetOrderDetailsComponent, WidgetDisclaimerComponent, WidgetPaymentComponent, WidgetCompleteComponent ],
     providers: [],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

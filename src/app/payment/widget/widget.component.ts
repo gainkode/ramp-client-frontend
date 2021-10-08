@@ -20,7 +20,8 @@ export class WidgetComponent implements OnInit {
   internalPayment = false;
   initState = true;
   mobileSummary = false;
-  stageId = 'order_details';
+  //stageId = 'order_details';
+  stageId = 'payment';
   title = 'Order details';
   step = 1;
   summary = new CheckoutSummary();

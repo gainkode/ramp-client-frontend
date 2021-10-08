@@ -1,0 +1,44 @@
+<form [formGroup]="cardForm" #cardform="ngForm">
+    <!-- Card number -->
+    <app-form-cardbox [label]="'Card number'" [placeholder]="'...'" [maxlength]="cardNumberLength"
+        [img]="currentCardType" formControlName="card" [errorMessages]="cardNumberErrorMessages" [separator]="true">
+    </app-form-cardbox>
+
+    <!-- Card holder -->
+    <app-form-textbox [label]="'Name on the card'" [boxType]="'text'" [placeholder]="'...'" [maxlength]="45"
+        formControlName="holder" [upperCase]="true" [errorMessages]="cardHolderErrorMessages" [separator]="true">
+    </app-form-textbox>
+
+    <div class="__widget-double-field-container">
+        <!-- Expiry date -->
+        <div class="__widget-double-field-left-box">
+            <div class="__form-label">
+                Expiry date
+            </div>
+            <div class="__form-textbox-border">
+                <input [ngClass]="expiredField?.valid && !expiredCard ? '__form-text-box' : '__form-text-box-error'" type="text"
+                    formControlName="expired" placeholder="00/00" mask="00/00" [dropSpecialCharacters]="false" maxlength="5"
+                    autocomplete="false" />
+                <div *ngIf="(!expiredField?.valid && expiredInit) || expiredCard" class="__form-input-error-icon-container">
+                    <mat-icon class="__form-input-error-icon">
+                        error
+                    </mat-icon>
+                </div>
+            </div>
+            <div *ngIf="expiredField?.hasError('pattern')" class="__form-assist __form-assist-error">
+                Invalid format
+            </div>
+            <div *ngIf="expiredField?.hasError('required') && expiredInit" class="__form-assist __form-assist-error">
+                Required date
+            </div>
+            <div *ngIf="expiredField?.valid && expiredCard" class="__form-assist __form-assist-error">
+                Card is expired
+            </div>
+        </div>
+        <!-- CVV -->
+        <div class="__widget-double-field-right-box">
+
+        </div>
+    </div>
+    <div class="__form-separator"></div>
+</form>

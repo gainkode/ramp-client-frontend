@@ -1,0 +1,26 @@
+<div *ngIf="label!==''" [ngClass]="{'__form-label': true, '__form-label-disabled': active===false}">
+    {{label}}
+</div>
+
+<div class="__form-cardbox-border">
+    <div *ngIf="img!==''" class="__form-card-type-icon-container">
+        <img class="__form-card-type-icon" [src]="img"/>
+    </div>
+    <input
+        [ngClass]="{'__form-card-box': control?.valid || !initialized, '__form-card-box-error': !control?.valid && initialized, '__form-card-box-active-icon': img!==''}" 
+        type="text" [placeholder]="placeholder" [formControl]="control" [maxlength]="maxlength"
+        [readonly]="active===false" [onlyNumber]="true" inputmode="numeric" pattern="[0-9]*"
+        autocomplete="false" />
+    <div *ngIf="!control?.valid && initialized" class="__form-cardinput-error-icon-container">
+        <mat-icon class="__form-input-error-icon">
+            error
+        </mat-icon>
+    </div>
+</div>
+
+<div *ngIf="assist!=='' || (!control?.valid)"
+    [ngClass]="{'__form-assist': true, '__form-assist-disabled': active===false, '__form-assist-error': errorMessage!==''}">
+    {{errorMessage==='' ? assist : errorMessage}}
+</div>
+
+<div *ngIf="separator" class="__form-separator"></div>

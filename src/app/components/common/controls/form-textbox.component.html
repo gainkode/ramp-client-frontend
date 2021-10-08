@@ -3,8 +3,11 @@
 </div>
 
 <div class="__form-textbox-border">
-    <input [ngClass]="control?.valid || !initialized ? '__form-text-box' : '__form-text-box-error'" [type]="boxType"
-        [placeholder]="placeholder" [formControl]="control" [maxlength]="maxlength" [readonly]="active===false" autocomplete="false"/>
+    <input
+        [ngClass]="{'__form-text-box': control?.valid || !initialized, '__form-text-box-error': !control?.valid && initialized, '__form-uppercase-input': upperCase}"
+        [type]="boxType" [placeholder]="placeholder" [formControl]="control" [maxlength]="maxlength"
+        [readonly]="active===false" [onlyNumber]="numberField" [attr.inputmode]="inputMode" [pattern]="inputPattern"
+        autocomplete="false" />
     <div *ngIf="!control?.valid && initialized" class="__form-input-error-icon-container">
         <mat-icon class="__form-input-error-icon">
             error

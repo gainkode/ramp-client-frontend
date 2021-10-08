@@ -3,12 +3,14 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { QRCodeModule } from 'angularx-qrcode';
+import { NgxMaskModule, IConfig } from 'ngx-mask'
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -61,11 +63,10 @@ import { ProfileAssetsComponent } from './profile/profile-assets.component';
 import { ProfileLastExchangesComponent } from './profile/profile-last-exchanges.component';
 import { ProfileContactEditorComponent } from './profile/profile-contact-editor.component';
 import { TransactionsFilterBarComponent } from './filter-bars/transactions-bar.component';
-import { NgxMaskModule, IConfig } from 'ngx-mask'
-import { MatChipsModule } from '@angular/material/chips';
 import { FormTextBoxComponent } from './common/controls/form-textbox.component';
 import { FormFinanceComboComponent } from './common/controls/form-finance-combo.component';
 import { FormPasswordBoxComponent } from './common/controls/form-password.component';
+import { FormCardBoxComponent } from './common/controls/form-cardbox.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -103,7 +104,7 @@ export class MaterialModule { }
 @NgModule({
     imports: [NgxMaskModule.forRoot(), CommonModule, FormsModule, ReactiveFormsModule, MaterialModule, DirectiveModule, QRCodeModule],
     declarations: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
-        FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent,
+        FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent,
         CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, 
         LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, CommonDialogBox, SideExpanderComponent,
         CreditCardComponent, TwoFaCodeComponent, NavPopupComponent, SideMenuComponent, LineBreakPipe, NumberFillPipe,
@@ -114,7 +115,7 @@ export class MaterialModule { }
         ProfileContactEditorComponent, ProfileWithdrawalComponent,
         ProfileAssetsComponent, ProfileLastExchangesComponent],
     exports: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
-        FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent,
+        FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent,
         CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, 
         LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, CommonDialogBox, SideExpanderComponent,
         CreditCardComponent, TwoFaCodeComponent, NavPopupComponent, SideMenuComponent, LineBreakPipe, NumberFillPipe,

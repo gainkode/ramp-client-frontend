@@ -4,7 +4,7 @@
             <!-- Card number -->
             <mat-form-field class="form-element">
                 <mat-label>Card number</mat-label>
-                <input type="text" #cardnumber matInput onlyNumber formControlName="card" pattern="[0-9]*"
+                <input type="text" #cardnumber matInput [onlyNumber]="true" formControlName="card" pattern="[0-9]*"
                     inputmode="numeric" [maxlength]="cardNumberLength" placeholder="Card number" required />
                 <mat-error *ngIf="cardNumberControl?.hasError('required')">
                     Please specify your card number
@@ -52,7 +52,7 @@
             <!-- CVC/CVV -->
             <mat-form-field class="form-element">
                 <mat-label>{{codeName}}</mat-label>
-                <input type="text" #cvv matInput onlyNumber formControlName="cvv" [maxlength]="cvvLength"
+                <input type="text" #cvv matInput [onlyNumber]="true" formControlName="cvv" [maxlength]="cvvLength"
                     placeholder="CVV" required />
                 <mat-error *ngIf="cardCvvControl?.hasError('required')">
                     Please specify {{codeName}} code

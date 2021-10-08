@@ -151,7 +151,7 @@ export const PaymentInstrumentList: Array<PaymentInstrumentView> = [
 
 export const QuickCheckoutPaymentInstrumentList: Array<PaymentInstrumentView> = [
     { id: PaymentInstrument.CreditCard, name: 'Credit card' },
-    { id: PaymentInstrument.Apm, name: 'APM' }
+    { id: PaymentInstrument.Apm, name: 'Online Banking' }
 ];
 
 export const PaymentProviderList: Array<PaymentProviderView> = [
@@ -281,9 +281,10 @@ export class CheckoutSummary {
     transactionDate = '';
     transactionType: TransactionType = TransactionType.Deposit;
     status: TransactionStatus = TransactionStatus.Pending;
-    card: CardView | null = null;
-    provider: PaymentProvider | null = null;
-    
+    card: CardView | undefined = undefined;
+    provider: PaymentProvider | undefined = undefined;
+    instrument: PaymentInstrument | undefined = undefined;
+
     get isFromCrypto(): boolean {
         let result = false;
         switch (this.transactionType) {
@@ -369,8 +370,9 @@ export class CheckoutSummary {
         this.transactionDate = '';
         this.transactionType = TransactionType.Deposit;
         this.status = TransactionStatus.Pending;
-        this.provider = null;
-        this.card = null;
+        this.provider = undefined;
+        this.instrument = undefined;
+        this.card = undefined;
     }
 
     setPaymentInfo(provider: PaymentProvider, instrument: PaymentInstrument, info: string): void {
@@ -378,7 +380,9 @@ export class CheckoutSummary {
             this.provider = provider;
             if (this.provider === PaymentProvider.Fibonatix || instrument === PaymentInstrument.CreditCard) {
                 this.card = new CardView();
-                this.card.setPaymentInfo(info);
+                if (info) {
+                    this.card.setPaymentInfo(info);
+                }
             }
         }
     }

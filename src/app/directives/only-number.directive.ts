@@ -1,4 +1,4 @@
-import { Directive, ElementRef, forwardRef, HostListener, Renderer2, StaticProvider } from '@angular/core';
+import { Directive, ElementRef, forwardRef, HostListener, Input, Renderer2, StaticProvider } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 export const CUSTOM_INPUT_DATE_PICKER_CONTROL_VALUE_ACCESSOR: StaticProvider = {
@@ -12,6 +12,8 @@ export const CUSTOM_INPUT_DATE_PICKER_CONTROL_VALUE_ACCESSOR: StaticProvider = {
     providers: [CUSTOM_INPUT_DATE_PICKER_CONTROL_VALUE_ACCESSOR]
 })
 export class OnlyNumberDirective implements ControlValueAccessor {
+    @Input() onlyNumber = true;
+
     private onChange!: (val: string) => void;
     private onTouched!: () => void;
     private value = '';
@@ -20,7 +22,7 @@ export class OnlyNumberDirective implements ControlValueAccessor {
 
     @HostListener('input', ['$event.target.value'])
     onInputChange(value: string): void {
-        const filteredValue: string = filterValue(value);
+        const filteredValue: string = (this.onlyNumber) ? filterValue(value) : value;
         this.updateTextInput(filteredValue, this.value !== filteredValue);
     }
 

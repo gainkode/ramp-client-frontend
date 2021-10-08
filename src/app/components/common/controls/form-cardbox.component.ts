@@ -3,31 +3,26 @@ import { ControlContainer, ControlValueAccessor, FormControl, FormControlDirecti
 import { Subscription } from 'rxjs';
 
 @Component({
-    selector: 'app-form-textbox',
-    templateUrl: 'form-textbox.component.html',
+    selector: 'app-form-cardbox',
+    templateUrl: 'form-cardbox.component.html',
     styleUrls: ['../../../../assets/text-control.scss'],
     providers: [{
         provide: NG_VALUE_ACCESSOR,
-        useExisting: FormTextBoxComponent,
+        useExisting: FormCardBoxComponent,
         multi: true
     }]
 })
-export class FormTextBoxComponent implements ControlValueAccessor, OnInit, OnDestroy {
+export class FormCardBoxComponent implements ControlValueAccessor, OnInit, OnDestroy {
     @ViewChild(FormControlDirective, { static: true })
     formControlDirective!: FormControlDirective;
     @Input() label = '';
     @Input() assist = '';
-    @Input() boxType = '';
     @Input() placeholder = '';
-    @Input() inputMask = '';
     @Input() maxlength = 0;
     @Input() errorMessages: {[key: string]: string} = {};
     @Input() formControl!: FormControl;
     @Input() formControlName!: string;
-    @Input() numberField = false;
-    @Input() inputMode = 'text';
-    @Input() inputPattern = '';
-    @Input() upperCase = false;
+    @Input() img = '';
     @Input() separator = false;
 
     private controlSubscription: Subscription | undefined = undefined;

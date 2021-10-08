@@ -42,9 +42,26 @@
     margin: 0px 4px;
 }
 
+.__form-card-type-icon-container {
+    display: flex;
+}
+
+.__form-card-type-icon {
+    grid-row: 1;
+    grid-column: 1 / 2;
+    width: 24px;
+    height: 18px;
+    margin: auto;
+}
+
 .__form-input-error-icon-container {
     grid-row: 1;
     grid-column: 2 / 3;
+}
+
+.__form-cardinput-error-icon-container {
+    grid-row: 1;
+    grid-column: 3 / 4;
 }
 
 .__form-input-password-icon-container {
@@ -120,6 +137,21 @@
     background-color: transparent;
 }
 
+.__form-cardbox-border {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 32px auto 24px;
+    grid-template-rows: 32px;
+
+    border: 1px solid $color_purple_50;
+    box-sizing: border-box;
+    border-radius: 4px;
+    background-color: transparent;
+}
+
+
+
+
 .__form-combo-border {
     width: 100%;
     display: grid;
@@ -178,6 +210,66 @@ input.__form-text-box-error:focus {
     outline: none;
 }
 
+
+
+
+
+
+input.__form-card-box {
+    grid-row: 1;
+    grid-column: 1 / 3;
+    width: calc(100% - 24px);
+    margin: 0px 16px;
+
+    border: 0px;
+    background-color: transparent;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 28px;
+    color: $color_purple_900_text;
+}
+
+input.__form-card-box:focus {
+    outline: none;
+}
+
+input.__form-card-box:disabled {
+    color: $color_purple_200;
+}
+
+input.__form-card-box-error {
+    grid-row: 1;
+    grid-column: 1 / 3;
+    width: calc(100% - 24px);
+    margin: 0px 16px;
+
+    border: 0px;
+    background-color: transparent;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 28px;
+    color: $color_pink_500;
+}
+
+input.__form-card-box-error:focus {
+    outline: none;
+}
+
+input.__form-card-box-active-icon {
+    grid-column: 2 / 3;
+    width: calc(100% - 56px);
+    margin: 0px 16px 0px 0px;
+}
+
+
+
+
 input.__form-finance-text-combo {
     grid-row: 1;
     grid-column: 1 / 3;
@@ -222,6 +314,10 @@ input.__form-finance-text-combo-error {
 
 input.__form-finance-text-combo-error:focus {
     outline: none;
+}
+
+.__form-uppercase-input {
+    text-transform: uppercase;
 }
 
 .__form-finance-combo-separator {

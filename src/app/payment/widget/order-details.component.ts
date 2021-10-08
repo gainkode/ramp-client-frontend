@@ -31,7 +31,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   @Output() onDataUpdated = new EventEmitter<CheckoutSummary>();
   @Output() onComplete = new EventEmitter();
 
-  private initState = true;
+  private pInitState = true;
   private pSubscriptions: Subscription = new Subscription();
   private pCurrencies: CurrencyView[] = [];
   private pSpendChanged = false;
@@ -115,7 +115,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   }
 
   ngAfterViewInit(): void {
-    this.initState = false;
+    this.pInitState = false;
   }
 
   ngOnDestroy(): void {
@@ -218,7 +218,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   }
 
   private sendData(spend: number | undefined, receive: number | undefined): void {
-    if (this.initState === false) {
+    if (this.pInitState === false) {
       const data = new CheckoutSummary();
       data.amountFrom = spend;
       data.amountTo = receive;
