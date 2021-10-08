@@ -389,6 +389,7 @@ export class CheckoutSummary {
 }
 
 export class WidgetSettings {
+    email = '';
     transaction: TransactionType | undefined = undefined;
     walletAddress = '';
 }

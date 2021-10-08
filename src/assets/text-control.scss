@@ -148,10 +148,6 @@
     border-radius: 4px;
     background-color: transparent;
 }
-
-
-
-
 .__form-combo-border {
     width: 100%;
     display: grid;
@@ -162,6 +158,30 @@
     box-sizing: border-box;
     border-radius: 4px;
     background-color: transparent;
+}
+
+
+
+
+
+input.__form-text-box-plain {
+    border: 1px solid $color_purple_50;
+    box-sizing: border-box;
+    border-radius: 4px;
+    width: 28px;
+    text-align: center;
+    background-color: transparent;
+    
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 28px;
+    color: $color_purple_900_text;
+}
+
+input.__form-text-box-plain:focus {
+    outline: none;
 }
 
 input.__form-text-box {
@@ -209,11 +229,6 @@ input.__form-text-box-error {
 input.__form-text-box-error:focus {
     outline: none;
 }
-
-
-
-
-
 
 input.__form-card-box {
     grid-row: 1;
@@ -266,9 +281,6 @@ input.__form-card-box-active-icon {
     width: calc(100% - 56px);
     margin: 0px 16px 0px 0px;
 }
-
-
-
 
 input.__form-finance-text-combo {
     grid-row: 1;

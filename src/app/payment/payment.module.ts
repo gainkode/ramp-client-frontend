@@ -26,11 +26,12 @@ import { WidgetOrderDetailsComponent } from './widget/order-details.component';
 import { WidgetSummaryComponent } from './widget/summary.component';
 import { WidgetRateComponent } from './widget/rate.component';
 import { WidgetRegisterComponent } from './widget/register.component';
-import { WidgetLoginComponent } from './widget/login.component';
+import { WidgetLoginAuthComponent } from './widget/login-auth.component';
 import { WidgetDisclaimerComponent } from './widget/disclaimer.component';
 import { WidgetCompleteComponent } from './widget/complete.component';
 import { WidgetPaymentComponent } from './widget/payment.component';
 import { WidgetCreditCardComponent } from './widget/credit-card.component';
+import { WidgetCodeAuthComponent } from './widget/code-auth.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -70,7 +71,7 @@ export class MaterialModule { }
     imports: [ NgxMaskModule.forRoot(), CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule ],
     declarations: [ PaymentComponent, QuickCheckoutComponent, ContainerComponentDeprecated,
         WidgetComponent, WidgetProgressComponent, WidgetSummaryComponent, WidgetRateComponent, WidgetCreditCardComponent,
-        WidgetRegisterComponent, WidgetLoginComponent,
+        WidgetRegisterComponent, WidgetLoginAuthComponent, WidgetCodeAuthComponent,
         WidgetOrderDetailsComponent, WidgetDisclaimerComponent, WidgetPaymentComponent, WidgetCompleteComponent ],
     providers: [],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]

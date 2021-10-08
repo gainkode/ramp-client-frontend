@@ -1,0 +1,46 @@
+<div class="__widget-data-box">
+    <div class="__widget-page-header">
+        We have just sent you an email to
+        <span class="__widget-fake-link">
+            {{email}}
+        </span>
+        with the code to confirm your identity.
+        <br>
+        Please enter it here.
+    </div>
+
+    <form [formGroup]="dataForm" (ngSubmit)="onSubmit()">
+        <div class="__form-label">
+            Confirmation code
+        </div>
+        <div class="__widget-code-container">
+            <input #code1input class="__form-text-box-plain" type="text" formControlName="code1" mask="0"
+                [dropSpecialCharacters]="false" maxlength="1" autocomplete="false" />
+            <input #code2input class="__form-text-box-plain" type="text" formControlName="code2" mask="0"
+                [dropSpecialCharacters]="false" maxlength="1" autocomplete="false" />
+            <input #code3input class="__form-text-box-plain" type="text" formControlName="code3" mask="0"
+                [dropSpecialCharacters]="false" maxlength="1" autocomplete="false" />
+            <input #code4input class="__form-text-box-plain" type="text" formControlName="code4" mask="0"
+                [dropSpecialCharacters]="false" maxlength="1" autocomplete="false" />
+            <input #code5input class="__form-text-box-plain" type="text" formControlName="code5" mask="0"
+                [dropSpecialCharacters]="false" maxlength="1" autocomplete="false" />
+        </div>
+        <div *ngIf="!codeField?.valid && init===true" class="__form-assist __form-assist-error">
+            Code is required
+        </div>
+        <div class="__form-separator"></div>
+
+        <div class="__widget-disclaimer-container">
+            <mat-checkbox color="accent" (change)="register=!register">
+                Register an account
+            </mat-checkbox>
+        </div>
+
+        <!-- Buttons -->
+        <div class="__widget-buttons-area">
+            <button class="__outlined-button" type="button" (click)="onBack.emit()">BACK</button>
+            <button class="__main-button __button-wide-separator" type="submit"
+                [disabled]="!validData && !register">next</button>
+        </div>
+    </form>
+</div>

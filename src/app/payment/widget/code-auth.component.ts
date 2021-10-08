@@ -1,0 +1,115 @@
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { LoginResult } from 'src/app/model/generated-models';
+
+@Component({
+    selector: 'app-widget-code-auth',
+    templateUrl: 'code-auth.component.html',
+    styleUrls: ['../../../assets/payment.scss', '../../../assets/button.scss', '../../../assets/text-control.scss']
+})
+export class WidgetCodeAuthComponent implements OnInit, OnDestroy {
+    @ViewChild('code1input') code1input: ElementRef | undefined = undefined;
+    @ViewChild('code2input') code2input: ElementRef | undefined = undefined;
+    @ViewChild('code3input') code3input: ElementRef | undefined = undefined;
+    @ViewChild('code4input') code4input: ElementRef | undefined = undefined;
+    @ViewChild('code5input') code5input: ElementRef | undefined = undefined;
+    @Input() email = '';
+    @Output() onError = new EventEmitter<string>();
+    @Output() onProgress = new EventEmitter<boolean>();
+    @Output() onBack = new EventEmitter();
+    @Output() onComplete = new EventEmitter<LoginResult | undefined>();
+
+    private pSubscriptions: Subscription = new Subscription();
+
+    errorMessage = '';
+    validData = false;
+    init = false;
+    register = false;
+
+    dataForm = this.formBuilder.group({
+        code1: [undefined, { validators: [Validators.required], updateOn: 'change' }],
+        code2: [undefined, { validators: [Validators.required], updateOn: 'change' }],
+        code3: [undefined, { validators: [Validators.required], updateOn: 'change' }],
+        code4: [undefined, { validators: [Validators.required], updateOn: 'change' }],
+        code5: [undefined, { validators: [Validators.required], updateOn: 'change' }],
+        code: [undefined, { validators: [Validators.required], updateOn: 'change' }]
+    });
+
+    get code1Field(): AbstractControl | null {
+        return this.dataForm.get('code1');
+    }
+
+    get code2Field(): AbstractControl | null {
+        return this.dataForm.get('code2');
+    }
+
+    get code3Field(): AbstractControl | null {
+        return this.dataForm.get('code3');
+    }
+
+    get code4Field(): AbstractControl | null {
+        return this.dataForm.get('code4');
+    }
+
+    get code5Field(): AbstractControl | null {
+        return this.dataForm.get('code5');
+    }
+
+    get codeField(): AbstractControl | null {
+        return this.dataForm.get('code');
+    }
+
+    constructor(private formBuilder: FormBuilder) { }
+
+    ngOnInit(): void {
+        this.pSubscriptions.add(this.dataForm.valueChanges.subscribe({ next: (result: any) => this.onFormUpdated() }));
+        this.pSubscriptions.add(this.code1Field?.valueChanges.subscribe(val => this.onCodeUpdated(val, 1)));
+        this.pSubscriptions.add(this.code2Field?.valueChanges.subscribe(val => this.onCodeUpdated(val, 2)));
+        this.pSubscriptions.add(this.code3Field?.valueChanges.subscribe(val => this.onCodeUpdated(val, 3)));
+        this.pSubscriptions.add(this.code4Field?.valueChanges.subscribe(val => this.onCodeUpdated(val, 4)));
+        this.pSubscriptions.add(this.code5Field?.valueChanges.subscribe(val => this.onCodeUpdated(val, 5)));
+    }
+
+    ngOnDestroy(): void {
+        this.pSubscriptions.unsubscribe();
+    }
+
+    onSubmit(): void {
+        if (this.register) {
+            this.onComplete.emit(undefined);
+        } else {
+
+        }
+    }
+
+    private onFormUpdated(): void {
+        this.init = true;
+    }
+
+    private onCodeUpdated(val: string, codeIndex: number): void {
+        const c1: string = this.code1Field?.value ?? '';
+        const c2: string = this.code2Field?.value ?? '';
+        const c3: string = this.code3Field?.value ?? '';
+        const c4: string = this.code4Field?.value ?? '';
+        const c5: string = this.code5Field?.value ?? '';
+        const code = `${c1}${c2}${c3}${c4}${c5}`;
+        this.codeField?.setValue(code);
+        this.validData = code.length === 5;
+        let focusInput: HTMLInputElement | undefined;
+        if (codeIndex === 1) {
+            focusInput = this.code2input?.nativeElement as HTMLInputElement;
+        } else if (codeIndex === 2) {
+            focusInput = this.code3input?.nativeElement as HTMLInputElement;
+        } else if (codeIndex === 3) {
+            focusInput = this.code4input?.nativeElement as HTMLInputElement;
+        } else if (codeIndex === 4) {
+            focusInput = this.code5input?.nativeElement as HTMLInputElement;
+        }
+        if (focusInput !== undefined) {
+            setTimeout(() => {
+                focusInput?.focus();
+            }, 100);
+        }
+    }
+}

@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { timer, Subscription } from 'rxjs';
-import { Rate, TransactionType } from 'src/app/model/generated-models';
+import { LoginResult, Rate, TransactionType } from 'src/app/model/generated-models';
 import { CheckoutSummary, WidgetSettings, WidgetStage } from 'src/app/model/payment.model';
 import { ErrorService } from 'src/app/services/error.service';
 import { PaymentDataService } from 'src/app/services/payment.service';
@@ -18,10 +18,11 @@ export class WidgetComponent implements OnInit {
   errorMessage = '';
   inProgress = false;
   internalPayment = false;
-  initState = true;
+  //initState = true;
+  initState = false;
   mobileSummary = false;
   //stageId = 'order_details';
-  stageId = 'payment';
+  stageId = 'code_auth';
   title = 'Order details';
   step = 1;
   summary = new CheckoutSummary();
@@ -43,8 +44,22 @@ export class WidgetComponent implements OnInit {
     private errorHandler: ErrorService) { }
 
   ngOnInit(): void {
+    // temp
+    this.widget.email = 'mister@twister.com';
     this.widget.transaction = TransactionType.Deposit;
     this.widget.walletAddress = 'mkBUjw37y46goULToq6b7y6ciJc3Qi32YM';
+    // temp
+
+    if (this.widget.email) {
+      this.summary.email = this.widget.email;
+    }
+    if (this.widget.transaction) {
+      this.summary.transactionType = this.widget.transaction;
+    }
+    if (this.widget.walletAddress) {
+      this.summary.address = this.widget.walletAddress;
+    }
+
     this.startExchangeRateTimer();
   }
 
@@ -172,9 +187,6 @@ export class WidgetComponent implements OnInit {
   orderDetailsChanged(data: CheckoutSummary): void {
     if (this.initState && (data.amountFrom || data.amountTo)) {
       this.initState = false;
-      if (this.widget.walletAddress) {
-        this.summary.address = this.widget.walletAddress;
-      }
     }
     this.summary.initialized = true;
     const amountFromTemp = (data.amountFrom) ? data.amountFrom?.toFixed(8) : undefined;
@@ -256,12 +268,26 @@ export class WidgetComponent implements OnInit {
       step: this.step
     } as WidgetStage);
     this.summary.agreementChecked = true;
-    this.stageId = 'complete';
-    this.title = 'Complete';
-    this.step = 6;
+    if (this.widget.email) {
+      this.stageId = 'code_auth';
+      this.title = 'Autorization';
+      this.step = 3;
+    } else {
+      this.stageId = 'complete';
+      this.title = 'Complete';
+      this.step = 6;
+    }
   }
 
   // ================
+
+  loginComplete(data: LoginResult | undefined): void {
+    if (data) {
+      // auth success
+    } else {
+      // need to register
+    }
+  }
 
   loginBack(): void {
     if (this.stages.length > 0) {

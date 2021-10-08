@@ -98,8 +98,8 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
-    if (this.settings.transaction) {
-      this.currentTransaction = this.settings.transaction;
+    if (this.summary?.transactionType) {
+      this.currentTransaction = this.summary.transactionType;
       this.transactionField?.setValue(this.currentTransaction);
     }
     if (this.summary?.initialized) {
