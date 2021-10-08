@@ -148,8 +148,8 @@ const SET_PASSWORD = gql`
 `;
 
 const CONFIRM_EMAIL = gql`
-  mutation ConfirmEmail($token: String!, $recaptcha: String!) {
-    confirmEmail(recaptcha: $recaptcha, token: $token)
+  mutation ConfirmEmail($token: String, $code: Int, $recaptcha: String!) {
+    confirmEmail(recaptcha: $recaptcha, token: $token, code: $code)
   }
 `;
 
@@ -533,6 +533,16 @@ export class AuthService {
             variables: {
                 recaptcha: environment.recaptchaId,
                 token: tokenValue
+            }
+        });
+    }
+
+    confirmCode(codeValue: number): Observable<any> {
+        return this.apollo.mutate({
+            mutation: CONFIRM_EMAIL,
+            variables: {
+                recaptcha: environment.recaptchaId,
+                code: codeValue
             }
         });
     }

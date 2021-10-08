@@ -10,25 +10,35 @@
     </div>
 
     <form [formGroup]="dataForm" (ngSubmit)="onSubmit()">
-        <div class="__form-label">
-            Confirmation code
+        <div *ngIf="codeLength===5">
+            <!-- Code (5 digits) -->
+            <div class="__form-label">
+                Confirmation code
+            </div>
+            <div class="__widget-code-container">
+                <input #code1input class="__form-text-box-plain" type="text" formControlName="code1" mask="0"
+                    [dropSpecialCharacters]="false" maxlength="1" autocomplete="false" />
+                <input #code2input class="__form-text-box-plain" type="text" formControlName="code2" mask="0"
+                    [dropSpecialCharacters]="false" maxlength="1" autocomplete="false" />
+                <input #code3input class="__form-text-box-plain" type="text" formControlName="code3" mask="0"
+                    [dropSpecialCharacters]="false" maxlength="1" autocomplete="false" />
+                <input #code4input class="__form-text-box-plain" type="text" formControlName="code4" mask="0"
+                    [dropSpecialCharacters]="false" maxlength="1" autocomplete="false" />
+                <input #code5input class="__form-text-box-plain" type="text" formControlName="code5" mask="0"
+                    [dropSpecialCharacters]="false" maxlength="1" autocomplete="false" />
+            </div>
+            <div *ngIf="!codeField?.valid && init===true" class="__form-assist __form-assist-error">
+                Code is required
+            </div>
+            <div class="__form-separator"></div>
         </div>
-        <div class="__widget-code-container">
-            <input #code1input class="__form-text-box-plain" type="text" formControlName="code1" mask="0"
-                [dropSpecialCharacters]="false" maxlength="1" autocomplete="false" />
-            <input #code2input class="__form-text-box-plain" type="text" formControlName="code2" mask="0"
-                [dropSpecialCharacters]="false" maxlength="1" autocomplete="false" />
-            <input #code3input class="__form-text-box-plain" type="text" formControlName="code3" mask="0"
-                [dropSpecialCharacters]="false" maxlength="1" autocomplete="false" />
-            <input #code4input class="__form-text-box-plain" type="text" formControlName="code4" mask="0"
-                [dropSpecialCharacters]="false" maxlength="1" autocomplete="false" />
-            <input #code5input class="__form-text-box-plain" type="text" formControlName="code5" mask="0"
-                [dropSpecialCharacters]="false" maxlength="1" autocomplete="false" />
+        <div *ngIf="codeLength!==5">
+            <!-- Code (not 5 digits) -->
+            <app-form-textbox #codeinput [label]="'Confirmation code'" [maxlength]="codeLength"
+                formControlName="code" [numberField]="true" [inputMode]="'numeric'"  [errorMessages]="codeErrorMessages"
+                [separator]="true">
+            </app-form-textbox>
         </div>
-        <div *ngIf="!codeField?.valid && init===true" class="__form-assist __form-assist-error">
-            Code is required
-        </div>
-        <div class="__form-separator"></div>
 
         <div class="__widget-disclaimer-container">
             <mat-checkbox color="accent" (change)="register=!register">

@@ -590,13 +590,11 @@ export type SettingsCommon = {
   __typename?: 'SettingsCommon';
   settingsCommonId?: Maybe<Scalars['String']>;
   liquidityProvider?: Maybe<Scalars['String']>;
-  liquidityProviderWithdrawalBenchmark?: Maybe<Scalars['Float']>;
-  liquidityProviderRemains?: Maybe<Scalars['Float']>;
   custodyProvider?: Maybe<Scalars['String']>;
-  custodyProviderWithdrawalVaultAccountId?: Maybe<Scalars['String']>;
-  custodyProviderWithdrawalAddress?: Maybe<Scalars['String']>;
   kycProvider?: Maybe<Scalars['String']>;
   kycBaseAddress?: Maybe<Scalars['String']>;
+  adminEmails?: Maybe<Array<Scalars['String']>>;
+  additionalSettings?: Maybe<Scalars['String']>;
 };
 
 export type SettingsCurrencyListResult = {
@@ -1635,6 +1633,8 @@ export type Mutation = {
   executeTransaction?: Maybe<TransactionShort>;
   cancelMyTransaction?: Maybe<TransactionShort>;
   cancelTransaction?: Maybe<Transaction>;
+  unbenchmarkTransactions?: Maybe<Array<Transaction>>;
+  repeatDeclinedTransactions?: Maybe<Array<Transaction>>;
   createMyWidget?: Maybe<Widget>;
   createWidget?: Maybe<Widget>;
   deleteMyWidget?: Maybe<Widget>;
@@ -1907,7 +1907,8 @@ export type MutationLoginArgs = {
 
 
 export type MutationConfirmEmailArgs = {
-  token: Scalars['String'];
+  token?: Maybe<Scalars['String']>;
+  code?: Maybe<Scalars['Int']>;
   recaptcha: Scalars['String'];
 };
 
@@ -1992,7 +1993,7 @@ export type MutationCreateTransactionArgs = {
 
 export type MutationExecuteTransactionArgs = {
   transactionId?: Maybe<Scalars['String']>;
-  code?: Maybe<Scalars['String']>;
+  code?: Maybe<Scalars['Int']>;
 };
 
 
@@ -2003,6 +2004,16 @@ export type MutationCancelMyTransactionArgs = {
 
 export type MutationCancelTransactionArgs = {
   transactionId?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationUnbenchmarkTransactionsArgs = {
+  transactionIds?: Maybe<Array<Scalars['String']>>;
+};
+
+
+export type MutationRepeatDeclinedTransactionsArgs = {
+  transactionIds?: Maybe<Array<Scalars['String']>>;
 };
 
 
@@ -2087,12 +2098,10 @@ export type PaymentOperationShort = {
 
 export type SettingsCommonInput = {
   liquidityProvider?: Maybe<Scalars['String']>;
-  liquidityProviderWithdrawalBenchmark?: Maybe<Scalars['Float']>;
-  liquidityProviderRemains?: Maybe<Scalars['Float']>;
   custodyProvider?: Maybe<Scalars['String']>;
-  custodyProviderWithdrawalVaultAccountId?: Maybe<Scalars['String']>;
-  custodyProviderWithdrawalAddress?: Maybe<Scalars['String']>;
   kycProvider?: Maybe<Scalars['String']>;
+  adminEmails?: Maybe<Array<Scalars['String']>>;
+  additionalSettings?: Maybe<Scalars['String']>;
 };
 
 export type SettingsFeeInput = {
@@ -2268,7 +2277,8 @@ export type Subscription = {
 
 export enum UserNotificationCodes {
   TestNotification = 'TEST_NOTIFICATION',
-  AdminNotification = 'ADMIN_NOTIFICATION',
+  AdminToUserNotification = 'ADMIN_TO_USER_NOTIFICATION',
+  TransactionDeclinedAdminNotification = 'TRANSACTION_DECLINED_ADMIN_NOTIFICATION',
   TransactionConfirmation = 'TRANSACTION_CONFIRMATION',
   TransactionStatusChanged = 'TRANSACTION_STATUS_CHANGED',
   KycStatusChanged = 'KYC_STATUS_CHANGED'
@@ -2500,6 +2510,12 @@ export type PaymentCaptureInput = {
   instrument: PaymentInstrument;
   provider: PaymentProvider;
 };
+
+export enum TransactionConfirmationMode {
+  Always = 'ALWAYS',
+  IfOneTime = 'IF_ONE_TIME',
+  Never = 'NEVER'
+}
 
 export type TransferListResult = {
   __typename?: 'TransferListResult';

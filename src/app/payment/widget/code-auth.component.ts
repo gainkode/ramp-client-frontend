@@ -1,20 +1,24 @@
-import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { LoginResult } from 'src/app/model/generated-models';
+import { AuthService } from 'src/app/services/auth.service';
+import { ErrorService } from 'src/app/services/error.service';
 
 @Component({
     selector: 'app-widget-code-auth',
     templateUrl: 'code-auth.component.html',
     styleUrls: ['../../../assets/payment.scss', '../../../assets/button.scss', '../../../assets/text-control.scss']
 })
-export class WidgetCodeAuthComponent implements OnInit, OnDestroy {
+export class WidgetCodeAuthComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild('code1input') code1input: ElementRef | undefined = undefined;
     @ViewChild('code2input') code2input: ElementRef | undefined = undefined;
     @ViewChild('code3input') code3input: ElementRef | undefined = undefined;
     @ViewChild('code4input') code4input: ElementRef | undefined = undefined;
     @ViewChild('code5input') code5input: ElementRef | undefined = undefined;
+    @ViewChild('codeinput') codeinput: ElementRef | undefined = undefined;
     @Input() email = '';
+    @Input() codeLength = 5;
     @Output() onError = new EventEmitter<string>();
     @Output() onProgress = new EventEmitter<boolean>();
     @Output() onBack = new EventEmitter();
@@ -26,6 +30,9 @@ export class WidgetCodeAuthComponent implements OnInit, OnDestroy {
     validData = false;
     init = false;
     register = false;
+    codeErrorMessages: { [key: string]: string; } = {
+        ['required']: 'Confirmation code is required'
+    };
 
     dataForm = this.formBuilder.group({
         code1: [undefined, { validators: [Validators.required], updateOn: 'change' }],
@@ -60,7 +67,10 @@ export class WidgetCodeAuthComponent implements OnInit, OnDestroy {
         return this.dataForm.get('code');
     }
 
-    constructor(private formBuilder: FormBuilder) { }
+    constructor(
+        private formBuilder: FormBuilder,
+        private errorHandler: ErrorService,
+        private auth: AuthService) { }
 
     ngOnInit(): void {
         this.pSubscriptions.add(this.dataForm.valueChanges.subscribe({ next: (result: any) => this.onFormUpdated() }));
@@ -71,6 +81,17 @@ export class WidgetCodeAuthComponent implements OnInit, OnDestroy {
         this.pSubscriptions.add(this.code5Field?.valueChanges.subscribe(val => this.onCodeUpdated(val, 5)));
     }
 
+    ngAfterViewInit(): void {
+        const focusInput = (this.codeLength === 5) ?
+            this.code1input?.nativeElement as HTMLInputElement :
+            this.codeinput?.nativeElement as HTMLInputElement;
+        if (focusInput !== undefined) {
+            setTimeout(() => {
+                focusInput?.focus();
+            }, 100);
+        }
+    }
+
     ngOnDestroy(): void {
         this.pSubscriptions.unsubscribe();
     }
@@ -79,8 +100,18 @@ export class WidgetCodeAuthComponent implements OnInit, OnDestroy {
         if (this.register) {
             this.onComplete.emit(undefined);
         } else {
-
+            this.pSubscriptions.add(
+                this.auth.confirmCode(this.codeField?.value).subscribe(({ data }) => {
+                    this.login();
+                }, (error) => {
+                    this.errorMessage = this.errorHandler.getError(error.message, 'Incorrect confirmation code');
+                })
+            );
         }
+    }
+
+    private login(): void {
+
     }
 
     private onFormUpdated(): void {
