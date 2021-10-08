@@ -26,6 +26,9 @@ export class WidgetCreditCardComponent implements OnInit, OnDestroy {
     currentCardType = '';
     expiredInit = false;
     expiredCard = false;
+    codeInit = false;
+    codeName = 'CVV';
+    codeLength = 3;
 
     cardForm = this.formBuilder.group({
         card: ['', { validators: [Validators.required, Validators.minLength(16)], updateOn: 'change' }],
@@ -76,6 +79,7 @@ export class WidgetCreditCardComponent implements OnInit, OnDestroy {
         this.pSubscriptions.add(this.cardForm.valueChanges.subscribe({ next: (result: any) => this.onFormUpdated() }));
         this.pSubscriptions.add(this.cardField?.valueChanges.subscribe((val) => this.onCardNumberUpdated(val)));
         this.pSubscriptions.add(this.expiredField?.valueChanges.subscribe((val) => this.onExpiredUpdated(val)));
+        this.pSubscriptions.add(this.codeField?.valueChanges.subscribe((val) => this.onCodeUpdated(val)));
     }
 
     ngOnDestroy(): void {
@@ -84,13 +88,16 @@ export class WidgetCreditCardComponent implements OnInit, OnDestroy {
 
     private onFormUpdated(): void {
         const card = new CardView();
-        card.valid = this.cardForm.valid;
+        card.valid = this.cardForm.valid && !this.expiredCard;
         if (this.cardForm.valid) {
             card.cardNumber = this.cardField?.value;
             card.holderName = this.holderField?.value;
-            //     card.monthExpired = this.cardValidMonthControl?.value;
-            //     card.yearExpired = this.cardValidYearControl?.value;
-            //     card.cvv = parseInt(this.cardCvvControl?.value, 10);
+            const expired = this.getCardExpiredDate(this.expiredField?.value);
+            if (expired.valid) {
+                card.monthExpired = expired.month;
+                card.yearExpired = expired.year;
+            }
+            card.cvv = parseInt(this.codeField?.value, 10);
         }
         this.onUpdate.emit(card);
     }
@@ -99,16 +106,16 @@ export class WidgetCreditCardComponent implements OnInit, OnDestroy {
         const cardInfo = creditCardType(val);
         // If there is one card type found (no ambigous options)
         if (cardInfo.length === 1) {
-            // this.codeName = cardInfo[0].code.name;
-            // this.cvvLength = cardInfo[0].code.size;
-            // this.cardNumberGaps = cardInfo[0].gaps;
+            this.codeName = cardInfo[0].code.name;
+            this.codeLength = cardInfo[0].code.size;
             this.setCardType(cardInfo[0].type);
             this.cardNumberLengths = cardInfo[0].lengths;
             if (this.cardNumberLengths.length > 0) {
                 this.cardNumberLength = this.cardNumberLengths[this.cardNumberLengths.length - 1];
             }
         } else {  // no card type or a few card types found
-            // this.cardNumberGaps = [];
+            this.codeName = 'CVV';
+            this.codeLength = 3;
             this.cardNumberLengths = [];
             this.cardNumberLength = 16;
             this.setCardType('');
@@ -118,6 +125,10 @@ export class WidgetCreditCardComponent implements OnInit, OnDestroy {
     private onExpiredUpdated(val: string): void {
         this.expiredInit = true;
         this.expiredCard = (this.getCardExpiredDate(val).valid === false);
+    }
+
+    private onCodeUpdated(val: string): void {
+        this.codeInit = true;
     }
 
     private setCardType(typeName: string | undefined): void {

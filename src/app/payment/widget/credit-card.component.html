@@ -16,10 +16,11 @@
                 Expiry date
             </div>
             <div class="__form-textbox-border">
-                <input [ngClass]="expiredField?.valid && !expiredCard ? '__form-text-box' : '__form-text-box-error'" type="text"
-                    formControlName="expired" placeholder="00/00" mask="00/00" [dropSpecialCharacters]="false" maxlength="5"
-                    autocomplete="false" />
-                <div *ngIf="(!expiredField?.valid && expiredInit) || expiredCard" class="__form-input-error-icon-container">
+                <input [ngClass]="expiredField?.valid && !expiredCard ? '__form-text-box' : '__form-text-box-error'"
+                    type="text" formControlName="expired" placeholder="00/00" mask="00/00"
+                    [dropSpecialCharacters]="false" maxlength="5" autocomplete="false" />
+                <div *ngIf="(!expiredField?.valid && expiredInit) || expiredCard"
+                    class="__form-input-error-icon-container">
                     <mat-icon class="__form-input-error-icon">
                         error
                     </mat-icon>
@@ -37,7 +38,24 @@
         </div>
         <!-- CVV -->
         <div class="__widget-double-field-right-box">
-
+            <div class="__form-label">
+                Security code
+            </div>
+            <div class="__form-textbox-border">
+                <input [ngClass]="codeField?.valid ? '__form-text-box' : '__form-text-box-error'" type="text"
+                    formControlName="code" [placeholder]="codeName" [maxlength]="codeLength" autocomplete="false" />
+                <div *ngIf="!codeField?.valid && codeInit" class="__form-input-error-icon-container">
+                    <mat-icon class="__form-input-error-icon">
+                        error
+                    </mat-icon>
+                </div>
+            </div>
+            <div *ngIf="codeField?.hasError('minlength')" class="__form-assist __form-assist-error">
+                Invalid code
+            </div>
+            <div *ngIf="codeField?.hasError('required') && codeInit" class="__form-assist __form-assist-error">
+                Required code
+            </div>
         </div>
     </div>
     <div class="__form-separator"></div>
