@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { timer, Subscription } from 'rxjs';
 import { LoginResult, Rate, TransactionType } from 'src/app/model/generated-models';
 import { CheckoutSummary, WidgetSettings, WidgetStage } from 'src/app/model/payment.model';
+import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { PaymentDataService } from 'src/app/services/payment.service';
 
@@ -21,8 +22,7 @@ export class WidgetComponent implements OnInit {
   initState = true;
   showSummary = true;
   mobileSummary = false;
-  //stageId = 'order_details';
-  stageId = 'identification';
+  stageId = 'order_details';
   title = 'Order details';
   step = 1;
   summary = new CheckoutSummary();
@@ -40,6 +40,7 @@ export class WidgetComponent implements OnInit {
 
   constructor(
     private changeDetector: ChangeDetectorRef,
+    private auth: AuthService,
     private dataService: PaymentDataService,
     private errorHandler: ErrorService) { }
 
@@ -277,7 +278,7 @@ export class WidgetComponent implements OnInit {
     } as WidgetStage);
     this.summary.agreementChecked = true;
     if (this.widget.email) {
-      this.stageId = 'code_auth';
+      this.stageId = 'identification';
       this.title = 'Autorization';
       this.step = 3;
       this.showSummary = true;
@@ -295,10 +296,44 @@ export class WidgetComponent implements OnInit {
 
   }
 
+  onLoginRequired(email: string): void {
+
+  }
+
+  onConfirmRequired(email: string): void {
+    this.summary.email = email;
+    this.stageId = 'code_auth';
+    this.title = 'Autorization';
+    this.step = 3;
+    this.showSummary = true;
+  }
+
   // == Identification ==
 
   identificationComplete(data: LoginResult): void {
-
+    this.auth.setLoginUser(data);
+    this.summary.email = data.user?.email ?? '';
+    this.inProgress = true;
+    // this.pSubscriptions.add(
+    //   this.auth.getSettingsCommon().valueChanges.subscribe((settings) => {
+    //     this.inProgress = false;
+    //     if (this.auth.user !== null) {
+    //       const settingsCommon: SettingsCommon = settings.data.getSettingsCommon;
+    //       this.auth.setLocalSettingsCommon(settingsCommon);
+    //       this.needToLogin = false;
+    //       if (this.stepper) {
+    //         this.stepper?.next();
+    //       }
+    //     }
+    //   }, (error) => {
+    //     this.inProgress = false;
+    //     if (this.auth.token !== '') {
+    //       this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load common settings');
+    //     } else {
+    //       this.errorMessage = this.errorHandler.getError(error.message, 'Unable to authenticate user');
+    //     }
+    //   })
+    // );
   }
 
   identificationBack(): void {

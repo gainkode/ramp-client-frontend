@@ -42,7 +42,9 @@
       </app-widget-disclaimer>
       <!-- User identification -->
       <app-widget-identification *ngSwitchCase="'identification'" [email]="summary.email"
-        (onComplete)="identificationComplete($event)" (onError)="handleError($event)" (onProgress)="progressChanged($event)">
+        (onComplete)="identificationComplete($event)" (onLoginRequired)="onLoginRequired($event)"
+        (onConfirmRequired)="onConfirmRequired($event)" (onError)="handleError($event)"
+        (onProgress)="progressChanged($event)" (onBack)="identificationBack()" (onRegister)="onRegister($event)">
       </app-widget-identification>
       <!-- Register -->
       <app-widget-register *ngSwitchCase="'register'" [email]="summary.email">
@@ -53,7 +55,7 @@
       <!-- Code Authentication -->
       <app-widget-code-auth *ngSwitchCase="'code_auth'" [email]="summary.email" [codeLength]="5"
         (onComplete)="loginComplete($event)" (onError)="handleError($event)" (onProgress)="progressChanged($event)"
-        (onBack)="loginBack()">
+        (onBack)="loginBack()" (onRegister)="onRegister($event)">
       </app-widget-code-auth>
       <!-- Payment -->
       <app-widget-payment *ngSwitchCase="'payment'"></app-widget-payment>
