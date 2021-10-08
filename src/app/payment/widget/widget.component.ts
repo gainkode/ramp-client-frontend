@@ -23,7 +23,7 @@ export class WidgetComponent implements OnInit {
   showSummary = true;
   mobileSummary = false;
   //stageId = 'order_details';
-  stageId = 'code_auth';
+  stageId = 'payment';
   title = 'Order details';
   step = 1;
   summary = new CheckoutSummary();
