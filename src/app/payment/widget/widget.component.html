@@ -24,7 +24,7 @@
 
   <div class="__widget-data-container">
     <div
-      [ngClass]="{'__widget-wizard-container': true, '__widget-wizard-container-single': initState || stageId==='disclaimer' || stageId==='complete'}"
+      [ngClass]="{'__widget-wizard-container': true, '__widget-wizard-container-single': initState || showSummary}"
       [ngSwitch]="stageId">
       <!-- Order details -->
       <app-widget-order-details *ngSwitchCase="'order_details'" [initialized]="!initState" [summary]="summary"
@@ -44,7 +44,7 @@
       <app-widget-login-auth *ngSwitchCase="'login_auth'" [email]="summary.email" (onBack)="loginBack()">
       </app-widget-login-auth>
       <!-- Code Authentication -->
-      <app-widget-code-auth *ngSwitchCase="'code_auth'" [email]="summary.email" [codeLength]="6" (onComplete)="loginComplete($event)"
+      <app-widget-code-auth *ngSwitchCase="'code_auth'" [email]="summary.email" [codeLength]="5" (onComplete)="loginComplete($event)"
         (onError)="handleError($event)" (onProgress)="progressChanged($event)" (onBack)="loginBack()">
       </app-widget-code-auth>
       <!-- Payment -->
@@ -52,7 +52,7 @@
       <!-- Complete -->
       <app-widget-complete *ngSwitchCase="'complete'"></app-widget-complete>
     </div>
-    <div *ngIf="!initState && stageId!=='disclaimer' && stageId!=='complete'" class="__widget-summary-container">
+    <div *ngIf="!initState && showSummary" class="__widget-summary-container">
       <div class="__widget-summary-box">
         <h3 class="__widget-summary-title">Order Summary</h3>
         <app-widget-rate class="__widget-rate-container" [title]="exchangeRateCountDownTitle"

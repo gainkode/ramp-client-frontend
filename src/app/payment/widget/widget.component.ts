@@ -20,6 +20,7 @@ export class WidgetComponent implements OnInit {
   internalPayment = false;
   //initState = true;
   initState = false;
+  showSummary = true;
   mobileSummary = false;
   //stageId = 'order_details';
   stageId = 'code_auth';
@@ -209,11 +210,13 @@ export class WidgetComponent implements OnInit {
     this.stages.push({
       id: this.stageId,
       title: this.title,
-      step: this.step
+      step: this.step,
+      summary: this.showSummary
     } as WidgetStage);
     this.stageId = 'disclaimer';
     this.title = 'Disclaimer';
     this.step = 2;
+    this.showSummary = false;
     // } else {
     // this.inProgress = true;
     // // try to authorised a user
@@ -258,6 +261,7 @@ export class WidgetComponent implements OnInit {
       this.stageId = lastStage.id;
       this.title = lastStage.title;
       this.step = lastStage.step;
+      this.showSummary = lastStage.summary;
     }
   }
 
@@ -265,17 +269,20 @@ export class WidgetComponent implements OnInit {
     this.stages.push({
       id: this.stageId,
       title: this.title,
-      step: this.step
+      step: this.step,
+      summary: this.showSummary
     } as WidgetStage);
     this.summary.agreementChecked = true;
     if (this.widget.email) {
       this.stageId = 'code_auth';
       this.title = 'Autorization';
       this.step = 3;
+      this.showSummary = true;
     } else {
       this.stageId = 'complete';
       this.title = 'Complete';
       this.step = 6;
+      this.showSummary = false;
     }
   }
 
@@ -295,6 +302,7 @@ export class WidgetComponent implements OnInit {
       this.stageId = lastStage.id;
       this.title = lastStage.title;
       this.step = lastStage.step;
+      this.showSummary = lastStage.summary;
     }
   }
 }

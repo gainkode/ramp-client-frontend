@@ -398,4 +398,5 @@ export class WidgetStage {
     id = '';
     title = '';
     step = 0;
+    summary = true;
 }
