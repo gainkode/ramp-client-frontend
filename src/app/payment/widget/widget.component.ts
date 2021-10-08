@@ -228,7 +228,17 @@ export class WidgetComponent implements OnInit {
   }
   // =======================
 
-  // == Disclaimer ==
+  // == Payment ============
+
+  paymentComplete(data: CheckoutSummary): void {
+    this.summary.provider = data.provider;
+    this.summary.instrument = data.instrument;
+    this.summary.card = data.card;
+  }
+
+  // =======================
+
+  // == Disclaimer =========
 
   desclaimerBack(): void {
     if (this.stages.length > 0) {
