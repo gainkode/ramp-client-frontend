@@ -98,6 +98,9 @@ export class ErrorService {
             case 'user.kyc_get_applicant_information_error':
                 result = 'Unable to get the user identification information';
                 break;
+            case 'user.kyc_generate_webapi_token_error':
+                result = 'Unable to generate the user token';
+                break;
             case 'core.insufficient_funds':
                 result = 'Insufficient funds';
                 break;

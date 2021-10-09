@@ -1,6 +1,5 @@
 import { Component, Input, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { ErrorService } from '../services/error.service';
@@ -10,20 +9,20 @@ const snsWebSdk = require('@sumsub/websdk');
 
 @Component({
     selector: 'app-kyc-panel',
-    templateUrl: 'kyc-panel.component.html',
-    styleUrls: ['kyc-panel.component.scss']
+    templateUrl: 'kyc-panel.component.html'
 })
 export class KycPanelComponent implements OnInit, OnDestroy {
     @Input() flow: string | null | undefined = '';
     @Input() url: string | null | undefined = '';
-    @Input() notifyCompleted: boolean | null | undefined = false;
+    @Input() notifyCompleted: boolean | undefined = false;
     @Output() completed = new EventEmitter();
-    private pTokenSubscription!: any;
-    inProgress = false;
-    errorMessage = '';
+    @Output() onError = new EventEmitter<string>();
+    @Output() onAuthError = new EventEmitter();
+    @Output() onProgress = new EventEmitter<boolean>();
+
+    private pTokenSubscription: Subscription | undefined = undefined;
 
     constructor(
-        private router: Router,
         public dialog: MatDialog,
         private auth: AuthService,
         private errorHandler: ErrorService) {
@@ -35,10 +34,7 @@ export class KycPanelComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        const t: Subscription = this.pTokenSubscription;
-        if (t !== undefined) {
-            (this.pTokenSubscription as Subscription).unsubscribe();
-        }
+        this.pTokenSubscription?.unsubscribe();
     }
 
     showSuccessDialog(): void {
@@ -53,9 +49,9 @@ export class KycPanelComponent implements OnInit, OnDestroy {
 
     loadSumSub(): void {
         // load sumsub widget
-        this.inProgress = true;
+        this.onProgress.emit(true);
         this.pTokenSubscription = this.auth.getKycToken().valueChanges.subscribe(({ data }) => {
-            this.inProgress = false;
+            this.onProgress.emit(false);
             this.launchSumSubWidget(
                 this.url as string,
                 this.flow as string,
@@ -64,11 +60,11 @@ export class KycPanelComponent implements OnInit, OnDestroy {
                 '',
                 []);
         }, (error) => {
-            this.inProgress = false;
+            this.onProgress.emit(false);
             if (this.auth.token !== '') {
-                this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load settings');
+                this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load settings'));
             } else {
-                this.router.navigateByUrl('/');
+                this.onAuthError.emit();
             }
         });
     }
@@ -116,7 +112,7 @@ export class KycPanelComponent implements OnInit, OnDestroy {
             //   // you may also use to pass string with plain styles `customCssStr:`
             // },
             onError: (error: any) => {
-                this.errorMessage = error.error;
+                this.onError.emit(error.error);
             },
         }).build();
         // you are ready to go:

@@ -47,13 +47,18 @@ export class WidgetComponent implements OnInit {
 
   ngOnInit(): void {
     // temp
-    this.widget.email = 'mister@twister.com';
-    this.widget.transaction = TransactionType.Deposit;
-    this.widget.walletAddress = 'mkBUjw37y46goULToq6b7y6ciJc3Qi32YM';
+    // this.widget.email = 'mister@twister.com';
+    // this.widget.transaction = TransactionType.Deposit;
+    // this.widget.walletAddress = 'mkBUjw37y46goULToq6b7y6ciJc3Qi32YM';
     // temp
 
     if (this.widget.email) {
       this.summary.email = this.widget.email;
+    } else {
+      const user = this.auth.user;
+      if (user) {
+        this.summary.email = this.auth?.user?.email ?? '';
+      }
     }
     if (this.widget.transaction) {
       this.summary.transactionType = this.widget.transaction;
@@ -77,6 +82,13 @@ export class WidgetComponent implements OnInit {
     this.errorMessage = message;
   }
 
+  handleAuthError(): void {
+    if (this.stages.length > 0) {
+      this.removeLastStage();
+      this.nextStage('login_auth', 'Autorization', 3, true);
+    }
+  }
+
   progressChanged(visible: boolean): void {
     this.inProgress = visible;
     this.changeDetector.detectChanges();
@@ -97,13 +109,24 @@ export class WidgetComponent implements OnInit {
     }
   }
 
-  private registerStage(): void {
-    this.stages.push({
-      id: this.stageId,
-      title: this.title,
-      step: this.step,
-      summary: this.showSummary
-    } as WidgetStage);
+  private nextStage(id: string, name: string, stepId: number, summaryVisible: boolean): void {
+    this.pSubscriptions.unsubscribe();
+    if (
+      this.stageId !== 'register' &&
+      this.stageId !== 'login_auth' &&
+      this.stageId !== 'code_auth') {
+      this.stages.push({
+        id: this.stageId,
+        title: this.title,
+        step: this.step,
+        summary: this.showSummary
+      } as WidgetStage);
+    }
+    this.errorMessage = '';
+    this.stageId = id;
+    this.title = name;
+    this.step = stepId;
+    this.showSummary = summaryVisible;
   }
 
   // == Exchange rate ==
@@ -232,35 +255,7 @@ export class WidgetComponent implements OnInit {
   }
 
   orderDetailsComplete(): void {
-    this.registerStage();
-    this.errorMessage = '';
-    this.stageId = 'disclaimer';
-    this.title = 'Disclaimer';
-    this.step = 2;
-    this.showSummary = false;
-    // } else {
-    // this.inProgress = true;
-    // // try to authorised a user
-    // this.auth.authenticate(this.summary.email, '', true).subscribe(({ data }) => {
-    //   const userData = data.login as LoginResult;
-    //   this.handleSuccessLogin(userData);
-    //   this.stageId = 'payment_info';
-    //   this.title = 'Payment Info';
-    // }, (error) => {
-    //    this.inProgress = false;
-    //   if (this.errorHandler.getCurrentError() === 'auth.password_null_or_empty') {
-    //     // Internal user cannot be authorised without a password, so need to show the authorisation form to fill
-    //     this.auth.logout();
-    //     this.stageId = 'login';
-    //     this.title = 'Login';
-    //     this.needToLogin = true;
-    //     this.loginTitle = 'Your account seems to be registered. Please, authenticate';
-    //     this.defaultUserName = this.detailsEmailControl?.value;
-    //   } else {
-    //     this.errorMessage = this.errorHandler.getError(error.message, 'Unable to authenticate user');
-    //    }
-    // });
-    // }
+    this.nextStage('disclaimer', 'Disclaimer', 2, false);
   }
   // =======================
 
@@ -281,19 +276,15 @@ export class WidgetComponent implements OnInit {
   }
 
   desclaimerNext(): void {
-    this.registerStage();
     this.summary.agreementChecked = true;
-    this.errorMessage = '';
-    if (this.widget.email) {
-      this.stageId = 'identification';
-      this.title = 'Autorization';
-      this.step = 3;
-      this.showSummary = true;
+    let needToLogin = true;
+    if (this.summary.email) {
+      needToLogin = (!this.auth.authenticated);
+    }
+    if (needToLogin) {
+      this.nextStage('identification', 'Autorization', 3, true);
     } else {
-      this.stageId = 'complete';
-      this.title = 'Complete';
-      this.step = 6;
-      this.showSummary = false;
+      this.nextStage('verification', 'Verification', 5, false);
     }
   }
 
@@ -301,20 +292,12 @@ export class WidgetComponent implements OnInit {
 
   onRegister(email: string): void {
     this.summary.email = email;
-    this.errorMessage = '';
-    this.stageId = 'register';
-    this.title = 'Autorization';
-    this.step = 3;
-    this.showSummary = true;
+    this.nextStage('register', 'Autorization', 3, true);
   }
 
   registerComplete(email: string): void {
     this.summary.email = email;
-    this.errorMessage = '';
-    this.stageId = 'login_auth';
-    this.title = 'Autorization';
-    this.step = 3;
-    this.showSummary = true;
+    this.nextStage('login_auth', 'Autorization', 3, true);
   }
 
   registerBack(): void {
@@ -323,20 +306,12 @@ export class WidgetComponent implements OnInit {
 
   onLoginRequired(email: string): void {
     this.summary.email = email;
-    this.errorMessage = '';
-    this.stageId = 'login_auth';
-    this.title = 'Autorization';
-    this.step = 3;
-    this.showSummary = true;
+    this.nextStage('login_auth', 'Autorization', 3, true);
   }
 
   onConfirmRequired(email: string): void {
     this.summary.email = email;
-    this.errorMessage = '';
-    this.stageId = 'code_auth';
-    this.title = 'Autorization';
-    this.step = 3;
-    this.showSummary = true;
+    this.nextStage('code_auth', 'Autorization', 3, true);
   }
 
   // == Identification ==
@@ -373,10 +348,27 @@ export class WidgetComponent implements OnInit {
 
   // ====================
 
+  // == KYC =============
+
+  kycBack(): void {
+    this.stageBack();
+  }
+
+  kycComplete(): void {
+    this.nextStage('complete', 'Complete', 6, false);
+  }
+
+  // ====================
+
   loginComplete(data: LoginResult): void {
     if (data) {
       // auth success
-      this.removeLastStage();
+
+      // remove identification stage from history
+      const stageIndex = this.stages.findIndex(x => x.id === 'identification');
+      if (stageIndex > -1) {
+        this.stages.splice(stageIndex, 1);
+      }
     } else {
       // need to register
     }
