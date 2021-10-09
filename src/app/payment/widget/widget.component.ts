@@ -1,10 +1,11 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { timer, Subscription } from 'rxjs';
-import { LoginResult, Rate, TransactionType } from 'src/app/model/generated-models';
+import { Subscription } from 'rxjs';
+import { LoginResult, Rate } from 'src/app/model/generated-models';
 import { CheckoutSummary, WidgetSettings, WidgetStage } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { PaymentDataService } from 'src/app/services/payment.service';
+import { ExchangeRateService } from 'src/app/services/rate.service';
 
 @Component({
   selector: 'app-widget',
@@ -33,14 +34,10 @@ export class WidgetComponent implements OnInit {
   exchangeRateCountDownValue = '';
 
   private pSubscriptions: Subscription = new Subscription();
-  private pRateSubscription: Subscription | undefined = undefined;
-  private exchangeRateTimer = timer(0, 1000);
-  private exchangeRateCountDown = 0;
-  private exchangeRateCountDownInit = false;
-  private lastChanceError = false;
 
   constructor(
     private changeDetector: ChangeDetectorRef,
+    private exhangeRate: ExchangeRateService,
     private auth: AuthService,
     private dataService: PaymentDataService,
     private errorHandler: ErrorService) { }
@@ -67,14 +64,21 @@ export class WidgetComponent implements OnInit {
       this.summary.address = this.widget.walletAddress;
     }
 
-    this.startExchangeRateTimer();
+    this.exhangeRate.setCurrency(this.summary.currencyFrom, this.summary.currencyTo, this.summary.transactionType);
+    this.exhangeRate.register(this.onExchangeRateUpdated.bind(this));
   }
 
   ngOnDestroy(): void {
     this.pSubscriptions.unsubscribe();
-    if (this.pRateSubscription) {
-      this.pRateSubscription.unsubscribe();
-      this.pRateSubscription = undefined;
+    this.exhangeRate.stop();
+  }
+
+  onExchangeRateUpdated(rate: Rate | undefined, countDownTitle: string, countDownValue: string, error: string): void {
+    this.exchangeRateCountDownTitle = countDownTitle;
+    this.exchangeRateCountDownValue = countDownValue;
+    this.rateErrorMessage = error;
+    if (rate) {
+      this.summary.exchangeRate = rate;
     }
   }
 
@@ -129,109 +133,6 @@ export class WidgetComponent implements OnInit {
     this.showSummary = summaryVisible;
   }
 
-  // == Exchange rate ==
-  private startExchangeRateTimer(): void {
-    this.pSubscriptions.add(
-      this.exchangeRateTimer.subscribe(val => {
-        if (this.exchangeRateCountDownInit) {
-          if (this.exchangeRateCountDown > 0) {
-            this.exchangeRateCountDown -= 1;
-            this.lastChanceError = false;
-            this.updateExchangeRateCountDown();
-          } else {
-            const success = this.loadExchangeRates();
-            if (!success) {
-              if (!this.lastChanceError) {
-                this.exchangeRateCountDown = 1;
-                this.updateExchangeRateCountDown();
-              }
-              this.lastChanceError = true;
-            } else {
-              this.lastChanceError = false;
-            }
-          }
-        } else {
-          this.exchangeRateCountDownInit = true;
-        }
-      })
-    );
-  }
-
-  private loadExchangeRates(): boolean {
-    let result = true;
-    this.rateErrorMessage = '';
-    if (this.exchangeRateCountDownInit) {
-      let currencyFrom = '';
-      let currencyTo = '';
-      if (this.summary?.transactionType === TransactionType.Withdrawal) {
-        currencyTo = this.summary?.currencyTo as string;
-        currencyFrom = this.summary?.currencyFrom as string;
-      } else if (this.summary?.transactionType === TransactionType.Deposit) {
-        currencyFrom = this.summary?.currencyTo as string;
-        currencyTo = this.summary?.currencyFrom as string;
-      }
-      console.log(`Get rate ${currencyFrom}->${currencyTo}`);
-      if (currencyFrom && currencyTo) {
-        const ratesData = this.dataService.getRates(currencyFrom, currencyTo);
-        if (ratesData === null) {
-          this.rateErrorMessage = this.errorHandler.getRejectedCookieMessage();
-        } else {
-          if (this.pRateSubscription) {
-            this.pRateSubscription.unsubscribe();
-            this.pRateSubscription = undefined;
-          }
-          this.pRateSubscription = ratesData.valueChanges.subscribe(({ data }) => {
-            const rates = data.getRates as Rate[];
-            if (rates.length > 0) {
-              this.summary.exchangeRate = rates[0];
-            }
-            this.restartExchangeRateCountDown();
-          }, (error) => {
-            this.setDefaultExchangeRate();
-            this.rateErrorMessage = this.errorHandler.getError(error.message, 'Unable to load exchange rate');
-            this.restartExchangeRateCountDown();
-          });
-        }
-      } else {
-        result = false;
-      }
-    }
-    return result;
-  }
-
-  private setDefaultExchangeRate(): void {
-    const rate = {
-      currencyFrom: '',
-      currencyTo: '',
-      originalRate: 0,
-      depositRate: 0,
-      withdrawRate: 0
-    };
-    this.summary.exchangeRate = rate;
-  }
-
-  private restartExchangeRateCountDown(): void {
-    this.exchangeRateCountDown = 30;
-    this.lastChanceError = false;
-    this.updateExchangeRateCountDown();
-  }
-
-  private updateExchangeRate(): void {
-    this.loadExchangeRates();
-    this.restartExchangeRateCountDown();
-  }
-
-  private updateExchangeRateCountDown(): void {
-    this.exchangeRateCountDownTitle = (this.exchangeRateCountDown > 0 && this.exchangeRateCountDown < 30) ?
-      'The price will be updated in' :
-      'The price is';
-    const sec = this.exchangeRateCountDown === 1 ? 'second' : 'seconds';
-    this.exchangeRateCountDownValue = (this.exchangeRateCountDown > 0 && this.exchangeRateCountDown < 30) ?
-      `${this.exchangeRateCountDown} ${sec}` :
-      'updating';
-  }
-  // =============================
-
   // == Order details page ==
   orderDetailsChanged(data: CheckoutSummary): void {
     if (this.initState && (data.amountFrom || data.amountTo)) {
@@ -250,10 +151,11 @@ export class WidgetComponent implements OnInit {
     this.summary.currencyTo = data.currencyTo;
     this.summary.transactionType = data.transactionType;
     if (currencyFromChanged || currencyToChanged) {
-      this.updateExchangeRate();
+      this.exhangeRate.setCurrency(this.summary.currencyFrom, this.summary.currencyTo, this.summary.transactionType);
+      this.exhangeRate.update();
     }
   }
-
+ 
   orderDetailsComplete(): void {
     this.nextStage('disclaimer', 'Disclaimer', 2, false);
   }

@@ -27,6 +27,7 @@ import { getMainDefinition } from '@apollo/client/utilities';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
 import { DirectiveModule } from './directives/directives.module';
 import { ProfileDataService } from './services/profile.service';
+import { ExchangeRateService } from './services/rate.service';
 
 @NgModule({
   declarations: [
@@ -63,7 +64,8 @@ import { ProfileDataService } from './services/profile.service';
     CommonDataService,
     PaymentDataService,
     NotificationService,
-    ErrorService
+    ErrorService,
+    ExchangeRateService
   ],
   bootstrap: [AppComponent]
 })
