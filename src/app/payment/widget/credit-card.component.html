@@ -1,61 +1,70 @@
-<form [formGroup]="cardForm" #cardform="ngForm">
-    <!-- Card number -->
-    <app-form-cardbox [label]="'Card number'" [placeholder]="'...'" [maxlength]="cardNumberLength"
-        [img]="currentCardType" formControlName="card" [errorMessages]="cardNumberErrorMessages" [separator]="true">
-    </app-form-cardbox>
+<div class="__widget-data-box">
+    <form [formGroup]="cardForm" (ngSubmit)="onSubmit()">
+        <!-- Card number -->
+        <app-form-cardbox [label]="'Card number'" [placeholder]="'...'" [maxlength]="cardNumberLength"
+            [img]="currentCardType" formControlName="card" [errorMessages]="cardNumberErrorMessages" [separator]="true">
+        </app-form-cardbox>
 
-    <!-- Card holder -->
-    <app-form-textbox [label]="'Name on the card'" [boxType]="'text'" [placeholder]="'...'" [maxlength]="45"
-        formControlName="holder" [upperCase]="true" [errorMessages]="cardHolderErrorMessages" [separator]="true">
-    </app-form-textbox>
+        <!-- Card holder -->
+        <app-form-textbox [label]="'Name on the card'" [boxType]="'text'" [placeholder]="'...'" [maxlength]="45"
+            formControlName="holder" [upperCase]="true" [errorMessages]="cardHolderErrorMessages" [separator]="true">
+        </app-form-textbox>
 
-    <div class="__widget-double-field-container">
-        <!-- Expiry date -->
-        <div class="__widget-double-field-left-box">
-            <div class="__form-label">
-                Expiry date
-            </div>
-            <div class="__form-textbox-border">
-                <input [ngClass]="expiredField?.valid && !expiredCard ? '__form-text-box' : '__form-text-box-error'"
-                    type="text" formControlName="expired" placeholder="00/00" mask="00/00"
-                    [dropSpecialCharacters]="false" maxlength="5" autocomplete="false" />
-                <div *ngIf="(!expiredField?.valid && expiredInit) || expiredCard"
-                    class="__form-input-error-icon-container">
-                    <mat-icon class="__form-input-error-icon">
-                        error
-                    </mat-icon>
+        <div class="__widget-double-field-container">
+            <!-- Expiry date -->
+            <div class="__widget-double-field-left-box">
+                <div class="__form-label">
+                    Expiry date
+                </div>
+                <div class="__form-textbox-border">
+                    <input [ngClass]="expiredField?.valid && !expiredCard ? '__form-text-box' : '__form-text-box-error'"
+                        type="text" formControlName="expired" placeholder="00/00" mask="00/00"
+                        [dropSpecialCharacters]="false" maxlength="5" autocomplete="false" />
+                    <div *ngIf="(!expiredField?.valid && expiredInit) || expiredCard"
+                        class="__form-input-error-icon-container">
+                        <mat-icon class="__form-input-error-icon">
+                            error
+                        </mat-icon>
+                    </div>
+                </div>
+                <div *ngIf="expiredField?.hasError('pattern')" class="__form-assist __form-assist-error">
+                    Invalid format
+                </div>
+                <div *ngIf="expiredField?.hasError('required') && expiredInit"
+                    class="__form-assist __form-assist-error">
+                    Required date
+                </div>
+                <div *ngIf="expiredField?.valid && expiredCard" class="__form-assist __form-assist-error">
+                    Card is expired
                 </div>
             </div>
-            <div *ngIf="expiredField?.hasError('pattern')" class="__form-assist __form-assist-error">
-                Invalid format
-            </div>
-            <div *ngIf="expiredField?.hasError('required') && expiredInit" class="__form-assist __form-assist-error">
-                Required date
-            </div>
-            <div *ngIf="expiredField?.valid && expiredCard" class="__form-assist __form-assist-error">
-                Card is expired
-            </div>
-        </div>
-        <!-- CVV -->
-        <div class="__widget-double-field-right-box">
-            <div class="__form-label">
-                Security code
-            </div>
-            <div class="__form-textbox-border">
-                <input [ngClass]="codeField?.valid ? '__form-text-box' : '__form-text-box-error'" type="text"
-                    formControlName="code" [placeholder]="codeName" [maxlength]="codeLength" autocomplete="false" />
-                <div *ngIf="!codeField?.valid && codeInit" class="__form-input-error-icon-container">
-                    <mat-icon class="__form-input-error-icon">
-                        error
-                    </mat-icon>
+            <!-- CVV -->
+            <div class="__widget-double-field-right-box">
+                <div class="__form-label">
+                    Security code
+                </div>
+                <div class="__form-textbox-border">
+                    <input [ngClass]="codeField?.valid ? '__form-text-box' : '__form-text-box-error'" type="text"
+                        formControlName="code" [placeholder]="codeName" [maxlength]="codeLength" autocomplete="false" />
+                    <div *ngIf="!codeField?.valid && codeInit" class="__form-input-error-icon-container">
+                        <mat-icon class="__form-input-error-icon">
+                            error
+                        </mat-icon>
+                    </div>
+                </div>
+                <div *ngIf="codeField?.hasError('minlength')" class="__form-assist __form-assist-error">
+                    Invalid code
+                </div>
+                <div *ngIf="codeField?.hasError('required') && codeInit" class="__form-assist __form-assist-error">
+                    Required code
                 </div>
             </div>
-            <div *ngIf="codeField?.hasError('minlength')" class="__form-assist __form-assist-error">
-                Invalid code
-            </div>
-            <div *ngIf="codeField?.hasError('required') && codeInit" class="__form-assist __form-assist-error">
-                Required code
-            </div>
         </div>
+    </form>
+
+    <!-- Buttons -->
+    <div class="__widget-buttons-area">
+        <button class="__outlined-button" type="button" (click)="onBack.emit()">BACK</button>
+        <button class="__main-button __button-wide-separator" type="submit" [disabled]="!cardForm.valid">next</button>
     </div>
-</form>
+</div>

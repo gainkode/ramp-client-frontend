@@ -12,6 +12,7 @@ import { CardView, CheckoutSummary, PaymentInstrumentView, PaymentProviderList, 
 export class WidgetPaymentComponent implements OnInit, OnDestroy {
   @Input() settings: WidgetSettings = new WidgetSettings();
   @Input() summary: CheckoutSummary | undefined = undefined;
+  @Output() onBack = new EventEmitter();
   @Output() onError = new EventEmitter<string>();
   @Output() onProgress = new EventEmitter<boolean>();
   @Output() onComplete = new EventEmitter<CheckoutSummary>();

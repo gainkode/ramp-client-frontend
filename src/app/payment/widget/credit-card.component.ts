@@ -17,7 +17,8 @@ class CardExpiredDate {
     styleUrls: ['../../../assets/payment.scss', '../../../assets/text-control.scss']
 })
 export class WidgetCreditCardComponent implements OnInit, OnDestroy {
-    @Output() onUpdate = new EventEmitter<CardView>();
+    @Output() onBack = new EventEmitter();
+    @Output() onComplete = new EventEmitter<CardView>();
 
     private pSubscriptions: Subscription = new Subscription();
 
@@ -76,7 +77,6 @@ export class WidgetCreditCardComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.pSubscriptions.add(this.cardForm.valueChanges.subscribe({ next: (result: any) => this.onFormUpdated() }));
         this.pSubscriptions.add(this.cardField?.valueChanges.subscribe((val) => this.onCardNumberUpdated(val)));
         this.pSubscriptions.add(this.expiredField?.valueChanges.subscribe((val) => this.onExpiredUpdated(val)));
         this.pSubscriptions.add(this.codeField?.valueChanges.subscribe((val) => this.onCodeUpdated(val)));
@@ -86,7 +86,7 @@ export class WidgetCreditCardComponent implements OnInit, OnDestroy {
         this.pSubscriptions.unsubscribe();
     }
 
-    private onFormUpdated(): void {
+    onSubmit(): void {
         const card = new CardView();
         card.valid = this.cardForm.valid && !this.expiredCard;
         if (this.cardForm.valid) {
@@ -99,7 +99,7 @@ export class WidgetCreditCardComponent implements OnInit, OnDestroy {
             }
             card.cvv = parseInt(this.codeField?.value, 10);
         }
-        this.onUpdate.emit(card);
+        this.onComplete.emit(card);
     }
 
     private onCardNumberUpdated(val: string): void {
