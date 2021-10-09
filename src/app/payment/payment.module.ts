@@ -34,6 +34,7 @@ import { WidgetCreditCardComponent } from './widget/credit-card.component';
 import { WidgetCodeAuthComponent } from './widget/code-auth.component';
 import { WidgetidentificationComponent } from './widget/identification.component';
 import { WidgetKycComponent } from './widget/kyc.component';
+import { WidgetProcessingComponent } from './widget/processing.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -74,7 +75,7 @@ export class MaterialModule { }
     declarations: [PaymentComponent, QuickCheckoutComponent, ContainerComponentDeprecated,
         WidgetComponent, WidgetProgressComponent, WidgetSummaryComponent, WidgetRateComponent, WidgetCreditCardComponent,
         WidgetidentificationComponent, WidgetRegisterComponent, WidgetLoginAuthComponent, WidgetCodeAuthComponent,
-        WidgetOrderDetailsComponent, WidgetDisclaimerComponent, WidgetPaymentComponent, WidgetKycComponent, WidgetCompleteComponent],
+        WidgetOrderDetailsComponent, WidgetDisclaimerComponent, WidgetPaymentComponent, WidgetKycComponent, WidgetProcessingComponent, WidgetCompleteComponent],
     providers: [],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
