@@ -32,14 +32,13 @@
     <div *ngIf="summary?.address !== ''" class="__widget-summary-double-item">
         Wallet:
         <br>
-        <span class="__widget-summary-wallet">
-            {{summary?.address}}
-        </span>
+        <input class="__text-box-noborder" type="text" readonly [value]="summary?.address"/>
     </div>
     <div *ngIf="summary?.email !== ''" class="__widget-summary-item">
         Email:
     </div>
     <div *ngIf="summary?.email !== ''" class="__widget-summary-item">
-        {{summary?.email}}
+        <input class="__text-box-noborder" type="text" readonly [value]="summary?.email"/>
+        <!-- {{summary?.email}} -->
     </div>
 </div>

@@ -329,6 +329,29 @@ input.__form-finance-text-combo-error:focus {
     outline: none;
 }
 
+
+
+
+input.__text-box-noborder {
+    border: 0px;
+    width: 100%;
+    background-color: transparent;
+    
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 28px;
+    color: $color_purple_900_text;
+}
+
+input.__text-box-noborder:focus {
+    outline: none;
+}
+
+
+
+
 .__form-uppercase-input {
     text-transform: uppercase;
 }

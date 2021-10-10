@@ -340,21 +340,12 @@
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
+    width: 100%;
 
     font-family: $font_main;
     font-style: normal;
     font-weight: 300;
     font-size: 14px;
-    line-height: 28px;
-
-    color: $color_purple_900_text;
-}
-
-.__widget-summary-wallet {
-    font-family: $font_main;
-    font-style: normal;
-    font-weight: 300;
-    font-size: 12px;
     line-height: 28px;
 
     color: $color_purple_900_text;
