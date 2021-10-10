@@ -163,23 +163,23 @@ export const PaymentProviderList: Array<PaymentProviderView> = [
 ];
 
 export const TransactionTypeList: Array<TransactionTypeView> = [
-    { id: TransactionType.Deposit, name: 'Deposit' },
+    { id: TransactionType.Deposit, name: 'Buy' },
     { id: TransactionType.Exchange, name: 'Swap' },
     { id: TransactionType.System, name: 'System' },
     { id: TransactionType.Transfer, name: 'Transfer' },
-    { id: TransactionType.Withdrawal, name: 'Withdrawal' }
+    { id: TransactionType.Withdrawal, name: 'Sell' }
 ];
 
 export const UserTransactionTypeList: Array<TransactionTypeView> = [
-    { id: TransactionType.Deposit, name: 'Deposit' },
+    { id: TransactionType.Deposit, name: 'Buy' },
     { id: TransactionType.Exchange, name: 'Swap' },
     { id: TransactionType.Transfer, name: 'Transfer' },
-    { id: TransactionType.Withdrawal, name: 'Withdrawal' }
+    { id: TransactionType.Withdrawal, name: 'Sell' }
 ];
 
 export const QuickCheckoutTransactionTypeList: Array<TransactionTypeView> = [
-    { id: TransactionType.Deposit, name: 'Deposit' },
-    { id: TransactionType.Withdrawal, name: 'Withdrawal' }
+    { id: TransactionType.Deposit, name: 'Buy' },
+    { id: TransactionType.Withdrawal, name: 'Sell' }
 ];
 
 export const TransactionSourceList: Array<TransactionSourceView> = [

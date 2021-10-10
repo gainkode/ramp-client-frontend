@@ -25,6 +25,7 @@ export class WidgetComponent implements OnInit {
   showSummary = true;
   mobileSummary = false;
   stageId = 'order_details';
+  //stageId = 'payment';
   title = 'Order details';
   step = 1;
   summary = new CheckoutSummary();
@@ -44,7 +45,7 @@ export class WidgetComponent implements OnInit {
 
   ngOnInit(): void {
     // temp
-    // this.widget.email = 'mister@twister.com';
+    // this.widget.email = 'tugaymv@gmail.com';
     // this.widget.transaction = TransactionType.Deposit;
     // this.widget.walletAddress = 'mkBUjw37y46goULToq6b7y6ciJc3Qi32YM';
     // temp
@@ -89,7 +90,7 @@ export class WidgetComponent implements OnInit {
   handleAuthError(): void {
     if (this.stages.length > 0) {
       this.removeLastStage();
-      this.nextStage('login_auth', 'Autorization', 3, true);
+      this.nextStage('login_auth', 'Authorization', 3, true);
     }
   }
 
@@ -114,7 +115,7 @@ export class WidgetComponent implements OnInit {
   }
 
   private nextStage(id: string, name: string, stepId: number, summaryVisible: boolean): void {
-    this.pSubscriptions.unsubscribe();
+    //this.pSubscriptions.unsubscribe();
     if (
       this.stageId !== 'register' &&
       this.stageId !== 'login_auth' &&
@@ -155,7 +156,7 @@ export class WidgetComponent implements OnInit {
       this.exhangeRate.update();
     }
   }
- 
+
   orderDetailsComplete(): void {
     this.nextStage('disclaimer', 'Disclaimer', 2, false);
   }
@@ -179,27 +180,86 @@ export class WidgetComponent implements OnInit {
 
   desclaimerNext(): void {
     this.summary.agreementChecked = true;
-    let needToLogin = true;
-    if (this.summary.email) {
-      needToLogin = (!this.auth.authenticated);
-    }
-    if (needToLogin) {
-      this.nextStage('identification', 'Autorization', 3, true);
+    this.getSettingsCommon();
+  }
+
+  private getSettingsCommon(): void {
+    this.errorMessage = '';
+    if (this.auth.token === '') {
+      if (this.summary.email) {
+        this.authenticate(this.summary.email, '');
+      } else {
+        this.nextStage('identification', 'Authorization', 3, true);
+      }
     } else {
-      this.nextStage('verification', 'Verification', 5, false);
+      this.inProgress = true;
+      const dataGetter = this.auth.getSettingsCommon();
+      if (dataGetter) {
+        this.pSubscriptions.add(
+          dataGetter.valueChanges.subscribe((settings) => {
+            this.inProgress = false;
+            this.nextStage('payment', 'Payment info', 4, true);
+          }, (error) => {
+            this.inProgress = false;
+            if (error.message === 'Access denied') {
+              if (this.summary.email) {
+                this.authenticate(this.summary.email, '');
+              } else {
+                this.nextStage('identification', 'Authorization', 3, true);
+              }
+            } else {
+              this.errorMessage = this.errorHandler.getError(error.message, 'Unable to read settings');
+            }
+          })
+        );
+      } else {
+        this.errorMessage = this.errorHandler.getRejectedCookieMessage();
+      }
     }
+  }
+
+  private authenticate(login: string, password: string) {
+    this.errorMessage = '';
+    this.inProgress = true;
+    console.log('authenticate');
+    // Consider that the user is one-time wallet user rather than internal one
+    this.pSubscriptions.add(
+      this.auth.authenticate(login, password, true).subscribe(({ data }) => {
+        console.log('authenticate success');
+        this.inProgress = false;
+        this.nextStage('payment', 'Payment info', 4, true);
+      }, (error) => {
+        console.log('authenticate error:', error);
+        this.inProgress = false;
+        if (this.errorHandler.getCurrentError() === 'auth.password_null_or_empty') {
+          // Internal user cannot be authorised without a password, so need to
+          //  show the authorisation form to fill
+          this.auth.logout();
+          this.nextStage('login_auth', 'Authorization', 3, true);
+        } else if (this.errorHandler.getCurrentError() === 'auth.unconfirmed_email') {
+          // User has to confirm email verifying the code
+          if (login === '') {
+            this.nextStage('code_auth', 'Authorization', 3, true);
+          } else {
+            this.errorMessage = 'Your email is not confirmed. Follow the link in the email message we have sent in order to confirm your email';
+          }
+        } else {
+          this.errorMessage = this.errorHandler.getError(error.message, 'Unable to authenticate user');
+        }
+      })
+    );
   }
 
   // ================
 
   onRegister(email: string): void {
     this.summary.email = email;
-    this.nextStage('register', 'Autorization', 3, true);
+    this.nextStage('register', 'Authorization', 3, true);
   }
 
   registerComplete(email: string): void {
     this.summary.email = email;
-    this.nextStage('login_auth', 'Autorization', 3, true);
+    this.nextStage('login_auth', 'Authorization', 3, true);
   }
 
   registerBack(): void {
@@ -208,12 +268,12 @@ export class WidgetComponent implements OnInit {
 
   onLoginRequired(email: string): void {
     this.summary.email = email;
-    this.nextStage('login_auth', 'Autorization', 3, true);
+    this.nextStage('login_auth', 'Authorization', 3, true);
   }
 
   onConfirmRequired(email: string): void {
     this.summary.email = email;
-    this.nextStage('code_auth', 'Autorization', 3, true);
+    this.nextStage('code_auth', 'Authorization', 3, true);
   }
 
   // == Identification ==
@@ -221,30 +281,22 @@ export class WidgetComponent implements OnInit {
   identificationComplete(data: LoginResult): void {
     this.auth.setLoginUser(data);
     this.summary.email = data.user?.email ?? '';
-    this.inProgress = true;
-    // this.pSubscriptions.add(
-    //   this.auth.getSettingsCommon().valueChanges.subscribe((settings) => {
-    //     this.inProgress = false;
-    //     if (this.auth.user !== null) {
-    //       const settingsCommon: SettingsCommon = settings.data.getSettingsCommon;
-    //       this.auth.setLocalSettingsCommon(settingsCommon);
-    //       this.needToLogin = false;
-    //       if (this.stepper) {
-    //         this.stepper?.next();
-    //       }
-    //     }
-    //   }, (error) => {
-    //     this.inProgress = false;
-    //     if (this.auth.token !== '') {
-    //       this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load common settings');
-    //     } else {
-    //       this.errorMessage = this.errorHandler.getError(error.message, 'Unable to authenticate user');
-    //     }
-    //   })
-    // );
+    this.authenticate(this.summary.email, '');
   }
 
   identificationBack(): void {
+    this.stageBack();
+  }
+
+  // ====================
+
+  // == Payment info ==
+
+  paymentUpdate(wallet: string) {
+    this.summary.address = wallet;
+  }
+
+  paymentBack(): void {
     this.stageBack();
   }
 

@@ -1,8 +1,13 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
-import { Subscription } from 'rxjs';
-import { PaymentInstrument, PaymentProvider } from 'src/app/model/generated-models';
-import { CardView, CheckoutSummary, PaymentInstrumentView, PaymentProviderList, PaymentProviderView, QuickCheckoutPaymentInstrumentList, WidgetSettings } from 'src/app/model/payment.model';
+import { Subscription, Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+import { CommonGroupValue } from 'src/app/model/common.model';
+import { TransactionType, UserState } from 'src/app/model/generated-models';
+import { CheckoutSummary, WidgetSettings } from 'src/app/model/payment.model';
+import { ErrorService } from 'src/app/services/error.service';
+import { PaymentDataService } from 'src/app/services/payment.service';
+import { WalletValidator } from 'src/app/utils/wallet.validator';
 
 @Component({
   selector: 'app-widget-payment',
@@ -15,83 +20,161 @@ export class WidgetPaymentComponent implements OnInit, OnDestroy {
   @Output() onBack = new EventEmitter();
   @Output() onError = new EventEmitter<string>();
   @Output() onProgress = new EventEmitter<boolean>();
+  @Output() onReset = new EventEmitter();
+  @Output() onUpdate = new EventEmitter<string>();
   @Output() onComplete = new EventEmitter<CheckoutSummary>();
 
   private pSubscriptions: Subscription = new Subscription();
-  private card = '';
 
-  validData = false;
-  showCreditCard = false;
-  currentInstrument: PaymentInstrumentView | undefined = undefined;
-  currentProvider: PaymentProviderView | undefined = undefined;
-  instrumentList = QuickCheckoutPaymentInstrumentList;
-  providerList = PaymentProviderList;
+  walletInit = false;
+  errorMessage = '';
+  userWallets: CommonGroupValue[] = [];
+  userWalletsFiltered: Observable<CommonGroupValue[]> | undefined = undefined;
 
   dataForm = this.formBuilder.group({
-    instrument: [undefined, { validators: [Validators.required], updateOn: 'change' }],
-    provider: [undefined, { validators: [Validators.required], updateOn: 'change' }]
-  });
+    wallet: ['', { validators: [Validators.required], updateOn: 'change' }],
+    currencyTo: [''],
+    transaction: [TransactionType.Deposit],
+  },
+    {
+      validators: [
+        WalletValidator.addressValidator(
+          'wallet',
+          'currencyTo',
+          'transaction'
+        ),
+      ],
+      updateOn: 'change',
+    });
 
-  get instrumentField(): AbstractControl | null {
-    return this.dataForm.get('instrument');
+  get walletField(): AbstractControl | null {
+    return this.dataForm.get('wallet');
   }
 
-  get providerField(): AbstractControl | null {
-    return this.dataForm.get('provider');
+  get currencyToField(): AbstractControl | null {
+    return this.dataForm.get('currencyTo');
+  }
+
+  get transactionField(): AbstractControl | null {
+    return this.dataForm.get('transaction');
   }
 
   constructor(
-    private formBuilder: FormBuilder) { }
+    private changeDetector: ChangeDetectorRef,
+    private formBuilder: FormBuilder,
+    private dataService: PaymentDataService,
+    private errorHandler: ErrorService) { }
 
   ngOnInit(): void {
-    this.pSubscriptions.add(this.instrumentField?.valueChanges.subscribe(val => this.onInstrumentUpdated(val)));
-    this.pSubscriptions.add(this.providerField?.valueChanges.subscribe(val => this.onProviderUpdated(val)));
-    this.currentInstrument = this.instrumentList.find(x => x.id === PaymentInstrument.CreditCard);
-    if (this.summary?.instrument) {
-      this.instrumentField?.setValue(this.summary?.instrument);
-    } else {
-      this.instrumentField?.setValue(PaymentInstrument.CreditCard);
-    }
+    this.currencyToField?.setValue(this.summary?.currencyTo);
+    this.transactionField?.setValue(this.summary?.transactionType);
+    this.pSubscriptions.add(this.walletField?.valueChanges.subscribe(val => this.onWalletUpdated(val)));
+    this.pSubscriptions.add(this.dataForm.valueChanges.subscribe({ next: (result: any) => this.onFormUpdated() }));
+    this.userWalletsFiltered =
+      this.walletField?.valueChanges.pipe(
+        startWith(''),
+        map((value) => this.filterUserWallets(value))
+      );
+    this.loadWallets();
   }
 
   ngOnDestroy(): void {
     this.pSubscriptions.unsubscribe();
   }
 
-  private onInstrumentUpdated(val: PaymentInstrument): void {
-    this.currentInstrument = this.instrumentList.find(x => x.id === val);
-    this.showCreditCard = (this.currentInstrument?.id === PaymentInstrument.CreditCard);
-    if (this.showCreditCard) {
-      this.providerField?.setValue(PaymentProvider.Fibonatix);
+  loadWallets(): void {
+    console.log('loadWallets');
+    this.userWallets = [];
+    if (this.summary?.address) {
+      this.walletField?.setValue(this.summary?.address);
     } else {
-      if (this.summary?.provider) {
-        this.providerField?.setValue(this.summary?.provider);
-      } else {
-        this.providerField?.setValue(PaymentProvider.Bank);
+      this.walletField?.setValue('');
+    }
+    this.walletField?.setValidators([]);
+    this.walletField?.updateValueAndValidity();
+    this.changeDetector.detectChanges();
+
+    const stateData = this.dataService.getState();
+    if (stateData === null) {
+      this.onError.emit(this.errorHandler.getRejectedCookieMessage());
+    } else {
+      this.onProgress.emit(true);
+      this.pSubscriptions.add(
+        stateData.valueChanges.subscribe(({ data }) => {
+          this.getStateData(data.myState as UserState);
+          this.onProgress.emit(false);
+        }, (error) => {
+          this.onProgress.emit(false);
+          if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
+            this.onReset.emit();
+          } else {
+            this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load wallet list'));
+          }
+        })
+      );
+    }
+  }
+
+  private getStateData(state: UserState): void {
+    const vaultAssets: string[] = [];
+    const externalWallets: string[] = [];
+    state.vault?.assets?.forEach((x) => {
+      if (x.id === this.summary?.currencyTo) {
+        x.addresses?.forEach((a) => vaultAssets.push(a.address as string));
       }
-      this.validData = false;
+    });
+    if (vaultAssets.length > 0) {
+      const v = new CommonGroupValue();
+      v.id = 'Vault Assets';
+      v.values = vaultAssets;
+      this.userWallets.push(v);
+    }
+    state.externalWallets?.forEach((x) => {
+      x.assets?.forEach((a) => {
+        if (a.id === this.summary?.currencyTo) {
+          externalWallets.push(a.address as string);
+        }
+      });
+    });
+    if (externalWallets.length > 0) {
+      const v = new CommonGroupValue();
+      v.id = 'External Wallets';
+      v.values = externalWallets;
+      this.userWallets.push(v);
+    }
+    if (this.settings.walletAddress === '') {
+      this.walletField?.setValidators([Validators.required]);
+    } else {
+      this.walletField?.setValidators([]);
+    }
+    this.walletField?.updateValueAndValidity();
+    this.changeDetector.detectChanges();
+  }
+
+  private filterUserWallets(value: string): CommonGroupValue[] {
+    if (value !== null) {
+      return this.userWallets
+        .map(group => ({ id: group.id, values: this.filterUserWalletGroupItem(group.values, value) }))
+        .filter(group => group.values.length > 0);
+    } else {
+      return [];
     }
   }
 
-  private onProviderUpdated(val: PaymentProvider): void {
-    this.currentProvider = this.providerList.find(x => x.id === val);
+  private filterUserWalletGroupItem = (opt: string[], value: string): string[] => {
+    const filterValue = value.toLowerCase();
+    return opt.filter(item => item.toLowerCase().includes(filterValue));
   }
 
-  updateCardInfo(data: CardView): void {
-    this.validData = data.valid;
-    if (this.validData) {
-      this.card = JSON.stringify(data);
+  private onFormUpdated(): void {
+    if (this.dataForm.valid) {
+      this.onUpdate.emit(this.walletField?.value);
     }
   }
 
-  onSubmit(): void {
-    if (this.dataForm.valid && this.validData) {
-      const data = new CheckoutSummary();
-      data.setPaymentInfo(
-        this.currentProvider?.id ?? PaymentProvider.Fibonatix,
-        this.currentInstrument?.id ?? PaymentInstrument.CreditCard,
-        this.card);
-      this.onComplete.emit(data);
+  private onWalletUpdated(val: string): void {
+    if (val && val !== '') {
+      this.walletInit = true;
     }
   }
 }

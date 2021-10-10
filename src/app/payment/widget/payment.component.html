@@ -1,6 +1,45 @@
 <div class="__widget-data-box">
-    <form [formGroup]="dataForm" (ngSubmit)="onSubmit()">
-        
+    <form [formGroup]="dataForm">
+        <div *ngIf="settings.walletAddress===''">
+            <!-- Wallet address -->
+            <div class="__form-label">
+                Wallet address
+            </div>
+            <div class="__form-textbox-border">
+                <input [ngClass]="{'__form-text-box': true, '__form-text-box-error': !walletField?.valid && walletInit}"
+                    type="text" placeholder="Wallet address" aria-label="walletAddressName" formControlName="wallet"
+                    [matAutocomplete]="auto" maxlength="60" required autocomplete="false" />
+                <div *ngIf="!walletField?.valid && walletInit" class="__form-input-error-icon-container">
+                    <mat-icon class="__form-input-error-icon">
+                        error
+                    </mat-icon>
+                </div>
+            </div>
+            <mat-autocomplete panelWidth="320px" #auto="matAutocomplete" class="__wallet-drop-list" classList="__wallet-drop-list">
+                <mat-optgroup *ngFor="let group of userWalletsFiltered | async" [label]="group.id">
+                    <mat-option *ngFor="let wallet of group.values" [value]="wallet" style="height: 32px;">
+                        <span class="__widget-wallet-drop-item">
+                            {{wallet}}
+                        </span>
+                    </mat-option>
+                </mat-optgroup>
+            </mat-autocomplete>
+            <div *ngIf="walletField?.hasError('required') && walletInit" class="__form-assist __form-assist-error">
+                Please specify your wallet address
+            </div>
+            <div *ngIf="walletField?.hasError('walletAddress') && walletInit" class="__form-assist __form-assist-error">
+                Wallet address is not valid
+            </div>
+            <div class="__form-separator"></div>
+        </div>
+
+
+
+
+        <!-- Tiles here -->
+
+
+
 
         <!-- Buttons -->
         <div class="__widget-buttons-area">

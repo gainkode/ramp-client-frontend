@@ -701,11 +701,15 @@ export class AuthService {
         return result;
     }
 
-    getSettingsCommon(): QueryRef<any, EmptyObject> {
-        return this.apollo.watchQuery<any>({
-            query: GET_SETTINGS_COMMON,
-            fetchPolicy: 'network-only'
-        });
+    getSettingsCommon(): QueryRef<any, EmptyObject> | null {
+        if (this.apollo.client !== undefined) {
+            return this.apollo.watchQuery<any>({
+                query: GET_SETTINGS_COMMON,
+                fetchPolicy: 'network-only'
+            });
+        } else {
+            return null;
+        }
     }
 
     getMyKycSettings(): QueryRef<any, EmptyObject> | null {

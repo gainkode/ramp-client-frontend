@@ -448,3 +448,13 @@
     flex-direction: row;
     justify-content: space-between;
 }
+
+.__widget-wallet-drop-item {
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 12px;
+    line-height: 14px;
+    
+    color: $color_purple_900_text;
+}

@@ -48,7 +48,7 @@ export class PersonalLoginComponent implements OnDestroy {
         this.auth.setLoginUser(userData);
         this.inProgress = true;
         this.subscriptions.add(
-            this.auth.getSettingsCommon().valueChanges.subscribe(settings => {
+            this.auth.getSettingsCommon()?.valueChanges.subscribe(settings => {
                 const settingsCommon: SettingsCommon = settings.data.getSettingsCommon;
                 this.auth.setLocalSettingsCommon(settingsCommon);
                 this.inProgress = false;

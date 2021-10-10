@@ -492,7 +492,7 @@ export class ContainerComponentDeprecated implements OnInit, OnDestroy {
     this.auth.setLoginUser(userData);
     this.detailsEmailControl?.setValue(userData.user?.email);
     this.inProgress = true;
-    this.auth.getSettingsCommon().valueChanges.subscribe((settings) => {
+    this.auth.getSettingsCommon()?.valueChanges.subscribe((settings) => {
       this.inProgress = false;
       if (this.auth.user !== null) {
         const settingsCommon: SettingsCommon = settings.data.getSettingsCommon;

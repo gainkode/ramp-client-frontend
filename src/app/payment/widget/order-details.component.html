@@ -9,7 +9,7 @@
                 <mat-select formControlName="transaction">
                     <mat-select-trigger>
                         <div class="__form-combo-item">
-                            {{transactionField?.value}}
+                            {{currentTransactionName}}
                         </div>
                     </mat-select-trigger>
                     <mat-option *ngFor="let item of transactionList" [value]="item.id" style="height: 32px;">

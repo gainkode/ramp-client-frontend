@@ -63,7 +63,9 @@
         (onBack)="loginBack()" (onRegister)="onRegister($event)">
       </app-widget-code-auth>
       <!-- Payment -->
-      <app-widget-payment *ngSwitchCase="'payment'"></app-widget-payment>
+      <app-widget-payment *ngSwitchCase="'payment'" [summary]="summary" [settings]="widget"
+        (onError)="handleError($event)" (onProgress)="progressChanged($event)" (onUpdate)="paymentUpdate($event)"
+        (onBack)="paymentBack()"></app-widget-payment>
       <!-- KYC -->
       <app-widget-kyc *ngSwitchCase="'verification'" (onError)="handleError($event)" (onAuthError)="handleAuthError()"
         (onProgress)="progressChanged($event)" (onBack)="kycBack()" (onNext)="kycComplete()"></app-widget-kyc>

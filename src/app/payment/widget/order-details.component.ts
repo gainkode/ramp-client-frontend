@@ -48,6 +48,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   currentCurrencySpend: CurrencyView | undefined = undefined;
   currentCurrencyReceive: CurrencyView | undefined = undefined;
   currentTransaction: TransactionType = TransactionType.Deposit;
+  currentTransactionName = '';
   spendCurrencyList: CurrencyView[] = [];
   receiveCurrencyList: CurrencyView[] = [];
   transactionList = QuickCheckoutTransactionTypeList;
@@ -106,6 +107,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       this.currentTransaction = this.summary.transactionType;
       this.transactionField?.setValue(this.summary.transactionType);
     }
+    this.currentTransactionName = QuickCheckoutTransactionTypeList.find(x => x.id === this.currentTransaction)?.name ?? this.currentTransaction;
     this.loadDetailsForm(this.summary?.initialized ?? false);
     this.pSubscriptions.add(this.currencySpendField?.valueChanges.subscribe(val => this.onCurrencySpendUpdated(val)));
     this.pSubscriptions.add(this.currencyReceiveField?.valueChanges.subscribe(val => this.onCurrencyReceiveUpdated(val)));
@@ -305,6 +307,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
 
   private onTransactionUpdated(val: TransactionType): void {
     this.currentTransaction = val;
+    this.currentTransactionName = QuickCheckoutTransactionTypeList.find(x => x.id === this.currentTransaction)?.name ?? this.currentTransaction;
     this.pSpendAutoUpdated = true;
     this.pReceiveAutoUpdated = true;
     this.pTransactionChanged = true;

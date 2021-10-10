@@ -87,10 +87,14 @@ export class AppModule {
               return forward(operation);
             });
           }
+          let codeValue = err.extensions?.code ?? 'INTERNAL_SERVER_ERROR';
+          if (codeValue === 'INTERNAL_SERVER_ERROR' && err.message) {
+            codeValue = err.message;
+          }
           if (operation.operationName === 'GetRates') {
-            sessionStorage.setItem('currentRateError', err.extensions?.code);
+            sessionStorage.setItem('currentRateError', codeValue);
           } else {
-            sessionStorage.setItem('currentError', err.extensions?.code);
+            sessionStorage.setItem('currentError', codeValue);
           }
         }
       }

@@ -148,8 +148,19 @@ input:-webkit-autofill::first-line {
     margin: 0px 8px 0px 4px;
 }
 
+.__wallet-drop-list {
+    background-color: $color_white;
+}
 
-
+.mat-optgroup {
+    display: block;
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 21px;
+    color: $color_purple_900_text;
+}
 
 
 

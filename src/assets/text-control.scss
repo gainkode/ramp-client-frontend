@@ -181,10 +181,14 @@ input.__form-text-box-plain:focus {
     outline: none;
 }
 
+input.__form-text-box-auto-error:focus {
+    outline: none;
+}
+
 input.__form-text-box {
     grid-row: 1;
     grid-column: 1 / 2;
-    width: calc(100% - 24px);
+    width: calc(100% - 8px);
     margin: 0px 16px;
 
     border: 0px;
