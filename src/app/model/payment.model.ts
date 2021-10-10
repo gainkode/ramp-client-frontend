@@ -11,8 +11,13 @@ export class PaymentInstrumentView {
 }
 
 export class PaymentProviderView {
-    id!: PaymentProvider;
+    id = '';
     name = '';
+
+    constructor(data: PaymentProvider) {
+        this.id = data.name ?? '';
+        this.name = data.name ?? '';
+    }
 }
 
 export class TransactionTypeView {
@@ -142,24 +147,14 @@ export class CardView {
 
 export const PaymentInstrumentList: Array<PaymentInstrumentView> = [
     { id: PaymentInstrument.Apm, name: 'APM' },
-    { id: PaymentInstrument.Bitstamp, name: 'Bitstamp' },
     { id: PaymentInstrument.CreditCard, name: 'Credit card' },
-    { id: PaymentInstrument.Received, name: 'Received' },
-    { id: PaymentInstrument.Send, name: 'Sent' },
+    { id: PaymentInstrument.BankTransfer, name: 'Bank transfer' },
     { id: PaymentInstrument.WireTransfer, name: 'Wire transfer' }
 ];
 
 export const QuickCheckoutPaymentInstrumentList: Array<PaymentInstrumentView> = [
     { id: PaymentInstrument.CreditCard, name: 'Credit card' },
-    { id: PaymentInstrument.Apm, name: 'Online Banking' }
-];
-
-export const PaymentProviderList: Array<PaymentProviderView> = [
-    { id: PaymentProvider.Bank, name: 'Bank' },
-    { id: PaymentProvider.Fibonatix, name: 'Fibonatix' },
-    { id: PaymentProvider.Skrill, name: 'Skrill' },
-    { id: PaymentProvider.Sofort, name: 'Sofort' },
-    { id: PaymentProvider.Totalprocessing, name: 'Total processing' }
+    { id: PaymentInstrument.Apm, name: 'APM' }
 ];
 
 export const TransactionTypeList: Array<TransactionTypeView> = [
@@ -375,10 +370,9 @@ export class CheckoutSummary {
         this.card = undefined;
     }
 
-    setPaymentInfo(provider: PaymentProvider, instrument: PaymentInstrument, info: string): void {
+    setPaymentInfo(instrument: PaymentInstrument, info: string): void {
         if (info) {
-            this.provider = provider;
-            if (this.provider === PaymentProvider.Fibonatix || instrument === PaymentInstrument.CreditCard) {
+            if (instrument === PaymentInstrument.CreditCard) {
                 this.card = new CardView();
                 if (info) {
                     this.card.setPaymentInfo(info);

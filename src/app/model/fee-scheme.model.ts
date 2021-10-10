@@ -3,7 +3,7 @@ import { getCountry, getCountryByCode3 } from './country-code.model';
 import {
     SettingsFee, PaymentInstrument, PaymentProvider, TransactionType, SettingsFeeTargetFilterType, UserType, UserMode
 } from './generated-models';
-import { PaymentInstrumentList, PaymentProviderList,
+import { PaymentInstrumentList, 
     FeeTargetFilterList, TransactionTypeList } from './payment.model';
 
 // temp
@@ -43,7 +43,7 @@ export class FeeScheme {
     instrument: Array<PaymentInstrument> = [];
     userType: Array<UserType> = [];
     userMode: Array<UserMode> = [];
-    provider: Array<PaymentProvider> = [];
+    provider: string[] = [];
     terms!: FeeShemeTerms;
     details!: FeeShemeWireDetails;
     currency!: string;
@@ -60,7 +60,7 @@ export class FeeScheme {
             this.currency = data.currency as string ?? 'euro';
             this.rateToEur = data.rateToEur as number;
             data.targetInstruments?.forEach(x => this.instrument.push(x as PaymentInstrument));
-            data.targetPaymentProviders?.forEach(x => this.provider.push(x as PaymentProvider));
+            data.targetPaymentProviders?.forEach(x => this.provider.push(x));
             data.targetTransactionTypes?.forEach(x => this.trxType.push(x as TransactionType));
             data.targetUserTypes?.forEach(x => this.userType.push(x as UserType));
             data.targetUserModes?.forEach(x => this.userMode.push(x as UserMode));
@@ -125,8 +125,7 @@ export class FeeScheme {
         let s = '';
         let p = false;
         this.provider.forEach(x => {
-            const v = PaymentProviderList.find(t => t.id === x)?.name as string;
-            s = `${s}${p ? ', ' : ''}${v}`;
+            s = `${s}${p ? ', ' : ''}${x}`;
             p = true;
         });
         return s;

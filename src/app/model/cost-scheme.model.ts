@@ -4,8 +4,7 @@ import {
     SettingsCost, PaymentInstrument, PaymentProvider, TransactionType, SettingsCostTargetFilterType
 } from './generated-models';
 import {
-    PaymentInstrumentList, PaymentProviderList,
-    CostTargetFilterList, TransactionTypeList
+    PaymentInstrumentList, CostTargetFilterList, TransactionTypeList
 } from './payment.model';
 
 // temp
@@ -26,7 +25,7 @@ export class CostScheme {
     targetValues: Array<string> = [];
     trxType: Array<TransactionType> = [];
     instrument: Array<PaymentInstrument> = [];
-    provider: Array<PaymentProvider> = [];
+    provider: string[] = [];
     terms!: CostShemeTerms;
 
     constructor(data: SettingsCost | null) {
@@ -37,7 +36,7 @@ export class CostScheme {
             this.description = data.description as string;
             this.terms = new CostShemeTerms(data.terms);
             data.targetInstruments?.forEach(x => this.instrument.push(x as PaymentInstrument));
-            data.targetPaymentProviders?.forEach(x => this.provider.push(x as PaymentProvider));
+            data.targetPaymentProviders?.forEach(x => this.provider.push(x));
             data.targetTransactionTypes?.forEach(x => this.trxType.push(x as TransactionType));
             this.target = data.targetFilterType as SettingsCostTargetFilterType | null;
             if (this.target === SettingsCostTargetFilterType.Country) {
@@ -99,8 +98,7 @@ export class CostScheme {
         let s = '';
         let p = false;
         this.provider.forEach(x => {
-            const v = PaymentProviderList.find(t => t.id === x)?.name as string;
-            s = `${s}${p ? ', ' : ''}${v}`;
+            s = `${s}${p ? ', ' : ''}${x}`;
             p = true;
         });
         return s;

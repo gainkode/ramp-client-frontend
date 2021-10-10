@@ -22,6 +22,17 @@ query GetRates($recaptcha: String!, $currenciesFrom: [String!]!, $currencyTo: St
 }
 `;
 
+const GET_PROVIDERS = gql`
+query GetProviders {
+  getPaymentProviders {
+    paymentProviderId
+    name
+    currencies
+    countries_code2
+  }
+}
+`;
+
 const MY_STATE = gql`
 query MyState {
   myState {
@@ -205,5 +216,16 @@ export class PaymentDataService {
         holder: card.holderName
       }
     });
+  }
+
+  getProviders(): QueryRef<any, EmptyObject> | null {
+    if (this.apollo.client !== undefined) {
+      return this.apollo.watchQuery<any>({
+        query: GET_PROVIDERS,
+        fetchPolicy: 'network-only'
+      });
+    } else {
+      return null;
+    }
   }
 }

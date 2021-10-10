@@ -161,7 +161,6 @@ const GET_COST_SETTINGS = gql`
     ) {
       count
       list {
-        targetPaymentProviders
         settingsCostId
         name
         default
@@ -288,10 +287,8 @@ const GET_TRANSACTIONS = gql`
         feeDetails
         currencyToSpend
         amountToSpend
-        amountToSpendInEur
         currencyToReceive
         amountToReceive
-        amountToReceiveInEur
         rate
         liquidityProvider
         instrument
@@ -402,7 +399,7 @@ const ADD_SETTINGS_FEE = gql`
     $targetUserTypes: [UserType!]
     $targetUserModes: [UserMode!]
     $targetTransactionTypes: [TransactionType!]
-    $targetPaymentProviders: [PaymentProvider!]
+    $targetPaymentProviders: [String!]
     $terms: String!
     $wireDetails: String!
   ) {
@@ -434,7 +431,7 @@ const ADD_SETTINGS_COST = gql`
     $targetFilterValues: [String!]
     $targetInstruments: [PaymentInstrument!]
     $targetTransactionTypes: [TransactionType!]
-    $targetPaymentProviders: [PaymentProvider!]
+    $targetPaymentProviders: [String!]
     $terms: String!
   ) {
     addSettingsCost(
@@ -523,7 +520,7 @@ const UPDATE_SETTINGS_FEE = gql`
     $targetUserTypes: [UserType!]
     $targetUserModes: [UserMode!]
     $targetTransactionTypes: [TransactionType!]
-    $targetPaymentProviders: [PaymentProvider!]
+    $targetPaymentProviders: [String!]
     $terms: String!
     $wireDetails: String!
   ) {
@@ -557,7 +554,7 @@ const UPDATE_SETTINGS_COST = gql`
     $targetFilterValues: [String!]
     $targetInstruments: [PaymentInstrument!]
     $targetTransactionTypes: [TransactionType!]
-    $targetPaymentProviders: [PaymentProvider!]
+    $targetPaymentProviders: [String!]
     $terms: String!
   ) {
     updateSettingsCost(

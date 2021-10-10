@@ -15,7 +15,6 @@ import {
 import {
   TransactionTypeList,
   PaymentInstrumentList,
-  PaymentProviderList,
   TransactionSourceList,
   TransactionStatusList,
   CardView,
@@ -156,8 +155,7 @@ export class TransactionItemDeprecated {
   }
 
   get paymentProviderName(): string {
-    return PaymentProviderList.find((p) => p.id === this.paymentProvider)
-      ?.name as string;
+    return this.paymentProvider?.name ?? '';
   }
 
   get userModeName(): string {

@@ -9,9 +9,11 @@ import { CostScheme, PspFilterList } from '../../model/cost-scheme.model';
 import {
     SettingsCostTargetFilterType, PaymentInstrument, PaymentProvider, TransactionType
 } from '../../model/generated-models';
-import { PaymentInstrumentList, PaymentProviderList, TransactionTypeList, CostTargetFilterList } from 'src/app/model/payment.model';
+import { PaymentInstrumentList, TransactionTypeList, CostTargetFilterList, PaymentProviderView } from 'src/app/model/payment.model';
 import { CommonTargetValue, TargetParams } from 'src/app/model/common.model';
 import { CountryFilterList, getCountry } from 'src/app/model/country-code.model';
+import { PaymentDataService } from 'src/app/services/payment.service';
+import { ErrorService } from 'src/app/services/error.service';
 
 @Component({
     selector: 'app-cost-editor',
@@ -46,7 +48,7 @@ export class CostEditorComponent implements OnInit {
     targets = CostTargetFilterList;
     transactionTypes = TransactionTypeList;
     instruments = PaymentInstrumentList;
-    providers = PaymentProviderList;
+    providers: PaymentProviderView[] = [];
 
     schemeForm = this.formBuilder.group({
         id: [''],
@@ -129,7 +131,10 @@ export class CostEditorComponent implements OnInit {
         return params;
     }
 
-    constructor(private formBuilder: FormBuilder) { }
+    constructor(
+        private formBuilder: FormBuilder,
+        private dataService: PaymentDataService,
+        private errorHandler: ErrorService) { }
 
     ngOnInit(): void {
         this.filteredTargetValues = of(this.filterTargetValues(''));
@@ -147,6 +152,17 @@ export class CostEditorComponent implements OnInit {
                 startWith(''),
                 map(value => this.filterTargetValues(value)));
         });
+        this.getPaymentProviders();
+    }
+
+    private getPaymentProviders() {
+        this.providers = [];
+        this.dataService.getProviders()?.valueChanges.subscribe(({ data }) => {
+            const providers = data.getPaymentProviders as PaymentProvider[];
+            this.providers = providers?.map((val) => new PaymentProviderView(val)) as PaymentProviderView[];
+        }, (error) => {
+            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load wallet list');
+        })
     }
 
     private setTargetValidator(): void {
@@ -232,7 +248,7 @@ export class CostEditorComponent implements OnInit {
         data.setTarget(this.schemeForm.get('target')?.value, this.schemeForm.get('targetValues')?.value);
         (this.schemeForm.get('instrument')?.value as PaymentInstrument[]).forEach(x => data.instrument.push(x));
         (this.schemeForm.get('trxType')?.value as TransactionType[]).forEach(x => data.trxType.push(x));
-        (this.schemeForm.get('provider')?.value as PaymentProvider[]).forEach(x => data.provider.push(x));
+        (this.schemeForm.get('provider')?.value as string[]).forEach(x => data.provider.push(x));
         // terms
         data.terms.mdr = Number(this.schemeForm.get('mdr')?.value);
         data.terms.transactionCost = Number(this.schemeForm.get('transactionCost')?.value);

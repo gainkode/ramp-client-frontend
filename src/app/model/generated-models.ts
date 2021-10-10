@@ -26,6 +26,7 @@ export type Query = {
   myNotifications?: Maybe<UserNotificationListResult>;
   getNotifications?: Maybe<UserNotificationListResult>;
   getSettingsCommon?: Maybe<SettingsCommon>;
+  getPaymentProviders?: Maybe<Array<PaymentProvider>>;
   getSettingsCurrency?: Maybe<SettingsCurrencyListResult>;
   getSettingsKycLevels?: Maybe<SettingsKycLevelListResult>;
   getSettingsKyc?: Maybe<SettingsKycListResult>;
@@ -157,7 +158,7 @@ export type QueryGetSettingsFeeArgs = {
 export type QueryMySettingsFeeArgs = {
   transactionType: TransactionType;
   instrument: PaymentInstrument;
-  paymentProvider?: Maybe<PaymentProvider>;
+  paymentProvider?: Maybe<Scalars['String']>;
   currency?: Maybe<Scalars['String']>;
 };
 
@@ -165,7 +166,7 @@ export type QueryMySettingsFeeArgs = {
 export type QueryMySettingsFeeFullArgs = {
   transactionType: TransactionType;
   instrument: PaymentInstrument;
-  paymentProvider?: Maybe<PaymentProvider>;
+  paymentProvider?: Maybe<Scalars['String']>;
   currency?: Maybe<Scalars['String']>;
 };
 
@@ -175,7 +176,7 @@ export type QueryGetAppropriateSettingsFeeArgs = {
   targetUserType: UserType;
   targetUserMode: UserMode;
   instrument: PaymentInstrument;
-  paymentProvider?: Maybe<PaymentProvider>;
+  paymentProvider?: Maybe<Scalars['String']>;
   currency?: Maybe<Scalars['String']>;
   filterType?: Maybe<SettingsFeeTargetFilterType>;
   filterValue?: Maybe<Scalars['String']>;
@@ -193,7 +194,7 @@ export type QueryGetSettingsCostArgs = {
 export type QueryGetAppropriateSettingsCostArgs = {
   transactionType: TransactionType;
   instrument: PaymentInstrument;
-  paymentProvider?: Maybe<PaymentProvider>;
+  paymentProvider?: Maybe<Scalars['String']>;
   currency?: Maybe<Scalars['String']>;
   filterType?: Maybe<SettingsCostTargetFilterType>;
   filterValue?: Maybe<Scalars['String']>;
@@ -203,7 +204,7 @@ export type QueryGetAppropriateSettingsCostArgs = {
 export type QueryGetAppropriateSettingsCostFullArgs = {
   transactionType: TransactionType;
   instrument: PaymentInstrument;
-  paymentProvider?: Maybe<PaymentProvider>;
+  paymentProvider?: Maybe<Scalars['String']>;
   currency?: Maybe<Scalars['String']>;
   filterType?: Maybe<SettingsCostTargetFilterType>;
   filterValue?: Maybe<Scalars['String']>;
@@ -597,6 +598,14 @@ export type SettingsCommon = {
   additionalSettings?: Maybe<Scalars['String']>;
 };
 
+export type PaymentProvider = {
+  __typename?: 'PaymentProvider';
+  paymentProviderId?: Maybe<Scalars['ID']>;
+  name?: Maybe<Scalars['String']>;
+  currencies?: Maybe<Array<Scalars['String']>>;
+  countries_code2?: Maybe<Array<Scalars['String']>>;
+};
+
 export type SettingsCurrencyListResult = {
   __typename?: 'SettingsCurrencyListResult';
   count?: Maybe<Scalars['Int']>;
@@ -742,18 +751,8 @@ export enum TransactionType {
 export enum PaymentInstrument {
   CreditCard = 'CreditCard',
   WireTransfer = 'WireTransfer',
-  Bitstamp = 'Bitstamp',
-  Apm = 'APM',
-  Received = 'Received',
-  Send = 'Send'
-}
-
-export enum PaymentProvider {
-  Fibonatix = 'Fibonatix',
-  Skrill = 'Skrill',
-  Totalprocessing = 'Totalprocessing',
-  Sofort = 'Sofort',
-  Bank = 'Bank'
+  BankTransfer = 'BankTransfer',
+  Apm = 'APM'
 }
 
 export type SettingsFeeShort = {
@@ -1144,7 +1143,7 @@ export type TransactionShort = {
   instrument: PaymentInstrument;
   custodyProvider?: Maybe<CustodyProvider>;
   custodyDetails?: Maybe<Scalars['String']>;
-  paymentProvider?: Maybe<PaymentProvider>;
+  paymentProvider?: Maybe<Scalars['String']>;
   liquidityProvider: LiquidityProvider;
   paymentOrder?: Maybe<PaymentOrder>;
   liquidityOrder?: Maybe<LiquidityOrder>;
@@ -1216,7 +1215,7 @@ export type PaymentOrder = {
   orderId?: Maybe<Scalars['String']>;
   userId?: Maybe<Scalars['String']>;
   transactionId?: Maybe<Scalars['String']>;
-  provider: PaymentProvider;
+  provider: Scalars['String'];
   created?: Maybe<Scalars['DateTime']>;
   amount: Scalars['Float'];
   currency: Scalars['String'];
@@ -1362,7 +1361,7 @@ export type Transaction = {
   instrument: PaymentInstrument;
   custodyProvider?: Maybe<CustodyProvider>;
   custodyDetails?: Maybe<Scalars['String']>;
-  paymentProvider?: Maybe<PaymentProvider>;
+  paymentProvider?: Maybe<Scalars['String']>;
   paymentOrderId?: Maybe<Scalars['String']>;
   paymentOrder?: Maybe<PaymentOrder>;
   liquidityProvider: LiquidityProvider;
@@ -1537,14 +1536,11 @@ export type Widget = {
   currenciesFrom?: Maybe<Array<Scalars['String']>>;
   currenciesTo?: Maybe<Array<Scalars['String']>>;
   destinationAddress?: Maybe<Scalars['String']>;
-  minAmountFrom?: Maybe<Scalars['Float']>;
-  maxAmountFrom?: Maybe<Scalars['Float']>;
-  fixAmountFrom?: Maybe<Scalars['Float']>;
   countriesCode2?: Maybe<Array<Scalars['String']>>;
   instruments?: Maybe<Array<PaymentInstrument>>;
-  paymentProviders?: Maybe<Array<PaymentProvider>>;
+  paymentProviders?: Maybe<Array<Scalars['String']>>;
   liquidityProvider?: Maybe<LiquidityProvider>;
-  data?: Maybe<Scalars['String']>;
+  additionalSettings?: Maybe<Scalars['String']>;
 };
 
 export type WidgetShort = {
@@ -1553,13 +1549,10 @@ export type WidgetShort = {
   currenciesFrom?: Maybe<Array<Scalars['String']>>;
   currenciesTo?: Maybe<Array<Scalars['String']>>;
   hasFixedAddress: Scalars['Boolean'];
-  minAmountFrom?: Maybe<Scalars['Float']>;
-  maxAmountFrom?: Maybe<Scalars['Float']>;
-  fixAmountFrom?: Maybe<Scalars['Float']>;
   instruments?: Maybe<Array<PaymentInstrument>>;
-  paymentProviders?: Maybe<Array<PaymentProvider>>;
+  paymentProviders?: Maybe<Array<Scalars['String']>>;
   liquidityProvider?: Maybe<LiquidityProvider>;
-  data?: Maybe<Scalars['String']>;
+  additionalSettings?: Maybe<Scalars['String']>;
 };
 
 
@@ -2049,7 +2042,7 @@ export type ApiKeySecret = {
 export type PaymentPreauthInput = {
   transactionId: Scalars['String'];
   instrument: PaymentInstrument;
-  provider: PaymentProvider;
+  provider: Scalars['String'];
   card?: Maybe<PaymentCard>;
 };
 
@@ -2078,7 +2071,7 @@ export type PaymentOrderShort = {
   orderId?: Maybe<Scalars['String']>;
   userId?: Maybe<Scalars['String']>;
   transactionId?: Maybe<Scalars['String']>;
-  provider: PaymentProvider;
+  provider: Scalars['String'];
   created?: Maybe<Scalars['DateTime']>;
   amount: Scalars['Float'];
   currency: Scalars['String'];
@@ -2113,7 +2106,7 @@ export type SettingsFeeInput = {
   targetUserTypes?: Maybe<Array<UserType>>;
   targetUserModes?: Maybe<Array<UserMode>>;
   targetTransactionTypes?: Maybe<Array<TransactionType>>;
-  targetPaymentProviders?: Maybe<Array<PaymentProvider>>;
+  targetPaymentProviders?: Maybe<Array<Scalars['String']>>;
   terms?: Maybe<Scalars['String']>;
   wireDetails?: Maybe<Scalars['String']>;
   default?: Maybe<Scalars['Boolean']>;
@@ -2127,7 +2120,7 @@ export type SettingsCostInput = {
   targetFilterValues?: Maybe<Array<Scalars['String']>>;
   targetInstruments?: Maybe<Array<PaymentInstrument>>;
   targetTransactionTypes?: Maybe<Array<TransactionType>>;
-  targetPaymentProviders?: Maybe<Array<PaymentProvider>>;
+  targetPaymentProviders?: Maybe<Array<Scalars['String']>>;
   terms?: Maybe<Scalars['String']>;
   default?: Maybe<Scalars['Boolean']>;
   deleted?: Maybe<Scalars['DateTime']>;
@@ -2249,7 +2242,7 @@ export type TransactionInput = {
   destinationType?: Maybe<TransactionDestinationType>;
   destination?: Maybe<Scalars['String']>;
   instrument: PaymentInstrument;
-  paymentProvider?: Maybe<PaymentProvider>;
+  paymentProvider?: Maybe<Scalars['String']>;
   liquidityProvider?: Maybe<LiquidityProvider>;
   data?: Maybe<Scalars['String']>;
 };
@@ -2259,14 +2252,11 @@ export type WidgetInput = {
   currenciesFrom?: Maybe<Array<Scalars['String']>>;
   currenciesTo?: Maybe<Array<Scalars['String']>>;
   destinationAddresses?: Maybe<Array<Scalars['String']>>;
-  minAmountFrom?: Maybe<Scalars['Float']>;
-  maxAmountFrom?: Maybe<Scalars['Float']>;
-  fixAmountFrom?: Maybe<Scalars['Float']>;
   countriesCode2?: Maybe<Array<Scalars['String']>>;
   instruments?: Maybe<Array<PaymentInstrument>>;
-  paymentProviders?: Maybe<Array<PaymentProvider>>;
+  paymentProviders?: Maybe<Array<Scalars['String']>>;
   liquidityProvider?: Maybe<LiquidityProvider>;
-  data?: Maybe<Scalars['String']>;
+  additionalSettings?: Maybe<Scalars['String']>;
 };
 
 export type Subscription = {
@@ -2508,7 +2498,7 @@ export type KycRejectedLabel = {
 export type PaymentCaptureInput = {
   orderId: Scalars['String'];
   instrument: PaymentInstrument;
-  provider: PaymentProvider;
+  provider: Scalars['String'];
 };
 
 export enum TransactionConfirmationMode {

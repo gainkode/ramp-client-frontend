@@ -40,7 +40,7 @@ import {
   CardView,
   CheckoutSummary,
   CurrencyView,
-  PaymentProviderList,
+  //PaymentProviderList,
   QuickCheckoutPaymentInstrumentList,
   QuickCheckoutTransactionTypeList,
 } from '../model/payment.model';
@@ -103,7 +103,7 @@ export class ContainerComponentDeprecated implements OnInit, OnDestroy {
   userWalletsFiltered: Observable<CommonGroupValue[]> | undefined = undefined;
   transactionList = QuickCheckoutTransactionTypeList;
   paymentInstrumentList = QuickCheckoutPaymentInstrumentList;
-  paymentProviderList = PaymentProviderList;
+  //paymentProviderList = PaymentProviderList;
   currentSourceCurrency: CurrencyView | null = null;
   currentDestinationCurrency: CurrencyView | null = null;
   currentRate: Rate | undefined = undefined;
@@ -328,7 +328,7 @@ export class ContainerComponentDeprecated implements OnInit, OnDestroy {
         this.isApmSelected = true;
       } else {
         this.isApmSelected = false;
-        this.paymentInfoProviderControl?.setValue(PaymentProvider.Fibonatix);
+        //this.paymentInfoProviderControl?.setValue(PaymentProvider.Fibonatix);
       }
     });
     this.paymentInfoAddressControl?.valueChanges.subscribe((val) => {
@@ -931,7 +931,7 @@ export class ContainerComponentDeprecated implements OnInit, OnDestroy {
         focusInput = this.paymentInfoNextElement?.nativeElement as HTMLInputElement;
         this.paymentInfoCurrencyToControl?.setValue(this.detailsCurrencyToControl?.value);
         this.paymentInfoTransactionControl?.setValue(this.detailsTransactionControl?.value);
-        this.paymentInfoProviderControl?.setValue(PaymentProvider.Fibonatix);
+        //this.paymentInfoProviderControl?.setValue(PaymentProvider.Fibonatix);
       } else if (step.selectedStep.label === 'verification') {
         focusInput = this.verificationResetElement
           ?.nativeElement as HTMLInputElement;
@@ -1126,7 +1126,6 @@ export class ContainerComponentDeprecated implements OnInit, OnDestroy {
           const preAuthResult = data.preauth as PaymentPreauthResultShort;
           const order = preAuthResult.order;
           this.summary.setPaymentInfo(
-            order?.provider as PaymentProvider,
             instrument as PaymentInstrument,
             order?.paymentInfo as string
           );

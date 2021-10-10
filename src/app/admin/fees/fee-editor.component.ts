@@ -5,6 +5,7 @@ import { Observable, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
+import { PaymentDataService } from '../../services/payment.service';
 import {
     FeeScheme, AccountTypeFilterList, AffiliateIdFilterList,
     AccountIdFilterList, WidgetFilterList
@@ -13,10 +14,11 @@ import {
     SettingsFeeTargetFilterType, PaymentInstrument, PaymentProvider, TransactionType, UserType, UserMode
 } from '../../model/generated-models';
 import {
-    PaymentInstrumentList, PaymentProviderList, FeeTargetFilterList, TransactionTypeList, UserTypeList, UserModeList
+    PaymentInstrumentList, FeeTargetFilterList, TransactionTypeList, UserTypeList, UserModeList, PaymentProviderView
 } from 'src/app/model/payment.model';
 import { CommonTargetValue, TargetParams } from 'src/app/model/common.model';
 import { CountryFilterList, getCountry } from 'src/app/model/country-code.model';
+import { ErrorService } from 'src/app/services/error.service';
 
 @Component({
     selector: 'app-fee-editor',
@@ -53,7 +55,7 @@ export class FeeEditorComponent implements OnInit {
     targets = FeeTargetFilterList;
     transactionTypes = TransactionTypeList;
     instruments = PaymentInstrumentList;
-    providers = PaymentProviderList;
+    providers: PaymentProviderView[] = [];
     userTypes = UserTypeList;
     userModes = UserModeList;
 
@@ -167,7 +169,10 @@ export class FeeEditorComponent implements OnInit {
         return params;
     }
 
-    constructor(private formBuilder: FormBuilder) { }
+    constructor(
+        private formBuilder: FormBuilder,
+        private dataService: PaymentDataService,
+        private errorHandler: ErrorService) { }
 
     ngOnInit(): void {
         this.filteredTargetValues = of(this.filterTargetValues(''));
@@ -185,6 +190,17 @@ export class FeeEditorComponent implements OnInit {
                 startWith(''),
                 map(value => this.filterTargetValues(value)));
         });
+        this.getPaymentProviders();
+    }
+
+    private getPaymentProviders() {
+        this.providers = [];
+        this.dataService.getProviders()?.valueChanges.subscribe(({ data }) => {
+            const providers = data.getPaymentProviders as PaymentProvider[];
+            this.providers = providers?.map((val) => new PaymentProviderView(val)) as PaymentProviderView[];
+        }, (error) => {
+            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load wallet list');
+        })
     }
 
     private setTargetValidator(): void {
@@ -286,7 +302,7 @@ export class FeeEditorComponent implements OnInit {
         data.setTarget(this.schemeForm.get('target')?.value, this.schemeForm.get('targetValues')?.value);
         (this.schemeForm.get('instrument')?.value as PaymentInstrument[]).forEach(x => data.instrument.push(x));
         (this.schemeForm.get('trxType')?.value as TransactionType[]).forEach(x => data.trxType.push(x));
-        (this.schemeForm.get('provider')?.value as PaymentProvider[]).forEach(x => data.provider.push(x));
+        (this.schemeForm.get('provider')?.value as string[]).forEach(x => data.provider.push(x));
         (this.schemeForm.get('userType')?.value as UserType[]).forEach(x => data.userType.push(x));
         (this.schemeForm.get('userMode')?.value as UserMode[]).forEach(x => data.userMode.push(x));
         // terms
