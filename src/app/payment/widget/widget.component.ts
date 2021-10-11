@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { LoginResult, Rate } from 'src/app/model/generated-models';
+import { LoginResult, Rate, User } from 'src/app/model/generated-models';
 import { CardView, CheckoutSummary, WidgetSettings, WidgetStage } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
@@ -32,6 +32,7 @@ export class WidgetComponent implements OnInit {
   stages: WidgetStage[] = [];
   exchangeRateCountDownTitle = '';
   exchangeRateCountDownValue = '';
+  requestKyc = false;
 
   private pSubscriptions: Subscription = new Subscription();
 
@@ -298,7 +299,7 @@ export class WidgetComponent implements OnInit {
         this.pSubscriptions.add(
           dataGetter.valueChanges.subscribe((settings) => {
             this.inProgress = false;
-            this.nextStage('payment', 'Payment info', 4, true);
+            this.startPayment();
           }, (error) => {
             this.inProgress = false;
             if (error.message === 'Access denied') {
@@ -347,12 +348,61 @@ export class WidgetComponent implements OnInit {
     );
   }
 
-  checkLoginResult(data: LoginResult) {
+  private checkLoginResult(data: LoginResult) {
     if (data.authTokenAction === 'Default' || data.authTokenAction === 'KycRequired') {
       this.auth.setLoginUser(data);
-      this.nextStage('payment', 'Payment info', 4, true);
+      this.startPayment();
     } else {
       this.errorMessage = `Unable to authenticate user with the action "${data.authTokenAction}"`;
     }
+  }
+
+  private startPayment(): void {
+    this.getKycStatus();
+  }
+
+  private getKycStatus(): void {
+    const kycStatusData = this.auth.getMyKycData();
+    if (kycStatusData === null) {
+      this.errorMessage = this.errorHandler.getRejectedCookieMessage();
+    } else {
+      this.inProgress = true;
+      this.pSubscriptions.add(
+        kycStatusData.valueChanges.subscribe(({ data }) => {
+          const userKyc = data.me as User;
+          const requestKyc = this.isKycRequired(userKyc);
+          this.inProgress = false;
+          if (requestKyc === null) {
+            this.errorMessage = 'We cannot proceed your payment because your identity is rejected';
+          } else {
+            this.requestKyc = (requestKyc === true);
+            this.nextStage('payment', 'Payment info', 4, true);
+          }
+        }, (error) => {
+          this.inProgress = false;
+          if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
+            this.handleAuthError();
+          } else {
+            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load your identification status');
+          }
+        })
+      );
+    }
+  }
+
+  private isKycRequired(kyc: User): boolean | null {
+    let result = true;
+    if (kyc.kycStatus === 'completed' || kyc.kycStatus === 'pending') {
+      result = false;
+    } else {
+      if (kyc.kycValid === true) {
+        result = false;
+      } else if (kyc.kycValid === false) {
+        if (kyc.kycReviewRejectedType === 'final') {
+          return null;
+        }
+      }
+    }
+    return result;
   }
 }
