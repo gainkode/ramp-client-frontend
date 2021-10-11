@@ -1,6 +1,5 @@
 <div class="__widget-data-box">
     <form [formGroup]="dataForm" (ngSubmit)="onSubmit()">
-        <!-- Code (not 5 digits) -->
         <app-form-textbox [label]="'Email'" [maxlength]="50" formControlName="email"
             [errorMessages]="emailErrorMessages" [separator]="true">
         </app-form-textbox>

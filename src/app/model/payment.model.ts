@@ -13,10 +13,18 @@ export class PaymentInstrumentView {
 export class PaymentProviderView {
     id = '';
     name = '';
+    image = '';
 
     constructor(data: PaymentProvider) {
         this.id = data.name ?? '';
         this.name = data.name ?? '';
+        if (this.id === 'Fibonatix') {
+            this.image = './assets/svg-providers/fibonatix.svg';
+        } else if (this.id === 'InstantPay') {
+            this.image = './assets/svg-providers/instantpay.png';
+        } else if (this.id === 'Sofort') {
+            this.image = './assets/svg-providers/klarna.svg';
+        }
     }
 }
 

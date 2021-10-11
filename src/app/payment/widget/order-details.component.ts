@@ -6,6 +6,7 @@ import { CheckoutSummary, CurrencyView, QuickCheckoutTransactionTypeList, Widget
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
 import { ErrorService } from 'src/app/services/error.service';
+import { WalletValidator } from 'src/app/utils/wallet.validator';
 
 @Component({
   selector: 'app-widget-order-details',
@@ -29,9 +30,11 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   @Output() onError = new EventEmitter<string>();
   @Output() onProgress = new EventEmitter<boolean>();
   @Output() onDataUpdated = new EventEmitter<CheckoutSummary>();
+  @Output() onWalletAddressUpdated = new EventEmitter<string | undefined>();
   @Output() onComplete = new EventEmitter();
 
   private pInitState = true;
+  private showWallet = true;
   private pSubscriptions: Subscription = new Subscription();
   private pCurrencies: CurrencyView[] = [];
   private pSpendChanged = false;
@@ -64,12 +67,26 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     ['min']: 'Minimal amount'
   };
 
+  walletErrorMessages: { [key: string]: string; } = {
+    ['required']: 'Address is required'
+  };
+
   dataForm = this.formBuilder.group({
     amountSpend: [undefined, { validators: [], updateOn: 'change' }],
     currencySpend: [null, { validators: [], updateOn: 'change' }],
     amountReceive: [undefined, { validators: [], updateOn: 'change' }],
     currencyReceive: [null, { validators: [], updateOn: 'change' }],
-    transaction: [TransactionType.Deposit, { validators: [], updateOn: 'change' }]
+    transaction: [TransactionType.Deposit, { validators: [], updateOn: 'change' }],
+    wallet: [undefined, { validators: [], updateOn: 'change' }]
+  }, {
+    validators: [
+      WalletValidator.addressValidator(
+        'wallet',
+        'currencyReceive',
+        'transaction'
+      ),
+    ],
+    updateOn: 'change',
   });
 
   get amountSpendField(): AbstractControl | null {
@@ -92,6 +109,10 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     return this.dataForm.get('transaction');
   }
 
+  get walletField(): AbstractControl | null {
+    return this.dataForm.get('wallet');
+  }
+
   constructor(
     private auth: AuthService,
     private commonService: CommonDataService,
@@ -103,10 +124,15 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       this.currentTransaction = this.summary.transactionType;
       this.transactionField?.setValue(this.currentTransaction);
     }
+    if (this.summary?.address) {
+      this.walletField?.setValue(this.summary.address);
+    }
     if (this.summary?.initialized) {
       this.currentTransaction = this.summary.transactionType;
       this.transactionField?.setValue(this.summary.transactionType);
     }
+    this.setWalletVisible();
+
     this.currentTransactionName = QuickCheckoutTransactionTypeList.find(x => x.id === this.currentTransaction)?.name ?? this.currentTransaction;
     this.loadDetailsForm(this.summary?.initialized ?? false);
     this.pSubscriptions.add(this.currencySpendField?.valueChanges.subscribe(val => this.onCurrencySpendUpdated(val)));
@@ -114,6 +140,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     this.pSubscriptions.add(this.amountSpendField?.valueChanges.subscribe(val => this.onAmountSpendUpdated(val)));
     this.pSubscriptions.add(this.amountReceiveField?.valueChanges.subscribe(val => this.onAmountReceiveUpdated(val)));
     this.pSubscriptions.add(this.transactionField?.valueChanges.subscribe(val => this.onTransactionUpdated(val)));
+    this.pSubscriptions.add(this.walletField?.valueChanges.subscribe(val => this.onWalletUpdated(val)));
   }
 
   ngAfterViewInit(): void {
@@ -219,6 +246,20 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     }
   }
 
+  private setWalletVisible(): void {
+    if (this.currentTransaction === TransactionType.Deposit) {
+      this.showWallet = (!this.settings.walletAddress);      
+    } else {
+      this.showWallet = false;
+    }
+    if (this.showWallet) {
+      this.walletField?.setValidators([Validators.required]);
+    } else {
+      this.walletField?.setValidators([]);
+    }
+    this.walletField?.updateValueAndValidity();
+  }
+
   private sendData(spend: number | undefined, receive: number | undefined): void {
     if (this.pInitState === false) {
       const data = new CheckoutSummary();
@@ -234,6 +275,9 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       }
       if (this.transactionField?.valid) {
         data.transactionType = this.transactionField?.value;
+      }
+      if (this.walletField?.valid && this.showWallet) {
+        data.address = this.walletField?.value;
       }
       this.onDataUpdated.emit(data);
     }
@@ -321,8 +365,15 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     this.currencySpendField?.setValue(this.currentCurrencySpend?.id);
     this.currencyReceiveField?.setValue(this.currentCurrencyReceive?.id);
     this.amountSpendField?.setValue(this.amountReceiveField?.value);
+    this.setWalletVisible();
 
     this.pTransactionChanged = false;
+  }
+
+  private onWalletUpdated(val: string): void {
+    if (this.showWallet) {
+      this.onWalletAddressUpdated.emit(this.walletField?.value);
+    }
   }
 
   private hasValidators(control: AbstractControl) {

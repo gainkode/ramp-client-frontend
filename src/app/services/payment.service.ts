@@ -171,10 +171,9 @@ export class PaymentDataService {
     currencyToReceive: string,
     amount: number,
     instrument: PaymentInstrument,
-    provider: PaymentProvider,
+    providerName: string,
     destinationType: TransactionDestinationType,
     walletAddress: string): Observable<any> {
-    const paymentPrvdr = (provider as string === '') ? undefined : provider;
     const wallet = (walletAddress === '') ? undefined : walletAddress;
     const vars = {
       transactionType,
@@ -182,7 +181,7 @@ export class PaymentDataService {
       currencyToReceive,
       amountToSpend: amount,
       instrument,
-      paymentProvider: paymentPrvdr,
+      paymentProvider: providerName,
       destinationType,
       destination: wallet
     };

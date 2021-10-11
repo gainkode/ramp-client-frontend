@@ -34,9 +34,18 @@
             [comboList]="receiveCurrencyList" [errorMessages]="amountReceiveErrorMessages" [separator]="true">
         </app-form-finance-combo>
 
+        <!-- Wallet address -->
+        <app-form-textbox [label]="'Wallet address'" [maxlength]="120" formControlName="wallet"
+            [errorMessages]="walletErrorMessages" [separator]="false">
+        </app-form-textbox>
+        <div *ngIf="walletField?.hasError('walletAddress')" class="__form-assist __form-assist-error">
+            Wallet address is not valid
+        </div>
+        <div class="__form-separator"></div>
+
         <!-- Buttons -->
         <div class="__widget-buttons-area">
-            <button class="__main-button" type="submit" [disabled]="!initialized || !validData">next</button>
+            <button class="__main-button" type="submit" [disabled]="!initialized || !validData || !walletField?.valid">next</button>
         </div>
     </form>
 </div>

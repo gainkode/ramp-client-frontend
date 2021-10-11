@@ -37,7 +37,7 @@
         [settings]="widget" [withdrawalRate]="summary?.exchangeRate?.withdrawRate"
         [depositRate]="summary?.exchangeRate?.depositRate" (onError)="handleError($event)"
         (onProgress)="progressChanged($event)" (onDataUpdated)="orderDetailsChanged($event)"
-        (onComplete)="orderDetailsComplete()">
+        (onWalletAddressUpdated)="orderWalletChanged($event)" (onComplete)=" orderDetailsComplete()">
       </app-widget-order-details>
       <!-- Disclaimer -->
       <app-widget-disclaimer *ngSwitchCase="'disclaimer'" [agreementChecked]="summary.agreementChecked"
@@ -64,8 +64,12 @@
       </app-widget-code-auth>
       <!-- Payment -->
       <app-widget-payment *ngSwitchCase="'payment'" [summary]="summary" [settings]="widget"
-        (onError)="handleError($event)" (onProgress)="progressChanged($event)" (onUpdate)="paymentUpdate($event)"
-        (onBack)="paymentBack()"></app-widget-payment>
+        (onError)="handleError($event)" (onProgress)="progressChanged($event)" 
+        (onBack)="paymentBack()" (onReset)="handleAuthError()" (onComplete)="paymentComplete($event)">
+      </app-widget-payment>
+      <!-- Credit card -->
+      <app-widget-credit-card *ngSwitchCase="'credit-card'" (onBack)="creditCardBack()"
+        (onComplete)="creditCardPaymentComplete($event)"></app-widget-credit-card>
       <!-- KYC -->
       <app-widget-kyc *ngSwitchCase="'verification'" (onError)="handleError($event)" (onAuthError)="handleAuthError()"
         (onProgress)="progressChanged($event)" (onBack)="kycBack()" (onNext)="kycComplete()"></app-widget-kyc>

@@ -14,7 +14,7 @@ class CardExpiredDate {
 @Component({
     selector: 'app-widget-credit-card',
     templateUrl: 'credit-card.component.html',
-    styleUrls: ['../../../assets/payment.scss', '../../../assets/text-control.scss']
+    styleUrls: ['../../../assets/payment.scss', '../../../assets/button.scss', '../../../assets/text-control.scss']
 })
 export class WidgetCreditCardComponent implements OnInit, OnDestroy {
     @Output() onBack = new EventEmitter();

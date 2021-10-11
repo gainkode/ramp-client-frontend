@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { LoginResult, Rate } from 'src/app/model/generated-models';
-import { CheckoutSummary, WidgetSettings, WidgetStage } from 'src/app/model/payment.model';
+import { CardView, CheckoutSummary, WidgetSettings, WidgetStage } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { PaymentDataService } from 'src/app/services/payment.service';
@@ -115,7 +115,6 @@ export class WidgetComponent implements OnInit {
   }
 
   private nextStage(id: string, name: string, stepId: number, summaryVisible: boolean): void {
-    //this.pSubscriptions.unsubscribe();
     if (
       this.stageId !== 'register' &&
       this.stageId !== 'login_auth' &&
@@ -135,6 +134,7 @@ export class WidgetComponent implements OnInit {
   }
 
   // == Order details page ==
+
   orderDetailsChanged(data: CheckoutSummary): void {
     if (this.initState && (data.amountFrom || data.amountTo)) {
       this.initState = false;
@@ -157,19 +157,13 @@ export class WidgetComponent implements OnInit {
     }
   }
 
+  orderWalletChanged(data: string | undefined): void {
+    this.summary.address = data ?? '';
+  }
+
   orderDetailsComplete(): void {
     this.nextStage('disclaimer', 'Disclaimer', 2, false);
   }
-  // =======================
-
-  // == Payment ============
-
-  paymentComplete(data: CheckoutSummary): void {
-    this.summary.provider = data.provider;
-    this.summary.instrument = data.instrument;
-    this.summary.card = data.card;
-  }
-
   // =======================
 
   // == Disclaimer =========
@@ -182,6 +176,105 @@ export class WidgetComponent implements OnInit {
     this.summary.agreementChecked = true;
     this.getSettingsCommon();
   }
+
+  // ================
+
+  // == Payment info ==
+
+  paymentBack(): void {
+    this.stageBack();
+  }
+
+  paymentComplete(data: CheckoutSummary): void {
+    this.summary.provider = data.provider;
+    this.nextStage('credit-card', 'Payment info', 4, true);
+  }
+
+  // ====================
+
+  // == Credit card ==
+
+  creditCardPaymentComplete(data: CardView): void {
+
+  }
+
+  creditCardBack(): void {
+    this.stageBack();
+  }
+
+  // ====================
+
+  // == Auth ========
+
+  onRegister(email: string): void {
+    this.summary.email = email;
+    this.nextStage('register', 'Authorization', 3, true);
+  }
+
+  registerComplete(email: string): void {
+    this.summary.email = email;
+    this.nextStage('login_auth', 'Authorization', 3, true);
+  }
+
+  registerBack(): void {
+    this.stageBack();
+  }
+
+  onLoginRequired(email: string): void {
+    this.summary.email = email;
+    this.nextStage('login_auth', 'Authorization', 3, true);
+  }
+
+  onConfirmRequired(email: string): void {
+    this.summary.email = email;
+    this.nextStage('code_auth', 'Authorization', 3, true);
+  }
+
+  loginComplete(data: LoginResult): void {
+    if (data) {
+      // auth success
+
+      // remove identification stage from history
+      const stageIndex = this.stages.findIndex(x => x.id === 'identification');
+      if (stageIndex > -1) {
+        this.stages.splice(stageIndex, 1);
+      }
+    } else {
+      // need to register
+    }
+  }
+
+  loginBack(): void {
+    this.stageBack();
+  }
+  
+  // ====================
+
+  // == Identification ==
+
+  identificationComplete(data: LoginResult): void {
+    this.auth.setLoginUser(data);
+    this.summary.email = data.user?.email ?? '';
+    this.authenticate(this.summary.email, '');
+  }
+
+  identificationBack(): void {
+    this.stageBack();
+  }
+
+  // ====================
+
+  // == KYC =============
+
+  kycBack(): void {
+    this.stageBack();
+  }
+
+  kycComplete(): void {
+    this.nextStage('complete', 'Complete', 6, false);
+  }
+
+  // ====================
 
   private getSettingsCommon(): void {
     this.errorMessage = '';
@@ -248,87 +341,5 @@ export class WidgetComponent implements OnInit {
         }
       })
     );
-  }
-
-  // ================
-
-  onRegister(email: string): void {
-    this.summary.email = email;
-    this.nextStage('register', 'Authorization', 3, true);
-  }
-
-  registerComplete(email: string): void {
-    this.summary.email = email;
-    this.nextStage('login_auth', 'Authorization', 3, true);
-  }
-
-  registerBack(): void {
-    this.stageBack();
-  }
-
-  onLoginRequired(email: string): void {
-    this.summary.email = email;
-    this.nextStage('login_auth', 'Authorization', 3, true);
-  }
-
-  onConfirmRequired(email: string): void {
-    this.summary.email = email;
-    this.nextStage('code_auth', 'Authorization', 3, true);
-  }
-
-  // == Identification ==
-
-  identificationComplete(data: LoginResult): void {
-    this.auth.setLoginUser(data);
-    this.summary.email = data.user?.email ?? '';
-    this.authenticate(this.summary.email, '');
-  }
-
-  identificationBack(): void {
-    this.stageBack();
-  }
-
-  // ====================
-
-  // == Payment info ==
-
-  paymentUpdate(wallet: string) {
-    this.summary.address = wallet;
-  }
-
-  paymentBack(): void {
-    this.stageBack();
-  }
-
-  // ====================
-
-  // == KYC =============
-
-  kycBack(): void {
-    this.stageBack();
-  }
-
-  kycComplete(): void {
-    this.nextStage('complete', 'Complete', 6, false);
-  }
-
-  // ====================
-
-  loginComplete(data: LoginResult): void {
-    if (data) {
-      // auth success
-
-      // remove identification stage from history
-      const stageIndex = this.stages.findIndex(x => x.id === 'identification');
-      if (stageIndex > -1) {
-        this.stages.splice(stageIndex, 1);
-      }
-    } else {
-      // need to register
-    }
-  }
-
-  loginBack(): void {
-    this.stageBack();
   }
 }

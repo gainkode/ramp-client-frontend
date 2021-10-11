@@ -1,7 +1,17 @@
 <div class="__widget-data-box">
-    <form [formGroup]="dataForm">
+    <div class="__widget-provider-list-container">
+        <button *ngFor="let item of providers" type="button" class="__widget-provider-item-button"
+            (click)="selectProvider(item.id)">
+            <img class="__widget-provider-item-image" [src]="item.image">
+        </button>
+    </div>
+
+    <div class="__widget-buttons-area">
+        <button class="__outlined-button" type="button" (click)="onBack.emit()">BACK</button>
+    </div>
+
+    <!-- <form [formGroup]="dataForm">
         <div *ngIf="settings.walletAddress===''">
-            <!-- Wallet address -->
             <div class="__form-label">
                 Wallet address
             </div>
@@ -15,7 +25,8 @@
                     </mat-icon>
                 </div>
             </div>
-            <mat-autocomplete panelWidth="320px" #auto="matAutocomplete" class="__wallet-drop-list" classList="__wallet-drop-list">
+            <mat-autocomplete panelWidth="320px" #auto="matAutocomplete" class="__wallet-drop-list"
+                classList="__wallet-drop-list">
                 <mat-optgroup *ngFor="let group of userWalletsFiltered | async" [label]="group.id">
                     <mat-option *ngFor="let wallet of group.values" [value]="wallet" style="height: 32px;">
                         <span class="__widget-wallet-drop-item">
@@ -33,17 +44,15 @@
             <div class="__form-separator"></div>
         </div>
 
+        <div *ngIf="dataForm.valid" class="__widget-provider-list-container">
+            <button *ngFor="let item of providers" type="button" class="__widget-provider-item-button"
+                (click)="selectProvider(item.id)">
+                <img class="__widget-provider-item-image" [src]="item.image">
+            </button>
+        </div>
 
-
-
-        <!-- Tiles here -->
-
-
-
-
-        <!-- Buttons -->
         <div class="__widget-buttons-area">
             <button class="__outlined-button" type="button" (click)="onBack.emit()">BACK</button>
         </div>
-    </form>
+    </form> -->
 </div>
