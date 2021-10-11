@@ -90,7 +90,7 @@ export class WidgetComponent implements OnInit {
   handleAuthError(): void {
     if (this.stages.length > 0) {
       this.removeLastStage();
-      this.nextStage('login_auth', 'Authorization', 3, true);
+      this.nextStage('identification', 'Authorization', 3, true);
     }
   }
 
@@ -233,21 +233,21 @@ export class WidgetComponent implements OnInit {
   loginComplete(data: LoginResult): void {
     if (data) {
       // auth success
-
+      this.getSettingsCommon();
       // remove identification stage from history
       const stageIndex = this.stages.findIndex(x => x.id === 'identification');
       if (stageIndex > -1) {
         this.stages.splice(stageIndex, 1);
       }
     } else {
-      // need to register
+      this.nextStage('register', 'Authorization', 3, true);
     }
   }
 
   loginBack(): void {
     this.stageBack();
   }
-  
+
   // ====================
 
   // == Identification ==
