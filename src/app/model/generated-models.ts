@@ -1902,6 +1902,7 @@ export type MutationLoginArgs = {
 export type MutationConfirmEmailArgs = {
   token?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['Int']>;
+  email?: Maybe<Scalars['String']>;
   recaptcha: Scalars['String'];
 };
 
