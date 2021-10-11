@@ -50,11 +50,9 @@ export class WidgetComponent implements OnInit {
     // temp
 
     if (this.widget.email) {
-      console.log('this.widget.email', this.widget.email);
       this.summary.email = this.widget.email;
     } else {
       const user = this.auth.user;
-      console.log('user', user);
       if (user) {
         this.summary.email = this.auth?.user?.email ?? '';
       } else {
@@ -286,11 +284,6 @@ export class WidgetComponent implements OnInit {
   // ====================
 
   private getSettingsCommon(): void {
-
-
-    console.log(this.summary.email);
-
-
     this.errorMessage = '';
     if (this.auth.token === '') {
       if (this.summary.email) {

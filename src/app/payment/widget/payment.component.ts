@@ -195,7 +195,6 @@ export class WidgetPaymentComponent implements OnInit, OnDestroy {
       currency = this.summary?.currencyTo ?? '';
     }
     this.providers = list.filter(x => x.currencies?.includes(currency, 0)).map(val => new PaymentProviderView(val));
-    console.log(this.providers);
   }
 
   // private filterUserWallets(value: string): CommonGroupValue[] {
