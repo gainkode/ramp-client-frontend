@@ -59,7 +59,7 @@
       </app-widget-login-auth>
       <!-- Code Authentication -->
       <app-widget-code-auth *ngSwitchCase="'code_auth'" [email]="summary.email" [codeLength]="5"
-        (onComplete)="loginComplete($event)" (onError)="handleError($event)" (onProgress)="progressChanged($event)"
+        (onComplete)="loginCodeConfirmed()" (onError)="handleError($event)" (onProgress)="progressChanged($event)"
         (onBack)="loginBack()" (onRegister)="onRegister($event)">
       </app-widget-code-auth>
       <!-- Payment -->

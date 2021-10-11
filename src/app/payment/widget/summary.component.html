@@ -1,9 +1,3 @@
-<div *ngIf="summary?.orderId!==''">
-    <label class="checkout-summary-label">Order Id</label>
-    <div class="checkout-summary-value">
-        {{summary?.orderId}}
-    </div>
-</div>
 <div class="__widget-summary-grid">
     <div class="__widget-summary-item">
         Transaction:
@@ -39,6 +33,11 @@
     </div>
     <div *ngIf="summary?.email !== ''" class="__widget-summary-item">
         <input class="__text-box-noborder" type="text" readonly [value]="summary?.email"/>
-        <!-- {{summary?.email}} -->
+    </div>
+    <div *ngIf="(summary) ? summary.fee>0 : false" class="__widget-summary-item">
+        eWallet fees:
+    </div>
+    <div *ngIf="(summary) ? summary.fee>0 : false" class="__widget-summary-item">
+        {{summary?.fee}}
     </div>
 </div>

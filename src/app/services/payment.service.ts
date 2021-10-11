@@ -69,7 +69,7 @@ mutation CreateTransaction(
   $currencyToReceive: String!,
   $amountToSpend: Float!,
   $instrument: PaymentInstrument!,
-  $paymentProvider: PaymentProvider,
+  $paymentProvider: String!,
   $destinationType: TransactionDestinationType!,
   $destination: String
 ) {

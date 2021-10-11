@@ -23,7 +23,7 @@ export class WidgetCodeAuthComponent implements OnInit, OnDestroy, AfterViewInit
     @Output() onProgress = new EventEmitter<boolean>();
     @Output() onBack = new EventEmitter();
     @Output() onRegister = new EventEmitter<string>();
-    @Output() onComplete = new EventEmitter<LoginResult>();
+    @Output() onComplete = new EventEmitter();
 
     private pSubscriptions: Subscription = new Subscription();
 
@@ -104,17 +104,13 @@ export class WidgetCodeAuthComponent implements OnInit, OnDestroy, AfterViewInit
             const code = parseInt(this.codeField?.value) as number;
             this.pSubscriptions.add(
                 this.auth.confirmCode(code, this.email).subscribe(({ data }) => {
-                    this.login();
+                    this.onComplete.emit();
                 }, (error) => {
                     this.errorMessage = this.errorHandler.getError(error.message, 'Incorrect confirmation code');
                     this.onError.emit(this.errorMessage);
                 })
             );
         }
-    }
-
-    private login(): void {
-
     }
 
     private onFormUpdated(): void {

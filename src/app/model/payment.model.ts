@@ -394,6 +394,7 @@ export class WidgetSettings {
     email = '';
     transaction: TransactionType | undefined = undefined;
     walletAddress = '';
+    affiliateCode = '';
 }
 
 export class WidgetStage {

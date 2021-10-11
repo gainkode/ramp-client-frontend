@@ -3,7 +3,7 @@ import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Subscription, Observable, forkJoin } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { CommonGroupValue } from 'src/app/model/common.model';
-import { PaymentProvider, TransactionType, UserState } from 'src/app/model/generated-models';
+import { PaymentInstrument, PaymentProvider, TransactionDestinationType, TransactionShort, TransactionType, UserState } from 'src/app/model/generated-models';
 import { CheckoutSummary, PaymentProviderView, WidgetSettings } from 'src/app/model/payment.model';
 import { ErrorService } from 'src/app/services/error.service';
 import { PaymentDataService } from 'src/app/services/payment.service';
@@ -21,10 +21,12 @@ export class WidgetPaymentComponent implements OnInit, OnDestroy {
   @Output() onError = new EventEmitter<string>();
   @Output() onProgress = new EventEmitter<boolean>();
   @Output() onReset = new EventEmitter();
-//  @Output() onUpdate = new EventEmitter<string>();
+  //  @Output() onUpdate = new EventEmitter<string>();
   @Output() onComplete = new EventEmitter<CheckoutSummary>();
 
   private pSubscriptions: Subscription = new Subscription();
+  private selectedProviderId = '';
+  private paymentInstrument = PaymentInstrument.CreditCard;
 
   // walletInit = false;
   // userWallets: CommonGroupValue[] = [];
@@ -86,10 +88,9 @@ export class WidgetPaymentComponent implements OnInit, OnDestroy {
 
   selectProvider(id: string) {
     if (id === 'Fibonatix') {
-      const result = new CheckoutSummary();
-      //result.address = this.walletField?.value;
-      result.provider = this.providers.find(x => x.id === id);
-      this.onComplete.emit(result);
+      this.selectedProviderId = id;
+      this.paymentInstrument = PaymentInstrument.CreditCard;
+      this.createTransaction();
     } else {
       this.onError.emit(`Payment using ${id} is currenctly not supported`);
     }
@@ -223,4 +224,51 @@ export class WidgetPaymentComponent implements OnInit, OnDestroy {
   //     this.walletInit = true;
   //   }
   // }
+
+  private createTransaction(): void {
+    this.onError.emit('');
+    this.onProgress.emit(true);
+    if (this.summary) {
+      let destinationType = TransactionDestinationType.Address;
+      let destination = this.summary.address;
+      if (this.settings.affiliateCode !== '') {
+        destinationType = TransactionDestinationType.Widget;
+        destination = this.settings.affiliateCode;
+      }
+      this.pSubscriptions.add(
+        this.dataService.createQuickCheckout(
+          this.summary.transactionType,
+          this.summary.currencyFrom,
+          this.summary.currencyTo,
+          this.summary.amountFrom ?? 0,
+          this.paymentInstrument,
+          this.selectedProviderId,
+          destinationType,
+          destination
+        ).subscribe(({ data }) => {
+          const order = data.createTransaction as TransactionShort;
+          this.onProgress.emit(false);
+          if (order.code) {
+            const result = new CheckoutSummary();
+            result.provider = this.providers.find(x => x.id === this.selectedProviderId);
+            result.orderId = order.code as string;
+            result.fee = order.feeFiat;
+            result.feeMinFiat = order.feeMinFiat;
+            result.feePercent = order.feePercent;
+            result.transactionDate = new Date().toLocaleString();
+            this.onComplete.emit(result);
+          } else {
+            this.onError.emit('Order code is invalid');
+          }
+        }, (error) => {
+          this.onProgress.emit(false);
+          if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
+            this.onReset.emit();
+          } else {
+            this.onError.emit(this.errorHandler.getError(error.message, 'Unable to register a new transaction'));
+          }
+        })
+      );
+    }
+  }
 }

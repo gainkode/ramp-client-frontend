@@ -25,7 +25,6 @@ export class WidgetComponent implements OnInit {
   showSummary = true;
   mobileSummary = false;
   stageId = 'order_details';
-  //stageId = 'payment';
   title = 'Order details';
   step = 1;
   summary = new CheckoutSummary();
@@ -51,11 +50,15 @@ export class WidgetComponent implements OnInit {
     // temp
 
     if (this.widget.email) {
+      console.log('this.widget.email', this.widget.email);
       this.summary.email = this.widget.email;
     } else {
       const user = this.auth.user;
+      console.log('user', user);
       if (user) {
         this.summary.email = this.auth?.user?.email ?? '';
+      } else {
+        this.auth.logout();
       }
     }
     if (this.widget.transaction) {
@@ -133,6 +136,13 @@ export class WidgetComponent implements OnInit {
     this.showSummary = summaryVisible;
   }
 
+  removeStage(stage: string) {
+    const stageIndex = this.stages.findIndex(x => x.id === stage);
+    if (stageIndex > -1) {
+      this.stages.splice(stageIndex, 1);
+    }
+  }
+
   // == Order details page ==
 
   orderDetailsChanged(data: CheckoutSummary): void {
@@ -187,6 +197,11 @@ export class WidgetComponent implements OnInit {
 
   paymentComplete(data: CheckoutSummary): void {
     this.summary.provider = data.provider;
+    this.summary.orderId = data.orderId;
+    this.summary.fee = data.fee;
+    this.summary.feeMinFiat = data.feeMinFiat;
+    this.summary.feePercent = data.feePercent;
+    this.summary.transactionDate = data.transactionDate;
     this.nextStage('credit-card', 'Payment info', 4, true);
   }
 
@@ -230,18 +245,12 @@ export class WidgetComponent implements OnInit {
     this.nextStage('code_auth', 'Authorization', 3, true);
   }
 
+  loginCodeConfirmed(): void {
+    this.getSettingsCommon();
+  }
+
   loginComplete(data: LoginResult): void {
-    if (data) {
-      // auth success
-      this.getSettingsCommon();
-      // remove identification stage from history
-      const stageIndex = this.stages.findIndex(x => x.id === 'identification');
-      if (stageIndex > -1) {
-        this.stages.splice(stageIndex, 1);
-      }
-    } else {
-      this.nextStage('register', 'Authorization', 3, true);
-    }
+    this.checkLoginResult(data);
   }
 
   loginBack(): void {
@@ -255,7 +264,7 @@ export class WidgetComponent implements OnInit {
   identificationComplete(data: LoginResult): void {
     this.auth.setLoginUser(data);
     this.summary.email = data.user?.email ?? '';
-    this.authenticate(this.summary.email, '');
+    this.authenticate(this.summary.email);
   }
 
   identificationBack(): void {
@@ -277,10 +286,15 @@ export class WidgetComponent implements OnInit {
   // ====================
 
   private getSettingsCommon(): void {
+
+
+    console.log(this.summary.email);
+
+
     this.errorMessage = '';
     if (this.auth.token === '') {
       if (this.summary.email) {
-        this.authenticate(this.summary.email, '');
+        this.authenticate(this.summary.email);
       } else {
         this.nextStage('identification', 'Authorization', 3, true);
       }
@@ -296,7 +310,7 @@ export class WidgetComponent implements OnInit {
             this.inProgress = false;
             if (error.message === 'Access denied') {
               if (this.summary.email) {
-                this.authenticate(this.summary.email, '');
+                this.authenticate(this.summary.email);
               } else {
                 this.nextStage('identification', 'Authorization', 3, true);
               }
@@ -311,18 +325,15 @@ export class WidgetComponent implements OnInit {
     }
   }
 
-  private authenticate(login: string, password: string) {
+  private authenticate(login: string) {
     this.errorMessage = '';
     this.inProgress = true;
-    console.log('authenticate');
     // Consider that the user is one-time wallet user rather than internal one
     this.pSubscriptions.add(
-      this.auth.authenticate(login, password, true).subscribe(({ data }) => {
-        console.log('authenticate success');
+      this.auth.authenticate(login, '', true).subscribe(({ data }) => {
         this.inProgress = false;
-        this.nextStage('payment', 'Payment info', 4, true);
+        this.checkLoginResult(data.login as LoginResult);
       }, (error) => {
-        console.log('authenticate error:', error);
         this.inProgress = false;
         if (this.errorHandler.getCurrentError() === 'auth.password_null_or_empty') {
           // Internal user cannot be authorised without a password, so need to
@@ -341,5 +352,14 @@ export class WidgetComponent implements OnInit {
         }
       })
     );
+  }
+
+  checkLoginResult(data: LoginResult) {
+    if (data.authTokenAction === 'Default' || data.authTokenAction === 'KycRequired') {
+      this.auth.setLoginUser(data);
+      this.nextStage('payment', 'Payment info', 4, true);
+    } else {
+      this.errorMessage = `Unable to authenticate user with the action "${data.authTokenAction}"`;
+    }
   }
 }
