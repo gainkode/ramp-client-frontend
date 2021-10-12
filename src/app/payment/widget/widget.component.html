@@ -45,9 +45,10 @@
       </app-widget-disclaimer>
       <!-- User identification -->
       <app-widget-identification *ngSwitchCase="'identification'" [email]="summary.email"
-        (onComplete)="identificationComplete($event)" (onLoginRequired)="onLoginRequired($event)"
-        (onConfirmRequired)="onConfirmRequired($event)" (onError)="handleError($event)"
-        (onProgress)="progressChanged($event)" (onBack)="identificationBack()" (onRegister)="onRegister($event)">
+        (onComplete)="identificationComplete($event)" (onAlreadyAuthenticated)="loginCodeConfirmed()"
+        (onLoginRequired)="onLoginRequired($event)" (onConfirmRequired)="onConfirmRequired($event)"
+        (onError)="handleError($event)" (onProgress)="progressChanged($event)" (onBack)="identificationBack()"
+        (onRegister)="onRegister($event)">
       </app-widget-identification>
       <!-- Register -->
       <app-widget-register *ngSwitchCase="'register'" [email]="summary.email" (onBack)="registerBack()"
@@ -64,8 +65,8 @@
       </app-widget-code-auth>
       <!-- Payment -->
       <app-widget-payment *ngSwitchCase="'payment'" [summary]="summary" [settings]="widget"
-        (onError)="handleError($event)" (onProgress)="progressChanged($event)" 
-        (onBack)="paymentBack()" (onReset)="handleAuthError()" (onComplete)="paymentComplete($event)">
+        (onError)="handleError($event)" (onProgress)="progressChanged($event)" (onBack)="paymentBack()"
+        (onReset)="handleAuthError()" (onComplete)="paymentComplete($event)">
       </app-widget-payment>
       <!-- Credit card -->
       <app-widget-credit-card *ngSwitchCase="'credit-card'" (onBack)="creditCardBack()"

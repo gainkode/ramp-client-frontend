@@ -17,6 +17,7 @@ export class WidgetidentificationComponent implements OnInit, OnDestroy {
     @Output() onBack = new EventEmitter();
     @Output() onRegister = new EventEmitter<string>();
     @Output() onComplete = new EventEmitter<LoginResult>();
+    @Output() onAlreadyAuthenticated = new EventEmitter();
     @Output() onLoginRequired = new EventEmitter<string>();
     @Output() onConfirmRequired = new EventEmitter<string>();
 
@@ -65,27 +66,32 @@ export class WidgetidentificationComponent implements OnInit, OnDestroy {
             this.onRegister.emit(emailValue);
         } else {
             if (this.dataForm.valid) {
-                this.onProgress.emit(true);
-                // Consider that the user is one-time wallet user rather than internal one
-                this.pSubscriptions.add(
-                    this.auth.authenticate(this.emailField?.value, '', true).subscribe(({ data }) => {
-                        this.onProgress.emit(false);
-                        this.onComplete.emit(data.login as LoginResult);
-                    }, (error) => {
-                        this.onProgress.emit(false);
-                        if (this.errorHandler.getCurrentError() === 'auth.password_null_or_empty') {
-                            // Internal user cannot be authorised without a password, so need to
-                            //  show the authorisation form to fill
-                            this.auth.logout();
-                            this.onLoginRequired.emit(emailValue);
-                        } else if (this.errorHandler.getCurrentError() === 'auth.unconfirmed_email') {
-                            // User has to confirm email verifying the code
-                            this.onConfirmRequired.emit(emailValue);
-                        } else {
-                            this.onError.emit(this.errorHandler.getError(error.message, 'Unable to authenticate user'));
-                        }
-                    })
-                );
+                const authEmail = this.auth.user?.email ?? '';
+                if (authEmail === this.emailField?.value) {
+                    this.onAlreadyAuthenticated.emit();
+                } else {
+                    this.onProgress.emit(true);
+                    // Consider that the user is one-time wallet user rather than internal one
+                    this.pSubscriptions.add(
+                        this.auth.authenticate(this.emailField?.value, '', true).subscribe(({ data }) => {
+                            this.onProgress.emit(false);
+                            this.onComplete.emit(data.login as LoginResult);
+                        }, (error) => {
+                            this.onProgress.emit(false);
+                            if (this.errorHandler.getCurrentError() === 'auth.password_null_or_empty') {
+                                // Internal user cannot be authorised without a password, so need to
+                                //  show the authorisation form to fill
+                                this.auth.logout();
+                                this.onLoginRequired.emit(emailValue);
+                            } else if (this.errorHandler.getCurrentError() === 'auth.unconfirmed_email') {
+                                // User has to confirm email verifying the code
+                                this.onConfirmRequired.emit(emailValue);
+                            } else {
+                                this.onError.emit(this.errorHandler.getError(error.message, 'Unable to authenticate user'));
+                            }
+                        })
+                    );
+                }
             }
         }
     }

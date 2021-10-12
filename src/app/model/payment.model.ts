@@ -395,6 +395,7 @@ export class WidgetSettings {
     transaction: TransactionType | undefined = undefined;
     walletAddress = '';
     affiliateCode = '';
+    kycFirst = false;
 }
 
 export class WidgetStage {

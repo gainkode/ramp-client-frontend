@@ -1,6 +1,7 @@
 <div class="__widget-data-box">
-    <app-kyc-panel [url]="address" [flow]="flow" [notifyCompleted]="true" (completed)="onNext.emit()"
-        (onError)="onError.emit($event)" (onAuthError)="onAuthError.emit()" (onProgress)="onProgress.emit($event)">
+    <app-kyc-panel *ngIf="showValidator" [url]="address" [flow]="flow" [notifyCompleted]="true"
+        (completed)="onNext.emit()" (onError)="onError.emit($event)" (onAuthError)="onAuthError.emit()"
+        (onProgress)="onProgress.emit($event)">
     </app-kyc-panel>
     <div class="__widget-buttons-area">
         <button class="__outlined-button" type="button" (click)="onBack.emit()">BACK</button>

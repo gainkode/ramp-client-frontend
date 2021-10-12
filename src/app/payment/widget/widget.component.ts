@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { LoginResult, Rate, User } from 'src/app/model/generated-models';
+import { LoginResult, Rate, SettingsCommon, TransactionType, User } from 'src/app/model/generated-models';
 import { CardView, CheckoutSummary, WidgetSettings, WidgetStage } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
@@ -45,9 +45,10 @@ export class WidgetComponent implements OnInit {
 
   ngOnInit(): void {
     // temp
-    // this.widget.email = 'tugaymv@gmail.com';
-    // this.widget.transaction = TransactionType.Deposit;
-    // this.widget.walletAddress = 'mkBUjw37y46goULToq6b7y6ciJc3Qi32YM';
+    this.widget.kycFirst = true;
+//    this.widget.email = 'tugaymv@gmail.com';
+    this.widget.transaction = TransactionType.Deposit;
+    this.widget.walletAddress = 'mkBUjw37y46goULToq6b7y6ciJc3Qi32YM';
     // temp
 
     if (this.widget.email) {
@@ -87,6 +88,7 @@ export class WidgetComponent implements OnInit {
 
   handleError(message: string): void {
     this.errorMessage = message;
+    this.changeDetector.detectChanges();
   }
 
   handleAuthError(): void {
@@ -143,7 +145,6 @@ export class WidgetComponent implements OnInit {
   }
 
   // == Order details page ==
-
   orderDetailsChanged(data: CheckoutSummary): void {
     if (this.initState && (data.amountFrom || data.amountTo)) {
       this.initState = false;
@@ -176,20 +177,21 @@ export class WidgetComponent implements OnInit {
   // =======================
 
   // == Disclaimer =========
-
   desclaimerBack(): void {
     this.stageBack();
   }
 
   desclaimerNext(): void {
     this.summary.agreementChecked = true;
-    this.getSettingsCommon();
+    if (this.widget.email === '') {
+      this.nextStage('identification', 'Authorization', 3, true);
+    } else {
+      this.getSettingsCommon();
+    }
   }
-
   // ================
 
   // == Payment info ==
-
   paymentBack(): void {
     this.stageBack();
   }
@@ -203,11 +205,9 @@ export class WidgetComponent implements OnInit {
     this.summary.transactionDate = data.transactionDate;
     this.nextStage('credit-card', 'Payment info', 4, true);
   }
-
   // ====================
 
   // == Credit card ==
-
   creditCardPaymentComplete(data: CardView): void {
 
   }
@@ -215,11 +215,9 @@ export class WidgetComponent implements OnInit {
   creditCardBack(): void {
     this.stageBack();
   }
-
   // ====================
 
   // == Auth ========
-
   onRegister(email: string): void {
     this.summary.email = email;
     this.nextStage('register', 'Authorization', 3, true);
@@ -255,25 +253,21 @@ export class WidgetComponent implements OnInit {
   loginBack(): void {
     this.stageBack();
   }
-
   // ====================
 
   // == Identification ==
-
   identificationComplete(data: LoginResult): void {
     this.auth.setLoginUser(data);
     this.summary.email = data.user?.email ?? '';
-    this.authenticate(this.summary.email);
+    this.getSettingsCommon();
   }
 
   identificationBack(): void {
     this.stageBack();
   }
-
   // ====================
 
   // == KYC =============
-
   kycBack(): void {
     this.stageBack();
   }
@@ -281,7 +275,6 @@ export class WidgetComponent implements OnInit {
   kycComplete(): void {
     this.nextStage('complete', 'Complete', 6, false);
   }
-
   // ====================
 
   private getSettingsCommon(): void {
@@ -298,8 +291,9 @@ export class WidgetComponent implements OnInit {
       if (dataGetter) {
         this.pSubscriptions.add(
           dataGetter.valueChanges.subscribe((settings) => {
+            this.auth.setLocalSettingsCommon(settings.data.getSettingsCommon);
             this.inProgress = false;
-            this.startPayment();
+            this.showPostSuccessLoginStage();
           }, (error) => {
             this.inProgress = false;
             if (error.message === 'Access denied') {
@@ -337,7 +331,7 @@ export class WidgetComponent implements OnInit {
         } else if (this.errorHandler.getCurrentError() === 'auth.unconfirmed_email') {
           // User has to confirm email verifying the code
           if (login === '') {
-            this.nextStage('code_auth', 'Authorization', 3, true);
+            this.onConfirmRequired(login);
           } else {
             this.errorMessage = 'Your email is not confirmed. Follow the link in the email message we have sent in order to confirm your email';
           }
@@ -351,13 +345,13 @@ export class WidgetComponent implements OnInit {
   private checkLoginResult(data: LoginResult) {
     if (data.authTokenAction === 'Default' || data.authTokenAction === 'KycRequired') {
       this.auth.setLoginUser(data);
-      this.startPayment();
+      this.getSettingsCommon();
     } else {
       this.errorMessage = `Unable to authenticate user with the action "${data.authTokenAction}"`;
     }
   }
 
-  private startPayment(): void {
+  private showPostSuccessLoginStage(): void {
     this.getKycStatus();
   }
 
@@ -376,7 +370,11 @@ export class WidgetComponent implements OnInit {
             this.errorMessage = 'We cannot proceed your payment because your identity is rejected';
           } else {
             this.requestKyc = (requestKyc === true);
-            this.nextStage('payment', 'Payment info', 4, true);
+            if (this.widget.kycFirst && this.requestKyc) {
+              this.nextStage('verification', 'Verification', 4, true);
+            } else {
+              this.nextStage('payment', 'Payment info', 4, true);
+            }
           }
         }, (error) => {
           this.inProgress = false;
