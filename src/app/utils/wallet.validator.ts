@@ -27,7 +27,7 @@ export class WalletValidator {
             }
             // valid BTC wallet: 1KFzzGtDdnq5hrwxXGjwVnKzRbvf8WVxck
             currency = currency.toLowerCase();
-            const networkType = environment.production ? 'prod' : 'both';
+            const networkType = environment.test_wallets ? 'both' : 'prod';
             const valid = WAValidator.validate(address, currency, networkType);
             if (valid) {
                 return null;

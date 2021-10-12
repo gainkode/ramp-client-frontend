@@ -47,9 +47,9 @@ export class WidgetComponent implements OnInit {
   ngOnInit(): void {
     // temp
     //this.widget.kycFirst = true;
-    //this.widget.email = 'tugaymv@gmail.com';
+    this.widget.email = 'tugaymv@gmail.com';
     this.widget.transaction = TransactionType.Deposit;
-    this.widget.walletAddress = 'mkBUjw37y46goULToq6b7y6ciJc3Qi32YM';
+    //this.widget.walletAddress = 'mkBUjw37y46goULToq6b7y6ciJc3Qi32YM';
     // temp
 
     if (this.widget.email) {
@@ -371,7 +371,7 @@ export class WidgetComponent implements OnInit {
           } else {
             this.requestKyc = (requestKyc === true);
             if (this.widget.kycFirst && this.requestKyc) {
-              this.nextStage('verification', 'Verification', 4, true);
+              this.nextStage('verification', 'Verification', 4, false);
             } else {
               this.showPaymentStage(4);
             }

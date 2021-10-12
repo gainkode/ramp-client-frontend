@@ -106,7 +106,7 @@ export class KycPanelComponent implements OnInit, OnDestroy {
                 }
             },
             // uiConf: {
-            //   customCss: "https://url.com/styles.css"
+            //   customCss: "http://localhost:4000/assets/sumsub.css"
             //   // URL to css file in case you need change it dynamically from the code
             //   // the similar setting at Applicant flow will rewrite customCss
             //   // you may also use to pass string with plain styles `customCssStr:`
