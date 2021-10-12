@@ -285,7 +285,8 @@ export class CheckoutSummary {
     transactionType: TransactionType = TransactionType.Deposit;
     status: TransactionStatus = TransactionStatus.Pending;
     card: CardView | undefined = undefined;
-    provider: PaymentProvider | undefined = undefined;
+    provider: PaymentProvider | undefined = undefined;  // deprecated
+    providerView: PaymentProviderView | undefined = undefined;
     instrument: PaymentInstrument | undefined = undefined;
 
     get isFromCrypto(): boolean {

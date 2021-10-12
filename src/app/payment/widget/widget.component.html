@@ -64,12 +64,11 @@
         (onBack)="loginBack()" (onRegister)="onRegister($event)">
       </app-widget-code-auth>
       <!-- Payment -->
-      <app-widget-payment *ngSwitchCase="'payment'" [summary]="summary" [settings]="widget"
-        (onError)="handleError($event)" (onProgress)="progressChanged($event)" (onBack)="paymentBack()"
-        (onReset)="handleAuthError()" (onComplete)="paymentComplete($event)">
+      <app-widget-payment *ngSwitchCase="'payment'" [providers]="paymentProviders" 
+        (onBack)="paymentBack()" (onSelect)="selectProvider($event)">
       </app-widget-payment>
       <!-- Credit card -->
-      <app-widget-credit-card *ngSwitchCase="'credit-card'" (onBack)="creditCardBack()"
+      <app-widget-credit-card *ngSwitchCase="'credit_card'" (onBack)="creditCardBack()"
         (onComplete)="creditCardPaymentComplete($event)"></app-widget-credit-card>
       <!-- KYC -->
       <app-widget-kyc *ngSwitchCase="'verification'" (onError)="handleError($event)" (onAuthError)="handleAuthError()"

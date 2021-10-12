@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { LoginResult, Rate, SettingsCommon, TransactionType, User } from 'src/app/model/generated-models';
-import { CardView, CheckoutSummary, WidgetSettings, WidgetStage } from 'src/app/model/payment.model';
+import { LoginResult, PaymentInstrument, PaymentProvider, Rate, SettingsCommon, TransactionDestinationType, TransactionShort, TransactionType, User } from 'src/app/model/generated-models';
+import { CardView, CheckoutSummary, PaymentProviderView, WidgetSettings, WidgetStage } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { PaymentDataService } from 'src/app/services/payment.service';
@@ -32,6 +32,7 @@ export class WidgetComponent implements OnInit {
   stages: WidgetStage[] = [];
   exchangeRateCountDownTitle = '';
   exchangeRateCountDownValue = '';
+  paymentProviders: PaymentProviderView[] = [];
   requestKyc = false;
 
   private pSubscriptions: Subscription = new Subscription();
@@ -45,8 +46,8 @@ export class WidgetComponent implements OnInit {
 
   ngOnInit(): void {
     // temp
-    this.widget.kycFirst = true;
-//    this.widget.email = 'tugaymv@gmail.com';
+    //this.widget.kycFirst = true;
+    //this.widget.email = 'tugaymv@gmail.com';
     this.widget.transaction = TransactionType.Deposit;
     this.widget.walletAddress = 'mkBUjw37y46goULToq6b7y6ciJc3Qi32YM';
     // temp
@@ -196,15 +197,14 @@ export class WidgetComponent implements OnInit {
     this.stageBack();
   }
 
-  paymentComplete(data: CheckoutSummary): void {
-    this.summary.provider = data.provider;
-    this.summary.orderId = data.orderId;
-    this.summary.fee = data.fee;
-    this.summary.feeMinFiat = data.feeMinFiat;
-    this.summary.feePercent = data.feePercent;
-    this.summary.transactionDate = data.transactionDate;
-    this.nextStage('credit-card', 'Payment info', 4, true);
+  selectProvider(id: string) {
+    if (id === 'Fibonatix') {
+      this.createTransaction(id, PaymentInstrument.CreditCard);
+    } else {
+      this.errorMessage = `Payment using ${id} is currenctly not supported`;
+    }
   }
+
   // ====================
 
   // == Credit card ==
@@ -373,7 +373,7 @@ export class WidgetComponent implements OnInit {
             if (this.widget.kycFirst && this.requestKyc) {
               this.nextStage('verification', 'Verification', 4, true);
             } else {
-              this.nextStage('payment', 'Payment info', 4, true);
+              this.showPaymentStage(4);
             }
           }
         }, (error) => {
@@ -382,6 +382,104 @@ export class WidgetComponent implements OnInit {
             this.handleAuthError();
           } else {
             this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load your identification status');
+          }
+        })
+      );
+    }
+  }
+
+  private showPaymentStage(stageNumber: number) {
+    if (this.summary.transactionType === TransactionType.Deposit) {
+      this.loadPaymentProviders(stageNumber);
+    } else {
+      this.errorMessage = `Transaction type "${this.summary.transactionType}" is currently not supported`;
+    }
+  }
+
+  private loadPaymentProviders(stageNumber: number): void {
+    this.paymentProviders = [];
+    const providersData = this.dataService.getProviders();
+    if (providersData === null) {
+      this.errorMessage = this.errorHandler.getRejectedCookieMessage();
+    } else {
+      this.inProgress = true;
+      this.pSubscriptions.add(
+        providersData.valueChanges.subscribe(({ data }) => {
+          this.getPaymentProviderData(data.getPaymentProviders as PaymentProvider[]);
+          if (this.paymentProviders.length < 1) {
+            this.errorMessage = `No supported payment providers found for "${this.summary.currencyFrom}"`;
+          } else if (this.paymentProviders.length > 1) {
+            this.nextStage('payment', 'Payment info', stageNumber, true);
+          } else {
+            this.selectProvider(this.paymentProviders[0].id);
+          }
+          this.inProgress = false;
+        }, (error) => {
+          this.inProgress = false;
+          if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
+            this.handleAuthError();
+          } else {
+            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load payment instruments');
+          }
+        })
+      );
+    }
+  }
+
+  private getPaymentProviderData(list: PaymentProvider[]): void {
+    let currency = '';
+    if (this.summary?.transactionType === TransactionType.Deposit) {
+      currency = this.summary?.currencyFrom ?? '';
+    } else if (this.summary?.transactionType === TransactionType.Withdrawal) {
+      currency = this.summary?.currencyTo ?? '';
+    }
+    this.paymentProviders = list.filter(x => x.currencies?.includes(currency, 0)).map(val => new PaymentProviderView(val));
+  }
+
+  private createTransaction(providerId: string, instrument: PaymentInstrument): void {
+    this.errorMessage = '';
+    this.inProgress = true;
+    if (this.summary) {
+      let destinationType = TransactionDestinationType.Address;
+      let destination = this.summary.address;
+      if (this.widget.affiliateCode !== '') {
+        destinationType = TransactionDestinationType.Widget;
+        destination = this.widget.affiliateCode;
+      }
+      this.pSubscriptions.add(
+        this.dataService.createQuickCheckout(
+          this.summary.transactionType,
+          this.summary.currencyFrom,
+          this.summary.currencyTo,
+          this.summary.amountFrom ?? 0,
+          instrument,
+          providerId,
+          destinationType,
+          destination
+        ).subscribe(({ data }) => {
+          const order = data.createTransaction as TransactionShort;
+          this.inProgress = false;
+          if (order.code) {
+            this.summary.providerView = this.paymentProviders.find(x => x.id === providerId);
+            this.summary.orderId = order.code as string;
+            this.summary.fee = order.feeFiat;
+            this.summary.feeMinFiat = order.feeMinFiat;
+            this.summary.feePercent = order.feePercent;
+            this.summary.transactionDate = new Date().toLocaleString();
+            if (providerId === 'Fibonatix') {
+              this.nextStage('credit_card', 'Payment info', this.step, true);
+            } else {
+              this.errorMessage = 'Invalid payment provider';
+            }
+          } else {
+            this.errorMessage = 'Order code is invalid';
+          }
+        }, (error) => {
+          this.inProgress = false;
+          if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
+            this.handleAuthError();
+          } else {
+            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to register a new transaction');
           }
         })
       );

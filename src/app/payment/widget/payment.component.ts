@@ -15,23 +15,23 @@ import { WalletValidator } from 'src/app/utils/wallet.validator';
   styleUrls: ['../../../assets/payment.scss', '../../../assets/button.scss', '../../../assets/text-control.scss']
 })
 export class WidgetPaymentComponent implements OnInit, OnDestroy {
-  @Input() settings: WidgetSettings = new WidgetSettings();
-  @Input() summary: CheckoutSummary | undefined = undefined;
+  @Input() providers: PaymentProviderView[] = [];
   @Output() onBack = new EventEmitter();
-  @Output() onError = new EventEmitter<string>();
-  @Output() onProgress = new EventEmitter<boolean>();
-  @Output() onReset = new EventEmitter();
-  //  @Output() onUpdate = new EventEmitter<string>();
-  @Output() onComplete = new EventEmitter<CheckoutSummary>();
+  @Output() onSelect = new EventEmitter<string>();
+  // @Output() onError = new EventEmitter<string>();
+  // @Output() onProgress = new EventEmitter<boolean>();
+  // @Output() onReset = new EventEmitter();
+  // @Output() onUpdate = new EventEmitter<string>();
+  // @Output() onComplete = new EventEmitter<CheckoutSummary>();
 
-  private pSubscriptions: Subscription = new Subscription();
-  private selectedProviderId = '';
-  private paymentInstrument = PaymentInstrument.CreditCard;
+  // private pSubscriptions: Subscription = new Subscription();
+  // private selectedProviderId = '';
+  // private paymentInstrument = PaymentInstrument.CreditCard;
 
   // walletInit = false;
   // userWallets: CommonGroupValue[] = [];
   // userWalletsFiltered: Observable<CommonGroupValue[]> | undefined = undefined;
-  providers: PaymentProviderView[] = [];
+  
 
   // dataForm = this.formBuilder.group({
   //   wallet: ['', { validators: [Validators.required], updateOn: 'change' }],
@@ -62,11 +62,11 @@ export class WidgetPaymentComponent implements OnInit, OnDestroy {
   //   return this.dataForm.get('transaction');
   // }
 
-  constructor(
-    private changeDetector: ChangeDetectorRef,
-    //private formBuilder: FormBuilder,
-    private dataService: PaymentDataService,
-    private errorHandler: ErrorService) { }
+  // constructor(
+  //   private changeDetector: ChangeDetectorRef,
+  //   //private formBuilder: FormBuilder,
+  //   private dataService: PaymentDataService,
+  //   private errorHandler: ErrorService) { }
 
   ngOnInit(): void {
     // this.currencyToField?.setValue(this.summary?.currencyTo);
@@ -79,22 +79,22 @@ export class WidgetPaymentComponent implements OnInit, OnDestroy {
     //     map((value) => this.filterUserWallets(value))
     //   );
     // this.loadWallets();
-    this.loadProviders();
+    // this.loadProviders();
   }
 
   ngOnDestroy(): void {
-    this.pSubscriptions.unsubscribe();
+    // this.pSubscriptions.unsubscribe();
   }
 
-  selectProvider(id: string) {
-    if (id === 'Fibonatix') {
-      this.selectedProviderId = id;
-      this.paymentInstrument = PaymentInstrument.CreditCard;
-      this.createTransaction();
-    } else {
-      this.onError.emit(`Payment using ${id} is currenctly not supported`);
-    }
-  }
+  // selectProvider(id: string) {
+  //   if (id === 'Fibonatix') {
+  //     this.selectedProviderId = id;
+  //     this.paymentInstrument = PaymentInstrument.CreditCard;
+  //     this.createTransaction();
+  //   } else {
+  //     this.onError.emit(`Payment using ${id} is currenctly not supported`);
+  //   }
+  // }
 
   // private loadWallets(): void {
   //   this.userWallets = [];
@@ -128,28 +128,28 @@ export class WidgetPaymentComponent implements OnInit, OnDestroy {
   //   }
   // }
 
-  private loadProviders(): void {
-    this.providers = [];
-    const providersData = this.dataService.getProviders();
-    if (providersData === null) {
-      this.onError.emit(this.errorHandler.getRejectedCookieMessage());
-    } else {
-      this.onProgress.emit(true);
-      this.pSubscriptions.add(
-        providersData.valueChanges.subscribe(({ data }) => {
-          this.getProviderData(data.getPaymentProviders as PaymentProvider[]);
-          this.onProgress.emit(false);
-        }, (error) => {
-          this.onProgress.emit(false);
-          if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
-            this.onReset.emit();
-          } else {
-            this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load payment instruments'));
-          }
-        })
-      );
-    }
-  }
+  // private loadProviders(): void {
+  //   this.providers = [];
+  //   const providersData = this.dataService.getProviders();
+  //   if (providersData === null) {
+  //     this.onError.emit(this.errorHandler.getRejectedCookieMessage());
+  //   } else {
+  //     this.onProgress.emit(true);
+  //     this.pSubscriptions.add(
+  //       providersData.valueChanges.subscribe(({ data }) => {
+  //         this.getProviderData(data.getPaymentProviders as PaymentProvider[]);
+  //         this.onProgress.emit(false);
+  //       }, (error) => {
+  //         this.onProgress.emit(false);
+  //         if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
+  //           this.onReset.emit();
+  //         } else {
+  //           this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load payment instruments'));
+  //         }
+  //       })
+  //     );
+  //   }
+  // }
 
   // private getStateData(state: UserState): void {
   //   const vaultAssets: string[] = [];
@@ -187,15 +187,15 @@ export class WidgetPaymentComponent implements OnInit, OnDestroy {
   //   this.changeDetector.detectChanges();
   // }
 
-  private getProviderData(list: PaymentProvider[]): void {
-    let currency = '';
-    if (this.summary?.transactionType === TransactionType.Deposit) {
-      currency = this.summary?.currencyFrom ?? '';
-    } else if (this.summary?.transactionType === TransactionType.Withdrawal) {
-      currency = this.summary?.currencyTo ?? '';
-    }
-    this.providers = list.filter(x => x.currencies?.includes(currency, 0)).map(val => new PaymentProviderView(val));
-  }
+  // private getProviderData(list: PaymentProvider[]): void {
+  //   let currency = '';
+  //   if (this.summary?.transactionType === TransactionType.Deposit) {
+  //     currency = this.summary?.currencyFrom ?? '';
+  //   } else if (this.summary?.transactionType === TransactionType.Withdrawal) {
+  //     currency = this.summary?.currencyTo ?? '';
+  //   }
+  //   this.providers = list.filter(x => x.currencies?.includes(currency, 0)).map(val => new PaymentProviderView(val));
+  // }
 
   // private filterUserWallets(value: string): CommonGroupValue[] {
   //   if (value !== null) {
@@ -224,50 +224,50 @@ export class WidgetPaymentComponent implements OnInit, OnDestroy {
   //   }
   // }
 
-  private createTransaction(): void {
-    this.onError.emit('');
-    this.onProgress.emit(true);
-    if (this.summary) {
-      let destinationType = TransactionDestinationType.Address;
-      let destination = this.summary.address;
-      if (this.settings.affiliateCode !== '') {
-        destinationType = TransactionDestinationType.Widget;
-        destination = this.settings.affiliateCode;
-      }
-      this.pSubscriptions.add(
-        this.dataService.createQuickCheckout(
-          this.summary.transactionType,
-          this.summary.currencyFrom,
-          this.summary.currencyTo,
-          this.summary.amountFrom ?? 0,
-          this.paymentInstrument,
-          this.selectedProviderId,
-          destinationType,
-          destination
-        ).subscribe(({ data }) => {
-          const order = data.createTransaction as TransactionShort;
-          this.onProgress.emit(false);
-          if (order.code) {
-            const result = new CheckoutSummary();
-            result.provider = this.providers.find(x => x.id === this.selectedProviderId);
-            result.orderId = order.code as string;
-            result.fee = order.feeFiat;
-            result.feeMinFiat = order.feeMinFiat;
-            result.feePercent = order.feePercent;
-            result.transactionDate = new Date().toLocaleString();
-            this.onComplete.emit(result);
-          } else {
-            this.onError.emit('Order code is invalid');
-          }
-        }, (error) => {
-          this.onProgress.emit(false);
-          if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
-            this.onReset.emit();
-          } else {
-            this.onError.emit(this.errorHandler.getError(error.message, 'Unable to register a new transaction'));
-          }
-        })
-      );
-    }
-  }
+  // private createTransaction(): void {
+  //   this.onError.emit('');
+  //   this.onProgress.emit(true);
+  //   if (this.summary) {
+  //     let destinationType = TransactionDestinationType.Address;
+  //     let destination = this.summary.address;
+  //     if (this.settings.affiliateCode !== '') {
+  //       destinationType = TransactionDestinationType.Widget;
+  //       destination = this.settings.affiliateCode;
+  //     }
+  //     this.pSubscriptions.add(
+  //       this.dataService.createQuickCheckout(
+  //         this.summary.transactionType,
+  //         this.summary.currencyFrom,
+  //         this.summary.currencyTo,
+  //         this.summary.amountFrom ?? 0,
+  //         this.paymentInstrument,
+  //         this.selectedProviderId,
+  //         destinationType,
+  //         destination
+  //       ).subscribe(({ data }) => {
+  //         const order = data.createTransaction as TransactionShort;
+  //         this.onProgress.emit(false);
+  //         if (order.code) {
+  //           const result = new CheckoutSummary();
+  //           result.provider = this.providers.find(x => x.id === this.selectedProviderId);
+  //           result.orderId = order.code as string;
+  //           result.fee = order.feeFiat;
+  //           result.feeMinFiat = order.feeMinFiat;
+  //           result.feePercent = order.feePercent;
+  //           result.transactionDate = new Date().toLocaleString();
+  //           this.onComplete.emit(result);
+  //         } else {
+  //           this.onError.emit('Order code is invalid');
+  //         }
+  //       }, (error) => {
+  //         this.onProgress.emit(false);
+  //         if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
+  //           this.onReset.emit();
+  //         } else {
+  //           this.onError.emit(this.errorHandler.getError(error.message, 'Unable to register a new transaction'));
+  //         }
+  //       })
+  //     );
+  //   }
+  // }
 }
