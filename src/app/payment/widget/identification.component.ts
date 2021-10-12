@@ -82,7 +82,6 @@ export class WidgetidentificationComponent implements OnInit, OnDestroy {
                             if (this.errorHandler.getCurrentError() === 'auth.password_null_or_empty') {
                                 // Internal user cannot be authorised without a password, so need to
                                 //  show the authorisation form to fill
-                                this.auth.logout();
                                 this.onLoginRequired.emit(emailValue);
                             } else if (this.errorHandler.getCurrentError() === 'auth.unconfirmed_email') {
                                 // User has to confirm email verifying the code

@@ -52,7 +52,7 @@
       </app-widget-identification>
       <!-- Register -->
       <app-widget-register *ngSwitchCase="'register'" [email]="summary.email" (onBack)="registerBack()"
-        (onProgress)="progressChanged($event)" (onComplete)="registerComplete($event)">
+        (onProgress)="progressChanged($event)" (onComplete)="onLoginRequired($event)">
       </app-widget-register>
       <!-- Login Authentication -->
       <app-widget-login-auth *ngSwitchCase="'login_auth'" [email]="summary.email" (onBack)="loginBack()"
@@ -64,8 +64,8 @@
         (onBack)="loginBack()" (onRegister)="onRegister($event)">
       </app-widget-code-auth>
       <!-- Payment -->
-      <app-widget-payment *ngSwitchCase="'payment'" [providers]="paymentProviders" 
-        (onBack)="paymentBack()" (onSelect)="selectProvider($event)">
+      <app-widget-payment *ngSwitchCase="'payment'" [providers]="paymentProviders" (onBack)="paymentBack()"
+        (onSelect)="selectProvider($event)">
       </app-widget-payment>
       <!-- Credit card -->
       <app-widget-credit-card *ngSwitchCase="'credit_card'" (onBack)="creditCardBack()"
@@ -77,6 +77,13 @@
       <app-widget-processing *ngSwitchCase="'processing'"></app-widget-processing>
       <!-- Complete -->
       <app-widget-complete *ngSwitchCase="'complete'"></app-widget-complete>
+
+      <!-- Common settings reading -->
+      <app-widget-settings-service *ngIf="readCommonSettings" [summary]="summary" (onError)="handleError($event)"
+        (onProgress)="progressChanged($event)" (onAuthenticationRequired)="settingsAuthRequired($event)"
+        (onIdentificationRequired)="settingsIdRequired()" (onLoginRequired)="settingsLoginRequired($event)"
+        (onKycStatusUpdate)="settingsKycState($event)" (onComplete)="settingsCommonComplete($event)">
+      </app-widget-settings-service>
     </div>
     <div *ngIf="!initState && showSummary" class="__widget-summary-container">
       <div class="__widget-summary-box">

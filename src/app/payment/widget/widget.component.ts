@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { LoginResult, PaymentInstrument, PaymentProvider, Rate, SettingsCommon, TransactionDestinationType, TransactionShort, TransactionType, User } from 'src/app/model/generated-models';
+import { LoginResult, PaymentInstrument, Rate, TransactionDestinationType, TransactionShort, TransactionType } from 'src/app/model/generated-models';
 import { CardView, CheckoutSummary, PaymentProviderView, WidgetSettings, WidgetStage } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
@@ -35,6 +34,7 @@ export class WidgetComponent implements OnInit {
   exchangeRateCountDownValue = '';
   paymentProviders: PaymentProviderView[] = [];
   requestKyc = false;
+  readCommonSettings = false;
 
   private pSubscriptions: Subscription = new Subscription();
 
@@ -110,6 +110,7 @@ export class WidgetComponent implements OnInit {
   }
 
   private stageBack(): void {
+    this.inProgress = false;
     if (this.stages.length > 0) {
       const lastStage = this.removeLastStage();
       this.errorMessage = '';
@@ -121,6 +122,7 @@ export class WidgetComponent implements OnInit {
   }
 
   private nextStage(id: string, name: string, stepId: number, summaryVisible: boolean): void {
+    //console.log('stage', this.stageId, '=>', id);
     if (
       this.stageId !== 'register' &&
       this.stageId !== 'login_auth' &&
@@ -188,15 +190,59 @@ export class WidgetComponent implements OnInit {
     if (this.widget.email === '') {
       this.nextStage('identification', 'Authorization', 3, true);
     } else {
-      console.log('invoke getSettingsCommon from disclaimer');
       this.getSettingsCommon();
     }
   }
+
   // ================
+
+  // == Common settings ==
+  settingsAuthRequired(email: string): void {
+    this.readCommonSettings = false;
+    setTimeout(() => {
+      this.authenticate(this.summary.email);
+    }, 100);
+  }
+
+  settingsIdRequired(): void {
+    this.readCommonSettings = false;
+    setTimeout(() => {
+      this.nextStage('identification', 'Authorization', 3, true);
+    }, 100);
+  }
+
+  settingsLoginRequired(email: string): void {
+    this.readCommonSettings = false;
+    this.onLoginRequired(this.summary.email);
+  }
+
+  settingsKycState(state: boolean): void {
+    this.requestKyc = state;
+  }
+
+  settingsCommonComplete(providers: PaymentProviderView[]): void {
+    this.readCommonSettings = false;
+    setTimeout(() => {
+      this.summary.fee = 0;
+      const nextStage = 4;
+      if (this.widget.kycFirst && this.requestKyc) {
+        this.nextStage('verification', 'Verification', nextStage, false);
+      } else {
+        this.paymentProviders = providers.map(val => val);
+        if (this.paymentProviders.length < 1) {
+          this.errorMessage = `No supported payment providers found for "${this.summary.currencyFrom}"`;
+        } else if (this.paymentProviders.length > 1) {
+          this.nextStage('payment', 'Payment info', nextStage, true);
+        } else {
+          this.selectProvider(this.paymentProviders[0].id);
+        }
+      }
+    }, 100);
+  }
+  // =====================
 
   // == Payment info ==
   paymentBack(): void {
-    console.log('payment back');
     this.stageBack();
   }
 
@@ -226,20 +272,16 @@ export class WidgetComponent implements OnInit {
     this.nextStage('register', 'Authorization', 3, true);
   }
 
-  registerComplete(email: string): void {
-    this.summary.email = email;
-    this.nextStage('login_auth', 'Authorization', 3, true);
-  }
-
   registerBack(): void {
     this.stageBack();
   }
 
   onLoginRequired(email: string): void {
     this.auth.logout();
-    console.log('need to login', email);
     this.summary.email = email;
-    this.nextStage('login_auth', 'Authorization', 3, true);
+    setTimeout(() => {
+      this.nextStage('login_auth', 'Authorization', 3, true);
+    }, 50);
   }
 
   onConfirmRequired(email: string): void {
@@ -248,12 +290,10 @@ export class WidgetComponent implements OnInit {
   }
 
   loginCodeConfirmed(): void {
-    console.log('invoke getSettingsCommon from code confirm');
     this.getSettingsCommon();
   }
 
   loginComplete(data: LoginResult): void {
-    console.log(data);
     this.checkLoginResult(data);
   }
 
@@ -264,10 +304,8 @@ export class WidgetComponent implements OnInit {
 
   // == Identification ==
   identificationComplete(data: LoginResult): void {
-    console.log('identification', data);
     this.auth.setLoginUser(data);
     this.summary.email = data.user?.email ?? '';
-    console.log('invoke getSettingsCommon from identification');
     this.getSettingsCommon();
   }
 
@@ -287,49 +325,7 @@ export class WidgetComponent implements OnInit {
   // ====================
 
   private getSettingsCommon(): void {
-    console.log('get settings common');
-    this.errorMessage = '';
-    if (this.auth.token === '') {
-      if (this.summary.email) {
-        this.authenticate(this.summary.email);
-      } else {
-        this.nextStage('identification', 'Authorization', 3, true);
-      }
-    } else {
-      const dataGetter = this.auth.getSettingsCommon();
-      console.log('get settings common');
-      if (dataGetter) {
-        this.inProgress = true;
-        console.log('new subscription');
-        this.pSubscriptions.add(
-          dataGetter.valueChanges.subscribe((settings) => {
-            console.log('new settings for ', this.summary.email);
-            if (this.auth.authenticated) {
-              this.auth.setLocalSettingsCommon(settings.data.getSettingsCommon);
-
-              this.showPostSuccessLoginStage();
-              //console.log('show payment page here for ', this.summary.email);
-
-            } else {
-              this.onLoginRequired(this.summary.email);
-            }
-            this.inProgress = false;
-          }, (error) => {
-            this.inProgress = false;
-            if (error.message === 'Access denied') {
-              if (this.summary.email) {
-                this.authenticate(this.summary.email);
-              } else {
-                this.nextStage('identification', 'Authorization', 3, true);
-              }
-            } else {
-              this.errorMessage = this.errorHandler.getError(error.message, 'Unable to read settings');
-            }
-          }));
-      } else {
-        this.errorMessage = this.errorHandler.getRejectedCookieMessage();
-      }
-    }
+    this.readCommonSettings = true;
   }
 
   private authenticate(login: string) {
@@ -359,99 +355,10 @@ export class WidgetComponent implements OnInit {
   private checkLoginResult(data: LoginResult) {
     if (data.authTokenAction === 'Default' || data.authTokenAction === 'KycRequired') {
       this.auth.setLoginUser(data);
-      console.log('invoke getSettingsCommon from checkLoginResult');
       this.getSettingsCommon();
     } else {
       this.errorMessage = `Unable to authenticate user with the action "${data.authTokenAction}"`;
     }
-  }
-
-  private showPostSuccessLoginStage(): void {
-    this.summary.fee = 0;
-    this.getKycStatus();
-  }
-
-  private getKycStatus(): void {
-    const kycStatusData = this.auth.getMyKycData();
-    if (kycStatusData === null) {
-      this.errorMessage = this.errorHandler.getRejectedCookieMessage();
-    } else {
-      this.inProgress = true;
-      this.pSubscriptions.add(
-        kycStatusData.valueChanges.subscribe(({ data }) => {
-          const userKyc = data.me as User;
-          const requestKyc = this.isKycRequired(userKyc);
-          this.inProgress = false;
-          if (requestKyc === null) {
-            this.errorMessage = 'We cannot proceed your payment because your identity is rejected';
-          } else {
-            this.requestKyc = (requestKyc === true);
-            if (this.widget.kycFirst && this.requestKyc) {
-              this.nextStage('verification', 'Verification', 4, false);
-            } else {
-              this.showPaymentStage(4);
-            }
-          }
-        }, (error) => {
-          this.inProgress = false;
-          if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
-            this.handleAuthError();
-          } else {
-            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load your identification status');
-          }
-        })
-      );
-    }
-  }
-
-  private showPaymentStage(stageNumber: number) {
-    if (this.summary.transactionType === TransactionType.Deposit) {
-      this.loadPaymentProviders(stageNumber);
-    } else {
-      this.errorMessage = `Transaction type "${this.summary.transactionType}" is currently not supported`;
-    }
-  }
-
-  private loadPaymentProviders(stageNumber: number): void {
-    console.log('loadPaymentProviders', stageNumber);
-    this.paymentProviders = [];
-    const providersData = this.dataService.getProviders();
-    if (providersData === null) {
-      this.errorMessage = this.errorHandler.getRejectedCookieMessage();
-    } else {
-      this.inProgress = true;
-      this.pSubscriptions.add(
-        providersData.valueChanges.subscribe(({ data }) => {
-          this.getPaymentProviderData(data.getPaymentProviders as PaymentProvider[]);
-          if (this.paymentProviders.length < 1) {
-            this.errorMessage = `No supported payment providers found for "${this.summary.currencyFrom}"`;
-          } else if (this.paymentProviders.length > 1) {
-            console.log(this.stageId, '-> payment show');
-            this.nextStage('payment', 'Payment info', stageNumber, true);
-          } else {
-            this.selectProvider(this.paymentProviders[0].id);
-          }
-          this.inProgress = false;
-        }, (error) => {
-          this.inProgress = false;
-          if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
-            this.handleAuthError();
-          } else {
-            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load payment instruments');
-          }
-        })
-      );
-    }
-  }
-
-  private getPaymentProviderData(list: PaymentProvider[]): void {
-    let currency = '';
-    if (this.summary?.transactionType === TransactionType.Deposit) {
-      currency = this.summary?.currencyFrom ?? '';
-    } else if (this.summary?.transactionType === TransactionType.Withdrawal) {
-      currency = this.summary?.currencyTo ?? '';
-    }
-    this.paymentProviders = list.filter(x => x.currencies?.includes(currency, 0)).map(val => new PaymentProviderView(val));
   }
 
   private createTransaction(providerId: string, instrument: PaymentInstrument): void {
@@ -502,21 +409,5 @@ export class WidgetComponent implements OnInit {
         })
       );
     }
-  }
-
-  private isKycRequired(kyc: User): boolean | null {
-    let result = true;
-    if (kyc.kycStatus === 'completed' || kyc.kycStatus === 'pending') {
-      result = false;
-    } else {
-      if (kyc.kycValid === true) {
-        result = false;
-      } else if (kyc.kycValid === false) {
-        if (kyc.kycReviewRejectedType === 'final') {
-          return null;
-        }
-      }
-    }
-    return result;
   }
 }
