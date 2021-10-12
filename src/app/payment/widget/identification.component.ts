@@ -67,13 +67,14 @@ export class WidgetidentificationComponent implements OnInit, OnDestroy {
         } else {
             if (this.dataForm.valid) {
                 const authEmail = this.auth.user?.email ?? '';
-                if (authEmail === this.emailField?.value) {
+                if (authEmail === emailValue && this.emailField?.valid) {
                     this.onAlreadyAuthenticated.emit();
                 } else {
+                    this.auth.logout();
                     this.onProgress.emit(true);
                     // Consider that the user is one-time wallet user rather than internal one
                     this.pSubscriptions.add(
-                        this.auth.authenticate(this.emailField?.value, '', true).subscribe(({ data }) => {
+                        this.auth.authenticate(emailValue, '', true).subscribe(({ data }) => {
                             this.onProgress.emit(false);
                             this.onComplete.emit(data.login as LoginResult);
                         }, (error) => {

@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { AuthService } from '../services/auth.service';
 import { ErrorService } from '../services/error.service';
 import { CommonDialogBox } from './common/common-box.dialog';
@@ -105,16 +106,14 @@ export class KycPanelComponent implements OnInit, OnDestroy {
                     }
                 }
             },
-            // uiConf: {
-            //   customCss: "http://localhost:4000/assets/sumsub.css"
-            //   // URL to css file in case you need change it dynamically from the code
-            //   // the similar setting at Applicant flow will rewrite customCss
-            //   // you may also use to pass string with plain styles `customCssStr:`
-            // },
+            uiConf: {
+              customCss: `${environment.client_host}/assets/sumsub.css`
+            },
             onError: (error: any) => {
                 this.onError.emit(error.error);
             },
         }).build();
+        environment.api_server
         // you are ready to go:
         // just launch the WebSDK by providing the container element for it
         snsWebSdkInstance.launch('#sumsub-websdk-container');

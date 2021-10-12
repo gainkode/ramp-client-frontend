@@ -5,6 +5,7 @@
 export const environment = {
   production: false,
   cookieDomain: 'localhost',
+  client_host: 'http://localhost:4000',
   api_server: 'http://localhost:4001',
   ws_server: 'ws://localhost:4001',
   // api_server: 'https://merx-ewallet.semirolab.com',
