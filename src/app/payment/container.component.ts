@@ -173,7 +173,6 @@ export class ContainerComponentDeprecated implements OnInit, OnDestroy {
   paymentInfoForm = this.formBuilder.group(
     {
       instrument: [PaymentInstrument.CreditCard, { validators: [Validators.required], updateOn: 'change' }],
-      provider: ['', { validators: [Validators.required], updateOn: 'change' }],
       currencyTo: [''],
       address: ['', { validators: [Validators.required], updateOn: 'change' }],
       transaction: [TransactionType.Deposit],
@@ -192,7 +191,6 @@ export class ContainerComponentDeprecated implements OnInit, OnDestroy {
     }
   );
   paymentInfoInstrumentControl: AbstractControl | null = null;
-  paymentInfoProviderControl: AbstractControl | null = null;
   paymentInfoAddressControl: AbstractControl | null = null;
   paymentInfoCurrencyToControl: AbstractControl | null = null;
   paymentInfoTransactionControl: AbstractControl | null = null;
@@ -248,7 +246,6 @@ export class ContainerComponentDeprecated implements OnInit, OnDestroy {
     this.detailsTransactionControl = this.detailsForm.get('transaction');
     this.detailsCompleteControl = this.detailsForm.get('complete');
     this.paymentInfoInstrumentControl = this.paymentInfoForm.get('instrument');
-    this.paymentInfoProviderControl = this.paymentInfoForm.get('provider');
     this.paymentInfoAddressControl = this.paymentInfoForm.get('address');
     this.paymentInfoCurrencyToControl = this.paymentInfoForm.get('currencyTo');
     this.paymentInfoTransactionControl = this.paymentInfoForm.get('transaction');
@@ -323,7 +320,6 @@ export class ContainerComponentDeprecated implements OnInit, OnDestroy {
     this.isApmSelected = false;
     this.paymentInfoInstrumentControl?.valueChanges.subscribe((val) => {
       this.errorMessage = '';
-      this.paymentInfoProviderControl?.setValue('');
       if (val === PaymentInstrument.Apm) {
         this.isApmSelected = true;
       } else {
@@ -528,7 +524,7 @@ export class ContainerComponentDeprecated implements OnInit, OnDestroy {
       this.detailsCurrencyToControl?.value,
       amount,
       this.paymentInfoInstrumentControl?.value,
-      this.paymentInfoProviderControl?.value,
+      'Fibonatix',
       destinationType,
       destination
     ).subscribe(({ data }) => {
@@ -1120,7 +1116,7 @@ export class ContainerComponentDeprecated implements OnInit, OnDestroy {
       this.inProgress = true;
       const transaction = this.paymentInfoTransactionIdControl?.value;
       const instrument = this.paymentInfoInstrumentControl?.value;
-      const payment = this.paymentInfoProviderControl?.value;
+      const payment = 'Fibonatix';
       this.dataService.preAuth(transaction, instrument, payment, this.currentCard).subscribe(
         ({ data }) => {
           const preAuthResult = data.preauth as PaymentPreauthResultShort;

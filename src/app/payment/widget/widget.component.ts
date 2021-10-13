@@ -1,9 +1,10 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { LoginResult, PaymentInstrument, Rate, TransactionDestinationType, TransactionShort, TransactionType } from 'src/app/model/generated-models';
+import { LoginResult, PaymentInstrument, PaymentPreauthResultShort, Rate, TransactionDestinationType, TransactionShort, TransactionType } from 'src/app/model/generated-models';
 import { CardView, CheckoutSummary, PaymentProviderView, WidgetSettings, WidgetStage } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { PaymentDataService } from 'src/app/services/payment.service';
 import { ExchangeRateService } from 'src/app/services/rate.service';
 
@@ -35,12 +36,17 @@ export class WidgetComponent implements OnInit {
   paymentProviders: PaymentProviderView[] = [];
   requestKyc = false;
   readCommonSettings = false;
+  iframeContent = '';
+  paymentComplete = false;
+  notificationStarted = false;
 
   private pSubscriptions: Subscription = new Subscription();
+  private pNotificationsSubscription: Subscription | undefined = undefined;
 
   constructor(
     private changeDetector: ChangeDetectorRef,
     private exhangeRate: ExchangeRateService,
+    private notification: NotificationService,
     private auth: AuthService,
     private dataService: PaymentDataService,
     private errorHandler: ErrorService) { }
@@ -50,7 +56,7 @@ export class WidgetComponent implements OnInit {
     //this.widget.kycFirst = true;
     //this.widget.email = 'tugaymv@gmail.com';
     this.widget.transaction = TransactionType.Deposit;
-    //this.widget.walletAddress = 'mkBUjw37y46goULToq6b7y6ciJc3Qi32YM';
+    this.widget.walletAddress = 'mkBUjw37y46goULToq6b7y6ciJc3Qi32YM';
     // temp
 
     if (this.widget.email) {
@@ -76,7 +82,61 @@ export class WidgetComponent implements OnInit {
 
   ngOnDestroy(): void {
     this.pSubscriptions.unsubscribe();
+    this.stopNotificationListener();
     this.exhangeRate.stop();
+  }
+
+  private startNotificationListener(): void {
+    this.stopNotificationListener();
+    console.log('transaction notification start');
+    this.notificationStarted = true;
+    this.pNotificationsSubscription = this.notification.subscribeToTransactionNotifications().subscribe(
+      ({ data }) => {
+        console.log('transaction notification', data);
+        this.handleTransactionSubscription(data);
+      },
+      (error) => {
+        this.notificationStarted = false;
+        // there was an error subscribing to notifications
+        console.log('Notifications error', error);
+      }
+    );
+  }
+
+  private stopNotificationListener(): void {
+    if (this.pNotificationsSubscription) {
+      console.log('transaction notification stop');
+      this.pNotificationsSubscription.unsubscribe();
+    }
+    this.pNotificationsSubscription = undefined;
+    this.notificationStarted = false;
+  }
+
+  private handleTransactionSubscription(data: any): void {
+    let res = false;
+    if (data.transactionServiceNotification.type === 'PaymentStatusChanged') {
+      res = true;
+    } else {
+      console.log('transactionApproved: unexpected type', data.transactionServiceNotification.type);
+    }
+    if (res) {
+      if (data.transactionServiceNotification.userId === this.auth.user?.userId) {
+        res = true;
+      } else {
+        console.log('transactionApproved: unexpected userId', data.transactionServiceNotification.userId);
+      }
+    }
+    if (res) {
+      if (data.transactionServiceNotification.operationType === 'preauth' ||
+        data.transactionServiceNotification.operationType === 'approved') {
+        res = true;
+      } else {
+        console.log('transactionApproved: unexpected operationType', data.transactionServiceNotification.operationType);
+      }
+    }
+    if (res) {
+      this.paymentComplete = true;
+    }
   }
 
   onExchangeRateUpdated(rate: Rate | undefined, countDownTitle: string, countDownValue: string, error: string): void {
@@ -134,11 +194,13 @@ export class WidgetComponent implements OnInit {
         summary: this.showSummary
       } as WidgetStage);
     }
-    this.errorMessage = '';
-    this.stageId = id;
-    this.title = name;
-    this.step = stepId;
-    this.showSummary = summaryVisible;
+    setTimeout(() => {
+      this.errorMessage = '';
+      this.stageId = id;
+      this.title = name;
+      this.step = stepId;
+      this.showSummary = summaryVisible;
+    }, 50);
   }
 
   removeStage(stage: string) {
@@ -154,6 +216,7 @@ export class WidgetComponent implements OnInit {
       this.initState = false;
     }
     this.summary.initialized = true;
+    this.summary.fee = 0;
     const amountFromTemp = (data.amountFrom) ? data.amountFrom?.toFixed(8) : undefined;
     this.summary.amountFrom = (amountFromTemp) ? parseFloat(amountFromTemp) : undefined;
     const amountToTemp = (data.amountTo) ? data.amountTo?.toFixed(8) : undefined;
@@ -213,7 +276,7 @@ export class WidgetComponent implements OnInit {
 
   settingsLoginRequired(email: string): void {
     this.readCommonSettings = false;
-    this.onLoginRequired(this.summary.email);
+    this.onLoginRequired(email);
   }
 
   settingsKycState(state: boolean): void {
@@ -222,13 +285,13 @@ export class WidgetComponent implements OnInit {
 
   settingsCommonComplete(providers: PaymentProviderView[]): void {
     this.readCommonSettings = false;
+    this.paymentProviders = providers.map(val => val);
     setTimeout(() => {
       this.summary.fee = 0;
       const nextStage = 4;
       if (this.widget.kycFirst && this.requestKyc) {
         this.nextStage('verification', 'Verification', nextStage, false);
       } else {
-        this.paymentProviders = providers.map(val => val);
         if (this.paymentProviders.length < 1) {
           this.errorMessage = `No supported payment providers found for "${this.summary.currencyFrom}"`;
         } else if (this.paymentProviders.length > 1) {
@@ -258,7 +321,8 @@ export class WidgetComponent implements OnInit {
 
   // == Credit card ==
   creditCardPaymentComplete(data: CardView): void {
-
+    this.paymentComplete = false;
+    this.completeCreditCardTransaction(this.summary.transactionId, this.summary.providerView?.id ?? '', data);
   }
 
   creditCardBack(): void {
@@ -266,6 +330,16 @@ export class WidgetComponent implements OnInit {
   }
   // ====================
 
+  // == Payment ===========
+  processingComplete(): void {
+    if (this.requestKyc) {
+      this.nextStage('verification', 'Verification', 5, false);
+    } else {
+      this.nextStage('complete', 'Complete', 6, false);
+    }
+  }
+
+  // ======================
   // == Auth ========
   onRegister(email: string): void {
     this.summary.email = email;
@@ -277,7 +351,10 @@ export class WidgetComponent implements OnInit {
   }
 
   onLoginRequired(email: string): void {
-    this.auth.logout();
+    const currentEmail = this.auth.user?.email ?? '';
+    if (currentEmail !== email) {
+      this.auth.logout();
+    }
     this.summary.email = email;
     setTimeout(() => {
       this.nextStage('login_auth', 'Authorization', 3, true);
@@ -320,11 +397,22 @@ export class WidgetComponent implements OnInit {
   }
 
   kycComplete(): void {
-    this.nextStage('complete', 'Complete', 6, false);
+    if (this.widget.kycFirst) {
+      if (this.paymentProviders.length < 1) {
+        this.errorMessage = `No supported payment providers found for "${this.summary.currencyFrom}"`;
+      } else if (this.paymentProviders.length > 1) {
+        this.nextStage('payment', 'Payment info', 5, true);
+      } else {
+        this.selectProvider(this.paymentProviders[0].id);
+      }
+    } else {
+      this.nextStage('complete', 'Complete', 6, false);
+    }
   }
   // ====================
 
   private getSettingsCommon(): void {
+    this.summary.fee = 0;
     this.readCommonSettings = true;
   }
 
@@ -382,15 +470,18 @@ export class WidgetComponent implements OnInit {
           destinationType,
           destination
         ).subscribe(({ data }) => {
+          this.startNotificationListener();
           const order = data.createTransaction as TransactionShort;
           this.inProgress = false;
           if (order.code) {
+            this.summary.instrument = instrument;
             this.summary.providerView = this.paymentProviders.find(x => x.id === providerId);
             this.summary.orderId = order.code as string;
             this.summary.fee = order.feeFiat;
             this.summary.feeMinFiat = order.feeMinFiat;
             this.summary.feePercent = order.feePercent;
             this.summary.transactionDate = new Date().toLocaleString();
+            this.summary.transactionId = order.transactionId as string;
             if (providerId === 'Fibonatix') {
               this.nextStage('credit_card', 'Payment info', this.step, true);
             } else {
@@ -409,5 +500,33 @@ export class WidgetComponent implements OnInit {
         })
       );
     }
+  }
+
+  private completeCreditCardTransaction(transactionId: string, provider: string, card: CardView): void {
+    this.inProgress = true;
+    this.dataService.preAuth(transactionId, PaymentInstrument.CreditCard, provider, card).subscribe(
+      ({ data }) => {
+        // One more chance to start notifictions
+        if (!this.notificationStarted) {
+          this.startNotificationListener();
+        }
+        const preAuthResult = data.preauth as PaymentPreauthResultShort;
+        const order = preAuthResult.order;
+        this.summary.setPaymentInfo(
+          PaymentInstrument.CreditCard,
+          order?.paymentInfo as string
+        );
+        this.iframeContent = preAuthResult.html as string;
+        this.inProgress = false;
+        this.nextStage('processing', 'Payment', this.step, false);
+      }, (error) => {
+        this.inProgress = false;
+        if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
+          this.handleAuthError();
+        } else {
+          this.errorMessage = this.errorHandler.getError(error.message, 'Unable to confirm your order');
+        }
+      }
+    );
   }
 }

@@ -97,7 +97,7 @@ const PRE_AUTH = gql`
 mutation PreAuth(
   $transactionId: String!,
   $instrument: PaymentInstrument!,
-  $paymentProvider: PaymentProvider!,
+  $paymentProvider: String!,
   $cardNumber: String!,
   $expiredMonth: Int!,
   $expiredYear: Int!,
@@ -201,7 +201,7 @@ export class PaymentDataService {
     });
   }
 
-  preAuth(id: string, paymentInstrument: PaymentInstrument, paymentProvider: PaymentProvider, card: CardView): Observable<any> {
+  preAuth(id: string, paymentInstrument: string, paymentProvider: string, card: CardView): Observable<any> {
     return this.apollo.mutate({
       mutation: PRE_AUTH,
       variables: {

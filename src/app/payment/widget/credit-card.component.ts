@@ -30,6 +30,7 @@ export class WidgetCreditCardComponent implements OnInit, OnDestroy {
     codeInit = false;
     codeName = 'CVV';
     codeLength = 3;
+    processing = false;
 
     cardForm = this.formBuilder.group({
         card: ['', { validators: [Validators.required, Validators.minLength(16)], updateOn: 'change' }],
@@ -98,8 +99,9 @@ export class WidgetCreditCardComponent implements OnInit, OnDestroy {
                 card.yearExpired = expired.year;
             }
             card.cvv = parseInt(this.codeField?.value, 10);
+            this.processing = true;
+            this.onComplete.emit(card);
         }
-        this.onComplete.emit(card);
     }
 
     private onCardNumberUpdated(val: string): void {

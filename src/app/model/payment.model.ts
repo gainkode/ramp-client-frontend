@@ -283,6 +283,7 @@ export class CheckoutSummary {
     exchangeRate: Rate | undefined = undefined;
     transactionDate = '';
     transactionType: TransactionType = TransactionType.Deposit;
+    transactionId = '';
     status: TransactionStatus = TransactionStatus.Pending;
     card: CardView | undefined = undefined;
     provider: PaymentProvider | undefined = undefined;  // deprecated
@@ -375,6 +376,7 @@ export class CheckoutSummary {
         this.transactionType = TransactionType.Deposit;
         this.status = TransactionStatus.Pending;
         this.provider = undefined;
+        this.providerView = undefined;
         this.instrument = undefined;
         this.card = undefined;
     }

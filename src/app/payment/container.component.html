@@ -186,18 +186,9 @@
                 Please specify payment method
               </mat-error>
             </mat-form-field>
+
+            
             <!-- Provider -->
-            <!-- <mat-form-field class="form-element" *ngIf="isApmSelected">
-              <mat-label>Provider</mat-label>
-              <mat-select formControlName="provider">
-                <mat-option *ngFor="let item of paymentProviderList" [value]="item.id">
-                  {{ item.name }}
-                </mat-option>
-              </mat-select>
-              <mat-error *ngIf="this.paymentInfoForm.get('provider')?.hasError('required')">
-                Please specify payment provider
-              </mat-error>
-            </mat-form-field>
             <div class="form-element">
               <button type="submit" #paymentinfonext class="main-button main-button-accent inline-button"
                 [disabled]="errorMessage !== ''" (click)="paymentInfoCompleted()">
@@ -206,7 +197,7 @@
               <button type="submit" class="main-button main-button-primary inline-button" (click)="resetStepper()">
                 RESET
               </button>
-            </div> -->
+            </div>
           </form>
         </mat-step>
         <!-- KYC Verification -->
