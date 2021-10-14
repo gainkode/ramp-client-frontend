@@ -14,7 +14,7 @@
     min-height: 720px;
     width: $widget_max_width + px;
     
-    background: linear-gradient(325.22deg, #E0F4FF 0%, #FFFFFF 50%);
+    background-color: $color_white;
     box-shadow: 0px 5px 6px rgba(153, 140, 149, 0.2), 0px 9px 12px rgba(153, 140, 149, 0.14), 0px 3px 16px rgba(153, 140, 149, 0.12);
     border-radius: 8px;
 
@@ -210,7 +210,7 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    margin: 24px;
+    margin: 24px 0px;
 }
 
 .__widget-summary-container {
