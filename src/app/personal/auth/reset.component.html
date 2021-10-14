@@ -1,0 +1,39 @@
+<div class="__auth-frame-box">
+    <div class="__auth-body">
+        <div class="__auth-container">
+            <div class="__auth-title-container">
+                <a style="font-size: 20px;margin: auto;color: mediumslateblue;" href="/">
+                    eWallet Logo
+                </a>
+            </div>
+            <div class="__auth-data-container">
+                <h2 class="__auth-title">New password</h2>
+                <mat-progress-bar *ngIf="inProgress" color="accent" mode="indeterminate"></mat-progress-bar>
+
+                <form [formGroup]="passwordForm" (ngSubmit)="onSubmit()">
+                    <!-- Password -->
+                    <app-form-password [label]="'Password'" [placeholder]="'Enter your password here'" [maxlength]="50"
+                        formControlName="password1" [errorMessages]="passwordErrorMessages" [separator]="true">
+                    </app-form-password>
+                    <!-- Confirm Password -->
+                    <app-form-password [label]="'Confirm password'" [placeholder]="'Confirm your password here'"
+                        [maxlength]="50" formControlName="password2" [errorMessages]="passwordErrorMessages"
+                        [separator]="true">
+                    </app-form-password>
+                    <!-- Errors -->
+                    <div *ngIf="errorMessage!==''">
+                        <span class="__auth-error-line">
+                            {{errorMessage}}
+                        </span>
+                    </div>
+                    <div class="__form-separator"></div>
+                    <!-- Button -->
+                    <div class="__auth-buttons-area">
+                        <button class="__main-button __button-wide" type="submit"
+                            [disabled]="!passwordForm?.valid">change</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

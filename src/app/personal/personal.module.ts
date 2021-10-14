@@ -36,6 +36,7 @@ import { PersonalRegisterComponent } from './auth/register.component';
 import { PersonalSuccessComponent } from './auth/success.component';
 import { PersonalConfirmDeviceComponent } from './auth/confirm-device.component';
 import { PersonalConfirmEmailComponent } from './auth/confirm-email.component';
+import { PersonalResetComponent } from './auth/reset.component';
 
 const routing = RouterModule.forChild([
     // Main page
@@ -61,6 +62,7 @@ const routing = RouterModule.forChild([
     { path: 'auth/confirm-email/:token', component: PersonalConfirmEmailComponent },
     { path: 'auth/confirm-device/:token', component: PersonalConfirmDeviceComponent },
     { path: 'auth/success/:type', component: PersonalSuccessComponent },
+    { path: 'auth/new-password/:token', component: PersonalResetComponent },
     // Obsolete and temporary
     { path: 'profile', component: ProfileMainPersonalComponent, canActivate: [PersonalGuard] },
     { path: 'myaccount', component: PersonalMyAccountComponent, canActivate: [PersonalGuard] },
@@ -99,7 +101,7 @@ export class MaterialModule { }
         // Intro
         IntroPersonalComponent,
         // Auth
-        PersonalLoginComponent, PersonalRegisterComponent, PersonalRestoreComponent,
+        PersonalLoginComponent, PersonalRegisterComponent, PersonalRestoreComponent, PersonalResetComponent,
         PersonalConfirmEmailComponent, PersonalConfirmDeviceComponent, PersonalSuccessComponent,
         // Profile
         PersonalComponent,

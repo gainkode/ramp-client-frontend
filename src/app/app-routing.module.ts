@@ -9,7 +9,7 @@ const routes: Routes = [
   },
   { path: 'auth/personal/confirm-email/:token', redirectTo: '/personal/auth/confirm-email/:token' },
   { path: 'auth/personal/confirm-device/:token', redirectTo: '/personal/auth/confirm-device/:token' },
-  // new-password must be here
+  { path: 'auth/personal/new-password/:token', redirectTo: '/personal/auth/new-password/:token' },
   {
     path: 'auth/merchant', loadChildren: () => import('./auth-merchant/auth.module').
       then(m => m.MerchantAuthModule)
