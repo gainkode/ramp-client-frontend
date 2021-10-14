@@ -32,7 +32,6 @@ export class WidgetComponent implements OnInit {
   summary = new CheckoutSummary();
   widget = new WidgetSettings();
   stages: WidgetStage[] = [];
-  unauthStage: WidgetStage | undefined = undefined;
   exchangeRateCountDownTitle = '';
   exchangeRateCountDownValue = '';
   paymentProviders: PaymentProviderView[] = [];
@@ -170,13 +169,7 @@ export class WidgetComponent implements OnInit {
   }
 
   handleAuthError(): void {
-    this.unauthStage = {
-      id: this.stageId,
-      title: this.title,
-      step: this.step,
-      summary: this.showSummary
-    } as WidgetStage;
-    this.authenticate(this.summary.email);
+    this.nextStage('order_details', 'Order details', 1, false);
   }
 
   progressChanged(visible: boolean): void {
@@ -538,10 +531,6 @@ export class WidgetComponent implements OnInit {
 
   private startPayment(): void {
     if (this.summary.providerView?.id === 'Fibonatix') {
-      if (this.stageId === 'credit_card') {
-        this.stageId = 'complete';
-        this.changeDetector.detectChanges();
-      }
       this.nextStage('credit_card', 'Payment info', this.step, true);
     } else {
       this.errorMessage = 'Invalid payment provider';

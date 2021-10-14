@@ -71,7 +71,7 @@
         (onComplete)="processingComplete()"></app-widget-processing>
       <!-- Complete -->
       <app-widget-complete *ngSwitchCase="'complete'" [showRestartButton]="widget.affiliateCode===''"
-        (onFinish)="resetWizard"></app-widget-complete>
+        (onFinish)="resetWizard()"></app-widget-complete>
 
       <!-- Common settings reading -->
       <app-widget-settings-service *ngIf="readCommonSettings" [summary]="summary" (onError)="handleError($event)"
