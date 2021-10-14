@@ -78,6 +78,7 @@ export class WidgetCreditCardComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.processing = false;
         this.pSubscriptions.add(this.cardField?.valueChanges.subscribe((val) => this.onCardNumberUpdated(val)));
         this.pSubscriptions.add(this.expiredField?.valueChanges.subscribe((val) => this.onExpiredUpdated(val)));
         this.pSubscriptions.add(this.codeField?.valueChanges.subscribe((val) => this.onCodeUpdated(val)));
@@ -88,6 +89,17 @@ export class WidgetCreditCardComponent implements OnInit, OnDestroy {
     }
 
     onSubmit(): void {
+
+        console.log('processing', this.processing);
+        console.log(this.cardForm.errors);
+        console.log(this.cardField?.errors);
+        console.log(this.holderField?.errors);
+        console.log(this.expiredField?.errors);
+        console.log(this.codeField?.errors);
+
+
+
+
         const card = new CardView();
         card.valid = this.cardForm.valid && !this.expiredCard;
         if (this.cardForm.valid) {
@@ -105,6 +117,7 @@ export class WidgetCreditCardComponent implements OnInit, OnDestroy {
     }
 
     private onCardNumberUpdated(val: string): void {
+        this.processing = false;
         const cardInfo = creditCardType(val);
         // If there is one card type found (no ambigous options)
         if (cardInfo.length === 1) {
@@ -125,11 +138,13 @@ export class WidgetCreditCardComponent implements OnInit, OnDestroy {
     }
 
     private onExpiredUpdated(val: string): void {
+        this.processing = false;
         this.expiredInit = true;
         this.expiredCard = (this.getCardExpiredDate(val).valid === false);
     }
 
     private onCodeUpdated(val: string): void {
+        this.processing = false;
         this.codeInit = true;
     }
 

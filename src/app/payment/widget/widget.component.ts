@@ -1,7 +1,7 @@
 import { SummaryResolver } from '@angular/compiler';
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { LoginResult, PaymentInstrument, PaymentPreauthResultShort, Rate, TransactionDestinationType, TransactionShort, TransactionType } from 'src/app/model/generated-models';
+import { LoginResult, PaymentInstrument, PaymentPreauthResultShort, Rate, TransactionDestinationType, TransactionShort, TransactionType, UserMode, UserType } from 'src/app/model/generated-models';
 import { CardView, CheckoutSummary, PaymentProviderView, WidgetSettings, WidgetStage } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
@@ -32,6 +32,7 @@ export class WidgetComponent implements OnInit {
   summary = new CheckoutSummary();
   widget = new WidgetSettings();
   stages: WidgetStage[] = [];
+  unauthStage: WidgetStage | undefined = undefined;
   exchangeRateCountDownTitle = '';
   exchangeRateCountDownValue = '';
   paymentProviders: PaymentProviderView[] = [];
@@ -169,10 +170,13 @@ export class WidgetComponent implements OnInit {
   }
 
   handleAuthError(): void {
-    if (this.stages.length > 0) {
-      this.removeLastStage();
-      this.nextStage('order_details', 'Order details', 1, true);
-    }
+    this.unauthStage = {
+      id: this.stageId,
+      title: this.title,
+      step: this.step,
+      summary: this.showSummary
+    } as WidgetStage;
+    this.authenticate(this.summary.email);
   }
 
   progressChanged(visible: boolean): void {
@@ -257,6 +261,8 @@ export class WidgetComponent implements OnInit {
     if (this.summary.email === email) {
       this.desclaimerNext();
     } else {
+      this.summary.transactionId = '';
+      this.summary.fee = 0;
       this.summary.email = email;
       this.authenticate(email);
     }
@@ -304,7 +310,6 @@ export class WidgetComponent implements OnInit {
     this.readCommonSettings = false;
     this.paymentProviders = providers.map(val => val);
     setTimeout(() => {
-      this.summary.fee = 0;
       const nextStage = 4;
       if (this.widget.kycFirst && this.requestKyc) {
         this.nextStage('verification', 'Verification', nextStage, false);
@@ -371,10 +376,16 @@ export class WidgetComponent implements OnInit {
     const currentEmail = this.auth.user?.email ?? '';
     if (currentEmail !== email) {
       this.auth.logout();
+      this.summary.transactionId = '';
+      this.summary.fee = 0;
     }
     this.summary.email = email;
     setTimeout(() => {
-      this.nextStage('login_auth', 'Authorization', 3, true);
+      if (this.summary.transactionId === '') {
+        this.nextStage('login_auth', 'Authorization', 3, true);
+      } else {
+        this.startPayment();
+      }
     }, 50);
   }
 
@@ -429,7 +440,6 @@ export class WidgetComponent implements OnInit {
   // ====================
 
   private getSettingsCommon(): void {
-    this.summary.fee = 0;
     this.readCommonSettings = true;
   }
 
@@ -516,7 +526,7 @@ export class WidgetComponent implements OnInit {
           }
         }, (error) => {
           this.inProgress = false;
-          if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
+          if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
             this.handleAuthError();
           } else {
             this.errorMessage = this.errorHandler.getError(error.message, 'Unable to register a new transaction');
@@ -528,6 +538,10 @@ export class WidgetComponent implements OnInit {
 
   private startPayment(): void {
     if (this.summary.providerView?.id === 'Fibonatix') {
+      if (this.stageId === 'credit_card') {
+        this.stageId = 'complete';
+        this.changeDetector.detectChanges();
+      }
       this.nextStage('credit_card', 'Payment info', this.step, true);
     } else {
       this.errorMessage = 'Invalid payment provider';
@@ -553,7 +567,7 @@ export class WidgetComponent implements OnInit {
         this.nextStage('processing', 'Payment', this.step, false);
       }, (error) => {
         this.inProgress = false;
-        if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
+        if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
           this.handleAuthError();
         } else {
           this.errorMessage = this.errorHandler.getError(error.message, 'Unable to confirm your order');
