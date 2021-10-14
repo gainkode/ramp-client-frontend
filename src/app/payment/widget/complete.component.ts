@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -7,6 +7,9 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['../../../assets/payment.scss', '../../../assets/button.scss']
 })
 export class WidgetCompleteComponent {
+  @Input() showRestartButton = false;
+  @Output() onFinish = new EventEmitter();
+  
   supportEmail = environment.support_email ?? 'support@test.com';
   supportEmailLink = `mailto: ${environment.support_email}` ?? 'mailto: support@test.com';
 }

@@ -59,6 +59,18 @@ export class WidgetComponent implements OnInit {
     this.widget.walletAddress = 'mkBUjw37y46goULToq6b7y6ciJc3Qi32YM';
     // temp
 
+    this.initData();
+    this.exhangeRate.setCurrency(this.summary.currencyFrom, this.summary.currencyTo, this.summary.transactionType);
+    this.exhangeRate.register(this.onExchangeRateUpdated.bind(this));
+  }
+
+  ngOnDestroy(): void {
+    this.pSubscriptions.unsubscribe();
+    this.stopNotificationListener();
+    this.exhangeRate.stop();
+  }
+
+  private initData(): void {
     if (this.widget.email) {
       this.summary.email = this.widget.email;
     } else {
@@ -75,15 +87,6 @@ export class WidgetComponent implements OnInit {
     if (this.widget.walletAddress) {
       this.summary.address = this.widget.walletAddress;
     }
-
-    this.exhangeRate.setCurrency(this.summary.currencyFrom, this.summary.currencyTo, this.summary.transactionType);
-    this.exhangeRate.register(this.onExchangeRateUpdated.bind(this));
-  }
-
-  ngOnDestroy(): void {
-    this.pSubscriptions.unsubscribe();
-    this.stopNotificationListener();
-    this.exhangeRate.stop();
   }
 
   private startNotificationListener(): void {
@@ -148,6 +151,13 @@ export class WidgetComponent implements OnInit {
     }
   }
 
+  resetWizard(): void {
+    this.summary.reset();
+    this.initData();
+    this.stages = [];
+    this.nextStage('order_details', 'Order details', 1, false);
+  }
+  
   handleError(message: string): void {
     this.errorMessage = message;
     this.changeDetector.detectChanges();

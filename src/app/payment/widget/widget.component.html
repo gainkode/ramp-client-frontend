@@ -77,7 +77,8 @@
       <app-widget-processing *ngSwitchCase="'processing'" [iframeContent]="iframeContent" [completed]="paymentComplete"
         (onComplete)="processingComplete()"></app-widget-processing>
       <!-- Complete -->
-      <app-widget-complete *ngSwitchCase="'complete'"></app-widget-complete>
+      <app-widget-complete *ngSwitchCase="'complete'" [showRestartButton]="widget.affiliateCode===''"
+        (onFinish)="resetWizard"></app-widget-complete>
 
       <!-- Common settings reading -->
       <app-widget-settings-service *ngIf="readCommonSettings" [summary]="summary" (onError)="handleError($event)"
