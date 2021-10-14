@@ -1,3 +1,4 @@
+import { SummaryResolver } from '@angular/compiler';
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { LoginResult, PaymentInstrument, PaymentPreauthResultShort, Rate, TransactionDestinationType, TransactionShort, TransactionType } from 'src/app/model/generated-models';
@@ -57,6 +58,7 @@ export class WidgetComponent implements OnInit {
     //this.widget.email = 'tugaymv@gmail.com';
     this.widget.transaction = TransactionType.Deposit;
     this.widget.walletAddress = 'mkBUjw37y46goULToq6b7y6ciJc3Qi32YM';
+    //this.widget.disclaimer = true;
     // temp
 
     this.initData();
@@ -71,6 +73,9 @@ export class WidgetComponent implements OnInit {
   }
 
   private initData(): void {
+    if (!this.widget.disclaimer) {
+      this.summary.agreementChecked = true;
+    }
     if (this.widget.email) {
       this.summary.email = this.widget.email;
     } else {
@@ -157,7 +162,7 @@ export class WidgetComponent implements OnInit {
     this.stages = [];
     this.nextStage('order_details', 'Order details', 1, false);
   }
-  
+
   handleError(message: string): void {
     this.errorMessage = message;
     this.changeDetector.detectChanges();
@@ -166,7 +171,7 @@ export class WidgetComponent implements OnInit {
   handleAuthError(): void {
     if (this.stages.length > 0) {
       this.removeLastStage();
-      this.nextStage('identification', 'Authorization', 3, true);
+      this.nextStage('order_details', 'Order details', 1, true);
     }
   }
 
@@ -248,9 +253,15 @@ export class WidgetComponent implements OnInit {
     this.summary.address = data ?? '';
   }
 
-  orderDetailsComplete(): void {
-    this.nextStage('disclaimer', 'Disclaimer', 2, false);
+  orderDetailsComplete(email: string): void {
+    if (this.summary.email === email) {
+      this.desclaimerNext();
+    } else {
+      this.summary.email = email;
+      this.authenticate(email);
+    }
   }
+
   // =======================
 
   // == Disclaimer =========
@@ -260,11 +271,7 @@ export class WidgetComponent implements OnInit {
 
   desclaimerNext(): void {
     this.summary.agreementChecked = true;
-    if (this.widget.email === '') {
-      this.nextStage('identification', 'Authorization', 3, true);
-    } else {
-      this.getSettingsCommon();
-    }
+    this.getSettingsCommon();
   }
 
   // ================
@@ -280,7 +287,7 @@ export class WidgetComponent implements OnInit {
   settingsIdRequired(): void {
     this.readCommonSettings = false;
     setTimeout(() => {
-      this.nextStage('identification', 'Authorization', 3, true);
+      this.nextStage('order_details', 'Order details', 1, true);
     }, 100);
   }
 
@@ -451,9 +458,20 @@ export class WidgetComponent implements OnInit {
   }
 
   private checkLoginResult(data: LoginResult) {
+    if (data.user) {
+      this.summary.email = data.user?.email;
+    }
     if (data.authTokenAction === 'Default' || data.authTokenAction === 'KycRequired') {
       this.auth.setLoginUser(data);
-      this.getSettingsCommon();
+      if (this.summary.agreementChecked) {
+        if (this.summary.transactionId === '') {
+          this.desclaimerNext();
+        } else {
+          this.startPayment();
+        }
+      } else {
+        this.nextStage('disclaimer', 'Disclaimer', 2, false);
+      }
     } else {
       this.errorMessage = `Unable to authenticate user with the action "${data.authTokenAction}"`;
     }
@@ -492,11 +510,7 @@ export class WidgetComponent implements OnInit {
             this.summary.feePercent = order.feePercent;
             this.summary.transactionDate = new Date().toLocaleString();
             this.summary.transactionId = order.transactionId as string;
-            if (providerId === 'Fibonatix') {
-              this.nextStage('credit_card', 'Payment info', this.step, true);
-            } else {
-              this.errorMessage = 'Invalid payment provider';
-            }
+            this.startPayment();
           } else {
             this.errorMessage = 'Order code is invalid';
           }
@@ -509,6 +523,14 @@ export class WidgetComponent implements OnInit {
           }
         })
       );
+    }
+  }
+
+  private startPayment(): void {
+    if (this.summary.providerView?.id === 'Fibonatix') {
+      this.nextStage('credit_card', 'Payment info', this.step, true);
+    } else {
+      this.errorMessage = 'Invalid payment provider';
     }
   }
 

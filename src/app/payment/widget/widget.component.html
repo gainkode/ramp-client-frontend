@@ -37,19 +37,12 @@
         [settings]="widget" [withdrawalRate]="summary?.exchangeRate?.withdrawRate"
         [depositRate]="summary?.exchangeRate?.depositRate" (onError)="handleError($event)"
         (onProgress)="progressChanged($event)" (onDataUpdated)="orderDetailsChanged($event)"
-        (onWalletAddressUpdated)="orderWalletChanged($event)" (onComplete)=" orderDetailsComplete()">
+        (onWalletAddressUpdated)="orderWalletChanged($event)" (onComplete)="orderDetailsComplete($event)">
       </app-widget-order-details>
       <!-- Disclaimer -->
       <app-widget-disclaimer *ngSwitchCase="'disclaimer'" [agreementChecked]="summary.agreementChecked"
         (onBack)="desclaimerBack()" (onNext)="desclaimerNext()">
       </app-widget-disclaimer>
-      <!-- User identification -->
-      <app-widget-identification *ngSwitchCase="'identification'" [email]="summary.email"
-        (onComplete)="identificationComplete($event)" (onAlreadyAuthenticated)="loginCodeConfirmed()"
-        (onLoginRequired)="onLoginRequired($event)" (onConfirmRequired)="onConfirmRequired($event)"
-        (onError)="handleError($event)" (onProgress)="progressChanged($event)" (onBack)="identificationBack()"
-        (onRegister)="onRegister($event)">
-      </app-widget-identification>
       <!-- Register -->
       <app-widget-register *ngSwitchCase="'register'" [email]="summary.email" (onBack)="registerBack()"
         (onProgress)="progressChanged($event)" (onComplete)="onLoginRequired($event)">

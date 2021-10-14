@@ -31,7 +31,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   @Output() onProgress = new EventEmitter<boolean>();
   @Output() onDataUpdated = new EventEmitter<CheckoutSummary>();
   @Output() onWalletAddressUpdated = new EventEmitter<string | undefined>();
-  @Output() onComplete = new EventEmitter();
+  @Output() onComplete = new EventEmitter<string>();
 
   private pInitState = true;
   private showWallet = true;
@@ -56,6 +56,10 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   receiveCurrencyList: CurrencyView[] = [];
   transactionList = QuickCheckoutTransactionTypeList;
 
+  emailErrorMessages: { [key: string]: string; } = {
+    ['pattern']: 'Email is not valid',
+    ['required']: 'Email is required'
+  };
   amountSpendErrorMessages: { [key: string]: string; } = {
     ['required']: 'Amount is required',
     ['pattern']: 'Amount must be a valid number',
@@ -66,12 +70,19 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     ['pattern']: 'Amount must be a valid number',
     ['min']: 'Minimal amount'
   };
-
   walletErrorMessages: { [key: string]: string; } = {
     ['required']: 'Address is required'
   };
 
   dataForm = this.formBuilder.group({
+    email: ['',
+      {
+        validators: [
+          Validators.required,
+          Validators.pattern('^[a-zA-Z0-9_.+\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-\.]+$')
+        ], updateOn: 'change'
+      }
+    ],
     amountSpend: [undefined, { validators: [], updateOn: 'change' }],
     currencySpend: [null, { validators: [], updateOn: 'change' }],
     amountReceive: [undefined, { validators: [], updateOn: 'change' }],
@@ -88,6 +99,10 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     ],
     updateOn: 'change',
   });
+
+  get emailField(): AbstractControl | null {
+    return this.dataForm.get('email');
+  }
 
   get amountSpendField(): AbstractControl | null {
     return this.dataForm.get('amountSpend');
@@ -126,6 +141,9 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     }
     if (this.summary?.address) {
       this.walletField?.setValue(this.summary.address);
+    }
+    if (this.summary?.email) {
+      this.emailField?.setValue(this.summary.email);
     }
     if (this.summary?.initialized) {
       this.currentTransaction = this.summary.transactionType;
@@ -248,7 +266,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
 
   private setWalletVisible(): void {
     if (this.currentTransaction === TransactionType.Deposit) {
-      this.showWallet = (!this.settings.walletAddress);      
+      this.showWallet = (!this.settings.walletAddress);
     } else {
       this.showWallet = false;
     }
@@ -459,7 +477,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
 
   onSubmit(): void {
     if (this.dataForm.valid) {
-      this.onComplete.emit();
+      this.onComplete.emit(this.emailField?.value);
     }
   }
 }

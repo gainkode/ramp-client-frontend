@@ -1,7 +1,12 @@
 <div class="__widget-data-box">
     <form [formGroup]="dataForm" (ngSubmit)="onSubmit()">
+        <!-- Email -->
+        <app-form-textbox *ngIf="settings.email===''" [label]="'Email'" [maxlength]="50" formControlName="email"
+            [errorMessages]="emailErrorMessages" [separator]="true">
+        </app-form-textbox>
+
+        <!-- Transaction -->
         <div *ngIf="settings.transaction===undefined">
-            <!-- Transaction -->
             <div class="__form-label">
                 Transaction
             </div>
@@ -48,7 +53,7 @@
         <!-- Buttons -->
         <div class="__widget-buttons-area">
             <button class="__main-button" type="submit"
-                [disabled]="!initialized || !validData || !walletField?.valid">next</button>
+                [disabled]="!initialized || !validData || !walletField?.valid || !emailField?.valid">next</button>
         </div>
     </form>
 </div>

@@ -32,7 +32,6 @@ import { WidgetCompleteComponent } from './widget/complete.component';
 import { WidgetPaymentComponent } from './widget/payment.component';
 import { WidgetCreditCardComponent } from './widget/credit-card.component';
 import { WidgetCodeAuthComponent } from './widget/code-auth.component';
-import { WidgetidentificationComponent } from './widget/identification.component';
 import { WidgetKycComponent } from './widget/kyc.component';
 import { WidgetProcessingComponent } from './widget/processing.component';
 import { WidgetSettingsService } from './widget/settings-service.component';
@@ -40,8 +39,8 @@ import { WidgetSettingsService } from './widget/settings-service.component';
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
 const routing = RouterModule.forChild([
-    { path: 'quickcheckout', component: PaymentComponent },
-    { path: 'qc', component: QuickCheckoutComponent },
+    { path: 'qc', component: PaymentComponent },
+    { path: 'quickcheckout', component: QuickCheckoutComponent },
     { path: 'container/:affiliateCode', component: ContainerComponentDeprecated },
     { path: 'container', component: ContainerComponentDeprecated },
     { path: 'widget/:affiliateCode', component: ContainerComponentDeprecated },
@@ -75,7 +74,7 @@ export class MaterialModule { }
     imports: [NgxMaskModule.forRoot(), CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule],
     declarations: [PaymentComponent, QuickCheckoutComponent, ContainerComponentDeprecated,
         WidgetComponent, WidgetProgressComponent, WidgetSummaryComponent, WidgetRateComponent, WidgetCreditCardComponent,
-        WidgetidentificationComponent, WidgetRegisterComponent, WidgetLoginAuthComponent, WidgetCodeAuthComponent,
+        WidgetRegisterComponent, WidgetLoginAuthComponent, WidgetCodeAuthComponent,
         WidgetOrderDetailsComponent, WidgetDisclaimerComponent, WidgetPaymentComponent, WidgetKycComponent,
         WidgetProcessingComponent, WidgetCompleteComponent,
         WidgetSettingsService],

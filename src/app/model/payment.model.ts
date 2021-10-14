@@ -374,6 +374,7 @@ export class CheckoutSummary {
         this.exchangeRate = undefined;
         this.transactionDate = '';
         this.transactionType = TransactionType.Deposit;
+        this.transactionId = '';
         this.status = TransactionStatus.Pending;
         this.provider = undefined;
         this.providerView = undefined;
@@ -399,6 +400,7 @@ export class WidgetSettings {
     walletAddress = '';
     affiliateCode = '';
     kycFirst = false;
+    disclaimer = false;
 }
 
 export class WidgetStage {

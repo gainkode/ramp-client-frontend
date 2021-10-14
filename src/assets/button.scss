@@ -35,6 +35,7 @@
     background: $color_purple_50;
     box-shadow: none;
     color: $color_purple_200;
+    cursor: default;
 }
 
 .__borderless-button {
@@ -70,6 +71,7 @@
     background: $color_purple_50;
     box-shadow: none;
     color: $color_purple_200;
+    cursor: default;
 }
 
 .__outlined-button {
@@ -104,6 +106,7 @@
 .__outlined-button:disabled {
     border: 1px solid $color_purple_200;
     color: $color_purple_200;
+    cursor: default;
 }
 
 .__toggle-button {
@@ -138,6 +141,7 @@
 .__toggle-button:disabled {
     border: 1px solid $color_purple_200;
     color: $color_purple_200;
+    cursor: default;
 }
 
 .__tool-button {
@@ -165,6 +169,7 @@
 
 .__tool-button:disabled {
     color: $color_purple_200;
+    cursor: default;
 }
 
 .__tool-button-icon {
@@ -203,6 +208,7 @@
 
 .__menu-button:disabled {
     color: $color_purple_200;
+    cursor: default;
 }
 
 .__menu-button-icon {
@@ -234,6 +240,7 @@
 
 .__table-button:disabled {
     color: $color_purple_200;
+    cursor: default;
 }
 
 .__small-button {
@@ -267,6 +274,7 @@
 .__small-button:disabled {
     background: $color_purple_50;
     color: $color_purple_200;
+    cursor: default;
 }
 
 .__side-menu-button {
@@ -301,6 +309,7 @@
 
 .__side-menu-button:disabled {
     color: $color_purple_300;
+    cursor: default;
 }
 
 .__side-menu-selected-button {
@@ -375,6 +384,7 @@
 
 .__side-menu-button-sm:disabled {
     color: $color_purple_300;
+    cursor: default;
 
     #button_icon {
         color: $color_purple_300;
