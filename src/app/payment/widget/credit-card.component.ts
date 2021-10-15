@@ -1,6 +1,7 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { CardView } from '../../model/payment.model';
 
 const creditCardType = require('credit-card-type');
@@ -78,6 +79,12 @@ export class WidgetCreditCardComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        if (!environment.production) {
+            this.cardField?.setValue('4111110000000211');
+            this.expiredField?.setValue('01/23');
+            this.codeField?.setValue('123');
+            this.holderField?.setValue('john doe');
+        }
         this.pSubscriptions.add(this.cardField?.valueChanges.subscribe((val) => this.onCardNumberUpdated(val)));
         this.pSubscriptions.add(this.expiredField?.valueChanges.subscribe((val) => this.onExpiredUpdated(val)));
         this.pSubscriptions.add(this.codeField?.valueChanges.subscribe((val) => this.onCodeUpdated(val)));

@@ -95,7 +95,7 @@ export class WidgetComponent implements OnInit {
   }
 
   private startNotificationListener(): void {
-    this.stopNotificationListener();
+    //this.stopNotificationListener();
     console.log('transaction notification start');
     this.notificationStarted = true;
     this.pNotificationsSubscription = this.notification.subscribeToTransactionNotifications().subscribe(
@@ -224,6 +224,7 @@ export class WidgetComponent implements OnInit {
 
   // == Order details page ==
   orderDetailsChanged(data: CheckoutSummary): void {
+    this.stopNotificationListener();
     if (this.initState && (data.amountFrom || data.amountTo)) {
       this.initState = false;
     }
@@ -310,6 +311,9 @@ export class WidgetComponent implements OnInit {
         if (this.paymentProviders.length < 1) {
           this.errorMessage = `No supported payment providers found for "${this.summary.currencyFrom}"`;
         } else if (this.paymentProviders.length > 1) {
+          if (!this.notificationStarted) {
+            this.startNotificationListener();
+          }
           this.nextStage('payment', 'Payment info', nextStage, true);
         } else {
           this.selectProvider(this.paymentProviders[0].id);
@@ -461,6 +465,7 @@ export class WidgetComponent implements OnInit {
   }
 
   private checkLoginResult(data: LoginResult) {
+    this.stopNotificationListener();
     if (data.user) {
       this.summary.email = data.user?.email;
     }
@@ -501,7 +506,9 @@ export class WidgetComponent implements OnInit {
           destinationType,
           destination
         ).subscribe(({ data }) => {
-          this.startNotificationListener();
+          if (!this.notificationStarted) {
+            this.startNotificationListener();
+          }
           const order = data.createTransaction as TransactionShort;
           this.inProgress = false;
           if (order.code) {
