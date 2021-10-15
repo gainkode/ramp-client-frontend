@@ -10,6 +10,7 @@ export class ErrorService {
                 code = sessionCode as string;
             }
         }
+        console.log('error code:', code.toLowerCase());
         switch (code.toLowerCase()) {
             // Common error codes (0 - 50)
             case 'success':
@@ -134,8 +135,12 @@ export class ErrorService {
             case 'core.transaction_handling_error':
                 result = 'Transaction handling error';
                 break;
+            // Other codes
             case 'client has not been defined yet':
                 result = this.getRejectedCookieMessage();
+                break;
+            case 'httperrorresponse':
+                result = 'Server is unavailable now. Please, try again later';
                 break;
             default:
                 if (code !== '') {
