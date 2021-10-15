@@ -4,13 +4,13 @@ import { Injectable } from '@angular/core';
 export class ErrorService {
     getError(code: string, defaultMessage: string): string {
         let result = defaultMessage;
-        const sessionCode = sessionStorage.getItem('currentError');
+        const sessionCode = this.getCurrentError();
         if (sessionCode) {
             if (code !== '') {
                 code = sessionCode as string;
             }
         }
-        console.log('error code:', code.toLowerCase());
+        console.log('error code:', defaultMessage, '->', sessionCode, '->', code.toLowerCase());
         switch (code.toLowerCase()) {
             // Common error codes (0 - 50)
             case 'success':

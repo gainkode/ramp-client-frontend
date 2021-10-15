@@ -100,7 +100,7 @@ export class AppModule {
       }
     }
     if (networkError) {
-      console.log('network error', networkError);
+      console.log('network error', networkError.name, networkError);
       if (operation.operationName === 'GetRates') {
         sessionStorage.setItem('currentRateError', networkError.name);
       } else {

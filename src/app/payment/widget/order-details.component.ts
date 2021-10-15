@@ -477,6 +477,11 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
 
   onSubmit(): void {
     if (this.dataForm.valid) {
+      if (this.auth.user) {
+        if (this.auth.user.email !== this.emailField?.value) {
+          this.auth.logout();
+        }
+      }
       this.onComplete.emit(this.emailField?.value);
     }
   }
