@@ -152,7 +152,7 @@
     </table>
 
     <mat-paginator color="accent" *ngIf="errorMessage === '' && paginatorVisible" class="__profile-data-table"
-        [length]="transactionCount" [pageSize]="pageSize" [pageSizeOptions]="pageCounts" showFirstLastButtons
+        [pageIndex]="pageIndex" [length]="transactionCount" [pageSize]="pageSize" [pageSizeOptions]="pageCounts" showFirstLastButtons
         (page)="handlePage($event)">
     </mat-paginator>
 </div>

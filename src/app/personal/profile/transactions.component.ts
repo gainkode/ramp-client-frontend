@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { PageEvent } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -126,7 +126,6 @@ export class PersonalTransactionsComponent implements OnInit, OnDestroy, AfterVi
                 }
                 this.inProgress = false;
             }, (error) => {
-                console.log('transaction error');
                 this.inProgress = false;
                 if (this.auth.token !== '') {
                     this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load transactions');
