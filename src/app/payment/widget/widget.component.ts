@@ -8,6 +8,7 @@ import { ErrorService } from 'src/app/services/error.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { PaymentDataService } from 'src/app/services/payment.service';
 import { ExchangeRateService } from 'src/app/services/rate.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-widget',
@@ -57,7 +58,10 @@ export class WidgetComponent implements OnInit {
     //this.widget.kycFirst = true;
     //this.widget.email = 'tugaymv@gmail.com';
     this.widget.transaction = TransactionType.Deposit;
-    this.widget.walletAddress = 'mkBUjw37y46goULToq6b7y6ciJc3Qi32YM';
+    if (!environment.production) {
+      this.widget.walletAddress = 'mkBUjw37y46goULToq6b7y6ciJc3Qi32YM';
+    }
+    //this.widget.walletAddress = 'mkBUjw37y46goULToq6b7y6ciJc3Qi32YM';
     //this.widget.disclaimer = true;
     // temp
 
