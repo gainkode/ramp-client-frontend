@@ -161,16 +161,15 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
             this.subscriptions.add(
                 this.auth.authenticate(login, this.passwordField?.value).subscribe(({ data }) => {
                     const userData = data.login as LoginResult;
+                    this.progressChange.emit(false);
                     if (userData.user?.mode === UserMode.InternalWallet) {
                         if (userData.authTokenAction === 'TwoFactorAuth') {
                             this.auth.setLoginUser(userData);
                             this.twoFa = true;
                             this.socialLogin = true;
-                            this.progressChange.emit(false);
                         } else if (userData.authTokenAction === 'UserInfoRequired') {
                             this.showSignupPanel(userData);
                         } else {
-                            this.progressChange.emit(false);
                             this.authenticated.emit(userData);
                         }
                     } else {

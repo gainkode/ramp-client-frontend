@@ -128,10 +128,10 @@ export class CardView {
         if (info) {
             const data = JSON.parse(info);
             this.bankName = data.bankName;
-            this.cardType = data.cardType.toLowerCase();
+            this.cardType = (data.cardType) ? data.cardType.toLowerCase() : '';
             this.monthExpired = parseInt(data.cardExpMonth, 10);
             this.yearExpired = parseInt(data.cardExpYear, 10);
-            this.holderName = (data.cardholderName as string).toUpperCase();
+            this.holderName = (data.cardholderName) ? (data.cardholderName as string).toUpperCase() : '';
             this.processor = data.processorName;
             this.bin = data.bin;
             this.lastDigits = data.lastFourDigits;

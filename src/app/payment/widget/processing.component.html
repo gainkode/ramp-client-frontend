@@ -1,6 +1,9 @@
 <div class="__widget-data-box">
-    <div class="__widget-external-frame-container">
+    <div *ngIf="iframeContent!==''" class="__widget-external-frame-container">
         <iframe id="iframe" class="__widget-external-frame-box" (load)="onLoadFrame()"></iframe>
+    </div>
+    <div *ngIf="iframeUrl!==''" class="__widget-external-frame-container">
+        <iframe class="__widget-external-frame-box" [src]="url"></iframe>
     </div>
     <div class="__widget-buttons-area">
         <button class="__main-button" type="button" [disabled]="!completed" (click)="onComplete.emit()">next</button>

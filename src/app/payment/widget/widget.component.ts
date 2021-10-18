@@ -39,6 +39,7 @@ export class WidgetComponent implements OnInit {
   requestKyc = false;
   readCommonSettings = false;
   iframeContent = '';
+  iframeUrl = '';
   paymentComplete = false;
   notificationStarted = false;
 
@@ -335,6 +336,8 @@ export class WidgetComponent implements OnInit {
   selectProvider(id: string) {
     if (id === 'Fibonatix') {
       this.createTransaction(id, PaymentInstrument.CreditCard);
+    } else if (id === 'InstantPay') {
+      this.createTransaction(id, PaymentInstrument.BankTransfer);
     } else {
       this.errorMessage = `Payment using ${id} is currenctly not supported`;
     }
@@ -543,6 +546,11 @@ export class WidgetComponent implements OnInit {
   private startPayment(): void {
     if (this.summary.providerView?.id === 'Fibonatix') {
       this.nextStage('credit_card', 'Payment info', this.step, true);
+    } else if (this.summary.providerView?.id === 'InstantPay') {
+      this.completeCommonTransaction(
+        this.summary.transactionId,
+        this.summary.providerView.id,
+        this.summary.instrument ?? PaymentInstrument.WireTransfer);
     } else {
       this.errorMessage = 'Invalid payment provider';
     }
@@ -550,7 +558,9 @@ export class WidgetComponent implements OnInit {
 
   private completeCreditCardTransaction(transactionId: string, provider: string, card: CardView): void {
     this.inProgress = true;
-    this.dataService.preAuth(transactionId, PaymentInstrument.CreditCard, provider, card).subscribe(
+    this.iframeContent = '';
+    this.iframeUrl = '';
+    this.dataService.preAuthCard(transactionId, PaymentInstrument.CreditCard, provider, card).subscribe(
       ({ data }) => {
         // One more chance to start notifictions
         if (!this.notificationStarted) {
@@ -558,11 +568,35 @@ export class WidgetComponent implements OnInit {
         }
         const preAuthResult = data.preauth as PaymentPreauthResultShort;
         const order = preAuthResult.order;
-        this.summary.setPaymentInfo(
-          PaymentInstrument.CreditCard,
-          order?.paymentInfo as string
-        );
+        this.summary.setPaymentInfo(PaymentInstrument.CreditCard, order?.paymentInfo as string);
         this.iframeContent = preAuthResult.html as string;
+        this.inProgress = false;
+        this.nextStage('processing', 'Payment', this.step, false);
+      }, (error) => {
+        this.inProgress = false;
+        if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
+          this.handleAuthError();
+        } else {
+          this.errorMessage = this.errorHandler.getError(error.message, 'Unable to confirm your order');
+        }
+      }
+    );
+  }
+
+  private completeCommonTransaction(transactionId: string, provider: string, instrument: PaymentInstrument): void {
+    this.inProgress = true;
+    this.iframeContent = '';
+    this.iframeUrl = '';
+    this.dataService.preAuth(transactionId, instrument, provider).subscribe(
+      ({ data }) => {
+        // One more chance to start notifictions
+        // if (!this.notificationStarted) {
+        //   this.startNotificationListener();
+        // }
+        const preAuthResult = data.preauth as PaymentPreauthResultShort;
+        const order = preAuthResult.order;
+        this.summary.setPaymentInfo(PaymentInstrument.CreditCard, order?.paymentInfo as string);
+        this.iframeUrl = preAuthResult.redirectUrl as string;
         this.inProgress = false;
         this.nextStage('processing', 'Payment', this.step, false);
       }, (error) => {

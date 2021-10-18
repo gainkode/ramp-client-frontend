@@ -97,6 +97,35 @@ const PRE_AUTH = gql`
 mutation PreAuth(
   $transactionId: String!,
   $instrument: PaymentInstrument!,
+  $paymentProvider: String!
+) {
+  preauth(
+    orderParams: {
+      transactionId: $transactionId
+      instrument: $instrument
+      provider: $paymentProvider
+    }
+  ) {
+    order {
+      transactionId
+      orderId
+      userId
+      provider
+      created
+      amount
+      currency
+      paymentInfo
+    }
+    html
+    redirectUrl
+  }
+}
+`;
+
+const PRE_AUTH_CARD = gql`
+mutation PreAuth(
+  $transactionId: String!,
+  $instrument: PaymentInstrument!,
   $paymentProvider: String!,
   $cardNumber: String!,
   $expiredMonth: Int!,
@@ -129,6 +158,7 @@ mutation PreAuth(
       paymentInfo
     }
     html
+    redirectUrl
   }
 }
 `;
@@ -201,9 +231,9 @@ export class PaymentDataService {
     });
   }
 
-  preAuth(id: string, paymentInstrument: string, paymentProvider: string, card: CardView): Observable<any> {
+  preAuthCard(id: string, paymentInstrument: string, paymentProvider: string, card: CardView): Observable<any> {
     return this.apollo.mutate({
-      mutation: PRE_AUTH,
+      mutation: PRE_AUTH_CARD,
       variables: {
         transactionId: id,
         instrument: paymentInstrument,
@@ -213,6 +243,17 @@ export class PaymentDataService {
         expiredYear: card.yearExpired,
         cvv: card.cvv,
         holder: card.holderName
+      }
+    });
+  }
+
+  preAuth(id: string, paymentInstrument: string, paymentProvider: string): Observable<any> {
+    return this.apollo.mutate({
+      mutation: PRE_AUTH,
+      variables: {
+        transactionId: id,
+        instrument: paymentInstrument,
+        paymentProvider
       }
     });
   }

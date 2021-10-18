@@ -413,7 +413,8 @@ export type QueryGetWidgetsArgs = {
 
 
 export type QueryGetWidgetArgs = {
-  widgetId?: Maybe<Scalars['String']>;
+  widgetId: Scalars['String'];
+  userParamsId?: Maybe<Scalars['String']>;
 };
 
 export type OrderBy = {
@@ -1398,6 +1399,7 @@ export type TransactionStatusDescriptor = {
   description: Scalars['String'];
   userStatus: UserTransactionStatus;
   level: TransactionStatusLevel;
+  repeatFromStatus?: Maybe<TransactionStatus>;
 };
 
 export enum UserTransactionStatus {
@@ -1541,6 +1543,7 @@ export type Widget = {
   paymentProviders?: Maybe<Array<Scalars['String']>>;
   liquidityProvider?: Maybe<LiquidityProvider>;
   additionalSettings?: Maybe<Scalars['String']>;
+  currentUserParams?: Maybe<Scalars['String']>;
 };
 
 export type WidgetShort = {
@@ -1553,6 +1556,7 @@ export type WidgetShort = {
   paymentProviders?: Maybe<Array<Scalars['String']>>;
   liquidityProvider?: Maybe<LiquidityProvider>;
   additionalSettings?: Maybe<Scalars['String']>;
+  currentUserParams?: Maybe<Scalars['String']>;
 };
 
 
@@ -1622,6 +1626,7 @@ export type Mutation = {
   sendEmailCodePasswordChange: Scalars['Boolean'];
   addFeedback: Feedback;
   sendTestNotification?: Maybe<Scalars['Void']>;
+  sendTestServiceNotification?: Maybe<Scalars['Void']>;
   createTransaction?: Maybe<TransactionShort>;
   executeTransaction?: Maybe<TransactionShort>;
   cancelMyTransaction?: Maybe<TransactionShort>;
@@ -1632,6 +1637,7 @@ export type Mutation = {
   createWidget?: Maybe<Widget>;
   deleteMyWidget?: Maybe<Widget>;
   deleteWidget?: Maybe<Widget>;
+  addMyWidgetUserParams?: Maybe<WidgetUserParams>;
 };
 
 
@@ -2031,6 +2037,11 @@ export type MutationDeleteWidgetArgs = {
   widgetId?: Maybe<Scalars['String']>;
 };
 
+
+export type MutationAddMyWidgetUserParamsArgs = {
+  widgetUserParams?: Maybe<WidgetUserParamsInput>;
+};
+
 export type ApiKeySecret = {
   __typename?: 'ApiKeySecret';
   apiKeyId: Scalars['ID'];
@@ -2059,12 +2070,14 @@ export type PaymentPreauthResult = {
   __typename?: 'PaymentPreauthResult';
   order?: Maybe<PaymentOrder>;
   html?: Maybe<Scalars['String']>;
+  redirectUrl?: Maybe<Scalars['String']>;
 };
 
 export type PaymentPreauthResultShort = {
   __typename?: 'PaymentPreauthResultShort';
   order?: Maybe<PaymentOrderShort>;
   html?: Maybe<Scalars['String']>;
+  redirectUrl?: Maybe<Scalars['String']>;
 };
 
 export type PaymentOrderShort = {
@@ -2258,6 +2271,21 @@ export type WidgetInput = {
   paymentProviders?: Maybe<Array<Scalars['String']>>;
   liquidityProvider?: Maybe<LiquidityProvider>;
   additionalSettings?: Maybe<Scalars['String']>;
+};
+
+export type WidgetUserParamsInput = {
+  widgetId?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['String']>;
+  params?: Maybe<Scalars['String']>;
+};
+
+export type WidgetUserParams = {
+  __typename?: 'WidgetUserParams';
+  widgetUserParamsId?: Maybe<Scalars['ID']>;
+  widgetId?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['String']>;
+  created: Scalars['DateTime'];
+  params?: Maybe<Scalars['String']>;
 };
 
 export type Subscription = {

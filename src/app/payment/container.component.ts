@@ -1117,7 +1117,7 @@ export class ContainerComponentDeprecated implements OnInit, OnDestroy {
       const transaction = this.paymentInfoTransactionIdControl?.value;
       const instrument = this.paymentInfoInstrumentControl?.value;
       const payment = 'Fibonatix';
-      this.dataService.preAuth(transaction, instrument, payment, this.currentCard).subscribe(
+      this.dataService.preAuthCard(transaction, instrument, payment, this.currentCard).subscribe(
         ({ data }) => {
           const preAuthResult = data.preauth as PaymentPreauthResultShort;
           const order = preAuthResult.order;

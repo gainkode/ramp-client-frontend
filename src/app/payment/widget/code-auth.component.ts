@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { LoginResult } from 'src/app/model/generated-models';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
 
@@ -95,6 +94,31 @@ export class WidgetCodeAuthComponent implements OnInit, OnDestroy, AfterViewInit
 
     ngOnDestroy(): void {
         this.pSubscriptions.unsubscribe();
+    }
+
+    onPaste(data: ClipboardEvent): void {
+        data.stopPropagation();
+        data.preventDefault();
+        const clipboardData = data.clipboardData as DataTransfer;
+        const pastedData = clipboardData.getData('Text');
+        if (pastedData && pastedData.length > 4) {
+            const val1 = parseInt(pastedData[0]);
+            const val2 = parseInt(pastedData[1]);
+            const val3 = parseInt(pastedData[2]);
+            const val4 = parseInt(pastedData[3]);
+            const val5 = parseInt(pastedData[4]);
+            if (val1.toString() === pastedData[0] &&
+                val2.toString() === pastedData[1] &&
+                val3.toString() === pastedData[2] &&
+                val4.toString() === pastedData[3] &&
+                val5.toString() === pastedData[4]) {
+                this.code1Field?.setValue(val1);
+                this.code2Field?.setValue(val2);
+                this.code3Field?.setValue(val3);
+                this.code4Field?.setValue(val4);
+                this.code5Field?.setValue(val5);
+            }
+        }
     }
 
     onSubmit(): void {

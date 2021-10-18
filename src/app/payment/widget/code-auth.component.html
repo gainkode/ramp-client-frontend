@@ -17,7 +17,7 @@
             </div>
             <div class="__widget-code-container">
                 <input #code1input class="__form-text-box-plain" type="text" formControlName="code1" mask="0"
-                    [dropSpecialCharacters]="false" maxlength="1" autocomplete="false" />
+                    [dropSpecialCharacters]="false" maxlength="1" autocomplete="false" (paste)="onPaste($event)"/>
                 <input #code2input class="__form-text-box-plain" type="text" formControlName="code2" mask="0"
                     [dropSpecialCharacters]="false" maxlength="1" autocomplete="false" />
                 <input #code3input class="__form-text-box-plain" type="text" formControlName="code3" mask="0"
