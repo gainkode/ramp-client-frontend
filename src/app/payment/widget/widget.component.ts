@@ -140,6 +140,15 @@ export class WidgetComponent implements OnInit {
       }
     }
     if (res) {
+      if (data.transactionServiceNotification.operationStatus === 'approved' ||
+        data.transactionServiceNotification.operationStatus === 'declined' ||
+        data.transactionServiceNotification.operationStatus === 'error') {
+        res = true;
+      } else {
+        console.log('transactionApproved: unexpected operationStatus', data.transactionServiceNotification.operationStatus);
+      }
+    }
+    if (res) {
       if (data.transactionServiceNotification.operationType === 'preauth' ||
         data.transactionServiceNotification.operationType === 'approved') {
         res = true;
