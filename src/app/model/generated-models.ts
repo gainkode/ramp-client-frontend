@@ -27,7 +27,7 @@ export type Query = {
   getNotifications?: Maybe<UserNotificationListResult>;
   getSettingsCommon?: Maybe<SettingsCommon>;
   getPaymentProviders?: Maybe<Array<PaymentProvider>>;
-  getSettingsCurrency?: Maybe<SettingsCurrencyListResult>;
+  getSettingsCurrency?: Maybe<SettingsCurrencyWithDefaults>;
   getSettingsKycLevels?: Maybe<SettingsKycLevelListResult>;
   getSettingsKyc?: Maybe<SettingsKycListResult>;
   mySettingsKyc?: Maybe<SettingsKycShort>;
@@ -605,6 +605,13 @@ export type PaymentProvider = {
   name?: Maybe<Scalars['String']>;
   currencies?: Maybe<Array<Scalars['String']>>;
   countries_code2?: Maybe<Array<Scalars['String']>>;
+};
+
+export type SettingsCurrencyWithDefaults = {
+  __typename?: 'SettingsCurrencyWithDefaults';
+  settingsCurrency?: Maybe<SettingsCurrencyListResult>;
+  defaultFiat?: Maybe<Scalars['String']>;
+  defaultCrypto?: Maybe<Scalars['String']>;
 };
 
 export type SettingsCurrencyListResult = {

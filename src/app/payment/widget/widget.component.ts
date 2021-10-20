@@ -275,7 +275,6 @@ export class WidgetComponent implements OnInit {
       this.authenticate(email);
     }
   }
-
   // =======================
 
   // == Disclaimer =========
@@ -287,7 +286,6 @@ export class WidgetComponent implements OnInit {
     this.summary.agreementChecked = true;
     this.getSettingsCommon();
   }
-
   // ================
 
   // == Common settings ==
@@ -351,7 +349,6 @@ export class WidgetComponent implements OnInit {
       this.errorMessage = `Payment using ${id} is currenctly not supported`;
     }
   }
-
   // ====================
 
   // == Credit card ==
@@ -373,8 +370,8 @@ export class WidgetComponent implements OnInit {
       this.nextStage('complete', 'Complete', 6, false);
     }
   }
-
   // ======================
+  
   // == Auth ========
   onRegister(email: string): void {
     this.summary.email = email;

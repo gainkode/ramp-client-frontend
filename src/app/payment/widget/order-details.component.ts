@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { SettingsCurrencyListResult, TransactionType } from 'src/app/model/generated-models';
+import { SettingsCurrencyListResult, SettingsCurrencyWithDefaults, TransactionType } from 'src/app/model/generated-models';
 import { CheckoutSummary, CurrencyView, QuickCheckoutTransactionTypeList, WidgetSettings } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
@@ -178,7 +178,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       this.onProgress.emit(true);
       this.pSubscriptions.add(
         currencyData.valueChanges.subscribe(
-          ({ data }) => this.loadCurrencyList(data.getSettingsCurrency as SettingsCurrencyListResult, initState),
+          ({ data }) => this.loadCurrencyList(data.getSettingsCurrency as SettingsCurrencyWithDefaults, initState),
           (error) => {
             this.onProgress.emit(false);
             this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load available list of currency types'));
@@ -187,10 +187,19 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     }
   }
 
-  private loadCurrencyList(currencySettings: SettingsCurrencyListResult, initState: boolean) {
+  private loadCurrencyList(currencySettings: SettingsCurrencyWithDefaults, initState: boolean) {
     let itemCount = 0;
     if (currencySettings !== null) {
-      itemCount = currencySettings.count as number;
+      const currencyList = currencySettings.settingsCurrency;
+      let defaultFiatCurrency = currencySettings.defaultFiat ?? '';
+      if (defaultFiatCurrency === '') {
+        defaultFiatCurrency = 'EUR';
+      }
+      let defaultCryptoCurrency = currencySettings.defaultCrypto ?? '';
+      if (defaultCryptoCurrency === '') {
+        defaultCryptoCurrency = 'BTC';
+      }
+      itemCount = currencyList?.count as number;
       if (itemCount > 0) {
         let currentCurrencySpendId = this.summary?.currencyFrom ?? '';
         let currentCurrencyReceiveId = this.summary?.currencyTo ?? '';
@@ -198,20 +207,20 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
         let currentAmountReceive = this.summary?.amountTo;
         if (this.currentTransaction === TransactionType.Deposit) {
           if (currentCurrencySpendId === '') {
-            currentCurrencySpendId = this.auth.user?.defaultFiatCurrency ?? '';
+            currentCurrencySpendId = defaultFiatCurrency ?? '';
           }
           if (currentCurrencyReceiveId === '') {
-            currentCurrencyReceiveId = this.auth.user?.defaultCryptoCurrency ?? '';
+            currentCurrencyReceiveId = defaultCryptoCurrency ?? '';
           }
         } else if (this.currentTransaction === TransactionType.Withdrawal) {
           if (currentCurrencySpendId === '') {
-            currentCurrencyReceiveId = this.auth.user?.defaultFiatCurrency ?? '';
+            currentCurrencyReceiveId = defaultFiatCurrency ?? '';
           }
           if (currentCurrencyReceiveId === '') {
-            currentCurrencySpendId = this.auth.user?.defaultCryptoCurrency ?? '';
+            currentCurrencySpendId = defaultCryptoCurrency ?? '';
           }
         }
-        this.pCurrencies = currencySettings.list?.map((val) => new CurrencyView(val)) as CurrencyView[];
+        this.pCurrencies = currencyList?.list?.map((val) => new CurrencyView(val)) as CurrencyView[];
         this.setCurrencyValues(
           initState,
           currentCurrencySpendId,

@@ -6,16 +6,20 @@ import { environment } from 'src/environments/environment';
 const GET_SETTINGS_CURRENCY_POST = gql`
   query GetSettingsCurrency($recaptcha: String!) {
     getSettingsCurrency(recaptcha: $recaptcha) {
-      count
-      list {
-        symbol
-        name
-        precision
-        minAmount
-        rateFactor
-        validateAsSymbol
-        fiat
+      settingsCurrency {
+        count
+        list {
+          symbol
+          name
+          precision
+          minAmount
+          rateFactor
+          validateAsSymbol
+          fiat
+        }
       }
+      defaultFiat
+      defaultCrypto
     }
   }
 `;
