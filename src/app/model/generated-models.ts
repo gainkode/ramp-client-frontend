@@ -1221,11 +1221,14 @@ export type PaymentOrder = {
   amount: Scalars['Float'];
   currency: Scalars['String'];
   operations?: Maybe<Array<PaymentOperation>>;
+  status?: Maybe<Scalars['String']>;
+  statusReason?: Maybe<Scalars['String']>;
   originalOrderId?: Maybe<Scalars['String']>;
   preauthOperationSn?: Maybe<Scalars['String']>;
   captureOperationSn?: Maybe<Scalars['String']>;
   refundOperationSn?: Maybe<Scalars['String']>;
   paymentInfo?: Maybe<Scalars['String']>;
+  providerSpecificStates?: Maybe<Array<DateMap>>;
   providerSpecificParams?: Maybe<Array<StringMap>>;
 };
 
@@ -1240,10 +1243,12 @@ export type PaymentOperation = {
   type: PaymentOperationType;
   sn: Scalars['String'];
   status?: Maybe<Scalars['String']>;
+  statusReason?: Maybe<Scalars['String']>;
   details?: Maybe<Scalars['String']>;
   callbackDetails?: Maybe<Scalars['String']>;
   errorCode?: Maybe<Scalars['String']>;
   errorMessage?: Maybe<Scalars['String']>;
+  providerSpecificStates?: Maybe<Array<DateMap>>;
   providerSpecificParams?: Maybe<Array<StringMap>>;
 };
 
@@ -1252,6 +1257,12 @@ export enum PaymentOperationType {
   Capture = 'capture',
   Refund = 'refund'
 }
+
+export type DateMap = {
+  __typename?: 'DateMap';
+  date: Scalars['DateTime'];
+  value?: Maybe<Scalars['String']>;
+};
 
 export type LiquidityOrder = {
   __typename?: 'LiquidityOrder';
@@ -1271,7 +1282,9 @@ export type LiquidityOrder = {
   volume: Scalars['Float'];
   state: LiquidityOrderState;
   status: Scalars['String'];
+  statusReason?: Maybe<Scalars['String']>;
   originalOrderId?: Maybe<Scalars['String']>;
+  providerSpecificStates?: Maybe<Array<DateMap>>;
   providerSpecificParams?: Maybe<Array<StringMap>>;
 };
 
@@ -2070,14 +2083,14 @@ export type PaymentPreauthResult = {
   __typename?: 'PaymentPreauthResult';
   order?: Maybe<PaymentOrder>;
   html?: Maybe<Scalars['String']>;
-  redirectUrl?: Maybe<Scalars['String']>;
+  details?: Maybe<Scalars['String']>;
 };
 
 export type PaymentPreauthResultShort = {
   __typename?: 'PaymentPreauthResultShort';
   order?: Maybe<PaymentOrderShort>;
   html?: Maybe<Scalars['String']>;
-  redirectUrl?: Maybe<Scalars['String']>;
+  details?: Maybe<Scalars['String']>;
 };
 
 export type PaymentOrderShort = {
@@ -2089,6 +2102,8 @@ export type PaymentOrderShort = {
   created?: Maybe<Scalars['DateTime']>;
   amount: Scalars['Float'];
   currency: Scalars['String'];
+  status?: Maybe<Scalars['String']>;
+  statusReason?: Maybe<Scalars['String']>;
   operations?: Maybe<Array<PaymentOperationShort>>;
   paymentInfo?: Maybe<Scalars['String']>;
 };
@@ -2099,6 +2114,7 @@ export type PaymentOperationShort = {
   created?: Maybe<Scalars['DateTime']>;
   type: PaymentOperationType;
   status?: Maybe<Scalars['String']>;
+  statusReason?: Maybe<Scalars['String']>;
   errorCode?: Maybe<Scalars['String']>;
   errorMessage?: Maybe<Scalars['String']>;
 };

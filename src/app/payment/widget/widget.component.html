@@ -66,9 +66,13 @@
       <!-- KYC -->
       <app-widget-kyc *ngSwitchCase="'verification'" (onError)="handleError($event)" (onAuthError)="handleAuthError()"
         (onProgress)="progressChanged($event)" (onBack)="kycBack()" (onNext)="kycComplete()"></app-widget-kyc>
-      <!-- Processing -->
-      <app-widget-processing *ngSwitchCase="'processing'" [iframeContent]="iframeContent" [iframeUrl]="iframeUrl"
-        [completed]="paymentComplete" (onComplete)="processingComplete()"></app-widget-processing>
+      <!-- Processing with a frame -->
+      <app-widget-processing-frame *ngSwitchCase="'processing-frame'" [iframeContent]="iframeContent"
+        [completed]="paymentComplete" (onComplete)="processingComplete()">
+      </app-widget-processing-frame>
+      <app-widget-processing-instantpay *ngSwitchCase="'processing-instantpay'" [details]="instantpayDetails">
+
+      </app-widget-processing-instantpay>
       <!-- Complete -->
       <app-widget-complete *ngSwitchCase="'complete'" [showRestartButton]="widget.affiliateCode===''"
         (onFinish)="resetWizard()"></app-widget-complete>

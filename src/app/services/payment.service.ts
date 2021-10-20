@@ -116,8 +116,7 @@ mutation PreAuth(
       currency
       paymentInfo
     }
-    html
-    redirectUrl
+    details
   }
 }
 `;
@@ -158,7 +157,6 @@ mutation PreAuth(
       paymentInfo
     }
     html
-    redirectUrl
   }
 }
 `;

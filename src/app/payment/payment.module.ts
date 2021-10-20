@@ -33,8 +33,9 @@ import { WidgetPaymentComponent } from './widget/payment.component';
 import { WidgetCreditCardComponent } from './widget/credit-card.component';
 import { WidgetCodeAuthComponent } from './widget/code-auth.component';
 import { WidgetKycComponent } from './widget/kyc.component';
-import { WidgetProcessingComponent } from './widget/processing.component';
+import { WidgetProcessingFrameComponent } from './widget/processing-frame.component';
 import { WidgetSettingsService } from './widget/settings-service.component';
+import { WidgetProcessingInstantpayComponent } from './widget/processing-instantpay.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -76,7 +77,7 @@ export class MaterialModule { }
         WidgetComponent, WidgetProgressComponent, WidgetSummaryComponent, WidgetRateComponent, WidgetCreditCardComponent,
         WidgetRegisterComponent, WidgetLoginAuthComponent, WidgetCodeAuthComponent,
         WidgetOrderDetailsComponent, WidgetDisclaimerComponent, WidgetPaymentComponent, WidgetKycComponent,
-        WidgetProcessingComponent, WidgetCompleteComponent,
+        WidgetProcessingFrameComponent, WidgetProcessingInstantpayComponent, WidgetCompleteComponent,
         WidgetSettingsService],
     providers: [],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]

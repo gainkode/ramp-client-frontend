@@ -39,7 +39,7 @@ export class WidgetComponent implements OnInit {
   requestKyc = false;
   readCommonSettings = false;
   iframeContent = '';
-  iframeUrl = '';
+  instantpayDetails = '';
   paymentComplete = false;
   notificationStarted = false;
 
@@ -556,10 +556,10 @@ export class WidgetComponent implements OnInit {
     if (this.summary.providerView?.id === 'Fibonatix') {
       this.nextStage('credit_card', 'Payment info', this.step, true);
     } else if (this.summary.providerView?.id === 'InstantPay') {
-      this.completeCommonTransaction(
+      this.completeInstantpayTransaction(
         this.summary.transactionId,
         this.summary.providerView.id,
-        this.summary.instrument ?? PaymentInstrument.WireTransfer);
+        this.summary.instrument ?? PaymentInstrument.BankTransfer);
     } else {
       this.errorMessage = 'Invalid payment provider';
     }
@@ -568,7 +568,6 @@ export class WidgetComponent implements OnInit {
   private completeCreditCardTransaction(transactionId: string, provider: string, card: CardView): void {
     this.inProgress = true;
     this.iframeContent = '';
-    this.iframeUrl = '';
     this.dataService.preAuthCard(transactionId, PaymentInstrument.CreditCard, provider, card).subscribe(
       ({ data }) => {
         // One more chance to start notifictions
@@ -580,7 +579,7 @@ export class WidgetComponent implements OnInit {
         this.summary.setPaymentInfo(PaymentInstrument.CreditCard, order?.paymentInfo as string);
         this.iframeContent = preAuthResult.html as string;
         this.inProgress = false;
-        this.nextStage('processing', 'Payment', this.step, false);
+        this.nextStage('processing-frame', 'Payment', this.step, false);
       }, (error) => {
         this.inProgress = false;
         if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
@@ -592,22 +591,19 @@ export class WidgetComponent implements OnInit {
     );
   }
 
-  private completeCommonTransaction(transactionId: string, provider: string, instrument: PaymentInstrument): void {
+  private completeInstantpayTransaction(transactionId: string, provider: string, instrument: PaymentInstrument): void {
     this.inProgress = true;
-    this.iframeContent = '';
-    this.iframeUrl = '';
+    this.instantpayDetails = '';
     this.dataService.preAuth(transactionId, instrument, provider).subscribe(
       ({ data }) => {
-        // One more chance to start notifictions
-        // if (!this.notificationStarted) {
-        //   this.startNotificationListener();
-        // }
         const preAuthResult = data.preauth as PaymentPreauthResultShort;
         const order = preAuthResult.order;
-        this.summary.setPaymentInfo(PaymentInstrument.CreditCard, order?.paymentInfo as string);
-        this.iframeUrl = preAuthResult.redirectUrl as string;
+        this.summary.setPaymentInfo(instrument, order?.paymentInfo as string);
+        if (preAuthResult.details) {
+          this.instantpayDetails = preAuthResult.details as string;
+        }
         this.inProgress = false;
-        this.nextStage('processing', 'Payment', this.step, false);
+        this.nextStage('processing-instantpay', 'Payment', this.step, false);
       }, (error) => {
         this.inProgress = false;
         if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {

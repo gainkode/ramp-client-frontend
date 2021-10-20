@@ -409,3 +409,10 @@ export class WidgetStage {
     step = 0;
     summary = true;
 }
+
+export class InstantpayDetails {
+    status = '';
+    redirectUrl = '';
+    uniqueReference = 0;
+    payId = '';
+}

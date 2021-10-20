@@ -1,0 +1,40 @@
+<div class="__widget-data-box">
+    
+    <div *ngIf="data?.status">
+        <div class="__widget-summary-item">
+            Status
+        </div>
+        <div class="__widget-summary-item">
+            {{data?.status}}
+        </div>
+        <div class="__form-separator"></div>
+    </div>
+    <div *ngIf="data?.payId">
+        <div class="__widget-summary-item">
+            PayID
+        </div>
+        <div class="__widget-summary-item">
+            {{data?.payId}}
+        </div>
+        <div class="__form-separator"></div>
+    </div>
+    <div *ngIf="data?.uniqueReference">
+        <div class="__widget-summary-item">
+            Reference Code
+        </div>
+        <div class="__widget-summary-item">
+            {{data?.uniqueReference}}
+        </div>
+        <div class="__form-separator"></div>
+    </div>
+    <div *ngIf="data?.redirectUrl">
+        <a target="_blank" rel="noopener noreferrer" [href]="data?.redirectUrl">
+            {{data?.redirectUrl}}
+        </a>
+        <div class="__form-separator"></div>
+    </div>
+    
+    <div class="__widget-buttons-area">
+        <button class="__main-button" type="button" [disabled]="!completed" (click)="onComplete.emit()">next</button>
+    </div>
+</div>
