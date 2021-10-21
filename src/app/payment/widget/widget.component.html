@@ -32,6 +32,8 @@
   <div class="__widget-data-container">
     <div [ngClass]="{'__widget-wizard-container': true, '__widget-wizard-container-single': initState || !showSummary}"
       [ngSwitch]="stageId">
+      <!-- Initialization -->
+      <app-widget-initialization *ngSwitchCase="'initialization'"></app-widget-initialization>
       <!-- Order details -->
       <app-widget-order-details *ngSwitchCase="'order_details'" [initialized]="!initState" [summary]="summary"
         [settings]="widget" [withdrawalRate]="summary?.exchangeRate?.withdrawRate"

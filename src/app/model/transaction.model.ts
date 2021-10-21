@@ -93,7 +93,7 @@ export class TransactionItemDeprecated {
       // }
 
       this.rate = data.rate ?? 0;
-      this.fees = data.feeFiat;
+      this.fees = data.feeFiat as number ?? 0;
       this.status = data.status;
 
       if (data.paymentOrder) {
@@ -201,7 +201,7 @@ export class TransactionItem {
         this.currencyToReceive = data.currencyToReceive;
         this.amountToSpend = data.amountToSpend;
         this.amountToReceive = data.amountToReceive ?? 0;
-        this.fees = data.feeFiat;
+        this.fees = data.feeFiat as number ?? 0;
       } else {
         this.currencyToSpend = '-X-';
         this.currencyToReceive = '-X-';

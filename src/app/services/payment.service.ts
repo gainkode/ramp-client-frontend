@@ -3,7 +3,7 @@ import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { EmptyObject } from 'apollo-angular/types';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { PaymentInstrument, PaymentProvider, TransactionDestinationType, TransactionType } from '../model/generated-models';
+import { PaymentInstrument, PaymentProvider, TransactionType } from '../model/generated-models';
 import { CardView } from '../model/payment.model';
 
 const GET_RATES = gql`
@@ -70,7 +70,7 @@ mutation CreateTransaction(
   $amountToSpend: Float!,
   $instrument: PaymentInstrument!,
   $paymentProvider: String!,
-  $destinationType: TransactionDestinationType!,
+  $widgetUserParamsId: String!,
   $destination: String
 ) {
   createTransaction(transaction: {
@@ -80,7 +80,7 @@ mutation CreateTransaction(
     amountToSpend: $amountToSpend
     instrument: $instrument
     paymentProvider: $paymentProvider
-    destinationType: $destinationType
+    widgetUserParamsId: $widgetUserParamsId
     destination: $destination
   }) {
     transactionId,
@@ -161,6 +161,22 @@ mutation PreAuth(
 }
 `;
 
+const GET_WIDGET = gql`
+query GetWidget($id: String!) {
+  getWidget(
+    userParamsId: $id
+  ) {
+    transactionTypes
+    currenciesFrom
+    currenciesTo
+    instruments
+    paymentProviders
+    additionalSettings
+    currentUserEmail
+  }
+}
+`;
+
 @Injectable()
 export class PaymentDataService {
   constructor(private apollo: Apollo) { }
@@ -200,7 +216,7 @@ export class PaymentDataService {
     amount: number,
     instrument: PaymentInstrument,
     providerName: string,
-    destinationType: TransactionDestinationType,
+    widgetUserParamsId: string,
     walletAddress: string): Observable<any> {
     const wallet = (walletAddress === '') ? undefined : walletAddress;
     const vars = {
@@ -210,7 +226,7 @@ export class PaymentDataService {
       amountToSpend: amount,
       instrument,
       paymentProvider: providerName,
-      destinationType,
+      widgetUserParamsId,
       destination: wallet
     };
     return this.apollo.mutate({
@@ -260,6 +276,21 @@ export class PaymentDataService {
     if (this.apollo.client !== undefined) {
       return this.apollo.watchQuery<any>({
         query: GET_PROVIDERS,
+        fetchPolicy: 'network-only'
+      });
+    } else {
+      return null;
+    }
+  }
+
+  getWidget(paramsId: string): QueryRef<any, EmptyObject> | null {
+    if (this.apollo.client !== undefined) {
+      const vars = {
+        id: paramsId
+      };
+      return this.apollo.watchQuery<any>({
+        query: GET_WIDGET,
+        variables: vars,
         fetchPolicy: 'network-only'
       });
     } else {

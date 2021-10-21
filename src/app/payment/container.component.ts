@@ -235,7 +235,7 @@ export class ContainerComponentDeprecated implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute
   ) {
-    this.affiliateCode = route.snapshot.params['affiliateCode'] ?? '';
+    this.affiliateCode = this.route.snapshot.params['affiliateCode'] ?? '';
     this.summary = new CheckoutSummary();
     this.detailsEmailControl = this.detailsForm.get('email');
     this.detailsRegisterControl = this.detailsForm.get('createAccount');

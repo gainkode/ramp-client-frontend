@@ -3,7 +3,7 @@ import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Subscription, Observable, forkJoin } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { CommonGroupValue } from 'src/app/model/common.model';
-import { PaymentInstrument, PaymentProvider, TransactionDestinationType, TransactionShort, TransactionType, UserState } from 'src/app/model/generated-models';
+import { PaymentInstrument, PaymentProvider, TransactionShort, TransactionType, UserState } from 'src/app/model/generated-models';
 import { CheckoutSummary, PaymentProviderView, WidgetSettings } from 'src/app/model/payment.model';
 import { ErrorService } from 'src/app/services/error.service';
 import { PaymentDataService } from 'src/app/services/payment.service';

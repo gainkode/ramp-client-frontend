@@ -413,7 +413,6 @@ export type QueryGetWidgetsArgs = {
 
 
 export type QueryGetWidgetArgs = {
-  widgetId: Scalars['String'];
   userParamsId?: Maybe<Scalars['String']>;
 };
 
@@ -1121,28 +1120,25 @@ export type TransactionShort = {
   code?: Maybe<Scalars['String']>;
   userId?: Maybe<Scalars['String']>;
   userIp?: Maybe<Scalars['String']>;
-  affiliateId?: Maybe<Scalars['String']>;
-  affiliateUser?: Maybe<UserShort>;
   created?: Maybe<Scalars['DateTime']>;
   executed?: Maybe<Scalars['DateTime']>;
   type: TransactionType;
   status: TransactionStatus;
-  feeFiat: Scalars['Float'];
-  feePercent: Scalars['Float'];
-  feeMinFiat: Scalars['Float'];
-  feeDetails: Scalars['String'];
+  feeFiat?: Maybe<Scalars['Float']>;
+  feePercent?: Maybe<Scalars['Float']>;
+  feeMinFiat?: Maybe<Scalars['Float']>;
+  feeDetails?: Maybe<Scalars['String']>;
   currencyToSpend: Scalars['String'];
   amountToSpend: Scalars['Float'];
-  amountToSpendWithoutFee: Scalars['Float'];
+  amountToSpendWithoutFee?: Maybe<Scalars['Float']>;
   currencyToReceive: Scalars['String'];
-  initialAmountToReceive: Scalars['Float'];
-  initialAmountToReceiveWithoutFee: Scalars['Float'];
+  initialAmountToReceive?: Maybe<Scalars['Float']>;
+  initialAmountToReceiveWithoutFee?: Maybe<Scalars['Float']>;
   amountToReceive?: Maybe<Scalars['Float']>;
   amountToReceiveWithoutFee?: Maybe<Scalars['Float']>;
-  initialRate: Scalars['Float'];
+  initialRate?: Maybe<Scalars['Float']>;
   rate?: Maybe<Scalars['Float']>;
-  rateFiatToEur: Scalars['Float'];
-  destinationType?: Maybe<TransactionDestinationType>;
+  rateFiatToEur?: Maybe<Scalars['Float']>;
   destination?: Maybe<Scalars['String']>;
   countryCode2?: Maybe<Scalars['String']>;
   countryCode3?: Maybe<Scalars['String']>;
@@ -1156,25 +1152,10 @@ export type TransactionShort = {
   paymentOrder?: Maybe<PaymentOrder>;
   liquidityOrder?: Maybe<LiquidityOrder>;
   transferOrder?: Maybe<TransferOrder>;
+  widgetId?: Maybe<Scalars['String']>;
+  widgetUserParamsId?: Maybe<Scalars['String']>;
+  widgetUserParams?: Maybe<Scalars['String']>;
   data?: Maybe<Scalars['String']>;
-};
-
-export type UserShort = {
-  __typename?: 'UserShort';
-  email: Scalars['String'];
-  type?: Maybe<UserType>;
-  firstName?: Maybe<Scalars['String']>;
-  lastName?: Maybe<Scalars['String']>;
-  avatar?: Maybe<Scalars['String']>;
-  birthday?: Maybe<Scalars['DateTime']>;
-  countryCode2?: Maybe<Scalars['String']>;
-  countryCode3?: Maybe<Scalars['String']>;
-  kycValid?: Maybe<Scalars['Boolean']>;
-  kycStatus?: Maybe<Scalars['String']>;
-  kycReviewComment?: Maybe<Scalars['String']>;
-  defaultFiatCurrency?: Maybe<Scalars['String']>;
-  defaultCryptoCurrency?: Maybe<Scalars['String']>;
-  affiliateCode?: Maybe<Scalars['String']>;
 };
 
 export enum TransactionStatus {
@@ -1198,13 +1179,6 @@ export enum TransactionStatus {
   Abandoned = 'Abandoned',
   Canceled = 'Canceled',
   Chargeback = 'Chargeback'
-}
-
-export enum TransactionDestinationType {
-  User = 'USER',
-  Affiliate = 'AFFILIATE',
-  Address = 'ADDRESS',
-  Widget = 'WIDGET'
 }
 
 export enum CustodyProvider {
@@ -1328,7 +1302,6 @@ export type TransferOrder = {
   amount?: Maybe<Scalars['Float']>;
   currency?: Maybe<Scalars['String']>;
   destination?: Maybe<Scalars['String']>;
-  destinationType?: Maybe<TransactionDestinationType>;
   originalOrderId?: Maybe<Scalars['String']>;
   transferHash?: Maybe<Scalars['String']>;
   transferDetails?: Maybe<Scalars['String']>;
@@ -1349,31 +1322,28 @@ export type Transaction = {
   userId: Scalars['String'];
   userIp?: Maybe<Scalars['String']>;
   user?: Maybe<User>;
-  affiliateId?: Maybe<Scalars['String']>;
-  affiliateUser?: Maybe<User>;
   created?: Maybe<Scalars['DateTime']>;
   executed?: Maybe<Scalars['DateTime']>;
   type: TransactionType;
   status: TransactionStatus;
   kycStatus: TransactionKycStatus;
-  feeFiat: Scalars['Float'];
-  feePercent: Scalars['Float'];
-  feeMinFiat: Scalars['Float'];
-  feeDetails: Scalars['String'];
+  feeFiat?: Maybe<Scalars['Float']>;
+  feePercent?: Maybe<Scalars['Float']>;
+  feeMinFiat?: Maybe<Scalars['Float']>;
+  feeDetails?: Maybe<Scalars['String']>;
   userDefaultFiatCurrency: Scalars['String'];
   userDefaultCryptoCurrency: Scalars['String'];
   currencyToSpend: Scalars['String'];
   amountToSpend: Scalars['Float'];
-  amountToSpendWithoutFee: Scalars['Float'];
+  amountToSpendWithoutFee?: Maybe<Scalars['Float']>;
   currencyToReceive: Scalars['String'];
-  initialAmountToReceive: Scalars['Float'];
-  initialAmountToReceiveWithoutFee: Scalars['Float'];
+  initialAmountToReceive?: Maybe<Scalars['Float']>;
+  initialAmountToReceiveWithoutFee?: Maybe<Scalars['Float']>;
   amountToReceive?: Maybe<Scalars['Float']>;
   amountToReceiveWithoutFee?: Maybe<Scalars['Float']>;
-  initialRate: Scalars['Float'];
+  initialRate?: Maybe<Scalars['Float']>;
   rate?: Maybe<Scalars['Float']>;
-  rateFiatToEur: Scalars['Float'];
-  destinationType?: Maybe<TransactionDestinationType>;
+  rateFiatToEur?: Maybe<Scalars['Float']>;
   destination?: Maybe<Scalars['String']>;
   countryCode2?: Maybe<Scalars['String']>;
   countryCode3?: Maybe<Scalars['String']>;
@@ -1397,6 +1367,9 @@ export type Transaction = {
   userBalanceTotalAfter?: Maybe<Scalars['Float']>;
   userBalanceAvailableAfter?: Maybe<Scalars['Float']>;
   hasBeenBenchmarked?: Maybe<Scalars['Boolean']>;
+  widgetId?: Maybe<Scalars['String']>;
+  widgetUserParamsId?: Maybe<Scalars['String']>;
+  widgetUserParams?: Maybe<Scalars['String']>;
   data?: Maybe<Scalars['String']>;
 };
 
@@ -1554,7 +1527,7 @@ export type Widget = {
   widgetId: Scalars['ID'];
   userId: Scalars['String'];
   created: Scalars['DateTime'];
-  transactionType?: Maybe<Array<TransactionType>>;
+  transactionTypes?: Maybe<Array<TransactionType>>;
   currenciesFrom?: Maybe<Array<Scalars['String']>>;
   currenciesTo?: Maybe<Array<Scalars['String']>>;
   destinationAddress?: Maybe<Scalars['String']>;
@@ -1568,15 +1541,14 @@ export type Widget = {
 
 export type WidgetShort = {
   __typename?: 'WidgetShort';
-  transactionType?: Maybe<Array<TransactionType>>;
+  transactionTypes?: Maybe<Array<TransactionType>>;
   currenciesFrom?: Maybe<Array<Scalars['String']>>;
   currenciesTo?: Maybe<Array<Scalars['String']>>;
   hasFixedAddress: Scalars['Boolean'];
   instruments?: Maybe<Array<PaymentInstrument>>;
   paymentProviders?: Maybe<Array<Scalars['String']>>;
-  liquidityProvider?: Maybe<LiquidityProvider>;
   additionalSettings?: Maybe<Scalars['String']>;
-  currentUserParams?: Maybe<Scalars['String']>;
+  currentUserEmail?: Maybe<Scalars['String']>;
 };
 
 
@@ -2193,7 +2165,6 @@ export type UserInput = {
   email?: Maybe<Scalars['String']>;
   type?: Maybe<UserType>;
   mode?: Maybe<UserMode>;
-  merchantIds?: Maybe<Array<Scalars['String']>>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   birthday?: Maybe<Scalars['DateTime']>;
@@ -2212,9 +2183,6 @@ export type UserInput = {
   phone?: Maybe<Scalars['String']>;
   avatar?: Maybe<Scalars['String']>;
   termsOfUse?: Maybe<Scalars['Boolean']>;
-  emailConfirmed?: Maybe<Scalars['DateTime']>;
-  deleted?: Maybe<Scalars['DateTime']>;
-  changePasswordRequired?: Maybe<Scalars['Boolean']>;
   defaultFiatCurrency?: Maybe<Scalars['String']>;
   defaultCryptoCurrency?: Maybe<Scalars['String']>;
 };
@@ -2276,16 +2244,15 @@ export type TransactionInput = {
   currencyToSpend: Scalars['String'];
   currencyToReceive: Scalars['String'];
   amountToSpend: Scalars['Float'];
-  destinationType?: Maybe<TransactionDestinationType>;
   destination?: Maybe<Scalars['String']>;
   instrument: PaymentInstrument;
   paymentProvider?: Maybe<Scalars['String']>;
-  liquidityProvider?: Maybe<LiquidityProvider>;
+  widgetUserParamsId?: Maybe<Scalars['String']>;
   data?: Maybe<Scalars['String']>;
 };
 
 export type WidgetInput = {
-  transactionType?: Maybe<Array<TransactionType>>;
+  transactionTypes?: Maybe<Array<TransactionType>>;
   currenciesFrom?: Maybe<Array<Scalars['String']>>;
   currenciesTo?: Maybe<Array<Scalars['String']>>;
   destinationAddresses?: Maybe<Array<Scalars['String']>>;
@@ -2297,8 +2264,8 @@ export type WidgetInput = {
 };
 
 export type WidgetUserParamsInput = {
-  widgetId?: Maybe<Scalars['String']>;
-  userId?: Maybe<Scalars['String']>;
+  widgetId: Scalars['String'];
+  userEmail: Scalars['String'];
   params?: Maybe<Scalars['String']>;
 };
 
@@ -2517,6 +2484,24 @@ export type UserNotificationTypeListResult = {
   __typename?: 'UserNotificationTypeListResult';
   count?: Maybe<Scalars['Int']>;
   list?: Maybe<Array<UserNotificationType>>;
+};
+
+export type UserShort = {
+  __typename?: 'UserShort';
+  email: Scalars['String'];
+  type?: Maybe<UserType>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  avatar?: Maybe<Scalars['String']>;
+  birthday?: Maybe<Scalars['DateTime']>;
+  countryCode2?: Maybe<Scalars['String']>;
+  countryCode3?: Maybe<Scalars['String']>;
+  kycValid?: Maybe<Scalars['Boolean']>;
+  kycStatus?: Maybe<Scalars['String']>;
+  kycReviewComment?: Maybe<Scalars['String']>;
+  defaultFiatCurrency?: Maybe<Scalars['String']>;
+  defaultCryptoCurrency?: Maybe<Scalars['String']>;
+  affiliateCode?: Maybe<Scalars['String']>;
 };
 
 export enum TokenAction {

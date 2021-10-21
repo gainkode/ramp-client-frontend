@@ -1,7 +1,8 @@
 import { SummaryResolver } from '@angular/compiler';
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { LoginResult, PaymentInstrument, PaymentPreauthResultShort, Rate, TransactionDestinationType, TransactionShort, TransactionType, UserMode, UserType } from 'src/app/model/generated-models';
+import { LoginResult, PaymentInstrument, PaymentPreauthResultShort, Rate, TransactionShort, TransactionType, UserMode, UserType, WidgetShort } from 'src/app/model/generated-models';
 import { CardView, CheckoutSummary, PaymentProviderView, WidgetSettings, WidgetStage } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
@@ -25,6 +26,7 @@ export class WidgetComponent implements OnInit {
   inProgress = false;
   internalPayment = false;
   initState = true;
+  userParamsId = '';
   showSummary = true;
   mobileSummary = false;
   stageId = 'order_details';
@@ -52,7 +54,10 @@ export class WidgetComponent implements OnInit {
     private notification: NotificationService,
     private auth: AuthService,
     private dataService: PaymentDataService,
-    private errorHandler: ErrorService) { }
+    private errorHandler: ErrorService,
+    private route: ActivatedRoute) {
+    this.userParamsId = this.route.snapshot.params['userParamsId'] ?? '';
+  }
 
   ngOnInit(): void {
     // temp
@@ -62,13 +67,19 @@ export class WidgetComponent implements OnInit {
     if (!environment.production) {
       this.widget.walletAddress = 'mkBUjw37y46goULToq6b7y6ciJc3Qi32YM';
     }
-    //this.widget.walletAddress = 'mkBUjw37y46goULToq6b7y6ciJc3Qi32YM';
     //this.widget.disclaimer = true;
     // temp
 
-    this.initData();
-    this.exhangeRate.setCurrency(this.summary.currencyFrom, this.summary.currencyTo, this.summary.transactionType);
-    this.exhangeRate.register(this.onExchangeRateUpdated.bind(this));
+    if (this.userParamsId === '') {
+      this.stageId = 'order_details';
+      this.title = 'Order details';
+      this.initData();
+    } else {
+      this.stageId = 'initialization';
+      this.title = 'Initialization';
+      this.loadUserParams();
+    }
+    this.startExchangeRate();
   }
 
   ngOnDestroy(): void {
@@ -87,8 +98,6 @@ export class WidgetComponent implements OnInit {
       const user = this.auth.user;
       if (user) {
         this.summary.email = this.auth?.user?.email ?? '';
-      } else {
-        this.auth.logout();
       }
     }
     if (this.widget.transaction) {
@@ -97,6 +106,11 @@ export class WidgetComponent implements OnInit {
     if (this.widget.walletAddress) {
       this.summary.address = this.widget.walletAddress;
     }
+  }
+
+  private startExchangeRate(): void {
+    this.exhangeRate.setCurrency(this.summary.currencyFrom, this.summary.currencyTo, this.summary.transactionType);
+    this.exhangeRate.register(this.onExchangeRateUpdated.bind(this));
   }
 
   private startNotificationListener(): void {
@@ -236,6 +250,32 @@ export class WidgetComponent implements OnInit {
     }
   }
 
+  private loadUserParams(): void {
+    this.errorMessage = '';
+    this.inProgress = true;
+    const widgetData = this.dataService.getWidget(this.userParamsId);
+    if (widgetData === null) {
+      this.errorMessage = this.errorHandler.getRejectedCookieMessage();
+    } else {
+      this.pSubscriptions.add(
+        widgetData.valueChanges.subscribe(({ data }) => {
+          this.inProgress = false;
+          const widgetInfo = data.getWidget as WidgetShort;
+          console.log(widgetInfo);
+          this.initData();
+          this.stageId = 'order_details';
+          this.title = 'Order details';
+          //this.initData();
+        }, (error) => {
+          this.inProgress = false;
+          this.stageId = 'order_details';
+          this.title = 'Order details';
+          //this.initData();
+        })
+      );
+    }
+  }
+
   // == Order details page ==
   orderDetailsChanged(data: CheckoutSummary): void {
     this.stopNotificationListener();
@@ -371,7 +411,7 @@ export class WidgetComponent implements OnInit {
     }
   }
   // ======================
-  
+
   // == Auth ========
   onRegister(email: string): void {
     this.summary.email = email;
@@ -502,10 +542,8 @@ export class WidgetComponent implements OnInit {
     this.errorMessage = '';
     this.inProgress = true;
     if (this.summary) {
-      let destinationType = TransactionDestinationType.Address;
       let destination = this.summary.address;
       if (this.widget.affiliateCode !== '') {
-        destinationType = TransactionDestinationType.Widget;
         destination = this.widget.affiliateCode;
       }
       this.pSubscriptions.add(
@@ -516,7 +554,7 @@ export class WidgetComponent implements OnInit {
           this.summary.amountFrom ?? 0,
           instrument,
           providerId,
-          destinationType,
+          this.userParamsId,
           destination
         ).subscribe(({ data }) => {
           if (!this.notificationStarted) {
@@ -528,9 +566,9 @@ export class WidgetComponent implements OnInit {
             this.summary.instrument = instrument;
             this.summary.providerView = this.paymentProviders.find(x => x.id === providerId);
             this.summary.orderId = order.code as string;
-            this.summary.fee = order.feeFiat;
-            this.summary.feeMinFiat = order.feeMinFiat;
-            this.summary.feePercent = order.feePercent;
+            this.summary.fee = order.feeFiat as number ?? 0;
+            this.summary.feeMinFiat = order.feeMinFiat as number ?? 0;
+            this.summary.feePercent = order.feePercent as number ?? 0;
             this.summary.transactionDate = new Date().toLocaleString();
             this.summary.transactionId = order.transactionId as string;
             this.startPayment();

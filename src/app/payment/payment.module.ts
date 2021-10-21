@@ -18,7 +18,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatStepperModule } from '@angular/material/stepper';
 import { ComponentsModule } from '../components/components.module';
 import { PaymentComponent } from './payment.component';
-import { ContainerComponentDeprecated } from './container.component';
+//import { ContainerComponentDeprecated } from './container.component';
 import { QuickCheckoutComponent } from './quickcheckout.component';
 import { WidgetComponent } from './widget/widget.component';
 import { WidgetProgressComponent } from './widget/progress.component';
@@ -36,15 +36,16 @@ import { WidgetKycComponent } from './widget/kyc.component';
 import { WidgetProcessingFrameComponent } from './widget/processing-frame.component';
 import { WidgetSettingsService } from './widget/settings-service.component';
 import { WidgetProcessingInstantpayComponent } from './widget/processing-instantpay.component';
+import { WidgetInitializationComponent } from './widget/initialization.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
 const routing = RouterModule.forChild([
     { path: 'qc', component: PaymentComponent },
     { path: 'quickcheckout', component: QuickCheckoutComponent },
-    { path: 'container/:affiliateCode', component: ContainerComponentDeprecated },
-    { path: 'container', component: ContainerComponentDeprecated },
-    { path: 'widget/:affiliateCode', component: ContainerComponentDeprecated },
+    // { path: 'container/:affiliateCode', component: ContainerComponentDeprecated },
+    // { path: 'container', component: ContainerComponentDeprecated },
+    { path: 'widget/:userParamsId', component: WidgetComponent },
     { path: '**', redirectTo: 'quickcheckout' }
 ]);
 
@@ -73,11 +74,11 @@ export class MaterialModule { }
 
 @NgModule({
     imports: [NgxMaskModule.forRoot(), CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule],
-    declarations: [PaymentComponent, QuickCheckoutComponent, ContainerComponentDeprecated,
+    declarations: [PaymentComponent, QuickCheckoutComponent, //ContainerComponentDeprecated,
         WidgetComponent, WidgetProgressComponent, WidgetSummaryComponent, WidgetRateComponent, WidgetCreditCardComponent,
         WidgetRegisterComponent, WidgetLoginAuthComponent, WidgetCodeAuthComponent,
-        WidgetOrderDetailsComponent, WidgetDisclaimerComponent, WidgetPaymentComponent, WidgetKycComponent,
-        WidgetProcessingFrameComponent, WidgetProcessingInstantpayComponent, WidgetCompleteComponent,
+        WidgetInitializationComponent, WidgetOrderDetailsComponent, WidgetDisclaimerComponent, WidgetKycComponent,
+        WidgetPaymentComponent, WidgetProcessingFrameComponent, WidgetProcessingInstantpayComponent, WidgetCompleteComponent,
         WidgetSettingsService],
     providers: [],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
