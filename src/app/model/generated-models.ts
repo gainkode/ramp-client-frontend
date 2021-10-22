@@ -1128,6 +1128,8 @@ export type TransactionShort = {
   feePercent?: Maybe<Scalars['Float']>;
   feeMinFiat?: Maybe<Scalars['Float']>;
   feeDetails?: Maybe<Scalars['String']>;
+  approxNetworkFee?: Maybe<Scalars['Float']>;
+  approxNetworkFeeFiat?: Maybe<Scalars['Float']>;
   currencyToSpend: Scalars['String'];
   amountToSpend: Scalars['Float'];
   amountToSpendWithoutFee?: Maybe<Scalars['Float']>;
@@ -1331,6 +1333,8 @@ export type Transaction = {
   feePercent?: Maybe<Scalars['Float']>;
   feeMinFiat?: Maybe<Scalars['Float']>;
   feeDetails?: Maybe<Scalars['String']>;
+  approxNetworkFee?: Maybe<Scalars['Float']>;
+  approxNetworkFeeFiat?: Maybe<Scalars['Float']>;
   userDefaultFiatCurrency: Scalars['String'];
   userDefaultCryptoCurrency: Scalars['String'];
   currencyToSpend: Scalars['String'];
@@ -1527,6 +1531,7 @@ export type Widget = {
   widgetId: Scalars['ID'];
   userId: Scalars['String'];
   created: Scalars['DateTime'];
+  transactionType?: Maybe<TransactionType>;
   transactionTypes?: Maybe<Array<TransactionType>>;
   currenciesFrom?: Maybe<Array<Scalars['String']>>;
   currenciesTo?: Maybe<Array<Scalars['String']>>;
@@ -1541,6 +1546,7 @@ export type Widget = {
 
 export type WidgetShort = {
   __typename?: 'WidgetShort';
+  transactionType?: Maybe<TransactionType>;
   transactionTypes?: Maybe<Array<TransactionType>>;
   currenciesFrom?: Maybe<Array<Scalars['String']>>;
   currenciesTo?: Maybe<Array<Scalars['String']>>;

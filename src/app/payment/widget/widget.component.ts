@@ -60,16 +60,6 @@ export class WidgetComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // temp
-    //this.widget.kycFirst = true;
-    //this.widget.email = 'tugaymv@gmail.com';
-    this.widget.transaction = TransactionType.Deposit;
-    if (!environment.production) {
-      this.widget.walletAddress = '2MwUASao7s4zH9TGD5jhbqwXJBqoMR2EYr5';
-    }
-    //this.widget.disclaimer = true;
-    // temp
-
     if (this.userParamsId === '') {
       this.stageId = 'order_details';
       this.title = 'Order details';
@@ -90,6 +80,7 @@ export class WidgetComponent implements OnInit {
 
   private initData(data: WidgetShort | undefined): void {
     if (data) {
+      console.log(data);
       if (data.additionalSettings) {
         //{"minAmountFrom":0,"maxAmountFrom":0,"fixedAmountFrom":0,"kycBeforePayment":false,"disclaimer":true}
         const extraData = JSON.parse(data.additionalSettings);
@@ -102,10 +93,20 @@ export class WidgetComponent implements OnInit {
       this.widget.email = data.currentUserEmail as string;
       const fixedAddress = data.hasFixedAddress ?? false;
       this.widget.walletAddress = (fixedAddress) ? 'fixedAddress' : this.widget.walletAddress;
+      this.widget.transaction = data.transactionType ?? undefined;
     } else {
       this.widget.disclaimer = true;
       this.widget.kycFirst = false;
       this.widget.email = '';
+      // temp
+      //this.widget.kycFirst = true;
+      //this.widget.email = 'tugaymv@gmail.com';
+      //this.widget.disclaimer = true;
+      this.widget.transaction = TransactionType.Deposit;
+      //temp
+      if (!environment.production) {
+        this.widget.walletAddress = '2MwUASao7s4zH9TGD5jhbqwXJBqoMR2EYr5';
+      }
     }
 
     if (!this.widget.disclaimer) {
