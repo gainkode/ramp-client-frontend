@@ -70,7 +70,7 @@ mutation CreateTransaction(
   $amountToSpend: Float!,
   $instrument: PaymentInstrument!,
   $paymentProvider: String!,
-  $widgetUserParamsId: String!,
+  $widgetUserParamsId: String,
   $destination: String
 ) {
   createTransaction(transaction: {
