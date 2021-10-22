@@ -80,7 +80,6 @@ export class WidgetComponent implements OnInit {
 
   private initData(data: WidgetShort | undefined): void {
     if (data) {
-      console.log(data);
       if (data.additionalSettings) {
         //{"minAmountFrom":0,"maxAmountFrom":0,"fixedAmountFrom":0,"kycBeforePayment":false,"disclaimer":true}
         const extraData = JSON.parse(data.additionalSettings);

@@ -72,8 +72,8 @@
       <app-widget-processing-frame *ngSwitchCase="'processing-frame'" [iframeContent]="iframeContent"
         [completed]="paymentComplete" (onComplete)="processingComplete()">
       </app-widget-processing-frame>
-      <app-widget-processing-instantpay *ngSwitchCase="'processing-instantpay'" [details]="instantpayDetails">
-
+      <app-widget-processing-instantpay *ngSwitchCase="'processing-instantpay'" [details]="instantpayDetails"
+        (onComplete)="processingComplete()">
       </app-widget-processing-instantpay>
       <!-- Complete -->
       <app-widget-complete *ngSwitchCase="'complete'" [showRestartButton]="widget.affiliateCode===''"
