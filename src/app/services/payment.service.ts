@@ -216,7 +216,7 @@ export class PaymentDataService {
     amount: number,
     instrument: PaymentInstrument,
     providerName: string,
-    widgetUserParamsId: string,
+    userParamsId: string,
     walletAddress: string): Observable<any> {
     const wallet = (walletAddress === '') ? undefined : walletAddress;
     const vars = {
@@ -226,7 +226,7 @@ export class PaymentDataService {
       amountToSpend: amount,
       instrument,
       paymentProvider: providerName,
-      widgetUserParamsId,
+      widgetUserParamsId: (userParamsId !== '') ? userParamsId : undefined,
       destination: wallet
     };
     return this.apollo.mutate({
