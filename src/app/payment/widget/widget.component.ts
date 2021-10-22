@@ -73,7 +73,7 @@ export class WidgetComponent implements OnInit {
     if (this.userParamsId === '') {
       this.stageId = 'order_details';
       this.title = 'Order details';
-      this.initData();
+      this.initData(undefined);
     } else {
       this.stageId = 'initialization';
       this.title = 'Initialization';
@@ -88,7 +88,26 @@ export class WidgetComponent implements OnInit {
     this.exhangeRate.stop();
   }
 
-  private initData(): void {
+  private initData(data: WidgetShort | undefined): void {
+    if (data) {
+      if (data.additionalSettings) {
+        //{"minAmountFrom":0,"maxAmountFrom":0,"fixedAmountFrom":0,"kycBeforePayment":false,"disclaimer":true}
+        const extraData = JSON.parse(data.additionalSettings);
+        this.widget.disclaimer = extraData.disclaimer ?? true;
+        this.widget.kycFirst = extraData.kycBeforePayment ?? false;
+      } else {
+        this.widget.disclaimer = true;
+        this.widget.kycFirst = false;
+      }
+      this.widget.email = data.currentUserEmail as string;
+      const fixedAddress = data.hasFixedAddress ?? false;
+      this.widget.walletAddress = (fixedAddress) ? 'fixedAddress' : this.widget.walletAddress;
+    } else {
+      this.widget.disclaimer = true;
+      this.widget.kycFirst = false;
+      this.widget.email = '';
+    }
+
     if (!this.widget.disclaimer) {
       this.summary.agreementChecked = true;
     }
@@ -186,7 +205,7 @@ export class WidgetComponent implements OnInit {
 
   resetWizard(): void {
     this.summary.reset();
-    this.initData();
+    this.initData(undefined);
     this.stages = [];
     this.nextStage('order_details', 'Order details', 1, false);
   }
@@ -260,17 +279,14 @@ export class WidgetComponent implements OnInit {
       this.pSubscriptions.add(
         widgetData.valueChanges.subscribe(({ data }) => {
           this.inProgress = false;
-          const widgetInfo = data.getWidget as WidgetShort;
-          console.log(widgetInfo);
-          this.initData();
+          this.initData(data.getWidget as WidgetShort);
           this.stageId = 'order_details';
           this.title = 'Order details';
-          //this.initData();
         }, (error) => {
           this.inProgress = false;
+          this.initData(undefined);
           this.stageId = 'order_details';
           this.title = 'Order details';
-          //this.initData();
         })
       );
     }
