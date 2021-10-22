@@ -65,7 +65,7 @@ export class WidgetComponent implements OnInit {
     //this.widget.email = 'tugaymv@gmail.com';
     this.widget.transaction = TransactionType.Deposit;
     if (!environment.production) {
-      this.widget.walletAddress = 'mkBUjw37y46goULToq6b7y6ciJc3Qi32YM';
+      this.widget.walletAddress = '2MwUASao7s4zH9TGD5jhbqwXJBqoMR2EYr5';
     }
     //this.widget.disclaimer = true;
     // temp
