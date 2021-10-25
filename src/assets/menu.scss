@@ -153,6 +153,19 @@
     }
 }
 
+.__side-menu-data-container {
+    margin-top: 44px;
+    margin-left: 48px;
+
+    @media (max-width: $md1 + px) {
+        margin-left: 0px;
+    }
+
+    @media (max-width: $md2 + px) {
+        margin-left: 0px;
+    }
+}
+
 .__tool-bar-container {
     margin: 16px 24px 24px 24px;
 }

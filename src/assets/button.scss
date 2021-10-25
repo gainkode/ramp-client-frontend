@@ -1,5 +1,6 @@
 @import "fonts.scss";
 @import "colors.scss";
+@import "./consts.scss";
 
 .__main-button {
     justify-content: center;
@@ -308,9 +309,11 @@
 }
 
 .__side-menu-button {
-    justify-content: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: baseline;
     align-items: center;
-    padding: 0px 10px 0px 48px;
+    padding: 0px 10px 0px 24px;
     width: 100%;
     height: 56px;
     margin: 12px auto;
@@ -321,8 +324,8 @@
     font-family: $font_main;
     font-style: normal;
     font-weight: normal;
-    font-size: 21px;
-    line-height: 15px;
+    font-size: 16px;
+    line-height: 28px;
     color: $color_purple_900_text;
 
     text-align: left;
@@ -343,9 +346,11 @@
 }
 
 .__side-menu-selected-button {
-    justify-content: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: baseline;
     align-items: center;
-    padding: 0px 10px 0px 48px;
+    padding: 0px 10px 0px 24px;
     width: 100%;
     height: 56px;
     margin: 12px auto;
@@ -357,8 +362,8 @@
     font-family: $font_main;
     font-style: normal;
     font-weight: normal;
-    font-size: 21px;
-    line-height: 15px;
+    font-size: 16px;
+    line-height: 28px;
     color: $color_main_blue_800;
 
     text-align: left;
@@ -377,24 +382,17 @@
     align-items: center;
     padding: 0px;
     width: 100%;
-    height: 92px;
-    margin: 6px auto;
+    height: 32px;
+    margin: 36px auto;
 
     border: none;
     background-color: $color_white;
 
-    font-family: $font_main;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 28px;
-    color: $color_purple_900_text;
-
     #button_icon {
-        font-size: 48px;
+        font-size: 24px;
         margin: auto;
-        width: 48px;
-        height: 48px;
+        width: 24px;
+        height: 24px;
         color: $color_purple_900_icons;
     }
 }
@@ -426,24 +424,17 @@
     align-items: center;
     padding: 0px;
     width: 100%;
-    height: 92px;
-    margin: 6px auto;
+    height: 28px;
+    margin: 38px auto;
 
     border: none;
-    background-color: $color_white;
+    background-color: transparent;
     
-    font-family: $font_main;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 28px;
-    color: $color_main_blue_800;
-
     #button_icon {
-        font-size: 48px;
+        font-size: 24px;
         margin: auto;
-        width: 48px;
-        height: 48px;
+        width: 24px;
+        height: 24px;
         color: $color_main_blue_800;
     }
 }
@@ -539,15 +530,13 @@
     }
 }
 
-.__side-menu-button-container-sm {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
 .__side-menu-button-title {
-    margin: 6px;
+    margin: auto 16px;
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 28px;
 }
 
 .__button-separator {

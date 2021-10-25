@@ -1,23 +1,23 @@
-<div *ngIf="expanded">
+<div *ngIf="expanded" class="__side-menu-data-container">
     <div *ngFor="let item of items">
         <button [ngClass]="(selectedItem===item.id) ? '__side-menu-selected-button' : '__side-menu-button'"
             (click)="clickItem(item)">
-            {{item.name}}
+            <mat-icon id="button_icon">
+                {{item.icon}}
+            </mat-icon>
+            <div class="__side-menu-button-title">
+                {{item.name}}
+            </div>
         </button>
     </div>
 </div>
 <div *ngIf="!expanded">
     <div *ngFor="let item of items">
         <button [ngClass]="(selectedItem===item.id) ? '__side-menu-selected-button-sm' : '__side-menu-button-sm'"
-            (click)="clickItem(item)">
-            <div class="__side-menu-button-container-sm">
-                <mat-icon id="button_icon">
-                    {{item.icon}}
-                </mat-icon>
-                <div class="__side-menu-button-title">
-                    {{item.name}}
-                </div>
-            </div>
+            #tooltip="matTooltip" [matTooltip]="item.name" [matTooltipDisabled]="selectedItem===item.id" (click)="clickItem(item)">
+            <mat-icon id="button_icon">
+                {{item.icon}}
+            </mat-icon>
         </button>
     </div>
 </div>

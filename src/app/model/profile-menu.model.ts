@@ -27,9 +27,9 @@ export const PersonalProfileMenuItems: Array<MenuItem> = [
     },
     
     {
-        id: 'swap',
-        name: 'Swap',
-        url: '/personal/main/swap',
+        id: 'pricelist',
+        name: 'Crypto Pricelist',
+        url: '/personal/main/pricelist',
         icon: 'sync_alt'
     }
 ];
