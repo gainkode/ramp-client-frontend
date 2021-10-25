@@ -10,11 +10,19 @@
     -moz-box-align  : center;
     align-items     : center;
     -moz-box-pack   : justify;
-    height          : $top_menu_height + px;
-    padding         : 0px 24px;
-    background-color: $color_white;
+    height          : $top_menu_height_lg + px;
+    padding         : 0px 24px 0px 0px;
+    background-color: $color_purple_900;
     width: 100%;
     z-index: 100;
+
+    @media (max-width: $md1 + px) {
+        height          : $top_menu_height_sm + px;
+    }
+    
+    @media (max-width: $md2 + px) {
+        height          : $top_menu_height_sm + px;
+    }
 
     @media (max-width: $md3 + px) {
         width: 0px;
@@ -27,6 +35,48 @@
     width           : 100%;
     display         : flex;
     justify-content : flex-end;
+}
+
+.__top-menu-content-bar-profile-side-menu-expanded {
+    width           : 100%;
+    display         : flex;
+    justify-content : space-between;
+    align-items: center;
+    margin-left: $side_menu_width_lg + px;
+
+    @media (max-width: $md1 + px) {
+        margin-left: $side_menu_width_sm + px;
+    }
+    
+    @media (max-width: $md2 + px) {
+        margin-left: $side_menu_width_sm + px;
+    }
+
+    @media (max-width: $md3 + px) {
+        width: 0px;
+        visibility: hidden;
+    }
+}
+
+.__top-menu-content-bar-profile-side-menu-collapsed {
+    width           : 100%;
+    display         : flex;
+    justify-content : space-between;
+    align-items: center;
+    margin-left: $side_menu_narrow_width_lg + px;
+
+    @media (max-width: $md1 + px) {
+        margin-left: $side_menu_narrow_width_sm + px;
+    }
+    
+    @media (max-width: $md2 + px) {
+        margin-left: $side_menu_narrow_width_sm + px;
+    }
+
+    @media (max-width: $md3 + px) {
+        width: 0px;
+        visibility: hidden;
+    }
 }
 
 .__top-menu-content-box {
@@ -186,7 +236,13 @@ input.__tool-bar-text-box-error:focus {
     border-bottom-width: 2px;
 }
 
-
+.__top-menu-button-separator {
+    width: 1px;
+    height: 28px;
+    background-color: $color_purple_50;
+    margin: 0px 8px;
+    opacity: 0.3;
+}
 
 
 

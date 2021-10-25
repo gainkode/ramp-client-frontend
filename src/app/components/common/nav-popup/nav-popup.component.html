@@ -10,8 +10,9 @@
                 <img src="../../../assets/navigation/__temp_user_icon.svg" alt="Avatar">
             </div>
         </div>
-        <img [ngClass]="menuOpened ? '__nav-popup-arrow-up' : '__nav-popup-arrow-down'"
-            src="../../../assets/navigation/plain_arrow_down.svg">
+        <mat-icon class="__nav-popup-arrow">{{menuArrow}}</mat-icon>
+        <!-- <img [ngClass]="menuOpened ? '__nav-popup-arrow-up' : '__nav-popup-arrow-down'"
+            src="../../../assets/navigation/plain_arrow_down.svg"> -->
     </button>
     <mat-menu #menu="matMenu" class="__popup-menu-panel" (closed)="onMenuClosed($event)">
         <div *ngFor="let item of items;let i=index;">

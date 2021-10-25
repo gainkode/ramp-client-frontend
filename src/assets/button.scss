@@ -215,6 +215,36 @@
     margin: auto;
 }
 
+.__top-menu-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    border: none;
+    margin: auto 24px;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 15px;
+    color: $color_white;
+}
+
+.__top-menu-button:focus {
+    outline: none;
+}
+
+.__top-menu-button:hover {
+    color: $color_white;
+    cursor: pointer;
+}
+
+.__top-menu-button:disabled {
+    opacity: 0.1;
+    cursor: default;
+}
+
 .__table-button {
     justify-content: center;
     align-items: center;

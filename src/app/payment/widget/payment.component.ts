@@ -242,7 +242,6 @@ export class WidgetPaymentComponent implements OnInit, OnDestroy {
   //         this.summary.amountFrom ?? 0,
   //         this.paymentInstrument,
   //         this.selectedProviderId,
-  //         destinationType,
   //         destination
   //       ).subscribe(({ data }) => {
   //         const order = data.createTransaction as TransactionShort;

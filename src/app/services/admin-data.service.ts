@@ -275,7 +275,6 @@ const GET_TRANSACTIONS = gql`
           mode
           kycStatus
         }
-        affiliateId
         created
         executed
         type
@@ -315,7 +314,6 @@ const GET_TRANSACTIONS = gql`
           paymentInfo
         }
         data
-        destinationType
         destination
       }
     }

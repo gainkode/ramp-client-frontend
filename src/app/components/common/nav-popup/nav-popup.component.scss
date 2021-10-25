@@ -15,7 +15,7 @@
     padding: 0px;
     height: 48px;
     border: none;
-    background-color: $color_white;
+    background-color: transparent;
 }
 
 .__nav-popup-button-box:focus {
@@ -54,6 +54,12 @@
     margin-left: 24px;
     margin-right: 6px;
     transform: rotate(180deg);
+}
+
+.__nav-popup-arrow {
+    margin-left: 24px;
+    margin-right: 6px;
+    color: $color_white;
 }
 
 .__nav-popup-user-name {

@@ -21,6 +21,7 @@ export class NavPopupComponent implements OnInit, OnDestroy {
     private pNotificationSubscription: Subscription | undefined = undefined;
 
     menuOpened = false;
+    menuArrow = 'expand_more';
     barHorizontalPosition: MatSnackBarHorizontalPosition = 'right';
     barVerticalPosition: MatSnackBarVerticalPosition = 'top';
     userId: string | undefined = undefined;
@@ -83,10 +84,12 @@ export class NavPopupComponent implements OnInit, OnDestroy {
 
     onMenuOpened(): void {
         this.menuOpened = true;
+        this.menuArrow = 'expand_less';
     }
 
     onMenuClosed(reason: MenuCloseReason): void {
         this.menuOpened = false;
+        this.menuArrow = 'expand_more';
     }
 }
 

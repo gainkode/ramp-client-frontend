@@ -28,7 +28,6 @@ import {
   SettingsCommon,
   SettingsCurrencyListResult,
   SettingsKycShort,
-  TransactionDestinationType,
   TransactionShort,
   TransactionType,
   User,
@@ -512,12 +511,7 @@ export class ContainerComponentDeprecated implements OnInit, OnDestroy {
     this.inProgress = true;
     const amountVal = this.detailsAmountFromControl?.value;
     const amount = parseFloat(amountVal);
-    let destinationType = TransactionDestinationType.Address;
     let destination = this.paymentInfoAddressControl?.value;
-    if (this.affiliateCode !== '') {
-      destinationType = TransactionDestinationType.Widget;
-      destination = this.affiliateCode;
-    }
     this.dataService.createQuickCheckout(
       this.detailsTransactionControl?.value,
       this.detailsCurrencyFromControl?.value,
@@ -525,7 +519,7 @@ export class ContainerComponentDeprecated implements OnInit, OnDestroy {
       amount,
       this.paymentInfoInstrumentControl?.value,
       'Fibonatix',
-      destinationType,
+      '',
       destination
     ).subscribe(({ data }) => {
       this.startNotificationListener();
@@ -533,9 +527,6 @@ export class ContainerComponentDeprecated implements OnInit, OnDestroy {
       this.inProgress = false;
       if (order.code) {
         this.summary.orderId = order.code as string;
-        this.summary.fee = order.feeFiat;
-        this.summary.feeMinFiat = order.feeMinFiat;
-        this.summary.feePercent = order.feePercent;
         this.summary.exchangeRate = this.currentRate;
         this.summary.transactionDate = new Date().toLocaleString();
         this.summary.transactionType = this.currentTransaction;

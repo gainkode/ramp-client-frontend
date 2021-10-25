@@ -46,7 +46,7 @@ a:active {
 
 .__container {
     width: 100%;
-    min-height: ($max_height - $top_menu_height - 10) + px;
+    min-height: ($max_height - $top_menu_height_lg - 10) + px;
 
     @media (max-width: $md1 + px) {
         min-height: $min_height + px;

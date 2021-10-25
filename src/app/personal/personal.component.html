@@ -1,18 +1,33 @@
 <div class="__container">
     <div [ngClass]="{'__profile-disabled-block': showDetails}">
         <div class="__top-menu-bar">
-            <div class="__top-menu-content-bar">
+            <div
+                [ngClass]="expandedMenu ? '__top-menu-content-bar-profile-side-menu-expanded' : '__top-menu-content-bar-profile-side-menu-collapsed'">
                 <div class="__top-menu-content-box">
-                    <button class="__borderless-button" (click)="routeTo('/payment')">
-                        Quick Checkout
+                    <button class="__top-menu-button" (click)="routeTo('/payment')">
+                        <mat-icon>vibration</mat-icon>&nbsp;&nbsp;&nbsp;Buy & Sell
                     </button>
+                    <div class="__top-menu-button-separator"></div>
+                    <button class="__top-menu-button" (click)="routeTo('/payment')">
+                        <mat-icon>expand_less</mat-icon>&nbsp;&nbsp;&nbsp;Receive
+                    </button>
+                    <div class="__top-menu-button-separator"></div>
+                    <button class="__top-menu-button" (click)="routeTo('/payment')">
+                        <mat-icon>expand_less</mat-icon>&nbsp;&nbsp;&nbsp;Send
+                    </button>
+                    <div class="__top-menu-button-separator"></div>
+                    <button class="__top-menu-button" (click)="routeTo('/payment')">
+                        <mat-icon>expand_less</mat-icon>&nbsp;&nbsp;&nbsp;Express transfer
+                    </button>
+                </div>
+                <div class="__top-menu-content-box">
                     <app-nav-popup [items]="popupItems" [userName]="userName" (onMenuClick)="popupMenuClick($event)">
                     </app-nav-popup>
                 </div>
             </div>
         </div>
-        <div class="__profile-top-menu-logo-box">
-            <a style="font-size: 20px;margin: auto;color: mediumslateblue;" href="/">
+        <div *ngIf="expandedMenu" class="__profile-top-menu-logo-box">
+            <a style="font-size: 20px;margin: auto;color: mediumspringgreen;" href="/">
                 eWallet Logo
             </a>
         </div>

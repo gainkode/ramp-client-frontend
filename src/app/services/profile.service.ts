@@ -25,7 +25,6 @@ const GET_MY_TRANSACTIONS = gql`
         code
         userId
         userIp
-        affiliateId
         created
         executed
         type
@@ -67,7 +66,6 @@ const GET_MY_TRANSACTIONS = gql`
           paymentInfo
         }
         data
-        destinationType
         destination
       }
     }
