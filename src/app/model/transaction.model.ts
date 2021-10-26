@@ -1,4 +1,5 @@
 import { DatePipe } from '@angular/common';
+import { getCurrencySign } from '../utils/utils';
 import { CommonTargetValue } from './common.model';
 import {
   PaymentInstrument,
@@ -10,8 +11,7 @@ import {
   TransactionStatusDescriptorMap,
   TransactionType,
   User,
-  UserMode,
-  UserTransactionSummary,
+  UserMode
 } from './generated-models';
 import {
   TransactionTypeList,
@@ -22,19 +22,6 @@ import {
   UserModeShortList,
 } from './payment.model';
 import { UserItem } from './user.model';
-
-function getCurrencySign(currency: string): string {
-  let result = currency;
-  switch (currency) {
-    case 'EUR':
-      result = '\u20AC';
-      break;
-    case 'USD':
-      result = '$';
-      break;
-  }
-  return result;
-}
 
 export class TransactionItemDeprecated {
   id = '';
@@ -302,43 +289,5 @@ export class TransactionItem {
 
   isFiatCurrency(currency: string): boolean {
     return (currency === 'USD' || currency === 'EUR');
-  }
-}
-
-export class UserBalanceItem {
-  private pId = '';
-  private pCryptoCurrency = '';
-  private pFiatSymbol = '';
-  private pIconUrl = '';
-  private pBalanceCrypto = 0;
-  private pBalanceFiat = 0;
-  private pFiatPrecision = 0;
-
-  get currencyName(): string {
-    return this.pCryptoCurrency;
-  }
-
-  get icon(): string {
-    return this.pIconUrl;
-  }
-
-  get balanceCrypto(): string {
-    return `${this.pBalanceCrypto} ${this.pId}`;
-  }
-
-  get balanceFiat(): string {
-    return `${getCurrencySign(this.pFiatSymbol)}${this.pBalanceFiat.toFixed(this.pFiatPrecision)}`;
-  }
-
-  constructor(data: UserTransactionSummary, cryptoCurrency: string, fiatSymbol: string, fiatPrecision: number, rate: number) {
-    this.pId = data.assetId ?? '';
-    this.pCryptoCurrency = cryptoCurrency;
-    this.pFiatSymbol = fiatSymbol;
-    if (this.pId.toLowerCase() === 'btc') {
-      this.pIconUrl = 'assets/svg-payment-systems/bitcoin.svg';
-    }
-    this.pFiatPrecision = fiatPrecision;
-    this.pBalanceCrypto = data.in?.amount ?? 0;
-    this.pBalanceFiat = this.pBalanceCrypto * rate;
   }
 }

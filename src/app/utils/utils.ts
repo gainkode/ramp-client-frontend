@@ -17,3 +17,16 @@ export function getFormattedUtcDate(value: string): Date | undefined {
         return undefined;
     }
 }
+
+export function getCurrencySign(currency: string): string {
+    let result = currency;
+    switch (currency) {
+        case 'EUR':
+            result = '\u20AC';
+            break;
+        case 'USD':
+            result = '$';
+            break;
+    }
+    return result;
+}

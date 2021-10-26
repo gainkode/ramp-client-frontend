@@ -1,4 +1,5 @@
-import { UserBalanceHistory } from "./generated-models";
+import { getCurrencySign } from "../utils/utils";
+import { UserBalanceHistory, UserTransactionSummary } from "./generated-models";
 
 export enum BalancePointType {
     Balance = 'Balance',
@@ -22,3 +23,41 @@ export class BalancePoint {
         }
     }
 }
+
+export class UserBalanceItem {
+    private pId = '';
+    private pCryptoCurrency = '';
+    private pFiatSymbol = '';
+    private pIconUrl = '';
+    private pBalanceCrypto = 0;
+    private pBalanceFiat = 0;
+    private pFiatPrecision = 0;
+  
+    get currencyName(): string {
+      return this.pCryptoCurrency;
+    }
+  
+    get icon(): string {
+      return this.pIconUrl;
+    }
+  
+    get balanceCrypto(): string {
+      return `${this.pBalanceCrypto} ${this.pId}`;
+    }
+  
+    get balanceFiat(): string {
+      return `${getCurrencySign(this.pFiatSymbol)}${this.pBalanceFiat.toFixed(this.pFiatPrecision)}`;
+    }
+  
+    constructor(data: UserTransactionSummary, cryptoCurrency: string, fiatSymbol: string, fiatPrecision: number, rate: number) {
+      this.pId = data.assetId ?? '';
+      this.pCryptoCurrency = cryptoCurrency;
+      this.pFiatSymbol = fiatSymbol;
+      if (this.pId.toLowerCase() === 'btc') {
+        this.pIconUrl = 'assets/svg-payment-systems/bitcoin.svg';
+      }
+      this.pFiatPrecision = fiatPrecision;
+      this.pBalanceCrypto = data.in?.amount ?? 0;
+      this.pBalanceFiat = this.pBalanceCrypto * rate;
+    }
+  }

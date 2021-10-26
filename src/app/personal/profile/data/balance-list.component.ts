@@ -1,8 +1,8 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { UserBalanceItem } from 'src/app/model/balance.model';
 import { Rate, SettingsCurrency, SettingsCurrencyWithDefaults, UserState, UserTransactionSummary } from 'src/app/model/generated-models';
-import { UserBalanceItem } from 'src/app/model/transaction.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
 import { ErrorService } from 'src/app/services/error.service';

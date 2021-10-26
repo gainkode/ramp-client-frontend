@@ -17,7 +17,7 @@ export const PersonalProfileMenuItems: Array<MenuItem> = [
         id: 'transactions',
         name: 'Transactions',
         url: '/personal/main/transactions',
-        icon: 'monetization_on'
+        icon: 'history_edu'
     },
     {
         id: 'contactlist',
@@ -30,7 +30,7 @@ export const PersonalProfileMenuItems: Array<MenuItem> = [
         id: 'pricelist',
         name: 'Crypto Pricelist',
         url: '/personal/main/pricelist',
-        icon: 'sync_alt'
+        icon: 'insights'
     }
 ];
 
