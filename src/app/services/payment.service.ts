@@ -33,21 +33,6 @@ query GetProviders {
 }
 `;
 
-const MY_STATE = gql`
-query MyState {
-  myState {
-    vault {
-      assets {
-        id, total, addresses { address }
-      }
-    },
-    externalWallets {
-        assets { id, address }
-    }
-  }
-}
-`;
-
 const EXECUTE_TRANSACTION = gql`
 mutation ExecuteTransaction(
   $transactionId: String!,
@@ -181,27 +166,16 @@ query GetWidget($id: String!) {
 export class PaymentDataService {
   constructor(private apollo: Apollo) { }
 
-  getRates(fromValue: string, toValue: string): QueryRef<any, EmptyObject> | null {
+  getRates(listCrypto: string[], fiat: string): QueryRef<any, EmptyObject> | null {
     if (this.apollo.client !== undefined) {
       const vars = {
         recaptcha: environment.recaptchaId,
-        currenciesFrom: [fromValue],
-        currencyTo: toValue
+        currenciesFrom: listCrypto,
+        currencyTo: fiat
       };
       return this.apollo.watchQuery<any>({
         query: GET_RATES,
         variables: vars,
-        fetchPolicy: 'network-only'
-      });
-    } else {
-      return null;
-    }
-  }
-
-  getState(): QueryRef<any, EmptyObject> | null {
-    if (this.apollo.client !== undefined) {
-      return this.apollo.watchQuery<any>({
-        query: MY_STATE,
         fetchPolicy: 'network-only'
       });
     } else {

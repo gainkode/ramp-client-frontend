@@ -99,8 +99,7 @@ export class ProfileInfoComponent implements OnInit, OnDestroy {
       this.inProgress = true;
       this.pSettingsSubscription = currencyData.valueChanges.subscribe(
         ({ data }) => {
-          const currencySettings =
-            data.getSettingsCurrency as SettingsCurrencyListResult;
+          const currencySettings = data.getSettingsCurrency as SettingsCurrencyListResult;
           let itemCount = 0;
           if (currencySettings !== null) {
             itemCount = currencySettings.count as number;

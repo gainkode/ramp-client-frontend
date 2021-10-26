@@ -24,6 +24,32 @@ const GET_SETTINGS_CURRENCY_POST = gql`
   }
 `;
 
+const MY_STATE = gql`
+query MyState {
+  myState {
+    date,
+    transactionSummary {
+      assetId,
+      in { transactionCount, amount },
+      out { transactionCount, amount }
+    },
+    vault {
+      assets {
+        id, total, addresses { address }
+      }
+    },
+    additionalVaults {
+      assets {
+        id, total, addresses { address }
+      }
+    },
+    externalWallets {
+        assets { id, address }
+    }
+  }
+}
+`;
+
 const GET_USERS_POST = gql`
   query GetUsers {
     getUsers(
@@ -151,6 +177,17 @@ export class CommonDataService {
         variables: {
           recaptcha: environment.recaptchaId
         },
+        fetchPolicy: 'network-only'
+      });
+    } else {
+      return null;
+    }
+  }
+
+  getMyState(): QueryRef<any, EmptyObject> | null {
+    if (this.apollo.client !== undefined) {
+      return this.apollo.watchQuery<any>({
+        query: MY_STATE,
         fetchPolicy: 'network-only'
       });
     } else {

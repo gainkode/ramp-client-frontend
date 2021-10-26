@@ -87,7 +87,7 @@ export class ExchangeRateService {
             }
             console.log(`Get rate ${currencyFrom}->${currencyTo}`);
             if (currencyFrom && currencyTo) {
-                const ratesData = this.dataService.getRates(currencyFrom, currencyTo);
+                const ratesData = this.dataService.getRates([currencyFrom], currencyTo);
                 if (ratesData === null) {
                     this.errorMessage = this.errorHandler.getRejectedCookieMessage();
                 } else {

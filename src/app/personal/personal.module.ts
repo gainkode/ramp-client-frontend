@@ -37,6 +37,8 @@ import { PersonalSuccessComponent } from './auth/success.component';
 import { PersonalConfirmDeviceComponent } from './auth/confirm-device.component';
 import { PersonalConfirmEmailComponent } from './auth/confirm-email.component';
 import { PersonalResetComponent } from './auth/reset.component';
+import { PersonalBalanceChartComponent } from './profile/data/balance-chart.component';
+import { PersonalBalanceListComponent } from './profile/data/balance-list.component';
 
 const routing = RouterModule.forChild([
     // Main page
@@ -110,6 +112,8 @@ export class MaterialModule { }
         PersonalTransactionsComponent, PersonalTransactionDetailsComponent,
         PersonalMyContactsComponent,
         PersonalSwapComponent,
+        // Data containers
+        PersonalBalanceChartComponent, PersonalBalanceListComponent,
         // Obsolete pages
         ProfileMainPersonalComponent, KycPersonalComponent, PersonalMyAccountComponent],
     providers: [PersonalGuard],

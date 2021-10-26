@@ -11,6 +11,7 @@ import {
   TransactionType,
   User,
   UserMode,
+  UserTransactionSummary,
 } from './generated-models';
 import {
   TransactionTypeList,
@@ -21,6 +22,19 @@ import {
   UserModeShortList,
 } from './payment.model';
 import { UserItem } from './user.model';
+
+function getCurrencySign(currency: string): string {
+  let result = currency;
+  switch (currency) {
+    case 'EUR':
+      result = '\u20AC';
+      break;
+    case 'USD':
+      result = '$';
+      break;
+  }
+  return result;
+}
 
 export class TransactionItemDeprecated {
   id = '';
@@ -267,39 +281,64 @@ export class TransactionItem {
   }
 
   get networkFees(): string {
-    return `${this.getCurrencySign('EUR')}${this.fees.toFixed(6)}`;
+    return `${getCurrencySign('EUR')}${this.fees.toFixed(6)}`;
   }
 
   get amountSent(): string {
     if (this.isFiatCurrency(this.currencyToSpend)) {
-      return `${this.getCurrencySign(this.currencyToSpend)}${this.amountToSpend}`;
+      return `${getCurrencySign(this.currencyToSpend)}${this.amountToSpend}`;
     } else {
-      return `${this.amountToSpend} ${this.getCurrencySign(this.currencyToSpend)}`;
+      return `${this.amountToSpend} ${getCurrencySign(this.currencyToSpend)}`;
     }
   }
 
   get amountReceived(): string {
     if (this.isFiatCurrency(this.currencyToReceive)) {
-      return `${this.getCurrencySign(this.currencyToReceive)}${this.amountToReceive}`;
+      return `${getCurrencySign(this.currencyToReceive)}${this.amountToReceive}`;
     } else {
-      return `${this.amountToReceive} ${this.getCurrencySign(this.currencyToReceive)}`;
+      return `${this.amountToReceive} ${getCurrencySign(this.currencyToReceive)}`;
     }
   }
 
   isFiatCurrency(currency: string): boolean {
     return (currency === 'USD' || currency === 'EUR');
   }
+}
 
-  getCurrencySign(currency: string): string {
-    let result = currency;
-    switch (currency) {
-      case 'EUR':
-        result = '\u20AC';
-        break;
-      case 'USD':
-        result = '$';
-        break;
+export class UserBalanceItem {
+  private pId = '';
+  private pCryptoCurrency = '';
+  private pFiatSymbol = '';
+  private pIconUrl = '';
+  private pBalanceCrypto = 0;
+  private pBalanceFiat = 0;
+  private pFiatPrecision = 0;
+
+  get currencyName(): string {
+    return this.pCryptoCurrency;
+  }
+
+  get icon(): string {
+    return this.pIconUrl;
+  }
+
+  get balanceCrypto(): string {
+    return `${this.pBalanceCrypto} ${this.pId}`;
+  }
+
+  get balanceFiat(): string {
+    return `${getCurrencySign(this.pFiatSymbol)}${this.pBalanceFiat.toFixed(this.pFiatPrecision)}`;
+  }
+
+  constructor(data: UserTransactionSummary, cryptoCurrency: string, fiatSymbol: string, fiatPrecision: number, rate: number) {
+    this.pId = data.assetId ?? '';
+    this.pCryptoCurrency = cryptoCurrency;
+    this.pFiatSymbol = fiatSymbol;
+    if (this.pId.toLowerCase() === 'btc') {
+      this.pIconUrl = 'assets/svg-payment-systems/bitcoin.svg';
     }
-    return result;
+    this.pFiatPrecision = fiatPrecision;
+    this.pBalanceCrypto = data.in?.amount ?? 0;
+    this.pBalanceFiat = this.pBalanceCrypto * rate;
   }
 }

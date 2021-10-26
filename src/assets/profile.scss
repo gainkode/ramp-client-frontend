@@ -257,3 +257,21 @@
     height: 100%;
     margin: 0px 24px 24px 24px;
 }
+
+.__profile-grid-item-container {
+    display: flex;
+    padding: 16px;
+    margin: 24px 36px;
+    width: 179px;
+    
+    background-color: $color_white;
+    box-shadow: 0px 3px 3px rgba(208, 207, 207, 0.2), 0px 3px 4px rgba(208, 207, 207, 0.14), 0px 1px 8px rgba(208, 207, 207, 0.12);
+    border-radius: 8px;
+}
+
+.__profile-grid-item-data-container {
+    display: flex;
+    width: 100%;
+    padding: 0px;
+    flex-direction: column;
+}
