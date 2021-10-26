@@ -15,7 +15,7 @@ export class ProfileAccountBalanceComponent {
     errorMessage = '';
     inProgress = false;
     chartPoints: BalancePoint[] = [];
-    period = UserBalanceHistoryPeriod.Dayly;
+    period = UserBalanceHistoryPeriod.LastWeek;
     private pChartSubscription!: Subscription;
     
     constructor(

@@ -25,7 +25,10 @@ export class PersonalComponent implements OnInit {
     detailsType = '';
     detailsContainer!: ProfileItemContainer;
 
-    constructor(private auth: AuthService, private notification: NotificationService, private router: Router) {
+    constructor(
+        private auth: AuthService,
+        private notification: NotificationService,
+        private router: Router) {
         this.getSectionName();
 
         this.router.events.subscribe(
@@ -97,7 +100,7 @@ export class PersonalComponent implements OnInit {
     }
 
     onActivatePage(component: any): void {
-        this.showDetailsRef = component.showDetails;
+        this.showDetailsRef = component.onShowDetails;
         if (this.showDetailsRef !== undefined) {
             this.showDetailsRef.subscribe((event: any) => {
                 const container = event as ProfileItemContainer;

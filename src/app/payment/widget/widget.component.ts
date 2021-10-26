@@ -1,8 +1,7 @@
-import { SummaryResolver } from '@angular/compiler';
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { LoginResult, PaymentInstrument, PaymentPreauthResultShort, Rate, TransactionShort, TransactionType, UserMode, UserType, WidgetShort } from 'src/app/model/generated-models';
+import { LoginResult, PaymentInstrument, PaymentPreauthResultShort, Rate, TransactionShort, TransactionType, WidgetShort } from 'src/app/model/generated-models';
 import { CardView, CheckoutSummary, PaymentProviderView, WidgetSettings, WidgetStage } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';

@@ -145,6 +145,41 @@
     cursor: default;
 }
 
+.__toggle-like-button {
+    justify-content: center;
+    align-items: center;
+    padding: 4px 12px;
+    height: 22px;
+    
+    background: transparent;
+    border: 1px solid $color_main_blue_800;
+    box-sizing: border-box;
+    border-radius: 50px;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 14px;
+    color: $color_main_blue_800;
+}
+
+.__toggle-like-button:focus {
+    outline: none;
+}
+
+.__toggle-like-button:hover {
+    border: 1px solid $color_main_blue_600;
+    color: $color_main_blue_600;
+    cursor: pointer;
+}
+
+.__toggle-like-button:disabled {
+    border: 1px solid $color_purple_200;
+    color: $color_purple_200;
+    cursor: default;
+}
+
 .__tool-button {
     justify-content: center;
     align-items: center;

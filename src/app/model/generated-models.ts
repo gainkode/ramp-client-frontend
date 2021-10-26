@@ -595,6 +595,7 @@ export type SettingsCommon = {
   kycProvider?: Maybe<Scalars['String']>;
   kycBaseAddress?: Maybe<Scalars['String']>;
   adminEmails?: Maybe<Array<Scalars['String']>>;
+  stoppedForServicing?: Maybe<Scalars['Boolean']>;
   additionalSettings?: Maybe<Scalars['String']>;
 };
 
@@ -629,6 +630,9 @@ export type SettingsCurrency = {
   rateFactor: Scalars['Float'];
   validateAsSymbol?: Maybe<Scalars['String']>;
   fiat?: Maybe<Scalars['Boolean']>;
+  defaultBankTransferProvider?: Maybe<Scalars['String']>;
+  defaultWireTransferProvider?: Maybe<Scalars['String']>;
+  defaultCreditCardProvider?: Maybe<Scalars['String']>;
 };
 
 export type SettingsKycLevelListResult = {
@@ -1032,10 +1036,10 @@ export enum UserActionType {
 }
 
 export enum UserBalanceHistoryPeriod {
-  Dayly = 'Dayly',
-  Weekly = 'Weekly',
-  Monthly = 'Monthly',
-  Yearly = 'Yearly'
+  LastWeek = 'LastWeek',
+  LastMonth = 'LastMonth',
+  LastYear = 'LastYear',
+  All = 'All'
 }
 
 export type UserBalanceHistoryListResult = {
@@ -2109,6 +2113,7 @@ export type SettingsCommonInput = {
   custodyProvider?: Maybe<Scalars['String']>;
   kycProvider?: Maybe<Scalars['String']>;
   adminEmails?: Maybe<Array<Scalars['String']>>;
+  stoppedForServicing?: Maybe<Scalars['Boolean']>;
   additionalSettings?: Maybe<Scalars['String']>;
 };
 

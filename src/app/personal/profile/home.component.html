@@ -4,5 +4,9 @@
     </div>
     <!-- <app-personal-balance-chart></app-personal-balance-chart> -->
     <app-personal-balance-list></app-personal-balance-list>
-    <!-- <app-transactions [recent]="true"></app-transactions> -->
+
+    <div class="__profile-data-title">Recent transactions</div>
+    <mat-progress-bar *ngIf="inProgress" color="accent" mode="indeterminate"></mat-progress-bar>
+    <app-personal-transaction-list [recent]=true #transactions (onShowDetails)="showTransactionDetails($event)"
+        (onError)="handleError($event)" (onProgress)="progressChanged($event)"></app-personal-transaction-list>
 </div>
