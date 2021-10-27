@@ -145,6 +145,11 @@
     cursor: default;
 }
 
+.__toggle-button-active {
+    border: 1px solid $color_main_blue_800;
+    color: $color_main_blue_800;
+}
+
 .__toggle-like-button {
     justify-content: center;
     align-items: center;

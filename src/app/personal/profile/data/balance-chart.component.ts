@@ -18,12 +18,14 @@ export class PersonalBalanceChartComponent implements OnInit, OnDestroy {
         this.fiatField?.setValue(val);
     }
     @Input() currencies: SettingsCurrency[] = [];
+    @Input() loading = false;
     @Output() onError = new EventEmitter<string>();
     @Output() onProgress = new EventEmitter<boolean>();
     @Output() onCurrencyChanged = new EventEmitter<string>();
 
     chartPoints: BalancePoint[] = [];
     period = UserBalanceHistoryPeriod.LastWeek;
+    periodIndex = 0;
     selectedFiat = '';
     currencyForm = this.formBuilder.group({
         fiat: ['', { validators: [Validators.required], updateOn: 'change' }]
@@ -56,6 +58,24 @@ export class PersonalBalanceChartComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.subscriptions.unsubscribe();
+    }
+
+    chnagePeriod(index: number): void {
+        const temp = this.periodIndex;
+        this.periodIndex = index;
+        if (index === 1) {
+            this.period = UserBalanceHistoryPeriod.LastMonth;
+        } else if (index === 2) {
+            this.period = UserBalanceHistoryPeriod.LastYear;
+        } else if (index === 3) {
+            this.period = UserBalanceHistoryPeriod.All;
+        } else {
+            this.period = UserBalanceHistoryPeriod.LastWeek;
+            this.periodIndex = 0;
+        }
+        if (temp !== this.periodIndex) {
+            // update chart here
+        }
     }
 
     private loadChartData(): void {

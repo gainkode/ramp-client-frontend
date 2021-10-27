@@ -13,7 +13,7 @@
                 </div>
                 <div class="__tool-bar-block __tool-bar-data-block">
                     <form [formGroup]="currencyForm">
-                        <mat-select formControlName="fiat">
+                        <mat-select formControlName="fiat" [disabled]="loading">
                             <mat-select-trigger>
                                 <span class="__mat-select-item">
                                     {{selectedFiat}}
@@ -32,8 +32,26 @@
                 +10.00% (2,500 USD)
             </div>
         </div>
-        <div style="background-color: lightseagreen;">
-            Buttons
+        <div style="margin: 32px 0px 0px 0px;">
+            <button [ngClass]="{'__toggle-button': true, '__toggle-button-active': periodIndex===0}" type="button"
+                [disabled]="loading" (click)="chnagePeriod(0)">
+                Last week
+            </button>
+            <button
+                [ngClass]="{'__toggle-button': true, '__toggle-button-active': periodIndex===1, '__button-separator': true}"
+                type="button" [disabled]="loading" (click)="chnagePeriod(1)">
+                Last month
+            </button>
+            <button
+                [ngClass]="{'__toggle-button': true, '__toggle-button-active': periodIndex===2, '__button-separator': true}"
+                type="button" [disabled]="loading" (click)="chnagePeriod(2)">
+                Last year
+            </button>
+            <button
+                [ngClass]="{'__toggle-button': true, '__toggle-button-active': periodIndex===3, '__button-separator': true}"
+                type="button" [disabled]="loading" (click)="chnagePeriod(3)">
+                All
+            </button>
         </div>
     </div>
 

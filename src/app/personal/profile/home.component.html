@@ -1,13 +1,19 @@
 <div class="__profile-data-container">
     <div style="margin: 24px 0px;">
-        <mat-progress-bar *ngIf="inProgressChart || inProgressBalance || inProgressTransactions" color="accent"
-            mode="indeterminate"></mat-progress-bar>
+        <mat-progress-bar *ngIf="loading" color="accent" mode="indeterminate"></mat-progress-bar>
     </div>
+
+
+
     <div style="color: red;margin: 48px 24px;" *ngIf="errorMessage!==''">
         {{errorMessage}}
     </div>
+
+
+
+
     <!-- Balance chart -->
-    <app-personal-balance-chart [selectedCurrency]="selectedFiat" [currencies]="fiatCurrencies"
+    <app-personal-balance-chart [selectedCurrency]="selectedFiat" [currencies]="fiatCurrencies" [loading]="loading"
         (onCurrencyChanged)="currencyChanged($event)"></app-personal-balance-chart>
     <!-- Balance carousel -->
     <app-personal-balance-list #balamcelist (onError)="handleError($event)"

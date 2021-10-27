@@ -33,6 +33,7 @@ export class PersonalHomeComponent implements OnInit, OnDestroy {
         }
     }
 
+    loading = false;
     inProgressChart = false;
     inProgressBalance = false;
     inProgressTransactions = false;
@@ -116,13 +117,21 @@ export class PersonalHomeComponent implements OnInit, OnDestroy {
         this.changeDetector.detectChanges();
     }
 
-    transactionProgressChanged(visible: boolean): void {
-        this.inProgressTransactions = visible;
+    chartProgressChanged(visible: boolean): void {
+        this.inProgressChart = visible;
+        this.loading = this.inProgressChart || this.inProgressBalance || this.inProgressTransactions;
         this.changeDetector.detectChanges();
     }
 
     balanceProgressChanged(visible: boolean): void {
         this.inProgressBalance = visible;
+        this.loading = this.inProgressChart || this.inProgressBalance || this.inProgressTransactions;
+        this.changeDetector.detectChanges();
+    }
+
+    transactionProgressChanged(visible: boolean): void {
+        this.inProgressTransactions = visible;
+        this.loading = this.inProgressChart || this.inProgressBalance || this.inProgressTransactions;
         this.changeDetector.detectChanges();
     }
 
