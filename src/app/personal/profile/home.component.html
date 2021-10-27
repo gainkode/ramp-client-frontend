@@ -1,12 +1,20 @@
 <div class="__profile-data-container">
-    <div class="form-error-box" *ngIf="errorMessage!==''">
+    <div style="margin: 24px 0px;">
+        <mat-progress-bar *ngIf="inProgressChart || inProgressBalance || inProgressTransactions" color="accent"
+            mode="indeterminate"></mat-progress-bar>
+    </div>
+    <div style="color: red;margin: 48px 24px;" *ngIf="errorMessage!==''">
         {{errorMessage}}
     </div>
-    <!-- <app-personal-balance-chart></app-personal-balance-chart> -->
-    <app-personal-balance-list></app-personal-balance-list>
-
+    <!-- Balance chart -->
+    <app-personal-balance-chart [selectedCurrency]="selectedFiat" [currencies]="fiatCurrencies"
+        (onCurrencyChanged)="currencyChanged($event)"></app-personal-balance-chart>
+    <!-- Balance carousel -->
+    <app-personal-balance-list #balamcelist (onError)="handleError($event)"
+        (onProgress)="balanceProgressChanged($event)"></app-personal-balance-list>
+    <!-- Recent transactions -->
     <div class="__profile-data-title">Recent transactions</div>
-    <mat-progress-bar *ngIf="inProgress" color="accent" mode="indeterminate"></mat-progress-bar>
     <app-personal-transaction-list [recent]=true #transactions (onShowDetails)="showTransactionDetails($event)"
-        (onError)="handleError($event)" (onProgress)="progressChanged($event)"></app-personal-transaction-list>
+        (onError)="handleError($event)" (onProgress)="transactionProgressChanged($event)">
+    </app-personal-transaction-list>
 </div>

@@ -1,13 +1,45 @@
-    
-    
-
-<mat-progress-bar *ngIf="inProgress" color="accent" mode="indeterminate"></mat-progress-bar>
+<div style="margin: 24px 0px;">
+    <div style="display: flex;flex-direction: row;justify-content: space-between;">
+        <div style="display: block;margin: 0px 0px 24px 0px;">
+            <div class="__profile-page-title">
+                $25.000
+            </div>
+            <div
+                style="display: flex;flex-direction: row;align-items: flex-start;justify-content: flex-start;margin: 4px 0px 0px 0px;">
+                <div style="margin: 4px 10px 0px 0px;">
+                    <div class="__profile-extra-data-value">
+                        Total balance in
+                    </div>
+                </div>
+                <div class="__tool-bar-block __tool-bar-data-block">
+                    <form [formGroup]="currencyForm">
+                        <mat-select formControlName="fiat">
+                            <mat-select-trigger>
+                                <span class="__mat-select-item">
+                                    {{selectedFiat}}
+                                </span>
+                            </mat-select-trigger>
+                            <mat-option *ngFor="let item of currencies" [value]="item.symbol" style="height: 36px;">
+                                <span class="__mat-select-item">
+                                    {{item.symbol}}
+                                </span>
+                            </mat-option>
+                        </mat-select>
+                    </form>
+                </div>
+            </div>
+            <div class="__profile-profit-value">
+                +10.00% (2,500 USD)
+            </div>
+        </div>
+        <div style="background-color: lightseagreen;">
+            Buttons
+        </div>
+    </div>
 
     <div style="margin: auto;width: 100%;height: 15em;background-color:lightgoldenrodyellow;">
         <div style="margin: auto;padding-top: 6em;color:firebrick;text-align: center;">
             Balance chart here
         </div>
     </div>
-
-
-
+</div>

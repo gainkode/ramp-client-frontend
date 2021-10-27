@@ -24,8 +24,23 @@ export function getCurrencySign(currency: string): string {
         case 'EUR':
             result = '\u20AC';
             break;
+        case 'GBP':
+            result = '\u00A3';
+            break;
         case 'USD':
             result = '$';
+            break;
+        case 'CAD':
+            result = 'CA$';
+            break;
+        case 'AUD':
+            result = 'AU$';
+            break;
+        case 'CHF':
+            result = 'CH\u20AC';
+            break;
+        case 'JPY':
+            result = '\u00A5';
             break;
     }
     return result;

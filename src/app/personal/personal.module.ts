@@ -14,6 +14,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatListModule } from '@angular/material/list';
 import { PersonalGuard } from './personal.guard';
@@ -81,6 +82,7 @@ const modules = [
     MatFormFieldModule,
     MatInputModule,
     MatTooltipModule,
+    MatSelectModule,
     MatCheckboxModule,
     MatRadioModule,
     MatIconModule,

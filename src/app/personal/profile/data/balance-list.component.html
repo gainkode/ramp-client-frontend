@@ -1,25 +1,25 @@
-<mat-progress-bar *ngIf="inProgress" color="accent" mode="indeterminate"></mat-progress-bar>
-
-<div *ngFor="let item of balances" class="__profile-grid-item-container">
-    <div class="__profile-grid-item-data-container">
-        <div class="__balance-item-data-container">
-            <div class="__balance-item-value-area">
-                <div class="__balance-item-title">
-                    {{item.currencyName}}
+<div class="__profile-grid-container">
+    <div *ngFor="let item of balances" class="__profile-grid-item-container">
+        <div class="__profile-grid-item-data-container">
+            <div class="__balance-item-data-container">
+                <div class="__balance-item-value-area">
+                    <div class="__balance-item-title">
+                        {{item.currencyName}}
+                    </div>
+                    <div class="__balance-item-crypto">
+                        {{item.balanceCrypto}}
+                    </div>
+                    <div class="__balance-item-fiat">
+                        {{item.balanceFiat}}
+                    </div>
                 </div>
-                <div class="__balance-item-crypto">
-                    {{item.balanceCrypto}}
-                </div>
-                <div class="__balance-item-fiat">
-                    {{item.balanceFiat}}
+                <div class="__balance-item-icon-box">
+                    <img class="__balance-item-icon" [src]="item.icon">
                 </div>
             </div>
-            <div class="__balance-item-icon-box">
-                <img class="__balance-item-icon" [src]="item.icon">
+            <div class="__balance-item-buton-box">
+                <button class="__toggle-button">Show wallets</button>
             </div>
-        </div>
-        <div class="__balance-item-buton-box">
-            <button class="__toggle-button">Show wallets</button>
         </div>
     </div>
 </div>
