@@ -52,11 +52,16 @@ export class PersonalBalanceListComponent implements OnInit, OnDestroy {
                 this.fiatPrecision = currentFiat.precision;
             }
             //this.loadRates();
+
+
+            // temp
             this.balances.push(new UserBalanceItem({
                 assetId: 'BTC',
                 totalBalanceFiat: 4200,
                 totalBalance: 0.001547
             } as BalancePerAsset, 'Bitcoin', this.currentCurrency, this.fiatPrecision));
+            this.onProgress.emit(false);
+            // temp
         }
     }
 
