@@ -1,26 +1,32 @@
+import { DatePipe } from "@angular/common";
 import { getCurrencySign } from "../utils/utils";
-import { UserBalanceHistory, UserTransactionSummary } from "./generated-models";
-
-export enum BalancePointType {
-    Balance = 'Balance',
-    BalanceEur = 'BalanceEur'
-}
+import { UserTransactionSummary } from "./generated-models";
 
 export class BalancePoint {
     date!: Date;
-    balance = 0;
-    transactionId = '';
+    dateLabel = '';
+    balanceCrypto = 0;
+    balanceFiat = 0;
 
-    constructor(point: UserBalanceHistory | undefined, pointType: BalancePointType) {
-        if (point) {
-            this.date = point.date;
-            this.transactionId = point.transactionId as string;
-            if (pointType === BalancePointType.Balance) {
-                this.balance = point.balance;
-            } else if (pointType === BalancePointType.BalanceEur) {
-                this.balance = point.balanceEur;
-            }
-        }
+    private datepipe: DatePipe = new DatePipe('en-US');
+
+    get datePoint(): string {
+      return this.datepipe.transform(
+        this.date,
+        'dd MMM'
+      ) as string;
+    }
+
+    get balanceCryptoValue(): string {
+      return `${this.balanceCrypto} BTC`;
+    }
+
+    get balanceFiatValue(): string {
+      return `$${this.balanceFiat}`;
+    }
+
+    constructor() {
+        
     }
 }
 

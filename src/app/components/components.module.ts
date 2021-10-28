@@ -48,7 +48,6 @@ import { SideMenuComponent } from './common/side-menu.component';
 import { SignUpPanelComponent } from './auth/signup-panel.component';
 import { SignupInfoPanelComponent } from './auth/signup-info.component';
 
-import { ProfileAccountBalanceComponent } from './profile/profile-account-balance.component';
 import { ProfileExchangeComponent } from './profile/profile-exchange.component';
 import { ProfileNotificationsComponent } from './profile/profile-notifications.component';
 import { ProfileQuickTransferComponent } from './profile/profile-quick-transfer.component';
@@ -109,7 +108,7 @@ export class MaterialModule { }
         LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, CommonDialogBox, SideExpanderComponent,
         CreditCardComponent, TwoFaCodeComponent, NavPopupComponent, SideMenuComponent, LineBreakPipe, NumberFillPipe,
         TransactionsFilterBarComponent,
-        ProfileAccountBalanceComponent, ProfileExchangeComponent, ProfileNotificationsComponent,
+        ProfileExchangeComponent, ProfileNotificationsComponent,
         ProfileQuickTransferComponent, ProfileTransactionsComponent, ProfileInfoComponent, ProfileTwoFAComponent,
         ProfilePasswordComponent, ProfileVerificationComponent, ProfileContactsComponent, 
         ProfileContactEditorComponent, ProfileWithdrawalComponent,
@@ -120,7 +119,7 @@ export class MaterialModule { }
         LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, CommonDialogBox, SideExpanderComponent,
         CreditCardComponent, TwoFaCodeComponent, NavPopupComponent, SideMenuComponent, LineBreakPipe, NumberFillPipe,
         TransactionsFilterBarComponent,
-        ProfileAccountBalanceComponent, ProfileExchangeComponent, ProfileNotificationsComponent,
+        ProfileExchangeComponent, ProfileNotificationsComponent,
         ProfileQuickTransferComponent, ProfileTransactionsComponent, ProfileInfoComponent, ProfileTwoFAComponent,
         ProfilePasswordComponent, ProfileVerificationComponent, ProfileContactsComponent,
         ProfileContactEditorComponent, ProfileWithdrawalComponent,

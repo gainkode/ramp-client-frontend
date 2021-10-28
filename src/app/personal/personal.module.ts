@@ -41,6 +41,7 @@ import { PersonalResetComponent } from './auth/reset.component';
 import { PersonalBalanceChartComponent } from './profile/data/balance-chart.component';
 import { PersonalBalanceListComponent } from './profile/data/balance-list.component';
 import { PersonalTransactionListComponent } from './profile/data/transaction-list.component';
+import { NgApexchartsModule } from 'ng-apexcharts';
 
 const routing = RouterModule.forChild([
     // Main page
@@ -91,7 +92,8 @@ const modules = [
     MatPaginatorModule,
     MatTableModule,
     MatSortModule,
-    ComponentsModule
+    ComponentsModule,
+    NgApexchartsModule
 ];
 
 @NgModule({
