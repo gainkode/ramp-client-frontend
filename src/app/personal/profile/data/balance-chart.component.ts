@@ -34,9 +34,6 @@ export class PersonalBalanceChartComponent implements OnInit, OnDestroy {
 
     positiveProfit = true;
     profitValue = '';
-    chartPoints: BalancePoint[] = [];
-    dataPoints = [];
-    labelPoints: string[] = [];
     inLoading = false;
     period = UserBalanceHistoryPeriod.LastWeek;
     periodIndex = 0;
@@ -48,8 +45,6 @@ export class PersonalBalanceChartComponent implements OnInit, OnDestroy {
     // Chart data options
     seriesData: ApexAxisChartSeries = [
         {
-            name: "BALANCE",
-            color: '#E0F4FF',
             data: []
         }
     ];
@@ -255,6 +250,7 @@ export class PersonalBalanceChartComponent implements OnInit, OnDestroy {
     }
 
     private loadChartData(): void {
+        console.log('load');
         this.onError.emit('');
         // const chartData = this.profileService.getMyProfit(this.selectedFiat, this.period);
         // if (chartData === null) {
@@ -290,62 +286,63 @@ export class PersonalBalanceChartComponent implements OnInit, OnDestroy {
 
 
 
+        this.profitValue = '';
+        
         this.onProgress.emit(true);
         setTimeout(() => {
 
 
-            this.chartPoints = [];
-
             this.positiveProfit = true;
             this.profitValue = `+ 15.00% (2.500 ${this.selectedFiat})`;
 
+
+            const chartPoints: BalancePoint[] = [];
             let val = new BalancePoint();
             val.date = new Date(2021, 7, 16, 0, 0, 0, 0);
             val.balanceCrypto = 0.0125;
             val.balanceFiat = 12500;
-            this.chartPoints.push(val);
+            chartPoints.push(val);
 
             val = new BalancePoint();
             val.date = new Date(2021, 7, 17, 0, 0, 0, 0);
             val.balanceCrypto = 0.0126;
             val.balanceFiat = 12684;
-            this.chartPoints.push(val);
+            chartPoints.push(val);
 
             val = new BalancePoint();
             val.date = new Date(2021, 7, 18, 0, 0, 0, 0);
             val.balanceCrypto = 0.0111;
             val.balanceFiat = 11110;
-            this.chartPoints.push(val);
+            chartPoints.push(val);
 
             val = new BalancePoint();
             val.date = new Date(2021, 7, 19, 0, 0, 0, 0);
             val.balanceCrypto = 0.0134;
             val.balanceFiat = 13452;
-            this.chartPoints.push(val);
+            chartPoints.push(val);
 
             val = new BalancePoint();
             val.date = new Date(2021, 7, 20, 0, 0, 0, 0);
             val.balanceCrypto = 0.0126;
             val.balanceFiat = 12600;
-            this.chartPoints.push(val);
+            chartPoints.push(val);
 
             val = new BalancePoint();
             val.date = new Date(2021, 7, 21, 0, 0, 0, 0);
             val.balanceCrypto = 0.0149;
             val.balanceFiat = 14985;
-            this.chartPoints.push(val);
+            chartPoints.push(val);
 
             val = new BalancePoint();
             val.date = new Date(2021, 7, 22, 0, 0, 0, 0);
             val.balanceCrypto = 0.0236;
             val.balanceFiat = 23600;
-            this.chartPoints.push(val);
+            chartPoints.push(val);
 
 
-            this.dataPoints = [];
-            this.labelPoints = [];
-            this.chartPoints.forEach((val, i) => {
-                const label = (i === 0 || i === this.chartPoints.length - 1) ? '' : val.datePoint;
+            const points = chartPoints.length;
+            chartPoints.forEach((val, i) => {
+                const label = (i === 0 || i === points - 1) ? '' : val.datePoint;
                 val.dateLabel = label;
             });
             this.onProgress.emit(false);
@@ -353,7 +350,7 @@ export class PersonalBalanceChartComponent implements OnInit, OnDestroy {
                 {
                     name: "BALANCE",
                     color: '#E0F4FF',
-                    data: this.chartPoints.map(v => {
+                    data: chartPoints.map(v => {
                         return {
                             x: v.dateLabel,
                             y: v.balanceFiat,
