@@ -1,6 +1,6 @@
 import { DatePipe } from "@angular/common";
 import { getCurrencySign } from "../utils/utils";
-import { UserTransactionSummary } from "./generated-models";
+import { BalancePerAsset, UserTransactionSummary } from "./generated-models";
 
 export class BalancePoint {
     date!: Date;
@@ -48,15 +48,23 @@ export class UserBalanceItem {
       return `${getCurrencySign(this.pFiatSymbol)}${this.pBalanceFiat.toFixed(this.pFiatPrecision)}`;
     }
   
-    constructor(data: UserTransactionSummary, cryptoCurrency: string, fiatSymbol: string, fiatPrecision: number, rate: number) {
+    constructor(data: BalancePerAsset, cuurencyName: string, fiatSymbol: string, fiatPrecision: number) {
       this.pId = data.assetId ?? '';
-      this.pCryptoCurrency = cryptoCurrency;
+      this.pCryptoCurrency = cuurencyName;
       this.pFiatSymbol = fiatSymbol;
       if (this.pId.toLowerCase() === 'btc') {
         this.pIconUrl = 'assets/svg-payment-systems/bitcoin.svg';
       }
       this.pFiatPrecision = fiatPrecision;
-      this.pBalanceCrypto = data.in?.amount ?? 0;
-      this.pBalanceFiat = this.pBalanceCrypto * rate;
+      this.pBalanceCrypto = data.totalBalance ?? 0;
+      this.pBalanceFiat = data.totalBalanceFiat;
+    }
+
+    increaseCrypto(val: number): void {
+      this.pBalanceCrypto += val;
+    }
+
+    increaseFiat(val: number): void {
+      this.pBalanceFiat += val;
     }
   }

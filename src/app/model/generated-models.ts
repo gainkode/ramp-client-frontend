@@ -76,6 +76,8 @@ export type Query = {
   myWidgets?: Maybe<WidgetListResult>;
   getWidgets?: Maybe<WidgetListResult>;
   getWidget?: Maybe<WidgetShort>;
+  getRiskAlerts?: Maybe<RiskAlertResultList>;
+  updateRiskAlertType?: Maybe<RiskAlertType>;
   getFakeError?: Maybe<Scalars['Void']>;
 };
 
@@ -437,6 +439,22 @@ export type QueryGetWidgetsArgs = {
 
 export type QueryGetWidgetArgs = {
   userParamsId?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryGetRiskAlertsArgs = {
+  userId?: Maybe<Scalars['String']>;
+  code?: Maybe<RiskAlertCodes>;
+  filter?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OrderBy>>;
+};
+
+
+export type QueryUpdateRiskAlertTypeArgs = {
+  riskAlertTypeId?: Maybe<Scalars['String']>;
+  riskAlertTypeInput?: Maybe<RiskAlertTypeInput>;
 };
 
 export type OrderBy = {
@@ -888,6 +906,7 @@ export type UserVault = {
   availableBalanceEur: Scalars['Float'];
   totalBalanceFiat: Scalars['Float'];
   availableBalanceFiat: Scalars['Float'];
+  balancesPerAsset?: Maybe<Array<BalancePerAsset>>;
   name?: Maybe<Scalars['String']>;
   assets?: Maybe<Array<VaultAccountAsset>>;
 };
@@ -897,6 +916,17 @@ export type UserVaultAssetsArgs = {
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
   orderBy?: Maybe<Array<OrderBy>>;
+};
+
+export type BalancePerAsset = {
+  __typename?: 'BalancePerAsset';
+  assetId: Scalars['String'];
+  totalBalance: Scalars['Float'];
+  totalBalanceEur: Scalars['Float'];
+  availableBalance: Scalars['Float'];
+  availableBalanceEur: Scalars['Float'];
+  totalBalanceFiat: Scalars['Float'];
+  availableBalanceFiat: Scalars['Float'];
 };
 
 export type VaultAccountAsset = {
@@ -994,6 +1024,7 @@ export type UserBalanceHistory = {
   asset: Scalars['String'];
   balance: Scalars['Float'];
   balanceEur: Scalars['Float'];
+  balanceFiat: Scalars['Float'];
   transactionId?: Maybe<Scalars['String']>;
 };
 
@@ -1115,7 +1146,8 @@ export enum UserActionType {
   Transfer = 'transfer',
   Exchange = 'exchange',
   System = 'system',
-  CancelTransaction = 'cancelTransaction'
+  CancelTransaction = 'cancelTransaction',
+  ChangeRiskAlertSettings = 'changeRiskAlertSettings'
 }
 
 export type SupportTicketListResult = {
@@ -1128,6 +1160,7 @@ export type SupportTicket = {
   __typename?: 'SupportTicket';
   supportTicketId: Scalars['ID'];
   userId?: Maybe<Scalars['String']>;
+  user?: Maybe<User>;
   title?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
   category?: Maybe<SupportTicketCategory>;
@@ -1614,6 +1647,41 @@ export type WidgetShort = {
   paymentProviders?: Maybe<Array<Scalars['String']>>;
   additionalSettings?: Maybe<Scalars['String']>;
   currentUserEmail?: Maybe<Scalars['String']>;
+};
+
+export enum RiskAlertCodes {
+  TooManyFailedLoginAttempts = 'TOO_MANY_FAILED_LOGIN_ATTEMPTS',
+  UnusualUserIpAddress = 'UNUSUAL_USER_IP_ADDRESS'
+}
+
+export type RiskAlertResultList = {
+  __typename?: 'RiskAlertResultList';
+  count?: Maybe<Scalars['Int']>;
+  list?: Maybe<Array<RiskAlert>>;
+};
+
+export type RiskAlert = {
+  __typename?: 'RiskAlert';
+  riskAlertId?: Maybe<Scalars['ID']>;
+  userId: Scalars['String'];
+  user?: Maybe<User>;
+  riskAlertTypeCode: RiskAlertCodes;
+  created: Scalars['DateTime'];
+  details?: Maybe<Scalars['String']>;
+};
+
+export type RiskAlertTypeInput = {
+  riskAlertTypeCode: RiskAlertCodes;
+  description?: Maybe<Scalars['String']>;
+  disabled?: Maybe<Scalars['DateTime']>;
+};
+
+export type RiskAlertType = {
+  __typename?: 'RiskAlertType';
+  riskAlertTypecode: RiskAlertCodes;
+  description?: Maybe<Scalars['String']>;
+  created: Scalars['DateTime'];
+  disabled?: Maybe<Scalars['DateTime']>;
 };
 
 
@@ -2476,15 +2544,6 @@ export enum FireblocksTransactionStatus {
   Failed = 'FAILED'
 }
 
-export type DeletedVaultAccount = {
-  __typename?: 'DeletedVaultAccount';
-  deletedVaultAccountId?: Maybe<Scalars['ID']>;
-  userId: Scalars['String'];
-  vaultAccountId: Scalars['String'];
-  deleted?: Maybe<Scalars['DateTime']>;
-  custodyProvider: Scalars['String'];
-};
-
 export type UserAddress = {
   __typename?: 'UserAddress';
   address?: Maybe<Scalars['ID']>;
@@ -2585,6 +2644,15 @@ export type UserShort = {
   defaultFiatCurrency?: Maybe<Scalars['String']>;
   defaultCryptoCurrency?: Maybe<Scalars['String']>;
   affiliateCode?: Maybe<Scalars['String']>;
+};
+
+export type DeletedVaultAccount = {
+  __typename?: 'DeletedVaultAccount';
+  deletedVaultAccountId?: Maybe<Scalars['ID']>;
+  userId: Scalars['String'];
+  vaultAccountId: Scalars['String'];
+  deleted?: Maybe<Scalars['DateTime']>;
+  custodyProvider: Scalars['String'];
 };
 
 export enum TokenAction {

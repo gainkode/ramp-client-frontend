@@ -34,17 +34,61 @@ query MyState {
       out { transactionCount, amount }
     },
     vault {
+      totalBalanceFiat,
+      balancesPerAsset {
+        assetId,
+        totalBalance,
+        totalBalanceFiat,
+        availableBalance,
+        availableBalanceFiat
+      },
       assets {
         id, total, addresses { address }
       }
     },
     additionalVaults {
+      totalBalanceFiat,
+      balancesPerAsset {
+        assetId,
+        totalBalance,
+        totalBalanceFiat,
+        availableBalance,
+        availableBalanceFiat
+      },
       assets {
         id, total, addresses { address }
       }
     },
     externalWallets {
         assets { id, address }
+    }
+  }
+}
+`;
+
+const MY_BALANCES = gql`
+query MyState {
+  myState {
+    date,
+    vault {
+      totalBalanceFiat,
+      balancesPerAsset {
+        assetId,
+        totalBalance,
+        totalBalanceFiat,
+        availableBalance,
+        availableBalanceFiat
+      }
+    },
+    additionalVaults {
+      totalBalanceFiat,
+      balancesPerAsset {
+        assetId,
+        totalBalance,
+        totalBalanceFiat,
+        availableBalance,
+        availableBalanceFiat
+      }
     }
   }
 }
@@ -195,6 +239,17 @@ export class CommonDataService {
     }
   }
 
+  getMyBalances(): QueryRef<any, EmptyObject> | null {
+    if (this.apollo.client !== undefined) {
+      return this.apollo.watchQuery<any>({
+        query: MY_BALANCES,
+        fetchPolicy: 'network-only'
+      });
+    } else {
+      return null;
+    }
+  }
+  
   getUsers(): QueryRef<any, EmptyObject> | null {
     if (this.apollo.client !== undefined) {
       return this.apollo.watchQuery<any>({
