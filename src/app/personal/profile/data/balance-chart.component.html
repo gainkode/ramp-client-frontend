@@ -27,8 +27,8 @@
                     </form>
                 </div>
             </div>
-            <div class="__profile-profit-value">
-                +10.00% (2,500 USD)
+            <div [ngClass]="positiveProfit ? '__profile-profit-value' : '__profile-profit-negative-value'">
+                {{profitValue}}
             </div>
         </div>
         <div class="__profile-balance-chart-period-selector">
@@ -55,7 +55,7 @@
     </div>
 
     <div id="chart">
-        <apx-chart [series]="seriesData" [chart]="chartData" [dataLabels]="dataLabels" [labels]="labelPoints"
+        <apx-chart [series]="seriesData" [chart]="chartData" [dataLabels]="dataLabels" 
             [grid]="gridSettings" [xaxis]="xaxis" [yaxis]="yaxis" [fill]="areaFill" [tooltip]="tooltips"
             [stroke]="chartStroke" [markers]="markers" [noData]="noDataSettings"></apx-chart>
     </div>

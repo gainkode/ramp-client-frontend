@@ -130,7 +130,7 @@ export class FeeEditorComponent implements OnInit {
                 this.targetEntity = '';
                 break;
             }
-            case SettingsFeeTargetFilterType.AffiliateId: {
+            case SettingsFeeTargetFilterType.WidgetId: {
                 params.title = 'List of affiliate identifiers *';
                 params.inputPlaceholder = 'New identifier...';
                 params.dataList = AffiliateIdFilterList;

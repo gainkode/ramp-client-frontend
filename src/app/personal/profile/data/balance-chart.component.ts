@@ -3,7 +3,7 @@ import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { BalancePoint } from 'src/app/model/balance.model';
-import { SettingsCurrency, UserBalanceHistoryPeriod } from 'src/app/model/generated-models';
+import { SettingsCurrency, UserBalanceHistoryPeriod, UserProfit } from 'src/app/model/generated-models';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
@@ -32,6 +32,8 @@ export class PersonalBalanceChartComponent implements OnInit, OnDestroy {
     @Output() onCurrencyChanged = new EventEmitter<string>();
     @ViewChild("chart") chart!: ChartComponent;
 
+    positiveProfit = true;
+    profitValue = '';
     chartPoints: BalancePoint[] = [];
     dataPoints = [];
     labelPoints: string[] = [];
@@ -185,11 +187,11 @@ export class PersonalBalanceChartComponent implements OnInit, OnDestroy {
         offsetX: 0,
         offsetY: 0,
         style: {
-          color: undefined,
-          fontSize: '14px',
-          fontFamily: undefined
+            color: undefined,
+            fontSize: '14px',
+            fontFamily: undefined
         }
-      };
+    };
 
     private subscriptions: Subscription = new Subscription();
 
@@ -208,12 +210,12 @@ export class PersonalBalanceChartComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.subscriptions.add(
             this.fiatField?.valueChanges.subscribe(val => {
-                if (val !== '') {
+                if (val !== '' && val !== this.selectedFiat) {
                     this.selectedFiat = val;
                     this.onCurrencyChanged.emit(val);
+                    this.loadChartData();
                 }
             }));
-        this.loadChartData();
     }
 
     ngOnDestroy(): void {
@@ -253,13 +255,49 @@ export class PersonalBalanceChartComponent implements OnInit, OnDestroy {
     }
 
     private loadChartData(): void {
-        const chartData = this.profileService.getBalanceHistory('', this.period);
+        this.onError.emit('');
+        // const chartData = this.profileService.getMyProfit(this.selectedFiat, this.period);
+        // if (chartData === null) {
+        //     this.onError.emit(this.errorHandler.getRejectedCookieMessage());
+        // } else {
+        //     this.profitValue = '';
+        //     this.positiveProfit = true;
+        //     this.onProgress.emit(true);
+        //     this.subscriptions.add(
+        //         chartData.valueChanges.subscribe(({ data }) => {
+        //             const profitData = data.myProfit as UserProfit;
+        //             let profit = 0;
+        //             let profitPercent = 0;
+        //             profitData.profits?.forEach(p => {
+        //                 profit += p.profitFiat ?? 0;
+        //                 profitPercent += p.profitPercent ?? 0;
+        //                 // read chart data here
+        //                 //console.log(p.userBalanceHistory);
+        //             });
+        //             this.positiveProfit = (profit >= 0);
+        //             this.profitValue = `${profit>0 ? '+ ' : ''}${profitPercent.toFixed(2)}% (${profit} ${this.selectedFiat})`;
+        //             this.onProgress.emit(false);
+        //         }, (error) => {
+        //             this.onProgress.emit(false);
+        //             if (this.auth.token !== '') {
+        //                 this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load chart data'));
+        //             } else {
+        //                 this.router.navigateByUrl('/');
+        //             }
+        //         })
+        //     );
+        // }
 
 
+
+        this.onProgress.emit(true);
         setTimeout(() => {
 
 
             this.chartPoints = [];
+
+            this.positiveProfit = true;
+            this.profitValue = `+ 15.00% (2.500 ${this.selectedFiat})`;
 
             let val = new BalancePoint();
             val.date = new Date(2021, 7, 16, 0, 0, 0, 0);
@@ -310,6 +348,7 @@ export class PersonalBalanceChartComponent implements OnInit, OnDestroy {
                 const label = (i === 0 || i === this.chartPoints.length - 1) ? '' : val.datePoint;
                 val.dateLabel = label;
             });
+            this.onProgress.emit(false);
             this.seriesData = [
                 {
                     name: "BALANCE",

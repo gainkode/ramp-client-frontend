@@ -87,30 +87,33 @@ query GetTransactionStatuses {
 }
 `;
 
-const GET_MY_BALANCE_HISTORY = gql`
-query MyBalanceHistory(
-  $asset: String
-  $period: UserBalanceHistoryPeriod
-  $filter: String
-  $skip: Int
-  $first: Int
-  $orderBy: [OrderBy!]
-) {
-  myBalanceHistory(
-    asset: $asset
-    period: $period
-    filter: $filter
-    skip: $skip
-    first: $first
-    orderBy: $orderBy
+const GET_MY_PROFIT = gql`
+query MyProfit($currencyTo: String, $period: UserBalanceHistoryPeriod!) {
+  myProfit(
+    options: {
+      currencyTo: $currencyTo
+      period: $period
+    }
   ) {
-    count
-    list {
-      userBalanceId,
-      date,
-      balance,
-      balanceEur,
-      transactionId
+    userId
+    currencyTo
+    period
+    profits {
+      currencyFrom
+      profitFiat
+      profitPercent
+      userBalanceHistory {
+        count
+        list {
+          userBalanceId
+          userId
+          date
+          asset
+          balance
+          balanceEur
+          transactionId
+        }
+      }
     }
   }
 }
@@ -366,21 +369,14 @@ export class ProfileDataService {
     }
   }
 
-  getBalanceHistory(
-    assetName: string,
-    chartPeriod: UserBalanceHistoryPeriod
-  ): QueryRef<any, EmptyObject> | null {
+  getMyProfit(fiatCurrency: string, selectPeriod: UserBalanceHistoryPeriod): QueryRef<any, EmptyObject> | null {
     if (this.apollo.client !== undefined) {
       const orderFields = [{ orderBy: 'date', desc: true }];
       return this.apollo.watchQuery<any>({
-        query: GET_MY_BALANCE_HISTORY,
+        query: GET_MY_PROFIT,
         variables: {
-          asset: assetName,
-          period: chartPeriod,
-          filter: '',
-          skip: 0,
-          first: 1000,
-          orderBy: orderFields,
+          currencyTo: fiatCurrency,
+          period: selectPeriod
         },
         fetchPolicy: 'network-only',
       });

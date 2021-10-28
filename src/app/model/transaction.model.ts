@@ -72,14 +72,14 @@ export class TransactionItemDeprecated {
       }
 
       this.type = data.type;
-      this.instrument = data.instrument;
+      this.instrument = data.instrument ?? undefined;
       this.paymentProvider = data.paymentProvider as
         | PaymentProvider
         | undefined;
-      this.source = data.source;
-      this.currencyToSpend = data.currencyToSpend;
-      this.currencyToReceive = data.currencyToReceive;
-      this.amountToSpend = data.amountToSpend;
+      this.source = data.source ?? undefined;
+      this.currencyToSpend = data.currencyToSpend ?? '';
+      this.currencyToReceive = data.currencyToReceive ?? '';
+      this.amountToSpend = data.amountToSpend ?? 0;
       this.amountToReceive = data.amountToReceive ?? 0;
 
       // if (
@@ -198,9 +198,9 @@ export class TransactionItem {
       this.executed = data.executed;
       this.type = data.type;
       if (this.type === TransactionType.Deposit) {
-        this.currencyToSpend = data.currencyToSpend;
-        this.currencyToReceive = data.currencyToReceive;
-        this.amountToSpend = data.amountToSpend;
+        this.currencyToSpend = data.currencyToSpend ?? '';
+        this.currencyToReceive = data.currencyToReceive ?? '';
+        this.amountToSpend = data.amountToSpend ?? 0;
         this.amountToReceive = data.amountToReceive ?? 0;
         this.fees = data.feeFiat as number ?? 0;
       } else {

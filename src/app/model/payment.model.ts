@@ -215,7 +215,7 @@ export const TransactionStatusList: Array<TransactionStatusView> = [
 
 export const FeeTargetFilterList: Array<FeeTargetFilterTypeView> = [
     { id: SettingsFeeTargetFilterType.None, name: 'None' },
-    { id: SettingsFeeTargetFilterType.AffiliateId, name: 'Affiliate identifier' },
+    { id: SettingsFeeTargetFilterType.WidgetId, name: 'Widget identifier' },
     { id: SettingsFeeTargetFilterType.AccountId, name: 'Account' },
     { id: SettingsFeeTargetFilterType.AccountType, name: 'Account type' },
     { id: SettingsFeeTargetFilterType.Country, name: 'Country' },
@@ -230,7 +230,7 @@ export const CostTargetFilterList: Array<CostTargetFilterTypeView> = [
 
 export const KycTargetFilterList: Array<KycTargetFilterTypeView> = [
     { id: SettingsKycTargetFilterType.None, name: 'None' },
-    { id: SettingsKycTargetFilterType.AffiliateId, name: 'Affiliate identifier' },
+    { id: SettingsKycTargetFilterType.WidgetId, name: 'Widget identifier' },
     { id: SettingsKycTargetFilterType.Country, name: 'Country' },
     { id: SettingsKycTargetFilterType.AccountId, name: 'Account' },
     { id: SettingsKycTargetFilterType.InitiateFrom, name: 'Initiate from ...' }

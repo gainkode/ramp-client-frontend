@@ -99,7 +99,7 @@ export class KycEditorComponent implements OnInit, OnDestroy {
                 this.targetEntity = 'account identifier';
                 break;
             }
-            case SettingsKycTargetFilterType.AffiliateId: {
+            case SettingsKycTargetFilterType.WidgetId: {
                 params.title = 'List of affiliate identifiers *';
                 params.inputPlaceholder = 'New identifier...';
                 params.dataList = AffiliateIdFilterList;

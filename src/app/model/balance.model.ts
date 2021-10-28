@@ -11,10 +11,7 @@ export class BalancePoint {
     private datepipe: DatePipe = new DatePipe('en-US');
 
     get datePoint(): string {
-      return this.datepipe.transform(
-        this.date,
-        'dd MMM'
-      ) as string;
+      return this.datepipe.transform(this.date, 'dd MMM') as string;
     }
 
     get balanceCryptoValue(): string {
@@ -23,10 +20,6 @@ export class BalancePoint {
 
     get balanceFiatValue(): string {
       return `$${this.balanceFiat}`;
-    }
-
-    constructor() {
-        
     }
 }
 
