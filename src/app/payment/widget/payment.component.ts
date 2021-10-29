@@ -230,9 +230,9 @@ export class WidgetPaymentComponent implements OnInit, OnDestroy {
   //   if (this.summary) {
   //     let destinationType = TransactionDestinationType.Address;
   //     let destination = this.summary.address;
-  //     if (this.settings.affiliateCode !== '') {
+  //     if (this.settings.widgetId !== '') {
   //       destinationType = TransactionDestinationType.Widget;
-  //       destination = this.settings.affiliateCode;
+  //       destination = this.settings.widgetId;
   //     }
   //     this.pSubscriptions.add(
   //       this.dataService.createQuickCheckout(

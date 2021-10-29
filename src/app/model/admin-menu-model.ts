@@ -68,9 +68,9 @@ export const AdminMenuItems: Array<MenuItem> = [
         icon: 'bolt'
     },
     {
-        id: 'affiliates',
-        name: 'Affiliates',
-        url: '/admin/main/affiliates',
+        id: 'widgets',
+        name: 'Widgets',
+        url: '/admin/main/widgets',
         icon: 'device_hub'
     }
 ];

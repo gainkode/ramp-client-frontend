@@ -7,8 +7,8 @@ import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material
 import { MatChipInputEvent } from '@angular/material/chips';
 import { PaymentDataService } from '../../services/payment.service';
 import {
-    FeeScheme, AccountTypeFilterList, AffiliateIdFilterList,
-    AccountIdFilterList, WidgetFilterList
+    FeeScheme, AccountTypeFilterList, 
+    AccountIdFilterList, WidgetFilterList, WidgetIdFilterList
 } from '../../model/fee-scheme.model';
 import {
     SettingsFeeTargetFilterType, PaymentInstrument, PaymentProvider, TransactionType, UserType, UserMode
@@ -131,10 +131,10 @@ export class FeeEditorComponent implements OnInit {
                 break;
             }
             case SettingsFeeTargetFilterType.WidgetId: {
-                params.title = 'List of affiliate identifiers *';
+                params.title = 'List of widget identifiers *';
                 params.inputPlaceholder = 'New identifier...';
-                params.dataList = AffiliateIdFilterList;
-                this.targetEntity = 'affiliate identifier';
+                params.dataList = WidgetIdFilterList;
+                this.targetEntity = 'widget identifier';
                 break;
             }
             case SettingsFeeTargetFilterType.Country: {

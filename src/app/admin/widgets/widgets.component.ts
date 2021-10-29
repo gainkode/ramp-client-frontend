@@ -5,10 +5,10 @@ import { AdminDataService } from '../../services/admin-data.service';
 import { ErrorService } from '../../services/error.service';
 
 @Component({
-  templateUrl: 'affiliates.component.html',
+  templateUrl: 'widgets.component.html',
   styleUrls: ['../admin.scss']
 })
-export class AffiliatesComponent {
+export class WidgetsComponent {
   @Output() changeEditMode = new EventEmitter<boolean>();
   inProgress = false;
   errorMessage = '';

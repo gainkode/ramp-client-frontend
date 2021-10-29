@@ -11,7 +11,7 @@ import { KycLevel, KycScheme } from '../model/identification.model';
 const GET_DASHBOARD_STATS = gql`
   query GetDashboardStats(
     $userIdOnly: [String!],
-    $affiliateIdOnly: [String!],
+    $widgetIdOnly: [String!],
     $sourcesOnly: [TransactionSource!],
     $countriesOnly: [String!],
     $countryCodeType: CountryCodeType,
@@ -19,7 +19,7 @@ const GET_DASHBOARD_STATS = gql`
   ) {
     getDashboardStats(
       userIdOnly: $userIdOnly
-      affiliateIdOnly: $affiliateIdOnly
+      widgetIdOnly: $widgetIdOnly
       sourcesOnly: $sourcesOnly
       countriesOnly: $countriesOnly
       countryCodeType: $countryCodeType
@@ -675,7 +675,7 @@ export class AdminDataService {
     if (this.apollo.client !== undefined) {
       const vars = {
         userIdOnly: filter.userIdOnly,
-        affiliateIdOnly: filter.affiliateIdOnly,
+        widgetIdOnly: filter.widgetIdOnly,
         sourcesOnly: filter.sourcesOnly,
         countriesOnly: filter.countriesOnly,
         countryCodeType: CountryCodeType.Code3,

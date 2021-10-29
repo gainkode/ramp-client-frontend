@@ -21,7 +21,7 @@ export class DashboardFilterComponent implements OnInit {
     @Output() update = new EventEmitter<DashboardFilter>();
     @ViewChild('countryInput') countryInput!: ElementRef<HTMLInputElement>;
     @ViewChild('userInput') userInput!: ElementRef<HTMLInputElement>;
-    @ViewChild('affiliateInput') affiliateInput!: ElementRef<HTMLInputElement>;
+    @ViewChild('widgetInput') widgetInput!: ElementRef<HTMLInputElement>;
 
     inProgress = false;
     sources = TransactionSourceList;
@@ -29,18 +29,18 @@ export class DashboardFilterComponent implements OnInit {
     countries: ICountryCode[] = CountryCodes;
     selectedCountries: ICountryCode[] = [];
     selectedUsers: UserItem[] = [];
-    selectedAffiliates: string[] = [];
+    selectedWidgets: string[] = [];
     separatorKeysCodes: number[] = [ENTER, COMMA];
     filteredCountries: Observable<ICountryCode[]> | undefined;
     filteredUsers: Observable<UserItem[]> | undefined;
-    filteredAffiliates: Observable<string[]> | undefined;
+    filteredWidgets: Observable<string[]> | undefined;
 
     filterForm = this.formBuilder.group({
         accountType: [[]],
         users: [[]],
         user: [''],
-        affiliates: [[]],
-        affiliate: [''],
+        widgets: [[]],
+        widget: [''],
         countries: [[]],
         country: [''],
         source: [[]]
@@ -49,21 +49,12 @@ export class DashboardFilterComponent implements OnInit {
     constructor(private formBuilder: FormBuilder, private adminService: AdminDataService) { }
 
     ngOnInit(): void {
-        this.filteredCountries = this.countryField?.valueChanges.pipe(
-            startWith(''),
-            map(value => this.filterCountries(value))
-        );
-        this.userField?.valueChanges.pipe(
-            distinctUntilChanged(),
-            debounceTime(1000)
-        ).subscribe(val => {
+        this.filteredCountries = this.countryField?.valueChanges.pipe(startWith(''), map(value => this.filterCountries(value)));
+        this.userField?.valueChanges.pipe(distinctUntilChanged(), debounceTime(1000)).subscribe(val => {
             this.filterUsers(val);
         });
-        this.affiliateField?.valueChanges.pipe(
-            distinctUntilChanged(),
-            debounceTime(1000)
-        ).subscribe(val => {
-            this.filterAffiliates(val);
+        this.widgetField?.valueChanges.pipe(distinctUntilChanged(), debounceTime(1000)).subscribe(val => {
+            this.filterWidgets(val);
         });
     }
 
@@ -75,8 +66,8 @@ export class DashboardFilterComponent implements OnInit {
         return this.filterForm.get('user');
     }
 
-    get affiliateField(): AbstractControl | null {
-        return this.filterForm.get('affiliate');
+    get widgetField(): AbstractControl | null {
+        return this.filterForm.get('widget');
     }
 
     get countryField(): AbstractControl | null {
@@ -174,33 +165,33 @@ export class DashboardFilterComponent implements OnInit {
         }
     }
 
-    addAffiliate(event: MatChipInputEvent): void {
-        this.affiliateInput.nativeElement.value = '';
-        this.affiliateField?.setValue(null);
-        this.filteredAffiliates = of([]);
+    addWidget(event: MatChipInputEvent): void {
+        this.widgetInput.nativeElement.value = '';
+        this.widgetField?.setValue(null);
+        this.filteredWidgets = of([]);
     }
 
-    removeAffiliate(val: string, index: number): void {
+    removeWidget(val: string, index: number): void {
         if (index >= 0) {
-            this.selectedAffiliates.splice(index, 1);
+            this.selectedWidgets.splice(index, 1);
         }
     }
 
-    clearAffiliates(): void {
-        this.selectedAffiliates = [];
+    clearWidgets(): void {
+        this.selectedWidgets = [];
     }
 
-    affiliateSelected(event: MatAutocompleteSelectedEvent): void {
-        const item = this.selectedAffiliates.find(x => x === event.option.value);
+    widgetSelected(event: MatAutocompleteSelectedEvent): void {
+        const item = this.selectedWidgets.find(x => x === event.option.value);
         if (!item) {
-            this.selectedAffiliates.push(event.option.value);
+            this.selectedWidgets.push(event.option.value);
         }
-        this.affiliateInput.nativeElement.value = '';
-        this.affiliateField?.setValue(null);
-        this.filteredAffiliates = of([]);
+        this.widgetInput.nativeElement.value = '';
+        this.widgetField?.setValue(null);
+        this.filteredWidgets = of([]);
     }
 
-    private filterAffiliates(value: string): void {
+    private filterWidgets(value: string): void {
         if (value && value !== '') {
             this.inProgress = true;
             const userData = this.adminService.getWidgets(value, 0, 1000, 'widgetId', false);
@@ -210,7 +201,7 @@ export class DashboardFilterComponent implements OnInit {
                     if (dataList !== null) {
                         const userCount = dataList?.count as number;
                         if (userCount > 0) {
-                            this.filteredAffiliates = of(dataList?.list?.map((val) => val.widgetId?.toString()) as string[]);
+                            this.filteredWidgets = of(dataList?.list?.map((val) => val.widgetId?.toString()) as string[]);
                         }
                     }
                     this.inProgress = false;
@@ -229,9 +220,9 @@ export class DashboardFilterComponent implements OnInit {
         this.userInput.nativeElement.value = '';
         this.userField?.setValue(null);
         this.selectedUsers = [];
-        this.affiliateInput.nativeElement.value = '';
-        this.affiliateField?.setValue(null);
-        this.selectedAffiliates = [];
+        this.widgetInput.nativeElement.value = '';
+        this.widgetField?.setValue(null);
+        this.selectedWidgets = [];
         this.countryInput.nativeElement.value = '';
         this.countryField?.setValue(null);
         this.selectedCountries = [];
@@ -248,8 +239,8 @@ export class DashboardFilterComponent implements OnInit {
         this.selectedUsers.forEach(u => {
             filter.userIdOnly.push(u.id);
         });
-        // affiliates
-        filter.affiliateIdOnly = this.selectedAffiliates;
+        // widgets
+        filter.widgetIdOnly = this.selectedWidgets;
         // countries
         filter.countriesOnly = [];
         this.selectedCountries.forEach(c => {

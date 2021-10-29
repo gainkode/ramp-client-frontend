@@ -43,22 +43,22 @@
                 </mat-form-field>
             </div>
             <div class="dashboard-filter-item">
-                <!-- Affiliate filter -->
+                <!-- Widget filter -->
                 <mat-form-field class="form-element">
-                    <mat-label>Affiliates</mat-label>
-                    <mat-chip-list #affiliateChipList aria-label="Affiliate selection" formControlName="affiliates">
-                        <mat-chip *ngFor="let a of selectedAffiliates;let i=index;" (removed)="removeAffiliate(a, i)">
-                            {{a}}
-                            <mat-icon matChipRemove matTooltip="Remove affiliate" matTooltipClass="info-tooltip">cancel
+                    <mat-label>Widgets</mat-label>
+                    <mat-chip-list #widgetChipList aria-label="Widget selection" formControlName="widgets">
+                        <mat-chip *ngFor="let w of selectedWidgets;let i=index;" (removed)="removeWidget(w, i)">
+                            {{w}}
+                            <mat-icon matChipRemove matTooltip="Remove widget" matTooltipClass="info-tooltip">cancel
                             </mat-icon>
                         </mat-chip>
-                        <input placeholder="Affiliates" #affiliateInput formControlName="affiliate"
-                            [matAutocomplete]="autoAffiliate" [matChipInputFor]="affiliateChipList"
+                        <input placeholder="Widgets" #widgetInput formControlName="widget"
+                            [matAutocomplete]="autoWidget" [matChipInputFor]="widgetChipList"
                             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                            (matChipInputTokenEnd)="addAffiliate($event)">
+                            (matChipInputTokenEnd)="addWidget($event)">
                     </mat-chip-list>
-                    <mat-autocomplete #autoAffiliate="matAutocomplete" (optionSelected)="affiliateSelected($event)">
-                        <mat-option *ngFor="let item of filteredAffiliates | async" [value]="item">
+                    <mat-autocomplete #autoWidget="matAutocomplete" (optionSelected)="widgetSelected($event)">
+                        <mat-option *ngFor="let item of filteredWidgets | async" [value]="item">
                             {{item}}
                         </mat-option>
                     </mat-autocomplete>

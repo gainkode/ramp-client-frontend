@@ -7,7 +7,7 @@ import { PaymentInstrumentList,
     FeeTargetFilterList, TransactionTypeList } from './payment.model';
 
 // temp
-export const AffiliateIdFilterList: CommonTargetValue[] = [
+export const WidgetIdFilterList: CommonTargetValue[] = [
     { title: 'fb4598gbf38d73', imgClass: '', imgSource: '', id: '' },
     { title: 'ce98g6g7fb80g4', imgClass: '', imgSource: '', id: '' },
     { title: 'ee3f78f4358g74', imgClass: '', imgSource: '', id: '' },

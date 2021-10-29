@@ -43,7 +43,6 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 const routing = RouterModule.forChild([
     { path: 'qc', component: PaymentComponent },
     { path: 'quickcheckout', component: QuickCheckoutComponent },
-    // { path: 'container/:affiliateCode', component: ContainerComponentDeprecated },
     // { path: 'container', component: ContainerComponentDeprecated },
     { path: 'widget/:userParamsId', component: WidgetComponent },
     { path: '**', redirectTo: 'quickcheckout' }

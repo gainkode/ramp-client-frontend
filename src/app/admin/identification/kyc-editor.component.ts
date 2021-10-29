@@ -16,7 +16,7 @@ import { CommonTargetValue, TargetParams } from 'src/app/model/common.model';
 import { CountryFilterList, getCountry } from 'src/app/model/country-code.model';
 import { KycScheme } from 'src/app/model/identification.model';
 import { AdminDataService } from 'src/app/services/admin-data.service';
-import { AffiliateIdFilterList, WidgetFilterList } from 'src/app/model/fee-scheme.model';
+import { WidgetFilterList, WidgetIdFilterList } from 'src/app/model/fee-scheme.model';
 
 @Component({
     selector: 'app-kyc-editor',
@@ -100,10 +100,10 @@ export class KycEditorComponent implements OnInit, OnDestroy {
                 break;
             }
             case SettingsKycTargetFilterType.WidgetId: {
-                params.title = 'List of affiliate identifiers *';
+                params.title = 'List of widget identifiers *';
                 params.inputPlaceholder = 'New identifier...';
-                params.dataList = AffiliateIdFilterList;
-                this.targetEntity = 'affiliate identifier';
+                params.dataList = WidgetIdFilterList;
+                this.targetEntity = 'widget identifier';
                 break;
             }
             case SettingsKycTargetFilterType.InitiateFrom: {

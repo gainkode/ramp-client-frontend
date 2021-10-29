@@ -46,7 +46,7 @@ import { NotificationsComponent } from './notifications/notifications.component'
 import { ReconciliationComponent } from './reconciliation/reconciliation.component';
 import { SystemUsersComponent } from './system-users/system-users.component';
 import { RiskCenterComponent } from './risk-center/risk-center.component';
-import { AffiliatesComponent } from './affiliates/affiliates.component';
+import { WidgetsComponent } from './widgets/widgets.component';
 
 const routing = RouterModule.forChild([
     {
@@ -64,7 +64,7 @@ const routing = RouterModule.forChild([
             { path: 'reconciliation', component: ReconciliationComponent, canActivate: [AdminGuard] },
             { path: 'system-users', component: SystemUsersComponent, canActivate: [AdminGuard] },
             { path: 'risk-center', component: RiskCenterComponent, canActivate: [AdminGuard] },
-            { path: 'affiliates', component: AffiliatesComponent, canActivate: [AdminGuard] },
+            { path: 'widgets', component: WidgetsComponent, canActivate: [AdminGuard] },
             { path: '**', redirectTo: 'dashboard' }
         ],
         canActivate: [AdminGuard]
@@ -116,7 +116,7 @@ export class MaterialModule { }
         ReconciliationComponent,
         SystemUsersComponent,
         RiskCenterComponent,
-        AffiliatesComponent],
+        WidgetsComponent],
     providers: [AdminGuard],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

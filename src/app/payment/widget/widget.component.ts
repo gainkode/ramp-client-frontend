@@ -558,8 +558,8 @@ export class WidgetComponent implements OnInit {
     this.inProgress = true;
     if (this.summary) {
       let destination = this.summary.address;
-      if (this.widget.affiliateCode !== '') {
-        destination = this.widget.affiliateCode;
+      if (this.widget.widgetId !== '') {
+        destination = this.widget.widgetId;
       }
       this.pSubscriptions.add(
         this.dataService.createQuickCheckout(
