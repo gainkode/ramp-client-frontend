@@ -67,7 +67,15 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
   private loadTransactions(): void {
     this.transactionCount = 0;
     const transactionsData = this.adminService.getTransactions(
-      this.pageIndex, this.pageSize, [TransactionSource.QuickCheckout], this.sortedField, this.sortedDesc);
+      this.pageIndex,
+      this.pageSize,
+      [
+        TransactionSource.QuickCheckout,
+        TransactionSource.Wallet,
+        TransactionSource.Widget
+      ],
+      this.sortedField,
+      this.sortedDesc);
     if (transactionsData === null) {
       this.errorMessage = this.errorHandler.getRejectedCookieMessage();
     } else {
