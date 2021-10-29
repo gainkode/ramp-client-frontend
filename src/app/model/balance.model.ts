@@ -14,6 +14,10 @@ export class BalancePoint {
       return this.datepipe.transform(this.date, 'dd MMM') as string;
     }
 
+    get datePointFull(): string {
+      return this.datepipe.transform(this.date, 'dd MMM YYYY') as string;
+    }
+
     get balanceCryptoValue(): string {
       return `${this.balanceCrypto} BTC`;
     }

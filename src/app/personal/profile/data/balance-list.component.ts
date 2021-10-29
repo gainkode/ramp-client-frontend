@@ -51,16 +51,17 @@ export class PersonalBalanceListComponent implements OnInit, OnDestroy {
             if (currentFiat) {
                 this.fiatPrecision = currentFiat.precision;
             }
+            this.loadBalanceData();
             //this.loadRates();
 
 
             // temp
-            this.balances.push(new UserBalanceItem({
-                assetId: 'BTC',
-                totalBalanceFiat: 4200,
-                totalBalance: 0.001547
-            } as BalancePerAsset, 'Bitcoin', this.currentCurrency, this.fiatPrecision));
-            this.onProgress.emit(false);
+            // this.balances.push(new UserBalanceItem({
+            //     assetId: 'BTC',
+            //     totalBalanceFiat: 4200,
+            //     totalBalance: 0.001547
+            // } as BalancePerAsset, 'Bitcoin', this.currentCurrency, this.fiatPrecision));
+            // this.onProgress.emit(false);
             // temp
         }
     }
@@ -95,6 +96,7 @@ export class PersonalBalanceListComponent implements OnInit, OnDestroy {
     }
 
     private loadBalanceData(): void {
+        this.onProgress.emit(true);
         const balanceData = this.commonService.getMyBalances();
         if (balanceData === null) {
             this.onProgress.emit(false);

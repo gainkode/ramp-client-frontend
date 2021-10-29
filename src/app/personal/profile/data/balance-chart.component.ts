@@ -114,7 +114,10 @@ export class PersonalBalanceChartComponent implements OnInit, OnDestroy {
             minHeight: undefined,
             maxHeight: 120,
             style: {
-                colors: '#362C3699'
+                colors: '#362C3699',
+                fontSize: '10px',
+                fontFamily: 'Prompt',
+                fontWeight: 400
             },
             offsetX: 0,
             offsetY: 0
@@ -145,7 +148,10 @@ export class PersonalBalanceChartComponent implements OnInit, OnDestroy {
             show: true,
             align: 'left',
             style: {
-                colors: '#362C3699'
+                colors: '#362C3699',
+                fontSize: '12px',
+                fontFamily: 'Ubuntu',
+                fontWeight: 400
             },
             formatter: function (val, index) {
                 return val.toFixed(0);
@@ -356,7 +362,7 @@ export class PersonalBalanceChartComponent implements OnInit, OnDestroy {
                             y: v.balanceFiat,
                             meta: {
                                 balance: v.balanceFiatValue,
-                                dateFull: v.datePoint
+                                dateFull: v.datePointFull
                             }
                         };
                     })
