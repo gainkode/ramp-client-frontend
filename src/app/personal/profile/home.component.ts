@@ -81,7 +81,16 @@ export class PersonalHomeComponent implements OnInit, OnDestroy {
                         if (itemCount > 0) {
                             if (currencySettings.settingsCurrency.list) {
                                 currencySettings.settingsCurrency.list.forEach(x => this.currencies.push(x));
-                                this.currencies.filter(x => x.fiat === true).forEach(x => this.fiatCurrencies.push(x));
+                                let validFiat = false;
+                                this.currencies.filter(x => x.fiat === true).forEach(x => {
+                                    if (x.symbol === this.selectedFiat) {
+                                        validFiat = true;
+                                    }
+                                    this.fiatCurrencies.push(x);
+                                });
+                                if (startLoading && !validFiat) {
+                                    this.selectedFiat = 'EUR';
+                                }
                                 if (this.balanceListPanel) {
                                     this.balanceListPanel.load(this.currencies, this.selectedFiat);
                                 }

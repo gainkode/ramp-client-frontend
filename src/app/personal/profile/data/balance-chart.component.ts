@@ -110,14 +110,14 @@ export class PersonalBalanceChartComponent implements OnInit, OnDestroy {
             rotateAlways: false,
             hideOverlappingLabels: true,
             showDuplicates: false,
-            trim: true,
+            trim: false,
             minHeight: undefined,
-            maxHeight: 120,
+            maxHeight: 30,
             style: {
                 colors: '#362C3699',
-                fontSize: '10px',
+                fontSize: '8px',
                 fontFamily: 'Prompt',
-                fontWeight: 400
+                fontWeight: 300
             },
             offsetX: 0,
             offsetY: 0
@@ -149,8 +149,7 @@ export class PersonalBalanceChartComponent implements OnInit, OnDestroy {
             align: 'left',
             style: {
                 colors: '#362C3699',
-                fontSize: '12px',
-                fontFamily: 'Ubuntu',
+                fontSize: '8px',
                 fontWeight: 400
             },
             formatter: function (val, index) {
@@ -251,7 +250,7 @@ export class PersonalBalanceChartComponent implements OnInit, OnDestroy {
         const divDateStyle = 'font-family: Ubuntu;font-style: normal;font-weight: normal;font-size: 12px;line-height: 14px;color: #B4AEB2;margin: 0px 0px;';
         const divDateStart = '<div style="' + divDateStyle + '">';
         const divDateEnd = '</div>';
-        const point = w.globals.initialSeries[seriesIndex].data[dataPointIndex].meta;
+        const point = w.globals.initialSeries[seriesIndex].data[dataPointIndex].goals;
         return divBlockStart + divBalanceStart + point.balance + divBalanceEnd + divDateStart + point.dateFull + divDateEnd + divBlockEnd;
     }
 
@@ -360,7 +359,7 @@ export class PersonalBalanceChartComponent implements OnInit, OnDestroy {
                         return {
                             x: v.dateLabel,
                             y: v.balanceFiat,
-                            meta: {
+                            goals: {
                                 balance: v.balanceFiatValue,
                                 dateFull: v.datePointFull
                             }

@@ -201,6 +201,10 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       }
       itemCount = currencyList?.count as number;
       if (itemCount > 0) {
+        const defaultFiat = currencyList?.list?.find(x => x.symbol === defaultFiatCurrency && x.fiat === true)
+        if (!defaultFiat) {
+          defaultFiatCurrency = 'EUR';
+        }
         let currentCurrencySpendId = this.summary?.currencyFrom ?? '';
         let currentCurrencyReceiveId = this.summary?.currencyTo ?? '';
         let currentAmountSpend = this.summary?.amountFrom;
