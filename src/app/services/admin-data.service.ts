@@ -749,7 +749,7 @@ export class AdminDataService {
       return this.apollo.watchQuery<any>({
         query: GET_TRANSACTIONS,
         variables: {
-          userIdsOnly: '',
+          userIdsOnly: [''],
           sourcesOnly: sources,
           filter: '',
           skip: pageIndex * takeItems,
