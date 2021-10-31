@@ -348,6 +348,53 @@
     cursor: default;
 }
 
+.__rounded-border-button {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    margin: 4px;
+
+    width: 34px;
+    height: 34px;
+
+    background: $color_white;
+    border: 1px solid $color_main_blue_800;
+    box-sizing: border-box;
+    border-radius: 8px;
+
+    #button_icon {
+        margin: auto;
+        width: 18px;
+        height: 18px;
+        background-image: url('copy_default.svg');
+        background-repeat: no-repeat;
+    }
+}
+
+.__rounded-border-button:focus {
+    outline: none;
+}
+
+.__rounded-border-button:hover {
+    border: 1px solid $color_main_blue_600;
+    cursor: pointer;
+
+    #button_icon {
+        background-image: url('copy_hover.svg');
+        background-repeat: no-repeat;
+    }
+}
+
+.__rounded-border-button:disabled {
+    border: 1px solid $color_purple_50;
+    cursor: default;
+
+    #button_icon {
+        background-image: url('copy_disabled.svg');
+        background-repeat: no-repeat;
+    }
+}
+
 .__side-menu-button {
     display: flex;
     flex-direction: row;

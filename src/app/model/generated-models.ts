@@ -71,6 +71,8 @@ export type Query = {
   getRates?: Maybe<Array<Rate>>;
   myTransactions?: Maybe<TransactionShortListResult>;
   getTransactions?: Maybe<TransactionListResult>;
+  myWallets?: Maybe<AssetAddressShortListResult>;
+  getWallets?: Maybe<AssetAddressListResult>;
   getTransactionStatuses?: Maybe<Array<TransactionStatusDescriptorMap>>;
   getDashboardStats?: Maybe<DashboardStats>;
   myWidgets?: Maybe<WidgetListResult>;
@@ -392,6 +394,7 @@ export type QueryGetRatesArgs = {
 
 
 export type QueryMyTransactionsArgs = {
+  transactionIdsOnly?: Maybe<Array<Scalars['String']>>;
   sourcesOnly?: Maybe<Array<TransactionSource>>;
   filter?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
@@ -401,8 +404,32 @@ export type QueryMyTransactionsArgs = {
 
 
 export type QueryGetTransactionsArgs = {
-  userId?: Maybe<Scalars['String']>;
+  transactionIdsOnly?: Maybe<Array<Scalars['String']>>;
+  userIdsOnly?: Maybe<Array<Scalars['String']>>;
+  widgetIdsOnly?: Maybe<Array<Scalars['String']>>;
   sourcesOnly?: Maybe<Array<TransactionSource>>;
+  countriesOnly?: Maybe<Array<Scalars['String']>>;
+  countryCodeType?: Maybe<CountryCodeType>;
+  accountTypesOnly?: Maybe<Array<UserType>>;
+  filter?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OrderBy>>;
+};
+
+
+export type QueryMyWalletsArgs = {
+  assetIdsOnly?: Maybe<Array<Scalars['String']>>;
+  filter?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OrderBy>>;
+};
+
+
+export type QueryGetWalletsArgs = {
+  userIdsOnly?: Maybe<Array<Scalars['String']>>;
+  assetIdsOnly?: Maybe<Array<Scalars['String']>>;
   filter?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
@@ -935,8 +962,8 @@ export type VaultAccountAsset = {
   originalId?: Maybe<Scalars['String']>;
   total?: Maybe<Scalars['Float']>;
   available?: Maybe<Scalars['Float']>;
-  pending?: Maybe<Scalars['String']>;
-  lockedAmount?: Maybe<Scalars['String']>;
+  pending?: Maybe<Scalars['Float']>;
+  lockedAmount?: Maybe<Scalars['Float']>;
   totalStakedCPU?: Maybe<Scalars['String']>;
   totalStakedNetwork?: Maybe<Scalars['String']>;
   selfStakedCPU?: Maybe<Scalars['String']>;
@@ -1402,6 +1429,11 @@ export type TransferOrder = {
   feeCurrency?: Maybe<Scalars['Float']>;
 };
 
+export enum CountryCodeType {
+  Code2 = 'code2',
+  Code3 = 'code3'
+}
+
 export type TransactionListResult = {
   __typename?: 'TransactionListResult';
   count?: Maybe<Scalars['Int']>;
@@ -1475,6 +1507,53 @@ export enum TransactionKycStatus {
   KycApproved = 'KycApproved'
 }
 
+export type AssetAddressShortListResult = {
+  __typename?: 'AssetAddressShortListResult';
+  count?: Maybe<Scalars['Int']>;
+  list?: Maybe<Array<AssetAddressShort>>;
+};
+
+export type AssetAddressShort = {
+  __typename?: 'AssetAddressShort';
+  address?: Maybe<Scalars['String']>;
+  legacyAddress?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
+  addressFormat?: Maybe<Scalars['String']>;
+  assetId?: Maybe<Scalars['String']>;
+  originalId?: Maybe<Scalars['String']>;
+  total?: Maybe<Scalars['Float']>;
+  available?: Maybe<Scalars['Float']>;
+  pending?: Maybe<Scalars['Float']>;
+  lockedAmount?: Maybe<Scalars['Float']>;
+  vaultId?: Maybe<Scalars['String']>;
+};
+
+export type AssetAddressListResult = {
+  __typename?: 'AssetAddressListResult';
+  count?: Maybe<Scalars['Int']>;
+  list?: Maybe<Array<AssetAddress>>;
+};
+
+export type AssetAddress = {
+  __typename?: 'AssetAddress';
+  address?: Maybe<Scalars['String']>;
+  legacyAddress?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
+  addressFormat?: Maybe<Scalars['String']>;
+  assetId?: Maybe<Scalars['String']>;
+  originalId?: Maybe<Scalars['String']>;
+  total?: Maybe<Scalars['Float']>;
+  available?: Maybe<Scalars['Float']>;
+  pending?: Maybe<Scalars['Float']>;
+  lockedAmount?: Maybe<Scalars['Float']>;
+  vaultId?: Maybe<Scalars['String']>;
+  vaultName?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['String']>;
+  userEmail?: Maybe<Scalars['String']>;
+};
+
 export type TransactionStatusDescriptorMap = {
   __typename?: 'TransactionStatusDescriptorMap';
   key: TransactionStatus;
@@ -1507,11 +1586,6 @@ export enum UserTransactionStatus {
 export enum TransactionStatusLevel {
   Info = 'info',
   Error = 'error'
-}
-
-export enum CountryCodeType {
-  Code2 = 'code2',
-  Code3 = 'code3'
 }
 
 export type DashboardStats = {

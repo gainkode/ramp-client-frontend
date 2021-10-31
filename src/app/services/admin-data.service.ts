@@ -236,7 +236,7 @@ const GET_KYC_LEVELS = gql`
 
 const GET_TRANSACTIONS = gql`
   query GetTransactions(
-    $userId: String
+    $userIdsOnly: [String!]
     $sourcesOnly: [TransactionSource!]
     $filter: String
     $skip: Int
@@ -244,7 +244,7 @@ const GET_TRANSACTIONS = gql`
     $orderBy: [OrderBy!]
   ) {
     getTransactions(
-      userId: $userId
+      userIdsOnly: $userIdsOnly
       sourcesOnly: $sourcesOnly
       filter: $filter
       skip: $skip
@@ -749,7 +749,7 @@ export class AdminDataService {
       return this.apollo.watchQuery<any>({
         query: GET_TRANSACTIONS,
         variables: {
-          userId: undefined,
+          userIdsOnly: '',
           sourcesOnly: sources,
           filter: '',
           skip: pageIndex * takeItems,
