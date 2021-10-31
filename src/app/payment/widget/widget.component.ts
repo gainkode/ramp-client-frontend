@@ -92,8 +92,8 @@ export class WidgetComponent implements OnInit {
       const fixedAddress = data.hasFixedAddress ?? false;
       this.widget.walletAddress = (fixedAddress) ? 'fixedAddress' : this.widget.walletAddress;
       this.widget.transaction = data.transactionType ?? undefined;
-    } else {
-      this.widget.disclaimer = true;
+    } else {  // Quick checkout
+      this.widget.disclaimer = false;
       this.widget.kycFirst = false;
       this.widget.email = '';
       // temp

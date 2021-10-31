@@ -2,9 +2,12 @@
 
     <div class="__widget-data-box-extra-internal">
         <div class="__widget-disclaimer-line">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-            dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-            ea commodo consequat.
+            <title class="__widget-data-item-title">
+                Make a bank transfer to the following Email PayID (Not compatible with RTGS).
+            </title>
+            <div class="__widget-data-item-value">
+                Most transactions are instant, however some banks will hold your first payment for 24 Hours.
+            </div>
         </div>
     </div>
 
@@ -28,7 +31,7 @@
             </div>
         </div>
         <div class="__widget-data-box-rounded-border-button-box">
-            <button class="__rounded-border-button">
+            <button type="button" class="__rounded-border-button" (click)="copyReference()">
                 <div id="button_icon"></div>
             </button>
         </div>

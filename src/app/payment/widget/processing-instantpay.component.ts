@@ -1,3 +1,4 @@
+import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { InstantpayDetails } from 'src/app/model/payment.model';
 
@@ -13,4 +14,13 @@ export class WidgetProcessingInstantpayComponent {
   @Output() onComplete = new EventEmitter();
 
   data: InstantpayDetails | undefined = undefined;
+
+  constructor(private clipboard: Clipboard) {}
+
+  copyReference() {
+    if (this.data) {
+      const val = `Pay ID: ${this.data.payId}\nReference code: ${this.data.uniqueReference}`;
+      this.clipboard.copy(val);
+    }
+  }
 }

@@ -16,6 +16,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatStepperModule } from '@angular/material/stepper';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 import { ComponentsModule } from '../components/components.module';
 import { PaymentComponent } from './payment.component';
 //import { ContainerComponentDeprecated } from './container.component';
@@ -49,6 +50,7 @@ const routing = RouterModule.forChild([
 ]);
 
 const modules = [
+    ClipboardModule,
     MatChipsModule,
     MatTooltipModule,
     MatTabsModule,

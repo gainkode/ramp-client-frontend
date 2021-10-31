@@ -385,6 +385,10 @@
     }
 }
 
+.__rounded-border-button:active {
+    background-color: $color_main_blue_100;
+}
+
 .__rounded-border-button:disabled {
     border: 1px solid $color_purple_50;
     cursor: default;
