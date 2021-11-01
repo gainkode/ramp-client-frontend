@@ -749,9 +749,9 @@ export class AdminDataService {
       return this.apollo.watchQuery<any>({
         query: GET_TRANSACTIONS,
         variables: {
-          userIdsOnly: [''],
+          userIdsOnly: [],
           sourcesOnly: sources,
-          filter: '',
+          filter: undefined,
           skip: pageIndex * takeItems,
           first: takeItems,
           orderBy: orderFields,

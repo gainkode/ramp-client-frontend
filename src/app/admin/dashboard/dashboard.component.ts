@@ -35,8 +35,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
         } else {
             this.inProgress = true;
             this.pStatsSubscription = statsData.valueChanges.subscribe(({ data }) => {
-                this.stats = new DashboardModel(data.getDashboardStats);
+                console.log(data);
                 this.inProgress = false;
+                this.stats = new DashboardModel(data.getDashboardStats);
             }, (error) => {
                 this.inProgress = false;
                 if (this.auth.token !== '') {

@@ -2,17 +2,21 @@ import { DecimalPipe } from "@angular/common";
 import { BalanceStats, DashboardStats, DepositOrWithdrawalStats, ExchangeStats, InstrumentStats, MerchantOrCustomerStats, TransactionSource, TransactionStatsByStatus, TransactionStatsVolume, TransferStats, UserType } from "./generated-models";
 import { PaymentInstrumentList } from "./payment.model";
 
-const isDepositOrWithdrawalStats = (variableToCheck: any): variableToCheck is DepositOrWithdrawalStats =>
-    (variableToCheck as DepositOrWithdrawalStats).approved !== undefined;
+const isDepositOrWithdrawalStats = (variableToCheck: any): variableToCheck is DepositOrWithdrawalStats => {
+    return (variableToCheck) ? (variableToCheck as DepositOrWithdrawalStats).approved !== undefined : false;
+}
 
-const isExchangeStats = (variableToCheck: any): variableToCheck is ExchangeStats =>
-    (variableToCheck as ExchangeStats).toMerchant !== undefined;
+const isExchangeStats = (variableToCheck: any): variableToCheck is ExchangeStats => {
+    return (variableToCheck) ? (variableToCheck as ExchangeStats).toMerchant !== undefined : false;
+}
 
-const isTransferStats = (variableToCheck: any): variableToCheck is TransferStats =>
-    (variableToCheck as TransferStats).toMerchant !== undefined;
+const isTransferStats = (variableToCheck: any): variableToCheck is TransferStats => {
+    return (variableToCheck) ? (variableToCheck as TransferStats).toMerchant !== undefined : false;
+}
 
-const isInstrumentStats = (variableToCheck: any): variableToCheck is InstrumentStats =>
-    (variableToCheck as InstrumentStats).instrument !== undefined;
+const isInstrumentStats = (variableToCheck: any): variableToCheck is InstrumentStats => {
+    return (variableToCheck) ? (variableToCheck as InstrumentStats).instrument !== undefined : false;
+}
 
 export class DashboardFilter {
     userIdOnly: string[] = [];
