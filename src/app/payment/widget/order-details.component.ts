@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { SettingsCurrencyListResult, SettingsCurrencyWithDefaults, TransactionType } from 'src/app/model/generated-models';
+import { SettingsCurrencyWithDefaults, TransactionType } from 'src/app/model/generated-models';
 import { CheckoutSummary, CurrencyView, QuickCheckoutTransactionTypeList, WidgetSettings } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
@@ -15,6 +15,7 @@ import { WalletValidator } from 'src/app/utils/wallet.validator';
 })
 export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() initialized = false;
+  @Input() errorMessage = '';
   @Input() settings: WidgetSettings = new WidgetSettings();
   @Input() summary: CheckoutSummary | undefined = undefined;
   @Input() set withdrawalRate(val: number | undefined) {

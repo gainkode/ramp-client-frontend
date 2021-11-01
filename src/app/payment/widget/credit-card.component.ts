@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -18,6 +18,7 @@ class CardExpiredDate {
     styleUrls: ['../../../assets/payment.scss', '../../../assets/button.scss', '../../../assets/text-control.scss']
 })
 export class WidgetCreditCardComponent implements OnInit, OnDestroy {
+    @Input() errorMessage = '';
     @Output() onBack = new EventEmitter();
     @Output() onComplete = new EventEmitter<CardView>();
 

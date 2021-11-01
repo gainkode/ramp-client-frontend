@@ -69,7 +69,8 @@ export class PersonalComponent implements OnInit {
                     section === 'wallets' ||
                     section === 'contactlist' ||
                     section === 'transactions' ||
-                    section === 'swap') {
+                    section === 'swap' ||
+                    section === 'notifications') {
                     this.selectedMenu = section;
                 } else {
                     this.router.navigateByUrl(this.menuItems[0].url);
@@ -131,10 +132,10 @@ export class PersonalComponent implements OnInit {
             this.logout();
         } else if (item.id === 'administration') {
             this.routeTo('/admin/main');
-        } else if (item.id === 'notifications') {
-            this.notificationTest();
         } else if (item.id === 'settings') {
             this.routeTo('/personal/myaccount');
+        } else {
+            this.routeTo(item.url);
         }
     }
 

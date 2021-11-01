@@ -16,6 +16,7 @@ import { WalletValidator } from 'src/app/utils/wallet.validator';
 })
 export class WidgetPaymentComponent implements OnInit, OnDestroy {
   @Input() providers: PaymentProviderView[] = [];
+  @Input() errorMessage = '';
   @Output() onBack = new EventEmitter();
   @Output() onSelect = new EventEmitter<string>();
   // @Output() onError = new EventEmitter<string>();

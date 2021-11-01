@@ -22,13 +22,6 @@
     <app-widget-progress [step]="step" [title]="title" [progress]="inProgress"></app-widget-progress>
   </div>
 
-  <div *ngIf="rateErrorMessage!==''" style="color: crimson;margin: 24px;">
-    {{rateErrorMessage}}
-  </div>
-  <div *ngIf="errorMessage!==''" style="color: crimson;margin: 24px;">
-    {{errorMessage}}
-  </div>
-
   <div class="__widget-data-container">
     <div [ngClass]="{'__widget-wizard-container': true, '__widget-wizard-container-single': initState || !showSummary}"
       [ngSwitch]="stageId">
@@ -37,6 +30,7 @@
       <!-- Order details -->
       <app-widget-order-details *ngSwitchCase="'order_details'" [initialized]="!initState" [summary]="summary"
         [settings]="widget" [withdrawalRate]="summary?.exchangeRate?.withdrawRate"
+        [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage"
         [depositRate]="summary?.exchangeRate?.depositRate" (onError)="handleError($event)"
         (onProgress)="progressChanged($event)" (onDataUpdated)="orderDetailsChanged($event)"
         (onWalletAddressUpdated)="orderWalletChanged($event)" (onComplete)="orderDetailsComplete($event)">
@@ -55,25 +49,31 @@
       </app-widget-login-auth>
       <!-- Code Authentication -->
       <app-widget-code-auth *ngSwitchCase="'code_auth'" [email]="summary.email" [codeLength]="5"
-        (onComplete)="loginCodeConfirmed()" (onError)="handleError($event)" (onProgress)="progressChanged($event)"
-        (onBack)="loginBack()" (onRegister)="onRegister($event)">
+        [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage" (onComplete)="loginCodeConfirmed()"
+        (onError)="handleError($event)" (onProgress)="progressChanged($event)" (onBack)="loginBack()"
+        (onRegister)="onRegister($event)">
       </app-widget-code-auth>
       <!-- Payment -->
-      <app-widget-payment *ngSwitchCase="'payment'" [providers]="paymentProviders" (onBack)="paymentBack()"
+      <app-widget-payment *ngSwitchCase="'payment'" [providers]="paymentProviders"
+        [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage" (onBack)="paymentBack()"
         (onSelect)="selectProvider($event)">
       </app-widget-payment>
       <!-- Credit card -->
-      <app-widget-credit-card *ngSwitchCase="'credit_card'" (onBack)="creditCardBack()"
+      <app-widget-credit-card *ngSwitchCase="'credit_card'"
+        [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage" (onBack)="creditCardBack()"
         (onComplete)="creditCardPaymentComplete($event)"></app-widget-credit-card>
       <!-- KYC -->
-      <app-widget-kyc *ngSwitchCase="'verification'" (onError)="handleError($event)" (onAuthError)="handleAuthError()"
-        (onProgress)="progressChanged($event)" (onBack)="kycBack()" (onNext)="kycComplete()"></app-widget-kyc>
+      <app-widget-kyc *ngSwitchCase="'verification'"
+        [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage" (onError)="handleError($event)"
+        (onAuthError)="handleAuthError()" (onProgress)="progressChanged($event)" (onBack)="kycBack()"
+        (onNext)="kycComplete()"></app-widget-kyc>
       <!-- Processing with a frame -->
       <app-widget-processing-frame *ngSwitchCase="'processing-frame'" [iframeContent]="iframeContent"
-        [completed]="paymentComplete" (onComplete)="processingComplete()">
+        [completed]="paymentComplete" [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage"
+        (onComplete)="processingComplete()">
       </app-widget-processing-frame>
       <app-widget-processing-instantpay *ngSwitchCase="'processing-instantpay'" [details]="instantpayDetails"
-        (onComplete)="processingComplete()">
+        [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage" (onComplete)="processingComplete()">
       </app-widget-processing-instantpay>
       <!-- Complete -->
       <app-widget-complete *ngSwitchCase="'complete'" [showRestartButton]="widget.widgetId===''"

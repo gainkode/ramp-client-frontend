@@ -222,7 +222,7 @@ export class PersonalBalanceChartComponent implements OnInit, OnDestroy {
         this.subscriptions.unsubscribe();
     }
 
-    chnagePeriod(index: number): void {
+    changePeriod(index: number): void {
         const temp = this.periodIndex;
         this.periodIndex = index;
         if (index === 1) {
@@ -255,48 +255,78 @@ export class PersonalBalanceChartComponent implements OnInit, OnDestroy {
     }
 
     private loadChartData(): void {
-        console.log('load');
         this.onError.emit('');
-        // const chartData = this.profileService.getMyProfit(this.selectedFiat, this.period);
+        const chartData = this.profileService.getMyProfit(this.selectedFiat, this.period);
+        if (chartData === null) {
+            this.onError.emit(this.errorHandler.getRejectedCookieMessage());
+        } else {
+            this.profitValue = '';
+            this.positiveProfit = true;
+            this.onProgress.emit(true);
+            this.subscriptions.add(
+                chartData.valueChanges.subscribe(({ data }) => {
+                    const profitData = data.myProfit as UserProfit;
+                    let profit = 0;
+                    let profitPercent = 0;
+                    profitData.profits?.forEach(p => {
+                        profit += p.profitFiat ?? 0;
+                        profitPercent += p.profitPercent ?? 0;
+                        // read chart data here
+                        console.log(p.userBalanceHistory);
+                    });
+                    this.positiveProfit = (profit >= 0);
+                    this.profitValue = `${profit>0 ? '+ ' : ''}${profitPercent.toFixed(2)}% (${profit} ${this.selectedFiat})`;
+                    this.onProgress.emit(false);
+                }, (error) => {
+                    this.onProgress.emit(false);
+                    if (this.auth.token !== '') {
+                        this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load chart data'));
+                    } else {
+                        this.router.navigateByUrl('/');
+                    }
+                })
+            );
+        }
+
+
+
+
+
+
         // if (chartData === null) {
-        //     this.onError.emit(this.errorHandler.getRejectedCookieMessage());
+        //     this.errorMessage = this.errorHandler.getRejectedCookieMessage();
         // } else {
-        //     this.profitValue = '';
-        //     this.positiveProfit = true;
-        //     this.onProgress.emit(true);
-        //     this.subscriptions.add(
-        //         chartData.valueChanges.subscribe(({ data }) => {
-        //             const profitData = data.myProfit as UserProfit;
-        //             let profit = 0;
-        //             let profitPercent = 0;
-        //             profitData.profits?.forEach(p => {
-        //                 profit += p.profitFiat ?? 0;
-        //                 profitPercent += p.profitPercent ?? 0;
-        //                 // read chart data here
-        //                 //console.log(p.userBalanceHistory);
-        //             });
-        //             this.positiveProfit = (profit >= 0);
-        //             this.profitValue = `${profit>0 ? '+ ' : ''}${profitPercent.toFixed(2)}% (${profit} ${this.selectedFiat})`;
-        //             this.onProgress.emit(false);
-        //         }, (error) => {
-        //             this.onProgress.emit(false);
-        //             if (this.auth.token !== '') {
-        //                 this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load chart data'));
-        //             } else {
-        //                 this.router.navigateByUrl('/');
+        //     this.inProgress = true;
+        //     this.pChartSubscription = chartData.valueChanges.subscribe(({ data }) => {
+        //         const chartPointsData = data.myBalanceHistory as UserBalanceHistoryListResult;
+
+
+        //         console.log(chartPointsData);
+
+
+        //         if (chartPointsData !== null) {
+        //             const pointCount = chartPointsData?.count as number;
+        //             if (pointCount > 0) {
+        //                 this.chartPoints = chartPointsData?.list?.map((val) => new BalancePoint(val, BalancePointType.Balance)) as BalancePoint[];
         //             }
-        //         })
-        //     );
+        //         }
+        //         this.inProgress = false;
+        //     }, (error) => {
+        //         this.inProgress = false;
+        //         if (this.auth.token !== '') {
+        //             this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load chart data');
+        //         } else {
+        //             this.router.navigateByUrl('/');
+        //         }
+        //     });
         // }
+    }
 
-
-
+    buildFakeData(): void {
         this.profitValue = '';
-        
+
         this.onProgress.emit(true);
         setTimeout(() => {
-
-
             this.positiveProfit = true;
             this.profitValue = `+ 15.00% (2.500 ${this.selectedFiat})`;
 
@@ -368,34 +398,5 @@ export class PersonalBalanceChartComponent implements OnInit, OnDestroy {
                 }
             ];
         }, 1000);
-
-
-        // if (chartData === null) {
-        //     this.errorMessage = this.errorHandler.getRejectedCookieMessage();
-        // } else {
-        //     this.inProgress = true;
-        //     this.pChartSubscription = chartData.valueChanges.subscribe(({ data }) => {
-        //         const chartPointsData = data.myBalanceHistory as UserBalanceHistoryListResult;
-
-
-        //         console.log(chartPointsData);
-
-
-        //         if (chartPointsData !== null) {
-        //             const pointCount = chartPointsData?.count as number;
-        //             if (pointCount > 0) {
-        //                 this.chartPoints = chartPointsData?.list?.map((val) => new BalancePoint(val, BalancePointType.Balance)) as BalancePoint[];
-        //             }
-        //         }
-        //         this.inProgress = false;
-        //     }, (error) => {
-        //         this.inProgress = false;
-        //         if (this.auth.token !== '') {
-        //             this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load chart data');
-        //         } else {
-        //             this.router.navigateByUrl('/');
-        //         }
-        //     });
-        // }
     }
 }

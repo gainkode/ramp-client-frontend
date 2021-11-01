@@ -109,8 +109,7 @@ query MyProfit($currencyTo: String, $period: UserBalanceHistoryPeriod!) {
           userId
           date
           asset
-          balance
-          balanceEur
+          balanceFiat
           transactionId
         }
       }

@@ -565,6 +565,13 @@
     margin: 4px 0px;
 }
 
-.__widget-data-box-rounded-border-button {
-
+.__widget-data-error {
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 14px;
+    
+    color: $color_pink_500;
+    margin: 0px 0px 24px 0px;
 }

@@ -211,6 +211,7 @@ export class WidgetComponent implements OnInit {
 
   handleError(message: string): void {
     this.errorMessage = message;
+    console.log(this.errorMessage);
     this.changeDetector.detectChanges();
   }
 

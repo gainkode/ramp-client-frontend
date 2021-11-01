@@ -11,6 +11,7 @@ import { ErrorService } from 'src/app/services/error.service';
   styleUrls: ['../../../assets/payment.scss', '../../../assets/button.scss']
 })
 export class WidgetKycComponent implements OnInit, OnDestroy {
+  @Input() errorMessage = '';
   @Output() onError = new EventEmitter<string>();
   @Output() onAuthError = new EventEmitter();
   @Output() onProgress = new EventEmitter<boolean>();

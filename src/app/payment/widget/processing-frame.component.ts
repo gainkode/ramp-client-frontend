@@ -8,6 +8,7 @@ import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, View
 export class WidgetProcessingFrameComponent implements AfterViewInit {
   @Input() iframeContent = '';
   @Input() completed = false;
+  @Input() errorMessage = '';
   @Output() onComplete = new EventEmitter();
   @ViewChild('iframe') iframe!: ElementRef;
 

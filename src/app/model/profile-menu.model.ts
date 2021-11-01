@@ -38,7 +38,7 @@ export const PersonalProfilePopupMenuItems: Array<MenuItem> = [
     {
         id: 'notifications',
         name: 'Notifications',
-        url: '',
+        url: '/personal/main/notifications',
         icon: 'notifications'
     },
     {

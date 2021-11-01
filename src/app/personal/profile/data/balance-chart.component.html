@@ -33,22 +33,22 @@
         </div>
         <div class="__profile-balance-chart-period-selector">
             <button [ngClass]="{'__toggle-button': true, '__toggle-button-active': periodIndex===0}" type="button"
-                [disabled]="inLoading" (click)="chnagePeriod(0)">
+                [disabled]="inLoading" (click)="changePeriod(0)">
                 Last week
             </button>
             <button
                 [ngClass]="{'__toggle-button': true, '__toggle-button-active': periodIndex===1, '__button-separator': true}"
-                type="button" [disabled]="inLoading" (click)="chnagePeriod(1)">
+                type="button" [disabled]="inLoading" (click)="changePeriod(1)">
                 Last month
             </button>
             <button
                 [ngClass]="{'__toggle-button': true, '__toggle-button-active': periodIndex===2, '__button-separator': true}"
-                type="button" [disabled]="inLoading" (click)="chnagePeriod(2)">
+                type="button" [disabled]="inLoading" (click)="changePeriod(2)">
                 Last year
             </button>
             <button
                 [ngClass]="{'__toggle-button': true, '__toggle-button-active': periodIndex===3, '__button-separator': true}"
-                type="button" [disabled]="inLoading" (click)="chnagePeriod(3)">
+                type="button" [disabled]="inLoading" (click)="changePeriod(3)">
                 All
             </button>
         </div>

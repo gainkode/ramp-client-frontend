@@ -8,6 +8,7 @@ import { InstantpayDetails } from 'src/app/model/payment.model';
   styleUrls: ['../../../assets/payment.scss', '../../../assets/button.scss', '../../../assets/text-control.scss']
 })
 export class WidgetProcessingInstantpayComponent {
+  @Input() errorMessage = '';
   @Input() set details(val: string) {
     this.data = JSON.parse(val);
   }

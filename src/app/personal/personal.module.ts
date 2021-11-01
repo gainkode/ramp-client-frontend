@@ -42,6 +42,7 @@ import { PersonalBalanceChartComponent } from './profile/data/balance-chart.comp
 import { PersonalBalanceListComponent } from './profile/data/balance-list.component';
 import { PersonalTransactionListComponent } from './profile/data/transaction-list.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
+import { PersonalNotificationsComponent } from './profile/notifications.component';
 
 const routing = RouterModule.forChild([
     // Main page
@@ -56,6 +57,7 @@ const routing = RouterModule.forChild([
             { path: 'contactlist', component: PersonalMyContactsComponent, canActivate: [PersonalGuard] },
             { path: 'transactions', component: PersonalTransactionsComponent, canActivate: [PersonalGuard] },
             { path: 'swap', component: PersonalSwapComponent, canActivate: [PersonalGuard] },
+            { path: 'notifications', component: PersonalNotificationsComponent, canActivate: [PersonalGuard] },
             { path: '**', redirectTo: 'home' }
         ],
         canActivate: [PersonalGuard]
@@ -117,6 +119,7 @@ export class MaterialModule { }
         PersonalTransactionsComponent, PersonalTransactionDetailsComponent,
         PersonalMyContactsComponent,
         PersonalSwapComponent,
+        PersonalNotificationsComponent,
         // Data containers
         PersonalBalanceChartComponent, PersonalBalanceListComponent, PersonalTransactionListComponent,
         // Obsolete pages

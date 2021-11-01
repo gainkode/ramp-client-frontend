@@ -10,6 +10,10 @@
         <button class="__outlined-button" type="button" (click)="onBack.emit()">BACK</button>
     </div>
 
+    <div class="__widget-data-error">
+        {{errorMessage}}
+    </div>
+
     <!-- <form [formGroup]="dataForm">
         <div *ngIf="settings.walletAddress===''">
             <div class="__form-label">
