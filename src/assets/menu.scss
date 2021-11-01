@@ -210,6 +210,25 @@
     color: $color_pink_600;
 }
 
+.__tool-bar-double-sided-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 32px;
+}
+
+.__tool-bar-double-sided-data-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.__tool-bar-icon-box {
+    display: block;
+    margin: 0px 24px 0px 4px;
+}
+
 input.__tool-bar-text-box {
     width: 120px;
     border: 0px solid $color_purple_300;

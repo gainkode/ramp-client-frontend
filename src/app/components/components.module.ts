@@ -67,6 +67,7 @@ import { FormFinanceComboComponent } from './common/controls/form-finance-combo.
 import { FormPasswordBoxComponent } from './common/controls/form-password.component';
 import { FormCardBoxComponent } from './common/controls/form-cardbox.component';
 import { NotificationsFilterBarComponent } from './filter-bars/notifications-bar.component';
+import { FormSearchBoxComponent } from './common/controls/form-searchbox.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -104,7 +105,7 @@ export class MaterialModule { }
 @NgModule({
     imports: [NgxMaskModule.forRoot(), CommonModule, FormsModule, ReactiveFormsModule, MaterialModule, DirectiveModule, QRCodeModule],
     declarations: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
-        FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent,
+        FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent, FormSearchBoxComponent,
         CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, 
         LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, CommonDialogBox, SideExpanderComponent,
         CreditCardComponent, TwoFaCodeComponent, NavPopupComponent, SideMenuComponent, LineBreakPipe, NumberFillPipe,
@@ -115,7 +116,7 @@ export class MaterialModule { }
         ProfileContactEditorComponent, ProfileWithdrawalComponent,
         ProfileAssetsComponent, ProfileLastExchangesComponent],
     exports: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
-        FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent,
+        FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent, FormSearchBoxComponent,
         CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, 
         LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, CommonDialogBox, SideExpanderComponent,
         CreditCardComponent, TwoFaCodeComponent, NavPopupComponent, SideMenuComponent, LineBreakPipe, NumberFillPipe,

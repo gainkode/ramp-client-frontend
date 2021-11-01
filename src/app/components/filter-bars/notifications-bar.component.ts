@@ -42,15 +42,15 @@ export class NotificationsFilterBarComponent implements OnInit, OnDestroy {
             this.unreadOnlyField?.valueChanges.subscribe(val => {
                 this.onApply();
             }));
-        this.subscriptions.add(
-            this.searchField?.valueChanges.subscribe(val => {
-                this.searchText = val;
-                this.onApply();
-            }));
     }
 
     ngOnDestroy(): void {
         this.subscriptions.unsubscribe();
+    }
+
+    onSearch(): void {
+        this.searchText = this.searchField?.value ?? '';
+        this.onApply();
     }
 
     onApply(): void {

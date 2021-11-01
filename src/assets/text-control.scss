@@ -72,6 +72,14 @@
     align-items: center;
 }
 
+.__form-input-search-icon-container {
+    grid-row: 1;
+    grid-column: 2 / 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .__form-input-error-icon {
     display: block;
     margin: 9px auto;
@@ -158,6 +166,18 @@
     border: 1px solid $color_purple_50;
     box-sizing: border-box;
     border-radius: 4px;
+    background-color: transparent;
+}
+
+.__form-searchbox-border {
+    width: 240px;
+    display: grid;
+    grid-template-columns: auto 32px;
+    grid-template-rows: 32px;
+
+    border: 1px solid $color_purple_200;
+    box-sizing: border-box;
+    border-radius: 12px;
     background-color: transparent;
 }
 
@@ -329,9 +349,6 @@ input.__form-finance-text-combo-error:focus {
     outline: none;
 }
 
-
-
-
 input.__text-box-noborder {
     border: 0px;
     width: 100%;
@@ -349,8 +366,30 @@ input.__text-box-noborder:focus {
     outline: none;
 }
 
+input.__form-search-box {
+    grid-row: 1;
+    grid-column: 1 / 2;
+    width: calc(100% - 8px);
+    margin: 0px 8px 0px 8px;
 
+    border: 0px;
+    background-color: transparent;
 
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 28px;
+    color: $color_purple_900_text;
+}
+
+input.__form-search-box:focus {
+    outline: none;
+}
+
+input.__form-search-box:disabled {
+    color: $color_purple_200;
+}
 
 .__form-uppercase-input {
     text-transform: uppercase;
