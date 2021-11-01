@@ -40,17 +40,20 @@
             </app-form-textbox>
         </div>
 
-        <div class="__widget-disclaimer-container">
-            <mat-checkbox color="accent" (change)="register=!register">
-                Register an account
-            </mat-checkbox>
-        </div>
-
         <!-- Buttons -->
         <div class="__widget-buttons-area">
             <button class="__outlined-button" type="button" (click)="onBack.emit()">BACK</button>
             <button class="__main-button __button-wide-separator" type="submit"
                 [disabled]="!validData && !register">next</button>
+        </div>
+
+        <div class="__widget-disclaimer-container">
+            <span class="__widget-disclaimer-line">
+                Don't have a wallet?
+            </span>
+            <mat-checkbox color="accent" (change)="register=!register">
+                Create an account
+            </mat-checkbox>
         </div>
     </form>
 </div>
