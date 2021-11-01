@@ -54,7 +54,6 @@ export class NotificationsFilterBarComponent implements OnInit, OnDestroy {
     }
 
     onApply(): void {
-        console.log('apply');
         const filter = new NotificationsFilter();
         filter.unreadOnly = this.unreadOnlyField?.value;
         filter.search = this.searchText;

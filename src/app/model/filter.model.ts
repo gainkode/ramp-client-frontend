@@ -96,14 +96,14 @@ export class TransactionsFilterChip {
 }
 
 export class NotificationsFilter implements ProfileBaseFilter {
-    unreadOnly: boolean = false;
+    unreadOnly = false;
     search: string = '';
 
     setData(data: any): void {
         this.unreadOnly = false;
         this.search = '';
         if (data.unreadOnly) {
-            this.unreadOnly = data.unreadOnly;
+            this.unreadOnly = (data.unreadOnly === 'true');
         }
         if (data.search) {
             this.search = data.search;
@@ -111,9 +111,10 @@ export class NotificationsFilter implements ProfileBaseFilter {
     }
 
     getParameters(): {} {
-        return {
-            unreadOnly: this.unreadOnly,
-            search: this.search
+        const result = {
+            ...(this.unreadOnly && { unreadOnly: this.unreadOnly }),
+            ...(this.search !== '' && { search: this.search })
         };
+        return result;
     }
 }
