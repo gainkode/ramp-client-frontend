@@ -120,6 +120,7 @@ export class PersonalTransactionListComponent implements OnDestroy, AfterViewIni
                 if (dataList !== null) {
                     this.transactionCount = dataList?.count as number;
                     if (this.transactionCount > 0) {
+                        console.log(dataList?.list);
                         this.transactions = dataList?.list?.map((val) => {
                             const status = this.userStatuses.find(x => x.key === val.status);
                             return new TransactionItem(val, status);

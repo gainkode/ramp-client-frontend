@@ -1,0 +1,36 @@
+<form [formGroup]="filterForm">
+    <div class="__tool-bar-container">
+        <div class="__tool-bar-filter-container">
+
+
+
+            <div style="display: flex;justify-content: space-between;width: 100%;">
+                <div style="display: flex;flex-direction: row;justify-content: center;">
+                    <div class="__tool-bar-block">
+                        <div
+                            style="display: block;justify-content: center;align-items: center;margin: 0px 24px 0px 4px;">
+                            <img style="width:24px; height:24px;" src="assets/calendar_default.svg" alt="">
+                        </div>
+                    </div>
+
+                    <div class="__tool-bar-block">
+                        <div class="__tool-bar-label">
+                            Show unread only
+                        </div>
+                    </div>
+
+                    <div class="__tool-bar-block">
+                        <div class="__toggle-switch">
+                            <input type="checkbox" id="toggle-button" class="__toggle-switch-slider" formControlName="unreadOnly">
+                        </div>
+                    </div>
+                </div>
+                <div style="background-color: lightskyblue;">
+                    Right
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</form>

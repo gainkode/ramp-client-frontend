@@ -1,4 +1,4 @@
-Notifications
+<app-notifications-filter [data]="filter" (update)="onFilterUpdate($event)"></app-notifications-filter>
 
 <div class="__profile-data-container">
     <mat-progress-bar *ngIf="inProgress" color="accent" mode="indeterminate"></mat-progress-bar>

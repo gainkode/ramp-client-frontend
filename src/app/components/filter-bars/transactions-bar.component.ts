@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { TransactionsFilter, TransactionsFilterChip, TransactionsFilterType } from 'src/app/model/filter.model';
+import { ProfileBaseFilter, TransactionsFilter, TransactionsFilterChip, TransactionsFilterType } from 'src/app/model/filter.model';
 import { TransactionSource, TransactionType } from 'src/app/model/generated-models';
 import { TransactionSourceList, UserTransactionTypeList } from 'src/app/model/payment.model';
 import { getFormattedUtcDate } from 'src/app/utils/utils';
@@ -13,7 +13,7 @@ import { getFormattedUtcDate } from 'src/app/utils/utils';
 })
 export class TransactionsFilterBarComponent implements OnInit, OnDestroy {
     @Input() data: TransactionsFilter | undefined = undefined;
-    @Output() update = new EventEmitter<TransactionsFilter>();
+    @Output() update = new EventEmitter<ProfileBaseFilter>();
 
     private subscriptions: Subscription = new Subscription();
 

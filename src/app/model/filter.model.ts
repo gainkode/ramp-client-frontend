@@ -2,6 +2,11 @@ import { TransactionSource, TransactionType } from "./generated-models";
 import { TransactionSourceList, UserTransactionTypeList } from "./payment.model";
 import { getFormattedUtcDate } from 'src/app/utils/utils';
 
+export interface ProfileBaseFilter {
+    setData(data: any): void;
+    getParameters(): {};
+}
+
 export enum TransactionsFilterType {
     None = 'None',
     Wallet = 'Wallet',
@@ -10,17 +15,17 @@ export enum TransactionsFilterType {
     Sender = 'Sender'
 }
 
-export class TransactionsFilter {
+export class TransactionsFilter implements ProfileBaseFilter {
     walletTypes: TransactionSource[] = [];
     transactionTypes: TransactionType[] = [];
     transactionDate: Date | undefined = undefined;
     sender: string = '';
 
-    setData(wallets: string | undefined, types: string | undefined, date: string | undefined, sender: string | undefined): void {
+    setData(data: any): void {
         this.walletTypes = [];
         this.transactionTypes = [];
-        if (wallets) {
-            const selectedWallets = wallets.split(',');
+        if (data.wallets) {
+            const selectedWallets = data.wallets.split(',');
             selectedWallets.forEach(w => {
                 this.walletTypes.push(w as TransactionSource);
             });
@@ -29,8 +34,8 @@ export class TransactionsFilter {
                 this.walletTypes.push(w.id);
             });
         }
-        if (types) {
-            const selectedTypes = types.split(',');
+        if (data.types) {
+            const selectedTypes = data.types.split(',');
             selectedTypes.forEach(w => {
                 this.transactionTypes.push(w as TransactionType);
             });
@@ -39,8 +44,8 @@ export class TransactionsFilter {
                 this.transactionTypes.push(w.id);
             });
         }
-        this.transactionDate = getFormattedUtcDate(date ?? '');
-        this.sender = sender ?? '';
+        this.transactionDate = getFormattedUtcDate(data.date ?? '');
+        this.sender = data.sender ?? '';
     }
 
     getParameters(): {} {
@@ -88,4 +93,27 @@ export class TransactionsFilterChip {
     filterType: TransactionsFilterType = TransactionsFilterType.None;
     name = '';
     value = '';
+}
+
+export class NotificationsFilter implements ProfileBaseFilter {
+    unreadOnly: boolean = false;
+    search: string = '';
+
+    setData(data: any): void {
+        this.unreadOnly = false;
+        this.search = '';
+        if (data.unreadOnly) {
+            this.unreadOnly = data.unreadOnly;
+        }
+        if (data.search) {
+            this.search = data.search;
+        }
+    }
+
+    getParameters(): {} {
+        return {
+            unreadOnly: this.unreadOnly,
+            search: this.search
+        };
+    }
 }

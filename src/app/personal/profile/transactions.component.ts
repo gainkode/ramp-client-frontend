@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TransactionsFilter } from 'src/app/model/filter.model';
+import { ProfileBaseFilter, TransactionsFilter } from 'src/app/model/filter.model';
 import { ProfileItemContainer } from 'src/app/model/profile-item.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { PersonalTransactionListComponent } from './data/transaction-list.component';
@@ -29,15 +29,15 @@ export class PersonalTransactionsComponent {
         private activeRoute: ActivatedRoute,
         private auth: AuthService,
         private router: Router) {
-        this.filter.setData(
-            this.activeRoute.snapshot.params['wallets'],
-            this.activeRoute.snapshot.params['types'],
-            this.activeRoute.snapshot.params['date'],
-            this.activeRoute.snapshot.params['sender']
-        );
+        this.filter.setData({
+            wallets: this.activeRoute.snapshot.params['wallets'],
+            types: this.activeRoute.snapshot.params['types'],
+            date: this.activeRoute.snapshot.params['date'],
+            sender: this.activeRoute.snapshot.params['sender']
+        });
     }
 
-    onFilterUpdate(filter: TransactionsFilter): void {
+    onFilterUpdate(filter: ProfileBaseFilter): void {
         this.router.navigateByUrl('/', { skipLocationChange: true }).then(() =>
             this.router.navigate([
                 `${this.auth.getUserMainPage()}/transactions`,

@@ -66,6 +66,7 @@ import { FormTextBoxComponent } from './common/controls/form-textbox.component';
 import { FormFinanceComboComponent } from './common/controls/form-finance-combo.component';
 import { FormPasswordBoxComponent } from './common/controls/form-password.component';
 import { FormCardBoxComponent } from './common/controls/form-cardbox.component';
+import { NotificationsFilterBarComponent } from './filter-bars/notifications-bar.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -107,7 +108,7 @@ export class MaterialModule { }
         CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, 
         LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, CommonDialogBox, SideExpanderComponent,
         CreditCardComponent, TwoFaCodeComponent, NavPopupComponent, SideMenuComponent, LineBreakPipe, NumberFillPipe,
-        TransactionsFilterBarComponent,
+        TransactionsFilterBarComponent, NotificationsFilterBarComponent,
         ProfileExchangeComponent, ProfileNotificationsComponent,
         ProfileQuickTransferComponent, ProfileTransactionsComponent, ProfileInfoComponent, ProfileTwoFAComponent,
         ProfilePasswordComponent, ProfileVerificationComponent, ProfileContactsComponent, 
@@ -118,7 +119,7 @@ export class MaterialModule { }
         CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, 
         LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, CommonDialogBox, SideExpanderComponent,
         CreditCardComponent, TwoFaCodeComponent, NavPopupComponent, SideMenuComponent, LineBreakPipe, NumberFillPipe,
-        TransactionsFilterBarComponent,
+        TransactionsFilterBarComponent, NotificationsFilterBarComponent,
         ProfileExchangeComponent, ProfileNotificationsComponent,
         ProfileQuickTransferComponent, ProfileTransactionsComponent, ProfileInfoComponent, ProfileTwoFAComponent,
         ProfilePasswordComponent, ProfileVerificationComponent, ProfileContactsComponent,
