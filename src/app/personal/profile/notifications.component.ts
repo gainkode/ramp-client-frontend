@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProfileBaseFilter, NotificationsFilter } from 'src/app/model/filter.model';
 import { ProfileItemContainer } from 'src/app/model/profile-item.model';
 import { AuthService } from 'src/app/services/auth.service';
+import { PersonalNotificationListComponent } from './data/notification-list.component';
 
 @Component({
     selector: 'app-personal-notifications',
@@ -11,13 +12,13 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class PersonalNotificationsComponent {
     @Output() onShowDetails = new EventEmitter<ProfileItemContainer>();
-    // private dataListPanel!: PersonalTransactionListComponent;
-    // @ViewChild('datalist') set dataList(panel: PersonalTransactionListComponent) {
-    //     if (panel) {
-    //         this.dataListPanel = panel;
-    //         this.dataListPanel.load(this.filter);
-    //     }
-    // }
+    private dataListPanel!: PersonalNotificationListComponent;
+    @ViewChild('datalist') set dataList(panel: PersonalNotificationListComponent) {
+        if (panel) {
+            this.dataListPanel = panel;
+            this.dataListPanel.load(this.filter);
+        }
+    }
 
     filter = new NotificationsFilter();
     inProgress = false;

@@ -139,6 +139,8 @@ const GET_MY_NOTIFICATIONS = gql`
         userId
         text
         userNotificationTypeCode
+        userNotificationLevel
+        params
       }
     }
   }

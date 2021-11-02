@@ -6,17 +6,18 @@ export class NotificationItem {
     id = '';
     userId = '';
     notificationType = '';
-    created = '';
-    viewed = '';
+    createdDate = '';
+    viewedDate = '';
     text = '';
     userNotificationTypeCode = '';
+    selected = false;
 
     constructor(data: UserNotification | null) {
         if (data !== null) {
             this.id = data.userNotificationId;
             const datepipe: DatePipe = new DatePipe('en-US');
-            this.created = datepipe.transform(data.created, 'dd-MM-YYYY HH:mm:ss') as string;
-            this.viewed = datepipe.transform(data.viewed, 'dd-MM-YYYY HH:mm:ss') as string;
+            this.createdDate = datepipe.transform(data.created, 'dd-MM-YYYY HH:mm:ss') as string;
+            this.viewedDate = datepipe.transform(data.viewed, 'dd-MM-YYYY HH:mm:ss') as string;
             this.userId = data.userId as string;
             this.text = data.text as string;
             this.userNotificationTypeCode = data.userNotificationTypeCode;

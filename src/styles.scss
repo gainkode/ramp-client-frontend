@@ -128,6 +128,11 @@ input:-webkit-autofill::first-line {
     color: $color_main_blue_600;
 }
 
+.mat-row .mat-cell {
+    border-bottom: 1px solid transparent;
+    border-top: 1px solid transparent;
+}
+
 .mat-row:hover {
     background-color: $color_main_blue_50;
 }
