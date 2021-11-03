@@ -14,7 +14,8 @@
 
     <!-- Balance chart -->
     <app-personal-balance-chart [selectedCurrency]="selectedFiat" [currencies]="fiatCurrencies" [loading]="loading"
-        (onCurrencyChanged)="currencyChanged($event)"></app-personal-balance-chart>
+        (onCurrencyChanged)="currencyChanged($event)" (onError)="handleError($event)"
+        (onProgress)="chartProgressChanged($event)"></app-personal-balance-chart>
     <!-- Balance carousel -->
     <app-personal-balance-list #balamcelist (onError)="handleError($event)"
         (onProgress)="balanceProgressChanged($event)"></app-personal-balance-list>

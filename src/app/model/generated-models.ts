@@ -24,6 +24,7 @@ export type Query = {
   myApiKeys?: Maybe<ApiKeyListResult>;
   getApiKeys?: Maybe<ApiKeyListResult>;
   myNotifications?: Maybe<UserNotificationListResult>;
+  getNotificationsByUser?: Maybe<UserNotificationListResult>;
   getNotifications?: Maybe<UserNotificationListResult>;
   getSettingsCommon?: Maybe<SettingsCommon>;
   getPaymentProviders?: Maybe<Array<PaymentProvider>>;
@@ -61,10 +62,11 @@ export type Query = {
   getUserBankAccounts: UserContactListResult;
   myActions: UserActionListResult;
   getUserActions: UserActionListResult;
-  myBalanceHistory: UserBalanceHistoryListResult;
-  getUserBalanceHistory: UserBalanceHistoryListResult;
+  myBalanceHistory: UserBalanceHistoryRecordListResult;
+  getUserBalanceHistory: UserBalanceHistoryRecordListResult;
   myKycInfo?: Maybe<KycInfo>;
   getUserKycInfo?: Maybe<KycInfo>;
+  getRoles?: Maybe<Array<UserRole>>;
   mySupportTickets?: Maybe<SupportTicketListResult>;
   getSupportTickets?: Maybe<SupportTicketListResult>;
   getFeedbacks?: Maybe<FeedbackListResult>;
@@ -76,6 +78,7 @@ export type Query = {
   getTransactionStatuses?: Maybe<Array<TransactionStatusDescriptorMap>>;
   getDashboardStats?: Maybe<DashboardStats>;
   myWidgets?: Maybe<WidgetListResult>;
+  getWidgetsByUser?: Maybe<WidgetListResult>;
   getWidgets?: Maybe<WidgetListResult>;
   getWidget?: Maybe<WidgetShort>;
   getRiskAlerts?: Maybe<RiskAlertResultList>;
@@ -109,9 +112,17 @@ export type QueryMyNotificationsArgs = {
 };
 
 
-export type QueryGetNotificationsArgs = {
+export type QueryGetNotificationsByUserArgs = {
   userId?: Maybe<Scalars['String']>;
   unreadOnly?: Maybe<Scalars['Boolean']>;
+  filter?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OrderBy>>;
+};
+
+
+export type QueryGetNotificationsArgs = {
   filter?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
@@ -455,8 +466,16 @@ export type QueryMyWidgetsArgs = {
 };
 
 
-export type QueryGetWidgetsArgs = {
+export type QueryGetWidgetsByUserArgs = {
   userId?: Maybe<Scalars['String']>;
+  filter?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OrderBy>>;
+};
+
+
+export type QueryGetWidgetsArgs = {
   filter?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
@@ -1034,17 +1053,17 @@ export type UserCurrencyProfit = {
   profitEur?: Maybe<Scalars['Float']>;
   profitFiat?: Maybe<Scalars['Float']>;
   profitPercent?: Maybe<Scalars['Float']>;
-  userBalanceHistory?: Maybe<UserBalanceHistoryListResult>;
+  userBalanceHistory?: Maybe<UserBalanceHistoryRecordListResult>;
 };
 
-export type UserBalanceHistoryListResult = {
-  __typename?: 'UserBalanceHistoryListResult';
+export type UserBalanceHistoryRecordListResult = {
+  __typename?: 'UserBalanceHistoryRecordListResult';
   count?: Maybe<Scalars['Int']>;
-  list?: Maybe<Array<UserBalanceHistory>>;
+  list?: Maybe<Array<Maybe<UserBalanceHistoryRecord>>>;
 };
 
-export type UserBalanceHistory = {
-  __typename?: 'UserBalanceHistory';
+export type UserBalanceHistoryRecord = {
+  __typename?: 'UserBalanceHistoryRecord';
   userBalanceId?: Maybe<Scalars['String']>;
   userId: Scalars['String'];
   date: Scalars['DateTime'];

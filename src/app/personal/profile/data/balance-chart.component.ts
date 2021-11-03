@@ -3,11 +3,12 @@ import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { BalancePoint } from 'src/app/model/balance.model';
-import { SettingsCurrency, UserBalanceHistoryPeriod, UserProfit } from 'src/app/model/generated-models';
+import { SettingsCurrency, UserBalanceHistoryPeriod, UserBalanceHistoryRecordListResult, UserCurrencyProfit, UserProfit } from 'src/app/model/generated-models';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
 import { ChartComponent, ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexFill, ApexStroke, ApexMarkers, ApexXAxis, ApexYAxis, ApexGrid, ApexTooltip, ApexNoData } from 'ng-apexcharts';
+import { getCurrencySign } from 'src/app/utils/utils';
 
 @Component({
     selector: 'app-personal-balance-chart',
@@ -34,6 +35,7 @@ export class PersonalBalanceChartComponent implements OnInit, OnDestroy {
 
     positiveProfit = true;
     profitValue = '';
+    totalBalance = '';
     inLoading = false;
     period = UserBalanceHistoryPeriod.LastWeek;
     periodIndex = 0;
@@ -112,7 +114,7 @@ export class PersonalBalanceChartComponent implements OnInit, OnDestroy {
             showDuplicates: false,
             trim: false,
             minHeight: undefined,
-            maxHeight: 30,
+            maxHeight: 50,
             style: {
                 colors: '#362C3699',
                 fontSize: '8px',
@@ -263,19 +265,39 @@ export class PersonalBalanceChartComponent implements OnInit, OnDestroy {
             this.profitValue = '';
             this.positiveProfit = true;
             this.onProgress.emit(true);
+            let chartPoints: BalancePoint[] = [];
             this.subscriptions.add(
                 chartData.valueChanges.subscribe(({ data }) => {
                     const profitData = data.myProfit as UserProfit;
+                    //const profitData = this.getFakeProfits();
                     let profit = 0;
                     let profitPercent = 0;
+                    this.totalBalance = '';
                     profitData.profits?.forEach(p => {
                         profit += p.profitFiat ?? 0;
                         profitPercent += p.profitPercent ?? 0;
-                        // read chart data here
-                        console.log(p.userBalanceHistory);
+                        chartPoints = this.buildChart(profitData.period, p.userBalanceHistory ?? undefined, chartPoints);
                     });
                     this.positiveProfit = (profit >= 0);
-                    this.profitValue = `${profit>0 ? '+ ' : ''}${profitPercent.toFixed(2)}% (${profit} ${this.selectedFiat})`;
+                    this.profitValue = `${profit > 0 ? '+ ' : ''}${profitPercent.toFixed(2)}% (${profit} ${this.selectedFiat})`;
+                    const totalBalanceValue = (chartPoints.length > 0) ? chartPoints[chartPoints.length - 1].balanceFiat : 0;
+                    this.totalBalance = `${getCurrencySign(this.selectedFiat)}${totalBalanceValue}`;
+                    this.seriesData = [
+                        {
+                            name: "BALANCE",
+                            color: '#E0F4FF',
+                            data: chartPoints.map(v => {
+                                return {
+                                    x: v.dateLabel,
+                                    y: v.balanceFiat,
+                                    goals: {
+                                        balance: v.balanceFiatValue,
+                                        dateFull: v.datePointFull
+                                    }
+                                };
+                            })
+                        }
+                    ];
                     this.onProgress.emit(false);
                 }, (error) => {
                     this.onProgress.emit(false);
@@ -287,116 +309,229 @@ export class PersonalBalanceChartComponent implements OnInit, OnDestroy {
                 })
             );
         }
-
-
-
-
-
-
-        // if (chartData === null) {
-        //     this.errorMessage = this.errorHandler.getRejectedCookieMessage();
-        // } else {
-        //     this.inProgress = true;
-        //     this.pChartSubscription = chartData.valueChanges.subscribe(({ data }) => {
-        //         const chartPointsData = data.myBalanceHistory as UserBalanceHistoryListResult;
-
-
-        //         console.log(chartPointsData);
-
-
-        //         if (chartPointsData !== null) {
-        //             const pointCount = chartPointsData?.count as number;
-        //             if (pointCount > 0) {
-        //                 this.chartPoints = chartPointsData?.list?.map((val) => new BalancePoint(val, BalancePointType.Balance)) as BalancePoint[];
-        //             }
-        //         }
-        //         this.inProgress = false;
-        //     }, (error) => {
-        //         this.inProgress = false;
-        //         if (this.auth.token !== '') {
-        //             this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load chart data');
-        //         } else {
-        //             this.router.navigateByUrl('/');
-        //         }
-        //     });
-        // }
     }
 
-    buildFakeData(): void {
-        this.profitValue = '';
-
-        this.onProgress.emit(true);
-        setTimeout(() => {
-            this.positiveProfit = true;
-            this.profitValue = `+ 15.00% (2.500 ${this.selectedFiat})`;
-
-
-            const chartPoints: BalancePoint[] = [];
-            let val = new BalancePoint();
-            val.date = new Date(2021, 7, 16, 0, 0, 0, 0);
-            val.balanceCrypto = 0.0125;
-            val.balanceFiat = 12500;
-            chartPoints.push(val);
-
-            val = new BalancePoint();
-            val.date = new Date(2021, 7, 17, 0, 0, 0, 0);
-            val.balanceCrypto = 0.0126;
-            val.balanceFiat = 12684;
-            chartPoints.push(val);
-
-            val = new BalancePoint();
-            val.date = new Date(2021, 7, 18, 0, 0, 0, 0);
-            val.balanceCrypto = 0.0111;
-            val.balanceFiat = 11110;
-            chartPoints.push(val);
-
-            val = new BalancePoint();
-            val.date = new Date(2021, 7, 19, 0, 0, 0, 0);
-            val.balanceCrypto = 0.0134;
-            val.balanceFiat = 13452;
-            chartPoints.push(val);
-
-            val = new BalancePoint();
-            val.date = new Date(2021, 7, 20, 0, 0, 0, 0);
-            val.balanceCrypto = 0.0126;
-            val.balanceFiat = 12600;
-            chartPoints.push(val);
-
-            val = new BalancePoint();
-            val.date = new Date(2021, 7, 21, 0, 0, 0, 0);
-            val.balanceCrypto = 0.0149;
-            val.balanceFiat = 14985;
-            chartPoints.push(val);
-
-            val = new BalancePoint();
-            val.date = new Date(2021, 7, 22, 0, 0, 0, 0);
-            val.balanceCrypto = 0.0236;
-            val.balanceFiat = 23600;
-            chartPoints.push(val);
-
-
-            const points = chartPoints.length;
-            chartPoints.forEach((val, i) => {
-                const label = (i === 0 || i === points - 1) ? '' : val.datePoint;
-                val.dateLabel = label;
-            });
-            this.onProgress.emit(false);
-            this.seriesData = [
-                {
-                    name: "BALANCE",
-                    color: '#E0F4FF',
-                    data: chartPoints.map(v => {
-                        return {
-                            x: v.dateLabel,
-                            y: v.balanceFiat,
-                            goals: {
-                                balance: v.balanceFiatValue,
-                                dateFull: v.datePointFull
-                            }
-                        };
-                    })
+    private buildChart(
+        period: UserBalanceHistoryPeriod,
+        data: UserBalanceHistoryRecordListResult | undefined,
+        chartPoints: BalancePoint[]): BalancePoint[] {
+        if (data && data.list) {
+            let inc = 0;
+            const max = data.count ?? 0;
+            const lastPoint = data.list[data.list.length - 1];
+            let initBalance = (lastPoint) ? lastPoint.balanceFiat : 0;
+            // fill chart with empty points
+            if (chartPoints.length < 1) {
+                let currentDate = new Date();
+                currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDay(), 0, 0, 0, 0);
+                let allDataStopNumber = 1;
+                if (period === UserBalanceHistoryPeriod.All) {
+                    if (max >= 10) {
+                        if (max < 30) {
+                            allDataStopNumber = 2;
+                        } else if (max < 400) {
+                            allDataStopNumber = 10;
+                        } else {
+                            allDataStopNumber = Math.round(max / 30);
+                        }
+                    }
                 }
-            ];
-        }, 1000);
+                while (inc < max) {
+                    let emptyLabel = false;
+                    if (period === UserBalanceHistoryPeriod.LastMonth) {
+                        emptyLabel = ((inc - 1) % 2 === 0);
+                    } else if (period === UserBalanceHistoryPeriod.LastYear) {
+                        emptyLabel = ((inc - 1) % 10 !== 0);
+                    } else if (period === UserBalanceHistoryPeriod.All) {
+                        if (max < 10) {
+                            emptyLabel = false;
+                        } else {
+                            emptyLabel = ((inc - 1) % allDataStopNumber !== 0);
+                        }
+                    }
+                    const val = new BalancePoint();
+                    val.date = new Date(2000, 1, 1, 0, 0, 0, 0);
+                    val.date.setTime(currentDate.getTime() - inc * 86400000);
+                    val.balanceCrypto = 0;
+                    val.balanceFiat = 0;
+                    val.dateLabel = (inc === 0 || inc === max - 1 || emptyLabel) ? '' : val.datePoint;
+                    chartPoints.splice(0, 0, val);
+                    inc++;
+                }
+            } else {
+                inc = max;
+            }
+            while (inc > 0) {
+                inc--;
+                const dataPoint = data.list[inc];
+                const chartPoint = chartPoints[max - inc - 1];
+                if (dataPoint) {
+                    chartPoint.balanceFiat += dataPoint.balanceFiat;
+                    initBalance = dataPoint.balanceFiat;
+                } else {
+                    chartPoint.balanceFiat += initBalance;
+                }
+            }
+        }
+        return chartPoints;
+    }
+
+    private getFakeProfits(): UserProfit {
+        return {
+            userId: "1a4efbf1-ad24-4900-9129-70743be6fa81",
+            currencyTo: "USD",
+            period: UserBalanceHistoryPeriod.LastMonth,
+            profits: [
+                {
+                    currencyFrom: "BTC",
+                    profit: -0.00135655,
+                    profitEur: -71.49,
+                    profitFiat: -82.95,
+                    profitPercent: -11.02,
+                    userBalanceHistory: {
+                        count: 30,
+                        list: [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            {
+                                userBalanceId: "2d547f53-b5f8-4421-a798-29306219d73c",
+                                userId: "1a4efbf1-ad24-4900-9129-70743be6fa81",
+                                date: "2021-10-15T10:45:50.000Z",
+                                asset: "BTC",
+                                balance: 0.00083068,
+                                balanceEur: 43.78,
+                                balanceFiat: 50.79,
+                                transactionId: "85bd49ab-9eb3-4553-983f-8590bfe64bf4"
+                            },
+                            {
+                                userBalanceId: "a6f7ee9f-cf68-47ec-bb41-e09e370d80c1",
+                                userId: "1a4efbf1-ad24-4900-9129-70743be6fa81",
+                                date: "2021-10-14T20:42:58.000Z",
+                                asset: "BTC",
+                                balance: 0.00083068,
+                                balanceEur: 43.78,
+                                balanceFiat: 50.79,
+                                transactionId: "081ace14-a787-49c7-9fc7-aea3db7d5566"
+                            },
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            {
+                                userBalanceId: "ff480ea2-e610-4c41-9a09-776899413658",
+                                userId: "1a4efbf1-ad24-4900-9129-70743be6fa81",
+                                date: "2021-10-08T17:40:37.000Z",
+                                asset: "BTC",
+                                balance: 0.00083068,
+                                balanceEur: 43.78,
+                                balanceFiat: 50.79,
+                                transactionId: "bb017469-93ae-43c1-9a68-559ad395c246"
+                            },
+                            {
+                                userBalanceId: "70fb7517-d391-49b1-aca5-9e69b5d7d54d",
+                                userId: "1a4efbf1-ad24-4900-9129-70743be6fa81",
+                                date: "2021-10-07T14:52:08.000Z",
+                                asset: "BTC",
+                                balance: 0.00353684,
+                                balanceEur: 186.39,
+                                balanceFiat: 216.26,
+                                transactionId: "bb017469-93ae-43c1-9a68-559ad395c246"
+                            },
+                            {
+                                userBalanceId: "e2cc1707-ea2f-4ca0-a0da-7d89783aa55e",
+                                userId: "1a4efbf1-ad24-4900-9129-70743be6fa81",
+                                date: "2021-10-06T17:02:48.000Z",
+                                asset: "BTC",
+                                balance: 0.00353684,
+                                balanceEur: 186.39,
+                                balanceFiat: 216.26,
+                                transactionId: "bb017469-93ae-43c1-9a68-559ad395c246"
+                            },
+                            null,
+                            {
+                                userBalanceId: "e352be57-99e2-498e-99b4-5f4ee175be9d",
+                                userId: "1a4efbf1-ad24-4900-9129-70743be6fa81",
+                                date: "2021-09-30T13:27:13.000Z",
+                                asset: "BTC",
+                                balance: 0.00135655,
+                                balanceEur: 71.49,
+                                balanceFiat: 82.95,
+                                transactionId: "d869cf5c-1247-495c-a6d9-ccff8d7d88cb"
+                            }
+                        ]
+                    }
+                },
+                {
+                    currencyFrom: "USDC",
+                    profit: 0,
+                    profitEur: 0,
+                    profitFiat: 0,
+                    profitPercent: null,
+                    userBalanceHistory: {
+                        count: 30,
+                        list: [
+                            null,
+                            null,
+                            null,
+                            {
+                                userBalanceId: "2d547f53-b5f8-4421-a798-29306219d73c",
+                                userId: "1a4efbf1-ad24-4900-9129-70743be6fa81",
+                                date: "2021-10-15T10:45:50.000Z",
+                                asset: "USDC",
+                                balance: 12.01,
+                                balanceEur: 11.16,
+                                balanceFiat: 12.01,
+                                transactionId: "85bd49ab-9eb3-4553-983f-8590bfe64bf4"
+                            },
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                        ]
+                    }
+                }
+            ]
+        }
     }
 }
