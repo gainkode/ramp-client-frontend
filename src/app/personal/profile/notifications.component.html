@@ -1,7 +1,57 @@
 <app-notifications-filter [data]="filter" (update)="onFilterUpdate($event)"></app-notifications-filter>
-
-<div class="__profile-data-container">
+<div class="__profile-data-container __profile-data-container-full">
     <mat-progress-bar *ngIf="inProgress" color="accent" mode="indeterminate"></mat-progress-bar>
-    <app-personal-notification-list #datalist (onError)="handleError($event)"
-        (onProgress)="progressChanged($event)"></app-personal-notification-list>
+    <div class="__profile-internal-table-container">
+        <div
+            [ngClass]="details ? '__profile-internal-table-data-container-open' : '__profile-internal-table-data-container-closed'">
+            <app-personal-notification-list #datalist (onOpenDetails)="showDetails($event)"
+                (onError)="handleError($event)" (onProgress)="progressChanged($event)"></app-personal-notification-list>
+        </div>
+        <div
+            [ngClass]="details ? '__profile-internal-table-details-container-open' : '__profile-internal-table-details-container-closed'">
+            <div class="__profile-internal-table-details-header-box">
+                <button class="__tool-button" (click)="details=false">
+                    <mat-icon>arrow_forward</mat-icon>
+                </button>
+            </div>
+            <div class="__profile-internal-table-details-box">
+                <div class="__profile-internal-table-details-data-box">
+                    <h2 class="__profile-internal-details-title">
+                        Welcome to GetCoins
+                    </h2>
+                    <div class="__profile-internal-table-details-value-box">
+                        <div class="__profile-internal-table-details-item-title-box">
+                            <div class="__profile-internal-details-item-title">
+                                Notification ID:
+                            </div>
+
+                        </div>
+                        <div class="__profile-internal-details-item-title">
+                            N0001
+                        </div>
+                    </div>
+                    <div class="__profile-internal-table-details-value-box">
+                        <div class="__profile-internal-table-details-item-title-box">
+                            <div class="__profile-internal-details-item-title">
+                                Date:
+                            </div>
+
+                        </div>
+                        <div class="__profile-internal-details-item-title">
+                            01 Jan 2022
+                        </div>
+                    </div>
+                    <div class="__profile-internal-table-details-text-box">
+                        <div class="__profile-internal-details-item-title">
+                            Dear Customer, Thank you for choosing GetCoins as your crypto wallet service!
+                        </div>
+                    </div>
+                    <div class="__profile-buttons-area">
+                        <button class="__outlined-button" type="button" (click)="copyEmail()">EMAIL COPY</button>
+                        <button class="__main-button __button-wide-separator" type="button" [disabled]="lastItem" (click)="nextItem()">next</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

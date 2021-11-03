@@ -262,7 +262,10 @@ export const UserNotificationCodeList: Array<UserNotificationCodeView> = [
     { id: UserNotificationCodes.KycStatusChanged, name: 'KYC Status Changed' },
     { id: UserNotificationCodes.TestNotification, name: 'Test' },
     { id: UserNotificationCodes.TransactionConfirmation, name: 'Transaction Confirmed' },
-    { id: UserNotificationCodes.TransactionStatusChanged, name: 'Transaction Status Changed' }
+    { id: UserNotificationCodes.TransactionStatusChanged, name: 'Transaction Status Changed' },
+    { id: UserNotificationCodes.TransactionDeclinedAdminNotification, name: 'Transaction Declined' },
+    { id: UserNotificationCodes.AdminToUserNotification, name: 'Administrator Request' },
+    { id: UserNotificationCodes.AskTransactionRedo, name: 'Transaction Redo Request' }
 ];
 
 export class CheckoutSummary {

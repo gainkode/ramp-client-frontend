@@ -1,17 +1,16 @@
 import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProfileBaseFilter, NotificationsFilter } from 'src/app/model/filter.model';
-import { ProfileItemContainer } from 'src/app/model/profile-item.model';
+import { NotificationItem } from 'src/app/model/notification.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { PersonalNotificationListComponent } from './data/notification-list.component';
 
 @Component({
     selector: 'app-personal-notifications',
     templateUrl: './notifications.component.html',
-    styleUrls: ['../../../assets/profile.scss']
+    styleUrls: ['../../../assets/profile.scss', '../../../assets/button.scss']
 })
 export class PersonalNotificationsComponent {
-    @Output() onShowDetails = new EventEmitter<ProfileItemContainer>();
     private dataListPanel!: PersonalNotificationListComponent;
     @ViewChild('datalist') set dataList(panel: PersonalNotificationListComponent) {
         if (panel) {
@@ -20,6 +19,8 @@ export class PersonalNotificationsComponent {
         }
     }
 
+    lastItem = false;
+    details = true;
     filter = new NotificationsFilter();
     inProgress = false;
     errorMessage = '';
@@ -54,7 +55,16 @@ export class PersonalNotificationsComponent {
         this.changeDetector.detectChanges();
     }
 
-    showDetails(details: ProfileItemContainer): void {
-        this.onShowDetails.emit(details);
+    showDetails(item: NotificationItem): void {
+        console.log(item);
+        this.details = true;
+    }
+
+    nextItem(): void {
+
+    }
+    
+    copyEmail(): void {
+
     }
 }

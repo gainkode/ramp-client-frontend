@@ -4,9 +4,8 @@ import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { NotificationsFilter } from 'src/app/model/filter.model';
-import { TransactionShortListResult, UserNotificationListResult } from 'src/app/model/generated-models';
+import { UserNotification, UserNotificationLevel, UserNotificationListResult } from 'src/app/model/generated-models';
 import { NotificationItem } from 'src/app/model/notification.model';
-import { ProfileItemContainer, ProfileItemContainerType } from 'src/app/model/profile-item.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
@@ -14,12 +13,13 @@ import { ProfileDataService } from 'src/app/services/profile.service';
 @Component({
     selector: 'app-personal-notification-list',
     templateUrl: './notification-list.component.html',
-    styleUrls: ['../../../../assets/menu.scss', '../../../../assets/button.scss', '../../../../assets/profile.scss', './transaction-list.component.scss']
+    styleUrls: ['../../../../assets/menu.scss', '../../../../assets/button.scss', '../../../../assets/profile.scss', './notification-list.component.scss']
 })
 export class PersonalNotificationListComponent implements OnDestroy, AfterViewInit {
     @Input() recent = false;
     @Output() onError = new EventEmitter<string>();
     @Output() onProgress = new EventEmitter<boolean>();
+    @Output() onOpenDetails = new EventEmitter<NotificationItem>();
     @ViewChild(MatSort) sort!: MatSort;
 
     private pNotificationsSubscription: Subscription | undefined = undefined;
@@ -34,8 +34,7 @@ export class PersonalNotificationListComponent implements OnDestroy, AfterViewIn
     pageIndex = 0;
     sortedField = 'createdDate';
     sortedDesc = true;
-    //displayedColumns: string[] = ['selected', 'viewedIcon', 'createdDate', 'viewedDate', 'notificationCode', 'id'];
-    displayedColumns: string[] = ['createdDate'];
+    displayedColumns: string[] = ['selected', 'viewedIcon', 'createdDate', 'viewedDate', 'notificationCode', 'id', 'remove'];
 
     constructor(
         private auth: AuthService,
@@ -110,7 +109,8 @@ export class PersonalNotificationListComponent implements OnDestroy, AfterViewIn
         } else {
             this.onProgress.emit(true);
             this.pNotificationsSubscription = notificationsData.valueChanges.subscribe(({ data }) => {
-                const dataList = data.myNotifications as UserNotificationListResult;
+                //const dataList = data.myNotifications as UserNotificationListResult;
+                const dataList = this.getFakeData();
                 if (dataList !== null) {
                     console.log(dataList);
                     this.notificationCount = dataList?.count as number;
@@ -147,7 +147,31 @@ export class PersonalNotificationListComponent implements OnDestroy, AfterViewIn
         return event;
     }
 
-    showDetailsPanel(): void {
-        
+    onRowSelected(selectedItem: NotificationItem): void {
+        this.onOpenDetails.emit(selectedItem);
+    }
+
+    private getFakeData(): UserNotificationListResult {
+        return {
+            count: 2,
+            list: [{
+                userNotificationId: 'N002',
+                userId: 'user_id_1',
+                userNotificationTypeCode: 'ADMIN_TO_USER_NOTIFICATION',
+                userNotificationLevel: UserNotificationLevel.Request,
+                created: new Date(),
+                viewed: undefined,
+                text: 'Administratir requested auxiliary data'
+            } as UserNotification,
+            {
+                userNotificationId: 'N007',
+                userId: 'user_id_1',
+                userNotificationTypeCode: 'ASK_TRANSACTION_REDO',
+                userNotificationLevel: UserNotificationLevel.Warning,
+                created: new Date(),
+                viewed: undefined,
+                text: 'You have to redo your transaction and put back all money to the cash office'
+            } as UserNotification]
+        } as UserNotificationListResult;
     }
 }
