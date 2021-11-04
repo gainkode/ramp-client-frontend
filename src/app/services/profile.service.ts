@@ -120,12 +120,14 @@ query MyProfit($currencyTo: String, $period: UserBalanceHistoryPeriod!) {
 
 const GET_MY_NOTIFICATIONS = gql`
   query MyNotifications(
+    $unreadOnly: Boolean
     $filter: String
     $skip: Int
     $first: Int
     $orderBy: [OrderBy!]
   ) {
     myNotifications(
+      unreadOnly: $unreadOnly
       filter: $filter
       skip: $skip
       first: $first
@@ -211,6 +213,18 @@ const GET_PROFILE_CONTACTS = gql`
         displayName
         created
       }
+    }
+  }
+`;
+
+const DELETE_MY_NOTIFICATION = gql`
+  mutation DeleteMyNotification(
+    $notificationId: ID!
+  ) {
+    deleteMyNotification(
+      notificationId: $notificationId
+    ) {
+      userNotificationId
     }
   }
 `;
@@ -387,6 +401,8 @@ export class ProfileDataService {
   }
 
   getMyNotifications(
+    unreadOnlyFilter: boolean,
+    search: string,
     pageIndex: number,
     takeItems: number,
     orderField: string,
@@ -397,7 +413,8 @@ export class ProfileDataService {
       return this.apollo.watchQuery<any>({
         query: GET_MY_NOTIFICATIONS,
         variables: {
-          filter: '',
+          unreadOnly: unreadOnlyFilter,
+          filter: search,
           skip: pageIndex * takeItems,
           first: takeItems,
           orderBy: orderFields,
@@ -407,6 +424,15 @@ export class ProfileDataService {
     } else {
       return null;
     }
+  }
+
+  deleteMyNotification(id: string): Observable<any> {
+    return this.apollo.mutate({
+      mutation: DELETE_MY_NOTIFICATION,
+      variables: {
+        notificationId: id,
+      },
+    });
   }
 
   saveUserInfo(

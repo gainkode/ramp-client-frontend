@@ -20,10 +20,11 @@ export class PersonalNotificationListComponent implements OnDestroy, AfterViewIn
     @Output() onError = new EventEmitter<string>();
     @Output() onProgress = new EventEmitter<boolean>();
     @Output() onOpenDetails = new EventEmitter<NotificationItem>();
+    @Output() onCloseDetails = new EventEmitter();
     @ViewChild(MatSort) sort!: MatSort;
 
     private pNotificationsSubscription: Subscription | undefined = undefined;
-    private pStatusSubscription: Subscription | undefined = undefined;
+    private pDeleteSubscription: Subscription | undefined = undefined;
     private pSortSubscription: Subscription | undefined = undefined;
     filter = new NotificationsFilter();
     notifications: NotificationItem[] = [];
@@ -58,9 +59,9 @@ export class PersonalNotificationListComponent implements OnDestroy, AfterViewIn
             this.pNotificationsSubscription.unsubscribe();
             this.pNotificationsSubscription = undefined;
         }
-        if (this.pStatusSubscription !== undefined) {
-            this.pStatusSubscription.unsubscribe();
-            this.pStatusSubscription = undefined;
+        if (this.pDeleteSubscription !== undefined) {
+            this.pDeleteSubscription.unsubscribe();
+            this.pDeleteSubscription = undefined;
         }
         if (this.pSortSubscription !== undefined) {
             this.pSortSubscription.unsubscribe();
@@ -95,6 +96,8 @@ export class PersonalNotificationListComponent implements OnDestroy, AfterViewIn
     private loadNotifications(): void {
         this.notificationCount = 0;
         const notificationsData = this.profileService.getMyNotifications(
+            this.filter.unreadOnly,
+            this.filter.search,
             this.pageIndex,
             this.pageSize,
             this.getSortedField(),
@@ -104,8 +107,8 @@ export class PersonalNotificationListComponent implements OnDestroy, AfterViewIn
         } else {
             this.onProgress.emit(true);
             this.pNotificationsSubscription = notificationsData.valueChanges.subscribe(({ data }) => {
-                //const dataList = data.myNotifications as UserNotificationListResult;
-                const dataList = this.getFakeData();
+                const dataList = data.myNotifications as UserNotificationListResult;
+                //const dataList = this.getFakeData();
                 if (dataList !== null) {
                     console.log(dataList);
                     this.notificationCount = dataList?.count as number;
@@ -175,11 +178,24 @@ export class PersonalNotificationListComponent implements OnDestroy, AfterViewIn
     }
 
     removeNotification(item: NotificationItem): void {
-
+        this.removeNotifications([item.id]);
     }
 
     removeSelectedNotifications(): void {
+        this.removeNotifications(this.notifications.map(x => x.id));
+    }
 
+    private removeNotifications(ids: string[]): void {
+        this.onCloseDetails.emit();
+        this.onError.emit('');
+        this.onProgress.emit(true);
+        const notificationsDelete = this.profileService.deleteMyNotification(ids[0]);
+        this.pDeleteSubscription = notificationsDelete.subscribe(({ data }) => {
+            this.loadNotifications();
+        }, (error) => {
+            this.onProgress.emit(false);
+            this.onError.emit(this.errorHandler.getError(error.message, 'Unable to delete notifications'));
+        });
     }
 
     private getFakeData(): UserNotificationListResult {
