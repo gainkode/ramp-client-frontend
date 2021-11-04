@@ -3,15 +3,21 @@
         matSortDirection="desc" matSortDisableClear>
         <!-- Notification selection -->
         <ng-container matColumnDef="selected">
-            <th mat-header-cell *matHeaderCellDef
-                class="__profile-table-column __profile-notifications-table-column-selected">
-                <span class="__profile-table-header">
-                    Sel
-                </span>
+            <th mat-header-cell *matHeaderCellDef class="__profile-table-column __profile-notifications-table-column-selected">
+                <div class="__profile-notifications-table-cell-icon-box">
+                    <div class="__profile-notifications-table-cell-button-box">
+                        <button *ngIf="selectedRows" type="button" class="__table-button" (click)="removeSelectedNotifications()">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
+                </div>
             </th>
-            <td mat-cell *matCellDef="let element" class="__profile-notifications-table-cell-plain">
-                <div class="__profile-notifications-table-cell-data">
-                    {{element.selected}}
+            <td mat-cell *matCellDef="let element" class="__profile-notifications-table-cell-plain" (click)="$event.stopPropagation()">
+                <div class="__profile-notifications-table-cell-icon-box">
+                    <div style="margin: 0px 0px 0px 14px;">
+                        <mat-checkbox color="accent" [checked]="element.selected" (change)="toggleSelected(element)">
+                        </mat-checkbox>
+                    </div>
                 </div>
             </td>
         </ng-container>
@@ -24,9 +30,13 @@
                 </span>
             </th>
             <td mat-cell *matCellDef="let element" class="__profile-notifications-table-cell-plain">
-                <div style="display: flex;flex-direction: row;align-items: center;">
-                    <img class="__profile-transactions-table-cell-transaction-icon"
-                        src="../../../assets/navigation/__temp_send_icon.svg">
+                <div *ngIf="!element.viewedStatus" class="__profile-notifications-table-cell-icon-box">
+                    <img class="__profile-notifications-table-cell-viewed-icon"
+                        src="../../../assets/navigation/__temp_notification_new.svg">
+                </div>
+                <div *ngIf="element.viewedStatus" class="__profile-notifications-table-cell-icon-box">
+                    <img class="__profile-notifications-table-cell-viewed-icon"
+                        src="../../../assets/navigation/__temp_notification_viewed.svg">
                 </div>
             </td>
         </ng-container>
@@ -34,7 +44,7 @@
         <!-- Notification Date -->
         <ng-container matColumnDef="createdDate">
             <th mat-header-cell mat-sort-header *matHeaderCellDef [disabled]="recent"
-                class="__profile-table-column __profile-transactions-table-column-created-date">
+                class="__profile-table-column __profile-notifications-table-column-created-date">
                 <span class="__profile-table-header">
                     Notification Date
                 </span>
@@ -49,7 +59,7 @@
         <!-- Viewed Date -->
         <ng-container matColumnDef="viewedDate">
             <th mat-header-cell mat-sort-header *matHeaderCellDef [disabled]="recent"
-                class="__profile-table-column __profile-transactions-table-column-viewed-date">
+                class="__profile-table-column __profile-notifications-table-column-viewed-date">
                 <span class="__profile-table-header">
                     Open Date
                 </span>
@@ -64,7 +74,7 @@
         <!-- Subject -->
         <ng-container matColumnDef="notificationCode">
             <th mat-header-cell mat-sort-header *matHeaderCellDef [disabled]="recent"
-                class="__profile-table-column __profile-transactions-table-column-notification-code">
+                class="__profile-table-column __profile-notifications-table-column-notification-code">
                 <span class="__profile-table-header">
                     Subject
                 </span>
@@ -79,7 +89,7 @@
         <!-- Id -->
         <ng-container matColumnDef="id">
             <th mat-header-cell mat-sort-header *matHeaderCellDef [disabled]="recent"
-                class="__profile-table-column __profile-transactions-table-column-id">
+                class="__profile-table-column __profile-notifications-table-column-id">
                 <span class="__profile-table-header">
                     Notification ID
                 </span>
@@ -94,137 +104,20 @@
         <!-- Remove -->
         <ng-container matColumnDef="remove">
             <th mat-header-cell *matHeaderCellDef
-                class="__profile-table-column __profile-transactions-table-column-remove">
+                class="__profile-table-column __profile-notifications-table-column-remove">
                 <span class="__profile-table-header">
                 </span>
             </th>
-            <td mat-cell *matCellDef="let element" class="__profile-notifications-table-cell-plain">
-                <div class="__profile-notifications-table-cell-data">
-                    Remove
+            <td mat-cell *matCellDef="let element" class="__profile-notifications-table-cell-plain" (click)="$event.stopPropagation()">
+                <div class="__profile-notifications-table-cell-icon-box">
+                    <div class="__profile-notifications-table-cell-button-box">
+                        <button type="button" class="__table-button" (click)="removeNotification(element)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
                 </div>
             </td>
         </ng-container>
-
-        <!-- Sender Column -->
-        <!-- <ng-container matColumnDef="sender">
-            <th mat-header-cell *matHeaderCellDef
-                class="__profile-table-column __profile-transactions-table-column-sender">
-                <span class="__profile-table-header">
-                    Sender
-                </span>
-            </th>
-            <td mat-cell *matCellDef="let element">
-                <div class="__profile-transactions-table-cell-sender">
-                    <img [ngClass]="element.sender?.imgClass" [src]="element.sender?.imgSource">
-                    <div class="__profile-notifications-table-cell-data">
-                        {{element.sender?.title}}
-                    </div>
-                </div>
-            </td>
-        </ng-container> -->
-
-        <!-- Recipient Column -->
-        <!-- <ng-container matColumnDef="recipient">
-            <th mat-header-cell *matHeaderCellDef
-                class="__profile-table-column __profile-transactions-table-column-recipient">
-                <span class="__profile-table-header">
-                    Recipient
-                </span>
-            </th>
-            <td mat-cell *matCellDef="let element">
-                <div class="__profile-transactions-table-cell-sender">
-                    <img class="__profile-transactions-table-cell-sender-icon"
-                        src="../../../assets/svg-payment-systems/bitcoin.svg">
-                    <div class="__profile-notifications-table-cell-data">
-                        {{element.recipientData}}
-                    </div>
-                </div>
-            </td>
-        </ng-container> -->
-
-        <!-- Sent Column -->
-        <!-- <ng-container matColumnDef="sent">
-            <th mat-header-cell mat-sort-header *matHeaderCellDef [disabled]="recent"
-                class="__profile-table-column __profile-transactions-table-column-sent">
-                <span class="__profile-table-header">
-                    Amount Sent
-                </span>
-            </th>
-            <td mat-cell *matCellDef="let element" class="__profile-notifications-table-cell-plain">
-                <div class="__profile-notifications-table-cell-data">
-                    {{element.amountSent}}
-                </div>
-            </td>
-        </ng-container> -->
-
-        <!-- Received Column -->
-        <!-- <ng-container matColumnDef="received">
-            <th mat-header-cell mat-sort-header *matHeaderCellDef [disabled]="recent"
-                class="__profile-table-column __profile-transactions-table-column-received">
-                <span class="__profile-table-header">
-                    Amount Received
-                </span>
-            </th>
-            <td mat-cell *matCellDef="let element" class="__profile-notifications-table-cell-plain">
-                <div class="__profile-notifications-table-cell-data">
-                    {{element.amountReceived}}
-                </div>
-            </td>
-        </ng-container> -->
-
-        <!-- Fees Column -->
-        <!-- <ng-container matColumnDef="fees">
-            <th mat-header-cell mat-sort-header *matHeaderCellDef [disabled]="recent"
-                class="__profile-table-column __profile-transactions-table-column-fees">
-                <span class="__profile-table-header">
-                    Network Fees
-                </span>
-            </th>
-            <td mat-cell *matCellDef="let element" class="__profile-notifications-table-cell-plain">
-                <div class="__profile-notifications-table-cell-data">
-                    {{element.networkFees}}
-                </div>
-            </td>
-        </ng-container> -->
-
-        <!-- Status Column -->
-        <!-- <ng-container matColumnDef="status">
-            <th mat-header-cell mat-sort-header *matHeaderCellDef [disabled]="recent"
-                class="__profile-table-column __profile-transactions-table-column-status">
-                <span class="__profile-table-header">
-                    Status
-                </span>
-            </th>
-            <td mat-cell *matCellDef="let element" class="__profile-notifications-table-cell-plain">
-                <div
-                    [ngClass]="{'__profile-notifications-table-cell-data': true, '__profile-transactions-table-cell-status-error': element.statusLevel === 'error'}">
-                    {{element.statusName}}
-                </div>
-            </td>
-        </ng-container> -->
-
-        <!-- Details Column -->
-        <!-- <ng-container matColumnDef="details">
-            <th mat-header-cell *matHeaderCellDef
-                class="__profile-table-column __profile-transactions-table-column-details">
-                <div *ngIf="!recent" class="__profile-table-details-table">
-                    <button class="__small-button" type="button" disabled>
-                        .pdf
-                    </button>
-                    <div class="__button-separator-sm"></div>
-                    <button class="__small-button" type="button" disabled>
-                        .csv
-                    </button>
-                </div>
-            </th>
-            <td mat-cell *matCellDef="let element">
-                <div class="__profile-transactions-table-cell-details">
-                    <button type="button" class="__table-button" (click)="showDetailsPanel(element)">
-                        <mat-icon>more_vert</mat-icon>
-                    </button>
-                </div>
-            </td>
-        </ng-container> -->
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onRowSelected(row)"></tr>

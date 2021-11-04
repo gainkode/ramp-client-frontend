@@ -29,6 +29,7 @@ export class PersonalNotificationListComponent implements OnDestroy, AfterViewIn
     notifications: NotificationItem[] = [];
     notificationCount = 0;
     selectedNotification: NotificationItem | null = null;
+    selectedRows = false;
     pageCounts = [25, 50, 100];
     pageSize = 25;
     pageIndex = 0;
@@ -81,18 +82,12 @@ export class PersonalNotificationListComponent implements OnDestroy, AfterViewIn
         let result = this.sortedField;
         if (this.sortedField === 'createdDate') {
             result = 'created';
-        } else if (this.sortedField === 'notification') {
-            result = 'type';
-        } else if (this.sortedField === 'sender') {
-            result = '';
-        } else if (this.sortedField === 'recipient') {
-            result = '';
-        } else if (this.sortedField === 'sent') {
-            result = 'amountToSpend';
-        } else if (this.sortedField === 'received') {
-            result = 'amountToReceive';
-        } else if (this.sortedField === 'fees') {
-            result = 'feeFiat';
+        } else if (this.sortedField === 'viewedDate') {
+            result = 'viewed';
+        } else if (this.sortedField === 'notificationCode') {
+            result = 'userNotificationTypeCode';
+        } else if (this.sortedField === 'id') {
+            result = 'userNotificationId';
         }
         return result;
     }
@@ -151,6 +146,42 @@ export class PersonalNotificationListComponent implements OnDestroy, AfterViewIn
         this.onOpenDetails.emit(selectedItem);
     }
 
+    toggleSelected(item: NotificationItem): void {
+        item.selected = !item.selected;
+        let selectedCount = 0;
+        this.notifications.forEach(x => {
+            if (x.selected) {
+                selectedCount++;
+            }
+        });
+        this.selectedRows = (selectedCount > 0);
+    }
+
+    getLastItemId(): string {
+        if (this.notifications.length > 0) {
+            return this.notifications[this.notifications.length - 1].id;
+        } else {
+            return '';
+        }
+    }
+
+    getNextItem(id: string): NotificationItem | undefined {
+        const itemIndex = this.notifications.findIndex(x => x.id === id);
+        if (itemIndex >= 0 && itemIndex < this.notifications.length - 1) {
+            return this.notifications[itemIndex + 1];
+        } else {
+            return undefined;
+        }
+    }
+
+    removeNotification(item: NotificationItem): void {
+
+    }
+
+    removeSelectedNotifications(): void {
+
+    }
+
     private getFakeData(): UserNotificationListResult {
         return {
             count: 2,
@@ -160,7 +191,7 @@ export class PersonalNotificationListComponent implements OnDestroy, AfterViewIn
                 userNotificationTypeCode: 'ADMIN_TO_USER_NOTIFICATION',
                 userNotificationLevel: UserNotificationLevel.Request,
                 created: new Date(),
-                viewed: undefined,
+                viewed: new Date(),
                 text: 'Administratir requested auxiliary data'
             } as UserNotification,
             {

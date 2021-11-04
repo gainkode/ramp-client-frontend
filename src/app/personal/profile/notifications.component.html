@@ -17,17 +17,16 @@
             <div class="__profile-internal-table-details-box">
                 <div class="__profile-internal-table-details-data-box">
                     <h2 class="__profile-internal-details-title">
-                        Welcome to GetCoins
+                        Notification title
                     </h2>
                     <div class="__profile-internal-table-details-value-box">
                         <div class="__profile-internal-table-details-item-title-box">
                             <div class="__profile-internal-details-item-title">
                                 Notification ID:
                             </div>
-
                         </div>
                         <div class="__profile-internal-details-item-title">
-                            N0001
+                            {{selectedNotification?.id}}
                         </div>
                     </div>
                     <div class="__profile-internal-table-details-value-box">
@@ -35,15 +34,14 @@
                             <div class="__profile-internal-details-item-title">
                                 Date:
                             </div>
-
                         </div>
                         <div class="__profile-internal-details-item-title">
-                            01 Jan 2022
+                            {{selectedNotification?.created}}
                         </div>
                     </div>
                     <div class="__profile-internal-table-details-text-box">
                         <div class="__profile-internal-details-item-title">
-                            Dear Customer, Thank you for choosing GetCoins as your crypto wallet service!
+                            {{selectedNotification?.text}}
                         </div>
                     </div>
                     <div class="__profile-buttons-area">

@@ -20,10 +20,11 @@ export class PersonalNotificationsComponent {
     }
 
     lastItem = false;
-    details = true;
+    details = false;
     filter = new NotificationsFilter();
     inProgress = false;
     errorMessage = '';
+    selectedNotification: NotificationItem | undefined = undefined;
 
     constructor(
         private changeDetector: ChangeDetectorRef,
@@ -56,12 +57,14 @@ export class PersonalNotificationsComponent {
     }
 
     showDetails(item: NotificationItem): void {
-        console.log(item);
+        this.selectedNotification = item;
         this.details = true;
+        this.lastItem = (this.dataListPanel.getLastItemId() === item.id);
     }
 
     nextItem(): void {
-
+        this.selectedNotification = this.dataListPanel.getNextItem(this.selectedNotification?.id ?? '');
+        this.lastItem = (this.dataListPanel.getLastItemId() === this.selectedNotification?.id);
     }
     
     copyEmail(): void {
