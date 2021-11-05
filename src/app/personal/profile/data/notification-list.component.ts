@@ -189,7 +189,7 @@ export class PersonalNotificationListComponent implements OnDestroy, AfterViewIn
         this.onCloseDetails.emit();
         this.onError.emit('');
         this.onProgress.emit(true);
-        const notificationsDelete = this.profileService.deleteMyNotification(ids[0]);
+        const notificationsDelete = this.profileService.deleteMyNotifications(ids);
         this.pDeleteSubscription = notificationsDelete.subscribe(({ data }) => {
             this.loadNotifications();
         }, (error) => {

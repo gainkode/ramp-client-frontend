@@ -537,6 +537,7 @@ export type UserNotification = {
   userNotificationLevel?: Maybe<UserNotificationLevel>;
   created?: Maybe<Scalars['DateTime']>;
   viewed?: Maybe<Scalars['DateTime']>;
+  title?: Maybe<Scalars['String']>;
   text?: Maybe<Scalars['String']>;
   linkedId?: Maybe<Scalars['String']>;
   linkedTable?: Maybe<Scalars['String']>;
@@ -1786,8 +1787,8 @@ export type Mutation = {
   createUserApiKey?: Maybe<ApiKeySecret>;
   deleteUserApiKey?: Maybe<ApiKey>;
   sendAdminNotification?: Maybe<UserNotification>;
-  deleteMyNotification?: Maybe<UserNotification>;
-  deleteUserNotification?: Maybe<UserNotification>;
+  deleteMyNotifications?: Maybe<Array<UserNotification>>;
+  deleteUserNotifications?: Maybe<Array<UserNotification>>;
   preauthFull: PaymentPreauthResult;
   preauth: PaymentPreauthResultShort;
   captureFull: PaymentOrder;
@@ -1881,13 +1882,13 @@ export type MutationSendAdminNotificationArgs = {
 };
 
 
-export type MutationDeleteMyNotificationArgs = {
-  notificationId: Scalars['ID'];
+export type MutationDeleteMyNotificationsArgs = {
+  notificationIds?: Maybe<Array<Scalars['ID']>>;
 };
 
 
-export type MutationDeleteUserNotificationArgs = {
-  notificationId: Scalars['ID'];
+export type MutationDeleteUserNotificationsArgs = {
+  notificationIds?: Maybe<Array<Scalars['ID']>>;
 };
 
 

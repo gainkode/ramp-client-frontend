@@ -140,6 +140,7 @@ const GET_MY_NOTIFICATIONS = gql`
         viewed
         userId
         text
+        title
         userNotificationTypeCode
         userNotificationLevel
         params
@@ -217,12 +218,12 @@ const GET_PROFILE_CONTACTS = gql`
   }
 `;
 
-const DELETE_MY_NOTIFICATION = gql`
-  mutation DeleteMyNotification(
-    $notificationId: ID!
+const DELETE_MY_NOTIFICATIONS = gql`
+  mutation DeleteMyNotifications(
+    $notificationIds: [ID!]
   ) {
-    deleteMyNotification(
-      notificationId: $notificationId
+    deleteMyNotifications(
+      notificationIds: $notificationIds
     ) {
       userNotificationId
     }
@@ -426,11 +427,11 @@ export class ProfileDataService {
     }
   }
 
-  deleteMyNotification(id: string): Observable<any> {
+  deleteMyNotifications(idList: string[]): Observable<any> {
     return this.apollo.mutate({
-      mutation: DELETE_MY_NOTIFICATION,
+      mutation: DELETE_MY_NOTIFICATIONS,
       variables: {
-        notificationId: id,
+        notificationIds: idList,
       },
     });
   }

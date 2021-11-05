@@ -12,6 +12,7 @@ export class NotificationItem {
     createdTime = '';
     viewedTime = '';
     text = '';
+    title = '';
     userNotificationTypeCode = '';
     selected = false;
 
@@ -19,8 +20,6 @@ export class NotificationItem {
         if (data !== null) {
             this.id = data.userNotificationId;
             const datepipe: DatePipe = new DatePipe('en-US');
-            //this.createdDate = (data.created) ? datepipe.transform(data.created, 'dd MMM YYYY HH:mm:ss') as string : '';
-            //this.viewedDate = (data.viewed) ? datepipe.transform(data.viewed, 'dd MMM YYYY HH:mm:ss') as string : '';
 
             this.created = (data.created) ? datepipe.transform(data.created, 'dd MMM YYYY HH:mm:ss') as string : '';
             this.createdDate = (data.created) ? datepipe.transform(data.created, 'dd MMM YYYY') as string : '';
@@ -30,6 +29,7 @@ export class NotificationItem {
 
             this.userId = data.userId as string;
             this.text = data.text as string;
+            this.title = data.title ?? 'Notification';
             this.userNotificationTypeCode = data.userNotificationTypeCode;
         }
     }
