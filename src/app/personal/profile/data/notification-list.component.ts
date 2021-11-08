@@ -4,7 +4,7 @@ import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { NotificationsFilter } from 'src/app/model/filter.model';
-import { UserNotification, UserNotificationLevel, UserNotificationListResult } from 'src/app/model/generated-models';
+import { UserNotificationListResult } from 'src/app/model/generated-models';
 import { NotificationItem } from 'src/app/model/notification.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
@@ -108,9 +108,7 @@ export class PersonalNotificationListComponent implements OnDestroy, AfterViewIn
             this.onProgress.emit(true);
             this.pNotificationsSubscription = notificationsData.valueChanges.subscribe(({ data }) => {
                 const dataList = data.myNotifications as UserNotificationListResult;
-                //const dataList = this.getFakeData();
                 if (dataList !== null) {
-                    console.log(dataList);
                     this.notificationCount = dataList?.count as number;
                     if (this.notificationCount > 0) {
                         this.notifications = dataList?.list?.map((val) => {
@@ -185,6 +183,10 @@ export class PersonalNotificationListComponent implements OnDestroy, AfterViewIn
         this.removeNotifications(this.notifications.map(x => x.id));
     }
 
+    removeItem(id: string) {
+        this.notifications.splice(this.notifications.findIndex(x => x.id === id), 1);
+    }
+
     private removeNotifications(ids: string[]): void {
         this.onCloseDetails.emit();
         this.onError.emit('');
@@ -196,29 +198,5 @@ export class PersonalNotificationListComponent implements OnDestroy, AfterViewIn
             this.onProgress.emit(false);
             this.onError.emit(this.errorHandler.getError(error.message, 'Unable to delete notifications'));
         });
-    }
-
-    private getFakeData(): UserNotificationListResult {
-        return {
-            count: 2,
-            list: [{
-                userNotificationId: 'N002',
-                userId: 'user_id_1',
-                userNotificationTypeCode: 'ADMIN_TO_USER_NOTIFICATION',
-                userNotificationLevel: UserNotificationLevel.Request,
-                created: new Date(),
-                viewed: new Date(),
-                text: 'Administratir requested auxiliary data'
-            } as UserNotification,
-            {
-                userNotificationId: 'N007',
-                userId: 'user_id_1',
-                userNotificationTypeCode: 'ASK_TRANSACTION_REDO',
-                userNotificationLevel: UserNotificationLevel.Warning,
-                created: new Date(),
-                viewed: undefined,
-                text: 'You have to redo your transaction and put back all money to the cash office'
-            } as UserNotification]
-        } as UserNotificationListResult;
     }
 }

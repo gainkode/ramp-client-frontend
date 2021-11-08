@@ -1787,6 +1787,7 @@ export type Mutation = {
   createUserApiKey?: Maybe<ApiKeySecret>;
   deleteUserApiKey?: Maybe<ApiKey>;
   sendAdminNotification?: Maybe<UserNotification>;
+  makeNotificationsViewed?: Maybe<Array<UserNotification>>;
   deleteMyNotifications?: Maybe<Array<UserNotification>>;
   deleteUserNotifications?: Maybe<Array<UserNotification>>;
   preauthFull: PaymentPreauthResult;
@@ -1879,6 +1880,11 @@ export type MutationSendAdminNotificationArgs = {
   notifiedUserId?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   level?: Maybe<UserNotificationLevel>;
+};
+
+
+export type MutationMakeNotificationsViewedArgs = {
+  notificationIds?: Maybe<Array<Scalars['ID']>>;
 };
 
 

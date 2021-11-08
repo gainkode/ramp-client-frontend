@@ -230,6 +230,18 @@ const DELETE_MY_NOTIFICATIONS = gql`
   }
 `;
 
+const MAKE_NOTIFICATIONS_VIEWED = gql`
+  mutation MakeNotificationsViewed(
+    $notificationIds: [ID!]
+  ) {
+    makeNotificationsViewed(
+      notificationIds: $notificationIds
+    ) {
+      userNotificationId
+    }
+  }
+`;
+
 const UPDATE_ME_INFO = gql`
   mutation UpdateMe(
     $firstName: String!
@@ -430,6 +442,15 @@ export class ProfileDataService {
   deleteMyNotifications(idList: string[]): Observable<any> {
     return this.apollo.mutate({
       mutation: DELETE_MY_NOTIFICATIONS,
+      variables: {
+        notificationIds: idList,
+      },
+    });
+  }
+
+  makeNotificationsViewed(idList: string[]): Observable<any> {
+    return this.apollo.mutate({
+      mutation: MAKE_NOTIFICATIONS_VIEWED,
       variables: {
         notificationIds: idList,
       },

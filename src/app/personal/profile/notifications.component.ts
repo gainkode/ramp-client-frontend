@@ -1,16 +1,20 @@
-import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProfileBaseFilter, NotificationsFilter } from 'src/app/model/filter.model';
 import { NotificationItem } from 'src/app/model/notification.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { PersonalNotificationListComponent } from './data/notification-list.component';
+import { Subscription } from 'rxjs';
+import { ProfileDataService } from 'src/app/services/profile.service';
+import { ErrorService } from 'src/app/services/error.service';
+import { UserNotification } from 'src/app/model/generated-models';
 
 @Component({
     selector: 'app-personal-notifications',
     templateUrl: './notifications.component.html',
     styleUrls: ['../../../assets/profile.scss', '../../../assets/button.scss']
 })
-export class PersonalNotificationsComponent {
+export class PersonalNotificationsComponent implements OnDestroy {
     private dataListPanel!: PersonalNotificationListComponent;
     @ViewChild('datalist') set dataList(panel: PersonalNotificationListComponent) {
         if (panel) {
@@ -26,15 +30,23 @@ export class PersonalNotificationsComponent {
     errorMessage = '';
     selectedNotification: NotificationItem | undefined = undefined;
 
+    private subscriptions: Subscription = new Subscription();
+
     constructor(
         private changeDetector: ChangeDetectorRef,
         private activeRoute: ActivatedRoute,
         private auth: AuthService,
+        private profileService: ProfileDataService,
+        private errorHandler: ErrorService,
         private router: Router) {
         this.filter.setData({
             unreadOnly: this.activeRoute.snapshot.params['unreadOnly'],
             search: this.activeRoute.snapshot.params['search']
         });
+    }
+
+    ngOnDestroy(): void {
+        this.subscriptions.unsubscribe();
     }
 
     onFilterUpdate(filter: ProfileBaseFilter): void {
@@ -57,17 +69,41 @@ export class PersonalNotificationsComponent {
     }
 
     showDetails(item: NotificationItem): void {
-        this.selectedNotification = item;
+        this.selectNotification(item);
         this.details = true;
-        this.lastItem = (this.dataListPanel.getLastItemId() === item.id);
     }
 
     nextItem(): void {
-        this.selectedNotification = this.dataListPanel.getNextItem(this.selectedNotification?.id ?? '');
-        this.lastItem = (this.dataListPanel.getLastItemId() === this.selectedNotification?.id);
+        this.selectNotification(this.dataListPanel.getNextItem(this.selectedNotification?.id ?? ''));
     }
-    
-    copyEmail(): void {
 
+    selectNotification(item: NotificationItem | undefined): void {
+        this.selectedNotification = item;
+        if (item) {
+            this.lastItem = (this.dataListPanel.getLastItemId() === item.id);
+            if (item.viewedStatus === false) {
+                this.setNotificationViewed(item.id);
+            }
+        } else {
+            this.lastItem = true;
+        }
+    }
+
+    private setNotificationViewed(id: string): void {
+        this.inProgress = true;
+        this.subscriptions.add(
+            this.profileService.makeNotificationsViewed([id]).subscribe(({ data }) => {
+                if (data) {
+                    const ids = data.makeNotificationsViewed as UserNotification[];
+                    if (ids.length > 0) {
+                        this.dataListPanel.removeItem(ids[0].userNotificationId);
+                    }
+                }
+                this.inProgress = false;
+            }, (error) => {
+                this.inProgress = false;
+                this.errorMessage = this.errorHandler.getError(error.message, `Unable to change notification status`);
+            })
+        );
     }
 }
