@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { AbstractControl, FormBuilder } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ProfileBaseFilter, WalletsFilter, WalletsFilterChip, WalletsFilterType } from 'src/app/model/filter.model';
+import { CurrencyView } from 'src/app/model/payment.model';
 
 @Component({
     selector: 'app-wallets-filter',
@@ -10,6 +11,7 @@ import { ProfileBaseFilter, WalletsFilter, WalletsFilterChip, WalletsFilterType 
 })
 export class WalletsFilterBarComponent implements OnInit, OnDestroy {
     @Input() data: WalletsFilter | undefined = undefined;
+    @Input() cryptoCurrencies: CurrencyView[] = [];
     @Output() update = new EventEmitter<ProfileBaseFilter>();
 
     private subscriptions: Subscription = new Subscription();

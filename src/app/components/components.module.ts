@@ -67,6 +67,7 @@ import { FormCardBoxComponent } from './common/controls/form-cardbox.component';
 import { NotificationsFilterBarComponent } from './filter-bars/notifications-bar.component';
 import { FormSearchBoxComponent } from './common/controls/form-searchbox.component';
 import { DeleteDialogBox } from './dialogs/delete-box.dialog';
+import { WalletsFilterBarComponent } from './filter-bars/wallets-bar.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -109,7 +110,7 @@ export class MaterialModule { }
         DeleteDialogBox,
         LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, CommonDialogBox, SideExpanderComponent,
         CreditCardComponent, TwoFaCodeComponent, NavPopupComponent, SideMenuComponent, LineBreakPipe, NumberFillPipe,
-        TransactionsFilterBarComponent, NotificationsFilterBarComponent,
+        TransactionsFilterBarComponent, WalletsFilterBarComponent, NotificationsFilterBarComponent,
         ProfileExchangeComponent, 
         ProfileQuickTransferComponent, ProfileInfoComponent, ProfileTwoFAComponent,
         ProfilePasswordComponent, ProfileVerificationComponent, ProfileContactsComponent, 
@@ -121,7 +122,7 @@ export class MaterialModule { }
         DeleteDialogBox,
         LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, CommonDialogBox, SideExpanderComponent,
         CreditCardComponent, TwoFaCodeComponent, NavPopupComponent, SideMenuComponent, LineBreakPipe, NumberFillPipe,
-        TransactionsFilterBarComponent, NotificationsFilterBarComponent,
+        TransactionsFilterBarComponent, WalletsFilterBarComponent, NotificationsFilterBarComponent,
         ProfileExchangeComponent, 
         ProfileQuickTransferComponent, ProfileInfoComponent, ProfileTwoFAComponent,
         ProfilePasswordComponent, ProfileVerificationComponent, ProfileContactsComponent,
