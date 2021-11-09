@@ -22,6 +22,20 @@
             </td>
         </ng-container>
 
+        <!-- Level icon -->
+        <ng-container matColumnDef="level">
+            <th mat-header-cell *matHeaderCellDef
+                class="__profile-table-column __profile-notifications-table-column-level">
+                <span class="__profile-table-header">
+                </span>
+            </th>
+            <td mat-cell *matCellDef="let element" class="__profile-notifications-table-cell-plain">
+                <div class="__profile-notifications-table-cell-icon-box">
+                    <img class="__profile-notifications-table-cell-level-icon" [src]="element.getLevelIcon('../../../assets')">
+                </div>
+            </td>
+        </ng-container>
+
         <!-- Viewed icon -->
         <ng-container matColumnDef="viewedIcon">
             <th mat-header-cell *matHeaderCellDef
@@ -30,13 +44,8 @@
                 </span>
             </th>
             <td mat-cell *matCellDef="let element" class="__profile-notifications-table-cell-plain">
-                <div *ngIf="!element.viewedStatus" class="__profile-notifications-table-cell-icon-box">
-                    <img class="__profile-notifications-table-cell-viewed-icon"
-                        src="../../../assets/navigation/__temp_notification_new.svg">
-                </div>
-                <div *ngIf="element.viewedStatus" class="__profile-notifications-table-cell-icon-box">
-                    <img class="__profile-notifications-table-cell-viewed-icon"
-                        src="../../../assets/navigation/__temp_notification_viewed.svg">
+                <div class="__profile-notifications-table-cell-icon-box">
+                    <img class="__profile-notifications-table-cell-viewed-icon" [src]="element.getViewedIcon('../../../assets')">
                 </div>
             </td>
         </ng-container>
@@ -51,7 +60,7 @@
             </th>
             <td mat-cell *matCellDef="let element" class="__profile-notifications-table-cell-plain">
                 <div class="__profile-notifications-table-cell-data">
-                    {{element.createdDate}}
+                    {{element.created}}
                 </div>
             </td>
         </ng-container>
@@ -66,7 +75,7 @@
             </th>
             <td mat-cell *matCellDef="let element" class="__profile-notifications-table-cell-plain">
                 <div class="__profile-notifications-table-cell-data">
-                    {{element.viewedDate}}
+                    {{element.viewed}}
                 </div>
             </td>
         </ng-container>
@@ -82,21 +91,6 @@
             <td mat-cell *matCellDef="let element" class="__profile-notifications-table-cell-plain">
                 <div class="__profile-notifications-table-cell-data">
                     {{element.notificationCode}}
-                </div>
-            </td>
-        </ng-container>
-
-        <!-- Id -->
-        <ng-container matColumnDef="id">
-            <th mat-header-cell mat-sort-header *matHeaderCellDef [disabled]="recent"
-                class="__profile-table-column __profile-notifications-table-column-id">
-                <span class="__profile-table-header">
-                    Notification ID
-                </span>
-            </th>
-            <td mat-cell *matCellDef="let element" class="__profile-notifications-table-cell-plain">
-                <div class="__profile-notifications-table-cell-data">
-                    {{element.id}}
                 </div>
             </td>
         </ng-container>

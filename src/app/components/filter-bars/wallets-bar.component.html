@@ -1,0 +1,28 @@
+<form [formGroup]="filterForm">
+    <div class="__tool-bar-container">
+        <div class="__tool-bar-filter-container">
+            <div class="__tool-bar-double-sided-container">
+                <div class="__tool-bar-double-sided-data-box">
+                    <div class="__tool-bar-block">
+                        <div class="__tool-bar-icon-box">
+                            <img style="width:24px; height:24px;" src="assets/calendar_default.svg" alt="">
+                        </div>
+                    </div>
+                    <div class="__tool-bar-block">
+                        <div class="__tool-bar-label">
+                            Show unread only
+                        </div>
+                    </div>
+                    <div class="__tool-bar-block">
+                        <div class="__toggle-switch">
+                            <input type="checkbox" id="toggle-button" class="__toggle-switch-slider" formControlName="unreadOnly">
+                        </div>
+                    </div>
+                </div>
+                <div class="__tool-bar-double-sided-data-box">
+                    <app-form-searchbox [maxlength]="50" formControlName="search" (onSearch)="onSearch()"></app-form-searchbox>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

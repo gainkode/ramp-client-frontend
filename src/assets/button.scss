@@ -34,9 +34,14 @@
 
 .__main-button:disabled {
     background: $color_purple_50;
-    box-shadow: none;
-    color: $color_purple_200;
-    cursor: default;
+}
+
+.__main-button-danger {
+    background: $color_pink_500;
+}
+
+.__main-button-danger:hover {
+    background: $color_pink_300;
 }
 
 .__borderless-button {

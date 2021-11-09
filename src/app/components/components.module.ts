@@ -50,7 +50,6 @@ import { SignupInfoPanelComponent } from './auth/signup-info.component';
 
 import { ProfileExchangeComponent } from './profile/profile-exchange.component';
 import { ProfileQuickTransferComponent } from './profile/profile-quick-transfer.component';
-import { ProfileTransactionsComponent } from './profile/profile-transactions.component';
 import { ProfileInfoComponent } from './profile/profile-info.component';
 import { ProfileTwoFAComponent } from './profile/profile-two-fa.component';
 import { ProfilePasswordComponent } from './profile/profile-password.component';
@@ -67,6 +66,7 @@ import { FormPasswordBoxComponent } from './common/controls/form-password.compon
 import { FormCardBoxComponent } from './common/controls/form-cardbox.component';
 import { NotificationsFilterBarComponent } from './filter-bars/notifications-bar.component';
 import { FormSearchBoxComponent } from './common/controls/form-searchbox.component';
+import { DeleteDialogBox } from './dialogs/delete-box.dialog';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -106,22 +106,24 @@ export class MaterialModule { }
     declarations: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
         FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent, FormSearchBoxComponent,
         CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, 
+        DeleteDialogBox,
         LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, CommonDialogBox, SideExpanderComponent,
         CreditCardComponent, TwoFaCodeComponent, NavPopupComponent, SideMenuComponent, LineBreakPipe, NumberFillPipe,
         TransactionsFilterBarComponent, NotificationsFilterBarComponent,
         ProfileExchangeComponent, 
-        ProfileQuickTransferComponent, ProfileTransactionsComponent, ProfileInfoComponent, ProfileTwoFAComponent,
+        ProfileQuickTransferComponent, ProfileInfoComponent, ProfileTwoFAComponent,
         ProfilePasswordComponent, ProfileVerificationComponent, ProfileContactsComponent, 
         ProfileContactEditorComponent, ProfileWithdrawalComponent,
         ProfileAssetsComponent, ProfileLastExchangesComponent],
     exports: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
         FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent, FormSearchBoxComponent,
         CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, 
+        DeleteDialogBox,
         LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, CommonDialogBox, SideExpanderComponent,
         CreditCardComponent, TwoFaCodeComponent, NavPopupComponent, SideMenuComponent, LineBreakPipe, NumberFillPipe,
         TransactionsFilterBarComponent, NotificationsFilterBarComponent,
         ProfileExchangeComponent, 
-        ProfileQuickTransferComponent, ProfileTransactionsComponent, ProfileInfoComponent, ProfileTwoFAComponent,
+        ProfileQuickTransferComponent, ProfileInfoComponent, ProfileTwoFAComponent,
         ProfilePasswordComponent, ProfileVerificationComponent, ProfileContactsComponent,
         ProfileContactEditorComponent, ProfileWithdrawalComponent,
         ProfileAssetsComponent, ProfileLastExchangesComponent],

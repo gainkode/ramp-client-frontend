@@ -7,6 +7,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -29,7 +30,7 @@ import { PersonalHomeComponent } from './profile/home.component';
 import { PersonalMyAccountComponent } from './profile/my-account.component';
 import { PersonalMyContactsComponent } from './profile/my-contacts.component';
 import { PersonalTransactionsComponent } from './profile/transactions.component';
-import { PersonalMyWalletsComponent } from './profile/my-wallets.component';
+import { PersonalWalletsComponent } from './profile/wallets.component';
 import { PersonalTransactionDetailsComponent } from './profile/details/transaction-details.component';
 import { PersonalLoginComponent } from './auth/login.component';
 import { PersonalRestoreComponent } from './auth/restore.component';
@@ -54,7 +55,7 @@ const routing = RouterModule.forChild([
         component: PersonalComponent,
         children: [
             { path: 'home', component: PersonalHomeComponent, canActivate: [PersonalGuard] },
-            { path: 'wallets', component: PersonalMyWalletsComponent, canActivate: [PersonalGuard] },
+            { path: 'wallets', component: PersonalWalletsComponent, canActivate: [PersonalGuard] },
             { path: 'contactlist', component: PersonalMyContactsComponent, canActivate: [PersonalGuard] },
             { path: 'transactions', component: PersonalTransactionsComponent, canActivate: [PersonalGuard] },
             { path: 'swap', component: PersonalSwapComponent, canActivate: [PersonalGuard] },
@@ -82,6 +83,7 @@ const routing = RouterModule.forChild([
 const modules = [
     MatTabsModule,
     MatCardModule,
+    MatDialogModule,
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
@@ -116,7 +118,7 @@ export class MaterialModule { }
         // Profile
         PersonalComponent,
         PersonalHomeComponent,
-        PersonalMyWalletsComponent,
+        PersonalWalletsComponent,
         PersonalTransactionsComponent, PersonalTransactionDetailsComponent,
         PersonalMyContactsComponent,
         PersonalSwapComponent,

@@ -167,7 +167,15 @@
 }
 
 .__tool-bar-container {
-    margin: 16px 24px 24px 24px;
+    margin: 40px 24px 24px 24px;
+
+    // @media (max-width: $md1 + px) {
+    //     margin: 44px 24px 24px 24px;
+    // }
+
+    @media (max-width: $md1 + px) {
+        margin: 24px 24px 24px 24px;
+    }
 }
 
 .__tool-bar-filter-container {

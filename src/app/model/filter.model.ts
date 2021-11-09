@@ -1,5 +1,5 @@
 import { TransactionSource, TransactionType } from "./generated-models";
-import { TransactionSourceList, UserTransactionTypeList } from "./payment.model";
+import { CurrencyView, TransactionSourceList, UserTransactionTypeList } from "./payment.model";
 import { getFormattedUtcDate } from 'src/app/utils/utils';
 
 export interface ProfileBaseFilter {
@@ -15,6 +15,12 @@ export enum TransactionsFilterType {
     Sender = 'Sender'
 }
 
+export enum WalletsFilterType {
+    None = 'None',
+    Currency = 'Currency',
+    ZeroBalance = 'ZeroBalance'
+}
+
 export class TransactionsFilter implements ProfileBaseFilter {
     walletTypes: TransactionSource[] = [];
     transactionTypes: TransactionType[] = [];
@@ -26,23 +32,15 @@ export class TransactionsFilter implements ProfileBaseFilter {
         this.transactionTypes = [];
         if (data.wallets) {
             const selectedWallets = data.wallets.split(',');
-            selectedWallets.forEach(w => {
-                this.walletTypes.push(w as TransactionSource);
-            });
+            selectedWallets.forEach(w => { this.walletTypes.push(w as TransactionSource); });
         } else {
-            TransactionSourceList.forEach(w => {
-                this.walletTypes.push(w.id);
-            });
+            TransactionSourceList.forEach(w => { this.walletTypes.push(w.id); });
         }
         if (data.types) {
             const selectedTypes = data.types.split(',');
-            selectedTypes.forEach(w => {
-                this.transactionTypes.push(w as TransactionType);
-            });
+            selectedTypes.forEach(w => { this.transactionTypes.push(w as TransactionType); });
         } else {
-            UserTransactionTypeList.forEach(w => {
-                this.transactionTypes.push(w.id);
-            });
+            UserTransactionTypeList.forEach(w => { this.transactionTypes.push(w.id); });
         }
         this.transactionDate = getFormattedUtcDate(data.date ?? '');
         this.sender = data.sender ?? '';
@@ -117,4 +115,45 @@ export class NotificationsFilter implements ProfileBaseFilter {
         };
         return result;
     }
+}
+
+export class WalletsFilter implements ProfileBaseFilter {
+    zeroBalance = false;
+    currencies: string[] = [];
+
+    setData(data: any): void {
+        this.zeroBalance = false;
+        this.currencies = [];
+        if (data.balance) {
+            this.zeroBalance = (data.balance === 'true');
+        }
+        if (data.currencies) {
+            const selectedCurrencies = data.currencies.split(',');
+            selectedCurrencies.forEach(w => { this.currencies.push((w as string).toUpperCase()); });
+        }
+    }
+
+    getParameters(): {} {
+        let currenciesFilter = '';
+        if (this.currencies.length > 0) {
+            let i = 0;
+            this.currencies.forEach(t => {
+                currenciesFilter += t.toString();
+                i++;
+                if (i < this.currencies.length) {
+                    currenciesFilter += ',';
+                }
+            });
+        }
+        const result = {
+            ...(this.zeroBalance && { balance: this.zeroBalance }),
+            ...(currenciesFilter !== '' && { currencies: currenciesFilter })
+        };
+        return result;
+    }
+}
+
+export class WalletsFilterChip {
+    filterType: WalletsFilterType = WalletsFilterType.None;
+    name = '';
 }

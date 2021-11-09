@@ -1,0 +1,10 @@
+<h1 mat-dialog-title>{{data.title}}</h1>
+<div class="__dialog-message" mat-dialog-content>{{data.message}}</div>
+<mat-dialog-actions align="center">
+    <button class="__outlined-button" type="button" (click)="onClose()">
+        CANCEL
+    </button>
+    <button class="__main-button __main-button-danger __button-wide-separator" [mat-dialog-close]="deleteAccept" cdkFocusInitial>
+        DELETE
+    </button>
+</mat-dialog-actions>

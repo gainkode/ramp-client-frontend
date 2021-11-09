@@ -5,12 +5,9 @@ import { UserNotificationCodeList } from './payment.model';
 export class NotificationItem {
     id = '';
     userId = '';
-    notificationType = '';
+    level = '';
     created = '';
-    createdDate = '';
-    viewedDate = '';
-    createdTime = '';
-    viewedTime = '';
+    viewed = '';
     text = '';
     title = '';
     userNotificationTypeCode = '';
@@ -22,14 +19,12 @@ export class NotificationItem {
             const datepipe: DatePipe = new DatePipe('en-US');
 
             this.created = (data.created) ? datepipe.transform(data.created, 'dd MMM YYYY HH:mm:ss') as string : '';
-            this.createdDate = (data.created) ? datepipe.transform(data.created, 'dd MMM YYYY') as string : '';
-            this.viewedDate = (data.viewed) ? datepipe.transform(data.viewed, 'dd MMM YYYY') as string : '';
-            this.createdTime = (data.created) ? datepipe.transform(data.created, 'HH:mm:ss') as string : '';
-            this.viewedTime = (data.viewed) ? datepipe.transform(data.viewed, 'HH:mm:ss') as string : '';
+            this.viewed = (data.viewed) ? datepipe.transform(data.viewed, 'dd MMM YYYY HH:mm:ss') as string : '';
 
             this.userId = data.userId as string;
             this.text = data.text as string;
             this.title = data.title ?? 'Notification';
+            this.level = data.userNotificationLevel as string ?? '';
             this.userNotificationTypeCode = data.userNotificationTypeCode;
         }
     }
@@ -39,7 +34,7 @@ export class NotificationItem {
     }
 
     get viewedStatus(): boolean {
-        return this.viewedDate !== '';
+        return this.viewed !== '';
     }
 
     getShortText(len: number): string {
@@ -50,5 +45,31 @@ export class NotificationItem {
             }
         }
         return result;
+    }
+
+    getViewedIcon(path: string): string {
+        return `${path}/navigation/${(this.viewedStatus) ? '__temp_notification_viewed' : '__temp_notification_new'}.svg`;
+    }
+
+    getLevelIcon(path: string): string {
+        let levelName = '';
+        switch (this.level) {
+            case 'Request':
+                levelName = 'request';
+                break;
+            case 'Debug':
+                levelName = 'debug';
+                break;
+            case 'Info':
+                levelName = 'info';
+                break;
+            case 'Warning':
+                levelName = 'warning';
+                break;
+            case 'Error':
+                levelName = 'error';
+                break;
+        }
+        return `${path}/navigation/${levelName}_24_24.svg`;
     }
 }
