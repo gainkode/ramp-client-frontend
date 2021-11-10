@@ -37,6 +37,11 @@ export class NotificationItem {
         return this.viewed !== '';
     }
 
+    setViewed(dt: Date): void {
+        const datepipe: DatePipe = new DatePipe('en-US');
+        this.viewed = datepipe.transform(dt, 'dd MMM YYYY HH:mm:ss') ?? '';
+    }
+
     getShortText(len: number): string {
         let result = '';
         if (this.text) {

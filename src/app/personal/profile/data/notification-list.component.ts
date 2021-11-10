@@ -195,8 +195,12 @@ export class PersonalNotificationListComponent implements OnDestroy, AfterViewIn
         );
     }
 
-    removeItem(id: string) {
-        this.notifications.splice(this.notifications.findIndex(x => x.id === id), 1);
+    setViewed(id: string, viewed: Date) {
+        if (this.filter.unreadOnly) {
+            this.loadNotifications();
+        } else {
+            this.notifications.find(x => x.id === id)?.setViewed(viewed);
+        }
     }
 
     private removeNotifications(ids: string[]): void {

@@ -94,9 +94,10 @@ export class PersonalNotificationsComponent implements OnDestroy {
         this.subscriptions.add(
             this.profileService.makeNotificationsViewed([id]).subscribe(({ data }) => {
                 if (data) {
-                    const ids = data.makeNotificationsViewed as UserNotification[];
-                    if (ids.length > 0) {
-                        this.dataListPanel.removeItem(ids[0].userNotificationId);
+                    const resultList = data.makeNotificationsViewed as UserNotification[];
+                    if (resultList.length > 0) {
+                        const notification = resultList[0];
+                        this.dataListPanel.setViewed(notification.userNotificationId, notification.viewed);
                     }
                 }
                 this.inProgress = false;

@@ -264,6 +264,7 @@ const MAKE_NOTIFICATIONS_VIEWED = gql`
       notificationIds: $notificationIds
     ) {
       userNotificationId
+      viewed
     }
   }
 `;
