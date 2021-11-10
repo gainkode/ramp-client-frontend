@@ -36,7 +36,6 @@ export class PersonalWalletListComponent implements OnDestroy {
     load(val: WalletsFilter): void {
         this.filter = val;
         this.loadWallets();
-        //this.loadFakeWallets();
     }
 
     ngOnDestroy(): void {
@@ -52,6 +51,7 @@ export class PersonalWalletListComponent implements OnDestroy {
         } else {
             this.loading = true;
             this.onProgress.emit(true);
+            const userFiat = this.auth.user?.defaultFiatCurrency ?? 'EUR';
             this.subscriptions.add(
                 walletsData.valueChanges.subscribe(({ data }) => {
                     const dataList = data.myWallets as AssetAddressShortListResult;
@@ -59,7 +59,7 @@ export class PersonalWalletListComponent implements OnDestroy {
                         this.walletCount = dataList?.count as number;
                         if (this.walletCount > 0) {
                             console.log(dataList?.list);
-                            this.wallets = dataList?.list?.map((val) => new WalletItem(val)) as WalletItem[];
+                            this.wallets = dataList?.list?.map((val) => new WalletItem(val, userFiat)) as WalletItem[];
                         }
                     }
                     this.onProgress.emit(false);
@@ -77,29 +77,6 @@ export class PersonalWalletListComponent implements OnDestroy {
         }
     }
 
-    private loadFakeWallets(): void {
-        this.walletCount = 3;
-        this.wallets = [];
-        
-        this.wallets.push({
-            address: 'address 1',
-            addressFormat: 'BITCOIN',
-            asset: 'BTC',
-            name: 'Bitcoin HODL',
-            total: 0.125471,
-            totalFiat: '$25,000.00'
-        } as WalletItem);
-
-        this.wallets.push({
-            address: 'address 2',
-            addressFormat: 'BITCOIN',
-            asset: 'BTC',
-            name: 'Bitcoin HODL',
-            total: 0.001615,
-            totalFiat: '$5,000.00'
-        } as WalletItem);
-    }
-
     showDetailsPanel(item: WalletItem): void {
         const c = new ProfileItemContainer();
         c.container = ProfileItemContainerType.Wallet;
@@ -109,5 +86,9 @@ export class PersonalWalletListComponent implements OnDestroy {
 
     newWallet(): void {
         console.log('newWallet()');
+    }
+
+    showWallet(id: string): void {
+        console.log(`showWallet(${id})`);
     }
 }

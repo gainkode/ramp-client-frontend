@@ -1,3 +1,4 @@
+import { getCurrencySign } from "../utils/utils";
 import { AssetAddressShort } from "./generated-models";
 
 export class WalletItem {
@@ -7,19 +8,21 @@ export class WalletItem {
   addressFormat = '';
   asset = '';
   total = 0;
-  totalFiat = '';
+  totalFiat = 0;
   name = '';
 
   private pIconUrl = '';
+  private fiat = '';
 
-  constructor(data: AssetAddressShort | null) {
+  constructor(data: AssetAddressShort | null, defaultFiat: string) {
     if (data) {
-      this.id = data.assetId ?? '';
+      this.fiat = defaultFiat;
+      this.id = data.originalId ?? '';
       this.address = data.address ?? '';
       this.addressFormat = data.addressFormat ?? '';
       this.asset = data.assetId ?? '';
       this.total = data.total ?? 0;
-      this.totalFiat = '$UNKNOWN';
+      this.totalFiat = 0;
       this.name = 'UNKNOWN';
       if (this.asset !== '') {
         this.pIconUrl = `assets/svg-crypto/${this.asset.toLowerCase()}.svg`;
@@ -29,5 +32,9 @@ export class WalletItem {
 
   get icon(): string {
     return this.pIconUrl;
+  }
+
+  get totalValue(): string {
+    return `${getCurrencySign(this.fiat)}${this.totalFiat.toFixed(2)}`;
   }
 }
