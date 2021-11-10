@@ -1,0 +1,46 @@
+<div>
+    <div *ngIf="walletCount===0 && loading === false" class="__profile-grid-table-container-default">
+        <div class="__profile-grid-table-new-item-container" (click)="newWallet()">
+            <h1 class="__profile-grid-table-new-item-title">+</h1>
+            <h2 class="__profile-grid-table-new-item-text">Add new wallet</h2>
+        </div>
+    </div>
+    <div *ngIf="walletCount>0" class="__profile-grid-table-container">
+        <div *ngFor="let wallet of wallets" class="__profile-grid-table-item __profile-grid-table-item-data">
+            <div class="__profile-wallet-item-container">
+                <div class="__profile-wallet-item-data-container">
+                    <div class="__profile-wallet-item-value-area">
+                        <div class="__profile-wallet-item-crypto">
+                            {{wallet.total}} {{wallet.asset}}
+                        </div>
+                        <div class="__profile-wallet-item-fiat">
+                            {{wallet.totalFiat}}
+                        </div>
+                    </div>
+                    <div class="__profile-wallet-item-icon-box">
+                        <img class="__profile-wallet-item-icon" [src]="wallet.icon">
+                    </div>
+                </div>
+                <div class="__profile-wallet-item-title-area">
+                    <div class="__profile-wallet-item-value-area">
+                        <div class="__profile-wallet-item-title">
+                            {{wallet.name}}
+                        </div>
+                        <div class="__profile-wallet-item-subtitle">
+                            {{wallet.addressFormat}} - {{wallet.asset}}
+                        </div>
+                    </div>
+                </div>
+                <div class="__profile-wallet-item-buton-box">
+                    <button class="__toggle-button">Show wallet</button>
+                </div>
+            </div>
+        </div>
+        <div class="__profile-grid-table-item __profile-grid-table-item-new" (click)="newWallet()">
+            <div style="height: 100%;display: flex;flex-direction: column;justify-content: center;align-items: center;">
+                <h1 class="__profile-grid-table-new-item-title __profile-grid-table-new-item-title-mini">+</h1>
+                <h2 class="__profile-grid-table-new-item-text __profile-grid-table-new-item-text-mini">Add new wallet</h2>
+            </div>
+        </div>
+    </div>
+</div>

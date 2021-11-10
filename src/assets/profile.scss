@@ -373,6 +373,103 @@
     margin: 0px 24px 24px 24px;
 }
 
+.__profile-grid-table-container-default {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-end;
+    min-height: 400px;
+    width: 100%;
+
+    @media (max-width: $md1 + px) {
+        min-height: 350px;
+    }
+}
+
+.__profile-grid-table-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: auto;
+    justify-content: start;
+    align-content: start;
+    justify-items: stretch;
+    align-items: stretch;
+    grid-auto-flow: row;
+    column-gap: 25px;
+    row-gap: 26px;
+    width: 100%;
+
+    @media (max-width: $md1 + px) {
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+}
+
+.__profile-grid-table-new-item-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.__profile-grid-table-new-item-title {
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 64px;
+    line-height: 32px;
+
+    text-align: center;
+    color: $color_main_blue_800;
+}
+
+.__profile-grid-table-new-item-title-mini {
+    font-size: 56px;
+}
+
+.__profile-grid-table-new-item-text {
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24px;
+    line-height: 56px;
+
+    text-align: center;
+    color: $color_main_blue_800;
+}
+
+.__profile-grid-table-new-item-text-mini {
+    font-size: 18px;
+    line-height: 35px;
+}
+
+.__profile-grid-table-item {
+    height: 184px;
+    background-color: $color_white;
+    max-width: 300px;
+}
+
+.__profile-grid-table-item-new {
+    border: 2px solid $color_main_blue_800;
+    box-sizing: border-box;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-items: flex-end;
+    cursor: pointer;
+}
+
+.__profile-grid-table-item-data {
+    box-shadow: 0px 3px 5px rgba(208, 207, 207, 0.2), 0px 5px 8px rgba(208, 207, 207, 0.14), 0px 1px 14px rgba(208, 207, 207, 0.12);
+    border-radius: 8px;
+}
+
+
+
+
+
+
 .__profile-grid-container {
     display: flex;
     flex-direction: row;

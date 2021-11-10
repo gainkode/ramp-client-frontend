@@ -45,6 +45,7 @@ import { PersonalTransactionListComponent } from './profile/data/transaction-lis
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { PersonalNotificationsComponent } from './profile/notifications.component';
 import { PersonalNotificationListComponent } from './profile/data/notification-list.component';
+import { PersonalWalletListComponent } from './profile/data/wallet-list.component';
 
 const routing = RouterModule.forChild([
     // Main page
@@ -124,7 +125,8 @@ export class MaterialModule { }
         PersonalSwapComponent,
         PersonalNotificationsComponent,
         // Data containers
-        PersonalBalanceChartComponent, PersonalBalanceListComponent, PersonalTransactionListComponent, PersonalNotificationListComponent,
+        PersonalBalanceChartComponent, PersonalBalanceListComponent, PersonalTransactionListComponent, PersonalWalletListComponent,
+        PersonalNotificationListComponent,
         // Obsolete pages
         ProfileMainPersonalComponent, KycPersonalComponent, PersonalMyAccountComponent],
     providers: [PersonalGuard],

@@ -87,6 +87,32 @@ query GetTransactionStatuses {
 }
 `;
 
+const GET_MY_WALLETS = gql`
+  query MyWallets(
+    $orderBy: [OrderBy!]
+  ) {
+    myWallets(
+      orderBy: $orderBy
+    ) {
+      count
+      list {
+        address
+        legacyAddress
+        description
+        type
+        addressFormat
+        assetId
+        originalId
+        total
+        available
+        pending
+        lockedAmount
+        vaultId
+      }
+    }
+  }
+`;
+
 const GET_MY_PROFIT = gql`
 query MyProfit($currencyTo: String, $period: UserBalanceHistoryPeriod!) {
   myProfit(
@@ -356,6 +382,23 @@ export class ProfileDataService {
     if (this.apollo.client !== undefined) {
       return this.apollo.watchQuery<any>({
         query: GET_TRANSACTION_STATUSES,
+        fetchPolicy: 'network-only',
+      });
+    } else {
+      return null;
+    }
+  }
+
+  getMyWallets(): QueryRef<any, EmptyObject> | null {
+    if (this.apollo.client !== undefined) {
+      const orderFields = [
+        { orderBy: 'total', desc: true }
+      ];
+      return this.apollo.watchQuery<any>({
+        query: GET_MY_WALLETS,
+        variables: {
+          orderBy: orderFields,
+        },
         fetchPolicy: 'network-only',
       });
     } else {
