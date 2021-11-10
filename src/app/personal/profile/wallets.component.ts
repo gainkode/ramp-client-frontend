@@ -40,7 +40,7 @@ export class PersonalWalletsComponent implements OnInit, OnDestroy {
         private router: Router) {
         this.filter.setData({
             currencies: this.activeRoute.snapshot.params['currencies'],
-            zeroBalance: this.activeRoute.snapshot.params['balance']
+            balance: this.activeRoute.snapshot.params['balance']
         });
     }
 

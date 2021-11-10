@@ -120,6 +120,7 @@ export class NotificationsFilter implements ProfileBaseFilter {
 export class WalletsFilter implements ProfileBaseFilter {
     zeroBalance = false;
     currencies: string[] = [];
+    currenciesSize = 0;
 
     setData(data: any): void {
         this.zeroBalance = false;
@@ -135,7 +136,7 @@ export class WalletsFilter implements ProfileBaseFilter {
 
     getParameters(): {} {
         let currenciesFilter = '';
-        if (this.currencies.length > 0) {
+        if (this.currencies.length > 0 && this.currencies.length < this.currenciesSize) {
             let i = 0;
             this.currencies.forEach(t => {
                 currenciesFilter += t.toString();
@@ -147,7 +148,7 @@ export class WalletsFilter implements ProfileBaseFilter {
         }
         const result = {
             ...(this.zeroBalance && { balance: this.zeroBalance }),
-            ...(currenciesFilter !== '' && { currencies: currenciesFilter })
+            ...(currenciesFilter !== '' && { currencies: currenciesFilter.toLowerCase() })
         };
         return result;
     }

@@ -1,4 +1,4 @@
-<form [formGroup]="filterForm">
+<form [formGroup]="filterForm" (ngSubmit)="onSubmit()">
     <div class="__tool-bar-container">
         <div class="__tool-bar-filter-container">
             <div class="__tool-bar-double-sided-container">
@@ -8,6 +8,28 @@
                             Filter coin
                         </div>
                     </div>
+                    <div class="__tool-bar-block __tool-bar-data-block">
+                        <mat-select formControlName="currencies" multiple style="margin: 3px 0px 0px 0px;">
+                            <mat-select-trigger>
+                                <span class="__mat-select-item">
+                                    {{selectedCurrency}}
+                                </span>
+                            </mat-select-trigger>
+                            <mat-option *ngFor="let item of cryptoList" [value]="item.id" style="height: 32px;">
+                                <div class="__tool-bar-image-combo-item">
+                                    <img class="__tool-bar-image-combo-item-img" [src]="item.img">
+                                    <span class="__tool-bar-image-combo-item-text">
+                                        {{item.title}}
+                                    </span>
+                                </div>
+                            </mat-option>
+                        </mat-select>
+                    </div>
+                    <div class="__tool-bar-label"></div> <!-- Space -->
+                    <!-- Search button -->
+                    <button class="__toggle-like-button" type="submit">Search</button>
+                    <div class="__tool-bar-label"></div> <!-- Space -->
+                    <button class="__toggle-like-button" type="button" (click)="resetFilter()">Clear all</button>
                 </div>
                 <div class="__tool-bar-double-sided-data-box">
                     <div class="__tool-bar-block">
@@ -17,11 +39,22 @@
                     </div>
                     <div class="__tool-bar-block">
                         <div class="__toggle-switch">
-                            <input type="checkbox" id="toggle-button" class="__toggle-switch-slider" formControlName="zeroBalance">
+                            <input type="checkbox" id="toggle-button" class="__toggle-switch-slider"
+                                formControlName="zeroBalance">
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div class="__tool-bar-filter-cloud">
+            <mat-chip-list aria-label="Wallet filter cloud">
+                <mat-chip style="font-size: 14px;margin: 0px 18px 0px 0px;" *ngFor="let chip of chips"
+                    selectable="false" removable="true" (removed)="removeChip(chip)">
+                    {{chip.name}}
+                    <mat-icon matChipRemove>cancel</mat-icon>
+                </mat-chip>
+            </mat-chip-list>
         </div>
     </div>
 </form>

@@ -169,10 +169,6 @@
 .__tool-bar-container {
     margin: 40px 24px 24px 24px;
 
-    // @media (max-width: $md1 + px) {
-    //     margin: 44px 24px 24px 24px;
-    // }
-
     @media (max-width: $md1 + px) {
         margin: 24px 24px 24px 24px;
     }
@@ -284,7 +280,28 @@ input.__tool-bar-text-box-error:focus {
     opacity: 0.3;
 }
 
+.__tool-bar-image-combo-item {
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
 
+.__tool-bar-image-combo-item-img {
+    margin: 0px 4px 0px 8px;
+    width: 16px;
+    height: 16px;
+}
+
+.__tool-bar-image-combo-item-text {
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 15px;
+    color: $color_purple_900_text;
+}
 
 
 
