@@ -1194,7 +1194,9 @@ export enum UserActionType {
   Exchange = 'exchange',
   System = 'system',
   CancelTransaction = 'cancelTransaction',
-  ChangeRiskAlertSettings = 'changeRiskAlertSettings'
+  ChangeRiskAlertSettings = 'changeRiskAlertSettings',
+  CreateApiKey = 'createApiKey',
+  DeleteApiKey = 'deleteApiKey'
 }
 
 export type SupportTicketListResult = {
@@ -1543,10 +1545,15 @@ export type AssetAddressShort = {
   assetId?: Maybe<Scalars['String']>;
   originalId?: Maybe<Scalars['String']>;
   total?: Maybe<Scalars['Float']>;
+  totalEur?: Maybe<Scalars['Float']>;
+  totalFiat?: Maybe<Scalars['Float']>;
   available?: Maybe<Scalars['Float']>;
+  availableEur?: Maybe<Scalars['Float']>;
+  availableFiat?: Maybe<Scalars['Float']>;
   pending?: Maybe<Scalars['Float']>;
   lockedAmount?: Maybe<Scalars['Float']>;
   vaultId?: Maybe<Scalars['String']>;
+  vaultName?: Maybe<Scalars['String']>;
 };
 
 export type AssetAddressListResult = {
@@ -1565,7 +1572,11 @@ export type AssetAddress = {
   assetId?: Maybe<Scalars['String']>;
   originalId?: Maybe<Scalars['String']>;
   total?: Maybe<Scalars['Float']>;
+  totalEur?: Maybe<Scalars['Float']>;
+  totalFiat?: Maybe<Scalars['Float']>;
   available?: Maybe<Scalars['Float']>;
+  availableEur?: Maybe<Scalars['Float']>;
+  availableFiat?: Maybe<Scalars['Float']>;
   pending?: Maybe<Scalars['Float']>;
   lockedAmount?: Maybe<Scalars['Float']>;
   vaultId?: Maybe<Scalars['String']>;

@@ -42,6 +42,33 @@
     margin: 8px 0px;
 }
 
+.__profile-details-link-block {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    
+    margin: 18px 0px;
+}
+
+.__profile-details-item-title-block {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    
+    margin: 8px 0px 0px 0px;
+}
+
+.__profile-details-item-value-block {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    
+    margin: 0px 0px 8px 0px;
+}
+
 .__profile-details-item-title {
     width: 140px;
     min-width: 140px;
@@ -49,7 +76,7 @@
     
     font-family: $font_main;
     font-style: normal;
-    font-weight: normal;
+    font-weight: 300;
     font-size: 14px;
     line-height: 28px;
     color: $color_purple_900_text;
@@ -67,6 +94,10 @@
     color: $color_purple_900_text;
 }
 
+.__profile-details-item-single-value {
+    margin: 0px;
+}
+
 .__profile-details-item-error {
     color: $color_pink_500;
 }
@@ -81,6 +112,7 @@
     width: 100%;
     height: 28px;
     display: flex;
+    justify-content: flex-start;
     flex-direction: row-reverse;
 }
 
@@ -91,32 +123,46 @@
     font-weight: normal;
     font-size: 12px;
     line-height: 14px;
-    text-align: right;
     color: $color_purple_900_text;
 }
 
-a.__profile-details-footer-link:link {
+a.__profile-details-link:link {
     font-family: $font_main;
     font-style: normal;
     font-weight: normal;
     font-size: 14px;
     line-height: 28px;
-    text-align: right;
-    color: $color_pink_500;
+    color: $color_main_blue_800;
     text-decoration: none;
 }
     
-a.__profile-details-footer-link:hover {
-    color: $color_pink_700;
+a.__profile-details-link:hover {
+    color: $color_main_blue_600;
     text-decoration: underline;
 }
 
-a.__profile-details-footer-link:visited {
-    color: $color_pink_500;
+a.__profile-details-link:visited {
+    color: $color_main_blue_800;
     text-decoration: none;
 }
 
-a.__profile-details-footer-link:active {
-    color: $color_pink_900;
+a.__profile-details-link:active {
+    color: $color_main_blue_800;
     text-decoration: underline;
+}    
+
+a.__profile-details-link-accent:link {
+    color: $color_pink_500;
+}
+    
+a.__profile-details-link-accent:hover {
+    color: $color_pink_700;
+}
+
+a.__profile-details-link-accent:visited {
+    color: $color_pink_500;
+}
+
+a.__profile-details-link-accent:active {
+    color: $color_pink_900;
 }    

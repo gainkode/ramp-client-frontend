@@ -1,0 +1,98 @@
+<div class="__profile-details-container">
+    <div class="__profile-details-title">
+        {{wallet?.name}}
+    </div>
+    <div class="__profile-details-data-container">
+        <div class="__profile-details-data-area">
+            <!-- Name -->
+            <div class="__profile-details-item-block">
+                <div class="__profile-details-item-title">
+                    Name:
+                </div>
+                <div class="__profile-details-item-value">
+                    {{wallet?.nameValue}}
+                </div>
+                <button type="button" class="__inline-button" (click)="editName()">
+                    <mat-icon style="font-size: 20px;">edit</mat-icon>
+                </button>
+            </div>
+            
+            <!-- Coin -->
+            <div class="__profile-details-item-block">
+                <div class="__profile-details-item-title">
+                    Coin:
+                </div>
+                <div class="__profile-details-item-value">
+                    {{wallet?.asset}}
+                </div>
+            </div>
+
+            <!-- Balance -->
+            <div class="__profile-details-item-block">
+                <div class="__profile-details-item-title">
+                    Balance:
+                </div>
+                <div class="__profile-details-item-value">
+                    {{wallet?.total}}
+                </div>
+            </div>
+
+            <!-- Address -->
+            <div class="__profile-details-item-title-block">
+                <div class="__profile-details-item-title">
+                    Address:
+                </div>
+            </div>
+            <div class="__profile-details-item-value-block">
+                <div class="__profile-details-item-value __profile-details-item-single-value">
+                    {{wallet?.address}}
+                </div>
+                <button type="button" class="__inline-button" (click)="copyAddress()">
+                    <mat-icon style="font-size: 20px;">content_copy</mat-icon>
+                </button>
+            </div>
+
+            <!-- Network -->
+            <div class="__profile-details-item-block">
+                <div class="__profile-details-item-title">
+                    Network:
+                </div>
+                <div class="__profile-details-item-value">
+                    {{wallet?.addressFormat}}
+                </div>
+            </div>
+
+            <!-- Show wallet transactions -->
+            <div class="__profile-details-link-block">
+                <a href="#" class="__profile-details-link">
+                    Show wallet transactions
+                </a>
+            </div>
+
+            <!-- Buttons -->
+            <div class="__profile-details-button-container">
+                <button type="button" class="__outlined-button" (click)="receiveStart()">
+                    <mat-icon style="font-size: 18px;margin-top: 8px;">
+                        file_download
+                    </mat-icon>
+                    <span style="font-weight: 500;">
+                        Receive
+                    </span>
+                </button>
+                <button type="button" class="__outlined-button __button-wide-separator" (click)="sendStart()">
+                    <mat-icon style="font-size: 18px;margin-top: 8px;">
+                        file_upload
+                    </mat-icon>
+                    <span style="font-weight: 500;">
+                        Send
+                    </span>
+                </button>
+            </div>
+        </div>
+        <div class="__profile-details-footer">
+            <a [routerLink]="" class="__profile-details-link __profile-details-link-accent" (click)="deleteWallet()">
+                Delete wallet
+            </a>
+        </div>
+    </div>
+</div>

@@ -46,6 +46,7 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { PersonalNotificationsComponent } from './profile/notifications.component';
 import { PersonalNotificationListComponent } from './profile/data/notification-list.component';
 import { PersonalWalletListComponent } from './profile/data/wallet-list.component';
+import { PersonalWalletDetailsComponent } from './profile/details/wallet-details.component';
 
 const routing = RouterModule.forChild([
     // Main page
@@ -121,7 +122,7 @@ export class MaterialModule { }
         PersonalHomeComponent,
         PersonalWalletsComponent,
         PersonalTransactionsComponent, PersonalTransactionDetailsComponent,
-        PersonalMyContactsComponent,
+        PersonalMyContactsComponent, PersonalWalletDetailsComponent,
         PersonalSwapComponent,
         PersonalNotificationsComponent,
         // Data containers

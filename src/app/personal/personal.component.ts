@@ -83,7 +83,14 @@ export class PersonalComponent implements OnInit {
         this.detailsContainer = container;
         if (container.container === ProfileItemContainerType.Transaction) {
             this.detailsType = 'transaction';
+        } else if (container.container === ProfileItemContainerType.Wallet) {
+            if (container.wallet) {
+                this.detailsType = 'wallet';
+            } else {
+                this.detailsType = 'new_wallet';
+            }
         }
+        console.log(this.detailsType);
     }
 
     ngOnInit(): void {

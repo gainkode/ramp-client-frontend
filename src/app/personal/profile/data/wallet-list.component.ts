@@ -77,7 +77,7 @@ export class PersonalWalletListComponent implements OnDestroy {
         }
     }
 
-    showDetailsPanel(item: WalletItem): void {
+    private showDetailsPanel(item: WalletItem | undefined): void {
         const c = new ProfileItemContainer();
         c.container = ProfileItemContainerType.Wallet;
         c.wallet = item;
@@ -85,10 +85,13 @@ export class PersonalWalletListComponent implements OnDestroy {
     }
 
     newWallet(): void {
-        console.log('newWallet()');
+        this.showDetailsPanel(undefined);
     }
 
     showWallet(id: string): void {
-        console.log(`showWallet(${id})`);
+        const item = this.wallets.find(x => x.id === id);
+        if (item) {
+            this.showDetailsPanel(item);
+        }
     }
 }

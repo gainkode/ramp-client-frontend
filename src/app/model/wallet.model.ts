@@ -22,8 +22,8 @@ export class WalletItem {
       this.addressFormat = data.addressFormat ?? '';
       this.asset = data.assetId ?? '';
       this.total = data.total ?? 0;
-      this.totalFiat = 0;
-      this.name = 'UNKNOWN';
+      this.totalFiat = data.totalFiat ?? 0;
+      this.name = data.vaultName ?? '';
       if (this.asset !== '') {
         this.pIconUrl = `assets/svg-crypto/${this.asset.toLowerCase()}.svg`;
       }
@@ -36,5 +36,10 @@ export class WalletItem {
 
   get totalValue(): string {
     return `${getCurrencySign(this.fiat)}${this.totalFiat.toFixed(2)}`;
+  }
+
+  get nameValue(): string {
+    const limit = 17;
+    return (this.name.length > limit) ? `${this.name.substr(0, limit)}...` : this.name;
   }
 }

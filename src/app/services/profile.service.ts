@@ -104,10 +104,15 @@ const GET_MY_WALLETS = gql`
         assetId
         originalId
         total
+        totalEur
+        totalFiat
         available
+        availableEur
+        availableFiat
         pending
         lockedAmount
         vaultId
+        vaultName
       }
     }
   }

@@ -63,6 +63,9 @@
                 <app-personal-transaction-details *ngIf="detailsType==='transaction'"
                     [transaction]="detailsContainer?.transaction">
                 </app-personal-transaction-details>
+                <app-personal-wallet-details *ngIf="detailsType==='wallet'"
+                    [wallet]="detailsContainer?.wallet">
+                </app-personal-wallet-details>
             </div>
         </div>
     </div>
