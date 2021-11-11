@@ -89,10 +89,12 @@ query GetTransactionStatuses {
 
 const GET_MY_WALLETS = gql`
   query MyWallets(
-    $orderBy: [OrderBy!]
+    $orderBy: [OrderBy!],
+    $assetIdsOnly: [String!]
   ) {
     myWallets(
       orderBy: $orderBy
+      assetIdsOnly: $assetIdsOnly
     ) {
       count
       list {
@@ -395,14 +397,16 @@ export class ProfileDataService {
     }
   }
 
-  getMyWallets(): QueryRef<any, EmptyObject> | null {
+  getMyWallets(assets: string[]): QueryRef<any, EmptyObject> | null {
     if (this.apollo.client !== undefined) {
       const orderFields = [
         { orderBy: 'total', desc: true }
       ];
+      const assetIds = (assets.length > 0) ? assets : undefined;
       return this.apollo.watchQuery<any>({
         query: GET_MY_WALLETS,
         variables: {
+          assetIdsOnly: assetIds,
           orderBy: orderFields,
         },
         fetchPolicy: 'network-only',

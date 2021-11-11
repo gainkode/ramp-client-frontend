@@ -45,7 +45,7 @@ export class PersonalWalletListComponent implements OnDestroy {
     private loadWallets(): void {
         this.onError.emit('');
         this.walletCount = 0;
-        const walletsData = this.profileService.getMyWallets();
+        const walletsData = this.profileService.getMyWallets(this.filter.currencies);
         if (walletsData === null) {
             this.onError.emit(this.errorHandler.getRejectedCookieMessage());
         } else {
