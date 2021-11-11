@@ -10,7 +10,7 @@ export const PersonalProfileMenuItems: Array<MenuItem> = [
     {
         id: 'wallets',
         name: 'My Wallets',
-        url: '/personal/main/wallets',
+        url: '/personal/main/wallets;balance=true',
         icon: 'account_balance_wallet'
     },
     {
