@@ -174,10 +174,21 @@
     display: grid;
     grid-template-columns: auto 32px;
     grid-template-rows: 32px;
-
+    
     border: 1px solid $color_purple_200;
     box-sizing: border-box;
     border-radius: 12px;
+    background-color: transparent;
+}
+
+.__form-editbox-border {
+    width: 250px;
+    display: grid;
+    grid-template-columns: auto 21px;
+    grid-template-rows: 21px;
+
+    border: 0px solid $color_purple_300;
+    border-bottom-width: 0.5px;
     background-color: transparent;
 }
 
@@ -389,6 +400,26 @@ input.__form-search-box:focus {
 
 input.__form-search-box:disabled {
     color: $color_purple_200;
+}
+
+input.__form-edit-box {
+    grid-row: 1;
+    grid-column: 1 / 2;
+    width: 100%;
+    margin: 0px 8px 0px 0px;
+
+    border: 0px;
+    background-color: transparent;
+    
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    color: $color_purple_900_text;
+}
+
+input.__form-edit-box:focus {
+    outline: none;
 }
 
 .__form-uppercase-input {

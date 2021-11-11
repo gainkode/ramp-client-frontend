@@ -68,6 +68,7 @@ import { NotificationsFilterBarComponent } from './filter-bars/notifications-bar
 import { FormSearchBoxComponent } from './common/controls/form-searchbox.component';
 import { DeleteDialogBox } from './dialogs/delete-box.dialog';
 import { WalletsFilterBarComponent } from './filter-bars/wallets-bar.component';
+import { FormEditBoxComponent } from './common/controls/form-editbox.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -106,6 +107,7 @@ export class MaterialModule { }
     imports: [NgxMaskModule.forRoot(), CommonModule, FormsModule, ReactiveFormsModule, MaterialModule, DirectiveModule, QRCodeModule],
     declarations: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
         FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent, FormSearchBoxComponent,
+        FormEditBoxComponent,
         CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, 
         DeleteDialogBox,
         LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, CommonDialogBox, SideExpanderComponent,
@@ -118,6 +120,7 @@ export class MaterialModule { }
         ProfileAssetsComponent, ProfileLastExchangesComponent],
     exports: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
         FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent, FormSearchBoxComponent,
+        FormEditBoxComponent,
         CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, 
         DeleteDialogBox,
         LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, CommonDialogBox, SideExpanderComponent,

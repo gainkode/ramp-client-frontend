@@ -39,7 +39,11 @@ export class WalletItem {
   }
 
   get nameValue(): string {
-    const limit = 17;
+    const limit = 15;
     return (this.name.length > limit) ? `${this.name.substr(0, limit)}...` : this.name;
+  }
+
+  setName(n: string): void {
+    this.name = n;
   }
 }

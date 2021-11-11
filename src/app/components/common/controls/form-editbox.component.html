@@ -1,0 +1,9 @@
+<div class="__form-editbox-border">
+    <input #inputbox class="__form-edit-box" type="text" [formControl]="control" [maxlength]="maxlength"
+        [readonly]="active===false" autocomplete="false" />
+    <div class="__form-input-search-icon-container">
+        <button class="__inline-button" type="button" (click)="onSubmit.emit()" [disabled]="!control.valid || active===false">
+            <span style="font-size: 18px;" class="material-icons">done</span>
+        </button>
+    </div>
+</div>

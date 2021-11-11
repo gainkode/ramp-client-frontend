@@ -327,7 +327,6 @@
 .__inline-button {
     justify-content: center;
     align-items: center;
-    margin: 4px 0px 0px 8px;
     padding: 0px;
     width: 16px;
     height: 16px;
@@ -730,6 +729,10 @@
   }
 
   .__toggle-switch-slider:checked {
-    background-color: $color_main_blue_50;
-    border: 1px solid $color_main_blue_900;
+      background-color: $color_main_blue_50;
+      border: 1px solid $color_main_blue_900;
+  }
+
+  .__inline-button-box {
+      margin: 2px 0px 0px 8px;
   }

@@ -4,19 +4,32 @@
     </div>
     <div class="__profile-details-data-container">
         <div class="__profile-details-data-area">
-            <!-- Name -->
-            <div class="__profile-details-item-block">
+            <!-- Name (show) -->
+            <div class="__profile-details-item-block" *ngIf="!editMode">
                 <div class="__profile-details-item-title">
                     Name:
                 </div>
-                <div class="__profile-details-item-value">
-                    {{wallet?.nameValue}}
-                </div>
-                <button type="button" class="__inline-button" (click)="editName()">
-                    <mat-icon style="font-size: 20px;">edit</mat-icon>
-                </button>
+                    <div class="__profile-details-item-value">
+                        {{wallet?.nameValue}}
+                    </div>
+                    <div class="__inline-button-box">
+                        <button type="button" class="__inline-button" (click)="editName()">
+                            <mat-icon style="font-size: 20px;">edit</mat-icon>
+                        </button>
+                    </div>
             </div>
-            
+            <!-- Name (edit) -->
+            <div class="__profile-details-item-block" *ngIf="editMode">
+                <div class="__profile-details-item-title __profile-details-item-title-edit">
+                    Name:
+                </div>
+                <div style="margin: 4px 0px 0px 0px;">
+                    <form [formGroup]="editForm">
+                        <app-form-editbox [maxlength]="50" formControlName="walletName" (onSubmit)="saveName()"></app-form-editbox>
+                    </form>
+                </div>
+            </div>
+
             <!-- Coin -->
             <div class="__profile-details-item-block">
                 <div class="__profile-details-item-title">
@@ -47,9 +60,11 @@
                 <div class="__profile-details-item-value __profile-details-item-single-value">
                     {{wallet?.address}}
                 </div>
-                <button type="button" class="__inline-button" (click)="copyAddress()">
-                    <mat-icon style="font-size: 20px;">content_copy</mat-icon>
-                </button>
+                <div class="__inline-button-box">
+                    <button type="button" class="__inline-button" (click)="copyAddress()">
+                        <mat-icon style="font-size: 20px;">content_copy</mat-icon>
+                    </button>
+                </div>
             </div>
 
             <!-- Network -->
