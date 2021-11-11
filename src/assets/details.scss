@@ -21,6 +21,18 @@
     color: $color_purple_900_text;
 }
         
+.__profile-details-subtitle {
+    margin: 24px 0px;
+    width: 100%;
+    
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 28px;
+    color: $color_purple_900_text;
+}
+        
 .__profile-details-data-container {
     display: flex;
     flex-direction: column;

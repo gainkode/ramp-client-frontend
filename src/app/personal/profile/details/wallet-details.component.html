@@ -1,22 +1,23 @@
 <div class="__profile-details-container">
+    <mat-progress-bar *ngIf="inProgress" color="accent" mode="indeterminate"></mat-progress-bar>
     <div class="__profile-details-title">
         {{wallet?.name}}
     </div>
-    <div class="__profile-details-data-container">
+    <div *ngIf="!deleteMode" class="__profile-details-data-container">
         <div class="__profile-details-data-area">
             <!-- Name (show) -->
             <div class="__profile-details-item-block" *ngIf="!editMode">
                 <div class="__profile-details-item-title">
                     Name:
                 </div>
-                    <div class="__profile-details-item-value">
-                        {{wallet?.nameValue}}
-                    </div>
-                    <div class="__inline-button-box">
-                        <button type="button" class="__inline-button" (click)="editName()">
-                            <mat-icon style="font-size: 20px;">edit</mat-icon>
-                        </button>
-                    </div>
+                <div class="__profile-details-item-value">
+                    {{wallet?.nameValue}}
+                </div>
+                <div class="__inline-button-box">
+                    <button type="button" class="__inline-button" (click)="editName()">
+                        <mat-icon style="font-size: 20px;">edit</mat-icon>
+                    </button>
+                </div>
             </div>
             <!-- Name (edit) -->
             <div class="__profile-details-item-block" *ngIf="editMode">
@@ -25,7 +26,8 @@
                 </div>
                 <div style="margin: 4px 0px 0px 0px;">
                     <form [formGroup]="editForm">
-                        <app-form-editbox [maxlength]="50" formControlName="walletName" (onSubmit)="saveName()"></app-form-editbox>
+                        <app-form-editbox [maxlength]="50" formControlName="walletName" (onSubmit)="saveName()">
+                        </app-form-editbox>
                     </form>
                 </div>
             </div>
@@ -105,9 +107,26 @@
             </div>
         </div>
         <div class="__profile-details-footer">
-            <a [routerLink]="" class="__profile-details-link __profile-details-link-accent" (click)="deleteWallet()">
+            <a [routerLink]="" class="__profile-details-link __profile-details-link-accent" (click)="requestDeleteWallet()">
                 Delete wallet
             </a>
+        </div>
+    </div>
+    <div *ngIf="deleteMode" class="__profile-details-data-container">
+        <div class="__profile-details-data-area">
+            <div class="__profile-details-subtitle">
+                You are going to delete the wallet. Please confirm.
+            </div>
+
+            <!-- Buttons -->
+            <div class="__profile-details-button-container">
+                <button type="button" class="__outlined-button" (click)="cancelDelete()">
+                    CANCEL
+                </button>
+                <button type="button" class="__main-button __main-button-danger __button-wide-separator" (click)="deleteWallet()">
+                    DELETE
+                </button>
+            </div>
         </div>
     </div>
 </div>

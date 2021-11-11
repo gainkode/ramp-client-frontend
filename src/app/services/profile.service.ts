@@ -276,6 +276,20 @@ const MAKE_NOTIFICATIONS_VIEWED = gql`
   }
 `;
 
+const UPDATE_MY_VAULT = gql`
+  mutation UpdateMyVault(
+    $vaultId: String,
+    $vaultName: String!
+  ) {
+    updateMyVault(
+      vaultId: $vaultId
+      vaultName: $vaultName
+    ) {
+      name
+    }
+  }
+`;
+
 const UPDATE_ME_INFO = gql`
   mutation UpdateMe(
     $firstName: String!
@@ -506,6 +520,16 @@ export class ProfileDataService {
       mutation: MAKE_NOTIFICATIONS_VIEWED,
       variables: {
         notificationIds: idList,
+      },
+    });
+  }
+
+  updateMyVault(vault: string, name: String): Observable<any> {
+    return this.apollo.mutate({
+      mutation: UPDATE_MY_VAULT,
+      variables: {
+        vaultId: vault,
+        vaultName: name
       },
     });
   }

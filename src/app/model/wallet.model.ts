@@ -3,6 +3,7 @@ import { AssetAddressShort } from "./generated-models";
 
 export class WalletItem {
   id = '';
+  vault = '';
   type = '';
   address = '';
   addressFormat = '';
@@ -18,6 +19,7 @@ export class WalletItem {
     if (data) {
       this.fiat = defaultFiat;
       this.id = data.originalId ?? '';
+      this.vault = data.vaultId ?? '';
       this.address = data.address ?? '';
       this.addressFormat = data.addressFormat ?? '';
       this.asset = data.assetId ?? '';
