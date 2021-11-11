@@ -18,6 +18,7 @@ export class WalletsFilterBarComponent implements OnInit, OnDestroy {
     @Output() update = new EventEmitter<ProfileBaseFilter>();
 
     private subscriptions: Subscription = new Subscription();
+    private internalLoading = false;
 
     chips: WalletsFilterChip[] = [];
     cryptoList: CurrencyView[] = [];
@@ -48,6 +49,9 @@ export class WalletsFilterBarComponent implements OnInit, OnDestroy {
         this.subscriptions.add(
             this.zeroBalanceField?.valueChanges.subscribe(val => {
                 this.updateChips(WalletsFilterType.ZeroBalance);
+                if (!this.internalLoading) {
+                    this.onSubmit();
+                }
             }));
     }
 
@@ -69,6 +73,7 @@ export class WalletsFilterBarComponent implements OnInit, OnDestroy {
     }
 
     private initData(): void {
+        this.internalLoading = true;
         if (this.data && this.data.currencies.length > 0) {
             this.currenciesField?.setValue(this.data.currencies.map(x => x));
         } else {
@@ -79,6 +84,7 @@ export class WalletsFilterBarComponent implements OnInit, OnDestroy {
         }
         this.updateChips(WalletsFilterType.Currency);
         this.updateChips(WalletsFilterType.ZeroBalance);
+        this.internalLoading = false;
     }
 
     private updateChips(chipType: WalletsFilterType): void {
@@ -110,14 +116,18 @@ export class WalletsFilterBarComponent implements OnInit, OnDestroy {
             this.currenciesField?.setValue(selectedCurrencies.filter(x => x !== chip.name));
             this.updateChips(chip.filterType);
         } else if (chip.filterType === WalletsFilterType.ZeroBalance) {
+            this.internalLoading = true;
             this.zeroBalanceField?.setValue(false);
+            this.internalLoading = false;
         }
         this.onSubmit();
     }
 
     resetFilter(): void {
+        this.internalLoading = true;
         this.currenciesField?.setValue([]);
         this.zeroBalanceField?.setValue(false);
+        this.internalLoading = false;
         this.update.emit(new WalletsFilter());
     }
 

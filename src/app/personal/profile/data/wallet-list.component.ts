@@ -59,7 +59,10 @@ export class PersonalWalletListComponent implements OnDestroy {
                         this.walletCount = dataList?.count as number;
                         if (this.walletCount > 0) {
                             console.log(dataList?.list);
-                            this.wallets = dataList?.list?.map((val) => new WalletItem(val, userFiat)) as WalletItem[];
+                            this.wallets = dataList?.list?.filter(x => {
+                                return (this.filter.zeroBalance) ? true : x.total ?? 0 > 0;
+                            }).map((val) => new WalletItem(val, userFiat)) as WalletItem[];
+                            this.walletCount = this.wallets.length;
                         }
                     }
                     this.onProgress.emit(false);
