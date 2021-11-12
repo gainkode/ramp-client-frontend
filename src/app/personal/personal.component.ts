@@ -10,6 +10,7 @@ import {
 } from '../model/profile-menu.model';
 import { AuthService } from '../services/auth.service';
 import { NotificationService } from '../services/notification.service';
+import { PersonalWalletsComponent } from './profile/wallets.component';
 
 @Component({
     templateUrl: 'personal.component.html',
@@ -24,6 +25,7 @@ export class PersonalComponent implements OnInit {
     showDetailsRef: any;
     detailsType = '';
     detailsContainer!: ProfileItemContainer;
+    dataPanel: any;
 
     constructor(
         private auth: AuthService,
@@ -108,8 +110,9 @@ export class PersonalComponent implements OnInit {
     }
 
     onActivatePage(component: any): void {
+        this.dataPanel = component;
         this.showDetailsRef = component.onShowDetails;
-        if (this.showDetailsRef !== undefined) {
+        if (this.showDetailsRef) {
             this.showDetailsRef.subscribe((event: any) => {
                 const container = event as ProfileItemContainer;
                 this.initializeDetailsPanel(container);
@@ -119,15 +122,20 @@ export class PersonalComponent implements OnInit {
     }
 
     onDeactivatePage(component: any): void {
-        if (this.showDetailsRef !== undefined) {
+        this.dataPanel = false;
+        if (this.showDetailsRef) {
             this.showDetailsRef.unsubscribe();
             this.showDetailsRef = undefined;
         }
     }
 
     detailsComplete(container: ProfileItemContainer): void {
-        console.log(container.container);
-        this.showDetails = false;
+        console.log(container.container, this.dataPanel);
+        if (container.container === ProfileItemContainerType.Wallet && container.wallet) {
+            const walletPanel = this.dataPanel as PersonalWalletsComponent;
+            walletPanel.addWallet(container.wallet);
+        }
+        this.closeDetails();
     }
 
     sideMenuExpanded(state: boolean): void {

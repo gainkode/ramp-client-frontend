@@ -5,6 +5,7 @@ import { ProfileBaseFilter, WalletsFilter } from 'src/app/model/filter.model';
 import { SettingsCurrencyWithDefaults } from 'src/app/model/generated-models';
 import { CurrencyView } from 'src/app/model/payment.model';
 import { ProfileItemContainer } from 'src/app/model/profile-item.model';
+import { WalletItem } from 'src/app/model/wallet.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
 import { ErrorService } from 'src/app/services/error.service';
@@ -52,6 +53,12 @@ export class PersonalWalletsComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.subscriptions.unsubscribe();
+    }
+
+    addWallet(wallet: WalletItem): void {
+        if (this.dataListPanel) {
+            this.dataListPanel.wallets.push(wallet);
+        }
     }
 
     private loadCurrencyData(): void {
