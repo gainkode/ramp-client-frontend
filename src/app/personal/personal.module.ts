@@ -28,7 +28,7 @@ import { DirectiveModule } from '../directives/directives.module';
 import { PersonalSwapComponent } from './profile/swap.component';
 import { PersonalHomeComponent } from './profile/home.component';
 import { PersonalMyAccountComponent } from './profile/my-account.component';
-import { PersonalMyContactsComponent } from './profile/my-contacts.component';
+import { PersonalContactsComponent } from './profile/contacts.component';
 import { PersonalTransactionsComponent } from './profile/transactions.component';
 import { PersonalWalletsComponent } from './profile/wallets.component';
 import { PersonalTransactionDetailsComponent } from './profile/details/transaction-details.component';
@@ -47,6 +47,7 @@ import { PersonalNotificationsComponent } from './profile/notifications.componen
 import { PersonalNotificationListComponent } from './profile/data/notification-list.component';
 import { PersonalWalletListComponent } from './profile/data/wallet-list.component';
 import { PersonalWalletDetailsComponent } from './profile/details/wallet-details.component';
+import { PersonalWalletCreateComponent } from './profile/details/wallet-create.component';
 
 const routing = RouterModule.forChild([
     // Main page
@@ -58,7 +59,7 @@ const routing = RouterModule.forChild([
         children: [
             { path: 'home', component: PersonalHomeComponent, canActivate: [PersonalGuard] },
             { path: 'wallets', component: PersonalWalletsComponent, canActivate: [PersonalGuard] },
-            { path: 'contactlist', component: PersonalMyContactsComponent, canActivate: [PersonalGuard] },
+            { path: 'contactlist', component: PersonalContactsComponent, canActivate: [PersonalGuard] },
             { path: 'transactions', component: PersonalTransactionsComponent, canActivate: [PersonalGuard] },
             { path: 'swap', component: PersonalSwapComponent, canActivate: [PersonalGuard] },
             { path: 'notifications', component: PersonalNotificationsComponent, canActivate: [PersonalGuard] },
@@ -120,9 +121,9 @@ export class MaterialModule { }
         // Profile
         PersonalComponent,
         PersonalHomeComponent,
-        PersonalWalletsComponent,
+        PersonalWalletsComponent, PersonalWalletDetailsComponent, PersonalWalletCreateComponent,
         PersonalTransactionsComponent, PersonalTransactionDetailsComponent,
-        PersonalMyContactsComponent, PersonalWalletDetailsComponent,
+        PersonalContactsComponent, 
         PersonalSwapComponent,
         PersonalNotificationsComponent,
         // Data containers

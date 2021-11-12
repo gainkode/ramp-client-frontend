@@ -66,6 +66,7 @@
                 <app-personal-wallet-details *ngIf="detailsType==='wallet'"
                     [wallet]="detailsContainer?.wallet">
                 </app-personal-wallet-details>
+                <app-personal-wallet-create *ngIf="detailsType==='new_wallet'" (onComplete)="detailsComplete($event)"></app-personal-wallet-create>
             </div>
         </div>
     </div>

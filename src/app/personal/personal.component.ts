@@ -125,6 +125,11 @@ export class PersonalComponent implements OnInit {
         }
     }
 
+    detailsComplete(container: ProfileItemContainer): void {
+        console.log(container.container);
+        this.showDetails = false;
+    }
+
     sideMenuExpanded(state: boolean): void {
         this.expandedMenu = state;
         if (state === true) {

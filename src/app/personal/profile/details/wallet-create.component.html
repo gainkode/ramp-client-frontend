@@ -1,0 +1,63 @@
+<div class="__profile-details-container">
+    <mat-progress-bar *ngIf="inProgress" color="accent" mode="indeterminate"></mat-progress-bar>
+    <div *ngIf="!completeMode">
+        <h2 class="__profile-details-title __profile-details-title-small">
+            {{title}}
+        </h2>
+        <div class="__profile-details-data-container">
+            <div class="__profile-details-data-area">
+                <form [formGroup]="createForm" (ngSubmit)="submit()">
+    
+                    <!-- Buttons -->
+                    <div class="__profile-details-button-container">
+                        <button type="submit" class="__main-button">
+                            create
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="completeMode">
+        <h2 class="__profile-details-title __profile-details-title-small __profile-details-title-center">
+            {{title}}
+        </h2>
+        <div class="__profile-details-data-container">
+            <div class="__profile-details-data-area">
+                <!-- Name (show) -->
+                <div class="__profile-details-item-block">
+                    <div class="__profile-details-item-title">
+                        Name:
+                    </div>
+                    <div class="__profile-details-item-value">
+                        {{wallet?.nameValue}}
+                    </div>
+                </div>
+    
+                <!-- Address -->
+                <div class="__profile-details-item-title-block">
+                    <div class="__profile-details-item-title">
+                        Address:
+                    </div>
+                </div>
+                <div class="__profile-details-item-value-block">
+                    <div class="__profile-details-item-value __profile-details-item-single-value">
+                        {{wallet?.address}}
+                    </div>
+                    <div class="__inline-button-box">
+                        <button type="button" class="__inline-button" (click)="copyAddress()">
+                            <mat-icon style="font-size: 20px;">content_copy</mat-icon>
+                        </button>
+                    </div>
+                </div>
+    
+                <!-- Buttons -->
+                <div class="__profile-details-button-container">
+                    <button type="button" class="__main-button" (click)="complete()">
+                        close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

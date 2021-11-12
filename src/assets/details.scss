@@ -20,7 +20,16 @@
     line-height: 28px;
     color: $color_purple_900_text;
 }
-        
+
+.__profile-details-title-small {
+    font-size: 16px;
+    line-height: 28px;
+}
+
+.__profile-details-title-center {
+    text-align: center;
+}
+
 .__profile-details-subtitle {
     margin: 24px 0px;
     width: 100%;
