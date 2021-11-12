@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { ProfileBaseFilter, WalletsFilter, WalletsFilterChip, WalletsFilterType } from 'src/app/model/filter.model';
+import { ProfileBaseFilter, WalletsFilter, FilterChip, FilterChipType } from 'src/app/model/filter.model';
 import { CurrencyView } from 'src/app/model/payment.model';
 
 @Component({
@@ -20,7 +20,7 @@ export class WalletsFilterBarComponent implements OnInit, OnDestroy {
     private subscriptions: Subscription = new Subscription();
     private internalLoading = false;
 
-    chips: WalletsFilterChip[] = [];
+    chips: FilterChip[] = [];
     cryptoList: CurrencyView[] = [];
 
     filterForm = this.formBuilder.group({
@@ -44,11 +44,11 @@ export class WalletsFilterBarComponent implements OnInit, OnDestroy {
                 if ((val as []).length < 1) {
                     this.currenciesField?.setValue(this.cryptoList.map(x => x.id));
                 }
-                this.updateChips(WalletsFilterType.Currency);
+                this.updateChips(FilterChipType.Currency);
             }));
         this.subscriptions.add(
             this.zeroBalanceField?.valueChanges.subscribe(val => {
-                this.updateChips(WalletsFilterType.ZeroBalance);
+                this.updateChips(FilterChipType.ZeroBalance);
                 if (!this.internalLoading) {
                     this.onSubmit();
                 }
@@ -82,40 +82,40 @@ export class WalletsFilterBarComponent implements OnInit, OnDestroy {
         if (this.data && this.data.zeroBalance) {
             this.zeroBalanceField?.setValue(this.data.zeroBalance);
         }
-        this.updateChips(WalletsFilterType.Currency);
-        this.updateChips(WalletsFilterType.ZeroBalance);
+        this.updateChips(FilterChipType.Currency);
+        this.updateChips(FilterChipType.ZeroBalance);
         this.internalLoading = false;
     }
 
-    private updateChips(chipType: WalletsFilterType): void {
+    private updateChips(chipType: FilterChipType): void {
         this.chips = this.chips.filter(x => x.filterType !== chipType);
-        if (chipType === WalletsFilterType.Currency) {
+        if (chipType === FilterChipType.Currency) {
             const selectedCurrencies = this.currenciesField?.value as string[];
             if (selectedCurrencies.length < this.cryptoList.length) {
                 selectedCurrencies.forEach(w => {
                     this.chips.push({
                         filterType: chipType,
                         name: w
-                    } as WalletsFilterChip);
+                    } as FilterChip);
                 });
             }
-        } else if (chipType === WalletsFilterType.ZeroBalance) {
+        } else if (chipType === FilterChipType.ZeroBalance) {
             const zeroBalanceSelected = this.zeroBalanceField?.value;
             if (zeroBalanceSelected === true) {
                 this.chips.push({
                     filterType: chipType,
                     name: 'Zero balance'
-                } as WalletsFilterChip);
+                } as FilterChip);
             }
         }
     }
 
-    removeChip(chip: WalletsFilterChip): void {
-        if (chip.filterType === WalletsFilterType.Currency) {
+    removeChip(chip: FilterChip): void {
+        if (chip.filterType === FilterChipType.Currency) {
             const selectedCurrencies = this.currenciesField?.value as string[];
             this.currenciesField?.setValue(selectedCurrencies.filter(x => x !== chip.name));
             this.updateChips(chip.filterType);
-        } else if (chip.filterType === WalletsFilterType.ZeroBalance) {
+        } else if (chip.filterType === FilterChipType.ZeroBalance) {
             this.internalLoading = true;
             this.zeroBalanceField?.setValue(false);
             this.internalLoading = false;

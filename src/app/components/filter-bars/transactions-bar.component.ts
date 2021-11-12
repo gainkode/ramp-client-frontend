@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { ProfileBaseFilter, TransactionsFilter, TransactionsFilterChip, TransactionsFilterType } from 'src/app/model/filter.model';
+import { FilterChip, FilterChipType, ProfileBaseFilter, TransactionsFilter } from 'src/app/model/filter.model';
 import { TransactionSource, TransactionType } from 'src/app/model/generated-models';
 import { TransactionSourceList, UserTransactionTypeList } from 'src/app/model/payment.model';
 import { getFormattedUtcDate } from 'src/app/utils/utils';
@@ -19,7 +19,7 @@ export class TransactionsFilterBarComponent implements OnInit, OnDestroy {
 
     transactionTypes = UserTransactionTypeList;
     walletTypes = TransactionSourceList;
-    chips: TransactionsFilterChip[] = [];
+    chips: FilterChip[] = [];
 
     filterForm = this.formBuilder.group({
         walletTypes: [[]],
@@ -67,31 +67,31 @@ export class TransactionsFilterBarComponent implements OnInit, OnDestroy {
         if (this.data && this.data.sender) {
             this.senderField?.setValue(this.data.sender);
         }
-        this.updateChips(TransactionsFilterType.Transaction);
-        this.updateChips(TransactionsFilterType.Wallet);
-        this.updateChips(TransactionsFilterType.Date);
-        this.updateChips(TransactionsFilterType.Sender);
+        this.updateChips(FilterChipType.Transaction);
+        this.updateChips(FilterChipType.Wallet);
+        this.updateChips(FilterChipType.Date);
+        this.updateChips(FilterChipType.Sender);
         this.subscriptions.add(
             this.transactionTypesField?.valueChanges.subscribe(val => {
                 if ((val as []).length < 1) {
                     this.transactionTypesField?.setValue(this.transactionTypes.map(x => x.id));
                 }
-                this.updateChips(TransactionsFilterType.Transaction);
+                this.updateChips(FilterChipType.Transaction);
             }));
         this.subscriptions.add(
             this.walletTypesField?.valueChanges.subscribe(val => {
                 if ((val as []).length < 1) {
                     this.walletTypesField?.setValue(this.walletTypes.map(x => x.id));
                 }
-                this.updateChips(TransactionsFilterType.Wallet);
+                this.updateChips(FilterChipType.Wallet);
             }));
         this.subscriptions.add(
             this.transactionDateField?.valueChanges.subscribe(val => {
-                this.updateChips(TransactionsFilterType.Date);
+                this.updateChips(FilterChipType.Date);
             }));
         this.subscriptions.add(
             this.senderField?.valueChanges.subscribe(val => {
-                this.updateChips(TransactionsFilterType.Sender);
+                this.updateChips(FilterChipType.Sender);
             }));
     }
 
@@ -125,9 +125,9 @@ export class TransactionsFilterBarComponent implements OnInit, OnDestroy {
         }
     }
 
-    private updateChips(chipType: TransactionsFilterType): void {
+    private updateChips(chipType: FilterChipType): void {
         this.chips = this.chips.filter(x => x.filterType !== chipType);
-        if (chipType === TransactionsFilterType.Wallet) {
+        if (chipType === FilterChipType.Wallet) {
             const selectedWallets = this.walletTypesField?.value as TransactionSource[];
             if (selectedWallets.length < this.walletTypes.length) {
                 selectedWallets.forEach(w => {
@@ -135,10 +135,10 @@ export class TransactionsFilterBarComponent implements OnInit, OnDestroy {
                         filterType: chipType,
                         name: TransactionSourceList.find(x => x.id === w)?.name ?? w as string,
                         value: w
-                    } as TransactionsFilterChip);
+                    } as FilterChip);
                 });
             }
-        } else if (chipType === TransactionsFilterType.Transaction) {
+        } else if (chipType === FilterChipType.Transaction) {
             const selectedTransactions = this.transactionTypesField?.value as TransactionType[];
             if (selectedTransactions.length < this.transactionTypes.length) {
                 selectedTransactions.forEach(t => {
@@ -146,40 +146,40 @@ export class TransactionsFilterBarComponent implements OnInit, OnDestroy {
                         filterType: chipType,
                         name: UserTransactionTypeList.find(x => x.id === t)?.name ?? t as string,
                         value: t
-                    } as TransactionsFilterChip);
+                    } as FilterChip);
                 });
             }
-        } else if (chipType === TransactionsFilterType.Date) {
+        } else if (chipType === FilterChipType.Date) {
             const date = this.transactionDateField?.value;
             if (date !== '' && this.transactionDateField?.valid) {
                 this.chips.push({
                     filterType: chipType,
                     name: date
-                } as TransactionsFilterChip);
+                } as FilterChip);
             }
-        } else if (chipType === TransactionsFilterType.Sender) {
+        } else if (chipType === FilterChipType.Sender) {
             const sender = this.senderField?.value;
             if (sender !== '') {
                 this.chips.push({
                     filterType: chipType,
                     name: sender
-                } as TransactionsFilterChip);
+                } as FilterChip);
             }
         }
     }
 
-    removeChip(chip: TransactionsFilterChip): void {
-        if (chip.filterType === TransactionsFilterType.Wallet) {
+    removeChip(chip: FilterChip): void {
+        if (chip.filterType === FilterChipType.Wallet) {
             const selectedWallets = this.walletTypesField?.value as TransactionSource[];
             this.walletTypesField?.setValue(selectedWallets.filter(x => x !== chip.value));
             this.updateChips(chip.filterType);
-        } else if (chip.filterType === TransactionsFilterType.Transaction) {
+        } else if (chip.filterType === FilterChipType.Transaction) {
             const selectedTransactions = this.transactionTypesField?.value as TransactionType[];
             this.transactionTypesField?.setValue(selectedTransactions.filter(x => x !== chip.value));
             this.updateChips(chip.filterType);
-        } else if (chip.filterType === TransactionsFilterType.Date) {
+        } else if (chip.filterType === FilterChipType.Date) {
             this.transactionDateField?.setValue('');
-        } else if (chip.filterType === TransactionsFilterType.Sender) {
+        } else if (chip.filterType === FilterChipType.Sender) {
             this.senderField?.setValue('');
         }
     }

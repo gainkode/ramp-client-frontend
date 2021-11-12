@@ -1,3 +1,7 @@
-<div style="margin: 0.5em;">
-    <app-contacts></app-contacts>
+<app-contacts-filter [data]="filter" (update)="onFilterUpdate($event)"></app-contacts-filter>
+
+<div class="__profile-data-container">
+    <mat-progress-bar *ngIf="inProgress" color="accent" mode="indeterminate"></mat-progress-bar>
+    <!-- <app-personal-contact-list #datalist (onShowDetails)="showDetails($event)" (onError)="handleError($event)"
+        (onProgress)="progressChanged($event)"></app-personal-contact-list> -->
 </div>

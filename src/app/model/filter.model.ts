@@ -7,18 +7,22 @@ export interface ProfileBaseFilter {
     getParameters(): {};
 }
 
-export enum TransactionsFilterType {
+export enum FilterChipType {
     None = 'None',
     Wallet = 'Wallet',
     Transaction = 'Transaction',
+    Currency = 'Currency',
     Date = 'Date',
-    Sender = 'Sender'
+    Sender = 'Sender',
+    ZeroBalance = 'ZeroBalance',
+    Email = 'Email',
+    UserName = 'UserName'
 }
 
-export enum WalletsFilterType {
-    None = 'None',
-    Currency = 'Currency',
-    ZeroBalance = 'ZeroBalance'
+export class FilterChip {
+    filterType: FilterChipType = FilterChipType.None;
+    name = '';
+    value = '';
 }
 
 export class TransactionsFilter implements ProfileBaseFilter {
@@ -87,12 +91,6 @@ export class TransactionsFilter implements ProfileBaseFilter {
     }
 }
 
-export class TransactionsFilterChip {
-    filterType: TransactionsFilterType = TransactionsFilterType.None;
-    name = '';
-    value = '';
-}
-
 export class NotificationsFilter implements ProfileBaseFilter {
     unreadOnly = false;
     search: string = '';
@@ -154,7 +152,26 @@ export class WalletsFilter implements ProfileBaseFilter {
     }
 }
 
-export class WalletsFilterChip {
-    filterType: WalletsFilterType = WalletsFilterType.None;
-    name = '';
+export class ContactsFilter implements ProfileBaseFilter {
+    email: string = '';
+    userName: string = '';
+
+    setData(data: any): void {
+        this.email = '';
+        this.userName = '';
+        if (data.email) {
+            this.email = data.email;
+        }
+        if (data.userName) {
+            this.userName = data.user;
+        }
+    }
+
+    getParameters(): {} {
+        const result = {
+            ...(this.email !== '' && { email: this.email }),
+            ...(this.userName !== '' && { user: this.userName })
+        };
+        return result;
+    }
 }
