@@ -78,17 +78,23 @@ input:-webkit-autofill::first-line {
     color: $color_purple_900_text;
 }
 
+.mat-select-placeholder {
+    color: $color_purple_200 !important;
+    font-weight: 300;
+    font-size: 14px;
+}
+
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-    color: $color_purple_200;
+    color: $color_purple_200 !important;
     opacity: 1; /* Firefox */
 }
 
 :-ms-input-placeholder { /* Internet Explorer 10-11 */
-    color: $color_purple_200;
+    color: $color_purple_200 !important;
 }
 
 ::-ms-input-placeholder { /* Microsoft Edge */
-    color: $color_purple_200;
+    color: $color_purple_200 !important;
 }
 
 .mat-input-element {

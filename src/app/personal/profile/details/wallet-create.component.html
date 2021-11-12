@@ -4,13 +4,56 @@
         <h2 class="__profile-details-title __profile-details-title-small">
             {{title}}
         </h2>
-        <div class="__profile-details-data-container">
+        <div class="__profile-details-data-container __profile-details-data-form">
             <div class="__profile-details-data-area">
                 <form [formGroup]="createForm" (ngSubmit)="submit()">
-    
+                    <!-- Currency -->
+                    <div class="__profile-details-item-block">
+                        <div class="__profile-details-data-caption">
+                            Select coin
+                        </div>
+                    </div>
+                    <div class="__profile-details-item-block">
+                        <div class="__form-text-border">
+                            <mat-select formControlName="currency" style="margin: 8px 0px 0px 0px;"
+                                placeholder="Select coin from your list">
+                                <mat-select-trigger>
+                                    <div class="__form-finance-combo-item">
+                                        <img class="__form-combo-item-img" [src]="selectedCurrency?.img">
+                                        <span class="__form-finance-combo-item-text">
+                                            {{selectedCurrency?.title}}
+                                        </span>
+                                    </div>
+                                </mat-select-trigger>
+                                <mat-option *ngFor="let item of cryptoList" [value]="item.id" style="height: 32px;">
+                                    <div class="__form-finance-combo-item">
+                                        <img class="__form-combo-item-img" [src]="item.img">
+                                        <span class="__form-finance-combo-item-text">
+                                            {{item.title}}
+                                        </span>
+                                    </div>
+                                </mat-option>
+                            </mat-select>
+                        </div>
+                    </div>
+                    <div class="__profile-details-item-block">
+                        <div *ngIf="!currencyField?.valid && currencyInit" class="__form-assist __form-assist-error">
+                            Currency is required
+                        </div>
+                    </div>
+                    <div class="__profile-details-item-block">
+                        <div class="__form-separator"></div>
+                    </div>
+
+                    <!-- Wallet name -->
+                    <app-form-textbox [label]="'Wallet name'" [smallLabel]="true" [boxType]="'text'" [placeholder]="'Enter wallet name'"
+                        [maxlength]="50" formControlName="walletName" [errorMessages]="walletNameErrorMessages"
+                        [separator]="true">
+                    </app-form-textbox>
+
                     <!-- Buttons -->
                     <div class="__profile-details-button-container">
-                        <button type="submit" class="__main-button">
+                        <button type="submit" class="__main-button" [disabled]="!createForm.valid">
                             create
                         </button>
                     </div>
@@ -33,7 +76,7 @@
                         {{wallet?.nameValue}}
                     </div>
                 </div>
-    
+
                 <!-- Address -->
                 <div class="__profile-details-item-title-block">
                     <div class="__profile-details-item-title">
@@ -50,7 +93,7 @@
                         </button>
                     </div>
                 </div>
-    
+
                 <!-- Buttons -->
                 <div class="__profile-details-button-container">
                     <button type="button" class="__main-button" (click)="complete()">

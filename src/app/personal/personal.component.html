@@ -17,7 +17,8 @@
                     </button>
                     <div class="__top-menu-button-separator"></div>
                     <button class="__top-menu-button" (click)="routeTo('/payment')">
-                        <img width="16" height="16" src="assets/paper-plane-solid.svg">&nbsp;&nbsp;&nbsp;Express transfer
+                        <img width="16" height="16" src="assets/paper-plane-solid.svg">&nbsp;&nbsp;&nbsp;Express
+                        transfer
                     </button>
                 </div>
                 <div class="__top-menu-content-box">
@@ -63,10 +64,11 @@
                 <app-personal-transaction-details *ngIf="detailsType==='transaction'"
                     [transaction]="detailsContainer?.transaction">
                 </app-personal-transaction-details>
-                <app-personal-wallet-details *ngIf="detailsType==='wallet'"
-                    [wallet]="detailsContainer?.wallet">
+                <app-personal-wallet-details *ngIf="detailsType==='wallet'" [wallet]="detailsContainer?.wallet">
                 </app-personal-wallet-details>
-                <app-personal-wallet-create *ngIf="detailsType==='new_wallet'" (onComplete)="detailsComplete($event)"></app-personal-wallet-create>
+                <app-personal-wallet-create *ngIf="detailsType==='new_wallet'" [cryptoList]="cryptoList"
+                    (onComplete)="detailsComplete($event)">
+                </app-personal-wallet-create>
             </div>
         </div>
     </div>

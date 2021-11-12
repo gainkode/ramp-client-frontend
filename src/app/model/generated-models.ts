@@ -407,6 +407,10 @@ export type QueryGetRatesArgs = {
 export type QueryMyTransactionsArgs = {
   transactionIdsOnly?: Maybe<Array<Scalars['String']>>;
   sourcesOnly?: Maybe<Array<TransactionSource>>;
+  transactionDateOnly?: Maybe<Scalars['DateTime']>;
+  transactionTypesOnly?: Maybe<Array<TransactionType>>;
+  sendersOrReceiversOnly?: Maybe<Array<Scalars['String']>>;
+  paymentProvidersOnly?: Maybe<Array<Scalars['String']>>;
   filter?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
@@ -422,6 +426,10 @@ export type QueryGetTransactionsArgs = {
   countriesOnly?: Maybe<Array<Scalars['String']>>;
   countryCodeType?: Maybe<CountryCodeType>;
   accountTypesOnly?: Maybe<Array<UserType>>;
+  transactionDateOnly?: Maybe<Scalars['DateTime']>;
+  transactionTypesOnly?: Maybe<Array<TransactionType>>;
+  sendersOrReceiversOnly?: Maybe<Array<Scalars['String']>>;
+  paymentProvidersOnly?: Maybe<Array<Scalars['String']>>;
   filter?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
@@ -598,8 +606,7 @@ export type User = {
   kycReviewResult?: Maybe<Scalars['String']>;
   kycStatusUpdateRequired?: Maybe<Scalars['Boolean']>;
   custodyProvider?: Maybe<Scalars['String']>;
-  vaultAccountId?: Maybe<Scalars['String']>;
-  additionalVaultAccountIds?: Maybe<Array<Scalars['String']>>;
+  vaults?: Maybe<Array<UserVaultIdObj>>;
   defaultFiatCurrency?: Maybe<Scalars['String']>;
   defaultCryptoCurrency?: Maybe<Scalars['String']>;
 };
@@ -666,6 +673,20 @@ export type UserNotificationSubscription = {
   userNotificationTypeCode: Scalars['String'];
   siteNotification?: Maybe<Scalars['Boolean']>;
   emailNotification?: Maybe<Scalars['Boolean']>;
+};
+
+export type UserVaultIdObj = {
+  __typename?: 'UserVaultIdObj';
+  userVaultId: Scalars['ID'];
+  userId?: Maybe<Scalars['String']>;
+  custodyProvider?: Maybe<Scalars['String']>;
+  originalId?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  default?: Maybe<Scalars['Boolean']>;
+  created?: Maybe<Scalars['DateTime']>;
+  disabled?: Maybe<Scalars['DateTime']>;
+  subWallets?: Maybe<Array<Scalars['String']>>;
+  additionalSettings?: Maybe<Scalars['String']>;
 };
 
 export enum UserNotificationLevel {
@@ -949,12 +970,13 @@ export type UserTransactionStats = {
 
 export type UserVault = {
   __typename?: 'UserVault';
-  totalBalanceEur: Scalars['Float'];
-  availableBalanceEur: Scalars['Float'];
-  totalBalanceFiat: Scalars['Float'];
-  availableBalanceFiat: Scalars['Float'];
+  totalBalanceEur?: Maybe<Scalars['Float']>;
+  availableBalanceEur?: Maybe<Scalars['Float']>;
+  totalBalanceFiat?: Maybe<Scalars['Float']>;
+  availableBalanceFiat?: Maybe<Scalars['Float']>;
   balancesPerAsset?: Maybe<Array<BalancePerAsset>>;
   name?: Maybe<Scalars['String']>;
+  default?: Maybe<Scalars['Boolean']>;
   assets?: Maybe<Array<VaultAccountAsset>>;
 };
 
@@ -1351,6 +1373,12 @@ export type PaymentOrder = {
   captureOperationSn?: Maybe<Scalars['String']>;
   refundOperationSn?: Maybe<Scalars['String']>;
   paymentInfo?: Maybe<Scalars['String']>;
+  paymentBankName?: Maybe<Scalars['String']>;
+  paymentCardHolderName?: Maybe<Scalars['String']>;
+  paymentCardType?: Maybe<Scalars['String']>;
+  paymentCardLastFourDigits?: Maybe<Scalars['String']>;
+  paymentProcessorName?: Maybe<Scalars['String']>;
+  paymentBin?: Maybe<Scalars['String']>;
   providerSpecificStates?: Maybe<Array<DateMap>>;
   providerSpecificParams?: Maybe<Array<StringMap>>;
 };
@@ -1554,6 +1582,7 @@ export type AssetAddressShort = {
   lockedAmount?: Maybe<Scalars['Float']>;
   vaultId?: Maybe<Scalars['String']>;
   vaultName?: Maybe<Scalars['String']>;
+  default?: Maybe<Scalars['Boolean']>;
 };
 
 export type AssetAddressListResult = {
@@ -1581,6 +1610,7 @@ export type AssetAddress = {
   lockedAmount?: Maybe<Scalars['Float']>;
   vaultId?: Maybe<Scalars['String']>;
   vaultName?: Maybe<Scalars['String']>;
+  default?: Maybe<Scalars['Boolean']>;
   userId?: Maybe<Scalars['String']>;
   userEmail?: Maybe<Scalars['String']>;
 };
@@ -2013,6 +2043,7 @@ export type MutationUpdateUserArgs = {
 
 export type MutationAddMyVaultArgs = {
   vaultName: Scalars['String'];
+  assetId: Scalars['String'];
 };
 
 
@@ -2030,6 +2061,7 @@ export type MutationDeleteMyVaultArgs = {
 export type MutationAddUserVaultArgs = {
   userId: Scalars['ID'];
   vaultName: Scalars['String'];
+  assetId: Scalars['String'];
 };
 
 
@@ -2329,6 +2361,12 @@ export type PaymentOrderShort = {
   statusReason?: Maybe<Scalars['String']>;
   operations?: Maybe<Array<PaymentOperationShort>>;
   paymentInfo?: Maybe<Scalars['String']>;
+  paymentBankName?: Maybe<Scalars['String']>;
+  paymentCardHolderName?: Maybe<Scalars['String']>;
+  paymentCardType?: Maybe<Scalars['String']>;
+  paymentCardLastFourDigits?: Maybe<Scalars['String']>;
+  paymentProcessorName?: Maybe<Scalars['String']>;
+  paymentBin?: Maybe<Scalars['String']>;
 };
 
 export type PaymentOperationShort = {
@@ -2737,6 +2775,12 @@ export type UserNotificationTypeListResult = {
   __typename?: 'UserNotificationTypeListResult';
   count?: Maybe<Scalars['Int']>;
   list?: Maybe<Array<UserNotificationType>>;
+};
+
+export type UserVaultIdObjListResult = {
+  __typename?: 'UserVaultIdObjListResult';
+  count?: Maybe<Scalars['Int']>;
+  list?: Maybe<Array<UserVaultIdObj>>;
 };
 
 export type UserShort = {

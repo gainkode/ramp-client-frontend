@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { Event as NavigationEvent } from '@angular/router';
 import { MenuItem } from '../model/common.model';
+import { CurrencyView } from '../model/payment.model';
 import { ProfileItemContainer, ProfileItemContainerType } from '../model/profile-item.model';
 import {
     PersonalProfileMenuItems,
@@ -26,6 +27,7 @@ export class PersonalComponent implements OnInit {
     detailsType = '';
     detailsContainer!: ProfileItemContainer;
     dataPanel: any;
+    cryptoList: CurrencyView[] = [];
 
     constructor(
         private auth: AuthService,
@@ -90,6 +92,7 @@ export class PersonalComponent implements OnInit {
                 this.detailsType = 'wallet';
             } else {
                 this.detailsType = 'new_wallet';
+                this.cryptoList = container.meta;
             }
         }
         console.log(this.detailsType);

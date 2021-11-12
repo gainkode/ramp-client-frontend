@@ -51,6 +51,10 @@
     margin: 24px 0px 0px 0px;
 }
 
+.__profile-details-data-form {
+    margin: 12px 0px 0px 0px;
+}
+
 .__profile-details-data-area {
     margin: 0px 16px 24px 16px;
     height: 100%;
@@ -126,6 +130,16 @@
 
 .__profile-details-item-error {
     color: $color_pink_500;
+}
+
+.__profile-details-data-caption {
+    margin: 0px 0px;
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 14px;
+    color: $color_purple_900_icons;
 }
 
 .__profile-details-button-container {

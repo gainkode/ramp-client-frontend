@@ -13,4 +13,5 @@ export class ProfileItemContainer {
     container: ProfileItemContainerType = ProfileItemContainerType.None;
     transaction: TransactionItem | undefined = undefined;
     wallet: WalletItem | undefined = undefined;
+    meta: any;
 }

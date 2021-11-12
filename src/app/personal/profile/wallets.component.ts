@@ -111,6 +111,9 @@ export class PersonalWalletsComponent implements OnInit, OnDestroy {
     }
 
     showDetails(details: ProfileItemContainer): void {
+        if (!details.wallet) {
+            details.meta = this.cryptoList;
+        }
         this.onShowDetails.emit(details);
     }
 }
