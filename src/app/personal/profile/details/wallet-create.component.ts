@@ -2,10 +2,11 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { AssetAddressShort } from 'src/app/model/generated-models';
+import { AssetAddressShort, UserVault } from 'src/app/model/generated-models';
 import { CurrencyView } from 'src/app/model/payment.model';
 import { ProfileItemContainer, ProfileItemContainerType } from 'src/app/model/profile-item.model';
 import { WalletItem } from "src/app/model/wallet.model";
+import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
 
@@ -20,6 +21,7 @@ export class PersonalWalletCreateComponent implements OnInit, OnDestroy {
 
     completeMode = false;
     title = 'Add new wallet';
+    errorMessage = '';
     inProgress = false;
     wallet: WalletItem | undefined = undefined;
     selectedCurrency: CurrencyView | undefined = undefined;
@@ -37,6 +39,7 @@ export class PersonalWalletCreateComponent implements OnInit, OnDestroy {
     constructor(
         private clipboard: Clipboard,
         private formBuilder: FormBuilder,
+        private auth: AuthService,
         private errorHandler: ErrorService,
         private profileService: ProfileDataService) { }
 
@@ -66,28 +69,45 @@ export class PersonalWalletCreateComponent implements OnInit, OnDestroy {
         }
     }
 
-    createWallet(): void {
-        //     const val = this.walletNameField?.value;
-        //     if (val) {
-        //         this.onError.emit('');
-        //         this.inProgress = true;
-        //         this.subscriptions.add(
-        //             this.profileService.updateMyVault(this.wallet?.vault ?? '', val).subscribe(({ data }) => {
-        //                 console.log(data);
-        //                 if (data && data.updateMyVault) {
-        //                     const result = data.updateMyVault as UserVault;
-        //                     if (result.name) {
-        //                         this.wallet?.setName(result.name);
-        //                         this.editMode = false;
-        //                     }
-        //                 }
-        //                 this.inProgress = false;
-        //             }, (error) => {
-        //                 this.inProgress = false;
-        //                 this.onError.emit(this.errorHandler.getError(error.message, `Unable to change notification status`));
-        //             })
-        //         );
-        //     }
+    createWallet(currency: string, walletName: string): void {
+        this.errorMessage = '';
+        this.inProgress = true;
+        this.subscriptions.add(
+            this.profileService.addMyVault(currency, walletName).subscribe(({ data }) => {
+                this.inProgress = false;
+                console.log(data);
+                if (data && data.addMyVault) {
+                    const result = data.addMyVault as UserVault;
+                    let walletAddress = '';
+                    let walletAddressFormat = '';
+                    result.assets?.forEach(x => {
+                        x.addresses?.forEach(a => {
+                            if (a.address && a.addressFormat) {
+                                walletAddress = a.address;
+                                walletAddressFormat = a.addressFormat;
+                            }
+                        });
+                    });
+                    if (walletAddress != '') {
+                        const walletData = {
+                            address: walletAddress,
+                            addressFormat: walletAddressFormat,
+                            assetId: currency,
+                            total: 0,
+                            totalFiat: 0,
+                            totalEur: 0,
+                            vaultName: walletName
+                        } as AssetAddressShort;
+                        this.wallet = new WalletItem(walletData, this.auth.user?.defaultFiatCurrency ?? 'EUR');
+                        this.completeMode = true;
+                        this.title = 'New wallet created!';
+                    }
+                }
+            }, (error) => {
+                this.inProgress = false;
+                this.errorMessage = this.errorHandler.getError(error.message, `Unable to create a new wallet`);
+            })
+        );
     }
 
     submit(): void {
@@ -96,23 +116,8 @@ export class PersonalWalletCreateComponent implements OnInit, OnDestroy {
             this.walletNameField?.setValue('');
         }
         if (this.createForm.valid) {
-            this.completeMode = true;
-            this.title = 'New wallet created!';
+            this.createWallet(this.currencyField?.value, this.walletNameField?.value);
         }
-
-        //this.createWallet();
-
-        // temp
-        // console.log('submit');
-        // this.wallet = new WalletItem({
-        //     assetId: 'BTC',
-        //     address: 'kdlvmnre084jgepsvnr894336gedsvdsv',
-        //     addressFormat: 'BITCOIN',
-        //     total: 0,
-        //     totalFiat: 0,
-        //     vaultName: 'Bitcoin HODL'
-        // } as AssetAddressShort, 'EUR');
-        // temp
     }
 
     complete(): void {

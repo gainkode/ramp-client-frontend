@@ -276,6 +276,28 @@ const MAKE_NOTIFICATIONS_VIEWED = gql`
   }
 `;
 
+const ADD_MY_VAULT = gql`
+  mutation AddMyVault(
+    $vaultName: String!,
+    $assetId: String!
+  ) {
+    addMyVault(
+      vaultName: $vaultName
+      assetId: $assetId
+    ) {
+      assets {
+        addresses {
+          address
+          legacyAddress
+          description
+          type
+          addressFormat
+        }
+      }
+    }
+  }
+`;
+
 const UPDATE_MY_VAULT = gql`
   mutation UpdateMyVault(
     $vaultId: String,
@@ -520,6 +542,16 @@ export class ProfileDataService {
       mutation: MAKE_NOTIFICATIONS_VIEWED,
       variables: {
         notificationIds: idList,
+      },
+    });
+  }
+
+  addMyVault(asset: string, name: String): Observable<any> {
+    return this.apollo.mutate({
+      mutation: ADD_MY_VAULT,
+      variables: {
+        assetId: asset,
+        vaultName: name
       },
     });
   }

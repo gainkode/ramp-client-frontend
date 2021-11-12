@@ -71,7 +71,7 @@ export class PersonalWalletDetailsComponent implements OnDestroy {
                     this.inProgress = false;
                 }, (error) => {
                     this.inProgress = false;
-                    this.onError.emit(this.errorHandler.getError(error.message, `Unable to change notification status`));
+                    this.onError.emit(this.errorHandler.getError(error.message, `Unable to change the wallet name`));
                 })
             );
         }
