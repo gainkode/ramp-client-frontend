@@ -140,7 +140,6 @@ export class PersonalComponent implements OnInit {
                 walletPanel.addWallet(container.wallet);
             } else if (container.action === ProfileItemActionType.Remove) {
                 const walletPanel = this.dataPanel as PersonalWalletsComponent;
-                console.log('detailsComplete', container.wallet.vault);
                 walletPanel.removeWallet(container.wallet.vault);
             }
         }

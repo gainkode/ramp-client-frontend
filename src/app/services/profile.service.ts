@@ -427,13 +427,23 @@ export class ProfileDataService {
         { orderBy: orderField, desc: orderDesc },
         { orderBy: 'created', desc: orderDesc }
       ];
+      console.log(JSON.stringify({
+        sourcesOnly: sources,
+        transactionDateOnly: transactionDate,
+        transactionTypesOnly: transactionTypes,
+        sendersOrReceiversOnly: [sendersOrReceivers],
+        filter: '',
+        skip: pageIndex * takeItems,
+        first: takeItems,
+        orderBy: orderFields,
+      }));
       return this.apollo.watchQuery<any>({
         query: GET_MY_TRANSACTIONS,
         variables: {
           sourcesOnly: sources,
           transactionDateOnly: transactionDate,
           transactionTypesOnly: transactionTypes,
-          sendersOrReceiversOnly: [sendersOrReceivers],
+          sendersOrReceiversOnly: (sendersOrReceivers === '') ? undefined : [sendersOrReceivers],
           filter: '',
           skip: pageIndex * takeItems,
           first: takeItems,

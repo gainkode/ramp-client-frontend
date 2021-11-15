@@ -1,6 +1,24 @@
 <form [formGroup]="filterForm" (ngSubmit)="onSubmit()">
     <div class="__tool-bar-container">
         <div class="__tool-bar-filter-container">
+
+
+            <div class="__tool-bar-block-lg">
+                <button type="button" class="__outlined-button __outlined-button-lg" (click)="addContact()">
+                    <mat-icon style="font-size: 18px;margin-top: 8px;">
+                        add
+                    </mat-icon>
+                    <span style="font-weight: 500;">
+                        Add new contact
+                    </span>
+                </button>
+            </div>
+
+
+            
+
+
+
             <!-- Wallet type filter -->
             <!-- <div class="__tool-bar-block">
                 <div class="__tool-bar-label">

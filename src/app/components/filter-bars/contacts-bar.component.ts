@@ -54,6 +54,10 @@ export class ContactsFilterBarComponent implements OnInit, OnDestroy {
         this.subscriptions.unsubscribe();
     }
 
+    addContact(): void {
+
+    }
+    
     // get selectedTransactionTypes(): string {
     //     const selected = this.transactionTypesField?.value as TransactionType[];
     //     if (selected.length === this.transactionTypes.length) {
