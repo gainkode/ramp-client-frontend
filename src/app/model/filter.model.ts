@@ -155,23 +155,50 @@ export class WalletsFilter implements ProfileBaseFilter {
 export class ContactsFilter implements ProfileBaseFilter {
     email: string = '';
     userName: string = '';
+    zeroBalance = false;
+    currencies: string[] = [];
+    currenciesSize = 0;
 
     setData(data: any): void {
         this.email = '';
         this.userName = '';
+        this.zeroBalance = false;
+        this.currencies = [];
+        console.log('contacts filter', data);
         if (data.email) {
             this.email = data.email;
         }
-        if (data.userName) {
+        if (data.user) {
             this.userName = data.user;
+        }
+        if (data.balance) {
+            this.zeroBalance = (data.balance === 'true');
+        }
+        if (data.currencies) {
+            const selectedCurrencies = data.currencies.split(',');
+            selectedCurrencies.forEach(w => { this.currencies.push((w as string).toUpperCase()); });
         }
     }
 
     getParameters(): {} {
+        let currenciesFilter = '';
+        if (this.currencies.length > 0 && this.currencies.length < this.currenciesSize) {
+            let i = 0;
+            this.currencies.forEach(t => {
+                currenciesFilter += t.toString();
+                i++;
+                if (i < this.currencies.length) {
+                    currenciesFilter += ',';
+                }
+            });
+        }
         const result = {
+            ...(this.zeroBalance && { balance: this.zeroBalance }),
+            ...(currenciesFilter !== '' && { currencies: currenciesFilter.toLowerCase() }),
             ...(this.email !== '' && { email: this.email }),
             ...(this.userName !== '' && { user: this.userName })
         };
+        console.log('result filter', currenciesFilter, result);
         return result;
     }
 }

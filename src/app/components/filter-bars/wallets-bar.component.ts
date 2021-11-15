@@ -119,8 +119,8 @@ export class WalletsFilterBarComponent implements OnInit, OnDestroy {
             this.internalLoading = true;
             this.zeroBalanceField?.setValue(false);
             this.internalLoading = false;
+            this.onSubmit();
         }
-        this.onSubmit();
     }
 
     resetFilter(): void {

@@ -40,6 +40,8 @@ export class PersonalContactsComponent implements OnInit, OnDestroy {
         private errorHandler: ErrorService,
         private router: Router) {
         this.filter.setData({
+            currencies: this.activeRoute.snapshot.params['currencies'],
+            balance: this.activeRoute.snapshot.params['balance'],
             email: this.activeRoute.snapshot.params['email'],
             user: this.activeRoute.snapshot.params['user']
         });
@@ -92,7 +94,7 @@ export class PersonalContactsComponent implements OnInit, OnDestroy {
     onFilterUpdate(filter: ProfileBaseFilter): void {
         this.router.navigateByUrl('/', { skipLocationChange: true }).then(() =>
             this.router.navigate([
-                `${this.auth.getUserMainPage()}/contacts`,
+                `${this.auth.getUserMainPage()}/contactlist`,
                 filter.getParameters()
             ])
         );

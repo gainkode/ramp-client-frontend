@@ -1,109 +1,105 @@
 <form [formGroup]="filterForm" (ngSubmit)="onSubmit()">
     <div class="__tool-bar-container">
         <div class="__tool-bar-filter-container">
+            <div class="__tool-bar-double-sided-container">
+                <div class="__tool-bar-double-sided-data-box">
+                    <div class="__tool-bar-filter-mixed-height-area">
+                        <!-- Add new contact button -->
+                        <div class="__tool-bar-block-lg">
+                            <button type="button" class="__outlined-button __outlined-button-lg" (click)="addContact()">
+                                <mat-icon style="font-size: 18px;margin-top: 8px;">
+                                    add
+                                </mat-icon>
+                                <span style="font-weight: 500;">
+                                    Add new contact
+                                </span>
+                            </button>
+                        </div>
+                        <!-- Controls -->
+                        <div class="__tool-bar-filter-mixed-height-small">
+                            <div class="__tool-bar-label"></div> <!-- Space -->
+                            <!-- Wallet coin -->
+                            <div class="__tool-bar-block">
+                                <div class="__tool-bar-label">
+                                    Wallet coin
+                                </div>
+                            </div>
+                            <div class="__tool-bar-block __tool-bar-data-block">
+                                <mat-select formControlName="currencies" multiple style="margin: 3px 0px 0px 0px;">
+                                    <mat-select-trigger>
+                                        <span class="__mat-select-item">
+                                            {{selectedCurrency}}
+                                        </span>
+                                    </mat-select-trigger>
+                                    <mat-option *ngFor="let item of cryptoList" [value]="item.id" style="height: 32px;">
+                                        <div class="__tool-bar-image-combo-item">
+                                            <img class="__tool-bar-image-combo-item-img" [src]="item.img">
+                                            <span class="__tool-bar-image-combo-item-text">
+                                                {{item.title}}
+                                            </span>
+                                        </div>
+                                    </mat-option>
+                                </mat-select>
+                            </div>
+                            <div class="__tool-bar-label"></div> <!-- Space -->
+                            <!-- Email -->
+                            <div class="__tool-bar-block">
+                                <div class="__tool-bar-label">
+                                    E-mail
+                                </div>
+                            </div>
+                            <div>
+                                <div class="__tool-bar-block">
+                                    <!-- <input class="__tool-bar-text-box __tool-bar-text-box-error" type="text"/> -->
+                                    <input
+                                        [ngClass]="{'__tool-bar-text-box': true, '__tool-bar-text-box-error': emailField?.errors}"
+                                        type="text" formControlName="email" maxlength="70" />
+                                </div>
+                                <div *ngIf="emailField?.errors?.email && (emailField?.dirty || emailField?.touched)"
+                                    class="__tool-bar-error">
+                                    Invalid email format
+                                </div>
+                            </div>
+                            <div class="__tool-bar-label"></div> <!-- Space -->
+                            <!-- Email -->
+                            <div class="__tool-bar-block">
+                                <div class="__tool-bar-label">
+                                    User name
+                                </div>
+                            </div>
+                            <div class="__tool-bar-block">
+                                <input class="__tool-bar-text-box" type="text" formControlName="userName"
+                                    maxlength="70" />
+                            </div>
+                            <div class="__tool-bar-label"></div> <!-- Space -->
+                            <!-- Search button -->
+                            <button class="__toggle-like-button" type="submit"
+                                [disabled]="filterForm.invalid">Search</button>
+                            <div class="__tool-bar-label"></div> <!-- Space -->
+                            <button class="__toggle-like-button" type="button" (click)="resetFilter()">Clear
+                                all</button>
+                        </div>
 
+                    </div>
+                </div>
+                <div class="__tool-bar-double-sided-data-box-top">
 
-            <div class="__tool-bar-block-lg">
-                <button type="button" class="__outlined-button __outlined-button-lg" (click)="addContact()">
-                    <mat-icon style="font-size: 18px;margin-top: 8px;">
-                        add
-                    </mat-icon>
-                    <span style="font-weight: 500;">
-                        Add new contact
-                    </span>
-                </button>
-            </div>
-
-
-            
-
-
-
-            <!-- Wallet type filter -->
-            <!-- <div class="__tool-bar-block">
-                <div class="__tool-bar-label">
-                    Wallet
+                    <div class="__tool-bar-double-sided-data-box">
+                        <div class="__tool-bar-block">
+                            <div class="__tool-bar-label">
+                                Show zero balance
+                            </div>
+                        </div>
+                        <div class="__tool-bar-block">
+                            <div class="__toggle-switch">
+                                <input type="checkbox" id="toggle-button" class="__toggle-switch-slider"
+                                    formControlName="zeroBalance">
+                            </div>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
-            <div class="__tool-bar-block __tool-bar-data-block">
-                <mat-select formControlName="walletTypes" multiple>
-                    <mat-select-trigger>
-                        <span class="__mat-select-item">
-                            {{selectedWalletTypes}}
-                        </span>
-                    </mat-select-trigger>
-                    <mat-option *ngFor="let item of walletTypes" [value]="item.id" style="height: 36px;">
-                        <span class="__mat-select-item">
-                            {{item.name}}
-                        </span>
-                    </mat-option>
-                </mat-select>
-            </div> -->
-            <div class="__tool-bar-label"></div> <!-- Space -->
-            <!-- Transaction type filter -->
-            <!-- <div class="__tool-bar-block">
-                <div class="__tool-bar-label">
-                    Transaction type
-                </div>
-            </div>
-            <div class="__tool-bar-block __tool-bar-data-block">
-                <mat-select formControlName="transactionTypes" multiple>
-                    <mat-select-trigger>
-                        <span class="__mat-select-item">
-                            {{selectedTransactionTypes}}
-                        </span>
-                    </mat-select-trigger>
-                    <mat-option *ngFor="let item of transactionTypes" [value]="item.id" style="height: 36px;">
-                        <span class="__mat-select-item">
-                            {{item.name}}
-                        </span>
-                    </mat-option>
-                </mat-select>
-            </div> -->
-            <div class="__tool-bar-label"></div> <!-- Space -->
-            <!-- Transaction date filter -->
-            <!-- <div class="__tool-bar-block">
-                <div class="__tool-bar-label">
-                    Transaction date
-                </div>
-            </div>
-            <div>
-                <div class="__tool-bar-block">
-                    <input
-                        [ngClass]="{'__tool-bar-text-box': true, '__tool-bar-text-box-error': transactionDateField?.errors}"
-                        type="text" mask="d0/M0/0000" placeholder="DD/MM/YYYY" [dropSpecialCharacters]="false"
-                        formControlName="transactionDate" />
-                </div>
-                <div *ngIf="transactionDateField?.errors?.pattern && (transactionDateField?.dirty || transactionDateField?.touched)"
-                    class="__tool-bar-error">
-                    Invalid date format
-                </div>
-            </div> -->
-            <div class="__tool-bar-label"></div> <!-- Space -->
-            <!-- Email -->
-            <div class="__tool-bar-block">
-                <div class="__tool-bar-label">
-                    E-mail
-                </div>
-            </div>
-            <div class="__tool-bar-block">
-                <input class="__tool-bar-text-box" type="text" formControlName="email" maxlength="70" />
-            </div>
-            <div class="__tool-bar-label"></div> <!-- Space -->
-            <!-- Email -->
-            <div class="__tool-bar-block">
-                <div class="__tool-bar-label">
-                    User name
-                </div>
-            </div>
-            <div class="__tool-bar-block">
-                <input class="__tool-bar-text-box" type="text" formControlName="userName" maxlength="70" />
-            </div>
-            <div class="__tool-bar-label"></div> <!-- Space -->
-            <!-- Search button -->
-            <button class="__toggle-like-button" type="submit" [disabled]="filterForm.invalid">Search</button>
-            <div class="__tool-bar-label"></div> <!-- Space -->
-            <button class="__toggle-like-button" type="button" (click)="resetFilter()">Clear all</button>
         </div>
 
         <div class="__tool-bar-filter-cloud">

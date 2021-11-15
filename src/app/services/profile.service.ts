@@ -444,7 +444,7 @@ export class ProfileDataService {
           transactionDateOnly: transactionDate,
           transactionTypesOnly: transactionTypes,
           sendersOrReceiversOnly: (sendersOrReceivers === '') ? undefined : [sendersOrReceivers],
-          filter: '',
+          filter: undefined,
           skip: pageIndex * takeItems,
           first: takeItems,
           orderBy: orderFields,
