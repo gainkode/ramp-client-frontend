@@ -109,6 +109,9 @@ export class PersonalTransactionListComponent implements OnDestroy, AfterViewIni
             this.pageIndex,
             this.pageSize,
             this.filter.walletTypes,
+            this.filter.transactionDate,
+            this.filter.transactionTypes,
+            this.filter.sender,
             this.getSortedField(),
             this.sortedDesc);
         if (transactionsData === null) {

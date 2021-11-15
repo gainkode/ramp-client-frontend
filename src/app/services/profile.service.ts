@@ -2,11 +2,14 @@ import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { Observable } from 'rxjs';
 import { EmptyObject } from 'apollo-angular/types';
-import { TransactionSource, UserBalanceHistoryPeriod } from '../model/generated-models';
+import { TransactionSource, TransactionType, UserBalanceHistoryPeriod } from '../model/generated-models';
 
 const GET_MY_TRANSACTIONS = gql`
   query MyTransactions(
     $sourcesOnly: [TransactionSource!]
+    $transactionDateOnly: DateTime
+    $transactionTypesOnly: [TransactionType!]
+    $sendersOrReceiversOnly: [String!]
     $filter: String
     $skip: Int
     $first: Int
@@ -14,6 +17,9 @@ const GET_MY_TRANSACTIONS = gql`
   ) {
     myTransactions(
       sourcesOnly: $sourcesOnly
+      transactionDateOnly: $transactionDateOnly
+      transactionTypesOnly: $transactionTypesOnly
+      sendersOrReceiversOnly: $sendersOrReceiversOnly
       filter: $filter
       skip: $skip
       first: $first
@@ -410,6 +416,9 @@ export class ProfileDataService {
     pageIndex: number,
     takeItems: number,
     sources: TransactionSource[],
+    transactionDate: Date | undefined,
+    transactionTypes: TransactionType[],
+    sendersOrReceivers: String,
     orderField: string,
     orderDesc: boolean
   ): QueryRef<any, EmptyObject> | null {
@@ -422,6 +431,9 @@ export class ProfileDataService {
         query: GET_MY_TRANSACTIONS,
         variables: {
           sourcesOnly: sources,
+          transactionDateOnly: transactionDate,
+          transactionTypesOnly: transactionTypes,
+          sendersOrReceiversOnly: [sendersOrReceivers],
           filter: '',
           skip: pageIndex * takeItems,
           first: takeItems,
