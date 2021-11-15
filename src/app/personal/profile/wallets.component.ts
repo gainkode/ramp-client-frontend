@@ -61,6 +61,16 @@ export class PersonalWalletsComponent implements OnInit, OnDestroy {
         }
     }
 
+    removeWallet(id: string): void {
+        console.log('removeWallet', id);
+        if (this.dataListPanel) {
+            const index = this.dataListPanel.wallets.findIndex(x => x.vault === id);
+            if (index >= 0) {
+                this.dataListPanel.wallets.splice(index, 1);
+            }
+        }
+    }
+
     private loadCurrencyData(): void {
         this.cryptoList = [];
         this.inProgressFilter = true;

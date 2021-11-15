@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, OnDestroy, Output } from "@angular/core
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { UserVault } from 'src/app/model/generated-models';
+import { ProfileItemActionType, ProfileItemContainer, ProfileItemContainerType } from 'src/app/model/profile-item.model';
 import { WalletItem } from "src/app/model/wallet.model";
 import { ErrorService } from 'src/app/services/error.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
@@ -15,6 +16,7 @@ import { ProfileDataService } from 'src/app/services/profile.service';
 export class PersonalWalletDetailsComponent implements OnDestroy {
     @Input() wallet: WalletItem | undefined;
     @Output() onError = new EventEmitter<string>();
+    @Output() onComplete = new EventEmitter<ProfileItemContainer>();
 
     editMode = false;
     deleteMode = false;
@@ -60,7 +62,6 @@ export class PersonalWalletDetailsComponent implements OnDestroy {
             this.inProgress = true;
             this.subscriptions.add(
                 this.profileService.updateMyVault(this.wallet?.vault ?? '', val).subscribe(({ data }) => {
-                    console.log(data);
                     if (data && data.updateMyVault) {
                         const result = data.updateMyVault as UserVault;
                         if (result.name) {
@@ -90,12 +91,29 @@ export class PersonalWalletDetailsComponent implements OnDestroy {
     }
 
     deleteWallet(): void {
-        console.log('delete wallet');
-        this.deleteMode = false;
+        this.onError.emit('');
+        this.inProgress = true;
+        this.subscriptions.add(
+            this.profileService.deleteMyVault(this.wallet?.vault ?? '').subscribe(({ data }) => {
+                this.inProgress = false;
+                console.log('delete wallet data', this.wallet?.vault, data);
+                if (data && data.deleteMyVault) {
+                    const item = new ProfileItemContainer();
+                    item.container = ProfileItemContainerType.Wallet;
+                    item.action = ProfileItemActionType.Create;
+                    item.wallet = new WalletItem(null, '');
+                    item.wallet.vault = this.wallet?.vault ?? '';
+                    console.log('emit', item.wallet.vault);
+                    this.onComplete.emit(item);
+                }
+            }, (error) => {
+                this.inProgress = false;
+                this.onError.emit(this.errorHandler.getError(error.message, `Unable to remove the wallet`));
+            })
+        );
     }
 
     cancelDelete(): void {
-        console.log('cancel delete wallet');
         this.deleteMode = false;
     }
 }

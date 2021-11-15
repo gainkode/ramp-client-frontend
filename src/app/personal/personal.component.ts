@@ -3,7 +3,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { Event as NavigationEvent } from '@angular/router';
 import { MenuItem } from '../model/common.model';
 import { CurrencyView } from '../model/payment.model';
-import { ProfileItemContainer, ProfileItemContainerType } from '../model/profile-item.model';
+import { ProfileItemActionType, ProfileItemContainer, ProfileItemContainerType } from '../model/profile-item.model';
 import {
     PersonalProfileMenuItems,
     PersonalProfilePopupAdministrationMenuItem,
@@ -135,8 +135,14 @@ export class PersonalComponent implements OnInit {
     detailsComplete(container: ProfileItemContainer): void {
         console.log(container.container, this.dataPanel);
         if (container.container === ProfileItemContainerType.Wallet && container.wallet) {
-            const walletPanel = this.dataPanel as PersonalWalletsComponent;
-            walletPanel.addWallet(container.wallet);
+            if (container.action === ProfileItemActionType.Create) {
+                const walletPanel = this.dataPanel as PersonalWalletsComponent;
+                walletPanel.addWallet(container.wallet);
+            } else if (container.action === ProfileItemActionType.Remove) {
+                const walletPanel = this.dataPanel as PersonalWalletsComponent;
+                console.log('detailsComplete', container.wallet.vault);
+                walletPanel.removeWallet(container.wallet.vault);
+            }
         }
         this.closeDetails();
     }

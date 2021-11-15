@@ -64,7 +64,8 @@
                 <app-personal-transaction-details *ngIf="detailsType==='transaction'"
                     [transaction]="detailsContainer?.transaction">
                 </app-personal-transaction-details>
-                <app-personal-wallet-details *ngIf="detailsType==='wallet'" [wallet]="detailsContainer?.wallet">
+                <app-personal-wallet-details *ngIf="detailsType==='wallet'" [wallet]="detailsContainer?.wallet"
+                    (onComplete)="detailsComplete($event)">
                 </app-personal-wallet-details>
                 <app-personal-wallet-create *ngIf="detailsType==='new_wallet'" [cryptoList]="cryptoList"
                     (onComplete)="detailsComplete($event)">

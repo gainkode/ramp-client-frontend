@@ -110,10 +110,8 @@ export class PersonalBalanceListComponent implements OnInit, OnDestroy {
                         balanceItem.increaseCrypto(balance.totalBalance);
                         balanceItem.increaseFiat(balance.totalBalanceFiat);
                     } else {
-                        console.log(`find currency as  ${balance.assetId}`);
                         const currency = this.currencies.find(c => c.symbol === balance.assetId);
                         if (currency) {
-                            console.log(`add as  ${currency.name}`);
                             this.balances.push(new UserBalanceItem(balance, currency.name, this.currentCurrency, this.fiatPrecision));
                         }
                     }

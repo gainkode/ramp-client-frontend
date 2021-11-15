@@ -4,7 +4,7 @@ import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { AssetAddressShort, UserVault } from 'src/app/model/generated-models';
 import { CurrencyView } from 'src/app/model/payment.model';
-import { ProfileItemContainer, ProfileItemContainerType } from 'src/app/model/profile-item.model';
+import { ProfileItemActionType, ProfileItemContainer, ProfileItemContainerType } from 'src/app/model/profile-item.model';
 import { WalletItem } from "src/app/model/wallet.model";
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
@@ -123,6 +123,7 @@ export class PersonalWalletCreateComponent implements OnInit, OnDestroy {
     complete(): void {
         const item = new ProfileItemContainer();
         item.container = ProfileItemContainerType.Wallet;
+        item.action = ProfileItemActionType.Create;
         item.wallet = this.wallet;
         this.onComplete.emit(item);
     }

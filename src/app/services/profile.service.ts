@@ -288,10 +288,10 @@ const ADD_MY_VAULT = gql`
       assets {
         addresses {
           address
+          addressFormat
           legacyAddress
           description
           type
-          addressFormat
         }
       }
     }
@@ -306,6 +306,18 @@ const UPDATE_MY_VAULT = gql`
     updateMyVault(
       vaultId: $vaultId
       vaultName: $vaultName
+    ) {
+      name
+    }
+  }
+`;
+
+const DELETE_MY_VAULT = gql`
+  mutation DeleteMyVault(
+    $vaultId: String
+  ) {
+    deleteMyVault(
+      vaultId: $vaultId
     ) {
       name
     }
@@ -556,7 +568,7 @@ export class ProfileDataService {
     });
   }
 
-  updateMyVault(vault: string, name: String): Observable<any> {
+  updateMyVault(vault: string, name: string): Observable<any> {
     return this.apollo.mutate({
       mutation: UPDATE_MY_VAULT,
       variables: {
@@ -566,6 +578,16 @@ export class ProfileDataService {
     });
   }
 
+  deleteMyVault(id: string): Observable<any> {
+    console.log('deleteMyVault', id);
+    return this.apollo.mutate({
+      mutation: DELETE_MY_VAULT,
+      variables: {
+        vaultId: id
+      },
+    });
+  }
+  
   saveUserInfo(
     firstName: string,
     lastName: string,
