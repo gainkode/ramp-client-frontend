@@ -1,4 +1,5 @@
 import { TransactionItem } from "./transaction.model";
+import { ContactItem } from "./user.model";
 import { WalletItem } from "./wallet.model";
 
 export enum ProfileItemContainerType {
@@ -20,5 +21,6 @@ export class ProfileItemContainer {
     action: ProfileItemActionType = ProfileItemActionType.None;
     transaction: TransactionItem | undefined = undefined;
     wallet: WalletItem | undefined = undefined;
+    contact: ContactItem | undefined = undefined;
     meta: any;
 }

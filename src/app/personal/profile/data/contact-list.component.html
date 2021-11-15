@@ -1,0 +1,142 @@
+<div>
+    <table mat-table class="__profile-data-table" [dataSource]="contacts" matSort [matSortActive]="sortedField"
+        matSortDirection="desc" matSortDisableClear>
+        <!-- Contact Icon -->
+        <ng-container matColumnDef="icon">
+            <th mat-header-cell *matHeaderCellDef class="__profile-table-column __profile-contacts-table-column-icon">
+                <span class="__profile-table-header">
+                </span>
+            </th>
+            <td mat-cell *matCellDef="let element" class="__profile-contacts-table-cell-plain">
+                <!-- <div style="display: flex;flex-direction: row;align-items: center;">
+                    <img class="__profile-transactions-table-cell-transaction-icon"
+                        src="../../../assets/navigation/__temp_send_icon.svg">
+                    <div class="__profile-transactions-table-cell-data">
+                        {{element.typeName}}
+                    </div>
+                </div> -->
+            </td>
+        </ng-container>
+
+        <!-- User name -->
+        <ng-container matColumnDef="userName">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef
+                class="__profile-table-column __profile-contacts-table-column-user-name">
+                <span class="__profile-table-header">
+                    User name
+                </span>
+            </th>
+            <td mat-cell *matCellDef="let element" class="__profile-contacts-table-cell-plain">
+                <div class="__profile-contacts-table-cell-data">
+                    {{element.userName}}
+                </div>
+            </td>
+        </ng-container>
+
+        <!-- Email -->
+        <ng-container matColumnDef="email">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef
+                class="__profile-table-column __profile-contacts-table-column-email">
+                <span class="__profile-table-header">
+                    Email
+                </span>
+            </th>
+            <td mat-cell *matCellDef="let element" class="__profile-contacts-table-cell-plain">
+                <div class="__profile-contacts-table-cell-data">
+                    {{element.email}}
+                </div>
+            </td>
+        </ng-container>
+
+        <!-- Coin -->
+        <ng-container matColumnDef="coin">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef
+                class="__profile-table-column __profile-contacts-table-column-coin">
+                <span class="__profile-table-header">
+                    Coin
+                </span>
+            </th>
+            <td mat-cell *matCellDef="let element" class="__profile-contacts-table-cell-plain">
+                <div class="__profile-contacts-table-cell-data">
+                    <!-- {{element.email}} -->
+                </div>
+            </td>
+        </ng-container>
+
+        <!-- Total Sent -->
+        <ng-container matColumnDef="sent">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef
+                class="__profile-table-column __profile-contacts-table-column-sent">
+                <span class="__profile-table-header">
+                    Total Sent
+                </span>
+            </th>
+            <td mat-cell *matCellDef="let element" class="__profile-contacts-table-cell-plain">
+                <div class="__profile-contacts-table-cell-data">
+                    <!-- {{element.sent}} -->
+                </div>
+            </td>
+        </ng-container>
+
+        <!-- Total Received -->
+        <ng-container matColumnDef="received">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef
+                class="__profile-table-column __profile-contacts-table-column-received">
+                <span class="__profile-table-header">
+                    Total Received
+                </span>
+            </th>
+            <td mat-cell *matCellDef="let element" class="__profile-contacts-table-cell-plain">
+                <div class="__profile-contacts-table-cell-data">
+                    <!-- {{element.received}} -->
+                </div>
+            </td>
+        </ng-container>
+
+        <!-- Added -->
+        <ng-container matColumnDef="added">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef
+                class="__profile-table-column __profile-contacts-table-column-added">
+                <span class="__profile-table-header">
+                    Date Added
+                </span>
+            </th>
+            <td mat-cell *matCellDef="let element" class="__profile-contacts-table-cell-plain">
+                <div class="__profile-contacts-table-cell-data">
+                    <!-- {{element.received}} -->
+                </div>
+            </td>
+        </ng-container>
+
+        <!-- Details Column -->
+        <ng-container matColumnDef="details">
+            <th mat-header-cell *matHeaderCellDef
+                class="__profile-table-column __profile-contacts-table-column-details">
+                <div class="__profile-table-details-table">
+                    <button class="__small-button" type="button" disabled>
+                        .pdf
+                    </button>
+                    <div class="__button-separator-sm"></div>
+                    <button class="__small-button" type="button" disabled>
+                        .csv
+                    </button>
+                </div>
+            </th>
+            <td mat-cell *matCellDef="let element">
+                <div class="__profile-contacts-table-cell-details">
+                    <button type="button" class="__table-button" (click)="showDetailsPanel(element)">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <mat-paginator color="accent" *ngIf="contactCount > pageCounts[0] && contactCount > 0"
+        class="__profile-data-table" [pageIndex]="pageIndex" [length]="contactCount"
+        [pageSize]="pageSize" [pageSizeOptions]="pageCounts" showFirstLastButtons (page)="handlePage($event)">
+    </mat-paginator>
+</div>

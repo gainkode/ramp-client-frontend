@@ -71,7 +71,7 @@ export class ProfileContactsComponent {
 
     private loadContacts(): void {
         this.contactCount = 0;
-        const contactsData = this.profileService.getProfileContacts(
+        const contactsData = this.profileService.getMyContacts(
             this.pageIndex,
             this.pageSize,
             this.sortedField,

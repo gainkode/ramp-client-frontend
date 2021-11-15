@@ -232,7 +232,7 @@ const GET_PROFILE_ME = gql`
   }
 `;
 
-const GET_PROFILE_CONTACTS = gql`
+const GET_MY_CONTACTS = gql`
   query MyContacts(
     $filter: String
     $skip: Int
@@ -497,7 +497,7 @@ export class ProfileDataService {
     }
   }
 
-  getProfileContacts(
+  getMyContacts(
     pageIndex: number,
     takeItems: number,
     orderField: string,
@@ -506,7 +506,7 @@ export class ProfileDataService {
     if (this.apollo.client !== undefined) {
       const orderFields = [{ orderBy: orderField, desc: orderDesc }];
       return this.apollo.watchQuery<any>({
-        query: GET_PROFILE_CONTACTS,
+        query: GET_MY_CONTACTS,
         variables: {
           filter: '',
           skip: pageIndex * takeItems,

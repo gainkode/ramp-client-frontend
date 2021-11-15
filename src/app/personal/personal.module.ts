@@ -48,6 +48,7 @@ import { PersonalNotificationListComponent } from './profile/data/notification-l
 import { PersonalWalletListComponent } from './profile/data/wallet-list.component';
 import { PersonalWalletDetailsComponent } from './profile/details/wallet-details.component';
 import { PersonalWalletCreateComponent } from './profile/details/wallet-create.component';
+import { PersonalContactListComponent } from './profile/data/contact-list.component';
 
 const routing = RouterModule.forChild([
     // Main page
@@ -128,7 +129,7 @@ export class MaterialModule { }
         PersonalNotificationsComponent,
         // Data containers
         PersonalBalanceChartComponent, PersonalBalanceListComponent, PersonalTransactionListComponent, PersonalWalletListComponent,
-        PersonalNotificationListComponent,
+        PersonalContactListComponent, PersonalNotificationListComponent,
         // Obsolete pages
         ProfileMainPersonalComponent, KycPersonalComponent, PersonalMyAccountComponent],
     providers: [PersonalGuard],

@@ -5,9 +5,11 @@ import { ContactsFilter, ProfileBaseFilter } from 'src/app/model/filter.model';
 import { SettingsCurrencyWithDefaults } from 'src/app/model/generated-models';
 import { CurrencyView } from 'src/app/model/payment.model';
 import { ProfileItemContainer } from 'src/app/model/profile-item.model';
+import { ContactItem } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
 import { ErrorService } from 'src/app/services/error.service';
+import { PersonalContactListComponent } from './data/contact-list.component';
 
 @Component({
     selector: 'app-personal-contacts',
@@ -16,13 +18,13 @@ import { ErrorService } from 'src/app/services/error.service';
 })
 export class PersonalContactsComponent implements OnInit, OnDestroy {
     @Output() onShowDetails = new EventEmitter<ProfileItemContainer>();
-    // private dataListPanel!: PersonalContactListComponent;
-    // @ViewChild('datalist') set dataList(panel: PersonalContactListComponent) {
-    //     if (panel) {
-    //         this.dataListPanel = panel;
-    //         this.dataListPanel.load(this.filter);
-    //     }
-    // }
+    private dataListPanel!: PersonalContactListComponent;
+    @ViewChild('datalist') set dataList(panel: PersonalContactListComponent) {
+        if (panel) {
+            this.dataListPanel = panel;
+            this.dataListPanel.load(this.filter);
+        }
+    }
 
     inProgress = false;
     inProgressFilter = false;
@@ -55,11 +57,11 @@ export class PersonalContactsComponent implements OnInit, OnDestroy {
         this.subscriptions.unsubscribe();
     }
 
-    // addContact(contact: ContactItem): void {
-    //     if (this.dataListPanel) {
-    //         this.dataListPanel.contacts.push(contact);
-    //     }
-    // }
+    addContact(contact: ContactItem): void {
+        if (this.dataListPanel) {
+            this.dataListPanel.contacts.push(contact);
+        }
+    }
 
     private loadCurrencyData(): void {
         this.cryptoList = [];
