@@ -932,8 +932,7 @@ export type UserState = {
   __typename?: 'UserState';
   date?: Maybe<Scalars['DateTime']>;
   transactionSummary?: Maybe<Array<UserTransactionSummary>>;
-  vault?: Maybe<UserVault>;
-  additionalVaults?: Maybe<Array<UserVault>>;
+  vaults?: Maybe<Array<UserVault>>;
   externalWallets?: Maybe<Array<ExternalWallet>>;
   notifications?: Maybe<UserNotificationListResult>;
 };

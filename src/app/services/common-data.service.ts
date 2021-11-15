@@ -70,17 +70,7 @@ const MY_BALANCES = gql`
 query MyState {
   myState {
     date,
-    vault {
-      totalBalanceFiat,
-      balancesPerAsset {
-        assetId,
-        totalBalance,
-        totalBalanceFiat,
-        availableBalance,
-        availableBalanceFiat
-      }
-    },
-    additionalVaults {
+    vaults {
       totalBalanceFiat,
       balancesPerAsset {
         assetId,

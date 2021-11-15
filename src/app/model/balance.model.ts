@@ -36,6 +36,10 @@ export class UserBalanceItem {
   private pBalanceFiat = 0;
   private pFiatPrecision = 0;
 
+  get id(): string {
+    return this.pId;
+  }
+
   get currencyName(): string {
     return this.pCryptoCurrency;
   }

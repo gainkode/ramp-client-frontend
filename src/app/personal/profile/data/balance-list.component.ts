@@ -1,8 +1,8 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserBalanceItem } from 'src/app/model/balance.model';
-import { BalancePerAsset, Rate, SettingsCurrency, UserState, UserTransactionSummary, UserVault } from 'src/app/model/generated-models';
+import { Rate, SettingsCurrency, UserState, UserVault } from 'src/app/model/generated-models';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
 import { ErrorService } from 'src/app/services/error.service';
@@ -70,29 +70,8 @@ export class PersonalBalanceListComponent implements OnInit, OnDestroy {
         this.currencies = [];
     }
 
-    private loadRates(): void {
-        const listCrypto: string[] = [];
-        this.currencies.filter(x => x.fiat === false).forEach(x => listCrypto.push(x.symbol));
-        const ratesData = this.paymentService.getRates(listCrypto, this.currentCurrency);
-        if (ratesData === null) {
-            this.onError.emit(this.errorHandler.getRejectedCookieMessage());
-        } else {
-            this.onProgress.emit(true);
-            this.rates = [];
-            this.subscriptions.add(
-                ratesData.valueChanges.subscribe(({ data }) => {
-                    (data.getRates as Rate[]).forEach(x => this.rates.push(x));
-                    this.loadBalanceData();
-                }, (error) => {
-                    this.onProgress.emit(false);
-                    if (this.auth.token !== '') {
-                        this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load exchange reates'));
-                    } else {
-                        this.router.navigateByUrl('/');
-                    }
-                })
-            );
-        }
+    showWallets(id: string): void {
+        this.router.navigateByUrl(`/personal/main/wallets;balance=true;currencies=${id.toLowerCase()}`);
     }
 
     private loadBalanceData(): void {
@@ -106,10 +85,8 @@ export class PersonalBalanceListComponent implements OnInit, OnDestroy {
             this.subscriptions.add(
                 balanceData.valueChanges.subscribe(({ data }) => {
                     const myState = data.myState as UserState;
-                    const vaults = [myState.vault] as UserVault[];
-                    myState.additionalVaults?.forEach(v => vaults.push(v));
                     this.balances = [];
-                    this.handleTransactions(vaults);
+                    this.handleTransactions(myState.vaults ?? []);
                     this.onProgress.emit(false);
                 }, (error) => {
                     this.onProgress.emit(false);
@@ -128,13 +105,15 @@ export class PersonalBalanceListComponent implements OnInit, OnDestroy {
         if (vaults.length > 0) {
             vaults.forEach(vault => {
                 vault.balancesPerAsset?.forEach(balance => {
-                    const balanceItem = this.balances.find(b => b.currencyName === balance.assetId);
+                    const balanceItem = this.balances.find(b => b.id === balance.assetId);
                     if (balanceItem) {
                         balanceItem.increaseCrypto(balance.totalBalance);
                         balanceItem.increaseFiat(balance.totalBalanceFiat);
                     } else {
+                        console.log(`find currency as  ${balance.assetId}`);
                         const currency = this.currencies.find(c => c.symbol === balance.assetId);
                         if (currency) {
+                            console.log(`add as  ${currency.name}`);
                             this.balances.push(new UserBalanceItem(balance, currency.name, this.currentCurrency, this.fiatPrecision));
                         }
                     }
