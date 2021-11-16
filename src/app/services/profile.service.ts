@@ -656,7 +656,7 @@ export class ProfileDataService {
     });
   }
 
-  saveContact(id: string, name: string, email: string, currency: string, contactAddress: string): Observable<any> {
+  saveMyContact(id: string, name: string, email: string, currency: string, contactAddress: string): Observable<any> {
     if (id === '') {
       return this.apollo.mutate({
         mutation: ADD_MY_CONTACT,
@@ -679,7 +679,7 @@ export class ProfileDataService {
     }
   }
 
-  deleteContact(id: string): Observable<any> {
+  deleteMyContact(id: string): Observable<any> {
     return this.apollo.mutate({
       mutation: DELETE_MY_CONTACT,
       variables: {

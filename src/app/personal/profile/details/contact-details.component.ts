@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, Output } from "@angular/core";
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { ProfileItemContainer } from 'src/app/model/profile-item.model';
+import { ProfileItemActionType, ProfileItemContainer, ProfileItemContainerType } from 'src/app/model/profile-item.model';
 import { ContactItem } from 'src/app/model/user.model';
 import { ErrorService } from 'src/app/services/error.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
@@ -84,24 +84,24 @@ export class PersonalContactDetailsComponent implements OnDestroy {
     deleteContact(): void {
         this.onError.emit('');
         this.inProgress = true;
-        // this.subscriptions.add(
-        //     this.profileService.deleteMyVault(this.contact?.vault ?? '').subscribe(({ data }) => {
-        //         this.inProgress = false;
-        //         console.log('delete wallet data', this.contact?.vault, data);
-        //         if (data && data.deleteMyVault) {
-        //             const item = new ProfileItemContainer();
-        //             item.container = ProfileItemContainerType.Wallet;
-        //             item.action = ProfileItemActionType.Create;
-        //             item.wallet = new WalletItem(null, '');
-        //             item.wallet.vault = this.contact?.vault ?? '';
-        //             console.log('emit', item.wallet.vault);
-        //             this.onComplete.emit(item);
-        //         }
-        //     }, (error) => {
-        //         this.inProgress = false;
-        //         this.onError.emit(this.errorHandler.getError(error.message, `Unable to remove the wallet`));
-        //     })
-        // );
+        this.subscriptions.add(
+            this.profileService.deleteMyContact(this.contact?.id ?? '').subscribe(({ data }) => {
+                this.inProgress = false;
+                console.log('delete contact data', this.contact?.id, data);
+                if (data && data.deleteMyContact) {
+                    const item = new ProfileItemContainer();
+                    item.container = ProfileItemContainerType.Contact;
+                    item.action = ProfileItemActionType.Remove;
+                    item.contact = new ContactItem(null);
+                    item.contact.id = this.contact?.id ?? '';
+                    console.log('emit', item.contact.id);
+                    this.onComplete.emit(item);
+                }
+            }, (error) => {
+                this.inProgress = false;
+                this.onError.emit(this.errorHandler.getError(error.message, `Unable to remove the contact`));
+            })
+        );
     }
 
     cancelDelete(): void {

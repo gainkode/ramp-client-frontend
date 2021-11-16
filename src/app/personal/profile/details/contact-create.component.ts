@@ -99,7 +99,7 @@ export class PersonalContactCreateComponent implements OnInit, OnDestroy {
         this.errorMessage = '';
         this.inProgress = true;
         this.subscriptions.add(
-            this.profileService.saveContact('', userName, email, crypto, address).subscribe(({ data }) => {
+            this.profileService.saveMyContact('', userName, email, crypto, address).subscribe(({ data }) => {
                 this.inProgress = false;
                 console.log(data);
 

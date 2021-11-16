@@ -8,7 +8,7 @@
             <!-- Added -->
             <div class="__profile-details-item-block">
                 <div class="__profile-details-item-title">
-                    Date added:
+                    Date Added:
                 </div>
                 <div class="__profile-details-item-value">
                     {{contact?.created}}
@@ -18,7 +18,7 @@
             <!-- Name -->
             <div class="__profile-details-item-block">
                 <div class="__profile-details-item-title">
-                    User name:
+                    User Name:
                 </div>
                 <div class="__profile-details-item-value">
                     {{contact?.displayName}}
@@ -32,6 +32,56 @@
                 </div>
                 <div class="__profile-details-item-value">
                     {{contact?.contactEmail}}
+                </div>
+            </div>
+
+            <!-- Coin -->
+            <div class="__profile-details-item-block">
+                <div class="__profile-details-item-title">
+                    Wallet Coin:
+                </div>
+                <div class="__profile-details-item-value">
+                    {{contact?.asset}}
+                </div>
+            </div>
+
+            <!-- Total sent -->
+            <div class="__profile-details-item-block">
+                <div class="__profile-details-item-title">
+                    Total Sent:
+                </div>
+                <div class="__profile-details-item-value">
+                    {{contact?.sent}}
+                </div>
+            </div>
+
+            <!-- Total received -->
+            <div class="__profile-details-item-block">
+                <div class="__profile-details-item-title">
+                    Total Received:
+                </div>
+                <div class="__profile-details-item-value">
+                    {{contact?.received}}
+                </div>
+            </div>
+
+            <!-- last Transaction Date -->
+            <div class="__profile-details-item-block">
+                <div class="__profile-details-item-title">
+                    Last Transaction:
+                </div>
+                <div class="__profile-details-item-value">
+                    {{contact?.lastTransactionDate}}
+                </div>
+            </div>
+            
+            <!-- last Transaction Status -->
+            <div class="__profile-details-item-block">
+                <div class="__profile-details-item-title">
+                    Status:
+                </div>
+                <div class="__profile-details-item-value">
+                    {{contact?.lastTransactionStatus}}
                 </div>
             </div>
 

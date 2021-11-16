@@ -105,6 +105,8 @@ export class ContactItem {
   asset = '';
   sent = 4200;
   received = 0.0042;
+  lastTransactionDate = '16-12-2020';
+  lastTransactionStatus = 'Pending';
   
   private pIconUrl = '';
   

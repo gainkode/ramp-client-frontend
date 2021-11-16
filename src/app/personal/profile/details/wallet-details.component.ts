@@ -100,7 +100,7 @@ export class PersonalWalletDetailsComponent implements OnDestroy {
                 if (data && data.deleteMyVault) {
                     const item = new ProfileItemContainer();
                     item.container = ProfileItemContainerType.Wallet;
-                    item.action = ProfileItemActionType.Create;
+                    item.action = ProfileItemActionType.Remove;
                     item.wallet = new WalletItem(null, '');
                     item.wallet.vault = this.wallet?.vault ?? '';
                     console.log('emit', item.wallet.vault);
