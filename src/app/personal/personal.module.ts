@@ -51,6 +51,7 @@ import { PersonalWalletCreateComponent } from './profile/details/wallet-create.c
 import { PersonalContactListComponent } from './profile/data/contact-list.component';
 import { PersonalContactCreateComponent } from './profile/details/contact-create.component';
 import { PersonalPricelistComponent } from './profile/pricelist.component';
+import { PersonalContactDetailsComponent } from './profile/details/contact-details.component';
 
 const routing = RouterModule.forChild([
     // Main page
@@ -126,7 +127,7 @@ export class MaterialModule { }
         PersonalHomeComponent,
         PersonalWalletsComponent, PersonalWalletDetailsComponent, PersonalWalletCreateComponent,
         PersonalTransactionsComponent, PersonalTransactionDetailsComponent,
-        PersonalContactsComponent, PersonalContactCreateComponent,
+        PersonalContactsComponent, PersonalContactDetailsComponent, PersonalContactCreateComponent,
         PersonalPricelistComponent,
         PersonalSwapComponent,
         PersonalNotificationsComponent,

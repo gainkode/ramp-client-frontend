@@ -1,0 +1,96 @@
+<div class="__profile-details-container">
+    <mat-progress-bar *ngIf="inProgress" color="accent" mode="indeterminate"></mat-progress-bar>
+    <h2 class="__profile-details-title">
+        {{contact?.displayName}}
+    </h2>
+    <div *ngIf="!deleteMode" class="__profile-details-data-container">
+        <div class="__profile-details-data-area">
+            <!-- Added -->
+            <div class="__profile-details-item-block">
+                <div class="__profile-details-item-title">
+                    Date added:
+                </div>
+                <div class="__profile-details-item-value">
+                    {{contact?.created}}
+                </div>
+            </div>
+
+            <!-- Name -->
+            <div class="__profile-details-item-block">
+                <div class="__profile-details-item-title">
+                    User name:
+                </div>
+                <div class="__profile-details-item-value">
+                    {{contact?.displayName}}
+                </div>
+            </div>
+
+            <!-- Email -->
+            <div class="__profile-details-item-block">
+                <div class="__profile-details-item-title">
+                    Email:
+                </div>
+                <div class="__profile-details-item-value">
+                    {{contact?.contactEmail}}
+                </div>
+            </div>
+
+            <!-- Name (edit) -->
+            <!-- <div class="__profile-details-item-block" *ngIf="editMode">
+                <div class="__profile-details-item-title __profile-details-item-title-edit">
+                    Name:
+                </div>
+                <div style="margin: 4px 0px 0px 0px;">
+                    <form [formGroup]="editForm">
+                        <app-form-editbox [maxlength]="50" formControlName="walletName" (onSubmit)="saveName()">
+                        </app-form-editbox>
+                    </form>
+                </div>
+            </div> -->
+
+            <div class="__form-separator"></div>
+            
+            <!-- Buttons -->
+            <div class="__profile-details-button-container">
+                <button type="button" class="__outlined-button" (click)="receiveStart()">
+                    <mat-icon style="font-size: 18px;margin-top: 8px;">
+                        file_download
+                    </mat-icon>
+                    <span style="font-weight: 500;">
+                        Receive
+                    </span>
+                </button>
+                <button type="button" class="__outlined-button __button-wide-separator" (click)="sendStart()">
+                    <mat-icon style="font-size: 18px;margin-top: 8px;">
+                        file_upload
+                    </mat-icon>
+                    <span style="font-weight: 500;">
+                        Send
+                    </span>
+                </button>
+            </div>
+        </div>
+        <div class="__profile-details-footer">
+            <a [routerLink]="" class="__profile-details-link __profile-details-link-accent" (click)="requestDeleteContact()">
+                Delete contact
+            </a>
+        </div>
+    </div>
+    <div *ngIf="deleteMode" class="__profile-details-data-container">
+        <div class="__profile-details-data-area">
+                <div class="__profile-details-subtitle">
+                    You are going to delete the contact. Please confirm.
+                </div>
+    
+                <!-- Buttons -->
+                <div class="__profile-details-button-container">
+                    <button type="button" class="__outlined-button" (click)="cancelDelete()">
+                        CANCEL
+                    </button>
+                    <button type="button" class="__main-button __main-button-danger __button-wide-separator" (click)="deleteContact()">
+                        DELETE
+                    </button>
+                </div>
+            </div>
+    </div>
+</div>
