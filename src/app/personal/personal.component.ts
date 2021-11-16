@@ -141,7 +141,6 @@ export class PersonalComponent implements OnInit {
     }
 
     detailsComplete(container: ProfileItemContainer): void {
-        console.log(container.container, this.dataPanel);
         if (container.container === ProfileItemContainerType.Wallet && container.wallet) {
             const walletPanel = this.dataPanel as PersonalWalletsComponent;
             if (container.action === ProfileItemActionType.Create) {

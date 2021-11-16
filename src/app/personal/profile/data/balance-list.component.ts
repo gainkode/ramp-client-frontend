@@ -101,7 +101,6 @@ export class PersonalBalanceListComponent implements OnInit, OnDestroy {
     }
 
     private handleTransactions(vaults: UserVault[]): void {
-        console.log(vaults);
         if (vaults.length > 0) {
             vaults.forEach(vault => {
                 vault.balancesPerAsset?.forEach(balance => {

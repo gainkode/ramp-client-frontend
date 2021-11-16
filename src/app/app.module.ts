@@ -76,7 +76,7 @@ export class AppModule {
         if (err.extensions !== null) {
           const code = err.extensions?.code as string;
           if (code.toUpperCase() === 'UNAUTHENTICATED') {
-            console.log('UNAUTHENTICATED');
+            console.error('UNAUTHENTICATED');
             const refreshToken = this.authService.refreshToken().toPromise();
             return fromPromise(
               refreshToken.catch(error => {
@@ -100,7 +100,7 @@ export class AppModule {
       }
     }
     if (networkError) {
-      console.log('network error', networkError.name, networkError);
+      console.error('network error', networkError.name, networkError);
       if (operation.operationName === 'GetRates') {
         sessionStorage.setItem('currentRateError', networkError.name);
       } else {

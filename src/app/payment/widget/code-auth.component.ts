@@ -97,12 +97,10 @@ export class WidgetCodeAuthComponent implements OnInit, OnDestroy, AfterViewInit
     }
 
     onPaste(data: ClipboardEvent): void {
-        console.log('clipboard', data);
         data.stopPropagation();
         data.preventDefault();
         const clipboardData = data.clipboardData as DataTransfer;
         const pastedData = clipboardData.getData('Text');
-        console.log('pastedData', pastedData);
         if (pastedData && pastedData.length > 4) {
             const val1 = parseInt(pastedData[0]);
             const val2 = parseInt(pastedData[1]);

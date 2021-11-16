@@ -164,7 +164,6 @@ export class ContactsFilter implements ProfileBaseFilter {
         this.userName = '';
         this.zeroBalance = false;
         this.currencies = [];
-        console.log('contacts filter', data);
         if (data.email) {
             this.email = data.email;
         }
@@ -198,7 +197,6 @@ export class ContactsFilter implements ProfileBaseFilter {
             ...(this.email !== '' && { email: this.email }),
             ...(this.userName !== '' && { user: this.userName })
         };
-        console.log('result filter', currenciesFilter, result);
         return result;
     }
 }

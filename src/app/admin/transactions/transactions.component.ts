@@ -81,7 +81,6 @@ export class TransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
     } else {
       this.inProgress = true;
       this.pTransactionsSubscription = transactionsData.valueChanges.subscribe(({ data }) => {
-        console.log(data);
         const dataList = data.getTransactions as TransactionListResult;
         if (dataList !== null) {
           this.transactionCount = dataList?.count as number;

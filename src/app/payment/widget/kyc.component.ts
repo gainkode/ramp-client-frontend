@@ -56,7 +56,6 @@ export class WidgetKycComponent implements OnInit, OnDestroy {
               this.flow = levels[0].flowData.value;
             }
             this.address = settingsCommon.kycBaseAddress as string;
-            console.log(this.flow, this.address);
             this.onProgress.emit(false);
             this.showValidator = true;
           },

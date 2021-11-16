@@ -143,7 +143,7 @@ export class SignUpPanelComponent implements OnInit, OnDestroy {
                 } else {
                     this.progressChange.emit(false);
                     this.registerError('Unable to recognize the registration action');
-                    console.log('Unable to recognize the registration action', userData.authTokenAction);
+                    console.error('Unable to recognize the registration action', userData.authTokenAction);
                 }
             }, (error) => {
                 this.progressChange.emit(false);
@@ -175,7 +175,7 @@ export class SignUpPanelComponent implements OnInit, OnDestroy {
             userData.authTokenAction === 'KycRequired') {
             this.registered.emit(userData?.user?.email);
         } else {
-            console.log('onSignupDone. Wrong token action:', userData.authTokenAction);
+            console.error('onSignupDone. Wrong token action:', userData.authTokenAction);
             this.registerError('Unable to update personal data');
         }
     }

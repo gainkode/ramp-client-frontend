@@ -211,7 +211,6 @@ export class WidgetComponent implements OnInit {
 
   handleError(message: string): void {
     this.errorMessage = message;
-    console.log(this.errorMessage);
     this.changeDetector.detectChanges();
   }
 
@@ -241,7 +240,6 @@ export class WidgetComponent implements OnInit {
   }
 
   private nextStage(id: string, name: string, stepId: number, summaryVisible: boolean): void {
-    //console.log('stage', this.stageId, '=>', id);
     if (
       this.stageId !== 'register' &&
       this.stageId !== 'login_auth' &&
@@ -579,7 +577,6 @@ export class WidgetComponent implements OnInit {
           const order = data.createTransaction as TransactionShort;
           this.inProgress = false;
           if (order.code) {
-            console.log(order);
             this.summary.instrument = instrument;
             this.summary.providerView = this.paymentProviders.find(x => x.id === providerId);
             this.summary.orderId = order.code as string;

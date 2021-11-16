@@ -232,7 +232,7 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
                 this.authenticated.emit(userData);
             }
         } else {
-            console.log('onSignupDone. Wrong token action:', userData.authTokenAction);
+            console.error('onSignupDone. Wrong token action:', userData.authTokenAction);
             this.registerError('Unable to update personal data');
         }
     }

@@ -142,9 +142,6 @@ export class DashboardModel {
 
     constructor(data: DashboardStats | null) {
         if (data !== null) {
-            //console.log(data);
-
-
             data.balances?.forEach(x => {
                 this.balances.push(new DashboardBalanceModel(x));
             });
@@ -352,8 +349,6 @@ export class DashboardModel {
                     this.totals.push(this.exchanges.total);
                 }
             }
-
-            //console.log(this);
         }
     }
 }
