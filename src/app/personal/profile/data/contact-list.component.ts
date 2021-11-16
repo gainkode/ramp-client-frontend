@@ -88,7 +88,6 @@ export class PersonalContactListComponent implements OnDestroy, AfterViewInit {
 
     private loadContacts(): void {
         this.onError.emit('');
-        this.onDataLoaded.emit(false);
         this.contactCount = 0;
         const contactsData = this.profileService.getMyContacts(
             this.pageIndex,
@@ -102,11 +101,11 @@ export class PersonalContactListComponent implements OnDestroy, AfterViewInit {
             this.onProgress.emit(true);
             const userFiat = this.auth.user?.defaultFiatCurrency ?? 'EUR';
             this.pContactsSubscription = contactsData.valueChanges.subscribe(({ data }) => {
-                const contactsItems = data.myContacts as UserContactListResult;
-                if (contactsItems !== null) {
+                //const contactsItems = data.myContacts as UserContactListResult;
+                const contactsItems = this.getFakes();
+                if (contactsItems) {
                     this.contactCount = contactsItems?.count as number;
                     if (this.contactCount > 0) {
-                        this.onDataLoaded.emit(true);
                         // this.contacts = contactsItems?.list?.filter(x => {
                         //     return (this.filter.zeroBalance) ? true : x.total ?? 0 > 0;
                         // }).map((val) => new ContactItem(val)) as ContactItem[];
@@ -114,8 +113,9 @@ export class PersonalContactListComponent implements OnDestroy, AfterViewInit {
                         this.contactCount = this.contacts.length;
                     }
                 }
-                this.onProgress.emit(false);
                 this.loading = false;
+                this.onProgress.emit(false);
+                this.onDataLoaded.emit(this.contactCount > 0);
             }, (error) => {
                 this.onProgress.emit(false);
                 this.loading = false;
@@ -124,8 +124,25 @@ export class PersonalContactListComponent implements OnDestroy, AfterViewInit {
                 } else {
                     this.router.navigateByUrl('/');
                 }
+                this.onDataLoaded.emit(false);
             });
         }
+    }
+
+    private getFakes(): UserContactListResult {
+        return {
+            count: 1,
+            list: [
+                {
+                    address: 'nvsdnDcvewThGTYf4ghwenovb9j6Hir4',
+                    assetId: 'BTC',
+                    contactEmail: 'mister@twister.com',
+                    displayName: 'Mister Twister',
+                    created: new Date(),
+                    userContactId: 'id'
+                }
+            ]
+        } as UserContactListResult;
     }
 
     private refresh(): void {

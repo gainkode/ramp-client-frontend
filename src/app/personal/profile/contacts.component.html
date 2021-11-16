@@ -1,4 +1,4 @@
-<app-contacts-filter [data]="filter" [cryptoCurrencies]="cryptoList" [showCreateButton]="!dataListEmpty"
+<app-contacts-filter [data]="filter" [cryptoCurrencies]="cryptoList" [showCreateButton]="!dataListEmpty && !inProgress"
     (update)="onFilterUpdate($event)" (onShowDetails)="showDetails($event)"></app-contacts-filter>
 
 <div class="__profile-data-container">

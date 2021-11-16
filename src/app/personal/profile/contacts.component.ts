@@ -30,7 +30,7 @@ export class PersonalContactsComponent implements OnInit, OnDestroy {
     errorMessage = '';
     filter = new ContactsFilter();
     cryptoList: CurrencyView[] = [];
-    dataListEmpty = true;
+    dataListEmpty = false;
 
     private subscriptions: Subscription = new Subscription();
 

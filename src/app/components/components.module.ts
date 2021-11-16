@@ -36,11 +36,7 @@ import { BackButtonComponent } from './common/backbutton.component';
 import { TabLabelComponent } from './common/tablabel.component';
 import { KycPanelComponent } from './kyc-panel.component';
 import { CommonDialogBox } from './common/common-box.dialog';
-import { CheckoutSummaryComponent } from './payment/checkout-summary.component';
-import { ExchangeRateComponent } from './payment/exchange-rate.component';
 import { LoginPanelComponent } from './auth/login-panel.component';
-import { CheckoutDoneComponent } from './payment/checkout-done.component';
-import { CreditCardComponent } from './payment/credit-card.component';
 import { TwoFaCodeComponent } from './auth/two-fa-code.component';
 import { NavPopupComponent } from './common/nav-popup/nav-popup.component';
 import { SideExpanderComponent } from './common/side-expander.component';
@@ -51,8 +47,6 @@ import { SignupInfoPanelComponent } from './auth/signup-info.component';
 import { ProfileInfoComponent } from './profile/profile-info.component';
 import { ProfileTwoFAComponent } from './profile/profile-two-fa.component';
 import { ProfilePasswordComponent } from './profile/profile-password.component';
-import { ProfileContactsComponent } from './profile/profile-contacts.component';
-import { ProfileContactEditorComponent } from './profile/profile-contact-editor.component';
 import { TransactionsFilterBarComponent } from './filter-bars/transactions-bar.component';
 import { FormTextBoxComponent } from './common/controls/form-textbox.component';
 import { FormFinanceComboComponent } from './common/controls/form-finance-combo.component';
@@ -103,25 +97,21 @@ export class MaterialModule { }
     declarations: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
         FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent, FormSearchBoxComponent,
         FormEditBoxComponent,
-        CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, 
         DeleteDialogBox,
         LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, CommonDialogBox, SideExpanderComponent,
-        CreditCardComponent, TwoFaCodeComponent, NavPopupComponent, SideMenuComponent, LineBreakPipe, NumberFillPipe,
+        TwoFaCodeComponent, NavPopupComponent, SideMenuComponent, LineBreakPipe, NumberFillPipe,
         TransactionsFilterBarComponent, WalletsFilterBarComponent, ContactsFilterBarComponent, NotificationsFilterBarComponent,
         
-        ProfileInfoComponent, ProfileTwoFAComponent, ProfilePasswordComponent,
-        ProfileContactsComponent, ProfileContactEditorComponent],
+        ProfileInfoComponent, ProfileTwoFAComponent, ProfilePasswordComponent],
     exports: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
         FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent, FormSearchBoxComponent,
         FormEditBoxComponent,
-        CheckoutSummaryComponent, CheckoutDoneComponent, ExchangeRateComponent, 
         DeleteDialogBox,
         LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, CommonDialogBox, SideExpanderComponent,
-        CreditCardComponent, TwoFaCodeComponent, NavPopupComponent, SideMenuComponent, LineBreakPipe, NumberFillPipe,
+        TwoFaCodeComponent, NavPopupComponent, SideMenuComponent, LineBreakPipe, NumberFillPipe,
         TransactionsFilterBarComponent, WalletsFilterBarComponent, ContactsFilterBarComponent, NotificationsFilterBarComponent,
         
-        ProfileInfoComponent, ProfileTwoFAComponent, ProfilePasswordComponent,
-        ProfileContactsComponent, ProfileContactEditorComponent],
+        ProfileInfoComponent, ProfileTwoFAComponent, ProfilePasswordComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 
