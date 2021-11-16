@@ -151,10 +151,8 @@ export class PersonalComponent implements OnInit {
             }
         } else if (container.container === ProfileItemContainerType.Contact && container.contact) {
             const contactPanel = this.dataPanel as PersonalContactsComponent;
-            if (container.action === ProfileItemActionType.Create) {
-                contactPanel.addContact(container.contact);
-            } else if (container.action === ProfileItemActionType.Remove) {
-                contactPanel.removeWallet(container.contact.id);
+            if (container.action === ProfileItemActionType.Create || container.action === ProfileItemActionType.Remove) {
+                contactPanel.update();
             }
         }
         this.closeDetails();

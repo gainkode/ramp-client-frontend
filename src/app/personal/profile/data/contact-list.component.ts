@@ -20,6 +20,7 @@ export class PersonalContactListComponent implements OnDestroy, AfterViewInit {
     @Output() onShowDetails = new EventEmitter<ProfileItemContainer>();
     @Output() onError = new EventEmitter<string>();
     @Output() onProgress = new EventEmitter<boolean>();
+    @Output() onDataLoaded = new EventEmitter<boolean>();
     @ViewChild(MatSort) sort!: MatSort;
 
     private pContactsSubscription: Subscription | undefined = undefined;
@@ -87,6 +88,7 @@ export class PersonalContactListComponent implements OnDestroy, AfterViewInit {
 
     private loadContacts(): void {
         this.onError.emit('');
+        this.onDataLoaded.emit(false);
         this.contactCount = 0;
         const contactsData = this.profileService.getMyContacts(
             this.pageIndex,
@@ -104,6 +106,7 @@ export class PersonalContactListComponent implements OnDestroy, AfterViewInit {
                 if (contactsItems !== null) {
                     this.contactCount = contactsItems?.count as number;
                     if (this.contactCount > 0) {
+                        this.onDataLoaded.emit(true);
                         // this.contacts = contactsItems?.list?.filter(x => {
                         //     return (this.filter.zeroBalance) ? true : x.total ?? 0 > 0;
                         // }).map((val) => new ContactItem(val)) as ContactItem[];

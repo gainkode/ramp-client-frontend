@@ -4,8 +4,7 @@ import { Subscription } from 'rxjs';
 import { ContactsFilter, ProfileBaseFilter } from 'src/app/model/filter.model';
 import { SettingsCurrencyWithDefaults } from 'src/app/model/generated-models';
 import { CurrencyView } from 'src/app/model/payment.model';
-import { ProfileItemContainer } from 'src/app/model/profile-item.model';
-import { ContactItem } from 'src/app/model/user.model';
+import { ProfileItemContainer, ProfileItemContainerType } from 'src/app/model/profile-item.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
 import { ErrorService } from 'src/app/services/error.service';
@@ -31,6 +30,7 @@ export class PersonalContactsComponent implements OnInit, OnDestroy {
     errorMessage = '';
     filter = new ContactsFilter();
     cryptoList: CurrencyView[] = [];
+    dataListEmpty = true;
 
     private subscriptions: Subscription = new Subscription();
 
@@ -57,20 +57,21 @@ export class PersonalContactsComponent implements OnInit, OnDestroy {
         this.subscriptions.unsubscribe();
     }
 
-    addContact(contact: ContactItem): void {
+    contactsLoaded(loadedList: boolean): void {
+        this.dataListEmpty = !loadedList;
+    }
+
+    update(): void {
         if (this.dataListPanel) {
-            this.dataListPanel.contacts.push(contact);
+            this.dataListPanel.load(this.filter);
         }
     }
 
-    removeWallet(id: string): void {
-        console.log('removeContact', id);
-        if (this.dataListPanel) {
-            const index = this.dataListPanel.contacts.findIndex(x => x.id === id);
-            if (index >= 0) {
-                this.dataListPanel.contacts.splice(index, 1);
-            }
-        }
+    newContact(): void {
+        const item = new ProfileItemContainer();
+        item.container = ProfileItemContainerType.Contact;
+        item.contact = undefined;
+        this.showDetails(item);
     }
 
     private loadCurrencyData(): void {

@@ -11,6 +11,7 @@ import { ProfileItemContainer, ProfileItemContainerType } from 'src/app/model/pr
     styleUrls: ['../../../assets/menu.scss', '../../../assets/button.scss']
 })
 export class ContactsFilterBarComponent implements OnInit, OnDestroy {
+    @Input() showCreateButton = false;
     @Input() data: ContactsFilter | undefined = undefined;
     @Input() set cryptoCurrencies(val: CurrencyView[]) {
         this.cryptoList = val;

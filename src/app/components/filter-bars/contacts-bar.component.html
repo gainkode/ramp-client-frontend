@@ -5,7 +5,7 @@
                 <div class="__tool-bar-double-sided-data-box">
                     <div class="__tool-bar-filter-mixed-height-area">
                         <!-- Add new contact button -->
-                        <div class="__tool-bar-block-lg">
+                        <div *ngIf="showCreateButton" class="__tool-bar-block-lg">
                             <button type="button" class="__outlined-button __outlined-button-lg" (click)="addContact()">
                                 <mat-icon style="font-size: 18px;margin-top: 8px;">
                                     add
@@ -17,7 +17,7 @@
                         </div>
                         <!-- Controls -->
                         <div class="__tool-bar-filter-mixed-height-small">
-                            <div class="__tool-bar-label"></div> <!-- Space -->
+                            <div *ngIf="showCreateButton" class="__tool-bar-label"></div> <!-- Space -->
                             <!-- Wallet coin -->
                             <div class="__tool-bar-block">
                                 <div class="__tool-bar-label">

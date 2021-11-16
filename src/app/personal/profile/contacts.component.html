@@ -1,8 +1,17 @@
-<app-contacts-filter [data]="filter" [cryptoCurrencies]="cryptoList" (update)="onFilterUpdate($event)"
-    (onShowDetails)="showDetails($event)"></app-contacts-filter>
+<app-contacts-filter [data]="filter" [cryptoCurrencies]="cryptoList" [showCreateButton]="!dataListEmpty"
+    (update)="onFilterUpdate($event)" (onShowDetails)="showDetails($event)"></app-contacts-filter>
 
 <div class="__profile-data-container">
     <mat-progress-bar *ngIf="inProgress" color="accent" mode="indeterminate"></mat-progress-bar>
-    <app-personal-contact-list #datalist (onShowDetails)="showDetails($event)" (onError)="handleError($event)"
-        (onProgress)="progressChanged($event)"></app-personal-contact-list>
+    <!-- Add new contact button -->
+    <div *ngIf="dataListEmpty" class="__profile-grid-table-container-default">
+        <div class="__profile-grid-table-new-item-container" type="button" (click)="newContact()">
+            <h1 class="__profile-grid-table-new-item-title">+</h1>
+            <h2 class="__profile-grid-table-new-item-text">Add new contact</h2>
+        </div>
+    </div>
+    <!-- Contact list -->
+    <app-personal-contact-list #datalist *ngIf="!dataListEmpty" (onDataLoaded)="contactsLoaded($event)"
+        (onShowDetails)="showDetails($event)" (onError)="handleError($event)" (onProgress)="progressChanged($event)">
+    </app-personal-contact-list>
 </div>
