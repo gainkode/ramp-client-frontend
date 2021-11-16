@@ -11,6 +11,7 @@ import {
 } from '../model/profile-menu.model';
 import { AuthService } from '../services/auth.service';
 import { NotificationService } from '../services/notification.service';
+import { PersonalContactsComponent } from './profile/contacts.component';
 import { PersonalWalletsComponent } from './profile/wallets.component';
 
 @Component({
@@ -73,7 +74,7 @@ export class PersonalComponent implements OnInit {
                     section === 'wallets' ||
                     section === 'contactlist' ||
                     section === 'transactions' ||
-                    section === 'swap' ||
+                    section === 'pricelist' ||
                     section === 'notifications') {
                     this.selectedMenu = section;
                 } else {
@@ -93,6 +94,12 @@ export class PersonalComponent implements OnInit {
             } else {
                 this.detailsType = 'new_wallet';
                 this.cryptoList = container.meta;
+            }
+        } else if (container.container === ProfileItemContainerType.Contact) {
+            if (container.contact) {
+                this.detailsType = 'contact';
+            } else {
+                this.detailsType = 'new_contact';
             }
         }
         console.log(this.detailsType);
@@ -135,12 +142,18 @@ export class PersonalComponent implements OnInit {
     detailsComplete(container: ProfileItemContainer): void {
         console.log(container.container, this.dataPanel);
         if (container.container === ProfileItemContainerType.Wallet && container.wallet) {
+            const walletPanel = this.dataPanel as PersonalWalletsComponent;
             if (container.action === ProfileItemActionType.Create) {
-                const walletPanel = this.dataPanel as PersonalWalletsComponent;
                 walletPanel.addWallet(container.wallet);
             } else if (container.action === ProfileItemActionType.Remove) {
-                const walletPanel = this.dataPanel as PersonalWalletsComponent;
                 walletPanel.removeWallet(container.wallet.vault);
+            }
+        } else if (container.container === ProfileItemContainerType.Contact && container.contact) {
+            const contactPanel = this.dataPanel as PersonalContactsComponent;
+            if (container.action === ProfileItemActionType.Create) {
+                contactPanel.addContact(container.contact);
+            } else if (container.action === ProfileItemActionType.Remove) {
+                contactPanel.removeWallet(container.contact.id);
             }
         }
         this.closeDetails();

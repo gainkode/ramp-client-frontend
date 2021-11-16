@@ -1,4 +1,5 @@
-<app-contacts-filter [data]="filter" [cryptoCurrencies]="cryptoList" (update)="onFilterUpdate($event)"></app-contacts-filter>
+<app-contacts-filter [data]="filter" [cryptoCurrencies]="cryptoList" (update)="onFilterUpdate($event)"
+    (onShowDetails)="showDetails($event)"></app-contacts-filter>
 
 <div class="__profile-data-container">
     <mat-progress-bar *ngIf="inProgress" color="accent" mode="indeterminate"></mat-progress-bar>

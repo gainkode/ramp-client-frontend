@@ -372,8 +372,10 @@ const ADD_MY_CONTACT = gql`
     $displayName: String!
   ) {
     addMyContact(
-      contactEmail: $contactEmail
-      displayName: $displayName
+      contact: {
+        contactEmail: $contactEmail
+        displayName: $displayName
+      }
     ) {
       userId
     }

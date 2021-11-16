@@ -73,12 +73,14 @@ export class PersonalContactListComponent implements OnDestroy, AfterViewInit {
 
     private getSortedField(): string {
         let result = this.sortedField;
-        if (this.sortedField === 'coin') {
-            result = 'coin';
-        } else if (this.sortedField === 'sent') {
-            result = 'amountToSent';
-        } else if (this.sortedField === 'received') {
-            result = 'amountToReceive';
+        if (this.sortedField === 'userName') {
+            result = 'displayName';
+        } else if (this.sortedField === 'email') {
+            result = 'contactEmail';
+        } else if (this.sortedField === 'coin') {
+            result = 'assetId';
+        } else if (this.sortedField === 'added') {
+            result = 'created';
         }
         return result;
     }
@@ -89,7 +91,7 @@ export class PersonalContactListComponent implements OnDestroy, AfterViewInit {
         const contactsData = this.profileService.getMyContacts(
             this.pageIndex,
             this.pageSize,
-            this.sortedField,
+            this.getSortedField(),
             this.sortedDesc);
         if (contactsData === null) {
             this.onError.emit(this.errorHandler.getRejectedCookieMessage());

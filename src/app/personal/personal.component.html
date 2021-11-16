@@ -70,6 +70,9 @@
                 <app-personal-wallet-create *ngIf="detailsType==='new_wallet'" [cryptoList]="cryptoList"
                     (onComplete)="detailsComplete($event)">
                 </app-personal-wallet-create>
+
+                <app-personal-contact-create *ngIf="detailsType==='new_contact'" (onComplete)="detailsComplete($event)">
+                </app-personal-contact-create>
             </div>
         </div>
     </div>

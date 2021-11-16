@@ -102,6 +102,9 @@ export class ContactItem {
   contactEmail = '';
   displayName = '';
   created = '';
+  asset = '';
+  
+  private pIconUrl = '';
   
   constructor(data: UserContact | null) {
     this.id = data?.userContactId as string;
@@ -109,9 +112,14 @@ export class ContactItem {
     this.contactEmail = data?.contactEmail as string;
     this.displayName = data?.displayName as string;
     const datepipe: DatePipe = new DatePipe('en-US');
-    this.created = datepipe.transform(
-      data?.created,
-      'dd-MM-YYYY HH:mm:ss'
-    ) as string;
+    this.created = datepipe.transform(data?.created, 'dd-MM-YYYY HH:mm:ss') as string;
+    this.asset = data?.assetId ?? '';
+    if (this.asset !== '') {
+      this.pIconUrl = `assets/svg-crypto/${this.asset.toLowerCase()}.svg`;
+    }
+  }
+
+  get icon(): string {
+    return this.pIconUrl;
   }
 }

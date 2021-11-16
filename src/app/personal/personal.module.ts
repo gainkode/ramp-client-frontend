@@ -49,6 +49,8 @@ import { PersonalWalletListComponent } from './profile/data/wallet-list.componen
 import { PersonalWalletDetailsComponent } from './profile/details/wallet-details.component';
 import { PersonalWalletCreateComponent } from './profile/details/wallet-create.component';
 import { PersonalContactListComponent } from './profile/data/contact-list.component';
+import { PersonalContactCreateComponent } from './profile/details/contact-create.component';
+import { PersonalPricelistComponent } from './profile/pricelist.component';
 
 const routing = RouterModule.forChild([
     // Main page
@@ -62,7 +64,7 @@ const routing = RouterModule.forChild([
             { path: 'wallets', component: PersonalWalletsComponent, canActivate: [PersonalGuard] },
             { path: 'contactlist', component: PersonalContactsComponent, canActivate: [PersonalGuard] },
             { path: 'transactions', component: PersonalTransactionsComponent, canActivate: [PersonalGuard] },
-            { path: 'swap', component: PersonalSwapComponent, canActivate: [PersonalGuard] },
+            { path: 'pricelist', component: PersonalPricelistComponent, canActivate: [PersonalGuard] },
             { path: 'notifications', component: PersonalNotificationsComponent, canActivate: [PersonalGuard] },
             { path: '**', redirectTo: 'home' }
         ],
@@ -124,7 +126,8 @@ export class MaterialModule { }
         PersonalHomeComponent,
         PersonalWalletsComponent, PersonalWalletDetailsComponent, PersonalWalletCreateComponent,
         PersonalTransactionsComponent, PersonalTransactionDetailsComponent,
-        PersonalContactsComponent, 
+        PersonalContactsComponent, PersonalContactCreateComponent,
+        PersonalPricelistComponent,
         PersonalSwapComponent,
         PersonalNotificationsComponent,
         // Data containers

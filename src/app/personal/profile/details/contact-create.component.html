@@ -1,0 +1,32 @@
+<div class="__profile-details-container">
+    <mat-progress-bar *ngIf="inProgress" color="accent" mode="indeterminate"></mat-progress-bar>
+    <div>
+        <h2 class="__profile-details-title __profile-details-title-small">
+            Add new contact
+        </h2>
+        <div class="__profile-details-data-container __profile-details-data-form">
+            <div class="__profile-details-data-area">
+                <form [formGroup]="createForm" (ngSubmit)="submit()">
+                    <!-- Email -->
+                    <app-form-textbox [label]="'Email'" [smallLabel]="true" [boxType]="'text'" [placeholder]="'Enter email'"
+                        [maxlength]="70" formControlName="email" [errorMessages]="emailErrorMessages"
+                        [separator]="true">
+                    </app-form-textbox>
+
+                    <!-- Display name -->
+                    <app-form-textbox [label]="'User name'" [smallLabel]="true" [boxType]="'text'" [placeholder]="'Enter contact name'"
+                        [maxlength]="70" formControlName="userName" [errorMessages]="userNameErrorMessages"
+                        [separator]="true">
+                    </app-form-textbox>
+
+                    <!-- Buttons -->
+                    <div class="__profile-details-button-container">
+                        <button type="submit" class="__main-button" [disabled]="!createForm.valid">
+                            create
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

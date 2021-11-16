@@ -3,6 +3,7 @@ import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ContactsFilter, FilterChip, FilterChipType, ProfileBaseFilter, TransactionsFilter } from 'src/app/model/filter.model';
 import { CurrencyView } from 'src/app/model/payment.model';
+import { ProfileItemContainer, ProfileItemContainerType } from 'src/app/model/profile-item.model';
 
 @Component({
     selector: 'app-contacts-filter',
@@ -16,6 +17,7 @@ export class ContactsFilterBarComponent implements OnInit, OnDestroy {
         this.initData();
     }
     @Output() update = new EventEmitter<ProfileBaseFilter>();
+    @Output() onShowDetails = new EventEmitter<ProfileItemContainer>();
 
     private subscriptions: Subscription = new Subscription();
     private internalLoading = false;
@@ -80,7 +82,10 @@ export class ContactsFilterBarComponent implements OnInit, OnDestroy {
     }
 
     addContact(): void {
-
+        const c = new ProfileItemContainer();
+        c.container = ProfileItemContainerType.Contact;
+        c.contact = undefined;
+        this.onShowDetails.emit(c);
     }
 
     get selectedCurrency(): string {

@@ -48,16 +48,10 @@ import { SideMenuComponent } from './common/side-menu.component';
 import { SignUpPanelComponent } from './auth/signup-panel.component';
 import { SignupInfoPanelComponent } from './auth/signup-info.component';
 
-import { ProfileExchangeComponent } from './profile/profile-exchange.component';
-import { ProfileQuickTransferComponent } from './profile/profile-quick-transfer.component';
 import { ProfileInfoComponent } from './profile/profile-info.component';
 import { ProfileTwoFAComponent } from './profile/profile-two-fa.component';
 import { ProfilePasswordComponent } from './profile/profile-password.component';
-import { ProfileVerificationComponent } from './profile/profile-verification.component';
 import { ProfileContactsComponent } from './profile/profile-contacts.component';
-import { ProfileWithdrawalComponent } from './profile/profile-withdrawal.component';
-import { ProfileAssetsComponent } from './profile/profile-assets.component';
-import { ProfileLastExchangesComponent } from './profile/profile-last-exchanges.component';
 import { ProfileContactEditorComponent } from './profile/profile-contact-editor.component';
 import { TransactionsFilterBarComponent } from './filter-bars/transactions-bar.component';
 import { FormTextBoxComponent } from './common/controls/form-textbox.component';
@@ -114,11 +108,9 @@ export class MaterialModule { }
         LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, CommonDialogBox, SideExpanderComponent,
         CreditCardComponent, TwoFaCodeComponent, NavPopupComponent, SideMenuComponent, LineBreakPipe, NumberFillPipe,
         TransactionsFilterBarComponent, WalletsFilterBarComponent, ContactsFilterBarComponent, NotificationsFilterBarComponent,
-        ProfileExchangeComponent, 
-        ProfileQuickTransferComponent, ProfileInfoComponent, ProfileTwoFAComponent,
-        ProfilePasswordComponent, ProfileVerificationComponent, ProfileContactsComponent, 
-        ProfileContactEditorComponent, ProfileWithdrawalComponent,
-        ProfileAssetsComponent, ProfileLastExchangesComponent],
+        
+        ProfileInfoComponent, ProfileTwoFAComponent, ProfilePasswordComponent,
+        ProfileContactsComponent, ProfileContactEditorComponent],
     exports: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
         FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent, FormSearchBoxComponent,
         FormEditBoxComponent,
@@ -127,11 +119,9 @@ export class MaterialModule { }
         LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, CommonDialogBox, SideExpanderComponent,
         CreditCardComponent, TwoFaCodeComponent, NavPopupComponent, SideMenuComponent, LineBreakPipe, NumberFillPipe,
         TransactionsFilterBarComponent, WalletsFilterBarComponent, ContactsFilterBarComponent, NotificationsFilterBarComponent,
-        ProfileExchangeComponent, 
-        ProfileQuickTransferComponent, ProfileInfoComponent, ProfileTwoFAComponent,
-        ProfilePasswordComponent, ProfileVerificationComponent, ProfileContactsComponent,
-        ProfileContactEditorComponent, ProfileWithdrawalComponent,
-        ProfileAssetsComponent, ProfileLastExchangesComponent],
+        
+        ProfileInfoComponent, ProfileTwoFAComponent, ProfilePasswordComponent,
+        ProfileContactsComponent, ProfileContactEditorComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 

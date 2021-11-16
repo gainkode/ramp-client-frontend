@@ -63,6 +63,16 @@ export class PersonalContactsComponent implements OnInit, OnDestroy {
         }
     }
 
+    removeWallet(id: string): void {
+        console.log('removeContact', id);
+        if (this.dataListPanel) {
+            const index = this.dataListPanel.contacts.findIndex(x => x.id === id);
+            if (index >= 0) {
+                this.dataListPanel.contacts.splice(index, 1);
+            }
+        }
+    }
+
     private loadCurrencyData(): void {
         this.cryptoList = [];
         this.inProgressFilter = true;
