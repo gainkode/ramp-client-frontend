@@ -101,8 +101,8 @@ export class PersonalContactListComponent implements OnDestroy, AfterViewInit {
             this.onProgress.emit(true);
             const userFiat = this.auth.user?.defaultFiatCurrency ?? 'EUR';
             this.pContactsSubscription = contactsData.valueChanges.subscribe(({ data }) => {
-                //const contactsItems = data.myContacts as UserContactListResult;
-                const contactsItems = this.getFakes();
+                const contactsItems = data.myContacts as UserContactListResult;
+                //const contactsItems = this.getFakes();
                 if (contactsItems) {
                     this.contactCount = contactsItems?.count as number;
                     if (this.contactCount > 0) {
