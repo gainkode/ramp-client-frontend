@@ -38,6 +38,12 @@
         eWallet fees:
     </div>
     <div *ngIf="(summary) ? summary.fee>0 : false" class="__widget-summary-item">
-        {{summary?.fee}}
+        {{summary?.transactionFee}} {{summary?.transactionFeeCurrency}}
+    </div>
+    <div *ngIf="(summary) ? summary.networkFee>0 : false" class="__widget-summary-item">
+        Network fees:
+    </div>
+    <div *ngIf="(summary) ? summary.networkFee>0 : false" class="__widget-summary-item">
+        {{summary?.networkFee}} {{summary?.networkFeeCurrency}}
     </div>
 </div>

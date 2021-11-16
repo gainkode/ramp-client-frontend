@@ -183,6 +183,7 @@ export class TransactionItem {
   amountToSpend = 0;
   amountToReceive = 0;
   fees = 0;
+  networkFee = 0;
   rate = 0;
   ip = '';
   status: TransactionStatusDescriptorMap | undefined = undefined;
@@ -203,12 +204,14 @@ export class TransactionItem {
         this.amountToSpend = data.amountToSpend ?? 0;
         this.amountToReceive = data.amountToReceive ?? 0;
         this.fees = data.feeFiat as number ?? 0;
+        this.networkFee = data.approxNetworkFee ?? 0;
       } else {
         this.currencyToSpend = '-X-';
         this.currencyToReceive = '-X-';
         this.amountToSpend = 42;
         this.amountToReceive = 42;
-        this.fees = 42;
+        this.fees = 4.2;
+        this.networkFee = 0.42;
       }
       this.rate = data.rate ?? 0;
       this.status = userStatus;

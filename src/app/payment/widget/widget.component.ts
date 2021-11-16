@@ -579,12 +579,14 @@ export class WidgetComponent implements OnInit {
           const order = data.createTransaction as TransactionShort;
           this.inProgress = false;
           if (order.code) {
+            console.log(order);
             this.summary.instrument = instrument;
             this.summary.providerView = this.paymentProviders.find(x => x.id === providerId);
             this.summary.orderId = order.code as string;
             this.summary.fee = order.feeFiat as number ?? 0;
             this.summary.feeMinFiat = order.feeMinFiat as number ?? 0;
             this.summary.feePercent = order.feePercent as number ?? 0;
+            this.summary.networkFee = order.approxNetworkFee ?? 0;
             this.summary.transactionDate = new Date().toLocaleString();
             this.summary.transactionId = order.transactionId as string;
             this.startPayment();

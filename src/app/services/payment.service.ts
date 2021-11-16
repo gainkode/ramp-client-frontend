@@ -73,6 +73,7 @@ mutation CreateTransaction(
     feeFiat,
     feePercent,
     feeMinFiat,
+    approxNetworkFee,
     data
   }
 }

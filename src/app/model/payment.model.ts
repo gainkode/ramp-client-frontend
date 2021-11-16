@@ -283,6 +283,7 @@ export class CheckoutSummary {
     fee = 0;
     feePercent = 0;
     feeMinFiat = 0;
+    networkFee = 0;
     exchangeRate: Rate | undefined = undefined;
     transactionDate = '';
     transactionType: TransactionType = TransactionType.Deposit;
@@ -336,6 +337,16 @@ export class CheckoutSummary {
         return result;
     }
 
+    get networkFeeCurrency(): string {
+        let result = '';
+        if (this.isFromCrypto) {
+            result = this.currencyFrom;
+        } else {
+            result = this.currencyTo as string;
+        }
+        return result;
+    }
+
     get rate(): string {
         let result = '';
         switch (this.transactionType) {
@@ -374,6 +385,7 @@ export class CheckoutSummary {
         this.fee = 0;
         this.feePercent = 0;
         this.feeMinFiat = 0;
+        this.networkFee = 0;
         this.exchangeRate = undefined;
         this.transactionDate = '';
         this.transactionType = TransactionType.Deposit;
