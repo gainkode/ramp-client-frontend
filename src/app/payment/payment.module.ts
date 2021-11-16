@@ -18,8 +18,6 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatStepperModule } from '@angular/material/stepper';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { ComponentsModule } from '../components/components.module';
-import { PaymentComponent } from './payment.component';
-//import { ContainerComponentDeprecated } from './container.component';
 import { QuickCheckoutComponent } from './quickcheckout.component';
 import { WidgetComponent } from './widget/widget.component';
 import { WidgetProgressComponent } from './widget/progress.component';
@@ -42,9 +40,7 @@ import { WidgetInitializationComponent } from './widget/initialization.component
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
 const routing = RouterModule.forChild([
-    { path: 'qc', component: PaymentComponent },
     { path: 'quickcheckout', component: QuickCheckoutComponent },
-    // { path: 'container', component: ContainerComponentDeprecated },
     { path: 'widget/:userParamsId', component: WidgetComponent },
     { path: '**', redirectTo: 'quickcheckout' }
 ]);
@@ -75,8 +71,8 @@ export class MaterialModule { }
 
 @NgModule({
     imports: [NgxMaskModule.forRoot(), CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule],
-    declarations: [PaymentComponent, QuickCheckoutComponent, //ContainerComponentDeprecated,
-        WidgetComponent, WidgetProgressComponent, WidgetSummaryComponent, WidgetRateComponent, WidgetCreditCardComponent,
+    declarations: [QuickCheckoutComponent, WidgetComponent, WidgetProgressComponent,
+        WidgetSummaryComponent, WidgetRateComponent, WidgetCreditCardComponent,
         WidgetRegisterComponent, WidgetLoginAuthComponent, WidgetCodeAuthComponent,
         WidgetInitializationComponent, WidgetOrderDetailsComponent, WidgetDisclaimerComponent, WidgetKycComponent,
         WidgetPaymentComponent, WidgetProcessingFrameComponent, WidgetProcessingInstantpayComponent, WidgetCompleteComponent,

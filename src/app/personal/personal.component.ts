@@ -172,8 +172,7 @@ export class PersonalComponent implements OnInit {
         } else if (item.id === 'administration') {
             this.routeTo('/admin/main');
         } else if (item.id === 'settings') {
-            this.notificationTest();
-            //this.routeTo('/personal/myaccount');
+            this.routeTo('/personal/myaccount');
         } else {
             this.routeTo(item.url);
         }
@@ -202,6 +201,10 @@ export class PersonalComponent implements OnInit {
 
     closeDetails(): void {
         this.showDetails = false;
+    }
+
+    getChat(): void {
+        this.notificationTest();
     }
 
     notificationTest(): void {
