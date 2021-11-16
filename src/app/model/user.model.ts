@@ -103,6 +103,8 @@ export class ContactItem {
   displayName = '';
   created = '';
   asset = '';
+  sent = 4200;
+  received = 0.0042;
   
   private pIconUrl = '';
   

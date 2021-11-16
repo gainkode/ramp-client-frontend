@@ -52,7 +52,7 @@
 .__profile-contacts-table-cell-data {
     font-family: $font_main;
     font-style: normal;
-    font-weight: normal;
+    font-weight: 300;
     font-size: 14px;
     line-height: 28px;
     color: $color_purple_900_text;
@@ -60,6 +60,25 @@
 
 .__profile-contacts-table-cell-plain {
     padding: 0px 0px 0px 4px !important;
+}
+
+.__profile-contacts-table-cell-user-photo {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.__profile-contacts-table-cell-coin {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.__profile-contacts-table-cell-coin-icon {
+    width: 18px;
+    height: 18px;
 }
 
 .__profile-contacts-table-cell-details {

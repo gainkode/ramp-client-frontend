@@ -8,13 +8,9 @@
                 </span>
             </th>
             <td mat-cell *matCellDef="let element" class="__profile-contacts-table-cell-plain">
-                <!-- <div style="display: flex;flex-direction: row;align-items: center;">
-                    <img class="__profile-transactions-table-cell-transaction-icon"
-                        src="../../../assets/navigation/__temp_send_icon.svg">
-                    <div class="__profile-transactions-table-cell-data">
-                        {{element.typeName}}
-                    </div>
-                </div> -->
+                <div class="__profile-contacts-table-cell-user-photo">
+                    <div style="background-color: lightgray;width: 40px;border-radius: 20px;height: 40px;margin: 4px;"></div>
+                </div>
             </td>
         </ng-container>
 
@@ -57,8 +53,8 @@
                 </span>
             </th>
             <td mat-cell *matCellDef="let element" class="__profile-contacts-table-cell-plain">
-                <div class="__profile-contacts-table-cell-data">
-                    <!-- {{element.email}} -->
+                <div class="__profile-contacts-table-cell-coin">
+                    <img class="__profile-contacts-table-cell-coin-icon" [src]="element.icon">
                 </div>
             </td>
         </ng-container>
@@ -73,7 +69,7 @@
             </th>
             <td mat-cell *matCellDef="let element" class="__profile-contacts-table-cell-plain">
                 <div class="__profile-contacts-table-cell-data">
-                    <!-- {{element.sent}} -->
+                    {{element.sent}}
                 </div>
             </td>
         </ng-container>
@@ -88,7 +84,7 @@
             </th>
             <td mat-cell *matCellDef="let element" class="__profile-contacts-table-cell-plain">
                 <div class="__profile-contacts-table-cell-data">
-                    <!-- {{element.received}} -->
+                    {{element.received}}
                 </div>
             </td>
         </ng-container>
