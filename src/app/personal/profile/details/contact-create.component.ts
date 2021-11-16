@@ -1,10 +1,14 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { TransactionType } from "src/app/model/generated-models";
+import { CurrencyView } from "src/app/model/payment.model";
 import { ProfileItemContainer } from 'src/app/model/profile-item.model';
 import { ContactItem } from 'src/app/model/user.model';
+import { AuthService } from "src/app/services/auth.service";
 import { ErrorService } from 'src/app/services/error.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
+import { WalletValidator } from "src/app/utils/wallet.validator";
 
 @Component({
     selector: 'app-personal-contact-create',
@@ -12,13 +16,16 @@ import { ProfileDataService } from 'src/app/services/profile.service';
     styleUrls: ['../../../../assets/button.scss', '../../../../assets/details.scss', '../../../../assets/text-control.scss']
 })
 export class PersonalContactCreateComponent implements OnInit, OnDestroy {
+    @Input() cryptoList: CurrencyView[] = [];
     @Output() onComplete = new EventEmitter<ProfileItemContainer>();
 
     errorMessage = '';
     inProgress = false;
     contact: ContactItem | undefined = undefined;
+    selectedCurrency: CurrencyView | undefined = undefined;
+    currencyInit = false;
     createForm = this.formBuilder.group({
-        userName: ['', { validators: [Validators.required], updateOn: 'change' }],
+        displayName: ['', { validators: [Validators.required], updateOn: 'change' }],
         email: [
             '',
             {
@@ -28,14 +35,29 @@ export class PersonalContactCreateComponent implements OnInit, OnDestroy {
                 ],
                 updateOn: 'change',
             }
-        ]
+        ],
+        currency: ['', { validators: [Validators.required], updateOn: 'change' }],
+        address: ['', { validators: [Validators.required], updateOn: 'change' }],
+        transaction: [TransactionType.Deposit, { validators: [], updateOn: 'change' }],
+    }, {
+        validators: [
+            WalletValidator.addressValidator(
+                'address',
+                'currency',
+                'transaction'
+            ),
+        ],
+        updateOn: 'change',
     });
     emailErrorMessages: { [key: string]: string; } = {
         ['required']: 'Email is required',
         ['pattern']: 'Email format is invalid'
     };
-    userNameErrorMessages: { [key: string]: string; } = {
-        ['required']: 'User name is required'
+    displayNameErrorMessages: { [key: string]: string; } = {
+        ['required']: 'Contact name is required'
+    };
+    addressErrorMessages: { [key: string]: string; } = {
+        ['required']: 'Address is required'
     };
 
     private subscriptions: Subscription = new Subscription();
@@ -46,26 +68,38 @@ export class PersonalContactCreateComponent implements OnInit, OnDestroy {
         private profileService: ProfileDataService) { }
 
     ngOnInit(): void {
-
+        this.subscriptions.add(
+            this.currencyField?.valueChanges.subscribe(val => {
+                this.currencyInit = true;
+                this.selectedCurrency = this.cryptoList.find(x => x.id === val);
+            }));
     }
 
     ngOnDestroy(): void {
         this.subscriptions.unsubscribe();
     }
 
-    get userNameField(): AbstractControl | null {
-        return this.createForm.get('userName');
+    get displayNameField(): AbstractControl | null {
+        return this.createForm.get('displayName');
     }
 
     get emailField(): AbstractControl | null {
         return this.createForm.get('email');
     }
 
-    private createContact(email: string, userName: string): void {
+    get addressField(): AbstractControl | null {
+        return this.createForm.get('address');
+    }
+
+    get currencyField(): AbstractControl | null {
+        return this.createForm.get('currency');
+    }
+
+    private createContact(email: string, userName: string, crypto: string, address: string): void {
         this.errorMessage = '';
         this.inProgress = true;
         this.subscriptions.add(
-            this.profileService.saveContact('', userName, email).subscribe(({ data }) => {
+            this.profileService.saveContact('', userName, email, crypto, address).subscribe(({ data }) => {
                 this.inProgress = false;
                 console.log(data);
 
@@ -84,7 +118,11 @@ export class PersonalContactCreateComponent implements OnInit, OnDestroy {
 
     submit(): void {
         if (this.createForm.valid) {
-            this.createContact(this.emailField?.value, this.userNameField?.value);
+            this.createContact(
+                this.emailField?.value,
+                this.displayNameField?.value,
+                this.selectedCurrency?.id ?? '',
+                this.addressField?.value);
         }
     }
 }

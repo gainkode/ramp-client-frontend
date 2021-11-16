@@ -100,6 +100,7 @@ export class PersonalComponent implements OnInit {
                 this.detailsType = 'contact';
             } else {
                 this.detailsType = 'new_contact';
+                this.cryptoList = container.meta;
             }
         }
         console.log(this.detailsType);

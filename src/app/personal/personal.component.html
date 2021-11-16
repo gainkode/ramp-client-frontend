@@ -71,7 +71,8 @@
                     (onComplete)="detailsComplete($event)">
                 </app-personal-wallet-create>
 
-                <app-personal-contact-create *ngIf="detailsType==='new_contact'" (onComplete)="detailsComplete($event)">
+                <app-personal-contact-create *ngIf="detailsType==='new_contact'" [cryptoList]="cryptoList"
+                    (onComplete)="detailsComplete($event)">
                 </app-personal-contact-create>
             </div>
         </div>
@@ -86,7 +87,7 @@
     </div>
 </div>
 
-<div class="__profile-chat-block" *ngIf="!showDetails" >
+<div class="__profile-chat-block" *ngIf="!showDetails">
     <button class="__main-button __main-button-chat">
         <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
             <img width="24" height="24" src="/assets/chat.svg" alt="">

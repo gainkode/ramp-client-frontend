@@ -205,7 +205,7 @@ export class ProfileContactsComponent {
         this.profileService.saveContact(
             contact.id,
             contact.displayName,
-            contact.contactEmail).subscribe(({ data }) => {
+            contact.contactEmail, '', '').subscribe(({ data }) => {
             this.inProgress = false;
             this.setEditMode(false);
             this.showEditor(null, false, false);

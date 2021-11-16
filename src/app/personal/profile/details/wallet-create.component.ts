@@ -44,6 +44,8 @@ export class PersonalWalletCreateComponent implements OnInit, OnDestroy {
         private profileService: ProfileDataService) { }
 
     ngOnInit(): void {
+        console.log(this.cryptoList);
+
         this.subscriptions.add(
             this.currencyField?.valueChanges.subscribe(val => {
                 this.currencyInit = true;

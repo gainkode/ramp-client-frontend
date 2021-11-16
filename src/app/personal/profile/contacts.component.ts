@@ -123,6 +123,9 @@ export class PersonalContactsComponent implements OnInit, OnDestroy {
     }
 
     showDetails(details: ProfileItemContainer): void {
+        if (!details.contact) {
+            details.meta = this.cryptoList;
+        }
         this.onShowDetails.emit(details);
     }
 }

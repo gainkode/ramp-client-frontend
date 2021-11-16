@@ -370,11 +370,15 @@ const ADD_MY_CONTACT = gql`
   mutation AddMyContact(
     $contactEmail: String!
     $displayName: String!
+    $assetId: String!
+    $address: String!
   ) {
     addMyContact(
       contact: {
         contactEmail: $contactEmail
         displayName: $displayName
+        assetId: $assetId
+        address: $address
       }
     ) {
       userId
@@ -390,8 +394,10 @@ const UPDATE_MY_CONTACT = gql`
   ) {
     updateMyContact(
       contactId: $contactId
-      contactEmail: $contactEmail
-      displayName: $displayName
+      contact: {
+        contactEmail: $contactEmail
+        displayName: $displayName
+      }
     ) {
       userId
     }
@@ -650,13 +656,15 @@ export class ProfileDataService {
     });
   }
 
-  saveContact(id: string, name: string, email: string): Observable<any> {
+  saveContact(id: string, name: string, email: string, currency: string, contactAddress: string): Observable<any> {
     if (id === '') {
       return this.apollo.mutate({
         mutation: ADD_MY_CONTACT,
         variables: {
           contactEmail: email,
-          displayName: name
+          displayName: name,
+          assetId: currency,
+          address: contactAddress
         },
       });
     } else {

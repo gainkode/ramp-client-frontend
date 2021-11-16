@@ -1,32 +1,75 @@
 <div class="__profile-details-container">
     <mat-progress-bar *ngIf="inProgress" color="accent" mode="indeterminate"></mat-progress-bar>
-    <div>
-        <h2 class="__profile-details-title __profile-details-title-small">
-            Add new contact
-        </h2>
-        <div class="__profile-details-data-container __profile-details-data-form">
-            <div class="__profile-details-data-area">
-                <form [formGroup]="createForm" (ngSubmit)="submit()">
-                    <!-- Email -->
-                    <app-form-textbox [label]="'Email'" [smallLabel]="true" [boxType]="'text'" [placeholder]="'Enter email'"
-                        [maxlength]="70" formControlName="email" [errorMessages]="emailErrorMessages"
-                        [separator]="true">
-                    </app-form-textbox>
+    <h2 class="__profile-details-title __profile-details-title-small">
+        Add new contact
+    </h2>
+    <div class="__profile-details-data-container __profile-details-data-form">
+        <div class="__profile-details-data-area">
+            <form [formGroup]="createForm" (ngSubmit)="submit()">
+                <!-- Contact name -->
+                <app-form-textbox [label]="'Contact name'" [smallLabel]="true" [boxType]="'text'"
+                    [placeholder]="'Enter contact name'" [maxlength]="70" formControlName="displayName"
+                    [errorMessages]="displayNameErrorMessages" [separator]="true">
+                </app-form-textbox>
 
-                    <!-- Display name -->
-                    <app-form-textbox [label]="'User name'" [smallLabel]="true" [boxType]="'text'" [placeholder]="'Enter contact name'"
-                        [maxlength]="70" formControlName="userName" [errorMessages]="userNameErrorMessages"
-                        [separator]="true">
-                    </app-form-textbox>
+                <!-- Email -->
+                <app-form-textbox [label]="'Email'" [smallLabel]="true" [boxType]="'text'"
+                    [placeholder]="'Enter contact email'" [maxlength]="70" formControlName="email"
+                    [errorMessages]="emailErrorMessages" [separator]="true">
+                </app-form-textbox>
 
-                    <!-- Buttons -->
-                    <div class="__profile-details-button-container">
-                        <button type="submit" class="__main-button" [disabled]="!createForm.valid">
-                            create
-                        </button>
+                <!-- Currency -->
+                <div class="__profile-details-item-block">
+                    <div class="__profile-details-data-caption">
+                        Select address coin
                     </div>
-                </form>
-            </div>
+                </div>
+                <div class="__profile-details-item-block">
+                    <div class="__form-text-border">
+                        <mat-select formControlName="currency" style="margin: 8px 0px 0px 0px;"
+                            placeholder="Select coin from your list">
+                            <mat-select-trigger>
+                                <div class="__form-finance-combo-item">
+                                    <img class="__form-combo-item-img" [src]="selectedCurrency?.img">
+                                    <span class="__form-finance-combo-item-text">
+                                        {{selectedCurrency?.title}}
+                                    </span>
+                                </div>
+                            </mat-select-trigger>
+                            <mat-option *ngFor="let item of cryptoList" [value]="item.id" style="height: 32px;">
+                                <div class="__form-finance-combo-item">
+                                    <img class="__form-combo-item-img" [src]="item.img">
+                                    <span class="__form-finance-combo-item-text">
+                                        {{item.title}}
+                                    </span>
+                                </div>
+                            </mat-option>
+                        </mat-select>
+                    </div>
+                </div>
+                <div class="__profile-details-item-block">
+                    <div *ngIf="!currencyField?.valid && currencyInit" class="__form-assist __form-assist-error">
+                        Currency is required
+                    </div>
+                </div>
+
+                <!-- Address -->
+                <app-form-textbox [label]="'Address'" [smallLabel]="true" [boxType]="'text'"
+                    [placeholder]="'Enter contact wallet address'" [maxlength]="100" formControlName="address"
+                    [errorMessages]="addressErrorMessages" [separator]="false">
+                </app-form-textbox>
+                <div *ngIf="addressField?.hasError('walletAddress')" class="__form-assist __form-assist-error">
+                    Wallet address is not valid
+                </div>
+                <div class="__form-separator"></div>
+
+                <!-- Buttons -->
+                <div class="__profile-details-button-container">
+                    <button type="submit" class="__main-button" [disabled]="!createForm.valid">
+                        create
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
