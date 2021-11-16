@@ -185,6 +185,25 @@
     }
 }
 
+.__profile-chat-block {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+
+    z-index: 300;
+    padding: 0px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    background-color: transparent;
+    //background-color: red;
+
+    @media (max-width: $md3 + px) {
+        display: none;
+        visibility: hidden;
+    }
+}
+
 .__profile-internal-table-container {
     display: flex;
     flex-direction: row;
