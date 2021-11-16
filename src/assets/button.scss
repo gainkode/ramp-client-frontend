@@ -336,13 +336,12 @@
     justify-content: center;
     align-items: center;
     padding: 0px;
-    width: 16px;
-    height: 16px;
+    width: 20px;
+    height: 20px;
 
     background: transparent;
     border: none;
 
-    //font-size: 2px;
     color: $color_purple_900_icons;
 }
 
@@ -744,3 +743,7 @@
   .__inline-button-box {
       margin: 2px 0px 0px 8px;
   }
+
+  .__inline-title-button-box {
+    margin: 6px 0px 0px 8px;
+}

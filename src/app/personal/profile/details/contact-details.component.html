@@ -1,8 +1,26 @@
 <div class="__profile-details-container">
     <mat-progress-bar *ngIf="inProgress" color="accent" mode="indeterminate"></mat-progress-bar>
-    <h2 class="__profile-details-title">
-        {{contact?.displayName}}
-    </h2>
+    <!-- Name (title) -->
+    <div class="__profile-details-item-block" *ngIf="!editMode">
+        <h2 class="__profile-details-title-editable">
+            {{contact?.displayName}}
+        </h2>
+        <div class="__inline-title-button-box">
+            <button type="button" class="__inline-button" (click)="editName()">
+                <mat-icon style="font-size: 20px;">edit</mat-icon>
+            </button>
+        </div>
+    </div>
+    <!-- Name (edit) -->
+    <div class="__profile-details-item-block" *ngIf="editMode">
+        <div style="margin: 4px 0px 0px 16px;">
+            <form [formGroup]="editForm">
+                <app-form-editbox [maxlength]="70" formControlName="displayName" (onSubmit)="saveName()">
+                </app-form-editbox>
+            </form>
+        </div>
+    </div>
+    <!-- Show data -->
     <div *ngIf="!deleteMode" class="__profile-details-data-container">
         <div class="__profile-details-data-area">
             <!-- Added -->
@@ -74,7 +92,7 @@
                     {{contact?.lastTransactionDate}}
                 </div>
             </div>
-            
+
             <!-- last Transaction Status -->
             <div class="__profile-details-item-block">
                 <div class="__profile-details-item-title">
@@ -85,21 +103,8 @@
                 </div>
             </div>
 
-            <!-- Name (edit) -->
-            <!-- <div class="__profile-details-item-block" *ngIf="editMode">
-                <div class="__profile-details-item-title __profile-details-item-title-edit">
-                    Name:
-                </div>
-                <div style="margin: 4px 0px 0px 0px;">
-                    <form [formGroup]="editForm">
-                        <app-form-editbox [maxlength]="50" formControlName="walletName" (onSubmit)="saveName()">
-                        </app-form-editbox>
-                    </form>
-                </div>
-            </div> -->
-
             <div class="__form-separator"></div>
-            
+
             <!-- Buttons -->
             <div class="__profile-details-button-container">
                 <button type="button" class="__outlined-button" (click)="receiveStart()">
@@ -121,26 +126,28 @@
             </div>
         </div>
         <div class="__profile-details-footer">
-            <a [routerLink]="" class="__profile-details-link __profile-details-link-accent" (click)="requestDeleteContact()">
+            <a [routerLink]="" class="__profile-details-link __profile-details-link-accent"
+                (click)="requestDeleteContact()">
                 Delete contact
             </a>
         </div>
     </div>
     <div *ngIf="deleteMode" class="__profile-details-data-container">
         <div class="__profile-details-data-area">
-                <div class="__profile-details-subtitle">
-                    You are going to delete the contact. Please confirm.
-                </div>
-    
-                <!-- Buttons -->
-                <div class="__profile-details-button-container">
-                    <button type="button" class="__outlined-button" (click)="cancelDelete()">
-                        CANCEL
-                    </button>
-                    <button type="button" class="__main-button __main-button-danger __button-wide-separator" (click)="deleteContact()">
-                        DELETE
-                    </button>
-                </div>
+            <div class="__profile-details-subtitle">
+                You are going to delete the contact. Please confirm.
             </div>
+
+            <!-- Buttons -->
+            <div class="__profile-details-button-container">
+                <button type="button" class="__outlined-button" (click)="cancelDelete()">
+                    CANCEL
+                </button>
+                <button type="button" class="__main-button __main-button-danger __button-wide-separator"
+                    (click)="deleteContact()">
+                    DELETE
+                </button>
+            </div>
+        </div>
     </div>
 </div>

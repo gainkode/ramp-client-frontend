@@ -51,21 +51,26 @@ export class PersonalContactDetailsComponent implements OnDestroy {
         if (val) {
             this.onError.emit('');
             this.inProgress = true;
-            // this.subscriptions.add(
-            //     this.profileService.updateMyVault(this.contact?.vault ?? '', val).subscribe(({ data }) => {
-            //         if (data && data.updateMyVault) {
-            //             const result = data.updateMyVault as UserVault;
-            //             if (result.name) {
-            //                 this.contact?.setName(result.name);
-            //                 this.editMode = false;
-            //             }
-            //         }
-            //         this.inProgress = false;
-            //     }, (error) => {
-            //         this.inProgress = false;
-            //         this.onError.emit(this.errorHandler.getError(error.message, `Unable to change the wallet name`));
-            //     })
-            // );
+            this.subscriptions.add(
+                this.profileService.saveMyContact(
+                    this.contact?.id ?? '',
+                    this.displayNameField?.value,
+                    this.contact?.contactEmail ?? '',
+                    '',
+                    '').subscribe(({ data }) => {
+                        if (this.contact) {
+                            this.contact.displayName = this.displayNameField?.value;
+                        }
+                        const item = new ProfileItemContainer();
+                        item.container = ProfileItemContainerType.Contact;
+                        item.action = ProfileItemActionType.Create;
+                        item.contact = this.contact;
+                        this.onComplete.emit(item);
+                    }, (error) => {
+                        this.inProgress = false;
+                        this.onError.emit(this.errorHandler.getError(error.message, `Unable to change the contact name`));
+                    })
+            );
         }
     }
 
