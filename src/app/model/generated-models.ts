@@ -294,6 +294,9 @@ export type QueryGetUsersArgs = {
 
 
 export type QueryMyContactsArgs = {
+  assetIds?: Maybe<Array<Scalars['String']>>;
+  contactEmails?: Maybe<Array<Scalars['String']>>;
+  contactDisplayNames?: Maybe<Array<Scalars['String']>>;
   filter?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
@@ -303,6 +306,9 @@ export type QueryMyContactsArgs = {
 
 export type QueryGetUserContactsArgs = {
   userId?: Maybe<Scalars['String']>;
+  assetIds?: Maybe<Array<Scalars['String']>>;
+  contactEmails?: Maybe<Array<Scalars['String']>>;
+  contactDisplayNames?: Maybe<Array<Scalars['String']>>;
   filter?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;

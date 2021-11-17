@@ -234,6 +234,9 @@ const GET_PROFILE_ME = gql`
 
 const GET_MY_CONTACTS = gql`
   query MyContacts(
+    $assetIds: [String!]
+    $contactEmails: [String!]
+    $contactDisplayNames: [String!]
     $filter: String
     $skip: Int
     $first: Int
@@ -244,6 +247,9 @@ const GET_MY_CONTACTS = gql`
       skip: $skip
       first: $first
       orderBy: $orderBy
+      assetIds: $assetIds
+      contactEmails: $contactEmails
+      contactDisplayNames: $contactDisplayNames
     ) {
       count
       list {
@@ -498,6 +504,9 @@ export class ProfileDataService {
   }
 
   getMyContacts(
+    assets: string[],
+    emails: string[],
+    displayNames: string[],
     pageIndex: number,
     takeItems: number,
     orderField: string,
@@ -512,6 +521,9 @@ export class ProfileDataService {
           skip: pageIndex * takeItems,
           first: takeItems,
           orderBy: orderFields,
+          assetIds: assets,
+          contactEmails: (emails.length > 0) ? emails : undefined,
+          contactDisplayNames: (displayNames.length > 0) ? displayNames : undefined
         },
         fetchPolicy: 'network-only',
       });

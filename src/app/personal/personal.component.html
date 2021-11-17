@@ -1,5 +1,5 @@
 <div class="__container">
-    <div [ngClass]="{'__profile-disabled-block': showDetails}">
+    <div [ngClass]="{'__profile-disabled-block': showDetails || showPayment}">
         <div class="__top-menu-bar">
             <div
                 [ngClass]="expandedMenu ? '__top-menu-content-bar-profile-side-menu-expanded' : '__top-menu-content-bar-profile-side-menu-collapsed'">

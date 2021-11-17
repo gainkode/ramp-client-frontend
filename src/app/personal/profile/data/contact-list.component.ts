@@ -91,6 +91,9 @@ export class PersonalContactListComponent implements OnDestroy, AfterViewInit {
         this.onError.emit('');
         this.contactCount = 0;
         const contactsData = this.profileService.getMyContacts(
+            this.filter.currencies,
+            (this.filter.email === '') ? [] : [this.filter.email],
+            (this.filter.userName === '') ? [] : [this.filter.userName],
             this.pageIndex,
             this.pageSize,
             this.getSortedField(),
