@@ -25,6 +25,8 @@ export class PersonalComponent implements OnInit {
     selectedMenu = 'home';
     showDetails = false;
     showDetailsRef: any;
+    showPayment = false;
+    paymentPanelTitle = '';
     detailsType = '';
     detailsContainer!: ProfileItemContainer;
     dataPanel: any;
@@ -201,6 +203,21 @@ export class PersonalComponent implements OnInit {
 
     closeDetails(): void {
         this.showDetails = false;
+    }
+
+    showPaymentPanel(paymentId: string): void {
+        if (paymentId === 'buy-sell') {
+            this.paymentPanelTitle = 'BUY or SELL any Crypto Currency using your Bank account directly in a single action!\nIt only takes 2 clicks and you’re done.';
+        } else if (paymentId === 'send') {
+            this.paymentPanelTitle = 'Send Crypto from your wallet anywhere in one single, easy step!\nSimply add your recepient address to your Contact List, or Insert New Address.';
+        } else if (paymentId === 'receive') {
+            this.paymentPanelTitle = 'Receive Crypto in your wallet is easy and simple!\nChoose the coin, then wallet to see your deposit wallet address. To aviod coins loss, make sure you use the correct network.';
+        }
+        this.showPayment = true;
+    }
+
+    closePayment(): void {
+        this.showPayment = false;
     }
 
     getChat(): void {

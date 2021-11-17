@@ -236,6 +236,34 @@
     transform: rotate(180deg);
 }
 
+.__tool-button-inversed {
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
+    width: 24px;
+    height: 24px;
+
+    background: transparent;
+    border: none;
+
+    font-size: 4px;
+    color: $color_white;
+}
+
+.__tool-button-inversed:focus {
+    outline: none;
+}
+
+.__tool-button-inversed:hover {
+    color: $color_main_blue_100;
+    cursor: pointer;
+}
+
+.__tool-button-inversed:disabled {
+    color: $color_purple_200;
+    cursor: default;
+}
+
 .__menu-button {
     display: flex;
     justify-content: center;

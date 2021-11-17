@@ -392,6 +392,28 @@
     margin: 0px 24px 24px 24px;
 }
 
+.__profile-payment-title-box {
+    width: 100%;
+    min-height: 40px;
+    display: flex;
+    flex-direction: column;
+    background-color: $color_purple_900;
+}
+
+.__profile-payment-title-bar {
+    width: 352px;
+    word-wrap: normal;
+    margin: 0px 24px 24px 24px;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 28px;
+
+    color: $color_white;
+}
+
 .__profile-grid-table-container-default {
     display: flex;
     flex-direction: row;

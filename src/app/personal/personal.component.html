@@ -4,15 +4,15 @@
             <div
                 [ngClass]="expandedMenu ? '__top-menu-content-bar-profile-side-menu-expanded' : '__top-menu-content-bar-profile-side-menu-collapsed'">
                 <div class="__top-menu-content-box">
-                    <button class="__top-menu-button" (click)="routeTo('/payment')">
+                    <button class="__top-menu-button" (click)="showPaymentPanel('buy-sell')">
                         <mat-icon>account_balance</mat-icon>&nbsp;&nbsp;&nbsp;Buy & Sell
                     </button>
                     <div class="__top-menu-button-separator"></div>
-                    <button class="__top-menu-button" (click)="routeTo('/payment')">
+                    <button class="__top-menu-button" (click)="showPaymentPanel('receive')">
                         <mat-icon>file_download</mat-icon>&nbsp;&nbsp;&nbsp;Receive
                     </button>
                     <div class="__top-menu-button-separator"></div>
-                    <button class="__top-menu-button" (click)="routeTo('/payment')">
+                    <button class="__top-menu-button" (click)="showPaymentPanel('send')">
                         <mat-icon>file_upload</mat-icon>&nbsp;&nbsp;&nbsp;Send
                     </button>
                     <div class="__top-menu-button-separator"></div>
@@ -51,8 +51,9 @@
         </div>
     </div>
 
-    <div *ngIf="showDetails" class="__profile-details-block">
-        <div class="__profile-details-panel">
+    <div *ngIf="showDetails || showPayment" class="__profile-details-block">
+        <!-- Details -->
+        <div *ngIf="showDetails" class="__profile-details-panel">
             <div class="__profile-details-title-bar">
                 <div class="__profile-details-close-button">
                     <button class="__tool-button" (click)="closeDetails()">
@@ -78,6 +79,21 @@
                 </app-personal-contact-create>
             </div>
         </div>
+        <!-- Payment -->
+        <div *ngIf="showPayment" class="__profile-details-panel">
+            <div class="__profile-payment-title-box">
+                <div class="__profile-details-title-bar">
+                    <div class="__profile-details-close-button">
+                        <button class="__tool-button-inversed" (click)="closePayment()">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </div>
+                </div>
+                <h3 class="__profile-payment-title-bar">
+                    {{paymentPanelTitle}}
+                </h3>
+            </div>
+        </div>
     </div>
 
     <div class="__profile-unsupported-device">
@@ -89,7 +105,7 @@
     </div>
 </div>
 
-<div class="__profile-chat-block" *ngIf="!showDetails">
+<div class="__profile-chat-block" *ngIf="!showDetails && !showPayment">
     <button type="button" class="__main-button __main-button-chat" (click)="getChat()">
         <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
             <img width="24" height="24" src="/assets/chat.svg" alt="">
