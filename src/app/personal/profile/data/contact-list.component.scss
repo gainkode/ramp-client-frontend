@@ -8,14 +8,18 @@
 }
 
 .__profile-contacts-table-column-user-name {
-    flex: 0 0 13%;
-    width: 13%;
+    // flex: 0 0 13%;
+    // width: 13%;  size, if the table has __profile-contacts-table-column-sent
+    flex: 0 0 26%;
+    width: 26%;
     min-width: 143px;
 }
 
 .__profile-contacts-table-column-email {
-    flex: 0 0 21%;
-    width: 21%;
+    // flex: 0 0 21%;
+    // width: 21%;  size, if the table has __profile-contacts-table-column-received
+    flex: 0 0 34%;
+    width: 34%;
     min-width: 215px;
 }
 

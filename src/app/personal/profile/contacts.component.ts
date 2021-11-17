@@ -62,7 +62,9 @@ export class PersonalContactsComponent implements OnInit, OnDestroy {
     }
 
     update(): void {
-        if (this.dataListPanel) {
+        const dataListEmptyState = this.dataListEmpty;
+        this.dataListEmpty = false;
+        if (this.dataListPanel && !dataListEmptyState) {
             this.dataListPanel.load(this.filter);
         }
     }

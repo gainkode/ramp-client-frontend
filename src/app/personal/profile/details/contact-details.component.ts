@@ -75,11 +75,11 @@ export class PersonalContactDetailsComponent implements OnDestroy {
     }
 
     receiveStart(): void {
-        console.log('receive');
+        
     }
 
     sendStart(): void {
-        console.log('send');
+        
     }
 
     requestDeleteContact(): void {
@@ -92,14 +92,12 @@ export class PersonalContactDetailsComponent implements OnDestroy {
         this.subscriptions.add(
             this.profileService.deleteMyContact(this.contact?.id ?? '').subscribe(({ data }) => {
                 this.inProgress = false;
-                console.log('delete contact data', this.contact?.id, data);
                 if (data && data.deleteMyContact) {
                     const item = new ProfileItemContainer();
                     item.container = ProfileItemContainerType.Contact;
                     item.action = ProfileItemActionType.Remove;
                     item.contact = new ContactItem(null);
                     item.contact.id = this.contact?.id ?? '';
-                    console.log('emit', item.contact.id);
                     this.onComplete.emit(item);
                 }
             }, (error) => {

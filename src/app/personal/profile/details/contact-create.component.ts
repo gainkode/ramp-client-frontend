@@ -3,9 +3,8 @@ import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { TransactionType } from "src/app/model/generated-models";
 import { CurrencyView } from "src/app/model/payment.model";
-import { ProfileItemContainer } from 'src/app/model/profile-item.model';
+import { ProfileItemActionType, ProfileItemContainer, ProfileItemContainerType } from 'src/app/model/profile-item.model';
 import { ContactItem } from 'src/app/model/user.model';
-import { AuthService } from "src/app/services/auth.service";
 import { ErrorService } from 'src/app/services/error.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
 import { WalletValidator } from "src/app/utils/wallet.validator";
@@ -101,14 +100,10 @@ export class PersonalContactCreateComponent implements OnInit, OnDestroy {
         this.subscriptions.add(
             this.profileService.saveMyContact('', userName, email, crypto, address).subscribe(({ data }) => {
                 this.inProgress = false;
-                console.log(data);
-
-                // const item = new ProfileItemContainer();
-                // item.container = ProfileItemContainerType.Contact;
-                // item.action = ProfileItemActionType.Create;
-                // item.contact = this.contact;
-                // this.onComplete.emit(item);
-
+                const item = new ProfileItemContainer();
+                item.container = ProfileItemContainerType.Contact;
+                item.action = ProfileItemActionType.Create;
+                this.onComplete.emit(item);
             }, (error) => {
                 this.inProgress = false;
                 this.errorMessage = this.errorHandler.getError(error.message, `Unable to create a new wallet`);

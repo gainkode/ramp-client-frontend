@@ -252,6 +252,8 @@ const GET_MY_CONTACTS = gql`
         contactEmail
         displayName
         created
+        address
+        assetId
       }
     }
   }

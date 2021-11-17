@@ -36,7 +36,8 @@ export class PersonalContactListComponent implements OnDestroy, AfterViewInit {
     pageIndex = 0;
     sortedField = 'userName';
     sortedDesc = true;
-    displayedColumns: string[] = ['icon', 'userName', 'email', 'coin', 'sent', 'received', 'added', 'details'];
+    //displayedColumns: string[] = ['icon', 'userName', 'email', 'coin', 'sent', 'received', 'added', 'details'];
+    displayedColumns: string[] = ['icon', 'userName', 'email', 'coin', 'added', 'details'];
 
     constructor(
         private auth: AuthService,
