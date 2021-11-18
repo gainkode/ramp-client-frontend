@@ -16,7 +16,12 @@ import { PersonalWalletsComponent } from './profile/wallets.component';
 
 @Component({
     templateUrl: 'personal.component.html',
-    styleUrls: ['../../assets/menu.scss', '../../assets/button.scss', '../../assets/profile.scss']
+    styleUrls: [
+        '../../assets/menu.scss',
+        '../../assets/button.scss',
+        '../../assets/profile.scss',
+        '../../assets/details.scss'
+    ]
 })
 export class PersonalComponent implements OnInit {
     menuItems: MenuItem[] = PersonalProfileMenuItems;
@@ -25,8 +30,8 @@ export class PersonalComponent implements OnInit {
     selectedMenu = 'home';
     showDetails = false;
     showDetailsRef: any;
-    showPayment = false;
-    paymentPanelTitle = '';
+    showPayment = true;
+    paymentPanelTitle = 'Express Transfer allowing you with a single action to Purchase & Send Crypto direclty from your Bank account to any address!\nIt only takes 2 clicks and you’re done.';
     detailsType = '';
     detailsContainer!: ProfileItemContainer;
     dataPanel: any;
@@ -211,7 +216,7 @@ export class PersonalComponent implements OnInit {
         } else if (paymentId === 'send') {
             this.paymentPanelTitle = 'Send Crypto from your wallet anywhere in one single, easy step!\nSimply add your recepient address to your Contact List, or Insert New Address.';
         } else if (paymentId === 'receive') {
-            this.paymentPanelTitle = 'Receive Crypto in your wallet is easy and simple!\nChoose the coin, then wallet to see your deposit wallet address. To aviod coins loss, make sure you use the correct network.';
+            this.paymentPanelTitle = 'Receive Crypto in your wallet is easy and simple!\nChoose the coin, then wallet to see your deposit wallet address. To aviod coins loss, make sure you use the correct network.\nText\nSome more text';
         }
         this.showPayment = true;
     }

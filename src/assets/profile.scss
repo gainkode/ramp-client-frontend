@@ -196,7 +196,6 @@
     justify-content: flex-end;
     align-items: flex-end;
     background-color: transparent;
-    //background-color: red;
 
     @media (max-width: $md3 + px) {
         display: none;
@@ -389,11 +388,28 @@
 
 .__profile-details-data-block {
     height: 100%;
+    display: block;
+    margin: 0px 24px 24px 24px;
+}
+
+.__profile-payment-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    width: $details_pane_width + px;
+    height:100%;
+    background-color: $color_white;
+    box-shadow: 0px 8px 11px rgba(208, 207, 207, 0.2), 0px 17px 26px rgba(208, 207, 207, 0.14), 0px 6px 32px rgba(0, 0, 0, 0.12);
+}
+
+.__profile-payment-data-block {
+    height: 90vh;
+    display: block;
     margin: 0px 24px 24px 24px;
 }
 
 .__profile-payment-title-box {
-    width: 100%;
     min-height: 40px;
     display: flex;
     flex-direction: column;
@@ -401,8 +417,9 @@
 }
 
 .__profile-payment-title-bar {
-    width: 352px;
+    display: flex;
     word-wrap: normal;
+    white-space: pre-line;
     margin: 0px 24px 24px 24px;
 
     font-family: $font_main;
@@ -412,6 +429,17 @@
     line-height: 28px;
 
     color: $color_white;
+}
+
+.__profile-payment-data-area {
+    margin: 12px 24px;
+    flex: 1;
+    overflow: auto;
+}
+
+.__profile-payment-footer {
+    min-height: 40px;
+    margin: 0px 24px 24px 24px;
 }
 
 .__profile-grid-table-container-default {

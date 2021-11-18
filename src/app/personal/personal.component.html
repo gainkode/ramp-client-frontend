@@ -80,8 +80,8 @@
             </div>
         </div>
         <!-- Payment -->
-        <div *ngIf="showPayment" class="__profile-details-panel">
-            <div class="__profile-payment-title-box">
+        <div *ngIf="showPayment" class="__profile-payment-panel">
+            <header class="__profile-payment-title-box">
                 <div class="__profile-details-title-bar">
                     <div class="__profile-details-close-button">
                         <button class="__tool-button-inversed" (click)="closePayment()">
@@ -92,6 +92,23 @@
                 <h3 class="__profile-payment-title-bar">
                     {{paymentPanelTitle}}
                 </h3>
+            </header>
+            <div class="__profile-payment-data-area">
+                main content: fills remaining space<br>
+                x<br>x<br>x<br>x<br>x<br>x<br>x<br>x<br>x<br>x<br>
+                <!-- uncomment to see it break -->
+                x<br>x<br>x<br>x<br>x<br>x<br>x<br>x<br>x<br>
+                x<br>x<br>x<br>x<br>x<br>x<br>x<br>x<br>x<br>
+                x<br>x<br>x<br>x<br>x<br>x<br>x<br>x<br>x<br>
+                x<br>x<br>x<br>x<br>x<br>x<br>x<br>x<br>x<br>
+                <!-- -->
+            </div>
+            <div class="__profile-payment-footer">
+                footer: fixed height in px<br>
+                footer: fixed height in px<br>
+                footer: fixed height in px<br>
+                footer: fixed height in px<br>
+                footer: fixed height in px
             </div>
         </div>
     </div>
