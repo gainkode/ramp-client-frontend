@@ -79,11 +79,11 @@ export class PersonalWalletDetailsComponent implements OnDestroy {
     }
 
     receiveStart(): void {
-        console.log('receive');
+        
     }
 
     sendStart(): void {
-        console.log('send');
+        
     }
 
     requestDeleteWallet(): void {
@@ -96,14 +96,12 @@ export class PersonalWalletDetailsComponent implements OnDestroy {
         this.subscriptions.add(
             this.profileService.deleteMyVault(this.wallet?.vault ?? '').subscribe(({ data }) => {
                 this.inProgress = false;
-                console.log('delete wallet data', this.wallet?.vault, data);
                 if (data && data.deleteMyVault) {
                     const item = new ProfileItemContainer();
                     item.container = ProfileItemContainerType.Wallet;
                     item.action = ProfileItemActionType.Remove;
-                    item.wallet = new WalletItem(null, '');
+                    item.wallet = new WalletItem(null, '', undefined);
                     item.wallet.vault = this.wallet?.vault ?? '';
-                    console.log('emit', item.wallet.vault);
                     this.onComplete.emit(item);
                 }
             }, (error) => {

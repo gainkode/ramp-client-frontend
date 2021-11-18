@@ -2,7 +2,7 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { AssetAddressShort, UserVault } from 'src/app/model/generated-models';
+import { AssetAddressShort, VaultAccount } from 'src/app/model/generated-models';
 import { CurrencyView } from 'src/app/model/payment.model';
 import { ProfileItemActionType, ProfileItemContainer, ProfileItemContainerType } from 'src/app/model/profile-item.model';
 import { WalletItem } from "src/app/model/wallet.model";
@@ -75,30 +75,28 @@ export class PersonalWalletCreateComponent implements OnInit, OnDestroy {
         this.subscriptions.add(
             this.profileService.addMyVault(currency, walletName).subscribe(({ data }) => {
                 this.inProgress = false;
-                console.log(data);
                 if (data && data.addMyVault) {
-                    const result = data.addMyVault as UserVault;
+                    const result = data.addMyVault as VaultAccount;
                     let walletAddress = '';
-                    let walletAddressFormat = '';
                     result.assets?.forEach(x => {
                         x.addresses?.forEach(a => {
-                            if (a.address && a.addressFormat) {
+                            if (a.address) {
                                 walletAddress = a.address;
-                                walletAddressFormat = a.addressFormat;
                             }
                         });
                     });
                     if (walletAddress != '') {
                         const walletData = {
                             address: walletAddress,
-                            addressFormat: walletAddressFormat,
                             assetId: currency,
                             total: 0,
                             totalFiat: 0,
                             totalEur: 0,
+                            vaultId: result.id,
                             vaultName: walletName
                         } as AssetAddressShort;
-                        this.wallet = new WalletItem(walletData, this.auth.user?.defaultFiatCurrency ?? 'EUR');
+                        const currencyItem = this.cryptoList.find(x => x.id === currency);
+                        this.wallet = new WalletItem(walletData, this.auth.user?.defaultFiatCurrency ?? 'EUR', currencyItem);
                         this.completeMode = true;
                         this.title = 'New wallet created!';
                     }

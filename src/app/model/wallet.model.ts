@@ -1,5 +1,6 @@
 import { getCurrencySign } from "../utils/utils";
 import { AssetAddressShort } from "./generated-models";
+import { CurrencyView } from "./payment.model";
 
 export class WalletItem {
   id = '';
@@ -14,8 +15,9 @@ export class WalletItem {
 
   private pIconUrl = '';
   private fiat = '';
+  private pCurrencyName = '';
 
-  constructor(data: AssetAddressShort | null, defaultFiat: string) {
+  constructor(data: AssetAddressShort | null, defaultFiat: string, currency: CurrencyView | undefined) {
     if (data) {
       this.fiat = defaultFiat;
       this.id = data.originalId ?? '';
@@ -28,6 +30,11 @@ export class WalletItem {
       this.name = data.vaultName ?? '';
       if (this.asset !== '') {
         this.pIconUrl = `assets/svg-crypto/${this.asset.toLowerCase()}.svg`;
+      }
+      if (currency) {
+        this.pCurrencyName = `${currency.name.toUpperCase()} - ${this.asset}`;
+      } else {
+        this.pCurrencyName = this.asset;
       }
     }
   }
@@ -43,6 +50,10 @@ export class WalletItem {
   get nameValue(): string {
     const limit = 15;
     return (this.name.length > limit) ? `${this.name.substr(0, limit)}...` : this.name;
+  }
+
+  get currencyName(): string {
+    return this.pCurrencyName;
   }
 
   setName(n: string): void {

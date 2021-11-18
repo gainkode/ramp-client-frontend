@@ -2,6 +2,6 @@
 
 <div class="__profile-data-container">
     <mat-progress-bar *ngIf="inProgress || inProgressFilter" color="accent" mode="indeterminate"></mat-progress-bar>
-    <app-personal-wallet-list #datalist (onShowDetails)="showDetails($event)" (onError)="handleError($event)"
+    <app-personal-wallet-list #datalist [cryptoCurrencies]="cryptoList" (onShowDetails)="showDetails($event)" (onError)="handleError($event)"
         (onProgress)="progressChanged($event)"></app-personal-wallet-list>
 </div>

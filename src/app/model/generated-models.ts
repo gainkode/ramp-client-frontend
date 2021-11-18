@@ -1855,12 +1855,12 @@ export type Mutation = {
   deleteSettingsKyc: SettingsKyc;
   updateMe?: Maybe<User>;
   updateUser?: Maybe<User>;
-  addMyVault?: Maybe<UserVault>;
-  updateMyVault?: Maybe<UserVault>;
-  deleteMyVault?: Maybe<UserVault>;
-  addUserVault?: Maybe<UserVault>;
-  updateUserVault?: Maybe<UserVault>;
-  deleteUserVault?: Maybe<UserVault>;
+  addMyVault?: Maybe<VaultAccount>;
+  updateMyVault?: Maybe<VaultAccount>;
+  deleteMyVault?: Maybe<UserVaultIdObj>;
+  addUserVault?: Maybe<VaultAccount>;
+  updateUserVault?: Maybe<VaultAccount>;
+  deleteUserVault?: Maybe<UserVaultIdObj>;
   assignRole?: Maybe<User>;
   removeRole?: Maybe<User>;
   deleteUser?: Maybe<User>;
@@ -2475,6 +2475,14 @@ export type UserInput = {
   defaultCryptoCurrency?: Maybe<Scalars['String']>;
 };
 
+export type VaultAccount = {
+  __typename?: 'VaultAccount';
+  id?: Maybe<Scalars['ID']>;
+  name?: Maybe<Scalars['String']>;
+  rawData?: Maybe<Scalars['String']>;
+  assets?: Maybe<Array<VaultAccountAsset>>;
+};
+
 export type UserContactInput = {
   contactEmail?: Maybe<Scalars['String']>;
   displayName?: Maybe<Scalars['String']>;
@@ -2612,14 +2620,6 @@ export type FileInfo = {
 export type RequiredUserPermission = {
   objectCode?: Maybe<Scalars['String']>;
   fullAccess?: Maybe<Scalars['Boolean']>;
-};
-
-export type VaultAccount = {
-  __typename?: 'VaultAccount';
-  id?: Maybe<Scalars['ID']>;
-  name?: Maybe<Scalars['String']>;
-  rawData?: Maybe<Scalars['String']>;
-  assets?: Maybe<Array<VaultAccountAsset>>;
 };
 
 export type InternalWallet = {

@@ -1,8 +1,9 @@
-import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { WalletsFilter } from 'src/app/model/filter.model';
-import { AssetAddressShortListResult } from 'src/app/model/generated-models';
+import { AssetAddressShort, AssetAddressShortListResult } from 'src/app/model/generated-models';
+import { CurrencyView } from 'src/app/model/payment.model';
 import { ProfileItemContainer, ProfileItemContainerType } from 'src/app/model/profile-item.model';
 import { WalletItem } from 'src/app/model/wallet.model';
 import { AuthService } from 'src/app/services/auth.service';
@@ -15,6 +16,7 @@ import { ProfileDataService } from 'src/app/services/profile.service';
     styleUrls: ['../../../../assets/menu.scss', '../../../../assets/button.scss', '../../../../assets/profile.scss', './wallet-list.component.scss']
 })
 export class PersonalWalletListComponent implements OnDestroy {
+    @Input() cryptoCurrencies: CurrencyView[] = [];
     @Output() onShowDetails = new EventEmitter<ProfileItemContainer>();
     @Output() onError = new EventEmitter<string>();
     @Output() onProgress = new EventEmitter<boolean>();
@@ -58,10 +60,9 @@ export class PersonalWalletListComponent implements OnDestroy {
                     if (dataList !== null) {
                         this.walletCount = dataList?.count as number;
                         if (this.walletCount > 0) {
-                            console.log(dataList?.list);
                             this.wallets = dataList?.list?.filter(x => {
                                 return (this.filter.zeroBalance) ? true : x.total ?? 0 > 0;
-                            }).map((val) => new WalletItem(val, userFiat)) as WalletItem[];
+                            }).map((val) => new WalletItem(val, userFiat, this.getCurrency(val))) as WalletItem[];
                             this.walletCount = this.wallets.length;
                         }
                     }
@@ -78,6 +79,10 @@ export class PersonalWalletListComponent implements OnDestroy {
                 })
             );
         }
+    }
+
+    private getCurrency(asset: AssetAddressShort): CurrencyView | undefined {
+        return this.cryptoCurrencies.find(x => x.id === asset.assetId);
     }
 
     private showDetailsPanel(item: WalletItem | undefined): void {

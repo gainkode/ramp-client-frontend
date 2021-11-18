@@ -299,6 +299,7 @@ const ADD_MY_VAULT = gql`
       vaultName: $vaultName
       assetId: $assetId
     ) {
+      id
       assets {
         addresses {
           address
