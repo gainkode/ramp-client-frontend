@@ -5,6 +5,14 @@ import {
     UserType, KycProvider, UserMode, SettingsCurrency, Rate, TransactionSource, UserNotificationCodes
 } from './generated-models';
 
+export enum PaymentWidgetType {
+    None = 'None',
+    BuySell = 'BuySell',
+    Send = 'Send',
+    Receive = 'Receive',
+    Transafer = 'Transafer'
+}
+
 export class PaymentInstrumentView {
     id!: PaymentInstrument;
     name = '';

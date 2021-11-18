@@ -36,6 +36,7 @@ import { WidgetProcessingFrameComponent } from './widget/processing-frame.compon
 import { WidgetSettingsService } from './widget/settings-service.component';
 import { WidgetProcessingInstantpayComponent } from './widget/processing-instantpay.component';
 import { WidgetInitializationComponent } from './widget/initialization.component';
+import { PaymentPanelComponent } from './payment-panel.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -70,13 +71,17 @@ const modules = [
 export class MaterialModule { }
 
 @NgModule({
-    imports: [NgxMaskModule.forRoot(), CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule],
-    declarations: [QuickCheckoutComponent, WidgetComponent, WidgetProgressComponent,
+    imports: [NgxMaskModule.forRoot(), CommonModule, FormsModule, ReactiveFormsModule, 
+        //routing, 
+        MaterialModule],
+    declarations: [
+        QuickCheckoutComponent, PaymentPanelComponent, WidgetComponent, WidgetProgressComponent,
         WidgetSummaryComponent, WidgetRateComponent, WidgetCreditCardComponent,
         WidgetRegisterComponent, WidgetLoginAuthComponent, WidgetCodeAuthComponent,
         WidgetInitializationComponent, WidgetOrderDetailsComponent, WidgetDisclaimerComponent, WidgetKycComponent,
         WidgetPaymentComponent, WidgetProcessingFrameComponent, WidgetProcessingInstantpayComponent, WidgetCompleteComponent,
         WidgetSettingsService],
+    exports: [PaymentPanelComponent],
     providers: [],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

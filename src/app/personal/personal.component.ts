@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { Event as NavigationEvent } from '@angular/router';
 import { MenuItem } from '../model/common.model';
-import { CurrencyView } from '../model/payment.model';
+import { CurrencyView, PaymentWidgetType } from '../model/payment.model';
 import { ProfileItemActionType, ProfileItemContainer, ProfileItemContainerType } from '../model/profile-item.model';
 import {
     PersonalProfileMenuItems,
@@ -26,12 +26,14 @@ import { PersonalWalletsComponent } from './profile/wallets.component';
 export class PersonalComponent implements OnInit {
     menuItems: MenuItem[] = PersonalProfileMenuItems;
     popupItems: MenuItem[] = PersonalProfilePopupMenuItems;
+    WIDGET_TYPE: typeof PaymentWidgetType = PaymentWidgetType;
     expandedMenu = false;
     selectedMenu = 'home';
     showDetails = false;
     showDetailsRef: any;
     showPayment = false;
     paymentPanelTitle = '';
+    selectedPaymentType = PaymentWidgetType.None;
     riskWarningText = '';
     detailsType = '';
     detailsContainer!: ProfileItemContainer;
@@ -215,12 +217,13 @@ export class PersonalComponent implements OnInit {
         this.showDetails = false;
     }
 
-    showPaymentPanel(paymentId: string): void {
-        if (paymentId === 'buy-sell') {
+    showPaymentPanel(paymentId: PaymentWidgetType): void {
+        this.selectedPaymentType = paymentId;
+        if (paymentId === PaymentWidgetType.BuySell) {
             this.paymentPanelTitle = 'BUY or SELL any Crypto Currency using your Bank account directly in a single action!\nIt only takes 2 clicks and you’re done.';
-        } else if (paymentId === 'send') {
+        } else if (paymentId === PaymentWidgetType.Send) {
             this.paymentPanelTitle = 'Send Crypto from your wallet anywhere in one single, easy step!\nSimply add your recepient address to your Contact List, or Insert New Address.';
-        } else if (paymentId === 'receive') {
+        } else if (paymentId === PaymentWidgetType.Receive) {
             this.paymentPanelTitle = 'Receive Crypto in your wallet is easy and simple!\nChoose the coin, then wallet to see your deposit wallet address. To aviod coins loss, make sure you use the correct network.';
         }
         this.showPayment = true;

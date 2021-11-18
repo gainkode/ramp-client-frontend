@@ -4,15 +4,15 @@
             <div
                 [ngClass]="expandedMenu ? '__top-menu-content-bar-profile-side-menu-expanded' : '__top-menu-content-bar-profile-side-menu-collapsed'">
                 <div class="__top-menu-content-box">
-                    <button class="__top-menu-button" (click)="showPaymentPanel('buy-sell')">
+                    <button class="__top-menu-button" (click)="showPaymentPanel(WIDGET_TYPE.BuySell)">
                         <mat-icon>account_balance</mat-icon>&nbsp;&nbsp;&nbsp;Buy & Sell
                     </button>
                     <div class="__top-menu-button-separator"></div>
-                    <button class="__top-menu-button" (click)="showPaymentPanel('receive')">
+                    <button class="__top-menu-button" (click)="showPaymentPanel(WIDGET_TYPE.Receive)">
                         <mat-icon>file_download</mat-icon>&nbsp;&nbsp;&nbsp;Receive
                     </button>
                     <div class="__top-menu-button-separator"></div>
-                    <button class="__top-menu-button" (click)="showPaymentPanel('send')">
+                    <button class="__top-menu-button" (click)="showPaymentPanel(WIDGET_TYPE.Send)">
                         <mat-icon>file_upload</mat-icon>&nbsp;&nbsp;&nbsp;Send
                     </button>
                     <div class="__top-menu-button-separator"></div>
@@ -94,14 +94,7 @@
                 </h3>
             </header>
             <div class="__profile-payment-data-area">
-                main content: fills remaining space<br>
-                x<br>x<br>x<br>x<br>x<br>x<br>x<br>x<br>x<br>x<br>
-                <!-- uncomment to see it break -->
-                x<br>x<br>x<br>x<br>x<br>x<br>x<br>x<br>x<br>
-                x<br>x<br>x<br>x<br>x<br>x<br>x<br>x<br>x<br>
-                x<br>x<br>x<br>x<br>x<br>x<br>x<br>x<br>x<br>
-                x<br>x<br>x<br>x<br>x<br>x<br>x<br>x<br>x<br>
-                <!-- -->
+                <app-payment-panel></app-payment-panel>
             </div>
             <div class="__profile-payment-footer">
                 <app-risk-warning [warningText]="riskWarningText"></app-risk-warning>
