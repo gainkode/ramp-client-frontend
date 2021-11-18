@@ -2,7 +2,7 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, EventEmitter, Input, OnDestroy, Output } from "@angular/core";
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { UserVault } from 'src/app/model/generated-models';
+import { VaultAccount } from 'src/app/model/generated-models';
 import { ProfileItemActionType, ProfileItemContainer, ProfileItemContainerType } from 'src/app/model/profile-item.model';
 import { WalletItem } from "src/app/model/wallet.model";
 import { ErrorService } from 'src/app/services/error.service';
@@ -63,7 +63,7 @@ export class PersonalWalletDetailsComponent implements OnDestroy {
             this.subscriptions.add(
                 this.profileService.updateMyVault(this.wallet?.vault ?? '', val).subscribe(({ data }) => {
                     if (data && data.updateMyVault) {
-                        const result = data.updateMyVault as UserVault;
+                        const result = data.updateMyVault as VaultAccount;
                         if (result.name) {
                             this.wallet?.setName(result.name);
                             this.editMode = false;

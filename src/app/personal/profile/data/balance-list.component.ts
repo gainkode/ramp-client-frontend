@@ -2,7 +2,7 @@ import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/cor
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserBalanceItem } from 'src/app/model/balance.model';
-import { Rate, SettingsCurrency, UserState, UserVault } from 'src/app/model/generated-models';
+import { Rate, SettingsCurrency, UserState, VaultAccountEx } from 'src/app/model/generated-models';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
 import { ErrorService } from 'src/app/services/error.service';
@@ -53,16 +53,6 @@ export class PersonalBalanceListComponent implements OnInit, OnDestroy {
             }
             this.loadBalanceData();
             //this.loadRates();
-
-
-            // temp
-            // this.balances.push(new UserBalanceItem({
-            //     assetId: 'BTC',
-            //     totalBalanceFiat: 4200,
-            //     totalBalance: 0.001547
-            // } as BalancePerAsset, 'Bitcoin', this.currentCurrency, this.fiatPrecision));
-            // this.onProgress.emit(false);
-            // temp
         }
     }
 
@@ -100,7 +90,7 @@ export class PersonalBalanceListComponent implements OnInit, OnDestroy {
         }
     }
 
-    private handleTransactions(vaults: UserVault[]): void {
+    private handleTransactions(vaults: VaultAccountEx[]): void {
         if (vaults.length > 0) {
             vaults.forEach(vault => {
                 vault.balancesPerAsset?.forEach(balance => {

@@ -938,7 +938,7 @@ export type UserState = {
   __typename?: 'UserState';
   date?: Maybe<Scalars['DateTime']>;
   transactionSummary?: Maybe<Array<UserTransactionSummary>>;
-  vaults?: Maybe<Array<UserVault>>;
+  vaults?: Maybe<Array<VaultAccountEx>>;
   externalWallets?: Maybe<Array<ExternalWallet>>;
   notifications?: Maybe<UserNotificationListResult>;
 };
@@ -973,34 +973,25 @@ export type UserTransactionStats = {
   amountFiat?: Maybe<Scalars['Float']>;
 };
 
-export type UserVault = {
-  __typename?: 'UserVault';
+export type VaultAccountEx = {
+  __typename?: 'VaultAccountEx';
+  id?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  default?: Maybe<Scalars['Boolean']>;
+  rawData?: Maybe<Scalars['String']>;
+  assets?: Maybe<Array<VaultAccountAsset>>;
   totalBalanceEur?: Maybe<Scalars['Float']>;
   availableBalanceEur?: Maybe<Scalars['Float']>;
   totalBalanceFiat?: Maybe<Scalars['Float']>;
   availableBalanceFiat?: Maybe<Scalars['Float']>;
   balancesPerAsset?: Maybe<Array<BalancePerAsset>>;
-  name?: Maybe<Scalars['String']>;
-  default?: Maybe<Scalars['Boolean']>;
-  assets?: Maybe<Array<VaultAccountAsset>>;
 };
 
 
-export type UserVaultAssetsArgs = {
+export type VaultAccountExAssetsArgs = {
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
   orderBy?: Maybe<Array<OrderBy>>;
-};
-
-export type BalancePerAsset = {
-  __typename?: 'BalancePerAsset';
-  assetId: Scalars['String'];
-  totalBalance: Scalars['Float'];
-  totalBalanceEur: Scalars['Float'];
-  availableBalance: Scalars['Float'];
-  availableBalanceEur: Scalars['Float'];
-  totalBalanceFiat: Scalars['Float'];
-  availableBalanceFiat: Scalars['Float'];
 };
 
 export type VaultAccountAsset = {
@@ -1027,6 +1018,17 @@ export type VaultAccountAssetAddress = {
   description?: Maybe<Scalars['String']>;
   type?: Maybe<Scalars['String']>;
   addressFormat?: Maybe<Scalars['String']>;
+};
+
+export type BalancePerAsset = {
+  __typename?: 'BalancePerAsset';
+  assetId: Scalars['String'];
+  totalBalance: Scalars['Float'];
+  totalBalanceEur: Scalars['Float'];
+  availableBalance: Scalars['Float'];
+  availableBalanceEur: Scalars['Float'];
+  totalBalanceFiat: Scalars['Float'];
+  availableBalanceFiat: Scalars['Float'];
 };
 
 export type ExternalWallet = {
