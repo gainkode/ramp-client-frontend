@@ -30,8 +30,10 @@ export class PersonalComponent implements OnInit {
     selectedMenu = 'home';
     showDetails = false;
     showDetailsRef: any;
-    showPayment = true;
-    paymentPanelTitle = 'Express Transfer allowing you with a single action to Purchase & Send Crypto direclty from your Bank account to any address!\nIt only takes 2 clicks and you’re done.';
+    showPayment = false;
+    paymentPanelTitle = '';
+    // showPayment = true;
+    // paymentPanelTitle = 'Express Transfer allowing you with a single action to Purchase & Send Crypto direclty from your Bank account to any address!\nIt only takes 2 clicks and you’re done.';
     detailsType = '';
     detailsContainer!: ProfileItemContainer;
     dataPanel: any;
