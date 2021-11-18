@@ -4,7 +4,7 @@
             <div
                 [ngClass]="expandedMenu ? '__top-menu-content-bar-profile-side-menu-expanded' : '__top-menu-content-bar-profile-side-menu-collapsed'">
                 <div class="__top-menu-content-box">
-                    <button class="__top-menu-button" (click)="showPaymentPanel(WIDGET_TYPE.BuySell)">
+                    <button class="__top-menu-button" (click)="showPaymentPanel(WIDGET_TYPE.Buy)">
                         <mat-icon>account_balance</mat-icon>
                         &nbsp;&nbsp;&nbsp;Buy & Sell
                     </button>
@@ -97,7 +97,7 @@
                 </h3>
             </header>
             <div class="__profile-payment-data-area">
-                <app-payment-panel></app-payment-panel>
+                <app-embedded-widget [widgetType]="selectedPaymentType"></app-embedded-widget>
             </div>
             <div class="__profile-payment-footer">
                 <app-risk-warning [warningText]="riskWarningText"></app-risk-warning>

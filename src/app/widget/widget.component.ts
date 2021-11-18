@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { LoginResult, PaymentInstrument, PaymentPreauthResultShort, Rate, TransactionShort, TransactionType, WidgetShort } from 'src/app/model/generated-models';
 import { CardView, CheckoutSummary, PaymentProviderView, WidgetSettings, WidgetStage } from 'src/app/model/payment.model';
@@ -13,9 +12,11 @@ import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-widget',
   templateUrl: 'widget.component.html',
-  styleUrls: ['../../../assets/button.scss', '../../../assets/payment.scss'],
+  styleUrls: ['../../assets/button.scss', '../../assets/payment.scss'],
 })
 export class WidgetComponent implements OnInit {
+  @Input() userParamsId = '';
+  @Input() settings: WidgetSettings | undefined = undefined;
   @Input() set internal(val: boolean) {
     this.internalPayment = val;
   }
@@ -25,7 +26,6 @@ export class WidgetComponent implements OnInit {
   inProgress = false;
   internalPayment = false;
   initState = true;
-  userParamsId = '';
   showSummary = true;
   mobileSummary = false;
   stageId = 'order_details';
@@ -53,15 +53,15 @@ export class WidgetComponent implements OnInit {
     private notification: NotificationService,
     private auth: AuthService,
     private dataService: PaymentDataService,
-    private errorHandler: ErrorService,
-    private route: ActivatedRoute) {
-    this.userParamsId = this.route.snapshot.params['userParamsId'] ?? '';
-  }
+    private errorHandler: ErrorService) {}
 
   ngOnInit(): void {
     if (this.userParamsId === '') {
       this.stageId = 'order_details';
       this.title = 'Order details';
+      if (this.settings) {
+        this.widget = this.settings;
+      }
       this.initData(undefined);
     } else {
       this.stageId = 'initialization';

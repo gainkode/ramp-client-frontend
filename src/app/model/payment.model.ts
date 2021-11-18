@@ -7,7 +7,8 @@ import {
 
 export enum PaymentWidgetType {
     None = 'None',
-    BuySell = 'BuySell',
+    Buy = 'Buy',
+    Sell = 'Sell',
     Send = 'Send',
     Receive = 'Receive',
     Transafer = 'Transafer'

@@ -1,0 +1,32 @@
+<div class="__widget-embedded-container">
+    <div *ngIf="widgetType === WIDGET_TYPE.Buy || widgetType === WIDGET_TYPE.Sell"
+        class="__widget-embedded-tab-container">
+        <div
+            [ngClass]="{'__widget-embedded-tab': true, '__widget-embedded-left-tab-unselected': widgetType !== WIDGET_TYPE.Buy}">
+            <span *ngIf="widgetType === WIDGET_TYPE.Buy" class="__widget-embedded-tab-title">
+                BUY
+            </span>
+            <a *ngIf="widgetType !== WIDGET_TYPE.Buy" [routerLink]="" class="__widget-embedded-tab-link"
+                (click)="selectPaymentType(WIDGET_TYPE.Buy)">
+                BUY
+            </a>
+        </div>
+        <div
+            [ngClass]="{'__widget-embedded-tab': true, '__widget-embedded-right-tab-unselected': widgetType !== WIDGET_TYPE.Sell}">
+            <span *ngIf="widgetType === WIDGET_TYPE.Sell" class="__widget-embedded-tab-title">
+                SELL
+            </span>
+            <a *ngIf="widgetType !== WIDGET_TYPE.Sell" [routerLink]="" class="__widget-embedded-tab-link"
+                (click)="selectPaymentType(WIDGET_TYPE.Sell)">
+                SELL
+            </a>
+        </div>
+    </div>
+
+    <div class="__widget-embedded-data-container">
+        Data
+        <!-- <app-widget [internal]="false"></app-widget> -->
+    </div>
+    
+
+</div>

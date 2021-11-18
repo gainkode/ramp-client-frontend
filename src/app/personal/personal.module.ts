@@ -24,6 +24,7 @@ import { PersonalComponent } from './personal.component';
 import { ProfileMainPersonalComponent } from './profile/main.component';
 import { KycPersonalComponent } from './profile/kyc.component';
 import { ComponentsModule } from '../components/components.module';
+import { WidgetModule } from '../widget/widget.module';
 import { DirectiveModule } from '../directives/directives.module';
 import { PersonalSwapComponent } from './profile/swap.component';
 import { PersonalHomeComponent } from './profile/home.component';
@@ -105,6 +106,7 @@ const modules = [
     MatTableModule,
     MatSortModule,
     ComponentsModule,
+    WidgetModule,
     NgApexchartsModule
 ];
 

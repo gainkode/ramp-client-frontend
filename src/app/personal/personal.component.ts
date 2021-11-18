@@ -219,7 +219,7 @@ export class PersonalComponent implements OnInit {
 
     showPaymentPanel(paymentId: PaymentWidgetType): void {
         this.selectedPaymentType = paymentId;
-        if (paymentId === PaymentWidgetType.BuySell) {
+        if (paymentId === PaymentWidgetType.Buy || paymentId === PaymentWidgetType.Sell) {
             this.paymentPanelTitle = 'BUY or SELL any Crypto Currency using your Bank account directly in a single action!\nIt only takes 2 clicks and you’re done.';
         } else if (paymentId === PaymentWidgetType.Send) {
             this.paymentPanelTitle = 'Send Crypto from your wallet anywhere in one single, easy step!\nSimply add your recepient address to your Contact List, or Insert New Address.';

@@ -4,15 +4,13 @@ import { TermsComponent } from './terms.component';
 
 const routes: Routes = [
   {
-    path: 'payment', loadChildren: () => import('./payment/payment.module').
-      then(m => m.PaymentModule)
+    path: 'payment', loadChildren: () => import('./payment/payment.module').then(m => m.PaymentModule)
   },
   { path: 'auth/personal/confirm-email/:token', redirectTo: '/personal/auth/confirm-email/:token' },
   { path: 'auth/personal/confirm-device/:token', redirectTo: '/personal/auth/confirm-device/:token' },
   { path: 'auth/personal/new-password/:token', redirectTo: '/personal/auth/new-password/:token' },
   {
-    path: 'auth/merchant', loadChildren: () => import('./auth-merchant/auth.module').
-      then(m => m.MerchantAuthModule)
+    path: 'auth/merchant', loadChildren: () => import('./auth-merchant/auth.module').then(m => m.MerchantAuthModule)
   },
   {
     path: 'personal', loadChildren: () => import('./personal/personal.module').then(m => m.PersonalModule)
