@@ -5,15 +5,18 @@
                 [ngClass]="expandedMenu ? '__top-menu-content-bar-profile-side-menu-expanded' : '__top-menu-content-bar-profile-side-menu-collapsed'">
                 <div class="__top-menu-content-box">
                     <button class="__top-menu-button" (click)="showPaymentPanel(WIDGET_TYPE.BuySell)">
-                        <mat-icon>account_balance</mat-icon>&nbsp;&nbsp;&nbsp;Buy & Sell
+                        <mat-icon>account_balance</mat-icon>
+                        &nbsp;&nbsp;&nbsp;Buy & Sell
                     </button>
                     <div class="__top-menu-button-separator"></div>
                     <button class="__top-menu-button" (click)="showPaymentPanel(WIDGET_TYPE.Receive)">
-                        <mat-icon>file_download</mat-icon>&nbsp;&nbsp;&nbsp;Receive
+                        <mat-icon>file_download</mat-icon>
+                        &nbsp;&nbsp;&nbsp;Receive
                     </button>
                     <div class="__top-menu-button-separator"></div>
                     <button class="__top-menu-button" (click)="showPaymentPanel(WIDGET_TYPE.Send)">
-                        <mat-icon>file_upload</mat-icon>&nbsp;&nbsp;&nbsp;Send
+                        <mat-icon>file_upload</mat-icon>
+                        &nbsp;&nbsp;&nbsp;Send
                     </button>
                     <div class="__top-menu-button-separator"></div>
                     <button class="__top-menu-button" (click)="routeTo('/payment')">
