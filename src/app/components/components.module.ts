@@ -58,6 +58,7 @@ import { DeleteDialogBox } from './dialogs/delete-box.dialog';
 import { WalletsFilterBarComponent } from './filter-bars/wallets-bar.component';
 import { FormEditBoxComponent } from './common/controls/form-editbox.component';
 import { ContactsFilterBarComponent } from './filter-bars/contacts-bar.component';
+import { RiskWarningComponent } from './common/risk-warning.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -94,21 +95,25 @@ export class MaterialModule { }
 
 @NgModule({
     imports: [NgxMaskModule.forRoot(), CommonModule, FormsModule, ReactiveFormsModule, MaterialModule, DirectiveModule, QRCodeModule],
-    declarations: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
+    declarations: [
+        DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
         FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent, FormSearchBoxComponent,
         FormEditBoxComponent,
-        DeleteDialogBox,
-        LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, CommonDialogBox, SideExpanderComponent,
-        TwoFaCodeComponent, NavPopupComponent, SideMenuComponent, LineBreakPipe, NumberFillPipe,
+        DeleteDialogBox, CommonDialogBox,
+        LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent,
+        TwoFaCodeComponent, NavPopupComponent, SideMenuComponent, SideExpanderComponent, RiskWarningComponent,
+        LineBreakPipe, NumberFillPipe,
         TransactionsFilterBarComponent, WalletsFilterBarComponent, ContactsFilterBarComponent, NotificationsFilterBarComponent,
         
         ProfileInfoComponent, ProfileTwoFAComponent, ProfilePasswordComponent],
-    exports: [DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
+    exports: [
+        DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
         FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent, FormSearchBoxComponent,
         FormEditBoxComponent,
-        DeleteDialogBox,
-        LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, CommonDialogBox, SideExpanderComponent,
-        TwoFaCodeComponent, NavPopupComponent, SideMenuComponent, LineBreakPipe, NumberFillPipe,
+        DeleteDialogBox, CommonDialogBox,
+        LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent,
+        TwoFaCodeComponent, NavPopupComponent, SideMenuComponent, SideExpanderComponent, RiskWarningComponent,
+        LineBreakPipe, NumberFillPipe,
         TransactionsFilterBarComponent, WalletsFilterBarComponent, ContactsFilterBarComponent, NotificationsFilterBarComponent,
         
         ProfileInfoComponent, ProfileTwoFAComponent, ProfilePasswordComponent],

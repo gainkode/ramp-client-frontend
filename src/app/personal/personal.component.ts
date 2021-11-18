@@ -30,10 +30,13 @@ export class PersonalComponent implements OnInit {
     selectedMenu = 'home';
     showDetails = false;
     showDetailsRef: any;
-    showPayment = false;
-    paymentPanelTitle = '';
-    // showPayment = true;
-    // paymentPanelTitle = 'Express Transfer allowing you with a single action to Purchase & Send Crypto direclty from your Bank account to any address!\nIt only takes 2 clicks and you’re done.';
+    // showPayment = false;
+    // paymentPanelTitle = '';
+    
+    showPayment = true;
+    paymentPanelTitle = 'Express Transfer allowing you with a single action to Purchase & Send Crypto direclty from your Bank account to any address!\nIt only takes 2 clicks and you’re done.';
+    
+    riskWarningText = 'The final crypto quote will be based on the asset\'s price at the time of order completion, the final rate will be presented to you in the order confirmation screen.\nPlease note that due to the nature of Crypto currencies, once your order has been submitted we will not be able to reverse it.';
     detailsType = '';
     detailsContainer!: ProfileItemContainer;
     dataPanel: any;
@@ -218,7 +221,7 @@ export class PersonalComponent implements OnInit {
         } else if (paymentId === 'send') {
             this.paymentPanelTitle = 'Send Crypto from your wallet anywhere in one single, easy step!\nSimply add your recepient address to your Contact List, or Insert New Address.';
         } else if (paymentId === 'receive') {
-            this.paymentPanelTitle = 'Receive Crypto in your wallet is easy and simple!\nChoose the coin, then wallet to see your deposit wallet address. To aviod coins loss, make sure you use the correct network.\nText\nSome more text';
+            this.paymentPanelTitle = 'Receive Crypto in your wallet is easy and simple!\nChoose the coin, then wallet to see your deposit wallet address. To aviod coins loss, make sure you use the correct network.';
         }
         this.showPayment = true;
     }
