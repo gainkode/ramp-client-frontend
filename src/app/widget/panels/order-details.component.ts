@@ -3,6 +3,7 @@ import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { SettingsCurrencyWithDefaults, TransactionType } from 'src/app/model/generated-models';
 import { CheckoutSummary, CurrencyView, QuickCheckoutTransactionTypeList, WidgetSettings } from 'src/app/model/payment.model';
+import { WalletItem } from 'src/app/model/wallet.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
 import { ErrorService } from 'src/app/services/error.service';
@@ -11,7 +12,12 @@ import { WalletValidator } from 'src/app/utils/wallet.validator';
 @Component({
   selector: 'app-widget-order-details',
   templateUrl: 'order-details.component.html',
-  styleUrls: ['../../../assets/payment.scss', '../../../assets/button.scss', '../../../assets/text-control.scss']
+  styleUrls: [
+    '../../../assets/payment.scss',
+    '../../../assets/button.scss',
+    '../../../assets/text-control.scss',
+    '../../../assets/profile.scss'
+  ]
 })
 export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() initialized = false;
@@ -28,6 +34,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     this.pDepositRate = val;
     this.updateCurrentAmounts();
   }
+  @Input() wallets: WalletItem[] = [];
   @Output() onError = new EventEmitter<string>();
   @Output() onProgress = new EventEmitter<boolean>();
   @Output() onDataUpdated = new EventEmitter<CheckoutSummary>();
@@ -55,6 +62,10 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   currentTransactionName = '';
   spendCurrencyList: CurrencyView[] = [];
   receiveCurrencyList: CurrencyView[] = [];
+  selectedWallet: WalletItem | undefined = undefined;
+  filteredWallets: WalletItem[] = [];
+  walletInit = false;
+  addressInit = false;
   transactionList = QuickCheckoutTransactionTypeList;
 
   emailErrorMessages: { [key: string]: string; } = {
@@ -142,6 +153,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     }
     if (this.summary?.address) {
       this.walletField?.setValue(this.summary.address);
+      this.walletInit = false;
     }
     if (this.summary?.email) {
       this.emailField?.setValue(this.summary.email);
@@ -151,7 +163,6 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       this.transactionField?.setValue(this.summary.transactionType);
     }
     this.setWalletVisible();
-
     this.currentTransactionName = QuickCheckoutTransactionTypeList.find(x => x.id === this.currentTransaction)?.name ?? this.currentTransaction;
     this.loadDetailsForm(this.summary?.initialized ?? false);
     this.pSubscriptions.add(this.currencySpendField?.valueChanges.subscribe(val => this.onCurrencySpendUpdated(val)));
@@ -226,12 +237,19 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
           }
         }
         this.pCurrencies = currencyList?.list?.map((val) => new CurrencyView(val)) as CurrencyView[];
+        this.addressInit = false;
         this.setCurrencyValues(
           initState,
           currentCurrencySpendId,
           currentCurrencyReceiveId,
           currentAmountSpend,
           currentAmountReceive);
+        this.addressInit = true;
+        if (this.currentTransaction === TransactionType.Deposit && this.wallets.length > 0) {
+          if (this.summary?.address !== '') {
+            this.walletField?.setValue(this.summary?.address);
+          }
+        }
       }
     }
     this.onProgress.emit(false);
@@ -352,6 +370,15 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       if (this.currentCurrencyReceive && this.amountReceiveField?.value) {
         this.setReceiveValidators();
       }
+      if (this.wallets.length > 0) {
+        if (this.summary?.transactionType === TransactionType.Deposit) {
+          if (this.addressInit) {
+            this.walletField?.setValue('');
+            this.walletInit = false;
+          }
+          this.filteredWallets = this.wallets.filter(x => x.asset === currency);
+        }
+      }
       this.pReceiveChanged = true;
       this.updateCurrentAmounts();
     }
@@ -404,6 +431,8 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
 
   private onWalletUpdated(val: string): void {
     if (this.showWallet) {
+      this.walletInit = true;
+      this.selectedWallet = this.wallets.find(x => x.address === val);
       this.onWalletAddressUpdated.emit(this.walletField?.value);
     }
   }

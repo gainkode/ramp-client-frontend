@@ -23,6 +23,9 @@ export class WidgetPanelComponent {
   }
 
   selectPaymentType(selected: PaymentWidgetType): void {
+    if (selected === PaymentWidgetType.Sell) {
+      return;
+    }
     if (this.selectedWidgetType === selected) {
       return;
     }
@@ -35,9 +38,9 @@ export class WidgetPanelComponent {
       case PaymentWidgetType.Buy:
         this.widgetSettings.transaction = TransactionType.Deposit;
         break;
-      case PaymentWidgetType.Sell:
-        this.widgetSettings.transaction = TransactionType.Withdrawal;
-        break;
+      // case PaymentWidgetType.Sell:
+      //   this.widgetSettings.transaction = TransactionType.Withdrawal;
+      //   break;
       case PaymentWidgetType.Transfer:
         this.widgetSettings.transaction = TransactionType.Transfer;
         break;

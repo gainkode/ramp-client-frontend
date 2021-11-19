@@ -33,7 +33,7 @@
       <app-widget-initialization *ngSwitchCase="'initialization'" [message]="initMessage"></app-widget-initialization>
       <!-- Order details -->
       <app-widget-order-details *ngSwitchCase="'order_details'" [initialized]="!initState" [summary]="summary"
-        [settings]="widget" [withdrawalRate]="summary?.exchangeRate?.withdrawRate"
+        [settings]="widget" [withdrawalRate]="summary?.exchangeRate?.withdrawRate" [wallets]="userWallets"
         [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage"
         [depositRate]="summary?.exchangeRate?.depositRate" (onError)="handleError($event)"
         (onProgress)="progressChanged($event)" (onDataUpdated)="orderDetailsChanged($event)"

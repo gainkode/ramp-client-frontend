@@ -498,3 +498,16 @@ input.__form-edit-box:focus {
     line-height: 28px;
     color: $color_purple_900_text;
 }
+
+.__form-combo-item-text {
+    height: 20px;
+    width: 100%;
+    padding: 0px;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 18px;
+    color: $color_purple_900_text;
+}

@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { LoginResult, PaymentInstrument, PaymentPreauthResultShort, Rate, TransactionShort, TransactionSource, TransactionType, WidgetShort } from 'src/app/model/generated-models';
+import { AssetAddressShortListResult, LoginResult, PaymentInstrument, PaymentPreauthResultShort, Rate, TransactionShort, TransactionSource, TransactionType, WidgetShort } from 'src/app/model/generated-models';
 import { CardView, CheckoutSummary, PaymentProviderView, WidgetSettings, WidgetStage } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
@@ -8,6 +8,8 @@ import { NotificationService } from 'src/app/services/notification.service';
 import { PaymentDataService } from 'src/app/services/payment.service';
 import { ExchangeRateService } from 'src/app/services/rate.service';
 import { environment } from 'src/environments/environment';
+import { WalletItem } from '../model/wallet.model';
+import { ProfileDataService } from '../services/profile.service';
 
 @Component({
   selector: 'app-widget',
@@ -29,13 +31,13 @@ export class WidgetComponent implements OnInit {
   showSummary = true;
   mobileSummary = false;
   stageId = 'order_details';
-  tempStageId = '';
   title = 'Order details';
   step = 1;
   initMessage = 'Initialization...';
   summary = new CheckoutSummary();
   widget = new WidgetSettings();
   stages: WidgetStage[] = [];
+  userWallets: WalletItem[] = [];
   exchangeRateCountDownTitle = '';
   exchangeRateCountDownValue = '';
   paymentProviders: PaymentProviderView[] = [];
@@ -55,16 +57,24 @@ export class WidgetComponent implements OnInit {
     private notification: NotificationService,
     private auth: AuthService,
     private dataService: PaymentDataService,
+    private profileService: ProfileDataService,
     private errorHandler: ErrorService) { }
 
   ngOnInit(): void {
+    this.initMessage = 'Initialization...';
     if (this.userParamsId === '') {
-      this.stageId = 'order_details';
-      this.title = 'Order details';
       if (this.settings) {
         this.widget = this.settings;
       }
-      this.initData(undefined);
+      if (this.widget.embedded) {
+        this.stageId = 'initialization';
+        this.title = 'Initialization';
+        this.loadUserWallets();
+      } else {
+        this.stageId = 'order_details';
+        this.title = 'Order details';
+        this.initData(undefined);
+      }
     } else {
       this.stageId = 'initialization';
       this.title = 'Initialization';
@@ -97,20 +107,20 @@ export class WidgetComponent implements OnInit {
       this.widget.transaction = data.transactionType ?? undefined;
       this.widget.source = TransactionSource.Widget;
     } else {  // Quick checkout
-      this.widget.disclaimer = false;
-      this.widget.kycFirst = false;
-      this.widget.email = '';
-      // temp
-      //this.widget.kycFirst = true;
-      //this.widget.email = 'tugaymv@gmail.com';
-      //this.widget.disclaimer = true;
-      this.widget.transaction = TransactionType.Deposit;
       if (!this.widget.embedded) {
+        this.widget.disclaimer = false;
+        this.widget.kycFirst = false;
+        this.widget.email = '';
+        // temp
+        //this.widget.kycFirst = true;
+        //this.widget.email = 'tugaymv@gmail.com';
+        //this.widget.disclaimer = true;
+        this.widget.transaction = TransactionType.Deposit;
+        //temp
         this.widget.source = TransactionSource.QuickCheckout;
-      }
-      //temp
-      if (!environment.production) {
-        this.widget.walletAddress = '2MwUASao7s4zH9TGD5jhbqwXJBqoMR2EYr5';
+        if (!environment.production) {
+          this.widget.walletAddress = '2MwUASao7s4zH9TGD5jhbqwXJBqoMR2EYr5';
+        }
       }
     }
 
@@ -247,14 +257,13 @@ export class WidgetComponent implements OnInit {
   }
 
   private nextStage(id: string, name: string, stepId: number, summaryVisible: boolean): void {
-    let currentStageId = this.stageId
-    if (this.tempStageId !== '') {
-      currentStageId = this.tempStageId;
-      this.tempStageId = '';
-    }
-    if (currentStageId !== 'register' && currentStageId !== 'login_auth' && currentStageId !== 'code_auth') {
+    if (
+      this.stageId !== 'initialization' &&
+      this.stageId !== 'register' &&
+      this.stageId !== 'login_auth' &&
+      this.stageId !== 'code_auth') {
       this.stages.push({
-        id: currentStageId,
+        id: this.stageId,
         title: this.title,
         step: this.step,
         summary: this.showSummary
@@ -287,6 +296,37 @@ export class WidgetComponent implements OnInit {
         widgetData.valueChanges.subscribe(({ data }) => {
           this.inProgress = false;
           this.initData(data.getWidget as WidgetShort);
+          this.stageId = 'order_details';
+          this.title = 'Order details';
+        }, (error) => {
+          this.inProgress = false;
+          this.initData(undefined);
+          this.stageId = 'order_details';
+          this.title = 'Order details';
+        })
+      );
+    }
+  }
+
+  loadUserWallets(): void {
+    this.errorMessage = '';
+    this.inProgress = true;
+    const walletData = this.profileService.getMyWallets([]);
+    if (walletData === null) {
+      this.errorMessage = this.errorHandler.getRejectedCookieMessage();
+    } else {
+      this.pSubscriptions.add(
+        walletData.valueChanges.subscribe(({ data }) => {
+          this.inProgress = false;
+          const dataList = data.myWallets as AssetAddressShortListResult;
+          if (dataList !== null) {
+            const walletCount = dataList?.count as number;
+            if (walletCount > 0) {
+              this.userWallets = dataList?.list?.
+              map((val) => new WalletItem(val, '', undefined)) as WalletItem[];
+            }
+          }
+          this.initData(undefined);
           this.stageId = 'order_details';
           this.title = 'Order details';
         }, (error) => {
@@ -564,7 +604,7 @@ export class WidgetComponent implements OnInit {
   private createTransaction(providerId: string, instrument: PaymentInstrument): void {
     this.errorMessage = '';
     this.inProgress = true;
-    this.tempStageId = this.stageId;
+    const tempStageId = this.stageId;
     this.stageId = 'initialization';
     this.initMessage = 'Processing...';
     if (this.summary) {
@@ -603,11 +643,11 @@ export class WidgetComponent implements OnInit {
             this.startPayment();
           } else {
             this.errorMessage = 'Order code is invalid';
-            this.stageId = this.tempStageId;
+            this.stageId = tempStageId;
           }
         }, (error) => {
           this.inProgress = false;
-          this.stageId = this.tempStageId;
+          this.stageId = tempStageId;
           if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
             this.handleAuthError();
           } else {
