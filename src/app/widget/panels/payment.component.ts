@@ -32,7 +32,7 @@ export class WidgetPaymentComponent implements OnInit, OnDestroy {
   // walletInit = false;
   // userWallets: CommonGroupValue[] = [];
   // userWalletsFiltered: Observable<CommonGroupValue[]> | undefined = undefined;
-  
+
 
   // dataForm = this.formBuilder.group({
   //   wallet: ['', { validators: [Validators.required], updateOn: 'change' }],

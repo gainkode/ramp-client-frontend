@@ -1,5 +1,5 @@
-<div class="__widget-container">
-  <div class="__widget-title-container">
+<div [ngClass]="widget.embedded ? '__widget-embedded-container' : '__widget-container'">
+  <div *ngIf="!widget.embedded" class="__widget-title-container">
     <div class="__widget-title-logo-container">
       <a style="font-size: 20px;margin: auto;color: mediumslateblue;" href="/">
         eWallet Logo
@@ -12,21 +12,25 @@
     </div>
   </div>
 
-  <div class="__widget-mobile-rate-container">
+  <div *ngIf="!widget.embedded" class="__widget-mobile-rate-container">
     <app-widget-rate class="__widget-rate-container" [title]="exchangeRateCountDownTitle"
       [countDown]="exchangeRateCountDownValue" [rate]="summary?.rate">
     </app-widget-rate>
   </div>
 
-  <div class="__widget-progress-container">
+  <div *ngIf="!widget.embedded" class="__widget-progress-container">
     <app-widget-progress [step]="step" [title]="title" [progress]="inProgress"></app-widget-progress>
+  </div>
+  <div *ngIf="widget.embedded && inProgress" class="__widget-embedded-progress-container">
+    <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
   </div>
 
   <div class="__widget-data-container">
-    <div [ngClass]="{'__widget-wizard-container': true, '__widget-wizard-container-single': initState || !showSummary}"
+    <div
+      [ngClass]="{'__widget-wizard-container': !widget.embedded, '__widget-wizard-container-single': !widget.embedded && (initState || !showSummary), '__widget-wizard-container-embedded': widget.embedded}"
       [ngSwitch]="stageId">
       <!-- Initialization -->
-      <app-widget-initialization *ngSwitchCase="'initialization'"></app-widget-initialization>
+      <app-widget-initialization *ngSwitchCase="'initialization'" [message]="initMessage"></app-widget-initialization>
       <!-- Order details -->
       <app-widget-order-details *ngSwitchCase="'order_details'" [initialized]="!initState" [summary]="summary"
         [settings]="widget" [withdrawalRate]="summary?.exchangeRate?.withdrawRate"
@@ -86,7 +90,7 @@
         (onKycStatusUpdate)="settingsKycState($event)" (onComplete)="settingsCommonComplete($event)">
       </app-widget-settings-service>
     </div>
-    <div *ngIf="!initState && showSummary" class="__widget-summary-container">
+    <div *ngIf="!initState && showSummary && !widget.embedded" class="__widget-summary-container">
       <div class="__widget-summary-box">
         <h3 class="__widget-summary-title">Order Summary</h3>
         <app-widget-rate class="__widget-rate-container" [title]="exchangeRateCountDownTitle"

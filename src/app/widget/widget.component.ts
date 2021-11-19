@@ -29,8 +29,10 @@ export class WidgetComponent implements OnInit {
   showSummary = true;
   mobileSummary = false;
   stageId = 'order_details';
+  tempStageId = '';
   title = 'Order details';
   step = 1;
+  initMessage = 'Initialization...';
   summary = new CheckoutSummary();
   widget = new WidgetSettings();
   stages: WidgetStage[] = [];
@@ -78,6 +80,7 @@ export class WidgetComponent implements OnInit {
   }
 
   private initData(data: WidgetShort | undefined): void {
+    this.initMessage = 'Initialization...';
     if (data) {
       if (data.additionalSettings) {
         //{"minAmountFrom":0,"maxAmountFrom":0,"fixedAmountFrom":0,"kycBeforePayment":false,"disclaimer":true}
@@ -244,12 +247,14 @@ export class WidgetComponent implements OnInit {
   }
 
   private nextStage(id: string, name: string, stepId: number, summaryVisible: boolean): void {
-    if (
-      this.stageId !== 'register' &&
-      this.stageId !== 'login_auth' &&
-      this.stageId !== 'code_auth') {
+    let currentStageId = this.stageId
+    if (this.tempStageId !== '') {
+      currentStageId = this.tempStageId;
+      this.tempStageId = '';
+    }
+    if (currentStageId !== 'register' && currentStageId !== 'login_auth' && currentStageId !== 'code_auth') {
       this.stages.push({
-        id: this.stageId,
+        id: currentStageId,
         title: this.title,
         step: this.step,
         summary: this.showSummary
@@ -559,6 +564,9 @@ export class WidgetComponent implements OnInit {
   private createTransaction(providerId: string, instrument: PaymentInstrument): void {
     this.errorMessage = '';
     this.inProgress = true;
+    this.tempStageId = this.stageId;
+    this.stageId = 'initialization';
+    this.initMessage = 'Processing...';
     if (this.summary) {
       let destination = this.summary.address;
       if (this.widget.widgetId !== '') {
@@ -595,9 +603,11 @@ export class WidgetComponent implements OnInit {
             this.startPayment();
           } else {
             this.errorMessage = 'Order code is invalid';
+            this.stageId = this.tempStageId;
           }
         }, (error) => {
           this.inProgress = false;
+          this.stageId = this.tempStageId;
           if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
             this.handleAuthError();
           } else {

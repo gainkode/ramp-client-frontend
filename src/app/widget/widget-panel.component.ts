@@ -23,8 +23,12 @@ export class WidgetPanelComponent {
   }
 
   selectPaymentType(selected: PaymentWidgetType): void {
+    if (this.selectedWidgetType === selected) {
+      return;
+    }
     this.widgetVisible = false;
     this.selectedWidgetType = selected;
+    this.widgetSettings = new WidgetSettings();
     this.widgetSettings.embedded = true;
     this.widgetSettings.email = this.auth.user?.email ?? '';
     switch (selected) {
