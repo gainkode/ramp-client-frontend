@@ -1287,6 +1287,7 @@ export type TransactionShort = {
   transactionId: Scalars['ID'];
   code?: Maybe<Scalars['String']>;
   userId?: Maybe<Scalars['String']>;
+  sourceVaultId?: Maybe<Scalars['String']>;
   userIp?: Maybe<Scalars['String']>;
   created?: Maybe<Scalars['DateTime']>;
   executed?: Maybe<Scalars['DateTime']>;
@@ -1478,6 +1479,7 @@ export type TransferOrder = {
   executingResult?: Maybe<Scalars['String']>;
   amount?: Maybe<Scalars['Float']>;
   currency?: Maybe<Scalars['String']>;
+  sourceVaultId?: Maybe<Scalars['String']>;
   destination?: Maybe<Scalars['String']>;
   originalOrderId?: Maybe<Scalars['String']>;
   transferHash?: Maybe<Scalars['String']>;
@@ -1503,6 +1505,7 @@ export type Transaction = {
   code?: Maybe<Scalars['String']>;
   userId: Scalars['String'];
   userIp?: Maybe<Scalars['String']>;
+  sourceVaultId?: Maybe<Scalars['String']>;
   user?: Maybe<User>;
   created?: Maybe<Scalars['DateTime']>;
   executed?: Maybe<Scalars['DateTime']>;
@@ -2539,6 +2542,8 @@ export type FeedbackInput = {
 
 export type TransactionInput = {
   type: TransactionType;
+  source: TransactionSource;
+  sourceVaultId?: Maybe<Scalars['String']>;
   currencyToSpend: Scalars['String'];
   currencyToReceive: Scalars['String'];
   amountToSpend: Scalars['Float'];
@@ -2706,6 +2711,7 @@ export type UserAddress = {
   type?: Maybe<Scalars['String']>;
   asset?: Maybe<Scalars['String']>;
   userId?: Maybe<Scalars['String']>;
+  vaultId?: Maybe<Scalars['String']>;
   created?: Maybe<Scalars['DateTime']>;
   details?: Maybe<Scalars['String']>;
 };

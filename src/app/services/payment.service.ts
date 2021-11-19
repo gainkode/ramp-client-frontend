@@ -3,7 +3,7 @@ import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { EmptyObject } from 'apollo-angular/types';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { PaymentInstrument, PaymentProvider, TransactionType } from '../model/generated-models';
+import { PaymentInstrument, PaymentProvider, TransactionSource, TransactionType } from '../model/generated-models';
 import { CardView } from '../model/payment.model';
 
 const GET_RATES = gql`
@@ -50,6 +50,8 @@ mutation ExecuteTransaction(
 const CREATE_TRANSACTION = gql`
 mutation CreateTransaction(
   $transactionType: TransactionType!,
+  $source: TransactionSource!,
+  $sourceVaultId: String,
   $currencyToSpend: String!,
   $currencyToReceive: String!,
   $amountToSpend: Float!,
@@ -60,6 +62,8 @@ mutation CreateTransaction(
 ) {
   createTransaction(transaction: {
     type: $transactionType
+    source: $source
+    sourceVaultId: $sourceVaultId
     currencyToSpend: $currencyToSpend
     currencyToReceive: $currencyToReceive
     amountToSpend: $amountToSpend
@@ -186,6 +190,8 @@ export class PaymentDataService {
 
   createQuickCheckout(
     transactionType: TransactionType,
+    transactionSource: TransactionSource,
+    sourceVault: string,
     currencyToSpend: string,
     currencyToReceive: string,
     amount: number,
@@ -194,8 +200,11 @@ export class PaymentDataService {
     userParamsId: string,
     walletAddress: string): Observable<any> {
     const wallet = (walletAddress === '') ? undefined : walletAddress;
+    const transactionSourceVaultId = (sourceVault === '') ? undefined : sourceVault;
     const vars = {
       transactionType,
+      source: transactionSource,
+      sourceVaultId: transactionSourceVaultId,
       currencyToSpend,
       currencyToReceive,
       amountToSpend: amount,

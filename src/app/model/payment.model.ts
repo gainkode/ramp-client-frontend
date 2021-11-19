@@ -421,6 +421,7 @@ export class CheckoutSummary {
 export class WidgetSettings {
     email = '';
     transaction: TransactionType | undefined = undefined;
+    source: TransactionSource = TransactionSource.QuickCheckout;
     walletAddress = '';
     widgetId = '';
     kycFirst = false;
