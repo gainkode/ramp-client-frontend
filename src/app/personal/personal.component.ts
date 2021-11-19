@@ -225,6 +225,8 @@ export class PersonalComponent implements OnInit {
             this.paymentPanelTitle = 'Send Crypto from your wallet anywhere in one single, easy step!\nSimply add your recepient address to your Contact List, or Insert New Address.';
         } else if (paymentId === PaymentWidgetType.Receive) {
             this.paymentPanelTitle = 'Receive Crypto in your wallet is easy and simple!\nChoose the coin, then wallet to see your deposit wallet address. To aviod coins loss, make sure you use the correct network.';
+        } else if (paymentId === PaymentWidgetType.Transfer) {
+            this.paymentPanelTitle = 'Express Transfer allowing you with a single action to Purchase & Send Crypto direclty from your Bank account to any address!\nIt only takes 2 clicks and you’re done.';
         }
         this.showPayment = true;
     }

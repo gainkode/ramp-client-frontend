@@ -1,37 +1,34 @@
 <div class="__widget-embedded-container">
-    <div *ngIf="widgetType === WIDGET_TYPE.Buy || widgetType === WIDGET_TYPE.Sell"
+    <div *ngIf="selectedWidgetType === WIDGET_TYPE.Buy || selectedWidgetType === WIDGET_TYPE.Sell"
         class="__widget-embedded-tab-container">
         <div
-            [ngClass]="{'__widget-embedded-tab': true, '__widget-embedded-left-tab-unselected': widgetType !== WIDGET_TYPE.Buy}">
-            <span *ngIf="widgetType === WIDGET_TYPE.Buy" class="__widget-embedded-tab-title">
+            [ngClass]="{'__widget-embedded-tab': true, '__widget-embedded-left-tab-unselected': selectedWidgetType !== WIDGET_TYPE.Buy}">
+            <span *ngIf="selectedWidgetType === WIDGET_TYPE.Buy" class="__widget-embedded-tab-title">
                 BUY
             </span>
-            <a *ngIf="widgetType !== WIDGET_TYPE.Buy" [routerLink]="" class="__widget-embedded-tab-link"
+            <a *ngIf="selectedWidgetType !== WIDGET_TYPE.Buy" [routerLink]="" class="__widget-embedded-tab-link"
                 (click)="selectPaymentType(WIDGET_TYPE.Buy)">
                 BUY
             </a>
         </div>
         <div
-            [ngClass]="{'__widget-embedded-tab': true, '__widget-embedded-right-tab-unselected': widgetType !== WIDGET_TYPE.Sell}">
+            [ngClass]="{'__widget-embedded-tab': true, '__widget-embedded-right-tab-unselected': selectedWidgetType !== WIDGET_TYPE.Sell}">
             
             <span class="__widget-embedded-tab-title" style="color: lightsteelblue;">
                 SELL
             </span>
 
-            <!-- <span *ngIf="widgetType === WIDGET_TYPE.Sell" class="__widget-embedded-tab-title">
+            <!-- <span *ngIf="selectedWidgetType === WIDGET_TYPE.Sell" class="__widget-embedded-tab-title">
                 SELL
             </span>
-            <a *ngIf="widgetType !== WIDGET_TYPE.Sell" [routerLink]="" class="__widget-embedded-tab-link" 
+            <a *ngIf="selectedWidgetType !== WIDGET_TYPE.Sell" [routerLink]="" class="__widget-embedded-tab-link" 
                 (click)="selectPaymentType(WIDGET_TYPE.Sell)">
                 SELL
             </a> -->
         </div>
     </div>
 
-    <div class="__widget-embedded-data-container">
-        Data
-        <!-- <app-widget [internal]="false"></app-widget> -->
+    <div *ngIf="widgetVisible" class="__widget-embedded-data-container">
+        <app-widget [internal]="false" [settings] = "widgetSettings"></app-widget>
     </div>
-    
-
 </div>

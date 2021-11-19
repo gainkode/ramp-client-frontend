@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { LoginResult, PaymentInstrument, PaymentPreauthResultShort, Rate, TransactionShort, TransactionType, WidgetShort } from 'src/app/model/generated-models';
+import { LoginResult, PaymentInstrument, PaymentPreauthResultShort, Rate, TransactionShort, TransactionSource, TransactionType, WidgetShort } from 'src/app/model/generated-models';
 import { CardView, CheckoutSummary, PaymentProviderView, WidgetSettings, WidgetStage } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
@@ -53,7 +53,7 @@ export class WidgetComponent implements OnInit {
     private notification: NotificationService,
     private auth: AuthService,
     private dataService: PaymentDataService,
-    private errorHandler: ErrorService) {}
+    private errorHandler: ErrorService) { }
 
   ngOnInit(): void {
     if (this.userParamsId === '') {
@@ -92,6 +92,7 @@ export class WidgetComponent implements OnInit {
       const fixedAddress = data.hasFixedAddress ?? false;
       this.widget.walletAddress = (fixedAddress) ? 'fixedAddress' : this.widget.walletAddress;
       this.widget.transaction = data.transactionType ?? undefined;
+      this.widget.source = TransactionSource.Widget;
     } else {  // Quick checkout
       this.widget.disclaimer = false;
       this.widget.kycFirst = false;
@@ -101,6 +102,9 @@ export class WidgetComponent implements OnInit {
       //this.widget.email = 'tugaymv@gmail.com';
       //this.widget.disclaimer = true;
       this.widget.transaction = TransactionType.Deposit;
+      if (!this.widget.embedded) {
+        this.widget.source = TransactionSource.QuickCheckout;
+      }
       //temp
       if (!environment.production) {
         this.widget.walletAddress = '2MwUASao7s4zH9TGD5jhbqwXJBqoMR2EYr5';

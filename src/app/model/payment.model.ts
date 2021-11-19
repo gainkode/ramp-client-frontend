@@ -11,7 +11,7 @@ export enum PaymentWidgetType {
     Sell = 'Sell',
     Send = 'Send',
     Receive = 'Receive',
-    Transafer = 'Transafer'
+    Transfer = 'Transfer'
 }
 
 export class PaymentInstrumentView {
@@ -419,6 +419,7 @@ export class CheckoutSummary {
 }
 
 export class WidgetSettings {
+    embedded = false;
     email = '';
     transaction: TransactionType | undefined = undefined;
     source: TransactionSource = TransactionSource.QuickCheckout;
