@@ -1,0 +1,14 @@
+<div class="__widget-embedded-container">
+  <div *ngIf="inProgress" class="__widget-embedded-progress-container">
+    <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
+  </div>
+  <div class="__widget-data-container">
+    <div class="__widget-wizard-container-embedded" [ngSwitch]="stageId">
+      <!-- Initialization -->
+      <app-widget-initialization *ngSwitchCase="'initialization'" [message]="initMessage"></app-widget-initialization>
+      <!-- Order details -->
+      <app-widget-receive-details *ngSwitchCase="'receive_details'" [wallets]="userWallets" [currencies]="cryptoList">
+      </app-widget-receive-details>
+    </div>
+  </div>
+</div>

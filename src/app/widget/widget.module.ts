@@ -36,6 +36,8 @@ import { WidgetProcessingInstantpayComponent } from './panels/processing-instant
 import { WidgetInitializationComponent } from './panels/initialization.component';
 import { WidgetPanelComponent } from './widget-panel.component';
 import { RouterModule } from '@angular/router';
+import { ReceiveWidgetComponent } from './receive.component';
+import { WidgetReceiveDetailsComponent } from './panels/receive-details.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -66,13 +68,13 @@ export class MaterialModule { }
     imports: [
         NgxMaskModule.forRoot(), CommonModule, ClipboardModule, FormsModule, ReactiveFormsModule, RouterModule, MaterialModule],
     declarations: [
-        WidgetComponent, WidgetPanelComponent, WidgetProgressComponent,
+        WidgetComponent, ReceiveWidgetComponent, WidgetPanelComponent, WidgetProgressComponent,
         WidgetSummaryComponent, WidgetRateComponent, WidgetCreditCardComponent,
         WidgetRegisterComponent, WidgetLoginAuthComponent, WidgetCodeAuthComponent,
-        WidgetInitializationComponent, WidgetOrderDetailsComponent, WidgetDisclaimerComponent, WidgetKycComponent,
+        WidgetInitializationComponent, WidgetOrderDetailsComponent, WidgetReceiveDetailsComponent, WidgetDisclaimerComponent, WidgetKycComponent,
         WidgetPaymentComponent, WidgetProcessingFrameComponent, WidgetProcessingInstantpayComponent, WidgetCompleteComponent,
         WidgetSettingsService],
-    exports: [WidgetComponent, WidgetPanelComponent],
+    exports: [WidgetComponent, WidgetPanelComponent, ReceiveWidgetComponent],
     providers: [],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

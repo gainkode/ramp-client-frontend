@@ -673,3 +673,41 @@
 .__widget-embedded-tab-title-unselected {
     color: $color_purple_900_icons;
 }
+
+.__widget-data-three-column-grid {
+    display: grid;
+    grid-template-columns: 70px auto 24px;
+    grid-template-rows: 36px;
+}
+
+.__widget-data-three-column-item-one {
+    grid-row: 1;
+    grid-column: 1;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 28px;
+    color: $color_purple_900_icons;
+}
+
+.__widget-data-three-column-item-two {
+    grid-row: 1;
+    grid-column: 2;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 0px 8px 0px 0px;
+}
+
+.__widget-data-three-column-item-three {
+    grid-row: 1;
+    grid-column: 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

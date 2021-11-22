@@ -1,0 +1,107 @@
+<div class="__widget-data-box">
+    <form [formGroup]="dataForm">
+        <!-- Currency -->
+        <div class="__form-label">
+            Select coin
+        </div>
+        <div class="__profile-details-item-block">
+            <div class="__form-text-border">
+                <mat-select formControlName="currency" style="margin: 8px 0px 0px 0px;"
+                    placeholder="Select coin from your list">
+                    <mat-select-trigger>
+                        <div class="__form-finance-combo-item">
+                            <img class="__form-combo-item-img" [src]="selectedCurrency?.img">
+                            <span class="__form-finance-combo-item-text">
+                                {{selectedCurrency?.title}}
+                            </span>
+                        </div>
+                    </mat-select-trigger>
+                    <mat-option *ngFor="let item of currencies" [value]="item.id" style="height: 32px;">
+                        <div class="__form-finance-combo-item">
+                            <img class="__form-combo-item-img" [src]="item.img">
+                            <span class="__form-finance-combo-item-text">
+                                {{item.title}}
+                            </span>
+                        </div>
+                    </mat-option>
+                </mat-select>
+            </div>
+        </div>
+        <div class="__profile-details-item-block">
+            <div *ngIf="!currencyField?.valid && currencyInit" class="__form-assist __form-assist-error">
+                Currency is required
+            </div>
+        </div>
+
+        <div class="__profile-details-item-block">
+            <div class="__form-separator"></div>
+        </div>
+
+        <!-- Wallets -->
+        <div *ngIf="wallets.length>0">
+            <div class="__form-label">
+                Receive to Wallet
+            </div>
+            <div class="__profile-details-item-block">
+                <div class="__form-text-border">
+                    <mat-select formControlName="wallet" style="margin: 6px 0px 0px 0px;"
+                        placeholder="Select wallet to receive Crypto">
+                        <mat-select-trigger>
+                            <div class="__form-combo-item-text">
+                                {{selectedWallet?.name}}
+                            </div>
+                        </mat-select-trigger>
+                        <mat-option *ngFor="let item of wallets" [value]="item.address" style="height: 32px;">
+                            <div class="__form-combo-item">
+                                {{item.name}}
+                            </div>
+                        </mat-option>
+                    </mat-select>
+                </div>
+            </div>
+            <div class="__profile-details-item-block">
+                <div *ngIf="walletInit && !walletField?.valid" class="__form-assist __form-assist-error">
+                    Wallet is required
+                </div>
+                <div *ngIf="selectedWallet" class="__form-assist">
+                    Available in the wallet: {{selectedWallet.total}}
+                </div>
+            </div>
+        </div>
+
+        <div class="__profile-details-item-block">
+            <div class="__form-separator"></div>
+        </div>
+    </form>
+
+    <div *ngIf="qrCode">
+        <div class="__widget-data-three-column-grid">
+            <div class="__widget-data-three-column-item-one">
+                Address:
+            </div>
+            <div class="__widget-data-three-column-item-two">
+                <input class="__text-box-noborder" type="text" readonly [value]="selectedWallet?.address" />
+            </div>
+            <div class="__widget-data-three-column-item-three">
+                <button class="__tool-button" (click)="copyAddress()">
+                    <mat-icon style="font-size: 20px;">content_copy</mat-icon>
+                </button>
+            </div>
+        </div>
+        <div class="__widget-data-three-column-grid">
+            <div class="__widget-data-three-column-item-one">
+                Network:
+            </div>
+            <div class="__widget-data-three-column-item-two">
+                <input class="__text-box-noborder" type="text" readonly [value]="selectedCurrency?.name" />
+            </div>
+        </div>
+        <div class="__profile-details-item-block">
+            <div class="__form-separator"></div>
+        </div>
+        <!-- QR-code -->
+        <div style="display: flex;justify-content: center;align-items: center;">
+            <div style="background-color: black;width: 150px;height: 150px;"></div>
+        </div>
+    </div>
+</div>
