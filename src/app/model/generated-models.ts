@@ -33,6 +33,8 @@ export type Query = {
   getSettingsKyc?: Maybe<SettingsKycListResult>;
   mySettingsKyc?: Maybe<SettingsKycShort>;
   mySettingsKycFull?: Maybe<SettingsKyc>;
+  getSettingsKycTiers?: Maybe<SettingsKycTierListResult>;
+  mySettingsKycTier?: Maybe<SettingsKycTierShort>;
   getAppropriateSettingsKyc?: Maybe<SettingsKyc>;
   getSettingsFee?: Maybe<SettingsFeeListResult>;
   mySettingsFee?: Maybe<SettingsFeeShort>;
@@ -152,6 +154,19 @@ export type QueryGetSettingsKycArgs = {
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
   orderBy?: Maybe<Array<OrderBy>>;
+};
+
+
+export type QueryGetSettingsKycTiersArgs = {
+  filter?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OrderBy>>;
+};
+
+
+export type QueryMySettingsKycTierArgs = {
+  amount?: Maybe<Scalars['Float']>;
 };
 
 
@@ -761,6 +776,8 @@ export type SettingsKycLevel = {
   __typename?: 'SettingsKycLevel';
   settingsKycLevelId: Scalars['ID'];
   name?: Maybe<Scalars['String']>;
+  original_level_name?: Maybe<Scalars['String']>;
+  original_flow_name?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
   userType?: Maybe<UserType>;
   order?: Maybe<Scalars['Int']>;
@@ -824,10 +841,55 @@ export type SettingsKycLevelShort = {
   __typename?: 'SettingsKycLevelShort';
   settingsKycLevelId: Scalars['ID'];
   name?: Maybe<Scalars['String']>;
+  originalLevelName?: Maybe<Scalars['String']>;
+  originalFlowName?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
   userType?: Maybe<UserType>;
   order?: Maybe<Scalars['Int']>;
   data?: Maybe<Scalars['String']>;
+};
+
+export type SettingsKycTierListResult = {
+  __typename?: 'SettingsKycTierListResult';
+  count?: Maybe<Scalars['Int']>;
+  list?: Maybe<Array<SettingsKycTier>>;
+};
+
+export type SettingsKycTier = {
+  __typename?: 'SettingsKycTier';
+  settingsKycTierId: Scalars['ID'];
+  name: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  amount?: Maybe<Scalars['Float']>;
+  targetKycProviders?: Maybe<Array<KycProvider>>;
+  targetUserType: UserType;
+  targetUserModes?: Maybe<Array<UserMode>>;
+  targetFilterType?: Maybe<SettingsKycTargetFilterType>;
+  targetFilterValues?: Maybe<Array<Scalars['String']>>;
+  levelId: Scalars['String'];
+  level?: Maybe<SettingsKycLevel>;
+  requireUserFullName?: Maybe<Scalars['Boolean']>;
+  requireUserPhone?: Maybe<Scalars['Boolean']>;
+  requireUserBirthday?: Maybe<Scalars['Boolean']>;
+  requireUserAddress?: Maybe<Scalars['Boolean']>;
+  requireUserFlatNumber?: Maybe<Scalars['Boolean']>;
+  created: Scalars['DateTime'];
+  createdBy?: Maybe<Scalars['String']>;
+  default?: Maybe<Scalars['Boolean']>;
+  deleted?: Maybe<Scalars['DateTime']>;
+};
+
+export type SettingsKycTierShort = {
+  __typename?: 'SettingsKycTierShort';
+  name: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  amount?: Maybe<Scalars['Float']>;
+  requireUserFullName?: Maybe<Scalars['Boolean']>;
+  requireUserPhone?: Maybe<Scalars['Boolean']>;
+  requireUserBirthday?: Maybe<Scalars['Boolean']>;
+  requireUserAddress?: Maybe<Scalars['Boolean']>;
+  requireUserFlatNumber?: Maybe<Scalars['Boolean']>;
+  level?: Maybe<SettingsKycLevel>;
 };
 
 export type SettingsFeeListResult = {
@@ -1107,6 +1169,7 @@ export type UserBalanceHistoryRecord = {
 export type KycInfo = {
   __typename?: 'KycInfo';
   applicant?: Maybe<KycApplicant>;
+  levelName?: Maybe<Scalars['String']>;
   appliedDocuments?: Maybe<Array<KycAppliedDocument>>;
   requiredInfo?: Maybe<KycRequiredInfo>;
 };
@@ -1858,6 +1921,9 @@ export type Mutation = {
   addSettingsKyc: SettingsKyc;
   updateSettingsKyc: SettingsKyc;
   deleteSettingsKyc: SettingsKyc;
+  addSettingsKycTier: SettingsKycTier;
+  updateSettingsKycTier: SettingsKycTier;
+  deleteSettingsKycTier: SettingsKycTier;
   updateMe?: Maybe<User>;
   updateUser?: Maybe<User>;
   addMyVault?: Maybe<VaultAccount>;
@@ -2036,6 +2102,22 @@ export type MutationUpdateSettingsKycArgs = {
 
 
 export type MutationDeleteSettingsKycArgs = {
+  settingsId: Scalars['ID'];
+};
+
+
+export type MutationAddSettingsKycTierArgs = {
+  settings: SettingsKycTierInput;
+};
+
+
+export type MutationUpdateSettingsKycTierArgs = {
+  settingsId: Scalars['ID'];
+  settings: SettingsKycTierInput;
+};
+
+
+export type MutationDeleteSettingsKycTierArgs = {
   settingsId: Scalars['ID'];
 };
 
@@ -2430,6 +2512,8 @@ export type SettingsCostInput = {
 
 export type SettingsKycLevelInput = {
   name: Scalars['String'];
+  original_level_name?: Maybe<Scalars['String']>;
+  original_flow_name?: Maybe<Scalars['String']>;
   data: Scalars['String'];
   description?: Maybe<Scalars['String']>;
   userType: UserType;
@@ -2445,6 +2529,25 @@ export type SettingsKycInput = {
   targetFilterType?: Maybe<SettingsKycTargetFilterType>;
   targetFilterValues?: Maybe<Array<Scalars['String']>>;
   levelIds?: Maybe<Array<Scalars['String']>>;
+  requireUserFullName?: Maybe<Scalars['Boolean']>;
+  requireUserPhone?: Maybe<Scalars['Boolean']>;
+  requireUserBirthday?: Maybe<Scalars['Boolean']>;
+  requireUserAddress?: Maybe<Scalars['Boolean']>;
+  requireUserFlatNumber?: Maybe<Scalars['Boolean']>;
+  default?: Maybe<Scalars['Boolean']>;
+  deleted?: Maybe<Scalars['DateTime']>;
+};
+
+export type SettingsKycTierInput = {
+  name?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  amount?: Maybe<Scalars['Float']>;
+  targetKycProviders?: Maybe<Array<KycProvider>>;
+  targetUserType: UserType;
+  targetUserModes?: Maybe<Array<UserMode>>;
+  targetFilterType?: Maybe<SettingsKycTargetFilterType>;
+  targetFilterValues?: Maybe<Array<Scalars['String']>>;
+  levelId: Scalars['String'];
   requireUserFullName?: Maybe<Scalars['Boolean']>;
   requireUserPhone?: Maybe<Scalars['Boolean']>;
   requireUserBirthday?: Maybe<Scalars['Boolean']>;
@@ -2548,7 +2651,7 @@ export type TransactionInput = {
   currencyToReceive: Scalars['String'];
   amountToSpend: Scalars['Float'];
   destination?: Maybe<Scalars['String']>;
-  instrument: PaymentInstrument;
+  instrument?: Maybe<PaymentInstrument>;
   paymentProvider?: Maybe<Scalars['String']>;
   widgetUserParamsId?: Maybe<Scalars['String']>;
   data?: Maybe<Scalars['String']>;

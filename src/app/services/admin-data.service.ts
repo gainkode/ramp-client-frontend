@@ -492,6 +492,8 @@ const ADD_KYC_LEVEL_SETTINGS = gql`
     $name: String!
     $description: String
     $userType: UserType!
+    $original_level_name: String!
+    $original_flow_name: String!
     $data: String!
   ) {
     addSettingsKycLevel(
@@ -500,6 +502,8 @@ const ADD_KYC_LEVEL_SETTINGS = gql`
         description: $description
         userType: $userType
         data: $data
+        original_level_name: $original_level_name
+        original_flow_name: $original_flow_name
       }
     ) {
       settingsKycLevelId
@@ -619,6 +623,8 @@ const UPDATE_KYC_LEVEL_SETTINGS = gql`
     $name: String!
     $description: String
     $userType: UserType!
+    $original_level_name: String!
+    $original_flow_name: String!
     $data: String!
   ) {
     updateSettingsKycLevel(
@@ -628,6 +634,8 @@ const UPDATE_KYC_LEVEL_SETTINGS = gql`
         description: $description
         userType: $userType
         data: $data
+        original_level_name: $original_level_name
+        original_flow_name: $original_flow_name
       }
     ) {
       settingsKycLevelId
@@ -933,6 +941,8 @@ export class AdminDataService {
           name: level.name,
           description: level.description,
           userType: level.userType,
+          original_level_name: level.levelData.value,
+          original_flow_name: level.flowData.value,
           data: level.getDataObject(),
         },
       })
@@ -943,6 +953,8 @@ export class AdminDataService {
           name: level.name,
           description: level.description,
           userType: level.userType,
+          original_level_name: level.levelData.value,
+          original_flow_name: level.flowData.value,
           data: level.getDataObject(),
         },
       });
