@@ -6,7 +6,6 @@ import { Rate, SettingsCurrency, UserState, VaultAccountEx } from 'src/app/model
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
 import { ErrorService } from 'src/app/services/error.service';
-import { PaymentDataService } from 'src/app/services/payment.service';
 
 @Component({
     selector: 'app-personal-balance-list',
@@ -26,7 +25,6 @@ export class PersonalBalanceListComponent implements OnInit, OnDestroy {
     constructor(
         private auth: AuthService,
         private errorHandler: ErrorService,
-        private paymentService: PaymentDataService,
         private commonService: CommonDataService,
         private router: Router) {
     }
@@ -52,7 +50,6 @@ export class PersonalBalanceListComponent implements OnInit, OnDestroy {
                 this.fiatPrecision = currentFiat.precision;
             }
             this.loadBalanceData();
-            //this.loadRates();
         }
     }
 
