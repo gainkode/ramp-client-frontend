@@ -25,6 +25,6 @@
     </div>
 
     <div *ngIf="widgetVisible" class="__widget-embedded-data-container">
-        <app-widget [internal]="false" [settings]="widgetSettings"></app-widget>
+        <app-widget [internal]="false" [settings]="widgetSettings" (onComplete)="widgetComplete($event)"></app-widget>
     </div>
 </div>

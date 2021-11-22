@@ -72,6 +72,33 @@
     height: 100%;
 }
 
+.__profile-details-payment-title-block {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.__profile-details-payment-title-image {
+    width: 126px;
+    height: 106px;
+    margin: 16px 0px 24px 0px;
+}
+
+.__profile-details-extra-data {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 28px;
+    color: $color_purple_900_text;
+}
+
 .__profile-details-item-block {
     width: 100%;
     display: flex;
@@ -152,6 +179,35 @@
     font-size: 12px;
     line-height: 14px;
     color: $color_purple_900_icons;
+}
+
+.__profile-details-payment-title {
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 35px;
+    color: $color_main_blue_800;
+}
+
+.__profile-details-payment-amount {
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24px;
+    line-height: 56px;
+    color: $color_purple_900_text;
+}
+
+.__profile-details-payment-subtitle {
+    margin: 16px 0px;
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 28px;
+    color: $color_purple_900_text;
+    text-align: center;
 }
 
 .__profile-details-button-container {

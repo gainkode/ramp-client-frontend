@@ -85,7 +85,6 @@ export class ExchangeRateService {
                 currencyFrom = this.currencyTo as string;
                 currencyTo = this.currencyFrom as string;
             }
-            console.log(`Get rate ${currencyFrom}->${currencyTo}`);
             if (currencyFrom && currencyTo) {
                 const ratesData = this.dataService.getRates([currencyFrom], currencyTo);
                 if (ratesData === null) {

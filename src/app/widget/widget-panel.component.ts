@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TransactionSource, TransactionType } from '../model/generated-models';
-import { PaymentWidgetType, WidgetSettings } from '../model/payment.model';
+import { PaymentCompleteDetails, PaymentWidgetType, WidgetSettings } from '../model/payment.model';
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -12,6 +12,7 @@ export class WidgetPanelComponent {
   @Input() set widgetType(val: PaymentWidgetType) {
     this.selectPaymentType(val);
   }
+  @Output() onComplete = new EventEmitter<PaymentCompleteDetails>();
 
   WIDGET_TYPE: typeof PaymentWidgetType = PaymentWidgetType;
   widgetVisible = false;
@@ -52,5 +53,10 @@ export class WidgetPanelComponent {
     this.widgetSettings.kycFirst = false;
     this.widgetSettings.disclaimer = false;
     this.widgetVisible = true;
+  }
+
+  widgetComplete(details: PaymentCompleteDetails): void {
+    details.paymentType = this.selectedWidgetType;
+    this.onComplete.emit(details);
   }
 }

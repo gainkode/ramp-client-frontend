@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { Event as NavigationEvent } from '@angular/router';
 import { MenuItem } from '../model/common.model';
-import { CurrencyView, PaymentWidgetType } from '../model/payment.model';
+import { CurrencyView, PaymentCompleteDetails, PaymentWidgetType } from '../model/payment.model';
 import { ProfileItemActionType, ProfileItemContainer, ProfileItemContainerType } from '../model/profile-item.model';
 import {
     PersonalProfileMenuItems,
@@ -39,6 +39,7 @@ export class PersonalComponent implements OnInit {
     detailsContainer!: ProfileItemContainer;
     dataPanel: any;
     cryptoList: CurrencyView[] = [];
+    paymentCompleteDetails: PaymentCompleteDetails | undefined = undefined;
 
     constructor(
         private auth: AuthService,
@@ -112,6 +113,9 @@ export class PersonalComponent implements OnInit {
                 this.detailsType = 'new_contact';
                 this.cryptoList = container.meta;
             }
+        } else if (container.container === ProfileItemContainerType.PaymentComplete) {
+            this.detailsType = 'payment_complete';
+            this.paymentCompleteDetails = container.paymentDetails;
         }
         console.log(this.detailsType);
     }
@@ -233,6 +237,15 @@ export class PersonalComponent implements OnInit {
 
     closePayment(): void {
         this.showPayment = false;
+    }
+
+    widgetComplete(details: PaymentCompleteDetails): void {
+        this.closePayment();
+        const container = new ProfileItemContainer();
+        container.container = ProfileItemContainerType.PaymentComplete;
+        container.paymentDetails = details;
+        this.initializeDetailsPanel(container);
+        this.showDetails = true;
     }
 
     getChat(): void {

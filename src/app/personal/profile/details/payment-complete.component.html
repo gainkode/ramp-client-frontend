@@ -1,0 +1,52 @@
+<div class="__profile-details-container">
+    <div class="__profile-details-data-container">
+        <div class="__profile-details-data-area">
+            <div class="__profile-details-payment-title-block">
+                <div class="__profile-details-payment-title-image">
+                    <img src="assets/rocket.svg" alt="complete">
+                </div>
+            </div>
+            <div class="__profile-details-payment-title-block">
+                <div class="__profile-details-payment-title">
+                    {{title}}
+                </div>
+                <div class="__profile-details-payment-amount">
+                    {{amount}}
+                </div>
+                <div class="__profile-details-payment-subtitle">
+                    You can view the transaction details in Transaction section of your account.
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="__profile-details-button-container">
+                <button type="button" class="__outlined-button" (click)="done()">
+                    VIEW TRANSACTION
+                </button>
+            </div>
+
+
+
+
+            <!-- Extra info -->
+            <div class="__profile-details-extra-data">
+                Dear customer, your transaction is being processed. We will do our best to complete it as soon as
+                possible!
+                <br>
+                Please note that confirmation time varies from currency to currency. In times of network overload, your
+                transaction may take longer than usual to be completed.
+            </div>
+
+
+
+        </div>
+        <div class="__profile-details-footer">
+            <a href="#" class="__profile-details-link">
+                contact support
+            </a>
+            <div class="__profile-details-footer-caption">
+                need help?
+            </div>
+        </div>
+    </div>
+</div>

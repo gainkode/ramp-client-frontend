@@ -442,3 +442,9 @@ export class InstantpayDetails {
     uniqueReference = 0;
     payId = '';
 }
+
+export class PaymentCompleteDetails {
+    paymentType: PaymentWidgetType = PaymentWidgetType.None;
+    amount = 0;
+    currency = '';
+}

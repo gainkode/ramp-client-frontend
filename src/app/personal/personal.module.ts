@@ -53,6 +53,7 @@ import { PersonalContactListComponent } from './profile/data/contact-list.compon
 import { PersonalContactCreateComponent } from './profile/details/contact-create.component';
 import { PersonalPricelistComponent } from './profile/pricelist.component';
 import { PersonalContactDetailsComponent } from './profile/details/contact-details.component';
+import { PersonalPaymentCompleteComponent } from './profile/details/payment-complete.component';
 
 const routing = RouterModule.forChild([
     // Main page
@@ -135,7 +136,7 @@ export class MaterialModule { }
         PersonalNotificationsComponent,
         // Data containers
         PersonalBalanceChartComponent, PersonalBalanceListComponent, PersonalTransactionListComponent, PersonalWalletListComponent,
-        PersonalContactListComponent, PersonalNotificationListComponent,
+        PersonalContactListComponent, PersonalNotificationListComponent, PersonalPaymentCompleteComponent,
         // Obsolete pages
         ProfileMainPersonalComponent, KycPersonalComponent, PersonalMyAccountComponent],
     providers: [PersonalGuard],

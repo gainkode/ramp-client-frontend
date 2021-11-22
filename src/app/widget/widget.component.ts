@@ -1,7 +1,7 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AssetAddressShortListResult, LoginResult, PaymentInstrument, PaymentPreauthResultShort, Rate, TransactionShort, TransactionSource, TransactionType, WidgetShort } from 'src/app/model/generated-models';
-import { CardView, CheckoutSummary, PaymentProviderView, WidgetSettings, WidgetStage } from 'src/app/model/payment.model';
+import { CardView, CheckoutSummary, PaymentCompleteDetails, PaymentProviderView, WidgetSettings, WidgetStage } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { NotificationService } from 'src/app/services/notification.service';
@@ -22,6 +22,7 @@ export class WidgetComponent implements OnInit {
   @Input() set internal(val: boolean) {
     this.internalPayment = val;
   }
+  @Output() onComplete = new EventEmitter<PaymentCompleteDetails>();
 
   errorMessage = '';
   rateErrorMessage = '';
@@ -323,7 +324,7 @@ export class WidgetComponent implements OnInit {
             const walletCount = dataList?.count as number;
             if (walletCount > 0) {
               this.userWallets = dataList?.list?.
-              map((val) => new WalletItem(val, '', undefined)) as WalletItem[];
+                map((val) => new WalletItem(val, '', undefined)) as WalletItem[];
             }
           }
           this.initData(undefined);
@@ -467,10 +468,17 @@ export class WidgetComponent implements OnInit {
 
   // == Payment ===========
   processingComplete(): void {
-    if (this.requestKyc) {
-      this.nextStage('verification', 'Verification', 5, false);
+    if (this.widget.embedded) {
+      const details = new PaymentCompleteDetails();
+      details.amount = parseFloat(this.summary.amountTo?.toFixed(this.summary.amountToPrecision) ?? '0');
+      details.currency = this.summary.currencyTo;
+      this.onComplete.emit(details);
     } else {
-      this.nextStage('complete', 'Complete', 6, false);
+      if (this.requestKyc) {
+        this.nextStage('verification', 'Verification', 5, false);
+      } else {
+        this.nextStage('complete', 'Complete', 6, false);
+      }
     }
   }
   // ======================
