@@ -12,6 +12,7 @@ import { PersonalTransactionListComponent } from './data/transaction-list.compon
 })
 export class PersonalTransactionsComponent {
     @Output() onShowDetails = new EventEmitter<ProfileItemContainer>();
+    @Output() onShowError = new EventEmitter<string>();
     private dataListPanel!: PersonalTransactionListComponent;
     @ViewChild('datalist') set dataList(panel: PersonalTransactionListComponent) {
         if (panel) {
@@ -48,6 +49,7 @@ export class PersonalTransactionsComponent {
 
     handleError(val: string): void {
         this.errorMessage = val;
+        this.onShowError.emit(this.errorMessage);
         this.changeDetector.detectChanges();
     }
 

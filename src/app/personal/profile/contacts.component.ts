@@ -17,6 +17,7 @@ import { PersonalContactListComponent } from './data/contact-list.component';
 })
 export class PersonalContactsComponent implements OnInit, OnDestroy {
     @Output() onShowDetails = new EventEmitter<ProfileItemContainer>();
+    @Output() onShowError = new EventEmitter<string>();
     private dataListPanel!: PersonalContactListComponent;
     @ViewChild('datalist') set dataList(panel: PersonalContactListComponent) {
         if (panel) {
@@ -82,6 +83,7 @@ export class PersonalContactsComponent implements OnInit, OnDestroy {
         const currencyData = this.commonService.getSettingsCurrency();
         if (currencyData === null) {
             this.errorMessage = this.errorHandler.getRejectedCookieMessage();
+            this.onShowError.emit(this.errorMessage);
         } else {
             this.subscriptions.add(
                 currencyData.valueChanges.subscribe(({ data }) => {
@@ -98,6 +100,7 @@ export class PersonalContactsComponent implements OnInit, OnDestroy {
                     this.inProgressFilter = false;
                     if (this.auth.token !== '') {
                         this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load currency data');
+                        this.onShowError.emit(this.errorMessage);
                     } else {
                         this.router.navigateByUrl('/');
                     }
@@ -117,6 +120,7 @@ export class PersonalContactsComponent implements OnInit, OnDestroy {
 
     handleError(val: string): void {
         this.errorMessage = val;
+        this.onShowError.emit(this.errorMessage);
         this.changeDetector.detectChanges();
     }
 

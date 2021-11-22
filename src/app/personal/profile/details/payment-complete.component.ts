@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { Router } from "@angular/router";
 import { PaymentCompleteDetails, PaymentWidgetType } from "src/app/model/payment.model";
 import { ProfileItemContainer, ProfileItemContainerType } from "src/app/model/profile-item.model";

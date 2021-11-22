@@ -1,5 +1,6 @@
 <div class="__container">
     <div [ngClass]="{'__profile-disabled-block': showDetails || showPayment}">
+        <!-- Top menu -->
         <div class="__top-menu-bar">
             <div
                 [ngClass]="expandedMenu ? '__top-menu-content-bar-profile-side-menu-expanded' : '__top-menu-content-bar-profile-side-menu-collapsed'">
@@ -30,11 +31,24 @@
                 </div>
             </div>
         </div>
+        <!-- Top menu logo -->
         <div *ngIf="expandedMenu" class="__profile-top-menu-logo-box">
             <a style="font-size: 20px;margin: auto;color: mediumspringgreen;" href="/payment">
                 eWallet Logo
             </a>
         </div>
+        <!-- Error bar -->
+        <div [ngClass]="errorMessage==='' ? '__top-menu-error-bar-hidden' : '__top-menu-error-bar'">
+            <div class="__error-message-text">
+                {{errorMessage}}
+            </div>
+            <div class="__error-close-button">
+                <button class="__tool-button-inversed" type="button" (click)="closeErrorBar()">
+                    <span style="font-size: 22px;" class="material-icons">close</span>
+                </button>
+            </div>
+        </div>
+        <!-- Data container with side bar and data panels -->
         <div class="__profile-container">
             <div [ngClass]="expandedMenu ? '__profile-side-menu-expanded' : '__profile-side-menu'">
                 <div class="__side-menu-container">
@@ -54,6 +68,7 @@
         </div>
     </div>
 
+    <!-- Right pane for details and payment -->
     <div *ngIf="showDetails || showPayment" class="__profile-details-block">
         <!-- Details -->
         <div *ngIf="showDetails" class="__profile-details-panel">
@@ -108,6 +123,7 @@
         </div>
     </div>
 
+    <!-- Warning when the screen is too small -->
     <div class="__profile-unsupported-device">
         <div class="__profile-unsupported-device-title">
             The screen size of your device is not supported.
@@ -117,6 +133,7 @@
     </div>
 </div>
 
+<!-- Chat button -->
 <div class="__profile-chat-block" *ngIf="!showDetails && !showPayment">
     <button type="button" class="__main-button __main-button-chat" (click)="getChat()">
         <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">

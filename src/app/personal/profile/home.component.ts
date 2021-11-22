@@ -18,6 +18,7 @@ import { PersonalTransactionListComponent } from './data/transaction-list.compon
 })
 export class PersonalHomeComponent implements OnInit, OnDestroy {
     @Output() onShowDetails = new EventEmitter<ProfileItemContainer>();
+    @Output() onShowError = new EventEmitter<string>();
     private transactionsPanel!: PersonalTransactionListComponent;
     private balanceListPanel!: PersonalBalanceListComponent;
     @ViewChild('transactions') set recentTransactions(panel: PersonalTransactionListComponent) {
@@ -67,6 +68,7 @@ export class PersonalHomeComponent implements OnInit, OnDestroy {
         const currencyData = this.commonService.getSettingsCurrency();
         if (currencyData === null) {
             this.errorMessage = this.errorHandler.getRejectedCookieMessage();
+            this.onShowError.emit(this.errorMessage);
         } else {
             this.subscriptions.add(
                 currencyData.valueChanges.subscribe(({ data }) => {
@@ -104,6 +106,7 @@ export class PersonalHomeComponent implements OnInit, OnDestroy {
                     }
                     if (this.auth.token !== '') {
                         this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load currency data');
+                        this.onShowError.emit(this.errorMessage);
                     } else {
                         this.router.navigateByUrl('/');
                     }
@@ -123,6 +126,7 @@ export class PersonalHomeComponent implements OnInit, OnDestroy {
 
     handleError(val: string): void {
         this.errorMessage = val;
+        this.onShowError.emit(this.errorMessage);
         this.changeDetector.detectChanges();
     }
 

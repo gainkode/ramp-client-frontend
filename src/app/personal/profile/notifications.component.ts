@@ -15,6 +15,7 @@ import { UserNotification } from 'src/app/model/generated-models';
     styleUrls: ['../../../assets/profile.scss', '../../../assets/button.scss']
 })
 export class PersonalNotificationsComponent implements OnDestroy {
+    @Output() onShowError = new EventEmitter<string>();
     private dataListPanel!: PersonalNotificationListComponent;
     @ViewChild('datalist') set dataList(panel: PersonalNotificationListComponent) {
         if (panel) {
@@ -60,6 +61,7 @@ export class PersonalNotificationsComponent implements OnDestroy {
 
     handleError(val: string): void {
         this.errorMessage = val;
+        this.onShowError.emit(this.errorMessage);
         this.changeDetector.detectChanges();
     }
 
@@ -104,6 +106,7 @@ export class PersonalNotificationsComponent implements OnDestroy {
             }, (error) => {
                 this.inProgress = false;
                 this.errorMessage = this.errorHandler.getError(error.message, `Unable to change notification status`);
+                this.onShowError.emit(this.errorMessage);
             })
         );
     }

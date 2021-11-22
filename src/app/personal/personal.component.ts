@@ -27,10 +27,12 @@ export class PersonalComponent implements OnInit {
     menuItems: MenuItem[] = PersonalProfileMenuItems;
     popupItems: MenuItem[] = PersonalProfilePopupMenuItems;
     WIDGET_TYPE: typeof PaymentWidgetType = PaymentWidgetType;
+    errorMessage = '';
     expandedMenu = false;
     selectedMenu = 'home';
     showDetails = false;
     showDetailsRef: any;
+    showErrorRef: any;
     showPayment = false;
     paymentPanelTitle = '';
     selectedPaymentType = PaymentWidgetType.None;
@@ -148,6 +150,12 @@ export class PersonalComponent implements OnInit {
                 this.showDetails = true;
             });
         }
+        this.showErrorRef = component.onShowError;
+        if (this.showErrorRef) {
+            this.showErrorRef.subscribe((event: any) => {
+                this.errorMessage = event as string;
+            });
+        }
     }
 
     onDeactivatePage(component: any): void {
@@ -156,6 +164,14 @@ export class PersonalComponent implements OnInit {
             this.showDetailsRef.unsubscribe();
             this.showDetailsRef = undefined;
         }
+        if (this.showErrorRef) {
+            this.showErrorRef.unsubscribe();
+            this.showErrorRef = undefined;
+        }
+    }
+
+    closeErrorBar(): void {
+        this.errorMessage = '';
     }
 
     detailsComplete(container: ProfileItemContainer): void {

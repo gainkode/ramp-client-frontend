@@ -84,6 +84,65 @@
     align-items     : center;
 }
 
+.__top-menu-error-bar {
+    position: sticky;
+    top: 0px;
+    display: grid;
+    grid-template-columns: auto 40px;
+    grid-template-rows: auto;
+    box-sizing      : border-box;
+    -moz-box-align  : center;
+    align-items     : center;
+    -moz-box-pack   : justify;
+    min-height      : 48px;
+    padding         : 0px;
+    background-color: $color_pink_500;
+    width: 100%;
+    z-index: 500;
+
+    @media (max-width: $md3 + px) {
+        display: none;
+        width: 0px;
+        min-width: 0px;
+        visibility: hidden;
+    }
+
+    div.__error-message-text {
+        grid-row: 1;
+        grid-column: 1 / 2;
+        margin: 8px 40px;
+        font-family: $font_main;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 28px;
+        color: $color_white;
+        white-space: pre-line;
+    }
+
+    div.__error-close-button {
+        grid-row: 1;
+        grid-column: 2 / 3;
+        width: 24px;
+        height: 24px;
+    }
+}
+
+.__top-menu-error-bar-hidden {
+    position: sticky;
+    top: 0px;
+    display: none;
+    min-height: 0px;
+    width: 100%;
+
+    @media (max-width: $md3 + px) {
+        display: none;
+        width: 0px;
+        min-width: 0px;
+        visibility: hidden;
+    }
+}
+
 .__popup-menu-separator {
     display: block;
     margin: 8px auto;
