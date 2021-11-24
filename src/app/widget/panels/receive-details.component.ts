@@ -1,6 +1,7 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AssetAddressShortListResult } from 'src/app/model/generated-models';
 import { CurrencyView } from 'src/app/model/payment.model';
@@ -57,7 +58,8 @@ export class WidgetReceiveDetailsComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private auth: AuthService,
     private profileService: ProfileDataService,
-    private errorHandler: ErrorService) { }
+    private errorHandler: ErrorService,
+    private router: Router) { }
 
   ngOnInit(): void {
     this.pSubscriptions.add(this.currencyField?.valueChanges.subscribe(val => this.onCurrencyUpdated(val)));
@@ -99,7 +101,11 @@ export class WidgetReceiveDetailsComponent implements OnInit, OnDestroy {
         }, (error) => {
           this.inProgress = false;
           this.onProgress.emit(this.inProgress);
-          this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load wallets');
+          if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
+            this.router.navigateByUrl('/');
+          } else {
+            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load wallets');
+          }
         })
       );
     }

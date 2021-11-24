@@ -1,12 +1,11 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { AssetAddressShortListResult, SettingsCurrencyWithDefaults } from 'src/app/model/generated-models';
-import { AuthService } from 'src/app/services/auth.service';
+import { SettingsCurrencyWithDefaults } from 'src/app/model/generated-models';
 import { ErrorService } from 'src/app/services/error.service';
 import { CurrencyView } from '../model/payment.model';
 import { WalletItem } from '../model/wallet.model';
 import { CommonDataService } from '../services/common-data.service';
-import { ProfileDataService } from '../services/profile.service';
 
 @Component({
   selector: 'app-receive-widget',
@@ -29,10 +28,9 @@ export class ReceiveWidgetComponent implements OnInit {
 
   constructor(
     private changeDetector: ChangeDetectorRef,
-    private auth: AuthService,
     private commonService: CommonDataService,
-    private profileService: ProfileDataService,
-    private errorHandler: ErrorService) { }
+    private errorHandler: ErrorService,
+    private router: Router) { }
 
   ngOnInit(): void {
     this.initMessage = 'Initialization...';
@@ -77,8 +75,11 @@ export class ReceiveWidgetComponent implements OnInit {
           this.title = 'Receive details';
         }, (error) => {
           this.inProgress = false;
-          this.stageId = 'receive_details';
-          this.title = 'Receive details';
+          if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
+            this.router.navigateByUrl('/');
+          } else {
+            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load currencies');
+          }
         })
       );
     }
