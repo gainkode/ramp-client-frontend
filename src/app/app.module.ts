@@ -28,6 +28,7 @@ import { SubscriptionClient } from 'subscriptions-transport-ws';
 import { DirectiveModule } from './directives/directives.module';
 import { ProfileDataService } from './services/profile.service';
 import { ExchangeRateService } from './services/rate.service';
+import { WidgetPagerService } from './services/widget-pager.service';
 
 @NgModule({
   declarations: [
@@ -65,7 +66,8 @@ import { ExchangeRateService } from './services/rate.service';
     PaymentDataService,
     NotificationService,
     ErrorService,
-    ExchangeRateService
+    ExchangeRateService,
+    WidgetPagerService
   ],
   bootstrap: [AppComponent]
 })

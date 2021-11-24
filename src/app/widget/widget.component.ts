@@ -10,6 +10,7 @@ import { ExchangeRateService } from 'src/app/services/rate.service';
 import { environment } from 'src/environments/environment';
 import { WalletItem } from '../model/wallet.model';
 import { ProfileDataService } from '../services/profile.service';
+import { WidgetPagerService } from '../services/widget-pager.service';
 
 @Component({
   selector: 'app-widget',
@@ -31,13 +32,9 @@ export class WidgetComponent implements OnInit {
   initState = true;
   showSummary = true;
   mobileSummary = false;
-  stageId = 'order_details';
-  title = 'Order details';
-  step = 1;
   initMessage = 'Initialization...';
   summary = new CheckoutSummary();
   widget = new WidgetSettings();
-  stages: WidgetStage[] = [];
   userWallets: WalletItem[] = [];
   exchangeRateCountDownTitle = '';
   exchangeRateCountDownValue = '';
@@ -55,6 +52,7 @@ export class WidgetComponent implements OnInit {
   constructor(
     private changeDetector: ChangeDetectorRef,
     private exhangeRate: ExchangeRateService,
+    public pager: WidgetPagerService,
     private notification: NotificationService,
     private auth: AuthService,
     private dataService: PaymentDataService,
@@ -68,17 +66,14 @@ export class WidgetComponent implements OnInit {
         this.widget = this.settings;
       }
       if (this.widget.embedded) {
-        this.stageId = 'initialization';
-        this.title = 'Initialization';
+        this.pager.init('initialization', 'Initialization');
         this.loadUserWallets();
       } else {
-        this.stageId = 'order_details';
-        this.title = 'Order details';
+        this.pager.init('order_details', 'Order details');
         this.initData(undefined);
       }
     } else {
-      this.stageId = 'initialization';
-      this.title = 'Initialization';
+      this.pager.init('initialization', 'Initialization');
       this.loadUserParams();
     }
     this.startExchangeRate();
@@ -223,7 +218,7 @@ export class WidgetComponent implements OnInit {
   resetWizard(): void {
     this.summary.reset();
     this.initData(undefined);
-    this.stages = [];
+    this.pager.init('', '');
     this.nextStage('order_details', 'Order details', 1, false);
   }
 
@@ -241,49 +236,25 @@ export class WidgetComponent implements OnInit {
     this.changeDetector.detectChanges();
   }
 
-  private removeLastStage(): WidgetStage {
-    return this.stages.splice(this.stages.length - 1, 1)[0];
-  }
-
   private stageBack(): void {
     this.inProgress = false;
-    if (this.stages.length > 0) {
-      const lastStage = this.removeLastStage();
-      this.errorMessage = '';
-      this.stageId = lastStage.id;
-      this.title = lastStage.title;
-      this.step = lastStage.step;
-      this.showSummary = lastStage.summary;
+    const stage = this.pager.goBack();
+    if (stage) {
+      this.showSummary = stage.summary;
     }
   }
 
   private nextStage(id: string, name: string, stepId: number, summaryVisible: boolean): void {
-    if (
-      this.stageId !== 'initialization' &&
-      this.stageId !== 'register' &&
-      this.stageId !== 'login_auth' &&
-      this.stageId !== 'code_auth') {
-      this.stages.push({
-        id: this.stageId,
-        title: this.title,
-        step: this.step,
-        summary: this.showSummary
-      } as WidgetStage);
-    }
+    const store = (id !== 'initialization' && id !== 'register' && id !== 'login_auth' && id !== 'code_auth');
     setTimeout(() => {
       this.errorMessage = '';
-      this.stageId = id;
-      this.title = name;
-      this.step = stepId;
+      this.pager.nextStage(id, name, stepId, this.showSummary, store);
       this.showSummary = summaryVisible;
     }, 50);
   }
 
   removeStage(stage: string) {
-    const stageIndex = this.stages.findIndex(x => x.id === stage);
-    if (stageIndex > -1) {
-      this.stages.splice(stageIndex, 1);
-    }
+    this.pager.removeStage(stage);
   }
 
   private loadUserParams(): void {
@@ -297,13 +268,11 @@ export class WidgetComponent implements OnInit {
         widgetData.valueChanges.subscribe(({ data }) => {
           this.inProgress = false;
           this.initData(data.getWidget as WidgetShort);
-          this.stageId = 'order_details';
-          this.title = 'Order details';
+          this.pager.init('order_details', 'Order details');
         }, (error) => {
           this.inProgress = false;
           this.initData(undefined);
-          this.stageId = 'order_details';
-          this.title = 'Order details';
+          this.pager.init('order_details', 'Order details');
         })
       );
     }
@@ -328,13 +297,11 @@ export class WidgetComponent implements OnInit {
             }
           }
           this.initData(undefined);
-          this.stageId = 'order_details';
-          this.title = 'Order details';
+          this.pager.init('order_details', 'Order details');
         }, (error) => {
           this.inProgress = false;
           this.initData(undefined);
-          this.stageId = 'order_details';
-          this.title = 'Order details';
+          this.pager.init('order_details', 'Order details');
         })
       );
     }
@@ -612,8 +579,7 @@ export class WidgetComponent implements OnInit {
   private createTransaction(providerId: string, instrument: PaymentInstrument): void {
     this.errorMessage = '';
     this.inProgress = true;
-    const tempStageId = this.stageId;
-    this.stageId = 'initialization';
+    const tempStageId = this.pager.swapStage('initialization');
     this.initMessage = 'Processing...';
     if (this.summary) {
       let destination = this.summary.address;
@@ -651,11 +617,11 @@ export class WidgetComponent implements OnInit {
             this.startPayment();
           } else {
             this.errorMessage = 'Order code is invalid';
-            this.stageId = tempStageId;
+            this.pager.swapStage(tempStageId);
           }
         }, (error) => {
           this.inProgress = false;
-          this.stageId = tempStageId;
+          this.pager.swapStage(tempStageId);
           if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
             this.handleAuthError();
           } else {
@@ -668,7 +634,7 @@ export class WidgetComponent implements OnInit {
 
   private startPayment(): void {
     if (this.summary.providerView?.id === 'Fibonatix') {
-      this.nextStage('credit_card', 'Payment info', this.step, true);
+      this.nextStage('credit_card', 'Payment info', this.pager.step, true);
     } else if (this.summary.providerView?.id === 'InstantPay') {
       this.completeInstantpayTransaction(
         this.summary.transactionId,
@@ -693,7 +659,7 @@ export class WidgetComponent implements OnInit {
         this.summary.setPaymentInfo(PaymentInstrument.CreditCard, order?.paymentInfo as string);
         this.iframeContent = preAuthResult.html as string;
         this.inProgress = false;
-        this.nextStage('processing-frame', 'Payment', this.step, false);
+        this.nextStage('processing-frame', 'Payment', this.pager.step, false);
       }, (error) => {
         this.inProgress = false;
         if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
@@ -717,7 +683,7 @@ export class WidgetComponent implements OnInit {
           this.instantpayDetails = preAuthResult.details as string;
         }
         this.inProgress = false;
-        this.nextStage('processing-instantpay', 'Payment', this.step, false);
+        this.nextStage('processing-instantpay', 'Payment', this.pager.step, false);
       }, (error) => {
         this.inProgress = false;
         if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {

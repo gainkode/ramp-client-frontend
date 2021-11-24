@@ -19,7 +19,7 @@
   </div>
 
   <div *ngIf="!widget.embedded" class="__widget-progress-container">
-    <app-widget-progress [step]="step" [title]="title" [progress]="inProgress"></app-widget-progress>
+    <app-widget-progress [step]="pager.step" [title]="pager.title" [progress]="inProgress"></app-widget-progress>
   </div>
   <div *ngIf="widget.embedded && inProgress" class="__widget-embedded-progress-container">
     <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
@@ -28,7 +28,7 @@
   <div class="__widget-data-container">
     <div
       [ngClass]="{'__widget-wizard-container': !widget.embedded, '__widget-wizard-container-single': !widget.embedded && (initState || !showSummary), '__widget-wizard-container-embedded': widget.embedded}"
-      [ngSwitch]="stageId">
+      [ngSwitch]="pager.stageId">
       <!-- Initialization -->
       <app-widget-initialization *ngSwitchCase="'initialization'" [message]="initMessage"></app-widget-initialization>
       <!-- Order details -->
