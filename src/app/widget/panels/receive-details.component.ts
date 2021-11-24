@@ -33,7 +33,7 @@ export class WidgetReceiveDetailsComponent implements OnInit, OnDestroy {
   wallets: WalletItem[] = [];
   currencyInit = false;
   walletInit = false;
-  qrCode = false;
+  qrCode = '';
 
   walletErrorMessages: { [key: string]: string; } = {
     ['required']: 'Wallet is required'
@@ -107,7 +107,7 @@ export class WidgetReceiveDetailsComponent implements OnInit, OnDestroy {
 
   private onCurrencyUpdated(symbol: string): void {
     this.currencyInit = true;
-    this.qrCode = false;
+    this.qrCode = '';
     this.selectedCurrency = this.currencies.find(x => x.id === symbol);
     if (this.selectedCurrency) {
       this.selectedWallet = undefined;
@@ -125,7 +125,7 @@ export class WidgetReceiveDetailsComponent implements OnInit, OnDestroy {
   }
 
   private showQrCode(currency: any, address: any) {
-    this.qrCode = true;
+    this.qrCode = address;
   }
 
   copyAddress(): void {

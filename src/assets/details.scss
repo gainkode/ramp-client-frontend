@@ -189,6 +189,13 @@
     color: $color_pink_500;
 }
 
+.__profile-details-qrcode-block {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5px;
+}
+
 .__profile-details-data-caption {
     margin: 0px 0px;
     font-family: $font_main;

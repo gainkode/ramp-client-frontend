@@ -37,7 +37,7 @@
         <!-- Wallets -->
         <div *ngIf="wallets.length>0">
             <div class="__profile-details-item-block">
-                <div class="__form-separator"></div>
+                <div class="__form-separator-small"></div>
             </div>
             <div class="__form-label-small">
                 Receive to Wallet
@@ -70,11 +70,11 @@
         </div>
 
         <div class="__profile-details-item-block">
-            <div class="__form-separator"></div>
+            <div class="__form-separator-small"></div>
         </div>
     </form>
 
-    <div *ngIf="qrCode">
+    <div *ngIf="qrCode!==''">
         <div class="__widget-data-three-column-grid">
             <div class="__widget-data-three-column-item-one">
                 Address:
@@ -97,11 +97,11 @@
             </div>
         </div>
         <div class="__profile-details-item-block">
-            <div class="__form-separator"></div>
+            <div class="__form-separator-small"></div>
         </div>
         <!-- QR-code -->
-        <div style="display: flex;justify-content: center;align-items: center;">
-            <div style="background-color: black;width: 150px;height: 150px;"></div>
+        <div class="__profile-details-qrcode-block">
+            <qrcode [qrdata]="qrCode" [width]="132" [errorCorrectionLevel]="'M'" [allowEmptyString]="true"></qrcode>
         </div>
     </div>
 

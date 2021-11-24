@@ -38,6 +38,7 @@ import { WidgetPanelComponent } from './widget-panel.component';
 import { RouterModule } from '@angular/router';
 import { ReceiveWidgetComponent } from './receive.component';
 import { WidgetReceiveDetailsComponent } from './panels/receive-details.component';
+import { QRCodeModule } from 'angularx-qrcode';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -66,7 +67,7 @@ export class MaterialModule { }
 
 @NgModule({
     imports: [
-        NgxMaskModule.forRoot(), CommonModule, ClipboardModule, FormsModule, ReactiveFormsModule, RouterModule, MaterialModule],
+        NgxMaskModule.forRoot(), CommonModule, ClipboardModule, FormsModule, ReactiveFormsModule, RouterModule, MaterialModule, QRCodeModule],
     declarations: [
         WidgetComponent, ReceiveWidgetComponent, WidgetPanelComponent, WidgetProgressComponent,
         WidgetSummaryComponent, WidgetRateComponent, WidgetCreditCardComponent,
