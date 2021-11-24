@@ -38,7 +38,7 @@ export class ReceiveWidgetComponent implements OnInit {
     this.initMessage = 'Initialization...';
     this.stageId = 'initialization';
     this.title = 'Initialization';
-    this.loadUserWallets();
+    this.loadCurrencyData();
   }
 
   ngOnDestroy(): void {
@@ -55,34 +55,9 @@ export class ReceiveWidgetComponent implements OnInit {
     this.changeDetector.detectChanges();
   }
 
-  loadUserWallets(): void {
-    this.errorMessage = '';
-    this.inProgress = true;
-    const walletData = this.profileService.getMyWallets([]);
-    if (walletData === null) {
-      this.errorMessage = this.errorHandler.getRejectedCookieMessage();
-    } else {
-      this.pSubscriptions.add(
-        walletData.valueChanges.subscribe(({ data }) => {
-          const dataList = data.myWallets as AssetAddressShortListResult;
-          if (dataList !== null) {
-            const walletCount = dataList?.count ?? 0;
-            if (walletCount > 0) {
-              this.userWallets = dataList?.list?.map((val) => new WalletItem(val, '', undefined)) as WalletItem[];
-            }
-          }
-          this.loadCurrencyData();
-        }, (error) => {
-          this.inProgress = false;
-          this.stageId = 'receive_details';
-          this.title = 'Receive details';
-        })
-      );
-    }
-  }
-
   private loadCurrencyData(): void {
     this.cryptoList = [];
+    this.inProgress = true;
     const currencyData = this.commonService.getSettingsCurrency();
     if (currencyData === null) {
       this.errorMessage = this.errorHandler.getRejectedCookieMessage();

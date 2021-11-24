@@ -1,11 +1,11 @@
 <div class="__widget-data-box">
     <form [formGroup]="dataForm">
         <!-- Currency -->
-        <div class="__form-label">
+        <div class="__form-label-small">
             Select coin
         </div>
-        <div class="__profile-details-item-block">
-            <div class="__form-text-border">
+        <div class="__profile-details-item-block __profile-details-item-activated-block">
+            <div class="__form-text-border __profile-details-item-active-block">
                 <mat-select formControlName="currency" style="margin: 8px 0px 0px 0px;"
                     placeholder="Select coin from your list">
                     <mat-select-trigger>
@@ -26,6 +26,7 @@
                     </mat-option>
                 </mat-select>
             </div>
+            <div *ngIf="inProgress" class="__profile-details-item-active-block-disabled"></div>
         </div>
         <div class="__profile-details-item-block">
             <div *ngIf="!currencyField?.valid && currencyInit" class="__form-assist __form-assist-error">
@@ -33,13 +34,12 @@
             </div>
         </div>
 
-        <div class="__profile-details-item-block">
-            <div class="__form-separator"></div>
-        </div>
-
         <!-- Wallets -->
         <div *ngIf="wallets.length>0">
-            <div class="__form-label">
+            <div class="__profile-details-item-block">
+                <div class="__form-separator"></div>
+            </div>
+            <div class="__form-label-small">
                 Receive to Wallet
             </div>
             <div class="__profile-details-item-block">
@@ -103,5 +103,9 @@
         <div style="display: flex;justify-content: center;align-items: center;">
             <div style="background-color: black;width: 150px;height: 150px;"></div>
         </div>
+    </div>
+
+    <div class="__widget-data-error">
+        {{errorMessage}}
     </div>
 </div>

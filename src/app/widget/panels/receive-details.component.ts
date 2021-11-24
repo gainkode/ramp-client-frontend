@@ -1,10 +1,13 @@
 import { Clipboard } from '@angular/cdk/clipboard';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { AssetAddressShortListResult } from 'src/app/model/generated-models';
 import { CurrencyView } from 'src/app/model/payment.model';
 import { WalletItem } from 'src/app/model/wallet.model';
 import { AuthService } from 'src/app/services/auth.service';
+import { ErrorService } from 'src/app/services/error.service';
+import { ProfileDataService } from 'src/app/services/profile.service';
 
 @Component({
   selector: 'app-widget-receive-details',
@@ -13,17 +16,21 @@ import { AuthService } from 'src/app/services/auth.service';
     '../../../assets/payment.scss',
     '../../../assets/button.scss',
     '../../../assets/text-control.scss',
-    '../../../assets/profile.scss'
+    '../../../assets/profile.scss',
+    '../../../assets/details.scss'
   ]
 })
 export class WidgetReceiveDetailsComponent implements OnInit, OnDestroy {
-  @Input() wallets: WalletItem[] = [];
   @Input() currencies: CurrencyView[] = [];
+  @Output() onProgress = new EventEmitter<boolean>();
 
   private pSubscriptions: Subscription = new Subscription();
 
+  errorMessage = '';
+  inProgress = false;
   selectedCurrency: CurrencyView | undefined = undefined;
   selectedWallet: WalletItem | undefined = undefined;
+  wallets: WalletItem[] = [];
   currencyInit = false;
   walletInit = false;
   qrCode = false;
@@ -48,7 +55,9 @@ export class WidgetReceiveDetailsComponent implements OnInit, OnDestroy {
   constructor(
     private clipboard: Clipboard,
     private formBuilder: FormBuilder,
-    private auth: AuthService) { }
+    private auth: AuthService,
+    private profileService: ProfileDataService,
+    private errorHandler: ErrorService) { }
 
   ngOnInit(): void {
     this.pSubscriptions.add(this.currencyField?.valueChanges.subscribe(val => this.onCurrencyUpdated(val)));
@@ -61,12 +70,49 @@ export class WidgetReceiveDetailsComponent implements OnInit, OnDestroy {
     this.pSubscriptions.unsubscribe();
   }
 
+  private loadUserWallets(symbol: string): void {
+    this.errorMessage = '';
+    this.inProgress = true;
+    this.onProgress.emit(this.inProgress);
+    this.wallets = [];
+    const walletData = this.profileService.getMyWallets([symbol]);
+    if (walletData === null) {
+      this.errorMessage = this.errorHandler.getRejectedCookieMessage();
+    } else {
+      this.pSubscriptions.add(
+        walletData.valueChanges.subscribe(({ data }) => {
+          this.inProgress = false;
+          this.onProgress.emit(this.inProgress);
+          const dataList = data.myWallets as AssetAddressShortListResult;
+          if (dataList !== null) {
+            const walletCount = dataList?.count ?? 0;
+            if (walletCount > 0) {
+              this.wallets = dataList?.list?.map((val) => new WalletItem(val, '', undefined)) as WalletItem[];
+              this.walletInit = false;
+              if (this.wallets.length === 1) {
+                this.walletField?.setValue(this.wallets[0].address);
+              }
+            } else {
+              this.errorMessage = `No wallets found for ${symbol}`;
+            }
+          }
+        }, (error) => {
+          this.inProgress = false;
+          this.onProgress.emit(this.inProgress);
+          this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load wallets');
+        })
+      );
+    }
+  }
+
   private onCurrencyUpdated(symbol: string): void {
     this.currencyInit = true;
     this.qrCode = false;
     this.selectedCurrency = this.currencies.find(x => x.id === symbol);
     if (this.selectedCurrency) {
-      //load wallets here
+      this.selectedWallet = undefined;
+      this.walletField?.setValue('');
+      this.loadUserWallets(symbol);
     }
   }
 
