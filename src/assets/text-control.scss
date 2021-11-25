@@ -29,7 +29,7 @@
 }
 
 .__form-assist {
-    display: block;
+    display: flex;
     margin-left: 16px;
     font-family: $font_main;
     font-style: normal;
@@ -45,6 +45,13 @@
 
 .__form-assist-error {
     color: $color_pink_500;
+}
+
+.__form-assist-link {
+    margin: 0px 4px;
+    font-weight: 500;
+    color: $color_main_blue_800;
+    cursor: pointer;
 }
 
 .__widget-checkout {
@@ -501,6 +508,11 @@ input.__form-edit-box:focus {
     font-size: 14px;
     line-height: 28px;
     color: $color_purple_900_text;
+}
+
+.__form-combo-item-default {
+    font-style: italic;
+    color: $color_purple_500;
 }
 
 .__form-combo-item-text {

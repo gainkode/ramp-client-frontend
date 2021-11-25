@@ -103,6 +103,7 @@ export class ContactItem {
   displayName = '';
   created = '';
   asset = '';
+  address = '';
   sent = 4200;
   received = 0.0042;
   lastTransactionDate = '16-12-2020';
@@ -111,12 +112,13 @@ export class ContactItem {
   private pIconUrl = '';
   
   constructor(data: UserContact | null) {
-    this.id = data?.userContactId as string;
-    this.userId = data?.userId as string;
-    this.contactEmail = data?.contactEmail as string;
-    this.displayName = data?.displayName as string;
+    this.id = data?.userContactId ?? '';
+    this.userId = data?.userId ?? '';
+    this.contactEmail = data?.contactEmail ?? '';
+    this.displayName = data?.displayName ?? '';
+    this.address = data?.address ?? '';
     const datepipe: DatePipe = new DatePipe('en-US');
-    this.created = datepipe.transform(data?.created, 'dd-MM-YYYY HH:mm:ss') as string;
+    this.created = datepipe.transform(data?.created, 'dd-MM-YYYY HH:mm:ss') ?? '';
     this.asset = data?.assetId ?? '';
     if (this.asset !== '') {
       this.pIconUrl = `assets/svg-crypto/${this.asset.toLowerCase()}.svg`;

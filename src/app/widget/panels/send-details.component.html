@@ -1,0 +1,107 @@
+<div class="__widget-data-box">
+    <form [formGroup]="dataForm" (ngSubmit)="onSubmit()">
+        <!-- Send -->
+        <app-form-finance-combo [label]="'Amount to send'" [placeholder]="'...'" [boxFieldName]="'amount'"
+            [boxField]="amountField" [comboField]="currencyField" [comboFieldName]="'currency'" [comboList]="currencies"
+            [errorMessages]="amountErrorMessages" [active]="!inProgress" [separator]="false">
+        </app-form-finance-combo>
+        <div *ngIf="zeroAmount" class="__form-assist __form-assist-error">
+            Amount must be greater than zero
+        </div>
+        <div *ngIf="amountField?.valid && !zeroAmount" class="__form-assist __form-assist-disabled">
+            {{fiatAmount}}
+        </div>
+
+        <!-- Wallets -->
+        <div *ngIf="wallets.length>0">
+            <div class="__profile-details-item-block">
+                <div class="__form-separator"></div>
+            </div>
+            <div class="__form-label">
+                Send from Wallet
+            </div>
+            <div class="__profile-details-item-block">
+                <div class="__form-text-border">
+                    <mat-select formControlName="wallet" style="margin: 6px 0px 0px 0px;" placeholder="...">
+                        <mat-select-trigger>
+                            <div class="__form-combo-item-text">
+                                {{selectedWallet?.name}}
+                            </div>
+                        </mat-select-trigger>
+                        <mat-option *ngFor="let item of wallets" [value]="item.address" style="height: 32px;">
+                            <div class="__form-combo-item">
+                                {{item.name}}
+                            </div>
+                        </mat-option>
+                    </mat-select>
+                </div>
+            </div>
+            <div class="__profile-details-item-block">
+                <div *ngIf="walletInit && !walletField?.valid" class="__form-assist __form-assist-error">
+                    Wallet is required
+                </div>
+                <div *ngIf="selectedWallet" class="__form-assist">
+                    Available in the wallet: {{selectedWallet.total}}
+                    <span *ngIf="selectedWallet.total>0" class="__form-assist __form-assist-link"
+                        (click)="sendAll()">send all</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contacts -->
+        <div *ngIf="contacts.length>0">
+            <div class="__profile-details-item-block">
+                <div class="__form-separator"></div>
+            </div>
+            <div class="__form-label">
+                Send to Contact
+            </div>
+            <div class="__profile-details-item-block">
+                <div class="__form-text-border">
+                    <mat-select formControlName="contact" style="margin: 6px 0px 0px 0px;" placeholder="...">
+                        <mat-select-trigger>
+                            <div class="__form-combo-item-text">
+                                {{selectedContact?.displayName}}
+                            </div>
+                        </mat-select-trigger>
+                        <mat-option *ngFor="let item of contacts" [value]="item.id" style="height: 32px;">
+                            <div *ngIf="item.id===''" class="__form-combo-item __form-combo-item-default">
+                                No contact (type address to receive)
+                            </div>
+                            <div *ngIf="item.id!==''" class="__form-combo-item">
+                                {{item.displayName}}
+                            </div>
+                        </mat-option>
+                    </mat-select>
+                </div>
+            </div>
+            <div class="__profile-details-item-block">
+                <div *ngIf="contactInit && !contactField?.valid" class="__form-assist __form-assist-error">
+                    Contact is required
+                </div>
+            </div>
+        </div>
+
+        <!-- Wallet address -->
+        <div *ngIf="contacts.length===0 || selectedContact?.id==='' || !selectedContact">
+            <div class="__profile-details-item-block">
+                <div class="__form-separator"></div>
+            </div>
+            <app-form-textbox [label]="'Send to New address'" [maxlength]="50" formControlName="address"
+                [errorMessages]="addressErrorMessages" [placeholder]="'...'" [separator]="false">
+            </app-form-textbox>
+            <div *ngIf="addressField?.hasError('walletAddress')" class="__form-assist __form-assist-error">
+                Wallet address is not valid
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="__widget-buttons-area">
+            <button class="__main-button" type="submit" [disabled]="!dataForm?.valid && !zeroAmount">send</button>
+        </div>
+    </form>
+
+    <div class="__widget-data-error">
+        {{errorMessage}}
+    </div>
+</div>

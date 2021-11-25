@@ -106,7 +106,6 @@ export class PersonalContactListComponent implements OnDestroy, AfterViewInit {
             const userFiat = this.auth.user?.defaultFiatCurrency ?? 'EUR';
             this.pContactsSubscription = contactsData.valueChanges.subscribe(({ data }) => {
                 const contactsItems = data.myContacts as UserContactListResult;
-                //const contactsItems = this.getFakes();
                 if (contactsItems) {
                     this.contactCount = contactsItems?.count as number;
                     if (this.contactCount > 0) {
@@ -131,22 +130,6 @@ export class PersonalContactListComponent implements OnDestroy, AfterViewInit {
                 this.onDataLoaded.emit(false);
             });
         }
-    }
-
-    private getFakes(): UserContactListResult {
-        return {
-            count: 1,
-            list: [
-                {
-                    address: 'nvsdnDcvewThGTYf4ghwenovb9j6Hir4',
-                    assetId: 'BTC',
-                    contactEmail: 'mister@twister.com',
-                    displayName: 'Mister Twister',
-                    created: new Date(),
-                    userContactId: 'id'
-                }
-            ]
-        } as UserContactListResult;
     }
 
     private refresh(): void {
