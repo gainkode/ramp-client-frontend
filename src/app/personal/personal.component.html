@@ -121,7 +121,7 @@
                 </app-embedded-widget>
                 <app-receive-widget *ngIf="selectedPaymentType===WIDGET_TYPE.Receive">
                 </app-receive-widget>
-                <app-send-widget *ngIf="selectedPaymentType===WIDGET_TYPE.Send">
+                <app-send-widget *ngIf="selectedPaymentType===WIDGET_TYPE.Send" (onComplete)="widgetComplete($event)">
                 </app-send-widget>
             </div>
             <div class="__profile-payment-footer">

@@ -195,7 +195,7 @@ export class PaymentDataService {
     currencyToSpend: string,
     currencyToReceive: string,
     amount: number,
-    instrument: PaymentInstrument,
+    instrument: PaymentInstrument | undefined,
     providerName: string,
     userParamsId: string,
     walletAddress: string): Observable<any> {

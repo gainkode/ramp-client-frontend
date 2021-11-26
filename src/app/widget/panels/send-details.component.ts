@@ -1,7 +1,8 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { find } from 'rxjs/operators';
 import { AssetAddressShortListResult, TransactionType, UserContact, UserContactListResult } from 'src/app/model/generated-models';
 import { CheckoutSummary, CurrencyView } from 'src/app/model/payment.model';
 import { ContactItem } from 'src/app/model/user.model';
@@ -22,7 +23,7 @@ import { WalletValidator } from 'src/app/utils/wallet.validator';
     '../../../assets/profile.scss'
   ]
 })
-export class WidgetSendDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
+export class WidgetSendDetailsComponent implements OnInit, OnDestroy {
   @Input() errorMessage = '';
   @Input() currencies: CurrencyView[] = [];
   @Input() set withdrawalRate(val: number | undefined) {
@@ -34,9 +35,8 @@ export class WidgetSendDetailsComponent implements OnInit, OnDestroy, AfterViewI
   @Output() onProgress = new EventEmitter<boolean>();
   @Output() onDataUpdated = new EventEmitter<CheckoutSummary>();
   @Output() onWalletAddressUpdated = new EventEmitter<string | undefined>();
-  @Output() onComplete = new EventEmitter();
+  @Output() onComplete = new EventEmitter<CheckoutSummary>();
 
-  private pInitState = true;
   private pSubscriptions: Subscription = new Subscription();
   private pWithdrawalRate: number | undefined = undefined;
   private pNumberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
@@ -120,10 +120,6 @@ export class WidgetSendDetailsComponent implements OnInit, OnDestroy, AfterViewI
     this.currencyField?.setValue(this.auth.user?.defaultCryptoCurrency);
   }
 
-  ngAfterViewInit(): void {
-    this.pInitState = false;
-  }
-
   ngOnDestroy(): void {
     this.pSubscriptions.unsubscribe();
   }
@@ -155,7 +151,7 @@ export class WidgetSendDetailsComponent implements OnInit, OnDestroy, AfterViewI
           if (this.wallets.length > 0) {
             this.loadContacts(symbol);
             if (this.wallets.length === 1) {
-              this.walletField?.setValue(this.wallets[0].address);
+              this.walletField?.setValue(this.wallets[0].id);
             }
           } else {
             this.errorMessage = `No wallets found for ${symbol}`;
@@ -168,7 +164,7 @@ export class WidgetSendDetailsComponent implements OnInit, OnDestroy, AfterViewI
           if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
             this.router.navigateByUrl('/');
           } else {
-            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load currencies');
+            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load wallets');
           }
         })
       );
@@ -215,7 +211,7 @@ export class WidgetSendDetailsComponent implements OnInit, OnDestroy, AfterViewI
           this.inProgress = false;
           this.onProgress.emit(this.inProgress);
           if (this.auth.token !== '') {
-            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load wallets');
+            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load contacts');
           } else {
             this.router.navigateByUrl('/');
           }
@@ -224,20 +220,19 @@ export class WidgetSendDetailsComponent implements OnInit, OnDestroy, AfterViewI
     }
   }
 
-  private sendData(send: number | undefined, receive: number | undefined): void {
-    if (this.pInitState === false) {
-      const data = new CheckoutSummary();
-      data.amountFrom = send;
-      if (this.currencyField?.valid) {
-        data.currencyFrom = this.currencyField?.value;
-        data.amountFromPrecision = this.currentCurrency?.precision ?? 2;
-      }
-      data.transactionType = TransactionType.Transfer;
-      if (this.walletField?.valid) {
-        data.address = this.walletField?.value;
-      }
-      this.onDataUpdated.emit(data);
+  private sendData(): void {
+    const data = new CheckoutSummary();
+    if (this.amountField?.valid) {
+      data.amountFrom = parseFloat(this.amountField?.value);
+    } else {
+      data.amountFrom = undefined;
     }
+    if (this.currencyField?.valid) {
+      data.currencyFrom = this.currencyField?.value;
+      console.log('Precision', this.currentCurrency?.precision);
+      data.amountFromPrecision = this.currentCurrency?.precision ?? 2;
+    }
+    this.onDataUpdated.emit(data);
   }
 
   private setAmountValidators(): void {
@@ -245,13 +240,17 @@ export class WidgetSendDetailsComponent implements OnInit, OnDestroy, AfterViewI
     this.amountField?.setValidators([
       Validators.required,
       Validators.pattern(this.pNumberPattern),
-      Validators.max(this.currentCurrency?.minAmount ?? 0),
+      Validators.max(this.selectedWallet?.total ?? 0),
     ]);
     this.amountField?.updateValueAndValidity();
   }
 
   private onCurrencyUpdated(currency: string): void {
     if (currency && currency !== '' && currency !== this.currentSymbol) {
+      this.currentCurrency = this.currencies.find(x => x.id === currency);
+      if (this.zeroAmount === false) {
+        this.sendData();
+      }
       this.currentSymbol = currency;
       this.loadUserWallets(currency);
     }
@@ -263,11 +262,14 @@ export class WidgetSendDetailsComponent implements OnInit, OnDestroy, AfterViewI
     } else {
       this.zeroAmount = false;
     }
+    this.updateCurrentAmounts();
   }
 
   private onWalletUpdated(val: string): void {
     this.walletInit = true;
-    this.selectedWallet = this.wallets.find(x => x.address === val);
+    console.log(val);
+    console.log(this.wallets);
+    this.selectedWallet = this.wallets.find(x => x.id === val);
     this.setAmountValidators();
   }
 
@@ -290,7 +292,13 @@ export class WidgetSendDetailsComponent implements OnInit, OnDestroy, AfterViewI
 
   onSubmit(): void {
     if (this.dataForm.valid) {
-      this.onComplete.emit();
+      const data = new CheckoutSummary();
+      data.amountFrom = parseFloat(this.amountField?.value);
+      data.amountFromPrecision = this.currentCurrency?.precision ?? 2;
+      data.currencyFrom = this.currencyField?.value;
+      data.address = this.addressField?.value;
+      data.vaultId = this.walletField?.value;
+      this.onComplete.emit(data);
     }
   }
 }

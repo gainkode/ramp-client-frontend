@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@ang
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { PaymentInstrument, Rate, SettingsCurrencyWithDefaults, TransactionShort, TransactionSource, TransactionType } from 'src/app/model/generated-models';
-import { CheckoutSummary, CurrencyView, PaymentCompleteDetails } from 'src/app/model/payment.model';
+import { CheckoutSummary, CurrencyView, PaymentCompleteDetails, PaymentWidgetType } from 'src/app/model/payment.model';
 import { ErrorService } from 'src/app/services/error.service';
 import { PaymentDataService } from 'src/app/services/payment.service';
 import { ExchangeRateService } from 'src/app/services/rate.service';
@@ -145,67 +145,54 @@ export class SendWidgetComponent implements OnInit {
     this.summary.initialized = true;
     this.summary.fee = 0;
     const amountFromTemp = (data.amountFrom) ? data.amountFrom?.toFixed(8) : undefined;
-    this.summary.amountFrom = (amountFromTemp) ? parseFloat(amountFromTemp) : undefined;
+    const amountFromValue = (amountFromTemp) ? parseFloat(amountFromTemp) : undefined;
+    const amountChanged = (amountFromValue !== this.summary.amountFrom);
+    this.summary.amountFrom = amountFromValue;
     this.summary.amountFromPrecision = data.amountFromPrecision;
     this.summary.amountToPrecision = data.amountToPrecision;
     const currencyFromChanged = (this.summary.currencyFrom !== data.currencyFrom);
     this.summary.currencyFrom = data.currencyFrom;
-    if (currencyFromChanged) {
+    if (currencyFromChanged || amountChanged) {
       this.exhangeRate.setCurrency(this.summary.currencyFrom, this.summary.currencyTo, TransactionType.Withdrawal);
       this.exhangeRate.update();
     }
   }
 
-  orderWalletChanged(data: string | undefined): void {
-    this.summary.address = data ?? '';
-  }
-
-  orderDetailsComplete(): void {
-    this.desclaimerNext();
+  orderDetailsComplete(data: CheckoutSummary): void {
+    this.summary.amountFrom = data.amountFrom;
+    this.summary.vaultId = data.vaultId;
+    this.summary.address = data.address;
+    this.createTransaction();
   }
   // =======================
 
-  // == Disclaimer =========
-  desclaimerBack(): void {
-    this.stageBack();
-  }
-
-  desclaimerNext(): void {
-    this.summary.agreementChecked = true;
-  }
-  // ================
-
-  private createTransaction(providerId: string, instrument: PaymentInstrument): void {
+  private createTransaction(): void {
     this.errorMessage = '';
     this.inProgress = true;
     const tempStageId = this.pager.swapStage('initialization');
     this.initMessage = 'Processing...';
     if (this.summary) {
-      let destination = this.summary.address;
       this.pSubscriptions.add(
         this.dataService.createQuickCheckout(
-          this.summary.transactionType,
+          TransactionType.Transfer,
           TransactionSource.Wallet,
-          '',
+          this.summary.vaultId,
           this.summary.currencyFrom,
-          this.summary.currencyTo,
+          this.summary.currencyFrom,
           this.summary.amountFrom ?? 0,
-          instrument,
-          providerId,
+          undefined,
           '',
-          destination
+          '',
+          this.summary.address
         ).subscribe(({ data }) => {
           const order = data.createTransaction as TransactionShort;
           this.inProgress = false;
           if (order.code) {
-            this.summary.instrument = instrument;
-            this.summary.orderId = order.code as string;
-            this.summary.fee = order.feeFiat as number ?? 0;
-            this.summary.feeMinFiat = order.feeMinFiat as number ?? 0;
-            this.summary.feePercent = order.feePercent as number ?? 0;
-            this.summary.networkFee = order.approxNetworkFee ?? 0;
-            this.summary.transactionDate = new Date().toLocaleString();
-            this.summary.transactionId = order.transactionId as string;
+            const details = new PaymentCompleteDetails();
+            details.paymentType = PaymentWidgetType.Send;
+            details.amount = parseFloat(this.summary.amountFrom?.toFixed(this.summary.amountFromPrecision) ?? '0');
+            details.currency = this.summary.currencyFrom;
+            this.onComplete.emit(details);
           } else {
             this.errorMessage = 'Order code is invalid';
             this.pager.swapStage(tempStageId);

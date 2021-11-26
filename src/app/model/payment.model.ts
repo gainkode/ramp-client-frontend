@@ -297,6 +297,7 @@ export class CheckoutSummary {
     transactionDate = '';
     transactionType: TransactionType = TransactionType.Deposit;
     transactionId = '';
+    vaultId = '';
     status: TransactionStatus = TransactionStatus.Pending;
     card: CardView | undefined = undefined;
     provider: PaymentProvider | undefined = undefined;  // deprecated

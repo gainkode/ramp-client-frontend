@@ -23,6 +23,11 @@ export class PersonalPaymentCompleteComponent implements OnInit {
             if (this.payment) {
                 this.amount = `${this.payment.amount} ${this.payment.currency}`;
             }
+        } else if (this.payment?.paymentType === PaymentWidgetType.Send) {
+            this.title = 'You just sent';
+            if (this.payment) {
+                this.amount = `${this.payment.amount} ${this.payment.currency}`;
+            }
         } else {
             this.title = 'Title initialization';
             this.amount = '';
