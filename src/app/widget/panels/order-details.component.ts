@@ -66,6 +66,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   filteredWallets: WalletItem[] = [];
   walletInit = false;
   addressInit = false;
+  currentTier = '';
   transactionList = QuickCheckoutTransactionTypeList;
 
   emailErrorMessages: { [key: string]: string; } = {
@@ -161,6 +162,11 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     if (this.summary?.initialized) {
       this.currentTransaction = this.summary.transactionType;
       this.transactionField?.setValue(this.summary.transactionType);
+    }
+    if (this.auth.user?.kycTier) {
+      this.currentTier = this.auth.user?.kycTier.name;
+    } else {
+      this.currentTier = '';
     }
     this.setWalletVisible();
     this.currentTransactionName = QuickCheckoutTransactionTypeList.find(x => x.id === this.currentTransaction)?.name ?? this.currentTransaction;
@@ -518,6 +524,10 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     this.sendData(spend, receive);
   }
 
+  showPersonalVerification(): void {
+
+  }
+  
   onSubmit(): void {
     if (this.dataForm.valid) {
       if (this.auth.user) {

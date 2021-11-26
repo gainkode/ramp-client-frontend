@@ -614,7 +614,7 @@ export class WidgetComponent implements OnInit {
             this.summary.networkFee = order.approxNetworkFee ?? 0;
             this.summary.transactionDate = new Date().toLocaleString();
             this.summary.transactionId = order.transactionId as string;
-            this.startPayment();
+            this.getTiers();
           } else {
             this.errorMessage = 'Order code is invalid';
             this.pager.swapStage(tempStageId);
@@ -627,6 +627,39 @@ export class WidgetComponent implements OnInit {
           } else {
             this.errorMessage = this.errorHandler.getError(error.message, 'Unable to register a new transaction');
           }
+        })
+      );
+    }
+  }
+
+  private getTiers(): void {
+    this.errorMessage = '';
+    this.inProgress = true;
+    let amount = 0;
+    let amountCurrency = '';
+    if (this.summary.transactionType === TransactionType.Deposit) {
+      amount = this.summary.amountFrom ?? 0;
+      amountCurrency = this.summary.currencyFrom;
+    } else if (this.summary.transactionType === TransactionType.Withdrawal) {
+      amount = this.summary.amountTo ?? 0;
+      amountCurrency = this.summary.currencyTo;
+    }
+    const tiersData = this.dataService.getAppropriateSettingsKycTiers(amount, amountCurrency, this.widget.source, '');
+    if (tiersData === null) {
+      this.errorMessage = this.errorHandler.getRejectedCookieMessage();
+    } else {
+      this.pSubscriptions.add(
+        tiersData.valueChanges.subscribe(({ data }) => {
+          this.inProgress = false;
+          
+          console.log(data);
+
+          //this.startPayment();
+
+        }, (error) => {
+          this.inProgress = false;
+          this.initData(undefined);
+          this.pager.init('order_details', 'Order details');
         })
       );
     }

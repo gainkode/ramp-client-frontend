@@ -48,6 +48,11 @@ const LOGIN = gql`
                   kycStatus,
                   kycStatusUpdateRequired,
                   kycReviewRejectedType,
+                  kycTier {
+                      name
+                      description
+                      amount
+                  }
                   defaultFiatCurrency,
                   defaultCryptoCurrency
             }
@@ -103,6 +108,11 @@ mutation SocialLogin(
                     kycStatus,
                     kycStatusUpdateRequired,
                     kycReviewRejectedType,
+                    kycTier {
+                      name
+                      description
+                      amount
+                    }
                     defaultFiatCurrency,
                     defaultCryptoCurrency
                 }

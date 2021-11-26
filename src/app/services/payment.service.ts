@@ -3,7 +3,7 @@ import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { EmptyObject } from 'apollo-angular/types';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { PaymentInstrument, PaymentProvider, TransactionSource, TransactionType } from '../model/generated-models';
+import { KycProvider, PaymentInstrument, PaymentProvider, TransactionSource, TransactionType } from '../model/generated-models';
 import { CardView } from '../model/payment.model';
 
 const GET_RATES = gql`
@@ -29,6 +29,46 @@ query GetProviders {
     name
     currencies
     countries_code2
+  }
+}
+`;
+
+const GET_APPROPRIATE_SETTINGS_KYC_TIERS = gql`
+query GetAppropriateSettingsKycTiers(
+  $amount: Float
+  $currency: String
+  $targetKycProvider: KycProvider
+  $source: TransactionSource
+  $widgetId: String
+) {
+  getAppropriateSettingsKycTiers(
+    amount: $amount,
+    currency: $currency,
+    targetKycProvider: $targetKycProvider
+    source: $source
+    widgetId: $widgetId
+  ) {
+    count
+    list {
+      settingsKycTierId
+      name
+      description
+      amount
+      levelId
+      level {
+        settingsKycLevelId
+        name
+        original_level_name
+        original_flow_name
+        description
+        data
+      }
+      requireUserFullName
+      requireUserPhone
+      requireUserBirthday
+      requireUserAddress
+      requireUserFlatNumber
+    }
   }
 }
 `;
@@ -180,6 +220,30 @@ export class PaymentDataService {
       };
       return this.apollo.watchQuery<any>({
         query: GET_RATES,
+        variables: vars,
+        fetchPolicy: 'network-only'
+      });
+    } else {
+      return null;
+    }
+  }
+
+  getAppropriateSettingsKycTiers(
+    amountVal: number,
+    currencyVal: string,
+    sourceVal: TransactionSource,
+    widgetId: string): QueryRef<any, EmptyObject> | null {
+    if (this.apollo.client !== undefined) {
+      const widget = (widgetId !== '') ? widgetId : undefined;
+      const vars = {
+        amount: amountVal,
+        currency: currencyVal,
+        targetKycProvider: KycProvider.SumSub,
+        source: sourceVal,
+        widgetId: widget
+      };
+      return this.apollo.watchQuery<any>({
+        query: GET_APPROPRIATE_SETTINGS_KYC_TIERS,
         variables: vars,
         fetchPolicy: 'network-only'
       });

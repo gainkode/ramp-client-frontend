@@ -432,6 +432,18 @@
     color: $color_purple_900_text;
 }
 
+.__widget-hint-line {
+    margin: 2px 0px;
+    display: flex;
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 14px;
+    color: $color_purple_200;
+    white-space: pre-line;
+}
+
 .__widget-rate-container {
     margin: 8px 0px 18px 0px;
 }

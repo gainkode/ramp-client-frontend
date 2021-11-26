@@ -33,6 +33,19 @@
             [comboList]="spendCurrencyList" [errorMessages]="amountSpendErrorMessages" [separator]="true">
         </app-form-finance-combo>
 
+        <div *ngIf="currentTier!==''">
+            <div class="__widget-hint-line">
+                You current Verification Level is {{currentTier}}.
+            </div>
+            <div class="__widget-hint-line">
+                Increase limitations by upgrading
+            </div>
+            <div class="__widget-hint-line __form-assist-link" (click)="showPersonalVerification()">
+                Account Verification Level
+            </div>
+            <div class="__form-separator-small"></div>
+        </div>
+
         <!-- Receive -->
         <app-form-finance-combo [label]="'Amount to receive'" [placeholder]="'...'" [boxFieldName]="'amountReceive'"
             [boxField]="amountReceiveField" [comboField]="currencyReceiveField" [comboFieldName]="'currencyReceive'"

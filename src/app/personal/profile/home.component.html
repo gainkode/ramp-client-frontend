@@ -2,16 +2,6 @@
     <div style="margin: 24px 0px;">
         <mat-progress-bar *ngIf="loading" color="accent" mode="indeterminate"></mat-progress-bar>
     </div>
-
-
-
-    <div style="color: red;margin: 48px 24px;" *ngIf="errorMessage!==''">
-        {{errorMessage}}
-    </div>
-
-
-
-
     <!-- Balance chart -->
     <app-personal-balance-chart [selectedCurrency]="selectedFiat" [currencies]="fiatCurrencies" [loading]="loading"
         (onCurrencyChanged)="currencyChanged($event)" (onError)="handleError($event)"
