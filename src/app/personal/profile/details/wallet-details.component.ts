@@ -79,11 +79,21 @@ export class PersonalWalletDetailsComponent implements OnDestroy {
     }
 
     receiveStart(): void {
-        
+        const item = new ProfileItemContainer();
+        item.container = ProfileItemContainerType.Wallet;
+        item.action = ProfileItemActionType.Redirect;
+        item.wallet = this.wallet;
+        item.meta = 'receive';
+        this.onComplete.emit(item);
     }
 
     sendStart(): void {
-        
+        const item = new ProfileItemContainer();
+        item.container = ProfileItemContainerType.Wallet;
+        item.action = ProfileItemActionType.Redirect;
+        item.wallet = this.wallet;
+        item.meta = 'send';
+        this.onComplete.emit(item);
     }
 
     requestDeleteWallet(): void {

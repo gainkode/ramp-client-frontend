@@ -23,6 +23,8 @@ import { ProfileDataService } from 'src/app/services/profile.service';
 })
 export class WidgetReceiveDetailsComponent implements OnInit, OnDestroy {
   @Input() currencies: CurrencyView[] = [];
+  @Input() presetCurrency = '';
+  @Input() presetWalletId = '';
   @Output() onProgress = new EventEmitter<boolean>();
 
   private pSubscriptions: Subscription = new Subscription();
@@ -64,7 +66,7 @@ export class WidgetReceiveDetailsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.pSubscriptions.add(this.currencyField?.valueChanges.subscribe(val => this.onCurrencyUpdated(val)));
     this.pSubscriptions.add(this.walletField?.valueChanges.subscribe(val => this.onWalletUpdated(val)));
-    const defaultCrypto = this.auth.user?.defaultCryptoCurrency;
+    const defaultCrypto = (this.presetCurrency === '') ? this.auth.user?.defaultCryptoCurrency : this.presetCurrency;
     this.currencyField?.setValue(defaultCrypto);
   }
 
@@ -91,8 +93,13 @@ export class WidgetReceiveDetailsComponent implements OnInit, OnDestroy {
             if (walletCount > 0) {
               this.wallets = dataList?.list?.map((val) => new WalletItem(val, '', undefined)) as WalletItem[];
               this.walletInit = false;
-              if (this.wallets.length === 1) {
-                this.walletField?.setValue(this.wallets[0].address);
+              if (this.presetWalletId === '') {
+                if (this.wallets.length === 1) {
+                  this.walletField?.setValue(this.wallets[0].address);
+                }
+              } else {
+                const w = this.wallets.find(x => x.id === this.presetWalletId);
+                this.walletField?.setValue(w?.address);
               }
             } else {
               this.errorMessage = `No wallets found for ${symbol}`;

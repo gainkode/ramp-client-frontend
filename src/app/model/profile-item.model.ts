@@ -15,7 +15,8 @@ export enum ProfileItemActionType {
     None = 'None',
     List = 'List',
     Create = 'Create',
-    Remove = 'Remove'
+    Remove = 'Remove',
+    Redirect = 'Redirect'
 }
 
 export class ProfileItemContainer {

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { PaymentInstrument, Rate, SettingsCurrencyWithDefaults, TransactionShort, TransactionSource, TransactionType } from 'src/app/model/generated-models';
@@ -16,6 +16,9 @@ import { WidgetPagerService } from '../services/widget-pager.service';
   styleUrls: ['../../assets/button.scss', '../../assets/payment.scss'],
 })
 export class SendWidgetComponent implements OnInit {
+  @Input() presetContactId = '';
+  @Input() presetWalletId = '';
+  @Input() presetCurrency = '';
   @Output() onComplete = new EventEmitter<PaymentCompleteDetails>();
 
   errorMessage = '';
@@ -91,11 +94,6 @@ export class SendWidgetComponent implements OnInit {
   progressChanged(visible: boolean): void {
     this.inProgress = visible;
     this.changeDetector.detectChanges();
-  }
-
-  private stageBack(): void {
-    this.inProgress = false;
-    this.pager.goBack();
   }
 
   private nextStage(id: string, name: string, stepId: number): void {

@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { find } from 'rxjs/operators';
 import { AssetAddressShortListResult, TransactionType, UserContact, UserContactListResult } from 'src/app/model/generated-models';
 import { CheckoutSummary, CurrencyView } from 'src/app/model/payment.model';
 import { ContactItem } from 'src/app/model/user.model';
@@ -25,10 +24,12 @@ import { WalletValidator } from 'src/app/utils/wallet.validator';
 })
 export class WidgetSendDetailsComponent implements OnInit, OnDestroy {
   @Input() errorMessage = '';
+  @Input() presetContactId = '';
+  @Input() presetWalletId = '';
+  @Input() presetCurrency = '';
   @Input() currencies: CurrencyView[] = [];
   @Input() set withdrawalRate(val: number | undefined) {
     this.pWithdrawalRate = val;
-    console.log('rate', val);
     this.updateCurrentAmounts();
   }
   @Output() onError = new EventEmitter<string>();
@@ -117,7 +118,11 @@ export class WidgetSendDetailsComponent implements OnInit, OnDestroy {
     this.pSubscriptions.add(this.amountField?.valueChanges.subscribe(val => this.onAmountUpdated(val)));
     this.pSubscriptions.add(this.walletField?.valueChanges.subscribe(val => this.onWalletUpdated(val)));
     this.pSubscriptions.add(this.contactField?.valueChanges.subscribe(val => this.onContactUpdated(val)));
-    this.currencyField?.setValue(this.auth.user?.defaultCryptoCurrency);
+    if (this.presetCurrency === '') {
+      this.currencyField?.setValue(this.auth.user?.defaultCryptoCurrency);
+    } else {
+      this.currencyField?.setValue(this.presetCurrency);
+    }
   }
 
   ngOnDestroy(): void {
@@ -150,8 +155,12 @@ export class WidgetSendDetailsComponent implements OnInit, OnDestroy {
           }
           if (this.wallets.length > 0) {
             this.loadContacts(symbol);
-            if (this.wallets.length === 1) {
-              this.walletField?.setValue(this.wallets[0].id);
+            if (this.presetWalletId === '') {
+              if (this.wallets.length === 1) {
+                this.walletField?.setValue(this.wallets[0].id);
+              }
+            } else {
+              this.walletField?.setValue(this.presetWalletId);
             }
           } else {
             this.errorMessage = `No wallets found for ${symbol}`;
@@ -180,7 +189,7 @@ export class WidgetSendDetailsComponent implements OnInit, OnDestroy {
       0,
       1000,
       'displayName',
-      true);
+      false);
     this.contacts = [];
     if (contactsData === null) {
       this.errorMessage = this.errorHandler.getRejectedCookieMessage();
@@ -203,6 +212,9 @@ export class WidgetSendDetailsComponent implements OnInit, OnDestroy {
                 displayName: '...',
                 assetId: symbol
               } as UserContact));
+              if (this.presetContactId !== '') {
+                this.contactField?.setValue(this.presetContactId);
+              }
             }
           }
           this.inProgress = false;
@@ -229,7 +241,6 @@ export class WidgetSendDetailsComponent implements OnInit, OnDestroy {
     }
     if (this.currencyField?.valid) {
       data.currencyFrom = this.currencyField?.value;
-      console.log('Precision', this.currentCurrency?.precision);
       data.amountFromPrecision = this.currentCurrency?.precision ?? 2;
     }
     this.onDataUpdated.emit(data);
@@ -267,8 +278,6 @@ export class WidgetSendDetailsComponent implements OnInit, OnDestroy {
 
   private onWalletUpdated(val: string): void {
     this.walletInit = true;
-    console.log(val);
-    console.log(this.wallets);
     this.selectedWallet = this.wallets.find(x => x.id === val);
     this.setAmountValidators();
   }
@@ -280,7 +289,17 @@ export class WidgetSendDetailsComponent implements OnInit, OnDestroy {
   }
 
   private updateCurrentAmounts(): void {
-    if (this.amountField?.valid && this.pWithdrawalRate) {
+    let valid = this.amountField?.valid;
+    let amountStr = '';
+    if (valid) {
+      amountStr = this.amountField?.value;
+      if (amountStr) {
+        valid = (amountStr !== '');
+      } else {
+        valid = false;
+      }
+    }
+    if (valid && this.pWithdrawalRate) {
       const send = parseFloat(this.amountField?.value);
       const fiat = (send * this.pWithdrawalRate).toFixed(2);
       const defaultFiat = this.auth.user?.defaultFiatCurrency ?? 'EUR';

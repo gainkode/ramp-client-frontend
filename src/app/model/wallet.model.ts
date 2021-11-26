@@ -16,6 +16,7 @@ export class WalletItem {
   private pIconUrl = '';
   private fiat = '';
   private pCurrencyName = '';
+  private pFullName = '';
 
   constructor(data: AssetAddressShort | null, defaultFiat: string, currency: CurrencyView | undefined) {
     if (data) {
@@ -33,8 +34,10 @@ export class WalletItem {
       }
       if (currency) {
         this.pCurrencyName = `${currency.name.toUpperCase()} - ${this.asset}`;
+        this.pFullName = currency.name;
       } else {
         this.pCurrencyName = this.asset;
+        this.pFullName = this.asset;
       }
     }
   }
@@ -54,6 +57,10 @@ export class WalletItem {
 
   get currencyName(): string {
     return this.pCurrencyName;
+  }
+
+  get fullName(): string {
+    return this.pFullName;
   }
 
   setName(n: string): void {

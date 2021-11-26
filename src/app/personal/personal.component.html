@@ -119,9 +119,12 @@
                     *ngIf="selectedPaymentType===WIDGET_TYPE.Buy || selectedPaymentType===WIDGET_TYPE.Sell"
                     [widgetType]="selectedPaymentType" (onComplete)="widgetComplete($event)">
                 </app-embedded-widget>
-                <app-receive-widget *ngIf="selectedPaymentType===WIDGET_TYPE.Receive">
+                <app-receive-widget *ngIf="selectedPaymentType===WIDGET_TYPE.Receive" [presetCurrency]="presetCurrency"
+                    [presetWalletId]="presetWalletId">
                 </app-receive-widget>
-                <app-send-widget *ngIf="selectedPaymentType===WIDGET_TYPE.Send" (onComplete)="widgetComplete($event)">
+                <app-send-widget *ngIf="selectedPaymentType===WIDGET_TYPE.Send" [presetContactId]="presetContactId"
+                    [presetWalletId]="presetWalletId" [presetCurrency]="presetCurrency"
+                    (onComplete)="widgetComplete($event)">
                 </app-send-widget>
             </div>
             <div class="__profile-payment-footer">

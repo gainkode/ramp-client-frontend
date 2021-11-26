@@ -42,6 +42,9 @@ export class PersonalComponent implements OnInit {
     dataPanel: any;
     cryptoList: CurrencyView[] = [];
     paymentCompleteDetails: PaymentCompleteDetails | undefined = undefined;
+    presetContactId = '';
+    presetCurrency = '';
+    presetWalletId = '';
     riskWarningQuoteText = 'The final crypto quote will be based on the asset\'s price at the time of order completion, the final rate will be presented to you in the order confirmation screen.';
     riskWarningNatureText = 'Please note that due to the nature of Crypto currencies, once your order has been submitted we will not be able to reverse it.';
 
@@ -179,11 +182,29 @@ export class PersonalComponent implements OnInit {
                 walletPanel.addWallet(container.wallet);
             } else if (container.action === ProfileItemActionType.Remove) {
                 walletPanel.removeWallet(container.wallet.vault);
+            } else if (container.action === ProfileItemActionType.Redirect) {
+                this.presetCurrency = container.wallet?.asset ?? '';
+                this.presetWalletId = container.wallet?.id ?? '';
+                const meta = container.meta as string;
+                if (meta === 'send') {
+                    this.showPaymentPanel(PaymentWidgetType.Send);
+                } else {
+                    this.showPaymentPanel(PaymentWidgetType.Receive);
+                }
             }
         } else if (container.container === ProfileItemContainerType.Contact) {
             const contactPanel = this.dataPanel as PersonalContactsComponent;
             if (container.action === ProfileItemActionType.Create || container.action === ProfileItemActionType.Remove) {
                 contactPanel.update();
+            } else if (container.action === ProfileItemActionType.Redirect) {
+                this.presetCurrency = container.contact?.asset ?? '';
+                this.presetContactId = container.contact?.id ?? '';
+                const meta = container.meta as string;
+                if (meta === 'send') {
+                    this.showPaymentPanel(PaymentWidgetType.Send);
+                } else {
+                    this.showPaymentPanel(PaymentWidgetType.Receive);
+                }
             }
         }
         this.closeDetails();
@@ -236,6 +257,7 @@ export class PersonalComponent implements OnInit {
     }
 
     showPaymentPanel(paymentId: PaymentWidgetType): void {
+        this.closeDetails();
         this.selectedPaymentType = paymentId;
         if (paymentId === PaymentWidgetType.Buy || paymentId === PaymentWidgetType.Sell) {
             this.paymentPanelTitle = 'BUY or SELL any Crypto Currency using your Bank account directly in a single action!\nIt only takes 2 clicks and you’re done.';

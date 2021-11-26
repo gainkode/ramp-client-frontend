@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { SettingsCurrencyWithDefaults } from 'src/app/model/generated-models';
@@ -13,6 +13,9 @@ import { CommonDataService } from '../services/common-data.service';
   styleUrls: ['../../assets/button.scss', '../../assets/payment.scss'],
 })
 export class ReceiveWidgetComponent implements OnInit {
+  @Input() presetWalletId = '';
+  @Input() presetCurrency = '';
+
   errorMessage = '';
   inProgress = false;
   initState = true;

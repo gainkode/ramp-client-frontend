@@ -75,11 +75,21 @@ export class PersonalContactDetailsComponent implements OnDestroy {
     }
 
     receiveStart(): void {
-        
+        const item = new ProfileItemContainer();
+        item.container = ProfileItemContainerType.Contact;
+        item.action = ProfileItemActionType.Redirect;
+        item.contact = this.contact;
+        item.meta = 'receive';
+        this.onComplete.emit(item);
     }
 
     sendStart(): void {
-        
+        const item = new ProfileItemContainer();
+        item.container = ProfileItemContainerType.Contact;
+        item.action = ProfileItemActionType.Redirect;
+        item.contact = this.contact;
+        item.meta = 'send';
+        this.onComplete.emit(item);
     }
 
     requestDeleteContact(): void {
