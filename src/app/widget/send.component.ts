@@ -173,7 +173,7 @@ export class SendWidgetComponent implements OnInit {
     this.initMessage = 'Processing...';
     if (this.summary) {
       this.pSubscriptions.add(
-        this.dataService.createQuickCheckout(
+        this.dataService.createTransaction(
           TransactionType.Transfer,
           TransactionSource.Wallet,
           this.summary.vaultId,

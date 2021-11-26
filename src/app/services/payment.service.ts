@@ -37,7 +37,7 @@ const GET_APPROPRIATE_SETTINGS_KYC_TIERS = gql`
 query GetAppropriateSettingsKycTiers(
   $amount: Float
   $currency: String
-  $targetKycProvider: KycProvider
+  $targetKycProvider: KycProvider!
   $source: TransactionSource
   $widgetId: String
 ) {
@@ -118,7 +118,19 @@ mutation CreateTransaction(
     feePercent,
     feeMinFiat,
     approxNetworkFee,
-    data
+    data,
+    userTier {
+      name
+      amount
+      originalLevelName
+      originalFlowName
+    },
+    requiredUserTier {
+      name
+      amount
+      originalLevelName
+      originalFlowName
+    }
   }
 }
 `;
@@ -252,7 +264,7 @@ export class PaymentDataService {
     }
   }
 
-  createQuickCheckout(
+  createTransaction(
     transactionType: TransactionType,
     transactionSource: TransactionSource,
     sourceVault: string,

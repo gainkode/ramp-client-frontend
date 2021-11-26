@@ -33,6 +33,7 @@
             [comboList]="spendCurrencyList" [errorMessages]="amountSpendErrorMessages" [separator]="true">
         </app-form-finance-combo>
 
+        <!-- Verification levels -->
         <div *ngIf="currentTier!==''">
             <div class="__widget-hint-line">
                 You current Verification Level is {{currentTier}}.
@@ -89,6 +90,18 @@
                     Wallet is required
                 </div>
             </div>
+        </div>
+
+        <!-- Current Quote -->
+        <div class="__form-separator"></div>
+        <div *ngIf="currentQuote!==''" style="display: flex;flex-direction: row;align-items: center;">
+            <div class="__widget-hint-line">
+                Your Estimated Quote is:&nbsp;&nbsp;&nbsp;
+            </div>
+            <div class="__widget-hint-line __form-assist-accent">
+                {{currentQuote}}
+            </div>
+            <div class="__form-separator-small"></div>
         </div>
 
         <!-- Buttons -->

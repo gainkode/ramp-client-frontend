@@ -587,7 +587,7 @@ export class WidgetComponent implements OnInit {
         destination = this.widget.widgetId;
       }
       this.pSubscriptions.add(
-        this.dataService.createQuickCheckout(
+        this.dataService.createTransaction(
           this.summary.transactionType,
           this.widget.source,
           '',
@@ -603,6 +603,9 @@ export class WidgetComponent implements OnInit {
             this.startNotificationListener();
           }
           const order = data.createTransaction as TransactionShort;
+
+          console.log(order);
+
           this.inProgress = false;
           if (order.code) {
             this.summary.instrument = instrument;
@@ -614,7 +617,7 @@ export class WidgetComponent implements OnInit {
             this.summary.networkFee = order.approxNetworkFee ?? 0;
             this.summary.transactionDate = new Date().toLocaleString();
             this.summary.transactionId = order.transactionId as string;
-            this.getTiers();
+            this.startPayment();
           } else {
             this.errorMessage = 'Order code is invalid';
             this.pager.swapStage(tempStageId);
@@ -651,11 +654,7 @@ export class WidgetComponent implements OnInit {
       this.pSubscriptions.add(
         tiersData.valueChanges.subscribe(({ data }) => {
           this.inProgress = false;
-          
-          console.log(data);
-
           //this.startPayment();
-
         }, (error) => {
           this.inProgress = false;
           this.initData(undefined);
