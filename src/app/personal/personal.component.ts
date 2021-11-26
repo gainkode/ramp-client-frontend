@@ -42,6 +42,8 @@ export class PersonalComponent implements OnInit {
     dataPanel: any;
     cryptoList: CurrencyView[] = [];
     paymentCompleteDetails: PaymentCompleteDetails | undefined = undefined;
+    riskWarningQuoteText = 'The final crypto quote will be based on the asset\'s price at the time of order completion, the final rate will be presented to you in the order confirmation screen.';
+    riskWarningNatureText = 'Please note that due to the nature of Crypto currencies, once your order has been submitted we will not be able to reverse it.';
 
     constructor(
         private auth: AuthService,
@@ -123,10 +125,6 @@ export class PersonalComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.riskWarningText =
-            'The final crypto quote will be based on the asset\'s price at the time of order completion,' +
-            'the final rate will be presented to you in the order confirmation screen.\n' +
-            'Please note that due to the nature of Crypto currencies, once your order has been submitted we will not be able to reverse it.';
         // side menu expanded state
         const expandedVal = localStorage.getItem('sideMenuExpanded');
         this.expandedMenu = (expandedVal === 'true');
@@ -241,12 +239,16 @@ export class PersonalComponent implements OnInit {
         this.selectedPaymentType = paymentId;
         if (paymentId === PaymentWidgetType.Buy || paymentId === PaymentWidgetType.Sell) {
             this.paymentPanelTitle = 'BUY or SELL any Crypto Currency using your Bank account directly in a single action!\nIt only takes 2 clicks and you’re done.';
+            this.riskWarningText = `${this.riskWarningQuoteText}\n${this.riskWarningNatureText}`;
         } else if (paymentId === PaymentWidgetType.Send) {
             this.paymentPanelTitle = 'Send Crypto from your wallet anywhere in one single, easy step!\nSimply add your recepient address to your Contact List, or Insert New Address.';
+            this.riskWarningText = this.riskWarningNatureText;
         } else if (paymentId === PaymentWidgetType.Receive) {
             this.paymentPanelTitle = 'Receive Crypto in your wallet is easy and simple!\nChoose the coin, then wallet to see your deposit wallet address. To aviod coins loss, make sure you use the correct network.';
+            this.riskWarningText = this.riskWarningNatureText;
         } else if (paymentId === PaymentWidgetType.Transfer) {
             this.paymentPanelTitle = 'Express Transfer allowing you with a single action to Purchase & Send Crypto direclty from your Bank account to any address!\nIt only takes 2 clicks and you’re done.';
+            this.riskWarningText = this.riskWarningNatureText;
         }
         this.showPayment = true;
     }
