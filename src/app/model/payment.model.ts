@@ -1,3 +1,4 @@
+import { getCryptoSymbol } from '../utils/utils';
 import { CommonTargetValue } from './common.model';
 import {
     PaymentInstrument, PaymentProvider, TransactionType, TransactionStatus,
@@ -114,7 +115,7 @@ export class CurrencyView {
         this.validateAsSymbol = data.validateAsSymbol as string | null;
         this.fiat = data.fiat as boolean;
         if (!this.fiat) {
-            this.img = `assets/svg-crypto/${data.symbol.toLowerCase()}.svg`;
+            this.img = `assets/svg-crypto/${getCryptoSymbol(data.symbol).toLowerCase()}.svg`;
         }
     }
 }

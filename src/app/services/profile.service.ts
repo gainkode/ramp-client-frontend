@@ -536,6 +536,14 @@ export class ProfileDataService {
   getMyProfit(fiatCurrency: string, selectPeriod: UserBalanceHistoryPeriod): QueryRef<any, EmptyObject> | null {
     if (this.apollo.client !== undefined) {
       const orderFields = [{ orderBy: 'date', desc: true }];
+
+
+      console.log({
+        currencyTo: fiatCurrency,
+        period: selectPeriod
+      });
+
+
       return this.apollo.watchQuery<any>({
         query: GET_MY_PROFIT,
         variables: {

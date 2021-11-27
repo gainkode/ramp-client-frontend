@@ -27,7 +27,7 @@ export class PersonalHomeComponent implements OnInit, OnDestroy {
             this.transactionsPanel.load(new TransactionsFilter());
         }
     }
-    @ViewChild('balamcelist') set balanceList(panel: PersonalBalanceListComponent) {
+    @ViewChild('balancelist') set balanceList(panel: PersonalBalanceListComponent) {
         if (panel) {
             this.balanceListPanel = panel;
             this.balanceListPanel.load(this.currencies, this.selectedFiat);

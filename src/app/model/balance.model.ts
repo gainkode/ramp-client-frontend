@@ -1,5 +1,5 @@
 import { DatePipe } from "@angular/common";
-import { getCurrencySign } from "../utils/utils";
+import { getCryptoSymbol, getCurrencySign } from "../utils/utils";
 import { BalancePerAsset } from "./generated-models";
 
 export class BalancePoint {
@@ -29,6 +29,7 @@ export class BalancePoint {
 
 export class UserBalanceItem {
   private pId = '';
+  private pAsset = '';
   private pCryptoCurrency = '';
   private pFiatSymbol = '';
   private pIconUrl = '';
@@ -60,7 +61,8 @@ export class UserBalanceItem {
     this.pId = data.assetId ?? '';
     this.pCryptoCurrency = cuurencyName;
     this.pFiatSymbol = fiatSymbol;
-    this.pIconUrl = `assets/svg-crypto/${this.pId.toLowerCase()}.svg`;
+    this.pAsset = this.pId;
+    this.pIconUrl = `assets/svg-crypto/${getCryptoSymbol(this.pAsset).toLowerCase()}.svg`;
     this.pFiatPrecision = fiatPrecision;
     this.pBalanceCrypto = data.totalBalance ?? 0;
     this.pBalanceFiat = data.totalBalanceFiat;

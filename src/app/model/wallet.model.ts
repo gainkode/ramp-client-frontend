@@ -1,4 +1,4 @@
-import { getCurrencySign } from "../utils/utils";
+import { getCryptoSymbol, getCurrencySign } from "../utils/utils";
 import { AssetAddressShort } from "./generated-models";
 import { CurrencyView } from "./payment.model";
 
@@ -30,7 +30,7 @@ export class WalletItem {
       this.totalFiat = data.totalFiat ?? 0;
       this.name = data.vaultName ?? '';
       if (this.asset !== '') {
-        this.pIconUrl = `assets/svg-crypto/${this.asset.toLowerCase()}.svg`;
+        this.pIconUrl = `assets/svg-crypto/${getCryptoSymbol(this.asset).toLowerCase()}.svg`;
       }
       if (currency) {
         this.pCurrencyName = `${currency.name.toUpperCase()} - ${this.asset}`;

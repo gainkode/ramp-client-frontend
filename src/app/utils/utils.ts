@@ -45,3 +45,14 @@ export function getCurrencySign(currency: string): string {
     }
     return result;
 }
+
+export function getCryptoSymbol(symbol: string): string {
+    let result = symbol;
+    if (symbol) {
+        if (symbol.toLowerCase().endsWith('_test')) {
+            const p = symbol.toLowerCase().indexOf('_test');
+            result = symbol.substring(0, p);
+        }
+    }
+    return result;
+}

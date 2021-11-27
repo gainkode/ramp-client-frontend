@@ -8,6 +8,7 @@ import {
 import { getCountryByCode2 } from './country-code.model';
 import { CommonTargetValue } from './common.model';
 import { DatePipe } from '@angular/common';
+import { getCryptoSymbol } from '../utils/utils';
 
 export class UserItem {
   id = '';
@@ -121,7 +122,7 @@ export class ContactItem {
     this.created = datepipe.transform(data?.created, 'dd-MM-YYYY HH:mm:ss') ?? '';
     this.asset = data?.assetId ?? '';
     if (this.asset !== '') {
-      this.pIconUrl = `assets/svg-crypto/${this.asset.toLowerCase()}.svg`;
+      this.pIconUrl = `assets/svg-crypto/${getCryptoSymbol(this.asset).toLowerCase()}.svg`;
     }
   }
 
