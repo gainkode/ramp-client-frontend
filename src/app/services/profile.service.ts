@@ -202,7 +202,6 @@ const GET_PROFILE_ME = gql`
       kycReviewRejectedLabels
       kycStatusUpdateRequired
       custodyProvider
-      vaultAccountId
       email
       type
       mode
