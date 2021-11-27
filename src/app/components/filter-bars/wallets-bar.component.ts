@@ -99,14 +99,6 @@ export class WalletsFilterBarComponent implements OnInit, OnDestroy {
                     } as FilterChip);
                 });
             }
-        } else if (chipType === FilterChipType.ZeroBalance) {
-            const zeroBalanceSelected = this.zeroBalanceField?.value;
-            if (zeroBalanceSelected === true) {
-                this.chips.push({
-                    filterType: chipType,
-                    name: 'Zero balance'
-                } as FilterChip);
-            }
         }
     }
 
@@ -115,11 +107,6 @@ export class WalletsFilterBarComponent implements OnInit, OnDestroy {
             const selectedCurrencies = this.currenciesField?.value as string[];
             this.currenciesField?.setValue(selectedCurrencies.filter(x => x !== chip.name));
             this.updateChips(chip.filterType);
-        } else if (chip.filterType === FilterChipType.ZeroBalance) {
-            this.internalLoading = true;
-            this.zeroBalanceField?.setValue(false);
-            this.internalLoading = false;
-            this.onSubmit();
         }
     }
 
