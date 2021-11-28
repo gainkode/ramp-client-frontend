@@ -1,13 +1,13 @@
 import { CommonTargetValue } from './common.model';
 
-export interface ICountryCode {
+export interface Country {
     name: string;
     dial_code: string;
     code2: string;
     code3: string;
 }
 
-export const CountryCodes: Array<ICountryCode> = [
+export const Countries: Array<Country> = [
     {
         name: 'Afghanistan',
         dial_code: '+93',
@@ -1468,36 +1468,36 @@ export const CountryCodes: Array<ICountryCode> = [
     }
 ];
 
-export function getCountry(countryName: string): ICountryCode | null {
+export function getCountry(countryName: string): Country | null {
     if (!countryName) {
         return null;
     }
     const searchText = countryName.toLowerCase();
-    const found = CountryCodes.filter(code => code.name.toLowerCase() === searchText);
+    const found = Countries.filter(code => code.name.toLowerCase() === searchText);
     if (found.length === 1) {
         return found[0];
     }
     return null;
 }
 
-export function getCountryByCode2(code2: string): ICountryCode | null {
+export function getCountryByCode2(code2: string): Country | null {
     if (!code2) {
         return null;
     }
     const searchCode = code2.toUpperCase();
-    const found = CountryCodes.filter(code => code.code2 === searchCode);
+    const found = Countries.filter(code => code.code2 === searchCode);
     if (found.length === 1) {
         return found[0];
     }
     return null;
 }
 
-export function getCountryByCode3(code3: string): ICountryCode | null {
+export function getCountryByCode3(code3: string): Country | null {
     if (!code3) {
         return null;
     }
     const searchCode = code3.toUpperCase();
-    const found = CountryCodes.filter(code => code.code3 === searchCode);
+    const found = Countries.filter(code => code.code3 === searchCode);
     if (found.length === 1) {
         return found[0];
     }
@@ -1512,7 +1512,7 @@ export function getCountryDialCode(countryName: string): string {
     return '';
 }
 
-export const CountryFilterList: CommonTargetValue[] = CountryCodes.map(c => {
+export const CountryFilterList: CommonTargetValue[] = Countries.map(c => {
     const item = new CommonTargetValue();
     item.imgClass = 'country-flag';
     item.imgSource = `assets/svg-country-flags/${c.code2.toLowerCase()}.svg`;

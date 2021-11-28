@@ -1,0 +1,41 @@
+$gutter: 16px;
+
+:host {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.spinner {
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.panels {
+  display: flex;
+  flex-direction: row;
+  margin: -$gutter/2;
+  padding: 24px 16px;
+
+  .column {
+    display: flex;
+    flex-direction: column;
+
+    &:nth-child(1) {
+      flex: 1 1 60%;
+    }
+
+    &:nth-child(2) {
+      flex: 1 1 40%;
+    }
+
+    app-data-card {
+      margin: $gutter/2;
+    }
+
+  }
+}

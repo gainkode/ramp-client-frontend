@@ -1,0 +1,79 @@
+<app-filter-panel [fields]="filterFields" (filter)="handleFilterApplied($event)"></app-filter-panel>
+
+<div *ngIf="!(dashboardService.isLoaded | async)" class="spinner">
+    <mat-spinner diameter="48"></mat-spinner>
+</div>
+<div *ngIf="dashboardService.isLoaded | async" class="panels">
+    <div class="column">
+        <app-data-card
+                title="Total volume in EUR"
+                source="total"
+        ></app-data-card>
+        <app-data-card
+                title="Deposits"
+                source="deposits"
+        ></app-data-card>
+        <app-data-card
+                title="Transfers"
+                source="transfers"
+        ></app-data-card>
+        <app-data-card
+                title="Withdrawals"
+                source="withdrawals"
+        ></app-data-card>
+        <app-data-card
+                title="Exchanges"
+                source="exchanges"
+        ></app-data-card>
+    </div>
+    <div class="column">
+        <app-data-card
+                title="Fees collected"
+                source="fees"
+        ></app-data-card>
+        <app-data-card
+                title="Balances in all eWallets"
+                source="balances"
+        ></app-data-card>
+    </div>
+
+</div>
+
+<!--<div style="padding: 0.5em;">-->
+<!--    <div class="details-editor" *ngIf="errorMessage!==''">-->
+<!--        <div class="form-error-box">-->
+<!--            {{errorMessage}}-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    <div style="margin: 0.5em;">-->
+<!--        <h1>-->
+<!--            Dashboard-->
+<!--        </h1>-->
+<!--        <div *ngIf="inProgress">-->
+<!--            <mat-progress-bar mode="indeterminate"></mat-progress-bar>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    <app-dashboard-filter (update)="loadDashboard($event)"></app-dashboard-filter>-->
+<!--    <div style="display: flex;margin: 0.5em 0;">-->
+<!--        <div style="width: 70%;margin: 0 0.5em 0 0">-->
+<!--            <app-dashboard-total [totals]="stats.totals"></app-dashboard-total>-->
+<!--            <app-dashboard-transactions *ngIf="!stats.deposits.isNull" [transactions]="stats.deposits.details"-->
+<!--                                        title="Deposits">-->
+<!--            </app-dashboard-transactions>-->
+<!--            <app-dashboard-transactions *ngIf="!stats.transfers.isNull" [transactions]="stats.transfers.details"-->
+<!--                                        title="Transfers">-->
+<!--            </app-dashboard-transactions>-->
+<!--            <app-dashboard-transactions *ngIf="!stats.withdrawals.isNull" [transactions]="stats.withdrawals.details"-->
+<!--                                        title="Withdrawals">-->
+<!--            </app-dashboard-transactions>-->
+<!--            <app-dashboard-transactions *ngIf="!stats.exchanges.isNull" [transactions]="stats.exchanges.details"-->
+<!--                                        title="Exchanges">-->
+<!--            </app-dashboard-transactions>-->
+<!--        </div>-->
+<!--        <div style="width: 30%;">-->
+<!--            <app-dashboard-fees [totals]="stats.totals"></app-dashboard-fees>-->
+<!--            <app-dashboard-balances [balances]="stats.balances"></app-dashboard-balances>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->

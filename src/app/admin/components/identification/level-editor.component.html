@@ -1,0 +1,81 @@
+<div class="form-section-title-box">
+    <h1>{{create ? "Create level" : "Change level"}}</h1>
+</div>
+
+<form [formGroup]="levelForm" (ngSubmit)="onSubmit()">
+    <div class="form-element" *ngIf="errorMessage!==''">
+        <div class="form-error-box">
+            {{errorMessage}}
+        </div>
+        <br>
+    </div>
+
+    <!-- Name -->
+    <mat-form-field class="form-element">
+        <mat-label>Level name</mat-label>
+        <input type="text" matInput formControlName="name" maxlength="50" placeholder="Level name" required/>
+        <mat-error *ngIf="this.levelForm.get('name')?.hasError('required')">
+            Please specify a level name
+        </mat-error>
+    </mat-form-field>
+
+    <!-- Description -->
+    <mat-form-field class="form-element">
+        <mat-label>Description</mat-label>
+        <textarea matInput cdkTextareaAutosize #descriptionInput="cdkTextareaAutosize" cdkAutosizeMinRows="1"
+                  formControlName="description" maxlength="500" placeholder="Level description">
+        </textarea>
+    </mat-form-field>
+
+    <!-- User type -->
+    <mat-form-field class="form-element">
+        <mat-label>User type</mat-label>
+        <mat-select formControlName="userType" required>
+            <mat-option *ngFor="let item of userTypes" [value]="item.id">
+                {{item.name}}
+            </mat-option>
+        </mat-select>
+        <mat-error *ngIf="this.levelForm.get('userType')?.hasError('required')">
+            Please specify a user type appropriate for the level
+        </mat-error>
+    </mat-form-field>
+
+    <!-- Level -->
+    <mat-form-field class="form-element">
+        <mat-label>Level value</mat-label>
+        <input type="text" matInput formControlName="level" maxlength="100" placeholder="Level value" required/>
+        <mat-error *ngIf="this.levelForm.get('level')?.hasError('required')">
+            Please specify a level value
+        </mat-error>
+    </mat-form-field>
+
+    <!-- Flow -->
+    <mat-form-field class="form-element">
+        <mat-label>Flow</mat-label>
+        <input type="text" matInput formControlName="flow" maxlength="100" placeholder="Flow" required/>
+        <mat-error *ngIf="this.levelForm.get('flow')?.hasError('required')">
+            Please specify flow
+        </mat-error>
+    </mat-form-field>
+
+    <div class="form-element">
+        <div class="button-form-panel">
+            <div class="button-panel-left">
+                <button class="main-button main-button-accent" type="submit">
+                    SAVE
+                </button>
+            </div>
+            <div *ngIf="create===false" class="button-panel-right">
+                <button class="main-button main-button-warn" type="button" (click)="onDeleteLevel()">
+                    DELETE
+                </button>
+            </div>
+        </div>
+        <br>
+        <div>
+            <button class="main-button main-button-primary" type="button" (click)="onCancel()">
+                CANCEL
+            </button>
+        </div>
+    </div>
+</form>

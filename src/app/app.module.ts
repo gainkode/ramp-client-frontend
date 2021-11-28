@@ -16,7 +16,6 @@ import {
   GoogleLoginProvider, FacebookLoginProvider
 } from 'angularx-social-login';
 import { AuthService } from './services/auth.service';
-import { AdminDataService } from './services/admin-data.service';
 import { ErrorService } from './services/error.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { environment } from 'src/environments/environment';
@@ -59,7 +58,6 @@ import { ExchangeRateService } from './services/rate.service';
       } as SocialAuthServiceConfig
     },
     AuthService,
-    AdminDataService,
     ProfileDataService,
     CommonDataService,
     PaymentDataService,

@@ -1,76 +1,80 @@
-import { Component } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
-import { Event as NavigationEvent } from '@angular/router';
+import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { AdminMenuItems } from '../model/admin-menu-model';
-import { MatSelectionListChange } from '@angular/material/list/selection-list';
-import { User } from '../model/generated-models';
-import { MenuItem } from '../model/common.model';
+import { filter, map, mergeMap, takeUntil, tap } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { LayoutService } from './services/layout.service';
+import { EmptyObject } from 'apollo-angular/types';
+import { Title } from '@angular/platform-browser';
+import { AdminDataService } from './services/admin-data.service';
 
 @Component({
-    templateUrl: 'admin.component.html',
-    styleUrls: ['admin.scss']
+  selector: 'app-admin',
+  templateUrl: 'admin.component.html',
+  styleUrls: ['admin.component.scss']
 })
-export class AdminComponent {
-    user: User | null = null;
-    menuItems: MenuItem[] = AdminMenuItems;
-    selectedMenu = 'dashboard';
-    editMode = false;
-    changeEditModeRef: any;
+export class AdminComponent implements OnInit, OnDestroy {
+  sectionHeader = '';
+  rightPanelTemplate: TemplateRef<any> | null = null;
 
-    constructor(private auth: AuthService, private router: Router) {
-        this.user = auth.user;
-        this.getSectionName();
+  private destroy$ = new Subject();
 
-        this.router.events.subscribe(
-            (event: NavigationEvent): void => {
-                if (event instanceof NavigationEnd) {
-                    this.getSectionName();
-                }
-            }
+  constructor(
+    public layoutService: LayoutService,
+    public adminDataService: AdminDataService,
+    private titleService: Title,
+    private router: Router,
+    private auth: AuthService,
+    private activatedRoute: ActivatedRoute
+  ) {
+  }
+
+  ngOnInit(): void {
+    this.setPageHeader();
+
+    // Observe route changes and update the header accordingly
+    this.router.events
+        .pipe(
+          takeUntil(this.destroy$),
+          filter(event => event instanceof NavigationEnd && this.activatedRoute.outlet === 'primary'),
+          map(() => undefined)
+        )
+        .subscribe(() => {
+            this.setPageHeader();
+          }
         );
+
+    /* region Right panel handling */
+    this.layoutService.rightPanelTemplate$
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(template => {
+          this.rightPanelTemplate = template;
+        });
+
+    /* endregion */
+
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+  }
+
+  handleRightPanelClose(): void {
+    this.layoutService.hideRightPanel();
+  }
+
+  private setPageHeader(): void {
+    let endRoute = this.activatedRoute.snapshot;
+    while (endRoute.firstChild) {
+      endRoute = endRoute.firstChild;
     }
 
-    private getSectionName(): void {
-        const routeTree = this.router.parseUrl(this.router.url);
-        const segments = routeTree.root.children['primary'].segments;
-        if (segments.length > 2) {
-            const path1 = segments[0].path;
-            const path2 = segments[1].path;
-            if (path1 === 'admin' && path2 === 'main') {
-                this.selectedMenu = segments[2].path;
-            }
-        }
-    }
+    let header = endRoute.data?.header;
+    const id = endRoute.params?.id;
+    header = header.replace('{:id}', id);
 
-    menuChanged(e: MatSelectionListChange): void {
-        if (this.editMode === false) {
-            const item = e.options[0].value as MenuItem;
-            this.router.navigateByUrl(item.url);
-        }
-    }
+    this.sectionHeader = header;
+    this.titleService.setTitle(`eWallet | Admin${header ? ' | ' : ''}${header}`);
+  }
 
-    onActivate(component: any): void {
-        this.changeEditModeRef = component.changeEditMode;
-        if (this.changeEditModeRef !== undefined) {
-            this.changeEditModeRef.subscribe((event: any) => {
-                const mode = event as boolean;
-                this.editMode = mode;
-            });
-        }
-    }
-
-    onDeactivate(component: any): void {
-        if (this.changeEditModeRef !== undefined) {
-            this.changeEditModeRef.unsubscribe();
-        }
-    }
-
-    logout(): void {
-        this.auth.logout();
-    }
-
-    getUserMainPage(): string {
-        return this.auth.getUserMainPage();
-    }
 }

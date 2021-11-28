@@ -5,10 +5,10 @@ import { Subscription, Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { CommonTargetValue } from 'src/app/model/common.model';
 import {
-  CountryCodes,
+  Countries,
   getCountry,
   getCountryByCode3,
-  ICountryCode,
+  Country,
 } from 'src/app/model/country-code.model';
 import {
   SettingsCurrencyListResult,
@@ -40,8 +40,8 @@ export class ProfileInfoComponent implements OnInit, OnDestroy {
   address = '';
   countryName = '';
   currencies: CommonTargetValue[] = [];
-  countries: ICountryCode[] = CountryCodes;
-  filteredCountries: Observable<ICountryCode[]> | undefined;
+  countries: Country[] = Countries;
+  filteredCountries: Observable<Country[]> | undefined;
 
   userForm = this.formBuilder.group({
     firstName: ['', { validators: [Validators.required], updateOn: 'change' }],
@@ -75,7 +75,7 @@ export class ProfileInfoComponent implements OnInit, OnDestroy {
     }
   }
 
-  private filterCountries(value: string | ICountryCode): ICountryCode[] {
+  private filterCountries(value: string | Country): Country[] {
     let filterValue = '';
     if (value) {
       filterValue =

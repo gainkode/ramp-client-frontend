@@ -1,0 +1,1264 @@
+import { Injectable } from '@angular/core';
+import { Apollo, gql, QueryRef, WatchQueryOptions } from 'apollo-angular';
+import { EmptyObject } from 'apollo-angular/types';
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
+import { CostScheme } from '../../model/cost-scheme.model';
+import { FeeScheme } from '../../model/fee-scheme.model';
+import {
+  AssetAddressListResult,
+  CountryCodeType,
+  DashboardStats,
+  QueryGetDashboardStatsArgs, QueryGetSettingsFeeArgs,
+  QueryGetTransactionsArgs,
+  QueryGetUsersArgs,
+  QueryGetWalletsArgs,
+  QueryGetWidgetsArgs,
+  SettingsFeeListResult,
+  TransactionListResult,
+  TransactionSource,
+  User,
+  UserListResult,
+  UserType,
+  Widget,
+  WidgetListResult
+} from '../../model/generated-models';
+import { KycLevel, KycScheme } from '../../model/identification.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { TransactionItemDeprecated } from '../../model/transaction.model';
+import { catchError, finalize, map, tap } from 'rxjs/operators';
+import { ApolloQueryResult } from '@apollo/client/core';
+import { ErrorService } from '../../services/error.service';
+import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
+import { Filter } from '../model/filter.model';
+import { UserItem } from '../../model/user.model';
+import { Wallet } from '../model/wallet.model';
+
+/* region queries */
+
+const GET_DASHBOARD_STATS = gql`
+  query GetDashboardStats(
+    $userIdOnly: [String!],
+    $widgetIdOnly: [String!],
+    $sourcesOnly: [TransactionSource!],
+    $countriesOnly: [String!],
+    $countryCodeType: CountryCodeType,
+    $accountTypesOnly: [UserType!]
+  ) {
+    getDashboardStats(
+      userIdOnly: $userIdOnly
+      widgetIdOnly: $widgetIdOnly
+      sourcesOnly: $sourcesOnly
+      countriesOnly: $countriesOnly
+      countryCodeType: $countryCodeType
+      accountTypesOnly: $accountTypesOnly
+    ) {
+      deposits {
+        approved {count, volume},
+        declined {count, volume},
+        abandoned {count, volume},
+        inProcess {count, volume},
+        fee {count, volume},
+        ratio,
+        byInstruments {
+          instrument,
+          approved {count, volume},
+          declined {count, volume},
+          abandoned {count, volume},
+          inProcess {count, volume},
+          fee {count, volume},
+          ratio
+        }
+      }
+      transfers {
+        approved {count, volume},
+        declined {count, volume},
+        abandoned {count, volume},
+        inProcess {count, volume},
+        fee {count, volume},
+        ratio,
+        toMerchant {
+          instrument,
+          approved {count, volume},
+          declined {count, volume},
+          abandoned {count, volume},
+          inProcess {count, volume},
+          fee {count, volume}
+          ratio
+        },
+        toCustomer {
+          instrument,
+          approved {count, volume},
+          declined {count, volume},
+          abandoned {count, volume},
+          inProcess {count, volume},
+          fee {count, volume},
+          ratio
+        }
+      }
+      withdrawals {
+        approved {count, volume},
+        declined {count, volume},
+        abandoned {count, volume},
+        inProcess {count, volume},
+        fee {count, volume},
+        ratio,
+        byInstruments {
+          instrument,
+          ratio,
+          approved {count, volume},
+          declined {count, volume},
+          abandoned {count, volume},
+          inProcess {count, volume},
+          fee {count, volume}
+        }
+      }
+      exchanges {
+        approved {count, volume},
+        declined {count, volume},
+        abandoned {count, volume},
+        inProcess {count, volume},
+        ratio,
+        toMerchant {
+          instrument,
+          ratio,
+          approved {count, volume},
+          declined {count, volume},
+          abandoned {count, volume},
+          inProcess {count, volume},
+          fee {count, volume}
+        },
+        toCustomer {
+          instrument,
+          ratio,
+          approved {count, volume},
+          declined {count, volume},
+          abandoned {count, volume},
+          inProcess {count, volume},
+          fee {count, volume}
+        },
+        fee {count, volume}
+      }
+      balances {
+        currency,
+        volume {count, volume}
+      }
+    }
+  }
+`;
+
+const GET_FEE_SETTINGS = gql`
+  query GetSettingsFee {
+    getSettingsFee(
+      filter: ""
+      orderBy: [
+        { orderBy: "default", desc: true }
+        { orderBy: "name", desc: false }
+      ]
+    ) {
+      count
+      list {
+        settingsFeeId
+        name
+        default
+        description
+        terms
+        wireDetails
+        targetInstruments
+        targetUserTypes
+        targetUserModes
+        targetPaymentProviders
+        targetTransactionTypes
+        targetFilterType
+        targetFilterValues
+        currency
+        rateToEur
+      }
+    }
+  }
+`;
+
+const GET_COST_SETTINGS = gql`
+  query GetSettingsCost {
+    getSettingsCost(
+      filter: ""
+      orderBy: [
+        { orderBy: "default", desc: true }
+        { orderBy: "name", desc: false }
+      ]
+    ) {
+      count
+      list {
+        settingsCostId
+        name
+        default
+        description
+        terms
+        targetFilterType
+        targetFilterValues
+        targetInstruments
+        targetTransactionTypes
+        targetPaymentProviders
+      }
+    }
+  }
+`;
+
+const GET_KYC_SETTINGS = gql`
+  query GetSettingsKyc {
+    getSettingsKyc(
+      filter: ""
+      orderBy: [
+        { orderBy: "default", desc: true }
+        { orderBy: "name", desc: false }
+      ]
+    ) {
+      count
+      list {
+        default
+        settingsKycId
+        name
+        description
+        targetKycProviders
+        targetUserType
+        targetUserModes
+        targetFilterType
+        targetFilterValues
+        requireUserFullName
+        requireUserPhone
+        requireUserBirthday
+        requireUserAddress
+        requireUserFlatNumber
+        levels {
+          settingsKycLevelId
+          name
+          data
+          description
+          order
+        }
+      }
+    }
+  }
+`;
+
+const GET_KYC_LEVELS = gql`
+  query GetSettingsKycLevels($filter: String) {
+    getSettingsKycLevels(
+      filter: $filter
+      orderBy: [{ orderBy: "name", desc: false }]
+    ) {
+      count
+      list {
+        settingsKycLevelId
+        name
+        description
+        userType
+        data
+        order
+        created
+        createdBy
+      }
+    }
+  }
+`;
+
+const GET_TRANSACTIONS = gql`
+  query GetTransactions(
+    $transactionIdsOnly: [String!]
+    $userIdsOnly: [String!]
+    $sourcesOnly: [TransactionSource!]
+    $filter: String
+    $skip: Int
+    $first: Int
+    $orderBy: [OrderBy!]
+  ) {
+    getTransactions(
+      transactionIdsOnly: $transactionIdsOnly
+      userIdsOnly: $userIdsOnly
+      sourcesOnly: $sourcesOnly
+      filter: $filter
+      skip: $skip
+      first: $first
+      orderBy: $orderBy
+    ) {
+      count
+      list {
+        transactionId
+        code
+        userId
+        userIp
+        user {
+          userId
+          email
+          firstName
+          lastName
+          postCode
+          town
+          street
+          subStreet
+          stateName
+          buildingName
+          buildingNumber
+          flatNumber
+          countryCode2
+          type
+          mode
+          kycStatus
+        }
+        created
+        executed
+        type
+        source
+        status
+        feeFiat
+        feeMinFiat
+        feePercent
+        feeDetails
+        currencyToSpend
+        amountToSpend
+        currencyToReceive
+        amountToReceive
+        rate
+        liquidityProvider
+        instrument
+        paymentProvider
+        paymentOrder {
+          orderId
+          amount
+          currency
+          operations {
+            operationId
+            created
+            type
+            sn
+            status
+            details
+            callbackDetails
+            errorCode
+            errorMessage
+          }
+          originalOrderId
+          preauthOperationSn
+          captureOperationSn
+          refundOperationSn
+          paymentInfo
+        }
+        data
+        destination
+      }
+    }
+  }
+`;
+
+const GET_USERS = gql`
+  query GetUsers(
+    $filter: String
+    $skip: Int
+    $first: Int
+    $orderBy: [OrderBy!]
+  ) {
+    getUsers(filter: $filter, skip: $skip, first: $first, orderBy: $orderBy) {
+      count
+      list {
+        userId
+        email
+        firstName
+        lastName
+        type
+        mode
+        countryCode2
+        countryCode3
+        created
+        defaultFiatCurrency
+        kycStatus
+        phone
+        postCode
+        town
+        street
+        subStreet
+        stateName
+        buildingName
+        buildingNumber
+        flatNumber
+        referralCode
+      }
+    }
+  }
+`;
+
+const GET_WALLETS = gql`
+  query GetWallets(
+    $userIdsOnly: [String!]
+    $assetIdsOnly: [String!]
+    $filter: String
+    $skip: Int
+    $first: Int
+    $orderBy: [OrderBy!]
+  ) {
+    getWallets(
+      userIdsOnly: $userIdsOnly
+      assetIdsOnly: $assetIdsOnly
+      filter: $filter
+      skip: $skip
+      first: $first
+      orderBy: $orderBy
+    ) {
+      count
+      list {
+        address
+        legacyAddress
+        description
+        type
+        addressFormat
+        assetId
+        originalId
+        total
+        available
+        pending
+        lockedAmount
+        vaultId
+        vaultName
+        userId
+        userEmail
+      }
+    }
+  }
+`;
+
+const GET_WIDGETS = gql`
+  query GetWidgets(
+    $userId: String
+    $filter: String
+    $skip: Int
+    $first: Int
+    $orderBy: [OrderBy!]
+  ) {
+    getWidgets(userId: $userId, filter: $filter, skip: $skip, first: $first, orderBy: $orderBy) {
+      count
+      list {
+        widgetId
+        userId
+        created
+        transactionType
+        currenciesFrom
+        currenciesTo
+        destinationAddress
+        minAmountFrom
+        maxAmountFrom
+        fixAmountFrom
+        countriesCode2
+        instruments
+        paymentProviders
+        liquidityProvider
+        data
+      }
+    }
+  }
+`;
+
+const ADD_SETTINGS_FEE = gql`
+  mutation AddSettingsFee(
+    $name: String!
+    $description: String
+    $targetFilterType: SettingsFeeTargetFilterType!
+    $targetFilterValues: [String!]
+    $targetInstruments: [PaymentInstrument!]
+    $targetUserTypes: [UserType!]
+    $targetUserModes: [UserMode!]
+    $targetTransactionTypes: [TransactionType!]
+    $targetPaymentProviders: [String!]
+    $terms: String!
+    $wireDetails: String!
+  ) {
+    addSettingsFee(
+      settings: {
+        name: $name
+        description: $description
+        targetFilterType: $targetFilterType
+        targetFilterValues: $targetFilterValues
+        targetInstruments: $targetInstruments
+        targetUserTypes: $targetUserTypes
+        targetUserModes: $targetUserModes
+        targetTransactionTypes: $targetTransactionTypes
+        targetPaymentProviders: $targetPaymentProviders
+        terms: $terms
+        wireDetails: $wireDetails
+      }
+    ) {
+      settingsFeeId
+    }
+  }
+`;
+
+const ADD_SETTINGS_COST = gql`
+  mutation AddSettingsCost(
+    $name: String!
+    $description: String
+    $targetFilterType: SettingsCostTargetFilterType!
+    $targetFilterValues: [String!]
+    $targetInstruments: [PaymentInstrument!]
+    $targetTransactionTypes: [TransactionType!]
+    $targetPaymentProviders: [String!]
+    $terms: String!
+  ) {
+    addSettingsCost(
+      settings: {
+        name: $name
+        description: $description
+        targetFilterType: $targetFilterType
+        targetFilterValues: $targetFilterValues
+        targetInstruments: $targetInstruments
+        targetTransactionTypes: $targetTransactionTypes
+        targetPaymentProviders: $targetPaymentProviders
+        terms: $terms
+      }
+    ) {
+      settingsCostId
+    }
+  }
+`;
+
+const ADD_SETTINGS_KYC = gql`
+  mutation AddSettingsKyc(
+    $name: String!
+    $description: String
+    $targetKycProviders: [KycProvider!]
+    $targetUserType: UserType!
+    $targetUserModes: [UserMode!]
+    $targetFilterType: SettingsKycTargetFilterType!
+    $targetFilterValues: [String!]
+    $levelIds: [String!]
+    $requireUserFullName: Boolean
+    $requireUserPhone: Boolean
+    $requireUserBirthday: Boolean
+    $requireUserAddress: Boolean
+    $requireUserFlatNumber: Boolean
+  ) {
+    addSettingsKyc(
+      settings: {
+        name: $name
+        description: $description
+        targetKycProviders: $targetKycProviders
+        targetUserType: $targetUserType
+        targetUserModes: $targetUserModes
+        targetFilterType: $targetFilterType
+        targetFilterValues: $targetFilterValues
+        requireUserFullName: $requireUserFullName
+        requireUserPhone: $requireUserPhone
+        requireUserBirthday: $requireUserBirthday
+        requireUserAddress: $requireUserAddress
+        requireUserFlatNumber: $requireUserFlatNumber
+        levelIds: $levelIds
+      }
+    ) {
+      settingsKycId
+    }
+  }
+`;
+
+const ADD_KYC_LEVEL_SETTINGS = gql`
+  mutation AddSettingsKycLevel(
+    $name: String!
+    $description: String
+    $userType: UserType!
+    $data: String!
+  ) {
+    addSettingsKycLevel(
+      settingsLevel: {
+        name: $name
+        description: $description
+        userType: $userType
+        data: $data
+      }
+    ) {
+      settingsKycLevelId
+    }
+  }
+`;
+
+const UPDATE_SETTINGS_FEE = gql`
+  mutation UpdateSettingsFee(
+    $settingsId: ID!
+    $name: String!
+    $description: String
+    $targetFilterType: SettingsFeeTargetFilterType!
+    $targetFilterValues: [String!]
+    $targetInstruments: [PaymentInstrument!]
+    $targetUserTypes: [UserType!]
+    $targetUserModes: [UserMode!]
+    $targetTransactionTypes: [TransactionType!]
+    $targetPaymentProviders: [String!]
+    $terms: String!
+    $wireDetails: String!
+  ) {
+    updateSettingsFee(
+      settingsId: $settingsId
+      settings: {
+        name: $name
+        description: $description
+        targetFilterType: $targetFilterType
+        targetFilterValues: $targetFilterValues
+        targetInstruments: $targetInstruments
+        targetUserTypes: $targetUserTypes
+        targetUserModes: $targetUserModes
+        targetTransactionTypes: $targetTransactionTypes
+        targetPaymentProviders: $targetPaymentProviders
+        terms: $terms
+        wireDetails: $wireDetails
+      }
+    ) {
+      settingsFeeId
+    }
+  }
+`;
+
+const UPDATE_SETTINGS_COST = gql`
+  mutation UpdateSettingsCost(
+    $settingsId: ID!
+    $name: String!
+    $description: String
+    $targetFilterType: SettingsCostTargetFilterType!
+    $targetFilterValues: [String!]
+    $targetInstruments: [PaymentInstrument!]
+    $targetTransactionTypes: [TransactionType!]
+    $targetPaymentProviders: [String!]
+    $terms: String!
+  ) {
+    updateSettingsCost(
+      settingsId: $settingsId
+      settings: {
+        name: $name
+        description: $description
+        targetFilterType: $targetFilterType
+        targetFilterValues: $targetFilterValues
+        targetInstruments: $targetInstruments
+        targetTransactionTypes: $targetTransactionTypes
+        targetPaymentProviders: $targetPaymentProviders
+        terms: $terms
+      }
+    ) {
+      settingsCostId
+    }
+  }
+`;
+
+const UPDATE_SETTINGS_KYC = gql`
+  mutation UpdateSettingsKyc(
+    $settingsId: ID!
+    $name: String!
+    $description: String
+    $targetKycProviders: [KycProvider!]
+    $targetUserType: UserType!
+    $targetUserModes: [UserMode!]
+    $targetFilterType: SettingsKycTargetFilterType!
+    $targetFilterValues: [String!]
+    $requireUserFullName: Boolean
+    $requireUserPhone: Boolean
+    $requireUserBirthday: Boolean
+    $requireUserAddress: Boolean
+    $requireUserFlatNumber: Boolean
+    $levelIds: [String!]
+  ) {
+    updateSettingsKyc(
+      settingsId: $settingsId
+      settings: {
+        name: $name
+        description: $description
+        targetKycProviders: $targetKycProviders
+        targetUserType: $targetUserType
+        targetUserModes: $targetUserModes
+        targetFilterType: $targetFilterType
+        targetFilterValues: $targetFilterValues
+        requireUserFullName: $requireUserFullName
+        requireUserPhone: $requireUserPhone
+        requireUserBirthday: $requireUserBirthday
+        requireUserAddress: $requireUserAddress
+        requireUserFlatNumber: $requireUserFlatNumber
+        levelIds: $levelIds
+      }
+    ) {
+      settingsKycId
+    }
+  }
+`;
+
+const UPDATE_KYC_LEVEL_SETTINGS = gql`
+  mutation UpdateSettingsKycLevel(
+    $settingsId: ID!
+    $name: String!
+    $description: String
+    $userType: UserType!
+    $data: String!
+  ) {
+    updateSettingsKycLevel(
+      settingsLevelId: $settingsId
+      settingsLevel: {
+        name: $name
+        description: $description
+        userType: $userType
+        data: $data
+      }
+    ) {
+      settingsKycLevelId
+    }
+  }
+`;
+
+const DELETE_SETTINGS_FEE = gql`
+  mutation DeleteSettingsFee($settingsId: ID!) {
+    deleteSettingsFee(settingsId: $settingsId) {
+      settingsFeeId
+    }
+  }
+`;
+
+const DELETE_SETTINGS_COST = gql`
+  mutation DeleteSettingsCost($settingsId: ID!) {
+    deleteSettingsCost(settingsId: $settingsId) {
+      settingsCostId
+    }
+  }
+`;
+
+const DELETE_SETTINGS_KYC = gql`
+  mutation DeleteSettingsKyc($settingsId: ID!) {
+    deleteSettingsKyc(settingsId: $settingsId) {
+      settingsKycId
+    }
+  }
+`;
+
+const DELETE_KYC_LEVEL_SETTINGS = gql`
+  mutation DeleteSettingsKycLevel($settingsId: ID!) {
+    deleteSettingsKycLevel(settingsId: $settingsId) {
+      settingsKycLevelId
+    }
+  }
+`;
+
+/* endregion */
+
+@Injectable()
+export class AdminDataService {
+  constructor(
+    private router: Router,
+    private apollo: Apollo,
+    private auth: AuthService,
+    private errorHandler: ErrorService,
+    private snackBar: MatSnackBar
+  ) {
+  }
+
+  private activeQueryCounter = 0;
+  private isBusySubject = new BehaviorSubject(false);
+
+  public get isBusy(): Observable<boolean> {
+    return this.isBusySubject.asObservable();
+  }
+
+  getDashboardStats(filter: Filter): Observable<DashboardStats> {
+    const vars: QueryGetDashboardStatsArgs = {
+      userIdOnly: filter.users,
+      widgetIdOnly: filter.widgets,
+      sourcesOnly: filter.sources,
+      countriesOnly: filter.countries,
+      countryCodeType: CountryCodeType.Code3,
+      accountTypesOnly: filter.accountTypes
+    };
+    return this.watchQuery<{ getDashboardStats: DashboardStats }, QueryGetDashboardStatsArgs>({
+      query: GET_DASHBOARD_STATS,
+      variables: vars,
+      fetchPolicy: 'network-only'
+    })
+               .pipe(
+                 map(result => {
+                   return result.data.getDashboardStats;
+                 })
+               );
+  }
+
+  getFeeSettings(): Observable<{ list: Array<FeeScheme>; count: number; }> {
+    return this.watchQuery<{ getSettingsFee: SettingsFeeListResult }, QueryGetSettingsFeeArgs>({
+      query: GET_FEE_SETTINGS,
+      fetchPolicy: 'network-only'
+    })
+               .pipe(
+                 map(result => {
+                   if (result.data?.getSettingsFee?.list && result.data?.getSettingsFee?.count) {
+                     return {
+                       list: result.data.getSettingsFee.list.map(item => new FeeScheme(item)),
+                       count: result.data.getSettingsFee.count
+                     };
+                   } else {
+                     return {
+                       list: [],
+                       count: 0
+                     };
+                   }
+                 })
+               );
+  }
+
+  getCostSettings(): QueryRef<any, EmptyObject> | null {
+    if (this.apollo.client !== undefined) {
+      return this.apollo.watchQuery<any>({
+        query: GET_COST_SETTINGS,
+        fetchPolicy: 'network-only'
+      });
+    } else {
+      return null;
+    }
+  }
+
+  getKycSettings(): QueryRef<any, EmptyObject> | null {
+    if (this.apollo.client !== undefined) {
+      return this.apollo.watchQuery<any>({
+        query: GET_KYC_SETTINGS,
+        fetchPolicy: 'network-only'
+      });
+    } else {
+      return null;
+    }
+  }
+
+  getKycLevels(userType: UserType | null): QueryRef<any, EmptyObject> | null {
+    const userTypeFilter = userType === null ? '' : userType?.toString();
+    // if (this.apollo.client !== undefined) {
+    //   return this.apollo.watchQuery<any>({
+    //     query: GET_KYC_LEVELS,
+    //     variables: { filter: userTypeFilter },
+    //     fetchPolicy: 'network-only'
+    //   });
+    // } else {
+    return null;
+    // }
+  }
+
+  getTransaction(transactionId: string): Observable<TransactionItemDeprecated | undefined> {
+    return this.watchQuery<{ getTransactions: TransactionListResult }, QueryGetTransactionsArgs>({
+      query: GET_TRANSACTIONS,
+      variables: {
+        transactionIdsOnly: [transactionId],
+        filter: undefined,
+        skip: 0,
+        first: 1
+      },
+      fetchPolicy: 'network-only'
+    })
+               .pipe(
+                 map(res => {
+                   const listResult = res?.data?.getTransactions.list;
+
+                   if (listResult && listResult.length === 1) {
+                     return new TransactionItemDeprecated(listResult[0]);
+                   }
+
+                   return undefined;
+                 })
+               );
+  }
+
+  getTransactions(
+    pageIndex: number,
+    takeItems: number,
+    orderField: string,
+    orderDesc: boolean,
+    filter?: Filter
+  ): Observable<{ list: Array<TransactionItemDeprecated>; count: number; }> {
+
+    const vars: QueryGetTransactionsArgs = {
+      accountTypesOnly: filter?.accountTypes,
+      countriesOnly: filter?.countries,
+      countryCodeType: CountryCodeType.Code3,
+      sourcesOnly: filter?.sources,
+      userIdsOnly: filter?.users,
+      widgetIdsOnly: filter?.widgets,
+      filter: filter?.search,
+      skip: pageIndex * takeItems,
+      first: takeItems,
+      orderBy: [{ orderBy: orderField, desc: orderDesc }]
+    };
+
+    return this.watchQuery<{ getTransactions: TransactionListResult }, QueryGetTransactionsArgs>(
+      {
+        query: GET_TRANSACTIONS,
+        variables: vars,
+        fetchPolicy: 'network-only'
+      })
+               .pipe(
+                 map(result => {
+                   if (result.data?.getTransactions?.list && result.data?.getTransactions?.count) {
+                     return {
+                       list: result.data.getTransactions.list.map(val => new TransactionItemDeprecated(val)),
+                       count: result.data.getTransactions.count
+                     };
+                   } else {
+                     return {
+                       list: [],
+                       count: 0
+                     };
+                   }
+                 })
+               );
+  }
+
+  getUsers(
+    pageIndex: number,
+    takeItems: number,
+    orderField: string,
+    orderDesc: boolean,
+    filter: Filter
+  ): Observable<{ list: UserItem[], count: number }> {
+    const vars = {
+      skip: pageIndex * takeItems,
+      first: takeItems,
+      orderBy: [{ orderBy: orderField, desc: orderDesc }],
+      filter: filter?.search
+    };
+
+    return this.watchQuery<{ getUsers: UserListResult }, QueryGetUsersArgs>({
+      query: GET_USERS,
+      variables: vars,
+      fetchPolicy: 'network-only'
+    })
+               .pipe(
+                 map(result => {
+                   if (result.data?.getUsers?.list && result.data?.getUsers?.count) {
+                     return {
+                       list: result.data.getUsers.list.map(u => new UserItem(u)),
+                       count: result.data.getUsers.count
+                     };
+                   } else {
+                     return {
+                       list: [],
+                       count: 0
+                     };
+                   }
+                 })
+               );
+  }
+
+  getWallets(
+    pageIndex: number,
+    takeItems: number,
+    orderField: string,
+    orderDesc: boolean,
+    filter?: Filter
+  ): Observable<{ list: Array<Wallet>; count: number; }> {
+    const vars: QueryGetWalletsArgs = {
+      userIdsOnly: filter?.users,
+      assetIdsOnly: filter?.assets,
+      filter: filter?.search,
+      skip: pageIndex * takeItems,
+      first: takeItems,
+      orderBy: [{ orderBy: orderField, desc: orderDesc }]
+    };
+
+    return this.watchQuery<{ getWallets: AssetAddressListResult }, QueryGetWalletsArgs>(
+      {
+        query: GET_WALLETS,
+        variables: vars,
+        fetchPolicy: 'network-only'
+      })
+               .pipe(
+                 map(result => {
+                   if (result.data?.getWallets?.list && result.data?.getWallets?.count) {
+                     return {
+                       list: result.data.getWallets.list.map(item => new Wallet(item)),
+                       count: result.data.getWallets.count
+                     };
+                   } else {
+                     return {
+                       list: [],
+                       count: 0
+                     };
+                   }
+                 })
+               );
+  }
+
+  getWidgets(
+    userFilter: string,
+    pageIndex: number,
+    takeItems: number,
+    orderField: string,
+    orderDesc: boolean
+  ): Observable<{ list: string[], count: number }> {
+    const orderFields = [{ orderBy: orderField, desc: orderDesc }];
+    const customerFilter = userFilter === null ? '' : userFilter?.toString();
+    const vars = {
+      userId: null,
+      filter: customerFilter,
+      skip: pageIndex * takeItems,
+      first: takeItems,
+      orderBy: orderFields
+    };
+    return this.watchQuery<{ getWidgets: WidgetListResult }, QueryGetWidgetsArgs>({
+      query: GET_WIDGETS,
+      variables: vars,
+      fetchPolicy: 'network-only'
+    })
+               .pipe(
+                 map(result => {
+                   if (result.data?.getWidgets?.list && result.data?.getWidgets?.count) {
+                     return {
+                       list: result.data.getWidgets.list.map(w => w.widgetId),
+                       count: result.data.getWidgets.count
+                     };
+                   } else {
+                     return {
+                       list: [],
+                       count: 0
+                     };
+                   }
+                 })
+               );
+
+  }
+
+  saveFeeSettings(settings: FeeScheme, create: boolean): Observable<any> {
+    return create
+      ? this.apollo.mutate({
+        mutation: ADD_SETTINGS_FEE,
+        variables: {
+          name: settings.name,
+          description: settings.description,
+          targetFilterType: settings.target,
+          targetFilterValues: settings.targetValues,
+          targetInstruments: settings.instrument,
+          targetUserTypes: settings.userType,
+          targetUserModes: settings.userMode,
+          targetTransactionTypes: settings.trxType,
+          targetPaymentProviders: settings.provider,
+          terms: settings.terms.getObject(),
+          wireDetails: settings.details.getObject()
+        }
+      })
+      : this.apollo.mutate({
+        mutation: UPDATE_SETTINGS_FEE,
+        variables: {
+          settingsId: settings.id,
+          name: settings.name,
+          description: settings.description,
+          targetFilterType: settings.target,
+          targetFilterValues: settings.targetValues,
+          targetInstruments: settings.instrument,
+          targetUserTypes: settings.userType,
+          targetUserModes: settings.userMode,
+          targetTransactionTypes: settings.trxType,
+          targetPaymentProviders: settings.provider,
+          terms: settings.terms.getObject(),
+          wireDetails: settings.details.getObject()
+        }
+      });
+  }
+
+  saveCostSettings(settings: CostScheme, create: boolean): Observable<any> {
+    return create
+      ? this.apollo.mutate({
+        mutation: ADD_SETTINGS_COST,
+        variables: {
+          name: settings.name,
+          description: settings.description,
+          targetFilterType: settings.target,
+          targetFilterValues: settings.targetValues,
+          targetInstruments: settings.instrument,
+          targetTransactionTypes: settings.trxType,
+          targetPaymentProviders: settings.provider,
+          terms: settings.terms.getObject()
+        }
+      })
+      : this.apollo.mutate({
+        mutation: UPDATE_SETTINGS_COST,
+        variables: {
+          settingsId: settings.id,
+          name: settings.name,
+          description: settings.description,
+          targetFilterType: settings.target,
+          targetFilterValues: settings.targetValues,
+          targetInstruments: settings.instrument,
+          targetTransactionTypes: settings.trxType,
+          targetPaymentProviders: settings.provider,
+          terms: settings.terms.getObject()
+        }
+      });
+  }
+
+  saveKycSettings(settings: KycScheme, create: boolean): Observable<any> {
+    return create
+      ? this.apollo.mutate({
+        mutation: ADD_SETTINGS_KYC,
+        variables: {
+          name: settings.name,
+          description: settings.description,
+          targetFilterType: settings.target,
+          targetFilterValues: settings.targetValues,
+          targetKycProviders: settings.kycProviders,
+          targetUserType: settings.userType,
+          targetUserModes: settings.userModes,
+          requireUserFullName: settings.requireUserFullName,
+          requireUserPhone: settings.requireUserPhone,
+          requireUserBirthday: settings.requireUserBirthday,
+          requireUserAddress: settings.requireUserAddress,
+          requireUserFlatNumber: settings.requireUserFlatNumber,
+          levelIds: [settings.levelId]
+        }
+      })
+      : this.apollo.mutate({
+        mutation: UPDATE_SETTINGS_KYC,
+        variables: {
+          settingsId: settings.id,
+          name: settings.name,
+          description: settings.description,
+          targetFilterType: settings.target,
+          targetFilterValues: settings.targetValues,
+          targetKycProviders: settings.kycProviders,
+          targetUserType: settings.userType,
+          targetUserModes: settings.userModes,
+          requireUserFullName: settings.requireUserFullName,
+          requireUserPhone: settings.requireUserPhone,
+          requireUserBirthday: settings.requireUserBirthday,
+          requireUserAddress: settings.requireUserAddress,
+          requireUserFlatNumber: settings.requireUserFlatNumber,
+          levelIds: [settings.levelId]
+        }
+      });
+  }
+
+  saveKycLevelSettings(level: KycLevel, create: boolean): Observable<any> {
+    return create
+      ? this.apollo.mutate({
+        mutation: ADD_KYC_LEVEL_SETTINGS,
+        variables: {
+          name: level.name,
+          description: level.description,
+          userType: level.userType,
+          data: level.getDataObject()
+        }
+      })
+      : this.apollo.mutate({
+        mutation: UPDATE_KYC_LEVEL_SETTINGS,
+        variables: {
+          settingsId: level.id,
+          name: level.name,
+          description: level.description,
+          userType: level.userType,
+          data: level.getDataObject()
+        }
+      });
+  }
+
+  deleteFeeSettings(settingsId: string): Observable<any> | null {
+    if (this.apollo.client !== undefined) {
+      return this.apollo.mutate({
+        mutation: DELETE_SETTINGS_FEE,
+        variables: {
+          settingsId
+        }
+      });
+    } else {
+      return null;
+    }
+  }
+
+  deleteCostSettings(settingsId: string): Observable<any> | null {
+    if (this.apollo.client !== undefined) {
+      return this.apollo.mutate({
+        mutation: DELETE_SETTINGS_COST,
+        variables: {
+          settingsId
+        }
+      });
+    } else {
+      return null;
+    }
+  }
+
+  deleteKycSettings(settingsId: string): Observable<any> | null {
+    if (this.apollo.client !== undefined) {
+      return this.apollo.mutate({
+        mutation: DELETE_SETTINGS_KYC,
+        variables: {
+          settingsId
+        }
+      });
+    } else {
+      return null;
+    }
+  }
+
+  deleteKycLevelSettings(settingsId: string): Observable<any> | null {
+    if (this.apollo.client !== undefined) {
+      return this.apollo.mutate({
+        mutation: DELETE_KYC_LEVEL_SETTINGS,
+        variables: {
+          settingsId
+        }
+      });
+    } else {
+      return null;
+    }
+  }
+
+  // TODO: move somewhere closer to HTTP, this approach can give false negatives (normally observable doesn't finish,
+  //       so tap can be triggered more than once per subscription)
+  private updateIsBusy(action: 'on' | 'off'): void {
+    if (action === 'on') {
+      console.log('on', this.activeQueryCounter);
+
+      this.activeQueryCounter++;
+
+      if (!this.isBusySubject.value) {
+        setTimeout(() => {
+          this.isBusySubject.next(true);
+        }, 0);
+      }
+    } else {
+      console.log('off', this.activeQueryCounter);
+
+      this.activeQueryCounter--;
+      this.activeQueryCounter = this.activeQueryCounter < 0 ? 0 : this.activeQueryCounter;
+      if (this.activeQueryCounter === 0) {
+        setTimeout(() => {
+          this.isBusySubject.next(false);
+        }, 0);
+      }
+    }
+  }
+
+  private watchQuery<TData, TVariables>(options: WatchQueryOptions<TVariables, TData>): Observable<ApolloQueryResult<TData>> {
+
+    this.updateIsBusy('on');
+
+    if (this.apollo.client !== undefined) {
+
+      return this.apollo.watchQuery<TData, TVariables>(options)
+                 .valueChanges
+                 .pipe(
+                   tap(() => {
+                     this.updateIsBusy('off');
+                   }),
+                   finalize(() => {
+                     this.updateIsBusy('off');
+                   }),
+                   catchError(error => {
+                     if (this.auth.token !== '') {
+                       this.snackBar.open(
+                         this.errorHandler.getError(error.message, 'Unable to load dashboard data'),
+                         undefined,
+                         { duration: 5000 }
+                       );
+                     } else {
+                       this.router.navigateByUrl('/')
+                           .then();
+                     }
+
+                     return throwError(null);
+                   })
+                 );
+    }
+
+    this.snackBar.open('Apollo not ready', undefined, { duration: 5000 });
+    return throwError(null);
+  }
+}

@@ -47,7 +47,7 @@ export class TransactionItemDeprecated {
   rate = 0;
   status: TransactionStatus | undefined = undefined;
   user: UserItem | undefined;
-  balance = 74.1254;
+  balance = 0;
 
   constructor(data: Transaction | TransactionShort | null) {
     if (data !== null) {
@@ -190,7 +190,8 @@ export class TransactionItem {
   private executed!: Date;
   private datepipe = new DatePipe('en-US');
 
-  constructor(data: Transaction | TransactionShort | null,
+  constructor(
+    data: Transaction | TransactionShort | null,
     userStatus: TransactionStatusDescriptorMap | undefined = undefined) {
     if (data) {
       this.id = data.transactionId;
