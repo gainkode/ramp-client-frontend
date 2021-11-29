@@ -8,13 +8,41 @@
       <!-- Initialization -->
       <app-widget-initialization *ngSwitchCase="'initialization'" [message]="initMessage"></app-widget-initialization>
       <!-- Order details -->
-      <app-widget-send-details *ngSwitchCase="'send_details'" 
-        [withdrawalRate]="summary?.exchangeRate?.withdrawRate" [currencies]="cryptoList"
-        [presetContactId]="presetContactId" [presetWalletId]="presetWalletId" [presetCurrency]="presetCurrency"
+      <app-widget-order-details *ngSwitchCase="'order_details'" [initialized]="!initState" [summary]="summary"
+        [settings]="widget" [withdrawalRate]="summary?.exchangeRate?.withdrawRate" [wallets]="userWallets"
         [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage"
-        (onError)="handleError($event)" (onProgress)="progressChanged($event)"
-        (onDataUpdated)="orderDetailsChanged($event)" (onComplete)="orderDetailsComplete($event)">
-      </app-widget-send-details>
+        [depositRate]="summary?.exchangeRate?.depositRate" (onError)="handleError($event)"
+        (onProgress)="progressChanged($event)" (onDataUpdated)="orderDetailsChanged($event)"
+        (onWalletAddressUpdated)="orderWalletChanged($event)" (onComplete)="orderDetailsComplete($event)">
+      </app-widget-order-details>
+      <!-- Payment -->
+      <app-widget-payment *ngSwitchCase="'payment'" [providers]="paymentProviders"
+        [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage" (onBack)="paymentBack()"
+        (onSelect)="selectProvider($event)">
+      </app-widget-payment>
+      <!-- Credit card -->
+      <app-widget-credit-card *ngSwitchCase="'credit_card'"
+        [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage" (onBack)="creditCardBack()"
+        (onComplete)="creditCardPaymentComplete($event)"></app-widget-credit-card>
+      <!-- KYC -->
+      <app-widget-kyc *ngSwitchCase="'verification'"
+        [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage" (onError)="handleError($event)"
+        (onAuthError)="handleAuthError()" (onProgress)="progressChanged($event)" (onBack)="kycBack()"
+        (onNext)="kycComplete()"></app-widget-kyc>
+      <!-- Processing with a frame -->
+      <app-widget-processing-frame *ngSwitchCase="'processing-frame'" [iframeContent]="iframeContent"
+        [completed]="paymentComplete" [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage"
+        (onComplete)="processingComplete()">
+      </app-widget-processing-frame>
+      <app-widget-processing-instantpay *ngSwitchCase="'processing-instantpay'" [details]="instantpayDetails"
+        [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage" (onComplete)="processingComplete()">
+      </app-widget-processing-instantpay>
+      <!-- Common settings reading -->
+      <app-widget-settings-service *ngIf="readCommonSettings" [summary]="summary" (onError)="handleError($event)"
+        (onProgress)="progressChanged($event)" (onAuthenticationRequired)="settingsAuthRequired($event)"
+        (onIdentificationRequired)="settingsIdRequired()" (onLoginRequired)="settingsLoginRequired($event)"
+        (onKycStatusUpdate)="settingsKycState($event)" (onComplete)="settingsCommonComplete($event)">
+      </app-widget-settings-service>
     </div>
   </div>
 </div>
