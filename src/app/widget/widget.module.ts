@@ -41,6 +41,7 @@ import { WidgetReceiveDetailsComponent } from './panels/receive-details.componen
 import { QRCodeModule } from 'angularx-qrcode';
 import { SendWidgetComponent } from './send.component';
 import { WidgetSendDetailsComponent } from './panels/send-details.component';
+import { TransferWidgetComponent } from './transfer.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -71,13 +72,13 @@ export class MaterialModule { }
     imports: [
         NgxMaskModule.forRoot(), CommonModule, ClipboardModule, FormsModule, ReactiveFormsModule, RouterModule, MaterialModule, QRCodeModule],
     declarations: [
-        WidgetComponent, ReceiveWidgetComponent, SendWidgetComponent, WidgetPanelComponent, WidgetProgressComponent,
+        WidgetComponent, ReceiveWidgetComponent, SendWidgetComponent, TransferWidgetComponent, WidgetPanelComponent, WidgetProgressComponent,
         WidgetSummaryComponent, WidgetRateComponent, WidgetCreditCardComponent,
         WidgetRegisterComponent, WidgetLoginAuthComponent, WidgetCodeAuthComponent,
         WidgetInitializationComponent, WidgetOrderDetailsComponent, WidgetReceiveDetailsComponent, WidgetSendDetailsComponent,
         WidgetDisclaimerComponent, WidgetKycComponent, WidgetPaymentComponent, WidgetProcessingFrameComponent,
         WidgetProcessingInstantpayComponent, WidgetCompleteComponent, WidgetSettingsService],
-    exports: [WidgetComponent, WidgetPanelComponent, ReceiveWidgetComponent, SendWidgetComponent],
+    exports: [WidgetComponent, WidgetPanelComponent, ReceiveWidgetComponent, SendWidgetComponent, TransferWidgetComponent],
     providers: [],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

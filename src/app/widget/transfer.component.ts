@@ -11,11 +11,11 @@ import { CommonDataService } from '../services/common-data.service';
 import { WidgetPagerService } from '../services/widget-pager.service';
 
 @Component({
-  selector: 'app-send-widget',
-  templateUrl: 'send.component.html',
+  selector: 'app-transfer-widget',
+  templateUrl: 'transfer.component.html',
   styleUrls: ['../../assets/button.scss', '../../assets/payment.scss'],
 })
-export class SendWidgetComponent implements OnInit {
+export class TransferWidgetComponent implements OnInit {
   @Input() presetContactId = '';
   @Input() presetWalletId = '';
   @Input() presetCurrency = '';
