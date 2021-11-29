@@ -1,29 +1,41 @@
-<div class="admin-side-nav">
-    <div class="split-panel-menu">
-        <div style="margin: 1.5em;margin-bottom: 0em;height: 5em;text-align: center;">
-            <a [href]="getUserMainPage()" style="margin-left: 1em;color: #DDDFE6;">
-                <mat-icon>attractions</mat-icon>
-            </a>
+<mat-sidenav-container [hasBackdrop]="false">
+    <mat-sidenav class="left" position="start" mode="side" opened>
+        <app-main-menu></app-main-menu>
+    </mat-sidenav>
+    <mat-sidenav
+            class="right"
+            position="end"
+            mode="over"
+            [opened]="layoutService.rightPanelIsOpened$ | async"
+            disableClose>
+        <div class="right-panel-header">
+            <button
+                    mat-icon-button
+                    aria-label="Close details panel"
+                    (click)="handleRightPanelClose()"
+                    tabindex="-1">
+                <mat-icon>clear</mat-icon>
+            </button>
         </div>
+        <div class="right-panel-content">
+            <ng-container [ngTemplateOutlet]="rightPanelTemplate"></ng-container>
+        </div>
+    </mat-sidenav>
 
-        <mat-selection-list [multiple]="false" (selectionChange)="menuChanged($event)">
-            <mat-list-option *ngFor="let item of menuItems" [value]="item" [selected]="selectedMenu===item.id"
-            class="panel-menu">
-                <div class="panel-menu-item">
-                    <mat-icon class="panel-menu-item-icon">{{item.icon}}</mat-icon>
-                    <div class="panel-menu-item-text">{{item.name}}</div>
-                </div>
-            </mat-list-option>
-        </mat-selection-list>
-        <br>
-        <br>
-        <a href="/admin" (click)="logout()" style="margin-left: 1em;color: #DDDFE6;">
-            <mat-icon>logout</mat-icon>
-        </a>
-    </div>
-</div>
+    <mat-sidenav-content>
+        <mat-toolbar class="header">
+            <h1>{{sectionHeader}}</h1>
+            <mat-progress-bar
+                    *ngIf="adminDataService.isBusy | async"
+                    mode="indeterminate"></mat-progress-bar>
+        </mat-toolbar>
+        <section>
+            <router-outlet>
+            </router-outlet>
+        </section>
+    </mat-sidenav-content>
+</mat-sidenav-container>
 
-<div class="admin-content-block">
-    <router-outlet (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
-    </router-outlet>
-</div>
+
+
+

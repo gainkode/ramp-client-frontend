@@ -3,7 +3,7 @@ import {
   UserModeShortList,
   UserModeView,
   UserTypeList,
-  UserTypeView,
+  UserTypeView
 } from './payment.model';
 import { getCountryByCode2 } from './country-code.model';
 import { CommonTargetValue } from './common.model';
@@ -15,6 +15,7 @@ export class UserItem {
   company = '';
   firstName = '';
   lastName = '';
+  fullName = '';
   email = '';
   phone = '';
   country: CommonTargetValue | null = null;
@@ -25,16 +26,6 @@ export class UserItem {
   created = '';
   fiatCurrency = '';
 
-  get fullName(): string {
-    let result = '';
-    if (this.userType?.id === UserType.Merchant) {
-      result = this.company;
-    } else {
-      result = `${this.firstName} ${this.lastName}`;
-    }
-    return result;
-  }
-
   constructor(data: User | null) {
     if (data) {
       this.id = data.userId;
@@ -44,7 +35,11 @@ export class UserItem {
         this.company = data.firstName ? (data.firstName as string) : '';
         this.firstName = '';
         this.lastName = '';
+        this.fullName = this.company;
+      } else {
+        this.fullName = `${this.firstName ?? ''} ${this.lastName ?? ''}`.trim();
       }
+
       this.email = data.email;
       this.phone = data.phone ? (data.phone as string) : '';
       this.address = this.getAddress(data);

@@ -1,0 +1,71 @@
+<mat-expansion-panel>
+    <mat-expansion-panel-header>
+        <mat-panel-title>
+            <mat-icon>filter_list</mat-icon>
+            <span>Filters</span>
+        </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <form *ngIf="filterForm" [formGroup]="filterForm">
+
+        <ng-container *ngFor="let field of fields">
+
+
+            <mat-form-field
+                    *ngIf="field === 'accountType'"
+            >
+                <mat-label>Account type</mat-label>
+                <mat-select formControlName="accountTypes" multiple>
+                    <mat-option *ngFor="let item of userTypeOptions" [value]="item.id">
+                        {{item.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <app-filter-field-country
+                    *ngIf="field === 'country'"
+                    formControlName="countries"
+            ></app-filter-field-country>
+
+            <mat-form-field
+                    *ngIf="field === 'source'">
+                <mat-label>Source</mat-label>
+                <mat-select formControlName="sources" multiple>
+                    <mat-option *ngFor="let item of sourceOptions" [value]="item.id">
+                        {{item.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <app-filter-field-user
+                    *ngIf="field === 'user'"
+                    formControlName="users"
+            ></app-filter-field-user>
+
+            <app-filter-field-widget
+                    *ngIf="field === 'widget'"
+                    formControlName="widgets"
+            ></app-filter-field-widget>
+
+            <mat-form-field
+                    *ngIf="field === 'search'">
+                <mat-label>Search</mat-label>
+                <input matInput formControlName="search"/>
+            </mat-form-field>
+
+        </ng-container>
+
+        <mat-action-row>
+            <button mat-flat-button color="primary"
+                    (click)="applyFilters()">
+                Apply
+            </button>
+            <button mat-button color="secondary"
+                    (click)="resetFilters()">
+                Reset
+            </button>
+        </mat-action-row>
+
+    </form>
+
+</mat-expansion-panel>

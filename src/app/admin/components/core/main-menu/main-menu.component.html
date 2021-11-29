@@ -1,0 +1,21 @@
+<div style="margin: 1.5em;margin-bottom: 0em;height: 5em;text-align: center;">
+    <a [href]="userMainPage" style="color: #DDDFE6;">
+        <mat-icon>attractions</mat-icon>
+    </a>
+</div>
+
+<mat-nav-list id="main-menu">
+    <a mat-list-item
+       *ngFor="let item of menuItems"
+       [routerLink]="item.url"
+       [routerLinkActive]="'active'"
+    >
+        <mat-icon class="panel-menu-item-icon">{{item.icon}}</mat-icon>
+        <span>{{item.name}}</span>
+
+    </a>
+</mat-nav-list>
+
+<a (click)="handleLogout()" style="display: block; margin-top: 2em;margin-left: 1em;color: #DDDFE6;">
+    <mat-icon>logout</mat-icon>
+</a>

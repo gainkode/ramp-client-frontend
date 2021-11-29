@@ -1,0 +1,575 @@
+import { Component, ElementRef, ViewChild, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { Validators, FormBuilder } from '@angular/forms';
+import { Observable, of } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
+import { MatChipInputEvent } from '@angular/material/chips';
+import { PaymentDataService } from '../../../../services/payment.service';
+import {
+  FeeScheme, AccountTypeFilterList,
+  AccountIdFilterList, WidgetFilterList, WidgetIdFilterList
+} from '../../../../model/fee-scheme.model';
+import {
+  SettingsFeeTargetFilterType, PaymentInstrument, PaymentProvider, TransactionType, UserType, UserMode
+} from '../../../../model/generated-models';
+import {
+  PaymentInstrumentList, FeeTargetFilterList, TransactionTypeList, UserTypeList, UserModeList, PaymentProviderView
+} from 'src/app/model/payment.model';
+import { CommonTargetValue, TargetParams } from 'src/app/model/common.model';
+import { CountryFilterList, getCountry } from 'src/app/model/country-code.model';
+import { ErrorService } from 'src/app/services/error.service';
+
+@Component({
+  selector: 'app-fee-editor',
+  templateUrl: 'fee-details.component.html',
+  styleUrls: ['fee-details.component.scss']
+})
+export class FeeDetailsComponent implements OnInit {
+  @Input()
+  set currentScheme(scheme: FeeScheme | null) {
+    this.forceValidate = false;
+    this.setFormData(scheme);
+    this.currency = scheme?.currency as string;
+    this.settingsId = (scheme !== null) ? scheme?.id : '';
+  }
+
+  @Input() create = false;
+  @Output() save = new EventEmitter<FeeScheme>();
+  @Output() delete = new EventEmitter<string>();
+  @Output() cancel = new EventEmitter();
+  @Output() formChanged = new EventEmitter<boolean>();
+  @ViewChild('targetValueInput') targetValueInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('auto') matAutocomplete!: MatAutocomplete;
+
+  private defaultSchemeName = '';
+  private settingsId = '';
+  private forceValidate = false;
+  private loadingData = false;
+  errorMessage = '';
+  selectedTab = 0;
+  targetEntity = '';
+  currency = '';
+  separatorKeysCodes: number[] = [ENTER, COMMA];
+  filteredTargetValues: Observable<CommonTargetValue[]> | undefined;
+
+  targets = FeeTargetFilterList;
+  transactionTypes = TransactionTypeList;
+  instruments = PaymentInstrumentList;
+  providers: PaymentProviderView[] = [];
+  userTypes = UserTypeList;
+  userModes = UserModeList;
+
+  schemeForm = this.formBuilder.group({
+    id: [''],
+    name: ['', { validators: [Validators.required], updateOn: 'change' }],
+    description: [''],
+    isDefault: [false],
+    target: ['', { validators: [Validators.required], updateOn: 'change' }],
+    targetValues: [[], { validators: [Validators.required], updateOn: 'change' }],
+    targetValue: [''],
+    instrument: [[], { validators: [Validators.required], updateOn: 'change' }],
+    userType: [[], { validators: [Validators.required], updateOn: 'change' }],
+    userMode: [[], { validators: [Validators.required], updateOn: 'change' }],
+    trxType: [[], { validators: [Validators.required], updateOn: 'change' }],
+    provider: [[], { validators: [Validators.required], updateOn: 'change' }],
+    transactionFees: [
+      '', {
+        validators: [
+          Validators.required, Validators.pattern('^[0-9.]+$')
+        ], updateOn: 'change'
+      }],
+    minTransactionFee: [
+      '', {
+        validators: [
+          Validators.required, Validators.pattern('^[0-9.]+$')
+        ], updateOn: 'change'
+      }],
+    rollingReserves: [
+      '', {
+        validators: [
+          Validators.required, Validators.pattern('^[0-9.]+$')
+        ], updateOn: 'change'
+      }],
+    rollingReservesDays: [
+      '', {
+        validators: [
+          Validators.required, Validators.pattern('^[0-9.]+$')
+        ], updateOn: 'change'
+      }],
+    chargebackFees: [
+      '', {
+        validators: [
+          Validators.required, Validators.pattern('^[0-9.]+$')
+        ], updateOn: 'change'
+      }],
+    monthlyFees: [
+      '', {
+        validators: [
+          Validators.required, Validators.pattern('^[0-9.]+$')
+        ], updateOn: 'change'
+      }],
+    minMonthlyFees: [
+      '', {
+        validators: [
+          Validators.required, Validators.pattern('^[0-9.]+$')
+        ], updateOn: 'change'
+      }],
+    beneficiaryName: ['', { validators: [Validators.required], updateOn: 'change' }],
+    beneficiaryAddress: ['', { validators: [Validators.required], updateOn: 'change' }],
+    iban: ['', { validators: [Validators.required], updateOn: 'change' }],
+    bankName: ['', { validators: [Validators.required], updateOn: 'change' }],
+    bankAddress: ['', { validators: [Validators.required], updateOn: 'change' }],
+    swift: ['', { validators: [Validators.required], updateOn: 'change' }]
+  });
+
+  get defaultSchemeFlag(): string {
+    return this.defaultSchemeName;
+  }
+
+  get targetValueParams(): TargetParams {
+    const val = this.schemeForm.get('target')?.value;
+    const params = new TargetParams();
+    switch (val) {
+      case SettingsFeeTargetFilterType.None: {
+        params.title = '';
+        params.inputPlaceholder = '';
+        params.dataList = [];
+        this.targetEntity = '';
+        break;
+      }
+      case SettingsFeeTargetFilterType.WidgetId: {
+        params.title = 'List of widget identifiers *';
+        params.inputPlaceholder = 'New identifier...';
+        params.dataList = WidgetIdFilterList;
+        this.targetEntity = 'widget identifier';
+        break;
+      }
+      case SettingsFeeTargetFilterType.Country: {
+        params.title = 'List of countries *';
+        params.inputPlaceholder = 'New country...';
+        params.dataList = CountryFilterList;
+        this.targetEntity = 'country';
+        break;
+      }
+      case SettingsFeeTargetFilterType.AccountId: {
+        params.title = 'List of account identifiers *';
+        params.inputPlaceholder = 'New identifier...';
+        params.dataList = AccountIdFilterList;
+        this.targetEntity = 'account identifier';
+        break;
+      }
+      case SettingsFeeTargetFilterType.AccountType: {
+        params.title = 'List of account types *';
+        params.inputPlaceholder = 'New account type...';
+        params.dataList = AccountTypeFilterList;
+        this.targetEntity = 'account type';
+        break;
+      }
+      case SettingsFeeTargetFilterType.InitiateFrom: {
+        params.title = 'List of widgets *';
+        params.inputPlaceholder = 'New widget...';
+        params.dataList = WidgetFilterList;
+        this.targetEntity = 'widget';
+        break;
+      }
+    }
+    return params;
+  }
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private dataService: PaymentDataService,
+    private errorHandler: ErrorService) {
+  }
+
+  ngOnInit(): void {
+    this.filteredTargetValues = of(this.filterTargetValues(''));
+    this.schemeForm.valueChanges.subscribe({
+      next: (result: any) => {
+        if (!this.create && !this.loadingData) {
+          this.formChanged.emit(true);
+        }
+      }
+    });
+    this.schemeForm.get('target')
+        ?.valueChanges
+        .subscribe(val => {
+          this.clearTargetValues();
+          this.setTargetValidator();
+          this.filteredTargetValues = this.schemeForm.get('targetValue')
+                                          ?.valueChanges
+                                          .pipe(
+                                            startWith(''),
+                                            map(value => this.filterTargetValues(value)));
+        });
+    this.getPaymentProviders();
+  }
+
+  private getPaymentProviders() {
+    this.providers = [];
+    this.dataService.getProviders()
+        ?.valueChanges
+        .subscribe(({ data }) => {
+          const providers = data.getPaymentProviders as PaymentProvider[];
+          this.providers = providers?.map((val) => new PaymentProviderView(val)) as PaymentProviderView[];
+        }, (error) => {
+          this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load wallet list');
+        });
+  }
+
+  private setTargetValidator(): void {
+    const val = this.schemeForm.get('target')?.value;
+    if (val === SettingsFeeTargetFilterType.None) {
+      this.schemeForm.get('targetValues')
+          ?.clearValidators();
+    } else {
+      this.schemeForm.get('targetValues')
+          ?.setValidators([Validators.required]);
+    }
+    this.schemeForm.get('targetValues')
+        ?.updateValueAndValidity();
+  }
+
+  private filterTargetValues(value: string): CommonTargetValue[] {
+    if (this.targetEntity !== '') {
+      let filterValue = '';
+      if (value) {
+        filterValue = value.toLowerCase();
+        return this.targetValueParams.dataList.filter(c => c.title.toLowerCase()
+                                                            .includes(filterValue));
+      } else {
+        return this.targetValueParams.dataList;
+      }
+    } else {
+      return [];
+    }
+  }
+
+  setFormData(scheme: FeeScheme | null): void {
+    this.schemeForm.reset();
+    this.defaultSchemeName = '';
+    if (scheme !== null) {
+      this.loadingData = true;
+      this.removeIncorrectTargetValues(scheme);
+      this.defaultSchemeName = scheme.isDefault ? scheme.name : '';
+      this.schemeForm.get('id')
+          ?.setValue(scheme?.id);
+      this.schemeForm.get('name')
+          ?.setValue(scheme?.name);
+      this.schemeForm.get('description')
+          ?.setValue(scheme?.description);
+      this.schemeForm.get('isDefault')
+          ?.setValue(scheme?.isDefault);
+      this.schemeForm.get('target')
+          ?.setValue(scheme?.target);
+      this.schemeForm.get('targetValues')
+          ?.setValue(scheme?.targetValues);
+      this.schemeForm.get('instrument')
+          ?.setValue(scheme.instrument);
+      this.schemeForm.get('userType')
+          ?.setValue(scheme?.userType);
+      this.schemeForm.get('userMode')
+          ?.setValue(scheme?.userMode);
+      this.schemeForm.get('trxType')
+          ?.setValue(scheme?.trxType);
+      this.schemeForm.get('provider')
+          ?.setValue(scheme?.provider);
+      this.schemeForm.get('transactionFees')
+          ?.setValue(scheme?.terms.transactionFees);
+      this.schemeForm.get('minTransactionFee')
+          ?.setValue(scheme?.terms.minTransactionFee);
+      this.schemeForm.get('rollingReserves')
+          ?.setValue(scheme?.terms.rollingReserves);
+      this.schemeForm.get('rollingReservesDays')
+          ?.setValue(scheme?.terms.rollingReservesDays);
+      this.schemeForm.get('chargebackFees')
+          ?.setValue(scheme?.terms.chargebackFees);
+      this.schemeForm.get('monthlyFees')
+          ?.setValue(scheme?.terms.monthlyFees);
+      this.schemeForm.get('minMonthlyFees')
+          ?.setValue(scheme?.terms.minMonthlyFees);
+      this.schemeForm.get('beneficiaryName')
+          ?.setValue(scheme?.details.beneficiaryName);
+      this.schemeForm.get('beneficiaryAddress')
+          ?.setValue(scheme?.details.beneficiaryAddress);
+      this.schemeForm.get('iban')
+          ?.setValue(scheme?.details.iban);
+      this.schemeForm.get('bankName')
+          ?.setValue(scheme?.details.bankName);
+      this.schemeForm.get('bankAddress')
+          ?.setValue(scheme?.details.bankAddress);
+      this.schemeForm.get('swift')
+          ?.setValue(scheme?.details.swift);
+      const p = this.targetValueParams;
+      this.setTargetValidator();
+      this.loadingData = false;
+      this.formChanged.emit(false);
+    } else {
+      this.schemeForm.get('id')
+          ?.setValue('');
+      this.schemeForm.get('name')
+          ?.setValue('');
+      this.schemeForm.get('description')
+          ?.setValue('');
+      this.schemeForm.get('isDefault')
+          ?.setValue('');
+      this.schemeForm.get('target')
+          ?.setValue(SettingsFeeTargetFilterType.None);
+      this.schemeForm.get('targetValues')
+          ?.setValue([]);
+      this.schemeForm.get('instrument')
+          ?.setValue('');
+      this.schemeForm.get('userType')
+          ?.setValue([]);
+      this.schemeForm.get('userMode')
+          ?.setValue([]);
+      this.schemeForm.get('trxType')
+          ?.setValue('');
+      this.schemeForm.get('provider')
+          ?.setValue('');
+      this.schemeForm.get('transactionFees')
+          ?.setValue('');
+      this.schemeForm.get('minTransactionFee')
+          ?.setValue('');
+      this.schemeForm.get('rollingReserves')
+          ?.setValue('');
+      this.schemeForm.get('rollingReservesDays')
+          ?.setValue('');
+      this.schemeForm.get('chargebackFees')
+          ?.setValue('');
+      this.schemeForm.get('monthlyFees')
+          ?.setValue('');
+      this.schemeForm.get('minMonthlyFees')
+          ?.setValue('');
+      this.schemeForm.get('beneficiaryName')
+          ?.setValue('');
+      this.schemeForm.get('beneficiaryAddress')
+          ?.setValue('');
+      this.schemeForm.get('iban')
+          ?.setValue('');
+      this.schemeForm.get('bankName')
+          ?.setValue('');
+      this.schemeForm.get('bankAddress')
+          ?.setValue('');
+      this.schemeForm.get('swift')
+          ?.setValue('');
+      this.setTargetValidator();
+    }
+  }
+
+  setSchemeData(): FeeScheme {
+    const data = new FeeScheme(null);
+    // common
+    data.name = this.schemeForm.get('name')?.value;
+    data.description = this.schemeForm.get('description')?.value;
+    data.isDefault = this.schemeForm.get('isDefault')?.value;
+    data.id = this.schemeForm.get('id')?.value;
+    // target
+    data.setTarget(this.schemeForm.get('target')?.value, this.schemeForm.get('targetValues')?.value);
+    (this.schemeForm.get('instrument')?.value as PaymentInstrument[]).forEach(x => data.instrument.push(x));
+    (this.schemeForm.get('trxType')?.value as TransactionType[]).forEach(x => data.trxType.push(x));
+    (this.schemeForm.get('provider')?.value as string[]).forEach(x => data.provider.push(x));
+    (this.schemeForm.get('userType')?.value as UserType[]).forEach(x => data.userType.push(x));
+    (this.schemeForm.get('userMode')?.value as UserMode[]).forEach(x => data.userMode.push(x));
+    // terms
+    data.terms.transactionFees = Number(this.schemeForm.get('transactionFees')?.value);
+    data.terms.minTransactionFee = Number(this.schemeForm.get('minTransactionFee')?.value);
+    data.terms.rollingReserves = Number(this.schemeForm.get('rollingReserves')?.value);
+    data.terms.rollingReservesDays = Number(this.schemeForm.get('rollingReservesDays')?.value);
+    data.terms.chargebackFees = Number(this.schemeForm.get('chargebackFees')?.value);
+    data.terms.monthlyFees = Number(this.schemeForm.get('monthlyFees')?.value);
+    data.terms.minMonthlyFees = Number(this.schemeForm.get('minMonthlyFees')?.value);
+    // wire details
+    data.details.beneficiaryName = this.schemeForm.get('beneficiaryName')?.value;
+    data.details.beneficiaryAddress = this.schemeForm.get('beneficiaryAddress')?.value;
+    data.details.iban = this.schemeForm.get('iban')?.value;
+    data.details.bankName = this.schemeForm.get('bankName')?.value;
+    data.details.bankAddress = this.schemeForm.get('bankAddress')?.value;
+    data.details.swift = this.schemeForm.get('swift')?.value;
+    return data;
+  }
+
+  private validateField(name: string): boolean {
+    let valid = true;
+    if (this.schemeForm.get(name)?.touched || this.forceValidate) {
+      valid = this.schemeForm.get(name)?.valid as boolean;
+    }
+    return valid;
+  }
+
+  tabHasError(tab: string): boolean {
+    let valid: boolean | undefined = true;
+    if (tab === 'tab1') {
+      valid = this.validateField('target');
+      if (valid) {
+        valid = this.validateField('targetValues');
+      }
+      if (valid) {
+        valid = this.validateField('instrument');
+      }
+      if (valid) {
+        valid = this.validateField('userType');
+      }
+      if (valid) {
+        valid = this.validateField('userMode');
+      }
+      if (valid) {
+        valid = this.validateField('trxType');
+      }
+      if (valid) {
+        valid = this.validateField('provider');
+      }
+      if (valid) {
+        valid = (this.errorMessage === '');
+      }
+    } else if (tab === 'tab2') {
+      valid = this.validateField('transactionFees');
+      if (valid) {
+        valid = this.validateField('minTransactionFee');
+      }
+      if (valid) {
+        valid = this.validateField('rollingReserves');
+      }
+      if (valid) {
+        valid = this.validateField('rollingReservesDays');
+      }
+      if (valid) {
+        valid = this.validateField('chargebackFees');
+      }
+      if (valid) {
+        valid = this.validateField('monthlyFees');
+      }
+      if (valid) {
+        valid = this.validateField('minMonthlyFees');
+      }
+    } else if (tab === 'tab3') {
+      valid = this.validateField('beneficiaryName');
+      if (valid) {
+        valid = this.validateField('beneficiaryAddress');
+      }
+      if (valid) {
+        valid = this.validateField('iban');
+      }
+      if (valid) {
+        valid = this.validateField('bankName');
+      }
+      if (valid) {
+        valid = this.validateField('bankAddress');
+      }
+      if (valid) {
+        valid = this.validateField('swift');
+      }
+    }
+    return valid !== true;
+  }
+
+  setSelectedTab(index: number): void {
+    this.selectedTab = index;
+  }
+
+  addTargetValue(event: MatChipInputEvent): void {
+    const input = event.input;
+    const value = event.value;
+    // Add new target value
+    if ((value || '').trim()) {
+      const values = this.schemeForm.get('targetValues')?.value;
+      values.push(value.trim());
+      this.schemeForm.get('targetValues')
+          ?.setValue(values);
+    }
+    // Reset the input value
+    if (input) {
+      input.value = '';
+    }
+    this.schemeForm.get('targetValue')
+        ?.setValue(null);
+  }
+
+  removeTargetValue(val: string): void {
+    const values = this.schemeForm.get('targetValues')?.value;
+    const index = values.indexOf(val);
+    if (index >= 0) {
+      values.splice(index, 1);
+      this.schemeForm.get('targetValues')
+          ?.setValue(values);
+    }
+  }
+
+  clearTargetValues(): void {
+    this.schemeForm.get('targetValues')
+        ?.setValue([]);
+  }
+
+  targetItemSelected(event: MatAutocompleteSelectedEvent): void {
+    const values = this.schemeForm.get('targetValues')?.value;
+    if (!values.includes(event.option.viewValue)) {
+      values.push(event.option.viewValue);
+      this.schemeForm.get('targetValues')
+          ?.setValue(values);
+    }
+    this.targetValueInput.nativeElement.value = '';
+    this.schemeForm.get('targetValue')
+        ?.setValue(null);
+  }
+
+  onDeleteScheme(): void {
+    this.delete.emit(this.settingsId);
+  }
+
+  private removeIncorrectTargetValues(scheme: FeeScheme): void {
+    scheme.targetValues = scheme.targetValues.filter(val => {
+      let result = true;
+      if (scheme.target === SettingsFeeTargetFilterType.Country) {
+        const c = getCountry(val);
+        result = (c !== null);
+      } else if (scheme.target === SettingsFeeTargetFilterType.AccountType) {
+        const c = AccountTypeFilterList.find(x => x.title.toLowerCase() === val.toLowerCase());
+        result = (c !== undefined);
+      }
+      return result;
+    });
+  }
+
+  private validateTargetValues(): boolean {
+    let result = true;
+    const filter = this.schemeForm.get('target')?.value as SettingsFeeTargetFilterType;
+    if (filter === SettingsFeeTargetFilterType.Country) {
+      (this.schemeForm.get('targetValues')?.value as string[]).every(x => {
+        const c = getCountry(x);
+        if (c === null) {
+          result = false;
+          this.errorMessage = `Country ${x} is not found in a list`;
+          this.selectedTab = 0;
+          return false;
+        }
+        return true;
+      });
+    } else if (filter === SettingsFeeTargetFilterType.AccountType) {
+      (this.schemeForm.get('targetValues')?.value as string[]).every(x => {
+        const c = AccountTypeFilterList.find(t => t.title.toLowerCase() === x.toLowerCase());
+        if (c === undefined) {
+          result = false;
+          this.errorMessage = `Account type ${x} is not valid`;
+          this.selectedTab = 0;
+          return false;
+        }
+        return true;
+      });
+    }
+    return result;
+  }
+
+  onSubmit(): void {
+    this.forceValidate = true;
+    if (this.schemeForm.valid && this.validateTargetValues()) {
+      this.save.emit(this.setSchemeData());
+    } else {
+      this.errorMessage = 'Input data is not completely valid. Please, check all fields are valid.';
+    }
+  }
+
+  onCancel(): void {
+    this.cancel.emit();
+  }
+}

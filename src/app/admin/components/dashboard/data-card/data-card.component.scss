@@ -1,0 +1,23 @@
+mat-card-content {
+  display: flex;
+  flex-direction: row;
+
+  .column {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+
+    &.align-right {
+      text-align: right;
+    }
+
+    > div {
+      height: 24px;
+      padding: 0 4px;
+
+      &.header {
+        background: #7E95A9;
+      }
+    }
+  }
+}

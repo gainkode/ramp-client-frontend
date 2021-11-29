@@ -1,0 +1,22 @@
+<mat-card>
+    <mat-card-title>{{title}}</mat-card-title>
+    <mat-card-content *ngIf="data">
+        <div
+                *ngFor="let col of data.columns"
+                class="column"
+                [ngClass]="{'column': true, 'align-right': col.type !== 'text'}"
+        >
+            <div class="header">{{col.label}}</div>
+            <div *ngFor="let row of data.rows">
+                <ng-container *ngIf="col.type === 'count-volume' && row[col.key + 'Count']">
+                    <span>({{row[col.key + 'Count']}})</span>
+                    <span>{{row[col.key + 'Volume']}}</span>
+                </ng-container>
+                <ng-container *ngIf="col.type !== 'count-volume'">
+                {{row[col.key]}}
+                </ng-container>
+                <button *ngIf="col.type === 'action'" mat-button>Show all</button>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>
