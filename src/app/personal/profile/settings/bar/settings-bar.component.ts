@@ -4,7 +4,7 @@ import { MenuItem } from 'src/app/model/common.model';
 @Component({
     selector: 'app-settings-bar',
     templateUrl: './settings-bar.component.html',
-    styleUrls: ['../../../assets/menu.scss', '../../../assets/button.scss']
+    styleUrls: ['../../../../../assets/menu.scss']
 })
 export class SettingsMenuBarComponent {
     @Output() select = new EventEmitter<string>();

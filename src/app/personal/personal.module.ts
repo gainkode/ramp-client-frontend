@@ -54,8 +54,11 @@ import { PersonalContactCreateComponent } from './profile/details/contact-create
 import { PersonalPricelistComponent } from './profile/pricelist.component';
 import { PersonalContactDetailsComponent } from './profile/details/contact-details.component';
 import { PersonalPaymentCompleteComponent } from './profile/details/payment-complete.component';
-import { PersonalSettingsComponent } from './profile/settings.component';
-import { SettingsMenuBarComponent } from './profile/settings-bar.component';
+import { PersonalSettingsComponent } from './profile/settings/settings.component';
+import { SettingsMenuBarComponent } from './profile/settings/bar/settings-bar.component';
+import { PersonalVerificationSettingsComponent } from './profile/settings/panels/verification.component';
+import { PersonalInfoSettingsComponent } from './profile/settings/panels/personal-info.component';
+import { PersonalSecuriySettingsComponent } from './profile/settings/panels/security.component';
 
 const routing = RouterModule.forChild([
     // Main page
@@ -138,6 +141,7 @@ export class MaterialModule { }
         PersonalSwapComponent,
         PersonalNotificationsComponent,
         PersonalSettingsComponent, SettingsMenuBarComponent,
+        PersonalInfoSettingsComponent, PersonalVerificationSettingsComponent, PersonalSecuriySettingsComponent,
         // Data containers
         PersonalBalanceChartComponent, PersonalBalanceListComponent, PersonalTransactionListComponent, PersonalWalletListComponent,
         PersonalContactListComponent, PersonalNotificationListComponent, PersonalPaymentCompleteComponent,
