@@ -93,6 +93,7 @@ export class PersonalComponent implements OnInit {
                     section === 'contactlist' ||
                     section === 'transactions' ||
                     section === 'pricelist' ||
+                    section === 'settings' ||
                     section === 'notifications') {
                     this.selectedMenu = section;
                 } else {
@@ -225,7 +226,7 @@ export class PersonalComponent implements OnInit {
         } else if (item.id === 'administration') {
             this.routeTo('/admin/main');
         } else if (item.id === 'settings') {
-            this.routeTo('/personal/myaccount');
+            this.routeTo('/personal/main/settings');
         } else {
             this.routeTo(item.url);
         }
