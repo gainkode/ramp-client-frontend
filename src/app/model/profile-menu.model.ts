@@ -25,13 +25,12 @@ export const PersonalProfileMenuItems: Array<MenuItem> = [
         url: '/personal/main/contactlist',
         icon: 'group'
     },
-    
-    {
-        id: 'pricelist',
-        name: 'Crypto Pricelist',
-        url: '/personal/main/pricelist',
-        icon: 'insights'
-    }
+    // {
+    //     id: 'pricelist',
+    //     name: 'Crypto Pricelist',
+    //     url: '/personal/main/pricelist',
+    //     icon: 'insights'
+    // }
 ];
 
 export const PersonalProfilePopupMenuItems: Array<MenuItem> = [
