@@ -13,7 +13,7 @@ import { getCurrencySign } from 'src/app/utils/utils';
 @Component({
     selector: 'app-personal-balance-chart',
     templateUrl: './balance-chart.component.html',
-    styleUrls: ['../../../../assets/menu.scss', '../../../../assets/button.scss', '../../../../assets/profile.scss']
+    styleUrls: ['../../../../../assets/menu.scss', '../../../../../assets/button.scss', '../../../../../assets/profile.scss']
 })
 export class PersonalBalanceChartComponent implements OnInit, OnDestroy {
     @Input() set selectedCurrency(val: string) {

@@ -11,7 +11,7 @@ import { ProfileDataService } from 'src/app/services/profile.service';
 @Component({
     selector: 'app-personal-wallet-details',
     templateUrl: './wallet-details.component.html',
-    styleUrls: ['../../../../assets/button.scss', '../../../../assets/details.scss']
+    styleUrls: ['../../../../../assets/button.scss', '../../../../../assets/details.scss']
 })
 export class PersonalWalletDetailsComponent implements OnDestroy {
     @Input() wallet: WalletItem | undefined;

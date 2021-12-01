@@ -14,7 +14,12 @@ import { ProfileDataService } from 'src/app/services/profile.service';
 @Component({
     selector: 'app-personal-contact-list',
     templateUrl: './contact-list.component.html',
-    styleUrls: ['../../../../assets/menu.scss', '../../../../assets/button.scss', '../../../../assets/profile.scss', './contact-list.component.scss']
+    styleUrls: [
+        '../../../../../assets/menu.scss',
+        '../../../../../assets/button.scss',
+        '../../../../../assets/profile.scss',
+        './contact-list.component.scss'
+    ]
 })
 export class PersonalContactListComponent implements OnDestroy, AfterViewInit {
     @Output() onShowDetails = new EventEmitter<ProfileItemContainer>();

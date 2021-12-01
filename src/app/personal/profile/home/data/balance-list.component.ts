@@ -10,7 +10,7 @@ import { ErrorService } from 'src/app/services/error.service';
 @Component({
     selector: 'app-personal-balance-list',
     templateUrl: './balance-list.component.html',
-    styleUrls: ['../../../../assets/button.scss', '../../../../assets/profile.scss', './balance-list.component.scss']
+    styleUrls: ['../../../../../assets/button.scss', '../../../../../assets/profile.scss', './balance-list.component.scss']
 })
 export class PersonalBalanceListComponent implements OnInit, OnDestroy {
     @Output() onError = new EventEmitter<string>();
@@ -58,7 +58,7 @@ export class PersonalBalanceListComponent implements OnInit, OnDestroy {
     }
 
     showWallets(id: string): void {
-        this.router.navigateByUrl(`/personal/main/wallets;balance=true;currencies=${id.toLowerCase()}`);
+        this.router.navigateByUrl(`${this.auth.getUserMainPage()}/wallets;balance=true;currencies=${id.toLowerCase()}`);
     }
 
     private loadBalanceData(): void {

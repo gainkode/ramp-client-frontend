@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { Router } from "@angular/router";
 import { PaymentCompleteDetails, PaymentWidgetType } from "src/app/model/payment.model";
 import { ProfileItemContainer, ProfileItemContainerType } from "src/app/model/profile-item.model";
+import { AuthService } from "src/app/services/auth.service";
 
 @Component({
     selector: 'app-personal-payment-complete',
@@ -15,7 +16,7 @@ export class PersonalPaymentCompleteComponent implements OnInit {
     title = '';
     amount = '';
 
-    constructor(private router: Router) { }
+    constructor(private router: Router, private auth: AuthService) { }
 
     ngOnInit(): void {
         if (this.payment?.paymentType === PaymentWidgetType.Buy) {
@@ -38,6 +39,6 @@ export class PersonalPaymentCompleteComponent implements OnInit {
         const details = new ProfileItemContainer();
         details.container = ProfileItemContainerType.PaymentComplete;
         this.onComplete.emit(details);
-        this.router.navigateByUrl('/personal/main/transactions');
+        this.router.navigateByUrl(`${this.auth.getUserMainPage()}/transactions`);
     }
 }

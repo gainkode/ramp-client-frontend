@@ -14,7 +14,7 @@ import { PersonalWalletListComponent } from './data/wallet-list.component';
 @Component({
     selector: 'app-personal-wallets',
     templateUrl: './wallets.component.html',
-    styleUrls: ['../../../assets/profile.scss']
+    styleUrls: ['../../../../assets/profile.scss']
 })
 export class PersonalWalletsComponent implements OnInit, OnDestroy {
     @Output() onShowDetails = new EventEmitter<ProfileItemContainer>();

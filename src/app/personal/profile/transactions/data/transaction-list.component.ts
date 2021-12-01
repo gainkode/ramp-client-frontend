@@ -14,7 +14,12 @@ import { ProfileDataService } from 'src/app/services/profile.service';
 @Component({
     selector: 'app-personal-transaction-list',
     templateUrl: './transaction-list.component.html',
-    styleUrls: ['../../../../assets/menu.scss', '../../../../assets/button.scss', '../../../../assets/profile.scss', './transaction-list.component.scss']
+    styleUrls: [
+        '../../../../../assets/menu.scss',
+        '../../../../../assets/button.scss',
+        '../../../../../assets/profile.scss',
+        './transaction-list.component.scss'
+    ]
 })
 export class PersonalTransactionListComponent implements OnDestroy, AfterViewInit {
     @Input() recent = false;

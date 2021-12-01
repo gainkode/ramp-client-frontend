@@ -13,7 +13,12 @@ import { ProfileDataService } from 'src/app/services/profile.service';
 @Component({
     selector: 'app-personal-wallet-list',
     templateUrl: './wallet-list.component.html',
-    styleUrls: ['../../../../assets/menu.scss', '../../../../assets/button.scss', '../../../../assets/profile.scss', './wallet-list.component.scss']
+    styleUrls: [
+        '../../../../../assets/menu.scss',
+        '../../../../../assets/button.scss',
+        '../../../../../assets/profile.scss',
+        './wallet-list.component.scss'
+    ]
 })
 export class PersonalWalletListComponent implements OnDestroy {
     @Input() cryptoCurrencies: CurrencyView[] = [];

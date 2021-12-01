@@ -13,7 +13,7 @@ import { PersonalContactListComponent } from './data/contact-list.component';
 @Component({
     selector: 'app-personal-contacts',
     templateUrl: './contacts.component.html',
-    styleUrls: ['../../../assets/profile.scss']
+    styleUrls: ['../../../../assets/profile.scss']
 })
 export class PersonalContactsComponent implements OnInit, OnDestroy {
     @Output() onShowDetails = new EventEmitter<ProfileItemContainer>();

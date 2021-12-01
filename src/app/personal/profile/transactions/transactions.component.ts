@@ -8,7 +8,7 @@ import { PersonalTransactionListComponent } from './data/transaction-list.compon
 @Component({
     selector: 'app-personal-transactions',
     templateUrl: './transactions.component.html',
-    styleUrls: ['../../../assets/profile.scss']
+    styleUrls: ['../../../../assets/profile.scss']
 })
 export class PersonalTransactionsComponent {
     @Output() onShowDetails = new EventEmitter<ProfileItemContainer>();

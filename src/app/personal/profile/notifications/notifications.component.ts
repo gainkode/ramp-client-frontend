@@ -12,7 +12,7 @@ import { UserNotification } from 'src/app/model/generated-models';
 @Component({
     selector: 'app-personal-notifications',
     templateUrl: './notifications.component.html',
-    styleUrls: ['../../../assets/profile.scss', '../../../assets/button.scss']
+    styleUrls: ['../../../../assets/profile.scss', '../../../../assets/button.scss']
 })
 export class PersonalNotificationsComponent implements OnDestroy {
     @Output() onShowError = new EventEmitter<string>();
@@ -53,7 +53,7 @@ export class PersonalNotificationsComponent implements OnDestroy {
     onFilterUpdate(filter: ProfileBaseFilter): void {
         this.router.navigateByUrl('/', { skipLocationChange: true }).then(() =>
             this.router.navigate([
-                `${this.auth.getUserMainPage()}/notifications`,
+                `${this.auth.getUserAccountPage()}/notifications`,
                 filter.getParameters()
             ])
         );

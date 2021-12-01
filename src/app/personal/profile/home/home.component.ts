@@ -8,13 +8,13 @@ import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
+import { PersonalTransactionListComponent } from '../transactions/data/transaction-list.component';
 import { PersonalBalanceListComponent } from './data/balance-list.component';
-import { PersonalTransactionListComponent } from './data/transaction-list.component';
 
 @Component({
     selector: 'app-personal-home',
     templateUrl: './home.component.html',
-    styleUrls: ['../../../assets/menu.scss', '../../../assets/button.scss', '../../../assets/profile.scss']
+    styleUrls: ['../../../../assets/menu.scss', '../../../../assets/button.scss', '../../../../assets/profile.scss']
 })
 export class PersonalHomeComponent implements OnInit, OnDestroy {
     @Output() onShowDetails = new EventEmitter<ProfileItemContainer>();
