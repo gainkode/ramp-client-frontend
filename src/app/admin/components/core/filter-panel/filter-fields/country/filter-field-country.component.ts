@@ -54,10 +54,10 @@ export class FilterFieldCountryComponent implements OnInit, OnDestroy, ControlVa
   // region ControlValueAccessor implementation
 
   onTouched = () => {
-  }
+  };
 
   onChange = (_: any) => {
-  }
+  };
 
   writeValue(value: Country[]): void {
     this.selectedOptions = value;
@@ -83,7 +83,7 @@ export class FilterFieldCountryComponent implements OnInit, OnDestroy, ControlVa
   handleOptionAdded(event: MatChipInputEvent): void {
     const country = this.filteredOptions.find(
       c => c.name.toLowerCase() === event.value.toLowerCase()
-                                          .trim()
+                                         .trim()
     );
 
     if (country) {
@@ -114,21 +114,17 @@ export class FilterFieldCountryComponent implements OnInit, OnDestroy, ControlVa
   }
 
   private getFilteredOptions(searchString: string): Observable<Country[]> {
-    if (searchString) {
-      const filteredOptions = this.countryOptions.filter(c => {
-        return (
-            !searchString || c.name.toLowerCase()
-                              .includes(searchString)
-          ) &&
-          !this.selectedOptions.some(s => {
-            return s.code3 === c.code3;
-          });
-      });
+    const filteredOptions = this.countryOptions.filter(c => {
+      return (
+          !searchString || c.name.toLowerCase()
+                            .includes(searchString)
+        ) &&
+        !this.selectedOptions.some(s => {
+          return s.code3 === c.code3;
+        });
+    });
 
-      return of(filteredOptions);
-    } else {
-      return of([...this.countryOptions]);
-    }
+    return of(filteredOptions);
   }
 
   private setSelectedOptions(options: Country[]): void {

@@ -95,7 +95,7 @@ export class KycLevelView {
 }
 
 export class CurrencyView {
-    id: string = '';
+    id = '';
     title = '';
     name = '';
     img = '';

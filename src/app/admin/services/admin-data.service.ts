@@ -1250,6 +1250,7 @@ export class AdminDataService {
 
   }
 
+
   saveFeeSettings(feeScheme: FeeScheme): Observable<any> {
     return !feeScheme.id
       ? this.mutate({
@@ -1406,6 +1407,7 @@ export class AdminDataService {
       : of(null);
   }
 
+
   deleteFeeSettings(settingsId: string): Observable<any> {
     return this.mutate({
       mutation: DELETE_SETTINGS_FEE,
@@ -1452,6 +1454,15 @@ export class AdminDataService {
     } else {
       return null;
     }
+  }
+
+  deleteWidget(widgetId: string): Observable<any> {
+    return this.mutate({
+      mutation: DELETE_WIDGET,
+      variables: {
+        widgetId
+      }
+    });
   }
 
   // TODO: move somewhere closer to HTTP, this approach can give false negatives (normally observable doesn't finish,
