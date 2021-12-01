@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@ang
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AssetAddressShortListResult, PaymentInstrument, PaymentPreauthResultShort, Rate, TransactionShort, TransactionSource, TransactionType } from 'src/app/model/generated-models';
-import { CardView, CheckoutSummary, PaymentCompleteDetails, PaymentProviderView, WidgetSettings } from 'src/app/model/payment.model';
+import { CardView, CheckoutSummary, PaymentCompleteDetails, PaymentProviderView, PaymentWidgetType, WidgetSettings } from 'src/app/model/payment.model';
 import { ErrorService } from 'src/app/services/error.service';
 import { PaymentDataService } from 'src/app/services/payment.service';
 import { ExchangeRateService } from 'src/app/services/rate.service';
@@ -336,6 +336,7 @@ export class TransferWidgetComponent implements OnInit {
   // == Payment ===========
   processingComplete(): void {
     const details = new PaymentCompleteDetails();
+    details.paymentType = PaymentWidgetType.Transfer;
     details.amount = parseFloat(this.summary.amountTo?.toFixed(this.summary.amountToPrecision) ?? '0');
     details.currency = this.summary.currencyTo;
     this.onComplete.emit(details);
@@ -392,6 +393,11 @@ export class TransferWidgetComponent implements OnInit {
             this.startNotificationListener();
           }
           const order = data.createTransaction as TransactionShort;
+
+
+          console.log(order);
+
+
           this.inProgress = false;
           if (order.code) {
             this.summary.instrument = instrument;

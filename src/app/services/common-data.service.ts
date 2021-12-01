@@ -24,44 +24,10 @@ const GET_SETTINGS_CURRENCY_POST = gql`
   }
 `;
 
-const MY_STATE = gql`
+const MY_TRANSACTIONS_TOTAL = gql`
 query MyState {
   myState {
-    date,
-    transactionSummary {
-      assetId,
-      in { transactionCount, amount },
-      out { transactionCount, amount }
-    },
-    vault {
-      totalBalanceFiat,
-      balancesPerAsset {
-        assetId,
-        totalBalance,
-        totalBalanceFiat,
-        availableBalance,
-        availableBalanceFiat
-      },
-      assets {
-        id, total, addresses { address }
-      }
-    },
-    additionalVaults {
-      totalBalanceFiat,
-      balancesPerAsset {
-        assetId,
-        totalBalance,
-        totalBalanceFiat,
-        availableBalance,
-        availableBalanceFiat
-      },
-      assets {
-        id, total, addresses { address }
-      }
-    },
-    externalWallets {
-        assets { id, address }
-    }
+    totalAmountEur
   }
 }
 `;
@@ -218,10 +184,10 @@ export class CommonDataService {
     }
   }
 
-  getMyState(): QueryRef<any, EmptyObject> | null {
+  getMyTransactionsTotal(): QueryRef<any, EmptyObject> | null {
     if (this.apollo.client !== undefined) {
       return this.apollo.watchQuery<any>({
-        query: MY_STATE,
+        query: MY_TRANSACTIONS_TOTAL,
         fetchPolicy: 'network-only'
       });
     } else {
