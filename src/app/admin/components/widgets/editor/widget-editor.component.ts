@@ -125,7 +125,7 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
   }
 
   onDelete(): void {
-
+    this.adminDataService.deleteWidget(this.form.value.id);
   }
 
   onCancel(): void {
