@@ -630,6 +630,83 @@ const ADD_KYC_LEVEL_SETTINGS = gql`
   }
 `;
 
+
+const CREATE_WIDGET = gql`
+  mutation CreateWidget(
+    $userId: String
+    $additionalSettings: String
+    $countriesCode2: [String!]
+    $currenciesFrom: [String!]
+    $currenciesTo: [String!]
+    $destinationAddresses: [String!]
+    $instruments: [PaymentInstrument!]
+    $liquidityProvider: LiquidityProvider
+    $paymentProviders: [String!]
+    $transactionTypes: [TransactionType!]
+  ) {
+    createWidget(
+      userId: $userId
+      widget: {
+        additionalSettings: $additionalSettings
+        transactionTypes: $transactionTypes
+        currenciesFrom: $currenciesFrom
+        currenciesTo: $currenciesTo
+        destinationAddresses: $destinationAddresses
+        countriesCode2: $countriesCode2
+        instruments: $instruments
+        paymentProviders: $paymentProviders
+        liquidityProvider: $liquidityProvider
+      }
+    ) {
+      widgetId
+    }
+  }
+`;
+
+// const UPDATE_WIDGET = gql`
+//   mutation UpdateWidget(
+//     $userId: String
+//     $transactionTypes: String[]
+//     $currenciesFrom: String[]
+//     $currenciesTo: String[]
+//     $destinationAddresses: String[]
+//     $countriesCode2: String[]
+//     $instruments: String[]
+//     $paymentProviders: String[]
+//     $liquidityProvider: String
+//     $additionalSettings: String
+//   ) {
+//     updateWidget(
+//       userId: $userId
+//       widget: {
+//         transactionTypes: $transactionTypes
+//         currenciesFrom: $currenciesFrom
+//         currenciesTo: $currenciesTo
+//         destinationAddresses: $destinationAddresses
+//         countriesCode2: $countriesCode2
+//         instruments: $instruments
+//         paymentProviders: $paymentProviders
+//         liquidityProvider: $liquidityProvider
+//         additionalSettings: $additionalSettings
+//       }
+//     ) {
+//       settingsKycLevelId
+//     }
+//   }
+// `;
+
+const DELETE_WIDGET = gql`
+  mutation DeleteWidget(
+    $widgetId: String
+  ) {
+    deleteWidget(
+      widgetId: $widgetId
+    ) {
+      widgetId
+    }
+  }
+`;
+
 const UPDATE_SETTINGS_FEE = gql`
   mutation UpdateSettingsFee(
     $settingsId: ID!
@@ -1307,6 +1384,26 @@ export class AdminDataService {
           data: level.getDataObject(),
         },
       });
+  }
+
+  saveWidget(widget: WidgetItem): Observable<any> {
+    return !widget.id
+      ? this.mutate({
+        mutation: CREATE_WIDGET,
+        variables: {
+          userId: widget.userId,
+          transactionTypes: widget.transactionTypes,
+          currenciesFrom: widget.currenciesFrom,
+          currenciesTo: widget.currenciesTo,
+          destinationAddresses: widget.destinationAddresses,
+          countriesCode2: widget.countriesCode2,
+          instruments: widget.instruments,
+          paymentProviders: widget.paymentProviders,
+          liquidityProvider: widget.liquidityProvider,
+            additionalSettings: widget.additionalSettings
+        },
+      })
+      : of(null);
   }
 
   deleteFeeSettings(settingsId: string): Observable<any> {

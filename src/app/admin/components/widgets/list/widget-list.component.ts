@@ -6,6 +6,7 @@ import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { PageEvent } from '@angular/material/paginator';
 import { WidgetItem } from '../../../model/widget.model';
+import { LayoutService } from '../../../services/layout.service';
 
 @Component({
   templateUrl: 'widget-list.component.html',
@@ -36,11 +37,17 @@ export class WidgetListComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
   constructor(
+    private layoutService: LayoutService,
     private adminDataService: AdminDataService
   ) {
   }
 
   ngOnInit(): void {
+    this.layoutService.rightPanelCloseRequested$.pipe(takeUntil(this.destroy$))
+        .subscribe(() => {
+          this.selectedItem = undefined;
+        });
+
     this.loadData();
   }
 
@@ -59,6 +66,10 @@ export class WidgetListComponent implements OnInit, OnDestroy, AfterViewInit {
   handleFilterApplied(filter: Filter): void {
     this.filter = filter;
     this.loadData();
+  }
+
+  createNewWidget(): void {
+    this.selectedItem = new WidgetItem(null);
   }
 
 

@@ -173,7 +173,7 @@ export class CostEditorComponent implements OnInit {
     this.getPaymentProviders();
   }
 
-  private getPaymentProviders() {
+  private getPaymentProviders(): void {
     this.providers = [];
     this.dataService.getProviders()
         ?.valueChanges

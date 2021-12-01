@@ -1,5 +1,12 @@
 <app-filter-panel [fields]="filterFields" (filter)="handleFilterApplied($event)"></app-filter-panel>
 
+<div class="action-panel">
+    <button mat-flat-button color="primary" [disabled]="selectedItem && !selectedItem.id"
+            (click)="createNewWidget()">
+        ADD WIDGET
+    </button>
+</div>
+
 <div class="data-table">
     <mat-table
             matSort
@@ -77,8 +84,15 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </mat-table>
+
 </div>
 
 <mat-paginator [length]="customerCount" [pageSize]="pageSize"
                [pageSizeOptions]="[25, 50, 100]" showFirstLastButtons (page)="handlePage($event)">
 </mat-paginator>
+
+<ng-template *ngIf="selectedItem" appRightPanel>
+    <app-widget-editor>
+        [widget]="selectedItem"
+    </app-widget-editor>
+</ng-template>

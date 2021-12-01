@@ -59,6 +59,7 @@ import { WalletListComponent } from './components/wallets/list/wallet-list.compo
 import { FeeDetailsComponent } from './components/fees/fee-details/fee-details.component';
 import { FeeListComponent } from './components/fees/fee-list/fee-list.component';
 import { DetailsAttributeComponent } from './components/core/details-attribute/details-attribute.component';
+import { WidgetEditorComponent } from './components/widgets/editor/widget-editor.component';
 
 @NgModule({
   imports: [
@@ -121,7 +122,8 @@ import { DetailsAttributeComponent } from './components/core/details-attribute/d
     FilterFieldUserComponent,
     FilterFieldCountryComponent,
     FilterFieldWidgetComponent,
-    DetailsAttributeComponent
+    DetailsAttributeComponent,
+    WidgetEditorComponent
   ],
   providers: [
     LayoutService,
