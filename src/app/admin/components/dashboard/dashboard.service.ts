@@ -349,12 +349,12 @@ export class DashboardService implements OnDestroy {
                 key: 'count',
                 label: 'Count',
                 type: 'number'
-              },
-              {
-                key: 'action',
-                label: '',
-                type: 'action'
               }
+              // {
+              //   key: 'action',
+              //   label: '',
+              //   type: 'action'
+              // }
             ],
             rows: [
               {
@@ -400,12 +400,12 @@ export class DashboardService implements OnDestroy {
                 key: 'count',
                 label: 'Wallets',
                 type: 'number'
-              },
-              {
-                key: 'action',
-                label: '',
-                type: 'action'
               }
+              // {
+              //   key: 'action',
+              //   label: '',
+              //   type: 'action'
+              // }
             ],
             rows: rawData.balances ?
               rawData.balances.map(item => {

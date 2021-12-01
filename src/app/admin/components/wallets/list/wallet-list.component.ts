@@ -8,7 +8,7 @@ import { MatSort } from '@angular/material/sort';
 import { Filter } from '../../../model/filter.model';
 import { takeUntil } from 'rxjs/operators';
 import { AssetAddress } from '../../../../model/generated-models';
-import { Wallet } from '../../../model/wallet.model';
+import { WalletItem } from '../../../model/wallet.model';
 
 @Component({
   templateUrl: 'wallet-list.component.html',
@@ -24,8 +24,8 @@ export class WalletListComponent implements OnInit, OnDestroy, AfterViewInit {
     'search'
   ];
 
-  selectedWallet?: Wallet;
-  wallets: Wallet[] = [];
+  selectedWallet?: WalletItem;
+  wallets: WalletItem[] = [];
   walletCount = 0;
   pageSize = 25;
   pageIndex = 0;
@@ -77,7 +77,7 @@ export class WalletListComponent implements OnInit, OnDestroy, AfterViewInit {
     return event;
   }
 
-  toggleDetails(wallet: Wallet): void {
+  toggleDetails(wallet: WalletItem): void {
     if (this.isSelectedWallet(wallet.address)) {
       this.selectedWallet = undefined;
     } else {

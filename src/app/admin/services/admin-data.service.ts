@@ -8,16 +8,22 @@ import {
   AssetAddressListResult,
   CountryCodeType,
   DashboardStats,
-  QueryGetDashboardStatsArgs, QueryGetSettingsFeeArgs,
+  QueryGetDashboardStatsArgs,
+  QueryGetNotificationsArgs,
+  QueryGetSettingsFeeArgs,
+  QueryGetSettingsKycArgs,
+  QueryGetSettingsKycLevelsArgs,
   QueryGetTransactionsArgs,
   QueryGetUsersArgs,
   QueryGetWalletsArgs,
   QueryGetWidgetsArgs,
-  SettingsFeeListResult,
+  SettingsFeeListResult, SettingsKycLevelListResult,
+  SettingsKycListResult,
   TransactionListResult,
   TransactionSource,
   User,
   UserListResult,
+  UserNotificationListResult,
   UserType,
   Widget,
   WidgetListResult
@@ -26,13 +32,15 @@ import { KycLevel, KycScheme } from '../../model/identification.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TransactionItemDeprecated } from '../../model/transaction.model';
 import { catchError, finalize, map, tap } from 'rxjs/operators';
-import { ApolloQueryResult } from '@apollo/client/core';
+import { ApolloQueryResult, FetchResult, MutationOptions } from '@apollo/client/core';
 import { ErrorService } from '../../services/error.service';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { Filter } from '../model/filter.model';
 import { UserItem } from '../../model/user.model';
-import { Wallet } from '../model/wallet.model';
+import { WalletItem } from '../model/wallet.model';
+import { NotificationItem } from '../../model/notification.model';
+import { WidgetItem } from '../model/widget.model';
 
 /* region queries */
 
@@ -262,6 +270,37 @@ const GET_KYC_LEVELS = gql`
   }
 `;
 
+const GET_NOTIFICATIONS = gql`
+  query GetNotifications(
+    $skip: Int
+    $first: Int
+    $orderBy: [OrderBy!]
+    $filter: String
+  ) {
+    getNotifications(
+      skip: $skip
+      first: $first
+      orderBy: $orderBy
+      filter: $filter
+    ) {
+      count
+      list {
+        created
+        linkedId
+        linkedTable
+        params
+        text
+        title
+        userId
+        userNotificationId
+        userNotificationLevel
+        userNotificationTypeCode
+        viewed
+      }
+    }
+  }
+`;
+
 const GET_TRANSACTIONS = gql`
   query GetTransactions(
     $transactionIdsOnly: [String!]
@@ -425,15 +464,30 @@ const GET_WALLETS = gql`
   }
 `;
 
-const GET_WIDGETS = gql`
-  query GetWidgets(
-    $userId: String
+const GET_WIDGET_IDS = gql`
+  query GetWidgetIds(
     $filter: String
     $skip: Int
     $first: Int
     $orderBy: [OrderBy!]
   ) {
-    getWidgets(userId: $userId, filter: $filter, skip: $skip, first: $first, orderBy: $orderBy) {
+    getWidgets(filter: $filter, skip: $skip, first: $first, orderBy: $orderBy) {
+      count
+      list {
+        widgetId
+      }
+    }
+  }
+`;
+
+const GET_WIDGETS = gql`
+  query GetWidgets(
+    $filter: String
+    $skip: Int
+    $first: Int
+    $orderBy: [OrderBy!]
+  ) {
+    getWidgets(filter: $filter, skip: $skip, first: $first, orderBy: $orderBy) {
       count
       list {
         widgetId
@@ -443,14 +497,10 @@ const GET_WIDGETS = gql`
         currenciesFrom
         currenciesTo
         destinationAddress
-        minAmountFrom
-        maxAmountFrom
-        fixAmountFrom
         countriesCode2
         instruments
         paymentProviders
         liquidityProvider
-        data
       }
     }
   }
@@ -810,28 +860,89 @@ export class AdminDataService {
     }
   }
 
-  getKycSettings(): QueryRef<any, EmptyObject> | null {
-    if (this.apollo.client !== undefined) {
-      return this.apollo.watchQuery<any>({
-        query: GET_KYC_SETTINGS,
-        fetchPolicy: 'network-only'
-      });
-    } else {
-      return null;
-    }
+  getKycSettings(): Observable<{ list: Array<KycScheme>; count: number; }> {
+    return this.watchQuery<{ getSettingsKyc: SettingsKycListResult }, QueryGetSettingsKycArgs>({
+      query: GET_KYC_SETTINGS,
+      fetchPolicy: 'network-only'
+    })
+               .pipe(
+                 map(result => {
+                   if (result.data?.getSettingsKyc?.list && result.data?.getSettingsKyc?.count) {
+                     return {
+                       list: result.data.getSettingsKyc.list.map(item => new KycScheme(item)),
+                       count: result.data.getSettingsKyc.count
+                     };
+                   } else {
+                     return {
+                       list: [],
+                       count: 0
+                     };
+                   }
+                 })
+               );
   }
 
-  getKycLevels(userType: UserType | null): QueryRef<any, EmptyObject> | null {
+  getKycLevels(userType: UserType | null): Observable<{ list: Array<KycLevel>; count: number; }> {
     const userTypeFilter = userType === null ? '' : userType?.toString();
-    // if (this.apollo.client !== undefined) {
-    //   return this.apollo.watchQuery<any>({
-    //     query: GET_KYC_LEVELS,
-    //     variables: { filter: userTypeFilter },
-    //     fetchPolicy: 'network-only'
-    //   });
-    // } else {
-    return null;
-    // }
+
+    return this.watchQuery<{ getSettingsKycLevels: SettingsKycLevelListResult }, QueryGetSettingsKycLevelsArgs>({
+      query: GET_KYC_LEVELS,
+      variables: { filter: userTypeFilter },
+      fetchPolicy: 'network-only'
+    })
+               .pipe(
+                 map(result => {
+                   if (result.data?.getSettingsKycLevels?.list && result.data?.getSettingsKycLevels?.count) {
+                     return {
+                       list: result.data.getSettingsKycLevels.list.map(item => new KycLevel(item)),
+                       count: result.data.getSettingsKycLevels.count
+                     };
+                   } else {
+                     return {
+                       list: [],
+                       count: 0
+                     };
+                   }
+                 })
+               );
+  }
+
+  getNotifications(
+    pageIndex: number,
+    takeItems: number,
+    orderField: string,
+    orderDesc: boolean,
+    filter?: Filter
+  ): Observable<{ list: Array<NotificationItem>; count: number; }> {
+
+    const vars: QueryGetNotificationsArgs = {
+      filter: filter?.search,
+      skip: pageIndex * takeItems,
+      first: takeItems,
+      orderBy: [{ orderBy: orderField, desc: orderDesc }]
+    };
+
+    return this.watchQuery<{ getNotifications: UserNotificationListResult }, QueryGetTransactionsArgs>(
+      {
+        query: GET_NOTIFICATIONS,
+        variables: vars,
+        fetchPolicy: 'network-only'
+      })
+               .pipe(
+                 map(result => {
+                   if (result.data?.getNotifications?.list && result.data?.getNotifications?.count) {
+                     return {
+                       list: result.data.getNotifications.list.map(val => new NotificationItem(val)),
+                       count: result.data.getNotifications.count
+                     };
+                   } else {
+                     return {
+                       list: [],
+                       count: 0
+                     };
+                   }
+                 })
+               );
   }
 
   getTransaction(transactionId: string): Observable<TransactionItemDeprecated | undefined> {
@@ -944,7 +1055,7 @@ export class AdminDataService {
     orderField: string,
     orderDesc: boolean,
     filter?: Filter
-  ): Observable<{ list: Array<Wallet>; count: number; }> {
+  ): Observable<{ list: Array<WalletItem>; count: number; }> {
     const vars: QueryGetWalletsArgs = {
       userIdsOnly: filter?.users,
       assetIdsOnly: filter?.assets,
@@ -964,7 +1075,7 @@ export class AdminDataService {
                  map(result => {
                    if (result.data?.getWallets?.list && result.data?.getWallets?.count) {
                      return {
-                       list: result.data.getWallets.list.map(item => new Wallet(item)),
+                       list: result.data.getWallets.list.map(item => new WalletItem(item)),
                        count: result.data.getWallets.count
                      };
                    } else {
@@ -977,7 +1088,7 @@ export class AdminDataService {
                );
   }
 
-  getWidgets(
+  getWidgetIds(
     userFilter: string,
     pageIndex: number,
     takeItems: number,
@@ -987,14 +1098,13 @@ export class AdminDataService {
     const orderFields = [{ orderBy: orderField, desc: orderDesc }];
     const customerFilter = userFilter === null ? '' : userFilter?.toString();
     const vars = {
-      userId: null,
       filter: customerFilter,
       skip: pageIndex * takeItems,
       first: takeItems,
       orderBy: orderFields
     };
     return this.watchQuery<{ getWidgets: WidgetListResult }, QueryGetWidgetsArgs>({
-      query: GET_WIDGETS,
+      query: GET_WIDGET_IDS,
       variables: vars,
       fetchPolicy: 'network-only'
     })
@@ -1016,39 +1126,78 @@ export class AdminDataService {
 
   }
 
-  saveFeeSettings(settings: FeeScheme, create: boolean): Observable<any> {
-    return create
-      ? this.apollo.mutate({
+  getWidgets(
+    pageIndex: number,
+    takeItems: number,
+    orderField: string,
+    orderDesc: boolean,
+    filter: Filter
+  ): Observable<{ list: WidgetItem[], count: number }> {
+    const orderFields = [{ orderBy: orderField, desc: orderDesc }];
+    const vars = {
+      filter: filter.search,
+      skip: pageIndex * takeItems,
+      first: takeItems,
+      orderBy: orderFields
+    };
+    return this.watchQuery<{ getWidgets: WidgetListResult }, QueryGetWidgetsArgs>({
+      query: GET_WIDGETS,
+      variables: vars,
+      fetchPolicy: 'network-only'
+    })
+               .pipe(
+                 map(result => {
+                   if (result.data?.getWidgets?.list && result.data?.getWidgets?.count) {
+                     return {
+                       list: result.data.getWidgets.list.map(w => {
+                         return new WidgetItem(w);
+                       }),
+                       count: result.data.getWidgets.count
+                     };
+                   } else {
+                     return {
+                       list: [],
+                       count: 0
+                     };
+                   }
+                 })
+               );
+
+  }
+
+  saveFeeSettings(feeScheme: FeeScheme): Observable<any> {
+    return !feeScheme.id
+      ? this.mutate({
         mutation: ADD_SETTINGS_FEE,
         variables: {
-          name: settings.name,
-          description: settings.description,
-          targetFilterType: settings.target,
-          targetFilterValues: settings.targetValues,
-          targetInstruments: settings.instrument,
-          targetUserTypes: settings.userType,
-          targetUserModes: settings.userMode,
-          targetTransactionTypes: settings.trxType,
-          targetPaymentProviders: settings.provider,
-          terms: settings.terms.getObject(),
-          wireDetails: settings.details.getObject()
+          name: feeScheme.name,
+          description: feeScheme.description,
+          targetFilterType: feeScheme.target,
+          targetFilterValues: feeScheme.targetValues,
+          targetInstruments: feeScheme.instrument,
+          targetUserTypes: feeScheme.userType,
+          targetUserModes: feeScheme.userMode,
+          targetTransactionTypes: feeScheme.trxType,
+          targetPaymentProviders: feeScheme.provider,
+          terms: feeScheme.terms.getObject(),
+          wireDetails: feeScheme.details.getObject()
         }
       })
-      : this.apollo.mutate({
+      : this.mutate({
         mutation: UPDATE_SETTINGS_FEE,
         variables: {
-          settingsId: settings.id,
-          name: settings.name,
-          description: settings.description,
-          targetFilterType: settings.target,
-          targetFilterValues: settings.targetValues,
-          targetInstruments: settings.instrument,
-          targetUserTypes: settings.userType,
-          targetUserModes: settings.userMode,
-          targetTransactionTypes: settings.trxType,
-          targetPaymentProviders: settings.provider,
-          terms: settings.terms.getObject(),
-          wireDetails: settings.details.getObject()
+          settingsId: feeScheme.id,
+          name: feeScheme.name,
+          description: feeScheme.description,
+          targetFilterType: feeScheme.target,
+          targetFilterValues: feeScheme.targetValues,
+          targetInstruments: feeScheme.instrument,
+          targetUserTypes: feeScheme.userType,
+          targetUserModes: feeScheme.userMode,
+          targetTransactionTypes: feeScheme.trxType,
+          targetPaymentProviders: feeScheme.provider,
+          terms: feeScheme.terms.getObject(),
+          wireDetails: feeScheme.details.getObject()
         }
       });
   }
@@ -1148,17 +1297,13 @@ export class AdminDataService {
       });
   }
 
-  deleteFeeSettings(settingsId: string): Observable<any> | null {
-    if (this.apollo.client !== undefined) {
-      return this.apollo.mutate({
-        mutation: DELETE_SETTINGS_FEE,
-        variables: {
-          settingsId
-        }
-      });
-    } else {
-      return null;
-    }
+  deleteFeeSettings(settingsId: string): Observable<any> {
+    return this.mutate({
+      mutation: DELETE_SETTINGS_FEE,
+      variables: {
+        settingsId
+      }
+    });
   }
 
   deleteCostSettings(settingsId: string): Observable<any> | null {
@@ -1227,7 +1372,6 @@ export class AdminDataService {
   }
 
   private watchQuery<TData, TVariables>(options: WatchQueryOptions<TVariables, TData>): Observable<ApolloQueryResult<TData>> {
-
     this.updateIsBusy('on');
 
     if (this.apollo.client !== undefined) {
@@ -1261,4 +1405,30 @@ export class AdminDataService {
     this.snackBar.open('Apollo not ready', undefined, { duration: 5000 });
     return throwError(null);
   }
+
+  private mutate<TData, TVariables>(options: MutationOptions<TData, TVariables>): Observable<FetchResult<TData>> {
+    if (this.apollo.client !== undefined) {
+      return this.apollo.mutate<TData, TVariables>(options)
+                 .pipe(
+                   catchError(error => {
+                     if (this.auth.token !== '') {
+                       this.snackBar.open(
+                         this.errorHandler.getError(error.message, 'Unable to perform action'),
+                         undefined,
+                         { duration: 5000 }
+                       );
+                     } else {
+                       this.router.navigateByUrl('/')
+                           .then();
+                     }
+
+                     return throwError(null);
+                   })
+                 );
+    }
+
+    this.snackBar.open('Apollo not ready', undefined, { duration: 5000 });
+    return throwError(null);
+  }
 }
+

@@ -12,7 +12,6 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['customer-list.component.scss']
 })
 export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
-  @Output() changeEditMode = new EventEmitter<boolean>();
   @ViewChild(MatSort) sort!: MatSort;
 
   filterFields = [

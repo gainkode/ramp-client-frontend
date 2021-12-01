@@ -1,5 +1,5 @@
 <div class="action-panel">
-    <button mat-flat-button color="primary" [disabled]="newSchemeIsBeingCreated"
+    <button mat-flat-button color="primary" [disabled]="selectedScheme && !selectedScheme.id"
             (click)="createNewScheme()">
         ADD SCHEME
     </button>
@@ -13,7 +13,7 @@
                 <button mat-icon-button class="row-button" (click)="toggleDetails(element)"
                         [attr.aria-label]="'Change details'" [attr.aria-pressed]="!!selectedScheme"
                         [matTooltip]="getDetailsTooltip(element.id)" matTooltipClass="info-tooltip"
-                        [disabled]="newSchemeIsBeingCreated">
+                        [disabled]="selectedScheme && !selectedScheme.id">
                     <mat-icon class="details-icon">{{getDetailsIcon(element.id)}}</mat-icon>
                 </button>
             </td>
@@ -72,13 +72,11 @@
     </mat-table>
 </div>
 
-<ng-template *ngIf="showDetailed" appRightPanel>
-        <app-fee-editor *ngIf="showDetailed"
+<ng-template *ngIf="selectedScheme" appRightPanel>
+        <app-fee-editor
                         [currentScheme]="selectedScheme"
-                        [create]="newSchemeIsBeingCreated"
                         (save)="onSaved($event)"
                         (delete)="onDeleteScheme($event)"
-                        (cancel)="onCancelEdit()"
-                        (formChanged)="onEditorFormChanged($event)">
+                        (cancel)="onCancelEdit()">
         </app-fee-editor>
 </ng-template>

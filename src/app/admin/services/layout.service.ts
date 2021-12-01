@@ -1,10 +1,12 @@
 import { Injectable, TemplateRef } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 @Injectable()
 export class LayoutService {
   private rightPanelTemplateSubject = new BehaviorSubject<TemplateRef<any> | null>(null);
   private rightPanelIsOpenedSubject = new BehaviorSubject<boolean>(false);
+  private hasBackdropSubject = new BehaviorSubject<boolean>(false);
+  private rightPanelCloseRequestedSubject = new Subject<void>();
 
   constructor() {
 
@@ -16,6 +18,14 @@ export class LayoutService {
 
   get rightPanelIsOpened$(): Observable<boolean> {
     return this.rightPanelIsOpenedSubject.asObservable();
+  }
+
+  get hasBackdrop$(): Observable<boolean> {
+    return this.hasBackdropSubject.asObservable();
+  }
+
+  get rightPanelCloseRequested$(): Observable<void> {
+    return this.rightPanelCloseRequestedSubject.asObservable();
   }
 
   setRightPanel(template: TemplateRef<any>): void {
@@ -31,8 +41,14 @@ export class LayoutService {
     setTimeout(() => {
       this.hideRightPanel();
       this.rightPanelTemplateSubject.next(null);
+      this.setBackdrop(false);
     });
   }
+
+  requestRightPanelClose(): void {
+    this.rightPanelCloseRequestedSubject.next();
+  }
+
 
   hideRightPanel(): void {
     this.rightPanelIsOpenedSubject.next(false);
@@ -40,6 +56,12 @@ export class LayoutService {
 
   showRightPanel(): void {
     this.rightPanelIsOpenedSubject.next(true);
+  }
+
+  setBackdrop(enable: boolean): void {
+    setTimeout(() => {
+      this.hasBackdropSubject.next(enable);
+    }, 0);
   }
 
 }

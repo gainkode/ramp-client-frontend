@@ -1,6 +1,6 @@
 import { AssetAddress } from '../../model/generated-models';
 
-export class Wallet {
+export class WalletItem {
   address = '';
   legacyAddress?: string;
   description?: string;

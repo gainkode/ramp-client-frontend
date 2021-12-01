@@ -3,6 +3,11 @@
 :host {
   ::ng-deep {
     @import "scss/data-table";
+    @import "scss/right-panel";
+
+    * {
+      box-sizing: border-box;
+    }
   }
 }
 

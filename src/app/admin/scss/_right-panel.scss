@@ -1,0 +1,21 @@
+mat-sidenav.right {
+
+  h2 {
+
+  }
+
+  .panel-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    margin-top: 16px;
+
+    > * {
+      margin-right: 16px;
+    }
+  }
+
+  .mat-tab-body-content {
+    overflow-x: hidden;
+  }
+}

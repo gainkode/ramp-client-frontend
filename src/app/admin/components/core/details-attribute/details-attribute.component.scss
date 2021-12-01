@@ -1,0 +1,21 @@
+.wrapper {
+  margin-bottom: 0.45em;
+
+  &.highlight {
+    .value {
+      color: brown;
+    }
+  }
+}
+
+.label {
+  margin-left: 0.1em;
+  font-size: 12px;
+  color: #3B4D5A;
+}
+
+.value {
+  display: block;
+  font-size: 16px;
+  line-height: 20px;
+}

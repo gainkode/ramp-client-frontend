@@ -4,13 +4,13 @@ import { KycLevel } from 'src/app/model/identification.model';
 @Component({
   selector: 'app-level-table',
   templateUrl: 'level-table.component.html',
-  styleUrls: ['identification.component.scss']
+  styleUrls: ['list/identification-list.component.scss']
 })
 export class LevelTableComponent {
   @Input() levels: KycLevel[] = [];
   @Input() selectedLevel: KycLevel | null = null;
   @Output() toggle = new EventEmitter<KycLevel>();
-  displayedColumns: string[] = ['name', 'flow', 'userType', 'details'];
+  displayedColumns: string[] = ['details', 'name', 'flow', 'userType'];
 
   constructor() {
   }
@@ -26,7 +26,7 @@ export class LevelTableComponent {
   }
 
   getDetailsIcon(levelId: string): string {
-    return (this.isSelectedLevel(levelId)) ? 'clear' : 'description';
+    return (this.isSelectedLevel(levelId)) ? 'clear' : 'open_in_new';
   }
 
   getDetailsTooltip(levelId: string): string {
