@@ -1,0 +1,79 @@
+<app-filter-panel [fields]="filterFields" (filter)="handleFilterApplied($event)"></app-filter-panel>
+
+<div class="data-table">
+    <mat-table
+            matSort
+            matSortDirection="desc"
+            matSortDisableClear
+            [matSortActive]="sortedField"
+            [dataSource]="data"
+    >
+
+        <ng-container matColumnDef="created">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef>Created</th>
+            <td mat-cell *matCellDef="let element"> {{element.created}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="linkedId">
+            <th mat-header-cell *matHeaderCellDef>Linked ID</th>
+            <td mat-cell *matCellDef="let element"> {{element.linkedId}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="linkedTable">
+            <th mat-header-cell *matHeaderCellDef>Linked Table</th>
+            <td mat-cell *matCellDef="let element"> {{element.linkedTable}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="params">
+            <th mat-header-cell *matHeaderCellDef>Params</th>
+            <td mat-cell *matCellDef="let element"> {{element.params}} </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="text">
+            <th mat-header-cell *matHeaderCellDef>Text</th>
+            <td mat-cell *matCellDef="let element"> {{element.text}} </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="title">
+            <th mat-header-cell *matHeaderCellDef>Title</th>
+            <td mat-cell *matCellDef="let element"> {{element.title}} </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="userId">
+            <th mat-header-cell *matHeaderCellDef>User Id</th>
+            <td mat-cell *matCellDef="let element"> {{element.userId}} </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="userNotificationId">
+            <th mat-header-cell *matHeaderCellDef>User notification Id</th>
+            <td mat-cell *matCellDef="let element"> {{element.userNotificationId}} </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="userNotificationLevel">
+            <th mat-header-cell *matHeaderCellDef>User notification level</th>
+            <td mat-cell *matCellDef="let element"> {{element.userNotificationLevel}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="userNotificationTypeCode">
+            <th mat-header-cell *matHeaderCellDef>User notification type code</th>
+            <td mat-cell *matCellDef="let element"> {{element.userNotificationTypeCode}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="viewed">
+            <th mat-header-cell *matHeaderCellDef>Viewed</th>
+            <td mat-cell *matCellDef="let element"> {{element.viewed}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </mat-table>
+</div>
+
+<mat-paginator [length]="customerCount" [pageSize]="pageSize"
+               [pageSizeOptions]="[25, 50, 100]" showFirstLastButtons (page)="handlePage($event)">
+</mat-paginator>

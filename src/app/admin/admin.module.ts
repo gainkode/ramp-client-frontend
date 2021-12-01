@@ -21,7 +21,7 @@ import { AdminComponent } from './admin.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { CostsComponent } from './components/costs/costs.component';
 import { CostEditorComponent } from './components/costs/cost-editor.component';
-import { IdentificationComponent } from './components/identification/identification.component';
+import { IdentificationListComponent } from './components/identification/list/identification-list.component';
 import { IdTableComponent } from './components/identification/id-table.component';
 import { LevelTableComponent } from './components/identification/level-table.component';
 import { LevelEditorComponent } from './components/identification/level-editor.component';
@@ -32,11 +32,11 @@ import { CustomerDetailsComponent } from './components/customers/details/custome
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FilterPanelComponent } from './components/core/filter-panel/filter-panel.component';
-import { NotificationsComponent } from './components/notifications/notifications.component';
+import { NotificationListComponent } from './components/notifications/list/notification-list.component';
 import { ReconciliationComponent } from './components/reconciliation/reconciliation.component';
 import { SystemUsersComponent } from './components/system-users/system-users.component';
 import { RiskCenterComponent } from './components/risk-center/risk-center.component';
-import { WidgetsComponent } from './components/widgets/widgets.component';
+import { WidgetListComponent } from './components/widgets/list/widget-list.component';
 import { MainMenuComponent } from './components/core/main-menu/main-menu.component';
 import { AdminRoutingModule } from './admin.routing.module';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -58,6 +58,7 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { WalletListComponent } from './components/wallets/list/wallet-list.component';
 import { FeeDetailsComponent } from './components/fees/fee-details/fee-details.component';
 import { FeeListComponent } from './components/fees/fee-list/fee-list.component';
+import { DetailsAttributeComponent } from './components/core/details-attribute/details-attribute.component';
 
 @NgModule({
   imports: [
@@ -103,9 +104,9 @@ import { FeeListComponent } from './components/fees/fee-list/fee-list.component'
     WalletListComponent,
     FeeListComponent,
     FeeDetailsComponent,
-    NotificationsComponent,
+    NotificationListComponent,
     CostsComponent, CostEditorComponent,
-    IdentificationComponent,
+    IdentificationListComponent,
     IdTableComponent,
     LevelTableComponent,
     KycEditorComponent,
@@ -113,13 +114,14 @@ import { FeeListComponent } from './components/fees/fee-list/fee-list.component'
     ReconciliationComponent,
     SystemUsersComponent,
     RiskCenterComponent,
-    WidgetsComponent,
+    WidgetListComponent,
     RightPanelDirective,
     TransactionSingleComponent,
     DataCardComponent,
     FilterFieldUserComponent,
     FilterFieldCountryComponent,
-    FilterFieldWidgetComponent
+    FilterFieldWidgetComponent,
+    DetailsAttributeComponent
   ],
   providers: [
     LayoutService,

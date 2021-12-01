@@ -60,7 +60,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   }
 
   handleRightPanelClose(): void {
-    this.layoutService.hideRightPanel();
+    this.layoutService.requestRightPanelClose();
   }
 
   private setPageHeader(): void {

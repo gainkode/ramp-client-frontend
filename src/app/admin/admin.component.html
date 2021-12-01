@@ -1,5 +1,10 @@
-<mat-sidenav-container [hasBackdrop]="false">
-    <mat-sidenav class="left" position="start" mode="side" opened>
+<mat-sidenav-container [hasBackdrop]="layoutService.hasBackdrop$ | async">
+    <mat-sidenav
+            class="left"
+            position="start"
+            mode="side"
+            opened
+            disableClose>
         <app-main-menu></app-main-menu>
     </mat-sidenav>
     <mat-sidenav

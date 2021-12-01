@@ -209,24 +209,15 @@
         </mat-tab>
     </mat-tab-group>
 
-    <div class="form-element">
-        <div class="button-form-panel">
-            <div class="button-panel-left">
-                <button class="main-button main-button-accent" type="submit">
-                    SAVE
-                </button>
-            </div>
-            <div *ngIf="defaultSchemeFlag==='' && create==false" class="button-panel-right">
-                <button class="main-button main-button-warn" type="button" (click)="onDeleteScheme()">
-                    DELETE
-                </button>
-            </div>
-        </div>
-        <br>
-        <div>
-            <button class="main-button main-button-primary" type="button" (click)="onCancel()">
-                CANCEL
-            </button>
-        </div>
+    <div class="panel-actions">
+        <button mat-flat-button color="primary" type="submit">
+            SAVE
+        </button>
+        <button *ngIf="defaultSchemeFlag === '' && create==false" mat-flat-button color="warn" (click)="onDeleteScheme()">
+            DELETE
+        </button>
+        <button mat-flat-button (click)="onCancel()">
+            CANCEL
+        </button>
     </div>
 </form>

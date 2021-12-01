@@ -110,7 +110,7 @@ export class FilterFieldWidgetComponent implements OnInit, OnDestroy, ControlVal
 
   private getFilteredOptions(searchString: string): Observable<string[]> {
     if (searchString) {
-      return this.adminDataService.getWidgets(searchString, 0, 100, 'widgetId', false)
+      return this.adminDataService.getWidgetIds(searchString, 0, 100, 'widgetId', false)
                  .pipe(
                    map(result => {
                      return result.list.filter(

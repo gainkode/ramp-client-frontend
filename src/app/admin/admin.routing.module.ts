@@ -4,13 +4,13 @@ import { AdminComponent } from './admin.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AdminGuard } from './admin.guard';
 import { CustomerListComponent } from './components/customers/list/customer-list.component';
-import { NotificationsComponent } from './components/notifications/notifications.component';
+import { NotificationListComponent } from './components/notifications/list/notification-list.component';
 import { CostsComponent } from './components/costs/costs.component';
-import { IdentificationComponent } from './components/identification/identification.component';
+import { IdentificationListComponent } from './components/identification/list/identification-list.component';
 import { ReconciliationComponent } from './components/reconciliation/reconciliation.component';
 import { SystemUsersComponent } from './components/system-users/system-users.component';
 import { RiskCenterComponent } from './components/risk-center/risk-center.component';
-import { WidgetsComponent } from './components/widgets/widgets.component';
+import { WidgetListComponent } from './components/widgets/list/widget-list.component';
 import { TransactionListComponent } from './components/transactions/list/transaction-list.component';
 import { TransactionSingleComponent } from './components/transactions/transaction-single/transaction-single.component';
 import { WalletListComponent } from './components/wallets/list/wallet-list.component';
@@ -70,7 +70,7 @@ const routes: Routes = [
       },
       {
         path: 'notifications',
-        component: NotificationsComponent,
+        component: NotificationListComponent,
         data: {
           header: 'Notifications'
         }
@@ -84,7 +84,7 @@ const routes: Routes = [
       },
       {
         path: 'identification',
-        component: IdentificationComponent,
+        component: IdentificationListComponent,
         data: {
           header: 'Identification'
         }
@@ -112,7 +112,7 @@ const routes: Routes = [
       },
       {
         path: 'widgets',
-        component: WidgetsComponent,
+        component: WidgetListComponent,
         data: {
           header: 'Widgets'
         }

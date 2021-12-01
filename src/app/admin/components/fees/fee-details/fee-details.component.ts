@@ -19,6 +19,7 @@ import {
 import { CommonTargetValue, TargetParams } from 'src/app/model/common.model';
 import { CountryFilterList, getCountry } from 'src/app/model/country-code.model';
 import { ErrorService } from 'src/app/services/error.service';
+import { LayoutService } from '../../../services/layout.service';
 
 @Component({
   selector: 'app-fee-editor',
@@ -32,9 +33,9 @@ export class FeeDetailsComponent implements OnInit {
     this.setFormData(scheme);
     this.currency = scheme?.currency as string;
     this.settingsId = (scheme !== null) ? scheme?.id : '';
+    this.layoutService.setBackdrop(!this.settingsId);
   }
 
-  @Input() create = false;
   @Output() save = new EventEmitter<FeeScheme>();
   @Output() delete = new EventEmitter<string>();
   @Output() cancel = new EventEmitter();
@@ -42,10 +43,8 @@ export class FeeDetailsComponent implements OnInit {
   @ViewChild('targetValueInput') targetValueInput!: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete!: MatAutocomplete;
 
-  private defaultSchemeName = '';
-  private settingsId = '';
-  private forceValidate = false;
-  private loadingData = false;
+  settingsId = '';
+
   errorMessage = '';
   selectedTab = 0;
   targetEntity = '';
@@ -59,6 +58,10 @@ export class FeeDetailsComponent implements OnInit {
   providers: PaymentProviderView[] = [];
   userTypes = UserTypeList;
   userModes = UserModeList;
+
+  private defaultSchemeName = '';
+  private forceValidate = false;
+  private loadingData = false;
 
   schemeForm = this.formBuilder.group({
     id: [''],
@@ -180,18 +183,14 @@ export class FeeDetailsComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private dataService: PaymentDataService,
-    private errorHandler: ErrorService) {
+    private errorHandler: ErrorService,
+    private layoutService: LayoutService
+  ) {
   }
 
   ngOnInit(): void {
     this.filteredTargetValues = of(this.filterTargetValues(''));
-    this.schemeForm.valueChanges.subscribe({
-      next: (result: any) => {
-        if (!this.create && !this.loadingData) {
-          this.formChanged.emit(true);
-        }
-      }
-    });
+
     this.schemeForm.get('target')
         ?.valueChanges
         .subscribe(val => {
@@ -206,7 +205,7 @@ export class FeeDetailsComponent implements OnInit {
     this.getPaymentProviders();
   }
 
-  private getPaymentProviders() {
+  private getPaymentProviders(): void {
     this.providers = [];
     this.dataService.getProviders()
         ?.valueChanges
@@ -535,7 +534,7 @@ export class FeeDetailsComponent implements OnInit {
     let result = true;
     const filter = this.schemeForm.get('target')?.value as SettingsFeeTargetFilterType;
     if (filter === SettingsFeeTargetFilterType.Country) {
-      (this.schemeForm.get('targetValues')?.value as string[]).every(x => {
+      result = (this.schemeForm.get('targetValues')?.value as string[]).every(x => {
         const c = getCountry(x);
         if (c === null) {
           result = false;
@@ -546,7 +545,7 @@ export class FeeDetailsComponent implements OnInit {
         return true;
       });
     } else if (filter === SettingsFeeTargetFilterType.AccountType) {
-      (this.schemeForm.get('targetValues')?.value as string[]).every(x => {
+      result = (this.schemeForm.get('targetValues')?.value as string[]).every(x => {
         const c = AccountTypeFilterList.find(t => t.title.toLowerCase() === x.toLowerCase());
         if (c === undefined) {
           result = false;
@@ -556,6 +555,9 @@ export class FeeDetailsComponent implements OnInit {
         }
         return true;
       });
+    }
+    if (result) {
+      this.errorMessage = '';
     }
     return result;
   }

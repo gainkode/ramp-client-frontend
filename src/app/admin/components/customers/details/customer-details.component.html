@@ -1,141 +1,31 @@
-<div class="customer-details-title">
+<section>
     <h2>Info</h2>
-</div>
-<div *ngIf="customer?.id!==''">
-    <label class="customer-details-label">Account ID</label>
-    <div class="customer-details-value">
-        {{customer?.id}}
-    </div>
-</div>
+    <app-details-attribute label="Account ID" [value]="customer?.id"></app-details-attribute>
+    <app-details-attribute label="Company" [value]="customer?.company"></app-details-attribute>
+    <app-details-attribute label="Name" [value]="customer?.lastName"></app-details-attribute>
+    <app-details-attribute label="Address" [value]="customer?.address"></app-details-attribute>
+    <app-details-attribute label="Country" [value]="customer?.country"></app-details-attribute>
+    <app-details-attribute label="Email" [value]="customer?.email"></app-details-attribute>
+    <app-details-attribute label="Phone" [value]="customer?.phone"></app-details-attribute>
+    <app-details-attribute label="Account Currency" [value]="customer?.fiatCurrency"></app-details-attribute>
+</section>
 
-<div *ngIf="customer?.company!==''">
-    <label class="customer-details-label">Company</label>
-    <div class="customer-details-value">
-        {{customer?.company}}
-    </div>
-</div>
+<!--<section *ngIf="customer?.userType?.id==='Merchant'">-->
+<!--    <h2>Verification Level</h2>-->
+<!--    <app-details-attribute label="Merchant agreement" [value]="customer?.id" [highlight]="true"></app-details-attribute>-->
+<!--    <app-details-attribute label="Director docs" [value]="customer?.id" [highlight]="true"></app-details-attribute>-->
+<!--    <app-details-attribute label="Inc. docs" [value]="customer?.id" [highlight]="true"></app-details-attribute>-->
+<!--    <app-details-attribute label="License" [value]="customer?.id" [highlight]="true"></app-details-attribute>-->
+<!--</section>-->
 
-<div *ngIf="customer?.company===''">
-    <label class="customer-details-label">Name</label>
-    <div class="customer-details-value">
-        {{customer?.firstName}} {{customer?.lastName}}
-    </div>
-</div>
 
-<div *ngIf="customer?.address!==''">
-    <label class="customer-details-label">Address</label>
-    <div class="customer-details-value">
-        {{customer?.address}}
-    </div>
-</div>
+<!--<section *ngIf="customer?.userType?.id==='Personal'">-->
+<!--    <h2>Verification</h2>-->
+<!--    <app-details-attribute label="T&C acceptance" [value]="customer?.id" [highlight]="true"></app-details-attribute>-->
+<!--    <app-details-attribute label="POI" [value]="customer?.id" [highlight]="true"></app-details-attribute>-->
+<!--    <app-details-attribute label="POR" [value]="customer?.id" [highlight]="true"></app-details-attribute>-->
+<!--    <app-details-attribute label="Selfie / Live Check" [value]=""></app-details-attribute>-->
+<!--    <app-details-attribute label="SOF" [value]="customer?.id" [highlight]="true"></app-details-attribute>-->
+<!--    <app-details-attribute label="Risk group" [value]="customer?.id" [highlight]="true"></app-details-attribute>-->
+<!--</section>-->
 
-<div *ngIf="customer?.country!==null">
-    <label class="customer-details-label">Country</label>
-    <div class="customer-details-value">
-        <app-dropdown-item itemValue="{{customer?.country?.title}}"
-                           imageClass="{{customer?.country?.imgClass}}"
-                           imageSource="{{customer?.country?.imgSource}}">
-        </app-dropdown-item>
-    </div>
-</div>
-
-<div *ngIf="customer?.email!==''">
-    <label class="customer-details-label">Email</label>
-    <div class="customer-details-value">
-        {{customer?.email}}
-    </div>
-</div>
-
-<div *ngIf="customer?.phone!==''">
-    <label class="customer-details-label">Phone</label>
-    <div class="customer-details-value">
-        {{customer?.phone}}
-    </div>
-</div>
-
-<div *ngIf="customer?.fiatCurrency!==''">
-    <label class="customer-details-label">Account Currency</label>
-    <div class="customer-details-value">
-        {{customer?.fiatCurrency}}
-    </div>
-</div>
-
-<ng-container *ngIf="customer?.userType?.id==='Merchant'">
-    <div class="customer-details-title">
-        <h2>Verification Level</h2>
-    </div>
-    <div *ngIf="customer?.id!==''">
-        <label class="customer-details-label">Merchant agreement</label>
-        <div class="customer-details-value">
-            <div style="color: brown;">{{customer?.id}}</div>
-        </div>
-    </div>
-
-    <div *ngIf="customer?.id!==''">
-        <label class="customer-details-label">Director docs</label>
-        <div class="customer-details-value">
-            <div style="color: brown;">{{customer?.id}}</div>
-        </div>
-    </div>
-
-    <div *ngIf="customer?.id!==''">
-        <label class="customer-details-label">Inc. docs</label>
-        <div class="customer-details-value">
-            <div style="color: brown;">{{customer?.id}}</div>
-        </div>
-    </div>
-
-    <div *ngIf="customer?.id!==''">
-        <label class="customer-details-label">License</label>
-        <div class="customer-details-value">
-            <div style="color: brown;">{{customer?.id}}</div>
-        </div>
-    </div>
-</ng-container>
-
-<ng-container *ngIf="customer?.userType?.id==='Personal'">
-    <div class="customer-details-title">
-        <h2>Verification</h2>
-    </div>
-    <div *ngIf="customer?.id!==''">
-        <label class="customer-details-label">T&C acceptance</label>
-        <div class="customer-details-value">
-            <div style="color: brown;">{{customer?.id}}</div>
-        </div>
-    </div>
-
-    <div *ngIf="customer?.id!==''">
-        <label class="customer-details-label">POI</label>
-        <div class="customer-details-value">
-            <div style="color: brown;">{{customer?.id}}</div>
-        </div>
-    </div>
-
-    <div *ngIf="customer?.id!==''">
-        <label class="customer-details-label">POR</label>
-        <div class="customer-details-value">
-            <div style="color: brown;">{{customer?.id}}</div>
-        </div>
-    </div>
-
-    <div *ngIf="customer?.id!==''">
-        <label class="customer-details-label">Selfie / Live Check</label>
-        <div class="customer-details-value">
-            <div style="color: brown;">{{customer?.id}}</div>
-        </div>
-    </div>
-
-    <div *ngIf="customer?.id!==''">
-        <label class="customer-details-label">SOF</label>
-        <div class="customer-details-value">
-            <div style="color: brown;">{{customer?.id}}</div>
-        </div>
-    </div>
-
-    <div *ngIf="customer?.id!==''">
-        <label class="customer-details-label">Risk group</label>
-        <div class="customer-details-value">
-            <div style="color: brown;">{{customer?.id}}</div>
-        </div>
-    </div>
-</ng-container>

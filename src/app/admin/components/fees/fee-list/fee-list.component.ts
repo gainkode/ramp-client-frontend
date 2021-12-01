@@ -1,19 +1,15 @@
-import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AdminDataService } from '../../../services/admin-data.service';
 import { FeeScheme } from '../../../../model/fee-scheme.model';
-import { Subject, Subscription } from 'rxjs';
+import { pipe, Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { LayoutService } from '../../../services/layout.service';
 
 @Component({
   templateUrl: 'fee-list.component.html',
   styleUrls: ['fee-list.component.scss']
 })
 export class FeeListComponent implements OnInit, OnDestroy {
-  @Output() changeEditMode = new EventEmitter<boolean>();
-  private pShowDetails = false;
-  private pEditMode = false;
-  errorMessage = '';
-  newSchemeIsBeingCreated = false;
   selectedScheme: FeeScheme | null = null;
   schemes: FeeScheme[] = [];
   displayedColumns: string[] = [
@@ -25,30 +21,24 @@ export class FeeListComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject();
   private listSubscription = Subscription.EMPTY;
 
-  get showDetailed(): boolean {
-    return this.pShowDetails;
-  }
-
-  get editMode(): boolean {
-    return this.pEditMode;
-  }
-
   constructor(
+    private layoutService: LayoutService,
     private adminDataService: AdminDataService
   ) {
   }
 
   ngOnInit(): void {
+    this.layoutService.rightPanelCloseRequested$.pipe(takeUntil(this.destroy$))
+        .subscribe(() => {
+          // TODO: ask for confirmation
+          this.selectedScheme = null;
+        });
+
     this.loadList();
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
-  }
-
-  private setEditMode(mode: boolean): void {
-    this.pEditMode = mode;
-    this.changeEditMode.emit(mode);
   }
 
   private isSelectedScheme(schemeId: string): boolean {
@@ -62,7 +52,7 @@ export class FeeListComponent implements OnInit, OnDestroy {
   }
 
   getDetailsIcon(schemeId: string): string {
-    if (this.newSchemeIsBeingCreated) {
+    if (this.selectedScheme && !this.selectedScheme.id) {
       return 'lock';
     } else {
       return this.isSelectedScheme(schemeId) ? 'clear' : 'open_in_new';
@@ -70,7 +60,7 @@ export class FeeListComponent implements OnInit, OnDestroy {
   }
 
   getDetailsTooltip(schemeId: string): string {
-    if (this.newSchemeIsBeingCreated) {
+    if (this.selectedScheme && !this.selectedScheme.id) {
       return 'Save changes first';
     } else {
       return (this.isSelectedScheme(schemeId)) ? 'Hide details' : 'Change scheme';
@@ -89,81 +79,35 @@ export class FeeListComponent implements OnInit, OnDestroy {
                                 });
   }
 
-  private showEditor(scheme: FeeScheme | null, createNew: boolean, visible: boolean): void {
-    this.pShowDetails = visible;
-    if (visible) {
-      this.selectedScheme = scheme;
-      this.newSchemeIsBeingCreated = createNew;
-      if (createNew) {
-        this.setEditMode(true);
-      }
-    } else {
-      this.selectedScheme = null;
-      this.setEditMode(false);
-    }
-  }
-
   toggleDetails(scheme: FeeScheme): void {
-    let show = true;
     if (this.isSelectedScheme(scheme.id)) {
-      show = false;
+      this.selectedScheme = null;
+    } else {
+      this.selectedScheme = scheme;
     }
-    this.showEditor(scheme, false, show);
   }
 
   createNewScheme(): void {
-    this.showEditor(null, true, true);
-  }
-
-  onEditorFormChanged(mode: boolean): void {
-    this.setEditMode(mode);
+    this.selectedScheme = new FeeScheme(null);
   }
 
   onCancelEdit(): void {
-    this.newSchemeIsBeingCreated = false;
-    this.showEditor(null, false, false);
-    this.setEditMode(false);
+    this.selectedScheme = null;
   }
 
   onDeleteScheme(id: string): void {
-    // this.editorErrorMessage = '';
-    // const requestData = this.adminService.deleteFeeSettings(id);
-    // if (requestData === null) {
-    //   this.errorMessage = this.errorHandler.getRejectedCookieMessage();
-    // } else {
-    //   this.inProgress = true;
-    //   requestData.subscribe(({ data }) => {
-    //     this.inProgress = false;
-    //     this.showEditor(null, false, false);
-    //     this.refresh();
-    //   }, (error) => {
-    //     this.inProgress = false;
-    //     if (this.auth.token !== '') {
-    //       this.editorErrorMessage = this.errorHandler.getError(error.message, 'Unable to delete fee settings');
-    //     } else {
-    //       this.router.navigateByUrl('/');
-    //     }
-    //   });
-    // }
+    this.adminDataService.deleteFeeSettings(id)
+        .subscribe(({ data }) => {
+          this.selectedScheme = null;
+          this.loadList();
+        });
   }
 
   onSaved(scheme: FeeScheme): void {
-    // this.editorErrorMessage = '';
-    // this.inProgress = true;
-    // this.adminService.saveFeeSettings(scheme, this.createScheme)
-    //     .subscribe(({ data }) => {
-    //       this.inProgress = false;
-    //       this.setEditMode(false);
-    //       this.showEditor(null, false, false);
-    //       this.createScheme = false;
-    //       this.refresh();
-    //     }, (error) => {
-    //       this.inProgress = false;
-    //       if (this.auth.token !== '') {
-    //         this.editorErrorMessage = this.errorHandler.getError(error.message, 'Unable to save fee settings');
-    //       } else {
-    //         this.router.navigateByUrl('/');
-    //       }
-    //     });
+    this.adminDataService.saveFeeSettings(scheme)
+        .subscribe(({ data }) => {
+          this.selectedScheme = null;
+          this.loadList();
+        });
   }
 }

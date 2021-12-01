@@ -4,17 +4,8 @@
   padding: 16px 24px;
 }
 
-.transaction-details-title {
-  padding-top: 1.0em;
-}
-
-.transaction-details-label {
-  margin-left: 0.1em;
-  font-size: 12px;
-  /* Grey 2 800 */
-  color: #3B4D5A;
-}
-
-.transaction-details-value {
-  margin-bottom: 0.45em;
+section {
+  &:not(:last-child) {
+    margin-bottom: 24px;
+  }
 }

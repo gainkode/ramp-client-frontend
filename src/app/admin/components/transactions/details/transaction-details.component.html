@@ -1,166 +1,39 @@
 <ng-container *ngIf="transaction">
-    <div>
-        <label class="transaction-details-label">Transaction Id</label>
-        <div class="transaction-details-value">
-            <a [routerLink]="'/admin/transactions/'+ transaction.id">
-                {{transaction.id}}
-            </a>
-        </div>
-    </div>
+    <section>
+        <app-details-attribute label="Transaction Id" [value]="transaction.id"
+                               [linkUrl]="'/admin/transactions/'+ transaction.id"></app-details-attribute>
+        <app-details-attribute label="Transaction Created" [value]="transaction?.created"></app-details-attribute>
+        <app-details-attribute label="Transaction Executed" [value]="transaction?.executed"></app-details-attribute>
+        <app-details-attribute label="First Name" [value]="transaction?.user?.firstName"></app-details-attribute>
+        <app-details-attribute label="Last Name" [value]="transaction?.user?.lastName"></app-details-attribute>
+        <app-details-attribute label="Company" [value]="transaction?.user?.company"></app-details-attribute>
+        <app-details-attribute label="Country" [value]="transaction?.user?.country"></app-details-attribute>
+        <app-details-attribute label="Address" [value]="transaction?.user?.address"></app-details-attribute>
+        <app-details-attribute label="Transaction Type"
+                               [value]="transaction?.transactionTypeName"></app-details-attribute>
+        <app-details-attribute label="Instrument" [value]="transaction?.instrumentName"></app-details-attribute>
+        <app-details-attribute label="Instrument Details"
+                               [value]="transaction?.instrumentDetails"></app-details-attribute>
+        <app-details-attribute label="Wallet Address" [value]="transaction?.address"></app-details-attribute>
+        <app-details-attribute label="Wallet amount"
+                               [value]="(transaction?.amountToReceive | number: '1.0-5') + ' ' + transaction?.currencyToReceive"></app-details-attribute>
+        <app-details-attribute label="Base amount"
+                               [value]="(transaction?.amountToSpend | number: '1.0-5') + ' ' + transaction?.currencyToSpend"></app-details-attribute>
+        <app-details-attribute label="Exchange rate"
+                               [value]="transaction?.rate | number: '1.0-5'"></app-details-attribute>
+        <app-details-attribute label="Transaction status"
+                               [value]="transaction?.transactionStatusName"></app-details-attribute>
+        <app-details-attribute label="Transaction fees"
+                               [value]="(transaction?.fees | number: '1.0-5') + ' EUR'"></app-details-attribute>
+        <app-details-attribute label="IP Address" [value]="transaction?.ip"></app-details-attribute>
+        <app-details-attribute label="Initiated from"
+                               [value]="transaction?.transactionSourceName"></app-details-attribute>
+        <app-details-attribute label="Wallet type" [value]="transaction?.userModeName"></app-details-attribute>
+    </section>
 
-    <div *ngIf="transaction?.created!==null">
-        <label class="transaction-details-label">Transaction Created</label>
-        <div class="transaction-details-value">
-            {{transaction?.created}}
-        </div>
-    </div>
-
-    <div *ngIf="transaction?.executed!==null">
-        <label class="transaction-details-label">Transaction Executed</label>
-        <div class="transaction-details-value">
-            {{transaction?.executed}}
-        </div>
-    </div>
-
-    <div *ngIf="transaction?.user!==null">
-        <div *ngIf="transaction?.user?.firstName!==''">
-            <label class="transaction-details-label">First Name</label>
-            <div class="transaction-details-value">
-                {{transaction?.user?.firstName}}
-            </div>
-        </div>
-
-        <div *ngIf="transaction?.user?.lastName!==''">
-            <label class="transaction-details-label">Last Name</label>
-            <div class="transaction-details-value">
-                {{transaction?.user?.lastName}}
-            </div>
-        </div>
-
-        <div *ngIf="transaction?.user?.company!==''">
-            <label class="transaction-details-label">Company</label>
-            <div class="transaction-details-value">
-                {{transaction?.user?.company}}
-            </div>
-        </div>
-
-        <div *ngIf="transaction?.user?.country!==null">
-            <label class="transaction-details-label">Country</label>
-            <div class="transaction-details-value">
-                <app-dropdown-item itemValue="{{transaction?.user?.country?.title}}"
-                                   imageClass="{{transaction?.user?.country?.imgClass}}"
-                                   imageSource="{{transaction?.user?.country?.imgSource}}">
-                </app-dropdown-item>
-            </div>
-        </div>
-
-        <div *ngIf="transaction?.user?.address!==''">
-            <label class="transaction-details-label">Address</label>
-            <div class="transaction-details-value">
-                {{transaction?.user?.address}}
-            </div>
-        </div>
-    </div>
-
-    <div *ngIf="transaction?.type!==undefined">
-        <label class="transaction-details-label">Transaction Type</label>
-        <div class="transaction-details-value">
-            {{transaction?.transactionTypeName}}
-        </div>
-    </div>
-
-    <div *ngIf="transaction?.instrument!==undefined">
-        <label class="transaction-details-label">Instrument</label>
-        <div class="transaction-details-value">
-            {{transaction?.instrumentName}}
-        </div>
-    </div>
-
-    <div *ngIf="transaction?.instrumentDetails!==null">
-        <label class="transaction-details-label">Instrument Details</label>
-        <div class="transaction-details-value">
-            <app-dropdown-item itemValue="{{transaction?.instrumentDetails?.title}}"
-                               imageClass="{{transaction?.instrumentDetails?.imgClass}}"
-                               imageSource="{{transaction?.instrumentDetails?.imgSource}}">
-            </app-dropdown-item>
-        </div>
-    </div>
-
-    <div *ngIf="transaction?.address!==''">
-        <label class="transaction-details-label">Wallet Address</label>
-        <div class="transaction-details-value">
-            {{transaction?.address}}
-        </div>
-    </div>
-
-    <div *ngIf="transaction?.currencyToReceive!==''">
-        <label class="transaction-details-label">Wallet amount</label>
-        <div class="transaction-details-value">
-            {{transaction?.amountToReceive | number: '1.0-5'}} {{transaction?.currencyToReceive}}
-        </div>
-    </div>
-
-    <div *ngIf="transaction?.currencyToSpend!==''">
-        <label class="transaction-details-label">Base amount</label>
-        <div class="transaction-details-value">
-            {{transaction?.amountToSpend | number: '1.0-5'}} {{transaction?.currencyToSpend}}
-        </div>
-    </div>
-
-    <label class="transaction-details-label">Exchange rate</label>
-    <div class="transaction-details-value">
-        {{transaction?.rate | number: '1.0-5'}}
-    </div>
-
-    <div *ngIf="transaction?.status!==undefined">
-        <label class="transaction-details-label">Transaction status</label>
-        <div class="transaction-details-value">
-            {{transaction?.transactionStatusName}}
-        </div>
-    </div>
-
-    <label class="transaction-details-label">Transaction fees</label>
-    <div class="transaction-details-value">
-        {{transaction?.fees | number: '1.0-5'}} EUR
-    </div>
-
-    <div *ngIf="transaction?.ip!==''">
-        <label class="transaction-details-label">IP Address</label>
-        <div class="transaction-details-value">
-            {{transaction?.ip}}
-        </div>
-    </div>
-
-    <div *ngIf="transaction?.source!==undefined">
-        <label class="transaction-details-label">Initiated from</label>
-        <div class="transaction-details-value">
-            {{transaction?.transactionSourceName}}
-        </div>
-    </div>
-
-    <div *ngIf="transaction?.userMode">
-        <label class="transaction-details-label">Wallet type</label>
-        <div class="transaction-details-value">
-            {{transaction?.userModeName}}
-        </div>
-    </div>
-
-    <div class="transaction-details-title">
+    <section>
         <h2>AML Checks</h2>
-    </div>
-    <div *ngIf="transaction?.user!==null">
-        <div *ngIf="transaction?.user?.id!==''">
-            <label class="transaction-details-label">Account ID</label>
-            <div class="transaction-details-value">
-                {{transaction?.user?.id}}
-            </div>
-        </div>
-
-        <div *ngIf="transaction?.user?.kycStatus!==''">
-            <label class="transaction-details-label">KYC Status</label>
-            <div class="transaction-details-value">
-                {{transaction?.user?.kycStatus}}
-            </div>
-        </div>
-    </div>
+        <app-details-attribute label="Account ID" [value]="transaction?.user?.id"></app-details-attribute>
+        <app-details-attribute label="KYC Status" [value]="transaction?.user?.kycStatus"></app-details-attribute>
+    </section>
 </ng-container>

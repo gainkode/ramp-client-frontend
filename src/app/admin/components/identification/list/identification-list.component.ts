@@ -1,17 +1,18 @@
 import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../services/auth.service';
-import { AdminDataService } from '../../services/admin-data.service';
-import { ErrorService } from '../../../services/error.service';
-import { SettingsKycLevelListResult, SettingsKycListResult } from '../../../model/generated-models';
-import { Subscription } from 'rxjs';
+import { AuthService } from '../../../../services/auth.service';
+import { AdminDataService } from '../../../services/admin-data.service';
+import { ErrorService } from '../../../../services/error.service';
+import { SettingsKycLevelListResult } from '../../../../model/generated-models';
+import { Subject, Subscription } from 'rxjs';
 import { KycLevel, KycScheme } from 'src/app/model/identification.model';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  templateUrl: 'identification.component.html',
-  styleUrls: ['identification.component.scss']
+  templateUrl: 'identification-list.component.html',
+  styleUrls: ['identification-list.component.scss']
 })
-export class IdentificationComponent implements OnInit, OnDestroy {
+export class IdentificationListComponent implements OnInit, OnDestroy {
   @Output() changeEditMode = new EventEmitter<boolean>();
   private pShowDetails = false;
   private pSettingsSubscription!: any;
@@ -29,9 +30,9 @@ export class IdentificationComponent implements OnInit, OnDestroy {
   schemes: KycScheme[] = [];
   levels: KycLevel[] = [];
 
-  get showDetailed(): boolean {
-    return this.pShowDetails;
-  }
+  private destroy$ = new Subject();
+  private schemesSubscription = Subscription.EMPTY;
+  private levelsSubscription = Subscription.EMPTY;
 
   get editMode(): boolean {
     return this.pEditMode;
@@ -45,27 +46,20 @@ export class IdentificationComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.refreshData();
+    this.loadData();
   }
 
   ngOnDestroy(): void {
-    const ss: Subscription = this.pSettingsSubscription;
-    const ls: Subscription = this.pLevelsSubscription;
-    if (ss !== undefined) {
-      ss.unsubscribe();
-    }
-    if (ls !== undefined) {
-      ls.unsubscribe();
-    }
+    this.destroy$.next();
   }
 
   setSelectedTab(index: number): void {
     this.onCancelEdit();
     this.selectedTab = index;
-    this.refreshData();
+    this.loadData();
   }
 
-  refreshData(): void {
+  loadData(): void {
     this.showSchemeEditor(null, false, false);
     if (this.selectedTab === 0) {
       // Levels
@@ -87,73 +81,35 @@ export class IdentificationComponent implements OnInit, OnDestroy {
   }
 
   loadSchemeList(): void {
-    const settingsData = this.adminService.getKycSettings();
-    if (settingsData === null) {
-      this.errorMessage = this.errorHandler.getRejectedCookieMessage();
-    } else {
-      this.inProgress = true;
-      this.pSettingsSubscription = settingsData.valueChanges.subscribe(({ data }) => {
-        const settings = data.getSettingsKyc as SettingsKycListResult;
-        let itemCount = 0;
-        if (settings !== null) {
-          itemCount = settings?.count as number;
-          if (itemCount > 0) {
-            this.schemes = settings?.list?.map((val) => new KycScheme(val)) as KycScheme[];
-          }
-        }
-        this.inProgress = false;
-      }, (error) => {
-        this.setEditMode(false);
-        this.inProgress = false;
-        if (this.auth.token !== '') {
-          this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load identification settings');
-        } else {
-          this.router.navigateByUrl('/');
-        }
-      });
-    }
+    this.schemesSubscription.unsubscribe();
+
+    this.schemesSubscription = this.adminService.getKycSettings()
+                                   .pipe(takeUntil(this.destroy$))
+                                   .subscribe(data => {
+                                     this.schemes = data.list;
+                                   });
   }
 
   refreshSchemeList(): void {
     const settingsData = this.adminService.getKycSettings();
     if (settingsData !== null) {
-      settingsData.refetch();
+      this.loadSchemeList();
     }
   }
 
   loadLevelList(): void {
-    const settingsData = this.adminService.getKycLevels(null);
-    if (settingsData === null) {
-      this.errorMessage = this.errorHandler.getRejectedCookieMessage();
-    } else {
-      this.inProgress = true;
-      this.pLevelsSubscription = settingsData.valueChanges.subscribe(({ data }) => {
-        const settings = data.getSettingsKycLevels as SettingsKycLevelListResult;
-        let itemCount = 0;
-        if (settings !== null) {
-          itemCount = settings?.count as number;
-          if (itemCount > 0) {
-            this.levels = settings?.list?.map((val) => new KycLevel(val)) as KycLevel[];
-          }
-        }
-        this.inProgress = false;
-      }, (error) => {
-        this.setEditMode(false);
-        this.inProgress = false;
-        if (this.auth.token !== '') {
-          this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load identification levels');
-        } else {
-          this.router.navigateByUrl('/');
-        }
-      });
-    }
+
+    this.levelsSubscription.unsubscribe();
+
+    this.levelsSubscription = this.adminService.getKycLevels(null)
+                                  .pipe(takeUntil(this.destroy$))
+                                   .subscribe(data => {
+                                     this.levels = data.list;
+                                   });
   }
 
   refreshLevelList(): void {
-    const settingsData = this.adminService.getKycLevels(null);
-    if (settingsData !== null) {
-      settingsData.refetch();
-    }
+      this.loadLevelList();
   }
 
   private setEditMode(mode: boolean): void {
@@ -184,7 +140,7 @@ export class IdentificationComponent implements OnInit, OnDestroy {
   private showSchemeEditor(scheme: KycScheme | null, createNew: boolean, visible: boolean): void {
     this.pShowDetails = visible;
     if (visible) {
-      this.selectedScheme = scheme;
+      this.selectedScheme = scheme ?? new KycScheme(null);
       this.createScheme = createNew;
       if (createNew) {
         this.setEditMode(true);
@@ -198,7 +154,7 @@ export class IdentificationComponent implements OnInit, OnDestroy {
   private showLevelEditor(level: KycLevel | null, createNew: boolean, visible: boolean): void {
     this.pShowDetails = visible;
     if (visible) {
-      this.selectedLevel = level;
+      this.selectedLevel = level ?? new KycLevel(null);
       this.createLevel = createNew;
       if (createNew) {
         this.setEditMode(true);
@@ -331,5 +287,10 @@ export class IdentificationComponent implements OnInit, OnDestroy {
             this.router.navigateByUrl('/');
           }
         });
+  }
+
+  handleDetailsPanelClosed(): void {
+    this.selectedScheme = null;
+    this.selectedLevel = null;
   }
 }

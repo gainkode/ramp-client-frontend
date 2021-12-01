@@ -1,0 +1,64 @@
+<mat-tab-group class="form-element" color="primary" animationDuration="0" [selectedIndex]="selectedTab"
+               (selectedIndexChange)="setSelectedTab($event)">
+    <!-- Levels tab -->
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <app-tab-label labelText="Levels"></app-tab-label>
+        </ng-template>
+        <div class="action-panel">
+            <button
+                    mat-flat-button
+                    color="primary"
+                    *ngIf="errorMessage===''"
+                    [disabled]="createLevel"
+                    (click)="createNewLevel()">
+                ADD LEVEL
+            </button>
+        </div>
+
+        <div class="data-table">
+            <app-level-table [levels]="levels" [selectedLevel]="selectedLevel"
+                             (toggle)="toggleLevelDetails($event)">
+            </app-level-table>
+        </div>
+    </mat-tab>
+
+    <!-- Schemes -->
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <app-tab-label labelText="Schemes"></app-tab-label>
+        </ng-template>
+        <div class="action-panel">
+            <div class="form-element" *ngIf="schemeEditorErrorMessage!==''">
+                <div class="form-error-box">
+                    {{schemeEditorErrorMessage}}
+                </div>
+            </div>
+
+            <button mat-flat-button
+                    color="primary"
+                    *ngIf="errorMessage===''"
+                    [disabled]="createScheme"
+                    (click)="createNewScheme()">
+                ADD SCHEME
+            </button>
+        </div>
+
+        <div class="data-table">
+            <app-identification-table [schemes]="schemes" [selectedScheme]="selectedScheme"
+                                      (toggle)="toggleSchemeDetails($event)">
+            </app-identification-table>
+        </div>
+    </mat-tab>
+</mat-tab-group>
+
+<ng-template *ngIf="selectedScheme || selectedLevel" appRightPanel (panelClosed)="handleDetailsPanelClosed()">
+    <app-level-editor *ngIf="selectedLevel && selectedTab===0" [currentLevel]="selectedLevel"
+                      [create]="createLevel"
+                      (save)="onSavedLevel($event)" (delete)="onDeleteLevel($event)" (cancel)="onCancelEdit()"
+                      (formChanged)="onEditorFormChanged($event)"></app-level-editor>
+    <app-kyc-editor *ngIf="selectedScheme && selectedTab===1" [currentScheme]="selectedScheme"
+                    [create]="createScheme"
+                    (save)="onSavedScheme($event)" (delete)="onDeleteScheme($event)" (cancel)="onCancelEdit()"
+                    (formChanged)="onEditorFormChanged($event)"></app-kyc-editor>
+</ng-template>

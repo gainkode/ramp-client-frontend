@@ -4,14 +4,14 @@ import { KycScheme } from 'src/app/model/identification.model';
 @Component({
   selector: 'app-identification-table',
   templateUrl: 'id-table.component.html',
-  styleUrls: ['identification.component.scss']
+  styleUrls: ['list/identification-list.component.scss']
 })
 export class IdTableComponent {
   @Input() schemes: KycScheme[] = [];
   @Input() selectedScheme: KycScheme | null = null;
   @Output() toggle = new EventEmitter<KycScheme>();
   displayedColumns: string[] = [
-    'isDefault', 'name', 'target', 'userType', 'userMode', 'provider', 'level', 'details'];
+    'details', 'isDefault', 'name', 'target', 'userType', 'userMode', 'provider', 'level'];
 
   constructor() {
   }
@@ -27,7 +27,7 @@ export class IdTableComponent {
   }
 
   getDetailsIcon(schemeId: string): string {
-    return (this.isSelectedScheme(schemeId)) ? 'clear' : 'description';
+    return (this.isSelectedScheme(schemeId)) ? 'clear' : 'open_in_new';
   }
 
   getDetailsTooltip(schemeId: string): string {
