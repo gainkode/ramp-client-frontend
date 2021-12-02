@@ -663,37 +663,37 @@ const CREATE_WIDGET = gql`
   }
 `;
 
-// const UPDATE_WIDGET = gql`
-//   mutation UpdateWidget(
-//     $userId: String
-//     $transactionTypes: String[]
-//     $currenciesFrom: String[]
-//     $currenciesTo: String[]
-//     $destinationAddresses: String[]
-//     $countriesCode2: String[]
-//     $instruments: String[]
-//     $paymentProviders: String[]
-//     $liquidityProvider: String
-//     $additionalSettings: String
-//   ) {
-//     updateWidget(
-//       userId: $userId
-//       widget: {
-//         transactionTypes: $transactionTypes
-//         currenciesFrom: $currenciesFrom
-//         currenciesTo: $currenciesTo
-//         destinationAddresses: $destinationAddresses
-//         countriesCode2: $countriesCode2
-//         instruments: $instruments
-//         paymentProviders: $paymentProviders
-//         liquidityProvider: $liquidityProvider
-//         additionalSettings: $additionalSettings
-//       }
-//     ) {
-//       settingsKycLevelId
-//     }
-//   }
-// `;
+const UPDATE_WIDGET = gql`
+  mutation UpdateWidget(
+    $widgetId: String
+    $transactionTypes: [String]
+    $currenciesFrom: [String]
+    $currenciesTo: [String]
+    $destinationAddress: String!
+    $countriesCode2: [String]
+    $instruments: [String]
+    $paymentProviders: [String]
+    $liquidityProvider: String
+    $additionalSettings: String
+  ) {
+    updateWidget(
+      widgetId: $widgetId,
+      widget: {
+        additionalSettings: $additionalSettings
+        transactionTypes: $transactionTypes
+        currenciesFrom: $currenciesFrom
+        currenciesTo: $currenciesTo
+        destinationAddress: $destinationAddress
+        countriesCode2: $countriesCode2
+        instruments: $instruments
+        paymentProviders: $paymentProviders
+        liquidityProvider: $liquidityProvider
+      }
+    ) {
+      widgetId
+    }
+  }
+`;
 
 const DELETE_WIDGET = gql`
   mutation DeleteWidget(
@@ -1388,8 +1388,8 @@ export class AdminDataService {
   }
 
   saveWidget(widget: WidgetItem): Observable<any> {
-    return !widget.id
-      ? this.mutate({
+    return widget.id
+      ? this.apollo.mutate({
         mutation: CREATE_WIDGET,
         variables: {
           userId: widget.userId,
@@ -1404,7 +1404,21 @@ export class AdminDataService {
           additionalSettings: undefined
         },
       })
-      : of(null);
+      : this.apollo.mutate({
+        mutation: UPDATE_WIDGET,
+        variables: {
+          widgetId: widget.id,
+          transactionTypes: widget.transactionTypes,
+          currenciesFrom: widget.currenciesFrom,
+          currenciesTo: widget.currenciesTo,
+          destinationAddress: widget.destinationAddresses,
+          countriesCode2: widget.countriesCode2,
+          instruments: widget.instruments,
+          paymentProviders: widget.paymentProviders,
+          liquidityProvider: widget.liquidityProvider,
+          additionalSettings: undefined
+        },
+      });
   }
 
 

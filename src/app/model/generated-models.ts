@@ -550,6 +550,8 @@ export type Mutation = {
   repeatDeclinedTransactions?: Maybe<Array<Transaction>>;
   createMyWidget?: Maybe<Widget>;
   createWidget?: Maybe<Widget>;
+  updateMyWidget?: Maybe<Widget>;
+  updateWidget?: Maybe<Widget>;
   deleteMyWidget?: Maybe<Widget>;
   deleteWidget?: Maybe<Widget>;
   addMyWidgetUserParams?: Maybe<WidgetUserParams>;
@@ -973,6 +975,18 @@ export type MutationCreateMyWidgetArgs = {
 
 export type MutationCreateWidgetArgs = {
   userId?: Maybe<Scalars['String']>;
+  widget?: Maybe<WidgetInput>;
+};
+
+
+export type MutationUpdateMyWidgetArgs = {
+  widgetId?: Maybe<Scalars['String']>;
+  widget?: Maybe<WidgetInput>;
+};
+
+
+export type MutationUpdateWidgetArgs = {
+  widgetId?: Maybe<Scalars['String']>;
   widget?: Maybe<WidgetInput>;
 };
 
