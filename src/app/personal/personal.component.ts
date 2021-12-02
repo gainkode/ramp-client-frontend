@@ -11,8 +11,8 @@ import {
 } from '../model/profile-menu.model';
 import { AuthService } from '../services/auth.service';
 import { NotificationService } from '../services/notification.service';
-import { PersonalContactsComponent } from './profile/contacts.component';
-import { PersonalWalletsComponent } from './profile/wallets.component';
+import { PersonalContactsComponent } from './profile/contacts/contacts.component';
+import { PersonalWalletsComponent } from './profile/wallets/wallets.component';
 
 @Component({
     templateUrl: 'personal.component.html',
@@ -86,18 +86,21 @@ export class PersonalComponent implements OnInit {
             const path1 = segments[0].path;
             const path2 = segments[1].path;
             const section = segments[2].path;
+            let personalVerified = false;
             if (path1 === 'personal' && path2 === 'main') {
-                if (
-                    section === 'home' ||
-                    section === 'wallets' ||
-                    section === 'contactlist' ||
-                    section === 'transactions' ||
-                    section === 'pricelist' ||
-                    section === 'notifications') {
-                    this.selectedMenu = section;
-                } else {
-                    this.router.navigateByUrl(this.menuItems[0].url);
+                if (section === 'home' || section === 'wallets' || section === 'contactlist' || section === 'transactions' || section === 'pricelist') {
+                    personalVerified = true;
                 }
+            }
+            if (personalVerified === false && path1 === 'personal' && path2 === 'account') {
+                if (section === 'settings' || section === 'notifications') {
+                    personalVerified = true;
+                }
+            }
+            if (personalVerified === true) {
+                this.selectedMenu = section;
+            } else {
+                this.router.navigateByUrl(this.menuItems[0].url);
             }
         }
     }
@@ -224,8 +227,6 @@ export class PersonalComponent implements OnInit {
             this.logout();
         } else if (item.id === 'administration') {
             this.routeTo('/admin/main');
-        } else if (item.id === 'settings') {
-            this.routeTo('/personal/myaccount');
         } else {
             this.routeTo(item.url);
         }

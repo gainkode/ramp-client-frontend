@@ -1,0 +1,9 @@
+<app-settings-bar [selectedTab]="selectedTab" (select)="pageSelected($event)"></app-settings-bar>
+<div class="__profile-data-container __profile-data-container-full">
+    <mat-progress-bar *ngIf="inProgress" color="accent" mode="indeterminate"></mat-progress-bar>
+    <div class="__profile-internal-table-container" [ngSwitch]="selectedTab">
+        <app-personal-info-settings *ngSwitchCase="'info'"></app-personal-info-settings>
+        <app-personal-verification-settings *ngSwitchCase="'verification'"></app-personal-verification-settings>
+        <app-personal-security-settings *ngSwitchCase="'security'"></app-personal-security-settings>
+    </div>
+</div>

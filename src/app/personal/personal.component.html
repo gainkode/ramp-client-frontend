@@ -126,6 +126,8 @@
                     [presetWalletId]="presetWalletId" [presetCurrency]="presetCurrency"
                     (onComplete)="widgetComplete($event)">
                 </app-send-widget>
+                <app-transfer-widget *ngIf="selectedPaymentType===WIDGET_TYPE.Transfer" (onComplete)="widgetComplete($event)">
+                </app-transfer-widget>
             </div>
             <div class="__profile-payment-footer">
                 <app-risk-warning [warningText]="riskWarningText"></app-risk-warning>

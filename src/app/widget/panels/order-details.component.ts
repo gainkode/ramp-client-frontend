@@ -1,12 +1,14 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { SettingsCurrencyWithDefaults, TransactionType } from 'src/app/model/generated-models';
+import { Rate, SettingsCurrencyWithDefaults, TransactionType } from 'src/app/model/generated-models';
 import { CheckoutSummary, CurrencyView, QuickCheckoutTransactionTypeList, WidgetSettings } from 'src/app/model/payment.model';
 import { WalletItem } from 'src/app/model/wallet.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
 import { ErrorService } from 'src/app/services/error.service';
+import { PaymentDataService } from 'src/app/services/payment.service';
 import { WalletValidator } from 'src/app/utils/wallet.validator';
 
 @Component({
@@ -143,8 +145,10 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   }
 
   constructor(
+    private router: Router,
     private auth: AuthService,
     private commonService: CommonDataService,
+    private paymentService: PaymentDataService,
     private errorHandler: ErrorService,
     private formBuilder: FormBuilder) { }
 
@@ -199,7 +203,16 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       this.onProgress.emit(true);
       this.pSubscriptions.add(
         currencyData.valueChanges.subscribe(
-          ({ data }) => this.loadCurrencyList(data.getSettingsCurrency as SettingsCurrencyWithDefaults, initState),
+          ({ data }) => {
+            this.loadCurrencyList(data.getSettingsCurrency as SettingsCurrencyWithDefaults, initState);
+            //this.loadRates();
+
+
+
+            // temp
+            this.onProgress.emit(false);
+            // temp
+          },
           (error) => {
             this.onProgress.emit(false);
             this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load available list of currency types'));
@@ -210,6 +223,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
 
   private loadCurrencyList(currencySettings: SettingsCurrencyWithDefaults, initState: boolean) {
     let itemCount = 0;
+    this.pCurrencies = [];
     if (currencySettings !== null) {
       const currencyList = currencySettings.settingsCurrency;
       let defaultFiatCurrency = currencySettings.defaultFiat ?? '';
@@ -261,7 +275,40 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
         }
       }
     }
-    this.onProgress.emit(false);
+  }
+
+  private loadRates(): void {
+    const rateCurrencies = this.pCurrencies.filter(x => x.fiat === true && x.id !== 'EUR').map((val) => val.id);
+    const rateData = this.paymentService.getRates(rateCurrencies, 'EUR');
+    if (rateData === null) {
+      this.onProgress.emit(false);
+      this.onError.emit(this.errorHandler.getRejectedCookieMessage());
+    } else {
+      this.pSubscriptions.add(
+        rateData.valueChanges.subscribe(
+          ({ data }) => {
+            const rates = data.getRates as Rate[];
+            this.pCurrencies.forEach(c => {
+              if (c.id === 'EUR') {
+                c.rateFactor = 1;
+              } else {
+                const rate = rates.find(x => x.currencyFrom === c.id);
+                if (rate) {
+                  c.rateFactor = rate.depositRate;
+                }
+              }
+            });
+
+            console.log(this.pCurrencies);
+
+            this.onProgress.emit(false);
+          },
+          (error) => {
+            this.onProgress.emit(false);
+            this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load exchange rate'));
+          })
+      );
+    }
   }
 
   private setCurrencyValues(
@@ -528,7 +575,9 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   }
 
   showPersonalVerification(): void {
-
+    this.router.navigateByUrl(`${this.auth.getUserAccountPage()}/settings/verification`).then(() => {
+      window.location.reload();
+    });
   }
 
   onSubmit(): void {

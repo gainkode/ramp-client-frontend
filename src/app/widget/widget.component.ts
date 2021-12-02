@@ -603,9 +603,6 @@ export class WidgetComponent implements OnInit {
             this.startNotificationListener();
           }
           const order = data.createTransaction as TransactionShort;
-
-          console.log(order);
-
           this.inProgress = false;
           if (order.code) {
             this.summary.instrument = instrument;
@@ -657,8 +654,11 @@ export class WidgetComponent implements OnInit {
           //this.startPayment();
         }, (error) => {
           this.inProgress = false;
-          this.initData(undefined);
-          this.pager.init('order_details', 'Order details');
+          if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
+            this.handleAuthError();
+          } else {
+            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to get tiers');
+          }
         })
       );
     }

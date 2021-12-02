@@ -424,19 +424,27 @@ export class AuthService {
         }
     }
 
-    getUserMainPage(): string {
+    private getUserSectionPage(section: string): string {
         let result = '/';
         const u = this.user;
         if (u !== null) {
             if (u.mode === UserMode.InternalWallet) {
                 if (u.type === 'Personal') {
-                    result = '/personal/main';
+                    result = `/personal/${section}`;
                 } else if (u.type === 'Merchant') {
-                    result = '/merchant/main';
+                    result = `/merchant/${section}`;
                 }
             }
         }
         return result;
+    }
+
+    getUserMainPage(): string {
+        return this.getUserSectionPage('main');
+    }
+
+    getUserAccountPage(): string {
+        return this.getUserSectionPage('account');
     }
 
     authenticate(username: string, userpassword: string, quickCheckout: boolean = false): Observable<any> {

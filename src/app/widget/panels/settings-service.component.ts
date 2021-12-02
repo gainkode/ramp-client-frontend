@@ -110,13 +110,14 @@ export class WidgetSettingsService implements OnInit, OnDestroy {
 
   private isKycRequired(kyc: User): boolean | null {
     let result = true;
-    if (kyc.kycStatus === 'completed' || kyc.kycStatus === 'pending') {
+    const kycStatus = kyc.kycStatus?.toLowerCase();
+    if (kycStatus === 'completed' || kycStatus === 'pending') {
       result = false;
     } else {
       if (kyc.kycValid === true) {
         result = false;
       } else if (kyc.kycValid === false) {
-        if (kyc.kycReviewRejectedType === 'final') {
+        if (kyc.kycReviewRejectedType?.toLowerCase() === 'final') {
           return null;
         }
       }

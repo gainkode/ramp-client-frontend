@@ -25,32 +25,31 @@ export const PersonalProfileMenuItems: Array<MenuItem> = [
         url: '/personal/main/contactlist',
         icon: 'group'
     },
-    
-    {
-        id: 'pricelist',
-        name: 'Crypto Pricelist',
-        url: '/personal/main/pricelist',
-        icon: 'insights'
-    }
+    // {
+    //     id: 'pricelist',
+    //     name: 'Crypto Pricelist',
+    //     url: '/personal/main/pricelist',
+    //     icon: 'insights'
+    // }
 ];
 
 export const PersonalProfilePopupMenuItems: Array<MenuItem> = [
     {
         id: 'notifications',
         name: 'Notifications',
-        url: '/personal/main/notifications',
+        url: '/personal/account/notifications',
         icon: 'notifications'
     },
     {
         id: 'settings',
         name: 'Settings',
-        url: '',
+        url: '/personal/account/settings',
         icon: 'construction'
     },
     {
         id: 'verification',
         name: 'Verification',
-        url: '',
+        url: '/personal/account/settings/verification',
         icon: 'person_outline'
     },
     {

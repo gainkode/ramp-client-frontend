@@ -1,0 +1,13 @@
+<div class="__tool-bar-container">
+    <div class="__tool-selector-bar-container">
+        <div class="__tool-selector-bar-line"></div>
+        <div class="__tool-selector-bar-data-container">
+            <div *ngFor="let item of tabs" class="__tool-selector-bar-item-container">
+                <div [ngClass]="{'__tool-selector-bar-item-data': true, '__tool-selector-bar-item-data-selected': selectedTab===item.id}"
+                    (click)="onSelect(item.id)">
+                    {{item.name}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
