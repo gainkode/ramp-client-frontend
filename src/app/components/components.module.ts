@@ -59,6 +59,7 @@ import { WalletsFilterBarComponent } from './filter-bars/wallets-bar.component';
 import { FormEditBoxComponent } from './common/controls/form-editbox.component';
 import { ContactsFilterBarComponent } from './filter-bars/contacts-bar.component';
 import { RiskWarningComponent } from './common/risk-warning.component';
+import { SettingsPasswordBoxComponent } from './common/controls/settings-password.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -98,7 +99,7 @@ export class MaterialModule { }
     declarations: [
         DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
         FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent, FormSearchBoxComponent,
-        FormEditBoxComponent,
+        FormEditBoxComponent, SettingsPasswordBoxComponent,
         DeleteDialogBox, CommonDialogBox,
         LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent,
         TwoFaCodeComponent, NavPopupComponent, SideMenuComponent, SideExpanderComponent, RiskWarningComponent,
@@ -109,7 +110,7 @@ export class MaterialModule { }
     exports: [
         DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
         FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent, FormSearchBoxComponent,
-        FormEditBoxComponent,
+        FormEditBoxComponent, SettingsPasswordBoxComponent,
         DeleteDialogBox, CommonDialogBox,
         LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent,
         TwoFaCodeComponent, NavPopupComponent, SideMenuComponent, SideExpanderComponent, RiskWarningComponent,

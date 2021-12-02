@@ -35,7 +35,7 @@
     font-style: normal;
     font-weight: normal;
     font-size: 12px;
-    line-height: 14px;    
+    line-height: 14px;
     color: $color_purple_900_text;
 }
 
@@ -196,7 +196,7 @@
     display: grid;
     grid-template-columns: auto 32px;
     grid-template-rows: 32px;
-    
+
     border: 1px solid $color_purple_200;
     box-sizing: border-box;
     border-radius: 12px;
@@ -214,6 +214,22 @@
     background-color: transparent;
 }
 
+.__form-settings-password-border {
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto 24px 24px;
+    grid-template-rows: 32px;
+
+    border: 1px solid $color_purple_50;
+    border-style: none none solid none;
+    background-color: transparent;
+}
+
+.__form-settings-password-border-error {
+    border: 1px solid $color_pink_500;
+    border-style: none none solid none;
+}
+
 input.__form-text-box-plain {
     border: 1px solid $color_purple_50;
     box-sizing: border-box;
@@ -221,7 +237,7 @@ input.__form-text-box-plain {
     width: 28px;
     text-align: center;
     background-color: transparent;
-    
+
     font-family: $font_main;
     font-style: normal;
     font-weight: 300;
@@ -386,7 +402,7 @@ input.__text-box-noborder {
     border: 0px;
     width: 100%;
     background-color: transparent;
-    
+
     font-family: $font_main;
     font-style: normal;
     font-weight: 300;
@@ -432,7 +448,7 @@ input.__form-edit-box {
 
     border: 0px;
     background-color: transparent;
-    
+
     font-family: $font_main;
     font-style: normal;
     font-weight: normal;
@@ -470,7 +486,7 @@ input.__form-edit-box:focus {
 
     border: 1px solid $color_purple_50;
     border-style: none none none solid;
-    
+
     display: flex;
 }
 
@@ -534,6 +550,10 @@ input.__form-edit-box:focus {
     color: $color_purple_900_text;
 }
 
+.__form-control-panel {
+    width: 305px;
+}
+
 .__form-settings-title {
     font-family: $font_main;
     font-style: normal;
@@ -544,7 +564,7 @@ input.__form-edit-box:focus {
     color: $color_purple_900_text;
 }
 
-.__form-settings-control-title {
+.__form-settings-label {
     padding: 0px;
     margin: 8px 0px;
     font-family: $font_main;

@@ -15,17 +15,7 @@
     </div>
     <div class="__profile-settings-delimitter"></div>
 
-    <h2 class="__form-settings-title">
-        Change Password
-    </h2>
-
-    <form [formGroup]="passwordForm">
-        <h3 class="__form-settings-control-title">
-            Old password
-        </h3>
-        <div style="width: 305px;height: 32px;background-color: cornflowerblue;">
-            Password
-        </div>
-    </form>
-
+    <app-profile-change-password *ngIf="passwordCanBeChanged" [twoFaRequired]="password2FaRequired" (error)="error.emit($event)"
+        (progressChange)="progressChange.emit($event)">
+    </app-profile-change-password>
 </div>

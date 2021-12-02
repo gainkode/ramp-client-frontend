@@ -52,14 +52,12 @@ export class ProfilePasswordComponent {
         ], updateOn: 'change'
       },
     ],
-  },
-    {
-      validators: [
-        PasswordValidator.equalityValidator('newPassword', 'confirmPassword'),
-      ],
-      updateOn: 'change',
-    }
-  );
+  }, {
+    validators: [
+      PasswordValidator.equalityValidator('newPassword', 'confirmPassword'),
+    ],
+    updateOn: 'change',
+  });
 
   constructor(
     private profile: ProfileDataService,
