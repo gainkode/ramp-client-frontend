@@ -1,5 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { getCountryByCode2 } from 'src/app/model/country-code.model';
+import { TransactionTypeList } from 'src/app/model/payment.model';
 import { Widget } from '../../model/generated-models';
 
 export class WidgetItem {
@@ -9,6 +10,7 @@ export class WidgetItem {
   created?: string;
   transactionType?: string;
   transactionTypes?: Array<string>;
+  transactions?: string[];
   currenciesFrom?: Array<string>;
   currenciesTo?: Array<string>;
   destinationAddress?: string;
@@ -43,6 +45,10 @@ export class WidgetItem {
         });
       }
       this.transactionTypes = data.transactionTypes ?? [];
+      this.transactions = data.transactionTypes?.map(val => {
+        const t = TransactionTypeList.find(x => x.id === val);
+        return (t) ? t.name : val;
+      });
       this.currenciesFrom = data.currenciesFrom ?? undefined;
       this.currenciesTo = data.currenciesTo ?? undefined;
       this.destinationAddress = data.destinationAddress as string;

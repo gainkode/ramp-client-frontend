@@ -38,7 +38,7 @@
 
         <ng-container matColumnDef="transactionType">
             <th mat-header-cell *matHeaderCellDef>Transaction Type</th>
-            <td mat-cell *matCellDef="let element"> {{element.transactionType}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.transactions?.join(', ')}} </td>
         </ng-container>
 
 
