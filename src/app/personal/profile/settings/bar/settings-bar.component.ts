@@ -1,5 +1,7 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { MenuItem } from 'src/app/model/common.model';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
     selector: 'app-settings-bar',
@@ -7,6 +9,7 @@ import { MenuItem } from 'src/app/model/common.model';
     styleUrls: ['../../../../../assets/menu.scss']
 })
 export class SettingsMenuBarComponent {
+    @Input() selectedTab = 'info';
     @Output() select = new EventEmitter<string>();
 
     tabs: MenuItem[] = [
@@ -23,12 +26,11 @@ export class SettingsMenuBarComponent {
             name: 'Security'
         } as MenuItem
     ];
-    selectedTab = 'info';
 
-    constructor() { }
+    constructor(private router: Router, private auth: AuthService) { }
 
     onSelect(itemId: string): void {
-        this.selectedTab = itemId;
         this.select.emit(itemId);
+        this.router.navigateByUrl(`${this.auth.getUserAccountPage()}/settings/${itemId}`);
     }
 }

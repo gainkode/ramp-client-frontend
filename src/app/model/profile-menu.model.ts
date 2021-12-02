@@ -49,7 +49,7 @@ export const PersonalProfilePopupMenuItems: Array<MenuItem> = [
     {
         id: 'verification',
         name: 'Verification',
-        url: '',
+        url: '/personal/account/settings/verification',
         icon: 'person_outline'
     },
     {

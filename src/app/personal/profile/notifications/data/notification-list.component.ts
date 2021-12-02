@@ -15,7 +15,12 @@ import { ProfileDataService } from 'src/app/services/profile.service';
 @Component({
     selector: 'app-personal-notification-list',
     templateUrl: './notification-list.component.html',
-    styleUrls: ['../../../../assets/menu.scss', '../../../../assets/button.scss', '../../../../assets/profile.scss', './notification-list.component.scss']
+    styleUrls: [
+        '../../../../../assets/menu.scss',
+        '../../../../../assets/button.scss',
+        '../../../../../assets/profile.scss',
+        './notification-list.component.scss'
+    ]
 })
 export class PersonalNotificationListComponent implements OnDestroy, AfterViewInit {
     @Input() recent = false;

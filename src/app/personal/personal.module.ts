@@ -82,6 +82,7 @@ const routing = RouterModule.forChild([
         component: PersonalComponent,
         children: [
             { path: 'notifications', component: PersonalNotificationsComponent, canActivate: [PersonalGuard] },
+            { path: 'settings/:page', component: PersonalSettingsComponent, canActivate: [PersonalGuard] },
             { path: 'settings', component: PersonalSettingsComponent, canActivate: [PersonalGuard] },
             { path: '**', redirectTo: 'settings' }
         ],

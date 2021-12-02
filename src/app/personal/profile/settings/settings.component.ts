@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
     selector: 'app-personal-settings',
@@ -11,15 +11,23 @@ export class PersonalSettingsComponent {
 
     inProgress = false;
     errorMessage = '';
-    selectedTab = 'info';
+    selectedTab = '';
 
     constructor(
         private changeDetector: ChangeDetectorRef,
+        private route: ActivatedRoute,
         private router: Router) {
+        const pageId = this.route.snapshot.params['page'] ?? '';
+        if (pageId === 'info' || pageId === 'verification' || pageId === 'security') {
+            this.pageSelected(pageId);
+        } else {
+            this.pageSelected('info');
+        }
     }
 
     pageSelected(id: string): void {
         this.selectedTab = id;
+        console.log('selected', this.selectedTab);
     }
 
     handleError(val: string): void {
