@@ -493,7 +493,7 @@ const GET_WIDGETS = gql`
         widgetId
         userId
         created
-        transactionType
+        transactionTypes
         currenciesFrom
         currenciesTo
         destinationAddress

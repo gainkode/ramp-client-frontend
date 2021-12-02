@@ -23,6 +23,7 @@ export class WidgetItem {
       this.userId = data.userId as string;
       this.created = data.created as Date;
       this.transactionType = data.transactionType as string;
+      this.transactionTypes = data.transactionTypes ?? [];
       this.currenciesFrom = data.currenciesFrom ?? undefined;
       this.currenciesTo = data.currenciesTo ?? undefined;
       this.destinationAddress = data.destinationAddress as string;
