@@ -22,7 +22,12 @@ export class WidgetItem {
       this.additionalSettings = data.additionalSettings as string;
       this.userId = data.userId as string;
       this.created = data.created as Date;
-      this.transactionType = data.transactionType as string;
+      this.transactionType = undefined;
+      if (data.transactionTypes) {
+        if (data.transactionTypes.length > 0) {
+          this.transactionType = data.transactionTypes[0];
+        }
+      }
       this.transactionTypes = data.transactionTypes ?? [];
       this.currenciesFrom = data.currenciesFrom ?? undefined;
       this.currenciesTo = data.currenciesTo ?? undefined;

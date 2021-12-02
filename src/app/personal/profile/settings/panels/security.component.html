@@ -10,12 +10,22 @@
                 <form [formGroup]="twoFaForm">
                     <input type="checkbox" id="toggle-button" class="__toggle-switch-slider" formControlName="switch">
                 </form>
-            </div>  
+            </div>
         </div>
     </div>
     <div class="__profile-settings-delimitter"></div>
 
+    <h2 class="__form-settings-title">
+        Change Password
+    </h2>
 
-
+    <form [formGroup]="passwordForm">
+        <h3 class="__form-settings-control-title">
+            Old password
+        </h3>
+        <div style="width: 305px;height: 32px;background-color: cornflowerblue;">
+            Password
+        </div>
+    </form>
 
 </div>

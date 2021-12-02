@@ -638,7 +638,7 @@ const CREATE_WIDGET = gql`
     $countriesCode2: [String!]
     $currenciesFrom: [String!]
     $currenciesTo: [String!]
-    $destinationAddresses: [String!]
+    $destinationAddress: String!
     $instruments: [PaymentInstrument!]
     $liquidityProvider: LiquidityProvider
     $paymentProviders: [String!]
@@ -651,7 +651,7 @@ const CREATE_WIDGET = gql`
         transactionTypes: $transactionTypes
         currenciesFrom: $currenciesFrom
         currenciesTo: $currenciesTo
-        destinationAddresses: $destinationAddresses
+        destinationAddress: $destinationAddress
         countriesCode2: $countriesCode2
         instruments: $instruments
         paymentProviders: $paymentProviders
@@ -1396,7 +1396,7 @@ export class AdminDataService {
           transactionTypes: widget.transactionTypes,
           currenciesFrom: widget.currenciesFrom,
           currenciesTo: widget.currenciesTo,
-          destinationAddresses: widget.destinationAddresses,
+          destinationAddress: widget.destinationAddresses,
           countriesCode2: widget.countriesCode2,
           instruments: widget.instruments,
           paymentProviders: widget.paymentProviders,
