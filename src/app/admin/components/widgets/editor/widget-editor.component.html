@@ -20,11 +20,6 @@
     </mat-form-field>
 
     <mat-form-field class="form-element">
-        <mat-label>Additional settings</mat-label>
-        <input type="text" matInput formControlName="additionalSettings" maxlength="50" placeholder="Additional settings" />
-    </mat-form-field>
-
-    <mat-form-field class="form-element">
         <mat-label>Countries</mat-label>
         <mat-chip-list #countryChipList aria-label="Country selection">
             <mat-chip *ngFor="let opt of this.form.controls.countries.value" (removed)="removeCountryOption(opt)">

@@ -29,24 +29,38 @@ export class WidgetListComponent implements OnInit, OnDestroy, AfterViewInit {
   filter = new Filter({});
 
   displayedColumns: string[] = [
-
+    //'details',
+    'id',
+    'userId',
+    'created',
+    'transactionType',
+    'currenciesFrom',
+    'currenciesTo',
+    'destinationAddress',
+    'userNotificationId',
+    'countries',
+    'instruments',
+    'paymentProviders',
+    'liquidityProvider'
   ];
 
   private destroy$ = new Subject();
   private listSubscription = Subscription.EMPTY;
 
-
   constructor(
     private layoutService: LayoutService,
-    private adminDataService: AdminDataService
-  ) {
+    private adminDataService: AdminDataService) {
   }
 
   ngOnInit(): void {
     this.layoutService.rightPanelCloseRequested$.pipe(takeUntil(this.destroy$))
-        .subscribe(() => {
-          this.selectedItem = undefined;
-        });
+      .subscribe(() => {
+        this.selectedItem = undefined;
+        this.loadData();
+        // setTimeout(() => {
+        //   this.loadData();
+        // }, 1500);
+      });
 
     this.loadData();
   }
@@ -72,6 +86,21 @@ export class WidgetListComponent implements OnInit, OnDestroy, AfterViewInit {
     this.selectedItem = new WidgetItem(null);
   }
 
+  toggleDetails(widget: WidgetItem): void {
+    if (this.isSelectedWidget(widget.id ?? '')) {
+      this.selectedItem = undefined;
+    } else {
+      this.selectedItem = widget;
+    }
+  }
+
+  getDetailsIcon(widgetId: string): string {
+    return (this.isSelectedWidget(widgetId)) ? 'clear' : 'open_in_new';
+  }
+
+  getDetailsTooltip(widgetId: string): string {
+    return (this.isSelectedWidget(widgetId)) ? 'Hide details' : 'Widget details';
+  }
 
   handleDetailsPanelClosed(): void {
     this.selectedItem = undefined;
@@ -87,14 +116,14 @@ export class WidgetListComponent implements OnInit, OnDestroy, AfterViewInit {
       this.sortedDesc,
       this.filter
     )
-                                .pipe(
-                                  takeUntil(this.destroy$)
-                                )
-                                .subscribe(result => {
-                                  console.log(result.list);
-                                  this.data = result.list;
-                                  this.customerCount = result.count;
-                                });
+      .pipe(
+        takeUntil(this.destroy$)
+      )
+      .subscribe(result => {
+        console.log('widgets', result.list);
+        this.data = result.list;
+        this.customerCount = result.count;
+      });
   }
 
   handlePage(event: PageEvent): PageEvent {
@@ -102,5 +131,9 @@ export class WidgetListComponent implements OnInit, OnDestroy, AfterViewInit {
     this.pageIndex = event.pageIndex;
     this.loadData();
     return event;
+  }
+
+  private isSelectedWidget(widgetId: string): boolean {
+    return !!this.selectedItem && this.selectedItem.id === widgetId;
   }
 }
