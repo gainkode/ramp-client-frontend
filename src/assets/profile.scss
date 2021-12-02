@@ -662,3 +662,21 @@
 
     color: $color_purple_900_text;
 }
+
+.__profile-settings-narrow-container {
+    width: 800px;
+    margin: 16px 0px;
+}
+
+.__profile-settings-item-bar {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+}
+
+.__profile-settings-delimitter {
+    margin: 24px 0px;
+    width: 100%;
+    height: 1px;
+    background-color: $color_purple_50;
+}
