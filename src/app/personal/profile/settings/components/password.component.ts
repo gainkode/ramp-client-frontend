@@ -1,9 +1,10 @@
-import { Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
-import { AbstractControl, FormBuilder, NgForm, Validators } from '@angular/forms';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CommonDialogBox } from 'src/app/components/dialogs/common-box.dialog';
+import { TwoFaDialogBox } from 'src/app/components/dialogs/two-fa-box.dialog';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
@@ -24,17 +25,15 @@ export class PersonalChangePasswordComponent implements OnDestroy {
     @Output() error = new EventEmitter<string>();
     @Output() progressChange = new EventEmitter<boolean>();
 
-    twoFaCode = '';
-
     private subscriptions: Subscription = new Subscription();
 
     passwordForm = this.formBuilder.group({
         currentPassword: [
-            '',
+            'Qwerty#123',
             { validators: [Validators.required], updateOn: 'change' },
         ],
         newPassword: [
-            '',
+            '!QAZ2wsx',
             {
                 validators: [
                     Validators.required,
@@ -44,7 +43,7 @@ export class PersonalChangePasswordComponent implements OnDestroy {
             },
         ],
         confirmPassword: [
-            '',
+            '!QAZ2wsx',
             {
                 validators: [
                     Validators.required,
@@ -107,13 +106,31 @@ export class PersonalChangePasswordComponent implements OnDestroy {
         );
     }
 
-    private savePassword(): void {
+    private showCodeRequestDialog(): void {
+        const dialogRef = this.dialog.open(TwoFaDialogBox, {
+            width: '414px',
+            data: {
+                title: '',
+                message: 'In order to change you password please enter the 2FA code'
+            }
+        });
+        this.subscriptions.add(
+            dialogRef.afterClosed().subscribe(result => {
+                console.log(result);
+                if (result && result !== '') {
+                    this.changePassword(result);
+                }
+            })
+        );
+    }
+
+    private changePassword(twoFaCode: string): void {
         if (this.passwordForm.valid) {
             this.error.emit('');
             this.progressChange.emit(true);
             this.subscriptions.add(
                 this.profileService.changePassword(
-                    this.twoFaCode,
+                    twoFaCode,
                     this.currentPasswordField?.value,
                     this.newPasswordField?.value
                 ).subscribe(({ data }) => {
@@ -134,9 +151,9 @@ export class PersonalChangePasswordComponent implements OnDestroy {
 
     onSubmit(): void {
         if (this.twoFaRequired) {
-            // show dialog
+            this.showCodeRequestDialog();
         } else {
-            this.savePassword();
+            this.changePassword('');
         }
     }
 }

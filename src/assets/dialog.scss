@@ -22,3 +22,28 @@
 
     color: $color_purple_900_text;
 }
+
+.__dialog-info {
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 14px;
+
+    color: $color_purple_900_icons;
+}
+
+.__dialog-space-small {
+    height: 8px;
+    width: 100%;
+}
+
+.__dialog-space {
+    height: 16px;
+    width: 100%;
+}
+
+.__dialog-space-large {
+    height: 24px;
+    width: 100%;
+}

@@ -45,7 +45,6 @@ import { SignupInfoPanelComponent } from './auth/signup-info.component';
 
 import { ProfileInfoComponent } from './profile/profile-info.component';
 import { ProfileTwoFAComponent } from './profile/profile-two-fa.component';
-import { ProfilePasswordComponent } from './profile/profile-password.component';
 import { TransactionsFilterBarComponent } from './filter-bars/transactions-bar.component';
 import { FormTextBoxComponent } from './common/controls/form-textbox.component';
 import { FormFinanceComboComponent } from './common/controls/form-finance-combo.component';
@@ -60,6 +59,7 @@ import { ContactsFilterBarComponent } from './filter-bars/contacts-bar.component
 import { RiskWarningComponent } from './common/risk-warning.component';
 import { SettingsPasswordBoxComponent } from './common/controls/settings-password.component';
 import { CommonDialogBox } from './dialogs/common-box.dialog';
+import { TwoFaDialogBox } from './dialogs/two-fa-box.dialog';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -100,24 +100,24 @@ export class MaterialModule { }
         DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
         FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent, FormSearchBoxComponent,
         FormEditBoxComponent, SettingsPasswordBoxComponent,
-        DeleteDialogBox, CommonDialogBox,
+        DeleteDialogBox, CommonDialogBox, TwoFaDialogBox,
         LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent,
         TwoFaCodeComponent, NavPopupComponent, SideMenuComponent, SideExpanderComponent, RiskWarningComponent,
         LineBreakPipe, NumberFillPipe,
         TransactionsFilterBarComponent, WalletsFilterBarComponent, ContactsFilterBarComponent, NotificationsFilterBarComponent,
         
-        ProfileInfoComponent, ProfileTwoFAComponent, ProfilePasswordComponent],
+        ProfileInfoComponent, ProfileTwoFAComponent],
     exports: [
         DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
         FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent, FormSearchBoxComponent,
         FormEditBoxComponent, SettingsPasswordBoxComponent,
-        DeleteDialogBox, CommonDialogBox,
+        DeleteDialogBox, CommonDialogBox, TwoFaDialogBox,
         LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent,
         TwoFaCodeComponent, NavPopupComponent, SideMenuComponent, SideExpanderComponent, RiskWarningComponent,
         LineBreakPipe, NumberFillPipe,
         TransactionsFilterBarComponent, WalletsFilterBarComponent, ContactsFilterBarComponent, NotificationsFilterBarComponent,
         
-        ProfileInfoComponent, ProfileTwoFAComponent, ProfilePasswordComponent],
+        ProfileInfoComponent, ProfileTwoFAComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 

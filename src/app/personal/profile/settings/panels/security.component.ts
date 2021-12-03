@@ -68,7 +68,7 @@ export class PersonalSecuriySettingsComponent implements OnInit, OnDestroy {
                     if (userData) {
                         this.user = userData;
                         this.passwordCanBeChanged = this.user.hasEmailAuth as boolean;
-                        this.password2FaRequired = this.user.is2faEnabled as boolean;
+                        this.password2FaRequired = true;//this.user.is2faEnabled as boolean;
                     }
                     this.progressChange.emit(false);
                 }, (error) => {

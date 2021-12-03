@@ -1,0 +1,13 @@
+<div class="__dialog-info" mat-dialog-content>{{data.message}}</div>
+<div class="__dialog-space-small"></div>
+<form [formGroup]="codeForm">
+    <app-settings-password [maxlength]="50" formControlName="code" [errorMessages]="codeErrorMessages"
+        [separator]="true">
+    </app-settings-password>
+
+    <mat-dialog-actions align="center">
+        <button class="__main-button __button-wide" [mat-dialog-close]="codeField?.value" [disabled]="!codeForm.valid">
+            CONFIRM
+        </button>
+    </mat-dialog-actions>
+</form>
