@@ -29,7 +29,7 @@ export class WidgetListComponent implements OnInit, OnDestroy, AfterViewInit {
   filter = new Filter({});
 
   displayedColumns: string[] = [
-    //'details',
+    'details',
     'id',
     'userId',
     'created',

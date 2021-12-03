@@ -37,14 +37,12 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
 
   @Input()
   set widget(widget: WidgetItem) {
-    this.widgetId = widget.id;
     this.setFormData(widget);
-    this.layoutService.setBackdrop(!this.widgetId);
+    this.layoutService.setBackdrop(!widget?.id);
   }
 
   @ViewChild('countrySearchInput') countrySearchInput!: ElementRef<HTMLInputElement>;
 
-  widgetId?: string;
   paymentProviderOptions: Array<PaymentProviderView> = [];
   currencyOptions: Array<CurrencyView> = [];
 
@@ -55,11 +53,11 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
   filteredCountryOptions: Array<Country> = [];
 
   form = this.formBuilder.group({
-    id: [''],
+    id: [null],
     countries: [[], { validators: [Validators.required], updateOn: 'change' }],
     currenciesFrom: [[], { validators: [Validators.required], updateOn: 'change' }],
     currenciesTo: [[], { validators: [Validators.required], updateOn: 'change' }],
-    destinationAddresses: [[], { validators: [Validators.required], updateOn: 'change' }],
+    destinationAddress: ['', { validators: [Validators.required], updateOn: 'change' }],
     instruments: [[], { validators: [Validators.required], updateOn: 'change' }],
     liquidityProvider: ['', { validators: [Validators.required], updateOn: 'change' }],
     paymentProviders: [[], { validators: [Validators.required], updateOn: 'change' }],
@@ -92,9 +90,9 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
       debounceTime(1000),
       switchMap(searchString => this.getUserFilteredOptions(searchString))
     )
-      .subscribe(options => {
-        this.filteredUserOptions = options;
-      });
+        .subscribe(options => {
+          this.filteredUserOptions = options;
+        });
 
     this.countrySearchString$.pipe(
       takeUntil(this.destroy$),
@@ -103,9 +101,9 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
       // distinctUntilChanged(),
       switchMap(searchString => this.getFilteredCountryOptions(searchString))
     )
-      .subscribe(options => {
-        this.filteredCountryOptions = options;
-      });
+        .subscribe(options => {
+          this.filteredCountryOptions = options;
+        });
 
     this.loadPaymentProviders();
     this.loadCurrencies();
@@ -119,13 +117,16 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
     console.log('submit', this.form.value);
     const widgetItem = this.getWidgetItem();
     this.adminDataService.saveWidget(widgetItem)
-      .subscribe(() => {
-        this.layoutService.requestRightPanelClose();
-      });
+        .subscribe(() => {
+          this.layoutService.requestRightPanelClose();
+        });
   }
 
   onDelete(): void {
-    this.adminDataService.deleteWidget(this.form.value.id);
+    this.adminDataService.deleteWidget(this.form.value.id)
+        .subscribe(() => {
+          this.layoutService.requestRightPanelClose();
+        });
   }
 
   onCancel(): void {
@@ -137,7 +138,7 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
   handleUserInputChange(event: Event): void {
     let searchString = event.target ? (event.target as HTMLInputElement).value : '';
     searchString = searchString.toLowerCase()
-      .trim();
+                               .trim();
     this.userSearchString$.next(searchString);
   }
 
@@ -154,14 +155,14 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
   handleCountrySearchInputChange(event: Event): void {
     let searchString = event.target ? (event.target as HTMLInputElement).value : '';
     searchString = searchString.toLowerCase()
-      .trim();
+                               .trim();
     this.countrySearchString$.next(searchString);
   }
 
   handleCountryOptionAdded(event: MatChipInputEvent): void {
     const country = this.filteredCountryOptions.find(
       c => c.name.toLowerCase() === event.value.toLowerCase()
-        .trim()
+                                         .trim()
     );
 
     if (country) {
@@ -174,12 +175,12 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
 
   handleCountryOptionSelected(event: MatAutocompleteSelectedEvent): void {
     if (!this.form.controls.countries.value
-      .some(x => x.code2 === event.option.id)) {
+             ?.some(x => x.code2 === event.option.id)) {
       this.form.controls.countries
-        ?.setValue([
-          ...this.form.controls.countries?.value,
-          event.option.value
-        ]);
+          ?.setValue([
+            ...this.form.controls.countries?.value,
+            event.option.value
+          ]);
     }
 
     this.countrySearchString$.next('');
@@ -188,16 +189,16 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
 
   removeCountryOption(country: Country): void {
     this.form.controls.countries
-      ?.setValue(
-        this.form.controls.countries
-          ?.value
-          .filter(v => v.code2 !== country.code2)
-      );
+        ?.setValue(
+          this.form.controls.countries
+              ?.value
+              .filter(v => v.code2 !== country.code2)
+        );
   }
 
   clearCountryOptions(): void {
     this.form.controls.countries
-      ?.setValue([]);
+        ?.setValue([]);
   }
 
   getCountryFlag(code: string): string {
@@ -208,11 +209,11 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
     const filteredOptions = this.countryOptions.filter(c => {
       return (
         !searchString || c.name.toLowerCase()
-          .includes(searchString)
-      ) && !this.form.controls.countries.value
-        .some(s => {
-          return s.code2 === c.code2;
-        });
+                          .includes(searchString)
+      ) && !this.form.controls.countries?.value
+                ?.some(s => {
+                  return s.code2 === c.code2;
+                });
     });
 
     return of(filteredOptions);
@@ -221,37 +222,36 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
   // endregion
 
   private setFormData(widget: WidgetItem): void {
-    this.form.reset();
+    if (widget) {
 
-    const user$ = widget.userId ?
-      this.getUserFilteredOptions(widget.userId)
-        .pipe(
-          take(1),
-          map(users => {
-            return users.find(u => u.id === widget.userId);
-          })
-        )
-      :
-      of(undefined);
+      const user$ = widget.userId ?
+        this.getUserFilteredOptions(widget.userId)
+            .pipe(
+              take(1),
+              map(users => {
+                return users.find(u => u.id === widget.userId);
+              })
+            )
+        :
+        of(undefined);
 
-    user$.subscribe(userItem => {
-
-      this.form.setValue({
-        id: widget.id,
-        countries: widget.countriesCode2?.map(code2 => {
-          return this.countryOptions.find(c => c.code2 === code2);
-        }),
-        currenciesFrom: widget.currenciesFrom,
-        currenciesTo: widget.currenciesTo,
-        destinationAddresses: (widget.destinationAddresses && widget.destinationAddresses.length > 0) ?
-          widget.destinationAddresses[0] : '',
-        instruments: widget.instruments,
-        liquidityProvider: widget.liquidityProvider,
-        paymentProviders: widget.paymentProviders,
-        transactionTypes: widget.transactionTypes,
-        user: userItem
+      user$.subscribe(userItem => {
+        this.form.setValue({
+          id: widget.id,
+          countries: widget.countriesCode2?.map(code2 => {
+            return this.countryOptions.find(c => c.code2 === code2);
+          }) ?? [],
+          currenciesFrom: widget.currenciesFrom ?? [],
+          currenciesTo: widget.currenciesTo ?? [],
+          destinationAddress: widget.destinationAddress ?? '',
+          instruments: widget.instruments ?? [],
+          liquidityProvider: widget.liquidityProvider ?? null,
+          paymentProviders: widget.paymentProviders ?? [],
+          transactionTypes: widget.transactionTypes ?? [],
+          user: userItem ?? null
+        });
       });
-    });
+    }
 
   }
 
@@ -264,7 +264,7 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
     widget.countriesCode2 = formValue.countries.map(c => c.code2);
     widget.currenciesFrom = formValue.currenciesFrom;
     widget.currenciesTo = formValue.currenciesTo;
-    widget.destinationAddresses = formValue.destinationAddresses;
+    widget.destinationAddress = formValue.destinationAddress;
     widget.instruments = formValue.instruments;
     widget.liquidityProvider = formValue.liquidityProvider;
     widget.paymentProviders = formValue.paymentProviders;
@@ -282,11 +282,11 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
         false,
         new Filter({ search: searchString })
       )
-        .pipe(
-          map(result => {
-            return result.list;
-          })
-        );
+                 .pipe(
+                   map(result => {
+                     return result.list;
+                   })
+                 );
     } else {
       return of([]);
     }
@@ -295,39 +295,39 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
   private loadPaymentProviders(): void {
     this.paymentProviderOptions = [];
     this.paymentDataService.getProviders()
-      ?.valueChanges
-      .subscribe(({ data }) => {
-        const providers = data.getPaymentProviders as PaymentProvider[];
-        this.paymentProviderOptions = providers?.map((val) => new PaymentProviderView(val)) as PaymentProviderView[];
-        console.log('ppo', this.paymentProviderOptions);
-      }, (error) => {
-        this.snackBar.open(
-          this.errorHandler.getError(error.message, 'Unable to load payment provider list.'),
-          undefined,
-          { duration: 5000 }
-        );
-      });
+        ?.valueChanges
+        .subscribe(({ data }) => {
+          const providers = data.getPaymentProviders as PaymentProvider[];
+          this.paymentProviderOptions = providers?.map((val) => new PaymentProviderView(val)) as PaymentProviderView[];
+          console.log('ppo', this.paymentProviderOptions);
+        }, (error) => {
+          this.snackBar.open(
+            this.errorHandler.getError(error.message, 'Unable to load payment provider list.'),
+            undefined,
+            { duration: 5000 }
+          );
+        });
   }
 
   private loadCurrencies(): void {
     this.commonDataService.getSettingsCurrency()
-      ?.valueChanges
-      .subscribe(({ data }) => {
-        const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
+        ?.valueChanges
+        .subscribe(({ data }) => {
+          const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
 
-        if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
-          this.currencyOptions = currencySettings.settingsCurrency.list
-            ?.map((val) => new CurrencyView(val)) as CurrencyView[];
-        } else {
-          this.currencyOptions = [];
-        }
-      }, (error) => {
-        this.snackBar.open(
-          this.errorHandler.getError(error.message, 'Unable to load payment provider list.'),
-          undefined,
-          { duration: 5000 }
-        );
-      });
+          if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
+            this.currencyOptions = currencySettings.settingsCurrency.list
+                                                   ?.map((val) => new CurrencyView(val)) as CurrencyView[];
+          } else {
+            this.currencyOptions = [];
+          }
+        }, (error) => {
+          this.snackBar.open(
+            this.errorHandler.getError(error.message, 'Unable to load payment provider list.'),
+            undefined,
+            { duration: 5000 }
+          );
+        });
   }
 
 }

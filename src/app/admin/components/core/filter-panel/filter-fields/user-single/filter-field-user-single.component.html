@@ -1,0 +1,14 @@
+<mat-form-field class="form-element">
+    <mat-label>User</mat-label>
+    <input type="text"
+           placeholder="Select user"
+           aria-label="User"
+           matInput
+           (input)="handleUserInputChange($event)"
+           [matAutocomplete]="auto">
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="formatValue" (optionSelected)="handleOptionSelected($event)">
+        <mat-option *ngFor="let option of filteredOptions" [value]="option">
+            {{option.fullName + (option.email ? ' ('+  option.email + ')'  : '')}}
+        </mat-option>
+    </mat-autocomplete>
+</mat-form-field>

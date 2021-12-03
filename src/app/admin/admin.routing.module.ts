@@ -9,12 +9,12 @@ import { CostsComponent } from './components/costs/costs.component';
 import { IdentificationListComponent } from './components/identification/list/identification-list.component';
 import { ReconciliationComponent } from './components/reconciliation/reconciliation.component';
 import { SystemUsersComponent } from './components/system-users/system-users.component';
-import { RiskCenterComponent } from './components/risk-center/risk-center.component';
 import { WidgetListComponent } from './components/widgets/list/widget-list.component';
 import { TransactionListComponent } from './components/transactions/list/transaction-list.component';
 import { TransactionSingleComponent } from './components/transactions/transaction-single/transaction-single.component';
 import { WalletListComponent } from './components/wallets/list/wallet-list.component';
 import { FeeListComponent } from './components/fees/fee-list/fee-list.component';
+import { RiskAlertListComponent } from './components/risk-center/list/risk-alert-list.component';
 
 const routes: Routes = [
   {
@@ -105,7 +105,7 @@ const routes: Routes = [
       },
       {
         path: 'risk-center',
-        component: RiskCenterComponent,
+        component: RiskAlertListComponent,
         data: {
           header: 'Risk center'
         }

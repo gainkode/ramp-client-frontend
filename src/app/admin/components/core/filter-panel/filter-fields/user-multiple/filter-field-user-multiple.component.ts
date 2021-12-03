@@ -1,33 +1,33 @@
-import { Component, ElementRef, forwardRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, forwardRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
-import { distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, switchMap, takeUntil } from 'rxjs/operators';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { UserItem } from '../../../../../../model/user.model';
 import { AdminDataService } from '../../../../../services/admin-data.service';
 import {
   ControlValueAccessor,
   NG_VALUE_ACCESSOR
 } from '@angular/forms';
-import { Countries, Country } from '../../../../../../model/country-code.model';
+import { Filter } from '../../../../../model/filter.model';
 
 @Component({
-  selector: 'app-filter-field-country',
-  templateUrl: './filter-field-country.component.html',
-  styleUrls: ['./filter-field-country.component.scss'],
+  selector: 'app-filter-field-users',
+  templateUrl: './filter-field-user-multiple.component.html',
+  styleUrls: ['./filter-field-user-multiple.component.scss'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => FilterFieldCountryComponent),
+      useExisting: forwardRef(() => FilterFieldUserMultipleComponent),
       multi: true
     }
   ]
 })
-export class FilterFieldCountryComponent implements OnInit, OnDestroy, ControlValueAccessor {
+export class FilterFieldUserMultipleComponent implements OnInit, OnDestroy, ControlValueAccessor {
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
 
-  countryOptions = Countries;
-  filteredOptions: Country[] = [];
-  selectedOptions: Country[] = [];
+  filteredOptions: UserItem[] = [];
+  selectedOptions: UserItem[] = [];
 
   private searchString$ = new BehaviorSubject<string>('');
 
@@ -40,6 +40,7 @@ export class FilterFieldCountryComponent implements OnInit, OnDestroy, ControlVa
     this.searchString$.pipe(
       takeUntil(this.destroy$),
       distinctUntilChanged(),
+      debounceTime(1000),
       switchMap(searchString => this.getFilteredOptions(searchString))
     )
         .subscribe(options => {
@@ -59,7 +60,7 @@ export class FilterFieldCountryComponent implements OnInit, OnDestroy, ControlVa
   onChange = (_: any) => {
   }
 
-  writeValue(value: Country[]): void {
+  writeValue(value: UserItem[]): void {
     this.selectedOptions = value;
   }
 
@@ -81,55 +82,57 @@ export class FilterFieldCountryComponent implements OnInit, OnDestroy, ControlVa
   }
 
   handleOptionAdded(event: MatChipInputEvent): void {
-    const country = this.filteredOptions.find(
-      c => c.name.toLowerCase() === event.value.toLowerCase()
-                                         .trim()
+    const user = this.filteredOptions.find(
+      c => c.email.toLowerCase() === event.value.toLowerCase()
+                                          .trim()
     );
 
-    if (country) {
-      this.setSelectedOptions([...this.selectedOptions, country]);
+    if (user) {
+      this.setSelectedOptions([...this.selectedOptions, user]);
     }
 
     this.searchInput.nativeElement.value = '';
   }
 
   handleOptionSelected(event: MatAutocompleteSelectedEvent): void {
-    if (!this.selectedOptions.some(x => x.code3 === event.option.id)) {
+    if (!this.selectedOptions.some(x => x.id === event.option.id)) {
       this.setSelectedOptions([...this.selectedOptions, event.option.value]);
     }
 
     this.searchInput.nativeElement.value = '';
   }
 
-  removeOption(country: Country): void {
-    this.setSelectedOptions(this.selectedOptions.filter(v => v.code3 !== country.code3));
+  removeOption(user: UserItem): void {
+    this.setSelectedOptions(this.selectedOptions.filter(v => v.id !== user.id));
   }
 
   clearOptions(): void {
     this.setSelectedOptions([]);
   }
 
-  getCountryFlag(code: string): string {
-    return `${code.toLowerCase()}.svg`;
+  private getFilteredOptions(searchString: string): Observable<UserItem[]> {
+    if (searchString) {
+      return this.adminDataService.getUsers(
+        0,
+        100,
+        'email',
+        false,
+        new Filter({ search: searchString })
+      )
+                 .pipe(
+                   map(result => {
+                     return result.list.filter(
+                       u => !this.selectedOptions.some(s => u.id === s.id));
+                   })
+                 );
+    } else {
+      return of([]);
+    }
   }
 
-  private getFilteredOptions(searchString: string): Observable<Country[]> {
-    const filteredOptions = this.countryOptions.filter(c => {
-      return (
-          !searchString || c.name.toLowerCase()
-                            .includes(searchString)
-        ) &&
-        !this.selectedOptions.some(s => {
-          return s.code3 === c.code3;
-        });
-    });
-
-    return of(filteredOptions);
-  }
-
-  private setSelectedOptions(options: Country[]): void {
+  private setSelectedOptions(options: UserItem[]): void {
     this.selectedOptions = options;
-    this.onChange(options.map(o => o.code3));
+    this.onChange(options.map(o => o.id));
   }
 
 }

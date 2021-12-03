@@ -4,21 +4,21 @@ import { TransactionTypeList } from 'src/app/model/payment.model';
 import { Widget } from '../../model/generated-models';
 
 export class WidgetItem {
-  id?: string;
+  id: string | null = null;
   additionalSettings?: string;
   userId?: string;
   created?: string;
   transactionType?: string;
   transactionTypes?: Array<string>;
-  transactions?: string[];
-  currenciesFrom?: Array<string>;
-  currenciesTo?: Array<string>;
-  destinationAddress?: string;
-  destinationAddresses?: Array<string>;
-  countriesCode2?: Array<string>;
-  countries: string[] = [];
-  instruments?: Array<string>;
-  paymentProviders?: Array<string>;
+  transactions: string[] = [];
+  currenciesFrom: Array<string> = [];
+  currenciesTo: Array<string> = [];
+  destinationAddress = '';
+  destinationAddresses: Array<string> = [];
+  countriesCode2: Array<string> = [];
+  countries: Array<string> = [];
+  instruments: Array<string> = [];
+  paymentProviders: Array<string> = [];
   liquidityProvider?: string;
 
   constructor(data: Widget | null) {
@@ -48,13 +48,13 @@ export class WidgetItem {
       this.transactions = data.transactionTypes?.map(val => {
         const t = TransactionTypeList.find(x => x.id === val);
         return (t) ? t.name : val;
-      });
-      this.currenciesFrom = data.currenciesFrom ?? undefined;
-      this.currenciesTo = data.currenciesTo ?? undefined;
+      }) ?? [];
+      this.currenciesFrom = data.currenciesFrom ?? [];
+      this.currenciesTo = data.currenciesTo ?? [];
       this.destinationAddress = data.destinationAddress as string;
-      this.countriesCode2 = data.countriesCode2 ?? undefined;
-      this.instruments = data.instruments ?? undefined;
-      this.paymentProviders = data.paymentProviders ?? undefined;
+      this.countriesCode2 = data.countriesCode2 ?? [];
+      this.instruments = data.instruments ?? [];
+      this.paymentProviders = data.paymentProviders ?? [];
       this.liquidityProvider = data.liquidityProvider as string;
     }
   }

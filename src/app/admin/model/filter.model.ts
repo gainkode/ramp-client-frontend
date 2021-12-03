@@ -1,4 +1,4 @@
-import { TransactionSource, UserType } from '../../model/generated-models';
+import { RiskAlertCodes, TransactionSource, UserType } from '../../model/generated-models';
 import { EmptyObject } from 'apollo-angular/types';
 
 export class Filter {
@@ -6,8 +6,10 @@ export class Filter {
   public assets?: Array<string>;
   public countries?: Array<string>; // code3
   public sources?: Array<TransactionSource>;
+  public user?: string;
   public users?: Array<string>;
   public widgets?: Array<string>;
+  public riskAlertCode?: RiskAlertCodes;
   public search?: string;
 
   constructor(filterValues: EmptyObject) {
@@ -27,12 +29,20 @@ export class Filter {
       this.sources = filterValues.sources;
     }
 
+    if (filterValues.user) {
+      this.user = filterValues.user;
+    }
+
     if (filterValues.users) {
       this.users = filterValues.users;
     }
 
     if (filterValues.widgets) {
       this.widgets = filterValues.widgets;
+    }
+
+    if (filterValues.riskAlertCode) {
+      this.riskAlertCode = filterValues.riskAlertCode;
     }
 
     if (filterValues.search) {

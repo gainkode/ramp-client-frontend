@@ -1,4 +1,4 @@
-import { Component, ElementRef, forwardRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, forwardRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, switchMap, takeUntil } from 'rxjs/operators';
 import { MatChipInputEvent } from '@angular/material/chips';
@@ -13,17 +13,17 @@ import { Filter } from '../../../../../model/filter.model';
 
 @Component({
   selector: 'app-filter-field-user',
-  templateUrl: './filter-field-user.component.html',
-  styleUrls: ['./filter-field-user.component.scss'],
+  templateUrl: './filter-field-user-single.component.html',
+  styleUrls: ['./filter-field-user-single.component.scss'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => FilterFieldUserComponent),
+      useExisting: forwardRef(() => FilterFieldUserSingleComponent),
       multi: true
     }
   ]
 })
-export class FilterFieldUserComponent implements OnInit, OnDestroy, ControlValueAccessor {
+export class FilterFieldUserSingleComponent implements OnInit, OnDestroy, ControlValueAccessor {
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
 
   filteredOptions: UserItem[] = [];
@@ -55,10 +55,10 @@ export class FilterFieldUserComponent implements OnInit, OnDestroy, ControlValue
   // region ControlValueAccessor implementation
 
   onTouched = () => {
-  };
+  }
 
   onChange = (_: any) => {
-  };
+  }
 
   writeValue(value: UserItem[]): void {
     this.selectedOptions = value;
@@ -74,40 +74,21 @@ export class FilterFieldUserComponent implements OnInit, OnDestroy, ControlValue
 
   // endregion
 
-  handleSearchInputChange(event: Event): void {
+  handleOptionSelected(event: MatAutocompleteSelectedEvent): void {
+    this.onChange(event.option.value.id);
+  }
+
+  handleUserInputChange(event: Event): void {
     let searchString = event.target ? (event.target as HTMLInputElement).value : '';
     searchString = searchString.toLowerCase()
                                .trim();
     this.searchString$.next(searchString);
   }
 
-  handleOptionAdded(event: MatChipInputEvent): void {
-    const user = this.filteredOptions.find(
-      c => c.email.toLowerCase() === event.value.toLowerCase()
-                                          .trim()
-    );
-
-    if (user) {
-      this.setSelectedOptions([...this.selectedOptions, user]);
-    }
-
-    this.searchInput.nativeElement.value = '';
-  }
-
-  handleOptionSelected(event: MatAutocompleteSelectedEvent): void {
-    if (!this.selectedOptions.some(x => x.id === event.option.id)) {
-      this.setSelectedOptions([...this.selectedOptions, event.option.value]);
-    }
-
-    this.searchInput.nativeElement.value = '';
-  }
-
-  removeOption(user: UserItem): void {
-    this.setSelectedOptions(this.selectedOptions.filter(v => v.id !== user.id));
-  }
-
-  clearOptions(): void {
-    this.setSelectedOptions([]);
+  formatValue(user: UserItem): string {
+    return user ?
+      (user.fullName + (user.email ? ' (' + user.email + ')' : '')) :
+      '';
   }
 
   private getFilteredOptions(searchString: string): Observable<UserItem[]> {
@@ -121,18 +102,11 @@ export class FilterFieldUserComponent implements OnInit, OnDestroy, ControlValue
       )
                  .pipe(
                    map(result => {
-                     return result.list.filter(
-                       u => !this.selectedOptions.some(s => u.id === s.id));
+                     return result.list;
                    })
                  );
     } else {
       return of([]);
     }
   }
-
-  private setSelectedOptions(options: UserItem[]): void {
-    this.selectedOptions = options;
-    this.onChange(options.map(o => o.id));
-  }
-
 }

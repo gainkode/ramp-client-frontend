@@ -35,7 +35,6 @@ import { FilterPanelComponent } from './components/core/filter-panel/filter-pane
 import { NotificationListComponent } from './components/notifications/list/notification-list.component';
 import { ReconciliationComponent } from './components/reconciliation/reconciliation.component';
 import { SystemUsersComponent } from './components/system-users/system-users.component';
-import { RiskCenterComponent } from './components/risk-center/risk-center.component';
 import { WidgetListComponent } from './components/widgets/list/widget-list.component';
 import { MainMenuComponent } from './components/core/main-menu/main-menu.component';
 import { AdminRoutingModule } from './admin.routing.module';
@@ -51,7 +50,6 @@ import { AdminDataService } from './services/admin-data.service';
 import { DataCardComponent } from './components/dashboard/data-card/data-card.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { FilterFieldUserComponent } from './components/core/filter-panel/filter-fields/user/filter-field-user.component';
 import { FilterFieldCountryComponent } from './components/core/filter-panel/filter-fields/country/filter-field-country.component';
 import { FilterFieldWidgetComponent } from './components/core/filter-panel/filter-fields/widget/filter-field-widget.component';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
@@ -60,6 +58,16 @@ import { FeeDetailsComponent } from './components/fees/fee-details/fee-details.c
 import { FeeListComponent } from './components/fees/fee-list/fee-list.component';
 import { DetailsAttributeComponent } from './components/core/details-attribute/details-attribute.component';
 import { WidgetEditorComponent } from './components/widgets/editor/widget-editor.component';
+import { RiskAlertListComponent } from './components/risk-center/list/risk-alert-list.component';
+import {
+  FilterFieldRiskAlertCodeComponent
+} from './components/core/filter-panel/filter-fields/risk-alert-code/filter-field-risk-alert-code.component';
+import {
+  FilterFieldUserSingleComponent
+} from './components/core/filter-panel/filter-fields/user-single/filter-field-user-single.component';
+import {
+  FilterFieldUserMultipleComponent
+} from './components/core/filter-panel/filter-fields/user-multiple/filter-field-user-multiple.component';
 
 @NgModule({
   imports: [
@@ -114,16 +122,18 @@ import { WidgetEditorComponent } from './components/widgets/editor/widget-editor
     LevelEditorComponent,
     ReconciliationComponent,
     SystemUsersComponent,
-    RiskCenterComponent,
+    RiskAlertListComponent,
     WidgetListComponent,
     RightPanelDirective,
     TransactionSingleComponent,
     DataCardComponent,
-    FilterFieldUserComponent,
+    FilterFieldUserSingleComponent,
+    FilterFieldUserMultipleComponent,
     FilterFieldCountryComponent,
     FilterFieldWidgetComponent,
+    FilterFieldRiskAlertCodeComponent,
     DetailsAttributeComponent,
-    WidgetEditorComponent
+    WidgetEditorComponent,
   ],
   providers: [
     LayoutService,

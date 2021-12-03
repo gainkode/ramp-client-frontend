@@ -14,8 +14,12 @@
         <span>{{item.name}}</span>
 
     </a>
-</mat-nav-list>
 
-<a (click)="handleLogout()" style="display: block; margin-top: 2em;margin-left: 1em;color: #DDDFE6;">
-    <mat-icon>logout</mat-icon>
-</a>
+    <a mat-list-item
+       (click)="handleLogout($event)"
+       style="margin-top: 32px;">
+        <mat-icon>logout</mat-icon>
+        <span>Log out</span>
+    </a>
+
+</mat-nav-list>

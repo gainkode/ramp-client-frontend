@@ -45,10 +45,16 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
       controlsConfig.sources = [[]];
     }
     if (this.fields.includes('user')) {
+      controlsConfig.user = [undefined];
+    }
+    if (this.fields.includes('users')) {
       controlsConfig.users = [[]];
     }
     if (this.fields.includes('widget')) {
       controlsConfig.widgets = [[]];
+    }
+    if (this.fields.includes('riskAlertCode')) {
+      controlsConfig.riskAlertCode = [undefined];
     }
     if (this.fields.includes('search')) {
       controlsConfig.search = [''];
@@ -73,10 +79,16 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
         this.filterForm.controls.sources.setValue([]);
       }
       if (this.fields.includes('user')) {
+        this.filterForm.controls.user.setValue(undefined);
+      }
+      if (this.fields.includes('users')) {
         this.filterForm.controls.users.setValue([]);
       }
       if (this.fields.includes('widget')) {
         this.filterForm.controls.widgets.setValue([]);
+      }
+      if (this.fields.includes('riskAlertCode')) {
+        this.filterForm.controls.riskAlertCode.setValue(undefined);
       }
       if (this.fields.includes('search')) {
         this.filterForm.controls.search.setValue('');

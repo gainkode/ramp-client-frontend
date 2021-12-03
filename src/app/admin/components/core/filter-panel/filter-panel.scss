@@ -16,6 +16,24 @@
         padding-top: 2px;
         margin-left: 4px;
       }
+
+      &.mat-expanded {
+        ::ng-deep .mat-expansion-indicator {
+          top: 4px;
+        }
+      }
+
+      ::ng-deep .mat-expansion-indicator {
+        position: relative;
+        top: -2px;
+        transition: 0.3s ease position;
+      }
+    }
+
+    ::ng-deep {
+      .mat-expansion-panel-body {
+        padding: 8px 24px 16px 24px;
+      }
     }
   }
 
@@ -29,6 +47,7 @@
 
     .mat-form-field {
       width: 100%;
+      margin-top: 8px;
     }
 
     .mat-form-field-wrapper {

@@ -5,7 +5,9 @@ import { AdminDataService } from '../../services/admin-data.service';
 import { ErrorService } from '../../../services/error.service';
 import { CostScheme } from '../../../model/cost-scheme.model';
 import { SettingsCostListResult } from '../../../model/generated-models';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
+import { LayoutService } from '../../services/layout.service';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   templateUrl: 'costs.component.html',
@@ -36,7 +38,10 @@ export class CostsComponent implements OnInit, OnDestroy {
     return this.pEditMode;
   }
 
+  private destroy$ = new Subject();
+
   constructor(
+    private layoutService: LayoutService,
     private auth: AuthService,
     private errorHandler: ErrorService,
     private adminService: AdminDataService,
@@ -44,6 +49,11 @@ export class CostsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.layoutService.rightPanelCloseRequested$.pipe(takeUntil(this.destroy$))
+        .subscribe(() => {
+          this.selectedScheme = null;
+        });
+
     const settingsData = this.adminService.getCostSettings();
     if (settingsData === null) {
       this.errorMessage = this.errorHandler.getRejectedCookieMessage();
@@ -72,6 +82,7 @@ export class CostsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.destroy$.next();
     const s: Subscription = this.pSettingsSubscription;
     if (s !== undefined) {
       (this.pSettingsSubscription as Subscription).unsubscribe();

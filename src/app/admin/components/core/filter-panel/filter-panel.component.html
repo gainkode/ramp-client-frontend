@@ -39,13 +39,23 @@
 
             <app-filter-field-user
                     *ngIf="field === 'user'"
-                    formControlName="users"
+                    formControlName="user"
             ></app-filter-field-user>
+
+            <app-filter-field-users
+                    *ngIf="field === 'users'"
+                    formControlName="users"
+            ></app-filter-field-users>
 
             <app-filter-field-widget
                     *ngIf="field === 'widget'"
                     formControlName="widgets"
             ></app-filter-field-widget>
+
+            <app-filter-field-risk-alert-code
+                *ngIf="field === 'riskAlertCode'"
+                formControlName="riskAlertCode">
+            </app-filter-field-risk-alert-code>
 
             <mat-form-field
                     *ngIf="field === 'search'">
