@@ -29,11 +29,11 @@ export class PersonalChangePasswordComponent implements OnDestroy {
 
     passwordForm = this.formBuilder.group({
         currentPassword: [
-            'Qwerty#123',
+            '',
             { validators: [Validators.required], updateOn: 'change' },
         ],
         newPassword: [
-            '!QAZ2wsx',
+            '',
             {
                 validators: [
                     Validators.required,
@@ -43,7 +43,7 @@ export class PersonalChangePasswordComponent implements OnDestroy {
             },
         ],
         confirmPassword: [
-            '!QAZ2wsx',
+            '',
             {
                 validators: [
                     Validators.required,
@@ -116,7 +116,6 @@ export class PersonalChangePasswordComponent implements OnDestroy {
         });
         this.subscriptions.add(
             dialogRef.afterClosed().subscribe(result => {
-                console.log(result);
                 if (result && result !== '') {
                     this.changePassword(result);
                 }

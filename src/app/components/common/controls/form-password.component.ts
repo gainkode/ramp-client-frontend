@@ -25,6 +25,7 @@ export class FormPasswordBoxComponent implements ControlValueAccessor, OnInit, O
     @Input() formControl!: FormControl;
     @Input() formControlName!: string;
     @Input() separator = false;
+    @Input() smallerLabel = false;
 
     private controlSubscription: Subscription | undefined = undefined;
     initialized = false;

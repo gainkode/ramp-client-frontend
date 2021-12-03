@@ -1,0 +1,108 @@
+<div class="__dialog-wizard-progress-container">
+    <div class="__dialog-wizard-progress-bar">
+        <!-- Horizonal line -->
+        <div class="__dialog-wizard-progress-line-container">
+            <div class="__dialog-wizard-progress-line"></div>
+        </div>
+        <!-- Circle 1 -->
+        <div
+            [ngClass]="{'__dialog-wizard-progress-step-one': true, '__dialog-wizard-progress-step': true, '__dialog-wizard-progress-step-active': step===1, '__dialog-wizard-progress-step-passed': step>1}">
+            1
+        </div>
+        <!-- Circle 2 -->
+        <div
+            [ngClass]="{'__dialog-wizard-progress-step-two': true, '__dialog-wizard-progress-step': true, '__dialog-wizard-progress-step-active': step===2, '__dialog-wizard-progress-step-passed': step>2}">
+            2
+        </div>
+        <!-- Circle 3 -->
+        <div
+            [ngClass]="{'__dialog-wizard-progress-step-three': true, '__dialog-wizard-progress-step': true, '__dialog-wizard-progress-step-active': step===3, '__dialog-wizard-progress-step-passed': step>3}">
+            3
+        </div>
+        <!-- Circle 4 -->
+        <div
+            [ngClass]="{'__dialog-wizard-progress-step-four': true, '__dialog-wizard-progress-step': true, '__dialog-wizard-progress-step-active': step===4, '__dialog-wizard-progress-step-passed': step>4}">
+            4
+        </div>
+    </div>
+</div>
+<div class="__dialog-space-large"></div>
+
+<div *ngIf="step===1" class="__dialog-wizard-data-container">
+    <div class="__dialog-message">
+        Download and install the Google Authenticator application
+    </div>
+    <!-- Buttons -->
+    <div class="__dialog-wizard-store-button-block">
+        <a target="_blank" rel="noopener noreferrer" [href]="GA_APP_STORE_URL" class="__dialog-wizard-store-button">
+            <img alt="a" src="assets/ga-app-store.svg" height="40px">
+        </a>
+        <a target="_blank" rel="noopener noreferrer" [href]="GA_GOOGLE_PLAY_URL" class="__dialog-wizard-store-button">
+            <img alt="G" src="assets/ga-google-play.svg" height="40px">
+        </a>
+    </div>
+    <button class="__main-button __button-wide" (click)="stepOneComplete()">
+        NEXT
+    </button>
+</div>
+
+<div *ngIf="step===2" class="__dialog-wizard-data-container">
+    <div class="__dialog-message">
+        Scan this QR code in the Google Authenticator application
+    </div>
+    <div class="__dialog-wizard-qr-code-container">
+        <qrcode [margin]="qrMargin" cssClass="__dialog-wizard-qr-code" [qrdata]="data.message" [width]="110"
+            [errorCorrectionLevel]="'M'" [allowEmptyString]="true"></qrcode>
+        <div class="__dialog-wizard-qr-code-symbols">
+            <div class="__dialog-message">
+                If you are unable to scan the QR code, please enter this code manually into the app.
+            </div>
+            <div class="__dialog-space-small"></div>
+            <div class="__dialog-message __dialog-message-accent">
+                {{data.title}}
+            </div>
+        </div>
+    </div>
+    <div class="__dialog-space"></div>
+    <button class="__main-button __button-wide" (click)="stepTwoComplete()">
+        NEXT
+    </button>
+</div>
+
+<div *ngIf="step===3" class="__dialog-wizard-data-container">
+    <div class="__dialog-message">
+        Please save this Key on paper.<br>
+        This Key will allow you to recover your Google Authenticator in case of phone loss
+    </div>
+    <div class="__dialog-space"></div>
+    <div class="__dialog-message __dialog-message-accent">
+        {{data.title}}
+    </div>
+    <div class="__dialog-space"></div>
+    <div class="__dialog-text">
+        Resetting your Google Authentication requires opening a support ticket and takes at least 7 days to process.
+    </div>
+    <div class="__dialog-space-large"></div>
+    <button class="__main-button __button-wide" (click)="stepThreeComplete()">
+        NEXT
+    </button>
+</div>
+
+<div *ngIf="step===4" class="__dialog-wizard-data-container">
+    <div class="__dialog-message">
+        Enable your Google Authenticator
+    </div>
+    <div class="__dialog-space"></div>
+    <form [formGroup]="codeForm">
+        <app-form-password [label]="'Confirmation code'" [smallerLabel]="true" [maxlength]="10" formControlName="code"
+            [errorMessages]="codeErrorMessages" [separator]="false">
+        </app-form-password>
+        <div class="__dialog-space-large"></div>
+        <mat-dialog-actions align="center">
+            <button class="__main-button __button-wide" [mat-dialog-close]="codeField?.value" [disabled]="!codeForm.valid">
+                NEXT
+            </button>
+        </mat-dialog-actions>
+    </form>
+    <div class="__dialog-space-small"></div>
+</div>

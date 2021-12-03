@@ -15,7 +15,7 @@
     </div>
     <div class="__profile-settings-delimitter"></div>
 
-    <app-profile-change-password *ngIf="passwordCanBeChanged" [twoFaRequired]="password2FaRequired" (error)="error.emit($event)"
+    <app-profile-change-password *ngIf="passwordCanBeChanged" [twoFaRequired]="twoFaActive" (error)="error.emit($event)"
         (progressChange)="progressChange.emit($event)">
     </app-profile-change-password>
 </div>

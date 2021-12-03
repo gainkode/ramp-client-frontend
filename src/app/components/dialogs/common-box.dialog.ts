@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogData } from 'src/app/model/dialog.model';
 
 @Component({
@@ -8,8 +8,15 @@ import { DialogData } from 'src/app/model/dialog.model';
     styleUrls: ['../../../assets/button.scss', '../../../assets/dialog.scss']
 })
 export class CommonDialogBox {
+    buttonTitle = '';
+
     constructor(public dialogRef: MatDialogRef<CommonDialogBox>,
-        @Inject(MAT_DIALOG_DATA) public data: DialogData) { }
+        @Inject(MAT_DIALOG_DATA) public data: DialogData) {
+        this.buttonTitle = data.button ?? 'OK';
+        if (this.buttonTitle === '') {
+            this.buttonTitle = 'OK';
+        }
+    }
 
     onClose(): void {
         this.dialogRef.close();

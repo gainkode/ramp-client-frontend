@@ -1,8 +1,12 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { User } from 'src/app/model/generated-models';
+import { CommonDialogBox } from 'src/app/components/dialogs/common-box.dialog';
+import { TwoFaDialogBox } from 'src/app/components/dialogs/two-fa-box.dialog';
+import { TwoFaDialogWizard } from 'src/app/components/dialogs/two-fa-wizard.dialog';
+import { LoginResult, TwoFactorAuthenticationResult, User } from 'src/app/model/generated-models';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
@@ -21,11 +25,12 @@ export class PersonalSecuriySettingsComponent implements OnInit, OnDestroy {
     @Output() error = new EventEmitter<string>();
     @Output() progressChange = new EventEmitter<boolean>();
 
-    password2FaRequired = false;
+    twoFaActive = false;
     passwordCanBeChanged = false;
     user!: User;
 
     private subscriptions: Subscription = new Subscription();
+    private autoLoading = false;
 
     twoFaForm = this.formBuilder.group({
         switch: [false]
@@ -40,19 +45,92 @@ export class PersonalSecuriySettingsComponent implements OnInit, OnDestroy {
         private errorHandler: ErrorService,
         private profileService: ProfileDataService,
         private formBuilder: FormBuilder,
-        private router: Router) {
+        private router: Router,
+        public dialog: MatDialog) {
     }
 
     ngOnInit(): void {
-        this.loadAccountData();
         this.subscriptions.add(
             this.twoFaField?.valueChanges.subscribe(val => {
-
+                if (!this.autoLoading) {
+                    if (this.twoFaActive) {
+                        // swtich off
+                        this.showCodeRequestDialog();
+                    } else {
+                        // switch on
+                        this.generateCode();
+                    }
+                }
+                this.autoLoading = false;
             }));
+        this.loadAccountData();
     }
 
     ngOnDestroy(): void {
         this.subscriptions.unsubscribe();
+    }
+
+    private show2FaWizard(qr: string, symbols: string): void {
+        const dialogRef = this.dialog.open(TwoFaDialogWizard, {
+            width: '900px',
+            data: {
+                title: symbols,
+                message: qr
+            }
+        });
+        this.subscriptions.add(
+            dialogRef.afterClosed().subscribe(code => {
+                if (code && code !== '') {
+                    this.enable2Fa(code);
+                } else {
+                    this.autoLoading = true;
+                    this.twoFaField?.setValue(this.twoFaActive);
+                }
+            })
+        );
+    }
+
+    private showSuccess(): void {
+        const dialogRef = this.dialog.open(CommonDialogBox, {
+            width: '900px',
+            data: {
+                title: '',
+                message: 'Congratulations. You have successfully set Google Authenticator.',
+                button: 'Close'
+            }
+        });
+    }
+
+    private showCodeRequestDialog(): void {
+        const dialogRef = this.dialog.open(TwoFaDialogBox, {
+            width: '414px',
+            data: {
+                message: 'In order to switch off 2FA please type the code'
+            }
+        });
+        this.subscriptions.add(
+            dialogRef.afterClosed().subscribe(code => {
+                if (code && code !== '') {
+                    this.disable2Fa(code);
+                } else {
+                    this.autoLoading = true;
+                    this.twoFaField?.setValue(this.twoFaActive);
+                }
+            })
+        );
+    }
+
+    private generateCode(): void {
+        this.error.emit('');
+        this.progressChange.emit(true);
+        this.auth.generate2FaCode().subscribe(({ data }) => {
+            this.progressChange.emit(false);
+            const resultData = data.generate2faCode as TwoFactorAuthenticationResult;
+            this.show2FaWizard(resultData.otpauthUrl, resultData.code);
+        }, (error) => {
+            this.progressChange.emit(false);
+            this.error.emit(this.errorHandler.getError(error.message, 'Unable to generate a code'));
+        });
     }
 
     private loadAccountData(): void {
@@ -64,11 +142,17 @@ export class PersonalSecuriySettingsComponent implements OnInit, OnDestroy {
         } else {
             this.subscriptions.add(
                 meQuery.valueChanges.subscribe(({ data }) => {
-                    const userData = data.me as User;
-                    if (userData) {
-                        this.user = userData;
-                        this.passwordCanBeChanged = this.user.hasEmailAuth as boolean;
-                        this.password2FaRequired = true;//this.user.is2faEnabled as boolean;
+                    if (data) {
+                        const userData = data.me as User;
+                        if (userData) {
+                            this.user = userData;
+                            this.passwordCanBeChanged = this.user.hasEmailAuth as boolean;
+                            this.twoFaActive = this.user.is2faEnabled as boolean;
+                            this.autoLoading = true;
+                            this.twoFaField?.setValue(this.twoFaActive);
+                        }
+                    } else {
+                        this.router.navigateByUrl('/');
                     }
                     this.progressChange.emit(false);
                 }, (error) => {
@@ -81,5 +165,52 @@ export class PersonalSecuriySettingsComponent implements OnInit, OnDestroy {
                 })
             );
         }
+    }
+
+    private enable2Fa(code: string): void {
+        this.error.emit('');
+        this.progressChange.emit(true);
+        this.auth.enable2Fa(code).subscribe(({ data }) => {
+            this.progressChange.emit(false);
+            const resultData = data.enable2fa as LoginResult;
+            const success = resultData.user?.is2faEnabled ?? false;
+            this.twoFaActive = success;
+            this.autoLoading = true;
+            this.twoFaField?.setValue(success);
+            this.showSuccess();
+        }, (error) => {
+            this.progressChange.emit(false);
+            this.autoLoading = true;
+            this.twoFaField?.setValue(false);
+            const err = this.errorHandler.getCurrentError();
+            if (err === 'auth.access_denied') {
+                this.error.emit('Incorrect confirmation code');
+            } else {
+                this.error.emit(this.errorHandler.getError(error.message, 'Unable to activate Two Factor Authentication'));
+            }
+        });
+    }
+
+    private disable2Fa(code: string): void {
+        this.error.emit('');
+        this.progressChange.emit(true);
+        this.auth.disable2Fa(code).subscribe(({ data }) => {
+            this.progressChange.emit(false);
+            const resultData = data.disable2fa as LoginResult;
+            const failed = resultData.user?.is2faEnabled ?? true;
+            this.twoFaActive = failed;
+            this.autoLoading = true;
+            this.twoFaField?.setValue(failed);
+        }, (error) => {
+            this.progressChange.emit(false);
+            this.autoLoading = true;
+            this.twoFaField?.setValue(true);
+            const err = this.errorHandler.getCurrentError();
+            if (err === 'auth.access_denied') {
+                this.error.emit('Incorrect confirmation code');
+            } else {
+                this.error.emit(this.errorHandler.getError(error.message, 'Unable to deactivate Two Factor Authentication'));
+            }
+        });
     }
 }
