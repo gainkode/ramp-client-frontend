@@ -11,7 +11,7 @@ export class PersonalGuard {
         //const authValid = (authAction === '' || authAction === 'Default' || authAction === 'KycRequired');
         //if (!this.auth.isAuthenticatedUserType('Personal') || !authValid) {
         if (!this.auth.isAuthenticatedUserType('Personal')) {
-            this.router.navigateByUrl('/auth/login/personal');
+            this.router.navigateByUrl('/personal/auth/login');
             return false;
         }
         return true;
