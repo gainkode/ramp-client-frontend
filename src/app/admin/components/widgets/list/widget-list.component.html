@@ -10,7 +10,7 @@
     <mat-table matSort matSortDirection="desc" matSortDisableClear [matSortActive]="sortedField" [dataSource]="data">
 
         <!-- Details Column -->
-        <!-- <ng-container matColumnDef="details" sticky>
+        <ng-container matColumnDef="details" sticky>
             <th mat-header-cell *matHeaderCellDef></th>
             <td mat-cell *matCellDef="let element">
                 <button mat-icon-button class="row-button" (click)="toggleDetails(element)"
@@ -19,7 +19,7 @@
                     <mat-icon class="details-icon">{{getDetailsIcon(element.id)}}</mat-icon>
                 </button>
             </td>
-        </ng-container> -->
+        </ng-container>
 
         <ng-container matColumnDef="id">
             <th mat-header-cell mat-sort-header *matHeaderCellDef>Widget ID</th>
@@ -97,7 +97,7 @@
 </mat-paginator>
 
 <ng-template *ngIf="selectedItem" appRightPanel>
-    <app-widget-editor>
-        [widget]="selectedItem"
+    <app-widget-editor
+        [widget]="selectedItem">
     </app-widget-editor>
 </ng-template>

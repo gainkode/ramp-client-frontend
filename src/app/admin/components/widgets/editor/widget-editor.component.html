@@ -1,4 +1,4 @@
-<h2>{{!widgetId ? "Create widget" : "Change widget"}}</h2>
+<h2>{{!form.value.id ? "Create widget" : "Change widget"}}</h2>
 
 
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
@@ -17,6 +17,9 @@
                 {{option.fullName + (option.email ? ' ('+  option.email + ')'  : '')}}
             </mat-option>
         </mat-autocomplete>
+        <mat-error *ngIf="this.form.controls.user.hasError('required')">
+            Mandatory field
+        </mat-error>
     </mat-form-field>
 
     <mat-form-field class="form-element">
@@ -73,8 +76,8 @@
 
     <mat-form-field class="form-element">
         <mat-label>Destination address</mat-label>
-        <input matInput formControlName="destinationAddresses" />
-        <mat-error *ngIf="this.form.controls.destinationAddresses.hasError('required')">
+        <input matInput formControlName="destinationAddress" />
+        <mat-error *ngIf="this.form.controls.destinationAddress.hasError('required')">
             Mandatory field
         </mat-error>
     </mat-form-field>
@@ -131,7 +134,7 @@
         <button mat-flat-button color="primary" type="submit">
             SAVE
         </button>
-        <button *ngIf="!!this.widgetId" mat-flat-button color="warn" type="button" (click)="onDelete()">
+        <button *ngIf="!!this.form.value.id" mat-flat-button color="warn" type="button" (click)="onDelete()">
             DELETE
         </button>
         <button mat-flat-button (click)="onCancel()" type="button">

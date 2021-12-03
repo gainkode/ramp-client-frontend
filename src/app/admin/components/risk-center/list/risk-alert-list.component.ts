@@ -1,0 +1,96 @@
+import { Component, ViewChild, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { AdminDataService } from '../../../services/admin-data.service';
+import { MatSort } from '@angular/material/sort';
+import { Filter } from '../../../model/filter.model';
+import { Subject, Subscription } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { PageEvent } from '@angular/material/paginator';
+import { RiskAlertItem } from '../../../model/risk-alert.model';
+
+@Component({
+  templateUrl: 'risk-alert-list.component.html',
+  styleUrls: ['risk-alert-list.component.scss']
+})
+export class RiskAlertListComponent implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild(MatSort) sort!: MatSort;
+
+  filterFields = [
+    'user',
+    'riskAlertCode',
+    'search'
+  ];
+
+  data: RiskAlertItem[] = [];
+  dataCount = 0;
+  pageSize = 25;
+  pageIndex = 0;
+  sortedField = 'created';
+  sortedDesc = true;
+  filter = new Filter({});
+
+  displayedColumns: string[] = [
+    'created',
+    'riskAlertId',
+    'riskAlertTypeCode',
+    'details',
+    'userId'
+  ];
+
+  private destroy$ = new Subject();
+  private listSubscription = Subscription.EMPTY;
+
+
+  constructor(
+    private adminDataService: AdminDataService
+  ) {
+  }
+
+  ngOnInit(): void {
+    this.loadData();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+  }
+
+  ngAfterViewInit(): void {
+    this.sort.sortChange.subscribe(() => {
+      this.sortedDesc = (this.sort.direction === 'desc');
+      this.sortedField = this.sort.active;
+      this.loadData();
+    });
+  }
+
+  handleFilterApplied(filter: Filter): void {
+    this.filter = filter;
+    console.log(filter.user);
+    this.loadData();
+  }
+
+  private loadData(): void {
+    this.listSubscription.unsubscribe();
+
+    this.listSubscription = this.adminDataService.getRiskAlerts(
+      this.pageIndex,
+      this.pageSize,
+      this.sortedField,
+      this.sortedDesc,
+      this.filter
+    )
+                                .pipe(
+                                  takeUntil(this.destroy$)
+                                )
+                                .subscribe(result => {
+                                  console.log(result.list);
+                                  this.data = result.list;
+                                  this.dataCount = result.count;
+                                });
+  }
+
+  handlePage(event: PageEvent): PageEvent {
+    this.pageSize = event.pageSize;
+    this.pageIndex = event.pageIndex;
+    this.loadData();
+    return event;
+  }
+}

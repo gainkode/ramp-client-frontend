@@ -6,6 +6,7 @@ import { MatSort } from '@angular/material/sort';
 import { UserItem } from 'src/app/model/user.model';
 import { Filter } from '../../../model/filter.model';
 import { takeUntil } from 'rxjs/operators';
+import { LayoutService } from '../../../services/layout.service';
 
 @Component({
   templateUrl: 'customer-list.component.html',
@@ -35,11 +36,17 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
   private listSubscription = Subscription.EMPTY;
 
   constructor(
+    private layoutService: LayoutService,
     private adminService: AdminDataService
   ) {
   }
 
   ngOnInit(): void {
+    this.layoutService.rightPanelCloseRequested$.pipe(takeUntil(this.destroy$))
+        .subscribe(() => {
+          this.selectedCustomer = undefined;
+        });
+
     this.loadCustomers();
   }
 
@@ -60,7 +67,6 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
     this.loadCustomers();
   }
 
-
   handleDetailsPanelClosed(): void {
     this.selectedCustomer = undefined;
   }
@@ -75,14 +81,14 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
       this.sortedDesc,
       this.filter
     )
-                                    .pipe(
-                                      takeUntil(this.destroy$)
-                                    )
-                                    .subscribe(result => {
-                                      console.log(result.list);
-                                      this.customers = result.list;
-                                      this.customerCount = result.count;
-                                    });
+                                .pipe(
+                                  takeUntil(this.destroy$)
+                                )
+                                .subscribe(result => {
+                                  console.log(result.list);
+                                  this.customers = result.list;
+                                  this.customerCount = result.count;
+                                });
   }
 
   private isSelectedCustomer(customerId: string): boolean {

@@ -9,6 +9,7 @@ import { Subject, Subscription } from 'rxjs';
 import { MatSort } from '@angular/material/sort';
 import { Filter } from '../../../model/filter.model';
 import { takeUntil } from 'rxjs/operators';
+import { LayoutService } from '../../../services/layout.service';
 
 @Component({
   templateUrl: 'transaction-list.component.html',
@@ -27,7 +28,7 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
     //'transactionType',
     //'senderOrReceiver',
     //'paymentProvider',
-    'user',
+    'users',
     'widget',
     'search'
   ];
@@ -51,13 +52,19 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
   ];
 
   constructor(
+    private layoutService: LayoutService,
     private auth: AuthService,
     private errorHandler: ErrorService,
-    private adminService: AdminDataService,
-    private router: Router) {
+    private adminService: AdminDataService
+  ) {
   }
 
   ngOnInit(): void {
+    this.layoutService.rightPanelCloseRequested$.pipe(takeUntil(this.destroy$))
+        .subscribe(() => {
+          this.selectedTransaction = undefined;
+        });
+
     this.loadList();
   }
 
