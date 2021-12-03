@@ -52,7 +52,14 @@ export class PersonalLoginComponent implements OnDestroy {
                 const settingsCommon: SettingsCommon = settings.data.getSettingsCommon;
                 this.auth.setLocalSettingsCommon(settingsCommon);
                 this.inProgress = false;
-                this.router.navigateByUrl(this.auth.getUserMainPage());
+
+                const adminRole = userData.user?.roles?.find(r => r.name === 'ADMIN');
+                const userRole = userData.user?.roles?.find(r => r.name === 'USER');
+                if (adminRole && !userRole) {
+                    this.router.navigateByUrl('/admin');
+                } else {
+                    this.router.navigateByUrl(this.auth.getUserMainPage());
+                }
             }, (error) => {
                 this.inProgress = false;
                 if (this.auth.token !== '') {
