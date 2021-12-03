@@ -1,10 +1,10 @@
-import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { FormBuilder, NgForm, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ErrorService } from 'src/app/services/error.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
 import { PasswordValidator } from 'src/app/utils/password.validator';
-import { CommonDialogBox } from '../common/common-box.dialog';
+import { CommonDialogBox } from '../dialogs/common-box.dialog';
 
 @Component({
   selector: 'app-password',

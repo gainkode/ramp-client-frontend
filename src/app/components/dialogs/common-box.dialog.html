@@ -1,0 +1,7 @@
+<h1 *ngIf="data.title!==''" class="__dialog-title" mat-dialog-title>{{data.title}}</h1>
+<div class="__dialog-message" mat-dialog-content>{{data.message}}</div>
+<mat-dialog-actions align="center">
+    <button class="__main-button __button-wide" [mat-dialog-close]="true" cdkFocusInitial>
+        OK
+    </button>
+</mat-dialog-actions>

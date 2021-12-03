@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { AuthService } from '../services/auth.service';
 import { ErrorService } from '../services/error.service';
-import { CommonDialogBox } from './common/common-box.dialog';
+import { CommonDialogBox } from './dialogs/common-box.dialog';
 
 const snsWebSdk = require('@sumsub/websdk');
 

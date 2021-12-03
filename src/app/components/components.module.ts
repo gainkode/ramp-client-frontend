@@ -35,7 +35,6 @@ import { DropdownItemComponent } from './common/dropdown-item.component';
 import { BackButtonComponent } from './common/backbutton.component';
 import { TabLabelComponent } from './common/tablabel.component';
 import { KycPanelComponent } from './kyc-panel.component';
-import { CommonDialogBox } from './common/common-box.dialog';
 import { LoginPanelComponent } from './auth/login-panel.component';
 import { TwoFaCodeComponent } from './auth/two-fa-code.component';
 import { NavPopupComponent } from './common/nav-popup/nav-popup.component';
@@ -60,6 +59,7 @@ import { FormEditBoxComponent } from './common/controls/form-editbox.component';
 import { ContactsFilterBarComponent } from './filter-bars/contacts-bar.component';
 import { RiskWarningComponent } from './common/risk-warning.component';
 import { SettingsPasswordBoxComponent } from './common/controls/settings-password.component';
+import { CommonDialogBox } from './dialogs/common-box.dialog';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 

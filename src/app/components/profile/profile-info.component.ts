@@ -19,7 +19,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
-import { CommonDialogBox } from '../common/common-box.dialog';
+import { CommonDialogBox } from '../dialogs/common-box.dialog';
 
 @Component({
   selector: 'app-info',

@@ -1,6 +1,10 @@
 import { Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, NgForm, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { CommonDialogBox } from 'src/app/components/dialogs/common-box.dialog';
+import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
 import { PasswordValidator } from 'src/app/utils/password.validator';
@@ -16,7 +20,6 @@ import { PasswordValidator } from 'src/app/utils/password.validator';
     ]
 })
 export class PersonalChangePasswordComponent implements OnDestroy {
-    @ViewChild('passwordform') private ngPasswordForm: NgForm | undefined = undefined;
     @Input() twoFaRequired = false;
     @Output() error = new EventEmitter<string>();
     @Output() progressChange = new EventEmitter<boolean>();
@@ -76,13 +79,32 @@ export class PersonalChangePasswordComponent implements OnDestroy {
     };
 
     constructor(
+        private auth: AuthService,
         private errorHandler: ErrorService,
         private profileService: ProfileDataService,
-        private formBuilder: FormBuilder) {
+        private formBuilder: FormBuilder,
+        private router: Router,
+        public dialog: MatDialog) {
     }
 
     ngOnDestroy(): void {
         this.subscriptions.unsubscribe();
+    }
+
+    private showSuccessMessageDialog(): void {
+        const dialogRef = this.dialog.open(CommonDialogBox, {
+            width: '400px',
+            data: {
+                title: 'Password change',
+                message: 'Your password has been successfully changed. Please, authenticate using your new password.'
+            }
+        });
+        this.subscriptions.add(
+            dialogRef.afterClosed().subscribe(result => {
+                this.auth.logout();
+                this.router.navigateByUrl('/personal/auth/login');
+            })
+        );
     }
 
     private savePassword(): void {
@@ -98,8 +120,7 @@ export class PersonalChangePasswordComponent implements OnDestroy {
                     this.progressChange.emit(false);
                     const resultData = data.changePassword as boolean;
                     if (resultData) {
-                        this.ngPasswordForm?.resetForm();
-                        //this.showSuccessMessageDialog();
+                        this.showSuccessMessageDialog();
                     } else {
                         this.error.emit('Password is not changed');
                     }
