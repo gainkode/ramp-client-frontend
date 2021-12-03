@@ -376,7 +376,7 @@ export class AuthService {
 
     get user(): User | null {
         let user: User | null = null;
-        const userStr = sessionStorage.getItem('currentUser');
+        const userStr = localStorage.getItem('currentUser');
         if (userStr !== null) {
             user = JSON.parse(userStr);
         }
@@ -384,7 +384,7 @@ export class AuthService {
     }
 
     get token(): string {
-        const tokenData: string | null = sessionStorage.getItem('currentToken');
+        const tokenData: string | null = localStorage.getItem('currentToken');
         return (tokenData === null) ? '' : tokenData;
     }
 
@@ -396,7 +396,7 @@ export class AuthService {
         });
         result.subscribe(x => {
             const d = x.data as any;
-            sessionStorage.setItem('currentToken', d.refreshToken as string);
+            localStorage.setItem('currentToken', d.refreshToken as string);
             this.notifyTokenRefresh();
         }, (error) => {
             // error
@@ -632,18 +632,18 @@ export class AuthService {
     }
 
     setLoginUser(login: LoginResult): void {
-        sessionStorage.setItem('currentUser', JSON.stringify(login.user));
-        sessionStorage.setItem('currentToken', login.authToken as string);
-        sessionStorage.setItem('currentAction', login.authTokenAction as string);
+        localStorage.setItem('currentUser', JSON.stringify(login.user));
+        localStorage.setItem('currentToken', login.authToken as string);
+        localStorage.setItem('currentAction', login.authTokenAction as string);
     }
 
     setLocalSettingsCommon(settings: SettingsCommon): void {
-        sessionStorage.setItem('common', JSON.stringify(settings));
+        localStorage.setItem('common', JSON.stringify(settings));
     }
 
     getLocalSettingsCommon(): SettingsCommon | null {
         let settings: SettingsCommon | null = null;
-        const str = sessionStorage.getItem('common');
+        const str = localStorage.getItem('common');
         if (str !== null) {
             settings = JSON.parse(str);
         }
@@ -655,13 +655,13 @@ export class AuthService {
         if (userData) {
             userData.firstName = firstName;
             userData.lastName = lastName;
-            sessionStorage.setItem('currentUser', JSON.stringify(userData));
+            localStorage.setItem('currentUser', JSON.stringify(userData));
         }
     }
 
     private getAuthenticatedUser(): User | null {
         let result: User | null = null;
-        const userData: string | null = sessionStorage.getItem('currentUser');
+        const userData: string | null = localStorage.getItem('currentUser');
         if (userData !== null) {
             result = JSON.parse(userData as string) as User;
         }
@@ -669,7 +669,7 @@ export class AuthService {
     }
 
     getAuthAction(): string {
-        let result = sessionStorage.getItem('currentAction');
+        let result = localStorage.getItem('currentAction');
         return result ?? '';
     }
 
@@ -784,9 +784,9 @@ export class AuthService {
 
     logout(): void {
         this.apollo.client.resetStore();
-        sessionStorage.removeItem('currentToken');
-        sessionStorage.removeItem('currentUser');
-        sessionStorage.removeItem('currentAction');
-        sessionStorage.removeItem('common');
+        localStorage.removeItem('currentToken');
+        localStorage.removeItem('currentUser');
+        localStorage.removeItem('currentAction');
+        localStorage.removeItem('common');
     }
 }

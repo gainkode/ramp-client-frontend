@@ -116,7 +116,7 @@ export class AppModule {
     } else {
       sessionStorage.setItem('currentError', '');
     }
-    const token = sessionStorage.getItem('currentToken');
+    const token = localStorage.getItem('currentToken');
     if (token === null) {
       return {};
     } else {
@@ -149,7 +149,7 @@ export class AppModule {
         reconnect: true,
         connectionParams: () => {
           return {
-            authToken: `Bearer ${sessionStorage.getItem('currentToken')}`
+            authToken: `Bearer ${localStorage.getItem('currentToken')}`
           };
         }
       });
