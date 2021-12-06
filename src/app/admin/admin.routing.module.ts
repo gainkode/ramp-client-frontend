@@ -15,6 +15,7 @@ import { TransactionSingleComponent } from './components/transactions/transactio
 import { WalletListComponent } from './components/wallets/list/wallet-list.component';
 import { FeeListComponent } from './components/fees/fee-list/fee-list.component';
 import { RiskAlertListComponent } from './components/risk-center/list/risk-alert-list.component';
+import { CommonSettingsEditorComponent } from './components/common-settings/common-settings.component';
 
 const routes: Routes = [
   {
@@ -26,6 +27,13 @@ const routes: Routes = [
         component: DashboardComponent,
         data: {
           header: 'Dashboard'
+        }
+      },
+      {
+        path: 'common-settings',
+        component: CommonSettingsEditorComponent,
+        data: {
+          header: 'Common Settings'
         }
       },
       {

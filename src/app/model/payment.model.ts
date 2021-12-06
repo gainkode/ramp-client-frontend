@@ -3,7 +3,7 @@ import { CommonTargetValue } from './common.model';
 import {
     PaymentInstrument, PaymentProvider, TransactionType, TransactionStatus,
     SettingsFeeTargetFilterType, SettingsCostTargetFilterType, SettingsKycTargetFilterType,
-    UserType, KycProvider, UserMode, SettingsCurrency, Rate, TransactionSource, UserNotificationCodes
+    UserType, KycProvider, UserMode, SettingsCurrency, Rate, TransactionSource, UserNotificationCodes, CustodyProvider
 } from './generated-models';
 
 export enum PaymentWidgetType {
@@ -65,6 +65,11 @@ export class UserModeView {
 
 export class KycProviderView {
     id!: KycProvider;
+    name = '';
+}
+
+export class CustodyProviderView {
+    id!: CustodyProvider;
     name = '';
 }
 
@@ -266,6 +271,11 @@ export const UserModeShortList: Array<UserModeView> = [
 export const KycProviderList: Array<KycProviderView> = [
     { id: KycProvider.Local, name: 'Local' },
     { id: KycProvider.SumSub, name: 'SumSub' }
+];
+
+export const CustodyProviderList: Array<CustodyProviderView> = [
+    { id: CustodyProvider.Fireblocks, name: 'Fireblocks' },
+    { id: CustodyProvider.Trustology, name: 'Trustology' }
 ];
 
 export const UserNotificationCodeList: Array<UserNotificationCodeView> = [

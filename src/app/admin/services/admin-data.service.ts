@@ -536,6 +536,20 @@ const GET_WIDGETS = gql`
   }
 `;
 
+const GET_SETTINGS_COMMON = gql`
+query {
+    getSettingsCommon {
+      settingsCommonId,
+      liquidityProvider,
+      custodyProvider,
+      kycProvider,
+      adminEmails,
+      stoppedForServicing,
+      additionalSettings
+    }
+  }
+`;
+
 const ADD_SETTINGS_FEE = gql`
   mutation AddSettingsFee(
     $name: String!
@@ -934,11 +948,11 @@ export class AdminDataService {
       variables: vars,
       fetchPolicy: 'network-only'
     })
-               .pipe(
-                 map(result => {
-                   return result.data.getDashboardStats;
-                 })
-               );
+      .pipe(
+        map(result => {
+          return result.data.getDashboardStats;
+        })
+      );
   }
 
   getFeeSettings(): Observable<{ list: Array<FeeScheme>; count: number; }> {
@@ -946,21 +960,21 @@ export class AdminDataService {
       query: GET_FEE_SETTINGS,
       fetchPolicy: 'network-only'
     })
-               .pipe(
-                 map(result => {
-                   if (result.data?.getSettingsFee?.list && result.data?.getSettingsFee?.count) {
-                     return {
-                       list: result.data.getSettingsFee.list.map(item => new FeeScheme(item)),
-                       count: result.data.getSettingsFee.count
-                     };
-                   } else {
-                     return {
-                       list: [],
-                       count: 0
-                     };
-                   }
-                 })
-               );
+      .pipe(
+        map(result => {
+          if (result.data?.getSettingsFee?.list && result.data?.getSettingsFee?.count) {
+            return {
+              list: result.data.getSettingsFee.list.map(item => new FeeScheme(item)),
+              count: result.data.getSettingsFee.count
+            };
+          } else {
+            return {
+              list: [],
+              count: 0
+            };
+          }
+        })
+      );
   }
 
   getCostSettings(): QueryRef<any, EmptyObject> | null {
@@ -979,21 +993,21 @@ export class AdminDataService {
       query: GET_KYC_SETTINGS,
       fetchPolicy: 'network-only'
     })
-               .pipe(
-                 map(result => {
-                   if (result.data?.getSettingsKyc?.list && result.data?.getSettingsKyc?.count) {
-                     return {
-                       list: result.data.getSettingsKyc.list.map(item => new KycScheme(item)),
-                       count: result.data.getSettingsKyc.count
-                     };
-                   } else {
-                     return {
-                       list: [],
-                       count: 0
-                     };
-                   }
-                 })
-               );
+      .pipe(
+        map(result => {
+          if (result.data?.getSettingsKyc?.list && result.data?.getSettingsKyc?.count) {
+            return {
+              list: result.data.getSettingsKyc.list.map(item => new KycScheme(item)),
+              count: result.data.getSettingsKyc.count
+            };
+          } else {
+            return {
+              list: [],
+              count: 0
+            };
+          }
+        })
+      );
   }
 
   getKycLevels(userType: UserType | null): Observable<{ list: Array<KycLevel>; count: number; }> {
@@ -1004,21 +1018,21 @@ export class AdminDataService {
       variables: { filter: userTypeFilter },
       fetchPolicy: 'network-only'
     })
-               .pipe(
-                 map(result => {
-                   if (result.data?.getSettingsKycLevels?.list && result.data?.getSettingsKycLevels?.count) {
-                     return {
-                       list: result.data.getSettingsKycLevels.list.map(item => new KycLevel(item)),
-                       count: result.data.getSettingsKycLevels.count
-                     };
-                   } else {
-                     return {
-                       list: [],
-                       count: 0
-                     };
-                   }
-                 })
-               );
+      .pipe(
+        map(result => {
+          if (result.data?.getSettingsKycLevels?.list && result.data?.getSettingsKycLevels?.count) {
+            return {
+              list: result.data.getSettingsKycLevels.list.map(item => new KycLevel(item)),
+              count: result.data.getSettingsKycLevels.count
+            };
+          } else {
+            return {
+              list: [],
+              count: 0
+            };
+          }
+        })
+      );
   }
 
   getNotifications(
@@ -1042,21 +1056,21 @@ export class AdminDataService {
         variables: vars,
         fetchPolicy: 'network-only'
       })
-               .pipe(
-                 map(result => {
-                   if (result.data?.getNotifications?.list && result.data?.getNotifications?.count) {
-                     return {
-                       list: result.data.getNotifications.list.map(val => new NotificationItem(val)),
-                       count: result.data.getNotifications.count
-                     };
-                   } else {
-                     return {
-                       list: [],
-                       count: 0
-                     };
-                   }
-                 })
-               );
+      .pipe(
+        map(result => {
+          if (result.data?.getNotifications?.list && result.data?.getNotifications?.count) {
+            return {
+              list: result.data.getNotifications.list.map(val => new NotificationItem(val)),
+              count: result.data.getNotifications.count
+            };
+          } else {
+            return {
+              list: [],
+              count: 0
+            };
+          }
+        })
+      );
   }
 
   getRiskAlerts(
@@ -1082,21 +1096,21 @@ export class AdminDataService {
         variables: vars,
         fetchPolicy: 'network-only'
       })
-               .pipe(
-                 map(result => {
-                   if (result.data?.getRiskAlerts?.list && result.data?.getRiskAlerts?.count) {
-                     return {
-                       list: result.data.getRiskAlerts.list.map(val => new RiskAlertItem(val)),
-                       count: result.data.getRiskAlerts.count
-                     };
-                   } else {
-                     return {
-                       list: [],
-                       count: 0
-                     };
-                   }
-                 })
-               );
+      .pipe(
+        map(result => {
+          if (result.data?.getRiskAlerts?.list && result.data?.getRiskAlerts?.count) {
+            return {
+              list: result.data.getRiskAlerts.list.map(val => new RiskAlertItem(val)),
+              count: result.data.getRiskAlerts.count
+            };
+          } else {
+            return {
+              list: [],
+              count: 0
+            };
+          }
+        })
+      );
   }
 
   getTransaction(transactionId: string): Observable<TransactionItemDeprecated | undefined> {
@@ -1110,17 +1124,17 @@ export class AdminDataService {
       },
       fetchPolicy: 'network-only'
     })
-               .pipe(
-                 map(res => {
-                   const listResult = res?.data?.getTransactions.list;
+      .pipe(
+        map(res => {
+          const listResult = res?.data?.getTransactions.list;
 
-                   if (listResult && listResult.length === 1) {
-                     return new TransactionItemDeprecated(listResult[0]);
-                   }
+          if (listResult && listResult.length === 1) {
+            return new TransactionItemDeprecated(listResult[0]);
+          }
 
-                   return undefined;
-                 })
-               );
+          return undefined;
+        })
+      );
   }
 
   getTransactions(
@@ -1150,21 +1164,21 @@ export class AdminDataService {
         variables: vars,
         fetchPolicy: 'network-only'
       })
-               .pipe(
-                 map(result => {
-                   if (result.data?.getTransactions?.list && result.data?.getTransactions?.count) {
-                     return {
-                       list: result.data.getTransactions.list.map(val => new TransactionItemDeprecated(val)),
-                       count: result.data.getTransactions.count
-                     };
-                   } else {
-                     return {
-                       list: [],
-                       count: 0
-                     };
-                   }
-                 })
-               );
+      .pipe(
+        map(result => {
+          if (result.data?.getTransactions?.list && result.data?.getTransactions?.count) {
+            return {
+              list: result.data.getTransactions.list.map(val => new TransactionItemDeprecated(val)),
+              count: result.data.getTransactions.count
+            };
+          } else {
+            return {
+              list: [],
+              count: 0
+            };
+          }
+        })
+      );
   }
 
   getUsers(
@@ -1186,21 +1200,21 @@ export class AdminDataService {
       variables: vars,
       fetchPolicy: 'network-only'
     })
-               .pipe(
-                 map(result => {
-                   if (result.data?.getUsers?.list && result.data?.getUsers?.count) {
-                     return {
-                       list: result.data.getUsers.list.map(u => new UserItem(u)),
-                       count: result.data.getUsers.count
-                     };
-                   } else {
-                     return {
-                       list: [],
-                       count: 0
-                     };
-                   }
-                 })
-               );
+      .pipe(
+        map(result => {
+          if (result.data?.getUsers?.list && result.data?.getUsers?.count) {
+            return {
+              list: result.data.getUsers.list.map(u => new UserItem(u)),
+              count: result.data.getUsers.count
+            };
+          } else {
+            return {
+              list: [],
+              count: 0
+            };
+          }
+        })
+      );
   }
 
   getWallets(
@@ -1225,21 +1239,21 @@ export class AdminDataService {
         variables: vars,
         fetchPolicy: 'network-only'
       })
-               .pipe(
-                 map(result => {
-                   if (result.data?.getWallets?.list && result.data?.getWallets?.count) {
-                     return {
-                       list: result.data.getWallets.list.map(item => new WalletItem(item)),
-                       count: result.data.getWallets.count
-                     };
-                   } else {
-                     return {
-                       list: [],
-                       count: 0
-                     };
-                   }
-                 })
-               );
+      .pipe(
+        map(result => {
+          if (result.data?.getWallets?.list && result.data?.getWallets?.count) {
+            return {
+              list: result.data.getWallets.list.map(item => new WalletItem(item)),
+              count: result.data.getWallets.count
+            };
+          } else {
+            return {
+              list: [],
+              count: 0
+            };
+          }
+        })
+      );
   }
 
   getWidgetIds(
@@ -1262,21 +1276,21 @@ export class AdminDataService {
       variables: vars,
       fetchPolicy: 'network-only'
     })
-               .pipe(
-                 map(result => {
-                   if (result.data?.getWidgets?.list && result.data?.getWidgets?.count) {
-                     return {
-                       list: result.data.getWidgets.list.map(w => w.widgetId),
-                       count: result.data.getWidgets.count
-                     };
-                   } else {
-                     return {
-                       list: [],
-                       count: 0
-                     };
-                   }
-                 })
-               );
+      .pipe(
+        map(result => {
+          if (result.data?.getWidgets?.list && result.data?.getWidgets?.count) {
+            return {
+              list: result.data.getWidgets.list.map(w => w.widgetId),
+              count: result.data.getWidgets.count
+            };
+          } else {
+            return {
+              list: [],
+              count: 0
+            };
+          }
+        })
+      );
 
   }
 
@@ -1299,24 +1313,35 @@ export class AdminDataService {
       variables: vars,
       fetchPolicy: 'network-only'
     })
-               .pipe(
-                 map(result => {
-                   if (result.data?.getWidgets?.list && result.data?.getWidgets?.count) {
-                     return {
-                       list: result.data.getWidgets.list.map(w => {
-                         return new WidgetItem(w);
-                       }),
-                       count: result.data.getWidgets.count
-                     };
-                   } else {
-                     return {
-                       list: [],
-                       count: 0
-                     };
-                   }
-                 })
-               );
+      .pipe(
+        map(result => {
+          if (result.data?.getWidgets?.list && result.data?.getWidgets?.count) {
+            return {
+              list: result.data.getWidgets.list.map(w => {
+                return new WidgetItem(w);
+              }),
+              count: result.data.getWidgets.count
+            };
+          } else {
+            return {
+              list: [],
+              count: 0
+            };
+          }
+        })
+      );
 
+  }
+
+  getSettingsCommon(): QueryRef<any, EmptyObject> | null {
+    if (this.apollo.client !== undefined) {
+      return this.apollo.watchQuery<any>({
+        query: GET_SETTINGS_COMMON,
+        fetchPolicy: 'network-only'
+      });
+    } else {
+      return null;
+    }
   }
 
   saveFeeSettings(feeScheme: FeeScheme): Observable<any> {
@@ -1472,12 +1497,12 @@ export class AdminDataService {
           additionalSettings: widget.additionalSettings
         }
       })
-            .pipe(tap(() => {
-              this.snackBar.open(
-                `Widget was created`,
-                undefined, { duration: 5000 }
-              );
-            }))
+        .pipe(tap(() => {
+          this.snackBar.open(
+            `Widget was created`,
+            undefined, { duration: 5000 }
+          );
+        }))
       : this.apollo.mutate({
         mutation: UPDATE_WIDGET,
         variables: {
@@ -1493,12 +1518,12 @@ export class AdminDataService {
           additionalSettings: widget.additionalSettings
         }
       })
-            .pipe(tap(() => {
-              this.snackBar.open(
-                `Widget was updated`,
-                undefined, { duration: 5000 }
-              );
-            }));
+        .pipe(tap(() => {
+          this.snackBar.open(
+            `Widget was updated`,
+            undefined, { duration: 5000 }
+          );
+        }));
   }
 
   deleteFeeSettings(settingsId: string): Observable<any> {
@@ -1556,12 +1581,12 @@ export class AdminDataService {
         widgetId
       }
     })
-               .pipe(tap((res) => {
-                 this.snackBar.open(
-                   `Widget was deleted`,
-                   undefined, { duration: 5000 }
-                 );
-               }));
+      .pipe(tap((res) => {
+        this.snackBar.open(
+          `Widget was deleted`,
+          undefined, { duration: 5000 }
+        );
+      }));
   }
 
   // TODO: move somewhere closer to HTTP, this approach can give false negatives (normally observable doesn't finish,
@@ -1596,29 +1621,29 @@ export class AdminDataService {
     if (this.apollo.client !== undefined) {
 
       return this.apollo.watchQuery<TData, TVariables>(options)
-                 .valueChanges
-                 .pipe(
-                   tap(() => {
-                     this.updateIsBusy('off');
-                   }),
-                   finalize(() => {
-                     this.updateIsBusy('off');
-                   }),
-                   catchError(error => {
-                     if (this.auth.token !== '') {
-                       this.snackBar.open(
-                         this.errorHandler.getError(error.message, 'Unable to load dashboard data'),
-                         undefined,
-                         { duration: 5000 }
-                       );
-                     } else {
-                       this.router.navigateByUrl('/')
-                           .then();
-                     }
+        .valueChanges
+        .pipe(
+          tap(() => {
+            this.updateIsBusy('off');
+          }),
+          finalize(() => {
+            this.updateIsBusy('off');
+          }),
+          catchError(error => {
+            if (this.auth.token !== '') {
+              this.snackBar.open(
+                this.errorHandler.getError(error.message, 'Unable to load dashboard data'),
+                undefined,
+                { duration: 5000 }
+              );
+            } else {
+              this.router.navigateByUrl('/')
+                .then();
+            }
 
-                     return throwError(null);
-                   })
-                 );
+            return throwError(null);
+          })
+        );
     }
 
     this.snackBar.open('Apollo not ready', undefined, { duration: 5000 });
@@ -1628,22 +1653,22 @@ export class AdminDataService {
   private mutate<TData, TVariables>(options: MutationOptions<TData, TVariables>): Observable<FetchResult<TData>> {
     if (this.apollo.client !== undefined) {
       return this.apollo.mutate<TData, TVariables>(options)
-                 .pipe(
-                   catchError(error => {
-                     if (this.auth.token !== '') {
-                       this.snackBar.open(
-                         this.errorHandler.getError(error.message, 'Unable to perform action'),
-                         undefined,
-                         { duration: 5000 }
-                       );
-                     } else {
-                       this.router.navigateByUrl('/')
-                           .then();
-                     }
+        .pipe(
+          catchError(error => {
+            if (this.auth.token !== '') {
+              this.snackBar.open(
+                this.errorHandler.getError(error.message, 'Unable to perform action'),
+                undefined,
+                { duration: 5000 }
+              );
+            } else {
+              this.router.navigateByUrl('/')
+                .then();
+            }
 
-                     return throwError(null);
-                   })
-                 );
+            return throwError(null);
+          })
+        );
     }
 
     this.snackBar.open('Apollo not ready', undefined, { duration: 5000 });

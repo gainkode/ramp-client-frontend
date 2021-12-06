@@ -161,8 +161,7 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
 
   handleCountryOptionAdded(event: MatChipInputEvent): void {
     const country = this.filteredCountryOptions.find(
-      c => c.name.toLowerCase() === event.value.toLowerCase()
-                                         .trim()
+      c => c.name.toLowerCase() === event.value.toLowerCase().trim()
     );
 
     if (country) {
