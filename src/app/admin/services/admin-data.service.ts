@@ -17,6 +17,7 @@ import {
   QueryGetUsersArgs,
   QueryGetWalletsArgs,
   QueryGetWidgetsArgs, RiskAlertResultList,
+  SettingsCommon,
   SettingsFeeListResult, SettingsKycLevelListResult,
   SettingsKycListResult,
   TransactionListResult,
@@ -549,6 +550,33 @@ query {
     }
   }
 `;
+
+const UPDATE_SETTINGS_COMMON = gql`
+  mutation UpdateSettingsCommon(
+    $settingsId: ID!
+    $liquidityProvider: String!
+    $custodyProvider: String!
+    $kycProvider: String!
+    $adminEmails: [String!]
+    $stoppedForServicing: Boolean!
+    $additionalSettings: String
+  ) {
+    updateSettingsCommon(
+      settingsId: $settingsId,
+      settings: {
+        liquidityProvider: $liquidityProvider
+        custodyProvider: $custodyProvider
+        kycProvider: $kycProvider
+        adminEmails: $adminEmails
+        stoppedForServicing: $stoppedForServicing
+        additionalSettings: $additionalSettings
+      }
+    ) {
+      settingsCommonId
+    }
+  }
+`;
+
 
 const ADD_SETTINGS_FEE = gql`
   mutation AddSettingsFee(
@@ -1342,6 +1370,21 @@ export class AdminDataService {
     } else {
       return null;
     }
+  }
+
+  updateSettingsCommon(data: SettingsCommon): Observable<any> {
+    return this.mutate({
+      mutation: UPDATE_SETTINGS_COMMON,
+      variables: {
+        settingsId: data.settingsCommonId,
+        liquidityProvider: data.liquidityProvider,
+        custodyProvider: data.custodyProvider,
+        kycProvider: data.kycProvider,
+        adminEmails: data.adminEmails,
+        stoppedForServicing: data.stoppedForServicing,
+        additionalSettings: data.additionalSettings
+      }
+    });
   }
 
   saveFeeSettings(feeScheme: FeeScheme): Observable<any> {

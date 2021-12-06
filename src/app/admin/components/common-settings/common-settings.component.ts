@@ -28,35 +28,63 @@ export class CommonSettingsEditorComponent implements OnInit, OnDestroy {
     adminEmails: [[]],
     stoppedForServicing: [false, { validators: [Validators.required], updateOn: 'change' }],
 
+    // Auth
     emailCodeNumberLength: [0, { validators: [Validators.required], updateOn: 'change' }],
     // Custody providers
     transferOrdersTrackingTimedeltaDays: [0, { validators: [Validators.required], updateOn: 'change' }],
     // Custody providers - Fireblocks
-    fireblocksCachedDepositAddressLifetime: [60000, { validators: [Validators.required], updateOn: 'change' }],
-    fireblocksCachedExternalWalletLifetime: [60000, { validators: [Validators.required], updateOn: 'change' }],
-    fireblocksCachedInternalWalletLifetime: [60000, { validators: [Validators.required], updateOn: 'change' }],
-    fireblocksCachedVaultAccountLifetime: [60000, { validators: [Validators.required], updateOn: 'change' }],
-    fireblocksDefaultUserVaultName: ['', { validators: [Validators.required], updateOn: 'change' }],
-    fireblocksTrackWithdrawals: [false, { validators: [Validators.required], updateOn: 'change' }],
-    fireblocksWithdrawalFromLiquidityProviderDestinationAddress: ['test_withdrawal', { validators: [Validators.required], updateOn: 'change' }],
-    fireblocksWithdrawalToEndUserSourceVaultAccountId: ['2', { validators: [Validators.required], updateOn: 'change' }],
-    fireblocksWithdrawalToEndUserSpeed: ['MEDIUM', { validators: [Validators.required], updateOn: 'change' }],
+    fireblocksCachedDepositAddressLifetime: [0, { validators: [Validators.required], updateOn: 'change' }],
+    fireblocksCachedExternalWalletLifetime: [0, { validators: [Validators.required], updateOn: 'change' }],
+    fireblocksCachedInternalWalletLifetime: [0, { validators: [Validators.required], updateOn: 'change' }],
+    fireblocksCachedVaultAccountLifetime: [0, { validators: [Validators.required], updateOn: 'change' }],
+    fireblocksDefaultUserVaultName: [''],
+    fireblocksTrackWithdrawals: [false],
+    fireblocksWithdrawalFromLiquidityProviderDestinationAddress: [''],
+    fireblocksWithdrawalToEndUserSourceVaultAccountId: [''],
+    fireblocksWithdrawalToEndUserSpeed: ['', { validators: [Validators.required], updateOn: 'change' }],
     // Custody providers - Trustology
-
-    trustologyCachedDepositAddressLifetime: [60000, { validators: [Validators.required], updateOn: 'change' }],
-    trustologyCachedExternalWalletLifetime: [60000, { validators: [Validators.required], updateOn: 'change' }],
-    trustologyCachedInternalWalletLifetime: [60000, { validators: [Validators.required], updateOn: 'change' }],
-    trustologyCachedVaultAccountLifetime: [60000, { validators: [Validators.required], updateOn: 'change' }],
-    trustologyDefaultHostWalletId: ['', { validators: [Validators.required], updateOn: 'change' }],
-    trustologyNetworkFeeEstimationVaultAccountId: ['', { validators: [Validators.required], updateOn: 'change' }],
-    trustologyNetworkFeeEstimationVaultAccountIdSubwallet: ['', { validators: [Validators.required], updateOn: 'change' }],
-    trustologyTrackWithdrawals: [false, { validators: [Validators.required], updateOn: 'change' }],
-    trustologyWithdrawalFromLiquidityProviderDestinationAddress: ['', { validators: [Validators.required], updateOn: 'change' }],
-    trustologyWithdrawalToEndUserSourceVaultAccountId: ['', { validators: [Validators.required], updateOn: 'change' }],
-    trustologyWithdrawalToEndUserSourceVaultAccountIdSubwallet: ['', { validators: [Validators.required], updateOn: 'change' }],
-    trustologyWithdrawalToEndUserSpeed: ['MEDIUM', { validators: [Validators.required], updateOn: 'change' }],
-
-
+    trustologyCachedDepositAddressLifetime: [0, { validators: [Validators.required], updateOn: 'change' }],
+    trustologyCachedExternalWalletLifetime: [0, { validators: [Validators.required], updateOn: 'change' }],
+    trustologyCachedInternalWalletLifetime: [0, { validators: [Validators.required], updateOn: 'change' }],
+    trustologyCachedVaultAccountLifetime: [0, { validators: [Validators.required], updateOn: 'change' }],
+    trustologyDefaultHostWalletId: [''],
+    trustologyNetworkFeeEstimationVaultAccountId: [''],
+    trustologyNetworkFeeEstimationVaultAccountIdSubwallet: [''],
+    trustologyTrackWithdrawals: [false],
+    trustologyWithdrawalFromLiquidityProviderDestinationAddress: [''],
+    trustologyWithdrawalToEndUserSourceVaultAccountId: [''],
+    trustologyWithdrawalToEndUserSourceVaultAccountIdSubwallet: [''],
+    trustologyWithdrawalToEndUserSpeed: ['', { validators: [Validators.required], updateOn: 'change' }],
+    // KYC providers - Sumsub
+    kycSumSubWebApiTokenLifetime: [0, { validators: [Validators.required], updateOn: 'change' }],
+    // Risk Center
+    riskCenterLoginCountToCompareIpAddress: [0, { validators: [Validators.required], updateOn: 'change' }],
+    riskCenterMaxFailedLoginAttempts: [0, { validators: [Validators.required], updateOn: 'change' }],
+    // Transactions
+    transactionsPaymentCodeNumberLength: [0, { validators: [Validators.required], updateOn: 'change' }],
+    transactionsQuickCheckoutTransactionConfirmationLifetime: [72000000, { validators: [Validators.required], updateOn: 'change' }],
+    transactionsTransactionCodeNumberLength: [0, { validators: [Validators.required], updateOn: 'change' }],
+    transactionsTransactionConfirmationMode: ['', { validators: [Validators.required], updateOn: 'change' }],
+    // Liquidity Providers
+    liquidityBenchmarkTrackingInterval: [0, { validators: [Validators.required], updateOn: 'change' }],
+    liquidityCryptoRateLifetime: [0, { validators: [Validators.required], updateOn: 'change' }],
+    liquidityExchangeInfoLifetime: [0, { validators: [Validators.required], updateOn: 'change' }],
+    liquidityExchangeOrdersTrackingTimedeltaDays: [0, { validators: [Validators.required], updateOn: 'change' }],
+    liquidityExchangeTrackingInterval: [0, { validators: [Validators.required], updateOn: 'change' }],
+    liquiditySettingsCurrencyLifetime: [0, { validators: [Validators.required], updateOn: 'change' }],
+    liquidityTransferOrdersTrackingTimedeltaDays: [0, { validators: [Validators.required], updateOn: 'change' }],
+    // Liquidity Providers - Bitstamp
+    bitstampRateLimit: [false, { validators: [Validators.required], updateOn: 'change' }],
+    bitstampTimeout: [0, { validators: [Validators.required], updateOn: 'change' }],
+    bitstampTrackOrders: [false, { validators: [Validators.required], updateOn: 'change' }],
+    bitstampTrackWithdrawals: [false, { validators: [Validators.required], updateOn: 'change' }],
+    bitstampWithdrawalBenchmark: [0, { validators: [Validators.required], updateOn: 'change' }],
+    bitstampWithdrawalBenchmarkAmountToRemain: [0, { validators: [Validators.required], updateOn: 'change' }],
+    // Liquidity Providers - Kraken
+    krakenTrackOrders: [false, { validators: [Validators.required], updateOn: 'change' }],
+    krakenTrackWithdrawals: [false, { validators: [Validators.required], updateOn: 'change' }],
+    krakenWithdrawalBenchmark: [0, { validators: [Validators.required], updateOn: 'change' }],
+    krakenWithdrawalBenchmarkAmountToRemain: [0, { validators: [Validators.required], updateOn: 'change' }]
   });
 
   private subscriptions: Subscription = new Subscription();
@@ -104,7 +132,7 @@ export class CommonSettingsEditorComponent implements OnInit, OnDestroy {
         this.form.get('fireblocksWithdrawalToEndUserSourceVaultAccountId')?.setValue(coreData.custodyProviders.Fireblocks.withdrawalToEndUserSourceVaultAccountId.vaultId ?? '22');
         this.form.get('fireblocksWithdrawalToEndUserSpeed')?.setValue(coreData.custodyProviders.Fireblocks.withdrawalToEndUserSpeed ?? 'MEDIUM');
         // Core - Custody providers - Trustology
-        this.form.get('trustologyCachedDepositAddressLifetime')?.setValue(coreData.custodyProviders.Trustology.cachedDepositAddressLifetime ?? 50000);
+        this.form.get('trustologyCachedDepositAddressLifetime')?.setValue(coreData.custodyProviders.Trustology.cachedDepositAddressLifetime ?? 60000);
         this.form.get('trustologyCachedExternalWalletLifetime')?.setValue(coreData.custodyProviders.Trustology.cachedExternalWalletLifetime ?? 60000);
         this.form.get('trustologyCachedInternalWalletLifetime')?.setValue(coreData.custodyProviders.Trustology.cachedInternalWalletLifetime ?? 60000);
         this.form.get('trustologyCachedVaultAccountLifetime')?.setValue(coreData.custodyProviders.Trustology.cachedVaultAccountLifetime ?? 60000);
@@ -116,10 +144,36 @@ export class CommonSettingsEditorComponent implements OnInit, OnDestroy {
         this.form.get('trustologyWithdrawalToEndUserSourceVaultAccountId')?.setValue(coreData.custodyProviders.Trustology.withdrawalToEndUserSourceVaultAccountId.walletId ?? '');
         this.form.get('trustologyWithdrawalToEndUserSourceVaultAccountIdSubwallet')?.setValue(coreData.custodyProviders.Trustology.withdrawalToEndUserSourceVaultAccountId.subWalletName ?? 'Bitcoin');
         this.form.get('trustologyWithdrawalToEndUserSpeed')?.setValue(coreData.custodyProviders.Trustology.withdrawalToEndUserSpeed ?? "MEDIUM");
-
-
-
-        console.log(additionalSettings);
+        // Core - KYC providers - Sumsub
+        this.form.get('kycSumSubWebApiTokenLifetime')?.setValue(coreData.kycProviders.SumSub.webApiTokenLifetime ?? 600000);
+        // Core - Risk Center
+        this.form.get('riskCenterLoginCountToCompareIpAddress')?.setValue(coreData.riskCenter.loginCountToCompareIpAddress ?? 10);
+        this.form.get('riskCenterMaxFailedLoginAttempts')?.setValue(coreData.riskCenter.maxFailedLoginAttempts ?? 10);
+        // Core - Transactions
+        this.form.get('transactionsPaymentCodeNumberLength')?.setValue(coreData.transactions.paymentCodeNumberLength ?? 5);
+        this.form.get('transactionsQuickCheckoutTransactionConfirmationLifetime')?.setValue(coreData.transactions.quickCheckoutTransactionConfirmationLifetime ?? 72000000);
+        this.form.get('transactionsTransactionCodeNumberLength')?.setValue(coreData.transactions.transactionCodeNumberLength ?? 5);
+        this.form.get('transactionsTransactionConfirmationMode')?.setValue(coreData.transactions.transactionConfirmationMode ?? 'NEVER');
+        // Core - Liquidity Providers
+        this.form.get('liquidityBenchmarkTrackingInterval')?.setValue(coreData.liquidityProviders.benchmarkTrackingInterval ?? 60000);
+        this.form.get('liquidityCryptoRateLifetime')?.setValue(coreData.liquidityProviders.cryptoRateLifetime ?? 60000);
+        this.form.get('liquidityExchangeInfoLifetime')?.setValue(coreData.liquidityProviders.exchangeInfoLifetime ?? 3600000);
+        this.form.get('liquidityExchangeOrdersTrackingTimedeltaDays')?.setValue(coreData.liquidityProviders.exchangeOrdersTrackingTimedeltaDays ?? 7);
+        this.form.get('liquidityExchangeTrackingInterval')?.setValue(coreData.liquidityProviders.exchangeTrackingInterval ?? 60000);
+        this.form.get('liquiditySettingsCurrencyLifetime')?.setValue(coreData.liquidityProviders.settingsCurrencyLifetime ?? 600000);
+        this.form.get('liquidityTransferOrdersTrackingTimedeltaDays')?.setValue(coreData.liquidityProviders.transferOrdersTrackingTimedeltaDays ?? 7);
+        // Core - Liquidity Providers - Bitstamp
+        this.form.get('bitstampRateLimit')?.setValue(coreData.liquidityProviders.Bitstamp.rateLimit ?? false);
+        this.form.get('bitstampTimeout')?.setValue(coreData.liquidityProviders.Bitstamp.timeout ?? 5000);
+        this.form.get('bitstampTrackOrders')?.setValue(coreData.liquidityProviders.Bitstamp.trackOrders ?? false);
+        this.form.get('bitstampTrackWithdrawals')?.setValue(coreData.liquidityProviders.Bitstamp.trackWithdrawals ?? false);
+        this.form.get('bitstampWithdrawalBenchmark')?.setValue(coreData.liquidityProviders.Bitstamp.withdrawalBenchmark ?? 10000);
+        this.form.get('bitstampWithdrawalBenchmarkAmountToRemain')?.setValue(coreData.liquidityProviders.Bitstamp.withdrawalBenchmarkAmountToRemain ?? 0);
+        // Core - Liquidity Providers - Kraken
+        this.form.get('krakenTrackOrders')?.setValue(coreData.liquidityProviders.Kraken.trackOrders ?? false);
+        this.form.get('krakenTrackWithdrawals')?.setValue(coreData.liquidityProviders.Kraken.trackWithdrawals ?? false);
+        this.form.get('krakenWithdrawalBenchmark')?.setValue(coreData.liquidityProviders.Kraken.withdrawalBenchmark ?? 10000);
+        this.form.get('krakenWithdrawalBenchmarkAmountToRemain')?.setValue(coreData.liquidityProviders.Kraken.withdrawalBenchmarkAmountToRemain ?? 0);
       }, (error) => {
 
       })
@@ -191,12 +245,62 @@ export class CommonSettingsEditorComponent implements OnInit, OnDestroy {
     const coreTrustologyWithdrawalToEndUserSourceVaultAccountId = this.form.get('trustologyWithdrawalToEndUserSourceVaultAccountId')?.value ?? '';
     const coreTrustologyWithdrawalToEndUserSourceVaultAccountIdSubwallet = this.form.get('trustologyWithdrawalToEndUserSourceVaultAccountIdSubwallet')?.value ?? '';
     const coreTrustologyWithdrawalToEndUserSpeed = this.form.get('trustologyWithdrawalToEndUserSpeed')?.value ?? '';
-
-
-
-
+    // KYC - SumSub
+    const coreSumSubWebApiTokenLifetime = parseInt(this.form.get('kycSumSubWebApiTokenLifetime')?.value ?? '600000');
+    // Risk Center
+    const coreRiskCenterLoginCountToCompareIpAddress = parseInt(this.form.get('riskCenterLoginCountToCompareIpAddress')?.value ?? '600000');
+    const coreRiskCenterMaxFailedLoginAttempts = parseInt(this.form.get('riskCenterMaxFailedLoginAttempts')?.value ?? '600000');
+    // Transactions
+    const coreTransactionsPaymentCodeNumberLength = parseInt(this.form.get('transactionsPaymentCodeNumberLength')?.value ?? '5');
+    const coreTransactionsQuickCheckoutTransactionConfirmationLifetime = parseInt(this.form.get('transactionsQuickCheckoutTransactionConfirmationLifetime')?.value ?? '72000000');
+    const coreTransactionsTransactionCodeNumberLength = parseInt(this.form.get('transactionsTransactionCodeNumberLength')?.value ?? '5');
+    const coreTransactionsTransactionConfirmationMode = this.form.get('transactionsTransactionConfirmationMode')?.value ?? 'NEVER';
+    // Liquidity Providers
+    const coreLiquidityBenchmarkTrackingInterval = parseInt(this.form.get('liquidityBenchmarkTrackingInterval')?.value ?? '60000');
+    const coreLiquidityCryptoRateLifetime = parseInt(this.form.get('liquidityCryptoRateLifetime')?.value ?? '60000');
+    const coreLiquidityExchangeInfoLifetime = parseInt(this.form.get('liquidityExchangeInfoLifetime')?.value ?? '3600000');
+    const coreLiquidityExchangeOrdersTrackingTimedeltaDays = parseInt(this.form.get('liquidityExchangeOrdersTrackingTimedeltaDays')?.value ?? '7');
+    const coreLiquidityExchangeTrackingInterval = parseInt(this.form.get('liquidityExchangeTrackingInterval')?.value ?? '60000');
+    const coreLiquiditySettingsCurrencyLifetime = parseInt(this.form.get('liquiditySettingsCurrencyLifetime')?.value ?? '600000');
+    const coreLiquidityTransferOrdersTrackingTimedeltaDays = parseInt(this.form.get('liquidityTransferOrdersTrackingTimedeltaDays')?.value ?? '7');
+    // Liquidity Providers - Bitstamp
+    const coreBitstampRateLimit = this.form.get('bitstampRateLimit')?.value ?? false;
+    const coreBitstampTimeout = parseInt(this.form.get('bitstampTimeout')?.value ?? '5000');
+    const coreBitstampTrackOrders = this.form.get('bitstampTrackOrders')?.value ?? false;
+    const coreBitstampTrackWithdrawals = this.form.get('bitstampTrackWithdrawals')?.value ?? false;
+    const coreBitstampWithdrawalBenchmark = parseInt(this.form.get('bitstampWithdrawalBenchmark')?.value ?? '10000');
+    const coreBitstampWithdrawalBenchmarkAmountToRemain = parseInt(this.form.get('bitstampWithdrawalBenchmarkAmountToRemain')?.value ?? '0');
+    // Liquidity Providers - Kraken
+    const coreKrakenTrackOrders = this.form.get('krakenTrackOrders')?.value ?? false;
+    const coreKrakenTrackWithdrawals = this.form.get('krakenTrackWithdrawals')?.value ?? false;
+    const coreKrakenWithdrawalBenchmark = parseInt(this.form.get('krakenWithdrawalBenchmark')?.value ?? '10000');
+    const coreKrakenWithdrawalBenchmarkAmountToRemain = parseInt(this.form.get('krakenWithdrawalBenchmarkAmountToRemain')?.value ?? '0');
 
     const coreData = {
+      liquidityProviders: {
+        benchmarkTrackingInterval: coreLiquidityBenchmarkTrackingInterval,
+        cryptoRateLifetime: coreLiquidityCryptoRateLifetime,
+        exchangeInfoLifetime: coreLiquidityExchangeInfoLifetime,
+        exchangeOrdersTrackingTimedeltaDays: coreLiquidityExchangeOrdersTrackingTimedeltaDays,
+        exchangeTrackingInterval: coreLiquidityExchangeTrackingInterval,
+        settingsCurrencyLifetime: coreLiquiditySettingsCurrencyLifetime,
+        transferOrdersTrackingTimedeltaDays: coreLiquidityTransferOrdersTrackingTimedeltaDays,
+        Binance: {},
+        Bitstamp: {
+          rateLimit: coreBitstampRateLimit,
+          timeout: coreBitstampTimeout,
+          trackOrders: coreBitstampTrackOrders,
+          trackWithdrawals: coreBitstampTrackWithdrawals,
+          withdrawalBenchmark: coreBitstampWithdrawalBenchmark,
+          withdrawalBenchmarkAmountToRemain: coreBitstampWithdrawalBenchmarkAmountToRemain
+        },
+        Kraken: {
+          trackOrders: coreKrakenTrackOrders,
+          trackWithdrawals: coreKrakenTrackWithdrawals,
+          withdrawalBenchmark: coreKrakenWithdrawalBenchmark,
+          withdrawalBenchmarkAmountToRemain: coreKrakenWithdrawalBenchmarkAmountToRemain
+        }
+      },
       custodyProviders: {
         transferOrdersTrackingTimedeltaDays: coreTransferOrdersTrackingTimedeltaDays,
         Fireblocks: {
@@ -230,6 +334,21 @@ export class CommonSettingsEditorComponent implements OnInit, OnDestroy {
           },
           withdrawalToEndUserSpeed: coreTrustologyWithdrawalToEndUserSpeed
         }
+      },
+      kycProviders: {
+        SumSub: {
+          webApiTokenLifetime: coreSumSubWebApiTokenLifetime
+        }
+      },
+      transactions: {
+        paymentCodeNumberLength: coreTransactionsPaymentCodeNumberLength,
+        quickCheckoutTransactionConfirmationLifetime: coreTransactionsQuickCheckoutTransactionConfirmationLifetime,
+        transactionCodeNumberLength: coreTransactionsTransactionCodeNumberLength,
+        transactionConfirmationMode: coreTransactionsTransactionConfirmationMode
+      },
+      riskCenter: {
+        loginCountToCompareIpAddress: coreRiskCenterLoginCountToCompareIpAddress,
+        maxFailedLoginAttempts: coreRiskCenterMaxFailedLoginAttempts
       }
     };
     // Result
@@ -237,7 +356,6 @@ export class CommonSettingsEditorComponent implements OnInit, OnDestroy {
       auth: authData,
       core: coreData
     }
-    console.log(additionalSettings);
     return {
       settingsCommonId: this.form.get('id')?.value,
       liquidityProvider: this.form.get('liquidityProvider')?.value,
@@ -251,7 +369,10 @@ export class CommonSettingsEditorComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
     const data = this.getDataObject();
-    console.log(data);
-    this.showSuccessDialog();
+    this.subscriptions.add(
+      this.adminService.updateSettingsCommon(data).subscribe(({ data }) => {
+        this.showSuccessDialog();
+      })
+    );
   }
 }
