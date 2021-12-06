@@ -45,10 +45,8 @@
                     <mat-icon matChipRemove matTooltip="Remove email" matTooltipClass="info-tooltip">cancel
                     </mat-icon>
                 </mat-chip>
-                <input #emailSearchInput
-                       placeholder="Administrators emails"
-                       [matChipInputFor]="emailChipList"
-                       (matChipInputTokenEnd)="handleEmailOptionAdded($event)">
+                <input #emailSearchInput placeholder="Administrators emails" [matChipInputFor]="emailChipList"
+                    (matChipInputTokenEnd)="handleEmailOptionAdded($event)">
             </mat-chip-list>
         </mat-form-field>
 
@@ -57,7 +55,188 @@
                 Stopped for servicing
             </mat-checkbox>
         </div>
-        
+        <div class="form-element">&nbsp;</div>
+
+
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <mat-icon>person</mat-icon>
+                    <span>Authentication settings</span>
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <div class="form-section-title-box">
+                <mat-form-field class="form-element">
+                    <mat-label>Email conformation code maximal length</mat-label>
+                    <input matInput required formControlName="emailCodeNumberLength" />
+                    <mat-error *ngIf="form.controls.emailCodeNumberLength.hasError('required')">
+                        Mandatory field
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <mat-icon>settings</mat-icon>
+                    <span>Core settings</span>
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <div class="form-section-title-box">
+                <h2>Custody Providers</h2>
+
+                <mat-form-field class="form-element">
+                    <mat-label>Transfer Orders Tracking Time Delta, in days</mat-label>
+                    <input matInput formControlName="transferOrdersTrackingTimedeltaDays" required />
+                    <mat-error *ngIf="form.controls.transferOrdersTrackingTimedeltaDays.hasError('required')">
+                        Mandatory field
+                    </mat-error>
+                </mat-form-field>
+
+                <h3>Fireblocks</h3>
+
+                <mat-form-field class="form-element">
+                    <mat-label>Cached Deposit Address Lifetime, in ms</mat-label>
+                    <input matInput formControlName="fireblocksCachedDepositAddressLifetime" required />
+                    <mat-error *ngIf="form.controls.fireblocksCachedDepositAddressLifetime.hasError('required')">
+                        Mandatory field
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="form-element">
+                    <mat-label>Cached External Wallet Lifetime, in ms</mat-label>
+                    <input matInput formControlName="fireblocksCachedExternalWalletLifetime" required />
+                    <mat-error *ngIf="form.controls.fireblocksCachedExternalWalletLifetime.hasError('required')">
+                        Mandatory field
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="form-element">
+                    <mat-label>Cached Internal Wallet Lifetime, in ms</mat-label>
+                    <input matInput formControlName="fireblocksCachedInternalWalletLifetime" required />
+                    <mat-error *ngIf="form.controls.fireblocksCachedInternalWalletLifetime.hasError('required')">
+                        Mandatory field
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="form-element">
+                    <mat-label>Cached Vault Account Lifetime, in ms</mat-label>
+                    <input matInput formControlName="fireblocksCachedVaultAccountLifetime" required />
+                    <mat-error *ngIf="form.controls.fireblocksCachedVaultAccountLifetime.hasError('required')">
+                        Mandatory field
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="form-element">
+                    <mat-label>Default User Vault Name</mat-label>
+                    <input matInput formControlName="fireblocksDefaultUserVaultName" />
+                </mat-form-field>
+
+                <mat-form-field class="form-element">
+                    <mat-label>Withdrawal From Liquidity Provider Destination Address</mat-label>
+                    <input matInput formControlName="fireblocksWithdrawalFromLiquidityProviderDestinationAddress" />
+                </mat-form-field>
+
+                <mat-form-field class="form-element">
+                    <mat-label>Withdrawal To End User Source Vault Account Id</mat-label>
+                    <input matInput formControlName="fireblocksWithdrawalToEndUserSourceVaultAccountId" />
+                </mat-form-field>
+
+                <mat-form-field class="form-element">
+                    <mat-label>Withdrawal To End User Speed</mat-label>
+                    <input matInput formControlName="fireblocksWithdrawalToEndUserSpeed" />
+                </mat-form-field>
+
+                <div class="form-element">
+                    <mat-checkbox color="accent" formControlName="fireblocksTrackWithdrawals">
+                        Track Withdrawals
+                    </mat-checkbox>
+                </div>
+                <div class="form-element">&nbsp;</div>
+
+                <h3>Trustology</h3>
+
+                <mat-form-field class="form-element">
+                    <mat-label>Cached Deposit Address Lifetime, in ms</mat-label>
+                    <input matInput formControlName="trustologyCachedDepositAddressLifetime" required />
+                    <mat-error *ngIf="form.controls.trustologyCachedDepositAddressLifetime.hasError('required')">
+                        Mandatory field
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="form-element">
+                    <mat-label>Cached External Wallet Lifetime, in ms</mat-label>
+                    <input matInput formControlName="trustologyCachedExternalWalletLifetime" required />
+                    <mat-error *ngIf="form.controls.trustologyCachedExternalWalletLifetime.hasError('required')">
+                        Mandatory field
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="form-element">
+                    <mat-label>Cached Internal Wallet Lifetime, in ms</mat-label>
+                    <input matInput formControlName="trustologyCachedInternalWalletLifetime" required />
+                    <mat-error *ngIf="form.controls.trustologyCachedInternalWalletLifetime.hasError('required')">
+                        Mandatory field
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="form-element">
+                    <mat-label>Cached Vault Account Lifetime, in ms</mat-label>
+                    <input matInput formControlName="trustologyCachedVaultAccountLifetime" required />
+                    <mat-error *ngIf="form.controls.trustologyCachedVaultAccountLifetime.hasError('required')">
+                        Mandatory field
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="form-element">
+                    <mat-label>Default Host Wallet Id</mat-label>
+                    <input matInput formControlName="trustologyDefaultHostWalletId" />
+                </mat-form-field>
+
+                <mat-form-field class="form-element">
+                    <mat-label>Network Fee Estimation Vault Account Id</mat-label>
+                    <input matInput formControlName="trustologyNetworkFeeEstimationVaultAccountId" />
+                </mat-form-field>
+
+                <mat-form-field class="form-element">
+                    <mat-label>Network Fee Estimation Vault Account Subwallet</mat-label>
+                    <input matInput formControlName="trustologyNetworkFeeEstimationVaultAccountIdSubwallet" />
+                </mat-form-field>
+
+                <mat-form-field class="form-element">
+                    <mat-label>Withdrawal From Liquidity Provider Destination Address</mat-label>
+                    <input matInput formControlName="trustologyWithdrawalFromLiquidityProviderDestinationAddress" />
+                </mat-form-field>
+
+                <mat-form-field class="form-element">
+                    <mat-label>Withdrawal To End User Source Vault Account Id</mat-label>
+                    <input matInput formControlName="trustologyWithdrawalToEndUserSourceVaultAccountId" />
+                </mat-form-field>
+
+                <mat-form-field class="form-element">
+                    <mat-label>Withdrawal To End User Source Vault Account Subwallet</mat-label>
+                    <input matInput formControlName="trustologyWithdrawalToEndUserSourceVaultAccountIdSubwallet" />
+                </mat-form-field>
+
+                <mat-form-field class="form-element">
+                    <mat-label>Withdrawal To End User Speed</mat-label>
+                    <input matInput formControlName="trustologyWithdrawalToEndUserSpeed" />
+                </mat-form-field>
+
+                <div class="form-element">
+                    <mat-checkbox color="accent" formControlName="trustologyTrackWithdrawals">
+                        Track Withdrawals
+                    </mat-checkbox>
+                </div>
+                <div class="form-element">&nbsp;</div>
+
+            </div>
+
+        </mat-expansion-panel>
+
         <div class="__common-settings-button-block">
             <button mat-flat-button color="primary" type="submit">
                 SAVE

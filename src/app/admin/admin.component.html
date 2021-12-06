@@ -34,7 +34,7 @@
                     *ngIf="adminDataService.isBusy | async"
                     mode="indeterminate"></mat-progress-bar>
         </mat-toolbar>
-        <section>
+        <section style="overflow: auto;">
             <router-outlet>
             </router-outlet>
         </section>
