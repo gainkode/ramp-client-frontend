@@ -1,4 +1,33 @@
-<div style="display: grid;grid-template-columns: 274px auto;grid-template-rows: auto;">
-    <div style="grid-row: 1;grid-column: 1;display: flex;margin: 0px 24px 0px 0px;background-color: burlywood;"></div>
-    <div style="grid-row: 1;grid-column: 2;display: flex;background-color: aquamarine;"></div>
+<div class="__profile-settings-personal-info-container">
+    <div class="__profile-settings-personal-info-common-container">
+        <div class="__profile-settings-personal-info-avatar-container"></div>
+        <div class="__profile-settings-personal-info-verification-container">
+            <h2 class="__profile-settings-personal-verification-level">
+                {{userView?.kycLevel==='' ? 'Not verified' : userView?.kycLevel}}
+            </h2>
+            <h2 class="__profile-settings-personal-name">
+                {{userView?.fullName}}
+            </h2>
+            <div class="__profile-settings-personal-verification-status-container __profile-settings-personal-verification-status-success">
+                <span style="font-size: 18px;transform: rotate(90deg);" class="material-icons">
+                    sync
+                </span>
+                <span class="__profile-settings-personal-verification-status-label">
+                    Verification
+                </span>
+            </div>
+            <!-- <div class="__profile-settings-personal-verification-status-container __profile-settings-personal-verification-status-failed">
+                <span style="font-size: 18px;" class="material-icons">
+                    error
+                </span>
+                <span class="__profile-settings-personal-verification-status-label">
+                    Rejected
+                </span>
+            </div> -->
+            <button class="__outlined-button" type="button" (click)="verifyKyc()">VERIFICATION</button>
+        </div>
+    </div>
+    <div class="__profile-settings-personal-info-editor-container">
+        
+    </div>
 </div>

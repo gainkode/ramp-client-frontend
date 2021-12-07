@@ -226,10 +226,10 @@
 }
 
 .__tool-bar-container {
-    margin: 40px 24px 24px 24px;
+    margin: 40px 24px 0px 24px;
 
     @media (max-width: $md1 + px) {
-        margin: 24px 24px 24px 24px;
+        margin: 24px 24px 0px 24px;
     }
 }
 

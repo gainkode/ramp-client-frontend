@@ -21,6 +21,7 @@ export class UserItem {
   country: CommonTargetValue | null = null;
   address = '';
   kycStatus = '';
+  kycLevel = '';
   userType: UserTypeView | null = null;
   userMode: UserModeView | null = null;
   created = '';
@@ -49,6 +50,9 @@ export class UserItem {
         'dd-MM-YYYY HH:mm:ss'
       ) as string;
       this.kycStatus = data.kycStatus as string;
+      if (data.kycTier) {
+        this.kycLevel = data.kycTier.name;
+      }
       const countryObject = getCountryByCode2(data.countryCode2 as string);
       if (countryObject !== null) {
         this.country = new CommonTargetValue();

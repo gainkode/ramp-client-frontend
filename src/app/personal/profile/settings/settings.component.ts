@@ -27,7 +27,6 @@ export class PersonalSettingsComponent {
 
     pageSelected(id: string): void {
         this.selectedTab = id;
-        console.log('selected', this.selectedTab);
     }
 
     handleError(val: string): void {

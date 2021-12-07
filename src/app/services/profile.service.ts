@@ -201,6 +201,17 @@ const GET_PROFILE_ME = gql`
       kycReviewRejectedType
       kycReviewRejectedLabels
       kycStatusUpdateRequired
+      kycTierId
+      kycTier {
+        name
+        description
+        amount
+        requireUserFullName
+        requireUserPhone
+        requireUserBirthday
+        requireUserAddress
+        requireUserFlatNumber
+      }
       custodyProvider
       email
       type
