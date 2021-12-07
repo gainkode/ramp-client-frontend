@@ -246,7 +246,9 @@ export class PersonalComponent implements OnInit {
 
     logout(): void {
         this.auth.logout();
-        this.router.navigateByUrl('/');
+        this.router.navigateByUrl('/personal/intro').then(() => {
+            window.location.reload();
+        });
     }
 
     getUserMainPage(): string {

@@ -63,12 +63,20 @@ import { PersonalChangePasswordComponent } from './profile/settings/components/p
 const routing = RouterModule.forChild([
     // Main page
     { path: 'intro', component: IntroPersonalComponent },
+    // Auth pages
+    { path: 'auth/login', component: PersonalLoginComponent },
+    { path: 'auth/register', component: PersonalRegisterComponent },
+    { path: 'auth/restore', component: PersonalRestoreComponent },
+    { path: 'auth/confirm-email/:token', component: PersonalConfirmEmailComponent },
+    { path: 'auth/confirm-device/:token', component: PersonalConfirmDeviceComponent },
+    { path: 'auth/success/:type', component: PersonalSuccessComponent },
+    { path: 'auth/new-password/:token', component: PersonalResetComponent },
     // Authenticated main profile
     {
         path: 'main',
         component: PersonalComponent,
         children: [
-            { path: 'home', component: PersonalHomeComponent, canActivate: [PersonalGuard] },
+            { path: 'home', component: PersonalHomeComponent},
             { path: 'wallets', component: PersonalWalletsComponent, canActivate: [PersonalGuard] },
             { path: 'contactlist', component: PersonalContactsComponent, canActivate: [PersonalGuard] },
             { path: 'transactions', component: PersonalTransactionsComponent, canActivate: [PersonalGuard] },
@@ -89,14 +97,6 @@ const routing = RouterModule.forChild([
         ],
         canActivate: [PersonalGuard]
     },
-    // Auth pages
-    { path: 'auth/login', component: PersonalLoginComponent },
-    { path: 'auth/register', component: PersonalRegisterComponent },
-    { path: 'auth/restore', component: PersonalRestoreComponent },
-    { path: 'auth/confirm-email/:token', component: PersonalConfirmEmailComponent },
-    { path: 'auth/confirm-device/:token', component: PersonalConfirmDeviceComponent },
-    { path: 'auth/success/:type', component: PersonalSuccessComponent },
-    { path: 'auth/new-password/:token', component: PersonalResetComponent },
     // Obsolete and temporary
     { path: 'profile', component: ProfileMainPersonalComponent, canActivate: [PersonalGuard] },
     { path: 'myaccount', component: PersonalMyAccountComponent, canActivate: [PersonalGuard] },
