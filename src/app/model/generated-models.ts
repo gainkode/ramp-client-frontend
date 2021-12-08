@@ -49,6 +49,7 @@ export type AssetAddress = {
   addressFormat?: Maybe<Scalars['String']>;
   assetId?: Maybe<Scalars['String']>;
   originalId?: Maybe<Scalars['String']>;
+  custodyProvider?: Maybe<Scalars['String']>;
   total?: Maybe<Scalars['Float']>;
   totalEur?: Maybe<Scalars['Float']>;
   totalFiat?: Maybe<Scalars['Float']>;
@@ -79,6 +80,7 @@ export type AssetAddressShort = {
   addressFormat?: Maybe<Scalars['String']>;
   assetId?: Maybe<Scalars['String']>;
   originalId?: Maybe<Scalars['String']>;
+  custodyProvider?: Maybe<Scalars['String']>;
   total?: Maybe<Scalars['Float']>;
   totalEur?: Maybe<Scalars['Float']>;
   totalFiat?: Maybe<Scalars['Float']>;
@@ -1228,6 +1230,7 @@ export type Query = {
   getSupportTickets?: Maybe<SupportTicketListResult>;
   getFeedbacks?: Maybe<FeedbackListResult>;
   getRates?: Maybe<Array<Rate>>;
+  getOneToManyRates?: Maybe<Array<Rate>>;
   myTransactions?: Maybe<TransactionShortListResult>;
   getTransactions?: Maybe<TransactionListResult>;
   myWallets?: Maybe<AssetAddressShortListResult>;
@@ -1581,6 +1584,13 @@ export type QueryGetRatesArgs = {
   currenciesFrom: Array<Scalars['String']>;
   currencyTo: Scalars['String'];
   recaptcha: Scalars['String'];
+};
+
+
+export type QueryGetOneToManyRatesArgs = {
+  currencyFrom: Scalars['String'];
+  currenciesTo: Array<Scalars['String']>;
+  reverse?: Maybe<Scalars['Boolean']>;
 };
 
 

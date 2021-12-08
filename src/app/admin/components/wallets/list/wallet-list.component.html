@@ -24,6 +24,11 @@
             <td mat-cell *matCellDef="let element"> {{element.address}} </td>
         </ng-container>
 
+        <ng-container matColumnDef="custodyProvider">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef>Custody Provider</th>
+            <td mat-cell *matCellDef="let element"> {{element.custodyProvider}} </td>
+        </ng-container>
+
         <ng-container matColumnDef="legacyAddress">
             <th mat-header-cell *matHeaderCellDef>Legacy address</th>
             <td mat-cell *matCellDef="let element"> {{element.legacyAddress}} </td>

@@ -490,6 +490,7 @@ const GET_WALLETS = gql`
         vaultName
         userId
         userEmail
+        custodyProvider
       }
     }
   }

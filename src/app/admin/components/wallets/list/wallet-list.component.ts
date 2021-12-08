@@ -38,7 +38,7 @@ export class WalletListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   displayedColumns: string[] = [
     //'details',
-    'address', 'legacyAddress', 'description', 'type',
+    'address', 'custodyProvider', 'legacyAddress', 'description', 'type',
     'addressFormat', 'assetId', 'originalId', 'total', 'available', 'pending', 'lockedAmount', 'vaultId',
     'vaultName', 'userId', 'userEmail'
   ];
