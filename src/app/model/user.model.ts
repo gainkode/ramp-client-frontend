@@ -22,7 +22,10 @@ export class UserItem {
   address = '';
   kycStatus = '';
   kycVerificationStatus = '';
+  kycVerificationAvailable = true;
   kycLevel = '';
+  kycLevelMax = false;
+  kycLevelIncreasable = false;
   kycComplete = false;
   kycRejected = false;
   userType: UserTypeView | null = null;
@@ -58,21 +61,26 @@ export class UserItem {
       if (status === KycStatus.Completed.toLowerCase()) {
         this.kycRejected = false;
         this.kycComplete = true;
+        this.kycLevelIncreasable = true;
+        this.kycVerificationAvailable = true;
       } else {
         this.kycComplete = false;
         if (status === KycStatus.Unknown.toLowerCase() ||
           status === KycStatus.NotFound.toLowerCase() ||
           status === KycStatus.Init.toLowerCase()) {
           this.kycVerificationStatus = 'Initialization';
+          this.kycVerificationAvailable = true;
         } else if (status === KycStatus.Pending.toLowerCase() ||
           status === KycStatus.Queued.toLowerCase() ||
           status === KycStatus.OnHold.toLowerCase()) {
           this.kycVerificationStatus = 'Verifying';
+          this.kycVerificationAvailable = false;
         }
       }
 
       if (data.kycTier) {
         this.kycLevel = data.kycTier.name;
+        this.kycLevelMax = (!data.kycTier.amount);
       }
       const countryObject = getCountryByCode2(data.countryCode2 as string);
       if (countryObject !== null) {

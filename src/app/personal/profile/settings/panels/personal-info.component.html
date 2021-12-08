@@ -33,7 +33,10 @@
                     Rejected
                 </span>
             </div>
-            <button class="__outlined-button" type="button" (click)="verifyKyc()">VERIFICATION</button>
+            <button *ngIf="!userView?.kycLevelMax" class="__outlined-button" type="button"
+                [disabled]="!userView?.kycVerificationAvailable" (click)="verifyKyc()">
+                {{userView?.kycLevelIncreasable ? 'INCREASE LEVEL' : 'VERIFY PROFILE'}}
+            </button>
         </div>
     </div>
     <div class="__profile-settings-personal-info-editor-container">
