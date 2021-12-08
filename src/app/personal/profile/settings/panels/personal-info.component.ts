@@ -73,4 +73,8 @@ export class PersonalInfoSettingsComponent implements OnInit, OnDestroy {
             window.location.reload();
         });
     }
+
+    setAvatar(): void {
+        
+    }
 }

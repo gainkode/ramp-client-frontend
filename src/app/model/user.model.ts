@@ -1,4 +1,4 @@
-import { User, UserContact, UserType } from './generated-models';
+import { KycStatus, User, UserContact, UserType } from './generated-models';
 import {
   UserModeShortList,
   UserModeView,
@@ -21,7 +21,10 @@ export class UserItem {
   country: CommonTargetValue | null = null;
   address = '';
   kycStatus = '';
+  kycVerificationStatus = '';
   kycLevel = '';
+  kycComplete = false;
+  kycRejected = false;
   userType: UserTypeView | null = null;
   userMode: UserModeView | null = null;
   created = '';
@@ -50,6 +53,24 @@ export class UserItem {
         'dd-MM-YYYY HH:mm:ss'
       ) as string;
       this.kycStatus = data.kycStatus as string;
+
+      const status = this.kycStatus.toLowerCase();
+      if (status === KycStatus.Completed.toLowerCase()) {
+        this.kycRejected = false;
+        this.kycComplete = true;
+      } else {
+        this.kycComplete = false;
+        if (status === KycStatus.Unknown.toLowerCase() ||
+          status === KycStatus.NotFound.toLowerCase() ||
+          status === KycStatus.Init.toLowerCase()) {
+          this.kycVerificationStatus = 'Initialization';
+        } else if (status === KycStatus.Pending.toLowerCase() ||
+          status === KycStatus.Queued.toLowerCase() ||
+          status === KycStatus.OnHold.toLowerCase()) {
+          this.kycVerificationStatus = 'Verifying';
+        }
+      }
+
       if (data.kycTier) {
         this.kycLevel = data.kycTier.name;
       }
@@ -108,9 +129,9 @@ export class ContactItem {
   received = 0.0042;
   lastTransactionDate = '16-12-2020';
   lastTransactionStatus = 'Pending';
-  
+
   private pIconUrl = '';
-  
+
   constructor(data: UserContact | null) {
     this.id = data?.userContactId ?? '';
     this.userId = data?.userId ?? '';

@@ -1,6 +1,13 @@
 <div class="__profile-settings-personal-info-container">
     <div class="__profile-settings-personal-info-common-container">
-        <div class="__profile-settings-personal-info-avatar-container"></div>
+        <div class="__profile-settings-personal-info-avatar-area">
+            <div class="__profile-settings-personal-info-avatar-container"></div>
+            <div class="__profile-settings-personal-info-avatar-button">
+                <button class="__tool-button" (click)="setAvatar()">
+                    <mat-icon style="font-size: 20px;">edit</mat-icon>
+                </button>
+            </div>
+        </div>
         <div class="__profile-settings-personal-info-verification-container">
             <h2 class="__profile-settings-personal-verification-level">
                 {{userView?.kycLevel==='' ? 'Not verified' : userView?.kycLevel}}
@@ -8,26 +15,28 @@
             <h2 class="__profile-settings-personal-name">
                 {{userView?.fullName}}
             </h2>
-            <div class="__profile-settings-personal-verification-status-container __profile-settings-personal-verification-status-success">
+            <div *ngIf="userView?.kycComplete===false"
+                class="__profile-settings-personal-verification-status-container __profile-settings-personal-verification-status-success">
                 <span style="font-size: 18px;transform: rotate(90deg);" class="material-icons">
                     sync
                 </span>
                 <span class="__profile-settings-personal-verification-status-label">
-                    Verification
+                    {{userView?.kycVerificationStatus}}
                 </span>
             </div>
-            <!-- <div class="__profile-settings-personal-verification-status-container __profile-settings-personal-verification-status-failed">
+            <div *ngIf="userView?.kycComplete===false && userView?.kycRejected===true"
+                class="__profile-settings-personal-verification-status-container __profile-settings-personal-verification-status-failed">
                 <span style="font-size: 18px;" class="material-icons">
                     error
                 </span>
                 <span class="__profile-settings-personal-verification-status-label">
                     Rejected
                 </span>
-            </div> -->
+            </div>
             <button class="__outlined-button" type="button" (click)="verifyKyc()">VERIFICATION</button>
         </div>
     </div>
     <div class="__profile-settings-personal-info-editor-container">
-        
+
     </div>
 </div>
