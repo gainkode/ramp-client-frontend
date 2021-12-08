@@ -68,7 +68,8 @@ import {
 import {
   FilterFieldUserMultipleComponent
 } from './components/core/filter-panel/filter-fields/user-multiple/filter-field-user-multiple.component';
-import { CommonSettingsEditorComponent } from './components/common-settings/common-settings.component';
+import { AdminSettingsComponent } from './components/settings/settings.component';
+import { CommonSettingsEditorComponent } from './components/settings/common/common-settings.component';
 
 @NgModule({
   imports: [
@@ -135,6 +136,7 @@ import { CommonSettingsEditorComponent } from './components/common-settings/comm
     FilterFieldRiskAlertCodeComponent,
     DetailsAttributeComponent,
     WidgetEditorComponent,
+    AdminSettingsComponent,
     CommonSettingsEditorComponent
   ],
   providers: [

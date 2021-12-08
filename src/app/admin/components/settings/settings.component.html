@@ -1,0 +1,11 @@
+<mat-tab-group class="form-element" color="primary" animationDuration="0" [selectedIndex]="selectedTab"
+    (selectedIndexChange)="setSelectedTab($event)">
+    <!-- Levels tab -->
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <app-tab-label labelText="Common"></app-tab-label>
+        </ng-template>
+        <app-common-settings>
+        </app-common-settings>
+    </mat-tab>
+</mat-tab-group>

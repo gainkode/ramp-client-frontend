@@ -74,9 +74,9 @@ export const AdminMenuItems: Array<MenuItem> = [
         icon: 'device_hub'
     },
     {
-        id: 'common-settings',
-        name: 'Common Settings',
-        url: '/admin/common-settings',
+        id: 'settings',
+        name: 'Settings',
+        url: '/admin/settings',
         icon: 'settings'
     }
 ];

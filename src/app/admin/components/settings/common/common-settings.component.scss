@@ -1,0 +1,28 @@
+.__common-settings-container {
+    margin: 24px;
+}
+
+.__common-settings-button-block {
+    margin: 24px 16px;
+    display: flex;
+}
+
+.__common-settings-slider-title {
+    margin: 0px 8px;
+}
+
+.__common-settings-grid {
+    display: grid;
+    grid-template-columns: 500px 24px 500px;
+    grid-template-rows: auto;
+}
+
+.__common-settings-grid-column-one {
+    grid-row: 1;
+    grid-column: 1;
+}
+
+.__common-settings-grid-column-two {
+    grid-row: 1;
+    grid-column: 3;
+}

@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-
 import { DashboardService } from './dashboard.service';
 import { Subject } from 'rxjs';
 import { Filter } from '../../model/filter.model';

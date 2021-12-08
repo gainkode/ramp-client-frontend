@@ -1,15 +1,17 @@
 import { Component, ViewChild, OnInit, OnDestroy, ElementRef } from '@angular/core';
-import { AdminDataService } from '../../services/admin-data.service';
+import { AdminDataService } from '../../../services/admin-data.service';
 import { Subscription } from 'rxjs';
 import { FormBuilder, Validators } from '@angular/forms';
 import { CustodyProviderList, KycProviderList } from 'src/app/model/payment.model';
-import { LiquidityProviderList } from '../../model/lists.model';
+import { LiquidityProviderList } from '../../../model/lists.model';
 import { SettingsCommon } from 'src/app/model/generated-models';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatDialog } from '@angular/material/dialog';
 import { CommonDialogBox } from 'src/app/components/dialogs/common-box.dialog';
+import { TransactionConfirmationModeList } from 'src/app/admin/model/settings.model';
 
 @Component({
+  selector: 'app-common-settings',
   templateUrl: 'common-settings.component.html',
   styleUrls: ['common-settings.component.scss']
 })
@@ -19,6 +21,7 @@ export class CommonSettingsEditorComponent implements OnInit, OnDestroy {
   kycProviderOptions = KycProviderList;
   custodyProviderOptions = CustodyProviderList;
   liquidityProviderOptions = LiquidityProviderList;
+  transactionConfirmationModeOptions = TransactionConfirmationModeList;
 
   form = this.formBuilder.group({
     id: [null],
