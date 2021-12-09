@@ -127,7 +127,6 @@ export class PersonalComponent implements OnInit {
             this.detailsType = 'payment_complete';
             this.paymentCompleteDetails = container.paymentDetails;
         }
-        console.log(this.detailsType);
     }
 
     ngOnInit(): void {

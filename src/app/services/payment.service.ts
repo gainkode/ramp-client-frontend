@@ -22,6 +22,25 @@ query GetRates($recaptcha: String!, $currenciesFrom: [String!]!, $currencyTo: St
 }
 `;
 
+const GET_ONE_TO_MANY_RATES = gql`
+query GetOneToManyRates(
+  $currencyFrom: String!
+  $currenciesTo: [String!]!
+  $reverse: Boolean!) {
+  getOneToManyRates(
+    currencyFrom: $currencyFrom,
+    currenciesTo: $currenciesTo,
+    reverse: $reverse
+  ) {
+    currencyFrom
+    currencyTo
+    originalRate
+    depositRate
+    withdrawRate
+  }
+}
+`;
+
 const GET_PROVIDERS = gql`
 query GetProviders {
   getPaymentProviders {
@@ -232,6 +251,23 @@ export class PaymentDataService {
       };
       return this.apollo.watchQuery<any>({
         query: GET_RATES,
+        variables: vars,
+        fetchPolicy: 'network-only'
+      });
+    } else {
+      return null;
+    }
+  }
+
+  getOneToManyRates(from: string, to: string[], reverseRate: boolean): QueryRef<any, EmptyObject> | null {
+    if (this.apollo.client !== undefined) {
+      const vars = {
+        reverse: reverseRate,
+        currencyFrom: from,
+        currenciesTo: to
+      };
+      return this.apollo.watchQuery<any>({
+        query: GET_ONE_TO_MANY_RATES,
         variables: vars,
         fetchPolicy: 'network-only'
       });

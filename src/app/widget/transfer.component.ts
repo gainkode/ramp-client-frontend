@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { AssetAddressShortListResult, PaymentInstrument, PaymentPreauthResultShort, Rate, TransactionShort, TransactionSource, TransactionType } from 'src/app/model/generated-models';
+import { AssetAddressShort, AssetAddressShortListResult, PaymentInstrument, PaymentPreauthResultShort, Rate, TransactionShort, TransactionSource, TransactionType, UserContactListResult } from 'src/app/model/generated-models';
 import { CardView, CheckoutSummary, PaymentCompleteDetails, PaymentProviderView, PaymentWidgetType, WidgetSettings } from 'src/app/model/payment.model';
 import { ErrorService } from 'src/app/services/error.service';
 import { PaymentDataService } from 'src/app/services/payment.service';
@@ -201,19 +201,26 @@ export class TransferWidgetComponent implements OnInit {
   loadUserWallets(): void {
     this.errorMessage = '';
     this.inProgress = true;
-    const walletData = this.profileService.getMyWallets([]);
+    const walletData = this.profileService.getMyContacts([], [], [], 0, 1000, 'displayName', false);
     if (walletData === null) {
       this.errorMessage = this.errorHandler.getRejectedCookieMessage();
     } else {
       this.pSubscriptions.add(
         walletData.valueChanges.subscribe(({ data }) => {
           this.inProgress = false;
-          const dataList = data.myWallets as AssetAddressShortListResult;
+          const dataList = data.myContacts as UserContactListResult;
           if (dataList !== null) {
             const walletCount = dataList?.count as number;
             if (walletCount > 0) {
               this.userWallets = dataList?.list?.
-                map((val) => new WalletItem(val, '', undefined)) as WalletItem[];
+                map((val) => {
+                  const walletData = {
+                    address: val.address,
+                    vaultName: val.displayName,
+                    assetId: val.assetId
+                  } as AssetAddressShort;
+                  return new WalletItem(walletData, '', undefined);
+                }) as WalletItem[];
             }
           }
           this.initData();

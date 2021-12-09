@@ -4,7 +4,7 @@ import { WidgetStage } from "../model/payment.model";
 @Injectable()
 export class WidgetPagerService {
     get stageId(): string {
-        return this._stageId;
+        return (this._swapStage === '') ? this._stageId : this._swapStage;
     }
 
     get title(): string {
@@ -15,6 +15,7 @@ export class WidgetPagerService {
         return this._step;
     }
 
+    private _swapStage = '';
     private _stageId = '';
     private _title = '';
     private _step = 0;
@@ -42,6 +43,7 @@ export class WidgetPagerService {
     }
 
     nextStage(id: string, name: string, stepId: number, summaryVisible: boolean, storeStage: boolean): void {
+        this._swapStage = '';
         if (storeStage) {
             this._stages.push({
                 id: this.stageId,
@@ -64,7 +66,11 @@ export class WidgetPagerService {
 
     swapStage(id: string): string {
         const res = this._stageId;
-        this._stageId = id;
+        if (id === this._stageId) {
+            this._swapStage = '';
+        } else {
+            this._swapStage = id;
+        }
         return res;
     }
 }

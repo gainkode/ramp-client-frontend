@@ -72,9 +72,6 @@ export class PersonalBalanceListComponent implements OnInit, OnDestroy {
             this.subscriptions.add(
                 balanceData.valueChanges.subscribe(({ data }) => {
                     const myState = data.myState as UserState;
-
-                    console.log(myState);
-
                     this.balances = [];
                     this.handleTransactions(myState.vaults ?? []);
                     this.onProgress.emit(false);
@@ -91,10 +88,6 @@ export class PersonalBalanceListComponent implements OnInit, OnDestroy {
     }
 
     private handleTransactions(vaults: VaultAccountEx[]): void {
-
-
-        console.log(vaults);
-
         if (vaults.length > 0) {
             vaults.forEach(vault => {
                 vault.balancesPerAsset?.forEach(balance => {

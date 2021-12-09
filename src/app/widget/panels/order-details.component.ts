@@ -69,6 +69,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   walletInit = false;
   addressInit = false;
   currentTier = '';
+  currentQuoteEur = 0;
   currentQuote = '';
   transactionList = QuickCheckoutTransactionTypeList;
 
@@ -168,12 +169,16 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       this.currentTransaction = this.summary.transactionType;
       this.transactionField?.setValue(this.summary.transactionType);
     }
+
+    console.log(this.auth.user?.kycTier);
+    console.log(this.auth.user?.kycTierId);
+
     if (this.auth.user?.kycTier) {
       this.currentTier = this.auth.user?.kycTier.name;
-      this.currentQuote = this.auth.user?.kycTier.amount?.toFixed(2) ?? '';
+      this.currentQuoteEur = this.auth.user?.kycTier.amount ?? 0;
     } else {
       this.currentTier = '';
-      this.currentQuote = '';
+      this.currentQuoteEur = 0;
     }
     this.setWalletVisible();
     this.currentTransactionName = QuickCheckoutTransactionTypeList.find(x => x.id === this.currentTransaction)?.name ?? this.currentTransaction;
@@ -205,13 +210,11 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
         currencyData.valueChanges.subscribe(
           ({ data }) => {
             this.loadCurrencyList(data.getSettingsCurrency as SettingsCurrencyWithDefaults, initState);
-            //this.loadRates();
-
-
-
-            // temp
-            this.onProgress.emit(false);
-            // temp
+            if (this.auth.authenticated) {
+            this.loadRates();
+            } else {
+              this.onProgress.emit(false);
+            }
           },
           (error) => {
             this.onProgress.emit(false);
@@ -279,7 +282,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
 
   private loadRates(): void {
     const rateCurrencies = this.pCurrencies.filter(x => x.fiat === true && x.id !== 'EUR').map((val) => val.id);
-    const rateData = this.paymentService.getRates(rateCurrencies, 'EUR');
+    const rateData = this.paymentService.getOneToManyRates('EUR', rateCurrencies, false);
     if (rateData === null) {
       this.onProgress.emit(false);
       this.onError.emit(this.errorHandler.getRejectedCookieMessage());
@@ -287,20 +290,17 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       this.pSubscriptions.add(
         rateData.valueChanges.subscribe(
           ({ data }) => {
-            const rates = data.getRates as Rate[];
+            const rates = data.getOneToManyRates as Rate[];
             this.pCurrencies.forEach(c => {
               if (c.id === 'EUR') {
                 c.rateFactor = 1;
               } else {
-                const rate = rates.find(x => x.currencyFrom === c.id);
+                const rate = rates.find(x => x.currencyTo === c.id);
                 if (rate) {
                   c.rateFactor = rate.depositRate;
                 }
               }
             });
-
-            console.log(this.pCurrencies);
-
             this.onProgress.emit(false);
           },
           (error) => {
@@ -415,7 +415,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       if (this.currentCurrencySpend && this.amountSpendField?.value) {
         this.setSpendValidators();
       }
-      this.pSpendChanged = true;
+      this.pReceiveChanged = true;
       this.updateCurrentAmounts();
     }
   }
@@ -435,7 +435,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
           this.filteredWallets = this.wallets.filter(x => x.asset === currency);
         }
       }
-      this.pReceiveChanged = true;
+      this.pSpendChanged = true;
       this.updateCurrentAmounts();
     }
   }
@@ -519,20 +519,16 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   }
 
   private updateAmounts(spend: number | undefined, receive: number | undefined): void {
+    this.currentQuote = '';
+    if (this.currentTransaction === TransactionType.Deposit && this.currentQuoteEur !== 0) {
+      const c = this.pCurrencies.find(x => x.id === this.currentCurrencySpend?.id);
+      if (c) {
+        const quote = this.currentQuoteEur * c.rateFactor;
+        this.currentQuote = `${quote} ${this.currentCurrencySpend?.id}`;
+      }
+    }
     this.validData = false;
     let dst = 0;
-
-
-    const rch = `pSpendChanged${(this.pReceiveChanged) ? '+' : '-'}`;
-    const sch = `pSpendChanged${(this.pSpendChanged) ? '+' : '-'}`;
-    const t = this.currentTransaction;
-    const dr = this.pDepositRate?.toString();
-    const wr = this.pWithdrawalRate?.toString();
-    const r = receive?.toString();
-    const s = spend?.toString();
-    console.log(`${rch} ${sch}. ${t} ${s} -> ${r}. Rate: ${dr}`);
-
-
     if (this.pReceiveChanged) {
       if (this.currentTransaction === TransactionType.Deposit) {
         if (receive && this.pDepositRate) {

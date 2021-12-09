@@ -50,7 +50,6 @@ export class PersonalInfoSettingsComponent implements OnInit, OnDestroy {
                         if (userData) {
                             this.user = userData;
                             this.userView = new UserItem(this.user);
-                            console.log(this.user.kycStatus);
                         }
                     } else {
                         this.router.navigateByUrl('/');

@@ -150,7 +150,6 @@ export class WidgetComponent implements OnInit {
   }
 
   private startNotificationListener(): void {
-    //this.stopNotificationListener();
     console.log('transaction notification start');
     this.notificationStarted = true;
     this.pNotificationsSubscription = this.notification.subscribeToTransactionNotifications().subscribe(
