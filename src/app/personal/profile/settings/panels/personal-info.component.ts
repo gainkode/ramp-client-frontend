@@ -17,7 +17,7 @@ export class PersonalInfoSettingsComponent implements OnInit, OnDestroy {
     @Output() progressChange = new EventEmitter<boolean>();
 
     user!: User;
-    userView!: UserItem;
+    userView: UserItem = new UserItem(null);
 
     private subscriptions: Subscription = new Subscription();
 

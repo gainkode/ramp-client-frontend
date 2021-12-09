@@ -521,6 +521,18 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   private updateAmounts(spend: number | undefined, receive: number | undefined): void {
     this.validData = false;
     let dst = 0;
+
+
+    const rch = `pSpendChanged${(this.pReceiveChanged) ? '+' : '-'}`;
+    const sch = `pSpendChanged${(this.pSpendChanged) ? '+' : '-'}`;
+    const t = this.currentTransaction;
+    const dr = this.pDepositRate?.toString();
+    const wr = this.pWithdrawalRate?.toString();
+    const r = receive?.toString();
+    const s = spend?.toString();
+    console.log(`${rch} ${sch}. ${t} ${s} -> ${r}. Rate: ${dr}`);
+
+
     if (this.pReceiveChanged) {
       if (this.currentTransaction === TransactionType.Deposit) {
         if (receive && this.pDepositRate) {

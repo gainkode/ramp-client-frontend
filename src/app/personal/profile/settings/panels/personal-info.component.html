@@ -10,21 +10,21 @@
         </div>
         <div class="__profile-settings-personal-info-verification-container">
             <h2 class="__profile-settings-personal-verification-level">
-                {{userView?.kycLevel==='' ? 'Not verified' : userView?.kycLevel}}
+                {{userView.kycLevel==='' ? 'Not verified' : userView.kycLevel}}
             </h2>
             <h2 class="__profile-settings-personal-name">
-                {{userView?.fullName}}
+                {{userView.fullName}}
             </h2>
-            <div *ngIf="userView?.kycComplete===false"
+            <div *ngIf="userView.kycComplete===false"
                 class="__profile-settings-personal-verification-status-container __profile-settings-personal-verification-status-success">
                 <span style="font-size: 18px;transform: rotate(90deg);" class="material-icons">
                     sync
                 </span>
                 <span class="__profile-settings-personal-verification-status-label">
-                    {{userView?.kycVerificationStatus}}
+                    {{userView.kycVerificationStatus}}
                 </span>
             </div>
-            <div *ngIf="userView?.kycComplete===false && userView?.kycRejected===true"
+            <div *ngIf="userView.kycComplete===false && userView.kycRejected===true"
                 class="__profile-settings-personal-verification-status-container __profile-settings-personal-verification-status-failed">
                 <span style="font-size: 18px;" class="material-icons">
                     error
@@ -33,15 +33,15 @@
                     Rejected
                 </span>
             </div>
-            <button *ngIf="!userView?.kycLevelMax" class="__outlined-button" type="button"
-                [disabled]="!userView?.kycVerificationAvailable" (click)="verifyKyc()">
-                {{userView?.kycLevelIncreasable ? 'INCREASE LEVEL' : 'VERIFY PROFILE'}}
+            <button *ngIf="!userView.kycLevelMax" class="__outlined-button" type="button"
+                [disabled]="!userView.kycVerificationAvailable" (click)="verifyKyc()">
+                {{userView.kycLevelIncreasable ? 'INCREASE LEVEL' : 'VERIFY PROFILE'}}
             </button>
         </div>
     </div>
     <div class="__profile-settings-personal-info-editor-container">
-        <app-profile-info-textbox [label]="'Email'"></app-profile-info-textbox>
-        <app-profile-info-textbox [label]="'First Name'"></app-profile-info-textbox>
-        <app-profile-info-textbox [label]="'Last name'"></app-profile-info-textbox>
+        <app-profile-info-textbox [label]="'Email'" [value]="userView.email" [editable]=false></app-profile-info-textbox>
+        <app-profile-info-textbox [label]="'First Name'" [value]="userView.firstName"></app-profile-info-textbox>
+        <app-profile-info-textbox [label]="'Last name'" [value]="userView.lastName"></app-profile-info-textbox>
     </div>
 </div>

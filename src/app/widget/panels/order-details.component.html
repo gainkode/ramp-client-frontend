@@ -54,7 +54,7 @@
         </app-form-finance-combo>
 
         <!-- Wallet address -->
-        <div *ngIf="settings.walletAddress==='' && wallets.length===0">
+        <div *ngIf="settings.walletAddress==='' && filteredWallets.length===0">
             <app-form-textbox [label]="'Wallet address'" [maxlength]="120" formControlName="wallet"
                 [errorMessages]="walletErrorMessages" [separator]="false">
             </app-form-textbox>
@@ -65,7 +65,7 @@
         </div>
 
         <!-- Wallets -->
-        <div *ngIf="wallets.length>0">
+        <div *ngIf="filteredWallets.length>0">
             <div class="__form-label">
                 Choose destination wallet
             </div>

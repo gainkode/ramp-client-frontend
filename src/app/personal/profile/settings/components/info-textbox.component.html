@@ -1,1 +1,30 @@
-{{label}}
+<form [formGroup]="dataForm">
+    <div
+        [ngClass]="{'__profile-settings-personal-info-editor-box': true, '__profile-settings-personal-info-editor-error': dataField?.errors}">
+        <h2 class="__profile-settings-personal-info-editor-label">
+            {{label}}
+        </h2>
+        <div class="__profile-settings-personal-info-editor-value-box">
+            <div *ngIf="editMode">
+                <div class="__tool-bar-block">
+                    <input [ngClass]="{'__tool-bar-text-box': true, '__tool-bar-text-box-error': dataField?.errors, '__tool-bar-text-box-wide': true}"
+                        type="text" formControlName="field" maxlength="50" [readonly]="!editable"/>
+                </div>
+                <div *ngIf="dataField?.errors?.required && (dataField?.dirty || dataField?.touched)"
+                    class="__tool-bar-error">
+                    {{label}} is required
+                </div>
+            </div>
+            <div *ngIf="!editMode" class="__profile-settings-personal-info-editor-value">
+                {{dataField?.value}}
+            </div>
+        </div>
+        <div class="__profile-settings-personal-info-editor-button">
+            <button *ngIf="editable" class="__tool-button" (click)="edit()">
+                <mat-icon style="font-size: 20px;">
+                    {{editMode ? 'check_circle_outline' : 'edit'}}
+                </mat-icon>
+            </button>
+        </div>
+    </div>
+</form>
