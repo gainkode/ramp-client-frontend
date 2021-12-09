@@ -2,7 +2,7 @@ import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Outpu
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { Rate, SettingsCurrencyWithDefaults, TransactionType } from 'src/app/model/generated-models';
+import { Rate, SettingsCurrencyWithDefaults, TransactionType, UserState } from 'src/app/model/generated-models';
 import { CheckoutSummary, CurrencyView, QuickCheckoutTransactionTypeList, WidgetSettings } from 'src/app/model/payment.model';
 import { WalletItem } from 'src/app/model/wallet.model';
 import { AuthService } from 'src/app/services/auth.service';
@@ -52,6 +52,9 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   private pTransactionChanged = false;
   private pSpendAutoUpdated = false;
   private pReceiveAutoUpdated = false;
+  private currentQuoteEur = 0;
+  private quoteLimit = 0;
+  private transactionsTotalEur = 0;
   private pWithdrawalRate: number | undefined = undefined;
   private pDepositRate: number | undefined = undefined;
   private pNumberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
@@ -68,8 +71,8 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   filteredWallets: WalletItem[] = [];
   walletInit = false;
   addressInit = false;
+  quoteExceed = false;
   currentTier = '';
-  currentQuoteEur = 0;
   currentQuote = '';
   transactionList = QuickCheckoutTransactionTypeList;
 
@@ -169,10 +172,6 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       this.currentTransaction = this.summary.transactionType;
       this.transactionField?.setValue(this.summary.transactionType);
     }
-
-    console.log(this.auth.user?.kycTier);
-    console.log(this.auth.user?.kycTierId);
-
     if (this.auth.user?.kycTier) {
       this.currentTier = this.auth.user?.kycTier.name;
       this.currentQuoteEur = this.auth.user?.kycTier.amount ?? 0;
@@ -211,7 +210,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
           ({ data }) => {
             this.loadCurrencyList(data.getSettingsCurrency as SettingsCurrencyWithDefaults, initState);
             if (this.auth.authenticated) {
-            this.loadRates();
+              this.loadRates();
             } else {
               this.onProgress.emit(false);
             }
@@ -301,12 +300,32 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
                 }
               }
             });
-            this.onProgress.emit(false);
+            this.loadTransactionsTotal();
           },
           (error) => {
             this.onProgress.emit(false);
             this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load exchange rate'));
           })
+      );
+    }
+  }
+
+  private loadTransactionsTotal(): void {
+    this.transactionsTotalEur = 0;
+    const totalData = this.commonService.getMyTransactionsTotal();
+    if (totalData === null) {
+      this.onProgress.emit(false);
+      this.onError.emit(this.errorHandler.getRejectedCookieMessage());
+    } else {
+      this.pSubscriptions.add(
+        totalData.valueChanges.subscribe(({ data }) => {
+          const totalState = data.myState as UserState;
+          this.transactionsTotalEur = totalState.totalAmountEur ?? 0;
+          this.onProgress.emit(false);
+        }, (error) => {
+          this.onProgress.emit(false);
+          this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load exchange rate'));
+        })
       );
     }
   }
@@ -523,8 +542,8 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     if (this.currentTransaction === TransactionType.Deposit && this.currentQuoteEur !== 0) {
       const c = this.pCurrencies.find(x => x.id === this.currentCurrencySpend?.id);
       if (c) {
-        const quote = this.currentQuoteEur * c.rateFactor;
-        this.currentQuote = `${quote} ${this.currentCurrencySpend?.id}`;
+        this.quoteLimit = (this.currentQuoteEur - this.transactionsTotalEur) * c.rateFactor;
+        this.currentQuote = `${this.quoteLimit} ${this.currentCurrencySpend?.id}`;
       }
     }
     this.validData = false;
@@ -575,6 +594,13 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
         const val = dst.toFixed(this.currentCurrencyReceive?.precision);
         this.pReceiveAutoUpdated = true;
         this.amountReceiveField?.setValue(val);
+      }
+    }
+    this.quoteExceed = false;
+    if (this.currentTransaction == TransactionType.Deposit) {
+      const amount = this.amountSpendField?.value ?? 0;
+      if (amount > 0 && this.quoteLimit > amount) {
+        this.quoteExceed = true;
       }
     }
     this.pSpendChanged = false;
