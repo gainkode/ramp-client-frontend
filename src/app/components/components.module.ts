@@ -42,7 +42,6 @@ import { SideMenuComponent } from './common/side-menu.component';
 import { SignUpPanelComponent } from './auth/signup-panel.component';
 import { SignupInfoPanelComponent } from './auth/signup-info.component';
 
-import { ProfileInfoComponent } from './profile/profile-info.component';
 import { TransactionsFilterBarComponent } from './filter-bars/transactions-bar.component';
 import { FormTextBoxComponent } from './common/controls/form-textbox.component';
 import { FormFinanceComboComponent } from './common/controls/form-finance-combo.component';
@@ -103,9 +102,7 @@ export class MaterialModule { }
         LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent,
         NavPopupComponent, SideMenuComponent, SideExpanderComponent, RiskWarningComponent,
         LineBreakPipe, NumberFillPipe,
-        TransactionsFilterBarComponent, WalletsFilterBarComponent, ContactsFilterBarComponent, NotificationsFilterBarComponent,
-        
-        ProfileInfoComponent],
+        TransactionsFilterBarComponent, WalletsFilterBarComponent, ContactsFilterBarComponent, NotificationsFilterBarComponent],
     exports: [
         DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
         FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent, FormSearchBoxComponent,
@@ -114,9 +111,7 @@ export class MaterialModule { }
         LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent,
         NavPopupComponent, SideMenuComponent, SideExpanderComponent, RiskWarningComponent,
         LineBreakPipe, NumberFillPipe,
-        TransactionsFilterBarComponent, WalletsFilterBarComponent, ContactsFilterBarComponent, NotificationsFilterBarComponent,
-        
-        ProfileInfoComponent],
+        TransactionsFilterBarComponent, WalletsFilterBarComponent, ContactsFilterBarComponent, NotificationsFilterBarComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 

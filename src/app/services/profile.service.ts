@@ -351,22 +351,63 @@ const DELETE_MY_VAULT = gql`
 
 const UPDATE_ME_INFO = gql`
   mutation UpdateMe(
-    $firstName: String!
-    $lastName: String!
-    $countryCode3: String!
-    $phone: String!
-    $defaultFiatCurrency: String!
+    $firstName: String
+    $lastName: String
+    $countryCode2: String
+    $countryCode3: String
+    $birthday: DateTime
+    $phone: String
+    $postCode: String
+    $town: String
+    $street: String
+    $subStreet: String
+    $stateName: String
+    $buildingName: String
+    $buildingNumber: String
+    $flatNumber: String
+    $avatar: String
+    $defaultFiatCurrency: String
+    $defaultCryptoCurrency: String
   ) {
     updateMe(
       user: {
         firstName: $firstName
         lastName: $lastName
+        countryCode2: $countryCode2
         countryCode3: $countryCode3
+        birthday: $birthday
         phone: $phone
+        postCode: $postCode
+        town: $town
+        street: $street
+        subStreet: $subStreet
+        stateName: $stateName
+        buildingName: $buildingName
+        buildingNumber: $buildingNumber
+        flatNumber: $flatNumber
+        avatar: $avatar
         defaultFiatCurrency: $defaultFiatCurrency
+        defaultCryptoCurrency: $defaultCryptoCurrency
       }
     ) {
       email
+      firstName
+      lastName
+      countryCode2
+      countryCode3
+      birthday
+      phone
+      postCode
+      town
+      street
+      subStreet
+      stateName
+      buildingName
+      buildingNumber
+      flatNumber
+      avatar
+      defaultFiatCurrency
+      defaultCryptoCurrency
     }
   }
 `;
@@ -631,23 +672,11 @@ export class ProfileDataService {
       },
     });
   }
-  
-  saveUserInfo(
-    firstName: string,
-    lastName: string,
-    country: string,
-    phone: string,
-    currency: string
-  ): Observable<any> {
+
+  saveUserInfo(vars: any): Observable<any> {
     return this.apollo.mutate({
       mutation: UPDATE_ME_INFO,
-      variables: {
-        firstName,
-        lastName,
-        countryCode3: country,
-        phone,
-        defaultFiatCurrency: currency,
-      },
+      variables: vars
     });
   }
 

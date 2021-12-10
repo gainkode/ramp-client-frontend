@@ -637,6 +637,10 @@ export class AuthService {
         localStorage.setItem('currentAction', login.authTokenAction as string);
     }
 
+    setUser(user: User): void {
+        localStorage.setItem('currentUser', JSON.stringify(user));
+    }
+
     setLocalSettingsCommon(settings: SettingsCommon): void {
         localStorage.setItem('common', JSON.stringify(settings));
     }

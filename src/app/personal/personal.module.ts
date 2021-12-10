@@ -21,12 +21,10 @@ import { MatListModule } from '@angular/material/list';
 import { PersonalGuard } from './personal.guard';
 import { IntroPersonalComponent } from './intro.component';
 import { PersonalComponent } from './personal.component';
-import { ProfileMainPersonalComponent } from './profile/main.component';
 import { KycPersonalComponent } from './profile/kyc.component';
 import { ComponentsModule } from '../components/components.module';
 import { WidgetModule } from '../widget/widget.module';
 import { DirectiveModule } from '../directives/directives.module';
-import { PersonalMyAccountComponent } from './profile/my-account.component';
 import { PersonalLoginComponent } from './auth/login.component';
 import { PersonalRestoreComponent } from './auth/restore.component';
 import { PersonalRegisterComponent } from './auth/register.component';
@@ -99,8 +97,6 @@ const routing = RouterModule.forChild([
         canActivate: [PersonalGuard]
     },
     // Obsolete and temporary
-    { path: 'profile', component: ProfileMainPersonalComponent, canActivate: [PersonalGuard] },
-    { path: 'myaccount', component: PersonalMyAccountComponent, canActivate: [PersonalGuard] },
     { path: 'kyc', component: KycPersonalComponent, canActivate: [PersonalGuard] },
     // ======================
     { path: '**', redirectTo: 'main' }
@@ -158,7 +154,7 @@ export class MaterialModule { }
         // Component blocks
         PersonalChangePasswordComponent, ProfileInfoTextboxComponent,
         // Obsolete pages
-        ProfileMainPersonalComponent, KycPersonalComponent, PersonalMyAccountComponent],
+        KycPersonalComponent],
     providers: [PersonalGuard],
     schemas: [
         CUSTOM_ELEMENTS_SCHEMA

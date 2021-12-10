@@ -41,7 +41,7 @@
     </div>
     <div class="__profile-settings-personal-info-editor-container">
         <app-profile-info-textbox [label]="'Email'" [value]="userView.email" [editable]=false></app-profile-info-textbox>
-        <app-profile-info-textbox [label]="'First Name'" [value]="userView.firstName"></app-profile-info-textbox>
-        <app-profile-info-textbox [label]="'Last name'" [value]="userView.lastName"></app-profile-info-textbox>
+        <app-profile-info-textbox [label]="'First Name'" [value]="userView.firstName" [required]=true (onComplete)="changeFirstName($event)"></app-profile-info-textbox>
+        <app-profile-info-textbox [label]="'Last name'" [value]="userView.lastName" (onComplete)="changeLastName($event)"></app-profile-info-textbox>
     </div>
 </div>

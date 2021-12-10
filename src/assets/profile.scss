@@ -446,16 +446,11 @@
 
 .__profile-settings-personal-info-editor-box {
     width: 100%;
-    height: 36px;
     display: grid;
-    grid-template-rows: 1;
+    grid-template-rows: 36px auto;
     grid-template-columns: 128px 8px 314px 50px;
     align-items: center;
     justify-items: start;
-}
-
-.__profile-settings-personal-info-editor-error {
-    height: 56px;
 }
 
 .__profile-settings-personal-info-editor-label {
@@ -473,12 +468,16 @@
     color: $color_purple_900_text;
 }
 
+.__profile-settings-personal-info-editor-label-required {
+    color: $color_pink_600;
+}
+
 .__profile-settings-personal-info-editor-value-box {
     width: 100%;
     padding: 0px;
     margin: 0px;
     grid-row: 1;
-    grid-column: 3;    
+    grid-column: 3;
 }
 
 .__profile-settings-personal-info-editor-value {
@@ -497,6 +496,11 @@
     grid-row: 1;
     grid-column: 4;
     justify-self: center;
+}
+
+.__profile-settings-personal-info-editor-error-box {
+    grid-row: 2;
+    grid-column: 3;
 }
 
 .__profile-data-table {

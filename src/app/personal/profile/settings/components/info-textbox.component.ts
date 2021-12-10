@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -13,12 +13,13 @@ import { MatDialog } from '@angular/material/dialog';
     ]
 })
 export class ProfileInfoTextboxComponent implements OnInit, AfterViewInit {
+    @ViewChild('inputbox') inputBox: ElementRef | undefined = undefined;
     @Input() editable = true;
     @Input() label = '';
     @Input() set value(val: string) {
         this.init(val);
     }
-    @Input() required = '';
+    @Input() required = false;
     @Output() onComplete = new EventEmitter<string>();
 
     editMode = false;
@@ -32,16 +33,17 @@ export class ProfileInfoTextboxComponent implements OnInit, AfterViewInit {
     }
 
     constructor(
+        private changeDetector : ChangeDetectorRef,
         private formBuilder: FormBuilder,
         public dialog: MatDialog) {
     }
 
     ngAfterViewInit(): void {
-        
+
     }
 
     ngOnInit(): void {
-        
+
     }
 
     private init(val: string): void {
@@ -53,9 +55,16 @@ export class ProfileInfoTextboxComponent implements OnInit, AfterViewInit {
     }
 
     edit(): void {
+        this.editMode = !this.editMode;
+        this.changeDetector.detectChanges();
         if (this.editMode) {
+            if (this.inputBox) {
+                setTimeout(() => {
+                    this.inputBox?.nativeElement.focus();
+                }, 100);
+            }            
+        } else {
             this.onComplete.emit(this.dataField?.value ?? '');
         }
-        this.editMode = !this.editMode;
     }
 }
