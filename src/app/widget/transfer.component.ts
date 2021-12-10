@@ -186,10 +186,9 @@ export class TransferWidgetComponent implements OnInit {
   }
 
   private nextStage(id: string, name: string, stepId: number, summaryVisible: boolean): void {
-    const store = (id !== 'initialization' && id !== 'register' && id !== 'login_auth' && id !== 'code_auth');
     setTimeout(() => {
       this.errorMessage = '';
-      this.pager.nextStage(id, name, stepId, this.showSummary, store);
+      this.pager.nextStage(id, name, stepId, this.showSummary);
       this.showSummary = summaryVisible;
     }, 50);
   }
@@ -253,6 +252,7 @@ export class TransferWidgetComponent implements OnInit {
     this.summary.currencyFrom = data.currencyFrom;
     this.summary.currencyTo = data.currencyTo;
     this.summary.transactionType = data.transactionType;
+    this.summary.quoteLimit = data.quoteLimit;
     if (currencyFromChanged || currencyToChanged) {
       this.exhangeRate.setCurrency(this.summary.currencyFrom, this.summary.currencyTo, this.summary.transactionType);
       this.exhangeRate.update();
@@ -400,11 +400,6 @@ export class TransferWidgetComponent implements OnInit {
             this.startNotificationListener();
           }
           const order = data.createTransaction as TransactionShort;
-
-
-          console.log(order);
-
-
           this.inProgress = false;
           if (order.code) {
             this.summary.instrument = instrument;

@@ -249,10 +249,9 @@ export class WidgetComponent implements OnInit {
   }
 
   private nextStage(id: string, name: string, stepId: number, summaryVisible: boolean): void {
-    const store = (id !== 'initialization' && id !== 'register' && id !== 'login_auth' && id !== 'code_auth');
     setTimeout(() => {
       this.errorMessage = '';
-      this.pager.nextStage(id, name, stepId, this.showSummary, store);
+      this.pager.nextStage(id, name, stepId, this.showSummary);
       this.showSummary = summaryVisible;
     }, 50);
   }
@@ -330,6 +329,7 @@ export class WidgetComponent implements OnInit {
     this.summary.currencyFrom = data.currencyFrom;
     this.summary.currencyTo = data.currencyTo;
     this.summary.transactionType = data.transactionType;
+    this.summary.quoteLimit = data.quoteLimit;
     if (currencyFromChanged || currencyToChanged) {
       this.exhangeRate.setCurrency(this.summary.currencyFrom, this.summary.currencyTo, this.summary.transactionType);
       this.exhangeRate.update();
@@ -384,7 +384,10 @@ export class WidgetComponent implements OnInit {
   }
 
   settingsKycState(state: boolean): void {
-    this.requestKyc = state;
+    if (this.summary.quoteLimit !== 0) {
+      this.widget.kycFirst = true;
+    }
+    this.requestKyc = state || this.summary.quoteLimit !== 0;
   }
 
   settingsCommonComplete(providers: PaymentProviderView[]): void {
@@ -630,38 +633,6 @@ export class WidgetComponent implements OnInit {
             this.handleAuthError();
           } else {
             this.errorMessage = this.errorHandler.getError(error.message, 'Unable to register a new transaction');
-          }
-        })
-      );
-    }
-  }
-
-  private getTiers(): void {
-    this.errorMessage = '';
-    this.inProgress = true;
-    let amount = 0;
-    let amountCurrency = '';
-    if (this.summary.transactionType === TransactionType.Deposit) {
-      amount = this.summary.amountFrom ?? 0;
-      amountCurrency = this.summary.currencyFrom;
-    } else if (this.summary.transactionType === TransactionType.Withdrawal) {
-      amount = this.summary.amountTo ?? 0;
-      amountCurrency = this.summary.currencyTo;
-    }
-    const tiersData = this.dataService.getAppropriateSettingsKycTiers(amount, amountCurrency, this.widget.source, '');
-    if (tiersData === null) {
-      this.errorMessage = this.errorHandler.getRejectedCookieMessage();
-    } else {
-      this.pSubscriptions.add(
-        tiersData.valueChanges.subscribe(({ data }) => {
-          this.inProgress = false;
-          //this.startPayment();
-        }, (error) => {
-          this.inProgress = false;
-          if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
-            this.handleAuthError();
-          } else {
-            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to get tiers');
           }
         })
       );

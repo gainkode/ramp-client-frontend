@@ -42,9 +42,14 @@ export class WidgetPagerService {
         return undefined;
     }
 
-    nextStage(id: string, name: string, stepId: number, summaryVisible: boolean, storeStage: boolean): void {
+    nextStage(id: string, name: string, stepId: number, summaryVisible: boolean): void {
+        const store = (
+            this._stageId !== 'initialization' &&
+            this._stageId !== 'register' &&
+            this._stageId !== 'login_auth' &&
+            this._stageId !== 'code_auth');
         this._swapStage = '';
-        if (storeStage) {
+        if (store) {
             this._stages.push({
                 id: this.stageId,
                 title: this.title,

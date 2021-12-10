@@ -99,7 +99,7 @@ export class SendWidgetComponent implements OnInit {
   private nextStage(id: string, name: string, stepId: number): void {
     setTimeout(() => {
       this.errorMessage = '';
-      this.pager.nextStage(id, name, stepId, false, false);
+      this.pager.nextStage(id, name, stepId, false);
     }, 50);
   }
 

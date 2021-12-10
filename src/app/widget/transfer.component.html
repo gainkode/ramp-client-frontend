@@ -25,7 +25,7 @@
         [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage" (onBack)="creditCardBack()"
         (onComplete)="creditCardPaymentComplete($event)"></app-widget-credit-card>
       <!-- KYC -->
-      <app-widget-kyc *ngSwitchCase="'verification'"
+      <app-widget-kyc *ngSwitchCase="'verification'" [summary]="summary"
         [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage" (onError)="handleError($event)"
         (onAuthError)="handleAuthError()" (onProgress)="progressChanged($event)" (onBack)="kycBack()"
         (onNext)="kycComplete()"></app-widget-kyc>

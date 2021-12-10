@@ -72,6 +72,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   walletInit = false;
   addressInit = false;
   quoteExceed = false;
+  quoteExceedHidden = false;
   currentTier = '';
   currentQuote = '';
   transactionList = QuickCheckoutTransactionTypeList;
@@ -321,6 +322,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
         totalData.valueChanges.subscribe(({ data }) => {
           const totalState = data.myState as UserState;
           this.transactionsTotalEur = totalState.totalAmountEur ?? 0;
+          this.updateQuote();
           this.onProgress.emit(false);
         }, (error) => {
           this.onProgress.emit(false);
@@ -403,6 +405,9 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       }
       if (this.walletField?.valid && this.showWallet) {
         data.address = this.walletField?.value;
+      }
+      if (this.quoteExceedHidden) {
+        data.quoteLimit = this.quoteLimit;
       }
       this.onDataUpdated.emit(data);
     }
@@ -537,7 +542,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     this.updateAmounts(spend, receive);
   }
 
-  private updateAmounts(spend: number | undefined, receive: number | undefined): void {
+  private updateQuote(): void {
     this.currentQuote = '';
     if (this.currentTransaction === TransactionType.Deposit && this.currentQuoteEur !== 0) {
       const c = this.pCurrencies.find(x => x.id === this.currentCurrencySpend?.id);
@@ -546,6 +551,10 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
         this.currentQuote = `${this.quoteLimit} ${this.currentCurrencySpend?.id}`;
       }
     }
+  }
+
+  private updateAmounts(spend: number | undefined, receive: number | undefined): void {
+    this.updateQuote();
     this.validData = false;
     let dst = 0;
     if (this.pReceiveChanged) {
@@ -596,13 +605,14 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
         this.amountReceiveField?.setValue(val);
       }
     }
-    this.quoteExceed = false;
+    this.quoteExceedHidden = false;
     if (this.currentTransaction == TransactionType.Deposit) {
       const amount = this.amountSpendField?.value ?? 0;
-      if (amount > 0 && this.quoteLimit > amount) {
-        this.quoteExceed = true;
+      if (amount > 0 && amount > this.quoteLimit) {
+        this.quoteExceedHidden = true;
       }
     }
+    this.quoteExceed = (this.settings.embedded) ? this.quoteExceedHidden : false;
     this.pSpendChanged = false;
     this.pReceiveChanged = false;
     this.sendData(spend, receive);

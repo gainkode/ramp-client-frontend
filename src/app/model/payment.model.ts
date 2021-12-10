@@ -314,6 +314,7 @@ export class CheckoutSummary {
     provider: PaymentProvider | undefined = undefined;  // deprecated
     providerView: PaymentProviderView | undefined = undefined;
     instrument: PaymentInstrument | undefined = undefined;
+    quoteLimit = 0;
 
     get isFromCrypto(): boolean {
         let result = false;
@@ -416,6 +417,7 @@ export class CheckoutSummary {
         this.providerView = undefined;
         this.instrument = undefined;
         this.card = undefined;
+        this.quoteLimit = 0;
     }
 
     setPaymentInfo(instrument: PaymentInstrument, info: string): void {
