@@ -75,7 +75,7 @@ export class PersonalHomeComponent implements OnInit, OnDestroy {
                     this.inProgressChart = false;
                     const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
                     if (startLoading) {
-                        this.selectedFiat = currencySettings.defaultFiat ?? 'EUR';
+                        this.selectedFiat = this.auth.user?.defaultFiatCurrency ?? 'EUR';
                     }
                     let itemCount = 0;
                     if (currencySettings.settingsCurrency) {

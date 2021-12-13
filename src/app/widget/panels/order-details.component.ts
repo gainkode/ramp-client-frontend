@@ -229,11 +229,11 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     this.pCurrencies = [];
     if (currencySettings !== null) {
       const currencyList = currencySettings.settingsCurrency;
-      let defaultFiatCurrency = currencySettings.defaultFiat ?? '';
+      let defaultFiatCurrency = this.auth.user?.defaultFiatCurrency ?? '';
       if (defaultFiatCurrency === '') {
         defaultFiatCurrency = 'EUR';
       }
-      let defaultCryptoCurrency = currencySettings.defaultCrypto ?? '';
+      let defaultCryptoCurrency = this.auth.user?.defaultCryptoCurrency ?? '';
       if (defaultCryptoCurrency === '') {
         defaultCryptoCurrency = 'BTC';
       }
