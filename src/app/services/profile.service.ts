@@ -193,6 +193,7 @@ const GET_PROFILE_ME = gql`
     me {
       userId
       defaultFiatCurrency
+      defaultCryptoCurrency
       referralCode
       kycProvider
       kycValid

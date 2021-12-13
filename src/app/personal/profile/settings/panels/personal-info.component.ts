@@ -1,11 +1,22 @@
-import { AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { User, UserInput } from 'src/app/model/generated-models';
+import { CommonTargetValue } from 'src/app/model/common.model';
+import { Countries, getCountryByCode3 } from 'src/app/model/country-code.model';
+import { SettingsCurrency, SettingsCurrencyWithDefaults, User, UserInput } from 'src/app/model/generated-models';
 import { UserItem } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
+import { CommonDataService } from 'src/app/services/common-data.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
+import { getCryptoSymbol } from 'src/app/utils/utils';
+
+enum ChangedDataType {
+    Unknown = 'Unknown',
+    Name = 'Name',
+    Currency = 'Currency',
+    Avatar = 'Avatar'
+};
 
 @Component({
     selector: 'app-personal-info-settings',
@@ -18,11 +29,22 @@ export class PersonalInfoSettingsComponent implements OnInit, OnDestroy {
 
     user!: User;
     userView: UserItem = new UserItem(null);
+    countryList: CommonTargetValue[] = Countries.map(val => {
+        return {
+            id: val.code3,
+            title: val.name,
+            imgClass: 'country-flag',
+            imgSource: `assets/svg-country-flags/${val.code2.toLowerCase()}.svg`
+        } as CommonTargetValue;
+    });
+    fiatList: CommonTargetValue[] = [];
+    cryptoList: CommonTargetValue[] = [];
 
     private subscriptions: Subscription = new Subscription();
 
     constructor(
         private auth: AuthService,
+        private commonService: CommonDataService,
         private errorHandler: ErrorService,
         private profileService: ProfileDataService,
         private router: Router) {
@@ -33,7 +55,7 @@ export class PersonalInfoSettingsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.loadAccountData();
+        this.loadCurrencyData();
     }
 
     private loadAccountData(): void {
@@ -43,8 +65,10 @@ export class PersonalInfoSettingsComponent implements OnInit, OnDestroy {
         if (meQuery === null) {
             this.error.emit(this.errorHandler.getRejectedCookieMessage());
         } else {
+            this.progressChange.emit(false);
             this.subscriptions.add(
                 meQuery.valueChanges.subscribe(({ data }) => {
+                    this.progressChange.emit(false);
                     if (data) {
                         const userData = data.me as User;
                         if (userData) {
@@ -54,7 +78,6 @@ export class PersonalInfoSettingsComponent implements OnInit, OnDestroy {
                     } else {
                         this.router.navigateByUrl('/');
                     }
-                    this.progressChange.emit(false);
                 }, (error) => {
                     this.progressChange.emit(false);
                     if (this.auth.token !== '') {
@@ -67,7 +90,55 @@ export class PersonalInfoSettingsComponent implements OnInit, OnDestroy {
         }
     }
 
-    private setUserData(vars: UserInput): void {
+    private loadCurrencyData(): void {
+        this.fiatList = [];
+        this.cryptoList = [];
+        const currencyData = this.commonService.getSettingsCurrency();
+        if (currencyData === null) {
+            this.error.emit(this.errorHandler.getRejectedCookieMessage());
+        } else {
+            this.progressChange.emit(true);
+            this.subscriptions.add(
+                currencyData.valueChanges.subscribe(({ data }) => {
+                    this.progressChange.emit(false);
+                    const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
+                    let itemCount = 0;
+                    if (currencySettings.settingsCurrency) {
+                        itemCount = currencySettings.settingsCurrency.count as number;
+                        if (itemCount > 0) {
+                            if (currencySettings.settingsCurrency.list) {
+                                this.fiatList = currencySettings.settingsCurrency.list.filter(x => x.fiat === true).map(val => {
+                                    return {
+                                        id: val.symbol,
+                                        title: val.symbol,
+                                        imgSource: ''
+                                    } as CommonTargetValue;
+                                });
+                                this.cryptoList = currencySettings.settingsCurrency.list.filter(x => x.fiat === false).map(val => {
+                                    return {
+                                        id: val.symbol,
+                                        title: val.symbol,
+                                        imgClass: '__form-finance-combo-item-img',
+                                        imgSource: `assets/svg-crypto/${getCryptoSymbol(val.symbol).toLowerCase()}.svg`
+                                    } as CommonTargetValue;
+                                });
+                                this.loadAccountData();
+                            }
+                        }
+                    }
+                }, (error) => {
+                    this.progressChange.emit(false);
+                    if (this.auth.token !== '') {
+                        this.error.emit(this.errorHandler.getError(error.message, 'Unable to load currency data'));
+                    } else {
+                        this.router.navigateByUrl('/');
+                    }
+                })
+            );
+        }
+    }
+
+    private setUserData(vars: UserInput, dataChanged: ChangedDataType): void {
         this.error.emit('');
         this.progressChange.emit(true);
         this.subscriptions.add(
@@ -78,7 +149,11 @@ export class PersonalInfoSettingsComponent implements OnInit, OnDestroy {
                     this.error.emit('Unable to save user data');
                 } else {
                     this.user = resultData;
-                    this.auth.setUser(resultData);
+                    if (dataChanged === ChangedDataType.Name) {
+                        this.auth.setUserName(resultData.firstName ?? '', resultData.lastName ?? '');
+                    } else if (dataChanged === ChangedDataType.Currency) {
+                        this.auth.setUserCurrencies(resultData.defaultCryptoCurrency ?? '', resultData.defaultFiatCurrency ?? '');
+                    }
                 }
             }, (error) => {
                 this.progressChange.emit(false);
@@ -107,7 +182,6 @@ export class PersonalInfoSettingsComponent implements OnInit, OnDestroy {
             defaultFiatCurrency: this.user.defaultFiatCurrency ?? undefined,
             defaultCryptoCurrency: this.user.defaultCryptoCurrency ?? undefined
         } as UserInput;
-        this.auth.setUserName
         return result;
     }
 
@@ -124,12 +198,94 @@ export class PersonalInfoSettingsComponent implements OnInit, OnDestroy {
     changeFirstName(data: string): void {
         const vars = this.getCurrentUserData();
         vars.firstName = data;
-        this.setUserData(vars);
+        this.setUserData(vars, ChangedDataType.Name);
     }
 
     changeLastName(data: string): void {
         const vars = this.getCurrentUserData();
         vars.lastName = data;
-        this.setUserData(vars);
+        this.setUserData(vars, ChangedDataType.Name);
+    }
+
+    changeBirthDate(data: string): void {
+        const vars = this.getCurrentUserData();
+        //vars.birthday = data;
+        this.setUserData(vars, ChangedDataType.Unknown);
+    }
+
+    changeStreet(data: string): void {
+        const vars = this.getCurrentUserData();
+        vars.street = data;
+        this.setUserData(vars, ChangedDataType.Unknown);
+    }
+
+    changeSubStreet(data: string): void {
+        const vars = this.getCurrentUserData();
+        vars.subStreet = data;
+        this.setUserData(vars, ChangedDataType.Unknown);
+    }
+
+    changeBuildingName(data: string): void {
+        const vars = this.getCurrentUserData();
+        vars.buildingName = data;
+        this.setUserData(vars, ChangedDataType.Unknown);
+    }
+
+    changeBuildingNumber(data: string): void {
+        const vars = this.getCurrentUserData();
+        vars.buildingNumber = data;
+        this.setUserData(vars, ChangedDataType.Unknown);
+    }
+
+    changeFlatNumber(data: string): void {
+        const vars = this.getCurrentUserData();
+        vars.flatNumber = data;
+        this.setUserData(vars, ChangedDataType.Unknown);
+    }
+
+    changeTown(data: string): void {
+        const vars = this.getCurrentUserData();
+        vars.town = data;
+        this.setUserData(vars, ChangedDataType.Unknown);
+    }
+
+    changePostCode(data: string): void {
+        const vars = this.getCurrentUserData();
+        vars.postCode = data;
+        this.setUserData(vars, ChangedDataType.Unknown);
+    }
+
+    changeCountry(data: string): void {
+        const country = getCountryByCode3(data);
+        if (country) {
+            const vars = this.getCurrentUserData();
+            vars.countryCode3 = country.code3;
+            vars.countryCode2 = country.code2;
+            this.setUserData(vars, ChangedDataType.Unknown);
+        }
+    }
+
+    changeState(data: string): void {
+        const vars = this.getCurrentUserData();
+        vars.lastName = data;
+        this.setUserData(vars, ChangedDataType.Unknown);
+    }
+
+    changePhone(data: string): void {
+        const vars = this.getCurrentUserData();
+        vars.phone = data;
+        this.setUserData(vars, ChangedDataType.Unknown);
+    }
+
+    changeCrypto(data: string): void {
+        const vars = this.getCurrentUserData();
+        vars.defaultCryptoCurrency = data;
+        this.setUserData(vars, ChangedDataType.Currency);
+    }
+
+    changeFiat(data: string): void {
+        const vars = this.getCurrentUserData();
+        vars.defaultFiatCurrency = data;
+        this.setUserData(vars, ChangedDataType.Currency);
     }
 }

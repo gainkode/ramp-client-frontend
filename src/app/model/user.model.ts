@@ -20,6 +20,14 @@ export class UserItem {
   phone = '';
   country: CommonTargetValue | null = null;
   address = '';
+  street = '';
+  subStreet = '';
+  buildingName = '';
+  buildingNumber = '';
+  flatNumber = '';
+  town = '';
+  postCode = '';
+  stateName = '';
   kycStatus = '';
   kycVerificationStatus = '';
   kycVerificationAvailable = true;
@@ -32,6 +40,11 @@ export class UserItem {
   userMode: UserModeView | null = null;
   created = '';
   fiatCurrency = '';
+  cryptoCurrency = '';
+
+  get countryId(): string | undefined {
+    return this.country?.id ?? undefined;
+  }
 
   constructor(data: User | null) {
     if (data) {
@@ -49,6 +62,14 @@ export class UserItem {
 
       this.email = data.email;
       this.phone = data.phone ? (data.phone as string) : '';
+      this.street = data.street ?? '';
+      this.subStreet = data.subStreet ?? '';
+      this.buildingName = data.buildingName ?? '';
+      this.buildingNumber = data.buildingNumber ?? '';
+      this.flatNumber = data.flatNumber ?? '';
+      this.town = data.town ?? '';
+      this.postCode = data.postCode ?? '';
+      this.stateName = data.stateName ?? '';
       this.address = this.getAddress(data);
       const datepipe: DatePipe = new DatePipe('en-US');
       this.created = datepipe.transform(
@@ -65,12 +86,8 @@ export class UserItem {
         this.kycVerificationAvailable = true;
       } else {
         this.kycComplete = false;
-        if (status === KycStatus.Unknown.toLowerCase() ||
-          status === KycStatus.NotFound.toLowerCase() ||
-          status === KycStatus.Init.toLowerCase()) {
-          this.kycVerificationStatus = 'Initialization';
-          this.kycVerificationAvailable = true;
-        } else if (status === KycStatus.Pending.toLowerCase() ||
+        this.kycVerificationAvailable = true;
+        if (status === KycStatus.Pending.toLowerCase() ||
           status === KycStatus.Queued.toLowerCase() ||
           status === KycStatus.OnHold.toLowerCase()) {
           this.kycVerificationStatus = 'Verifying';
@@ -85,6 +102,7 @@ export class UserItem {
       const countryObject = getCountryByCode2(data.countryCode2 as string);
       if (countryObject !== null) {
         this.country = new CommonTargetValue();
+        this.country.id = countryObject.code3;
         this.country.imgClass = 'country-flag';
         this.country.imgSource = `assets/svg-country-flags/${countryObject.code2.toLowerCase()}.svg`;
         this.country.title = countryObject.name;
@@ -92,12 +110,11 @@ export class UserItem {
       this.fiatCurrency = data.defaultFiatCurrency
         ? (data.defaultFiatCurrency as string)
         : '';
-      this.userType = UserTypeList.find(
-        (x) => x.id === data.type
-      ) as UserTypeView;
-      this.userMode = UserModeShortList.find(
-        (x) => x.id === data.mode
-      ) as UserModeView;
+      this.cryptoCurrency = data.defaultCryptoCurrency
+        ? (data.defaultCryptoCurrency as string)
+        : '';
+      this.userType = UserTypeList.find((x) => x.id === data.type) as UserTypeView;
+      this.userMode = UserModeShortList.find((x) => x.id === data.mode) as UserModeView;
     }
   }
 

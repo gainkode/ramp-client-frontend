@@ -15,7 +15,7 @@
             <h2 class="__profile-settings-personal-name">
                 {{userView.fullName}}
             </h2>
-            <div *ngIf="userView.kycComplete===false"
+            <div *ngIf="userView.kycComplete===false && !userView.kycVerificationAvailable"
                 class="__profile-settings-personal-verification-status-container __profile-settings-personal-verification-status-success">
                 <span style="font-size: 18px;transform: rotate(90deg);" class="material-icons">
                     sync
@@ -40,8 +40,41 @@
         </div>
     </div>
     <div class="__profile-settings-personal-info-editor-container">
-        <app-profile-info-textbox [label]="'Email'" [value]="userView.email" [editable]=false></app-profile-info-textbox>
-        <app-profile-info-textbox [label]="'First Name'" [value]="userView.firstName" [required]=true (onComplete)="changeFirstName($event)"></app-profile-info-textbox>
-        <app-profile-info-textbox [label]="'Last name'" [value]="userView.lastName" (onComplete)="changeLastName($event)"></app-profile-info-textbox>
+        <app-profile-info-textbox [label]="'Email'" [value]="userView.email" [editable]=false>
+        </app-profile-info-textbox>
+        <app-profile-info-textbox [label]="'First Name'" [value]="userView.firstName" [required]=true
+            (onComplete)="changeFirstName($event)"></app-profile-info-textbox>
+        <app-profile-info-textbox [label]="'Last name'" [value]="userView.lastName" [required]=true
+            (onComplete)="changeLastName($event)"></app-profile-info-textbox>
+
+
+        <app-profile-info-textbox [label]="'Date of birth'" [value]="userView.lastName"
+            (onComplete)="changeBirthDate($event)"></app-profile-info-textbox>
+
+
+        <app-profile-info-textbox [label]="'Address 1'" [value]="userView.street" (onComplete)="changeStreet($event)">
+        </app-profile-info-textbox>
+        <app-profile-info-textbox [label]="'Address 2'" [value]="userView.subStreet"
+            (onComplete)="changeSubStreet($event)"></app-profile-info-textbox>
+        <app-profile-info-textbox [label]="'Building name'" [value]="userView.buildingName"
+            (onComplete)="changeBuildingName($event)"></app-profile-info-textbox>
+        <app-profile-info-textbox [label]="'Building number'" [value]="userView.buildingNumber"
+            (onComplete)="changeBuildingNumber($event)"></app-profile-info-textbox>
+        <app-profile-info-textbox [label]="'Flat number'" [value]="userView.flatNumber"
+            (onComplete)="changeFlatNumber($event)"></app-profile-info-textbox>
+        <app-profile-info-textbox [label]="'Town'" [value]="userView.town" (onComplete)="changeTown($event)">
+        </app-profile-info-textbox>
+        <app-profile-info-textbox [label]="'Post code'" [value]="userView.postCode"
+            (onComplete)="changePostCode($event)"></app-profile-info-textbox>
+        <app-profile-info-textbox [label]="'State'" [value]="userView.stateName" (onComplete)="changeState($event)">
+        </app-profile-info-textbox>
+        <app-profile-info-dropbox [label]="'Country'" [value]="userView.countryId" [dataList]="countryList"
+            [required]=true (onComplete)="changeCountry($event)"></app-profile-info-dropbox>
+        <app-profile-info-textbox [label]="'Phone'" [value]="userView.phone" (onComplete)="changePhone($event)">
+        </app-profile-info-textbox>
+        <app-profile-info-dropbox [label]="'Default Crypto'" [value]="userView.cryptoCurrency" [dataList]="cryptoList"
+            [required]=true (onComplete)="changeCrypto($event)"></app-profile-info-dropbox>
+        <app-profile-info-dropbox [label]="'Default Fiat'" [value]="userView.fiatCurrency" [dataList]="fiatList"
+            [required]=true (onComplete)="changeFiat($event)"></app-profile-info-dropbox>
     </div>
 </div>

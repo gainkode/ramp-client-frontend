@@ -90,9 +90,9 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
       debounceTime(1000),
       switchMap(searchString => this.getUserFilteredOptions(searchString))
     )
-        .subscribe(options => {
-          this.filteredUserOptions = options;
-        });
+      .subscribe(options => {
+        this.filteredUserOptions = options;
+      });
 
     this.countrySearchString$.pipe(
       takeUntil(this.destroy$),
@@ -101,9 +101,9 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
       // distinctUntilChanged(),
       switchMap(searchString => this.getFilteredCountryOptions(searchString))
     )
-        .subscribe(options => {
-          this.filteredCountryOptions = options;
-        });
+      .subscribe(options => {
+        this.filteredCountryOptions = options;
+      });
 
     this.loadPaymentProviders();
     this.loadCurrencies();
@@ -117,16 +117,16 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
     console.log('submit', this.form.value);
     const widgetItem = this.getWidgetItem();
     this.adminDataService.saveWidget(widgetItem)
-        .subscribe(() => {
-          this.layoutService.requestRightPanelClose();
-        });
+      .subscribe(() => {
+        this.layoutService.requestRightPanelClose();
+      });
   }
 
   onDelete(): void {
     this.adminDataService.deleteWidget(this.form.value.id)
-        .subscribe(() => {
-          this.layoutService.requestRightPanelClose();
-        });
+      .subscribe(() => {
+        this.layoutService.requestRightPanelClose();
+      });
   }
 
   onCancel(): void {
@@ -138,7 +138,7 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
   handleUserInputChange(event: Event): void {
     let searchString = event.target ? (event.target as HTMLInputElement).value : '';
     searchString = searchString.toLowerCase()
-                               .trim();
+      .trim();
     this.userSearchString$.next(searchString);
   }
 
@@ -155,7 +155,7 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
   handleCountrySearchInputChange(event: Event): void {
     let searchString = event.target ? (event.target as HTMLInputElement).value : '';
     searchString = searchString.toLowerCase()
-                               .trim();
+      .trim();
     this.countrySearchString$.next(searchString);
   }
 
@@ -174,12 +174,12 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
 
   handleCountryOptionSelected(event: MatAutocompleteSelectedEvent): void {
     if (!this.form.controls.countries.value
-             ?.some(x => x.code2 === event.option.id)) {
+      ?.some(x => x.code2 === event.option.id)) {
       this.form.controls.countries
-          ?.setValue([
-            ...this.form.controls.countries?.value,
-            event.option.value
-          ]);
+        ?.setValue([
+          ...this.form.controls.countries?.value,
+          event.option.value
+        ]);
     }
 
     this.countrySearchString$.next('');
@@ -188,16 +188,16 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
 
   removeCountryOption(country: Country): void {
     this.form.controls.countries
-        ?.setValue(
-          this.form.controls.countries
-              ?.value
-              .filter(v => v.code2 !== country.code2)
-        );
+      ?.setValue(
+        this.form.controls.countries
+          ?.value
+          .filter(v => v.code2 !== country.code2)
+      );
   }
 
   clearCountryOptions(): void {
     this.form.controls.countries
-        ?.setValue([]);
+      ?.setValue([]);
   }
 
   getCountryFlag(code: string): string {
@@ -208,11 +208,11 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
     const filteredOptions = this.countryOptions.filter(c => {
       return (
         !searchString || c.name.toLowerCase()
-                          .includes(searchString)
+          .includes(searchString)
       ) && !this.form.controls.countries?.value
-                ?.some(s => {
-                  return s.code2 === c.code2;
-                });
+        ?.some(s => {
+          return s.code2 === c.code2;
+        });
     });
 
     return of(filteredOptions);
@@ -225,12 +225,12 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
 
       const user$ = widget.userId ?
         this.getUserFilteredOptions(widget.userId)
-            .pipe(
-              take(1),
-              map(users => {
-                return users.find(u => u.id === widget.userId);
-              })
-            )
+          .pipe(
+            take(1),
+            map(users => {
+              return users.find(u => u.id === widget.userId);
+            })
+          )
         :
         of(undefined);
 
@@ -281,11 +281,11 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
         false,
         new Filter({ search: searchString })
       )
-                 .pipe(
-                   map(result => {
-                     return result.list;
-                   })
-                 );
+        .pipe(
+          map(result => {
+            return result.list;
+          })
+        );
     } else {
       return of([]);
     }
@@ -294,39 +294,35 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
   private loadPaymentProviders(): void {
     this.paymentProviderOptions = [];
     this.paymentDataService.getProviders()
-        ?.valueChanges
-        .subscribe(({ data }) => {
-          const providers = data.getPaymentProviders as PaymentProvider[];
-          this.paymentProviderOptions = providers?.map((val) => new PaymentProviderView(val)) as PaymentProviderView[];
-          console.log('ppo', this.paymentProviderOptions);
-        }, (error) => {
-          this.snackBar.open(
-            this.errorHandler.getError(error.message, 'Unable to load payment provider list.'),
-            undefined,
-            { duration: 5000 }
-          );
-        });
+      ?.valueChanges
+      .subscribe(({ data }) => {
+        const providers = data.getPaymentProviders as PaymentProvider[];
+        this.paymentProviderOptions = providers?.map((val) => new PaymentProviderView(val)) as PaymentProviderView[];
+        console.log('ppo', this.paymentProviderOptions);
+      }, (error) => {
+        this.snackBar.open(
+          this.errorHandler.getError(error.message, 'Unable to load payment provider list.'),
+          undefined,
+          { duration: 5000 }
+        );
+      });
   }
 
   private loadCurrencies(): void {
-    this.commonDataService.getSettingsCurrency()
-        ?.valueChanges
-        .subscribe(({ data }) => {
-          const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
-
-          if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
-            this.currencyOptions = currencySettings.settingsCurrency.list
-                                                   ?.map((val) => new CurrencyView(val)) as CurrencyView[];
-          } else {
-            this.currencyOptions = [];
-          }
-        }, (error) => {
-          this.snackBar.open(
-            this.errorHandler.getError(error.message, 'Unable to load payment provider list.'),
-            undefined,
-            { duration: 5000 }
-          );
-        });
+    this.commonDataService.getSettingsCurrency()?.valueChanges.subscribe(({ data }) => {
+        const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
+        if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
+          this.currencyOptions = currencySettings.settingsCurrency.list
+            ?.map((val) => new CurrencyView(val)) as CurrencyView[];
+        } else {
+          this.currencyOptions = [];
+        }
+      }, (error) => {
+        this.snackBar.open(
+          this.errorHandler.getError(error.message, 'Unable to load payment provider list.'),
+          undefined,
+          { duration: 5000 }
+        );
+      });
   }
-
 }

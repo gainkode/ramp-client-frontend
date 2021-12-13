@@ -663,6 +663,15 @@ export class AuthService {
         }
     }
 
+    setUserCurrencies(crypto: string, fiat: string): void {
+        const userData = this.user;
+        if (userData) {
+            userData.defaultCryptoCurrency = crypto;
+            userData.defaultFiatCurrency = fiat;
+            localStorage.setItem('currentUser', JSON.stringify(userData));
+        }
+    }
+
     private getAuthenticatedUser(): User | null {
         let result: User | null = null;
         const userData: string | null = localStorage.getItem('currentUser');

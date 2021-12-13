@@ -1,0 +1,30 @@
+<form [formGroup]="dataForm">
+    <div class="__profile-settings-personal-info-editor-box">
+        <h2 class="__profile-settings-personal-info-editor-label">
+            {{label}}
+            <span *ngIf="required" class="__profile-settings-personal-info-editor-label-required">*</span>
+        </h2>
+        <div class="__profile-settings-personal-info-editor-value-box">
+            <div class="__profile-settings-personal-info-combo-box">
+                <mat-select formControlName="field" style="margin: 8px 0px 0px 0px;">
+                    <mat-select-trigger>
+                        <div class="__profile-settings-personal-info-combo-item">
+                            <img *ngIf="selectedValue?.imgSource!==''" class="__profile-settings-personal-info-combo-img" [src]="selectedValue?.imgSource">
+                            <span class="__profile-settings-personal-info-combo-text">
+                                {{selectedValue?.title}}
+                            </span>
+                        </div>
+                    </mat-select-trigger>
+                    <mat-option *ngFor="let item of dataList" [value]="item.id" style="height: 32px;">
+                        <div class="__profile-settings-personal-info-combo-item">
+                            <img *ngIf="item.imgSource!==''" class="__profile-settings-personal-info-combo-img" [src]="item.imgSource">
+                            <span class="__profile-settings-personal-info-combo-text">
+                                {{item.title}}
+                            </span>
+                        </div>
+                    </mat-option>
+                </mat-select>
+            </div>
+        </div>
+    </div>
+</form>

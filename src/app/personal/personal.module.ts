@@ -58,6 +58,7 @@ import { PersonalNotificationListComponent } from './profile/notifications/data/
 import { PersonalPricelistComponent } from './profile/pricelist/pricelist.component';
 import { PersonalChangePasswordComponent } from './profile/settings/components/password.component';
 import { ProfileInfoTextboxComponent } from './profile/settings/components/info-textbox.component';
+import { ProfileInfoDropboxComponent } from './profile/settings/components/info-dropbox.component';
 
 const routing = RouterModule.forChild([
     // Main page
@@ -152,7 +153,7 @@ export class MaterialModule { }
         PersonalBalanceChartComponent, PersonalBalanceListComponent, PersonalTransactionListComponent, PersonalWalletListComponent,
         PersonalContactListComponent, PersonalNotificationListComponent, PersonalPaymentCompleteComponent,
         // Component blocks
-        PersonalChangePasswordComponent, ProfileInfoTextboxComponent,
+        PersonalChangePasswordComponent, ProfileInfoTextboxComponent, ProfileInfoDropboxComponent,
         // Obsolete pages
         KycPersonalComponent],
     providers: [PersonalGuard],
