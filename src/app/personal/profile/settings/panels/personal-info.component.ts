@@ -207,9 +207,9 @@ export class PersonalInfoSettingsComponent implements OnInit, OnDestroy {
         this.setUserData(vars, ChangedDataType.Name);
     }
 
-    changeBirthDate(data: string): void {
+    changeBirthDate(data: Date | undefined): void {
         const vars = this.getCurrentUserData();
-        //vars.birthday = data;
+        vars.birthday = data;
         this.setUserData(vars, ChangedDataType.Unknown);
     }
 

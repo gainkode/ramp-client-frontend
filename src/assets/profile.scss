@@ -502,15 +502,6 @@
     grid-column: 3;
 }
 
-
-
-.__profile-settings-personal-info-combo-box {
-    border: 0px solid $color_purple_300;
-    border-bottom-width: 0.5px;
-    background-color: transparent;
-}
-
-
 .__profile-settings-personal-info-combo-item {
     margin: auto;
     display: flex;
@@ -520,7 +511,7 @@
 }
 
 .__profile-settings-personal-info-combo-img {
-    margin: 0px 4px 0px 8px;
+    margin: 0px 4px 0px 0px;
     width: 16px;
     height: 16px;
 }

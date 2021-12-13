@@ -48,8 +48,8 @@
             (onComplete)="changeLastName($event)"></app-profile-info-textbox>
 
 
-        <app-profile-info-textbox [label]="'Date of birth'" [value]="userView.lastName"
-            (onComplete)="changeBirthDate($event)"></app-profile-info-textbox>
+        <app-profile-info-datebox [label]="'Date of birth'" [value]="userView.birthday"
+            (onComplete)="changeBirthDate($event)"></app-profile-info-datebox>
 
 
         <app-profile-info-textbox [label]="'Address 1'" [value]="userView.street" (onComplete)="changeStreet($event)">

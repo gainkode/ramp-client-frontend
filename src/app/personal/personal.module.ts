@@ -59,6 +59,10 @@ import { PersonalPricelistComponent } from './profile/pricelist/pricelist.compon
 import { PersonalChangePasswordComponent } from './profile/settings/components/password.component';
 import { ProfileInfoTextboxComponent } from './profile/settings/components/info-textbox.component';
 import { ProfileInfoDropboxComponent } from './profile/settings/components/info-dropbox.component';
+import { ProfileInfoDateboxComponent } from './profile/settings/components/info-datebox.component';
+import { NgxMaskModule, IConfig } from 'ngx-mask';
+
+export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
 const routing = RouterModule.forChild([
     // Main page
@@ -132,7 +136,7 @@ const modules = [
 export class MaterialModule { }
 
 @NgModule({
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule, DirectiveModule],
+    imports: [NgxMaskModule.forRoot(), CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule, DirectiveModule],
     declarations: [
         // Intro
         IntroPersonalComponent,
@@ -153,7 +157,7 @@ export class MaterialModule { }
         PersonalBalanceChartComponent, PersonalBalanceListComponent, PersonalTransactionListComponent, PersonalWalletListComponent,
         PersonalContactListComponent, PersonalNotificationListComponent, PersonalPaymentCompleteComponent,
         // Component blocks
-        PersonalChangePasswordComponent, ProfileInfoTextboxComponent, ProfileInfoDropboxComponent,
+        PersonalChangePasswordComponent, ProfileInfoTextboxComponent, ProfileInfoDropboxComponent, ProfileInfoDateboxComponent,
         // Obsolete pages
         KycPersonalComponent],
     providers: [PersonalGuard],

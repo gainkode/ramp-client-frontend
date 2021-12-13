@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -12,7 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
         '../../../../../assets/profile.scss',
     ]
 })
-export class ProfileInfoTextboxComponent implements OnInit, AfterViewInit {
+export class ProfileInfoTextboxComponent {
     @ViewChild('inputbox') inputBox: ElementRef | undefined = undefined;
     @Input() editable = true;
     @Input() label = '';
@@ -36,14 +36,6 @@ export class ProfileInfoTextboxComponent implements OnInit, AfterViewInit {
         private changeDetector : ChangeDetectorRef,
         private formBuilder: FormBuilder,
         public dialog: MatDialog) {
-    }
-
-    ngAfterViewInit(): void {
-
-    }
-
-    ngOnInit(): void {
-
     }
 
     private init(val: string): void {

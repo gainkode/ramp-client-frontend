@@ -41,6 +41,7 @@ export class UserItem {
   created = '';
   fiatCurrency = '';
   cryptoCurrency = '';
+  birthday: Date | undefined = undefined;
 
   get countryId(): string | undefined {
     return this.country?.id ?? undefined;
@@ -59,6 +60,8 @@ export class UserItem {
       } else {
         this.fullName = `${this.firstName ?? ''} ${this.lastName ?? ''}`.trim();
       }
+
+      this.birthday = (data.birthday) ? new Date(data.birthday) : undefined;
 
       this.email = data.email;
       this.phone = data.phone ? (data.phone as string) : '';

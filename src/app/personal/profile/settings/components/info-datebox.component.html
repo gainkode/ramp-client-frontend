@@ -1,0 +1,38 @@
+<form [formGroup]="dataForm">
+    <div
+        [ngClass]="{'__profile-settings-personal-info-editor-box': true, '__profile-settings-personal-info-editor-error': dataField?.errors}">
+        <h2 class="__profile-settings-personal-info-editor-label">
+            {{label}}
+            <span *ngIf="required" class="__profile-settings-personal-info-editor-label-required">*</span>
+        </h2>
+        <div class="__profile-settings-personal-info-editor-value-box">
+            <div *ngIf="editMode">
+                <div class="__tool-bar-block">
+                    <input #inputbox
+                        [ngClass]="{'__tool-bar-text-box': true, '__tool-bar-text-box-error': dataField?.errors, '__tool-bar-text-box-wide': true}"
+                        type="text" mask="d0/M0/0000" placeholder="DD/MM/YYYY" [dropSpecialCharacters]="false"
+                        formControlName="field" maxlength="10" />
+                </div>
+            </div>
+            <div *ngIf="!editMode" class="__profile-settings-personal-info-editor-value">
+                {{formattedDate}}
+            </div>
+        </div>
+        <div class="__profile-settings-personal-info-editor-button">
+            <button class="__tool-button" (click)="edit()" [disabled]="editMode && dataField?.errors">
+                <mat-icon style="font-size: 20px;">
+                    {{editMode ? 'check_circle_outline' : 'edit'}}
+                </mat-icon>
+            </button>
+        </div>
+        <div *ngIf="dataField?.errors && (dataField?.dirty || dataField?.touched)"
+            class="__profile-settings-personal-info-editor-error-box">
+            <div *ngIf="dataField?.errors?.required" class="__tool-bar-error">
+                {{label}} is required
+            </div>
+            <div *ngIf="dataField?.errors?.pattern" class="__tool-bar-error">
+                Incorrect date format
+            </div>
+        </div>
+    </div>
+</form>

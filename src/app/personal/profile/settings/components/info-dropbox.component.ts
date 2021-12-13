@@ -46,12 +46,14 @@ export class ProfileInfoDropboxComponent implements OnInit, OnDestroy {
     constructor(private formBuilder: FormBuilder) { }
 
     ngOnInit(): void {
-        this.dataField?.valueChanges.subscribe(data => {
-            if (!this.autoChange) {
-                this.onComplete.emit(data);
-            }
-            this.autoChange = false;
-        });
+        this.subscriptions.add(
+            this.dataField?.valueChanges.subscribe(data => {
+                if (!this.autoChange) {
+                    this.onComplete.emit(data);
+                }
+                this.autoChange = false;
+            })
+        );
     }
 
     ngOnDestroy(): void {
