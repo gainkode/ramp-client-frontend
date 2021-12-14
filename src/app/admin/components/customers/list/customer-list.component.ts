@@ -8,6 +8,11 @@ import { Filter } from '../../../model/filter.model';
 import { takeUntil } from 'rxjs/operators';
 import { LayoutService } from '../../../services/layout.service';
 import { ErrorService } from 'src/app/services/error.service';
+import { CurrencyView } from 'src/app/model/payment.model';
+import { CommonDataService } from 'src/app/services/common-data.service';
+import { SettingsCurrencyWithDefaults, User } from 'src/app/model/generated-models';
+import { AuthService } from 'src/app/services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   templateUrl: 'customer-list.component.html',
@@ -22,6 +27,7 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
   ];
 
   private pEditMode = false;
+  private subscriptions: Subscription = new Subscription();
 
   selectedCustomer: UserItem | undefined = undefined;
   customers: UserItem[] = [];
@@ -31,6 +37,7 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
   sortedField = 'lastName';
   sortedDesc = true;
   filter = new Filter({});
+  currencyList: CurrencyView[] = [];
 
   displayedColumns: string[] = [
     'details', 'id', 'created', 'type', 'email', 'firstName', 'lastName', 'country', 'mode', 'kycStatus'
@@ -42,7 +49,10 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private errorHandler: ErrorService,
     private layoutService: LayoutService,
-    private adminService: AdminDataService
+    private auth: AuthService,
+    private commonService: CommonDataService,
+    private adminService: AdminDataService,
+    private router: Router
   ) {
   }
 
@@ -51,10 +61,11 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
       this.selectedCustomer = undefined;
     });
 
-    this.loadCustomers();
+    this.loadCurrencyData();
   }
 
   ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
     this.destroy$.next();
   }
 
@@ -64,6 +75,29 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
       this.sortedField = this.sort.active;
       this.loadCustomers();
     });
+  }
+
+  private loadCurrencyData(): void {
+    this.currencyList = [];
+    const currencyData = this.commonService.getSettingsCurrency();
+    if (currencyData) {
+      this.subscriptions.add(
+        currencyData.valueChanges.subscribe(({ data }) => {
+          const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
+          if (currencySettings.settingsCurrency) {
+            if (currencySettings.settingsCurrency.count ?? 0 > 0) {
+              this.currencyList = currencySettings.settingsCurrency.list?.
+                map((val) => new CurrencyView(val)) as CurrencyView[];
+            }
+          }
+          this.loadCustomers();
+        }, (error) => {
+          if (this.auth.token === '') {
+            this.router.navigateByUrl('/');
+          }
+        })
+      );
+    }
   }
 
   handleFilterApplied(filter: Filter): void {
@@ -139,47 +173,37 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
     this.setEditMode(false);
   }
 
-  onDeleteLevel(id: string): void {
-    // this.levelEditorErrorMessage = '';
-    // const requestData = this.adminService.deleteKycLevelSettings(id);
-    // if (requestData === null) {
-    //   this.errorMessage = this.errorHandler.getRejectedCookieMessage();
-    // } else {
-    //   this.inProgress = true;
-    //   requestData.subscribe(({ data }) => {
-    //     this.inProgress = false;
-    //     this.showEditor(null, false);
-    //     this.refreshLevelList();
-    //   }, (error) => {
-    //     this.inProgress = false;
-    //     if (this.auth.token !== '') {
-    //       this.levelEditorErrorMessage = this.errorHandler.getError(error.message,
-    //         'Unable to delete identification level');
-    //     } else {
-    //       this.router.navigateByUrl('/');
-    //     }
-    //   });
-    // }
+  onDeleteCustomer(id: string): void {
+    const requestData = this.adminService.deleteCustomer(id);
+    if (requestData) {
+      requestData.subscribe(({ data }) => {
+        this.showEditor(null, false);
+        this.loadCustomers();
+      }, (error) => {
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
+      });
+    }
   }
 
-  onSavedLevel(level: UserItem): void {
-    // this.levelEditorErrorMessage = '';
-    // this.inProgress = true;
-    // this.adminService.saveKycLevelSettings(level, this.createLevel)
-    //   .subscribe(({ data }) => {
-    //     this.inProgress = false;
-    //     this.setEditMode(false);
-    //     this.showEditor(null, false);
-    //     this.createLevel = false;
-    //     this.refreshLevelList();
-    //   }, (error) => {
-    //     this.inProgress = false;
-    //     if (this.auth.token !== '') {
-    //       this.levelEditorErrorMessage = this.errorHandler.getError(error.message,
-    //         'Unable to save identification level');
-    //     } else {
-    //       this.router.navigateByUrl('/');
-    //     }
-    //   });
+  onSaveCustomer(customer: User): void {
+    const requestData = this.adminService.saveCustomer(customer);
+    if (requestData) {
+      requestData.subscribe(({ data }) => {
+        this.showEditor(null, false);
+        if (this.auth.user?.userId === customer.userId) {
+          this.auth.setUserName(customer.firstName ?? '', customer.lastName ?? '');
+          this.auth.setUserCurrencies(
+            customer.defaultCryptoCurrency ?? 'BTC',
+            customer.defaultFiatCurrency ?? 'EUR');
+        }
+        this.loadCustomers();
+      }, (error) => {
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
+      });
+    }
   }
 }

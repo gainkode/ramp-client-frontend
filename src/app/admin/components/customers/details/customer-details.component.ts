@@ -1,8 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { Countries } from 'src/app/model/country-code.model';
-import { UserType } from 'src/app/model/generated-models';
+import { Countries, getCountryByCode3 } from 'src/app/model/country-code.model';
+import { User, UserType } from 'src/app/model/generated-models';
+import { CurrencyView } from 'src/app/model/payment.model';
 import { UserItem } from 'src/app/model/user.model';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-customer-details',
@@ -13,40 +15,51 @@ export class CustomerDetailsComponent {
   @Input() set customer(val: UserItem | null) {
     this.setFormData(val);
     this.settingsId = (val) ? val?.id : '';
+    this.removable = (this.auth.user?.userId !== this.settingsId);
     this.email = (val) ? val.email : '';
     this.address = (val) ? val.address : '';
     this.userType = (val) ? val.userType?.id ?? UserType.Personal : UserType.Personal;
   }
-  @Output() save = new EventEmitter<UserItem>();
+  @Input() set currencies(val: CurrencyView[]) {
+    this.fiatCurrencies = val.filter(x => x.fiat === true);
+    this.cryptoCurrencies = val.filter(x => x.fiat === false);
+  }
+  @Output() save = new EventEmitter<User>();
   @Output() delete = new EventEmitter<string>();
   @Output() cancel = new EventEmitter();
   @Output() formChanged = new EventEmitter<boolean>();
 
   USER_TYPE: typeof UserType = UserType;
   settingsId = '';
+  removable = true;
   email = '';
   address = '';
   userType = UserType.Personal;
   loadingData = false;
   errorMessage = '';
   countries = Countries;
+  fiatCurrencies: CurrencyView[] = [];
+  cryptoCurrencies: CurrencyView[] = [];
 
   dataForm = this.formBuilder.group({
     id: [''],
     firstName: ['', { validators: [Validators.required], updateOn: 'change' }],
-    lastName: ['', { validators: [Validators.required], updateOn: 'change' }],
+    lastName: ['', { validators: [], updateOn: 'change' }],
     country: ['', { validators: [Validators.required], updateOn: 'change' }],
     phone: ['', { validators: [Validators.required], updateOn: 'change' }],
     fiat: ['', { validators: [Validators.required], updateOn: 'change' }],
     crypto: ['', { validators: [Validators.required], updateOn: 'change' }]
   });
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private auth: AuthService) {
   }
 
   setFormData(data: UserItem | null): void {
+    this.errorMessage = '';
     this.dataForm.reset();
-    if (data !== null) {
+    if (data) {
       this.loadingData = true;
       this.dataForm.get('id')?.setValue(data?.id);
       if (data.userType?.id === UserType.Merchant) {
@@ -73,15 +86,20 @@ export class CustomerDetailsComponent {
     }
   }
 
-  setCustomerData(): UserItem {
-    const data = new UserItem(null);
-    data.firstName = this.dataForm.get('firstName')?.value;
-    data.lastName = this.dataForm.get('lastName')?.value;
-    data.country = this.dataForm.get('country')?.value;
-    data.phone = this.dataForm.get('phone')?.value;
-    data.fiatCurrency = this.dataForm.get('fiat')?.value;
-    data.cryptoCurrency = this.dataForm.get('crypto')?.value;
-    data.id = this.dataForm.get('id')?.value;
+  setCustomerData(): User {
+    const code3 = this.dataForm.get('country')?.value;
+    const country = getCountryByCode3(code3);
+    const code2 = (country) ? country.code2 : '';
+    const data = {
+      userId: this.dataForm.get('id')?.value,
+      firstName: this.dataForm.get('firstName')?.value,
+      lastName: this.dataForm.get('lastName')?.value,
+      countryCode2: code2,
+      countryCode3: code3,
+      phone: this.dataForm.get('phone')?.value,
+      defaultFiatCurrency: this.dataForm.get('fiat')?.value,
+      defaultCryptoCurrency: this.dataForm.get('crypto')?.value
+    } as User;
     return data;
   }
 

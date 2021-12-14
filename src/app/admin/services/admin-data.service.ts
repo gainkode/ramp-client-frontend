@@ -440,6 +440,7 @@ const GET_USERS = gql`
         countryCode3
         created
         defaultFiatCurrency
+        defaultCryptoCurrency
         kycStatus
         phone
         postCode
@@ -777,6 +778,46 @@ const DELETE_WIDGET = gql`
       widgetId
     }
   }
+`;
+
+const UPDATE_USER = gql`
+mutation UpdateUser(
+  $userId: ID!
+  $firstName: String
+  $lastName: String
+  $countryCode2: String
+  $countryCode3: String
+  $phone: String
+  $defaultFiatCurrency: String
+  $defaultCryptoCurrency: String
+) {
+  updateUser(
+    userId: $userId
+    user: {
+      firstName: $firstName
+      lastName: $lastName
+      countryCode2: $countryCode2
+      countryCode3: $countryCode3
+      phone: $phone
+      defaultFiatCurrency: $defaultFiatCurrency
+      defaultCryptoCurrency: $defaultCryptoCurrency
+    }
+  ) {
+    userId
+  }
+}
+`;
+
+const DELETE_CUSTOMER = gql`
+mutation DeleteUser(
+  $customerId: ID!
+) {
+  deleteUser(
+    userId: $customerId
+  ) {
+    userId
+  }
+}
 `;
 
 const UPDATE_SETTINGS_FEE = gql`
@@ -1570,6 +1611,28 @@ export class AdminDataService {
         }));
   }
 
+  saveCustomer(customer: User): Observable<any> {
+    return this.apollo.mutate({
+      mutation: UPDATE_USER,
+      variables: {
+        userId: customer.userId,
+        firstName: customer.firstName,
+        lastName: customer.lastName,
+        countryCode2: customer.countryCode2,
+        countryCode3: customer.countryCode3,
+        phone: customer.phone,
+        defaultFiatCurrency: customer.defaultFiatCurrency,
+        defaultCryptoCurrency: customer.defaultCryptoCurrency
+      }
+    })
+      .pipe(tap(() => {
+        this.snackBar.open(
+          `Customer was updated`,
+          undefined, { duration: 5000 }
+        );
+      }));
+  }
+
   deleteFeeSettings(settingsId: string): Observable<any> {
     return this.mutate({
       mutation: DELETE_SETTINGS_FEE,
@@ -1631,6 +1694,19 @@ export class AdminDataService {
           undefined, { duration: 5000 }
         );
       }));
+  }
+
+  deleteCustomer(customerId: string): Observable<any> | null {
+    if (this.apollo.client !== undefined) {
+      return this.apollo.mutate({
+        mutation: DELETE_CUSTOMER,
+        variables: {
+          customerId
+        }
+      });
+    } else {
+      return null;
+    }
   }
 
   // TODO: move somewhere closer to HTTP, this approach can give false negatives (normally observable doesn't finish,
