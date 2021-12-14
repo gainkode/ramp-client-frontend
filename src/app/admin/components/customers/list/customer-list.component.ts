@@ -47,10 +47,9 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.layoutService.rightPanelCloseRequested$.pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.selectedCustomer = undefined;
-      });
+    this.layoutService.rightPanelCloseRequested$.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.selectedCustomer = undefined;
+    });
 
     this.loadCustomers();
   }
@@ -90,7 +89,6 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
       this.sortedDesc,
       this.filter
     ).pipe(takeUntil(this.destroy$)).subscribe(result => {
-      console.log(result.list);
       this.customers = result.list;
       this.customerCount = result.count;
     });

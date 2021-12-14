@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { Countries } from 'src/app/model/country-code.model';
 import { UserType } from 'src/app/model/generated-models';
 import { UserItem } from 'src/app/model/user.model';
 
@@ -21,12 +22,14 @@ export class CustomerDetailsComponent {
   @Output() cancel = new EventEmitter();
   @Output() formChanged = new EventEmitter<boolean>();
 
+  USER_TYPE: typeof UserType = UserType;
   settingsId = '';
   email = '';
   address = '';
   userType = UserType.Personal;
   loadingData = false;
   errorMessage = '';
+  countries = Countries;
 
   dataForm = this.formBuilder.group({
     id: [''],
@@ -46,8 +49,13 @@ export class CustomerDetailsComponent {
     if (data !== null) {
       this.loadingData = true;
       this.dataForm.get('id')?.setValue(data?.id);
-      this.dataForm.get('firstName')?.setValue(data?.firstName);
-      this.dataForm.get('lastName')?.setValue(data?.lastName);
+      if (data.userType?.id === UserType.Merchant) {
+        this.dataForm.get('firstName')?.setValue(data?.company);
+        this.dataForm.get('lastName')?.setValue('');
+      } else {
+        this.dataForm.get('firstName')?.setValue(data?.firstName);
+        this.dataForm.get('lastName')?.setValue(data?.lastName);
+      }
       this.dataForm.get('country')?.setValue(data?.country?.id);
       this.dataForm.get('phone')?.setValue(data?.phone);
       this.dataForm.get('fiat')?.setValue(data?.fiatCurrency);
