@@ -1,10 +1,158 @@
-<div style="margin: auto;margin-top: 10em;text-align: center;color: darkblue;">
-    <h2>Merchant main page</h2>
+<div class="__container">
+    <div [ngClass]="{'__profile-disabled-block': showDetails || showPayment}">
+        <!-- Top menu -->
+        <div class="__top-menu-bar">
+            <div
+                [ngClass]="expandedMenu ? '__top-menu-content-bar-profile-side-menu-expanded' : '__top-menu-content-bar-profile-side-menu-collapsed'">
+                <div class="__top-menu-content-box">
+                    <button class="__top-menu-button" (click)="showPaymentPanel(WIDGET_TYPE.Buy)">
+                        <mat-icon>account_balance</mat-icon>
+                        &nbsp;&nbsp;&nbsp;Buy & Sell
+                    </button>
+                    <div class="__top-menu-button-separator"></div>
+                    <button class="__top-menu-button" (click)="showPaymentPanel(WIDGET_TYPE.Receive)">
+                        <mat-icon>file_download</mat-icon>
+                        &nbsp;&nbsp;&nbsp;Receive
+                    </button>
+                    <div class="__top-menu-button-separator"></div>
+                    <button class="__top-menu-button" (click)="showPaymentPanel(WIDGET_TYPE.Send)">
+                        <mat-icon>file_upload</mat-icon>
+                        &nbsp;&nbsp;&nbsp;Send
+                    </button>
+                    <div class="__top-menu-button-separator"></div>
+                    <button class="__top-menu-button" (click)="showPaymentPanel(WIDGET_TYPE.Transfer)">
+                        <img width="16" height="16" src="assets/paper-plane-solid.svg">
+                        &nbsp;&nbsp;&nbsp;Express transfer
+                    </button>
+                </div>
+                <div class="__top-menu-content-box">
+                    <app-nav-popup [items]="popupItems" [userName]="userName" (onMenuClick)="popupMenuClick($event)">
+                    </app-nav-popup>
+                </div>
+            </div>
+        </div>
+        <!-- Top menu logo -->
+        <div *ngIf="expandedMenu" class="__profile-top-menu-logo-box">
+            <a style="font-size: 20px;margin: auto;color: mediumturquoise;" href="/payment">
+                eWallet Logo
+            </a>
+        </div>
+        <!-- Error bar -->
+        <div [ngClass]="errorMessage==='' ? '__top-menu-error-bar-hidden' : '__top-menu-error-bar'">
+            <div class="__error-message-text">
+                {{errorMessage}}
+            </div>
+            <div class="__error-close-button">
+                <button class="__tool-button-inversed" type="button" (click)="closeErrorBar()">
+                    <span style="font-size: 22px;" class="material-icons">close</span>
+                </button>
+            </div>
+        </div>
+        <!-- Data container with side bar and data panels -->
+        <div class="__profile-container">
+            <div [ngClass]="expandedMenu ? '__profile-side-menu-expanded' : '__profile-side-menu'">
+                <div class="__side-menu-container">
+                    <app-side-menu [items]="menuItems" [selectedItem]="selectedMenu" [expanded]="expandedMenu"
+                        (onMenuClick)="sideMenuClick($event)">
+                    </app-side-menu>
+                    <div class="__side-menu-footer-container">
+                        <app-side-expander-button [expanded]="expandedMenu" (stateChanged)="sideMenuExpanded($event)">
+                        </app-side-expander-button>
+                    </div>
+                </div>
+            </div>
+            <div [ngClass]="expandedMenu ? '__profile-content-expanded' : '__profile-content'">
+                <router-outlet (activate)="onActivatePage($event)" (deactivate)="onDeactivatePage($event)">
+                </router-outlet>
+            </div>
+        </div>
+    </div>
 
-    <br><br>
-    <a href="/payment">Quick checkout</a>
-    <br><br><br>
-    <a href="/merchant" (click)="logout()" style="margin-left: 1em;">
-        <mat-icon>logout</mat-icon>
-    </a>
+    <!-- Right pane for details and payment -->
+    <div *ngIf="showDetails || showPayment" class="__profile-details-block">
+        <!-- Details -->
+        <div *ngIf="showDetails" class="__profile-details-panel">
+            <div class="__profile-details-title-bar">
+                <div class="__profile-details-close-button">
+                    <button class="__tool-button" (click)="closeDetails()">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </div>
+            </div>
+            <div class="__profile-details-data-block">
+                <app-personal-transaction-details *ngIf="detailsType==='transaction'"
+                    [transaction]="detailsContainer?.transaction">
+                </app-personal-transaction-details>
+                <app-personal-wallet-details *ngIf="detailsType==='wallet'" [wallet]="detailsContainer?.wallet"
+                    (onComplete)="detailsComplete($event)">
+                </app-personal-wallet-details>
+                <app-personal-wallet-create *ngIf="detailsType==='new_wallet'" [cryptoList]="cryptoList"
+                    (onComplete)="detailsComplete($event)">
+                </app-personal-wallet-create>
+                <app-personal-contact-details *ngIf="detailsType==='contact'" [contact]="detailsContainer?.contact"
+                    (onComplete)="detailsComplete($event)">
+                </app-personal-contact-details>
+                <app-personal-contact-create *ngIf="detailsType==='new_contact'" [cryptoList]="cryptoList"
+                    (onComplete)="detailsComplete($event)">
+                </app-personal-contact-create>
+                <app-personal-payment-complete *ngIf="detailsType==='payment_complete'"
+                    [payment]="paymentCompleteDetails" (onComplete)="detailsComplete($event)">
+                </app-personal-payment-complete>
+            </div>
+        </div>
+        <!-- Payment -->
+        <div *ngIf="showPayment" class="__profile-payment-panel">
+            <header class="__profile-payment-title-box">
+                <div class="__profile-details-title-bar">
+                    <div class="__profile-details-close-button">
+                        <button class="__tool-button-inversed" (click)="closePayment()">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </div>
+                </div>
+                <h3 class="__profile-payment-title-bar">
+                    {{paymentPanelTitle}}
+                </h3>
+            </header>
+            <div class="__profile-payment-data-area">
+                <app-embedded-widget
+                    *ngIf="selectedPaymentType===WIDGET_TYPE.Buy || selectedPaymentType===WIDGET_TYPE.Sell"
+                    [widgetType]="selectedPaymentType" (onComplete)="widgetComplete($event)">
+                </app-embedded-widget>
+                <app-receive-widget *ngIf="selectedPaymentType===WIDGET_TYPE.Receive" [presetCurrency]="presetCurrency"
+                    [presetWalletId]="presetWalletId">
+                </app-receive-widget>
+                <app-send-widget *ngIf="selectedPaymentType===WIDGET_TYPE.Send" [presetContactId]="presetContactId"
+                    [presetWalletId]="presetWalletId" [presetCurrency]="presetCurrency"
+                    (onComplete)="widgetComplete($event)">
+                </app-send-widget>
+                <app-transfer-widget *ngIf="selectedPaymentType===WIDGET_TYPE.Transfer" (onComplete)="widgetComplete($event)">
+                </app-transfer-widget>
+            </div>
+            <div class="__profile-payment-footer">
+                <app-risk-warning [warningText]="riskWarningText"></app-risk-warning>
+            </div>
+        </div>
+    </div>
+
+    <!-- Warning when the screen is too small -->
+    <div class="__profile-unsupported-device">
+        <div class="__profile-unsupported-device-title">
+            The screen size of your device is not supported.
+            <br><br>
+            Please, install our application <a style="font-size: 14px;" href="#">here</a>.
+        </div>
+    </div>
 </div>
+
+<!-- Chat button -->
+<!-- <div class="__profile-chat-block" *ngIf="!showDetails && !showPayment">
+    <button type="button" class="__main-button __main-button-chat" (click)="getChat()">
+        <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
+            <img width="24" height="24" src="/assets/chat.svg" alt="">
+            <span style="margin: 0px 4px 0px 12px;font-size: 14px;">
+                chat
+            </span>
+        </div>
+    </button>
+</div> -->

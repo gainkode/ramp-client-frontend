@@ -23,6 +23,15 @@ import { MerchantRegisterComponent } from './auth/register.component';
 import { MerchantResetComponent } from './auth/reset.component';
 import { MerchantConfirmEmailComponent } from './auth/confirm-email.component';
 import { MerchantConfirmDeviceComponent } from './auth/confirm-device.component';
+import { WidgetModule } from '../widget/widget.module';
+import { ProfileModule } from '../profile/profile.module';
+import { PersonalNotificationsComponent } from '../profile/notifications/notifications.component';
+import { PersonalSettingsComponent } from '../profile/settings/settings.component';
+import { PersonalHomeComponent } from '../profile/home/home.component';
+import { PersonalWalletsComponent } from '../profile/wallets/wallets.component';
+import { PersonalContactsComponent } from '../profile/contacts/contacts.component';
+import { PersonalTransactionsComponent } from '../profile/transactions/transactions.component';
+import { PersonalPricelistComponent } from '../profile/pricelist/pricelist.component';
 
 const routing = RouterModule.forChild([
     { path: 'intro', component: IntroMerchantComponent },
@@ -35,7 +44,32 @@ const routing = RouterModule.forChild([
     { path: 'auth/success/:type', component: MerchantSuccessComponent },
     { path: 'auth/new-password/:token', component: MerchantResetComponent },
     // Authenticated main profile
-    { path: 'main', component: MerchantComponent, canActivate: [MerchantGuard] },
+    {
+        path: 'main',
+        component: MerchantComponent,
+        children: [
+            { path: 'home', component: PersonalHomeComponent },
+            { path: 'wallets', component: PersonalWalletsComponent },
+            { path: 'contactlist', component: PersonalContactsComponent },
+            { path: 'transactions', component: PersonalTransactionsComponent },
+            { path: 'pricelist', component: PersonalPricelistComponent },
+            { path: '**', redirectTo: 'home' }
+        ],
+        canActivate: [MerchantGuard]
+    },
+    // Authenticated account profile
+    {
+        path: 'account',
+        component: MerchantComponent,
+        children: [
+            { path: 'notifications', component: PersonalNotificationsComponent },
+            { path: 'settings/:page', component: PersonalSettingsComponent },
+            { path: 'settings', component: PersonalSettingsComponent },
+            { path: '**', redirectTo: 'settings' }
+        ],
+        canActivate: [MerchantGuard]
+    },
+    // Obsolete and temporary
     { path: 'kyc', component: KycMerchantComponent, canActivate: [MerchantGuard] },
     { path: '**', redirectTo: 'main' }
 ]);
@@ -50,7 +84,9 @@ const modules = [
     MatRadioModule,
     MatIconModule,
     MatProgressBarModule,
-    ComponentsModule
+    ComponentsModule,
+    WidgetModule,
+    ProfileModule
 ];
 
 @NgModule({

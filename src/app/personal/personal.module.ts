@@ -23,7 +23,6 @@ import { IntroPersonalComponent } from './intro.component';
 import { PersonalComponent } from './personal.component';
 import { KycPersonalComponent } from './profile/kyc.component';
 import { ComponentsModule } from '../components/components.module';
-import { WidgetModule } from '../widget/widget.module';
 import { DirectiveModule } from '../directives/directives.module';
 import { PersonalLoginComponent } from './auth/login.component';
 import { PersonalRestoreComponent } from './auth/restore.component';
@@ -32,8 +31,6 @@ import { PersonalSuccessComponent } from './auth/success.component';
 import { PersonalConfirmDeviceComponent } from './auth/confirm-device.component';
 import { PersonalConfirmEmailComponent } from './auth/confirm-email.component';
 import { PersonalResetComponent } from './auth/reset.component';
-import { NgApexchartsModule } from 'ng-apexcharts';
-import { NgxMaskModule, IConfig } from 'ngx-mask';
 import { ProfileModule } from '../profile/profile.module';
 import { PersonalContactsComponent } from '../profile/contacts/contacts.component';
 import { PersonalWalletsComponent } from '../profile/wallets/wallets.component';
@@ -42,8 +39,7 @@ import { PersonalPricelistComponent } from '../profile/pricelist/pricelist.compo
 import { PersonalHomeComponent } from '../profile/home/home.component';
 import { PersonalNotificationsComponent } from '../profile/notifications/notifications.component';
 import { PersonalSettingsComponent } from '../profile/settings/settings.component';
-
-export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
+import { WidgetModule } from '../widget/widget.module';
 
 const routing = RouterModule.forChild([
     // Main page
@@ -61,11 +57,11 @@ const routing = RouterModule.forChild([
         path: 'main',
         component: PersonalComponent,
         children: [
-            { path: 'home', component: PersonalHomeComponent, canActivate: [PersonalGuard] },
-            { path: 'wallets', component: PersonalWalletsComponent, canActivate: [PersonalGuard] },
-            { path: 'contactlist', component: PersonalContactsComponent, canActivate: [PersonalGuard] },
-            { path: 'transactions', component: PersonalTransactionsComponent, canActivate: [PersonalGuard] },
-            { path: 'pricelist', component: PersonalPricelistComponent, canActivate: [PersonalGuard] },
+            { path: 'home', component: PersonalHomeComponent },
+            { path: 'wallets', component: PersonalWalletsComponent },
+            { path: 'contactlist', component: PersonalContactsComponent },
+            { path: 'transactions', component: PersonalTransactionsComponent },
+            { path: 'pricelist', component: PersonalPricelistComponent },
             { path: '**', redirectTo: 'home' }
         ],
         canActivate: [PersonalGuard]
@@ -75,9 +71,9 @@ const routing = RouterModule.forChild([
         path: 'account',
         component: PersonalComponent,
         children: [
-            { path: 'notifications', component: PersonalNotificationsComponent, canActivate: [PersonalGuard] },
-            { path: 'settings/:page', component: PersonalSettingsComponent, canActivate: [PersonalGuard] },
-            { path: 'settings', component: PersonalSettingsComponent, canActivate: [PersonalGuard] },
+            { path: 'notifications', component: PersonalNotificationsComponent },
+            { path: 'settings/:page', component: PersonalSettingsComponent },
+            { path: 'settings', component: PersonalSettingsComponent },
             { path: '**', redirectTo: 'settings' }
         ],
         canActivate: [PersonalGuard]
@@ -107,8 +103,7 @@ const modules = [
     MatSortModule,
     ComponentsModule,
     WidgetModule,
-    ProfileModule,
-    NgApexchartsModule
+    ProfileModule
 ];
 
 @NgModule({
@@ -118,7 +113,7 @@ const modules = [
 export class MaterialModule { }
 
 @NgModule({
-    imports: [NgxMaskModule.forRoot(), CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule, DirectiveModule],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule, DirectiveModule],
     declarations: [
         // Intro
         IntroPersonalComponent,

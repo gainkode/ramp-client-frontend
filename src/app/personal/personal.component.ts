@@ -6,7 +6,7 @@ import { CurrencyView, PaymentCompleteDetails, PaymentWidgetType } from '../mode
 import { ProfileItemActionType, ProfileItemContainer, ProfileItemContainerType } from '../model/profile-item.model';
 import {
     PersonalProfileMenuItems,
-    PersonalProfilePopupAdministrationMenuItem,
+    ProfilePopupAdministrationMenuItem,
     PersonalProfilePopupMenuItems
 } from '../model/profile-menu.model';
 import { PersonalContactsComponent } from '../profile/contacts/contacts.component';
@@ -144,9 +144,9 @@ export class PersonalComponent implements OnInit, OnDestroy {
         // Administration menu item
         const adminRole = this.auth.user?.roles?.find(r => r.name === 'ADMIN');
         if (adminRole) {
-            const adminMenu = this.popupItems.find(x => x.id === PersonalProfilePopupAdministrationMenuItem.id);
+            const adminMenu = this.popupItems.find(x => x.id === ProfilePopupAdministrationMenuItem.id);
             if (!adminMenu) {
-                this.popupItems.splice(0, 0, PersonalProfilePopupAdministrationMenuItem);
+                this.popupItems.splice(0, 0, ProfilePopupAdministrationMenuItem);
             }
         }
     }

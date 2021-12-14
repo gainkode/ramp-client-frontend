@@ -14,18 +14,18 @@ export class MerchantGuard {
         //     return false;
         // }
         if (!this.auth.isAuthenticatedUserType(UserType.Merchant)) {
-            this.router.navigateByUrl('/auth/login/merchant');
+            this.router.navigateByUrl('/merchant/auth/login');
             return false;
         } else {
             // If merchant KYC is not approved, they must be redirected to the KYC page
-            // if (!this.auth.isMerchantApproved()) {
-            //     if (route.url.length > 0) {
-            //         if (route.url[0].path !== 'kyc') {
-            //             this.router.navigateByUrl('/merchant/kyc');
-            //             return false;
-            //         }
-            //     }
-            // }
+            if (!this.auth.isMerchantApproved()) {
+                if (route.url.length > 0) {
+                    if (route.url[0].path !== 'kyc') {
+                        this.router.navigateByUrl('/merchant/kyc');
+                        return false;
+                    }
+                }
+            }
         }
         return true;
     }
