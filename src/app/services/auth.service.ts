@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { from, Observable } from 'rxjs';
-import { SocialAuthService, FacebookLoginProvider, GoogleLoginProvider, SocialUser } from 'angularx-social-login';
+import { SocialAuthService, FacebookLoginProvider, GoogleLoginProvider } from 'angularx-social-login';
 import { LoginResult, PostAddress, SettingsCommon, User, UserMode, UserType } from '../model/generated-models';
 import { environment } from 'src/environments/environment';
 import { EmptyObject } from 'apollo-angular/types';
-import { INotificationObserver } from './notification.observer';
 
 const LOGIN = gql`
   mutation Login($recaptcha: String!, $email: String!, $password: String, $quickCheckout: Boolean) {
@@ -368,8 +367,6 @@ query {
 
 @Injectable()
 export class AuthService {
-    private notificationObservers: INotificationObserver[] = [];
-
     get authenticated(): boolean {
         return this.token !== '';
     }
@@ -397,31 +394,10 @@ export class AuthService {
         result.subscribe(x => {
             const d = x.data as any;
             localStorage.setItem('currentToken', d.refreshToken as string);
-            this.notifyTokenRefresh();
         }, (error) => {
             // error
         });
         return result;
-    }
-
-    attachRefreshTokenNotification(observer: INotificationObserver): void {
-        const isExist = this.notificationObservers.includes(observer);
-        if (!isExist) {
-            this.notificationObservers.push(observer);
-        }
-    }
-
-    detachRefreshTokenNotification(observer: INotificationObserver): void {
-        const observerIndex = this.notificationObservers.indexOf(observer);
-        if (observerIndex >= 0) {
-            this.notificationObservers.splice(observerIndex, 1);
-        }
-    }
-
-    private notifyTokenRefresh(): void {
-        for (const observer of this.notificationObservers) {
-            observer.refreshToken();
-        }
     }
 
     private getUserSectionPage(section: string): string {
@@ -695,9 +671,9 @@ export class AuthService {
         return result;
     }
 
-    isAuthenticatedUserType(type: string): boolean {
+    isAuthenticatedUserType(type: UserType): boolean {
         let result = false;
-        const user: User | null = this.getAuthenticatedUser();
+        const user = this.getAuthenticatedUser();
         if (user !== null) {
             result = (user.type === type);
         }
