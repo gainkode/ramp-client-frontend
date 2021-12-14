@@ -75,10 +75,7 @@ export class UserItem {
       this.stateName = data.stateName ?? '';
       this.address = this.getAddress(data);
       const datepipe: DatePipe = new DatePipe('en-US');
-      this.created = datepipe.transform(
-        data.created,
-        'dd-MM-YYYY HH:mm:ss'
-      ) as string;
+      this.created = datepipe.transform(data.created, 'dd MMM YYYY HH:mm:ss') as string;
       this.kycStatus = data.kycStatus as string;
 
       const status = this.kycStatus.toLowerCase();
@@ -167,7 +164,7 @@ export class ContactItem {
     this.displayName = data?.displayName ?? '';
     this.address = data?.address ?? '';
     const datepipe: DatePipe = new DatePipe('en-US');
-    this.created = datepipe.transform(data?.created, 'dd-MM-YYYY HH:mm:ss') ?? '';
+    this.created = datepipe.transform(data?.created, 'dd MMM YYYY HH:mm:ss') ?? '';
     this.asset = data?.assetId ?? '';
     if (this.asset !== '') {
       this.pIconUrl = `assets/svg-crypto/${getCryptoSymbol(this.asset).toLowerCase()}.svg`;
