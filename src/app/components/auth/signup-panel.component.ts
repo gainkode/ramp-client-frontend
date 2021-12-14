@@ -31,6 +31,7 @@ export class SignUpPanelComponent implements OnInit, OnDestroy {
 
     extraData = false;
     validData = false;
+    userTypeSection = 'personal';
 
     signupForm = this.formBuilder.group({
         email: ['',
@@ -91,6 +92,9 @@ export class SignUpPanelComponent implements OnInit, OnDestroy {
         private formBuilder: FormBuilder) { }
 
     ngOnInit(): void {
+        if (this.userType === UserType.Merchant) {
+            this.userTypeSection = 'merchant';
+        }
         this.subscriptions.add(this.emailField?.valueChanges.subscribe(val => {
             this.validateForm();
         }));

@@ -1,0 +1,62 @@
+<div class="__auth-frame-box">
+    <div class="__auth-body">
+        <div class="__auth-container">
+            <div class="__auth-title-container">
+                <a style="font-size: 20px;margin: auto;color: mediumvioletred;" href="/merchant/intro">
+                    eWallet Logo
+                </a>
+            </div>
+            <div class="__auth-data-container">
+                <div *ngIf="successType=='signup'" class="__auth-disclaimer-area">
+                    <h2 class="__auth-title">
+                        Registration complete
+                    </h2>
+                    <div class="__auth-disclaimer-container">
+                        <span class="__auth-disclaimer-line">
+                            Thank you for your registration.
+                        </span>
+                    </div>
+                    <div class="__auth-disclaimer-container">
+                        <span class="__auth-disclaimer-line">
+                            Confirmation letter was sent to your email.
+                        </span>
+                        <br>
+                        <span class="__auth-disclaimer-line">
+                            Please, follow the link in the letter to complete your registration.
+                        </span>
+                    </div>
+                </div>
+                <div *ngIf="successType=='restore'" class="__auth-disclaimer-area">
+                    <h2 class="__auth-title">
+                        Restore Password
+                    </h2>
+                    <div class="__auth-disclaimer-container">
+                        <span class="__auth-disclaimer-line">
+                            Temporary password was generated and sent to your email address.
+                        </span>
+                    </div>
+                    <div class="__auth-disclaimer-container">
+                        <span class="__auth-disclaimer-line">
+                            Please, follow the link in the letter to complete the process.
+                        </span>
+                    </div>
+                </div>
+                <div *ngIf="successType=='reset'" class="__auth-disclaimer-area">
+                    <h2 class="__auth-title">
+                        Password Reset Complete
+                    </h2>
+                    <div class="__auth-disclaimer-container">
+                        <span class="__auth-disclaimer-line">
+                            Your password has been successfully changed.
+                        </span>
+                    </div>
+                    <div class="__auth-disclaimer-container">
+                        <span class="__auth-disclaimer-line">
+                            Now you can <a href="/merchant/auth/login">sign in</a> with your new password.
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

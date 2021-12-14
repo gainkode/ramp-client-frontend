@@ -1,0 +1,46 @@
+<div class="__auth-frame-box">
+    <div class="__auth-body">
+        <div class="__auth-container">
+            <div class="__auth-title-container">
+                <a style="font-size: 20px;margin: auto;color: mediumvioletred;" href="/merchant/intro">
+                    eWallet Logo
+                </a>
+            </div>
+            <div class="__auth-data-container">
+                <div *ngIf="!validated">
+                    <h2 class="__auth-title">Token validation</h2>
+                    <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
+                </div>
+                <div *ngIf="validated" class="__auth-disclaimer-area">
+                    <div *ngIf="valid" class="__auth-disclaimer-container">
+                        <h2 class="__auth-title">Validation complete</h2>
+                        <span class="__auth-disclaimer-line">
+                            Your device is successfully confirmed.
+                        </span>
+                    </div>
+                    <div *ngIf="valid" class="__auth-disclaimer-container">
+                        <span class="__auth-disclaimer-line">
+                            Now you can <a href="/merchant/auth/login">sign in</a> with your password.
+                        </span>
+                    </div>
+                    <div *ngIf="!valid" class="__auth-disclaimer-container">
+                        <span class="__auth-disclaimer-line">
+                            Can't confirm device.
+                        </span>
+                    </div>
+                    <div *ngIf="!valid" class="__auth-disclaimer-container">
+                        <span class="__auth-disclaimer-line">
+                            Make sure you're using the latest received confirmation email.
+                        </span>
+                    </div>
+                </div>
+                <!-- Errors -->
+                <div *ngIf="errorMessage!==''" class="__auth-error-area">
+                    <span class="__auth-error-line">
+                        {{errorMessage}}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

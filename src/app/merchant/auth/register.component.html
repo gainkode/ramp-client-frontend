@@ -1,0 +1,17 @@
+<div class="__auth-frame-box">
+    <div class="__auth-body">
+        <div class="__auth-container">
+            <div class="__auth-title-container">
+                <a style="font-size: 20px;margin: auto;color: mediumvioletred;" href="/merchant/intro">
+                    eWallet Logo
+                </a>
+            </div>
+            <mat-progress-bar *ngIf="inProgress" color="accent" mode="indeterminate"></mat-progress-bar>
+            <div class="__auth-data-container">
+                <app-signup-panel [errorMessage]="errorMessage" [userType]="USER_TYPE.Merchant" (error)="onError($event)"
+                    (progressChange)="onProgressChange($event)" (registered)="onRegistered($event)">
+                </app-signup-panel>
+            </div>
+        </div>
+    </div>
+</div>

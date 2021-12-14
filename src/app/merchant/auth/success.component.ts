@@ -3,15 +3,17 @@ import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
     templateUrl: 'success.component.html',
-    styleUrls: ['./login.component.scss']
+    styleUrls: ['../../../assets/auth.scss']
 })
-export class SuccessComponent {
+export class MerchantSuccessComponent {
     successType = '';
 
     constructor(private router: Router, activeRoute: ActivatedRoute) {
         this.successType = activeRoute.snapshot.params['type'];
-        if (this.successType !== 'signup' && this.successType !== 'restore') {
-            this.router.navigateByUrl('/auth/merchant/login');
+        if (this.successType !== 'signup' &&
+            this.successType !== 'reset' &&
+            this.successType !== 'restore') {
+            this.router.navigateByUrl('/merchant/auth/login');
         }
     }
 }

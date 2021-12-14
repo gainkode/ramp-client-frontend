@@ -17,6 +17,7 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
         this.userMail = val;
         this.emailField?.setValue(this.userMail);
     }
+    @Input() userTypeSection = 'personal';
     @Input() socialButtons: boolean = false;
     @Input() wizardButtons: boolean = false;
     @Input() errorMessage = '';

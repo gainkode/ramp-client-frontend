@@ -11,8 +11,8 @@ import { CommonDialogBox } from 'src/app/components/dialogs/common-box.dialog';
     templateUrl: 'login.component.html',
     styleUrls: ['../../../assets/auth.scss']
 })
-export class PersonalLoginComponent implements OnDestroy {
-    userType = UserType.Personal;
+export class MerchantLoginComponent implements OnDestroy {
+    userType = UserType.Merchant;
     inProgress = false;
     errorMessage = '';
     showExtraOptions = true;
@@ -34,12 +34,12 @@ export class PersonalLoginComponent implements OnDestroy {
             width: '550px',
             data: {
                 title: 'Authentication',
-                message: `You are signing in as a ${userType.toLowerCase()} in the personal section. You will be redirected to the merchant section.`
+                message: `You are signing in as a ${userType.toLowerCase()} in the merchant section. You will be redirected to the personal section.`
             }
         });
         this.subscriptions.add(
             dialogRef.afterClosed().subscribe(result => {
-                this.router.navigateByUrl('/merchant/auth/login');
+                this.router.navigateByUrl('/personal/auth/login');
             })
         );
     }
@@ -52,14 +52,7 @@ export class PersonalLoginComponent implements OnDestroy {
                 const settingsCommon: SettingsCommon = settings.data.getSettingsCommon;
                 this.auth.setLocalSettingsCommon(settingsCommon);
                 this.inProgress = false;
-
-                const adminRole = userData.user?.roles?.find(r => r.name === 'ADMIN');
-                const userRole = userData.user?.roles?.find(r => r.name === 'USER');
-                if (adminRole && !userRole) {
-                    this.router.navigateByUrl('/admin');
-                } else {
-                    this.router.navigateByUrl(this.auth.getUserMainPage());
-                }
+                this.router.navigateByUrl(this.auth.getUserMainPage());
             }, (error) => {
                 this.inProgress = false;
                 if (this.auth.token !== '') {
@@ -80,8 +73,8 @@ export class PersonalLoginComponent implements OnDestroy {
     }
 
     onAuthenticated(userData: LoginResult): void {
-        if (userData.user?.type === UserType.Personal) {
-            if (userData.authTokenAction === 'Default') {
+        if (userData.user?.type === UserType.Merchant) {
+            if (userData.authTokenAction === 'Default' || userData.authTokenAction === 'KycRequired') {
                 this.handleSuccessLogin(userData);
             } else {
                 this.auth.logout();
@@ -89,28 +82,7 @@ export class PersonalLoginComponent implements OnDestroy {
             }
         } else {
             this.auth.logout();
-            let u = UserType.Merchant;
-            if (userData.user?.type) {
-                u = userData.user?.type;
-            }
-            this.showWrongUserTypeRedirectDialog(u);
-        }
-    }
-
-    onSocialAuthenticated(userData: LoginResult): void {
-        if (userData.user?.type === UserType.Personal) {
-            if (userData.authTokenAction === 'Default') {
-                this.handleSuccessLogin(userData);
-            } else if (userData.authTokenAction === 'ConfirmName') {
-                this.auth.logout();
-                this.router.navigateByUrl(`/personal/auth/signup/${userData.authToken}`);
-            } else {
-                this.auth.logout();
-                this.errorMessage = `Invalid authentication via social media`;
-            }
-        } else {
-            this.auth.logout();
-            let u = UserType.Merchant;
+            let u = UserType.Personal;
             if (userData.user?.type) {
                 u = userData.user?.type;
             }

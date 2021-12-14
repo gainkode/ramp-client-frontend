@@ -25,7 +25,7 @@
         <div *ngIf="!wizardButtons" class="__auth-buttons-area">
             <button class="__main-button __button-wide" type="submit" [disabled]="!loginForm?.valid">login</button>
             <div class="__button-wide-separator">
-                <a href="/personal/auth/restore">Forgot your password?</a>
+                <a href="/{{userTypeSection}}/auth/restore">Forgot your password?</a>
             </div>
         </div>
     </form>
@@ -76,5 +76,5 @@
 
 <div *ngIf="!twoFa && !extraData && !wizardButtons" class="__auth-footer-area">
     <span class="__auth-footer-text">Not a member yet?</span>
-    <a href="/personal/auth/register">Create an account</a>
+    <a href="/{{userTypeSection}}/auth/register">Create an account</a>
 </div>

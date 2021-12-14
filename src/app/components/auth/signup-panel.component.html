@@ -39,7 +39,7 @@
         <!-- Default Buttons -->
         <div *ngIf="!wizardButtons" class="__widget-buttons-area">
             <button class="__main-button __button-wide" type="submit" [disabled]="!validData">create account</button>
-            <a class="__button-wide-separator" href="/personal/auth/login">
+            <a class="__button-wide-separator" href="/{{userTypeSection}}/auth/login">
                 Already member?
             </a>
         </div>

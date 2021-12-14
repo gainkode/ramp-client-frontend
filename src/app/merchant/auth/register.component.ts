@@ -1,15 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserType } from '../model/generated-models';
+import { UserType } from 'src/app/model/generated-models';
 
 @Component({
     templateUrl: 'register.component.html',
-    styleUrls: ['./login.component.scss']
+    styleUrls: ['../../../assets/auth.scss']
 })
-export class RegisterComponent {
+export class MerchantRegisterComponent {
     inProgress = false;
     errorMessage = '';
-    userType = UserType.Merchant;
+    USER_TYPE: typeof UserType = UserType;
 
     constructor(private router: Router) { }
 
@@ -22,6 +22,6 @@ export class RegisterComponent {
     }
 
     onRegistered(email: string): void {
-        this.router.navigateByUrl('/auth/merchant/success/signup');
+        this.router.navigateByUrl('/merchant/auth/success/signup');
     }
 }
