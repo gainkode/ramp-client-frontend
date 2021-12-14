@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
-import { Event as NavigationEvent } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { NavigationEnd, Router, Event as NavigationEvent } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { MenuItem } from '../model/common.model';
 import { CurrencyView, PaymentCompleteDetails, PaymentWidgetType } from '../model/payment.model';
 import { ProfileItemActionType, ProfileItemContainer, ProfileItemContainerType } from '../model/profile-item.model';
@@ -9,10 +9,10 @@ import {
     PersonalProfilePopupAdministrationMenuItem,
     PersonalProfilePopupMenuItems
 } from '../model/profile-menu.model';
+import { PersonalContactsComponent } from '../profile/contacts/contacts.component';
+import { PersonalWalletsComponent } from '../profile/wallets/wallets.component';
 import { AuthService } from '../services/auth.service';
 import { NotificationService } from '../services/notification.service';
-import { PersonalContactsComponent } from './profile/contacts/contacts.component';
-import { PersonalWalletsComponent } from './profile/wallets/wallets.component';
 
 @Component({
     templateUrl: 'personal.component.html',
@@ -23,7 +23,7 @@ import { PersonalWalletsComponent } from './profile/wallets/wallets.component';
         '../../assets/details.scss'
     ]
 })
-export class PersonalComponent implements OnInit {
+export class PersonalComponent implements OnInit, OnDestroy {
     menuItems: MenuItem[] = PersonalProfileMenuItems;
     popupItems: MenuItem[] = PersonalProfilePopupMenuItems;
     WIDGET_TYPE: typeof PaymentWidgetType = PaymentWidgetType;
@@ -48,19 +48,17 @@ export class PersonalComponent implements OnInit {
     riskWarningQuoteText = 'The final crypto quote will be based on the asset\'s price at the time of order completion, the final rate will be presented to you in the order confirmation screen.';
     riskWarningNatureText = 'Please note that due to the nature of Crypto currencies, once your order has been submitted we will not be able to reverse it.';
 
+    private subscriptions: Subscription = new Subscription();
+
     constructor(
         private auth: AuthService,
         private notification: NotificationService,
         private router: Router) {
         this.getSectionName();
+    }
 
-        this.router.events.subscribe(
-            (event: NavigationEvent): void => {
-                if (event instanceof NavigationEnd) {
-                    this.getSectionName();
-                }
-            }
-        );
+    ngOnDestroy(): void {
+        this.subscriptions.unsubscribe();
     }
 
     get userName(): string {
@@ -130,6 +128,16 @@ export class PersonalComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        // route change detection
+        this.subscriptions.add(
+            this.router.events.subscribe(
+                (event: NavigationEvent): void => {
+                    if (event instanceof NavigationEnd) {
+                        this.getSectionName();
+                    }
+                }
+            )
+        );
         // side menu expanded state
         const expandedVal = localStorage.getItem('sideMenuExpanded');
         this.expandedMenu = (expandedVal === 'true');

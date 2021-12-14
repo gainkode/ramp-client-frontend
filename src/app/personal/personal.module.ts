@@ -33,34 +33,15 @@ import { PersonalConfirmDeviceComponent } from './auth/confirm-device.component'
 import { PersonalConfirmEmailComponent } from './auth/confirm-email.component';
 import { PersonalResetComponent } from './auth/reset.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
-import { PersonalPaymentCompleteComponent } from './profile/details/payment-complete.component';
-import { PersonalSettingsComponent } from './profile/settings/settings.component';
-import { PersonalVerificationSettingsComponent } from './profile/settings/panels/verification.component';
-import { PersonalInfoSettingsComponent } from './profile/settings/panels/personal-info.component';
-import { PersonalSecuriySettingsComponent } from './profile/settings/panels/security.component';
-import { PersonalContactsComponent } from './profile/contacts/contacts.component';
-import { PersonalContactDetailsComponent } from './profile/contacts/details/contact-details.component';
-import { PersonalContactCreateComponent } from './profile/contacts/details/contact-create.component';
-import { PersonalContactListComponent } from './profile/contacts/data/contact-list.component';
-import { PersonalHomeComponent } from './profile/home/home.component';
-import { PersonalBalanceChartComponent } from './profile/home/data/balance-chart.component';
-import { PersonalBalanceListComponent } from './profile/home/data/balance-list.component';
-import { PersonalWalletsComponent } from './profile/wallets/wallets.component';
-import { PersonalWalletDetailsComponent } from './profile/wallets/details/wallet-details.component';
-import { PersonalWalletCreateComponent } from './profile/wallets/details/wallet-create.component';
-import { PersonalWalletListComponent } from './profile/wallets/data/wallet-list.component';
-import { PersonalTransactionsComponent } from './profile/transactions/transactions.component';
-import { PersonalTransactionDetailsComponent } from './profile/transactions/details/transaction-details.component';
-import { PersonalTransactionListComponent } from './profile/transactions/data/transaction-list.component';
-import { SettingsMenuBarComponent } from './profile/settings/bar/settings-bar.component';
-import { PersonalNotificationsComponent } from './profile/notifications/notifications.component';
-import { PersonalNotificationListComponent } from './profile/notifications/data/notification-list.component';
-import { PersonalPricelistComponent } from './profile/pricelist/pricelist.component';
-import { PersonalChangePasswordComponent } from './profile/settings/components/password.component';
-import { ProfileInfoTextboxComponent } from './profile/settings/components/info-textbox.component';
-import { ProfileInfoDropboxComponent } from './profile/settings/components/info-dropbox.component';
-import { ProfileInfoDateboxComponent } from './profile/settings/components/info-datebox.component';
 import { NgxMaskModule, IConfig } from 'ngx-mask';
+import { ProfileModule } from '../profile/profile.module';
+import { PersonalContactsComponent } from '../profile/contacts/contacts.component';
+import { PersonalWalletsComponent } from '../profile/wallets/wallets.component';
+import { PersonalTransactionsComponent } from '../profile/transactions/transactions.component';
+import { PersonalPricelistComponent } from '../profile/pricelist/pricelist.component';
+import { PersonalHomeComponent } from '../profile/home/home.component';
+import { PersonalNotificationsComponent } from '../profile/notifications/notifications.component';
+import { PersonalSettingsComponent } from '../profile/settings/settings.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -80,7 +61,7 @@ const routing = RouterModule.forChild([
         path: 'main',
         component: PersonalComponent,
         children: [
-            { path: 'home', component: PersonalHomeComponent},
+            { path: 'home', component: PersonalHomeComponent, canActivate: [PersonalGuard] },
             { path: 'wallets', component: PersonalWalletsComponent, canActivate: [PersonalGuard] },
             { path: 'contactlist', component: PersonalContactsComponent, canActivate: [PersonalGuard] },
             { path: 'transactions', component: PersonalTransactionsComponent, canActivate: [PersonalGuard] },
@@ -126,6 +107,7 @@ const modules = [
     MatSortModule,
     ComponentsModule,
     WidgetModule,
+    ProfileModule,
     NgApexchartsModule
 ];
 
@@ -145,19 +127,6 @@ export class MaterialModule { }
         PersonalConfirmEmailComponent, PersonalConfirmDeviceComponent, PersonalSuccessComponent,
         // Profile main
         PersonalComponent,
-        PersonalHomeComponent,
-        PersonalWalletsComponent, PersonalWalletDetailsComponent, PersonalWalletCreateComponent,
-        PersonalTransactionsComponent, PersonalTransactionDetailsComponent,
-        PersonalContactsComponent, PersonalContactDetailsComponent, PersonalContactCreateComponent,
-        PersonalPricelistComponent,
-        PersonalNotificationsComponent,
-        PersonalSettingsComponent, SettingsMenuBarComponent,
-        PersonalInfoSettingsComponent, PersonalVerificationSettingsComponent, PersonalSecuriySettingsComponent,
-        // Data containers
-        PersonalBalanceChartComponent, PersonalBalanceListComponent, PersonalTransactionListComponent, PersonalWalletListComponent,
-        PersonalContactListComponent, PersonalNotificationListComponent, PersonalPaymentCompleteComponent,
-        // Component blocks
-        PersonalChangePasswordComponent, ProfileInfoTextboxComponent, ProfileInfoDropboxComponent, ProfileInfoDateboxComponent,
         // Obsolete pages
         KycPersonalComponent],
     providers: [PersonalGuard],

@@ -1,0 +1,123 @@
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
+import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { TransactionType } from "src/app/model/generated-models";
+import { CurrencyView } from "src/app/model/payment.model";
+import { ProfileItemActionType, ProfileItemContainer, ProfileItemContainerType } from 'src/app/model/profile-item.model';
+import { ContactItem } from 'src/app/model/user.model';
+import { ErrorService } from 'src/app/services/error.service';
+import { ProfileDataService } from 'src/app/services/profile.service';
+import { WalletValidator } from "src/app/utils/wallet.validator";
+
+@Component({
+    selector: 'app-personal-contact-create',
+    templateUrl: './contact-create.component.html',
+    styleUrls: ['../../../../assets/button.scss', '../../../../assets/details.scss', '../../../../assets/text-control.scss']
+})
+export class PersonalContactCreateComponent implements OnInit, OnDestroy {
+    @Input() cryptoList: CurrencyView[] = [];
+    @Output() onComplete = new EventEmitter<ProfileItemContainer>();
+
+    errorMessage = '';
+    inProgress = false;
+    contact: ContactItem | undefined = undefined;
+    selectedCurrency: CurrencyView | undefined = undefined;
+    currencyInit = false;
+    createForm = this.formBuilder.group({
+        displayName: ['', { validators: [Validators.required], updateOn: 'change' }],
+        email: [
+            '',
+            {
+                validators: [
+                    Validators.required,
+                    Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$'),
+                ],
+                updateOn: 'change',
+            }
+        ],
+        currency: ['', { validators: [Validators.required], updateOn: 'change' }],
+        address: ['', { validators: [Validators.required], updateOn: 'change' }],
+        transaction: [TransactionType.Deposit, { validators: [], updateOn: 'change' }],
+    }, {
+        validators: [
+            WalletValidator.addressValidator(
+                'address',
+                'currency',
+                'transaction'
+            ),
+        ],
+        updateOn: 'change',
+    });
+    emailErrorMessages: { [key: string]: string; } = {
+        ['required']: 'Email is required',
+        ['pattern']: 'Email format is invalid'
+    };
+    displayNameErrorMessages: { [key: string]: string; } = {
+        ['required']: 'Contact name is required'
+    };
+    addressErrorMessages: { [key: string]: string; } = {
+        ['required']: 'Address is required'
+    };
+
+    private subscriptions: Subscription = new Subscription();
+
+    constructor(
+        private formBuilder: FormBuilder,
+        private errorHandler: ErrorService,
+        private profileService: ProfileDataService) { }
+
+    ngOnInit(): void {
+        this.subscriptions.add(
+            this.currencyField?.valueChanges.subscribe(val => {
+                this.currencyInit = true;
+                this.selectedCurrency = this.cryptoList.find(x => x.id === val);
+            }));
+    }
+
+    ngOnDestroy(): void {
+        this.subscriptions.unsubscribe();
+    }
+
+    get displayNameField(): AbstractControl | null {
+        return this.createForm.get('displayName');
+    }
+
+    get emailField(): AbstractControl | null {
+        return this.createForm.get('email');
+    }
+
+    get addressField(): AbstractControl | null {
+        return this.createForm.get('address');
+    }
+
+    get currencyField(): AbstractControl | null {
+        return this.createForm.get('currency');
+    }
+
+    private createContact(email: string, userName: string, crypto: string, address: string): void {
+        this.errorMessage = '';
+        this.inProgress = true;
+        this.subscriptions.add(
+            this.profileService.saveMyContact('', userName, email, crypto, address).subscribe(({ data }) => {
+                this.inProgress = false;
+                const item = new ProfileItemContainer();
+                item.container = ProfileItemContainerType.Contact;
+                item.action = ProfileItemActionType.Create;
+                this.onComplete.emit(item);
+            }, (error) => {
+                this.inProgress = false;
+                this.errorMessage = this.errorHandler.getError(error.message, `Unable to create a new wallet`);
+            })
+        );
+    }
+
+    submit(): void {
+        if (this.createForm.valid) {
+            this.createContact(
+                this.emailField?.value,
+                this.displayNameField?.value,
+                this.selectedCurrency?.id ?? '',
+                this.addressField?.value);
+        }
+    }
+}
