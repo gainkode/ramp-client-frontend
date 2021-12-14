@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../../../services/auth.service';
 import { AdminDataService } from '../../../services/admin-data.service';
 import { ErrorService } from '../../../../services/error.service';
-import { SettingsKycLevelListResult } from '../../../../model/generated-models';
 import { Subject, Subscription } from 'rxjs';
 import { KycLevel, KycScheme } from 'src/app/model/identification.model';
 import { takeUntil } from 'rxjs/operators';
@@ -14,7 +13,6 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class IdentificationListComponent implements OnInit, OnDestroy {
   @Output() changeEditMode = new EventEmitter<boolean>();
-  private pShowDetails = false;
   private pSettingsSubscription!: any;
   private pLevelsSubscription!: any;
   private pEditMode = false;
@@ -138,7 +136,6 @@ export class IdentificationListComponent implements OnInit, OnDestroy {
   }
 
   private showSchemeEditor(scheme: KycScheme | null, createNew: boolean, visible: boolean): void {
-    this.pShowDetails = visible;
     if (visible) {
       this.selectedScheme = scheme ?? new KycScheme(null);
       this.createScheme = createNew;
@@ -152,7 +149,6 @@ export class IdentificationListComponent implements OnInit, OnDestroy {
   }
 
   private showLevelEditor(level: KycLevel | null, createNew: boolean, visible: boolean): void {
-    this.pShowDetails = visible;
     if (visible) {
       this.selectedLevel = level ?? new KycLevel(null);
       this.createLevel = createNew;

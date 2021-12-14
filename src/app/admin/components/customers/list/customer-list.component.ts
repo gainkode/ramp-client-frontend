@@ -7,19 +7,23 @@ import { UserItem } from 'src/app/model/user.model';
 import { Filter } from '../../../model/filter.model';
 import { takeUntil } from 'rxjs/operators';
 import { LayoutService } from '../../../services/layout.service';
+import { ErrorService } from 'src/app/services/error.service';
 
 @Component({
   templateUrl: 'customer-list.component.html',
   styleUrls: ['customer-list.component.scss']
 })
 export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
+  @Output() changeEditMode = new EventEmitter<boolean>();
   @ViewChild(MatSort) sort!: MatSort;
 
   filterFields = [
     'search'
   ];
 
-  selectedCustomer?: UserItem;
+  private pEditMode = false;
+
+  selectedCustomer: UserItem | undefined = undefined;
   customers: UserItem[] = [];
   customerCount = 0;
   pageSize = 25;
@@ -36,6 +40,7 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
   private listSubscription = Subscription.EMPTY;
 
   constructor(
+    private errorHandler: ErrorService,
     private layoutService: LayoutService,
     private adminService: AdminDataService
   ) {
@@ -43,9 +48,9 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit(): void {
     this.layoutService.rightPanelCloseRequested$.pipe(takeUntil(this.destroy$))
-        .subscribe(() => {
-          this.selectedCustomer = undefined;
-        });
+      .subscribe(() => {
+        this.selectedCustomer = undefined;
+      });
 
     this.loadCustomers();
   }
@@ -71,24 +76,24 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
     this.selectedCustomer = undefined;
   }
 
+  private setEditMode(mode: boolean): void {
+    this.pEditMode = mode;
+    this.changeEditMode.emit(mode);
+  }
+
   private loadCustomers(): void {
     this.listSubscription.unsubscribe();
-
     this.listSubscription = this.adminService.getUsers(
       this.pageIndex,
       this.pageSize,
       this.sortedField,
       this.sortedDesc,
       this.filter
-    )
-                                .pipe(
-                                  takeUntil(this.destroy$)
-                                )
-                                .subscribe(result => {
-                                  console.log(result.list);
-                                  this.customers = result.list;
-                                  this.customerCount = result.count;
-                                });
+    ).pipe(takeUntil(this.destroy$)).subscribe(result => {
+      console.log(result.list);
+      this.customers = result.list;
+      this.customerCount = result.count;
+    });
   }
 
   private isSelectedCustomer(customerId: string): boolean {
@@ -100,6 +105,15 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
     this.pageIndex = event.pageIndex;
     this.loadCustomers();
     return event;
+  }
+
+  private showEditor(customer: UserItem | null, visible: boolean): void {
+    if (visible) {
+      this.selectedCustomer = customer ?? new UserItem(null);
+    } else {
+      this.selectedCustomer = undefined;
+      this.setEditMode(false);
+    }
   }
 
   toggleDetails(customer: UserItem): void {
@@ -116,5 +130,58 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   getDetailsTooltip(customerId: string): string {
     return (this.isSelectedCustomer(customerId)) ? 'Hide details' : 'Customer details';
+  }
+
+  onEditorFormChanged(mode: boolean): void {
+    this.setEditMode(mode);
+  }
+
+  onCancelEdit(): void {
+    this.showEditor(null, false);
+    this.setEditMode(false);
+  }
+
+  onDeleteLevel(id: string): void {
+    // this.levelEditorErrorMessage = '';
+    // const requestData = this.adminService.deleteKycLevelSettings(id);
+    // if (requestData === null) {
+    //   this.errorMessage = this.errorHandler.getRejectedCookieMessage();
+    // } else {
+    //   this.inProgress = true;
+    //   requestData.subscribe(({ data }) => {
+    //     this.inProgress = false;
+    //     this.showEditor(null, false);
+    //     this.refreshLevelList();
+    //   }, (error) => {
+    //     this.inProgress = false;
+    //     if (this.auth.token !== '') {
+    //       this.levelEditorErrorMessage = this.errorHandler.getError(error.message,
+    //         'Unable to delete identification level');
+    //     } else {
+    //       this.router.navigateByUrl('/');
+    //     }
+    //   });
+    // }
+  }
+
+  onSavedLevel(level: UserItem): void {
+    // this.levelEditorErrorMessage = '';
+    // this.inProgress = true;
+    // this.adminService.saveKycLevelSettings(level, this.createLevel)
+    //   .subscribe(({ data }) => {
+    //     this.inProgress = false;
+    //     this.setEditMode(false);
+    //     this.showEditor(null, false);
+    //     this.createLevel = false;
+    //     this.refreshLevelList();
+    //   }, (error) => {
+    //     this.inProgress = false;
+    //     if (this.auth.token !== '') {
+    //       this.levelEditorErrorMessage = this.errorHandler.getError(error.message,
+    //         'Unable to save identification level');
+    //     } else {
+    //       this.router.navigateByUrl('/');
+    //     }
+    //   });
   }
 }

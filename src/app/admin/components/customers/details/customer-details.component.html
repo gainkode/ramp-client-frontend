@@ -1,31 +1,40 @@
-<section>
-    <h2>Info</h2>
-    <app-details-attribute label="Account ID" [value]="customer?.id"></app-details-attribute>
-    <app-details-attribute label="Company" [value]="customer?.company"></app-details-attribute>
-    <app-details-attribute label="Name" [value]="customer?.lastName"></app-details-attribute>
-    <app-details-attribute label="Address" [value]="customer?.address"></app-details-attribute>
-    <app-details-attribute label="Country" [value]="customer?.country"></app-details-attribute>
-    <app-details-attribute label="Email" [value]="customer?.email"></app-details-attribute>
-    <app-details-attribute label="Phone" [value]="customer?.phone"></app-details-attribute>
-    <app-details-attribute label="Account Currency" [value]="customer?.fiatCurrency"></app-details-attribute>
-</section>
+<form [formGroup]="dataForm" (ngSubmit)="onSubmit()">
+    <div class="form-element" *ngIf="errorMessage!==''">
+        <div class="form-error-box">
+            {{errorMessage}}
+        </div>
+        <br>
+    </div>
 
-<!--<section *ngIf="customer?.userType?.id==='Merchant'">-->
-<!--    <h2>Verification Level</h2>-->
-<!--    <app-details-attribute label="Merchant agreement" [value]="customer?.id" [highlight]="true"></app-details-attribute>-->
-<!--    <app-details-attribute label="Director docs" [value]="customer?.id" [highlight]="true"></app-details-attribute>-->
-<!--    <app-details-attribute label="Inc. docs" [value]="customer?.id" [highlight]="true"></app-details-attribute>-->
-<!--    <app-details-attribute label="License" [value]="customer?.id" [highlight]="true"></app-details-attribute>-->
-<!--</section>-->
+    <section>
+        <h2>Customer info</h2>
+        <app-details-attribute label="Account ID" [value]="settingsId"></app-details-attribute>
+        <app-details-attribute label="Email" [value]="email"></app-details-attribute>
+        <!-- <app-details-attribute label="Company" [value]="customer?.company"></app-details-attribute>
+    <app-details-attribute label="Name" [value]="customer?.lastName"></app-details-attribute> -->
+        <app-details-attribute label="Address" [value]="address"></app-details-attribute>
+        <!-- <app-details-attribute label="Country" [value]="customer?.country"></app-details-attribute> -->
+    <!-- <app-details-attribute label="Account Currency" [value]="customer?.fiatCurrency"></app-details-attribute> -->
+    </section>
 
+    <!-- Phone -->
+    <mat-form-field class="form-element">
+        <mat-label>Phone</mat-label>
+        <input type="text" matInput formControlName="phone" maxlength="25" placeholder="Phone number"/>
+        <mat-error *ngIf="this.dataForm.get('phone')?.hasError('required')">
+            Please specify the phone number
+        </mat-error>
+    </mat-form-field>
 
-<!--<section *ngIf="customer?.userType?.id==='Personal'">-->
-<!--    <h2>Verification</h2>-->
-<!--    <app-details-attribute label="T&C acceptance" [value]="customer?.id" [highlight]="true"></app-details-attribute>-->
-<!--    <app-details-attribute label="POI" [value]="customer?.id" [highlight]="true"></app-details-attribute>-->
-<!--    <app-details-attribute label="POR" [value]="customer?.id" [highlight]="true"></app-details-attribute>-->
-<!--    <app-details-attribute label="Selfie / Live Check" [value]=""></app-details-attribute>-->
-<!--    <app-details-attribute label="SOF" [value]="customer?.id" [highlight]="true"></app-details-attribute>-->
-<!--    <app-details-attribute label="Risk group" [value]="customer?.id" [highlight]="true"></app-details-attribute>-->
-<!--</section>-->
-
+    <div class="panel-actions">
+        <button mat-flat-button color="primary" type="submit">
+            SAVE
+        </button>
+        <button mat-flat-button color="warn" (click)="onDeleteCustomer()">
+            DELETE
+        </button>
+        <button mat-flat-button (click)="onCancel()">
+            CANCEL
+        </button>
+    </div>
+</form>

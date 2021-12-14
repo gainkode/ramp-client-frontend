@@ -191,43 +191,34 @@ export class FeeDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.filteredTargetValues = of(this.filterTargetValues(''));
 
-    this.schemeForm.get('target')
-        ?.valueChanges
-        .subscribe(val => {
-          this.clearTargetValues();
-          this.setTargetValidator();
-          this.filteredTargetValues = this.schemeForm.get('targetValue')
-                                          ?.valueChanges
-                                          .pipe(
-                                            startWith(''),
-                                            map(value => this.filterTargetValues(value)));
-        });
+    this.schemeForm.get('target')?.valueChanges.subscribe(val => {
+      this.clearTargetValues();
+      this.setTargetValidator();
+      this.filteredTargetValues = this.schemeForm.get('targetValue')?.valueChanges.pipe(
+        startWith(''),
+        map(value => this.filterTargetValues(value)));
+    });
     this.getPaymentProviders();
   }
 
   private getPaymentProviders(): void {
     this.providers = [];
-    this.dataService.getProviders()
-        ?.valueChanges
-        .subscribe(({ data }) => {
-          const providers = data.getPaymentProviders as PaymentProvider[];
-          this.providers = providers?.map((val) => new PaymentProviderView(val)) as PaymentProviderView[];
-        }, (error) => {
-          this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load wallet list');
-        });
+    this.dataService.getProviders()?.valueChanges.subscribe(({ data }) => {
+      const providers = data.getPaymentProviders as PaymentProvider[];
+      this.providers = providers?.map((val) => new PaymentProviderView(val)) as PaymentProviderView[];
+    }, (error) => {
+      this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load wallet list');
+    });
   }
 
   private setTargetValidator(): void {
     const val = this.schemeForm.get('target')?.value;
     if (val === SettingsFeeTargetFilterType.None) {
-      this.schemeForm.get('targetValues')
-          ?.clearValidators();
+      this.schemeForm.get('targetValues')?.clearValidators();
     } else {
-      this.schemeForm.get('targetValues')
-          ?.setValidators([Validators.required]);
+      this.schemeForm.get('targetValues')?.setValidators([Validators.required]);
     }
-    this.schemeForm.get('targetValues')
-        ?.updateValueAndValidity();
+    this.schemeForm.get('targetValues')?.updateValueAndValidity();
   }
 
   private filterTargetValues(value: string): CommonTargetValue[] {
@@ -235,8 +226,7 @@ export class FeeDetailsComponent implements OnInit {
       let filterValue = '';
       if (value) {
         filterValue = value.toLowerCase();
-        return this.targetValueParams.dataList.filter(c => c.title.toLowerCase()
-                                                            .includes(filterValue));
+        return this.targetValueParams.dataList.filter(c => c.title.toLowerCase().includes(filterValue));
       } else {
         return this.targetValueParams.dataList;
       }
@@ -252,107 +242,59 @@ export class FeeDetailsComponent implements OnInit {
       this.loadingData = true;
       this.removeIncorrectTargetValues(scheme);
       this.defaultSchemeName = scheme.isDefault ? scheme.name : '';
-      this.schemeForm.get('id')
-          ?.setValue(scheme?.id);
-      this.schemeForm.get('name')
-          ?.setValue(scheme?.name);
-      this.schemeForm.get('description')
-          ?.setValue(scheme?.description);
-      this.schemeForm.get('isDefault')
-          ?.setValue(scheme?.isDefault);
-      this.schemeForm.get('target')
-          ?.setValue(scheme?.target);
-      this.schemeForm.get('targetValues')
-          ?.setValue(scheme?.targetValues);
-      this.schemeForm.get('instrument')
-          ?.setValue(scheme.instrument);
-      this.schemeForm.get('userType')
-          ?.setValue(scheme?.userType);
-      this.schemeForm.get('userMode')
-          ?.setValue(scheme?.userMode);
-      this.schemeForm.get('trxType')
-          ?.setValue(scheme?.trxType);
-      this.schemeForm.get('provider')
-          ?.setValue(scheme?.provider);
-      this.schemeForm.get('transactionFees')
-          ?.setValue(scheme?.terms.transactionFees);
-      this.schemeForm.get('minTransactionFee')
-          ?.setValue(scheme?.terms.minTransactionFee);
-      this.schemeForm.get('rollingReserves')
-          ?.setValue(scheme?.terms.rollingReserves);
-      this.schemeForm.get('rollingReservesDays')
-          ?.setValue(scheme?.terms.rollingReservesDays);
-      this.schemeForm.get('chargebackFees')
-          ?.setValue(scheme?.terms.chargebackFees);
-      this.schemeForm.get('monthlyFees')
-          ?.setValue(scheme?.terms.monthlyFees);
-      this.schemeForm.get('minMonthlyFees')
-          ?.setValue(scheme?.terms.minMonthlyFees);
-      this.schemeForm.get('beneficiaryName')
-          ?.setValue(scheme?.details.beneficiaryName);
-      this.schemeForm.get('beneficiaryAddress')
-          ?.setValue(scheme?.details.beneficiaryAddress);
-      this.schemeForm.get('iban')
-          ?.setValue(scheme?.details.iban);
-      this.schemeForm.get('bankName')
-          ?.setValue(scheme?.details.bankName);
-      this.schemeForm.get('bankAddress')
-          ?.setValue(scheme?.details.bankAddress);
-      this.schemeForm.get('swift')
-          ?.setValue(scheme?.details.swift);
+      this.schemeForm.get('id')?.setValue(scheme?.id);
+      this.schemeForm.get('name')?.setValue(scheme?.name);
+      this.schemeForm.get('description')?.setValue(scheme?.description);
+      this.schemeForm.get('isDefault')?.setValue(scheme?.isDefault);
+      this.schemeForm.get('target')?.setValue(scheme?.target);
+      this.schemeForm.get('targetValues')?.setValue(scheme?.targetValues);
+      this.schemeForm.get('instrument')?.setValue(scheme.instrument);
+      this.schemeForm.get('userType')?.setValue(scheme?.userType);
+      this.schemeForm.get('userMode')?.setValue(scheme?.userMode);
+      this.schemeForm.get('trxType')?.setValue(scheme?.trxType);
+      this.schemeForm.get('provider')?.setValue(scheme?.provider);
+      this.schemeForm.get('transactionFees')?.setValue(scheme?.terms.transactionFees);
+      this.schemeForm.get('minTransactionFee')?.setValue(scheme?.terms.minTransactionFee);
+      this.schemeForm.get('rollingReserves')?.setValue(scheme?.terms.rollingReserves);
+      this.schemeForm.get('rollingReservesDays')?.setValue(scheme?.terms.rollingReservesDays);
+      this.schemeForm.get('chargebackFees')?.setValue(scheme?.terms.chargebackFees);
+      this.schemeForm.get('monthlyFees')?.setValue(scheme?.terms.monthlyFees);
+      this.schemeForm.get('minMonthlyFees')?.setValue(scheme?.terms.minMonthlyFees);
+      this.schemeForm.get('beneficiaryName')?.setValue(scheme?.details.beneficiaryName);
+      this.schemeForm.get('beneficiaryAddress')?.setValue(scheme?.details.beneficiaryAddress);
+      this.schemeForm.get('iban')?.setValue(scheme?.details.iban);
+      this.schemeForm.get('bankName')?.setValue(scheme?.details.bankName);
+      this.schemeForm.get('bankAddress')?.setValue(scheme?.details.bankAddress);
+      this.schemeForm.get('swift')?.setValue(scheme?.details.swift);
       const p = this.targetValueParams;
       this.setTargetValidator();
       this.loadingData = false;
       this.formChanged.emit(false);
     } else {
-      this.schemeForm.get('id')
-          ?.setValue('');
-      this.schemeForm.get('name')
-          ?.setValue('');
-      this.schemeForm.get('description')
-          ?.setValue('');
-      this.schemeForm.get('isDefault')
-          ?.setValue('');
-      this.schemeForm.get('target')
-          ?.setValue(SettingsFeeTargetFilterType.None);
-      this.schemeForm.get('targetValues')
-          ?.setValue([]);
-      this.schemeForm.get('instrument')
-          ?.setValue('');
-      this.schemeForm.get('userType')
-          ?.setValue([]);
-      this.schemeForm.get('userMode')
-          ?.setValue([]);
-      this.schemeForm.get('trxType')
-          ?.setValue('');
-      this.schemeForm.get('provider')
-          ?.setValue('');
-      this.schemeForm.get('transactionFees')
-          ?.setValue('');
-      this.schemeForm.get('minTransactionFee')
-          ?.setValue('');
-      this.schemeForm.get('rollingReserves')
-          ?.setValue('');
-      this.schemeForm.get('rollingReservesDays')
-          ?.setValue('');
-      this.schemeForm.get('chargebackFees')
-          ?.setValue('');
-      this.schemeForm.get('monthlyFees')
-          ?.setValue('');
-      this.schemeForm.get('minMonthlyFees')
-          ?.setValue('');
-      this.schemeForm.get('beneficiaryName')
-          ?.setValue('');
-      this.schemeForm.get('beneficiaryAddress')
-          ?.setValue('');
-      this.schemeForm.get('iban')
-          ?.setValue('');
-      this.schemeForm.get('bankName')
-          ?.setValue('');
-      this.schemeForm.get('bankAddress')
-          ?.setValue('');
-      this.schemeForm.get('swift')
-          ?.setValue('');
+      this.schemeForm.get('id')?.setValue('');
+      this.schemeForm.get('name')?.setValue('');
+      this.schemeForm.get('description')?.setValue('');
+      this.schemeForm.get('isDefault')?.setValue('');
+      this.schemeForm.get('target')?.setValue(SettingsFeeTargetFilterType.None);
+      this.schemeForm.get('targetValues')?.setValue([]);
+      this.schemeForm.get('instrument')?.setValue('');
+      this.schemeForm.get('userType')?.setValue([]);
+      this.schemeForm.get('userMode')?.setValue([]);
+      this.schemeForm.get('trxType')?.setValue('');
+      this.schemeForm.get('provider')?.setValue('');
+      this.schemeForm.get('transactionFees')?.setValue('');
+      this.schemeForm.get('minTransactionFee')?.setValue('');
+      this.schemeForm.get('rollingReserves')?.setValue('');
+      this.schemeForm.get('rollingReservesDays')?.setValue('');
+      this.schemeForm.get('chargebackFees')?.setValue('');
+      this.schemeForm.get('monthlyFees')?.setValue('');
+      this.schemeForm.get('minMonthlyFees')?.setValue('');
+      this.schemeForm.get('beneficiaryName')?.setValue('');
+      this.schemeForm.get('beneficiaryAddress')?.setValue('');
+      this.schemeForm.get('iban')?.setValue('');
+      this.schemeForm.get('bankName')?.setValue('');
+      this.schemeForm.get('bankAddress')?.setValue('');
+      this.schemeForm.get('swift')?.setValue('');
       this.setTargetValidator();
     }
   }
@@ -475,14 +417,14 @@ export class FeeDetailsComponent implements OnInit {
       const values = this.schemeForm.get('targetValues')?.value;
       values.push(value.trim());
       this.schemeForm.get('targetValues')
-          ?.setValue(values);
+        ?.setValue(values);
     }
     // Reset the input value
     if (input) {
       input.value = '';
     }
     this.schemeForm.get('targetValue')
-        ?.setValue(null);
+      ?.setValue(null);
   }
 
   removeTargetValue(val: string): void {
@@ -491,13 +433,13 @@ export class FeeDetailsComponent implements OnInit {
     if (index >= 0) {
       values.splice(index, 1);
       this.schemeForm.get('targetValues')
-          ?.setValue(values);
+        ?.setValue(values);
     }
   }
 
   clearTargetValues(): void {
     this.schemeForm.get('targetValues')
-        ?.setValue([]);
+      ?.setValue([]);
   }
 
   targetItemSelected(event: MatAutocompleteSelectedEvent): void {
@@ -505,11 +447,11 @@ export class FeeDetailsComponent implements OnInit {
     if (!values.includes(event.option.viewValue)) {
       values.push(event.option.viewValue);
       this.schemeForm.get('targetValues')
-          ?.setValue(values);
+        ?.setValue(values);
     }
     this.targetValueInput.nativeElement.value = '';
     this.schemeForm.get('targetValue')
-        ?.setValue(null);
+      ?.setValue(null);
   }
 
   onDeleteScheme(): void {
