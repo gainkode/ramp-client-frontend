@@ -7,8 +7,11 @@ import { Subject, Subscription } from 'rxjs';
 import { MatSort } from '@angular/material/sort';
 import { Filter } from '../../../model/filter.model';
 import { takeUntil } from 'rxjs/operators';
-import { AssetAddress } from '../../../../model/generated-models';
+import { AssetAddress, SettingsCurrencyWithDefaults } from '../../../../model/generated-models';
 import { WalletItem } from '../../../model/wallet.model';
+import { CurrencyView } from 'src/app/model/payment.model';
+import { CommonDataService } from 'src/app/services/common-data.service';
+import { Router } from '@angular/router';
 
 @Component({
   templateUrl: 'wallet-list.component.html',
@@ -32,28 +35,33 @@ export class WalletListComponent implements OnInit, OnDestroy, AfterViewInit {
   sortedField = 'address';
   sortedDesc = true;
   filter = new Filter({});
+  currencyList: CurrencyView[] = [];
 
   private destroy$ = new Subject();
   private walletsSubscription = Subscription.EMPTY;
+  private subscriptions: Subscription = new Subscription();
 
   displayedColumns: string[] = [
-    //'details',
+    'details',
     'address', 'custodyProvider', 'legacyAddress', 'description', 'type',
-    'addressFormat', 'assetId', 'originalId', 'total', 'available', 'pending', 'lockedAmount', 'vaultId',
-    'vaultName', 'userId', 'userEmail'
+    'addressFormat', 'assetId', 'originalId', 'total', 'available', 'pending', 'lockedAmount',
+    'vaultName', 'userEmail'
   ];
 
   constructor(
     private auth: AuthService,
     private errorHandler: ErrorService,
-    private adminService: AdminDataService) {
+    private commonService: CommonDataService,
+    private adminService: AdminDataService,
+    private router: Router) {
   }
 
   ngOnInit(): void {
-    this.loadWallets();
+    this.loadCurrencyData();
   }
 
   ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
     this.destroy$.next();
   }
 
@@ -77,6 +85,15 @@ export class WalletListComponent implements OnInit, OnDestroy, AfterViewInit {
     return event;
   }
 
+  private showEditor(wallet: WalletItem | null, visible: boolean): void {
+    if (visible) {
+      this.selectedWallet = wallet ?? undefined;
+    } else {
+      this.selectedWallet = undefined;
+      this.setEditMode(false);
+    }
+  }
+
   toggleDetails(wallet: WalletItem): void {
     if (this.isSelectedWallet(wallet.address)) {
       this.selectedWallet = undefined;
@@ -97,26 +114,91 @@ export class WalletListComponent implements OnInit, OnDestroy, AfterViewInit {
     this.selectedWallet = undefined;
   }
 
+  private setEditMode(mode: boolean): void {
+    this.changeEditMode.emit(mode);
+  }
+
+  private loadCurrencyData(): void {
+    this.currencyList = [];
+    const currencyData = this.commonService.getSettingsCurrency();
+    if (currencyData) {
+      this.subscriptions.add(
+        currencyData.valueChanges.subscribe(({ data }) => {
+          const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
+          if (currencySettings.settingsCurrency) {
+            if (currencySettings.settingsCurrency.count ?? 0 > 0) {
+              this.currencyList = currencySettings.settingsCurrency.list?.
+                map((val) => new CurrencyView(val)) as CurrencyView[];
+            }
+          }
+          this.loadWallets();
+        }, (error) => {
+          if (this.auth.token === '') {
+            this.router.navigateByUrl('/');
+          }
+        })
+      );
+    }
+  }
+
   private loadWallets(): void {
     this.walletsSubscription.unsubscribe();
-
     this.walletsSubscription = this.adminService.getWallets(
       this.pageIndex,
       this.pageSize,
       this.sortedField,
       this.sortedDesc,
       this.filter
-    )
-                                        .pipe(
-                                          takeUntil(this.destroy$)
-                                        )
-                                        .subscribe(({ list, count }) => {
-                                          this.wallets = list;
-                                          this.walletCount = count;
-                                        });
+    ).pipe(takeUntil(this.destroy$)).subscribe(({ list, count }) => {
+      this.wallets = list;
+      this.walletCount = count;
+    });
   }
 
   private isSelectedWallet(walletAddress: string): boolean {
     return !!this.selectedWallet && this.selectedWallet.address === walletAddress;
+  }
+
+  onEditorFormChanged(mode: boolean): void {
+    this.setEditMode(mode);
+  }
+
+  onCancelEdit(): void {
+    this.showEditor(null, false);
+    this.setEditMode(false);
+  }
+
+  onDeleteWallet(id: string): void {
+    // const requestData = this.adminService.deleteCustomer(id);
+    // if (requestData) {
+    //   requestData.subscribe(({ data }) => {
+    //     this.showEditor(null, false);
+    //     this.loadCustomers();
+    //   }, (error) => {
+    //     if (this.auth.token === '') {
+    //       this.router.navigateByUrl('/');
+    //     }
+    //   });
+    // }
+  }
+
+  onSaveWallet(customer: AssetAddress): void {
+    // const requestData = this.adminService.saveCustomer(customer);
+    // if (requestData) {
+    //   requestData.subscribe(({ data }) => {
+    //     this.showEditor(null, false);
+    //     if (this.auth.user?.userId === customer.userId) {
+    //       this.auth.setUserName(customer.firstName ?? '', customer.lastName ?? '');
+    //       this.auth.setUserCurrencies(
+    //         customer.defaultCryptoCurrency ?? 'BTC',
+    //         customer.defaultFiatCurrency ?? 'EUR');
+    //     }
+    //     this.loadCustomers();
+    //   }, (error) => {
+    //     if (this.auth.token === '') {
+    //       this.router.navigateByUrl('/');
+    //     }
+    //   });
+    // }
   }
 }

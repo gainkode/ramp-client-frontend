@@ -70,6 +70,7 @@ import {
 } from './components/core/filter-panel/filter-fields/user-multiple/filter-field-user-multiple.component';
 import { AdminSettingsComponent } from './components/settings/settings.component';
 import { CommonSettingsEditorComponent } from './components/settings/common/common-settings.component';
+import { WalletDetailsComponent } from './components/wallets/details/wallet-details.component';
 
 @NgModule({
   imports: [
@@ -113,6 +114,7 @@ import { CommonSettingsEditorComponent } from './components/settings/common/comm
     CustomerListComponent,
     CustomerDetailsComponent,
     WalletListComponent,
+    WalletDetailsComponent,
     FeeListComponent,
     FeeDetailsComponent,
     NotificationListComponent,

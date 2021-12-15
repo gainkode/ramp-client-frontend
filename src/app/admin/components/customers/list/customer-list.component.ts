@@ -26,7 +26,6 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
     'search'
   ];
 
-  private pEditMode = false;
   private subscriptions: Subscription = new Subscription();
 
   selectedCustomer: UserItem | undefined = undefined;
@@ -110,7 +109,6 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private setEditMode(mode: boolean): void {
-    this.pEditMode = mode;
     this.changeEditMode.emit(mode);
   }
 
