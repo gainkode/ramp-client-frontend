@@ -1,6 +1,5 @@
 <h2>{{!form.value.id ? "Create widget" : "Change widget"}}</h2>
 
-
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
     <mat-form-field class="form-element">
@@ -21,6 +20,8 @@
             Mandatory field
         </mat-error>
     </mat-form-field>
+
+    <app-details-attribute *ngIf="form.value.id" label="Widget address" [value]="widgetLink"></app-details-attribute>
 
     <mat-form-field class="form-element">
         <mat-label>Countries</mat-label>

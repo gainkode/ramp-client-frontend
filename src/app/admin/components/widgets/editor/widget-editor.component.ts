@@ -45,7 +45,7 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
 
   paymentProviderOptions: Array<PaymentProviderView> = [];
   currencyOptions: Array<CurrencyView> = [];
-
+  widgetLink = '';
   countryOptions = Countries;
   instrumentOptions = PaymentInstrumentList;
   liquidityProviderOptions = LiquidityProviderList;
@@ -234,6 +234,7 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
         :
         of(undefined);
 
+      this.widgetLink = `https://merx-ewallet.semirolab.com/payment/widget/${widget.id}`;
       user$.subscribe(userItem => {
         this.form.setValue({
           id: widget.id,
@@ -310,19 +311,19 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
 
   private loadCurrencies(): void {
     this.commonDataService.getSettingsCurrency()?.valueChanges.subscribe(({ data }) => {
-        const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
-        if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
-          this.currencyOptions = currencySettings.settingsCurrency.list
-            ?.map((val) => new CurrencyView(val)) as CurrencyView[];
-        } else {
-          this.currencyOptions = [];
-        }
-      }, (error) => {
-        this.snackBar.open(
-          this.errorHandler.getError(error.message, 'Unable to load payment provider list.'),
-          undefined,
-          { duration: 5000 }
-        );
-      });
+      const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
+      if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
+        this.currencyOptions = currencySettings.settingsCurrency.list
+          ?.map((val) => new CurrencyView(val)) as CurrencyView[];
+      } else {
+        this.currencyOptions = [];
+      }
+    }, (error) => {
+      this.snackBar.open(
+        this.errorHandler.getError(error.message, 'Unable to load payment provider list.'),
+        undefined,
+        { duration: 5000 }
+      );
+    });
   }
 }
