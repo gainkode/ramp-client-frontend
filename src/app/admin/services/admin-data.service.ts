@@ -783,6 +783,7 @@ const DELETE_WIDGET = gql`
 const UPDATE_USER = gql`
 mutation UpdateUser(
   $userId: ID!
+  $email: String!,
   $firstName: String
   $lastName: String
   $countryCode2: String
@@ -794,6 +795,7 @@ mutation UpdateUser(
   updateUser(
     userId: $userId
     user: {
+      email: $email
       firstName: $firstName
       lastName: $lastName
       countryCode2: $countryCode2
@@ -1628,6 +1630,7 @@ export class AdminDataService {
       mutation: UPDATE_USER,
       variables: {
         userId: customer.userId,
+        email: customer.email,
         firstName: customer.firstName,
         lastName: customer.lastName,
         countryCode2: customer.countryCode2,

@@ -16,7 +16,6 @@ export class CustomerDetailsComponent {
     this.setFormData(val);
     this.settingsId = (val) ? val?.id : '';
     this.removable = (this.auth.user?.userId !== this.settingsId);
-    this.email = (val) ? val.email : '';
     this.address = (val) ? val.address : '';
     this.userType = (val) ? val.userType?.id ?? UserType.Personal : UserType.Personal;
   }
@@ -43,10 +42,11 @@ export class CustomerDetailsComponent {
 
   dataForm = this.formBuilder.group({
     id: [''],
+    email: ['', { validators: [Validators.required], updateOn: 'change' }],
     firstName: ['', { validators: [Validators.required], updateOn: 'change' }],
     lastName: ['', { validators: [], updateOn: 'change' }],
     country: ['', { validators: [Validators.required], updateOn: 'change' }],
-    phone: ['', { validators: [Validators.required], updateOn: 'change' }],
+    phone: ['', { validators: [], updateOn: 'change' }],
     fiat: ['', { validators: [Validators.required], updateOn: 'change' }],
     crypto: ['', { validators: [Validators.required], updateOn: 'change' }]
   });
@@ -62,6 +62,7 @@ export class CustomerDetailsComponent {
     if (data) {
       this.loadingData = true;
       this.dataForm.get('id')?.setValue(data?.id);
+      this.dataForm.get('email')?.setValue(data?.email);
       if (data.userType?.id === UserType.Merchant) {
         this.dataForm.get('firstName')?.setValue(data?.company);
         this.dataForm.get('lastName')?.setValue('');
@@ -77,6 +78,7 @@ export class CustomerDetailsComponent {
       this.formChanged.emit(false);
     } else {
       this.dataForm.get('id')?.setValue('');
+      this.dataForm.get('email')?.setValue('');
       this.dataForm.get('firstName')?.setValue('');
       this.dataForm.get('lastName')?.setValue('');
       this.dataForm.get('country')?.setValue('');
@@ -92,6 +94,7 @@ export class CustomerDetailsComponent {
     const code2 = (country) ? country.code2 : '';
     const data = {
       userId: this.dataForm.get('id')?.value,
+      email: this.dataForm.get('email')?.value,
       firstName: this.dataForm.get('firstName')?.value,
       lastName: this.dataForm.get('lastName')?.value,
       countryCode2: code2,
