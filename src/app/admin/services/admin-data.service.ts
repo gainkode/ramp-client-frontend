@@ -415,6 +415,7 @@ const GET_TRANSACTIONS = gql`
         }
         data
         destination
+        kycStatus
       }
     }
   }

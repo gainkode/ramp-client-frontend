@@ -1,5 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Transaction } from 'src/app/model/generated-models';
+import { FormBuilder, Validators } from '@angular/forms';
+import { LayoutService } from 'src/app/admin/services/layout.service';
+import { CommonTargetValue } from 'src/app/model/common.model';
+import { Transaction, TransactionKycStatus, TransactionType } from 'src/app/model/generated-models';
+import { CurrencyView } from 'src/app/model/payment.model';
 import { TransactionItemDeprecated } from 'src/app/model/transaction.model';
 
 @Component({
@@ -9,11 +13,25 @@ import { TransactionItemDeprecated } from 'src/app/model/transaction.model';
 })
 export class TransactionDetailsComponent {
   @Input() set transaction(val: TransactionItemDeprecated | undefined) {
-    this.data = val;
-    this.transactionId = val?.id ?? '';
-    this.removable = val?.statusInfo?.value.canBeCancelled ?? false;
+    this.setFormData(val);
+    this.layoutService.setBackdrop(!val?.id);
   }
   @Input() cancelable = false;
+  @Input() set currencies(list: CurrencyView[]) {
+    if (this.data) {
+      if (this.data.type === TransactionType.Withdrawal) {
+        this.currenciesToReceive = list.filter(x => x.fiat === true);
+        this.currenciesToSpend = list.filter(x => x.fiat === false);
+        this.form.get('currencyToSpend')?.setValue(this.data?.currencyToSpend);
+        this.form.get('currencyToReceive')?.setValue(this.data?.currencyToReceive);
+      } else {
+        this.currenciesToReceive = list.filter(x => x.fiat === false);
+        this.currenciesToSpend = list.filter(x => x.fiat === true);
+        this.form.get('currencyToReceive')?.setValue(this.data?.currencyToSpend);
+        this.form.get('currencyToSpend')?.setValue(this.data?.currencyToReceive);
+      }
+    }
+  }
   @Output() save = new EventEmitter<Transaction>();
   @Output() delete = new EventEmitter<string>();
   @Output() cancel = new EventEmitter();
@@ -21,6 +39,65 @@ export class TransactionDetailsComponent {
   data: TransactionItemDeprecated | undefined = undefined;
   removable = false;
   transactionId = '';
+  currenciesToSpend: CurrencyView[] = [];
+  currenciesToReceive: CurrencyView[] = [];
+  kycStatuses: CommonTargetValue[] = [
+    { id: TransactionKycStatus.KycWaiting, title: 'Waiting' } as CommonTargetValue,
+    { id: TransactionKycStatus.KycApproved, title: 'Approved' } as CommonTargetValue,
+    { id: TransactionKycStatus.KycRejected, title: 'Rejected' } as CommonTargetValue
+  ];
+
+  form = this.formBuilder.group({
+    address: ['', { validators: [Validators.required], updateOn: 'change' }],
+    currencyToSpend: ['', { validators: [Validators.required], updateOn: 'change' }],
+    currencyToReceive: ['', { validators: [Validators.required], updateOn: 'change' }],
+    amountToReceive: [0, { validators: [Validators.required], updateOn: 'change' }],
+    amountToSpend: [0, { validators: [Validators.required], updateOn: 'change' }],
+    kycStatus: [TransactionKycStatus.KycWaiting, { validators: [Validators.required], updateOn: 'change' }]
+  });
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private layoutService: LayoutService
+  ) { }
+
+  setFormData(val: TransactionItemDeprecated | undefined) {
+    this.data = val;
+    this.transactionId = val?.id ?? '';
+    this.removable = val?.statusInfo?.value.canBeCancelled ?? false;
+    if (this.data) {
+      this.form.get('address')?.setValue(this.data.address);
+      if (this.data.type === TransactionType.Withdrawal) {
+        this.form.get('currencyToReceive')?.setValue(this.data.currencyToSpend);
+        this.form.get('currencyToSpend')?.setValue(this.data.currencyToReceive);
+      } else {
+        this.form.get('currencyToSpend')?.setValue(this.data.currencyToSpend);
+        this.form.get('currencyToReceive')?.setValue(this.data.currencyToReceive);
+      }
+      this.form.get('amountToSpend')?.setValue(this.data.amountToSpend);
+      this.form.get('amountToReceive')?.setValue(this.data.amountToReceive);
+      this.form.get('kycStatus')?.setValue(this.data.kycStatus);
+    }
+  }
+
+  onSubmit(): void {
+    if (this.form.valid) {
+      const transaction = {
+        transactionId: this.transactionId,
+        destination: this.form.get('address')?.value,
+        currencyToSpend: (this.data?.type === TransactionType.Withdrawal) ?
+        this.form.get('currencyToReceive')?.value :
+        this.form.get('currencyToSpend')?.value,
+        currencyToReceive: (this.data?.type === TransactionType.Withdrawal) ?
+        this.form.get('currencyToSpend')?.value :
+        this.form.get('currencyToReceive')?.value,
+        amountToSpend: this.form.get('amountToSpend')?.value,
+        amountToReceive: this.form.get('amountToReceive')?.value,
+        kycStatus: this.form.get('kycStatus')?.value
+      } as Transaction;
+      this.save.emit(transaction);
+    }
+  }
 
   onDeleteTransaction(): void {
     if (this.transactionId !== '' && this.removable) {

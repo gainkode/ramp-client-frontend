@@ -5,6 +5,7 @@ import {
   PaymentInstrument,
   PaymentProvider,
   Transaction,
+  TransactionKycStatus,
   TransactionShort,
   TransactionSource,
   TransactionStatus,
@@ -49,6 +50,7 @@ export class TransactionItemDeprecated {
   statusInfo: TransactionStatusDescriptorMap | undefined = undefined;
   user: UserItem | undefined;
   balance = 0;
+  kycStatus = TransactionKycStatus.KycWaiting;
   selected = false;
 
   constructor(data: Transaction | TransactionShort | null) {
@@ -83,6 +85,7 @@ export class TransactionItemDeprecated {
       this.currencyToReceive = data.currencyToReceive ?? '';
       this.amountToSpend = data.amountToSpend ?? 0;
       this.amountToReceive = data.amountToReceive ?? 0;
+      this.kycStatus = (data as Transaction).kycStatus ?? TransactionKycStatus.KycWaiting;
 
       // if (
       //   transactionData.amountToSpendInEur ||

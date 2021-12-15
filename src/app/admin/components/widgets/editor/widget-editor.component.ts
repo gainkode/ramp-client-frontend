@@ -4,12 +4,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { PaymentDataService } from '../../../../services/payment.service';
 import { ErrorService } from '../../../../services/error.service';
 import { LayoutService } from '../../../services/layout.service';
-import {
-  LiquidityProvider,
-  PaymentInstrument,
-  PaymentProvider,
-  SettingsCurrencyWithDefaults
-} from '../../../../model/generated-models';
+import { PaymentProvider, SettingsCurrencyWithDefaults } from '../../../../model/generated-models';
 import {
   CurrencyView,
   PaymentInstrumentList,
@@ -21,7 +16,7 @@ import { CommonDataService } from '../../../../services/common-data.service';
 import { AdminDataService } from '../../../services/admin-data.service';
 import { UserItem } from '../../../../model/user.model';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, startWith, switchMap, take, takeUntil } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, switchMap, take, takeUntil } from 'rxjs/operators';
 import { Filter } from '../../../model/filter.model';
 import { Countries, Country } from '../../../../model/country-code.model';
 import { MatChipInputEvent } from '@angular/material/chips';
@@ -89,10 +84,9 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
       distinctUntilChanged(),
       debounceTime(1000),
       switchMap(searchString => this.getUserFilteredOptions(searchString))
-    )
-      .subscribe(options => {
-        this.filteredUserOptions = options;
-      });
+    ).subscribe(options => {
+      this.filteredUserOptions = options;
+    });
 
     this.countrySearchString$.pipe(
       takeUntil(this.destroy$),
@@ -100,8 +94,7 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
       // (input empty, not changed)
       // distinctUntilChanged(),
       switchMap(searchString => this.getFilteredCountryOptions(searchString))
-    )
-      .subscribe(options => {
+    ).subscribe(options => {
         this.filteredCountryOptions = options;
       });
 
@@ -320,7 +313,7 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
       }
     }, (error) => {
       this.snackBar.open(
-        this.errorHandler.getError(error.message, 'Unable to load payment provider list.'),
+        this.errorHandler.getError(error.message, 'Unable to load currencies.'),
         undefined,
         { duration: 5000 }
       );

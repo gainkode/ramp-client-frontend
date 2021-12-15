@@ -10,8 +10,10 @@ import { MatSort } from '@angular/material/sort';
 import { Filter } from '../../../model/filter.model';
 import { takeUntil } from 'rxjs/operators';
 import { LayoutService } from '../../../services/layout.service';
-import { TransactionStatusDescriptorMap } from 'src/app/model/generated-models';
+import { SettingsCurrencyWithDefaults, Transaction, TransactionStatusDescriptorMap } from 'src/app/model/generated-models';
 import { ProfileDataService } from 'src/app/services/profile.service';
+import { CommonDataService } from 'src/app/services/common-data.service';
+import { CurrencyView } from 'src/app/model/payment.model';
 
 @Component({
   templateUrl: 'transaction-list.component.html',
@@ -39,6 +41,7 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
   transactions: TransactionItemDeprecated[] = [];
   transactionCount = 0;
   userStatuses: TransactionStatusDescriptorMap[] = [];
+  currencyOptions: CurrencyView[] = [];
   pageSize = 25;
   pageIndex = 0;
   sortedField = 'created';
@@ -62,6 +65,7 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
     private errorHandler: ErrorService,
     private adminService: AdminDataService,
     private profileService: ProfileDataService,
+    private commonDataService: CommonDataService,
     private router: Router
   ) {
   }
@@ -140,6 +144,24 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
     }
   }
 
+  private loadCurrencies(): void {
+    this.currencyOptions = [];
+    this.commonDataService.getSettingsCurrency()?.valueChanges.subscribe(({ data }) => {
+      const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
+      if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
+        this.currencyOptions = currencySettings.settingsCurrency.list
+          ?.map((val) => new CurrencyView(val)) as CurrencyView[];
+      } else {
+        this.currencyOptions = [];
+      }
+      this.loadTransactions();
+    }, (error) => {
+      if (this.auth.token === '') {
+        this.router.navigateByUrl('/');
+      }
+    });
+  }
+
   private loadList(): void {
     if (this.userStatuses.length === 0) {
       this.loadTransactionStatuses();
@@ -173,7 +195,7 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
       this.subscriptions.add(
         statusListData.valueChanges.subscribe(({ data }) => {
           this.userStatuses = data.getTransactionStatuses as TransactionStatusDescriptorMap[];
-          this.loadTransactions();
+          this.loadCurrencies();
         }, (error) => {
           if (this.auth.token === '') {
             this.router.navigateByUrl('/');
@@ -185,6 +207,12 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
 
   private isSelectedTransaction(transactionId: string): boolean {
     return !!this.selectedTransaction && this.selectedTransaction.id === transactionId;
+  }
+
+  onSaveTransaction(transaction: Transaction): void {
+    console.log(transaction);
+    this.selectedTransaction = undefined;
+    this.loadList();
   }
 
   onDeleteTransaction(id: string): void {
