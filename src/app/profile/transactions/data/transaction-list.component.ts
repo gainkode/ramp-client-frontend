@@ -57,7 +57,7 @@ export class PersonalTransactionListComponent implements OnDestroy, AfterViewIni
             this.sortedField = 'dt';
         }
         if (this.userStatuses.length === 0) {
-            this.loadUserStatuses();
+            this.loadTransactionStatuses();
         } else {
             this.loadTransactions();
         }
@@ -154,7 +154,7 @@ export class PersonalTransactionListComponent implements OnDestroy, AfterViewIni
         this.loadTransactions();
     }
 
-    private loadUserStatuses(): void {
+    private loadTransactionStatuses(): void {
         const statusListData = this.profileService.getTransactionStatuses();
         if (statusListData === null) {
             this.onError.emit(this.errorHandler.getRejectedCookieMessage());

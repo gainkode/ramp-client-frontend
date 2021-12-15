@@ -46,8 +46,10 @@ export class TransactionItemDeprecated {
   fees = 0;
   rate = 0;
   status: TransactionStatus | undefined = undefined;
+  statusInfo: TransactionStatusDescriptorMap | undefined = undefined;
   user: UserItem | undefined;
   balance = 0;
+  selected = false;
 
   constructor(data: Transaction | TransactionShort | null) {
     if (data !== null) {

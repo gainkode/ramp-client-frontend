@@ -1,20 +1,25 @@
+<div class="action-panel">
+    <button mat-flat-button color="primary" (click)="unbenchmark()" [disabled]="!selected">
+        UNBENCHMARK
+    </button>
+</div>
+
 <app-filter-panel [fields]="filterFields" (filter)="handleFilterApplied($event)"></app-filter-panel>
 
 <div class="data-table">
-    <mat-table matSort
-               [matSortActive]="sortedField"
-               matSortDirection="desc"
-               matSortDisableClear
-               [dataSource]="transactions"
-    >
+    <mat-table matSort [matSortActive]="sortedField" matSortDirection="desc" matSortDisableClear
+        [dataSource]="transactions">
 
         <!-- Details Column -->
         <ng-container matColumnDef="details" sticky>
             <th mat-header-cell *matHeaderCellDef></th>
-            <td mat-cell *matCellDef="let element">
+            <td mat-cell *matCellDef="let element" style="margin: 0px;padding: 0px 8px; background-color: white;">
+                <mat-checkbox color="accent" [checked]="element.selected"
+                    (change)="onTransactionSelected(element)">
+                </mat-checkbox>
                 <button mat-icon-button class="row-button" (click)="toggleDetails(element)"
-                        [attr.aria-label]="'Transaction details'" [attr.aria-pressed]="!!selectedTransaction"
-                        [matTooltip]="getDetailsTooltip(element.id)" matTooltipClass="info-tooltip">
+                    [attr.aria-label]="'Transaction details'" [attr.aria-pressed]="!!selectedTransaction"
+                    [matTooltip]="getDetailsTooltip(element.id)" matTooltipClass="info-tooltip">
                     <mat-icon class="details-icon">{{getDetailsIcon(element.id)}}</mat-icon>
                 </button>
             </td>
@@ -133,12 +138,12 @@
     </mat-table>
 </div>
 
-<mat-paginator [length]="transactionCount" [pageSize]="pageSize"
-               [pageSizeOptions]="[25, 50, 100]" showFirstLastButtons (page)="handlePage($event)">
+<mat-paginator [length]="transactionCount" [pageSize]="pageSize" [pageSizeOptions]="[25, 50, 100]" showFirstLastButtons
+    (page)="handlePage($event)">
 </mat-paginator>
 
 <ng-template *ngIf="selectedTransaction" appRightPanel (panelClosed)="handleDetailsPanelClosed()">
-    <app-transaction-details [transaction]="selectedTransaction" (delete)="onDeleteTransaction($event)" (cancel)="onCancelEdit()">
+    <app-transaction-details [transaction]="selectedTransaction" [cancelable]=true
+        (delete)="onDeleteTransaction($event)" (cancel)="onCancelEdit()">
     </app-transaction-details>
 </ng-template>
-

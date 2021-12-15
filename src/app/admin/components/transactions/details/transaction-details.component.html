@@ -1,40 +1,40 @@
-<ng-container *ngIf="transaction">
+<ng-container *ngIf="data">
     <section>
-        <app-details-attribute label="Transaction Id" [value]="transaction.id"
-                               [linkUrl]="'/admin/transactions/'+ transaction.id"></app-details-attribute>
-        <app-details-attribute label="Transaction Created" [value]="transaction?.created"></app-details-attribute>
-        <app-details-attribute label="Transaction Executed" [value]="transaction?.executed"></app-details-attribute>
-        <app-details-attribute label="First Name" [value]="transaction?.user?.firstName"></app-details-attribute>
-        <app-details-attribute label="Last Name" [value]="transaction?.user?.lastName"></app-details-attribute>
-        <app-details-attribute label="Company" [value]="transaction?.user?.company"></app-details-attribute>
-        <app-details-attribute label="Country" [value]="transaction?.user?.country"></app-details-attribute>
-        <app-details-attribute label="Address" [value]="transaction?.user?.address"></app-details-attribute>
+        <app-details-attribute label="Transaction Id" [value]="transactionId"
+                               [linkUrl]="'/admin/transactions/'+ transactionId"></app-details-attribute>
+        <app-details-attribute label="Transaction Created" [value]="data?.created"></app-details-attribute>
+        <app-details-attribute label="Transaction Executed" [value]="data?.executed"></app-details-attribute>
+        <app-details-attribute label="First Name" [value]="data?.user?.firstName"></app-details-attribute>
+        <app-details-attribute label="Last Name" [value]="data?.user?.lastName"></app-details-attribute>
+        <app-details-attribute label="Company" [value]="data?.user?.company"></app-details-attribute>
+        <app-details-attribute label="Country" [value]="data?.user?.country"></app-details-attribute>
+        <app-details-attribute label="Address" [value]="data?.user?.address"></app-details-attribute>
         <app-details-attribute label="Transaction Type"
-                               [value]="transaction?.transactionTypeName"></app-details-attribute>
-        <app-details-attribute label="Instrument" [value]="transaction?.instrumentName"></app-details-attribute>
+                               [value]="data?.transactionTypeName"></app-details-attribute>
+        <app-details-attribute label="Instrument" [value]="data?.instrumentName"></app-details-attribute>
         <app-details-attribute label="Instrument Details"
-                               [value]="transaction?.instrumentDetails"></app-details-attribute>
-        <app-details-attribute label="Wallet Address" [value]="transaction?.address"></app-details-attribute>
+                               [value]="data?.instrumentDetails"></app-details-attribute>
+        <app-details-attribute label="Wallet Address" [value]="data?.address"></app-details-attribute>
         <app-details-attribute label="Wallet amount"
-                               [value]="(transaction?.amountToReceive | number: '1.0-5') + ' ' + transaction?.currencyToReceive"></app-details-attribute>
+                               [value]="(data?.amountToReceive | number: '1.0-5') + ' ' + data?.currencyToReceive"></app-details-attribute>
         <app-details-attribute label="Base amount"
-                               [value]="(transaction?.amountToSpend | number: '1.0-5') + ' ' + transaction?.currencyToSpend"></app-details-attribute>
+                               [value]="(data?.amountToSpend | number: '1.0-5') + ' ' + data?.currencyToSpend"></app-details-attribute>
         <app-details-attribute label="Exchange rate"
-                               [value]="transaction?.rate | number: '1.0-5'"></app-details-attribute>
+                               [value]="data?.rate | number: '1.0-5'"></app-details-attribute>
         <app-details-attribute label="Transaction status"
-                               [value]="transaction?.transactionStatusName"></app-details-attribute>
+                               [value]="data?.transactionStatusName"></app-details-attribute>
         <app-details-attribute label="Transaction fees"
-                               [value]="(transaction?.fees | number: '1.0-5') + ' EUR'"></app-details-attribute>
-        <app-details-attribute label="IP Address" [value]="transaction?.ip"></app-details-attribute>
+                               [value]="(data?.fees | number: '1.0-5') + ' EUR'"></app-details-attribute>
+        <app-details-attribute label="IP Address" [value]="data?.ip"></app-details-attribute>
         <app-details-attribute label="Initiated from"
-                               [value]="transaction?.transactionSourceName"></app-details-attribute>
-        <app-details-attribute label="Wallet type" [value]="transaction?.userModeName"></app-details-attribute>
+                               [value]="data?.transactionSourceName"></app-details-attribute>
+        <app-details-attribute label="Wallet type" [value]="data?.userModeName"></app-details-attribute>
     </section>
 
     <section>
         <h2>AML Checks</h2>
-        <app-details-attribute label="Account ID" [value]="transaction?.user?.id"></app-details-attribute>
-        <app-details-attribute label="KYC Status" [value]="transaction?.user?.kycStatus"></app-details-attribute>
+        <app-details-attribute label="Account ID" [value]="data?.user?.id"></app-details-attribute>
+        <app-details-attribute label="KYC Status" [value]="data?.user?.kycStatus"></app-details-attribute>
     </section>
 
 
@@ -46,7 +46,7 @@
         <button *ngIf="removable" mat-flat-button color="warn" (click)="onDeleteTransaction()">
             DELETE
         </button>
-        <button mat-flat-button (click)="onCancel()">
+        <button *ngIf="cancelable" mat-flat-button (click)="onCancel()">
             CANCEL
         </button>
     </div>

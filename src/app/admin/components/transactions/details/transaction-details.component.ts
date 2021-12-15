@@ -8,17 +8,23 @@ import { TransactionItemDeprecated } from 'src/app/model/transaction.model';
   styleUrls: ['transaction-details.component.scss']
 })
 export class TransactionDetailsComponent {
-  @Input() transaction?: TransactionItemDeprecated;
+  @Input() set transaction(val: TransactionItemDeprecated | undefined) {
+    this.data = val;
+    this.transactionId = val?.id ?? '';
+    this.removable = val?.statusInfo?.value.canBeCancelled ?? false;
+  }
+  @Input() cancelable = false;
   @Output() save = new EventEmitter<Transaction>();
   @Output() delete = new EventEmitter<string>();
   @Output() cancel = new EventEmitter();
 
-  settingsId = '';
-  removable = true;
+  data: TransactionItemDeprecated | undefined = undefined;
+  removable = false;
+  transactionId = '';
 
   onDeleteTransaction(): void {
-    if (this.transaction) {
-      this.delete.emit(this.transaction.id);
+    if (this.transactionId !== '' && this.removable) {
+      this.delete.emit(this.transactionId);
     }
   }
 

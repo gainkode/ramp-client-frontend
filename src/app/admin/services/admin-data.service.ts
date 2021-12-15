@@ -834,6 +834,18 @@ mutation CancelTransaction(
 }
 `;
 
+const UNBENCHMARK_TRANSACTIONS = gql`
+mutation UnbenchmarkTransactions(
+  $transactionIds: [String!]
+) {
+  unbenchmarkTransactions(
+    transactionIds: $transactionIds
+  ) {
+    transactionId
+  }
+}
+`;
+
 const UPDATE_SETTINGS_FEE = gql`
   mutation UpdateSettingsFee(
     $settingsId: ID!
@@ -1733,6 +1745,20 @@ export class AdminDataService {
     }).pipe(tap((res) => {
       this.snackBar.open(
         `Transaction was cancelled`,
+        undefined, { duration: 5000 }
+      );
+    }));
+  }
+  
+  unbenchmarkTransaction(ids: string[]): Observable<any> {
+    return this.mutate({
+      mutation: UNBENCHMARK_TRANSACTIONS,
+      variables: {
+        transactionIds: ids
+      }
+    }).pipe(tap((res) => {
+      this.snackBar.open(
+        `Transactions were changed`,
         undefined, { duration: 5000 }
       );
     }));

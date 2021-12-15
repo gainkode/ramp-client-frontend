@@ -10,6 +10,8 @@ import { MatSort } from '@angular/material/sort';
 import { Filter } from '../../../model/filter.model';
 import { takeUntil } from 'rxjs/operators';
 import { LayoutService } from '../../../services/layout.service';
+import { TransactionStatusDescriptorMap } from 'src/app/model/generated-models';
+import { ProfileDataService } from 'src/app/services/profile.service';
 
 @Component({
   templateUrl: 'transaction-list.component.html',
@@ -36,14 +38,17 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
   selectedTransaction?: TransactionItemDeprecated;
   transactions: TransactionItemDeprecated[] = [];
   transactionCount = 0;
+  userStatuses: TransactionStatusDescriptorMap[] = [];
   pageSize = 25;
   pageIndex = 0;
   sortedField = 'created';
   sortedDesc = true;
   filter = new Filter({});
+  selected = false;
 
   private destroy$ = new Subject();
   private transactionsSubscription = Subscription.EMPTY;
+  private subscriptions: Subscription = new Subscription();
 
   displayedColumns: string[] = [
     'details', 'id', 'created', 'executed', 'email', 'type', 'instrument', 'paymentProvider', 'paymentProviderResponse',
@@ -56,6 +61,7 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
     private auth: AuthService,
     private errorHandler: ErrorService,
     private adminService: AdminDataService,
+    private profileService: ProfileDataService,
     private router: Router
   ) {
   }
@@ -70,6 +76,7 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
     this.destroy$.next();
   }
 
@@ -113,7 +120,35 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
     this.selectedTransaction = undefined;
   }
 
+  onTransactionSelected(item: TransactionItemDeprecated): void {
+    item.selected = !item.selected;
+    this.selected = this.transactions.some(x => x.selected === true);
+  }
+
+  unbenchmark(): void {
+    const requestData = this.adminService.unbenchmarkTransaction(
+      this.transactions.map(val => val.id)
+    );
+    if (requestData) {
+      requestData.subscribe(({ data }) => {
+        this.transactions.forEach(x => x.selected = false);
+      }, (error) => {
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
+      });
+    }
+  }
+
   private loadList(): void {
+    if (this.userStatuses.length === 0) {
+      this.loadTransactionStatuses();
+    } else {
+      this.loadTransactions();
+    }
+  }
+
+  private loadTransactions(): void {
     this.transactionsSubscription.unsubscribe();
 
     this.transactionsSubscription = this.adminService.getTransactions(
@@ -125,7 +160,27 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
     ).pipe(takeUntil(this.destroy$)).subscribe(({ list, count }) => {
       this.transactions = list;
       this.transactionCount = count;
+      this.transactions.forEach(val => {
+        val.statusInfo = this.userStatuses.find(x => x.key === val.status);
+      });
     });
+  }
+
+  private loadTransactionStatuses(): void {
+    this.userStatuses = [];
+    const statusListData = this.profileService.getTransactionStatuses();
+    if (statusListData) {
+      this.subscriptions.add(
+        statusListData.valueChanges.subscribe(({ data }) => {
+          this.userStatuses = data.getTransactionStatuses as TransactionStatusDescriptorMap[];
+          this.loadTransactions();
+        }, (error) => {
+          if (this.auth.token === '') {
+            this.router.navigateByUrl('/');
+          }
+        })
+      );
+    }
   }
 
   private isSelectedTransaction(transactionId: string): boolean {
