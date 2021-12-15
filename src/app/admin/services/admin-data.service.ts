@@ -820,6 +820,18 @@ mutation DeleteUser(
 }
 `;
 
+const CANCEL_TRANSACTION = gql`
+mutation CancelTransaction(
+  $transactionId: String!
+) {
+  cancelTransaction(
+    transactionId: $transactionId
+  ) {
+    userId
+  }
+}
+`;
+
 const UPDATE_SETTINGS_FEE = gql`
   mutation UpdateSettingsFee(
     $settingsId: ID!
@@ -1687,26 +1699,40 @@ export class AdminDataService {
       variables: {
         widgetId
       }
-    })
-      .pipe(tap((res) => {
-        this.snackBar.open(
-          `Widget was deleted`,
-          undefined, { duration: 5000 }
-        );
-      }));
+    }).pipe(tap((res) => {
+      this.snackBar.open(
+        `Widget was deleted`,
+        undefined, { duration: 5000 }
+      );
+    }));
   }
 
   deleteCustomer(customerId: string): Observable<any> | null {
-    if (this.apollo.client !== undefined) {
-      return this.apollo.mutate({
-        mutation: DELETE_CUSTOMER,
-        variables: {
-          customerId
-        }
-      });
-    } else {
-      return null;
-    }
+    return this.mutate({
+      mutation: DELETE_CUSTOMER,
+      variables: {
+        customerId
+      }
+    }).pipe(tap((res) => {
+      this.snackBar.open(
+        `Customer was deleted`,
+        undefined, { duration: 5000 }
+      );
+    }));
+  }
+
+  deleteTransaction(transactionId: string): Observable<any> {
+    return this.mutate({
+      mutation: CANCEL_TRANSACTION,
+      variables: {
+        transactionId
+      }
+    }).pipe(tap((res) => {
+      this.snackBar.open(
+        `Transaction was cancelled`,
+        undefined, { duration: 5000 }
+      );
+    }));
   }
 
   // TODO: move somewhere closer to HTTP, this approach can give false negatives (normally observable doesn't finish,

@@ -55,15 +55,16 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
     private layoutService: LayoutService,
     private auth: AuthService,
     private errorHandler: ErrorService,
-    private adminService: AdminDataService
+    private adminService: AdminDataService,
+    private router: Router
   ) {
   }
 
   ngOnInit(): void {
     this.layoutService.rightPanelCloseRequested$.pipe(takeUntil(this.destroy$))
-        .subscribe(() => {
-          this.selectedTransaction = undefined;
-        });
+      .subscribe(() => {
+        this.selectedTransaction = undefined;
+      });
 
     this.loadList();
   }
@@ -121,17 +122,31 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
       this.sortedField,
       this.sortedDesc,
       this.filter
-    )
-                                        .pipe(
-                                          takeUntil(this.destroy$)
-                                        )
-                                        .subscribe(({ list, count }) => {
-                                          this.transactions = list;
-                                          this.transactionCount = count;
-                                        });
+    ).pipe(takeUntil(this.destroy$)).subscribe(({ list, count }) => {
+      this.transactions = list;
+      this.transactionCount = count;
+    });
   }
 
   private isSelectedTransaction(transactionId: string): boolean {
     return !!this.selectedTransaction && this.selectedTransaction.id === transactionId;
+  }
+
+  onDeleteTransaction(id: string): void {
+    const requestData = this.adminService.deleteTransaction(id);
+    if (requestData) {
+      requestData.subscribe(({ data }) => {
+        this.selectedTransaction = undefined;
+        this.loadList();
+      }, (error) => {
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
+      });
+    }
+  }
+
+  onCancelEdit(): void {
+    this.selectedTransaction = undefined;
   }
 }
