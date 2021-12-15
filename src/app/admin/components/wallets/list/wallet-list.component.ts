@@ -42,10 +42,9 @@ export class WalletListComponent implements OnInit, OnDestroy, AfterViewInit {
   private subscriptions: Subscription = new Subscription();
 
   displayedColumns: string[] = [
-    'details',
+    'details', 'vaultName', 'userEmail',
     'address', 'custodyProvider', 'legacyAddress', 'description', 'type',
-    'addressFormat', 'assetId', 'originalId', 'total', 'available', 'pending', 'lockedAmount',
-    'vaultName', 'userEmail'
+    'addressFormat', 'assetId', 'originalId', 'total', 'available', 'pending', 'lockedAmount'
   ];
 
   constructor(
@@ -168,21 +167,23 @@ export class WalletListComponent implements OnInit, OnDestroy, AfterViewInit {
     this.setEditMode(false);
   }
 
-  onDeleteWallet(id: string): void {
-    // const requestData = this.adminService.deleteCustomer(id);
-    // if (requestData) {
-    //   requestData.subscribe(({ data }) => {
-    //     this.showEditor(null, false);
-    //     this.loadCustomers();
-    //   }, (error) => {
-    //     if (this.auth.token === '') {
-    //       this.router.navigateByUrl('/');
-    //     }
-    //   });
-    // }
+  onDeleteWallet(customer: AssetAddress): void {
+    const requestData = this.adminService.deleteWallet(customer.vaultId ?? '', customer.userId ?? '');
+    if (requestData) {
+      requestData.subscribe(({ data }) => {
+        this.showEditor(null, false);
+        this.loadWallets();
+      }, (error) => {
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
+      });
+    }
   }
 
   onSaveWallet(customer: AssetAddress): void {
+
+    console.log('save', customer);
     // const requestData = this.adminService.saveCustomer(customer);
     // if (requestData) {
     //   requestData.subscribe(({ data }) => {

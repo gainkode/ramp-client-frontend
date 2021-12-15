@@ -12,11 +12,12 @@ export class DetailsAttributeComponent implements OnInit {
   label?: string;
 
   @Input()
-  set value(value: string | CommonTargetValue | null | undefined) {
+  set value(value: string | number | CommonTargetValue | null | undefined) {
     if (value instanceof CommonTargetValue) {
       this.valueImage = value;
-    }
-    else {
+    } else if (typeof(value) === 'number') {
+      this.valueString = value.toString();
+    } else {
       this.valueString = value ? value.trim() : undefined;
     }
   }

@@ -1,9 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { Countries, getCountryByCode3 } from 'src/app/model/country-code.model';
-import { AssetAddress, User, UserType } from 'src/app/model/generated-models';
-import { CurrencyView } from 'src/app/model/payment.model';
-import { UserItem } from 'src/app/model/user.model';
+import { AssetAddress } from 'src/app/model/generated-models';
 import { WalletItem } from '../../../model/wallet.model';
 
 @Component({
@@ -13,119 +10,62 @@ import { WalletItem } from '../../../model/wallet.model';
 })
 export class WalletDetailsComponent {
   @Input() set wallet(val: WalletItem | undefined) {
-    // this.setFormData(val);
-    // this.settingsId = (val) ? val?.id : '';
-    // this.removable = (this.auth.user?.userId !== this.settingsId);
-    // this.email = (val) ? val.email : '';
-    // this.address = (val) ? val.address : '';
-    // this.userType = (val) ? val.userType?.id ?? UserType.Personal : UserType.Personal;
-  }
-  @Input() set currencies(val: CurrencyView[]) {
-    this.fiatCurrencies = val.filter(x => x.fiat === true);
-    this.cryptoCurrencies = val.filter(x => x.fiat === false);
+    this.setFormData(val);
   }
   @Output() save = new EventEmitter<AssetAddress>();
-  @Output() delete = new EventEmitter<string>();
+  @Output() delete = new EventEmitter<AssetAddress>();
   @Output() cancel = new EventEmitter();
   @Output() formChanged = new EventEmitter<boolean>();
 
-  USER_TYPE: typeof UserType = UserType;
   settingsId = '';
-  removable = true;
-  email = '';
-  address = '';
-  userType = UserType.Personal;
+  userId = '';
+  walletData: WalletItem | undefined = undefined;
   loadingData = false;
   errorMessage = '';
-  countries = Countries;
-  fiatCurrencies: CurrencyView[] = [];
-  cryptoCurrencies: CurrencyView[] = [];
 
   dataForm = this.formBuilder.group({
-    id: [''],
-    firstName: ['', { validators: [Validators.required], updateOn: 'change' }],
-    lastName: ['', { validators: [], updateOn: 'change' }],
-    country: ['', { validators: [Validators.required], updateOn: 'change' }],
-    phone: ['', { validators: [Validators.required], updateOn: 'change' }],
-    fiat: ['', { validators: [Validators.required], updateOn: 'change' }],
-    crypto: ['', { validators: [Validators.required], updateOn: 'change' }]
-
-    // address = '';
-    // legacyAddress?: string;
-    // description?: string;
-    // type?: string;
-    // addressFormat?: string;
-    // assetId?: string;
-    // originalId?: string;
-    // total?: number;
-    // available?: number;
-    // pending?: number;
-    // lockedAmount?: number;
-    // vaultId?: string;
-    // vaultName?: string;
-    // userId?: string;
-    // userEmail?: string;
-    // custodyProvider?: string;
+    vaultName: ['', { validators: [Validators.required], updateOn: 'change' }]
   });
 
   constructor(
     private formBuilder: FormBuilder) {
   }
 
-  setFormData(data: UserItem | null): void {
+  setFormData(data: WalletItem | undefined): void {
     this.errorMessage = '';
     this.dataForm.reset();
     if (data) {
       this.loadingData = true;
-      this.dataForm.get('id')?.setValue(data?.id);
-      if (data.userType?.id === UserType.Merchant) {
-        this.dataForm.get('firstName')?.setValue(data?.company);
-        this.dataForm.get('lastName')?.setValue('');
-      } else {
-        this.dataForm.get('firstName')?.setValue(data?.firstName);
-        this.dataForm.get('lastName')?.setValue(data?.lastName);
-      }
-      this.dataForm.get('country')?.setValue(data?.country?.id);
-      this.dataForm.get('phone')?.setValue(data?.phone);
-      this.dataForm.get('fiat')?.setValue(data?.fiatCurrency);
-      this.dataForm.get('crypto')?.setValue(data?.cryptoCurrency);
+      this.walletData = data;
+      this.dataForm.get('vaultName')?.setValue(data?.vaultName);
+      this.userId = data.userId ?? '';
+      this.settingsId = data.vaultId ?? '';
       this.loadingData = false;
-      this.formChanged.emit(false);
     } else {
-      this.dataForm.get('id')?.setValue('');
-      this.dataForm.get('firstName')?.setValue('');
-      this.dataForm.get('lastName')?.setValue('');
-      this.dataForm.get('country')?.setValue('');
-      this.dataForm.get('phone')?.setValue('');
-      this.dataForm.get('fiat')?.setValue('');
-      this.dataForm.get('crypto')?.setValue('');
+      this.walletData = undefined;
+      this.dataForm.get('vaultName')?.setValue('');
+      this.userId = '';
+      this.settingsId = '';
     }
+    this.formChanged.emit(false);
   }
 
-  setCustomerData(): User {
-    const code3 = this.dataForm.get('country')?.value;
-    const country = getCountryByCode3(code3);
-    const code2 = (country) ? country.code2 : '';
+  setWalletData(): AssetAddress {
     const data = {
-      userId: this.dataForm.get('id')?.value,
-      firstName: this.dataForm.get('firstName')?.value,
-      lastName: this.dataForm.get('lastName')?.value,
-      countryCode2: code2,
-      countryCode3: code3,
-      phone: this.dataForm.get('phone')?.value,
-      defaultFiatCurrency: this.dataForm.get('fiat')?.value,
-      defaultCryptoCurrency: this.dataForm.get('crypto')?.value
-    } as User;
+      userId: this.userId,
+      vaultId: this.settingsId,
+      vaultName: this.dataForm.get('vaultName')?.value
+    } as AssetAddress;
     return data;
   }
 
-  onDeleteCustomer(): void {
-    this.delete.emit(this.settingsId);
+  onDeleteWallet(): void {
+    this.delete.emit(this.setWalletData());
   }
 
   onSubmit(): void {
     if (this.dataForm.valid) {
-      //this.save.emit(this.setCustomerData());
+      this.save.emit(this.setWalletData());
     } else {
       this.errorMessage = 'Input data is not completely valid. Please, check all fields are valid.';
     }
