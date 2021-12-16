@@ -295,6 +295,9 @@ const GET_NOTIFICATIONS = gql`
         params
         text
         title
+        user {
+          email
+        }
         userId
         userNotificationId
         userNotificationLevel
@@ -891,6 +894,18 @@ mutation SendAdminNotification(
     title: $title
     text: $text
     level: $level
+  ) {
+    userNotificationId
+  }
+}
+`;
+
+const RESEND_NOTIFICATION = gql`
+mutation ResendNotification(
+  $notificationId: String
+) {
+  resendNotification(
+    notificationId: $notificationId
   ) {
     userNotificationId
   }
@@ -1849,7 +1864,7 @@ export class AdminDataService {
     return this.mutate({
       mutation: SEND_ADMIN_NOTIFICATION,
       variables: {
-        notifiedUserId: ids[0],
+        notifiedUserId: ids,
         title,
         text,
         level
@@ -1857,6 +1872,20 @@ export class AdminDataService {
     }).pipe(tap((res) => {
       this.snackBar.open(
         `Message was sent`,
+        undefined, { duration: 5000 }
+      );
+    }));
+  }
+
+  resendAdminNotification(notificationId: string): Observable<any> {
+    return this.mutate({
+      mutation: RESEND_NOTIFICATION,
+      variables: {
+        notificationId: notificationId
+      }
+    }).pipe(tap((res) => {
+      this.snackBar.open(
+        `Message was resent`,
         undefined, { duration: 5000 }
       );
     }));

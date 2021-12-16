@@ -6,6 +6,9 @@ import { NotificationItem } from '../../../../model/notification.model';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { PageEvent } from '@angular/material/paginator';
+import { LayoutService } from 'src/app/admin/services/layout.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   templateUrl: 'notification-list.component.html',
@@ -20,7 +23,7 @@ export class NotificationListComponent implements OnInit, OnDestroy, AfterViewIn
 
   selectedItem?: NotificationItem;
   data: NotificationItem[] = [];
-  customerCount = 0;
+  messageCount = 0;
   pageSize = 25;
   pageIndex = 0;
   sortedField = 'created';
@@ -28,16 +31,13 @@ export class NotificationListComponent implements OnInit, OnDestroy, AfterViewIn
   filter = new Filter({});
 
   displayedColumns: string[] = [
+    'details',
     'created',
     'viewed',
+    'user',
     'title',
-    'linkedId',
-    'linkedTable',
-    'params',
-    'userId',
-    'userNotificationId',
+    'code',
     'userNotificationLevel',
-    'userNotificationTypeCode',
     'text'
   ];
 
@@ -46,11 +46,18 @@ export class NotificationListComponent implements OnInit, OnDestroy, AfterViewIn
 
 
   constructor(
+    private layoutService: LayoutService,
+    private router: Router,
+    private auth: AuthService,
     private adminDataService: AdminDataService
   ) {
   }
 
   ngOnInit(): void {
+    this.layoutService.rightPanelCloseRequested$.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.selectedItem = undefined;
+    });
+
     this.loadData();
   }
 
@@ -71,9 +78,24 @@ export class NotificationListComponent implements OnInit, OnDestroy, AfterViewIn
     this.loadData();
   }
 
-
   handleDetailsPanelClosed(): void {
     this.selectedItem = undefined;
+  }
+
+  getDetailsIcon(customerId: string): string {
+    return (this.isSelectedMessage(customerId)) ? 'clear' : 'open_in_new';
+  }
+
+  getDetailsTooltip(customerId: string): string {
+    return (this.isSelectedMessage(customerId)) ? 'Hide details' : 'Customer details';
+  }
+
+  toggleDetails(message: NotificationItem): void {
+    if (this.isSelectedMessage(message.id)) {
+      this.selectedItem = undefined;
+    } else {
+      this.selectedItem = message;
+    }
   }
 
   private loadData(): void {
@@ -85,15 +107,14 @@ export class NotificationListComponent implements OnInit, OnDestroy, AfterViewIn
       this.sortedField,
       this.sortedDesc,
       this.filter
-    )
-                                .pipe(
-                                  takeUntil(this.destroy$)
-                                )
-                                .subscribe(result => {
-                                  console.log(result.list);
-                                  this.data = result.list;
-                                  this.customerCount = result.count;
-                                });
+    ).pipe(takeUntil(this.destroy$)).subscribe(result => {
+      this.data = result.list;
+      this.messageCount = result.count;
+    });
+  }
+
+  private isSelectedMessage(messageId: string): boolean {
+    return !!this.selectedItem && this.selectedItem.id === messageId;
   }
 
   handlePage(event: PageEvent): PageEvent {
@@ -101,5 +122,18 @@ export class NotificationListComponent implements OnInit, OnDestroy, AfterViewIn
     this.pageIndex = event.pageIndex;
     this.loadData();
     return event;
+  }
+
+  onMessageResend(msgId: string): void {
+    const requestData = this.adminDataService.resendAdminNotification(msgId);
+    if (requestData) {
+      requestData.subscribe(({ data }) => {
+        this.selectedItem = undefined;
+      }, (error) => {
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
+      });
+    }
   }
 }

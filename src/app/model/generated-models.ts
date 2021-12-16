@@ -478,7 +478,7 @@ export type Mutation = {
   deleteMyApiKey?: Maybe<ApiKey>;
   createUserApiKey?: Maybe<ApiKeySecret>;
   deleteUserApiKey?: Maybe<ApiKey>;
-  sendAdminNotification?: Maybe<UserNotification>;
+  sendAdminNotification?: Maybe<Array<UserNotification>>;
   resendNotification?: Maybe<UserNotification>;
   makeNotificationsViewed?: Maybe<Array<UserNotification>>;
   deleteMyNotifications?: Maybe<Array<UserNotification>>;
@@ -547,7 +547,7 @@ export type Mutation = {
   sendTestServiceNotification?: Maybe<Scalars['Void']>;
   createTransaction?: Maybe<TransactionShort>;
   executeTransaction?: Maybe<TransactionShort>;
-  updateTransaction?: Maybe<TransactionShort>;
+  updateTransaction?: Maybe<Transaction>;
   cancelMyTransaction?: Maybe<TransactionShort>;
   cancelTransaction?: Maybe<Transaction>;
   unbenchmarkTransactions?: Maybe<Array<Transaction>>;
@@ -578,7 +578,7 @@ export type MutationDeleteUserApiKeyArgs = {
 
 
 export type MutationSendAdminNotificationArgs = {
-  notifiedUserId?: Maybe<Scalars['String']>;
+  notifiedUserIds?: Maybe<Array<Scalars['String']>>;
   title?: Maybe<Scalars['String']>;
   text?: Maybe<Scalars['String']>;
   level?: Maybe<UserNotificationLevel>;
@@ -960,7 +960,7 @@ export type MutationExecuteTransactionArgs = {
 
 export type MutationUpdateTransactionArgs = {
   transactionId?: Maybe<Scalars['String']>;
-  transaction?: Maybe<TransactionInput>;
+  transaction?: Maybe<TransactionUpdateInput>;
 };
 
 
@@ -2216,6 +2216,8 @@ export type Transaction = {
   widgetUserParamsId?: Maybe<Scalars['String']>;
   widgetUserParams?: Maybe<Scalars['String']>;
   destinationUserId?: Maybe<Scalars['String']>;
+  manuallyEditedAmounts?: Maybe<Scalars['Boolean']>;
+  backups?: Maybe<Array<Scalars['String']>>;
   data?: Maybe<Scalars['String']>;
 };
 
@@ -2379,6 +2381,18 @@ export enum TransactionType {
   Exchange = 'Exchange',
   System = 'System'
 }
+
+export type TransactionUpdateInput = {
+  sourceVaultId?: Maybe<Scalars['String']>;
+  currencyToSpend?: Maybe<Scalars['String']>;
+  currencyToReceive?: Maybe<Scalars['String']>;
+  amountToSpend?: Maybe<Scalars['Float']>;
+  amountToReceive?: Maybe<Scalars['Float']>;
+  rate?: Maybe<Scalars['Float']>;
+  destination?: Maybe<Scalars['String']>;
+  widgetId?: Maybe<Scalars['String']>;
+  widgetUserParamsId?: Maybe<Scalars['String']>;
+};
 
 export type TransferListResult = {
   __typename?: 'TransferListResult';
@@ -2998,6 +3012,8 @@ export type Widget = {
   __typename?: 'Widget';
   widgetId: Scalars['ID'];
   userId: Scalars['String'];
+  name: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
   created: Scalars['DateTime'];
   transactionTypes?: Maybe<Array<TransactionType>>;
   currenciesFrom?: Maybe<Array<Scalars['String']>>;
@@ -3012,6 +3028,8 @@ export type Widget = {
 };
 
 export type WidgetInput = {
+  name: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
   transactionTypes?: Maybe<Array<TransactionType>>;
   currenciesFrom?: Maybe<Array<Scalars['String']>>;
   currenciesTo?: Maybe<Array<Scalars['String']>>;
@@ -3031,6 +3049,8 @@ export type WidgetListResult = {
 
 export type WidgetShort = {
   __typename?: 'WidgetShort';
+  name: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
   transactionTypes?: Maybe<Array<TransactionType>>;
   currenciesFrom?: Maybe<Array<Scalars['String']>>;
   currenciesTo?: Maybe<Array<Scalars['String']>>;

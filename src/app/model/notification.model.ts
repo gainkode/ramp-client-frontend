@@ -5,6 +5,7 @@ import { UserNotificationCodeList } from './payment.model';
 export class NotificationItem {
     id = '';
     userId = '';
+    userEmail = '';
     level = '';
     created = '';
     viewed = '';
@@ -22,6 +23,7 @@ export class NotificationItem {
             this.viewed = (data.viewed) ? datepipe.transform(data.viewed, 'dd MMM YYYY HH:mm:ss') as string : '';
 
             this.userId = data.userId as string;
+            this.userEmail = data.user?.email ?? '';
             this.text = data.text as string;
             this.title = data.title ?? 'Notification';
             this.level = data.userNotificationLevel as string ?? '';

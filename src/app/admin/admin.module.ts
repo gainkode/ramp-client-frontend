@@ -71,6 +71,7 @@ import {
 import { AdminSettingsComponent } from './components/settings/settings.component';
 import { CommonSettingsEditorComponent } from './components/settings/common/common-settings.component';
 import { WalletDetailsComponent } from './components/wallets/details/wallet-details.component';
+import { NotificationDetailsComponent } from './components/notifications/details/notification-details.component';
 
 @NgModule({
   imports: [
@@ -118,6 +119,7 @@ import { WalletDetailsComponent } from './components/wallets/details/wallet-deta
     FeeListComponent,
     FeeDetailsComponent,
     NotificationListComponent,
+    NotificationDetailsComponent,
     CostsComponent, CostEditorComponent,
     IdentificationListComponent,
     IdTableComponent,
