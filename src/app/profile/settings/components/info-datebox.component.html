@@ -19,7 +19,7 @@
             </div>
         </div>
         <div class="__profile-settings-personal-info-editor-button">
-            <button class="__tool-button" (click)="edit()" [disabled]="editMode && dataField?.errors">
+            <button [ngClass]="editMode ? '__table-button' : '__tool-button'" (click)="edit()" [disabled]="editMode && dataField?.errors">
                 <mat-icon style="font-size: 20px;">
                     {{editMode ? 'check_circle_outline' : 'edit'}}
                 </mat-icon>
