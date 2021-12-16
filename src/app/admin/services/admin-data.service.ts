@@ -21,8 +21,8 @@ import {
   SettingsCommon,
   SettingsFeeListResult, SettingsKycLevelListResult,
   SettingsKycListResult,
+  Transaction,
   TransactionListResult,
-  TransactionSource,
   User,
   UserListResult,
   UserNotificationLevel,
@@ -876,6 +876,32 @@ mutation UnbenchmarkTransactions(
 ) {
   unbenchmarkTransactions(
     transactionIds: $transactionIds
+  ) {
+    transactionId
+  }
+}
+`;
+
+const UPDATE_TRANSACTIONS = gql`
+mutation UpdateTransaction(
+  $transactionId: String!
+  $currencyToSpend: String
+  $currencyToReceive: String
+  $amountToSpend: Float
+  $amountToReceive: Float
+  $rate: Float
+  $destination: String
+) {
+  updateTransaction(
+    transactionId: $transactionId
+    transaction: {
+      currencyToSpend: $currencyToSpend
+      currencyToReceive: $currencyToReceive
+      amountToSpend: $amountToSpend
+      amountToReceive: $amountToReceive
+      rate: $rate
+      destination: $destination
+    }
   ) {
     transactionId
   }
@@ -1855,6 +1881,26 @@ export class AdminDataService {
     }).pipe(tap((res) => {
       this.snackBar.open(
         `Transactions were changed`,
+        undefined, { duration: 5000 }
+      );
+    }));
+  }
+
+  updateTransaction(data: Transaction): Observable<any> {
+    return this.mutate({
+      mutation: UPDATE_TRANSACTIONS,
+      variables: {
+        transactionId: data.transactionId,
+        currencyToSpend: data.currencyToSpend,
+        currencyToReceive: data.currencyToReceive,
+        amountToSpend: data.amountToSpend,
+        amountToReceive: data.amountToReceive,
+        rate: data.rate,
+        destination: data.destination
+      }
+    }).pipe(tap((res) => {
+      this.snackBar.open(
+        `Transaction was updated`,
         undefined, { duration: 5000 }
       );
     }));

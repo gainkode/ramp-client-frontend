@@ -210,9 +210,17 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   onSaveTransaction(transaction: Transaction): void {
-    console.log(transaction);
-    this.selectedTransaction = undefined;
-    this.loadList();
+    const requestData = this.adminService.updateTransaction(transaction);
+    if (requestData) {
+      requestData.subscribe(({ data }) => {
+        this.selectedTransaction = undefined;
+        this.loadList();
+      }, (error) => {
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
+      });
+    }
   }
 
   onDeleteTransaction(id: string): void {

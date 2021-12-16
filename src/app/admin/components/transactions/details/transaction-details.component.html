@@ -67,6 +67,18 @@
                 </mat-select>
             </mat-form-field>
 
+            <!-- Rate -->
+            <mat-form-field class="form-element">
+                <mat-label>Exchange rate</mat-label>
+                <input matInput formControlName="rate" required/>
+                <mat-error *ngIf="form.controls.rate.hasError('required')">
+                    Rate is required
+                </mat-error>
+                <mat-error *ngIf="form.controls.rate.hasError('pattern')">
+                    Incorrect number value
+                </mat-error>
+            </mat-form-field>
+
             <app-details-attribute label="Transaction status" [value]="data?.transactionStatusName">
             </app-details-attribute>
             <app-details-attribute label="Transaction fees" [value]="(data?.fees | number: '1.0-5') + ' EUR'">
@@ -79,16 +91,7 @@
         <section>
             <h2>AML Checks</h2>
             <app-details-attribute label="Account ID" [value]="data?.user?.id"></app-details-attribute>
-
-            <!-- Crypto currencies -->
-            <mat-form-field class="form-element">
-                <mat-label>KYC Status</mat-label>
-                <mat-select formControlName="kycStatus" required>
-                    <mat-option *ngFor="let item of kycStatuses" [value]="item.id">
-                        {{item.title}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
+            <app-details-attribute label="KYC Status" [value]="data?.kycStatus"></app-details-attribute>
         </section>
 
         <div class="panel-actions">

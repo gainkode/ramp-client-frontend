@@ -43,25 +43,14 @@ export class TransactionDetailsComponent {
   transactionId = '';
   currenciesToSpend: CurrencyView[] = [];
   currenciesToReceive: CurrencyView[] = [];
-  kycStatuses: CommonTargetValue[] = [
-    { id: TransactionKycStatus.KycWaiting, title: 'Waiting' } as CommonTargetValue,
-    { id: TransactionKycStatus.KycApproved, title: 'Approved' } as CommonTargetValue,
-    { id: TransactionKycStatus.KycRejected, title: 'Rejected' } as CommonTargetValue
-  ];
 
   form = this.formBuilder.group({
     address: ['', { validators: [Validators.required], updateOn: 'change' }],
     currencyToSpend: ['', { validators: [Validators.required], updateOn: 'change' }],
     currencyToReceive: ['', { validators: [Validators.required], updateOn: 'change' }],
-    amountToReceive: [0, { validators: [
-      Validators.required,
-      Validators.pattern(this.pNumberPattern)
-    ], updateOn: 'change' }],
-    amountToSpend: [0, { validators: [
-      Validators.required,
-      Validators.pattern(this.pNumberPattern)
-    ], updateOn: 'change' }],
-    kycStatus: [TransactionKycStatus.KycWaiting, { validators: [Validators.required], updateOn: 'change' }]
+    amountToReceive: [0, { validators: [Validators.required, Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
+    amountToSpend: [0, { validators: [Validators.required, Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
+    rate: [0, { validators: [Validators.required, Validators.pattern(this.pNumberPattern)], updateOn: 'change' }]
   });
 
   constructor(
@@ -84,7 +73,7 @@ export class TransactionDetailsComponent {
       }
       this.form.get('amountToSpend')?.setValue(this.data.amountToSpend);
       this.form.get('amountToReceive')?.setValue(this.data.amountToReceive);
-      this.form.get('kycStatus')?.setValue(this.data.kycStatus);
+      this.form.get('rate')?.setValue(this.data.rate);
     }
   }
 
@@ -99,9 +88,9 @@ export class TransactionDetailsComponent {
         currencyToReceive: (this.data?.type === TransactionType.Withdrawal) ?
         this.form.get('currencyToSpend')?.value :
         this.form.get('currencyToReceive')?.value,
-        amountToSpend: this.form.get('amountToSpend')?.value,
-        amountToReceive: this.form.get('amountToReceive')?.value,
-        kycStatus: this.form.get('kycStatus')?.value
+        amountToSpend: parseFloat(this.form.get('amountToSpend')?.value ?? '0'),
+        amountToReceive: parseFloat(this.form.get('amountToReceive')?.value ?? '0'),
+        rate: parseFloat(this.form.get('rate')?.value ?? '0')
       } as Transaction;
       this.save.emit(transaction);
     }

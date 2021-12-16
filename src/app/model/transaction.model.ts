@@ -21,6 +21,7 @@ import {
   TransactionStatusList,
   CardView,
   UserModeShortList,
+  TransactionKycStatusList,
 } from './payment.model';
 import { UserItem } from './user.model';
 
@@ -50,7 +51,7 @@ export class TransactionItemDeprecated {
   statusInfo: TransactionStatusDescriptorMap | undefined = undefined;
   user: UserItem | undefined;
   balance = 0;
-  kycStatus = TransactionKycStatus.KycWaiting;
+  kycStatus = '';
   selected = false;
 
   constructor(data: Transaction | TransactionShort | null) {
@@ -77,15 +78,14 @@ export class TransactionItemDeprecated {
 
       this.type = data.type;
       this.instrument = data.instrument ?? undefined;
-      this.paymentProvider = data.paymentProvider as
-        | PaymentProvider
-        | undefined;
+      this.paymentProvider = data.paymentProvider as | PaymentProvider | undefined;
       this.source = data.source ?? undefined;
       this.currencyToSpend = data.currencyToSpend ?? '';
       this.currencyToReceive = data.currencyToReceive ?? '';
       this.amountToSpend = data.amountToSpend ?? 0;
       this.amountToReceive = data.amountToReceive ?? 0;
-      this.kycStatus = (data as Transaction).kycStatus ?? TransactionKycStatus.KycWaiting;
+      const kycStatus = TransactionKycStatusList.find(x => x.id === (data as Transaction).kycStatus);
+      this.kycStatus = (kycStatus) ? kycStatus.name : '';
 
       // if (
       //   transactionData.amountToSpendInEur ||

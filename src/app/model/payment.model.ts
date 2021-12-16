@@ -3,7 +3,7 @@ import { CommonTargetValue } from './common.model';
 import {
     PaymentInstrument, PaymentProvider, TransactionType, TransactionStatus,
     SettingsFeeTargetFilterType, SettingsCostTargetFilterType, SettingsKycTargetFilterType,
-    UserType, KycProvider, UserMode, SettingsCurrency, Rate, TransactionSource, UserNotificationCodes, CustodyProvider
+    UserType, KycProvider, UserMode, SettingsCurrency, Rate, TransactionSource, UserNotificationCodes, CustodyProvider, TransactionKycStatus
 } from './generated-models';
 
 export enum PaymentWidgetType {
@@ -50,6 +50,11 @@ export class TransactionSourceView {
 
 export class TransactionStatusView {
     id!: TransactionStatus;
+    name = '';
+}
+
+export class TransactionKycStatusView {
+    id!: TransactionKycStatus;
     name = '';
 }
 
@@ -226,6 +231,12 @@ export const TransactionStatusList: Array<TransactionStatusView> = [
     { id: TransactionStatus.Abandoned, name: 'Abandoned' },
     { id: TransactionStatus.Canceled, name: 'Canceled' },
     { id: TransactionStatus.Chargeback, name: 'Chargeback' }
+];
+
+export const TransactionKycStatusList: Array<TransactionKycStatusView> = [
+    { id: TransactionKycStatus.KycWaiting, name: 'Waiting' },
+    { id: TransactionKycStatus.KycApproved, name: 'Approved' },
+    { id: TransactionKycStatus.KycRejected, name: 'Rejected' }
 ];
 
 export const FeeTargetFilterList: Array<FeeTargetFilterTypeView> = [
