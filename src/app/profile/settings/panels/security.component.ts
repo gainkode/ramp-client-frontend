@@ -12,7 +12,7 @@ import { ErrorService } from 'src/app/services/error.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
 
 @Component({
-    selector: 'app-personal-security-settings',
+    selector: 'app-profile-security-settings',
     templateUrl: './security.component.html',
     styleUrls: [
         '../../../../assets/menu.scss',
@@ -21,7 +21,7 @@ import { ProfileDataService } from 'src/app/services/profile.service';
         '../../../../assets/profile.scss'
     ]
 })
-export class PersonalSecuriySettingsComponent implements OnInit, OnDestroy {
+export class ProfileSecuriySettingsComponent implements OnInit, OnDestroy {
     @Output() error = new EventEmitter<string>();
     @Output() progressChange = new EventEmitter<boolean>();
 

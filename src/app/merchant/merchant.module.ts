@@ -26,7 +26,7 @@ import { MerchantConfirmDeviceComponent } from './auth/confirm-device.component'
 import { WidgetModule } from '../widget/widget.module';
 import { ProfileModule } from '../profile/profile.module';
 import { PersonalNotificationsComponent } from '../profile/notifications/notifications.component';
-import { PersonalSettingsComponent } from '../profile/settings/settings.component';
+import { ProfileSettingsComponent } from '../profile/settings/settings.component';
 import { PersonalHomeComponent } from '../profile/home/home.component';
 import { PersonalWalletsComponent } from '../profile/wallets/wallets.component';
 import { PersonalContactsComponent } from '../profile/contacts/contacts.component';
@@ -63,8 +63,8 @@ const routing = RouterModule.forChild([
         component: MerchantComponent,
         children: [
             { path: 'notifications', component: PersonalNotificationsComponent },
-            { path: 'settings/:page', component: PersonalSettingsComponent },
-            { path: 'settings', component: PersonalSettingsComponent },
+            { path: 'settings/:page', component: ProfileSettingsComponent },
+            { path: 'settings', component: ProfileSettingsComponent },
             { path: '**', redirectTo: 'settings' }
         ],
         canActivate: [MerchantGuard]

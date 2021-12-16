@@ -39,12 +39,12 @@ import { PersonalBalanceChartComponent } from './home/data/balance-chart.compone
 import { PersonalBalanceListComponent } from './home/data/balance-list.component';
 import { PersonalNotificationsComponent } from './notifications/notifications.component';
 import { PersonalNotificationListComponent } from './notifications/data/notification-list.component';
-import { PersonalSettingsComponent } from './settings/settings.component';
+import { ProfileSettingsComponent } from './settings/settings.component';
 import { SettingsMenuBarComponent } from './settings/bar/settings-bar.component';
-import { PersonalInfoSettingsComponent } from './settings/panels/personal-info.component';
-import { PersonalVerificationSettingsComponent } from './settings/panels/verification.component';
-import { PersonalSecuriySettingsComponent } from './settings/panels/security.component';
-import { PersonalChangePasswordComponent } from './settings/components/password.component';
+import { ProfileInfoSettingsComponent } from './settings/panels/info.component';
+import { ProfileVerificationSettingsComponent } from './settings/panels/verification.component';
+import { ProfileSecuriySettingsComponent } from './settings/panels/security.component';
+import { ProfileChangePasswordComponent } from './settings/components/password.component';
 import { ProfileInfoTextboxComponent } from './settings/components/info-textbox.component';
 import { ProfileInfoDateboxComponent } from './settings/components/info-datebox.component';
 import { ProfileInfoDropboxComponent } from './settings/components/info-dropbox.component';
@@ -87,8 +87,8 @@ export class MaterialModule { }
         PersonalPricelistComponent,
         PersonalPaymentCompleteComponent, 
         PersonalNotificationsComponent, PersonalNotificationListComponent,
-        PersonalSettingsComponent, PersonalInfoSettingsComponent, PersonalVerificationSettingsComponent, PersonalSecuriySettingsComponent,
-        PersonalChangePasswordComponent, ProfileInfoTextboxComponent, ProfileInfoDateboxComponent, ProfileInfoDropboxComponent,
+        ProfileSettingsComponent, ProfileInfoSettingsComponent, ProfileVerificationSettingsComponent, ProfileSecuriySettingsComponent,
+        ProfileChangePasswordComponent, ProfileInfoTextboxComponent, ProfileInfoDateboxComponent, ProfileInfoDropboxComponent,
         SettingsMenuBarComponent
     ],
     exports: [
@@ -99,7 +99,7 @@ export class MaterialModule { }
         PersonalPricelistComponent,
         PersonalPaymentCompleteComponent,
         PersonalNotificationsComponent,
-        PersonalSettingsComponent
+        ProfileSettingsComponent
     ],
     providers: [],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]

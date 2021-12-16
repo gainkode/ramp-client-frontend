@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CommonTargetValue } from 'src/app/model/common.model';
 import { Countries, getCountryByCode3 } from 'src/app/model/country-code.model';
-import { SettingsCurrencyWithDefaults, User, UserInput } from 'src/app/model/generated-models';
+import { SettingsCurrencyWithDefaults, User, UserInput, UserType } from 'src/app/model/generated-models';
 import { UserItem } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
@@ -19,14 +19,15 @@ enum ChangedDataType {
 };
 
 @Component({
-    selector: 'app-personal-info-settings',
-    templateUrl: './personal-info.component.html',
+    selector: 'app-profile-info-settings',
+    templateUrl: './info.component.html',
     styleUrls: ['../../../../assets/menu.scss', '../../../../assets/button.scss', '../../../../assets/profile.scss']
 })
-export class PersonalInfoSettingsComponent implements OnInit, OnDestroy {
+export class ProfileInfoSettingsComponent implements OnInit, OnDestroy {
     @Output() error = new EventEmitter<string>();
     @Output() progressChange = new EventEmitter<boolean>();
 
+    USER_TYPE: typeof UserType = UserType;
     user!: User;
     userView: UserItem = new UserItem(null);
     countryList: CommonTargetValue[] = Countries.map(val => {
@@ -150,6 +151,9 @@ export class PersonalInfoSettingsComponent implements OnInit, OnDestroy {
                 } else {
                     this.user = resultData;
                     if (dataChanged === ChangedDataType.Name) {
+                        this.userView.firstName = resultData.firstName ?? '';
+                        this.userView.lastName = resultData.lastName ?? '';
+                        this.userView.setFullName();
                         this.auth.setUserName(resultData.firstName ?? '', resultData.lastName ?? '');
                     } else if (dataChanged === ChangedDataType.Currency) {
                         this.auth.setUserCurrencies(resultData.defaultCryptoCurrency ?? '', resultData.defaultFiatCurrency ?? '');

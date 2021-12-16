@@ -2,11 +2,11 @@ import { ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/cor
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
-    selector: 'app-personal-settings',
+    selector: 'app-profile-settings',
     templateUrl: './settings.component.html',
     styleUrls: ['../../../assets/profile.scss', '../../../assets/button.scss']
 })
-export class PersonalSettingsComponent {
+export class ProfileSettingsComponent {
     @Output() onShowError = new EventEmitter<string>();
 
     inProgress = false;

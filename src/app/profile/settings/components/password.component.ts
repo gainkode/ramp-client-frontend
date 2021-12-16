@@ -20,7 +20,7 @@ import { PasswordValidator } from 'src/app/utils/password.validator';
         '../../../../assets/profile.scss'
     ]
 })
-export class PersonalChangePasswordComponent implements OnDestroy {
+export class ProfileChangePasswordComponent implements OnDestroy {
     @Input() twoFaRequired = false;
     @Output() error = new EventEmitter<string>();
     @Output() progressChange = new EventEmitter<boolean>();

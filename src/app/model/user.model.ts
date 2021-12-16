@@ -50,19 +50,12 @@ export class UserItem {
   constructor(data: User | null) {
     if (data) {
       this.id = data.userId;
+      this.userType = UserTypeList.find((x) => x.id === data.type) as UserTypeView;
+      this.userMode = UserModeShortList.find((x) => x.id === data.mode) as UserModeView;
       this.firstName = data.firstName as string;
       this.lastName = data.lastName as string;
-      if (data.type === UserType.Merchant) {
-        this.company = data.firstName ? (data.firstName as string) : '';
-        this.firstName = '';
-        this.lastName = '';
-        this.fullName = this.company;
-      } else {
-        this.fullName = `${this.firstName ?? ''} ${this.lastName ?? ''}`.trim();
-      }
-
+      this.setFullName();
       this.birthday = (data.birthday) ? new Date(data.birthday) : undefined;
-
       this.email = data.email;
       this.phone = data.phone ? (data.phone as string) : '';
       this.street = data.street ?? '';
@@ -113,8 +106,6 @@ export class UserItem {
       this.cryptoCurrency = data.defaultCryptoCurrency
         ? (data.defaultCryptoCurrency as string)
         : '';
-      this.userType = UserTypeList.find((x) => x.id === data.type) as UserTypeView;
-      this.userMode = UserModeShortList.find((x) => x.id === data.mode) as UserModeView;
     }
   }
 
@@ -139,6 +130,17 @@ export class UserItem {
     const flatValue = user.flatNumber ? `${user.flatNumber}, ` : '';
 
     return `${flatValue}${buildingNameValue}${buildingValue}${fullStreetValue}${townValue}${stateValue}${postCodeValue}`;
+  }
+
+  setFullName(): void {
+    if (this.userType?.id === UserType.Merchant) {
+      this.company = (this.firstName) ? this.firstName : '';
+      this.firstName = '';
+      this.lastName = '';
+      this.fullName = this.company;
+    } else if (this.userType?.id === UserType.Personal) {
+      this.fullName = `${this.firstName ?? ''} ${this.lastName ?? ''}`.trim();
+    }
   }
 }
 

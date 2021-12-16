@@ -38,7 +38,7 @@ import { PersonalTransactionsComponent } from '../profile/transactions/transacti
 import { PersonalPricelistComponent } from '../profile/pricelist/pricelist.component';
 import { PersonalHomeComponent } from '../profile/home/home.component';
 import { PersonalNotificationsComponent } from '../profile/notifications/notifications.component';
-import { PersonalSettingsComponent } from '../profile/settings/settings.component';
+import { ProfileSettingsComponent } from '../profile/settings/settings.component';
 import { WidgetModule } from '../widget/widget.module';
 
 const routing = RouterModule.forChild([
@@ -72,8 +72,8 @@ const routing = RouterModule.forChild([
         component: PersonalComponent,
         children: [
             { path: 'notifications', component: PersonalNotificationsComponent },
-            { path: 'settings/:page', component: PersonalSettingsComponent },
-            { path: 'settings', component: PersonalSettingsComponent },
+            { path: 'settings/:page', component: ProfileSettingsComponent },
+            { path: 'settings', component: ProfileSettingsComponent },
             { path: '**', redirectTo: 'settings' }
         ],
         canActivate: [PersonalGuard]
