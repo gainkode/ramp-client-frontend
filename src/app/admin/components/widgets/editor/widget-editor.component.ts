@@ -57,7 +57,9 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
     liquidityProvider: ['', { validators: [Validators.required], updateOn: 'change' }],
     paymentProviders: [[], { validators: [Validators.required], updateOn: 'change' }],
     transactionTypes: ['', { validators: [Validators.required], updateOn: 'change' }],
-    user: ['', { validators: [Validators.required], updateOn: 'change' }]
+    user: ['', { validators: [Validators.required], updateOn: 'change' }],
+    name: ['', { validators: [Validators.required], updateOn: 'change' }],
+    description: ['']
   });
 
   filteredUserOptions: Array<UserItem> = [];
@@ -95,8 +97,8 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
       // distinctUntilChanged(),
       switchMap(searchString => this.getFilteredCountryOptions(searchString))
     ).subscribe(options => {
-        this.filteredCountryOptions = options;
-      });
+      this.filteredCountryOptions = options;
+    });
 
     this.loadPaymentProviders();
     this.loadCurrencies();
@@ -229,6 +231,7 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
 
       this.widgetLink = `https://merx-ewallet.semirolab.com/payment/widget/${widget.id}`;
       user$.subscribe(userItem => {
+        console.log(userItem);
         this.form.setValue({
           id: widget.id,
           countries: widget.countriesCode2?.map(code2 => {
@@ -241,11 +244,12 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
           liquidityProvider: widget.liquidityProvider ?? null,
           paymentProviders: widget.paymentProviders ?? [],
           transactionTypes: widget.transactionTypes ?? [],
-          user: userItem ?? null
+          user: userItem ?? null,
+          name: widget.name ?? 'Widget',
+          description: widget.description
         });
       });
     }
-
   }
 
   private getWidgetItem(): WidgetItem {
@@ -253,6 +257,8 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
     const formValue = this.form.value;
 
     widget.id = formValue.id;
+    widget.name = formValue.name;
+    widget.description = formValue.description;
     widget.userId = formValue.user.id;
     widget.countriesCode2 = formValue.countries.map(c => c.code2);
     widget.currenciesFrom = formValue.currenciesFrom;
@@ -268,18 +274,11 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
 
   private getUserFilteredOptions(searchString: string): Observable<UserItem[]> {
     if (searchString) {
-      return this.adminDataService.getUsers(
-        0,
-        100,
-        'email',
-        false,
-        new Filter({ search: searchString })
-      )
-        .pipe(
-          map(result => {
-            return result.list;
-          })
-        );
+      return this.adminDataService.getUsers(0, 100, 'email', false, new Filter({ search: searchString })).pipe(
+        map(result => {
+          return result.list;
+        })
+      );
     } else {
       return of([]);
     }

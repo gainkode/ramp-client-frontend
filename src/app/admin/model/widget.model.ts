@@ -5,6 +5,8 @@ import { Widget } from '../../model/generated-models';
 
 export class WidgetItem {
   id: string | null = null;
+  name?: string;
+  description?: string;
   additionalSettings?: string;
   userId?: string;
   created?: string;
@@ -25,6 +27,8 @@ export class WidgetItem {
     if (data) {
       const datepipe: DatePipe = new DatePipe('en-US');
       this.id = data.widgetId as string;
+      this.name = data.name;
+      this.description = data.description ?? '';
       this.additionalSettings = data.additionalSettings as string;
       this.userId = data.userId as string;
       this.created = datepipe.transform(

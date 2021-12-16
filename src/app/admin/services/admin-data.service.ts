@@ -531,6 +531,8 @@ const GET_WIDGETS = gql`
       list {
         widgetId
         userId
+        name
+        description
         created
         transactionTypes
         currenciesFrom
@@ -713,6 +715,8 @@ const ADD_KYC_LEVEL_SETTINGS = gql`
 const CREATE_WIDGET = gql`
   mutation CreateWidget(
     $userId: String
+    $name: String!
+    $description: String
     $countriesCode2: [String!]
     $currenciesFrom: [String!]
     $currenciesTo: [String!]
@@ -726,6 +730,8 @@ const CREATE_WIDGET = gql`
     createWidget(
       userId: $userId
       widget: {
+        name: $name
+        description: $description
         additionalSettings: $additionalSettings
         transactionTypes: $transactionTypes
         currenciesFrom: $currenciesFrom
@@ -745,6 +751,8 @@ const CREATE_WIDGET = gql`
 const UPDATE_WIDGET = gql`
   mutation UpdateWidget(
     $widgetId: String
+    $name: String!
+    $description: String
     $countriesCode2: [String!]
     $currenciesFrom: [String!]
     $currenciesTo: [String!]
@@ -758,6 +766,8 @@ const UPDATE_WIDGET = gql`
     updateWidget(
       widgetId: $widgetId,
       widget: {
+        name: $name
+        description: $description
         additionalSettings: $additionalSettings
         transactionTypes: $transactionTypes
         currenciesFrom: $currenciesFrom
@@ -1689,6 +1699,8 @@ export class AdminDataService {
         mutation: CREATE_WIDGET,
         variables: {
           userId: widget.userId,
+          name: widget.name,
+          description: widget.description,
           transactionTypes: widget.transactionTypes,
           currenciesFrom: widget.currenciesFrom,
           currenciesTo: widget.currenciesTo,
@@ -1710,6 +1722,8 @@ export class AdminDataService {
         mutation: UPDATE_WIDGET,
         variables: {
           widgetId: widget.id,
+          name: widget.name,
+          description: widget.description,
           transactionTypes: widget.transactionTypes,
           currenciesFrom: widget.currenciesFrom,
           currenciesTo: widget.currenciesTo,

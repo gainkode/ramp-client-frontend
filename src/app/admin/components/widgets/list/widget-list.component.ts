@@ -30,8 +30,8 @@ export class WidgetListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   displayedColumns: string[] = [
     'details',
-    'id',
-    'userId',
+    'name',
+//    'user',
     'created',
     'transactionType',
     'currenciesFrom',
