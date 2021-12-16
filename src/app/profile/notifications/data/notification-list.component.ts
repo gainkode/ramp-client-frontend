@@ -188,7 +188,8 @@ export class ProfileNotificationListComponent implements OnDestroy, AfterViewIni
             width: '402px',
             data: {
                 title: '',
-                message: `You are going to delete ${msgCount}. Please confirm.`
+                message: `You are going to delete ${msgCount}. Please confirm.`,
+                button: 'DELETE'
             }
         });
         this.subscriptions.add(

@@ -14,6 +14,8 @@ import { SettingsCurrencyWithDefaults, Transaction, TransactionStatusDescriptorM
 import { ProfileDataService } from 'src/app/services/profile.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
 import { CurrencyView } from 'src/app/model/payment.model';
+import { DeleteDialogBox } from 'src/app/components/dialogs/delete-box.dialog';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   templateUrl: 'transaction-list.component.html',
@@ -66,7 +68,8 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
     private adminService: AdminDataService,
     private profileService: ProfileDataService,
     private commonDataService: CommonDataService,
-    private router: Router
+    private router: Router,
+    public dialog: MatDialog
   ) {
   }
 
@@ -210,17 +213,31 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   onSaveTransaction(transaction: Transaction): void {
-    const requestData = this.adminService.updateTransaction(transaction);
-    if (requestData) {
-      requestData.subscribe(({ data }) => {
-        this.selectedTransaction = undefined;
-        this.loadList();
-      }, (error) => {
-        if (this.auth.token === '') {
-          this.router.navigateByUrl('/');
+    const dialogRef = this.dialog.open(DeleteDialogBox, {
+      width: '400px',
+      data: {
+        title: 'Update transaction',
+        message: `You are going to update transaction data. Confirm operation.`,
+        button: 'CONFIRM'
+      }
+    });
+    this.subscriptions.add(
+      dialogRef.afterClosed().subscribe(result => {
+        if (result === true) {
+          const requestData = this.adminService.updateTransaction(transaction);
+          if (requestData) {
+            requestData.subscribe(({ data }) => {
+              this.selectedTransaction = undefined;
+              this.loadList();
+            }, (error) => {
+              if (this.auth.token === '') {
+                this.router.navigateByUrl('/');
+              }
+            });
+          }
         }
-      });
-    }
+      })
+    );
   }
 
   onDeleteTransaction(id: string): void {
