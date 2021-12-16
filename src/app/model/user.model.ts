@@ -42,6 +42,7 @@ export class UserItem {
   fiatCurrency = '';
   cryptoCurrency = '';
   birthday: Date | undefined = undefined;
+  selected = false;
 
   get countryId(): string | undefined {
     return this.country?.id ?? undefined;

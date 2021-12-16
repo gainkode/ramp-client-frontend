@@ -13,6 +13,8 @@ import { CommonDataService } from 'src/app/services/common-data.service';
 import { SettingsCurrencyWithDefaults, User } from 'src/app/model/generated-models';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
+import { SendNotificationDialogBox } from 'src/app/components/dialogs/send-notification-box.dialog';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   templateUrl: 'customer-list.component.html',
@@ -37,6 +39,7 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
   sortedDesc = true;
   filter = new Filter({});
   currencyList: CurrencyView[] = [];
+  selected = false;
 
   displayedColumns: string[] = [
     'details', 'id', 'created', 'type', 'email', 'firstName', 'lastName', 'country', 'mode', 'kycStatus'
@@ -51,7 +54,8 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
     private auth: AuthService,
     private commonService: CommonDataService,
     private adminService: AdminDataService,
-    private router: Router
+    private router: Router,
+    public dialog: MatDialog
   ) {
   }
 
@@ -106,6 +110,28 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   handleDetailsPanelClosed(): void {
     this.selectedCustomer = undefined;
+  }
+
+  onCustomerSelected(item: UserItem): void {
+    item.selected = !item.selected;
+    this.selected = this.customers.some(x => x.selected === true);
+  }
+
+  sendMessage(): void {
+      const dialogRef = this.dialog.open(SendNotificationDialogBox, {
+          width: '550px',
+          data: {
+              title: 'Send message to selected users',
+              message: ''
+          }
+      });
+      this.subscriptions.add(
+          dialogRef.afterClosed().subscribe(result => {
+              if (result && result !== '') {
+                  
+              }
+          })
+      );
   }
 
   private setEditMode(mode: boolean): void {

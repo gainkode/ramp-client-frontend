@@ -1,8 +1,9 @@
-<div *ngIf="label!==''" [ngClass]="{'__form-label': true, '__form-label-small': smallLabel, '__form-label-disabled': active===false}">
+<div *ngIf="label!==''"
+    [ngClass]="{'__form-label': true, '__form-label-small': smallLabel, '__form-label-disabled': active===false}">
     {{label}}
 </div>
 
-<div class="__form-textbox-border">
+<div *ngIf="!multiple" class="__form-textbox-border">
     <input
         [ngClass]="{'__form-text-box': control?.valid || !initialized, '__form-text-box-error': !control?.valid && initialized, '__form-uppercase-input': upperCase}"
         [type]="boxType" [placeholder]="placeholder" [formControl]="control" [maxlength]="maxlength"
@@ -14,6 +15,9 @@
         </mat-icon>
     </div>
 </div>
+<textarea *ngIf="multiple"
+    [ngClass]="{'__form-text-area': true, '__form-text-area-error': !control?.valid && initialized}"
+    [placeholder]="placeholder" [formControl]="control" [maxlength]="maxlength" [readonly]="active===false"></textarea>
 
 <div *ngIf="assist!=='' || (!control?.valid)"
     [ngClass]="{'__form-assist': true, '__form-assist-disabled': active===false, '__form-assist-error': errorMessage!==''}">

@@ -28,6 +28,7 @@ export class FormTextBoxComponent implements ControlValueAccessor, OnInit, OnDes
     @Input() numberField = false;
     @Input() inputMode = 'text';
     @Input() inputPattern = '';
+    @Input() multiple = false;
     @Input() upperCase = false;
     @Input() separator = false;
 
