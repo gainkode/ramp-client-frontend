@@ -8,26 +8,26 @@ import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
-import { PersonalTransactionListComponent } from '../transactions/data/transaction-list.component';
-import { PersonalBalanceListComponent } from './data/balance-list.component';
+import { ProfileTransactionListComponent } from '../transactions/data/transaction-list.component';
+import { ProfileBalanceListComponent } from './data/balance-list.component';
 
 @Component({
-    selector: 'app-personal-home',
+    selector: 'app-profile-home',
     templateUrl: './home.component.html',
     styleUrls: ['../../../assets/menu.scss', '../../../assets/button.scss', '../../../assets/profile.scss']
 })
-export class PersonalHomeComponent implements OnInit, OnDestroy {
+export class ProfileHomeComponent implements OnInit, OnDestroy {
     @Output() onShowDetails = new EventEmitter<ProfileItemContainer>();
     @Output() onShowError = new EventEmitter<string>();
-    private transactionsPanel!: PersonalTransactionListComponent;
-    private balanceListPanel!: PersonalBalanceListComponent;
-    @ViewChild('transactions') set recentTransactions(panel: PersonalTransactionListComponent) {
+    private transactionsPanel!: ProfileTransactionListComponent;
+    private balanceListPanel!: ProfileBalanceListComponent;
+    @ViewChild('transactions') set recentTransactions(panel: ProfileTransactionListComponent) {
         if (panel) {
             this.transactionsPanel = panel;
             this.transactionsPanel.load(new TransactionsFilter());
         }
     }
-    @ViewChild('balancelist') set balanceList(panel: PersonalBalanceListComponent) {
+    @ViewChild('balancelist') set balanceList(panel: ProfileBalanceListComponent) {
         if (panel) {
             this.balanceListPanel = panel;
             this.balanceListPanel.load(this.currencies, this.selectedFiat);

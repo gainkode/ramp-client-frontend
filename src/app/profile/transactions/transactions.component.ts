@@ -3,18 +3,18 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProfileBaseFilter, TransactionsFilter } from 'src/app/model/filter.model';
 import { ProfileItemContainer } from 'src/app/model/profile-item.model';
 import { AuthService } from 'src/app/services/auth.service';
-import { PersonalTransactionListComponent } from './data/transaction-list.component';
+import { ProfileTransactionListComponent } from './data/transaction-list.component';
 
 @Component({
-    selector: 'app-personal-transactions',
+    selector: 'app-profile-transactions',
     templateUrl: './transactions.component.html',
     styleUrls: ['../../../assets/profile.scss']
 })
-export class PersonalTransactionsComponent {
+export class ProfileTransactionsComponent {
     @Output() onShowDetails = new EventEmitter<ProfileItemContainer>();
     @Output() onShowError = new EventEmitter<string>();
-    private dataListPanel!: PersonalTransactionListComponent;
-    @ViewChild('datalist') set dataList(panel: PersonalTransactionListComponent) {
+    private dataListPanel!: ProfileTransactionListComponent;
+    @ViewChild('datalist') set dataList(panel: ProfileTransactionListComponent) {
         if (panel) {
             this.dataListPanel = panel;
             this.dataListPanel.load(this.filter);

@@ -8,11 +8,11 @@ import { CommonDataService } from 'src/app/services/common-data.service';
 import { ErrorService } from 'src/app/services/error.service';
 
 @Component({
-    selector: 'app-personal-balance-list',
+    selector: 'app-profile-balance-list',
     templateUrl: './balance-list.component.html',
     styleUrls: ['../../../../assets/button.scss', '../../../../assets/profile.scss', './balance-list.component.scss']
 })
-export class PersonalBalanceListComponent implements OnInit, OnDestroy {
+export class ProfileBalanceListComponent implements OnInit, OnDestroy {
     @Output() onError = new EventEmitter<string>();
     @Output() onProgress = new EventEmitter<boolean>();
     currencies: SettingsCurrency[] = [];

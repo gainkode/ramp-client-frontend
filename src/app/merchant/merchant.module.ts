@@ -27,11 +27,11 @@ import { WidgetModule } from '../widget/widget.module';
 import { ProfileModule } from '../profile/profile.module';
 import { ProfileNotificationsComponent } from '../profile/notifications/notifications.component';
 import { ProfileSettingsComponent } from '../profile/settings/settings.component';
-import { PersonalHomeComponent } from '../profile/home/home.component';
-import { PersonalWalletsComponent } from '../profile/wallets/wallets.component';
-import { PersonalContactsComponent } from '../profile/contacts/contacts.component';
-import { PersonalTransactionsComponent } from '../profile/transactions/transactions.component';
-import { PersonalPricelistComponent } from '../profile/pricelist/pricelist.component';
+import { ProfileHomeComponent } from '../profile/home/home.component';
+import { ProfileWalletsComponent } from '../profile/wallets/wallets.component';
+import { ProfileContactsComponent } from '../profile/contacts/contacts.component';
+import { ProfileTransactionsComponent } from '../profile/transactions/transactions.component';
+import { ProfilePricelistComponent } from '../profile/pricelist/pricelist.component';
 
 const routing = RouterModule.forChild([
     { path: 'intro', component: IntroMerchantComponent },
@@ -48,11 +48,11 @@ const routing = RouterModule.forChild([
         path: 'main',
         component: MerchantComponent,
         children: [
-            { path: 'home', component: PersonalHomeComponent },
-            { path: 'wallets', component: PersonalWalletsComponent },
-            { path: 'contactlist', component: PersonalContactsComponent },
-            { path: 'transactions', component: PersonalTransactionsComponent },
-            { path: 'pricelist', component: PersonalPricelistComponent },
+            { path: 'home', component: ProfileHomeComponent },
+            { path: 'wallets', component: ProfileWalletsComponent },
+            { path: 'contactlist', component: ProfileContactsComponent },
+            { path: 'transactions', component: ProfileTransactionsComponent },
+            { path: 'pricelist', component: ProfilePricelistComponent },
             { path: '**', redirectTo: 'home' }
         ],
         canActivate: [MerchantGuard]

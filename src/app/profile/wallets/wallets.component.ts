@@ -9,18 +9,18 @@ import { WalletItem } from 'src/app/model/wallet.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
 import { ErrorService } from 'src/app/services/error.service';
-import { PersonalWalletListComponent } from './data/wallet-list.component';
+import { ProfileWalletListComponent } from './data/wallet-list.component';
 
 @Component({
-    selector: 'app-personal-wallets',
+    selector: 'app-profile-wallets',
     templateUrl: './wallets.component.html',
     styleUrls: ['../../../assets/profile.scss']
 })
-export class PersonalWalletsComponent implements OnInit, OnDestroy {
+export class ProfileWalletsComponent implements OnInit, OnDestroy {
     @Output() onShowDetails = new EventEmitter<ProfileItemContainer>();
     @Output() onShowError = new EventEmitter<string>();
-    private dataListPanel!: PersonalWalletListComponent;
-    @ViewChild('datalist') set dataList(panel: PersonalWalletListComponent) {
+    private dataListPanel!: ProfileWalletListComponent;
+    @ViewChild('datalist') set dataList(panel: ProfileWalletListComponent) {
         if (panel) {
             this.dataListPanel = panel;
             this.dataListPanel.load(this.filter);

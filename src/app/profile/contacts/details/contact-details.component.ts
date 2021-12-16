@@ -7,11 +7,11 @@ import { ErrorService } from 'src/app/services/error.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
 
 @Component({
-    selector: 'app-personal-contact-details',
+    selector: 'app-profile-contact-details',
     templateUrl: './contact-details.component.html',
     styleUrls: ['../../../../assets/button.scss', '../../../../assets/details.scss', '../../../../assets/text-control.scss']
 })
-export class PersonalContactDetailsComponent implements OnDestroy {
+export class ProfileContactDetailsComponent implements OnDestroy {
     @Input() contact: ContactItem | undefined;
     @Output() onError = new EventEmitter<string>();
     @Output() onComplete = new EventEmitter<ProfileItemContainer>();

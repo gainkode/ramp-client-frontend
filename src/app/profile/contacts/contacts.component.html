@@ -11,7 +11,7 @@
         </div>
     </div>
     <!-- Contact list -->
-    <app-personal-contact-list #datalist *ngIf="!dataListEmpty" (onDataLoaded)="contactsLoaded($event)"
+    <app-profile-contact-list #datalist *ngIf="!dataListEmpty" (onDataLoaded)="contactsLoaded($event)"
         (onShowDetails)="showDetails($event)" (onError)="handleError($event)" (onProgress)="progressChanged($event)">
-    </app-personal-contact-list>
+    </app-profile-contact-list>
 </div>

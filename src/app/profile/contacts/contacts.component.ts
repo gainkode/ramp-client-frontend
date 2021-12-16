@@ -8,18 +8,18 @@ import { ProfileItemContainer, ProfileItemContainerType } from 'src/app/model/pr
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
 import { ErrorService } from 'src/app/services/error.service';
-import { PersonalContactListComponent } from './data/contact-list.component';
+import { ProfileContactListComponent } from './data/contact-list.component';
 
 @Component({
-    selector: 'app-personal-contacts',
+    selector: 'app-profile-contacts',
     templateUrl: './contacts.component.html',
     styleUrls: ['../../../assets/profile.scss']
 })
-export class PersonalContactsComponent implements OnInit, OnDestroy {
+export class ProfileContactsComponent implements OnInit, OnDestroy {
     @Output() onShowDetails = new EventEmitter<ProfileItemContainer>();
     @Output() onShowError = new EventEmitter<string>();
-    private dataListPanel!: PersonalContactListComponent;
-    @ViewChild('datalist') set dataList(panel: PersonalContactListComponent) {
+    private dataListPanel!: ProfileContactListComponent;
+    @ViewChild('datalist') set dataList(panel: ProfileContactListComponent) {
         if (panel) {
             this.dataListPanel = panel;
             this.dataListPanel.load(this.filter);

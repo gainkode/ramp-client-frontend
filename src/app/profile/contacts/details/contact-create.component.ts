@@ -10,11 +10,11 @@ import { ProfileDataService } from 'src/app/services/profile.service';
 import { WalletValidator } from "src/app/utils/wallet.validator";
 
 @Component({
-    selector: 'app-personal-contact-create',
+    selector: 'app-profile-contact-create',
     templateUrl: './contact-create.component.html',
     styleUrls: ['../../../../assets/button.scss', '../../../../assets/details.scss', '../../../../assets/text-control.scss']
 })
-export class PersonalContactCreateComponent implements OnInit, OnDestroy {
+export class ProfileContactCreateComponent implements OnInit, OnDestroy {
     @Input() cryptoList: CurrencyView[] = [];
     @Output() onComplete = new EventEmitter<ProfileItemContainer>();
 

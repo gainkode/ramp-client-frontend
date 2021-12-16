@@ -16,27 +16,27 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
 import { ComponentsModule } from '../components/components.module';
 import { RouterModule } from '@angular/router';
 import { QRCodeModule } from 'angularx-qrcode';
-import { PersonalContactsComponent } from './contacts/contacts.component';
-import { PersonalContactListComponent } from './contacts/data/contact-list.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { NgApexchartsModule } from 'ng-apexcharts';
-import { PersonalContactCreateComponent } from './contacts/details/contact-create.component';
-import { PersonalContactDetailsComponent } from './contacts/details/contact-details.component';
-import { PersonalWalletsComponent } from './wallets/wallets.component';
-import { PersonalWalletCreateComponent } from './wallets/details/wallet-create.component';
-import { PersonalWalletDetailsComponent } from './wallets/details/wallet-details.component';
-import { PersonalWalletListComponent } from './wallets/data/wallet-list.component';
+import { ProfileContactsComponent } from './contacts/contacts.component';
+import { ProfileContactListComponent } from './contacts/data/contact-list.component';
+import { ProfileContactCreateComponent } from './contacts/details/contact-create.component';
+import { ProfileContactDetailsComponent } from './contacts/details/contact-details.component';
+import { ProfileWalletsComponent } from './wallets/wallets.component';
+import { ProfileWalletCreateComponent } from './wallets/details/wallet-create.component';
+import { ProfileWalletDetailsComponent } from './wallets/details/wallet-details.component';
+import { ProfileWalletListComponent } from './wallets/data/wallet-list.component';
 import { ProfilePaymentCompleteComponent } from './details/payment-complete.component';
-import { PersonalTransactionsComponent } from './transactions/transactions.component';
-import { PersonalTransactionDetailsComponent } from './transactions/details/transaction-details.component';
-import { PersonalTransactionListComponent } from './transactions/data/transaction-list.component';
-import { PersonalPricelistComponent } from './pricelist/pricelist.component';
-import { PersonalHomeComponent } from './home/home.component';
-import { PersonalBalanceChartComponent } from './home/data/balance-chart.component';
-import { PersonalBalanceListComponent } from './home/data/balance-list.component';
+import { ProfileTransactionsComponent } from './transactions/transactions.component';
+import { ProfileTransactionDetailsComponent } from './transactions/details/transaction-details.component';
+import { ProfileTransactionListComponent } from './transactions/data/transaction-list.component';
+import { ProfilePricelistComponent } from './pricelist/pricelist.component';
+import { ProfileHomeComponent } from './home/home.component';
+import { ProfileBalanceChartComponent } from './home/data/balance-chart.component';
+import { ProfileBalanceListComponent } from './home/data/balance-list.component';
 import { ProfileNotificationsComponent } from './notifications/notifications.component';
 import { ProfileNotificationListComponent } from './notifications/data/notification-list.component';
 import { ProfileSettingsComponent } from './settings/settings.component';
@@ -80,11 +80,11 @@ export class MaterialModule { }
     imports: [
         NgxMaskModule.forRoot(), CommonModule, ClipboardModule, FormsModule, ReactiveFormsModule, RouterModule, MaterialModule, QRCodeModule],
     declarations: [
-        PersonalHomeComponent, PersonalBalanceChartComponent, PersonalBalanceListComponent,
-        PersonalTransactionsComponent, PersonalTransactionListComponent, PersonalTransactionDetailsComponent,
-        PersonalContactsComponent, PersonalContactListComponent, PersonalContactCreateComponent, PersonalContactDetailsComponent,
-        PersonalWalletsComponent, PersonalWalletListComponent, PersonalWalletCreateComponent, PersonalWalletDetailsComponent,
-        PersonalPricelistComponent,
+        ProfileHomeComponent, ProfileBalanceChartComponent, ProfileBalanceListComponent,
+        ProfileTransactionsComponent, ProfileTransactionListComponent, ProfileTransactionDetailsComponent,
+        ProfileContactsComponent, ProfileContactListComponent, ProfileContactCreateComponent, ProfileContactDetailsComponent,
+        ProfileWalletsComponent, ProfileWalletListComponent, ProfileWalletCreateComponent, ProfileWalletDetailsComponent,
+        ProfilePricelistComponent,
         ProfilePaymentCompleteComponent, 
         ProfileNotificationsComponent, ProfileNotificationListComponent,
         ProfileSettingsComponent, ProfileInfoSettingsComponent, ProfileVerificationSettingsComponent, ProfileSecuriySettingsComponent,
@@ -92,11 +92,11 @@ export class MaterialModule { }
         SettingsMenuBarComponent
     ],
     exports: [
-        PersonalHomeComponent,
-        PersonalTransactionsComponent, PersonalTransactionDetailsComponent,
-        PersonalContactsComponent, PersonalContactCreateComponent, PersonalContactDetailsComponent,
-        PersonalWalletsComponent, PersonalWalletCreateComponent, PersonalWalletDetailsComponent,
-        PersonalPricelistComponent,
+        ProfileHomeComponent,
+        ProfileTransactionsComponent, ProfileTransactionDetailsComponent,
+        ProfileContactsComponent, ProfileContactCreateComponent, ProfileContactDetailsComponent,
+        ProfileWalletsComponent, ProfileWalletCreateComponent, ProfileWalletDetailsComponent,
+        ProfilePricelistComponent,
         ProfilePaymentCompleteComponent,
         ProfileNotificationsComponent,
         ProfileSettingsComponent

@@ -11,11 +11,11 @@ import { ErrorService } from 'src/app/services/error.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
 
 @Component({
-    selector: 'app-personal-wallet-create',
+    selector: 'app-profile-wallet-create',
     templateUrl: './wallet-create.component.html',
     styleUrls: ['../../../../assets/button.scss', '../../../../assets/details.scss', '../../../../assets/text-control.scss']
 })
-export class PersonalWalletCreateComponent implements OnInit, OnDestroy {
+export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
     @Input() cryptoList: CurrencyView[] = [];
     @Output() onComplete = new EventEmitter<ProfileItemContainer>();
 

@@ -11,11 +11,11 @@ import { ChartComponent, ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexFil
 import { getCurrencySign } from 'src/app/utils/utils';
 
 @Component({
-    selector: 'app-personal-balance-chart',
+    selector: 'app-profile-balance-chart',
     templateUrl: './balance-chart.component.html',
     styleUrls: ['../../../../assets/menu.scss', '../../../../assets/button.scss', '../../../../assets/profile.scss']
 })
-export class PersonalBalanceChartComponent implements OnInit, OnDestroy {
+export class ProfileBalanceChartComponent implements OnInit, OnDestroy {
     @Input() set selectedCurrency(val: string) {
         this.fiatField?.setValue(val);
     }

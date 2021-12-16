@@ -80,21 +80,21 @@
                 </div>
             </div>
             <div class="__profile-details-data-block">
-                <app-personal-transaction-details *ngIf="detailsType==='transaction'"
-                    [transaction]="detailsContainer?.transaction">
-                </app-personal-transaction-details>
-                <app-personal-wallet-details *ngIf="detailsType==='wallet'" [wallet]="detailsContainer?.wallet"
+                <app-profile-transaction-details *ngIf="detailsType==='transaction'"
+                    [profile]="detailsContainer?.transaction">
+                </app-profile-transaction-details>
+                <app-profile-wallet-details *ngIf="detailsType==='wallet'" [wallet]="detailsContainer?.wallet"
                     (onComplete)="detailsComplete($event)">
-                </app-personal-wallet-details>
-                <app-personal-wallet-create *ngIf="detailsType==='new_wallet'" [cryptoList]="cryptoList"
+                </app-profile-wallet-details>
+                <app-profile-wallet-create *ngIf="detailsType==='new_wallet'" [cryptoList]="cryptoList"
                     (onComplete)="detailsComplete($event)">
-                </app-personal-wallet-create>
-                <app-personal-contact-details *ngIf="detailsType==='contact'" [contact]="detailsContainer?.contact"
+                </app-profile-wallet-create>
+                <app-profile-contact-details *ngIf="detailsType==='contact'" [contact]="detailsContainer?.contact"
                     (onComplete)="detailsComplete($event)">
-                </app-personal-contact-details>
-                <app-personal-contact-create *ngIf="detailsType==='new_contact'" [cryptoList]="cryptoList"
+                </app-profile-contact-details>
+                <app-profile-contact-create *ngIf="detailsType==='new_contact'" [cryptoList]="cryptoList"
                     (onComplete)="detailsComplete($event)">
-                </app-personal-contact-create>
+                </app-profile-contact-create>
                 <app-profile-payment-complete *ngIf="detailsType==='payment_complete'"
                     [payment]="paymentCompleteDetails" (onComplete)="detailsComplete($event)">
                 </app-profile-payment-complete>

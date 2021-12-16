@@ -11,7 +11,7 @@ import { ErrorService } from 'src/app/services/error.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
 
 @Component({
-    selector: 'app-personal-wallet-list',
+    selector: 'app-profile-wallet-list',
     templateUrl: './wallet-list.component.html',
     styleUrls: [
         '../../../../assets/menu.scss',
@@ -20,7 +20,7 @@ import { ProfileDataService } from 'src/app/services/profile.service';
         './wallet-list.component.scss'
     ]
 })
-export class PersonalWalletListComponent implements OnDestroy {
+export class ProfileWalletListComponent implements OnDestroy {
     @Input() cryptoCurrencies: CurrencyView[] = [];
     @Output() onShowDetails = new EventEmitter<ProfileItemContainer>();
     @Output() onError = new EventEmitter<string>();

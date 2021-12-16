@@ -5,8 +5,8 @@ import { MenuItem } from '../model/common.model';
 import { CurrencyView, PaymentCompleteDetails, PaymentWidgetType } from '../model/payment.model';
 import { ProfileItemActionType, ProfileItemContainer, ProfileItemContainerType } from '../model/profile-item.model';
 import { MerchantProfileMenuItems, ProfilePopupAdministrationMenuItem, MerchantProfilePopupMenuItems } from '../model/profile-menu.model';
-import { PersonalContactsComponent } from '../profile/contacts/contacts.component';
-import { PersonalWalletsComponent } from '../profile/wallets/wallets.component';
+import { ProfileContactsComponent } from '../profile/contacts/contacts.component';
+import { ProfileWalletsComponent } from '../profile/wallets/wallets.component';
 import { AuthService } from '../services/auth.service';
 import { NotificationService } from '../services/notification.service';
 
@@ -183,7 +183,7 @@ export class MerchantComponent implements OnInit, OnDestroy {
 
     detailsComplete(container: ProfileItemContainer): void {
         if (container.container === ProfileItemContainerType.Wallet && container.wallet) {
-            const walletPanel = this.dataPanel as PersonalWalletsComponent;
+            const walletPanel = this.dataPanel as ProfileWalletsComponent;
             if (container.action === ProfileItemActionType.Create) {
                 walletPanel.addWallet(container.wallet);
             } else if (container.action === ProfileItemActionType.Remove) {
@@ -199,7 +199,7 @@ export class MerchantComponent implements OnInit, OnDestroy {
                 }
             }
         } else if (container.container === ProfileItemContainerType.Contact) {
-            const contactPanel = this.dataPanel as PersonalContactsComponent;
+            const contactPanel = this.dataPanel as ProfileContactsComponent;
             if (container.action === ProfileItemActionType.Create || container.action === ProfileItemActionType.Remove) {
                 contactPanel.update();
             } else if (container.action === ProfileItemActionType.Redirect) {

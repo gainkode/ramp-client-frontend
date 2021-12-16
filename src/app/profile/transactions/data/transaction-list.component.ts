@@ -12,7 +12,7 @@ import { ErrorService } from 'src/app/services/error.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
 
 @Component({
-    selector: 'app-personal-transaction-list',
+    selector: 'app-profile-transaction-list',
     templateUrl: './transaction-list.component.html',
     styleUrls: [
         '../../../../assets/menu.scss',
@@ -21,7 +21,7 @@ import { ProfileDataService } from 'src/app/services/profile.service';
         './transaction-list.component.scss'
     ]
 })
-export class PersonalTransactionListComponent implements OnDestroy, AfterViewInit {
+export class ProfileTransactionListComponent implements OnDestroy, AfterViewInit {
     @Input() recent = false;
     @Output() onShowDetails = new EventEmitter<ProfileItemContainer>();
     @Output() onError = new EventEmitter<string>();

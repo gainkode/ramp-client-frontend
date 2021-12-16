@@ -12,7 +12,7 @@ import { ErrorService } from 'src/app/services/error.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
 
 @Component({
-    selector: 'app-personal-contact-list',
+    selector: 'app-profile-contact-list',
     templateUrl: './contact-list.component.html',
     styleUrls: [
         '../../../../assets/menu.scss',
@@ -21,7 +21,7 @@ import { ProfileDataService } from 'src/app/services/profile.service';
         './contact-list.component.scss'
     ]
 })
-export class PersonalContactListComponent implements OnDestroy, AfterViewInit {
+export class ProfileContactListComponent implements OnDestroy, AfterViewInit {
     @Output() onShowDetails = new EventEmitter<ProfileItemContainer>();
     @Output() onError = new EventEmitter<string>();
     @Output() onProgress = new EventEmitter<boolean>();

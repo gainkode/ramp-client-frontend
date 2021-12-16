@@ -9,11 +9,11 @@ import { ErrorService } from 'src/app/services/error.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
 
 @Component({
-    selector: 'app-personal-wallet-details',
+    selector: 'app-profile-wallet-details',
     templateUrl: './wallet-details.component.html',
     styleUrls: ['../../../../assets/button.scss', '../../../../assets/details.scss']
 })
-export class PersonalWalletDetailsComponent implements OnDestroy {
+export class ProfileWalletDetailsComponent implements OnDestroy {
     @Input() wallet: WalletItem | undefined;
     @Output() onError = new EventEmitter<string>();
     @Output() onComplete = new EventEmitter<ProfileItemContainer>();

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-    selector: 'app-personal-pricelist',
+    selector: 'app-profile-pricelist',
     templateUrl: './pricelist.component.html'
 })
-export class PersonalPricelistComponent { }
+export class ProfilePricelistComponent { }
