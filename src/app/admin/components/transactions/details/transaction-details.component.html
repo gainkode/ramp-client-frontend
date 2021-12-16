@@ -30,6 +30,9 @@
                 <mat-error *ngIf="form.controls.amountToSpend.hasError('required')">
                     Amount is required
                 </mat-error>
+                <mat-error *ngIf="form.controls.amountToSpend.hasError('pattern')">
+                    Incorrect number value
+                </mat-error>
             </mat-form-field>
 
             <!-- Currency to spend -->
@@ -48,6 +51,9 @@
                 <input matInput formControlName="amountToReceive" required/>
                 <mat-error *ngIf="form.controls.amountToReceive.hasError('required')">
                     Amount is required
+                </mat-error>
+                <mat-error *ngIf="form.controls.amountToReceive.hasError('pattern')">
+                    Incorrect number value
                 </mat-error>
             </mat-form-field>
 

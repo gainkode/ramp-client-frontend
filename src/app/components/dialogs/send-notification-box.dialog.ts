@@ -3,6 +3,7 @@ import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CommonTargetValue } from 'src/app/model/common.model';
 import { DialogData } from 'src/app/model/dialog.model';
+import { UserNotificationLevel } from 'src/app/model/generated-models';
 
 @Component({
     selector: 'app-send-notification-dialog-box',
@@ -11,7 +12,7 @@ import { DialogData } from 'src/app/model/dialog.model';
 })
 export class SendNotificationDialogBox {
     messageForm = this.formBuilder.group({
-        level: ['Info'],
+        level: [UserNotificationLevel.Info],
         title: [''],
         text: ['', { validators: [Validators.required], updateOn: 'change' }]
     });
@@ -33,11 +34,11 @@ export class SendNotificationDialogBox {
     }
 
     levels: CommonTargetValue[] = [
-        { id: 'Request', title: 'Request', imgClass: '', imgSource: '' },
-        { id: 'Debug', title: 'Debug', imgClass: '', imgSource: '' },
-        { id: 'Info', title: 'Info', imgClass: '', imgSource: '' },
-        { id: 'Warning', title: 'Warning', imgClass: '', imgSource: '' },
-        { id: 'Error', title: 'Error', imgClass: '', imgSource: '' }
+        { id: UserNotificationLevel.Request, title: 'Request', imgClass: '', imgSource: '' },
+        { id: UserNotificationLevel.Debug, title: 'Debug', imgClass: '', imgSource: '' },
+        { id: UserNotificationLevel.Info, title: 'Info', imgClass: '', imgSource: '' },
+        { id: UserNotificationLevel.Warning, title: 'Warning', imgClass: '', imgSource: '' },
+        { id: UserNotificationLevel.Error, title: 'Error', imgClass: '', imgSource: '' }
     ];
 
     constructor(

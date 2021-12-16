@@ -36,6 +36,8 @@ export class TransactionDetailsComponent {
   @Output() delete = new EventEmitter<string>();
   @Output() cancel = new EventEmitter();
 
+  private pNumberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
+
   data: TransactionItemDeprecated | undefined = undefined;
   removable = false;
   transactionId = '';
@@ -51,8 +53,14 @@ export class TransactionDetailsComponent {
     address: ['', { validators: [Validators.required], updateOn: 'change' }],
     currencyToSpend: ['', { validators: [Validators.required], updateOn: 'change' }],
     currencyToReceive: ['', { validators: [Validators.required], updateOn: 'change' }],
-    amountToReceive: [0, { validators: [Validators.required], updateOn: 'change' }],
-    amountToSpend: [0, { validators: [Validators.required], updateOn: 'change' }],
+    amountToReceive: [0, { validators: [
+      Validators.required,
+      Validators.pattern(this.pNumberPattern)
+    ], updateOn: 'change' }],
+    amountToSpend: [0, { validators: [
+      Validators.required,
+      Validators.pattern(this.pNumberPattern)
+    ], updateOn: 'change' }],
     kycStatus: [TransactionKycStatus.KycWaiting, { validators: [Validators.required], updateOn: 'change' }]
   });
 

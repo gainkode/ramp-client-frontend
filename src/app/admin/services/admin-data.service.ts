@@ -884,13 +884,13 @@ mutation UnbenchmarkTransactions(
 
 const SEND_ADMIN_NOTIFICATION = gql`
 mutation SendAdminNotification(
-  $notifiedUserId: String
+  $notifiedUserIds: [String!]
   $title: String
   $text: String
   $level: UserNotificationLevel
 ) {
   sendAdminNotification(
-    notifiedUserId: $notifiedUserId
+    notifiedUserIds: $notifiedUserIds
     title: $title
     text: $text
     level: $level
@@ -1864,7 +1864,7 @@ export class AdminDataService {
     return this.mutate({
       mutation: SEND_ADMIN_NOTIFICATION,
       variables: {
-        notifiedUserId: ids,
+        notifiedUserIds: ids,
         title,
         text,
         level
