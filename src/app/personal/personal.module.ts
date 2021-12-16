@@ -37,7 +37,7 @@ import { PersonalWalletsComponent } from '../profile/wallets/wallets.component';
 import { PersonalTransactionsComponent } from '../profile/transactions/transactions.component';
 import { PersonalPricelistComponent } from '../profile/pricelist/pricelist.component';
 import { PersonalHomeComponent } from '../profile/home/home.component';
-import { PersonalNotificationsComponent } from '../profile/notifications/notifications.component';
+import { ProfileNotificationsComponent } from '../profile/notifications/notifications.component';
 import { ProfileSettingsComponent } from '../profile/settings/settings.component';
 import { WidgetModule } from '../widget/widget.module';
 
@@ -71,7 +71,7 @@ const routing = RouterModule.forChild([
         path: 'account',
         component: PersonalComponent,
         children: [
-            { path: 'notifications', component: PersonalNotificationsComponent },
+            { path: 'notifications', component: ProfileNotificationsComponent },
             { path: 'settings/:page', component: ProfileSettingsComponent },
             { path: 'settings', component: ProfileSettingsComponent },
             { path: '**', redirectTo: 'settings' }

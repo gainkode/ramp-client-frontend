@@ -25,7 +25,7 @@ import { MerchantConfirmEmailComponent } from './auth/confirm-email.component';
 import { MerchantConfirmDeviceComponent } from './auth/confirm-device.component';
 import { WidgetModule } from '../widget/widget.module';
 import { ProfileModule } from '../profile/profile.module';
-import { PersonalNotificationsComponent } from '../profile/notifications/notifications.component';
+import { ProfileNotificationsComponent } from '../profile/notifications/notifications.component';
 import { ProfileSettingsComponent } from '../profile/settings/settings.component';
 import { PersonalHomeComponent } from '../profile/home/home.component';
 import { PersonalWalletsComponent } from '../profile/wallets/wallets.component';
@@ -62,7 +62,7 @@ const routing = RouterModule.forChild([
         path: 'account',
         component: MerchantComponent,
         children: [
-            { path: 'notifications', component: PersonalNotificationsComponent },
+            { path: 'notifications', component: ProfileNotificationsComponent },
             { path: 'settings/:page', component: ProfileSettingsComponent },
             { path: 'settings', component: ProfileSettingsComponent },
             { path: '**', redirectTo: 'settings' }

@@ -29,7 +29,7 @@ import { PersonalWalletsComponent } from './wallets/wallets.component';
 import { PersonalWalletCreateComponent } from './wallets/details/wallet-create.component';
 import { PersonalWalletDetailsComponent } from './wallets/details/wallet-details.component';
 import { PersonalWalletListComponent } from './wallets/data/wallet-list.component';
-import { PersonalPaymentCompleteComponent } from './details/payment-complete.component';
+import { ProfilePaymentCompleteComponent } from './details/payment-complete.component';
 import { PersonalTransactionsComponent } from './transactions/transactions.component';
 import { PersonalTransactionDetailsComponent } from './transactions/details/transaction-details.component';
 import { PersonalTransactionListComponent } from './transactions/data/transaction-list.component';
@@ -37,8 +37,8 @@ import { PersonalPricelistComponent } from './pricelist/pricelist.component';
 import { PersonalHomeComponent } from './home/home.component';
 import { PersonalBalanceChartComponent } from './home/data/balance-chart.component';
 import { PersonalBalanceListComponent } from './home/data/balance-list.component';
-import { PersonalNotificationsComponent } from './notifications/notifications.component';
-import { PersonalNotificationListComponent } from './notifications/data/notification-list.component';
+import { ProfileNotificationsComponent } from './notifications/notifications.component';
+import { ProfileNotificationListComponent } from './notifications/data/notification-list.component';
 import { ProfileSettingsComponent } from './settings/settings.component';
 import { SettingsMenuBarComponent } from './settings/bar/settings-bar.component';
 import { ProfileInfoSettingsComponent } from './settings/panels/info.component';
@@ -85,8 +85,8 @@ export class MaterialModule { }
         PersonalContactsComponent, PersonalContactListComponent, PersonalContactCreateComponent, PersonalContactDetailsComponent,
         PersonalWalletsComponent, PersonalWalletListComponent, PersonalWalletCreateComponent, PersonalWalletDetailsComponent,
         PersonalPricelistComponent,
-        PersonalPaymentCompleteComponent, 
-        PersonalNotificationsComponent, PersonalNotificationListComponent,
+        ProfilePaymentCompleteComponent, 
+        ProfileNotificationsComponent, ProfileNotificationListComponent,
         ProfileSettingsComponent, ProfileInfoSettingsComponent, ProfileVerificationSettingsComponent, ProfileSecuriySettingsComponent,
         ProfileChangePasswordComponent, ProfileInfoTextboxComponent, ProfileInfoDateboxComponent, ProfileInfoDropboxComponent,
         SettingsMenuBarComponent
@@ -97,8 +97,8 @@ export class MaterialModule { }
         PersonalContactsComponent, PersonalContactCreateComponent, PersonalContactDetailsComponent,
         PersonalWalletsComponent, PersonalWalletCreateComponent, PersonalWalletDetailsComponent,
         PersonalPricelistComponent,
-        PersonalPaymentCompleteComponent,
-        PersonalNotificationsComponent,
+        ProfilePaymentCompleteComponent,
+        ProfileNotificationsComponent,
         ProfileSettingsComponent
     ],
     providers: [],

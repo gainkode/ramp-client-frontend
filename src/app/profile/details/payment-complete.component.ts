@@ -5,11 +5,11 @@ import { ProfileItemContainer, ProfileItemContainerType } from "src/app/model/pr
 import { AuthService } from "src/app/services/auth.service";
 
 @Component({
-    selector: 'app-personal-payment-complete',
+    selector: 'app-profile-payment-complete',
     templateUrl: './payment-complete.component.html',
     styleUrls: ['../../../assets/button.scss', '../../../assets/details.scss', '../../../assets/text-control.scss']
 })
-export class PersonalPaymentCompleteComponent implements OnInit {
+export class ProfilePaymentCompleteComponent implements OnInit {
     @Input() payment: PaymentCompleteDetails | undefined;
     @Output() onComplete = new EventEmitter<ProfileItemContainer>();
 

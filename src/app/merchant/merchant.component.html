@@ -95,9 +95,9 @@
                 <app-personal-contact-create *ngIf="detailsType==='new_contact'" [cryptoList]="cryptoList"
                     (onComplete)="detailsComplete($event)">
                 </app-personal-contact-create>
-                <app-personal-payment-complete *ngIf="detailsType==='payment_complete'"
+                <app-profile-payment-complete *ngIf="detailsType==='payment_complete'"
                     [payment]="paymentCompleteDetails" (onComplete)="detailsComplete($event)">
-                </app-personal-payment-complete>
+                </app-profile-payment-complete>
             </div>
         </div>
         <!-- Payment -->

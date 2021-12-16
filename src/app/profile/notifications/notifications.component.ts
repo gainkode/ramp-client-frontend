@@ -3,21 +3,21 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProfileBaseFilter, NotificationsFilter } from 'src/app/model/filter.model';
 import { NotificationItem } from 'src/app/model/notification.model';
 import { AuthService } from 'src/app/services/auth.service';
-import { PersonalNotificationListComponent } from './data/notification-list.component';
+import { ProfileNotificationListComponent } from './data/notification-list.component';
 import { Subscription } from 'rxjs';
 import { ProfileDataService } from 'src/app/services/profile.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { UserNotification } from 'src/app/model/generated-models';
 
 @Component({
-    selector: 'app-personal-notifications',
+    selector: 'app-profile-notifications',
     templateUrl: './notifications.component.html',
     styleUrls: ['../../../assets/profile.scss', '../../../assets/button.scss']
 })
-export class PersonalNotificationsComponent implements OnDestroy {
+export class ProfileNotificationsComponent implements OnDestroy {
     @Output() onShowError = new EventEmitter<string>();
-    private dataListPanel!: PersonalNotificationListComponent;
-    @ViewChild('datalist') set dataList(panel: PersonalNotificationListComponent) {
+    private dataListPanel!: ProfileNotificationListComponent;
+    @ViewChild('datalist') set dataList(panel: ProfileNotificationListComponent) {
         if (panel) {
             this.dataListPanel = panel;
             this.dataListPanel.load(this.filter);

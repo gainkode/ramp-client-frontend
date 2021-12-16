@@ -4,8 +4,8 @@
     <div class="__profile-internal-table-container">
         <div
             [ngClass]="details ? '__profile-internal-table-data-container-open' : '__profile-internal-table-data-container-closed'">
-            <app-personal-notification-list #datalist (onOpenDetails)="showDetails($event)" (onCloseDetails)="details=false"
-                (onError)="handleError($event)" (onProgress)="progressChanged($event)"></app-personal-notification-list>
+            <app-profile-notification-list #datalist (onOpenDetails)="showDetails($event)" (onCloseDetails)="details=false"
+                (onError)="handleError($event)" (onProgress)="progressChanged($event)"></app-profile-notification-list>
         </div>
         <div
             [ngClass]="details ? '__profile-internal-table-details-container-open' : '__profile-internal-table-details-container-closed'">

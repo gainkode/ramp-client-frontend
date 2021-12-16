@@ -13,7 +13,7 @@ import { ErrorService } from 'src/app/services/error.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
 
 @Component({
-    selector: 'app-personal-notification-list',
+    selector: 'app-profile-notification-list',
     templateUrl: './notification-list.component.html',
     styleUrls: [
         '../../../../assets/menu.scss',
@@ -22,7 +22,7 @@ import { ProfileDataService } from 'src/app/services/profile.service';
         './notification-list.component.scss'
     ]
 })
-export class PersonalNotificationListComponent implements OnDestroy, AfterViewInit {
+export class ProfileNotificationListComponent implements OnDestroy, AfterViewInit {
     @Input() recent = false;
     @Output() onError = new EventEmitter<string>();
     @Output() onProgress = new EventEmitter<boolean>();
