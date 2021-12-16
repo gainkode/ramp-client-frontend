@@ -182,24 +182,16 @@ export class WalletListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onSaveWallet(customer: AssetAddress): void {
-
-    console.log('save', customer);
-    // const requestData = this.adminService.saveCustomer(customer);
-    // if (requestData) {
-    //   requestData.subscribe(({ data }) => {
-    //     this.showEditor(null, false);
-    //     if (this.auth.user?.userId === customer.userId) {
-    //       this.auth.setUserName(customer.firstName ?? '', customer.lastName ?? '');
-    //       this.auth.setUserCurrencies(
-    //         customer.defaultCryptoCurrency ?? 'BTC',
-    //         customer.defaultFiatCurrency ?? 'EUR');
-    //     }
-    //     this.loadCustomers();
-    //   }, (error) => {
-    //     if (this.auth.token === '') {
-    //       this.router.navigateByUrl('/');
-    //     }
-    //   });
-    // }
+    const requestData = this.adminService.updateUserVault(customer);
+    if (requestData) {
+      requestData.subscribe(({ data }) => {
+        this.showEditor(null, false);
+        this.loadWallets();
+      }, (error) => {
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
+      });
+    }
   }
 }

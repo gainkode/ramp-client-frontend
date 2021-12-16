@@ -5,6 +5,7 @@ import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { CostScheme } from '../../model/cost-scheme.model';
 import { FeeScheme } from '../../model/fee-scheme.model';
 import {
+  AssetAddress,
   AssetAddressListResult,
   CountryCodeType,
   DashboardStats,
@@ -791,6 +792,22 @@ mutation DeleteUserVault(
     vaultId: $vaultId
   ) {
     userVaultId
+  }
+}
+`;
+
+const UPDATE_USER_VAULT = gql`
+mutation UpdateUserVault(
+  $userId: ID!
+  $vaultId: String!
+  $vaultName: String!
+) {
+  updateUserVault(
+    userId: $userId
+    vaultId: $vaultId
+    vaultName: $vaultName
+  ) {
+    id
   }
 }
 `;
@@ -1666,13 +1683,28 @@ export class AdminDataService {
         defaultFiatCurrency: customer.defaultFiatCurrency,
         defaultCryptoCurrency: customer.defaultCryptoCurrency
       }
-    })
-      .pipe(tap(() => {
-        this.snackBar.open(
-          `Customer was updated`,
-          undefined, { duration: 5000 }
-        );
-      }));
+    }).pipe(tap(() => {
+      this.snackBar.open(
+        `Customer was updated`,
+        undefined, { duration: 5000 }
+      );
+    }));
+  }
+
+  updateUserVault(wallet: AssetAddress): Observable<any> {
+    return this.apollo.mutate({
+      mutation: UPDATE_USER_VAULT,
+      variables: {
+        userId: wallet.userId,
+        vaultId: wallet.vaultId,
+        vaultName: wallet.vaultName
+      }
+    }).pipe(tap(() => {
+      this.snackBar.open(
+        `Wallet was updated`,
+        undefined, { duration: 5000 }
+      );
+    }));
   }
 
   deleteFeeSettings(settingsId: string): Observable<any> {
@@ -1779,7 +1811,7 @@ export class AdminDataService {
       );
     }));
   }
-  
+
   unbenchmarkTransaction(ids: string[]): Observable<any> {
     return this.mutate({
       mutation: UNBENCHMARK_TRANSACTIONS,
