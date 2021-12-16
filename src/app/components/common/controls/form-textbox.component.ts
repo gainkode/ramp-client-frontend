@@ -1,4 +1,4 @@
-import { Component, ElementRef, Host, Input, OnDestroy, OnInit, Optional, SkipSelf, ViewChild } from '@angular/core';
+import { Component, Host, Input, OnDestroy, OnInit, Optional, SkipSelf, ViewChild } from '@angular/core';
 import { ControlContainer, ControlValueAccessor, FormControl, FormControlDirective, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
@@ -22,7 +22,7 @@ export class FormTextBoxComponent implements ControlValueAccessor, OnInit, OnDes
     @Input() placeholder = '';
     @Input() inputMask = '';
     @Input() maxlength = 0;
-    @Input() errorMessages: {[key: string]: string} = {};
+    @Input() errorMessages: { [key: string]: string } = {};
     @Input() formControl!: FormControl;
     @Input() formControlName!: string;
     @Input() numberField = false;
@@ -35,7 +35,6 @@ export class FormTextBoxComponent implements ControlValueAccessor, OnInit, OnDes
     private controlSubscription: Subscription | undefined = undefined;
     initialized = false;
     active = true;
-    
     errorMessage = '';
 
     get control(): FormControl {
@@ -46,7 +45,7 @@ export class FormTextBoxComponent implements ControlValueAccessor, OnInit, OnDes
         @Optional() @Host() @SkipSelf()
         private controlContainer: ControlContainer) {
     }
-    
+
     private getError(): string {
         let result = '';
         const errors = this.control?.errors;
@@ -77,15 +76,21 @@ export class FormTextBoxComponent implements ControlValueAccessor, OnInit, OnDes
     }
 
     registerOnTouched(fn: any): void {
-        this.formControlDirective.valueAccessor?.registerOnTouched(fn);
+        if (this.formControlDirective) {
+            this.formControlDirective.valueAccessor?.registerOnTouched(fn);
+        }
     }
 
     registerOnChange(fn: any): void {
-        this.formControlDirective.valueAccessor?.registerOnChange(fn);
+        if (this.formControlDirective) {
+            this.formControlDirective.valueAccessor?.registerOnChange(fn);
+        }
     }
 
     writeValue(obj: any): void {
-        this.formControlDirective.valueAccessor?.writeValue(obj);
+        if (this.formControlDirective) {
+            this.formControlDirective.valueAccessor?.writeValue(obj);
+        }
     }
 
     setDisabledState(isDisabled: boolean): void {

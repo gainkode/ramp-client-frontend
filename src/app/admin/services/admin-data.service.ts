@@ -25,6 +25,7 @@ import {
   TransactionSource,
   User,
   UserListResult,
+  UserNotificationLevel,
   UserNotificationListResult,
   UserType,
   Widget,
@@ -874,6 +875,24 @@ mutation UnbenchmarkTransactions(
     transactionIds: $transactionIds
   ) {
     transactionId
+  }
+}
+`;
+
+const SEND_ADMIN_NOTIFICATION = gql`
+mutation SendAdminNotification(
+  $notifiedUserId: String
+  $title: String
+  $text: String
+  $level: UserNotificationLevel
+) {
+  sendAdminNotification(
+    notifiedUserId: $notifiedUserId
+    title: $title
+    text: $text
+    level: $level
+  ) {
+    userNotificationId
   }
 }
 `;
@@ -1821,6 +1840,23 @@ export class AdminDataService {
     }).pipe(tap((res) => {
       this.snackBar.open(
         `Transactions were changed`,
+        undefined, { duration: 5000 }
+      );
+    }));
+  }
+
+  sendAdminNotification(ids: string[], level: UserNotificationLevel, title: string, text: string): Observable<any> {
+    return this.mutate({
+      mutation: SEND_ADMIN_NOTIFICATION,
+      variables: {
+        notifiedUserId: ids[0],
+        title,
+        text,
+        level
+      }
+    }).pipe(tap((res) => {
+      this.snackBar.open(
+        `Message was sent`,
         undefined, { duration: 5000 }
       );
     }));

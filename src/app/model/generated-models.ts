@@ -479,6 +479,7 @@ export type Mutation = {
   createUserApiKey?: Maybe<ApiKeySecret>;
   deleteUserApiKey?: Maybe<ApiKey>;
   sendAdminNotification?: Maybe<UserNotification>;
+  resendNotification?: Maybe<UserNotification>;
   makeNotificationsViewed?: Maybe<Array<UserNotification>>;
   deleteMyNotifications?: Maybe<Array<UserNotification>>;
   deleteUserNotifications?: Maybe<Array<UserNotification>>;
@@ -546,6 +547,7 @@ export type Mutation = {
   sendTestServiceNotification?: Maybe<Scalars['Void']>;
   createTransaction?: Maybe<TransactionShort>;
   executeTransaction?: Maybe<TransactionShort>;
+  updateTransaction?: Maybe<TransactionShort>;
   cancelMyTransaction?: Maybe<TransactionShort>;
   cancelTransaction?: Maybe<Transaction>;
   unbenchmarkTransactions?: Maybe<Array<Transaction>>;
@@ -577,8 +579,14 @@ export type MutationDeleteUserApiKeyArgs = {
 
 export type MutationSendAdminNotificationArgs = {
   notifiedUserId?: Maybe<Scalars['String']>;
-  message?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  text?: Maybe<Scalars['String']>;
   level?: Maybe<UserNotificationLevel>;
+};
+
+
+export type MutationResendNotificationArgs = {
+  notificationId?: Maybe<Scalars['String']>;
 };
 
 
@@ -947,6 +955,12 @@ export type MutationCreateTransactionArgs = {
 export type MutationExecuteTransactionArgs = {
   transactionId?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['Int']>;
+};
+
+
+export type MutationUpdateTransactionArgs = {
+  transactionId?: Maybe<Scalars['String']>;
+  transaction?: Maybe<TransactionInput>;
 };
 
 

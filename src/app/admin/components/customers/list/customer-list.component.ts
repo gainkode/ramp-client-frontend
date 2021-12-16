@@ -10,11 +10,12 @@ import { LayoutService } from '../../../services/layout.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { CurrencyView } from 'src/app/model/payment.model';
 import { CommonDataService } from 'src/app/services/common-data.service';
-import { SettingsCurrencyWithDefaults, User } from 'src/app/model/generated-models';
+import { MutationSendAdminNotificationArgs, SettingsCurrencyWithDefaults, User, UserNotificationLevel } from 'src/app/model/generated-models';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
 import { SendNotificationDialogBox } from 'src/app/components/dialogs/send-notification-box.dialog';
 import { MatDialog } from '@angular/material/dialog';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   templateUrl: 'customer-list.component.html',
@@ -118,20 +119,37 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   sendMessage(): void {
-      const dialogRef = this.dialog.open(SendNotificationDialogBox, {
-          width: '550px',
-          data: {
-              title: 'Send message to selected users',
-              message: ''
-          }
+    const dialogRef = this.dialog.open(SendNotificationDialogBox, {
+      width: '550px',
+      data: {
+        title: 'Send message to selected users',
+        message: ''
+      }
+    });
+    this.subscriptions.add(
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          const ids = this.customers.filter(x => x.selected === true).map(val => val.id);
+          const form = result as FormGroup;
+          const msgLevel = form.get('level')?.value ?? UserNotificationLevel.Info;
+          const msgTitle = form.get('title')?.value ?? '';
+          const msgText = form.get('text')?.value ?? '';
+          this.sendMessageData(ids, msgLevel, msgTitle, msgText);
+        }
+      })
+    );
+  }
+
+  sendMessageData(ids: string[], level: UserNotificationLevel, title: string, text: string) {
+    const requestData = this.adminService.sendAdminNotification(ids, level, title, text);
+    if (requestData) {
+      requestData.subscribe(({ data }) => {
+      }, (error) => {
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
       });
-      this.subscriptions.add(
-          dialogRef.afterClosed().subscribe(result => {
-              if (result && result !== '') {
-                  
-              }
-          })
-      );
+    }
   }
 
   private setEditMode(mode: boolean): void {
