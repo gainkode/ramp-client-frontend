@@ -145,18 +145,20 @@
     left: 0px;
     top: 0px;
     height: $top_menu_height_lg + px;
+    width: $side_menu_width_lg + px;
     align-items: center;
     justify-content: flex-start;
-    margin: 0px 30px;
+    background-color: $color_purple_900;
     z-index: 200;
 
     @media (max-width: $md1 + px) {
         height: $top_menu_height_sm + px;
-        margin: 0px 48px;
+        width: $side_menu_width_sm + px;
     }
 
     @media (max-width: $md2 + px) {
         height: $top_menu_height_sm + px;
+        width: $side_menu_width_sm + px;
     }
 
     @media (max-width: $md3 + px) {
@@ -166,10 +168,15 @@
 }
 
 .__profile-top-menu-logo {
+    margin: 0px 48px;
     font-family: $font_logo;
     font-weight: 800;
     font-size: 32px;
     color: $color_white;
+
+    @media (max-width: $md1 + px) {
+        margin: 0px 30px;
+    }
 }
 
 .__profile-details-block {
@@ -580,6 +587,7 @@
 
 .__profile-settings-verification-tier-limit {
     margin: 7px 0px;
+    width: 100%;
     border-bottom: 0.5px solid $color_purple_50;
 
     text-align: center;
