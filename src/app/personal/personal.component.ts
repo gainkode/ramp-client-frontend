@@ -53,7 +53,7 @@ export class PersonalComponent implements OnInit, OnDestroy {
     constructor(
         private auth: AuthService,
         private notification: NotificationService,
-        private router: Router) {
+        public router: Router) {
         this.getSectionName();
     }
 

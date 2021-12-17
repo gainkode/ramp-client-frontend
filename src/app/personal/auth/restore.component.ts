@@ -35,7 +35,7 @@ export class PersonalRestoreComponent implements OnDestroy {
         private auth: AuthService,
         private errorHandler: ErrorService,
         private formBuilder: FormBuilder,
-        private router: Router) { }
+        public router: Router) { }
 
     ngOnDestroy(): void {
         this.subscriptions.unsubscribe();

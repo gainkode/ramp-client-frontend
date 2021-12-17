@@ -48,8 +48,8 @@ export class PersonalResetComponent implements OnDestroy {
         private auth: AuthService,
         private errorHandler: ErrorService,
         private formBuilder: FormBuilder,
-        private router: Router,
-        activeRoute: ActivatedRoute) {
+        public router: Router,
+        public activeRoute: ActivatedRoute) {
         this.token = activeRoute.snapshot.params['token'];
     }
 

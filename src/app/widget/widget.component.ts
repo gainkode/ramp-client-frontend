@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AssetAddressShortListResult, LoginResult, PaymentInstrument, PaymentPreauthResultShort, Rate, TransactionShort, TransactionSource, TransactionType, WidgetShort } from 'src/app/model/generated-models';
 import { CardView, CheckoutSummary, PaymentCompleteDetails, PaymentProviderView, WidgetSettings, WidgetStage } from 'src/app/model/payment.model';
@@ -53,6 +54,7 @@ export class WidgetComponent implements OnInit {
     private changeDetector: ChangeDetectorRef,
     private exhangeRate: ExchangeRateService,
     public pager: WidgetPagerService,
+    public router: Router,
     private notification: NotificationService,
     private auth: AuthService,
     private dataService: PaymentDataService,

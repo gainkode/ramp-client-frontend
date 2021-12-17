@@ -11,7 +11,7 @@ export class MerchantRegisterComponent {
     errorMessage = '';
     USER_TYPE: typeof UserType = UserType;
 
-    constructor(private router: Router) { }
+    constructor(public router: Router) { }
 
     onError(error: string): void {
         this.errorMessage = error;

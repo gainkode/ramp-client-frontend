@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
@@ -19,7 +19,8 @@ export class MerchantConfirmDeviceComponent implements OnDestroy {
     constructor(
         private auth: AuthService,
         private errorHandler: ErrorService,
-        activeRoute: ActivatedRoute) {
+        public activeRoute: ActivatedRoute,
+        public router: Router) {
         this.token = activeRoute.snapshot.params['token'];
         if (this.token !== undefined) {
             this.subscriptions.add(

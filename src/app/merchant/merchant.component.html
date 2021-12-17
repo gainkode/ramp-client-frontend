@@ -33,9 +33,9 @@
         </div>
         <!-- Top menu logo -->
         <div *ngIf="expandedMenu" class="__profile-top-menu-logo-box">
-            <a class="__profile-top-menu-logo" href="/payment">
+            <span class="__profile-top-menu-logo" (click)="router.navigateByUrl('/payment')">
                 GetCoins
-            </a>
+            </span>
         </div>
         <!-- Error bar -->
         <div [ngClass]="errorMessage==='' ? '__top-menu-error-bar-hidden' : '__top-menu-error-bar'">

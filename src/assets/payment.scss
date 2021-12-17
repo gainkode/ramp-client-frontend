@@ -54,9 +54,17 @@
 .__widget-title-logo-container {
     grid-row: 1;
     grid-column: 1 / 3;
-    color: mediumslateblue;
     margin: auto;
     font-size: 20px;
+}
+
+.__widget-title-logo {
+    margin: 0px;
+    font-family: $font_logo;
+    font-weight: 800;
+    font-size: 32px;
+    color: $color_main_blue_900;
+    cursor: pointer;
 }
 
 .__widget-title-button-container {

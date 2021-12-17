@@ -2,9 +2,9 @@
     <div class="__auth-body">
         <div class="__auth-container">
             <div class="__auth-title-container">
-                <a style="font-size: 20px;margin: auto;color: mediumvioletred;" href="/merchant/intro">
-                    eWallet Logo
-                </a>
+                <span class="__auth-title-logo" (click)="router.navigateByUrl('/merchant/intro')">
+                    GetCoins
+                </span>
             </div>
             <div class="__auth-data-container">
                 <div *ngIf="successType=='signup'" class="__auth-disclaimer-area">

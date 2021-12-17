@@ -22,7 +22,7 @@ export class MerchantLoginComponent implements OnDestroy {
     constructor(
         private auth: AuthService,
         private errorHandler: ErrorService,
-        private router: Router,
+        public router: Router,
         public dialog: MatDialog) { }
 
     ngOnDestroy(): void {

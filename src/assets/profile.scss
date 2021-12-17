@@ -173,6 +173,7 @@
     font-weight: 800;
     font-size: 32px;
     color: $color_white;
+    cursor: pointer;
 
     @media (max-width: $md1 + px) {
         margin: 0px 30px;

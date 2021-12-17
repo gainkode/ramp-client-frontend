@@ -8,7 +8,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class MerchantSuccessComponent {
     successType = '';
 
-    constructor(private router: Router, activeRoute: ActivatedRoute) {
+    constructor(public router: Router, activeRoute: ActivatedRoute) {
         this.successType = activeRoute.snapshot.params['type'];
         if (this.successType !== 'signup' &&
             this.successType !== 'reset' &&

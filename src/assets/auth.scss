@@ -25,6 +25,17 @@
 .__auth-title-container {
     display: flex;
     margin: 24px;
+    justify-content: center;
+    align-items: center;
+}
+
+.__auth-title-logo {
+    margin: 0px;
+    font-family: $font_logo;
+    font-weight: 800;
+    font-size: 32px;
+    color: $color_main_blue_900;
+    cursor: pointer;
 }
 
 .__auth-footer-area {

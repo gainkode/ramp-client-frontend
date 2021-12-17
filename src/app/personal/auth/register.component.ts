@@ -9,7 +9,7 @@ export class PersonalRegisterComponent {
     inProgress = false;
     errorMessage = '';
 
-    constructor(private router: Router) { }
+    constructor(public router: Router) { }
 
     onError(error: string): void {
         this.errorMessage = error;
