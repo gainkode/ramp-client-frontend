@@ -1,1 +1,33 @@
-Verification
+<div class="__profile-settings-verification-container" >
+    <div class="__profile-settings-verification-tier-container" *ngFor="let tier of tiers">
+        <div [ngClass]="{'__profile-settings-verification-tier-title': true, '__profile-settings-verification-tier-title-passed': tier.passed || tier.current}">
+            {{tier.name}}
+        </div>
+        <div class="__profile-settings-verification-tier-data-container">
+            <div class="__profile-settings-verification-tier-limit">
+                {{tier.limit}}
+            </div>
+            <h2 class="__profile-settings-verification-tier-subtitle">
+                {{tier.subtitle}}
+            </h2>
+            <div class="__profile-settings-verification-tier-description">
+                {{tier.description}}
+            </div>
+        </div>
+        <div class="__profile-settings-verification-tier-button-container">
+            <button class="__main-button __button-wide" type="button" [disabled]="!tier.current" (click)="onVerify(tier.id)">VERIFY</button>
+        </div>
+    </div>
+
+    <!-- <div style="flex: 1 1 0;background-color: lawngreen;display: flex;flex-direction: column;justify-content: space-between;" *ngFor="let tier of tiers">
+        <div style="height: 40px;background-color: hotpink;">
+            title
+        </div>
+        <div>
+            {{tier.description}}
+        </div>
+        <div class="__profile-settings-verification-tier-button-container">
+            <button class="__main-button __button-wide" type="button" [disabled]="!tier.current" (click)="onVerify(tier.id)">VERIFY</button>
+        </div>
+    </div> -->
+</div>

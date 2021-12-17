@@ -4,7 +4,7 @@ import {
     SettingsKyc, SettingsKycTargetFilterType, KycProvider, UserMode, UserType, SettingsKycLevel, SettingsKycLevelShort
 } from './generated-models';
 import {
-    KycTargetFilterList, UserTypeList, KycProviderList, UserModeList
+    KycTargetFilterList, KycProviderList, UserModeList
 } from './payment.model';
 
 // temp
@@ -197,4 +197,14 @@ export class KycLevelShort {
             }
         });
     }
+}
+
+export class TierItem {
+    id = '';
+    name = '';
+    limit = '';
+    subtitle = '';
+    description = '';
+    passed = false;
+    current = false;
 }

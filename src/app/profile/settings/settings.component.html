@@ -5,8 +5,9 @@
     </div>
     <div class="__profile-internal-table-container" [ngSwitch]="selectedTab">
         <app-profile-info-settings *ngSwitchCase="'info'" (error)="handleError($event)"
-        (progressChange)="progressChanged($event)"></app-profile-info-settings>
-        <app-profile-verification-settings *ngSwitchCase="'verification'"></app-profile-verification-settings>
+            (progressChange)="progressChanged($event)"></app-profile-info-settings>
+        <app-profile-verification-settings *ngSwitchCase="'verification'" (error)="handleError($event)"
+            (progressChange)="progressChanged($event)"></app-profile-verification-settings>
         <app-profile-security-settings *ngSwitchCase="'security'" (error)="handleError($event)"
             (progressChange)="progressChanged($event)"></app-profile-security-settings>
     </div>
