@@ -429,38 +429,6 @@ export class TransferWidgetComponent implements OnInit {
     }
   }
 
-  private getTiers(): void {
-    this.errorMessage = '';
-    this.inProgress = true;
-    let amount = 0;
-    let amountCurrency = '';
-    if (this.summary.transactionType === TransactionType.Deposit) {
-      amount = this.summary.amountFrom ?? 0;
-      amountCurrency = this.summary.currencyFrom;
-    } else if (this.summary.transactionType === TransactionType.Withdrawal) {
-      amount = this.summary.amountTo ?? 0;
-      amountCurrency = this.summary.currencyTo;
-    }
-    const tiersData = this.dataService.getAppropriateSettingsKycTiers(amount, amountCurrency, TransactionSource.Widget, '');
-    if (tiersData === null) {
-      this.errorMessage = this.errorHandler.getRejectedCookieMessage();
-    } else {
-      this.pSubscriptions.add(
-        tiersData.valueChanges.subscribe(({ data }) => {
-          this.inProgress = false;
-          //this.startPayment();
-        }, (error) => {
-          this.inProgress = false;
-          if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
-            this.handleAuthError();
-          } else {
-            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to get tiers');
-          }
-        })
-      );
-    }
-  }
-
   private startPayment(): void {
     if (this.summary.providerView?.id === 'Fibonatix') {
       this.nextStage('credit_card', 'Payment info', this.pager.step, true);

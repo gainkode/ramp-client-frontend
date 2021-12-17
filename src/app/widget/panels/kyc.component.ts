@@ -103,8 +103,14 @@ export class WidgetKycComponent implements OnInit, OnDestroy {
           if ((tiers.count ?? 0 > 0) && tiers.list) {
             const rawTiers = [...tiers.list];
             const sortedTiers = rawTiers.sort((a, b) => {
-              const aa = a.amount ?? 0;
-              const ba = b.amount ?? 0;
+              let aa = a.amount ?? 0;
+              let ba = b.amount ?? 0;
+              if (!a.amount && b.amount) {
+                return 1;
+              }
+              if (a.amount && !b.amount) {
+                return -1;
+              }
               if (aa > ba) {
                 return 1;
               }

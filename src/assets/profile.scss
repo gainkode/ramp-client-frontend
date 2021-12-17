@@ -542,15 +542,17 @@
 .__profile-settings-verification-container {
     margin: 24px 24px 0px 0px;
     display: flex;
-    flex-flow: row nowrap;
+    flex-flow: row wrap;
     justify-content: space-between;
     align-items: stretch;
-    column-gap: 24px;
+    gap: 24px 24px;
 }
 
 .__profile-settings-verification-tier-container {
     flex: 1 1 0;
     display: flex;
+    min-width: 200px;
+    max-width: 600px;
     flex-direction: column;
     justify-content: space-between;
     background: $color_white;
@@ -560,7 +562,7 @@
 
 .__profile-settings-verification-tier-title {
     padding: 24px;
-    background: $color_purple_200;
+    background: $color_main_blue_900;
 
     text-align: center;
     font-family: $font_main;
@@ -570,10 +572,6 @@
     line-height: 35px;
 
     color: $color_white;
-}
-
-.__profile-settings-verification-tier-title-passed {
-    background: $color_main_blue_900;
 }
 
 .__profile-settings-verification-tier-data-container {

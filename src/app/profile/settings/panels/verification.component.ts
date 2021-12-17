@@ -1,63 +1,136 @@
-import { AfterViewInit, Component, EventEmitter, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { SettingsKycTierListResult, UserState } from 'src/app/model/generated-models';
 import { TierItem } from 'src/app/model/identification.model';
 import { AuthService } from 'src/app/services/auth.service';
+import { CommonDataService } from 'src/app/services/common-data.service';
 import { ErrorService } from 'src/app/services/error.service';
-import { ProfileDataService } from 'src/app/services/profile.service';
+import { PaymentDataService } from 'src/app/services/payment.service';
 
 @Component({
     selector: 'app-profile-verification-settings',
     templateUrl: './verification.component.html',
     styleUrls: ['../../../../assets/menu.scss', '../../../../assets/button.scss', '../../../../assets/profile.scss']
 })
-export class ProfileVerificationSettingsComponent implements OnDestroy, AfterViewInit {
+export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
     @Output() error = new EventEmitter<string>();
     @Output() progressChange = new EventEmitter<boolean>();
 
+    kycUrl = '';
+    total = 0;
     tiers: TierItem[] = [];
+
+    private pSubscriptions: Subscription = new Subscription();
 
     constructor(
         private auth: AuthService,
         private errorHandler: ErrorService,
-        private profileService: ProfileDataService,
+        private dataService: PaymentDataService,
+        private commonService: CommonDataService,
         private router: Router) {
     }
 
-    ngOnDestroy(): void {
-
-    }
-
-    ngAfterViewInit(): void {
-        this.tiers.push({
-            id: 'entry_tier',
-            name: 'Entry Tier',
-            limit: 'FIAT 1.000',
-            subtitle: 'Crypto Unlimited',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-            passed: true,
-            current: false
-        } as TierItem);
-        this.tiers.push({
-            id: 'mid_tier',
-            name: 'Mid Tier',
-            limit: 'FIAT 10.000',
-            subtitle: 'Crypto Unlimited',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-            passed: false,
-            current: true
-        } as TierItem);
-        this.tiers.push({
-            id: 'pro_tier',
-            name: 'Pro Tier',
-            limit: 'FIAT 1.000.000',
-            subtitle: 'Crypto Unlimited',
-            description: 'Lorem ipsum dolor sit amet',
-            passed: false,
-            current: false
-        } as TierItem);
+    ngOnInit(): void {
+        this.loadTransactionsTotal();
     }
 
     onVerify(id: string): void {
         console.log(id);
+    }
+
+    ngOnDestroy(): void {
+        this.pSubscriptions.unsubscribe();
+    }
+
+    private loadTransactionsTotal(): void {
+        this.total = 0;
+        const totalData = this.commonService.getMyTransactionsTotal();
+        this.progressChange.emit(true);
+        if (totalData === null) {
+            this.progressChange.emit(false);
+            this.error.emit(this.errorHandler.getRejectedCookieMessage());
+        } else {
+            this.pSubscriptions.add(
+                totalData.valueChanges.subscribe(({ data }) => {
+                    const totalState = data.myState as UserState;
+                    this.total = totalState.totalAmountEur ?? 0;
+                    this.getTiers();
+                }, (error) => {
+                    this.progressChange.emit(false);
+                    this.error.emit(this.errorHandler.getError(error.message, 'Unable to load exchange rate'));
+                })
+            );
+        }
+    }
+
+    private getTiers(): void {
+        this.error.emit('');
+        this.tiers = [];
+        const tiersData = this.dataService.getSettingsKycTiers();
+        const settingsCommon = this.auth.getLocalSettingsCommon();
+        if (tiersData === null) {
+            this.error.emit(this.errorHandler.getRejectedCookieMessage());
+        } else if (settingsCommon === null) {
+            this.error.emit('Unable to load common settings');
+        } else {
+            this.pSubscriptions.add(
+                tiersData.valueChanges.subscribe(({ data }) => {
+                    const tiersData = data.getSettingsKycTiers as SettingsKycTierListResult;
+                    this.progressChange.emit(false);
+                    if ((tiersData.count ?? 0 > 0) && tiersData.list) {
+                        const rawTiers = [...tiersData.list];
+                        const sortedTiers = rawTiers.sort((a, b) => {
+                            let aa = a.amount ?? 0;
+                            let ba = b.amount ?? 0;
+                            if (!a.amount && b.amount) {
+                                return 1;
+                            }
+                            if (a.amount && !b.amount) {
+                                return -1;
+                            }
+                            if (aa > ba) {
+                                return 1;
+                            }
+                            if (aa < ba) {
+                                return -1;
+                            }
+                            return 0;
+                        });
+                        const currentQuote = this.auth.user?.kycTier?.amount ?? undefined;
+                        this.tiers = sortedTiers.map(val => {
+                            const defaultDescription = 'Start verification process to increase your limit up to this level.';
+                            let tierPassed = true;
+                            if (currentQuote) {
+                                tierPassed = (val.amount) ? (currentQuote > val.amount) : false;
+                            }
+                            return {
+                                id: val.settingsKycTierId,
+                                limit: (val.amount) ?
+                                    new Intl.NumberFormat('de-DE', {
+                                        minimumFractionDigits: 0,
+                                        style: 'currency',
+                                        currency: 'EUR'
+                                    }).format(val.amount ?? 0) :
+                                    'Unlimited',
+                                name: val.name,
+                                passed: tierPassed,
+                                subtitle: val.level?.name ?? 'Identity',
+                                description: val.description ?? defaultDescription,
+                                flow: val.level?.original_flow_name ?? ''
+                            } as TierItem;
+                        });
+                    }
+                    this.kycUrl = settingsCommon.kycBaseAddress as string;
+                }, (error) => {
+                    this.progressChange.emit(false);
+                    if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
+                        this.router.navigateByUrl('/');
+                    } else {
+                        this.error.emit(this.errorHandler.getError(error.message, 'Unable to get tiers'));
+                    }
+                })
+            );
+        }
     }
 }

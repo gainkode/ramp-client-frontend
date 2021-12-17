@@ -205,6 +205,6 @@ export class TierItem {
     limit = '';
     subtitle = '';
     description = '';
+    flow = '';
     passed = false;
-    current = false;
 }
