@@ -53,7 +53,8 @@ const LOGIN = gql`
                       amount
                   }
                   defaultFiatCurrency,
-                  defaultCryptoCurrency
+                  defaultCryptoCurrency,
+                  avatar
             }
             authTokenAction
         }
@@ -113,7 +114,8 @@ mutation SocialLogin(
                       amount
                     }
                     defaultFiatCurrency,
-                    defaultCryptoCurrency
+                    defaultCryptoCurrency,
+                    avatar
                 }
                 authTokenAction
             }

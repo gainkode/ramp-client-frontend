@@ -17,6 +17,7 @@ export class NavPopupComponent implements OnInit, OnDestroy {
     @Output() onMenuClick = new EventEmitter<MenuItem>();
     @Input() items: MenuItem[] | undefined = undefined;
     @Input() userName: string = '';
+    @Input() avatar: string = '';
 
     private pNotificationSubscription: Subscription | undefined = undefined;
 

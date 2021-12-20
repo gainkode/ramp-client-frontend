@@ -1,7 +1,10 @@
 <div class="__profile-settings-personal-info-container">
     <div class="__profile-settings-personal-info-common-container">
         <div class="__profile-settings-personal-info-avatar-area">
-            <div class="__profile-settings-personal-info-avatar-container"></div>
+
+            <div *ngIf="avatarPath===''" class="__profile-settings-personal-info-avatar-container"></div>
+            <img *ngIf="avatarPath!==''" class="__profile-settings-personal-info-avatar-container" [src]="avatarPath" alt="Avatar">
+
             <input #avatarInput class="__profile-settings-personal-info-avatar-loader" type="file" accept="image/*"
                 (change)="uploadAvatar($event)">
             <div class="__profile-settings-personal-info-avatar-button">
@@ -10,9 +13,7 @@
                 </button>
             </div>
         </div>
-
         <mat-progress-bar *ngIf="uploadProgress" color="accent" mode="determinate" [value]="uploadProgress"></mat-progress-bar>
-        
         <div class="__profile-settings-personal-info-verification-container">
             <h2 class="__profile-settings-personal-verification-level">
                 {{userView.kycLevel==='' ? 'Not verified' : userView.kycLevel}}

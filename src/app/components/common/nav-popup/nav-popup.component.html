@@ -5,14 +5,14 @@
     <button class="__nav-popup-button-box" type="button" [matMenuTriggerFor]="menu" #menuTrigger
         (click)="onMenuOpened()">
         <div>
-            <!-- <img class="__nav-popup-user-icon" src="img_avatar.png" alt="Avatar"> -->
-            <div class="__nav-popup-nouser-icon">
+            <div *ngIf="avatar!==''" class="__nav-popup-user-icon">
+                <img [src]="avatar" alt="Avatar">
+            </div>
+            <div *ngIf="avatar===''" class="__nav-popup-nouser-icon">
                 <img src="../../../assets/navigation/__temp_user_icon.svg" alt="Avatar">
             </div>
         </div>
         <mat-icon class="__nav-popup-arrow">{{menuArrow}}</mat-icon>
-        <!-- <img [ngClass]="menuOpened ? '__nav-popup-arrow-up' : '__nav-popup-arrow-down'"
-            src="../../../assets/navigation/plain_arrow_down.svg"> -->
     </button>
     <mat-menu #menu="matMenu" class="__popup-menu-panel" (closed)="onMenuClosed($event)">
         <div *ngFor="let item of items;let i=index;">

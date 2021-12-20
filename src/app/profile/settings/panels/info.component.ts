@@ -17,8 +17,7 @@ import { environment } from 'src/environments/environment';
 enum ChangedDataType {
     Unknown = 'Unknown',
     Name = 'Name',
-    Currency = 'Currency',
-    Avatar = 'Avatar'
+    Currency = 'Currency'
 };
 
 @Component({
@@ -29,6 +28,7 @@ enum ChangedDataType {
 export class ProfileInfoSettingsComponent implements OnInit, OnDestroy {
     @Output() error = new EventEmitter<string>();
     @Output() progressChange = new EventEmitter<boolean>();
+    @Output() onUpdateAvatar = new EventEmitter<string>();
 
     USER_TYPE: typeof UserType = UserType;
     user!: User;
@@ -44,8 +44,11 @@ export class ProfileInfoSettingsComponent implements OnInit, OnDestroy {
     fiatList: CommonTargetValue[] = [];
     cryptoList: CommonTargetValue[] = [];
     uploadProgress: number | undefined = undefined;
-
+    avatarPath = '';
+    avatarError = false;
+    
     private subscriptions: Subscription = new Subscription();
+    private uploadSub: Subscription | undefined = undefined;
 
     constructor(
         private auth: AuthService,
@@ -67,6 +70,7 @@ export class ProfileInfoSettingsComponent implements OnInit, OnDestroy {
     private loadAccountData(): void {
         this.error.emit('');
         this.progressChange.emit(true);
+        let avatarLoaded = false;
         const meQuery = this.profileService.getProfileData();
         if (meQuery === null) {
             this.error.emit(this.errorHandler.getRejectedCookieMessage());
@@ -80,6 +84,14 @@ export class ProfileInfoSettingsComponent implements OnInit, OnDestroy {
                         if (userData) {
                             this.user = userData;
                             this.userView = new UserItem(this.user);
+                            if (avatarLoaded === false) {
+                                avatarLoaded = true;
+                                const avatarData = JSON.parse(this.user.avatar ?? '{}');
+                                if (avatarData.path && avatarData.originFileName) {
+                                    this.avatarPath = `${environment.api_server}/${avatarData.path}/${avatarData.originFileName}`;
+                                    this.onUpdateAvatar.emit(this.avatarPath);
+                                }
+                            }
                         }
                     } else {
                         this.router.navigateByUrl('/');
@@ -202,6 +214,7 @@ export class ProfileInfoSettingsComponent implements OnInit, OnDestroy {
 
     uploadAvatar(event): void {
         this.error.emit('');
+        this.avatarError = false;
         const file: File = event.target.files[0];
         if (file) {
             const fileName = file.name;
@@ -213,30 +226,33 @@ export class ProfileInfoSettingsComponent implements OnInit, OnDestroy {
                 reportProgress: true,
                 observe: 'events'
             }).pipe(
-                finalize(() => this.reset())
+                finalize(() => this.onAvatarUploaded())
             );
 
             this.uploadProgress = 0;
-            this.subscriptions.add(
-                upload.subscribe(event => {
-                    if (event.type == HttpEventType.UploadProgress) {
-                        const total = event.total ?? 0;
-                        if (total > 0) {
-                            this.uploadProgress = Math.round(100 * (event.loaded / total));
-                        } else {
-                            this.uploadProgress = 100;
-                        }
+            this.uploadSub = upload.subscribe(event => {
+                if (event.type == HttpEventType.UploadProgress) {
+                    const total = event.total ?? 0;
+                    if (total > 0) {
+                        this.uploadProgress = Math.round(100 * (event.loaded / total));
+                    } else {
+                        this.uploadProgress = 100;
                     }
-                }, (error) => {
-                    this.uploadProgress = undefined;
-                    this.error.emit(this.errorHandler.getError(error.message, 'Unable to save avatar'));
-                })
-            );
+                }
+            }, (error) => {
+                this.avatarError = true;
+                this.error.emit(this.errorHandler.getError(error.message, 'Unable to save avatar'));
+                this.uploadProgress = undefined;
+            });
         }
     }
 
-    reset() {
+    onAvatarUploaded() {
         this.uploadProgress = undefined;
+        this.uploadSub = undefined;
+        if (this.avatarError === false) {
+            this.loadAccountData();
+        }
     }
 
     changeFirstName(data: string): void {

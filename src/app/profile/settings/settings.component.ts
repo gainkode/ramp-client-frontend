@@ -8,6 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class ProfileSettingsComponent {
     @Output() onShowError = new EventEmitter<string>();
+    @Output() onUpdateAvatar = new EventEmitter<string>();
 
     inProgress = false;
     errorMessage = '';

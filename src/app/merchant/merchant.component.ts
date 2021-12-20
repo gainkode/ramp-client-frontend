@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavigationEnd, Router, Event as NavigationEvent } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { MenuItem } from '../model/common.model';
 import { CurrencyView, PaymentCompleteDetails, PaymentWidgetType } from '../model/payment.model';
 import { ProfileItemActionType, ProfileItemContainer, ProfileItemContainerType } from '../model/profile-item.model';
@@ -24,11 +25,13 @@ export class MerchantComponent implements OnInit, OnDestroy {
     popupItems: MenuItem[] = MerchantProfilePopupMenuItems;
     WIDGET_TYPE: typeof PaymentWidgetType = PaymentWidgetType;
     errorMessage = '';
+    avatar = '';
     expandedMenu = false;
     selectedMenu = 'home';
     showDetails = false;
     showDetailsRef: any;
     showErrorRef: any;
+    updateAvatarRef: any;
     showPayment = false;
     paymentPanelTitle = '';
     selectedPaymentType = PaymentWidgetType.None;
@@ -75,6 +78,7 @@ export class MerchantComponent implements OnInit, OnDestroy {
                 this.popupItems.splice(0, 0, ProfilePopupAdministrationMenuItem);
             }
         }
+        this.loadAvatar(undefined);
     }
 
     ngOnDestroy(): void {
@@ -97,6 +101,12 @@ export class MerchantComponent implements OnInit, OnDestroy {
                 this.errorMessage = event as string;
             });
         }
+        this.updateAvatarRef = component.onUpdateAvatar;
+        if (this.updateAvatarRef) {
+            this.updateAvatarRef.subscribe((event: any) => {
+                this.loadAvatar(event as string);
+            });
+        }
     }
 
     onDeactivatePage(component: any): void {
@@ -108,6 +118,10 @@ export class MerchantComponent implements OnInit, OnDestroy {
         if (this.showErrorRef) {
             this.showErrorRef.unsubscribe();
             this.showErrorRef = undefined;
+        }
+        if (this.updateAvatarRef) {
+            this.updateAvatarRef.unsubscribe();
+            this.updateAvatarRef = undefined;
         }
     }
 
@@ -175,6 +189,18 @@ export class MerchantComponent implements OnInit, OnDestroy {
             this.detailsType = 'payment_complete';
             this.paymentCompleteDetails = container.paymentDetails;
         }
+    }
+
+    loadAvatar(path: string | undefined): void {
+        if (path) {
+            this.avatar = path;
+        } else {
+            const avatarData = JSON.parse(this.auth.user?.avatar ?? '{}');
+            if (avatarData.path && avatarData.originFileName) {
+                this.avatar = `${environment.api_server}/${avatarData.path}/${avatarData.originFileName}`;
+            }
+        }
+        console.log('load avatar', this.avatar);
     }
 
     closeErrorBar(): void {

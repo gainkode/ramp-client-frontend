@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavigationEnd, Router, Event as NavigationEvent } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { MenuItem } from '../model/common.model';
 import { CurrencyView, PaymentCompleteDetails, PaymentWidgetType } from '../model/payment.model';
 import { ProfileItemActionType, ProfileItemContainer, ProfileItemContainerType } from '../model/profile-item.model';
@@ -28,11 +29,13 @@ export class PersonalComponent implements OnInit, OnDestroy {
     popupItems: MenuItem[] = PersonalProfilePopupMenuItems;
     WIDGET_TYPE: typeof PaymentWidgetType = PaymentWidgetType;
     errorMessage = '';
+    avatar = '';
     expandedMenu = false;
     selectedMenu = 'home';
     showDetails = false;
     showDetailsRef: any;
     showErrorRef: any;
+    updateAvatarRef: any;
     showPayment = false;
     paymentPanelTitle = '';
     selectedPaymentType = PaymentWidgetType.None;
@@ -57,10 +60,6 @@ export class PersonalComponent implements OnInit, OnDestroy {
         this.getSectionName();
     }
 
-    ngOnDestroy(): void {
-        this.subscriptions.unsubscribe();
-    }
-
     get userName(): string {
         let name = '';
         const user = this.auth.user;
@@ -75,6 +74,75 @@ export class PersonalComponent implements OnInit, OnDestroy {
 
     get selectedSection(): string {
         return this.selectedMenu;
+    }
+
+    ngOnInit(): void {
+        // route change detection
+        this.subscriptions.add(
+            this.router.events.subscribe(
+                (event: NavigationEvent): void => {
+                    if (event instanceof NavigationEnd) {
+                        this.getSectionName();
+                    }
+                }
+            )
+        );
+        // side menu expanded state
+        const expandedVal = localStorage.getItem('sideMenuExpanded');
+        this.expandedMenu = (expandedVal === 'true');
+        // Administration menu item
+        const adminRole = this.auth.user?.roles?.find(r => r.name === 'ADMIN');
+        if (adminRole) {
+            const adminMenu = this.popupItems.find(x => x.id === ProfilePopupAdministrationMenuItem.id);
+            if (!adminMenu) {
+                this.popupItems.splice(0, 0, ProfilePopupAdministrationMenuItem);
+            }
+        }
+        this.loadAvatar(undefined);
+    }
+
+    ngOnDestroy(): void {
+        this.subscriptions.unsubscribe();
+    }
+
+    onActivatePage(component: any): void {
+        this.dataPanel = component;
+        this.showDetailsRef = component.onShowDetails;
+        if (this.showDetailsRef) {
+            this.showDetailsRef.subscribe((event: any) => {
+                const container = event as ProfileItemContainer;
+                this.initializeDetailsPanel(container);
+                this.showDetails = true;
+            });
+        }
+        this.showErrorRef = component.onShowError;
+        if (this.showErrorRef) {
+            this.showErrorRef.subscribe((event: any) => {
+                this.errorMessage = event as string;
+            });
+        }
+        this.updateAvatarRef = component.onUpdateAvatar;
+        if (this.updateAvatarRef) {
+            this.updateAvatarRef.subscribe((event: any) => {
+                this.loadAvatar(event as string);
+            });
+        }
+    }
+
+    onDeactivatePage(component: any): void {
+        this.dataPanel = false;
+        if (this.showDetailsRef) {
+            this.showDetailsRef.unsubscribe();
+            this.showDetailsRef = undefined;
+        }
+        if (this.showErrorRef) {
+            this.showErrorRef.unsubscribe();
+            this.showErrorRef = undefined;
+        }
+        if (this.updateAvatarRef) {
+            this.updateAvatarRef.unsubscribe();
+            this.updateAvatarRef = undefined;
+        }
     }
 
     private getSectionName(): void {
@@ -127,57 +195,14 @@ export class PersonalComponent implements OnInit, OnDestroy {
         }
     }
 
-    ngOnInit(): void {
-        // route change detection
-        this.subscriptions.add(
-            this.router.events.subscribe(
-                (event: NavigationEvent): void => {
-                    if (event instanceof NavigationEnd) {
-                        this.getSectionName();
-                    }
-                }
-            )
-        );
-        // side menu expanded state
-        const expandedVal = localStorage.getItem('sideMenuExpanded');
-        this.expandedMenu = (expandedVal === 'true');
-        // Administration menu item
-        const adminRole = this.auth.user?.roles?.find(r => r.name === 'ADMIN');
-        if (adminRole) {
-            const adminMenu = this.popupItems.find(x => x.id === ProfilePopupAdministrationMenuItem.id);
-            if (!adminMenu) {
-                this.popupItems.splice(0, 0, ProfilePopupAdministrationMenuItem);
+    loadAvatar(path: string | undefined): void {
+        if (path) {
+            this.avatar = path;
+        } else {
+            const avatarData = JSON.parse(this.auth.user?.avatar ?? '{}');
+            if (avatarData.path && avatarData.originFileName) {
+                this.avatar = `${environment.api_server}/${avatarData.path}/${avatarData.originFileName}`;
             }
-        }
-    }
-
-    onActivatePage(component: any): void {
-        this.dataPanel = component;
-        this.showDetailsRef = component.onShowDetails;
-        if (this.showDetailsRef) {
-            this.showDetailsRef.subscribe((event: any) => {
-                const container = event as ProfileItemContainer;
-                this.initializeDetailsPanel(container);
-                this.showDetails = true;
-            });
-        }
-        this.showErrorRef = component.onShowError;
-        if (this.showErrorRef) {
-            this.showErrorRef.subscribe((event: any) => {
-                this.errorMessage = event as string;
-            });
-        }
-    }
-
-    onDeactivatePage(component: any): void {
-        this.dataPanel = false;
-        if (this.showDetailsRef) {
-            this.showDetailsRef.unsubscribe();
-            this.showDetailsRef = undefined;
-        }
-        if (this.showErrorRef) {
-            this.showErrorRef.unsubscribe();
-            this.showErrorRef = undefined;
         }
     }
 
