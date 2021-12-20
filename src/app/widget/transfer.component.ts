@@ -27,7 +27,7 @@ export class TransferWidgetComponent implements OnInit {
   initState = true;
   showSummary = true;
   mobileSummary = false;
-  initMessage = 'Initialization...';
+  initMessage = 'Loading...';
   summary = new CheckoutSummary();
   widget = new WidgetSettings();
   userWallets: WalletItem[] = [];
@@ -56,7 +56,7 @@ export class TransferWidgetComponent implements OnInit {
     private errorHandler: ErrorService) { }
 
   ngOnInit(): void {
-    this.initMessage = 'Initialization...';
+    this.initMessage = 'Loading...';
     this.pager.init('initialization', 'Initialization');
     this.loadUserWallets();
     this.startExchangeRate();
@@ -69,7 +69,7 @@ export class TransferWidgetComponent implements OnInit {
   }
 
   private initData(): void {
-    this.initMessage = 'Initialization...';
+    this.initMessage = 'Loading...';
     this.summary.agreementChecked = true;
     const user = this.auth.user;
     if (user) {

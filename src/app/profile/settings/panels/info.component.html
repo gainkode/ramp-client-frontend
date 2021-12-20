@@ -2,8 +2,10 @@
     <div class="__profile-settings-personal-info-common-container">
         <div class="__profile-settings-personal-info-avatar-area">
             <div class="__profile-settings-personal-info-avatar-container"></div>
+            <input #avatarInput class="__profile-settings-personal-info-avatar-loader" type="file" accept="image/*"
+                (change)="uploadAvatar($event)">
             <div class="__profile-settings-personal-info-avatar-button">
-                <button class="__table-button" (click)="setAvatar()">
+                <button class="__table-button" (click)="avatarInput.click()">
                     <mat-icon style="font-size: 20px;">edit</mat-icon>
                 </button>
             </div>

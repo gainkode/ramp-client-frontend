@@ -22,7 +22,7 @@ export class ReceiveWidgetComponent implements OnInit {
   stageId = 'order_details';
   title = 'Order details';
   step = 1;
-  initMessage = 'Initialization...';
+  initMessage = 'Loading...';
   userWallets: WalletItem[] = [];
   cryptoList: CurrencyView[] = [];
   readCommonSettings = false;
@@ -36,7 +36,7 @@ export class ReceiveWidgetComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit(): void {
-    this.initMessage = 'Initialization...';
+    this.initMessage = 'Loading...';
     this.stageId = 'initialization';
     this.title = 'Initialization';
     this.loadCurrencyData();

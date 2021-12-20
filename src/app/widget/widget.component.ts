@@ -33,7 +33,7 @@ export class WidgetComponent implements OnInit {
   initState = true;
   showSummary = true;
   mobileSummary = false;
-  initMessage = 'Initialization...';
+  initMessage = 'Loading...';
   summary = new CheckoutSummary();
   widget = new WidgetSettings();
   userWallets: WalletItem[] = [];
@@ -62,7 +62,7 @@ export class WidgetComponent implements OnInit {
     private errorHandler: ErrorService) { }
 
   ngOnInit(): void {
-    this.initMessage = 'Initialization...';
+    this.initMessage = 'Loading...';
     if (this.userParamsId === '') {
       if (this.settings) {
         this.widget = this.settings;
@@ -88,7 +88,7 @@ export class WidgetComponent implements OnInit {
   }
 
   private initData(data: WidgetShort | undefined): void {
-    this.initMessage = 'Initialization...';
+    this.initMessage = 'Loading...';
     if (data) {
       if (data.additionalSettings) {
         //{"minAmountFrom":0,"maxAmountFrom":0,"fixedAmountFrom":0,"kycBeforePayment":false,"disclaimer":true}

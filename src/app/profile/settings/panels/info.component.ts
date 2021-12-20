@@ -195,8 +195,8 @@ export class ProfileInfoSettingsComponent implements OnInit, OnDestroy {
         });
     }
 
-    setAvatar(): void {
-
+    uploadAvatar(event): void {
+        console.log(event.target.files);
     }
 
     changeFirstName(data: string): void {

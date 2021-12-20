@@ -24,7 +24,7 @@ export class SendWidgetComponent implements OnInit {
   errorMessage = '';
   rateErrorMessage = '';
   inProgress = false;
-  initMessage = 'Initialization...';
+  initMessage = 'Loading...';
   summary = new CheckoutSummary();
   cryptoList: CurrencyView[] = [];
 
@@ -41,7 +41,7 @@ export class SendWidgetComponent implements OnInit {
     private errorHandler: ErrorService) { }
 
   ngOnInit(): void {
-    this.initMessage = 'Initialization...';
+    this.initMessage = 'Loading...';
     this.pager.init('initialization', 'Initialization');
     this.initData();
     this.loadCurrencyData();
@@ -54,7 +54,7 @@ export class SendWidgetComponent implements OnInit {
   }
 
   private initData(): void {
-    this.initMessage = 'Initialization...';
+    this.initMessage = 'Loading...';
     this.summary.agreementChecked = true;
     this.summary.email = '';
     this.summary.transactionType = TransactionType.Transfer;
