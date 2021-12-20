@@ -1,6 +1,8 @@
+import { HttpClient, HttpEventType, HttpHeaders } from '@angular/common/http';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 import { CommonTargetValue } from 'src/app/model/common.model';
 import { Countries, getCountryByCode3 } from 'src/app/model/country-code.model';
 import { SettingsCurrencyWithDefaults, User, UserInput, UserType } from 'src/app/model/generated-models';
@@ -10,6 +12,7 @@ import { CommonDataService } from 'src/app/services/common-data.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
 import { getCryptoSymbol } from 'src/app/utils/utils';
+import { environment } from 'src/environments/environment';
 
 enum ChangedDataType {
     Unknown = 'Unknown',
@@ -40,6 +43,7 @@ export class ProfileInfoSettingsComponent implements OnInit, OnDestroy {
     });
     fiatList: CommonTargetValue[] = [];
     cryptoList: CommonTargetValue[] = [];
+    uploadProgress: number | undefined = undefined;
 
     private subscriptions: Subscription = new Subscription();
 
@@ -48,6 +52,7 @@ export class ProfileInfoSettingsComponent implements OnInit, OnDestroy {
         private commonService: CommonDataService,
         private errorHandler: ErrorService,
         private profileService: ProfileDataService,
+        private http: HttpClient,
         private router: Router) {
     }
 
@@ -196,7 +201,42 @@ export class ProfileInfoSettingsComponent implements OnInit, OnDestroy {
     }
 
     uploadAvatar(event): void {
-        console.log(event.target.files);
+        this.error.emit('');
+        const file: File = event.target.files[0];
+        if (file) {
+            const fileName = file.name;
+            const formData = new FormData();
+            formData.append("docs", file);
+
+            const upload = this.http.post(`${environment.api_server}/rest/user/upload-avatar`, formData, {
+                headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.auth.token),
+                reportProgress: true,
+                observe: 'events'
+            }).pipe(
+                finalize(() => this.reset())
+            );
+
+            this.uploadProgress = 0;
+            this.subscriptions.add(
+                upload.subscribe(event => {
+                    if (event.type == HttpEventType.UploadProgress) {
+                        const total = event.total ?? 0;
+                        if (total > 0) {
+                            this.uploadProgress = Math.round(100 * (event.loaded / total));
+                        } else {
+                            this.uploadProgress = 100;
+                        }
+                    }
+                }, (error) => {
+                    this.uploadProgress = undefined;
+                    this.error.emit(this.errorHandler.getError(error.message, 'Unable to save avatar'));
+                })
+            );
+        }
+    }
+
+    reset() {
+        this.uploadProgress = undefined;
     }
 
     changeFirstName(data: string): void {

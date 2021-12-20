@@ -10,6 +10,9 @@
                 </button>
             </div>
         </div>
+
+        <mat-progress-bar *ngIf="uploadProgress" color="accent" mode="determinate" [value]="uploadProgress"></mat-progress-bar>
+        
         <div class="__profile-settings-personal-info-verification-container">
             <h2 class="__profile-settings-personal-verification-level">
                 {{userView.kycLevel==='' ? 'Not verified' : userView.kycLevel}}
