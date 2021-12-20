@@ -119,7 +119,7 @@ export class WidgetKycComponent implements OnInit, OnDestroy {
               }
               return 0;
             });
-            this.flow = sortedTiers[0].level?.original_flow_name ?? '';
+            this.flow = sortedTiers[0].level?.originalFlowName ?? '';
           }
           if (this.flow === '') {
             this.getSettings();

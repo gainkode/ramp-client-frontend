@@ -1976,8 +1976,8 @@ export type SettingsKycLevel = {
   __typename?: 'SettingsKycLevel';
   settingsKycLevelId: Scalars['ID'];
   name?: Maybe<Scalars['String']>;
-  original_level_name?: Maybe<Scalars['String']>;
-  original_flow_name?: Maybe<Scalars['String']>;
+  originalLevelName?: Maybe<Scalars['String']>;
+  originalFlowName?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
   userType?: Maybe<UserType>;
   order?: Maybe<Scalars['Int']>;
@@ -1988,8 +1988,8 @@ export type SettingsKycLevel = {
 
 export type SettingsKycLevelInput = {
   name: Scalars['String'];
-  original_level_name?: Maybe<Scalars['String']>;
-  original_flow_name?: Maybe<Scalars['String']>;
+  originalLevelName?: Maybe<Scalars['String']>;
+  originalFlowName?: Maybe<Scalars['String']>;
   data: Scalars['String'];
   description?: Maybe<Scalars['String']>;
   userType: UserType;
