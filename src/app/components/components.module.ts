@@ -59,6 +59,7 @@ import { CommonDialogBox } from './dialogs/common-box.dialog';
 import { TwoFaDialogBox } from './dialogs/two-fa-box.dialog';
 import { TwoFaDialogWizard } from './dialogs/two-fa-wizard.dialog';
 import { SendNotificationDialogBox } from './dialogs/send-notification-box.dialog';
+import { SumsubVerificationDialogBox } from './dialogs/sumsub-verification.dialog';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -99,7 +100,7 @@ export class MaterialModule { }
         DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
         FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent, FormSearchBoxComponent,
         FormEditBoxComponent, SettingsPasswordBoxComponent,
-        DeleteDialogBox, CommonDialogBox, TwoFaDialogBox, TwoFaDialogWizard, SendNotificationDialogBox,
+        DeleteDialogBox, CommonDialogBox, TwoFaDialogBox, TwoFaDialogWizard, SendNotificationDialogBox, SumsubVerificationDialogBox,
         LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent,
         NavPopupComponent, SideMenuComponent, SideExpanderComponent, RiskWarningComponent,
         LineBreakPipe, NumberFillPipe,
@@ -108,7 +109,7 @@ export class MaterialModule { }
         DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
         FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent, FormSearchBoxComponent,
         FormEditBoxComponent, SettingsPasswordBoxComponent,
-        DeleteDialogBox, CommonDialogBox, TwoFaDialogBox, TwoFaDialogWizard, SendNotificationDialogBox,
+        DeleteDialogBox, CommonDialogBox, TwoFaDialogBox, TwoFaDialogWizard, SendNotificationDialogBox, SumsubVerificationDialogBox,
         LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent,
         NavPopupComponent, SideMenuComponent, SideExpanderComponent, RiskWarningComponent,
         LineBreakPipe, NumberFillPipe,

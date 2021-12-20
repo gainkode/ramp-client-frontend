@@ -393,7 +393,9 @@ const GET_TRANSACTIONS = gql`
         amountToSpend
         currencyToReceive
         amountToReceive
+        initialAmountToReceive
         rate
+        initialRate
         liquidityProvider
         instrument
         paymentProvider
@@ -1901,17 +1903,20 @@ export class AdminDataService {
   }
 
   updateTransaction(data: Transaction): Observable<any> {
+    const vars = {
+      transactionId: data.transactionId,
+      currencyToSpend: data.currencyToSpend,
+      currencyToReceive: data.currencyToReceive,
+      amountToSpend: data.amountToSpend,
+      amountToReceive: data.amountToReceive,
+      rate: data.rate,
+      destination: data.destination
+    };
+    console.log('data', data);
+    console.log('vars', vars);
     return this.mutate({
       mutation: UPDATE_TRANSACTIONS,
-      variables: {
-        transactionId: data.transactionId,
-        currencyToSpend: data.currencyToSpend,
-        currencyToReceive: data.currencyToReceive,
-        amountToSpend: data.amountToSpend,
-        amountToReceive: data.amountToReceive,
-        rate: data.rate,
-        destination: data.destination
-      }
+      variables: vars
     }).pipe(tap((res) => {
       this.snackBar.open(
         `Transaction was updated`,

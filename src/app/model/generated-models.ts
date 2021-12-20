@@ -263,8 +263,12 @@ export type FileInfo = {
 };
 
 export enum FileType {
-  Avatar = 'Avatar',
-  SupportTicket = 'SupportTicket'
+  UserAvatar = 'USER_AVATAR',
+  KycDocument = 'KYC_DOCUMENT',
+  LandingPageImage = 'LANDING_PAGE_IMAGE',
+  WidgetPageImage = 'WIDGET_PAGE_IMAGE',
+  SupportTicket = 'SUPPORT_TICKET',
+  Other = 'OTHER'
 }
 
 export enum FireblocksTransactionStatus {
@@ -1206,7 +1210,8 @@ export type Query = {
   getAppropriateSettingsKyc?: Maybe<SettingsKyc>;
   getSettingsKycTiers?: Maybe<SettingsKycTierListResult>;
   mySettingsKycTier?: Maybe<SettingsKycTierShort>;
-  getAppropriateSettingsKycTiers?: Maybe<SettingsKycTierListResult>;
+  mySettingsKycTiers?: Maybe<SettingsKycTierShortExListResult>;
+  getAppropriateSettingsKycTiers?: Maybe<SettingsKycTierShortExListResult>;
   getSettingsFee?: Maybe<SettingsFeeListResult>;
   mySettingsFee?: Maybe<SettingsFeeShort>;
   mySettingsFeeFull?: Maybe<SettingsFee>;
@@ -1343,6 +1348,12 @@ export type QueryGetSettingsKycTiersArgs = {
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
   orderBy?: Maybe<Array<OrderBy>>;
+};
+
+
+export type QueryMySettingsKycTiersArgs = {
+  source?: Maybe<TransactionSource>;
+  widgetId?: Maybe<Scalars['String']>;
 };
 
 
@@ -2102,6 +2113,12 @@ export type SettingsKycTierShortEx = {
   levelDescription?: Maybe<Scalars['String']>;
   originalLevelName?: Maybe<Scalars['String']>;
   originalFlowName?: Maybe<Scalars['String']>;
+};
+
+export type SettingsKycTierShortExListResult = {
+  __typename?: 'SettingsKycTierShortExListResult';
+  count?: Maybe<Scalars['Int']>;
+  list?: Maybe<Array<SettingsKycTierShortEx>>;
 };
 
 export type StringMap = {

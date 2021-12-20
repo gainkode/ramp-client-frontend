@@ -1,8 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { LayoutService } from 'src/app/admin/services/layout.service';
-import { CommonTargetValue } from 'src/app/model/common.model';
-import { Transaction, TransactionKycStatus, TransactionType } from 'src/app/model/generated-models';
+import { Transaction, TransactionType } from 'src/app/model/generated-models';
 import { CurrencyView } from 'src/app/model/payment.model';
 import { TransactionItemDeprecated } from 'src/app/model/transaction.model';
 
@@ -19,16 +18,13 @@ export class TransactionDetailsComponent {
   @Input() cancelable = false;
   @Input() set currencies(list: CurrencyView[]) {
     if (this.data) {
-      if (this.data.type === TransactionType.Withdrawal) {
-        this.currenciesToReceive = list.filter(x => x.fiat === true);
-        this.currenciesToSpend = list.filter(x => x.fiat === false);
+      const currencyToSpendSymbol = this.data?.currencyToSpend;
+      const currencyToSpend = list.find(x => x.id === currencyToSpendSymbol);
+      if (currencyToSpend) {
+        this.currenciesToSpend = list.filter(x => x.fiat === currencyToSpend.fiat);
+        this.currenciesToReceive = list.filter(x => x.fiat === !currencyToSpend.fiat);
         this.form.get('currencyToSpend')?.setValue(this.data?.currencyToSpend);
         this.form.get('currencyToReceive')?.setValue(this.data?.currencyToReceive);
-      } else {
-        this.currenciesToReceive = list.filter(x => x.fiat === false);
-        this.currenciesToSpend = list.filter(x => x.fiat === true);
-        this.form.get('currencyToReceive')?.setValue(this.data?.currencyToSpend);
-        this.form.get('currencyToSpend')?.setValue(this.data?.currencyToReceive);
       }
     }
   }
@@ -46,10 +42,10 @@ export class TransactionDetailsComponent {
 
   form = this.formBuilder.group({
     address: ['', { validators: [Validators.required], updateOn: 'change' }],
-    currencyToSpend: ['', { validators: [Validators.required], updateOn: 'change' }],
-    currencyToReceive: ['', { validators: [Validators.required], updateOn: 'change' }],
-    amountToReceive: [0, { validators: [Validators.required, Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
-    amountToSpend: [0, { validators: [Validators.required, Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
+    currencyToSpend: [undefined, { validators: [Validators.required], updateOn: 'change' }],
+    currencyToReceive: [undefined, { validators: [Validators.required], updateOn: 'change' }],
+    amountToReceive: [undefined, { validators: [Validators.required, Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
+    amountToSpend: [undefined, { validators: [Validators.required, Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
     rate: [0, { validators: [Validators.required, Validators.pattern(this.pNumberPattern)], updateOn: 'change' }]
   });
 
@@ -64,15 +60,10 @@ export class TransactionDetailsComponent {
     this.removable = val?.statusInfo?.value.canBeCancelled ?? false;
     if (this.data) {
       this.form.get('address')?.setValue(this.data.address);
-      if (this.data.type === TransactionType.Withdrawal) {
-        this.form.get('currencyToReceive')?.setValue(this.data.currencyToSpend);
-        this.form.get('currencyToSpend')?.setValue(this.data.currencyToReceive);
-      } else {
-        this.form.get('currencyToSpend')?.setValue(this.data.currencyToSpend);
-        this.form.get('currencyToReceive')?.setValue(this.data.currencyToReceive);
-      }
       this.form.get('amountToSpend')?.setValue(this.data.amountToSpend);
       this.form.get('amountToReceive')?.setValue(this.data.amountToReceive);
+      this.form.get('currencyToSpend')?.setValue(this.data?.currencyToSpend);
+      this.form.get('currencyToReceive')?.setValue(this.data?.currencyToReceive);
       this.form.get('rate')?.setValue(this.data.rate);
     }
   }
@@ -82,15 +73,13 @@ export class TransactionDetailsComponent {
       const transaction = {
         transactionId: this.transactionId,
         destination: this.form.get('address')?.value,
-        currencyToSpend: (this.data?.type === TransactionType.Withdrawal) ?
-        this.form.get('currencyToReceive')?.value :
-        this.form.get('currencyToSpend')?.value,
-        currencyToReceive: (this.data?.type === TransactionType.Withdrawal) ?
-        this.form.get('currencyToSpend')?.value :
-        this.form.get('currencyToReceive')?.value,
+        currencyToSpend: this.form.get('currencyToSpend')?.value,
+        currencyToReceive: this.form.get('currencyToReceive')?.value,
         amountToSpend: parseFloat(this.form.get('amountToSpend')?.value ?? '0'),
-        amountToReceive: parseFloat(this.form.get('amountToReceive')?.value ?? '0'),
-        rate: parseFloat(this.form.get('rate')?.value ?? '0')
+        amountToReceive: (!this.data?.initialAmount) ? this.form.get('amountToReceive')?.value : undefined,
+        initialAmountToReceive: (this.data?.initialAmount) ? this.form.get('amountToReceive')?.value : undefined,
+        rate: (!this.data?.initialAmount) ? parseFloat(this.form.get('rate')?.value ?? '0') : undefined,
+        initialRate: (this.data?.initialAmount) ? parseFloat(this.form.get('rate')?.value ?? '0') : undefined
       } as Transaction;
       this.save.emit(transaction);
     }

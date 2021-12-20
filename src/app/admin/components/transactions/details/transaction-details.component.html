@@ -38,7 +38,7 @@
             <!-- Currency to spend -->
             <mat-form-field class="form-element">
                 <mat-label>Currency to spend</mat-label>
-                <mat-select formControlName="currencyToReceive" required>
+                <mat-select formControlName="currencyToSpend" required>
                     <mat-option *ngFor="let item of currenciesToSpend" [value]="item.id">
                         {{item.id}}
                     </mat-option>
@@ -60,7 +60,7 @@
             <!-- Currency to receive -->
             <mat-form-field class="form-element">
                 <mat-label>Currency to receive</mat-label>
-                <mat-select formControlName="currencyToSpend" required>
+                <mat-select formControlName="currencyToReceive" required>
                     <mat-option *ngFor="let item of currenciesToReceive" [value]="item.id">
                         {{item.id}}
                     </mat-option>

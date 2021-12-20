@@ -81,6 +81,28 @@ query GetSettingsKycTiers {
 }
 `;
 
+const MY_SETTINGS_KYC_TIERS = gql`
+query MySettingsKycTiers {
+  mySettingsKycTiers {
+    count
+    list {
+      name
+      description
+      amount
+      levelName
+      levelDescription
+      originalLevelName
+      originalFlowName
+      requireUserFullName
+      requireUserPhone
+      requireUserBirthday
+      requireUserAddress
+      requireUserFlatNumber
+    }
+  }
+}
+`;
+
 const GET_APPROPRIATE_SETTINGS_KYC_TIERS = gql`
 query GetAppropriateSettingsKycTiers(
   $amount: Float
@@ -310,6 +332,17 @@ export class PaymentDataService {
     if (this.apollo.client !== undefined) {
       return this.apollo.watchQuery<any>({
         query: GET_SETTINGS_KYC_TIERS,
+        fetchPolicy: 'network-only'
+      });
+    } else {
+      return null;
+    }
+  }
+
+  mySettingsKycTiers(): QueryRef<any, EmptyObject> | null {
+    if (this.apollo.client !== undefined) {
+      return this.apollo.watchQuery<any>({
+        query: MY_SETTINGS_KYC_TIERS,
         fetchPolicy: 'network-only'
       });
     } else {

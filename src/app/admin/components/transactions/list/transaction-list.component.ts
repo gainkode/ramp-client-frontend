@@ -175,7 +175,6 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
 
   private loadTransactions(): void {
     this.transactionsSubscription.unsubscribe();
-
     this.transactionsSubscription = this.adminService.getTransactions(
       this.pageIndex,
       this.pageSize,

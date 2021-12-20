@@ -200,7 +200,6 @@ export class KycLevelShort {
 }
 
 export class TierItem {
-    id = '';
     name = '';
     limit = '';
     subtitle = '';

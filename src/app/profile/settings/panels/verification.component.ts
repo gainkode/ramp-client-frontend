@@ -1,7 +1,9 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { SettingsKycTierListResult, UserState } from 'src/app/model/generated-models';
+import { SumsubVerificationDialogBox } from 'src/app/components/dialogs/sumsub-verification.dialog';
+import { SettingsKycTierListResult, SettingsKycTierShortExListResult, UserState } from 'src/app/model/generated-models';
 import { TierItem } from 'src/app/model/identification.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
@@ -28,19 +30,27 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
         private errorHandler: ErrorService,
         private dataService: PaymentDataService,
         private commonService: CommonDataService,
-        private router: Router) {
+        private router: Router,
+        public dialog: MatDialog) {
     }
 
     ngOnInit(): void {
         this.loadTransactionsTotal();
     }
 
-    onVerify(id: string): void {
-        console.log(id);
-    }
-
     ngOnDestroy(): void {
         this.pSubscriptions.unsubscribe();
+    }
+
+    onVerify(flow: string, level: string): void {
+        this.dialog.open(SumsubVerificationDialogBox, {
+            width: '700px',
+            data: {
+                title: level,
+                message: this.kycUrl,
+                button: flow
+            }
+        });
     }
 
     private loadTransactionsTotal(): void {
@@ -67,7 +77,7 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
     private getTiers(): void {
         this.error.emit('');
         this.tiers = [];
-        const tiersData = this.dataService.getSettingsKycTiers();
+        const tiersData = this.dataService.mySettingsKycTiers();
         const settingsCommon = this.auth.getLocalSettingsCommon();
         if (tiersData === null) {
             this.error.emit(this.errorHandler.getRejectedCookieMessage());
@@ -76,7 +86,7 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
         } else {
             this.pSubscriptions.add(
                 tiersData.valueChanges.subscribe(({ data }) => {
-                    const tiersData = data.getSettingsKycTiers as SettingsKycTierListResult;
+                    const tiersData = data.mySettingsKycTiers as SettingsKycTierShortExListResult;
                     this.progressChange.emit(false);
                     if ((tiersData.count ?? 0 > 0) && tiersData.list) {
                         const rawTiers = [...tiersData.list];
@@ -105,7 +115,6 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
                                 tierPassed = (val.amount) ? (currentQuote > val.amount) : false;
                             }
                             return {
-                                id: val.settingsKycTierId,
                                 limit: (val.amount) ?
                                     new Intl.NumberFormat('de-DE', {
                                         minimumFractionDigits: 0,
@@ -115,9 +124,9 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
                                     'Unlimited',
                                 name: val.name,
                                 passed: tierPassed,
-                                subtitle: val.level?.name ?? 'Identity',
+                                subtitle: val.levelName ?? 'Identity',
                                 description: val.description ?? defaultDescription,
-                                flow: val.level?.original_flow_name ?? ''
+                                flow: val.originalFlowName ?? ''
                             } as TierItem;
                         });
                     }

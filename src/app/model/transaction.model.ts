@@ -42,11 +42,14 @@ export class TransactionItemDeprecated {
   currencyToReceive = '';
   amountToSpend = 0;
   amountToReceive = 0;
+  initialAmountToReceive = 0;
+  initialAmount = false;
   address = '';
   ip = '';
   euro = 0;
   fees = 0;
   rate = 0;
+  initialRate = 0;
   status: TransactionStatus | undefined = undefined;
   statusInfo: TransactionStatusDescriptorMap | undefined = undefined;
   user: UserItem | undefined;
@@ -83,7 +86,14 @@ export class TransactionItemDeprecated {
       this.currencyToSpend = data.currencyToSpend ?? '';
       this.currencyToReceive = data.currencyToReceive ?? '';
       this.amountToSpend = data.amountToSpend ?? 0;
-      this.amountToReceive = data.amountToReceive ?? 0;
+      if (data.amountToReceive) {
+        this.amountToReceive = data.amountToReceive ?? 0;
+        this.rate = data.rate ?? 0;
+      } else {
+        this.amountToReceive = data.initialAmountToReceive ?? 0;
+        this.rate = data.initialRate ?? 0;
+        this.initialAmount = true;
+      }
       const kycStatus = TransactionKycStatusList.find(x => x.id === (data as Transaction).kycStatus);
       this.kycStatus = (kycStatus) ? kycStatus.name : '';
 
@@ -98,7 +108,6 @@ export class TransactionItemDeprecated {
       //   }
       // }
 
-      this.rate = data.rate ?? 0;
       this.fees = data.feeFiat as number ?? 0;
       this.status = data.status;
 

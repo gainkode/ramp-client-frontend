@@ -15,7 +15,9 @@
             </div>
         </div>
         <div class="__profile-settings-verification-tier-button-container">
-            <button class="__main-button __button-wide" type="button" [disabled]="tier.passed" (click)="onVerify(tier.id)">VERIFY</button>
+            <button class="__main-button __button-wide" type="button" [disabled]="tier.passed" (click)="onVerify(tier.flow, tier.subtitle)">
+                VERIFY
+            </button>
         </div>
     </div>
 </div>
