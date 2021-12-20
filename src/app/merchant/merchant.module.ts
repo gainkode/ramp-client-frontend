@@ -14,7 +14,6 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MerchantGuard } from './merchant.guard';
 import { MerchantComponent } from './merchant.component';
 import { IntroMerchantComponent } from './intro.component';
-import { KycMerchantComponent } from './profile/kyc.component';
 import { ComponentsModule } from '../components/components.module';
 import { MerchantLoginComponent } from './auth/login.component';
 import { MerchantRestoreComponent } from './auth/restore.component';
@@ -69,8 +68,6 @@ const routing = RouterModule.forChild([
         ],
         canActivate: [MerchantGuard]
     },
-    // Obsolete and temporary
-    { path: 'kyc', component: KycMerchantComponent, canActivate: [MerchantGuard] },
     { path: '**', redirectTo: 'main' }
 ]);
 
@@ -102,9 +99,7 @@ export class MaterialModule { }
         MerchantLoginComponent, MerchantRegisterComponent, MerchantRestoreComponent, MerchantResetComponent,
         MerchantConfirmEmailComponent, MerchantConfirmDeviceComponent, MerchantSuccessComponent,
         // Profile main
-        MerchantComponent,
-        // Obsolete
-        KycMerchantComponent],
+        MerchantComponent],
     providers: [MerchantGuard],
     schemas: [
       CUSTOM_ELEMENTS_SCHEMA

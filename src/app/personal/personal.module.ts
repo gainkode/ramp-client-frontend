@@ -21,7 +21,6 @@ import { MatListModule } from '@angular/material/list';
 import { PersonalGuard } from './personal.guard';
 import { IntroPersonalComponent } from './intro.component';
 import { PersonalComponent } from './personal.component';
-import { KycPersonalComponent } from './profile/kyc.component';
 import { ComponentsModule } from '../components/components.module';
 import { DirectiveModule } from '../directives/directives.module';
 import { PersonalLoginComponent } from './auth/login.component';
@@ -78,9 +77,6 @@ const routing = RouterModule.forChild([
         ],
         canActivate: [PersonalGuard]
     },
-    // Obsolete and temporary
-    { path: 'kyc', component: KycPersonalComponent, canActivate: [PersonalGuard] },
-    // ======================
     { path: '**', redirectTo: 'main' }
 ]);
 
@@ -121,9 +117,7 @@ export class MaterialModule { }
         PersonalLoginComponent, PersonalRegisterComponent, PersonalRestoreComponent, PersonalResetComponent,
         PersonalConfirmEmailComponent, PersonalConfirmDeviceComponent, PersonalSuccessComponent,
         // Profile main
-        PersonalComponent,
-        // Obsolete pages
-        KycPersonalComponent],
+        PersonalComponent],
     providers: [PersonalGuard],
     schemas: [
         CUSTOM_ELEMENTS_SCHEMA

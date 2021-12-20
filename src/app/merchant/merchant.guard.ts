@@ -21,7 +21,7 @@ export class MerchantGuard {
             if (!this.auth.isMerchantApproved()) {
                 if (route.url.length > 0) {
                     if (route.url[0].path !== 'kyc') {
-                        this.router.navigateByUrl('/merchant/kyc');
+                        this.router.navigateByUrl('/merchant/account/settings/verification');
                         return false;
                     }
                 }
