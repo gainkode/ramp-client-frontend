@@ -369,12 +369,20 @@
     justify-content: flex-start;
 }
 
-.__profile-settings-personal-info-avatar-container {
+.__profile-settings-personal-info-no-avatar {
     width: 180px;
     height: 180px;
     border-radius: 90px;
     margin: 20px 0px 0px 0px;
     background-color: $color_purple_200;
+}
+
+.__profile-settings-personal-info-avatar-image {
+    margin: 20px 0px 0px 0px;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
 .__profile-settings-personal-info-avatar-button {

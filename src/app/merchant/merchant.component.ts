@@ -10,6 +10,7 @@ import { ProfileContactsComponent } from '../profile/contacts/contacts.component
 import { ProfileWalletsComponent } from '../profile/wallets/wallets.component';
 import { AuthService } from '../services/auth.service';
 import { NotificationService } from '../services/notification.service';
+import { getAvatarPath } from '../utils/utils';
 
 @Component({
     templateUrl: 'merchant.component.html',
@@ -192,15 +193,7 @@ export class MerchantComponent implements OnInit, OnDestroy {
     }
 
     loadAvatar(path: string | undefined): void {
-        if (path) {
-            this.avatar = path;
-        } else {
-            const avatarData = JSON.parse(this.auth.user?.avatar ?? '{}');
-            if (avatarData.path && avatarData.originFileName) {
-                this.avatar = `${environment.api_server}/${avatarData.path}/${avatarData.originFileName}`;
-            }
-        }
-        console.log('load avatar', this.avatar);
+        this.avatar = (path) ? path : getAvatarPath(this.auth.user?.avatar ?? undefined);
     }
 
     closeErrorBar(): void {

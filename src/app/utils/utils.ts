@@ -1,3 +1,5 @@
+import { environment } from "src/environments/environment";
+
 export function round(value: number, precision: number | undefined): number {
     const multiplier = Math.pow(10, precision || 0);
     return Math.round(value * multiplier) / multiplier;
@@ -53,6 +55,15 @@ export function getCryptoSymbol(symbol: string): string {
             const p = symbol.toLowerCase().indexOf('_test');
             result = symbol.substring(0, p);
         }
+    }
+    return result;
+}
+
+export function getAvatarPath(avatarObject: string | undefined): string {
+    let result = '';
+    const avatarData = JSON.parse(avatarObject ?? '{}');
+    if (avatarData.path && avatarData.originFileName) {
+        result = `${environment.image_host}/${avatarData.path}/${avatarData.originFileName}`;
     }
     return result;
 }

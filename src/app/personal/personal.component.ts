@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavigationEnd, Router, Event as NavigationEvent } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { MenuItem } from '../model/common.model';
 import { CurrencyView, PaymentCompleteDetails, PaymentWidgetType } from '../model/payment.model';
 import { ProfileItemActionType, ProfileItemContainer, ProfileItemContainerType } from '../model/profile-item.model';
@@ -14,6 +13,7 @@ import { ProfileContactsComponent } from '../profile/contacts/contacts.component
 import { ProfileWalletsComponent } from '../profile/wallets/wallets.component';
 import { AuthService } from '../services/auth.service';
 import { NotificationService } from '../services/notification.service';
+import { getAvatarPath } from '../utils/utils';
 
 @Component({
     templateUrl: 'personal.component.html',
@@ -196,14 +196,7 @@ export class PersonalComponent implements OnInit, OnDestroy {
     }
 
     loadAvatar(path: string | undefined): void {
-        if (path) {
-            this.avatar = path;
-        } else {
-            const avatarData = JSON.parse(this.auth.user?.avatar ?? '{}');
-            if (avatarData.path && avatarData.originFileName) {
-                this.avatar = `${environment.api_server}/${avatarData.path}/${avatarData.originFileName}`;
-            }
-        }
+        this.avatar = (path) ? path : getAvatarPath(this.auth.user?.avatar ?? undefined);
     }
 
     closeErrorBar(): void {

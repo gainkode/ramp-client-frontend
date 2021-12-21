@@ -650,6 +650,14 @@ export class AuthService {
         }
     }
 
+    setUserAvatar(data: string): void {
+        const userData = this.user;
+        if (userData) {
+            userData.avatar = data;
+            localStorage.setItem('currentUser', JSON.stringify(userData));
+        }
+    }
+
     private getAuthenticatedUser(): User | null {
         let result: User | null = null;
         const userData: string | null = localStorage.getItem('currentUser');

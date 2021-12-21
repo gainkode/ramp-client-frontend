@@ -8,6 +8,7 @@ export const environment = {
   client_host: 'http://localhost:4000',
   api_server: 'http://localhost:4001',
   ws_server: 'ws://localhost:4001',
+  image_host: 'http://localhost',
   // api_server: 'https://merx-ewallet.semirolab.com',
   // ws_server: 'https://merx-ewallet.semirolab.com/gql',
   api_timeout: 30000,

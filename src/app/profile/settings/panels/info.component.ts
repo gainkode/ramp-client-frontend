@@ -11,7 +11,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
-import { getCryptoSymbol } from 'src/app/utils/utils';
+import { getAvatarPath, getCryptoSymbol } from 'src/app/utils/utils';
 import { environment } from 'src/environments/environment';
 
 enum ChangedDataType {
@@ -46,7 +46,7 @@ export class ProfileInfoSettingsComponent implements OnInit, OnDestroy {
     uploadProgress: number | undefined = undefined;
     avatarPath = '';
     avatarError = false;
-    
+
     private subscriptions: Subscription = new Subscription();
     private uploadSub: Subscription | undefined = undefined;
 
@@ -67,7 +67,7 @@ export class ProfileInfoSettingsComponent implements OnInit, OnDestroy {
         this.loadCurrencyData();
     }
 
-    private loadAccountData(): void {
+    private loadAccountData(updateLocalAvatar: boolean): void {
         this.error.emit('');
         this.progressChange.emit(true);
         let avatarLoaded = false;
@@ -86,11 +86,11 @@ export class ProfileInfoSettingsComponent implements OnInit, OnDestroy {
                             this.userView = new UserItem(this.user);
                             if (avatarLoaded === false) {
                                 avatarLoaded = true;
-                                const avatarData = JSON.parse(this.user.avatar ?? '{}');
-                                if (avatarData.path && avatarData.originFileName) {
-                                    this.avatarPath = `${environment.api_server}/${avatarData.path}/${avatarData.originFileName}`;
-                                    this.onUpdateAvatar.emit(this.avatarPath);
+                                if (updateLocalAvatar) {
+                                    this.auth.setUserAvatar(this.user.avatar ?? '');
                                 }
+                                this.avatarPath = getAvatarPath(this.user.avatar ?? undefined);
+                                this.onUpdateAvatar.emit(this.avatarPath);
                             }
                         }
                     } else {
@@ -140,7 +140,7 @@ export class ProfileInfoSettingsComponent implements OnInit, OnDestroy {
                                         imgSource: `assets/svg-crypto/${getCryptoSymbol(val.symbol).toLowerCase()}.svg`
                                     } as CommonTargetValue;
                                 });
-                                this.loadAccountData();
+                                this.loadAccountData(false);
                             }
                         }
                     }
@@ -251,7 +251,7 @@ export class ProfileInfoSettingsComponent implements OnInit, OnDestroy {
         this.uploadProgress = undefined;
         this.uploadSub = undefined;
         if (this.avatarError === false) {
-            this.loadAccountData();
+            this.loadAccountData(true);
         }
     }
 
