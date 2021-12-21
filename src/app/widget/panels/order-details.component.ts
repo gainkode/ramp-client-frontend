@@ -9,7 +9,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { PaymentDataService } from 'src/app/services/payment.service';
-import { getCryptoSymbol } from 'src/app/utils/utils';
+import { getCurrencySign } from 'src/app/utils/utils';
 import { WalletValidator } from 'src/app/utils/wallet.validator';
 
 @Component({
@@ -549,7 +549,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       const c = this.pCurrencies.find(x => x.id === this.currentCurrencySpend?.id);
       if (c) {
         this.quoteLimit = (this.currentQuoteEur - this.transactionsTotalEur) * c.rateFactor;
-        this.currentQuote = `${getCryptoSymbol(this.currentCurrencySpend?.id ?? '')}${this.quoteLimit.toFixed(2)}`;
+        this.currentQuote = `${getCurrencySign(this.currentCurrencySpend?.id ?? '')}${this.quoteLimit.toFixed(2)}`;
       }
     }
   }

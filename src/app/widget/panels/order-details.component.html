@@ -98,7 +98,7 @@
 
         <!-- Current Quote -->
         <div class="__form-separator"></div>
-        <div *ngIf="currentQuote!==''" style="display: flex;flex-direction: row;align-items: center;">
+        <div *ngIf="currentQuote!=='' && settings.embedded" class="__widget-quote-block">
             <div class="__widget-hint-line">
                 Your Estimated Quote is:&nbsp;
             </div>

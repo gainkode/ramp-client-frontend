@@ -503,6 +503,12 @@
     justify-content: space-between;
 }
 
+.__widget-quote-block {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
 .__widget-double-field-left-box {
     margin: 0px 18px 0px 0px;
     width: 100%;

@@ -29,7 +29,6 @@ export class WidgetCodeAuthComponent implements OnInit, OnDestroy, AfterViewInit
 
     validData = false;
     init = false;
-    register = false;
     codeErrorMessages: { [key: string]: string; } = {
         ['required']: 'Confirmation code is required'
     };
@@ -121,19 +120,19 @@ export class WidgetCodeAuthComponent implements OnInit, OnDestroy, AfterViewInit
         }
     }
 
+    registerAccount(): void {
+        this.onRegister.emit(this.email);
+    }
+
     onSubmit(): void {
-        if (this.register) {
-            this.onRegister.emit(this.email);
-        } else {
-            const code = parseInt(this.codeField?.value) as number;
-            this.pSubscriptions.add(
-                this.auth.confirmCode(code, this.email).subscribe(({ data }) => {
-                    this.onComplete.emit();
-                }, (error) => {
-                    this.onError.emit(this.errorHandler.getError(error.message, 'Incorrect confirmation code'));
-                })
-            );
-        }
+        const code = parseInt(this.codeField?.value) as number;
+        this.pSubscriptions.add(
+            this.auth.confirmCode(code, this.email).subscribe(({ data }) => {
+                this.onComplete.emit();
+            }, (error) => {
+                this.onError.emit(this.errorHandler.getError(error.message, 'Incorrect confirmation code'));
+            })
+        );
     }
 
     private onFormUpdated(): void {
