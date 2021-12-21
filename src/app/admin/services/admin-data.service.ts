@@ -125,32 +125,6 @@ const GET_DASHBOARD_STATS = gql`
           fee {count, volume}
         }
       }
-      exchanges {
-        approved {count, volume},
-        declined {count, volume},
-        abandoned {count, volume},
-        inProcess {count, volume},
-        ratio,
-        toMerchant {
-          instrument,
-          ratio,
-          approved {count, volume},
-          declined {count, volume},
-          abandoned {count, volume},
-          inProcess {count, volume},
-          fee {count, volume}
-        },
-        toCustomer {
-          instrument,
-          ratio,
-          approved {count, volume},
-          declined {count, volume},
-          abandoned {count, volume},
-          inProcess {count, volume},
-          fee {count, volume}
-        },
-        fee {count, volume}
-      }
       balances {
         currency,
         volume {count, volume}

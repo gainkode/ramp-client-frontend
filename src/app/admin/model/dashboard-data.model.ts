@@ -19,7 +19,6 @@ export interface DashboardData {
   deposits: DashboardCardData;
   transfers: DashboardCardData;
   withdrawals: DashboardCardData;
-  exchanges: DashboardCardData;
   fees: DashboardCardData;
   balances: DashboardCardData;
 }

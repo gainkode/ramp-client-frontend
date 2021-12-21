@@ -2,20 +2,16 @@ import {
   BalanceStats,
   DashboardStats,
   DepositOrWithdrawalStats,
-  ExchangeStats, InstrumentStats,
-  MerchantOrCustomerStats, TransactionSource,
+  InstrumentStats,
+  MerchantOrCustomerStats, 
   TransactionStatsByStatus, TransactionStatsVolume,
-  TransferStats, UserType
+  TransferStats
 } from '../../model/generated-models';
 import { DecimalPipe } from '@angular/common';
 import { PaymentInstrumentList } from '../../model/payment.model';
 
 const isDepositOrWithdrawalStats = (variableToCheck: any): variableToCheck is DepositOrWithdrawalStats => {
   return (variableToCheck) ? (variableToCheck as DepositOrWithdrawalStats).approved !== undefined : false;
-};
-
-const isExchangeStats = (variableToCheck: any): variableToCheck is ExchangeStats => {
-  return (variableToCheck) ? (variableToCheck as ExchangeStats).toMerchant !== undefined : false;
 };
 
 const isTransferStats = (variableToCheck: any): variableToCheck is TransferStats => {
@@ -92,10 +88,10 @@ export class DashboardTransactionItemModel {
   }
 
   constructor(
-    data: DepositOrWithdrawalStats | InstrumentStats | ExchangeStats | TransferStats | MerchantOrCustomerStats | TransactionStatsByStatus | null,
+    data: DepositOrWithdrawalStats | InstrumentStats | TransferStats | MerchantOrCustomerStats | TransactionStatsByStatus | null,
     title: string = '') {
     this.isNull = (data === null);
-    if (isDepositOrWithdrawalStats(data) || isInstrumentStats(data) || isExchangeStats(data) || isTransferStats(data)) {
+    if (isDepositOrWithdrawalStats(data) || isInstrumentStats(data) || isTransferStats(data)) {
       this.ratio = data.ratio as number;
       this.approved = new DashboardTransactionVolumeModel(data?.approved as TransactionStatsVolume | undefined);
       this.declined = new DashboardTransactionVolumeModel(data?.declined as TransactionStatsVolume | undefined);
@@ -123,7 +119,7 @@ export class DashboardTransactionModel {
   total?: DashboardTransactionItemModel;
   details: DashboardTransactionItemModel[] = [];
 
-  constructor(data: DepositOrWithdrawalStats | ExchangeStats | TransferStats | undefined) {
+  constructor(data: DepositOrWithdrawalStats | TransferStats | undefined) {
     if (data) {
       this.total = new DashboardTransactionItemModel(data);
       this.isNull = this.total.isNull;
@@ -133,7 +129,7 @@ export class DashboardTransactionModel {
           this.details.push(new DashboardTransactionItemModel(x));
         });
       }
-      if (isExchangeStats(data) || isTransferStats(data)) {
+      if (isTransferStats(data)) {
         this.details.push(
           new DashboardTransactionItemModel(data.toMerchant as MerchantOrCustomerStats, 'To Merchants'));
         this.details.push(
@@ -148,7 +144,6 @@ export class DashboardModel {
   balances: DashboardBalanceModel[] = [];
   deposits = new DashboardTransactionModel(undefined);
   withdrawals = new DashboardTransactionModel(undefined);
-  exchanges = new DashboardTransactionModel(undefined);
   transfers = new DashboardTransactionModel(undefined);
 
   constructor(data: DashboardStats | null) {
@@ -159,180 +154,6 @@ export class DashboardModel {
       this.deposits = new DashboardTransactionModel(data.deposits as DepositOrWithdrawalStats | undefined);
       this.transfers = new DashboardTransactionModel(data.transfers as TransferStats | undefined);
       this.withdrawals = new DashboardTransactionModel(data.withdrawals as DepositOrWithdrawalStats | undefined);
-      this.exchanges = new DashboardTransactionModel(data.exchanges as ExchangeStats | undefined);
-
-      // temp
-      // this.transfers = new DashboardTransactionModel({
-      //     __typename: 'TransferStats',
-      //     ratio: 11,
-      //     approved: {
-      //         __typename: 'TransactionStatsVolume',
-      //         count: 7,
-      //         volume: 17.71
-      //     },
-      //     declined: {
-      //         __typename: 'TransactionStatsVolume',
-      //         count: 8,
-      //         volume: 18.81
-      //     },
-      //     abandoned: {
-      //         __typename: 'TransactionStatsVolume',
-      //         count: 9,
-      //         volume: 19.91
-      //     },
-      //     inProcess: {
-      //         __typename: 'TransactionStatsVolume',
-      //         count: 2,
-      //         volume: 12.21
-      //     },
-      //     toMerchant: {
-      //         ratio: 31.13,
-      //         approved: {
-      //             __typename: 'TransactionStatsVolume',
-      //             count: 32,
-      //             volume: 32.92
-      //         },
-      //         declined: {
-      //             __typename: 'TransactionStatsVolume',
-      //             count: 33,
-      //             volume: 33.93
-      //         },
-      //         abandoned: {
-      //             __typename: 'TransactionStatsVolume',
-      //             count: 34,
-      //             volume: 34.94
-      //         },
-      //         inProcess: {
-      //             __typename: 'TransactionStatsVolume',
-      //             count: 35,
-      //             volume: 35.95
-      //         },
-      //         fee: {
-      //             __typename: 'TransactionStatsVolume',
-      //             count: 36,
-      //             volume: 36.96
-      //         }
-      //     },
-      //     toCustomer: {
-      //         ratio: 41.13,
-      //         approved: {
-      //             __typename: 'TransactionStatsVolume',
-      //             count: 42,
-      //             volume: 42.92
-      //         },
-      //         declined: {
-      //             __typename: 'TransactionStatsVolume',
-      //             count: 43,
-      //             volume: 43.93
-      //         },
-      //         abandoned: {
-      //             __typename: 'TransactionStatsVolume',
-      //             count: 44,
-      //             volume: 44.94
-      //         },
-      //         inProcess: {
-      //             __typename: 'TransactionStatsVolume',
-      //             count: 45,
-      //             volume: 45.95
-      //         },
-      //         fee: {
-      //             __typename: 'TransactionStatsVolume',
-      //             count: 46,
-      //             volume: 46.96
-      //         }
-      //     },
-      //     fee: {
-      //         __typename: 'TransactionStatsVolume',
-      //         count: 5,
-      //         volume: 15.51
-      //     },
-      // } as TransferStats);
-      // this.exchanges = new DashboardTransactionModel({
-      //     __typename: 'ExchangeStats',
-      //     ratio: 11,
-      //     approved: {
-      //         __typename: 'TransactionStatsVolume',
-      //         count: 17,
-      //         volume: 117.71
-      //     },
-      //     declined: {
-      //         __typename: 'TransactionStatsVolume',
-      //         count: 18,
-      //         volume: 118.81
-      //     },
-      //     abandoned: {
-      //         __typename: 'TransactionStatsVolume',
-      //         count: 19,
-      //         volume: 119.91
-      //     },
-      //     inProcess: {
-      //         __typename: 'TransactionStatsVolume',
-      //         count: 12,
-      //         volume: 112.21
-      //     },
-      //     toMerchant: {
-      //         ratio: 51.13,
-      //         approved: {
-      //             __typename: 'TransactionStatsVolume',
-      //             count: 52,
-      //             volume: 52.92
-      //         },
-      //         declined: {
-      //             __typename: 'TransactionStatsVolume',
-      //             count: 53,
-      //             volume: 53.93
-      //         },
-      //         abandoned: {
-      //             __typename: 'TransactionStatsVolume',
-      //             count: 54,
-      //             volume: 54.94
-      //         },
-      //         inProcess: {
-      //             __typename: 'TransactionStatsVolume',
-      //             count: 55,
-      //             volume: 55.95
-      //         },
-      //         fee: {
-      //             __typename: 'TransactionStatsVolume',
-      //             count: 56,
-      //             volume: 56.96
-      //         }
-      //     },
-      //     toCustomer: {
-      //         ratio: 61.13,
-      //         approved: {
-      //             __typename: 'TransactionStatsVolume',
-      //             count: 62,
-      //             volume: 62.92
-      //         },
-      //         declined: {
-      //             __typename: 'TransactionStatsVolume',
-      //             count: 63,
-      //             volume: 63.93
-      //         },
-      //         abandoned: {
-      //             __typename: 'TransactionStatsVolume',
-      //             count: 64,
-      //             volume: 64.94
-      //         },
-      //         inProcess: {
-      //             __typename: 'TransactionStatsVolume',
-      //             count: 65,
-      //             volume: 65.95
-      //         },
-      //         fee: {
-      //             __typename: 'TransactionStatsVolume',
-      //             count: 66,
-      //             volume: 66.96
-      //         }
-      //     },
-      //     fee: {
-      //         __typename: 'TransactionStatsVolume',
-      //         count: 15,
-      //         volume: 115.51
-      //     },
-      // } as ExchangeStats);
-      // temp
 
       if (this.deposits.total) {
         this.deposits.total.title = 'Deposits';
@@ -350,12 +171,6 @@ export class DashboardModel {
         this.withdrawals.total.title = 'Withdrawals';
         if (!this.withdrawals.total.isNull) {
           this.totals.push(this.withdrawals.total);
-        }
-      }
-      if (this.exchanges.total) {
-        this.exchanges.total.title = 'Exchanges';
-        if (!this.exchanges.total.isNull) {
-          this.totals.push(this.exchanges.total);
         }
       }
     }

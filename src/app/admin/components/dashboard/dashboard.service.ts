@@ -112,16 +112,6 @@ export class DashboardService implements OnDestroy {
                 abandonedCount: rawData.withdrawals?.abandoned?.count ?? null,
                 abandonedVolume: rawData.withdrawals?.abandoned?.volume ?? null,
                 ratio: rawData.withdrawals?.ratio ?? null
-              },
-              {
-                type: 'Exchanges',
-                approvedCount: rawData.exchanges?.approved?.count ?? null,
-                approvedVolume: rawData.exchanges?.approved?.volume ?? null,
-                declinedCount: rawData.exchanges?.declined?.count ?? null,
-                declinedVolume: rawData.exchanges?.declined?.volume ?? null,
-                abandonedCount: rawData.exchanges?.abandoned?.count ?? null,
-                abandonedVolume: rawData.exchanges?.abandoned?.volume ?? null,
-                ratio: rawData.exchanges?.ratio ?? null
               }
             ]
           };
@@ -275,60 +265,6 @@ export class DashboardService implements OnDestroy {
                 };
               }) : []
           };
-
-          // region Exchanges
-          const exchangesData: DashboardCardData = {
-            columns: [
-              {
-                key: 'instrument',
-                label: 'Instrument',
-                type: 'text'
-              },
-              {
-                key: 'approved',
-                label: 'Approved',
-                type: 'count-volume'
-              },
-              {
-                key: 'declined',
-                label: 'Declined',
-                type: 'count-volume'
-              },
-              {
-                key: 'abandoned',
-                label: 'Abandoned',
-                type: 'count-volume'
-              },
-              {
-                key: 'ratio',
-                label: 'Ratio',
-                type: 'percent'
-              }
-            ],
-            rows: [
-              {
-                type: 'To merchants',
-                approvedCount: rawData.exchanges?.toMerchant?.approved?.count ?? null,
-                approvedVolume: rawData.exchanges?.toMerchant?.approved?.volume ?? null,
-                declinedCount: rawData.exchanges?.toMerchant?.declined?.count ?? null,
-                declinedVolume: rawData.exchanges?.toMerchant?.declined?.volume ?? null,
-                abandonedCount: rawData.exchanges?.toMerchant?.abandoned?.count ?? null,
-                abandonedVolume: rawData.exchanges?.toMerchant?.abandoned?.volume ?? null,
-                ratio: rawData.exchanges?.toMerchant?.ratio ?? null
-              },
-              {
-                type: 'To customers',
-                approvedCount: rawData.exchanges?.toCustomer?.approved?.count ?? null,
-                approvedVolume: rawData.exchanges?.toCustomer?.approved?.volume ?? null,
-                declinedCount: rawData.exchanges?.toCustomer?.declined?.count ?? null,
-                declinedVolume: rawData.exchanges?.toCustomer?.declined?.volume ?? null,
-                abandonedCount: rawData.exchanges?.toCustomer?.abandoned?.count ?? null,
-                abandonedVolume: rawData.exchanges?.toCustomer?.abandoned?.volume ?? null,
-                ratio: rawData.exchanges?.toCustomer?.ratio ?? null
-              }
-            ]
-          };
-
           // endregion
 
           // region Fees
@@ -371,11 +307,6 @@ export class DashboardService implements OnDestroy {
                 source: 'Withdrawals',
                 volume: rawData.withdrawals?.fee?.volume ?? null,
                 count: rawData.withdrawals?.fee?.count ?? null
-              },
-              {
-                source: 'Exchanges',
-                volume: rawData.exchanges?.fee?.volume ?? null,
-                count: rawData.exchanges?.fee?.count ?? null
               }
             ]
           };
@@ -424,7 +355,6 @@ export class DashboardService implements OnDestroy {
             deposits: depositsData,
             transfers: transfersData,
             withdrawals: withdrawalsData,
-            exchanges: exchangesData,
             fees: feesData,
             balances: balancesData
           };
