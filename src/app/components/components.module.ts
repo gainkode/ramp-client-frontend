@@ -32,7 +32,6 @@ import { LineBreakPipe } from '../utils/line-break.pipe';
 import { NumberFillPipe } from '../utils/number-fill.pipe';
 
 import { DropdownItemComponent } from './common/dropdown-item.component';
-import { BackButtonComponent } from './common/backbutton.component';
 import { TabLabelComponent } from './common/tablabel.component';
 import { KycPanelComponent } from './kyc-panel.component';
 import { LoginPanelComponent } from './auth/login-panel.component';
@@ -97,7 +96,7 @@ export class MaterialModule { }
 @NgModule({
     imports: [NgxMaskModule.forRoot(), CommonModule, FormsModule, ReactiveFormsModule, MaterialModule, DirectiveModule, QRCodeModule],
     declarations: [
-        DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
+        DropdownItemComponent, TabLabelComponent, KycPanelComponent,
         FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent, FormSearchBoxComponent,
         FormEditBoxComponent, SettingsPasswordBoxComponent,
         DeleteDialogBox, CommonDialogBox, TwoFaDialogBox, TwoFaDialogWizard, SendNotificationDialogBox, SumsubVerificationDialogBox,
@@ -106,7 +105,7 @@ export class MaterialModule { }
         LineBreakPipe, NumberFillPipe,
         TransactionsFilterBarComponent, WalletsFilterBarComponent, ContactsFilterBarComponent, NotificationsFilterBarComponent],
     exports: [
-        DropdownItemComponent, BackButtonComponent, TabLabelComponent, KycPanelComponent,
+        DropdownItemComponent, TabLabelComponent, KycPanelComponent,
         FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent, FormSearchBoxComponent,
         FormEditBoxComponent, SettingsPasswordBoxComponent,
         DeleteDialogBox, CommonDialogBox, TwoFaDialogBox, TwoFaDialogWizard, SendNotificationDialogBox, SumsubVerificationDialogBox,
