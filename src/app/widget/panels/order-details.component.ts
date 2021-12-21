@@ -415,7 +415,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   }
 
   private setSpendValidators(): void {
-    this.amountSpendErrorMessages['min'] = `Minimal amount is ${this.currentCurrencySpend?.minAmount} ${this.currentCurrencySpend?.title}`;
+    this.amountSpendErrorMessages['min'] = `Min. amount ${this.currentCurrencySpend?.minAmount} ${this.currentCurrencySpend?.title}`;
     this.amountSpendField?.setValidators([
       Validators.required,
       Validators.pattern(this.pNumberPattern),
@@ -425,7 +425,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   }
 
   private setReceiveValidators(): void {
-    this.amountReceiveErrorMessages['min'] = `Minimal amount is ${this.currentCurrencyReceive?.minAmount} ${this.currentCurrencyReceive?.title}`;
+    this.amountReceiveErrorMessages['min'] = `Min. amount ${this.currentCurrencyReceive?.minAmount} ${this.currentCurrencyReceive?.title}`;
     this.amountReceiveField?.setValidators([
       Validators.required,
       Validators.pattern(this.pNumberPattern),

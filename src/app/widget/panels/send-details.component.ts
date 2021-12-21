@@ -247,7 +247,7 @@ export class WidgetSendDetailsComponent implements OnInit, OnDestroy {
   }
 
   private setAmountValidators(): void {
-    this.amountErrorMessages['max'] = `Maximal amount to send is ${this.selectedWallet?.total} ${this.currencyField?.value}`;
+    this.amountErrorMessages['max'] = `Max. amount to send ${this.selectedWallet?.total} ${this.currencyField?.value}`;
     this.amountField?.setValidators([
       Validators.required,
       Validators.pattern(this.pNumberPattern),
