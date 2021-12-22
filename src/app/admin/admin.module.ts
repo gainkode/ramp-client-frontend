@@ -72,6 +72,7 @@ import { AdminSettingsComponent } from './components/settings/settings.component
 import { CommonSettingsEditorComponent } from './components/settings/common/common-settings.component';
 import { WalletDetailsComponent } from './components/wallets/details/wallet-details.component';
 import { NotificationDetailsComponent } from './components/notifications/details/notification-details.component';
+import { CustomerSingleComponent } from './components/customers/customer-single/customer-single.component';
 
 @NgModule({
   imports: [
@@ -113,6 +114,7 @@ import { NotificationDetailsComponent } from './components/notifications/details
     TransactionSingleComponent,
     TransactionDetailsComponent,
     CustomerListComponent,
+    CustomerSingleComponent,
     CustomerDetailsComponent,
     WalletListComponent,
     WalletDetailsComponent,

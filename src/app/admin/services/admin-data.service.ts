@@ -1393,6 +1393,30 @@ export class AdminDataService {
       );
   }
 
+  getUser(userId: string): Observable<UserItem | undefined> {
+    return this.watchQuery<{ getUsers: UserListResult }, QueryGetUsersArgs>({
+      query: GET_USERS,
+      variables: {
+        //userIdsOnly: [userId],
+        filter: undefined,
+        skip: 0,
+        first: 1
+      },
+      fetchPolicy: 'network-only'
+    })
+      .pipe(
+        map(res => {
+          const listResult = res?.data?.getUsers.list;
+
+          if (listResult && listResult.length === 1) {
+            return new UserItem(listResult[0]);
+          }
+
+          return undefined;
+        })
+      );
+  }
+
   getWallets(
     pageIndex: number,
     takeItems: number,

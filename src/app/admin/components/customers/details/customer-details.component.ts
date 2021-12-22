@@ -12,7 +12,7 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['customer-details.component.scss']
 })
 export class CustomerDetailsComponent {
-  @Input() set customer(val: UserItem | null) {
+  @Input() set customer(val: UserItem | null | undefined) {
     this.setFormData(val);
     this.settingsId = (val) ? val?.id : '';
     this.removable = (this.auth.user?.userId !== this.settingsId);
@@ -23,6 +23,7 @@ export class CustomerDetailsComponent {
     this.fiatCurrencies = val.filter(x => x.fiat === true);
     this.cryptoCurrencies = val.filter(x => x.fiat === false);
   }
+  @Input() cancelable = false;
   @Output() save = new EventEmitter<User>();
   @Output() delete = new EventEmitter<string>();
   @Output() cancel = new EventEmitter();
@@ -30,12 +31,12 @@ export class CustomerDetailsComponent {
 
   USER_TYPE: typeof UserType = UserType;
   settingsId = '';
-  removable = true;
   email = '';
   address = '';
   userType = UserType.Personal;
   loadingData = false;
   errorMessage = '';
+  removable = false;
   countries = Countries;
   fiatCurrencies: CurrencyView[] = [];
   cryptoCurrencies: CurrencyView[] = [];
@@ -56,7 +57,7 @@ export class CustomerDetailsComponent {
     private auth: AuthService) {
   }
 
-  setFormData(data: UserItem | null): void {
+  setFormData(data: UserItem | null | undefined): void {
     this.errorMessage = '';
     this.dataForm.reset();
     if (data) {

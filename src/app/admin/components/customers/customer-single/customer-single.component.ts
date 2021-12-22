@@ -1,19 +1,19 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute} from '@angular/router';
-import { TransactionItemDeprecated } from '../../../../model/transaction.model';
 import { ErrorService } from '../../../../services/error.service';
 import { AdminDataService } from '../../../services/admin-data.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { UserItem } from 'src/app/model/user.model';
 
 @Component({
-  selector: 'app-transaction-single',
-  templateUrl: './transaction-single.component.html',
-  styleUrls: ['./transaction-single.component.scss']
+  selector: 'app-customer-single',
+  templateUrl: './customer-single.component.html',
+  styleUrls: ['./customer-single.component.scss']
 })
-export class TransactionSingleComponent implements OnInit, OnDestroy {
-  transactionId?: string;
-  transaction?: TransactionItemDeprecated;
+export class CustomerSingleComponent implements OnInit, OnDestroy {
+  customerId?: string;
+  customer?: UserItem;
 
   private destroy$ = new Subject();
 
@@ -35,12 +35,12 @@ export class TransactionSingleComponent implements OnInit, OnDestroy {
   }
 
   private loadData(id: string): void {
-    this.transactionId = id;
+    this.customerId = id;
 
-    this.adminService.getTransaction(id).pipe(
+    this.adminService.getUser(id).pipe(
       takeUntil(this.destroy$)
-    ).subscribe(transaction =>  {
-      this.transaction = transaction;
+    ).subscribe(user =>  {
+      this.customer = user;
     });
   }
 

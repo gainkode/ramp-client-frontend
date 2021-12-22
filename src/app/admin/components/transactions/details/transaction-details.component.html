@@ -94,7 +94,8 @@
 
         <section>
             <h2>AML Checks</h2>
-            <app-details-attribute label="Account ID" [value]="data?.user?.id"></app-details-attribute>
+            <app-details-attribute label="Account ID" [value]="data?.user?.id" [linkUrl]="'/admin/customers/'+ data?.user?.id">
+            </app-details-attribute>
             <app-details-attribute label="Verification Tier" [value]="data?.kycTier"></app-details-attribute>
             <app-details-attribute label="KYC Status" [value]="data?.kycStatus"></app-details-attribute>
         </section>

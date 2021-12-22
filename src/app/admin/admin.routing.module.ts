@@ -16,6 +16,7 @@ import { WalletListComponent } from './components/wallets/list/wallet-list.compo
 import { FeeListComponent } from './components/fees/fee-list/fee-list.component';
 import { RiskAlertListComponent } from './components/risk-center/list/risk-alert-list.component';
 import { AdminSettingsComponent } from './components/settings/settings.component';
+import { CustomerSingleComponent } from './components/customers/customer-single/customer-single.component';
 
 const routes: Routes = [
   {
@@ -57,10 +58,22 @@ const routes: Routes = [
       },
       {
         path: 'customers',
-        component: CustomerListComponent,
-        data: {
-          header: 'Customers'
-        }
+        children: [
+          {
+            path: ':id',
+            component: CustomerSingleComponent,
+            data: {
+              header: 'Customer {:id}'
+            }
+          },
+          {
+            path: '',
+            component: CustomerListComponent,
+            data: {
+              header: 'Customers'
+            }
+          }
+        ]
       },
       {
         path: 'wallets',
