@@ -133,8 +133,9 @@ export class AppModule {
   constructor(private apollo: Apollo, private httpLink: HttpLink, private authService: AuthService) {
     const cookieName = 'cookieconsent_status';
     const w = window as any;
+    const whiteListedPath = (location.pathname.startsWith('/terms') || location.pathname.startsWith('/payment/widget/'));
     const consentStatus = w.cookieconsent.utils.getCookie(cookieName);
-    const allowCookies = (consentStatus === 'dismiss');
+    const allowCookies = whiteListedPath || (consentStatus === 'allow');
     const http = httpLink.create({
       uri: `${environment.api_server}/gql/api`,
       withCredentials: allowCookies

@@ -1,10 +1,8 @@
 import { DatePipe } from '@angular/common';
 import { getCurrencySign } from '../utils/utils';
 import { CommonTargetValue } from './common.model';
-import { getCountryByCode2 } from './country-code.model';
 import {
   PaymentInstrument,
-  PaymentProvider,
   Transaction,
   TransactionShort,
   TransactionSource,
@@ -18,7 +16,6 @@ import {
   TransactionTypeList,
   PaymentInstrumentList,
   TransactionSourceList,
-  TransactionStatusList,
   CardView,
   UserModeShortList,
   TransactionKycStatusList,
@@ -57,6 +54,8 @@ export class TransactionItemDeprecated {
   user: UserItem | undefined;
   balance = 0;
   kycStatus = '';
+  kycTier = '';
+  widgetId = '';
   selected = false;
 
   constructor(data: Transaction | TransactionShort | null) {
@@ -79,6 +78,7 @@ export class TransactionItemDeprecated {
       this.type = data.type;
       this.instrument = data.instrument ?? undefined;
       this.paymentProvider = data.paymentProvider ?? '';
+      this.widgetId = data.widgetId ?? '';
       this.source = data.source ?? undefined;
       this.currencyToSpend = data.currencyToSpend ?? '';
       this.currencyToReceive = data.currencyToReceive ?? '';
@@ -93,7 +93,7 @@ export class TransactionItemDeprecated {
       }
       const kycStatus = TransactionKycStatusList.find(x => x.id === (data as Transaction).kycStatus);
       this.kycStatus = (kycStatus) ? kycStatus.name : '';
-
+      this.kycTier = data.userTier?.name ?? '';
       this.fees = data.feeFiat as number ?? 0;
       this.status = data.status;
 

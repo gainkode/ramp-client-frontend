@@ -5,10 +5,13 @@
             <app-details-attribute label="Transaction Id" [value]="transactionId"
                 [linkUrl]="'/admin/transactions/'+ transactionId"></app-details-attribute>
             <app-details-attribute label="Transaction Created" [value]="data?.created"></app-details-attribute>
-            <app-details-attribute label="Transaction Executed" [value]="data?.executed"></app-details-attribute>
+            <app-details-attribute label="Transaction Completed" [value]="data?.executed"></app-details-attribute>
             <app-details-attribute label="First Name" [value]="data?.user?.firstName"></app-details-attribute>
             <app-details-attribute label="Last Name" [value]="data?.user?.lastName"></app-details-attribute>
             <app-details-attribute label="Company" [value]="data?.user?.company"></app-details-attribute>
+            <app-details-attribute label="Email" [value]="data?.user?.email"></app-details-attribute>
+            <app-details-attribute label="Customer ID" [value]="data?.accountId"></app-details-attribute>
+            <app-details-attribute label="Widget ID" [value]="data?.widgetId"></app-details-attribute>
             <app-details-attribute label="Country" [value]="data?.user?.country"></app-details-attribute>
                         
             <mat-form-field *ngIf="data?.address!==''" class="form-element">
@@ -20,8 +23,9 @@
             </mat-form-field>
 
             <app-details-attribute label="Transaction Type" [value]="data?.transactionTypeName"></app-details-attribute>
-            <app-details-attribute label="Instrument" [value]="data?.instrumentName"></app-details-attribute>
-            <app-details-attribute label="Instrument Details" [value]="data?.instrumentDetails"></app-details-attribute>
+            <app-details-attribute label="Payment Method" [value]="data?.instrumentName"></app-details-attribute>
+            <app-details-attribute label="Payment Provider" [value]="data?.paymentProvider"></app-details-attribute>
+            <app-details-attribute label="Payment Details" [value]="data?.instrumentDetails"></app-details-attribute>
             
             <!-- Amount to spend -->
             <mat-form-field class="form-element">
@@ -91,6 +95,7 @@
         <section>
             <h2>AML Checks</h2>
             <app-details-attribute label="Account ID" [value]="data?.user?.id"></app-details-attribute>
+            <app-details-attribute label="Verification Tier" [value]="data?.kycTier"></app-details-attribute>
             <app-details-attribute label="KYC Status" [value]="data?.kycStatus"></app-details-attribute>
         </section>
 

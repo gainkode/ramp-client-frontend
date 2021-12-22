@@ -425,16 +425,20 @@ export class AuthService {
         return this.getUserSectionPage('account');
     }
 
-    authenticate(username: string, userpassword: string, quickCheckout: boolean = false): Observable<any> {
-        return this.apollo.mutate({
-            mutation: LOGIN,
-            variables: {
-                recaptcha: environment.recaptchaId,
-                email: username,
-                password: quickCheckout ? null : userpassword,
-                quickCheckout
-            }
-        });
+    authenticate(username: string, userpassword: string, quickCheckout: boolean = false): Observable<any> | null {
+        if (this.apollo.client !== undefined) {
+            return this.apollo.mutate({
+                mutation: LOGIN,
+                variables: {
+                    recaptcha: environment.recaptchaId,
+                    email: username,
+                    password: quickCheckout ? null : userpassword,
+                    quickCheckout
+                }
+            });
+        } else {
+            return null;
+        }
     }
 
     authenticateSocial(provider: string, token: string): Observable<any> {

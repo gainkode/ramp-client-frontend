@@ -8,7 +8,6 @@ import { ErrorService } from 'src/app/services/error.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { PaymentDataService } from 'src/app/services/payment.service';
 import { ExchangeRateService } from 'src/app/services/rate.service';
-import { environment } from 'src/environments/environment';
 import { WalletItem } from '../model/wallet.model';
 import { ProfileDataService } from '../services/profile.service';
 import { WidgetPagerService } from '../services/widget-pager.service';
@@ -261,11 +260,13 @@ export class WidgetComponent implements OnInit {
 
   private loadUserParams(): void {
     this.errorMessage = '';
-    this.inProgress = true;
     const widgetData = this.dataService.getWidget(this.userParamsId);
     if (widgetData === null) {
       this.errorMessage = this.errorHandler.getRejectedCookieMessage();
+      this.initData(undefined);
+      this.pager.init('order_details', 'Order details');
     } else {
+      this.inProgress = true;
       this.pSubscriptions.add(
         widgetData.valueChanges.subscribe(({ data }) => {
           this.inProgress = false;
@@ -539,26 +540,31 @@ export class WidgetComponent implements OnInit {
 
   private authenticate(login: string) {
     this.errorMessage = '';
-    this.inProgress = true;
     // Consider that the user is one-time wallet user rather than internal one
-    this.pSubscriptions.add(
-      this.auth.authenticate(login, '', true).subscribe(({ data }) => {
-        this.inProgress = false;
-        this.checkLoginResult(data.login as LoginResult);
-      }, (error) => {
-        this.inProgress = false;
-        if (this.errorHandler.getCurrentError() === 'auth.password_null_or_empty') {
-          // Internal user cannot be authorised without a password, so need to
-          //  show the authorisation form to fill
-          this.onLoginRequired(login);
-        } else if (this.errorHandler.getCurrentError() === 'auth.unconfirmed_email') {
-          // User has to confirm email verifying the code
-          this.onConfirmRequired(login);
-        } else {
-          this.errorMessage = this.errorHandler.getError(error.message, 'Unable to authenticate user');
-        }
-      })
-    );
+    const authenticateData = this.auth.authenticate(login, '', true);
+    if (authenticateData !== null) {
+      this.inProgress = true;
+      this.pSubscriptions.add(
+        authenticateData.subscribe(({ data }) => {
+          this.inProgress = false;
+          this.checkLoginResult(data.login as LoginResult);
+        }, (error) => {
+          this.inProgress = false;
+          if (this.errorHandler.getCurrentError() === 'auth.password_null_or_empty') {
+            // Internal user cannot be authorised without a password, so need to
+            //  show the authorisation form to fill
+            this.onLoginRequired(login);
+          } else if (this.errorHandler.getCurrentError() === 'auth.unconfirmed_email') {
+            // User has to confirm email verifying the code
+            this.onConfirmRequired(login);
+          } else {
+            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to authenticate user');
+          }
+        })
+      );
+    } else {
+      this.errorMessage = this.errorHandler.getRejectedCookieMessage();
+    }
   }
 
   private checkLoginResult(data: LoginResult) {

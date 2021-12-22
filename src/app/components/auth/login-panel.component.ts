@@ -157,30 +157,35 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
     onSubmit(): void {
         this.registerError('');
         if (this.loginForm.valid) {
-            this.progressChange.emit(true);
             const login = this.emailField?.value;
-            this.subscriptions.add(
-                this.auth.authenticate(login, this.passwordField?.value).subscribe(({ data }) => {
-                    const userData = data.login as LoginResult;
-                    this.progressChange.emit(false);
-                    if (userData.user?.mode === UserMode.InternalWallet) {
-                        if (userData.authTokenAction === 'TwoFactorAuth') {
-                            this.auth.setLoginUser(userData);
-                            this.twoFa = true;
-                            this.socialLogin = true;
-                        } else if (userData.authTokenAction === 'UserInfoRequired') {
-                            this.showSignupPanel(userData);
+            const loginData = this.auth.authenticate(login, this.passwordField?.value);
+            if (loginData !== null) {
+                this.progressChange.emit(true);
+                this.subscriptions.add(
+                    loginData.subscribe(({ data }) => {
+                        const userData = data.login as LoginResult;
+                        this.progressChange.emit(false);
+                        if (userData.user?.mode === UserMode.InternalWallet) {
+                            if (userData.authTokenAction === 'TwoFactorAuth') {
+                                this.auth.setLoginUser(userData);
+                                this.twoFa = true;
+                                this.socialLogin = true;
+                            } else if (userData.authTokenAction === 'UserInfoRequired') {
+                                this.showSignupPanel(userData);
+                            } else {
+                                this.authenticated.emit(userData);
+                            }
                         } else {
-                            this.authenticated.emit(userData);
+                            this.registerError(`Unable to authorise with the login '${login}'. Please sign up`);
                         }
-                    } else {
-                        this.registerError(`Unable to authorise with the login '${login}'. Please sign up`);
-                    }
-                }, (error) => {
-                    this.progressChange.emit(false);
-                    this.registerError(this.errorHandler.getError(error.message, 'Incorrect login or password'));
-                })
-            );
+                    }, (error) => {
+                        this.progressChange.emit(false);
+                        this.registerError(this.errorHandler.getError(error.message, 'Incorrect login or password'));
+                    })
+                );
+            } else {
+                this.registerError(this.errorHandler.getRejectedCookieMessage());
+            }
         }
     }
 

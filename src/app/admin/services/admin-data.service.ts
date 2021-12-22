@@ -354,6 +354,7 @@ const GET_TRANSACTIONS = gql`
           mode
           kycStatus
         }
+        userTier { name }
         created
         executed
         type
@@ -397,6 +398,7 @@ const GET_TRANSACTIONS = gql`
         data
         destination
         kycStatus
+        widgetId
       }
     }
   }

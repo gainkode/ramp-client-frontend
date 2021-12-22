@@ -13,6 +13,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     const w = window as any;
+    console.log('location', location.pathname);
     w.cookieconsent.initialise({
       cookie: {
         domain: environment.cookieDomain,
@@ -30,16 +31,16 @@ export class AppComponent implements OnInit {
           text: '#000000'
         }
       },
-      type: 'info',
+      type: 'opt-out',
       content: {
-        message: 'This website uses cookies to ensure you get the best experience on our website.',
+        message: 'We use cookies to improve and personalize your experience using our website. Learn more about our',
         dismiss: 'Got it!',
-        deny: 'Refuse cookies',
-        link: 'Learn more',
+        deny: 'Decline',
+        allow: 'Accept',
+        link: 'Cookies Policy',
         href: '/terms',
         policy: 'Cookie Policy'
       },
-      container: '<div>Test</div>',
       onStatusChange: function(status: any) {
         window.location.reload();
       }
