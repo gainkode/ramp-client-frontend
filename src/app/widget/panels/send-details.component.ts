@@ -71,7 +71,7 @@ export class WidgetSendDetailsComponent implements OnInit, OnDestroy {
   dataForm = this.formBuilder.group({
     amount: [undefined, { validators: [], updateOn: 'change' }],
     currency: [null, { validators: [Validators.required], updateOn: 'change' }],
-    transaction: [TransactionType.Transfer, { validators: [], updateOn: 'change' }],
+    transaction: [TransactionType.Deposit, { validators: [], updateOn: 'change' }],
     wallet: [undefined, { validators: [Validators.required], updateOn: 'change' }],
     address: [undefined, { validators: [Validators.required], updateOn: 'change' }],
     contact: [undefined, { validators: [], updateOn: 'change' }]

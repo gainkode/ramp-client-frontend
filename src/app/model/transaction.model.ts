@@ -194,6 +194,7 @@ export class TransactionItem {
   rate = 0;
   ip = '';
   status: TransactionStatusDescriptorMap | undefined = undefined;
+  typeIcon = 'error';
   private created!: Date;
   private datepipe = new DatePipe('en-US');
 
@@ -211,6 +212,15 @@ export class TransactionItem {
         this.amountToReceive = data.amountToReceive ?? 0;
         this.fees = data.feeFiat as number ?? 0;
         this.networkFee = data.approxNetworkFee ?? 0;
+        this.typeIcon = 'account_balance';
+      } else if (this.type === TransactionType.Transfer) {
+        this.currencyToSpend = '-X-';
+        this.currencyToReceive = '-X-';
+        this.amountToSpend = 42;
+        this.amountToReceive = 42;
+        this.fees = 4.2;
+        this.networkFee = 0.42;
+        this.typeIcon = 'file_upload';
       } else {
         this.currencyToSpend = '-X-';
         this.currencyToReceive = '-X-';

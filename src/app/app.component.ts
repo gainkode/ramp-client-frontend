@@ -30,7 +30,7 @@ export class AppComponent implements OnInit {
           text: '#000000'
         }
       },
-      //type: 'opt-out',
+      type: 'info',
       content: {
         message: 'This website uses cookies to ensure you get the best experience on our website.',
         dismiss: 'Got it!',

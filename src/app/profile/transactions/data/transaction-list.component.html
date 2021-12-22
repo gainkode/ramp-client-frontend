@@ -11,8 +11,11 @@
             </th>
             <td mat-cell *matCellDef="let element" class="__profile-transactions-table-cell-plain">
                 <div style="display: flex;flex-direction: row;align-items: center;">
-                    <img class="__profile-transactions-table-cell-transaction-icon"
-                        src="../../../assets/navigation/__temp_send_icon.svg">
+                    <span style="font-size: 18px;margin: 0px 4px 0px 0px;" class="material-icons">
+                        {{element.typeIcon}}
+                    </span>
+                    <!-- <img class="__profile-transactions-table-cell-transaction-icon"
+                        src="../../../assets/navigation/__temp_send_icon.svg"> -->
                     <div class="__profile-transactions-table-cell-data">
                         {{element.typeName}}
                     </div>
