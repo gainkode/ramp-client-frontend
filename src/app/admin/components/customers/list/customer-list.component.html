@@ -19,7 +19,17 @@
                 <button mat-icon-button class="row-button" (click)="toggleDetails(element)"
                     [attr.aria-label]="'Customer details'" [attr.aria-pressed]="!!selectedCustomer"
                     [matTooltip]="getDetailsTooltip(element.id)" matTooltipClass="info-tooltip">
-                    <mat-icon class="details-icon">{{getDetailsIcon(element.id)}}</mat-icon>
+                    <mat-icon class="details-icon">
+                        {{getDetailsIcon(element.id)}}
+                    </mat-icon>
+                </button>
+
+                <button mat-icon-button class="row-button" (click)="showTransactions(element.id)"
+                    [attr.aria-label]="'Customer transactions'" 
+                    [matTooltip]="'Customer\'s transactions'" matTooltipClass="info-tooltip">
+                    <mat-icon class="details-icon">
+                        compare_arrows
+                    </mat-icon>
                 </button>
             </td>
         </ng-container>

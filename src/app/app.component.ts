@@ -13,7 +13,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     const w = window as any;
-    console.log('location', location.pathname);
     w.cookieconsent.initialise({
       cookie: {
         domain: environment.cookieDomain,

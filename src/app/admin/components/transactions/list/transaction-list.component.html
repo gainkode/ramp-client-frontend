@@ -4,7 +4,7 @@
     </button>
 </div>
 
-<app-filter-panel [fields]="filterFields" (filter)="handleFilterApplied($event)"></app-filter-panel>
+<app-filter-panel [fields]="filterFields" [filterData]="filter" (filter)="handleFilterApplied($event)"></app-filter-panel>
 
 <div class="data-table">
     <mat-table matSort [matSortActive]="sortedField" matSortDirection="desc" matSortDisableClear

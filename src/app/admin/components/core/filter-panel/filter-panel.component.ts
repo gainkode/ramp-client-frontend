@@ -11,13 +11,12 @@ import { EmptyObject } from 'apollo-angular/types';
   styleUrls: ['filter-panel.scss']
 })
 export class FilterPanelComponent implements OnInit, OnDestroy {
-  @Input()
-  fields: Array<string> = [];
+  @Input() fields: Array<string> = [];
+  @Input() filterData: Filter | undefined = undefined;
 
   private filterSubject = new Subject<Filter>();
 
-  @Output()
-  get filter(): Observable<Filter> {
+  @Output() get filter(): Observable<Filter> {
     return this.filterSubject.asObservable();
   }
 
@@ -35,6 +34,8 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const controlsConfig: EmptyObject = {};
 
+    console.log(this.filterData);
+
     if (this.fields.includes('accountType')) {
       controlsConfig.accountTypes = [[]];
     }
@@ -49,6 +50,11 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
     }
     if (this.fields.includes('users')) {
       controlsConfig.users = [[]];
+      // if (this.filterData) {
+      //   if (this.filterData.users) {
+      //     controlsConfig.users = [this.filterData.users];
+      //   }
+      // }
     }
     if (this.fields.includes('widget')) {
       controlsConfig.widgets = [[]];

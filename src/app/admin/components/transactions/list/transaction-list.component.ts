@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Output, EventEmitter, ViewChild, AfterViewInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PageEvent } from '@angular/material/paginator';
 import { AuthService } from '../../../../services/auth.service';
 import { AdminDataService } from '../../../services/admin-data.service';
@@ -56,7 +56,7 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
   private subscriptions: Subscription = new Subscription();
 
   displayedColumns: string[] = [
-    'details', 'id', 'created', 'accountName', 'email', 'type', 
+    'details', 'id', 'created', 'accountName', 'email', 'type',
     'currencyToSpend', 'amountToSpend', 'currencyToReceive', 'amountToReceive',
     'address', 'instrument', 'paymentProvider', 'status', 'userType', 'source', 'kycStatus'
   ];
@@ -69,8 +69,12 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
     private profileService: ProfileDataService,
     private commonDataService: CommonDataService,
     private router: Router,
-    public dialog: MatDialog
-  ) {
+    public dialog: MatDialog,
+    public activeRoute: ActivatedRoute) {
+    const id = activeRoute.snapshot.params['id'];
+    if (id) {
+      this.filter.users = [id as string];
+    }
   }
 
   ngOnInit(): void {

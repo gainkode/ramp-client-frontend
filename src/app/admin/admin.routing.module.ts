@@ -41,6 +41,13 @@ const routes: Routes = [
         path: 'transactions',
         children: [
           {
+            path: 'users/:id',
+            component: TransactionListComponent,
+            data: {
+              header: 'Transactions'
+            }
+          },
+          {
             path: ':id',
             component: TransactionSingleComponent,
             data: {

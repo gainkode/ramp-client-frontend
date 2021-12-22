@@ -118,6 +118,10 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
     this.selected = this.customers.some(x => x.selected === true);
   }
 
+  showTransactions(id: string): void {
+    this.router.navigateByUrl(`/admin/transactions/users/${id}`);
+  }
+
   sendMessage(): void {
     const dialogRef = this.dialog.open(SendNotificationDialogBox, {
       width: '550px',
