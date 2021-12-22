@@ -1,11 +1,11 @@
 import { DatePipe } from '@angular/common';
 import { getCurrencySign } from '../utils/utils';
 import { CommonTargetValue } from './common.model';
+import { getCountryByCode2 } from './country-code.model';
 import {
   PaymentInstrument,
   PaymentProvider,
   Transaction,
-  TransactionKycStatus,
   TransactionShort,
   TransactionSource,
   TransactionStatus,
@@ -22,6 +22,7 @@ import {
   CardView,
   UserModeShortList,
   TransactionKycStatusList,
+  UserTypeList,
 } from './payment.model';
 import { UserItem } from './user.model';
 
@@ -31,11 +32,12 @@ export class TransactionItemDeprecated {
   created = '';
   executed = '';
   accountId = '';
+  accountName = '';
   type: TransactionType | undefined = undefined;
   userMode: UserMode | undefined = undefined;
   instrument: PaymentInstrument | undefined = undefined;
   instrumentDetails: CommonTargetValue | null = null;
-  paymentProvider: PaymentProvider | undefined = undefined;
+  paymentProvider = '';
   paymentProviderResponse = '';
   source: TransactionSource | undefined = undefined;
   currencyToSpend = '';
@@ -62,26 +64,21 @@ export class TransactionItemDeprecated {
       this.code = data.code as string;
       this.id = data.transactionId;
       const datepipe: DatePipe = new DatePipe('en-US');
-      this.created = datepipe.transform(
-        data.created,
-        'dd-MM-YYYY HH:mm:ss'
-      ) as string;
-      this.executed = datepipe.transform(
-        data.executed,
-        'dd-MM-YYYY HH:mm:ss'
-      ) as string;
+      this.created = datepipe.transform(data.created, 'dd-MM-YYYY HH:mm:ss') as string;
+      this.executed = datepipe.transform(data.executed, 'dd-MM-YYYY HH:mm:ss') as string;
       this.address = data.destination as string;
       this.accountId = data.userId as string;
       const transactionData = data as Transaction;
       if (transactionData.user) {
         this.user = new UserItem(transactionData.user as User);
+        this.accountName = this.user.fullName;
         this.ip = transactionData.userIp as string;
         this.userMode = transactionData.user?.mode as UserMode | undefined;
       }
 
       this.type = data.type;
       this.instrument = data.instrument ?? undefined;
-      this.paymentProvider = data.paymentProvider as | PaymentProvider | undefined;
+      this.paymentProvider = data.paymentProvider ?? '';
       this.source = data.source ?? undefined;
       this.currencyToSpend = data.currencyToSpend ?? '';
       this.currencyToReceive = data.currencyToReceive ?? '';
@@ -96,17 +93,6 @@ export class TransactionItemDeprecated {
       }
       const kycStatus = TransactionKycStatusList.find(x => x.id === (data as Transaction).kycStatus);
       this.kycStatus = (kycStatus) ? kycStatus.name : '';
-
-      // if (
-      //   transactionData.amountToSpendInEur ||
-      //   transactionData.amountToReceiveInEur
-      // ) {
-      //   if (transactionData.amountToSpendInEur) {
-      //     this.euro = transactionData.amountToSpendInEur;
-      //   } else {
-      //     this.euro = transactionData.amountToReceiveInEur;
-      //   }
-      // }
 
       this.fees = data.feeFiat as number ?? 0;
       this.status = data.status;
@@ -150,33 +136,40 @@ export class TransactionItemDeprecated {
     }
   }
 
+  get transactionListSelectorColumnStyle(): string {
+    return 'transaction-list-selector-column-white';
+  }
+
+  get transactionListDataColumnStyle(): string {
+    return 'transaction-list-data-column-white';
+  }
+
   get transactionTypeName(): string {
     return TransactionTypeList.find((t) => t.id === this.type)?.name as string;
   }
 
   get transactionSourceName(): string {
-    return TransactionSourceList.find((t) => t.id === this.source)
-      ?.name as string;
+    return TransactionSourceList.find((t) => t.id === this.source)?.name as string;
   }
 
   get transactionStatusName(): string {
-    return TransactionStatusList.find((t) => t.id === this.status)
-      ?.name as string;
+    return this.statusInfo?.value.userStatus.toString() ?? '';
   }
 
   get instrumentName(): string {
-    return PaymentInstrumentList.find((i) => i.id === this.instrument)
-      ?.name as string;
-  }
-
-  get paymentProviderName(): string {
-    return this.paymentProvider?.name ?? '';
+    return PaymentInstrumentList.find((i) => i.id === this.instrument)?.name as string;
   }
 
   get userModeName(): string {
     if (this.userMode) {
-      return UserModeShortList.find((p) => p.id === this.userMode)
-        ?.name as string;
+      return UserModeShortList.find((p) => p.id === this.userMode)?.name as string;
+    }
+    return '';
+  }
+
+  get userTypeName(): string {
+    if (this.user) {
+      return UserTypeList.find((p) => p.id === this.user?.userType?.id)?.name as string;
     }
     return '';
   }
@@ -202,7 +195,6 @@ export class TransactionItem {
   ip = '';
   status: TransactionStatusDescriptorMap | undefined = undefined;
   private created!: Date;
-  private executed!: Date;
   private datepipe = new DatePipe('en-US');
 
   constructor(
@@ -211,7 +203,6 @@ export class TransactionItem {
     if (data) {
       this.id = data.transactionId;
       this.created = data.created;
-      this.executed = data.executed;
       this.type = data.type;
       if (this.type === TransactionType.Deposit) {
         this.currencyToSpend = data.currencyToSpend ?? '';

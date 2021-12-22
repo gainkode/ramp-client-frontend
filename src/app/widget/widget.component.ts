@@ -121,9 +121,6 @@ export class WidgetComponent implements OnInit {
         this.widget.transaction = TransactionType.Deposit;
         //temp
         this.widget.source = TransactionSource.QuickCheckout;
-        if (!environment.production) {
-          this.widget.walletAddress = '2MwUASao7s4zH9TGD5jhbqwXJBqoMR2EYr5';
-        }
       }
     }
 

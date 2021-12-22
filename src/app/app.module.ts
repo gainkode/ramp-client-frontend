@@ -134,7 +134,7 @@ export class AppModule {
     const cookieName = 'cookieconsent_status';
     const w = window as any;
     const consentStatus = w.cookieconsent.utils.getCookie(cookieName);
-    const allowCookies = (consentStatus === 'allow');
+    const allowCookies = (consentStatus === 'dismiss');
     const http = httpLink.create({
       uri: `${environment.api_server}/gql/api`,
       withCredentials: allowCookies

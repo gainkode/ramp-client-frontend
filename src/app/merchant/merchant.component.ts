@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavigationEnd, Router, Event as NavigationEvent } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { MenuItem } from '../model/common.model';
 import { CurrencyView, PaymentCompleteDetails, PaymentWidgetType } from '../model/payment.model';
 import { ProfileItemActionType, ProfileItemContainer, ProfileItemContainerType } from '../model/profile-item.model';
@@ -10,7 +9,7 @@ import { ProfileContactsComponent } from '../profile/contacts/contacts.component
 import { ProfileWalletsComponent } from '../profile/wallets/wallets.component';
 import { AuthService } from '../services/auth.service';
 import { NotificationService } from '../services/notification.service';
-import { getAvatarPath } from '../utils/utils';
+import { getAvatarPath, getFullName } from '../utils/utils';
 
 @Component({
     templateUrl: 'merchant.component.html',
@@ -127,15 +126,7 @@ export class MerchantComponent implements OnInit, OnDestroy {
     }
 
     get userName(): string {
-        let name = '';
-        const user = this.auth.user;
-        if (user) {
-            name = `${user.firstName ?? ''} ${user.lastName ?? ''}`;
-        }
-        if (name === ' ') {
-            name = user?.email ?? 'No name';
-        }
-        return name;
+        return (this.auth.user !== null) ? getFullName(this.auth.user) : '';
     }
 
     get selectedSection(): string {

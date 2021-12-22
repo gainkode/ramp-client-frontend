@@ -13,7 +13,7 @@ import { ProfileContactsComponent } from '../profile/contacts/contacts.component
 import { ProfileWalletsComponent } from '../profile/wallets/wallets.component';
 import { AuthService } from '../services/auth.service';
 import { NotificationService } from '../services/notification.service';
-import { getAvatarPath } from '../utils/utils';
+import { getAvatarPath, getFullName } from '../utils/utils';
 
 @Component({
     templateUrl: 'personal.component.html',
@@ -61,15 +61,7 @@ export class PersonalComponent implements OnInit, OnDestroy {
     }
 
     get userName(): string {
-        let name = '';
-        const user = this.auth.user;
-        if (user) {
-            name = `${user.firstName ?? ''} ${user.lastName ?? ''}`;
-        }
-        if (name === ' ') {
-            name = user?.email ?? 'No name';
-        }
-        return name;
+        return (this.auth.user !== null) ? getFullName(this.auth.user) : '';
     }
 
     get selectedSection(): string {

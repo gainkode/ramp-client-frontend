@@ -156,19 +156,19 @@ export class DashboardModel {
       this.withdrawals = new DashboardTransactionModel(data.withdrawals as DepositOrWithdrawalStats | undefined);
 
       if (this.deposits.total) {
-        this.deposits.total.title = 'Deposits';
+        this.deposits.total.title = 'Bought';
         if (!this.deposits.total.isNull) {
           this.totals.push(this.deposits.total);
         }
       }
       if (this.transfers.total) {
-        this.transfers.total.title = 'Transfers';
+        this.transfers.total.title = 'Sent';
         if (!this.transfers.total.isNull) {
           this.totals.push(this.transfers.total);
         }
       }
       if (this.withdrawals.total) {
-        this.withdrawals.total.title = 'Withdrawals';
+        this.withdrawals.total.title = 'Sold';
         if (!this.withdrawals.total.isNull) {
           this.totals.push(this.withdrawals.total);
         }

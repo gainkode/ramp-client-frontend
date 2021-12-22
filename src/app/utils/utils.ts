@@ -1,4 +1,5 @@
 import { environment } from "src/environments/environment";
+import { User, UserType } from "../model/generated-models";
 
 export function round(value: number, precision: number | undefined): number {
     const multiplier = Math.pow(10, precision || 0);
@@ -57,6 +58,19 @@ export function getCryptoSymbol(symbol: string): string {
         }
     }
     return result;
+}
+
+export function getFullName(user: User): string {
+    let fullName = '';
+    if (user.type === UserType.Merchant) {
+        fullName = user.firstName ?? '';
+    } else if (user.type === UserType.Personal) {
+        fullName = `${user.firstName ?? ''} ${user.lastName ?? ''}`;
+    }
+    if (fullName === ' ') {
+        fullName = user?.email ?? 'No name';
+    }
+    return fullName;
 }
 
 export function getAvatarPath(avatarObject: string | undefined): string {

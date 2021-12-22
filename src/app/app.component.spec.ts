@@ -20,16 +20,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'cm-ewallet'`, () => {
+  it(`should have as title 'GetCoins'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('cm-ewallet');
+    expect(app.title).toEqual('GetCoins');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('.content span').textContent).toContain('cm-ewallet app is running!');
+    expect(compiled.querySelector('.content span').textContent).toContain('GetCoins app is running!');
   });
 });

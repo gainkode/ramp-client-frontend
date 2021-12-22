@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  title = 'cm-eWallet';
+  title = 'GetCoins';
   version = '0.1.1';
   copyrightYears = '2021';
 
@@ -15,7 +15,8 @@ export class AppComponent implements OnInit {
     const w = window as any;
     w.cookieconsent.initialise({
       cookie: {
-        domain: environment.cookieDomain
+        domain: environment.cookieDomain,
+        secure: false // If secure is true, the cookies will only be allowed over https
       },
       position: 'bottom',
       theme: 'classic',
@@ -29,7 +30,7 @@ export class AppComponent implements OnInit {
           text: '#000000'
         }
       },
-      type: 'opt-out',
+      //type: 'opt-out',
       content: {
         message: 'This website uses cookies to ensure you get the best experience on our website.',
         dismiss: 'Got it!',
@@ -38,6 +39,7 @@ export class AppComponent implements OnInit {
         href: '/terms',
         policy: 'Cookie Policy'
       },
+      container: '<div>Test</div>',
       onStatusChange: function(status: any) {
         window.location.reload();
       }

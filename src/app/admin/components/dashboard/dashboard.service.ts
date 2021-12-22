@@ -84,7 +84,7 @@ export class DashboardService implements OnDestroy {
             ],
             rows: [
               {
-                type: 'Deposits',
+                type: 'Buy',
                 approvedCount: rawData.deposits?.approved?.count ?? null,
                 approvedVolume: rawData.deposits?.approved?.volume ?? null,
                 declinedCount: rawData.deposits?.declined?.count ?? null,
@@ -94,7 +94,7 @@ export class DashboardService implements OnDestroy {
                 ratio: rawData.deposits?.ratio ?? null
               },
               {
-                type: 'Transfers',
+                type: 'Send',
                 approvedCount: rawData.transfers?.approved?.count ?? null,
                 approvedVolume: rawData.transfers?.approved?.volume ?? null,
                 declinedCount: rawData.transfers?.declined?.count ?? null,
@@ -104,7 +104,7 @@ export class DashboardService implements OnDestroy {
                 ratio: rawData.transfers?.ratio ?? null
               },
               {
-                type: 'Withdrawals',
+                type: 'Sell',
                 approvedCount: rawData.withdrawals?.approved?.count ?? null,
                 approvedVolume: rawData.withdrawals?.approved?.volume ?? null,
                 declinedCount: rawData.withdrawals?.declined?.count ?? null,
@@ -294,17 +294,17 @@ export class DashboardService implements OnDestroy {
             ],
             rows: [
               {
-                source: 'Deposits',
+                source: 'Buy',
                 volume: rawData.deposits?.fee?.volume ?? null,
                 count: rawData.deposits?.fee?.count ?? null
               },
               {
-                source: 'Transfers',
+                source: 'Send',
                 volume: rawData.transfers?.fee?.volume ?? null,
                 count: rawData.transfers?.fee?.count ?? null
               },
               {
-                source: 'Withdrawals',
+                source: 'Sell',
                 volume: rawData.withdrawals?.fee?.volume ?? null,
                 count: rawData.withdrawals?.fee?.count ?? null
               }
