@@ -30,24 +30,6 @@
             <td mat-cell *matCellDef="let element"> {{element.id}} </td>
         </ng-container>
 
-        <!-- Registered Column -->
-        <ng-container matColumnDef="created">
-            <th mat-header-cell mat-sort-header *matHeaderCellDef>Registered</th>
-            <td mat-cell *matCellDef="let element"> {{element.created}} </td>
-        </ng-container>
-
-        <!-- Account Type Column -->
-        <ng-container matColumnDef="type">
-            <th mat-header-cell mat-sort-header *matHeaderCellDef>Type</th>
-            <td mat-cell *matCellDef="let element"> {{element.userType?.name}} </td>
-        </ng-container>
-
-        <!-- Email Column -->
-        <ng-container matColumnDef="email">
-            <th mat-header-cell mat-sort-header *matHeaderCellDef>Email</th>
-            <td mat-cell *matCellDef="let element"> {{element.email}} </td>
-        </ng-container>
-
         <!-- First Name Column -->
         <ng-container matColumnDef="firstName">
             <th mat-header-cell mat-sort-header *matHeaderCellDef>First name</th>
@@ -60,28 +42,34 @@
             <td mat-cell *matCellDef="let element"> {{element.lastName}} </td>
         </ng-container>
 
-        <!-- Country Column -->
-        <ng-container matColumnDef="country">
-            <th mat-header-cell *matHeaderCellDef>Country</th>
-            <td mat-cell *matCellDef="let element"> {{element.country?.title}} </td>
-        </ng-container>
-
-        <!-- Mode Column -->
-        <ng-container matColumnDef="mode">
-            <th mat-header-cell *matHeaderCellDef>Wallet source</th>
-            <td mat-cell *matCellDef="let element"> {{element.mode}} </td>
-        </ng-container>
-
-        <!-- Currency Column -->
-        <ng-container matColumnDef="currency">
-            <th mat-header-cell *matHeaderCellDef>Wallet source</th>
-            <td mat-cell *matCellDef="let element"> {{element.currency}} </td>
+        <!-- Email Column -->
+        <ng-container matColumnDef="email">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef>Email</th>
+            <td mat-cell *matCellDef="let element"> {{element.email}} </td>
         </ng-container>
 
         <!-- KYC Column -->
         <ng-container matColumnDef="kycStatus">
             <th mat-header-cell *matHeaderCellDef>KYC status</th>
             <td mat-cell *matCellDef="let element"> {{element.kycStatus}} </td>
+        </ng-container>
+
+        <!-- Registered Column -->
+        <ng-container matColumnDef="created">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef>Registered</th>
+            <td mat-cell *matCellDef="let element"> {{element.created}} </td>
+        </ng-container>
+
+        <!-- Country Column -->
+        <ng-container matColumnDef="country">
+            <th mat-header-cell *matHeaderCellDef>Country</th>
+            <td mat-cell *matCellDef="let element"> {{element.country?.title}} </td>
+        </ng-container>
+
+        <!-- Country Column -->
+        <ng-container matColumnDef="phone">
+            <th mat-header-cell *matHeaderCellDef>Phone</th>
+            <td mat-cell *matCellDef="let element"> {{element.phone}} </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>

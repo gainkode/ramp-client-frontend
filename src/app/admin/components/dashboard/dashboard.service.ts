@@ -122,7 +122,7 @@ export class DashboardService implements OnDestroy {
             columns: [
               {
                 key: 'instrument',
-                label: 'Instrument',
+                label: 'Payment Method',
                 type: 'text'
               },
               {
@@ -225,7 +225,7 @@ export class DashboardService implements OnDestroy {
             columns: [
               {
                 key: 'instrument',
-                label: 'Instrument',
+                label: 'Payment Method',
                 type: 'text'
               },
               {

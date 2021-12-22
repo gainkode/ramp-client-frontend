@@ -97,7 +97,7 @@
     </mat-form-field>
 
     <mat-form-field class="form-element">
-        <mat-label>Instruments</mat-label>
+        <mat-label>Payment Methods</mat-label>
         <mat-select formControlName="instruments" multiple>
             <mat-option *ngFor="let item of instrumentOptions" [value]="item.id">
                 {{item.name}}
