@@ -243,7 +243,6 @@ export const FeeTargetFilterList: Array<FeeTargetFilterTypeView> = [
     { id: SettingsFeeTargetFilterType.None, name: 'None' },
     { id: SettingsFeeTargetFilterType.WidgetId, name: 'Widget identifier' },
     { id: SettingsFeeTargetFilterType.AccountId, name: 'Account' },
-    { id: SettingsFeeTargetFilterType.AccountType, name: 'Account type' },
     { id: SettingsFeeTargetFilterType.Country, name: 'Country' },
     { id: SettingsFeeTargetFilterType.InitiateFrom, name: 'Initiate from ...' }
 ];

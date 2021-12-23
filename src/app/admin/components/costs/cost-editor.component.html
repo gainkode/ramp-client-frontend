@@ -158,11 +158,11 @@
 
             <!-- Rolling reserves days -->
             <mat-form-field class="form-element">
-                <mat-label>Rolling reserves days</mat-label>
+                <mat-label>Rolling reserves days, %</mat-label>
                 <input type="text" matInput formControlName="rollingReservesDays" maxlength="7" placeholder="5%"
                        required/>
                 <mat-error *ngIf="this.schemeForm.get('rollingReservesDays')?.hasError('required')">
-                    Please specify number of rolling reserves days
+                    Please specify percentage of rolling reserves days
                 </mat-error>
                 <mat-error *ngIf="this.schemeForm.get('rollingReservesDays')?.hasError('pattern')">
                     Invalid number value

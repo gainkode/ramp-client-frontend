@@ -1514,6 +1514,7 @@ export function getCountryDialCode(countryName: string): string {
 
 export const CountryFilterList: CommonTargetValue[] = Countries.map(c => {
     const item = new CommonTargetValue();
+    item.id = c.code3;
     item.imgClass = 'country-flag';
     item.imgSource = `assets/svg-country-flags/${c.code2.toLowerCase()}.svg`;
     item.title = c.name;

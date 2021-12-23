@@ -4,7 +4,7 @@ import {
     SettingsFee, PaymentInstrument, PaymentProvider, TransactionType, SettingsFeeTargetFilterType, UserType, UserMode
 } from './generated-models';
 import { PaymentInstrumentList, 
-    FeeTargetFilterList, TransactionTypeList } from './payment.model';
+    FeeTargetFilterList, TransactionTypeList, UserTypeList } from './payment.model';
 
 // temp
 export const WidgetIdFilterList: CommonTargetValue[] = [
@@ -28,8 +28,8 @@ export const WidgetFilterList: CommonTargetValue[] = [
 // temp
 
 export const AccountTypeFilterList: CommonTargetValue[] = [
-    { title: 'Personal', imgClass: '', imgSource: '', id: '' },
-    { title: 'Merchant', imgClass: '', imgSource: '', id: '' }
+    { title: 'Personal', imgClass: '', imgSource: '', id: UserType.Personal },
+    { title: 'Merchant', imgClass: '', imgSource: '', id: UserType.Merchant }
 ];
 
 export class FeeScheme {

@@ -1,14 +1,14 @@
 import { Component, ElementRef, ViewChild, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Validators, FormBuilder } from '@angular/forms';
-import { Observable, of } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { PaymentDataService } from '../../../../services/payment.service';
 import {
   FeeScheme, AccountTypeFilterList,
-  AccountIdFilterList, WidgetFilterList, WidgetIdFilterList
+  WidgetFilterList, WidgetIdFilterList
 } from '../../../../model/fee-scheme.model';
 import {
   SettingsFeeTargetFilterType, PaymentInstrument, PaymentProvider, TransactionType, UserType, UserMode
@@ -20,6 +20,8 @@ import { CommonTargetValue, TargetParams } from 'src/app/model/common.model';
 import { CountryFilterList, getCountry } from 'src/app/model/country-code.model';
 import { ErrorService } from 'src/app/services/error.service';
 import { LayoutService } from '../../../services/layout.service';
+import { AdminDataService } from 'src/app/admin/services/admin-data.service';
+import { Filter } from 'src/app/admin/model/filter.model';
 
 @Component({
   selector: 'app-fee-editor',
@@ -48,6 +50,7 @@ export class FeeDetailsComponent implements OnInit {
   errorMessage = '';
   selectedTab = 0;
   targetEntity = '';
+  targetType = SettingsFeeTargetFilterType.None;
   currency = '';
   separatorKeysCodes: number[] = [ENTER, COMMA];
   filteredTargetValues: Observable<CommonTargetValue[]> | undefined;
@@ -58,10 +61,12 @@ export class FeeDetailsComponent implements OnInit {
   providers: PaymentProviderView[] = [];
   userTypes = UserTypeList;
   userModes = UserModeList;
+  targteValues: CommonTargetValue[] = [];
 
   private defaultSchemeName = '';
   private forceValidate = false;
-  private loadingData = false;
+  private destroy$ = new Subject();
+  private targetSearchString$ = new BehaviorSubject<string>('');
 
   schemeForm = this.formBuilder.group({
     id: [''],
@@ -156,9 +161,9 @@ export class FeeDetailsComponent implements OnInit {
         break;
       }
       case SettingsFeeTargetFilterType.AccountId: {
-        params.title = 'List of account identifiers *';
-        params.inputPlaceholder = 'New identifier...';
-        params.dataList = AccountIdFilterList;
+        params.title = 'List of accounts *';
+        params.inputPlaceholder = 'Type account email...';
+        params.dataList = [];
         this.targetEntity = 'account identifier';
         break;
       }
@@ -183,6 +188,7 @@ export class FeeDetailsComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private dataService: PaymentDataService,
+    private adminDataService: AdminDataService,
     private errorHandler: ErrorService,
     private layoutService: LayoutService
   ) {
@@ -194,11 +200,45 @@ export class FeeDetailsComponent implements OnInit {
     this.schemeForm.get('target')?.valueChanges.subscribe(val => {
       this.clearTargetValues();
       this.setTargetValidator();
-      this.filteredTargetValues = this.schemeForm.get('targetValue')?.valueChanges.pipe(
-        startWith(''),
-        map(value => this.filterTargetValues(value)));
+      if (this.targetType === SettingsFeeTargetFilterType.WidgetId ||
+        this.targetType === SettingsFeeTargetFilterType.AccountId ||
+        this.targetType === SettingsFeeTargetFilterType.InitiateFrom) {
+        this.targetSearchString$.pipe(
+          takeUntil(this.destroy$),
+          distinctUntilChanged(),
+          debounceTime(1000),
+          switchMap(searchString => this.getFilteredOptions(searchString))
+        ).subscribe(options => {
+          this.filteredTargetValues = of(options);
+        });
+      } else {
+        this.filteredTargetValues = this.schemeForm.get('targetValue')?.valueChanges.pipe(
+          startWith(''),
+          map(value => this.filterTargetValues(value)));
+      }
     });
     this.getPaymentProviders();
+  }
+
+  private getFilteredOptions(searchString: string): Observable<CommonTargetValue[]> {
+    if (searchString) {
+      if (this.targetType === SettingsFeeTargetFilterType.AccountId) {
+        return this.adminDataService.getUsers(0, 100, 'email', false, new Filter({ search: searchString })).pipe(
+          map(result => {
+            return result.list.map(user => {
+              return {
+                id: user.id,
+                title: user.email
+              } as CommonTargetValue;
+            });
+          })
+        );
+      } else {
+        return of([]);
+      }
+    } else {
+      return of([]);
+    }
   }
 
   private getPaymentProviders(): void {
@@ -213,7 +253,8 @@ export class FeeDetailsComponent implements OnInit {
 
   private setTargetValidator(): void {
     const val = this.schemeForm.get('target')?.value;
-    if (val === SettingsFeeTargetFilterType.None) {
+    this.targetType = val ?? SettingsFeeTargetFilterType.None as SettingsFeeTargetFilterType;
+    if (this.targetType === SettingsFeeTargetFilterType.None) {
       this.schemeForm.get('targetValues')?.clearValidators();
     } else {
       this.schemeForm.get('targetValues')?.setValidators([Validators.required]);
@@ -222,7 +263,7 @@ export class FeeDetailsComponent implements OnInit {
   }
 
   private filterTargetValues(value: string): CommonTargetValue[] {
-    if (this.targetEntity !== '') {
+    if (this.targetType !== SettingsFeeTargetFilterType.None) {
       let filterValue = '';
       if (value) {
         filterValue = value.toLowerCase();
@@ -235,11 +276,20 @@ export class FeeDetailsComponent implements OnInit {
     }
   }
 
+  handleTargetInputChange(event: Event): void {
+    if (this.targetType === SettingsFeeTargetFilterType.WidgetId ||
+      this.targetType === SettingsFeeTargetFilterType.AccountId ||
+      this.targetType === SettingsFeeTargetFilterType.InitiateFrom) {
+      let searchString = event.target ? (event.target as HTMLInputElement).value : '';
+      searchString = searchString.toLowerCase().trim();
+      this.targetSearchString$.next(searchString);
+    }
+  }
+
   setFormData(scheme: FeeScheme | null): void {
     this.schemeForm.reset();
     this.defaultSchemeName = '';
     if (scheme !== null) {
-      this.loadingData = true;
       this.removeIncorrectTargetValues(scheme);
       this.defaultSchemeName = scheme.isDefault ? scheme.name : '';
       this.schemeForm.get('id')?.setValue(scheme?.id);
@@ -247,7 +297,14 @@ export class FeeDetailsComponent implements OnInit {
       this.schemeForm.get('description')?.setValue(scheme?.description);
       this.schemeForm.get('isDefault')?.setValue(scheme?.isDefault);
       this.schemeForm.get('target')?.setValue(scheme?.target);
-      this.schemeForm.get('targetValues')?.setValue(scheme?.targetValues);
+      this.targetType = scheme?.target ?? SettingsFeeTargetFilterType.None;
+      if (this.targetType === SettingsFeeTargetFilterType.WidgetId ||
+        this.targetType === SettingsFeeTargetFilterType.AccountId ||
+        this.targetType === SettingsFeeTargetFilterType.InitiateFrom) {
+        this.schemeForm.get('targetValues')?.setValue(scheme?.targetValues);
+      } else {
+        this.schemeForm.get('targetValues')?.setValue(scheme?.targetValues);
+      }
       this.schemeForm.get('instrument')?.setValue(scheme.instrument);
       this.schemeForm.get('userType')?.setValue(scheme?.userType);
       this.schemeForm.get('userMode')?.setValue(scheme?.userMode);
@@ -268,7 +325,6 @@ export class FeeDetailsComponent implements OnInit {
       this.schemeForm.get('swift')?.setValue(scheme?.details.swift);
       const p = this.targetValueParams;
       this.setTargetValidator();
-      this.loadingData = false;
       this.formChanged.emit(false);
     } else {
       this.schemeForm.get('id')?.setValue('');
@@ -307,7 +363,16 @@ export class FeeDetailsComponent implements OnInit {
     data.isDefault = this.schemeForm.get('isDefault')?.value;
     data.id = this.schemeForm.get('id')?.value;
     // target
-    data.setTarget(this.schemeForm.get('target')?.value, this.schemeForm.get('targetValues')?.value);
+    if (this.targetType === SettingsFeeTargetFilterType.WidgetId ||
+      this.targetType === SettingsFeeTargetFilterType.AccountId ||
+      this.targetType === SettingsFeeTargetFilterType.InitiateFrom) {
+      data.setTarget(this.schemeForm.get('target')?.value, this.targteValues.map(c => {
+        return c.id;
+      }));
+    } else {
+      data.setTarget(this.schemeForm.get('target')?.value, this.schemeForm.get('targetValues')?.value);
+    }
+
     (this.schemeForm.get('instrument')?.value as PaymentInstrument[]).forEach(x => data.instrument.push(x));
     (this.schemeForm.get('trxType')?.value as TransactionType[]).forEach(x => data.trxType.push(x));
     (this.schemeForm.get('provider')?.value as string[]).forEach(x => data.provider.push(x));
@@ -416,15 +481,14 @@ export class FeeDetailsComponent implements OnInit {
     if ((value || '').trim()) {
       const values = this.schemeForm.get('targetValues')?.value;
       values.push(value.trim());
-      this.schemeForm.get('targetValues')
-        ?.setValue(values);
+      this.addTarget(value.trim());
+      this.schemeForm.get('targetValues')?.setValue(values);
     }
     // Reset the input value
     if (input) {
       input.value = '';
     }
-    this.schemeForm.get('targetValue')
-      ?.setValue(null);
+    this.schemeForm.get('targetValue')?.setValue(null);
   }
 
   removeTargetValue(val: string): void {
@@ -432,30 +496,44 @@ export class FeeDetailsComponent implements OnInit {
     const index = values.indexOf(val);
     if (index >= 0) {
       values.splice(index, 1);
-      this.schemeForm.get('targetValues')
-        ?.setValue(values);
+      this.removeTarget(val);
+      this.schemeForm.get('targetValues')?.setValue(values);
     }
   }
 
   clearTargetValues(): void {
-    this.schemeForm.get('targetValues')
-      ?.setValue([]);
+    this.targteValues = [];
+    this.filteredTargetValues = of([]);
+    this.schemeForm.get('targetValues')?.setValue([]);
   }
 
   targetItemSelected(event: MatAutocompleteSelectedEvent): void {
     const values = this.schemeForm.get('targetValues')?.value;
     if (!values.includes(event.option.viewValue)) {
       values.push(event.option.viewValue);
-      this.schemeForm.get('targetValues')
-        ?.setValue(values);
+      this.addTarget(event.option.viewValue);
+      this.schemeForm.get('targetValues')?.setValue(values);
     }
     this.targetValueInput.nativeElement.value = '';
-    this.schemeForm.get('targetValue')
-      ?.setValue(null);
+    this.schemeForm.get('targetValue')?.setValue(null);
   }
 
   onDeleteScheme(): void {
     this.delete.emit(this.settingsId);
+  }
+
+  private addTarget(value: string): void {
+    this.filteredTargetValues?.subscribe(val => {
+      const valueObject = val.find(x => x.title === value);
+      if (valueObject) {
+        this.targteValues.push(valueObject);
+      }
+    });
+  }
+
+  private removeTarget(value: string): void {
+    const idx = this.targteValues.findIndex(x => x.title === value);
+    this.targteValues.splice(idx, 1);
   }
 
   private removeIncorrectTargetValues(scheme: FeeScheme): void {
