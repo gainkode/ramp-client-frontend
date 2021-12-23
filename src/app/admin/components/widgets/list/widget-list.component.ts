@@ -31,8 +31,10 @@ export class WidgetListComponent implements OnInit, OnDestroy, AfterViewInit {
   displayedColumns: string[] = [
     'details',
     'name',
-//    'user',
+    'id',
+    'link',
     'created',
+
     'transactionType',
     'currenciesFrom',
     'currenciesTo',
@@ -120,7 +122,6 @@ export class WidgetListComponent implements OnInit, OnDestroy, AfterViewInit {
         takeUntil(this.destroy$)
       )
       .subscribe(result => {
-        console.log('widgets', result.list);
         this.data = result.list;
         this.customerCount = result.count;
       });

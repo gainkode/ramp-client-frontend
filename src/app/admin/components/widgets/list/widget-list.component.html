@@ -31,22 +31,34 @@
             <td mat-cell *matCellDef="let element"> {{element.name}} </td>
         </ng-container>
 
+        <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef>Widget ID</th>
+            <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="link">
+            <th mat-header-cell *matHeaderCellDef>Link</th>
+            <td mat-cell *matCellDef="let element"> 
+                <a target="_blank" rel="noopener noreferrer" [href]="element.link">Widget</a>
+             </td>
+        </ng-container>
+
         <ng-container matColumnDef="created">
-            <th mat-header-cell *matHeaderCellDef>Created at</th>
+            <th mat-header-cell *matHeaderCellDef>Created</th>
             <td mat-cell *matCellDef="let element"> {{element.created}} </td>
         </ng-container>
+
+
 
         <ng-container matColumnDef="transactionType">
             <th mat-header-cell *matHeaderCellDef>Transaction Type</th>
             <td mat-cell *matCellDef="let element"> {{element.transactions?.join(', ')}} </td>
         </ng-container>
 
-
         <ng-container matColumnDef="currenciesFrom">
             <th mat-header-cell *matHeaderCellDef>Currencies From</th>
             <td mat-cell *matCellDef="let element"> {{element.currenciesFrom?.join(', ')}} </td>
         </ng-container>
-
 
         <ng-container matColumnDef="currenciesTo">
             <th mat-header-cell *matHeaderCellDef>Currencies to</th>

@@ -15,21 +15,30 @@ export class DetailsAttributeComponent implements OnInit {
   set value(value: string | number | CommonTargetValue | null | undefined) {
     if (value instanceof CommonTargetValue) {
       this.valueImage = value;
-    } else if (typeof(value) === 'number') {
+    } else if (typeof (value) === 'number') {
       this.valueString = value.toString();
     } else {
       this.valueString = value ? value.trim() : undefined;
     }
   }
 
-  @Input()
-  linkUrl?: string;
+  @Input() set linkUrl(val: string) {
+    this.setLink = true;
+    if (val.startsWith('http')) {
+      this.url = val;
+    } else {
+      this.urlPath = val;
+    }
+  }
 
   @Input()
   highlight = false;
 
   valueString?: string;
   valueImage?: CommonTargetValue;
+  setLink = false;
+  urlPath: string | undefined = undefined;
+  url: string | undefined = undefined;
 
   constructor() { }
 

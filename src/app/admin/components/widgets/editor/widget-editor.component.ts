@@ -33,6 +33,7 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
   @Input()
   set widget(widget: WidgetItem) {
     this.setFormData(widget);
+    this.widgetLink = widget?.link ?? '';
     this.layoutService.setBackdrop(!widget?.id);
   }
 
@@ -109,7 +110,6 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    console.log('submit', this.form.value);
     const widgetItem = this.getWidgetItem();
     this.adminDataService.saveWidget(widgetItem)
       .subscribe(() => {
@@ -229,7 +229,6 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
         :
         of(undefined);
 
-      this.widgetLink = `https://merx-ewallet.semirolab.com/payment/widget/${widget.id}`;
       user$.subscribe(userItem => {
         console.log(userItem);
         this.form.setValue({

@@ -22,11 +22,13 @@ export class WidgetItem {
   instruments: Array<string> = [];
   paymentProviders: Array<string> = [];
   liquidityProvider?: string;
+  link = '';
 
   constructor(data: Widget | null) {
     if (data) {
       const datepipe: DatePipe = new DatePipe('en-US');
       this.id = data.widgetId as string;
+      this.link = `https://merx-ewallet.semirolab.com/payment/widget/${this.id}`;
       this.name = data.name;
       this.description = data.description ?? '';
       this.additionalSettings = data.additionalSettings as string;

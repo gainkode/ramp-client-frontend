@@ -1,9 +1,12 @@
 <div *ngIf="!!valueString || !!valueImage" class="wrapper" [class.highlight] = 'highlight'>
     <label class="label">{{label}}</label>
-    <div *ngIf="valueString && !linkUrl" class="value">
+    <div *ngIf="valueString && setLink===false" class="value">
         {{valueString}}
     </div>
-    <a *ngIf="valueString && linkUrl" [routerLink]="linkUrl" class="value">
+    <a *ngIf="valueString && url" target="_blank" rel="noopener noreferrer" [href]="url" class="value">
+        {{valueString}}
+    </a>
+    <a *ngIf="valueString && urlPath" [routerLink]="urlPath" class="value">
         {{valueString}}
     </a>
     <div *ngIf="!!valueImage" class="value">
