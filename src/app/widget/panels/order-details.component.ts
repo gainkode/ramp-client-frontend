@@ -2,7 +2,7 @@ import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Outpu
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { Rate, SettingsCurrencyWithDefaults, TransactionType, UserState } from 'src/app/model/generated-models';
+import { AssetAddressShort, Rate, SettingsCurrencyWithDefaults, TransactionType, UserState } from 'src/app/model/generated-models';
 import { CheckoutSummary, CurrencyView, QuickCheckoutTransactionTypeList, WidgetSettings } from 'src/app/model/payment.model';
 import { WalletItem } from 'src/app/model/wallet.model';
 import { AuthService } from 'src/app/services/auth.service';
@@ -454,10 +454,21 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       if (this.wallets.length > 0) {
         if (this.summary?.transactionType === TransactionType.Deposit) {
           if (this.addressInit) {
-            this.walletField?.setValue('');
+            this.walletField?.setValue(this.summary.address ?? '');
             this.walletInit = false;
           }
           this.filteredWallets = this.wallets.filter(x => x.asset === currency);
+        }
+      }
+      if (this.summary?.transactionType === TransactionType.Deposit && this.settings.walletAddress === '') {
+        const emptyList = (this.filteredWallets.length === 0);
+        this.filteredWallets.splice(0, 0, new WalletItem({
+          vaultName: '...',
+          address: '',
+          default: false
+        } as AssetAddressShort, '', undefined));
+        if (emptyList) {
+          this.walletField?.setValue(this.summary.address ?? '');
         }
       }
       this.pSpendChanged = true;
@@ -514,6 +525,9 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     if (this.showWallet) {
       this.walletInit = true;
       this.selectedWallet = this.wallets.find(x => x.address === val);
+      if (!this.selectedWallet) {
+        this.selectedWallet = this.filteredWallets.find(x => x.address === val);
+      }
       this.onWalletAddressUpdated.emit(this.walletField?.value);
     }
   }

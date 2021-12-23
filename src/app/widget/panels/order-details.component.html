@@ -57,19 +57,8 @@
             [comboList]="receiveCurrencyList" [errorMessages]="amountReceiveErrorMessages" [separator]="true">
         </app-form-finance-combo>
 
-        <!-- Wallet address -->
-        <div *ngIf="settings.walletAddress==='' && filteredWallets.length===0">
-            <app-form-textbox [label]="'Wallet address'" [maxlength]="120" formControlName="wallet"
-                [errorMessages]="walletErrorMessages" [separator]="false">
-            </app-form-textbox>
-            <div *ngIf="walletField?.hasError('walletAddress')" class="__form-assist __form-assist-error">
-                Wallet address is not valid
-            </div>
-            <div class="__form-separator"></div>
-        </div>
-
         <!-- Wallets -->
-        <div *ngIf="filteredWallets.length>0">
+        <div *ngIf="filteredWallets.length>1">
             <div class="__form-label">
                 Choose destination wallet
             </div>
@@ -89,11 +78,23 @@
                     </mat-select>
                 </div>
             </div>
-            <div class="__profile-details-item-block">
+            <!-- <div class="__profile-details-item-block">
                 <div *ngIf="walletInit && walletField?.hasError('required')" class="__form-assist __form-assist-error">
                     Wallet is required
                 </div>
+            </div> -->
+        </div>
+
+        <!-- Wallet address -->
+        <div *ngIf="selectedWallet?.address==='' || !selectedWallet">
+            <div class="__form-separator-small"></div>
+            <app-form-textbox [label]="'Wallet address'" [maxlength]="120" formControlName="wallet"
+                [errorMessages]="walletErrorMessages" [separator]="false">
+            </app-form-textbox>
+            <div *ngIf="walletField?.hasError('walletAddress')" class="__form-assist __form-assist-error">
+                Wallet address is not valid
             </div>
+            <div class="__form-separator"></div>
         </div>
 
         <!-- Current Quote -->
