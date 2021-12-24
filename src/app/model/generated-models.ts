@@ -1707,7 +1707,8 @@ export type QueryGetWidgetsArgs = {
 
 
 export type QueryGetWidgetArgs = {
-  userParamsId?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  recaptcha: Scalars['String'];
 };
 
 

@@ -275,9 +275,10 @@ mutation PreAuth(
 `;
 
 const GET_WIDGET = gql`
-query GetWidget($id: String!) {
+query GetWidget($id: String!, $recaptcha: String!) {
   getWidget(
-    userParamsId: $id
+    id: $id,
+    recaptcha: $recaptcha
   ) {
     transactionTypes
     currenciesFrom
@@ -456,7 +457,8 @@ export class PaymentDataService {
   getWidget(paramsId: string): QueryRef<any, EmptyObject> | null {
     if (this.apollo.client !== undefined) {
       const vars = {
-        id: paramsId
+        id: paramsId,
+        recaptcha: environment.recaptchaId,
       };
       return this.apollo.watchQuery<any>({
         query: GET_WIDGET,
