@@ -49,7 +49,7 @@ export class WidgetPanelComponent {
         break;
     }
     this.widgetSettings.source = TransactionSource.Wallet;
-    this.widgetSettings.walletAddress = '';
+    this.widgetSettings.walletAddressPreset = false;
     this.widgetSettings.kycFirst = false;
     this.widgetSettings.disclaimer = false;
     this.widgetVisible = true;

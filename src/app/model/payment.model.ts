@@ -310,6 +310,7 @@ export class CheckoutSummary {
     amountFromPrecision: number = 2;
     amountToPrecision: number = 2;
     address = '';
+    addressPreset = false;
     fee = 0;
     feePercent = 0;
     feeMinFiat = 0;
@@ -447,7 +448,7 @@ export class WidgetSettings {
     email = '';
     transaction: TransactionType | undefined = undefined;
     source: TransactionSource = TransactionSource.QuickCheckout;
-    walletAddress = '';
+    walletAddressPreset = false;
     widgetId = '';
     kycFirst = false;
     disclaimer = false;

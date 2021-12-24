@@ -99,8 +99,7 @@ export class WidgetComponent implements OnInit {
         this.widget.kycFirst = false;
       }
       this.widget.email = data.currentUserEmail as string;
-      const fixedAddress = data.hasFixedAddress ?? false;
-      this.widget.walletAddress = (fixedAddress) ? 'fixedAddress' : this.widget.walletAddress;
+      this.widget.walletAddressPreset = data.hasFixedAddress ?? false;
       this.widget.transaction = undefined;
       if (data.transactionTypes) {
         if (data.transactionTypes.length > 0) {
@@ -136,9 +135,6 @@ export class WidgetComponent implements OnInit {
     }
     if (this.widget.transaction) {
       this.summary.transactionType = this.widget.transaction;
-    }
-    if (this.widget.walletAddress) {
-      this.summary.address = this.widget.walletAddress;
     }
   }
 
@@ -266,21 +262,13 @@ export class WidgetComponent implements OnInit {
       this.initData(undefined);
       this.pager.init('order_details', 'Order details');
     } else {
-      console.log('id', this.userParamsId); 
       this.inProgress = true;
       this.pSubscriptions.add(
         widgetData.valueChanges.subscribe(({ data }) => {
           this.inProgress = false;
-
-          console.log(data);
-
-
           this.initData(data.getWidget as WidgetShort);
           this.pager.init('order_details', 'Order details');
         }, (error) => {
-
-          console.log('error', error);
-
           this.inProgress = false;
           this.initData(undefined);
           this.pager.init('order_details', 'Order details');

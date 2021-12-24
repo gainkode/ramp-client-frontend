@@ -376,7 +376,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
 
   private setWalletVisible(): void {
     if (this.currentTransaction === TransactionType.Deposit) {
-      this.showWallet = (!this.settings.walletAddress);
+      this.showWallet = !this.settings.walletAddressPreset;
     } else {
       this.showWallet = false;
     }
@@ -460,7 +460,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
           this.filteredWallets = this.wallets.filter(x => x.asset === currency);
         }
       }
-      if (this.summary?.transactionType === TransactionType.Deposit && this.settings.walletAddress === '') {
+      if (this.summary?.transactionType === TransactionType.Deposit && this.settings.embedded) {
         const emptyList = (this.filteredWallets.length === 0);
         this.filteredWallets.splice(0, 0, new WalletItem({
           vaultName: '...',

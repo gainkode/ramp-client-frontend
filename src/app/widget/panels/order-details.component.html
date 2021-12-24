@@ -86,7 +86,7 @@
         </div>
 
         <!-- Wallet address -->
-        <div *ngIf="selectedWallet?.address==='' || !selectedWallet">
+        <div *ngIf="(selectedWallet?.address==='' || !selectedWallet) && !settings.walletAddressPreset">
             <div class="__form-separator-small"></div>
             <app-form-textbox [label]="'Wallet address'" [maxlength]="120" formControlName="wallet"
                 [errorMessages]="walletErrorMessages" [separator]="false">

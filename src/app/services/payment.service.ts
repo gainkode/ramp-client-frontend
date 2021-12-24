@@ -280,9 +280,11 @@ query GetWidget($id: String!, $recaptcha: String!) {
     id: $id,
     recaptcha: $recaptcha
   ) {
+    name
     transactionTypes
     currenciesFrom
     currenciesTo
+    hasFixedAddress
     instruments
     paymentProviders
     additionalSettings
