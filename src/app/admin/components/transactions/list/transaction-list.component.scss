@@ -11,50 +11,40 @@
   background: $color-grey-0;
 }
 
-.transaction-list-selector-column-white {
+.transaction-list-selector-column {
   margin: 0px;
   padding: 0px 8px;
+}
+
+.transaction-list-data-column {
+  margin: 0px;
+  padding: 0px;
+}
+
+.transaction-list-column-white {
   background-color: white;
 }
 
-.transaction-list-selector-column-blue {
-  margin: 0px;
-  padding: 0px 8px;
+.transaction-list-column-grey {
+  background-color: lightgray;
+}
+
+.transaction-list-column-blue {
   background-color: lightblue;
 }
 
-.transaction-list-selector-column-purple {
-  margin: 0px;
-  padding: 0px 8px;
+.transaction-list-column-red {
+  background-color: pink;
+}
+
+.transaction-list-column-purple {
   background-color: plum;
 }
 
-.transaction-list-selector-column-green {
-  margin: 0px;
-  padding: 0px 8px;
+.transaction-list-column-green {
   background-color: lightgreen;
 }
 
-.transaction-list-data-column-white {
-  margin: 0px;
-  padding: 0px;
-  background-color: white;
-}
-
-.transaction-list-data-column-blue {
-  margin: 0px;
-  padding: 0px;
-  background-color: lightblue;
-}
-
-.transaction-list-data-column-purple {
-  margin: 0px;
-  padding: 0px;
-  background-color: plum;
-}
-
-.transaction-list-data-column-green {
-  margin: 0px;
-  padding: 0px;
-  background-color: lightgreen;
+.transaction-list-column-yellow {
+  background-color: lightyellow;
 }

@@ -10,7 +10,8 @@ import {
   TransactionStatusDescriptorMap,
   TransactionType,
   User,
-  UserMode
+  UserMode,
+  UserTransactionStatus
 } from './generated-models';
 import {
   TransactionTypeList,
@@ -136,12 +137,49 @@ export class TransactionItemDeprecated {
     }
   }
 
-  get transactionListSelectorColumnStyle(): string {
-    return 'transaction-list-selector-column-white';
+  private getTransactionStatusColor(): string {
+    let color = 'white';
+    switch (this.statusInfo?.value.userStatus) {
+      case UserTransactionStatus.Pending:
+        color = 'white';
+        break;
+      case UserTransactionStatus.Processing:
+        color = 'grey';
+        break;
+      case UserTransactionStatus.Paid:
+        color = 'purple';
+        break;
+      case UserTransactionStatus.Declined:
+      case UserTransactionStatus.Canceled:
+      case UserTransactionStatus.Abandoned:
+        color = 'red';
+        break;
+      case UserTransactionStatus.Delivering:
+        color = 'blue';
+        break;
+      case UserTransactionStatus.Completed:
+        color = 'green';
+        break;
+      case UserTransactionStatus.Chargeback: color = 'yellow';
+        break;
+      default:
+        color = 'white';
+    }
+    return color;
   }
 
-  get transactionListDataColumnStyle(): string {
-    return 'transaction-list-data-column-white';
+  get transactionListSelectorColumnStyle(): string[] {
+    return [
+      'transaction-list-selector-column',
+      `transaction-list-column-${this.getTransactionStatusColor()}`
+    ];
+  }
+
+  get transactionListDataColumnStyle(): string[] {
+    return [
+      'transaction-list-data-column',
+      `transaction-list-column-${this.getTransactionStatusColor()}`
+    ];
   }
 
   get transactionTypeName(): string {
