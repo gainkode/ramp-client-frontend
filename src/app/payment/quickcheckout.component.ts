@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -7,6 +8,9 @@ import { environment } from 'src/environments/environment';
 })
 export class QuickCheckoutComponent {
   prodMode = environment.production;
+  userParamsId = '';
 
-  constructor() {}
+  constructor(private route: ActivatedRoute) {
+    this.userParamsId = this.route.snapshot.params['userParamsId'] ?? '';
+  }
 }

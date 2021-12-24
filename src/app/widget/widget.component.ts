@@ -266,13 +266,21 @@ export class WidgetComponent implements OnInit {
       this.initData(undefined);
       this.pager.init('order_details', 'Order details');
     } else {
+      console.log('id', this.userParamsId); 
       this.inProgress = true;
       this.pSubscriptions.add(
         widgetData.valueChanges.subscribe(({ data }) => {
           this.inProgress = false;
+
+          console.log(data);
+
+
           this.initData(data.getWidget as WidgetShort);
           this.pager.init('order_details', 'Order details');
         }, (error) => {
+
+          console.log('error', error);
+
           this.inProgress = false;
           this.initData(undefined);
           this.pager.init('order_details', 'Order details');
