@@ -72,6 +72,11 @@
             </mat-form-field>
 
             <!-- Rate -->
+            <div class="form-element">
+                <a [routerLink]="" (click)="updateRate()">
+                    Set current exchange rate
+                </a>
+            </div>
             <mat-form-field class="form-element">
                 <mat-label>Exchange rate</mat-label>
                 <input matInput formControlName="rate" required/>

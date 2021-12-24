@@ -1,16 +1,17 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { LayoutService } from 'src/app/admin/services/layout.service';
-import { Transaction, TransactionType } from 'src/app/model/generated-models';
+import { Rate, Transaction, TransactionType } from 'src/app/model/generated-models';
 import { CurrencyView } from 'src/app/model/payment.model';
 import { TransactionItemDeprecated } from 'src/app/model/transaction.model';
+import { ExchangeRateService } from 'src/app/services/rate.service';
 
 @Component({
   selector: 'app-transaction-details',
   templateUrl: 'transaction-details.component.html',
   styleUrls: ['transaction-details.component.scss']
 })
-export class TransactionDetailsComponent {
+export class TransactionDetailsComponent implements OnInit, OnDestroy {
   @Input() set transaction(val: TransactionItemDeprecated | undefined) {
     this.setFormData(val);
     this.layoutService.setBackdrop(!val?.id);
@@ -39,6 +40,7 @@ export class TransactionDetailsComponent {
   transactionId = '';
   currenciesToSpend: CurrencyView[] = [];
   currenciesToReceive: CurrencyView[] = [];
+  currentRate = 0;
 
   form = this.formBuilder.group({
     address: ['', { validators: [Validators.required], updateOn: 'change' }],
@@ -51,10 +53,37 @@ export class TransactionDetailsComponent {
 
   constructor(
     private formBuilder: FormBuilder,
+    private exhangeRate: ExchangeRateService,
     private layoutService: LayoutService
   ) { }
 
-  setFormData(val: TransactionItemDeprecated | undefined) {
+  ngOnInit(): void {
+    this.exhangeRate.register(this.onExchangeRateUpdated.bind(this));
+  }
+
+  ngOnDestroy(): void {
+    this.exhangeRate.stop();
+  }
+
+  onExchangeRateUpdated(rate: Rate | undefined, countDownTitle: string, countDownValue: string, error: string): void {
+    //this.rateErrorMessage = error;
+    if (rate) {
+      this.currentRate = rate.depositRate;
+    }
+  }
+
+  private startExchangeRate(): void {
+    const currencyToSpendSymbol = this.data?.currencyToSpend;
+    const currencyToSpend = this.currenciesToSpend.find(x => x.id === currencyToSpendSymbol);
+    if (currencyToSpend?.fiat) {
+      this.exhangeRate.setCurrency(this.form.get('currencyToReceive')?.value, this.form.get('currencyToSpend')?.value, TransactionType.Deposit);
+    } else {
+      this.exhangeRate.setCurrency(this.form.get('currencyToSpend')?.value, this.form.get('currencyToReceive')?.value, TransactionType.Deposit);
+    }
+    this.exhangeRate.update(); 
+  }
+
+  private setFormData(val: TransactionItemDeprecated | undefined) {
     this.data = val;
     this.transactionId = val?.id ?? '';
     this.removable = val?.statusInfo?.value.canBeCancelled ?? false;
@@ -65,7 +94,12 @@ export class TransactionDetailsComponent {
       this.form.get('currencyToSpend')?.setValue(this.data?.currencyToSpend);
       this.form.get('currencyToReceive')?.setValue(this.data?.currencyToReceive);
       this.form.get('rate')?.setValue(this.data.rate);
+      this.startExchangeRate();
     }
+  }
+
+  updateRate(): void {
+    this.form.get('rate')?.setValue(this.currentRate);
   }
 
   onSubmit(): void {
