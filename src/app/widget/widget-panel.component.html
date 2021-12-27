@@ -12,19 +12,18 @@
         <div
             [ngClass]="{'__widget-embedded-tab': true, '__widget-embedded-right-tab-unselected': selectedWidgetType !== WIDGET_TYPE.Sell}"
             (click)="selectPaymentType(WIDGET_TYPE.Sell)">
-
             <span
                 [ngClass]="{'__widget-embedded-tab-title': true, '__widget-embedded-tab-title-unselected': selectedWidgetType !== WIDGET_TYPE.Sell}">
                 SELL
             </span>
-
-            <!-- <span class="__widget-embedded-tab-title" style="color: lightsteelblue;">
-                SELL
-            </span> -->
         </div>
     </div>
 
-    <div *ngIf="widgetVisible" class="__widget-embedded-data-container">
+    <div *ngIf="widgetVisible && selectedWidgetType !== WIDGET_TYPE.Buy" class="__widget-embedded-data-container">
+        <app-widget [internal]="false" [settings]="widgetSettings" (onComplete)="widgetComplete($event)"></app-widget>
+    </div>
+
+    <div *ngIf="widgetVisible && selectedWidgetType !== WIDGET_TYPE.Sell" class="__widget-embedded-data-container">
         <app-widget [internal]="false" [settings]="widgetSettings" (onComplete)="widgetComplete($event)"></app-widget>
     </div>
 </div>

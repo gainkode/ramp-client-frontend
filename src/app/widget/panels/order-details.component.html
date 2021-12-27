@@ -37,76 +37,74 @@
         </div>
         <div class="__form-separator"></div>
 
-        <!-- Verification levels -->
-        <div *ngIf="currentTier!=='' && settings.embedded">
-            <div class="__widget-hint-line">
-                You current Verification Level is {{currentTier}}.
+        <div *ngIf="currentTransaction !== TRANSACTION_TYPE.Withdrawal">
+            <!-- Verification levels -->
+            <div *ngIf="currentTier!=='' && settings.embedded">
+                <div class="__widget-hint-line">
+                    You current Verification Level is {{currentTier}}.
+                </div>
+                <div class="__widget-hint-line">
+                    Increase limitations by upgrading
+                </div>
+                <div class="__widget-hint-line __form-assist-link" (click)="showPersonalVerification()">
+                    Account Verification Level
+                </div>
+                <div class="__form-separator-small"></div>
             </div>
-            <div class="__widget-hint-line">
-                Increase limitations by upgrading
-            </div>
-            <div class="__widget-hint-line __form-assist-link" (click)="showPersonalVerification()">
-                Account Verification Level
-            </div>
-            <div class="__form-separator-small"></div>
-        </div>
 
-        <!-- Receive -->
-        <app-form-finance-combo [label]="'Amount to receive'" [placeholder]="'...'" [boxFieldName]="'amountReceive'"
-            [boxField]="amountReceiveField" [comboField]="currencyReceiveField" [comboFieldName]="'currencyReceive'"
-            [comboList]="receiveCurrencyList" [errorMessages]="amountReceiveErrorMessages" [separator]="true">
-        </app-form-finance-combo>
+            <!-- Receive -->
+            <app-form-finance-combo [label]="'Amount to receive'" [placeholder]="'...'" [boxFieldName]="'amountReceive'"
+                [boxField]="amountReceiveField" [comboField]="currencyReceiveField" [comboFieldName]="'currencyReceive'"
+                [comboList]="receiveCurrencyList" [errorMessages]="amountReceiveErrorMessages" [separator]="true">
+            </app-form-finance-combo>
 
-        <!-- Wallets -->
-        <div *ngIf="filteredWallets.length>1">
-            <div class="__form-label">
-                Choose destination wallet
-            </div>
-            <div class="__profile-details-item-block">
-                <div class="__form-text-border">
-                    <mat-select formControlName="wallet" style="margin: 8px 0px 0px 0px;" placeholder="...">
-                        <mat-select-trigger>
-                            <div class="__form-combo-item-text">
-                                {{selectedWallet?.name}}
-                            </div>
-                        </mat-select-trigger>
-                        <mat-option *ngFor="let item of filteredWallets" [value]="item.address" style="height: 32px;">
-                            <div class="__form-combo-item">
-                                {{item.name}}
-                            </div>
-                        </mat-option>
-                    </mat-select>
+            <!-- Wallets -->
+            <div *ngIf="filteredWallets.length>1">
+                <div class="__form-label">
+                    Choose destination wallet
+                </div>
+                <div class="__profile-details-item-block">
+                    <div class="__form-text-border">
+                        <mat-select formControlName="wallet" style="margin: 8px 0px 0px 0px;" placeholder="...">
+                            <mat-select-trigger>
+                                <div class="__form-combo-item-text">
+                                    {{selectedWallet?.name}}
+                                </div>
+                            </mat-select-trigger>
+                            <mat-option *ngFor="let item of filteredWallets" [value]="item.address"
+                                style="height: 32px;">
+                                <div class="__form-combo-item">
+                                    {{item.name}}
+                                </div>
+                            </mat-option>
+                        </mat-select>
+                    </div>
                 </div>
             </div>
-            <!-- <div class="__profile-details-item-block">
-                <div *ngIf="walletInit && walletField?.hasError('required')" class="__form-assist __form-assist-error">
-                    Wallet is required
-                </div>
-            </div> -->
-        </div>
 
-        <!-- Wallet address -->
-        <div *ngIf="(selectedWallet?.address==='' || !selectedWallet) && !settings.walletAddressPreset">
-            <div class="__form-separator-small"></div>
-            <app-form-textbox [label]="'Wallet address'" [maxlength]="120" formControlName="wallet"
-                [errorMessages]="walletErrorMessages" [separator]="false">
-            </app-form-textbox>
-            <div *ngIf="walletField?.hasError('walletAddress')" class="__form-assist __form-assist-error">
-                Wallet address is not valid
+            <!-- Wallet address -->
+            <div *ngIf="(selectedWallet?.address==='' || !selectedWallet) && !settings.walletAddressPreset">
+                <div class="__form-separator-small"></div>
+                <app-form-textbox [label]="'Wallet address'" [maxlength]="120" formControlName="wallet"
+                    [errorMessages]="walletErrorMessages" [separator]="false">
+                </app-form-textbox>
+                <div *ngIf="walletField?.hasError('walletAddress')" class="__form-assist __form-assist-error">
+                    Wallet address is not valid
+                </div>
+                <div class="__form-separator"></div>
             </div>
+
+            <!-- Current Quote -->
             <div class="__form-separator"></div>
-        </div>
-
-        <!-- Current Quote -->
-        <div class="__form-separator"></div>
-        <div *ngIf="currentQuote!=='' && settings.embedded" class="__widget-quote-block">
-            <div class="__widget-hint-line">
-                Estimated Quote is:&nbsp;
+            <div *ngIf="currentQuote!=='' && settings.embedded" class="__widget-quote-block">
+                <div class="__widget-hint-line">
+                    Estimated Quote is:&nbsp;
+                </div>
+                <div class="__widget-hint-line __form-assist-accent">
+                    {{currentQuote}}
+                </div>
+                <div class="__form-separator-small"></div>
             </div>
-            <div class="__widget-hint-line __form-assist-accent">
-                {{currentQuote}}
-            </div>
-            <div class="__form-separator-small"></div>
         </div>
 
         <!-- Buttons -->

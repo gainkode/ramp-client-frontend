@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { TransactionType } from 'src/app/model/generated-models';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -8,8 +9,10 @@ import { environment } from 'src/environments/environment';
 })
 export class WidgetCompleteComponent {
   @Input() showRestartButton = false;
+  @Input() transaction: TransactionType = TransactionType.Deposit;
   @Output() onFinish = new EventEmitter();
   
+  TRANSACTION_TYPE: typeof TransactionType = TransactionType;
   supportEmail = environment.support_email ?? 'support@test.com';
   supportEmailLink = `mailto: ${environment.support_email}` ?? 'mailto: support@test.com';
 }

@@ -24,7 +24,7 @@ import { WalletValidator } from 'src/app/utils/wallet.validator';
 })
 export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() initialized = false;
-  @Input() errorMessage = '';
+  @Input() errorMessage = '123';
   @Input() settings: WidgetSettings = new WidgetSettings();
   @Input() summary: CheckoutSummary | undefined = undefined;
   @Input() set withdrawalRate(val: number | undefined) {
@@ -60,6 +60,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   private pDepositRate: number | undefined = undefined;
   private pNumberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
 
+  TRANSACTION_TYPE: typeof TransactionType = TransactionType;
   validData = false;
   transactionTypeEdit = false;
   currentCurrencySpend: CurrencyView | undefined = undefined;

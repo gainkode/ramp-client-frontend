@@ -355,7 +355,11 @@ export class WidgetComponent implements OnInit {
 
   desclaimerNext(): void {
     this.summary.agreementChecked = true;
-    this.getSettingsCommon();
+    if (this.summary.transactionType === TransactionType.Withdrawal) {
+      this.createWithdrawalTransaction();
+    } else {
+      this.getSettingsCommon();
+    }
   }
   // ================
 
@@ -416,9 +420,9 @@ export class WidgetComponent implements OnInit {
 
   selectProvider(id: string) {
     if (id === 'Fibonatix') {
-      this.createTransaction(id, PaymentInstrument.CreditCard);
+      this.createDepositTransaction(id, PaymentInstrument.CreditCard);
     } else if (id === 'InstantPay') {
-      this.createTransaction(id, PaymentInstrument.BankTransfer);
+      this.createDepositTransaction(id, PaymentInstrument.BankTransfer);
     } else {
       this.errorMessage = `Payment using ${id} is currenctly not supported`;
     }
@@ -584,7 +588,7 @@ export class WidgetComponent implements OnInit {
     }
   }
 
-  private createTransaction(providerId: string, instrument: PaymentInstrument): void {
+  private createDepositTransaction(providerId: string, instrument: PaymentInstrument): void {
     this.errorMessage = '';
     this.inProgress = true;
     const tempStageId = this.pager.swapStage('initialization');
@@ -630,6 +634,54 @@ export class WidgetComponent implements OnInit {
         }, (error) => {
           this.inProgress = false;
           this.pager.swapStage(tempStageId);
+          if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
+            this.handleAuthError();
+          } else {
+            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to register a new transaction');
+          }
+        })
+      );
+    }
+  }
+
+  private createWithdrawalTransaction(): void {
+    this.errorMessage = '';
+    this.inProgress = true;
+    this.initMessage = 'Processing...';
+    if (this.summary) {
+      let destination = this.summary.address;
+      if (this.widget.widgetId !== '') {
+        destination = this.widget.widgetId;
+      }
+      this.pSubscriptions.add(
+        this.dataService.createTransaction(
+          TransactionType.Withdrawal,
+          this.widget.source,
+          '',
+          this.summary.currencyFrom,
+          '',
+          this.summary.amountFrom ?? 0,
+          undefined,
+          '',
+          this.userParamsId,
+          ''
+        ).subscribe(({ data }) => {
+          const order = data.createTransaction as TransactionShort;
+          this.inProgress = false;
+          if (order.code) {
+            this.summary.orderId = order.code as string;
+            this.summary.fee = order.feeFiat as number ?? 0;
+            this.summary.feeMinFiat = order.feeMinFiat as number ?? 0;
+            this.summary.feePercent = order.feePercent as number ?? 0;
+            this.summary.networkFee = order.approxNetworkFee ?? 0;
+            this.summary.transactionDate = new Date().toLocaleString();
+            this.summary.transactionId = order.transactionId as string;
+            this.nextStage('complete', 'Complete', 6, false);
+          } else {
+            this.errorMessage = 'Order code is invalid';
+          }
+        }, (error) => {
+          this.inProgress = false;
           if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
             this.handleAuthError();
           } else {

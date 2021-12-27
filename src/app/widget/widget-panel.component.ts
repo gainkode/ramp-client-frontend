@@ -24,9 +24,6 @@ export class WidgetPanelComponent {
   }
 
   selectPaymentType(selected: PaymentWidgetType): void {
-    if (selected === PaymentWidgetType.Sell) {
-      return;
-    }
     if (this.selectedWidgetType === selected) {
       return;
     }
@@ -39,9 +36,9 @@ export class WidgetPanelComponent {
       case PaymentWidgetType.Buy:
         this.widgetSettings.transaction = TransactionType.Deposit;
         break;
-      // case PaymentWidgetType.Sell:
-      //   this.widgetSettings.transaction = TransactionType.Withdrawal;
-      //   break;
+      case PaymentWidgetType.Sell:
+        this.widgetSettings.transaction = TransactionType.Withdrawal;
+        break;
       case PaymentWidgetType.Transfer:
         this.widgetSettings.transaction = TransactionType.Transfer;
         break;
@@ -49,7 +46,7 @@ export class WidgetPanelComponent {
         break;
     }
     this.widgetSettings.source = TransactionSource.Wallet;
-    this.widgetSettings.walletAddressPreset = false;
+    this.widgetSettings.walletAddressPreset = (selected === PaymentWidgetType.Sell);
     this.widgetSettings.kycFirst = false;
     this.widgetSettings.disclaimer = false;
     this.widgetVisible = true;

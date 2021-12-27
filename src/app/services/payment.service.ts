@@ -395,10 +395,10 @@ export class PaymentDataService {
       source: transactionSource,
       sourceVaultId: transactionSourceVaultId,
       currencyToSpend,
-      currencyToReceive,
+      currencyToReceive: (currencyToReceive !== '') ? currencyToReceive : undefined,
       amountToSpend: amount,
       instrument,
-      paymentProvider: providerName,
+      paymentProvider: (providerName !== '') ? providerName : undefined,
       widgetUserParamsId: (userParamsId !== '') ? userParamsId : undefined,
       destination: wallet
     };

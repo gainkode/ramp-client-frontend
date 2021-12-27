@@ -1,6 +1,9 @@
 <div class="__widget-data-box">
-    <h1 class="__widget-title">
+    <h1 *ngIf="transaction===TRANSACTION_TYPE.Deposit" class="__widget-title">
         Payment completed
+    </h1>
+    <h1 *ngIf="transaction===TRANSACTION_TYPE.Withdrawal" class="__widget-title">
+        Transaction completed
     </h1>
     <div class="__widget-disclaimer-container">
         <span class="__widget-disclaimer-line">
@@ -36,7 +39,7 @@
         <div class="__widget-disclaimer-container">
             <span class="__widget-disclaimer-line">
                 Order confirmation is typically received within 60 minutes of your payment, this time may
-                vary depending on your selected crypto-currency and network overloads.  
+                vary depending on your selected crypto-currency and network overloads.
             </span>
         </div>
     </div>
