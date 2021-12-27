@@ -26,7 +26,8 @@
                     </button>
                 </div>
                 <div class="__top-menu-content-box">
-                    <app-nav-popup [items]="popupItems" [userName]="userName" [avatar]="avatar" (onMenuClick)="popupMenuClick($event)">
+                    <app-nav-popup [items]="popupItems" [userName]="userName" [avatar]="avatar"
+                        (onMenuClick)="popupMenuClick($event)">
                     </app-nav-popup>
                 </div>
             </div>
@@ -126,7 +127,8 @@
                     [presetWalletId]="presetWalletId" [presetCurrency]="presetCurrency"
                     (onComplete)="widgetComplete($event)">
                 </app-send-widget>
-                <app-transfer-widget *ngIf="selectedPaymentType===WIDGET_TYPE.Transfer" (onComplete)="widgetComplete($event)">
+                <app-transfer-widget *ngIf="selectedPaymentType===WIDGET_TYPE.Transfer"
+                    (onComplete)="widgetComplete($event)">
                 </app-transfer-widget>
             </div>
             <div class="__profile-payment-footer">
@@ -136,13 +138,40 @@
     </div>
 
     <!-- Warning when the screen is too small -->
-    <div class="__profile-unsupported-device">
+    <!-- <div class="__profile-unsupported-device">
         <div class="__profile-unsupported-device-title">
             The screen size of your device is not supported.
             <br><br>
             Please, install our application <a style="font-size: 14px;" href="#">here</a>.
         </div>
+    </div> -->
+
+    <div class="__top-menu-hamburger">
+        <input id="top_menu_hamburger_toggle" type="checkbox" />
+        <label class="__top-menu-hamburger-button" for="top_menu_hamburger_toggle">
+            <span></span>
+        </label>
+        <ul class="__top-menu-hamburger-box">
+            <li *ngFor="let item of topMenuItems;let i=index;">
+                <a class="__top-menu-hamburger-item" href="#">
+                    {{item.name}}
+                </a>
+            </li>
+            <div class="__top-menu-hamburger-separator"></div>
+            <li *ngFor="let item of menuItems;let i=index;">
+                <a class="__top-menu-hamburger-item" href="#">
+                    {{item.name}}
+                </a>
+            </li>
+            <div class="__top-menu-hamburger-separator"></div>
+            <li *ngFor="let item of popupItems;let i=index;">
+                <a class="__top-menu-hamburger-item" href="#">
+                    {{item.name}}
+                </a>
+            </li>
+        </ul>
     </div>
+
 </div>
 
 <!-- Chat button -->

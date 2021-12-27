@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 import { MenuItem } from '../model/common.model';
 import { CurrencyView, PaymentCompleteDetails, PaymentWidgetType } from '../model/payment.model';
 import { ProfileItemActionType, ProfileItemContainer, ProfileItemContainerType } from '../model/profile-item.model';
-import { MerchantProfileMenuItems, ProfilePopupAdministrationMenuItem, MerchantProfilePopupMenuItems } from '../model/profile-menu.model';
+import { MerchantProfileMenuItems, ProfilePopupAdministrationMenuItem, MerchantProfilePopupMenuItems, MerchantProfileTopMenuItems } from '../model/profile-menu.model';
 import { ProfileContactsComponent } from '../profile/contacts/contacts.component';
 import { ProfileWalletsComponent } from '../profile/wallets/wallets.component';
 import { AuthService } from '../services/auth.service';
@@ -23,6 +23,7 @@ import { getAvatarPath, getFullName } from '../utils/utils';
 export class MerchantComponent implements OnInit, OnDestroy {
     menuItems: MenuItem[] = MerchantProfileMenuItems;
     popupItems: MenuItem[] = MerchantProfilePopupMenuItems;
+    topMenuItems: MenuItem[] = MerchantProfileTopMenuItems;
     WIDGET_TYPE: typeof PaymentWidgetType = PaymentWidgetType;
     errorMessage = '';
     avatar = '';

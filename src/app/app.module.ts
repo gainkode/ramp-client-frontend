@@ -135,7 +135,7 @@ export class AppModule {
     const w = window as any;
     const whiteListedPath = (location.pathname.startsWith('/terms') || location.pathname.startsWith('/payment/widget/'));
     const consentStatus = w.cookieconsent.utils.getCookie(cookieName);
-    const allowCookies = whiteListedPath || (consentStatus === 'allow');
+    const allowCookies = whiteListedPath || (consentStatus === 'allow') || (consentStatus === 'dismiss');
     const http = httpLink.create({
       uri: `${environment.api_server}/gql/api`,
       withCredentials: allowCookies

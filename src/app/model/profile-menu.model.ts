@@ -93,6 +93,33 @@ export const PersonalProfilePopupMenuItems: Array<MenuItem> = [
     }
 ];
 
+export const PersonalProfileTopMenuItems: Array<MenuItem> = [
+    {
+        id: 'buy_sell',
+        name: 'Buy / Sell',
+        url: '',
+        icon: ''
+    },
+    {
+        id: 'receive',
+        name: 'Receive',
+        url: '',
+        icon: ''
+    },
+    {
+        id: 'send',
+        name: 'Send',
+        url: '',
+        icon: ''
+    },
+    {
+        id: 'transfer',
+        name: 'Express transfer',
+        url: '',
+        icon: ''
+    }
+];
+
 export const MerchantProfilePopupMenuItems: Array<MenuItem> = [
     {
         id: 'notifications',
@@ -126,3 +153,30 @@ export const ProfilePopupAdministrationMenuItem: MenuItem = {
     url: '',
     icon: 'admin_panel_settings'
 };
+
+export const MerchantProfileTopMenuItems: Array<MenuItem> = [
+    {
+        id: 'buy_sell',
+        name: 'Buy / Sell',
+        url: '',
+        icon: ''
+    },
+    {
+        id: 'receive',
+        name: 'Receive',
+        url: '',
+        icon: ''
+    },
+    {
+        id: 'send',
+        name: 'Send',
+        url: '',
+        icon: ''
+    },
+    {
+        id: 'transfer',
+        name: 'Express transfer',
+        url: '',
+        icon: ''
+    }
+];
