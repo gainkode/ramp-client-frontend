@@ -33,9 +33,6 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const controlsConfig: EmptyObject = {};
-
-    console.log(this.filterData);
-
     if (this.fields.includes('accountType')) {
       controlsConfig.accountTypes = [[]];
     }

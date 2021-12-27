@@ -1912,8 +1912,6 @@ export class AdminDataService {
       rate: data.rate,
       destination: data.destination
     };
-    console.log('data', data);
-    console.log('vars', vars);
     return this.mutate({
       mutation: UPDATE_TRANSACTIONS,
       variables: vars
@@ -1960,8 +1958,6 @@ export class AdminDataService {
   //       so tap can be triggered more than once per subscription)
   private updateIsBusy(action: 'on' | 'off'): void {
     if (action === 'on') {
-      console.log('on', this.activeQueryCounter);
-
       this.activeQueryCounter++;
 
       if (!this.isBusySubject.value) {
@@ -1970,8 +1966,6 @@ export class AdminDataService {
         }, 0);
       }
     } else {
-      console.log('off', this.activeQueryCounter);
-
       this.activeQueryCounter--;
       this.activeQueryCounter = this.activeQueryCounter < 0 ? 0 : this.activeQueryCounter;
       if (this.activeQueryCounter === 0) {

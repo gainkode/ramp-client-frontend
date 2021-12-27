@@ -63,7 +63,6 @@ export class RiskAlertListComponent implements OnInit, OnDestroy, AfterViewInit 
 
   handleFilterApplied(filter: Filter): void {
     this.filter = filter;
-    console.log(filter.user);
     this.loadData();
   }
 
@@ -81,7 +80,6 @@ export class RiskAlertListComponent implements OnInit, OnDestroy, AfterViewInit 
                                   takeUntil(this.destroy$)
                                 )
                                 .subscribe(result => {
-                                  console.log(result.list);
                                   this.data = result.list;
                                   this.dataCount = result.count;
                                 });

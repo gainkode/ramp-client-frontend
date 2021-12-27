@@ -230,7 +230,6 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
         of(undefined);
 
       user$.subscribe(userItem => {
-        console.log(userItem);
         this.form.setValue({
           id: widget.id,
           countries: widget.countriesCode2?.map(code2 => {
@@ -290,7 +289,6 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
       .subscribe(({ data }) => {
         const providers = data.getPaymentProviders as PaymentProvider[];
         this.paymentProviderOptions = providers?.map((val) => new PaymentProviderView(val)) as PaymentProviderView[];
-        console.log('ppo', this.paymentProviderOptions);
       }, (error) => {
         this.snackBar.open(
           this.errorHandler.getError(error.message, 'Unable to load payment provider list.'),
