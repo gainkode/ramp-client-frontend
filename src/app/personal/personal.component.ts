@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NavigationEnd, Router, Event as NavigationEvent } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { MenuItem } from '../model/common.model';
@@ -25,6 +25,8 @@ import { getAvatarPath, getFullName } from '../utils/utils';
     ]
 })
 export class PersonalComponent implements OnInit, OnDestroy {
+    @ViewChild('top_menu_hamburger_toggle') hamburgerToggle!: ElementRef<HTMLInputElement>;
+
     menuItems: MenuItem[] = PersonalProfileMenuItems;
     popupItems: MenuItem[] = PersonalProfilePopupMenuItems;
     WIDGET_TYPE: typeof PaymentWidgetType = PaymentWidgetType;
@@ -247,10 +249,12 @@ export class PersonalComponent implements OnInit, OnDestroy {
         } else {
             this.routeTo(item.url);
         }
+        this.hamburgerToggle.nativeElement.checked = false;
     }
 
     sideMenuClick(item: MenuItem): void {
         this.router.navigateByUrl(item.url);
+        this.hamburgerToggle.nativeElement.checked = false;
     }
 
     routeTo(link: string): void {
@@ -278,6 +282,7 @@ export class PersonalComponent implements OnInit, OnDestroy {
 
     showPaymentPanel(paymentId: PaymentWidgetType): void {
         this.closeDetails();
+        this.hamburgerToggle.nativeElement.checked = false;
         this.selectedPaymentType = paymentId;
         if (paymentId === PaymentWidgetType.Buy || paymentId === PaymentWidgetType.Sell) {
             this.paymentPanelTitle = 'BUY or SELL any Crypto Currency using your Bank account directly in a single action!\nIt only takes 2 clicks and you’re done.';

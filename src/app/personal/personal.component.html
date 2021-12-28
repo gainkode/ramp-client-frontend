@@ -26,7 +26,8 @@
                     </button>
                 </div>
                 <div class="__top-menu-content-box">
-                    <app-nav-popup [items]="popupItems" [userName]="userName" [avatar]="avatar" (onMenuClick)="popupMenuClick($event)">
+                    <app-nav-popup [items]="popupItems" [userName]="userName" [avatar]="avatar"
+                        (onMenuClick)="popupMenuClick($event)">
                     </app-nav-popup>
                 </div>
             </div>
@@ -48,6 +49,47 @@
                 </button>
             </div>
         </div>
+
+        <!-- Mobile only menu -->
+        <div class="__top-menu-hamburger">
+            <input #top_menu_hamburger_toggle id="top_menu_hamburger_toggle" type="checkbox" />
+            <label class="__top-menu-hamburger-button" for="top_menu_hamburger_toggle">
+                <span></span>
+            </label>
+            <ul class="__top-menu-hamburger-box">
+                <li>
+                    <a [routerLink]="" class="__top-menu-hamburger-item" (click)="showPaymentPanel(WIDGET_TYPE.Buy)">
+                        Buy & Sell
+                    </a>
+                    <a [routerLink]="" class="__top-menu-hamburger-item"
+                        (click)="showPaymentPanel(WIDGET_TYPE.Receive)">
+                        Receive
+                    </a>
+                    <a [routerLink]="" class="__top-menu-hamburger-item" (click)="showPaymentPanel(WIDGET_TYPE.Send)">
+                        Send
+                    </a>
+                    <a [routerLink]="" class="__top-menu-hamburger-item"
+                        (click)="showPaymentPanel(WIDGET_TYPE.Transfer)">
+                        Express transfer
+                    </a>
+                </li>
+                <div class="__top-menu-hamburger-separator"></div>
+                <li *ngFor="let item of menuItems;let i=index;">
+                    <a *ngIf="item.id!=='wallets' && item.id!=='contactlist'" [routerLink]=""
+                        class="__top-menu-hamburger-item" (click)="sideMenuClick(item)">
+                        {{item.name}}
+                    </a>
+                </li>
+                <div class="__top-menu-hamburger-separator"></div>
+                <li *ngFor="let item of popupItems;let i=index;">
+                    <a *ngIf="item.id!=='administration' && item.id!=='verification'" [routerLink]=""
+                        class="__top-menu-hamburger-item" (click)="popupMenuClick(item)">
+                        {{item.name}}
+                    </a>
+                </li>
+            </ul>
+        </div>
+
         <!-- Data container with side bar and data panels -->
         <div class="__profile-container">
             <div [ngClass]="expandedMenu ? '__profile-side-menu-expanded' : '__profile-side-menu'">
@@ -81,7 +123,7 @@
             </div>
             <div class="__profile-details-data-block">
                 <app-profile-transaction-details *ngIf="detailsType==='transaction'"
-                    [profile]="detailsContainer?.transaction">
+                    [transaction]="detailsContainer?.transaction">
                 </app-profile-transaction-details>
                 <app-profile-wallet-details *ngIf="detailsType==='wallet'" [wallet]="detailsContainer?.wallet"
                     (onComplete)="detailsComplete($event)">
@@ -126,7 +168,8 @@
                     [presetWalletId]="presetWalletId" [presetCurrency]="presetCurrency"
                     (onComplete)="widgetComplete($event)">
                 </app-send-widget>
-                <app-transfer-widget *ngIf="selectedPaymentType===WIDGET_TYPE.Transfer" (onComplete)="widgetComplete($event)">
+                <app-transfer-widget *ngIf="selectedPaymentType===WIDGET_TYPE.Transfer"
+                    (onComplete)="widgetComplete($event)">
                 </app-transfer-widget>
             </div>
             <div class="__profile-payment-footer">
@@ -136,13 +179,13 @@
     </div>
 
     <!-- Warning when the screen is too small -->
-    <div class="__profile-unsupported-device">
+    <!-- <div class="__profile-unsupported-device">
         <div class="__profile-unsupported-device-title">
             The screen size of your device is not supported.
             <br><br>
             Please, install our application <a style="font-size: 14px;" href="#">here</a>.
         </div>
-    </div>
+    </div> -->
 </div>
 
 <!-- Chat button -->

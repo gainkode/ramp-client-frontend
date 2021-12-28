@@ -1,10 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NavigationEnd, Router, Event as NavigationEvent } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { MenuItem } from '../model/common.model';
 import { CurrencyView, PaymentCompleteDetails, PaymentWidgetType } from '../model/payment.model';
 import { ProfileItemActionType, ProfileItemContainer, ProfileItemContainerType } from '../model/profile-item.model';
-import { MerchantProfileMenuItems, ProfilePopupAdministrationMenuItem, MerchantProfilePopupMenuItems, MerchantProfileTopMenuItems } from '../model/profile-menu.model';
+import { MerchantProfileMenuItems, ProfilePopupAdministrationMenuItem, MerchantProfilePopupMenuItems } from '../model/profile-menu.model';
 import { ProfileContactsComponent } from '../profile/contacts/contacts.component';
 import { ProfileWalletsComponent } from '../profile/wallets/wallets.component';
 import { AuthService } from '../services/auth.service';
@@ -21,9 +21,10 @@ import { getAvatarPath, getFullName } from '../utils/utils';
     ]
 })
 export class MerchantComponent implements OnInit, OnDestroy {
+    @ViewChild('top_menu_hamburger_toggle') hamburgerToggle!: ElementRef<HTMLInputElement>;
+
     menuItems: MenuItem[] = MerchantProfileMenuItems;
     popupItems: MenuItem[] = MerchantProfilePopupMenuItems;
-    topMenuItems: MenuItem[] = MerchantProfileTopMenuItems;
     WIDGET_TYPE: typeof PaymentWidgetType = PaymentWidgetType;
     errorMessage = '';
     avatar = '';
@@ -244,10 +245,12 @@ export class MerchantComponent implements OnInit, OnDestroy {
         } else {
             this.routeTo(item.url);
         }
+        this.hamburgerToggle.nativeElement.checked = false;
     }
 
     sideMenuClick(item: MenuItem): void {
         this.router.navigateByUrl(item.url);
+        this.hamburgerToggle.nativeElement.checked = false;
     }
 
     routeTo(link: string): void {
@@ -275,6 +278,7 @@ export class MerchantComponent implements OnInit, OnDestroy {
 
     showPaymentPanel(paymentId: PaymentWidgetType): void {
         this.closeDetails();
+        this.hamburgerToggle.nativeElement.checked = false;
         this.selectedPaymentType = paymentId;
         if (paymentId === PaymentWidgetType.Buy || paymentId === PaymentWidgetType.Sell) {
             this.paymentPanelTitle = 'BUY or SELL any Crypto Currency using your Bank account directly in a single action!\nIt only takes 2 clicks and you’re done.';

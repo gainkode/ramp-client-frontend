@@ -7,8 +7,10 @@
     display: flex;
 
     @media (max-width: $md3 + px) {
-        display: none;
-        visibility: hidden;
+        // display: none;
+        // visibility: hidden;
+        
+        //overflow: scroll;
     }
 }
 
@@ -113,9 +115,14 @@
     }
 
     @media (max-width: $md3 + px) {
-        padding: 0px;
-        width: 0px;
-        visibility: hidden;
+        // padding: 0px;
+        // width: 0px;
+        // visibility: hidden;
+        width: 100%;
+        padding: 0px 0px;
+        background-color: $color_white;
+        margin-left: 0px;
+        overflow: scroll;
     }
 }
 
@@ -138,9 +145,14 @@
     }
 
     @media (max-width: $md3 + px) {
-        padding: 0px;
-        width: 0px;
-        visibility: hidden;
+        // padding: 0px;
+        // width: 0px;
+        // visibility: hidden;
+        width: 100%;
+        padding: 0px 0px;
+        background-color: $color_white;
+        margin-left: 0px;
+        overflow: scroll;
     }
 }
 
@@ -198,10 +210,10 @@
     align-items: baseline;
     background-color: #bbbbbb60;
 
-    @media (max-width: $md3 + px) {
-        width: 0px;
-        visibility: hidden;
-    }
+    // @media (max-width: $md3 + px) {
+    //     width: 0px;
+    //     visibility: hidden;
+    // }
 }
 
 .__profile-chat-block {
