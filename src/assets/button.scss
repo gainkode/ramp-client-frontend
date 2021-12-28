@@ -165,8 +165,6 @@
 }
 
 .__toggle-like-button {
-    justify-content: center;
-    align-items: center;
     padding: 4px 12px;
     height: 22px;
     
@@ -174,6 +172,7 @@
     border: 1px solid $color_main_blue_800;
     box-sizing: border-box;
     border-radius: 50px;
+    white-space: nowrap;
 
     font-family: $font_main;
     font-style: normal;

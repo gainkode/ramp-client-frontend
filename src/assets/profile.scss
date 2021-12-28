@@ -357,6 +357,19 @@
     height: 100%;
 }
 
+
+
+
+.__profile-content-data-container {
+    @media (max-width: $md3 + px) {
+        display: none;
+        visibility: hidden;
+    }
+}
+
+
+
+
 .__profile-settings-container {
     display: block;
     margin: 16px 0px 0px 24px;

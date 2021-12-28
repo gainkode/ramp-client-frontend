@@ -352,6 +352,10 @@
     color: $color_purple_900_text;
 }
 
+.__tool-bar-label-limited-width {
+    min-width: 120px;
+}
+
 .__tool-bar-error {
     display: block;
     width: 120px;
@@ -583,7 +587,7 @@ input.__tool-bar-text-box-wide {
 .menu-content-bar {
     margin: auto;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-between;
     width: 100%;
 }

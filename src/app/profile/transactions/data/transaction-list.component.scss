@@ -1,10 +1,11 @@
 @import "../../../../assets/fonts.scss";
 @import "../../../../assets/colors.scss";
+@import "../../../../assets/consts.scss";
 
 .__profile-transactions-table-column-transaction {
     flex: 0 0 8%;
     width: 8%;
-    min-width: 80px;
+    min-width: 90px;
 }
 
 .__profile-transactions-table-column-dt {
@@ -55,6 +56,12 @@
     min-width: 59px;
 }
 
+.__profile-transactions-table-column-details-mobile {
+    flex: 0 0 2%;
+    width: 2%;
+    min-width: 24px;
+}
+
 .__profile-transactions-table-cell-data {
     font-family: $font_main;
     font-style: normal;
@@ -93,7 +100,7 @@
 }
 
 .__profile-transactions-table-cell-status-error {
-    color: $color_pink_500
+    color: $color_pink_500;
 }
 
 .__profile-transactions-table-cell-plain {
@@ -105,4 +112,20 @@
     display: flex;
     justify-content: flex-end;
     align-items: stretch;
+}
+
+.__profile-transactions-table-details-colummn-mobile {
+    display: none;
+    
+    @media (max-width: $md3 + px) {
+        display: table-cell;
+    }
+}
+
+.__profile-transactions-table-details-colummn-fullscreen {
+    display: table-cell;
+
+    @media (max-width: $md3 + px) {
+        display: none;
+    }
 }

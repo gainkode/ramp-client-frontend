@@ -41,7 +41,7 @@ export class ProfileTransactionListComponent implements OnDestroy, AfterViewInit
     pageIndex = 0;
     sortedField = 'transaction';
     sortedDesc = true;
-    displayedColumns: string[] = ['transaction', 'dt', 'sender', 'recipient', 'sent', 'received', 'fees', 'status', 'details'];
+    displayedColumns: string[] = ['details_mobile', 'transaction', 'dt', 'sender', 'recipient', 'sent', 'received', 'fees', 'status', 'details'];
 
     constructor(
         private auth: AuthService,

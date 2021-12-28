@@ -10,10 +10,12 @@
                     Date:
                 </div>
                 <div class="__profile-details-item-value">
-                    {{transaction?.dateLong}}
+                    <div style="background-color: goldenrod;">
+                        {{transaction?.dateLong}}
+                    </div>
                 </div>
             </div>
-            
+
             <!-- Type -->
             <div class="__profile-details-item-block">
                 <div class="__profile-details-item-title">
@@ -89,7 +91,8 @@
                 <div class="__profile-details-item-title">
                     Status:
                 </div>
-                <div [ngClass]="{'__profile-details-item-value': true, '__profile-details-item-error': transaction?.statusLevel === 'error'}">
+                <div
+                    [ngClass]="{'__profile-details-item-value': true, '__profile-details-item-error': transaction?.statusLevel === 'error'}">
                     {{transaction?.statusName}}
                 </div>
             </div>
