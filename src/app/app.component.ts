@@ -33,7 +33,7 @@ export class AppComponent implements OnInit {
       type: 'info',//'opt-out',
       content: {
         message: 'We use cookies to improve and personalize your experience using our website. Learn more about our',
-        dismiss: 'Got it!',
+        dismiss: 'Accept',
         deny: 'Decline',
         allow: 'Accept',
         link: 'Cookies Policy',

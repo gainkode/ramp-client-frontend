@@ -39,15 +39,17 @@
 
         <div *ngIf="currentTransaction !== TRANSACTION_TYPE.Withdrawal">
             <!-- Verification levels -->
-            <div *ngIf="currentTier!=='' && settings.embedded && !settings.transfer">
+            <div *ngIf="currentTier!=='' && settings.embedded">
                 <div class="__widget-hint-line">
-                    You current Verification Level is {{currentTier}}.
+                    Current Verification: {{currentTier}}.
                 </div>
-                <div class="__widget-hint-line">
-                    Increase limitations by upgrading
-                </div>
-                <div class="__widget-hint-line __form-assist-link" (click)="showPersonalVerification()">
-                    Account Verification Level
+                <div class="__widget-quote-block">
+                    <div class="__widget-hint-line">
+                        To increase limitations go to
+                    </div>
+                    <div class="__widget-hint-line __form-assist-link" (click)="showPersonalVerification()">
+                        Verification
+                    </div>
                 </div>
                 <div class="__form-separator-small"></div>
             </div>
@@ -55,17 +57,18 @@
             <!-- Receive -->
             <app-form-finance-combo [label]="'Amount to receive'" [placeholder]="'...'" [boxFieldName]="'amountReceive'"
                 [boxField]="amountReceiveField" [comboField]="currencyReceiveField" [comboFieldName]="'currencyReceive'"
-                [comboList]="receiveCurrencyList" [errorMessages]="amountReceiveErrorMessages" [separator]="true">
+                [comboList]="receiveCurrencyList" [errorMessages]="amountReceiveErrorMessages" [separator]="false">
             </app-form-finance-combo>
 
             <!-- Wallets -->
             <div *ngIf="filteredWallets.length>1">
+                <div class="__form-separator"></div>
                 <div class="__form-label">
                     Choose destination wallet
                 </div>
                 <div class="__profile-details-item-block">
                     <div class="__form-text-border">
-                        <mat-select formControlName="wallet" style="margin: 8px 0px 0px 0px;" placeholder="...">
+                        <mat-select formControlName="walletSelector" style="margin: 8px 0px 0px 0px;" placeholder="...">
                             <mat-select-trigger>
                                 <div class="__form-combo-item-text">
                                     {{selectedWallet?.name}}
@@ -83,7 +86,7 @@
             </div>
 
             <!-- Wallet address -->
-            <div *ngIf="(selectedWallet?.address==='' || !selectedWallet) && showWallet">
+            <div *ngIf="showWallet">
                 <div class="__form-separator-small"></div>
                 <app-form-textbox [label]="'Wallet address'" [maxlength]="120" formControlName="wallet"
                     [errorMessages]="walletErrorMessages" [separator]="false">
@@ -91,19 +94,27 @@
                 <div *ngIf="walletField?.hasError('walletAddress')" class="__form-assist __form-assist-error">
                     Wallet address is not valid
                 </div>
-                <div class="__form-separator"></div>
             </div>
 
             <!-- Current Quote -->
-            <div class="__form-separator"></div>
             <div *ngIf="currentQuote!=='' && settings.embedded && !settings.transfer" class="__widget-quote-block">
+                <div class="__form-separator"></div>
                 <div class="__widget-hint-line">
                     Estimated Quote is:&nbsp;
                 </div>
                 <div class="__widget-hint-line __form-assist-accent">
                     {{currentQuote}}
                 </div>
-                <div class="__form-separator-small"></div>
+            </div>
+
+            <div *ngIf="!settings.embedded" class="__widget-disclaimer-container">
+                <div class="__form-separator"></div>
+                <span class="__widget-disclaimer-line">
+                    Don't have a wallet?
+                </span>
+                <a href="/personal/auth/register">
+                    Create an account
+                </a>
             </div>
         </div>
 

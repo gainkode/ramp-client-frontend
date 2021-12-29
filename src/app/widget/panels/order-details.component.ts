@@ -111,6 +111,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     amountReceive: [undefined, { validators: [], updateOn: 'change' }],
     currencyReceive: [null, { validators: [], updateOn: 'change' }],
     transaction: [TransactionType.Deposit, { validators: [], updateOn: 'change' }],
+    walletSelector: [undefined, { validators: [], updateOn: 'change' }],
     wallet: [undefined, { validators: [], updateOn: 'change' }]
   }, {
     validators: [
@@ -145,6 +146,10 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
 
   get transactionField(): AbstractControl | null {
     return this.dataForm.get('transaction');
+  }
+
+  get walletSelectorField(): AbstractControl | null {
+    return this.dataForm.get('walletSelector');
   }
 
   get walletField(): AbstractControl | null {
@@ -190,6 +195,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     this.pSubscriptions.add(this.amountSpendField?.valueChanges.subscribe(val => this.onAmountSpendUpdated(val)));
     this.pSubscriptions.add(this.amountReceiveField?.valueChanges.subscribe(val => this.onAmountReceiveUpdated(val)));
     this.pSubscriptions.add(this.transactionField?.valueChanges.subscribe(val => this.onTransactionUpdated(val)));
+    this.pSubscriptions.add(this.walletSelectorField?.valueChanges.subscribe(val => this.onWalletSelectorUpdated(val)));
     this.pSubscriptions.add(this.walletField?.valueChanges.subscribe(val => this.onWalletUpdated(val)));
   }
 
@@ -388,7 +394,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     } else {
       this.showWallet = false;
     }
-    if (this.showWallet) {
+    if (!this.settings.walletAddressPreset) {
       this.walletField?.setValidators([Validators.required]);
     } else {
       this.walletField?.setValidators([]);
@@ -528,16 +534,20 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     this.pTransactionChanged = false;
   }
 
+  private onWalletSelectorUpdated(val: string): void {
+    this.walletField?.setValue(val);
+  }
+
   private onWalletUpdated(val: string): void {
-    const proceed = this.showWallet || !this.settings.transfer;
-    if (proceed) {
-      this.walletInit = true;
-      this.selectedWallet = this.wallets.find(x => x.address === val);
-      if (!this.selectedWallet) {
-        this.selectedWallet = this.filteredWallets.find(x => x.address === val);
-      }
-      this.onWalletAddressUpdated.emit(this.walletField?.value);
+    //    const proceed = this.showWallet || !this.settings.transfer;
+    //    if (proceed) {
+    this.walletInit = true;
+    this.selectedWallet = this.wallets.find(x => x.address === val);
+    if (!this.selectedWallet) {
+      this.selectedWallet = this.filteredWallets.find(x => x.address === val);
     }
+    //    }
+    this.onWalletAddressUpdated.emit(this.walletField?.value);
   }
 
   private hasValidators(control: AbstractControl) {
