@@ -45,7 +45,6 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   @Output() onComplete = new EventEmitter<string>();
 
   private pInitState = true;
-  private showWallet = true;
   private pSubscriptions: Subscription = new Subscription();
   private pCurrencies: CurrencyView[] = [];
   private pSpendChanged = false;
@@ -75,6 +74,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   addressInit = false;
   quoteExceed = false;
   quoteExceedHidden = false;
+  showWallet = false;
   currentTier = '';
   currentQuote = '';
   transactionList = QuickCheckoutTransactionTypeList;
@@ -378,6 +378,13 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   private setWalletVisible(): void {
     if (this.currentTransaction === TransactionType.Deposit) {
       this.showWallet = !this.settings.walletAddressPreset;
+      if (this.showWallet) {
+        if (this.settings.transfer) {
+          this.showWallet = true;
+        } else {
+          this.showWallet = !this.settings.embedded;
+        }
+      }
     } else {
       this.showWallet = false;
     }
@@ -518,12 +525,12 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     this.currencyReceiveField?.setValue(this.currentCurrencyReceive?.id);
     this.amountSpendField?.setValue(this.amountReceiveField?.value);
     this.setWalletVisible();
-
     this.pTransactionChanged = false;
   }
 
   private onWalletUpdated(val: string): void {
-    if (this.showWallet) {
+    const proceed = this.showWallet || !this.settings.transfer;
+    if (proceed) {
       this.walletInit = true;
       this.selectedWallet = this.wallets.find(x => x.address === val);
       if (!this.selectedWallet) {

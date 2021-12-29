@@ -39,7 +39,7 @@
 
         <div *ngIf="currentTransaction !== TRANSACTION_TYPE.Withdrawal">
             <!-- Verification levels -->
-            <div *ngIf="currentTier!=='' && settings.embedded">
+            <div *ngIf="currentTier!=='' && settings.embedded && !settings.transfer">
                 <div class="__widget-hint-line">
                     You current Verification Level is {{currentTier}}.
                 </div>
@@ -83,7 +83,7 @@
             </div>
 
             <!-- Wallet address -->
-            <div *ngIf="(selectedWallet?.address==='' || !selectedWallet) && !settings.walletAddressPreset">
+            <div *ngIf="(selectedWallet?.address==='' || !selectedWallet) && showWallet">
                 <div class="__form-separator-small"></div>
                 <app-form-textbox [label]="'Wallet address'" [maxlength]="120" formControlName="wallet"
                     [errorMessages]="walletErrorMessages" [separator]="false">
@@ -96,7 +96,7 @@
 
             <!-- Current Quote -->
             <div class="__form-separator"></div>
-            <div *ngIf="currentQuote!=='' && settings.embedded" class="__widget-quote-block">
+            <div *ngIf="currentQuote!=='' && settings.embedded && !settings.transfer" class="__widget-quote-block">
                 <div class="__widget-hint-line">
                     Estimated Quote is:&nbsp;
                 </div>

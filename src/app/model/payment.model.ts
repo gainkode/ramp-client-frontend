@@ -452,6 +452,7 @@ export class WidgetSettings {
     widgetId = '';
     kycFirst = false;
     disclaimer = false;
+    transfer = false;
 }
 
 export class WidgetStage {

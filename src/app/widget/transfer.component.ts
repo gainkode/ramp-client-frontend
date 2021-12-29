@@ -77,7 +77,9 @@ export class TransferWidgetComponent implements OnInit {
       this.widget.email = this.summary.email;
     }
     this.summary.transactionType = TransactionType.Deposit;
-    this.widget.transaction =  this.summary.transactionType;
+    this.widget.embedded = true;
+    this.widget.transaction = this.summary.transactionType;
+    this.widget.transfer = true;
   }
 
   private startExchangeRate(): void {
@@ -211,15 +213,14 @@ export class TransferWidgetComponent implements OnInit {
           if (dataList !== null) {
             const walletCount = dataList?.count as number;
             if (walletCount > 0) {
-              this.userWallets = dataList?.list?.
-                map((val) => {
-                  const walletData = {
-                    address: val.address,
-                    vaultName: val.displayName,
-                    assetId: val.assetId
-                  } as AssetAddressShort;
-                  return new WalletItem(walletData, '', undefined);
-                }) as WalletItem[];
+              this.userWallets = dataList?.list?.map((val) => {
+                const walletData = {
+                  address: val.address,
+                  vaultName: val.displayName,
+                  assetId: val.assetId
+                } as AssetAddressShort;
+                return new WalletItem(walletData, '', undefined);
+              }) as WalletItem[];
             }
           }
           this.initData();
