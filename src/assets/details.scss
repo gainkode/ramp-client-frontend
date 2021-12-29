@@ -107,6 +107,13 @@
 
 .__profile-details-item-block {
     width: 100%;
+    display: flex;
+    flex-direction: row;
+    margin: 8px 0px;
+}
+
+.__profile-details-item-grid {
+    width: 100%;
     margin: 8px 0px;
     display: grid;
     grid-template-columns: 130px auto;
@@ -157,10 +164,23 @@
     margin: 0px 0px 8px 0px;
 }
 
-.__profile-details-item-title {
+.__profile-details-item-title-box {
     grid-row: 1;
     grid-column: 1 / 2;
 
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 28px;
+    color: $color_purple_900_text;
+}
+
+.__profile-details-item-title {
+    width: 130px;
+    min-width: 130px;
+    height: 28px;
+    
     font-family: $font_main;
     font-style: normal;
     font-weight: 300;
@@ -175,6 +195,18 @@
 }
 
 .__profile-details-item-value {
+    margin-left: 8px;
+    height: 28px;
+    
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 28px;
+    color: $color_purple_900_text;
+}
+
+.__profile-details-item-value-box {
     grid-row: 1;
     grid-column: 2 / 3;
     margin-left: 8px;

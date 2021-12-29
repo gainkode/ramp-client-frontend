@@ -355,10 +355,7 @@
     font-size: 14px;
     line-height: 28px;
     color: $color_purple_900_text;
-}
-
-.__tool-bar-label-limited-width {
-    min-width: 120px;
+    white-space: nowrap;
 }
 
 .__tool-bar-error {
@@ -374,7 +371,7 @@
 .__tool-bar-double-sided-container {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: flex-end;
     width: 100%;
 }
 

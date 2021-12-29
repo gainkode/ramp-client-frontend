@@ -5,102 +5,102 @@
     <div class="__profile-details-data-container">
         <div class="__profile-details-data-area">
             <!-- Date -->
-            <div class="__profile-details-item-block">
-                <div class="__profile-details-item-title">
+            <div class="__profile-details-item-grid">
+                <div class="__profile-details-item-title-box">
                     Date:
                 </div>
-                <div class="__profile-details-item-value">
+                <div class="__profile-details-item-value-box">
                     {{transaction?.dateLong}}
                 </div>
             </div>
 
             <!-- Type -->
-            <div class="__profile-details-item-block">
-                <div class="__profile-details-item-title">
+            <div class="__profile-details-item-grid">
+                <div class="__profile-details-item-title-box">
                     Type:
                 </div>
-                <div class="__profile-details-item-value">
+                <div class="__profile-details-item-value-box">
                     {{transaction?.typeName}}
                 </div>
             </div>
 
             <!-- Sender -->
-            <div class="__profile-details-item-block">
-                <div class="__profile-details-item-title">
+            <div class="__profile-details-item-grid">
+                <div class="__profile-details-item-title-box">
                     Sender:
                 </div>
-                <div class="__profile-details-item-value">
+                <div class="__profile-details-item-value-box">
                     {{transaction?.sender?.title}}
                 </div>
             </div>
 
             <!-- Amount sent -->
-            <div class="__profile-details-item-block">
-                <div class="__profile-details-item-title">
+            <div class="__profile-details-item-grid">
+                <div class="__profile-details-item-title-box">
                     Amount Sent:
                 </div>
-                <div class="__profile-details-item-value">
+                <div class="__profile-details-item-value-box">
                     {{transaction?.amountSent}}
                 </div>
             </div>
 
             <!-- Recipient -->
-            <div class="__profile-details-item-block">
-                <div class="__profile-details-item-title">
+            <div class="__profile-details-item-grid">
+                <div class="__profile-details-item-title-box">
                     Recipient:
                 </div>
-                <div class="__profile-details-item-value">
+                <div class="__profile-details-item-value-box">
                     {{transaction?.recipient}}
                 </div>
             </div>
 
             <!-- Amount received -->
-            <div class="__profile-details-item-block">
-                <div class="__profile-details-item-title">
+            <div class="__profile-details-item-grid">
+                <div class="__profile-details-item-title-box">
                     Amount Received:
                 </div>
-                <div class="__profile-details-item-value">
+                <div class="__profile-details-item-value-box">
                     {{transaction?.amountReceived}}
                 </div>
             </div>
 
             <!-- Rate -->
-            <div class="__profile-details-item-block">
-                <div class="__profile-details-item-title">
+            <div class="__profile-details-item-grid">
+                <div class="__profile-details-item-title-box">
                     Rate:
                 </div>
-                <div class="__profile-details-item-value">
+                <div class="__profile-details-item-value-box">
                     {{transaction?.rate}}
                 </div>
             </div>
 
             <!-- Network Fee -->
-            <div class="__profile-details-item-block">
-                <div class="__profile-details-item-title">
+            <div class="__profile-details-item-grid">
+                <div class="__profile-details-item-title-box">
                     Network Fee:
                 </div>
-                <div class="__profile-details-item-value">
+                <div class="__profile-details-item-value-box">
                     {{transaction?.networkFees}}
                 </div>
             </div>
 
             <!-- Status -->
-            <div class="__profile-details-item-block">
-                <div class="__profile-details-item-title">
+            <div class="__profile-details-item-grid">
+                <div class="__profile-details-item-title-box">
                     Status:
                 </div>
                 <div
-                    [ngClass]="{'__profile-details-item-value': true, '__profile-details-item-error': transaction?.statusLevel === 'error'}">
+                    [ngClass]="{'__profile-details-item-value-box': true, '__profile-details-item-error': transaction?.statusLevel === 'error'}">
                     {{transaction?.statusName}}
                 </div>
             </div>
 
             <!-- IP -->
-            <div class="__profile-details-item-block">
-                <div class="__profile-details-item-title">
+            <div class="__profile-details-item-grid">
+                <div class="__profile-details-item-title-box">
                     IP Address:
                 </div>
-                <div class="__profile-details-item-value">
+                <div class="__profile-details-item-value-box">
                     {{transaction?.ip}}
                 </div>
             </div>
