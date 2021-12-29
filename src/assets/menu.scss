@@ -251,6 +251,10 @@
     @media (max-width: $md1 + px) {
         margin: 24px 24px 8px 24px;
     }
+
+    @media (max-width: $md3 + px) {
+        margin: 8px;
+    }
 }
 
 .__tool-bar-filter-container {
@@ -299,6 +303,7 @@
     flex-direction: row;
     align-items: baseline;
     justify-content: flex-start;
+    white-space: nowrap;
 }
 
 .__tool-selector-bar-item-container {

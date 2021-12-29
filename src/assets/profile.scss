@@ -5,13 +5,6 @@
 
 .__profile-container {
     display: flex;
-
-    @media (max-width: $md3 + px) {
-        // display: none;
-        // visibility: hidden;
-        
-        //overflow: scroll;
-    }
 }
 
 .__profile-side-menu {
@@ -785,6 +778,11 @@
     line-height: 28px;
 
     color: $color_white;
+
+    @media (max-width: $md3 + px) {
+        display: none;
+        visibility: hidden;
+    }
 }
 
 .__profile-payment-data-area {

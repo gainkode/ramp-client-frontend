@@ -42,7 +42,7 @@
             <div class="__form-label-small">
                 Receive to Wallet
             </div>
-            <div class="__profile-details-item-block">
+            <div class="__profile-details-item-block __profile-details-item-activated-block">
                 <div class="__form-text-border">
                     <mat-select formControlName="wallet" style="margin: 6px 0px 0px 0px;"
                         placeholder="Select wallet to receive Crypto">
@@ -59,7 +59,7 @@
                     </mat-select>
                 </div>
             </div>
-            <div class="__profile-details-item-block">
+            <div class="__profile-details-item-block __profile-details-item-activated-block">
                 <div *ngIf="walletInit && !walletField?.valid" class="__form-assist __form-assist-error">
                     Wallet is required
                 </div>
