@@ -202,11 +202,6 @@
     justify-content: flex-end;
     align-items: baseline;
     background-color: #bbbbbb60;
-
-    // @media (max-width: $md3 + px) {
-    //     width: 0px;
-    //     visibility: hidden;
-    // }
 }
 
 .__profile-chat-block {
@@ -231,9 +226,17 @@
     margin: 0px 24px;
 }
 
-.__profile-internal-table-container {
+.__profile-settings-container-block {
     display: flex;
     flex-direction: column;
+    width: 100%;
+    justify-content: flex-start;
+    align-items: stretch;
+}
+
+.__profile-internal-table-container {
+    display: flex;
+    flex-direction: row;
     width: 100%;
     justify-content: flex-start;
     align-items: stretch;
@@ -247,15 +250,25 @@
         width: calc(100% - 342px);
         transition: width 250ms cubic-bezier(0, 0, 0.2, 1);
     }
+
+    @media (max-width: $md3 + px) {
+        display: none;
+    }
 }
 
 .__profile-internal-table-details-container-open {
     width: 475px;
     margin: 0px 0px 0px 24px;
     background-color: $color_white;
+    z-index: 50;
 
     @media (max-width: $md1 + px) {
         width: 342px;
+    }
+
+    @media (max-width: $md3 + px) {
+        width: 100%;
+        margin: 0px;
     }
 }
 
@@ -283,6 +296,12 @@
     @media (max-width: $md1 + px) {
         width: 342px;
         min-height: 600px;
+    }
+
+    @media (max-width: $md3 + px) {
+        width: 100%;
+        min-height: 400px;
+        border-style: none;
     }
 }
 
