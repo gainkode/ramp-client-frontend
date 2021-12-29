@@ -6,7 +6,7 @@ import { DialogData } from 'src/app/model/dialog.model';
 @Component({
     selector: 'app-two-fa-dialog-wizard',
     templateUrl: 'two-fa-wizard.dialog.html',
-    styleUrls: ['../../../assets/button.scss', '../../../assets/dialog.scss']
+    styleUrls: ['../../../assets/button.scss', '../../../assets/text-control.scss', '../../../assets/dialog.scss']
 })
 export class TwoFaDialogWizard {
     codeForm = this.formBuilder.group({

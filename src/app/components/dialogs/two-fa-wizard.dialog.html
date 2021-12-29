@@ -58,8 +58,8 @@
                 If you are unable to scan the QR code, please enter this code manually into the app.
             </div>
             <div class="__dialog-space-small"></div>
-            <div class="__dialog-message __dialog-message-accent">
-                {{data.title}}
+            <div style="width: 90%;">
+                <input class="__text-box-noborder-accent" type="text" readonly [value]="data.title"/>
             </div>
         </div>
     </div>
@@ -75,8 +75,8 @@
         This Key will allow you to recover your Google Authenticator in case of phone loss
     </div>
     <div class="__dialog-space"></div>
-    <div class="__dialog-message __dialog-message-accent">
-        {{data.title}}
+    <div style="width: 90%;">
+        <input class="__text-box-noborder-accent" type="text" readonly [value]="data.title"/>
     </div>
     <div class="__dialog-space"></div>
     <div class="__dialog-text">
