@@ -107,7 +107,7 @@
                 </div>
             </div>
 
-            <div *ngIf="!settings.embedded" class="__widget-disclaimer-container">
+            <div *ngIf="!settings.embedded && internalPayment" class="__widget-disclaimer-container">
                 <div class="__form-separator"></div>
                 <span class="__widget-disclaimer-line">
                     Don't have a wallet?

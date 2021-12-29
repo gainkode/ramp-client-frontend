@@ -34,7 +34,7 @@
       <!-- Order details -->
       <app-widget-order-details *ngSwitchCase="'order_details'" [initialized]="!initState" [summary]="summary"
         [settings]="widget" [withdrawalRate]="summary?.exchangeRate?.withdrawRate" [wallets]="userWallets"
-        [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage"
+        [internalPayment]="internalPayment" [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage"
         [depositRate]="summary?.exchangeRate?.depositRate" (onError)="handleError($event)"
         (onProgress)="progressChanged($event)" (onDataUpdated)="orderDetailsChanged($event)"
         (onWalletAddressUpdated)="orderWalletChanged($event)" (onComplete)="orderDetailsComplete($event)">
@@ -80,8 +80,8 @@
         [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage" (onComplete)="processingComplete()">
       </app-widget-processing-instantpay>
       <!-- Complete -->
-      <app-widget-complete *ngSwitchCase="'complete'" [showRestartButton]="widget.widgetId===''" [transaction]="summary.transactionType"
-        (onFinish)="resetWizard()"></app-widget-complete>
+      <app-widget-complete *ngSwitchCase="'complete'" [showRestartButton]="widget.widgetId===''"
+        [transaction]="summary.transactionType" (onFinish)="resetWizard()"></app-widget-complete>
 
       <!-- Common settings reading -->
       <app-widget-settings-service *ngIf="readCommonSettings" [summary]="summary" (onError)="handleError($event)"
