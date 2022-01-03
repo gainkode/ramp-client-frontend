@@ -9,7 +9,9 @@ const GET_MY_TRANSACTIONS = gql`
     $sourcesOnly: [TransactionSource!]
     $transactionDateOnly: DateTime
     $transactionTypesOnly: [TransactionType!]
+    $transactionIdsOnly: [String!]
     $sendersOrReceiversOnly: [String!]
+    $paymentProvidersOnly: [String!]
     $filter: String
     $skip: Int
     $first: Int
@@ -19,7 +21,9 @@ const GET_MY_TRANSACTIONS = gql`
       sourcesOnly: $sourcesOnly
       transactionDateOnly: $transactionDateOnly
       transactionTypesOnly: $transactionTypesOnly
+      transactionIdsOnly: $transactionIdsOnly
       sendersOrReceiversOnly: $sendersOrReceiversOnly
+      paymentProvidersOnly: $paymentProvidersOnly
       filter: $filter
       skip: $skip
       first: $first

@@ -1,18 +1,15 @@
-<div style="margin: 1.5em;margin-bottom: 0em;height: 5em;text-align: center;">
-    <a [href]="userMainPage" style="color: #DDDFE6;">
-        <mat-icon>attractions</mat-icon>
-    </a>
+<div style="height: 4em;width: 100%;display: flex;align-items: center;justify-content: center;">
+    <div class="__admin-top-menu-logo-box">
+        <span class="__admin-top-menu-logo" (click)="goToMainPage()">
+            GetCoins
+        </span>
+    </div>
 </div>
 
 <mat-nav-list id="main-menu">
-    <a mat-list-item
-       *ngFor="let item of menuItems"
-       [routerLink]="item.url"
-       [routerLinkActive]="'active'"
-    >
+    <a mat-list-item *ngFor="let item of menuItems" [routerLink]="item.url" [routerLinkActive]="'active'">
         <mat-icon class="panel-menu-item-icon">{{item.icon}}</mat-icon>
         <span>{{item.name}}</span>
-
     </a>
 
     <!-- <a mat-list-item

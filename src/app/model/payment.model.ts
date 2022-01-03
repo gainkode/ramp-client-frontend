@@ -176,7 +176,6 @@ export class CardView {
 export const PaymentInstrumentList: Array<PaymentInstrumentView> = [
     { id: PaymentInstrument.Apm, name: 'APM' },
     { id: PaymentInstrument.CreditCard, name: 'Credit card' },
-    { id: PaymentInstrument.BankTransfer, name: 'Bank transfer' },
     { id: PaymentInstrument.WireTransfer, name: 'Wire transfer' }
 ];
 
