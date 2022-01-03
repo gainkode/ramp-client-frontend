@@ -22,11 +22,12 @@
             <button class="__main-button __button-separator" type="submit" [disabled]="!loginForm?.valid">login</button>
         </div>
         <!-- Default Buttons -->
-        <div *ngIf="!wizardButtons" class="__auth-buttons-area">
-            <button class="__main-button __button-wide" type="submit" [disabled]="!loginForm?.valid">login</button>
-            <div class="__button-wide-separator">
-                <a href="/{{userTypeSection}}/auth/restore">Forgot your password?</a>
-            </div>
+        <div *ngIf="!wizardButtons" class="__auth-buttons-wizard-area">
+            <button class="__main-button __button-login-wide" type="submit" [disabled]="!loginForm?.valid">login</button>
+        </div>
+        <div *ngIf="!wizardButtons" class="__form-separator"></div>
+        <div *ngIf="!wizardButtons" class="__auth-buttons-wizard-area">
+            <a href="/{{userTypeSection}}/auth/restore">Forgot your password?</a>
         </div>
     </form>
     <div *ngIf="socialButtons">

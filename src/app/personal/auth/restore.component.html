@@ -6,33 +6,11 @@
                     GetCoins
                 </span>
             </div>
+            <mat-progress-bar *ngIf="inProgress" color="accent" mode="indeterminate"></mat-progress-bar>
             <div class="__auth-data-container">
-                <form [formGroup]="restoreForm" (ngSubmit)="onSubmit()">
-                    <!-- Email -->
-                    <app-form-textbox [label]="'Email'" [boxType]="'email'" [placeholder]="'Enter your email here'"
-                        [maxlength]="50" formControlName="email" [errorMessages]="emailErrorMessages"
-                        [separator]="true">
-                    </app-form-textbox>
-
-                    <!-- Errors -->
-                    <div *ngIf="errorMessage!==''">
-                        <span class="__auth-error-line">
-                            {{errorMessage}}
-                        </span>
-                    </div>
-
-                    <div class="__form-separator"></div>
-
-                    <!-- Button -->
-                    <div class="__auth-buttons-area">
-                        <button class="__main-button __button-wide" type="submit"
-                            [disabled]="!restoreForm?.valid">send</button>
-                    </div>
-                </form>
-            </div>
-            <div class="__auth-footer-area-small">
-                <span class="__auth-footer-text">Don’t remember your email?</span>
-                <a href="#">Contact customer service</a>
+                <app-restore-panel [errorMessage]="errorMessage" [userTypeSection]="'personal'" (error)="onError($event)"
+                    (progressChange)="onProgressChange($event)">
+                </app-restore-panel>
             </div>
         </div>
     </div>

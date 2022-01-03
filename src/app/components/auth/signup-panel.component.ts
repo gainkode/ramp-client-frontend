@@ -9,7 +9,12 @@ import { Subscription } from 'rxjs';
 @Component({
     selector: 'app-signup-panel',
     templateUrl: 'signup-panel.component.html',
-    styleUrls: ['../../../assets/button.scss', '../../../assets/text-control.scss', '../../../assets/auth.scss', '../../../assets/payment.scss']
+    styleUrls: [
+        '../../../assets/button.scss',
+        '../../../assets/text-control.scss',
+        '../../../assets/auth.scss',
+        '../../../assets/payment.scss'
+    ]
 })
 export class SignUpPanelComponent implements OnInit, OnDestroy {
     @Input() set userName(val: string) {

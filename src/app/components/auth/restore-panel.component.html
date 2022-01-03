@@ -1,0 +1,22 @@
+<form [formGroup]="restoreForm" (ngSubmit)="onSubmit()">
+    <!-- Email -->
+    <app-form-textbox [label]="'Email'" [boxType]="'email'" [placeholder]="'Enter your email here'" [maxlength]="50"
+        formControlName="email" [errorMessages]="emailErrorMessages" [separator]="true">
+    </app-form-textbox>
+    <!-- Errors -->
+    <div *ngIf="errorMessage!==''">
+        <span class="__auth-error-line">
+            {{errorMessage}}
+        </span>
+    </div>
+    <div class="__form-separator"></div>
+    <!-- Button -->
+    <div class="__auth-buttons-area">
+        <button class="__main-button __button-wide" type="submit" [disabled]="!restoreForm?.valid">send</button>
+    </div>
+</form>
+
+<div class="__auth-footer-area-small">
+    <span class="__auth-footer-text-long">Don’t remember your email?</span>
+    <a href="#">Contact customer service</a>
+</div>

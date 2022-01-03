@@ -35,6 +35,7 @@ import { DropdownItemComponent } from './common/dropdown-item.component';
 import { TabLabelComponent } from './common/tablabel.component';
 import { KycPanelComponent } from './kyc-panel.component';
 import { LoginPanelComponent } from './auth/login-panel.component';
+import { RestorePanelComponent } from './auth/restore-panel.component';
 import { NavPopupComponent } from './common/nav-popup/nav-popup.component';
 import { SideExpanderComponent } from './common/side-expander.component';
 import { SideMenuComponent } from './common/side-menu.component';
@@ -100,7 +101,7 @@ export class MaterialModule { }
         FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent, FormSearchBoxComponent,
         FormEditBoxComponent, SettingsPasswordBoxComponent,
         DeleteDialogBox, CommonDialogBox, TwoFaDialogBox, TwoFaDialogWizard, SendNotificationDialogBox, SumsubVerificationDialogBox,
-        LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent,
+        LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, RestorePanelComponent,
         NavPopupComponent, SideMenuComponent, SideExpanderComponent, RiskWarningComponent,
         LineBreakPipe, NumberFillPipe,
         TransactionsFilterBarComponent, WalletsFilterBarComponent, ContactsFilterBarComponent, NotificationsFilterBarComponent],
@@ -109,7 +110,7 @@ export class MaterialModule { }
         FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent, FormSearchBoxComponent,
         FormEditBoxComponent, SettingsPasswordBoxComponent,
         DeleteDialogBox, CommonDialogBox, TwoFaDialogBox, TwoFaDialogWizard, SendNotificationDialogBox, SumsubVerificationDialogBox,
-        LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent,
+        LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, RestorePanelComponent,
         NavPopupComponent, SideMenuComponent, SideExpanderComponent, RiskWarningComponent,
         LineBreakPipe, NumberFillPipe,
         TransactionsFilterBarComponent, WalletsFilterBarComponent, ContactsFilterBarComponent, NotificationsFilterBarComponent],
