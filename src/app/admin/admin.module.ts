@@ -34,7 +34,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FilterPanelComponent } from './components/core/filter-panel/filter-panel.component';
 import { NotificationListComponent } from './components/notifications/list/notification-list.component';
 import { ReconciliationComponent } from './components/reconciliation/reconciliation.component';
-import { SystemUsersComponent } from './components/system-users/system-users.component';
 import { WidgetListComponent } from './components/widgets/list/widget-list.component';
 import { MainMenuComponent } from './components/core/main-menu/main-menu.component';
 import { AdminRoutingModule } from './admin.routing.module';
@@ -73,6 +72,9 @@ import { CommonSettingsEditorComponent } from './components/settings/common/comm
 import { WalletDetailsComponent } from './components/wallets/details/wallet-details.component';
 import { NotificationDetailsComponent } from './components/notifications/details/notification-details.component';
 import { CustomerSingleComponent } from './components/customers/customer-single/customer-single.component';
+import { SystemUserListComponent } from './components/system-users/list/user-list.component';
+import { SystemUserSingleComponent } from './components/system-users/user-single/user-single.component';
+import { SystemUserDetailsComponent } from './components/system-users/details/user-details.component';
 
 @NgModule({
   imports: [
@@ -129,7 +131,9 @@ import { CustomerSingleComponent } from './components/customers/customer-single/
     KycEditorComponent,
     LevelEditorComponent,
     ReconciliationComponent,
-    SystemUsersComponent,
+    SystemUserListComponent,
+    SystemUserSingleComponent,
+    SystemUserDetailsComponent,
     RiskAlertListComponent,
     WidgetListComponent,
     RightPanelDirective,

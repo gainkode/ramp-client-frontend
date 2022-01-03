@@ -8,7 +8,6 @@ import { NotificationListComponent } from './components/notifications/list/notif
 import { CostsComponent } from './components/costs/costs.component';
 import { IdentificationListComponent } from './components/identification/list/identification-list.component';
 import { ReconciliationComponent } from './components/reconciliation/reconciliation.component';
-import { SystemUsersComponent } from './components/system-users/system-users.component';
 import { WidgetListComponent } from './components/widgets/list/widget-list.component';
 import { TransactionListComponent } from './components/transactions/list/transaction-list.component';
 import { TransactionSingleComponent } from './components/transactions/transaction-single/transaction-single.component';
@@ -17,6 +16,8 @@ import { FeeListComponent } from './components/fees/fee-list/fee-list.component'
 import { RiskAlertListComponent } from './components/risk-center/list/risk-alert-list.component';
 import { AdminSettingsComponent } from './components/settings/settings.component';
 import { CustomerSingleComponent } from './components/customers/customer-single/customer-single.component';
+import { SystemUserSingleComponent } from './components/system-users/user-single/user-single.component';
+import { SystemUserListComponent } from './components/system-users/list/user-list.component';
 
 const routes: Routes = [
   {
@@ -126,10 +127,22 @@ const routes: Routes = [
       },
       {
         path: 'system-users',
-        component: SystemUsersComponent,
-        data: {
-          header: 'System users'
-        }
+        children: [
+          {
+            path: ':id',
+            component: SystemUserSingleComponent,
+            data: {
+              header: 'User {:id}'
+            }
+          },
+          {
+            path: '',
+            component: SystemUserListComponent,
+            data: {
+              header: 'System Users'
+            }
+          }
+        ]
       },
       {
         path: 'risk-center',
