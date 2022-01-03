@@ -282,8 +282,8 @@ query GetWidget($id: String!, $recaptcha: String!) {
   ) {
     name
     transactionTypes
-    currenciesFrom
-    currenciesTo
+    currenciesCrypto
+    currenciesFiat
     hasFixedAddress
     instruments
     paymentProviders

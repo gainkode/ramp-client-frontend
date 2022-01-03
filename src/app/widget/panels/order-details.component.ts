@@ -375,12 +375,28 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
 
   private setCurrencyLists(): void {
     if (this.currentTransaction === TransactionType.Deposit) {
-      this.spendCurrencyList = this.pCurrencies.filter((c) => c.fiat);
-      this.receiveCurrencyList = this.pCurrencies.filter((c) => !c.fiat);
+      this.spendCurrencyList = this.pCurrencies.filter((c) => this.filterFiat(c));
+      this.receiveCurrencyList = this.pCurrencies.filter((c) => this.filterCrypto(c));
     } else if (this.currentTransaction === TransactionType.Withdrawal) {
-      this.spendCurrencyList = this.pCurrencies.filter((c) => !c.fiat);
-      this.receiveCurrencyList = this.pCurrencies.filter((c) => c.fiat);
+      this.spendCurrencyList = this.pCurrencies.filter((c) => this.filterCrypto(c));
+      this.receiveCurrencyList = this.pCurrencies.filter((c) => this.filterFiat(c));
     }
+  }
+
+  private filterFiat(c: CurrencyView): boolean {
+    let result = (c.fiat === true);
+    if (result && this.settings.fiatList.length > 0) {
+      result = (this.settings.fiatList.find(x => x === c.id) !== undefined);
+    }
+    return result;
+  }
+
+  private filterCrypto(c: CurrencyView): boolean {
+    let result = (c.fiat === false);
+    if (result && this.settings.cryptoList.length > 0) {
+      result = (this.settings.cryptoList.find(x => x === c.id) !== undefined);
+    }
+    return result;
   }
 
   private setWalletVisible(): void {

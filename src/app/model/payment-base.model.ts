@@ -19,6 +19,8 @@ export class WidgetSettings {
     kycFirst = false;
     disclaimer = false;
     transfer = false;
+    fiatList: string[] = [];
+    cryptoList: string[] = [];
 }
 
 export class WidgetStage {

@@ -102,6 +102,16 @@ export class WidgetComponent implements OnInit {
       this.widget.email = data.currentUserEmail as string;
       this.widget.walletAddressPreset = data.hasFixedAddress ?? false;
       this.widget.transaction = undefined;
+      if (data.currenciesCrypto) {
+        if (data.currenciesCrypto.length > 0) {
+          this.widget.cryptoList = data.currenciesCrypto.map(val => val);
+        }
+      }
+      if (data.currenciesFiat) {
+        if (data.currenciesFiat.length > 0) {
+          this.widget.fiatList = data.currenciesFiat.map(val => val);
+        }
+      }
       if (data.transactionTypes) {
         if (data.transactionTypes.length > 0) {
           this.widget.transaction = data.transactionTypes[0];
