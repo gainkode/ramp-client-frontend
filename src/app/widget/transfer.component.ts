@@ -1,11 +1,12 @@
 import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { AssetAddressShort, AssetAddressShortListResult, PaymentInstrument, PaymentPreauthResultShort, Rate, TransactionShort, TransactionSource, TransactionType, UserContactListResult } from 'src/app/model/generated-models';
-import { CardView, CheckoutSummary, PaymentCompleteDetails, PaymentProviderView, PaymentWidgetType, WidgetSettings } from 'src/app/model/payment.model';
+import { AssetAddressShort, PaymentInstrument, PaymentPreauthResultShort, Rate, TransactionShort, TransactionSource, TransactionType, UserContactListResult } from 'src/app/model/generated-models';
+import { CardView, CheckoutSummary, PaymentProviderView } from 'src/app/model/payment.model';
 import { ErrorService } from 'src/app/services/error.service';
 import { PaymentDataService } from 'src/app/services/payment.service';
 import { ExchangeRateService } from 'src/app/services/rate.service';
+import { PaymentCompleteDetails, PaymentWidgetType, WidgetSettings } from '../model/payment-base.model';
 import { WalletItem } from '../model/wallet.model';
 import { AuthService } from '../services/auth.service';
 import { NotificationService } from '../services/notification.service';

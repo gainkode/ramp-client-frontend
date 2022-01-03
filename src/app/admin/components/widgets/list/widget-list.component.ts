@@ -36,8 +36,8 @@ export class WidgetListComponent implements OnInit, OnDestroy, AfterViewInit {
     'created',
 
     'transactionType',
-    'currenciesFrom',
-    'currenciesTo',
+    'currenciesCrypto',
+    'currenciesFiat',
     'destinationAddress',
     'userNotificationId',
     'countries',
@@ -118,9 +118,7 @@ export class WidgetListComponent implements OnInit, OnDestroy, AfterViewInit {
       this.sortedDesc,
       this.filter
     )
-      .pipe(
-        takeUntil(this.destroy$)
-      )
+      .pipe(takeUntil(this.destroy$))
       .subscribe(result => {
         this.data = result.list;
         this.customerCount = result.count;

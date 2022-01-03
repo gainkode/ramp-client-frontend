@@ -2,12 +2,13 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } fro
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AssetAddressShortListResult, LoginResult, PaymentInstrument, PaymentPreauthResultShort, Rate, TransactionShort, TransactionSource, TransactionType, WidgetShort } from 'src/app/model/generated-models';
-import { CardView, CheckoutSummary, PaymentCompleteDetails, PaymentProviderView, WidgetSettings, WidgetStage } from 'src/app/model/payment.model';
+import { CardView, CheckoutSummary, PaymentProviderView } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { PaymentDataService } from 'src/app/services/payment.service';
 import { ExchangeRateService } from 'src/app/services/rate.service';
+import { PaymentCompleteDetails, WidgetSettings } from '../model/payment-base.model';
 import { WalletItem } from '../model/wallet.model';
 import { ProfileDataService } from '../services/profile.service';
 import { WidgetPagerService } from '../services/widget-pager.service';

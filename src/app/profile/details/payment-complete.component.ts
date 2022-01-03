@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { Router } from "@angular/router";
-import { PaymentCompleteDetails, PaymentWidgetType } from "src/app/model/payment.model";
+import { PaymentCompleteDetails, PaymentWidgetType } from "src/app/model/payment-base.model";
 import { ProfileItemContainer, ProfileItemContainerType } from "src/app/model/profile-item.model";
 import { AuthService } from "src/app/services/auth.service";
 

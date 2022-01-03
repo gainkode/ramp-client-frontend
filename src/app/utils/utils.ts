@@ -1,6 +1,6 @@
 import { environment } from "src/environments/environment";
 import { User, UserType } from "../model/generated-models";
-import { PaymentWidgetType } from "../model/payment.model";
+import { PaymentWidgetType } from "../model/payment-base.model";
 
 export interface PaymentTitleInfo {
     panelTitle: string;

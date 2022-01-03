@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { WidgetStage } from "../model/payment.model";
+import { WidgetStage } from "../model/payment-base.model";
 
 @Injectable()
 export class WidgetPagerService {

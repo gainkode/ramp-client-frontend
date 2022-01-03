@@ -2,7 +2,8 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { NavigationEnd, Router, Event as NavigationEvent } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { MenuItem } from '../model/common.model';
-import { CurrencyView, PaymentCompleteDetails, PaymentWidgetType } from '../model/payment.model';
+import { PaymentCompleteDetails, PaymentWidgetType } from '../model/payment-base.model';
+import { CurrencyView } from '../model/payment.model';
 import { ProfileItemActionType, ProfileItemContainer, ProfileItemContainerType } from '../model/profile-item.model';
 import { MerchantProfileMenuItems, ProfilePopupAdministrationMenuItem, MerchantProfilePopupMenuItems } from '../model/profile-menu.model';
 import { ProfileContactsComponent } from '../profile/contacts/contacts.component';

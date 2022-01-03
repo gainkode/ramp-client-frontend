@@ -513,8 +513,8 @@ const GET_WIDGETS = gql`
         description
         created
         transactionTypes
-        currenciesFrom
-        currenciesTo
+        currenciesCrypto
+        currenciesFiat
         destinationAddress
         countriesCode2
         instruments
@@ -692,12 +692,12 @@ const ADD_KYC_LEVEL_SETTINGS = gql`
 
 const CREATE_WIDGET = gql`
   mutation CreateWidget(
-    $userId: String
+    $userId: String!
     $name: String!
     $description: String
     $countriesCode2: [String!]
-    $currenciesFrom: [String!]
-    $currenciesTo: [String!]
+    $currenciesCrypto: [String!]
+    $currenciesFiat: [String!]
     $destinationAddress: String!
     $instruments: [PaymentInstrument!]
     $liquidityProvider: LiquidityProvider
@@ -712,8 +712,8 @@ const CREATE_WIDGET = gql`
         description: $description
         additionalSettings: $additionalSettings
         transactionTypes: $transactionTypes
-        currenciesFrom: $currenciesFrom
-        currenciesTo: $currenciesTo
+        currenciesCrypto: $currenciesCrypto
+        currenciesFiat: $currenciesFiat
         destinationAddress: $destinationAddress
         countriesCode2: $countriesCode2
         instruments: $instruments
@@ -729,11 +729,12 @@ const CREATE_WIDGET = gql`
 const UPDATE_WIDGET = gql`
   mutation UpdateWidget(
     $widgetId: String
+    $userId: String!
     $name: String!
     $description: String
     $countriesCode2: [String!]
-    $currenciesFrom: [String!]
-    $currenciesTo: [String!]
+    $currenciesCrypto: [String!]
+    $currenciesFiat: [String!]
     $destinationAddress: String!
     $instruments: [PaymentInstrument!]
     $liquidityProvider: LiquidityProvider
@@ -744,12 +745,13 @@ const UPDATE_WIDGET = gql`
     updateWidget(
       widgetId: $widgetId,
       widget: {
+        userId: $userId
         name: $name
         description: $description
         additionalSettings: $additionalSettings
         transactionTypes: $transactionTypes
-        currenciesFrom: $currenciesFrom
-        currenciesTo: $currenciesTo
+        currenciesCrypto: $currenciesCrypto
+        currenciesFiat: $currenciesFiat
         destinationAddress: $destinationAddress
         countriesCode2: $countriesCode2
         instruments: $instruments
@@ -1704,8 +1706,8 @@ export class AdminDataService {
           name: widget.name,
           description: widget.description,
           transactionTypes: widget.transactionTypes,
-          currenciesFrom: widget.currenciesFrom,
-          currenciesTo: widget.currenciesTo,
+          currenciesCrypto: widget.currenciesCrypto,
+          currenciesFiat: widget.currenciesFiat,
           destinationAddress: widget.destinationAddress,
           countriesCode2: widget.countriesCode2,
           instruments: widget.instruments,
@@ -1715,20 +1717,18 @@ export class AdminDataService {
         }
       })
         .pipe(tap(() => {
-          this.snackBar.open(
-            `Widget was created`,
-            undefined, { duration: 5000 }
-          );
+          this.snackBar.open(`Widget was created`, undefined, { duration: 5000 });
         }))
       : this.apollo.mutate({
         mutation: UPDATE_WIDGET,
         variables: {
           widgetId: widget.id,
+          userId: widget.userId,
           name: widget.name,
           description: widget.description,
           transactionTypes: widget.transactionTypes,
-          currenciesFrom: widget.currenciesFrom,
-          currenciesTo: widget.currenciesTo,
+          currenciesCrypto: widget.currenciesCrypto,
+          currenciesFiat: widget.currenciesFiat,
           destinationAddress: widget.destinationAddress,
           countriesCode2: widget.countriesCode2,
           instruments: widget.instruments,

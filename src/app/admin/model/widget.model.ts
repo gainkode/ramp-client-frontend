@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { getCountryByCode2 } from 'src/app/model/country-code.model';
 import { TransactionTypeList } from 'src/app/model/payment.model';
+import { environment } from 'src/environments/environment';
 import { Widget } from '../../model/generated-models';
 
 export class WidgetItem {
@@ -13,8 +14,8 @@ export class WidgetItem {
   transactionType?: string;
   transactionTypes?: Array<string>;
   transactions: string[] = [];
-  currenciesFrom: Array<string> = [];
-  currenciesTo: Array<string> = [];
+  currenciesCrypto: Array<string> = [];
+  currenciesFiat: Array<string> = [];
   destinationAddress = '';
   destinationAddresses: Array<string> = [];
   countriesCode2: Array<string> = [];
@@ -28,15 +29,12 @@ export class WidgetItem {
     if (data) {
       const datepipe: DatePipe = new DatePipe('en-US');
       this.id = data.widgetId as string;
-      this.link = `https://merx-ewallet.semirolab.com/payment/widget/${this.id}`;
+      this.link = `${environment.client_host}/payment/widget/${this.id}`;
       this.name = data.name;
       this.description = data.description ?? '';
       this.additionalSettings = data.additionalSettings as string;
       this.userId = data.userId as string;
-      this.created = datepipe.transform(
-        data.created,
-        'dd-MM-YYYY HH:mm:ss'
-      ) as string;
+      this.created = datepipe.transform(data.created, 'dd-MM-YYYY HH:mm:ss') ?? '';
       this.transactionType = undefined;
       if (data.transactionTypes) {
         if (data.transactionTypes.length > 0) {
@@ -55,8 +53,8 @@ export class WidgetItem {
         const t = TransactionTypeList.find(x => x.id === val);
         return (t) ? t.name : val;
       }) ?? [];
-      this.currenciesFrom = data.currenciesFrom ?? [];
-      this.currenciesTo = data.currenciesTo ?? [];
+      this.currenciesCrypto = data.currenciesCrypto ?? [];
+      this.currenciesFiat = data.currenciesFiat ?? [];
       this.destinationAddress = data.destinationAddress as string;
       this.countriesCode2 = data.countriesCode2 ?? [];
       this.instruments = data.instruments ?? [];

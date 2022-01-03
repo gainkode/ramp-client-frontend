@@ -1,4 +1,4 @@
-import { PaymentCompleteDetails } from "./payment.model";
+import { PaymentCompleteDetails } from "./payment-base.model";
 import { TransactionItem } from "./transaction.model";
 import { ContactItem } from "./user.model";
 import { WalletItem } from "./wallet.model";

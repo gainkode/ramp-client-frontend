@@ -64,26 +64,25 @@
     </mat-form-field>
 
     <mat-form-field class="form-element">
-        <mat-label>Currencies from</mat-label>
-        <mat-select formControlName="currenciesFrom" multiple>
-            <mat-option *ngFor="let item of currencyOptions" [value]="item.id">
+        <mat-label>Crypto Currencies</mat-label>
+        <mat-select formControlName="currenciesCrypto" multiple>
+            <mat-option *ngFor="let item of currencyOptionsCrypto" [value]="item.id">
                 {{item.name}}
             </mat-option>
         </mat-select>
-        <mat-error *ngIf="this.form.controls.currenciesFrom.hasError('required')">
+        <mat-error *ngIf="this.form.controls.currenciesCrypto.hasError('required')">
             Mandatory field
         </mat-error>
     </mat-form-field>
 
-
     <mat-form-field class="form-element">
-        <mat-label>Currencies to</mat-label>
-        <mat-select formControlName="currenciesTo" multiple>
-            <mat-option *ngFor="let item of currencyOptions" [value]="item.id">
+        <mat-label>Fiat Currencies</mat-label>
+        <mat-select formControlName="currenciesFiat" multiple>
+            <mat-option *ngFor="let item of currencyOptionsFiat" [value]="item.id">
                 {{item.name}}
             </mat-option>
         </mat-select>
-        <mat-error *ngIf="this.form.controls.currenciesTo.hasError('required')">
+        <mat-error *ngIf="this.form.controls.currenciesFiat.hasError('required')">
             Mandatory field
         </mat-error>
     </mat-form-field>

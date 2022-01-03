@@ -4,7 +4,7 @@ import { Subscription, Observable, forkJoin } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { CommonGroupValue } from 'src/app/model/common.model';
 import { PaymentInstrument, PaymentProvider, TransactionShort, TransactionType, UserState } from 'src/app/model/generated-models';
-import { CheckoutSummary, PaymentProviderView, WidgetSettings } from 'src/app/model/payment.model';
+import { CheckoutSummary, PaymentProviderView } from 'src/app/model/payment.model';
 import { ErrorService } from 'src/app/services/error.service';
 import { PaymentDataService } from 'src/app/services/payment.service';
 import { WalletValidator } from 'src/app/utils/wallet.validator';

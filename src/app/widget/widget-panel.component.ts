@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TransactionSource, TransactionType } from '../model/generated-models';
-import { PaymentCompleteDetails, PaymentWidgetType, WidgetSettings } from '../model/payment.model';
+import { PaymentCompleteDetails, PaymentWidgetType, WidgetSettings } from '../model/payment-base.model';
 import { AuthService } from '../services/auth.service';
 
 @Component({

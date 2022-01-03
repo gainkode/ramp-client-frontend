@@ -40,7 +40,8 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
   @ViewChild('countrySearchInput') countrySearchInput!: ElementRef<HTMLInputElement>;
 
   paymentProviderOptions: Array<PaymentProviderView> = [];
-  currencyOptions: Array<CurrencyView> = [];
+  currencyOptionsCrypto: Array<CurrencyView> = [];
+  currencyOptionsFiat: Array<CurrencyView> = [];
   widgetLink = '';
   countryOptions = Countries;
   instrumentOptions = PaymentInstrumentList;
@@ -51,8 +52,8 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
   form = this.formBuilder.group({
     id: [null],
     countries: [[], { validators: [Validators.required], updateOn: 'change' }],
-    currenciesFrom: [[], { validators: [Validators.required], updateOn: 'change' }],
-    currenciesTo: [[], { validators: [Validators.required], updateOn: 'change' }],
+    currenciesCrypto: [[], { validators: [Validators.required], updateOn: 'change' }],
+    currenciesFiat: [[], { validators: [Validators.required], updateOn: 'change' }],
     destinationAddress: ['', { validators: [Validators.required], updateOn: 'change' }],
     instruments: [[], { validators: [Validators.required], updateOn: 'change' }],
     liquidityProvider: ['', { validators: [Validators.required], updateOn: 'change' }],
@@ -111,10 +112,9 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
     const widgetItem = this.getWidgetItem();
-    this.adminDataService.saveWidget(widgetItem)
-      .subscribe(() => {
-        this.layoutService.requestRightPanelClose();
-      });
+    this.adminDataService.saveWidget(widgetItem).subscribe(() => {
+      this.layoutService.requestRightPanelClose();
+    });
   }
 
   onDelete(): void {
@@ -235,8 +235,8 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
           countries: widget.countriesCode2?.map(code2 => {
             return this.countryOptions.find(c => c.code2 === code2);
           }) ?? [],
-          currenciesFrom: widget.currenciesFrom ?? [],
-          currenciesTo: widget.currenciesTo ?? [],
+          currenciesCrypto: widget.currenciesCrypto ?? [],
+          currenciesFiat: widget.currenciesFiat ?? [],
           destinationAddress: widget.destinationAddress ?? '',
           instruments: widget.instruments ?? [],
           liquidityProvider: widget.liquidityProvider ?? null,
@@ -259,8 +259,8 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
     widget.description = formValue.description;
     widget.userId = formValue.user.id;
     widget.countriesCode2 = formValue.countries.map(c => c.code2);
-    widget.currenciesFrom = formValue.currenciesFrom;
-    widget.currenciesTo = formValue.currenciesTo;
+    widget.currenciesCrypto = formValue.currenciesCrypto;
+    widget.currenciesFiat = formValue.currenciesFiat;
     widget.destinationAddress = formValue.destinationAddress;
     widget.instruments = formValue.instruments;
     widget.liquidityProvider = formValue.liquidityProvider;
@@ -302,10 +302,15 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
     this.commonDataService.getSettingsCurrency()?.valueChanges.subscribe(({ data }) => {
       const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
       if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
-        this.currencyOptions = currencySettings.settingsCurrency.list
-          ?.map((val) => new CurrencyView(val)) as CurrencyView[];
+        this.currencyOptionsFiat = currencySettings.settingsCurrency.list?.
+          filter(x => x.fiat === true).
+          map((val) => new CurrencyView(val)) as CurrencyView[];
+        this.currencyOptionsCrypto = currencySettings.settingsCurrency.list?.
+          filter(x => x.fiat === false).
+          map((val) => new CurrencyView(val)) as CurrencyView[];
       } else {
-        this.currencyOptions = [];
+        this.currencyOptionsCrypto = [];
+        this.currencyOptionsFiat = [];
       }
     }, (error) => {
       this.snackBar.open(
