@@ -16,6 +16,14 @@
 
 .__auth-container {
     margin: 0px 24px;
+
+    @media (max-width: $md2 + px) {
+        margin: 0px 16px;
+    }
+
+    @media (max-width: $md3 + px) {
+        margin: 0px 8px;
+    }
 }
 
 .__auth-data-container {
@@ -27,6 +35,45 @@
     margin: 24px;
     justify-content: center;
     align-items: center;
+}
+
+.__auth-account-type-tab-container {
+    display: flex;
+    flex-direction: row;
+    margin: 40px 0px 0px 0px;
+    justify-content: center;
+    align-items: center;
+}
+
+.__auth-account-type-tab {
+    padding: 0px 8px;
+    cursor: pointer;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 28px;
+    text-align: center;
+    
+    color: $color_purple_900_icons;
+}
+
+.__auth-account-type-tab-selected {
+    cursor: default;
+
+    border: 2px solid $color_main_blue_800;
+    border-style: none none solid none;
+
+    color: $color_main_blue_800;
+}
+
+.__auth-account-type-tab-left {
+    margin: 0px 16px 0px 0px;
+}
+
+.__auth-account-type-tab-right {
+    margin: 0px 0px 0px 16px;
 }
 
 .__auth-title-logo {
