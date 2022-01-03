@@ -422,7 +422,7 @@ export class WidgetComponent implements OnInit {
     if (id === 'Fibonatix') {
       this.createDepositTransaction(id, PaymentInstrument.CreditCard);
     } else if (id === 'InstantPay') {
-      this.createDepositTransaction(id, PaymentInstrument.WireTransfer);
+      this.createDepositTransaction(id, PaymentInstrument.Apm);
     } else {
       this.errorMessage = `Payment using ${id} is currenctly not supported`;
     }
@@ -699,7 +699,7 @@ export class WidgetComponent implements OnInit {
       this.completeInstantpayTransaction(
         this.summary.transactionId,
         this.summary.providerView.id,
-        this.summary.instrument ?? PaymentInstrument.WireTransfer);
+        this.summary.instrument ?? PaymentInstrument.Apm);
     } else {
       this.errorMessage = 'Invalid payment provider';
     }
