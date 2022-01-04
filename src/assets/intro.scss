@@ -28,6 +28,49 @@
     }
 }
 
+.__intro-header-1 {
+    margin: 0px;
+    padding: 0px;
+    white-space: pre-line;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 64px;
+    line-height: 96px;
+
+    color: $color_main_blue_900;
+
+    @media (max-width: $md2 + px) {
+        font-size: 32px;
+        line-height: 56px;
+    }
+
+    @media (max-width: $md3 + px) {
+        text-align: center;
+    }
+}
+
+.__intro-header-2 {
+    margin: 0px;
+    padding: 0px;
+    white-space: pre-line;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 37px;
+    line-height: 56px;
+    text-align: center;
+
+    color: $color_main_blue_900;
+
+    @media (max-width: $md2 + px) {
+        font-size: 28px;
+        line-height: 35px;
+    }
+}
+
 .__intro-background {
     display: flex;
     grid-column: 1;
@@ -168,29 +211,6 @@
     }
 }
 
-.__intro-header {
-    margin: 0px;
-    padding: 0px;
-    white-space: pre-line;
-
-    font-family: $font_main;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 64px;
-    line-height: 96px;
-
-    color: $color_main_blue_900;
-
-    @media (max-width: $md2 + px) {
-        font-size: 32px;
-        line-height: 56px;
-    }
-
-    @media (max-width: $md3 + px) {
-        text-align: center;
-    }
-}
-
 .__intro-create-account-block {
     margin: 40px 0px 0px 0px;
 
@@ -207,14 +227,29 @@
 }
 
 .__intro-about-container {
-    display: flex;
     grid-column: 1;
     grid-row: 3 / 5;
     width: 100%;
-    background-color: lightpink;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: lightyellow;
+    opacity: 0.7;
 
     @media (max-width: $md3 + px) {
-        grid-row: 4 / 5;
+        grid-row: 4;
+    }
+}
+
+.__intro-about-title-container {
+    margin: 80px 0px 40px 0px;
+
+    @media (max-width: $md1 + px) {
+        margin: 40px 0px 0px 0px;
+    }
+
+    @media (max-width: $md3 + px) {
+        margin: 40px 0px 20px 0px;
     }
 }
 
