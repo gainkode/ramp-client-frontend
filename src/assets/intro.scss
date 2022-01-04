@@ -1,0 +1,142 @@
+@import "./fonts.scss";
+@import "./colors.scss";
+@import "./consts.scss";
+
+.__intro-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+.__intro-top-container {
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: 120px 960px 192px auto 204px auto auto 133px;
+    width: 100%;
+
+    @media (max-width: $md1 + px) {
+        grid-template-rows: 84px 684px 187px auto 204px auto auto 133px;
+    }
+
+    @media (max-width: $md2 + px) {
+        grid-template-rows: 84px 413px 203px auto 140px auto auto 133px;
+    }
+
+    @media (max-width: $md3 + px) {
+        grid-template-rows: 84px 716px 8px auto 628px auto auto 226px;
+    }
+}
+
+.__intro-background {
+    display: flex;
+    grid-column: 1;
+    grid-row: 1 / 4;
+    width: 100%;
+
+    background-image: url("intro-bg.svg");
+    background-position: top;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    @media (max-width: $md3 + px) {
+        grid-row: 1 / 3;
+        background-size: 150%;
+        background-repeat: repeat-y;
+    }
+}
+
+.__intro-login-container {
+    display: flex;
+    grid-column: 1;
+    grid-row: 1;
+    width: 100%;
+    background-color: lightblue;
+}
+
+.__intro-about-container {
+    display: flex;
+    grid-column: 1;
+    grid-row: 3 / 5;
+    width: 100%;
+    background-color: lightpink;
+
+    @media (max-width: $md3 + px) {
+        grid-row: 4 / 5;
+    }
+}
+
+.__intro-stat-container {
+    display: flex;
+    grid-column: 1;
+    grid-row: 5;
+    width: 100%;
+    background-color: $color_main_blue_900;
+}
+
+.__intro-pricelist-container {
+    display: flex;
+    grid-column: 1;
+    grid-row: 6;
+    width: 100%;
+    min-height: 614px;
+    background-color: gold;
+
+    @media (max-width: $md1 + px) {
+        min-height: 515px;
+    }
+
+    @media (max-width: $md2 + px) {
+        min-height: 515px;
+    }
+
+    @media (max-width: $md3 + px) {
+        min-height: 647px;
+    }
+}
+
+.__intro-info-container {
+    display: flex;
+    grid-column: 1;
+    grid-row: 7;
+    width: 100%;
+    min-height: 748px;
+    background-color: goldenrod;
+
+    @media (max-width: $md1 + px) {
+        min-height: 419px;
+    }
+
+    @media (max-width: $md2 + px) {
+        min-height: 365px;
+    }
+
+    @media (max-width: $md3 + px) {
+        min-height: 733px;
+    }
+}
+
+.__intro-contact-container {
+    display: flex;
+    grid-column: 1;
+    grid-row: 7;
+    width: 100%;
+    min-height: 798px;
+    background-color: hotpink;
+
+    @media (max-width: $md2 + px) {
+        min-height: 787px;
+    }
+
+    @media (max-width: $md3 + px) {
+        min-height: 823px;
+    }
+}
+
+.__intro-footer-container {
+    display: flex;
+    grid-column: 1;
+    grid-row: 8;
+    width: 100%;
+    background-color: $color_purple_900;
+}
