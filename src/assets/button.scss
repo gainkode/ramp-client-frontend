@@ -1,6 +1,6 @@
 @import "fonts.scss";
 @import "colors.scss";
-@import "./consts.scss";
+@import "consts.scss";
 
 .__main-button {
     justify-content: center;
@@ -130,6 +130,49 @@
 
 .__outlined-button-lg {
     height: 36px;
+}
+
+.__outlined-button-giant {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 56px;
+    height: 80px;
+
+    background: $color_white;
+    border: 1px solid $color_orange_500;
+    box-sizing: border-box;
+    border-radius: 50px;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 37px;
+    line-height: 56px;
+    color: $color_orange_500;
+
+    @media (max-width: $md3 + px) {
+        padding: 8px 32px;
+        height: 64px;
+        font-size: 27px;
+        line-height: 32px;
+    }
+}
+
+.__outlined-button-giant:focus {
+    outline: none;
+}
+
+.__outlined-button-giant:hover {
+    border: 1px solid $color_orange_700;
+    color: $color_orange_700;
+    cursor: pointer;
+}
+
+.__outlined-button-giant:disabled {
+    border: 1px solid $color_purple_200;
+    color: $color_purple_200;
+    cursor: default;
 }
 
 .__toggle-button {
