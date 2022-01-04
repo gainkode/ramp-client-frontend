@@ -12,19 +12,19 @@
 .__intro-top-container {
     display: grid;
     grid-template-columns: auto;
-    grid-template-rows: 120px 960px 192px auto 204px auto auto 133px;
+    grid-template-rows: auto 960px 192px auto 204px auto auto 133px;
     width: 100%;
 
     @media (max-width: $md1 + px) {
-        grid-template-rows: 84px 684px 187px auto 204px auto auto 133px;
+        grid-template-rows: auto 684px 187px auto 204px auto auto 133px;
     }
 
     @media (max-width: $md2 + px) {
-        grid-template-rows: 84px 413px 203px auto 140px auto auto 133px;
+        grid-template-rows: auto 413px 203px auto 140px auto auto 133px;
     }
 
     @media (max-width: $md3 + px) {
-        grid-template-rows: 84px 716px 8px auto 628px auto auto 226px;
+        grid-template-rows: auto 716px 8px auto 628px auto auto 226px;
     }
 }
 
@@ -47,11 +47,57 @@
 }
 
 .__intro-login-container {
-    display: flex;
     grid-column: 1;
     grid-row: 1;
     width: 100%;
-    background-color: lightblue;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+
+    @media (max-width: $md1 + px) {
+        min-height: 84px;
+    }
+}
+
+.__intro-login-title-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    //background-color: lightseagreen;
+
+    @media (max-width: $md3 + px) {
+        height: 84px;
+    }
+}
+
+.__intro-login-buttons-area {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin: 0px 100px 0px 0px;
+
+    @media (max-width: $md1 + px) {
+        margin: 0px 40px 0px 0px;
+    }
+
+    @media (max-width: $md3 + px) {
+        display: none;
+    }
+}
+
+.__intro-menu-button-area {
+    display: none;
+
+    @media (max-width: $md3 + px) {
+        display: block;
+        margin: 0px 19px 0px 0px;
+    }
 }
 
 .__intro-about-container {
@@ -139,4 +185,126 @@
     grid-row: 8;
     width: 100%;
     background-color: $color_purple_900;
+}
+
+.__intro-logo {
+    margin: 0px 100px;
+    font-family: $font_logo;
+    font-weight: 800;
+    font-size: 42px;
+    line-height: 51px;
+    color: $color_main_blue_900;
+
+    @media (max-width: $md1 + px) {
+        margin: 0px 40px;
+    }
+
+    @media (max-width: $md3 + px) {
+        margin: 16px;
+    }
+}
+
+#intro_menu_toggle {
+    display: none;
+}
+
+#intro_menu_toggle:checked ~ .__intro-menu-button > span {
+    transform: rotate(45deg);
+}
+
+#intro_menu_toggle:checked ~ .__intro-menu-button > span::before {
+    top: 0;
+    transform: rotate(0);
+}
+
+#intro_menu_toggle:checked ~ .__intro-menu-button > span::after {
+    top: 0;
+    transform: rotate(90deg);
+}
+
+#intro_menu_toggle:checked ~ .__intro-menu-panel {
+    visibility: visible;
+    top: 0px;
+}
+
+.__intro-menu-button {
+    display: flex;
+    align-items: center;
+    position: relative;
+    top: 0px;
+    left: 0px;
+    width: 18px;
+    height: 18px;
+
+    cursor: pointer;
+    z-index: 1;
+}
+
+.__intro-menu-button > span,
+.__intro-menu-button > span::before,
+.__intro-menu-button > span::after {
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 2px;
+
+    background-color: $color_purple_900_icons;
+
+    transition-duration: 0.25s;
+}
+
+.__intro-menu-button > span::before {
+    content: "";
+    top: -6px;
+}
+
+.__intro-menu-button > span::after {
+    content: "";
+    top: 6px;
+}
+
+.__intro-menu-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: fixed;
+    visibility: hidden;
+    top: -100%;
+    left: 0px;
+
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    padding: 64px 0px;
+
+    list-style: none;
+    background-color: $color_white;
+
+    transition-duration: 0.25s;
+}
+
+.__intro-menu-item {
+    display: block;
+    
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 32px;
+    line-height: 56px;
+    text-align: center;
+    text-decoration: none;
+    color: $color_main_blue_800;
+    
+    transition-duration: 0.25s;
+}
+
+.__intro-menu-item:hover {
+    background-color: $color_purple_500;
+}
+
+.__top-menu-hamburger-separator {
+    width: 100px;
+    height: 1px;
+    background-color: $color_purple_900_icons;
+    margin: 8px 0px;
 }

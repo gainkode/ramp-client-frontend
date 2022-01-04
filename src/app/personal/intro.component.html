@@ -2,7 +2,40 @@
     <div class="__intro-top-container">
         <div class="__intro-background"></div>
         <div class="__intro-login-container">
-            Login
+            <div class="__intro-login-title-container">
+                <span class="__intro-logo">
+                    GetCoins
+                </span>
+                <div class="__intro-login-buttons-area">
+                    <button class="__main-button" type="button" (click)="routeTo('/personal/auth/login')">
+                        log in
+                    </button>
+                    <button class="__outlined-button __button-wide-separator" type="button" (click)="routeTo('/personal/auth/register')">
+                        SIGN UP
+                    </button>
+                </div>
+                <div class="__intro-menu-button-area">
+                    <input #intro_menu_toggle id="intro_menu_toggle" type="checkbox" />
+                    <label class="__intro-menu-button" for="intro_menu_toggle">
+                        <span></span>
+                    </label>
+                    <ul class="__intro-menu-panel">
+                        <li>
+                            <a [routerLink]="" class="__intro-menu-item"
+                                (click)="routeTo('/personal/auth/login')">
+                                Login
+                            </a>
+                        </li>
+                        <div class="__top-menu-hamburger-separator"></div>
+                        <li>
+                            <a [routerLink]="" class="__intro-menu-item"
+                                (click)="routeTo('/personal/auth/register')">
+                                Sign Up
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
         <div class="__intro-about-container">
             About Us

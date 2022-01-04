@@ -5,7 +5,7 @@ import { AuthService } from '../services/auth.service';
 
 @Component({
     templateUrl: 'intro.component.html',
-    styleUrls: ['../../assets/menu.scss', '../../assets/intro.scss']
+    styleUrls: ['../../assets/button.scss', '../../assets/intro.scss']
 })
 export class IntroPersonalComponent implements OnInit {
     constructor(private router: Router, private auth: AuthService) { }
