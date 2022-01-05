@@ -10,7 +10,8 @@
                     <button class="__main-button" type="button" (click)="routeTo('/personal/auth/login')">
                         log in
                     </button>
-                    <button class="__outlined-button __button-wide-separator" type="button" (click)="routeTo('/personal/auth/register')">
+                    <button class="__outlined-button __button-wide-separator" type="button"
+                        (click)="routeTo('/personal/auth/register')">
                         SIGN UP
                     </button>
                 </div>
@@ -21,15 +22,13 @@
                     </label>
                     <ul class="__intro-menu-panel">
                         <li>
-                            <a [routerLink]="" class="__intro-menu-item"
-                                (click)="routeTo('/personal/auth/login')">
+                            <a [routerLink]="" class="__intro-menu-item" (click)="routeTo('/personal/auth/login')">
                                 Login
                             </a>
                         </li>
                         <div class="__top-menu-hamburger-separator"></div>
                         <li>
-                            <a [routerLink]="" class="__intro-menu-item"
-                                (click)="routeTo('/personal/auth/register')">
+                            <a [routerLink]="" class="__intro-menu-item" (click)="routeTo('/personal/auth/register')">
                                 Sign Up
                             </a>
                         </li>
@@ -49,7 +48,7 @@
                 </div>
             </div>
             <div class="__intro-frame-order-container">
-                
+
             </div>
         </div>
         <div class="__intro-about-container">
@@ -58,19 +57,52 @@
                     About Us
                 </h2>
             </div>
-            <p>
-                About Us<br>
-            </p>
-            <p>
-                About You<br>
-            </p>
-            <p>
-                About Me<br>
-            </p>
-            <br>
-            <p>
-                About Them<br>
-            </p>
+            <div class="__intro-about-content">
+                <p class="__intro-regular-text">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
+                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                    aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                    cillum dolore eu fugiat nulla pariatur.
+                </p>
+            </div>
+            <div class="__intro-about-section-container">
+                <div class="__intro-about-data-section">
+                    <div class="__intro-about-section-icon __intro-about-section-shield-icon"></div>
+                    <h3 class="__intro-header-3">
+                        Security
+                    </h3>
+                    <div class="__intor-about-data-section-content">
+                        <p class="__intro-regular-text">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                            labore et dolore magna aliqua.
+                        </p>
+                    </div>
+                </div>
+                <div class="__intro-about-data-section">
+                    <div class="__intro-about-section-icon __intro-about-section-rocket-icon"></div>
+                    <h3 class="__intro-header-3">
+                        Fast
+                    </h3>
+                    <div class="__intor-about-data-section-content">
+                        <p class="__intro-regular-text">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                            labore et dolore magna aliqua.
+                        </p>
+                    </div>
+                </div>
+                <div class="__intro-about-data-section">
+                    <div class="__intro-about-section-icon __intro-about-section-globe-icon"></div>
+                    <h3 class="__intro-header-3">
+                        Flexible
+                    </h3>
+                    <div class="__intor-about-data-section-content">
+                        <p class="__intro-regular-text">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                            labore et dolore magna aliqua.
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="__intro-stat-container">
             Stat
@@ -92,34 +124,3 @@
         </div>
     </div>
 </div>
-
-
-
-<!-- <div class="menu-bar">
-    <div class="menu-content-bar">
-        <div class="menu-box">
-            <button mat-icon-button (click)="routeTo('/')">
-                <mat-icon>attractions</mat-icon>
-            </button>
-            <button class="link-button link-button-accent" (click)="routeTo('/personal/intro')">
-                Personal
-            </button>
-            <button class="link-button link-button-primary" (click)="routeTo('/merchant/intro')">
-                Business
-            </button>
-        </div>
-        <div class="menu-box">
-            <button class="link-button link-button-primary" (click)="routeTo('/personal/auth/login')">
-                LOG IN
-            </button>
-            <button class="main-button main-button-primary" (click)="routeTo('/personal/auth/register')">
-                SIGN UP
-            </button>
-        </div>
-        <div class="menu-box">
-            <button class="link-button link-button-accent" (click)="routeTo('/payment')">
-                Quick Checkout
-            </button>
-        </div>
-    </div>
-</div> -->
