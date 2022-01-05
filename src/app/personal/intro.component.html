@@ -22,13 +22,13 @@
                     </label>
                     <ul class="__intro-menu-panel">
                         <li>
-                            <a [routerLink]="" class="__intro-menu-item" (click)="routeTo('/personal/auth/login')">
+                            <a class="__intro-menu-item" href="/personal/auth/login">
                                 Login
                             </a>
                         </li>
                         <div class="__top-menu-hamburger-separator"></div>
                         <li>
-                            <a [routerLink]="" class="__intro-menu-item" (click)="routeTo('/personal/auth/register')">
+                            <a class="__intro-menu-item" href="/personal/auth/register">
                                 Sign Up
                             </a>
                         </li>
@@ -187,13 +187,21 @@
         </div>
         <div class="__intro-footer-container">
             <div class="__intro-footer-policy-list">
-                <a class="__intro-policy-link" [routerLink]="">Terms of Use</a>
+                <a class="__intro-policy-link" target="_blank" rel="noopener noreferrer" href="/terms">
+                    Terms of Use
+                </a>
                 <span class="__intro-policy-link-separator">|</span>
-                <a class="__intro-policy-link" [routerLink]="">Privacy Policy</a>
+                <a class="__intro-policy-link" target="_blank" rel="noopener noreferrer" href="/terms">
+                    Privacy Policy
+                </a>
                 <span class="__intro-policy-link-separator __intro-policy-link-middle-separator">|</span>
-                <a class="__intro-policy-link" [routerLink]="">Cookie Policy</a>
+                <a class="__intro-policy-link" target="_blank" rel="noopener noreferrer" href="/terms">
+                    Cookie Policy
+                </a>
                 <span class="__intro-policy-link-separator">|</span>
-                <a class="__intro-policy-link" [routerLink]="">AML/CTF Policy</a>
+                <a class="__intro-policy-link" target="_blank" rel="noopener noreferrer" href="/terms">
+                    AML/CTF Policy
+                </a>
             </div>
             <div class="__intro-footer-payment-block">
                 <div class="__intro-footer-payment-icon __intro-footer-payment-visa"></div>
