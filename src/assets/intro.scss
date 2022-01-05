@@ -509,7 +509,6 @@
 .__intro-pricelist-table-container {
     width: 100%;
     margin: 0px 0px 40px 0px;
-    background-color: gold;
 
     @media (max-width: $md1 + px) {
         margin: 0px 0px 24px 0px;
@@ -628,18 +627,9 @@
     grid-column: 1;
     grid-row: 8;
     width: 100%;
-    min-height: 798px;
     display: flex;
     flex-direction: column;
     align-items: center;
-
-    @media (max-width: $md2 + px) {
-        min-height: 787px;
-    }
-
-    @media (max-width: $md3 + px) {
-        min-height: 823px;
-    }
 }
 
 .__intro-contacts-subtitle {
@@ -662,8 +652,6 @@
 .__intro-contacts-panel {
     margin: 0px 16px;
     width: 674px;
-
-    background-color: greenyellow;
 
     @media (max-width: $md3 + px) {
         width: calc(100% - 32px);

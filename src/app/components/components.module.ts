@@ -60,6 +60,7 @@ import { TwoFaDialogBox } from './dialogs/two-fa-box.dialog';
 import { TwoFaDialogWizard } from './dialogs/two-fa-wizard.dialog';
 import { SendNotificationDialogBox } from './dialogs/send-notification-box.dialog';
 import { SumsubVerificationDialogBox } from './dialogs/sumsub-verification.dialog';
+import { ContactFormComponent } from './contact-form.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -97,7 +98,7 @@ export class MaterialModule { }
 @NgModule({
     imports: [NgxMaskModule.forRoot(), CommonModule, FormsModule, ReactiveFormsModule, MaterialModule, DirectiveModule, QRCodeModule],
     declarations: [
-        DropdownItemComponent, TabLabelComponent, KycPanelComponent,
+        DropdownItemComponent, TabLabelComponent, KycPanelComponent, ContactFormComponent,
         FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent, FormSearchBoxComponent,
         FormEditBoxComponent, SettingsPasswordBoxComponent,
         DeleteDialogBox, CommonDialogBox, TwoFaDialogBox, TwoFaDialogWizard, SendNotificationDialogBox, SumsubVerificationDialogBox,
@@ -106,7 +107,7 @@ export class MaterialModule { }
         LineBreakPipe, NumberFillPipe,
         TransactionsFilterBarComponent, WalletsFilterBarComponent, ContactsFilterBarComponent, NotificationsFilterBarComponent],
     exports: [
-        DropdownItemComponent, TabLabelComponent, KycPanelComponent,
+        DropdownItemComponent, TabLabelComponent, KycPanelComponent, ContactFormComponent,
         FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent, FormSearchBoxComponent,
         FormEditBoxComponent, SettingsPasswordBoxComponent,
         DeleteDialogBox, CommonDialogBox, TwoFaDialogBox, TwoFaDialogWizard, SendNotificationDialogBox, SumsubVerificationDialogBox,

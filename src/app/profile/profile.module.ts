@@ -33,7 +33,7 @@ import { ProfilePaymentCompleteComponent } from './details/payment-complete.comp
 import { ProfileTransactionsComponent } from './transactions/transactions.component';
 import { ProfileTransactionDetailsComponent } from './transactions/details/transaction-details.component';
 import { ProfileTransactionListComponent } from './transactions/data/transaction-list.component';
-import { ProfilePricelistComponent } from './pricelist/pricelist.component';
+import { ProfilePriceListComponent } from './pricelist/data/price-list.component';
 import { ProfileHomeComponent } from './home/home.component';
 import { ProfileBalanceChartComponent } from './home/data/balance-chart.component';
 import { ProfileBalanceListComponent } from './home/data/balance-list.component';
@@ -84,7 +84,7 @@ export class MaterialModule { }
         ProfileTransactionsComponent, ProfileTransactionListComponent, ProfileTransactionDetailsComponent,
         ProfileContactsComponent, ProfileContactListComponent, ProfileContactCreateComponent, ProfileContactDetailsComponent,
         ProfileWalletsComponent, ProfileWalletListComponent, ProfileWalletCreateComponent, ProfileWalletDetailsComponent,
-        ProfilePricelistComponent,
+        ProfilePriceListComponent,
         ProfilePaymentCompleteComponent, 
         ProfileNotificationsComponent, ProfileNotificationListComponent,
         ProfileSettingsComponent, ProfileInfoSettingsComponent, ProfileVerificationSettingsComponent, ProfileSecuriySettingsComponent,
@@ -96,7 +96,7 @@ export class MaterialModule { }
         ProfileTransactionsComponent, ProfileTransactionDetailsComponent,
         ProfileContactsComponent, ProfileContactCreateComponent, ProfileContactDetailsComponent,
         ProfileWalletsComponent, ProfileWalletCreateComponent, ProfileWalletDetailsComponent,
-        ProfilePricelistComponent,
+        ProfilePriceListComponent,
         ProfilePaymentCompleteComponent,
         ProfileNotificationsComponent,
         ProfileSettingsComponent

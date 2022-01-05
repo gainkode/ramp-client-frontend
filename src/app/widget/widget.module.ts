@@ -42,6 +42,7 @@ import { QRCodeModule } from 'angularx-qrcode';
 import { SendWidgetComponent } from './send.component';
 import { WidgetSendDetailsComponent } from './panels/send-details.component';
 import { TransferWidgetComponent } from './transfer.component';
+import { PaymentIntroComponent } from './payment-intro.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -77,8 +78,8 @@ export class MaterialModule { }
         WidgetRegisterComponent, WidgetLoginAuthComponent, WidgetCodeAuthComponent,
         WidgetInitializationComponent, WidgetOrderDetailsComponent, WidgetReceiveDetailsComponent, WidgetSendDetailsComponent,
         WidgetDisclaimerComponent, WidgetKycComponent, WidgetPaymentComponent, WidgetProcessingFrameComponent,
-        WidgetProcessingInstantpayComponent, WidgetCompleteComponent, WidgetSettingsService],
-    exports: [WidgetComponent, WidgetPanelComponent, ReceiveWidgetComponent, SendWidgetComponent, TransferWidgetComponent],
+        WidgetProcessingInstantpayComponent, WidgetCompleteComponent, WidgetSettingsService, PaymentIntroComponent],
+    exports: [WidgetComponent, WidgetPanelComponent, ReceiveWidgetComponent, SendWidgetComponent, TransferWidgetComponent, PaymentIntroComponent],
     providers: [],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
