@@ -7,10 +7,6 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  title = 'GetCoins';
-  version = '0.1.1';
-  copyrightYears = '2021';
-
   ngOnInit(): void {
     const w = window as any;
     w.cookieconsent.initialise({
