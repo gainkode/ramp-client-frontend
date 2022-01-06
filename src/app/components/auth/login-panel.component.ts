@@ -157,9 +157,6 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
 
     onSubmit(): void {
         this.registerError('');
-
-        console.log('login');
-
         if (this.loginForm.valid) {
             const login = this.emailField?.value;
             const loginData = this.auth.authenticate(login, this.passwordField?.value, false, (this.widgetId !== '') ? this.widgetId : undefined);
@@ -168,11 +165,6 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
                 this.subscriptions.add(
                     loginData.subscribe(({ data }) => {
                         const userData = data.login as LoginResult;
-
-
-                        console.log(data);
-
-                        
                         this.progressChange.emit(false);
                         if (userData.user?.mode === UserMode.InternalWallet) {
                             if (userData.authTokenAction === 'TwoFactorAuth') {

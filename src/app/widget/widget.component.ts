@@ -100,8 +100,6 @@ export class WidgetComponent implements OnInit {
         this.widget.kycFirst = false;
       }
 
-      console.log('data.widgetId', data.widgetId);
-
       this.widget.widgetId = data.widgetId;
       this.widget.email = data.currentUserEmail ?? '';
       this.widget.walletAddressPreset = data.hasFixedAddress ?? false;
@@ -381,6 +379,7 @@ export class WidgetComponent implements OnInit {
   // == Common settings ==
   settingsAuthRequired(email: string): void {
     this.readCommonSettings = false;
+    this.changeDetector.detectChanges();
     setTimeout(() => {
       this.authenticate(this.summary.email);
     }, 100);
@@ -388,6 +387,7 @@ export class WidgetComponent implements OnInit {
 
   settingsIdRequired(): void {
     this.readCommonSettings = false;
+    this.changeDetector.detectChanges();
     setTimeout(() => {
       this.nextStage('order_details', 'Order details', 1, true);
     }, 100);
@@ -395,6 +395,7 @@ export class WidgetComponent implements OnInit {
 
   settingsLoginRequired(email: string): void {
     this.readCommonSettings = false;
+    this.changeDetector.detectChanges();
     this.onLoginRequired(email);
   }
 
@@ -408,6 +409,7 @@ export class WidgetComponent implements OnInit {
   settingsCommonComplete(providers: PaymentProviderView[]): void {
     this.readCommonSettings = false;
     this.paymentProviders = providers.map(val => val);
+    this.changeDetector.detectChanges();
     setTimeout(() => {
       const nextStage = 4;
       if (this.widget.kycFirst && this.requestKyc) {
@@ -571,9 +573,6 @@ export class WidgetComponent implements OnInit {
           if (this.errorHandler.getCurrentError() === 'auth.password_null_or_empty') {
             // Internal user cannot be authorised without a password, so need to
             //  show the authorisation form to fill
-
-            console.log(error);
-
             this.onLoginRequired(login);
           } else if (this.errorHandler.getCurrentError() === 'auth.unconfirmed_email') {
             // User has to confirm email verifying the code
