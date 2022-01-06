@@ -48,8 +48,8 @@
         (onProgress)="progressChanged($event)" (onComplete)="onLoginRequired($event)">
       </app-widget-register>
       <!-- Login Authentication -->
-      <app-widget-login-auth *ngSwitchCase="'login_auth'" [email]="summary.email" (onBack)="loginBack()"
-        (onProgress)="progressChanged($event)" (onComplete)="loginComplete($event)">
+      <app-widget-login-auth *ngSwitchCase="'login_auth'" [email]="summary.email" [widgetId]="widget.widgetId"
+        (onBack)="loginBack()" (onProgress)="progressChanged($event)" (onComplete)="loginComplete($event)">
       </app-widget-login-auth>
       <!-- Code Authentication -->
       <app-widget-code-auth *ngSwitchCase="'code_auth'" [email]="summary.email" [codeLength]="5"
