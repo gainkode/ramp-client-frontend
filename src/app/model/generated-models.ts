@@ -881,7 +881,7 @@ export type MutationLoginArgs = {
   oAuthProvider?: Maybe<OAuthProvider>;
   oAuthToken?: Maybe<Scalars['String']>;
   recaptcha: Scalars['String'];
-  quickCheckout?: Maybe<Scalars['Boolean']>;
+  widgetId?: Maybe<Scalars['String']>;
 };
 
 
@@ -1693,6 +1693,7 @@ export type QueryGetWalletsArgs = {
 
 
 export type QueryGetDashboardStatsArgs = {
+  transactionDateOnly?: Maybe<Scalars['DateTime']>;
   userIdOnly?: Maybe<Array<Scalars['String']>>;
   widgetIdOnly?: Maybe<Array<Scalars['String']>>;
   sourcesOnly?: Maybe<Array<TransactionSource>>;
@@ -2585,6 +2586,30 @@ export type User = {
   defaultCryptoCurrency?: Maybe<Scalars['String']>;
   risk?: Maybe<RiskLevel>;
   riskCodes?: Maybe<Array<Scalars['String']>>;
+  riskAlertCount?: Maybe<Scalars['Int']>;
+  widgetId?: Maybe<Scalars['String']>;
+  widgetCode?: Maybe<Scalars['String']>;
+  affiliateId?: Maybe<Scalars['String']>;
+  affiliateCode?: Maybe<Scalars['String']>;
+  totalBoughtCompleted?: Maybe<Scalars['Float']>;
+  totalBoughtCompletedCount?: Maybe<Scalars['Int']>;
+  totalBoughtInProcess?: Maybe<Scalars['Float']>;
+  totalBoughtInProcessCount?: Maybe<Scalars['Int']>;
+  totalSoldCompleted?: Maybe<Scalars['Float']>;
+  totalSoldCompletedCount?: Maybe<Scalars['Int']>;
+  totalSoldInProcess?: Maybe<Scalars['Float']>;
+  totalSoldInProcessCount?: Maybe<Scalars['Int']>;
+  totalSentCompleted?: Maybe<Scalars['Float']>;
+  totalSentCompletedCount?: Maybe<Scalars['Int']>;
+  totalSentInProcess?: Maybe<Scalars['Float']>;
+  totalSentInProcessCount?: Maybe<Scalars['Int']>;
+  totalReceivedCompleted?: Maybe<Scalars['Float']>;
+  totalReceivedCompletedCount?: Maybe<Scalars['Int']>;
+  totalReceivedInProcess?: Maybe<Scalars['Float']>;
+  totalReceivedInProcessCount?: Maybe<Scalars['Int']>;
+  totalTransactionCount?: Maybe<Scalars['Int']>;
+  avarageTransaction?: Maybe<Scalars['Float']>;
+  data?: Maybe<Scalars['String']>;
 };
 
 export type UserAction = {
@@ -2784,6 +2809,7 @@ export type UserInput = {
   defaultCryptoCurrency?: Maybe<Scalars['String']>;
   risk?: Maybe<RiskLevel>;
   riskCodes?: Maybe<Array<Scalars['String']>>;
+  widgetId?: Maybe<Scalars['String']>;
 };
 
 export type UserListResult = {
@@ -2946,9 +2972,11 @@ export type UserShort = {
   kycDocs?: Maybe<Array<Scalars['String']>>;
   defaultFiatCurrency?: Maybe<Scalars['String']>;
   defaultCryptoCurrency?: Maybe<Scalars['String']>;
-  affiliateCode?: Maybe<Scalars['String']>;
   risk?: Maybe<RiskLevel>;
   riskCodes?: Maybe<Array<Scalars['String']>>;
+  riskAlertCount?: Maybe<Scalars['Int']>;
+  totalTransactionCount?: Maybe<Scalars['Int']>;
+  data?: Maybe<Scalars['String']>;
 };
 
 export type UserState = {
@@ -3102,6 +3130,7 @@ export type Widget = {
   widgetId: Scalars['ID'];
   code: Scalars['String'];
   userId: Scalars['String'];
+  userCode?: Maybe<Scalars['String']>;
   name: Scalars['String'];
   description?: Maybe<Scalars['String']>;
   created: Scalars['DateTime'];
@@ -3139,6 +3168,7 @@ export type WidgetListResult = {
 
 export type WidgetShort = {
   __typename?: 'WidgetShort';
+  widgetId: Scalars['ID'];
   code: Scalars['String'];
   name: Scalars['String'];
   description?: Maybe<Scalars['String']>;

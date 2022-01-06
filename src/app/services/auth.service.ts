@@ -7,12 +7,12 @@ import { environment } from 'src/environments/environment';
 import { EmptyObject } from 'apollo-angular/types';
 
 const LOGIN = gql`
-  mutation Login($recaptcha: String!, $email: String!, $password: String, $quickCheckout: Boolean) {
+  mutation Login($recaptcha: String!, $email: String!, $password: String, $widgetId: String) {
       login(
           recaptcha: $recaptcha,
           email: $email,
           password: $password,
-          quickCheckout: $quickCheckout) {
+          widgetId: $widgetId) {
               authToken
               user {
                   userId
@@ -425,16 +425,18 @@ export class AuthService {
         return this.getUserSectionPage('account');
     }
 
-    authenticate(username: string, userpassword: string, quickCheckout: boolean = false): Observable<any> | null {
+    authenticate(username: string, userpassword: string, noPassword: boolean, widgetId: string | undefined = undefined): Observable<any> | null {
         if (this.apollo.client !== undefined) {
+            const vars = {
+                recaptcha: environment.recaptchaId,
+                email: username,
+                password: noPassword ? undefined : userpassword,
+                widgetId
+            };
+            console.log(vars);
             return this.apollo.mutate({
                 mutation: LOGIN,
-                variables: {
-                    recaptcha: environment.recaptchaId,
-                    email: username,
-                    password: quickCheckout ? null : userpassword,
-                    quickCheckout
-                }
+                variables: vars
             });
         } else {
             return null;

@@ -21,6 +21,7 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
     @Input() socialButtons: boolean = false;
     @Input() wizardButtons: boolean = false;
     @Input() errorMessage = '';
+    @Input() widgetId = '';
     @Output() error = new EventEmitter<string>();
     @Output() progressChange = new EventEmitter<boolean>();
     @Output() authenticated = new EventEmitter<LoginResult>();
@@ -156,14 +157,22 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
 
     onSubmit(): void {
         this.registerError('');
+
+        console.log('login');
+
         if (this.loginForm.valid) {
             const login = this.emailField?.value;
-            const loginData = this.auth.authenticate(login, this.passwordField?.value);
+            const loginData = this.auth.authenticate(login, this.passwordField?.value, false, (this.widgetId !== '') ? this.widgetId : undefined);
             if (loginData !== null) {
                 this.progressChange.emit(true);
                 this.subscriptions.add(
                     loginData.subscribe(({ data }) => {
                         const userData = data.login as LoginResult;
+
+
+                        console.log(data);
+
+                        
                         this.progressChange.emit(false);
                         if (userData.user?.mode === UserMode.InternalWallet) {
                             if (userData.authTokenAction === 'TwoFactorAuth') {

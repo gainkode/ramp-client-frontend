@@ -280,6 +280,7 @@ query GetWidget($id: String!, $recaptcha: String!) {
     id: $id,
     recaptcha: $recaptcha
   ) {
+    widgetId
     name
     transactionTypes
     currenciesCrypto

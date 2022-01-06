@@ -3,8 +3,8 @@
         Your account seems to be registered. Please, authenticate
     </div>
 
-    <app-login-panel [socialButtons]="false" [wizardButtons]="true" [userName]="email" [errorMessage]="errorMessage"
-        (error)="loginError($event)" (progressChange)="onProgress.emit($event)" (onBack)="onBack.emit()"
-        (authenticated)="onComplete.emit($event)">
+    <app-login-panel [socialButtons]="false" [wizardButtons]="true" [userName]="email" [widgetId]="widgetId"
+        [errorMessage]="errorMessage" (error)="loginError($event)" (progressChange)="onProgress.emit($event)"
+        (onBack)="onBack.emit()" (authenticated)="onComplete.emit($event)">
     </app-login-panel>
 </div>

@@ -99,7 +99,11 @@ export class WidgetComponent implements OnInit {
         this.widget.disclaimer = true;
         this.widget.kycFirst = false;
       }
-      this.widget.email = data.currentUserEmail as string;
+
+      console.log('data.widgetId', data.widgetId);
+
+      this.widget.widgetId = data.widgetId;
+      this.widget.email = data.currentUserEmail ?? '';
       this.widget.walletAddressPreset = data.hasFixedAddress ?? false;
       this.widget.transaction = undefined;
       if (data.currenciesCrypto) {
@@ -552,18 +556,24 @@ export class WidgetComponent implements OnInit {
   private authenticate(login: string) {
     this.errorMessage = '';
     // Consider that the user is one-time wallet user rather than internal one
-    const authenticateData = this.auth.authenticate(login, '', true);
+    const authenticateData = this.auth.authenticate(login, '', true, (this.widget.widgetId !== '') ? this.widget.widgetId : undefined);
     if (authenticateData !== null) {
       this.inProgress = true;
       this.pSubscriptions.add(
         authenticateData.subscribe(({ data }) => {
           this.inProgress = false;
+
+          console.log(data);
+
           this.checkLoginResult(data.login as LoginResult);
         }, (error) => {
           this.inProgress = false;
           if (this.errorHandler.getCurrentError() === 'auth.password_null_or_empty') {
             // Internal user cannot be authorised without a password, so need to
             //  show the authorisation form to fill
+
+            console.log(error);
+
             this.onLoginRequired(login);
           } else if (this.errorHandler.getCurrentError() === 'auth.unconfirmed_email') {
             // User has to confirm email verifying the code
