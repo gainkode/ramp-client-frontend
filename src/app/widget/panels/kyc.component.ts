@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { SettingsKycShort, SettingsKycTier, SettingsKycTierListResult, TransactionSource, TransactionType } from 'src/app/model/generated-models';
+import { SettingsKycShort, SettingsKycTier, SettingsKycTierListResult, SettingsKycTierShortExListResult, TransactionSource, TransactionType } from 'src/app/model/generated-models';
 import { KycLevel, KycLevelShort } from 'src/app/model/identification.model';
 import { CheckoutSummary } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
@@ -99,7 +99,7 @@ export class WidgetKycComponent implements OnInit, OnDestroy {
       this.onProgress.emit(true);
       this.pSubscriptions.add(
         tiersData.valueChanges.subscribe(({ data }) => {
-          const tiers = data.getAppropriateSettingsKycTiers as SettingsKycTierListResult;
+          const tiers = data.getAppropriateSettingsKycTiers as SettingsKycTierShortExListResult;
           if ((tiers.count ?? 0 > 0) && tiers.list) {
             const rawTiers = [...tiers.list];
             const sortedTiers = rawTiers.sort((a, b) => {
@@ -119,7 +119,7 @@ export class WidgetKycComponent implements OnInit, OnDestroy {
               }
               return 0;
             });
-            this.flow = sortedTiers[0].level?.originalFlowName ?? '';
+            this.flow = sortedTiers[0].originalFlowName ?? '';
           }
           if (this.flow === '') {
             this.getSettings();
