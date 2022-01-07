@@ -105,6 +105,9 @@ export class WidgetComponent implements OnInit {
       this.widget.widgetId = data.widgetId;
       this.widget.email = data.currentUserEmail ?? '';
       this.widget.walletAddressPreset = data.hasFixedAddress ?? false;
+      if (this.quickCheckout) {
+        this.widget.walletAddressPreset = false;
+      }
       this.widget.transaction = undefined;
       if (data.currenciesCrypto) {
         if (data.currenciesCrypto.length > 0) {
