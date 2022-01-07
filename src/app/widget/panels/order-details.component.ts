@@ -352,6 +352,11 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     if (this.spendCurrencyList.length > 0) {
       if (defaultSpendCurrency === '') {
         defaultSpendCurrency = this.spendCurrencyList[0].id;
+      } else {
+        const presented = this.spendCurrencyList.find(x => x.id === defaultSpendCurrency);
+        if (!presented) {
+          defaultSpendCurrency = this.spendCurrencyList[0].id;
+        }
       }
       this.currencySpendField?.setValue(defaultSpendCurrency);
       this.pSpendAutoUpdated = true;
@@ -360,6 +365,11 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     if (this.receiveCurrencyList.length > 0) {
       if (defaultReceiveCurrency === '') {
         defaultReceiveCurrency = this.receiveCurrencyList[0].id;
+      } else {
+        const presented = this.receiveCurrencyList.find(x => x.id === defaultReceiveCurrency);
+        if (!presented) {
+          defaultReceiveCurrency = this.receiveCurrencyList[0].id;
+        }
       }
       this.currencyReceiveField?.setValue(defaultReceiveCurrency);
       this.pReceiveAutoUpdated = true;
