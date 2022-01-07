@@ -21,6 +21,7 @@ import { WidgetPagerService } from '../services/widget-pager.service';
 })
 export class WidgetComponent implements OnInit {
   @Input() userParamsId = '';
+  @Input() quickCheckout = false;
   @Input() settings: WidgetSettings | undefined = undefined;
   @Input() set internal(val: boolean) {
     this.internalPayment = val;
@@ -120,8 +121,8 @@ export class WidgetComponent implements OnInit {
           this.widget.transaction = data.transactionTypes[0];
         }
       }
-      this.widget.source = TransactionSource.Widget;
-    } else {  // Quick checkout
+      this.widget.source = (this.quickCheckout) ? TransactionSource.QuickCheckout : TransactionSource.Widget;
+    } else {  // Quick checkout w/o parameters
       if (!this.widget.embedded) {
         this.widget.disclaimer = false;
         this.widget.kycFirst = false;
