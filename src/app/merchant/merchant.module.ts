@@ -13,7 +13,6 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MerchantGuard } from './merchant.guard';
 import { MerchantComponent } from './merchant.component';
-import { IntroMerchantComponent } from './intro.component';
 import { ComponentsModule } from '../components/components.module';
 import { MerchantLoginComponent } from './auth/login.component';
 import { MerchantRestoreComponent } from './auth/restore.component';
@@ -33,7 +32,6 @@ import { ProfileTransactionsComponent } from '../profile/transactions/transactio
 import { ProfilePriceListComponent } from '../profile/pricelist/data/price-list.component';
 
 const routing = RouterModule.forChild([
-    { path: 'intro', component: IntroMerchantComponent },
     // Auth pages
     { path: 'auth/login', component: MerchantLoginComponent },
     { path: 'auth/register', component: MerchantRegisterComponent },
@@ -94,7 +92,7 @@ export class MaterialModule { }
 
 @NgModule({
     imports: [ CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule ],
-    declarations: [IntroMerchantComponent,
+    declarations: [
         // Auth
         MerchantLoginComponent, MerchantRegisterComponent, MerchantRestoreComponent, MerchantResetComponent,
         MerchantConfirmEmailComponent, MerchantConfirmDeviceComponent, MerchantSuccessComponent,

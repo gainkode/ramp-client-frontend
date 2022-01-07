@@ -19,7 +19,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatListModule } from '@angular/material/list';
 import { PersonalGuard } from './personal.guard';
-import { IntroPersonalComponent } from './intro.component';
 import { PersonalComponent } from './personal.component';
 import { ComponentsModule } from '../components/components.module';
 import { DirectiveModule } from '../directives/directives.module';
@@ -41,8 +40,6 @@ import { ProfileSettingsComponent } from '../profile/settings/settings.component
 import { WidgetModule } from '../widget/widget.module';
 
 const routing = RouterModule.forChild([
-    // Main page
-    { path: 'intro', component: IntroPersonalComponent },
     // Auth pages
     { path: 'auth/login', component: PersonalLoginComponent },
     { path: 'auth/register', component: PersonalRegisterComponent },
@@ -111,8 +108,6 @@ export class MaterialModule { }
 @NgModule({
     imports: [CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule, DirectiveModule],
     declarations: [
-        // Intro
-        IntroPersonalComponent,
         // Auth
         PersonalLoginComponent, PersonalRegisterComponent, PersonalRestoreComponent, PersonalResetComponent,
         PersonalConfirmEmailComponent, PersonalConfirmDeviceComponent, PersonalSuccessComponent,

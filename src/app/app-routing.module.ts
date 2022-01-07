@@ -1,6 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { ComponentsModule } from './components/components.module';
+import { IntroComponent } from './intro.component';
+import { ProfileModule } from './profile/profile.module';
 import { TermsComponent } from './terms.component';
+import { WidgetModule } from './widget/widget.module';
 
 const routes: Routes = [
   {
@@ -22,12 +26,18 @@ const routes: Routes = [
     path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)
   },
   { path: 'terms', component: TermsComponent },
-  { path: '**', redirectTo: '/personal/intro' }
+  { path: '', component: IntroComponent },
+  { path: '**', redirectTo: '' }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  declarations: [TermsComponent],
+  imports: [
+    RouterModule.forRoot(routes),
+    ComponentsModule,
+    ProfileModule,
+    WidgetModule
+  ],
+  declarations: [TermsComponent, IntroComponent],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

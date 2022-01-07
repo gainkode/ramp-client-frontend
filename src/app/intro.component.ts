@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserMode } from '../model/generated-models';
-import { AuthService } from '../services/auth.service';
+import { UserMode } from './model/generated-models';
+import { AuthService } from './services/auth.service';
 
 @Component({
     templateUrl: 'intro.component.html',
-    styleUrls: ['../../assets/button.scss', '../../assets/intro.scss']
+    styleUrls: ['../assets/button.scss', '../assets/intro.scss']
 })
-export class IntroPersonalComponent implements OnInit {
+export class IntroComponent implements OnInit {
     constructor(private router: Router, private auth: AuthService) { }
 
     ngOnInit(): void {
