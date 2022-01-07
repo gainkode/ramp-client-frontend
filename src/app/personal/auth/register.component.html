@@ -6,6 +6,15 @@
                     GetCoins
                 </span>
             </div>
+            <div class="__auth-account-type-tab-container">
+                <div class="__auth-account-type-tab __auth-account-type-tab-left __auth-account-type-tab-selected">
+                    Personal Account
+                </div>
+                <div class="__auth-account-type-tab __auth-account-type-tab-right"
+                    (click)="router.navigateByUrl('/merchant/auth/register')">
+                    Business Account
+                </div>
+            </div>
             <mat-progress-bar *ngIf="inProgress" color="accent" mode="indeterminate"></mat-progress-bar>
             <div class="__auth-data-container">
                 <app-signup-panel [errorMessage]="errorMessage" (error)="onError($event)"
