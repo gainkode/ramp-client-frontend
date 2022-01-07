@@ -19,7 +19,7 @@ export class WidgetSettingsService implements OnInit, OnDestroy {
   @Output() onLoginRequired = new EventEmitter<string>();
   @Output() onKycStatusUpdate = new EventEmitter<boolean>();
   @Output() onComplete = new EventEmitter<PaymentProviderView[]>();
-  
+
   private pSubscriptions: Subscription = new Subscription();
 
   constructor(private auth: AuthService, private paymentService: PaymentDataService, private errorHandler: ErrorService) { }
@@ -111,7 +111,7 @@ export class WidgetSettingsService implements OnInit, OnDestroy {
   private isKycRequired(kyc: User): boolean | null {
     let result = true;
     const kycStatus = kyc.kycStatus?.toLowerCase();
-    if (kycStatus !== 'init') {
+    if (kycStatus !== 'init' && kycStatus !== 'unknown') {
       result = false;
     } else {
       if (kyc.kycValid === true) {

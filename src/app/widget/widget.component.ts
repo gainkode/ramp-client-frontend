@@ -340,6 +340,9 @@ export class WidgetComponent implements OnInit {
     this.summary.currencyTo = data.currencyTo;
     this.summary.transactionType = data.transactionType;
     this.summary.quoteLimit = data.quoteLimit;
+
+    console.log('this.summary.quoteLimit', this.summary.quoteLimit);
+
     if (currencyFromChanged || currencyToChanged) {
       this.exhangeRate.setCurrency(this.summary.currencyFrom, this.summary.currencyTo, this.summary.transactionType);
       this.exhangeRate.update();
@@ -405,6 +408,8 @@ export class WidgetComponent implements OnInit {
       this.widget.kycFirst = true;
     }
     this.requestKyc = state || this.summary.quoteLimit !== 0;
+
+    console.log('requestKyc', this.requestKyc, '<-', state, this.summary.quoteLimit);
   }
 
   settingsCommonComplete(providers: PaymentProviderView[]): void {
@@ -413,6 +418,9 @@ export class WidgetComponent implements OnInit {
     this.changeDetector.detectChanges();
     setTimeout(() => {
       const nextStage = 4;
+
+      console.log('complete', this.widget.kycFirst, this.requestKyc);
+
       if (this.widget.kycFirst && this.requestKyc) {
         this.nextStage('verification', 'Verification', nextStage, false);
       } else {
