@@ -263,7 +263,7 @@
 .__intro-frame-data-container {
     grid-column: 1;
     grid-row: 1;
-    margin: 264px 114px 0px 200px;
+    margin: 204px 114px 0px 200px;
 
     @media (max-width: $md1 + px) {
         margin: 96px 61px 0px 100px;
@@ -797,7 +797,7 @@
     grid-template-rows: 32px;
     grid-template-columns: repeat(6, auto);
     column-gap: 18px;
-    margin: 0px 0px 16px 0px;
+    margin: 0px 0px 8px 0px;
 
     @media (max-width: $md3 + px) {
         grid-template-rows: 32px 32px;
