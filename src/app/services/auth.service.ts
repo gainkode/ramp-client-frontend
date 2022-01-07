@@ -433,7 +433,6 @@ export class AuthService {
                 password: noPassword ? undefined : userpassword,
                 widgetId
             };
-            console.log(vars);
             return this.apollo.mutate({
                 mutation: LOGIN,
                 variables: vars

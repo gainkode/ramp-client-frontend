@@ -120,25 +120,18 @@ query GetAppropriateSettingsKycTiers(
   ) {
     count
     list {
-      settingsKycTierId
       name
       description
       amount
-      levelId
-      level {
-        settingsKycLevelId
-        name
-        original_level_name
-        original_flow_name
-        description
-        data
-      }
-      default
       requireUserFullName
       requireUserPhone
       requireUserBirthday
       requireUserAddress
       requireUserFlatNumber
+      levelName
+      levelDescription
+      originalLevelName
+      originalFlowName
     }
   }
 }
