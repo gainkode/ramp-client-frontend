@@ -111,7 +111,7 @@ export class WidgetSettingsService implements OnInit, OnDestroy {
   private isKycRequired(kyc: User): boolean | null {
     let result = true;
     const kycStatus = kyc.kycStatus?.toLowerCase();
-    if (kycStatus === 'completed' || kycStatus === 'pending') {
+    if (kycStatus !== 'init') {
       result = false;
     } else {
       if (kyc.kycValid === true) {

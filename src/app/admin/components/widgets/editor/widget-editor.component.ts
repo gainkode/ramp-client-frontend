@@ -34,6 +34,7 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
   set widget(widget: WidgetItem) {
     this.setFormData(widget);
     this.widgetLink = widget?.link ?? '';
+    this.widgetMaskLink = widget?.maskLink ?? '';
     this.layoutService.setBackdrop(!widget?.id);
   }
 
@@ -42,6 +43,7 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
   paymentProviderOptions: Array<PaymentProviderView> = [];
   currencyOptionsCrypto: Array<CurrencyView> = [];
   currencyOptionsFiat: Array<CurrencyView> = [];
+  widgetMaskLink = '';
   widgetLink = '';
   countryOptions = Countries;
   instrumentOptions = PaymentInstrumentList;

@@ -24,12 +24,14 @@ export class WidgetItem {
   paymentProviders: Array<string> = [];
   liquidityProvider?: string;
   link = '';
+  maskLink = '';
 
   constructor(data: Widget | null) {
     if (data) {
       const datepipe: DatePipe = new DatePipe('en-US');
       this.id = data.widgetId as string;
       this.link = `${environment.client_host}/payment/widget/${this.id}`;
+      this.maskLink = `${environment.client_host}/payment/widget/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`;
       this.name = data.name;
       this.description = data.description ?? '';
       this.additionalSettings = data.additionalSettings as string;
