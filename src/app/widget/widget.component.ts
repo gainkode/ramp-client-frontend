@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { AssetAddressShortListResult, LoginResult, PaymentInstrument, PaymentPreauthResultShort, Rate, TransactionShort, TransactionSource, TransactionType, WidgetShort } from 'src/app/model/generated-models';
 import { CardView, CheckoutSummary, PaymentProviderView } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
@@ -277,7 +278,7 @@ export class WidgetComponent implements OnInit {
     } else {
       this.inProgress = true;
       this.pSubscriptions.add(
-        widgetData.valueChanges.subscribe(({ data }) => {
+        widgetData.valueChanges.pipe(take(1)).subscribe(({ data }) => {
           this.inProgress = false;
           this.initData(data.getWidget as WidgetShort);
           this.pager.init('order_details', 'Order details');
@@ -298,7 +299,7 @@ export class WidgetComponent implements OnInit {
       this.errorMessage = this.errorHandler.getRejectedCookieMessage();
     } else {
       this.pSubscriptions.add(
-        walletData.valueChanges.subscribe(({ data }) => {
+        walletData.valueChanges.pipe(take(1)).subscribe(({ data }) => {
           this.inProgress = false;
           const dataList = data.myWallets as AssetAddressShortListResult;
           if (dataList !== null) {
@@ -564,9 +565,6 @@ export class WidgetComponent implements OnInit {
       this.pSubscriptions.add(
         authenticateData.subscribe(({ data }) => {
           this.inProgress = false;
-
-          console.log(data);
-
           this.checkLoginResult(data.login as LoginResult);
         }, (error) => {
           this.inProgress = false;
