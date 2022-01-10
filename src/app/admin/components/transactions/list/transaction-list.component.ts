@@ -137,6 +137,24 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   unbenchmark(): void {
+    const dialogRef = this.dialog.open(DeleteDialogBox, {
+      width: '400px',
+      data: {
+        title: 'Unbenchmark transaction(s)',
+        message: `You are going to update transaction data. Confirm operation.`,
+        button: 'CONFIRM'
+      }
+    });
+    this.subscriptions.add(
+      dialogRef.afterClosed().subscribe(result => {
+        if (result === true) {
+          this.executeUnbenchmark();
+        }
+      })
+    );
+  }
+
+  private executeUnbenchmark(): void {
     const requestData = this.adminService.unbenchmarkTransaction(
       this.transactions.map(val => val.id)
     );
