@@ -30,7 +30,7 @@ export class WidgetItem {
     if (data) {
       const datepipe: DatePipe = new DatePipe('en-US');
       this.id = data.widgetId as string;
-      this.link = `${environment.client_host}/payment/widget/${this.id}`;
+      this.link = `${environment.client_host}/payment/quickcheckout/${this.id}`;
       this.maskLink = `${environment.client_host}/payment/widget/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`;
       this.name = data.name;
       this.description = data.description ?? '';
