@@ -29,6 +29,7 @@ export class TransactionItemDeprecated {
   code = '';
   created = '';
   executed = '';
+  updated = '';
   accountId = '';
   accountName = '';
   type: TransactionType | undefined = undefined;
@@ -54,6 +55,7 @@ export class TransactionItemDeprecated {
   statusInfo: TransactionStatusDescriptorMap | undefined = undefined;
   user: UserItem | undefined;
   balance = 0;
+  accountStatus = '';
   kycStatus = '';
   kycTier = '';
   widgetId = '';
@@ -61,13 +63,15 @@ export class TransactionItemDeprecated {
 
   constructor(data: Transaction | TransactionShort | null) {
     if (data !== null) {
-      this.code = data.code as string;
+      this.code = data.code ?? '';
       this.id = data.transactionId;
       const datepipe: DatePipe = new DatePipe('en-US');
       this.created = datepipe.transform(data.created, 'dd-MM-YYYY HH:mm:ss') as string;
       this.executed = datepipe.transform(data.executed, 'dd-MM-YYYY HH:mm:ss') as string;
+      this.updated = datepipe.transform(data.updated, 'dd-MM-YYYY HH:mm:ss') as string;
       this.address = data.destination as string;
-      this.accountId = data.userId as string;
+      this.accountId = data.userId ?? '';
+      this.accountStatus = data.accountStatus ?? '';
       const transactionData = data as Transaction;
       if (transactionData.user) {
         this.user = new UserItem(transactionData.user as User);
@@ -75,7 +79,6 @@ export class TransactionItemDeprecated {
         this.ip = transactionData.userIp as string;
         this.userMode = transactionData.user?.mode as UserMode | undefined;
       }
-
       this.type = data.type;
       this.instrument = data.instrument ?? undefined;
       this.paymentProvider = data.paymentProvider ?? '';

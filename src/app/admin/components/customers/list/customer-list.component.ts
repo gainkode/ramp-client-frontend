@@ -10,7 +10,7 @@ import { LayoutService } from '../../../services/layout.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { CurrencyView } from 'src/app/model/payment.model';
 import { CommonDataService } from 'src/app/services/common-data.service';
-import { MutationSendAdminNotificationArgs, SettingsCurrencyWithDefaults, User, UserNotificationLevel } from 'src/app/model/generated-models';
+import { SettingsCurrencyWithDefaults, User, UserNotificationLevel } from 'src/app/model/generated-models';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
 import { SendNotificationDialogBox } from 'src/app/components/dialogs/send-notification-box.dialog';
@@ -43,7 +43,7 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
   selected = false;
 
   displayedColumns: string[] = [
-    'details', 'id', 'firstName', 'lastName', 'email', 'kycStatus', 'created', 'country', 'phone'
+    'details', 'referralCode', 'firstName', 'lastName', 'email', 'accountStatus', 'kycStatus', 'created', 'country', 'phone', 'risk', 'id'
   ];
 
   private destroy$ = new Subject();

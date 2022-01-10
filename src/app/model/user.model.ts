@@ -12,6 +12,7 @@ import { getCryptoSymbol } from '../utils/utils';
 
 export class UserItem {
   id = '';
+  referralCode = '';
   company = '';
   firstName = '';
   lastName = '';
@@ -29,6 +30,7 @@ export class UserItem {
   postCode = '';
   stateName = '';
   kycStatus = '';
+  accountStatus = '';
   kycVerificationStatus = '';
   kycVerificationAvailable = true;
   kycLevel = '';
@@ -42,6 +44,7 @@ export class UserItem {
   fiatCurrency = '';
   cryptoCurrency = '';
   birthday: Date | undefined = undefined;
+  risk = '';
   selected = false;
 
   get countryId(): string | undefined {
@@ -51,6 +54,7 @@ export class UserItem {
   constructor(data: User | null) {
     if (data) {
       this.id = data.userId;
+      this.referralCode = data.referralCode?.toString() ?? '';
       this.userType = UserTypeList.find((x) => x.id === data.type) as UserTypeView;
       this.userMode = UserModeShortList.find((x) => x.id === data.mode) as UserModeView;
       this.firstName = data.firstName as string;
@@ -71,7 +75,9 @@ export class UserItem {
       const datepipe: DatePipe = new DatePipe('en-US');
       this.created = datepipe.transform(data.created, 'dd MMM YYYY HH:mm:ss') as string;
       this.kycStatus = data.kycStatus as string;
-
+      this.accountStatus = data.accountStatus ?? '';
+      this.risk = data.risk ?? '';
+      
       const status = this.kycStatus.toLowerCase();
       if (status === KycStatus.Completed.toLowerCase()) {
         this.kycRejected = false;

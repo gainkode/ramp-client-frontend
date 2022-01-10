@@ -355,8 +355,10 @@ const GET_TRANSACTIONS = gql`
           kycStatus
         }
         userTier { name }
+        accountStatus
         created
         executed
+        updated
         type
         source
         status
@@ -425,6 +427,7 @@ const GET_USERS = gql`
         created
         defaultFiatCurrency
         defaultCryptoCurrency
+        accountStatus
         kycStatus
         phone
         postCode
@@ -436,6 +439,7 @@ const GET_USERS = gql`
         buildingNumber
         flatNumber
         referralCode
+        risk
       }
     }
   }

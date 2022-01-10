@@ -56,9 +56,9 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
   private subscriptions: Subscription = new Subscription();
 
   displayedColumns: string[] = [
-    'details', 'id', 'created', 'accountName', 'email', 'type',
+    'details', 'code', 'created', 'accountName', 'email', 'accountStatus', 'type',
     'currencyToSpend', 'amountToSpend', 'currencyToReceive', 'amountToReceive',
-    'address', 'instrument', 'paymentProvider', 'status', 'userType', 'source', 'kycStatus'
+    'address', 'instrument', 'paymentProvider', 'status', 'userType', 'source', 'kycStatus', 'id'
   ];
 
   constructor(
