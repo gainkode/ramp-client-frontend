@@ -43,7 +43,9 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
   selected = false;
 
   displayedColumns: string[] = [
-    'details', 'referralCode', 'firstName', 'lastName', 'email', 'accountStatus', 'kycStatus', 'created', 'country', 'phone', 'risk', 'id'
+    'details', 'referralCode', 'firstName', 'lastName', 'email', 'accountStatus', 'kycStatus',
+    'totalBought', 'totalSold', 'totalSent', 'totalReceived', 
+    'created', 'country', 'phone', 'risk', 'id'
   ];
 
   private destroy$ = new Subject();

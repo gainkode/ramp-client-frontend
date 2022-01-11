@@ -2137,6 +2137,7 @@ export type SettingsKycTierShort = {
 
 export type SettingsKycTierShortEx = {
   __typename?: 'SettingsKycTierShortEx';
+  settingsKycTierId: Scalars['String'];
   name: Scalars['String'];
   description?: Maybe<Scalars['String']>;
   amount?: Maybe<Scalars['Float']>;
@@ -2145,6 +2146,7 @@ export type SettingsKycTierShortEx = {
   requireUserBirthday?: Maybe<Scalars['Boolean']>;
   requireUserAddress?: Maybe<Scalars['Boolean']>;
   requireUserFlatNumber?: Maybe<Scalars['Boolean']>;
+  levelId?: Maybe<Scalars['String']>;
   levelName?: Maybe<Scalars['String']>;
   levelDescription?: Maybe<Scalars['String']>;
   originalLevelName?: Maybe<Scalars['String']>;

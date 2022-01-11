@@ -440,6 +440,23 @@ const GET_USERS = gql`
         flatNumber
         referralCode
         risk
+
+        totalBoughtCompleted
+        totalBoughtCompletedCount
+        totalBoughtInProcess
+        totalBoughtInProcessCount
+        totalSoldCompleted
+        totalSoldCompletedCount
+        totalSoldInProcess
+        totalSoldInProcessCount
+        totalSentCompleted
+        totalSentCompletedCount
+        totalSentInProcess
+        totalSentInProcessCount
+        totalReceivedCompleted
+        totalReceivedCompletedCount
+        totalReceivedInProcess
+        totalReceivedInProcessCount
       }
     }
   }

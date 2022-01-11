@@ -41,10 +41,33 @@ export class UserItem {
   userType: UserTypeView | null = null;
   userMode: UserModeView | null = null;
   created = '';
+  updated = '';
   fiatCurrency = '';
   cryptoCurrency = '';
   birthday: Date | undefined = undefined;
   risk = '';
+  totalBoughtCompleted = 0;
+  totalBoughtCompletedCount = 0;
+  totalBoughtInProcess = 0;
+  totalBoughtInProcessCount = 0;
+  totalSoldCompleted = 0;
+  totalSoldCompletedCount = 0;
+  totalSoldInProcess = 0;
+  totalSoldInProcessCount = 0;
+  totalSentCompleted = 0;
+  totalSentCompletedCount = 0;
+  totalSentInProcess = 0;
+  totalSentInProcessCount = 0;
+  totalReceivedCompleted = 0;
+  totalReceivedCompletedCount = 0;
+  totalReceivedInProcess = 0;
+  totalReceivedInProcessCount = 0;
+  totalBought = '';
+  totalSold = '';
+  totalSent = '';
+  totalReceived = '';
+
+
   selected = false;
 
   get countryId(): string | undefined {
@@ -74,10 +97,31 @@ export class UserItem {
       this.address = this.getAddress(data);
       const datepipe: DatePipe = new DatePipe('en-US');
       this.created = datepipe.transform(data.created, 'dd MMM YYYY HH:mm:ss') as string;
+      this.updated = datepipe.transform(data.updated, 'dd MMM YYYY HH:mm:ss') as string;
       this.kycStatus = data.kycStatus as string;
       this.accountStatus = data.accountStatus ?? '';
       this.risk = data.risk ?? '';
-      
+      this.totalBoughtCompleted = data.totalBoughtCompleted ?? 0;
+      this.totalBoughtCompletedCount = data.totalBoughtCompletedCount ?? 0;
+      this.totalBoughtInProcess = data.totalBoughtInProcess ?? 0;
+      this.totalBoughtInProcessCount = data.totalBoughtInProcessCount ?? 0;
+      this.totalSoldCompleted = data.totalSoldCompleted ?? 0;
+      this.totalSoldCompletedCount = data.totalSoldCompletedCount ?? 0;
+      this.totalSoldInProcess = data.totalSoldInProcess ?? 0;
+      this.totalSoldInProcessCount = data.totalSoldInProcessCount ?? 0;
+      this.totalSentCompleted = data.totalSentCompleted ?? 0;
+      this.totalSentCompletedCount = data.totalSentCompletedCount ?? 0;
+      this.totalSentInProcess = data.totalSentInProcess ?? 0;
+      this.totalSentInProcessCount = data.totalSentInProcessCount ?? 0;
+      this.totalReceivedCompleted = data.totalReceivedCompleted ?? 0;
+      this.totalReceivedCompletedCount = data.totalReceivedCompletedCount ?? 0;
+      this.totalReceivedInProcess = data.totalReceivedInProcess ?? 0;
+      this.totalReceivedInProcessCount = data.totalReceivedInProcessCount ?? 0;
+      this.totalBought = (this.totalBoughtCompleted + this.totalBoughtInProcess).toFixed(2);
+      this.totalSold = (this.totalSoldCompleted + this.totalSoldInProcess).toFixed(2);
+      this.totalSent = (this.totalSentCompleted + this.totalSentInProcess).toFixed(2);
+      this.totalReceived = (this.totalReceivedCompleted + this.totalReceivedInProcess).toFixed(2);
+
       const status = this.kycStatus.toLowerCase();
       if (status === KycStatus.Completed.toLowerCase()) {
         this.kycRejected = false;
