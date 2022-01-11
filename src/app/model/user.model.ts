@@ -45,6 +45,7 @@ export class UserItem {
   fiatCurrency = '';
   cryptoCurrency = '';
   birthday: Date | undefined = undefined;
+  age = '';
   risk = '';
   totalBoughtCompleted = 0;
   totalBoughtCompletedCount = 0;
@@ -67,7 +68,6 @@ export class UserItem {
   totalSent = '';
   totalReceived = '';
 
-
   selected = false;
 
   get countryId(): string | undefined {
@@ -84,6 +84,12 @@ export class UserItem {
       this.lastName = data.lastName as string;
       this.setFullName();
       this.birthday = (data.birthday) ? new Date(data.birthday) : undefined;
+      if (this.birthday) {
+        const currentDate = new Date();
+        const currentMonths = currentDate.getFullYear() * 10000 + currentDate.getMonth() * 100 + currentDate.getDate();
+        const birthDayMonths = this.birthday.getFullYear() * 10000 + this.birthday.getMonth() * 100 + this.birthday.getDate();
+        this.age = Math.floor((currentMonths - birthDayMonths) / 10000).toString();
+      }
       this.email = data.email;
       this.phone = data.phone ? (data.phone as string) : '';
       this.street = data.street ?? '';

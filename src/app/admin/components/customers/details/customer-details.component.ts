@@ -18,6 +18,7 @@ export class CustomerDetailsComponent {
     this.removable = (this.auth.user?.userId !== this.settingsId);
     this.address = (val) ? val.address : '';
     this.userType = (val) ? val.userType?.id ?? UserType.Personal : UserType.Personal;
+    this.age = (val) ? val.age : '';
   }
   @Input() set currencies(val: CurrencyView[]) {
     this.fiatCurrencies = val.filter(x => x.fiat === true);
@@ -33,6 +34,7 @@ export class CustomerDetailsComponent {
   settingsId = '';
   email = '';
   address = '';
+  age = '';
   userType = UserType.Personal;
   loadingData = false;
   errorMessage = '';

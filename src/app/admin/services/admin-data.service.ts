@@ -422,6 +422,7 @@ const GET_USERS = gql`
         lastName
         type
         mode
+        birthday
         countryCode2
         countryCode3
         created
