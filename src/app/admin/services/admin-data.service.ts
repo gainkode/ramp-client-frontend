@@ -492,19 +492,6 @@ const GET_USER_KYC_INFO = gql`
         countryCode3
         
       }
-      requiredInfo {
-        documents {
-          code
-          type
-          name
-          description
-          options
-        }
-        fields {
-          name
-          required
-        }
-      }
     }
   }
 `;
@@ -1502,13 +1489,10 @@ export class AdminDataService {
     })
       .pipe(
         map(res => {
-
           const result = res?.data?.getUserKycInfo;
-
-          console.log(result);
-          // if (result) {
-          //   return result;
-          // }
+          if (result) {
+            return result;
+          }
           return undefined;
         })
       );

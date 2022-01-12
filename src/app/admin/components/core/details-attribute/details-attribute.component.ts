@@ -12,13 +12,18 @@ export class DetailsAttributeComponent implements OnInit {
   label?: string;
 
   @Input()
-  set value(value: string | number | CommonTargetValue | null | undefined) {
+  set value(value: string | string[] | number | CommonTargetValue | null | undefined) {
+    this.setArray = false;
     if (value instanceof CommonTargetValue) {
       this.valueImage = value;
     } else if (typeof (value) === 'number') {
       this.valueString = value.toString();
-    } else {
+    } else if (typeof (value) === 'string') {
       this.valueString = value ? value.trim() : undefined;
+    } else {
+      this.setArray = true;
+      this.valueString = (value) ? (value.length > 0 ? 'data' : undefined) : undefined;
+      this.valueStrings = value ?? [];
     }
   }
 
@@ -31,12 +36,13 @@ export class DetailsAttributeComponent implements OnInit {
     }
   }
 
-  @Input()
-  highlight = false;
+  @Input() highlight = false;
 
   valueString?: string;
+  valueStrings?: string[];
   valueImage?: CommonTargetValue;
   setLink = false;
+  setArray = false;
   urlPath: string | undefined = undefined;
   url: string | undefined = undefined;
 

@@ -52,6 +52,7 @@ export class CustomerDetailsComponent {
   fiatCurrencies: CurrencyView[] = [];
   cryptoCurrencies: CurrencyView[] = [];
   riskLevels = RiskLevelViewList;
+  kycDocs: string [] = [];
 
   dataForm = this.formBuilder.group({
     id: [''],
@@ -127,7 +128,7 @@ export class CustomerDetailsComponent {
     this.adminService.getUserKycInfo(id).pipe(
       takeUntil(this.destroy$)
     ).subscribe(kyc => {
-      console.log(kyc);
+      this.kycDocs = kyc?.appliedDocuments?.map(doc => doc.code) ?? [];
     });
   }
 

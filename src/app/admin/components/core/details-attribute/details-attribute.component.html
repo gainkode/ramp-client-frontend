@@ -1,18 +1,25 @@
 <div *ngIf="!!valueString || !!valueImage" class="wrapper" [class.highlight] = 'highlight'>
     <label class="label">{{label}}</label>
-    <div *ngIf="valueString && setLink===false" class="value">
-        {{valueString}}
+    <div *ngIf="setArray===false">
+        <div *ngIf="valueString && setLink===false" class="value">
+            {{valueString}}
+        </div>
+        <a *ngIf="valueString && url" target="_blank" rel="noopener noreferrer" [href]="url" class="value">
+            {{valueString}}
+        </a>
+        <a *ngIf="valueString && urlPath" [routerLink]="urlPath" class="value">
+            {{valueString}}
+        </a>
+        <div *ngIf="!!valueImage" class="value">
+            <app-dropdown-item itemValue="{{valueImage?.title}}"
+                               imageClass="{{valueImage?.imgClass}}"
+                               imageSource="{{valueImage?.imgSource}}">
+            </app-dropdown-item>
+        </div>
     </div>
-    <a *ngIf="valueString && url" target="_blank" rel="noopener noreferrer" [href]="url" class="value">
-        {{valueString}}
-    </a>
-    <a *ngIf="valueString && urlPath" [routerLink]="urlPath" class="value">
-        {{valueString}}
-    </a>
-    <div *ngIf="!!valueImage" class="value">
-        <app-dropdown-item itemValue="{{valueImage?.title}}"
-                           imageClass="{{valueImage?.imgClass}}"
-                           imageSource="{{valueImage?.imgSource}}">
-        </app-dropdown-item>
+    <div *ngIf="setArray===true">
+        <div *ngFor="let s of valueStrings" class="value">
+            {{s}}
+        </div>
     </div>
 </div>

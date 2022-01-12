@@ -144,9 +144,6 @@
     <app-details-attribute label="Total Transactions" [value]="user?.totalTransactionCount"></app-details-attribute>
     <app-details-attribute label="Avarage Transaction" [value]="user?.avarageTransaction"></app-details-attribute>
 
-    <app-details-attribute label="KYC Tier" [value]="user?.kycLevel"></app-details-attribute>
-    <app-details-attribute label="Risk Level" [value]="user?.risk"></app-details-attribute>
-
     <!-- Crypto currencies -->
     <mat-form-field class="form-element">
         <mat-label>Risk Level</mat-label>
@@ -160,7 +157,11 @@
         </mat-error>
     </mat-form-field>
 
+    <app-details-attribute label="KYC Tier" [value]="user?.kycLevel"></app-details-attribute>
     <app-details-attribute label="KYC Status" [value]="user?.kycStatus"></app-details-attribute>
+
+    <app-details-attribute label="Provided documents" [value]="kycDocs"></app-details-attribute>
+
     <app-details-attribute label="KYC Details" [value]="user?.kycProviderLink" [linkUrl]="kycProviderLink">
     </app-details-attribute>
 
