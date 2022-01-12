@@ -3,7 +3,7 @@ import { CommonTargetValue } from './common.model';
 import {
     PaymentInstrument, PaymentProvider, TransactionType, TransactionStatus,
     SettingsFeeTargetFilterType, SettingsCostTargetFilterType, SettingsKycTargetFilterType,
-    UserType, KycProvider, UserMode, SettingsCurrency, Rate, TransactionSource, UserNotificationCodes, CustodyProvider, TransactionKycStatus
+    UserType, KycProvider, UserMode, SettingsCurrency, Rate, TransactionSource, UserNotificationCodes, CustodyProvider, TransactionKycStatus, RiskLevel
 } from './generated-models';
 
 export class PaymentInstrumentView {
@@ -61,6 +61,11 @@ export class UserModeView {
 
 export class KycProviderView {
     id!: KycProvider;
+    name = '';
+}
+
+export class RiskLevelView {
+    id!: RiskLevel;
     name = '';
 }
 
@@ -271,6 +276,12 @@ export const UserModeShortList: Array<UserModeView> = [
 export const KycProviderList: Array<KycProviderView> = [
     { id: KycProvider.Local, name: 'Local' },
     { id: KycProvider.SumSub, name: 'SumSub' }
+];
+
+export const RiskLevelViewList: Array<RiskLevelView> = [
+    { id: RiskLevel.Low, name: 'Low' },
+    { id: RiskLevel.Medium, name: 'Medium' },
+    { id: RiskLevel.High, name: 'High' }
 ];
 
 export const CustodyProviderList: Array<CustodyProviderView> = [

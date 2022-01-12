@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Countries, getCountryByCode3 } from 'src/app/model/country-code.model';
 import { RiskLevel, User, UserType } from 'src/app/model/generated-models';
-import { CurrencyView } from 'src/app/model/payment.model';
+import { CurrencyView, RiskLevelView, RiskLevelViewList, UserModeView } from 'src/app/model/payment.model';
 import { UserItem } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { Subject } from 'rxjs';
@@ -51,6 +51,7 @@ export class CustomerDetailsComponent {
   countries = Countries;
   fiatCurrencies: CurrencyView[] = [];
   cryptoCurrencies: CurrencyView[] = [];
+  riskLevels = RiskLevelViewList;
 
   dataForm = this.formBuilder.group({
     id: [''],
@@ -60,6 +61,7 @@ export class CustomerDetailsComponent {
     birthday: ['', { validators: [], updateOn: 'change' }],
     country: ['', { validators: [Validators.required], updateOn: 'change' }],
     phone: ['', { validators: [], updateOn: 'change' }],
+    risk: [RiskLevel.Medium, { validators: [Validators.required], updateOn: 'change' }],
     fiat: ['', { validators: [Validators.required], updateOn: 'change' }],
     crypto: ['', { validators: [Validators.required], updateOn: 'change' }]
   });
@@ -98,6 +100,7 @@ export class CustomerDetailsComponent {
           Validators.pattern('^(3[01]|[12][0-9]|0?[1-9])/(1[0-2]|0?[1-9])/(?:[0-9]{2})?[0-9]{2}$')
         ]);
       }
+      this.dataForm.get('risk')?.setValue(data?.risk ?? RiskLevel.Medium);
       this.dataForm.get('country')?.setValue(data?.country?.id);
       this.dataForm.get('phone')?.setValue(data?.phone);
       this.dataForm.get('fiat')?.setValue(data?.fiatCurrency);
@@ -111,6 +114,7 @@ export class CustomerDetailsComponent {
       this.dataForm.get('lastName')?.setValue('');
       this.dataForm.get('birthday')?.setValue('');
       this.dataForm.get('birthday')?.setValidators([]);
+      this.dataForm.get('risk')?.setValue(RiskLevel.Medium);
       this.dataForm.get('country')?.setValue('');
       this.dataForm.get('phone')?.setValue('');
       this.dataForm.get('fiat')?.setValue('');
@@ -142,7 +146,7 @@ export class CustomerDetailsComponent {
       phone: this.dataForm.get('phone')?.value,
       defaultFiatCurrency: this.dataForm.get('fiat')?.value,
       defaultCryptoCurrency: this.dataForm.get('crypto')?.value,
-      risk: RiskLevel.High
+      risk: this.dataForm.get('risk')?.value
     } as User;
     return data;
   }
