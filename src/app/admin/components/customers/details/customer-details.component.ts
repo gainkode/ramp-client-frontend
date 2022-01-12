@@ -1,10 +1,14 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Countries, getCountryByCode3 } from 'src/app/model/country-code.model';
-import { User, UserType } from 'src/app/model/generated-models';
+import { RiskLevel, User, UserType } from 'src/app/model/generated-models';
 import { CurrencyView } from 'src/app/model/payment.model';
 import { UserItem } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
+import { Subject } from 'rxjs';
+import { AdminDataService } from 'src/app/admin/services/admin-data.service';
+import { takeUntil } from 'rxjs/operators';
+import { getFormattedUtcDate } from 'src/app/utils/utils';
 
 @Component({
   selector: 'app-customer-details',
@@ -20,6 +24,9 @@ export class CustomerDetailsComponent {
     this.userType = (val) ? val.userType?.id ?? UserType.Personal : UserType.Personal;
     this.kycProviderLink = (val) ? val.kycProviderLink : '';
     this.user = val;
+    if (val) {
+      this.getUserKycInfo(this.settingsId);
+    }
   }
   @Input() set currencies(val: CurrencyView[]) {
     this.fiatCurrencies = val.filter(x => x.fiat === true);
@@ -50,18 +57,22 @@ export class CustomerDetailsComponent {
     email: ['', { validators: [Validators.required], updateOn: 'change' }],
     firstName: ['', { validators: [Validators.required], updateOn: 'change' }],
     lastName: ['', { validators: [], updateOn: 'change' }],
+    birthday: ['', { validators: [], updateOn: 'change' }],
     country: ['', { validators: [Validators.required], updateOn: 'change' }],
     phone: ['', { validators: [], updateOn: 'change' }],
     fiat: ['', { validators: [Validators.required], updateOn: 'change' }],
     crypto: ['', { validators: [Validators.required], updateOn: 'change' }]
   });
 
+  private destroy$ = new Subject();
+
   constructor(
     private formBuilder: FormBuilder,
-    private auth: AuthService) {
+    private auth: AuthService,
+    private adminService: AdminDataService) {
   }
 
-  setFormData(data: UserItem | null | undefined): void {
+  private setFormData(data: UserItem | null | undefined): void {
     this.errorMessage = '';
     this.dataForm.reset();
     if (data) {
@@ -71,9 +82,21 @@ export class CustomerDetailsComponent {
       if (data.userType?.id === UserType.Merchant) {
         this.dataForm.get('firstName')?.setValue(data?.company);
         this.dataForm.get('lastName')?.setValue('');
+        this.dataForm.get('birthday')?.setValue('');
+        this.dataForm.get('birthday')?.setValidators([]);
       } else {
         this.dataForm.get('firstName')?.setValue(data?.firstName);
         this.dataForm.get('lastName')?.setValue(data?.lastName);
+        if (data?.birthday) {
+          const d = `${data.birthday.getDate()}/${data.birthday.getMonth() + 1}/${data.birthday.getFullYear()}`;
+          this.dataForm.get('birthday')?.setValue(d);
+        } else {
+          this.dataForm.get('birthday')?.setValue('');
+        }
+        this.dataForm.get('birthday')?.setValidators([
+          Validators.required,
+          Validators.pattern('^(3[01]|[12][0-9]|0?[1-9])/(1[0-2]|0?[1-9])/(?:[0-9]{2})?[0-9]{2}$')
+        ]);
       }
       this.dataForm.get('country')?.setValue(data?.country?.id);
       this.dataForm.get('phone')?.setValue(data?.phone);
@@ -86,14 +109,25 @@ export class CustomerDetailsComponent {
       this.dataForm.get('email')?.setValue('');
       this.dataForm.get('firstName')?.setValue('');
       this.dataForm.get('lastName')?.setValue('');
+      this.dataForm.get('birthday')?.setValue('');
+      this.dataForm.get('birthday')?.setValidators([]);
       this.dataForm.get('country')?.setValue('');
       this.dataForm.get('phone')?.setValue('');
       this.dataForm.get('fiat')?.setValue('');
       this.dataForm.get('crypto')?.setValue('');
     }
+    this.dataForm.get('birthday')?.updateValueAndValidity();
   }
 
-  setCustomerData(): User {
+  private getUserKycInfo(id: string): void {
+    this.adminService.getUserKycInfo(id).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(kyc => {
+      console.log(kyc);
+    });
+  }
+
+  private setCustomerData(): User {
     const code3 = this.dataForm.get('country')?.value;
     const country = getCountryByCode3(code3);
     const code2 = (country) ? country.code2 : '';
@@ -102,11 +136,13 @@ export class CustomerDetailsComponent {
       email: this.dataForm.get('email')?.value,
       firstName: this.dataForm.get('firstName')?.value,
       lastName: this.dataForm.get('lastName')?.value,
+      birthday: getFormattedUtcDate(this.dataForm.get('birthday')?.value ?? ''),
       countryCode2: code2,
       countryCode3: code3,
       phone: this.dataForm.get('phone')?.value,
       defaultFiatCurrency: this.dataForm.get('fiat')?.value,
-      defaultCryptoCurrency: this.dataForm.get('crypto')?.value
+      defaultCryptoCurrency: this.dataForm.get('crypto')?.value,
+      risk: RiskLevel.High
     } as User;
     return data;
   }
@@ -127,13 +163,3 @@ export class CustomerDetailsComponent {
     this.cancel.emit();
   }
 }
-
-
-
-/**
- riskCodes,
- widgetId,
- widgetCode,
- affiliateId,
- affiliateCode
- */

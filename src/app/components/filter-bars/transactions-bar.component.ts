@@ -25,7 +25,8 @@ export class TransactionsFilterBarComponent implements OnInit, OnDestroy {
         walletTypes: [[]],
         transactionTypes: [[]],
         transactionDate: ['', {
-            validators: [Validators.pattern('^(3[01]|[12][0-9]|0?[1-9])/(1[0-2]|0?[1-9])/(?:[0-9]{2})?[0-9]{2}$')
+            validators: [
+                Validators.pattern('^(3[01]|[12][0-9]|0?[1-9])/(1[0-2]|0?[1-9])/(?:[0-9]{2})?[0-9]{2}$')
             ], updateOn: 'change'
         }],
         sender: ['']

@@ -1,6 +1,7 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgxMaskModule, IConfig } from 'ngx-mask'
 import { MatTabsModule } from '@angular/material/tabs';
 import { MAT_CHIPS_DEFAULT_OPTIONS, MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -76,8 +77,11 @@ import { SystemUserListComponent } from './components/system-users/list/user-lis
 import { SystemUserSingleComponent } from './components/system-users/user-single/user-single.component';
 import { SystemUserDetailsComponent } from './components/system-users/details/user-details.component';
 
+export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
+
 @NgModule({
   imports: [
+    NgxMaskModule.forRoot(), 
     CommonModule,
     FormsModule,
     ReactiveFormsModule,

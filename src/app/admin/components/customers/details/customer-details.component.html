@@ -58,23 +58,20 @@
         </mat-error>
     </mat-form-field>
 
-
-
-
     <!-- Birthday -->
-    <!-- <mat-form-field *ngIf="age!==''" class="form-element">
-        <mat-label>Age</mat-label>
-        <input type="text" matInput formControlName="lastName" maxlength="50" placeholder="Last name" />
-        <mat-error *ngIf="this.dataForm.get('lastName')?.hasError('required')">
-            Please specify the customer name
+    <mat-form-field *ngIf="userType===USER_TYPE.Personal" class="form-element">
+        <mat-label>Birthday</mat-label>
+        <input type="text" matInput formControlName="birthday" maxlength="10" mask="d0/M0/0000" placeholder="DD/MM/YYYY"
+            [dropSpecialCharacters]="false" />
+        <mat-error *ngIf="this.dataForm.get('birthday')?.hasError('required')">
+            Please specify the birthday
         </mat-error>
-    </mat-form-field> -->
-
+        <mat-error *ngIf="this.dataForm.get('birthday')?.hasError('pattern')">
+            Incorrect date format
+        </mat-error>
+    </mat-form-field>
     <app-details-attribute label="Age" [value]="user?.age"></app-details-attribute>
     <app-details-attribute label="Account Status" [value]="user?.accountStatus"></app-details-attribute>
-    <app-details-attribute label="Risk Level" [value]="user?.risk"></app-details-attribute>
-    <app-details-attribute label="KYC Status" [value]="user?.kycStatus"></app-details-attribute>
-    <app-details-attribute label="KYC Details" [value]="user?.kycProviderLink" [linkUrl]="kycProviderLink"></app-details-attribute>
 
     <!-- Country -->
     <mat-form-field class="form-element">
@@ -125,18 +122,33 @@
     </mat-form-field>
 
     <!-- Totals -->
-    <app-details-attribute label="Total Transaction Count" [value]="user?.totalTransactionCount"></app-details-attribute>
+    <app-details-attribute label="Total Transaction Count" [value]="user?.totalTransactionCount">
+    </app-details-attribute>
     <app-details-attribute label="Avarage Transaction" [value]="user?.avarageTransaction"></app-details-attribute>
-    <app-details-attribute label="Total Bought Completed" [value]="user?.totalBoughtCompletedResult"></app-details-attribute>
-    <app-details-attribute label="Total Bought In Process" [value]="user?.totalBoughtInProcessResult"></app-details-attribute>
-    <app-details-attribute label="Total Sold Completed" [value]="user?.totalSoldCompletedResult"></app-details-attribute>
-    <app-details-attribute label="Total Sold In Process" [value]="user?.totalSoldInProcessResult"></app-details-attribute>
-    <app-details-attribute label="Total Sent Completed" [value]="user?.totalSentCompletedResult"></app-details-attribute>
-    <app-details-attribute label="Total Sent In Process" [value]="user?.totalSentInProcessResult"></app-details-attribute>
-    <app-details-attribute label="Total Received Completed" [value]="user?.totalReceivedCompletedResult"></app-details-attribute>
-    <app-details-attribute label="Total Received In Process" [value]="user?.totalReceivedInProcessResult"></app-details-attribute>
+    <app-details-attribute label="Total Bought Completed" [value]="user?.totalBoughtCompletedResult">
+    </app-details-attribute>
+    <app-details-attribute label="Total Bought In Process" [value]="user?.totalBoughtInProcessResult">
+    </app-details-attribute>
+    <app-details-attribute label="Total Sold Completed" [value]="user?.totalSoldCompletedResult">
+    </app-details-attribute>
+    <app-details-attribute label="Total Sold In Process" [value]="user?.totalSoldInProcessResult">
+    </app-details-attribute>
+    <app-details-attribute label="Total Sent Completed" [value]="user?.totalSentCompletedResult">
+    </app-details-attribute>
+    <app-details-attribute label="Total Sent In Process" [value]="user?.totalSentInProcessResult">
+    </app-details-attribute>
+    <app-details-attribute label="Total Received Completed" [value]="user?.totalReceivedCompletedResult">
+    </app-details-attribute>
+    <app-details-attribute label="Total Received In Process" [value]="user?.totalReceivedInProcessResult">
+    </app-details-attribute>
     <app-details-attribute label="Total Transactions" [value]="user?.totalTransactionCount"></app-details-attribute>
     <app-details-attribute label="Avarage Transaction" [value]="user?.avarageTransaction"></app-details-attribute>
+
+    <app-details-attribute label="KYC Tier" [value]="user?.kycLevel"></app-details-attribute>
+    <app-details-attribute label="Risk Level" [value]="user?.risk"></app-details-attribute>
+    <app-details-attribute label="KYC Status" [value]="user?.kycStatus"></app-details-attribute>
+    <app-details-attribute label="KYC Details" [value]="user?.kycProviderLink" [linkUrl]="kycProviderLink">
+    </app-details-attribute>
 
     <app-details-attribute label="Lasr updated" [value]="user?.updated"></app-details-attribute>
 

@@ -9,12 +9,14 @@ import {
   AssetAddressListResult,
   CountryCodeType,
   DashboardStats,
+  KycInfo,
   QueryGetDashboardStatsArgs,
   QueryGetNotificationsArgs, QueryGetRiskAlertsArgs,
   QueryGetSettingsFeeArgs,
   QueryGetSettingsKycArgs,
   QueryGetSettingsKycLevelsArgs,
   QueryGetTransactionsArgs,
+  QueryGetUserKycInfoArgs,
   QueryGetUsersArgs,
   QueryGetWalletsArgs,
   QueryGetWidgetsArgs, RiskAlertResultList,
@@ -432,6 +434,7 @@ const GET_USERS = gql`
         accountStatus
         kycStatus
         kycProviderLink
+        kycTier { name }
         phone
         postCode
         town
@@ -470,6 +473,42 @@ const GET_USERS = gql`
     }
   }
 `;
+
+const GET_USER_KYC_INFO = gql`
+  query GetUserKycInfo(
+    $userId: String
+  ) {
+    getUserKycInfo(
+      userId: $userId
+    ) {
+      appliedDocuments {
+        code
+        firstName
+        lastName
+        issuedDate
+        validUntil
+        number
+        countryCode2
+        countryCode3
+        
+      }
+      requiredInfo {
+        documents {
+          code
+          type
+          name
+          description
+          options
+        }
+        fields {
+          name
+          required
+        }
+      }
+    }
+  }
+`;
+
 
 const GET_WALLETS = gql`
   query GetWallets(
@@ -842,9 +881,11 @@ mutation UpdateUser(
   $email: String!,
   $firstName: String
   $lastName: String
+  $birthday: DateTime
   $countryCode2: String
   $countryCode3: String
   $phone: String
+  $risk: RiskLevel
   $defaultFiatCurrency: String
   $defaultCryptoCurrency: String
 ) {
@@ -854,9 +895,11 @@ mutation UpdateUser(
       email: $email
       firstName: $firstName
       lastName: $lastName
+      birthday: $birthday
       countryCode2: $countryCode2
       countryCode3: $countryCode3
       phone: $phone
+      risk: $risk
       defaultFiatCurrency: $defaultFiatCurrency
       defaultCryptoCurrency: $defaultCryptoCurrency
     }
@@ -1449,6 +1492,28 @@ export class AdminDataService {
       );
   }
 
+  getUserKycInfo(userId: string): Observable<KycInfo | undefined> {
+    return this.watchQuery<{ getUserKycInfo: KycInfo }, QueryGetUserKycInfoArgs>({
+      query: GET_USER_KYC_INFO,
+      variables: {
+        userId
+      },
+      fetchPolicy: 'network-only'
+    })
+      .pipe(
+        map(res => {
+
+          const result = res?.data?.getUserKycInfo;
+
+          console.log(result);
+          // if (result) {
+          //   return result;
+          // }
+          return undefined;
+        })
+      );
+  }
+
   getWallets(
     pageIndex: number,
     takeItems: number,
@@ -1783,9 +1848,11 @@ export class AdminDataService {
         email: customer.email,
         firstName: customer.firstName,
         lastName: customer.lastName,
+        birthday: customer.birthday,
         countryCode2: customer.countryCode2,
         countryCode3: customer.countryCode3,
         phone: customer.phone,
+        risk: customer.risk,
         defaultFiatCurrency: customer.defaultFiatCurrency,
         defaultCryptoCurrency: customer.defaultCryptoCurrency
       }
