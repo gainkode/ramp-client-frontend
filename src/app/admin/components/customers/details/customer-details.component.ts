@@ -18,7 +18,8 @@ export class CustomerDetailsComponent {
     this.removable = (this.auth.user?.userId !== this.settingsId);
     this.address = (val) ? val.address : '';
     this.userType = (val) ? val.userType?.id ?? UserType.Personal : UserType.Personal;
-    this.age = (val) ? val.age : '';
+    this.kycProviderLink = (val) ? val.kycProviderLink : '';
+    this.user = val;
   }
   @Input() set currencies(val: CurrencyView[]) {
     this.fiatCurrencies = val.filter(x => x.fiat === true);
@@ -34,7 +35,8 @@ export class CustomerDetailsComponent {
   settingsId = '';
   email = '';
   address = '';
-  age = '';
+  kycProviderLink = '';
+  user: UserItem | null | undefined;
   userType = UserType.Personal;
   loadingData = false;
   errorMessage = '';
@@ -125,3 +127,13 @@ export class CustomerDetailsComponent {
     this.cancel.emit();
   }
 }
+
+
+
+/**
+ riskCodes,
+ widgetId,
+ widgetCode,
+ affiliateId,
+ affiliateCode
+ */

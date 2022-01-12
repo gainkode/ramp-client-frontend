@@ -426,10 +426,12 @@ const GET_USERS = gql`
         countryCode2
         countryCode3
         created
+        updated
         defaultFiatCurrency
         defaultCryptoCurrency
         accountStatus
         kycStatus
+        kycProviderLink
         phone
         postCode
         town
@@ -440,8 +442,14 @@ const GET_USERS = gql`
         buildingNumber
         flatNumber
         referralCode
+        widgetId
+        widgetCode
+        affiliateId
+        affiliateCode
         risk
-
+        riskCodes
+        totalTransactionCount
+        avarageTransaction
         totalBoughtCompleted
         totalBoughtCompletedCount
         totalBoughtInProcess

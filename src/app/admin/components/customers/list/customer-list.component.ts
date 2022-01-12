@@ -44,7 +44,7 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   displayedColumns: string[] = [
     'details', 'referralCode', 'firstName', 'lastName', 'email', 'accountStatus', 'kycStatus',
-    'totalBought', 'totalSold', 'totalSent', 'totalReceived', 
+    'widgetId', 'totalBought', 'totalSold', 'totalSent', 'totalReceived', 
     'created', 'country', 'phone', 'risk', 'id'
   ];
 

@@ -29,8 +29,13 @@ export class UserItem {
   town = '';
   postCode = '';
   stateName = '';
-  kycStatus = '';
   accountStatus = '';
+  widgetId = '';
+  widgetCode = '';
+  affiliateId = '';
+  affiliateCode = '';
+  kycStatus = '';
+  kycProviderLink = '';
   kycVerificationStatus = '';
   kycVerificationAvailable = true;
   kycLevel = '';
@@ -47,6 +52,8 @@ export class UserItem {
   birthday: Date | undefined = undefined;
   age = '';
   risk = '';
+  totalTransactionCount = 0;
+  avarageTransaction = 0;
   totalBoughtCompleted = 0;
   totalBoughtCompletedCount = 0;
   totalBoughtInProcess = 0;
@@ -63,6 +70,14 @@ export class UserItem {
   totalReceivedCompletedCount = 0;
   totalReceivedInProcess = 0;
   totalReceivedInProcessCount = 0;
+  totalBoughtCompletedResult = '';
+  totalBoughtInProcessResult = '';
+  totalSoldCompletedResult = '';
+  totalSoldInProcessResult = '';
+  totalSentCompletedResult = '';
+  totalSentInProcessResult = '';
+  totalReceivedCompletedResult = '';
+  totalReceivedInProcessResult = '';
   totalBought = '';
   totalSold = '';
   totalSent = '';
@@ -104,9 +119,19 @@ export class UserItem {
       const datepipe: DatePipe = new DatePipe('en-US');
       this.created = datepipe.transform(data.created, 'dd MMM YYYY HH:mm:ss') as string;
       this.updated = datepipe.transform(data.updated, 'dd MMM YYYY HH:mm:ss') as string;
+      this.widgetId = data.widgetId ?? '';
+      this.widgetCode = data.widgetCode ?? '';
+      this.affiliateId = data.affiliateId ?? '';
+      this.affiliateCode = data.affiliateCode ?? '';
       this.kycStatus = data.kycStatus as string;
+      this.kycProviderLink = data.kycProviderLink ?? '';
       this.accountStatus = data.accountStatus ?? '';
       this.risk = data.risk ?? '';
+
+      console.log(data.riskCodes);
+
+      this.totalTransactionCount = data.totalTransactionCount ?? 0;
+      this.avarageTransaction = data.avarageTransaction ?? 0;
       this.totalBoughtCompleted = data.totalBoughtCompleted ?? 0;
       this.totalBoughtCompletedCount = data.totalBoughtCompletedCount ?? 0;
       this.totalBoughtInProcess = data.totalBoughtInProcess ?? 0;
@@ -123,6 +148,14 @@ export class UserItem {
       this.totalReceivedCompletedCount = data.totalReceivedCompletedCount ?? 0;
       this.totalReceivedInProcess = data.totalReceivedInProcess ?? 0;
       this.totalReceivedInProcessCount = data.totalReceivedInProcessCount ?? 0;
+      this.totalBoughtCompletedResult = this.getTransactionResult(this.totalBoughtCompleted, this.totalBoughtCompletedCount);
+      this.totalBoughtInProcessResult = this.getTransactionResult(this.totalBoughtInProcess, this.totalBoughtInProcessCount);
+      this.totalSoldCompletedResult = this.getTransactionResult(this.totalSoldCompleted, this.totalSoldCompletedCount);
+      this.totalSoldInProcessResult = this.getTransactionResult(this.totalSoldInProcess, this.totalSoldInProcessCount);
+      this.totalSentCompletedResult = this.getTransactionResult(this.totalSentCompleted, this.totalSentCompletedCount);
+      this.totalSentInProcessResult = this.getTransactionResult(this.totalSentInProcess, this.totalSentInProcessCount);
+      this.totalReceivedCompletedResult = this.getTransactionResult(this.totalReceivedCompleted, this.totalReceivedCompletedCount);
+      this.totalReceivedInProcessResult = this.getTransactionResult(this.totalReceivedInProcess, this.totalReceivedInProcessCount);
       this.totalBought = (this.totalBoughtCompleted + this.totalBoughtInProcess).toFixed(2);
       this.totalSold = (this.totalSoldCompleted + this.totalSoldInProcess).toFixed(2);
       this.totalSent = (this.totalSentCompleted + this.totalSentInProcess).toFixed(2);
@@ -164,6 +197,14 @@ export class UserItem {
         ? (data.defaultCryptoCurrency as string)
         : '';
     }
+  }
+
+  private getTransactionResult(val: number, count: number): string {
+    return `${val.toFixed(2)} (${this.getTransactionCount(count)})`;
+  }
+
+  private getTransactionCount(c: number): string {
+    return (c === 1) ? '1 transaction' : `${c} transactions`;
   }
 
   private getAddress(user: User): string {

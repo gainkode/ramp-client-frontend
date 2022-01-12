@@ -10,8 +10,16 @@
         <h2>Customer info</h2>
         <app-details-attribute label="Account ID" [value]="settingsId" [linkUrl]="'/admin/customers/'+ settingsId">
         </app-details-attribute>
+
+        <app-details-attribute label="Widget" [value]="user?.widgetId"></app-details-attribute>
+        <app-details-attribute label="Widget Code" [value]="user?.widgetCode"></app-details-attribute>
+
+        <app-details-attribute label="Affiliate" [value]="user?.affiliateId"></app-details-attribute>
+        <app-details-attribute label="Affiliate Code" [value]="user?.affiliateCode"></app-details-attribute>
+
+        <!-- Temp -->
         <app-details-attribute label="Address" [value]="address"></app-details-attribute>
-        <!-- <app-details-attribute label="Account Currency" [value]="customer?.fiatCurrency"></app-details-attribute> -->
+        <!-- Temp -->
     </section>
 
     <!-- Email -->
@@ -53,9 +61,6 @@
 
 
 
-    <!-- Age -->
-    <app-details-attribute label="Age" [value]="age"></app-details-attribute>
-
     <!-- Birthday -->
     <!-- <mat-form-field *ngIf="age!==''" class="form-element">
         <mat-label>Age</mat-label>
@@ -65,7 +70,11 @@
         </mat-error>
     </mat-form-field> -->
 
-
+    <app-details-attribute label="Age" [value]="user?.age"></app-details-attribute>
+    <app-details-attribute label="Account Status" [value]="user?.accountStatus"></app-details-attribute>
+    <app-details-attribute label="Risk Level" [value]="user?.risk"></app-details-attribute>
+    <app-details-attribute label="KYC Status" [value]="user?.kycStatus"></app-details-attribute>
+    <app-details-attribute label="KYC Details" [value]="user?.kycProviderLink" [linkUrl]="kycProviderLink"></app-details-attribute>
 
     <!-- Country -->
     <mat-form-field class="form-element">
@@ -114,6 +123,22 @@
             Please specify default crypto currency
         </mat-error>
     </mat-form-field>
+
+    <!-- Totals -->
+    <app-details-attribute label="Total Transaction Count" [value]="user?.totalTransactionCount"></app-details-attribute>
+    <app-details-attribute label="Avarage Transaction" [value]="user?.avarageTransaction"></app-details-attribute>
+    <app-details-attribute label="Total Bought Completed" [value]="user?.totalBoughtCompletedResult"></app-details-attribute>
+    <app-details-attribute label="Total Bought In Process" [value]="user?.totalBoughtInProcessResult"></app-details-attribute>
+    <app-details-attribute label="Total Sold Completed" [value]="user?.totalSoldCompletedResult"></app-details-attribute>
+    <app-details-attribute label="Total Sold In Process" [value]="user?.totalSoldInProcessResult"></app-details-attribute>
+    <app-details-attribute label="Total Sent Completed" [value]="user?.totalSentCompletedResult"></app-details-attribute>
+    <app-details-attribute label="Total Sent In Process" [value]="user?.totalSentInProcessResult"></app-details-attribute>
+    <app-details-attribute label="Total Received Completed" [value]="user?.totalReceivedCompletedResult"></app-details-attribute>
+    <app-details-attribute label="Total Received In Process" [value]="user?.totalReceivedInProcessResult"></app-details-attribute>
+    <app-details-attribute label="Total Transactions" [value]="user?.totalTransactionCount"></app-details-attribute>
+    <app-details-attribute label="Avarage Transaction" [value]="user?.avarageTransaction"></app-details-attribute>
+
+    <app-details-attribute label="Lasr updated" [value]="user?.updated"></app-details-attribute>
 
     <div class="panel-actions">
         <button mat-flat-button color="primary" type="submit">
