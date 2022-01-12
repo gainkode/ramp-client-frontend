@@ -2567,7 +2567,6 @@ export type User = {
   systemUser: Scalars['Boolean'];
   notificationSubscriptions?: Maybe<Array<UserNotificationSubscription>>;
   kycProvider?: Maybe<Scalars['String']>;
-  kycProviderLink?: Maybe<Scalars['String']>;
   kycTierId?: Maybe<Scalars['String']>;
   kycTier?: Maybe<SettingsKycTierShort>;
   kycApplicantId?: Maybe<Scalars['String']>;
@@ -2984,6 +2983,7 @@ export type UserShort = {
 export type UserState = {
   __typename?: 'UserState';
   date?: Maybe<Scalars['DateTime']>;
+  kycProviderLink?: Maybe<Scalars['String']>;
   totalAmountEur?: Maybe<Scalars['Float']>;
   transactionSummary?: Maybe<Array<UserTransactionSummary>>;
   vaults?: Maybe<Array<VaultAccountEx>>;

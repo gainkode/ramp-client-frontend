@@ -35,7 +35,6 @@ export class UserItem {
   affiliateId = '';
   affiliateCode = '';
   kycStatus = '';
-  kycProviderLink = '';
   kycVerificationStatus = '';
   kycVerificationAvailable = true;
   kycLevel = '';
@@ -124,11 +123,10 @@ export class UserItem {
       this.affiliateId = data.affiliateId ?? '';
       this.affiliateCode = data.affiliateCode ?? '';
       this.kycStatus = data.kycStatus as string;
-      this.kycProviderLink = data.kycProviderLink ?? '';
       this.accountStatus = data.accountStatus ?? '';
       this.risk = data.risk ?? '';
 
-      console.log(data.riskCodes);
+      console.log('risk codes', data.riskCodes);
 
       this.totalTransactionCount = data.totalTransactionCount ?? 0;
       this.avarageTransaction = data.avarageTransaction ?? 0;

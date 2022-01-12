@@ -433,7 +433,6 @@ const GET_USERS = gql`
         defaultCryptoCurrency
         accountStatus
         kycStatus
-        kycProviderLink
         kycTier { name }
         phone
         postCode
@@ -871,6 +870,14 @@ mutation UpdateUser(
   $birthday: DateTime
   $countryCode2: String
   $countryCode3: String
+  $postCode: String
+  $town: String
+  $street: String
+  $subStreet: String
+  $stateName: String
+  $buildingName: String
+  $buildingNumber: String
+  $flatNumber: String
   $phone: String
   $risk: RiskLevel
   $defaultFiatCurrency: String
@@ -885,6 +892,14 @@ mutation UpdateUser(
       birthday: $birthday
       countryCode2: $countryCode2
       countryCode3: $countryCode3
+      postCode: $postCode
+      town: $town
+      street: $street
+      subStreet: $subStreet
+      stateName: $stateName
+      buildingName: $buildingName
+      buildingNumber: $buildingNumber
+      flatNumber: $flatNumber
       phone: $phone
       risk: $risk
       defaultFiatCurrency: $defaultFiatCurrency
@@ -1835,6 +1850,14 @@ export class AdminDataService {
         birthday: customer.birthday,
         countryCode2: customer.countryCode2,
         countryCode3: customer.countryCode3,
+        postCode: customer.postCode,
+        town: customer.town,
+        street: customer.street,
+        subStreet: customer.subStreet,
+        stateName: customer.stateName,
+        buildingName: customer.buildingName,
+        buildingNumber: customer.buildingNumber,
+        flatNumber: customer.flatNumber,
         phone: customer.phone,
         risk: customer.risk,
         defaultFiatCurrency: customer.defaultFiatCurrency,

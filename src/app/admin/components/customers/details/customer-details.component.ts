@@ -22,7 +22,6 @@ export class CustomerDetailsComponent {
     this.removable = (this.auth.user?.userId !== this.settingsId);
     this.address = (val) ? val.address : '';
     this.userType = (val) ? val.userType?.id ?? UserType.Personal : UserType.Personal;
-    this.kycProviderLink = (val) ? val.kycProviderLink : '';
     this.user = val;
     if (val) {
       this.getUserKycInfo(this.settingsId);
@@ -52,7 +51,7 @@ export class CustomerDetailsComponent {
   fiatCurrencies: CurrencyView[] = [];
   cryptoCurrencies: CurrencyView[] = [];
   riskLevels = RiskLevelViewList;
-  kycDocs: string [] = [];
+  kycDocs: string[] = [];
 
   dataForm = this.formBuilder.group({
     id: [''],
@@ -61,6 +60,14 @@ export class CustomerDetailsComponent {
     lastName: ['', { validators: [], updateOn: 'change' }],
     birthday: ['', { validators: [], updateOn: 'change' }],
     country: ['', { validators: [Validators.required], updateOn: 'change' }],
+    postCode: ['', { validators: [], updateOn: 'change' }],
+    town: ['', { validators: [], updateOn: 'change' }],
+    street: ['', { validators: [], updateOn: 'change' }],
+    subStreet: ['', { validators: [], updateOn: 'change' }],
+    stateName: ['', { validators: [], updateOn: 'change' }],
+    buildingName: ['', { validators: [], updateOn: 'change' }],
+    buildingNumber: ['', { validators: [], updateOn: 'change' }],
+    flatNumber: ['', { validators: [], updateOn: 'change' }],
     phone: ['', { validators: [], updateOn: 'change' }],
     risk: [RiskLevel.Medium, { validators: [Validators.required], updateOn: 'change' }],
     fiat: ['', { validators: [Validators.required], updateOn: 'change' }],
@@ -103,6 +110,14 @@ export class CustomerDetailsComponent {
       }
       this.dataForm.get('risk')?.setValue(data?.risk ?? RiskLevel.Medium);
       this.dataForm.get('country')?.setValue(data?.country?.id);
+      this.dataForm.get('postCode')?.setValue(data?.postCode);
+      this.dataForm.get('town')?.setValue(data?.town);
+      this.dataForm.get('street')?.setValue(data?.street);
+      this.dataForm.get('subStreet')?.setValue(data?.subStreet);
+      this.dataForm.get('stateName')?.setValue(data?.stateName);
+      this.dataForm.get('buildingName')?.setValue(data?.buildingName);
+      this.dataForm.get('buildingNumber')?.setValue(data?.buildingNumber);
+      this.dataForm.get('flatNumber')?.setValue(data?.flatNumber);
       this.dataForm.get('phone')?.setValue(data?.phone);
       this.dataForm.get('fiat')?.setValue(data?.fiatCurrency);
       this.dataForm.get('crypto')?.setValue(data?.cryptoCurrency);
@@ -117,6 +132,14 @@ export class CustomerDetailsComponent {
       this.dataForm.get('birthday')?.setValidators([]);
       this.dataForm.get('risk')?.setValue(RiskLevel.Medium);
       this.dataForm.get('country')?.setValue('');
+      this.dataForm.get('postCode')?.setValue('');
+      this.dataForm.get('town')?.setValue('');
+      this.dataForm.get('street')?.setValue('');
+      this.dataForm.get('subStreet')?.setValue('');
+      this.dataForm.get('stateName')?.setValue('');
+      this.dataForm.get('buildingName')?.setValue('');
+      this.dataForm.get('buildingNumber')?.setValue('');
+      this.dataForm.get('flatNumber')?.setValue('');
       this.dataForm.get('phone')?.setValue('');
       this.dataForm.get('fiat')?.setValue('');
       this.dataForm.get('crypto')?.setValue('');
@@ -144,6 +167,14 @@ export class CustomerDetailsComponent {
       birthday: getFormattedUtcDate(this.dataForm.get('birthday')?.value ?? ''),
       countryCode2: code2,
       countryCode3: code3,
+      postCode: this.dataForm.get('postCode')?.value,
+      town: this.dataForm.get('town')?.value,
+      street: this.dataForm.get('street')?.value,
+      subStreet: this.dataForm.get('subStreet')?.value,
+      stateName: this.dataForm.get('stateName')?.value,
+      buildingName: this.dataForm.get('buildingName')?.value,
+      buildingNumber: this.dataForm.get('buildingNumber')?.value,
+      flatNumber: this.dataForm.get('flatNumber')?.value,
       phone: this.dataForm.get('phone')?.value,
       defaultFiatCurrency: this.dataForm.get('fiat')?.value,
       defaultCryptoCurrency: this.dataForm.get('crypto')?.value,
