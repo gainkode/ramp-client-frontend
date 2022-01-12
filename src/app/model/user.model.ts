@@ -42,6 +42,13 @@ export class UserItem {
   kycLevelIncreasable = false;
   kycComplete = false;
   kycRejected = false;
+  kycReviewDate = '';
+  kycStatusDate = '';
+  kycReviewComment = '';
+  kycPrivateComment = '';
+  kycReviewRejectedType = '';
+  kycReviewRejectedLabels: string[] = [];
+  kycStatusUpdateRequired = 'No';
   userType: UserTypeView | null = null;
   userMode: UserModeView | null = null;
   created = '';
@@ -175,7 +182,13 @@ export class UserItem {
           this.kycVerificationAvailable = false;
         }
       }
-
+      this.kycReviewDate = datepipe.transform(data.kycReviewDate, 'dd MMM YYYY HH:mm:ss') as string;
+      this.kycStatusDate = datepipe.transform(data.kycStatusDate, 'dd MMM YYYY HH:mm:ss') as string;
+      this.kycReviewComment = data.kycReviewComment ?? '';
+      this.kycPrivateComment = data.kycPrivateComment ?? '';
+      this.kycReviewRejectedType = data.kycReviewRejectedType ?? '';
+      this.kycReviewRejectedLabels = data.kycReviewRejectedLabels ?? [];
+      this.kycStatusUpdateRequired = (data.kycStatusUpdateRequired) ? ((data.kycStatusUpdateRequired === true) ? 'Yes' : 'No') : 'No';
       if (data.kycTier) {
         this.kycLevel = data.kycTier.name;
         this.kycLevelMax = (!data.kycTier.amount);

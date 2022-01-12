@@ -434,6 +434,14 @@ const GET_USERS = gql`
         accountStatus
         kycStatus
         kycTier { name }
+        kycReviewDate
+        kycStatusDate
+        kycReviewComment
+        kycPrivateComment
+        kycReviewRejectedType
+        kycReviewRejectedLabels
+        # kycReviewResult
+        kycStatusUpdateRequired
         phone
         postCode
         town
