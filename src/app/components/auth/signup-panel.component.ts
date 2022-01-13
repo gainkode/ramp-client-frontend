@@ -23,6 +23,7 @@ export class SignUpPanelComponent implements OnInit, OnDestroy {
     @Input() userType: UserType = UserType.Personal;
     @Input() errorMessage = '';
     @Input() wizardButtons = false;
+    @Input() widget = false;
     @Output() error = new EventEmitter<string>();
     @Output() progressChange = new EventEmitter<boolean>();
     @Output() onBack = new EventEmitter();
@@ -143,7 +144,7 @@ export class SignUpPanelComponent implements OnInit, OnDestroy {
         try {
             this.progressChange.emit(true);
             this.subscriptions.add(
-                this.auth.register(email, password, this.userType).subscribe((signupData) => {
+                this.auth.register(this.widget, email, password, this.userType).subscribe((signupData) => {
                     const userData = signupData.data.signup as LoginResult;
                     if (!userData.authTokenAction) {
                         this.progressChange.emit(false);

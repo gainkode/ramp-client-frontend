@@ -3,7 +3,7 @@
         <span class="__widget-page-header">
             Please, type your data to register a new account
         </span>
-        <app-signup-panel [userType]="userType" [userName]="email" [wizardButtons]="true"
+        <app-signup-panel [widget]="true" [userType]="userType" [userName]="email" [wizardButtons]="true"
             [errorMessage]="errorMessage" (error)="registerError($event)" (progressChange)="onProgress.emit($event)"
             (onBack)="onBack.emit()" (registered)="registerComplete($event)">
         </app-signup-panel>

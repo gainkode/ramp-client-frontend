@@ -437,10 +437,10 @@ export class AuthService {
         return this.getUserSectionPage('account');
     }
 
-    authenticate(username: string, userpassword: string, noPassword: boolean, widgetId: string | undefined = undefined): Observable<any> {
+    authenticate(ignoreCookies: boolean, username: string, userpassword: string, noPassword: boolean, widgetId: string | undefined = undefined): Observable<any> {
         const w = window as any;
         const consentStatus = w.cookieconsent.utils.getCookie(this.cookieName);
-        if (consentStatus) {
+        if (consentStatus || ignoreCookies) {
             const vars = {
                 recaptcha: environment.recaptchaId,
                 email: username,
@@ -489,10 +489,10 @@ export class AuthService {
         );
     }
 
-    register(usermail: string, userpassword: string, usertype: UserType): Observable<any> {
+    register(ignoreCookies: boolean, usermail: string, userpassword: string, usertype: UserType): Observable<any> {
         const w = window as any;
         const consentStatus = w.cookieconsent.utils.getCookie(this.cookieName);
-        if (consentStatus) {
+        if (consentStatus || ignoreCookies) {
             return this.apollo.mutate({
                 mutation: SIGNUP,
                 variables: {

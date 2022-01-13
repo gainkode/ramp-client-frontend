@@ -564,7 +564,7 @@ export class WidgetComponent implements OnInit {
     this.errorMessage = '';
     // Consider that the user is one-time wallet user rather than internal one
     try {
-    const authenticateData = this.auth.authenticate(login, '', true, (this.widget.widgetId !== '') ? this.widget.widgetId : undefined);
+    const authenticateData = this.auth.authenticate((this.widget.widgetId ?? '') !== '', login, '', true, (this.widget.widgetId !== '') ? this.widget.widgetId : undefined);
       this.inProgress = true;
       this.pSubscriptions.add(
         authenticateData.subscribe(({ data }) => {

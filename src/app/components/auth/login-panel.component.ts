@@ -165,7 +165,7 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
         if (this.loginForm.valid) {
             const login = this.emailField?.value;
             try {
-                const loginData = this.auth.authenticate(login, this.passwordField?.value, false, (this.widgetId !== '') ? this.widgetId : undefined);
+                const loginData = this.auth.authenticate(this.widgetId !== '', login, this.passwordField?.value, false, (this.widgetId !== '') ? this.widgetId : undefined);
                 this.progressChange.emit(true);
                 this.subscriptions.add(
                     loginData.subscribe(({ data }) => {
