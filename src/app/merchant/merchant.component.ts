@@ -262,7 +262,7 @@ export class MerchantComponent implements OnInit, OnDestroy {
 
     logout(): void {
         this.auth.logout();
-        this.router.navigateByUrl('/merchant/intro').then(() => {
+        this.router.navigateByUrl('/').then(() => {
             window.location.reload();
         });
     }

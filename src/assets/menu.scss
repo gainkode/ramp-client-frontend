@@ -350,7 +350,7 @@
     margin: 0px 16px 0px 0px;
     font-family: $font_main;
     font-style: normal;
-    font-weight: normal;
+    font-weight: 300;
     font-size: 14px;
     line-height: 28px;
     color: $color_purple_900_text;
@@ -365,6 +365,10 @@
     font-weight: normal;
     font-size: 11px;
     color: $color_pink_600;
+}
+
+.__tool-bar-error-wide {
+    width: 100%;
 }
 
 .__tool-bar-double-sided-container {

@@ -1,3 +1,75 @@
-<div style="width: 100%;height: 100%;">
-    <!-- Contact Us -->
-</div>
+<form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+    <!-- Name -->
+    <div class="__tool-bar-label">
+        Name
+    </div>
+    <div class="__tool-bar-block">
+        <input
+            [ngClass]="{'__tool-bar-text-box': true, '__tool-bar-text-box-wide': true, '__tool-bar-text-box-error': nameField?.errors?.required && (nameField?.dirty || nameField?.touched)}"
+            type="text" placeholder="Please type your name here" formControlName="name" />
+    </div>
+    <div *ngIf="nameField?.errors?.required && (nameField?.dirty || nameField?.touched)"
+        class="__tool-bar-error __tool-bar-error-wide">
+        Your name is required
+    </div>
+    <div class="__form-separator"></div>
+    <!-- Email -->
+    <div class="__tool-bar-label">
+        Email
+    </div>
+    <div class="__tool-bar-block">
+        <input
+            [ngClass]="{'__tool-bar-text-box': true, '__tool-bar-text-box-wide': true, '__tool-bar-text-box-error': (emailField?.errors?.required || emailField?.errors?.email) && (emailField?.dirty || emailField?.touched)}"
+            type="text" placeholder="Please type your email here" formControlName="email" />
+    </div>
+    <div *ngIf="emailField?.errors?.required && (emailField?.dirty || emailField?.touched)"
+        class="__tool-bar-error __tool-bar-error-wide">
+        Your email is required
+    </div>
+    <div *ngIf="emailField?.errors?.email && (emailField?.dirty || emailField?.touched)"
+        class="__tool-bar-error __tool-bar-error-wide">
+        Email has incorrect format
+    </div>
+    <div class="__form-separator"></div>
+    <!-- Title -->
+    <div class="__tool-bar-label">
+        Title
+    </div>
+    <div class="__tool-bar-block">
+        <input
+            [ngClass]="{'__tool-bar-text-box': true, '__tool-bar-text-box-wide': true, '__tool-bar-text-box-error': titleField?.errors?.required && (titleField?.dirty || titleField?.touched)}"
+            type="text" placeholder="Please type the subject of your inquiry" formControlName="title" />
+    </div>
+    <div *ngIf="titleField?.errors?.required && (titleField?.dirty || titleField?.touched)"
+        class="__tool-bar-error __tool-bar-error-wide">
+        Title is required
+    </div>
+    <div class="__form-separator"></div>
+
+
+
+
+    <!-- Message -->
+    <div class="__tool-bar-label">
+        Your message
+    </div>
+    <div class="__tool-bar-block">
+        <textarea
+            [ngClass]="{'__form-text-area': true, '__form-text-area-error': messageField?.errors?.required && (messageField?.dirty || messageField?.touched)}"
+            type="text" placeholder="Type your message here" formControlName="message"></textarea>
+    </div>
+    <div *ngIf="messageField?.errors?.required && (messageField?.dirty || messageField?.touched)"
+        class="__tool-bar-error __tool-bar-error-wide">
+        Message text is required
+    </div>
+    <div class="__form-separator"></div>
+
+
+
+
+
+
+    <div class="__form-separator"></div>
+    <div class="__form-separator"></div>
+
+</form>

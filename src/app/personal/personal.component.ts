@@ -266,7 +266,7 @@ export class PersonalComponent implements OnInit, OnDestroy {
 
     logout(): void {
         this.auth.logout();
-        this.router.navigateByUrl('/personal/intro').then(() => {
+        this.router.navigateByUrl('/').then(() => {
             window.location.reload();
         });
     }

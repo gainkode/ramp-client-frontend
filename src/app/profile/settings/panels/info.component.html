@@ -60,8 +60,8 @@
             <app-profile-info-textbox [label]="'Company name'" [value]="userView.company" [required]=true
                 (onComplete)="changeFirstName($event)"></app-profile-info-textbox>
         </div>
-        <app-profile-info-datebox [label]="'Date of birth'" [value]="userView.birthday"
-            (onComplete)="changeBirthDate($event)"></app-profile-info-datebox>
+        <app-profile-info-datebox *ngIf="userView.userType?.id===USER_TYPE.Personal" [label]="'Date of birth'"
+            [value]="userView.birthday" (onComplete)="changeBirthDate($event)"></app-profile-info-datebox>
         <app-profile-info-textbox [label]="'Address 1'" [value]="userView.street" (onComplete)="changeStreet($event)">
         </app-profile-info-textbox>
         <app-profile-info-textbox [label]="'Address 2'" [value]="userView.subStreet"
