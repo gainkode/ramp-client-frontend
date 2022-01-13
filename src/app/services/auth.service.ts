@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
-import { from, Observable } from 'rxjs';
+import { from, Observable, of } from 'rxjs';
 import { SocialAuthService, FacebookLoginProvider, GoogleLoginProvider } from 'angularx-social-login';
 import { FeedbackInput, LoginResult, PostAddress, SettingsCommon, User, UserMode, UserType } from '../model/generated-models';
 import { environment } from 'src/environments/environment';
@@ -379,6 +379,8 @@ query {
 
 @Injectable()
 export class AuthService {
+    cookieName = 'cookieconsent_status';
+
     get authenticated(): boolean {
         return this.token !== '';
     }
@@ -435,8 +437,10 @@ export class AuthService {
         return this.getUserSectionPage('account');
     }
 
-    authenticate(username: string, userpassword: string, noPassword: boolean, widgetId: string | undefined = undefined): Observable<any> | null {
-        if (this.apollo.client !== undefined) {
+    authenticate(username: string, userpassword: string, noPassword: boolean, widgetId: string | undefined = undefined): Observable<any> {
+        const w = window as any;
+        const consentStatus = w.cookieconsent.utils.getCookie(this.cookieName);
+        if (consentStatus) {
             const vars = {
                 recaptcha: environment.recaptchaId,
                 email: username,
@@ -448,19 +452,25 @@ export class AuthService {
                 variables: vars
             });
         } else {
-            return null;
+            throw 'Cookie consent is rejected. Allow cookie in order to have access';
         }
     }
 
     authenticateSocial(provider: string, token: string): Observable<any> {
-        return this.apollo.mutate({
-            mutation: SOCIAL_LOGIN,
-            variables: {
-                recaptcha: environment.recaptchaId,
-                oauthprovider: provider,
-                oauthtoken: token
-            }
-        });
+        const w = window as any;
+        const consentStatus = w.cookieconsent.utils.getCookie(this.cookieName);
+        if (consentStatus) {
+            return this.apollo.mutate({
+                mutation: SOCIAL_LOGIN,
+                variables: {
+                    recaptcha: environment.recaptchaId,
+                    oauthprovider: provider,
+                    oauthtoken: token
+                }
+            });
+        } else {
+            throw 'Cookie consent is rejected. Allow cookie in order to have access';
+        }
     }
 
     socialSignIn(provider: string): Observable<any> {
@@ -480,17 +490,23 @@ export class AuthService {
     }
 
     register(usermail: string, userpassword: string, usertype: UserType): Observable<any> {
-        return this.apollo.mutate({
-            mutation: SIGNUP,
-            variables: {
-                recaptcha: environment.recaptchaId,
-                email: usermail,
-                password: userpassword,
-                userType: usertype,
-                mode: 'InternalWallet',
-                termsOfUse: true
-            }
-        });
+        const w = window as any;
+        const consentStatus = w.cookieconsent.utils.getCookie(this.cookieName);
+        if (consentStatus) {
+            return this.apollo.mutate({
+                mutation: SIGNUP,
+                variables: {
+                    recaptcha: environment.recaptchaId,
+                    email: usermail,
+                    password: userpassword,
+                    userType: usertype,
+                    mode: 'InternalWallet',
+                    termsOfUse: true
+                }
+            });
+        } else {
+            throw 'Cookie consent is rejected. Allow cookie in order to have access';
+        }
     }
 
     confirmName(

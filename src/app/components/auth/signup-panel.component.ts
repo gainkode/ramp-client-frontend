@@ -135,30 +135,35 @@ export class SignUpPanelComponent implements OnInit, OnDestroy {
                 this.registerError('Passwords are not equal');
                 return;
             }
-            this.progressChange.emit(true);
             this.registerAccount(this.emailField?.value, this.signupForm.get('password1')?.value);
         }
     }
 
-    registerAccount(email: string, password: string): void {
-        this.subscriptions.add(
-            this.auth.register(email, password, this.userType).subscribe((signupData) => {
-                const userData = signupData.data.signup as LoginResult;
-                if (!userData.authTokenAction) {
+    private registerAccount(email: string, password: string): void {
+        try {
+            this.progressChange.emit(true);
+            this.subscriptions.add(
+                this.auth.register(email, password, this.userType).subscribe((signupData) => {
+                    const userData = signupData.data.signup as LoginResult;
+                    if (!userData.authTokenAction) {
+                        this.progressChange.emit(false);
+                        this.registered.emit(email);
+                    } else if (userData.authTokenAction === 'UserInfoRequired') {
+                        this.showSignupPanel(userData);
+                    } else {
+                        this.progressChange.emit(false);
+                        this.registerError('Unable to recognize the registration action');
+                        console.error('Unable to recognize the registration action', userData.authTokenAction);
+                    }
+                }, (error) => {
                     this.progressChange.emit(false);
-                    this.registered.emit(email);
-                } else if (userData.authTokenAction === 'UserInfoRequired') {
-                    this.showSignupPanel(userData);
-                } else {
-                    this.progressChange.emit(false);
-                    this.registerError('Unable to recognize the registration action');
-                    console.error('Unable to recognize the registration action', userData.authTokenAction);
-                }
-            }, (error) => {
-                this.progressChange.emit(false);
-                this.registerError(this.errorHandler.getError(error.message, 'Unable to register new account'));
-            })
-        );
+                    this.registerError(this.errorHandler.getError(error.message, 'Unable to register new account'));
+                })
+            );
+        } catch (e) {
+            this.progressChange.emit(false);
+            this.registerError(e as string);
+        }
     }
 
     showSignupPanel(userData: LoginResult): void {

@@ -125,26 +125,31 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
                         token = user.authToken;
                     }
                     this.auth.socialSignOut();
-                    this.auth.authenticateSocial(providerName.toLowerCase(), token).subscribe((loginData) => {
-                        const userData = loginData.data.login as LoginResult;
-                        this.progressChange.emit(false);
-                        if (userData.user?.mode === UserMode.InternalWallet) {
-                            if (userData.authTokenAction === 'TwoFactorAuth') {
-                                this.auth.setLoginUser(userData);
-                                this.twoFa = true;
-                                this.socialLogin = true;
-                            } else if (userData.authTokenAction === 'UserInfoRequired') {
-                                this.showSignupPanel(userData);
+                    try {
+                        this.auth.authenticateSocial(providerName.toLowerCase(), token).subscribe((loginData) => {
+                            const userData = loginData.data.login as LoginResult;
+                            this.progressChange.emit(false);
+                            if (userData.user?.mode === UserMode.InternalWallet) {
+                                if (userData.authTokenAction === 'TwoFactorAuth') {
+                                    this.auth.setLoginUser(userData);
+                                    this.twoFa = true;
+                                    this.socialLogin = true;
+                                } else if (userData.authTokenAction === 'UserInfoRequired') {
+                                    this.showSignupPanel(userData);
+                                } else {
+                                    this.socialAuthenticated.emit(userData);
+                                }
                             } else {
-                                this.socialAuthenticated.emit(userData);
+                                this.registerError(`Unable to authorise with the login '${user.email}'. Please sign up`);
                             }
-                        } else {
-                            this.registerError(`Unable to authorise with the login '${user.email}'. Please sign up`);
-                        }
-                    }, (error) => {
+                        }, (error) => {
+                            this.progressChange.emit(false);
+                            this.registerError(this.errorHandler.getError(error.message, `Invalid authentication via ${providerName}`));
+                        });
+                    } catch (e) {
                         this.progressChange.emit(false);
-                        this.registerError(this.errorHandler.getError(error.message, `Invalid authentication via ${providerName}`));
-                    });
+                        this.registerError(e as string);
+                    }
                 } else {
                     this.progressChange.emit(false);
                 }
@@ -159,8 +164,8 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
         this.registerError('');
         if (this.loginForm.valid) {
             const login = this.emailField?.value;
-            const loginData = this.auth.authenticate(login, this.passwordField?.value, false, (this.widgetId !== '') ? this.widgetId : undefined);
-            if (loginData !== null) {
+            try {
+                const loginData = this.auth.authenticate(login, this.passwordField?.value, false, (this.widgetId !== '') ? this.widgetId : undefined);
                 this.progressChange.emit(true);
                 this.subscriptions.add(
                     loginData.subscribe(({ data }) => {
@@ -184,8 +189,8 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
                         this.registerError(this.errorHandler.getError(error.message, 'Incorrect login or password'));
                     })
                 );
-            } else {
-                this.registerError(this.errorHandler.getRejectedCookieMessage());
+            } catch (e) {
+                this.registerError(e as string);
             }
         }
     }

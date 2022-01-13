@@ -131,14 +131,9 @@ export class AppModule {
   });
 
   constructor(private apollo: Apollo, private httpLink: HttpLink, private authService: AuthService) {
-    const cookieName = 'cookieconsent_status';
-    const w = window as any;
-    const whiteListedPath = (location.pathname.startsWith('/terms') || location.pathname.startsWith('/payment/widget/'));
-    const consentStatus = w.cookieconsent.utils.getCookie(cookieName);
-    const allowCookies = whiteListedPath || (consentStatus === 'allow') || (consentStatus === 'dismiss');
     const http = httpLink.create({
       uri: `${environment.api_server}/gql/api`,
-      withCredentials: allowCookies
+      withCredentials: true
     });
     const timeoutLink = new ApolloLinkTimeout(environment.api_timeout ?? 10000); // 10 second timeout
     const timeoutHttp = timeoutLink.concat(http);
@@ -170,11 +165,10 @@ export class AppModule {
       this.headersLink,
       transportLink
     ]);
-    if (allowCookies) {
-      apollo.create({
-        link: apolloLink,
-        cache: new InMemoryCache()
-      });
-    }
+
+    apollo.create({
+      link: apolloLink,
+      cache: new InMemoryCache()
+    });
   }
 }

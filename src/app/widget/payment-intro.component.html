@@ -3,14 +3,14 @@
         Spend
         <app-form-finance-combo [label]="'Amount to spend'" [placeholder]="'...'" [boxFieldName]="'amountSpend'"
             [boxField]="amountSpendField" [comboField]="currencySpendField" [comboFieldName]="'currencySpend'"
-            [comboList]="spendCurrencyList" [errorMessages]="amountSpendErrorMessages" [separator]="false">
+            [comboList]="spendCurrencyList" [errorMessages]="amountSpendErrorMessages" [separator]="true">
         </app-form-finance-combo>
         <div class="__form-separator"></div>
 
         Receive
         <app-form-finance-combo [label]="'Amount to receive'" [placeholder]="'...'" [boxFieldName]="'amountReceive'"
             [boxField]="amountReceiveField" [comboField]="currencyReceiveField" [comboFieldName]="'currencyReceive'"
-            [comboList]="receiveCurrencyList" [errorMessages]="amountReceiveErrorMessages" [separator]="false">
+            [comboList]="receiveCurrencyList" [errorMessages]="amountReceiveErrorMessages" [separator]="true">
         </app-form-finance-combo>
 
         Buttons

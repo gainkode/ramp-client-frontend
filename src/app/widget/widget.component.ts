@@ -563,8 +563,8 @@ export class WidgetComponent implements OnInit {
   private authenticate(login: string) {
     this.errorMessage = '';
     // Consider that the user is one-time wallet user rather than internal one
+    try {
     const authenticateData = this.auth.authenticate(login, '', true, (this.widget.widgetId !== '') ? this.widget.widgetId : undefined);
-    if (authenticateData !== null) {
       this.inProgress = true;
       this.pSubscriptions.add(
         authenticateData.subscribe(({ data }) => {
@@ -584,8 +584,8 @@ export class WidgetComponent implements OnInit {
           }
         })
       );
-    } else {
-      this.errorMessage = this.errorHandler.getRejectedCookieMessage();
+    } catch (e) {
+      this.errorMessage = e as string;
     }
   }
 
