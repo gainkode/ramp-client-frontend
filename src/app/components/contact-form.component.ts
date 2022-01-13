@@ -1,8 +1,11 @@
 import { Component, OnDestroy } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { Feedback, FeedbackInput } from '../model/generated-models';
 import { AuthService } from '../services/auth.service';
+import { ErrorService } from '../services/error.service';
+import { CommonDialogBox } from './dialogs/common-box.dialog';
 
 @Component({
   selector: 'app-contact-form',
@@ -37,10 +40,34 @@ export class ContactFormComponent implements OnDestroy {
 
   private subscriptions: Subscription = new Subscription();
 
-  constructor(private formBuilder: FormBuilder, private auth: AuthService) { }
+  constructor(
+    public dialog: MatDialog,
+    private formBuilder: FormBuilder,
+    private auth: AuthService,
+    private errorHandler: ErrorService) { }
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+  }
+
+  private showSuccessDialog(message: string): void {
+    this.dialog.open(CommonDialogBox, {
+      width: '450px',
+      data: {
+        title: 'Success',
+        message: message
+      }
+    });
+  }
+
+  private showFailDialog(message: string): void {
+    this.dialog.open(CommonDialogBox, {
+      width: '450px',
+      data: {
+        title: 'Error',
+        message: message
+      }
+    });
   }
 
   onSubmit(): void {
@@ -55,13 +82,13 @@ export class ContactFormComponent implements OnDestroy {
           this.inProgress = false;
           const userData = data.addFeedback as Feedback;
           if (userData.feedbackId) {
-            alert('Success');
+            this.showSuccessDialog('Your message has been successfully sent.');
           } else {
-            alert('Oops');
+            this.showFailDialog('Unable to send the message.');
           }
         }, (error) => {
           this.inProgress = false;
-          alert('Error');
+          this.showFailDialog(this.errorHandler.getError(error.message, 'Unable to send the message.'));
         })
       );
     }
