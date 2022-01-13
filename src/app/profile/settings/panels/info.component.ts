@@ -183,29 +183,6 @@ export class ProfileInfoSettingsComponent implements OnInit, OnDestroy {
         );
     }
 
-    private getCurrentUserData(): UserInput {
-        const result = {
-            firstName: this.user.firstName ?? undefined,
-            lastName: this.user.lastName ?? undefined,
-            countryCode2: this.user.countryCode2 ?? undefined,
-            countryCode3: this.user.countryCode3 ?? undefined,
-            birthday: this.user.birthday ?? undefined,
-            phone: this.user.phone ?? undefined,
-            postCode: this.user.postCode ?? undefined,
-            town: this.user.town ?? undefined,
-            street: this.user.street ?? undefined,
-            subStreet: this.user.subStreet ?? undefined,
-            stateName: this.user.stateName ?? undefined,
-            buildingName: this.user.buildingName ?? undefined,
-            buildingNumber: this.user.buildingNumber ?? undefined,
-            flatNumber: this.user.flatNumber ?? undefined,
-            avatar: this.user.avatar ?? undefined,
-            defaultFiatCurrency: this.user.defaultFiatCurrency ?? undefined,
-            defaultCryptoCurrency: this.user.defaultCryptoCurrency ?? undefined
-        } as UserInput;
-        return result;
-    }
-
     verifyKyc(): void {
         this.router.navigateByUrl(`${this.auth.getUserAccountPage()}/settings/verification`).then(() => {
             window.location.reload();
@@ -257,96 +234,111 @@ export class ProfileInfoSettingsComponent implements OnInit, OnDestroy {
     }
 
     changeFirstName(data: string): void {
-        const vars = this.getCurrentUserData();
-        vars.firstName = data;
+        const vars = {
+            firstName: data
+        };
         this.setUserData(vars, ChangedDataType.Name);
     }
 
     changeLastName(data: string): void {
-        const vars = this.getCurrentUserData();
-        vars.lastName = data;
+        const vars = {
+            lastName: data
+        };
         this.setUserData(vars, ChangedDataType.Name);
     }
 
     changeBirthDate(data: Date | undefined): void {
-        const vars = this.getCurrentUserData();
-        vars.birthday = data;
+        const vars = {
+            birthday: data
+        };
         this.setUserData(vars, ChangedDataType.Unknown);
     }
 
     changeStreet(data: string): void {
-        const vars = this.getCurrentUserData();
-        vars.street = data;
+        const vars = {
+            street: data
+        };
         this.setUserData(vars, ChangedDataType.Unknown);
     }
 
     changeSubStreet(data: string): void {
-        const vars = this.getCurrentUserData();
-        vars.subStreet = data;
+        const vars = {
+            subStreet: data
+        };
         this.setUserData(vars, ChangedDataType.Unknown);
     }
 
     changeBuildingName(data: string): void {
-        const vars = this.getCurrentUserData();
-        vars.buildingName = data;
+        const vars = {
+            buildingName: data
+        };
         this.setUserData(vars, ChangedDataType.Unknown);
     }
 
     changeBuildingNumber(data: string): void {
-        const vars = this.getCurrentUserData();
-        vars.buildingNumber = data;
+        const vars = {
+            buildingNumber: data
+        };
         this.setUserData(vars, ChangedDataType.Unknown);
     }
 
     changeFlatNumber(data: string): void {
-        const vars = this.getCurrentUserData();
-        vars.flatNumber = data;
+        const vars = {
+            flatNumber: data
+        };
         this.setUserData(vars, ChangedDataType.Unknown);
     }
 
     changeTown(data: string): void {
-        const vars = this.getCurrentUserData();
-        vars.town = data;
+        const vars = {
+            town: data
+        };
         this.setUserData(vars, ChangedDataType.Unknown);
     }
 
     changePostCode(data: string): void {
-        const vars = this.getCurrentUserData();
-        vars.postCode = data;
+        const vars = {
+            postCode: data
+        };
         this.setUserData(vars, ChangedDataType.Unknown);
     }
 
     changeCountry(data: string): void {
         const country = getCountryByCode3(data);
         if (country) {
-            const vars = this.getCurrentUserData();
-            vars.countryCode3 = country.code3;
-            vars.countryCode2 = country.code2;
+            const vars = {
+                countryCode3: country.code3,
+                countryCode2: country.code2
+            }
             this.setUserData(vars, ChangedDataType.Unknown);
         }
     }
 
     changeState(data: string): void {
-        const vars = this.getCurrentUserData();
-        vars.lastName = data;
+        const vars = {
+            stateName: data
+        };
         this.setUserData(vars, ChangedDataType.Unknown);
     }
 
     changePhone(data: string): void {
-        const vars = this.getCurrentUserData();
-        vars.phone = data;
+        const vars = {
+            phone: data
+        };
         this.setUserData(vars, ChangedDataType.Unknown);
     }
 
     changeCrypto(data: string): void {
-        const vars = this.getCurrentUserData();
-        vars.defaultCryptoCurrency = data;
+        const vars = {
+            defaultCryptoCurrency: data
+        };
         this.setUserData(vars, ChangedDataType.Currency);
     }
 
     changeFiat(data: string): void {
-        const vars = this.getCurrentUserData();
-        vars.defaultFiatCurrency = data;
+        const vars = {
+            defaultFiatCurrency: data
+        };
         this.setUserData(vars, ChangedDataType.Currency);
     }
 }
