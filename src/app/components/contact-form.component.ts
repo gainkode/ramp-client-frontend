@@ -4,7 +4,7 @@ import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 @Component({
   selector: 'app-contact-form',
   templateUrl: 'contact-form.component.html',
-  styleUrls: ['../../assets/menu.scss', '../../assets/button.scss', '../../assets/text-control.scss']
+  styleUrls: ['../../assets/menu.scss', '../../assets/button.scss', '../../assets/dialog.scss', '../../assets/text-control.scss']
 })
 export class ContactFormComponent {
   contactForm = this.formBuilder.group({

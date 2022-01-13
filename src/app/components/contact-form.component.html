@@ -45,31 +45,23 @@
         Title is required
     </div>
     <div class="__form-separator"></div>
-
-
-
-
     <!-- Message -->
     <div class="__tool-bar-label">
         Your message
     </div>
     <div class="__tool-bar-block">
         <textarea
-            [ngClass]="{'__form-text-area': true, '__form-text-area-error': messageField?.errors?.required && (messageField?.dirty || messageField?.touched)}"
+            [ngClass]="{'__tool-bar-text-box': true, '__tool-bar-text-box-error': messageField?.errors?.required && (messageField?.dirty || messageField?.touched)}"
             type="text" placeholder="Type your message here" formControlName="message"></textarea>
     </div>
+    <div class="__tool-bar-text-area-separator"></div>
     <div *ngIf="messageField?.errors?.required && (messageField?.dirty || messageField?.touched)"
         class="__tool-bar-error __tool-bar-error-wide">
         Message text is required
     </div>
-    <div class="__form-separator"></div>
 
-
-
-
-
-
-    <div class="__form-separator"></div>
-    <div class="__form-separator"></div>
-
+    <!-- Button -->
+    <div class="__dialog-wizard-store-button-block">
+        <button class="__main-button __button-wide" type="submit" [disabled]="!contactForm?.valid">send</button>
+    </div>
 </form>

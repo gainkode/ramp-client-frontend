@@ -439,6 +439,51 @@ input.__tool-bar-text-box-wide {
     width: 100%;
 }
 
+textarea.__tool-bar-text-box {
+    resize: none;
+    height: 150px;
+    width: 100%;
+    border: 0px solid $color_purple_300;
+    border-bottom-width: 0.5px;
+    background-color: transparent;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    color: $color_purple_900_text;
+}
+
+textarea.__tool-bar-text-box:hover {
+    border: 0px solid $color_main_blue_600;
+    border-bottom-width: 1px;
+}
+
+textarea.__tool-bar-text-box:focus {
+    outline: none;
+    border: 0px solid $color_main_blue_800;
+    border-bottom-width: 2px;
+}
+
+textarea.__tool-bar-text-box-error {
+    border: 0px solid $color_pink_300;
+    border-bottom-width: 0.5px;
+}
+
+textarea.__tool-bar-text-box-error:hover {
+    border: 0px solid $color_pink_700;
+    border-bottom-width: 1px;
+}
+
+textarea.__tool-bar-text-box-error:focus {
+    border: 0px solid $color_pink_500;
+    border-bottom-width: 2px;
+}
+
+.__tool-bar-text-area-separator {
+    height: 136px;
+}
+
 .__top-menu-button-separator {
     width: 1px;
     height: 28px;
