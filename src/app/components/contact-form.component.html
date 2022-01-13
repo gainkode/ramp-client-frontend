@@ -1,3 +1,4 @@
+<mat-progress-bar *ngIf="inProgress" color="accent" mode="indeterminate"></mat-progress-bar>
 <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
     <!-- Name -->
     <div class="__tool-bar-label">

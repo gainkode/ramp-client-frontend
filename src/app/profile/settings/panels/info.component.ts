@@ -48,7 +48,7 @@ export class ProfileInfoSettingsComponent implements OnInit, OnDestroy {
     avatarError = false;
 
     private subscriptions: Subscription = new Subscription();
-    private uploadSub: Subscription | undefined = undefined;
+    private uploadSubscription: Subscription | undefined = undefined;
 
     constructor(
         private auth: AuthService,
@@ -230,7 +230,7 @@ export class ProfileInfoSettingsComponent implements OnInit, OnDestroy {
             );
 
             this.uploadProgress = 0;
-            this.uploadSub = upload.subscribe(event => {
+            this.uploadSubscription = upload.subscribe(event => {
                 if (event.type == HttpEventType.UploadProgress) {
                     const total = event.total ?? 0;
                     if (total > 0) {
@@ -249,7 +249,8 @@ export class ProfileInfoSettingsComponent implements OnInit, OnDestroy {
 
     onAvatarUploaded() {
         this.uploadProgress = undefined;
-        this.uploadSub = undefined;
+        this.uploadSubscription?.unsubscribe();
+        this.uploadSubscription = undefined;
         if (this.avatarError === false) {
             this.loadAccountData(true);
         }

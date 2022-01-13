@@ -1848,6 +1848,31 @@ export class AdminDataService {
   }
 
   saveCustomer(customer: User): Observable<any> {
+
+    const vars = {
+      userId: customer.userId,
+      email: customer.email,
+      firstName: customer.firstName,
+      lastName: customer.lastName,
+      birthday: customer.birthday,
+      countryCode2: customer.countryCode2,
+      countryCode3: customer.countryCode3,
+      postCode: customer.postCode,
+      town: customer.town,
+      street: customer.street,
+      subStreet: customer.subStreet,
+      stateName: customer.stateName,
+      buildingName: customer.buildingName,
+      buildingNumber: customer.buildingNumber,
+      flatNumber: customer.flatNumber,
+      phone: customer.phone,
+      risk: customer.risk,
+      defaultFiatCurrency: customer.defaultFiatCurrency,
+      defaultCryptoCurrency: customer.defaultCryptoCurrency
+    };
+    console.log(vars);
+
+
     return this.apollo.mutate({
       mutation: UPDATE_USER,
       variables: {

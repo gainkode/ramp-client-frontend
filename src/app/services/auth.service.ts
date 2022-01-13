@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { from, Observable } from 'rxjs';
 import { SocialAuthService, FacebookLoginProvider, GoogleLoginProvider } from 'angularx-social-login';
-import { LoginResult, PostAddress, SettingsCommon, User, UserMode, UserType } from '../model/generated-models';
+import { FeedbackInput, LoginResult, PostAddress, SettingsCommon, User, UserMode, UserType } from '../model/generated-models';
 import { environment } from 'src/environments/environment';
 import { EmptyObject } from 'apollo-angular/types';
 
@@ -312,6 +312,16 @@ mutation Verify2faCode($code: String!) {
 }
 `;
 
+const ADD_FEEDBACK = gql`
+mutation AddFeedback($title: String, $description: String) {
+    addFeedback(
+        feedback: {
+            title: $title,
+            description: $description
+        }) { feedbackId }
+    }
+`;
+
 const GET_SETTINGS_COMMON = gql`
 query {
     getSettingsCommon {
@@ -610,6 +620,16 @@ export class AuthService {
             mutation: VERIFY_2FA,
             variables: {
                 code
+            }
+        });
+    }
+
+    addFeedback(feedback: FeedbackInput): Observable<any> {
+        return this.apollo.mutate({
+            mutation: ADD_FEEDBACK,
+            variables: {
+                title: feedback.title,
+                description: feedback.description
             }
         });
     }
