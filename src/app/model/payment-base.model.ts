@@ -21,6 +21,9 @@ export class WidgetSettings {
     transfer = false;
     fiatList: string[] = [];
     cryptoList: string[] = [];
+    currencyFrom = '';
+    currencyTo = '';
+    amountFrom = 0;
 }
 
 export class WidgetStage {
