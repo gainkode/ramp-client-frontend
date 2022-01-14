@@ -1,13 +1,13 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Countries, getCountryByCode3 } from 'src/app/model/country-code.model';
 import { RiskLevel, User, UserType } from 'src/app/model/generated-models';
 import { CurrencyView, RiskLevelView, RiskLevelViewList, UserModeView } from 'src/app/model/payment.model';
 import { UserItem } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { AdminDataService } from 'src/app/admin/services/admin-data.service';
-import { takeUntil } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
 import { getFormattedUtcDate } from 'src/app/utils/utils';
 
 @Component({
@@ -15,7 +15,7 @@ import { getFormattedUtcDate } from 'src/app/utils/utils';
   templateUrl: 'customer-details.component.html',
   styleUrls: ['customer-details.component.scss']
 })
-export class CustomerDetailsComponent {
+export class CustomerDetailsComponent implements OnDestroy {
   @Input() set customer(val: UserItem | null | undefined) {
     this.setFormData(val);
     this.settingsId = (val) ? val?.id : '';
@@ -25,6 +25,7 @@ export class CustomerDetailsComponent {
     this.user = val;
     if (val) {
       this.getUserKycInfo(this.settingsId);
+      this.getUserState(this.settingsId);
     }
   }
   @Input() set currencies(val: CurrencyView[]) {
@@ -41,7 +42,6 @@ export class CustomerDetailsComponent {
   settingsId = '';
   email = '';
   address = '';
-  kycProviderLink = '';
   user: UserItem | null | undefined;
   userType = UserType.Personal;
   loadingData = false;
@@ -51,6 +51,8 @@ export class CustomerDetailsComponent {
   fiatCurrencies: CurrencyView[] = [];
   cryptoCurrencies: CurrencyView[] = [];
   riskLevels = RiskLevelViewList;
+  totalBalance = '';
+  kycProviderLink = '';
   kycDocs: string[] = [];
 
   dataForm = this.formBuilder.group({
@@ -74,12 +76,16 @@ export class CustomerDetailsComponent {
     crypto: ['', { validators: [Validators.required], updateOn: 'change' }]
   });
 
-  private destroy$ = new Subject();
+  private subscriptions: Subscription = new Subscription();
 
   constructor(
     private formBuilder: FormBuilder,
     private auth: AuthService,
     private adminService: AdminDataService) {
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   private setFormData(data: UserItem | null | undefined): void {
@@ -148,11 +154,22 @@ export class CustomerDetailsComponent {
   }
 
   private getUserKycInfo(id: string): void {
-    this.adminService.getUserKycInfo(id).pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(kyc => {
-      this.kycDocs = kyc?.appliedDocuments?.map(doc => doc.code) ?? [];
-    });
+    this.subscriptions.add(
+      this.adminService.getUserKycInfo(id).pipe(take(1)).subscribe(kyc => {
+        this.kycDocs = kyc?.appliedDocuments?.map(doc => doc.code) ?? [];
+      }));
+  }
+
+  private getUserState(id: string): void {
+    this.subscriptions.add(
+      this.adminService.getUserState(id).pipe(take(1)).subscribe(state => {
+        this.kycProviderLink = state?.kycProviderLink ?? '';
+        let balance = 0;
+        state?.vaults?.forEach(x => {
+          balance += x.totalBalanceEur ?? 0;
+        });
+        this.totalBalance = `${balance} EUR`;
+      }));
   }
 
   private setCustomerData(): User {

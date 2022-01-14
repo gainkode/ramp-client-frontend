@@ -18,6 +18,7 @@ import {
   QueryGetTransactionsArgs,
   QueryGetUserKycInfoArgs,
   QueryGetUsersArgs,
+  QueryGetUserStateArgs,
   QueryGetWalletsArgs,
   QueryGetWidgetsArgs, RiskAlertResultList,
   SettingsCommon,
@@ -29,6 +30,7 @@ import {
   UserListResult,
   UserNotificationLevel,
   UserNotificationListResult,
+  UserState,
   UserType,
   Widget,
   WidgetListResult
@@ -503,6 +505,20 @@ const GET_USER_KYC_INFO = gql`
   }
 `;
 
+const GET_USER_STATE = gql`
+  query GetUserState(
+    $userId: String
+  ) {
+    getUserState(
+      userId: $userId
+    ) {
+      kycProviderLink
+      vaults {
+        totalBalanceEur
+      }
+    }
+  }
+`;
 
 const GET_WALLETS = gql`
   query GetWallets(
@@ -1519,6 +1535,22 @@ export class AdminDataService {
           return undefined;
         })
       );
+  }
+
+  getUserState(id: string): Observable<UserState | undefined> {
+    return this.watchQuery<{ getUserState: UserState }, QueryGetUserStateArgs>({
+      query: GET_USER_STATE,
+      variables: {
+        userId: id
+      },
+      fetchPolicy: 'network-only'
+    }).pipe(map(res => {
+      const result = res?.data?.getUserState;
+      if (result) {
+        return result;
+      }
+      return undefined;
+    }));
   }
 
   getWallets(
