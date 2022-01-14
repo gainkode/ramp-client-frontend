@@ -19,6 +19,7 @@ export class CustomerDetailsComponent implements OnDestroy {
   @Input() set customer(val: UserItem | null | undefined) {
     this.setFormData(val);
     this.settingsId = (val) ? val?.id : '';
+    this.email = (val) ? val?.email : '';
     this.removable = (this.auth.user?.userId !== this.settingsId);
     this.address = (val) ? val.address : '';
     this.userType = (val) ? val.userType?.id ?? UserType.Personal : UserType.Personal;
@@ -210,6 +211,14 @@ export class CustomerDetailsComponent implements OnDestroy {
     } else {
       this.errorMessage = 'Input data is not completely valid. Please, check all fields are valid.';
     }
+  }
+
+  onResetPassword(): void {
+    this.save.emit({
+      userId: this.settingsId,
+      email: this.email,
+      changePasswordRequired: true
+    } as User);
   }
 
   onCancel(): void {

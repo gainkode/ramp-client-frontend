@@ -16,6 +16,7 @@ import { Router } from '@angular/router';
 import { SendNotificationDialogBox } from 'src/app/components/dialogs/send-notification-box.dialog';
 import { MatDialog } from '@angular/material/dialog';
 import { FormGroup } from '@angular/forms';
+import { CommonDialogBox } from 'src/app/components/dialogs/common-box.dialog';
 
 @Component({
   templateUrl: 'customer-list.component.html',
@@ -44,7 +45,7 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   displayedColumns: string[] = [
     'details', 'referralCode', 'firstName', 'lastName', 'email', 'accountStatus', 'kycStatus',
-    'widgetId', 'totalBought', 'totalSold', 'totalSent', 'totalReceived', 
+    'widgetId', 'totalBought', 'totalSold', 'totalSent', 'totalReceived',
     'created', 'country', 'phone', 'risk', 'id'
   ];
 
@@ -239,14 +240,24 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
     const requestData = this.adminService.saveCustomer(customer);
     if (requestData) {
       requestData.subscribe(({ data }) => {
-        this.showEditor(null, false);
-        if (this.auth.user?.userId === customer.userId) {
-          this.auth.setUserName(customer.firstName ?? '', customer.lastName ?? '');
-          this.auth.setUserCurrencies(
-            customer.defaultCryptoCurrency ?? 'BTC',
-            customer.defaultFiatCurrency ?? 'EUR');
+        if (customer.changePasswordRequired === true) {
+          this.dialog.open(CommonDialogBox, {
+            width: '450px',
+            data: {
+              title: 'Reset password',
+              message: 'Password has been reset successfully'
+            }
+          });
+        } else {
+          this.showEditor(null, false);
+          if (this.auth.user?.userId === customer.userId) {
+            this.auth.setUserName(customer.firstName ?? '', customer.lastName ?? '');
+            this.auth.setUserCurrencies(
+              customer.defaultCryptoCurrency ?? 'BTC',
+              customer.defaultFiatCurrency ?? 'EUR');
+          }
+          this.loadCustomers();
         }
-        this.loadCustomers();
       }, (error) => {
         if (this.auth.token === '') {
           this.router.navigateByUrl('/');

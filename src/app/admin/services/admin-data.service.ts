@@ -889,6 +889,7 @@ const UPDATE_USER = gql`
 mutation UpdateUser(
   $userId: ID!
   $email: String!,
+  $changePasswordRequired: Boolean,
   $firstName: String
   $lastName: String
   $birthday: DateTime
@@ -911,6 +912,7 @@ mutation UpdateUser(
     userId: $userId
     user: {
       email: $email
+      changePasswordRequired: $changePasswordRequired
       firstName: $firstName
       lastName: $lastName
       birthday: $birthday
@@ -1885,6 +1887,7 @@ export class AdminDataService {
       variables: {
         userId: customer.userId,
         email: customer.email,
+        changePasswordRequired: customer.changePasswordRequired,
         firstName: customer.firstName,
         lastName: customer.lastName,
         birthday: customer.birthday,
