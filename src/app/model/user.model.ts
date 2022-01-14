@@ -48,6 +48,7 @@ export class UserItem {
   kycPrivateComment = '';
   kycReviewRejectedType = '';
   kycReviewRejectedLabels: string[] = [];
+  kycReviewResult = '';
   kycStatusUpdateRequired = 'No';
   userType: UserTypeView | null = null;
   userMode: UserModeView | null = null;
@@ -58,6 +59,7 @@ export class UserItem {
   birthday: Date | undefined = undefined;
   age = '';
   risk = '';
+  riskCodes: string[] = [];
   totalTransactionCount = 0;
   avarageTransaction = 0;
   totalBoughtCompleted = 0;
@@ -129,12 +131,12 @@ export class UserItem {
       this.widgetCode = data.widgetCode ?? '';
       this.affiliateId = data.affiliateId ?? '';
       this.affiliateCode = data.affiliateCode ?? '';
-      this.kycStatus = data.kycStatus as string;
       this.accountStatus = data.accountStatus ?? '';
       this.risk = data.risk ?? '';
-
-      console.log('risk codes', data.riskCodes);
-
+      this.riskCodes = data.riskCodes?.map(code => {
+        const riskData = JSON.parse(code);
+        return riskData.code as string ?? '';
+      }) ?? [];
       this.totalTransactionCount = data.totalTransactionCount ?? 0;
       this.avarageTransaction = data.avarageTransaction ?? 0;
       this.totalBoughtCompleted = data.totalBoughtCompleted ?? 0;
@@ -166,6 +168,7 @@ export class UserItem {
       this.totalSent = (this.totalSentCompleted + this.totalSentInProcess).toFixed(2);
       this.totalReceived = (this.totalReceivedCompleted + this.totalReceivedInProcess).toFixed(2);
 
+      this.kycStatus = data.kycStatus as string;
       const status = this.kycStatus.toLowerCase();
       if (status === KycStatus.Completed.toLowerCase()) {
         this.kycRejected = false;
@@ -182,12 +185,16 @@ export class UserItem {
           this.kycVerificationAvailable = false;
         }
       }
-      this.kycReviewDate = datepipe.transform(data.kycReviewDate, 'dd MMM YYYY HH:mm:ss') as string;
-      this.kycStatusDate = datepipe.transform(data.kycStatusDate, 'dd MMM YYYY HH:mm:ss') as string;
+      this.kycReviewDate = datepipe.transform(data.kycReviewDate, 'dd MMM YYYY HH:mm:ss') ?? '';
+      this.kycStatusDate = datepipe.transform(data.kycStatusDate, 'dd MMM YYYY HH:mm:ss') ?? '';
       this.kycReviewComment = data.kycReviewComment ?? '';
       this.kycPrivateComment = data.kycPrivateComment ?? '';
       this.kycReviewRejectedType = data.kycReviewRejectedType ?? '';
       this.kycReviewRejectedLabels = data.kycReviewRejectedLabels ?? [];
+      const kycReviewResultData = JSON.parse(data.kycReviewResult ?? '');
+      if (kycReviewResultData !== null) {
+        this.kycReviewResult = kycReviewResultData.reviewAnswer ?? '';
+      }
       this.kycStatusUpdateRequired = (data.kycStatusUpdateRequired) ? ((data.kycStatusUpdateRequired === true) ? 'Yes' : 'No') : 'No';
       if (data.kycTier) {
         this.kycLevel = data.kycTier.name;
