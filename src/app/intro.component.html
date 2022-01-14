@@ -54,7 +54,7 @@
                 <h2 class="__intro-frame-order-title">
                     Create an Order
                 </h2>
-                <app-payment-intro>
+                <app-payment-intro (onComplete)="onWidgetComplete($event)" (onError)="onWidgetError($event)">
                 </app-payment-intro>
             </div>
         </div>
@@ -189,7 +189,8 @@
             </div>
             <div class="__intro-contacts-subtitle">
                 <p class="__intro-regular-text">
-                    to help us resolve your inquiry faster, please use the same email as register in your GetCoins account
+                    to help us resolve your inquiry faster, please use the same email as register in your GetCoins
+                    account
                 </p>
             </div>
             <app-contact-form class="__intro-contacts-panel">

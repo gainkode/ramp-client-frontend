@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { CommonDialogBox } from './components/dialogs/common-box.dialog';
 import { UserMode } from './model/generated-models';
+import { CheckoutSummary } from './model/payment.model';
 import { AuthService } from './services/auth.service';
 
 @Component({
@@ -8,7 +11,10 @@ import { AuthService } from './services/auth.service';
     styleUrls: ['../assets/button.scss', '../assets/intro.scss']
 })
 export class IntroComponent implements OnInit {
-    constructor(private router: Router, private auth: AuthService) { }
+    constructor(
+        private router: Router,
+        public dialog: MatDialog,
+        private auth: AuthService) { }
 
     ngOnInit(): void {
         if (this.auth.authenticated) {
@@ -20,5 +26,22 @@ export class IntroComponent implements OnInit {
 
     routeTo(link: string): void {
         this.router.navigateByUrl(link);
+    }
+
+    onWidgetComplete(data: CheckoutSummary): void {
+        const url = `payment/quickcheckout-express/${data.currencyFrom}/${data.currencyTo}/${data.amountFrom}`;
+        this.router.navigateByUrl(url);
+    }
+
+    onWidgetError(error: string): void {
+        if (error !== '') {
+            this.dialog.open(CommonDialogBox, {
+                width: '450px',
+                data: {
+                    title: 'Error',
+                    message: error
+                }
+            });
+        }
     }
 }

@@ -9,6 +9,7 @@ export class ExchangeRateService {
     private updateCallback: Function | undefined = undefined;
     private pSubscriptions: Subscription = new Subscription();
     private pRateSubscription: Subscription | undefined = undefined;
+    private currentExchangeRate: Rate | undefined;
     private updateTimer = timer(0, 1000);
     private counterLimit = 30;
     private countDownInit = false;
@@ -20,6 +21,7 @@ export class ExchangeRateService {
     private transaction: TransactionType = TransactionType.Deposit;
 
     constructor(private dataService: PaymentDataService, private errorHandler: ErrorService) {
+        console.log('start exchange rate timer');
         this.startTimer();
     }
 
@@ -34,11 +36,13 @@ export class ExchangeRateService {
     }
 
     stop() {
-        this.pSubscriptions.unsubscribe();
-        if (this.pRateSubscription) {
-            this.pRateSubscription.unsubscribe();
-            this.pRateSubscription = undefined;
-        }
+        // service shouldn't be stopped as it is a single-ton service
+
+        // this.pSubscriptions.unsubscribe();
+        // if (this.pRateSubscription) {
+        //     this.pRateSubscription.unsubscribe();
+        //     this.pRateSubscription = undefined;
+        // }
     }
 
     update(): void {
@@ -121,6 +125,9 @@ export class ExchangeRateService {
             'The price is';
         const sec = this.countDown === 1 ? 'second' : 'seconds';
         const val = (this.countDown > 0 && this.countDown < this.counterLimit) ? `${this.countDown} ${sec}` : 'updating';
+        if (rate) {
+            this.currentExchangeRate = rate;
+        }
         if (this.updateCallback) {
             this.updateCallback(rate, title, val, this.errorMessage);
         }
@@ -134,6 +141,10 @@ export class ExchangeRateService {
             depositRate: 0,
             withdrawRate: 0
         } as Rate;
+    }
+
+    get currentRate(): Rate | undefined {
+        return this.currentExchangeRate;
     }
 
     private restartCountDown(): void {

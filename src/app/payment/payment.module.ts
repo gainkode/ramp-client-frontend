@@ -13,6 +13,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 const routing = RouterModule.forChild([
     { path: 'quickcheckout', component: QuickCheckoutComponent },
     { path: 'quickcheckout/:userParamsId', component: QuickCheckoutComponent },
+    { path: 'quickcheckout-express/:from/:to/:value', component: QuickCheckoutComponent },
     { path: 'widget/:userParamsId', component: WidgetWrapComponent },
     { path: '**', redirectTo: 'quickcheckout' }
 ]);

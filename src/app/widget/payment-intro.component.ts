@@ -1,11 +1,11 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { SettingsCurrencyWithDefaults } from '../model/generated-models';
+import { Rate, SettingsCurrencyWithDefaults, TransactionType } from '../model/generated-models';
 import { CheckoutSummary, CurrencyView } from '../model/payment.model';
 import { CommonDataService } from '../services/common-data.service';
 import { ErrorService } from '../services/error.service';
-import { PaymentDataService } from '../services/payment.service';
+import { ExchangeRateService } from '../services/rate.service';
 
 @Component({
   selector: 'app-payment-intro',
@@ -13,11 +13,6 @@ import { PaymentDataService } from '../services/payment.service';
   styleUrls: ['../../assets/payment.scss', '../../assets/button.scss']
 })
 export class PaymentIntroComponent implements OnInit, OnDestroy {
-  @Input() set depositRate(val: number | undefined) {
-    this.pSpendChanged = true;
-    this.pDepositRate = val;
-    this.updateCurrentAmounts();
-  }
   @Output() onComplete = new EventEmitter<CheckoutSummary>();
   @Output() onError = new EventEmitter<string>();
 
@@ -27,6 +22,7 @@ export class PaymentIntroComponent implements OnInit, OnDestroy {
   private pReceiveChanged = false;
   private pSpendAutoUpdated = false;
   private pReceiveAutoUpdated = false;
+  private pExchangeRateStarted = false;
   private pDepositRate: number | undefined = undefined;
   private pNumberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
 
@@ -72,7 +68,7 @@ export class PaymentIntroComponent implements OnInit, OnDestroy {
 
   constructor(
     private commonService: CommonDataService,
-    private paymentService: PaymentDataService,
+    private exchangeRate: ExchangeRateService,
     private errorHandler: ErrorService,
     private formBuilder: FormBuilder) { }
 
@@ -86,6 +82,37 @@ export class PaymentIntroComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.pSubscriptions.unsubscribe();
+    this.exchangeRate.stop();
+  }
+
+  private startExchangeRate(): void {
+    if (this.pExchangeRateStarted === false) {
+      this.exchangeRate.setCurrency(
+        this.currentCurrencySpend?.id ?? '',
+        this.currentCurrencyReceive?.id ?? '',
+        TransactionType.Deposit);
+      this.exchangeRate.register(this.onExchangeRateUpdated.bind(this));
+    }
+    this.pExchangeRateStarted = true;
+  }
+
+  private onExchangeRateUpdated(rate: Rate | undefined, countDownTitle: string, countDownValue: string, error: string): void {
+    if (error !== '') {
+      this.onError.emit(error);
+    }
+    if (rate) {
+      this.pSpendChanged = true;
+      this.pDepositRate = rate.depositRate;
+      this.updateCurrentAmounts();
+    }
+    if (!this.pDepositRate) {
+      const currentRate = this.exchangeRate.currentRate;
+      if (currentRate) {
+        this.pSpendChanged = true;
+        this.pDepositRate = currentRate.depositRate;
+        this.updateCurrentAmounts();
+      }
+    }
   }
 
   private loadDetailsForm(): void {
@@ -132,6 +159,7 @@ export class PaymentIntroComponent implements OnInit, OnDestroy {
           undefined,
           undefined);
       }
+      this.startExchangeRate();
     }
   }
 
@@ -204,6 +232,11 @@ export class PaymentIntroComponent implements OnInit, OnDestroy {
     }
     this.pReceiveChanged = true;
     this.updateCurrentAmounts();
+    this.exchangeRate.setCurrency(
+      this.currentCurrencySpend?.id ?? '',
+      this.currentCurrencyReceive?.id ?? '',
+      TransactionType.Deposit);
+    this.exchangeRate.update();
   }
 
   private onCurrencyReceiveUpdated(currency: string): void {
