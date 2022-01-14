@@ -237,12 +237,16 @@ export type Feedback = {
   __typename?: 'Feedback';
   feedbackId: Scalars['ID'];
   userId?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
   created?: Maybe<Scalars['DateTime']>;
 };
 
 export type FeedbackInput = {
+  name?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
 };
@@ -962,6 +966,7 @@ export type MutationDisable2faArgs = {
 
 
 export type MutationAddFeedbackArgs = {
+  recaptcha?: Maybe<Scalars['String']>;
   feedback: FeedbackInput;
 };
 
@@ -1619,6 +1624,7 @@ export type QueryGetSupportTicketsArgs = {
 
 
 export type QueryGetFeedbacksArgs = {
+  recaptcha?: Maybe<Scalars['String']>;
   filter?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
@@ -1793,7 +1799,7 @@ export type RiskAlertResultList = {
 
 export type RiskAlertType = {
   __typename?: 'RiskAlertType';
-  riskAlertTypecode: RiskAlertCodes;
+  riskAlertTypeCode: RiskAlertCodes;
   description?: Maybe<Scalars['String']>;
   created: Scalars['DateTime'];
   disabled?: Maybe<Scalars['DateTime']>;
@@ -2610,6 +2616,7 @@ export type User = {
   totalReceivedInProcessCount?: Maybe<Scalars['Int']>;
   totalTransactionCount?: Maybe<Scalars['Int']>;
   avarageTransaction?: Maybe<Scalars['Float']>;
+  manuallyEditedRisk?: Maybe<Scalars['Boolean']>;
   data?: Maybe<Scalars['String']>;
 };
 

@@ -313,9 +313,11 @@ mutation Verify2faCode($code: String!) {
 `;
 
 const ADD_FEEDBACK = gql`
-mutation AddFeedback($title: String, $description: String) {
+mutation AddFeedback($name: String, $email: String, $title: String, $description: String) {
     addFeedback(
         feedback: {
+            name: $name,
+            email: $email,
             title: $title,
             description: $description
         }) { feedbackId }
@@ -644,6 +646,8 @@ export class AuthService {
         return this.apollo.mutate({
             mutation: ADD_FEEDBACK,
             variables: {
+                name: feedback.name,
+                email: feedback.email,
                 title: feedback.title,
                 description: feedback.description
             }

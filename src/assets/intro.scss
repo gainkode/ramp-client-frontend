@@ -290,6 +290,11 @@
         0px 6px 32px rgba(0, 0, 0, 0.12);
     border-radius: 8px;
 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+
     @media (max-width: $md1 + px) {
         margin: 125px 0px 0px 0px;
     }
@@ -305,6 +310,19 @@
         justify-self: center;
         margin: 0px;
     }
+}
+
+.__intro-frame-order-title {
+    padding: 0px;
+    margin: 40px 40px 0px 40px;
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 23px;
+    line-height: 28px;
+    text-align: center;
+
+    color: $color_purple_900_text;
 }
 
 .__intro-create-account-block {

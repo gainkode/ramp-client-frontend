@@ -1,21 +1,22 @@
-<!-- <div class="__widget-data-box">
+<div class="__widget-data-box-lg">
     <form [formGroup]="dataForm" (ngSubmit)="onSubmit()">
-        Spend
+        <!-- Spend -->
         <app-form-finance-combo [label]="'Amount to spend'" [placeholder]="'...'" [boxFieldName]="'amountSpend'"
             [boxField]="amountSpendField" [comboField]="currencySpendField" [comboFieldName]="'currencySpend'"
             [comboList]="spendCurrencyList" [errorMessages]="amountSpendErrorMessages" [separator]="true">
         </app-form-finance-combo>
         <div class="__form-separator"></div>
 
-        Receive
+        <!-- Receive -->
         <app-form-finance-combo [label]="'Amount to receive'" [placeholder]="'...'" [boxFieldName]="'amountReceive'"
             [boxField]="amountReceiveField" [comboField]="currencyReceiveField" [comboFieldName]="'currencyReceive'"
-            [comboList]="receiveCurrencyList" [errorMessages]="amountReceiveErrorMessages" [separator]="true">
+            [comboList]="receiveCurrencyList" [errorMessages]="amountReceiveErrorMessages" [separator]="false">
         </app-form-finance-combo>
+        <div class="__form-separator-small"></div>
 
-        Buttons
+        <!-- Buttons -->
         <div class="__widget-buttons-area">
-            <button class="__main-button" type="submit" [disabled]="!initialized || !validData">create order</button>
+            <button class="__main-button" type="submit" [disabled]="!validData">create order</button>
         </div>
     </form>
-</div> -->
+</div>

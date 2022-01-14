@@ -74,6 +74,8 @@ export class ContactFormComponent implements OnDestroy {
     if (this.contactForm.valid) {
       this.inProgress = true;
       const feedback: FeedbackInput = {
+        name: this.nameField?.value,
+        email: this.emailField?.value,
         title: this.titleField?.value,
         description: this.messageField?.value
       };
@@ -82,6 +84,7 @@ export class ContactFormComponent implements OnDestroy {
           this.inProgress = false;
           const userData = data.addFeedback as Feedback;
           if (userData.feedbackId) {
+            this.contactForm.reset();
             this.showSuccessDialog('Your message has been successfully sent.');
           } else {
             this.showFailDialog('Unable to send the message.');

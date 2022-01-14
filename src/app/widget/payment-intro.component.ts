@@ -1,7 +1,7 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormBuilder } from '@angular/forms';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { Rate, SettingsCurrencyWithDefaults } from '../model/generated-models';
+import { SettingsCurrencyWithDefaults } from '../model/generated-models';
 import { CheckoutSummary, CurrencyView } from '../model/payment.model';
 import { CommonDataService } from '../services/common-data.service';
 import { ErrorService } from '../services/error.service';
@@ -10,14 +10,31 @@ import { PaymentDataService } from '../services/payment.service';
 @Component({
   selector: 'app-payment-intro',
   templateUrl: 'payment-intro.component.html',
-  styleUrls: ['../../assets/payment.scss']
+  styleUrls: ['../../assets/payment.scss', '../../assets/button.scss']
 })
 export class PaymentIntroComponent implements OnInit, OnDestroy {
+  @Input() set depositRate(val: number | undefined) {
+    this.pSpendChanged = true;
+    this.pDepositRate = val;
+    this.updateCurrentAmounts();
+  }
   @Output() onComplete = new EventEmitter<CheckoutSummary>();
   @Output() onError = new EventEmitter<string>();
 
   private pSubscriptions: Subscription = new Subscription();
   private pCurrencies: CurrencyView[] = [];
+  private pSpendChanged = false;
+  private pReceiveChanged = false;
+  private pSpendAutoUpdated = false;
+  private pReceiveAutoUpdated = false;
+  private pDepositRate: number | undefined = undefined;
+  private pNumberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
+
+  validData = false;
+  currentCurrencySpend: CurrencyView | undefined = undefined;
+  currentCurrencyReceive: CurrencyView | undefined = undefined;
+  spendCurrencyList: CurrencyView[] = [];
+  receiveCurrencyList: CurrencyView[] = [];
 
   amountSpendErrorMessages: { [key: string]: string; } = {
     ['required']: 'Amount is required',
@@ -54,23 +71,21 @@ export class PaymentIntroComponent implements OnInit, OnDestroy {
   }
 
   constructor(
-    private formBuilder: FormBuilder,
-    private errorHandler: ErrorService,
+    private commonService: CommonDataService,
     private paymentService: PaymentDataService,
-    private commonService: CommonDataService) {
-
-  }
+    private errorHandler: ErrorService,
+    private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
     this.loadDetailsForm();
+    this.pSubscriptions.add(this.currencySpendField?.valueChanges.subscribe(val => this.onCurrencySpendUpdated(val)));
+    this.pSubscriptions.add(this.currencyReceiveField?.valueChanges.subscribe(val => this.onCurrencyReceiveUpdated(val)));
+    this.pSubscriptions.add(this.amountSpendField?.valueChanges.subscribe(val => this.onAmountSpendUpdated(val)));
+    this.pSubscriptions.add(this.amountReceiveField?.valueChanges.subscribe(val => this.onAmountReceiveUpdated(val)));
   }
 
   ngOnDestroy(): void {
     this.pSubscriptions.unsubscribe();
-  }
-
-  onSubmit(): void {
-
   }
 
   private loadDetailsForm(): void {
@@ -111,13 +126,194 @@ export class PaymentIntroComponent implements OnInit, OnDestroy {
           defaultFiatCurrency = 'EUR';
         }
         this.pCurrencies = currencyList?.list?.map((val) => new CurrencyView(val)) as CurrencyView[];
-        // this.setCurrencyValues(
-        //   initState,
-        //   defaultFiatCurrency,
-        //   defaultCryptoCurrency,
-        //   undefined,
-        //   undefined);
+        this.setCurrencyValues(
+          defaultFiatCurrency,
+          defaultCryptoCurrency,
+          undefined,
+          undefined);
       }
+    }
+  }
+
+  private setCurrencyValues(
+    defaultSpendCurrency: string = '',
+    defaultReceiveCurrency: string = '',
+    defaultSpendAmount: number | undefined = undefined,
+    defaultReceiveAmount: number | undefined = undefined): void {
+    this.setCurrencyLists();
+    if (this.spendCurrencyList.length > 0) {
+      if (defaultSpendCurrency === '') {
+        defaultSpendCurrency = this.spendCurrencyList[0].id;
+      } else {
+        const presented = this.spendCurrencyList.find(x => x.id === defaultSpendCurrency);
+        if (!presented) {
+          defaultSpendCurrency = this.spendCurrencyList[0].id;
+        }
+      }
+      this.currencySpendField?.setValue(defaultSpendCurrency);
+      this.pSpendAutoUpdated = true;
+      this.amountSpendField?.setValue(defaultSpendAmount);
+    }
+    if (this.receiveCurrencyList.length > 0) {
+      if (defaultReceiveCurrency === '') {
+        defaultReceiveCurrency = this.receiveCurrencyList[0].id;
+      } else {
+        const presented = this.receiveCurrencyList.find(x => x.id === defaultReceiveCurrency);
+        if (!presented) {
+          defaultReceiveCurrency = this.receiveCurrencyList[0].id;
+        }
+      }
+      this.currencyReceiveField?.setValue(defaultReceiveCurrency);
+      this.pReceiveAutoUpdated = true;
+      this.amountReceiveField?.setValue(defaultReceiveAmount);
+    }
+    if (this.pSpendChanged || this.pReceiveChanged) {
+      this.updateCurrentAmounts();
+    }
+  }
+
+  private setCurrencyLists(): void {
+    this.spendCurrencyList = this.pCurrencies.filter(c => c.fiat === true);
+    this.receiveCurrencyList = this.pCurrencies.filter(c => c.fiat === false);
+  }
+
+  private setSpendValidators(): void {
+    this.amountSpendErrorMessages['min'] = `Min. amount ${this.currentCurrencySpend?.minAmount} ${this.currentCurrencySpend?.title}`;
+    this.amountSpendField?.setValidators([
+      Validators.required,
+      Validators.pattern(this.pNumberPattern),
+      Validators.min(this.currentCurrencySpend?.minAmount ?? 0),
+    ]);
+    this.amountSpendField?.updateValueAndValidity();
+  }
+
+  private setReceiveValidators(): void {
+    this.amountReceiveErrorMessages['min'] = `Min. amount ${this.currentCurrencyReceive?.minAmount} ${this.currentCurrencyReceive?.title}`;
+    this.amountReceiveField?.setValidators([
+      Validators.required,
+      Validators.pattern(this.pNumberPattern),
+      Validators.min(this.currentCurrencyReceive?.minAmount ?? 0),
+    ]);
+    this.amountReceiveField?.updateValueAndValidity();
+  }
+
+  private onCurrencySpendUpdated(currency: string): void {
+    this.currentCurrencySpend = this.pCurrencies.find((x) => x.id === currency);
+    if (this.currentCurrencySpend && this.amountSpendField?.value) {
+      this.setSpendValidators();
+    }
+    this.pReceiveChanged = true;
+    this.updateCurrentAmounts();
+  }
+
+  private onCurrencyReceiveUpdated(currency: string): void {
+    this.currentCurrencyReceive = this.pCurrencies.find((x) => x.id === currency);
+    if (this.currentCurrencyReceive && this.amountReceiveField?.value) {
+      this.setReceiveValidators();
+    }
+    this.pSpendChanged = true;
+    this.updateCurrentAmounts();
+  }
+
+  private onAmountSpendUpdated(val: any) {
+    if (val && !this.pSpendAutoUpdated) {
+      this.pSpendAutoUpdated = false;
+      if (this.hasValidators(this.amountSpendField as AbstractControl) === false && this.currentCurrencySpend) {
+        this.setSpendValidators();
+      }
+      this.pSpendChanged = true;
+      this.updateCurrentAmounts();
+    }
+    this.pSpendAutoUpdated = false;
+  }
+
+  private onAmountReceiveUpdated(val: any) {
+    if (val && !this.pReceiveAutoUpdated) {
+      this.pReceiveAutoUpdated = false;
+      if (this.hasValidators(this.amountReceiveField as AbstractControl) === false && this.currentCurrencyReceive) {
+        this.setReceiveValidators();
+      }
+      this.pReceiveChanged = true;
+      this.updateCurrentAmounts();
+    }
+    this.pReceiveAutoUpdated = false;
+  }
+
+  private hasValidators(control: AbstractControl) {
+    if (!control) {
+      return false;
+    }
+    if (control.validator) {
+      const validator = control.validator({} as AbstractControl);
+      if (validator && validator.required) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private updateCurrentAmounts(): void {
+    let spend: number | undefined = undefined;
+    let receive: number | undefined = undefined;
+    if (this.amountSpendField?.value && this.amountSpendField?.valid) {
+      spend = parseFloat(this.amountSpendField?.value);
+    }
+    if (this.amountReceiveField?.value && this.amountReceiveField?.valid) {
+      receive = parseFloat(this.amountReceiveField?.value);
+    }
+    this.updateAmounts(spend, receive);
+  }
+
+  private updateAmounts(spend: number | undefined, receive: number | undefined): void {
+    this.validData = false;
+    let dst = 0;
+    if (this.pReceiveChanged) {
+      if (receive && this.pDepositRate) {
+        dst = receive * this.pDepositRate;
+        this.validData = true;
+      }
+      if (this.validData === true) {
+        spend = dst;
+        const val = dst.toFixed(this.currentCurrencySpend?.precision);
+        this.pSpendAutoUpdated = true;
+        this.amountSpendField?.setValue(val);
+      }
+    }
+    if (this.pSpendChanged) {
+      if (spend && this.pDepositRate) {
+        const rate = this.pDepositRate;
+        if (rate === 0) {
+          dst = 0;
+        } else {
+          dst = spend / rate;
+        }
+        this.validData = true;
+      }
+      if (this.validData === true) {
+        receive = dst;
+        const val = dst.toFixed(this.currentCurrencyReceive?.precision);
+        this.pReceiveAutoUpdated = true;
+        this.amountReceiveField?.setValue(val);
+      }
+    }
+    this.pSpendChanged = false;
+    this.pReceiveChanged = false;
+  }
+
+  onSubmit(): void {
+    if (this.dataForm.valid) {
+      const data = new CheckoutSummary();
+      data.amountFrom = this.amountSpendField?.value;
+      data.amountTo = this.amountReceiveField?.value;
+      if (this.currencySpendField?.valid) {
+        data.currencyFrom = this.currencySpendField?.value;
+        data.amountFromPrecision = this.currentCurrencySpend?.precision ?? 2;
+      }
+      if (this.currencyReceiveField?.valid) {
+        data.currencyTo = this.currencyReceiveField?.value;
+        data.amountToPrecision = this.currentCurrencyReceive?.precision ?? 2;
+      }
+      this.onComplete.emit(data);
     }
   }
 }
