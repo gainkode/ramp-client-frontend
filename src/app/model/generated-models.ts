@@ -1238,7 +1238,8 @@ export type Query = {
   getNotificationsByUser?: Maybe<UserNotificationListResult>;
   getNotifications?: Maybe<UserNotificationListResult>;
   getSettingsCommon?: Maybe<SettingsCommon>;
-  getPaymentProviders?: Maybe<Array<PaymentProviderByInstrument>>;
+  getPaymentProviders?: Maybe<Array<PaymentProvider>>;
+  getAppropriatePaymentProviders?: Maybe<Array<PaymentProviderByInstrument>>;
   getSettingsCurrency?: Maybe<SettingsCurrencyWithDefaults>;
   getSettingsKycLevels?: Maybe<SettingsKycLevelListResult>;
   getSettingsKyc?: Maybe<SettingsKycListResult>;
@@ -1346,8 +1347,9 @@ export type QueryGetNotificationsArgs = {
 };
 
 
-export type QueryGetPaymentProvidersArgs = {
-  fiatCurrency: Scalars['String'];
+export type QueryGetAppropriatePaymentProvidersArgs = {
+  fiatCurrency?: Maybe<Scalars['String']>;
+  widgetId?: Maybe<Scalars['String']>;
 };
 
 

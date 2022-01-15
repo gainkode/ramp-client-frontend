@@ -1,7 +1,6 @@
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { WidgetItem } from '../../../model/widget.model';
 import { FormBuilder, Validators } from '@angular/forms';
-import { PaymentDataService } from '../../../../services/payment.service';
 import { ErrorService } from '../../../../services/error.service';
 import { LayoutService } from '../../../services/layout.service';
 import { PaymentProvider, SettingsCurrencyWithDefaults } from '../../../../model/generated-models';
@@ -75,7 +74,6 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
   constructor(
     private formBuilder: FormBuilder,
     private commonDataService: CommonDataService,
-    private paymentDataService: PaymentDataService,
     private adminDataService: AdminDataService,
     private layoutService: LayoutService,
     private errorHandler: ErrorService,
@@ -286,18 +284,16 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
 
   private loadPaymentProviders(): void {
     this.paymentProviderOptions = [];
-    this.paymentDataService.getProviders()
-      ?.valueChanges
-      .subscribe(({ data }) => {
-        const providers = data.getPaymentProviders as PaymentProvider[];
-        this.paymentProviderOptions = providers?.map((val) => new PaymentProviderView(val)) as PaymentProviderView[];
-      }, (error) => {
-        this.snackBar.open(
-          this.errorHandler.getError(error.message, 'Unable to load payment provider list.'),
-          undefined,
-          { duration: 5000 }
-        );
-      });
+    this.adminDataService.getProviders()?.valueChanges.subscribe(({ data }) => {
+      const providers = data.getPaymentProviders as PaymentProvider[];
+      this.paymentProviderOptions = providers?.map((val) => new PaymentProviderView(val)) as PaymentProviderView[];
+    }, (error) => {
+      this.snackBar.open(
+        this.errorHandler.getError(error.message, 'Unable to load payment provider list.'),
+        undefined,
+        { duration: 5000 }
+      );
+    });
   }
 
   private loadCurrencies(): void {

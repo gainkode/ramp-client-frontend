@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { PaymentProvider, TransactionType, User } from 'src/app/model/generated-models';
-import { CheckoutSummary, PaymentProviderView } from 'src/app/model/payment.model';
+import { PaymentProviderByInstrument, TransactionType, User } from 'src/app/model/generated-models';
+import { CheckoutSummary, PaymentProviderInstrumentView } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { PaymentDataService } from 'src/app/services/payment.service';
@@ -12,13 +12,14 @@ import { PaymentDataService } from 'src/app/services/payment.service';
 })
 export class WidgetSettingsService implements OnInit, OnDestroy {
   @Input() summary: CheckoutSummary = new CheckoutSummary();
+  @Input() widgetId: string = '';
   @Output() onError = new EventEmitter<string>();
   @Output() onProgress = new EventEmitter<boolean>();
   @Output() onAuthenticationRequired = new EventEmitter<string>();
   @Output() onIdentificationRequired = new EventEmitter();
   @Output() onLoginRequired = new EventEmitter<string>();
   @Output() onKycStatusUpdate = new EventEmitter<boolean>();
-  @Output() onComplete = new EventEmitter<PaymentProviderView[]>();
+  @Output() onComplete = new EventEmitter<PaymentProviderInstrumentView[]>();
 
   private pSubscriptions: Subscription = new Subscription();
 
@@ -126,7 +127,13 @@ export class WidgetSettingsService implements OnInit, OnDestroy {
   }
 
   private loadPaymentProviders(): void {
-    const providersData = this.paymentService.getProviders();
+    let fiatCurrency = '';
+    if (this.summary.transactionType === TransactionType.Deposit) {
+      fiatCurrency = this.summary.currencyFrom;
+    } else if (this.summary.transactionType === TransactionType.Withdrawal) {
+      fiatCurrency = this.summary.currencyTo;
+    }
+    const providersData = this.paymentService.getProviders(fiatCurrency, (this.widgetId !== '') ? this.widgetId : undefined);
     if (providersData === null) {
       this.onError.emit(this.errorHandler.getRejectedCookieMessage());
     } else {
@@ -134,7 +141,7 @@ export class WidgetSettingsService implements OnInit, OnDestroy {
       this.pSubscriptions.add(
         providersData.valueChanges.subscribe(({ data }) => {
           this.onProgress.emit(false);
-          this.onComplete.emit(this.getPaymentProviderList(data.getPaymentProviders as PaymentProvider[]));
+          this.onComplete.emit(this.getPaymentProviderList(data.getAppropriatePaymentProviders as PaymentProviderByInstrument[]));
         }, (error) => {
           this.onProgress.emit(false);
           if (this.errorHandler.getCurrentError() === 'auth.token_invalid') {
@@ -151,13 +158,16 @@ export class WidgetSettingsService implements OnInit, OnDestroy {
     }
   }
 
-  private getPaymentProviderList(list: PaymentProvider[]): PaymentProviderView[] {
+  private getPaymentProviderList(list: PaymentProviderByInstrument[]): PaymentProviderInstrumentView[] {
     let currency = '';
     if (this.summary?.transactionType === TransactionType.Deposit) {
       currency = this.summary?.currencyFrom ?? '';
     } else if (this.summary?.transactionType === TransactionType.Withdrawal) {
       currency = this.summary?.currencyTo ?? '';
     }
-    return list.filter(x => x.currencies?.includes(currency, 0)).map(val => new PaymentProviderView(val));
+    console.log(list);
+    return list
+      .filter(x => x.provider?.currencies?.includes(currency, 0))
+      .map(val => new PaymentProviderInstrumentView(val));
   }
 }

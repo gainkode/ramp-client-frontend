@@ -10,6 +10,7 @@ import {
   CountryCodeType,
   DashboardStats,
   KycInfo,
+  PaymentProvider,
   QueryGetDashboardStatsArgs,
   QueryGetNotificationsArgs, QueryGetRiskAlertsArgs,
   QueryGetSettingsFeeArgs,
@@ -602,6 +603,17 @@ const GET_WIDGETS = gql`
       }
     }
   }
+`;
+
+const GET_PROVIDERS = gql`
+query GetProviders {
+  getPaymentProviders {
+    paymentProviderId
+    name
+    currencies
+    countries_code2
+  }
+}
 `;
 
 const GET_SETTINGS_COMMON = gql`
@@ -1650,25 +1662,30 @@ export class AdminDataService {
       query: GET_WIDGETS,
       variables: vars,
       fetchPolicy: 'network-only'
-    })
-      .pipe(
-        map(result => {
-          if (result.data?.getWidgets?.list && result.data?.getWidgets?.count) {
-            return {
-              list: result.data.getWidgets.list.map(w => {
-                return new WidgetItem(w);
-              }),
-              count: result.data.getWidgets.count
-            };
-          } else {
-            return {
-              list: [],
-              count: 0
-            };
-          }
-        })
-      );
+    }).pipe(
+      map(result => {
+        if (result.data?.getWidgets?.list && result.data?.getWidgets?.count) {
+          return {
+            list: result.data.getWidgets.list.map(w => {
+              return new WidgetItem(w);
+            }),
+            count: result.data.getWidgets.count
+          };
+        } else {
+          return {
+            list: [],
+            count: 0
+          };
+        }
+      })
+    );
+  }
 
+  getProviders(): QueryRef<any, EmptyObject> {
+    return this.apollo.watchQuery<any>({
+      query: GET_PROVIDERS,
+      fetchPolicy: 'network-only'
+    });
   }
 
   getSettingsCommon(): QueryRef<any, EmptyObject> | null {

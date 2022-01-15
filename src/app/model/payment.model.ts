@@ -3,12 +3,35 @@ import { CommonTargetValue } from './common.model';
 import {
     PaymentInstrument, PaymentProvider, TransactionType, TransactionStatus,
     SettingsFeeTargetFilterType, SettingsCostTargetFilterType, SettingsKycTargetFilterType,
-    UserType, KycProvider, UserMode, SettingsCurrency, Rate, TransactionSource, UserNotificationCodes, CustodyProvider, TransactionKycStatus, RiskLevel
+    UserType, KycProvider, UserMode, SettingsCurrency, Rate, TransactionSource, UserNotificationCodes, CustodyProvider, TransactionKycStatus, RiskLevel, PaymentProviderByInstrument
 } from './generated-models';
 
 export class PaymentInstrumentView {
     id!: PaymentInstrument;
     name = '';
+}
+
+export class PaymentProviderInstrumentView {
+    id = '';
+    name = '';
+    image = '';
+    instrument: PaymentInstrument = PaymentInstrument.CreditCard;
+
+    constructor(data: PaymentProviderByInstrument) {
+        this.id = data.provider?.name ?? '';
+        this.name = data.provider?.name ?? '';
+        this.instrument = data.instrument ?? PaymentInstrument.CreditCard;
+        if (this.instrument === PaymentInstrument.Apm) {
+            this.name = 'APM';
+            this.image = './assets/svg-providers/bank-payment.svg';
+        } else if (this.instrument === PaymentInstrument.CreditCard) {
+            this.name = 'CARD PAYMENT';
+            this.image = './assets/svg-providers/credit-card.svg';
+        } else if (this.instrument === PaymentInstrument.WireTransfer) {
+            this.name = 'WIRE TRANSFER';
+            this.image = './assets/svg-providers/bank-payment.svg';
+        }
+    }
 }
 
 export class PaymentProviderView {

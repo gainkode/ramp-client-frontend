@@ -17,8 +17,8 @@ import {
 } from 'src/app/model/payment.model';
 import { CommonTargetValue, TargetParams } from 'src/app/model/common.model';
 import { CountryFilterList, getCountry } from 'src/app/model/country-code.model';
-import { PaymentDataService } from 'src/app/services/payment.service';
 import { ErrorService } from 'src/app/services/error.service';
+import { AdminDataService } from '../../services/admin-data.service';
 
 @Component({
   selector: 'app-cost-editor',
@@ -146,7 +146,7 @@ export class CostEditorComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private dataService: PaymentDataService,
+    private dataService: AdminDataService,
     private errorHandler: ErrorService) {
   }
 

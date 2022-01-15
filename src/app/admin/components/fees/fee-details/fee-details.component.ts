@@ -5,7 +5,6 @@ import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { PaymentDataService } from '../../../../services/payment.service';
 import {
   FeeScheme, AccountTypeFilterList,
   WidgetFilterList, WidgetIdFilterList
@@ -187,7 +186,6 @@ export class FeeDetailsComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private dataService: PaymentDataService,
     private adminDataService: AdminDataService,
     private errorHandler: ErrorService,
     private layoutService: LayoutService
@@ -243,7 +241,7 @@ export class FeeDetailsComponent implements OnInit {
 
   private getPaymentProviders(): void {
     this.providers = [];
-    this.dataService.getProviders()?.valueChanges.subscribe(({ data }) => {
+    this.adminDataService.getProviders()?.valueChanges.subscribe(({ data }) => {
       const providers = data.getPaymentProviders as PaymentProvider[];
       this.providers = providers?.map((val) => new PaymentProviderView(val)) as PaymentProviderView[];
     }, (error) => {
