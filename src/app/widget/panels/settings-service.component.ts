@@ -141,6 +141,9 @@ export class WidgetSettingsService implements OnInit, OnDestroy {
       this.pSubscriptions.add(
         providersData.valueChanges.subscribe(({ data }) => {
           this.onProgress.emit(false);
+
+          console.log(data);
+
           this.onComplete.emit(this.getPaymentProviderList(data.getAppropriatePaymentProviders as PaymentProviderByInstrument[]));
         }, (error) => {
           this.onProgress.emit(false);

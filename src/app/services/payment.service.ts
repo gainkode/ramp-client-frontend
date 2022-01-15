@@ -450,8 +450,8 @@ export class PaymentDataService {
     });
   }
 
-  getProviders(fiatCurrency: string, widgetId: string | undefined): QueryRef<any, EmptyObject> | null {
-    if (this.apollo.client !== undefined) {
+  getProviders(fiatCurrency: string, widgetId: string | undefined): QueryRef<any, EmptyObject> {
+    console.log('getProviders', fiatCurrency, widgetId);
       return this.apollo.watchQuery<any>({
         query: GET_PROVIDERS,
         variables: {
@@ -460,9 +460,6 @@ export class PaymentDataService {
         },
         fetchPolicy: 'network-only'
       });
-    } else {
-      return null;
-    }
   }
 
   getWidget(paramsId: string): QueryRef<any, EmptyObject> | null {
