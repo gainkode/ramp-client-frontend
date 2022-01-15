@@ -7,13 +7,8 @@
     </mat-expansion-panel-header>
 
     <form *ngIf="filterForm" [formGroup]="filterForm">
-
         <ng-container *ngFor="let field of fields">
-
-
-            <mat-form-field
-                    *ngIf="field === 'accountType'"
-            >
+            <mat-form-field *ngIf="field === 'accountType'">
                 <mat-label>Account type</mat-label>
                 <mat-select formControlName="accountTypes" multiple>
                     <mat-option *ngFor="let item of userTypeOptions" [value]="item.id">
@@ -22,13 +17,10 @@
                 </mat-select>
             </mat-form-field>
 
-            <app-filter-field-country
-                    *ngIf="field === 'country'"
-                    formControlName="countries"
-            ></app-filter-field-country>
+            <app-filter-field-country *ngIf="field === 'country'" formControlName="countries">
+            </app-filter-field-country>
 
-            <mat-form-field
-                    *ngIf="field === 'source'">
+            <mat-form-field *ngIf="field === 'source'">
                 <mat-label>Source</mat-label>
                 <mat-select formControlName="sources" multiple>
                     <mat-option *ngFor="let item of sourceOptions" [value]="item.id">
@@ -37,41 +29,36 @@
                 </mat-select>
             </mat-form-field>
 
-            <app-filter-field-user
-                    *ngIf="field === 'user'"
-                    formControlName="user"
-            ></app-filter-field-user>
+            <mat-form-field *ngIf="field === 'riskLevels'">
+                <mat-label>Risk Levels</mat-label>
+                <mat-select formControlName="riskLevels" multiple>
+                    <mat-option *ngFor="let item of riskLevelsOptions" [value]="item.id">
+                        {{item.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
 
-            <app-filter-field-users
-                    *ngIf="field === 'users'"
-                    formControlName="users"
-            ></app-filter-field-users>
+            <app-filter-field-user *ngIf="field === 'user'" formControlName="user"></app-filter-field-user>
 
-            <app-filter-field-widget
-                    *ngIf="field === 'widget'"
-                    formControlName="widgets"
-            ></app-filter-field-widget>
+            <app-filter-field-users *ngIf="field === 'users'" formControlName="users"></app-filter-field-users>
 
-            <app-filter-field-risk-alert-code
-                *ngIf="field === 'riskAlertCode'"
-                formControlName="riskAlertCode">
+            <app-filter-field-widget *ngIf="field === 'widget'" formControlName="widgets"></app-filter-field-widget>
+
+            <app-filter-field-risk-alert-code *ngIf="field === 'riskAlertCode'" formControlName="riskAlertCode">
             </app-filter-field-risk-alert-code>
 
-            <mat-form-field
-                    *ngIf="field === 'search'">
+            <mat-form-field *ngIf="field === 'search'">
                 <mat-label>Search</mat-label>
-                <input matInput formControlName="search"/>
+                <input matInput formControlName="search" />
             </mat-form-field>
 
         </ng-container>
 
         <mat-action-row>
-            <button mat-flat-button color="primary"
-                    (click)="applyFilters()">
+            <button mat-flat-button color="primary" (click)="applyFilters()">
                 Apply
             </button>
-            <button mat-button color="secondary"
-                    (click)="resetFilters()">
+            <button mat-button color="secondary" (click)="resetFilters()">
                 Reset
             </button>
         </mat-action-row>

@@ -1,4 +1,4 @@
-import { RiskAlertCodes, TransactionSource, UserType } from '../../model/generated-models';
+import { CountryCodeType, DateTimeInterval, PaymentInstrument, RiskAlertCodes, TransactionSource, TransactionType, UserType } from '../../model/generated-models';
 import { EmptyObject } from 'apollo-angular/types';
 
 export class Filter {
@@ -10,6 +10,13 @@ export class Filter {
   public users?: Array<string>;
   public widgets?: Array<string>;
   public riskAlertCode?: RiskAlertCodes;
+  public transactionTypes?: Array<TransactionType>;
+  public userTierLevels?: string;
+  public riskLevels?: Array<string>;
+  public paymentInstruments?: Array<PaymentInstrument>;
+  public createdDateInterval?: DateTimeInterval;
+  public completedDateInterval?: DateTimeInterval;
+  public walletAddress?: Array<string>;
   public search?: string;
 
   constructor(filterValues: EmptyObject) {
@@ -43,6 +50,40 @@ export class Filter {
 
     if (filterValues.riskAlertCode) {
       this.riskAlertCode = filterValues.riskAlertCode;
+    }
+
+    if (filterValues.transactionTypes) {
+      this.transactionTypes = filterValues.transactionTypes;
+    }
+
+    if (filterValues.userTierLevels) {
+      this.userTierLevels = filterValues.userTierLevels;
+    }
+
+    if (filterValues.riskLevels) {
+      this.riskLevels = filterValues.riskLevels;
+    }
+
+    if (filterValues.paymentInstruments) {
+      this.paymentInstruments = filterValues.paymentInstruments;
+    }
+
+    if (filterValues.createdDateStart && filterValues.createdDateEnd) {
+      this.createdDateInterval = {
+        from: filterValues.createdDateStart,
+        to: filterValues.createdDateEnd
+      };
+    }
+
+    if (filterValues.completedDateStart && filterValues.completedDateEnd) {
+      this.completedDateInterval = {
+        from: filterValues.completedDateStart,
+        to: filterValues.completedDateEnd
+      };
+    }
+
+    if (filterValues.walletAddress) {
+      this.walletAddress = filterValues.walletAddress;
     }
 
     if (filterValues.search) {

@@ -321,6 +321,16 @@ const GET_TRANSACTIONS = gql`
     $transactionIdsOnly: [String!]
     $userIdsOnly: [String!]
     $sourcesOnly: [TransactionSource!]
+    $widgetIdsOnly: [String!]
+    $countriesOnly: [String!]
+    $countryCodeType: CountryCodeType!
+    $transactionTypesOnly: [TransactionType!]
+    $userTierLevelsOnly: [String!]
+    $riskLevelsOnly: [String!]
+    $paymentInstrumentsOnly: [PaymentInstrument!]
+    $createdDateInterval: DateTimeInterval
+    $completedDateInterval: DateTimeInterval
+    $walletAddressOnly: String
     $filter: String
     $skip: Int
     $first: Int
@@ -330,6 +340,16 @@ const GET_TRANSACTIONS = gql`
       transactionIdsOnly: $transactionIdsOnly
       userIdsOnly: $userIdsOnly
       sourcesOnly: $sourcesOnly
+      widgetIdsOnly: $widgetIdsOnly
+      countriesOnly: $countriesOnly
+      countryCodeType: $countryCodeType
+      transactionTypesOnly: $transactionTypesOnly
+      userTierLevelsOnly: $userTierLevelsOnly
+      riskLevelsOnly: $riskLevelsOnly
+      paymentInstrumentsOnly: $paymentInstrumentsOnly
+      createdDateInterval: $createdDateInterval
+      completedDateInterval: $completedDateInterval
+      walletAddressOnly: $walletAddressOnly
       filter: $filter
       skip: $skip
       first: $first
@@ -1438,11 +1458,25 @@ export class AdminDataService {
       sourcesOnly: filter?.sources,
       userIdsOnly: filter?.users,
       widgetIdsOnly: filter?.widgets,
+
+
+      // transactionTypesOnly: $transactionTypesOnly
+      // userTierLevelsOnly: $userTierLevelsOnly
+      riskLevelsOnly: filter?.riskLevels,
+      // paymentInstrumentsOnly: $paymentInstrumentsOnly
+      // createdDateInterval: $createdDateInterval
+      // completedDateInterval: $completedDateInterval
+      // walletAddressOnly: $walletAddressOnly
+
+
+
       filter: filter?.search,
       skip: pageIndex * takeItems,
       first: takeItems,
       orderBy: [{ orderBy: orderField, desc: orderDesc }]
     };
+
+    console.log(vars);
 
     return this.watchQuery<{ getTransactions: TransactionListResult }, QueryGetTransactionsArgs>(
       {
@@ -1952,12 +1986,12 @@ export class AdminDataService {
   }
 
   deleteCostSettings(settingsId: string): Observable<any> {
-      return this.apollo.mutate({
-        mutation: DELETE_SETTINGS_COST,
-        variables: {
-          settingsId
-        }
-      });
+    return this.apollo.mutate({
+      mutation: DELETE_SETTINGS_COST,
+      variables: {
+        settingsId
+      }
+    });
   }
 
   deleteKycSettings(settingsId: string): Observable<any> {
