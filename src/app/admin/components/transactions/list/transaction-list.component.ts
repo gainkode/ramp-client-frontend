@@ -100,9 +100,6 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   handleFilterApplied(filter: Filter): void {
-
-    console.log(filter);
-
     this.filter = filter;
     this.loadList();
   }
@@ -205,9 +202,6 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
       this.sortedField,
       this.sortedDesc,
       this.filter).pipe(take(1));
-
-      console.log('filter', this.filter);
-
     this.subscriptions.add(
       listData$.subscribe(({ list, count }) => {
         this.transactions = list;

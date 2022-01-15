@@ -111,7 +111,6 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
   applyFilters(): void {
     if (this.filterForm) {
       const f = new Filter(this.filterForm.value);
-      console.log('f', this.filterForm.value);
       this.filterSubject.next(f);
     }
   }
