@@ -1,7 +1,7 @@
 <div class="__intro-container">
     <div class="__intro-login-container">
         <div class="__intro-login-title-container">
-            <span class="__intro-logo">
+            <span class="__intro-logo __intro-logo-link" (click)="routeTo('/')">
                 GetCoins
             </span>
             <div class="__intro-login-buttons-area">
@@ -38,7 +38,7 @@
         <div class="__intro-terms-data-container">
             <div class="__intro-terms-title-container">
                 <h2 class="__intro-header-2-sm">
-                    Privacy Policy
+                    {{title}}
                 </h2>
             </div>
             <div class="__intro-terms-data-content">
@@ -110,19 +110,19 @@
     </div>
     <div class="__intro-footer-sticky-container">
         <div class="__intro-footer-policy-list">
-            <a class="__intro-policy-link" href="/terms">
+            <a class="__intro-policy-link" href="/terms/main">
                 Terms of Use
             </a>
             <span class="__intro-policy-link-separator">|</span>
-            <a class="__intro-policy-link" href="/terms">
+            <a class="__intro-policy-link" href="/terms/privacy">
                 Privacy Policy
             </a>
             <span class="__intro-policy-link-separator __intro-policy-link-middle-separator">|</span>
-            <a class="__intro-policy-link" href="/terms">
+            <a class="__intro-policy-link" href="/terms/cookie">
                 Cookie Policy
             </a>
             <span class="__intro-policy-link-separator">|</span>
-            <a class="__intro-policy-link" href="/terms">
+            <a class="__intro-policy-link" href="/terms/aml">
                 AML/CTF Policy
             </a>
         </div>
