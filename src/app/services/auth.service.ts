@@ -439,6 +439,10 @@ export class AuthService {
         return this.getUserSectionPage('account');
     }
 
+    getUserAuthPage(): string {
+        return this.getUserSectionPage('auth');
+    }
+
     authenticate(ignoreCookies: boolean, username: string, userpassword: string, noPassword: boolean, widgetId: string | undefined = undefined): Observable<any> {
         const w = window as any;
         const consentStatus = w.cookieconsent.utils.getCookie(this.cookieName);

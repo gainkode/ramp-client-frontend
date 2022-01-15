@@ -165,6 +165,11 @@ export type DateMap = {
 };
 
 
+export type DateTimeInterval = {
+  from?: Maybe<Scalars['DateTime']>;
+  to?: Maybe<Scalars['DateTime']>;
+};
+
 export type DeletedVaultAccount = {
   __typename?: 'DeletedVaultAccount';
   deletedVaultAccountId?: Maybe<Scalars['ID']>;
@@ -236,7 +241,6 @@ export type ExternalWalletAssetShort = {
 export type Feedback = {
   __typename?: 'Feedback';
   feedbackId: Scalars['ID'];
-  userId?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
@@ -1199,9 +1203,17 @@ export type PaymentPreauthResultShort = {
 export type PaymentProvider = {
   __typename?: 'PaymentProvider';
   paymentProviderId?: Maybe<Scalars['ID']>;
-  name?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
   currencies?: Maybe<Array<Scalars['String']>>;
   countries_code2?: Maybe<Array<Scalars['String']>>;
+  instruments?: Maybe<Array<Scalars['String']>>;
+  default?: Maybe<Scalars['Boolean']>;
+};
+
+export type PaymentProviderByInstrument = {
+  __typename?: 'PaymentProviderByInstrument';
+  instrument?: Maybe<PaymentInstrument>;
+  provider?: Maybe<PaymentProvider>;
 };
 
 export type PostAddress = {
@@ -1226,7 +1238,7 @@ export type Query = {
   getNotificationsByUser?: Maybe<UserNotificationListResult>;
   getNotifications?: Maybe<UserNotificationListResult>;
   getSettingsCommon?: Maybe<SettingsCommon>;
-  getPaymentProviders?: Maybe<Array<PaymentProvider>>;
+  getPaymentProviders?: Maybe<Array<PaymentProviderByInstrument>>;
   getSettingsCurrency?: Maybe<SettingsCurrencyWithDefaults>;
   getSettingsKycLevels?: Maybe<SettingsKycLevelListResult>;
   getSettingsKyc?: Maybe<SettingsKycListResult>;
@@ -1334,6 +1346,11 @@ export type QueryGetNotificationsArgs = {
 };
 
 
+export type QueryGetPaymentProvidersArgs = {
+  fiatCurrency: Scalars['String'];
+};
+
+
 export type QueryGetSettingsCurrencyArgs = {
   filter?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
@@ -1369,6 +1386,7 @@ export type QueryGetAppropriateSettingsKycArgs = {
 
 
 export type QueryGetSettingsKycTiersArgs = {
+  userId?: Maybe<Scalars['String']>;
   filter?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
@@ -1514,6 +1532,18 @@ export type QueryUserByReferralCodeArgs = {
 
 export type QueryGetUsersArgs = {
   userIds?: Maybe<Array<Scalars['String']>>;
+  accountTypesOnly?: Maybe<Array<UserType>>;
+  accountModesOnly?: Maybe<Array<UserMode>>;
+  accountStatusesOnly?: Maybe<Array<AccountStatus>>;
+  userTierLevelsOnly?: Maybe<Array<Scalars['String']>>;
+  riskLevelsOnly?: Maybe<Array<RiskLevel>>;
+  countriesOnly?: Maybe<Array<Scalars['String']>>;
+  countryCodeType?: Maybe<CountryCodeType>;
+  kycStatusesOnly?: Maybe<Array<KycStatus>>;
+  registrationDateOnly?: Maybe<Array<Scalars['DateTime']>>;
+  widgetIdsOnly?: Maybe<Array<Scalars['String']>>;
+  totalBuyVolumeOver?: Maybe<Scalars['Int']>;
+  transactionCountOver?: Maybe<Scalars['Int']>;
   filter?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
@@ -1672,6 +1702,13 @@ export type QueryGetTransactionsArgs = {
   transactionTypesOnly?: Maybe<Array<TransactionType>>;
   sendersOrReceiversOnly?: Maybe<Array<Scalars['String']>>;
   paymentProvidersOnly?: Maybe<Array<Scalars['String']>>;
+  accountStatusesOnly?: Maybe<Array<Scalars['String']>>;
+  userTierLevelsOnly?: Maybe<Array<Scalars['String']>>;
+  riskLevelsOnly?: Maybe<Array<Scalars['String']>>;
+  paymentInstrumentsOnly?: Maybe<Array<PaymentInstrument>>;
+  createdDateInterval?: Maybe<DateTimeInterval>;
+  completedDateInterval?: Maybe<DateTimeInterval>;
+  walletAddressOnly?: Maybe<Scalars['String']>;
   filter?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
@@ -2818,6 +2855,8 @@ export type UserInput = {
   risk?: Maybe<RiskLevel>;
   riskCodes?: Maybe<Array<Scalars['String']>>;
   widgetId?: Maybe<Scalars['String']>;
+  changePasswordRequired?: Maybe<Scalars['Boolean']>;
+  kycTierId?: Maybe<Scalars['String']>;
 };
 
 export type UserListResult = {
