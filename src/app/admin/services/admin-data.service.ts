@@ -1463,7 +1463,7 @@ export class AdminDataService {
       // transactionTypesOnly: $transactionTypesOnly
       // userTierLevelsOnly: $userTierLevelsOnly
       riskLevelsOnly: filter?.riskLevels,
-      // paymentInstrumentsOnly: $paymentInstrumentsOnly
+      paymentInstrumentsOnly: filter?.paymentInstruments,
       // createdDateInterval: $createdDateInterval
       // completedDateInterval: $completedDateInterval
       // walletAddressOnly: $walletAddressOnly
@@ -1475,6 +1475,9 @@ export class AdminDataService {
       first: takeItems,
       orderBy: [{ orderBy: orderField, desc: orderDesc }]
     };
+
+    console.log('getTransactions', vars);
+
     return this.watchQuery<{ getTransactions: TransactionListResult }, QueryGetTransactionsArgs>(
       {
         query: GET_TRANSACTIONS,

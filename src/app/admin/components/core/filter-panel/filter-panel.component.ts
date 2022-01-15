@@ -1,5 +1,5 @@
 import { Observable, Subject } from 'rxjs';
-import { RiskLevelViewList, TransactionSourceList, UserTypeList } from 'src/app/model/payment.model';
+import { PaymentInstrumentList, RiskLevelViewList, TransactionSourceList, UserTypeList } from 'src/app/model/payment.model';
 import { Filter } from '../../../model/filter.model';
 import { Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
@@ -22,6 +22,7 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
 
   sourceOptions = TransactionSourceList;
   riskLevelsOptions = RiskLevelViewList;
+  paymentInstrumentsOptions = PaymentInstrumentList;
   userTypeOptions = UserTypeList;
 
   filterForm?: FormGroup;
@@ -63,6 +64,9 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
     if (this.fields.includes('riskLevels')) {
       controlsConfig.riskLevels = [[]];
     }
+    if (this.fields.includes('paymentInstruments')) {
+      controlsConfig.paymentInstruments = [[]];
+    }
     if (this.fields.includes('search')) {
       controlsConfig.search = [''];
     }
@@ -100,6 +104,9 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
       if (this.fields.includes('riskLevels')) {
         this.filterForm.controls.riskLevels.setValue([]);
       }
+      if (this.fields.includes('paymentInstruments')) {
+        this.filterForm.controls.paymentInstruments.setValue([]);
+      }
       if (this.fields.includes('search')) {
         this.filterForm.controls.search.setValue('');
       }
@@ -110,8 +117,7 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
 
   applyFilters(): void {
     if (this.filterForm) {
-      const f = new Filter(this.filterForm.value);
-      this.filterSubject.next(f);
+      this.filterSubject.next(new Filter(this.filterForm.value));
     }
   }
 }

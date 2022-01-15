@@ -38,6 +38,15 @@
                 </mat-select>
             </mat-form-field>
 
+            <mat-form-field *ngIf="field === 'paymentInstruments'">
+                <mat-label>Payment methods</mat-label>
+                <mat-select formControlName="paymentInstruments" multiple>
+                    <mat-option *ngFor="let item of paymentInstrumentsOptions" [value]="item.id">
+                        {{item.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
             <app-filter-field-user *ngIf="field === 'user'" formControlName="user"></app-filter-field-user>
 
             <app-filter-field-users *ngIf="field === 'users'" formControlName="users"></app-filter-field-users>
