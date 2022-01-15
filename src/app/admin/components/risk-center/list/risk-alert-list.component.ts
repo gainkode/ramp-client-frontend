@@ -2,8 +2,8 @@ import { Component, ViewChild, OnInit, OnDestroy, AfterViewInit } from '@angular
 import { AdminDataService } from '../../../services/admin-data.service';
 import { MatSort } from '@angular/material/sort';
 import { Filter } from '../../../model/filter.model';
-import { Subject, Subscription } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { take, takeUntil } from 'rxjs/operators';
 import { PageEvent } from '@angular/material/paginator';
 import { RiskAlertItem } from '../../../model/risk-alert.model';
 
@@ -36,9 +36,7 @@ export class RiskAlertListComponent implements OnInit, OnDestroy, AfterViewInit 
     'userId'
   ];
 
-  private destroy$ = new Subject();
-  private listSubscription = Subscription.EMPTY;
-
+  private subscriptions: Subscription = new Subscription();
 
   constructor(
     private adminDataService: AdminDataService
@@ -50,7 +48,7 @@ export class RiskAlertListComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   ngOnDestroy(): void {
-    this.destroy$.next();
+    this.subscriptions.unsubscribe();
   }
 
   ngAfterViewInit(): void {
@@ -67,22 +65,18 @@ export class RiskAlertListComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   private loadData(): void {
-    this.listSubscription.unsubscribe();
-
-    this.listSubscription = this.adminDataService.getRiskAlerts(
+    const listData$ = this.adminDataService.getRiskAlerts(
       this.pageIndex,
       this.pageSize,
       this.sortedField,
       this.sortedDesc,
-      this.filter
-    )
-                                .pipe(
-                                  takeUntil(this.destroy$)
-                                )
-                                .subscribe(result => {
-                                  this.data = result.list;
-                                  this.dataCount = result.count;
-                                });
+      this.filter).pipe(take(1));
+    this.subscriptions.add(
+      listData$.subscribe(result => {
+        this.data = result.list;
+        this.dataCount = result.count;
+      })
+    );
   }
 
   handlePage(event: PageEvent): PageEvent {

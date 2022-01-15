@@ -1250,33 +1250,28 @@ export class AdminDataService {
     return this.watchQuery<{ getSettingsFee: SettingsFeeListResult }, QueryGetSettingsFeeArgs>({
       query: GET_FEE_SETTINGS,
       fetchPolicy: 'network-only'
-    })
-      .pipe(
-        map(result => {
-          if (result.data?.getSettingsFee?.list && result.data?.getSettingsFee?.count) {
-            return {
-              list: result.data.getSettingsFee.list.map(item => new FeeScheme(item)),
-              count: result.data.getSettingsFee.count
-            };
-          } else {
-            return {
-              list: [],
-              count: 0
-            };
-          }
-        })
-      );
+    }).pipe(
+      map(result => {
+        if (result.data?.getSettingsFee?.list && result.data?.getSettingsFee?.count) {
+          return {
+            list: result.data.getSettingsFee.list.map(item => new FeeScheme(item)),
+            count: result.data.getSettingsFee.count
+          };
+        } else {
+          return {
+            list: [],
+            count: 0
+          };
+        }
+      })
+    );
   }
 
-  getCostSettings(): QueryRef<any, EmptyObject> | null {
-    if (this.apollo.client !== undefined) {
-      return this.apollo.watchQuery<any>({
-        query: GET_COST_SETTINGS,
-        fetchPolicy: 'network-only'
-      });
-    } else {
-      return null;
-    }
+  getCostSettings(): QueryRef<any, EmptyObject> {
+    return this.apollo.watchQuery<any>({
+      query: GET_COST_SETTINGS,
+      fetchPolicy: 'network-only'
+    });
   }
 
   getKycSettings(): Observable<{ list: Array<KycScheme>; count: number; }> {
@@ -1956,43 +1951,31 @@ export class AdminDataService {
     });
   }
 
-  deleteCostSettings(settingsId: string): Observable<any> | null {
-    if (this.apollo.client !== undefined) {
+  deleteCostSettings(settingsId: string): Observable<any> {
       return this.apollo.mutate({
         mutation: DELETE_SETTINGS_COST,
         variables: {
           settingsId
         }
       });
-    } else {
-      return null;
-    }
   }
 
-  deleteKycSettings(settingsId: string): Observable<any> | null {
-    if (this.apollo.client !== undefined) {
-      return this.apollo.mutate({
-        mutation: DELETE_SETTINGS_KYC,
-        variables: {
-          settingsId
-        }
-      });
-    } else {
-      return null;
-    }
+  deleteKycSettings(settingsId: string): Observable<any> {
+    return this.apollo.mutate({
+      mutation: DELETE_SETTINGS_KYC,
+      variables: {
+        settingsId
+      }
+    });
   }
 
-  deleteKycLevelSettings(settingsId: string): Observable<any> | null {
-    if (this.apollo.client !== undefined) {
-      return this.apollo.mutate({
-        mutation: DELETE_KYC_LEVEL_SETTINGS,
-        variables: {
-          settingsId
-        }
-      });
-    } else {
-      return null;
-    }
+  deleteKycLevelSettings(settingsId: string): Observable<any> {
+    return this.apollo.mutate({
+      mutation: DELETE_KYC_LEVEL_SETTINGS,
+      variables: {
+        settingsId
+      }
+    });
   }
 
   deleteWidget(widgetId: string): Observable<any> {
@@ -2024,7 +2007,7 @@ export class AdminDataService {
     }));
   }
 
-  deleteCustomer(customerId: string): Observable<any> | null {
+  deleteCustomer(customerId: string): Observable<any> {
     return this.mutate({
       mutation: DELETE_CUSTOMER,
       variables: {

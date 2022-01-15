@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { DashboardService } from '../dashboard.service';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { DashboardCardData } from '../../../model/dashboard-data.model';
 
 @Component({
@@ -19,7 +19,7 @@ export class DataCardComponent implements OnInit, OnDestroy {
 
   data?: DashboardCardData;
 
-  private destroy$ = new Subject();
+  private subscriptions: Subscription = new Subscription();
 
   constructor(
     private dashboardService: DashboardService
@@ -28,17 +28,12 @@ export class DataCardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.dashboardService.data
-        .pipe(
-          takeUntil(this.destroy$)
-        )
-        .subscribe(data => {
-          this.data = data[this.source];
-        });
+    this.dashboardService.data.pipe(take(1)).subscribe(data => {
+      this.data = data[this.source];
+    });
   }
 
   ngOnDestroy(): void {
-    this.destroy$.next();
+    this.subscriptions.unsubscribe();
   }
-
 }

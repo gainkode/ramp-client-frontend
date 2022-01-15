@@ -5,7 +5,7 @@ import { Subject, Subscription } from 'rxjs';
 import { MatSort } from '@angular/material/sort';
 import { UserItem } from 'src/app/model/user.model';
 import { Filter } from '../../../model/filter.model';
-import { takeUntil } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
 import { LayoutService } from '../../../services/layout.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { CurrencyView } from 'src/app/model/payment.model';
@@ -30,8 +30,6 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
     'search'
   ];
 
-  private subscriptions: Subscription = new Subscription();
-
   selectedCustomer: UserItem | undefined = undefined;
   customers: UserItem[] = [];
   customerCount = 0;
@@ -50,7 +48,7 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
   ];
 
   private destroy$ = new Subject();
-  private listSubscription = Subscription.EMPTY;
+  private subscriptions: Subscription = new Subscription();
 
   constructor(
     private errorHandler: ErrorService,
@@ -72,8 +70,8 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
     this.destroy$.next();
+    this.subscriptions.unsubscribe();
   }
 
   ngAfterViewInit(): void {
@@ -148,15 +146,15 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   sendMessageData(ids: string[], level: UserNotificationLevel, title: string, text: string) {
-    const requestData = this.adminService.sendAdminNotification(ids, level, title, text);
-    if (requestData) {
-      requestData.subscribe(({ data }) => {
+    const requestData$ = this.adminService.sendAdminNotification(ids, level, title, text);
+    this.subscriptions.add(
+      requestData$.subscribe(({ data }) => {
       }, (error) => {
         if (this.auth.token === '') {
           this.router.navigateByUrl('/');
         }
-      });
-    }
+      })
+    );
   }
 
   private setEditMode(mode: boolean): void {
@@ -164,17 +162,18 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private loadCustomers(): void {
-    this.listSubscription.unsubscribe();
-    this.listSubscription = this.adminService.getUsers(
+    const listData$ = this.adminService.getUsers(
       this.pageIndex,
       this.pageSize,
       this.sortedField,
       this.sortedDesc,
-      this.filter
-    ).pipe(takeUntil(this.destroy$)).subscribe(result => {
-      this.customers = result.list;
-      this.customerCount = result.count;
-    });
+      this.filter).pipe(take(1));
+    this.subscriptions.add(
+      listData$.subscribe(result => {
+        this.customers = result.list;
+        this.customerCount = result.count;
+      })
+    );
   }
 
   private isSelectedCustomer(customerId: string): boolean {
@@ -223,23 +222,23 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onDeleteCustomer(id: string): void {
-    const requestData = this.adminService.deleteCustomer(id);
-    if (requestData) {
-      requestData.subscribe(({ data }) => {
+    const requestData$ = this.adminService.deleteCustomer(id);
+    this.subscriptions.add(
+      requestData$.subscribe(({ data }) => {
         this.showEditor(null, false);
         this.loadCustomers();
       }, (error) => {
         if (this.auth.token === '') {
           this.router.navigateByUrl('/');
         }
-      });
-    }
+      })
+    );
   }
 
   onSaveCustomer(customer: User): void {
-    const requestData = this.adminService.saveCustomer(customer);
-    if (requestData) {
-      requestData.subscribe(({ data }) => {
+    const requestData$ = this.adminService.saveCustomer(customer);
+    this.subscriptions.add(
+      requestData$.subscribe(({ data }) => {
         if (customer.changePasswordRequired === true) {
           this.dialog.open(CommonDialogBox, {
             width: '450px',
@@ -262,7 +261,7 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.auth.token === '') {
           this.router.navigateByUrl('/');
         }
-      });
-    }
+      })
+    );
   }
 }

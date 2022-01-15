@@ -8,7 +8,7 @@ import { TransactionItemDeprecated } from '../../../../model/transaction.model';
 import { Subject, Subscription } from 'rxjs';
 import { MatSort } from '@angular/material/sort';
 import { Filter } from '../../../model/filter.model';
-import { takeUntil } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
 import { LayoutService } from '../../../services/layout.service';
 import { SettingsCurrencyWithDefaults, Transaction, TransactionStatusDescriptorMap } from 'src/app/model/generated-models';
 import { ProfileDataService } from 'src/app/services/profile.service';
@@ -52,7 +52,6 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
   selected = false;
 
   private destroy$ = new Subject();
-  private transactionsSubscription = Subscription.EMPTY;
   private subscriptions: Subscription = new Subscription();
 
   displayedColumns: string[] = [
@@ -196,37 +195,36 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   private loadTransactions(): void {
-    this.transactionsSubscription.unsubscribe();
-    this.transactionsSubscription = this.adminService.getTransactions(
+    const listData$ = this.adminService.getTransactions(
       this.pageIndex,
       this.pageSize,
       this.sortedField,
       this.sortedDesc,
-      this.filter
-    ).pipe(takeUntil(this.destroy$)).subscribe(({ list, count }) => {
-      this.transactions = list;
-      this.transactionCount = count;
-      this.transactions.forEach(val => {
-        val.statusInfo = this.userStatuses.find(x => x.key === val.status);
-      });
-    });
+      this.filter).pipe(take(1));
+    this.subscriptions.add(
+      listData$.subscribe(({ list, count }) => {
+        this.transactions = list;
+        this.transactionCount = count;
+        this.transactions.forEach(val => {
+          val.statusInfo = this.userStatuses.find(x => x.key === val.status);
+        });
+      })
+    );
   }
 
   private loadTransactionStatuses(): void {
     this.userStatuses = [];
-    const statusListData = this.profileService.getTransactionStatuses();
-    if (statusListData) {
-      this.subscriptions.add(
-        statusListData.valueChanges.subscribe(({ data }) => {
-          this.userStatuses = data.getTransactionStatuses as TransactionStatusDescriptorMap[];
-          this.loadCurrencies();
-        }, (error) => {
-          if (this.auth.token === '') {
-            this.router.navigateByUrl('/');
-          }
-        })
-      );
-    }
+    const statusListData$ = this.profileService.getTransactionStatuses();
+    this.subscriptions.add(
+      statusListData$.valueChanges.subscribe(({ data }) => {
+        this.userStatuses = data.getTransactionStatuses as TransactionStatusDescriptorMap[];
+        this.loadCurrencies();
+      }, (error) => {
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
+      })
+    );
   }
 
   private isSelectedTransaction(transactionId: string): boolean {

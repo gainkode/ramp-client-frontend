@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AdminDataService } from '../../../services/admin-data.service';
 import { FeeScheme } from '../../../../model/fee-scheme.model';
 import { pipe, Subject, Subscription } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
 import { LayoutService } from '../../../services/layout.service';
 
 @Component({
@@ -19,7 +19,7 @@ export class FeeListComponent implements OnInit, OnDestroy {
   ];
 
   private destroy$ = new Subject();
-  private listSubscription = Subscription.EMPTY;
+  private subscriptions: Subscription = new Subscription();
 
   constructor(
     private layoutService: LayoutService,
@@ -29,16 +29,16 @@ export class FeeListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.layoutService.rightPanelCloseRequested$.pipe(takeUntil(this.destroy$))
-        .subscribe(() => {
-          // TODO: ask for confirmation
-          this.selectedScheme = null;
-        });
-
+      .subscribe(() => {
+        // TODO: ask for confirmation
+        this.selectedScheme = null;
+      });
     this.loadList();
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
+    this.subscriptions.unsubscribe();
   }
 
   private isSelectedScheme(schemeId: string): boolean {
@@ -68,15 +68,12 @@ export class FeeListComponent implements OnInit, OnDestroy {
   }
 
   private loadList(): void {
-    this.listSubscription.unsubscribe();
-
-    this.listSubscription = this.adminDataService.getFeeSettings()
-                                .pipe(
-                                  takeUntil(this.destroy$)
-                                )
-                                .subscribe(({ list, count }) => {
-                                  this.schemes = list;
-                                });
+    const listData$ = this.adminDataService.getFeeSettings().pipe(take(1));
+    this.subscriptions.add(
+      listData$.subscribe(({ list, count }) => {
+        this.schemes = list;
+      })
+    );
   }
 
   toggleDetails(scheme: FeeScheme): void {
@@ -96,18 +93,22 @@ export class FeeListComponent implements OnInit, OnDestroy {
   }
 
   onDeleteScheme(id: string): void {
-    this.adminDataService.deleteFeeSettings(id)
+    this.subscriptions.add(
+      this.adminDataService.deleteFeeSettings(id)
         .subscribe(({ data }) => {
           this.selectedScheme = null;
           this.loadList();
-        });
+        })
+    );
   }
 
   onSaved(scheme: FeeScheme): void {
-    this.adminDataService.saveFeeSettings(scheme)
+    this.subscriptions.add(
+      this.adminDataService.saveFeeSettings(scheme)
         .subscribe(({ data }) => {
           this.selectedScheme = null;
           this.loadList();
-        });
+        })
+    );
   }
 }
