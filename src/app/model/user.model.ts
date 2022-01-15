@@ -191,9 +191,11 @@ export class UserItem {
       this.kycPrivateComment = data.kycPrivateComment ?? '';
       this.kycReviewRejectedType = data.kycReviewRejectedType ?? '';
       this.kycReviewRejectedLabels = data.kycReviewRejectedLabels ?? [];
-      const kycReviewResultData = JSON.parse(data.kycReviewResult ?? '');
-      if (kycReviewResultData !== null) {
-        this.kycReviewResult = kycReviewResultData.reviewAnswer ?? '';
+      if (data.kycReviewResult) {
+        const kycReviewResultData = JSON.parse(data.kycReviewResult ?? '');
+        if (kycReviewResultData !== null) {
+          this.kycReviewResult = kycReviewResultData.reviewAnswer ?? '';
+        }
       }
       this.kycStatusUpdateRequired = (data.kycStatusUpdateRequired) ? ((data.kycStatusUpdateRequired === true) ? 'Yes' : 'No') : 'No';
       if (data.kycTier) {

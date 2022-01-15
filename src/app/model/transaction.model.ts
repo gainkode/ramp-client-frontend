@@ -100,7 +100,6 @@ export class TransactionItemDeprecated {
       this.kycTier = data.userTier?.name ?? '';
       this.fees = data.feeFiat as number ?? 0;
       this.status = data.status;
-
       if (data.paymentOrder) {
         if (data.paymentOrder.paymentInfo) {
           let payment = JSON.parse(data.paymentOrder.paymentInfo);

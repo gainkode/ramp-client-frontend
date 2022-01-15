@@ -451,7 +451,6 @@ export class PaymentDataService {
   }
 
   getProviders(fiatCurrency: string, widgetId: string | undefined): QueryRef<any, EmptyObject> {
-    console.log('getProviders', fiatCurrency, widgetId);
       return this.apollo.watchQuery<any>({
         query: GET_PROVIDERS,
         variables: {
