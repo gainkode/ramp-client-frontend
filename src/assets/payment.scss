@@ -2,11 +2,42 @@
 @import "./colors.scss";
 @import "./consts.scss";
 
+.__widget-frame-container {
+    width: 100%;
+    height: 100%;
+    min-height: 768px;
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: 50% 10% 40%;
+    background-color: $color_white;
+}
+
+.__widget-frame-background {
+    grid-column: 1/3;
+    grid-row: 1;
+    background: linear-gradient(51.56deg, #0D3D55 0%, #1A68AD 28.65%, #00A6AB 66.67%, #79CDD4 100%);   
+}
+
+.__widget-frame-background-pipes {
+    grid-column: 1;
+    grid-row: 1;
+    background-color: #79CDD4;
+    mask: url("widget-bg.svg");
+    mask-position: top;
+    mask-repeat: no-repeat;
+    mask-size: cover;
+}
+
 .__widget-frame-box {
+    grid-row: 1;
+    grid-column: 1/4;
     border: none;
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    align-items: flex-end;
     padding: 0px;
+    margin: 0px 10% 0px 0px;
 }
 
 .__widget-container {
@@ -650,7 +681,7 @@
     font-weight: normal;
     font-size: 12px;
     line-height: 14px;
-    
+
     color: $color_purple_900_icons;
     margin: 4px 0px 0px 0px;
 }
@@ -681,12 +712,14 @@
 }
 
 .__widget-embedded-left-tab-unselected {
-    box-shadow: 3px -3px 5px rgba(208, 207, 207, 0.2), 5px -5px 8px rgba(208, 207, 207, 0.14), 1px -1px 14px rgba(208, 207, 207, 0.12);
+    box-shadow: 3px -3px 5px rgba(208, 207, 207, 0.2), 5px -5px 8px rgba(208, 207, 207, 0.14),
+        1px -1px 14px rgba(208, 207, 207, 0.12);
     cursor: pointer;
 }
 
 .__widget-embedded-right-tab-unselected {
-    box-shadow: -3px -3px 5px rgba(208, 207, 207, 0.2), -5px -5px 8px rgba(208, 207, 207, 0.14), -1px -1px 14px rgba(208, 207, 207, 0.12);
+    box-shadow: -3px -3px 5px rgba(208, 207, 207, 0.2), -5px -5px 8px rgba(208, 207, 207, 0.14),
+        -1px -1px 14px rgba(208, 207, 207, 0.12);
     cursor: pointer;
 }
 

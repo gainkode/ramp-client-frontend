@@ -1,23 +1,13 @@
-<div style="text-align: center">
-  <div style="margin: 24px;">
-    <a style="font-size: 16px;color: mediumslateblue;" href="/">
-      New Quick Checkout
-    </a>
-    <br />
-    <div *ngIf="!prodMode">
-      <div style="padding: 12px;color: mediumvioletred">
-        4111110000000211
-      </div>
-      <div style="padding: 12px;color: mediumblue">
-        mkBUjw37y46goULToq6b7y6ciJc3Qi32YM
-      </div>
-    </div>
+<div class="__widget-frame-container">
+  <div class="__widget-frame-background"></div>
+  <div class="__widget-frame-background-pipes"></div>
+  <div class="__widget-frame-box">
+    <app-widget [internal]="true" [settings]="settings" [userParamsId]="userParamsId" [quickCheckout]=true></app-widget>
+  </div>
+
+
+
+  <div *ngIf="!prodMode" style="grid-column: 3;grid-row: 1;padding: 12px;color: #1A68AD;">
+    mkBUjw37y46goULToq6b7y6ciJc3Qi32YM
   </div>
 </div>
-
-<div class="__widget-frame-box">
-  <app-widget [internal]="true" [settings]="settings" [userParamsId]="userParamsId" [quickCheckout]=true></app-widget>
-</div>
-
-<!-- Pseudo-footer -->
-<div style="height: 48px;"></div>
