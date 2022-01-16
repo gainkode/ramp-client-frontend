@@ -1475,9 +1475,6 @@ export class AdminDataService {
       first: takeItems,
       orderBy: [{ orderBy: orderField, desc: orderDesc }]
     };
-
-    console.log('getTransactions', vars);
-
     return this.watchQuery<{ getTransactions: TransactionListResult }, QueryGetTransactionsArgs>(
       {
         query: GET_TRANSACTIONS,
@@ -1514,7 +1511,6 @@ export class AdminDataService {
       orderBy: [{ orderBy: orderField, desc: orderDesc }],
       filter: filter?.search
     };
-
     return this.watchQuery<{ getUsers: UserListResult }, QueryGetUsersArgs>({
       query: GET_USERS,
       variables: vars,

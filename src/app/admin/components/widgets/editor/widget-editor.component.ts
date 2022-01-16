@@ -132,8 +132,7 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
 
   handleUserInputChange(event: Event): void {
     let searchString = event.target ? (event.target as HTMLInputElement).value : '';
-    searchString = searchString.toLowerCase()
-      .trim();
+    searchString = searchString.toLowerCase().trim();
     this.userSearchString$.next(searchString);
   }
 
@@ -149,8 +148,7 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
 
   handleCountrySearchInputChange(event: Event): void {
     let searchString = event.target ? (event.target as HTMLInputElement).value : '';
-    searchString = searchString.toLowerCase()
-      .trim();
+    searchString = searchString.toLowerCase().trim();
     this.countrySearchString$.next(searchString);
   }
 
@@ -202,8 +200,7 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
   private getFilteredCountryOptions(searchString: string): Observable<Country[]> {
     const filteredOptions = this.countryOptions.filter(c => {
       return (
-        !searchString || c.name.toLowerCase()
-          .includes(searchString)
+        !searchString || c.name.toLowerCase().includes(searchString)
       ) && !this.form.controls.countries?.value
         ?.some(s => {
           return s.code2 === c.code2;
@@ -217,7 +214,6 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
 
   private setFormData(widget: WidgetItem): void {
     if (widget) {
-
       const user$ = widget.userId ?
         this.getUserFilteredOptions(widget.userId)
           .pipe(

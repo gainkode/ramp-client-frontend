@@ -39,7 +39,7 @@ export class ProfileTransactionListComponent implements OnDestroy, AfterViewInit
     pageCounts = [25, 50, 100];
     pageSize = 25;
     pageIndex = 0;
-    sortedField = 'transaction';
+    sortedField = 'dt';
     sortedDesc = true;
     displayedColumns: string[] = ['details_mobile', 'transaction', 'dt', 'sender', 'recipient', 'sent', 'received', 'fees', 'status', 'details'];
 
