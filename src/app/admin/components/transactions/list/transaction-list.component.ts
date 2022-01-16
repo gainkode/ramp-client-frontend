@@ -156,18 +156,18 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   private executeUnbenchmark(): void {
-    const requestData = this.adminService.unbenchmarkTransaction(
-      this.transactions.map(val => val.id)
+    const requestData$ = this.adminService.unbenchmarkTransaction(
+      this.transactions.filter(x => x.selected === true).map(val => val.id)
     );
-    if (requestData) {
-      requestData.subscribe(({ data }) => {
+    this.subscriptions.add(
+      requestData$.subscribe(({ data }) => {
         this.transactions.forEach(x => x.selected = false);
       }, (error) => {
         if (this.auth.token === '') {
           this.router.navigateByUrl('/');
         }
-      });
-    }
+      })
+    );
   }
 
   private loadCurrencies(): void {
