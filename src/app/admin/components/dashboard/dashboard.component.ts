@@ -10,6 +10,7 @@ import { Filter } from '../../model/filter.model';
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   filterFields = [
+    'transactionDate',
     'accountType',
     'country',
     'source',

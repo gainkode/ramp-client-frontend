@@ -55,6 +55,7 @@ import { RiskAlertItem } from '../model/risk-alert.model';
 
 const GET_DASHBOARD_STATS = gql`
   query GetDashboardStats(
+    $transactionDateOnly: DateTime
     $userIdOnly: [String!],
     $widgetIdOnly: [String!],
     $sourcesOnly: [TransactionSource!],
@@ -63,6 +64,7 @@ const GET_DASHBOARD_STATS = gql`
     $accountTypesOnly: [UserType!]
   ) {
     getDashboardStats(
+      transactionDateOnly: $transactionDateOnly
       userIdOnly: $userIdOnly
       widgetIdOnly: $widgetIdOnly
       sourcesOnly: $sourcesOnly
@@ -1277,6 +1279,7 @@ export class AdminDataService {
 
   getDashboardStats(filter: Filter): Observable<DashboardStats> {
     const vars: QueryGetDashboardStatsArgs = {
+      transactionDateOnly: filter.transactionDate,
       userIdOnly: filter.users,
       widgetIdOnly: filter.widgets,
       sourcesOnly: filter.sources,

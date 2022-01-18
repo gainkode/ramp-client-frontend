@@ -19,6 +19,8 @@ export class Filter {
   public paymentInstruments?: Array<PaymentInstrument>;
   public createdDateInterval?: DateTimeInterval;
   public completedDateInterval?: DateTimeInterval;
+  public transactionDate?: Date;
+  public registrationDate?: Date;
   public walletAddress?: string;
   public totalBuyVolumeOver?: number;
   public transactionCountOver?: number;
@@ -57,7 +59,12 @@ export class Filter {
       this.users = filterValues.users;
     }
 
-          //registrationDateOnly: [DateTime]
+    if (filterValues.transactionDate) {
+      const dtNum = Date.parse(filterValues.transactionDate);
+      this.transactionDate = isNaN(dtNum) ? undefined : new Date(dtNum);
+    }
+
+    //registrationDateOnly: [DateTime]
 
     if (filterValues.widgets) {
       this.widgets = filterValues.widgets;

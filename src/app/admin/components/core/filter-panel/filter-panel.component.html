@@ -118,6 +118,11 @@
                 <input matInput [onlyNumber]="true" maxlength="8" formControlName="transactionCountOver" />
             </mat-form-field>
 
+            <mat-form-field *ngIf="field === 'transactionDate'">
+                <mat-label>Transaction date</mat-label>
+                <input matInput formControlName="transactionDate" type="date"/>
+            </mat-form-field>
+
             <mat-form-field *ngIf="field === 'search'">
                 <mat-label>Search</mat-label>
                 <input matInput formControlName="search" />
