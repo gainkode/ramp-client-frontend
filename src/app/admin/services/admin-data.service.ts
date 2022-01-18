@@ -1460,13 +1460,13 @@ export class AdminDataService {
       widgetIdsOnly: filter?.widgets,
 
 
-      // transactionTypesOnly: $transactionTypesOnly
+      transactionTypesOnly: filter?.transactionTypes,
       // userTierLevelsOnly: $userTierLevelsOnly
       riskLevelsOnly: filter?.riskLevels,
       paymentInstrumentsOnly: filter?.paymentInstruments,
       // createdDateInterval: $createdDateInterval
       // completedDateInterval: $completedDateInterval
-      // walletAddressOnly: $walletAddressOnly
+      walletAddressOnly: filter?.walletAddress,
 
 
 

@@ -29,15 +29,11 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
     'accountType',
     'country',
     'source',
-    'paymentInstruments',
-    //'transactionId',
-    //'transactionDate',
-    //'transactionType',
-    //'senderOrReceiver',
-    //'paymentProvider',
-    'riskLevels',
+    'paymentInstrument',
+    'transactionType',
+    'riskLevel',
+    'walletAddress',
     'users',
-    //'widget',
     'search'
   ];
 

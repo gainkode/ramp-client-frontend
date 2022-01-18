@@ -16,7 +16,7 @@ export class Filter {
   public paymentInstruments?: Array<PaymentInstrument>;
   public createdDateInterval?: DateTimeInterval;
   public completedDateInterval?: DateTimeInterval;
-  public walletAddress?: Array<string>;
+  public walletAddress?: string;
   public search?: string;
 
   constructor(filterValues: EmptyObject) {

@@ -1,5 +1,5 @@
 import { Observable, Subject } from 'rxjs';
-import { PaymentInstrumentList, RiskLevelViewList, TransactionSourceList, UserTypeList } from 'src/app/model/payment.model';
+import { PaymentInstrumentList, RiskLevelViewList, TransactionSourceList, TransactionTypeList, UserTypeList } from 'src/app/model/payment.model';
 import { Filter } from '../../../model/filter.model';
 import { Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
@@ -24,10 +24,9 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
   riskLevelsOptions = RiskLevelViewList;
   paymentInstrumentsOptions = PaymentInstrumentList;
   userTypeOptions = UserTypeList;
+  transactionTypeOptions = TransactionTypeList;
 
   filterForm?: FormGroup;
-
-  private destroy$ = new Subject();
 
   constructor(private formBuilder: FormBuilder) {
 
@@ -55,17 +54,23 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
       //   }
       // }
     }
+    if (this.fields.includes('transactionType')) {
+      controlsConfig.transactionTypes = [[]];
+    }
     if (this.fields.includes('widget')) {
       controlsConfig.widgets = [[]];
     }
     if (this.fields.includes('riskAlertCode')) {
       controlsConfig.riskAlertCode = [undefined];
     }
-    if (this.fields.includes('riskLevels')) {
+    if (this.fields.includes('riskLevel')) {
       controlsConfig.riskLevels = [[]];
     }
-    if (this.fields.includes('paymentInstruments')) {
+    if (this.fields.includes('paymentInstrument')) {
       controlsConfig.paymentInstruments = [[]];
+    }
+    if (this.fields.includes('walletAddress')) {
+      controlsConfig.walletAddress = [''];
     }
     if (this.fields.includes('search')) {
       controlsConfig.search = [''];
@@ -75,7 +80,7 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.destroy$.next();
+    
   }
 
   resetFilters(): void {
@@ -95,17 +100,23 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
       if (this.fields.includes('users')) {
         this.filterForm.controls.users.setValue([]);
       }
+      if (this.fields.includes('transactionType')) {
+        this.filterForm.controls.transactionTypes.setValue([]);
+      }
       if (this.fields.includes('widget')) {
         this.filterForm.controls.widgets.setValue([]);
       }
       if (this.fields.includes('riskAlertCode')) {
         this.filterForm.controls.riskAlertCode.setValue(undefined);
       }
-      if (this.fields.includes('riskLevels')) {
+      if (this.fields.includes('riskLevel')) {
         this.filterForm.controls.riskLevels.setValue([]);
       }
-      if (this.fields.includes('paymentInstruments')) {
+      if (this.fields.includes('paymentInstrument')) {
         this.filterForm.controls.paymentInstruments.setValue([]);
+      }
+      if (this.fields.includes('walletAddress')) {
+        this.filterForm.controls.walletAddress.setValue('');
       }
       if (this.fields.includes('search')) {
         this.filterForm.controls.search.setValue('');

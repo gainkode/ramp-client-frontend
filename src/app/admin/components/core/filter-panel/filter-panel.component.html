@@ -29,7 +29,7 @@
                 </mat-select>
             </mat-form-field>
 
-            <mat-form-field *ngIf="field === 'riskLevels'">
+            <mat-form-field *ngIf="field === 'riskLevel'">
                 <mat-label>Risk Levels</mat-label>
                 <mat-select formControlName="riskLevels" multiple>
                     <mat-option *ngFor="let item of riskLevelsOptions" [value]="item.id">
@@ -38,7 +38,16 @@
                 </mat-select>
             </mat-form-field>
 
-            <mat-form-field *ngIf="field === 'paymentInstruments'">
+            <mat-form-field *ngIf="field === 'transactionType'">
+                <mat-label>Transaction Types</mat-label>
+                <mat-select formControlName="transactionTypes" multiple>
+                    <mat-option *ngFor="let item of transactionTypeOptions" [value]="item.id">
+                        {{item.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field *ngIf="field === 'paymentInstrument'">
                 <mat-label>Payment methods</mat-label>
                 <mat-select formControlName="paymentInstruments" multiple>
                     <mat-option *ngFor="let item of paymentInstrumentsOptions" [value]="item.id">
@@ -55,6 +64,11 @@
 
             <app-filter-field-risk-alert-code *ngIf="field === 'riskAlertCode'" formControlName="riskAlertCode">
             </app-filter-field-risk-alert-code>
+
+            <mat-form-field *ngIf="field === 'walletAddress'">
+                <mat-label>Wallet address</mat-label>
+                <input matInput formControlName="walletAddress" />
+            </mat-form-field>
 
             <mat-form-field *ngIf="field === 'search'">
                 <mat-label>Search</mat-label>
