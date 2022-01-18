@@ -1,10 +1,9 @@
 import { Observable, Subject } from 'rxjs';
-import { PaymentInstrumentList, RiskLevelViewList, TransactionSourceList, TransactionTypeList, UserTypeList } from 'src/app/model/payment.model';
+import { KycStatusList, PaymentInstrumentList, RiskLevelViewList, TransactionSourceList, TransactionTypeList, UserStatusList, UserTypeList } from 'src/app/model/payment.model';
 import { Filter } from '../../../model/filter.model';
 import { Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { EmptyObject } from 'apollo-angular/types';
-import { DateTimeInterval } from 'src/app/model/generated-models';
 
 @Component({
   selector: 'app-filter-panel',
@@ -25,7 +24,9 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
   riskLevelsOptions = RiskLevelViewList;
   paymentInstrumentsOptions = PaymentInstrumentList;
   userTypeOptions = UserTypeList;
+  userStatusOptions = UserStatusList;
   transactionTypeOptions = TransactionTypeList;
+  kysStatusOptions = KycStatusList;
 
   filterForm?: FormGroup;
 
@@ -41,6 +42,9 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
     const controlsConfig: EmptyObject = {};
     if (this.fields.includes('accountType')) {
       controlsConfig.accountTypes = [[]];
+    }
+    if (this.fields.includes('accountStatus')) {
+      controlsConfig.accountStatuses = [[]];
     }
     if (this.fields.includes('country')) {
       controlsConfig.countries = [[]];
@@ -60,16 +64,16 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
       // }
     }
     if (this.fields.includes('createdDateStart')) {
-      controlsConfig.createdDateRangeStart = '';
+      controlsConfig.createdDateRangeStart = [undefined];
     }
     if (this.fields.includes('createdDateEnd')) {
-      controlsConfig.createdDateRangeEnd = '';
+      controlsConfig.createdDateRangeEnd = [undefined];
     }
     if (this.fields.includes('completedDateStart')) {
-      controlsConfig.completedDateRangeStart = '';
+      controlsConfig.completedDateRangeStart = [undefined];
     }
     if (this.fields.includes('completedDateEnd')) {
-      controlsConfig.completedDateRangeEnd = '';
+      controlsConfig.completedDateRangeEnd = [undefined];
     }
     if (this.fields.includes('transactionType')) {
       controlsConfig.transactionTypes = [[]];
@@ -83,11 +87,20 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
     if (this.fields.includes('riskLevel')) {
       controlsConfig.riskLevels = [[]];
     }
+    if (this.fields.includes('kycStatus')) {
+      controlsConfig.kycStatuses = [[]];
+    }
     if (this.fields.includes('paymentInstrument')) {
       controlsConfig.paymentInstruments = [[]];
     }
     if (this.fields.includes('walletAddress')) {
-      controlsConfig.walletAddress = [''];
+      controlsConfig.walletAddress = [undefined];
+    }
+    if (this.fields.includes('totalBuyVolume')) {
+      controlsConfig.totalBuyVolumeOver = [0];
+    }
+    if (this.fields.includes('transactionCount')) {
+      controlsConfig.transactionCountOver = [0];
     }
     if (this.fields.includes('search')) {
       controlsConfig.search = [''];
@@ -104,6 +117,9 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
     if (this.filterForm) {
       if (this.fields.includes('accountType')) {
         this.filterForm.controls.accountTypes.setValue([]);
+      }
+      if (this.fields.includes('accountStatus')) {
+        this.filterForm.controls.accountStatuses.setValue([]);
       }
       if (this.fields.includes('country')) {
         this.filterForm.controls.countries.setValue([]);
@@ -130,8 +146,10 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
         this.filterForm.controls.completedDateRangeEnd.setValue(undefined);
       }
       if (this.fields.includes('createdDateInterval')) {
-        this.filterForm.controls.createdDateIntervalStart.setValue('');
-        this.filterForm.controls.createdDateIntervalEnd.setValue('');
+        this.filterForm.controls.createdDateRangeStart.setValue(undefined);
+      }
+      if (this.fields.includes('createdDateStart')) {
+        this.filterForm.controls.createdDateRangeStart.setValue(undefined);
       }
       if (this.fields.includes('transactionType')) {
         this.filterForm.controls.transactionTypes.setValue([]);
@@ -145,11 +163,20 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
       if (this.fields.includes('riskLevel')) {
         this.filterForm.controls.riskLevels.setValue([]);
       }
+      if (this.fields.includes('kycStatus')) {
+        this.filterForm.controls.kycStatuses.setValue([]);
+      }
       if (this.fields.includes('paymentInstrument')) {
         this.filterForm.controls.paymentInstruments.setValue([]);
       }
       if (this.fields.includes('walletAddress')) {
         this.filterForm.controls.walletAddress.setValue('');
+      }
+      if (this.fields.includes('totalBuyVolume')) {
+        this.filterForm.controls.totalBuyVolumeOver.setValue(0);
+      }
+      if (this.fields.includes('transactionCount')) {
+        this.filterForm.controls.transactionCountOver.setValue(0);
       }
       if (this.fields.includes('search')) {
         this.filterForm.controls.search.setValue('');

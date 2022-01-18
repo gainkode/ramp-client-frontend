@@ -1,8 +1,10 @@
-import { CountryCodeType, DateTimeInterval, PaymentInstrument, RiskAlertCodes, TransactionSource, TransactionType, UserType } from '../../model/generated-models';
+import { AccountStatus, CountryCodeType, DateTimeInterval, KycStatus, PaymentInstrument, RiskAlertCodes, RiskLevel, TransactionSource, TransactionType, UserMode, UserType } from '../../model/generated-models';
 import { EmptyObject } from 'apollo-angular/types';
 
 export class Filter {
   public accountTypes?: Array<UserType>;
+  public accountModes?: Array<UserMode>;
+  public accountStatuses?: Array<AccountStatus>;
   public assets?: Array<string>;
   public countries?: Array<string>; // code3
   public sources?: Array<TransactionSource>;
@@ -12,16 +14,23 @@ export class Filter {
   public riskAlertCode?: RiskAlertCodes;
   public transactionTypes?: Array<TransactionType>;
   public userTierLevels?: string;
-  public riskLevels?: Array<string>;
+  public kycStatuses?: Array<KycStatus>;
+  public riskLevels?: Array<RiskLevel>;
   public paymentInstruments?: Array<PaymentInstrument>;
   public createdDateInterval?: DateTimeInterval;
   public completedDateInterval?: DateTimeInterval;
   public walletAddress?: string;
+  public totalBuyVolumeOver?: number;
+  public transactionCountOver?: number;
   public search?: string;
 
   constructor(filterValues: EmptyObject) {
     if (filterValues.accountTypes) {
       this.accountTypes = filterValues.accountTypes;
+    }
+
+    if (filterValues.accountStatuses) {
+      this.accountStatuses = filterValues.accountStatuses;
     }
 
     if (filterValues.assets) {
@@ -35,6 +44,19 @@ export class Filter {
     if (filterValues.sources) {
       this.sources = filterValues.sources;
     }
+
+
+
+
+
+
+      //registrationDateOnly: [DateTime]
+      //totalBuyVolumeOver: [Int]
+      //transactionCountOver: [Int]
+
+
+
+
 
     if (filterValues.user) {
       this.user = filterValues.user;
@@ -50,6 +72,10 @@ export class Filter {
 
     if (filterValues.riskAlertCode) {
       this.riskAlertCode = filterValues.riskAlertCode;
+    }
+
+    if (filterValues.kycStatuses) {
+      this.kycStatuses = filterValues.kycStatuses;
     }
 
     if (filterValues.transactionTypes) {
@@ -78,6 +104,16 @@ export class Filter {
 
     if (filterValues.walletAddress) {
       this.walletAddress = filterValues.walletAddress;
+    }
+
+    if (filterValues.totalBuyVolumeOver) {
+      const val = parseInt(filterValues.totalBuyVolumeOver);
+      this.totalBuyVolumeOver = isNaN(val) || val === 0 ? undefined : val;
+    }
+
+    if (filterValues.transactionCountOver) {
+      const val = parseInt(filterValues.transactionCountOver);
+      this.transactionCountOver = isNaN(val) || val === 0 ? undefined : val;
     }
 
     if (filterValues.search) {

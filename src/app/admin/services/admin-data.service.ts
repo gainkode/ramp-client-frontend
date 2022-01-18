@@ -433,12 +433,42 @@ const GET_TRANSACTIONS = gql`
 
 const GET_USERS = gql`
   query GetUsers(
+    $userIds: [String!]
+    $accountTypesOnly: [UserType!]
+    $accountModesOnly: [UserMode!]
+    $accountStatusesOnly: [AccountStatus!]
+    $userTierLevelsOnly: [String!]
+    $riskLevelsOnly: [RiskLevel!]
+    $countriesOnly: [String!]
+    $countryCodeType: CountryCodeType!
+    $kycStatusesOnly: [KycStatus!]
+    $registrationDateOnly: [DateTime!]
+    $widgetIdsOnly: [String!]
+    $totalBuyVolumeOver: Int
+    $transactionCountOver: Int
     $filter: String
     $skip: Int
     $first: Int
     $orderBy: [OrderBy!]
   ) {
-    getUsers(filter: $filter, skip: $skip, first: $first, orderBy: $orderBy) {
+    getUsers(
+      userIds: $userIds
+      accountTypesOnly: $accountTypesOnly
+      accountModesOnly: $accountModesOnly
+      accountStatusesOnly: $accountStatusesOnly
+      userTierLevelsOnly: $userTierLevelsOnly
+      riskLevelsOnly: $riskLevelsOnly
+      countriesOnly: $countriesOnly
+      countryCodeType: $countryCodeType
+      kycStatusesOnly: $kycStatusesOnly
+      registrationDateOnly: $registrationDateOnly
+      widgetIdsOnly: $widgetIdsOnly
+      totalBuyVolumeOver: $totalBuyVolumeOver
+      transactionCountOver: $transactionCountOver
+      filter: $filter,
+      skip: $skip,
+      first: $first,
+      orderBy: $orderBy) {
       count
       list {
         userId
@@ -1501,6 +1531,17 @@ export class AdminDataService {
     filter: Filter
   ): Observable<{ list: UserItem[], count: number }> {
     const vars = {
+      userIds: filter?.users,
+      accountTypesOnly: filter?.accountTypes,
+      accountStatusesOnly: filter?.accountStatuses,
+      riskLevelsOnly: filter?.riskLevels,
+      countriesOnly: filter?.countries,
+      countryCodeType: CountryCodeType.Code3,
+      kycStatusesOnly: filter.kycStatuses,
+      //registrationDateOnly: [DateTime]
+      widgetIdsOnly: filter?.widgets,
+      totalBuyVolumeOver: filter?.totalBuyVolumeOver,
+      transactionCountOver: filter?.transactionCountOver,
       skip: pageIndex * takeItems,
       first: takeItems,
       orderBy: [{ orderBy: orderField, desc: orderDesc }],

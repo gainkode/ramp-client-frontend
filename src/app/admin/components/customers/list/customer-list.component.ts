@@ -27,6 +27,18 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   filterFields = [
+    'users',
+    'accountType',
+    'accountMode',
+    'accountStatus',
+    'userTierLevel',
+    'riskLevel',
+    'country',
+    'kycStatus',
+    'registration',
+    'widget',
+    'totalBuyVolume',
+    'transactionCount',
     'search'
   ];
 

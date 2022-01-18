@@ -17,6 +17,15 @@
                 </mat-select>
             </mat-form-field>
 
+            <mat-form-field *ngIf="field === 'accountStatus'">
+                <mat-label>Account status</mat-label>
+                <mat-select formControlName="accountStatuses" multiple>
+                    <mat-option *ngFor="let item of userStatusOptions" [value]="item.id">
+                        {{item.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
             <app-filter-field-country *ngIf="field === 'country'" formControlName="countries">
             </app-filter-field-country>
 
@@ -24,6 +33,15 @@
                 <mat-label>Source</mat-label>
                 <mat-select formControlName="sources" multiple>
                     <mat-option *ngFor="let item of sourceOptions" [value]="item.id">
+                        {{item.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field *ngIf="field === 'kycStatus'">
+                <mat-label>KYC Statuses</mat-label>
+                <mat-select formControlName="kycStatuses" multiple>
+                    <mat-option *ngFor="let item of kysStatusOptions" [value]="item.id">
                         {{item.name}}
                     </mat-option>
                 </mat-select>
@@ -88,6 +106,16 @@
             <mat-form-field *ngIf="field === 'walletAddress'">
                 <mat-label>Wallet address</mat-label>
                 <input matInput formControlName="walletAddress" />
+            </mat-form-field>
+
+            <mat-form-field *ngIf="field === 'totalBuyVolume'">
+                <mat-label>Buy volume over</mat-label>
+                <input matInput [onlyNumber]="true" maxlength="8" formControlName="totalBuyVolumeOver" />
+            </mat-form-field>
+
+            <mat-form-field *ngIf="field === 'transactionCount'">
+                <mat-label>Transaction count over</mat-label>
+                <input matInput [onlyNumber]="true" maxlength="8" formControlName="transactionCountOver" />
             </mat-form-field>
 
             <mat-form-field *ngIf="field === 'search'">

@@ -76,6 +76,7 @@ import { CustomerSingleComponent } from './components/customers/customer-single/
 import { SystemUserListComponent } from './components/system-users/list/user-list.component';
 import { SystemUserSingleComponent } from './components/system-users/user-single/user-single.component';
 import { SystemUserDetailsComponent } from './components/system-users/details/user-details.component';
+import { DirectiveModule } from '../directives/directives.module';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -109,7 +110,8 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
     MatSnackBarModule,
     ComponentsModule,
     AdminRoutingModule,
-    MaterialModule
+    MaterialModule,
+    DirectiveModule
   ],
   declarations: [
     MainMenuComponent,

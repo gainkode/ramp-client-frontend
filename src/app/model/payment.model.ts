@@ -3,7 +3,7 @@ import { CommonTargetValue } from './common.model';
 import {
     PaymentInstrument, PaymentProvider, TransactionType, TransactionStatus,
     SettingsFeeTargetFilterType, SettingsCostTargetFilterType, SettingsKycTargetFilterType,
-    UserType, KycProvider, UserMode, SettingsCurrency, Rate, TransactionSource, UserNotificationCodes, CustodyProvider, TransactionKycStatus, RiskLevel, PaymentProviderByInstrument
+    UserType, KycProvider, UserMode, SettingsCurrency, Rate, TransactionSource, UserNotificationCodes, CustodyProvider, TransactionKycStatus, RiskLevel, PaymentProviderByInstrument, AccountStatus, KycStatus
 } from './generated-models';
 
 export class PaymentInstrumentView {
@@ -79,6 +79,16 @@ export class UserTypeView {
 
 export class UserModeView {
     id!: UserMode;
+    name = '';
+}
+
+export class AccountStatusView {
+    id!: AccountStatus;
+    name = '';
+}
+
+export class KycStatusView {
+    id!: KycStatus;
     name = '';
 }
 
@@ -294,6 +304,23 @@ export const UserModeShortList: Array<UserModeView> = [
     { id: UserMode.InternalWallet, name: 'Internal' },
     { id: UserMode.ExternalWallet, name: 'External' },
     { id: UserMode.OneTimeWallet, name: 'One Time wallet' }
+];
+
+export const UserStatusList: Array<AccountStatusView> = [
+    { id: AccountStatus.Closed, name: 'Closed' },
+    { id: AccountStatus.Banned, name: 'Banned' },
+    { id: AccountStatus.Live, name: 'Live' },
+    { id: AccountStatus.Suspended, name: 'Suspended' }
+];
+
+export const KycStatusList: Array<KycStatusView> = [
+    { id: KycStatus.Unknown, name: 'Unknown' },
+    { id: KycStatus.NotFound, name: 'Not Found' },
+    { id: KycStatus.Init, name: 'Initialization' },
+    { id: KycStatus.Pending, name: 'Pending' },
+    { id: KycStatus.Queued, name: 'Queued' },
+    { id: KycStatus.Completed, name: 'Completed' },
+    { id: KycStatus.OnHold, name: 'On Hold' }
 ];
 
 export const KycProviderList: Array<KycProviderView> = [
