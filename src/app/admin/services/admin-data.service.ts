@@ -1458,8 +1458,6 @@ export class AdminDataService {
       sourcesOnly: filter?.sources,
       userIdsOnly: filter?.users,
       widgetIdsOnly: filter?.widgets,
-
-
       transactionTypesOnly: filter?.transactionTypes,
       // userTierLevelsOnly: $userTierLevelsOnly
       riskLevelsOnly: filter?.riskLevels,
@@ -1467,9 +1465,6 @@ export class AdminDataService {
       // createdDateInterval: $createdDateInterval
       // completedDateInterval: $completedDateInterval
       walletAddressOnly: filter?.walletAddress,
-
-
-
       filter: filter?.search,
       skip: pageIndex * takeItems,
       first: takeItems,

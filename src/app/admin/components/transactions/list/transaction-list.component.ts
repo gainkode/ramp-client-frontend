@@ -32,6 +32,7 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
     'paymentInstrument',
     'transactionType',
     'riskLevel',
+    'widget',
     'walletAddress',
     'users',
     'search'
