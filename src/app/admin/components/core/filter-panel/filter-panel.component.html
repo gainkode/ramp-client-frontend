@@ -56,6 +56,26 @@
                 </mat-select>
             </mat-form-field>
 
+            <mat-form-field *ngIf="field === 'createdDateStart'">
+                <mat-label>Created transaction later</mat-label>
+                <input matInput formControlName="createdDateRangeStart" type="datetime-local"/>
+            </mat-form-field>
+
+            <mat-form-field *ngIf="field === 'createdDateEnd'">
+                <mat-label>Created transaction until</mat-label>
+                <input matInput formControlName="createdDateRangeEnd" type="datetime-local"/>
+            </mat-form-field>
+
+            <mat-form-field *ngIf="field === 'completedDateStart'">
+                <mat-label>Completed transaction later</mat-label>
+                <input matInput formControlName="completedDateRangeStart" type="datetime-local"/>
+            </mat-form-field>
+
+            <mat-form-field *ngIf="field === 'completedDateEnd'">
+                <mat-label>Completed transaction until</mat-label>
+                <input matInput formControlName="completedDateRangeEnd" type="datetime-local"/>
+            </mat-form-field>
+
             <app-filter-field-user *ngIf="field === 'user'" formControlName="user"></app-filter-field-user>
 
             <app-filter-field-users *ngIf="field === 'users'" formControlName="users"></app-filter-field-users>

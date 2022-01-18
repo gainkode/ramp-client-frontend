@@ -1462,8 +1462,8 @@ export class AdminDataService {
       // userTierLevelsOnly: $userTierLevelsOnly
       riskLevelsOnly: filter?.riskLevels,
       paymentInstrumentsOnly: filter?.paymentInstruments,
-      // createdDateInterval: $createdDateInterval
-      // completedDateInterval: $completedDateInterval
+      createdDateInterval: filter?.createdDateInterval,
+      completedDateInterval: filter?.completedDateInterval,
       walletAddressOnly: filter?.walletAddress,
       filter: filter?.search,
       skip: pageIndex * takeItems,

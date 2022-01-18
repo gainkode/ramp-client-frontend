@@ -68,18 +68,12 @@ export class Filter {
       this.paymentInstruments = filterValues.paymentInstruments;
     }
 
-    if (filterValues.createdDateStart && filterValues.createdDateEnd) {
-      this.createdDateInterval = {
-        from: filterValues.createdDateStart,
-        to: filterValues.createdDateEnd
-      };
+    if (filterValues.createdDateRangeStart || filterValues.createdDateRangeEnd) {
+      this.createdDateInterval = this.getDateTimeRange(filterValues.createdDateRangeStart, filterValues.createdDateRangeEnd);
     }
 
-    if (filterValues.completedDateStart && filterValues.completedDateEnd) {
-      this.completedDateInterval = {
-        from: filterValues.completedDateStart,
-        to: filterValues.completedDateEnd
-      };
+    if (filterValues.completedDateStart || filterValues.completedDateEnd) {
+      this.completedDateInterval = this.getDateTimeRange(filterValues.completedDateRangeStart, filterValues.completedDateRangeEnd);
     }
 
     if (filterValues.walletAddress) {
@@ -91,4 +85,21 @@ export class Filter {
     }
   }
 
+  private getDateTimeRange(start: string, end: string): DateTimeInterval {
+    let startNum = Date.parse(start);
+    let endNum = Date.parse(end);
+    if (!isNaN(startNum) && !isNaN(endNum)) {
+      if (startNum > endNum) {
+        const pivot = startNum;
+        startNum = endNum;
+        endNum = pivot;
+      }
+    }
+    const startDate = (isNaN(startNum)) ? undefined : new Date(startNum);
+    const endDate = (isNaN(endNum)) ? undefined : new Date(endNum);
+    return {
+      from: startDate,
+      to: endDate
+    } as DateTimeInterval;
+  }
 }

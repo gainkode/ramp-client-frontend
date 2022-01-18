@@ -2,8 +2,9 @@ import { Observable, Subject } from 'rxjs';
 import { PaymentInstrumentList, RiskLevelViewList, TransactionSourceList, TransactionTypeList, UserTypeList } from 'src/app/model/payment.model';
 import { Filter } from '../../../model/filter.model';
 import { Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { EmptyObject } from 'apollo-angular/types';
+import { DateTimeInterval } from 'src/app/model/generated-models';
 
 @Component({
   selector: 'app-filter-panel',
@@ -27,6 +28,10 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
   transactionTypeOptions = TransactionTypeList;
 
   filterForm?: FormGroup;
+
+  get createdDateIntervalStartField(): AbstractControl | null {
+    return this.filterForm?.controls.createdDateIntervalStart ?? null;
+  }
 
   constructor(private formBuilder: FormBuilder) {
 
@@ -54,6 +59,18 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
       //   }
       // }
     }
+    if (this.fields.includes('createdDateStart')) {
+      controlsConfig.createdDateRangeStart = '';
+    }
+    if (this.fields.includes('createdDateEnd')) {
+      controlsConfig.createdDateRangeEnd = '';
+    }
+    if (this.fields.includes('completedDateStart')) {
+      controlsConfig.completedDateRangeStart = '';
+    }
+    if (this.fields.includes('completedDateEnd')) {
+      controlsConfig.completedDateRangeEnd = '';
+    }
     if (this.fields.includes('transactionType')) {
       controlsConfig.transactionTypes = [[]];
     }
@@ -80,7 +97,7 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    
+
   }
 
   resetFilters(): void {
@@ -99,6 +116,22 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
       }
       if (this.fields.includes('users')) {
         this.filterForm.controls.users.setValue([]);
+      }
+      if (this.fields.includes('createdDateStart')) {
+        this.filterForm.controls.createdDateRangeStart.setValue(undefined);
+      }
+      if (this.fields.includes('createdDateEnd')) {
+        this.filterForm.controls.createdDateRangeEnd.setValue(undefined);
+      }
+      if (this.fields.includes('completedDateStart')) {
+        this.filterForm.controls.completedDateRangeStart.setValue(undefined);
+      }
+      if (this.fields.includes('completedDateEnd')) {
+        this.filterForm.controls.completedDateRangeEnd.setValue(undefined);
+      }
+      if (this.fields.includes('createdDateInterval')) {
+        this.filterForm.controls.createdDateIntervalStart.setValue('');
+        this.filterForm.controls.createdDateIntervalEnd.setValue('');
       }
       if (this.fields.includes('transactionType')) {
         this.filterForm.controls.transactionTypes.setValue([]);
