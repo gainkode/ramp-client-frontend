@@ -45,19 +45,6 @@ export class Filter {
       this.sources = filterValues.sources;
     }
 
-
-
-
-
-
-      //registrationDateOnly: [DateTime]
-      //totalBuyVolumeOver: [Int]
-      //transactionCountOver: [Int]
-
-
-
-
-
     if (filterValues.user) {
       this.user = filterValues.user;
     }
@@ -65,6 +52,12 @@ export class Filter {
     if (filterValues.users) {
       this.users = filterValues.users;
     }
+
+    if (filterValues.users) {
+      this.users = filterValues.users;
+    }
+
+          //registrationDateOnly: [DateTime]
 
     if (filterValues.widgets) {
       this.widgets = filterValues.widgets;
