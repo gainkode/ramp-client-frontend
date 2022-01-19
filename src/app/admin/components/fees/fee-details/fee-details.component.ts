@@ -120,12 +120,12 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
           Validators.required, Validators.pattern('^[0-9.]+$')
         ], updateOn: 'change'
       }],
-    beneficiaryName: ['', { validators: [Validators.required], updateOn: 'change' }],
-    beneficiaryAddress: ['', { validators: [Validators.required], updateOn: 'change' }],
-    iban: ['', { validators: [Validators.required], updateOn: 'change' }],
-    bankName: ['', { validators: [Validators.required], updateOn: 'change' }],
-    bankAddress: ['', { validators: [Validators.required], updateOn: 'change' }],
-    swift: ['', { validators: [Validators.required], updateOn: 'change' }]
+    beneficiaryName: [''],
+    beneficiaryAddress: [''],
+    iban: [''],
+    bankName: [''],
+    bankAddress: [''],
+    swift: ['']
   });
 
   get defaultSchemeFlag(): string {
@@ -206,7 +206,6 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
   private updateTarget(val: any): void {
     this.clearTargetValues();
     this.setTargetValidator();
-    console.log('update target', this.targetType);
     if (this.targetType === SettingsFeeTargetFilterType.WidgetId ||
       this.targetType === SettingsFeeTargetFilterType.AccountId ||
       this.targetType === SettingsFeeTargetFilterType.InitiateFrom) {
