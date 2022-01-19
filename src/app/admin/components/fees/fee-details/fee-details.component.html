@@ -68,7 +68,7 @@
                                (matChipInputTokenEnd)="addTargetValue($event)">
                     </mat-chip-list>
                     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="targetItemSelected($event)">
-                        <mat-option *ngFor="let item of filteredTargetValues | async" [value]="item.title">
+                        <mat-option *ngFor="let item of filteredTargetValues$ | async" [value]="item.title">
                             <app-dropdown-item itemValue="{{item.title}}" imageClass="{{item.imgClass}}"
                                                imageSource="{{item.imgSource}}"></app-dropdown-item>
                         </mat-option>
@@ -242,7 +242,7 @@
             <mat-form-field class="form-element">
                 <mat-label>Beneficiary name</mat-label>
                 <input type="text" matInput formControlName="beneficiaryName" maxlength="100"
-                       placeholder="Beneficiary name" required/>
+                       placeholder="Beneficiary name"/>
                 <mat-error *ngIf="this.schemeForm.get('beneficiaryName')?.hasError('required')">
                     Please specify beneficiary name
                 </mat-error>
@@ -252,7 +252,7 @@
             <mat-form-field class="form-element">
                 <mat-label>Beneficiary address</mat-label>
                 <input type="text" matInput formControlName="beneficiaryAddress" maxlength="100"
-                       placeholder="Beneficiary address" required/>
+                       placeholder="Beneficiary address"/>
                 <mat-error *ngIf="this.schemeForm.get('beneficiaryAddress')?.hasError('required')">
                     Please specify beneficiary address
                 </mat-error>
@@ -261,7 +261,7 @@
             <!-- IBAN -->
             <mat-form-field class="form-element">
                 <mat-label>IBAN</mat-label>
-                <input type="text" matInput formControlName="iban" maxlength="30" placeholder="IBAN" required/>
+                <input type="text" matInput formControlName="iban" maxlength="30" placeholder="IBAN"/>
                 <mat-error *ngIf="this.schemeForm.get('iban')?.hasError('required')">
                     Please specify IBAN
                 </mat-error>
@@ -270,8 +270,7 @@
             <!-- Bank name -->
             <mat-form-field class="form-element">
                 <mat-label>Bank name</mat-label>
-                <input type="text" matInput formControlName="bankName" maxlength="100" placeholder="Bank name"
-                       required/>
+                <input type="text" matInput formControlName="bankName" maxlength="100" placeholder="Bank name"/>
                 <mat-error *ngIf="this.schemeForm.get('bankName')?.hasError('required')">
                     Please specify a bank name
                 </mat-error>
@@ -280,8 +279,7 @@
             <!-- Bank address -->
             <mat-form-field class="form-element">
                 <mat-label>Bank address</mat-label>
-                <input type="text" matInput formControlName="bankAddress" maxlength="100" placeholder="Bank address"
-                       required/>
+                <input type="text" matInput formControlName="bankAddress" maxlength="100" placeholder="Bank address"/>
                 <mat-error *ngIf="this.schemeForm.get('bankAddress')?.hasError('required')">
                     Please specify a bank address
                 </mat-error>
@@ -290,8 +288,7 @@
             <!-- SWIFT -->
             <mat-form-field class="form-element">
                 <mat-label>SWIFT</mat-label>
-                <input type="text" matInput formControlName="swift" maxlength="11" minlength="8" placeholder="SWIFT"
-                       required/>
+                <input type="text" matInput formControlName="swift" maxlength="11" minlength="8" placeholder="SWIFT"/>
                 <mat-error *ngIf="this.schemeForm.get('swift')?.hasError('required')">
                     Please specify SWIFT
                 </mat-error>
