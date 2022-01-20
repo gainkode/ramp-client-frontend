@@ -27,6 +27,7 @@ import {
   SettingsKycListResult,
   Transaction,
   TransactionListResult,
+  TransactionUpdateTransferOrderChanges,
   User,
   UserListResult,
   UserNotificationLevel,
@@ -325,7 +326,7 @@ const GET_TRANSACTIONS = gql`
     $sourcesOnly: [TransactionSource!]
     $widgetIdsOnly: [String!]
     $countriesOnly: [String!]
-    $countryCodeType: CountryCodeType!
+    $countryCodeType: CountryCodeType
     $transactionTypesOnly: [TransactionType!]
     $userTierLevelsOnly: [String!]
     $riskLevelsOnly: [String!]
@@ -424,6 +425,8 @@ const GET_TRANSACTIONS = gql`
           refundOperationSn
           paymentInfo
         }
+        transferOrder { orderId transferHash }
+        benchmarkTransferOrder { orderId transferHash }
         data
         destination
         kycStatus
@@ -1045,7 +1048,16 @@ mutation UpdateTransaction(
   $amountToSpend: Float
   $amountToReceive: Float
   $rate: Float
+  $feeFiat: Float
   $destination: String
+  $status: TransactionStatus
+  $kycStatus: TransactionKycStatus
+  $accountStatus: AccountStatus
+  $launchAfterUpdate: Boolean
+  $transferOrderId: String
+  $transferOrderHash: String
+  $benchmarkTransferOrderId: String
+  $benchmarkTransferOrderHash: String
 ) {
   updateTransaction(
     transactionId: $transactionId
@@ -1055,7 +1067,20 @@ mutation UpdateTransaction(
       amountToSpend: $amountToSpend
       amountToReceive: $amountToReceive
       rate: $rate
+      feeFiat: $feeFiat
       destination: $destination
+      status: $status
+      kycStatus: $kycStatus
+      accountStatus: $accountStatus
+      launchAfterUpdate: $launchAfterUpdate
+      transferOrderChanges: {
+        orderId: $transferOrderId
+        hash: $transferOrderHash
+      }
+      benchmarkTransferOrderChanges: {
+        orderId: $benchmarkTransferOrderId
+        hash: $benchmarkTransferOrderHash
+      }
     }
   ) {
     transactionId
@@ -1511,6 +1536,8 @@ export class AdminDataService {
       })
       .pipe(
         map(result => {
+          console.log(result);
+
           if (result.data?.getTransactions?.list && result.data?.getTransactions?.count) {
             return {
               list: result.data.getTransactions.list.map(val => new TransactionItemDeprecated(val)),
@@ -2118,7 +2145,21 @@ export class AdminDataService {
     }));
   }
 
-  updateTransaction(data: Transaction): Observable<any> {
+  updateTransaction(data: Transaction, restartTransaction: boolean): Observable<any> {
+    let benchmark: TransactionUpdateTransferOrderChanges | undefined = undefined;
+    let transfer: TransactionUpdateTransferOrderChanges | undefined = undefined;
+    if (data.transferOrder?.orderId !== '' && data.transferOrder?.transferHash !== '') {
+      transfer = {
+        orderId: data.transferOrder?.orderId,
+        hash: data.transferOrder?.transferHash
+      };
+    }
+    if (data.benchmarkTransferOrder?.orderId !== '' && data.benchmarkTransferOrder?.transferHash !== '') {
+      benchmark = {
+        orderId: data.benchmarkTransferOrder?.orderId,
+        hash: data.benchmarkTransferOrder?.transferHash
+      };
+    }
     const vars = {
       transactionId: data.transactionId,
       currencyToSpend: data.currencyToSpend,
@@ -2126,8 +2167,19 @@ export class AdminDataService {
       amountToSpend: data.amountToSpend,
       amountToReceive: data.amountToReceive,
       rate: data.rate,
-      destination: data.destination
+      feeFiat: data.feeFiat,
+      destination: data.destination,
+      status: data.status,
+      kycStatus: data.kycStatus,
+      accountStatus: data.accountStatus,
+      launchAfterUpdate: restartTransaction,
+      transferOrderChanges: transfer,
+      benchmarkTransferOrderChanges: benchmark
     };
+
+    console.log(vars);
+
+
     return this.mutate({
       mutation: UPDATE_TRANSACTIONS,
       variables: vars

@@ -568,6 +568,7 @@ export type Mutation = {
   createTransaction?: Maybe<TransactionShort>;
   executeTransaction?: Maybe<TransactionShort>;
   updateTransaction?: Maybe<Transaction>;
+  exportTransactionsToCsv?: Maybe<Scalars['Boolean']>;
   cancelMyTransaction?: Maybe<TransactionShort>;
   cancelTransaction?: Maybe<Transaction>;
   unbenchmarkTransactions?: Maybe<Array<Transaction>>;
@@ -989,6 +990,11 @@ export type MutationExecuteTransactionArgs = {
 export type MutationUpdateTransactionArgs = {
   transactionId?: Maybe<Scalars['String']>;
   transaction?: Maybe<TransactionUpdateInput>;
+};
+
+
+export type MutationExportTransactionsToCsvArgs = {
+  transactionIds?: Maybe<Array<Scalars['String']>>;
 };
 
 
@@ -1542,7 +1548,7 @@ export type QueryGetUsersArgs = {
   countriesOnly?: Maybe<Array<Scalars['String']>>;
   countryCodeType?: Maybe<CountryCodeType>;
   kycStatusesOnly?: Maybe<Array<KycStatus>>;
-  registrationDateOnly?: Maybe<Array<Scalars['DateTime']>>;
+  registrationDateInterval?: Maybe<DateTimeInterval>;
   widgetIdsOnly?: Maybe<Array<Scalars['String']>>;
   totalBuyVolumeOver?: Maybe<Scalars['Int']>;
   transactionCountOver?: Maybe<Scalars['Int']>;
@@ -1937,6 +1943,7 @@ export type SettingsCurrency = {
   defaultBankTransferProvider?: Maybe<Scalars['String']>;
   defaultWireTransferProvider?: Maybe<Scalars['String']>;
   defaultCreditCardProvider?: Maybe<Scalars['String']>;
+  explorerLink?: Maybe<Scalars['String']>;
 };
 
 export type SettingsCurrencyListResult = {
@@ -2307,8 +2314,10 @@ export type Transaction = {
   liquidityOrder?: Maybe<LiquidityOrder>;
   transferOrderId?: Maybe<Scalars['String']>;
   transferOrder?: Maybe<TransferOrder>;
+  transferOrderBlockchainLink?: Maybe<Scalars['String']>;
   benchmarkTransferOrderId?: Maybe<Scalars['String']>;
   benchmarkTransferOrder?: Maybe<TransferOrder>;
+  benchmarkTransferOrderBlockchainLink?: Maybe<Scalars['String']>;
   userBalanceTotalBefore?: Maybe<Scalars['Float']>;
   userBalanceAvailableBefore?: Maybe<Scalars['Float']>;
   userBalanceTotalAfter?: Maybe<Scalars['Float']>;
@@ -2512,7 +2521,15 @@ export type TransactionUpdateInput = {
   widgetUserParamsId?: Maybe<Scalars['String']>;
   status?: Maybe<TransactionStatus>;
   kycStatus?: Maybe<TransactionKycStatus>;
+  launchAfterUpdate?: Maybe<Scalars['Boolean']>;
   accountStatus?: Maybe<AccountStatus>;
+  transferOrderChanges?: Maybe<TransactionUpdateTransferOrderChanges>;
+  benchmarkTransferOrderChanges?: Maybe<TransactionUpdateTransferOrderChanges>;
+};
+
+export type TransactionUpdateTransferOrderChanges = {
+  orderId?: Maybe<Scalars['String']>;
+  hash?: Maybe<Scalars['String']>;
 };
 
 export type TransferListResult = {
@@ -2523,11 +2540,11 @@ export type TransferListResult = {
 
 export type TransferOrder = {
   __typename?: 'TransferOrder';
-  orderId: Scalars['ID'];
+  orderId?: Maybe<Scalars['ID']>;
   userId: Scalars['String'];
   transactionId?: Maybe<Scalars['String']>;
   provider?: Maybe<Scalars['String']>;
-  created: Scalars['DateTime'];
+  created?: Maybe<Scalars['DateTime']>;
   published?: Maybe<Scalars['DateTime']>;
   publishingResult?: Maybe<Scalars['String']>;
   executed?: Maybe<Scalars['DateTime']>;
@@ -3184,6 +3201,7 @@ export type Widget = {
   name: Scalars['String'];
   description?: Maybe<Scalars['String']>;
   created: Scalars['DateTime'];
+  createdBy?: Maybe<Scalars['String']>;
   transactionTypes?: Maybe<Array<TransactionType>>;
   currenciesCrypto?: Maybe<Array<Scalars['String']>>;
   currenciesFiat?: Maybe<Array<Scalars['String']>>;

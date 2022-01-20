@@ -16,6 +16,8 @@ import { CommonDataService } from 'src/app/services/common-data.service';
 import { CurrencyView } from 'src/app/model/payment.model';
 import { DeleteDialogBox } from 'src/app/components/dialogs/delete-box.dialog';
 import { MatDialog } from '@angular/material/dialog';
+import { YesNoDialogBox } from 'src/app/components/dialogs/yesno-box.dialog';
+import { stat } from 'fs/promises';
 
 @Component({
   templateUrl: 'transaction-list.component.html',
@@ -233,7 +235,17 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
     return !!this.selectedTransaction && this.selectedTransaction.id === transactionId;
   }
 
-  onSaveTransaction(transaction: Transaction): void {
+  onSaveTransaction(data: {
+    transaction: Transaction,
+    statusChanged: boolean
+  }): void {
+
+
+
+    console.log('onSaveTransaction', data.transaction);
+
+
+
     const dialogRef = this.dialog.open(DeleteDialogBox, {
       width: '400px',
       data: {
@@ -245,17 +257,43 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
     this.subscriptions.add(
       dialogRef.afterClosed().subscribe(result => {
         if (result === true) {
-          const requestData = this.adminService.updateTransaction(transaction);
-          if (requestData) {
-            requestData.subscribe(({ data }) => {
-              this.selectedTransaction = undefined;
-              this.loadList();
-            }, (error) => {
-              if (this.auth.token === '') {
-                this.router.navigateByUrl('/');
-              }
-            });
+          if (data.statusChanged) {
+            this.saveConfirmedTransaction(data.transaction);
+          } else {
+            this.updateTransaction(data.transaction, false);
           }
+        }
+      })
+    );
+  }
+
+  saveConfirmedTransaction(transaction: Transaction): void {
+    const dialogRef = this.dialog.open(YesNoDialogBox, {
+      width: '400px',
+      data: {
+        title: 'Update transaction',
+        message: `You are going to change the transaction status. Should we restart the transaction handling after saving?`
+      }
+    });
+    this.subscriptions.add(
+      dialogRef.afterClosed().pipe(take(1)).subscribe(result => {
+        console.log('yesno?', result);
+        if (result && result !== 0) {
+          this.updateTransaction(transaction, result === 1);
+        }
+      })
+    );
+  }
+
+  updateTransaction(transaction: Transaction, restartTransaction: boolean): void {
+    const requestData = this.adminService.updateTransaction(transaction, restartTransaction);
+    this.subscriptions.add(
+      requestData.subscribe(({ data }) => {
+        this.selectedTransaction = undefined;
+        this.loadList();
+      }, (error) => {
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
         }
       })
     );

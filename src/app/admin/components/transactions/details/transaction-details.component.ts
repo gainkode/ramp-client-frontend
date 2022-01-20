@@ -1,10 +1,15 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { LayoutService } from 'src/app/admin/services/layout.service';
-import { Rate, Transaction, TransactionType } from 'src/app/model/generated-models';
-import { CurrencyView } from 'src/app/model/payment.model';
+import { YesNoDialogBox } from 'src/app/components/dialogs/yesno-box.dialog';
+import { AccountStatus, KycStatus, Rate, Transaction, TransactionKycStatus, TransactionStatus, TransactionType, TransferOrder } from 'src/app/model/generated-models';
+import { CurrencyView, TransactionKycStatusList, TransactionStatusList, UserStatusList } from 'src/app/model/payment.model';
 import { TransactionItemDeprecated } from 'src/app/model/transaction.model';
 import { ExchangeRateService } from 'src/app/services/rate.service';
+import { getTransactionStatusHash } from 'src/app/utils/utils';
 
 @Component({
   selector: 'app-transaction-details',
@@ -14,6 +19,7 @@ import { ExchangeRateService } from 'src/app/services/rate.service';
 export class TransactionDetailsComponent implements OnInit, OnDestroy {
   @Input() set transaction(val: TransactionItemDeprecated | undefined) {
     this.setFormData(val);
+    this.pStatusHash = val?.statusHash ?? 0;
     this.layoutService.setBackdrop(!val?.id);
   }
   @Input() cancelable = false;
@@ -29,13 +35,21 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
       }
     }
   }
-  @Output() save = new EventEmitter<Transaction>();
+  @Output() save = new EventEmitter<{
+    transaction: Transaction,
+    statusChanged: boolean
+  }>();
   @Output() delete = new EventEmitter<string>();
   @Output() cancel = new EventEmitter();
 
   private pNumberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
+  private pStatusHash = 0;
+  private subscriptions: Subscription = new Subscription();
 
   data: TransactionItemDeprecated | undefined = undefined;
+  accountStatuses = UserStatusList;
+  kycStatuses = TransactionKycStatusList;
+  transactionStatuses = TransactionStatusList;
   removable = false;
   transactionId = '';
   currenciesToSpend: CurrencyView[] = [];
@@ -48,11 +62,16 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
     currencyToReceive: [undefined, { validators: [Validators.required], updateOn: 'change' }],
     amountToReceive: [undefined, { validators: [Validators.required, Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
     amountToSpend: [undefined, { validators: [Validators.required, Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
-    rate: [0, { validators: [Validators.required, Validators.pattern(this.pNumberPattern)], updateOn: 'change' }]
+    rate: [0, { validators: [Validators.required, Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
+    fee: [0, { validators: [Validators.required, Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
+    transactionStatus: [TransactionStatus.New, { validators: [Validators.required], updateOn: 'change' }],
+    kycStatus: [KycStatus.Unknown, { validators: [Validators.required], updateOn: 'change' }],
+    accountStatus: [AccountStatus.Closed, { validators: [Validators.required], updateOn: 'change' }],
   });
 
   constructor(
     private formBuilder: FormBuilder,
+    public dialog: MatDialog,
     private exhangeRate: ExchangeRateService,
     private layoutService: LayoutService
   ) { }
@@ -80,13 +99,13 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
     } else {
       this.exhangeRate.setCurrency(this.form.get('currencyToSpend')?.value, this.form.get('currencyToReceive')?.value, TransactionType.Deposit);
     }
-    this.exhangeRate.update(); 
+    this.exhangeRate.update();
   }
 
-  private setFormData(val: TransactionItemDeprecated | undefined) {
+  private setFormData(val: TransactionItemDeprecated | undefined): void {
     this.data = val;
     this.transactionId = val?.id ?? '';
-    this.removable = val?.statusInfo?.value.canBeCancelled ?? false;
+    this.removable = true;//val?.statusInfo?.value.canBeCancelled ?? false;  // confirmed
     if (this.data) {
       this.form.get('address')?.setValue(this.data.address);
       this.form.get('amountToSpend')?.setValue(this.data.amountToSpend);
@@ -94,6 +113,10 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
       this.form.get('currencyToSpend')?.setValue(this.data?.currencyToSpend);
       this.form.get('currencyToReceive')?.setValue(this.data?.currencyToReceive);
       this.form.get('rate')?.setValue(this.data.rate);
+      this.form.get('fee')?.setValue(this.data.fees);
+      this.form.get('transactionStatus')?.setValue(this.data.status);
+      this.form.get('kycStatus')?.setValue(this.data.kycStatusValue);
+      this.form.get('accountStatus')?.setValue(this.data.accountStatusValue);
       this.startExchangeRate();
     }
   }
@@ -113,9 +136,28 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
         amountToReceive: (!this.data?.initialAmount) ? this.form.get('amountToReceive')?.value : undefined,
         initialAmountToReceive: (this.data?.initialAmount) ? this.form.get('amountToReceive')?.value : undefined,
         rate: (!this.data?.initialAmount) ? parseFloat(this.form.get('rate')?.value ?? '0') : undefined,
-        initialRate: (this.data?.initialAmount) ? parseFloat(this.form.get('rate')?.value ?? '0') : undefined
+        feeFiat: parseFloat(this.form.get('fee')?.value ?? '0'),
+        status: this.form.get('transactionStatus')?.value,
+        kycStatus: this.form.get('kycStatus')?.value,
+        accountStatus: this.form.get('accountStatus')?.value,
+        initialRate: (this.data?.initialAmount) ? parseFloat(this.form.get('rate')?.value ?? '0') : undefined,
+        transferOrder: {
+          orderId: this.data?.transferOrderId,
+          transferHash: this.data?.transferOrderHash
+        },
+        benchmarkTransferOrder: {
+          orderId: this.data?.benchmarkTransferOrderId,
+          transferHash: this.data?.benchmarkTransferOrderHash
+        }
       } as Transaction;
-      this.save.emit(transaction);
+      const hash = getTransactionStatusHash(
+        transaction.status,
+        transaction.kycStatus ?? TransactionKycStatus.KycWaiting,
+        transaction.accountStatus ?? AccountStatus.Closed);
+      this.save.emit({
+        transaction,
+        statusChanged: this.pStatusHash !== hash
+      });
     }
   }
 

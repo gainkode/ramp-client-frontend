@@ -107,3 +107,15 @@ export function getPaymentTitles(paymentId: PaymentWidgetType): PaymentTitleInfo
     }
     return result;
 }
+
+export function getTransactionStatusHash(transactionStatus: string, kycStatus: string, accountStatus: string): number {
+    const sum = `${transactionStatus}${kycStatus}${accountStatus}`;
+    let hash = 0, i, chr;
+    if (sum.length === 0) return hash;
+    for (i = 0; i < sum.length; i++) {
+        chr = sum.charCodeAt(i);
+        hash = ((hash << 5) - hash) + chr;
+        hash |= 0; // Convert to 32bit integer
+    }
+    return hash;
+}
