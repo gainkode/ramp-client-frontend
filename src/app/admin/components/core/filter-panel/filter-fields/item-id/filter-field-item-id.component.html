@@ -9,7 +9,6 @@
         </mat-chip>
         <input #idInput
                placeholder="Type ID here"
-               [matAutocomplete]="auto"
                [matChipInputFor]="chipList"
                (input)="handleIdInputChange($event)"
                (matChipInputTokenEnd)="handleOptionAdded($event)">
