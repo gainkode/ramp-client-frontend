@@ -142,9 +142,10 @@ export class Filter {
     }
     const startDate = (isNaN(startNum)) ? undefined : new Date(startNum);
     const endDate = (isNaN(endNum)) ? undefined : new Date(endNum);
+    const def = startDate || endDate;
     return {
-      from: startDate,
-      to: endDate
+      from: (def) ? (startDate ?? new Date(0)) : startDate,
+      to: (def) ? (endDate ?? new Date()) : endDate
     } as DateTimeInterval;
   }
 }
