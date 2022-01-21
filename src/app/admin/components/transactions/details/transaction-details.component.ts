@@ -1,11 +1,17 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
+import { AdminDataService } from 'src/app/admin/services/admin-data.service';
 import { LayoutService } from 'src/app/admin/services/layout.service';
+import { DeleteDialogBox } from 'src/app/components/dialogs/delete-box.dialog';
+import { YesNoDialogBox } from 'src/app/components/dialogs/yesno-box.dialog';
 import { AccountStatus, KycStatus, Rate, Transaction, TransactionKycStatus, TransactionStatus, TransactionType, TransferOrder } from 'src/app/model/generated-models';
 import { CurrencyView, TransactionKycStatusList, TransactionStatusList, UserStatusList } from 'src/app/model/payment.model';
 import { TransactionItemDeprecated } from 'src/app/model/transaction.model';
+import { AuthService } from 'src/app/services/auth.service';
 import { ExchangeRateService } from 'src/app/services/rate.service';
 import { getTransactionStatusHash } from 'src/app/utils/utils';
 
@@ -18,30 +24,20 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
   @Input() set transaction(val: TransactionItemDeprecated | undefined) {
     this.setFormData(val);
     this.pStatusHash = val?.statusHash ?? 0;
+    this.setCurrencies(this.pCurrencies);
     this.layoutService.setBackdrop(!val?.id);
   }
   @Input() cancelable = false;
   @Input() set currencies(list: CurrencyView[]) {
-    if (this.data) {
-      const currencyToSpendSymbol = this.data?.currencyToSpend;
-      const currencyToSpend = list.find(x => x.id === currencyToSpendSymbol);
-      if (currencyToSpend) {
-        this.currenciesToSpend = list.filter(x => x.fiat === currencyToSpend.fiat);
-        this.currenciesToReceive = list.filter(x => x.fiat === !currencyToSpend.fiat);
-        this.form.get('currencyToSpend')?.setValue(this.data?.currencyToSpend);
-        this.form.get('currencyToReceive')?.setValue(this.data?.currencyToReceive);
-      }
-    }
+    this.pCurrencies = list;
+    this.setCurrencies(list);
   }
-  @Output() save = new EventEmitter<{
-    transaction: Transaction,
-    statusChanged: boolean
-  }>();
-  @Output() delete = new EventEmitter<string>();
+  @Output() save = new EventEmitter();
   @Output() cancel = new EventEmitter();
 
   private pNumberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
   private pStatusHash = 0;
+  private pCurrencies: CurrencyView[] = [];
   private subscriptions: Subscription = new Subscription();
 
   data: TransactionItemDeprecated | undefined = undefined;
@@ -73,9 +69,12 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
 
   constructor(
     private formBuilder: FormBuilder,
+    private router: Router,
+    private auth: AuthService,
     public dialog: MatDialog,
     private exhangeRate: ExchangeRateService,
-    private layoutService: LayoutService
+    private layoutService: LayoutService,
+    private adminService: AdminDataService
   ) { }
 
   ngOnInit(): void {
@@ -84,6 +83,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.exhangeRate.stop();
+    this.subscriptions.unsubscribe();
   }
 
   onExchangeRateUpdated(rate: Rate | undefined, countDownTitle: string, countDownValue: string, error: string): void {
@@ -102,6 +102,19 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
       this.exhangeRate.setCurrency(this.form.get('currencyToSpend')?.value, this.form.get('currencyToReceive')?.value, TransactionType.Deposit);
     }
     this.exhangeRate.update();
+  }
+
+  private setCurrencies(list: CurrencyView[]): void {
+    if (this.data) {
+      const currencyToSpendSymbol = this.data?.currencyToSpend;
+      const currencyToSpend = list.find(x => x.id === currencyToSpendSymbol);
+      if (currencyToSpend) {
+        this.currenciesToSpend = list.filter(x => x.fiat === currencyToSpend.fiat);
+        this.currenciesToReceive = list.filter(x => x.fiat === !currencyToSpend.fiat);
+        this.form.get('currencyToSpend')?.setValue(this.data?.currencyToSpend);
+        this.form.get('currencyToReceive')?.setValue(this.data?.currencyToReceive);
+      }
+    }
   }
 
   private setFormData(val: TransactionItemDeprecated | undefined): void {
@@ -129,6 +142,58 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
 
   updateRate(): void {
     this.form.get('rate')?.setValue(this.currentRate);
+  }
+
+  private saveTransaction(transaction: Transaction, statusChanged: boolean): void {
+    const dialogRef = this.dialog.open(DeleteDialogBox, {
+      width: '400px',
+      data: {
+        title: 'Update transaction',
+        message: `You are going to update transaction data. Confirm operation.`,
+        button: 'CONFIRM'
+      }
+    });
+    this.subscriptions.add(
+      dialogRef.afterClosed().subscribe(result => {
+        if (result === true) {
+          if (statusChanged) {
+            this.saveConfirmedTransaction(transaction);
+          } else {
+            this.updateTransaction(transaction, false);
+          }
+        }
+      })
+    );
+  }
+
+  private saveConfirmedTransaction(transaction: Transaction): void {
+    const dialogRef = this.dialog.open(YesNoDialogBox, {
+      width: '400px',
+      data: {
+        title: 'Update transaction',
+        message: `You are going to change the transaction status. Should we restart the transaction handling after saving?`
+      }
+    });
+    this.subscriptions.add(
+      dialogRef.afterClosed().pipe(take(1)).subscribe(result => {
+        if (result && result !== 0) {
+          this.updateTransaction(transaction, result === 1);
+        }
+      })
+    );
+  }
+
+  updateTransaction(transaction: Transaction, restartTransaction: boolean): void {
+    const requestData = this.adminService.updateTransaction(transaction, restartTransaction);
+    this.subscriptions.add(
+      requestData.subscribe(({ data }) => {
+        this.save.emit();
+      }, (error) => {
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
+      })
+    );
   }
 
   onSubmit(): void {
@@ -160,16 +225,40 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
         transaction.status,
         transaction.kycStatus ?? TransactionKycStatus.KycWaiting,
         transaction.accountStatus ?? AccountStatus.Closed);
-      this.save.emit({
-        transaction,
-        statusChanged: this.pStatusHash !== hash
-      });
+      this.saveTransaction(transaction, this.pStatusHash !== hash);
     }
   }
 
-  onDeleteTransaction(): void {
+  private deleteTransaction(): void {
+    const requestData = this.adminService.deleteTransaction(this.transactionId);
+    this.subscriptions.add(
+      requestData.subscribe(({ data }) => {
+        this.save.emit();
+      }, (error) => {
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
+      })
+    );
+  }
+
+  onDelete(): void {
     if (this.transactionId !== '' && this.removable) {
-      this.delete.emit(this.transactionId);
+      const dialogRef = this.dialog.open(DeleteDialogBox, {
+        width: '400px',
+        data: {
+          title: 'Delete transaction',
+          message: `You are going to delete selected transaction. Confirm operation.`,
+          button: 'DELETE'
+        }
+      });
+      this.subscriptions.add(
+        dialogRef.afterClosed().subscribe(result => {
+          if (result === true) {
+            this.deleteTransaction();
+          }
+        })
+      );
     }
   }
 

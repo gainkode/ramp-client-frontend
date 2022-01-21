@@ -2,8 +2,10 @@
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
         <section>
-            <app-details-attribute label="Transaction Id" [value]="transactionId"
+            <app-details-attribute *ngIf="cancelable" label="Transaction Id" [value]="transactionId"
                 [linkUrl]="'/admin/transactions/'+ transactionId"></app-details-attribute>
+            <app-details-attribute *ngIf="!cancelable" label="Transaction Id" [value]="transactionId"></app-details-attribute>
+
             <app-details-attribute label="Transaction Created" [value]="data?.created"></app-details-attribute>
             <app-details-attribute label="Transaction Completed" [value]="data?.executed"></app-details-attribute>
             <app-details-attribute label="First Name" [value]="data?.user?.firstName"></app-details-attribute>
@@ -171,7 +173,7 @@
             <button mat-flat-button color="primary" type="submit">
                 SAVE
             </button>
-            <button *ngIf="removable" mat-flat-button color="warn" (click)="onDeleteTransaction()">
+            <button *ngIf="removable" mat-flat-button type="button" color="warn" (click)="onDelete()">
                 DELETE
             </button>
             <button *ngIf="cancelable" mat-flat-button (click)="onCancel()">

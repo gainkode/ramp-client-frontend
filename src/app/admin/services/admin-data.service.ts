@@ -1054,10 +1054,8 @@ mutation UpdateTransaction(
   $kycStatus: TransactionKycStatus
   $accountStatus: AccountStatus
   $launchAfterUpdate: Boolean
-  $transferOrderId: String
-  $transferOrderHash: String
-  $benchmarkTransferOrderId: String
-  $benchmarkTransferOrderHash: String
+  $transferOrder: TransactionUpdateTransferOrderChanges
+  $benchmarkTransferOrder: TransactionUpdateTransferOrderChanges
 ) {
   updateTransaction(
     transactionId: $transactionId
@@ -1073,14 +1071,8 @@ mutation UpdateTransaction(
       kycStatus: $kycStatus
       accountStatus: $accountStatus
       launchAfterUpdate: $launchAfterUpdate
-      transferOrderChanges: {
-        orderId: $transferOrderId
-        hash: $transferOrderHash
-      }
-      benchmarkTransferOrderChanges: {
-        orderId: $benchmarkTransferOrderId
-        hash: $benchmarkTransferOrderHash
-      }
+      transferOrderChanges: $transferOrder
+      benchmarkTransferOrderChanges: $benchmarkTransferOrder
     }
   ) {
     transactionId
@@ -1536,8 +1528,6 @@ export class AdminDataService {
       })
       .pipe(
         map(result => {
-          console.log(result);
-
           if (result.data?.getTransactions?.list && result.data?.getTransactions?.count) {
             return {
               list: result.data.getTransactions.list.map(val => new TransactionItemDeprecated(val)),
@@ -2173,9 +2163,10 @@ export class AdminDataService {
       kycStatus: data.kycStatus,
       accountStatus: data.accountStatus,
       launchAfterUpdate: restartTransaction,
-      transferOrderChanges: transfer,
-      benchmarkTransferOrderChanges: benchmark
+      transferOrder: transfer,
+      benchmarkTransferOrder: benchmark
     };
+
 
     console.log(vars);
 
