@@ -50,7 +50,7 @@ export class TransactionItemDeprecated {
   transferOrderId = '';
   transferOrderHash = '';
   benchmarkTransferOrderId = '';
-  benchmarkTransferOrderHash = ''
+  benchmarkTransferOrderHash = '';
   address = '';
   ip = '';
   euro = 0;

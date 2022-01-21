@@ -2,9 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
 import { LayoutService } from 'src/app/admin/services/layout.service';
-import { YesNoDialogBox } from 'src/app/components/dialogs/yesno-box.dialog';
 import { AccountStatus, KycStatus, Rate, Transaction, TransactionKycStatus, TransactionStatus, TransactionType, TransferOrder } from 'src/app/model/generated-models';
 import { CurrencyView, TransactionKycStatusList, TransactionStatusList, UserStatusList } from 'src/app/model/payment.model';
 import { TransactionItemDeprecated } from 'src/app/model/transaction.model';
@@ -55,6 +53,8 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
   currenciesToSpend: CurrencyView[] = [];
   currenciesToReceive: CurrencyView[] = [];
   currentRate = 0;
+  showTransferHash = false;
+  showBenchmarkTransferHash = false;
 
   form = this.formBuilder.group({
     address: ['', { validators: [Validators.required], updateOn: 'change' }],
@@ -67,6 +67,8 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
     transactionStatus: [TransactionStatus.New, { validators: [Validators.required], updateOn: 'change' }],
     kycStatus: [KycStatus.Unknown, { validators: [Validators.required], updateOn: 'change' }],
     accountStatus: [AccountStatus.Closed, { validators: [Validators.required], updateOn: 'change' }],
+    transferHash: [undefined],
+    benchmarkTransferHash: [undefined]
   });
 
   constructor(
@@ -117,6 +119,10 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
       this.form.get('transactionStatus')?.setValue(this.data.status);
       this.form.get('kycStatus')?.setValue(this.data.kycStatusValue);
       this.form.get('accountStatus')?.setValue(this.data.accountStatusValue);
+      this.form.get('transferHash')?.setValue(this.data.transferOrderHash);
+      this.form.get('benchmarkTransferHash')?.setValue(this.data.benchmarkTransferOrderHash);
+      this.showTransferHash = (this.data.transferOrderId !== '');
+      this.showBenchmarkTransferHash = (this.data.benchmarkTransferOrderId !== '');
       this.startExchangeRate();
     }
   }
@@ -143,11 +149,11 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
         initialRate: (this.data?.initialAmount) ? parseFloat(this.form.get('rate')?.value ?? '0') : undefined,
         transferOrder: {
           orderId: this.data?.transferOrderId,
-          transferHash: this.data?.transferOrderHash
+          transferHash: this.form.get('transferHash')?.value ?? ''
         },
         benchmarkTransferOrder: {
           orderId: this.data?.benchmarkTransferOrderId,
-          transferHash: this.data?.benchmarkTransferOrderHash
+          transferHash: this.form.get('benchmarkTransferHash')?.value ?? ''
         }
       } as Transaction;
       const hash = getTransactionStatusHash(

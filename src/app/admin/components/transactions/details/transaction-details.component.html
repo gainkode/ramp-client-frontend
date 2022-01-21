@@ -116,6 +116,19 @@
             <app-details-attribute label="IP Address" [value]="data?.ip"></app-details-attribute>
             <app-details-attribute label="Initiated from" [value]="data?.transactionSourceName"></app-details-attribute>
             <app-details-attribute label="Wallet type" [value]="data?.userModeName"></app-details-attribute>
+
+            <!-- End-user transfer hash -->
+            <mat-form-field *ngIf="showTransferHash" class="form-element">
+                <mat-label>End-user transfer hash</mat-label>
+                <input matInput formControlName="transferHash" />
+            </mat-form-field>
+
+            <!-- Benchmark transfer hash -->
+            <mat-form-field *ngIf="showBenchmarkTransferHash" class="form-element">
+                <mat-label>Benchmark transfer hash</mat-label>
+                <input matInput formControlName="benchmarkTransferHash" />
+            </mat-form-field>
+
             <app-details-attribute label="Last Updated" [value]="data?.updated"></app-details-attribute>
         </section>
 
