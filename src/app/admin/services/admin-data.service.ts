@@ -203,7 +203,11 @@ const GET_COST_SETTINGS = gql`
 
 const GET_SETTINGS_KYC_TIERS = gql`
 query GetSettingsKycTiers {
-  getSettingsKycTiers {
+  getSettingsKycTiers(
+    orderBy: [
+      { orderBy: "amount", desc: false }
+    ]
+  ) {
       count
       list {
         settingsKycTierId
