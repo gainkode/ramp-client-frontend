@@ -82,6 +82,9 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
     if (this.fields.includes('transactionStatus')) {
       controlsConfig.transactionStatuses = [[]];
     }
+    if (this.fields.includes('tier')) {
+      controlsConfig.tiers = [[]];
+    }
     if (this.fields.includes('widget')) {
       controlsConfig.widgets = [[]];
     }
@@ -163,6 +166,9 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
       }
       if (this.fields.includes('transactionStatus')) {
         this.filterForm.controls.transactionStatuses.setValue([]);
+      }
+      if (this.fields.includes('tier')) {
+        this.filterForm.controls.tiers.setValue([]);
       }
       if (this.fields.includes('widget')) {
         this.filterForm.controls.widgets.setValue([]);

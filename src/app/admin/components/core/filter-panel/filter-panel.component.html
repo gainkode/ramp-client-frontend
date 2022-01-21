@@ -65,6 +65,9 @@
                 </mat-select>
             </mat-form-field>
 
+            <app-filter-field-user-tier *ngIf="field === 'tier'" formControlName="tiers">
+            </app-filter-field-user-tier>
+
             <mat-form-field *ngIf="field === 'transactionStatus'">
                 <mat-label>Transaction Statuses</mat-label>
                 <mat-select formControlName="transactionStatuses" multiple>

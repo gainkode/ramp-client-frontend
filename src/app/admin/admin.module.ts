@@ -77,6 +77,7 @@ import { SystemUserListComponent } from './components/system-users/list/user-lis
 import { SystemUserSingleComponent } from './components/system-users/user-single/user-single.component';
 import { SystemUserDetailsComponent } from './components/system-users/details/user-details.component';
 import { DirectiveModule } from '../directives/directives.module';
+import { FilterFieldUserTierComponent } from './components/core/filter-panel/filter-fields/user-tier/filter-field-user-tier.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -150,6 +151,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
     FilterFieldCountryComponent,
     FilterFieldWidgetComponent,
     FilterFieldRiskAlertCodeComponent,
+    FilterFieldUserTierComponent,
     DetailsAttributeComponent,
     WidgetEditorComponent,
     AdminSettingsComponent,

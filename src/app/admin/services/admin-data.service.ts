@@ -16,6 +16,7 @@ import {
   QueryGetSettingsFeeArgs,
   QueryGetSettingsKycArgs,
   QueryGetSettingsKycLevelsArgs,
+  QueryGetSettingsKycTiersArgs,
   QueryGetTransactionsArgs,
   QueryGetUserKycInfoArgs,
   QueryGetUsersArgs,
@@ -25,6 +26,8 @@ import {
   SettingsCommon,
   SettingsFeeListResult, SettingsKycLevelListResult,
   SettingsKycListResult,
+  SettingsKycTier,
+  SettingsKycTierListResult,
   Transaction,
   TransactionListResult,
   TransactionUpdateTransferOrderChanges,
@@ -37,7 +40,7 @@ import {
   Widget,
   WidgetListResult
 } from '../../model/generated-models';
-import { KycLevel, KycScheme } from '../../model/identification.model';
+import { KycLevel, KycScheme, TierItem } from '../../model/identification.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TransactionItemDeprecated } from '../../model/transaction.model';
 import { catchError, finalize, map, tap } from 'rxjs/operators';
@@ -193,6 +196,18 @@ const GET_COST_SETTINGS = gql`
         targetInstruments
         targetTransactionTypes
         targetPaymentProviders
+      }
+    }
+  }
+`;
+
+const GET_SETTINGS_KYC_TIERS = gql`
+query GetSettingsKycTiers {
+  getSettingsKycTiers {
+      count
+      list {
+        settingsKycTierId
+        name
       }
     }
   }
@@ -1342,6 +1357,28 @@ export class AdminDataService {
       query: GET_COST_SETTINGS,
       fetchPolicy: 'network-only'
     });
+  }
+
+  getSettingsKycTiers(): Observable<{ list: Array<SettingsKycTier>; count: number; }> {
+    return this.watchQuery<{ getSettingsKycTiers: SettingsKycTierListResult }, QueryGetSettingsKycTiersArgs>({
+      query: GET_SETTINGS_KYC_TIERS,
+      fetchPolicy: 'network-only'
+    })
+      .pipe(
+        map(result => {
+          if (result.data?.getSettingsKycTiers?.list && result.data?.getSettingsKycTiers?.count) {
+            return {
+              list: result.data.getSettingsKycTiers.list,
+              count: result.data.getSettingsKycTiers.count
+            };
+          } else {
+            return {
+              list: [],
+              count: 0
+            };
+          }
+        })
+      );
   }
 
   getKycSettings(): Observable<{ list: Array<KycScheme>; count: number; }> {
