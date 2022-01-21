@@ -36,6 +36,7 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
     'completedDateEnd',
     'paymentInstrument',
     'transactionType',
+    'transactionStatus',
     'widget',
     'walletAddress',
     'users',

@@ -545,6 +545,7 @@ export type Mutation = {
   updateBankAccount?: Maybe<User>;
   deleteBankAccount?: Maybe<User>;
   changeUserKycTier?: Maybe<User>;
+  exportUsersToCsv?: Maybe<Scalars['Boolean']>;
   signup: LoginResult;
   login: LoginResult;
   logout: Scalars['Boolean'];
@@ -580,6 +581,7 @@ export type Mutation = {
   deleteMyWidget?: Maybe<Widget>;
   deleteWidget?: Maybe<Widget>;
   addMyWidgetUserParams?: Maybe<WidgetUserParams>;
+  exportWidgetsToCsv?: Maybe<Scalars['Boolean']>;
   updateRiskAlertType?: Maybe<RiskAlertType>;
 };
 
@@ -866,6 +868,11 @@ export type MutationChangeUserKycTierArgs = {
 };
 
 
+export type MutationExportUsersToCsvArgs = {
+  userIds?: Maybe<Array<Scalars['String']>>;
+};
+
+
 export type MutationSignupArgs = {
   email: Scalars['String'];
   type: UserType;
@@ -1053,6 +1060,11 @@ export type MutationDeleteWidgetArgs = {
 
 export type MutationAddMyWidgetUserParamsArgs = {
   widgetUserParams?: Maybe<WidgetUserParamsInput>;
+};
+
+
+export type MutationExportWidgetsToCsvArgs = {
+  widgetIds?: Maybe<Array<Scalars['String']>>;
 };
 
 
@@ -1700,6 +1712,7 @@ export type QueryMyTransactionsArgs = {
 
 export type QueryGetTransactionsArgs = {
   transactionIdsOnly?: Maybe<Array<Scalars['String']>>;
+  transactionStatusesOnly?: Maybe<Array<Scalars['String']>>;
   userIdsOnly?: Maybe<Array<Scalars['String']>>;
   widgetIdsOnly?: Maybe<Array<Scalars['String']>>;
   sourcesOnly?: Maybe<Array<TransactionSource>>;
@@ -1893,9 +1906,10 @@ export type SettingsCost = {
   targetInstruments?: Maybe<Array<Scalars['String']>>;
   targetTransactionTypes?: Maybe<Array<Scalars['String']>>;
   targetPaymentProviders?: Maybe<Array<Scalars['String']>>;
-  terms: Scalars['String'];
+  terms?: Maybe<Scalars['String']>;
   created: Scalars['DateTime'];
   createdBy?: Maybe<Scalars['String']>;
+  bankAccounts?: Maybe<Scalars['String']>;
   default?: Maybe<Scalars['Boolean']>;
   deleted?: Maybe<Scalars['DateTime']>;
 };
@@ -1909,6 +1923,7 @@ export type SettingsCostInput = {
   targetTransactionTypes?: Maybe<Array<TransactionType>>;
   targetPaymentProviders?: Maybe<Array<Scalars['String']>>;
   terms?: Maybe<Scalars['String']>;
+  bankAccounts?: Maybe<Scalars['String']>;
   default?: Maybe<Scalars['Boolean']>;
   deleted?: Maybe<Scalars['DateTime']>;
 };
@@ -1921,7 +1936,8 @@ export type SettingsCostListResult = {
 
 export type SettingsCostShort = {
   __typename?: 'SettingsCostShort';
-  terms: Scalars['String'];
+  terms?: Maybe<Scalars['String']>;
+  bankAccounts?: Maybe<Scalars['String']>;
 };
 
 export enum SettingsCostTargetFilterType {

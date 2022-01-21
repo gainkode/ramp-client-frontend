@@ -1,5 +1,5 @@
 import { Observable, Subject } from 'rxjs';
-import { KycStatusList, PaymentInstrumentList, RiskLevelViewList, TransactionSourceList, TransactionTypeList, UserStatusList, UserTypeList } from 'src/app/model/payment.model';
+import { KycStatusList, PaymentInstrumentList, RiskLevelViewList, TransactionSourceList, TransactionStatusList, TransactionTypeList, UserStatusList, UserTypeList } from 'src/app/model/payment.model';
 import { Filter } from '../../../model/filter.model';
 import { Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
@@ -26,6 +26,7 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
   userTypeOptions = UserTypeList;
   userStatusOptions = UserStatusList;
   transactionTypeOptions = TransactionTypeList;
+  transactionStatusOptions = TransactionStatusList;
   kysStatusOptions = KycStatusList;
 
   filterForm?: FormGroup;
@@ -77,6 +78,9 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
     }
     if (this.fields.includes('transactionType')) {
       controlsConfig.transactionTypes = [[]];
+    }
+    if (this.fields.includes('transactionStatus')) {
+      controlsConfig.transactionStatuses = [[]];
     }
     if (this.fields.includes('widget')) {
       controlsConfig.widgets = [[]];
@@ -156,6 +160,9 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
       }
       if (this.fields.includes('transactionType')) {
         this.filterForm.controls.transactionTypes.setValue([]);
+      }
+      if (this.fields.includes('transactionStatus')) {
+        this.filterForm.controls.transactionStatuses.setValue([]);
       }
       if (this.fields.includes('widget')) {
         this.filterForm.controls.widgets.setValue([]);

@@ -34,7 +34,7 @@ export class CostScheme {
             this.id = data.settingsCostId;
             this.isDefault = data.default as boolean;
             this.description = data.description as string;
-            this.terms = new CostShemeTerms(data.terms);
+            this.terms = new CostShemeTerms(data.terms ?? '');
             data.targetInstruments?.forEach(x => this.instrument.push(x as PaymentInstrument));
             data.targetPaymentProviders?.forEach(x => this.provider.push(x));
             data.targetTransactionTypes?.forEach(x => this.trxType.push(x as TransactionType));

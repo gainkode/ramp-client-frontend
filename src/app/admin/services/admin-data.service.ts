@@ -1509,6 +1509,7 @@ export class AdminDataService {
       userIdsOnly: filter?.users,
       widgetIdsOnly: filter?.widgets,
       transactionTypesOnly: filter?.transactionTypes,
+      transactionStatusesOnly: filter?.transactionStatuses,
       // userTierLevelsOnly: $userTierLevelsOnly
       riskLevelsOnly: filter?.riskLevels,
       paymentInstrumentsOnly: filter?.paymentInstruments,
@@ -1520,6 +1521,9 @@ export class AdminDataService {
       first: takeItems,
       orderBy: [{ orderBy: orderField, desc: orderDesc }]
     };
+
+    console.log(vars);
+
     return this.watchQuery<{ getTransactions: TransactionListResult }, QueryGetTransactionsArgs>(
       {
         query: GET_TRANSACTIONS,

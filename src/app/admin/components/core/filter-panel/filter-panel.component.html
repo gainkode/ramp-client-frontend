@@ -65,6 +65,15 @@
                 </mat-select>
             </mat-form-field>
 
+            <mat-form-field *ngIf="field === 'transactionStatus'">
+                <mat-label>Transaction Statuses</mat-label>
+                <mat-select formControlName="transactionStatuses" multiple>
+                    <mat-option *ngFor="let item of transactionStatusOptions" [value]="item.id">
+                        {{item.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
             <mat-form-field *ngIf="field === 'paymentInstrument'">
                 <mat-label>Payment methods</mat-label>
                 <mat-select formControlName="paymentInstruments" multiple>
