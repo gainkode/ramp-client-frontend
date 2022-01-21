@@ -59,8 +59,12 @@ export class FilterFieldUserTierComponent implements OnInit, OnDestroy, ControlV
   onChange = (_: any) => {
   }
 
-  writeValue(value: CommonTargetValue[]): void {
-    this.selectedOptions = value;
+  // writeValue(value: CommonTargetValue[]): void {
+  //   this.selectedOptions = value;
+  // }
+
+  writeValue(value: any): void {
+    console.log('writeValue', value);
   }
 
   registerOnChange(fn: any): void {

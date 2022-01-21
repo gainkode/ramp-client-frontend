@@ -20,8 +20,8 @@ export class Filter {
   public paymentInstruments?: Array<PaymentInstrument>;
   public createdDateInterval?: DateTimeInterval;
   public completedDateInterval?: DateTimeInterval;
+  public registrationDateInterval?: DateTimeInterval;
   public transactionDate?: Date;
-  public registrationDate?: Date;
   public walletAddress?: string;
   public totalBuyVolumeOver?: number;
   public transactionCountOver?: number;
@@ -105,6 +105,10 @@ export class Filter {
 
     if (filterValues.completedDateStart || filterValues.completedDateEnd) {
       this.completedDateInterval = this.getDateTimeRange(filterValues.completedDateRangeStart, filterValues.completedDateRangeEnd);
+    }
+
+    if (filterValues.registrationDateRangeStart || filterValues.registrationDateRangeEnd) {
+      this.registrationDateInterval = this.getDateTimeRange(filterValues.registrationDateRangeStart, filterValues.registrationDateRangeEnd);
     }
 
     if (filterValues.walletAddress) {

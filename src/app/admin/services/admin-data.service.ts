@@ -462,7 +462,7 @@ const GET_USERS = gql`
     $countriesOnly: [String!]
     $countryCodeType: CountryCodeType!
     $kycStatusesOnly: [KycStatus!]
-    $registrationDateOnly: [DateTime!]
+    $registrationDateInterval: DateTimeInterval
     $widgetIdsOnly: [String!]
     $totalBuyVolumeOver: Int
     $transactionCountOver: Int
@@ -481,7 +481,7 @@ const GET_USERS = gql`
       countriesOnly: $countriesOnly
       countryCodeType: $countryCodeType
       kycStatusesOnly: $kycStatusesOnly
-      registrationDateOnly: $registrationDateOnly
+      registrationDateInterval: $registrationDateInterval
       widgetIdsOnly: $widgetIdsOnly
       totalBuyVolumeOver: $totalBuyVolumeOver
       transactionCountOver: $transactionCountOver
@@ -1599,7 +1599,7 @@ export class AdminDataService {
       countriesOnly: filter?.countries,
       countryCodeType: CountryCodeType.Code3,
       kycStatusesOnly: filter.kycStatuses,
-      //registrationDateOnly: [DateTime]
+      registrationDateInterval: filter?.registrationDateInterval,
       widgetIdsOnly: filter?.widgets,
       totalBuyVolumeOver: filter?.totalBuyVolumeOver,
       transactionCountOver: filter?.transactionCountOver,

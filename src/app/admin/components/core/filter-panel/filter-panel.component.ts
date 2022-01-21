@@ -76,6 +76,12 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
     if (this.fields.includes('completedDateEnd')) {
       controlsConfig.completedDateRangeEnd = [undefined];
     }
+    if (this.fields.includes('registrationDateStart')) {
+      controlsConfig.registrationDateRangeStart = [undefined];
+    }
+    if (this.fields.includes('registrationDateEnd')) {
+      controlsConfig.registrationDateRangeEnd = [undefined];
+    }
     if (this.fields.includes('transactionType')) {
       controlsConfig.transactionTypes = [[]];
     }
@@ -155,11 +161,11 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
       if (this.fields.includes('completedDateEnd')) {
         this.filterForm.controls.completedDateRangeEnd.setValue(undefined);
       }
-      if (this.fields.includes('createdDateInterval')) {
-        this.filterForm.controls.createdDateRangeStart.setValue(undefined);
+      if (this.fields.includes('registrationDateStart')) {
+        this.filterForm.controls.registrationDateRangeStart.setValue(undefined);
       }
-      if (this.fields.includes('createdDateStart')) {
-        this.filterForm.controls.createdDateRangeStart.setValue(undefined);
+      if (this.fields.includes('registrationDateEnd')) {
+        this.filterForm.controls.registrationDateRangeEnd.setValue(undefined);
       }
       if (this.fields.includes('transactionType')) {
         this.filterForm.controls.transactionTypes.setValue([]);
