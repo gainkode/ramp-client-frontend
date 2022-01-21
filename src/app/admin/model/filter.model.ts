@@ -1,4 +1,4 @@
-import { AccountStatus, CountryCodeType, DateTimeInterval, KycStatus, PaymentInstrument, RiskAlertCodes, RiskLevel, TransactionSource, TransactionStatus, TransactionType, UserMode, UserType } from '../../model/generated-models';
+import { AccountStatus, DateTimeInterval, KycStatus, PaymentInstrument, RiskAlertCodes, RiskLevel, TransactionSource, TransactionStatus, TransactionType, UserMode, UserType } from '../../model/generated-models';
 import { EmptyObject } from 'apollo-angular/types';
 
 export class Filter {
@@ -14,7 +14,7 @@ export class Filter {
   public riskAlertCode?: RiskAlertCodes;
   public transactionTypes?: Array<TransactionType>;
   public transactionStatuses?: Array<TransactionStatus>;
-  public userTierLevels?: string;
+  public tiers?: Array<string>;
   public kycStatuses?: Array<KycStatus>;
   public riskLevels?: Array<RiskLevel>;
   public paymentInstruments?: Array<PaymentInstrument>;
@@ -65,8 +65,6 @@ export class Filter {
       this.transactionDate = isNaN(dtNum) ? undefined : new Date(dtNum);
     }
 
-    //registrationDateOnly: [DateTime]
-
     if (filterValues.widgets) {
       this.widgets = filterValues.widgets;
     }
@@ -87,8 +85,8 @@ export class Filter {
       this.transactionStatuses = filterValues.transactionStatuses;
     }
 
-    if (filterValues.userTierLevels) {
-      this.userTierLevels = filterValues.userTierLevels;
+    if (filterValues.tiers) {
+      this.tiers = filterValues.tiers;
     }
 
     if (filterValues.riskLevels) {

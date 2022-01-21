@@ -6,6 +6,7 @@ import {
   NG_VALUE_ACCESSOR
 } from '@angular/forms';
 import { CommonTargetValue } from 'src/app/model/common.model';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'app-filter-field-user-tier',
@@ -20,10 +21,8 @@ import { CommonTargetValue } from 'src/app/model/common.model';
   ]
 })
 export class FilterFieldUserTierComponent implements OnInit, OnDestroy, ControlValueAccessor {
-  @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
-
   filteredOptions: CommonTargetValue[] = [];
-  selectedOptions: CommonTargetValue[] = [];
+  selectedItems: string[] = [];
 
   private subscriptions: Subscription = new Subscription();
 
@@ -57,14 +56,11 @@ export class FilterFieldUserTierComponent implements OnInit, OnDestroy, ControlV
   }
 
   onChange = (_: any) => {
+    console.log('change', _);
   }
 
-  // writeValue(value: CommonTargetValue[]): void {
-  //   this.selectedOptions = value;
-  // }
-
   writeValue(value: any): void {
-    console.log('writeValue', value);
+    this.selectedItems = value;
   }
 
   registerOnChange(fn: any): void {
@@ -76,4 +72,9 @@ export class FilterFieldUserTierComponent implements OnInit, OnDestroy, ControlV
   }
 
   // endregion
+
+  handleSelectionChange(event: MatSelectChange): void {
+    this.selectedItems = event.value;
+    this.onChange(event.value);
+  }
 }

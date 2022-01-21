@@ -31,10 +31,6 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
 
   filterForm?: FormGroup;
 
-  get createdDateIntervalStartField(): AbstractControl | null {
-    return this.filterForm?.controls.createdDateIntervalStart ?? null;
-  }
-
   constructor(private formBuilder: FormBuilder) {
 
   }

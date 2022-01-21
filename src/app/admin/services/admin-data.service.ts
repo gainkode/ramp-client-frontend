@@ -343,6 +343,7 @@ const GET_TRANSACTIONS = gql`
     $countriesOnly: [String!]
     $countryCodeType: CountryCodeType
     $transactionTypesOnly: [TransactionType!]
+    $transactionStatusesOnly: [String!]
     $userTierLevelsOnly: [String!]
     $riskLevelsOnly: [String!]
     $paymentInstrumentsOnly: [PaymentInstrument!]
@@ -362,6 +363,7 @@ const GET_TRANSACTIONS = gql`
       countriesOnly: $countriesOnly
       countryCodeType: $countryCodeType
       transactionTypesOnly: $transactionTypesOnly
+      transactionStatusesOnly: $transactionStatusesOnly
       userTierLevelsOnly: $userTierLevelsOnly
       riskLevelsOnly: $riskLevelsOnly
       paymentInstrumentsOnly: $paymentInstrumentsOnly
@@ -1537,7 +1539,6 @@ export class AdminDataService {
     orderDesc: boolean,
     filter?: Filter
   ): Observable<{ list: Array<TransactionItemDeprecated>; count: number; }> {
-
     const vars: QueryGetTransactionsArgs = {
       accountTypesOnly: filter?.accountTypes,
       countriesOnly: filter?.countries,
@@ -1547,7 +1548,7 @@ export class AdminDataService {
       widgetIdsOnly: filter?.widgets,
       transactionTypesOnly: filter?.transactionTypes,
       transactionStatusesOnly: filter?.transactionStatuses,
-      // userTierLevelsOnly: $userTierLevelsOnly
+      userTierLevelsOnly: filter?.tiers,
       riskLevelsOnly: filter?.riskLevels,
       paymentInstrumentsOnly: filter?.paymentInstruments,
       createdDateInterval: filter?.createdDateInterval,
@@ -1558,9 +1559,6 @@ export class AdminDataService {
       first: takeItems,
       orderBy: [{ orderBy: orderField, desc: orderDesc }]
     };
-
-    console.log(vars);
-
     return this.watchQuery<{ getTransactions: TransactionListResult }, QueryGetTransactionsArgs>(
       {
         query: GET_TRANSACTIONS,
@@ -2209,7 +2207,7 @@ export class AdminDataService {
     };
 
 
-    console.log(vars);
+    console.log('updateTransaction', vars);
 
 
     return this.mutate({

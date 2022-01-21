@@ -1,6 +1,6 @@
 <mat-form-field class="form-element">
     <mat-label>Verification Tiers</mat-label>
-    <mat-select formControlName="transactionStatuses" multiple>
+    <mat-select [value]="selectedItems" multiple (selectionChange)="handleSelectionChange($event)">
         <mat-option *ngFor="let item of filteredOptions" [value]="item.id">
             {{item.title}}
         </mat-option>
