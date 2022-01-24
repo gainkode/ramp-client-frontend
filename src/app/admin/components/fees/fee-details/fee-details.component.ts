@@ -1,11 +1,10 @@
-import { Component, ElementRef, ViewChild, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, ElementRef, ViewChild, Input, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Validators, FormBuilder } from '@angular/forms';
-import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { PaymentDataService } from '../../../../services/payment.service';
 import {
   FeeScheme, AccountTypeFilterList,
   WidgetFilterList, WidgetIdFilterList
@@ -28,13 +27,11 @@ import { Filter } from 'src/app/admin/model/filter.model';
   templateUrl: 'fee-details.component.html',
   styleUrls: ['fee-details.component.scss']
 })
-export class FeeDetailsComponent implements OnInit {
+export class FeeDetailsComponent implements OnInit, OnDestroy {
   @Input()
   set currentScheme(scheme: FeeScheme | null) {
     this.forceValidate = false;
     this.setFormData(scheme);
-    this.currency = scheme?.currency as string;
-    this.settingsId = (scheme !== null) ? scheme?.id : '';
     this.layoutService.setBackdrop(!this.settingsId);
   }
 
@@ -46,14 +43,13 @@ export class FeeDetailsComponent implements OnInit {
   @ViewChild('auto') matAutocomplete!: MatAutocomplete;
 
   settingsId = '';
-
   errorMessage = '';
   selectedTab = 0;
   targetEntity = '';
   targetType = SettingsFeeTargetFilterType.None;
   currency = '';
   separatorKeysCodes: number[] = [ENTER, COMMA];
-  filteredTargetValues: Observable<CommonTargetValue[]> | undefined;
+  filteredTargetValues$: Observable<CommonTargetValue[]> | undefined;
 
   targets = FeeTargetFilterList;
   transactionTypes = TransactionTypeList;
@@ -67,6 +63,7 @@ export class FeeDetailsComponent implements OnInit {
   private forceValidate = false;
   private destroy$ = new Subject();
   private targetSearchString$ = new BehaviorSubject<string>('');
+  private subscriptions: Subscription = new Subscription();
 
   schemeForm = this.formBuilder.group({
     id: [''],
@@ -123,12 +120,12 @@ export class FeeDetailsComponent implements OnInit {
           Validators.required, Validators.pattern('^[0-9.]+$')
         ], updateOn: 'change'
       }],
-    beneficiaryName: ['', { validators: [Validators.required], updateOn: 'change' }],
-    beneficiaryAddress: ['', { validators: [Validators.required], updateOn: 'change' }],
-    iban: ['', { validators: [Validators.required], updateOn: 'change' }],
-    bankName: ['', { validators: [Validators.required], updateOn: 'change' }],
-    bankAddress: ['', { validators: [Validators.required], updateOn: 'change' }],
-    swift: ['', { validators: [Validators.required], updateOn: 'change' }]
+    beneficiaryName: [''],
+    beneficiaryAddress: [''],
+    iban: [''],
+    bankName: [''],
+    bankAddress: [''],
+    swift: ['']
   });
 
   get defaultSchemeFlag(): string {
@@ -187,7 +184,6 @@ export class FeeDetailsComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private dataService: PaymentDataService,
     private adminDataService: AdminDataService,
     private errorHandler: ErrorService,
     private layoutService: LayoutService
@@ -195,44 +191,44 @@ export class FeeDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.filteredTargetValues = of(this.filterTargetValues(''));
-
-    this.schemeForm.get('target')?.valueChanges.subscribe(val => {
-      this.clearTargetValues();
-      this.setTargetValidator();
-      if (this.targetType === SettingsFeeTargetFilterType.WidgetId ||
-        this.targetType === SettingsFeeTargetFilterType.AccountId ||
-        this.targetType === SettingsFeeTargetFilterType.InitiateFrom) {
-        this.targetSearchString$.pipe(
-          takeUntil(this.destroy$),
-          distinctUntilChanged(),
-          debounceTime(1000),
-          switchMap(searchString => this.getFilteredOptions(searchString))
-        ).subscribe(options => {
-          this.filteredTargetValues = of(options);
-        });
-      } else {
-        this.filteredTargetValues = this.schemeForm.get('targetValue')?.valueChanges.pipe(
-          startWith(''),
-          map(value => this.filterTargetValues(value)));
-      }
-    });
+    this.filteredTargetValues$ = of(this.filterTargetValues(''));
+    this.subscriptions.add(
+      this.schemeForm.get('target')?.valueChanges.subscribe(val => this.updateTarget(val))
+    );
     this.getPaymentProviders();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.subscriptions.unsubscribe();
+  }
+
+  private updateTarget(val: any): void {
+    this.clearTargetValues();
+    this.setTargetValidator();
+    if (this.targetType === SettingsFeeTargetFilterType.WidgetId ||
+      this.targetType === SettingsFeeTargetFilterType.AccountId ||
+      this.targetType === SettingsFeeTargetFilterType.InitiateFrom) {
+      this.targetSearchString$.pipe(
+        takeUntil(this.destroy$),
+        distinctUntilChanged(),
+        debounceTime(1000),
+        switchMap(searchString => this.getFilteredOptions(searchString))
+      ).subscribe(options => {
+        this.filteredTargetValues$ = of(options);
+      });
+    } else {
+      this.filteredTargetValues$ = this.schemeForm.get('targetValue')?.valueChanges.pipe(
+        startWith(''),
+        map(value => this.filterTargetValues(value)));
+    }
   }
 
   private getFilteredOptions(searchString: string): Observable<CommonTargetValue[]> {
     if (searchString) {
       if (this.targetType === SettingsFeeTargetFilterType.AccountId) {
-        return this.adminDataService.getUsers(0, 100, 'email', false, new Filter({ search: searchString })).pipe(
-          map(result => {
-            return result.list.map(user => {
-              return {
-                id: user.id,
-                title: user.email
-              } as CommonTargetValue;
-            });
-          })
-        );
+        const accountFilter = new Filter({ search: searchString });
+        return this.getFilteredAccounts(accountFilter);
       } else {
         return of([]);
       }
@@ -241,9 +237,35 @@ export class FeeDetailsComponent implements OnInit {
     }
   }
 
+  private getFilteredAccounts(filter: Filter): Observable<CommonTargetValue[]> {
+    return this.adminDataService.getUsers(0, 100, 'email', false, filter).pipe(
+      map(result => {
+        return result.list.map(user => {
+          return {
+            id: user.id,
+            title: user.email
+          } as CommonTargetValue;
+        });
+      })
+    );
+  }
+
+  private getFilteredWidgets(filter: Filter): Observable<CommonTargetValue[]> {
+    return this.adminDataService.getWidgets(0, 100, 'widgetId', false, filter).pipe(
+      map(result => {
+        return result.list.map(widget => {
+          return {
+            id: widget.id,
+            title: widget.id
+          } as CommonTargetValue;
+        });
+      })
+    );
+  }
+
   private getPaymentProviders(): void {
     this.providers = [];
-    this.dataService.getProviders()?.valueChanges.subscribe(({ data }) => {
+    this.adminDataService.getProviders()?.valueChanges.subscribe(({ data }) => {
       const providers = data.getPaymentProviders as PaymentProvider[];
       this.providers = providers?.map((val) => new PaymentProviderView(val)) as PaymentProviderView[];
     }, (error) => {
@@ -286,9 +308,11 @@ export class FeeDetailsComponent implements OnInit {
     }
   }
 
-  setFormData(scheme: FeeScheme | null): void {
+  private setFormData(scheme: FeeScheme | null): void {
     this.schemeForm.reset();
     this.defaultSchemeName = '';
+    this.currency = scheme?.currency ?? '';
+    this.settingsId = (scheme !== null) ? scheme?.id : '';
     if (scheme !== null) {
       this.removeIncorrectTargetValues(scheme);
       this.defaultSchemeName = scheme.isDefault ? scheme.name : '';
@@ -298,10 +322,30 @@ export class FeeDetailsComponent implements OnInit {
       this.schemeForm.get('isDefault')?.setValue(scheme?.isDefault);
       this.schemeForm.get('target')?.setValue(scheme?.target);
       this.targetType = scheme?.target ?? SettingsFeeTargetFilterType.None;
-      if (this.targetType === SettingsFeeTargetFilterType.WidgetId ||
-        this.targetType === SettingsFeeTargetFilterType.AccountId ||
-        this.targetType === SettingsFeeTargetFilterType.InitiateFrom) {
-        this.schemeForm.get('targetValues')?.setValue(scheme?.targetValues);
+      if (this.targetType === SettingsFeeTargetFilterType.AccountId) {
+        const filter = new Filter({
+          users: scheme?.targetValues
+        });
+        this.getFilteredAccounts(filter).subscribe(result => {
+          this.targteValues = result;
+          this.schemeForm.get('targetValues')?.setValue(result.map(x => x.title));
+        });
+      } else if (this.targetType === SettingsFeeTargetFilterType.WidgetId) {
+        const filter = new Filter({
+          users: scheme?.targetValues
+        });
+        this.getFilteredAccounts(filter).subscribe(result => {
+          this.targteValues = result;
+          this.schemeForm.get('targetValues')?.setValue(result.map(x => x.title));
+        });
+      } else if (this.targetType === SettingsFeeTargetFilterType.InitiateFrom) {
+        const filter = new Filter({
+          users: scheme?.targetValues
+        });
+        this.getFilteredAccounts(filter).subscribe(result => {
+          this.targteValues = result;
+          this.schemeForm.get('targetValues')?.setValue(result.map(x => x.title));
+        });
       } else {
         this.schemeForm.get('targetValues')?.setValue(scheme?.targetValues);
       }
@@ -503,7 +547,7 @@ export class FeeDetailsComponent implements OnInit {
 
   clearTargetValues(): void {
     this.targteValues = [];
-    this.filteredTargetValues = of([]);
+    this.filteredTargetValues$ = of([]);
     this.schemeForm.get('targetValues')?.setValue([]);
   }
 
@@ -523,7 +567,7 @@ export class FeeDetailsComponent implements OnInit {
   }
 
   private addTarget(value: string): void {
-    this.filteredTargetValues?.subscribe(val => {
+    this.filteredTargetValues$?.subscribe(val => {
       const valueObject = val.find(x => x.title === value);
       if (valueObject) {
         this.targteValues.push(valueObject);

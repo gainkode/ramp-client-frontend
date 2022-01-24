@@ -25,6 +25,7 @@ const routes: Routes = [
   {
     path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)
   },
+  { path: 'terms/:id', component: TermsComponent },
   { path: 'terms', component: TermsComponent },
   { path: '', component: IntroComponent },
   { path: '**', redirectTo: '' }

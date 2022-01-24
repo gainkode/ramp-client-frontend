@@ -21,7 +21,6 @@ export class ExchangeRateService {
     private transaction: TransactionType = TransactionType.Deposit;
 
     constructor(private dataService: PaymentDataService, private errorHandler: ErrorService) {
-        console.log('start exchange rate timer');
         this.startTimer();
     }
 

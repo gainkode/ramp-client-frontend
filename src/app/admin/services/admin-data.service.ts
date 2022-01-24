@@ -10,30 +10,37 @@ import {
   CountryCodeType,
   DashboardStats,
   KycInfo,
+  PaymentProvider,
   QueryGetDashboardStatsArgs,
   QueryGetNotificationsArgs, QueryGetRiskAlertsArgs,
   QueryGetSettingsFeeArgs,
   QueryGetSettingsKycArgs,
   QueryGetSettingsKycLevelsArgs,
+  QueryGetSettingsKycTiersArgs,
   QueryGetTransactionsArgs,
   QueryGetUserKycInfoArgs,
   QueryGetUsersArgs,
+  QueryGetUserStateArgs,
   QueryGetWalletsArgs,
   QueryGetWidgetsArgs, RiskAlertResultList,
   SettingsCommon,
   SettingsFeeListResult, SettingsKycLevelListResult,
   SettingsKycListResult,
+  SettingsKycTier,
+  SettingsKycTierListResult,
   Transaction,
   TransactionListResult,
+  TransactionUpdateTransferOrderChanges,
   User,
   UserListResult,
   UserNotificationLevel,
   UserNotificationListResult,
+  UserState,
   UserType,
   Widget,
   WidgetListResult
 } from '../../model/generated-models';
-import { KycLevel, KycScheme } from '../../model/identification.model';
+import { KycLevel, KycScheme, TierItem } from '../../model/identification.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TransactionItemDeprecated } from '../../model/transaction.model';
 import { catchError, finalize, map, tap } from 'rxjs/operators';
@@ -52,6 +59,7 @@ import { RiskAlertItem } from '../model/risk-alert.model';
 
 const GET_DASHBOARD_STATS = gql`
   query GetDashboardStats(
+    $transactionDateOnly: DateTime
     $userIdOnly: [String!],
     $widgetIdOnly: [String!],
     $sourcesOnly: [TransactionSource!],
@@ -60,6 +68,7 @@ const GET_DASHBOARD_STATS = gql`
     $accountTypesOnly: [UserType!]
   ) {
     getDashboardStats(
+      transactionDateOnly: $transactionDateOnly
       userIdOnly: $userIdOnly
       widgetIdOnly: $widgetIdOnly
       sourcesOnly: $sourcesOnly
@@ -192,6 +201,22 @@ const GET_COST_SETTINGS = gql`
   }
 `;
 
+const GET_SETTINGS_KYC_TIERS = gql`
+query GetSettingsKycTiers {
+  getSettingsKycTiers(
+    orderBy: [
+      { orderBy: "amount", desc: false }
+    ]
+  ) {
+      count
+      list {
+        settingsKycTierId
+        name
+      }
+    }
+  }
+`;
+
 const GET_KYC_SETTINGS = gql`
   query GetSettingsKyc {
     getSettingsKyc(
@@ -318,6 +343,17 @@ const GET_TRANSACTIONS = gql`
     $transactionIdsOnly: [String!]
     $userIdsOnly: [String!]
     $sourcesOnly: [TransactionSource!]
+    $widgetIdsOnly: [String!]
+    $countriesOnly: [String!]
+    $countryCodeType: CountryCodeType
+    $transactionTypesOnly: [TransactionType!]
+    $transactionStatusesOnly: [String!]
+    $userTierLevelsOnly: [String!]
+    $riskLevelsOnly: [String!]
+    $paymentInstrumentsOnly: [PaymentInstrument!]
+    $createdDateInterval: DateTimeInterval
+    $completedDateInterval: DateTimeInterval
+    $walletAddressOnly: String
     $filter: String
     $skip: Int
     $first: Int
@@ -327,6 +363,17 @@ const GET_TRANSACTIONS = gql`
       transactionIdsOnly: $transactionIdsOnly
       userIdsOnly: $userIdsOnly
       sourcesOnly: $sourcesOnly
+      widgetIdsOnly: $widgetIdsOnly
+      countriesOnly: $countriesOnly
+      countryCodeType: $countryCodeType
+      transactionTypesOnly: $transactionTypesOnly
+      transactionStatusesOnly: $transactionStatusesOnly
+      userTierLevelsOnly: $userTierLevelsOnly
+      riskLevelsOnly: $riskLevelsOnly
+      paymentInstrumentsOnly: $paymentInstrumentsOnly
+      createdDateInterval: $createdDateInterval
+      completedDateInterval: $completedDateInterval
+      walletAddressOnly: $walletAddressOnly
       filter: $filter
       skip: $skip
       first: $first
@@ -399,6 +446,8 @@ const GET_TRANSACTIONS = gql`
           refundOperationSn
           paymentInfo
         }
+        transferOrder { orderId transferHash }
+        benchmarkTransferOrder { orderId transferHash }
         data
         destination
         kycStatus
@@ -410,12 +459,42 @@ const GET_TRANSACTIONS = gql`
 
 const GET_USERS = gql`
   query GetUsers(
+    $userIds: [String!]
+    $accountTypesOnly: [UserType!]
+    $accountModesOnly: [UserMode!]
+    $accountStatusesOnly: [AccountStatus!]
+    $userTierLevelsOnly: [String!]
+    $riskLevelsOnly: [RiskLevel!]
+    $countriesOnly: [String!]
+    $countryCodeType: CountryCodeType!
+    $kycStatusesOnly: [KycStatus!]
+    $registrationDateInterval: DateTimeInterval
+    $widgetIdsOnly: [String!]
+    $totalBuyVolumeOver: Int
+    $transactionCountOver: Int
     $filter: String
     $skip: Int
     $first: Int
     $orderBy: [OrderBy!]
   ) {
-    getUsers(filter: $filter, skip: $skip, first: $first, orderBy: $orderBy) {
+    getUsers(
+      userIds: $userIds
+      accountTypesOnly: $accountTypesOnly
+      accountModesOnly: $accountModesOnly
+      accountStatusesOnly: $accountStatusesOnly
+      userTierLevelsOnly: $userTierLevelsOnly
+      riskLevelsOnly: $riskLevelsOnly
+      countriesOnly: $countriesOnly
+      countryCodeType: $countryCodeType
+      kycStatusesOnly: $kycStatusesOnly
+      registrationDateInterval: $registrationDateInterval
+      widgetIdsOnly: $widgetIdsOnly
+      totalBuyVolumeOver: $totalBuyVolumeOver
+      transactionCountOver: $transactionCountOver
+      filter: $filter,
+      skip: $skip,
+      first: $first,
+      orderBy: $orderBy) {
       count
       list {
         userId
@@ -440,7 +519,7 @@ const GET_USERS = gql`
         kycPrivateComment
         kycReviewRejectedType
         kycReviewRejectedLabels
-        # kycReviewResult
+        kycReviewResult
         kycStatusUpdateRequired
         phone
         postCode
@@ -503,6 +582,20 @@ const GET_USER_KYC_INFO = gql`
   }
 `;
 
+const GET_USER_STATE = gql`
+  query GetUserState(
+    $userId: String
+  ) {
+    getUserState(
+      userId: $userId
+    ) {
+      kycProviderLink
+      vaults {
+        totalBalanceEur
+      }
+    }
+  }
+`;
 
 const GET_WALLETS = gql`
   query GetWallets(
@@ -586,6 +679,17 @@ const GET_WIDGETS = gql`
       }
     }
   }
+`;
+
+const GET_PROVIDERS = gql`
+query GetProviders {
+  getPaymentProviders {
+    paymentProviderId
+    name
+    currencies
+    countries_code2
+  }
+}
 `;
 
 const GET_SETTINGS_COMMON = gql`
@@ -873,6 +977,7 @@ const UPDATE_USER = gql`
 mutation UpdateUser(
   $userId: ID!
   $email: String!,
+  $changePasswordRequired: Boolean,
   $firstName: String
   $lastName: String
   $birthday: DateTime
@@ -895,6 +1000,7 @@ mutation UpdateUser(
     userId: $userId
     user: {
       email: $email
+      changePasswordRequired: $changePasswordRequired
       firstName: $firstName
       lastName: $lastName
       birthday: $birthday
@@ -963,7 +1069,14 @@ mutation UpdateTransaction(
   $amountToSpend: Float
   $amountToReceive: Float
   $rate: Float
+  $feeFiat: Float
   $destination: String
+  $status: TransactionStatus
+  $kycStatus: TransactionKycStatus
+  $accountStatus: AccountStatus
+  $launchAfterUpdate: Boolean
+  $transferOrder: TransactionUpdateTransferOrderChanges
+  $benchmarkTransferOrder: TransactionUpdateTransferOrderChanges
 ) {
   updateTransaction(
     transactionId: $transactionId
@@ -973,7 +1086,14 @@ mutation UpdateTransaction(
       amountToSpend: $amountToSpend
       amountToReceive: $amountToReceive
       rate: $rate
+      feeFiat: $feeFiat
       destination: $destination
+      status: $status
+      kycStatus: $kycStatus
+      accountStatus: $accountStatus
+      launchAfterUpdate: $launchAfterUpdate
+      transferOrderChanges: $transferOrder
+      benchmarkTransferOrderChanges: $benchmarkTransferOrder
     }
   ) {
     transactionId
@@ -1197,6 +1317,7 @@ export class AdminDataService {
 
   getDashboardStats(filter: Filter): Observable<DashboardStats> {
     const vars: QueryGetDashboardStatsArgs = {
+      transactionDateOnly: filter.transactionDate,
       userIdOnly: filter.users,
       widgetIdOnly: filter.widgets,
       sourcesOnly: filter.sources,
@@ -1220,13 +1341,41 @@ export class AdminDataService {
     return this.watchQuery<{ getSettingsFee: SettingsFeeListResult }, QueryGetSettingsFeeArgs>({
       query: GET_FEE_SETTINGS,
       fetchPolicy: 'network-only'
+    }).pipe(
+      map(result => {
+        if (result.data?.getSettingsFee?.list && result.data?.getSettingsFee?.count) {
+          return {
+            list: result.data.getSettingsFee.list.map(item => new FeeScheme(item)),
+            count: result.data.getSettingsFee.count
+          };
+        } else {
+          return {
+            list: [],
+            count: 0
+          };
+        }
+      })
+    );
+  }
+
+  getCostSettings(): QueryRef<any, EmptyObject> {
+    return this.apollo.watchQuery<any>({
+      query: GET_COST_SETTINGS,
+      fetchPolicy: 'network-only'
+    });
+  }
+
+  getSettingsKycTiers(): Observable<{ list: Array<SettingsKycTier>; count: number; }> {
+    return this.watchQuery<{ getSettingsKycTiers: SettingsKycTierListResult }, QueryGetSettingsKycTiersArgs>({
+      query: GET_SETTINGS_KYC_TIERS,
+      fetchPolicy: 'network-only'
     })
       .pipe(
         map(result => {
-          if (result.data?.getSettingsFee?.list && result.data?.getSettingsFee?.count) {
+          if (result.data?.getSettingsKycTiers?.list && result.data?.getSettingsKycTiers?.count) {
             return {
-              list: result.data.getSettingsFee.list.map(item => new FeeScheme(item)),
-              count: result.data.getSettingsFee.count
+              list: result.data.getSettingsKycTiers.list,
+              count: result.data.getSettingsKycTiers.count
             };
           } else {
             return {
@@ -1236,17 +1385,6 @@ export class AdminDataService {
           }
         })
       );
-  }
-
-  getCostSettings(): QueryRef<any, EmptyObject> | null {
-    if (this.apollo.client !== undefined) {
-      return this.apollo.watchQuery<any>({
-        query: GET_COST_SETTINGS,
-        fetchPolicy: 'network-only'
-      });
-    } else {
-      return null;
-    }
   }
 
   getKycSettings(): Observable<{ list: Array<KycScheme>; count: number; }> {
@@ -1405,7 +1543,6 @@ export class AdminDataService {
     orderDesc: boolean,
     filter?: Filter
   ): Observable<{ list: Array<TransactionItemDeprecated>; count: number; }> {
-
     const vars: QueryGetTransactionsArgs = {
       accountTypesOnly: filter?.accountTypes,
       countriesOnly: filter?.countries,
@@ -1413,12 +1550,19 @@ export class AdminDataService {
       sourcesOnly: filter?.sources,
       userIdsOnly: filter?.users,
       widgetIdsOnly: filter?.widgets,
+      transactionTypesOnly: filter?.transactionTypes,
+      transactionStatusesOnly: filter?.transactionStatuses,
+      userTierLevelsOnly: filter?.tiers,
+      riskLevelsOnly: filter?.riskLevels,
+      paymentInstrumentsOnly: filter?.paymentInstruments,
+      createdDateInterval: filter?.createdDateInterval,
+      completedDateInterval: filter?.completedDateInterval,
+      walletAddressOnly: filter?.walletAddress,
       filter: filter?.search,
       skip: pageIndex * takeItems,
       first: takeItems,
       orderBy: [{ orderBy: orderField, desc: orderDesc }]
     };
-
     return this.watchQuery<{ getTransactions: TransactionListResult }, QueryGetTransactionsArgs>(
       {
         query: GET_TRANSACTIONS,
@@ -1450,12 +1594,22 @@ export class AdminDataService {
     filter: Filter
   ): Observable<{ list: UserItem[], count: number }> {
     const vars = {
+      userIds: filter?.users,
+      accountTypesOnly: filter?.accountTypes,
+      accountStatusesOnly: filter?.accountStatuses,
+      riskLevelsOnly: filter?.riskLevels,
+      countriesOnly: filter?.countries,
+      countryCodeType: CountryCodeType.Code3,
+      kycStatusesOnly: filter.kycStatuses,
+      registrationDateInterval: filter?.registrationDateInterval,
+      widgetIdsOnly: filter?.widgets,
+      totalBuyVolumeOver: filter?.totalBuyVolumeOver,
+      transactionCountOver: filter?.transactionCountOver,
       skip: pageIndex * takeItems,
       first: takeItems,
       orderBy: [{ orderBy: orderField, desc: orderDesc }],
       filter: filter?.search
     };
-
     return this.watchQuery<{ getUsers: UserListResult }, QueryGetUsersArgs>({
       query: GET_USERS,
       variables: vars,
@@ -1519,6 +1673,22 @@ export class AdminDataService {
           return undefined;
         })
       );
+  }
+
+  getUserState(id: string): Observable<UserState | undefined> {
+    return this.watchQuery<{ getUserState: UserState }, QueryGetUserStateArgs>({
+      query: GET_USER_STATE,
+      variables: {
+        userId: id
+      },
+      fetchPolicy: 'network-only'
+    }).pipe(map(res => {
+      const result = res?.data?.getUserState;
+      if (result) {
+        return result;
+      }
+      return undefined;
+    }));
   }
 
   getWallets(
@@ -1616,25 +1786,30 @@ export class AdminDataService {
       query: GET_WIDGETS,
       variables: vars,
       fetchPolicy: 'network-only'
-    })
-      .pipe(
-        map(result => {
-          if (result.data?.getWidgets?.list && result.data?.getWidgets?.count) {
-            return {
-              list: result.data.getWidgets.list.map(w => {
-                return new WidgetItem(w);
-              }),
-              count: result.data.getWidgets.count
-            };
-          } else {
-            return {
-              list: [],
-              count: 0
-            };
-          }
-        })
-      );
+    }).pipe(
+      map(result => {
+        if (result.data?.getWidgets?.list && result.data?.getWidgets?.count) {
+          return {
+            list: result.data.getWidgets.list.map(w => {
+              return new WidgetItem(w);
+            }),
+            count: result.data.getWidgets.count
+          };
+        } else {
+          return {
+            list: [],
+            count: 0
+          };
+        }
+      })
+    );
+  }
 
+  getProviders(): QueryRef<any, EmptyObject> {
+    return this.apollo.watchQuery<any>({
+      query: GET_PROVIDERS,
+      fetchPolicy: 'network-only'
+    });
   }
 
   getSettingsCommon(): QueryRef<any, EmptyObject> | null {
@@ -1848,36 +2023,12 @@ export class AdminDataService {
   }
 
   saveCustomer(customer: User): Observable<any> {
-
-    const vars = {
-      userId: customer.userId,
-      email: customer.email,
-      firstName: customer.firstName,
-      lastName: customer.lastName,
-      birthday: customer.birthday,
-      countryCode2: customer.countryCode2,
-      countryCode3: customer.countryCode3,
-      postCode: customer.postCode,
-      town: customer.town,
-      street: customer.street,
-      subStreet: customer.subStreet,
-      stateName: customer.stateName,
-      buildingName: customer.buildingName,
-      buildingNumber: customer.buildingNumber,
-      flatNumber: customer.flatNumber,
-      phone: customer.phone,
-      risk: customer.risk,
-      defaultFiatCurrency: customer.defaultFiatCurrency,
-      defaultCryptoCurrency: customer.defaultCryptoCurrency
-    };
-    console.log(vars);
-
-
     return this.apollo.mutate({
       mutation: UPDATE_USER,
       variables: {
         userId: customer.userId,
         email: customer.email,
+        changePasswordRequired: customer.changePasswordRequired,
         firstName: customer.firstName,
         lastName: customer.lastName,
         birthday: customer.birthday,
@@ -1929,43 +2080,31 @@ export class AdminDataService {
     });
   }
 
-  deleteCostSettings(settingsId: string): Observable<any> | null {
-    if (this.apollo.client !== undefined) {
-      return this.apollo.mutate({
-        mutation: DELETE_SETTINGS_COST,
-        variables: {
-          settingsId
-        }
-      });
-    } else {
-      return null;
-    }
+  deleteCostSettings(settingsId: string): Observable<any> {
+    return this.apollo.mutate({
+      mutation: DELETE_SETTINGS_COST,
+      variables: {
+        settingsId
+      }
+    });
   }
 
-  deleteKycSettings(settingsId: string): Observable<any> | null {
-    if (this.apollo.client !== undefined) {
-      return this.apollo.mutate({
-        mutation: DELETE_SETTINGS_KYC,
-        variables: {
-          settingsId
-        }
-      });
-    } else {
-      return null;
-    }
+  deleteKycSettings(settingsId: string): Observable<any> {
+    return this.apollo.mutate({
+      mutation: DELETE_SETTINGS_KYC,
+      variables: {
+        settingsId
+      }
+    });
   }
 
-  deleteKycLevelSettings(settingsId: string): Observable<any> | null {
-    if (this.apollo.client !== undefined) {
-      return this.apollo.mutate({
-        mutation: DELETE_KYC_LEVEL_SETTINGS,
-        variables: {
-          settingsId
-        }
-      });
-    } else {
-      return null;
-    }
+  deleteKycLevelSettings(settingsId: string): Observable<any> {
+    return this.apollo.mutate({
+      mutation: DELETE_KYC_LEVEL_SETTINGS,
+      variables: {
+        settingsId
+      }
+    });
   }
 
   deleteWidget(widgetId: string): Observable<any> {
@@ -1997,7 +2136,7 @@ export class AdminDataService {
     }));
   }
 
-  deleteCustomer(customerId: string): Observable<any> | null {
+  deleteCustomer(customerId: string): Observable<any> {
     return this.mutate({
       mutation: DELETE_CUSTOMER,
       variables: {
@@ -2039,7 +2178,21 @@ export class AdminDataService {
     }));
   }
 
-  updateTransaction(data: Transaction): Observable<any> {
+  updateTransaction(data: Transaction, restartTransaction: boolean): Observable<any> {
+    let benchmark: TransactionUpdateTransferOrderChanges | undefined = undefined;
+    let transfer: TransactionUpdateTransferOrderChanges | undefined = undefined;
+    if (data.transferOrder?.orderId !== '' && data.transferOrder?.transferHash !== '') {
+      transfer = {
+        orderId: data.transferOrder?.orderId,
+        hash: data.transferOrder?.transferHash
+      };
+    }
+    if (data.benchmarkTransferOrder?.orderId !== '' && data.benchmarkTransferOrder?.transferHash !== '') {
+      benchmark = {
+        orderId: data.benchmarkTransferOrder?.orderId,
+        hash: data.benchmarkTransferOrder?.transferHash
+      };
+    }
     const vars = {
       transactionId: data.transactionId,
       currencyToSpend: data.currencyToSpend,
@@ -2047,8 +2200,20 @@ export class AdminDataService {
       amountToSpend: data.amountToSpend,
       amountToReceive: data.amountToReceive,
       rate: data.rate,
-      destination: data.destination
+      feeFiat: data.feeFiat,
+      destination: data.destination,
+      status: data.status,
+      kycStatus: data.kycStatus,
+      accountStatus: data.accountStatus,
+      launchAfterUpdate: restartTransaction,
+      transferOrder: transfer,
+      benchmarkTransferOrder: benchmark
     };
+
+
+    console.log('updateTransaction', vars);
+
+
     return this.mutate({
       mutation: UPDATE_TRANSACTIONS,
       variables: vars

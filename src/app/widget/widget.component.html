@@ -84,7 +84,7 @@
         [transaction]="summary.transactionType" (onFinish)="resetWizard()"></app-widget-complete>
 
       <!-- Common settings reading -->
-      <app-widget-settings-service *ngIf="readCommonSettings" [summary]="summary" (onError)="handleError($event)"
+      <app-widget-settings-service *ngIf="readCommonSettings" [summary]="summary" [widgetId]="widget.widgetId" (onError)="handleError($event)"
         (onProgress)="progressChanged($event)" (onAuthenticationRequired)="settingsAuthRequired($event)"
         (onIdentificationRequired)="settingsIdRequired()" (onLoginRequired)="settingsLoginRequired($event)"
         (onKycStatusUpdate)="settingsKycState($event)" (onComplete)="settingsCommonComplete($event)">

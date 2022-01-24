@@ -3,6 +3,9 @@
         <button *ngFor="let item of providers" type="button" class="__widget-provider-item-button"
             (click)="onSelect.emit(item.id)" [disabled]="">
             <img class="__widget-provider-item-image" [src]="item.image">
+            <h2 class="__widget-provider-item-title">
+                {{item.name}}
+            </h2>
         </button>
     </div>
 

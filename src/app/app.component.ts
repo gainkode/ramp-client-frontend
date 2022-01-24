@@ -36,7 +36,7 @@ export class AppComponent implements OnInit {
           deny: 'Decline',
           allow: 'Accept',
           link: 'Cookies Policy',
-          href: '/terms',
+          href: '/terms/cookie',
           policy: 'Cookie Policy'
         },
         onStatusChange: function (status: any) {

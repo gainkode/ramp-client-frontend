@@ -1,7 +1,6 @@
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { WidgetItem } from '../../../model/widget.model';
 import { FormBuilder, Validators } from '@angular/forms';
-import { PaymentDataService } from '../../../../services/payment.service';
 import { ErrorService } from '../../../../services/error.service';
 import { LayoutService } from '../../../services/layout.service';
 import { PaymentProvider, SettingsCurrencyWithDefaults } from '../../../../model/generated-models';
@@ -75,7 +74,6 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
   constructor(
     private formBuilder: FormBuilder,
     private commonDataService: CommonDataService,
-    private paymentDataService: PaymentDataService,
     private adminDataService: AdminDataService,
     private layoutService: LayoutService,
     private errorHandler: ErrorService,
@@ -134,8 +132,7 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
 
   handleUserInputChange(event: Event): void {
     let searchString = event.target ? (event.target as HTMLInputElement).value : '';
-    searchString = searchString.toLowerCase()
-      .trim();
+    searchString = searchString.toLowerCase().trim();
     this.userSearchString$.next(searchString);
   }
 
@@ -151,8 +148,7 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
 
   handleCountrySearchInputChange(event: Event): void {
     let searchString = event.target ? (event.target as HTMLInputElement).value : '';
-    searchString = searchString.toLowerCase()
-      .trim();
+    searchString = searchString.toLowerCase().trim();
     this.countrySearchString$.next(searchString);
   }
 
@@ -204,8 +200,7 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
   private getFilteredCountryOptions(searchString: string): Observable<Country[]> {
     const filteredOptions = this.countryOptions.filter(c => {
       return (
-        !searchString || c.name.toLowerCase()
-          .includes(searchString)
+        !searchString || c.name.toLowerCase().includes(searchString)
       ) && !this.form.controls.countries?.value
         ?.some(s => {
           return s.code2 === c.code2;
@@ -219,7 +214,6 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
 
   private setFormData(widget: WidgetItem): void {
     if (widget) {
-
       const user$ = widget.userId ?
         this.getUserFilteredOptions(widget.userId)
           .pipe(
@@ -286,18 +280,16 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
 
   private loadPaymentProviders(): void {
     this.paymentProviderOptions = [];
-    this.paymentDataService.getProviders()
-      ?.valueChanges
-      .subscribe(({ data }) => {
-        const providers = data.getPaymentProviders as PaymentProvider[];
-        this.paymentProviderOptions = providers?.map((val) => new PaymentProviderView(val)) as PaymentProviderView[];
-      }, (error) => {
-        this.snackBar.open(
-          this.errorHandler.getError(error.message, 'Unable to load payment provider list.'),
-          undefined,
-          { duration: 5000 }
-        );
-      });
+    this.adminDataService.getProviders()?.valueChanges.subscribe(({ data }) => {
+      const providers = data.getPaymentProviders as PaymentProvider[];
+      this.paymentProviderOptions = providers?.map((val) => new PaymentProviderView(val)) as PaymentProviderView[];
+    }, (error) => {
+      this.snackBar.open(
+        this.errorHandler.getError(error.message, 'Unable to load payment provider list.'),
+        undefined,
+        { duration: 5000 }
+      );
+    });
   }
 
   private loadCurrencies(): void {

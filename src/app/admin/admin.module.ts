@@ -76,6 +76,9 @@ import { CustomerSingleComponent } from './components/customers/customer-single/
 import { SystemUserListComponent } from './components/system-users/list/user-list.component';
 import { SystemUserSingleComponent } from './components/system-users/user-single/user-single.component';
 import { SystemUserDetailsComponent } from './components/system-users/details/user-details.component';
+import { DirectiveModule } from '../directives/directives.module';
+import { FilterFieldUserTierComponent } from './components/core/filter-panel/filter-fields/user-tier/filter-field-user-tier.component';
+import { FilterFieldItemIdComponent } from './components/core/filter-panel/filter-fields/item-id/filter-field-item-id.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -109,7 +112,8 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
     MatSnackBarModule,
     ComponentsModule,
     AdminRoutingModule,
-    MaterialModule
+    MaterialModule,
+    DirectiveModule
   ],
   declarations: [
     MainMenuComponent,
@@ -148,6 +152,8 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
     FilterFieldCountryComponent,
     FilterFieldWidgetComponent,
     FilterFieldRiskAlertCodeComponent,
+    FilterFieldUserTierComponent,
+    FilterFieldItemIdComponent,
     DetailsAttributeComponent,
     WidgetEditorComponent,
     AdminSettingsComponent,

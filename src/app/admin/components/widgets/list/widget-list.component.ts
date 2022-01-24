@@ -3,7 +3,7 @@ import { AdminDataService } from '../../../services/admin-data.service';
 import { MatSort } from '@angular/material/sort';
 import { Filter } from '../../../model/filter.model';
 import { Subject, Subscription } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
 import { PageEvent } from '@angular/material/paginator';
 import { WidgetItem } from '../../../model/widget.model';
 import { LayoutService } from '../../../services/layout.service';
@@ -47,7 +47,7 @@ export class WidgetListComponent implements OnInit, OnDestroy, AfterViewInit {
   ];
 
   private destroy$ = new Subject();
-  private listSubscription = Subscription.EMPTY;
+  private subscriptions: Subscription = new Subscription();
 
   constructor(
     private layoutService: LayoutService,
@@ -59,9 +59,6 @@ export class WidgetListComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe(() => {
         this.selectedItem = undefined;
         this.loadData();
-        // setTimeout(() => {
-        //   this.loadData();
-        // }, 1500);
       });
 
     this.loadData();
@@ -69,6 +66,7 @@ export class WidgetListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy(): void {
     this.destroy$.next();
+    this.subscriptions.unsubscribe();
   }
 
   ngAfterViewInit(): void {
@@ -109,20 +107,18 @@ export class WidgetListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private loadData(): void {
-    this.listSubscription.unsubscribe();
-
-    this.listSubscription = this.adminDataService.getWidgets(
+    const listData$ = this.adminDataService.getWidgets(
       this.pageIndex,
       this.pageSize,
       this.sortedField,
       this.sortedDesc,
-      this.filter
-    )
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(result => {
+      this.filter).pipe(take(1));
+    this.subscriptions.add(
+      listData$.subscribe(result => {
         this.data = result.list;
         this.customerCount = result.count;
-      });
+      })
+    );
   }
 
   handlePage(event: PageEvent): PageEvent {

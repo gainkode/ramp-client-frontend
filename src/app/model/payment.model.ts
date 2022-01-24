@@ -3,12 +3,35 @@ import { CommonTargetValue } from './common.model';
 import {
     PaymentInstrument, PaymentProvider, TransactionType, TransactionStatus,
     SettingsFeeTargetFilterType, SettingsCostTargetFilterType, SettingsKycTargetFilterType,
-    UserType, KycProvider, UserMode, SettingsCurrency, Rate, TransactionSource, UserNotificationCodes, CustodyProvider, TransactionKycStatus, RiskLevel
+    UserType, KycProvider, UserMode, SettingsCurrency, Rate, TransactionSource, UserNotificationCodes, CustodyProvider, TransactionKycStatus, RiskLevel, PaymentProviderByInstrument, AccountStatus, KycStatus
 } from './generated-models';
 
 export class PaymentInstrumentView {
     id!: PaymentInstrument;
     name = '';
+}
+
+export class PaymentProviderInstrumentView {
+    id = '';
+    name = '';
+    image = '';
+    instrument: PaymentInstrument = PaymentInstrument.CreditCard;
+
+    constructor(data: PaymentProviderByInstrument) {
+        this.id = data.provider?.name ?? '';
+        this.name = data.provider?.name ?? '';
+        this.instrument = data.instrument ?? PaymentInstrument.CreditCard;
+        if (this.instrument === PaymentInstrument.Apm) {
+            this.name = 'APM';
+            this.image = './assets/svg-providers/bank-payment.svg';
+        } else if (this.instrument === PaymentInstrument.CreditCard) {
+            this.name = 'CARD PAYMENT';
+            this.image = './assets/svg-providers/credit-card.svg';
+        } else if (this.instrument === PaymentInstrument.WireTransfer) {
+            this.name = 'WIRE TRANSFER';
+            this.image = './assets/svg-providers/bank-payment.svg';
+        }
+    }
 }
 
 export class PaymentProviderView {
@@ -56,6 +79,16 @@ export class UserTypeView {
 
 export class UserModeView {
     id!: UserMode;
+    name = '';
+}
+
+export class AccountStatusView {
+    id!: AccountStatus;
+    name = '';
+}
+
+export class KycStatusView {
+    id!: KycStatus;
     name = '';
 }
 
@@ -271,6 +304,23 @@ export const UserModeShortList: Array<UserModeView> = [
     { id: UserMode.InternalWallet, name: 'Internal' },
     { id: UserMode.ExternalWallet, name: 'External' },
     { id: UserMode.OneTimeWallet, name: 'One Time wallet' }
+];
+
+export const UserStatusList: Array<AccountStatusView> = [
+    { id: AccountStatus.Closed, name: 'Closed' },
+    { id: AccountStatus.Banned, name: 'Banned' },
+    { id: AccountStatus.Live, name: 'Live' },
+    { id: AccountStatus.Suspended, name: 'Suspended' }
+];
+
+export const KycStatusList: Array<KycStatusView> = [
+    { id: KycStatus.Unknown, name: 'Unknown' },
+    { id: KycStatus.NotFound, name: 'Not Found' },
+    { id: KycStatus.Init, name: 'Initialization' },
+    { id: KycStatus.Pending, name: 'Pending' },
+    { id: KycStatus.Queued, name: 'Queued' },
+    { id: KycStatus.Completed, name: 'Completed' },
+    { id: KycStatus.OnHold, name: 'On Hold' }
 ];
 
 export const KycProviderList: Array<KycProviderView> = [

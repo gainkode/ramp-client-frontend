@@ -4,7 +4,7 @@ import { MatSort } from '@angular/material/sort';
 import { Filter } from '../../../model/filter.model';
 import { NotificationItem } from '../../../../model/notification.model';
 import { Subject, Subscription } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
 import { PageEvent } from '@angular/material/paginator';
 import { LayoutService } from 'src/app/admin/services/layout.service';
 import { AuthService } from 'src/app/services/auth.service';
@@ -42,7 +42,7 @@ export class NotificationListComponent implements OnInit, OnDestroy, AfterViewIn
   ];
 
   private destroy$ = new Subject();
-  private listSubscription = Subscription.EMPTY;
+  private subscriptions: Subscription = new Subscription();
 
 
   constructor(
@@ -63,6 +63,7 @@ export class NotificationListComponent implements OnInit, OnDestroy, AfterViewIn
 
   ngOnDestroy(): void {
     this.destroy$.next();
+    this.subscriptions.unsubscribe();
   }
 
   ngAfterViewInit(): void {
@@ -99,18 +100,19 @@ export class NotificationListComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   private loadData(): void {
-    this.listSubscription.unsubscribe();
-
-    this.listSubscription = this.adminDataService.getNotifications(
+    const listData$ = this.adminDataService.getNotifications(
       this.pageIndex,
       this.pageSize,
       this.sortedField,
       this.sortedDesc,
       this.filter
-    ).pipe(takeUntil(this.destroy$)).subscribe(result => {
-      this.data = result.list;
-      this.messageCount = result.count;
-    });
+    ).pipe(take(1));
+    this.subscriptions.add(
+      listData$.subscribe(result => {
+        this.data = result.list;
+        this.messageCount = result.count;
+      })
+    );
   }
 
   private isSelectedMessage(messageId: string): boolean {
@@ -125,15 +127,15 @@ export class NotificationListComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   onMessageResend(msgId: string): void {
-    const requestData = this.adminDataService.resendAdminNotification(msgId);
-    if (requestData) {
-      requestData.subscribe(({ data }) => {
+    const requestData$ = this.adminDataService.resendAdminNotification(msgId);
+    this.subscriptions.add(
+      requestData$.subscribe(({ data }) => {
         this.selectedItem = undefined;
       }, (error) => {
         if (this.auth.token === '') {
           this.router.navigateByUrl('/');
         }
-      });
-    }
+      })
+    );
   }
 }

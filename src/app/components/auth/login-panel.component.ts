@@ -6,6 +6,9 @@ import { SocialUser } from 'angularx-social-login';
 import { LoginResult, UserMode } from '../../model/generated-models';
 import { SignupInfoPanelComponent } from './signup-info.component';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { CommonDialogBox } from '../dialogs/common-box.dialog';
 
 @Component({
     selector: 'app-login-panel',
@@ -71,6 +74,7 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
     };
 
     constructor(
+        public dialog: MatDialog,
         private auth: AuthService,
         private errorHandler: ErrorService,
         private formBuilder: FormBuilder) { }
@@ -186,7 +190,17 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
                         }
                     }, (error) => {
                         this.progressChange.emit(false);
-                        this.registerError(this.errorHandler.getError(error.message, 'Incorrect login or password'));
+                        const errorMessage = this.errorHandler.getError(error.message, 'Incorrect login or password');
+                        if (this.errorHandler.getCurrentError().toLowerCase() === 'auth.password_has_to_be_changed') {
+                            this.dialog.open(CommonDialogBox, {
+                                width: '400px',
+                                data: {
+                                    title: errorMessage,
+                                    message: 'Your password has to be changed. Use the link we have sent to your email address to reset your password.'
+                                }
+                            });
+                        }
+                        this.registerError(errorMessage);
                     })
                 );
             } catch (e) {

@@ -138,6 +138,15 @@ export class WidgetComponent implements OnInit {
         //temp
         this.widget.source = TransactionSource.QuickCheckout;
       }
+      if (this.widget.amountFrom !== 0) {
+        this.summary.amountFrom = this.widget.amountFrom;
+      }
+      if (this.widget.currencyFrom !== '') {
+        this.summary.currencyFrom = this.widget.currencyFrom;
+      }
+      if (this.widget.currencyTo !== '') {
+        this.summary.currencyTo = this.widget.currencyTo;
+      }
     }
 
     if (!this.widget.disclaimer) {

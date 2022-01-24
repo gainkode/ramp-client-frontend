@@ -8,7 +8,7 @@ import { TransactionItemDeprecated } from '../../../../model/transaction.model';
 import { Subject, Subscription } from 'rxjs';
 import { MatSort } from '@angular/material/sort';
 import { Filter } from '../../../model/filter.model';
-import { takeUntil } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
 import { LayoutService } from '../../../services/layout.service';
 import { SettingsCurrencyWithDefaults, Transaction, TransactionStatusDescriptorMap } from 'src/app/model/generated-models';
 import { ProfileDataService } from 'src/app/services/profile.service';
@@ -16,6 +16,7 @@ import { CommonDataService } from 'src/app/services/common-data.service';
 import { CurrencyView } from 'src/app/model/payment.model';
 import { DeleteDialogBox } from 'src/app/components/dialogs/delete-box.dialog';
 import { MatDialog } from '@angular/material/dialog';
+import { YesNoDialogBox } from 'src/app/components/dialogs/yesno-box.dialog';
 
 @Component({
   templateUrl: 'transaction-list.component.html',
@@ -29,13 +30,17 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
     'accountType',
     'country',
     'source',
-    //'transactionId',
-    //'transactionDate',
-    //'transactionType',
-    //'senderOrReceiver',
-    //'paymentProvider',
-    'users',
+    'createdDateStart',
+    'createdDateEnd',
+    'completedDateStart',
+    'completedDateEnd',
+    'paymentInstrument',
+    'transactionType',
+    'transactionStatus',
+    'tier',
     'widget',
+    'walletAddress',
+    'users',
     'search'
   ];
 
@@ -52,7 +57,6 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
   selected = false;
 
   private destroy$ = new Subject();
-  private transactionsSubscription = Subscription.EMPTY;
   private subscriptions: Subscription = new Subscription();
 
   displayedColumns: string[] = [
@@ -63,13 +67,13 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
 
   constructor(
     private layoutService: LayoutService,
+    public dialog: MatDialog,
     private auth: AuthService,
     private errorHandler: ErrorService,
     private adminService: AdminDataService,
     private profileService: ProfileDataService,
     private commonDataService: CommonDataService,
     private router: Router,
-    public dialog: MatDialog,
     public activeRoute: ActivatedRoute) {
     const id = activeRoute.snapshot.params['id'];
     if (id) {
@@ -155,18 +159,18 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   private executeUnbenchmark(): void {
-    const requestData = this.adminService.unbenchmarkTransaction(
-      this.transactions.map(val => val.id)
+    const requestData$ = this.adminService.unbenchmarkTransaction(
+      this.transactions.filter(x => x.selected === true).map(val => val.id)
     );
-    if (requestData) {
-      requestData.subscribe(({ data }) => {
+    this.subscriptions.add(
+      requestData$.subscribe(({ data }) => {
         this.transactions.forEach(x => x.selected = false);
       }, (error) => {
         if (this.auth.token === '') {
           this.router.navigateByUrl('/');
         }
-      });
-    }
+      })
+    );
   }
 
   private loadCurrencies(): void {
@@ -196,83 +200,45 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   private loadTransactions(): void {
-    this.transactionsSubscription.unsubscribe();
-    this.transactionsSubscription = this.adminService.getTransactions(
+    const listData$ = this.adminService.getTransactions(
       this.pageIndex,
       this.pageSize,
       this.sortedField,
       this.sortedDesc,
-      this.filter
-    ).pipe(takeUntil(this.destroy$)).subscribe(({ list, count }) => {
-      this.transactions = list;
-      this.transactionCount = count;
-      this.transactions.forEach(val => {
-        val.statusInfo = this.userStatuses.find(x => x.key === val.status);
-      });
-    });
+      this.filter).pipe(take(1));
+    this.subscriptions.add(
+      listData$.subscribe(({ list, count }) => {
+        this.transactions = list;
+        this.transactionCount = count;
+        this.transactions.forEach(val => {
+          val.statusInfo = this.userStatuses.find(x => x.key === val.status);
+        });
+      })
+    );
   }
 
   private loadTransactionStatuses(): void {
     this.userStatuses = [];
-    const statusListData = this.profileService.getTransactionStatuses();
-    if (statusListData) {
-      this.subscriptions.add(
-        statusListData.valueChanges.subscribe(({ data }) => {
-          this.userStatuses = data.getTransactionStatuses as TransactionStatusDescriptorMap[];
-          this.loadCurrencies();
-        }, (error) => {
-          if (this.auth.token === '') {
-            this.router.navigateByUrl('/');
-          }
-        })
-      );
-    }
+    const statusListData$ = this.profileService.getTransactionStatuses();
+    this.subscriptions.add(
+      statusListData$.valueChanges.subscribe(({ data }) => {
+        this.userStatuses = data.getTransactionStatuses as TransactionStatusDescriptorMap[];
+        this.loadCurrencies();
+      }, (error) => {
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
+      })
+    );
   }
 
   private isSelectedTransaction(transactionId: string): boolean {
     return !!this.selectedTransaction && this.selectedTransaction.id === transactionId;
   }
 
-  onSaveTransaction(transaction: Transaction): void {
-    const dialogRef = this.dialog.open(DeleteDialogBox, {
-      width: '400px',
-      data: {
-        title: 'Update transaction',
-        message: `You are going to update transaction data. Confirm operation.`,
-        button: 'CONFIRM'
-      }
-    });
-    this.subscriptions.add(
-      dialogRef.afterClosed().subscribe(result => {
-        if (result === true) {
-          const requestData = this.adminService.updateTransaction(transaction);
-          if (requestData) {
-            requestData.subscribe(({ data }) => {
-              this.selectedTransaction = undefined;
-              this.loadList();
-            }, (error) => {
-              if (this.auth.token === '') {
-                this.router.navigateByUrl('/');
-              }
-            });
-          }
-        }
-      })
-    );
-  }
-
-  onDeleteTransaction(id: string): void {
-    const requestData = this.adminService.deleteTransaction(id);
-    if (requestData) {
-      requestData.subscribe(({ data }) => {
-        this.selectedTransaction = undefined;
-        this.loadList();
-      }, (error) => {
-        if (this.auth.token === '') {
-          this.router.navigateByUrl('/');
-        }
-      });
-    }
+  onSaveTransaction(): void {
+    this.selectedTransaction = undefined;
+    this.loadList();
   }
 
   onCancelEdit(): void {

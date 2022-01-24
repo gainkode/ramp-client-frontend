@@ -5,7 +5,7 @@ import { AdminDataService } from '../../../services/admin-data.service';
 import { ErrorService } from '../../../../services/error.service';
 import { Subject, Subscription } from 'rxjs';
 import { KycLevel, KycScheme } from 'src/app/model/identification.model';
-import { takeUntil } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
 
 @Component({
   templateUrl: 'identification-list.component.html',
@@ -29,8 +29,7 @@ export class IdentificationListComponent implements OnInit, OnDestroy {
   levels: KycLevel[] = [];
 
   private destroy$ = new Subject();
-  private schemesSubscription = Subscription.EMPTY;
-  private levelsSubscription = Subscription.EMPTY;
+  private subscriptions: Subscription = new Subscription();
 
   get editMode(): boolean {
     return this.pEditMode;
@@ -49,6 +48,7 @@ export class IdentificationListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.destroy$.next();
+    this.subscriptions.unsubscribe();
   }
 
   setSelectedTab(index: number): void {
@@ -79,13 +79,12 @@ export class IdentificationListComponent implements OnInit, OnDestroy {
   }
 
   loadSchemeList(): void {
-    this.schemesSubscription.unsubscribe();
-
-    this.schemesSubscription = this.adminService.getKycSettings()
-                                   .pipe(takeUntil(this.destroy$))
-                                   .subscribe(data => {
-                                     this.schemes = data.list;
-                                   });
+    const listData$ = this.adminService.getKycSettings().pipe(take(1));
+    this.subscriptions.add(
+      listData$.subscribe(data => {
+        this.schemes = data.list;
+      })
+    );
   }
 
   refreshSchemeList(): void {
@@ -96,18 +95,16 @@ export class IdentificationListComponent implements OnInit, OnDestroy {
   }
 
   loadLevelList(): void {
-
-    this.levelsSubscription.unsubscribe();
-
-    this.levelsSubscription = this.adminService.getKycLevels(null)
-                                  .pipe(takeUntil(this.destroy$))
-                                   .subscribe(data => {
-                                     this.levels = data.list;
-                                   });
+    const listData$ = this.adminService.getKycLevels(null).pipe(take(1));
+    this.subscriptions.add(
+      listData$.subscribe(data => {
+        this.levels = data.list;
+      })
+    );
   }
 
   refreshLevelList(): void {
-      this.loadLevelList();
+    this.loadLevelList();
   }
 
   private setEditMode(mode: boolean): void {
@@ -199,12 +196,10 @@ export class IdentificationListComponent implements OnInit, OnDestroy {
 
   onDeleteScheme(id: string): void {
     this.schemeEditorErrorMessage = '';
-    const requestData = this.adminService.deleteKycSettings(id);
-    if (requestData === null) {
-      this.errorMessage = this.errorHandler.getRejectedCookieMessage();
-    } else {
-      this.inProgress = true;
-      requestData.subscribe(({ data }) => {
+    this.inProgress = true;
+    const requestData$ = this.adminService.deleteKycSettings(id);
+    this.subscriptions.add(
+      requestData$.subscribe(({ data }) => {
         this.inProgress = false;
         this.showSchemeEditor(null, false, false);
         this.refreshSchemeList();
@@ -216,18 +211,16 @@ export class IdentificationListComponent implements OnInit, OnDestroy {
         } else {
           this.router.navigateByUrl('/');
         }
-      });
-    }
+      })
+    );
   }
 
   onDeleteLevel(id: string): void {
     this.levelEditorErrorMessage = '';
-    const requestData = this.adminService.deleteKycLevelSettings(id);
-    if (requestData === null) {
-      this.errorMessage = this.errorHandler.getRejectedCookieMessage();
-    } else {
-      this.inProgress = true;
-      requestData.subscribe(({ data }) => {
+    this.inProgress = true;
+    const requestData$ = this.adminService.deleteKycLevelSettings(id);
+    this.subscriptions.add(
+      requestData$.subscribe(({ data }) => {
         this.inProgress = false;
         this.showLevelEditor(null, false, false);
         this.refreshLevelList();
@@ -239,50 +232,54 @@ export class IdentificationListComponent implements OnInit, OnDestroy {
         } else {
           this.router.navigateByUrl('/');
         }
-      });
-    }
+      })
+    );
   }
 
   onSavedScheme(scheme: KycScheme): void {
     this.schemeEditorErrorMessage = '';
     this.inProgress = true;
-    this.adminService.saveKycSettings(scheme, this.createScheme)
-        .subscribe(({ data }) => {
-          this.inProgress = false;
-          this.setEditMode(false);
-          this.showSchemeEditor(null, false, false);
-          this.createScheme = false;
-          this.refreshSchemeList();
-        }, (error) => {
-          this.inProgress = false;
-          if (this.auth.token !== '') {
-            this.schemeEditorErrorMessage = this.errorHandler.getError(error.message,
-              'Unable to save identification settings');
-          } else {
-            this.router.navigateByUrl('/');
-          }
-        });
+    const requestData$ = this.adminService.saveKycSettings(scheme, this.createScheme);
+    this.subscriptions.add(
+      requestData$.subscribe(({ data }) => {
+        this.inProgress = false;
+        this.setEditMode(false);
+        this.showSchemeEditor(null, false, false);
+        this.createScheme = false;
+        this.refreshSchemeList();
+      }, (error) => {
+        this.inProgress = false;
+        if (this.auth.token !== '') {
+          this.schemeEditorErrorMessage = this.errorHandler.getError(error.message,
+            'Unable to save identification settings');
+        } else {
+          this.router.navigateByUrl('/');
+        }
+      })
+    );
   }
 
   onSavedLevel(level: KycLevel): void {
     this.levelEditorErrorMessage = '';
     this.inProgress = true;
-    this.adminService.saveKycLevelSettings(level, this.createLevel)
-        .subscribe(({ data }) => {
-          this.inProgress = false;
-          this.setEditMode(false);
-          this.showLevelEditor(null, false, false);
-          this.createLevel = false;
-          this.refreshLevelList();
-        }, (error) => {
-          this.inProgress = false;
-          if (this.auth.token !== '') {
-            this.levelEditorErrorMessage = this.errorHandler.getError(error.message,
-              'Unable to save identification level');
-          } else {
-            this.router.navigateByUrl('/');
-          }
-        });
+    const requestData$ = this.adminService.saveKycLevelSettings(level, this.createLevel);
+    this.subscriptions.add(
+      requestData$.subscribe(({ data }) => {
+        this.inProgress = false;
+        this.setEditMode(false);
+        this.showLevelEditor(null, false, false);
+        this.createLevel = false;
+        this.refreshLevelList();
+      }, (error) => {
+        this.inProgress = false;
+        if (this.auth.token !== '') {
+          this.levelEditorErrorMessage = this.errorHandler.getError(error.message,
+            'Unable to save identification level');
+        } else {
+          this.router.navigateByUrl('/');
+        }
+      })
+    );
   }
 
   handleDetailsPanelClosed(): void {

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DashboardService } from './dashboard.service';
-import { Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { Filter } from '../../model/filter.model';
 
 @Component({
@@ -10,6 +10,7 @@ import { Filter } from '../../model/filter.model';
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   filterFields = [
+    'transactionDate',
     'accountType',
     'country',
     'source',
@@ -17,7 +18,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     'widget'
   ];
 
-  private destroy$ = new Subject();
+  private subscriptions: Subscription = new Subscription();
 
   constructor(
     public dashboardService: DashboardService
@@ -25,15 +26,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.dashboardService.data.subscribe(d => {
-      
-    });
+    this.subscriptions.add(
+      this.dashboardService.data.subscribe(d => {
 
+      })
+    );
     this.dashboardService.load();
   }
 
   ngOnDestroy(): void {
-    this.destroy$.next();
+    this.subscriptions.unsubscribe();
   }
 
   handleFilterApplied(filter: Filter): void {

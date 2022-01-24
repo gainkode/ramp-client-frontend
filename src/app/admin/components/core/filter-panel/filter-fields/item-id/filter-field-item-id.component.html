@@ -1,0 +1,16 @@
+<mat-form-field class="form-element">
+    <mat-label>{{title}}</mat-label>
+    <mat-chip-list #chipList aria-label="ID selection">
+        <mat-chip *ngFor="let opt of filteredOptions" (removed)="removeOption(opt)">
+            {{opt}}
+            <mat-icon matChipRemove matTooltip="Remove ID" matTooltipClass="info-tooltip">
+                cancel
+            </mat-icon>
+        </mat-chip>
+        <input #idInput
+               placeholder="Type ID here"
+               [matChipInputFor]="chipList"
+               (input)="handleIdInputChange($event)"
+               (matChipInputTokenEnd)="handleOptionAdded($event)">
+    </mat-chip-list>
+</mat-form-field>

@@ -1,9 +1,11 @@
 import { DatePipe } from '@angular/common';
-import { getCurrencySign } from '../utils/utils';
+import { getCurrencySign, getTransactionStatusHash } from '../utils/utils';
 import { CommonTargetValue } from './common.model';
 import {
+  AccountStatus,
   PaymentInstrument,
   Transaction,
+  TransactionKycStatus,
   TransactionShort,
   TransactionSource,
   TransactionStatus,
@@ -45,6 +47,10 @@ export class TransactionItemDeprecated {
   amountToReceive = 0;
   initialAmountToReceive = 0;
   initialAmount = false;
+  transferOrderId = '';
+  transferOrderHash = '';
+  benchmarkTransferOrderId = '';
+  benchmarkTransferOrderHash = '';
   address = '';
   ip = '';
   euro = 0;
@@ -56,7 +62,9 @@ export class TransactionItemDeprecated {
   user: UserItem | undefined;
   balance = 0;
   accountStatus = '';
+  accountStatusValue = AccountStatus.Closed;
   kycStatus = '';
+  kycStatusValue = TransactionKycStatus.KycWaiting;
   kycTier = '';
   widgetId = '';
   selected = false;
@@ -72,13 +80,18 @@ export class TransactionItemDeprecated {
       this.address = data.destination as string;
       this.accountId = data.userId ?? '';
       this.accountStatus = data.accountStatus ?? '';
+      this.accountStatusValue = data.accountStatus ?? AccountStatus.Closed;
       const transactionData = data as Transaction;
       if (transactionData.user) {
         this.user = new UserItem(transactionData.user as User);
         this.accountName = this.user.fullName;
         this.ip = transactionData.userIp as string;
         this.userMode = transactionData.user?.mode as UserMode | undefined;
+        this.benchmarkTransferOrderId = transactionData.benchmarkTransferOrder?.orderId ?? '';
+        this.benchmarkTransferOrderHash = transactionData.benchmarkTransferOrder?.transferHash ?? '';
       }
+      this.transferOrderId = data.transferOrder?.orderId ?? '';
+      this.transferOrderHash = data.transferOrder?.transferHash ?? '';
       this.type = data.type;
       this.instrument = data.instrument ?? undefined;
       this.paymentProvider = data.paymentProvider ?? '';
@@ -97,6 +110,7 @@ export class TransactionItemDeprecated {
       }
       const kycStatus = TransactionKycStatusList.find(x => x.id === (data as Transaction).kycStatus);
       this.kycStatus = (kycStatus) ? kycStatus.name : '';
+      this.kycStatusValue = (kycStatus) ? kycStatus.id : TransactionKycStatus.KycWaiting;
       this.kycTier = data.userTier?.name ?? '';
       this.fees = data.feeFiat as number ?? 0;
       this.status = data.status;
@@ -213,6 +227,10 @@ export class TransactionItemDeprecated {
       return UserTypeList.find((p) => p.id === this.user?.userType?.id)?.name as string;
     }
     return '';
+  }
+
+  get statusHash(): number {
+    return getTransactionStatusHash(this.status ?? '', this.kycStatusValue, this.accountStatusValue);
   }
 }
 

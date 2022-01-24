@@ -519,15 +519,11 @@ export class ProfileDataService {
     }
   }
 
-  getTransactionStatuses(): QueryRef<any, EmptyObject> | null {
-    if (this.apollo.client !== undefined) {
+  getTransactionStatuses(): QueryRef<any, EmptyObject> {
       return this.apollo.watchQuery<any>({
         query: GET_TRANSACTION_STATUSES,
         fetchPolicy: 'network-only',
       });
-    } else {
-      return null;
-    }
   }
 
   getMyWallets(assets: string[]): QueryRef<any, EmptyObject> | null {

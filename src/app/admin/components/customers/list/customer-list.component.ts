@@ -5,7 +5,7 @@ import { Subject, Subscription } from 'rxjs';
 import { MatSort } from '@angular/material/sort';
 import { UserItem } from 'src/app/model/user.model';
 import { Filter } from '../../../model/filter.model';
-import { takeUntil } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
 import { LayoutService } from '../../../services/layout.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { CurrencyView } from 'src/app/model/payment.model';
@@ -16,6 +16,7 @@ import { Router } from '@angular/router';
 import { SendNotificationDialogBox } from 'src/app/components/dialogs/send-notification-box.dialog';
 import { MatDialog } from '@angular/material/dialog';
 import { FormGroup } from '@angular/forms';
+import { CommonDialogBox } from 'src/app/components/dialogs/common-box.dialog';
 
 @Component({
   templateUrl: 'customer-list.component.html',
@@ -26,10 +27,21 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   filterFields = [
+    'users',
+    'accountType',
+    'accountMode',
+    'accountStatus',
+    'userTierLevel',
+    'riskLevel',
+    'country',
+    'kycStatus',
+    'registrationDateStart',
+    'registrationDateEnd',
+    'widget',
+    'totalBuyVolume',
+    'transactionCount',
     'search'
   ];
-
-  private subscriptions: Subscription = new Subscription();
 
   selectedCustomer: UserItem | undefined = undefined;
   customers: UserItem[] = [];
@@ -44,12 +56,12 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   displayedColumns: string[] = [
     'details', 'referralCode', 'firstName', 'lastName', 'email', 'accountStatus', 'kycStatus',
-    'widgetId', 'totalBought', 'totalSold', 'totalSent', 'totalReceived', 
+    'widgetId', 'totalBought', 'totalSold', 'totalSent', 'totalReceived',
     'created', 'country', 'phone', 'risk', 'id'
   ];
 
   private destroy$ = new Subject();
-  private listSubscription = Subscription.EMPTY;
+  private subscriptions: Subscription = new Subscription();
 
   constructor(
     private errorHandler: ErrorService,
@@ -71,8 +83,8 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
     this.destroy$.next();
+    this.subscriptions.unsubscribe();
   }
 
   ngAfterViewInit(): void {
@@ -147,15 +159,15 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   sendMessageData(ids: string[], level: UserNotificationLevel, title: string, text: string) {
-    const requestData = this.adminService.sendAdminNotification(ids, level, title, text);
-    if (requestData) {
-      requestData.subscribe(({ data }) => {
+    const requestData$ = this.adminService.sendAdminNotification(ids, level, title, text);
+    this.subscriptions.add(
+      requestData$.subscribe(({ data }) => {
       }, (error) => {
         if (this.auth.token === '') {
           this.router.navigateByUrl('/');
         }
-      });
-    }
+      })
+    );
   }
 
   private setEditMode(mode: boolean): void {
@@ -163,17 +175,18 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private loadCustomers(): void {
-    this.listSubscription.unsubscribe();
-    this.listSubscription = this.adminService.getUsers(
+    const listData$ = this.adminService.getUsers(
       this.pageIndex,
       this.pageSize,
       this.sortedField,
       this.sortedDesc,
-      this.filter
-    ).pipe(takeUntil(this.destroy$)).subscribe(result => {
-      this.customers = result.list;
-      this.customerCount = result.count;
-    });
+      this.filter).pipe(take(1));
+    this.subscriptions.add(
+      listData$.subscribe(result => {
+        this.customers = result.list;
+        this.customerCount = result.count;
+      })
+    );
   }
 
   private isSelectedCustomer(customerId: string): boolean {
@@ -222,36 +235,46 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onDeleteCustomer(id: string): void {
-    const requestData = this.adminService.deleteCustomer(id);
-    if (requestData) {
-      requestData.subscribe(({ data }) => {
+    const requestData$ = this.adminService.deleteCustomer(id);
+    this.subscriptions.add(
+      requestData$.subscribe(({ data }) => {
         this.showEditor(null, false);
         this.loadCustomers();
       }, (error) => {
         if (this.auth.token === '') {
           this.router.navigateByUrl('/');
         }
-      });
-    }
+      })
+    );
   }
 
   onSaveCustomer(customer: User): void {
-    const requestData = this.adminService.saveCustomer(customer);
-    if (requestData) {
-      requestData.subscribe(({ data }) => {
-        this.showEditor(null, false);
-        if (this.auth.user?.userId === customer.userId) {
-          this.auth.setUserName(customer.firstName ?? '', customer.lastName ?? '');
-          this.auth.setUserCurrencies(
-            customer.defaultCryptoCurrency ?? 'BTC',
-            customer.defaultFiatCurrency ?? 'EUR');
+    const requestData$ = this.adminService.saveCustomer(customer);
+    this.subscriptions.add(
+      requestData$.subscribe(({ data }) => {
+        if (customer.changePasswordRequired === true) {
+          this.dialog.open(CommonDialogBox, {
+            width: '450px',
+            data: {
+              title: 'Reset password',
+              message: 'Password has been reset successfully'
+            }
+          });
+        } else {
+          this.showEditor(null, false);
+          if (this.auth.user?.userId === customer.userId) {
+            this.auth.setUserName(customer.firstName ?? '', customer.lastName ?? '');
+            this.auth.setUserCurrencies(
+              customer.defaultCryptoCurrency ?? 'BTC',
+              customer.defaultFiatCurrency ?? 'EUR');
+          }
+          this.loadCustomers();
         }
-        this.loadCustomers();
       }, (error) => {
         if (this.auth.token === '') {
           this.router.navigateByUrl('/');
         }
-      });
-    }
+      })
+    );
   }
 }

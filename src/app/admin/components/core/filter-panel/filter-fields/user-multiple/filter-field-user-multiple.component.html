@@ -1,5 +1,5 @@
 <mat-form-field class="form-element">
-    <mat-label>Users</mat-label>
+    <mat-label>Customer search</mat-label>
     <mat-chip-list #chipList aria-label="User selection">
         <mat-chip *ngFor="let opt of selectedOptions" (removed)="removeOption(opt)">
             {{opt.email}}

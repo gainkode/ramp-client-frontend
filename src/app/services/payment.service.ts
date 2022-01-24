@@ -42,12 +42,23 @@ query GetOneToManyRates(
 `;
 
 const GET_PROVIDERS = gql`
-query GetProviders {
-  getPaymentProviders {
-    paymentProviderId
-    name
-    currencies
-    countries_code2
+query GetAppropriatePaymentProviders(
+  $fiatCurrency: String
+  $widgetId: String
+) {
+  getAppropriatePaymentProviders(
+    fiatCurrency: $fiatCurrency
+    widgetId: $widgetId
+  ) {
+    instrument
+    provider {
+      paymentProviderId
+      name
+      currencies
+      countries_code2
+      instruments
+      default
+    }
   }
 }
 `;
@@ -439,15 +450,15 @@ export class PaymentDataService {
     });
   }
 
-  getProviders(): QueryRef<any, EmptyObject> | null {
-    if (this.apollo.client !== undefined) {
+  getProviders(fiatCurrency: string, widgetId: string | undefined): QueryRef<any, EmptyObject> {
       return this.apollo.watchQuery<any>({
         query: GET_PROVIDERS,
+        variables: {
+          fiatCurrency,
+          widgetId
+        },
         fetchPolicy: 'network-only'
       });
-    } else {
-      return null;
-    }
   }
 
   getWidget(paramsId: string): QueryRef<any, EmptyObject> | null {

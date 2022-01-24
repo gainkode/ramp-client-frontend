@@ -7,7 +7,7 @@ import { CostScheme } from '../../../model/cost-scheme.model';
 import { SettingsCostListResult } from '../../../model/generated-models';
 import { Subject, Subscription } from 'rxjs';
 import { LayoutService } from '../../services/layout.service';
-import { takeUntil } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
 
 @Component({
   templateUrl: 'costs.component.html',
@@ -16,7 +16,6 @@ import { takeUntil } from 'rxjs/operators';
 export class CostsComponent implements OnInit, OnDestroy {
   @Output() changeEditMode = new EventEmitter<boolean>();
   private pShowDetails = false;
-  private pSettingsSubscription!: any;
   private pEditMode = false;
   inProgress = false;
   errorMessage = '';
@@ -39,6 +38,7 @@ export class CostsComponent implements OnInit, OnDestroy {
   }
 
   private destroy$ = new Subject();
+  private subscriptions: Subscription = new Subscription();
 
   constructor(
     private layoutService: LayoutService,
@@ -50,16 +50,14 @@ export class CostsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.layoutService.rightPanelCloseRequested$.pipe(takeUntil(this.destroy$))
-        .subscribe(() => {
-          this.selectedScheme = null;
-        });
+      .subscribe(() => {
+        this.selectedScheme = null;
+      });
 
-    const settingsData = this.adminService.getCostSettings();
-    if (settingsData === null) {
-      this.errorMessage = this.errorHandler.getRejectedCookieMessage();
-    } else {
-      this.inProgress = true;
-      this.pSettingsSubscription = settingsData.valueChanges.subscribe(({ data }) => {
+    const listData$ = this.adminService.getCostSettings().valueChanges.pipe(take(1));
+    this.inProgress = true;
+    this.subscriptions.add(
+      listData$.subscribe(({ data }) => {
         const settings = data.getSettingsCost as SettingsCostListResult;
         let itemCount = 0;
         if (settings !== null) {
@@ -77,16 +75,13 @@ export class CostsComponent implements OnInit, OnDestroy {
         } else {
           this.router.navigateByUrl('/');
         }
-      });
-    }
+      })
+    );
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
-    const s: Subscription = this.pSettingsSubscription;
-    if (s !== undefined) {
-      (this.pSettingsSubscription as Subscription).unsubscribe();
-    }
+    this.subscriptions.unsubscribe();
   }
 
   refresh(): void {
@@ -165,12 +160,10 @@ export class CostsComponent implements OnInit, OnDestroy {
 
   onDeleteScheme(id: string): void {
     this.editorErrorMessage = '';
-    const requestData = this.adminService.deleteCostSettings(id);
-    if (requestData === null) {
-      this.errorMessage = this.errorHandler.getRejectedCookieMessage();
-    } else {
-      this.inProgress = true;
-      requestData.subscribe(({ data }) => {
+    const requestData$ = this.adminService.deleteCostSettings(id);
+    this.inProgress = true;
+    this.subscriptions.add(
+      requestData$.subscribe(({ data }) => {
         this.inProgress = false;
         this.showEditor(null, false, false);
         this.refresh();
@@ -181,27 +174,29 @@ export class CostsComponent implements OnInit, OnDestroy {
         } else {
           this.router.navigateByUrl('/');
         }
-      });
-    }
+      })
+    );
   }
 
   onSaved(scheme: CostScheme): void {
     this.editorErrorMessage = '';
     this.inProgress = true;
-    this.adminService.saveCostSettings(scheme, this.createScheme)
-        .subscribe(({ data }) => {
-          this.inProgress = false;
-          this.setEditMode(false);
-          this.showEditor(null, false, false);
-          this.createScheme = false;
-          this.refresh();
-        }, (error) => {
-          this.inProgress = false;
-          if (this.auth.token !== '') {
-            this.editorErrorMessage = this.errorHandler.getError(error.message, 'Unable to save cost settings');
-          } else {
-            this.router.navigateByUrl('/');
-          }
-        });
+    const requestData$ = this.adminService.saveCostSettings(scheme, this.createScheme)
+    this.subscriptions.add(
+      requestData$.subscribe(({ data }) => {
+        this.inProgress = false;
+        this.setEditMode(false);
+        this.showEditor(null, false, false);
+        this.createScheme = false;
+        this.refresh();
+      }, (error) => {
+        this.inProgress = false;
+        if (this.auth.token !== '') {
+          this.editorErrorMessage = this.errorHandler.getError(error.message, 'Unable to save cost settings');
+        } else {
+          this.router.navigateByUrl('/');
+        }
+      })
+    );
   }
 }

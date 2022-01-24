@@ -2,8 +2,10 @@
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
         <section>
-            <app-details-attribute label="Transaction Id" [value]="transactionId"
+            <app-details-attribute *ngIf="cancelable" label="Transaction Id" [value]="transactionId"
                 [linkUrl]="'/admin/transactions/'+ transactionId"></app-details-attribute>
+            <app-details-attribute *ngIf="!cancelable" label="Transaction Id" [value]="transactionId"></app-details-attribute>
+
             <app-details-attribute label="Transaction Created" [value]="data?.created"></app-details-attribute>
             <app-details-attribute label="Transaction Completed" [value]="data?.executed"></app-details-attribute>
             <app-details-attribute label="First Name" [value]="data?.user?.firstName"></app-details-attribute>
@@ -13,10 +15,10 @@
             <app-details-attribute label="Customer ID" [value]="data?.accountId"></app-details-attribute>
             <app-details-attribute label="Widget ID" [value]="data?.widgetId"></app-details-attribute>
             <app-details-attribute label="Country" [value]="data?.user?.country"></app-details-attribute>
-                        
+
             <mat-form-field *ngIf="data?.address!==''" class="form-element">
                 <mat-label>Wallet address</mat-label>
-                <input matInput formControlName="address" required/>
+                <input matInput formControlName="address" required />
                 <mat-error *ngIf="form.controls.address.hasError('required')">
                     Address is required
                 </mat-error>
@@ -26,11 +28,11 @@
             <app-details-attribute label="Payment Method" [value]="data?.instrumentName"></app-details-attribute>
             <app-details-attribute label="Payment Provider" [value]="data?.paymentProvider"></app-details-attribute>
             <app-details-attribute label="Payment Details" [value]="data?.instrumentDetails"></app-details-attribute>
-            
+
             <!-- Amount to spend -->
             <mat-form-field class="form-element">
                 <mat-label>Amount To Spend</mat-label>
-                <input matInput formControlName="amountToSpend" required/>
+                <input matInput formControlName="amountToSpend" required />
                 <mat-error *ngIf="form.controls.amountToSpend.hasError('required')">
                     Amount is required
                 </mat-error>
@@ -52,7 +54,7 @@
             <!-- Amount to receive -->
             <mat-form-field class="form-element">
                 <mat-label>Amount To Receive</mat-label>
-                <input matInput formControlName="amountToReceive" required/>
+                <input matInput formControlName="amountToReceive" required />
                 <mat-error *ngIf="form.controls.amountToReceive.hasError('required')">
                     Amount is required
                 </mat-error>
@@ -79,7 +81,7 @@
             </div>
             <mat-form-field class="form-element">
                 <mat-label>Exchange rate</mat-label>
-                <input matInput formControlName="rate" required/>
+                <input matInput formControlName="rate" required />
                 <mat-error *ngIf="form.controls.rate.hasError('required')">
                     Rate is required
                 </mat-error>
@@ -88,29 +90,90 @@
                 </mat-error>
             </mat-form-field>
 
-            <app-details-attribute label="Transaction status" [value]="data?.transactionStatusName">
-            </app-details-attribute>
-            <app-details-attribute label="Transaction fees" [value]="(data?.fees | number: '1.0-5') + ' EUR'">
-            </app-details-attribute>
+            <!-- Transaction status -->
+            <mat-form-field class="form-element">
+                <mat-label>Transaction status</mat-label>
+                <mat-select formControlName="transactionStatus" required>
+                    <mat-option *ngFor="let item of transactionStatuses" [value]="item.id">
+                        {{item.name}}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="this.form.get('transactionStatus')?.hasError('required')">
+                    Please specify the transaction status
+                </mat-error>
+            </mat-form-field>
+
+            <!-- Fees -->
+            <mat-form-field class="form-element">
+                <mat-label>Fees, EUR</mat-label>
+                <input matInput formControlName="fee" required />
+                <mat-error *ngIf="form.controls.fee.hasError('required')">
+                    Fee is required
+                </mat-error>
+                <mat-error *ngIf="form.controls.rate.hasError('pattern')">
+                    Incorrect number value
+                </mat-error>
+            </mat-form-field>
+
             <app-details-attribute label="IP Address" [value]="data?.ip"></app-details-attribute>
             <app-details-attribute label="Initiated from" [value]="data?.transactionSourceName"></app-details-attribute>
             <app-details-attribute label="Wallet type" [value]="data?.userModeName"></app-details-attribute>
+
+            <!-- End-user transfer hash -->
+            <mat-form-field *ngIf="showTransferHash" class="form-element">
+                <mat-label>End-user transfer hash</mat-label>
+                <input matInput formControlName="transferHash" />
+            </mat-form-field>
+
+            <!-- Benchmark transfer hash -->
+            <mat-form-field *ngIf="showBenchmarkTransferHash" class="form-element">
+                <mat-label>Benchmark transfer hash</mat-label>
+                <input matInput formControlName="benchmarkTransferHash" />
+            </mat-form-field>
+
             <app-details-attribute label="Last Updated" [value]="data?.updated"></app-details-attribute>
         </section>
 
         <section>
             <h2>AML Checks</h2>
-            <app-details-attribute label="Account ID" [value]="data?.user?.id" [linkUrl]="'/admin/customers/'+ data?.user?.id">
+            <app-details-attribute label="Account ID" [value]="data?.user?.id"
+                [linkUrl]="'/admin/customers/'+ data?.user?.id">
             </app-details-attribute>
             <app-details-attribute label="Verification Tier" [value]="data?.kycTier"></app-details-attribute>
-            <app-details-attribute label="KYC Status" [value]="data?.kycStatus"></app-details-attribute>
+
+            <!-- KYC status -->
+            <mat-form-field class="form-element">
+                <mat-label>KYC Status</mat-label>
+                <mat-select formControlName="kycStatus" required>
+                    <mat-option *ngFor="let item of kycStatuses" [value]="item.id">
+                        {{item.name}}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="this.form.get('kycStatus')?.hasError('required')">
+                    Please specify the KYC status
+                </mat-error>
+            </mat-form-field>
+
+            <!-- Account status -->
+            <mat-form-field class="form-element">
+                <mat-label>Account Status</mat-label>
+                <mat-select formControlName="accountStatus" required>
+                    <mat-option *ngFor="let item of accountStatuses" [value]="item.id">
+                        {{item.name}}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="this.form.get('accountStatus')?.hasError('required')">
+                    Please specify the account status
+                </mat-error>
+            </mat-form-field>
+
         </section>
 
         <div class="panel-actions">
             <button mat-flat-button color="primary" type="submit">
                 SAVE
             </button>
-            <button *ngIf="removable" mat-flat-button color="warn" (click)="onDeleteTransaction()">
+            <button *ngIf="removable" mat-flat-button type="button" color="warn" (click)="onDelete()">
                 DELETE
             </button>
             <button *ngIf="cancelable" mat-flat-button (click)="onCancel()">

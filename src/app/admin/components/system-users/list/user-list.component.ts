@@ -5,7 +5,7 @@ import { Subject, Subscription } from 'rxjs';
 import { MatSort } from '@angular/material/sort';
 import { UserItem } from 'src/app/model/user.model';
 import { Filter } from '../../../model/filter.model';
-import { takeUntil } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
 import { LayoutService } from '../../../services/layout.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { CurrencyView } from 'src/app/model/payment.model';
@@ -29,8 +29,6 @@ export class SystemUserListComponent implements OnInit, OnDestroy, AfterViewInit
     'search'
   ];
 
-  private subscriptions: Subscription = new Subscription();
-
   selectedUser: UserItem | undefined = undefined;
   users: UserItem[] = [];
   userCount = 0;
@@ -47,7 +45,7 @@ export class SystemUserListComponent implements OnInit, OnDestroy, AfterViewInit
   ];
 
   private destroy$ = new Subject();
-  private listSubscription = Subscription.EMPTY;
+  private subscriptions: Subscription = new Subscription();
 
   constructor(
     private errorHandler: ErrorService,
@@ -161,17 +159,18 @@ export class SystemUserListComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   private loadUsers(): void {
-    this.listSubscription.unsubscribe();
-    this.listSubscription = this.adminService.getUsers(
+    const listData$ = this.adminService.getUsers(
       this.pageIndex,
       this.pageSize,
       this.sortedField,
       this.sortedDesc,
-      this.filter
-    ).pipe(takeUntil(this.destroy$)).subscribe(result => {
-      this.users = result.list;
+      this.filter).pipe(take(1));
+    this.subscriptions.add(
+      listData$.subscribe(result => {
+        this.users = result.list;
       this.userCount = result.count;
-    });
+      })
+    );
   }
 
   private isSelectedUser(userId: string): boolean {
@@ -220,23 +219,23 @@ export class SystemUserListComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   onDeleteUser(id: string): void {
-    const requestData = this.adminService.deleteCustomer(id);
-    if (requestData) {
-      requestData.subscribe(({ data }) => {
+    const requestData$ = this.adminService.deleteCustomer(id);
+    this.subscriptions.add(
+      requestData$.subscribe(({ data }) => {
         this.showEditor(null, false);
         this.loadUsers();
       }, (error) => {
         if (this.auth.token === '') {
           this.router.navigateByUrl('/');
         }
-      });
-    }
+      })
+    );
   }
 
   onSaveUser(user: User): void {
-    const requestData = this.adminService.saveCustomer(user);
-    if (requestData) {
-      requestData.subscribe(({ data }) => {
+    const requestData$ = this.adminService.saveCustomer(user);
+    this.subscriptions.add(
+      requestData$.subscribe(({ data }) => {
         this.showEditor(null, false);
         if (this.auth.user?.userId === user.userId) {
           this.auth.setUserName(user.firstName ?? '', user.lastName ?? '');
@@ -249,7 +248,7 @@ export class SystemUserListComponent implements OnInit, OnDestroy, AfterViewInit
         if (this.auth.token === '') {
           this.router.navigateByUrl('/');
         }
-      });
-    }
+      })
+    );
   }
 }

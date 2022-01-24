@@ -6,7 +6,7 @@ import { ErrorService } from '../../../../services/error.service';
 import { Subject, Subscription } from 'rxjs';
 import { MatSort } from '@angular/material/sort';
 import { Filter } from '../../../model/filter.model';
-import { takeUntil } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
 import { AssetAddress, SettingsCurrencyWithDefaults } from '../../../../model/generated-models';
 import { WalletItem } from '../../../model/wallet.model';
 import { CurrencyView } from 'src/app/model/payment.model';
@@ -38,7 +38,6 @@ export class WalletListComponent implements OnInit, OnDestroy, AfterViewInit {
   currencyList: CurrencyView[] = [];
 
   private destroy$ = new Subject();
-  private walletsSubscription = Subscription.EMPTY;
   private subscriptions: Subscription = new Subscription();
 
   displayedColumns: string[] = [
@@ -141,17 +140,18 @@ export class WalletListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private loadWallets(): void {
-    this.walletsSubscription.unsubscribe();
-    this.walletsSubscription = this.adminService.getWallets(
+    const listData$ = this.adminService.getWallets(
       this.pageIndex,
       this.pageSize,
       this.sortedField,
       this.sortedDesc,
-      this.filter
-    ).pipe(takeUntil(this.destroy$)).subscribe(({ list, count }) => {
-      this.wallets = list;
-      this.walletCount = count;
-    });
+      this.filter).pipe(take(1));
+    this.subscriptions.add(
+      listData$.subscribe(({ list, count }) => {
+        this.wallets = list;
+        this.walletCount = count;
+      })
+    );
   }
 
   private isSelectedWallet(walletAddress: string): boolean {
