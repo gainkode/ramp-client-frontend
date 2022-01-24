@@ -25,6 +25,23 @@ export enum AccountStatus {
   Closed = 'Closed'
 }
 
+export enum AdminTransactionStatus {
+  New = 'New',
+  Pending = 'Pending',
+  Paid = 'Paid',
+  Exchanging = 'Exchanging',
+  Confirming = 'Confirming',
+  Completed = 'Completed',
+  Abandoned = 'Abandoned',
+  Canceled = 'Canceled',
+  Chargeback = 'Chargeback',
+  PaymentDeclined = 'PaymentDeclined',
+  AddressDeclined = 'AddressDeclined',
+  ExchangeDeclined = 'ExchangeDeclined',
+  TransferDeclined = 'TransferDeclined',
+  BenchmarkTransferDeclined = 'BenchmarkTransferDeclined'
+}
+
 export type ApiKey = {
   __typename?: 'ApiKey';
   apiKeyId: Scalars['ID'];
@@ -165,6 +182,11 @@ export type DateMap = {
 };
 
 
+export type DateTimeInterval = {
+  from?: Maybe<Scalars['DateTime']>;
+  to?: Maybe<Scalars['DateTime']>;
+};
+
 export type DeletedVaultAccount = {
   __typename?: 'DeletedVaultAccount';
   deletedVaultAccountId?: Maybe<Scalars['ID']>;
@@ -236,7 +258,6 @@ export type ExternalWalletAssetShort = {
 export type Feedback = {
   __typename?: 'Feedback';
   feedbackId: Scalars['ID'];
-  userId?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
@@ -518,6 +539,9 @@ export type Mutation = {
   addSettingsKycTier: SettingsKycTier;
   updateSettingsKycTier: SettingsKycTier;
   deleteSettingsKycTier: SettingsKycTier;
+  addWireTransferBankAccount: WireTransferBankAccount;
+  updateWireTransferBankAccount: WireTransferBankAccount;
+  deleteWireTransferBankAccount: WireTransferBankAccount;
   createUser?: Maybe<User>;
   updateMe?: Maybe<User>;
   updateUser?: Maybe<User>;
@@ -541,6 +565,7 @@ export type Mutation = {
   updateBankAccount?: Maybe<User>;
   deleteBankAccount?: Maybe<User>;
   changeUserKycTier?: Maybe<User>;
+  exportUsersToCsv?: Maybe<Scalars['Boolean']>;
   signup: LoginResult;
   login: LoginResult;
   logout: Scalars['Boolean'];
@@ -564,6 +589,7 @@ export type Mutation = {
   createTransaction?: Maybe<TransactionShort>;
   executeTransaction?: Maybe<TransactionShort>;
   updateTransaction?: Maybe<Transaction>;
+  exportTransactionsToCsv?: Maybe<Scalars['Boolean']>;
   cancelMyTransaction?: Maybe<TransactionShort>;
   cancelTransaction?: Maybe<Transaction>;
   unbenchmarkTransactions?: Maybe<Array<Transaction>>;
@@ -575,6 +601,7 @@ export type Mutation = {
   deleteMyWidget?: Maybe<Widget>;
   deleteWidget?: Maybe<Widget>;
   addMyWidgetUserParams?: Maybe<WidgetUserParams>;
+  exportWidgetsToCsv?: Maybe<Scalars['Boolean']>;
   updateRiskAlertType?: Maybe<RiskAlertType>;
 };
 
@@ -729,6 +756,22 @@ export type MutationDeleteSettingsKycTierArgs = {
 };
 
 
+export type MutationAddWireTransferBankAccountArgs = {
+  bankAccount: WireTransferBankAccountInput;
+};
+
+
+export type MutationUpdateWireTransferBankAccountArgs = {
+  bankAccountId: Scalars['ID'];
+  bankAccount: WireTransferBankAccountInput;
+};
+
+
+export type MutationDeleteWireTransferBankAccountArgs = {
+  bankAccountId: Scalars['ID'];
+};
+
+
 export type MutationCreateUserArgs = {
   user: UserInput;
   roles?: Maybe<Array<Scalars['String']>>;
@@ -861,6 +904,11 @@ export type MutationChangeUserKycTierArgs = {
 };
 
 
+export type MutationExportUsersToCsvArgs = {
+  userIds?: Maybe<Array<Scalars['String']>>;
+};
+
+
 export type MutationSignupArgs = {
   email: Scalars['String'];
   type: UserType;
@@ -988,6 +1036,11 @@ export type MutationUpdateTransactionArgs = {
 };
 
 
+export type MutationExportTransactionsToCsvArgs = {
+  transactionIds?: Maybe<Array<Scalars['String']>>;
+};
+
+
 export type MutationCancelMyTransactionArgs = {
   transactionId?: Maybe<Scalars['String']>;
 };
@@ -1043,6 +1096,11 @@ export type MutationDeleteWidgetArgs = {
 
 export type MutationAddMyWidgetUserParamsArgs = {
   widgetUserParams?: Maybe<WidgetUserParamsInput>;
+};
+
+
+export type MutationExportWidgetsToCsvArgs = {
+  widgetIds?: Maybe<Array<Scalars['String']>>;
 };
 
 
@@ -1199,9 +1257,17 @@ export type PaymentPreauthResultShort = {
 export type PaymentProvider = {
   __typename?: 'PaymentProvider';
   paymentProviderId?: Maybe<Scalars['ID']>;
-  name?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
   currencies?: Maybe<Array<Scalars['String']>>;
   countries_code2?: Maybe<Array<Scalars['String']>>;
+  instruments?: Maybe<Array<Scalars['String']>>;
+  default?: Maybe<Scalars['Boolean']>;
+};
+
+export type PaymentProviderByInstrument = {
+  __typename?: 'PaymentProviderByInstrument';
+  instrument?: Maybe<PaymentInstrument>;
+  provider?: Maybe<PaymentProvider>;
 };
 
 export type PostAddress = {
@@ -1227,6 +1293,7 @@ export type Query = {
   getNotifications?: Maybe<UserNotificationListResult>;
   getSettingsCommon?: Maybe<SettingsCommon>;
   getPaymentProviders?: Maybe<Array<PaymentProvider>>;
+  getAppropriatePaymentProviders?: Maybe<Array<PaymentProviderByInstrument>>;
   getSettingsCurrency?: Maybe<SettingsCurrencyWithDefaults>;
   getSettingsKycLevels?: Maybe<SettingsKycLevelListResult>;
   getSettingsKyc?: Maybe<SettingsKycListResult>;
@@ -1242,8 +1309,9 @@ export type Query = {
   mySettingsFeeFull?: Maybe<SettingsFee>;
   getAppropriateSettingsFee?: Maybe<SettingsFee>;
   getSettingsCost?: Maybe<SettingsCostListResult>;
-  getAppropriateSettingsCost?: Maybe<SettingsCostShort>;
+  mySettingsCost?: Maybe<SettingsCostShort>;
   getAppropriateSettingsCostFull?: Maybe<SettingsCost>;
+  getWireTransferBankAccounts?: Maybe<WireTransferBankAccountListResult>;
   generateWebApiToken: Scalars['String'];
   me: User;
   myState: UserState;
@@ -1334,6 +1402,12 @@ export type QueryGetNotificationsArgs = {
 };
 
 
+export type QueryGetAppropriatePaymentProvidersArgs = {
+  fiatCurrency?: Maybe<Scalars['String']>;
+  widgetId?: Maybe<Scalars['String']>;
+};
+
+
 export type QueryGetSettingsCurrencyArgs = {
   filter?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
@@ -1369,6 +1443,7 @@ export type QueryGetAppropriateSettingsKycArgs = {
 
 
 export type QueryGetSettingsKycTiersArgs = {
+  userId?: Maybe<Scalars['String']>;
   filter?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
@@ -1439,13 +1514,11 @@ export type QueryGetSettingsCostArgs = {
 };
 
 
-export type QueryGetAppropriateSettingsCostArgs = {
+export type QueryMySettingsCostArgs = {
   transactionType: TransactionType;
   instrument: PaymentInstrument;
   paymentProvider?: Maybe<Scalars['String']>;
   currency?: Maybe<Scalars['String']>;
-  filterType?: Maybe<SettingsCostTargetFilterType>;
-  filterValue?: Maybe<Scalars['String']>;
 };
 
 
@@ -1456,6 +1529,14 @@ export type QueryGetAppropriateSettingsCostFullArgs = {
   currency?: Maybe<Scalars['String']>;
   filterType?: Maybe<SettingsCostTargetFilterType>;
   filterValue?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryGetWireTransferBankAccountsArgs = {
+  filter?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OrderBy>>;
 };
 
 
@@ -1514,6 +1595,18 @@ export type QueryUserByReferralCodeArgs = {
 
 export type QueryGetUsersArgs = {
   userIds?: Maybe<Array<Scalars['String']>>;
+  accountTypesOnly?: Maybe<Array<UserType>>;
+  accountModesOnly?: Maybe<Array<UserMode>>;
+  accountStatusesOnly?: Maybe<Array<AccountStatus>>;
+  userTierLevelsOnly?: Maybe<Array<Scalars['String']>>;
+  riskLevelsOnly?: Maybe<Array<RiskLevel>>;
+  countriesOnly?: Maybe<Array<Scalars['String']>>;
+  countryCodeType?: Maybe<CountryCodeType>;
+  kycStatusesOnly?: Maybe<Array<KycStatus>>;
+  registrationDateInterval?: Maybe<DateTimeInterval>;
+  widgetIdsOnly?: Maybe<Array<Scalars['String']>>;
+  totalBuyVolumeOver?: Maybe<Scalars['Int']>;
+  transactionCountOver?: Maybe<Scalars['Int']>;
   filter?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
@@ -1662,6 +1755,7 @@ export type QueryMyTransactionsArgs = {
 
 export type QueryGetTransactionsArgs = {
   transactionIdsOnly?: Maybe<Array<Scalars['String']>>;
+  transactionStatusesOnly?: Maybe<Array<Scalars['String']>>;
   userIdsOnly?: Maybe<Array<Scalars['String']>>;
   widgetIdsOnly?: Maybe<Array<Scalars['String']>>;
   sourcesOnly?: Maybe<Array<TransactionSource>>;
@@ -1672,6 +1766,13 @@ export type QueryGetTransactionsArgs = {
   transactionTypesOnly?: Maybe<Array<TransactionType>>;
   sendersOrReceiversOnly?: Maybe<Array<Scalars['String']>>;
   paymentProvidersOnly?: Maybe<Array<Scalars['String']>>;
+  accountStatusesOnly?: Maybe<Array<Scalars['String']>>;
+  userTierLevelsOnly?: Maybe<Array<Scalars['String']>>;
+  riskLevelsOnly?: Maybe<Array<Scalars['String']>>;
+  paymentInstrumentsOnly?: Maybe<Array<PaymentInstrument>>;
+  createdDateInterval?: Maybe<DateTimeInterval>;
+  completedDateInterval?: Maybe<DateTimeInterval>;
+  walletAddressOnly?: Maybe<Scalars['String']>;
   filter?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
@@ -1848,9 +1949,10 @@ export type SettingsCost = {
   targetInstruments?: Maybe<Array<Scalars['String']>>;
   targetTransactionTypes?: Maybe<Array<Scalars['String']>>;
   targetPaymentProviders?: Maybe<Array<Scalars['String']>>;
-  terms: Scalars['String'];
+  terms?: Maybe<Scalars['String']>;
   created: Scalars['DateTime'];
   createdBy?: Maybe<Scalars['String']>;
+  bankAccounts?: Maybe<Array<WireTransferBankAccount>>;
   default?: Maybe<Scalars['Boolean']>;
   deleted?: Maybe<Scalars['DateTime']>;
 };
@@ -1864,6 +1966,7 @@ export type SettingsCostInput = {
   targetTransactionTypes?: Maybe<Array<TransactionType>>;
   targetPaymentProviders?: Maybe<Array<Scalars['String']>>;
   terms?: Maybe<Scalars['String']>;
+  bankAccountIds?: Maybe<Array<Scalars['String']>>;
   default?: Maybe<Scalars['Boolean']>;
   deleted?: Maybe<Scalars['DateTime']>;
 };
@@ -1876,7 +1979,8 @@ export type SettingsCostListResult = {
 
 export type SettingsCostShort = {
   __typename?: 'SettingsCostShort';
-  terms: Scalars['String'];
+  terms?: Maybe<Scalars['String']>;
+  bankAccounts?: Maybe<Array<WireTransferBankAccountShort>>;
 };
 
 export enum SettingsCostTargetFilterType {
@@ -1898,6 +2002,7 @@ export type SettingsCurrency = {
   defaultBankTransferProvider?: Maybe<Scalars['String']>;
   defaultWireTransferProvider?: Maybe<Scalars['String']>;
   defaultCreditCardProvider?: Maybe<Scalars['String']>;
+  explorerLink?: Maybe<Scalars['String']>;
 };
 
 export type SettingsCurrencyListResult = {
@@ -2268,8 +2373,10 @@ export type Transaction = {
   liquidityOrder?: Maybe<LiquidityOrder>;
   transferOrderId?: Maybe<Scalars['String']>;
   transferOrder?: Maybe<TransferOrder>;
+  transferOrderBlockchainLink?: Maybe<Scalars['String']>;
   benchmarkTransferOrderId?: Maybe<Scalars['String']>;
   benchmarkTransferOrder?: Maybe<TransferOrder>;
+  benchmarkTransferOrderBlockchainLink?: Maybe<Scalars['String']>;
   userBalanceTotalBefore?: Maybe<Scalars['Float']>;
   userBalanceAvailableBefore?: Maybe<Scalars['Float']>;
   userBalanceTotalAfter?: Maybe<Scalars['Float']>;
@@ -2473,7 +2580,15 @@ export type TransactionUpdateInput = {
   widgetUserParamsId?: Maybe<Scalars['String']>;
   status?: Maybe<TransactionStatus>;
   kycStatus?: Maybe<TransactionKycStatus>;
+  launchAfterUpdate?: Maybe<Scalars['Boolean']>;
   accountStatus?: Maybe<AccountStatus>;
+  transferOrderChanges?: Maybe<TransactionUpdateTransferOrderChanges>;
+  benchmarkTransferOrderChanges?: Maybe<TransactionUpdateTransferOrderChanges>;
+};
+
+export type TransactionUpdateTransferOrderChanges = {
+  orderId?: Maybe<Scalars['String']>;
+  hash?: Maybe<Scalars['String']>;
 };
 
 export type TransferListResult = {
@@ -2484,11 +2599,11 @@ export type TransferListResult = {
 
 export type TransferOrder = {
   __typename?: 'TransferOrder';
-  orderId: Scalars['ID'];
+  orderId?: Maybe<Scalars['ID']>;
   userId: Scalars['String'];
   transactionId?: Maybe<Scalars['String']>;
   provider?: Maybe<Scalars['String']>;
-  created: Scalars['DateTime'];
+  created?: Maybe<Scalars['DateTime']>;
   published?: Maybe<Scalars['DateTime']>;
   publishingResult?: Maybe<Scalars['String']>;
   executed?: Maybe<Scalars['DateTime']>;
@@ -2818,6 +2933,8 @@ export type UserInput = {
   risk?: Maybe<RiskLevel>;
   riskCodes?: Maybe<Array<Scalars['String']>>;
   widgetId?: Maybe<Scalars['String']>;
+  changePasswordRequired?: Maybe<Scalars['Boolean']>;
+  kycTierId?: Maybe<Scalars['String']>;
 };
 
 export type UserListResult = {
@@ -3026,16 +3143,14 @@ export type UserTransactionStats = {
 };
 
 export enum UserTransactionStatus {
-  Pending = 'Pending',
+  New = 'New',
   Processing = 'Processing',
-  Paid = 'Paid',
-  Declined = 'Declined',
-  Delivering = 'Delivering',
-  Delivered = 'Delivered',
+  Confirming = 'Confirming',
   Completed = 'Completed',
-  Abandoned = 'Abandoned',
   Canceled = 'Canceled',
-  Chargeback = 'Chargeback'
+  UnderReview = 'UnderReview',
+  Declined = 'Declined',
+  SendingError = 'SendingError'
 }
 
 export type UserTransactionSummary = {
@@ -3143,6 +3258,7 @@ export type Widget = {
   name: Scalars['String'];
   description?: Maybe<Scalars['String']>;
   created: Scalars['DateTime'];
+  createdBy?: Maybe<Scalars['String']>;
   transactionTypes?: Maybe<Array<TransactionType>>;
   currenciesCrypto?: Maybe<Array<Scalars['String']>>;
   currenciesFiat?: Maybe<Array<Scalars['String']>>;
@@ -3219,4 +3335,42 @@ export type WidgetUserParamsInput = {
   widgetId: Scalars['String'];
   userEmail: Scalars['String'];
   params?: Maybe<Scalars['String']>;
+};
+
+export type WireTransferBankAccount = {
+  __typename?: 'WireTransferBankAccount';
+  bankAccountId: Scalars['ID'];
+  name?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  created: Scalars['DateTime'];
+  createdBy?: Maybe<Scalars['String']>;
+  au?: Maybe<Scalars['String']>;
+  us?: Maybe<Scalars['String']>;
+  eu?: Maybe<Scalars['String']>;
+  deleted?: Maybe<Scalars['DateTime']>;
+};
+
+export type WireTransferBankAccountInput = {
+  name?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  au?: Maybe<Scalars['String']>;
+  us?: Maybe<Scalars['String']>;
+  eu?: Maybe<Scalars['String']>;
+  deleted?: Maybe<Scalars['DateTime']>;
+};
+
+export type WireTransferBankAccountListResult = {
+  __typename?: 'WireTransferBankAccountListResult';
+  count?: Maybe<Scalars['Int']>;
+  list?: Maybe<Array<WireTransferBankAccount>>;
+};
+
+export type WireTransferBankAccountShort = {
+  __typename?: 'WireTransferBankAccountShort';
+  bankAccountId: Scalars['ID'];
+  name?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  au?: Maybe<Scalars['String']>;
+  us?: Maybe<Scalars['String']>;
+  eu?: Maybe<Scalars['String']>;
 };

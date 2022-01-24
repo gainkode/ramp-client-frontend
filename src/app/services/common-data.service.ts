@@ -3,7 +3,7 @@ import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { EmptyObject } from 'apollo-angular/types';
 import { environment } from 'src/environments/environment';
 
-const GET_SETTINGS_CURRENCY_POST = gql`
+const GET_SETTINGS_CURRENCY = gql`
   query GetSettingsCurrency($recaptcha: String!) {
     getSettingsCurrency(recaptcha: $recaptcha) {
       settingsCurrency {
@@ -50,7 +50,7 @@ query MyState {
 }
 `;
 
-const GET_USERS_POST = gql`
+const GET_USERS = gql`
   query GetUsers {
     getUsers(
       skip: 0,
@@ -108,7 +108,7 @@ const GET_USERS_POST = gql`
   }
 `;
 
-const GET_USER_BY_ID_POST = gql`
+const GET_USER_BY_ID = gql`
   query GetUserById(
     $userId: String
   ) {
@@ -170,18 +170,14 @@ const GET_USER_BY_ID_POST = gql`
 export class CommonDataService {
   constructor(private apollo: Apollo) { }
 
-  getSettingsCurrency(): QueryRef<any, EmptyObject> | null {
-    if (this.apollo.client !== undefined) {
-      return this.apollo.watchQuery<any>({
-        query: GET_SETTINGS_CURRENCY_POST,
-        variables: {
-          recaptcha: environment.recaptchaId
-        },
-        fetchPolicy: 'network-only'
-      });
-    } else {
-      return null;
-    }
+  getSettingsCurrency(): QueryRef<any, EmptyObject> {
+    return this.apollo.watchQuery<any>({
+      query: GET_SETTINGS_CURRENCY,
+      variables: {
+        recaptcha: environment.recaptchaId
+      },
+      fetchPolicy: 'network-only'
+    });
   }
 
   getMyTransactionsTotal(): QueryRef<any, EmptyObject> | null {
@@ -205,11 +201,11 @@ export class CommonDataService {
       return null;
     }
   }
-  
+
   getUsers(): QueryRef<any, EmptyObject> | null {
     if (this.apollo.client !== undefined) {
       return this.apollo.watchQuery<any>({
-        query: GET_USERS_POST,
+        query: GET_USERS,
         fetchPolicy: 'network-only'
       });
     } else {
@@ -220,7 +216,7 @@ export class CommonDataService {
   getUserById(id: string): QueryRef<any, EmptyObject> | null {
     if (this.apollo.client !== undefined) {
       return this.apollo.watchQuery<any>({
-        query: GET_USER_BY_ID_POST,
+        query: GET_USER_BY_ID,
         variables: { userId: id },
         fetchPolicy: 'network-only'
       });

@@ -143,27 +143,27 @@ export class TransactionItemDeprecated {
   private getTransactionStatusColor(): string {
     let color = 'white';
     switch (this.statusInfo?.value.userStatus) {
-      case UserTransactionStatus.Pending:
+      case UserTransactionStatus.New:
         color = 'white';
         break;
       case UserTransactionStatus.Processing:
         color = 'grey';
         break;
-      case UserTransactionStatus.Paid:
+      case UserTransactionStatus.SendingError:
         color = 'purple';
         break;
       case UserTransactionStatus.Declined:
       case UserTransactionStatus.Canceled:
-      case UserTransactionStatus.Abandoned:
         color = 'red';
         break;
-      case UserTransactionStatus.Delivering:
+      case UserTransactionStatus.Confirming:
         color = 'blue';
         break;
       case UserTransactionStatus.Completed:
         color = 'green';
         break;
-      case UserTransactionStatus.Chargeback: color = 'yellow';
+      case UserTransactionStatus.UnderReview:
+        color = 'yellow';
         break;
       default:
         color = 'white';
