@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AdminDataService } from '../../../services/admin-data.service';
 import { FeeScheme } from '../../../../model/fee-scheme.model';
-import { pipe, Subject, Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
 import { LayoutService } from '../../../services/layout.service';
 

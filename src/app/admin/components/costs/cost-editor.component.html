@@ -5,7 +5,7 @@
     <div *ngIf="defaultSchemeFlag===''">
         <mat-form-field class="form-element">
             <mat-label>Scheme name</mat-label>
-            <input type="text" matInput formControlName="name" maxlength="50" placeholder="Fee scheme name" required/>
+            <input type="text" matInput formControlName="name" maxlength="50" placeholder="Fee scheme name" required />
             <mat-error *ngIf="this.schemeForm.get('name')?.hasError('required')">
                 Please specify a scheme name
             </mat-error>
@@ -14,14 +14,15 @@
     <div *ngIf="defaultSchemeFlag!==''">
         <mat-form-field class="form-element">
             <mat-label>Scheme name</mat-label>
-            <input type="text" matInput [value]="defaultSchemeFlag" disabled/>
+            <input type="text" matInput [value]="defaultSchemeFlag" disabled />
         </mat-form-field>
     </div>
 
     <!-- Description -->
     <mat-form-field class="form-element">
         <mat-label>Description</mat-label>
-        <input type="text" matInput formControlName="description" maxlength="100" placeholder="Fee scheme description"/>
+        <input type="text" matInput formControlName="description" maxlength="100"
+            placeholder="Fee scheme description" />
     </mat-form-field>
 
     <div class="form-element" *ngIf="errorMessage!==''">
@@ -32,7 +33,7 @@
     </div>
 
     <mat-tab-group class="form-element" color="primary" mat-stretch-tabs animationDuration="0"
-                   [selectedIndex]="selectedTab" (selectedIndexChange)="setSelectedTab($event)">
+        [selectedIndex]="selectedTab" (selectedIndexChange)="setSelectedTab($event)">
         <mat-tab>
             <ng-template mat-tab-label>
                 <app-tab-label [hasErrors]="tabHasError('tab1')" labelText="Targets"></app-tab-label>
@@ -56,19 +57,19 @@
                     <mat-label>{{targetValueParams.title}}</mat-label>
                     <mat-chip-list #chipList aria-label="Target selection" formControlName="targetValues">
                         <mat-chip *ngFor="let val of schemeForm.get('targetValues')?.value"
-                                  (removed)="removeTargetValue(val)">
+                            (removed)="removeTargetValue(val)">
                             {{val}}
                             <mat-icon matChipRemove matTooltip="Remove" matTooltipClass="info-tooltip">cancel</mat-icon>
                         </mat-chip>
                         <input [placeholder]="targetValueParams.inputPlaceholder" #targetValueInput
-                               formControlName="targetValue" [matAutocomplete]="auto" [matChipInputFor]="chipList"
-                               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                               (matChipInputTokenEnd)="addTargetValue($event)">
+                            formControlName="targetValue" [matAutocomplete]="auto" [matChipInputFor]="chipList"
+                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                            (matChipInputTokenEnd)="addTargetValue($event)">
                     </mat-chip-list>
                     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="targetItemSelected($event)">
                         <mat-option *ngFor="let item of filteredTargetValues | async" [value]="item.title">
                             <app-dropdown-item itemValue="{{item.title}}" imageClass="{{item.imgClass}}"
-                                               imageSource="{{item.imgSource}}"></app-dropdown-item>
+                                imageSource="{{item.imgSource}}"></app-dropdown-item>
                         </mat-option>
                     </mat-autocomplete>
                     <mat-error *ngIf="this.schemeForm.get('targetValues')?.hasError('required')">
@@ -123,7 +124,7 @@
             <!-- MDR -->
             <mat-form-field class="form-element">
                 <mat-label>MDR, %</mat-label>
-                <input type="text" matInput formControlName="mdr" maxlength="7" placeholder="2%" required/>
+                <input type="text" matInput formControlName="mdr" maxlength="7" placeholder="2%" required />
                 <mat-error *ngIf="this.schemeForm.get('mdr')?.hasError('required')">
                     Please specify MDR value
                 </mat-error>
@@ -135,7 +136,7 @@
             <!-- Per transaction cost -->
             <mat-form-field class="form-element">
                 <mat-label>Per transaction cost</mat-label>
-                <input type="text" matInput formControlName="transactionCost" maxlength="10" placeholder="1" required/>
+                <input type="text" matInput formControlName="transactionCost" maxlength="10" placeholder="1" required />
                 <mat-error *ngIf="this.schemeForm.get('transactionCost')?.hasError('required')">
                     Please specify transaction cost
                 </mat-error>
@@ -147,7 +148,7 @@
             <!-- Rolling Reserves -->
             <mat-form-field class="form-element">
                 <mat-label>Rolling reserves, %</mat-label>
-                <input type="text" matInput formControlName="rollingReserves" maxlength="7" placeholder="5%" required/>
+                <input type="text" matInput formControlName="rollingReserves" maxlength="7" placeholder="5%" required />
                 <mat-error *ngIf="this.schemeForm.get('rollingReserves')?.hasError('required')">
                     Please specify rolling reserves value
                 </mat-error>
@@ -160,7 +161,7 @@
             <mat-form-field class="form-element">
                 <mat-label>Rolling reserves days, %</mat-label>
                 <input type="text" matInput formControlName="rollingReservesDays" maxlength="7" placeholder="5%"
-                       required/>
+                    required />
                 <mat-error *ngIf="this.schemeForm.get('rollingReservesDays')?.hasError('required')">
                     Please specify percentage of rolling reserves days
                 </mat-error>
@@ -172,7 +173,7 @@
             <!-- Chargeback cost -->
             <mat-form-field class="form-element">
                 <mat-label>Chargeback cost</mat-label>
-                <input type="text" matInput formControlName="chargebackCost" maxlength="10" placeholder="5" required/>
+                <input type="text" matInput formControlName="chargebackCost" maxlength="10" placeholder="5" required />
                 <mat-error *ngIf="this.schemeForm.get('chargebackCost')?.hasError('required')">
                     Please specify chargeback cost
                 </mat-error>
@@ -184,7 +185,7 @@
             <!-- Monthly cost -->
             <mat-form-field class="form-element">
                 <mat-label>Monthly cost<span style="font-style: italic;"> (only in system)</span></mat-label>
-                <input type="text" matInput formControlName="monthlyCost" maxlength="7" placeholder="5" required/>
+                <input type="text" matInput formControlName="monthlyCost" maxlength="7" placeholder="5" required />
                 <mat-error *ngIf="this.schemeForm.get('monthlyCost')?.hasError('required')">
                     Please specify monthly cost
                 </mat-error>
@@ -196,7 +197,7 @@
             <!-- Minimal monthly cost -->
             <mat-form-field class="form-element">
                 <mat-label>Min. monthly cost<span style="font-style: italic;"> (in system)</span></mat-label>
-                <input type="text" matInput formControlName="minMonthlyCost" maxlength="7" placeholder="5" required/>
+                <input type="text" matInput formControlName="minMonthlyCost" maxlength="7" placeholder="5" required />
                 <mat-error *ngIf="this.schemeForm.get('minMonthlyCost')?.hasError('required')">
                     Please specify minimal monthly cost
                 </mat-error>
@@ -211,7 +212,8 @@
         <button mat-flat-button color="primary" type="submit">
             SAVE
         </button>
-        <button *ngIf="defaultSchemeFlag === '' && create==false" mat-flat-button color="warn" (click)="onDeleteScheme()">
+        <button *ngIf="defaultSchemeFlag === '' && create==false" mat-flat-button color="warn"
+            (click)="onDeleteScheme()">
             DELETE
         </button>
         <button mat-flat-button (click)="onCancel()">

@@ -1,5 +1,5 @@
 <mat-form-field class="form-element">
-    <mat-label>Countries</mat-label>
+    <mat-label>Customer Countries</mat-label>
     <mat-chip-list #chipList aria-label="Country selection">
         <mat-chip *ngFor="let opt of selectedOptions" (removed)="removeOption(opt)">
             {{opt.name}}

@@ -119,13 +119,7 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
         validators: [
           Validators.required, Validators.pattern('^[0-9.]+$')
         ], updateOn: 'change'
-      }],
-    beneficiaryName: [''],
-    beneficiaryAddress: [''],
-    iban: [''],
-    bankName: [''],
-    bankAddress: [''],
-    swift: ['']
+      }]
   });
 
   get defaultSchemeFlag(): string {
@@ -361,12 +355,6 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
       this.schemeForm.get('chargebackFees')?.setValue(scheme?.terms.chargebackFees);
       this.schemeForm.get('monthlyFees')?.setValue(scheme?.terms.monthlyFees);
       this.schemeForm.get('minMonthlyFees')?.setValue(scheme?.terms.minMonthlyFees);
-      this.schemeForm.get('beneficiaryName')?.setValue(scheme?.details.beneficiaryName);
-      this.schemeForm.get('beneficiaryAddress')?.setValue(scheme?.details.beneficiaryAddress);
-      this.schemeForm.get('iban')?.setValue(scheme?.details.iban);
-      this.schemeForm.get('bankName')?.setValue(scheme?.details.bankName);
-      this.schemeForm.get('bankAddress')?.setValue(scheme?.details.bankAddress);
-      this.schemeForm.get('swift')?.setValue(scheme?.details.swift);
       const p = this.targetValueParams;
       this.setTargetValidator();
       this.formChanged.emit(false);
@@ -389,12 +377,6 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
       this.schemeForm.get('chargebackFees')?.setValue('');
       this.schemeForm.get('monthlyFees')?.setValue('');
       this.schemeForm.get('minMonthlyFees')?.setValue('');
-      this.schemeForm.get('beneficiaryName')?.setValue('');
-      this.schemeForm.get('beneficiaryAddress')?.setValue('');
-      this.schemeForm.get('iban')?.setValue('');
-      this.schemeForm.get('bankName')?.setValue('');
-      this.schemeForm.get('bankAddress')?.setValue('');
-      this.schemeForm.get('swift')?.setValue('');
       this.setTargetValidator();
     }
   }
@@ -430,13 +412,6 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
     data.terms.chargebackFees = Number(this.schemeForm.get('chargebackFees')?.value);
     data.terms.monthlyFees = Number(this.schemeForm.get('monthlyFees')?.value);
     data.terms.minMonthlyFees = Number(this.schemeForm.get('minMonthlyFees')?.value);
-    // wire details
-    data.details.beneficiaryName = this.schemeForm.get('beneficiaryName')?.value;
-    data.details.beneficiaryAddress = this.schemeForm.get('beneficiaryAddress')?.value;
-    data.details.iban = this.schemeForm.get('iban')?.value;
-    data.details.bankName = this.schemeForm.get('bankName')?.value;
-    data.details.bankAddress = this.schemeForm.get('bankAddress')?.value;
-    data.details.swift = this.schemeForm.get('swift')?.value;
     return data;
   }
 
@@ -492,23 +467,6 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
       }
       if (valid) {
         valid = this.validateField('minMonthlyFees');
-      }
-    } else if (tab === 'tab3') {
-      valid = this.validateField('beneficiaryName');
-      if (valid) {
-        valid = this.validateField('beneficiaryAddress');
-      }
-      if (valid) {
-        valid = this.validateField('iban');
-      }
-      if (valid) {
-        valid = this.validateField('bankName');
-      }
-      if (valid) {
-        valid = this.validateField('bankAddress');
-      }
-      if (valid) {
-        valid = this.validateField('swift');
       }
     }
     return valid !== true;

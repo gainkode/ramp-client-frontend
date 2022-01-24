@@ -234,69 +234,6 @@
                 </mat-error>
             </mat-form-field>
         </mat-tab>
-        <mat-tab>
-            <ng-template mat-tab-label>
-                <app-tab-label [hasErrors]="tabHasError('tab3')" labelText="Wire details"></app-tab-label>
-            </ng-template>
-            <!-- Beneficiary name -->
-            <mat-form-field class="form-element">
-                <mat-label>Beneficiary name</mat-label>
-                <input type="text" matInput formControlName="beneficiaryName" maxlength="100"
-                       placeholder="Beneficiary name"/>
-                <mat-error *ngIf="this.schemeForm.get('beneficiaryName')?.hasError('required')">
-                    Please specify beneficiary name
-                </mat-error>
-            </mat-form-field>
-
-            <!-- Beneficiary address -->
-            <mat-form-field class="form-element">
-                <mat-label>Beneficiary address</mat-label>
-                <input type="text" matInput formControlName="beneficiaryAddress" maxlength="100"
-                       placeholder="Beneficiary address"/>
-                <mat-error *ngIf="this.schemeForm.get('beneficiaryAddress')?.hasError('required')">
-                    Please specify beneficiary address
-                </mat-error>
-            </mat-form-field>
-
-            <!-- IBAN -->
-            <mat-form-field class="form-element">
-                <mat-label>IBAN</mat-label>
-                <input type="text" matInput formControlName="iban" maxlength="30" placeholder="IBAN"/>
-                <mat-error *ngIf="this.schemeForm.get('iban')?.hasError('required')">
-                    Please specify IBAN
-                </mat-error>
-            </mat-form-field>
-
-            <!-- Bank name -->
-            <mat-form-field class="form-element">
-                <mat-label>Bank name</mat-label>
-                <input type="text" matInput formControlName="bankName" maxlength="100" placeholder="Bank name"/>
-                <mat-error *ngIf="this.schemeForm.get('bankName')?.hasError('required')">
-                    Please specify a bank name
-                </mat-error>
-            </mat-form-field>
-
-            <!-- Bank address -->
-            <mat-form-field class="form-element">
-                <mat-label>Bank address</mat-label>
-                <input type="text" matInput formControlName="bankAddress" maxlength="100" placeholder="Bank address"/>
-                <mat-error *ngIf="this.schemeForm.get('bankAddress')?.hasError('required')">
-                    Please specify a bank address
-                </mat-error>
-            </mat-form-field>
-
-            <!-- SWIFT -->
-            <mat-form-field class="form-element">
-                <mat-label>SWIFT</mat-label>
-                <input type="text" matInput formControlName="swift" maxlength="11" minlength="8" placeholder="SWIFT"/>
-                <mat-error *ngIf="this.schemeForm.get('swift')?.hasError('required')">
-                    Please specify SWIFT
-                </mat-error>
-                <mat-error *ngIf="this.schemeForm.get('swift')?.hasError('minlength')">
-                    Minimal length of SWIFT is 8 symbols
-                </mat-error>
-            </mat-form-field>
-        </mat-tab>
     </mat-tab-group>
 
     <div class="panel-actions">
