@@ -9,3 +9,15 @@ section {
     margin-bottom: 24px;
   }
 }
+
+
+.panel-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  margin-top: 16px;
+
+  > * {
+    margin-right: 16px;
+  }
+}

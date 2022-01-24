@@ -1636,7 +1636,8 @@ export class AdminDataService {
     return this.watchQuery<{ getUsers: UserListResult }, QueryGetUsersArgs>({
       query: GET_USERS,
       variables: {
-        //userIdsOnly: [userId],
+        userIds: [userId],
+        countryCodeType: CountryCodeType.Code3,
         filter: undefined,
         skip: 0,
         first: 1

@@ -140,7 +140,7 @@
 </mat-paginator>
 
 <ng-template *ngIf="selectedCustomer" appRightPanel (panelClosed)="handleDetailsPanelClosed()">
-    <app-customer-details [customer]="selectedCustomer" [currencies]="currencyList" [cancelable]=true (save)="onSaveCustomer($event)"
-        (delete)="onDeleteCustomer($event)" (cancel)="onCancelEdit()" (formChanged)="onEditorFormChanged($event)">
+    <app-customer-details [customer]="selectedCustomer" [currencies]="currencyList" [cancelable]=true (save)="onSave()"
+        (cancel)="onCancelEdit()">
     </app-customer-details>
 </ng-template>

@@ -3,8 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TransactionItemDeprecated } from '../../../../model/transaction.model';
 import { ErrorService } from '../../../../services/error.service';
 import { AdminDataService } from '../../../services/admin-data.service';
-import { take, takeUntil } from 'rxjs/operators';
-import { Subject, Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 import { CurrencyView } from 'src/app/model/payment.model';
 import { CommonDataService } from 'src/app/services/common-data.service';
 import { SettingsCurrencyWithDefaults } from 'src/app/model/generated-models';
@@ -45,20 +45,23 @@ export class TransactionSingleComponent implements OnInit, OnDestroy {
   private loadData(id: string): void {
     this.transactionId = id;
     this.currencyOptions = [];
-    this.commonDataService.getSettingsCurrency()?.valueChanges.subscribe(({ data }) => {
-      const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
-      if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
-        this.currencyOptions = currencySettings.settingsCurrency.list?.map((val) => new CurrencyView(val)) as CurrencyView[];
-      } else {
-        this.currencyOptions = [];
-      }
-      this.adminService.getTransaction(id).pipe(take(1)).subscribe(transaction => {
-        this.transaction = transaction;
-      });
-    }, (error) => {
-      if (this.auth.token === '') {
-        this.router.navigateByUrl('/');
-      }
-    });    
+    const transactionData$ = this.commonDataService.getSettingsCurrency()?.valueChanges;
+    this.subscriptions.add(
+      transactionData$.subscribe(({ data }) => {
+        const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
+        if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
+          this.currencyOptions = currencySettings.settingsCurrency.list?.map((val) => new CurrencyView(val)) as CurrencyView[];
+        } else {
+          this.currencyOptions = [];
+        }
+        this.adminService.getTransaction(id).pipe(take(1)).subscribe(transaction => {
+          this.transaction = transaction;
+        });
+      }, (error) => {
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
+      })
+    );
   }
 }

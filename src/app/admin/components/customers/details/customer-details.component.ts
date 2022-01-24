@@ -2,13 +2,17 @@ import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core
 import { FormBuilder, Validators } from '@angular/forms';
 import { Countries, getCountryByCode3 } from 'src/app/model/country-code.model';
 import { RiskLevel, User, UserType } from 'src/app/model/generated-models';
-import { CurrencyView, RiskLevelView, RiskLevelViewList, UserModeView } from 'src/app/model/payment.model';
+import { CurrencyView, RiskLevelViewList } from 'src/app/model/payment.model';
 import { UserItem } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
-import { Subject, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { AdminDataService } from 'src/app/admin/services/admin-data.service';
-import { take, takeUntil } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 import { getFormattedUtcDate } from 'src/app/utils/utils';
+import { LayoutService } from 'src/app/admin/services/layout.service';
+import { Router } from '@angular/router';
+import { CommonDialogBox } from 'src/app/components/dialogs/common-box.dialog';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-customer-details',
@@ -18,27 +22,18 @@ import { getFormattedUtcDate } from 'src/app/utils/utils';
 export class CustomerDetailsComponent implements OnDestroy {
   @Input() set customer(val: UserItem | null | undefined) {
     this.setFormData(val);
-    this.settingsId = (val) ? val?.id : '';
-    this.email = (val) ? val?.email : '';
-    this.removable = (this.auth.user?.userId !== this.settingsId);
-    this.address = (val) ? val.address : '';
-    this.userType = (val) ? val.userType?.id ?? UserType.Personal : UserType.Personal;
-    this.user = val;
-    if (val) {
-      this.getUserKycInfo(this.settingsId);
-      this.getUserState(this.settingsId);
-    }
+    this.setCurrencies(this.pCurrencies);
+    this.layoutService.setBackdrop(!val?.id);
   }
   @Input() set currencies(val: CurrencyView[]) {
-    this.fiatCurrencies = val.filter(x => x.fiat === true);
-    this.cryptoCurrencies = val.filter(x => x.fiat === false);
+    this.pCurrencies = val;
+    this.setCurrencies(val);
   }
   @Input() cancelable = false;
-  @Output() save = new EventEmitter<User>();
-  @Output() delete = new EventEmitter<string>();
+  @Output() save = new EventEmitter();
   @Output() cancel = new EventEmitter();
-  @Output() formChanged = new EventEmitter<boolean>();
 
+  data: UserItem | null | undefined
   USER_TYPE: typeof UserType = UserType;
   settingsId = '';
   email = '';
@@ -78,9 +73,13 @@ export class CustomerDetailsComponent implements OnDestroy {
   });
 
   private subscriptions: Subscription = new Subscription();
+  private pCurrencies: CurrencyView[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
+    private layoutService: LayoutService,
+    private router: Router,
+    public dialog: MatDialog,
     private auth: AuthService,
     private adminService: AdminDataService) {
   }
@@ -89,7 +88,17 @@ export class CustomerDetailsComponent implements OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
+  private setCurrencies(list: CurrencyView[]): void {
+    if (this.data) {
+      this.fiatCurrencies = list.filter(x => x.fiat === true);
+      this.dataForm.get('fiat')?.setValue(this.data?.fiatCurrency ?? '');
+      this.cryptoCurrencies = list.filter(x => x.fiat === false);
+      this.dataForm.get('crypto')?.setValue(this.data.cryptoCurrency ?? '');
+    }
+  }
+
   private setFormData(data: UserItem | null | undefined): void {
+    this.data = data;
     this.errorMessage = '';
     this.dataForm.reset();
     if (data) {
@@ -129,7 +138,6 @@ export class CustomerDetailsComponent implements OnDestroy {
       this.dataForm.get('fiat')?.setValue(data?.fiatCurrency);
       this.dataForm.get('crypto')?.setValue(data?.cryptoCurrency);
       this.loadingData = false;
-      this.formChanged.emit(false);
     } else {
       this.dataForm.get('id')?.setValue('');
       this.dataForm.get('email')?.setValue('');
@@ -152,6 +160,16 @@ export class CustomerDetailsComponent implements OnDestroy {
       this.dataForm.get('crypto')?.setValue('');
     }
     this.dataForm.get('birthday')?.updateValueAndValidity();
+    this.settingsId = (data) ? data?.id : '';
+    this.email = (data) ? data?.email : '';
+    this.removable = (this.auth.user?.userId !== this.settingsId);
+    this.address = (data) ? data.address : '';
+    this.userType = (data) ? data.userType?.id ?? UserType.Personal : UserType.Personal;
+    this.user = data;
+    if (data) {
+      this.getUserKycInfo(this.settingsId);
+      this.getUserState(this.settingsId);
+    }
   }
 
   private getUserKycInfo(id: string): void {
@@ -201,20 +219,62 @@ export class CustomerDetailsComponent implements OnDestroy {
     return data;
   }
 
+  private onDelete(id: string): void {
+    const requestData$ = this.adminService.deleteCustomer(id);
+    this.subscriptions.add(
+      requestData$.subscribe(({ data }) => {
+        this.save.emit();
+      }, (error) => {
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
+      })
+    );
+  }
+
   onDeleteCustomer(): void {
-    this.delete.emit(this.settingsId);
+    this.onDelete(this.settingsId);
+  }
+
+  onSave(customer: User): void {
+    const requestData$ = this.adminService.saveCustomer(customer);
+    this.subscriptions.add(
+      requestData$.subscribe(({ data }) => {
+        if (customer.changePasswordRequired === true) {
+          this.dialog.open(CommonDialogBox, {
+            width: '450px',
+            data: {
+              title: 'Reset password',
+              message: 'Password has been reset successfully'
+            }
+          });
+        } else {
+          if (this.auth.user?.userId === customer.userId) {
+            this.auth.setUserName(customer.firstName ?? '', customer.lastName ?? '');
+            this.auth.setUserCurrencies(
+              customer.defaultCryptoCurrency ?? 'BTC',
+              customer.defaultFiatCurrency ?? 'EUR');
+          }
+          this.save.emit();
+        }
+      }, (error) => {
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
+      })
+    );
   }
 
   onSubmit(): void {
     if (this.dataForm.valid) {
-      this.save.emit(this.setCustomerData());
+      this.onSave(this.setCustomerData());
     } else {
       this.errorMessage = 'Input data is not completely valid. Please, check all fields are valid.';
     }
   }
 
   onResetPassword(): void {
-    this.save.emit({
+    this.onSave({
       userId: this.settingsId,
       email: this.email,
       changePasswordRequired: true

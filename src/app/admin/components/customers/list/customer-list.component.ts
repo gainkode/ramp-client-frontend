@@ -16,7 +16,6 @@ import { Router } from '@angular/router';
 import { SendNotificationDialogBox } from 'src/app/components/dialogs/send-notification-box.dialog';
 import { MatDialog } from '@angular/material/dialog';
 import { FormGroup } from '@angular/forms';
-import { CommonDialogBox } from 'src/app/components/dialogs/common-box.dialog';
 
 @Component({
   templateUrl: 'customer-list.component.html',
@@ -234,47 +233,8 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
     this.setEditMode(false);
   }
 
-  onDeleteCustomer(id: string): void {
-    const requestData$ = this.adminService.deleteCustomer(id);
-    this.subscriptions.add(
-      requestData$.subscribe(({ data }) => {
-        this.showEditor(null, false);
-        this.loadCustomers();
-      }, (error) => {
-        if (this.auth.token === '') {
-          this.router.navigateByUrl('/');
-        }
-      })
-    );
-  }
-
-  onSaveCustomer(customer: User): void {
-    const requestData$ = this.adminService.saveCustomer(customer);
-    this.subscriptions.add(
-      requestData$.subscribe(({ data }) => {
-        if (customer.changePasswordRequired === true) {
-          this.dialog.open(CommonDialogBox, {
-            width: '450px',
-            data: {
-              title: 'Reset password',
-              message: 'Password has been reset successfully'
-            }
-          });
-        } else {
-          this.showEditor(null, false);
-          if (this.auth.user?.userId === customer.userId) {
-            this.auth.setUserName(customer.firstName ?? '', customer.lastName ?? '');
-            this.auth.setUserCurrencies(
-              customer.defaultCryptoCurrency ?? 'BTC',
-              customer.defaultFiatCurrency ?? 'EUR');
-          }
-          this.loadCustomers();
-        }
-      }, (error) => {
-        if (this.auth.token === '') {
-          this.router.navigateByUrl('/');
-        }
-      })
-    );
+  onSave(): void {
+    this.showEditor(null, false);
+    this.loadCustomers();
   }
 }
