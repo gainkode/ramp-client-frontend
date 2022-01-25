@@ -5,7 +5,7 @@
     <div *ngIf="defaultSchemeFlag===''">
         <mat-form-field class="form-element">
             <mat-label>Scheme name</mat-label>
-            <input type="text" matInput formControlName="name" maxlength="50" placeholder="Fee scheme name" required />
+            <input type="text" matInput formControlName="name" maxlength="50" placeholder="Cost scheme name" required />
             <mat-error *ngIf="this.schemeForm.get('name')?.hasError('required')">
                 Please specify a scheme name
             </mat-error>
@@ -22,7 +22,7 @@
     <mat-form-field class="form-element">
         <mat-label>Description</mat-label>
         <input type="text" matInput formControlName="description" maxlength="100"
-            placeholder="Fee scheme description" />
+            placeholder="Cost scheme description" />
     </mat-form-field>
 
     <div class="form-element" *ngIf="errorMessage!==''">

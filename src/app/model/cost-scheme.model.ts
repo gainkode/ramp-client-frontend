@@ -144,13 +144,23 @@ export class WireTransferBankAccountItem {
     id = '';
     name = '';
     description = '';
-    auAvailable = false;
-    ukAvailable = false;
-    euAvailable = false;
+
     au: WireTransferBankAccountAu | undefined = undefined;
     uk: WireTransferBankAccountUk | undefined = undefined;
     eu: WireTransferBankAccountEu | undefined = undefined;
 
+    get auAvailable() {
+        return (this.au !== undefined);
+    }
+
+    get ukAvailable() {
+        return (this.uk !== undefined);
+    }
+
+    get euAvailable() {
+        return (this.eu !== undefined);
+    }
+    
     constructor(data: WireTransferBankAccount | undefined) {
         if (data) {
             this.id = data.bankAccountId;
@@ -158,15 +168,12 @@ export class WireTransferBankAccountItem {
             this.description = data.description ?? '';
             if (data.au) {
                 this.au = JSON.parse(data.au);
-                this.auAvailable = (this.au !== undefined);
             }
             if (data.us) {
                 this.uk = JSON.parse(data.us);
-                this.ukAvailable = (this.uk !== undefined);
             }
             if (data.eu) {
                 this.eu = JSON.parse(data.eu);
-                this.euAvailable = (this.eu !== undefined);
             }
         } else {
             this.id = '';

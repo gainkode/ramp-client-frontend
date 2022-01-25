@@ -81,6 +81,7 @@ import { FilterFieldUserTierComponent } from './components/core/filter-panel/fil
 import { FilterFieldItemIdComponent } from './components/core/filter-panel/filter-fields/item-id/filter-field-item-id.component';
 import { CostTabListComponent } from './components/costs/tab-list/cost-tab-list.component';
 import { BankAccountsComponent } from './components/costs/list/bank-accounts.component';
+import { BankAccountEditorComponent } from './components/costs/details/bank-account-editor.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -136,7 +137,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
     NotificationDetailsComponent,
     CostTabListComponent,
     CostsComponent, CostEditorComponent,
-    BankAccountsComponent,
+    BankAccountsComponent, BankAccountEditorComponent,
     IdentificationListComponent,
     IdTableComponent,
     LevelTableComponent,

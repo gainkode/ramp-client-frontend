@@ -1,0 +1,38 @@
+<h2>{{create ? "Create bank account scheme" : "Change bank account scheme"}}</h2>
+
+<form [formGroup]="accountForm" (ngSubmit)="onSubmit()">
+    <!-- Scheme name -->
+    <mat-form-field class="form-element">
+        <mat-label>Bank account name</mat-label>
+        <input type="text" matInput formControlName="name" maxlength="50" placeholder="Bank account name" required />
+        <mat-error *ngIf="this.accountForm.get('name')?.hasError('required')">
+            Please specify a name
+        </mat-error>
+    </mat-form-field>
+
+    <!-- Description -->
+    <mat-form-field class="form-element">
+        <mat-label>Description</mat-label>
+        <input type="text" matInput formControlName="description" maxlength="100"
+            placeholder="Bank account description" />
+    </mat-form-field>
+
+    <div class="form-element" *ngIf="errorMessage!==''">
+        <div class="form-error-box">
+            {{errorMessage}}
+        </div>
+        <br>
+    </div>
+
+    <div class="panel-actions">
+        <button mat-flat-button color="primary" type="submit">
+            SAVE
+        </button>
+        <button *ngIf="create===false" mat-flat-button color="warn" (click)="onDeleteScheme()">
+            DELETE
+        </button>
+        <button mat-flat-button (click)="onCancel()">
+            CANCEL
+        </button>
+    </div>
+</form>
