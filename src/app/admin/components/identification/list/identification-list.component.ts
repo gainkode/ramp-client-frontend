@@ -3,9 +3,9 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../../../services/auth.service';
 import { AdminDataService } from '../../../services/admin-data.service';
 import { ErrorService } from '../../../../services/error.service';
-import { Subject, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { KycLevel, KycScheme } from 'src/app/model/identification.model';
-import { take, takeUntil } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 
 @Component({
   templateUrl: 'identification-list.component.html',
@@ -28,7 +28,6 @@ export class IdentificationListComponent implements OnInit, OnDestroy {
   schemes: KycScheme[] = [];
   levels: KycLevel[] = [];
 
-  private destroy$ = new Subject();
   private subscriptions: Subscription = new Subscription();
 
   get editMode(): boolean {
@@ -47,7 +46,6 @@ export class IdentificationListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.destroy$.next();
     this.subscriptions.unsubscribe();
   }
 

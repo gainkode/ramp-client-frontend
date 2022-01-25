@@ -1,32 +1,32 @@
-import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, EventEmitter, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../services/auth.service';
-import { AdminDataService } from '../../services/admin-data.service';
-import { ErrorService } from '../../../services/error.service';
-import { CostScheme } from '../../../model/cost-scheme.model';
-import { SettingsCostListResult } from '../../../model/generated-models';
+import { AuthService } from '../../../../services/auth.service';
+import { AdminDataService } from '../../../services/admin-data.service';
+import { ErrorService } from '../../../../services/error.service';
+import { CostScheme } from '../../../../model/cost-scheme.model';
 import { Subject, Subscription } from 'rxjs';
-import { LayoutService } from '../../services/layout.service';
+import { LayoutService } from '../../../services/layout.service';
 import { take, takeUntil } from 'rxjs/operators';
 
 @Component({
   templateUrl: 'costs.component.html',
-  styleUrls: ['costs.component.scss']
+  styleUrls: ['costs.component.scss'],
+  selector: 'app-cost-table'
 })
 export class CostsComponent implements OnInit, OnDestroy {
-  @Output() changeEditMode = new EventEmitter<boolean>();
+  @Input() selectedScheme: CostScheme | null = null;
+  @Input() schemes: CostScheme[] = [];
+  @Output() toggle = new EventEmitter<CostScheme>();
+
   private pShowDetails = false;
   private pEditMode = false;
+  
   inProgress = false;
   errorMessage = '';
   editorErrorMessage = '';
   createScheme = false;
-  selectedScheme: CostScheme | null = null;
-  schemes: CostScheme[] = [];
   displayedColumns: string[] = [
-    'details',
-    'isDefault',
-    'name', 'target', 'trxType', 'instrument', 'provider'
+    'details', 'isDefault', 'name', 'target', 'trxType', 'instrument', 'provider'
   ];
 
   get showDetailed(): boolean {
@@ -53,30 +53,6 @@ export class CostsComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.selectedScheme = null;
       });
-
-    const listData$ = this.adminService.getCostSettings().valueChanges.pipe(take(1));
-    this.inProgress = true;
-    this.subscriptions.add(
-      listData$.subscribe(({ data }) => {
-        const settings = data.getSettingsCost as SettingsCostListResult;
-        let itemCount = 0;
-        if (settings !== null) {
-          itemCount = settings?.count as number;
-          if (itemCount > 0) {
-            this.schemes = settings?.list?.map((val) => new CostScheme(val)) as CostScheme[];
-          }
-        }
-        this.inProgress = false;
-      }, (error) => {
-        this.setEditMode(false);
-        this.inProgress = false;
-        if (this.auth.token !== '') {
-          this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load cost settings');
-        } else {
-          this.router.navigateByUrl('/');
-        }
-      })
-    );
   }
 
   ngOnDestroy(): void {
@@ -93,7 +69,6 @@ export class CostsComponent implements OnInit, OnDestroy {
 
   private setEditMode(mode: boolean): void {
     this.pEditMode = mode;
-    this.changeEditMode.emit(mode);
   }
 
   private isSelectedScheme(schemeId: string): boolean {
@@ -137,25 +112,7 @@ export class CostsComponent implements OnInit, OnDestroy {
   }
 
   toggleDetails(scheme: CostScheme): void {
-    let show = true;
-    if (this.isSelectedScheme(scheme.id)) {
-      show = false;
-    }
-    this.showEditor(scheme, false, show);
-  }
-
-  createNewScheme(): void {
-    this.showEditor(null, true, true);
-  }
-
-  onEditorFormChanged(mode: boolean): void {
-    this.setEditMode(mode);
-  }
-
-  onCancelEdit(): void {
-    this.createScheme = false;
-    this.showEditor(null, false, false);
-    this.setEditMode(false);
+    this.toggle.emit(scheme);
   }
 
   onDeleteScheme(id: string): void {

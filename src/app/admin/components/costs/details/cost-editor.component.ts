@@ -5,10 +5,10 @@ import { Observable, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { CostScheme, PspFilterList } from '../../../model/cost-scheme.model';
+import { CostScheme, PspFilterList } from '../../../../model/cost-scheme.model';
 import {
   SettingsCostTargetFilterType, PaymentInstrument, PaymentProvider, TransactionType
-} from '../../../model/generated-models';
+} from '../../../../model/generated-models';
 import {
   PaymentInstrumentList,
   TransactionTypeList,
@@ -18,7 +18,7 @@ import {
 import { CommonTargetValue, TargetParams } from 'src/app/model/common.model';
 import { CountryFilterList, getCountry } from 'src/app/model/country-code.model';
 import { ErrorService } from 'src/app/services/error.service';
-import { AdminDataService } from '../../services/admin-data.service';
+import { AdminDataService } from '../../../services/admin-data.service';
 
 @Component({
   selector: 'app-cost-editor',

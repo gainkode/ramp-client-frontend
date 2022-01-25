@@ -1,0 +1,54 @@
+<mat-tab-group class="form-element" color="primary" animationDuration="0" [selectedIndex]="selectedTab"
+    (selectedIndexChange)="setSelectedTab($event)">
+    <!-- Costs tab -->
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <app-tab-label labelText="Costs"></app-tab-label>
+        </ng-template>
+        <div class="action-panel">
+            <button mat-flat-button color="primary" *ngIf="errorMessage===''" [disabled]="createScheme"
+                (click)="createNewScheme()">
+                ADD SCHEME
+            </button>
+        </div>
+
+        <div class="data-table">
+            <app-cost-table [schemes]="schemes" [selectedScheme]="selectedScheme" (toggle)="toggleSchemeDetails($event)">
+            </app-cost-table>
+        </div>
+    </mat-tab>
+
+    <!-- Bank Accounts tab -->
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <app-tab-label labelText="Bank Accounts"></app-tab-label>
+        </ng-template>
+        <div class="action-panel">
+            <div class="form-element" *ngIf="accountEditorErrorMessage!==''">
+                <div class="form-error-box">
+                    {{accountEditorErrorMessage}}
+                </div>
+            </div>
+
+            <button mat-flat-button color="primary" *ngIf="errorMessage===''" [disabled]="createAccount"
+                (click)="createNewAccount()">
+                ADD ACCOUNT
+            </button>
+        </div>
+
+        <div class="data-table">
+            <app-identification-table [schemes]="accounts" [selectedAccount]="selectedAccount"
+                (toggle)="toggleAccountDetails($event)">
+            </app-identification-table>
+        </div>
+    </mat-tab>
+</mat-tab-group>
+
+<ng-template *ngIf="selectedAccount || selectedScheme" appRightPanel (panelClosed)="handleDetailsPanelClosed()">
+    <!-- <app-level-editor *ngIf="selectedScheme && selectedTab===0" [currentLevel]="selectedScheme" [create]="createScheme"
+        (save)="onSavedScheme($event)" (delete)="onDeleteScheme($event)" (cancel)="onCancelEdit()"
+        (formChanged)="onEditorFormChanged($event)"></app-level-editor>
+    <app-kyc-editor *ngIf="selectedAccount && selectedTab===1" [currentScheme]="selectedAccount"
+        [create]="createAccount" (save)="onSavedAccount($event)" (delete)="onDeleteAccount($event)"
+        (cancel)="onCancelEdit()" (formChanged)="onEditorFormChanged($event)"></app-kyc-editor> -->
+</ng-template>

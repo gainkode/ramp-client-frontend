@@ -20,8 +20,8 @@ import { ComponentsModule, MaterialModule } from '../components/components.modul
 import { AdminGuard } from './admin.guard';
 import { AdminComponent } from './admin.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { CostsComponent } from './components/costs/costs.component';
-import { CostEditorComponent } from './components/costs/cost-editor.component';
+import { CostsComponent } from './components/costs/list/costs.component';
+import { CostEditorComponent } from './components/costs/details/cost-editor.component';
 import { IdentificationListComponent } from './components/identification/list/identification-list.component';
 import { IdTableComponent } from './components/identification/id-table.component';
 import { LevelTableComponent } from './components/identification/level-table.component';
@@ -79,6 +79,7 @@ import { SystemUserDetailsComponent } from './components/system-users/details/us
 import { DirectiveModule } from '../directives/directives.module';
 import { FilterFieldUserTierComponent } from './components/core/filter-panel/filter-fields/user-tier/filter-field-user-tier.component';
 import { FilterFieldItemIdComponent } from './components/core/filter-panel/filter-fields/item-id/filter-field-item-id.component';
+import { CostTabListComponent } from './components/costs/tab-list/cost-tab-list.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -132,6 +133,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
     FeeDetailsComponent,
     NotificationListComponent,
     NotificationDetailsComponent,
+    CostTabListComponent,
     CostsComponent, CostEditorComponent,
     IdentificationListComponent,
     IdTableComponent,

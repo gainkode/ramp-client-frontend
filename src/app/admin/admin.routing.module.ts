@@ -5,7 +5,6 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AdminGuard } from './admin.guard';
 import { CustomerListComponent } from './components/customers/list/customer-list.component';
 import { NotificationListComponent } from './components/notifications/list/notification-list.component';
-import { CostsComponent } from './components/costs/costs.component';
 import { IdentificationListComponent } from './components/identification/list/identification-list.component';
 import { ReconciliationComponent } from './components/reconciliation/reconciliation.component';
 import { WidgetListComponent } from './components/widgets/list/widget-list.component';
@@ -18,6 +17,7 @@ import { AdminSettingsComponent } from './components/settings/settings.component
 import { CustomerSingleComponent } from './components/customers/customer-single/customer-single.component';
 import { SystemUserSingleComponent } from './components/system-users/user-single/user-single.component';
 import { SystemUserListComponent } from './components/system-users/list/user-list.component';
+import { CostTabListComponent } from './components/costs/tab-list/cost-tab-list.component';
 
 const routes: Routes = [
   {
@@ -106,7 +106,7 @@ const routes: Routes = [
       },
       {
         path: 'costs',
-        component: CostsComponent,
+        component: CostTabListComponent,
         data: {
           header: 'Costs'
         }
