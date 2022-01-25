@@ -1,9 +1,6 @@
 import { Component, OnInit, OnDestroy, Output, EventEmitter, Input } from '@angular/core';
-import { Router } from '@angular/router';
 import { WireTransferBankAccountItem } from '../../../../model/cost-scheme.model';
-import { Subject, Subscription } from 'rxjs';
-import { LayoutService } from '../../../services/layout.service';
-import { takeUntil } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 
 @Component({
   templateUrl: 'bank-accounts.component.html',
@@ -19,22 +16,14 @@ export class BankAccountsComponent implements OnInit, OnDestroy {
     'details', 'name', 'description', 'auAvailable', 'ukAvailable', 'euAvailable'
   ];
 
-  private destroy$ = new Subject();
   private subscriptions: Subscription = new Subscription();
 
-  constructor(
-    private layoutService: LayoutService,
-    private router: Router) {
+  constructor() {
   }
 
-  ngOnInit(): void {
-    this.layoutService.rightPanelCloseRequested$.pipe(takeUntil(this.destroy$)).subscribe(() => {
-      this.selectedAccount = null;
-    });
-  }
+  ngOnInit(): void {}
 
   ngOnDestroy(): void {
-    this.destroy$.next();
     this.subscriptions.unsubscribe();
   }
 

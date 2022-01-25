@@ -179,13 +179,13 @@ export class WireTransferBankAccountItem {
             this.name = data.name ?? '';
             this.description = data.description ?? '';
             if (data.au) {
-                this.au = JSON.parse(data.au);
+                this.au = JSON.parse(data.au) ?? undefined;
             }
             if (data.uk) {
-                this.uk = JSON.parse(data.uk);
+                this.uk = JSON.parse(data.uk) ?? undefined;
             }
             if (data.eu) {
-                this.eu = JSON.parse(data.eu);
+                this.eu = JSON.parse(data.eu) ?? undefined;
             }
         } else {
             this.id = '';

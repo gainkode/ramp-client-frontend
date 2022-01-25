@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { CostScheme, WireTransferBankAccountItem } from 'src/app/model/cost-scheme.model';
 import { SettingsCostListResult, WireTransferBankAccountListResult } from 'src/app/model/generated-models';
+import { LayoutService } from 'src/app/admin/services/layout.service';
 
 @Component({
   templateUrl: 'cost-tab-list.component.html',
@@ -14,7 +15,6 @@ import { SettingsCostListResult, WireTransferBankAccountListResult } from 'src/a
 })
 export class CostTabListComponent implements OnInit, OnDestroy {
   @Output() changeEditMode = new EventEmitter<boolean>();
-  private pEditMode = false;
   inProgress = false;
   errorMessage = '';
   schemeEditorErrorMessage = '';
@@ -27,6 +27,7 @@ export class CostTabListComponent implements OnInit, OnDestroy {
   accounts: WireTransferBankAccountItem[] = [];
   schemes: CostScheme[] = [];
 
+  private pEditMode = false;
   private subscriptions: Subscription = new Subscription();
 
   get editMode(): boolean {
@@ -34,6 +35,7 @@ export class CostTabListComponent implements OnInit, OnDestroy {
   }
 
   constructor(
+    private layoutService: LayoutService,
     private auth: AuthService,
     private errorHandler: ErrorService,
     private adminService: AdminDataService,
@@ -41,6 +43,11 @@ export class CostTabListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.subscriptions.add(
+      this.layoutService.rightPanelCloseRequested$.subscribe(() => {
+        this.onCancelEdit();
+      })
+    );
     this.loadData();
   }
 
@@ -103,7 +110,7 @@ export class CostTabListComponent implements OnInit, OnDestroy {
         const settings = data.getSettingsCost as SettingsCostListResult;
         let itemCount = 0;
         if (settings !== null) {
-          itemCount = settings?.count as number;
+          itemCount = settings?.count ?? 0;
           if (itemCount > 0) {
             this.schemes = settings?.list?.map((val) => new CostScheme(val)) as CostScheme[];
           }
