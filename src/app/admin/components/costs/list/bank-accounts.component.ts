@@ -1,22 +1,22 @@
 import { Component, OnInit, OnDestroy, Output, EventEmitter, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { CostScheme } from '../../../../model/cost-scheme.model';
+import { WireTransferBankAccountItem } from '../../../../model/cost-scheme.model';
 import { Subject, Subscription } from 'rxjs';
 import { LayoutService } from '../../../services/layout.service';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  templateUrl: 'costs.component.html',
-  styleUrls: ['costs.component.scss'],
-  selector: 'app-cost-table'
+  templateUrl: 'bank-accounts.component.html',
+  styleUrls: ['bank-accounts.component.scss'],
+  selector: 'app-bank-account-table'
 })
-export class CostsComponent implements OnInit, OnDestroy {
-  @Input() selectedScheme: CostScheme | null = null;
-  @Input() schemes: CostScheme[] = [];
-  @Output() toggle = new EventEmitter<CostScheme>();
+export class BankAccountsComponent implements OnInit, OnDestroy {
+  @Input() selectedAccount: WireTransferBankAccountItem | null = null;
+  @Input() accounts: WireTransferBankAccountItem[] = [];
+  @Output() toggle = new EventEmitter<WireTransferBankAccountItem>();
 
   displayedColumns: string[] = [
-    'details', 'isDefault', 'name', 'target', 'trxType', 'instrument', 'provider'
+    'details', 'name', 'description', 'auAvailable', 'ukAvailable', 'euAvailable'
   ];
 
   private destroy$ = new Subject();
@@ -29,7 +29,7 @@ export class CostsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.layoutService.rightPanelCloseRequested$.pipe(takeUntil(this.destroy$)).subscribe(() => {
-      this.selectedScheme = null;
+      this.selectedAccount = null;
     });
   }
 
@@ -38,10 +38,10 @@ export class CostsComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  private isSelectedScheme(schemeId: string): boolean {
+  private isSelectedAccount(schemeId: string): boolean {
     let selected = false;
-    if (this.selectedScheme !== null) {
-      if (this.selectedScheme.id === schemeId) {
+    if (this.selectedAccount !== null) {
+      if (this.selectedAccount.id === schemeId) {
         selected = true;
       }
     }
@@ -49,14 +49,14 @@ export class CostsComponent implements OnInit, OnDestroy {
   }
 
   getDetailsIcon(schemeId: string): string {
-    return (this.isSelectedScheme(schemeId)) ? 'clear' : 'open_in_new';
+    return (this.isSelectedAccount(schemeId)) ? 'clear' : 'open_in_new';
   }
 
   getDetailsTooltip(schemeId: string): string {
-    return (this.isSelectedScheme(schemeId)) ? 'Hide details' : 'Change scheme';
+    return (this.isSelectedAccount(schemeId)) ? 'Hide details' : 'Change account';
   }
 
-  toggleDetails(scheme: CostScheme): void {
+  toggleDetails(scheme: WireTransferBankAccountItem): void {
     this.toggle.emit(scheme);
   }
 }

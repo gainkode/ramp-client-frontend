@@ -201,6 +201,22 @@ const GET_COST_SETTINGS = gql`
   }
 `;
 
+const GET_WIRE_TRANSFER_SETTINGS = gql`
+query GetWireTransferBankAccounts {
+  getWireTransferBankAccounts {
+    count
+    list {
+      bankAccountId
+      name
+      description
+      au
+      uk
+      eu
+    }
+  }
+}
+`;
+
 const GET_SETTINGS_KYC_TIERS = gql`
 query GetSettingsKycTiers {
   getSettingsKycTiers(
@@ -1361,6 +1377,13 @@ export class AdminDataService {
   getCostSettings(): QueryRef<any, EmptyObject> {
     return this.apollo.watchQuery<any>({
       query: GET_COST_SETTINGS,
+      fetchPolicy: 'network-only'
+    });
+  }
+
+  getWireTransferBankAccounts(): QueryRef<any, EmptyObject> {
+    return this.apollo.watchQuery<any>({
+      query: GET_WIRE_TRANSFER_SETTINGS,
       fetchPolicy: 'network-only'
     });
   }

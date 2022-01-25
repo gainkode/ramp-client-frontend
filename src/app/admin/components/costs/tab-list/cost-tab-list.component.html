@@ -37,9 +37,9 @@
         </div>
 
         <div class="data-table">
-            <app-identification-table [schemes]="accounts" [selectedAccount]="selectedAccount"
+            <app-bank-account-table [accounts]="accounts" [selectedAccount]="selectedAccount"
                 (toggle)="toggleAccountDetails($event)">
-            </app-identification-table>
+            </app-bank-account-table>
         </div>
     </mat-tab>
 </mat-tab-group>

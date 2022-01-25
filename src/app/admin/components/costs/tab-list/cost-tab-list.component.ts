@@ -4,10 +4,9 @@ import { AuthService } from '../../../../services/auth.service';
 import { AdminDataService } from '../../../services/admin-data.service';
 import { ErrorService } from '../../../../services/error.service';
 import { Subscription } from 'rxjs';
-import { KycLevel, KycScheme } from 'src/app/model/identification.model';
 import { take } from 'rxjs/operators';
-import { CostScheme } from 'src/app/model/cost-scheme.model';
-import { SettingsCostListResult } from 'src/app/model/generated-models';
+import { CostScheme, WireTransferBankAccountItem } from 'src/app/model/cost-scheme.model';
+import { SettingsCostListResult, WireTransferBankAccountListResult } from 'src/app/model/generated-models';
 
 @Component({
   templateUrl: 'cost-tab-list.component.html',
@@ -23,9 +22,9 @@ export class CostTabListComponent implements OnInit, OnDestroy {
   selectedTab = 0;
   createAccount = false;
   createScheme = false;
-  selectedAccount: KycScheme | null = null;
+  selectedAccount: WireTransferBankAccountItem | null = null;
   selectedScheme: CostScheme | null = null;
-  accounts: KycScheme[] = [];
+  accounts: WireTransferBankAccountItem[] = [];
   schemes: CostScheme[] = [];
 
   private subscriptions: Subscription = new Subscription();
@@ -67,16 +66,35 @@ export class CostTabListComponent implements OnInit, OnDestroy {
   }
 
   loadAccountList(): void {
-    const listData$ = this.adminService.getKycSettings().pipe(take(1));
+    const listData$ = this.adminService.getWireTransferBankAccounts().valueChanges.pipe(take(1));
+    this.errorMessage = '';
+    this.inProgress = true;
     this.subscriptions.add(
-      listData$.subscribe(data => {
-        this.accounts = data.list;
+      listData$.subscribe(({ data }) => {
+        const settings = data.getWireTransferBankAccounts as WireTransferBankAccountListResult;
+        let itemCount = 0;
+        if (settings !== null) {
+          itemCount = settings?.count as number;
+          if (itemCount > 0) {
+            this.accounts = settings?.list?.map((val) => new WireTransferBankAccountItem(val)) as WireTransferBankAccountItem[];
+          }
+        }
+        this.inProgress = false;
+      }, (error) => {
+        this.setEditMode(false);
+        this.inProgress = false;
+        if (this.auth.token !== '') {
+          this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load settings for bank accounts');
+        } else {
+          this.router.navigateByUrl('/');
+        }
       })
     );
   }
 
   loadSchemeList(): void {
     const listData$ = this.adminService.getCostSettings().valueChanges.pipe(take(1));
+    this.errorMessage = '';
     this.inProgress = true;
     this.subscriptions.add(
       listData$.subscribe(({ data }) => {
@@ -126,9 +144,9 @@ export class CostTabListComponent implements OnInit, OnDestroy {
     return selected;
   }
 
-  private showAccountEditor(account: KycScheme | null, createNew: boolean, visible: boolean): void {
+  private showAccountEditor(account: WireTransferBankAccountItem | null, createNew: boolean, visible: boolean): void {
     if (visible) {
-      this.selectedAccount = account ?? new KycScheme(null);
+      this.selectedAccount = account ?? new WireTransferBankAccountItem(undefined);
       this.createAccount = createNew;
       if (createNew) {
         this.setEditMode(true);
@@ -152,7 +170,7 @@ export class CostTabListComponent implements OnInit, OnDestroy {
     }
   }
 
-  toggleAccountDetails(account: KycScheme): void {
+  toggleAccountDetails(account: WireTransferBankAccountItem): void {
     let show = true;
     if (this.isSelectedAccount(account.id)) {
       show = false;
@@ -190,6 +208,7 @@ export class CostTabListComponent implements OnInit, OnDestroy {
 
   onDeleteAccount(id: string): void {
     this.accountEditorErrorMessage = '';
+    this.errorMessage = '';
     this.inProgress = true;
     const requestData$ = this.adminService.deleteKycSettings(id);
     this.subscriptions.add(
@@ -211,6 +230,7 @@ export class CostTabListComponent implements OnInit, OnDestroy {
 
   onDeleteScheme(id: string): void {
     this.schemeEditorErrorMessage = '';
+    this.errorMessage = '';
     const requestData$ = this.adminService.deleteCostSettings(id);
     this.inProgress = true;
     this.subscriptions.add(
@@ -229,31 +249,33 @@ export class CostTabListComponent implements OnInit, OnDestroy {
     );
   }
 
-  onSavedAccount(account: KycScheme): void {
+  onSavedAccount(account: WireTransferBankAccountItem): void {
     this.accountEditorErrorMessage = '';
-    this.inProgress = true;
-    const requestData$ = this.adminService.saveKycSettings(account, this.createAccount);
-    this.subscriptions.add(
-      requestData$.subscribe(({ data }) => {
-        this.inProgress = false;
-        this.setEditMode(false);
-        this.showAccountEditor(null, false, false);
-        this.createAccount = false;
-        this.loadAccountList();
-      }, (error) => {
-        this.inProgress = false;
-        if (this.auth.token !== '') {
-          this.accountEditorErrorMessage = this.errorHandler.getError(error.message,
-            'Unable to save identification settings');
-        } else {
-          this.router.navigateByUrl('/');
-        }
-      })
-    );
+    this.errorMessage = '';
+    // this.inProgress = true;
+    // const requestData$ = this.adminService.saveKycSettings(account, this.createAccount);
+    // this.subscriptions.add(
+    //   requestData$.subscribe(({ data }) => {
+    //     this.inProgress = false;
+    //     this.setEditMode(false);
+    //     this.showAccountEditor(null, false, false);
+    //     this.createAccount = false;
+    //     this.loadAccountList();
+    //   }, (error) => {
+    //     this.inProgress = false;
+    //     if (this.auth.token !== '') {
+    //       this.accountEditorErrorMessage = this.errorHandler.getError(error.message,
+    //         'Unable to save identification settings');
+    //     } else {
+    //       this.router.navigateByUrl('/');
+    //     }
+    //   })
+    // );
   }
 
   onSavedScheme(scheme: CostScheme): void {
     this.schemeEditorErrorMessage = '';
+    this.errorMessage = '';
     this.inProgress = true;
     const requestData$ = this.adminService.saveCostSettings(scheme, this.createScheme)
     this.subscriptions.add(

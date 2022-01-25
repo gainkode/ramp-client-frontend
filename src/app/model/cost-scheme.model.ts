@@ -1,7 +1,7 @@
 import { CommonTargetValue } from './common.model';
 import { getCountry, getCountryByCode3 } from './country-code.model';
 import {
-    SettingsCost, PaymentInstrument, PaymentProvider, TransactionType, SettingsCostTargetFilterType
+    SettingsCost, PaymentInstrument, TransactionType, SettingsCostTargetFilterType, WireTransferBankAccount
 } from './generated-models';
 import {
     PaymentInstrumentList, CostTargetFilterList, TransactionTypeList
@@ -138,4 +138,58 @@ export class CostShemeTerms {
             Min_monthly_cost: this.minMonthlyCost
         });
     }
+}
+
+export class WireTransferBankAccountItem {
+    id = '';
+    name = '';
+    description = '';
+    auAvailable = false;
+    ukAvailable = false;
+    euAvailable = false;
+    au: WireTransferBankAccountAu | undefined = undefined;
+    uk: WireTransferBankAccountUk | undefined = undefined;
+    eu: WireTransferBankAccountEu | undefined = undefined;
+
+    constructor(data: WireTransferBankAccount | undefined) {
+        if (data) {
+            this.id = data.bankAccountId;
+            this.name = data.name ?? '';
+            this.description = data.description ?? '';
+            if (data.au) {
+                this.au = JSON.parse(data.au);
+                this.auAvailable = (this.au !== undefined);
+            }
+            if (data.us) {
+                this.uk = JSON.parse(data.us);
+                this.ukAvailable = (this.uk !== undefined);
+            }
+            if (data.eu) {
+                this.eu = JSON.parse(data.eu);
+                this.euAvailable = (this.eu !== undefined);
+            }
+        } else {
+            this.id = '';
+            this.name = '';
+            this.description = '';
+        }
+    }
+}
+
+export class WireTransferBankAccountAu {
+    accountName = '';
+    accountNumber = '';
+    bsb = '';
+}
+
+export class WireTransferBankAccountUk {
+    accountName = '';
+    accountNumber = '';
+    sortCode = '';
+}
+
+export class WireTransferBankAccountEu {
+    accountOwnerName = '';
+    swift = '';
+    iban = '';
 }

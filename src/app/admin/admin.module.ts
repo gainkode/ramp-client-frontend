@@ -80,6 +80,7 @@ import { DirectiveModule } from '../directives/directives.module';
 import { FilterFieldUserTierComponent } from './components/core/filter-panel/filter-fields/user-tier/filter-field-user-tier.component';
 import { FilterFieldItemIdComponent } from './components/core/filter-panel/filter-fields/item-id/filter-field-item-id.component';
 import { CostTabListComponent } from './components/costs/tab-list/cost-tab-list.component';
+import { BankAccountsComponent } from './components/costs/list/bank-accounts.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -135,6 +136,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
     NotificationDetailsComponent,
     CostTabListComponent,
     CostsComponent, CostEditorComponent,
+    BankAccountsComponent,
     IdentificationListComponent,
     IdTableComponent,
     LevelTableComponent,
