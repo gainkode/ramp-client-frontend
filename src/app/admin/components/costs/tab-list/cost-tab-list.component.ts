@@ -6,7 +6,7 @@ import { ErrorService } from '../../../../services/error.service';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { CostScheme, WireTransferBankAccountItem } from 'src/app/model/cost-scheme.model';
-import { SettingsCostListResult, WireTransferBankAccountListResult } from 'src/app/model/generated-models';
+import { SettingsCostListResult, WireTransferBankAccount, WireTransferBankAccountListResult } from 'src/app/model/generated-models';
 import { LayoutService } from 'src/app/admin/services/layout.service';
 
 @Component({
@@ -82,7 +82,7 @@ export class CostTabListComponent implements OnInit, OnDestroy {
         const settings = data.getWireTransferBankAccounts as WireTransferBankAccountListResult;
         let itemCount = 0;
         if (settings !== null) {
-          itemCount = settings?.count as number;
+          itemCount = settings?.count ?? 0;
           if (itemCount > 0) {
             this.accounts = settings?.list?.map((val) => new WireTransferBankAccountItem(val)) as WireTransferBankAccountItem[];
           }
@@ -258,7 +258,7 @@ export class CostTabListComponent implements OnInit, OnDestroy {
     );
   }
 
-  onSavedAccount(account: WireTransferBankAccountItem): void {
+  onSavedAccount(account: WireTransferBankAccount): void {
     this.accountEditorErrorMessage = '';
     this.errorMessage = '';
     this.inProgress = true;

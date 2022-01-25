@@ -38,7 +38,8 @@ import {
   UserState,
   UserType,
   Widget,
-  WidgetListResult
+  WidgetListResult,
+  WireTransferBankAccount
 } from '../../model/generated-models';
 import { KycLevel, KycScheme, TierItem } from '../../model/identification.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -1984,27 +1985,38 @@ export class AdminDataService {
       });
   }
 
-  saveBankAccountSettings(account: WireTransferBankAccountItem, create: boolean): Observable<any> {
+  saveBankAccountSettings(account: WireTransferBankAccount, create: boolean): Observable<any> {
+
+    const vars = {
+      bankAccountId: account.bankAccountId,
+      name: account.name,
+      description: account.description,
+      au: account.au,
+      uk: account.uk,
+      eu: account.eu
+    };
+    console.log(vars);
+
     return create
       ? this.apollo.mutate({
         mutation: ADD_WIRE_TRANSFER_SETTINGS,
         variables: {
           name: account.name,
           description: account.description,
-          au: account.auData,
-          uk: account.ukData,
-          eu: account.euData
+          au: account.au,
+          uk: account.uk,
+          eu: account.eu
         }
       })
       : this.apollo.mutate({
         mutation: UPDATE_WIRE_TRANSFER_SETTINGS,
         variables: {
-          bankAccountId: account.id,
+          bankAccountId: account.bankAccountId,
           name: account.name,
           description: account.description,
-          au: account.auData,
-          uk: account.ukData,
-          eu: account.euData
+          au: account.au,
+          uk: account.uk,
+          eu: account.eu
         }
       });
   }
