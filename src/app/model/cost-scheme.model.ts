@@ -149,18 +149,30 @@ export class WireTransferBankAccountItem {
     uk: WireTransferBankAccountUk | undefined = undefined;
     eu: WireTransferBankAccountEu | undefined = undefined;
 
-    get auAvailable() {
+    get auAvailable(): boolean {
         return (this.au !== undefined);
     }
 
-    get ukAvailable() {
+    get ukAvailable(): boolean {
         return (this.uk !== undefined);
     }
 
-    get euAvailable() {
+    get euAvailable(): boolean {
         return (this.eu !== undefined);
     }
     
+    get auData(): string | undefined {
+        return (this.au) ? JSON.stringify(this.au) : undefined;
+    }
+
+    get ukData(): string | undefined {
+        return (this.uk) ? JSON.stringify(this.uk) : undefined;
+    }
+
+    get euData(): string | undefined {
+        return (this.eu) ? JSON.stringify(this.eu) : undefined;
+    }
+
     constructor(data: WireTransferBankAccount | undefined) {
         if (data) {
             this.id = data.bankAccountId;
@@ -169,8 +181,8 @@ export class WireTransferBankAccountItem {
             if (data.au) {
                 this.au = JSON.parse(data.au);
             }
-            if (data.us) {
-                this.uk = JSON.parse(data.us);
+            if (data.uk) {
+                this.uk = JSON.parse(data.uk);
             }
             if (data.eu) {
                 this.eu = JSON.parse(data.eu);

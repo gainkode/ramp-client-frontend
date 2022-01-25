@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef, WatchQueryOptions } from 'apollo-angular';
 import { EmptyObject } from 'apollo-angular/types';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
-import { CostScheme } from '../../model/cost-scheme.model';
+import { CostScheme, WireTransferBankAccountItem } from '../../model/cost-scheme.model';
 import { FeeScheme } from '../../model/fee-scheme.model';
 import {
   AssetAddress,
@@ -811,6 +811,28 @@ const ADD_SETTINGS_COST = gql`
   }
 `;
 
+const ADD_WIRE_TRANSFER_SETTINGS = gql`
+mutation AddWireTransferBankAccount(
+  $name: String!
+  $description: String
+  $au: String
+  $uk: String
+  $eu: String
+) {
+  addWireTransferBankAccount(
+    bankAccount: {
+      name: $name
+      description: $description
+      au: $au
+      uk: $uk
+      eu: $eu
+    }
+  ) {
+    bankAccountId
+  }
+}
+`;
+
 const ADD_SETTINGS_KYC = gql`
   mutation AddSettingsKyc(
     $name: String!
@@ -1213,6 +1235,30 @@ const UPDATE_SETTINGS_COST = gql`
   }
 `;
 
+const UPDATE_WIRE_TRANSFER_SETTINGS = gql`
+  mutation UpdateWireTransferBankAccount(
+    $bankAccountId: ID!
+    $name: String!
+    $description: String
+    $au: String
+    $uk: String
+    $eu: String
+  ) {
+    updateWireTransferBankAccount(
+      bankAccountId: $bankAccountId
+      bankAccount: {
+        name: $name
+        description: $description
+        au: $au
+        uk: $uk
+        eu: $eu
+      }
+    ) {
+      bankAccountId
+    }
+  }
+`;
+
 const UPDATE_SETTINGS_KYC = gql`
   mutation UpdateSettingsKyc(
     $settingsId: ID!
@@ -1291,6 +1337,14 @@ const DELETE_SETTINGS_COST = gql`
   mutation DeleteSettingsCost($settingsId: ID!) {
     deleteSettingsCost(settingsId: $settingsId) {
       settingsCostId
+    }
+  }
+`;
+
+const DELETE_WIRE_TRANSFER_SETTINGS = gql`
+  mutation DeleteWireTransferBankAccount($bankAccountId: ID!) {
+    deleteWireTransferBankAccount(bankAccountId: $bankAccountId) {
+      bankAccountId
     }
   }
 `;
@@ -1930,6 +1984,31 @@ export class AdminDataService {
       });
   }
 
+  saveBankAccountSettings(account: WireTransferBankAccountItem, create: boolean): Observable<any> {
+    return create
+      ? this.apollo.mutate({
+        mutation: ADD_WIRE_TRANSFER_SETTINGS,
+        variables: {
+          name: account.name,
+          description: account.description,
+          au: account.auData,
+          uk: account.ukData,
+          eu: account.euData
+        }
+      })
+      : this.apollo.mutate({
+        mutation: UPDATE_WIRE_TRANSFER_SETTINGS,
+        variables: {
+          bankAccountId: account.id,
+          name: account.name,
+          description: account.description,
+          au: account.auData,
+          uk: account.ukData,
+          eu: account.euData
+        }
+      });
+  }
+
   saveKycSettings(settings: KycScheme, create: boolean): Observable<any> {
     return create
       ? this.apollo.mutate({
@@ -2109,6 +2188,15 @@ export class AdminDataService {
       mutation: DELETE_SETTINGS_COST,
       variables: {
         settingsId
+      }
+    });
+  }
+
+  deleteBankAccountSettings(accountId: string): Observable<any> {
+    return this.apollo.mutate({
+      mutation: DELETE_WIRE_TRANSFER_SETTINGS,
+      variables: {
+        bankAccountId: accountId
       }
     });
   }

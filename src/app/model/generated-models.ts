@@ -3345,7 +3345,7 @@ export type WireTransferBankAccount = {
   created: Scalars['DateTime'];
   createdBy?: Maybe<Scalars['String']>;
   au?: Maybe<Scalars['String']>;
-  us?: Maybe<Scalars['String']>;
+  uk?: Maybe<Scalars['String']>;
   eu?: Maybe<Scalars['String']>;
   deleted?: Maybe<Scalars['DateTime']>;
 };
@@ -3354,7 +3354,7 @@ export type WireTransferBankAccountInput = {
   name?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
   au?: Maybe<Scalars['String']>;
-  us?: Maybe<Scalars['String']>;
+  uk?: Maybe<Scalars['String']>;
   eu?: Maybe<Scalars['String']>;
   deleted?: Maybe<Scalars['DateTime']>;
 };
@@ -3371,6 +3371,6 @@ export type WireTransferBankAccountShort = {
   name?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
   au?: Maybe<Scalars['String']>;
-  us?: Maybe<Scalars['String']>;
+  uk?: Maybe<Scalars['String']>;
   eu?: Maybe<Scalars['String']>;
 };

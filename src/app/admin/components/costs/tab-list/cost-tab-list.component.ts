@@ -69,6 +69,7 @@ export class CostTabListComponent implements OnInit, OnDestroy {
     const listData$ = this.adminService.getWireTransferBankAccounts().valueChanges.pipe(take(1));
     this.errorMessage = '';
     this.inProgress = true;
+    this.accounts = [];
     this.subscriptions.add(
       listData$.subscribe(({ data }) => {
         const settings = data.getWireTransferBankAccounts as WireTransferBankAccountListResult;
@@ -96,6 +97,7 @@ export class CostTabListComponent implements OnInit, OnDestroy {
     const listData$ = this.adminService.getCostSettings().valueChanges.pipe(take(1));
     this.errorMessage = '';
     this.inProgress = true;
+    this.schemes = [];
     this.subscriptions.add(
       listData$.subscribe(({ data }) => {
         const settings = data.getSettingsCost as SettingsCostListResult;
@@ -210,7 +212,7 @@ export class CostTabListComponent implements OnInit, OnDestroy {
     this.accountEditorErrorMessage = '';
     this.errorMessage = '';
     this.inProgress = true;
-    const requestData$ = this.adminService.deleteKycSettings(id);
+    const requestData$ = this.adminService.deleteBankAccountSettings(id);
     this.subscriptions.add(
       requestData$.subscribe(({ data }) => {
         this.inProgress = false;
@@ -220,7 +222,7 @@ export class CostTabListComponent implements OnInit, OnDestroy {
         this.inProgress = false;
         if (this.auth.token !== '') {
           this.accountEditorErrorMessage = this.errorHandler.getError(error.message,
-            'Unable to delete identification settings');
+            'Unable to delete bank account settings');
         } else {
           this.router.navigateByUrl('/');
         }
@@ -252,25 +254,25 @@ export class CostTabListComponent implements OnInit, OnDestroy {
   onSavedAccount(account: WireTransferBankAccountItem): void {
     this.accountEditorErrorMessage = '';
     this.errorMessage = '';
-    // this.inProgress = true;
-    // const requestData$ = this.adminService.saveKycSettings(account, this.createAccount);
-    // this.subscriptions.add(
-    //   requestData$.subscribe(({ data }) => {
-    //     this.inProgress = false;
-    //     this.setEditMode(false);
-    //     this.showAccountEditor(null, false, false);
-    //     this.createAccount = false;
-    //     this.loadAccountList();
-    //   }, (error) => {
-    //     this.inProgress = false;
-    //     if (this.auth.token !== '') {
-    //       this.accountEditorErrorMessage = this.errorHandler.getError(error.message,
-    //         'Unable to save identification settings');
-    //     } else {
-    //       this.router.navigateByUrl('/');
-    //     }
-    //   })
-    // );
+    this.inProgress = true;
+    const requestData$ = this.adminService.saveBankAccountSettings(account, this.createAccount);
+    this.subscriptions.add(
+      requestData$.subscribe(({ data }) => {
+        this.inProgress = false;
+        this.setEditMode(false);
+        this.showAccountEditor(null, false, false);
+        this.createAccount = false;
+        this.loadAccountList();
+      }, (error) => {
+        this.inProgress = false;
+        if (this.auth.token !== '') {
+          this.accountEditorErrorMessage = this.errorHandler.getError(error.message,
+            'Unable to save bank account settings');
+        } else {
+          this.router.navigateByUrl('/');
+        }
+      })
+    );
   }
 
   onSavedScheme(scheme: CostScheme): void {
