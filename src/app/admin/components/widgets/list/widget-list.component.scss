@@ -10,3 +10,14 @@
   padding: 16px 24px;
   background: $color-grey-0;
 }
+
+.panel-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  margin-top: 16px;
+
+  > * {
+    margin-right: 16px;
+  }
+}

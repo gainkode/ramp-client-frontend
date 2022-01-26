@@ -244,4 +244,8 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
   onCancelEdit(): void {
     this.selectedTransaction = undefined;
   }
+
+  export(): void {
+    
+  }
 }

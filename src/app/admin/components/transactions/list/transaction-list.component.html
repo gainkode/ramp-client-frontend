@@ -1,6 +1,9 @@
-<div class="action-panel">
-    <button mat-flat-button color="primary" (click)="unbenchmark()" [disabled]="!selected">
+<div class="action-panel panel-actions">
+    <button mat-flat-button color="primary" type="button" (click)="unbenchmark()" [disabled]="!selected">
         UNBENCHMARK
+    </button>
+    <button mat-flat-button color="primary" type="button" (click)="export()">
+        EXPORT
     </button>
 </div>
 

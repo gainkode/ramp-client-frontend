@@ -237,4 +237,8 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
     this.showEditor(null, false);
     this.loadCustomers();
   }
+
+  export(): void {
+    
+  }
 }

@@ -128,6 +128,10 @@ export class WidgetListComponent implements OnInit, OnDestroy, AfterViewInit {
     return event;
   }
 
+  export(): void {
+    
+  }
+  
   private isSelectedWidget(widgetId: string): boolean {
     return !!this.selectedItem && this.selectedItem.id === widgetId;
   }

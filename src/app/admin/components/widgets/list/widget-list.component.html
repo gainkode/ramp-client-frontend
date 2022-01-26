@@ -1,10 +1,13 @@
-<app-filter-panel [fields]="filterFields" (filter)="handleFilterApplied($event)"></app-filter-panel>
-
-<div class="action-panel">
-    <button mat-flat-button color="primary" [disabled]="selectedItem && !selectedItem.id" (click)="createNewWidget()">
+<div class="action-panel panel-actions">
+    <button mat-flat-button color="primary" type="button" [disabled]="selectedItem && !selectedItem.id" (click)="createNewWidget()">
         ADD WIDGET
     </button>
+    <button mat-flat-button color="primary" type="button" (click)="export()">
+        EXPORT
+    </button>
 </div>
+
+<app-filter-panel [fields]="filterFields" (filter)="handleFilterApplied($event)"></app-filter-panel>
 
 <div class="data-table">
     <mat-table matSort matSortDirection="desc" matSortDisableClear [matSortActive]="sortedField" [dataSource]="data">

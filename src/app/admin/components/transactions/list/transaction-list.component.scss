@@ -48,3 +48,14 @@
 .transaction-list-column-yellow {
   background-color: lightyellow;
 }
+
+.panel-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  margin-top: 16px;
+
+  > * {
+    margin-right: 16px;
+  }
+}

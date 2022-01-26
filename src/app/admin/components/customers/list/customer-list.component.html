@@ -1,6 +1,9 @@
-<div class="action-panel">
-    <button mat-flat-button color="primary" (click)="sendMessage()" [disabled]="!selected">
+<div class="action-panel panel-actions">
+    <button mat-flat-button color="primary" type="button" (click)="sendMessage()" [disabled]="!selected">
         SEND MESSAGE
+    </button>
+    <button mat-flat-button color="primary" type="button" (click)="export()">
+        EXPORT
     </button>
 </div>
 
