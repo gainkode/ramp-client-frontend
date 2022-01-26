@@ -54,7 +54,6 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   private pTransactionChanged = false;
   private pSpendAutoUpdated = false;
   private pReceiveAutoUpdated = false;
-  private quoteUnlimit = false;
   private currentQuoteEur = 0;
   private quoteLimit = 0;
   private transactionsTotalEur = 0;
@@ -77,6 +76,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   addressInit = false;
   quoteExceed = false;
   quoteExceedHidden = false;
+  quoteUnlimit = false;
   showWallet = false;
   currentTier = '';
   currentQuote = '';
@@ -513,6 +513,9 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
         } as AssetAddressShort, '', undefined));
         if (emptyList) {
           this.walletField?.setValue(this.summary.address ?? '');
+          this.errorMessage = 'Unable to find wallets for selected currency';
+        } else {
+          this.errorMessage = '';
         }
       }
       this.pSpendChanged = true;

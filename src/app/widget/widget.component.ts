@@ -826,7 +826,6 @@ export class WidgetComponent implements OnInit {
         ({ data }) => {
           this.inProgress = false;
           const settingsResult = data.mySettingsCost as SettingsCostShort;
-          const singleSelect = false;
           if (settingsResult.bankAccounts && (settingsResult.bankAccounts?.length ?? 0 > 0)) {
             const accountData = settingsResult.bankAccounts[0];
             this.bankAccountId = accountData.bankAccountId;

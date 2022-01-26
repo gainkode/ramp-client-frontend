@@ -43,7 +43,7 @@
                 <div class="__widget-hint-line">
                     Current Verification: {{currentTier}}.
                 </div>
-                <div class="__widget-quote-block">
+                <div *ngIf="!quoteUnlimit" class="__widget-quote-block">
                     <div class="__widget-hint-line">
                         To increase limitations go to
                     </div>
