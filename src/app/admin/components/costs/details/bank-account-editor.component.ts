@@ -22,6 +22,9 @@ export class BankAccountEditorComponent implements OnInit {
 
   private settingsId = '';
   public errorMessage = '';
+  private auChecked = false;
+  private ukChecked = false;
+  private euChecked = false;
 
   accountForm = this.formBuilder.group({
     name: ['', { validators: [Validators.required], updateOn: 'change' }],
@@ -77,6 +80,9 @@ export class BankAccountEditorComponent implements OnInit {
         this.accountForm.get('euSwift')?.setValue(account.eu?.swift);
         this.accountForm.get('euIban')?.setValue(account.eu?.iban);
       }
+      this.auChecked = account.auAvailable;
+      this.ukChecked = account.ukAvailable;
+      this.euChecked = account.euAvailable;
     } else {
       this.accountForm.get('name')?.setValue('');
       this.accountForm.get('description')?.setValue('');
@@ -115,6 +121,10 @@ export class BankAccountEditorComponent implements OnInit {
         };
         data.au = JSON.stringify(auData);
       }
+    } else {
+      if (this.auChecked) {
+        data.au = null;
+      }
     }
     const ukSelected = this.accountForm.get('ukSelected')?.value ?? false;
     if (ukSelected === true) {
@@ -129,6 +139,10 @@ export class BankAccountEditorComponent implements OnInit {
         };
         data.uk = JSON.stringify(ukData);
       }
+    } else {
+      if (this.ukChecked) {
+        data.uk = null;
+      }
     }
     const euSelected = this.accountForm.get('euSelected')?.value ?? false;
     if (euSelected === true) {
@@ -142,6 +156,10 @@ export class BankAccountEditorComponent implements OnInit {
           iban: euIban
         };
         data.eu = JSON.stringify(euData);
+      }
+    } else {
+      if (this.euChecked) {
+        data.eu = null;
       }
     }
     return data;

@@ -1986,7 +1986,6 @@ export class AdminDataService {
   }
 
   saveBankAccountSettings(account: WireTransferBankAccount, create: boolean): Observable<any> {
-
     const vars = {
       bankAccountId: account.bankAccountId,
       name: account.name,
@@ -1995,8 +1994,6 @@ export class AdminDataService {
       uk: account.uk,
       eu: account.eu
     };
-    console.log(vars);
-
     return create
       ? this.apollo.mutate({
         mutation: ADD_WIRE_TRANSFER_SETTINGS,
@@ -2333,11 +2330,6 @@ export class AdminDataService {
       transferOrder: transfer,
       benchmarkTransferOrder: benchmark
     };
-
-
-    console.log('updateTransaction', vars);
-
-
     return this.mutate({
       mutation: UPDATE_TRANSACTIONS,
       variables: vars

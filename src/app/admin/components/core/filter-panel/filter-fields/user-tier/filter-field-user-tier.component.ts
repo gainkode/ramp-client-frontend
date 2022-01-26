@@ -55,9 +55,7 @@ export class FilterFieldUserTierComponent implements OnInit, OnDestroy, ControlV
   onTouched = () => {
   }
 
-  onChange = (_: any) => {
-    console.log('change', _);
-  }
+  onChange = (_: any) => {}
 
   writeValue(value: any): void {
     this.selectedItems = value;
