@@ -54,6 +54,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   private pTransactionChanged = false;
   private pSpendAutoUpdated = false;
   private pReceiveAutoUpdated = false;
+  private quoteUnlimit = false;
   private currentQuoteEur = 0;
   private quoteLimit = 0;
   private transactionsTotalEur = 0;
@@ -185,6 +186,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     if (this.auth.user?.kycTier) {
       this.currentTier = this.auth.user?.kycTier.name;
       this.currentQuoteEur = this.auth.user?.kycTier.amount ?? 0;
+      this.quoteUnlimit = (this.auth.user?.kycTier.amount === null);
     } else {
       this.currentTier = '';
       this.currentQuoteEur = 0;
@@ -669,7 +671,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     this.quoteExceedHidden = false;
     if (this.currentTransaction == TransactionType.Deposit) {
       const amount = this.amountSpendField?.value ?? 0;
-      if (amount > 0 && amount > this.quoteLimit) {
+      if (amount > 0 && amount > this.quoteLimit && !this.quoteUnlimit) {
         this.quoteExceedHidden = true;
       }
     }
