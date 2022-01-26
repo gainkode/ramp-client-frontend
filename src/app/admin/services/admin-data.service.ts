@@ -1173,6 +1173,24 @@ mutation ResendNotification(
 }
 `;
 
+const EXPORT_TRANSACTIONS = gql`
+mutation ExportTransactionsToCsv {
+  exportTransactionsToCsv
+}
+`;
+
+const EXPORT_USERS = gql`
+mutation ExportUsersToCsv {
+  exportUsersToCsv
+}
+`;
+
+const EXPORT_WIDGETS = gql`
+mutation ExportWidgetsToCsv {
+  exportWidgetsToCsv
+}
+`;
+
 const UPDATE_SETTINGS_FEE = gql`
   mutation UpdateSettingsFee(
     $settingsId: ID!
@@ -2377,6 +2395,24 @@ export class AdminDataService {
         undefined, { duration: 5000 }
       );
     }));
+  }
+
+  exportUsersToCsv(): Observable<any> {
+    return this.apollo.mutate({
+      mutation: EXPORT_USERS,
+    });
+  }
+
+  exportTransactionsToCsv(): Observable<any> {
+    return this.apollo.mutate({
+      mutation: EXPORT_TRANSACTIONS,
+    });
+  }
+
+  exportWidgetsToCsv(): Observable<any> {
+    return this.apollo.mutate({
+      mutation: EXPORT_WIDGETS,
+    });
   }
 
   // TODO: move somewhere closer to HTTP, this approach can give false negatives (normally observable doesn't finish,

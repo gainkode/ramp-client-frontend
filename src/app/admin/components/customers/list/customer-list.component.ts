@@ -10,12 +10,13 @@ import { LayoutService } from '../../../services/layout.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { CurrencyView } from 'src/app/model/payment.model';
 import { CommonDataService } from 'src/app/services/common-data.service';
-import { SettingsCurrencyWithDefaults, User, UserNotificationLevel } from 'src/app/model/generated-models';
+import { SettingsCurrencyWithDefaults, UserNotificationLevel } from 'src/app/model/generated-models';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
 import { SendNotificationDialogBox } from 'src/app/components/dialogs/send-notification-box.dialog';
 import { MatDialog } from '@angular/material/dialog';
 import { FormGroup } from '@angular/forms';
+import { CommonDialogBox } from 'src/app/components/dialogs/common-box.dialog';
 
 @Component({
   templateUrl: 'customer-list.component.html',
@@ -239,6 +240,22 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   export(): void {
-    
+    const exportData$ = this.adminService.exportUsersToCsv();
+    this.subscriptions.add(
+      exportData$.subscribe(({ data }) => {
+        console.log(data);
+        this.dialog.open(CommonDialogBox, {
+          width: '400px',
+          data: {
+            title: 'Export',
+            message: 'Exported list of customers has been sent to your email.'
+          }
+        });
+      }, (error) => {
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
+      })
+    );
   }
 }

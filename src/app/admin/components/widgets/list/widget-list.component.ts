@@ -7,6 +7,10 @@ import { take, takeUntil } from 'rxjs/operators';
 import { PageEvent } from '@angular/material/paginator';
 import { WidgetItem } from '../../../model/widget.model';
 import { LayoutService } from '../../../services/layout.service';
+import { CommonDialogBox } from 'src/app/components/dialogs/common-box.dialog';
+import { Router } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   templateUrl: 'widget-list.component.html',
@@ -50,16 +54,18 @@ export class WidgetListComponent implements OnInit, OnDestroy, AfterViewInit {
   private subscriptions: Subscription = new Subscription();
 
   constructor(
+    public dialog: MatDialog,
     private layoutService: LayoutService,
+    private router: Router,
+    private auth: AuthService,
     private adminDataService: AdminDataService) {
   }
 
   ngOnInit(): void {
-    this.layoutService.rightPanelCloseRequested$.pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.selectedItem = undefined;
-        this.loadData();
-      });
+    this.layoutService.rightPanelCloseRequested$.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.selectedItem = undefined;
+      this.loadData();
+    });
 
     this.loadData();
   }
@@ -129,9 +135,25 @@ export class WidgetListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   export(): void {
-    
+    const exportData$ = this.adminDataService.exportWidgetsToCsv();
+    this.subscriptions.add(
+      exportData$.subscribe(({ data }) => {
+        console.log(data);
+        this.dialog.open(CommonDialogBox, {
+          width: '400px',
+          data: {
+            title: 'Export',
+            message: 'Exported list of widgets has been sent to your email.'
+          }
+        });
+      }, (error) => {
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
+      })
+    );
   }
-  
+
   private isSelectedWidget(widgetId: string): boolean {
     return !!this.selectedItem && this.selectedItem.id === widgetId;
   }

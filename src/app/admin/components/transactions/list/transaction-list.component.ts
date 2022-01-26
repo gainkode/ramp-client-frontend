@@ -10,13 +10,13 @@ import { MatSort } from '@angular/material/sort';
 import { Filter } from '../../../model/filter.model';
 import { take, takeUntil } from 'rxjs/operators';
 import { LayoutService } from '../../../services/layout.service';
-import { SettingsCurrencyWithDefaults, Transaction, TransactionStatusDescriptorMap } from 'src/app/model/generated-models';
+import { SettingsCurrencyWithDefaults, TransactionStatusDescriptorMap } from 'src/app/model/generated-models';
 import { ProfileDataService } from 'src/app/services/profile.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
 import { CurrencyView } from 'src/app/model/payment.model';
 import { DeleteDialogBox } from 'src/app/components/dialogs/delete-box.dialog';
 import { MatDialog } from '@angular/material/dialog';
-import { YesNoDialogBox } from 'src/app/components/dialogs/yesno-box.dialog';
+import { CommonDialogBox } from 'src/app/components/dialogs/common-box.dialog';
 
 @Component({
   templateUrl: 'transaction-list.component.html',
@@ -246,6 +246,22 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   export(): void {
-    
+    const exportData$ = this.adminService.exportTransactionsToCsv();
+    this.subscriptions.add(
+      exportData$.subscribe(({ data }) => {
+        console.log(data);
+        this.dialog.open(CommonDialogBox, {
+          width: '400px',
+          data: {
+            title: 'Export',
+            message: 'Exported list of transactions has been sent to your email.'
+          }
+        });
+      }, (error) => {
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
+      })
+    );
   }
 }
