@@ -191,6 +191,7 @@ const GET_COST_SETTINGS = gql`
         name
         default
         description
+        bankAccounts { bankAccountId, name }
         terms
         targetFilterType
         targetFilterValues
@@ -788,6 +789,7 @@ const ADD_SETTINGS_COST = gql`
   mutation AddSettingsCost(
     $name: String!
     $description: String
+    $bankAccountIds: [String!]
     $targetFilterType: SettingsCostTargetFilterType!
     $targetFilterValues: [String!]
     $targetInstruments: [PaymentInstrument!]
@@ -799,6 +801,7 @@ const ADD_SETTINGS_COST = gql`
       settings: {
         name: $name
         description: $description
+        bankAccountIds: $bankAccountIds
         targetFilterType: $targetFilterType
         targetFilterValues: $targetFilterValues
         targetInstruments: $targetInstruments
@@ -1211,6 +1214,7 @@ const UPDATE_SETTINGS_COST = gql`
     $settingsId: ID!
     $name: String!
     $description: String
+    $bankAccountIds: [String!]
     $targetFilterType: SettingsCostTargetFilterType!
     $targetFilterValues: [String!]
     $targetInstruments: [PaymentInstrument!]
@@ -1223,6 +1227,7 @@ const UPDATE_SETTINGS_COST = gql`
       settings: {
         name: $name
         description: $description
+        bankAccountIds: $bankAccountIds
         targetFilterType: $targetFilterType
         targetFilterValues: $targetFilterValues
         targetInstruments: $targetInstruments
@@ -1955,12 +1960,15 @@ export class AdminDataService {
   }
 
   saveCostSettings(settings: CostScheme, create: boolean): Observable<any> {
+
+    console.log('save', settings);
     return create
       ? this.apollo.mutate({
         mutation: ADD_SETTINGS_COST,
         variables: {
           name: settings.name,
           description: settings.description,
+          bankAccountIds: settings.bankAccountIds,
           targetFilterType: settings.target,
           targetFilterValues: settings.targetValues,
           targetInstruments: settings.instrument,
@@ -1975,6 +1983,7 @@ export class AdminDataService {
           settingsId: settings.id,
           name: settings.name,
           description: settings.description,
+          bankAccountIds: settings.bankAccountIds,
           targetFilterType: settings.target,
           targetFilterValues: settings.targetValues,
           targetInstruments: settings.instrument,

@@ -1,13 +1,13 @@
-import { Component, ElementRef, ViewChild, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, ElementRef, ViewChild, Input, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Validators, FormBuilder } from '@angular/forms';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { CostScheme, PspFilterList } from '../../../../model/cost-scheme.model';
 import {
-  SettingsCostTargetFilterType, PaymentInstrument, PaymentProvider, TransactionType
+  SettingsCostTargetFilterType, PaymentInstrument, PaymentProvider, TransactionType, WireTransferBankAccount, WireTransferBankAccountListResult
 } from '../../../../model/generated-models';
 import {
   PaymentInstrumentList,
@@ -25,7 +25,7 @@ import { AdminDataService } from '../../../services/admin-data.service';
   templateUrl: 'cost-editor.component.html',
   styleUrls: ['cost-editor.component.scss']
 })
-export class CostEditorComponent implements OnInit {
+export class CostEditorComponent implements OnInit, OnDestroy {
   @Input()
   set currentScheme(scheme: CostScheme | null) {
     this.forceValidate = false;
@@ -45,6 +45,7 @@ export class CostEditorComponent implements OnInit {
   private settingsId = '';
   private forceValidate = false;
   private loadingData = false;
+  private subscriptions: Subscription = new Subscription();
   selectedTab = 0;
   errorMessage = '';
   targetEntity = '';
@@ -55,11 +56,13 @@ export class CostEditorComponent implements OnInit {
   transactionTypes = TransactionTypeList;
   instruments = PaymentInstrumentList;
   providers: PaymentProviderView[] = [];
+  bankAccounts: CommonTargetValue[] = [];
 
   schemeForm = this.formBuilder.group({
     id: [''],
     name: ['', { validators: [Validators.required], updateOn: 'change' }],
     description: [''],
+    bankAccounts: [[], { validators: [Validators.required], updateOn: 'change' }],
     isDefault: [false],
     target: ['', { validators: [Validators.required], updateOn: 'change' }],
     targetValues: [[], { validators: [Validators.required], updateOn: 'change' }],
@@ -159,43 +162,61 @@ export class CostEditorComponent implements OnInit {
         }
       }
     });
-    this.schemeForm.get('target')
-        ?.valueChanges
-        .subscribe(val => {
-          this.clearTargetValues();
-          this.setTargetValidator();
-          this.filteredTargetValues = this.schemeForm.get('targetValue')
-                                          ?.valueChanges
-                                          .pipe(
-                                            startWith(''),
-                                            map(value => this.filterTargetValues(value)));
-        });
+    this.schemeForm.get('target')?.valueChanges.subscribe(val => {
+      this.clearTargetValues();
+      this.setTargetValidator();
+      this.filteredTargetValues = this.schemeForm.get('targetValue')?.valueChanges.pipe(startWith(''),
+        map(value => this.filterTargetValues(value)));
+    });
     this.getPaymentProviders();
+    this.getWiteTransferAccounts();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   private getPaymentProviders(): void {
     this.providers = [];
-    this.dataService.getProviders()
-        ?.valueChanges
-        .subscribe(({ data }) => {
-          const providers = data.getPaymentProviders as PaymentProvider[];
-          this.providers = providers?.map((val) => new PaymentProviderView(val)) as PaymentProviderView[];
-        }, (error) => {
-          this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load wallet list');
-        });
+    const data$ = this.dataService.getProviders()?.valueChanges;
+    this.subscriptions.add(
+      data$.subscribe(({ data }) => {
+        const providers = data.getPaymentProviders as PaymentProvider[];
+        this.providers = providers?.map((val) => new PaymentProviderView(val)) as PaymentProviderView[];
+      }, (error) => {
+        this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load wallet list');
+      })
+    );
+  }
+
+  private getWiteTransferAccounts(): void {
+    this.bankAccounts = [];
+    const data$ = this.dataService.getWireTransferBankAccounts()?.valueChanges;
+    this.subscriptions.add(
+      data$.subscribe(({ data }) => {
+        const dataList = data.getWireTransferBankAccounts as WireTransferBankAccountListResult;
+        if (dataList?.count ?? 0 > 0) {
+          this.bankAccounts = dataList?.list?.map(val => {
+            return {
+              id: val.bankAccountId,
+              title: val.name
+            } as CommonTargetValue;
+          }) ?? [];
+        }
+      }, (error) => {
+        this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load wallet list');
+      })
+    );
   }
 
   private setTargetValidator(): void {
     const val = this.schemeForm.get('target')?.value;
     if (val === SettingsCostTargetFilterType.None) {
-      this.schemeForm.get('targetValues')
-          ?.clearValidators();
+      this.schemeForm.get('targetValues')?.clearValidators();
     } else {
-      this.schemeForm.get('targetValues')
-          ?.setValidators([Validators.required]);
+      this.schemeForm.get('targetValues')?.setValidators([Validators.required]);
     }
-    this.schemeForm.get('targetValues')
-        ?.updateValueAndValidity();
+    this.schemeForm.get('targetValues')?.updateValueAndValidity();
   }
 
   private filterTargetValues(value: string): CommonTargetValue[] {
@@ -203,8 +224,7 @@ export class CostEditorComponent implements OnInit {
       let filterValue = '';
       if (value) {
         filterValue = value.toLowerCase();
-        return this.targetValueParams.dataList.filter(c => c.title.toLowerCase()
-                                                            .includes(filterValue));
+        return this.targetValueParams.dataList.filter(c => c.title.toLowerCase().includes(filterValue));
       } else {
         return this.targetValueParams.dataList;
       }
@@ -220,75 +240,45 @@ export class CostEditorComponent implements OnInit {
       this.loadingData = true;
       this.removeIncorrectTargetValues(scheme);
       this.defaultSchemeName = scheme.isDefault ? scheme.name : '';
-      this.schemeForm.get('id')
-          ?.setValue(scheme?.id);
-      this.schemeForm.get('name')
-          ?.setValue(scheme?.name);
-      this.schemeForm.get('description')
-          ?.setValue(scheme?.description);
-      this.schemeForm.get('isDefault')
-          ?.setValue(scheme?.isDefault);
-      this.schemeForm.get('target')
-          ?.setValue(scheme?.target);
-      this.schemeForm.get('targetValues')
-          ?.setValue(scheme?.targetValues);
-      this.schemeForm.get('instrument')
-          ?.setValue(scheme.instrument);
-      this.schemeForm.get('trxType')
-          ?.setValue(scheme?.trxType);
-      this.schemeForm.get('provider')
-          ?.setValue(scheme?.provider);
-      this.schemeForm.get('mdr')
-          ?.setValue(scheme?.terms.mdr);
-      this.schemeForm.get('transactionCost')
-          ?.setValue(scheme?.terms.transactionCost);
-      this.schemeForm.get('rollingReserves')
-          ?.setValue(scheme?.terms.rollingReserves);
-      this.schemeForm.get('rollingReservesDays')
-          ?.setValue(scheme?.terms.rollingReservesDays);
-      this.schemeForm.get('chargebackCost')
-          ?.setValue(scheme?.terms.chargebackCost);
-      this.schemeForm.get('monthlyCost')
-          ?.setValue(scheme?.terms.monthlyCost);
-      this.schemeForm.get('minMonthlyCost')
-          ?.setValue(scheme?.terms.minMonthlyCost);
+      this.schemeForm.get('id')?.setValue(scheme?.id);
+      this.schemeForm.get('name')?.setValue(scheme?.name);
+      this.schemeForm.get('description')?.setValue(scheme?.description);
+      this.schemeForm.get('bankAccounts')?.setValue(scheme?.bankAccountIds);
+      this.schemeForm.get('isDefault')?.setValue(scheme?.isDefault);
+      this.schemeForm.get('target')?.setValue(scheme?.target);
+      this.schemeForm.get('targetValues')?.setValue(scheme?.targetValues);
+      this.schemeForm.get('instrument')?.setValue(scheme.instrument);
+      this.schemeForm.get('trxType')?.setValue(scheme?.trxType);
+      this.schemeForm.get('provider')?.setValue(scheme?.provider);
+      this.schemeForm.get('mdr')?.setValue(scheme?.terms.mdr);
+      this.schemeForm.get('transactionCost')?.setValue(scheme?.terms.transactionCost);
+      this.schemeForm.get('rollingReserves')?.setValue(scheme?.terms.rollingReserves);
+      this.schemeForm.get('rollingReservesDays')?.setValue(scheme?.terms.rollingReservesDays);
+      this.schemeForm.get('chargebackCost')?.setValue(scheme?.terms.chargebackCost);
+      this.schemeForm.get('monthlyCost')?.setValue(scheme?.terms.monthlyCost);
+      this.schemeForm.get('minMonthlyCost')?.setValue(scheme?.terms.minMonthlyCost);
       const p = this.targetValueParams;
       this.setTargetValidator();
       this.loadingData = false;
       this.formChanged.emit(false);
     } else {
-      this.schemeForm.get('id')
-          ?.setValue('');
-      this.schemeForm.get('name')
-          ?.setValue('');
-      this.schemeForm.get('description')
-          ?.setValue('');
-      this.schemeForm.get('isDefault')
-          ?.setValue('');
-      this.schemeForm.get('target')
-          ?.setValue(SettingsCostTargetFilterType.None);
-      this.schemeForm.get('targetValues')
-          ?.setValue([]);
-      this.schemeForm.get('instrument')
-          ?.setValue('');
-      this.schemeForm.get('trxType')
-          ?.setValue('');
-      this.schemeForm.get('provider')
-          ?.setValue('');
-      this.schemeForm.get('mdr')
-          ?.setValue('');
-      this.schemeForm.get('transactionCost')
-          ?.setValue('');
-      this.schemeForm.get('rollingReserves')
-          ?.setValue('');
-      this.schemeForm.get('rollingReservesDays')
-          ?.setValue('');
-      this.schemeForm.get('chargebackCost')
-          ?.setValue('');
-      this.schemeForm.get('monthlyCost')
-          ?.setValue('');
-      this.schemeForm.get('minMonthlyCost')
-          ?.setValue('');
+      this.schemeForm.get('id')?.setValue('');
+      this.schemeForm.get('name')?.setValue('');
+      this.schemeForm.get('description')?.setValue('');
+      this.schemeForm.get('bankAccounts')?.setValue([]);
+      this.schemeForm.get('isDefault')?.setValue('');
+      this.schemeForm.get('target')?.setValue(SettingsCostTargetFilterType.None);
+      this.schemeForm.get('targetValues')?.setValue([]);
+      this.schemeForm.get('instrument')?.setValue('');
+      this.schemeForm.get('trxType')?.setValue('');
+      this.schemeForm.get('provider')?.setValue('');
+      this.schemeForm.get('mdr')?.setValue('');
+      this.schemeForm.get('transactionCost')?.setValue('');
+      this.schemeForm.get('rollingReserves')?.setValue('');
+      this.schemeForm.get('rollingReservesDays')?.setValue('');
+      this.schemeForm.get('chargebackCost')?.setValue('');
+      this.schemeForm.get('monthlyCost')?.setValue('');
+      this.schemeForm.get('minMonthlyCost')?.setValue('');
       this.setTargetValidator();
     }
   }
@@ -300,6 +290,7 @@ export class CostEditorComponent implements OnInit {
     data.description = this.schemeForm.get('description')?.value;
     data.isDefault = this.schemeForm.get('isDefault')?.value;
     data.id = this.schemeForm.get('id')?.value;
+    data.bankAccountIds = this.schemeForm.get('bankAccounts')?.value;
     // target
     data.setTarget(this.schemeForm.get('target')?.value, this.schemeForm.get('targetValues')?.value);
     (this.schemeForm.get('instrument')?.value as PaymentInstrument[]).forEach(x => data.instrument.push(x));
@@ -379,14 +370,14 @@ export class CostEditorComponent implements OnInit {
       const values = this.schemeForm.get('targetValues')?.value;
       values.push(value.trim());
       this.schemeForm.get('targetValues')
-          ?.setValue(values);
+        ?.setValue(values);
     }
     // Reset the input value
     if (input) {
       input.value = '';
     }
     this.schemeForm.get('targetValue')
-        ?.setValue(null);
+      ?.setValue(null);
   }
 
   removeTargetValue(val: string): void {
@@ -395,13 +386,13 @@ export class CostEditorComponent implements OnInit {
     if (index >= 0) {
       values.splice(index, 1);
       this.schemeForm.get('targetValues')
-          ?.setValue(values);
+        ?.setValue(values);
     }
   }
 
   clearTargetValues(): void {
     this.schemeForm.get('targetValues')
-        ?.setValue([]);
+      ?.setValue([]);
   }
 
   targetItemSelected(event: MatAutocompleteSelectedEvent): void {
@@ -409,11 +400,11 @@ export class CostEditorComponent implements OnInit {
     if (!values.includes(event.option.viewValue)) {
       values.push(event.option.viewValue);
       this.schemeForm.get('targetValues')
-          ?.setValue(values);
+        ?.setValue(values);
     }
     this.targetValueInput.nativeElement.value = '';
     this.schemeForm.get('targetValue')
-        ?.setValue(null);
+      ?.setValue(null);
   }
 
   onDeleteScheme(): void {
