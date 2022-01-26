@@ -1960,8 +1960,6 @@ export class AdminDataService {
   }
 
   saveCostSettings(settings: CostScheme, create: boolean): Observable<any> {
-
-    console.log('save', settings);
     return create
       ? this.apollo.mutate({
         mutation: ADD_SETTINGS_COST,

@@ -214,3 +214,8 @@ export class WireTransferBankAccountEu {
     swift = '';
     iban = '';
 }
+
+export class WireTransferUserSelection {
+    id = '';
+    selected = '';
+}

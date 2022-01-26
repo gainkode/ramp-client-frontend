@@ -15,13 +15,13 @@
 .__widget-frame-background {
     grid-column: 1/3;
     grid-row: 1;
-    background: linear-gradient(51.56deg, #0D3D55 0%, #1A68AD 28.65%, #00A6AB 66.67%, #79CDD4 100%);   
+    background: linear-gradient(51.56deg, #0d3d55 0%, #1a68ad 28.65%, #00a6ab 66.67%, #79cdd4 100%);
 }
 
 .__widget-frame-background-pipes {
     grid-column: 1;
     grid-row: 1;
-    background-color: #79CDD4;
+    background-color: #79cdd4;
     mask: url("widget-bg.svg");
     mask-position: top;
     mask-repeat: no-repeat;
@@ -621,7 +621,7 @@
     font-weight: normal;
     font-size: 14px;
     line-height: 15px;
-    
+
     text-align: center;
     color: $color_purple_900_text;
 }
@@ -792,4 +792,20 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.__widget-radio-group {
+    display: flex;
+    flex-direction: column;
+    margin: 0px 0px;
+}
+
+.__widget-radio-button {
+    margin: 5px;
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 10px;
+    line-height: 24px;
+    color: $color_purple_900_icons;
 }

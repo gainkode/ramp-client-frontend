@@ -1,12 +1,14 @@
 import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { AssetAddressShort, PaymentInstrument, PaymentPreauthResultShort, Rate, TransactionShort, TransactionSource, TransactionType, UserContactListResult } from 'src/app/model/generated-models';
-import { CardView, CheckoutSummary, PaymentProviderView } from 'src/app/model/payment.model';
+import { take } from 'rxjs/operators';
+import { AssetAddressShort, PaymentInstrument, PaymentPreauthResultShort, Rate, SettingsCostShort, TransactionShort, TransactionSource, TransactionType, UserContactListResult } from 'src/app/model/generated-models';
+import { CardView, CheckoutSummary, PaymentProviderInstrumentView, WireTransferPaymentCategoryList } from 'src/app/model/payment.model';
 import { ErrorService } from 'src/app/services/error.service';
 import { PaymentDataService } from 'src/app/services/payment.service';
 import { ExchangeRateService } from 'src/app/services/rate.service';
-import { PaymentCompleteDetails, PaymentWidgetType, WidgetSettings } from '../model/payment-base.model';
+import { WireTransferUserSelection } from '../model/cost-scheme.model';
+import { PaymentCompleteDetails, PaymentWidgetType, WidgetSettings, WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from '../model/payment-base.model';
 import { WalletItem } from '../model/wallet.model';
 import { AuthService } from '../services/auth.service';
 import { NotificationService } from '../services/notification.service';
@@ -34,7 +36,9 @@ export class TransferWidgetComponent implements OnInit {
   userWallets: WalletItem[] = [];
   exchangeRateCountDownTitle = '';
   exchangeRateCountDownValue = '';
-  paymentProviders: PaymentProviderView[] = [];
+  paymentProviders: PaymentProviderInstrumentView[] = [];
+  bankAccountId = '';
+  wireTransferList: WireTransferPaymentCategoryItem[] = [];
   requestKyc = false;
   readCommonSettings = false;
   iframeContent = '';
@@ -292,7 +296,7 @@ export class TransferWidgetComponent implements OnInit {
     this.requestKyc = state;
   }
 
-  settingsCommonComplete(providers: PaymentProviderView[]): void {
+  settingsCommonComplete(providers: PaymentProviderInstrumentView[]): void {
     this.readCommonSettings = false;
     this.paymentProviders = providers.map(val => val);
     setTimeout(() => {
@@ -322,9 +326,12 @@ export class TransferWidgetComponent implements OnInit {
 
   selectProvider(id: string) {
     if (id === 'Fibonatix') {
-      this.createTransaction(id, PaymentInstrument.CreditCard);
+      this.createTransaction(id, PaymentInstrument.CreditCard, '');
     } else if (id === 'InstantPay') {
-      this.createTransaction(id, PaymentInstrument.Apm);
+      this.createTransaction(id, PaymentInstrument.Apm, '');
+    } else if (id === 'WireTransferPayment') {
+      this.summary.providerView = this.paymentProviders.find(x => x.id === id);
+      this.startPayment();
     } else {
       this.errorMessage = `Payment using ${id} is currenctly not supported`;
     }
@@ -336,9 +343,16 @@ export class TransferWidgetComponent implements OnInit {
     this.paymentComplete = false;
     this.completeCreditCardTransaction(this.summary.transactionId, this.summary.providerView?.id ?? '', data);
   }
+  // ====================
 
-  creditCardBack(): void {
-    this.stageBack();
+  // == Wire transfer ==
+  wireTransferPaymentComplete(data: WireTransferUserSelection): void {
+    const settings = {
+      settingsCostId: data.id,
+      accountType: data.selected
+    };
+    const settingsData = JSON.stringify(settings);
+    this.createTransaction('', PaymentInstrument.WireTransfer, settingsData);
   }
   // ====================
 
@@ -378,7 +392,7 @@ export class TransferWidgetComponent implements OnInit {
     this.readCommonSettings = true;
   }
 
-  private createTransaction(providerId: string, instrument: PaymentInstrument): void {
+  private createTransaction(providerId: string, instrument: PaymentInstrument, instrumentDetails: string): void {
     this.errorMessage = '';
     this.inProgress = true;
     const tempStageId = this.pager.swapStage('initialization');
@@ -394,7 +408,8 @@ export class TransferWidgetComponent implements OnInit {
           this.summary.currencyTo,
           this.summary.amountFrom ?? 0,
           instrument,
-          providerId,
+          instrumentDetails,
+          (instrument === PaymentInstrument.WireTransfer) ? '' : providerId,
           '',
           destination
         ).subscribe(({ data }) => {
@@ -413,7 +428,11 @@ export class TransferWidgetComponent implements OnInit {
             this.summary.networkFee = order.approxNetworkFee ?? 0;
             this.summary.transactionDate = new Date().toLocaleString();
             this.summary.transactionId = order.transactionId as string;
-            this.startPayment();
+            if (instrument === PaymentInstrument.WireTransfer) {
+              this.processingComplete();
+            } else {
+              this.startPayment();
+            }
           } else {
             this.errorMessage = 'Order code is invalid';
             this.pager.swapStage(tempStageId);
@@ -439,6 +458,8 @@ export class TransferWidgetComponent implements OnInit {
         this.summary.transactionId,
         this.summary.providerView.id,
         this.summary.instrument ?? PaymentInstrument.Apm);
+    } else if (this.summary.providerView?.id === 'WireTransferPayment') {
+      this.getWireTransferSettings();
     } else {
       this.errorMessage = 'Invalid payment provider';
     }
@@ -447,50 +468,113 @@ export class TransferWidgetComponent implements OnInit {
   private completeCreditCardTransaction(transactionId: string, provider: string, card: CardView): void {
     this.inProgress = true;
     this.iframeContent = '';
-    this.dataService.preAuthCard(transactionId, PaymentInstrument.CreditCard, provider, card).subscribe(
-      ({ data }) => {
-        // One more chance to start notifictions
-        if (!this.notificationStarted) {
-          this.startNotificationListener();
+    const transactionData$ = this.dataService.preAuthCard(transactionId, PaymentInstrument.CreditCard, provider, card);
+    this.pSubscriptions.add(
+      transactionData$.subscribe(
+        ({ data }) => {
+          // One more chance to start notifictions
+          if (!this.notificationStarted) {
+            this.startNotificationListener();
+          }
+          const preAuthResult = data.preauth as PaymentPreauthResultShort;
+          const order = preAuthResult.order;
+          this.summary.setPaymentInfo(PaymentInstrument.CreditCard, order?.paymentInfo as string);
+          this.iframeContent = preAuthResult.html as string;
+          this.inProgress = false;
+          this.nextStage('processing-frame', 'Payment', this.pager.step, false);
+        }, (error) => {
+          this.inProgress = false;
+          if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
+            this.handleAuthError();
+          } else {
+            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to confirm your order');
+          }
         }
-        const preAuthResult = data.preauth as PaymentPreauthResultShort;
-        const order = preAuthResult.order;
-        this.summary.setPaymentInfo(PaymentInstrument.CreditCard, order?.paymentInfo as string);
-        this.iframeContent = preAuthResult.html as string;
-        this.inProgress = false;
-        this.nextStage('processing-frame', 'Payment', this.pager.step, false);
-      }, (error) => {
-        this.inProgress = false;
-        if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
-          this.handleAuthError();
-        } else {
-          this.errorMessage = this.errorHandler.getError(error.message, 'Unable to confirm your order');
-        }
-      }
+      )
     );
   }
 
   private completeInstantpayTransaction(transactionId: string, provider: string, instrument: PaymentInstrument): void {
     this.inProgress = true;
     this.instantpayDetails = '';
-    this.dataService.preAuth(transactionId, instrument, provider).subscribe(
-      ({ data }) => {
-        const preAuthResult = data.preauth as PaymentPreauthResultShort;
-        const order = preAuthResult.order;
-        this.summary.setPaymentInfo(instrument, order?.paymentInfo as string);
-        if (preAuthResult.details) {
-          this.instantpayDetails = preAuthResult.details as string;
+    const transactionData$ = this.dataService.preAuth(transactionId, instrument, provider);
+    this.pSubscriptions.add(
+      transactionData$.subscribe(
+        ({ data }) => {
+          const preAuthResult = data.preauth as PaymentPreauthResultShort;
+          const order = preAuthResult.order;
+          this.summary.setPaymentInfo(instrument, order?.paymentInfo as string);
+          if (preAuthResult.details) {
+            this.instantpayDetails = preAuthResult.details as string;
+          }
+          this.inProgress = false;
+          this.nextStage('processing-instantpay', 'Payment', this.pager.step, false);
+        }, (error) => {
+          this.inProgress = false;
+          if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
+            this.handleAuthError();
+          } else {
+            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to confirm your order');
+          }
         }
-        this.inProgress = false;
-        this.nextStage('processing-instantpay', 'Payment', this.pager.step, false);
-      }, (error) => {
-        this.inProgress = false;
-        if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
-          this.handleAuthError();
-        } else {
-          this.errorMessage = this.errorHandler.getError(error.message, 'Unable to confirm your order');
-        }
-      }
+      )
     );
+  }
+
+  private getWireTransferSettings(): void {
+    this.inProgress = true;
+    this.bankAccountId = '';
+    this.wireTransferList = [];
+    const settingsData$ = this.dataService.mySettingsCost(
+      this.summary.transactionType,
+      PaymentInstrument.WireTransfer,
+      this.summary.currencyTo).valueChanges.pipe(take(1));
+    this.pSubscriptions.add(
+      settingsData$.subscribe(
+        ({ data }) => {
+          this.inProgress = false;
+          const settingsResult = data.mySettingsCost as SettingsCostShort;
+          const singleSelect = false;
+          if (settingsResult.bankAccounts && (settingsResult.bankAccounts?.length ?? 0 > 0)) {
+            const accountData = settingsResult.bankAccounts[0];
+            this.bankAccountId = accountData.bankAccountId;
+            this.wireTransferList = WireTransferPaymentCategoryList.map(val => val);
+            if (accountData.au === null || accountData.au === undefined || accountData.au === 'null') {
+              this.removeWireTransferItem(WireTransferPaymentCategory.AU);
+            }
+            if (accountData.uk === null || accountData.uk === undefined || accountData.uk === 'null') {
+              this.removeWireTransferItem(WireTransferPaymentCategory.UK);
+            }
+            if (accountData.eu === null || accountData.eu === undefined || accountData.eu === 'null') {
+              this.removeWireTransferItem(WireTransferPaymentCategory.EU);
+            }
+          }
+          if (this.wireTransferList.length > 1) {
+            this.nextStage('wire_transfer', 'Payment info', this.pager.step, true);
+          } else if (this.wireTransferList.length === 1) {
+            this.wireTransferPaymentComplete({
+              id: this.bankAccountId,
+              selected: this.wireTransferList[0].id
+            } as WireTransferUserSelection);
+          } else {
+            this.errorMessage = 'No settings found for wire transfer';
+          }
+        }, (error) => {
+          this.inProgress = false;
+          if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
+            this.handleAuthError();
+          } else {
+            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to get wire transfer settings');
+          }
+        }
+      )
+    );
+  }
+
+  private removeWireTransferItem(cat: WireTransferPaymentCategory): void {
+    const pos = this.wireTransferList.findIndex(x => x.id === cat);
+    if (pos >= 0) {
+      this.wireTransferList.splice(pos, 1);
+    }
   }
 }

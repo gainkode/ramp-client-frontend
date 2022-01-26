@@ -22,8 +22,12 @@
       </app-widget-payment>
       <!-- Credit card -->
       <app-widget-credit-card *ngSwitchCase="'credit_card'"
-        [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage" (onBack)="creditCardBack()"
+        [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage" (onBack)="paymentBack()"
         (onComplete)="creditCardPaymentComplete($event)"></app-widget-credit-card>
+      <!-- Wire transfer -->
+      <app-widget-wire-transfer *ngSwitchCase="'wire_transfer'" [bankCategories]="wireTransferList"
+        [bankAccountId]="bankAccountId" [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage"
+        (onBack)="paymentBack()" (onComplete)="wireTransferPaymentComplete($event)"></app-widget-wire-transfer>
       <!-- KYC -->
       <app-widget-kyc *ngSwitchCase="'verification'" [summary]="summary"
         [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage" (onError)="handleError($event)"

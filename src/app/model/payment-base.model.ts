@@ -9,6 +9,12 @@ export enum PaymentWidgetType {
     Transfer = 'Transfer'
 }
 
+export enum WireTransferPaymentCategory {
+    AU = 'AU',
+    UK = 'UK',
+    EU = 'EU'
+}
+
 export class WidgetSettings {
     embedded = false;
     email = '';
@@ -44,4 +50,9 @@ export class PaymentCompleteDetails {
     paymentType: PaymentWidgetType = PaymentWidgetType.None;
     amount = 0;
     currency = '';
+}
+
+export class WireTransferPaymentCategoryItem {
+    id = WireTransferPaymentCategory.AU;
+    title = '';
 }

@@ -63,6 +63,28 @@ query GetAppropriatePaymentProviders(
 }
 `;
 
+const MY_SETTINGS_COST = gql`
+query MySettingsCost(
+  $transactionType: TransactionType!
+  $instrument: PaymentInstrument!
+  $currency: String
+) {
+  mySettingsCost(
+    transactionType: $transactionType
+    instrument: $instrument
+    currency: $currency
+  ) {
+    terms
+    bankAccounts {
+      bankAccountId
+      au
+      uk
+      eu
+    }
+  }
+}
+`;
+
 const GET_SETTINGS_KYC_TIERS = gql`
 query GetSettingsKycTiers {
   getSettingsKycTiers {
@@ -171,7 +193,8 @@ mutation CreateTransaction(
   $currencyToReceive: String!,
   $amountToSpend: Float!,
   $instrument: PaymentInstrument!,
-  $paymentProvider: String!,
+  $instrumentDetails: String,
+  $paymentProvider: String,
   $widgetUserParamsId: String,
   $destination: String
 ) {
@@ -183,6 +206,7 @@ mutation CreateTransaction(
     currencyToReceive: $currencyToReceive
     amountToSpend: $amountToSpend
     instrument: $instrument
+    instrumentDetails: $instrumentDetails
     paymentProvider: $paymentProvider
     widgetUserParamsId: $widgetUserParamsId
     destination: $destination
@@ -390,6 +414,7 @@ export class PaymentDataService {
     currencyToReceive: string,
     amount: number,
     instrument: PaymentInstrument | undefined,
+    instrumentDetails: string,
     providerName: string,
     userParamsId: string,
     walletAddress: string): Observable<any> {
@@ -403,6 +428,7 @@ export class PaymentDataService {
       currencyToReceive: (currencyToReceive !== '') ? currencyToReceive : undefined,
       amountToSpend: amount,
       instrument,
+      instrumentDetails: (instrumentDetails !== '') ? instrumentDetails : undefined,
       paymentProvider: (providerName !== '') ? providerName : undefined,
       widgetUserParamsId: (userParamsId !== '') ? userParamsId : undefined,
       destination: wallet
@@ -451,14 +477,26 @@ export class PaymentDataService {
   }
 
   getProviders(fiatCurrency: string, widgetId: string | undefined): QueryRef<any, EmptyObject> {
-      return this.apollo.watchQuery<any>({
-        query: GET_PROVIDERS,
-        variables: {
-          fiatCurrency,
-          widgetId
-        },
-        fetchPolicy: 'network-only'
-      });
+    return this.apollo.watchQuery<any>({
+      query: GET_PROVIDERS,
+      variables: {
+        fiatCurrency,
+        widgetId
+      },
+      fetchPolicy: 'network-only'
+    });
+  }
+
+  mySettingsCost(transactionType: TransactionType, instrument: PaymentInstrument, currency: string): QueryRef<any, EmptyObject> {
+    return this.apollo.watchQuery<any>({
+      query: MY_SETTINGS_COST,
+      variables: {
+        transactionType,
+        instrument,
+        currency
+      },
+      fetchPolicy: 'network-only'
+    });
   }
 
   getWidget(paramsId: string): QueryRef<any, EmptyObject> | null {

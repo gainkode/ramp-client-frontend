@@ -5,6 +5,7 @@ import {
     SettingsFeeTargetFilterType, SettingsCostTargetFilterType, SettingsKycTargetFilterType,
     UserType, KycProvider, UserMode, SettingsCurrency, Rate, TransactionSource, UserNotificationCodes, CustodyProvider, TransactionKycStatus, RiskLevel, PaymentProviderByInstrument, AccountStatus, KycStatus
 } from './generated-models';
+import { WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from './payment-base.model';
 
 export class PaymentInstrumentView {
     id!: PaymentInstrument;
@@ -23,13 +24,14 @@ export class PaymentProviderInstrumentView {
         this.instrument = data.instrument ?? PaymentInstrument.CreditCard;
         if (this.instrument === PaymentInstrument.Apm) {
             this.name = 'APM';
-            this.image = './assets/svg-providers/bank-payment.svg';
+            this.image = './assets/svg-providers/apm.svg';
         } else if (this.instrument === PaymentInstrument.CreditCard) {
             this.name = 'CARD PAYMENT';
             this.image = './assets/svg-providers/credit-card.svg';
         } else if (this.instrument === PaymentInstrument.WireTransfer) {
+            this.id = 'WireTransferPayment';
             this.name = 'WIRE TRANSFER';
-            this.image = './assets/svg-providers/bank-payment.svg';
+            this.image = './assets/svg-providers/wire-transfer.svg';
         }
     }
 }
@@ -208,6 +210,12 @@ export const PaymentInstrumentList: Array<PaymentInstrumentView> = [
     { id: PaymentInstrument.WireTransfer, name: 'Wire transfer' }
 ];
 
+export const WireTransferPaymentCategoryList: Array<WireTransferPaymentCategoryItem> = [
+    { id: WireTransferPaymentCategory.AU, title: 'Australian Bank' },
+    { id: WireTransferPaymentCategory.UK, title: 'UK Bank' },
+    { id: WireTransferPaymentCategory.EU, title: 'EU Bank' }
+];
+
 export const QuickCheckoutPaymentInstrumentList: Array<PaymentInstrumentView> = [
     { id: PaymentInstrument.CreditCard, name: 'Credit card' },
     { id: PaymentInstrument.Apm, name: 'APM' }
@@ -374,7 +382,7 @@ export class CheckoutSummary {
     status: TransactionStatus = TransactionStatus.Pending;
     card: CardView | undefined = undefined;
     provider: PaymentProvider | undefined = undefined;  // deprecated
-    providerView: PaymentProviderView | undefined = undefined;
+    providerView: PaymentProviderInstrumentView | undefined = undefined;
     instrument: PaymentInstrument | undefined = undefined;
     quoteLimit = 0;
 

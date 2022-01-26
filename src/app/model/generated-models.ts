@@ -2363,6 +2363,7 @@ export type Transaction = {
   accountType?: Maybe<Scalars['String']>;
   source?: Maybe<TransactionSource>;
   instrument?: Maybe<PaymentInstrument>;
+  instrumentDetails?: Maybe<Scalars['String']>;
   custodyProvider?: Maybe<CustodyProvider>;
   custodyDetails?: Maybe<Scalars['String']>;
   paymentProvider?: Maybe<Scalars['String']>;
@@ -2414,6 +2415,7 @@ export type TransactionInput = {
   amountToSpend: Scalars['Float'];
   destination?: Maybe<Scalars['String']>;
   instrument?: Maybe<PaymentInstrument>;
+  instrumentDetails?: Maybe<Scalars['String']>;
   paymentProvider?: Maybe<Scalars['String']>;
   widgetUserParamsId?: Maybe<Scalars['String']>;
   data?: Maybe<Scalars['String']>;
@@ -2474,6 +2476,7 @@ export type TransactionShort = {
   accountType?: Maybe<Scalars['String']>;
   source?: Maybe<TransactionSource>;
   instrument?: Maybe<PaymentInstrument>;
+  instrumentDetails?: Maybe<Scalars['String']>;
   custodyProvider?: Maybe<CustodyProvider>;
   custodyDetails?: Maybe<Scalars['String']>;
   paymentProvider?: Maybe<Scalars['String']>;

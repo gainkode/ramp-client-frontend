@@ -4,7 +4,7 @@ import { Subscription, Observable, forkJoin } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { CommonGroupValue } from 'src/app/model/common.model';
 import { PaymentInstrument, PaymentProvider, TransactionShort, TransactionType, UserState } from 'src/app/model/generated-models';
-import { CheckoutSummary, PaymentProviderView } from 'src/app/model/payment.model';
+import { CheckoutSummary, PaymentProviderInstrumentView, PaymentProviderView } from 'src/app/model/payment.model';
 import { ErrorService } from 'src/app/services/error.service';
 import { PaymentDataService } from 'src/app/services/payment.service';
 import { WalletValidator } from 'src/app/utils/wallet.validator';
@@ -15,7 +15,7 @@ import { WalletValidator } from 'src/app/utils/wallet.validator';
   styleUrls: ['../../../assets/payment.scss', '../../../assets/button.scss', '../../../assets/text-control.scss']
 })
 export class WidgetPaymentComponent implements OnInit, OnDestroy {
-  @Input() providers: PaymentProviderView[] = [];
+  @Input() providers: PaymentProviderInstrumentView[] = [];
   @Input() errorMessage = '';
   @Output() onBack = new EventEmitter();
   @Output() onSelect = new EventEmitter<string>();

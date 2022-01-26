@@ -43,6 +43,8 @@ import { SendWidgetComponent } from './send.component';
 import { WidgetSendDetailsComponent } from './panels/send-details.component';
 import { TransferWidgetComponent } from './transfer.component';
 import { PaymentIntroComponent } from './payment-intro.component';
+import { WidgetWireTransferComponent } from './panels/wire-transfer.component';
+import { MatRadioModule } from '@angular/material/radio';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -54,6 +56,7 @@ const modules = [
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
+    MatRadioModule,
     MatSelectModule,
     MatAutocompleteModule,
     MatIconModule,
@@ -74,7 +77,7 @@ export class MaterialModule { }
         NgxMaskModule.forRoot(), CommonModule, ClipboardModule, FormsModule, ReactiveFormsModule, RouterModule, MaterialModule, QRCodeModule],
     declarations: [
         WidgetComponent, ReceiveWidgetComponent, SendWidgetComponent, TransferWidgetComponent, WidgetPanelComponent, WidgetProgressComponent,
-        WidgetSummaryComponent, WidgetRateComponent, WidgetCreditCardComponent,
+        WidgetSummaryComponent, WidgetRateComponent, WidgetCreditCardComponent, WidgetWireTransferComponent,
         WidgetRegisterComponent, WidgetLoginAuthComponent, WidgetCodeAuthComponent,
         WidgetInitializationComponent, WidgetOrderDetailsComponent, WidgetReceiveDetailsComponent, WidgetSendDetailsComponent,
         WidgetDisclaimerComponent, WidgetKycComponent, WidgetPaymentComponent, WidgetProcessingFrameComponent,

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { PaymentProviderByInstrument, TransactionType, User } from 'src/app/model/generated-models';
+import { PaymentInstrument, PaymentProviderByInstrument, TransactionType, User } from 'src/app/model/generated-models';
 import { CheckoutSummary, PaymentProviderInstrumentView } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
@@ -166,7 +166,7 @@ export class WidgetSettingsService implements OnInit, OnDestroy {
       currency = this.summary?.currencyTo ?? '';
     }
     return list
-      .filter(x => x.provider?.currencies?.includes(currency, 0))
+      .filter(x => x.provider?.currencies?.includes(currency, 0) || x.instrument === PaymentInstrument.WireTransfer)
       .map(val => new PaymentProviderInstrumentView(val));
   }
 }
