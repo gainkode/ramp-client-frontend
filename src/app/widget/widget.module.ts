@@ -31,7 +31,6 @@ import { WidgetCreditCardComponent } from './panels/credit-card.component';
 import { WidgetCodeAuthComponent } from './panels/code-auth.component';
 import { WidgetKycComponent } from './panels/kyc.component';
 import { WidgetProcessingFrameComponent } from './panels/processing-frame.component';
-import { WidgetSettingsService } from './panels/settings-service.component';
 import { WidgetProcessingInstantpayComponent } from './panels/processing-instantpay.component';
 import { WidgetInitializationComponent } from './panels/initialization.component';
 import { WidgetPanelComponent } from './widget-panel.component';
@@ -81,7 +80,7 @@ export class MaterialModule { }
         WidgetRegisterComponent, WidgetLoginAuthComponent, WidgetCodeAuthComponent,
         WidgetInitializationComponent, WidgetOrderDetailsComponent, WidgetReceiveDetailsComponent, WidgetSendDetailsComponent,
         WidgetDisclaimerComponent, WidgetKycComponent, WidgetPaymentComponent, WidgetProcessingFrameComponent,
-        WidgetProcessingInstantpayComponent, WidgetCompleteComponent, WidgetSettingsService, PaymentIntroComponent],
+        WidgetProcessingInstantpayComponent, WidgetCompleteComponent, PaymentIntroComponent],
     exports: [WidgetComponent, WidgetPanelComponent, ReceiveWidgetComponent, SendWidgetComponent, TransferWidgetComponent, PaymentIntroComponent],
     providers: [],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]

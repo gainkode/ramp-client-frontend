@@ -520,29 +520,25 @@ export class ProfileDataService {
   }
 
   getTransactionStatuses(): QueryRef<any, EmptyObject> {
-      return this.apollo.watchQuery<any>({
-        query: GET_TRANSACTION_STATUSES,
-        fetchPolicy: 'network-only',
-      });
+    return this.apollo.watchQuery<any>({
+      query: GET_TRANSACTION_STATUSES,
+      fetchPolicy: 'network-only',
+    });
   }
 
-  getMyWallets(assets: string[]): QueryRef<any, EmptyObject> | null {
-    if (this.apollo.client !== undefined) {
-      const orderFields = [
-        { orderBy: 'total', desc: true }
-      ];
-      const assetIds = (assets.length > 0) ? assets : undefined;
-      return this.apollo.watchQuery<any>({
-        query: GET_MY_WALLETS,
-        variables: {
-          assetIdsOnly: assetIds,
-          orderBy: orderFields,
-        },
-        fetchPolicy: 'network-only',
-      });
-    } else {
-      return null;
-    }
+  getMyWallets(assets: string[]): QueryRef<any, EmptyObject> {
+    const orderFields = [
+      { orderBy: 'total', desc: true }
+    ];
+    const assetIds = (assets.length > 0) ? assets : undefined;
+    return this.apollo.watchQuery<any>({
+      query: GET_MY_WALLETS,
+      variables: {
+        assetIdsOnly: assetIds,
+        orderBy: orderFields,
+      },
+      fetchPolicy: 'network-only',
+    });
   }
 
   getProfileData(): QueryRef<any, EmptyObject> | null {

@@ -42,11 +42,11 @@
         [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage" (onComplete)="processingComplete()">
       </app-widget-processing-instantpay>
       <!-- Common settings reading -->
-      <app-widget-settings-service *ngIf="readCommonSettings" [summary]="summary" (onError)="handleError($event)"
+      <!-- <app-widget-settings-service *ngIf="readCommonSettings" [summary]="summary" (onError)="handleError($event)"
         (onProgress)="progressChanged($event)" (onAuthenticationRequired)="settingsAuthRequired($event)"
         (onIdentificationRequired)="settingsIdRequired()" (onLoginRequired)="settingsLoginRequired($event)"
         (onKycStatusUpdate)="settingsKycState($event)" (onComplete)="settingsCommonComplete($event)">
-      </app-widget-settings-service>
+      </app-widget-settings-service> -->
     </div>
   </div>
 </div>

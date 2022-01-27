@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { AssetAddressShortListResult } from 'src/app/model/generated-models';
 import { CurrencyView } from 'src/app/model/payment.model';
 import { WalletItem } from 'src/app/model/wallet.model';
@@ -80,42 +81,38 @@ export class WidgetReceiveDetailsComponent implements OnInit, OnDestroy {
     this.onProgress.emit(this.inProgress);
     this.wallets = [];
     const walletData = this.profileService.getMyWallets([symbol]);
-    if (walletData === null) {
-      this.errorMessage = this.errorHandler.getRejectedCookieMessage();
-    } else {
-      this.pSubscriptions.add(
-        walletData.valueChanges.subscribe(({ data }) => {
-          this.inProgress = false;
-          this.onProgress.emit(this.inProgress);
-          const dataList = data.myWallets as AssetAddressShortListResult;
-          if (dataList !== null) {
-            const walletCount = dataList?.count ?? 0;
-            if (walletCount > 0) {
-              this.wallets = dataList?.list?.map((val) => new WalletItem(val, '', undefined)) as WalletItem[];
-              this.walletInit = false;
-              if (this.presetWalletId === '') {
-                if (this.wallets.length === 1) {
-                  this.walletField?.setValue(this.wallets[0].address);
-                }
-              } else {
-                const w = this.wallets.find(x => x.id === this.presetWalletId);
-                this.walletField?.setValue(w?.address);
+    this.pSubscriptions.add(
+      walletData.valueChanges.pipe(take(1)).subscribe(({ data }) => {
+        this.inProgress = false;
+        this.onProgress.emit(this.inProgress);
+        const dataList = data.myWallets as AssetAddressShortListResult;
+        if (dataList !== null) {
+          const walletCount = dataList?.count ?? 0;
+          if (walletCount > 0) {
+            this.wallets = dataList?.list?.map((val) => new WalletItem(val, '', undefined)) as WalletItem[];
+            this.walletInit = false;
+            if (this.presetWalletId === '') {
+              if (this.wallets.length === 1) {
+                this.walletField?.setValue(this.wallets[0].address);
               }
             } else {
-              this.errorMessage = `No wallets found for ${symbol}`;
+              const w = this.wallets.find(x => x.id === this.presetWalletId);
+              this.walletField?.setValue(w?.address);
             }
-          }
-        }, (error) => {
-          this.inProgress = false;
-          this.onProgress.emit(this.inProgress);
-          if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
-            this.router.navigateByUrl('/');
           } else {
-            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load wallets');
+            this.errorMessage = `No wallets found for ${symbol}`;
           }
-        })
-      );
-    }
+        }
+      }, (error) => {
+        this.inProgress = false;
+        this.onProgress.emit(this.inProgress);
+        if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
+          this.router.navigateByUrl('/');
+        } else {
+          this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load wallets');
+        }
+      })
+    );
   }
 
   private onCurrencyUpdated(symbol: string): void {

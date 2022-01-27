@@ -14,6 +14,7 @@ import { PaymentCompleteDetails, WidgetSettings, WireTransferPaymentCategory, Wi
 import { WalletItem } from '../model/wallet.model';
 import { ProfileDataService } from '../services/profile.service';
 import { WidgetPagerService } from '../services/widget-pager.service';
+import { WidgetService } from '../services/widget.service';
 
 @Component({
   selector: 'app-widget',
@@ -46,7 +47,6 @@ export class WidgetComponent implements OnInit {
   bankAccountId = '';
   wireTransferList: WireTransferPaymentCategoryItem[] = [];
   requestKyc = false;
-  readCommonSettings = false;
   iframeContent = '';
   instantpayDetails = '';
   paymentComplete = false;
@@ -57,9 +57,10 @@ export class WidgetComponent implements OnInit {
 
   constructor(
     private changeDetector: ChangeDetectorRef,
-    private exhangeRate: ExchangeRateService,
-    public pager: WidgetPagerService,
     public router: Router,
+    public pager: WidgetPagerService,
+    private exhangeRate: ExchangeRateService,
+    private widgetService: WidgetService,
     private notification: NotificationService,
     private auth: AuthService,
     private dataService: PaymentDataService,
@@ -67,6 +68,18 @@ export class WidgetComponent implements OnInit {
     private errorHandler: ErrorService) { }
 
   ngOnInit(): void {
+    this.widgetService.register(
+      this.progressChanged.bind(this),
+      this.handleError.bind(this),
+      this.settingsIdRequired.bind(this),
+      this.settingsAuthRequired.bind(this),
+      this.onLoginRequired.bind(this),
+      this.checkLoginResult.bind(this),
+      this.onCodeLoginRequired.bind(this),
+      this.settingsKycState.bind(this),
+      this.settingsCommonComplete.bind(this),
+      this.onWireTransferListLoaded.bind(this)
+    );
     this.initMessage = 'Loading...';
     if (this.userParamsId === '') {
       if (this.settings) {
@@ -286,54 +299,43 @@ export class WidgetComponent implements OnInit {
 
   private loadUserParams(): void {
     this.errorMessage = '';
-    const widgetData = this.dataService.getWidget(this.userParamsId);
-    if (widgetData === null) {
-      this.errorMessage = this.errorHandler.getRejectedCookieMessage();
-      this.initData(undefined);
-      this.pager.init('order_details', 'Order details');
-    } else {
-      this.inProgress = true;
-      this.pSubscriptions.add(
-        widgetData.valueChanges.pipe(take(1)).subscribe(({ data }) => {
-          this.inProgress = false;
-          this.initData(data.getWidget as WidgetShort);
-          this.pager.init('order_details', 'Order details');
-        }, (error) => {
-          this.inProgress = false;
-          this.initData(undefined);
-          this.pager.init('order_details', 'Order details');
-        })
-      );
-    }
+    const widgetData = this.dataService.getWidget(this.userParamsId).valueChanges.pipe(take(1));
+    this.inProgress = true;
+    this.pSubscriptions.add(
+      widgetData.subscribe(({ data }) => {
+        this.inProgress = false;
+        this.initData(data.getWidget as WidgetShort);
+        this.pager.init('order_details', 'Order details');
+      }, (error) => {
+        this.inProgress = false;
+        this.initData(undefined);
+        this.pager.init('order_details', 'Order details');
+      })
+    );
   }
 
   loadUserWallets(): void {
     this.errorMessage = '';
     this.inProgress = true;
-    const walletData = this.profileService.getMyWallets([]);
-    if (walletData === null) {
-      this.errorMessage = this.errorHandler.getRejectedCookieMessage();
-    } else {
-      this.pSubscriptions.add(
-        walletData.valueChanges.pipe(take(1)).subscribe(({ data }) => {
-          this.inProgress = false;
-          const dataList = data.myWallets as AssetAddressShortListResult;
-          if (dataList !== null) {
-            const walletCount = dataList?.count as number;
-            if (walletCount > 0) {
-              this.userWallets = dataList?.list?.
-                map((val) => new WalletItem(val, '', undefined)) as WalletItem[];
-            }
+    const walletData = this.profileService.getMyWallets([]).valueChanges.pipe(take(1));
+    this.pSubscriptions.add(
+      walletData.subscribe(({ data }) => {
+        this.inProgress = false;
+        const dataList = data.myWallets as AssetAddressShortListResult;
+        if (dataList !== null) {
+          const walletCount = dataList?.count as number;
+          if (walletCount > 0) {
+            this.userWallets = dataList?.list?.map((val) => new WalletItem(val, '', undefined)) as WalletItem[];
           }
-          this.initData(undefined);
-          this.pager.init('order_details', 'Order details');
-        }, (error) => {
-          this.inProgress = false;
-          this.initData(undefined);
-          this.pager.init('order_details', 'Order details');
-        })
-      );
-    }
+        }
+        this.initData(undefined);
+        this.pager.init('order_details', 'Order details');
+      }, (error) => {
+        this.inProgress = false;
+        this.initData(undefined);
+        this.pager.init('order_details', 'Order details');
+      })
+    );
   }
 
   // == Order details page ==
@@ -373,7 +375,7 @@ export class WidgetComponent implements OnInit {
       this.summary.transactionId = '';
       this.summary.fee = 0;
       this.summary.email = email;
-      this.authenticate(email);
+      this.widgetService.authenticate(email, this.widget.widgetId);
     }
   }
   // =======================
@@ -388,62 +390,44 @@ export class WidgetComponent implements OnInit {
     if (this.summary.transactionType === TransactionType.Withdrawal) {
       this.createWithdrawalTransaction();
     } else {
-      this.getSettingsCommon();
+      this.widgetService.getSettingsCommon(this.summary, this.widget.widgetId);
     }
   }
   // ================
 
   // == Common settings ==
   settingsAuthRequired(email: string): void {
-    this.readCommonSettings = false;
-    this.changeDetector.detectChanges();
-    setTimeout(() => {
-      this.authenticate(this.summary.email);
-    }, 100);
+    this.widgetService.authenticate(this.summary.email, this.widget.widgetId);
   }
 
   settingsIdRequired(): void {
-    this.readCommonSettings = false;
-    this.changeDetector.detectChanges();
-    setTimeout(() => {
-      this.nextStage('order_details', 'Order details', 1, true);
-    }, 100);
+    this.nextStage('order_details', 'Order details', 1, true);
   }
 
-  settingsLoginRequired(email: string): void {
-    this.readCommonSettings = false;
-    this.changeDetector.detectChanges();
-    this.onLoginRequired(email);
-  }
-
-  settingsKycState(state: boolean): void {
+  private settingsKycState(state: boolean): void {
     if (this.summary.quoteLimit !== 0) {
       this.widget.kycFirst = true;
     }
     this.requestKyc = state || this.summary.quoteLimit !== 0;
   }
 
-  settingsCommonComplete(providers: PaymentProviderInstrumentView[]): void {
-    this.readCommonSettings = false;
+  private settingsCommonComplete(providers: PaymentProviderInstrumentView[]): void {
     this.paymentProviders = providers.map(val => val);
-    this.changeDetector.detectChanges();
-    setTimeout(() => {
-      const nextStage = 4;
-      if (this.widget.kycFirst && this.requestKyc) {
-        this.nextStage('verification', 'Verification', nextStage, false);
-      } else {
-        if (this.paymentProviders.length < 1) {
-          this.errorMessage = `No supported payment providers found for "${this.summary.currencyFrom}"`;
-        } else if (this.paymentProviders.length > 1) {
-          if (!this.notificationStarted) {
-            this.startNotificationListener();
-          }
-          this.nextStage('payment', 'Payment info', nextStage, true);
-        } else {
-          this.selectProvider(this.paymentProviders[0].id);
+    const nextStage = 4;
+    if (this.widget.kycFirst && this.requestKyc) {
+      this.nextStage('verification', 'Verification', nextStage, false);
+    } else {
+      if (this.paymentProviders.length < 1) {
+        this.errorMessage = `No supported payment providers found for "${this.summary.currencyFrom}"`;
+      } else if (this.paymentProviders.length > 1) {
+        if (!this.notificationStarted) {
+          this.startNotificationListener();
         }
+        this.nextStage('payment', 'Payment info', nextStage, true);
+      } else {
+        this.selectProvider(this.paymentProviders[0].id);
       }
-    }, 100);
+    }
   }
   // =====================
 
@@ -520,22 +504,20 @@ export class WidgetComponent implements OnInit {
       this.summary.fee = 0;
     }
     this.summary.email = email;
-    setTimeout(() => {
-      if (this.summary.transactionId === '') {
-        this.nextStage('login_auth', 'Authorization', 3, true);
-      } else {
-        this.startPayment();
-      }
-    }, 50);
+    if (this.summary.transactionId === '') {
+      this.nextStage('login_auth', 'Authorization', 3, true);
+    } else {
+      this.startPayment();
+    }
   }
 
-  onConfirmRequired(email: string): void {
+  onCodeLoginRequired(email: string): void {
     this.summary.email = email;
     this.nextStage('code_auth', 'Authorization', 3, true);
   }
 
   loginCodeConfirmed(): void {
-    this.getSettingsCommon();
+    this.widgetService.getSettingsCommon(this.summary, this.widget.widgetId);
   }
 
   loginComplete(data: LoginResult): void {
@@ -551,7 +533,7 @@ export class WidgetComponent implements OnInit {
   identificationComplete(data: LoginResult): void {
     this.auth.setLoginUser(data);
     this.summary.email = data.user?.email ?? '';
-    this.getSettingsCommon();
+    this.widgetService.getSettingsCommon(this.summary, this.widget.widgetId);
   }
 
   identificationBack(): void {
@@ -578,39 +560,6 @@ export class WidgetComponent implements OnInit {
     }
   }
   // ====================
-
-  private getSettingsCommon(): void {
-    this.readCommonSettings = true;
-  }
-
-  private authenticate(login: string) {
-    this.errorMessage = '';
-    // Consider that the user is one-time wallet user rather than internal one
-    try {
-      const authenticateData = this.auth.authenticate((this.widget.widgetId ?? '') !== '', login, '', true, (this.widget.widgetId !== '') ? this.widget.widgetId : undefined);
-      this.inProgress = true;
-      this.pSubscriptions.add(
-        authenticateData.subscribe(({ data }) => {
-          this.inProgress = false;
-          this.checkLoginResult(data.login as LoginResult);
-        }, (error) => {
-          this.inProgress = false;
-          if (this.errorHandler.getCurrentError() === 'auth.password_null_or_empty') {
-            // Internal user cannot be authorised without a password, so need to
-            //  show the authorisation form to fill
-            this.onLoginRequired(login);
-          } else if (this.errorHandler.getCurrentError() === 'auth.unconfirmed_email') {
-            // User has to confirm email verifying the code
-            this.onConfirmRequired(login);
-          } else {
-            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to authenticate user');
-          }
-        })
-      );
-    } catch (e) {
-      this.errorMessage = e as string;
-    }
-  }
 
   private checkLoginResult(data: LoginResult) {
     this.stopNotificationListener();
@@ -752,7 +701,7 @@ export class WidgetComponent implements OnInit {
         this.summary.providerView.id,
         this.summary.instrument ?? PaymentInstrument.Apm);
     } else if (this.summary.providerView?.id === 'WireTransferPayment') {
-      this.getWireTransferSettings();
+      this.widgetService.getWireTransferSettings(this.summary);
     } else {
       this.errorMessage = 'Invalid payment provider';
     }
@@ -812,60 +761,18 @@ export class WidgetComponent implements OnInit {
     );
   }
 
-  private getWireTransferSettings(): void {
-    this.inProgress = true;
-    this.bankAccountId = '';
-    this.wireTransferList = [];
-    const c = (this.summary.transactionType === TransactionType.Deposit) ? this.summary.currencyTo : this.summary.currencyFrom;
-    const settingsData$ = this.dataService.mySettingsCost(
-      this.summary.transactionType,
-      PaymentInstrument.WireTransfer,
-      c).valueChanges.pipe(take(1));
-    this.pSubscriptions.add(
-      settingsData$.subscribe(
-        ({ data }) => {
-          this.inProgress = false;
-          const settingsResult = data.mySettingsCost as SettingsCostShort;
-          if (settingsResult.bankAccounts && (settingsResult.bankAccounts?.length ?? 0 > 0)) {
-            const accountData = settingsResult.bankAccounts[0];
-            this.bankAccountId = accountData.bankAccountId;
-            this.wireTransferList = WireTransferPaymentCategoryList.map(val => val);
-            if (accountData.au === null || accountData.au === undefined || accountData.au === 'null') {
-              this.removeWireTransferItem(WireTransferPaymentCategory.AU);
-            }
-            if (accountData.uk === null || accountData.uk === undefined || accountData.uk === 'null') {
-              this.removeWireTransferItem(WireTransferPaymentCategory.UK);
-            }
-            if (accountData.eu === null || accountData.eu === undefined || accountData.eu === 'null') {
-              this.removeWireTransferItem(WireTransferPaymentCategory.EU);
-            }
-          }
-          if (this.wireTransferList.length > 1) {
-            this.nextStage('wire_transfer', 'Payment info', this.pager.step, true);
-          } else if (this.wireTransferList.length === 1) {
-            this.wireTransferPaymentComplete({
-              id: this.bankAccountId,
-              selected: this.wireTransferList[0].id
-            } as WireTransferUserSelection);
-          } else {
-            this.errorMessage = 'No settings found for wire transfer';
-          }
-        }, (error) => {
-          this.inProgress = false;
-          if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
-            this.handleAuthError();
-          } else {
-            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to get wire transfer settings');
-          }
-        }
-      )
-    );
-  }
-
-  private removeWireTransferItem(cat: WireTransferPaymentCategory): void {
-    const pos = this.wireTransferList.findIndex(x => x.id === cat);
-    if (pos >= 0) {
-      this.wireTransferList.splice(pos, 1);
+  private onWireTransferListLoaded(wireTransferList: WireTransferPaymentCategoryItem[], bankAccountId: string): void {
+    this.bankAccountId = bankAccountId;
+    this.wireTransferList = wireTransferList;
+    if (this.wireTransferList.length > 1) {
+      this.nextStage('wire_transfer', 'Payment info', this.pager.step, true);
+    } else if (this.wireTransferList.length === 1) {
+      this.wireTransferPaymentComplete({
+        id: this.bankAccountId,
+        selected: this.wireTransferList[0].id
+      } as WireTransferUserSelection);
+    } else {
+      this.errorMessage = 'No settings found for wire transfer';
     }
   }
 }

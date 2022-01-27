@@ -768,15 +768,11 @@ export class AuthService {
         return result;
     }
 
-    getSettingsCommon(): QueryRef<any, EmptyObject> | null {
-        if (this.apollo.client !== undefined) {
-            return this.apollo.watchQuery<any>({
-                query: GET_SETTINGS_COMMON,
-                fetchPolicy: 'network-only'
-            });
-        } else {
-            return null;
-        }
+    getSettingsCommon(): QueryRef<any, EmptyObject> {
+        return this.apollo.watchQuery<any>({
+            query: GET_SETTINGS_COMMON,
+            fetchPolicy: 'network-only'
+        });
     }
 
     getMyKycSettings(): QueryRef<any, EmptyObject> | null {
@@ -815,15 +811,11 @@ export class AuthService {
         });
     }
 
-    getMyKycData(): QueryRef<any, EmptyObject> | null {
-        if (this.apollo.client !== undefined) {
-            return this.apollo.watchQuery<any>({
-                query: ME_KYC,
-                fetchPolicy: 'network-only'
-            });
-        } else {
-            return null;
-        }
+    getMyKycData(): QueryRef<any, EmptyObject> {
+        return this.apollo.watchQuery<any>({
+            query: ME_KYC,
+            fetchPolicy: 'network-only'
+        });
     }
 
     socialSignOut(): void {

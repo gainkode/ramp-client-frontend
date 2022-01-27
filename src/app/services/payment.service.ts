@@ -503,19 +503,15 @@ export class PaymentDataService {
     });
   }
 
-  getWidget(paramsId: string): QueryRef<any, EmptyObject> | null {
-    if (this.apollo.client !== undefined) {
-      const vars = {
-        id: paramsId,
-        recaptcha: environment.recaptchaId,
-      };
-      return this.apollo.watchQuery<any>({
-        query: GET_WIDGET,
-        variables: vars,
-        fetchPolicy: 'network-only'
-      });
-    } else {
-      return null;
-    }
+  getWidget(paramsId: string): QueryRef<any, EmptyObject> {
+    const vars = {
+      id: paramsId,
+      recaptcha: environment.recaptchaId,
+    };
+    return this.apollo.watchQuery<any>({
+      query: GET_WIDGET,
+      variables: vars,
+      fetchPolicy: 'network-only'
+    });
   }
 }

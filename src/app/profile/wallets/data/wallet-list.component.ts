@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { WalletsFilter } from 'src/app/model/filter.model';
 import { AssetAddressShort, AssetAddressShortListResult } from 'src/app/model/generated-models';
 import { CurrencyView } from 'src/app/model/payment.model';
@@ -52,15 +53,12 @@ export class ProfileWalletListComponent implements OnDestroy {
     private loadWallets(): void {
         this.onError.emit('');
         this.walletCount = 0;
-        const walletsData = this.profileService.getMyWallets(this.filter.currencies);
-        if (walletsData === null) {
-            this.onError.emit(this.errorHandler.getRejectedCookieMessage());
-        } else {
+        const walletsData$ = this.profileService.getMyWallets(this.filter.currencies).valueChanges.pipe(take(1));
             this.loading = true;
             this.onProgress.emit(true);
             const userFiat = this.auth.user?.defaultFiatCurrency ?? 'EUR';
             this.subscriptions.add(
-                walletsData.valueChanges.subscribe(({ data }) => {
+                walletsData$.subscribe(({ data }) => {
                     const dataList = data.myWallets as AssetAddressShortListResult;
                     if (dataList !== null) {
                         this.walletCount = dataList?.count as number;
@@ -83,7 +81,6 @@ export class ProfileWalletListComponent implements OnDestroy {
                     }
                 })
             );
-        }
     }
 
     private getCurrency(asset: AssetAddressShort): CurrencyView | undefined {

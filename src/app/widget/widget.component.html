@@ -86,13 +86,6 @@
       <!-- Complete -->
       <app-widget-complete *ngSwitchCase="'complete'" [showRestartButton]="widget.widgetId===''"
         [transaction]="summary.transactionType" (onFinish)="resetWizard()"></app-widget-complete>
-      <!-- Common settings reading -->
-      <app-widget-settings-service *ngIf="readCommonSettings" [summary]="summary" [widgetId]="widget.widgetId"
-        (onError)="handleError($event)" (onProgress)="progressChanged($event)"
-        (onAuthenticationRequired)="settingsAuthRequired($event)" (onIdentificationRequired)="settingsIdRequired()"
-        (onLoginRequired)="settingsLoginRequired($event)" (onKycStatusUpdate)="settingsKycState($event)"
-        (onComplete)="settingsCommonComplete($event)">
-      </app-widget-settings-service>
     </div>
     <div *ngIf="!initState && showSummary && !widget.embedded" class="__widget-summary-container">
       <div class="__widget-summary-box">

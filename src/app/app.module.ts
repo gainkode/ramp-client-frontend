@@ -28,6 +28,7 @@ import { DirectiveModule } from './directives/directives.module';
 import { ProfileDataService } from './services/profile.service';
 import { ExchangeRateService } from './services/rate.service';
 import { WidgetPagerService } from './services/widget-pager.service';
+import { WidgetService } from './services/widget.service';
 
 @NgModule({
   declarations: [
@@ -65,7 +66,8 @@ import { WidgetPagerService } from './services/widget-pager.service';
     NotificationService,
     ErrorService,
     ExchangeRateService,
-    WidgetPagerService
+    WidgetPagerService,
+    WidgetService
   ],
   bootstrap: [AppComponent]
 })
