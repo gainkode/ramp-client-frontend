@@ -8,7 +8,7 @@ import { ErrorService } from 'src/app/services/error.service';
 import { PaymentDataService } from 'src/app/services/payment.service';
 import { ExchangeRateService } from 'src/app/services/rate.service';
 import { WireTransferUserSelection } from '../model/cost-scheme.model';
-import { PaymentCompleteDetails, PaymentWidgetType, WidgetSettings, WireTransferPaymentCategoryItem } from '../model/payment-base.model';
+import { PaymentCompleteDetails, PaymentWidgetType, WidgetSettings, WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from '../model/payment-base.model';
 import { WalletItem } from '../model/wallet.model';
 import { AuthService } from '../services/auth.service';
 import { NotificationService } from '../services/notification.service';
@@ -40,6 +40,11 @@ export class TransferWidgetComponent implements OnInit {
   paymentProviders: PaymentProviderInstrumentView[] = [];
   bankAccountId = '';
   wireTransferList: WireTransferPaymentCategoryItem[] = [];
+  selectedWireTransfer: WireTransferPaymentCategoryItem = {
+    id: WireTransferPaymentCategory.AU,
+    title: '',
+    data: ''
+  }
   requestKyc = false;
   iframeContent = '';
   instantpayDetails = '';
@@ -357,6 +362,7 @@ export class TransferWidgetComponent implements OnInit {
 
   // == Wire transfer ==
   wireTransferPaymentComplete(data: WireTransferUserSelection): void {
+    this.selectedWireTransfer = data.selected;
     const settings = {
       settingsCostId: data.id,
       accountType: data.selected
@@ -435,7 +441,7 @@ export class TransferWidgetComponent implements OnInit {
             this.summary.transactionDate = new Date().toLocaleString();
             this.summary.transactionId = order.transactionId as string;
             if (instrument === PaymentInstrument.WireTransfer) {
-              this.processingComplete();
+              this.nextStage('wire_transfer_result', 'Payment', 5, false);
             } else {
               this.startPayment();
             }
@@ -535,7 +541,7 @@ export class TransferWidgetComponent implements OnInit {
     } else if (this.wireTransferList.length === 1) {
       this.wireTransferPaymentComplete({
         id: this.bankAccountId,
-        selected: this.wireTransferList[0].id
+        selected: this.wireTransferList[0]
       } as WireTransferUserSelection);
     } else {
       this.errorMessage = 'No settings found for wire transfer';

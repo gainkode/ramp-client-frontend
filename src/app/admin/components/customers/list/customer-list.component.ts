@@ -243,7 +243,6 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
     const exportData$ = this.adminService.exportUsersToCsv();
     this.subscriptions.add(
       exportData$.subscribe(({ data }) => {
-        console.log(data);
         this.dialog.open(CommonDialogBox, {
           width: '400px',
           data: {

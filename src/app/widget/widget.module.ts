@@ -44,6 +44,7 @@ import { TransferWidgetComponent } from './transfer.component';
 import { PaymentIntroComponent } from './payment-intro.component';
 import { WidgetWireTransferComponent } from './panels/wire-transfer.component';
 import { MatRadioModule } from '@angular/material/radio';
+import { WidgetWireTransferResultComponent } from './panels/wire-transfer-result.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -76,7 +77,7 @@ export class MaterialModule { }
         NgxMaskModule.forRoot(), CommonModule, ClipboardModule, FormsModule, ReactiveFormsModule, RouterModule, MaterialModule, QRCodeModule],
     declarations: [
         WidgetComponent, ReceiveWidgetComponent, SendWidgetComponent, TransferWidgetComponent, WidgetPanelComponent, WidgetProgressComponent,
-        WidgetSummaryComponent, WidgetRateComponent, WidgetCreditCardComponent, WidgetWireTransferComponent,
+        WidgetSummaryComponent, WidgetRateComponent, WidgetCreditCardComponent, WidgetWireTransferComponent, WidgetWireTransferResultComponent,
         WidgetRegisterComponent, WidgetLoginAuthComponent, WidgetCodeAuthComponent,
         WidgetInitializationComponent, WidgetOrderDetailsComponent, WidgetReceiveDetailsComponent, WidgetSendDetailsComponent,
         WidgetDisclaimerComponent, WidgetKycComponent, WidgetPaymentComponent, WidgetProcessingFrameComponent,

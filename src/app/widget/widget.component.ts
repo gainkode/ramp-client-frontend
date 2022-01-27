@@ -2,8 +2,8 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } fro
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { AssetAddressShortListResult, LoginResult, PaymentInstrument, PaymentPreauthResultShort, Rate, SettingsCostShort, TransactionShort, TransactionSource, TransactionType, WidgetShort } from 'src/app/model/generated-models';
-import { CardView, CheckoutSummary, PaymentProviderInstrumentView, WireTransferPaymentCategoryList } from 'src/app/model/payment.model';
+import { AssetAddressShortListResult, LoginResult, PaymentInstrument, PaymentPreauthResultShort, Rate, TransactionShort, TransactionSource, TransactionType, WidgetShort } from 'src/app/model/generated-models';
+import { CardView, CheckoutSummary, PaymentProviderInstrumentView } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { NotificationService } from 'src/app/services/notification.service';
@@ -46,6 +46,11 @@ export class WidgetComponent implements OnInit {
   paymentProviders: PaymentProviderInstrumentView[] = [];
   bankAccountId = '';
   wireTransferList: WireTransferPaymentCategoryItem[] = [];
+  selectedWireTransfer: WireTransferPaymentCategoryItem = {
+    id: WireTransferPaymentCategory.AU,
+    title: '',
+    data: ''
+  }
   requestKyc = false;
   iframeContent = '';
   instantpayDetails = '';
@@ -460,13 +465,18 @@ export class WidgetComponent implements OnInit {
 
   // == Wire transfer ==
   wireTransferPaymentComplete(data: WireTransferUserSelection): void {
+    this.selectedWireTransfer = data.selected;
     const settings = {
       settingsCostId: data.id,
-      accountType: data.selected
+      accountType: data.selected.id
     };
+
+    console.log(this.selectedWireTransfer);
+
     const settingsData = JSON.stringify(settings);
     this.createDepositTransaction('', PaymentInstrument.WireTransfer, settingsData);
   }
+
   // ====================
 
   // == Payment ===========
@@ -622,7 +632,7 @@ export class WidgetComponent implements OnInit {
             this.summary.transactionDate = new Date().toLocaleString();
             this.summary.transactionId = order.transactionId as string;
             if (instrument === PaymentInstrument.WireTransfer) {
-              this.processingComplete();
+              this.nextStage('wire_transfer_result', 'Payment', 5, false);
             } else {
               this.startPayment();
             }
@@ -769,7 +779,7 @@ export class WidgetComponent implements OnInit {
     } else if (this.wireTransferList.length === 1) {
       this.wireTransferPaymentComplete({
         id: this.bankAccountId,
-        selected: this.wireTransferList[0].id
+        selected: this.wireTransferList[0]
       } as WireTransferUserSelection);
     } else {
       this.errorMessage = 'No settings found for wire transfer';

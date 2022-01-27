@@ -1,0 +1,33 @@
+<div class="__widget-data-box">
+    <h3 class="__widget-summary-title">Transfer Details</h3>
+    <div class="__widget-summary-grid __widget-summary-grid-wide">
+        <div *ngIf="field1Title!=='' && field1Value!==''" class="__widget-summary-item">
+            {{field1Title}}:
+        </div>
+        <div *ngIf="field1Title!=='' && field1Value!==''" class="__widget-summary-item">
+            <input class="__text-box-noborder" type="text" readonly [value]="field1Value"/>
+        </div>
+
+        <div *ngIf="field2Title!=='' && field2Value!==''" class="__widget-summary-item">
+            {{field2Title}}:
+        </div>
+        <div *ngIf="field2Title!=='' && field2Value!==''" class="__widget-summary-item">
+            <input class="__text-box-noborder" type="text" readonly [value]="field2Value"/>
+        </div>
+
+        <div *ngIf="field3Title!=='' && field3Value!==''" class="__widget-summary-item">
+            {{field3Title}}:
+        </div>
+        <div *ngIf="field3Title!=='' && field3Value!==''" class="__widget-summary-item">
+            <input class="__text-box-noborder" type="text" readonly [value]="field3Value"/>
+        </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="__widget-buttons-area">
+        <button class="__outlined-button" type="button" (click)="sendEmail()">SEND EMAIL</button>
+        <button class="__main-button __button-wide-separator" type="button" (click)="onComplete.emit()">
+            done
+        </button>
+    </div>
+</div>

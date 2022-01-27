@@ -249,7 +249,6 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
     const exportData$ = this.adminService.exportTransactionsToCsv();
     this.subscriptions.add(
       exportData$.subscribe(({ data }) => {
-        console.log(data);
         this.dialog.open(CommonDialogBox, {
           width: '400px',
           data: {

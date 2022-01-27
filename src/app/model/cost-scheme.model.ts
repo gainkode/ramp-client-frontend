@@ -3,6 +3,7 @@ import { getCountry, getCountryByCode3 } from './country-code.model';
 import {
     SettingsCost, PaymentInstrument, TransactionType, SettingsCostTargetFilterType, WireTransferBankAccount
 } from './generated-models';
+import { WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from './payment-base.model';
 import {
     PaymentInstrumentList, CostTargetFilterList, TransactionTypeList
 } from './payment.model';
@@ -217,5 +218,9 @@ export class WireTransferBankAccountEu {
 
 export class WireTransferUserSelection {
     id = '';
-    selected = '';
+    selected: WireTransferPaymentCategoryItem = {
+        id: WireTransferPaymentCategory.AU,
+        title: '',
+        data: ''
+    }
 }

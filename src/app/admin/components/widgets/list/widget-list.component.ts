@@ -138,7 +138,6 @@ export class WidgetListComponent implements OnInit, OnDestroy, AfterViewInit {
     const exportData$ = this.adminDataService.exportWidgetsToCsv();
     this.subscriptions.add(
       exportData$.subscribe(({ data }) => {
-        console.log(data);
         this.dialog.open(CommonDialogBox, {
           width: '400px',
           data: {

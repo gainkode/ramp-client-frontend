@@ -153,22 +153,28 @@ export class WidgetService {
                 if (settingsResult.bankAccounts && (settingsResult.bankAccounts?.length ?? 0 > 0)) {
                     const accountData = settingsResult.bankAccounts[0];
                     const wireTransferList = WireTransferPaymentCategoryList.map(val => val);
-                    if (accountData.au === null || accountData.au === undefined || accountData.au === 'null') {
-                        const pos = wireTransferList.findIndex(x => x.id === WireTransferPaymentCategory.AU);
-                        if (pos >= 0) {
+                    let pos = wireTransferList.findIndex(x => x.id === WireTransferPaymentCategory.AU);
+                    if (pos >= 0) {
+                        if (accountData.au === null || accountData.au === undefined || accountData.au === 'null') {
                             wireTransferList.splice(pos, 1);
+                        } else {
+                            wireTransferList[pos].data = accountData.au;
                         }
                     }
-                    if (accountData.uk === null || accountData.uk === undefined || accountData.uk === 'null') {
-                        const pos = wireTransferList.findIndex(x => x.id === WireTransferPaymentCategory.UK);
-                        if (pos >= 0) {
+                    pos = wireTransferList.findIndex(x => x.id === WireTransferPaymentCategory.UK);
+                    if (pos >= 0) {
+                        if (accountData.uk === null || accountData.uk === undefined || accountData.uk === 'null') {
                             wireTransferList.splice(pos, 1);
+                        } else {
+                            wireTransferList[pos].data = accountData.uk;
                         }
                     }
-                    if (accountData.eu === null || accountData.eu === undefined || accountData.eu === 'null') {
-                        const pos = wireTransferList.findIndex(x => x.id === WireTransferPaymentCategory.EU);
-                        if (pos >= 0) {
+                    pos = wireTransferList.findIndex(x => x.id === WireTransferPaymentCategory.EU);
+                    if (pos >= 0) {
+                        if (accountData.eu === null || accountData.eu === undefined || accountData.eu === 'null') {
                             wireTransferList.splice(pos, 1);
+                        } else {
+                            wireTransferList[pos].data = accountData.eu;
                         }
                     }
                     if (this.onWireTranferListLoaded) {

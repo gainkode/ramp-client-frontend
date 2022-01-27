@@ -55,4 +55,5 @@ export class PaymentCompleteDetails {
 export class WireTransferPaymentCategoryItem {
     id = WireTransferPaymentCategory.AU;
     title = '';
+    data = '';
 }

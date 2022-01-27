@@ -1,8 +1,6 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { WireTransferUserSelection } from 'src/app/model/cost-scheme.model';
 import { WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from 'src/app/model/payment-base.model';
-import { WireTransferPaymentCategoryList } from 'src/app/model/payment.model';
 
 @Component({
     selector: 'app-widget-wire-transfer',
@@ -22,9 +20,12 @@ export class WidgetWireTransferComponent {
     }
 
     onSubmit(): void {
-        this.onComplete.emit({
-            id: this.bankAccountId,
-            selected: this.selectedCategory
-        } as WireTransferUserSelection);
+        if (this.selectedCategory) {
+            const selected = this.bankCategories.find(x => x.id === this.selectedCategory);
+            this.onComplete.emit({
+                id: this.bankAccountId,
+                selected: selected
+            } as WireTransferUserSelection);
+        }
     }
 }

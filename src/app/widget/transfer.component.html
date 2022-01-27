@@ -28,6 +28,9 @@
       <app-widget-wire-transfer *ngSwitchCase="'wire_transfer'" [bankCategories]="wireTransferList"
         [bankAccountId]="bankAccountId" [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage"
         (onBack)="paymentBack()" (onComplete)="wireTransferPaymentComplete($event)"></app-widget-wire-transfer>
+      <app-widget-wire-transfer-result *ngSwitchCase="'wire_transfer_result'" [bankData]="selectedWireTransfer"
+        (onComplete)="processingComplete()">
+      </app-widget-wire-transfer-result>
       <!-- KYC -->
       <app-widget-kyc *ngSwitchCase="'verification'" [summary]="summary"
         [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage" (onError)="handleError($event)"
@@ -41,12 +44,6 @@
       <app-widget-processing-instantpay *ngSwitchCase="'processing-instantpay'" [details]="instantpayDetails"
         [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage" (onComplete)="processingComplete()">
       </app-widget-processing-instantpay>
-      <!-- Common settings reading -->
-      <!-- <app-widget-settings-service *ngIf="readCommonSettings" [summary]="summary" (onError)="handleError($event)"
-        (onProgress)="progressChanged($event)" (onAuthenticationRequired)="settingsAuthRequired($event)"
-        (onIdentificationRequired)="settingsIdRequired()" (onLoginRequired)="settingsLoginRequired($event)"
-        (onKycStatusUpdate)="settingsKycState($event)" (onComplete)="settingsCommonComplete($event)">
-      </app-widget-settings-service> -->
     </div>
   </div>
 </div>

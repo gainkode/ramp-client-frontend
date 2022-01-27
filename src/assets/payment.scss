@@ -422,6 +422,10 @@
     place-items: center start;
 }
 
+.__widget-summary-grid-wide {
+    grid-template-columns: 150px auto;
+}
+
 .__widget-summary-item {
     margin: 8px 0px;
     display: flex;
