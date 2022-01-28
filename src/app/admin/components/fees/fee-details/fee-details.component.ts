@@ -2,7 +2,7 @@ import { Component, ElementRef, ViewChild, Input, OnInit, Output, EventEmitter, 
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Validators, FormBuilder } from '@angular/forms';
 import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, startWith, switchMap, take, takeUntil } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import {
@@ -10,7 +10,7 @@ import {
   WidgetFilterList, WidgetIdFilterList
 } from '../../../../model/fee-scheme.model';
 import {
-  SettingsFeeTargetFilterType, PaymentInstrument, PaymentProvider, TransactionType, UserType, UserMode
+  SettingsFeeTargetFilterType, PaymentInstrument, PaymentProvider, TransactionType, UserType, UserMode, SettingsCostListResult
 } from '../../../../model/generated-models';
 import {
   PaymentInstrumentList, FeeTargetFilterList, TransactionTypeList, UserTypeList, UserModeList, PaymentProviderView
@@ -21,6 +21,7 @@ import { ErrorService } from 'src/app/services/error.service';
 import { LayoutService } from '../../../services/layout.service';
 import { AdminDataService } from 'src/app/admin/services/admin-data.service';
 import { Filter } from 'src/app/admin/model/filter.model';
+import { CostScheme } from 'src/app/model/cost-scheme.model';
 
 @Component({
   selector: 'app-fee-editor',
@@ -58,6 +59,7 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
   userTypes = UserTypeList;
   userModes = UserModeList;
   targteValues: CommonTargetValue[] = [];
+  costSchemes: CostScheme[] = [];
 
   private defaultSchemeName = '';
   private forceValidate = false;
@@ -73,7 +75,7 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
     target: ['', { validators: [Validators.required], updateOn: 'change' }],
     targetValues: [[], { validators: [Validators.required], updateOn: 'change' }],
     targetValue: [''],
-    instrument: [[], { validators: [Validators.required], updateOn: 'change' }],
+    instrument: [undefined, { validators: [Validators.required], updateOn: 'change' }],
     userType: [[], { validators: [Validators.required], updateOn: 'change' }],
     userMode: [[], { validators: [Validators.required], updateOn: 'change' }],
     trxType: [[], { validators: [Validators.required], updateOn: 'change' }],
@@ -267,6 +269,26 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
+  private loadCostSchemeList(): void {
+    const listData$ = this.adminDataService.getCostSettings().valueChanges.pipe(take(1));
+    this.errorMessage = '';
+    this.costSchemes = [];
+    this.subscriptions.add(
+      listData$.subscribe(({ data }) => {
+        const settings = data.getSettingsCost as SettingsCostListResult;
+        let itemCount = 0;
+        if (settings !== null) {
+          itemCount = settings?.count ?? 0;
+          if (itemCount > 0) {
+            this.costSchemes = settings?.list?.map((val) => new CostScheme(val)) as CostScheme[];
+          }
+        }
+      }, (error) => {
+        this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load cost settings');
+      })
+    );
+  }
+
   private setTargetValidator(): void {
     const val = this.schemeForm.get('target')?.value;
     this.targetType = val ?? SettingsFeeTargetFilterType.None as SettingsFeeTargetFilterType;
@@ -343,7 +365,11 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
       } else {
         this.schemeForm.get('targetValues')?.setValue(scheme?.targetValues);
       }
-      this.schemeForm.get('instrument')?.setValue(scheme.instrument);
+      if (scheme.instrument && scheme.instrument.length > 0) {
+        this.schemeForm.get('instrument')?.setValue(scheme.instrument[0]);
+      } else {
+        this.schemeForm.get('instrument')?.setValue(undefined);
+      }
       this.schemeForm.get('userType')?.setValue(scheme?.userType);
       this.schemeForm.get('userMode')?.setValue(scheme?.userMode);
       this.schemeForm.get('trxType')?.setValue(scheme?.trxType);
@@ -365,7 +391,7 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
       this.schemeForm.get('isDefault')?.setValue('');
       this.schemeForm.get('target')?.setValue(SettingsFeeTargetFilterType.None);
       this.schemeForm.get('targetValues')?.setValue([]);
-      this.schemeForm.get('instrument')?.setValue('');
+      this.schemeForm.get('instrument')?.setValue(undefined);
       this.schemeForm.get('userType')?.setValue([]);
       this.schemeForm.get('userMode')?.setValue([]);
       this.schemeForm.get('trxType')?.setValue('');
@@ -399,7 +425,7 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
       data.setTarget(this.schemeForm.get('target')?.value, this.schemeForm.get('targetValues')?.value);
     }
 
-    (this.schemeForm.get('instrument')?.value as PaymentInstrument[]).forEach(x => data.instrument.push(x));
+    data.instrument.push(this.schemeForm.get('instrument')?.value);
     (this.schemeForm.get('trxType')?.value as TransactionType[]).forEach(x => data.trxType.push(x));
     (this.schemeForm.get('provider')?.value as string[]).forEach(x => data.provider.push(x));
     (this.schemeForm.get('userType')?.value as UserType[]).forEach(x => data.userType.push(x));

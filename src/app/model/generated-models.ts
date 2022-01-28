@@ -155,6 +155,18 @@ export enum BitcoinAddressFormats {
   Segwit = 'SEGWIT'
 }
 
+export type BlackCountry = {
+  __typename?: 'BlackCountry';
+  countryCode2: Scalars['ID'];
+  created: Scalars['DateTime'];
+};
+
+export type BlackCountryListResult = {
+  __typename?: 'BlackCountryListResult';
+  count?: Maybe<Scalars['Int']>;
+  list?: Maybe<Array<BlackCountry>>;
+};
+
 
 export enum CountryCodeType {
   Code2 = 'code2',
@@ -603,6 +615,8 @@ export type Mutation = {
   addMyWidgetUserParams?: Maybe<WidgetUserParams>;
   exportWidgetsToCsv?: Maybe<Scalars['Boolean']>;
   updateRiskAlertType?: Maybe<RiskAlertType>;
+  addBlackCountry?: Maybe<BlackCountry>;
+  deleteBlackCountry?: Maybe<BlackCountry>;
 };
 
 
@@ -1109,6 +1123,16 @@ export type MutationUpdateRiskAlertTypeArgs = {
   riskAlertTypeInput?: Maybe<RiskAlertTypeInput>;
 };
 
+
+export type MutationAddBlackCountryArgs = {
+  countryCode2: Scalars['String'];
+};
+
+
+export type MutationDeleteBlackCountryArgs = {
+  countryCode2: Scalars['String'];
+};
+
 export type NewAddress = {
   __typename?: 'NewAddress';
   address: Scalars['String'];
@@ -1355,6 +1379,7 @@ export type Query = {
   getWidget?: Maybe<WidgetShort>;
   getRiskAlerts?: Maybe<RiskAlertResultList>;
   getSellAddress?: Maybe<Scalars['String']>;
+  getCountryBlackList?: Maybe<BlackCountryListResult>;
   getFakeError?: Maybe<Scalars['Void']>;
 };
 
@@ -1594,7 +1619,8 @@ export type QueryUserByReferralCodeArgs = {
 
 
 export type QueryGetUsersArgs = {
-  userIds?: Maybe<Array<Scalars['String']>>;
+  userIdsOnly?: Maybe<Array<Scalars['String']>>;
+  roleIdsOnly?: Maybe<Array<Scalars['String']>>;
   accountTypesOnly?: Maybe<Array<UserType>>;
   accountModesOnly?: Maybe<Array<UserMode>>;
   accountStatusesOnly?: Maybe<Array<AccountStatus>>;
@@ -1828,6 +1854,8 @@ export type QueryGetWidgetsByUserArgs = {
 
 
 export type QueryGetWidgetsArgs = {
+  widgetIdsOnly?: Maybe<Array<Scalars['String']>>;
+  userIdsOnly?: Maybe<Array<Scalars['String']>>;
   filter?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
@@ -3262,6 +3290,7 @@ export type Widget = {
   description?: Maybe<Scalars['String']>;
   created: Scalars['DateTime'];
   createdBy?: Maybe<Scalars['String']>;
+  createdByUser?: Maybe<User>;
   transactionTypes?: Maybe<Array<TransactionType>>;
   currenciesCrypto?: Maybe<Array<Scalars['String']>>;
   currenciesFiat?: Maybe<Array<Scalars['String']>>;

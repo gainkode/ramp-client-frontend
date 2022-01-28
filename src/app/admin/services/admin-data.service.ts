@@ -496,7 +496,7 @@ const GET_USERS = gql`
     $orderBy: [OrderBy!]
   ) {
     getUsers(
-      userIds: $userIds
+      userIdsOnly: $userIds
       accountTypesOnly: $accountTypesOnly
       accountModesOnly: $accountModesOnly
       accountStatusesOnly: $accountStatusesOnly
@@ -1737,7 +1737,7 @@ export class AdminDataService {
     return this.watchQuery<{ getUsers: UserListResult }, QueryGetUsersArgs>({
       query: GET_USERS,
       variables: {
-        userIds: [userId],
+        userIdsOnly: [userId],
         countryCodeType: CountryCodeType.Code3,
         filter: undefined,
         skip: 0,
