@@ -1,7 +1,7 @@
 import { CommonTargetValue } from './common.model';
 import { getCountry, getCountryByCode3 } from './country-code.model';
 import {
-    SettingsFee, PaymentInstrument, PaymentProvider, TransactionType, SettingsFeeTargetFilterType, UserType, UserMode
+    SettingsFee, PaymentInstrument, PaymentProvider, TransactionType, SettingsFeeTargetFilterType, UserType, UserMode, TransactionSource
 } from './generated-models';
 import { PaymentInstrumentList, 
     FeeTargetFilterList, TransactionTypeList, UserTypeList } from './payment.model';
@@ -30,6 +30,12 @@ export const WidgetFilterList: CommonTargetValue[] = [
 export const AccountTypeFilterList: CommonTargetValue[] = [
     { title: 'Personal', imgClass: '', imgSource: '', id: UserType.Personal },
     { title: 'Merchant', imgClass: '', imgSource: '', id: UserType.Merchant }
+];
+
+export const TransactionSourceFilterList: CommonTargetValue[] = [
+    { id: TransactionSource.Widget, title: 'Widget', imgClass: '', imgSource: '' },
+    { id: TransactionSource.Wallet, title: 'Wallet', imgClass: '', imgSource: '' },
+    { id: TransactionSource.QuickCheckout, title: 'Quick Checkout', imgClass: '', imgSource: '' }
 ];
 
 export class FeeScheme {

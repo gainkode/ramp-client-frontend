@@ -6,8 +6,7 @@ import { debounceTime, distinctUntilChanged, map, startWith, switchMap, take, ta
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import {
-  FeeScheme, AccountTypeFilterList,
-  WidgetFilterList, WidgetIdFilterList
+  FeeScheme, AccountTypeFilterList, TransactionSourceFilterList
 } from '../../../../model/fee-scheme.model';
 import {
   SettingsFeeTargetFilterType, PaymentInstrument, PaymentProvider, TransactionType, UserType, UserMode, SettingsCostListResult
@@ -44,6 +43,7 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
   @ViewChild('auto') matAutocomplete!: MatAutocomplete;
 
   PAYMENT_INSTRUMENT: typeof PaymentInstrument = PaymentInstrument;
+  currectScheme: FeeScheme | null = null;
   settingsId = '';
   errorMessage = '';
   selectedTab = 0;
@@ -141,9 +141,9 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
         break;
       }
       case SettingsFeeTargetFilterType.WidgetId: {
-        params.title = 'List of widget identifiers *';
-        params.inputPlaceholder = 'New identifier...';
-        params.dataList = WidgetIdFilterList;
+        params.title = 'List of widgets *';
+        params.inputPlaceholder = 'New widget (Name, code or ID)...';
+        params.dataList = [];
         this.targetEntity = 'widget identifier';
         break;
       }
@@ -169,10 +169,10 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
         break;
       }
       case SettingsFeeTargetFilterType.InitiateFrom: {
-        params.title = 'List of widgets *';
-        params.inputPlaceholder = 'New widget...';
-        params.dataList = WidgetFilterList;
-        this.targetEntity = 'widget';
+        params.title = 'List of sources *';
+        params.inputPlaceholder = 'New source...';
+        params.dataList = TransactionSourceFilterList;
+        this.targetEntity = 'source';
         break;
       }
     }
@@ -212,8 +212,7 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
     this.clearTargetValues();
     this.setTargetValidator();
     if (this.targetType === SettingsFeeTargetFilterType.WidgetId ||
-      this.targetType === SettingsFeeTargetFilterType.AccountId ||
-      this.targetType === SettingsFeeTargetFilterType.InitiateFrom) {
+      this.targetType === SettingsFeeTargetFilterType.AccountId) {
       this.targetSearchString$.pipe(
         takeUntil(this.destroy$),
         distinctUntilChanged(),
@@ -234,6 +233,9 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
       if (this.targetType === SettingsFeeTargetFilterType.AccountId) {
         const accountFilter = new Filter({ search: searchString });
         return this.getFilteredAccounts(accountFilter);
+      } else if (this.targetType === SettingsFeeTargetFilterType.WidgetId) {
+        const widgetFilter = new Filter({ search: searchString });
+        return this.getFilteredWidgets(widgetFilter);
       } else {
         return of([]);
       }
@@ -261,7 +263,7 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
         return result.list.map(widget => {
           return {
             id: widget.id,
-            title: widget.id
+            title: widget.name
           } as CommonTargetValue;
         });
       })
@@ -325,8 +327,7 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
 
   handleTargetInputChange(event: Event): void {
     if (this.targetType === SettingsFeeTargetFilterType.WidgetId ||
-      this.targetType === SettingsFeeTargetFilterType.AccountId ||
-      this.targetType === SettingsFeeTargetFilterType.InitiateFrom) {
+      this.targetType === SettingsFeeTargetFilterType.AccountId) {
       let searchString = event.target ? (event.target as HTMLInputElement).value : '';
       searchString = searchString.toLowerCase().trim();
       this.targetSearchString$.next(searchString);
@@ -355,22 +356,16 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
           this.targteValues = result;
           this.schemeForm.get('targetValues')?.setValue(result.map(x => x.title));
         });
+        this.updateTarget('');
       } else if (this.targetType === SettingsFeeTargetFilterType.WidgetId) {
         const filter = new Filter({
-          users: scheme?.targetValues
+          widgets: scheme?.targetValues
         });
-        this.getFilteredAccounts(filter).subscribe(result => {
+        this.getFilteredWidgets(filter).subscribe(result => {
           this.targteValues = result;
           this.schemeForm.get('targetValues')?.setValue(result.map(x => x.title));
         });
-      } else if (this.targetType === SettingsFeeTargetFilterType.InitiateFrom) {
-        const filter = new Filter({
-          users: scheme?.targetValues
-        });
-        this.getFilteredAccounts(filter).subscribe(result => {
-          this.targteValues = result;
-          this.schemeForm.get('targetValues')?.setValue(result.map(x => x.title));
-        });
+        this.updateTarget('');
       } else {
         this.schemeForm.get('targetValues')?.setValue(scheme?.targetValues);
       }
@@ -432,8 +427,7 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
     data.id = this.schemeForm.get('id')?.value;
     // target
     if (this.targetType === SettingsFeeTargetFilterType.WidgetId ||
-      this.targetType === SettingsFeeTargetFilterType.AccountId ||
-      this.targetType === SettingsFeeTargetFilterType.InitiateFrom) {
+      this.targetType === SettingsFeeTargetFilterType.AccountId) {
       data.setTarget(this.schemeForm.get('target')?.value, this.targteValues.map(c => {
         return c.id;
       }));

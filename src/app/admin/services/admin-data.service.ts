@@ -673,12 +673,18 @@ const GET_WIDGET_IDS = gql`
 
 const GET_WIDGETS = gql`
   query GetWidgets(
+    $widgetIdsOnly: [String!]
     $filter: String
     $skip: Int
     $first: Int
     $orderBy: [OrderBy!]
   ) {
-    getWidgets(filter: $filter, skip: $skip, first: $first, orderBy: $orderBy) {
+    getWidgets(
+      widgetIdsOnly: $widgetIdsOnly,
+      filter: $filter,
+      skip: $skip,
+      first: $first,
+      orderBy: $orderBy) {
       count
       list {
         widgetId
@@ -1879,6 +1885,7 @@ export class AdminDataService {
   ): Observable<{ list: WidgetItem[], count: number }> {
     const orderFields = [{ orderBy: orderField, desc: orderDesc }];
     const vars = {
+      widgetIdsOnly: filter.widgets,
       filter: filter.search,
       skip: pageIndex * takeItems,
       first: takeItems,
