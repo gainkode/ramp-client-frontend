@@ -35,10 +35,10 @@ export class WidgetListComponent implements OnInit, OnDestroy, AfterViewInit {
   displayedColumns: string[] = [
     'details',
     'name',
-    'id',
+    'code',
     'link',
     'created',
-
+    'createdBy',
     'transactionType',
     'currenciesCrypto',
     'currenciesFiat',
@@ -47,7 +47,8 @@ export class WidgetListComponent implements OnInit, OnDestroy, AfterViewInit {
     'countries',
     'instruments',
     'paymentProviders',
-    'liquidityProvider'
+    'liquidityProvider',
+    'id'
   ];
 
   private destroy$ = new Subject();

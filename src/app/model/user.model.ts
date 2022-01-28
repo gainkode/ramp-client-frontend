@@ -168,7 +168,7 @@ export class UserItem {
       this.totalSent = (this.totalSentCompleted + this.totalSentInProcess).toFixed(2);
       this.totalReceived = (this.totalReceivedCompleted + this.totalReceivedInProcess).toFixed(2);
 
-      this.kycStatus = data.kycStatus as string;
+      this.kycStatus = data.kycStatus ?? '';
       const status = this.kycStatus.toLowerCase();
       if (status === KycStatus.Completed.toLowerCase()) {
         this.kycRejected = false;

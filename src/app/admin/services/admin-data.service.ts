@@ -691,9 +691,16 @@ const GET_WIDGETS = gql`
       list {
         widgetId
         userId
+        code
         name
         description
         created
+        createdByUser {
+          userId
+          email
+          firstName
+          lastName
+        }
         transactionTypes
         currenciesCrypto
         currenciesFiat
