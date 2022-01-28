@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Countries, getCountryByCode3 } from 'src/app/model/country-code.model';
-import { RiskLevel, User, UserType } from 'src/app/model/generated-models';
+import { RiskLevel, User, UserInput, UserType } from 'src/app/model/generated-models';
 import { CurrencyView, RiskLevelViewList } from 'src/app/model/payment.model';
 import { UserItem } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
@@ -13,6 +13,7 @@ import { LayoutService } from 'src/app/admin/services/layout.service';
 import { Router } from '@angular/router';
 import { CommonDialogBox } from 'src/app/components/dialogs/common-box.dialog';
 import { MatDialog } from '@angular/material/dialog';
+import { CommonTargetValue } from 'src/app/model/common.model';
 
 @Component({
   selector: 'app-customer-details',
@@ -50,6 +51,7 @@ export class CustomerDetailsComponent implements OnDestroy {
   totalBalance = '';
   kycProviderLink = '';
   kycDocs: string[] = [];
+  tiers: CommonTargetValue[] = [];
 
   dataForm = this.formBuilder.group({
     id: [''],
@@ -68,6 +70,7 @@ export class CustomerDetailsComponent implements OnDestroy {
     flatNumber: ['', { validators: [], updateOn: 'change' }],
     phone: ['', { validators: [], updateOn: 'change' }],
     risk: [RiskLevel.Medium, { validators: [Validators.required], updateOn: 'change' }],
+    tier: ['', { validators: [Validators.required], updateOn: 'change' }],
     fiat: ['', { validators: [Validators.required], updateOn: 'change' }],
     crypto: ['', { validators: [Validators.required], updateOn: 'change' }]
   });
@@ -125,6 +128,7 @@ export class CustomerDetailsComponent implements OnDestroy {
         ]);
       }
       this.dataForm.get('risk')?.setValue(data?.risk ?? RiskLevel.Medium);
+      this.dataForm.get('tier')?.setValue(data?.kycLevel);
       this.dataForm.get('country')?.setValue(data?.country?.id);
       this.dataForm.get('postCode')?.setValue(data?.postCode);
       this.dataForm.get('town')?.setValue(data?.town);
@@ -146,6 +150,7 @@ export class CustomerDetailsComponent implements OnDestroy {
       this.dataForm.get('birthday')?.setValue('');
       this.dataForm.get('birthday')?.setValidators([]);
       this.dataForm.get('risk')?.setValue(RiskLevel.Medium);
+      this.dataForm.get('tier')?.setValue('');
       this.dataForm.get('country')?.setValue('');
       this.dataForm.get('postCode')?.setValue('');
       this.dataForm.get('town')?.setValue('');
@@ -169,6 +174,7 @@ export class CustomerDetailsComponent implements OnDestroy {
     if (data) {
       this.getUserKycInfo(this.settingsId);
       this.getUserState(this.settingsId);
+      this.getUserKycTiers(this.settingsId);
     }
   }
 
@@ -176,6 +182,19 @@ export class CustomerDetailsComponent implements OnDestroy {
     this.subscriptions.add(
       this.adminService.getUserKycInfo(id).pipe(take(1)).subscribe(kyc => {
         this.kycDocs = kyc?.appliedDocuments?.map(doc => doc.code) ?? [];
+      }));
+  }
+
+  private getUserKycTiers(id: string): void {
+    this.tiers = [];
+    this.subscriptions.add(
+      this.adminService.getSettingsKycTiers(id).pipe(take(1)).subscribe(data => {
+        this.tiers = data?.list?.map(tier => {
+          return {
+            id: tier.settingsKycTierId,
+            title: tier.name
+          } as CommonTargetValue;
+        }) ?? [];
       }));
   }
 
@@ -191,12 +210,13 @@ export class CustomerDetailsComponent implements OnDestroy {
       }));
   }
 
-  private setCustomerData(): User {
+  private setCustomerData(): UserInput {
     const code3 = this.dataForm.get('country')?.value;
     const country = getCountryByCode3(code3);
     const code2 = (country) ? country.code2 : '';
+    const tierName = this.dataForm.get('tier')?.value;
+    const tierId = this.tiers.find(x => x.title === tierName)?.id;
     const data = {
-      userId: this.dataForm.get('id')?.value,
       email: this.dataForm.get('email')?.value,
       firstName: this.dataForm.get('firstName')?.value,
       lastName: this.dataForm.get('lastName')?.value,
@@ -214,8 +234,9 @@ export class CustomerDetailsComponent implements OnDestroy {
       phone: this.dataForm.get('phone')?.value,
       defaultFiatCurrency: this.dataForm.get('fiat')?.value,
       defaultCryptoCurrency: this.dataForm.get('crypto')?.value,
-      risk: this.dataForm.get('risk')?.value
-    } as User;
+      risk: this.dataForm.get('risk')?.value,
+      kycTierId: tierId
+    } as UserInput;
     return data;
   }
 
@@ -236,8 +257,8 @@ export class CustomerDetailsComponent implements OnDestroy {
     this.onDelete(this.settingsId);
   }
 
-  onSave(customer: User): void {
-    const requestData$ = this.adminService.saveCustomer(customer);
+  onSave(id: string, customer: UserInput): void {
+    const requestData$ = this.adminService.saveCustomer(id, customer);
     this.subscriptions.add(
       requestData$.subscribe(({ data }) => {
         if (customer.changePasswordRequired === true) {
@@ -249,7 +270,7 @@ export class CustomerDetailsComponent implements OnDestroy {
             }
           });
         } else {
-          if (this.auth.user?.userId === customer.userId) {
+          if (this.auth.user?.userId === id) {
             this.auth.setUserName(customer.firstName ?? '', customer.lastName ?? '');
             this.auth.setUserCurrencies(
               customer.defaultCryptoCurrency ?? 'BTC',
@@ -267,18 +288,17 @@ export class CustomerDetailsComponent implements OnDestroy {
 
   onSubmit(): void {
     if (this.dataForm.valid) {
-      this.onSave(this.setCustomerData());
+      this.onSave(this.settingsId, this.setCustomerData());
     } else {
       this.errorMessage = 'Input data is not completely valid. Please, check all fields are valid.';
     }
   }
 
   onResetPassword(): void {
-    this.onSave({
-      userId: this.settingsId,
+    this.onSave(this.settingsId, {
       email: this.email,
       changePasswordRequired: true
-    } as User);
+    } as UserInput);
   }
 
   onCancel(): void {

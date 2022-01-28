@@ -32,6 +32,7 @@ import {
   TransactionListResult,
   TransactionUpdateTransferOrderChanges,
   User,
+  UserInput,
   UserListResult,
   UserNotificationLevel,
   UserNotificationListResult,
@@ -220,8 +221,9 @@ query GetWireTransferBankAccounts {
 `;
 
 const GET_SETTINGS_KYC_TIERS = gql`
-query GetSettingsKycTiers {
+query GetSettingsKycTiers($userId: String) {
   getSettingsKycTiers(
+    userId: $userId
     orderBy: [
       { orderBy: "amount", desc: false }
     ]
@@ -1041,6 +1043,7 @@ mutation UpdateUser(
   $flatNumber: String
   $phone: String
   $risk: RiskLevel
+  $kycTierId: String
   $defaultFiatCurrency: String
   $defaultCryptoCurrency: String
 ) {
@@ -1064,6 +1067,7 @@ mutation UpdateUser(
       flatNumber: $flatNumber
       phone: $phone
       risk: $risk
+      kycTierId: $kycTierId
       defaultFiatCurrency: $defaultFiatCurrency
       defaultCryptoCurrency: $defaultCryptoCurrency
     }
@@ -1472,26 +1476,26 @@ export class AdminDataService {
     });
   }
 
-  getSettingsKycTiers(): Observable<{ list: Array<SettingsKycTier>; count: number; }> {
+  getSettingsKycTiers(id: string): Observable<{ list: Array<SettingsKycTier>; count: number; }> {
     return this.watchQuery<{ getSettingsKycTiers: SettingsKycTierListResult }, QueryGetSettingsKycTiersArgs>({
       query: GET_SETTINGS_KYC_TIERS,
+      variables: { userId: (id !== '') ? id : undefined },
       fetchPolicy: 'network-only'
-    })
-      .pipe(
-        map(result => {
-          if (result.data?.getSettingsKycTiers?.list && result.data?.getSettingsKycTiers?.count) {
-            return {
-              list: result.data.getSettingsKycTiers.list,
-              count: result.data.getSettingsKycTiers.count
-            };
-          } else {
-            return {
-              list: [],
-              count: 0
-            };
-          }
-        })
-      );
+    }).pipe(
+      map(result => {
+        if (result.data?.getSettingsKycTiers?.list && result.data?.getSettingsKycTiers?.count) {
+          return {
+            list: result.data.getSettingsKycTiers.list,
+            count: result.data.getSettingsKycTiers.count
+          };
+        } else {
+          return {
+            list: [],
+            count: 0
+          };
+        }
+      })
+    );
   }
 
   getKycSettings(): Observable<{ list: Array<KycScheme>; count: number; }> {
@@ -2167,11 +2171,11 @@ export class AdminDataService {
         }));
   }
 
-  saveCustomer(customer: User): Observable<any> {
+  saveCustomer(id: string, customer: UserInput): Observable<any> {
     return this.apollo.mutate({
       mutation: UPDATE_USER,
       variables: {
-        userId: customer.userId,
+        userId: id,
         email: customer.email,
         changePasswordRequired: customer.changePasswordRequired,
         firstName: customer.firstName,
@@ -2189,6 +2193,7 @@ export class AdminDataService {
         flatNumber: customer.flatNumber,
         phone: customer.phone,
         risk: customer.risk,
+        kycTierId: customer.kycTierId,
         defaultFiatCurrency: customer.defaultFiatCurrency,
         defaultCryptoCurrency: customer.defaultCryptoCurrency
       }

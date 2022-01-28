@@ -31,7 +31,7 @@ export class FilterFieldUserTierComponent implements OnInit, OnDestroy, ControlV
 
   ngOnInit(): void {
     this.subscriptions.add(
-      this.adminDataService.getSettingsKycTiers().subscribe(val => {
+      this.adminDataService.getSettingsKycTiers('').subscribe(val => {
         if (val.count === 0) {
           this.filteredOptions = [];
         } else {
