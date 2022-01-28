@@ -43,6 +43,7 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
   @ViewChild('targetValueInput') targetValueInput!: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete!: MatAutocomplete;
 
+  PAYMENT_INSTRUMENT: typeof PaymentInstrument = PaymentInstrument;
   settingsId = '';
   errorMessage = '';
   selectedTab = 0;
@@ -191,12 +192,20 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.schemeForm.get('target')?.valueChanges.subscribe(val => this.updateTarget(val))
     );
+    this.subscriptions.add(
+      this.schemeForm.get('instrument')?.valueChanges.subscribe(val => this.updateInstrument(val))
+    );
     this.getPaymentProviders();
+    this.loadCostSchemeList();
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.subscriptions.unsubscribe();
+  }
+
+  private updateInstrument(val: any): void {
+    this.schemeForm.get('provider')?.setValue(undefined);
   }
 
   private updateTarget(val: any): void {
@@ -366,14 +375,21 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
         this.schemeForm.get('targetValues')?.setValue(scheme?.targetValues);
       }
       if (scheme.instrument && scheme.instrument.length > 0) {
-        this.schemeForm.get('instrument')?.setValue(scheme.instrument[0]);
+        const instrument = scheme.instrument[0];
+        this.schemeForm.get('instrument')?.setValue(instrument);
+        if (instrument === PaymentInstrument.WireTransfer) {
+          this.schemeForm.get('provider')?.setValue(scheme?.provider[0]);
+        } else {
+          this.schemeForm.get('provider')?.setValue(scheme?.provider);
+        }
       } else {
         this.schemeForm.get('instrument')?.setValue(undefined);
+        this.schemeForm.get('provider')?.setValue(undefined);
       }
       this.schemeForm.get('userType')?.setValue(scheme?.userType);
       this.schemeForm.get('userMode')?.setValue(scheme?.userMode);
       this.schemeForm.get('trxType')?.setValue(scheme?.trxType);
-      this.schemeForm.get('provider')?.setValue(scheme?.provider);
+      this.schemeForm.get('costScheme')?.setValue(scheme?.provider[0]);
       this.schemeForm.get('transactionFees')?.setValue(scheme?.terms.transactionFees);
       this.schemeForm.get('minTransactionFee')?.setValue(scheme?.terms.minTransactionFee);
       this.schemeForm.get('rollingReserves')?.setValue(scheme?.terms.rollingReserves);
@@ -395,7 +411,7 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
       this.schemeForm.get('userType')?.setValue([]);
       this.schemeForm.get('userMode')?.setValue([]);
       this.schemeForm.get('trxType')?.setValue('');
-      this.schemeForm.get('provider')?.setValue('');
+      this.schemeForm.get('provider')?.setValue(undefined);
       this.schemeForm.get('transactionFees')?.setValue('');
       this.schemeForm.get('minTransactionFee')?.setValue('');
       this.schemeForm.get('rollingReserves')?.setValue('');
@@ -424,10 +440,14 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
     } else {
       data.setTarget(this.schemeForm.get('target')?.value, this.schemeForm.get('targetValues')?.value);
     }
-
-    data.instrument.push(this.schemeForm.get('instrument')?.value);
+    const instrument = this.schemeForm.get('instrument')?.value;
+    data.instrument.push(instrument);
     (this.schemeForm.get('trxType')?.value as TransactionType[]).forEach(x => data.trxType.push(x));
-    (this.schemeForm.get('provider')?.value as string[]).forEach(x => data.provider.push(x));
+    if (instrument === PaymentInstrument.WireTransfer) {
+      data.provider.push(this.schemeForm.get('provider')?.value);
+    } else {
+      (this.schemeForm.get('provider')?.value as string[]).forEach(x => data.provider.push(x));
+    }
     (this.schemeForm.get('userType')?.value as UserType[]).forEach(x => data.userType.push(x));
     (this.schemeForm.get('userMode')?.value as UserMode[]).forEach(x => data.userMode.push(x));
     // terms
