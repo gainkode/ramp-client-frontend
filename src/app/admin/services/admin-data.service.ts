@@ -676,6 +676,7 @@ const GET_WIDGET_IDS = gql`
 const GET_WIDGETS = gql`
   query GetWidgets(
     $widgetIdsOnly: [String!]
+    $userIdsOnly: [String!]
     $filter: String
     $skip: Int
     $first: Int
@@ -683,6 +684,7 @@ const GET_WIDGETS = gql`
   ) {
     getWidgets(
       widgetIdsOnly: $widgetIdsOnly,
+      userIdsOnly: $userIdsOnly,
       filter: $filter,
       skip: $skip,
       first: $first,
@@ -1897,12 +1899,17 @@ export class AdminDataService {
   ): Observable<{ list: WidgetItem[], count: number }> {
     const orderFields = [{ orderBy: orderField, desc: orderDesc }];
     const vars = {
+      userIdsOnly: filter.users,
       widgetIdsOnly: filter.widgets,
       filter: filter.search,
       skip: pageIndex * takeItems,
       first: takeItems,
       orderBy: orderFields
     };
+
+    console.log(vars);
+
+
     return this.watchQuery<{ getWidgets: WidgetListResult }, QueryGetWidgetsArgs>({
       query: GET_WIDGETS,
       variables: vars,
@@ -2474,7 +2481,7 @@ export class AdminDataService {
           catchError(error => {
             if (this.auth.token !== '') {
               this.snackBar.open(
-                this.errorHandler.getError(error.message, 'Unable to load dashboard data'),
+                this.errorHandler.getError(error.message, 'Unable to load data'),
                 undefined,
                 { duration: 5000 }
               );

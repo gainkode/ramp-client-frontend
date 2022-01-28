@@ -6,7 +6,7 @@ import { ErrorService } from '../../../../services/error.service';
 import { Subject, Subscription } from 'rxjs';
 import { MatSort } from '@angular/material/sort';
 import { Filter } from '../../../model/filter.model';
-import { take, takeUntil } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 import { AssetAddress, SettingsCurrencyWithDefaults } from '../../../../model/generated-models';
 import { WalletItem } from '../../../model/wallet.model';
 import { CurrencyView } from 'src/app/model/payment.model';
@@ -52,6 +52,7 @@ export class WalletListComponent implements OnInit, OnDestroy, AfterViewInit {
     private commonService: CommonDataService,
     private adminService: AdminDataService,
     private router: Router) {
+    
   }
 
   ngOnInit(): void {

@@ -171,6 +171,9 @@
         </mat-error>
     </mat-form-field>
 
+    <app-details-attribute label="Widgets" [value]="'Related widgets'"
+        [linkUrl]="'/admin/widgets/'+ settingsId"></app-details-attribute>
+
     <!-- Totals -->
     <app-details-attribute label="Total Balance" [value]="totalBalance"></app-details-attribute>
     <app-details-attribute label="Total Transaction Count" [value]="user?.totalTransactionCount">

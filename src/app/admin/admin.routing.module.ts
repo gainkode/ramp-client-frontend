@@ -159,6 +159,13 @@ const routes: Routes = [
         }
       },
       {
+        path: 'widgets/:userId',
+        component: WidgetListComponent,
+        data: {
+          header: 'Widgets'
+        }
+      },
+      {
         path: '**',
         redirectTo: 'dashboard'
       }

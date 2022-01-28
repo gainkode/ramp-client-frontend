@@ -118,10 +118,9 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
   }
 
   onDelete(): void {
-    this.adminDataService.deleteWidget(this.form.value.id)
-      .subscribe(() => {
-        this.layoutService.requestRightPanelClose();
-      });
+    this.adminDataService.deleteWidget(this.form.value.id).subscribe(() => {
+      this.layoutService.requestRightPanelClose();
+    });
   }
 
   onCancel(): void {

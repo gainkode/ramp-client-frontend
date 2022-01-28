@@ -8,7 +8,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { WidgetItem } from '../../../model/widget.model';
 import { LayoutService } from '../../../services/layout.service';
 import { CommonDialogBox } from 'src/app/components/dialogs/common-box.dialog';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -31,6 +31,7 @@ export class WidgetListComponent implements OnInit, OnDestroy, AfterViewInit {
   sortedField = 'created';
   sortedDesc = true;
   filter = new Filter({});
+  userIdFilter = '';
 
   displayedColumns: string[] = [
     'details',
@@ -57,9 +58,11 @@ export class WidgetListComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     public dialog: MatDialog,
     private layoutService: LayoutService,
+    private route: ActivatedRoute,
     private router: Router,
     private auth: AuthService,
     private adminDataService: AdminDataService) {
+      this.userIdFilter = this.route.snapshot.params['userId'] ?? '';
   }
 
   ngOnInit(): void {
@@ -68,6 +71,11 @@ export class WidgetListComponent implements OnInit, OnDestroy, AfterViewInit {
       this.loadData();
     });
 
+    if (this.userIdFilter !== '') {
+      this.filter = new Filter({
+        users: [this.userIdFilter]
+      });
+    }
     this.loadData();
   }
 
