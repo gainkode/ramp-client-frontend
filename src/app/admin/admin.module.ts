@@ -82,6 +82,7 @@ import { FilterFieldItemIdComponent } from './components/core/filter-panel/filte
 import { CostTabListComponent } from './components/costs/tab-list/cost-tab-list.component';
 import { BankAccountsComponent } from './components/costs/list/bank-accounts.component';
 import { BankAccountEditorComponent } from './components/costs/details/bank-account-editor.component';
+import { MatRadioModule } from '@angular/material/radio';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -93,6 +94,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
     ReactiveFormsModule,
     MatCardModule,
     MatChipsModule,
+    MatRadioModule,
     MatExpansionModule,
     MatSidenavModule,
     MatTooltipModule,

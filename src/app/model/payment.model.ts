@@ -276,7 +276,7 @@ export const TransactionKycStatusList: Array<TransactionKycStatusView> = [
 ];
 
 export const FeeTargetFilterList: Array<FeeTargetFilterTypeView> = [
-    { id: SettingsFeeTargetFilterType.None, name: 'None' },
+    { id: SettingsFeeTargetFilterType.None, name: 'Default' },
     { id: SettingsFeeTargetFilterType.WidgetId, name: 'Widget identifier' },
     { id: SettingsFeeTargetFilterType.AccountId, name: 'Account' },
     { id: SettingsFeeTargetFilterType.Country, name: 'Country' },
@@ -284,13 +284,13 @@ export const FeeTargetFilterList: Array<FeeTargetFilterTypeView> = [
 ];
 
 export const CostTargetFilterList: Array<CostTargetFilterTypeView> = [
-    { id: SettingsCostTargetFilterType.None, name: 'None' },
+    { id: SettingsCostTargetFilterType.None, name: 'Default' },
     { id: SettingsCostTargetFilterType.Country, name: 'Country' },
-    { id: SettingsCostTargetFilterType.Psp, name: 'PSP' }
+    //{ id: SettingsCostTargetFilterType.Psp, name: 'PSP' }
 ];
 
 export const KycTargetFilterList: Array<KycTargetFilterTypeView> = [
-    { id: SettingsKycTargetFilterType.None, name: 'None' },
+    { id: SettingsKycTargetFilterType.None, name: 'Default' },
     { id: SettingsKycTargetFilterType.WidgetId, name: 'Widget identifier' },
     { id: SettingsKycTargetFilterType.Country, name: 'Country' },
     { id: SettingsKycTargetFilterType.AccountId, name: 'Account' },

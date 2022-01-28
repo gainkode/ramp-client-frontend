@@ -17,22 +17,27 @@
             placeholder="Bank account description" />
     </mat-form-field>
 
-    <!-- AU Banks -->
-    <div class="form-element">
-        <mat-checkbox color="accent" formControlName="auSelected">
-            Australia Banks
-        </mat-checkbox>
+    <!-- Account category -->
+    <div class="form-element" [formGroup]="accountForm">
+        <mat-label class="__bank-account-label">Bank Account</mat-label>
+        <mat-radio-group class="__bank-account-radio-group" formControlName="category">
+            <mat-radio-button class="__bank-account-radio-button" *ngFor="let cat of bankCategories" [value]="cat.id">
+                {{cat.title}}
+            </mat-radio-button>
+        </mat-radio-group>
     </div>
 
-    <div *ngIf="this.accountForm.get('auSelected')?.value===true">
+    <div *ngIf="this.accountForm.get('category')?.value==='AU'">
         <mat-form-field class="form-element">
             <mat-label>Account Name</mat-label>
-            <input type="text" matInput formControlName="auAccountName" maxlength="100" placeholder="Bank Account Name" />
+            <input type="text" matInput formControlName="auAccountName" maxlength="100"
+                placeholder="Bank Account Name" />
         </mat-form-field>
 
         <mat-form-field class="form-element">
             <mat-label>Account Number</mat-label>
-            <input type="text" matInput formControlName="auAccountNumber" maxlength="100" placeholder="Bank Account Number" />
+            <input type="text" matInput formControlName="auAccountNumber" maxlength="100"
+                placeholder="Bank Account Number" />
         </mat-form-field>
 
         <mat-form-field class="form-element">
@@ -41,21 +46,17 @@
         </mat-form-field>
     </div>
 
-    <div class="form-element">
-        <mat-checkbox color="accent" formControlName="ukSelected">
-            UK Banks
-        </mat-checkbox>
-    </div>
-
-    <div *ngIf="this.accountForm.get('ukSelected')?.value===true">
+    <div *ngIf="this.accountForm.get('category')?.value==='UK'">
         <mat-form-field class="form-element">
             <mat-label>Account Name</mat-label>
-            <input type="text" matInput formControlName="ukAccountName" maxlength="100" placeholder="Bank Account Name" />
+            <input type="text" matInput formControlName="ukAccountName" maxlength="100"
+                placeholder="Bank Account Name" />
         </mat-form-field>
 
         <mat-form-field class="form-element">
             <mat-label>Account Number</mat-label>
-            <input type="text" matInput formControlName="ukAccountNumber" maxlength="100" placeholder="Bank Account Number" />
+            <input type="text" matInput formControlName="ukAccountNumber" maxlength="100"
+                placeholder="Bank Account Number" />
         </mat-form-field>
 
         <mat-form-field class="form-element">
@@ -64,16 +65,11 @@
         </mat-form-field>
     </div>
 
-    <div class="form-element">
-        <mat-checkbox color="accent" formControlName="euSelected">
-            EU Banks
-        </mat-checkbox>
-    </div>
-
-    <div *ngIf="this.accountForm.get('euSelected')?.value===true">
+    <div *ngIf="this.accountForm.get('category')?.value==='EU'">
         <mat-form-field class="form-element">
             <mat-label>Account Owner Name</mat-label>
-            <input type="text" matInput formControlName="euAccountOwnerName" maxlength="100" placeholder="Bank Account Owner Name" />
+            <input type="text" matInput formControlName="euAccountOwnerName" maxlength="100"
+                placeholder="Bank Account Owner Name" />
         </mat-form-field>
 
         <mat-form-field class="form-element">
@@ -97,7 +93,7 @@
     <div class="form-element">&nbsp;</div>
 
     <div class="panel-actions">
-        <button mat-flat-button color="primary" type="submit">
+        <button mat-flat-button color="primary" type="submit" [disabled]="!accountForm.valid">
             SAVE
         </button>
         <button *ngIf="create===false" mat-flat-button color="warn" type="button" (click)="onDeleteScheme()">
