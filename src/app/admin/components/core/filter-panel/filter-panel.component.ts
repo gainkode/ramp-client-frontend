@@ -78,6 +78,9 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
     if (this.fields.includes('registrationDateEnd')) {
       controlsConfig.registrationDateRangeEnd = [undefined];
     }
+    if (this.fields.includes('transactionIds')) {
+      controlsConfig.transactionIds = [[]];
+    }
     if (this.fields.includes('transactionType')) {
       controlsConfig.transactionTypes = [[]];
     }
@@ -162,6 +165,9 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
       }
       if (this.fields.includes('registrationDateEnd')) {
         this.filterForm.controls.registrationDateRangeEnd.setValue(undefined);
+      }
+      if (this.fields.includes('transactionIds')) {
+        this.filterForm.controls.transactionIds.setValue([]);
       }
       if (this.fields.includes('transactionType')) {
         this.filterForm.controls.transactionTypes.setValue([]);

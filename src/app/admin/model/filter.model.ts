@@ -12,6 +12,7 @@ export class Filter {
   public users?: Array<string>;
   public widgets?: Array<string>;
   public riskAlertCode?: RiskAlertCodes;
+  public transactionIds?: Array<string>;
   public transactionTypes?: Array<TransactionType>;
   public transactionStatuses?: Array<TransactionStatus>;
   public tiers?: Array<string>;
@@ -75,6 +76,10 @@ export class Filter {
 
     if (filterValues.kycStatuses) {
       this.kycStatuses = filterValues.kycStatuses;
+    }
+
+    if (filterValues.transactionIds) {
+      this.transactionIds = filterValues.transactionIds;
     }
 
     if (filterValues.transactionTypes) {

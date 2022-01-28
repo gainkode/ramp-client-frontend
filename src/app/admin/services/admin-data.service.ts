@@ -1651,6 +1651,7 @@ export class AdminDataService {
     filter?: Filter
   ): Observable<{ list: Array<TransactionItemDeprecated>; count: number; }> {
     const vars: QueryGetTransactionsArgs = {
+      transactionIdsOnly: filter?.transactionIds,
       accountTypesOnly: filter?.accountTypes,
       countriesOnly: filter?.countries,
       countryCodeType: CountryCodeType.Code3,
