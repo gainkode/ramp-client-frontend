@@ -192,7 +192,7 @@ mutation CreateTransaction(
   $currencyToSpend: String!,
   $currencyToReceive: String!,
   $amountToSpend: Float!,
-  $instrument: PaymentInstrument!,
+  $instrument: PaymentInstrument,
   $instrumentDetails: String,
   $paymentProvider: String,
   $widgetUserParamsId: String,
@@ -433,10 +433,6 @@ export class PaymentDataService {
       widgetUserParamsId: (userParamsId !== '') ? userParamsId : undefined,
       destination: wallet
     };
-
-    console.log(vars);
-
-
     return this.apollo.mutate({
       mutation: CREATE_TRANSACTION,
       variables: vars
