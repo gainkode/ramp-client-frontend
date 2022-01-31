@@ -183,6 +183,7 @@ export type DashboardStats = {
   deposits?: Maybe<DepositOrWithdrawalStats>;
   withdrawals?: Maybe<DepositOrWithdrawalStats>;
   transfers?: Maybe<TransferStats>;
+  receives?: Maybe<TransferStats>;
   exchanges?: Maybe<ExchangeStats>;
   balances?: Maybe<Array<BalanceStats>>;
 };

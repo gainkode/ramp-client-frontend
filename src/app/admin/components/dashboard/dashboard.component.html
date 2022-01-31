@@ -5,22 +5,11 @@
 </div>
 <div *ngIf="dashboardService.isLoaded | async" class="panels">
     <div class="column">
-        <app-data-card
-                title="Total volume in EUR"
-                source="total"
-        ></app-data-card>
-        <app-data-card
-                title="BUY"
-                source="deposits"
-        ></app-data-card>
-        <!-- <app-data-card
-                title="SEND"
-                source="transfers"
-        ></app-data-card> -->
-        <app-data-card
-                title="SELL"
-                source="withdrawals"
-        ></app-data-card>
+        <app-data-card title="Total volume in EUR" source="total"></app-data-card>
+        <app-data-card title="BUY" source="deposits"></app-data-card>
+        <!-- <app-data-card title="SEND" source="transfers"></app-data-card> -->
+        <app-data-card title="SELL" source="withdrawals"></app-data-card>
+        <app-data-card title="RECEIVE" source="receives"></app-data-card>
     </div>
     <div class="column">
         <app-data-card

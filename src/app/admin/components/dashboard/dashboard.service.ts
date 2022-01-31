@@ -112,6 +112,16 @@ export class DashboardService implements OnDestroy {
                 abandonedCount: rawData.transfers?.abandoned?.count ?? null,
                 abandonedVolume: rawData.transfers?.abandoned?.volume ?? null,
                 ratio: rawData.transfers?.ratio ?? null
+              },
+              {
+                type: 'Receive',
+                approvedCount: rawData.receives?.approved?.count ?? null,
+                approvedVolume: rawData.receives?.approved?.volume ?? null,
+                declinedCount: rawData.receives?.declined?.count ?? null,
+                declinedVolume: rawData.receives?.declined?.volume ?? null,
+                abandonedCount: rawData.receives?.abandoned?.count ?? null,
+                abandonedVolume: rawData.receives?.abandoned?.volume ?? null,
+                ratio: rawData.receives?.ratio ?? null
               }
             ]
           };
@@ -149,7 +159,6 @@ export class DashboardService implements OnDestroy {
             rows: rawData.deposits?.byInstruments ?
               rawData.deposits.byInstruments.map(item => {
                 const instrument = PaymentInstrumentList.find(i => i.id === item.instrument);
-
                 return {
                   instrument: instrument?.name ?? '?',
                   approvedCount: item.approved?.count ?? null,
@@ -217,7 +226,60 @@ export class DashboardService implements OnDestroy {
               }
             ]
           };
+          // endregion
 
+          // region Receives
+          const receivesData: DashboardCardData = {
+            columns: [
+              {
+                key: 'type',
+                label: 'Type',
+                type: 'text'
+              },
+              {
+                key: 'approved',
+                label: 'Approved',
+                type: 'count-volume'
+              },
+              {
+                key: 'declined',
+                label: 'Declined',
+                type: 'count-volume'
+              },
+              {
+                key: 'abandoned',
+                label: 'Abandoned',
+                type: 'count-volume'
+              },
+              {
+                key: 'ratio',
+                label: 'Ratio',
+                type: 'percent'
+              }
+            ],
+            rows: [
+              {
+                type: 'To merchants',
+                approvedCount: rawData.receives?.toMerchant?.approved?.count ?? null,
+                approvedVolume: rawData.receives?.toMerchant?.approved?.volume ?? null,
+                declinedCount: rawData.receives?.toMerchant?.declined?.count ?? null,
+                declinedVolume: rawData.receives?.toMerchant?.declined?.volume ?? null,
+                abandonedCount: rawData.receives?.toMerchant?.abandoned?.count ?? null,
+                abandonedVolume: rawData.receives?.toMerchant?.abandoned?.volume ?? null,
+                ratio: rawData.receives?.toMerchant?.ratio ?? null
+              },
+              {
+                type: 'To customers',
+                approvedCount: rawData.receives?.toCustomer?.approved?.count ?? null,
+                approvedVolume: rawData.receives?.toCustomer?.approved?.volume ?? null,
+                declinedCount: rawData.receives?.toCustomer?.declined?.count ?? null,
+                declinedVolume: rawData.receives?.toCustomer?.declined?.volume ?? null,
+                abandonedCount: rawData.receives?.toCustomer?.abandoned?.count ?? null,
+                abandonedVolume: rawData.receives?.toCustomer?.abandoned?.volume ?? null,
+                ratio: rawData.receives?.toCustomer?.ratio ?? null
+              }
+            ]
+          };
           // endregion
 
           // region Withdrawals
@@ -299,14 +361,19 @@ export class DashboardService implements OnDestroy {
                 count: rawData.deposits?.fee?.count ?? null
               },
               {
+                source: 'Sell',
+                volume: rawData.withdrawals?.fee?.volume ?? null,
+                count: rawData.withdrawals?.fee?.count ?? null
+              },
+              {
                 source: 'Send',
                 volume: rawData.transfers?.fee?.volume ?? null,
                 count: rawData.transfers?.fee?.count ?? null
               },
               {
-                source: 'Sell',
-                volume: rawData.withdrawals?.fee?.volume ?? null,
-                count: rawData.withdrawals?.fee?.count ?? null
+                source: 'Receive',
+                volume: rawData.receives?.fee?.volume ?? null,
+                count: rawData.receives?.fee?.count ?? null
               }
             ]
           };
@@ -354,6 +421,7 @@ export class DashboardService implements OnDestroy {
             total: totalData,
             deposits: depositsData,
             transfers: transfersData,
+            receives: receivesData,
             withdrawals: withdrawalsData,
             fees: feesData,
             balances: balancesData
@@ -366,7 +434,5 @@ export class DashboardService implements OnDestroy {
           }
 
         });
-
   }
-
 }
