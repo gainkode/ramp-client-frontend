@@ -51,6 +51,8 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
   currentRate = 0;
   showTransferHash = false;
   showBenchmarkTransferHash = false;
+  transferOrderBlockchainLink = '';
+  benchmarkTransferOrderBlockchainLink = '';
 
   form = this.formBuilder.group({
     address: ['', { validators: [Validators.required], updateOn: 'change' }],
@@ -120,6 +122,8 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
   private setFormData(val: TransactionItemDeprecated | undefined): void {
     this.data = val;
     this.transactionId = val?.id ?? '';
+    this.transferOrderBlockchainLink = val?.transferOrderBlockchainLink ?? '';
+    this.benchmarkTransferOrderBlockchainLink = val?.benchmarkTransferOrderBlockchainLink ?? '';
     this.removable = true;//val?.statusInfo?.value.canBeCancelled ?? false;  // confirmed
     if (this.data) {
       this.form.get('address')?.setValue(this.data.address);

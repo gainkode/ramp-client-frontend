@@ -51,6 +51,8 @@ export class TransactionItemDeprecated {
   transferOrderHash = '';
   benchmarkTransferOrderId = '';
   benchmarkTransferOrderHash = '';
+  transferOrderBlockchainLink = '';
+  benchmarkTransferOrderBlockchainLink = '';
   address = '';
   ip = '';
   euro = 0;
@@ -77,7 +79,7 @@ export class TransactionItemDeprecated {
       this.created = datepipe.transform(data.created, 'dd-MM-YYYY HH:mm:ss') as string;
       this.executed = datepipe.transform(data.executed, 'dd-MM-YYYY HH:mm:ss') as string;
       this.updated = datepipe.transform(data.updated, 'dd-MM-YYYY HH:mm:ss') as string;
-      this.address = data.destination as string;
+      this.address = data.destination ?? '';
       this.accountId = data.userId ?? '';
       this.accountStatus = data.accountStatus ?? '';
       this.accountStatusValue = data.accountStatus ?? AccountStatus.Closed;
@@ -92,6 +94,8 @@ export class TransactionItemDeprecated {
       }
       this.transferOrderId = data.transferOrder?.orderId ?? '';
       this.transferOrderHash = data.transferOrder?.transferHash ?? '';
+      this.transferOrderBlockchainLink = transactionData.transferOrderBlockchainLink ?? '';
+      this.benchmarkTransferOrderBlockchainLink = transactionData.benchmarkTransferOrderBlockchainLink ?? '';
       this.type = data.type;
       this.instrument = data.instrument ?? undefined;
       this.paymentProvider = data.paymentProvider ?? '';

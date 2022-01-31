@@ -468,6 +468,8 @@ const GET_TRANSACTIONS = gql`
         }
         transferOrder { orderId transferHash }
         benchmarkTransferOrder { orderId transferHash }
+        transferOrderBlockchainLink
+        benchmarkTransferOrderBlockchainLink
         data
         destination
         kycStatus

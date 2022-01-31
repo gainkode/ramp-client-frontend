@@ -94,16 +94,6 @@ export class DashboardService implements OnDestroy {
                 ratio: rawData.deposits?.ratio ?? null
               },
               {
-                type: 'Send',
-                approvedCount: rawData.transfers?.approved?.count ?? null,
-                approvedVolume: rawData.transfers?.approved?.volume ?? null,
-                declinedCount: rawData.transfers?.declined?.count ?? null,
-                declinedVolume: rawData.transfers?.declined?.volume ?? null,
-                abandonedCount: rawData.transfers?.abandoned?.count ?? null,
-                abandonedVolume: rawData.transfers?.abandoned?.volume ?? null,
-                ratio: rawData.transfers?.ratio ?? null
-              },
-              {
                 type: 'Sell',
                 approvedCount: rawData.withdrawals?.approved?.count ?? null,
                 approvedVolume: rawData.withdrawals?.approved?.volume ?? null,
@@ -112,6 +102,16 @@ export class DashboardService implements OnDestroy {
                 abandonedCount: rawData.withdrawals?.abandoned?.count ?? null,
                 abandonedVolume: rawData.withdrawals?.abandoned?.volume ?? null,
                 ratio: rawData.withdrawals?.ratio ?? null
+              },
+              {
+                type: 'Send',
+                approvedCount: rawData.transfers?.approved?.count ?? null,
+                approvedVolume: rawData.transfers?.approved?.volume ?? null,
+                declinedCount: rawData.transfers?.declined?.count ?? null,
+                declinedVolume: rawData.transfers?.declined?.volume ?? null,
+                abandonedCount: rawData.transfers?.abandoned?.count ?? null,
+                abandonedVolume: rawData.transfers?.abandoned?.volume ?? null,
+                ratio: rawData.transfers?.ratio ?? null
               }
             ]
           };
