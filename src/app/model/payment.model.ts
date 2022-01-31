@@ -213,7 +213,7 @@ export const PaymentInstrumentList: Array<PaymentInstrumentView> = [
 export const WireTransferPaymentCategoryList: Array<WireTransferPaymentCategoryItem> = [
     { id: WireTransferPaymentCategory.AU, title: 'Australian Bank', data: '' },
     { id: WireTransferPaymentCategory.UK, title: 'UK Bank', data: '' },
-    { id: WireTransferPaymentCategory.EU, title: 'EU Bank', data: '' }
+    { id: WireTransferPaymentCategory.EU, title: 'SEPA / SWIFT', data: '' }
 ];
 
 export const QuickCheckoutPaymentInstrumentList: Array<PaymentInstrumentView> = [

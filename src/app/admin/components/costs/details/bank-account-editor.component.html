@@ -17,17 +17,12 @@
             placeholder="Bank account description" />
     </mat-form-field>
 
-    <!-- Account category -->
-    <div class="form-element" [formGroup]="accountForm">
-        <mat-label class="__bank-account-label">Bank Account</mat-label>
-        <mat-radio-group class="__bank-account-radio-group" formControlName="category">
-            <mat-radio-button class="__bank-account-radio-button" *ngFor="let cat of bankCategories" [value]="cat.id">
-                {{cat.title}}
-            </mat-radio-button>
-        </mat-radio-group>
+    <div class="form-element">
+        <mat-checkbox color="accent" formControlName="auSelected">
+            {{auCategory?.title}}
+        </mat-checkbox>
     </div>
-
-    <div *ngIf="this.accountForm.get('category')?.value==='AU'">
+    <div *ngIf="this.accountForm.get('auSelected')?.value===true">
         <mat-form-field class="form-element">
             <mat-label>Account Name</mat-label>
             <input type="text" matInput formControlName="auAccountName" maxlength="100"
@@ -46,7 +41,12 @@
         </mat-form-field>
     </div>
 
-    <div *ngIf="this.accountForm.get('category')?.value==='UK'">
+    <div class="form-element">
+        <mat-checkbox color="accent" formControlName="ukSelected">
+            {{ukCategory?.title}}
+        </mat-checkbox>
+    </div>
+    <div *ngIf="this.accountForm.get('ukSelected')?.value===true">
         <mat-form-field class="form-element">
             <mat-label>Account Name</mat-label>
             <input type="text" matInput formControlName="ukAccountName" maxlength="100"
@@ -65,21 +65,42 @@
         </mat-form-field>
     </div>
 
-    <div *ngIf="this.accountForm.get('category')?.value==='EU'">
+    <div class="form-element">
+        <mat-checkbox color="accent" formControlName="euSelected">
+            {{euCategory?.title}}
+        </mat-checkbox>
+    </div>
+    <div *ngIf="this.accountForm.get('euSelected')?.value===true">
         <mat-form-field class="form-element">
-            <mat-label>Account Owner Name</mat-label>
-            <input type="text" matInput formControlName="euAccountOwnerName" maxlength="100"
-                placeholder="Bank Account Owner Name" />
+            <mat-label>Bank Address</mat-label>
+            <input type="text" matInput formControlName="euBankAddress" maxlength="100"
+                placeholder="Bank Address" />
         </mat-form-field>
 
         <mat-form-field class="form-element">
-            <mat-label>SWIFT</mat-label>
-            <input type="text" matInput formControlName="euSwift" maxlength="100" placeholder="SWIFT" />
+            <mat-label>Bank Name</mat-label>
+            <input type="text" matInput formControlName="euBankName" maxlength="100" placeholder="Bank Name" />
+        </mat-form-field>
+
+        <mat-form-field class="form-element">
+            <mat-label>Beneficiary Address</mat-label>
+            <input type="text" matInput formControlName="euBeneficiaryAddress" maxlength="100" placeholder="Beneficiary Address" />
+        </mat-form-field>
+
+        <mat-form-field class="form-element">
+            <mat-label>Beneficiary Name</mat-label>
+            <input type="text" matInput formControlName="euBeneficiaryName" maxlength="100"
+                placeholder="Beneficiary Name" />
         </mat-form-field>
 
         <mat-form-field class="form-element">
             <mat-label>IBAN</mat-label>
             <input type="text" matInput formControlName="euIban" maxlength="100" placeholder="IBAN" />
+        </mat-form-field>
+
+        <mat-form-field class="form-element">
+            <mat-label>SWIFT / BIC</mat-label>
+            <input type="text" matInput formControlName="euSwiftBic" maxlength="100" placeholder="SWIFT / BIC" />
         </mat-form-field>
     </div>
 

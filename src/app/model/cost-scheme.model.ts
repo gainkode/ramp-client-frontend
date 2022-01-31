@@ -163,7 +163,7 @@ export class WireTransferBankAccountItem {
     get euAvailable(): boolean {
         return (this.eu !== undefined);
     }
-    
+
     get auData(): string | undefined {
         return (this.au) ? JSON.stringify(this.au) : undefined;
     }
@@ -211,9 +211,12 @@ export class WireTransferBankAccountUk {
 }
 
 export class WireTransferBankAccountEu {
-    accountOwnerName = '';
-    swift = '';
+    bankAddress = '';
+    bankName = '';
+    beneficiaryAddress = '';
+    beneficiaryName = '';
     iban = '';
+    swiftBic = '';
 }
 
 export class WireTransferUserSelection {

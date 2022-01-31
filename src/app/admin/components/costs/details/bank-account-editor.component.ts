@@ -3,7 +3,7 @@ import { Validators, FormBuilder } from '@angular/forms';
 import { WireTransferBankAccount } from 'src/app/model/generated-models';
 import { WireTransferPaymentCategory } from 'src/app/model/payment-base.model';
 import { WireTransferPaymentCategoryList } from 'src/app/model/payment.model';
-import { WireTransferBankAccountItem } from '../../../../model/cost-scheme.model';
+import { WireTransferBankAccountAu, WireTransferBankAccountEu, WireTransferBankAccountItem, WireTransferBankAccountUk } from '../../../../model/cost-scheme.model';
 
 @Component({
   selector: 'app-bank-account-editor',
@@ -22,23 +22,30 @@ export class BankAccountEditorComponent implements OnInit {
   @Output() cancel = new EventEmitter();
 
   private settingsId = '';
+  private bankCategories = WireTransferPaymentCategoryList;
   public errorMessage = '';
-
-  bankCategories = WireTransferPaymentCategoryList;
+  public auCategory: any;
+  public ukCategory: any;
+  public euCategory: any;
 
   accountForm = this.formBuilder.group({
     name: ['', { validators: [Validators.required], updateOn: 'change' }],
     description: [''],
-    category: [undefined, { validators: [Validators.required], updateOn: 'change' }],
+    auSelected: [false],
+    ukSelected: [false],
+    euSelected: [false],
     auAccountName: [undefined],
     auAccountNumber: [undefined],
     auBsb: [undefined],
     ukAccountName: [undefined],
     ukAccountNumber: [undefined],
     ukSortCode: [undefined],
-    euAccountOwnerName: [undefined],
-    euSwift: [undefined],
+    euBankAddress: [undefined],
+    euBankName: [undefined],
+    euBeneficiaryAddress: [undefined],
+    euBeneficiaryName: [undefined],
     euIban: [undefined],
+    euSwiftBic: [undefined]
   });
 
   constructor(
@@ -46,43 +53,60 @@ export class BankAccountEditorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    this.auCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.AU);
+    this.ukCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.UK);
+    this.euCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.EU);
   }
 
   setFormData(account: WireTransferBankAccountItem | null): void {
     this.accountForm.reset();
+
+
+    console.log(account);
+
+
     if (account !== null) {
       this.accountForm.get('name')?.setValue(account.name);
       this.accountForm.get('description')?.setValue(account.description);
       if (account.auAvailable) {
-        this.accountForm.get('category')?.setValue(WireTransferPaymentCategory.AU);
+        this.accountForm.get('auSelected')?.setValue(true);
         this.accountForm.get('auAccountName')?.setValue(account.au?.accountName);
         this.accountForm.get('auAccountNumber')?.setValue(account.au?.accountNumber);
         this.accountForm.get('auBsb')?.setValue(account.au?.bsb);
-      } else if (account.ukAvailable) {
-        this.accountForm.get('category')?.setValue(WireTransferPaymentCategory.UK);
+      }
+      if (account.ukAvailable) {
+        this.accountForm.get('ukSelected')?.setValue(true);
         this.accountForm.get('ukAccountName')?.setValue(account.uk?.accountName);
         this.accountForm.get('ukAccountNumber')?.setValue(account.uk?.accountNumber);
         this.accountForm.get('ukSortCode')?.setValue(account.uk?.sortCode);
-      } else if (account.euAvailable) {
-        this.accountForm.get('category')?.setValue(WireTransferPaymentCategory.EU);
-        this.accountForm.get('euAccountOwnerName')?.setValue(account.eu?.accountOwnerName);
-        this.accountForm.get('euSwift')?.setValue(account.eu?.swift);
+      }
+      if (account.euAvailable) {
+        this.accountForm.get('euSelected')?.setValue(true);
+        this.accountForm.get('euBankAddress')?.setValue(account.eu?.bankAddress);
+        this.accountForm.get('euBankName')?.setValue(account.eu?.bankName);
+        this.accountForm.get('euBeneficiaryAddress')?.setValue(account.eu?.beneficiaryAddress);
+        this.accountForm.get('euBeneficiaryName')?.setValue(account.eu?.beneficiaryName);
         this.accountForm.get('euIban')?.setValue(account.eu?.iban);
+        this.accountForm.get('euSwiftBic')?.setValue(account.eu?.swiftBic);
       }
     } else {
       this.accountForm.get('name')?.setValue('');
       this.accountForm.get('description')?.setValue('');
-      this.accountForm.get('category')?.setValue(undefined);
+      this.accountForm.get('auSelected')?.setValue(true);
+      this.accountForm.get('ukSelected')?.setValue(true);
+      this.accountForm.get('euSelected')?.setValue(true);
       this.accountForm.get('auAccountName')?.setValue(undefined);
       this.accountForm.get('auAccountNumber')?.setValue(undefined);
       this.accountForm.get('auBsb')?.setValue(undefined);
       this.accountForm.get('ukAccountName')?.setValue(undefined);
       this.accountForm.get('ukAccountNumber')?.setValue(undefined);
       this.accountForm.get('ukSortCode')?.setValue(undefined);
-      this.accountForm.get('euAccountOwnerName')?.setValue(undefined);
-      this.accountForm.get('euSwift')?.setValue(undefined);
+      this.accountForm.get('euBankAddress')?.setValue(undefined);
+      this.accountForm.get('euBankName')?.setValue(undefined);
+      this.accountForm.get('euBeneficiaryAddress')?.setValue(undefined);
+      this.accountForm.get('euBeneficiaryName')?.setValue(undefined);
       this.accountForm.get('euIban')?.setValue(undefined);
+      this.accountForm.get('euSwiftBic')?.setValue(undefined);
     }
   }
 
@@ -93,12 +117,11 @@ export class BankAccountEditorComponent implements OnInit {
     data.description = this.accountForm.get('description')?.value;
     data.bankAccountId = this.settingsId;
     // data
-    const selectedCategory = this.accountForm.get('category')?.value as WireTransferPaymentCategory | undefined;
-    if (selectedCategory === WireTransferPaymentCategory.AU) {
+    if (this.accountForm.get('auSelected')?.value === true) {
       const auAccountName = this.accountForm.get('auAccountName')?.value;
       const auAccountNumber = this.accountForm.get('auAccountNumber')?.value;
       const auBsb = this.accountForm.get('auBsb')?.value;
-      const auData = {
+      const auData: WireTransferBankAccountAu = {
         accountName: auAccountName,
         accountNumber: auAccountNumber,
         bsb: auBsb
@@ -107,11 +130,11 @@ export class BankAccountEditorComponent implements OnInit {
     } else {
       data.au = null;
     }
-    if (selectedCategory === WireTransferPaymentCategory.UK) {
+    if (this.accountForm.get('ukSelected')?.value === true) {
       const ukAccountName = this.accountForm.get('ukAccountName')?.value;
       const ukAccountNumber = this.accountForm.get('ukAccountNumber')?.value;
       const ukSortCode = this.accountForm.get('ukSortCode')?.value;
-      const ukData = {
+      const ukData: WireTransferBankAccountUk = {
         accountName: ukAccountName,
         accountNumber: ukAccountNumber,
         sortCode: ukSortCode
@@ -120,14 +143,20 @@ export class BankAccountEditorComponent implements OnInit {
     } else {
       data.uk = null;
     }
-    if (selectedCategory === WireTransferPaymentCategory.EU) {
-      const euAccountOwnerName = this.accountForm.get('euAccountOwnerName')?.value;
-      const euSwift = this.accountForm.get('euSwift')?.value;
+    if (this.accountForm.get('euSelected')?.value === true) {
+      const euBankAddress = this.accountForm.get('euBankAddress')?.value;
+      const euBankName = this.accountForm.get('euBankName')?.value;
+      const euBeneficiaryAddress = this.accountForm.get('euBeneficiaryAddress')?.value;
+      const euBeneficiaryName = this.accountForm.get('euBeneficiaryName')?.value;
       const euIban = this.accountForm.get('euIban')?.value;
-      const euData = {
-        accountOwnerName: euAccountOwnerName,
-        swift: euSwift,
-        iban: euIban
+      const euSwiftBic = this.accountForm.get('euSwiftBic')?.value;
+      const euData: WireTransferBankAccountEu = {
+        bankAddress: euBankAddress,
+        bankName: euBankName,
+        beneficiaryAddress: euBeneficiaryAddress,
+        beneficiaryName: euBeneficiaryName,
+        iban: euIban,
+        swiftBic: euSwiftBic
       };
       data.eu = JSON.stringify(euData);
     } else {

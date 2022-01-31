@@ -16,9 +16,15 @@ export class WidgetWireTransferResultComponent {
     field1Title = '';
     field2Title = '';
     field3Title = '';
+    field4Title = '';
+    field5Title = '';
+    field6Title = '';
     field1Value = '';
     field2Value = '';
     field3Value = '';
+    field4Value = '';
+    field5Value = '';
+    field6Value = '';
 
     sendEmail(): void {
 
@@ -44,12 +50,18 @@ export class WidgetWireTransferResultComponent {
             this.field3Value = dataUk.sortCode;
         } else if (val.id === WireTransferPaymentCategory.EU) {
             const dataEu = data as WireTransferBankAccountEu;
-            this.field1Title = 'Account owner name';
-            this.field2Title = 'SWIFT';
-            this.field3Title = 'IBAN';
-            this.field1Value = dataEu.accountOwnerName;
-            this.field2Value = dataEu.swift;
-            this.field3Value = dataEu.iban;
+            this.field1Title = 'Bank Address';
+            this.field2Title = 'Bank Name';
+            this.field3Title = 'Beneficiary Address';
+            this.field4Title = 'Beneficiary Name';
+            this.field5Title = 'IBAN';
+            this.field6Title = 'SWIFT / BIC';
+            this.field1Value = dataEu.bankAddress;
+            this.field2Value = dataEu.bankName;
+            this.field3Value = dataEu.beneficiaryAddress;
+            this.field4Value = dataEu.beneficiaryName;
+            this.field5Value = dataEu.iban;
+            this.field6Value = dataEu.swiftBic;
         }
     }
 }
