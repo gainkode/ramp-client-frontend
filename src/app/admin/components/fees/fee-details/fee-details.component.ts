@@ -59,7 +59,7 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
   providers: PaymentProviderView[] = [];
   userTypes = UserTypeList;
   userModes = UserModeList;
-  targteValues: CommonTargetValue[] = [];
+  targetValues: CommonTargetValue[] = [];
   costSchemes: CostScheme[] = [];
 
   private defaultSchemeName = '';
@@ -224,7 +224,8 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
     } else {
       this.filteredTargetValues$ = this.schemeForm.get('targetValue')?.valueChanges.pipe(
         startWith(''),
-        map(value => this.filterTargetValues(value)));
+        map(value => this.filterTargetValues(value))
+      );
     }
   }
 
@@ -353,7 +354,7 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
           users: scheme?.targetValues
         });
         this.getFilteredAccounts(filter).subscribe(result => {
-          this.targteValues = result;
+          this.targetValues = result;
           this.schemeForm.get('targetValues')?.setValue(result.map(x => x.title));
         });
         this.updateTarget('');
@@ -362,7 +363,7 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
           widgets: scheme?.targetValues
         });
         this.getFilteredWidgets(filter).subscribe(result => {
-          this.targteValues = result;
+          this.targetValues = result;
           this.schemeForm.get('targetValues')?.setValue(result.map(x => x.title));
         });
         this.updateTarget('');
@@ -428,7 +429,7 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
     // target
     if (this.targetType === SettingsFeeTargetFilterType.WidgetId ||
       this.targetType === SettingsFeeTargetFilterType.AccountId) {
-      data.setTarget(this.schemeForm.get('target')?.value, this.targteValues.map(c => {
+      data.setTarget(this.schemeForm.get('target')?.value, this.targetValues.map(c => {
         return c.id;
       }));
     } else {
@@ -544,7 +545,7 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
   }
 
   clearTargetValues(): void {
-    this.targteValues = [];
+    this.targetValues = [];
     this.filteredTargetValues$ = of([]);
     this.schemeForm.get('targetValues')?.setValue([]);
   }
@@ -568,14 +569,14 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
     this.filteredTargetValues$?.subscribe(val => {
       const valueObject = val.find(x => x.title === value);
       if (valueObject) {
-        this.targteValues.push(valueObject);
+        this.targetValues.push(valueObject);
       }
     });
   }
 
   private removeTarget(value: string): void {
-    const idx = this.targteValues.findIndex(x => x.title === value);
-    this.targteValues.splice(idx, 1);
+    const idx = this.targetValues.findIndex(x => x.title === value);
+    this.targetValues.splice(idx, 1);
   }
 
   private removeIncorrectTargetValues(scheme: FeeScheme): void {

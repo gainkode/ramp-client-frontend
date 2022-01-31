@@ -66,11 +66,11 @@
                 <mat-icon matChipRemove matTooltip="Remove" matTooltipClass="info-tooltip">cancel</mat-icon>
             </mat-chip>
             <input [placeholder]="targetValueParams.inputPlaceholder" #targetValueInput formControlName="targetValue"
-                   [matAutocomplete]="auto" [matChipInputFor]="targetChipList"
-                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="addTargetValue($event)">
+                   [matAutocomplete]="auto" [matChipInputFor]="targetChipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                   (input)="handleTargetInputChange($event)" (matChipInputTokenEnd)="addTargetValue($event)">
         </mat-chip-list>
         <mat-autocomplete #auto="matAutocomplete" (optionSelected)="targetItemSelected($event)">
-            <mat-option *ngFor="let item of filteredTargetValues | async" [value]="item.title">
+            <mat-option *ngFor="let item of filteredTargetValues$ | async" [value]="item.title">
                 <app-dropdown-item itemValue="{{item.title}}" imageClass="{{item.imgClass}}"
                                    imageSource="{{item.imgSource}}"></app-dropdown-item>
             </mat-option>
