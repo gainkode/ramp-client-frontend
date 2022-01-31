@@ -2594,6 +2594,7 @@ export enum TransactionType {
   Deposit = 'Deposit',
   Withdrawal = 'Withdrawal',
   Transfer = 'Transfer',
+  Receive = 'Receive',
   Exchange = 'Exchange',
   System = 'System'
 }
