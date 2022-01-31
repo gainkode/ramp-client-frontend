@@ -10,6 +10,7 @@
             <div *ngFor="let row of data.rows">
                 <ng-container *ngIf="col.type === 'count-volume' && row[col.key + 'Count']">
                     <span>({{row[col.key + 'Count']}})</span>
+                    <span>&nbsp;&euro;</span>
                     <span>{{row[col.key + 'Volume']}}</span>
                 </ng-container>
                 <ng-container *ngIf="col.type !== 'count-volume'">
