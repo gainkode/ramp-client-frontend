@@ -1054,6 +1054,7 @@ mutation UpdateUser(
   $flatNumber: String
   $phone: String
   $risk: RiskLevel
+  $accountStatus: AccountStatus
   $kycTierId: String
   $defaultFiatCurrency: String
   $defaultCryptoCurrency: String
@@ -1078,6 +1079,7 @@ mutation UpdateUser(
       flatNumber: $flatNumber
       phone: $phone
       risk: $risk
+      accountStatus: $accountStatus
       kycTierId: $kycTierId
       defaultFiatCurrency: $defaultFiatCurrency
       defaultCryptoCurrency: $defaultCryptoCurrency
@@ -2209,6 +2211,7 @@ export class AdminDataService {
         flatNumber: customer.flatNumber,
         phone: customer.phone,
         risk: customer.risk,
+        accountStatus: customer.accountStatus,
         kycTierId: customer.kycTierId,
         defaultFiatCurrency: customer.defaultFiatCurrency,
         defaultCryptoCurrency: customer.defaultCryptoCurrency

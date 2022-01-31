@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Countries, getCountryByCode3 } from 'src/app/model/country-code.model';
-import { RiskLevel, User, UserInput, UserType } from 'src/app/model/generated-models';
-import { CurrencyView, RiskLevelViewList } from 'src/app/model/payment.model';
+import { AccountStatus, RiskLevel, User, UserInput, UserType } from 'src/app/model/generated-models';
+import { CurrencyView, RiskLevelViewList, UserStatusList } from 'src/app/model/payment.model';
 import { UserItem } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { Subscription } from 'rxjs';
@@ -48,6 +48,7 @@ export class CustomerDetailsComponent implements OnDestroy {
   fiatCurrencies: CurrencyView[] = [];
   cryptoCurrencies: CurrencyView[] = [];
   riskLevels = RiskLevelViewList;
+  accountStatuses = UserStatusList;
   totalBalance = '';
   kycProviderLink = '';
   kycDocs: string[] = [];
@@ -69,6 +70,7 @@ export class CustomerDetailsComponent implements OnDestroy {
     buildingNumber: ['', { validators: [], updateOn: 'change' }],
     flatNumber: ['', { validators: [], updateOn: 'change' }],
     phone: ['', { validators: [], updateOn: 'change' }],
+    accountStatus: [AccountStatus.Closed, { validators: [Validators.required], updateOn: 'change' }],
     risk: [RiskLevel.Medium, { validators: [Validators.required], updateOn: 'change' }],
     tier: ['', { validators: [Validators.required], updateOn: 'change' }],
     fiat: ['', { validators: [Validators.required], updateOn: 'change' }],
@@ -128,6 +130,7 @@ export class CustomerDetailsComponent implements OnDestroy {
         ]);
       }
       this.dataForm.get('risk')?.setValue(data?.risk ?? RiskLevel.Medium);
+      this.dataForm.get('accountStatus')?.setValue(data?.accountStatus ?? AccountStatus.Closed);
       this.dataForm.get('tier')?.setValue(data?.kycLevel);
       this.dataForm.get('country')?.setValue(data?.country?.id);
       this.dataForm.get('postCode')?.setValue(data?.postCode);
@@ -150,6 +153,7 @@ export class CustomerDetailsComponent implements OnDestroy {
       this.dataForm.get('birthday')?.setValue('');
       this.dataForm.get('birthday')?.setValidators([]);
       this.dataForm.get('risk')?.setValue(RiskLevel.Medium);
+      this.dataForm.get('accountStatus')?.setValue(AccountStatus.Closed);
       this.dataForm.get('tier')?.setValue('');
       this.dataForm.get('country')?.setValue('');
       this.dataForm.get('postCode')?.setValue('');
@@ -235,6 +239,7 @@ export class CustomerDetailsComponent implements OnDestroy {
       defaultFiatCurrency: this.dataForm.get('fiat')?.value,
       defaultCryptoCurrency: this.dataForm.get('crypto')?.value,
       risk: this.dataForm.get('risk')?.value,
+      accountStatus: this.dataForm.get('accountStatus')?.value,
       kycTierId: tierId
     } as UserInput;
     return data;
