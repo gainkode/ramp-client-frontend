@@ -83,6 +83,8 @@ import { CostTabListComponent } from './components/costs/tab-list/cost-tab-list.
 import { BankAccountsComponent } from './components/costs/list/bank-accounts.component';
 import { BankAccountEditorComponent } from './components/costs/details/bank-account-editor.component';
 import { MatRadioModule } from '@angular/material/radio';
+import { BlackListTableComponent } from './components/identification/list/black-list-table.component';
+import { BlackListEditorComponent } from './components/identification/details/black-list-editor.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -142,9 +144,11 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
     BankAccountsComponent, BankAccountEditorComponent,
     IdentificationListComponent,
     IdTableComponent,
+    BlackListTableComponent,
     LevelTableComponent,
     KycEditorComponent,
     LevelEditorComponent,
+    BlackListEditorComponent,
     ReconciliationComponent,
     SystemUserListComponent,
     SystemUserSingleComponent,

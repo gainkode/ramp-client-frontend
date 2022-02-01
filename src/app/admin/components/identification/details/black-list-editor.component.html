@@ -1,0 +1,38 @@
+<h2>{{create ? "Add country" : "Remove country"}}</h2>
+
+<form [formGroup]="dataForm" (ngSubmit)="onSubmit()">
+    <div class="form-element" *ngIf="errorMessage!==''">
+        <div class="form-error-box">
+            {{errorMessage}}
+        </div>
+        <br>
+    </div>
+
+    <app-details-attribute *ngIf="create===false" label="Country" [value]="countryName"></app-details-attribute>
+
+    <!-- Target values -->
+    <mat-form-field *ngIf="create===true" class="form-element">
+        <mat-label>Select country to add</mat-label>
+        <mat-select formControlName="id" required>
+            <mat-option *ngFor="let item of dataList" [value]="item.id">
+                {{item.title}}
+            </mat-option>
+        </mat-select>
+        <mat-error *ngIf="dataForm.get('id')?.hasError('required')">
+            Please specify a country
+        </mat-error>
+    </mat-form-field>
+
+    <div class="panel-actions">
+        <button mat-flat-button color="primary" *ngIf="create" type="submit">
+            SAVE
+        </button>
+        <button *ngIf="create==false" mat-flat-button color="warn" (click)="onDeleteItem()">
+            REMOVE
+        </button>
+        <button mat-flat-button (click)="onCancel()">
+            CANCEL
+        </button>
+    </div>
+
+</form>

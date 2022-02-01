@@ -22,7 +22,7 @@ import { LayoutService } from '../../../services/layout.service';
 @Component({
   selector: 'app-kyc-editor',
   templateUrl: 'kyc-editor.component.html',
-  styleUrls: ['kyc-editor.component.scss', '../list/identification-list.component.scss']
+  styleUrls: ['kyc-editor.component.scss', '../tab-list/identification-list.component.scss']
 })
 export class KycEditorComponent implements OnInit, OnDestroy {
   @Input()

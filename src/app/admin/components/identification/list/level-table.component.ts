@@ -4,7 +4,7 @@ import { KycLevel } from 'src/app/model/identification.model';
 @Component({
   selector: 'app-level-table',
   templateUrl: 'level-table.component.html',
-  styleUrls: ['list/identification-list.component.scss']
+  styleUrls: ['../tab-list/identification-list.component.scss']
 })
 export class LevelTableComponent {
   @Input() levels: KycLevel[] = [];

@@ -7,6 +7,8 @@ import { Subscription } from 'rxjs';
 import { KycLevel, KycScheme } from 'src/app/model/identification.model';
 import { take } from 'rxjs/operators';
 import { LayoutService } from 'src/app/admin/services/layout.service';
+import { CommonTargetValue } from 'src/app/model/common.model';
+import { CountryFilterList } from 'src/app/model/country-code.model';
 
 @Component({
   templateUrl: 'identification-list.component.html',
@@ -14,20 +16,22 @@ import { LayoutService } from 'src/app/admin/services/layout.service';
 })
 export class IdentificationListComponent implements OnInit, OnDestroy {
   @Output() changeEditMode = new EventEmitter<boolean>();
-  private pSettingsSubscription!: any;
-  private pLevelsSubscription!: any;
   private pEditMode = false;
   inProgress = false;
   errorMessage = '';
   levelEditorErrorMessage = '';
   schemeEditorErrorMessage = '';
+  blackListEditorErrorMessage = '';
   selectedTab = 0;
   createScheme = false;
   createLevel = false;
+  createBlackItem = false;
   selectedScheme: KycScheme | null = null;
   selectedLevel: KycLevel | null = null;
+  selectedBlackItem: CommonTargetValue | null = null;
   schemes: KycScheme[] = [];
   levels: KycLevel[] = [];
+  blackList: CommonTargetValue[] = [];
 
   private subscriptions: Subscription = new Subscription();
 
@@ -66,20 +70,13 @@ export class IdentificationListComponent implements OnInit, OnDestroy {
     this.showSchemeEditor(null, false, false);
     if (this.selectedTab === 0) {
       // Levels
-      const s: Subscription = this.pLevelsSubscription;
-      if (s !== undefined) {
-        this.refreshLevelList();
-      } else {
-        this.loadLevelList();
-      }
-    } else {
+      this.loadLevelList();
+    } else if (this.selectedTab === 1) {
       // Schemes
-      const s: Subscription = this.pSettingsSubscription;
-      if (s !== undefined) {
-        this.refreshSchemeList();
-      } else {
-        this.loadSchemeList();
-      }
+      this.loadSchemeList();
+    } else {
+      // Black list
+      this.loadBlackListList();
     }
   }
 
@@ -92,13 +89,6 @@ export class IdentificationListComponent implements OnInit, OnDestroy {
     );
   }
 
-  refreshSchemeList(): void {
-    const settingsData = this.adminService.getKycSettings();
-    if (settingsData !== null) {
-      this.loadSchemeList();
-    }
-  }
-
   loadLevelList(): void {
     const listData$ = this.adminService.getKycLevels(null).pipe(take(1));
     this.subscriptions.add(
@@ -108,8 +98,8 @@ export class IdentificationListComponent implements OnInit, OnDestroy {
     );
   }
 
-  refreshLevelList(): void {
-    this.loadLevelList();
+  loadBlackListList(): void {
+    this.blackList = CountryFilterList;
   }
 
   private setEditMode(mode: boolean): void {
@@ -131,6 +121,16 @@ export class IdentificationListComponent implements OnInit, OnDestroy {
     let selected = false;
     if (this.selectedLevel !== null) {
       if (this.selectedLevel.id === levelId) {
+        selected = true;
+      }
+    }
+    return selected;
+  }
+
+  private isSelectedBlackItem(itemId: string): boolean {
+    let selected = false;
+    if (this.selectedBlackItem !== null) {
+      if (this.selectedBlackItem.id === itemId) {
         selected = true;
       }
     }
@@ -163,6 +163,25 @@ export class IdentificationListComponent implements OnInit, OnDestroy {
     }
   }
 
+  private showBlackListEditor(item: CommonTargetValue | null, createNew: boolean, visible: boolean): void {
+
+    console.log('showBlackListEditor', item, createNew, visible, this.selectedTab);
+
+    if (visible) {
+      this.selectedBlackItem = item ?? {
+        id: '',
+        title: ''
+      } as CommonTargetValue;
+      this.createBlackItem = createNew;
+      if (createNew) {
+        this.setEditMode(true);
+      }
+    } else {
+      this.selectedBlackItem = null;
+      this.setEditMode(false);
+    }
+  }
+
   toggleSchemeDetails(scheme: KycScheme): void {
     let show = true;
     if (this.isSelectedScheme(scheme.id)) {
@@ -179,12 +198,24 @@ export class IdentificationListComponent implements OnInit, OnDestroy {
     this.showLevelEditor(level, false, show);
   }
 
+  toggleBlackItemDetails(item: CommonTargetValue): void {
+    let show = true;
+    if (this.isSelectedBlackItem(item.id)) {
+      show = false;
+    }
+    this.showBlackListEditor(item, false, show);
+  }
+
   createNewScheme(): void {
     this.showSchemeEditor(null, true, true);
   }
 
   createNewLevel(): void {
     this.showLevelEditor(null, true, true);
+  }
+
+  createNewBlackItem(): void {
+    this.showBlackListEditor(null, true, true);
   }
 
   onEditorFormChanged(mode: boolean): void {
@@ -194,8 +225,10 @@ export class IdentificationListComponent implements OnInit, OnDestroy {
   onCancelEdit(): void {
     this.createScheme = false;
     this.createLevel = false;
+    this.createBlackItem = false;
     this.showSchemeEditor(null, false, false);
     this.showLevelEditor(null, false, false);
+    this.showBlackListEditor(null, false, false);
     this.setEditMode(false);
   }
 
@@ -207,7 +240,7 @@ export class IdentificationListComponent implements OnInit, OnDestroy {
       requestData$.subscribe(({ data }) => {
         this.inProgress = false;
         this.showSchemeEditor(null, false, false);
-        this.refreshSchemeList();
+        this.loadSchemeList();
       }, (error) => {
         this.inProgress = false;
         if (this.auth.token !== '') {
@@ -228,7 +261,7 @@ export class IdentificationListComponent implements OnInit, OnDestroy {
       requestData$.subscribe(({ data }) => {
         this.inProgress = false;
         this.showLevelEditor(null, false, false);
-        this.refreshLevelList();
+        this.loadLevelList();
       }, (error) => {
         this.inProgress = false;
         if (this.auth.token !== '') {
@@ -241,6 +274,10 @@ export class IdentificationListComponent implements OnInit, OnDestroy {
     );
   }
 
+  onDeleteBlackItem(id: string): void {
+    
+  }
+
   onSavedScheme(scheme: KycScheme): void {
     this.schemeEditorErrorMessage = '';
     this.inProgress = true;
@@ -251,7 +288,7 @@ export class IdentificationListComponent implements OnInit, OnDestroy {
         this.setEditMode(false);
         this.showSchemeEditor(null, false, false);
         this.createScheme = false;
-        this.refreshSchemeList();
+        this.loadSchemeList();
       }, (error) => {
         this.inProgress = false;
         if (this.auth.token !== '') {
@@ -274,7 +311,7 @@ export class IdentificationListComponent implements OnInit, OnDestroy {
         this.setEditMode(false);
         this.showLevelEditor(null, false, false);
         this.createLevel = false;
-        this.refreshLevelList();
+        this.loadLevelList();
       }, (error) => {
         this.inProgress = false;
         if (this.auth.token !== '') {
@@ -287,8 +324,13 @@ export class IdentificationListComponent implements OnInit, OnDestroy {
     );
   }
 
+  onSavedBlackItem(item: CommonTargetValue): void {
+    
+  }
+
   handleDetailsPanelClosed(): void {
     this.selectedScheme = null;
     this.selectedLevel = null;
+    this.selectedBlackItem = null;
   }
 }

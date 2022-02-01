@@ -106,6 +106,24 @@
   min-width: 1.5em;
 }
 
+.mat-column-black-list-table-details {
+  flex: 0 0 2%;
+  width: 2%;
+  min-width: 1.5em;
+}
+
+.mat-column-black-list-table-id {
+  flex: 0 0 8%;
+  width: 8%;
+  min-width: 1.5em;
+}
+
+.mat-column-black-list-table-name {
+  flex: 0 0 90%;
+  width: 90%;
+  min-width: 1.5em;
+}
+
 .target-tab-box {
   overflow: hidden;
 }

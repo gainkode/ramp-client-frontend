@@ -4,7 +4,7 @@ import { KycScheme } from 'src/app/model/identification.model';
 @Component({
   selector: 'app-identification-table',
   templateUrl: 'id-table.component.html',
-  styleUrls: ['list/identification-list.component.scss']
+  styleUrls: ['../tab-list/identification-list.component.scss']
 })
 export class IdTableComponent {
   @Input() schemes: KycScheme[] = [];
