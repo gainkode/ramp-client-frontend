@@ -9,7 +9,7 @@ import { UserTypeList } from 'src/app/model/payment.model';
 @Component({
   selector: 'app-level-editor',
   templateUrl: 'level-editor.component.html',
-  styleUrls: ['level-editor.component.scss', 'list/identification-list.component.scss']
+  styleUrls: ['level-editor.component.scss', '../list/identification-list.component.scss']
 })
 export class LevelEditorComponent implements OnInit, OnDestroy {
   @Input()

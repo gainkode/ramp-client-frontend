@@ -6,6 +6,7 @@ import { ErrorService } from '../../../../services/error.service';
 import { Subscription } from 'rxjs';
 import { KycLevel, KycScheme } from 'src/app/model/identification.model';
 import { take } from 'rxjs/operators';
+import { LayoutService } from 'src/app/admin/services/layout.service';
 
 @Component({
   templateUrl: 'identification-list.component.html',
@@ -35,6 +36,7 @@ export class IdentificationListComponent implements OnInit, OnDestroy {
   }
 
   constructor(
+    private layoutService: LayoutService,
     private auth: AuthService,
     private errorHandler: ErrorService,
     private adminService: AdminDataService,
@@ -42,6 +44,11 @@ export class IdentificationListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.subscriptions.add(
+      this.layoutService.rightPanelCloseRequested$.subscribe(() => {
+        this.onCancelEdit();
+      })
+    );
     this.loadData();
   }
 

@@ -7,22 +7,22 @@ import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material
 import { MatChipInputEvent } from '@angular/material/chips';
 import {
   SettingsKycTargetFilterType, KycProvider, UserMode, UserType
-} from '../../../model/generated-models';
+} from '../../../../model/generated-models';
 import {
   KycTargetFilterList, UserTypeList, UserModeList, KycProviderList, KycLevelView
 } from 'src/app/model/payment.model';
 import { CommonTargetValue, TargetParams } from 'src/app/model/common.model';
 import { CountryFilterList, getCountry } from 'src/app/model/country-code.model';
 import { KycScheme } from 'src/app/model/identification.model';
-import { AdminDataService } from '../../services/admin-data.service';
+import { AdminDataService } from '../../../services/admin-data.service';
 import { TransactionSourceFilterList } from 'src/app/model/fee-scheme.model';
-import { Filter } from '../../model/filter.model';
-import { LayoutService } from '../../services/layout.service';
+import { Filter } from '../../../model/filter.model';
+import { LayoutService } from '../../../services/layout.service';
 
 @Component({
   selector: 'app-kyc-editor',
   templateUrl: 'kyc-editor.component.html',
-  styleUrls: ['kyc-editor.component.scss', 'list/identification-list.component.scss']
+  styleUrls: ['kyc-editor.component.scss', '../list/identification-list.component.scss']
 })
 export class KycEditorComponent implements OnInit, OnDestroy {
   @Input()
@@ -284,7 +284,7 @@ export class KycEditorComponent implements OnInit, OnDestroy {
       this.schemeForm.get('name')?.setValue(scheme?.name);
       this.schemeForm.get('description')?.setValue(scheme?.description);
       this.schemeForm.get('isDefault')?.setValue(scheme?.isDefault);
-      this.schemeForm.get('level')?.setValue(scheme?.level.settingsKycLevelId);
+      this.schemeForm.get('level')?.setValue(scheme?.level?.settingsKycLevelId ?? '');
       this.schemeForm.get('target')?.setValue(scheme?.target);
       this.targetType = scheme?.target ?? SettingsKycTargetFilterType.None;
       if (this.targetType === SettingsKycTargetFilterType.AccountId) {

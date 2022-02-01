@@ -5,7 +5,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AdminGuard } from './admin.guard';
 import { CustomerListComponent } from './components/customers/list/customer-list.component';
 import { NotificationListComponent } from './components/notifications/list/notification-list.component';
-import { IdentificationListComponent } from './components/identification/list/identification-list.component';
+import { IdentificationListComponent } from './components/identification/tab-list/identification-list.component';
 import { ReconciliationComponent } from './components/reconciliation/reconciliation.component';
 import { WidgetListComponent } from './components/widgets/list/widget-list.component';
 import { TransactionListComponent } from './components/transactions/list/transaction-list.component';
