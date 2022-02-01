@@ -8,7 +8,8 @@ import { KycLevel, KycScheme } from 'src/app/model/identification.model';
 import { take } from 'rxjs/operators';
 import { LayoutService } from 'src/app/admin/services/layout.service';
 import { CommonTargetValue } from 'src/app/model/common.model';
-import { CountryFilterList } from 'src/app/model/country-code.model';
+import { CountryFilterList, getCountry, getCountryByCode2, getCountryByCode3 } from 'src/app/model/country-code.model';
+import { BlackCountryListResult } from 'src/app/model/generated-models';
 
 @Component({
   templateUrl: 'identification-list.component.html',
@@ -99,7 +100,25 @@ export class IdentificationListComponent implements OnInit, OnDestroy {
   }
 
   loadBlackListList(): void {
-    this.blackList = CountryFilterList;
+    const listData$ = this.adminService.getCountryBlackList().valueChanges.pipe(take(1));
+    this.subscriptions.add(
+      listData$.subscribe(({ data }) => {
+        const responseData = data.getCountryBlackList as BlackCountryListResult;
+        let itemCount = 0;
+        if (responseData !== null) {
+          itemCount = responseData?.count ?? 0;
+          if (itemCount > 0) {
+            this.blackList = responseData?.list?.map((val) => {
+              const c = getCountryByCode2(val.countryCode2);
+              return {
+                id: c?.code3 ?? '',
+                title: c?.name ?? ''
+              }
+            }) as CommonTargetValue[];
+          }
+        }
+      })
+    );
   }
 
   private setEditMode(mode: boolean): void {
@@ -164,9 +183,6 @@ export class IdentificationListComponent implements OnInit, OnDestroy {
   }
 
   private showBlackListEditor(item: CommonTargetValue | null, createNew: boolean, visible: boolean): void {
-
-    console.log('showBlackListEditor', item, createNew, visible, this.selectedTab);
-
     if (visible) {
       this.selectedBlackItem = item ?? {
         id: '',
@@ -275,7 +291,27 @@ export class IdentificationListComponent implements OnInit, OnDestroy {
   }
 
   onDeleteBlackItem(id: string): void {
-    
+    const c = getCountryByCode3(id);
+    if (c) {
+      this.blackListEditorErrorMessage = '';
+      this.inProgress = true;
+      const requestData$ = this.adminService.deleteBlackCountry(c.code2);
+      this.subscriptions.add(
+        requestData$.subscribe(({ data }) => {
+          this.inProgress = false;
+          this.showBlackListEditor(null, false, false);
+          this.loadBlackListList();
+        }, (error) => {
+          this.inProgress = false;
+          if (this.auth.token !== '') {
+            this.blackListEditorErrorMessage = this.errorHandler.getError(error.message,
+              'Unable to remove a country from the black list');
+          } else {
+            this.router.navigateByUrl('/');
+          }
+        })
+      );
+    }
   }
 
   onSavedScheme(scheme: KycScheme): void {
@@ -325,7 +361,29 @@ export class IdentificationListComponent implements OnInit, OnDestroy {
   }
 
   onSavedBlackItem(item: CommonTargetValue): void {
-    
+    this.blackListEditorErrorMessage = '';
+    this.inProgress = true;
+    const c = getCountryByCode3(item.id);
+    if (c) {
+      const requestData$ = this.adminService.addBlackCountry(c.code2);
+      this.subscriptions.add(
+        requestData$.subscribe(({ data }) => {
+          this.inProgress = false;
+          this.setEditMode(false);
+          this.showBlackListEditor(null, false, false);
+          this.createBlackItem = false;
+          this.loadBlackListList();
+        }, (error) => {
+          this.inProgress = false;
+          if (this.auth.token !== '') {
+            this.blackListEditorErrorMessage = this.errorHandler.getError(error.message,
+              'Unable to add a country to the black list');
+          } else {
+            this.router.navigateByUrl('/');
+          }
+        })
+      );
+    }
   }
 
   handleDetailsPanelClosed(): void {

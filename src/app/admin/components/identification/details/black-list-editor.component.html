@@ -27,7 +27,7 @@
         <button mat-flat-button color="primary" *ngIf="create" type="submit">
             SAVE
         </button>
-        <button *ngIf="create==false" mat-flat-button color="warn" (click)="onDeleteItem()">
+        <button *ngIf="create==false" mat-flat-button color="warn" type="button" (click)="onDeleteItem()">
             REMOVE
         </button>
         <button mat-flat-button (click)="onCancel()">

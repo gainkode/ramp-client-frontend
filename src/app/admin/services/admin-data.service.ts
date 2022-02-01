@@ -2,15 +2,16 @@ import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef, WatchQueryOptions } from 'apollo-angular';
 import { EmptyObject } from 'apollo-angular/types';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
-import { CostScheme, WireTransferBankAccountItem } from '../../model/cost-scheme.model';
+import { CostScheme } from '../../model/cost-scheme.model';
 import { FeeScheme } from '../../model/fee-scheme.model';
 import {
   AssetAddress,
   AssetAddressListResult,
+  BlackCountry,
+  BlackCountryListResult,
   CountryCodeType,
   DashboardStats,
   KycInfo,
-  PaymentProvider,
   QueryGetDashboardStatsArgs,
   QueryGetNotificationsArgs, QueryGetRiskAlertsArgs,
   QueryGetSettingsFeeArgs,
@@ -31,18 +32,16 @@ import {
   Transaction,
   TransactionListResult,
   TransactionUpdateTransferOrderChanges,
-  User,
   UserInput,
   UserListResult,
   UserNotificationLevel,
   UserNotificationListResult,
   UserState,
   UserType,
-  Widget,
   WidgetListResult,
   WireTransferBankAccount
 } from '../../model/generated-models';
-import { KycLevel, KycScheme, TierItem } from '../../model/identification.model';
+import { KycLevel, KycScheme } from '../../model/identification.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TransactionItemDeprecated } from '../../model/transaction.model';
 import { catchError, finalize, map, tap } from 'rxjs/operators';
@@ -56,6 +55,7 @@ import { WalletItem } from '../model/wallet.model';
 import { NotificationItem } from '../../model/notification.model';
 import { WidgetItem } from '../model/widget.model';
 import { RiskAlertItem } from '../model/risk-alert.model';
+import { CommonTargetValue } from 'src/app/model/common.model';
 
 /* region queries */
 
@@ -327,6 +327,17 @@ const GET_NOTIFICATIONS = gql`
       }
     }
   }
+`;
+
+const GET_COUNTRY_BLACK_LIST = gql`
+query GetCountryBlackList {
+  getCountryBlackList {
+    count
+    list {
+      countryCode2
+    }
+  }
+}
 `;
 
 const GET_RISK_ALERTS = gql`
@@ -918,6 +929,18 @@ const ADD_KYC_LEVEL_SETTINGS = gql`
   }
 `;
 
+const ADD_BLACK_COUNTRY = gql`
+mutation AddBlackCountry(
+  $countryCode2: String!
+) {
+  addBlackCountry(
+    countryCode2: $countryCode2
+  ) {
+    countryCode2
+  }
+}
+`;
+
 const CREATE_WIDGET = gql`
   mutation CreateWidget(
     $userId: String!
@@ -988,6 +1011,18 @@ const UPDATE_WIDGET = gql`
       }
     ) {
       widgetId
+    }
+  }
+`;
+
+const DELETE_BLACK_COUNTRY = gql`
+  mutation DeleteBlackCountry(
+    $countryCode2: String!
+  ) {
+    deleteBlackCountry(
+      countryCode2: $countryCode2
+    ) {
+      countryCode2
     }
   }
 `;
@@ -1556,6 +1591,13 @@ export class AdminDataService {
           }
         })
       );
+  }
+
+  getCountryBlackList(): QueryRef<any, EmptyObject> {
+    return this.apollo.watchQuery<any>({
+      query: GET_COUNTRY_BLACK_LIST,
+      fetchPolicy: 'network-only'
+    });
   }
 
   getNotifications(
@@ -2141,6 +2183,15 @@ export class AdminDataService {
       });
   }
 
+  addBlackCountry(code: string): Observable<any> {
+    return this.apollo.mutate({
+      mutation: ADD_BLACK_COUNTRY,
+      variables: {
+        countryCode2: code
+      }
+    });
+  }
+
   saveWidget(widget: WidgetItem): Observable<any> {
     return !widget.id
       ? this.apollo.mutate({
@@ -2281,6 +2332,15 @@ export class AdminDataService {
       mutation: DELETE_KYC_LEVEL_SETTINGS,
       variables: {
         settingsId
+      }
+    });
+  }
+
+  deleteBlackCountry(code: string): Observable<any> {
+    return this.apollo.mutate({
+      mutation: DELETE_BLACK_COUNTRY,
+      variables: {
+        countryCode2: code
       }
     });
   }
