@@ -1952,10 +1952,6 @@ export class AdminDataService {
       first: takeItems,
       orderBy: orderFields
     };
-
-    console.log(vars);
-
-
     return this.watchQuery<{ getWidgets: WidgetListResult }, QueryGetWidgetsArgs>({
       query: GET_WIDGETS,
       variables: vars,

@@ -60,11 +60,6 @@ export class BankAccountEditorComponent implements OnInit {
 
   setFormData(account: WireTransferBankAccountItem | null): void {
     this.accountForm.reset();
-
-
-    console.log(account);
-
-
     if (account !== null) {
       this.accountForm.get('name')?.setValue(account.name);
       this.accountForm.get('description')?.setValue(account.description);
