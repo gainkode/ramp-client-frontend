@@ -3,7 +3,7 @@ import { CommonTargetValue } from './common.model';
 import {
     PaymentInstrument, PaymentProvider, TransactionType, TransactionStatus,
     SettingsFeeTargetFilterType, SettingsCostTargetFilterType, SettingsKycTargetFilterType,
-    UserType, KycProvider, UserMode, SettingsCurrency, Rate, TransactionSource, UserNotificationCodes, CustodyProvider, TransactionKycStatus, RiskLevel, PaymentProviderByInstrument, AccountStatus, KycStatus
+    UserType, KycProvider, UserMode, SettingsCurrency, Rate, TransactionSource, UserNotificationCodes, CustodyProvider, TransactionKycStatus, RiskLevel, PaymentProviderByInstrument, AccountStatus, KycStatus, AdminTransactionStatus
 } from './generated-models';
 import { WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from './payment-base.model';
 
@@ -66,6 +66,11 @@ export class TransactionSourceView {
 
 export class TransactionStatusView {
     id!: TransactionStatus;
+    name = '';
+}
+
+export class AdminTransactionStatusView {
+    id!: AdminTransactionStatus;
     name = '';
 }
 
@@ -255,8 +260,8 @@ export const TransactionStatusList: Array<TransactionStatusView> = [
     { id: TransactionStatus.Paid, name: 'Paid' },
     { id: TransactionStatus.AddressDeclined, name: 'Address declined' },
     { id: TransactionStatus.PaymentDeclined, name: 'Payment declined' },
-    { id: TransactionStatus.ExchangeDeclined, name: 'Exchange Declined' },
-    { id: TransactionStatus.TransferDeclined, name: 'Transfer Declined' },
+    { id: TransactionStatus.ExchangeDeclined, name: 'Exchange declined' },
+    { id: TransactionStatus.TransferDeclined, name: 'Transfer declined' },
     { id: TransactionStatus.Exchanging, name: 'Exchanging' },
     { id: TransactionStatus.Exchanged, name: 'Exchanged' },
     { id: TransactionStatus.TransferBenchmarkWaiting, name: 'Transfer benchmark waiting' },
@@ -266,8 +271,25 @@ export const TransactionStatusList: Array<TransactionStatusView> = [
     { id: TransactionStatus.Sent, name: 'Sent' },
     { id: TransactionStatus.Completed, name: 'Completed' },
     { id: TransactionStatus.Abandoned, name: 'Abandoned' },
-    { id: TransactionStatus.Canceled, name: 'Canceled' },
+    { id: TransactionStatus.Canceled, name: 'Cancelled' },
     { id: TransactionStatus.Chargeback, name: 'Chargeback' }
+];
+
+export const AdminTransactionStatusList: Array<AdminTransactionStatusView> = [
+    { id: AdminTransactionStatus.New, name: 'New' },
+    { id: AdminTransactionStatus.Pending, name: 'Pending' },
+    { id: AdminTransactionStatus.Paid, name: 'Paid' },
+    { id: AdminTransactionStatus.Exchanging, name: 'Exchanging' },
+    { id: AdminTransactionStatus.Confirming, name: 'Confirming' },
+    { id: AdminTransactionStatus.Completed, name: 'Completed' },
+    { id: AdminTransactionStatus.Abandoned, name: 'Abandoned' },
+    { id: AdminTransactionStatus.Canceled, name: 'Cancelled' },
+    { id: AdminTransactionStatus.Chargeback, name: 'Chargeback' },
+    { id: AdminTransactionStatus.PaymentDeclined, name: 'Payment declined' },
+    { id: AdminTransactionStatus.AddressDeclined, name: 'Address declined' },
+    { id: AdminTransactionStatus.ExchangeDeclined, name: 'Exchange declined' },
+    { id: AdminTransactionStatus.TransferDeclined, name: 'Transfer declined' },
+    { id: AdminTransactionStatus.BenchmarkTransferDeclined, name: 'Benchmark transfer declined' }
 ];
 
 export const TransactionKycStatusList: Array<TransactionKycStatusView> = [

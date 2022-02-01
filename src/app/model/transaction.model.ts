@@ -3,6 +3,7 @@ import { getCurrencySign, getTransactionStatusHash } from '../utils/utils';
 import { CommonTargetValue } from './common.model';
 import {
   AccountStatus,
+  AdminTransactionStatus,
   PaymentInstrument,
   Transaction,
   TransactionKycStatus,
@@ -23,6 +24,8 @@ import {
   UserModeShortList,
   TransactionKycStatusList,
   UserTypeList,
+  AdminTransactionStatusList,
+  TransactionStatusList,
 } from './payment.model';
 import { UserItem } from './user.model';
 
@@ -160,27 +163,35 @@ export class TransactionItemDeprecated {
 
   private getTransactionStatusColor(): string {
     let color = 'white';
-    switch (this.statusInfo?.value.userStatus) {
-      case UserTransactionStatus.New:
+    switch (this.statusInfo?.value.adminStatus) {
+      case AdminTransactionStatus.New:
         color = 'white';
         break;
-      case UserTransactionStatus.Processing:
+      case AdminTransactionStatus.Pending:
         color = 'grey';
         break;
-      case UserTransactionStatus.SendingError:
-        color = 'purple';
+      case AdminTransactionStatus.Paid:
+        color = 'orange';
         break;
-      case UserTransactionStatus.Declined:
-      case UserTransactionStatus.Canceled:
-        color = 'red';
-        break;
-      case UserTransactionStatus.Confirming:
+      case AdminTransactionStatus.Exchanging:
         color = 'blue';
         break;
-      case UserTransactionStatus.Completed:
+      case AdminTransactionStatus.Confirming:
+        color = 'purple';
+        break;
+      case AdminTransactionStatus.Completed:
         color = 'green';
         break;
-      case UserTransactionStatus.UnderReview:
+      case AdminTransactionStatus.Abandoned:
+      case AdminTransactionStatus.Canceled:
+      case AdminTransactionStatus.Chargeback:
+      case AdminTransactionStatus.PaymentDeclined:
+        color = 'red';
+        break;
+      case AdminTransactionStatus.AddressDeclined:
+      case AdminTransactionStatus.ExchangeDeclined:
+      case AdminTransactionStatus.TransferDeclined:
+      case AdminTransactionStatus.BenchmarkTransferDeclined:
         color = 'yellow';
         break;
       default:
@@ -204,15 +215,17 @@ export class TransactionItemDeprecated {
   }
 
   get transactionTypeName(): string {
-    return TransactionTypeList.find((t) => t.id === this.type)?.name as string;
+    return TransactionTypeList.find((t) => t.id === this.type)?.name ?? '';
   }
 
   get transactionSourceName(): string {
-    return TransactionSourceList.find((t) => t.id === this.source)?.name as string;
+    return TransactionSourceList.find((t) => t.id === this.source)?.name ?? '';
   }
 
   get transactionStatusName(): string {
-    return this.statusInfo?.value.userStatus.toString() ?? '';
+    const adminStatus = AdminTransactionStatusList.find((t) => t.id === this.statusInfo?.value.adminStatus)?.name ?? 'Unknown';
+    const transactionStatus = TransactionStatusList.find((t) => t.id === this.statusInfo?.key)?.name ?? 'Unknown';
+    return `${adminStatus} (${transactionStatus})`;
   }
 
   get instrumentName(): string {

@@ -8,8 +8,8 @@ import { AdminDataService } from 'src/app/admin/services/admin-data.service';
 import { LayoutService } from 'src/app/admin/services/layout.service';
 import { DeleteDialogBox } from 'src/app/components/dialogs/delete-box.dialog';
 import { YesNoDialogBox } from 'src/app/components/dialogs/yesno-box.dialog';
-import { AccountStatus, KycStatus, Rate, Transaction, TransactionKycStatus, TransactionStatus, TransactionType, TransferOrder } from 'src/app/model/generated-models';
-import { CurrencyView, TransactionKycStatusList, TransactionStatusList, UserStatusList } from 'src/app/model/payment.model';
+import { AccountStatus, KycStatus, Rate, Transaction, TransactionKycStatus, TransactionStatus, TransactionStatusDescriptorMap, TransactionType } from 'src/app/model/generated-models';
+import { AdminTransactionStatusList, CurrencyView, TransactionKycStatusList, TransactionStatusList, TransactionStatusView, UserStatusList } from 'src/app/model/payment.model';
 import { TransactionItemDeprecated } from 'src/app/model/transaction.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ExchangeRateService } from 'src/app/services/rate.service';
@@ -28,6 +28,22 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
     this.layoutService.setBackdrop(!val?.id);
   }
   @Input() cancelable = false;
+  @Input() set userStatuses(list: TransactionStatusDescriptorMap[]) {
+    this.transactionStatuses = TransactionStatusList.map(data => {
+      const status = list.find(x => x.key === data.id);
+      const adminStatus = status?.value.adminStatus;
+      const statusName = data.name;
+      let adminStatusName = 'Unknown';
+      if (adminStatus) {
+        adminStatusName = AdminTransactionStatusList.find(x => x.id === adminStatus)?.name ?? 'Unknown';
+      }
+      status?.value.adminStatus ?? 'Unknown';
+      return {
+        id: data.id,
+        name: `${adminStatusName} (${statusName})`
+      } as TransactionStatusView;
+    });
+  }
   @Input() set currencies(list: CurrencyView[]) {
     this.pCurrencies = list;
     this.setCurrencies(list);
@@ -43,7 +59,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
   data: TransactionItemDeprecated | undefined = undefined;
   accountStatuses = UserStatusList;
   kycStatuses = TransactionKycStatusList;
-  transactionStatuses = TransactionStatusList;
+  transactionStatuses: TransactionStatusView[] = [];
   removable = false;
   transactionId = '';
   currenciesToSpend: CurrencyView[] = [];
@@ -188,9 +204,9 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
   }
 
   updateTransaction(transaction: Transaction, restartTransaction: boolean): void {
-    const requestData = this.adminService.updateTransaction(transaction, restartTransaction);
+    const requestData$ = this.adminService.updateTransaction(transaction, restartTransaction);
     this.subscriptions.add(
-      requestData.subscribe(({ data }) => {
+      requestData$.subscribe(({ data }) => {
         this.save.emit();
       }, (error) => {
         if (this.auth.token === '') {

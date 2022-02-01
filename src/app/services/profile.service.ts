@@ -92,6 +92,7 @@ query GetTransactionStatuses {
       description
       userStatus
       level
+      adminStatus
     }
   }    
 }
