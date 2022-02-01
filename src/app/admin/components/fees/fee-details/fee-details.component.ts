@@ -273,12 +273,14 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
 
   private getPaymentProviders(): void {
     this.providers = [];
-    this.adminDataService.getProviders()?.valueChanges.subscribe(({ data }) => {
-      const providers = data.getPaymentProviders as PaymentProvider[];
-      this.providers = providers?.map((val) => new PaymentProviderView(val)) as PaymentProviderView[];
-    }, (error) => {
-      this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load wallet list');
-    });
+    this.subscriptions.add(
+      this.adminDataService.getProviders()?.valueChanges.subscribe(({ data }) => {
+        const providers = data.getPaymentProviders as PaymentProvider[];
+        this.providers = providers?.map((val) => new PaymentProviderView(val)) as PaymentProviderView[];
+      }, (error) => {
+        this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load wallet list');
+      })
+    );
   }
 
   private loadCostSchemeList(): void {
@@ -353,19 +355,23 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
         const filter = new Filter({
           users: scheme?.targetValues
         });
-        this.getFilteredAccounts(filter).subscribe(result => {
-          this.targetValues = result;
-          this.schemeForm.get('targetValues')?.setValue(result.map(x => x.title));
-        });
+        this.subscriptions.add(
+          this.getFilteredAccounts(filter).subscribe(result => {
+            this.targetValues = result;
+            this.schemeForm.get('targetValues')?.setValue(result.map(x => x.title));
+          })
+        );
         this.updateTarget('');
       } else if (this.targetType === SettingsFeeTargetFilterType.WidgetId) {
         const filter = new Filter({
           widgets: scheme?.targetValues
         });
-        this.getFilteredWidgets(filter).subscribe(result => {
-          this.targetValues = result;
-          this.schemeForm.get('targetValues')?.setValue(result.map(x => x.title));
-        });
+        this.subscriptions.add(
+          this.getFilteredWidgets(filter).subscribe(result => {
+            this.targetValues = result;
+            this.schemeForm.get('targetValues')?.setValue(result.map(x => x.title));
+          })
+        );
         this.updateTarget('');
       } else {
         this.schemeForm.get('targetValues')?.setValue(scheme?.targetValues);
@@ -566,12 +572,14 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
   }
 
   private addTarget(value: string): void {
-    this.filteredTargetValues$?.subscribe(val => {
-      const valueObject = val.find(x => x.title === value);
-      if (valueObject) {
-        this.targetValues.push(valueObject);
-      }
-    });
+    this.subscriptions.add(
+      this.filteredTargetValues$?.subscribe(val => {
+        const valueObject = val.find(x => x.title === value);
+        if (valueObject) {
+          this.targetValues.push(valueObject);
+        }
+      })
+    );
   }
 
   private removeTarget(value: string): void {

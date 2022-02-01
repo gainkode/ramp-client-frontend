@@ -3,6 +3,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { ContactsFilter } from 'src/app/model/filter.model';
 import { UserContactListResult } from 'src/app/model/generated-models';
 import { ProfileItemContainer, ProfileItemContainerType } from 'src/app/model/profile-item.model';
@@ -94,46 +95,42 @@ export class ProfileContactListComponent implements OnDestroy, AfterViewInit {
     private loadContacts(): void {
         this.onError.emit('');
         this.contactCount = 0;
-        const contactsData = this.profileService.getMyContacts(
+        const contactsData$ = this.profileService.getMyContacts(
             this.filter.currencies,
             (this.filter.email === '') ? [] : [this.filter.email],
             (this.filter.userName === '') ? [] : [this.filter.userName],
             this.pageIndex,
             this.pageSize,
             this.getSortedField(),
-            this.sortedDesc);
-        if (contactsData === null) {
-            this.onError.emit(this.errorHandler.getRejectedCookieMessage());
-        } else {
-            this.loading = true;
-            this.onProgress.emit(true);
-            const userFiat = this.auth.user?.defaultFiatCurrency ?? 'EUR';
-            this.pContactsSubscription = contactsData.valueChanges.subscribe(({ data }) => {
-                const contactsItems = data.myContacts as UserContactListResult;
-                if (contactsItems) {
-                    this.contactCount = contactsItems?.count as number;
-                    if (this.contactCount > 0) {
-                        // this.contacts = contactsItems?.list?.filter(x => {
-                        //     return (this.filter.zeroBalance) ? true : x.total ?? 0 > 0;
-                        // }).map((val) => new ContactItem(val)) as ContactItem[];
-                        this.contacts = contactsItems?.list?.map((val) => new ContactItem(val)) as ContactItem[];
-                        this.contactCount = this.contacts.length;
-                    }
+            this.sortedDesc).valueChanges.pipe(take(1));
+        this.loading = true;
+        this.onProgress.emit(true);
+        const userFiat = this.auth.user?.defaultFiatCurrency ?? 'EUR';
+        this.pContactsSubscription = contactsData$.subscribe(({ data }) => {
+            const contactsItems = data.myContacts as UserContactListResult;
+            if (contactsItems) {
+                this.contactCount = contactsItems?.count as number;
+                if (this.contactCount > 0) {
+                    // this.contacts = contactsItems?.list?.filter(x => {
+                    //     return (this.filter.zeroBalance) ? true : x.total ?? 0 > 0;
+                    // }).map((val) => new ContactItem(val)) as ContactItem[];
+                    this.contacts = contactsItems?.list?.map((val) => new ContactItem(val)) as ContactItem[];
+                    this.contactCount = this.contacts.length;
                 }
-                this.loading = false;
-                this.onProgress.emit(false);
-                this.onDataLoaded.emit(this.contactCount > 0);
-            }, (error) => {
-                this.onProgress.emit(false);
-                this.loading = false;
-                if (this.auth.token !== '') {
-                    this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load wallets'));
-                } else {
-                    this.router.navigateByUrl('/');
-                }
-                this.onDataLoaded.emit(false);
-            });
-        }
+            }
+            this.loading = false;
+            this.onProgress.emit(false);
+            this.onDataLoaded.emit(this.contactCount > 0);
+        }, (error) => {
+            this.onProgress.emit(false);
+            this.loading = false;
+            if (this.auth.token !== '') {
+                this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load wallets'));
+            } else {
+                this.router.navigateByUrl('/');
+            }
+            this.onDataLoaded.emit(false);
+        });
     }
 
     private refresh(): void {

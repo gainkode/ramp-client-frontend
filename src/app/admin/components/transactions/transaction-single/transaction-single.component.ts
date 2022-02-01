@@ -25,7 +25,6 @@ export class TransactionSingleComponent implements OnInit, OnDestroy {
   constructor(
     private auth: AuthService,
     private activeRoute: ActivatedRoute,
-    private errorHandler: ErrorService,
     private commonDataService: CommonDataService,
     private adminService: AdminDataService,
     private router: Router
@@ -33,9 +32,11 @@ export class TransactionSingleComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.activeRoute.params.subscribe(routeParams => {
-      this.loadData(routeParams.id);
-    });
+    this.subscriptions.add(
+      this.activeRoute.params.subscribe(routeParams => {
+        this.loadData(routeParams.id);
+      })
+    );
   }
 
   ngOnDestroy(): void {
@@ -54,9 +55,11 @@ export class TransactionSingleComponent implements OnInit, OnDestroy {
         } else {
           this.currencyOptions = [];
         }
-        this.adminService.getTransaction(id).pipe(take(1)).subscribe(transaction => {
-          this.transaction = transaction;
-        });
+        this.subscriptions.add(
+          this.adminService.getTransaction(id).pipe(take(1)).subscribe(transaction => {
+            this.transaction = transaction;
+          })
+        );
       }, (error) => {
         if (this.auth.token === '') {
           this.router.navigateByUrl('/');

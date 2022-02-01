@@ -155,19 +155,23 @@ export class CostEditorComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.filteredTargetValues = of(this.filterTargetValues(''));
-    this.schemeForm.valueChanges.subscribe({
-      next: (result: any) => {
-        if (!this.create && !this.loadingData) {
-          this.formChanged.emit(true);
+    this.subscriptions.add(
+      this.schemeForm.valueChanges.subscribe({
+        next: (result: any) => {
+          if (!this.create && !this.loadingData) {
+            this.formChanged.emit(true);
+          }
         }
-      }
-    });
-    this.schemeForm.get('target')?.valueChanges.subscribe(val => {
-      this.clearTargetValues();
-      this.setTargetValidator();
-      this.filteredTargetValues = this.schemeForm.get('targetValue')?.valueChanges.pipe(startWith(''),
-        map(value => this.filterTargetValues(value)));
-    });
+      })
+    );
+    this.subscriptions.add(
+      this.schemeForm.get('target')?.valueChanges.subscribe(val => {
+        this.clearTargetValues();
+        this.setTargetValidator();
+        this.filteredTargetValues = this.schemeForm.get('targetValue')?.valueChanges.pipe(startWith(''),
+          map(value => this.filterTargetValues(value)));
+      })
+    );
     this.getPaymentProviders();
     this.getWiteTransferAccounts();
   }

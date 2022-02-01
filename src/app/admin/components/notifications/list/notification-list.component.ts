@@ -67,11 +67,13 @@ export class NotificationListComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   ngAfterViewInit(): void {
-    this.sort.sortChange.subscribe(() => {
-      this.sortedDesc = (this.sort.direction === 'desc');
-      this.sortedField = this.sort.active;
-      this.loadData();
-    });
+    this.subscriptions.add(
+      this.sort.sortChange.subscribe(() => {
+        this.sortedDesc = (this.sort.direction === 'desc');
+        this.sortedField = this.sort.active;
+        this.loadData();
+      })
+    );
   }
 
   handleFilterApplied(filter: Filter): void {

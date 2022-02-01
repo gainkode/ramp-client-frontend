@@ -4,6 +4,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { DeleteDialogBox } from 'src/app/components/dialogs/delete-box.dialog';
 import { NotificationsFilter } from 'src/app/model/filter.model';
 import { UserNotificationListResult } from 'src/app/model/generated-models';
@@ -99,32 +100,28 @@ export class ProfileNotificationListComponent implements OnDestroy, AfterViewIni
             this.pageIndex,
             this.pageSize,
             this.getSortedField(),
-            this.sortedDesc);
-        if (notificationsData === null) {
-            this.onError.emit(this.errorHandler.getRejectedCookieMessage());
-        } else {
-            this.onProgress.emit(true);
-            this.pNotificationsSubscription = notificationsData.valueChanges.subscribe(({ data }) => {
-                const dataList = data.myNotifications as UserNotificationListResult;
-                if (dataList !== null) {
-                    this.selectedRows = false;
-                    this.notificationCount = dataList?.count as number;
-                    if (this.notificationCount > 0) {
-                        this.notifications = dataList?.list?.map((val) => {
-                            return new NotificationItem(val);
-                        }) as NotificationItem[];
-                    }
+            this.sortedDesc).valueChanges.pipe(take(1));
+        this.onProgress.emit(true);
+        this.pNotificationsSubscription = notificationsData.subscribe(({ data }) => {
+            const dataList = data.myNotifications as UserNotificationListResult;
+            if (dataList !== null) {
+                this.selectedRows = false;
+                this.notificationCount = dataList?.count as number;
+                if (this.notificationCount > 0) {
+                    this.notifications = dataList?.list?.map((val) => {
+                        return new NotificationItem(val);
+                    }) as NotificationItem[];
                 }
-                this.onProgress.emit(false);
-            }, (error) => {
-                this.onProgress.emit(false);
-                if (this.auth.token !== '') {
-                    this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load notifications'));
-                } else {
-                    this.router.navigateByUrl('/');
-                }
-            });
-        }
+            }
+            this.onProgress.emit(false);
+        }, (error) => {
+            this.onProgress.emit(false);
+            if (this.auth.token !== '') {
+                this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load notifications'));
+            } else {
+                this.router.navigateByUrl('/');
+            }
+        });
     }
 
     private refresh(): void {
@@ -214,11 +211,13 @@ export class ProfileNotificationListComponent implements OnDestroy, AfterViewIni
         this.onError.emit('');
         this.onProgress.emit(true);
         const notificationsDelete = this.profileService.deleteMyNotifications(ids);
-        this.subscriptions.add(notificationsDelete.subscribe(({ data }) => {
-            this.loadNotifications();
-        }, (error) => {
-            this.onProgress.emit(false);
-            this.onError.emit(this.errorHandler.getError(error.message, 'Unable to delete notifications'));
-        }));
+        this.subscriptions.add(
+            notificationsDelete.subscribe(({ data }) => {
+                this.loadNotifications();
+            }, (error) => {
+                this.onProgress.emit(false);
+                this.onError.emit(this.errorHandler.getError(error.message, 'Unable to delete notifications'));
+            })
+        );
     }
 }

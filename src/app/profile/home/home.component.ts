@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { TransactionsFilter } from 'src/app/model/filter.model';
 import { SettingsCurrency, SettingsCurrencyWithDefaults, User } from 'src/app/model/generated-models';
 import { ProfileItemContainer } from 'src/app/model/profile-item.model';
@@ -65,54 +66,49 @@ export class ProfileHomeComponent implements OnInit, OnDestroy {
         this.currencies = [];
         this.fiatCurrencies = [];
         this.inProgressChart = true;
-        const currencyData = this.commonService.getSettingsCurrency();
-        if (currencyData === null) {
-            this.errorMessage = this.errorHandler.getRejectedCookieMessage();
-            this.onShowError.emit(this.errorMessage);
-        } else {
-            this.subscriptions.add(
-                currencyData.valueChanges.subscribe(({ data }) => {
-                    this.inProgressChart = false;
-                    const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
-                    if (startLoading) {
-                        this.selectedFiat = this.auth.user?.defaultFiatCurrency ?? 'EUR';
-                    }
-                    let itemCount = 0;
-                    if (currencySettings.settingsCurrency) {
-                        itemCount = currencySettings.settingsCurrency.count as number;
-                        if (itemCount > 0) {
-                            if (currencySettings.settingsCurrency.list) {
-                                currencySettings.settingsCurrency.list.forEach(x => this.currencies.push(x));
-                                let validFiat = false;
-                                this.currencies.filter(x => x.fiat === true).forEach(x => {
-                                    if (x.symbol === this.selectedFiat) {
-                                        validFiat = true;
-                                    }
-                                    this.fiatCurrencies.push(x);
-                                });
-                                if (startLoading && !validFiat) {
-                                    this.selectedFiat = 'EUR';
+        const currencyData$ = this.commonService.getSettingsCurrency().valueChanges.pipe(take(1));
+        this.subscriptions.add(
+            currencyData$.subscribe(({ data }) => {
+                this.inProgressChart = false;
+                const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
+                if (startLoading) {
+                    this.selectedFiat = this.auth.user?.defaultFiatCurrency ?? 'EUR';
+                }
+                let itemCount = 0;
+                if (currencySettings.settingsCurrency) {
+                    itemCount = currencySettings.settingsCurrency.count as number;
+                    if (itemCount > 0) {
+                        if (currencySettings.settingsCurrency.list) {
+                            currencySettings.settingsCurrency.list.forEach(x => this.currencies.push(x));
+                            let validFiat = false;
+                            this.currencies.filter(x => x.fiat === true).forEach(x => {
+                                if (x.symbol === this.selectedFiat) {
+                                    validFiat = true;
                                 }
-                                if (this.balanceListPanel) {
-                                    this.balanceListPanel.load(this.currencies, this.selectedFiat);
-                                }
+                                this.fiatCurrencies.push(x);
+                            });
+                            if (startLoading && !validFiat) {
+                                this.selectedFiat = 'EUR';
+                            }
+                            if (this.balanceListPanel) {
+                                this.balanceListPanel.load(this.currencies, this.selectedFiat);
                             }
                         }
                     }
-                }, (error) => {
-                    this.inProgressChart = false;
-                    if (this.balanceListPanel) {
-                        this.balanceListPanel.clear();
-                    }
-                    if (this.auth.token !== '') {
-                        this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load currency data');
-                        this.onShowError.emit(this.errorMessage);
-                    } else {
-                        this.router.navigateByUrl('/');
-                    }
-                })
-            );
-        }
+                }
+            }, (error) => {
+                this.inProgressChart = false;
+                if (this.balanceListPanel) {
+                    this.balanceListPanel.clear();
+                }
+                if (this.auth.token !== '') {
+                    this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load currency data');
+                    this.onShowError.emit(this.errorMessage);
+                } else {
+                    this.router.navigateByUrl('/');
+                }
+            })
+        );
     }
 
     currencyChanged(val: string): void {

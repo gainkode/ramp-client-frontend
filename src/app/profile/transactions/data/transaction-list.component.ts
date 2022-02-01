@@ -3,6 +3,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { TransactionsFilter } from 'src/app/model/filter.model';
 import { TransactionShortListResult, TransactionStatusDescriptorMap } from 'src/app/model/generated-models';
 import { ProfileItemContainer, ProfileItemContainerType } from 'src/app/model/profile-item.model';
@@ -110,7 +111,7 @@ export class ProfileTransactionListComponent implements OnDestroy, AfterViewInit
 
     private loadTransactions(): void {
         this.transactionCount = 0;
-        const transactionsData = this.profileService.getMyTransactions(
+        const transactionsData$ = this.profileService.getMyTransactions(
             this.pageIndex,
             this.pageSize,
             this.filter.walletTypes,
@@ -118,32 +119,28 @@ export class ProfileTransactionListComponent implements OnDestroy, AfterViewInit
             this.filter.transactionTypes,
             this.filter.sender,
             this.getSortedField(),
-            this.sortedDesc);
-        if (transactionsData === null) {
-            this.onError.emit(this.errorHandler.getRejectedCookieMessage());
-        } else {
-            this.onProgress.emit(true);
-            this.pTransactionsSubscription = transactionsData.valueChanges.subscribe(({ data }) => {
-                const dataList = data.myTransactions as TransactionShortListResult;
-                if (dataList !== null) {
-                    this.transactionCount = dataList?.count as number;
-                    if (this.transactionCount > 0) {
-                        this.transactions = dataList?.list?.map((val) => {
-                            const status = this.userStatuses.find(x => x.key === val.status);
-                            return new TransactionItem(val, status);
-                        }) as TransactionItem[];
-                    }
+            this.sortedDesc).valueChanges.pipe(take(1));
+        this.onProgress.emit(true);
+        this.pTransactionsSubscription = transactionsData$.subscribe(({ data }) => {
+            const dataList = data.myTransactions as TransactionShortListResult;
+            if (dataList !== null) {
+                this.transactionCount = dataList?.count as number;
+                if (this.transactionCount > 0) {
+                    this.transactions = dataList?.list?.map((val) => {
+                        const status = this.userStatuses.find(x => x.key === val.status);
+                        return new TransactionItem(val, status);
+                    }) as TransactionItem[];
                 }
-                this.onProgress.emit(false);
-            }, (error) => {
-                this.onProgress.emit(false);
-                if (this.auth.token !== '') {
-                    this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load transactions'));
-                } else {
-                    this.router.navigateByUrl('/');
-                }
-            });
-        }
+            }
+            this.onProgress.emit(false);
+        }, (error) => {
+            this.onProgress.emit(false);
+            if (this.auth.token !== '') {
+                this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load transactions'));
+            } else {
+                this.router.navigateByUrl('/');
+            }
+        });
     }
 
     private refresh(): void {
@@ -155,24 +152,20 @@ export class ProfileTransactionListComponent implements OnDestroy, AfterViewInit
     }
 
     private loadTransactionStatuses(): void {
-        const statusListData = this.profileService.getTransactionStatuses();
-        if (statusListData === null) {
-            this.onError.emit(this.errorHandler.getRejectedCookieMessage());
-        } else {
-            this.onProgress.emit(true);
-            this.pStatusSubscription = statusListData.valueChanges.subscribe(({ data }) => {
-                this.userStatuses = data.getTransactionStatuses as TransactionStatusDescriptorMap[];
-                this.onProgress.emit(false);
-                this.loadTransactions();
-            }, (error) => {
-                this.onProgress.emit(false);
-                if (this.auth.token !== '') {
-                    this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load transactions statuses'));
-                } else {
-                    this.router.navigateByUrl('/');
-                }
-            });
-        }
+        const statusListData$ = this.profileService.getTransactionStatuses().valueChanges.pipe(take(1));
+        this.onProgress.emit(true);
+        this.pStatusSubscription = statusListData$.subscribe(({ data }) => {
+            this.userStatuses = data.getTransactionStatuses as TransactionStatusDescriptorMap[];
+            this.onProgress.emit(false);
+            this.loadTransactions();
+        }, (error) => {
+            this.onProgress.emit(false);
+            if (this.auth.token !== '') {
+                this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load transactions statuses'));
+            } else {
+                this.router.navigateByUrl('/');
+            }
+        });
     }
 
     handlePage(event: PageEvent): PageEvent {

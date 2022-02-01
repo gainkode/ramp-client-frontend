@@ -291,19 +291,23 @@ export class KycEditorComponent implements OnInit, OnDestroy {
         const filter = new Filter({
           users: scheme?.targetValues
         });
-        this.getFilteredAccounts(filter).subscribe(result => {
-          this.targetValues = result;
-          this.schemeForm.get('targetValues')?.setValue(result.map(x => x.title));
-        });
+        this.subscriptions.add(
+          this.getFilteredAccounts(filter).subscribe(result => {
+            this.targetValues = result;
+            this.schemeForm.get('targetValues')?.setValue(result.map(x => x.title));
+          })
+        );
         this.updateTarget('');
       } else if (this.targetType === SettingsKycTargetFilterType.WidgetId) {
         const filter = new Filter({
           widgets: scheme?.targetValues
         });
-        this.getFilteredWidgets(filter).subscribe(result => {
-          this.targetValues = result;
-          this.schemeForm.get('targetValues')?.setValue(result.map(x => x.title));
-        });
+        this.subscriptions.add(
+          this.getFilteredWidgets(filter).subscribe(result => {
+            this.targetValues = result;
+            this.schemeForm.get('targetValues')?.setValue(result.map(x => x.title));
+          })
+        );
         this.updateTarget('');
       } else {
         this.schemeForm.get('targetValues')?.setValue(scheme?.targetValues);

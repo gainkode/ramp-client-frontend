@@ -27,7 +27,7 @@ export class FormPasswordBoxComponent implements ControlValueAccessor, OnInit, O
     @Input() separator = false;
     @Input() smallerLabel = false;
 
-    private controlSubscription: Subscription | undefined = undefined;
+    private subscriptions: Subscription = new Subscription();
     initialized = false;
     active = true;
     errorMessage = '';
@@ -42,7 +42,7 @@ export class FormPasswordBoxComponent implements ControlValueAccessor, OnInit, O
         @Optional() @Host() @SkipSelf()
         private controlContainer: ControlContainer) {
     }
-    
+
     private getError(): string {
         let result = '';
         const errors = this.control?.errors;
@@ -59,17 +59,16 @@ export class FormPasswordBoxComponent implements ControlValueAccessor, OnInit, O
     }
 
     ngOnInit(): void {
-        this.controlSubscription = this.control?.valueChanges.subscribe(val => {
-            this.initialized = true;
-            this.errorMessage = this.getError();
-        });
+        this.subscriptions.add(
+            this.control?.valueChanges.subscribe(val => {
+                this.initialized = true;
+                this.errorMessage = this.getError();
+            })
+        );
     }
 
     ngOnDestroy(): void {
-        if (this.controlSubscription) {
-            this.controlSubscription.unsubscribe();
-            this.controlSubscription = undefined;
-        }
+        this.subscriptions.unsubscribe();
     }
 
     registerOnTouched(fn: any): void {

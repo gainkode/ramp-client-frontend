@@ -307,10 +307,12 @@ export class PersonalComponent implements OnInit, OnDestroy {
     }
 
     notificationTest(): void {
-        this.notification.sendTestNotification().subscribe(({ data }) => {
-            // data
-        }, (error) => {
-            // error
-        });
+        this.subscriptions.add(
+            this.notification.sendTestNotification().subscribe(({ data }) => {
+                // data
+            }, (error) => {
+                // error
+            })
+        );
     }
 }

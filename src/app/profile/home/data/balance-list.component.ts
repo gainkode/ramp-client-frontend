@@ -1,6 +1,7 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { UserBalanceItem } from 'src/app/model/balance.model';
 import { Rate, SettingsCurrency, UserState, VaultAccountEx } from 'src/app/model/generated-models';
 import { AuthService } from 'src/app/services/auth.service';
@@ -63,14 +64,10 @@ export class ProfileBalanceListComponent implements OnInit, OnDestroy {
 
     private loadBalanceData(): void {
         this.onProgress.emit(true);
-        const balanceData = this.commonService.getMyBalances();
-        if (balanceData === null) {
-            this.onProgress.emit(false);
-            this.onError.emit(this.errorHandler.getRejectedCookieMessage());
-        } else {
+        const balanceData$ = this.commonService.getMyBalances().valueChanges.pipe(take(1));
             this.balances = [];
             this.subscriptions.add(
-                balanceData.valueChanges.subscribe(({ data }) => {
+                balanceData$.subscribe(({ data }) => {
                     const myState = data.myState as UserState;
                     this.balances = [];
                     this.handleTransactions(myState.vaults ?? []);
@@ -84,7 +81,6 @@ export class ProfileBalanceListComponent implements OnInit, OnDestroy {
                     }
                 })
             );
-        }
     }
 
     private handleTransactions(vaults: VaultAccountEx[]): void {

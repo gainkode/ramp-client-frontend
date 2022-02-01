@@ -179,54 +179,50 @@ export class WidgetSendDetailsComponent implements OnInit, OnDestroy {
 
   private loadContacts(symbol: string): void {
     this.errorMessage = '';
-    const contactsData = this.profileService.getMyContacts(
+    const contactsData$ = this.profileService.getMyContacts(
       [symbol],
       [],
       [],
       0,
       1000,
       'displayName',
-      false);
+      false).valueChanges.pipe(take(1));
     this.contacts = [];
-    if (contactsData === null) {
-      this.errorMessage = this.errorHandler.getRejectedCookieMessage();
-    } else {
-      if (this.inProgress === false) {
-        this.inProgress = true;
-        this.onProgress.emit(this.inProgress);
-      }
-      const userFiat = this.auth.user?.defaultFiatCurrency ?? 'EUR';
-      this.pSubscriptions.add(
-        contactsData.valueChanges.subscribe(({ data }) => {
-          const contactsItems = data.myContacts as UserContactListResult;
-          if (contactsItems) {
-            const contactCount = contactsItems?.count as number;
-            if (contactCount > 0) {
-              this.contacts = contactsItems?.list?.map((val) => new ContactItem(val)) as ContactItem[];
-              this.contacts.splice(0, 0, new ContactItem({
-                userContactId: '',
-                contactEmail: '',
-                displayName: '...',
-                assetId: symbol
-              } as UserContact));
-              if (this.presetContactId !== '') {
-                this.contactField?.setValue(this.presetContactId);
-              }
+    if (this.inProgress === false) {
+      this.inProgress = true;
+      this.onProgress.emit(this.inProgress);
+    }
+    const userFiat = this.auth.user?.defaultFiatCurrency ?? 'EUR';
+    this.pSubscriptions.add(
+      contactsData$.subscribe(({ data }) => {
+        const contactsItems = data.myContacts as UserContactListResult;
+        if (contactsItems) {
+          const contactCount = contactsItems?.count as number;
+          if (contactCount > 0) {
+            this.contacts = contactsItems?.list?.map((val) => new ContactItem(val)) as ContactItem[];
+            this.contacts.splice(0, 0, new ContactItem({
+              userContactId: '',
+              contactEmail: '',
+              displayName: '...',
+              assetId: symbol
+            } as UserContact));
+            if (this.presetContactId !== '') {
+              this.contactField?.setValue(this.presetContactId);
             }
           }
-          this.inProgress = false;
-          this.onProgress.emit(this.inProgress);
-        }, (error) => {
-          this.inProgress = false;
-          this.onProgress.emit(this.inProgress);
-          if (this.auth.token !== '') {
-            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load contacts');
-          } else {
-            this.router.navigateByUrl('/');
-          }
-        })
-      );
-    }
+        }
+        this.inProgress = false;
+        this.onProgress.emit(this.inProgress);
+      }, (error) => {
+        this.inProgress = false;
+        this.onProgress.emit(this.inProgress);
+        if (this.auth.token !== '') {
+          this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load contacts');
+        } else {
+          this.router.navigateByUrl('/');
+        }
+      })
+    );
   }
 
   private sendData(): void {

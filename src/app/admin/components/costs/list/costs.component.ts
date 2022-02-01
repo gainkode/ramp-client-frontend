@@ -1,13 +1,12 @@
-import { Component, OnInit, OnDestroy, Output, EventEmitter, Input } from '@angular/core';
+import { Component, Output, EventEmitter, Input } from '@angular/core';
 import { CostScheme } from '../../../../model/cost-scheme.model';
-import { Subscription } from 'rxjs';
 
 @Component({
   templateUrl: 'costs.component.html',
   styleUrls: ['costs.component.scss'],
   selector: 'app-cost-table'
 })
-export class CostsComponent implements OnInit, OnDestroy {
+export class CostsComponent {
   @Input() selectedScheme: CostScheme | null = null;
   @Input() schemes: CostScheme[] = [];
   @Output() toggle = new EventEmitter<CostScheme>();
@@ -16,15 +15,7 @@ export class CostsComponent implements OnInit, OnDestroy {
     'details', 'isDefault', 'name', 'target', 'trxType', 'instrument', 'provider'
   ];
 
-  private subscriptions: Subscription = new Subscription();
-
   constructor() {
-  }
-
-  ngOnInit(): void {}
-
-  ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
   }
 
   private isSelectedScheme(schemeId: string): boolean {

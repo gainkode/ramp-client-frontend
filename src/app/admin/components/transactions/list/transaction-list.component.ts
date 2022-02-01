@@ -97,11 +97,13 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   ngAfterViewInit(): void {
-    this.sort.sortChange.subscribe(() => {
-      this.sortedDesc = (this.sort.direction === 'desc');
-      this.sortedField = this.sort.active;
-      this.loadList();
-    });
+    this.subscriptions.add(
+      this.sort.sortChange.subscribe(() => {
+        this.sortedDesc = (this.sort.direction === 'desc');
+        this.sortedField = this.sort.active;
+        this.loadList();
+      })
+    );
   }
 
   handleFilterApplied(filter: Filter): void {
@@ -176,20 +178,22 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
 
   private loadCurrencies(): void {
     this.currencyOptions = [];
-    this.commonDataService.getSettingsCurrency()?.valueChanges.subscribe(({ data }) => {
-      const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
-      if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
-        this.currencyOptions = currencySettings.settingsCurrency.list
-          ?.map((val) => new CurrencyView(val)) as CurrencyView[];
-      } else {
-        this.currencyOptions = [];
-      }
-      this.loadTransactions();
-    }, (error) => {
-      if (this.auth.token === '') {
-        this.router.navigateByUrl('/');
-      }
-    });
+    this.subscriptions.add(
+      this.commonDataService.getSettingsCurrency()?.valueChanges.pipe(take(1)).subscribe(({ data }) => {
+        const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
+        if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
+          this.currencyOptions = currencySettings.settingsCurrency.list
+            ?.map((val) => new CurrencyView(val)) as CurrencyView[];
+        } else {
+          this.currencyOptions = [];
+        }
+        this.loadTransactions();
+      }, (error) => {
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
+      })
+    );
   }
 
   private loadList(): void {

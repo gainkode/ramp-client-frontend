@@ -214,26 +214,22 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   private loadDetailsForm(initState: boolean): void {
     this.onError.emit('');
     const currencyData = this.commonService.getSettingsCurrency();
-    if (currencyData === null) {
-      this.onError.emit(this.errorHandler.getRejectedCookieMessage());
-    } else {
-      this.onProgress.emit(true);
-      this.pSubscriptions.add(
-        currencyData.valueChanges.subscribe(
-          ({ data }) => {
-            this.loadCurrencyList(data.getSettingsCurrency as SettingsCurrencyWithDefaults, initState);
-            if (this.auth.authenticated) {
-              this.loadRates();
-            } else {
-              this.onProgress.emit(false);
-            }
-          },
-          (error) => {
+    this.onProgress.emit(true);
+    this.pSubscriptions.add(
+      currencyData.valueChanges.subscribe(
+        ({ data }) => {
+          this.loadCurrencyList(data.getSettingsCurrency as SettingsCurrencyWithDefaults, initState);
+          if (this.auth.authenticated) {
+            this.loadRates();
+          } else {
             this.onProgress.emit(false);
-            this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load available list of currency types'));
-          })
-      );
-    }
+          }
+        },
+        (error) => {
+          this.onProgress.emit(false);
+          this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load available list of currency types'));
+        })
+    );
   }
 
   private loadCurrencyList(currencySettings: SettingsCurrencyWithDefaults, initState: boolean) {
@@ -295,53 +291,43 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   private loadRates(): void {
     const rateCurrencies = this.pCurrencies.filter(x => x.fiat === true && x.id !== 'EUR').map((val) => val.id);
     const rateData = this.paymentService.getOneToManyRates('EUR', rateCurrencies, false);
-    if (rateData === null) {
-      this.onProgress.emit(false);
-      this.onError.emit(this.errorHandler.getRejectedCookieMessage());
-    } else {
-      this.pSubscriptions.add(
-        rateData.valueChanges.subscribe(
-          ({ data }) => {
-            const rates = data.getOneToManyRates as Rate[];
-            this.pCurrencies.forEach(c => {
-              if (c.id === 'EUR') {
-                c.rateFactor = 1;
-              } else {
-                const rate = rates.find(x => x.currencyTo === c.id);
-                if (rate) {
-                  c.rateFactor = rate.depositRate;
-                }
+    this.pSubscriptions.add(
+      rateData.valueChanges.subscribe(
+        ({ data }) => {
+          const rates = data.getOneToManyRates as Rate[];
+          this.pCurrencies.forEach(c => {
+            if (c.id === 'EUR') {
+              c.rateFactor = 1;
+            } else {
+              const rate = rates.find(x => x.currencyTo === c.id);
+              if (rate) {
+                c.rateFactor = rate.depositRate;
               }
-            });
-            this.loadTransactionsTotal();
-          },
-          (error) => {
-            this.onProgress.emit(false);
-            this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load exchange rate'));
-          })
-      );
-    }
+            }
+          });
+          this.loadTransactionsTotal();
+        },
+        (error) => {
+          this.onProgress.emit(false);
+          this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load exchange rate'));
+        })
+    );
   }
 
   private loadTransactionsTotal(): void {
     this.transactionsTotalEur = 0;
     const totalData = this.commonService.getMyTransactionsTotal();
-    if (totalData === null) {
-      this.onProgress.emit(false);
-      this.onError.emit(this.errorHandler.getRejectedCookieMessage());
-    } else {
-      this.pSubscriptions.add(
-        totalData.valueChanges.subscribe(({ data }) => {
-          const totalState = data.myState as UserState;
-          this.transactionsTotalEur = totalState.totalAmountEur ?? 0;
-          this.updateQuote();
-          this.onProgress.emit(false);
-        }, (error) => {
-          this.onProgress.emit(false);
-          this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load exchange rate'));
-        })
-      );
-    }
+    this.pSubscriptions.add(
+      totalData.valueChanges.subscribe(({ data }) => {
+        const totalState = data.myState as UserState;
+        this.transactionsTotalEur = totalState.totalAmountEur ?? 0;
+        this.updateQuote();
+        this.onProgress.emit(false);
+      }, (error) => {
+        this.onProgress.emit(false);
+        this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load exchange rate'));
+      })
+    );
   }
 
   private setCurrencyValues(

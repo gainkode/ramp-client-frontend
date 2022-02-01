@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { SettingsKycShort, SettingsKycTier, SettingsKycTierListResult, SettingsKycTierShortExListResult, TransactionSource, TransactionType } from 'src/app/model/generated-models';
-import { KycLevel, KycLevelShort } from 'src/app/model/identification.model';
+import { take } from 'rxjs/operators';
+import { SettingsKycShort, SettingsKycTierShortExListResult, TransactionSource, TransactionType } from 'src/app/model/generated-models';
+import { KycLevelShort } from 'src/app/model/identification.model';
 import { CheckoutSummary } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
@@ -48,15 +49,13 @@ export class WidgetKycComponent implements OnInit, OnDestroy {
     this.onError.emit('');
     this.showValidator = false;
     const settingsCommon = this.auth.getLocalSettingsCommon();
-    const kycData = this.auth.getMyKycSettings();
-    if (kycData === null) {
-      this.onError.emit(this.errorHandler.getRejectedCookieMessage());
-    } else if (settingsCommon === null) {
+    const kycData$ = this.auth.getMyKycSettings().valueChanges.pipe(take(1));
+    if (settingsCommon === null) {
       this.onError.emit('Unable to load common settings');
     } else {
       this.onProgress.emit(true);
       this.pSubscriptions.add(
-        kycData.valueChanges.subscribe(
+        kycData$.subscribe(
           ({ data }) => {
             const settingsKyc = data.mySettingsKyc as SettingsKycShort;
             const levels = settingsKyc.levels?.map((val) => new KycLevelShort(val)) as KycLevelShort[];
@@ -89,16 +88,15 @@ export class WidgetKycComponent implements OnInit, OnDestroy {
     const amount = this.summary?.amountFrom ?? 0;
     const limit = this.summary?.quoteLimit ?? 0;
     const overLimit = amount - limit;
-    const tiersData = this.dataService.getAppropriateSettingsKycTiers(overLimit, currency, TransactionSource.Widget, '');
+    const tiersData$ = this.dataService.getAppropriateSettingsKycTiers(
+      overLimit, currency, TransactionSource.Widget, '').valueChanges.pipe(take(1));
     const settingsCommon = this.auth.getLocalSettingsCommon();
-    if (tiersData === null) {
-      this.errorMessage = this.errorHandler.getRejectedCookieMessage();
-    } else if (settingsCommon === null) {
+    if (settingsCommon === null) {
       this.onError.emit('Unable to load common settings');
     } else {
       this.onProgress.emit(true);
       this.pSubscriptions.add(
-        tiersData.valueChanges.subscribe(({ data }) => {
+        tiersData$.subscribe(({ data }) => {
           const tiers = data.getAppropriateSettingsKycTiers as SettingsKycTierShortExListResult;
           if ((tiers.count ?? 0 > 0) && tiers.list) {
             const rawTiers = [...tiers.list];

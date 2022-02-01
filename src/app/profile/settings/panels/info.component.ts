@@ -2,7 +2,7 @@ import { HttpClient, HttpEventType, HttpHeaders } from '@angular/common/http';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { finalize } from 'rxjs/operators';
+import { finalize, take } from 'rxjs/operators';
 import { CommonTargetValue } from 'src/app/model/common.model';
 import { Countries, getCountryByCode3 } from 'src/app/model/country-code.model';
 import { SettingsCurrencyWithDefaults, User, UserInput, UserType } from 'src/app/model/generated-models';
@@ -71,89 +71,81 @@ export class ProfileInfoSettingsComponent implements OnInit, OnDestroy {
         this.error.emit('');
         this.progressChange.emit(true);
         let avatarLoaded = false;
-        const meQuery = this.profileService.getProfileData();
-        if (meQuery === null) {
-            this.error.emit(this.errorHandler.getRejectedCookieMessage());
-        } else {
-            this.progressChange.emit(false);
-            this.subscriptions.add(
-                meQuery.valueChanges.subscribe(({ data }) => {
-                    this.progressChange.emit(false);
-                    if (data) {
-                        const userData = data.me as User;
-                        if (userData) {
-                            this.user = userData;
-                            this.userView = new UserItem(this.user);
-                            if (avatarLoaded === false) {
-                                avatarLoaded = true;
-                                if (updateLocalAvatar) {
-                                    this.auth.setUserAvatar(this.user.avatar ?? '');
-                                }
-                                this.avatarPath = getAvatarPath(this.user.avatar ?? undefined);
-                                this.onUpdateAvatar.emit(this.avatarPath);
+        const meQuery$ = this.profileService.getProfileData().valueChanges.pipe(take(1));
+        this.progressChange.emit(false);
+        this.subscriptions.add(
+            meQuery$.subscribe(({ data }) => {
+                this.progressChange.emit(false);
+                if (data) {
+                    const userData = data.me as User;
+                    if (userData) {
+                        this.user = userData;
+                        this.userView = new UserItem(this.user);
+                        if (avatarLoaded === false) {
+                            avatarLoaded = true;
+                            if (updateLocalAvatar) {
+                                this.auth.setUserAvatar(this.user.avatar ?? '');
                             }
+                            this.avatarPath = getAvatarPath(this.user.avatar ?? undefined);
+                            this.onUpdateAvatar.emit(this.avatarPath);
                         }
-                    } else {
-                        this.router.navigateByUrl('/');
                     }
-                }, (error) => {
-                    this.progressChange.emit(false);
-                    if (this.auth.token !== '') {
-                        this.error.emit(this.errorHandler.getError(error.message, 'Unable to load user data'));
-                    } else {
-                        this.router.navigateByUrl('/');
-                    }
-                })
-            );
-        }
+                } else {
+                    this.router.navigateByUrl('/');
+                }
+            }, (error) => {
+                this.progressChange.emit(false);
+                if (this.auth.token !== '') {
+                    this.error.emit(this.errorHandler.getError(error.message, 'Unable to load user data'));
+                } else {
+                    this.router.navigateByUrl('/');
+                }
+            })
+        );
     }
 
     private loadCurrencyData(): void {
         this.fiatList = [];
         this.cryptoList = [];
-        const currencyData = this.commonService.getSettingsCurrency();
-        if (currencyData === null) {
-            this.error.emit(this.errorHandler.getRejectedCookieMessage());
-        } else {
-            this.progressChange.emit(true);
-            this.subscriptions.add(
-                currencyData.valueChanges.subscribe(({ data }) => {
-                    this.progressChange.emit(false);
-                    const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
-                    let itemCount = 0;
-                    if (currencySettings.settingsCurrency) {
-                        itemCount = currencySettings.settingsCurrency.count as number;
-                        if (itemCount > 0) {
-                            if (currencySettings.settingsCurrency.list) {
-                                this.fiatList = currencySettings.settingsCurrency.list.filter(x => x.fiat === true).map(val => {
-                                    return {
-                                        id: val.symbol,
-                                        title: val.symbol,
-                                        imgSource: ''
-                                    } as CommonTargetValue;
-                                });
-                                this.cryptoList = currencySettings.settingsCurrency.list.filter(x => x.fiat === false).map(val => {
-                                    return {
-                                        id: val.symbol,
-                                        title: val.symbol,
-                                        imgClass: '__form-finance-combo-item-img',
-                                        imgSource: `assets/svg-crypto/${getCryptoSymbol(val.symbol).toLowerCase()}.svg`
-                                    } as CommonTargetValue;
-                                });
-                                this.loadAccountData(false);
-                            }
+        const currencyData = this.commonService.getSettingsCurrency().valueChanges.pipe(take(1));
+        this.progressChange.emit(true);
+        this.subscriptions.add(
+            currencyData.subscribe(({ data }) => {
+                this.progressChange.emit(false);
+                const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
+                let itemCount = 0;
+                if (currencySettings.settingsCurrency) {
+                    itemCount = currencySettings.settingsCurrency.count as number;
+                    if (itemCount > 0) {
+                        if (currencySettings.settingsCurrency.list) {
+                            this.fiatList = currencySettings.settingsCurrency.list.filter(x => x.fiat === true).map(val => {
+                                return {
+                                    id: val.symbol,
+                                    title: val.symbol,
+                                    imgSource: ''
+                                } as CommonTargetValue;
+                            });
+                            this.cryptoList = currencySettings.settingsCurrency.list.filter(x => x.fiat === false).map(val => {
+                                return {
+                                    id: val.symbol,
+                                    title: val.symbol,
+                                    imgClass: '__form-finance-combo-item-img',
+                                    imgSource: `assets/svg-crypto/${getCryptoSymbol(val.symbol).toLowerCase()}.svg`
+                                } as CommonTargetValue;
+                            });
+                            this.loadAccountData(false);
                         }
                     }
-                }, (error) => {
-                    this.progressChange.emit(false);
-                    if (this.auth.token !== '') {
-                        this.error.emit(this.errorHandler.getError(error.message, 'Unable to load currency data'));
-                    } else {
-                        this.router.navigateByUrl('/');
-                    }
-                })
-            );
-        }
+                }
+            }, (error) => {
+                this.progressChange.emit(false);
+                if (this.auth.token !== '') {
+                    this.error.emit(this.errorHandler.getError(error.message, 'Unable to load currency data'));
+                } else {
+                    this.router.navigateByUrl('/');
+                }
+            })
+        );
     }
 
     private setUserData(vars: UserInput, dataChanged: ChangedDataType): void {

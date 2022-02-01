@@ -19,7 +19,7 @@ export class NavPopupComponent implements OnInit, OnDestroy {
     @Input() userName: string = '';
     @Input() avatar: string = '';
 
-    private pNotificationSubscription: Subscription | undefined = undefined;
+    private subscriptions: Subscription = new Subscription();
 
     menuOpened = false;
     menuArrow = 'expand_more';
@@ -44,27 +44,26 @@ export class NavPopupComponent implements OnInit, OnDestroy {
 
     private startNotifications(): void {
         console.log('start popup user notification subscrption: ', this.auth.token);
-        this.pNotificationSubscription = this.notification.subscribeToNotifications().subscribe(
-            ({ data }) => {
-                // got data
-                if (this.userId) {
-                    if (this.userId === data.newNotification?.userId) {
-                        this.openSnackBar(data.newNotification);
+        this.subscriptions.add(
+            this.notification.subscribeToNotifications().subscribe(
+                ({ data }) => {
+                    // got data
+                    if (this.userId) {
+                        if (this.userId === data.newNotification?.userId) {
+                            this.openSnackBar(data.newNotification);
+                        }
                     }
+                },
+                (error) => {
+                    console.log('popup notification error', error);
+                    // there was an error subscribing to notifications
                 }
-            },
-            (error) => {
-                console.log('popup notification error', error);
-                // there was an error subscribing to notifications
-            }
+            )
         );
     }
 
     private stopNotifications(): void {
-        if (this.pNotificationSubscription) {
-            this.pNotificationSubscription.unsubscribe();
-            this.pNotificationSubscription = undefined;
-        }
+        this.subscriptions.unsubscribe();
     }
 
     private openSnackBar(data: any): void {

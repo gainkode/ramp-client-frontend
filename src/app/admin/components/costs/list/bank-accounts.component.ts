@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Output, EventEmitter, Input } from '@angular/core';
+import { Component, Output, EventEmitter, Input } from '@angular/core';
 import { WireTransferBankAccountItem } from '../../../../model/cost-scheme.model';
 import { Subscription } from 'rxjs';
 
@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['bank-accounts.component.scss'],
   selector: 'app-bank-account-table'
 })
-export class BankAccountsComponent implements OnInit, OnDestroy {
+export class BankAccountsComponent {
   @Input() selectedAccount: WireTransferBankAccountItem | null = null;
   @Input() accounts: WireTransferBankAccountItem[] = [];
   @Output() toggle = new EventEmitter<WireTransferBankAccountItem>();
@@ -16,15 +16,7 @@ export class BankAccountsComponent implements OnInit, OnDestroy {
     'details', 'name', 'description', 'auAvailable', 'ukAvailable', 'euAvailable'
   ];
 
-  private subscriptions: Subscription = new Subscription();
-
   constructor() {
-  }
-
-  ngOnInit(): void {}
-
-  ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
   }
 
   private isSelectedAccount(schemeId: string): boolean {

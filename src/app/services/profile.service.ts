@@ -494,29 +494,25 @@ export class ProfileDataService {
     sendersOrReceivers: String,
     orderField: string,
     orderDesc: boolean
-  ): QueryRef<any, EmptyObject> | null {
-    if (this.apollo.client !== undefined) {
-      const orderFields = [
-        { orderBy: orderField, desc: orderDesc },
-        { orderBy: 'created', desc: orderDesc }
-      ];
-      return this.apollo.watchQuery<any>({
-        query: GET_MY_TRANSACTIONS,
-        variables: {
-          sourcesOnly: sources,
-          transactionDateOnly: transactionDate,
-          transactionTypesOnly: transactionTypes,
-          sendersOrReceiversOnly: (sendersOrReceivers === '') ? undefined : [sendersOrReceivers],
-          filter: undefined,
-          skip: pageIndex * takeItems,
-          first: takeItems,
-          orderBy: orderFields,
-        },
-        fetchPolicy: 'network-only',
-      });
-    } else {
-      return null;
-    }
+  ): QueryRef<any, EmptyObject> {
+    const orderFields = [
+      { orderBy: orderField, desc: orderDesc },
+      { orderBy: 'created', desc: orderDesc }
+    ];
+    return this.apollo.watchQuery<any>({
+      query: GET_MY_TRANSACTIONS,
+      variables: {
+        sourcesOnly: sources,
+        transactionDateOnly: transactionDate,
+        transactionTypesOnly: transactionTypes,
+        sendersOrReceiversOnly: (sendersOrReceivers === '') ? undefined : [sendersOrReceivers],
+        filter: undefined,
+        skip: pageIndex * takeItems,
+        first: takeItems,
+        orderBy: orderFields,
+      },
+      fetchPolicy: 'network-only',
+    });
   }
 
   getTransactionStatuses(): QueryRef<any, EmptyObject> {
@@ -541,15 +537,11 @@ export class ProfileDataService {
     });
   }
 
-  getProfileData(): QueryRef<any, EmptyObject> | null {
-    if (this.apollo.client !== undefined) {
-      return this.apollo.watchQuery<any>({
-        query: GET_PROFILE_ME,
-        fetchPolicy: 'network-only',
-      });
-    } else {
-      return null;
-    }
+  getProfileData(): QueryRef<any, EmptyObject> {
+    return this.apollo.watchQuery<any>({
+      query: GET_PROFILE_ME,
+      fetchPolicy: 'network-only',
+    });
   }
 
   getMyContacts(
@@ -560,41 +552,33 @@ export class ProfileDataService {
     takeItems: number,
     orderField: string,
     orderDesc: boolean
-  ): QueryRef<any, EmptyObject> | null {
-    if (this.apollo.client !== undefined) {
-      const orderFields = [{ orderBy: orderField, desc: orderDesc }];
-      return this.apollo.watchQuery<any>({
-        query: GET_MY_CONTACTS,
-        variables: {
-          filter: '',
-          skip: pageIndex * takeItems,
-          first: takeItems,
-          orderBy: orderFields,
-          assetIds: assets,
-          contactEmails: (emails.length > 0) ? emails : undefined,
-          contactDisplayNames: (displayNames.length > 0) ? displayNames : undefined
-        },
-        fetchPolicy: 'network-only',
-      });
-    } else {
-      return null;
-    }
+  ): QueryRef<any, EmptyObject> {
+    const orderFields = [{ orderBy: orderField, desc: orderDesc }];
+    return this.apollo.watchQuery<any>({
+      query: GET_MY_CONTACTS,
+      variables: {
+        filter: '',
+        skip: pageIndex * takeItems,
+        first: takeItems,
+        orderBy: orderFields,
+        assetIds: assets,
+        contactEmails: (emails.length > 0) ? emails : undefined,
+        contactDisplayNames: (displayNames.length > 0) ? displayNames : undefined
+      },
+      fetchPolicy: 'network-only',
+    });
   }
 
-  getMyProfit(fiatCurrency: string, selectPeriod: UserBalanceHistoryPeriod): QueryRef<any, EmptyObject> | null {
-    if (this.apollo.client !== undefined) {
-      const orderFields = [{ orderBy: 'date', desc: true }];
-      return this.apollo.watchQuery<any>({
-        query: GET_MY_PROFIT,
-        variables: {
-          currencyTo: fiatCurrency,
-          period: selectPeriod
-        },
-        fetchPolicy: 'network-only',
-      });
-    } else {
-      return null;
-    }
+  getMyProfit(fiatCurrency: string, selectPeriod: UserBalanceHistoryPeriod): QueryRef<any, EmptyObject> {
+    const orderFields = [{ orderBy: 'date', desc: true }];
+    return this.apollo.watchQuery<any>({
+      query: GET_MY_PROFIT,
+      variables: {
+        currencyTo: fiatCurrency,
+        period: selectPeriod
+      },
+      fetchPolicy: 'network-only',
+    });
   }
 
   getMyNotifications(
@@ -604,23 +588,19 @@ export class ProfileDataService {
     takeItems: number,
     orderField: string,
     orderDesc: boolean
-  ): QueryRef<any, EmptyObject> | null {
-    if (this.apollo.client !== undefined) {
-      const orderFields = [{ orderBy: orderField, desc: orderDesc }];
-      return this.apollo.watchQuery<any>({
-        query: GET_MY_NOTIFICATIONS,
-        variables: {
-          unreadOnly: unreadOnlyFilter,
-          filter: search,
-          skip: pageIndex * takeItems,
-          first: takeItems,
-          orderBy: orderFields,
-        },
-        fetchPolicy: 'network-only',
-      });
-    } else {
-      return null;
-    }
+  ): QueryRef<any, EmptyObject> {
+    const orderFields = [{ orderBy: orderField, desc: orderDesc }];
+    return this.apollo.watchQuery<any>({
+      query: GET_MY_NOTIFICATIONS,
+      variables: {
+        unreadOnly: unreadOnlyFilter,
+        filter: search,
+        skip: pageIndex * takeItems,
+        first: takeItems,
+        orderBy: orderFields,
+      },
+      fetchPolicy: 'network-only',
+    });
   }
 
   deleteMyNotifications(idList: string[]): Observable<any> {

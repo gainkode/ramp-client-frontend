@@ -5,6 +5,7 @@ import { Validators, FormBuilder, AbstractControl } from '@angular/forms';
 import { LoginResult, PostAddress, SettingsKyc, UserMode, UserType } from '../../model/generated-models';
 import { Subscription } from 'rxjs';
 import { getCountryByCode3 } from '../../model/country-code.model';
+import { take } from 'rxjs/operators';
 
 @Component({
     selector: 'app-signup-info-panel',
@@ -82,27 +83,23 @@ export class SignupInfoPanelComponent implements OnDestroy {
     }
 
     init(): void {
-        const fieldsData = this.auth.getSignupRequiredFields();
-        if (fieldsData === null) {
-            this.error.emit(this.errorHandler.getRejectedCookieMessage());
-        } else {
-            this.progressChange.emit(true);
-            this.subscriptions.add(
-                fieldsData.valueChanges.subscribe(({ data }) => {
-                    const fields: SettingsKyc = data.mySettingsKyc;
-                    this.requireUserFullName = fields.requireUserFullName as boolean;
-                    this.requireUserPhone = fields.requireUserPhone as boolean;
-                    this.requireUserBirthday = fields.requireUserBirthday as boolean;
-                    this.requireUserAddress = fields.requireUserAddress as boolean;
-                    this.requireUserFlatNumber = fields.requireUserFlatNumber as boolean;
-                    this.setFields();
-                    this.progressChange.emit(false);
-                }, (error) => {
-                    this.error.emit(this.errorHandler.getError('error', 'Unable to specify required data'));
-                    this.progressChange.emit(false);
-                })
-            );
-        }
+        const fieldsData = this.auth.getSignupRequiredFields().valueChanges.pipe(take(1));
+        this.progressChange.emit(true);
+        this.subscriptions.add(
+            fieldsData.subscribe(({ data }) => {
+                const fields: SettingsKyc = data.mySettingsKyc;
+                this.requireUserFullName = fields.requireUserFullName as boolean;
+                this.requireUserPhone = fields.requireUserPhone as boolean;
+                this.requireUserBirthday = fields.requireUserBirthday as boolean;
+                this.requireUserAddress = fields.requireUserAddress as boolean;
+                this.requireUserFlatNumber = fields.requireUserFlatNumber as boolean;
+                this.setFields();
+                this.progressChange.emit(false);
+            }, (error) => {
+                this.error.emit(this.errorHandler.getError('error', 'Unable to specify required data'));
+                this.progressChange.emit(false);
+            })
+        );
     }
 
     private setFields(): void {

@@ -101,18 +101,26 @@ export class SignUpPanelComponent implements OnInit, OnDestroy {
         if (this.userType === UserType.Merchant) {
             this.userTypeSection = 'merchant';
         }
-        this.subscriptions.add(this.emailField?.valueChanges.subscribe(val => {
-            this.validateForm();
-        }));
-        this.subscriptions.add(this.signupForm.get('password1')?.valueChanges.subscribe(val => {
-            this.validateForm();
-        }));
-        this.subscriptions.add(this.signupForm.get('password2')?.valueChanges.subscribe(val => {
-            this.validateForm();
-        }));
-        this.subscriptions.add(this.signupForm.get('agreement')?.valueChanges.subscribe(val => {
-            this.validateForm();
-        }));
+        this.subscriptions.add(
+            this.subscriptions.add(this.emailField?.valueChanges.subscribe(val => {
+                this.validateForm();
+            }))
+        );
+        this.subscriptions.add(
+            this.subscriptions.add(this.signupForm.get('password1')?.valueChanges.subscribe(val => {
+                this.validateForm();
+            }))
+        );
+        this.subscriptions.add(
+            this.subscriptions.add(this.signupForm.get('password2')?.valueChanges.subscribe(val => {
+                this.validateForm();
+            }))
+        );
+        this.subscriptions.add(
+            this.subscriptions.add(this.signupForm.get('agreement')?.valueChanges.subscribe(val => {
+                this.validateForm();
+            }))
+        );
     }
 
     ngOnDestroy(): void {

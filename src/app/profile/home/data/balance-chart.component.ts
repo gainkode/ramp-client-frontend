@@ -9,6 +9,7 @@ import { ErrorService } from 'src/app/services/error.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
 import { ChartComponent, ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexFill, ApexStroke, ApexMarkers, ApexXAxis, ApexYAxis, ApexGrid, ApexTooltip, ApexNoData } from 'ng-apexcharts';
 import { getCurrencySign } from 'src/app/utils/utils';
+import { take } from 'rxjs/operators';
 
 @Component({
     selector: 'app-profile-balance-chart',
@@ -258,57 +259,53 @@ export class ProfileBalanceChartComponent implements OnInit, OnDestroy {
 
     private loadChartData(): void {
         this.onError.emit('');
-        const chartData = this.profileService.getMyProfit(this.selectedFiat, this.period);
-        if (chartData === null) {
-            this.onError.emit(this.errorHandler.getRejectedCookieMessage());
-        } else {
-            this.profitValue = '';
-            this.positiveProfit = true;
-            this.onProgress.emit(true);
-            let chartPoints: BalancePoint[] = [];
-            this.subscriptions.add(
-                chartData.valueChanges.subscribe(({ data }) => {
-                    const profitData = data.myProfit as UserProfit;
-                    //const profitData = this.getFakeProfits();
-                    let profit = 0;
-                    let profitPercent = 0;
-                    this.totalBalance = '';
-                    profitData.profits?.forEach(p => {
-                        profit += p.profitFiat ?? 0;
-                        profitPercent += p.profitPercent ?? 0;
-                        chartPoints = this.buildChart(profitData.period, p.userBalanceHistory ?? undefined, chartPoints);
-                    });
-                    this.positiveProfit = (profit >= 0);
-                    this.profitValue = `${profit > 0 ? '+ ' : ''}${profitPercent.toFixed(2)}% (${profit} ${this.selectedFiat})`;
-                    const totalBalanceValue = (chartPoints.length > 0) ? chartPoints[chartPoints.length - 1].balanceFiat : 0;
-                    this.totalBalance = `${getCurrencySign(this.selectedFiat)}${totalBalanceValue}`;
-                    this.seriesData = [
-                        {
-                            name: "BALANCE",
-                            color: '#E0F4FF',
-                            data: chartPoints.map(v => {
-                                return {
-                                    x: v.dateLabel,
-                                    y: v.balanceFiat,
-                                    goals: {
-                                        balance: v.balanceFiatValue,
-                                        dateFull: v.datePointFull
-                                    }
-                                };
-                            })
-                        }
-                    ];
-                    this.onProgress.emit(false);
-                }, (error) => {
-                    this.onProgress.emit(false);
-                    if (this.auth.token !== '') {
-                        this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load chart data'));
-                    } else {
-                        this.router.navigateByUrl('/');
+        const chartData$ = this.profileService.getMyProfit(this.selectedFiat, this.period).valueChanges.pipe(take(1));
+        this.profitValue = '';
+        this.positiveProfit = true;
+        this.onProgress.emit(true);
+        let chartPoints: BalancePoint[] = [];
+        this.subscriptions.add(
+            chartData$.subscribe(({ data }) => {
+                const profitData = data.myProfit as UserProfit;
+                //const profitData = this.getFakeProfits();
+                let profit = 0;
+                let profitPercent = 0;
+                this.totalBalance = '';
+                profitData.profits?.forEach(p => {
+                    profit += p.profitFiat ?? 0;
+                    profitPercent += p.profitPercent ?? 0;
+                    chartPoints = this.buildChart(profitData.period, p.userBalanceHistory ?? undefined, chartPoints);
+                });
+                this.positiveProfit = (profit >= 0);
+                this.profitValue = `${profit > 0 ? '+ ' : ''}${profitPercent.toFixed(2)}% (${profit} ${this.selectedFiat})`;
+                const totalBalanceValue = (chartPoints.length > 0) ? chartPoints[chartPoints.length - 1].balanceFiat : 0;
+                this.totalBalance = `${getCurrencySign(this.selectedFiat)}${totalBalanceValue}`;
+                this.seriesData = [
+                    {
+                        name: "BALANCE",
+                        color: '#E0F4FF',
+                        data: chartPoints.map(v => {
+                            return {
+                                x: v.dateLabel,
+                                y: v.balanceFiat,
+                                goals: {
+                                    balance: v.balanceFiatValue,
+                                    dateFull: v.datePointFull
+                                }
+                            };
+                        })
                     }
-                })
-            );
-        }
+                ];
+                this.onProgress.emit(false);
+            }, (error) => {
+                this.onProgress.emit(false);
+                if (this.auth.token !== '') {
+                    this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load chart data'));
+                } else {
+                    this.router.navigateByUrl('/');
+                }
+            })
+        );
     }
 
     private buildChart(

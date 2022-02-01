@@ -130,26 +130,28 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
                     }
                     this.auth.socialSignOut();
                     try {
-                        this.auth.authenticateSocial(providerName.toLowerCase(), token).subscribe((loginData) => {
-                            const userData = loginData.data.login as LoginResult;
-                            this.progressChange.emit(false);
-                            if (userData.user?.mode === UserMode.InternalWallet) {
-                                if (userData.authTokenAction === 'TwoFactorAuth') {
-                                    this.auth.setLoginUser(userData);
-                                    this.twoFa = true;
-                                    this.socialLogin = true;
-                                } else if (userData.authTokenAction === 'UserInfoRequired') {
-                                    this.showSignupPanel(userData);
+                        this.subscriptions.add(
+                            this.auth.authenticateSocial(providerName.toLowerCase(), token).subscribe((loginData) => {
+                                const userData = loginData.data.login as LoginResult;
+                                this.progressChange.emit(false);
+                                if (userData.user?.mode === UserMode.InternalWallet) {
+                                    if (userData.authTokenAction === 'TwoFactorAuth') {
+                                        this.auth.setLoginUser(userData);
+                                        this.twoFa = true;
+                                        this.socialLogin = true;
+                                    } else if (userData.authTokenAction === 'UserInfoRequired') {
+                                        this.showSignupPanel(userData);
+                                    } else {
+                                        this.socialAuthenticated.emit(userData);
+                                    }
                                 } else {
-                                    this.socialAuthenticated.emit(userData);
+                                    this.registerError(`Unable to authorise with the login '${user.email}'. Please sign up`);
                                 }
-                            } else {
-                                this.registerError(`Unable to authorise with the login '${user.email}'. Please sign up`);
-                            }
-                        }, (error) => {
-                            this.progressChange.emit(false);
-                            this.registerError(this.errorHandler.getError(error.message, `Invalid authentication via ${providerName}`));
-                        });
+                            }, (error) => {
+                                this.progressChange.emit(false);
+                                this.registerError(this.errorHandler.getError(error.message, `Invalid authentication via ${providerName}`));
+                            })
+                        );
                     } catch (e) {
                         this.progressChange.emit(false);
                         this.registerError(e as string);

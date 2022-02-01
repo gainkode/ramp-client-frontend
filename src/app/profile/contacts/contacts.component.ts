@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { ContactsFilter, ProfileBaseFilter } from 'src/app/model/filter.model';
 import { SettingsCurrencyWithDefaults } from 'src/app/model/generated-models';
 import { CurrencyView } from 'src/app/model/payment.model';
@@ -80,33 +81,28 @@ export class ProfileContactsComponent implements OnInit, OnDestroy {
     private loadCurrencyData(): void {
         this.cryptoList = [];
         this.inProgressFilter = true;
-        const currencyData = this.commonService.getSettingsCurrency();
-        if (currencyData === null) {
-            this.errorMessage = this.errorHandler.getRejectedCookieMessage();
-            this.onShowError.emit(this.errorMessage);
-        } else {
-            this.subscriptions.add(
-                currencyData.valueChanges.subscribe(({ data }) => {
-                    this.inProgressFilter = false;
-                    const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
-                    if (currencySettings.settingsCurrency) {
-                        if (currencySettings.settingsCurrency.count ?? 0 > 0) {
-                            this.cryptoList = currencySettings.settingsCurrency.list?.
-                                filter(x => x.fiat === false).
-                                map((val) => new CurrencyView(val)) as CurrencyView[];
-                        }
+        const currencyData$ = this.commonService.getSettingsCurrency().valueChanges.pipe(take(1));
+        this.subscriptions.add(
+            currencyData$.subscribe(({ data }) => {
+                this.inProgressFilter = false;
+                const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
+                if (currencySettings.settingsCurrency) {
+                    if (currencySettings.settingsCurrency.count ?? 0 > 0) {
+                        this.cryptoList = currencySettings.settingsCurrency.list?.
+                            filter(x => x.fiat === false).
+                            map((val) => new CurrencyView(val)) as CurrencyView[];
                     }
-                }, (error) => {
-                    this.inProgressFilter = false;
-                    if (this.auth.token !== '') {
-                        this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load currency data');
-                        this.onShowError.emit(this.errorMessage);
-                    } else {
-                        this.router.navigateByUrl('/');
-                    }
-                })
-            );
-        }
+                }
+            }, (error) => {
+                this.inProgressFilter = false;
+                if (this.auth.token !== '') {
+                    this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load currency data');
+                    this.onShowError.emit(this.errorMessage);
+                } else {
+                    this.router.navigateByUrl('/');
+                }
+            })
+        );
     }
 
     onFilterUpdate(filter: ProfileBaseFilter): void {

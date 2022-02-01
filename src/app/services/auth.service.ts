@@ -775,26 +775,18 @@ export class AuthService {
         });
     }
 
-    getMyKycSettings(): QueryRef<any, EmptyObject> | null {
-        if (this.apollo.client !== undefined) {
-            return this.apollo.watchQuery<any>({
-                query: GET_MY_SETTINGS_KYC,
-                fetchPolicy: 'network-only'
-            });
-        } else {
-            return null;
-        }
+    getMyKycSettings(): QueryRef<any, EmptyObject> {
+        return this.apollo.watchQuery<any>({
+            query: GET_MY_SETTINGS_KYC,
+            fetchPolicy: 'network-only'
+        });
     }
 
-    getSignupRequiredFields(): QueryRef<any, EmptyObject> | null {
-        if (this.apollo.client !== undefined) {
-            return this.apollo.watchQuery<any>({
-                query: GET_SIGNUP_REQUIRED_FIELDS,
-                fetchPolicy: 'network-only'
-            });
-        } else {
-            return null;
-        }
+    getSignupRequiredFields(): QueryRef<any, EmptyObject> {
+        return this.apollo.watchQuery<any>({
+            query: GET_SIGNUP_REQUIRED_FIELDS,
+            fetchPolicy: 'network-only'
+        });
     }
 
     getKycToken(): QueryRef<any, EmptyObject> {

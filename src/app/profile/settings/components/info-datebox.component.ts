@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { getFormattedUtcDate } from 'src/app/utils/utils';
@@ -14,7 +14,7 @@ import { getFormattedUtcDate } from 'src/app/utils/utils';
         '../../../../assets/profile.scss',
     ]
 })
-export class ProfileInfoDateboxComponent implements OnInit, OnDestroy {
+export class ProfileInfoDateboxComponent {
     @ViewChild('inputbox') inputBox: ElementRef | undefined = undefined;
     @Input() label = '';
     @Input() set value(val: Date | undefined) {
@@ -50,20 +50,11 @@ export class ProfileInfoDateboxComponent implements OnInit, OnDestroy {
 
     private date: Date | undefined = undefined;
     private datepipe: DatePipe = new DatePipe('en-US');
-    //private subscriptions: Subscription = new Subscription();
 
     constructor(
         private changeDetector: ChangeDetectorRef,
         private formBuilder: FormBuilder,
         public dialog: MatDialog) {
-    }
-
-    ngOnInit(): void {
-
-    }
-
-    ngOnDestroy(): void {
-        //this.subscriptions.unsubscribe();
     }
 
     private updateValidators(): void {
@@ -99,7 +90,7 @@ export class ProfileInfoDateboxComponent implements OnInit, OnDestroy {
         this.changeDetector.detectChanges();
         if (this.editMode) {
             if (this.inputBox) {
-                setTimeout(() => {
+                setInterval(() => {
                     this.inputBox?.nativeElement.focus();
                 }, 100);
             }

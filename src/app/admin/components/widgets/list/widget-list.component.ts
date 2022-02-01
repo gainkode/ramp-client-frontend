@@ -62,7 +62,7 @@ export class WidgetListComponent implements OnInit, OnDestroy, AfterViewInit {
     private router: Router,
     private auth: AuthService,
     private adminDataService: AdminDataService) {
-      this.userIdFilter = this.route.snapshot.params['userId'] ?? '';
+    this.userIdFilter = this.route.snapshot.params['userId'] ?? '';
   }
 
   ngOnInit(): void {
@@ -85,11 +85,13 @@ export class WidgetListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.sort.sortChange.subscribe(() => {
-      this.sortedDesc = (this.sort.direction === 'desc');
-      this.sortedField = this.sort.active;
-      this.loadData();
-    });
+    this.subscriptions.add(
+      this.sort.sortChange.subscribe(() => {
+        this.sortedDesc = (this.sort.direction === 'desc');
+        this.sortedField = this.sort.active;
+        this.loadData();
+      })
+    );
   }
 
   handleFilterApplied(filter: Filter): void {

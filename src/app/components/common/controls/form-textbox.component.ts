@@ -32,7 +32,7 @@ export class FormTextBoxComponent implements ControlValueAccessor, OnInit, OnDes
     @Input() upperCase = false;
     @Input() separator = false;
 
-    private controlSubscription: Subscription | undefined = undefined;
+    private subscriptions: Subscription = new Subscription();
     initialized = false;
     active = true;
     errorMessage = '';
@@ -62,17 +62,16 @@ export class FormTextBoxComponent implements ControlValueAccessor, OnInit, OnDes
     }
 
     ngOnInit(): void {
-        this.controlSubscription = this.control?.valueChanges.subscribe(val => {
-            this.initialized = true;
-            this.errorMessage = this.getError();
-        });
+        this.subscriptions.add(
+            this.control?.valueChanges.subscribe(val => {
+                this.initialized = true;
+                this.errorMessage = this.getError();
+            })
+        );
     }
 
     ngOnDestroy(): void {
-        if (this.controlSubscription) {
-            this.controlSubscription.unsubscribe();
-            this.controlSubscription = undefined;
-        }
+        this.subscriptions.unsubscribe();
     }
 
     registerOnTouched(fn: any): void {

@@ -14,7 +14,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommonDataService } from '../../../../services/common-data.service';
 import { AdminDataService } from '../../../services/admin-data.service';
 import { UserItem } from '../../../../model/user.model';
-import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, switchMap, take, takeUntil } from 'rxjs/operators';
 import { Filter } from '../../../model/filter.model';
 import { Countries, Country } from '../../../../model/country-code.model';
@@ -68,6 +68,7 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
   filteredUserOptions: Array<UserItem> = [];
 
   private destroy$ = new Subject();
+  private subscriptions: Subscription = new Subscription();
   private userSearchString$ = new BehaviorSubject<string>('');
   private countrySearchString$ = new BehaviorSubject<string>('');
 
@@ -108,19 +109,24 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.destroy$.next();
+    this.subscriptions.unsubscribe();
   }
 
   onSubmit(): void {
     const widgetItem = this.getWidgetItem();
-    this.adminDataService.saveWidget(widgetItem).subscribe(() => {
-      this.layoutService.requestRightPanelClose();
-    });
+    this.subscriptions.add(
+      this.adminDataService.saveWidget(widgetItem).subscribe(() => {
+        this.layoutService.requestRightPanelClose();
+      })
+    );
   }
 
   onDelete(): void {
-    this.adminDataService.deleteWidget(this.form.value.id).subscribe(() => {
-      this.layoutService.requestRightPanelClose();
-    });
+    this.subscriptions.add(
+      this.adminDataService.deleteWidget(this.form.value.id).subscribe(() => {
+        this.layoutService.requestRightPanelClose();
+      })
+    );
   }
 
   onCancel(): void {
@@ -279,38 +285,42 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
 
   private loadPaymentProviders(): void {
     this.paymentProviderOptions = [];
-    this.adminDataService.getProviders()?.valueChanges.subscribe(({ data }) => {
-      const providers = data.getPaymentProviders as PaymentProvider[];
-      this.paymentProviderOptions = providers?.map((val) => new PaymentProviderView(val)) as PaymentProviderView[];
-    }, (error) => {
-      this.snackBar.open(
-        this.errorHandler.getError(error.message, 'Unable to load payment provider list.'),
-        undefined,
-        { duration: 5000 }
-      );
-    });
+    this.subscriptions.add(
+      this.adminDataService.getProviders()?.valueChanges.pipe(take(1)).subscribe(({ data }) => {
+        const providers = data.getPaymentProviders as PaymentProvider[];
+        this.paymentProviderOptions = providers?.map((val) => new PaymentProviderView(val)) as PaymentProviderView[];
+      }, (error) => {
+        this.snackBar.open(
+          this.errorHandler.getError(error.message, 'Unable to load payment provider list.'),
+          undefined,
+          { duration: 5000 }
+        );
+      })
+    );
   }
 
   private loadCurrencies(): void {
-    this.commonDataService.getSettingsCurrency()?.valueChanges.subscribe(({ data }) => {
-      const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
-      if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
-        this.currencyOptionsFiat = currencySettings.settingsCurrency.list?.
-          filter(x => x.fiat === true).
-          map((val) => new CurrencyView(val)) as CurrencyView[];
-        this.currencyOptionsCrypto = currencySettings.settingsCurrency.list?.
-          filter(x => x.fiat === false).
-          map((val) => new CurrencyView(val)) as CurrencyView[];
-      } else {
-        this.currencyOptionsCrypto = [];
-        this.currencyOptionsFiat = [];
-      }
-    }, (error) => {
-      this.snackBar.open(
-        this.errorHandler.getError(error.message, 'Unable to load currencies.'),
-        undefined,
-        { duration: 5000 }
-      );
-    });
+    this.subscriptions.add(
+      this.commonDataService.getSettingsCurrency()?.valueChanges.pipe(take(1)).subscribe(({ data }) => {
+        const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
+        if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
+          this.currencyOptionsFiat = currencySettings.settingsCurrency.list?.
+            filter(x => x.fiat === true).
+            map((val) => new CurrencyView(val)) as CurrencyView[];
+          this.currencyOptionsCrypto = currencySettings.settingsCurrency.list?.
+            filter(x => x.fiat === false).
+            map((val) => new CurrencyView(val)) as CurrencyView[];
+        } else {
+          this.currencyOptionsCrypto = [];
+          this.currencyOptionsFiat = [];
+        }
+      }, (error) => {
+        this.snackBar.open(
+          this.errorHandler.getError(error.message, 'Unable to load currencies.'),
+          undefined,
+          { duration: 5000 }
+        );
+      })
+    );
   }
 }

@@ -226,35 +226,31 @@ export class TransferWidgetComponent implements OnInit {
     this.errorMessage = '';
     this.inProgress = true;
     const walletData = this.profileService.getMyContacts([], [], [], 0, 1000, 'displayName', false);
-    if (walletData === null) {
-      this.errorMessage = this.errorHandler.getRejectedCookieMessage();
-    } else {
-      this.pSubscriptions.add(
-        walletData.valueChanges.pipe(take(1)).subscribe(({ data }) => {
-          this.inProgress = false;
-          const dataList = data.myContacts as UserContactListResult;
-          if (dataList !== null) {
-            const walletCount = dataList?.count as number;
-            if (walletCount > 0) {
-              this.userWallets = dataList?.list?.map((val) => {
-                const walletData = {
-                  address: val.address,
-                  vaultName: val.displayName,
-                  assetId: val.assetId
-                } as AssetAddressShort;
-                return new WalletItem(walletData, '', undefined);
-              }) as WalletItem[];
-            }
+    this.pSubscriptions.add(
+      walletData.valueChanges.pipe(take(1)).subscribe(({ data }) => {
+        this.inProgress = false;
+        const dataList = data.myContacts as UserContactListResult;
+        if (dataList !== null) {
+          const walletCount = dataList?.count as number;
+          if (walletCount > 0) {
+            this.userWallets = dataList?.list?.map((val) => {
+              const walletData = {
+                address: val.address,
+                vaultName: val.displayName,
+                assetId: val.assetId
+              } as AssetAddressShort;
+              return new WalletItem(walletData, '', undefined);
+            }) as WalletItem[];
           }
-          this.initData();
-          this.pager.init('order_details', 'Order details');
-        }, (error) => {
-          this.inProgress = false;
-          this.initData();
-          this.pager.init('order_details', 'Order details');
-        })
-      );
-    }
+        }
+        this.initData();
+        this.pager.init('order_details', 'Order details');
+      }, (error) => {
+        this.inProgress = false;
+        this.initData();
+        this.pager.init('order_details', 'Order details');
+      })
+    );
   }
 
   // == Order details page ==

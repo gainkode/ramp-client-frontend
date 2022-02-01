@@ -1,6 +1,7 @@
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
-import { Component, Input, Output, EventEmitter, OnInit, ViewChild, NgZone } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, ViewChild, NgZone, OnDestroy } from '@angular/core';
 import { Validators, FormBuilder } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { KycLevel } from 'src/app/model/identification.model';
 import { UserTypeList } from 'src/app/model/payment.model';
@@ -10,7 +11,7 @@ import { UserTypeList } from 'src/app/model/payment.model';
   templateUrl: 'level-editor.component.html',
   styleUrls: ['level-editor.component.scss', 'list/identification-list.component.scss']
 })
-export class LevelEditorComponent implements OnInit {
+export class LevelEditorComponent implements OnInit, OnDestroy {
   @Input()
   set currentLevel(level: KycLevel | null) {
     this.setFormData(level);
@@ -26,6 +27,7 @@ export class LevelEditorComponent implements OnInit {
 
   private settingsId = '';
   private loadingData = false;
+  private subscriptions: Subscription = new Subscription();
   errorMessage = '';
 
   userTypes = UserTypeList;
@@ -39,23 +41,29 @@ export class LevelEditorComponent implements OnInit {
     flow: ['', { validators: [Validators.required], updateOn: 'change' }]
   });
 
-  ngOnInit(): void {
-    this.levelForm.valueChanges.subscribe({
-      next: (result: any) => {
-        if (!this.create && !this.loadingData) {
-          this.formChanged.emit(true);
-        }
-      }
-    });
+  constructor(private formBuilder: FormBuilder, private ngZone: NgZone) {
   }
 
-  constructor(private formBuilder: FormBuilder, private ngZone: NgZone) {
+  ngOnInit(): void {
+    this.subscriptions.add(
+      this.levelForm.valueChanges.subscribe({
+        next: (result: any) => {
+          if (!this.create && !this.loadingData) {
+            this.formChanged.emit(true);
+          }
+        }
+      })
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   triggerResize(): void {
     // Wait for changes to be applied, then trigger textarea resize.
     this.ngZone.onStable.pipe(take(1))
-        .subscribe(() => this.descriptionInput.resizeToFitContent(true));
+      .subscribe(() => this.descriptionInput.resizeToFitContent(true));
   }
 
   setFormData(level: KycLevel | null): void {

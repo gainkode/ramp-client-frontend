@@ -19,16 +19,16 @@ export class FormCardBoxComponent implements ControlValueAccessor, OnInit, OnDes
     @Input() assist = '';
     @Input() placeholder = '';
     @Input() maxlength = 0;
-    @Input() errorMessages: {[key: string]: string} = {};
+    @Input() errorMessages: { [key: string]: string } = {};
     @Input() formControl!: FormControl;
     @Input() formControlName!: string;
     @Input() img = '';
     @Input() separator = false;
 
-    private controlSubscription: Subscription | undefined = undefined;
+    private subscriptions: Subscription = new Subscription();
     initialized = false;
     active = true;
-    
+
     errorMessage = '';
 
     get control(): FormControl {
@@ -39,7 +39,7 @@ export class FormCardBoxComponent implements ControlValueAccessor, OnInit, OnDes
         @Optional() @Host() @SkipSelf()
         private controlContainer: ControlContainer) {
     }
-    
+
     private getError(): string {
         let result = '';
         const errors = this.control?.errors;
@@ -56,17 +56,16 @@ export class FormCardBoxComponent implements ControlValueAccessor, OnInit, OnDes
     }
 
     ngOnInit(): void {
-        this.controlSubscription = this.control?.valueChanges.subscribe(val => {
-            this.initialized = true;
-            this.errorMessage = this.getError();
-        });
+        this.subscriptions.add(
+            this.control?.valueChanges.subscribe(val => {
+                this.initialized = true;
+                this.errorMessage = this.getError();
+            })
+        );
     }
 
     ngOnDestroy(): void {
-        if (this.controlSubscription) {
-            this.controlSubscription.unsubscribe();
-            this.controlSubscription = undefined;
-        }
+        this.subscriptions.unsubscribe();
     }
 
     registerOnTouched(fn: any): void {

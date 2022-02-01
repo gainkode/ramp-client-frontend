@@ -72,11 +72,13 @@ export class SystemUserListComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   ngAfterViewInit(): void {
-    this.sort.sortChange.subscribe(() => {
-      this.sortedDesc = (this.sort.direction === 'desc');
-      this.sortedField = this.sort.active;
-      this.loadUsers();
-    });
+    this.subscriptions.add(
+      this.sort.sortChange.subscribe(() => {
+        this.sortedDesc = (this.sort.direction === 'desc');
+        this.sortedField = this.sort.active;
+        this.loadUsers();
+      })
+    );
   }
 
   private loadCurrencyData(): void {
@@ -144,14 +146,14 @@ export class SystemUserListComponent implements OnInit, OnDestroy, AfterViewInit
 
   sendMessageData(ids: string[], level: UserNotificationLevel, title: string, text: string) {
     const requestData = this.adminService.sendAdminNotification(ids, level, title, text);
-    if (requestData) {
+    this.subscriptions.add(
       requestData.subscribe(({ data }) => {
       }, (error) => {
         if (this.auth.token === '') {
           this.router.navigateByUrl('/');
         }
-      });
-    }
+      })
+    );    
   }
 
   private setEditMode(mode: boolean): void {
@@ -168,7 +170,7 @@ export class SystemUserListComponent implements OnInit, OnDestroy, AfterViewInit
     this.subscriptions.add(
       listData$.subscribe(result => {
         this.users = result.list;
-      this.userCount = result.count;
+        this.userCount = result.count;
       })
     );
   }

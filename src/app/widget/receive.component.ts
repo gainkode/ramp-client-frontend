@@ -60,31 +60,27 @@ export class ReceiveWidgetComponent implements OnInit {
     this.cryptoList = [];
     this.inProgress = true;
     const currencyData = this.commonService.getSettingsCurrency();
-    if (currencyData === null) {
-      this.errorMessage = this.errorHandler.getRejectedCookieMessage();
-    } else {
-      this.pSubscriptions.add(
-        currencyData.valueChanges.subscribe(({ data }) => {
-          this.inProgress = false;
-          const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
-          if (currencySettings.settingsCurrency) {
-            if (currencySettings.settingsCurrency.count ?? 0 > 0) {
-              this.cryptoList = currencySettings.settingsCurrency.list?.
-                filter(x => x.fiat === false).
-                map((val) => new CurrencyView(val)) as CurrencyView[];
-            }
+    this.pSubscriptions.add(
+      currencyData.valueChanges.subscribe(({ data }) => {
+        this.inProgress = false;
+        const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
+        if (currencySettings.settingsCurrency) {
+          if (currencySettings.settingsCurrency.count ?? 0 > 0) {
+            this.cryptoList = currencySettings.settingsCurrency.list?.
+              filter(x => x.fiat === false).
+              map((val) => new CurrencyView(val)) as CurrencyView[];
           }
-          this.stageId = 'receive_details';
-          this.title = 'Receive details';
-        }, (error) => {
-          this.inProgress = false;
-          if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
-            this.router.navigateByUrl('/');
-          } else {
-            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load currencies');
-          }
-        })
-      );
-    }
+        }
+        this.stageId = 'receive_details';
+        this.title = 'Receive details';
+      }, (error) => {
+        this.inProgress = false;
+        if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
+          this.router.navigateByUrl('/');
+        } else {
+          this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load currencies');
+        }
+      })
+    );
   }
 }

@@ -52,7 +52,7 @@ export class WalletListComponent implements OnInit, OnDestroy, AfterViewInit {
     private commonService: CommonDataService,
     private adminService: AdminDataService,
     private router: Router) {
-    
+
   }
 
   ngOnInit(): void {
@@ -65,11 +65,13 @@ export class WalletListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.sort.sortChange.subscribe(() => {
-      this.sortedDesc = (this.sort.direction === 'desc');
-      this.sortedField = this.sort.active;
-      this.loadWallets();
-    });
+    this.subscriptions.add(
+      this.sort.sortChange.subscribe(() => {
+        this.sortedDesc = (this.sort.direction === 'desc');
+        this.sortedField = this.sort.active;
+        this.loadWallets();
+      })
+    );
   }
 
   handleFilterApplied(filter: Filter): void {
@@ -171,28 +173,32 @@ export class WalletListComponent implements OnInit, OnDestroy, AfterViewInit {
   onDeleteWallet(customer: AssetAddress): void {
     const requestData = this.adminService.deleteWallet(customer.vaultId ?? '', customer.userId ?? '');
     if (requestData) {
-      requestData.subscribe(({ data }) => {
-        this.showEditor(null, false);
-        this.loadWallets();
-      }, (error) => {
-        if (this.auth.token === '') {
-          this.router.navigateByUrl('/');
-        }
-      });
+      this.subscriptions.add(
+        requestData.subscribe(({ data }) => {
+          this.showEditor(null, false);
+          this.loadWallets();
+        }, (error) => {
+          if (this.auth.token === '') {
+            this.router.navigateByUrl('/');
+          }
+        })
+      );
     }
   }
 
   onSaveWallet(customer: AssetAddress): void {
     const requestData = this.adminService.updateUserVault(customer);
     if (requestData) {
-      requestData.subscribe(({ data }) => {
-        this.showEditor(null, false);
-        this.loadWallets();
-      }, (error) => {
-        if (this.auth.token === '') {
-          this.router.navigateByUrl('/');
-        }
-      });
+      this.subscriptions.add(
+        requestData.subscribe(({ data }) => {
+          this.showEditor(null, false);
+          this.loadWallets();
+        }, (error) => {
+          if (this.auth.token === '') {
+            this.router.navigateByUrl('/');
+          }
+        })
+      );
     }
   }
 }

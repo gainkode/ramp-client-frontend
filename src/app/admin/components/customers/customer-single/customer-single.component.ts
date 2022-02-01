@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router} from '@angular/router';
-import { ErrorService } from '../../../../services/error.service';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AdminDataService } from '../../../services/admin-data.service';
 import { take } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
@@ -25,7 +24,6 @@ export class CustomerSingleComponent implements OnInit, OnDestroy {
   constructor(
     private activeRoute: ActivatedRoute,
     private router: Router,
-    private errorHandler: ErrorService,
     private auth: AuthService,
     private commonDataService: CommonDataService,
     private adminService: AdminDataService
@@ -33,9 +31,11 @@ export class CustomerSingleComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.activeRoute.params.subscribe(routeParams => {
-      this.loadData(routeParams.id);
-    });
+    this.subscriptions.add(
+      this.activeRoute.params.subscribe(routeParams => {
+        this.loadData(routeParams.id);
+      })
+    );
   }
 
   ngOnDestroy(): void {
@@ -54,9 +54,11 @@ export class CustomerSingleComponent implements OnInit, OnDestroy {
         } else {
           this.currencyOptions = [];
         }
-        this.adminService.getUser(id).pipe(take(1)).subscribe(user => {
-          this.customer = user;
-        });
+        this.subscriptions.add(
+          this.adminService.getUser(id).pipe(take(1)).subscribe(user => {
+            this.customer = user;
+          })
+        );
       }, (error) => {
         if (this.auth.token === '') {
           this.router.navigateByUrl('/');

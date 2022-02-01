@@ -343,21 +343,17 @@ export class PaymentDataService {
     }
   }
 
-  getOneToManyRates(from: string, to: string[], reverseRate: boolean): QueryRef<any, EmptyObject> | null {
-    if (this.apollo.client !== undefined) {
-      const vars = {
-        reverse: reverseRate,
-        currencyFrom: from,
-        currenciesTo: to
-      };
-      return this.apollo.watchQuery<any>({
-        query: GET_ONE_TO_MANY_RATES,
-        variables: vars,
-        fetchPolicy: 'network-only'
-      });
-    } else {
-      return null;
-    }
+  getOneToManyRates(from: string, to: string[], reverseRate: boolean): QueryRef<any, EmptyObject> {
+    const vars = {
+      reverse: reverseRate,
+      currencyFrom: from,
+      currenciesTo: to
+    };
+    return this.apollo.watchQuery<any>({
+      query: GET_ONE_TO_MANY_RATES,
+      variables: vars,
+      fetchPolicy: 'network-only'
+    });
   }
 
   getSettingsKycTiers(): QueryRef<any, EmptyObject> | null {
@@ -371,39 +367,31 @@ export class PaymentDataService {
     }
   }
 
-  mySettingsKycTiers(): QueryRef<any, EmptyObject> | null {
-    if (this.apollo.client !== undefined) {
-      return this.apollo.watchQuery<any>({
-        query: MY_SETTINGS_KYC_TIERS,
-        fetchPolicy: 'network-only'
-      });
-    } else {
-      return null;
-    }
+  mySettingsKycTiers(): QueryRef<any, EmptyObject> {
+    return this.apollo.watchQuery<any>({
+      query: MY_SETTINGS_KYC_TIERS,
+      fetchPolicy: 'network-only'
+    });
   }
 
   getAppropriateSettingsKycTiers(
     amountVal: number,
     currencyVal: string,
     sourceVal: TransactionSource,
-    widgetId: string): QueryRef<any, EmptyObject> | null {
-    if (this.apollo.client !== undefined) {
-      const widget = (widgetId !== '') ? widgetId : undefined;
-      const vars = {
-        amount: amountVal,
-        currency: currencyVal,
-        targetKycProvider: KycProvider.SumSub,
-        source: sourceVal,
-        widgetId: widget
-      };
-      return this.apollo.watchQuery<any>({
-        query: GET_APPROPRIATE_SETTINGS_KYC_TIERS,
-        variables: vars,
-        fetchPolicy: 'network-only'
-      });
-    } else {
-      return null;
-    }
+    widgetId: string): QueryRef<any, EmptyObject> {
+    const widget = (widgetId !== '') ? widgetId : undefined;
+    const vars = {
+      amount: amountVal,
+      currency: currencyVal,
+      targetKycProvider: KycProvider.SumSub,
+      source: sourceVal,
+      widgetId: widget
+    };
+    return this.apollo.watchQuery<any>({
+      query: GET_APPROPRIATE_SETTINGS_KYC_TIERS,
+      variables: vars,
+      fetchPolicy: 'network-only'
+    });
   }
 
   createTransaction(

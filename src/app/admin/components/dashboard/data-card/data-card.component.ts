@@ -28,9 +28,11 @@ export class DataCardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.dashboardService.data.pipe(take(1)).subscribe(data => {
-      this.data = data[this.source];
-    });
+    this.subscriptions.add(
+      this.dashboardService.data.pipe(take(1)).subscribe(data => {
+        this.data = data[this.source];
+      })
+    );
   }
 
   ngOnDestroy(): void {

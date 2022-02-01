@@ -2576,6 +2576,7 @@ export type TransactionStatusDescriptor = {
   canBeCancelled: Scalars['Boolean'];
   description: Scalars['String'];
   userStatus: UserTransactionStatus;
+  adminStatus: AdminTransactionStatus;
   level: TransactionStatusLevel;
   repeatFromStatus?: Maybe<TransactionStatus>;
 };

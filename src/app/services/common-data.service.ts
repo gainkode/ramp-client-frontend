@@ -180,48 +180,32 @@ export class CommonDataService {
     });
   }
 
-  getMyTransactionsTotal(): QueryRef<any, EmptyObject> | null {
-    if (this.apollo.client !== undefined) {
-      return this.apollo.watchQuery<any>({
-        query: MY_TRANSACTIONS_TOTAL,
-        fetchPolicy: 'network-only'
-      });
-    } else {
-      return null;
-    }
+  getMyTransactionsTotal(): QueryRef<any, EmptyObject> {
+    return this.apollo.watchQuery<any>({
+      query: MY_TRANSACTIONS_TOTAL,
+      fetchPolicy: 'network-only'
+    });
   }
 
-  getMyBalances(): QueryRef<any, EmptyObject> | null {
-    if (this.apollo.client !== undefined) {
-      return this.apollo.watchQuery<any>({
-        query: MY_BALANCES,
-        fetchPolicy: 'network-only'
-      });
-    } else {
-      return null;
-    }
+  getMyBalances(): QueryRef<any, EmptyObject> {
+    return this.apollo.watchQuery<any>({
+      query: MY_BALANCES,
+      fetchPolicy: 'network-only'
+    });
   }
 
-  getUsers(): QueryRef<any, EmptyObject> | null {
-    if (this.apollo.client !== undefined) {
-      return this.apollo.watchQuery<any>({
-        query: GET_USERS,
-        fetchPolicy: 'network-only'
-      });
-    } else {
-      return null;
-    }
+  getUsers(): QueryRef<any, EmptyObject> {
+    return this.apollo.watchQuery<any>({
+      query: GET_USERS,
+      fetchPolicy: 'network-only'
+    });
   }
 
-  getUserById(id: string): QueryRef<any, EmptyObject> | null {
-    if (this.apollo.client !== undefined) {
-      return this.apollo.watchQuery<any>({
-        query: GET_USER_BY_ID,
-        variables: { userId: id },
-        fetchPolicy: 'network-only'
-      });
-    } else {
-      return null;
-    }
+  getUserById(id: string): QueryRef<any, EmptyObject> {
+    return this.apollo.watchQuery<any>({
+      query: GET_USER_BY_ID,
+      variables: { userId: id },
+      fetchPolicy: 'network-only'
+    });
   }
 }

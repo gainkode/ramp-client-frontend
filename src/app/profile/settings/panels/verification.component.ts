@@ -2,6 +2,7 @@ import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/cor
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { SumsubVerificationDialogBox } from 'src/app/components/dialogs/sumsub-verification.dialog';
 import { SettingsKycTierListResult, SettingsKycTierShortExListResult, UserState } from 'src/app/model/generated-models';
 import { TierItem } from 'src/app/model/identification.model';
@@ -55,37 +56,30 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
 
     private loadTransactionsTotal(): void {
         this.total = 0;
-        const totalData = this.commonService.getMyTransactionsTotal();
+        const totalData$ = this.commonService.getMyTransactionsTotal().valueChanges.pipe(take(1));
         this.progressChange.emit(true);
-        if (totalData === null) {
-            this.progressChange.emit(false);
-            this.error.emit(this.errorHandler.getRejectedCookieMessage());
-        } else {
-            this.pSubscriptions.add(
-                totalData.valueChanges.subscribe(({ data }) => {
-                    const totalState = data.myState as UserState;
-                    this.total = totalState.totalAmountEur ?? 0;
-                    this.getTiers();
-                }, (error) => {
-                    this.progressChange.emit(false);
-                    this.error.emit(this.errorHandler.getError(error.message, 'Unable to load exchange rate'));
-                })
-            );
-        }
+        this.pSubscriptions.add(
+            totalData$.subscribe(({ data }) => {
+                const totalState = data.myState as UserState;
+                this.total = totalState.totalAmountEur ?? 0;
+                this.getTiers();
+            }, (error) => {
+                this.progressChange.emit(false);
+                this.error.emit(this.errorHandler.getError(error.message, 'Unable to load exchange rate'));
+            })
+        );
     }
 
     private getTiers(): void {
         this.error.emit('');
         this.tiers = [];
-        const tiersData = this.dataService.mySettingsKycTiers();
+        const tiersData = this.dataService.mySettingsKycTiers().valueChanges.pipe(take(1));
         const settingsCommon = this.auth.getLocalSettingsCommon();
-        if (tiersData === null) {
-            this.error.emit(this.errorHandler.getRejectedCookieMessage());
-        } else if (settingsCommon === null) {
+        if (settingsCommon === null) {
             this.error.emit('Unable to load common settings');
         } else {
             this.pSubscriptions.add(
-                tiersData.valueChanges.subscribe(({ data }) => {
+                tiersData.subscribe(({ data }) => {
                     const tiersData = data.mySettingsKycTiers as SettingsKycTierShortExListResult;
                     this.progressChange.emit(false);
                     if ((tiersData.count ?? 0 > 0) && tiersData.list) {

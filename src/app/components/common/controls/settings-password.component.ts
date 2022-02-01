@@ -27,7 +27,7 @@ export class SettingsPasswordBoxComponent implements ControlValueAccessor, OnIni
     @Input() separator = false;
     @Input() externalError = false;
 
-    private controlSubscription: Subscription | undefined = undefined;
+    private subscriptions: Subscription = new Subscription();
     initialized = false;
     active = true;
     errorMessage = '';
@@ -42,7 +42,7 @@ export class SettingsPasswordBoxComponent implements ControlValueAccessor, OnIni
         @Optional() @Host() @SkipSelf()
         private controlContainer: ControlContainer) {
     }
-    
+
     private getError(): string {
         let result = '';
         const errors = this.control?.errors;
@@ -59,17 +59,16 @@ export class SettingsPasswordBoxComponent implements ControlValueAccessor, OnIni
     }
 
     ngOnInit(): void {
-        this.controlSubscription = this.control?.valueChanges.subscribe(val => {
-            this.initialized = true;
-            this.errorMessage = this.getError();
-        });
+        this.subscriptions.add(
+            this.control?.valueChanges.subscribe(val => {
+                this.initialized = true;
+                this.errorMessage = this.getError();
+            })
+        );
     }
 
     ngOnDestroy(): void {
-        if (this.controlSubscription) {
-            this.controlSubscription.unsubscribe();
-            this.controlSubscription = undefined;
-        }
+        this.subscriptions.unsubscribe();
     }
 
     registerOnTouched(fn: any): void {
