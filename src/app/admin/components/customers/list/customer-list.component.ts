@@ -10,7 +10,7 @@ import { LayoutService } from '../../../services/layout.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { CurrencyView } from 'src/app/model/payment.model';
 import { CommonDataService } from 'src/app/services/common-data.service';
-import { SettingsCurrencyWithDefaults, UserNotificationLevel } from 'src/app/model/generated-models';
+import { SettingsCurrencyWithDefaults, UserNotificationLevel, UserRole } from 'src/app/model/generated-models';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
 import { SendNotificationDialogBox } from 'src/app/components/dialogs/send-notification-box.dialog';
@@ -44,6 +44,7 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
   ];
 
   selectedCustomer: UserItem | undefined = undefined;
+  roleIds: string[] = [];
   customers: UserItem[] = [];
   customerCount = 0;
   pageSize = 25;
@@ -107,6 +108,29 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
               this.currencyList = currencySettings.settingsCurrency.list?.
                 map((val) => new CurrencyView(val)) as CurrencyView[];
             }
+          }
+          this.loadRoleData();
+        }, (error) => {
+          if (this.auth.token === '') {
+            this.router.navigateByUrl('/');
+          }
+        })
+      );
+    }
+  }
+
+  private loadRoleData(): void {
+    this.currencyList = [];
+    const currencyData = this.commonService.getRoles();
+    if (currencyData) {
+      this.subscriptions.add(
+        currencyData.valueChanges.subscribe(({ data }) => {
+          const roleData = data.getRoles as UserRole[];
+          const userRole = roleData.find(x => x.code === 'USER');
+          if (userRole) {
+            this.roleIds = [userRole.userRoleId ?? ''];
+          } else {
+            this.roleIds = [];
           }
           this.loadCustomers();
         }, (error) => {
@@ -176,6 +200,7 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private loadCustomers(): void {
     const listData$ = this.adminService.getUsers(
+      this.roleIds,
       this.pageIndex,
       this.pageSize,
       this.sortedField,

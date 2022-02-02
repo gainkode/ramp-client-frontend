@@ -40,6 +40,7 @@ const GET_MY_TRANSACTIONS = gql`
         type
         source
         status
+        transferOrder { transferDetails }
         feeFiat
         feeMinFiat
         feePercent

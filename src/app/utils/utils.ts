@@ -66,6 +66,14 @@ export function getCryptoSymbol(symbol: string): string {
     return result;
 }
 
+export function shortenString(val: string, limit: number): string {
+    let result = val;
+    if (val.length > limit) {
+        result = `${val.slice(0, limit - 1)}...`;
+    }
+    return result;
+}
+
 export function getFullName(user: User): string {
     let fullName = '';
     if (user.type === UserType.Merchant) {

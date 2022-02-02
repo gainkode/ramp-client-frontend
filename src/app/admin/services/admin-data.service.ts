@@ -493,6 +493,7 @@ const GET_TRANSACTIONS = gql`
 const GET_USERS = gql`
   query GetUsers(
     $userIds: [String!]
+    $roleIdsOnly: [String!]
     $accountTypesOnly: [UserType!]
     $accountModesOnly: [UserMode!]
     $accountStatusesOnly: [AccountStatus!]
@@ -512,6 +513,7 @@ const GET_USERS = gql`
   ) {
     getUsers(
       userIdsOnly: $userIds
+      roleIdsOnly: $roleIdsOnly
       accountTypesOnly: $accountTypesOnly
       accountModesOnly: $accountModesOnly
       accountStatusesOnly: $accountStatusesOnly
@@ -1754,6 +1756,7 @@ export class AdminDataService {
   }
 
   getUsers(
+    roleIds: string[],
     pageIndex: number,
     takeItems: number,
     orderField: string,
@@ -1762,6 +1765,7 @@ export class AdminDataService {
   ): Observable<{ list: UserItem[], count: number }> {
     const vars = {
       userIds: filter?.users,
+      roleIdsOnly: (roleIds.length > 0) ? roleIds : undefined,
       accountTypesOnly: filter?.accountTypes,
       accountStatusesOnly: filter?.accountStatuses,
       riskLevelsOnly: filter?.riskLevels,

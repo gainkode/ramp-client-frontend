@@ -24,6 +24,17 @@ const GET_SETTINGS_CURRENCY = gql`
   }
 `;
 
+const GET_ROLES = gql`
+query GetRoles {
+  getRoles {
+    userRoleId
+    name
+    code
+    immutable
+  }
+}
+`;
+
 const MY_TRANSACTIONS_TOTAL = gql`
 query MyState {
   myState {
@@ -176,6 +187,13 @@ export class CommonDataService {
       variables: {
         recaptcha: environment.recaptchaId
       },
+      fetchPolicy: 'network-only'
+    });
+  }
+
+  getRoles(): QueryRef<any, EmptyObject> {
+    return this.apollo.watchQuery<any>({
+      query: GET_ROLES,
       fetchPolicy: 'network-only'
     });
   }

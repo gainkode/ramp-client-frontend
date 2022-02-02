@@ -3097,6 +3097,7 @@ export type UserProfitInput = {
 
 export type UserRole = {
   __typename?: 'UserRole';
+  userRoleId?: Maybe<Scalars['String']>;
   name: Scalars['String'];
   code: Scalars['String'];
   immutable?: Maybe<Scalars['Boolean']>;

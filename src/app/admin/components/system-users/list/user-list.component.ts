@@ -162,6 +162,7 @@ export class SystemUserListComponent implements OnInit, OnDestroy, AfterViewInit
 
   private loadUsers(): void {
     const listData$ = this.adminService.getUsers(
+      [],
       this.pageIndex,
       this.pageSize,
       this.sortedField,

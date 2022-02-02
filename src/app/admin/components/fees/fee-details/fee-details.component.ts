@@ -246,7 +246,7 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
   }
 
   private getFilteredAccounts(filter: Filter): Observable<CommonTargetValue[]> {
-    return this.adminDataService.getUsers(0, 100, 'email', false, filter).pipe(
+    return this.adminDataService.getUsers([], 0, 100, 'email', false, filter).pipe(
       map(result => {
         return result.list.map(user => {
           return {

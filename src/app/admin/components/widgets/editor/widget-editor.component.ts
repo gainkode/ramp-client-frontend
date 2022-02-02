@@ -273,7 +273,7 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
 
   private getUserFilteredOptions(searchString: string): Observable<UserItem[]> {
     if (searchString) {
-      return this.adminDataService.getUsers(0, 100, 'email', false, new Filter({ search: searchString })).pipe(
+      return this.adminDataService.getUsers([], 0, 100, 'email', false, new Filter({ search: searchString })).pipe(
         map(result => {
           return result.list;
         })

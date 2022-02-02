@@ -49,8 +49,9 @@
                 <div class="__profile-details-item-title-box">
                     Recipient:
                 </div>
-                <div class="__profile-details-item-value-box">
-                    {{transaction?.recipient}}
+                <div class="__profile-details-item-value-box-default">
+                    <input class="__profile-text-box-noborder" type="text" readonly
+                        [value]="transaction?.recipient?.title" />
                 </div>
             </div>
 

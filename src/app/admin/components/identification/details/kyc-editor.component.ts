@@ -201,7 +201,7 @@ export class KycEditorComponent implements OnInit, OnDestroy {
   }
 
   private getFilteredAccounts(filter: Filter): Observable<CommonTargetValue[]> {
-    return this.adminService.getUsers(0, 100, 'email', false, filter).pipe(
+    return this.adminService.getUsers([], 0, 100, 'email', false, filter).pipe(
       map(result => {
         return result.list.map(user => {
           return {

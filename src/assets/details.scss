@@ -206,6 +206,11 @@
     color: $color_purple_900_text;
 }
 
+.__profile-details-item-value-box-default {
+    grid-row: 1;
+    grid-column: 2 / 3;
+}
+
 .__profile-details-item-value-box {
     grid-row: 1;
     grid-column: 2 / 3;

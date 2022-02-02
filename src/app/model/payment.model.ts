@@ -239,7 +239,8 @@ export const UserTransactionTypeList: Array<TransactionTypeView> = [
     { id: TransactionType.Deposit, name: 'Buy' },
     { id: TransactionType.Exchange, name: 'Swap' },
     { id: TransactionType.Transfer, name: 'Send' },
-    { id: TransactionType.Withdrawal, name: 'Sell' }
+    { id: TransactionType.Withdrawal, name: 'Sell' },
+    { id: TransactionType.Receive, name: 'Receive' }
 ];
 
 export const QuickCheckoutTransactionTypeList: Array<TransactionTypeView> = [

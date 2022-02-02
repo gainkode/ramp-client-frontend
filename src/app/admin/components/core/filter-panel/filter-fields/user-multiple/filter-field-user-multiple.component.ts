@@ -113,6 +113,7 @@ export class FilterFieldUserMultipleComponent implements OnInit, OnDestroy, Cont
   private getFilteredOptions(searchString: string): Observable<UserItem[]> {
     if (searchString) {
       return this.adminDataService.getUsers(
+        [],
         0,
         100,
         'email',

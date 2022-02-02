@@ -135,7 +135,7 @@ export class UserItem {
       this.risk = data.risk ?? '';
       this.riskCodes = data.riskCodes?.map(code => {
         const riskData = JSON.parse(code);
-        return riskData.code as string ?? '';
+        return riskData.code ?? '';
       }) ?? [];
       this.totalTransactionCount = data.totalTransactionCount ?? 0;
       this.avarageTransaction = data.avarageTransaction ?? 0;

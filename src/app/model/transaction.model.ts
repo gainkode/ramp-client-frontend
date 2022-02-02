@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { getCurrencySign, getTransactionStatusHash } from '../utils/utils';
+import { getCryptoSymbol, getCurrencySign, getTransactionStatusHash, shortenString } from '../utils/utils';
 import { CommonTargetValue } from './common.model';
 import {
   AccountStatus,
@@ -260,7 +260,12 @@ export class TransactionItem {
     imgClass: '',
     imgSource: ''
   };
-  recipient = 'Default Vault BTC';
+  recipient: CommonTargetValue = {
+    id: '',
+    title: '',
+    imgClass: '',
+    imgSource: ''
+  };
   currencyToSpend = '';
   currencyToReceive = '';
   amountToSpend = 0;
@@ -286,6 +291,16 @@ export class TransactionItem {
         this.currencyToReceive = data.currencyToReceive ?? '';
         this.amountToSpend = data.amountToSpend ?? 0;
         this.amountToReceive = data.amountToReceive ?? 0;
+        const c = getCryptoSymbol(this.currencyToReceive);
+        const cryptoImg = (c !== '') ?
+          `../../../assets/svg-crypto/${c.toLowerCase()}.svg` :
+          '';
+        this.recipient = {
+          id: '',
+          title: `Default Vault ${c}`,
+          imgClass: '',
+          imgSource: cryptoImg
+        };
         this.fees = data.feeFiat as number ?? 0;
         this.networkFee = data.approxNetworkFee ?? 0;
         this.typeIcon = 'account_balance';
@@ -297,6 +312,41 @@ export class TransactionItem {
         this.fees = 4.2;
         this.networkFee = 0.42;
         this.typeIcon = 'file_upload';
+      } else if (this.type === TransactionType.Receive) {
+        this.currencyToSpend = data.currencyToSpend ?? '';
+        this.currencyToReceive = data.currencyToReceive ?? '';
+        this.amountToSpend = data.amountToSpend ?? 0;
+        this.amountToReceive = data.amountToReceive ?? 0;
+        const c = getCryptoSymbol(this.currencyToReceive).toLowerCase();
+        const cryptoImg = (c !== '') ? `../../../assets/svg-crypto/${c}.svg` : '';
+        this.recipient = {
+          id: '',
+          title: data.destination ?? '',
+          imgClass: '',
+          imgSource: cryptoImg
+        };
+        this.fees = data.feeFiat as number ?? 0;
+        this.networkFee = data.approxNetworkFee ?? 0;
+        this.typeIcon = 'file_download';
+        const transferDetails = data.transferOrder?.transferDetails;
+        if (transferDetails) {
+          let transferDetailsData = JSON.parse(transferDetails);
+          // sometimes it comes as a string with escape symbols.
+          //  In this case parse returns a stringified JSON, which has to be parsed again
+          if (typeof transferDetailsData === 'string') {
+            transferDetailsData = JSON.parse(transferDetailsData);
+          }
+          if (transferDetailsData.data) {
+            let sourceData = JSON.parse(transferDetailsData.data);
+            const senderName = `${sourceData?.source?.name ?? ''} ${sourceData?.sourceAddress ?? ''}`;
+            this.sender = {
+              id: '',
+              title: senderName,
+              imgSource: '',
+              imgClass: ''
+            } as CommonTargetValue;
+          }
+        }
       } else {
         this.currencyToSpend = '-X-';
         this.currencyToReceive = '-X-';
@@ -346,10 +396,6 @@ export class TransactionItem {
     return (this.datepipe.transform(this.created, 'd MMM YYYY HH:mm:ss') as string).toUpperCase();
   }
 
-  get recipientData(): string {
-    return this.recipient;
-  }
-
   get typeName(): string {
     return TransactionTypeList.find((t) => t.id === this.type)?.name as string;
   }
@@ -380,6 +426,10 @@ export class TransactionItem {
     } else {
       return `${this.amountToReceive} ${getCurrencySign(this.currencyToReceive)}`;
     }
+  }
+
+  get recipientShort(): string {
+    return shortenString(this.recipient.title, 16);
   }
 
   isFiatCurrency(currency: string): boolean {

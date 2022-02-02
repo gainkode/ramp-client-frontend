@@ -432,6 +432,25 @@ input.__text-box-noborder-accent:focus {
     outline: none;
 }
 
+input.__profile-text-box-noborder {
+    border: 0px;
+    width: 100%;
+    background-color: transparent;
+    margin: 0px 4px;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 28px;
+    white-space: normal;
+    color: $color_purple_900_text;
+}
+
+input.__profile-text-box-noborder:focus {
+    outline: none;
+}
+
 input.__form-search-box {
     grid-row: 1;
     grid-column: 1 / 2;
