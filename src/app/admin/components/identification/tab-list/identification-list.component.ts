@@ -8,7 +8,7 @@ import { KycLevel, KycScheme } from 'src/app/model/identification.model';
 import { take } from 'rxjs/operators';
 import { LayoutService } from 'src/app/admin/services/layout.service';
 import { CommonTargetValue } from 'src/app/model/common.model';
-import { CountryFilterList, getCountry, getCountryByCode2, getCountryByCode3 } from 'src/app/model/country-code.model';
+import { getCountryByCode2, getCountryByCode3 } from 'src/app/model/country-code.model';
 import { BlackCountryListResult } from 'src/app/model/generated-models';
 
 @Component({
@@ -77,7 +77,7 @@ export class IdentificationListComponent implements OnInit, OnDestroy {
       this.loadSchemeList();
     } else {
       // Black list
-      this.loadBlackListList();
+      this.loadBlackList();
     }
   }
 
@@ -99,7 +99,8 @@ export class IdentificationListComponent implements OnInit, OnDestroy {
     );
   }
 
-  loadBlackListList(): void {
+  loadBlackList(): void {
+    this.blackList = [];
     const listData$ = this.adminService.getCountryBlackList().valueChanges.pipe(take(1));
     this.subscriptions.add(
       listData$.subscribe(({ data }) => {
@@ -300,7 +301,7 @@ export class IdentificationListComponent implements OnInit, OnDestroy {
         requestData$.subscribe(({ data }) => {
           this.inProgress = false;
           this.showBlackListEditor(null, false, false);
-          this.loadBlackListList();
+          this.loadBlackList();
         }, (error) => {
           this.inProgress = false;
           if (this.auth.token !== '') {
@@ -372,7 +373,7 @@ export class IdentificationListComponent implements OnInit, OnDestroy {
           this.setEditMode(false);
           this.showBlackListEditor(null, false, false);
           this.createBlackItem = false;
-          this.loadBlackListList();
+          this.loadBlackList();
         }, (error) => {
           this.inProgress = false;
           if (this.auth.token !== '') {
