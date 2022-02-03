@@ -1,9 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AdminDataService } from '../../../services/admin-data.service';
 import { take } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { UserItem } from 'src/app/model/user.model';
+import { CurrencyView } from 'src/app/model/payment.model';
+import { AuthService } from 'src/app/services/auth.service';
+import { CommonDataService } from 'src/app/services/common-data.service';
+import { SettingsCurrencyWithDefaults } from 'src/app/model/generated-models';
 
 @Component({
   selector: 'app-system-user-single',
@@ -13,11 +17,15 @@ import { UserItem } from 'src/app/model/user.model';
 export class SystemUserSingleComponent implements OnInit, OnDestroy {
   userId?: string;
   user?: UserItem;
+  currencyOptions: CurrencyView[] = [];
 
   private subscriptions: Subscription = new Subscription();
 
   constructor(
     private activeRoute: ActivatedRoute,
+    private router: Router,
+    private auth: AuthService,
+    private commonDataService: CommonDataService,
     private adminService: AdminDataService
   ) {
   }
@@ -36,11 +44,26 @@ export class SystemUserSingleComponent implements OnInit, OnDestroy {
 
   private loadData(id: string): void {
     this.userId = id;
+    this.currencyOptions = [];
+    const transactionData$ = this.commonDataService.getSettingsCurrency()?.valueChanges;
     this.subscriptions.add(
-      this.adminService.getUser(id).pipe(take(1)).subscribe(user => {
-        this.user = user;
+      transactionData$.subscribe(({ data }) => {
+        const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
+        if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
+          this.currencyOptions = currencySettings.settingsCurrency.list?.map((val) => new CurrencyView(val)) as CurrencyView[];
+        } else {
+          this.currencyOptions = [];
+        }
+        this.subscriptions.add(
+          this.adminService.getUser(id).pipe(take(1)).subscribe(user => {
+            this.user = user;
+          })
+        );
+      }, (error) => {
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
       })
     );
   }
-
 }

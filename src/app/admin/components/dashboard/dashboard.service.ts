@@ -42,7 +42,6 @@ export class DashboardService implements OnDestroy {
   }
 
   setFilter(filter: Filter): void {
-    console.log('load filter');
     this.filter = filter;
     this.load();
   }

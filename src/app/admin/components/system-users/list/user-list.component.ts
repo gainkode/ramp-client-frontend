@@ -160,6 +160,10 @@ export class SystemUserListComponent implements OnInit, OnDestroy, AfterViewInit
     this.router.navigateByUrl(`/admin/transactions/users/${id}`);
   }
 
+  addUser(): void {
+
+  }
+  
   sendMessage(): void {
     const dialogRef = this.dialog.open(SendNotificationDialogBox, {
       width: '550px',

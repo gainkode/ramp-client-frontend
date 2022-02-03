@@ -518,7 +518,7 @@ const GET_TRANSACTIONS = gql`
 
 const GET_USERS = gql`
   query GetUsers(
-    $userIds: [String!]
+    $userIdsOnly: [String!]
     $roleIdsOnly: [String!]
     $accountTypesOnly: [UserType!]
     $accountModesOnly: [UserMode!]
@@ -538,7 +538,7 @@ const GET_USERS = gql`
     $orderBy: [OrderBy!]
   ) {
     getUsers(
-      userIdsOnly: $userIds
+      userIdsOnly: $userIdsOnly
       roleIdsOnly: $roleIdsOnly
       accountTypesOnly: $accountTypesOnly
       accountModesOnly: $accountModesOnly
@@ -1787,7 +1787,7 @@ export class AdminDataService {
     filter: Filter
   ): Observable<{ list: UserItem[], count: number }> {
     const vars = {
-      userIds: filter?.users,
+      userIdsOnly: filter?.users,
       roleIdsOnly: (roleIds.length > 0) ? roleIds : undefined,
       accountTypesOnly: filter?.accountTypes,
       accountStatusesOnly: filter?.accountStatuses,
@@ -1832,7 +1832,7 @@ export class AdminDataService {
       variables: {
         userIdsOnly: [userId],
         countryCodeType: CountryCodeType.Code3,
-        filter: undefined,
+        //filter: undefined,
         skip: 0,
         first: 1
       },
@@ -1841,11 +1841,9 @@ export class AdminDataService {
       .pipe(
         map(res => {
           const listResult = res?.data?.getUsers.list;
-
           if (listResult && listResult.length === 1) {
             return new UserItem(listResult[0]);
           }
-
           return undefined;
         })
       );
@@ -1858,16 +1856,13 @@ export class AdminDataService {
         userId
       },
       fetchPolicy: 'network-only'
-    })
-      .pipe(
-        map(res => {
-          const result = res?.data?.getUserKycInfo;
-          if (result) {
-            return result;
-          }
-          return undefined;
-        })
-      );
+    }).pipe(map(res => {
+      const result = res?.data?.getUserKycInfo;
+      if (result) {
+        return result;
+      }
+      return undefined;
+    }));
   }
 
   getUserState(id: string): Observable<UserState | undefined> {

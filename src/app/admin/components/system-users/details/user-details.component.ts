@@ -183,6 +183,7 @@ export class SystemUserDetailsComponent {
   }
 
   private getUserKycInfo(id: string): void {
+    this.kycDocs = [];
     this.subscriptions.add(
       this.adminService.getUserKycInfo(id).pipe(take(1)).subscribe(kyc => {
         this.kycDocs = kyc?.appliedDocuments?.map(doc => doc.code) ?? [];
