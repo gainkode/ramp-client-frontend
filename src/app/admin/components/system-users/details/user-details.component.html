@@ -1,3 +1,5 @@
+<h2 *ngIf="createNew">Create a new user</h2>
+
 <form [formGroup]="dataForm" (ngSubmit)="onSubmit()">
     <section>
         <h2>User info</h2>
@@ -48,7 +50,7 @@
         </mat-error>
     </mat-form-field>
 
-    <button type="button" mat-flat-button (click)="onResetPassword()">
+    <button *ngIf="!createNew" type="button" mat-flat-button (click)="onResetPassword()">
         RESET PASSWORD
     </button>
 
@@ -177,32 +179,37 @@
         </mat-error>
     </mat-form-field>
 
-    <app-details-attribute label="Widgets" [value]="'Related widgets'"
+    <app-details-attribute *ngIf="!createNew" label="Widgets" [value]="'Related widgets'"
         [linkUrl]="'/admin/widgets/'+ settingsId"></app-details-attribute>
 
     <!-- Totals -->
-    <app-details-attribute label="Total Balance" [value]="totalBalance"></app-details-attribute>
-    <app-details-attribute label="Total Transaction Count" [value]="userData?.totalTransactionCount">
-    </app-details-attribute>
-    <app-details-attribute label="Avarage Transaction" [value]="userData?.avarageTransaction"></app-details-attribute>
-    <app-details-attribute label="Total Bought Completed" [value]="userData?.totalBoughtCompletedResult">
-    </app-details-attribute>
-    <app-details-attribute label="Total Bought In Process" [value]="userData?.totalBoughtInProcessResult">
-    </app-details-attribute>
-    <app-details-attribute label="Total Sold Completed" [value]="userData?.totalSoldCompletedResult">
-    </app-details-attribute>
-    <app-details-attribute label="Total Sold In Process" [value]="userData?.totalSoldInProcessResult">
-    </app-details-attribute>
-    <app-details-attribute label="Total Sent Completed" [value]="userData?.totalSentCompletedResult">
-    </app-details-attribute>
-    <app-details-attribute label="Total Sent In Process" [value]="userData?.totalSentInProcessResult">
-    </app-details-attribute>
-    <app-details-attribute label="Total Received Completed" [value]="userData?.totalReceivedCompletedResult">
-    </app-details-attribute>
-    <app-details-attribute label="Total Received In Process" [value]="userData?.totalReceivedInProcessResult">
-    </app-details-attribute>
-    <app-details-attribute label="Total Transactions" [value]="userData?.totalTransactionCount"></app-details-attribute>
-    <app-details-attribute label="Avarage Transaction" [value]="userData?.avarageTransaction"></app-details-attribute>
+    <div *ngIf="!createNew">
+        <app-details-attribute label="Total Balance" [value]="totalBalance"></app-details-attribute>
+        <app-details-attribute label="Total Transaction Count" [value]="userData?.totalTransactionCount">
+        </app-details-attribute>
+        <app-details-attribute label="Avarage Transaction" [value]="userData?.avarageTransaction">
+        </app-details-attribute>
+        <app-details-attribute label="Total Bought Completed" [value]="userData?.totalBoughtCompletedResult">
+        </app-details-attribute>
+        <app-details-attribute label="Total Bought In Process" [value]="userData?.totalBoughtInProcessResult">
+        </app-details-attribute>
+        <app-details-attribute label="Total Sold Completed" [value]="userData?.totalSoldCompletedResult">
+        </app-details-attribute>
+        <app-details-attribute label="Total Sold In Process" [value]="userData?.totalSoldInProcessResult">
+        </app-details-attribute>
+        <app-details-attribute label="Total Sent Completed" [value]="userData?.totalSentCompletedResult">
+        </app-details-attribute>
+        <app-details-attribute label="Total Sent In Process" [value]="userData?.totalSentInProcessResult">
+        </app-details-attribute>
+        <app-details-attribute label="Total Received Completed" [value]="userData?.totalReceivedCompletedResult">
+        </app-details-attribute>
+        <app-details-attribute label="Total Received In Process" [value]="userData?.totalReceivedInProcessResult">
+        </app-details-attribute>
+        <app-details-attribute label="Total Transactions" [value]="userData?.totalTransactionCount">
+        </app-details-attribute>
+        <app-details-attribute label="Avarage Transaction" [value]="userData?.avarageTransaction">
+        </app-details-attribute>
+    </div>
 
     <!-- Risks -->
     <app-details-attribute label="Risk codes" [value]="userData?.riskCodes"></app-details-attribute>
@@ -219,9 +226,9 @@
     </mat-form-field>
 
     <!-- Tier -->
-    <mat-form-field class="form-element">
+    <mat-form-field *ngIf="!createNew" class="form-element">
         <mat-label>KYC Tier</mat-label>
-        <mat-select formControlName="tier" required>
+        <mat-select formControlName="tier">
             <mat-option *ngFor="let t of tiers" [value]="t.title">
                 {{t.title}}
             </mat-option>
@@ -244,7 +251,7 @@
     <app-details-attribute label="KYC Status Update Required" [value]="userData?.kycStatusUpdateRequired">
     </app-details-attribute>
     <app-details-attribute label="Provided documents" [value]="kycDocs"></app-details-attribute>
-    <app-details-attribute label="KYC Details" [value]="kycProviderLink" [linkUrl]="kycProviderLink">
+    <app-details-attribute *ngIf="!createNew" label="KYC Details" [value]="kycProviderLink" [linkUrl]="kycProviderLink">
     </app-details-attribute>
 
     <app-details-attribute label="Lasr updated" [value]="userData?.updated"></app-details-attribute>

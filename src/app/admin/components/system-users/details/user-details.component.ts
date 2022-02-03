@@ -36,6 +36,7 @@ export class SystemUserDetailsComponent implements OnDestroy {
 
   data: UserItem | null | undefined
   USER_TYPE: typeof UserType = UserType;
+  createNew = false;
   settingsId = '';
   email = '';
   address = '';
@@ -94,15 +95,18 @@ export class SystemUserDetailsComponent implements OnDestroy {
   }
 
   private setCurrencies(list: CurrencyView[]): void {
-    if (this.data) {
+    if (this.data || this.createNew) {
       this.fiatCurrencies = list.filter(x => x.fiat === true);
       this.dataForm.get('fiat')?.setValue(this.data?.fiatCurrency ?? '');
       this.cryptoCurrencies = list.filter(x => x.fiat === false);
-      this.dataForm.get('crypto')?.setValue(this.data.cryptoCurrency ?? '');
+      this.dataForm.get('crypto')?.setValue(this.data?.cryptoCurrency ?? '');
     }
   }
 
   private setFormData(data: UserItem | null | undefined): void {
+    if (data?.id === undefined || data?.id === '') {
+      data = undefined;
+    }
     this.data = data;
     this.errorMessage = '';
     this.dataForm.reset();
@@ -146,6 +150,7 @@ export class SystemUserDetailsComponent implements OnDestroy {
       this.dataForm.get('crypto')?.setValue(data?.cryptoCurrency);
       this.loadingData = false;
     } else {
+      this.createNew = true;
       this.dataForm.get('id')?.setValue('');
       this.dataForm.get('email')?.setValue('');
       this.dataForm.get('firstName')?.setValue('');
@@ -153,7 +158,7 @@ export class SystemUserDetailsComponent implements OnDestroy {
       this.dataForm.get('birthday')?.setValue('');
       this.dataForm.get('birthday')?.setValidators([]);
       this.dataForm.get('risk')?.setValue(RiskLevel.Medium);
-      this.dataForm.get('accountStatus')?.setValue(AccountStatus.Closed);
+      this.dataForm.get('accountStatus')?.setValue(AccountStatus.Live);
       this.dataForm.get('tier')?.setValue('');
       this.dataForm.get('country')?.setValue('');
       this.dataForm.get('postCode')?.setValue('');
@@ -167,15 +172,21 @@ export class SystemUserDetailsComponent implements OnDestroy {
       this.dataForm.get('phone')?.setValue('');
       this.dataForm.get('fiat')?.setValue('');
       this.dataForm.get('crypto')?.setValue('');
+      this.dataForm.get('birthday')?.setValidators([
+        Validators.required,
+        Validators.pattern('^(3[01]|[12][0-9]|0?[1-9])/(1[0-2]|0?[1-9])/(?:[0-9]{2})?[0-9]{2}$')
+      ]);
+      this.dataForm.get('tier')?.setValidators([]);      
     }
     this.dataForm.get('birthday')?.updateValueAndValidity();
+    this.dataForm.get('tier')?.updateValueAndValidity();
     this.settingsId = (data) ? data?.id : '';
     this.email = (data) ? data?.email : '';
     this.removable = (this.auth.user?.userId !== this.settingsId);
     this.address = (data) ? data.address : '';
     this.userType = (data) ? data.userType?.id ?? UserType.Personal : UserType.Personal;
     this.userData = data;
-    if (data) {
+    if (data && !this.createNew) {
       this.getUserKycInfo(this.settingsId);
       this.getUserState(this.settingsId);
       this.getUserKycTiers(this.settingsId);

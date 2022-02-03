@@ -1,5 +1,8 @@
 <div class="action-panel panel-actions">
     <button mat-flat-button color="primary" type="button" (click)="addUser()">
+        ADD USER
+    </button>
+    <button mat-flat-button color="primary" type="button" (click)="setRole()">
         SET ROLE
     </button>
     <button mat-flat-button color="primary" type="button" (click)="sendMessage()" [disabled]="!selected">
@@ -143,10 +146,10 @@
     (page)="handlePage($event)">
 </mat-paginator>
 
-<ng-template *ngIf="selectedUser || addUserFlag" appRightPanel (panelClosed)="handleDetailsPanelClosed()">
+<ng-template *ngIf="selectedUser || setRoleFlag" appRightPanel (panelClosed)="handleDetailsPanelClosed()">
     <app-system-user-details *ngIf="selectedUser" [user]="selectedUser" [currencies]="currencyList" [cancelable]=true
         (save)="onSave()" (cancel)="onCancelEdit()">
     </app-system-user-details>
-    <app-add-system-user *ngIf="addUserFlag" [roles]="userRoles" (save)="onSave()" (cancel)="onCancelEdit()">
+    <app-add-system-user *ngIf="setRoleFlag" [roles]="userRoles" (save)="onSave()" (cancel)="onCancelEdit()">
     </app-add-system-user>
 </ng-template>

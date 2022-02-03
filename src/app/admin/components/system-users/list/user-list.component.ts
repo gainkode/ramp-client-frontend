@@ -44,7 +44,7 @@ export class SystemUserListComponent implements OnInit, OnDestroy, AfterViewInit
   ];
 
   selectedUser: UserItem | undefined = undefined;
-  addUserFlag = false;
+  setRoleFlag = false;
   roleIds: string[] = [];
   userRoles: UserRole[] = [];
   users: UserItem[] = [];
@@ -152,7 +152,7 @@ export class SystemUserListComponent implements OnInit, OnDestroy, AfterViewInit
 
   handleDetailsPanelClosed(): void {
     this.selectedUser = undefined;
-    this.addUserFlag = false;
+    this.setRoleFlag = false;
   }
 
   onUserSelected(item: UserItem): void {
@@ -165,9 +165,13 @@ export class SystemUserListComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   addUser(): void {
-    this.addUserFlag = true;
+    this.toggleDetails({} as UserItem);
   }
   
+  setRole(): void {
+    this.setRoleFlag = true;
+  }
+
   sendMessage(): void {
     const dialogRef = this.dialog.open(SendNotificationDialogBox, {
       width: '550px',
@@ -237,7 +241,7 @@ export class SystemUserListComponent implements OnInit, OnDestroy, AfterViewInit
     if (visible) {
       this.selectedUser = user ?? new UserItem(null);
     } else {
-      this.addUserFlag = false;
+      this.setRoleFlag = false;
       this.selectedUser = undefined;
       this.setEditMode(false);
     }

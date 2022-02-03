@@ -34,6 +34,7 @@ import {
   TransactionUpdateTransferOrderChanges,
   UserInput,
   UserListResult,
+  UserMode,
   UserNotificationLevel,
   UserNotificationListResult,
   UserState,
@@ -1205,6 +1206,66 @@ mutation UpdateUser(
       defaultFiatCurrency: $defaultFiatCurrency
       defaultCryptoCurrency: $defaultCryptoCurrency
     }
+  ) {
+    userId
+  }
+}
+`;
+
+const CREATE_USER = gql`
+mutation CreateUser(
+  $roles: [String!]
+  $email: String!
+  $type: UserType!
+  $mode: UserMode!
+  $changePasswordRequired: Boolean
+  $firstName: String
+  $lastName: String
+  $birthday: DateTime
+  $countryCode2: String
+  $countryCode3: String
+  $postCode: String
+  $town: String
+  $street: String
+  $subStreet: String
+  $stateName: String
+  $buildingName: String
+  $buildingNumber: String
+  $flatNumber: String
+  $phone: String
+  $risk: RiskLevel
+  $accountStatus: AccountStatus
+  $kycTierId: String
+  $defaultFiatCurrency: String
+  $defaultCryptoCurrency: String
+) {
+  createUser(
+    user: {
+      email: $email
+      type: $type
+      mode: $mode
+      changePasswordRequired: $changePasswordRequired
+      firstName: $firstName
+      lastName: $lastName
+      birthday: $birthday
+      countryCode2: $countryCode2
+      countryCode3: $countryCode3
+      postCode: $postCode
+      town: $town
+      street: $street
+      subStreet: $subStreet
+      stateName: $stateName
+      buildingName: $buildingName
+      buildingNumber: $buildingNumber
+      flatNumber: $flatNumber
+      phone: $phone
+      risk: $risk
+      accountStatus: $accountStatus
+      kycTierId: $kycTierId
+      defaultFiatCurrency: $defaultFiatCurrency
+      defaultCryptoCurrency: $defaultCryptoCurrency
+    }
+    roles: $roles
   ) {
     userId
   }
@@ -2385,38 +2446,69 @@ export class AdminDataService {
   }
 
   saveCustomer(id: string, customer: UserInput): Observable<any> {
-    return this.apollo.mutate({
-      mutation: UPDATE_USER,
-      variables: {
-        userId: id,
-        email: customer.email,
-        changePasswordRequired: customer.changePasswordRequired,
-        firstName: customer.firstName,
-        lastName: customer.lastName,
-        birthday: customer.birthday,
-        countryCode2: customer.countryCode2,
-        countryCode3: customer.countryCode3,
-        postCode: customer.postCode,
-        town: customer.town,
-        street: customer.street,
-        subStreet: customer.subStreet,
-        stateName: customer.stateName,
-        buildingName: customer.buildingName,
-        buildingNumber: customer.buildingNumber,
-        flatNumber: customer.flatNumber,
-        phone: customer.phone,
-        risk: customer.risk,
-        accountStatus: customer.accountStatus,
-        kycTierId: customer.kycTierId,
-        defaultFiatCurrency: customer.defaultFiatCurrency,
-        defaultCryptoCurrency: customer.defaultCryptoCurrency
-      }
-    }).pipe(tap(() => {
-      this.snackBar.open(
-        `Customer was updated`,
-        undefined, { duration: 5000 }
-      );
-    }));
+    if (id === '') {
+      return this.apollo.mutate({
+        mutation: CREATE_USER,
+        variables: {
+          roles: ['USER'],
+          type: UserType.Personal,
+          mode: UserMode.InternalWallet,
+          email: customer.email,
+          changePasswordRequired: customer.changePasswordRequired,
+          firstName: customer.firstName,
+          lastName: customer.lastName,
+          birthday: customer.birthday,
+          countryCode2: customer.countryCode2,
+          countryCode3: customer.countryCode3,
+          postCode: customer.postCode,
+          town: customer.town,
+          street: customer.street,
+          subStreet: customer.subStreet,
+          stateName: customer.stateName,
+          buildingName: customer.buildingName,
+          buildingNumber: customer.buildingNumber,
+          flatNumber: customer.flatNumber,
+          phone: customer.phone,
+          risk: customer.risk,
+          accountStatus: customer.accountStatus,
+          kycTierId: customer.kycTierId,
+          defaultFiatCurrency: customer.defaultFiatCurrency,
+          defaultCryptoCurrency: customer.defaultCryptoCurrency
+        }
+      }).pipe(tap(() => {
+        this.snackBar.open(`User was created`, undefined, { duration: 5000 });
+      }));
+    } else {
+      return this.apollo.mutate({
+        mutation: UPDATE_USER,
+        variables: {
+          userId: id,
+          email: customer.email,
+          changePasswordRequired: customer.changePasswordRequired,
+          firstName: customer.firstName,
+          lastName: customer.lastName,
+          birthday: customer.birthday,
+          countryCode2: customer.countryCode2,
+          countryCode3: customer.countryCode3,
+          postCode: customer.postCode,
+          town: customer.town,
+          street: customer.street,
+          subStreet: customer.subStreet,
+          stateName: customer.stateName,
+          buildingName: customer.buildingName,
+          buildingNumber: customer.buildingNumber,
+          flatNumber: customer.flatNumber,
+          phone: customer.phone,
+          risk: customer.risk,
+          accountStatus: customer.accountStatus,
+          kycTierId: customer.kycTierId,
+          defaultFiatCurrency: customer.defaultFiatCurrency,
+          defaultCryptoCurrency: customer.defaultCryptoCurrency
+        }
+      }).pipe(tap(() => {
+        this.snackBar.open(`User was updated`, undefined, { duration: 5000 });
+      }));
+    }
   }
 
   updateUserVault(wallet: AssetAddress): Observable<any> {
@@ -2647,7 +2739,7 @@ export class AdminDataService {
       );
     }));
   }
-  
+
   removeRole(userId: string, roleCodes: string[]): Observable<any> {
     return this.mutate({
       mutation: REMOVE_ROLE,
@@ -2662,7 +2754,7 @@ export class AdminDataService {
       );
     }));
   }
-  
+
   exportUsersToCsv(): Observable<any> {
     return this.apollo.mutate({
       mutation: EXPORT_USERS,
