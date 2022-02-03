@@ -30,19 +30,15 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
   @Input() cancelable = false;
   @Input() set userStatuses(list: TransactionStatusDescriptorMap[]) {
     this.transactionStatuses = TransactionStatusList.map(data => {
-      const status = list.find(x => x.key === data.id);
-      const adminStatus = status?.value.adminStatus;
-      const statusName = data.name;
-      let adminStatusName = 'Unknown';
-      if (adminStatus) {
-        adminStatusName = AdminTransactionStatusList.find(x => x.id === adminStatus)?.name ?? 'Unknown';
-      }
-      status?.value.adminStatus ?? 'Unknown';
+      const statusName = this.getTransactionStatusName(list, data);
       return {
         id: data.id,
-        name: `${adminStatusName} (${statusName})`
+        name: statusName
       } as TransactionStatusView;
     });
+    if (this.transactionStatus) {
+      this.transactionStatusName = this.transactionStatuses.find(x => x.id === this.transactionStatus)?.name ?? '';
+    }
   }
   @Input() set currencies(list: CurrencyView[]) {
     this.pCurrencies = list;
@@ -56,15 +52,21 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
   private pCurrencies: CurrencyView[] = [];
   private subscriptions: Subscription = new Subscription();
 
+  TRANSACTION_TYPE: typeof TransactionType = TransactionType;
   data: TransactionItemDeprecated | undefined = undefined;
   accountStatuses = UserStatusList;
   kycStatuses = TransactionKycStatusList;
   transactionStatuses: TransactionStatusView[] = [];
   removable = false;
   transactionId = '';
+  transactionType: TransactionType = TransactionType.System;
   currenciesToSpend: CurrencyView[] = [];
   currenciesToReceive: CurrencyView[] = [];
   currentRate = 0;
+  transactionStatus: TransactionStatus | undefined = undefined;
+  transactionStatusName = '';
+  kycStatus = '';
+  accountStatus = '';
   showTransferHash = false;
   showBenchmarkTransferHash = false;
   transferOrderBlockchainLink = '';
@@ -143,6 +145,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
   private setFormData(val: TransactionItemDeprecated | undefined): void {
     this.data = val;
     this.transactionId = val?.id ?? '';
+    this.transactionType = val?.type ?? TransactionType.System;
     this.transferOrderBlockchainLink = val?.transferOrderBlockchainLink ?? '';
     this.benchmarkTransferOrderBlockchainLink = val?.benchmarkTransferOrderBlockchainLink ?? '';
     this.removable = true;//val?.statusInfo?.value.canBeCancelled ?? false;  // confirmed
@@ -150,8 +153,8 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
       this.form.get('address')?.setValue(this.data.address);
       this.form.get('amountToSpend')?.setValue(this.data.amountToSpend);
       this.form.get('amountToReceive')?.setValue(this.data.amountToReceive);
-      this.form.get('currencyToSpend')?.setValue(this.data?.currencyToSpend);
-      this.form.get('currencyToReceive')?.setValue(this.data?.currencyToReceive);
+      this.form.get('currencyToSpend')?.setValue(this.data.currencyToSpend);
+      this.form.get('currencyToReceive')?.setValue(this.data.currencyToReceive);
       this.form.get('rate')?.setValue(this.data.rate);
       this.form.get('fee')?.setValue(this.data.fees);
       this.form.get('transactionStatus')?.setValue(this.data.status);
@@ -159,8 +162,14 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
       this.form.get('accountStatus')?.setValue(this.data.accountStatusValue);
       this.form.get('transferHash')?.setValue(this.data.transferOrderHash);
       this.form.get('benchmarkTransferHash')?.setValue(this.data.benchmarkTransferOrderHash);
+      this.transactionStatus = this.data.status;
+      if (this.transactionStatuses.length > 0) {
+        this.transactionStatusName = this.transactionStatuses.find(x => x.id === this.transactionStatus)?.name ?? '';
+      }
       this.showTransferHash = (this.data.transferOrderId !== '');
       this.showBenchmarkTransferHash = (this.data.benchmarkTransferOrderId !== '');
+      this.kycStatus = TransactionKycStatusList.find(x => x.id === this.data?.kycStatusValue)?.name ?? '';
+      this.accountStatus = UserStatusList.find(x => x.id === this.data?.accountStatusValue)?.name ?? '';
       this.startExchangeRate();
     }
   }
@@ -265,6 +274,18 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
         }
       })
     );
+  }
+
+  private getTransactionStatusName(list: TransactionStatusDescriptorMap[], data: TransactionStatusView): string {
+    const status = list.find(x => x.key === data.id);
+    const adminStatus = status?.value.adminStatus;
+    const statusName = data.name;
+    let adminStatusName = 'Unknown';
+    if (adminStatus) {
+      adminStatusName = AdminTransactionStatusList.find(x => x.id === adminStatus)?.name ?? 'Unknown';
+    }
+    status?.value.adminStatus ?? 'Unknown';
+    return `${adminStatusName} (${statusName})`;
   }
 
   onDelete(): void {

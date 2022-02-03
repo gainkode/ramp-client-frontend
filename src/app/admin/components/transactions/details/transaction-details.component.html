@@ -17,7 +17,10 @@
             <app-details-attribute label="Widget ID" [value]="data?.widgetId"></app-details-attribute>
             <app-details-attribute label="Country" [value]="data?.user?.country"></app-details-attribute>
 
-            <mat-form-field *ngIf="data?.address!==''" class="form-element">
+            <app-details-attribute *ngIf="transactionType===TRANSACTION_TYPE.Receive" label="Wallet address"
+                [value]="data?.address"></app-details-attribute>
+            <mat-form-field *ngIf="data?.address!=='' && transactionType!==TRANSACTION_TYPE.Receive"
+                class="form-element">
                 <mat-label>Wallet address</mat-label>
                 <input matInput formControlName="address" required />
                 <mat-error *ngIf="form.controls.address.hasError('required')">
@@ -35,7 +38,9 @@
             <app-details-attribute label="Payment Details" [value]="data?.instrumentDetails"></app-details-attribute>
 
             <!-- Amount to spend -->
-            <mat-form-field class="form-element">
+            <app-details-attribute *ngIf="transactionType===TRANSACTION_TYPE.Receive" label="Amount To Spend"
+                [value]="data?.amountToSpend"></app-details-attribute>
+            <mat-form-field *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-element">
                 <mat-label>Amount To Spend</mat-label>
                 <input matInput formControlName="amountToSpend" required />
                 <mat-error *ngIf="form.controls.amountToSpend.hasError('required')">
@@ -47,7 +52,9 @@
             </mat-form-field>
 
             <!-- Currency to spend -->
-            <mat-form-field class="form-element">
+            <app-details-attribute *ngIf="transactionType===TRANSACTION_TYPE.Receive" label="Currency to spend"
+                [value]="data?.currencyToSpend"></app-details-attribute>
+            <mat-form-field *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-element">
                 <mat-label>Currency to spend</mat-label>
                 <mat-select formControlName="currencyToSpend" required>
                     <mat-option *ngFor="let item of currenciesToSpend" [value]="item.id">
@@ -57,7 +64,9 @@
             </mat-form-field>
 
             <!-- Amount to receive -->
-            <mat-form-field class="form-element">
+            <app-details-attribute *ngIf="transactionType===TRANSACTION_TYPE.Receive" label="Amount To Receive"
+                [value]="data?.amountToReceive"></app-details-attribute>
+            <mat-form-field *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-element">
                 <mat-label>Amount To Receive</mat-label>
                 <input matInput formControlName="amountToReceive" required />
                 <mat-error *ngIf="form.controls.amountToReceive.hasError('required')">
@@ -69,7 +78,9 @@
             </mat-form-field>
 
             <!-- Currency to receive -->
-            <mat-form-field class="form-element">
+            <app-details-attribute *ngIf="transactionType===TRANSACTION_TYPE.Receive" label="Currency to receive"
+                [value]="data?.currencyToReceive"></app-details-attribute>
+            <mat-form-field *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-element">
                 <mat-label>Currency to receive</mat-label>
                 <mat-select formControlName="currencyToReceive" required>
                     <mat-option *ngFor="let item of currenciesToReceive" [value]="item.id">
@@ -79,12 +90,12 @@
             </mat-form-field>
 
             <!-- Rate -->
-            <div class="form-element">
+            <div *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-element">
                 <a [routerLink]="" (click)="updateRate()">
                     Set current exchange rate
                 </a>
             </div>
-            <mat-form-field class="form-element">
+            <mat-form-field *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-element">
                 <mat-label>Exchange rate</mat-label>
                 <input matInput formControlName="rate" required />
                 <mat-error *ngIf="form.controls.rate.hasError('required')">
@@ -96,7 +107,9 @@
             </mat-form-field>
 
             <!-- Transaction status -->
-            <mat-form-field class="form-element">
+            <app-details-attribute *ngIf="transactionType===TRANSACTION_TYPE.Receive" label="Transaction status"
+                [value]="transactionStatusName"></app-details-attribute>
+            <mat-form-field *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-element">
                 <mat-label>Transaction status</mat-label>
                 <mat-select formControlName="transactionStatus" required>
                     <mat-option *ngFor="let item of transactionStatuses" [value]="item.id">
@@ -109,7 +122,9 @@
             </mat-form-field>
 
             <!-- Fees -->
-            <mat-form-field class="form-element">
+            <app-details-attribute *ngIf="transactionType===TRANSACTION_TYPE.Receive" label="Fees, EUR"
+                [value]="data?.fees"></app-details-attribute>
+            <mat-form-field *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-element">
                 <mat-label>Fees, EUR</mat-label>
                 <input matInput formControlName="fee" required />
                 <mat-error *ngIf="form.controls.fee.hasError('required')">
@@ -147,7 +162,9 @@
             <app-details-attribute label="Verification Tier" [value]="data?.kycTier"></app-details-attribute>
 
             <!-- KYC status -->
-            <mat-form-field class="form-element">
+            <app-details-attribute *ngIf="transactionType===TRANSACTION_TYPE.Receive" label="KYC Status"
+                [value]="kycStatus"></app-details-attribute>
+            <mat-form-field *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-element">
                 <mat-label>KYC Status</mat-label>
                 <mat-select formControlName="kycStatus" required>
                     <mat-option *ngFor="let item of kycStatuses" [value]="item.id">
@@ -160,7 +177,9 @@
             </mat-form-field>
 
             <!-- Account status -->
-            <mat-form-field class="form-element">
+            <app-details-attribute *ngIf="transactionType===TRANSACTION_TYPE.Receive" label="Account Status"
+                [value]="accountStatus"></app-details-attribute>
+            <mat-form-field *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-element">
                 <mat-label>Account Status</mat-label>
                 <mat-select formControlName="accountStatus" required>
                     <mat-option *ngFor="let item of accountStatuses" [value]="item.id">
@@ -175,7 +194,7 @@
         </section>
 
         <div class="panel-actions">
-            <button mat-flat-button color="primary" type="submit">
+            <button *ngIf="transactionType!==TRANSACTION_TYPE.Receive" mat-flat-button color="primary" type="submit">
                 SAVE
             </button>
             <button *ngIf="removable" mat-flat-button type="button" color="warn" (click)="onDelete()">

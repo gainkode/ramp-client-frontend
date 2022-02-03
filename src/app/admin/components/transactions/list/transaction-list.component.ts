@@ -10,7 +10,7 @@ import { MatSort } from '@angular/material/sort';
 import { Filter } from '../../../model/filter.model';
 import { take, takeUntil } from 'rxjs/operators';
 import { LayoutService } from '../../../services/layout.service';
-import { SettingsCurrencyWithDefaults, TransactionStatusDescriptorMap } from 'src/app/model/generated-models';
+import { SettingsCurrencyWithDefaults, TransactionStatusDescriptorMap, TransactionType } from 'src/app/model/generated-models';
 import { ProfileDataService } from 'src/app/services/profile.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
 import { CurrencyView } from 'src/app/model/payment.model';
@@ -55,7 +55,7 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
   sortedField = 'created';
   sortedDesc = true;
   filter = new Filter({});
-  selected = false;
+  selectedForUnbenchmark = false;
 
   private destroy$ = new Subject();
   private subscriptions: Subscription = new Subscription();
@@ -140,7 +140,8 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
 
   onTransactionSelected(item: TransactionItemDeprecated): void {
     item.selected = !item.selected;
-    this.selected = this.transactions.some(x => x.selected === true);
+    this.selectedForUnbenchmark = this.transactions.some(x => 
+      x.selected === true && x.type !== TransactionType.Receive);
   }
 
   unbenchmark(): void {
@@ -163,7 +164,7 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
 
   private executeUnbenchmark(): void {
     const requestData$ = this.adminService.unbenchmarkTransaction(
-      this.transactions.filter(x => x.selected === true).map(val => val.id)
+      this.transactions.filter(x => x.selected === true && x.type !== TransactionType.Receive).map(val => val.id)
     );
     this.subscriptions.add(
       requestData$.subscribe(({ data }) => {
