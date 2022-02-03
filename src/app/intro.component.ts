@@ -35,13 +35,16 @@ export class IntroComponent implements OnInit {
 
     onWidgetError(error: string): void {
         if (error !== '') {
-            this.dialog.open(CommonDialogBox, {
+            const dialogRef = this.dialog.open(CommonDialogBox, {
                 width: '450px',
                 data: {
                     title: 'Error',
                     message: error
                 }
             });
+            setInterval(() => {
+                dialogRef.close(undefined);
+            }, 10000);
         }
     }
 }
