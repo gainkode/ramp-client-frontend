@@ -14,7 +14,9 @@ export class DetailsAttributeComponent implements OnInit {
   @Input()
   set value(value: string | string[] | number | CommonTargetValue | null | undefined) {
     this.setArray = false;
+    console.log(value);
     if (value instanceof CommonTargetValue) {
+      console.log('common target value');
       this.valueImage = value;
     } else if (typeof (value) === 'number') {
       this.valueString = value.toString();

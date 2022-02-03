@@ -8,14 +8,19 @@
         <br>
     </div>
 
-    <app-details-attribute *ngIf="create===false" label="Country" [value]="countryName"></app-details-attribute>
+    <div *ngIf="create===false" style="display: flex;flex-direction: column;">
+        <app-dropdown-item itemValue="{{selectedItem.title}}" imageClass="{{selectedItem.imgClass}}"
+            imageSource="{{selectedItem.imgSource}}">
+        </app-dropdown-item>
+    </div>
 
     <!-- Target values -->
     <mat-form-field *ngIf="create===true" class="form-element">
         <mat-label>Select country to add</mat-label>
         <mat-select formControlName="id" required>
             <mat-option *ngFor="let item of dataList" [value]="item.id">
-                {{item.title}}
+                <app-dropdown-item itemValue="{{item.title}}" imageClass="{{item.imgClass}}"
+                    imageSource="{{item.imgSource}}"></app-dropdown-item>
             </mat-option>
         </mat-select>
         <mat-error *ngIf="dataForm.get('id')?.hasError('required')">

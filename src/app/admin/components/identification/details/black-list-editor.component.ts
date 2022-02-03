@@ -14,7 +14,11 @@ export class BlackListEditorComponent {
   set currentCountry(item: CommonTargetValue | null) {
     this.setFormData(item);
     this.settingsId = (item !== null) ? item?.id : '';
-    this.countryName = (item !== null) ? item?.title : '';
+    if (item !== null) {
+      this.selectedItem = item;
+    }
+
+    console.log(item instanceof CommonTargetValue, this.selectedItem);
     this.layoutService.setBackdrop(!this.settingsId);
   }
 
@@ -24,7 +28,7 @@ export class BlackListEditorComponent {
   @Output() cancel = new EventEmitter();
   @Output() formChanged = new EventEmitter<boolean>();
 
-  countryName = '';
+  selectedItem: CommonTargetValue = {} as CommonTargetValue;
   private settingsId = '';
 
   errorMessage = '';
