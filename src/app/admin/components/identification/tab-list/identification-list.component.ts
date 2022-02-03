@@ -113,7 +113,9 @@ export class IdentificationListComponent implements OnInit, OnDestroy {
               const c = getCountryByCode2(val.countryCode2);
               return {
                 id: c?.code3 ?? '',
-                title: c?.name ?? ''
+                title: c?.name ?? '',
+                imgClass: 'country-flag',
+                imgSource: `assets/svg-country-flags/${c?.code2.toLowerCase()}.svg`
               }
             }) as CommonTargetValue[];
           }
