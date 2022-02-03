@@ -17,8 +17,6 @@ export class BlackListEditorComponent {
     if (item !== null) {
       this.selectedItem = item;
     }
-
-    console.log(item instanceof CommonTargetValue, this.selectedItem);
     this.layoutService.setBackdrop(!this.settingsId);
   }
 

@@ -20,15 +20,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   private subscriptions: Subscription = new Subscription();
 
-  constructor(
-    public dashboardService: DashboardService
-  ) {
-  }
+  constructor(public dashboardService: DashboardService) { }
 
   ngOnInit(): void {
     this.subscriptions.add(
       this.dashboardService.data.subscribe(d => {
-
       })
     );
     this.dashboardService.load();
@@ -41,5 +37,4 @@ export class DashboardComponent implements OnInit, OnDestroy {
   handleFilterApplied(filter: Filter): void {
     this.dashboardService.setFilter(filter);
   }
-
 }

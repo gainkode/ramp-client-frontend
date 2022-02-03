@@ -121,6 +121,32 @@ const GET_DASHBOARD_STATS = gql`
           ratio
         }
       }
+      receives {
+        approved {count, volume},
+        declined {count, volume},
+        abandoned {count, volume},
+        inProcess {count, volume},
+        fee {count, volume},
+        ratio,
+        toMerchant {
+          instrument,
+          approved {count, volume},
+          declined {count, volume},
+          abandoned {count, volume},
+          inProcess {count, volume},
+          fee {count, volume}
+          ratio
+        },
+        toCustomer {
+          instrument,
+          approved {count, volume},
+          declined {count, volume},
+          abandoned {count, volume},
+          inProcess {count, volume},
+          fee {count, volume},
+          ratio
+        }
+      }
       withdrawals {
         approved {count, volume},
         declined {count, volume},
@@ -1483,12 +1509,9 @@ export class AdminDataService {
       query: GET_DASHBOARD_STATS,
       variables: vars,
       fetchPolicy: 'network-only'
-    })
-      .pipe(
-        map(result => {
-          return result.data.getDashboardStats;
-        })
-      );
+    }).pipe(map(result => {
+      return result.data.getDashboardStats;
+    }));
   }
 
   getFeeSettings(): Observable<{ list: Array<FeeScheme>; count: number; }> {
