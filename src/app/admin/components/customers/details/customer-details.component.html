@@ -12,11 +12,11 @@
             [linkUrl]="'/admin/customers/'+ settingsId"></app-details-attribute>
         <app-details-attribute *ngIf="!cancelable" label="Account Id" [value]="settingsId"></app-details-attribute>
 
-        <app-details-attribute label="Widget" [value]="user?.widgetId"></app-details-attribute>
-        <app-details-attribute label="Widget Code" [value]="user?.widgetCode"></app-details-attribute>
+        <app-details-attribute label="Widget" [value]="userData?.widgetId"></app-details-attribute>
+        <app-details-attribute label="Widget Code" [value]="userData?.widgetCode"></app-details-attribute>
 
-        <app-details-attribute label="Affiliate" [value]="user?.affiliateId"></app-details-attribute>
-        <app-details-attribute label="Affiliate Code" [value]="user?.affiliateCode"></app-details-attribute>
+        <app-details-attribute label="Affiliate" [value]="userData?.affiliateId"></app-details-attribute>
+        <app-details-attribute label="Affiliate Code" [value]="userData?.affiliateCode"></app-details-attribute>
     </section>
 
     <!-- Email -->
@@ -71,7 +71,7 @@
             Incorrect date format
         </mat-error>
     </mat-form-field>
-    <app-details-attribute label="Age" [value]="user?.age"></app-details-attribute>
+    <app-details-attribute label="Age" [value]="userData?.age"></app-details-attribute>
 
     <!-- Account status -->
     <mat-form-field class="form-element">
@@ -189,30 +189,30 @@
 
     <!-- Totals -->
     <app-details-attribute label="Total Balance" [value]="totalBalance"></app-details-attribute>
-    <app-details-attribute label="Total Transaction Count" [value]="user?.totalTransactionCount">
+    <app-details-attribute label="Total Transaction Count" [value]="userData?.totalTransactionCount">
     </app-details-attribute>
-    <app-details-attribute label="Avarage Transaction" [value]="user?.avarageTransaction"></app-details-attribute>
-    <app-details-attribute label="Total Bought Completed" [value]="user?.totalBoughtCompletedResult">
+    <app-details-attribute label="Avarage Transaction" [value]="userData?.avarageTransaction"></app-details-attribute>
+    <app-details-attribute label="Total Bought Completed" [value]="userData?.totalBoughtCompletedResult">
     </app-details-attribute>
-    <app-details-attribute label="Total Bought In Process" [value]="user?.totalBoughtInProcessResult">
+    <app-details-attribute label="Total Bought In Process" [value]="userData?.totalBoughtInProcessResult">
     </app-details-attribute>
-    <app-details-attribute label="Total Sold Completed" [value]="user?.totalSoldCompletedResult">
+    <app-details-attribute label="Total Sold Completed" [value]="userData?.totalSoldCompletedResult">
     </app-details-attribute>
-    <app-details-attribute label="Total Sold In Process" [value]="user?.totalSoldInProcessResult">
+    <app-details-attribute label="Total Sold In Process" [value]="userData?.totalSoldInProcessResult">
     </app-details-attribute>
-    <app-details-attribute label="Total Sent Completed" [value]="user?.totalSentCompletedResult">
+    <app-details-attribute label="Total Sent Completed" [value]="userData?.totalSentCompletedResult">
     </app-details-attribute>
-    <app-details-attribute label="Total Sent In Process" [value]="user?.totalSentInProcessResult">
+    <app-details-attribute label="Total Sent In Process" [value]="userData?.totalSentInProcessResult">
     </app-details-attribute>
-    <app-details-attribute label="Total Received Completed" [value]="user?.totalReceivedCompletedResult">
+    <app-details-attribute label="Total Received Completed" [value]="userData?.totalReceivedCompletedResult">
     </app-details-attribute>
-    <app-details-attribute label="Total Received In Process" [value]="user?.totalReceivedInProcessResult">
+    <app-details-attribute label="Total Received In Process" [value]="userData?.totalReceivedInProcessResult">
     </app-details-attribute>
-    <app-details-attribute label="Total Transactions" [value]="user?.totalTransactionCount"></app-details-attribute>
-    <app-details-attribute label="Avarage Transaction" [value]="user?.avarageTransaction"></app-details-attribute>
+    <app-details-attribute label="Total Transactions" [value]="userData?.totalTransactionCount"></app-details-attribute>
+    <app-details-attribute label="Avarage Transaction" [value]="userData?.avarageTransaction"></app-details-attribute>
 
     <!-- Risks -->
-    <app-details-attribute label="Risk codes" [value]="user?.riskCodes"></app-details-attribute>
+    <app-details-attribute label="Risk codes" [value]="userData?.riskCodes"></app-details-attribute>
     <mat-form-field class="form-element">
         <mat-label>Risk Level</mat-label>
         <mat-select formControlName="risk" required>
@@ -238,23 +238,23 @@
         </mat-error>
     </mat-form-field>
 
-    <app-details-attribute label="KYC Status" [value]="user?.kycStatus"></app-details-attribute>
-    <app-details-attribute label="KYC Review Date" [value]="user?.kycReviewDate"></app-details-attribute>
-    <app-details-attribute label="KYC Status Date" [value]="user?.kycStatusDate"></app-details-attribute>
-    <app-details-attribute label="KYC Review Comment" [value]="user?.kycReviewComment"></app-details-attribute>
-    <app-details-attribute label="KYC Private Comment" [value]="user?.kycPrivateComment"></app-details-attribute>
-    <app-details-attribute label="KYC Review Rejected Type" [value]="user?.kycReviewRejectedType">
+    <app-details-attribute label="KYC Status" [value]="userData?.kycStatus"></app-details-attribute>
+    <app-details-attribute label="KYC Review Date" [value]="userData?.kycReviewDate"></app-details-attribute>
+    <app-details-attribute label="KYC Status Date" [value]="userData?.kycStatusDate"></app-details-attribute>
+    <app-details-attribute label="KYC Review Comment" [value]="userData?.kycReviewComment"></app-details-attribute>
+    <app-details-attribute label="KYC Private Comment" [value]="userData?.kycPrivateComment"></app-details-attribute>
+    <app-details-attribute label="KYC Review Rejected Type" [value]="userData?.kycReviewRejectedType">
     </app-details-attribute>
-    <app-details-attribute label="KYC Review Rejected Labels" [value]="user?.kycReviewRejectedLabels">
+    <app-details-attribute label="KYC Review Rejected Labels" [value]="userData?.kycReviewRejectedLabels">
     </app-details-attribute>
-    <app-details-attribute label="KYC Review Result" [value]="user?.kycReviewResult"></app-details-attribute>
-    <app-details-attribute label="KYC Status Update Required" [value]="user?.kycStatusUpdateRequired">
+    <app-details-attribute label="KYC Review Result" [value]="userData?.kycReviewResult"></app-details-attribute>
+    <app-details-attribute label="KYC Status Update Required" [value]="userData?.kycStatusUpdateRequired">
     </app-details-attribute>
     <app-details-attribute label="Provided documents" [value]="kycDocs"></app-details-attribute>
     <app-details-attribute label="KYC Details" [value]="kycProviderLink" [linkUrl]="kycProviderLink">
     </app-details-attribute>
 
-    <app-details-attribute label="Lasr updated" [value]="user?.updated"></app-details-attribute>
+    <app-details-attribute label="Lasr updated" [value]="userData?.updated"></app-details-attribute>
 
     <div class="panel-actions">
         <button mat-flat-button color="primary" type="submit">

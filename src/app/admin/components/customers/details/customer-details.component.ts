@@ -39,7 +39,7 @@ export class CustomerDetailsComponent implements OnDestroy {
   settingsId = '';
   email = '';
   address = '';
-  user: UserItem | null | undefined;
+  userData: UserItem | null | undefined;
   userType = UserType.Personal;
   loadingData = false;
   errorMessage = '';
@@ -174,7 +174,7 @@ export class CustomerDetailsComponent implements OnDestroy {
     this.removable = (this.auth.user?.userId !== this.settingsId);
     this.address = (data) ? data.address : '';
     this.userType = (data) ? data.userType?.id ?? UserType.Personal : UserType.Personal;
-    this.user = data;
+    this.userData = data;
     if (data) {
       this.getUserKycInfo(this.settingsId);
       this.getUserState(this.settingsId);

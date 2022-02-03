@@ -10,12 +10,13 @@ import { LayoutService } from '../../../services/layout.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { CurrencyView } from 'src/app/model/payment.model';
 import { CommonDataService } from 'src/app/services/common-data.service';
-import { SettingsCurrencyWithDefaults, User, UserInput, UserNotificationLevel } from 'src/app/model/generated-models';
+import { SettingsCurrencyWithDefaults, UserNotificationLevel, UserRole } from 'src/app/model/generated-models';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
 import { SendNotificationDialogBox } from 'src/app/components/dialogs/send-notification-box.dialog';
 import { MatDialog } from '@angular/material/dialog';
 import { FormGroup } from '@angular/forms';
+import { CommonDialogBox } from 'src/app/components/dialogs/common-box.dialog';
 
 @Component({
   templateUrl: 'user-list.component.html',
@@ -26,10 +27,24 @@ export class SystemUserListComponent implements OnInit, OnDestroy, AfterViewInit
   @ViewChild(MatSort) sort!: MatSort;
 
   filterFields = [
+    'users',
+    'accountType',
+    'accountMode',
+    'accountStatus',
+    'userTierLevel',
+    'riskLevel',
+    'country',
+    'kycStatus',
+    'registrationDateStart',
+    'registrationDateEnd',
+    'widget',
+    'totalBuyVolume',
+    'transactionCount',
     'search'
   ];
 
   selectedUser: UserItem | undefined = undefined;
+  roleIds: string[] = [];
   users: UserItem[] = [];
   userCount = 0;
   pageSize = 25;
@@ -41,7 +56,9 @@ export class SystemUserListComponent implements OnInit, OnDestroy, AfterViewInit
   selected = false;
 
   displayedColumns: string[] = [
-    'details', 'id', 'firstName', 'lastName', 'email', 'kycStatus', 'created', 'country', 'phone'
+    'details', 'referralCode', 'firstName', 'lastName', 'email', 'accountStatus', 'kycStatus',
+    'widgetId', 'totalBought', 'totalSold', 'totalSent', 'totalReceived',
+    'created', 'country', 'phone', 'risk', 'id'
   ];
 
   private destroy$ = new Subject();
@@ -67,18 +84,16 @@ export class SystemUserListComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
     this.destroy$.next();
+    this.subscriptions.unsubscribe();
   }
 
   ngAfterViewInit(): void {
-    this.subscriptions.add(
-      this.sort.sortChange.subscribe(() => {
-        this.sortedDesc = (this.sort.direction === 'desc');
-        this.sortedField = this.sort.active;
-        this.loadUsers();
-      })
-    );
+    this.sort.sortChange.subscribe(() => {
+      this.sortedDesc = (this.sort.direction === 'desc');
+      this.sortedField = this.sort.active;
+      this.loadUsers();
+    });
   }
 
   private loadCurrencyData(): void {
@@ -93,6 +108,29 @@ export class SystemUserListComponent implements OnInit, OnDestroy, AfterViewInit
               this.currencyList = currencySettings.settingsCurrency.list?.
                 map((val) => new CurrencyView(val)) as CurrencyView[];
             }
+          }
+          this.loadRoleData();
+        }, (error) => {
+          if (this.auth.token === '') {
+            this.router.navigateByUrl('/');
+          }
+        })
+      );
+    }
+  }
+
+  private loadRoleData(): void {
+    this.currencyList = [];
+    const currencyData = this.commonService.getRoles();
+    if (currencyData) {
+      this.subscriptions.add(
+        currencyData.valueChanges.subscribe(({ data }) => {
+          const roleData = data.getRoles as UserRole[];
+          const userRoles = roleData.filter(x => x.code !== 'USER');
+          if (userRoles) {
+            this.roleIds = userRoles.map(val => val.userRoleId ?? '');
+          } else {
+            this.roleIds = [];
           }
           this.loadUsers();
         }, (error) => {
@@ -145,15 +183,15 @@ export class SystemUserListComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   sendMessageData(ids: string[], level: UserNotificationLevel, title: string, text: string) {
-    const requestData = this.adminService.sendAdminNotification(ids, level, title, text);
+    const requestData$ = this.adminService.sendAdminNotification(ids, level, title, text);
     this.subscriptions.add(
-      requestData.subscribe(({ data }) => {
+      requestData$.subscribe(({ data }) => {
       }, (error) => {
         if (this.auth.token === '') {
           this.router.navigateByUrl('/');
         }
       })
-    );    
+    );
   }
 
   private setEditMode(mode: boolean): void {
@@ -162,7 +200,7 @@ export class SystemUserListComponent implements OnInit, OnDestroy, AfterViewInit
 
   private loadUsers(): void {
     const listData$ = this.adminService.getUsers(
-      [],
+      this.roleIds,
       this.pageIndex,
       this.pageSize,
       this.sortedField,
@@ -221,32 +259,22 @@ export class SystemUserListComponent implements OnInit, OnDestroy, AfterViewInit
     this.setEditMode(false);
   }
 
-  onDeleteUser(id: string): void {
-    const requestData$ = this.adminService.deleteCustomer(id);
-    this.subscriptions.add(
-      requestData$.subscribe(({ data }) => {
-        this.showEditor(null, false);
-        this.loadUsers();
-      }, (error) => {
-        if (this.auth.token === '') {
-          this.router.navigateByUrl('/');
-        }
-      })
-    );
+  onSave(): void {
+    this.showEditor(null, false);
+    this.loadUsers();
   }
 
-  onSaveUser(user: User): void {
-    const requestData$ = this.adminService.saveCustomer(user.userId, user);
+  export(): void {
+    const exportData$ = this.adminService.exportUsersToCsv();
     this.subscriptions.add(
-      requestData$.subscribe(({ data }) => {
-        this.showEditor(null, false);
-        if (this.auth.user?.userId === user.userId) {
-          this.auth.setUserName(user.firstName ?? '', user.lastName ?? '');
-          this.auth.setUserCurrencies(
-            user.defaultCryptoCurrency ?? 'BTC',
-            user.defaultFiatCurrency ?? 'EUR');
-        }
-        this.loadUsers();
+      exportData$.subscribe(({ data }) => {
+        this.dialog.open(CommonDialogBox, {
+          width: '400px',
+          data: {
+            title: 'Export',
+            message: 'Exported list of users has been sent to your email.'
+          }
+        });
       }, (error) => {
         if (this.auth.token === '') {
           this.router.navigateByUrl('/');
