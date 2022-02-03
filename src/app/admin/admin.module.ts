@@ -85,6 +85,7 @@ import { BankAccountEditorComponent } from './components/costs/details/bank-acco
 import { MatRadioModule } from '@angular/material/radio';
 import { BlackListTableComponent } from './components/identification/list/black-list-table.component';
 import { BlackListEditorComponent } from './components/identification/details/black-list-editor.component';
+import { AddSystemUserComponent } from './components/system-users/details/add-user.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -153,6 +154,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
     SystemUserListComponent,
     SystemUserSingleComponent,
     SystemUserDetailsComponent,
+    AddSystemUserComponent,
     RiskAlertListComponent,
     WidgetListComponent,
     RightPanelDirective,

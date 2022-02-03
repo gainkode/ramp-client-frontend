@@ -44,7 +44,9 @@ export class SystemUserListComponent implements OnInit, OnDestroy, AfterViewInit
   ];
 
   selectedUser: UserItem | undefined = undefined;
+  addUserFlag = false;
   roleIds: string[] = [];
+  userRoles: UserRole[] = [];
   users: UserItem[] = [];
   userCount = 0;
   pageSize = 25;
@@ -120,15 +122,16 @@ export class SystemUserListComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   private loadRoleData(): void {
-    this.currencyList = [];
+    this.userRoles = [];
+    this.roleIds = [];
     const currencyData = this.commonService.getRoles();
     if (currencyData) {
       this.subscriptions.add(
         currencyData.valueChanges.subscribe(({ data }) => {
-          const roleData = data.getRoles as UserRole[];
-          const userRoles = roleData.filter(x => x.code !== 'USER');
-          if (userRoles) {
-            this.roleIds = userRoles.map(val => val.userRoleId ?? '');
+          this.userRoles = data.getRoles as UserRole[];
+          const filteredRoles = this.userRoles.filter(x => x.code !== 'USER');
+          if (filteredRoles) {
+            this.roleIds = filteredRoles.map(val => val.userRoleId ?? '');
           } else {
             this.roleIds = [];
           }
@@ -149,6 +152,7 @@ export class SystemUserListComponent implements OnInit, OnDestroy, AfterViewInit
 
   handleDetailsPanelClosed(): void {
     this.selectedUser = undefined;
+    this.addUserFlag = false;
   }
 
   onUserSelected(item: UserItem): void {
@@ -161,7 +165,7 @@ export class SystemUserListComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   addUser(): void {
-
+    this.addUserFlag = true;
   }
   
   sendMessage(): void {
@@ -233,6 +237,7 @@ export class SystemUserListComponent implements OnInit, OnDestroy, AfterViewInit
     if (visible) {
       this.selectedUser = user ?? new UserItem(null);
     } else {
+      this.addUserFlag = false;
       this.selectedUser = undefined;
       this.setEditMode(false);
     }

@@ -49,7 +49,6 @@ export class LayoutService {
     this.rightPanelCloseRequestedSubject.next();
   }
 
-
   hideRightPanel(): void {
     this.rightPanelIsOpenedSubject.next(false);
   }

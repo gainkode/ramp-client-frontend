@@ -143,8 +143,7 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
 
   formatUserValue(user: UserItem): string {
     return user ?
-      (user.fullName + (user.email ? ' (' + user.email + ')' : '')) :
-      '';
+      (user.fullName + (user.email ? ' (' + user.email + ')' : '')) : '';
   }
 
   // endregion
@@ -220,14 +219,9 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
   private setFormData(widget: WidgetItem): void {
     if (widget) {
       const user$ = widget.userId ?
-        this.getUserFilteredOptions(widget.userId)
-          .pipe(
-            take(1),
-            map(users => {
-              return users.find(u => u.id === widget.userId);
-            })
-          )
-        :
+        this.getUserFilteredOptions(widget.userId).pipe(take(1), map(users => {
+          return users.find(u => u.id === widget.userId);
+        })) :
         of(undefined);
 
       user$.subscribe(userItem => {
@@ -273,10 +267,8 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
 
   private getUserFilteredOptions(searchString: string): Observable<UserItem[]> {
     if (searchString) {
-      return this.adminDataService.getUsers([], 0, 100, 'email', false, new Filter({ search: searchString })).pipe(
-        map(result => {
-          return result.list;
-        })
+      return this.adminDataService.findUsers(new Filter({ search: searchString })).pipe(
+        map(result => { return result.list; })
       );
     } else {
       return of([]);

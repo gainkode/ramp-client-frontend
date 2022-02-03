@@ -1,0 +1,40 @@
+<h2>Add user</h2>
+
+<form [formGroup]="dataForm" (ngSubmit)="onSubmit()">
+    <mat-form-field class="form-element">
+        <mat-label>User</mat-label>
+        <input type="text" placeholder="Select user" aria-label="User" matInput formControlName="userId"
+            (input)="handleUserInputChange($event)" [matAutocomplete]="autoUser">
+        <mat-autocomplete #autoUser="matAutocomplete" [displayWith]="formatUserValue">
+            <mat-option *ngFor="let option of filteredUserOptions" [value]="option">
+                {{option.fullName + (option.email ? ' ('+ option.email + ')' : '')}}
+            </mat-option>
+        </mat-autocomplete>
+        <mat-error *ngIf="dataForm.controls.userId.hasError('required')">
+            Mandatory field
+        </mat-error>
+    </mat-form-field>
+
+    <div class="form-element data-boxes">
+        <mat-checkbox color="accent" *ngFor="let role of roleList"
+        [formControlName]="role.code">
+            {{role?.code}}
+        </mat-checkbox>
+    </div>
+
+    <div class="form-element" *ngIf="errorMessage!==''">
+        <div class="form-error-box">
+            {{errorMessage}}
+        </div>
+        <br>
+    </div>
+
+    <div class="panel-actions">
+        <button mat-flat-button color="primary" type="submit">
+            SAVE
+        </button>
+        <button mat-flat-button (click)="onCancel()" type="button">
+            CANCEL
+        </button>
+    </div>
+</form>

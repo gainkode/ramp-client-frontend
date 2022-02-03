@@ -1,11 +1,4 @@
 <form [formGroup]="dataForm" (ngSubmit)="onSubmit()">
-    <div class="form-element" *ngIf="errorMessage!==''">
-        <div class="form-error-box">
-            {{errorMessage}}
-        </div>
-        <br>
-    </div>
-
     <section>
         <h2>User info</h2>
         <app-details-attribute *ngIf="cancelable" label="Account Id" [value]="settingsId"
@@ -255,6 +248,13 @@
     </app-details-attribute>
 
     <app-details-attribute label="Lasr updated" [value]="userData?.updated"></app-details-attribute>
+
+    <div class="form-element" *ngIf="errorMessage!==''">
+        <div class="form-error-box">
+            {{errorMessage}}
+        </div>
+        <br>
+    </div>
 
     <div class="panel-actions">
         <button mat-flat-button color="primary" type="submit">

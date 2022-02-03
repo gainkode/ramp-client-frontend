@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -20,7 +20,7 @@ import { getFormattedUtcDate } from 'src/app/utils/utils';
   templateUrl: 'user-details.component.html',
   styleUrls: ['user-details.component.scss']
 })
-export class SystemUserDetailsComponent {
+export class SystemUserDetailsComponent implements OnDestroy {
   @Input() set user(val: UserItem | null | undefined) {
     this.setFormData(val);
     this.setCurrencies(this.pCurrencies);

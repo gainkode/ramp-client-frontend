@@ -621,6 +621,64 @@ const GET_USERS = gql`
   }
 `;
 
+const FIND_USERS = gql`
+  query GetUsers(
+    $userIdsOnly: [String!]
+    $accountTypesOnly: [UserType!]
+    $accountModesOnly: [UserMode!]
+    $accountStatusesOnly: [AccountStatus!]
+    $userTierLevelsOnly: [String!]
+    $riskLevelsOnly: [RiskLevel!]
+    $countriesOnly: [String!]
+    $countryCodeType: CountryCodeType!
+    $kycStatusesOnly: [KycStatus!]
+    $registrationDateInterval: DateTimeInterval
+    $widgetIdsOnly: [String!]
+    $totalBuyVolumeOver: Int
+    $transactionCountOver: Int
+    $filter: String
+    $skip: Int
+    $first: Int
+    $orderBy: [OrderBy!]
+  ) {
+    getUsers(
+      userIdsOnly: $userIdsOnly
+      accountTypesOnly: $accountTypesOnly
+      accountModesOnly: $accountModesOnly
+      accountStatusesOnly: $accountStatusesOnly
+      userTierLevelsOnly: $userTierLevelsOnly
+      riskLevelsOnly: $riskLevelsOnly
+      countriesOnly: $countriesOnly
+      countryCodeType: $countryCodeType
+      kycStatusesOnly: $kycStatusesOnly
+      registrationDateInterval: $registrationDateInterval
+      widgetIdsOnly: $widgetIdsOnly
+      totalBuyVolumeOver: $totalBuyVolumeOver
+      transactionCountOver: $transactionCountOver
+      filter: $filter,
+      skip: $skip,
+      first: $first,
+      orderBy: $orderBy) {
+      count
+      list {
+        userId
+        email
+        firstName
+        lastName
+        type
+        mode
+        countryCode2
+        countryCode3
+        roles {
+          userRoleId
+          name
+          code
+        }
+      }
+    }
+  }
+`;
+
 const GET_USER_KYC_INFO = gql`
   query GetUserKycInfo(
     $userId: String
@@ -1259,6 +1317,34 @@ mutation ResendNotification(
 }
 `;
 
+const ASSIGN_ROLE = gql`
+mutation AssignRole(
+  $userId: ID!
+  $roleCodes: [String!]
+) {
+  assignRole(
+    userId: $userId
+    roleCodes: $roleCodes
+  ) {
+    userId
+  }
+}
+`;
+
+const REMOVE_ROLE = gql`
+mutation RemoveRole(
+  $userId: ID!
+  $roleCodes: [String!]
+) {
+  removeRole(
+    userId: $userId
+    roleCodes: $roleCodes
+  ) {
+    userId
+  }
+}
+`;
+
 const EXPORT_TRANSACTIONS = gql`
 mutation ExportTransactionsToCsv {
   exportTransactionsToCsv
@@ -1806,6 +1892,46 @@ export class AdminDataService {
     };
     return this.watchQuery<{ getUsers: UserListResult }, QueryGetUsersArgs>({
       query: GET_USERS,
+      variables: vars,
+      fetchPolicy: 'network-only'
+    })
+      .pipe(
+        map(result => {
+          if (result.data?.getUsers?.list && result.data?.getUsers?.count) {
+            return {
+              list: result.data.getUsers.list.map(u => new UserItem(u)),
+              count: result.data.getUsers.count
+            };
+          } else {
+            return {
+              list: [],
+              count: 0
+            };
+          }
+        })
+      );
+  }
+
+  findUsers(filter: Filter): Observable<{ list: UserItem[], count: number }> {
+    const vars = {
+      userIdsOnly: filter?.users,
+      accountTypesOnly: filter?.accountTypes,
+      accountStatusesOnly: filter?.accountStatuses,
+      riskLevelsOnly: filter?.riskLevels,
+      countriesOnly: filter?.countries,
+      countryCodeType: CountryCodeType.Code3,
+      kycStatusesOnly: filter.kycStatuses,
+      registrationDateInterval: filter?.registrationDateInterval,
+      widgetIdsOnly: filter?.widgets,
+      totalBuyVolumeOver: filter?.totalBuyVolumeOver,
+      transactionCountOver: filter?.transactionCountOver,
+      skip: 0,
+      first: 1000,
+      orderBy: [{ orderBy: 'email', desc: true }],
+      filter: filter?.search
+    };
+    return this.watchQuery<{ getUsers: UserListResult }, QueryGetUsersArgs>({
+      query: FIND_USERS,
       variables: vars,
       fetchPolicy: 'network-only'
     })
@@ -2507,6 +2633,36 @@ export class AdminDataService {
     }));
   }
 
+  assignRole(userId: string, roleCodes: string[]): Observable<any> {
+    return this.mutate({
+      mutation: ASSIGN_ROLE,
+      variables: {
+        userId,
+        roleCodes
+      }
+    }).pipe(tap((res) => {
+      this.snackBar.open(
+        `Roles are assigned`,
+        undefined, { duration: 5000 }
+      );
+    }));
+  }
+  
+  removeRole(userId: string, roleCodes: string[]): Observable<any> {
+    return this.mutate({
+      mutation: REMOVE_ROLE,
+      variables: {
+        userId,
+        roleCodes
+      }
+    }).pipe(tap((res) => {
+      this.snackBar.open(
+        `Roles are removed`,
+        undefined, { duration: 5000 }
+      );
+    }));
+  }
+  
   exportUsersToCsv(): Observable<any> {
     return this.apollo.mutate({
       mutation: EXPORT_USERS,

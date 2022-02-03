@@ -120,7 +120,7 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private loadRoleData(): void {
-    this.currencyList = [];
+    this.roleIds = [];
     const currencyData = this.commonService.getRoles();
     if (currencyData) {
       this.subscriptions.add(

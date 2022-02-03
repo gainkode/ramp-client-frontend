@@ -1,4 +1,4 @@
-import { KycStatus, User, UserContact, UserType } from './generated-models';
+import { KycStatus, User, UserContact, UserRole, UserType } from './generated-models';
 import {
   UserModeShortList,
   UserModeView,
@@ -60,6 +60,7 @@ export class UserItem {
   age = '';
   risk = '';
   riskCodes: string[] = [];
+  roles: string[] = [];
   totalTransactionCount = 0;
   avarageTransaction = 0;
   totalBoughtCompleted = 0;
@@ -132,6 +133,7 @@ export class UserItem {
       this.affiliateId = data.affiliateId ?? '';
       this.affiliateCode = data.affiliateCode ?? '';
       this.accountStatus = data.accountStatus ?? '';
+      this.roles = data.roles?.map(val => val.code) ?? [];
       this.risk = data.risk ?? '';
       this.riskCodes = data.riskCodes?.map(code => {
         const riskData = JSON.parse(code);
@@ -293,5 +295,18 @@ export class ContactItem {
 
   get icon(): string {
     return this.pIconUrl;
+  }
+}
+
+export class RoleItem {
+  id = '';
+  name = '';
+  code = '';
+  selected = false;
+
+  constructor(data: UserRole | null) {
+    this.id = data?.userRoleId ?? '';
+    this.name = data?.name ?? '';
+    this.code = data?.code ?? '';
   }
 }
