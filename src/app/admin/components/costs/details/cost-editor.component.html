@@ -93,7 +93,7 @@
                 <!-- Transaction type -->
                 <mat-form-field class="form-element">
                     <mat-label>Transaction type</mat-label>
-                    <mat-select formControlName="trxType" multiple required>
+                    <mat-select formControlName="trxType" multiple>
                         <mat-option *ngFor="let item of transactionTypes" [value]="item.id">
                             {{item.name}}
                         </mat-option>
@@ -106,7 +106,7 @@
                 <!-- Payment Method -->
                 <mat-form-field class="form-element">
                     <mat-label>Payment Methods</mat-label>
-                    <mat-select formControlName="instrument" multiple required>
+                    <mat-select formControlName="instrument" multiple>
                         <mat-option *ngFor="let item of instruments" [value]="item.id">
                             {{item.name}}
                         </mat-option>
@@ -119,7 +119,7 @@
                 <!-- Payment provider -->
                 <mat-form-field class="form-element">
                     <mat-label>Payment provider</mat-label>
-                    <mat-select formControlName="provider" multiple required>
+                    <mat-select formControlName="provider" multiple>
                         <mat-option *ngFor="let item of providers" [value]="item.id">
                             {{item.name}}
                         </mat-option>

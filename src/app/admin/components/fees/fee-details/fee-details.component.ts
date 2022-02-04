@@ -76,11 +76,11 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
     target: ['', { validators: [Validators.required], updateOn: 'change' }],
     targetValues: [[], { validators: [Validators.required], updateOn: 'change' }],
     targetValue: [''],
-    instrument: [undefined, { validators: [Validators.required], updateOn: 'change' }],
-    userType: [[], { validators: [Validators.required], updateOn: 'change' }],
-    userMode: [[], { validators: [Validators.required], updateOn: 'change' }],
-    trxType: [[], { validators: [Validators.required], updateOn: 'change' }],
-    provider: [[], { validators: [Validators.required], updateOn: 'change' }],
+    instrument: [undefined],
+    userType: [[]],
+    userMode: [[]],
+    trxType: [[]],
+    provider: [[]],
     transactionFees: [
       '', {
         validators: [
@@ -442,15 +442,32 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
       data.setTarget(this.schemeForm.get('target')?.value, this.schemeForm.get('targetValues')?.value);
     }
     const instrument = this.schemeForm.get('instrument')?.value;
-    data.instrument.push(instrument);
-    (this.schemeForm.get('trxType')?.value as TransactionType[]).forEach(x => data.trxType.push(x));
-    if (instrument === PaymentInstrument.WireTransfer) {
-      data.provider.push(this.schemeForm.get('provider')?.value);
-    } else {
-      (this.schemeForm.get('provider')?.value as string[]).forEach(x => data.provider.push(x));
+    if (instrument) {
+      data.instrument.push(instrument);
     }
-    (this.schemeForm.get('userType')?.value as UserType[]).forEach(x => data.userType.push(x));
-    (this.schemeForm.get('userMode')?.value as UserMode[]).forEach(x => data.userMode.push(x));
+    const transactionTypes = this.schemeForm.get('trxType')?.value as TransactionType[];
+    if (transactionTypes) {
+      transactionTypes.forEach(x => data.trxType.push(x));
+    }
+    if (instrument === PaymentInstrument.WireTransfer) {
+      const provider = this.schemeForm.get('provider')?.value;
+      if (provider) {
+        data.provider.push(provider);
+      }
+    } else {
+      const providers = this.schemeForm.get('provider')?.value as string[];
+      if (providers) {
+        providers.forEach(x => data.provider.push(x));
+      }
+    }
+    const userTypes = this.schemeForm.get('userType')?.value as UserType[];
+    if (userTypes) {
+      userTypes.forEach(x => data.userType.push(x));
+    }
+    const userModes = this.schemeForm.get('userMode')?.value as UserMode[];
+    if (userModes) {
+      userModes.forEach(x => data.userMode.push(x));
+    }
     // terms
     data.terms.transactionFees = Number(this.schemeForm.get('transactionFees')?.value);
     data.terms.minTransactionFee = Number(this.schemeForm.get('minTransactionFee')?.value);
@@ -468,6 +485,10 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
       valid = this.schemeForm.get(name)?.valid as boolean;
     }
     return valid;
+  }
+
+  resetInstrument(): void {
+    this.schemeForm.get('instrument')?.setValue(undefined);
   }
 
   tabHasError(tab: string): boolean {

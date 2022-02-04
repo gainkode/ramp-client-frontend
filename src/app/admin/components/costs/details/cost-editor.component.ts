@@ -67,9 +67,9 @@ export class CostEditorComponent implements OnInit, OnDestroy {
     target: ['', { validators: [Validators.required], updateOn: 'change' }],
     targetValues: [[], { validators: [Validators.required], updateOn: 'change' }],
     targetValue: [''],
-    instrument: [[], { validators: [Validators.required], updateOn: 'change' }],
-    trxType: [[], { validators: [Validators.required], updateOn: 'change' }],
-    provider: [[], { validators: [Validators.required], updateOn: 'change' }],
+    instrument: [[]],
+    trxType: [[]],
+    provider: [[]],
     mdr: [
       '', {
         validators: [
@@ -297,9 +297,18 @@ export class CostEditorComponent implements OnInit, OnDestroy {
     data.bankAccountIds = this.schemeForm.get('bankAccounts')?.value;
     // target
     data.setTarget(this.schemeForm.get('target')?.value, this.schemeForm.get('targetValues')?.value);
-    (this.schemeForm.get('instrument')?.value as PaymentInstrument[]).forEach(x => data.instrument.push(x));
-    (this.schemeForm.get('trxType')?.value as TransactionType[]).forEach(x => data.trxType.push(x));
-    (this.schemeForm.get('provider')?.value as string[]).forEach(x => data.provider.push(x));
+    const instruments = this.schemeForm.get('instrument')?.value as PaymentInstrument[];
+    if (instruments) {
+      instruments.forEach(x => data.instrument.push(x));
+    }
+    const transactonTypes = this.schemeForm.get('trxType')?.value as TransactionType[];
+    if (transactonTypes) {
+      transactonTypes.forEach(x => data.trxType.push(x));
+    }
+    const providers = this.schemeForm.get('provider')?.value as string[];
+    if (providers) {
+      providers.forEach(x => data.provider.push(x));
+    }
     // terms
     data.terms.mdr = Number(this.schemeForm.get('mdr')?.value);
     data.terms.transactionCost = Number(this.schemeForm.get('transactionCost')?.value);
