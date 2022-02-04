@@ -600,6 +600,7 @@ export type Mutation = {
   sendTestNotification?: Maybe<Scalars['Void']>;
   sendTestServiceNotification?: Maybe<Scalars['Void']>;
   createTransaction?: Maybe<TransactionShort>;
+  sendInvoice?: Maybe<Scalars['Boolean']>;
   executeTransaction?: Maybe<TransactionShort>;
   updateTransaction?: Maybe<Transaction>;
   exportTransactionsToCsv?: Maybe<Scalars['Boolean']>;
@@ -1036,6 +1037,11 @@ export type MutationAddFeedbackArgs = {
 
 export type MutationCreateTransactionArgs = {
   transaction?: Maybe<TransactionInput>;
+};
+
+
+export type MutationSendInvoiceArgs = {
+  transactionId?: Maybe<Scalars['String']>;
 };
 
 

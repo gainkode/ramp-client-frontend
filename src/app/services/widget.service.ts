@@ -190,6 +190,37 @@ export class WidgetService {
         );
     }
 
+    sendWireTransferMessage(email: string, id: string, callback: Function): void {
+        if (this.onError) {
+            this.onError('');
+        }
+        try {
+            const messageData$ = this.paymentService.sendInvoice(id).pipe(take(1));
+            if (this.onProgressChanged) {
+                this.onProgressChanged(true);
+            }
+            this.pSubscriptions.add(
+                messageData$.subscribe(({ data }) => {
+                    if (this.onProgressChanged) {
+                        this.onProgressChanged(false);
+                    }
+                    if (callback) {
+                        callback();
+                    }
+                }, (error) => {
+                    if (this.onProgressChanged) {
+                        this.onProgressChanged(false);
+                    }
+                    this.handleError(error, email, 'Unable to send a message');
+                })
+            );
+        } catch (e) {
+            if (this.onError) {
+                this.onError(e as string);
+            }
+        }
+    }
+
     private getKycStatus(summary: CheckoutSummary, widgetId: string): void {
         if (this.onError) {
             this.onError('');

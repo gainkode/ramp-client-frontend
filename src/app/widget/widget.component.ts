@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -9,6 +10,7 @@ import { ErrorService } from 'src/app/services/error.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { PaymentDataService } from 'src/app/services/payment.service';
 import { ExchangeRateService } from 'src/app/services/rate.service';
+import { CommonDialogBox } from '../components/dialogs/common-box.dialog';
 import { WireTransferUserSelection } from '../model/cost-scheme.model';
 import { PaymentCompleteDetails, WidgetSettings, WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from '../model/payment-base.model';
 import { WalletItem } from '../model/wallet.model';
@@ -63,6 +65,7 @@ export class WidgetComponent implements OnInit {
   constructor(
     private changeDetector: ChangeDetectorRef,
     public router: Router,
+    public dialog: MatDialog,
     public pager: WidgetPagerService,
     private exhangeRate: ExchangeRateService,
     private widgetService: WidgetService,
@@ -471,10 +474,26 @@ export class WidgetComponent implements OnInit {
       accountType: data.selected.id
     };
 
-    console.log(this.selectedWireTransfer);
-
     const settingsData = JSON.stringify(settings);
     this.createDepositTransaction('', PaymentInstrument.WireTransfer, settingsData);
+  }
+
+  sendWireTransaferMessageResult(): void {
+    this.dialog.open(CommonDialogBox, {
+      width: '450px',
+      data: {
+        title: 'Payment',
+        message: 'Message has been sent successfully'
+      }
+    });
+  }
+
+  sendWireTransaferMessage(): void {
+    this.widgetService.sendWireTransferMessage(
+      this.summary.email,
+      this.summary.transactionId,
+      this.sendWireTransaferMessageResult.bind(this)
+    )
   }
 
   // ====================

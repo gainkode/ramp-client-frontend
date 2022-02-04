@@ -12,6 +12,7 @@ export class WidgetWireTransferResultComponent {
         this.loadData(val);
     }
     @Output() onComplete = new EventEmitter();
+    @Output() onSendEmail = new EventEmitter();
 
     field1Title = '';
     field2Title = '';

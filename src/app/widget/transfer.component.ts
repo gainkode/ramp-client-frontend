@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -7,6 +8,7 @@ import { CardView, CheckoutSummary, PaymentProviderInstrumentView } from 'src/ap
 import { ErrorService } from 'src/app/services/error.service';
 import { PaymentDataService } from 'src/app/services/payment.service';
 import { ExchangeRateService } from 'src/app/services/rate.service';
+import { CommonDialogBox } from '../components/dialogs/common-box.dialog';
 import { WireTransferUserSelection } from '../model/cost-scheme.model';
 import { PaymentCompleteDetails, PaymentWidgetType, WidgetSettings, WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from '../model/payment-base.model';
 import { WalletItem } from '../model/wallet.model';
@@ -57,6 +59,7 @@ export class TransferWidgetComponent implements OnInit {
   constructor(
     private changeDetector: ChangeDetectorRef,
     private router: Router,
+    public dialog: MatDialog,
     public pager: WidgetPagerService,
     private exhangeRate: ExchangeRateService,
     private widgetService: WidgetService,
@@ -366,6 +369,24 @@ export class TransferWidgetComponent implements OnInit {
     const settingsData = JSON.stringify(settings);
     this.createTransaction('', PaymentInstrument.WireTransfer, settingsData);
   }
+
+  sendWireTransaferMessageResult(): void {
+    this.dialog.open(CommonDialogBox, {
+      width: '450px',
+      data: {
+        title: 'Payment',
+        message: 'Message has been sent successfully'
+      }
+    });
+  }
+
+  sendWireTransaferMessage(): void {
+    this.widgetService.sendWireTransferMessage(
+      this.summary.email,
+      this.summary.transactionId,
+      this.sendWireTransaferMessageResult.bind(this)
+    )
+  }
   // ====================
 
   // == Payment ===========
@@ -429,10 +450,10 @@ export class TransferWidgetComponent implements OnInit {
           if (order.code) {
             this.summary.instrument = instrument;
             this.summary.providerView = this.paymentProviders.find(x => x.id === providerId);
-            this.summary.orderId = order.code as string;
-            this.summary.fee = order.feeFiat as number ?? 0;
-            this.summary.feeMinFiat = order.feeMinFiat as number ?? 0;
-            this.summary.feePercent = order.feePercent as number ?? 0;
+            this.summary.orderId = order.code ?? '';
+            this.summary.fee = order.feeFiat ?? 0;
+            this.summary.feeMinFiat = order.feeMinFiat ?? 0;
+            this.summary.feePercent = order.feePercent ?? 0;
             this.summary.networkFee = order.approxNetworkFee ?? 0;
             this.summary.transactionDate = new Date().toLocaleString();
             this.summary.transactionId = order.transactionId as string;

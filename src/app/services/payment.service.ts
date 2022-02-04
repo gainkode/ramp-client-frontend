@@ -302,6 +302,14 @@ mutation PreAuth(
 }
 `;
 
+const SEND_INVOICE = gql`
+mutation SendInvoice(
+  $transactionId: String
+) {
+  sendInvoice(transactionId: $transactionId)
+}
+`;
+
 const GET_WIDGET = gql`
 query GetWidget($id: String!, $recaptcha: String!) {
   getWidget(
@@ -464,6 +472,15 @@ export class PaymentDataService {
     });
   }
 
+  sendInvoice(transactionId: string): Observable<any> {
+    return this.apollo.mutate({
+      mutation: SEND_INVOICE,
+      variables: {
+        transactionId
+      }
+    });
+  }
+  
   getProviders(fiatCurrency: string, widgetId: string | undefined): QueryRef<any, EmptyObject> {
     return this.apollo.watchQuery<any>({
       query: GET_PROVIDERS,

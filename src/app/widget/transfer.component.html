@@ -29,7 +29,7 @@
         [bankAccountId]="bankAccountId" [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage"
         (onBack)="paymentBack()" (onComplete)="wireTransferPaymentComplete($event)"></app-widget-wire-transfer>
       <app-widget-wire-transfer-result *ngSwitchCase="'wire_transfer_result'" [bankData]="selectedWireTransfer"
-        (onComplete)="processingComplete()">
+        (onComplete)="processingComplete()" (onSendEmail)="sendWireTransaferMessage()">
       </app-widget-wire-transfer-result>
       <!-- KYC -->
       <app-widget-kyc *ngSwitchCase="'verification'" [summary]="summary"
