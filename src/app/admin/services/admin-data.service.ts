@@ -2618,7 +2618,7 @@ export class AdminDataService {
       }
     }).pipe(tap((res) => {
       this.snackBar.open(
-        `Customer was deleted`,
+        `Customer was disabled`,
         undefined, { duration: 5000 }
       );
     }));

@@ -1,5 +1,6 @@
 import { KycStatus, User, UserContact, UserRole, UserType } from './generated-models';
 import {
+  KycStatusList,
   UserModeShortList,
   UserModeView,
   UserTypeList,
@@ -34,6 +35,7 @@ export class UserItem {
   widgetCode = '';
   affiliateId = '';
   affiliateCode = '';
+  kycStatusValue = KycStatus.Unknown;
   kycStatus = '';
   kycVerificationStatus = '';
   kycVerificationAvailable = true;
@@ -170,7 +172,8 @@ export class UserItem {
       this.totalSent = (this.totalSentCompleted + this.totalSentInProcess).toFixed(2);
       this.totalReceived = (this.totalReceivedCompleted + this.totalReceivedInProcess).toFixed(2);
 
-      this.kycStatus = data.kycStatus ?? '';
+      this.kycStatusValue = data.kycStatus as KycStatus ?? KycStatus.Unknown;
+      this.kycStatus = KycStatusList.find(x => x.id === data.kycStatus?.toLowerCase())?.name ?? '';
       const status = this.kycStatus.toLowerCase();
       if (status === KycStatus.Completed.toLowerCase()) {
         this.kycRejected = false;
@@ -250,6 +253,37 @@ export class UserItem {
     const flatValue = user.flatNumber ? `${user.flatNumber}, ` : '';
 
     return `${flatValue}${buildingNameValue}${buildingValue}${fullStreetValue}${townValue}${stateValue}${postCodeValue}`;
+  }
+
+  private getKycStatusColor(): string {
+    let color = 'grey';
+    switch (this.kycStatusValue) {
+      case KycStatus.Unknown:
+      case KycStatus.Init:
+      case KycStatus.NotFound:
+        color = 'red';
+        break;
+      case KycStatus.Completed:
+        color = 'green';
+        break;
+      default:
+        color = 'grey';
+    }
+    return color;
+  }
+
+  get customerListSelectorColumnStyle(): string[] {
+    return [
+      'customer-list-selector-column',
+      `customer-list-column-${this.getKycStatusColor()}`
+    ];
+  }
+
+  get customerListDataColumnStyle(): string[] {
+    return [
+      'customer-list-data-column',
+      `customer-list-column-${this.getKycStatusColor()}`
+    ];
   }
 
   setFullName(): void {
