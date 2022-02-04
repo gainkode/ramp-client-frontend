@@ -150,7 +150,7 @@ export class FeeShemeTerms {
     constructor(data: string) {
         if (data !== '') {
             const terms = JSON.parse(data);
-            this.transactionFees = terms.Ttransaction_fee;
+            this.transactionFees = terms.Transaction_fee;
             this.minTransactionFee = terms.Min_transaction_fee;
             this.rollingReserves = terms.Rolling_reserves;
             this.rollingReservesDays = terms.Rolling_reserves_days;
@@ -162,7 +162,7 @@ export class FeeShemeTerms {
 
     getObject(): string {
         return JSON.stringify({
-            Ttransaction_fee: this.transactionFees,
+            Transaction_fee: this.transactionFees,
             Min_transaction_fee: this.minTransactionFee,
             Rolling_reserves: this.rollingReserves,
             Rolling_reserves_days: this.rollingReservesDays,
