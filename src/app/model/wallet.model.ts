@@ -21,7 +21,7 @@ export class WalletItem {
   constructor(data: AssetAddressShort | null, defaultFiat: string, currency: CurrencyView | undefined) {
     if (data) {
       this.fiat = defaultFiat;
-      this.id = data.originalId ?? '';
+      this.id = data.vaultId ?? '';
       this.vault = data.vaultId ?? '';
       this.address = data.address ?? '';
       this.addressFormat = data.addressFormat ?? '';
