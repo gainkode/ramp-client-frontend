@@ -94,7 +94,12 @@ export class ProfileBalanceListComponent implements OnInit, OnDestroy {
                     } else {
                         const currency = this.currencies.find(c => c.symbol === balance.assetId);
                         if (currency) {
-                            this.balances.push(new UserBalanceItem(balance, currency.name, this.currentCurrency, this.fiatPrecision));
+                            this.balances.push(new UserBalanceItem(
+                                balance,
+                                currency.name,
+                                this.currentCurrency,
+                                this.fiatPrecision,
+                                currency.precision));
                         }
                     }
                 });
