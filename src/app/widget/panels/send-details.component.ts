@@ -36,7 +36,6 @@ export class WidgetSendDetailsComponent implements OnInit, OnDestroy {
   @Output() onError = new EventEmitter<string>();
   @Output() onProgress = new EventEmitter<boolean>();
   @Output() onDataUpdated = new EventEmitter<CheckoutSummary>();
-  @Output() onWalletAddressUpdated = new EventEmitter<string | undefined>();
   @Output() onComplete = new EventEmitter<CheckoutSummary>();
 
   private pSubscriptions: Subscription = new Subscription();
@@ -60,6 +59,7 @@ export class WidgetSendDetailsComponent implements OnInit, OnDestroy {
   amountErrorMessages: { [key: string]: string; } = {
     ['required']: 'Amount is required',
     ['pattern']: 'Amount must be a valid number',
+    ['min']: 'Minimal amount',
     ['max']: 'Maximal amount'
   };
   walletErrorMessages: { [key: string]: string; } = {
@@ -240,6 +240,7 @@ export class WidgetSendDetailsComponent implements OnInit, OnDestroy {
   }
 
   private setAmountValidators(): void {
+    this.amountErrorMessages['min'] = `Min. amount to send ${this.currentCurrency?.minAmount} ${this.currencyField?.value}`;
     this.amountErrorMessages['max'] = `Max. amount to send ${this.selectedWallet?.total} ${this.currencyField?.value}`;
     this.amountField?.setValidators([
       Validators.required,

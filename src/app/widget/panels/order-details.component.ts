@@ -43,7 +43,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   @Output() onError = new EventEmitter<string>();
   @Output() onProgress = new EventEmitter<boolean>();
   @Output() onDataUpdated = new EventEmitter<CheckoutSummary>();
-  @Output() onWalletAddressUpdated = new EventEmitter<string | undefined>();
+  @Output() onWalletAddressUpdated = new EventEmitter<CheckoutSummary>();
   @Output() onComplete = new EventEmitter<string>();
 
   private pInitState = true;
@@ -566,7 +566,10 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       this.selectedWallet = this.filteredWallets.find(x => x.address === val);
     }
     //    }
-    this.onWalletAddressUpdated.emit(this.walletField?.value);
+    const data: CheckoutSummary = new CheckoutSummary();
+    data.address = this.walletField?.value;
+    data.vaultId = this.selectedWallet?.id ?? '';
+    this.onWalletAddressUpdated.emit(data);
   }
 
   private hasValidators(control: AbstractControl) {

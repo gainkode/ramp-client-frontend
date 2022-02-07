@@ -282,8 +282,9 @@ export class TransferWidgetComponent implements OnInit {
     }
   }
 
-  orderWalletChanged(data: string | undefined): void {
-    this.summary.address = data ?? '';
+  orderWalletChanged(data: CheckoutSummary): void {
+    this.summary.address = data.address ?? '';
+    this.summary.vaultId = data.vaultId ?? '';
   }
 
   orderDetailsComplete(email: string): void {
@@ -432,7 +433,7 @@ export class TransferWidgetComponent implements OnInit {
         this.dataService.createTransaction(
           this.summary.transactionType,
           TransactionSource.Wallet,
-          '',
+          this.summary.vaultId,
           this.summary.currencyFrom,
           this.summary.currencyTo,
           this.summary.amountFrom ?? 0,

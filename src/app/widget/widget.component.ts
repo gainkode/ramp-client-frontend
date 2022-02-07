@@ -372,8 +372,9 @@ export class WidgetComponent implements OnInit {
     }
   }
 
-  orderWalletChanged(data: string | undefined): void {
-    this.summary.address = data ?? '';
+  orderWalletChanged(data: CheckoutSummary): void {
+    this.summary.address = data.address ?? '';
+    this.summary.vaultId = data.vaultId ?? '';
   }
 
   orderDetailsComplete(email: string): void {
@@ -625,7 +626,7 @@ export class WidgetComponent implements OnInit {
         this.dataService.createTransaction(
           this.summary.transactionType,
           this.widget.source,
-          '',
+          this.summary.vaultId,
           this.summary.currencyFrom,
           this.summary.currencyTo,
           this.summary.amountFrom ?? 0,
