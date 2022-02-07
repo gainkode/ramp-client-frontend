@@ -244,7 +244,8 @@ export class WidgetSendDetailsComponent implements OnInit, OnDestroy {
     this.amountField?.setValidators([
       Validators.required,
       Validators.pattern(this.pNumberPattern),
-      Validators.max(this.selectedWallet?.total ?? 0),
+      Validators.min(this.currentCurrency?.minAmount ?? 0),
+      Validators.max(this.selectedWallet?.total ?? 0)
     ]);
     this.amountField?.updateValueAndValidity();
   }
