@@ -530,6 +530,7 @@ export class ProfileDataService {
 
   getMyWallets(assets: string[]): QueryRef<any, EmptyObject> {
     const orderFields = [
+      { orderBy: 'default', desc: true },
       { orderBy: 'total', desc: true }
     ];
     const assetIds = (assets.length > 0) ? assets : undefined;

@@ -1951,6 +1951,9 @@ export class AdminDataService {
       orderBy: [{ orderBy: orderField, desc: orderDesc }],
       filter: filter?.search
     };
+
+    console.log(vars);
+
     return this.watchQuery<{ getUsers: UserListResult }, QueryGetUsersArgs>({
       query: GET_USERS,
       variables: vars,
