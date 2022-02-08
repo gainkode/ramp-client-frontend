@@ -5,6 +5,7 @@ import { DashboardCardData, DashboardData } from '../../model/dashboard-data.mod
 import { Filter } from '../../model/filter.model';
 import { take } from 'rxjs/operators';
 import { PaymentInstrumentList } from '../../../model/payment.model';
+import { getCurrencySign } from 'src/app/utils/utils';
 
 @Injectable({
   providedIn: 'any'
@@ -353,22 +354,22 @@ export class DashboardService implements OnDestroy {
         rows: [
           {
             source: 'Buy',
-            volume: rawData.deposits?.fee?.volume ?? null,
+            volume: this.getFeeValue(rawData.deposits?.fee?.volume ?? null),
             count: rawData.deposits?.fee?.count ?? null
           },
           {
             source: 'Sell',
-            volume: rawData.withdrawals?.fee?.volume ?? null,
+            volume: this.getFeeValue(rawData.withdrawals?.fee?.volume ?? null),
             count: rawData.withdrawals?.fee?.count ?? null
           },
           {
             source: 'Send',
-            volume: rawData.transfers?.fee?.volume ?? null,
+            volume: this.getFeeValue(rawData.transfers?.fee?.volume ?? null),
             count: rawData.transfers?.fee?.count ?? null
           },
           {
             source: 'Receive',
-            volume: rawData.receives?.fee?.volume ?? null,
+            volume: this.getFeeValue(rawData.receives?.fee?.volume ?? null),
             count: rawData.receives?.fee?.count ?? null
           }
         ]
@@ -431,5 +432,13 @@ export class DashboardService implements OnDestroy {
 
     })
     );
+  }
+
+  getFeeValue(val: number | null): string | null {
+    if (val === null) {
+      return null;
+    } else {
+      return `${getCurrencySign('EUR')}${val}`;
+    }
   }
 }
