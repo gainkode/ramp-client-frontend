@@ -167,10 +167,10 @@ export class UserItem {
       this.totalSentInProcessResult = this.getTransactionResult(this.totalSentInProcess, this.totalSentInProcessCount);
       this.totalReceivedCompletedResult = this.getTransactionResult(this.totalReceivedCompleted, this.totalReceivedCompletedCount);
       this.totalReceivedInProcessResult = this.getTransactionResult(this.totalReceivedInProcess, this.totalReceivedInProcessCount);
-      this.totalBought = (this.totalBoughtCompleted + this.totalBoughtInProcess).toFixed(2);
-      this.totalSold = (this.totalSoldCompleted + this.totalSoldInProcess).toFixed(2);
-      this.totalSent = (this.totalSentCompleted + this.totalSentInProcess).toFixed(2);
-      this.totalReceived = (this.totalReceivedCompleted + this.totalReceivedInProcess).toFixed(2);
+      this.totalBought = this.totalBoughtCompleted.toFixed(2);
+      this.totalSold = this.totalSoldCompleted.toFixed(2);
+      this.totalSent = this.totalSentCompleted.toFixed(2);
+      this.totalReceived = this.totalReceivedCompleted.toFixed(2);
 
       this.kycStatusValue = data.kycStatus as KycStatus ?? KycStatus.Unknown;
       this.kycStatus = KycStatusList.find(x => x.id === data.kycStatus?.toLowerCase())?.name ?? '';
