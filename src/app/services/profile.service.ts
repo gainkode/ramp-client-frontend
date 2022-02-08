@@ -78,6 +78,10 @@ const GET_MY_TRANSACTIONS = gql`
         }
         data
         destination
+        destVaultId
+        destVault
+        sourceVaultId
+        sourceVault
       }
     }
   }

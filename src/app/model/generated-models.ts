@@ -84,6 +84,7 @@ export type AssetAddress = {
   lockedAmount?: Maybe<Scalars['Float']>;
   vaultId?: Maybe<Scalars['String']>;
   vaultName?: Maybe<Scalars['String']>;
+  vaultOriginalId?: Maybe<Scalars['String']>;
   default?: Maybe<Scalars['Boolean']>;
   userId?: Maybe<Scalars['String']>;
   userEmail?: Maybe<Scalars['String']>;
@@ -115,6 +116,7 @@ export type AssetAddressShort = {
   lockedAmount?: Maybe<Scalars['Float']>;
   vaultId?: Maybe<Scalars['String']>;
   vaultName?: Maybe<Scalars['String']>;
+  vaultOriginalId?: Maybe<Scalars['String']>;
   default?: Maybe<Scalars['Boolean']>;
 };
 
@@ -2364,6 +2366,7 @@ export type Transaction = {
   requiredUserTierId?: Maybe<Scalars['String']>;
   requiredUserTier?: Maybe<SettingsKycTierShortEx>;
   sourceVaultId?: Maybe<Scalars['String']>;
+  sourceVault?: Maybe<Scalars['String']>;
   user?: Maybe<User>;
   created?: Maybe<Scalars['DateTime']>;
   updated?: Maybe<Scalars['DateTime']>;
@@ -2392,6 +2395,8 @@ export type Transaction = {
   initialRate?: Maybe<Scalars['Float']>;
   rate?: Maybe<Scalars['Float']>;
   rateFiatToEur?: Maybe<Scalars['Float']>;
+  destVaultId?: Maybe<Scalars['String']>;
+  destVault?: Maybe<Scalars['String']>;
   destination?: Maybe<Scalars['String']>;
   countryCode2?: Maybe<Scalars['String']>;
   countryCode3?: Maybe<Scalars['String']>;
@@ -2445,10 +2450,11 @@ export type TransactionInput = {
   type: TransactionType;
   source: TransactionSource;
   sourceVaultId?: Maybe<Scalars['String']>;
+  destVaultId?: Maybe<Scalars['String']>;
+  destination?: Maybe<Scalars['String']>;
   currencyToSpend?: Maybe<Scalars['String']>;
   currencyToReceive?: Maybe<Scalars['String']>;
   amountToSpend: Scalars['Float'];
-  destination?: Maybe<Scalars['String']>;
   instrument?: Maybe<PaymentInstrument>;
   instrumentDetails?: Maybe<Scalars['String']>;
   paymentProvider?: Maybe<Scalars['String']>;
@@ -2475,6 +2481,7 @@ export type TransactionShort = {
   userId?: Maybe<Scalars['String']>;
   userReferralCode: Scalars['Int'];
   sourceVaultId?: Maybe<Scalars['String']>;
+  sourceVault?: Maybe<Scalars['String']>;
   userIp?: Maybe<Scalars['String']>;
   userTierId?: Maybe<Scalars['String']>;
   userTier?: Maybe<SettingsKycTierShortEx>;
@@ -2505,6 +2512,8 @@ export type TransactionShort = {
   initialRate?: Maybe<Scalars['Float']>;
   rate?: Maybe<Scalars['Float']>;
   rateFiatToEur?: Maybe<Scalars['Float']>;
+  destVaultId?: Maybe<Scalars['String']>;
+  destVault?: Maybe<Scalars['String']>;
   destination?: Maybe<Scalars['String']>;
   countryCode2?: Maybe<Scalars['String']>;
   countryCode3?: Maybe<Scalars['String']>;
@@ -2853,9 +2862,9 @@ export type UserBalanceHistoryRecord = {
   userId: Scalars['String'];
   date: Scalars['DateTime'];
   asset: Scalars['String'];
-  balance: Scalars['Float'];
-  balanceEur: Scalars['Float'];
-  balanceFiat: Scalars['Float'];
+  balance?: Maybe<Scalars['Float']>;
+  balanceEur?: Maybe<Scalars['Float']>;
+  balanceFiat?: Maybe<Scalars['Float']>;
   transactionId?: Maybe<Scalars['String']>;
 };
 

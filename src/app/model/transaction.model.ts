@@ -295,9 +295,14 @@ export class TransactionItem {
         const cryptoImg = (c !== '') ?
           `../../../assets/svg-crypto/${c.toLowerCase()}.svg` :
           '';
+        const destVaultData = JSON.parse(data.destVault ?? '{}');
+        let recipientName = `Default Vault ${c}`;
+        if (destVaultData && destVaultData.name) {
+          recipientName = destVaultData.name;
+        }
         this.recipient = {
           id: '',
-          title: `Default Vault ${c}`,
+          title: recipientName,
           imgClass: '',
           imgSource: cryptoImg
         };
