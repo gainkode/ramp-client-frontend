@@ -305,11 +305,12 @@ export class TransactionItem {
           imgClass: '',
           imgSource: cryptoImg
         };
-        const sourceVaultData = JSON.parse(data.sourceVault ?? '{}');
-        if (sourceVaultData) {
+        if (
+          data.instrument === PaymentInstrument.Apm ||
+          data.instrument === PaymentInstrument.WireTransfer) {
           this.sender = {
             id: '',
-            title: sourceVaultData.name ?? '',
+            title: PaymentInstrumentList.find(x => x.id === data.instrument)?.name ?? '',
             imgSource: '',
             imgClass: ''
           } as CommonTargetValue;
