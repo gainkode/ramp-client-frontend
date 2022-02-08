@@ -305,6 +305,15 @@ export class TransactionItem {
           imgClass: '',
           imgSource: cryptoImg
         };
+        const sourceVaultData = JSON.parse(data.sourceVault ?? '{}');
+        if (sourceVaultData) {
+          this.sender = {
+            id: '',
+            title: sourceVaultData.name ?? '',
+            imgSource: '',
+            imgClass: ''
+          } as CommonTargetValue;
+        }
         this.fees = data.feeFiat as number ?? 0;
         this.networkFee = data.approxNetworkFee ?? 0;
         this.typeIcon = 'account_balance';
