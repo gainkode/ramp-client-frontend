@@ -1,0 +1,26 @@
+<div class="__profile-details-container">
+    <div class="__profile-details-data-container">
+        <div class="__profile-details-data-area">
+            <div class="__profile-error-payment-title-block">
+                <div class="__profile-details-payment-title-image">
+                    <img src="assets/widget_error.svg" alt="complete">
+                </div>
+            </div>
+            <div class="__profile-details-payment-title-block">
+                <div class="__profile-error-payment-title">
+                    {{error?.errorMessage}}
+                </div>
+                <div class="__profile-details-payment-subtitle">
+                    Your {{transactionType}} transaction failed. You can come back to the start stage and try it again.
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="__profile-details-button-container">
+                <button type="button" class="__outlined-button" (click)="tryAgain()">
+                    TRY AGAIN
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

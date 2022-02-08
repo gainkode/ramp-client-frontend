@@ -12,7 +12,7 @@ import { PaymentDataService } from 'src/app/services/payment.service';
 import { ExchangeRateService } from 'src/app/services/rate.service';
 import { CommonDialogBox } from '../components/dialogs/common-box.dialog';
 import { WireTransferUserSelection } from '../model/cost-scheme.model';
-import { PaymentCompleteDetails, WidgetSettings, WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from '../model/payment-base.model';
+import { PaymentCompleteDetails, PaymentErrorDetails, WidgetSettings, WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from '../model/payment-base.model';
 import { WalletItem } from '../model/wallet.model';
 import { ProfileDataService } from '../services/profile.service';
 import { WidgetPagerService } from '../services/widget-pager.service';
@@ -31,6 +31,7 @@ export class WidgetComponent implements OnInit {
     this.internalPayment = val;
   }
   @Output() onComplete = new EventEmitter<PaymentCompleteDetails>();
+  @Output() onError = new EventEmitter<PaymentErrorDetails>();
 
   errorMessage = '';
   rateErrorMessage = '';
@@ -658,7 +659,13 @@ export class WidgetComponent implements OnInit {
             }
           } else {
             this.errorMessage = 'Order code is invalid';
-            this.pager.swapStage(tempStageId);
+            if (this.widget.embedded) {
+              this.onError.emit({
+                errorMessage: this.errorMessage
+              } as PaymentErrorDetails);
+            } else {
+              this.pager.swapStage(tempStageId);
+            }
           }
         }, (error) => {
           this.inProgress = false;
@@ -667,6 +674,11 @@ export class WidgetComponent implements OnInit {
             this.handleAuthError();
           } else {
             this.errorMessage = this.errorHandler.getError(error.message, 'Unable to register a new transaction');
+            if (this.widget.embedded) {
+              this.onError.emit({
+                errorMessage: this.errorMessage
+              } as PaymentErrorDetails);
+            }
           }
         })
       );
@@ -709,6 +721,11 @@ export class WidgetComponent implements OnInit {
             this.nextStage('complete', 'Complete', 6, false);
           } else {
             this.errorMessage = 'Order code is invalid';
+            if (this.widget.embedded) {
+              this.onError.emit({
+                errorMessage: this.errorMessage
+              } as PaymentErrorDetails);
+            }
           }
         }, (error) => {
           this.inProgress = false;
@@ -716,6 +733,11 @@ export class WidgetComponent implements OnInit {
             this.handleAuthError();
           } else {
             this.errorMessage = this.errorHandler.getError(error.message, 'Unable to register a new transaction');
+            if (this.widget.embedded) {
+              this.onError.emit({
+                errorMessage: this.errorMessage
+              } as PaymentErrorDetails);
+            }
           }
         })
       );
@@ -759,6 +781,11 @@ export class WidgetComponent implements OnInit {
             this.handleAuthError();
           } else {
             this.errorMessage = this.errorHandler.getError(error.message, 'Unable to confirm your order');
+            if (this.widget.embedded) {
+              this.onError.emit({
+                errorMessage: this.errorMessage
+              } as PaymentErrorDetails);
+            }
           }
         }
       )
@@ -785,6 +812,11 @@ export class WidgetComponent implements OnInit {
             this.handleAuthError();
           } else {
             this.errorMessage = this.errorHandler.getError(error.message, 'Unable to confirm your order');
+            if (this.widget.embedded) {
+              this.onError.emit({
+                errorMessage: this.errorMessage
+              } as PaymentErrorDetails);
+            }
           }
         }
       )

@@ -1,4 +1,4 @@
-import { PaymentCompleteDetails } from "./payment-base.model";
+import { PaymentCompleteDetails, PaymentErrorDetails } from "./payment-base.model";
 import { TransactionItem } from "./transaction.model";
 import { ContactItem } from "./user.model";
 import { WalletItem } from "./wallet.model";
@@ -8,7 +8,8 @@ export enum ProfileItemContainerType {
     Transaction = 'Transaction',
     Wallet = 'Wallet',
     Contact = 'Contact',
-    PaymentComplete = 'PaymentComplete'
+    PaymentComplete = 'PaymentComplete',
+    PaymentError = 'PaymentError'
 }
 
 export enum ProfileItemActionType {
@@ -26,5 +27,6 @@ export class ProfileItemContainer {
     wallet: WalletItem | undefined = undefined;
     contact: ContactItem | undefined = undefined;
     paymentDetails: PaymentCompleteDetails | undefined = undefined;
+    paymentError: PaymentErrorDetails | undefined = undefined;
     meta: any;
 }

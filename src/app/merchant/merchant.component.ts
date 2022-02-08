@@ -2,7 +2,7 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { NavigationEnd, Router, Event as NavigationEvent } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { MenuItem } from '../model/common.model';
-import { PaymentCompleteDetails, PaymentWidgetType } from '../model/payment-base.model';
+import { PaymentCompleteDetails, PaymentErrorDetails, PaymentWidgetType } from '../model/payment-base.model';
 import { CurrencyView } from '../model/payment.model';
 import { ProfileItemActionType, ProfileItemContainer, ProfileItemContainerType } from '../model/profile-item.model';
 import { MerchantProfileMenuItems, ProfilePopupAdministrationMenuItem, MerchantProfilePopupMenuItems } from '../model/profile-menu.model';
@@ -44,6 +44,7 @@ export class MerchantComponent implements OnInit, OnDestroy {
     dataPanel: any;
     cryptoList: CurrencyView[] = [];
     paymentCompleteDetails: PaymentCompleteDetails | undefined = undefined;
+    paymentErrorDetails: PaymentErrorDetails | undefined = undefined;
     presetContactId = '';
     presetCurrency = '';
     presetWalletId = '';
@@ -181,6 +182,9 @@ export class MerchantComponent implements OnInit, OnDestroy {
         } else if (container.container === ProfileItemContainerType.PaymentComplete) {
             this.detailsType = 'payment_complete';
             this.paymentCompleteDetails = container.paymentDetails;
+        } else if (container.container === ProfileItemContainerType.PaymentError) {
+            this.detailsType = 'payment_error';
+            this.paymentErrorDetails = container.paymentError;
         }
     }
 
@@ -223,8 +227,17 @@ export class MerchantComponent implements OnInit, OnDestroy {
                     this.showPaymentPanel(PaymentWidgetType.Receive);
                 }
             }
+        } else if (container.container === ProfileItemContainerType.PaymentError) {
+            const p = container.paymentError?.paymentType;
+            if (p) {
+                this.showPaymentPanel(p);
+            } else {
+                this.closeDetails();
+            }
         }
-        this.closeDetails();
+        if (container.container !== ProfileItemContainerType.PaymentError) {
+            this.closeDetails();
+        }
     }
 
     sideMenuExpanded(state: boolean): void {
@@ -298,6 +311,15 @@ export class MerchantComponent implements OnInit, OnDestroy {
         this.showDetails = true;
     }
 
+    widgetError(errorDetails: PaymentErrorDetails): void {
+        this.closePayment();
+        const container = new ProfileItemContainer();
+        container.container = ProfileItemContainerType.PaymentError;
+        container.paymentError = errorDetails;
+        this.initializeDetailsPanel(container);
+        this.showDetails = true;
+    }
+    
     getChat(): void {
         this.notificationTest();
     }

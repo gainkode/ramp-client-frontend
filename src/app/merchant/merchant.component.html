@@ -82,8 +82,8 @@
                 </li>
                 <div class="__top-menu-hamburger-separator"></div>
                 <li *ngFor="let item of popupItems;let i=index;">
-                    <a *ngIf="item.id!=='administration'" [routerLink]=""
-                        class="__top-menu-hamburger-item" (click)="popupMenuClick(item)">
+                    <a *ngIf="item.id!=='administration'" [routerLink]="" class="__top-menu-hamburger-item"
+                        (click)="popupMenuClick(item)">
                         {{item.name}}
                     </a>
                 </li>
@@ -140,6 +140,9 @@
                 <app-profile-payment-complete *ngIf="detailsType==='payment_complete'"
                     [payment]="paymentCompleteDetails" (onComplete)="detailsComplete($event)">
                 </app-profile-payment-complete>
+                <app-profile-payment-error *ngIf="detailsType==='payment_error'" [error]="paymentErrorDetails"
+                    (onComplete)="detailsComplete($event)">
+                </app-profile-payment-error>
             </div>
         </div>
         <!-- Payment -->
@@ -157,19 +160,20 @@
                 </h3>
             </header>
             <div class="__profile-payment-data-area">
-                <app-embedded-widget
+                <app-buy-sell-widget
                     *ngIf="selectedPaymentType===WIDGET_TYPE.Buy || selectedPaymentType===WIDGET_TYPE.Sell"
-                    [widgetType]="selectedPaymentType" (onComplete)="widgetComplete($event)">
-                </app-embedded-widget>
+                    [widgetType]="selectedPaymentType" (onComplete)="widgetComplete($event)"
+                    (onError)="widgetError($event)">
+                </app-buy-sell-widget>
                 <app-receive-widget *ngIf="selectedPaymentType===WIDGET_TYPE.Receive" [presetCurrency]="presetCurrency"
                     [presetWalletId]="presetWalletId">
                 </app-receive-widget>
                 <app-send-widget *ngIf="selectedPaymentType===WIDGET_TYPE.Send" [presetContactId]="presetContactId"
                     [presetWalletId]="presetWalletId" [presetCurrency]="presetCurrency"
-                    (onComplete)="widgetComplete($event)">
+                    (onComplete)="widgetComplete($event)" (onError)="widgetError($event)">
                 </app-send-widget>
                 <app-transfer-widget *ngIf="selectedPaymentType===WIDGET_TYPE.Transfer"
-                    (onComplete)="widgetComplete($event)">
+                    (onComplete)="widgetComplete($event)" (onError)="widgetError($event)">
                 </app-transfer-widget>
             </div>
             <div class="__profile-payment-footer">

@@ -48,6 +48,7 @@ import { ProfileChangePasswordComponent } from './settings/components/password.c
 import { ProfileInfoTextboxComponent } from './settings/components/info-textbox.component';
 import { ProfileInfoDateboxComponent } from './settings/components/info-datebox.component';
 import { ProfileInfoDropboxComponent } from './settings/components/info-dropbox.component';
+import { ProfilePaymentErrorComponent } from './details/payment-error.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -85,7 +86,7 @@ export class MaterialModule { }
         ProfileContactsComponent, ProfileContactListComponent, ProfileContactCreateComponent, ProfileContactDetailsComponent,
         ProfileWalletsComponent, ProfileWalletListComponent, ProfileWalletCreateComponent, ProfileWalletDetailsComponent,
         ProfilePriceListComponent,
-        ProfilePaymentCompleteComponent, 
+        ProfilePaymentCompleteComponent, ProfilePaymentErrorComponent,
         ProfileNotificationsComponent, ProfileNotificationListComponent,
         ProfileSettingsComponent, ProfileInfoSettingsComponent, ProfileVerificationSettingsComponent, ProfileSecuriySettingsComponent,
         ProfileChangePasswordComponent, ProfileInfoTextboxComponent, ProfileInfoDateboxComponent, ProfileInfoDropboxComponent,
@@ -97,7 +98,7 @@ export class MaterialModule { }
         ProfileContactsComponent, ProfileContactCreateComponent, ProfileContactDetailsComponent,
         ProfileWalletsComponent, ProfileWalletCreateComponent, ProfileWalletDetailsComponent,
         ProfilePriceListComponent,
-        ProfilePaymentCompleteComponent,
+        ProfilePaymentCompleteComponent, ProfilePaymentErrorComponent,
         ProfileNotificationsComponent,
         ProfileSettingsComponent
     ],

@@ -33,7 +33,7 @@ import { WidgetKycComponent } from './panels/kyc.component';
 import { WidgetProcessingFrameComponent } from './panels/processing-frame.component';
 import { WidgetProcessingInstantpayComponent } from './panels/processing-instantpay.component';
 import { WidgetInitializationComponent } from './panels/initialization.component';
-import { WidgetPanelComponent } from './widget-panel.component';
+import { BuySellWidgetComponent } from './buy-sell.component';
 import { RouterModule } from '@angular/router';
 import { ReceiveWidgetComponent } from './receive.component';
 import { WidgetReceiveDetailsComponent } from './panels/receive-details.component';
@@ -76,13 +76,13 @@ export class MaterialModule { }
     imports: [
         NgxMaskModule.forRoot(), CommonModule, ClipboardModule, FormsModule, ReactiveFormsModule, RouterModule, MaterialModule, QRCodeModule],
     declarations: [
-        WidgetComponent, ReceiveWidgetComponent, SendWidgetComponent, TransferWidgetComponent, WidgetPanelComponent, WidgetProgressComponent,
+        WidgetComponent, ReceiveWidgetComponent, SendWidgetComponent, TransferWidgetComponent, BuySellWidgetComponent, WidgetProgressComponent,
         WidgetSummaryComponent, WidgetRateComponent, WidgetCreditCardComponent, WidgetWireTransferComponent, WidgetWireTransferResultComponent,
         WidgetRegisterComponent, WidgetLoginAuthComponent, WidgetCodeAuthComponent,
         WidgetInitializationComponent, WidgetOrderDetailsComponent, WidgetReceiveDetailsComponent, WidgetSendDetailsComponent,
         WidgetDisclaimerComponent, WidgetKycComponent, WidgetPaymentComponent, WidgetProcessingFrameComponent,
         WidgetProcessingInstantpayComponent, WidgetCompleteComponent, PaymentIntroComponent],
-    exports: [WidgetComponent, WidgetPanelComponent, ReceiveWidgetComponent, SendWidgetComponent, TransferWidgetComponent, PaymentIntroComponent],
+    exports: [WidgetComponent, BuySellWidgetComponent, ReceiveWidgetComponent, SendWidgetComponent, TransferWidgetComponent, PaymentIntroComponent],
     providers: [],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

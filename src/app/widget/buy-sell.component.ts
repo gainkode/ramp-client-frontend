@@ -1,18 +1,19 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TransactionSource, TransactionType } from '../model/generated-models';
-import { PaymentCompleteDetails, PaymentWidgetType, WidgetSettings } from '../model/payment-base.model';
+import { PaymentCompleteDetails, PaymentErrorDetails, PaymentWidgetType, WidgetSettings } from '../model/payment-base.model';
 import { AuthService } from '../services/auth.service';
 
 @Component({
-  selector: 'app-embedded-widget',
-  templateUrl: 'widget-panel.component.html',
+  selector: 'app-buy-sell-widget',
+  templateUrl: 'buy-sell.component.html',
   styleUrls: ['../../assets/payment.scss']
 })
-export class WidgetPanelComponent {
+export class BuySellWidgetComponent {
   @Input() set widgetType(val: PaymentWidgetType) {
     this.selectPaymentType(val);
   }
   @Output() onComplete = new EventEmitter<PaymentCompleteDetails>();
+  @Output() onError = new EventEmitter<PaymentErrorDetails>();
 
   WIDGET_TYPE: typeof PaymentWidgetType = PaymentWidgetType;
   widgetVisible = false;
@@ -55,5 +56,10 @@ export class WidgetPanelComponent {
   widgetComplete(details: PaymentCompleteDetails): void {
     details.paymentType = this.selectedWidgetType;
     this.onComplete.emit(details);
+  }
+
+  widgetError(error: PaymentErrorDetails): void {
+    error.paymentType = this.selectedWidgetType;
+    this.onError.emit(error);
   }
 }

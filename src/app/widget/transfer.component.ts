@@ -10,7 +10,7 @@ import { PaymentDataService } from 'src/app/services/payment.service';
 import { ExchangeRateService } from 'src/app/services/rate.service';
 import { CommonDialogBox } from '../components/dialogs/common-box.dialog';
 import { WireTransferUserSelection } from '../model/cost-scheme.model';
-import { PaymentCompleteDetails, PaymentWidgetType, WidgetSettings, WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from '../model/payment-base.model';
+import { PaymentCompleteDetails, PaymentErrorDetails, PaymentWidgetType, WidgetSettings, WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from '../model/payment-base.model';
 import { WalletItem } from '../model/wallet.model';
 import { AuthService } from '../services/auth.service';
 import { NotificationService } from '../services/notification.service';
@@ -25,6 +25,7 @@ import { WidgetService } from '../services/widget.service';
 })
 export class TransferWidgetComponent implements OnInit {
   @Output() onComplete = new EventEmitter<PaymentCompleteDetails>();
+  @Output() onError = new EventEmitter<PaymentErrorDetails>();
 
   errorMessage = '';
   rateErrorMessage = '';
@@ -465,7 +466,14 @@ export class TransferWidgetComponent implements OnInit {
             }
           } else {
             this.errorMessage = 'Order code is invalid';
-            this.pager.swapStage(tempStageId);
+            if (this.widget.embedded) {
+              this.onError.emit({
+                errorMessage: this.errorMessage,
+                paymentType: PaymentWidgetType.Transfer
+              } as PaymentErrorDetails);
+            } else {
+              this.pager.swapStage(tempStageId);
+            }
           }
         }, (error) => {
           this.inProgress = false;
@@ -474,6 +482,10 @@ export class TransferWidgetComponent implements OnInit {
             this.handleAuthError();
           } else {
             this.errorMessage = this.errorHandler.getError(error.message, 'Unable to register a new transaction');
+            this.onError.emit({
+              errorMessage: this.errorMessage,
+              paymentType: PaymentWidgetType.Transfer
+            } as PaymentErrorDetails);
           }
         })
       );
@@ -518,6 +530,10 @@ export class TransferWidgetComponent implements OnInit {
             this.handleAuthError();
           } else {
             this.errorMessage = this.errorHandler.getError(error.message, 'Unable to confirm your order');
+            this.onError.emit({
+              errorMessage: this.errorMessage,
+              paymentType: PaymentWidgetType.Transfer
+            } as PaymentErrorDetails);
           }
         }
       )
@@ -545,6 +561,10 @@ export class TransferWidgetComponent implements OnInit {
             this.handleAuthError();
           } else {
             this.errorMessage = this.errorHandler.getError(error.message, 'Unable to confirm your order');
+            this.onError.emit({
+              errorMessage: this.errorMessage,
+              paymentType: PaymentWidgetType.Transfer
+            } as PaymentErrorDetails);
           }
         }
       )

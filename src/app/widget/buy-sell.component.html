@@ -1,16 +1,14 @@
 <div class="__widget-embedded-container">
     <div *ngIf="selectedWidgetType === WIDGET_TYPE.Buy || selectedWidgetType === WIDGET_TYPE.Sell"
         class="__widget-embedded-tab-container">
-        <div
-            [ngClass]="{'__widget-embedded-tab': true, '__widget-embedded-left-tab-unselected': selectedWidgetType !== WIDGET_TYPE.Buy}"
+        <div [ngClass]="{'__widget-embedded-tab': true, '__widget-embedded-left-tab-unselected': selectedWidgetType !== WIDGET_TYPE.Buy}"
             (click)="selectPaymentType(WIDGET_TYPE.Buy)">
             <span
                 [ngClass]="{'__widget-embedded-tab-title': true, '__widget-embedded-tab-title-unselected': selectedWidgetType !== WIDGET_TYPE.Buy}">
                 BUY
             </span>
         </div>
-        <div
-            [ngClass]="{'__widget-embedded-tab': true, '__widget-embedded-right-tab-unselected': selectedWidgetType !== WIDGET_TYPE.Sell}"
+        <div [ngClass]="{'__widget-embedded-tab': true, '__widget-embedded-right-tab-unselected': selectedWidgetType !== WIDGET_TYPE.Sell}"
             (click)="selectPaymentType(WIDGET_TYPE.Sell)">
             <span
                 [ngClass]="{'__widget-embedded-tab-title': true, '__widget-embedded-tab-title-unselected': selectedWidgetType !== WIDGET_TYPE.Sell}">
@@ -20,10 +18,14 @@
     </div>
 
     <div *ngIf="widgetVisible && selectedWidgetType !== WIDGET_TYPE.Buy" class="__widget-embedded-data-container">
-        <app-widget [internal]="false" [settings]="widgetSettings" (onComplete)="widgetComplete($event)"></app-widget>
+        <app-widget [internal]="false" [settings]="widgetSettings" (onComplete)="widgetComplete($event)"
+            (onError)="widgetError($event)">
+        </app-widget>
     </div>
 
     <div *ngIf="widgetVisible && selectedWidgetType !== WIDGET_TYPE.Sell" class="__widget-embedded-data-container">
-        <app-widget [internal]="false" [settings]="widgetSettings" (onComplete)="widgetComplete($event)"></app-widget>
+        <app-widget [internal]="false" [settings]="widgetSettings" (onComplete)="widgetComplete($event)"
+            (onError)="widgetError($event)">
+        </app-widget>
     </div>
 </div>

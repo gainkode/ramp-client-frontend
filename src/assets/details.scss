@@ -86,6 +86,15 @@
     width: 100%;
 }
 
+.__profile-error-payment-title-block {
+    margin: 140px 0px 0px 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
 .__profile-details-payment-title-image {
     width: 126px;
     height: 106px;
@@ -257,6 +266,15 @@
     font-size: 18px;
     line-height: 35px;
     color: $color_main_blue_800;
+}
+
+.__profile-error-payment-title {
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 35px;
+    color: $color_pink_500;
 }
 
 .__profile-details-payment-amount {

@@ -7,7 +7,7 @@ import { CheckoutSummary, CurrencyView } from 'src/app/model/payment.model';
 import { ErrorService } from 'src/app/services/error.service';
 import { PaymentDataService } from 'src/app/services/payment.service';
 import { ExchangeRateService } from 'src/app/services/rate.service';
-import { PaymentCompleteDetails, PaymentWidgetType } from '../model/payment-base.model';
+import { PaymentCompleteDetails, PaymentErrorDetails, PaymentWidgetType } from '../model/payment-base.model';
 import { AuthService } from '../services/auth.service';
 import { CommonDataService } from '../services/common-data.service';
 import { WidgetPagerService } from '../services/widget-pager.service';
@@ -22,6 +22,7 @@ export class SendWidgetComponent implements OnInit {
   @Input() presetWalletId = '';
   @Input() presetCurrency = '';
   @Output() onComplete = new EventEmitter<PaymentCompleteDetails>();
+  @Output() onError = new EventEmitter<PaymentErrorDetails>();
 
   errorMessage = '';
   rateErrorMessage = '';
@@ -192,7 +193,10 @@ export class SendWidgetComponent implements OnInit {
             this.onComplete.emit(details);
           } else {
             this.errorMessage = 'Order code is invalid';
-            this.pager.swapStage(tempStageId);
+            this.onError.emit({
+              errorMessage: this.errorMessage,
+              paymentType: PaymentWidgetType.Send
+            } as PaymentErrorDetails);
           }
         }, (error) => {
           this.inProgress = false;
@@ -201,6 +205,10 @@ export class SendWidgetComponent implements OnInit {
             this.handleAuthError();
           } else {
             this.errorMessage = this.errorHandler.getError(error.message, 'Unable to register a new transaction');
+            this.onError.emit({
+              errorMessage: this.errorMessage,
+              paymentType: PaymentWidgetType.Send
+            } as PaymentErrorDetails);
           }
         })
       );

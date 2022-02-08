@@ -52,6 +52,11 @@ export class PaymentCompleteDetails {
     currency = '';
 }
 
+export class PaymentErrorDetails {
+    paymentType: PaymentWidgetType = PaymentWidgetType.None;
+    errorMessage = '';
+}
+
 export class WireTransferPaymentCategoryItem {
     id = WireTransferPaymentCategory.AU;
     title = '';
