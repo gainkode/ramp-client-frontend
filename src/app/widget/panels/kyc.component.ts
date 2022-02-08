@@ -131,7 +131,7 @@ export class WidgetKycComponent implements OnInit, OnDestroy {
           if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
             this.onAuthError.emit();
           } else {
-            this.onError.emit(this.errorHandler.getError(error.message, 'Unable to get tiers'));
+            this.onError.emit(this.errorHandler.getError(error.message, 'Unable to get verification levels'));
           }
         })
       );

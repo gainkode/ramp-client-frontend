@@ -159,7 +159,7 @@
             <app-details-attribute label="Account ID" [value]="data?.user?.id"
                 [linkUrl]="'/admin/customers/'+ data?.user?.id">
             </app-details-attribute>
-            <app-details-attribute label="Verification Tier" [value]="data?.kycTier"></app-details-attribute>
+            <app-details-attribute label="Verification Level" [value]="data?.kycTier"></app-details-attribute>
 
             <!-- KYC status -->
             <app-details-attribute *ngIf="transactionType===TRANSACTION_TYPE.Receive" label="KYC Status"

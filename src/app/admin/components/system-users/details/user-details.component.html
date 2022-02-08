@@ -225,16 +225,16 @@
         </mat-error>
     </mat-form-field>
 
-    <!-- Tier -->
+    <!-- Level -->
     <mat-form-field *ngIf="!createNew" class="form-element">
-        <mat-label>KYC Tier</mat-label>
+        <mat-label>KYC Level</mat-label>
         <mat-select formControlName="tier">
             <mat-option *ngFor="let t of tiers" [value]="t.title">
                 {{t.title}}
             </mat-option>
         </mat-select>
         <mat-error *ngIf="dataForm.get('tier')?.hasError('required')">
-            Please specify the user tier
+            Please specify the user verification level
         </mat-error>
     </mat-form-field>
 

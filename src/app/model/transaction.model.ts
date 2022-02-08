@@ -433,7 +433,7 @@ export class TransactionItem {
   }
 
   get recipientShort(): string {
-    return shortenString(this.recipient.title, 16);
+    return shortenString(this.recipient.title, 18);
   }
 
   isFiatCurrency(currency: string): boolean {
