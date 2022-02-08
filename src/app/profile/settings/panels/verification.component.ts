@@ -46,6 +46,7 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
     onVerify(flow: string, level: string): void {
         this.dialog.open(SumsubVerificationDialogBox, {
             width: '700px',
+            height: '80%',
             data: {
                 title: level,
                 message: this.kycUrl,

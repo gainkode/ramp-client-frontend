@@ -13,8 +13,7 @@ import {
   TransactionStatusDescriptorMap,
   TransactionType,
   User,
-  UserMode,
-  UserTransactionStatus
+  UserMode
 } from './generated-models';
 import {
   TransactionTypeList,
