@@ -57,6 +57,8 @@ export class TransactionItemFull {
   transferOrderBlockchainLink = '';
   benchmarkTransferOrderBlockchainLink = '';
   address = '';
+  sender = '';
+  recipient = '';
   ip = '';
   euro = 0;
   fees = 0;
@@ -105,9 +107,14 @@ export class TransactionItemFull {
       this.paymentProvider = data.paymentProvider ?? '';
       this.widgetId = data.widgetId ?? '';
       this.source = data.source ?? undefined;
-      this.currencyToSpend = data.currencyToSpend ?? '';
-      this.currencyToReceive = data.currencyToReceive ?? '';
       this.amountToSpend = data.amountToSpend ?? 0;
+      const paymentData = getPaymentData(data);
+      this.currencyToSpend = paymentData.currencyToSpend;
+      this.currencyToReceive = paymentData.currencyToReceive;
+      this.amountToSpend = paymentData.amountToSpend;
+      this.fees = paymentData.fees;
+      this.sender = paymentData.sender.title;
+      this.recipient = paymentData.recipient.title;
       if (data.amountToReceive) {
         this.amountToReceive = data.amountToReceive ?? 0;
         this.rate = data.rate ?? 0;
@@ -120,7 +127,6 @@ export class TransactionItemFull {
       this.kycStatus = (kycStatus) ? kycStatus.name : '';
       this.kycStatusValue = (kycStatus) ? kycStatus.id : TransactionKycStatus.KycWaiting;
       this.kycTier = data.userTier?.name ?? '';
-      this.fees = data.feeFiat as number ?? 0;
       this.status = data.status;
 
       if (data.paymentOrder) {
@@ -288,90 +294,15 @@ export class TransactionItem {
       this.created = data.created;
       this.type = data.type;
       const paymentData = getPaymentData(data);
-      if (this.type === TransactionType.Deposit) {
-        this.currencyToSpend = data.currencyToSpend ?? '';
-        this.currencyToReceive = data.currencyToReceive ?? '';
-        this.amountToSpend = data.amountToSpend ?? 0;
-        this.amountToReceive = data.amountToReceive ?? 0;
-        const c = getCryptoSymbol(this.currencyToReceive);
-        const cryptoImg = (c !== '') ?
-          `../../../assets/svg-crypto/${c.toLowerCase()}.svg` :
-          '';
-        const destVaultData = JSON.parse(data.destVault ?? '{}');
-        let recipientName = `Default Vault ${c}`;
-        if (destVaultData && destVaultData.name) {
-          recipientName = destVaultData.name;
-        }
-        this.recipient = {
-          id: '',
-          title: recipientName,
-          imgClass: '',
-          imgSource: cryptoImg
-        };
-        if (
-          data.instrument === PaymentInstrument.Apm ||
-          data.instrument === PaymentInstrument.WireTransfer) {
-          this.sender = {
-            id: '',
-            title: PaymentInstrumentList.find(x => x.id === data.instrument)?.name ?? '',
-            imgSource: '',
-            imgClass: ''
-          } as CommonTargetValue;
-        }
-        this.fees = data.feeFiat as number ?? 0;
-        this.networkFee = data.approxNetworkFee ?? 0;
-        this.typeIcon = 'account_balance';
-      } else if (this.type === TransactionType.Transfer) {
-        this.currencyToSpend = '-X-';
-        this.currencyToReceive = '-X-';
-        this.amountToSpend = 42;
-        this.amountToReceive = 42;
-        this.fees = 4.2;
-        this.networkFee = 0.42;
-        this.typeIcon = 'file_upload';
-      } else if (this.type === TransactionType.Receive) {
-        this.currencyToSpend = data.currencyToSpend ?? '';
-        this.currencyToReceive = data.currencyToReceive ?? '';
-        this.amountToSpend = data.amountToSpend ?? 0;
-        this.amountToReceive = data.amountToReceive ?? 0;
-        const c = getCryptoSymbol(this.currencyToReceive).toLowerCase();
-        const cryptoImg = (c !== '') ? `../../../assets/svg-crypto/${c}.svg` : '';
-        this.recipient = {
-          id: '',
-          title: data.destination ?? '',
-          imgClass: '',
-          imgSource: cryptoImg
-        };
-        this.fees = data.feeFiat as number ?? 0;
-        this.networkFee = data.approxNetworkFee ?? 0;
-        this.typeIcon = 'file_download';
-        const transferDetails = data.transferOrder?.transferDetails;
-        if (transferDetails) {
-          let transferDetailsData = JSON.parse(transferDetails);
-          // sometimes it comes as a string with escape symbols.
-          //  In this case parse returns a stringified JSON, which has to be parsed again
-          if (typeof transferDetailsData === 'string') {
-            transferDetailsData = JSON.parse(transferDetailsData);
-          }
-          if (transferDetailsData.data) {
-            let sourceData = JSON.parse(transferDetailsData.data);
-            const senderName = `${sourceData?.source?.name ?? ''} ${sourceData?.sourceAddress ?? ''}`;
-            this.sender = {
-              id: '',
-              title: senderName,
-              imgSource: '',
-              imgClass: ''
-            } as CommonTargetValue;
-          }
-        }
-      } else {
-        this.currencyToSpend = '-X-';
-        this.currencyToReceive = '-X-';
-        this.amountToSpend = 42;
-        this.amountToReceive = 42;
-        this.fees = 4.2;
-        this.networkFee = 0.42;
-      }
+      this.currencyToSpend = paymentData.currencyToSpend;
+      this.currencyToReceive = paymentData.currencyToReceive;
+      this.amountToSpend = paymentData.amountToSpend;
+      this.amountToReceive = paymentData.amountToReceive;
+      this.fees = paymentData.fees;
+      this.networkFee = paymentData.networkFee;
+      this.typeIcon = paymentData.typeIcon;
+      this.sender = paymentData.sender;
+      this.recipient = paymentData.recipient;
       this.rate = data.rate ?? 0;
       this.status = userStatus;
       this.ip = data.userIp as string;

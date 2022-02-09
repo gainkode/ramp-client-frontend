@@ -286,6 +286,15 @@ export class UserItem {
     ];
   }
 
+  get fullFirstName(): string {
+    if (this.userType?.id === UserType.Merchant) {
+      return this.company;
+    } else if (this.userType?.id === UserType.Personal) {
+      return this.firstName;
+    }
+    return '';
+  }
+
   setFullName(): void {
     if (this.userType?.id === UserType.Merchant) {
       this.company = (this.firstName) ? this.firstName : '';

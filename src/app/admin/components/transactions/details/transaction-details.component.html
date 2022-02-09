@@ -106,6 +106,9 @@
                 </mat-error>
             </mat-form-field>
 
+            <app-details-attribute label="From" [value]="data?.sender"></app-details-attribute>
+            <app-details-attribute label="To" [value]="data?.recipient"></app-details-attribute>
+
             <!-- Transaction status -->
             <app-details-attribute *ngIf="transactionType===TRANSACTION_TYPE.Receive" label="Transaction status"
                 [value]="transactionStatusName"></app-details-attribute>
