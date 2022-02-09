@@ -28,7 +28,7 @@ import {
 } from './payment.model';
 import { UserItem } from './user.model';
 
-export class TransactionItemDeprecated {
+export class TransactionItemFull {
   id = '';
   code = '';
   created = '';
@@ -51,6 +51,7 @@ export class TransactionItemDeprecated {
   initialAmount = false;
   transferOrderId = '';
   transferOrderHash = '';
+  transferFee = '';
   benchmarkTransferOrderId = '';
   benchmarkTransferOrderHash = '';
   transferOrderBlockchainLink = '';
@@ -96,6 +97,7 @@ export class TransactionItemDeprecated {
       }
       this.transferOrderId = data.transferOrder?.orderId ?? '';
       this.transferOrderHash = data.transferOrder?.transferHash ?? '';
+      this.transferFee = data.transferOrder?.feeCurrency?.toFixed(8) ?? '';
       this.transferOrderBlockchainLink = transactionData.transferOrderBlockchainLink ?? '';
       this.benchmarkTransferOrderBlockchainLink = transactionData.benchmarkTransferOrderBlockchainLink ?? '';
       this.type = data.type;
@@ -285,6 +287,7 @@ export class TransactionItem {
       this.id = data.transactionId;
       this.created = data.created;
       this.type = data.type;
+      const paymentData = getPaymentData(data);
       if (this.type === TransactionType.Deposit) {
         this.currencyToSpend = data.currencyToSpend ?? '';
         this.currencyToReceive = data.currencyToReceive ?? '';
@@ -450,3 +453,103 @@ export class TransactionItem {
     return (currency === 'USD' || currency === 'EUR');
   }
 }
+
+class TransactionPayment {
+  currencyToSpend = '';
+  currencyToReceive = '';
+  amountToSpend = 0;
+  amountToReceive = 0;
+  fees = 0;
+  networkFee = 0;
+  typeIcon = '';
+  sender: CommonTargetValue = {
+    id: '',
+    title: '',
+    imgClass: '',
+    imgSource: ''
+  };
+  recipient: CommonTargetValue = {
+    id: '',
+    title: '',
+    imgClass: '',
+    imgSource: ''
+  };
+}
+
+function getPaymentData(data: Transaction | TransactionShort): TransactionPayment {
+  const result = new TransactionPayment();
+  result.currencyToSpend = data.currencyToSpend ?? '';
+  result.currencyToReceive = data.currencyToReceive ?? '';
+  result.amountToSpend = data.amountToSpend ?? 0;
+  result.amountToReceive = data.amountToReceive ?? 0;
+  if (data.type === TransactionType.Deposit) {
+    const c = getCryptoSymbol(result.currencyToReceive);
+    const cryptoImg = (c !== '') ?
+      `../../../assets/svg-crypto/${c.toLowerCase()}.svg` :
+      '';
+    const destVaultData = JSON.parse(data.destVault ?? '{}');
+    let recipientName = `Default Vault ${c}`;
+    if (destVaultData && destVaultData.name) {
+      recipientName = destVaultData.name;
+    }
+    result.recipient = {
+      id: '',
+      title: recipientName,
+      imgClass: '',
+      imgSource: cryptoImg
+    };
+    if (
+      data.instrument === PaymentInstrument.Apm ||
+      data.instrument === PaymentInstrument.WireTransfer) {
+      result.sender = {
+        id: '',
+        title: PaymentInstrumentList.find(x => x.id === data.instrument)?.name ?? '',
+        imgSource: '',
+        imgClass: ''
+      } as CommonTargetValue;
+    }
+    result.fees = data.feeFiat as number ?? 0;
+    result.networkFee = data.approxNetworkFee ?? 0;
+    result.typeIcon = 'account_balance';
+  } else if (data.type === TransactionType.Transfer) {
+    result.fees = 4.2;
+    result.networkFee = 0.42;
+    result.typeIcon = 'file_upload';
+  } else if (data.type === TransactionType.Receive) {
+    const c = getCryptoSymbol(result.currencyToReceive).toLowerCase();
+    const cryptoImg = (c !== '') ? `../../../assets/svg-crypto/${c}.svg` : '';
+    result.recipient = {
+      id: '',
+      title: data.destination ?? '',
+      imgClass: '',
+      imgSource: cryptoImg
+    };
+    result.fees = data.feeFiat as number ?? 0;
+    result.networkFee = data.approxNetworkFee ?? 0;
+    result.typeIcon = 'file_download';
+    const transferDetails = data.transferOrder?.transferDetails;
+    if (transferDetails) {
+      let transferDetailsData = JSON.parse(transferDetails);
+      // sometimes it comes as a string with escape symbols.
+      //  In this case parse returns a stringified JSON, which has to be parsed again
+      if (typeof transferDetailsData === 'string') {
+        transferDetailsData = JSON.parse(transferDetailsData);
+      }
+      if (transferDetailsData.data) {
+        let sourceData = JSON.parse(transferDetailsData.data);
+        const senderName = `${sourceData?.source?.name ?? ''} ${sourceData?.sourceAddress ?? ''}`;
+        result.sender = {
+          id: '',
+          title: senderName,
+          imgSource: '',
+          imgClass: ''
+        } as CommonTargetValue;
+      }
+    }
+  } else {
+    result.fees = 4.2;
+    result.networkFee = 0.42;
+  }
+  return result;
+}
+

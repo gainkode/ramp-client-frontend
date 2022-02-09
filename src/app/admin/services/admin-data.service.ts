@@ -42,7 +42,7 @@ import {
 } from '../../model/generated-models';
 import { KycLevel, KycScheme } from '../../model/identification.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { TransactionItemDeprecated } from '../../model/transaction.model';
+import { TransactionItemFull } from '../../model/transaction.model';
 import { catchError, finalize, map, tap } from 'rxjs/operators';
 import { ApolloQueryResult, FetchResult, MutationOptions } from '@apollo/client/core';
 import { ErrorService } from '../../services/error.service';
@@ -503,7 +503,11 @@ const GET_TRANSACTIONS = gql`
           refundOperationSn
           paymentInfo
         }
-        transferOrder { orderId transferHash }
+        transferOrder {
+          orderId
+          transferHash
+          feeCurrency
+        }
         benchmarkTransferOrder { orderId transferHash }
         transferOrderBlockchainLink
         benchmarkTransferOrderBlockchainLink
@@ -1927,7 +1931,7 @@ export class AdminDataService {
       );
   }
 
-  getTransaction(transactionId: string): Observable<TransactionItemDeprecated | undefined> {
+  getTransaction(transactionId: string): Observable<TransactionItemFull | undefined> {
     return this.watchQuery<{ getTransactions: TransactionListResult }, QueryGetTransactionsArgs>({
       query: GET_TRANSACTIONS,
       variables: {
@@ -1943,7 +1947,7 @@ export class AdminDataService {
           const listResult = res?.data?.getTransactions.list;
 
           if (listResult && listResult.length === 1) {
-            return new TransactionItemDeprecated(listResult[0]);
+            return new TransactionItemFull(listResult[0]);
           }
 
           return undefined;
@@ -1957,7 +1961,7 @@ export class AdminDataService {
     orderField: string,
     orderDesc: boolean,
     filter?: Filter
-  ): Observable<{ list: Array<TransactionItemDeprecated>; count: number; }> {
+  ): Observable<{ list: Array<TransactionItemFull>; count: number; }> {
     const vars: QueryGetTransactionsArgs = {
       transactionIdsOnly: filter?.transactionIds,
       accountTypesOnly: filter?.accountTypes,
@@ -1979,7 +1983,6 @@ export class AdminDataService {
       first: takeItems,
       orderBy: [{ orderBy: orderField, desc: orderDesc }]
     };
-    console.log(vars);
     return this.watchQuery<{ getTransactions: TransactionListResult }, QueryGetTransactionsArgs>({
       query: GET_TRANSACTIONS,
       variables: vars,
@@ -1987,7 +1990,7 @@ export class AdminDataService {
     }).pipe(map(result => {
       if (result.data?.getTransactions?.list && result.data?.getTransactions?.count) {
         return {
-          list: result.data.getTransactions.list.map(val => new TransactionItemDeprecated(val)),
+          list: result.data.getTransactions.list.map(val => new TransactionItemFull(val)),
           count: result.data.getTransactions.count
         };
       } else {

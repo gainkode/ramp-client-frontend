@@ -46,10 +46,16 @@
                     </div>
 
                     <!-- Wallet name -->
-                    <app-form-textbox [label]="'Wallet name'" [smallLabel]="true" [boxType]="'text'" [placeholder]="'Enter wallet name'"
-                        [maxlength]="50" formControlName="walletName" [errorMessages]="walletNameErrorMessages"
-                        [separator]="true">
+                    <app-form-textbox [label]="'Wallet name'" [smallLabel]="true" [boxType]="'text'"
+                        [placeholder]="'Enter wallet name'" [maxlength]="50" formControlName="walletName"
+                        [errorMessages]="walletNameErrorMessages" [separator]="true">
                     </app-form-textbox>
+
+                    <div class="__profile-details-item-block">
+                        <div class="__profile-details-item-value-box __profile-details-item-error">
+                            {{errorMessage}}
+                        </div>
+                    </div>
 
                     <!-- Buttons -->
                     <div class="__profile-details-button-container">
@@ -95,11 +101,11 @@
                 </div>
 
                 <!-- Buttons -->
-                <div class="__profile-details-button-container">
+                <!-- <div class="__profile-details-button-container">
                     <button type="button" class="__main-button" (click)="complete()">
                         close
                     </button>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>

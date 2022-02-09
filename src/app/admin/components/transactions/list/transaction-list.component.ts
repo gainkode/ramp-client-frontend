@@ -4,7 +4,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { AuthService } from '../../../../services/auth.service';
 import { AdminDataService } from '../../../services/admin-data.service';
 import { ErrorService } from '../../../../services/error.service';
-import { TransactionItemDeprecated } from '../../../../model/transaction.model';
+import { TransactionItemFull } from '../../../../model/transaction.model';
 import { Subject, Subscription } from 'rxjs';
 import { MatSort } from '@angular/material/sort';
 import { Filter } from '../../../model/filter.model';
@@ -45,8 +45,8 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
     'search'
   ];
 
-  selectedTransaction?: TransactionItemDeprecated;
-  transactions: TransactionItemDeprecated[] = [];
+  selectedTransaction?: TransactionItemFull;
+  transactions: TransactionItemFull[] = [];
   transactionCount = 0;
   userStatuses: TransactionStatusDescriptorMap[] = [];
   currencyOptions: CurrencyView[] = [];
@@ -118,7 +118,7 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
     return event;
   }
 
-  toggleDetails(transaction: TransactionItemDeprecated): void {
+  toggleDetails(transaction: TransactionItemFull): void {
     if (this.isSelectedTransaction(transaction.id)) {
       this.selectedTransaction = undefined;
     } else {
@@ -138,7 +138,7 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
     this.selectedTransaction = undefined;
   }
 
-  onTransactionSelected(item: TransactionItemDeprecated): void {
+  onTransactionSelected(item: TransactionItemFull): void {
     item.selected = !item.selected;
     this.selectedForUnbenchmark = this.transactions.some(x => 
       x.selected === true && x.type !== TransactionType.Receive);

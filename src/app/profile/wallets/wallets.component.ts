@@ -63,6 +63,12 @@ export class ProfileWalletsComponent implements OnInit, OnDestroy {
         }
     }
 
+    reload(): void {
+        if (this.dataListPanel) {
+            this.dataListPanel.load(this.filter);
+        }
+    }
+
     removeWallet(id: string): void {
         if (this.dataListPanel) {
             const index = this.dataListPanel.wallets.findIndex(x => x.vault === id);

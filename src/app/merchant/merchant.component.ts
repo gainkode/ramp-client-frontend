@@ -201,6 +201,8 @@ export class MerchantComponent implements OnInit, OnDestroy {
             const walletPanel = this.dataPanel as ProfileWalletsComponent;
             if (container.action === ProfileItemActionType.Create) {
                 walletPanel.addWallet(container.wallet);
+            } else if (container.action === ProfileItemActionType.List) {
+                walletPanel.reload();
             } else if (container.action === ProfileItemActionType.Remove) {
                 walletPanel.removeWallet(container.wallet.vault);
             } else if (container.action === ProfileItemActionType.Redirect) {

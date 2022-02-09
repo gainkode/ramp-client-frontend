@@ -10,7 +10,7 @@ import { DeleteDialogBox } from 'src/app/components/dialogs/delete-box.dialog';
 import { YesNoDialogBox } from 'src/app/components/dialogs/yesno-box.dialog';
 import { AccountStatus, KycStatus, Rate, Transaction, TransactionKycStatus, TransactionStatus, TransactionStatusDescriptorMap, TransactionType } from 'src/app/model/generated-models';
 import { AdminTransactionStatusList, CurrencyView, TransactionKycStatusList, TransactionStatusList, TransactionStatusView, UserStatusList } from 'src/app/model/payment.model';
-import { TransactionItemDeprecated } from 'src/app/model/transaction.model';
+import { TransactionItemFull } from 'src/app/model/transaction.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ExchangeRateService } from 'src/app/services/rate.service';
 import { getTransactionStatusHash } from 'src/app/utils/utils';
@@ -21,7 +21,7 @@ import { getTransactionStatusHash } from 'src/app/utils/utils';
   styleUrls: ['transaction-details.component.scss']
 })
 export class TransactionDetailsComponent implements OnInit, OnDestroy {
-  @Input() set transaction(val: TransactionItemDeprecated | undefined) {
+  @Input() set transaction(val: TransactionItemFull | undefined) {
     this.setFormData(val);
     this.pStatusHash = val?.statusHash ?? 0;
     this.setCurrencies(this.pCurrencies);
@@ -53,7 +53,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription = new Subscription();
 
   TRANSACTION_TYPE: typeof TransactionType = TransactionType;
-  data: TransactionItemDeprecated | undefined = undefined;
+  data: TransactionItemFull | undefined = undefined;
   accountStatuses = UserStatusList;
   kycStatuses = TransactionKycStatusList;
   transactionStatuses: TransactionStatusView[] = [];
@@ -142,7 +142,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  private setFormData(val: TransactionItemDeprecated | undefined): void {
+  private setFormData(val: TransactionItemFull | undefined): void {
     this.data = val;
     this.transactionId = val?.id ?? '';
     this.transactionType = val?.type ?? TransactionType.System;

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TransactionItemDeprecated } from '../../../../model/transaction.model';
+import { TransactionItemFull } from '../../../../model/transaction.model';
 import { ErrorService } from '../../../../services/error.service';
 import { AdminDataService } from '../../../services/admin-data.service';
 import { take } from 'rxjs/operators';
@@ -17,7 +17,7 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class TransactionSingleComponent implements OnInit, OnDestroy {
   transactionId?: string;
-  transaction?: TransactionItemDeprecated;
+  transaction?: TransactionItemFull;
   currencyOptions: CurrencyView[] = [];
 
   private subscriptions: Subscription = new Subscription();

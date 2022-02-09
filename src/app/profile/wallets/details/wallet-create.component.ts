@@ -1,6 +1,7 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AssetAddressShort, VaultAccount } from 'src/app/model/generated-models';
 import { CurrencyView } from 'src/app/model/payment.model';
@@ -39,6 +40,7 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
     constructor(
         private clipboard: Clipboard,
         private formBuilder: FormBuilder,
+        private router: Router,
         private auth: AuthService,
         private errorHandler: ErrorService,
         private profileService: ProfileDataService) { }
@@ -69,13 +71,16 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
         }
     }
 
-    createWallet(currency: string, walletName: string): void {
+    private createWallet(currency: string, walletName: string): void {
         this.errorMessage = '';
         this.inProgress = true;
         this.subscriptions.add(
             this.profileService.addMyVault(currency, walletName).subscribe(({ data }) => {
                 this.inProgress = false;
                 if (data && data.addMyVault) {
+
+                    console.log(data.addMyVault);
+
                     const result = data.addMyVault as VaultAccount;
                     let walletAddress = '';
                     result.assets?.forEach(x => {
@@ -85,25 +90,32 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
                             }
                         });
                     });
+                    const walletData = {
+                        address: walletAddress,
+                        assetId: currency,
+                        total: 0,
+                        totalFiat: 0,
+                        totalEur: 0,
+                        vaultId: result.id,
+                        vaultName: walletName
+                    } as AssetAddressShort;
+                    const currencyItem = this.cryptoList.find(x => x.id === currency);
+                    this.wallet = new WalletItem(walletData, this.auth.user?.defaultFiatCurrency ?? 'EUR', currencyItem);
                     if (walletAddress != '') {
-                        const walletData = {
-                            address: walletAddress,
-                            assetId: currency,
-                            total: 0,
-                            totalFiat: 0,
-                            totalEur: 0,
-                            vaultId: result.id,
-                            vaultName: walletName
-                        } as AssetAddressShort;
-                        const currencyItem = this.cryptoList.find(x => x.id === currency);
-                        this.wallet = new WalletItem(walletData, this.auth.user?.defaultFiatCurrency ?? 'EUR', currencyItem);
-                        this.completeMode = true;
-                        this.title = 'New wallet created!';
+                        this.complete(ProfileItemActionType.Create);
+                    } else {
+                        this.complete(ProfileItemActionType.List);
                     }
+                    // this.completeMode = true;
+                    // this.title = 'New wallet created!';
                 }
             }, (error) => {
                 this.inProgress = false;
-                this.errorMessage = this.errorHandler.getError(error.message, `Unable to create a new wallet`);
+                if (this.auth.token !== '') {
+                    this.errorMessage = this.errorHandler.getError(error.message, `Unable to create a new wallet`);
+                } else {
+                    this.router.navigateByUrl('/');
+                }
             })
         );
     }
@@ -118,11 +130,14 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
         }
     }
 
-    complete(): void {
+    complete(action: ProfileItemActionType): void {
         const item = new ProfileItemContainer();
         item.container = ProfileItemContainerType.Wallet;
-        item.action = ProfileItemActionType.Create;
+        item.action = action;
         item.wallet = this.wallet;
+
+        console.log('wallet create', item);
+
         this.onComplete.emit(item);
     }
 }
