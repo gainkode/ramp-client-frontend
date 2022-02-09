@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -17,9 +17,9 @@ import { AuthService } from 'src/app/services/auth.service';
 import { getFormattedUtcDate } from 'src/app/utils/utils';
 
 @Component({
-  selector: 'app-add-system-user',
-  templateUrl: 'add-user.component.html',
-  styleUrls: ['add-user.component.scss']
+  selector: 'app-user-role',
+  templateUrl: 'user-role.component.html',
+  styleUrls: ['user-role.component.scss']
 })
 export class AddSystemUserComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() set roles(list: UserRole[]) {
@@ -30,6 +30,8 @@ export class AddSystemUserComponent implements OnInit, OnDestroy, AfterViewInit 
       return new RoleItem(val);
     });
   }
+  @Input() userId = '';
+
   @Output() save = new EventEmitter();
   @Output() cancel = new EventEmitter();
 
@@ -49,6 +51,7 @@ export class AddSystemUserComponent implements OnInit, OnDestroy, AfterViewInit 
   private selectedRoles: string[] = [];
 
   constructor(
+    private changeDetector: ChangeDetectorRef,
     private formBuilder: FormBuilder,
     private layoutService: LayoutService,
     private router: Router,
@@ -86,6 +89,20 @@ export class AddSystemUserComponent implements OnInit, OnDestroy, AfterViewInit 
 
   ngAfterViewInit(): void {
     this.layoutService.setBackdrop(true);
+    if (this.userId !== '') {
+      console.log('look for user', this.userId);
+      this.subscriptions.add(
+        this.adminService.findUsers(
+          new Filter({ users: [this.userId] })).pipe(map(result => {
+            return result.list;
+          })).subscribe((data) => {
+            if (data.length > 0) {
+              this.dataForm.controls.userId.setValue(data[0]);
+              this.changeDetector.detectChanges();
+            }
+          })
+      );
+    }
   }
 
   ngOnDestroy(): void {
@@ -120,7 +137,11 @@ export class AddSystemUserComponent implements OnInit, OnDestroy, AfterViewInit 
       const requestData$ = this.adminService.assignRole(userId, assigned);
       this.subscriptions.add(
         requestData$.subscribe(({ data }) => {
-          this.removeUserRole(userId, removed);
+          if (removed.length > 0) {
+            this.removeUserRole(userId, removed);
+          } else {
+            this.save.emit();
+          }
         }, (error) => {
           if (this.auth.token === '') {
             this.router.navigateByUrl('/');
@@ -174,8 +195,9 @@ export class AddSystemUserComponent implements OnInit, OnDestroy, AfterViewInit 
         }
       });
       if (selection.length > 0) {
+        const id = (this.userId === '') ? (this.dataForm.controls.userId.value as UserItem).id : this.userId;
         this.onSave(
-          (this.dataForm.controls.userId.value as UserItem).id,
+          id,
           this.getAssignedRoles(selection, this.selectedRoles),
           this.getRemovedRoles(selection, this.selectedRoles));
       } else {

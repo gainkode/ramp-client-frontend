@@ -30,12 +30,10 @@
                         {{getDetailsIcon(element.id)}}
                     </mat-icon>
                 </button>
-
-                <button mat-icon-button class="row-button" (click)="showTransactions(element.id)"
-                    [attr.aria-label]="'User transactions'" [matTooltip]="'User\'s transactions'"
-                    matTooltipClass="info-tooltip">
+                <button mat-icon-button class="row-button" (click)="setUserRole(element)"
+                    [attr.aria-label]="'User transactions'" [matTooltip]="'Set roles'" matTooltipClass="info-tooltip">
                     <mat-icon class="details-icon">
-                        compare_arrows
+                        perm_data_setting
                     </mat-icon>
                 </button>
             </td>
@@ -50,7 +48,7 @@
         <!-- First Name Column -->
         <ng-container matColumnDef="firstName">
             <th mat-header-cell mat-sort-header *matHeaderCellDef>First name</th>
-            <td mat-cell *matCellDef="let element"> {{element.firstName}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.fullFirstName}} </td>
         </ng-container>
 
         <!-- Last name Column -->
@@ -150,6 +148,6 @@
     <app-system-user-details *ngIf="selectedUser" [user]="selectedUser" [currencies]="currencyList" [cancelable]=true
         (save)="onSave()" (cancel)="onCancelEdit()">
     </app-system-user-details>
-    <app-add-system-user *ngIf="setRoleFlag" [roles]="userRoles" (save)="onSave()" (cancel)="onCancelEdit()">
-    </app-add-system-user>
+    <app-user-role *ngIf="setRoleFlag" [userId]="roleUserId" [roles]="userRoles" (save)="onSave()" (cancel)="onCancelEdit()">
+    </app-user-role>
 </ng-template>

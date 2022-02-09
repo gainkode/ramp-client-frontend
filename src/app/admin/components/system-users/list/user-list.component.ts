@@ -48,6 +48,7 @@ export class SystemUserListComponent implements OnInit, OnDestroy, AfterViewInit
   roleIds: string[] = [];
   userRoles: UserRole[] = [];
   users: UserItem[] = [];
+  roleUserId = '';
   userCount = 0;
   pageSize = 25;
   pageIndex = 0;
@@ -160,8 +161,9 @@ export class SystemUserListComponent implements OnInit, OnDestroy, AfterViewInit
     this.selected = this.users.some(x => x.selected === true);
   }
 
-  showTransactions(id: string): void {
-    this.router.navigateByUrl(`/admin/transactions/users/${id}`);
+  setUserRole(item: UserItem): void {
+    this.roleUserId = item.id;
+    this.setRoleFlag = true;
   }
 
   addUser(): void {
