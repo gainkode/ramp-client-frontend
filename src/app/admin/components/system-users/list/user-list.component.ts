@@ -8,9 +8,8 @@ import { Filter } from '../../../model/filter.model';
 import { take, takeUntil } from 'rxjs/operators';
 import { LayoutService } from '../../../services/layout.service';
 import { ErrorService } from 'src/app/services/error.service';
-import { CurrencyView } from 'src/app/model/payment.model';
 import { CommonDataService } from 'src/app/services/common-data.service';
-import { SettingsCurrencyWithDefaults, UserNotificationLevel, UserRole } from 'src/app/model/generated-models';
+import { UserNotificationLevel, UserRole } from 'src/app/model/generated-models';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
 import { SendNotificationDialogBox } from 'src/app/components/dialogs/send-notification-box.dialog';
@@ -31,15 +30,9 @@ export class SystemUserListComponent implements OnInit, OnDestroy, AfterViewInit
     'accountType',
     'accountMode',
     'accountStatus',
-    'userTierLevel',
-    'riskLevel',
     'country',
-    'kycStatus',
     'registrationDateStart',
     'registrationDateEnd',
-    'widget',
-    'totalBuyVolume',
-    'transactionCount',
     'search'
   ];
 
@@ -48,20 +41,17 @@ export class SystemUserListComponent implements OnInit, OnDestroy, AfterViewInit
   roleIds: string[] = [];
   userRoles: UserRole[] = [];
   users: UserItem[] = [];
-  roleUserId = '';
+  roleUser: UserItem | undefined = undefined;
   userCount = 0;
   pageSize = 25;
   pageIndex = 0;
   sortedField = 'lastName';
   sortedDesc = true;
   filter = new Filter({});
-  currencyList: CurrencyView[] = [];
   selected = false;
 
   displayedColumns: string[] = [
-    'details', 'referralCode', 'firstName', 'lastName', 'email', 'accountStatus', 'kycStatus',
-    'widgetId', 'totalBought', 'totalSold', 'totalSent', 'totalReceived',
-    'created', 'country', 'phone', 'risk', 'id'
+    'details', 'referralCode', 'firstName', 'lastName', 'email', 'role', 'accountStatus', 'lastLogin', 'created'
   ];
 
   private destroy$ = new Subject();
@@ -82,8 +72,7 @@ export class SystemUserListComponent implements OnInit, OnDestroy, AfterViewInit
     this.layoutService.rightPanelCloseRequested$.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.selectedUser = undefined;
     });
-
-    this.loadCurrencyData();
+    this.loadRoleData();
   }
 
   ngOnDestroy(): void {
@@ -97,29 +86,6 @@ export class SystemUserListComponent implements OnInit, OnDestroy, AfterViewInit
       this.sortedField = this.sort.active;
       this.loadUsers();
     });
-  }
-
-  private loadCurrencyData(): void {
-    this.currencyList = [];
-    const currencyData = this.commonService.getSettingsCurrency();
-    if (currencyData) {
-      this.subscriptions.add(
-        currencyData.valueChanges.subscribe(({ data }) => {
-          const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
-          if (currencySettings.settingsCurrency) {
-            if (currencySettings.settingsCurrency.count ?? 0 > 0) {
-              this.currencyList = currencySettings.settingsCurrency.list?.
-                map((val) => new CurrencyView(val)) as CurrencyView[];
-            }
-          }
-          this.loadRoleData();
-        }, (error) => {
-          if (this.auth.token === '') {
-            this.router.navigateByUrl('/');
-          }
-        })
-      );
-    }
   }
 
   private loadRoleData(): void {
@@ -162,7 +128,7 @@ export class SystemUserListComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   setUserRole(item: UserItem): void {
-    this.roleUserId = item.id;
+    this.roleUser = item;
     this.setRoleFlag = true;
   }
 
@@ -213,7 +179,7 @@ export class SystemUserListComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   private loadUsers(): void {
-    const listData$ = this.adminService.getUsers(
+    const listData$ = this.adminService.getSystemUsers(
       this.roleIds,
       this.pageIndex,
       this.pageSize,

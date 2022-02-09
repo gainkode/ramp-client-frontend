@@ -2830,6 +2830,7 @@ export type User = {
   totalTransactionCount?: Maybe<Scalars['Int']>;
   avarageTransaction?: Maybe<Scalars['Float']>;
   manuallyEditedRisk?: Maybe<Scalars['Boolean']>;
+  lastLogin?: Maybe<Scalars['DateTime']>;
   data?: Maybe<Scalars['String']>;
 };
 
@@ -3200,6 +3201,7 @@ export type UserShort = {
   riskCodes?: Maybe<Array<Scalars['String']>>;
   riskAlertCount?: Maybe<Scalars['Int']>;
   totalTransactionCount?: Maybe<Scalars['Int']>;
+  lastLogin?: Maybe<Scalars['DateTime']>;
   data?: Maybe<Scalars['String']>;
 };
 

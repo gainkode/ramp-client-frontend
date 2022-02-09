@@ -3,14 +3,12 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
 import { AdminDataService } from 'src/app/admin/services/admin-data.service';
 import { LayoutService } from 'src/app/admin/services/layout.service';
 import { CommonDialogBox } from 'src/app/components/dialogs/common-box.dialog';
-import { CommonTargetValue } from 'src/app/model/common.model';
 import { Countries, getCountryByCode3 } from 'src/app/model/country-code.model';
-import { AccountStatus, RiskLevel, UserInput, UserType } from 'src/app/model/generated-models';
-import { CurrencyView, RiskLevelViewList, UserStatusList } from 'src/app/model/payment.model';
+import { AccountStatus, UserInput, UserType } from 'src/app/model/generated-models';
+import { UserStatusList } from 'src/app/model/payment.model';
 import { UserItem } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { getFormattedUtcDate } from 'src/app/utils/utils';
@@ -23,12 +21,7 @@ import { getFormattedUtcDate } from 'src/app/utils/utils';
 export class SystemUserDetailsComponent implements OnDestroy {
   @Input() set user(val: UserItem | null | undefined) {
     this.setFormData(val);
-    this.setCurrencies(this.pCurrencies);
     this.layoutService.setBackdrop(!val?.id);
-  }
-  @Input() set currencies(val: CurrencyView[]) {
-    this.pCurrencies = val;
-    this.setCurrencies(val);
   }
   @Input() cancelable = false;
   @Output() save = new EventEmitter();
@@ -46,14 +39,7 @@ export class SystemUserDetailsComponent implements OnDestroy {
   errorMessage = '';
   removable = false;
   countries = Countries;
-  fiatCurrencies: CurrencyView[] = [];
-  cryptoCurrencies: CurrencyView[] = [];
-  riskLevels = RiskLevelViewList;
   accountStatuses = UserStatusList;
-  totalBalance = '';
-  kycProviderLink = '';
-  kycDocs: string[] = [];
-  tiers: CommonTargetValue[] = [];
 
   dataForm = this.formBuilder.group({
     id: [''],
@@ -72,14 +58,9 @@ export class SystemUserDetailsComponent implements OnDestroy {
     flatNumber: ['', { validators: [], updateOn: 'change' }],
     phone: ['', { validators: [], updateOn: 'change' }],
     accountStatus: [AccountStatus.Closed, { validators: [Validators.required], updateOn: 'change' }],
-    risk: [RiskLevel.Medium, { validators: [Validators.required], updateOn: 'change' }],
-    tier: ['', { validators: [Validators.required], updateOn: 'change' }],
-    fiat: ['', { validators: [Validators.required], updateOn: 'change' }],
-    crypto: ['', { validators: [Validators.required], updateOn: 'change' }]
   });
 
   private subscriptions: Subscription = new Subscription();
-  private pCurrencies: CurrencyView[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -92,15 +73,6 @@ export class SystemUserDetailsComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
-  }
-
-  private setCurrencies(list: CurrencyView[]): void {
-    if (this.data || this.createNew) {
-      this.fiatCurrencies = list.filter(x => x.fiat === true);
-      this.dataForm.get('fiat')?.setValue(this.data?.fiatCurrency ?? '');
-      this.cryptoCurrencies = list.filter(x => x.fiat === false);
-      this.dataForm.get('crypto')?.setValue(this.data?.cryptoCurrency ?? '');
-    }
   }
 
   private setFormData(data: UserItem | null | undefined): void {
@@ -133,9 +105,7 @@ export class SystemUserDetailsComponent implements OnDestroy {
           Validators.pattern('^(3[01]|[12][0-9]|0?[1-9])/(1[0-2]|0?[1-9])/(?:[0-9]{2})?[0-9]{2}$')
         ]);
       }
-      this.dataForm.get('risk')?.setValue(data?.risk ?? RiskLevel.Medium);
       this.dataForm.get('accountStatus')?.setValue(data?.accountStatus ?? AccountStatus.Closed);
-      this.dataForm.get('tier')?.setValue(data?.kycLevel);
       this.dataForm.get('country')?.setValue(data?.country?.id);
       this.dataForm.get('postCode')?.setValue(data?.postCode);
       this.dataForm.get('town')?.setValue(data?.town);
@@ -157,9 +127,7 @@ export class SystemUserDetailsComponent implements OnDestroy {
       this.dataForm.get('lastName')?.setValue('');
       this.dataForm.get('birthday')?.setValue('');
       this.dataForm.get('birthday')?.setValidators([]);
-      this.dataForm.get('risk')?.setValue(RiskLevel.Medium);
       this.dataForm.get('accountStatus')?.setValue(AccountStatus.Live);
-      this.dataForm.get('tier')?.setValue('');
       this.dataForm.get('country')?.setValue('');
       this.dataForm.get('postCode')?.setValue('');
       this.dataForm.get('town')?.setValue('');
@@ -170,68 +138,24 @@ export class SystemUserDetailsComponent implements OnDestroy {
       this.dataForm.get('buildingNumber')?.setValue('');
       this.dataForm.get('flatNumber')?.setValue('');
       this.dataForm.get('phone')?.setValue('');
-      this.dataForm.get('fiat')?.setValue('');
-      this.dataForm.get('crypto')?.setValue('');
       this.dataForm.get('birthday')?.setValidators([
         Validators.required,
         Validators.pattern('^(3[01]|[12][0-9]|0?[1-9])/(1[0-2]|0?[1-9])/(?:[0-9]{2})?[0-9]{2}$')
       ]);
-      this.dataForm.get('tier')?.setValidators([]);      
     }
     this.dataForm.get('birthday')?.updateValueAndValidity();
-    this.dataForm.get('tier')?.updateValueAndValidity();
     this.settingsId = (data) ? data?.id : '';
     this.email = (data) ? data?.email : '';
     this.removable = (this.auth.user?.userId !== this.settingsId);
     this.address = (data) ? data.address : '';
     this.userType = (data) ? data.userType?.id ?? UserType.Personal : UserType.Personal;
     this.userData = data;
-    if (data && !this.createNew) {
-      this.getUserKycInfo(this.settingsId);
-      this.getUserState(this.settingsId);
-      this.getUserKycTiers(this.settingsId);
-    }
-  }
-
-  private getUserKycInfo(id: string): void {
-    this.kycDocs = [];
-    this.subscriptions.add(
-      this.adminService.getUserKycInfo(id).pipe(take(1)).subscribe(kyc => {
-        this.kycDocs = kyc?.appliedDocuments?.map(doc => doc.code) ?? [];
-      }));
-  }
-
-  private getUserKycTiers(id: string): void {
-    this.tiers = [];
-    this.subscriptions.add(
-      this.adminService.getSettingsKycTiers(id).pipe(take(1)).subscribe(data => {
-        this.tiers = data?.list?.map(tier => {
-          return {
-            id: tier.settingsKycTierId,
-            title: tier.name
-          } as CommonTargetValue;
-        }) ?? [];
-      }));
-  }
-
-  private getUserState(id: string): void {
-    this.subscriptions.add(
-      this.adminService.getUserState(id).pipe(take(1)).subscribe(state => {
-        this.kycProviderLink = state?.kycProviderLink ?? '';
-        let balance = 0;
-        state?.vaults?.forEach(x => {
-          balance += x.totalBalanceEur ?? 0;
-        });
-        this.totalBalance = `${balance} EUR`;
-      }));
   }
 
   private setUserData(): UserInput {
     const code3 = this.dataForm.get('country')?.value;
     const country = getCountryByCode3(code3);
     const code2 = (country) ? country.code2 : '';
-    const tierName = this.dataForm.get('tier')?.value;
-    const tierId = this.tiers.find(x => x.title === tierName)?.id;
     const data = {
       email: this.dataForm.get('email')?.value,
       firstName: this.dataForm.get('firstName')?.value,
@@ -248,11 +172,7 @@ export class SystemUserDetailsComponent implements OnDestroy {
       buildingNumber: this.dataForm.get('buildingNumber')?.value,
       flatNumber: this.dataForm.get('flatNumber')?.value,
       phone: this.dataForm.get('phone')?.value,
-      defaultFiatCurrency: this.dataForm.get('fiat')?.value,
-      defaultCryptoCurrency: this.dataForm.get('crypto')?.value,
-      risk: this.dataForm.get('risk')?.value,
-      accountStatus: this.dataForm.get('accountStatus')?.value,
-      kycTierId: tierId
+      accountStatus: this.dataForm.get('accountStatus')?.value
     } as UserInput;
     return data;
   }

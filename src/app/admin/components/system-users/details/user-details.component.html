@@ -6,12 +6,6 @@
         <app-details-attribute *ngIf="cancelable" label="Account Id" [value]="settingsId"
             [linkUrl]="'/admin/system-users/'+ settingsId"></app-details-attribute>
         <app-details-attribute *ngIf="!cancelable" label="Account Id" [value]="settingsId"></app-details-attribute>
-
-        <app-details-attribute label="Widget" [value]="userData?.widgetId"></app-details-attribute>
-        <app-details-attribute label="Widget Code" [value]="userData?.widgetCode"></app-details-attribute>
-
-        <app-details-attribute label="Affiliate" [value]="userData?.affiliateId"></app-details-attribute>
-        <app-details-attribute label="Affiliate Code" [value]="userData?.affiliateCode"></app-details-attribute>
     </section>
 
     <!-- Email -->
@@ -80,6 +74,8 @@
             Please specify the account status
         </mat-error>
     </mat-form-field>
+
+    <app-details-attribute label="Roles" [value]="userData?.roles"></app-details-attribute>
 
     <app-details-attribute label="Address" [value]="address"></app-details-attribute>
 
@@ -153,108 +149,8 @@
         </mat-error>
     </mat-form-field>
 
-    <!-- Fiat currencies -->
-    <mat-form-field class="form-element">
-        <mat-label>Default currency</mat-label>
-        <mat-select formControlName="fiat" required>
-            <mat-option *ngFor="let item of fiatCurrencies" [value]="item.id">
-                {{item.id}}
-            </mat-option>
-        </mat-select>
-        <mat-error *ngIf="this.dataForm.get('fiat')?.hasError('required')">
-            Please specify default fiat currency
-        </mat-error>
-    </mat-form-field>
-
-    <!-- Crypto currencies -->
-    <mat-form-field class="form-element">
-        <mat-label>Default crypto</mat-label>
-        <mat-select formControlName="crypto" required>
-            <mat-option *ngFor="let item of cryptoCurrencies" [value]="item.id">
-                {{item.id}}
-            </mat-option>
-        </mat-select>
-        <mat-error *ngIf="this.dataForm.get('crypto')?.hasError('required')">
-            Please specify default crypto currency
-        </mat-error>
-    </mat-form-field>
-
-    <app-details-attribute *ngIf="!createNew" label="Widgets" [value]="'Related widgets'"
-        [linkUrl]="'/admin/widgets/'+ settingsId"></app-details-attribute>
-
-    <!-- Totals -->
-    <div *ngIf="!createNew">
-        <app-details-attribute label="Total Balance" [value]="totalBalance"></app-details-attribute>
-        <app-details-attribute label="Total Transaction Count" [value]="userData?.totalTransactionCount">
-        </app-details-attribute>
-        <app-details-attribute label="Avarage Transaction" [value]="userData?.avarageTransaction">
-        </app-details-attribute>
-        <app-details-attribute label="Total Buy Completed" [value]="userData?.totalBoughtCompletedResult">
-        </app-details-attribute>
-        <app-details-attribute label="Total Buy In Process" [value]="userData?.totalBoughtInProcessResult">
-        </app-details-attribute>
-        <app-details-attribute label="Total Sell Completed" [value]="userData?.totalSoldCompletedResult">
-        </app-details-attribute>
-        <app-details-attribute label="Total Sell In Process" [value]="userData?.totalSoldInProcessResult">
-        </app-details-attribute>
-        <app-details-attribute label="Total Send Completed" [value]="userData?.totalSentCompletedResult">
-        </app-details-attribute>
-        <app-details-attribute label="Total Send In Process" [value]="userData?.totalSentInProcessResult">
-        </app-details-attribute>
-        <app-details-attribute label="Total Receive Completed" [value]="userData?.totalReceivedCompletedResult">
-        </app-details-attribute>
-        <app-details-attribute label="Total Receive In Process" [value]="userData?.totalReceivedInProcessResult">
-        </app-details-attribute>
-        <app-details-attribute label="Total Transactions" [value]="userData?.totalTransactionCount">
-        </app-details-attribute>
-        <app-details-attribute label="Avarage Transaction" [value]="userData?.avarageTransaction">
-        </app-details-attribute>
-    </div>
-
-    <!-- Risks -->
-    <app-details-attribute label="Risk codes" [value]="userData?.riskCodes"></app-details-attribute>
-    <mat-form-field class="form-element">
-        <mat-label>Risk Level</mat-label>
-        <mat-select formControlName="risk" required>
-            <mat-option *ngFor="let item of riskLevels" [value]="item.id">
-                {{item.name}}
-            </mat-option>
-        </mat-select>
-        <mat-error *ngIf="this.dataForm.get('risk')?.hasError('required')">
-            Please specify the risk level
-        </mat-error>
-    </mat-form-field>
-
-    <!-- Level -->
-    <mat-form-field *ngIf="!createNew" class="form-element">
-        <mat-label>KYC Level</mat-label>
-        <mat-select formControlName="tier">
-            <mat-option *ngFor="let t of tiers" [value]="t.title">
-                {{t.title}}
-            </mat-option>
-        </mat-select>
-        <mat-error *ngIf="dataForm.get('tier')?.hasError('required')">
-            Please specify the user verification level
-        </mat-error>
-    </mat-form-field>
-
-    <app-details-attribute label="KYC Status" [value]="userData?.kycStatus"></app-details-attribute>
-    <app-details-attribute label="KYC Review Date" [value]="userData?.kycReviewDate"></app-details-attribute>
-    <app-details-attribute label="KYC Status Date" [value]="userData?.kycStatusDate"></app-details-attribute>
-    <app-details-attribute label="KYC Review Comment" [value]="userData?.kycReviewComment"></app-details-attribute>
-    <app-details-attribute label="KYC Private Comment" [value]="userData?.kycPrivateComment"></app-details-attribute>
-    <app-details-attribute label="KYC Review Rejected Type" [value]="userData?.kycReviewRejectedType">
-    </app-details-attribute>
-    <app-details-attribute label="KYC Review Rejected Labels" [value]="userData?.kycReviewRejectedLabels">
-    </app-details-attribute>
-    <app-details-attribute label="KYC Review Result" [value]="userData?.kycReviewResult"></app-details-attribute>
-    <app-details-attribute label="KYC Status Update Required" [value]="userData?.kycStatusUpdateRequired">
-    </app-details-attribute>
-    <app-details-attribute label="Provided documents" [value]="kycDocs"></app-details-attribute>
-    <app-details-attribute *ngIf="!createNew" label="KYC Details" [value]="kycProviderLink" [linkUrl]="kycProviderLink">
-    </app-details-attribute>
-
-    <app-details-attribute label="Lasr updated" [value]="userData?.updated"></app-details-attribute>
+    <app-details-attribute label="Last updated" [value]="userData?.updated"></app-details-attribute>
+    <app-details-attribute label="Last login" [value]="userData?.lastLogin"></app-details-attribute>
 
     <div class="form-element" *ngIf="errorMessage!==''">
         <div class="form-error-box">

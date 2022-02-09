@@ -1,7 +1,7 @@
 <h2>Set role</h2>
 
 <form [formGroup]="dataForm" (ngSubmit)="onSubmit()">
-    <mat-form-field *ngIf="userId===''" class="form-element">
+    <mat-form-field *ngIf="user===undefined" class="form-element">
         <mat-label>User</mat-label>
         <input type="text" placeholder="Select user" aria-label="User" matInput formControlName="userId"
             (input)="handleUserInputChange($event)" [matAutocomplete]="autoUser">

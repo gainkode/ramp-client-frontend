@@ -3,18 +3,13 @@ import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, switchMap, take, takeUntil } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, switchMap, takeUntil } from 'rxjs/operators';
 import { Filter } from 'src/app/admin/model/filter.model';
 import { AdminDataService } from 'src/app/admin/services/admin-data.service';
 import { LayoutService } from 'src/app/admin/services/layout.service';
-import { CommonDialogBox } from 'src/app/components/dialogs/common-box.dialog';
-import { CommonTargetValue } from 'src/app/model/common.model';
-import { Countries, getCountryByCode3 } from 'src/app/model/country-code.model';
-import { AccountStatus, RiskLevel, UserInput, UserRole, UserType } from 'src/app/model/generated-models';
-import { CurrencyView, RiskLevelViewList, UserStatusList } from 'src/app/model/payment.model';
+import { UserRole } from 'src/app/model/generated-models';
 import { RoleItem, UserItem } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
-import { getFormattedUtcDate } from 'src/app/utils/utils';
 
 @Component({
   selector: 'app-user-role',
@@ -30,7 +25,7 @@ export class AddSystemUserComponent implements OnInit, OnDestroy, AfterViewInit 
       return new RoleItem(val);
     });
   }
-  @Input() userId = '';
+  @Input() user: UserItem | undefined = undefined;
 
   @Output() save = new EventEmitter();
   @Output() cancel = new EventEmitter();
@@ -89,19 +84,9 @@ export class AddSystemUserComponent implements OnInit, OnDestroy, AfterViewInit 
 
   ngAfterViewInit(): void {
     this.layoutService.setBackdrop(true);
-    if (this.userId !== '') {
-      console.log('look for user', this.userId);
-      this.subscriptions.add(
-        this.adminService.findUsers(
-          new Filter({ users: [this.userId] })).pipe(map(result => {
-            return result.list;
-          })).subscribe((data) => {
-            if (data.length > 0) {
-              this.dataForm.controls.userId.setValue(data[0]);
-              this.changeDetector.detectChanges();
-            }
-          })
-      );
+    if (this.user) {
+      this.dataForm.controls.userId.setValue(this.user);
+      this.changeDetector.detectChanges();
     }
   }
 
@@ -195,7 +180,7 @@ export class AddSystemUserComponent implements OnInit, OnDestroy, AfterViewInit 
         }
       });
       if (selection.length > 0) {
-        const id = (this.userId === '') ? (this.dataForm.controls.userId.value as UserItem).id : this.userId;
+        const id = (this.user) ? this.user.id : (this.dataForm.controls.userId.value as UserItem).id;
         this.onSave(
           id,
           this.getAssignedRoles(selection, this.selectedRoles),

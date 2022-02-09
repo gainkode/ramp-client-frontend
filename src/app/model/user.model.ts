@@ -56,6 +56,7 @@ export class UserItem {
   userMode: UserModeView | null = null;
   created = '';
   updated = '';
+  lastLogin = '';
   fiatCurrency = '';
   cryptoCurrency = '';
   birthday: Date | undefined = undefined;
@@ -128,8 +129,9 @@ export class UserItem {
       this.stateName = data.stateName ?? '';
       this.address = this.getAddress(data);
       const datepipe: DatePipe = new DatePipe('en-US');
-      this.created = datepipe.transform(data.created, 'dd MMM YYYY HH:mm:ss') as string;
-      this.updated = datepipe.transform(data.updated, 'dd MMM YYYY HH:mm:ss') as string;
+      this.created = datepipe.transform(data.created, 'dd MMM YYYY HH:mm:ss') ?? '';
+      this.updated = datepipe.transform(data.updated, 'dd MMM YYYY HH:mm:ss') ?? '';
+      this.lastLogin = datepipe.transform(data.lastLogin, 'dd MMM YYYY HH:mm:ss') ?? '';
       this.widgetId = data.widgetId ?? '';
       this.widgetCode = data.widgetCode ?? '';
       this.affiliateId = data.affiliateId ?? '';
@@ -293,6 +295,10 @@ export class UserItem {
       return this.firstName;
     }
     return '';
+  }
+
+  get roleNames(): string {
+    return this.roles.join(', ');
   }
 
   setFullName(): void {

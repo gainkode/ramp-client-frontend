@@ -625,6 +625,69 @@ const GET_USERS = gql`
   }
 `;
 
+const GET_USERS_EX = gql`
+  query GetUsers(
+    $userIdsOnly: [String!]
+    $roleIdsOnly: [String!]
+    $accountTypesOnly: [UserType!]
+    $accountModesOnly: [UserMode!]
+    $accountStatusesOnly: [AccountStatus!]
+    $countriesOnly: [String!]
+    $countryCodeType: CountryCodeType!
+    $registrationDateInterval: DateTimeInterval
+    $filter: String
+    $skip: Int
+    $first: Int
+    $orderBy: [OrderBy!]
+  ) {
+    getUsers(
+      userIdsOnly: $userIdsOnly
+      roleIdsOnly: $roleIdsOnly
+      accountTypesOnly: $accountTypesOnly
+      accountModesOnly: $accountModesOnly
+      accountStatusesOnly: $accountStatusesOnly
+      countriesOnly: $countriesOnly
+      countryCodeType: $countryCodeType
+      registrationDateInterval: $registrationDateInterval
+      filter: $filter,
+      skip: $skip,
+      first: $first,
+      orderBy: $orderBy) {
+      count
+      list {
+        userId
+        email
+        firstName
+        lastName
+        type
+        mode
+        birthday
+        countryCode2
+        countryCode3
+        created
+        updated
+        lastLogin
+        accountStatus
+        phone
+        postCode
+        town
+        street
+        subStreet
+        stateName
+        buildingName
+        buildingNumber
+        flatNumber
+        referralCode
+        roles {
+          userRoleId
+          name
+          code
+        }
+      }
+    }
+  }
+`;
+
 const FIND_USERS = gql`
   query GetUsers(
     $userIdsOnly: [String!]
@@ -2030,6 +2093,49 @@ export class AdminDataService {
     };
     return this.watchQuery<{ getUsers: UserListResult }, QueryGetUsersArgs>({
       query: GET_USERS,
+      variables: vars,
+      fetchPolicy: 'network-only'
+    })
+      .pipe(
+        map(result => {
+          if (result.data?.getUsers?.list && result.data?.getUsers?.count) {
+            return {
+              list: result.data.getUsers.list.map(u => new UserItem(u)),
+              count: result.data.getUsers.count
+            };
+          } else {
+            return {
+              list: [],
+              count: 0
+            };
+          }
+        })
+      );
+  }
+
+  getSystemUsers(
+    roleIds: string[],
+    pageIndex: number,
+    takeItems: number,
+    orderField: string,
+    orderDesc: boolean,
+    filter: Filter
+  ): Observable<{ list: UserItem[], count: number }> {
+    const vars = {
+      userIdsOnly: filter?.users,
+      roleIdsOnly: (roleIds.length > 0) ? roleIds : undefined,
+      accountTypesOnly: filter?.accountTypes,
+      accountStatusesOnly: filter?.accountStatuses,
+      countriesOnly: filter?.countries,
+      countryCodeType: CountryCodeType.Code3,
+      registrationDateInterval: filter?.registrationDateInterval,
+      skip: pageIndex * takeItems,
+      first: takeItems,
+      orderBy: [{ orderBy: orderField, desc: orderDesc }],
+      filter: filter?.search
+    };
+    return this.watchQuery<{ getUsers: UserListResult }, QueryGetUsersArgs>({
+      query: GET_USERS_EX,
       variables: vars,
       fetchPolicy: 'network-only'
     })

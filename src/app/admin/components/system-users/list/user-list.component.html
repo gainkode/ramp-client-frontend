@@ -63,76 +63,28 @@
             <td mat-cell *matCellDef="let element"> {{element.email}} </td>
         </ng-container>
 
+        <!-- Roles Column -->
+        <ng-container matColumnDef="role">
+            <th mat-header-cell *matHeaderCellDef>Roles</th>
+            <td mat-cell *matCellDef="let element"> {{element.roleNames}} </td>
+        </ng-container>
+
         <!-- Status Column -->
         <ng-container matColumnDef="accountStatus">
             <th mat-header-cell mat-sort-header *matHeaderCellDef>Account status</th>
             <td mat-cell *matCellDef="let element"> {{element.accountStatus}} </td>
         </ng-container>
 
-        <!-- KYC Column -->
-        <ng-container matColumnDef="kycStatus">
-            <th mat-header-cell *matHeaderCellDef>KYC status</th>
-            <td mat-cell *matCellDef="let element"> {{element.kycStatus}} </td>
-        </ng-container>
-
-        <!-- widgetId Column -->
-        <ng-container matColumnDef="widgetId">
-            <th mat-header-cell *matHeaderCellDef>Widget ID</th>
-            <td mat-cell *matCellDef="let element"> {{element.widgetId}} </td>
-        </ng-container>
-
-        <!-- totalBought Column -->
-        <ng-container matColumnDef="totalBought">
-            <th mat-header-cell *matHeaderCellDef>Total Buy</th>
-            <td mat-cell *matCellDef="let element"> {{element.totalBought}} </td>
-        </ng-container>
-
-        <!-- totalSold Column -->
-        <ng-container matColumnDef="totalSold">
-            <th mat-header-cell *matHeaderCellDef>Total Sold</th>
-            <td mat-cell *matCellDef="let element"> {{element.totalSold}} </td>
-        </ng-container>
-
-        <!-- totalSent Column -->
-        <ng-container matColumnDef="totalSent">
-            <th mat-header-cell *matHeaderCellDef>Total Send</th>
-            <td mat-cell *matCellDef="let element"> {{element.totalSent}} </td>
-        </ng-container>
-
-        <!-- totalReceived Column -->
-        <ng-container matColumnDef="totalReceived">
-            <th mat-header-cell *matHeaderCellDef>Total Receive</th>
-            <td mat-cell *matCellDef="let element"> {{element.totalReceived}} </td>
+        <!-- Last Login Column -->
+        <ng-container matColumnDef="lastLogin">
+            <th mat-header-cell *matHeaderCellDef>Last Login</th>
+            <td mat-cell *matCellDef="let element"> {{element.lastLogin}} </td>
         </ng-container>
 
         <!-- Registered Column -->
         <ng-container matColumnDef="created">
             <th mat-header-cell mat-sort-header *matHeaderCellDef>Registered</th>
             <td mat-cell *matCellDef="let element"> {{element.created}} </td>
-        </ng-container>
-
-        <!-- Country Column -->
-        <ng-container matColumnDef="country">
-            <th mat-header-cell *matHeaderCellDef>Country</th>
-            <td mat-cell *matCellDef="let element"> {{element.country?.title}} </td>
-        </ng-container>
-
-        <!-- Phone Column -->
-        <ng-container matColumnDef="phone">
-            <th mat-header-cell *matHeaderCellDef>Phone</th>
-            <td mat-cell *matCellDef="let element"> {{element.phone}} </td>
-        </ng-container>
-
-        <!-- Risk Column -->
-        <ng-container matColumnDef="risk">
-            <th mat-header-cell *matHeaderCellDef>Risk Level</th>
-            <td mat-cell *matCellDef="let element"> {{element.risk}} </td>
-        </ng-container>
-
-        <!-- User ID Column -->
-        <ng-container matColumnDef="id">
-            <th mat-header-cell *matHeaderCellDef>ID</th>
-            <td mat-cell *matCellDef="let element"> {{element.id}} </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
@@ -145,9 +97,9 @@
 </mat-paginator>
 
 <ng-template *ngIf="selectedUser || setRoleFlag" appRightPanel (panelClosed)="handleDetailsPanelClosed()">
-    <app-system-user-details *ngIf="selectedUser" [user]="selectedUser" [currencies]="currencyList" [cancelable]=true
+    <app-system-user-details *ngIf="selectedUser" [user]="selectedUser" [cancelable]=true
         (save)="onSave()" (cancel)="onCancelEdit()">
     </app-system-user-details>
-    <app-user-role *ngIf="setRoleFlag" [userId]="roleUserId" [roles]="userRoles" (save)="onSave()" (cancel)="onCancelEdit()">
+    <app-user-role *ngIf="setRoleFlag" [user]="roleUser" [roles]="userRoles" (save)="onSave()" (cancel)="onCancelEdit()">
     </app-user-role>
 </ng-template>
