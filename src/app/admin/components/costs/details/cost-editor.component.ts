@@ -49,6 +49,7 @@ export class CostEditorComponent implements OnInit, OnDestroy {
   selectedTab = 0;
   errorMessage = '';
   targetEntity = '';
+  showPaymentProvider = false;
   separatorKeysCodes: number[] = [ENTER, COMMA];
   filteredTargetValues: Observable<CommonTargetValue[]> | undefined;
 
@@ -172,8 +173,11 @@ export class CostEditorComponent implements OnInit, OnDestroy {
           map(value => this.filterTargetValues(value)));
       })
     );
+    this.subscriptions.add(
+      this.schemeForm.get('instrument')?.valueChanges.subscribe(val => this.updateInstruments(val))
+    );
     this.getPaymentProviders();
-    this.getWiteTransferAccounts();
+    this.getWireTransferAccounts();
   }
 
   ngOnDestroy(): void {
@@ -193,7 +197,7 @@ export class CostEditorComponent implements OnInit, OnDestroy {
     );
   }
 
-  private getWiteTransferAccounts(): void {
+  private getWireTransferAccounts(): void {
     this.bankAccounts = [];
     const data$ = this.dataService.getWireTransferBankAccounts()?.valueChanges;
     this.subscriptions.add(
@@ -237,6 +241,15 @@ export class CostEditorComponent implements OnInit, OnDestroy {
     }
   }
 
+  private updateInstruments(data: PaymentInstrument[]): void {
+    if (data.some(x => x === PaymentInstrument.CreditCard)) {
+      this.showPaymentProvider = true;
+    } else {
+      this.showPaymentProvider = false;
+      this.schemeForm.get('provider')?.setValue([]);
+    }
+  }
+
   setFormData(scheme: CostScheme | null): void {
     this.schemeForm.reset();
     this.defaultSchemeName = '';
@@ -261,7 +274,7 @@ export class CostEditorComponent implements OnInit, OnDestroy {
       this.schemeForm.get('chargebackCost')?.setValue(scheme?.terms.chargebackCost);
       this.schemeForm.get('monthlyCost')?.setValue(scheme?.terms.monthlyCost);
       this.schemeForm.get('minMonthlyCost')?.setValue(scheme?.terms.minMonthlyCost);
-      const p = this.targetValueParams;
+      this.updateInstruments(scheme.instrument);
       this.setTargetValidator();
       this.loadingData = false;
       this.formChanged.emit(false);
@@ -273,9 +286,9 @@ export class CostEditorComponent implements OnInit, OnDestroy {
       this.schemeForm.get('isDefault')?.setValue('');
       this.schemeForm.get('target')?.setValue(SettingsCostTargetFilterType.None);
       this.schemeForm.get('targetValues')?.setValue([]);
-      this.schemeForm.get('instrument')?.setValue('');
+      this.schemeForm.get('instrument')?.setValue([]);
       this.schemeForm.get('trxType')?.setValue('');
-      this.schemeForm.get('provider')?.setValue('');
+      this.schemeForm.get('provider')?.setValue([]);
       this.schemeForm.get('mdr')?.setValue('');
       this.schemeForm.get('transactionCost')?.setValue('');
       this.schemeForm.get('rollingReserves')?.setValue('');
@@ -283,6 +296,7 @@ export class CostEditorComponent implements OnInit, OnDestroy {
       this.schemeForm.get('chargebackCost')?.setValue('');
       this.schemeForm.get('monthlyCost')?.setValue('');
       this.schemeForm.get('minMonthlyCost')?.setValue('');
+      this.updateInstruments([]);
       this.setTargetValidator();
     }
   }
