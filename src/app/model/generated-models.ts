@@ -234,6 +234,11 @@ export type DepositOrWithdrawalStats = BaseStat & {
   byInstruments?: Maybe<Array<InstrumentStats>>;
 };
 
+export enum EntityType {
+  User = 'User',
+  Transaction = 'Transaction'
+}
+
 export type ExchangeStats = BaseStat & {
   __typename?: 'ExchangeStats';
   ratio?: Maybe<Scalars['Float']>;
@@ -923,7 +928,24 @@ export type MutationChangeUserKycTierArgs = {
 
 
 export type MutationExportUsersToCsvArgs = {
-  userIds?: Maybe<Array<Scalars['String']>>;
+  userIdsOnly?: Maybe<Array<Scalars['String']>>;
+  roleIdsOnly?: Maybe<Array<Scalars['String']>>;
+  accountTypesOnly?: Maybe<Array<UserType>>;
+  accountModesOnly?: Maybe<Array<UserMode>>;
+  accountStatusesOnly?: Maybe<Array<AccountStatus>>;
+  userTierLevelsOnly?: Maybe<Array<Scalars['String']>>;
+  riskLevelsOnly?: Maybe<Array<RiskLevel>>;
+  countriesOnly?: Maybe<Array<Scalars['String']>>;
+  countryCodeType?: Maybe<CountryCodeType>;
+  kycStatusesOnly?: Maybe<Array<KycStatus>>;
+  registrationDateInterval?: Maybe<DateTimeInterval>;
+  widgetIdsOnly?: Maybe<Array<Scalars['String']>>;
+  totalBuyVolumeOver?: Maybe<Scalars['Int']>;
+  transactionCountOver?: Maybe<Scalars['Int']>;
+  filter?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OrderBy>>;
 };
 
 
@@ -1060,7 +1082,16 @@ export type MutationUpdateTransactionArgs = {
 
 
 export type MutationExportTransactionsToCsvArgs = {
-  transactionIds?: Maybe<Array<Scalars['String']>>;
+  transactionIdsOnly?: Maybe<Array<Scalars['String']>>;
+  sourcesOnly?: Maybe<Array<TransactionSource>>;
+  transactionDateOnly?: Maybe<Scalars['DateTime']>;
+  transactionTypesOnly?: Maybe<Array<TransactionType>>;
+  sendersOrReceiversOnly?: Maybe<Array<Scalars['String']>>;
+  paymentProvidersOnly?: Maybe<Array<Scalars['String']>>;
+  filter?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OrderBy>>;
 };
 
 
@@ -1123,7 +1154,12 @@ export type MutationAddMyWidgetUserParamsArgs = {
 
 
 export type MutationExportWidgetsToCsvArgs = {
-  widgetIds?: Maybe<Array<Scalars['String']>>;
+  widgetIdsOnly?: Maybe<Array<Scalars['String']>>;
+  userIdsOnly?: Maybe<Array<Scalars['String']>>;
+  filter?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OrderBy>>;
 };
 
 

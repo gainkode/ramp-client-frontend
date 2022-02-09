@@ -7,8 +7,6 @@ import { FeeScheme } from '../../model/fee-scheme.model';
 import {
   AssetAddress,
   AssetAddressListResult,
-  BlackCountry,
-  BlackCountryListResult,
   CountryCodeType,
   DashboardStats,
   KycInfo,
@@ -56,7 +54,6 @@ import { WalletItem } from '../model/wallet.model';
 import { NotificationItem } from '../../model/notification.model';
 import { WidgetItem } from '../model/widget.model';
 import { RiskAlertItem } from '../model/risk-alert.model';
-import { CommonTargetValue } from 'src/app/model/common.model';
 
 /* region queries */
 
@@ -1415,17 +1412,64 @@ mutation ExportTransactionsToCsv($transactionIds: [String!]) {
 `;
 
 const EXPORT_USERS = gql`
-mutation ExportUsersToCsv($userIds: [String!]) {
+mutation ExportUsersToCsv(
+  $userIdsOnly: [String!]
+  $roleIdsOnly: [String!]
+  $accountTypesOnly: [UserType!]
+  $accountModesOnly: [UserMode!]
+  $accountStatusesOnly: [AccountStatus!]
+  $userTierLevelsOnly: [String!]
+  $riskLevelsOnly: [RiskLevel!]
+  $countriesOnly: [String!]
+  $countryCodeType: CountryCodeType!
+  $kycStatusesOnly: [KycStatus!]
+  $registrationDateInterval: DateTimeInterval
+  $widgetIdsOnly: [String!]
+  $totalBuyVolumeOver: Int
+  $transactionCountOver: Int
+  $filter: String
+  $skip: Int
+  $first: Int
+  $orderBy: [OrderBy!]) {
   exportUsersToCsv (
-    userIds: $userIds
+    userIdsOnly: $userIdsOnly
+    roleIdsOnly: $roleIdsOnly
+    accountTypesOnly: $accountTypesOnly
+    accountModesOnly: $accountModesOnly
+    accountStatusesOnly: $accountStatusesOnly
+    userTierLevelsOnly: $userTierLevelsOnly
+    riskLevelsOnly: $riskLevelsOnly
+    countriesOnly: $countriesOnly
+    countryCodeType: $countryCodeType
+    kycStatusesOnly: $kycStatusesOnly
+    registrationDateInterval: $registrationDateInterval
+    widgetIdsOnly: $widgetIdsOnly
+    totalBuyVolumeOver: $totalBuyVolumeOver
+    transactionCountOver: $transactionCountOver
+    filter: $filter,
+    skip: $skip,
+    first: $first,
+    orderBy: $orderBy
   )
 }
 `;
 
+
 const EXPORT_WIDGETS = gql`
-mutation ExportWidgetsToCsv($widgetIds: [String!]) {
+mutation ExportWidgetsToCsv(
+  $widgetIdsOnly: [String!]
+  $userIdsOnly: [String!]
+  $filter: String
+  $skip: Int
+  $first: Int
+  $orderBy: [OrderBy!]) {
   exportWidgetsToCsv (
-    widgetIds: $widgetIds
+    widgetIdsOnly: $widgetIdsOnly,
+      userIdsOnly: $userIdsOnly,
+      filter: $filter,
+      skip: $skip,
+      first: $first,
+      orderBy: $orderBy
   )
 }
 `;
@@ -1957,9 +2001,6 @@ export class AdminDataService {
       orderBy: [{ orderBy: orderField, desc: orderDesc }],
       filter: filter?.search
     };
-
-    console.log(vars);
-
     return this.watchQuery<{ getUsers: UserListResult }, QueryGetUsersArgs>({
       query: GET_USERS,
       variables: vars,
@@ -2764,12 +2805,42 @@ export class AdminDataService {
     }));
   }
 
-  exportUsersToCsv(userIds: string[]): Observable<any> {
+  exportUsersToCsv(
+    userIds: string[],
+    roleIds: string[],
+    orderField: string,
+    orderDesc: boolean,
+    filter: Filter
+  ): Observable<any> {
+    let vars = {};
+    if (userIds.length === 0) {
+      vars = {
+        userIdsOnly: filter?.users,
+        roleIdsOnly: (roleIds.length > 0) ? roleIds : undefined,
+        accountTypesOnly: filter?.accountTypes,
+        accountStatusesOnly: filter?.accountStatuses,
+        riskLevelsOnly: filter?.riskLevels,
+        countriesOnly: filter?.countries,
+        countryCodeType: CountryCodeType.Code3,
+        kycStatusesOnly: filter.kycStatuses,
+        registrationDateInterval: filter?.registrationDateInterval,
+        widgetIdsOnly: filter?.widgets,
+        totalBuyVolumeOver: filter?.totalBuyVolumeOver,
+        transactionCountOver: filter?.transactionCountOver,
+        orderBy: [{ orderBy: orderField, desc: orderDesc }],
+        filter: filter?.search
+      };
+    } else {
+      vars = {
+        userIdsOnly: userIds,
+        roleIdsOnly: (roleIds.length > 0) ? roleIds : undefined,
+        countryCodeType: CountryCodeType.Code3,
+        orderBy: [{ orderBy: orderField, desc: orderDesc }]
+      };
+    }
     return this.apollo.mutate({
       mutation: EXPORT_USERS,
-      variables: {
-        userIds
-      }
+      variables: vars
     });
   }
 
@@ -2782,12 +2853,29 @@ export class AdminDataService {
     });
   }
 
-  exportWidgetsToCsv(widgetIds: string[]): Observable<any> {
+  exportWidgetsToCsv(
+    widgetIds: string[],
+    orderField: string,
+    orderDesc: boolean,
+    filter: Filter): Observable<any> {
+    const orderFields = [{ orderBy: orderField, desc: orderDesc }];
+    let vars = {};
+    if (widgetIds.length === 0) {
+      vars = {
+        userIdsOnly: filter.users,
+        widgetIdsOnly: filter.widgets,
+        filter: filter.search,
+        orderBy: orderFields
+      };
+    } else {
+      vars = {
+        widgetIdsOnly: widgetIds,
+        orderBy: orderFields
+      };
+    }
     return this.apollo.mutate({
       mutation: EXPORT_WIDGETS,
-      variables: {
-        widgetIds
-      }
+      variables: vars
     });
   }
 

@@ -151,7 +151,10 @@ export class WidgetListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   export(): void {
     const exportData$ = this.adminDataService.exportWidgetsToCsv(
-      this.data.filter(x => x.selected === true).map(val => val.id)
+      this.data.filter(x => x.selected === true).map(val => val.id),
+      this.sortedField,
+      this.sortedDesc,
+      this.filter
     );
     this.subscriptions.add(
       exportData$.subscribe(({ data }) => {

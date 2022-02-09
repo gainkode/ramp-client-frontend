@@ -266,7 +266,12 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   export(): void {
     const ids = this.customers.filter(x => x.selected === true).map(val => val.id);
-    const exportData$ = this.adminService.exportUsersToCsv(ids);
+    const exportData$ = this.adminService.exportUsersToCsv(
+      ids,
+      this.roleIds,
+      this.sortedField,
+      this.sortedDesc,
+      this.filter);
     this.subscriptions.add(
       exportData$.subscribe(({ data }) => {
         this.dialog.open(CommonDialogBox, {
