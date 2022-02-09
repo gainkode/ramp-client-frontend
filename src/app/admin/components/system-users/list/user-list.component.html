@@ -20,7 +20,7 @@
 
         <ng-container matColumnDef="details" sticky>
             <th mat-header-cell *matHeaderCellDef class="action"></th>
-            <td mat-cell *matCellDef="let element" style="margin: 0px;padding: 0px 8px; background-color: white;">
+            <td mat-cell *matCellDef="let element">
                 <mat-checkbox color="accent" [checked]="element.selected" (change)="onUserSelected(element)">
                 </mat-checkbox>
                 <button mat-icon-button class="row-button" (click)="toggleDetails(element)"

@@ -25,7 +25,7 @@ export class WidgetListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   selectedItem?: WidgetItem;
   data: WidgetItem[] = [];
-  customerCount = 0;
+  widgetCount = 0;
   pageSize = 25;
   pageIndex = 0;
   sortedField = 'created';
@@ -123,6 +123,10 @@ export class WidgetListComponent implements OnInit, OnDestroy, AfterViewInit {
     this.selectedItem = undefined;
   }
 
+  onWidgetSelected(item: WidgetItem): void {
+    item.selected = !item.selected;
+  }
+
   private loadData(): void {
     const listData$ = this.adminDataService.getWidgets(
       this.pageIndex,
@@ -133,7 +137,7 @@ export class WidgetListComponent implements OnInit, OnDestroy, AfterViewInit {
     this.subscriptions.add(
       listData$.subscribe(result => {
         this.data = result.list;
-        this.customerCount = result.count;
+        this.widgetCount = result.count;
       })
     );
   }
@@ -146,7 +150,9 @@ export class WidgetListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   export(): void {
-    const exportData$ = this.adminDataService.exportWidgetsToCsv();
+    const exportData$ = this.adminDataService.exportWidgetsToCsv(
+      this.data.filter(x => x.selected === true).map(val => val.id)
+    );
     this.subscriptions.add(
       exportData$.subscribe(({ data }) => {
         this.dialog.open(CommonDialogBox, {

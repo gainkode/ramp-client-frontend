@@ -278,7 +278,8 @@ export class SystemUserListComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   export(): void {
-    const exportData$ = this.adminService.exportUsersToCsv();
+    const ids = this.users.filter(x => x.selected === true).map(val => val.id);
+    const exportData$ = this.adminService.exportUsersToCsv(ids);
     this.subscriptions.add(
       exportData$.subscribe(({ data }) => {
         this.dialog.open(CommonDialogBox, {

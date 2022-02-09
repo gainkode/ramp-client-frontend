@@ -1407,20 +1407,26 @@ mutation RemoveRole(
 `;
 
 const EXPORT_TRANSACTIONS = gql`
-mutation ExportTransactionsToCsv {
-  exportTransactionsToCsv
+mutation ExportTransactionsToCsv($transactionIds: [String!]) {
+  exportTransactionsToCsv (
+    transactionIds: $transactionIds
+  )
 }
 `;
 
 const EXPORT_USERS = gql`
-mutation ExportUsersToCsv {
-  exportUsersToCsv
+mutation ExportUsersToCsv($userIds: [String!]) {
+  exportUsersToCsv (
+    userIds: $userIds
+  )
 }
 `;
 
 const EXPORT_WIDGETS = gql`
-mutation ExportWidgetsToCsv {
-  exportWidgetsToCsv
+mutation ExportWidgetsToCsv($widgetIds: [String!]) {
+  exportWidgetsToCsv (
+    widgetIds: $widgetIds
+  )
 }
 `;
 
@@ -2758,21 +2764,30 @@ export class AdminDataService {
     }));
   }
 
-  exportUsersToCsv(): Observable<any> {
+  exportUsersToCsv(userIds: string[]): Observable<any> {
     return this.apollo.mutate({
       mutation: EXPORT_USERS,
+      variables: {
+        userIds
+      }
     });
   }
 
-  exportTransactionsToCsv(): Observable<any> {
+  exportTransactionsToCsv(transactionIds: string[]): Observable<any> {
     return this.apollo.mutate({
       mutation: EXPORT_TRANSACTIONS,
+      variables: {
+        transactionIds
+      }
     });
   }
 
-  exportWidgetsToCsv(): Observable<any> {
+  exportWidgetsToCsv(widgetIds: string[]): Observable<any> {
     return this.apollo.mutate({
       mutation: EXPORT_WIDGETS,
+      variables: {
+        widgetIds
+      }
     });
   }
 
