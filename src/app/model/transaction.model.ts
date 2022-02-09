@@ -443,6 +443,28 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
     result.networkFee = data.approxNetworkFee ?? 0;
     result.typeIcon = 'account_balance';
   } else if (data.type === TransactionType.Transfer) {
+    const destVaultData = JSON.parse(data.destVault ?? '{}');
+    let recipientName = '';
+    if (destVaultData && destVaultData.name) {
+      recipientName = destVaultData.name;
+    }
+    result.recipient = {
+      id: '',
+      title: recipientName,
+      imgClass: '',
+      imgSource: ''
+    };
+    const sourceVaultData = JSON.parse(data.sourceVault ?? '{}');
+    let senderName = '';
+    if (sourceVaultData && sourceVaultData.name) {
+      senderName = sourceVaultData.name;
+    }
+    result.recipient = {
+      id: '',
+      title: senderName,
+      imgClass: '',
+      imgSource: ''
+    };
     result.fees = 4.2;
     result.networkFee = 0.42;
     result.typeIcon = 'file_upload';
