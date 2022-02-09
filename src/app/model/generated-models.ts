@@ -1083,11 +1083,24 @@ export type MutationUpdateTransactionArgs = {
 
 export type MutationExportTransactionsToCsvArgs = {
   transactionIdsOnly?: Maybe<Array<Scalars['String']>>;
+  transactionStatusesOnly?: Maybe<Array<Scalars['String']>>;
+  userIdsOnly?: Maybe<Array<Scalars['String']>>;
+  widgetIdsOnly?: Maybe<Array<Scalars['String']>>;
   sourcesOnly?: Maybe<Array<TransactionSource>>;
+  countriesOnly?: Maybe<Array<Scalars['String']>>;
+  countryCodeType?: Maybe<CountryCodeType>;
+  accountTypesOnly?: Maybe<Array<UserType>>;
   transactionDateOnly?: Maybe<Scalars['DateTime']>;
   transactionTypesOnly?: Maybe<Array<TransactionType>>;
   sendersOrReceiversOnly?: Maybe<Array<Scalars['String']>>;
   paymentProvidersOnly?: Maybe<Array<Scalars['String']>>;
+  accountStatusesOnly?: Maybe<Array<Scalars['String']>>;
+  userTierLevelsOnly?: Maybe<Array<Scalars['String']>>;
+  riskLevelsOnly?: Maybe<Array<Scalars['String']>>;
+  paymentInstrumentsOnly?: Maybe<Array<PaymentInstrument>>;
+  createdDateInterval?: Maybe<DateTimeInterval>;
+  completedDateInterval?: Maybe<DateTimeInterval>;
+  walletAddressOnly?: Maybe<Scalars['String']>;
   filter?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;

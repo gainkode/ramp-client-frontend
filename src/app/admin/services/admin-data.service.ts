@@ -401,6 +401,7 @@ const GET_TRANSACTIONS = gql`
     $widgetIdsOnly: [String!]
     $countriesOnly: [String!]
     $countryCodeType: CountryCodeType
+    $accountTypesOnly: [UserType!]
     $transactionTypesOnly: [TransactionType!]
     $transactionStatusesOnly: [String!]
     $userTierLevelsOnly: [String!]
@@ -421,6 +422,7 @@ const GET_TRANSACTIONS = gql`
       widgetIdsOnly: $widgetIdsOnly
       countriesOnly: $countriesOnly
       countryCodeType: $countryCodeType
+      accountTypesOnly: $accountTypesOnly
       transactionTypesOnly: $transactionTypesOnly
       transactionStatusesOnly: $transactionStatusesOnly
       userTierLevelsOnly: $userTierLevelsOnly
@@ -1404,9 +1406,42 @@ mutation RemoveRole(
 `;
 
 const EXPORT_TRANSACTIONS = gql`
-mutation ExportTransactionsToCsv($transactionIds: [String!]) {
+mutation ExportTransactionsToCsv(
+  $transactionIdsOnly: [String!]
+  $userIdsOnly: [String!]
+  $sourcesOnly: [TransactionSource!]
+  $widgetIdsOnly: [String!]
+  $countriesOnly: [String!]
+  $countryCodeType: CountryCodeType
+  $accountTypesOnly: [UserType!]
+  $transactionTypesOnly: [TransactionType!]
+  $transactionStatusesOnly: [String!]
+  $userTierLevelsOnly: [String!]
+  $riskLevelsOnly: [String!]
+  $paymentInstrumentsOnly: [PaymentInstrument!]
+  $createdDateInterval: DateTimeInterval
+  $completedDateInterval: DateTimeInterval
+  $walletAddressOnly: String
+  $filter: String
+  $orderBy: [OrderBy!]) {
   exportTransactionsToCsv (
-    transactionIds: $transactionIds
+    transactionIdsOnly: $transactionIdsOnly
+    userIdsOnly: $userIdsOnly
+    sourcesOnly: $sourcesOnly
+    widgetIdsOnly: $widgetIdsOnly
+    countriesOnly: $countriesOnly
+    countryCodeType: $countryCodeType
+    accountTypesOnly: $accountTypesOnly
+    transactionTypesOnly: $transactionTypesOnly
+    transactionStatusesOnly: $transactionStatusesOnly
+    userTierLevelsOnly: $userTierLevelsOnly
+    riskLevelsOnly: $riskLevelsOnly
+    paymentInstrumentsOnly: $paymentInstrumentsOnly
+    createdDateInterval: $createdDateInterval
+    completedDateInterval: $completedDateInterval
+    walletAddressOnly: $walletAddressOnly
+    filter: $filter
+    orderBy: $orderBy
   )
 }
 `;
@@ -1428,8 +1463,6 @@ mutation ExportUsersToCsv(
   $totalBuyVolumeOver: Int
   $transactionCountOver: Int
   $filter: String
-  $skip: Int
-  $first: Int
   $orderBy: [OrderBy!]) {
   exportUsersToCsv (
     userIdsOnly: $userIdsOnly
@@ -1447,8 +1480,6 @@ mutation ExportUsersToCsv(
     totalBuyVolumeOver: $totalBuyVolumeOver
     transactionCountOver: $transactionCountOver
     filter: $filter,
-    skip: $skip,
-    first: $first,
     orderBy: $orderBy
   )
 }
@@ -1460,15 +1491,11 @@ mutation ExportWidgetsToCsv(
   $widgetIdsOnly: [String!]
   $userIdsOnly: [String!]
   $filter: String
-  $skip: Int
-  $first: Int
   $orderBy: [OrderBy!]) {
   exportWidgetsToCsv (
     widgetIdsOnly: $widgetIdsOnly,
       userIdsOnly: $userIdsOnly,
       filter: $filter,
-      skip: $skip,
-      first: $first,
       orderBy: $orderBy
   )
 }
@@ -1952,27 +1979,24 @@ export class AdminDataService {
       first: takeItems,
       orderBy: [{ orderBy: orderField, desc: orderDesc }]
     };
-    return this.watchQuery<{ getTransactions: TransactionListResult }, QueryGetTransactionsArgs>(
-      {
-        query: GET_TRANSACTIONS,
-        variables: vars,
-        fetchPolicy: 'network-only'
-      })
-      .pipe(
-        map(result => {
-          if (result.data?.getTransactions?.list && result.data?.getTransactions?.count) {
-            return {
-              list: result.data.getTransactions.list.map(val => new TransactionItemDeprecated(val)),
-              count: result.data.getTransactions.count
-            };
-          } else {
-            return {
-              list: [],
-              count: 0
-            };
-          }
-        })
-      );
+    console.log(vars);
+    return this.watchQuery<{ getTransactions: TransactionListResult }, QueryGetTransactionsArgs>({
+      query: GET_TRANSACTIONS,
+      variables: vars,
+      fetchPolicy: 'network-only'
+    }).pipe(map(result => {
+      if (result.data?.getTransactions?.list && result.data?.getTransactions?.count) {
+        return {
+          list: result.data.getTransactions.list.map(val => new TransactionItemDeprecated(val)),
+          count: result.data.getTransactions.count
+        };
+      } else {
+        return {
+          list: [],
+          count: 0
+        };
+      }
+    }));
   }
 
   getUsers(
@@ -2844,12 +2868,42 @@ export class AdminDataService {
     });
   }
 
-  exportTransactionsToCsv(transactionIds: string[]): Observable<any> {
+  exportTransactionsToCsv(
+    transactionIds: string[],
+    orderField: string,
+    orderDesc: boolean,
+    filter?: Filter): Observable<any> {
+    let vars = {};
+    if (transactionIds.length === 0) {
+      vars = {
+        transactionIdsOnly: filter?.transactionIds,
+        accountTypesOnly: filter?.accountTypes,
+        countriesOnly: filter?.countries,
+        countryCodeType: CountryCodeType.Code3,
+        sourcesOnly: filter?.sources,
+        userIdsOnly: filter?.users,
+        widgetIdsOnly: filter?.widgets,
+        transactionTypesOnly: filter?.transactionTypes,
+        transactionStatusesOnly: filter?.transactionStatuses,
+        userTierLevelsOnly: filter?.tiers,
+        riskLevelsOnly: filter?.riskLevels,
+        paymentInstrumentsOnly: filter?.paymentInstruments,
+        createdDateInterval: filter?.createdDateInterval,
+        completedDateInterval: filter?.completedDateInterval,
+        walletAddressOnly: filter?.walletAddress,
+        filter: filter?.search,
+        orderBy: [{ orderBy: orderField, desc: orderDesc }]
+      };
+    } else {
+      vars = {
+        transactionIdsOnly: transactionIds,
+        countryCodeType: CountryCodeType.Code3,
+        orderBy: [{ orderBy: orderField, desc: orderDesc }]
+      };
+    }
     return this.apollo.mutate({
       mutation: EXPORT_TRANSACTIONS,
-      variables: {
-        transactionIds
-      }
+      variables: vars
     });
   }
 

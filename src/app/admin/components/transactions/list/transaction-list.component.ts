@@ -253,7 +253,10 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
 
   export(): void {
     const exportData$ = this.adminService.exportTransactionsToCsv(
-      this.transactions.filter(x => x.selected === true).map(val => val.id)
+      this.transactions.filter(x => x.selected === true).map(val => val.id),
+      this.sortedField,
+      this.sortedDesc,
+      this.filter
     );
     this.subscriptions.add(
       exportData$.subscribe(({ data }) => {
