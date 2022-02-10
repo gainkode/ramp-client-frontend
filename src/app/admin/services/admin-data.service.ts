@@ -513,6 +513,8 @@ const GET_TRANSACTIONS = gql`
         benchmarkTransferOrderBlockchainLink
         data
         destination
+        destVault
+        sourceVault
         kycStatus
         widgetId
       }

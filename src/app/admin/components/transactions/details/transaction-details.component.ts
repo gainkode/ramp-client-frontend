@@ -129,7 +129,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
       const currencyToSpendSymbol = this.data?.currencyToSpend;
       const currencyToSpend = list.find(x => x.id === currencyToSpendSymbol);
       if (currencyToSpend) {
-        if (this.data.type === TransactionType.Receive) {
+        if (this.data.type === TransactionType.Receive || this.data.type === TransactionType.Transfer) {
           this.currenciesToSpend = list.filter(x => x.fiat === false);
           this.currenciesToReceive = list.filter(x => x.fiat === false);
         } else {
