@@ -89,7 +89,8 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   amountSpendErrorMessages: { [key: string]: string; } = {
     ['required']: 'Amount is required',
     ['pattern']: 'Amount must be a valid number',
-    ['min']: 'Minimal amount'
+    ['min']: 'Minimal amount',
+    ['max']: 'Maximal amount'
   };
   amountReceiveErrorMessages: { [key: string]: string; } = {
     ['required']: 'Amount is required',
@@ -444,13 +445,25 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     }
   }
 
-  private setSpendValidators(): void {
+  private setSpendValidators(maxValid: number | undefined = undefined): void {
     this.amountSpendErrorMessages['min'] = `Min. amount ${this.currentCurrencySpend?.minAmount} ${this.currentCurrencySpend?.title}`;
-    this.amountSpendField?.setValidators([
+    let validators = [
       Validators.required,
       Validators.pattern(this.pNumberPattern),
       Validators.min(this.currentCurrencySpend?.minAmount ?? 0),
-    ]);
+    ];
+    if (maxValid !== undefined) {
+      if (maxValid > 0) {
+        this.amountSpendErrorMessages['max'] = `Max. amount ${maxValid} ${this.currentCurrencySpend?.title}`;
+      } else {
+        this.amountSpendErrorMessages['max'] = 'Current wallet is empty';
+      }
+      validators = [
+        ...validators,
+        Validators.max(maxValid)
+      ];
+    }
+    this.amountSpendField?.setValidators(validators);
     this.amountSpendField?.updateValueAndValidity();
   }
 
@@ -585,6 +598,9 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       this.selectedWallet = this.filteredWallets.find(x => x.address === val);
     }
     //    }
+    if (this.selectedWallet && this.summary?.transactionType === TransactionType.Withdrawal) {
+      this.setSpendValidators(this.selectedWallet.total);
+    }
     const data: CheckoutSummary = new CheckoutSummary();
     data.address = this.walletField?.value;
     data.vaultId = this.selectedWallet?.id ?? '';
