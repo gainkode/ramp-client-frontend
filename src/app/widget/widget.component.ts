@@ -700,7 +700,7 @@ export class WidgetComponent implements OnInit {
           this.widget.source,
           '',
           this.summary.currencyFrom,
-          '',
+          'EUR',
           this.summary.amountFrom ?? 0,
           undefined,
           '',
