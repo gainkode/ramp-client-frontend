@@ -443,6 +443,16 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
     result.networkFee = data.approxNetworkFee ?? 0;
     result.typeIcon = 'account_balance';
   } else if (data.type === TransactionType.Transfer) {
+    result.recipient = {
+      id: '',
+      title: data.destination ?? '',
+      imgClass: '',
+      imgSource: ''
+    };
+    const c = getCryptoSymbol(result.currencyToSpend);
+    const cryptoImg = (c !== '') ?
+      `../../../assets/svg-crypto/${c.toLowerCase()}.svg` :
+      '';
     const sourceVaultData = JSON.parse(data.sourceVault ?? '{}');
     let senderName = '';
     if (sourceVaultData && sourceVaultData.name) {
@@ -451,8 +461,8 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
     result.sender = {
       id: '',
       title: senderName,
-      imgClass: '',
-      imgSource: ''
+      imgClass: '__profile-transactions-table-cell-sender-icon',
+      imgSource: cryptoImg
     };
     result.fees = data.feeFiat as number ?? 0;
     result.networkFee = data.approxNetworkFee ?? 0;
@@ -488,6 +498,31 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
         } as CommonTargetValue;
       }
     }
+  } else if (data.type === TransactionType.Withdrawal) {
+    result.recipient = {
+      id: '',
+      title: data.destination ?? '',
+      imgClass: '',
+      imgSource: ''
+    };
+    const c = getCryptoSymbol(result.currencyToSpend);
+    const cryptoImg = (c !== '') ?
+      `../../../assets/svg-crypto/${c.toLowerCase()}.svg` :
+      '';
+    const sourceVaultData = JSON.parse(data.sourceVault ?? '{}');
+    let senderName = '';
+    if (sourceVaultData && sourceVaultData.name) {
+      senderName = sourceVaultData.name;
+    }
+    result.sender = {
+      id: '',
+      title: senderName,
+      imgClass: '__profile-transactions-table-cell-sender-icon',
+      imgSource: cryptoImg
+    };
+    result.fees = data.feeFiat as number ?? 0;
+    result.networkFee = data.approxNetworkFee ?? 0;
+    result.typeIcon = 'file_upload';
   } else {
     result.fees = 4.2;
     result.networkFee = 0.42;
