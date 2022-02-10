@@ -118,6 +118,71 @@
             </div>
         </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <div *ngIf="currentTransaction === TRANSACTION_TYPE.Withdrawal">
+            <!-- Wallets -->
+            <div *ngIf="filteredWallets.length>1">
+                <div class="__form-separator"></div>
+                <div class="__form-label">
+                    Choose source wallet
+                </div>
+                <div class="__profile-details-item-block">
+                    <div class="__form-text-border">
+                        <mat-select formControlName="walletSelector" style="margin: 8px 0px 0px 0px;" placeholder="...">
+                            <mat-select-trigger>
+                                <div class="__form-combo-item-text">
+                                    {{selectedWallet?.name}}
+                                </div>
+                            </mat-select-trigger>
+                            <mat-option *ngFor="let item of filteredWallets" [value]="item.address"
+                                style="height: 32px;">
+                                <div class="__form-combo-item">
+                                    {{item.name}}
+                                </div>
+                            </mat-option>
+                        </mat-select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Wallet address -->
+            <div *ngIf="showWallet">
+                <div class="__form-separator-small"></div>
+                <app-form-textbox [label]="'Wallet address'" [maxlength]="120" formControlName="wallet"
+                    [errorMessages]="walletErrorMessages" [separator]="false">
+                </app-form-textbox>
+                <div *ngIf="walletField?.hasError('walletAddress')" class="__form-assist __form-assist-error">
+                    Wallet address is not valid
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         <!-- Buttons -->
         <div class="__widget-buttons-area">
             <button class="__main-button" type="submit"

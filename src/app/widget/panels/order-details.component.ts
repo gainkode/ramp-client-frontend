@@ -470,6 +470,27 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       if (this.currentCurrencySpend && this.amountSpendField?.value) {
         this.setSpendValidators();
       }
+      if (this.wallets.length > 0 && this.summary?.transactionType === TransactionType.Withdrawal) {
+        if (this.addressInit) {
+          this.walletField?.setValue(this.summary.address ?? '');
+          this.walletInit = false;
+        }
+        this.filteredWallets = this.wallets.filter(x => x.asset === currency);
+      }
+      if (this.summary?.transactionType === TransactionType.Withdrawal && this.settings.embedded) {
+        const emptyList = (this.filteredWallets.length === 0);
+        this.filteredWallets.splice(0, 0, new WalletItem({
+          vaultName: '...',
+          address: '',
+          default: false
+        } as AssetAddressShort, '', undefined));
+        if (emptyList) {
+          this.walletField?.setValue(this.summary.address ?? '');
+          this.errorMessage = 'Unable to find wallets for selected currency';
+        } else {
+          this.errorMessage = '';
+        }
+      }
       this.pReceiveChanged = true;
       this.updateCurrentAmounts();
     }
@@ -481,14 +502,12 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       if (this.currentCurrencyReceive && this.amountReceiveField?.value) {
         this.setReceiveValidators();
       }
-      if (this.wallets.length > 0) {
-        if (this.summary?.transactionType === TransactionType.Deposit) {
-          if (this.addressInit) {
-            this.walletField?.setValue(this.summary.address ?? '');
-            this.walletInit = false;
-          }
-          this.filteredWallets = this.wallets.filter(x => x.asset === currency);
+      if (this.wallets.length > 0 && this.summary?.transactionType === TransactionType.Deposit) {
+        if (this.addressInit) {
+          this.walletField?.setValue(this.summary.address ?? '');
+          this.walletInit = false;
         }
+        this.filteredWallets = this.wallets.filter(x => x.asset === currency);
       }
       if (this.summary?.transactionType === TransactionType.Deposit && this.settings.embedded) {
         const emptyList = (this.filteredWallets.length === 0);

@@ -698,7 +698,7 @@ export class WidgetComponent implements OnInit {
         this.dataService.createTransaction(
           TransactionType.Withdrawal,
           this.widget.source,
-          '',
+          this.summary.vaultId,
           this.summary.currencyFrom,
           'EUR',
           this.summary.amountFrom ?? 0,
