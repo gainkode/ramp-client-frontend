@@ -13,7 +13,6 @@ export class RiskAlertItem {
   user: UserItem | undefined = undefined;
 
   constructor(data: RiskAlert | null) {
-    console.log(data);
     if (data) {
       const datepipe: DatePipe = new DatePipe('en-US');
       this.created = (data.created) ? datepipe.transform(data.created, 'dd MMM YYYY HH:mm:ss') as string : '';

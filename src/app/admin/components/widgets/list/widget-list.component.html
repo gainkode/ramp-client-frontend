@@ -121,8 +121,7 @@
     (page)="handlePage($event)">
 </mat-paginator>
 
-<ng-template *ngIf="selectedItem" appRightPanel>
-    <app-widget-editor
-        [widget]="selectedItem">
+<ng-template *ngIf="selectedItem" appRightPanel (panelClosed)="handleDetailsPanelClosed()">
+    <app-widget-editor [widget]="selectedItem">
     </app-widget-editor>
 </ng-template>

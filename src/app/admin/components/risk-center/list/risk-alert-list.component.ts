@@ -21,6 +21,7 @@ export class RiskAlertListComponent implements OnInit, OnDestroy, AfterViewInit 
   ];
 
   data: RiskAlertItem[] = [];
+  selectedAlert?: RiskAlertItem;
   dataCount = 0;
   pageSize = 25;
   pageIndex = 0;
@@ -29,6 +30,7 @@ export class RiskAlertListComponent implements OnInit, OnDestroy, AfterViewInit 
   filter = new Filter({});
 
   displayedColumns: string[] = [
+    'details',
     'riskAlertId',
     'user',
     'email',
@@ -39,10 +41,7 @@ export class RiskAlertListComponent implements OnInit, OnDestroy, AfterViewInit 
 
   private subscriptions: Subscription = new Subscription();
 
-  constructor(
-    private adminDataService: AdminDataService
-  ) {
-  }
+  constructor(private adminDataService: AdminDataService) { }
 
   ngOnInit(): void {
     this.loadData();
@@ -60,6 +59,26 @@ export class RiskAlertListComponent implements OnInit, OnDestroy, AfterViewInit 
         this.loadData();
       })
     );
+  }
+
+  toggleDetails(alert: RiskAlertItem): void {
+    if (this.isSelectedAlert(alert.riskAlertId ?? '')) {
+      this.selectedAlert = undefined;
+    } else {
+      this.selectedAlert = alert;
+    }
+  }
+
+  getDetailsIcon(alertId: string): string {
+    return (this.isSelectedAlert(alertId)) ? 'clear' : 'open_in_new';
+  }
+
+  getDetailsTooltip(widgetId: string): string {
+    return (this.isSelectedAlert(widgetId)) ? 'Hide details' : 'Risk alert details';
+  }
+
+  handleDetailsPanelClosed(): void {
+    this.selectedAlert = undefined;
   }
 
   handleFilterApplied(filter: Filter): void {
@@ -87,5 +106,13 @@ export class RiskAlertListComponent implements OnInit, OnDestroy, AfterViewInit 
     this.pageIndex = event.pageIndex;
     this.loadData();
     return event;
+  }
+
+  onCancelEdit(): void {
+    this.selectedAlert = undefined;
+  }
+
+  private isSelectedAlert(alertId: string): boolean {
+    return !!this.selectedAlert && this.selectedAlert.riskAlertId === alertId;
   }
 }
