@@ -3,7 +3,7 @@ import { AdminDataService } from '../../../services/admin-data.service';
 import { MatSort } from '@angular/material/sort';
 import { Filter } from '../../../model/filter.model';
 import { Subscription } from 'rxjs';
-import { take, takeUntil } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 import { PageEvent } from '@angular/material/paginator';
 import { RiskAlertItem } from '../../../model/risk-alert.model';
 

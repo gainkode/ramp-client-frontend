@@ -86,6 +86,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { BlackListTableComponent } from './components/identification/list/black-list-table.component';
 import { BlackListEditorComponent } from './components/identification/details/black-list-editor.component';
 import { AddSystemUserComponent } from './components/system-users/details/user-role.component';
+import { RiskAlertDetailsComponent } from './components/risk-center/details/risk-alert-details.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -156,6 +157,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
     SystemUserDetailsComponent,
     AddSystemUserComponent,
     RiskAlertListComponent,
+    RiskAlertDetailsComponent,
     WidgetListComponent,
     RightPanelDirective,
     TransactionSingleComponent,

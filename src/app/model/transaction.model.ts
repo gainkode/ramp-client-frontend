@@ -357,6 +357,10 @@ export class TransactionItem {
   }
 
   get networkFees(): string {
+    return `${getCurrencySign('EUR')}${this.networkFee.toFixed(6)}`;
+  }
+
+  get systemFees(): string {
     return `${getCurrencySign('EUR')}${this.fees.toFixed(6)}`;
   }
 

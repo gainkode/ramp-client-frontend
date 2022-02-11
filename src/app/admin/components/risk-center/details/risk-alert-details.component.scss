@@ -1,0 +1,23 @@
+:host {
+  display: block;
+  width: 480px;
+  padding: 16px 24px;
+}
+
+section {
+  &:not(:last-child) {
+    margin-bottom: 24px;
+  }
+}
+
+
+.panel-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  margin-top: 16px;
+
+  > * {
+    margin-right: 16px;
+  }
+}

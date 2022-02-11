@@ -42,7 +42,9 @@ export class ProfileTransactionListComponent implements OnDestroy, AfterViewInit
     pageIndex = 0;
     sortedField = 'dt';
     sortedDesc = true;
-    displayedColumns: string[] = ['details_mobile', 'transaction', 'dt', 'sender', 'recipient', 'sent', 'received', 'fees', 'status', 'details'];
+    displayedColumns: string[] = [
+        'details_mobile', 'transaction', 'dt', 'sender', 'recipient', 'sent', 'received', 'sys_fees', 'net_fees', 'status', 'details'
+    ];
 
     constructor(
         private auth: AuthService,
@@ -95,6 +97,8 @@ export class ProfileTransactionListComponent implements OnDestroy, AfterViewInit
             result = 'created';
         } else if (this.sortedField === 'transaction') {
             result = 'type';
+        } else if (this.sortedField === 'sys_fees') {
+            result = 'feeFiat';
         } else if (this.sortedField === 'sender') {
             result = '';
         } else if (this.sortedField === 'recipient') {
@@ -103,8 +107,6 @@ export class ProfileTransactionListComponent implements OnDestroy, AfterViewInit
             result = 'amountToSpend';
         } else if (this.sortedField === 'received') {
             result = 'amountToReceive';
-        } else if (this.sortedField === 'fees') {
-            result = 'feeFiat';
         }
         return result;
     }

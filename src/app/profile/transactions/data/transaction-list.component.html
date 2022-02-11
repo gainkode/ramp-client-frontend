@@ -104,10 +104,24 @@
             </td>
         </ng-container>
 
-        <!-- Fees Column -->
-        <ng-container matColumnDef="fees">
+        <!-- System Fees Column -->
+        <ng-container matColumnDef="sys_fees">
             <th mat-header-cell mat-sort-header *matHeaderCellDef [disabled]="recent"
                 class="__profile-table-column __profile-transactions-table-column-fees">
+                <span class="__profile-table-header">
+                    System Fees
+                </span>
+            </th>
+            <td mat-cell *matCellDef="let element" class="__profile-transactions-table-cell-plain">
+                <div class="__profile-transactions-table-cell-data">
+                    {{element.systemFees}}
+                </div>
+            </td>
+        </ng-container>
+
+        <!-- Network Fees Column -->
+        <ng-container matColumnDef="net_fees">
+            <th mat-header-cell *matHeaderCellDef class="__profile-table-column __profile-transactions-table-column-fees">
                 <span class="__profile-table-header">
                     Network Fees
                 </span>
