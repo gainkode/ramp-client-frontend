@@ -8,9 +8,9 @@
 
     <section>
         <h2>Customer info</h2>
-        <app-details-attribute *ngIf="cancelable" label="Account Id" [value]="settingsId"
+        <app-details-attribute *ngIf="cancelable" label="Account Id" [value]="data?.referralCode"
             [linkUrl]="'/admin/customers/'+ settingsId"></app-details-attribute>
-        <app-details-attribute *ngIf="!cancelable" label="Account Id" [value]="settingsId"></app-details-attribute>
+        <app-details-attribute *ngIf="!cancelable" label="Account Id" [value]="data?.referralCode"></app-details-attribute>
 
         <app-details-attribute label="Widget" [value]="userData?.widgetId"></app-details-attribute>
         <app-details-attribute label="Widget Code" [value]="userData?.widgetCode"></app-details-attribute>

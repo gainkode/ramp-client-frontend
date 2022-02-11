@@ -83,10 +83,9 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   ngOnInit(): void {
-    this.layoutService.rightPanelCloseRequested$.pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.selectedTransaction = undefined;
-      });
+    this.layoutService.rightPanelCloseRequested$.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.selectedTransaction = undefined;
+    });
 
     this.loadList();
   }
@@ -140,7 +139,7 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
 
   onTransactionSelected(item: TransactionItemFull): void {
     item.selected = !item.selected;
-    this.selectedForUnbenchmark = this.transactions.some(x => 
+    this.selectedForUnbenchmark = this.transactions.some(x =>
       x.selected === true && x.type !== TransactionType.Receive);
   }
 
@@ -214,6 +213,9 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
       this.filter).pipe(take(1));
     this.subscriptions.add(
       listData$.subscribe(({ list, count }) => {
+
+        console.log(count, list);
+
         this.transactions = list;
         this.transactionCount = count;
         this.transactions.forEach(val => {
