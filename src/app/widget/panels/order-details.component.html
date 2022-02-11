@@ -64,7 +64,7 @@
             <div *ngIf="filteredWallets.length>1">
                 <div class="__form-separator"></div>
                 <div class="__form-label">
-                    Choose destination wallet
+                    {{settings.transfer ? 'Select from Contact List' : 'Choose destination wallet'}}
                 </div>
                 <div class="__profile-details-item-block">
                     <div class="__form-text-border">

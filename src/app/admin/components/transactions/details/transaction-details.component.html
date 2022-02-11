@@ -2,9 +2,9 @@
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
         <section>
-            <app-details-attribute *ngIf="cancelable" label="Transaction Id" [value]="transactionId"
+            <app-details-attribute *ngIf="cancelable" label="Transaction Id" [value]="data?.code"
                 [linkUrl]="'/admin/transactions/'+ transactionId"></app-details-attribute>
-            <app-details-attribute *ngIf="!cancelable" label="Transaction Id" [value]="transactionId">
+            <app-details-attribute *ngIf="!cancelable" label="Transaction Id" [value]="data?.code">
             </app-details-attribute>
 
             <app-details-attribute label="Transaction Created" [value]="data?.created"></app-details-attribute>
@@ -90,12 +90,15 @@
             </mat-form-field>
 
             <!-- Rate -->
-            <div *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-element">
+            <div *ngIf="transactionType!==TRANSACTION_TYPE.Receive && transactionType!==TRANSACTION_TYPE.Transfer"
+                class="form-element">
                 <a [routerLink]="" (click)="updateRate()">
                     Set current exchange rate
                 </a>
             </div>
-            <mat-form-field *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-element">
+            <mat-form-field
+                *ngIf="transactionType!==TRANSACTION_TYPE.Receive && transactionType!==TRANSACTION_TYPE.Transfer"
+                class="form-element">
                 <mat-label>Exchange rate</mat-label>
                 <input matInput formControlName="rate" required />
                 <mat-error *ngIf="form.controls.rate.hasError('required')">
