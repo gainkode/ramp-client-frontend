@@ -1,6 +1,13 @@
 <div class="__widget-data-box">
     <h3 class="__widget-summary-title">Transfer Details</h3>
     <div class="__widget-summary-grid __widget-summary-grid-wide">
+        <div class="__widget-summary-item">
+            Reference ID:
+        </div>
+        <div class="__widget-summary-item">
+            <input class="__text-box-noborder" type="text" readonly [value]="referenceId"/>
+        </div>
+
         <div *ngIf="field1Title!=='' && field1Value!==''" class="__widget-summary-item">
             {{field1Title}}:
         </div>

@@ -70,7 +70,7 @@
       <app-widget-wire-transfer *ngSwitchCase="'wire_transfer'" [bankCategories]="wireTransferList"
         [bankAccountId]="bankAccountId" [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage"
         (onBack)="paymentBack()" (onComplete)="wireTransferPaymentComplete($event)"></app-widget-wire-transfer>
-      <app-widget-wire-transfer-result *ngSwitchCase="'wire_transfer_result'" [bankData]="selectedWireTransfer"
+      <app-widget-wire-transfer-result *ngSwitchCase="'wire_transfer_result'" [referenceId]="summary.orderId" [bankData]="selectedWireTransfer"
         (onComplete)="processingComplete()" (onSendEmail)="sendWireTransaferMessage()">
       </app-widget-wire-transfer-result>
       <!-- KYC -->

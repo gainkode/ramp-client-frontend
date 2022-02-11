@@ -8,6 +8,7 @@ import { WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from 'sr
     styleUrls: ['../../../assets/payment.scss', '../../../assets/button.scss', '../../../assets/text-control.scss']
 })
 export class WidgetWireTransferResultComponent {
+    @Input() referenceId = '';
     @Input() set bankData(val: WireTransferPaymentCategoryItem) {
         this.loadData(val);
     }

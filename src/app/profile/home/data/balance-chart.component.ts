@@ -266,9 +266,6 @@ export class ProfileBalanceChartComponent implements OnInit, OnDestroy {
         this.subscriptions.add(
             chartData$.subscribe(({ data }) => {
                 const profitData = data.myProfit as UserProfit;
-
-                console.log('myProfit', profitData);
-
                 //const profitData = this.getFakeProfits();
                 let profit = 0;
                 let profitPercent = 0;
