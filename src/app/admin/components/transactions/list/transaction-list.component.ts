@@ -147,7 +147,7 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
     const dialogRef = this.dialog.open(DeleteDialogBox, {
       width: '400px',
       data: {
-        title: 'Unbenchmark transaction(s)',
+        title: 'Settle transaction(s)',
         message: `You are going to update transaction data. Confirm operation.`,
         button: 'CONFIRM'
       }
