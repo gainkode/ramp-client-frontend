@@ -16,6 +16,7 @@ import { ErrorService } from 'src/app/services/error.service';
 export class ProfileBalanceListComponent implements OnInit, OnDestroy {
     @Output() onError = new EventEmitter<string>();
     @Output() onProgress = new EventEmitter<boolean>();
+    @Output() onUpdateTotal = new EventEmitter<number>();
     currencies: SettingsCurrency[] = [];
     currentCurrency = '';
     balances: UserBalanceItem[] = [];
@@ -65,28 +66,30 @@ export class ProfileBalanceListComponent implements OnInit, OnDestroy {
     private loadBalanceData(): void {
         this.onProgress.emit(true);
         const balanceData$ = this.commonService.getMyBalances().valueChanges.pipe(take(1));
-            this.balances = [];
-            this.subscriptions.add(
-                balanceData$.subscribe(({ data }) => {
-                    const myState = data.myState as UserState;
-                    this.balances = [];
-                    this.handleTransactions(myState.vaults ?? []);
-                    this.onProgress.emit(false);
-                }, (error) => {
-                    this.onProgress.emit(false);
-                    if (this.auth.token !== '') {
-                        this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load balance data'));
-                    } else {
-                        this.router.navigateByUrl('/');
-                    }
-                })
-            );
+        this.balances = [];
+        this.subscriptions.add(
+            balanceData$.subscribe(({ data }) => {
+                const myState = data.myState as UserState;
+                this.balances = [];
+                this.handleTransactions(myState.vaults ?? []);
+                this.onProgress.emit(false);
+            }, (error) => {
+                this.onProgress.emit(false);
+                if (this.auth.token !== '') {
+                    this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load balance data'));
+                } else {
+                    this.router.navigateByUrl('/');
+                }
+            })
+        );
     }
 
     private handleTransactions(vaults: VaultAccountEx[]): void {
+        let total = 0;
         if (vaults.length > 0) {
             vaults.forEach(vault => {
                 vault.balancesPerAsset?.forEach(balance => {
+                    total += balance.totalBalanceFiat ?? 0;
                     const balanceItem = this.balances.find(b => b.id === balance.assetId);
                     if (balanceItem) {
                         balanceItem.increaseCrypto(balance.totalBalance);
@@ -104,6 +107,7 @@ export class ProfileBalanceListComponent implements OnInit, OnDestroy {
                     }
                 });
             });
+            this.onUpdateTotal.emit(total);
         }
     }
 }

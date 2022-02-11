@@ -78,9 +78,6 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
             this.profileService.addMyVault(currency, walletName).subscribe(({ data }) => {
                 this.inProgress = false;
                 if (data && data.addMyVault) {
-
-                    console.log(data.addMyVault);
-
                     const result = data.addMyVault as VaultAccount;
                     let walletAddress = '';
                     result.assets?.forEach(x => {
@@ -135,9 +132,6 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
         item.container = ProfileItemContainerType.Wallet;
         item.action = action;
         item.wallet = this.wallet;
-
-        console.log('wallet create', item);
-
         this.onComplete.emit(item);
     }
 }

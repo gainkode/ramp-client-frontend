@@ -3,12 +3,11 @@ import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { BalancePoint } from 'src/app/model/balance.model';
-import { SettingsCurrency, UserBalanceHistoryPeriod, UserBalanceHistoryRecordListResult, UserCurrencyProfit, UserProfit } from 'src/app/model/generated-models';
+import { SettingsCurrency, UserBalanceHistoryPeriod, UserBalanceHistoryRecordListResult, UserProfit } from 'src/app/model/generated-models';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
 import { ChartComponent, ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexFill, ApexStroke, ApexMarkers, ApexXAxis, ApexYAxis, ApexGrid, ApexTooltip, ApexNoData } from 'ng-apexcharts';
-import { getCurrencySign } from 'src/app/utils/utils';
 import { take } from 'rxjs/operators';
 
 @Component({
@@ -21,6 +20,7 @@ export class ProfileBalanceChartComponent implements OnInit, OnDestroy {
         this.fiatField?.setValue(val);
     }
     @Input() currencies: SettingsCurrency[] = [];
+    @Input() totalBalance = '';
     @Input() set loading(val: boolean) {
         this.inLoading = val;
         if (val === true) {
@@ -36,7 +36,6 @@ export class ProfileBalanceChartComponent implements OnInit, OnDestroy {
 
     positiveProfit = true;
     profitValue = '';
-    totalBalance = '';
     inLoading = false;
     period = UserBalanceHistoryPeriod.LastWeek;
     periodIndex = 0;
@@ -267,10 +266,12 @@ export class ProfileBalanceChartComponent implements OnInit, OnDestroy {
         this.subscriptions.add(
             chartData$.subscribe(({ data }) => {
                 const profitData = data.myProfit as UserProfit;
+
+                console.log('myProfit', profitData);
+
                 //const profitData = this.getFakeProfits();
                 let profit = 0;
                 let profitPercent = 0;
-                this.totalBalance = '';
                 profitData.profits?.forEach(p => {
                     profit += p.profitFiat ?? 0;
                     profitPercent += p.profitPercent ?? 0;
@@ -278,24 +279,20 @@ export class ProfileBalanceChartComponent implements OnInit, OnDestroy {
                 });
                 this.positiveProfit = (profit >= 0);
                 this.profitValue = `${profit > 0 ? '+ ' : ''}${profitPercent.toFixed(2)}% (${profit} ${this.selectedFiat})`;
-                const totalBalanceValue = (chartPoints.length > 0) ? chartPoints[chartPoints.length - 1].balanceFiat : 0;
-                this.totalBalance = `${getCurrencySign(this.selectedFiat)}${totalBalanceValue}`;
-                this.seriesData = [
-                    {
-                        name: "BALANCE",
-                        color: '#E0F4FF',
-                        data: chartPoints.map(v => {
-                            return {
-                                x: v.dateLabel,
-                                y: v.balanceFiat,
-                                goals: {
-                                    balance: v.balanceFiatValue,
-                                    dateFull: v.datePointFull
-                                }
-                            };
-                        })
-                    }
-                ];
+                this.seriesData = [{
+                    name: "BALANCE",
+                    color: '#E0F4FF',
+                    data: chartPoints.map(v => {
+                        return {
+                            x: v.dateLabel,
+                            y: v.balanceFiat,
+                            goals: {
+                                balance: v.balanceFiatValue,
+                                dateFull: v.datePointFull
+                            }
+                        };
+                    })
+                }];
                 this.onProgress.emit(false);
             }, (error) => {
                 this.onProgress.emit(false);

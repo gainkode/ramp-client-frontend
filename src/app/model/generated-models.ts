@@ -239,6 +239,17 @@ export enum EntityType {
   Transaction = 'Transaction'
 }
 
+export type Error = {
+  __typename?: 'Error';
+  errorId?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['String']>;
+  code?: Maybe<Scalars['Int']>;
+  type?: Maybe<Scalars['String']>;
+  text?: Maybe<Scalars['String']>;
+  created?: Maybe<Scalars['String']>;
+  details?: Maybe<Scalars['String']>;
+};
+
 export type ExchangeStats = BaseStat & {
   __typename?: 'ExchangeStats';
   ratio?: Maybe<Scalars['Float']>;

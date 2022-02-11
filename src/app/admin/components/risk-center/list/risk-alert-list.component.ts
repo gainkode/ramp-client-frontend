@@ -29,11 +29,12 @@ export class RiskAlertListComponent implements OnInit, OnDestroy, AfterViewInit 
   filter = new Filter({});
 
   displayedColumns: string[] = [
-    'created',
     'riskAlertId',
+    'user',
+    'email',
+    'created',
     'riskAlertTypeCode',
-    'details',
-    'userId'
+    'entity'
   ];
 
   private subscriptions: Subscription = new Subscription();

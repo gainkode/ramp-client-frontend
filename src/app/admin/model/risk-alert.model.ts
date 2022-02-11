@@ -1,25 +1,39 @@
-import { RiskAlert, RiskAlertCodes} from '../../model/generated-models';
+import { RiskAlert, RiskAlertCodes } from '../../model/generated-models';
 import { DatePipe } from '@angular/common';
 import { RiskAlertCodeList } from './lists.model';
+import { UserItem } from 'src/app/model/user.model';
 
 export class RiskAlertItem {
-  created?: string;
-  details?: string;
+  created = '';
+  details = '';
   riskAlertId?: string;
-  riskAlertType?: string;
+  riskAlertType = '';
+  entity = '';
   userId?: string;
+  user: UserItem | undefined = undefined;
 
   constructor(data: RiskAlert | null) {
+    console.log(data);
     if (data) {
       const datepipe: DatePipe = new DatePipe('en-US');
-
       this.created = (data.created) ? datepipe.transform(data.created, 'dd MMM YYYY HH:mm:ss') as string : '';
-      this.details = data.details as string;
       this.riskAlertId = data.riskAlertId as string;
-      this.riskAlertType = data.riskAlertTypeCode ?
-        RiskAlertCodeList.find(c => c.id === data.riskAlertTypeCode)?.name :
-        undefined;
+      this.riskAlertType = data.riskAlertTypeCode ?? '';
+      this.details = data.details ?? '{}';
+      if (data.details === null) {
+        this.details = '{}';
+      }
+      const detailsData = JSON.parse(this.details);
+      if (detailsData.riskAlertTypeCode) {
+        this.riskAlertType = detailsData.riskAlertTypeCode;
+      }
+      if (detailsData.entity) {
+        this.entity = detailsData.entity;
+      }
       this.userId = data.userId;
+      if (data.user) {
+        this.user = new UserItem(data.user);
+      }
     }
   }
 }

@@ -4,11 +4,11 @@
     </div>
     <!-- Balance chart -->
     <app-profile-balance-chart class="__profile-content-data-container" [selectedCurrency]="selectedFiat"
-        [currencies]="fiatCurrencies" [loading]="loading" (onCurrencyChanged)="currencyChanged($event)"
+        [currencies]="fiatCurrencies" [loading]="loading" [totalBalance]="totalFiat" (onCurrencyChanged)="currencyChanged($event)"
         (onError)="handleError($event)" (onProgress)="chartProgressChanged($event)"></app-profile-balance-chart>
     <!-- Balance carousel -->
     <app-profile-balance-list #balancelist class="__profile-content-data-container" (onError)="handleError($event)"
-        (onProgress)="balanceProgressChanged($event)"></app-profile-balance-list>
+        (onProgress)="balanceProgressChanged($event)" (onUpdateTotal)="totalBalanceUpdate($event)"></app-profile-balance-list>
     <!-- Recent transactions -->
     <div class="__profile-data-title">Recent transactions</div>
     <app-profile-transaction-list [recent]=true #transactions (onShowDetails)="showTransactionDetails($event)"

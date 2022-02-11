@@ -388,6 +388,7 @@ const GET_RISK_ALERTS = gql`
         riskAlertId
         riskAlertTypeCode
         userId
+        user { firstName, lastName, email, mode, type }
       }
     }
   }
@@ -1938,22 +1939,19 @@ export class AdminDataService {
         query: GET_NOTIFICATIONS,
         variables: vars,
         fetchPolicy: 'network-only'
-      })
-      .pipe(
-        map(result => {
-          if (result.data?.getNotifications?.list && result.data?.getNotifications?.count) {
-            return {
-              list: result.data.getNotifications.list.map(val => new NotificationItem(val)),
-              count: result.data.getNotifications.count
-            };
-          } else {
-            return {
-              list: [],
-              count: 0
-            };
-          }
-        })
-      );
+      }).pipe(map(result => {
+        if (result.data?.getNotifications?.list && result.data?.getNotifications?.count) {
+          return {
+            list: result.data.getNotifications.list.map(val => new NotificationItem(val)),
+            count: result.data.getNotifications.count
+          };
+        } else {
+          return {
+            list: [],
+            count: 0
+          };
+        }
+      }));
   }
 
   getRiskAlerts(
@@ -1978,22 +1976,19 @@ export class AdminDataService {
         query: GET_RISK_ALERTS,
         variables: vars,
         fetchPolicy: 'network-only'
-      })
-      .pipe(
-        map(result => {
-          if (result.data?.getRiskAlerts?.list && result.data?.getRiskAlerts?.count) {
-            return {
-              list: result.data.getRiskAlerts.list.map(val => new RiskAlertItem(val)),
-              count: result.data.getRiskAlerts.count
-            };
-          } else {
-            return {
-              list: [],
-              count: 0
-            };
-          }
-        })
-      );
+      }).pipe(map(result => {
+        if (result.data?.getRiskAlerts?.list && result.data?.getRiskAlerts?.count) {
+          return {
+            list: result.data.getRiskAlerts.list.map(val => new RiskAlertItem(val)),
+            count: result.data.getRiskAlerts.count
+          };
+        } else {
+          return {
+            list: [],
+            count: 0
+          };
+        }
+      }));
   }
 
   getTransaction(transactionId: string): Observable<TransactionItemFull | undefined> {

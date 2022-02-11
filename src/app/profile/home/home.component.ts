@@ -9,6 +9,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
+import { getCurrencySign } from 'src/app/utils/utils';
 import { ProfileTransactionListComponent } from '../transactions/data/transaction-list.component';
 import { ProfileBalanceListComponent } from './data/balance-list.component';
 
@@ -31,7 +32,7 @@ export class ProfileHomeComponent implements OnInit, OnDestroy {
     @ViewChild('balancelist') set balanceList(panel: ProfileBalanceListComponent) {
         if (panel) {
             this.balanceListPanel = panel;
-            this.balanceListPanel.load(this.currencies, this.selectedFiat);
+            this.balanceListPanel.load(this.currencies, this.defaultFiat);
         }
     }
 
@@ -41,6 +42,8 @@ export class ProfileHomeComponent implements OnInit, OnDestroy {
     inProgressTransactions = false;
     errorMessage = '';
     selectedFiat = '';
+    defaultFiat = '';
+    totalFiat = '';
     currencies: SettingsCurrency[] = [];
     fiatCurrencies: SettingsCurrency[] = [];
 
@@ -55,6 +58,8 @@ export class ProfileHomeComponent implements OnInit, OnDestroy {
         private router: Router) { }
 
     ngOnInit(): void {
+        this.defaultFiat = this.auth.user?.defaultFiatCurrency ?? 'EUR';
+        this.totalFiat = `${getCurrencySign(this.defaultFiat)}0`;
         this.loadCurrencyData(true);
     }
 
@@ -72,7 +77,7 @@ export class ProfileHomeComponent implements OnInit, OnDestroy {
                 this.inProgressChart = false;
                 const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
                 if (startLoading) {
-                    this.selectedFiat = this.auth.user?.defaultFiatCurrency ?? 'EUR';
+                    this.selectedFiat = this.defaultFiat;
                 }
                 let itemCount = 0;
                 if (currencySettings.settingsCurrency) {
@@ -91,7 +96,7 @@ export class ProfileHomeComponent implements OnInit, OnDestroy {
                                 this.selectedFiat = 'EUR';
                             }
                             if (this.balanceListPanel) {
-                                this.balanceListPanel.load(this.currencies, this.selectedFiat);
+                                this.balanceListPanel.load(this.currencies, this.defaultFiat);
                             }
                         }
                     }
@@ -115,7 +120,7 @@ export class ProfileHomeComponent implements OnInit, OnDestroy {
         if (this.selectedFiat !== val) {
             this.selectedFiat = val;
             if (this.balanceListPanel) {
-                this.balanceListPanel.load(this.currencies, this.selectedFiat);
+                this.balanceListPanel.load(this.currencies, this.defaultFiat);
             }
         }
     }
@@ -129,6 +134,12 @@ export class ProfileHomeComponent implements OnInit, OnDestroy {
     chartProgressChanged(visible: boolean): void {
         this.inProgressChart = visible;
         this.loading = this.inProgressChart || this.inProgressBalance || this.inProgressTransactions;
+        this.changeDetector.detectChanges();
+    }
+
+    totalBalanceUpdate(total: number): void {
+        const c = this.currencies.find(x => x.symbol === this.defaultFiat);
+        this.totalFiat = `${getCurrencySign(this.defaultFiat)}${total.toFixed(c?.precision ?? 2)}`;
         this.changeDetector.detectChanges();
     }
 
