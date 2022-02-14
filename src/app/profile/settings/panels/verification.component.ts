@@ -82,16 +82,19 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
             this.pSubscriptions.add(
                 tiersData.subscribe(({ data }) => {
                     const tiersData = data.mySettingsKycTiers as SettingsKycTierShortExListResult;
+
+                    console.log(tiersData);
+
                     this.progressChange.emit(false);
                     if ((tiersData.count ?? 0 > 0) && tiersData.list) {
                         const rawTiers = [...tiersData.list];
                         const sortedTiers = rawTiers.sort((a, b) => {
                             let aa = a.amount ?? 0;
                             let ba = b.amount ?? 0;
-                            if (!a.amount && b.amount) {
+                            if ((a.amount === undefined || a.amount === null) && b.amount) {
                                 return 1;
                             }
-                            if (a.amount && !b.amount) {
+                            if (a.amount && (b.amount === undefined || b.amount === null)) {
                                 return -1;
                             }
                             if (aa > ba) {
@@ -106,17 +109,19 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
                         this.tiers = sortedTiers.map(val => {
                             const defaultDescription = 'Start verification process to increase your limit up to this level.';
                             let tierPassed = true;
-                            if (currentQuote) {
-                                tierPassed = (val.amount) ? (currentQuote > val.amount) : false;
+                            const unlimitVal = (val.amount === undefined || val.amount === null);
+                            if (currentQuote !== undefined && !unlimitVal) {
+                                const amount = val.amount ?? 0;
+                                tierPassed = (unlimitVal) ? true : (currentQuote > amount);
                             }
                             return {
-                                limit: (val.amount) ?
+                                limit: (unlimitVal) ?
+                                    'Unlimited' :
                                     new Intl.NumberFormat('de-DE', {
                                         minimumFractionDigits: 0,
                                         style: 'currency',
                                         currency: 'EUR'
-                                    }).format(val.amount ?? 0) :
-                                    'Unlimited',
+                                    }).format(val.amount ?? 0),
                                 name: val.name,
                                 passed: tierPassed,
                                 subtitle: val.levelName ?? 'Identity',
