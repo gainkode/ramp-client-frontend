@@ -82,9 +82,6 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
             this.pSubscriptions.add(
                 tiersData.subscribe(({ data }) => {
                     const tiersData = data.mySettingsKycTiers as SettingsKycTierShortExListResult;
-
-                    console.log(tiersData);
-
                     this.progressChange.emit(false);
                     if ((tiersData.count ?? 0 > 0) && tiersData.list) {
                         const rawTiers = [...tiersData.list];
@@ -113,6 +110,9 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
                             if (currentQuote !== undefined && !unlimitVal) {
                                 const amount = val.amount ?? 0;
                                 tierPassed = (unlimitVal) ? true : (currentQuote > amount);
+                            }
+                            if (val.levelName === undefined || val.levelName === null) {
+                                tierPassed = true;
                             }
                             return {
                                 limit: (unlimitVal) ?
