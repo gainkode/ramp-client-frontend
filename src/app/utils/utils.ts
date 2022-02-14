@@ -127,3 +127,18 @@ export function getTransactionStatusHash(transactionStatus: string, kycStatus: s
     }
     return hash;
 }
+
+export function getTransactionAmountHash(rate: number, amount: number, fee: number): number {
+    const sum = `${rate}-${amount}-${fee}`;
+    let hash = 0, i, chr;
+    if (sum.length === 0) return hash;
+    for (i = 0; i < sum.length; i++) {
+        chr = sum.charCodeAt(i);
+        hash = ((hash << 5) - hash) + chr;
+        hash |= 0; // Convert to 32bit integer
+    }
+
+    console.log('getTransactionAmountHash ->', sum);
+
+    return hash;
+}

@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { getCryptoSymbol, getCurrencySign, getTransactionStatusHash, shortenString } from '../utils/utils';
+import { getCryptoSymbol, getCurrencySign, getTransactionAmountHash, getTransactionStatusHash, shortenString } from '../utils/utils';
 import { CommonTargetValue } from './common.model';
 import {
   AccountStatus,
@@ -255,6 +255,10 @@ export class TransactionItemFull {
 
   get statusHash(): number {
     return getTransactionStatusHash(this.status ?? '', this.kycStatusValue, this.accountStatusValue);
+  }
+
+  get amountHash(): number {
+    return getTransactionAmountHash(this.rate ?? '', this.amountToSpend, this.fees);
   }
 }
 

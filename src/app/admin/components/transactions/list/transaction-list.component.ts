@@ -213,9 +213,6 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
       this.filter).pipe(take(1));
     this.subscriptions.add(
       listData$.subscribe(({ list, count }) => {
-
-        console.log(count, list);
-
         this.transactions = list;
         this.transactionCount = count;
         this.transactions.forEach(val => {

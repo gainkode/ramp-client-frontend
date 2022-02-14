@@ -1089,6 +1089,7 @@ export type MutationExecuteTransactionArgs = {
 export type MutationUpdateTransactionArgs = {
   transactionId?: Maybe<Scalars['String']>;
   transaction?: Maybe<TransactionUpdateInput>;
+  recalculate?: Maybe<Scalars['Boolean']>;
 };
 
 

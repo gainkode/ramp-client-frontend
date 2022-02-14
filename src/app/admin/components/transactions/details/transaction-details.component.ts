@@ -13,7 +13,7 @@ import { AdminTransactionStatusList, CurrencyView, TransactionKycStatusList, Tra
 import { TransactionItemFull } from 'src/app/model/transaction.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ExchangeRateService } from 'src/app/services/rate.service';
-import { getTransactionStatusHash } from 'src/app/utils/utils';
+import { getTransactionAmountHash, getTransactionStatusHash } from 'src/app/utils/utils';
 
 @Component({
   selector: 'app-transaction-details',
@@ -24,6 +24,8 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
   @Input() set transaction(val: TransactionItemFull | undefined) {
     this.setFormData(val);
     this.pStatusHash = val?.statusHash ?? 0;
+    this.pAmountHash = val?.amountHash ?? 0;
+    this.pDefaultRate = val?.rate ?? 0;
     this.setCurrencies(this.pCurrencies);
     this.layoutService.setBackdrop(!val?.id);
   }
@@ -49,6 +51,8 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
 
   private pNumberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
   private pStatusHash = 0;
+  private pAmountHash = 0;
+  private pDefaultRate = 0;
   private pCurrencies: CurrencyView[] = [];
   private subscriptions: Subscription = new Subscription();
 
@@ -176,24 +180,9 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
 
   updateRate(): void {
     this.form.get('rate')?.setValue(this.currentRate);
-    const dialogRef = this.dialog.open(DeleteDialogBox, {
-      width: '400px',
-      data: {
-        title: 'Update transaction rate',
-        message: `You changed the transaction exhange rate. Do you want to update transaction amounts?`,
-        button: 'UPDATE'
-      }
-    });
-    this.subscriptions.add(
-      dialogRef.afterClosed().subscribe(result => {
-        if (result === true) {
-          
-        }
-      })
-    );
   }
 
-  private saveTransaction(transaction: Transaction, statusChanged: boolean): void {
+  private saveTransaction(transaction: Transaction, statusChanged: boolean, amountChanged: boolean): void {
     const dialogRef = this.dialog.open(DeleteDialogBox, {
       width: '400px',
       data: {
@@ -202,20 +191,23 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
         button: 'CONFIRM'
       }
     });
+
+    console.log('saveTransaction', statusChanged, amountChanged);
+
     this.subscriptions.add(
       dialogRef.afterClosed().subscribe(result => {
         if (result === true) {
           if (statusChanged) {
-            this.saveConfirmedTransaction(transaction);
+            this.requestTransactionStatusChange(transaction, amountChanged);
           } else {
-            this.updateTransaction(transaction, false);
+            this.requestTransactionAmountChange(transaction, false);
           }
         }
       })
     );
   }
 
-  private saveConfirmedTransaction(transaction: Transaction): void {
+  private requestTransactionStatusChange(transaction: Transaction, requireAmountChangeConfirmation: boolean): void {
     const dialogRef = this.dialog.open(YesNoDialogBox, {
       width: '400px',
       data: {
@@ -226,14 +218,36 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       dialogRef.afterClosed().pipe(take(1)).subscribe(result => {
         if (result && result !== 0) {
-          this.updateTransaction(transaction, result === 1);
+          const changeStatus = (result === 1);
+          if (requireAmountChangeConfirmation) {
+            this.requestTransactionAmountChange(transaction, changeStatus);
+          } else {
+            this.updateTransaction(transaction, changeStatus, false);
+          }
         }
       })
     );
   }
 
-  updateTransaction(transaction: Transaction, restartTransaction: boolean): void {
-    const requestData$ = this.adminService.updateTransaction(transaction, restartTransaction);
+  private requestTransactionAmountChange(transaction: Transaction, changeStatus: boolean): void {
+    const dialogRef = this.dialog.open(YesNoDialogBox, {
+      width: '400px',
+      data: {
+        title: 'Update transaction',
+        message: `You are going to change the transaction amounts. Should we recalculate transaction after saving?`
+      }
+    });
+    this.subscriptions.add(
+      dialogRef.afterClosed().pipe(take(1)).subscribe(result => {
+        if (result && result !== 0) {
+          this.updateTransaction(transaction, changeStatus, result === 1);
+        }
+      })
+    );
+  }
+
+  updateTransaction(transaction: Transaction, restartTransaction: boolean, recalculateAmounts: boolean): void {
+    const requestData$ = this.adminService.updateTransaction(transaction, restartTransaction, recalculateAmounts);
     this.subscriptions.add(
       requestData$.subscribe(({ data }) => {
         this.save.emit();
@@ -270,11 +284,24 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
           transferHash: this.form.get('benchmarkTransferHash')?.value ?? ''
         }
       } as Transaction;
-      const hash = getTransactionStatusHash(
+      const statusHash = getTransactionStatusHash(
         transaction.status,
         transaction.kycStatus ?? TransactionKycStatus.KycWaiting,
         transaction.accountStatus ?? AccountStatus.Closed);
-      this.saveTransaction(transaction, this.pStatusHash !== hash);
+      let newRate: number | undefined = undefined;
+      if (this.form.get('rate')?.value !== undefined) {
+        if (!this.data?.initialAmount) {
+          newRate = parseFloat(this.form.get('rate')?.value);
+        }
+      }
+      if (newRate === undefined) {
+        newRate = this.pDefaultRate;
+      }
+      const amountHash = getTransactionAmountHash(
+        newRate,
+        transaction.amountToSpend ?? 0,
+        transaction.feeFiat ?? 0);
+      this.saveTransaction(transaction, this.pStatusHash !== statusHash, this.pAmountHash !== amountHash);
     }
   }
 

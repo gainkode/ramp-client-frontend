@@ -1392,11 +1392,13 @@ mutation UpdateTransaction(
   $kycStatus: TransactionKycStatus
   $accountStatus: AccountStatus
   $launchAfterUpdate: Boolean
+  $recalculate: Boolean
   $transferOrder: TransactionUpdateTransferOrderChanges
   $benchmarkTransferOrder: TransactionUpdateTransferOrderChanges
 ) {
   updateTransaction(
     transactionId: $transactionId
+    recalculate: $recalculate
     transaction: {
       currencyToSpend: $currencyToSpend
       currencyToReceive: $currencyToReceive
@@ -2833,7 +2835,7 @@ export class AdminDataService {
     }));
   }
 
-  updateTransaction(data: Transaction, restartTransaction: boolean): Observable<any> {
+  updateTransaction(data: Transaction, restartTransaction: boolean, recalculateAmounts: boolean): Observable<any> {
     let benchmark: TransactionUpdateTransferOrderChanges | undefined = undefined;
     let transfer: TransactionUpdateTransferOrderChanges | undefined = undefined;
     if (data.transferOrder?.orderId !== '' && data.transferOrder?.transferHash !== '') {
@@ -2862,8 +2864,14 @@ export class AdminDataService {
       accountStatus: data.accountStatus,
       launchAfterUpdate: restartTransaction,
       transferOrder: transfer,
-      benchmarkTransferOrder: benchmark
+      benchmarkTransferOrder: benchmark,
+      recalculate: recalculateAmounts
     };
+
+
+    console.log('updateTransaction', vars);
+
+
     return this.mutate({
       mutation: UPDATE_TRANSACTIONS,
       variables: vars
