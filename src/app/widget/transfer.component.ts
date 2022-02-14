@@ -314,9 +314,9 @@ export class TransferWidgetComponent implements OnInit {
     this.paymentProviders = providers.map(val => val);
     setTimeout(() => {
       const nextStage = 4;
-      if (this.requestKyc) {
-        this.nextStage('verification', 'Verification', nextStage, false);
-      } else {
+      // if (this.requestKyc) {
+      //   this.nextStage('verification', 'Verification', nextStage, false);
+      // } else {
         if (this.paymentProviders.length < 1) {
           this.errorMessage = `No supported payment providers found for "${this.summary.currencyFrom}"`;
         } else if (this.paymentProviders.length > 1) {
@@ -327,7 +327,7 @@ export class TransferWidgetComponent implements OnInit {
         } else {
           this.selectProvider(this.paymentProviders[0].id);
         }
-      }
+      //}
     }, 100);
   }
   // =====================
