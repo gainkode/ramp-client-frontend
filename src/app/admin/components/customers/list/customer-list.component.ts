@@ -47,7 +47,7 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
   roleIds: string[] = [];
   customers: UserItem[] = [];
   customerCount = 0;
-  pageSize = 2;//25;
+  pageSize = 25;
   pageIndex = 0;
   sortedField = 'created';
   sortedDesc = false;
@@ -208,7 +208,6 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
       this.filter).pipe(take(1));
     this.subscriptions.add(
       listData$.subscribe(result => {
-        console.log(result);
         this.customers = result.list;
         this.customerCount = result.count;
       })

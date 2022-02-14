@@ -562,7 +562,8 @@ const GET_USERS = gql`
       filter: $filter,
       skip: $skip,
       first: $first,
-      orderBy: $orderBy) {
+      orderBy: $orderBy
+      ) {
       count
       list {
         userId
