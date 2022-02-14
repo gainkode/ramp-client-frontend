@@ -176,6 +176,21 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
 
   updateRate(): void {
     this.form.get('rate')?.setValue(this.currentRate);
+    const dialogRef = this.dialog.open(DeleteDialogBox, {
+      width: '400px',
+      data: {
+        title: 'Update transaction rate',
+        message: `You changed the transaction exhange rate. Do you want to update transaction amounts?`,
+        button: 'UPDATE'
+      }
+    });
+    this.subscriptions.add(
+      dialogRef.afterClosed().subscribe(result => {
+        if (result === true) {
+          
+        }
+      })
+    );
   }
 
   private saveTransaction(transaction: Transaction, statusChanged: boolean): void {
