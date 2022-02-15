@@ -743,8 +743,16 @@ export class AuthService {
         let result = false;
         const user: User | null = this.getAuthenticatedUser();
         if (user != null) {
-            const adminRoles = user.roles?.forEach(item => {
-                if (roles.includes(item.name.toLowerCase())) {
+            result = this.isUserRole(user, roles);
+        }
+        return result;
+    }
+
+    isUserRole(user: User, roles: string[]): boolean {
+        let result = false;
+        if (user != null) {
+            user.roles?.forEach(item => {
+                if (roles.includes(item.name)) {
                     result = true;
                 }
             });

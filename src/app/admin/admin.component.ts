@@ -1,10 +1,9 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { filter, map, mergeMap, takeUntil, tap } from 'rxjs/operators';
+import { filter, map, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { LayoutService } from './services/layout.service';
-import { EmptyObject } from 'apollo-angular/types';
 import { Title } from '@angular/platform-browser';
 import { AdminDataService } from './services/admin-data.service';
 
@@ -33,26 +32,22 @@ export class AdminComponent implements OnInit, OnDestroy {
     this.setPageHeader();
 
     // Observe route changes and update the header accordingly
-    this.router.events
-        .pipe(
-          takeUntil(this.destroy$),
-          filter(event => event instanceof NavigationEnd && this.activatedRoute.outlet === 'primary'),
-          map(() => undefined)
-        )
-        .subscribe(() => {
-            this.setPageHeader();
-          }
-        );
+    this.router.events.pipe(
+      takeUntil(this.destroy$),
+      filter(event => event instanceof NavigationEnd && this.activatedRoute.outlet === 'primary'),
+      map(() => undefined)
+    ).subscribe(() => {
+      this.setPageHeader();
+    });
 
     /* region Right panel handling */
     this.layoutService.rightPanelTemplate$
-        .pipe(takeUntil(this.destroy$))
-        .subscribe(template => {
-          this.rightPanelTemplate = template;
-        });
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(template => {
+        this.rightPanelTemplate = template;
+      });
 
     /* endregion */
-
   }
 
   ngOnDestroy(): void {

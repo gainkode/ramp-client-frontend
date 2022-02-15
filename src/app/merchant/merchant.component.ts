@@ -73,7 +73,7 @@ export class MerchantComponent implements OnInit, OnDestroy {
         const expandedVal = localStorage.getItem('sideMenuExpanded');
         this.expandedMenu = (expandedVal === 'true');
         // Administration menu item
-        const adminRole = this.auth.user?.roles?.find(r => r.name === 'ADMIN');
+        const adminRole = this.auth.isAuthenticatedUserRole(['MERCHANT', 'MANAGER', 'SUPPORT', 'ADMIN']);
         if (adminRole) {
             const adminMenu = this.popupItems.find(x => x.id === ProfilePopupAdministrationMenuItem.id);
             if (!adminMenu) {

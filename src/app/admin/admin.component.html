@@ -1,24 +1,11 @@
 <mat-sidenav-container [hasBackdrop]="layoutService.hasBackdrop$ | async">
-    <mat-sidenav
-            class="left"
-            position="start"
-            mode="side"
-            opened
-            disableClose>
+    <mat-sidenav class="left" position="start" mode="side" opened disableClose>
         <app-main-menu></app-main-menu>
     </mat-sidenav>
-    <mat-sidenav
-            class="right"
-            position="end"
-            mode="over"
-            [opened]="layoutService.rightPanelIsOpened$ | async"
-            disableClose>
+    <mat-sidenav class="right" position="end" mode="over" [opened]="layoutService.rightPanelIsOpened$ | async"
+        disableClose>
         <div class="right-panel-header">
-            <button
-                    mat-icon-button
-                    aria-label="Close details panel"
-                    (click)="handleRightPanelClose()"
-                    tabindex="-1">
+            <button mat-icon-button aria-label="Close details panel" (click)="handleRightPanelClose()" tabindex="-1">
                 <mat-icon>clear</mat-icon>
             </button>
         </div>
@@ -30,9 +17,7 @@
     <mat-sidenav-content>
         <mat-toolbar class="header">
             <h1>{{sectionHeader}}</h1>
-            <mat-progress-bar
-                    *ngIf="adminDataService.isBusy | async"
-                    mode="indeterminate"></mat-progress-bar>
+            <mat-progress-bar *ngIf="adminDataService.isBusy | async" mode="indeterminate"></mat-progress-bar>
         </mat-toolbar>
         <section style="overflow: auto;">
             <router-outlet>
@@ -40,7 +25,3 @@
         </section>
     </mat-sidenav-content>
 </mat-sidenav-container>
-
-
-
-

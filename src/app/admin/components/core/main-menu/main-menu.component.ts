@@ -10,13 +10,19 @@ import { Router } from '@angular/router';
   styleUrls: ['./main-menu.component.scss', '../../../../../assets/admin.scss']
 })
 export class MainMenuComponent implements OnInit {
-  menuItems: MenuItem[] = AdminMenuItems;
+  menuItems: MenuItem[] = [];
   userMainPage = '';
 
   constructor(private auth: AuthService, private router: Router) {
   }
 
   ngOnInit(): void {
+    AdminMenuItems.forEach(item => {
+      const permission = this.auth.isPermittedObjectCode(item.code);
+      if (permission > 0) {
+        this.menuItems.push(item);
+      }
+    });
     this.userMainPage = this.auth.getUserMainPage();
   }
 
