@@ -47,8 +47,6 @@ export class TransactionItemFull {
   currencyToReceive = '';
   amountToSpend = 0;
   amountToReceive = 0;
-  initialAmountToReceive = 0;
-  initialAmount = false;
   transferOrderId = '';
   transferOrderHash = '';
   transferFee = '';
@@ -63,7 +61,6 @@ export class TransactionItemFull {
   euro = 0;
   fees = 0;
   rate = 0;
-  initialRate = 0;
   status: TransactionStatus | undefined = undefined;
   statusInfo: TransactionStatusDescriptorMap | undefined = undefined;
   user: UserItem | undefined;
@@ -115,13 +112,15 @@ export class TransactionItemFull {
       this.fees = paymentData.fees;
       this.sender = paymentData.sender.title;
       this.recipient = paymentData.recipient.title;
-      if (data.amountToReceive) {
+      if (data.amountToReceive !== undefined && data.amountToReceive !== null) {
         this.amountToReceive = data.amountToReceive ?? 0;
-        this.rate = data.rate ?? 0;
       } else {
         this.amountToReceive = data.initialAmountToReceive ?? 0;
+      }
+      if (data.rate !== undefined && data.rate !== null) {
+        this.rate = data.rate;
+      } else {
         this.rate = data.initialRate ?? 0;
-        this.initialAmount = true;
       }
       const kycStatus = TransactionKycStatusList.find(x => x.id === (data as Transaction).kycStatus);
       this.kycStatus = (kycStatus) ? kycStatus.name : '';
@@ -258,7 +257,7 @@ export class TransactionItemFull {
   }
 
   get amountHash(): number {
-    return getTransactionAmountHash(this.rate ?? '', this.amountToSpend, this.fees);
+    return getTransactionAmountHash(this.rate, this.amountToSpend, this.fees);
   }
 }
 

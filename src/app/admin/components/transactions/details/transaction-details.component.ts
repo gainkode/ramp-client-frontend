@@ -80,7 +80,6 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
     address: ['', { validators: [Validators.required], updateOn: 'change' }],
     currencyToSpend: [undefined, { validators: [Validators.required], updateOn: 'change' }],
     currencyToReceive: [undefined, { validators: [Validators.required], updateOn: 'change' }],
-    amountToReceive: [undefined, { validators: [Validators.required, Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
     amountToSpend: [undefined, { validators: [Validators.required, Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
     rate: [0, { validators: [Validators.required, Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
     fee: [0, { validators: [Validators.required, Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
@@ -103,6 +102,16 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.exhangeRate.register(this.onExchangeRateUpdated.bind(this));
+    this.subscriptions.add(
+      this.form.get('currencyToSpend')?.valueChanges.subscribe(val => {
+        this.startExchangeRate();
+      })
+    );
+    this.subscriptions.add(
+      this.form.get('currencyToReceive')?.valueChanges.subscribe(val => {
+        this.startExchangeRate();
+      })
+    );
   }
 
   ngOnDestroy(): void {
@@ -118,12 +127,18 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
   }
 
   private startExchangeRate(): void {
+    if (this.currenciesToSpend.length === 0) {
+      return;
+    }
     const currencyToSpendSymbol = this.data?.currencyToSpend;
     const currencyToSpend = this.currenciesToSpend.find(x => x.id === currencyToSpendSymbol);
-    if (currencyToSpend?.fiat) {
-      this.exhangeRate.setCurrency(this.form.get('currencyToReceive')?.value, this.form.get('currencyToSpend')?.value, TransactionType.Deposit);
+    const spendFiat = currencyToSpend?.fiat ?? false;
+    const spend = this.form.get('currencyToSpend')?.value;
+    const receive = this.form.get('currencyToReceive')?.value;
+    if (spendFiat) {
+      this.exhangeRate.setCurrency(spend, receive, TransactionType.Deposit);
     } else {
-      this.exhangeRate.setCurrency(this.form.get('currencyToSpend')?.value, this.form.get('currencyToReceive')?.value, TransactionType.Deposit);
+      this.exhangeRate.setCurrency(receive, spend, TransactionType.Deposit);
     }
     this.exhangeRate.update();
   }
@@ -143,6 +158,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
         this.form.get('currencyToSpend')?.setValue(this.data?.currencyToSpend);
         this.form.get('currencyToReceive')?.setValue(this.data?.currencyToReceive);
       }
+      this.startExchangeRate();
     }
   }
 
@@ -155,12 +171,11 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
     this.removable = true;//val?.statusInfo?.value.canBeCancelled ?? false;  // confirmed
     if (this.data) {
       this.form.get('address')?.setValue(this.data.address);
-      this.form.get('amountToSpend')?.setValue(this.data.amountToSpend);
-      this.form.get('amountToReceive')?.setValue(this.data.amountToReceive);
-      this.form.get('currencyToSpend')?.setValue(this.data.currencyToSpend);
-      this.form.get('currencyToReceive')?.setValue(this.data.currencyToReceive);
       this.form.get('rate')?.setValue(this.data.rate);
       this.form.get('fee')?.setValue(this.data.fees);
+      this.form.get('amountToSpend')?.setValue(this.data.amountToSpend);
+      this.form.get('currencyToSpend')?.setValue(this.data.currencyToSpend);
+      this.form.get('currencyToReceive')?.setValue(this.data.currencyToReceive);
       this.form.get('transactionStatus')?.setValue(this.data.status);
       this.form.get('kycStatus')?.setValue(this.data.kycStatusValue);
       this.form.get('accountStatus')?.setValue(this.data.accountStatusValue);
@@ -174,7 +189,6 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
       this.showBenchmarkTransferHash = (this.data.benchmarkTransferOrderId !== '');
       this.kycStatus = TransactionKycStatusList.find(x => x.id === this.data?.kycStatusValue)?.name ?? '';
       this.accountStatus = UserStatusList.find(x => x.id === this.data?.accountStatusValue)?.name ?? '';
-      this.startExchangeRate();
     }
   }
 
@@ -191,9 +205,6 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
         button: 'CONFIRM'
       }
     });
-
-    console.log('saveTransaction', statusChanged, amountChanged);
-
     this.subscriptions.add(
       dialogRef.afterClosed().subscribe(result => {
         if (result === true) {
@@ -261,20 +272,25 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
     if (this.form.valid) {
+      const currentRateValue = this.form.get('rate')?.value;
+      let currentRate: number | undefined = undefined;
+      if (currentRateValue !== undefined) {
+        currentRate = parseFloat(currentRateValue);
+      }
+      if (currentRate === this.pDefaultRate) {
+        currentRate = undefined;
+      }
       const transaction = {
         transactionId: this.transactionId,
         destination: this.form.get('address')?.value,
         currencyToSpend: this.form.get('currencyToSpend')?.value,
         currencyToReceive: this.form.get('currencyToReceive')?.value,
         amountToSpend: parseFloat(this.form.get('amountToSpend')?.value ?? '0'),
-        amountToReceive: (!this.data?.initialAmount) ? this.form.get('amountToReceive')?.value : undefined,
-        initialAmountToReceive: (this.data?.initialAmount) ? this.form.get('amountToReceive')?.value : undefined,
-        rate: (!this.data?.initialAmount) ? parseFloat(this.form.get('rate')?.value ?? '0') : undefined,
+        rate: currentRate,
         feeFiat: parseFloat(this.form.get('fee')?.value ?? '0'),
         status: this.form.get('transactionStatus')?.value,
         kycStatus: this.form.get('kycStatus')?.value,
         accountStatus: this.form.get('accountStatus')?.value,
-        initialRate: (this.data?.initialAmount) ? parseFloat(this.form.get('rate')?.value ?? '0') : undefined,
         transferOrder: {
           orderId: this.data?.transferOrderId,
           transferHash: this.form.get('transferHash')?.value ?? ''
@@ -288,17 +304,8 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
         transaction.status,
         transaction.kycStatus ?? TransactionKycStatus.KycWaiting,
         transaction.accountStatus ?? AccountStatus.Closed);
-      let newRate: number | undefined = undefined;
-      if (this.form.get('rate')?.value !== undefined) {
-        if (!this.data?.initialAmount) {
-          newRate = parseFloat(this.form.get('rate')?.value);
-        }
-      }
-      if (newRate === undefined) {
-        newRate = this.pDefaultRate;
-      }
       const amountHash = getTransactionAmountHash(
-        newRate,
+        currentRate ?? this.pDefaultRate,
         transaction.amountToSpend ?? 0,
         transaction.feeFiat ?? 0);
       this.saveTransaction(transaction, this.pStatusHash !== statusHash, this.pAmountHash !== amountHash);

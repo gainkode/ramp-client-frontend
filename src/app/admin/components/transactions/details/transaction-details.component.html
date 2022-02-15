@@ -64,18 +64,7 @@
             </mat-form-field>
 
             <!-- Amount to receive -->
-            <app-details-attribute *ngIf="transactionType===TRANSACTION_TYPE.Receive" label="Amount To Receive"
-                [value]="data?.amountToReceive"></app-details-attribute>
-            <mat-form-field *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-element">
-                <mat-label>Amount To Receive</mat-label>
-                <input matInput formControlName="amountToReceive" required />
-                <mat-error *ngIf="form.controls.amountToReceive.hasError('required')">
-                    Amount is required
-                </mat-error>
-                <mat-error *ngIf="form.controls.amountToReceive.hasError('pattern')">
-                    Incorrect number value
-                </mat-error>
-            </mat-form-field>
+            <app-details-attribute label="Amount To Receive" [value]="data?.amountToReceive"></app-details-attribute>
 
             <!-- Currency to receive -->
             <app-details-attribute *ngIf="transactionType===TRANSACTION_TYPE.Receive" label="Currency to receive"

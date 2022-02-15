@@ -739,14 +739,15 @@ export class AuthService {
         return result;
     }
 
-    isAuthenticatedUserRole(role: string): boolean {
+    isAuthenticatedUserRole(roles: string[]): boolean {
         let result = false;
         const user: User | null = this.getAuthenticatedUser();
         if (user != null) {
-            const roleItem = (user.roles?.find(x => x.name?.toLowerCase() === role));
-            if (roleItem !== undefined) {
-                result = true;
-            }
+            const adminRoles = user.roles?.forEach(item => {
+                if (roles.includes(item.name.toLowerCase())) {
+                    result = true;
+                }
+            });
         }
         return result;
     }

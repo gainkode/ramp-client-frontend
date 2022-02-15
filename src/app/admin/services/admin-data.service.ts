@@ -2867,11 +2867,6 @@ export class AdminDataService {
       benchmarkTransferOrder: benchmark,
       recalculate: recalculateAmounts
     };
-
-
-    console.log('updateTransaction', vars);
-
-
     return this.mutate({
       mutation: UPDATE_TRANSACTIONS,
       variables: vars

@@ -137,8 +137,5 @@ export function getTransactionAmountHash(rate: number, amount: number, fee: numb
         hash = ((hash << 5) - hash) + chr;
         hash |= 0; // Convert to 32bit integer
     }
-
-    console.log('getTransactionAmountHash ->', sum);
-
     return hash;
 }

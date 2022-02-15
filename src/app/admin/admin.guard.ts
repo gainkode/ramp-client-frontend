@@ -8,7 +8,7 @@ export class AdminGuard {
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    if (!this.auth.isAuthenticatedUserRole('admin')) {
+    if (!this.auth.isAuthenticatedUserRole(['admin'])) {
       this.router.navigateByUrl('/');
       return false;
     }
