@@ -47,6 +47,7 @@ const LOGIN = gql`
                   kycStatus,
                   kycStatusUpdateRequired,
                   kycReviewRejectedType,
+                  kycTierId,
                   kycTier {
                       name
                       description
@@ -108,6 +109,7 @@ mutation SocialLogin(
                     kycStatus,
                     kycStatusUpdateRequired,
                     kycReviewRejectedType,
+                    kycTierId,
                     kycTier {
                       name
                       description

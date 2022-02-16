@@ -119,6 +119,7 @@ query MySettingsKycTiers {
   mySettingsKycTiers {
     count
     list {
+      settingsKycTierId
       name
       description
       amount

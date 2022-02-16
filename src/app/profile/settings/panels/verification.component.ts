@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { SumsubVerificationDialogBox } from 'src/app/components/dialogs/sumsub-verification.dialog';
-import { SettingsKycTierListResult, SettingsKycTierShortExListResult, UserState } from 'src/app/model/generated-models';
+import { SettingsKycTierListResult, SettingsKycTierShortEx, SettingsKycTierShortExListResult, UserState } from 'src/app/model/generated-models';
 import { TierItem } from 'src/app/model/identification.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
@@ -81,55 +81,8 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
         } else {
             this.pSubscriptions.add(
                 tiersData.subscribe(({ data }) => {
-                    const tiersData = data.mySettingsKycTiers as SettingsKycTierShortExListResult;
                     this.progressChange.emit(false);
-                    if ((tiersData.count ?? 0 > 0) && tiersData.list) {
-                        const rawTiers = [...tiersData.list];
-                        const sortedTiers = rawTiers.sort((a, b) => {
-                            let aa = a.amount ?? 0;
-                            let ba = b.amount ?? 0;
-                            if ((a.amount === undefined || a.amount === null) && b.amount) {
-                                return 1;
-                            }
-                            if (a.amount && (b.amount === undefined || b.amount === null)) {
-                                return -1;
-                            }
-                            if (aa > ba) {
-                                return 1;
-                            }
-                            if (aa < ba) {
-                                return -1;
-                            }
-                            return 0;
-                        });
-                        const currentQuote = this.auth.user?.kycTier?.amount ?? undefined;
-                        this.tiers = sortedTiers.map(val => {
-                            const defaultDescription = 'Start verification process to increase your limit up to this level.';
-                            let tierPassed = true;
-                            const unlimitVal = (val.amount === undefined || val.amount === null);
-                            if (currentQuote !== undefined && !unlimitVal) {
-                                const amount = val.amount ?? 0;
-                                tierPassed = (unlimitVal) ? true : (currentQuote > amount);
-                            }
-                            if (val.levelName === undefined || val.levelName === null) {
-                                tierPassed = true;
-                            }
-                            return {
-                                limit: (unlimitVal) ?
-                                    'Unlimited' :
-                                    new Intl.NumberFormat('de-DE', {
-                                        minimumFractionDigits: 0,
-                                        style: 'currency',
-                                        currency: 'EUR'
-                                    }).format(val.amount ?? 0),
-                                name: val.name,
-                                passed: tierPassed,
-                                subtitle: val.levelName ?? 'Identity',
-                                description: val.description ?? defaultDescription,
-                                flow: val.originalFlowName ?? ''
-                            } as TierItem;
-                        });
-                    }
+                    this.handleTiers(data.mySettingsKycTiers as SettingsKycTierShortExListResult);
                     this.kycUrl = settingsCommon.kycBaseAddress as string;
                 }, (error) => {
                     this.progressChange.emit(false);
@@ -140,6 +93,58 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
                     }
                 })
             );
+        }
+    }
+
+    private tierSortHandler(a: SettingsKycTierShortEx, b: SettingsKycTierShortEx): number {
+        let aa = a.amount ?? 0;
+        let ba = b.amount ?? 0;
+        if ((a.amount === undefined || a.amount === null) && b.amount) {
+            return 1;
+        }
+        if (a.amount && (b.amount === undefined || b.amount === null)) {
+            return -1;
+        }
+        if (aa > ba) {
+            return 1;
+        }
+        if (aa < ba) {
+            return -1;
+        }
+        return 0;
+    }
+
+    private handleTiers(tiersData: SettingsKycTierShortExListResult): void {
+        if ((tiersData.count ?? 0 > 0) && tiersData.list) {
+            const rawTiers = [...tiersData.list];
+            const sortedTiers = rawTiers.sort((a, b) => this.tierSortHandler(a, b));
+            const currentTierId = this.auth.user?.kycTierId;
+            let passed = true;
+            this.tiers = sortedTiers.map(val => {
+                const defaultDescription = 'Start verification process to increase your limit up to this level.';
+                const unlimitVal = (val.amount === undefined || val.amount === null);
+                let tierPassed = false;
+                if (passed) {
+                    if (val.settingsKycTierId === currentTierId) {
+                        passed = false;
+                    }
+                    tierPassed = true;
+                }
+                return {
+                    limit: (unlimitVal) ?
+                        'Unlimited' :
+                        new Intl.NumberFormat('de-DE', {
+                            minimumFractionDigits: 0,
+                            style: 'currency',
+                            currency: 'EUR'
+                        }).format(val.amount ?? 0),
+                    name: val.name,
+                    passed: tierPassed,
+                    subtitle: val.levelName ?? 'Identity',
+                    description: val.description ?? defaultDescription,
+                    flow: val.originalFlowName ?? ''
+                } as TierItem;
+            });
         }
     }
 }
