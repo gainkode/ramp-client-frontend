@@ -15,12 +15,12 @@ import { ProfileDataService } from 'src/app/services/profile.service';
 })
 export class ProfileWalletDetailsComponent implements OnDestroy {
     @Input() wallet: WalletItem | undefined;
-    @Output() onError = new EventEmitter<string>();
     @Output() onComplete = new EventEmitter<ProfileItemContainer>();
 
     editMode = false;
     deleteMode = false;
     inProgress = false;
+    errorMessage = '';
 
     editForm = this.formBuilder.group({
         walletName: ['', { validators: [Validators.required], updateOn: 'change' }]
@@ -58,7 +58,7 @@ export class ProfileWalletDetailsComponent implements OnDestroy {
     saveName(): void {
         const val = this.walletNameField?.value;
         if (val) {
-            this.onError.emit('');
+            this.errorMessage = '';
             this.inProgress = true;
             this.subscriptions.add(
                 this.profileService.updateMyVault(this.wallet?.vault ?? '', val).subscribe(({ data }) => {
@@ -72,7 +72,7 @@ export class ProfileWalletDetailsComponent implements OnDestroy {
                     this.inProgress = false;
                 }, (error) => {
                     this.inProgress = false;
-                    this.onError.emit(this.errorHandler.getError(error.message, `Unable to change the wallet name`));
+                    this.errorMessage = this.errorHandler.getError(error.message, `Unable to change the wallet name`);
                 })
             );
         }
@@ -101,7 +101,7 @@ export class ProfileWalletDetailsComponent implements OnDestroy {
     }
 
     deleteWallet(): void {
-        this.onError.emit('');
+        this.errorMessage = '';
         this.inProgress = true;
         this.subscriptions.add(
             this.profileService.deleteMyVault(this.wallet?.vault ?? '').subscribe(({ data }) => {
@@ -116,7 +116,7 @@ export class ProfileWalletDetailsComponent implements OnDestroy {
                 }
             }, (error) => {
                 this.inProgress = false;
-                this.onError.emit(this.errorHandler.getError(error.message, `Unable to remove the wallet`));
+                this.errorMessage = this.errorHandler.getError(error.message, `Unable to remove the wallet`);
             })
         );
     }

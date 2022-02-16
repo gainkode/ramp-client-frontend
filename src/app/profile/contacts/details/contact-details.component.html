@@ -63,48 +63,14 @@
                 </div>
             </div>
 
-            <!-- Total sent -->
-            <!-- <div class="__profile-details-item-grid">
-                <div class="__profile-details-item-title-box">
-                    Total Sent:
-                </div>
-                <div class="__profile-details-item-value-box">
-                    {{contact?.sent}}
-                </div>
-            </div> -->
-
-            <!-- Total received -->
-            <!-- <div class="__profile-details-item-grid">
-                <div class="__profile-details-item-title-box">
-                    Total Received:
-                </div>
-                <div class="__profile-details-item-value-box">
-                    {{contact?.received}}
-                </div>
-            </div> -->
-
-            <!-- last Transaction Date -->
-            <!-- <div class="__profile-details-item-grid">
-                <div class="__profile-details-item-title-box">
-                    Last Transaction:
-                </div>
-                <div class="__profile-details-item-value-box">
-                    {{contact?.lastTransactionDate}}
-                </div>
-            </div> -->
-
-            <!-- last Transaction Status -->
-            <!-- <div class="__profile-details-item-grid">
-                <div class="__profile-details-item-title-box">
-                    Status:
-                </div>
-                <div class="__profile-details-item-value-box">
-                    {{contact?.lastTransactionStatus}}
-                </div>
-            </div> -->
-
             <div class="__form-separator"></div>
 
+            <div class="__profile-details-item-block">
+                <div class="__profile-details-item-value-box __profile-details-item-error">
+                    {{errorMessage}}
+                </div>
+            </div>
+            
             <!-- Buttons -->
             <div class="__profile-details-button-container">
                 <button type="button" class="__outlined-button" (click)="receiveStart()">

@@ -106,7 +106,7 @@ export class ProfileContactCreateComponent implements OnInit, OnDestroy {
                 this.onComplete.emit(item);
             }, (error) => {
                 this.inProgress = false;
-                this.errorMessage = this.errorHandler.getError(error.message, `Unable to create a new wallet`);
+                this.errorMessage = this.errorHandler.getError(error.message, `Unable to create a new contact`);
             })
         );
     }

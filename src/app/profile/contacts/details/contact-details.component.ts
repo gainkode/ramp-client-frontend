@@ -13,12 +13,12 @@ import { ProfileDataService } from 'src/app/services/profile.service';
 })
 export class ProfileContactDetailsComponent implements OnDestroy {
     @Input() contact: ContactItem | undefined;
-    @Output() onError = new EventEmitter<string>();
     @Output() onComplete = new EventEmitter<ProfileItemContainer>();
 
     editMode = false;
     deleteMode = false;
     inProgress = false;
+    errorMessage = '';
 
     editForm = this.formBuilder.group({
         displayName: ['', { validators: [Validators.required], updateOn: 'change' }]
@@ -49,7 +49,7 @@ export class ProfileContactDetailsComponent implements OnDestroy {
     saveName(): void {
         const val = this.displayNameField?.value;
         if (val) {
-            this.onError.emit('');
+            this.errorMessage = '';
             this.inProgress = true;
             const request$ = this.profileService.saveMyContact(
                 this.contact?.id ?? '',
@@ -69,7 +69,7 @@ export class ProfileContactDetailsComponent implements OnDestroy {
                     this.onComplete.emit(item);
                 }, (error) => {
                     this.inProgress = false;
-                    this.onError.emit(this.errorHandler.getError(error.message, `Unable to change the contact name`));
+                    this.errorMessage = this.errorHandler.getError(error.message, `Unable to change the contact name`);
                 })
             );
         }
@@ -98,7 +98,7 @@ export class ProfileContactDetailsComponent implements OnDestroy {
     }
 
     deleteContact(): void {
-        this.onError.emit('');
+        this.errorMessage = '';
         this.inProgress = true;
         const request$ = this.profileService.deleteMyContact(this.contact?.id ?? '');
         this.subscriptions.add(
@@ -114,7 +114,7 @@ export class ProfileContactDetailsComponent implements OnDestroy {
                 }
             }, (error) => {
                 this.inProgress = false;
-                this.onError.emit(this.errorHandler.getError(error.message, `Unable to remove the contact`));
+                this.errorMessage = this.errorHandler.getError(error.message, `Unable to remove the contact`);
             })
         );
     }
