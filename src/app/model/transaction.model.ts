@@ -529,7 +529,7 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
     };
     result.fees = data.feeFiat as number ?? 0;
     result.networkFee = data.approxNetworkFee ?? 0;
-    result.typeIcon = 'file_upload';
+    result.typeIcon = 'account_balance';
   } else {
     result.fees = 4.2;
     result.networkFee = 0.42;

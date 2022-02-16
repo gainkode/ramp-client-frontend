@@ -718,7 +718,11 @@ export class WidgetComponent implements OnInit {
             this.summary.networkFee = order.approxNetworkFee ?? 0;
             this.summary.transactionDate = new Date().toLocaleString();
             this.summary.transactionId = order.transactionId as string;
-            this.nextStage('complete', 'Complete', 6, false);
+            
+            
+            //this.nextStage('complete', 'Complete', 6, false);
+
+            this.processingComplete();
           } else {
             this.errorMessage = 'Order code is invalid';
             if (this.widget.embedded) {

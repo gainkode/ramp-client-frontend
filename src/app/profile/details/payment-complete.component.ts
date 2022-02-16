@@ -24,6 +24,11 @@ export class ProfilePaymentCompleteComponent implements OnInit {
             if (this.payment) {
                 this.amount = `${this.payment.amount} ${this.payment.currency}`;
             }
+        } else if (this.payment?.paymentType === PaymentWidgetType.Sell) {
+            this.title = 'You just sold';
+            if (this.payment) {
+                this.amount = `${this.payment.amount} ${this.payment.currency}`;
+            }
         } else if (this.payment?.paymentType === PaymentWidgetType.Send) {
             this.title = 'You just sent';
             if (this.payment) {
