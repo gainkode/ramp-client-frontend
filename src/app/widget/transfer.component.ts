@@ -198,7 +198,11 @@ export class TransferWidgetComponent implements OnInit {
   }
 
   handleAuthError(): void {
-    this.nextStage('order_details', 'Order details', 1, false);
+    if (this.widget.embedded) {
+      this.router.navigateByUrl('/');
+    } else {
+      this.nextStage('order_details', 'Order details', 1, false);
+    }
   }
 
   progressChanged(visible: boolean): void {

@@ -278,7 +278,11 @@ export class WidgetComponent implements OnInit {
   }
 
   handleAuthError(): void {
-    this.nextStage('order_details', 'Order details', 1, false);
+    if (this.widget.embedded) {
+      this.router.navigateByUrl('/');
+    } else {
+      this.nextStage('order_details', 'Order details', 1, false);
+    }
   }
 
   progressChanged(visible: boolean): void {
@@ -528,17 +532,21 @@ export class WidgetComponent implements OnInit {
   }
 
   onLoginRequired(email: string): void {
-    const currentEmail = this.auth.user?.email ?? '';
-    if (currentEmail !== email) {
-      this.auth.logout();
-      this.summary.transactionId = '';
-      this.summary.fee = 0;
-    }
-    this.summary.email = email;
-    if (this.summary.transactionId === '') {
-      this.nextStage('login_auth', 'Authorization', 3, true);
+    if (this.widget.embedded) {
+      this.router.navigateByUrl('/');
     } else {
-      this.startPayment();
+      const currentEmail = this.auth.user?.email ?? '';
+      if (currentEmail !== email) {
+        this.auth.logout();
+        this.summary.transactionId = '';
+        this.summary.fee = 0;
+      }
+      this.summary.email = email;
+      if (this.summary.transactionId === '') {
+        this.nextStage('login_auth', 'Authorization', 3, true);
+      } else {
+        this.startPayment();
+      }
     }
   }
 
@@ -718,10 +726,6 @@ export class WidgetComponent implements OnInit {
             this.summary.networkFee = order.approxNetworkFee ?? 0;
             this.summary.transactionDate = new Date().toLocaleString();
             this.summary.transactionId = order.transactionId as string;
-            
-            
-            //this.nextStage('complete', 'Complete', 6, false);
-
             this.processingComplete();
           } else {
             this.errorMessage = 'Order code is invalid';
