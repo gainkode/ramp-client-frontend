@@ -50,7 +50,7 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
   pageSize = 25;
   pageIndex = 0;
   sortedField = 'created';
-  sortedDesc = false;
+  sortedDesc = true;
   filter = new Filter({});
   currencyList: CurrencyView[] = [];
   selected = false;
