@@ -514,7 +514,6 @@ export enum LiquidityOrderType {
 
 export enum LiquidityProvider {
   Bitstamp = 'Bitstamp',
-  Binance = 'Binance',
   Kraken = 'Kraken'
 }
 
@@ -2632,6 +2631,7 @@ export enum TransactionStatus {
   PaymentDeclined = 'PaymentDeclined',
   ExchangeDeclined = 'ExchangeDeclined',
   TransferDeclined = 'TransferDeclined',
+  TransferBlocked = 'TransferBlocked',
   Exchanging = 'Exchanging',
   Exchanged = 'Exchanged',
   TransferBenchmarkWaiting = 'TransferBenchmarkWaiting',
@@ -2639,6 +2639,7 @@ export enum TransactionStatus {
   BenchmarkTransfered = 'BenchmarkTransfered',
   BenchmarkTransferDeclined = 'BenchmarkTransferDeclined',
   Sending = 'Sending',
+  SendingWaiting = 'SendingWaiting',
   Sent = 'Sent',
   Completed = 'Completed',
   Abandoned = 'Abandoned',
@@ -2713,6 +2714,8 @@ export type TransferOrder = {
   userId: Scalars['String'];
   transactionId?: Maybe<Scalars['String']>;
   provider?: Maybe<Scalars['String']>;
+  operation?: Maybe<Scalars['String']>;
+  signed?: Maybe<Scalars['String']>;
   created?: Maybe<Scalars['DateTime']>;
   published?: Maybe<Scalars['DateTime']>;
   publishingResult?: Maybe<Scalars['String']>;
@@ -2721,11 +2724,13 @@ export type TransferOrder = {
   amount?: Maybe<Scalars['Float']>;
   currency?: Maybe<Scalars['String']>;
   sourceVaultId?: Maybe<Scalars['String']>;
+  source?: Maybe<Scalars['String']>;
   destination?: Maybe<Scalars['String']>;
   originalOrderId?: Maybe<Scalars['String']>;
   transferHash?: Maybe<Scalars['String']>;
   transferDetails?: Maybe<Scalars['String']>;
   status?: Maybe<Scalars['String']>;
+  subStatus?: Maybe<Scalars['String']>;
   feeCurrency?: Maybe<Scalars['Float']>;
 };
 

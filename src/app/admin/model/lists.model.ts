@@ -8,7 +8,6 @@ export interface LiquidityProviderItem {
 
 export const LiquidityProviderList: Array<LiquidityProviderItem> = [
   { id: LiquidityProvider.Bitstamp, name: 'Bitstamp' },
-  { id: LiquidityProvider.Binance, name: 'Binance' },
   { id: LiquidityProvider.Kraken, name: 'Kraken' }
 ];
 
