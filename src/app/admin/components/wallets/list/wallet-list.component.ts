@@ -23,7 +23,7 @@ export class WalletListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   filterFields = [
     //'asset',
-    'user',
+    'users',
     'search'
   ];
 
@@ -143,6 +143,9 @@ export class WalletListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private loadWallets(): void {
+
+    console.log('load wallets', this.filter);
+
     const listData$ = this.adminService.getWallets(
       this.pageIndex,
       this.pageSize,
