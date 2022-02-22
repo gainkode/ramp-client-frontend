@@ -117,6 +117,16 @@ export class TransactionItemFull {
       } else {
         this.amountToReceive = data.initialAmountToReceiveWithoutFee ?? 0;
       }
+
+
+
+
+      //console.log(this.code, data.amountToReceive, data.amountToReceiveWithoutFee, data.initialAmountToReceive, data.initialAmountToReceiveWithoutFee);
+
+
+
+
+
       if (data.rate !== undefined && data.rate !== null) {
         this.rate = data.rate;
       } else {

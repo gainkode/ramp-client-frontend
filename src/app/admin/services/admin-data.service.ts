@@ -2268,9 +2268,6 @@ export class AdminDataService {
       first: takeItems,
       orderBy: [{ orderBy: orderField, desc: orderDesc }]
     };
-
-    console.log('get wallets', vars);
-
     return this.watchQuery<{ getWallets: AssetAddressListResult }, QueryGetWalletsArgs>(
       {
         query: GET_WALLETS,

@@ -143,9 +143,6 @@ export class WalletListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private loadWallets(): void {
-
-    console.log('load wallets', this.filter);
-
     const listData$ = this.adminService.getWallets(
       this.pageIndex,
       this.pageSize,
