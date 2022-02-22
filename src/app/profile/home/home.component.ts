@@ -44,6 +44,8 @@ export class ProfileHomeComponent implements OnInit, OnDestroy {
     selectedFiat = '';
     defaultFiat = '';
     totalFiat = '';
+    totalFiatValue = 0;
+    totalFiatInit = false;
     currencies: SettingsCurrency[] = [];
     fiatCurrencies: SettingsCurrency[] = [];
 
@@ -60,6 +62,8 @@ export class ProfileHomeComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.defaultFiat = this.auth.user?.defaultFiatCurrency ?? 'EUR';
         this.totalFiat = `${getCurrencySign(this.defaultFiat)}0`;
+        this.totalFiatInit = false;
+        this.totalFiatValue = 0;
         this.loadCurrencyData(true);
     }
 
@@ -138,8 +142,11 @@ export class ProfileHomeComponent implements OnInit, OnDestroy {
     }
 
     totalBalanceUpdate(total: number): void {
+        this.totalFiatInit = true;
+        this.changeDetector.detectChanges();
         const c = this.currencies.find(x => x.symbol === this.defaultFiat);
         this.totalFiat = `${getCurrencySign(this.defaultFiat)}${total.toFixed(c?.precision ?? 2)}`;
+        this.totalFiatValue = total;
         this.changeDetector.detectChanges();
     }
 

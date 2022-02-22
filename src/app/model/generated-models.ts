@@ -2726,6 +2726,7 @@ export type TransferOrder = {
   sourceVaultId?: Maybe<Scalars['String']>;
   source?: Maybe<Scalars['String']>;
   destination?: Maybe<Scalars['String']>;
+  type?: Maybe<TransferType>;
   originalOrderId?: Maybe<Scalars['String']>;
   transferHash?: Maybe<Scalars['String']>;
   transferDetails?: Maybe<Scalars['String']>;
@@ -2753,6 +2754,11 @@ export type TransferStats = BaseStat & {
   toCustomer?: Maybe<MerchantOrCustomerStats>;
   fee?: Maybe<TransactionStatsVolume>;
 };
+
+export enum TransferType {
+  Send = 'Send',
+  Receive = 'Receive'
+}
 
 export type TwoFactorAuthenticationResult = {
   __typename?: 'TwoFactorAuthenticationResult';

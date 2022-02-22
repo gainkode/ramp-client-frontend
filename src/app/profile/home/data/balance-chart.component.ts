@@ -21,6 +21,11 @@ export class ProfileBalanceChartComponent implements OnInit, OnDestroy {
     }
     @Input() currencies: SettingsCurrency[] = [];
     @Input() totalBalance = '';
+    @Input() totalBalanceInit = false;
+    @Input() set totalBalanceNum(val: number) {
+        this.currentBalance = val;
+        this.loadChartData();
+    }
     @Input() set loading(val: boolean) {
         this.inLoading = val;
         if (val === true) {
@@ -196,6 +201,7 @@ export class ProfileBalanceChartComponent implements OnInit, OnDestroy {
     };
 
     private subscriptions: Subscription = new Subscription();
+    private currentBalance = 0;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -257,6 +263,9 @@ export class ProfileBalanceChartComponent implements OnInit, OnDestroy {
     }
 
     private loadChartData(): void {
+        if (this.totalBalanceInit === false) {
+            return;
+        }
         this.onError.emit('');
         const chartData$ = this.profileService.getMyProfit(this.selectedFiat, this.period).valueChanges.pipe(take(1));
         this.profitValue = '';
@@ -309,12 +318,10 @@ export class ProfileBalanceChartComponent implements OnInit, OnDestroy {
         if (data && data.list) {
             let inc = 0;
             const max = data.count ?? 0;
-            const lastPoint = data.list[data.list.length - 1];
-            let initBalance = (lastPoint) ? lastPoint.balanceFiat : 0;
             // fill chart with empty points
             if (chartPoints.length < 1) {
                 let currentDate = new Date();
-                currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDay(), 0, 0, 0, 0);
+                currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 0, 0, 0, 0);
                 let allDataStopNumber = 1;
                 if (period === UserBalanceHistoryPeriod.All) {
                     if (max >= 10) {
@@ -344,7 +351,7 @@ export class ProfileBalanceChartComponent implements OnInit, OnDestroy {
                     val.date = new Date(2000, 1, 1, 0, 0, 0, 0);
                     val.date.setTime(currentDate.getTime() - inc * 86400000);
                     val.balanceCrypto = 0;
-                    val.balanceFiat = 0;
+                    val.balanceFiat = this.currentBalance;
                     val.dateLabel = (inc === 0 || inc === max - 1 || emptyLabel) ? '' : val.datePoint;
                     chartPoints.splice(0, 0, val);
                     inc++;
@@ -352,16 +359,15 @@ export class ProfileBalanceChartComponent implements OnInit, OnDestroy {
             } else {
                 inc = max;
             }
+            let spotBalance = 0;
             while (inc > 0) {
                 inc--;
                 const dataPoint = data.list[inc];
                 const chartPoint = chartPoints[max - inc - 1];
                 if (dataPoint) {
-                    chartPoint.balanceFiat += dataPoint.balanceFiat ?? 0;
-                    initBalance = dataPoint.balanceFiat;
-                } else {
-                    chartPoint.balanceFiat += initBalance ?? 0;
+                    spotBalance += dataPoint.balanceFiat ?? 0;
                 }
+                chartPoint.balanceFiat += spotBalance;
             }
         }
         return chartPoints;
@@ -402,30 +408,39 @@ export class ProfileBalanceChartComponent implements OnInit, OnDestroy {
                             null,
                             null,
                             {
-                                userBalanceId: "2d547f53-b5f8-4421-a798-29306219d73c",
-                                userId: "1a4efbf1-ad24-4900-9129-70743be6fa81",
-                                date: "2021-10-15T10:45:50.000Z",
+                                userBalanceId: null,
+                                userId: "4a9f147e-d3e8-4e8e-8844-4d05e91f3ee9",
+                                date: "2022-02-21T10:27:33.813Z",
                                 asset: "BTC",
-                                balance: 0.00083068,
-                                balanceEur: 43.78,
-                                balanceFiat: 50.79,
-                                transactionId: "85bd49ab-9eb3-4553-983f-8590bfe64bf4"
+                                balance: 0.0155385,
+                                balanceEur: 516.83,
+                                balanceFiat: 585.87,
+                                transactionId: "e0ee739b-bf0d-450a-81ab-60cb1b8b0981"
                             },
                             {
-                                userBalanceId: "a6f7ee9f-cf68-47ec-bb41-e09e370d80c1",
-                                userId: "1a4efbf1-ad24-4900-9129-70743be6fa81",
-                                date: "2021-10-14T20:42:58.000Z",
+                                userBalanceId: null,
+                                userId: "4a9f147e-d3e8-4e8e-8844-4d05e91f3ee9",
+                                date: "2022-02-20T07:44:19.552Z",
                                 asset: "BTC",
-                                balance: 0.00083068,
-                                balanceEur: 43.78,
-                                balanceFiat: 50.79,
-                                transactionId: "081ace14-a787-49c7-9fc7-aea3db7d5566"
+                                balance: 0.00716475,
+                                balanceEur: 238.31,
+                                balanceFiat: 270.14,
+                                transactionId: "062246f6-8e00-49ed-ad58-d4ccfde671ed"
                             },
                             null,
                             null,
                             null,
                             null,
-                            null,
+                            {
+                                userBalanceId: null,
+                                userId: "4a9f147e-d3e8-4e8e-8844-4d05e91f3ee9",
+                                date: "2022-02-16T18:24:29.670Z",
+                                asset: "btc_test",
+                                balance: 0.019265499999999998,
+                                balanceEur: -640.8,
+                                balanceFiat: -726.39,
+                                transactionId: "97fdd004-84fe-4b82-9cb7-48e27981ab31"
+                            },
                             {
                                 userBalanceId: "ff480ea2-e610-4c41-9a09-776899413658",
                                 userId: "1a4efbf1-ad24-4900-9129-70743be6fa81",
