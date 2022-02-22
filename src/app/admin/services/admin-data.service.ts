@@ -478,6 +478,8 @@ const GET_TRANSACTIONS = gql`
         currencyToReceive
         amountToReceive
         initialAmountToReceive
+        amountToReceiveWithoutFee
+        initialAmountToReceiveWithoutFee
         rate
         initialRate
         liquidityProvider

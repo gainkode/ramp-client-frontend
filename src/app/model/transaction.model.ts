@@ -113,9 +113,9 @@ export class TransactionItemFull {
       this.sender = paymentData.sender.title;
       this.recipient = paymentData.recipient.title;
       if (data.amountToReceive !== undefined && data.amountToReceive !== null) {
-        this.amountToReceive = data.amountToReceive ?? 0;
+        this.amountToReceive = data.amountToReceiveWithoutFee ?? 0;
       } else {
-        this.amountToReceive = data.initialAmountToReceive ?? 0;
+        this.amountToReceive = data.initialAmountToReceiveWithoutFee ?? 0;
       }
       if (data.rate !== undefined && data.rate !== null) {
         this.rate = data.rate;
@@ -419,7 +419,7 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
   result.currencyToSpend = data.currencyToSpend ?? '';
   result.currencyToReceive = data.currencyToReceive ?? '';
   result.amountToSpend = data.amountToSpend ?? 0;
-  result.amountToReceive = data.amountToReceive ?? 0;
+  result.amountToReceive = data.amountToReceiveWithoutFee ?? 0;
   if (data.type === TransactionType.Deposit) {
     const c = getCryptoSymbol(result.currencyToReceive);
     const cryptoImg = (c !== '') ?
