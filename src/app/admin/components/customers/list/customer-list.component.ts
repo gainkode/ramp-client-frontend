@@ -160,6 +160,10 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
     this.router.navigateByUrl(`/admin/transactions/users/${id}`);
   }
 
+  showWallets(id: string): void {
+    this.router.navigateByUrl(`/admin/wallets/users/${id}`);
+  }
+
   sendMessage(): void {
     const dialogRef = this.dialog.open(SendNotificationDialogBox, {
       width: '550px',

@@ -11,7 +11,7 @@ import { AssetAddress, SettingsCurrencyWithDefaults } from '../../../../model/ge
 import { WalletItem } from '../../../model/wallet.model';
 import { CurrencyView } from 'src/app/model/payment.model';
 import { CommonDataService } from 'src/app/services/common-data.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   templateUrl: 'wallet-list.component.html',
@@ -51,8 +51,12 @@ export class WalletListComponent implements OnInit, OnDestroy, AfterViewInit {
     private errorHandler: ErrorService,
     private commonService: CommonDataService,
     private adminService: AdminDataService,
-    private router: Router) {
-
+    private router: Router,
+    public activeRoute: ActivatedRoute) {
+      const id = activeRoute.snapshot.params['id'];
+      if (id) {
+        this.filter.users = [id as string];
+      }
   }
 
   ngOnInit(): void {

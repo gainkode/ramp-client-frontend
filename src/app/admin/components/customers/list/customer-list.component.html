@@ -33,6 +33,13 @@
                         compare_arrows
                     </mat-icon>
                 </button>
+                <button mat-icon-button class="row-button" (click)="showWallets(element.id)"
+                    [attr.aria-label]="'Customer wallets'" 
+                    [matTooltip]="'Customer\'s wallets'" matTooltipClass="info-tooltip">
+                    <mat-icon class="details-icon">
+                        account_balance_wallet
+                    </mat-icon>
+                </button>
             </td>
         </ng-container>
 

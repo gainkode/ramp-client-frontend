@@ -45,7 +45,7 @@ const routes: Routes = [
             path: 'users/:id',
             component: TransactionListComponent,
             data: {
-              header: 'Transactions'
+              header: 'Customer transactions'
             }
           },
           {
@@ -85,10 +85,22 @@ const routes: Routes = [
       },
       {
         path: 'wallets',
-        component: WalletListComponent,
-        data: {
-          header: 'Wallets'
-        }
+        children: [
+          {
+            path: 'users/:id',
+            component: WalletListComponent,
+            data: {
+              header: 'Customer wallets'
+            }
+          },
+          {
+            path: '',
+            component: WalletListComponent,
+            data: {
+              header: 'Wallets'
+            }
+          },
+        ]
       },
       {
         path: 'fees',
