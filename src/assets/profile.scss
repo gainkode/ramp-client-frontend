@@ -369,18 +369,12 @@
     height: 100%;
 }
 
-
-
-
-.__profile-content-data-container {
+.__profile-content-mobile-container {
     @media (max-width: $md3 + px) {
         display: none;
         visibility: hidden;
     }
 }
-
-
-
 
 .__profile-settings-container {
     display: block;
@@ -913,6 +907,11 @@
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
+
+    @media (max-width: $md3 + px) {
+        display: none;
+        visibility: hidden;
+    }
 }
 
 .__profile-grid-item-container {
@@ -974,6 +973,12 @@
     justify-content: space-between;
 }
 
+.__profile-balance-mobile-header-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
 .__profile-balance-chart-summary-container {
     display: block;
     margin: 0px 0px 24px 0px;
@@ -993,6 +998,11 @@
 
 .__profile-balance-chart-period-selector {
     margin: 32px 0px 0px 0px;
+
+    @media (max-width: $md3 + px) {
+        display: none;
+        visibility: hidden;
+    }
 }
 
 .__profile-balance-chart-data-container {

@@ -3,12 +3,12 @@
         <mat-progress-bar *ngIf="loading" color="accent" mode="indeterminate"></mat-progress-bar>
     </div>
     <!-- Balance chart -->
-    <app-profile-balance-chart class="__profile-content-data-container" [selectedCurrency]="selectedFiat"
+    <app-profile-balance-chart [selectedCurrency]="selectedFiat"
         [currencies]="fiatCurrencies" [loading]="loading" [totalBalance]="totalFiat" [totalBalanceNum]="totalFiatValue"
         [totalBalanceInit]="totalFiatInit" (onCurrencyChanged)="currencyChanged($event)" (onError)="handleError($event)"
         (onProgress)="chartProgressChanged($event)"></app-profile-balance-chart>
     <!-- Balance carousel -->
-    <app-profile-balance-list #balancelist class="__profile-content-data-container" (onError)="handleError($event)"
+    <app-profile-balance-list #balancelist (onError)="handleError($event)"
         (onProgress)="balanceProgressChanged($event)" (onUpdateTotal)="totalBalanceUpdate($event)">
     </app-profile-balance-list>
     <!-- Recent transactions -->

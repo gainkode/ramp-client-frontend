@@ -107,6 +107,7 @@ export class ProfileBalanceListComponent implements OnInit, OnDestroy {
                     }
                 });
             });
+            console.log('load balance', total);
             this.onUpdateTotal.emit(total);
         }
     }

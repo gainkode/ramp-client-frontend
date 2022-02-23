@@ -24,6 +24,7 @@ export class ProfileBalanceChartComponent implements OnInit, OnDestroy {
     @Input() totalBalanceInit = false;
     @Input() set totalBalanceNum(val: number) {
         this.currentBalance = val;
+        console.log(this.currentBalance);
         this.loadChartData();
     }
     @Input() set loading(val: boolean) {
