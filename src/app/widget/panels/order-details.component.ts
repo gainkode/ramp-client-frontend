@@ -264,10 +264,10 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
             currentCurrencyReceiveId = defaultCryptoCurrency ?? '';
           }
         } else if (this.currentTransaction === TransactionType.Withdrawal) {
-          if (currentCurrencySpendId === '') {
+          if (currentCurrencyReceiveId === '') {
             currentCurrencyReceiveId = defaultFiatCurrency ?? '';
           }
-          if (currentCurrencyReceiveId === '') {
+          if (currentCurrencySpendId === '') {
             currentCurrencySpendId = defaultCryptoCurrency ?? '';
           }
         }
