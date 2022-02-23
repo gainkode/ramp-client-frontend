@@ -508,6 +508,7 @@ const GET_TRANSACTIONS = gql`
         }
         transferOrder {
           orderId
+          originalOrderId
           transferHash
           feeCurrency
         }

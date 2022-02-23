@@ -48,6 +48,7 @@ export class TransactionItemFull {
   amountToSpend = 0;
   amountToReceive = 0;
   transferOrderId = '';
+  transferOriginalOrderId = '';
   transferOrderHash = '';
   transferFee = '';
   benchmarkTransferOrderId = '';
@@ -95,6 +96,7 @@ export class TransactionItemFull {
         this.benchmarkTransferOrderHash = transactionData.benchmarkTransferOrder?.transferHash ?? '';
       }
       this.transferOrderId = data.transferOrder?.orderId ?? '';
+      this.transferOriginalOrderId = data.transferOrder?.originalOrderId ?? '-';
       this.transferOrderHash = data.transferOrder?.transferHash ?? '';
       this.transferFee = data.transferOrder?.feeCurrency?.toFixed(8) ?? '';
       this.transferOrderBlockchainLink = transactionData.transferOrderBlockchainLink ?? '';
