@@ -117,16 +117,6 @@ export class TransactionItemFull {
       } else {
         this.amountToReceive = data.initialAmountToReceiveWithoutFee ?? 0;
       }
-
-
-
-
-      //console.log(this.code, data.amountToReceive, data.amountToReceiveWithoutFee, data.initialAmountToReceive, data.initialAmountToReceiveWithoutFee);
-
-
-
-
-
       if (data.rate !== undefined && data.rate !== null) {
         this.rate = data.rate;
       } else {
@@ -296,6 +286,8 @@ export class TransactionItem {
   ip = '';
   status: TransactionStatusDescriptorMap | undefined = undefined;
   typeIcon = 'error';
+  kycStatus = '';
+  kycRejected = false;
   private created!: Date;
   private datepipe = new DatePipe('en-US');
 
@@ -319,7 +311,11 @@ export class TransactionItem {
       this.rate = data.rate ?? 0;
       this.status = userStatus;
       this.ip = data.userIp as string;
-
+      const kycStatusValue = data.kycStatus ?? TransactionKycStatus.KycApproved;
+      if (kycStatusValue !== TransactionKycStatus.KycApproved) {
+        this.kycStatus = TransactionKycStatusList.find(x => x.id === kycStatusValue)?.name ?? '';
+        this.kycRejected = kycStatusValue === TransactionKycStatus.KycRejected;
+      }
       if (data.paymentOrder) {
         if (data.paymentOrder.paymentInfo) {
           let payment = JSON.parse(data.paymentOrder.paymentInfo);

@@ -106,6 +106,17 @@
                 </div>
             </div>
 
+            <!-- KYC Status -->
+            <div *ngIf="transaction?.kycStatus!==''" class="__profile-details-item-grid">
+                <div class="__profile-details-item-title-box">
+                    KYC Status:
+                </div>
+                <div
+                    [ngClass]="{'__profile-details-item-value-box': true, '__profile-details-item-error': transaction?.kycRejected === true}">
+                    {{transaction?.kycStatus}}
+                </div>
+            </div>
+
             <!-- IP -->
             <div class="__profile-details-item-grid">
                 <div class="__profile-details-item-title-box">
