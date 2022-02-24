@@ -56,6 +56,7 @@ const routing = RouterModule.forChild([
             { path: 'home', component: ProfileHomeComponent },
             { path: 'wallets', component: ProfileWalletsComponent },
             { path: 'contactlist', component: ProfileContactsComponent },
+            { path: 'transactions/:wallet', component: ProfileTransactionsComponent },
             { path: 'transactions', component: ProfileTransactionsComponent },
             { path: 'pricelist', component: ProfilePriceListComponent },
             { path: '**', redirectTo: 'home' }

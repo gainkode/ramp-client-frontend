@@ -1841,6 +1841,7 @@ export type QueryMyTransactionsArgs = {
   transactionTypesOnly?: Maybe<Array<TransactionType>>;
   sendersOrReceiversOnly?: Maybe<Array<Scalars['String']>>;
   paymentProvidersOnly?: Maybe<Array<Scalars['String']>>;
+  walletAddressOnly?: Maybe<Scalars['String']>;
   filter?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;

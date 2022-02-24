@@ -30,12 +30,14 @@ export class ProfileTransactionsComponent {
         private activeRoute: ActivatedRoute,
         private auth: AuthService,
         private router: Router) {
+        const walletId = this.activeRoute.snapshot.params['wallet'] ?? '';
         this.filter.setData({
             wallets: this.activeRoute.snapshot.params['wallets'],
             types: this.activeRoute.snapshot.params['types'],
             date: this.activeRoute.snapshot.params['date'],
             sender: this.activeRoute.snapshot.params['sender']
         });
+        this.filter.walletAddress = walletId;
     }
 
     onFilterUpdate(filter: ProfileBaseFilter): void {

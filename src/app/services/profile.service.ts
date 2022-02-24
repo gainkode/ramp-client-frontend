@@ -12,6 +12,7 @@ const GET_MY_TRANSACTIONS = gql`
     $transactionIdsOnly: [String!]
     $sendersOrReceiversOnly: [String!]
     $paymentProvidersOnly: [String!]
+    $walletAddressOnly: String
     $filter: String
     $skip: Int
     $first: Int
@@ -24,6 +25,7 @@ const GET_MY_TRANSACTIONS = gql`
       transactionIdsOnly: $transactionIdsOnly
       sendersOrReceiversOnly: $sendersOrReceiversOnly
       paymentProvidersOnly: $paymentProvidersOnly
+      walletAddressOnly: $walletAddressOnly
       filter: $filter
       skip: $skip
       first: $first
@@ -497,7 +499,8 @@ export class ProfileDataService {
     sources: TransactionSource[],
     transactionDate: Date | undefined,
     transactionTypes: TransactionType[],
-    sendersOrReceivers: String,
+    sendersOrReceivers: string,
+    walletAddress: string,
     orderField: string,
     orderDesc: boolean
   ): QueryRef<any, EmptyObject> {
@@ -505,18 +508,20 @@ export class ProfileDataService {
       { orderBy: orderField, desc: orderDesc },
       { orderBy: 'created', desc: orderDesc }
     ];
+    const vars = {
+      sourcesOnly: sources,
+      transactionDateOnly: transactionDate,
+      transactionTypesOnly: transactionTypes,
+      sendersOrReceiversOnly: (sendersOrReceivers === '') ? undefined : [sendersOrReceivers],
+      walletAddressOnly: (walletAddress !== '') ? walletAddress : undefined,
+      filter: undefined,
+      skip: pageIndex * takeItems,
+      first: takeItems,
+      orderBy: orderFields,
+    };
     return this.apollo.watchQuery<any>({
       query: GET_MY_TRANSACTIONS,
-      variables: {
-        sourcesOnly: sources,
-        transactionDateOnly: transactionDate,
-        transactionTypesOnly: transactionTypes,
-        sendersOrReceiversOnly: (sendersOrReceivers === '') ? undefined : [sendersOrReceivers],
-        filter: undefined,
-        skip: pageIndex * takeItems,
-        first: takeItems,
-        orderBy: orderFields,
-      },
+      variables: vars,
       fetchPolicy: 'network-only',
     });
   }

@@ -1,7 +1,7 @@
 <div class="__profile-details-container">
     <mat-progress-bar *ngIf="inProgress" color="accent" mode="indeterminate"></mat-progress-bar>
     <h2 class="__profile-details-title">
-        {{wallet?.name}}
+        {{walletData?.name}}
     </h2>
     <div *ngIf="!deleteMode" class="__profile-details-data-container">
         <div class="__profile-details-data-area">
@@ -11,7 +11,7 @@
                     Name:
                 </div>
                 <div class="__profile-details-item-value">
-                    {{wallet?.nameValue}}
+                    {{walletData?.nameValue}}
                 </div>
                 <div class="__inline-button-box">
                     <button type="button" class="__inline-button" (click)="editName()">
@@ -38,7 +38,7 @@
                     Coin:
                 </div>
                 <div class="__profile-details-item-value-box">
-                    {{wallet?.asset}}
+                    {{walletData?.asset}}
                 </div>
             </div>
 
@@ -48,7 +48,7 @@
                     Balance:
                 </div>
                 <div class="__profile-details-item-value-box">
-                    {{wallet?.total}}
+                    {{walletData?.total}}
                 </div>
             </div>
 
@@ -60,7 +60,7 @@
             </div>
             <div class="__profile-details-item-value-block">
                 <div class="__profile-details-item-value __profile-details-item-single-value">
-                    {{wallet?.address}}
+                    {{walletData?.address}}
                 </div>
                 <div class="__inline-button-box">
                     <button type="button" class="__inline-button" (click)="copyAddress()">
@@ -75,13 +75,13 @@
                     Network:
                 </div>
                 <div class="__profile-details-item-value-box">
-                    {{wallet?.fullName}}
+                    {{walletData?.fullName}}
                 </div>
             </div>
 
             <!-- Show wallet transactions -->
             <div class="__profile-details-link-block">
-                <a href="#" class="__profile-details-link">
+                <a [href]="walletTransactionLink" class="__profile-details-link">
                     Show wallet transactions
                 </a>
             </div>

@@ -30,6 +30,7 @@ export class TransactionsFilter implements ProfileBaseFilter {
     transactionTypes: TransactionType[] = [];
     transactionDate: Date | undefined = undefined;
     sender: string = '';
+    walletAddress = '';
 
     setData(data: any): void {
         this.walletTypes = [];

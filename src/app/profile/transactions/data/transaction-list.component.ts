@@ -120,6 +120,7 @@ export class ProfileTransactionListComponent implements OnDestroy, AfterViewInit
             this.filter.transactionDate,
             this.filter.transactionTypes,
             this.filter.sender,
+            this.filter.walletAddress,
             this.getSortedField(),
             this.sortedDesc).valueChanges.pipe(take(1));
         this.onProgress.emit(true);

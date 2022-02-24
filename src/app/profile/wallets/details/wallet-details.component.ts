@@ -14,13 +14,18 @@ import { ProfileDataService } from 'src/app/services/profile.service';
     styleUrls: ['../../../../assets/button.scss', '../../../../assets/details.scss']
 })
 export class ProfileWalletDetailsComponent implements OnDestroy {
-    @Input() wallet: WalletItem | undefined;
+    @Input() set wallet(val: WalletItem | undefined) {
+        this.walletData = val;
+        this.walletTransactionLink = `/personal/main/transactions/${this.walletData?.address ?? ''}`;
+    }
     @Output() onComplete = new EventEmitter<ProfileItemContainer>();
 
     editMode = false;
     deleteMode = false;
     inProgress = false;
     errorMessage = '';
+    walletData: WalletItem | undefined = undefined;
+    walletTransactionLink = '';
 
     editForm = this.formBuilder.group({
         walletName: ['', { validators: [Validators.required], updateOn: 'change' }]
@@ -43,14 +48,14 @@ export class ProfileWalletDetailsComponent implements OnDestroy {
     }
 
     copyAddress(): void {
-        if (this.wallet) {
-            this.clipboard.copy(this.wallet.address);
+        if (this.walletData) {
+            this.clipboard.copy(this.walletData.address);
         }
     }
 
     editName(): void {
-        if (this.wallet) {
-            this.walletNameField?.setValue(this.wallet.name);
+        if (this.walletData) {
+            this.walletNameField?.setValue(this.walletData.name);
         }
         this.editMode = true;
     }
@@ -61,11 +66,11 @@ export class ProfileWalletDetailsComponent implements OnDestroy {
             this.errorMessage = '';
             this.inProgress = true;
             this.subscriptions.add(
-                this.profileService.updateMyVault(this.wallet?.vault ?? '', val).subscribe(({ data }) => {
+                this.profileService.updateMyVault(this.walletData?.vault ?? '', val).subscribe(({ data }) => {
                     if (data && data.updateMyVault) {
                         const result = data.updateMyVault as VaultAccount;
                         if (result.name) {
-                            this.wallet?.setName(result.name);
+                            this.walletData?.setName(result.name);
                             this.editMode = false;
                         }
                     }
@@ -82,7 +87,7 @@ export class ProfileWalletDetailsComponent implements OnDestroy {
         const item = new ProfileItemContainer();
         item.container = ProfileItemContainerType.Wallet;
         item.action = ProfileItemActionType.Redirect;
-        item.wallet = this.wallet;
+        item.wallet = this.walletData;
         item.meta = 'receive';
         this.onComplete.emit(item);
     }
@@ -91,7 +96,7 @@ export class ProfileWalletDetailsComponent implements OnDestroy {
         const item = new ProfileItemContainer();
         item.container = ProfileItemContainerType.Wallet;
         item.action = ProfileItemActionType.Redirect;
-        item.wallet = this.wallet;
+        item.wallet = this.walletData;
         item.meta = 'send';
         this.onComplete.emit(item);
     }
@@ -104,14 +109,14 @@ export class ProfileWalletDetailsComponent implements OnDestroy {
         this.errorMessage = '';
         this.inProgress = true;
         this.subscriptions.add(
-            this.profileService.deleteMyVault(this.wallet?.vault ?? '').subscribe(({ data }) => {
+            this.profileService.deleteMyVault(this.walletData?.vault ?? '').subscribe(({ data }) => {
                 this.inProgress = false;
                 if (data && data.deleteMyVault) {
                     const item = new ProfileItemContainer();
                     item.container = ProfileItemContainerType.Wallet;
                     item.action = ProfileItemActionType.Remove;
                     item.wallet = new WalletItem(null, '', undefined);
-                    item.wallet.vault = this.wallet?.vault ?? '';
+                    item.wallet.vault = this.walletData?.vault ?? '';
                     this.onComplete.emit(item);
                 }
             }, (error) => {
