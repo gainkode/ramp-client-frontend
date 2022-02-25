@@ -6,7 +6,6 @@ import { SocialUser } from 'angularx-social-login';
 import { LoginResult, UserMode } from '../../model/generated-models';
 import { SignupInfoPanelComponent } from './signup-info.component';
 import { Subscription } from 'rxjs';
-import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { CommonDialogBox } from '../dialogs/common-box.dialog';
 
@@ -51,7 +50,7 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
             {
                 validators: [
                     Validators.required,
-                    Validators.pattern('^[a-zA-Z0-9_.+\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-\.]+$')
+                    Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
                 ], updateOn: 'change'
             }
         ],
