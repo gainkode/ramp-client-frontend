@@ -82,7 +82,7 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
                     let walletAddress = '';
                     result.assets?.forEach(x => {
                         x.addresses?.forEach(a => {
-                            if (a.address) {
+                            if (a.address && a.addressFormat?.toLowerCase() === 'LEGACY') {
                                 walletAddress = a.address;
                             }
                         });

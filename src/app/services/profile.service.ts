@@ -323,7 +323,27 @@ const ADD_MY_VAULT = gql`
       assetId: $assetId
     ) {
       id
+
+      rawData
+
       assets {
+
+
+        id
+        originalId
+        total
+        available
+        pending
+        lockedAmount
+        totalStakedCPU
+        totalStakedNetwork
+        selfStakedCPU
+        selfStakedNetwork
+        pendingRefundCPU
+        pendingRefundNetwork
+        
+
+  
         addresses {
           address
           addressFormat
