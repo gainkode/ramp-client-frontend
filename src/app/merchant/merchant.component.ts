@@ -7,6 +7,7 @@ import { CurrencyView } from '../model/payment.model';
 import { ProfileItemActionType, ProfileItemContainer, ProfileItemContainerType } from '../model/profile-item.model';
 import { MerchantProfileMenuItems, ProfilePopupAdministrationMenuItem, MerchantProfilePopupMenuItems } from '../model/profile-menu.model';
 import { ProfileContactsComponent } from '../profile/contacts/contacts.component';
+import { ProfileHomeComponent } from '../profile/home/home.component';
 import { ProfileTransactionsComponent } from '../profile/transactions/transactions.component';
 import { ProfileWalletsComponent } from '../profile/wallets/wallets.component';
 import { AuthService } from '../services/auth.service';
@@ -315,6 +316,9 @@ export class MerchantComponent implements OnInit, OnDestroy {
         if (this.selectedMenu === 'transactions') {
             const transactionPanel = this.dataPanel as ProfileTransactionsComponent;
             transactionPanel.update();
+        } else if (this.selectedMenu === 'home') {
+            const transactionPanel = this.dataPanel as ProfileHomeComponent;
+            transactionPanel.updateTransactions();
         }
     }
 
@@ -326,7 +330,7 @@ export class MerchantComponent implements OnInit, OnDestroy {
         this.initializeDetailsPanel(container);
         this.showDetails = true;
     }
-    
+
     getChat(): void {
         this.notificationTest();
     }
@@ -334,6 +338,9 @@ export class MerchantComponent implements OnInit, OnDestroy {
     transactionStatusUpdate(transactionId: string): void {
         if (this.selectedMenu === 'transactions') {
             const transactionPanel = this.dataPanel as ProfileTransactionsComponent;
+            transactionPanel.updateTransactionStatus(transactionId);
+        } else if (this.selectedMenu === 'home') {
+            const transactionPanel = this.dataPanel as ProfileHomeComponent;
             transactionPanel.updateTransactionStatus(transactionId);
         }
     }

@@ -165,4 +165,12 @@ export class ProfileHomeComponent implements OnInit, OnDestroy {
     showTransactionDetails(details: ProfileItemContainer): void {
         this.onShowDetails.emit(details);
     }
+
+    updateTransactions(): void {
+        this.transactionsPanel.load(new TransactionsFilter());
+    }
+
+    updateTransactionStatus(transactionId: string): void {
+        this.transactionsPanel.updateTransactionStatus(transactionId);
+    }
 }

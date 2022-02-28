@@ -11,6 +11,7 @@ import {
     PersonalProfilePopupMenuItems
 } from '../model/profile-menu.model';
 import { ProfileContactsComponent } from '../profile/contacts/contacts.component';
+import { ProfileHomeComponent } from '../profile/home/home.component';
 import { ProfileTransactionsComponent } from '../profile/transactions/transactions.component';
 import { ProfileWalletsComponent } from '../profile/wallets/wallets.component';
 import { AuthService } from '../services/auth.service';
@@ -319,6 +320,9 @@ export class PersonalComponent implements OnInit, OnDestroy {
         if (this.selectedMenu === 'transactions') {
             const transactionPanel = this.dataPanel as ProfileTransactionsComponent;
             transactionPanel.update();
+        } else if (this.selectedMenu === 'home') {
+            const transactionPanel = this.dataPanel as ProfileHomeComponent;
+            transactionPanel.updateTransactions();
         }
     }
 
@@ -338,6 +342,9 @@ export class PersonalComponent implements OnInit, OnDestroy {
     transactionStatusUpdate(transactionId: string): void {
         if (this.selectedMenu === 'transactions') {
             const transactionPanel = this.dataPanel as ProfileTransactionsComponent;
+            transactionPanel.updateTransactionStatus(transactionId);
+        } else if (this.selectedMenu === 'home') {
+            const transactionPanel = this.dataPanel as ProfileHomeComponent;
             transactionPanel.updateTransactionStatus(transactionId);
         }
     }
