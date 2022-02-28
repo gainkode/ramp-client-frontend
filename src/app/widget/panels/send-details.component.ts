@@ -47,7 +47,11 @@ export class WidgetSendDetailsComponent implements OnInit, OnDestroy {
   currentSymbol = '';
   currentCurrency: CurrencyView | undefined = undefined;
   contacts: ContactItem[] = [];
+  contactList: ContactItem[] = [];
+  contactCount = -1;
   wallets: WalletItem[] = [];
+  walletList: WalletItem[] = [];
+  walletCount = -1;
   selectedWallet: WalletItem | undefined = undefined;
   selectedContact: ContactItem | undefined = undefined;
   fiatAmount = '';
@@ -134,94 +138,114 @@ export class WidgetSendDetailsComponent implements OnInit, OnDestroy {
     this.amountField?.setValue(this.selectedWallet?.total);
   }
 
-  private loadUserWallets(symbol: string): void {
+  private loadWallets(symbol: string): void {
     this.errorMessage = '';
-    this.inProgress = true;
-    this.onProgress.emit(this.inProgress);
     this.wallets = [];
     this.contacts = [];
-    const walletData = this.profileService.getMyWallets([symbol]);
-    this.pSubscriptions.add(
-      walletData.valueChanges.pipe(take(1)).subscribe(({ data }) => {
-        const dataList = data.myWallets as AssetAddressShortListResult;
-        if (dataList !== null) {
-          const walletCount = dataList?.count as number;
-          if (walletCount > 0) {
-            this.wallets = dataList?.list?.
-              map((val) => new WalletItem(val, '', undefined)) as WalletItem[];
-          }
-        }
-        if (this.wallets.length > 0) {
-          this.loadContacts(symbol);
-          if (this.presetWalletId === '') {
-            if (this.wallets.length === 1) {
-              this.walletField?.setValue(this.wallets[0].id);
+    if (this.walletCount < 0) {
+      this.inProgress = true;
+      this.onProgress.emit(this.inProgress);
+      const walletData = this.profileService.getMyWallets([]);
+      this.pSubscriptions.add(
+        walletData.valueChanges.pipe(take(1)).subscribe(({ data }) => {
+          const dataList = data.myWallets as AssetAddressShortListResult;
+          if (dataList !== null) {
+            this.walletCount = dataList?.count ?? 0;
+            if (this.walletCount > 0) {
+              this.walletList = dataList?.list?.map((val) => new WalletItem(val, '', undefined)) as WalletItem[];
+              this.loadFilteredWallets(symbol);
             }
-          } else {
-            this.walletField?.setValue(this.presetWalletId);
           }
-        } else {
-          this.errorMessage = `No wallets found for ${symbol}`;
+        }, (error) => {
           this.inProgress = false;
           this.onProgress.emit(this.inProgress);
+          if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
+            this.router.navigateByUrl('/');
+          } else {
+            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load wallets');
+          }
+        })
+      );
+    } else {
+      this.inProgress = false;
+      this.onProgress.emit(this.inProgress);
+      this.loadFilteredWallets(symbol);
+    }
+  }
+
+  private loadFilteredWallets(symbol: string): void {
+    this.wallets = this.walletList.filter(x => x.asset === symbol);
+    if (this.wallets.length > 0) {
+      this.loadContacts(symbol);
+      if (this.presetWalletId === '') {
+        if (this.wallets.length === 1) {
+          this.walletField?.setValue(this.wallets[0].id);
         }
-      }, (error) => {
-        this.inProgress = false;
-        this.onProgress.emit(this.inProgress);
-        if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
-          this.router.navigateByUrl('/');
-        } else {
-          this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load wallets');
-        }
-      })
-    );
+      } else {
+        this.walletField?.setValue(this.presetWalletId);
+      }
+    } else {
+      this.errorMessage = `No wallets found for ${symbol}`;
+      this.inProgress = false;
+      this.onProgress.emit(this.inProgress);
+    }
   }
 
   private loadContacts(symbol: string): void {
     this.errorMessage = '';
-    const contactsData$ = this.profileService.getMyContacts(
-      [symbol],
-      [],
-      [],
-      0,
-      1000,
-      'displayName',
-      false).valueChanges.pipe(take(1));
     this.contacts = [];
-    if (this.inProgress === false) {
-      this.inProgress = true;
-      this.onProgress.emit(this.inProgress);
-    }
-    this.pSubscriptions.add(
-      contactsData$.subscribe(({ data }) => {
-        const contactsItems = data.myContacts as UserContactListResult;
-        if (contactsItems) {
-          const contactCount = contactsItems?.count as number;
-          if (contactCount > 0) {
-            this.contacts = contactsItems?.list?.map((val) => new ContactItem(val)) as ContactItem[];
-            this.contacts.splice(0, 0, new ContactItem({
-              userContactId: '',
-              contactEmail: '',
-              displayName: '...',
-              assetId: symbol
-            } as UserContact));
-            if (this.presetContactId !== '') {
-              this.contactField?.setValue(this.presetContactId);
-            }
+    if (this.contactCount < 0) {
+      const contactsData$ = this.profileService.getMyContacts(
+        [symbol],
+        [],
+        [],
+        0,
+        1000,
+        'displayName',
+        false).valueChanges.pipe(take(1));
+      this.contacts = [];
+      if (this.inProgress === false) {
+        this.inProgress = true;
+        this.onProgress.emit(this.inProgress);
+      }
+      this.pSubscriptions.add(
+        contactsData$.subscribe(({ data }) => {
+          const contactsItems = data.myContacts as UserContactListResult;
+          if (contactsItems) {
+            this.contactCount = contactsItems?.count ?? 0;
+            this.contactList = contactsItems?.list?.map((val) => new ContactItem(val)) as ContactItem[];
+            this.loadFilteredContacts(symbol);
           }
-        }
-        this.inProgress = false;
-        this.onProgress.emit(this.inProgress);
-      }, (error) => {
-        this.inProgress = false;
-        this.onProgress.emit(this.inProgress);
-        if (this.auth.token !== '') {
-          this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load contacts');
-        } else {
-          this.router.navigateByUrl('/');
-        }
-      })
-    );
+          this.inProgress = false;
+          this.onProgress.emit(this.inProgress);
+        }, (error) => {
+          this.inProgress = false;
+          this.onProgress.emit(this.inProgress);
+          if (this.auth.token !== '') {
+            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load contacts');
+          } else {
+            this.router.navigateByUrl('/');
+          }
+        })
+      );
+    } else {
+      this.inProgress = false;
+      this.onProgress.emit(this.inProgress);
+      this.loadFilteredContacts(symbol);
+    }
+  }
+
+  private loadFilteredContacts(symbol: string): void {
+    this.contacts = this.contactList?.map(val => val);
+    this.contacts.splice(0, 0, new ContactItem({
+      userContactId: '',
+      contactEmail: '',
+      displayName: '...',
+      assetId: symbol
+    } as UserContact));
+    if (this.presetContactId !== '') {
+      this.contactField?.setValue(this.presetContactId);
+    }
   }
 
   private sendData(): void {
@@ -261,7 +285,10 @@ export class WidgetSendDetailsComponent implements OnInit, OnDestroy {
         this.sendData();
       }
       this.currentSymbol = currency;
-      this.loadUserWallets(currency);
+      this.walletField?.setValue(undefined);
+      this.addressField?.setValue(undefined);
+      this.contactField?.setValue(undefined);
+      this.loadWallets(currency);
     }
   }
 
