@@ -11,6 +11,7 @@ import {
     PersonalProfilePopupMenuItems
 } from '../model/profile-menu.model';
 import { ProfileContactsComponent } from '../profile/contacts/contacts.component';
+import { ProfileTransactionsComponent } from '../profile/transactions/transactions.component';
 import { ProfileWalletsComponent } from '../profile/wallets/wallets.component';
 import { AuthService } from '../services/auth.service';
 import { NotificationService } from '../services/notification.service';
@@ -315,6 +316,10 @@ export class PersonalComponent implements OnInit, OnDestroy {
         container.paymentDetails = details;
         this.initializeDetailsPanel(container);
         this.showDetails = true;
+        if (this.selectedMenu === 'transactions') {
+            const transactionPanel = this.dataPanel as ProfileTransactionsComponent;
+            transactionPanel.update();
+        }
     }
 
     widgetError(errorDetails: PaymentErrorDetails): void {

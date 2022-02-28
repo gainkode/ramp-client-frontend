@@ -6,6 +6,8 @@ import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarRef, MatSnackBar
 import { AuthService } from 'src/app/services/auth.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { Subscription } from 'rxjs';
+import { CommonDataService } from 'src/app/services/common-data.service';
+import { take } from 'rxjs/operators';
 
 @Component({
     selector: 'app-nav-popup',
@@ -15,6 +17,7 @@ import { Subscription } from 'rxjs';
 export class NavPopupComponent implements OnInit, OnDestroy {
     @ViewChild('menuTrigger') menuTrigger!: MatMenuTrigger;
     @Output() onMenuClick = new EventEmitter<MenuItem>();
+    @Output() onTransactionUpdate = new EventEmitter<string>();
     @Input() items: MenuItem[] | undefined = undefined;
     @Input() userName: string = '';
     @Input() avatar: string = '';
@@ -30,12 +33,13 @@ export class NavPopupComponent implements OnInit, OnDestroy {
     constructor(
         private snackBar: MatSnackBar,
         private auth: AuthService,
+        private commonService: CommonDataService,
         private notification: NotificationService
     ) { }
 
     ngOnInit(): void {
         this.userId = this.auth.user?.userId;
-        this.startNotifications();
+        this.loadTransactionsTotal();
     }
 
     ngOnDestroy(): void {
@@ -48,7 +52,23 @@ export class NavPopupComponent implements OnInit, OnDestroy {
             this.notification.subscribeToNotifications().subscribe(
                 ({ data }) => {
                     // got data
+                    /**
+                     * created: "2022-02-28T11:41:06.891Z"
+                     * linkedId: "49df848e-62d8-401f-9777-1e3faa1655e4"
+                     * linkedTable: "t_transaction"
+                     * params: null
+                     * text: "your deposit transaction (code: T43935, created: Mon Feb 28 2022 11:41:06 GMT+0300 (Moscow Standard Time)) status has been changed to New."
+                     * title: null
+                     * userId: "d05169d2-c131-4119-acc9-30f02a298ef6"
+                     * userNotificationId: "ce6fc343-df19-4d31-9e56-701bd4673a9d"
+                     * userNotificationLevel: "Info"
+                     * userNotificationTypeCode: "TRANSACTION_STATUS_CHANGED"
+                     * viewed: null
+                     */
                     if (this.userId) {
+                        if (data.newNotification?.userNotificationTypeCode === 'TRANSACTION_STATUS_CHANGED') {
+                            this.onTransactionUpdate.emit(data.newNotification?.linkedId);
+                        }
                         if (this.userId === data.newNotification?.userId) {
                             this.openSnackBar(data.newNotification);
                         }
@@ -64,6 +84,17 @@ export class NavPopupComponent implements OnInit, OnDestroy {
 
     private stopNotifications(): void {
         this.subscriptions.unsubscribe();
+    }
+
+    private loadTransactionsTotal(): void {
+        const totalData = this.commonService.getMyTransactionsTotal();
+        this.subscriptions.add(
+            totalData.valueChanges.pipe(take(1)).subscribe(({ data }) => {
+                this.startNotifications();
+            }, (error) => {
+
+            })
+        );
     }
 
     private openSnackBar(data: any): void {

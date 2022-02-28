@@ -63,4 +63,8 @@ export class ProfileTransactionsComponent {
     showDetails(details: ProfileItemContainer): void {
         this.onShowDetails.emit(details);
     }
+
+    update(): void {
+        this.dataListPanel.load(this.filter);
+    }
 }
