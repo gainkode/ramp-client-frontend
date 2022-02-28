@@ -67,4 +67,8 @@ export class ProfileTransactionsComponent {
     update(): void {
         this.dataListPanel.load(this.filter);
     }
+
+    updateTransactionStatus(transactionId: string): void {
+        this.dataListPanel.updateTransactionStatus(transactionId);
+    }
 }

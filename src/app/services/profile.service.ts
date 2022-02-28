@@ -89,6 +89,21 @@ const GET_MY_TRANSACTIONS = gql`
   }
 `;
 
+const GET_MY_TRANSACTION_STATUS = gql`
+  query MyTransactions(
+    $transactionIdsOnly: [String!]
+  ) {
+    myTransactions(
+      transactionIdsOnly: $transactionIdsOnly
+    ) {
+      count
+      list {
+        status
+      }
+    }
+  }
+`;
+
 const GET_TRANSACTION_STATUSES = gql`
 query GetTransactionStatuses {
   getTransactionStatuses{
@@ -524,6 +539,17 @@ export class ProfileDataService {
     };
     return this.apollo.watchQuery<any>({
       query: GET_MY_TRANSACTIONS,
+      variables: vars,
+      fetchPolicy: 'network-only',
+    });
+  }
+
+  getMyTransactionStatus(id: string): QueryRef<any, EmptyObject> {
+    const vars = {
+      transactionIdsOnly: [id]
+    };
+    return this.apollo.watchQuery<any>({
+      query: GET_MY_TRANSACTION_STATUS,
       variables: vars,
       fetchPolicy: 'network-only',
     });

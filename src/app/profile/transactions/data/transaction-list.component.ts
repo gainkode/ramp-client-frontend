@@ -32,6 +32,7 @@ export class ProfileTransactionListComponent implements OnDestroy, AfterViewInit
     private pTransactionsSubscription: Subscription | undefined = undefined;
     private pStatusSubscription: Subscription | undefined = undefined;
     private pSortSubscription: Subscription | undefined = undefined;
+    private pTransactionSubscription: Subscription | undefined = undefined;
     filter = new TransactionsFilter();
     userStatuses: TransactionStatusDescriptorMap[] = [];
     transactions: TransactionItem[] = [];
@@ -66,10 +67,44 @@ export class ProfileTransactionListComponent implements OnDestroy, AfterViewInit
         }
     }
 
+    updateTransactionStatus(transactionId: string): void {
+        const transactionData = this.transactions.find(x => x.id === transactionId);
+        if (transactionData) {
+            let itemCount = 0;
+            const transactionData$ = this.profileService.getMyTransactionStatus(transactionId).valueChanges.pipe(take(1));
+            this.onProgress.emit(true);
+            this.pTransactionSubscription = transactionData$.subscribe(({ data }) => {
+                const dataList = data.myTransactions as TransactionShortListResult;
+                if (dataList !== null) {
+                    itemCount = dataList?.count as number;
+                    if (itemCount > 0 && dataList?.list) {
+                        const transaction = dataList?.list[0];
+                        const status = this.userStatuses.find(x => x.key === transaction.status);
+                        if (status) {
+                            transactionData.status = status;
+                        }
+                    }
+                }
+                this.onProgress.emit(false);
+            }, (error) => {
+                this.onProgress.emit(false);
+                if (this.auth.token !== '') {
+                    this.onError.emit(this.errorHandler.getError(error.message, 'Unable to update transaction'));
+                } else {
+                    this.router.navigateByUrl('/');
+                }
+            });
+        }
+    }
+
     ngOnDestroy(): void {
         if (this.pTransactionsSubscription !== undefined) {
             this.pTransactionsSubscription.unsubscribe();
             this.pTransactionsSubscription = undefined;
+        }
+        if (this.pTransactionSubscription !== undefined) {
+            this.pTransactionSubscription.unsubscribe();
+            this.pTransactionSubscription = undefined;
         }
         if (this.pStatusSubscription !== undefined) {
             this.pStatusSubscription.unsubscribe();

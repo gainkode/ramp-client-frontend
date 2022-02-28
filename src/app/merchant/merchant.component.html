@@ -27,7 +27,7 @@
                 </div>
                 <div class="__top-menu-content-box">
                     <app-nav-popup [items]="popupItems" [userName]="userName" [avatar]="avatar"
-                        (onMenuClick)="popupMenuClick($event)">
+                        (onMenuClick)="popupMenuClick($event)" (onTransactionUpdate)="transactionStatusUpdate($event)">
                     </app-nav-popup>
                 </div>
             </div>

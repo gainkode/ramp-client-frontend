@@ -335,6 +335,13 @@ export class PersonalComponent implements OnInit, OnDestroy {
         this.notificationTest();
     }
 
+    transactionStatusUpdate(transactionId: string): void {
+        if (this.selectedMenu === 'transactions') {
+            const transactionPanel = this.dataPanel as ProfileTransactionsComponent;
+            transactionPanel.updateTransactionStatus(transactionId);
+        }
+    }
+
     notificationTest(): void {
         this.subscriptions.add(
             this.notification.sendTestNotification().subscribe(({ data }) => {

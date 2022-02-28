@@ -7,6 +7,7 @@ import { CurrencyView } from '../model/payment.model';
 import { ProfileItemActionType, ProfileItemContainer, ProfileItemContainerType } from '../model/profile-item.model';
 import { MerchantProfileMenuItems, ProfilePopupAdministrationMenuItem, MerchantProfilePopupMenuItems } from '../model/profile-menu.model';
 import { ProfileContactsComponent } from '../profile/contacts/contacts.component';
+import { ProfileTransactionsComponent } from '../profile/transactions/transactions.component';
 import { ProfileWalletsComponent } from '../profile/wallets/wallets.component';
 import { AuthService } from '../services/auth.service';
 import { NotificationService } from '../services/notification.service';
@@ -311,6 +312,10 @@ export class MerchantComponent implements OnInit, OnDestroy {
         container.paymentDetails = details;
         this.initializeDetailsPanel(container);
         this.showDetails = true;
+        if (this.selectedMenu === 'transactions') {
+            const transactionPanel = this.dataPanel as ProfileTransactionsComponent;
+            transactionPanel.update();
+        }
     }
 
     widgetError(errorDetails: PaymentErrorDetails): void {
@@ -324,6 +329,13 @@ export class MerchantComponent implements OnInit, OnDestroy {
     
     getChat(): void {
         this.notificationTest();
+    }
+
+    transactionStatusUpdate(transactionId: string): void {
+        if (this.selectedMenu === 'transactions') {
+            const transactionPanel = this.dataPanel as ProfileTransactionsComponent;
+            transactionPanel.updateTransactionStatus(transactionId);
+        }
     }
 
     notificationTest(): void {
