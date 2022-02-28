@@ -276,6 +276,7 @@ export class ProfileBalanceChartComponent implements OnInit, OnDestroy {
             chartData$.subscribe(({ data }) => {
                 const profitData = data.myProfit as UserProfit;
                 //const profitData = this.getFakeProfits();
+                //const profitData = this.getFakeProfits2();
                 let profit = 0;
                 let profitPercent = 0;
                 profitData.profits?.forEach(p => {
@@ -364,6 +365,9 @@ export class ProfileBalanceChartComponent implements OnInit, OnDestroy {
                 inc--;
                 const dataPoint = data.list[inc];
                 const chartPoint = chartPoints[max - inc - 1];
+
+                console.log(inc, dataPoint?.balanceFiat, chartPoint.balanceFiat);
+
                 if (dataPoint) {
                     spotBalance += dataPoint.balanceFiat ?? 0;
                 }
@@ -534,6 +538,91 @@ export class ProfileBalanceChartComponent implements OnInit, OnDestroy {
                             null,
                             null,
                             null
+                        ]
+                    }
+                }
+            ]
+        }
+    }
+
+    private getFakeProfits2(): UserProfit {
+        return {
+            userId: "1a4efbf1-ad24-4900-9129-70743be6fa81",
+            currencyTo: "USD",
+            period: UserBalanceHistoryPeriod.LastWeek,
+            profits: [
+                {
+                    currencyFrom: 'USDC',
+                    profit: 0,
+                    profitEur: 0,
+                    profitFiat: 0,
+                    profitPercent: 0,
+                    userBalanceHistory: {
+                        count: 7,
+                        list: [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                        ]
+                    }
+                },
+                {
+                    currencyFrom: 'BTC',
+                    profit: 0,
+                    profitEur: 0,
+                    profitFiat: 0,
+                    profitPercent: 0,
+                    userBalanceHistory: {
+                        count: 7,
+                        list: [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                        ]
+                    }
+                },
+                {
+                    currencyFrom: 'BTC_TEST',
+                    profit: -0.00447076,
+                    profitEur: -158.71,
+                    profitFiat: -178.12,
+                    profitPercent: 0,
+                    userBalanceHistory: {
+                        count: 7,
+                        list: [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            {
+                                userBalanceId: null,
+                                userId: '4a9f147e-d3e8-4e8e-8844-4d05e91f3ee9',
+                                date: '2022-02-22T15:59:20.547Z',
+                                asset: 'btc_test',
+                                balance: -0.0015630600000000002,
+                                balanceEur: -55.49,
+                                balanceFiat: -62.27,
+                                transactionId: '7f4f32c0-8758-4a42-b2eb-7bca50283908'
+                            },
+                            {
+                                userBalanceId: null,
+                                userId: '4a9f147e-d3e8-4e8e-8844-4d05e91f3ee9',
+                                date: '2022-02-21T10:27:33.814Z',
+                                asset: 'btc_test',
+                                balance: 0.0029077,
+                                balanceEur: 103.22,
+                                balanceFiat: 115.85,
+                                transactionId: '2a3a83d7-cd0c-4306-ad98-b25989bc7874'
+                            }
                         ]
                     }
                 }
