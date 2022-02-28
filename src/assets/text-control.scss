@@ -516,7 +516,7 @@ textarea.__form-text-area {
     color: $color_purple_900_text;
 }
 
-textarea.__form-text-area:focus { 
+textarea.__form-text-area:focus {
     outline: none !important;
 }
 
@@ -603,7 +603,6 @@ textarea.__form-text-area-error {
 
 .__form-combo-item-text {
     height: 20px;
-    width: 100%;
     padding: 0px;
 
     font-family: $font_main;
@@ -612,6 +611,24 @@ textarea.__form-text-area-error {
     font-size: 14px;
     line-height: 18px;
     color: $color_purple_900_text;
+}
+
+.__form-combo-item-text-extra {
+    height: 20px;
+    padding: 0px 0px 0px 12px;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 12px;
+    line-height: 18px;
+    color: $color_purple_900_icons;
+}
+
+.__form-combo-item-block {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
 }
 
 .__form-control-panel {

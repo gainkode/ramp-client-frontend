@@ -192,7 +192,6 @@ export class WidgetSendDetailsComponent implements OnInit, OnDestroy {
       this.inProgress = true;
       this.onProgress.emit(this.inProgress);
     }
-    const userFiat = this.auth.user?.defaultFiatCurrency ?? 'EUR';
     this.pSubscriptions.add(
       contactsData$.subscribe(({ data }) => {
         const contactsItems = data.myContacts as UserContactListResult;

@@ -74,10 +74,14 @@
                                     {{selectedWallet?.name}}
                                 </div>
                             </mat-select-trigger>
-                            <mat-option *ngFor="let item of filteredWallets" [value]="item.address"
-                                style="height: 32px;">
-                                <div class="__form-combo-item">
-                                    {{item.name}}
+                            <mat-option *ngFor="let item of filteredWallets" [value]="item.address" style="height: 32px;">
+                                <div class="__form-combo-item-block">
+                                    <div class="__form-combo-item-text">
+                                        {{item.name}}
+                                    </div>
+                                    <div *ngIf="item.name!=='...'" class="__form-combo-item-text-extra">
+                                        {{item.total}} {{currentCurrencyReceive?.id}}
+                                    </div>
                                 </div>
                             </mat-option>
                         </mat-select>
@@ -118,19 +122,6 @@
             </div>
         </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
         <div *ngIf="currentTransaction === TRANSACTION_TYPE.Withdrawal">
             <!-- Wallets -->
             <div *ngIf="filteredWallets.length>1">
@@ -146,10 +137,14 @@
                                     {{selectedWallet?.name}}
                                 </div>
                             </mat-select-trigger>
-                            <mat-option *ngFor="let item of filteredWallets" [value]="item.address"
-                                style="height: 32px;">
-                                <div class="__form-combo-item">
-                                    {{item.name}}
+                            <mat-option *ngFor="let item of filteredWallets" [value]="item.address" style="height: 32px;">
+                                <div class="__form-combo-item-block">
+                                    <div class="__form-combo-item-text">
+                                        {{item.name}}
+                                    </div>
+                                    <div *ngIf="item.name!=='...'" class="__form-combo-item-text-extra">
+                                        {{item.total}} {{currentCurrencySpend?.id}}
+                                    </div>
                                 </div>
                             </mat-option>
                         </mat-select>
@@ -168,20 +163,6 @@
                 </div>
             </div>
         </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         <!-- Buttons -->
         <div class="__widget-buttons-area">

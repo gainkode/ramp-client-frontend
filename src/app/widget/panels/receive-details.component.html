@@ -52,8 +52,13 @@
                             </div>
                         </mat-select-trigger>
                         <mat-option *ngFor="let item of wallets" [value]="item.address" style="height: 32px;">
-                            <div class="__form-combo-item">
-                                {{item.name}}
+                            <div class="__form-combo-item-block">
+                                <div class="__form-combo-item-text">
+                                    {{item.name}}
+                                </div>
+                                <div class="__form-combo-item-text-extra">
+                                    {{item.total}} {{selectedCurrency?.id}}
+                                </div>
                             </div>
                         </mat-option>
                     </mat-select>
@@ -64,7 +69,7 @@
                     Wallet is required
                 </div>
                 <div *ngIf="selectedWallet" class="__form-assist">
-                    Available in the wallet: {{selectedWallet.total}}
+                    Available in the wallet: {{selectedWallet.total}} {{selectedCurrency?.id}}
                 </div>
             </div>
         </div>
