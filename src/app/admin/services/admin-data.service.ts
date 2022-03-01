@@ -520,6 +520,7 @@ const GET_TRANSACTIONS = gql`
         destVault
         sourceVault
         kycStatus
+        widget
         widgetId
       }
     }

@@ -1250,7 +1250,7 @@ export type PaymentOperation = {
   userId?: Maybe<Scalars['String']>;
   created?: Maybe<Scalars['DateTime']>;
   type: PaymentOperationType;
-  sn: Scalars['String'];
+  sn?: Maybe<Scalars['String']>;
   status?: Maybe<Scalars['String']>;
   statusReason?: Maybe<Scalars['String']>;
   details?: Maybe<Scalars['String']>;
@@ -2489,6 +2489,7 @@ export type Transaction = {
   widgetCode?: Maybe<Scalars['String']>;
   widgetUserParamsId?: Maybe<Scalars['String']>;
   widgetUserParams?: Maybe<Scalars['String']>;
+  widget?: Maybe<Scalars['String']>;
   destinationUserId?: Maybe<Scalars['String']>;
   manuallyEditedAmounts?: Maybe<Scalars['Boolean']>;
   manuallyEditedFee?: Maybe<Scalars['Boolean']>;
@@ -2593,6 +2594,7 @@ export type TransactionShort = {
   widgetCode?: Maybe<Scalars['String']>;
   widgetUserParamsId?: Maybe<Scalars['String']>;
   widgetUserParams?: Maybe<Scalars['String']>;
+  widget?: Maybe<Scalars['String']>;
   destinationUserId?: Maybe<Scalars['String']>;
   risk: RiskLevel;
   riskCodes?: Maybe<Array<Scalars['String']>>;
@@ -3313,6 +3315,7 @@ export type UserVaultIdObjListResult = {
 export type VaultAccount = {
   __typename?: 'VaultAccount';
   id?: Maybe<Scalars['ID']>;
+  userId?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   rawData?: Maybe<Scalars['String']>;
   assets?: Maybe<Array<VaultAccountAsset>>;
@@ -3347,6 +3350,7 @@ export type VaultAccountAssetAddress = {
 export type VaultAccountEx = {
   __typename?: 'VaultAccountEx';
   id?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   default?: Maybe<Scalars['Boolean']>;
   rawData?: Maybe<Scalars['String']>;

@@ -54,33 +54,33 @@ export class ProfileWalletListComponent implements OnDestroy {
         this.onError.emit('');
         this.walletCount = 0;
         const walletsData$ = this.profileService.getMyWallets(this.filter.currencies).valueChanges.pipe(take(1));
-            this.loading = true;
-            this.onProgress.emit(true);
-            const userFiat = this.auth.user?.defaultFiatCurrency ?? 'EUR';
-            this.subscriptions.add(
-                walletsData$.subscribe(({ data }) => {
-                    const dataList = data.myWallets as AssetAddressShortListResult;
-                    if (dataList !== null) {
-                        this.walletCount = dataList?.count as number;
-                        if (this.walletCount > 0) {
-                            this.wallets = dataList?.list?.filter(x => {
-                                return (this.filter.zeroBalance) ? true : x.total ?? 0 > 0;
-                            }).map((val) => new WalletItem(val, userFiat, this.getCurrency(val))) as WalletItem[];
-                            this.walletCount = this.wallets.length;
-                        }
+        this.loading = true;
+        this.onProgress.emit(true);
+        const userFiat = this.auth.user?.defaultFiatCurrency ?? 'EUR';
+        this.subscriptions.add(
+            walletsData$.subscribe(({ data }) => {
+                const dataList = data.myWallets as AssetAddressShortListResult;
+                if (dataList !== null) {
+                    this.walletCount = dataList?.count as number;
+                    if (this.walletCount > 0) {
+                        this.wallets = dataList?.list?.filter(x => {
+                            return (this.filter.zeroBalance) ? true : x.total ?? 0 > 0;
+                        }).map((val) => new WalletItem(val, userFiat, this.getCurrency(val))) as WalletItem[];
+                        this.walletCount = this.wallets.length;
                     }
-                    this.onProgress.emit(false);
-                    this.loading = false;
-                }, (error) => {
-                    this.onProgress.emit(false);
-                    this.loading = false;
-                    if (this.auth.token !== '') {
-                        this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load wallets'));
-                    } else {
-                        this.router.navigateByUrl('/');
-                    }
-                })
-            );
+                }
+                this.onProgress.emit(false);
+                this.loading = false;
+            }, (error) => {
+                this.onProgress.emit(false);
+                this.loading = false;
+                if (this.auth.token !== '') {
+                    this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load wallets'));
+                } else {
+                    this.router.navigateByUrl('/');
+                }
+            })
+        );
     }
 
     private getCurrency(asset: AssetAddressShort): CurrencyView | undefined {

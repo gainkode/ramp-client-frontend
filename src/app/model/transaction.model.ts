@@ -72,6 +72,7 @@ export class TransactionItemFull {
   kycStatusValue = TransactionKycStatus.KycWaiting;
   kycTier = '';
   widgetId = '';
+  widgetName = '';
   selected = false;
 
   constructor(data: Transaction | TransactionShort | null) {
@@ -129,6 +130,10 @@ export class TransactionItemFull {
       this.kycStatusValue = (kycStatus) ? kycStatus.id : TransactionKycStatus.KycWaiting;
       this.kycTier = data.userTier?.name ?? '';
       this.status = data.status;
+      const widgetData = JSON.parse(data.widget ?? '{}');
+      if (widgetData) {
+        this.widgetName = widgetData.widgetName;
+      }
 
       if (data.paymentOrder) {
         if (data.paymentOrder.paymentInfo) {
