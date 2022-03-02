@@ -323,32 +323,6 @@ export class TransactionItem {
         this.kycStatus = TransactionKycStatusList.find(x => x.id === kycStatusValue)?.name ?? '';
         this.kycRejected = kycStatusValue === TransactionKycStatus.KycRejected;
       }
-      if (data.paymentOrder) {
-        if (data.paymentOrder.paymentInfo) {
-          let payment = JSON.parse(data.paymentOrder.paymentInfo);
-          // sometimes it comes as a string with escape symbols.
-          //  In this case parse returns a stringified JSON, which has to be parsed again
-          if (typeof payment === 'string') {
-            payment = JSON.parse(payment);
-          }
-          if (data.instrument === PaymentInstrument.CreditCard) {
-            const card = new CardView();
-            card.setPaymentInfo(JSON.stringify(payment));
-            if (card.cardInfo) {
-              if (this.type === TransactionType.Deposit) {
-                this.sender = card.cardInfo;
-                if (this.sender) {
-                  this.sender.title = card.secureCardNumber;
-                }
-              }
-            }
-          }
-        }
-        // } else {
-        //   this.sender.imgClass = '__table-cell-payment-icon';
-        //   this.sender.imgSource = `assets/svg-payment-systems/visa.svg`;
-        //   this.sender.title = '1234 **** **** 5678';
-      }
     }
   }
 
@@ -440,6 +414,9 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
       '';
     const destVaultData = JSON.parse(data.destVault ?? '{}');
     let recipientName = `Default Vault ${c}`;
+    if (data.destination) {
+      recipientName = data.destination;
+    }
     if (destVaultData && destVaultData.name) {
       recipientName = destVaultData.name;
     }
@@ -458,6 +435,25 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
         imgSource: '',
         imgClass: ''
       } as CommonTargetValue;
+    } else if (data.instrument === PaymentInstrument.CreditCard) {
+      if (data.paymentOrder) {
+        if (data.paymentOrder.paymentInfo) {
+          let payment = JSON.parse(data.paymentOrder.paymentInfo);
+          // sometimes it comes as a string with escape symbols.
+          //  In this case parse returns a stringified JSON, which has to be parsed again
+          if (typeof payment === 'string') {
+            payment = JSON.parse(payment);
+          }
+          const card = new CardView();
+          card.setPaymentInfo(JSON.stringify(payment));
+          if (card.cardInfo) {
+            result.sender = card.cardInfo;
+            if (result.sender) {
+              result.sender.title = card.secureCardNumber;
+            }
+          }
+        }
+      }
     }
     result.fees = data.feeFiat as number ?? 0;
     result.networkFee = data.approxNetworkFee ?? 0;
@@ -470,7 +466,7 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
       imgSource: ''
     };
     const c = getCryptoSymbol(result.currencyToSpend);
-    const cryptoImg = (c !== '') ?
+    let cryptoImg = (c !== '') ?
       `../../../assets/svg-crypto/${c.toLowerCase()}.svg` :
       '';
     let sourceVaultData = JSON.parse(data.sourceVault ?? '{}');
@@ -482,6 +478,9 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
     let senderName = '';
     if (sourceVaultData && sourceVaultData.name) {
       senderName = sourceVaultData.name;
+    }
+    if (senderName === '') {
+      cryptoImg = '';
     }
     result.sender = {
       id: '',
@@ -532,18 +531,21 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
   } else if (data.type === TransactionType.Withdrawal) {
     result.recipient = {
       id: '',
-      title: data.destination ?? '',
+      title: '',
       imgClass: '',
       imgSource: ''
     };
     const c = getCryptoSymbol(result.currencyToSpend);
-    const cryptoImg = (c !== '') ?
+    let cryptoImg = (c !== '') ?
       `../../../assets/svg-crypto/${c.toLowerCase()}.svg` :
       '';
     const sourceVaultData = JSON.parse(data.sourceVault ?? '{}');
     let senderName = '';
     if (sourceVaultData && sourceVaultData.name) {
       senderName = sourceVaultData.name;
+    }
+    if (senderName === '') {
+      cryptoImg = '';
     }
     result.sender = {
       id: '',
