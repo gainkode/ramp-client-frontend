@@ -473,7 +473,12 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
     const cryptoImg = (c !== '') ?
       `../../../assets/svg-crypto/${c.toLowerCase()}.svg` :
       '';
-    const sourceVaultData = JSON.parse(data.sourceVault ?? '{}');
+    let sourceVaultData = JSON.parse(data.sourceVault ?? '{}');
+    // sometimes it comes as a string with escape symbols.
+    //  In this case parse returns a stringified JSON, which has to be parsed again
+    if (typeof sourceVaultData === 'string') {
+      sourceVaultData = JSON.parse(sourceVaultData);
+    }
     let senderName = '';
     if (sourceVaultData && sourceVaultData.name) {
       senderName = sourceVaultData.name;
@@ -490,15 +495,21 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
   } else if (data.type === TransactionType.Receive) {
     const c = getCryptoSymbol(result.currencyToReceive).toLowerCase();
     const cryptoImg = (c !== '') ? `../../../assets/svg-crypto/${c}.svg` : '';
+    const destVaultData = JSON.parse(data.destVault ?? '{}');
+    let recipientName = data.destination ?? '';
+    if (destVaultData && destVaultData.name) {
+      recipientName = destVaultData.name;
+    }
     result.recipient = {
       id: '',
-      title: data.destination ?? '',
+      title: recipientName,
       imgClass: '',
       imgSource: cryptoImg
     };
     result.fees = data.feeFiat as number ?? 0;
     result.networkFee = data.approxNetworkFee ?? 0;
     result.typeIcon = 'file_download';
+    let senderName = 'External';
     const transferDetails = data.transferOrder?.transferDetails;
     if (transferDetails) {
       let transferDetailsData = JSON.parse(transferDetails);
@@ -509,15 +520,15 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
       }
       if (transferDetailsData.data) {
         let sourceData = JSON.parse(transferDetailsData.data);
-        const senderName = `${sourceData?.source?.name ?? ''} ${sourceData?.sourceAddress ?? ''}`;
-        result.sender = {
-          id: '',
-          title: senderName,
-          imgSource: '',
-          imgClass: ''
-        } as CommonTargetValue;
+        senderName = `${sourceData?.source?.name ?? ''} ${sourceData?.sourceAddress ?? 'External'}`;
       }
     }
+    result.sender = {
+      id: '',
+      title: senderName,
+      imgSource: '',
+      imgClass: ''
+    } as CommonTargetValue;
   } else if (data.type === TransactionType.Withdrawal) {
     result.recipient = {
       id: '',
