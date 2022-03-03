@@ -176,6 +176,10 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     if (this.summary?.address) {
       this.walletField?.setValue(this.summary.address);
       this.walletInit = false;
+      if (this.summary.address !== '') {
+        this.selectedWallet = this.wallets.find(x => x.address === this.summary?.address);
+        this.walletSelectorField?.setValue(this.summary.address);
+      }
     }
     if (this.summary?.email) {
       this.emailField?.setValue(this.summary.email);
@@ -483,25 +487,28 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       if (this.currentCurrencySpend && this.amountSpendField?.value) {
         this.setSpendValidators();
       }
-      if (this.wallets.length > 0 && this.summary?.transactionType === TransactionType.Withdrawal) {
-        if (this.addressInit) {
-          this.walletField?.setValue(this.summary.address ?? '');
-          this.walletInit = false;
+      if (this.summary?.transactionType === TransactionType.Withdrawal) {
+
+        if (this.wallets.length > 0) {
+          if (this.addressInit) {
+            this.walletField?.setValue(this.summary.address ?? '');
+            this.walletInit = false;
+          }
+          this.filteredWallets = this.wallets.filter(x => x.asset === currency);
         }
-        this.filteredWallets = this.wallets.filter(x => x.asset === currency);
-      }
-      if (this.summary?.transactionType === TransactionType.Withdrawal && this.settings.embedded) {
-        const emptyList = (this.filteredWallets.length === 0);
-        this.filteredWallets.splice(0, 0, new WalletItem({
-          vaultName: '...',
-          address: '',
-          default: false
-        } as AssetAddressShort, '', undefined));
-        if (emptyList) {
-          this.walletField?.setValue(this.summary.address ?? '');
-          this.errorMessage = 'Unable to find wallets for selected currency';
-        } else {
-          this.errorMessage = '';
+        if (this.settings.embedded) {
+          const emptyList = (this.filteredWallets.length === 0);
+          this.filteredWallets.splice(0, 0, new WalletItem({
+            vaultName: '...',
+            address: '',
+            default: false
+          } as AssetAddressShort, '', undefined));
+          if (emptyList) {
+            this.walletField?.setValue(this.summary.address ?? '');
+            this.errorMessage = 'Unable to find wallets for selected currency';
+          } else {
+            this.errorMessage = '';
+          }
         }
       }
       this.pReceiveChanged = true;
@@ -602,7 +609,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       this.setSpendValidators(this.selectedWallet.total);
     }
     const data: CheckoutSummary = new CheckoutSummary();
-    data.address = this.walletField?.value;
+    data.address = this.selectedWallet?.address ?? '';
     data.vaultId = this.selectedWallet?.id ?? '';
     this.onWalletAddressUpdated.emit(data);
   }

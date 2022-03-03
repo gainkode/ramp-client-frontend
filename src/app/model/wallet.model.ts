@@ -26,8 +26,8 @@ export class WalletItem {
       this.address = data.address ?? '';
       this.addressFormat = data.addressFormat ?? '';
       this.asset = data.assetId ?? '';
-      this.total = data.total ?? 0;
-      this.totalFiat = data.totalFiat ?? 0;
+      this.total = 100/43154;//data.total ?? 0;
+      this.totalFiat = 1000;//data.totalFiat ?? 0;
       this.name = data.vaultName ?? '';
       if (this.asset !== '') {
         this.pIconUrl = `assets/svg-crypto/${getCryptoSymbol(this.asset).toLowerCase()}.svg`;

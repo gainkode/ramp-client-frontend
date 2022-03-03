@@ -126,7 +126,6 @@ export class WidgetComponent implements OnInit {
         this.widget.disclaimer = true;
         this.widget.kycFirst = false;
       }
-
       this.widget.widgetId = data.widgetId;
       this.widget.email = data.currentUserEmail ?? '';
       this.widget.walletAddressPreset = data.hasFixedAddress ?? false;
@@ -394,6 +393,12 @@ export class WidgetComponent implements OnInit {
   }
   // =======================
 
+  // == Sell ===============
+  sellComplete(instrumentDetails: string): void {
+
+  }
+  // =======================
+
   // == Disclaimer =========
   desclaimerBack(): void {
     this.stageBack();
@@ -402,7 +407,8 @@ export class WidgetComponent implements OnInit {
   desclaimerNext(): void {
     this.summary.agreementChecked = true;
     if (this.summary.transactionType === TransactionType.Withdrawal) {
-      this.createWithdrawalTransaction();
+      this.nextStage('sell_details', 'Bank details', 2, true);
+      //this.createWithdrawalTransaction();
     } else {
       this.widgetService.getSettingsCommon(this.summary, this.widget.widgetId);
     }

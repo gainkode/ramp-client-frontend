@@ -45,6 +45,7 @@ import { PaymentIntroComponent } from './payment-intro.component';
 import { WidgetWireTransferComponent } from './panels/wire-transfer.component';
 import { MatRadioModule } from '@angular/material/radio';
 import { WidgetWireTransferResultComponent } from './panels/wire-transfer-result.component';
+import { WidgetSellDetailsComponent } from './panels/sell-details.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -78,11 +79,19 @@ export class MaterialModule { }
     declarations: [
         WidgetComponent, ReceiveWidgetComponent, SendWidgetComponent, TransferWidgetComponent, BuySellWidgetComponent, WidgetProgressComponent,
         WidgetSummaryComponent, WidgetRateComponent, WidgetCreditCardComponent, WidgetWireTransferComponent, WidgetWireTransferResultComponent,
+        WidgetSellDetailsComponent,
         WidgetRegisterComponent, WidgetLoginAuthComponent, WidgetCodeAuthComponent,
         WidgetInitializationComponent, WidgetOrderDetailsComponent, WidgetReceiveDetailsComponent, WidgetSendDetailsComponent,
         WidgetDisclaimerComponent, WidgetKycComponent, WidgetPaymentComponent, WidgetProcessingFrameComponent,
         WidgetProcessingInstantpayComponent, WidgetCompleteComponent, PaymentIntroComponent],
-    exports: [WidgetComponent, BuySellWidgetComponent, ReceiveWidgetComponent, SendWidgetComponent, TransferWidgetComponent, PaymentIntroComponent],
+    exports: [
+        WidgetComponent,
+        BuySellWidgetComponent,
+        ReceiveWidgetComponent,
+        SendWidgetComponent,
+        TransferWidgetComponent,
+        PaymentIntroComponent
+    ],
     providers: [],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

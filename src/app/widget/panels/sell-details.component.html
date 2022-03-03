@@ -1,0 +1,20 @@
+<div class="__widget-data-box">
+    <div class="__form-label">
+        Bank Category
+    </div>
+    <mat-radio-group class="__widget-radio-group" [(ngModel)]="selectedCategory">
+        <mat-radio-button class="__widget-radio-button" *ngFor="let cat of bankCategories" [value]="cat.id">
+            {{cat.title}}
+        </mat-radio-button>
+    </mat-radio-group>
+    <div class="__form-separator"></div>
+
+    <!-- Buttons -->
+    <div class="__widget-buttons-area">
+        <button class="__outlined-button" type="button" (click)="onBack.emit()">BACK</button>
+        <button class="__main-button __button-wide-separator" type="button" [disabled]="selectedCategory===undefined"
+            (click)="onSubmit()">
+            pay now
+        </button>
+    </div>
+</div>
