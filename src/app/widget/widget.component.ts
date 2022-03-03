@@ -477,7 +477,7 @@ export class WidgetComponent implements OnInit {
     this.selectedWireTransfer = data.selected;
     const settings = {
       settingsCostId: data.id,
-      accountType: data.selected.id
+      accountType: data.selected
     };
 
     const settingsData = JSON.stringify(settings);
