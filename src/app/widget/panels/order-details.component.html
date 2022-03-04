@@ -123,6 +123,12 @@
         </div>
 
         <div *ngIf="currentTransaction === TRANSACTION_TYPE.Withdrawal">
+            <!-- Receive -->
+            <app-form-finance-combo [label]="'Amount to receive'" [placeholder]="'...'" [boxFieldName]="'amountReceive'"
+                [boxField]="amountReceiveField" [comboField]="currencyReceiveField" [comboFieldName]="'currencyReceive'"
+                [comboList]="receiveCurrencyList" [errorMessages]="amountReceiveErrorMessages" [separator]="false">
+            </app-form-finance-combo>
+            
             <!-- Wallets -->
             <div *ngIf="filteredWallets.length>1">
                 <div class="__form-separator"></div>

@@ -543,7 +543,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
           this.errorMessage = '';
         }
       }
-      this.pSpendChanged = true;
+      this.pReceiveChanged = true;
       this.updateCurrentAmounts();
     }
   }
