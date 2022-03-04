@@ -1,6 +1,6 @@
 <div class="__widget-data-box">
     <div class="__form-label">
-        Bank Category
+        Bank Details
     </div>
     <mat-radio-group class="__widget-radio-group" [(ngModel)]="selectedCategory">
         <mat-radio-button class="__widget-radio-button" *ngFor="let cat of bankCategories" [value]="cat.id">
@@ -9,10 +9,66 @@
     </mat-radio-group>
     <div class="__form-separator"></div>
 
+    <form *ngIf="selectedCategory===PAYMENT_CATEGORY.AU" [formGroup]="auDataForm">
+        <!-- Account name -->
+        <app-form-textbox [label]="'Account name'" [maxlength]="100" formControlName="accountName"
+            [errorMessages]="formErrorMessages" [separator]="true">
+        </app-form-textbox>
+        <!-- Account number -->
+        <app-form-textbox [label]="'Account number'" [maxlength]="100" formControlName="accountNumber"
+            [errorMessages]="formErrorMessages" [separator]="true">
+        </app-form-textbox>
+        <!-- BSB -->
+        <app-form-textbox [label]="'BSB'" [maxlength]="100" formControlName="bsb" [errorMessages]="formErrorMessages"
+            [separator]="true">
+        </app-form-textbox>
+    </form>
+    <form *ngIf="selectedCategory===PAYMENT_CATEGORY.EU" [formGroup]="euDataForm">
+        <!-- Bank address -->
+        <app-form-textbox [label]="'Bank address'" [maxlength]="100" formControlName="bankAddress"
+            [errorMessages]="formErrorMessages" [separator]="false">
+        </app-form-textbox>
+        <!-- Bank name -->
+        <app-form-textbox [label]="'Bank name'" [maxlength]="100" formControlName="bankName"
+            [errorMessages]="formErrorMessages" [separator]="false">
+        </app-form-textbox>
+        <!-- Beneficiary address -->
+        <app-form-textbox [label]="'Beneficiary address'" [maxlength]="100" formControlName="beneficiaryAddress"
+            [errorMessages]="formErrorMessages" [separator]="false">
+        </app-form-textbox>
+        <!-- Beneficiary name -->
+        <app-form-textbox [label]="'Beneficiary name'" [maxlength]="100" formControlName="beneficiaryName"
+            [errorMessages]="formErrorMessages" [separator]="false">
+        </app-form-textbox>
+        <!-- IBAN -->
+        <app-form-textbox [label]="'IBAN'" [maxlength]="100" formControlName="iban"
+            [errorMessages]="formErrorMessages" [separator]="false">
+        </app-form-textbox>
+        <!-- SWIFT / BIC -->
+        <app-form-textbox [label]="'SWIFT / BIC'" [maxlength]="100" formControlName="swiftBic"
+            [errorMessages]="formErrorMessages" [separator]="false">
+        </app-form-textbox>
+    </form>
+    <form *ngIf="selectedCategory===PAYMENT_CATEGORY.UK" [formGroup]="ukDataForm">
+        <!-- Account name -->
+        <app-form-textbox [label]="'Account name'" [maxlength]="100" formControlName="accountName"
+            [errorMessages]="formErrorMessages" [separator]="true">
+        </app-form-textbox>
+        <!-- Account number -->
+        <app-form-textbox [label]="'Account number'" [maxlength]="100" formControlName="accountNumber"
+            [errorMessages]="formErrorMessages" [separator]="true">
+        </app-form-textbox>
+        <!-- SortCode -->
+        <app-form-textbox [label]="'Sort code'" [maxlength]="100" formControlName="sortCode"
+            [errorMessages]="formErrorMessages" [separator]="true">
+        </app-form-textbox>
+    </form>
+
+    <div class="__form-separator"></div>
     <!-- Buttons -->
     <div class="__widget-buttons-area">
         <button class="__outlined-button" type="button" (click)="onBack.emit()">BACK</button>
-        <button class="__main-button __button-wide-separator" type="button" [disabled]="selectedCategory===undefined"
+        <button class="__main-button __button-wide-separator" type="button" [disabled]="!currentFormValid"
             (click)="onSubmit()">
             pay now
         </button>

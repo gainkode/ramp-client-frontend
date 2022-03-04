@@ -40,7 +40,7 @@
         (onWalletAddressUpdated)="orderWalletChanged($event)" (onComplete)="orderDetailsComplete($event)">
       </app-widget-order-details>
       <!-- Sell details -->
-      <app-widget-sell-details *ngSwitchCase="'sell_details'" [summary]="summary" [bankCategories]="wireTransferList"
+      <app-widget-sell-details *ngSwitchCase="'sell_details'" [summary]="summary"
         (onBack)="paymentBack()" (onComplete)="sellComplete($event)">
       </app-widget-sell-details>
       <!-- Disclaimer -->

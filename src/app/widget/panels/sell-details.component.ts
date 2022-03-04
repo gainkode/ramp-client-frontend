@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { WireTransferUserSelection } from 'src/app/model/cost-scheme.model';
+import { FormBuilder, Validators } from '@angular/forms';
+import { WireTransferBankAccountAu, WireTransferBankAccountEu, WireTransferBankAccountUk, WireTransferUserSelection } from 'src/app/model/cost-scheme.model';
 import { WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from 'src/app/model/payment-base.model';
 import { CheckoutSummary } from 'src/app/model/payment.model';
 
@@ -10,22 +11,145 @@ import { CheckoutSummary } from 'src/app/model/payment.model';
 })
 export class WidgetSellDetailsComponent {
     @Input() summary: CheckoutSummary | undefined = undefined;
-    @Input() bankCategories: WireTransferPaymentCategoryItem[] = [];
     @Output() onBack = new EventEmitter();
     @Output() onComplete = new EventEmitter<string>();
 
+    bankCategories: WireTransferPaymentCategoryItem[] = [];
     selectedCategory: WireTransferPaymentCategory | undefined = undefined;
+    PAYMENT_CATEGORY: typeof WireTransferPaymentCategory = WireTransferPaymentCategory;
+    formErrorMessages: { [key: string]: string; } = {
+        ['required']: 'Field is required'
+    };
 
-    constructor() {
+    auDataForm = this.formBuilder.group({
+        accountName: [undefined, { validators: [Validators.required], updateOn: 'change' }],
+        accountNumber: [undefined, { validators: [Validators.required], updateOn: 'change' }],
+        bsb: [undefined, { validators: [Validators.required], updateOn: 'change' }]
+    });
+    euDataForm = this.formBuilder.group({
+        bankAddress: [undefined, { validators: [Validators.required], updateOn: 'change' }],
+        bankName: [undefined, { validators: [Validators.required], updateOn: 'change' }],
+        beneficiaryAddress: [undefined, { validators: [Validators.required], updateOn: 'change' }],
+        beneficiaryName: [undefined, { validators: [Validators.required], updateOn: 'change' }],
+        iban: [undefined, { validators: [Validators.required], updateOn: 'change' }],
+        swiftBic: [undefined, { validators: [Validators.required], updateOn: 'change' }]
+    });
+    ukDataForm = this.formBuilder.group({
+        accountName: [undefined, { validators: [Validators.required], updateOn: 'change' }],
+        accountNumber: [undefined, { validators: [Validators.required], updateOn: 'change' }],
+        sortCode: [undefined, { validators: [Validators.required], updateOn: 'change' }]
+    });
+
+    get currentFormValid(): boolean {
+        let valid = false;
+        if (this.selectedCategory === WireTransferPaymentCategory.AU) {
+            valid = this.auDataForm.valid;
+        } else if (this.selectedCategory === WireTransferPaymentCategory.EU) {
+            valid = this.euDataForm.valid;
+        } else if (this.selectedCategory === WireTransferPaymentCategory.UK) {
+            valid = this.ukDataForm.valid;
+        }
+        return valid;
+    }
+
+    constructor(private formBuilder: FormBuilder) {
+        const au: WireTransferBankAccountAu = {
+            accountName: 'AU Account',
+            accountNumber: 'AU Number',
+            bsb: 'BSB'
+        };
+        const eu: WireTransferBankAccountEu = {
+            bankAddress: 'Bank Address',
+            bankName: 'Bank name',
+            beneficiaryAddress: 'Beneficiary',
+            beneficiaryName: 'Name',
+            iban: 'IBAN',
+            swiftBic: 'BIC'
+        };
+        const uk: WireTransferBankAccountUk = {
+            accountName: 'UK Account',
+            accountNumber: 'UK Number',
+            sortCode: 'Sort'
+        };
+        this.bankCategories.push({
+            id: WireTransferPaymentCategory.AU,
+            title: 'Australia',
+            data: JSON.stringify(au)
+        });
+        this.bankCategories.push({
+            id: WireTransferPaymentCategory.EU,
+            title: 'EU',
+            data: JSON.stringify(eu)
+        });
+        this.bankCategories.push({
+            id: WireTransferPaymentCategory.UK,
+            title: 'UK',
+            data: JSON.stringify(uk)
+        });
+        this.setFormData();
+    }
+
+    private setFormData(): void {
+        const auCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.AU);
+        if (auCategory) {
+            const auData = JSON.parse(auCategory.data);
+            if (auData) {
+                this.auDataForm.get('accountName')?.setValue(auData.accountName);
+                this.auDataForm.get('accountNumber')?.setValue(auData.accountNumber);
+                this.auDataForm.get('bsb')?.setValue(auData.bsb);
+            }
+        }
+        const euCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.EU);
+        if (euCategory) {
+            const euData = JSON.parse(euCategory.data);
+            if (euData) {
+                this.euDataForm.get('bankAddress')?.setValue(euData.bankAddress);
+                this.euDataForm.get('bankName')?.setValue(euData.bankName);
+                this.euDataForm.get('beneficiaryAddress')?.setValue(euData.beneficiaryAddress);
+                this.euDataForm.get('beneficiaryName')?.setValue(euData.beneficiaryName);
+                this.euDataForm.get('iban')?.setValue(euData.iban);
+                this.euDataForm.get('swiftBic')?.setValue(euData.swiftBic);
+            }
+        }
+        const ukCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.UK);
+        if (ukCategory) {
+            const ukData = JSON.parse(ukCategory.data);
+            if (ukData) {
+                this.ukDataForm.get('accountName')?.setValue(ukData.accountName);
+                this.ukDataForm.get('accountNumber')?.setValue(ukData.accountNumber);
+                this.ukDataForm.get('sortCode')?.setValue(ukData.sortCode);
+            }
+        }
     }
 
     onSubmit(): void {
-        // if (this.selectedCategory) {
-        //     const selected = this.bankCategories.find(x => x.id === this.selectedCategory);
-        //     this.onComplete.emit({
-        //         id: this.bankAccountId,
-        //         selected: selected
-        //     } as WireTransferUserSelection);
-        // }
+        let paymentData = '';
+        if (this.selectedCategory === WireTransferPaymentCategory.AU && this.auDataForm.valid) {
+            const data: WireTransferBankAccountAu = {
+                accountName: this.auDataForm.get('accountName')?.value,
+                accountNumber: this.auDataForm.get('accountNumber')?.value,
+                bsb: this.auDataForm.get('bsb')?.value
+            };
+            paymentData = JSON.stringify(data);
+        } else if (this.selectedCategory === WireTransferPaymentCategory.EU && this.euDataForm.valid) {
+            const data: WireTransferBankAccountEu = {
+                bankAddress: this.euDataForm.get('bankAddress')?.value,
+                bankName: this.euDataForm.get('bankName')?.value,
+                beneficiaryAddress: this.euDataForm.get('beneficiaryAddress')?.value,
+                beneficiaryName: this.euDataForm.get('beneficiaryName')?.value,
+                iban: this.euDataForm.get('iban')?.value,
+                swiftBic: this.euDataForm.get('swiftBic')?.value
+            };
+            paymentData = JSON.stringify(data);
+        } else if (this.selectedCategory === WireTransferPaymentCategory.UK && this.ukDataForm.valid) {
+            const uk: WireTransferBankAccountUk = {
+                accountName: this.ukDataForm.get('accountName')?.value,
+                accountNumber: this.ukDataForm.get('accountNumber')?.value,
+                sortCode: this.ukDataForm.get('sortCode')?.value
+            };
+        }
+        if (paymentData !== '') {
+            this.onComplete.emit(paymentData);
+        }
     }
 }

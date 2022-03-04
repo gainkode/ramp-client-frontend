@@ -95,8 +95,9 @@ export class WidgetComponent implements OnInit {
         this.widget = this.settings;
       }
       if (this.widget.embedded) {
-        this.pager.init('initialization', 'Initialization');
-        this.loadUserWallets();
+        this.pager.init('sell_details', 'Initialization');
+        // this.pager.init('initialization', 'Initialization');
+        // this.loadUserWallets();
       } else {
         this.pager.init('order_details', 'Order details');
         this.initData(undefined);
@@ -172,7 +173,6 @@ export class WidgetComponent implements OnInit {
         this.summary.currencyTo = this.widget.currencyTo;
       }
     }
-
     if (!this.widget.disclaimer) {
       this.summary.agreementChecked = true;
     }
