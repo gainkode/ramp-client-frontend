@@ -3,6 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { WireTransferBankAccountAu, WireTransferBankAccountEu, WireTransferBankAccountUk, WireTransferUserSelection } from 'src/app/model/cost-scheme.model';
 import { WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from 'src/app/model/payment-base.model';
 import { CheckoutSummary } from 'src/app/model/payment.model';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
     selector: 'app-widget-sell-details',
@@ -52,25 +53,12 @@ export class WidgetSellDetailsComponent {
         return valid;
     }
 
-    constructor(private formBuilder: FormBuilder) {
-        const au: WireTransferBankAccountAu = {
-            accountName: 'AU Account',
-            accountNumber: 'AU Number',
-            bsb: 'BSB'
-        };
-        const eu: WireTransferBankAccountEu = {
-            bankAddress: 'Bank Address',
-            bankName: 'Bank name',
-            beneficiaryAddress: 'Beneficiary',
-            beneficiaryName: 'Name',
-            iban: 'IBAN',
-            swiftBic: 'BIC'
-        };
-        const uk: WireTransferBankAccountUk = {
-            accountName: 'UK Account',
-            accountNumber: 'UK Number',
-            sortCode: 'Sort'
-        };
+    constructor(
+        private formBuilder: FormBuilder,
+        private auth: AuthService) {
+        const au = new WireTransferBankAccountAu();
+        const eu = new WireTransferBankAccountEu();
+        const uk = new WireTransferBankAccountUk();
         this.bankCategories.push({
             id: WireTransferPaymentCategory.AU,
             title: 'Australia',
@@ -149,7 +137,12 @@ export class WidgetSellDetailsComponent {
             };
         }
         if (paymentData !== '') {
-            this.onComplete.emit(paymentData);
+            const result = {
+                id: this.selectedCategory,
+                title: this.bankCategories.find(x => x.id === this.selectedCategory)?.title,
+                data: paymentData
+            } as WireTransferPaymentCategoryItem;
+            this.onComplete.emit(JSON.stringify(result));
         }
     }
 }

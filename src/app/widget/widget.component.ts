@@ -95,9 +95,9 @@ export class WidgetComponent implements OnInit {
         this.widget = this.settings;
       }
       if (this.widget.embedded) {
-        this.pager.init('sell_details', 'Initialization');
-        // this.pager.init('initialization', 'Initialization');
-        // this.loadUserWallets();
+        //this.pager.init('sell_details', 'Initialization');
+        this.pager.init('initialization', 'Initialization');
+        this.loadUserWallets();
       } else {
         this.pager.init('order_details', 'Order details');
         this.initData(undefined);
@@ -395,7 +395,11 @@ export class WidgetComponent implements OnInit {
 
   // == Sell ===============
   sellComplete(instrumentDetails: string): void {
-
+    const settings = {
+      accountType: instrumentDetails
+    };
+    const settingsData = JSON.stringify(settings);
+    this.createWithdrawalTransaction(settingsData);
   }
   // =======================
 
@@ -699,7 +703,7 @@ export class WidgetComponent implements OnInit {
     }
   }
 
-  private createWithdrawalTransaction(): void {
+  private createWithdrawalTransaction(instrumentDetails: string): void {
     this.errorMessage = '';
     this.inProgress = true;
     this.initMessage = 'Processing...';
@@ -717,7 +721,7 @@ export class WidgetComponent implements OnInit {
           'EUR',
           this.summary.amountFrom ?? 0,
           undefined,
-          '',
+          instrumentDetails,
           '',
           this.userParamsId,
           ''
