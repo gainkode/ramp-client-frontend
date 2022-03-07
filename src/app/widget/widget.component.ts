@@ -636,6 +636,8 @@ export class WidgetComponent implements OnInit {
     this.inProgress = true;
     const tempStageId = this.pager.swapStage('initialization');
     this.initMessage = 'Processing...';
+    console.log('createDepositTransaction', 'address', this.summary.address);
+    console.log('createDepositTransaction', 'widget', this.widget.widgetId);
     if (this.summary) {
       let destination = this.summary.address;
       if (this.widget.widgetId !== '') {
