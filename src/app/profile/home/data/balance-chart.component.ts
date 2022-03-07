@@ -365,9 +365,6 @@ export class ProfileBalanceChartComponent implements OnInit, OnDestroy {
                 inc--;
                 const dataPoint = data.list[inc];
                 const chartPoint = chartPoints[max - inc - 1];
-
-                console.log(inc, dataPoint?.balanceFiat, chartPoint.balanceFiat);
-
                 if (dataPoint) {
                     spotBalance += dataPoint.balanceFiat ?? 0;
                 }

@@ -609,8 +609,13 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       this.setSpendValidators(this.selectedWallet.total);
     }
     const data: CheckoutSummary = new CheckoutSummary();
-    data.address = this.selectedWallet?.address ?? '';
-    data.vaultId = this.selectedWallet?.id ?? '';
+    if (this.selectedWallet) {
+      data.address = this.selectedWallet?.address ?? '';
+      data.vaultId = this.selectedWallet?.id ?? '';
+    } else {
+      data.address = val;
+      data.vaultId = '';
+    }
     this.onWalletAddressUpdated.emit(data);
   }
 
