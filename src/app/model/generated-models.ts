@@ -85,6 +85,7 @@ export type AssetAddress = {
   vaultId?: Maybe<Scalars['String']>;
   vaultName?: Maybe<Scalars['String']>;
   vaultOriginalId?: Maybe<Scalars['String']>;
+  custodyProviderLink?: Maybe<Scalars['String']>;
   default?: Maybe<Scalars['Boolean']>;
   userId?: Maybe<Scalars['String']>;
   userEmail?: Maybe<Scalars['String']>;
@@ -2499,6 +2500,7 @@ export type Transaction = {
   risk: RiskLevel;
   riskCodes?: Maybe<Array<Scalars['String']>>;
   backups?: Maybe<Array<Scalars['String']>>;
+  comment?: Maybe<Scalars['String']>;
   data?: Maybe<Scalars['String']>;
 };
 
@@ -2698,6 +2700,7 @@ export type TransactionUpdateInput = {
   accountStatus?: Maybe<AccountStatus>;
   transferOrderChanges?: Maybe<TransactionUpdateTransferOrderChanges>;
   benchmarkTransferOrderChanges?: Maybe<TransactionUpdateTransferOrderChanges>;
+  comment?: Maybe<Scalars['String']>;
 };
 
 export type TransactionUpdateTransferOrderChanges = {
@@ -3317,6 +3320,7 @@ export type VaultAccount = {
   id?: Maybe<Scalars['ID']>;
   userId?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
+  custodyProviderLink?: Maybe<Scalars['String']>;
   rawData?: Maybe<Scalars['String']>;
   assets?: Maybe<Array<VaultAccountAsset>>;
 };
@@ -3352,6 +3356,7 @@ export type VaultAccountEx = {
   id?: Maybe<Scalars['String']>;
   userId?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
+  custodyProviderLink?: Maybe<Scalars['String']>;
   default?: Maybe<Scalars['Boolean']>;
   rawData?: Maybe<Scalars['String']>;
   assets?: Maybe<Array<VaultAccountAsset>>;

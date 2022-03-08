@@ -1,0 +1,14 @@
+<h1 *ngIf="data.title!==''" class="__dialog-title" mat-dialog-title>{{data.title}}</h1>
+<div class="__dialog-space-small"></div>
+<form [formGroup]="messageForm">
+
+    <app-form-textbox [label]="'Comment'" [boxType]="'text'" [placeholder]="'Comment'" [maxlength]="500"
+        formControlName="comment" [multiple]=true [separator]="true">
+    </app-form-textbox>
+
+    <mat-dialog-actions align="center">
+        <button class="__main-button __button-wide" [mat-dialog-close]="messageForm">
+            SAVE
+        </button>
+    </mat-dialog-actions>
+</form>

@@ -74,6 +74,7 @@ export class TransactionItemFull {
   widgetId = '';
   widgetName = '';
   selected = false;
+  comment = '';
 
   constructor(data: Transaction | TransactionShort | null) {
     if (data !== null) {
@@ -96,6 +97,7 @@ export class TransactionItemFull {
         this.benchmarkTransferOrderId = transactionData.benchmarkTransferOrder?.orderId ?? '';
         this.benchmarkTransferOrderHash = transactionData.benchmarkTransferOrder?.transferHash ?? '';
       }
+      this.comment = transactionData.comment ?? '';
       this.transferOrderId = data.transferOrder?.orderId ?? '';
       this.transferOriginalOrderId = data.transferOrder?.originalOrderId ?? '-';
       this.transferOrderHash = data.transferOrder?.transferHash ?? '';

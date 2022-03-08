@@ -53,9 +53,13 @@ export class WalletListComponent implements OnInit, OnDestroy, AfterViewInit {
     private adminService: AdminDataService,
     private router: Router,
     public activeRoute: ActivatedRoute) {
-      const id = activeRoute.snapshot.params['id'];
-      if (id) {
-        this.filter.users = [id as string];
+      const filterUserId = activeRoute.snapshot.params['userid'];
+      const filterTransactionId = activeRoute.snapshot.params['transactionid'];
+      if (filterUserId) {
+        this.filter.users = [filterUserId as string];
+      }
+      if (filterTransactionId) {
+        this.filter.transactionIds = [filterTransactionId as string];
       }
   }
 
@@ -117,6 +121,10 @@ export class WalletListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   handleDetailsPanelClosed(): void {
     this.selectedWallet = undefined;
+  }
+
+  showWallets(walletId: string): void {
+
   }
 
   private setEditMode(mode: boolean): void {

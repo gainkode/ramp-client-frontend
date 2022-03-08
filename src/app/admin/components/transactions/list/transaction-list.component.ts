@@ -161,6 +161,10 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
     );
   }
 
+  showWallets(transactionId: string): void {
+
+  }
+  
   private executeUnbenchmark(): void {
     const requestData$ = this.adminService.unbenchmarkTransaction(
       this.transactions.filter(x => x.selected === true && x.type !== TransactionType.Receive).map(val => val.id)

@@ -522,6 +522,7 @@ const GET_TRANSACTIONS = gql`
         kycStatus
         widget
         widgetId
+        comment
       }
     }
   }

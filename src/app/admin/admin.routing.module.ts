@@ -27,16 +27,12 @@ const routes: Routes = [
       {
         path: 'dashboard',
         component: DashboardComponent,
-        data: {
-          header: 'Dashboard'
-        }
+        data: { header: 'Dashboard' }
       },
       {
         path: 'settings',
         component: AdminSettingsComponent,
-        data: {
-          header: 'Settings'
-        }
+        data: { header: 'Settings' }
       },
       {
         path: 'transactions',
@@ -44,23 +40,17 @@ const routes: Routes = [
           {
             path: 'users/:id',
             component: TransactionListComponent,
-            data: {
-              header: 'Customer transactions'
-            }
+            data: { header: 'Customer transactions' }
           },
           {
             path: ':id',
             component: TransactionSingleComponent,
-            data: {
-              header: 'Transaction {:id}'
-            }
+            data: { header: 'Transaction {:id}' }
           },
           {
             path: '',
             component: TransactionListComponent,
-            data: {
-              header: 'Transactions'
-            }
+            data: { header: 'Transactions' }
           }
         ]
       },
@@ -70,16 +60,12 @@ const routes: Routes = [
           {
             path: ':id',
             component: CustomerSingleComponent,
-            data: {
-              header: 'Customer {:id}'
-            }
+            data: { header: 'Customer {:id}' }
           },
           {
             path: '',
             component: CustomerListComponent,
-            data: {
-              header: 'Customers'
-            }
+            data: { header: 'Customers' }
           }
         ]
       },
@@ -87,55 +73,46 @@ const routes: Routes = [
         path: 'wallets',
         children: [
           {
-            path: 'users/:id',
+            path: 'users/:userid',
             component: WalletListComponent,
-            data: {
-              header: 'Customer wallets'
-            }
+            data: { header: 'Customer wallets' }
+          },
+          {
+            path: 'transactions/:transactionid',
+            component: WalletListComponent,
+            data: { header: 'Transaction wallets' }
           },
           {
             path: '',
             component: WalletListComponent,
-            data: {
-              header: 'Wallets'
-            }
+            data: { header: 'Wallets' }
           },
         ]
       },
       {
         path: 'fees',
         component: FeeListComponent,
-        data: {
-          header: 'Fees'
-        }
+        data: { header: 'Fees' }
       },
       {
         path: 'notifications',
         component: NotificationListComponent,
-        data: {
-          header: 'Notifications'
-        }
+        data: { header: 'Notifications' }
       },
       {
         path: 'costs',
         component: CostTabListComponent,
-        data: {
-          header: 'Costs'
-        }
+        data: { header: 'Costs' }
       },
       {
         path: 'identification',
         component: IdentificationListComponent,
-        data: {
-          header: 'Identification'
-        }
+        data: { header: 'Identification' }
       },
       {
         path: 'reconciliation',
         component: ReconciliationComponent,
-        data: {
-          header: 'Reconciliation'
-        }
+        data: { header: 'Reconciliation' }
       },
       {
         path: 'system-users',
@@ -143,39 +120,29 @@ const routes: Routes = [
           {
             path: ':id',
             component: SystemUserSingleComponent,
-            data: {
-              header: 'User {:id}'
-            }
+            data: { header: 'User {:id}' }
           },
           {
             path: '',
             component: SystemUserListComponent,
-            data: {
-              header: 'System Users'
-            }
+            data: { header: 'System Users' }
           }
         ]
       },
       {
         path: 'risk-center',
         component: RiskAlertListComponent,
-        data: {
-          header: 'Risk center'
-        }
+        data: { header: 'Risk center' }
       },
       {
         path: 'widgets',
         component: WidgetListComponent,
-        data: {
-          header: 'Widgets'
-        }
+        data: { header: 'Widgets' }
       },
       {
         path: 'widgets/:userId',
         component: WidgetListComponent,
-        data: {
-          header: 'Widgets'
-        }
+        data: { header: 'Widgets' }
       },
       {
         path: '**',
@@ -188,13 +155,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forChild(routes)
-  ],
-  exports: [
-    RouterModule
-  ]
+  imports: [ RouterModule.forChild(routes) ],
+  exports: [ RouterModule ]
 })
-export class AdminRoutingModule {
-
-}
+export class AdminRoutingModule {}

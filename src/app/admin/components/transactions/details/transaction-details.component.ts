@@ -87,7 +87,8 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
     kycStatus: [KycStatus.Unknown, { validators: [Validators.required], updateOn: 'change' }],
     accountStatus: [AccountStatus.Closed, { validators: [Validators.required], updateOn: 'change' }],
     transferHash: [undefined],
-    benchmarkTransferHash: [undefined]
+    benchmarkTransferHash: [undefined],
+    comment: [undefined]
   });
 
   constructor(
@@ -181,6 +182,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
       this.form.get('accountStatus')?.setValue(this.data.accountStatusValue);
       this.form.get('transferHash')?.setValue(this.data.transferOrderHash);
       this.form.get('benchmarkTransferHash')?.setValue(this.data.benchmarkTransferOrderHash);
+      this.form.get('comment')?.setValue(this.data.comment);
       this.transactionStatus = this.data.status;
       if (this.transactionStatuses.length > 0) {
         this.transactionStatusName = this.transactionStatuses.find(x => x.id === this.transactionStatus)?.name ?? '';
@@ -196,7 +198,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
     this.form.get('rate')?.setValue(this.currentRate);
   }
 
-  private saveTransaction(transaction: Transaction, statusChanged: boolean, amountChanged: boolean): void {
+  private saveTransaction(transaction: Transaction, statusChanged: boolean, amountChanged: boolean, setComplete: boolean): void {
     const dialogRef = this.dialog.open(DeleteDialogBox, {
       width: '400px',
       data: {
@@ -298,8 +300,10 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
         benchmarkTransferOrder: {
           orderId: this.data?.benchmarkTransferOrderId,
           transferHash: this.form.get('benchmarkTransferHash')?.value ?? ''
-        }
+        },
+        comment: this.form.get('comment')?.value ?? ''
       } as Transaction;
+      const statusComplete = (this.transactionStatus !== transaction.status && transaction.status === TransactionStatus.Completed);
       const statusHash = getTransactionStatusHash(
         transaction.status,
         transaction.kycStatus ?? TransactionKycStatus.KycWaiting,
@@ -308,7 +312,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
         currentRate ?? this.pDefaultRate,
         transaction.amountToSpend ?? 0,
         transaction.feeFiat ?? 0);
-      this.saveTransaction(transaction, this.pStatusHash !== statusHash, this.pAmountHash !== amountHash);
+      this.saveTransaction(transaction, this.pStatusHash !== statusHash, this.pAmountHash !== amountHash, statusComplete);
     }
   }
 
