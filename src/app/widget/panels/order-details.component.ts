@@ -95,7 +95,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   amountReceiveErrorMessages: { [key: string]: string; } = {
     ['required']: 'Amount is required',
     ['pattern']: 'Amount must be a valid number',
-    ['min']: 'Minimal amount'
+    //['min']: 'Minimal amount'
   };
   walletErrorMessages: { [key: string]: string; } = {
     ['required']: 'Address is required'
@@ -476,7 +476,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     this.amountReceiveField?.setValidators([
       Validators.required,
       Validators.pattern(this.pNumberPattern),
-      Validators.min(this.currentCurrencyReceive?.minAmount ?? 0),
+      //Validators.min(this.currentCurrencyReceive?.minAmount ?? 0),
     ]);
     this.amountReceiveField?.updateValueAndValidity();
   }
