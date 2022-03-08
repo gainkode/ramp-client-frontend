@@ -488,7 +488,6 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
         this.setSpendValidators();
       }
       if (this.summary?.transactionType === TransactionType.Withdrawal) {
-
         if (this.wallets.length > 0) {
           if (this.addressInit) {
             this.walletField?.setValue(this.summary.address ?? '');
@@ -511,7 +510,11 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
           }
         }
       }
-      this.pReceiveChanged = true;
+      if (this.summary?.transactionType === TransactionType.Withdrawal) {
+        this.pSpendChanged = true;
+      } else {
+        this.pReceiveChanged = true;
+      }
       this.updateCurrentAmounts();
     }
   }
@@ -543,7 +546,11 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
           this.errorMessage = '';
         }
       }
-      this.pReceiveChanged = true;
+      if (this.summary?.transactionType === TransactionType.Withdrawal) {
+        this.pSpendChanged = true;
+      } else {
+        this.pReceiveChanged = true;
+      }
       this.updateCurrentAmounts();
     }
   }
