@@ -198,7 +198,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
     this.form.get('rate')?.setValue(this.currentRate);
   }
 
-  private saveTransaction(transaction: Transaction, statusChanged: boolean, amountChanged: boolean, setComplete: boolean): void {
+  private saveTransaction(transaction: Transaction, statusChanged: boolean, amountChanged: boolean): void {
     const dialogRef = this.dialog.open(DeleteDialogBox, {
       width: '400px',
       data: {
@@ -303,7 +303,6 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
         },
         comment: this.form.get('comment')?.value ?? ''
       } as Transaction;
-      const statusComplete = (this.transactionStatus !== transaction.status && transaction.status === TransactionStatus.Completed);
       const statusHash = getTransactionStatusHash(
         transaction.status,
         transaction.kycStatus ?? TransactionKycStatus.KycWaiting,
@@ -312,7 +311,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
         currentRate ?? this.pDefaultRate,
         transaction.amountToSpend ?? 0,
         transaction.feeFiat ?? 0);
-      this.saveTransaction(transaction, this.pStatusHash !== statusHash, this.pAmountHash !== amountHash, statusComplete);
+      this.saveTransaction(transaction, this.pStatusHash !== statusHash, this.pAmountHash !== amountHash);
     }
   }
 

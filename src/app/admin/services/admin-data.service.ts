@@ -1401,6 +1401,7 @@ mutation UpdateTransaction(
   $recalculate: Boolean
   $transferOrder: TransactionUpdateTransferOrderChanges
   $benchmarkTransferOrder: TransactionUpdateTransferOrderChanges
+  $comment: String
 ) {
   updateTransaction(
     transactionId: $transactionId
@@ -1419,6 +1420,7 @@ mutation UpdateTransaction(
       launchAfterUpdate: $launchAfterUpdate
       transferOrderChanges: $transferOrder
       benchmarkTransferOrderChanges: $benchmarkTransferOrder
+      comment: $comment
     }
   ) {
     transactionId
@@ -2862,6 +2864,7 @@ export class AdminDataService {
       status: data.status,
       kycStatus: data.kycStatus,
       accountStatus: data.accountStatus,
+      comment: data.comment,
       launchAfterUpdate: restartTransaction,
       transferOrder: transfer,
       benchmarkTransferOrder: benchmark,
