@@ -1,9 +1,9 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Subscription, Observable, forkJoin } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { map, startWith, take } from 'rxjs/operators';
 import { CommonGroupValue } from 'src/app/model/common.model';
-import { PaymentInstrument, PaymentProvider, TransactionShort, TransactionType, UserState } from 'src/app/model/generated-models';
+import { PaymentInstrument, PaymentProvider, SettingsCostShort, TransactionShort, TransactionType, UserState } from 'src/app/model/generated-models';
 import { CheckoutSummary, PaymentProviderInstrumentView, PaymentProviderView } from 'src/app/model/payment.model';
 import { ErrorService } from 'src/app/services/error.service';
 import { PaymentDataService } from 'src/app/services/payment.service';
@@ -16,6 +16,7 @@ import { WalletValidator } from 'src/app/utils/wallet.validator';
 })
 export class WidgetPaymentComponent implements OnInit, OnDestroy {
   @Input() providers: PaymentProviderInstrumentView[] = [];
+  @Input() summary: CheckoutSummary | undefined = undefined;
   @Input() errorMessage = '';
   @Output() onBack = new EventEmitter();
   @Output() onSelect = new EventEmitter<string>();
@@ -25,14 +26,15 @@ export class WidgetPaymentComponent implements OnInit, OnDestroy {
   // @Output() onUpdate = new EventEmitter<string>();
   // @Output() onComplete = new EventEmitter<CheckoutSummary>();
 
-  // private pSubscriptions: Subscription = new Subscription();
+  private pSubscriptions: Subscription = new Subscription();
   // private selectedProviderId = '';
   // private paymentInstrument = PaymentInstrument.CreditCard;
+
+  paymentMethods: PaymentProviderInstrumentView[] = [];
 
   // walletInit = false;
   // userWallets: CommonGroupValue[] = [];
   // userWalletsFiltered: Observable<CommonGroupValue[]> | undefined = undefined;
-
 
   // dataForm = this.formBuilder.group({
   //   wallet: ['', { validators: [Validators.required], updateOn: 'change' }],
@@ -63,13 +65,14 @@ export class WidgetPaymentComponent implements OnInit, OnDestroy {
   //   return this.dataForm.get('transaction');
   // }
 
-  // constructor(
-  //   private changeDetector: ChangeDetectorRef,
-  //   //private formBuilder: FormBuilder,
-  //   private dataService: PaymentDataService,
-  //   private errorHandler: ErrorService) { }
+  constructor(
+    private changeDetector: ChangeDetectorRef,
+    //private formBuilder: FormBuilder,
+    private paymentService: PaymentDataService,
+    private errorHandler: ErrorService) { }
 
   ngOnInit(): void {
+    this.getWireTransferSettings();
     // this.currencyToField?.setValue(this.summary?.currencyTo);
     // this.transactionField?.setValue(this.summary?.transactionType);
     // this.pSubscriptions.add(this.walletField?.valueChanges.subscribe(val => this.onWalletUpdated(val)));
@@ -84,7 +87,36 @@ export class WidgetPaymentComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // this.pSubscriptions.unsubscribe();
+    this.pSubscriptions.unsubscribe();
+  }
+
+  private getWireTransferSettings(): void {
+    this.errorMessage = '';
+    let showWireTransfer = false;
+    this.paymentMethods = [];
+    const settingsData$ = this.paymentService.mySettingsCost(
+      this.summary?.transactionType ?? TransactionType.Deposit,
+      PaymentInstrument.WireTransfer,
+      this.summary?.currencyTo ?? 'BTC').valueChanges.pipe(take(1));
+    this.pSubscriptions.add(
+      settingsData$.subscribe(({ data }) => {
+        const settingsResult = data.mySettingsCost as SettingsCostShort;
+        if (settingsResult.bankAccounts && (settingsResult.bankAccounts?.length ?? 0 > 0)) {
+          showWireTransfer = true;
+        }
+        this.providers.forEach(p => {
+          if (p.instrument === PaymentInstrument.WireTransfer) {
+            if (showWireTransfer) {
+              this.paymentMethods.push(p);
+            }
+          } else {
+            this.paymentMethods.push(p);
+          }
+        });
+      }, (error) => {
+        this.errorMessage = 'Unable to get wire transfer settings';
+      })
+    );
   }
 
   // selectProvider(id: string) {

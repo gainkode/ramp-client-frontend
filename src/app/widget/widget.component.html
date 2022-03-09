@@ -62,7 +62,7 @@
         (onRegister)="onRegister($event)">
       </app-widget-code-auth>
       <!-- Payment -->
-      <app-widget-payment *ngSwitchCase="'payment'" [providers]="paymentProviders"
+      <app-widget-payment *ngSwitchCase="'payment'" [providers]="paymentProviders" [summary]="summary"
         [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage" (onBack)="paymentBack()"
         (onSelect)="selectProvider($event)">
       </app-widget-payment>

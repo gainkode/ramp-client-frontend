@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Subscription } from "rxjs";
 import { take } from "rxjs/operators";
-import { LoginResult, PaymentInstrument, PaymentProviderByInstrument, SettingsCostShort, TransactionType, User } from "../model/generated-models";
+import { LoginResult, PaymentInstrument, PaymentProviderByInstrument, SettingsCostShort, TransactionType, User, WireTransferBankAccountShort } from "../model/generated-models";
 import { WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from "../model/payment-base.model";
 import { CheckoutSummary, PaymentProviderInstrumentView, WireTransferPaymentCategoryList } from "../model/payment.model";
 import { AuthService } from "./auth.service";
@@ -149,10 +149,12 @@ export class WidgetService {
                 if (this.onProgressChanged) {
                     this.onProgressChanged(false);
                 }
+                let wireTransferList: WireTransferPaymentCategoryItem[] = [];
+                let accountData: WireTransferBankAccountShort | undefined = undefined;
                 const settingsResult = data.mySettingsCost as SettingsCostShort;
                 if (settingsResult.bankAccounts && (settingsResult.bankAccounts?.length ?? 0 > 0)) {
-                    const accountData = settingsResult.bankAccounts[0];
-                    const wireTransferList = WireTransferPaymentCategoryList.map(val => val);
+                    accountData = settingsResult.bankAccounts[0];
+                    wireTransferList = WireTransferPaymentCategoryList.map(val => val);
                     let pos = wireTransferList.findIndex(x => x.id === WireTransferPaymentCategory.AU);
                     if (pos >= 0) {
                         if (accountData.au === null || accountData.au === undefined || accountData.au === 'null') {
@@ -177,9 +179,9 @@ export class WidgetService {
                             wireTransferList[pos].data = accountData.eu;
                         }
                     }
-                    if (this.onWireTranferListLoaded) {
-                        this.onWireTranferListLoaded(wireTransferList, accountData.bankAccountId);
-                    }
+                }
+                if (this.onWireTranferListLoaded) {
+                    this.onWireTranferListLoaded(wireTransferList, accountData?.bankAccountId);
                 }
             }, (error) => {
                 if (this.onProgressChanged) {
