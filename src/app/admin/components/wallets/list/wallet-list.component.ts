@@ -123,8 +123,8 @@ export class WalletListComponent implements OnInit, OnDestroy, AfterViewInit {
     this.selectedWallet = undefined;
   }
 
-  showWallets(walletId: string): void {
-
+  showCustodyProvider(url: string): void {
+    window.open(url, '_blank');
   }
 
   private setEditMode(mode: boolean): void {

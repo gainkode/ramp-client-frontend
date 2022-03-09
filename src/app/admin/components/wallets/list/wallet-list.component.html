@@ -1,23 +1,19 @@
 <app-filter-panel [fields]="filterFields" (filter)="handleFilterApplied($event)"></app-filter-panel>
 
 <div class="data-table">
-    <mat-table matSort
-               [matSortActive]="sortedField"
-               matSortDirection="desc"
-               matSortDisableClear
-               [dataSource]="wallets"
-    >
+    <mat-table matSort [matSortActive]="sortedField" matSortDirection="desc" matSortDisableClear [dataSource]="wallets">
 
         <ng-container matColumnDef="details" sticky>
             <th mat-header-cell *matHeaderCellDef></th>
             <td mat-cell *matCellDef="let element">
                 <button mat-icon-button class="row-button" (click)="toggleDetails(element)"
-                        [attr.aria-label]="'Transaction details'" [attr.aria-pressed]="!!selectedWallet"
-                        [matTooltip]="getDetailsTooltip(element.id)" matTooltipClass="info-tooltip">
+                    [attr.aria-label]="'Transaction details'" [attr.aria-pressed]="!!selectedWallet"
+                    [matTooltip]="getDetailsTooltip(element.id)" matTooltipClass="info-tooltip">
                     <mat-icon class="details-icon">{{getDetailsIcon(element.id)}}</mat-icon>
                 </button>
-                <button mat-icon-button class="row-button" (click)="showWallets(element.id)"
-                    [attr.aria-label]="'Wallet details'" [matTooltip]="'Wallet details'" matTooltipClass="info-tooltip">
+                <button *ngIf="element.custodyProviderLink!==''" mat-icon-button class="row-button"
+                    (click)="showCustodyProvider(element.custodyProviderLink)" [attr.aria-label]="'Wallet details'"
+                    [matTooltip]="'Wallet details'" matTooltipClass="info-tooltip">
                     <mat-icon class="details-icon">
                         account_balance_wallet
                     </mat-icon>
@@ -100,8 +96,8 @@
     </mat-table>
 </div>
 
-<mat-paginator [length]="walletCount" [pageSize]="pageSize"
-               [pageSizeOptions]="[25, 50, 100]" showFirstLastButtons (page)="handlePage($event)">
+<mat-paginator [length]="walletCount" [pageSize]="pageSize" [pageSizeOptions]="[25, 50, 100]" showFirstLastButtons
+    (page)="handlePage($event)">
 </mat-paginator>
 
 <ng-template *ngIf="selectedWallet" appRightPanel (panelClosed)="handleDetailsPanelClosed()">

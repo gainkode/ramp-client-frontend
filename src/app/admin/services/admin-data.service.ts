@@ -827,6 +827,7 @@ const GET_WALLETS = gql`
         userId
         userEmail
         custodyProvider
+        custodyProviderLink
       }
     }
   }
@@ -2602,10 +2603,9 @@ export class AdminDataService {
           liquidityProvider: widget.liquidityProvider,
           additionalSettings: widget.additionalSettings
         }
-      })
-        .pipe(tap(() => {
-          this.snackBar.open(`Widget was created`, undefined, { duration: 5000 });
-        }))
+      }).pipe(tap(() => {
+        this.snackBar.open(`Widget was created`, undefined, { duration: 5000 });
+      }))
       : this.apollo.mutate({
         mutation: UPDATE_WIDGET,
         variables: {
@@ -2623,13 +2623,9 @@ export class AdminDataService {
           liquidityProvider: widget.liquidityProvider,
           additionalSettings: widget.additionalSettings
         }
-      })
-        .pipe(tap(() => {
-          this.snackBar.open(
-            `Widget was updated`,
-            undefined, { duration: 5000 }
-          );
-        }));
+      }).pipe(tap(() => {
+        this.snackBar.open(`Widget was updated`, undefined, { duration: 5000 });
+      }));
   }
 
   saveCustomer(id: string, customer: UserInput): Observable<any> {

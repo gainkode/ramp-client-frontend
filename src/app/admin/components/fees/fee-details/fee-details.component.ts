@@ -81,48 +81,13 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
     userMode: [[]],
     trxType: [[]],
     provider: [[]],
-    transactionFees: [
-      '', {
-        validators: [
-          Validators.required, Validators.pattern('^[0-9.]+$')
-        ], updateOn: 'change'
-      }],
-    minTransactionFee: [
-      '', {
-        validators: [
-          Validators.required, Validators.pattern('^[0-9.]+$')
-        ], updateOn: 'change'
-      }],
-    rollingReserves: [
-      '', {
-        validators: [
-          Validators.required, Validators.pattern('^[0-9.]+$')
-        ], updateOn: 'change'
-      }],
-    rollingReservesDays: [
-      '', {
-        validators: [
-          Validators.required, Validators.pattern('^[0-9.]+$')
-        ], updateOn: 'change'
-      }],
-    chargebackFees: [
-      '', {
-        validators: [
-          Validators.required, Validators.pattern('^[0-9.]+$')
-        ], updateOn: 'change'
-      }],
-    monthlyFees: [
-      '', {
-        validators: [
-          Validators.required, Validators.pattern('^[0-9.]+$')
-        ], updateOn: 'change'
-      }],
-    minMonthlyFees: [
-      '', {
-        validators: [
-          Validators.required, Validators.pattern('^[0-9.]+$')
-        ], updateOn: 'change'
-      }]
+    transactionFees: ['', { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
+    minTransactionFee: ['', { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
+    rollingReserves: ['', { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
+    rollingReservesDays: ['', { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
+    chargebackFees: ['', { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
+    monthlyFees: ['', { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
+    minMonthlyFees: ['', { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }]
   });
 
   get defaultSchemeFlag(): string {
@@ -497,21 +462,6 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
       valid = this.validateField('target');
       if (valid) {
         valid = this.validateField('targetValues');
-      }
-      if (valid) {
-        valid = this.validateField('instrument');
-      }
-      if (valid) {
-        valid = this.validateField('userType');
-      }
-      if (valid) {
-        valid = this.validateField('userMode');
-      }
-      if (valid) {
-        valid = this.validateField('trxType');
-      }
-      if (valid) {
-        valid = this.validateField('provider');
       }
       if (valid) {
         valid = (this.errorMessage === '');

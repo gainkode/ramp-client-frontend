@@ -59,9 +59,6 @@
                 </app-dropdown-item>
             </mat-option>
         </mat-autocomplete>
-        <mat-error *ngIf="this.form.controls.countries.hasError('required')">
-            Mandatory field
-        </mat-error>
     </mat-form-field>
 
     <mat-form-field class="form-element">
@@ -71,9 +68,6 @@
                 {{item.name}}
             </mat-option>
         </mat-select>
-        <mat-error *ngIf="this.form.controls.currenciesCrypto.hasError('required')">
-            Mandatory field
-        </mat-error>
     </mat-form-field>
 
     <mat-form-field class="form-element">
@@ -83,17 +77,11 @@
                 {{item.name}}
             </mat-option>
         </mat-select>
-        <mat-error *ngIf="this.form.controls.currenciesFiat.hasError('required')">
-            Mandatory field
-        </mat-error>
     </mat-form-field>
 
     <mat-form-field class="form-element">
         <mat-label>Destination address</mat-label>
         <input matInput formControlName="destinationAddress" />
-        <mat-error *ngIf="this.form.controls.destinationAddress.hasError('required')">
-            Mandatory field
-        </mat-error>
     </mat-form-field>
 
     <mat-form-field class="form-element">
@@ -103,9 +91,6 @@
                 {{item.name}}
             </mat-option>
         </mat-select>
-        <mat-error *ngIf="this.form.controls.instruments.hasError('required')">
-            Mandatory field
-        </mat-error>
     </mat-form-field>
 
     <mat-form-field class="form-element">
@@ -120,16 +105,13 @@
         </mat-error>
     </mat-form-field>
 
-    <mat-form-field class="form-element">
+    <mat-form-field *ngIf="showPaymentProviders" class="form-element">
         <mat-label>Payment providers</mat-label>
         <mat-select formControlName="paymentProviders" multiple>
             <mat-option *ngFor="let item of paymentProviderOptions" [value]="item.id">
                 {{item.name}}
             </mat-option>
         </mat-select>
-        <mat-error *ngIf="this.form.controls.paymentProviders.hasError('required')">
-            Mandatory field
-        </mat-error>
     </mat-form-field>
 
     <mat-form-field class="form-element">
@@ -139,9 +121,6 @@
                 {{item.name}}
             </mat-option>
         </mat-select>
-        <mat-error *ngIf="this.form.controls.transactionTypes.hasError('required')">
-            Mandatory field
-        </mat-error>
     </mat-form-field>
 
     <div class="panel-actions">

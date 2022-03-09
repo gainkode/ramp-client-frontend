@@ -17,6 +17,7 @@ export class WalletItem {
   userId?: string;
   userEmail?: string;
   custodyProvider?: string;
+  custodyProviderLink?: string;
 
   constructor(data?: AssetAddress) {
     if (data) {
@@ -36,6 +37,7 @@ export class WalletItem {
       this.userId = data.userId as string;
       this.userEmail = data.userEmail as string;
       this.custodyProvider = data.custodyProvider ?? '';
+      this.custodyProviderLink = data.custodyProviderLink ?? '';
     }
   }
 }

@@ -3,7 +3,7 @@ import { WidgetItem } from '../../../model/widget.model';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ErrorService } from '../../../../services/error.service';
 import { LayoutService } from '../../../services/layout.service';
-import { PaymentProvider, SettingsCurrencyWithDefaults } from '../../../../model/generated-models';
+import { PaymentInstrument, PaymentProvider, SettingsCurrencyWithDefaults } from '../../../../model/generated-models';
 import {
   CurrencyView,
   PaymentInstrumentList,
@@ -49,17 +49,18 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
   liquidityProviderOptions = LiquidityProviderList;
   transactionTypeOptions = TransactionTypeList;
   filteredCountryOptions: Array<Country> = [];
+  showPaymentProviders = true;
 
   form = this.formBuilder.group({
     id: [null],
-    countries: [[], { validators: [Validators.required], updateOn: 'change' }],
-    currenciesCrypto: [[], { validators: [Validators.required], updateOn: 'change' }],
-    currenciesFiat: [[], { validators: [Validators.required], updateOn: 'change' }],
-    destinationAddress: ['', { validators: [Validators.required], updateOn: 'change' }],
-    instruments: [[], { validators: [Validators.required], updateOn: 'change' }],
+    countries: [[]],
+    currenciesCrypto: [[]],
+    currenciesFiat: [[]],
+    destinationAddress: [''],
+    instruments: [[]],
     liquidityProvider: ['', { validators: [Validators.required], updateOn: 'change' }],
-    paymentProviders: [[], { validators: [Validators.required], updateOn: 'change' }],
-    transactionTypes: ['', { validators: [Validators.required], updateOn: 'change' }],
+    paymentProviders: [[]],
+    transactionTypes: [''],
     user: ['', { validators: [Validators.required], updateOn: 'change' }],
     name: ['', { validators: [Validators.required], updateOn: 'change' }],
     description: ['']
@@ -103,6 +104,18 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
       this.filteredCountryOptions = options;
     });
 
+    this.subscriptions.add(
+      this.form.get('instruments')?.valueChanges.subscribe(val => {
+        this.showPaymentProviders = true;
+        if (val.length === 1) {
+          if (val[0] === PaymentInstrument.WireTransfer) {
+            this.showPaymentProviders = false;
+            this.form.get('paymentProviders')?.setValue([]);
+          }
+        }
+      })
+    );
+
     this.loadPaymentProviders();
     this.loadCurrencies();
   }
@@ -113,12 +126,14 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    const widgetItem = this.getWidgetItem();
-    this.subscriptions.add(
-      this.adminDataService.saveWidget(widgetItem).subscribe(() => {
-        this.layoutService.requestRightPanelClose();
-      })
-    );
+    if (this.form.valid) {
+      const widgetItem = this.getWidgetItem();
+      this.subscriptions.add(
+        this.adminDataService.saveWidget(widgetItem).subscribe(() => {
+          this.layoutService.requestRightPanelClose();
+        })
+      );
+    }
   }
 
   onDelete(): void {
@@ -184,12 +199,10 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
   }
 
   removeCountryOption(country: Country): void {
-    this.form.controls.countries
-      ?.setValue(
-        this.form.controls.countries
-          ?.value
-          .filter(v => v.code2 !== country.code2)
-      );
+    this.form.controls.countries?.setValue(
+      this.form.controls.countries?.value
+        .filter(v => v.code2 !== country.code2)
+    );
   }
 
   clearCountryOptions(): void {
