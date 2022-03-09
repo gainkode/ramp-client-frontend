@@ -133,6 +133,7 @@ export class WidgetComponent implements OnInit {
       if (this.quickCheckout) {
         this.widget.walletAddressPreset = false;
       }
+      console.log(this.quickCheckout, data);
       this.widget.transaction = undefined;
       if (data.currenciesCrypto) {
         if (data.currenciesCrypto.length > 0) {
@@ -636,13 +637,8 @@ export class WidgetComponent implements OnInit {
     this.inProgress = true;
     const tempStageId = this.pager.swapStage('initialization');
     this.initMessage = 'Processing...';
-    console.log('createDepositTransaction', 'address', this.summary.address);
-    console.log('createDepositTransaction', 'widget', this.widget.widgetId);
     if (this.summary) {
       let destination = this.summary.address;
-      if (this.widget.widgetId !== '') {
-        destination = this.widget.widgetId;
-      }
       this.pSubscriptions.add(
         this.dataService.createTransaction(
           this.summary.transactionType,
@@ -711,9 +707,6 @@ export class WidgetComponent implements OnInit {
     this.initMessage = 'Processing...';
     if (this.summary) {
       let destination = this.summary.address;
-      if (this.widget.widgetId !== '') {
-        destination = this.widget.widgetId;
-      }
       this.pSubscriptions.add(
         this.dataService.createTransaction(
           TransactionType.Withdrawal,
