@@ -60,7 +60,7 @@ export class WalletListComponent implements OnInit, OnDestroy, AfterViewInit {
       }
       if (filterVaultId) {
         const filterData = (filterVaultId as string).split('#');
-        this.filter.search = filterData.join(' ');
+        this.filter.walletIds = filterData;
       }
   }
 

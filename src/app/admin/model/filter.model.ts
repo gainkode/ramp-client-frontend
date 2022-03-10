@@ -24,6 +24,7 @@ export class Filter {
   public registrationDateInterval?: DateTimeInterval;
   public transactionDate?: Date;
   public walletAddress?: string;
+  public walletIds?: Array<string>;
   public totalBuyVolumeOver?: number;
   public transactionCountOver?: number;
   public search?: string;

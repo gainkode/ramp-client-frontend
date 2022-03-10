@@ -1887,6 +1887,7 @@ export type QueryMyWalletsArgs = {
 
 
 export type QueryGetWalletsArgs = {
+  walletIdsOnly?: Maybe<Array<Scalars['String']>>;
   userIdsOnly?: Maybe<Array<Scalars['String']>>;
   assetIdsOnly?: Maybe<Array<Scalars['String']>>;
   filter?: Maybe<Scalars['String']>;

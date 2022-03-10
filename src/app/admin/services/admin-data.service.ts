@@ -798,6 +798,7 @@ const GET_WALLETS = gql`
   query GetWallets(
     $userIdsOnly: [String!]
     $assetIdsOnly: [String!]
+    $walletIdsOnly: [String!]
     $filter: String
     $skip: Int
     $first: Int
@@ -806,6 +807,7 @@ const GET_WALLETS = gql`
     getWallets(
       userIdsOnly: $userIdsOnly
       assetIdsOnly: $assetIdsOnly
+      walletIdsOnly: $walletIdsOnly
       filter: $filter
       skip: $skip
       first: $first
@@ -2271,6 +2273,7 @@ export class AdminDataService {
     const vars: QueryGetWalletsArgs = {
       userIdsOnly: filter?.users,
       assetIdsOnly: filter?.assets,
+      walletIdsOnly: filter?.walletIds,
       filter: filter?.search,
       skip: pageIndex * takeItems,
       first: takeItems,
