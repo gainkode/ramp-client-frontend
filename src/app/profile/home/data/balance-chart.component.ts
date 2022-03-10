@@ -284,6 +284,11 @@ export class ProfileBalanceChartComponent implements OnInit, OnDestroy {
                     profitPercent += p.profitPercent ?? 0;
                     chartPoints = this.buildChart(profitData.period, p.userBalanceHistory ?? undefined, chartPoints);
                 });
+                const pointerLimit = this.currencies.find(x => x.symbol === this.selectedFiat)?.precision ?? 1;
+                chartPoints.forEach(c => {
+                    const str = c.balanceFiat.toFixed(pointerLimit);
+                    c.balanceFiat = parseFloat(str);
+                });
                 this.positiveProfit = (profit >= 0);
                 this.profitValue = `${profit > 0 ? '+ ' : ''}${profitPercent.toFixed(2)}% (${profit} ${this.selectedFiat})`;
                 this.seriesData = [{
@@ -617,7 +622,7 @@ export class ProfileBalanceChartComponent implements OnInit, OnDestroy {
                                 asset: 'btc_test',
                                 balance: 0.0029077,
                                 balanceEur: 103.22,
-                                balanceFiat: 115.85,
+                                balanceFiat: 115.85105,
                                 transactionId: '2a3a83d7-cd0c-4306-ad98-b25989bc7874'
                             }
                         ]
