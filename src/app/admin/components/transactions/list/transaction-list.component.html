@@ -25,7 +25,7 @@
                     [matTooltip]="getDetailsTooltip(element.id)" matTooltipClass="info-tooltip">
                     <mat-icon class="details-icon">{{getDetailsIcon(element.id)}}</mat-icon>
                 </button>
-                <button mat-icon-button class="row-button" (click)="showWallets(element.id)"
+                <button *ngIf="element.vaultIds.length>0" mat-icon-button class="row-button" (click)="showWallets(element.id)"
                     [attr.aria-label]="'Transaction wallet'" 
                     [matTooltip]="'Transaction wallet'" matTooltipClass="info-tooltip">
                     <mat-icon class="details-icon">

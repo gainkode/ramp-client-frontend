@@ -54,12 +54,13 @@ export class WalletListComponent implements OnInit, OnDestroy, AfterViewInit {
     private router: Router,
     public activeRoute: ActivatedRoute) {
       const filterUserId = activeRoute.snapshot.params['userid'];
-      const filterTransactionId = activeRoute.snapshot.params['transactionid'];
+      const filterVaultId = activeRoute.snapshot.params['vaultids'];
       if (filterUserId) {
         this.filter.users = [filterUserId as string];
       }
-      if (filterTransactionId) {
-        this.filter.transactionIds = [filterTransactionId as string];
+      if (filterVaultId) {
+        const filterData = (filterVaultId as string).split('#');
+        this.filter.search = filterData.join(' ');
       }
   }
 

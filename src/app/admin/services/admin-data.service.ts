@@ -518,7 +518,9 @@ const GET_TRANSACTIONS = gql`
         data
         destination
         destVault
+        destVaultId
         sourceVault
+        sourceVaultId
         kycStatus
         widget
         widgetId

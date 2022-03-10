@@ -78,7 +78,7 @@ const routes: Routes = [
             data: { header: 'Customer wallets' }
           },
           {
-            path: 'transactions/:transactionid',
+            path: 'vaults/:vaultids',
             component: WalletListComponent,
             data: { header: 'Transaction wallets' }
           },

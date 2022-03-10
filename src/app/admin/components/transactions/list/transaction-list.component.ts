@@ -162,7 +162,8 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   showWallets(transactionId: string): void {
-    this.router.navigateByUrl(`/admin/wallets/transactions/${transactionId}`);
+    const transaction = this.transactions.find(x => x.id === transactionId);
+    this.router.navigateByUrl(`/admin/wallets/vaults/${transaction?.vaultIds.join('#') ?? ''}`);
   }
   
   private executeUnbenchmark(): void {

@@ -75,6 +75,7 @@ export class TransactionItemFull {
   widgetName = '';
   selected = false;
   comment = '';
+  vaultIds: string[] = [];
 
   constructor(data: Transaction | TransactionShort | null) {
     if (data !== null) {
@@ -135,6 +136,17 @@ export class TransactionItemFull {
       const widgetData = JSON.parse(data.widget ?? '{}');
       if (widgetData) {
         this.widgetName = widgetData.widgetName;
+      }
+
+      if (data.destVaultId) {
+        if (!this.vaultIds.includes(data.destVaultId)) {
+          this.vaultIds.push(data.destVaultId);
+        }
+      }
+      if (data.sourceVaultId) {
+        if (!this.vaultIds.includes(data.sourceVaultId)) {
+          this.vaultIds.push(data.sourceVaultId);
+        }
       }
 
       if (data.paymentOrder) {

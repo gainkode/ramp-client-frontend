@@ -133,7 +133,6 @@ export class WidgetComponent implements OnInit {
       if (this.quickCheckout) {
         this.widget.walletAddressPreset = false;
       }
-      console.log(this.quickCheckout, data);
       this.widget.transaction = undefined;
       if (data.currenciesCrypto) {
         if (data.currenciesCrypto.length > 0) {
