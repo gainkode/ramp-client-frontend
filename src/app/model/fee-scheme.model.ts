@@ -1,10 +1,10 @@
 import { CommonTargetValue } from './common.model';
 import { getCountry, getCountryByCode3 } from './country-code.model';
 import {
-    SettingsFee, PaymentInstrument, PaymentProvider, TransactionType, SettingsFeeTargetFilterType, UserType, UserMode, TransactionSource
+    SettingsFee, PaymentInstrument, TransactionType, SettingsFeeTargetFilterType, UserType, UserMode, TransactionSource
 } from './generated-models';
 import { PaymentInstrumentList, 
-    FeeTargetFilterList, TransactionTypeList, UserTypeList } from './payment.model';
+    FeeTargetFilterList, TransactionTypeList } from './payment.model';
 
 // temp
 export const WidgetIdFilterList: CommonTargetValue[] = [

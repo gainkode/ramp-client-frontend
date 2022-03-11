@@ -903,6 +903,7 @@ query GetProviders {
     name
     currencies
     countries_code2
+    instruments
   }
 }
 `;

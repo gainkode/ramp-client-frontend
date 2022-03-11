@@ -40,10 +40,12 @@ export class PaymentProviderView {
     id = '';
     name = '';
     image = '';
+    instruments: string[] = [];
 
     constructor(data: PaymentProvider) {
         this.id = data.name ?? '';
         this.name = data.name ?? '';
+        this.instruments = data.instruments?.map(val => val) ?? [];
         if (this.id === 'Fibonatix') {
             this.image = './assets/svg-providers/fibonatix.svg';
         } else if (this.id === 'InstantPay') {

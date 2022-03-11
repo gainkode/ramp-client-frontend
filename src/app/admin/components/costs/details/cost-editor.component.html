@@ -120,7 +120,7 @@
                 <mat-form-field *ngIf="showPaymentProvider===true" class="form-element">
                     <mat-label>Payment provider</mat-label>
                     <mat-select formControlName="provider" multiple>
-                        <mat-option *ngFor="let item of providers" [value]="item.id">
+                        <mat-option *ngFor="let item of filteredProviders" [value]="item.id">
                             {{item.name}}
                         </mat-option>
                     </mat-select>

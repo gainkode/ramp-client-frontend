@@ -107,25 +107,10 @@
                 </a>
 
                 <!-- Payment provider -->
-                <mat-form-field *ngIf="schemeForm.get('instrument')?.value!==PAYMENT_INSTRUMENT.WireTransfer"
-                    class="form-element">
+                <mat-form-field *ngIf="showPaymentProvider===true" class="form-element">
                     <mat-label>Payment provider</mat-label>
                     <mat-select formControlName="provider" multiple>
-                        <mat-option *ngFor="let item of providers" [value]="item.id">
-                            {{item.name}}
-                        </mat-option>
-                    </mat-select>
-                    <mat-error *ngIf="this.schemeForm.get('provider')?.hasError('required')">
-                        Please specify a payment provider
-                    </mat-error>
-                </mat-form-field>
-
-                <!-- Cost scheme -->
-                <mat-form-field *ngIf="schemeForm.get('instrument')?.value===PAYMENT_INSTRUMENT.WireTransfer"
-                    class="form-element">
-                    <mat-label>Payment provider</mat-label>
-                    <mat-select formControlName="provider">
-                        <mat-option *ngFor="let item of costSchemes" [value]="item.id">
+                        <mat-option *ngFor="let item of filteredProviders" [value]="item.id">
                             {{item.name}}
                         </mat-option>
                     </mat-select>

@@ -1,6 +1,7 @@
 import { environment } from "src/environments/environment";
 import { User, UserType } from "../model/generated-models";
 import { PaymentWidgetType } from "../model/payment-base.model";
+import { PaymentProviderView } from "../model/payment.model";
 
 export interface PaymentTitleInfo {
     panelTitle: string;
@@ -138,4 +139,18 @@ export function getTransactionAmountHash(rate: number, amount: number, fee: numb
         hash |= 0; // Convert to 32bit integer
     }
     return hash;
+}
+
+export function getProviderList(instruments: string[], providers: PaymentProviderView[]): PaymentProviderView[] {
+    if (instruments.length < 1) {
+        return providers;
+    } else {
+        return providers.filter(x => {
+            return x.instruments.filter(i => instruments.includes(i)).length > 0;
+        });
+    }
+}
+
+export function getCheckedProviderList(checkedproviders: string[], providerList: PaymentProviderView[]): string[] {
+    return checkedproviders.filter(x => providerList.some(p => p.id === x));
 }

@@ -21,6 +21,7 @@ import { LayoutService } from '../../../services/layout.service';
 import { AdminDataService } from 'src/app/admin/services/admin-data.service';
 import { Filter } from 'src/app/admin/model/filter.model';
 import { CostScheme } from 'src/app/model/cost-scheme.model';
+import { getCheckedProviderList, getProviderList } from 'src/app/utils/utils';
 
 @Component({
   selector: 'app-fee-editor',
@@ -57,6 +58,8 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
   transactionTypes = TransactionTypeList;
   instruments = PaymentInstrumentList;
   providers: PaymentProviderView[] = [];
+  filteredProviders: PaymentProviderView[] = [];
+  showPaymentProvider = false;
   userTypes = UserTypeList;
   userModes = UserModeList;
   targetValues: CommonTargetValue[] = [];
@@ -161,7 +164,7 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
       this.schemeForm.get('instrument')?.valueChanges.subscribe(val => this.updateInstrument(val))
     );
     this.getPaymentProviders();
-    this.loadCostSchemeList();
+    //this.loadCostSchemeList();
   }
 
   ngOnDestroy(): void {
@@ -170,7 +173,7 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
   }
 
   private updateInstrument(val: any): void {
-    this.schemeForm.get('provider')?.setValue(undefined);
+    this.filterPaymentProviders([val]);
   }
 
   private updateTarget(val: any): void {
@@ -242,10 +245,22 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
       this.adminDataService.getProviders()?.valueChanges.subscribe(({ data }) => {
         const providers = data.getPaymentProviders as PaymentProvider[];
         this.providers = providers?.map((val) => new PaymentProviderView(val)) as PaymentProviderView[];
+        const selectedInstrument = this.schemeForm.get('instrument')?.value;
+        this.filterPaymentProviders([selectedInstrument]);
       }, (error) => {
         this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load wallet list');
       })
     );
+  }
+
+  private filterPaymentProviders(instruments: PaymentInstrument[]): void {
+    this.filteredProviders = getProviderList(instruments, this.providers);
+    this.showPaymentProvider = this.filteredProviders.length > 0;
+    if (this.providers.length > 0) {
+      this.schemeForm.get('provider')?.setValue(getCheckedProviderList(
+        this.schemeForm.get('provider')?.value ?? [],
+        this.filteredProviders));
+    }
   }
 
   private loadCostSchemeList(): void {
@@ -344,19 +359,14 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
       if (scheme.instrument && scheme.instrument.length > 0) {
         const instrument = scheme.instrument[0];
         this.schemeForm.get('instrument')?.setValue(instrument);
-        if (instrument === PaymentInstrument.WireTransfer) {
-          this.schemeForm.get('provider')?.setValue(scheme?.provider[0]);
-        } else {
-          this.schemeForm.get('provider')?.setValue(scheme?.provider);
-        }
+        this.schemeForm.get('provider')?.setValue(scheme?.provider);
       } else {
         this.schemeForm.get('instrument')?.setValue(undefined);
-        this.schemeForm.get('provider')?.setValue(undefined);
+        this.schemeForm.get('provider')?.setValue([]);
       }
       this.schemeForm.get('userType')?.setValue(scheme?.userType);
       this.schemeForm.get('userMode')?.setValue(scheme?.userMode);
       this.schemeForm.get('trxType')?.setValue(scheme?.trxType);
-      this.schemeForm.get('costScheme')?.setValue(scheme?.provider[0]);
       this.schemeForm.get('transactionFees')?.setValue(scheme?.terms.transactionFees);
       this.schemeForm.get('minTransactionFee')?.setValue(scheme?.terms.minTransactionFee);
       this.schemeForm.get('rollingReserves')?.setValue(scheme?.terms.rollingReserves);
@@ -378,7 +388,7 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
       this.schemeForm.get('userType')?.setValue([]);
       this.schemeForm.get('userMode')?.setValue([]);
       this.schemeForm.get('trxType')?.setValue('');
-      this.schemeForm.get('provider')?.setValue(undefined);
+      this.schemeForm.get('provider')?.setValue([]);
       this.schemeForm.get('transactionFees')?.setValue('');
       this.schemeForm.get('minTransactionFee')?.setValue('');
       this.schemeForm.get('rollingReserves')?.setValue('');
@@ -414,16 +424,9 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
     if (transactionTypes) {
       transactionTypes.forEach(x => data.trxType.push(x));
     }
-    if (instrument === PaymentInstrument.WireTransfer) {
-      const provider = this.schemeForm.get('provider')?.value;
-      if (provider) {
-        data.provider.push(provider);
-      }
-    } else {
-      const providers = this.schemeForm.get('provider')?.value as string[];
-      if (providers) {
-        providers.forEach(x => data.provider.push(x));
-      }
+    const providers = this.schemeForm.get('provider')?.value as string[];
+    if (providers) {
+      providers.forEach(x => data.provider.push(x));
     }
     const userTypes = this.schemeForm.get('userType')?.value as UserType[];
     if (userTypes) {
@@ -454,6 +457,7 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
 
   resetInstrument(): void {
     this.schemeForm.get('instrument')?.setValue(undefined);
+    this.schemeForm.get('provider')?.setValue([]);
   }
 
   tabHasError(tab: string): boolean {

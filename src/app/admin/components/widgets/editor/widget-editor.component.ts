@@ -21,6 +21,7 @@ import { Countries, Country } from '../../../../model/country-code.model';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { LiquidityProviderList } from '../../../model/lists.model';
+import { getCheckedProviderList, getProviderList } from 'src/app/utils/utils';
 
 @Component({
   selector: 'app-widget-editor',
@@ -40,6 +41,7 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
   @ViewChild('countrySearchInput') countrySearchInput!: ElementRef<HTMLInputElement>;
 
   paymentProviderOptions: Array<PaymentProviderView> = [];
+  filteredProviders: PaymentProviderView[] = [];
   currencyOptionsCrypto: Array<CurrencyView> = [];
   currencyOptionsFiat: Array<CurrencyView> = [];
   widgetMaskLink = '';
@@ -106,13 +108,7 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
 
     this.subscriptions.add(
       this.form.get('instruments')?.valueChanges.subscribe(val => {
-        this.showPaymentProviders = true;
-        if (val.length === 1) {
-          if (val[0] === PaymentInstrument.WireTransfer) {
-            this.showPaymentProviders = false;
-            this.form.get('paymentProviders')?.setValue([]);
-          }
-        }
+        this.filterPaymentProviders(val);
       })
     );
 
@@ -200,28 +196,35 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
 
   removeCountryOption(country: Country): void {
     this.form.controls.countries?.setValue(
-      this.form.controls.countries?.value
-        .filter(v => v.code2 !== country.code2)
+      this.form.controls.countries?.value.filter(v => v.code2 !== country.code2)
     );
   }
 
   clearCountryOptions(): void {
-    this.form.controls.countries
-      ?.setValue([]);
+    this.form.controls.countries?.setValue([]);
   }
 
   getCountryFlag(code: string): string {
     return `${code.toLowerCase()}.svg`;
   }
 
+  private filterPaymentProviders(instruments: PaymentInstrument[]): void {
+    this.filteredProviders = getProviderList(instruments, this.paymentProviderOptions);
+    this.showPaymentProviders = this.filteredProviders.length > 0;
+    if (this.paymentProviderOptions.length > 0) {
+      this.form.get('paymentProviders')?.setValue(getCheckedProviderList(
+        this.form.get('paymentProviders')?.value ?? [],
+        this.filteredProviders));
+    }
+  }
+
   private getFilteredCountryOptions(searchString: string): Observable<Country[]> {
     const filteredOptions = this.countryOptions.filter(c => {
       return (
         !searchString || c.name.toLowerCase().includes(searchString)
-      ) && !this.form.controls.countries?.value
-        ?.some(s => {
-          return s.code2 === c.code2;
-        });
+      ) && !this.form.controls.countries?.value?.some(s => {
+        return s.code2 === c.code2;
+      });
     });
 
     return of(filteredOptions);
@@ -294,6 +297,7 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
       this.adminDataService.getProviders()?.valueChanges.pipe(take(1)).subscribe(({ data }) => {
         const providers = data.getPaymentProviders as PaymentProvider[];
         this.paymentProviderOptions = providers?.map((val) => new PaymentProviderView(val)) as PaymentProviderView[];
+        this.filterPaymentProviders(this.form.get('instruments')?.value ?? []);
       }, (error) => {
         this.snackBar.open(
           this.errorHandler.getError(error.message, 'Unable to load payment provider list.'),

@@ -19,6 +19,7 @@ import { CommonTargetValue, TargetParams } from 'src/app/model/common.model';
 import { CountryFilterList, getCountry } from 'src/app/model/country-code.model';
 import { ErrorService } from 'src/app/services/error.service';
 import { AdminDataService } from '../../../services/admin-data.service';
+import { getCheckedProviderList, getProviderList } from 'src/app/utils/utils';
 
 @Component({
   selector: 'app-cost-editor',
@@ -57,6 +58,7 @@ export class CostEditorComponent implements OnInit, OnDestroy {
   transactionTypes = TransactionTypeList;
   instruments = PaymentInstrumentList;
   providers: PaymentProviderView[] = [];
+  filteredProviders: PaymentProviderView[] = [];
   bankAccounts: CommonTargetValue[] = [];
 
   schemeForm = this.formBuilder.group({
@@ -191,6 +193,7 @@ export class CostEditorComponent implements OnInit, OnDestroy {
       data$.subscribe(({ data }) => {
         const providers = data.getPaymentProviders as PaymentProvider[];
         this.providers = providers?.map((val) => new PaymentProviderView(val)) as PaymentProviderView[];
+        this.filterPaymentProviders(this.schemeForm.get('instrument')?.value);
       }, (error) => {
         this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load wallet list');
       })
@@ -215,6 +218,16 @@ export class CostEditorComponent implements OnInit, OnDestroy {
         this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load wallet list');
       })
     );
+  }
+
+  private filterPaymentProviders(instruments: PaymentInstrument[]): void {
+    this.filteredProviders = getProviderList(instruments, this.providers);
+    this.showPaymentProvider = this.filteredProviders.length > 0;
+    if (this.providers.length > 0) {
+      this.schemeForm.get('provider')?.setValue(getCheckedProviderList(
+        this.schemeForm.get('provider')?.value ?? [],
+        this.filteredProviders));
+    }
   }
 
   private setTargetValidator(): void {
@@ -242,12 +255,7 @@ export class CostEditorComponent implements OnInit, OnDestroy {
   }
 
   private updateInstruments(data: PaymentInstrument[]): void {
-    if (data.some(x => x === PaymentInstrument.CreditCard)) {
-      this.showPaymentProvider = true;
-    } else {
-      this.showPaymentProvider = false;
-      this.schemeForm.get('provider')?.setValue([]);
-    }
+    this.filterPaymentProviders(data);
   }
 
   setFormData(scheme: CostScheme | null): void {
