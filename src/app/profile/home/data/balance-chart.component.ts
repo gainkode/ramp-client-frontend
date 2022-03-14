@@ -386,8 +386,6 @@ export class ProfileBalanceChartComponent implements OnInit, OnDestroy {
                     spotBalance += dataPoint.balanceFiat ?? 0;
                 }
                 chartPoint.balanceFiat -= spotBalance;
-
-                console.log(chartPoint.dateLabel, chartPoint.balanceFiat);
             }
         }
         return chartPoints;
