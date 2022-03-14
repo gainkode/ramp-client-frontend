@@ -47,6 +47,7 @@ export class TransactionItemFull {
   source: TransactionSource | undefined = undefined;
   currencyToSpend = '';
   currencyToReceive = '';
+  currencyFiat = '';
   amountToSpend = 0;
   amountToReceive = 0;
   transferOrderId = '';
@@ -119,6 +120,7 @@ export class TransactionItemFull {
       const paymentData = getPaymentData(data);
       this.currencyToSpend = paymentData.currencyToSpend;
       this.currencyToReceive = paymentData.currencyToReceive;
+      this.currencyFiat = paymentData.currencyFiat;
       this.amountToSpend = paymentData.amountToSpend;
       this.fees = paymentData.fees;
       this.sender = paymentData.sender.title;

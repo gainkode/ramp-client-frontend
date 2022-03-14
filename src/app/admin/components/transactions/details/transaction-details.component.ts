@@ -31,6 +31,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
     if (val?.type === TransactionType.Withdrawal) {
       this.amountToSpendTitle = 'Amount To Sell';
     }
+    this.systemFeeTitle = `Fee, ${val?.currencyFiat}`;
   }
   @Input() cancelable = false;
   @Input() set userStatuses(list: TransactionStatusDescriptorMap[]) {
@@ -79,6 +80,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
   transferOrderBlockchainLink = '';
   benchmarkTransferOrderBlockchainLink = '';
   amountToSpendTitle = 'Amount To Spend';
+  systemFeeTitle = 'Fee, EUR';
 
   form = this.formBuilder.group({
     address: ['', { validators: [Validators.required], updateOn: 'change' }],
