@@ -7,15 +7,6 @@ import {
     KycTargetFilterList, KycProviderList, UserModeList
 } from './payment.model';
 
-// temp
-export const AccountIdFilterList: CommonTargetValue[] = [
-    { title: '37d83fbg8954bf', imgClass: '', imgSource: '', id: '' },
-    { title: '4g08bf7g6g89ec', imgClass: '', imgSource: '', id: '' },
-    { title: '47g8534f87f3ee', imgClass: '', imgSource: '', id: '' },
-    { title: 'bdeb95gaabab90', imgClass: '', imgSource: '', id: '' }
-];
-// temp
-
 export class KycScheme {
     id!: string;
     isDefault = false;

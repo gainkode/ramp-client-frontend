@@ -1,4 +1,3 @@
-import { CommonTargetValue } from './common.model';
 import { getCountry, getCountryByCode3 } from './country-code.model';
 import {
     SettingsCost, PaymentInstrument, TransactionType, SettingsCostTargetFilterType, WireTransferBankAccount
@@ -7,15 +6,6 @@ import { WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from './
 import {
     PaymentInstrumentList, CostTargetFilterList, TransactionTypeList
 } from './payment.model';
-
-// temp
-export const PspFilterList: CommonTargetValue[] = [
-    { title: 'psp 1', imgClass: '', imgSource: '', id: '' },
-    { title: 'psp 2', imgClass: '', imgSource: '', id: '' },
-    { title: 'psp 3', imgClass: '', imgSource: '', id: '' },
-    { title: 'psp 4', imgClass: '', imgSource: '', id: '' }
-];
-// temp
 
 export class CostScheme {
     id!: string;

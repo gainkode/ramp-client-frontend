@@ -53,7 +53,6 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
   currency = '';
   separatorKeysCodes: number[] = [ENTER, COMMA];
   filteredTargetValues$: Observable<CommonTargetValue[]> | undefined;
-
   targets = FeeTargetFilterList;
   transactionTypes = TransactionTypeList;
   instruments = PaymentInstrumentList;
@@ -164,7 +163,7 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
       this.schemeForm.get('instrument')?.valueChanges.subscribe(val => this.updateInstrument(val))
     );
     this.getPaymentProviders();
-    //this.loadCostSchemeList();
+    this.loadCostSchemeList();
   }
 
   ngOnDestroy(): void {
@@ -173,6 +172,7 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
   }
 
   private updateInstrument(val: any): void {
+    this.schemeForm.get('provider')?.setValue(undefined);
     this.filterPaymentProviders([val]);
   }
 
@@ -359,7 +359,11 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
       if (scheme.instrument && scheme.instrument.length > 0) {
         const instrument = scheme.instrument[0];
         this.schemeForm.get('instrument')?.setValue(instrument);
-        this.schemeForm.get('provider')?.setValue(scheme?.provider);
+        if (instrument === PaymentInstrument.WireTransfer) {
+          this.schemeForm.get('provider')?.setValue(scheme?.provider[0]);
+        } else {
+          this.schemeForm.get('provider')?.setValue(scheme?.provider);
+        }
       } else {
         this.schemeForm.get('instrument')?.setValue(undefined);
         this.schemeForm.get('provider')?.setValue([]);
@@ -418,15 +422,22 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
     }
     const instrument = this.schemeForm.get('instrument')?.value;
     if (instrument) {
-      data.instrument.push(instrument);
+      data.instrument = [instrument];
     }
     const transactionTypes = this.schemeForm.get('trxType')?.value as TransactionType[];
     if (transactionTypes) {
       transactionTypes.forEach(x => data.trxType.push(x));
     }
-    const providers = this.schemeForm.get('provider')?.value as string[];
-    if (providers) {
-      providers.forEach(x => data.provider.push(x));
+    if (instrument === PaymentInstrument.WireTransfer) {
+      const providers = this.schemeForm.get('provider')?.value as string;
+      if (providers) {
+        data.provider = [ providers ];
+      }
+    } else {
+      const providers = this.schemeForm.get('provider')?.value as string[];
+      if (providers) {
+        providers.forEach(x => data.provider.push(x));
+      }
     }
     const userTypes = this.schemeForm.get('userType')?.value as UserType[];
     if (userTypes) {

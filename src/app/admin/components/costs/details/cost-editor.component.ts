@@ -5,9 +5,9 @@ import { Observable, of, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { CostScheme, PspFilterList } from '../../../../model/cost-scheme.model';
+import { CostScheme } from '../../../../model/cost-scheme.model';
 import {
-  SettingsCostTargetFilterType, PaymentInstrument, PaymentProvider, TransactionType, WireTransferBankAccount, WireTransferBankAccountListResult
+  SettingsCostTargetFilterType, PaymentInstrument, PaymentProvider, TransactionType, WireTransferBankAccountListResult
 } from '../../../../model/generated-models';
 import {
   PaymentInstrumentList,
@@ -130,13 +130,6 @@ export class CostEditorComponent implements OnInit, OnDestroy {
         params.inputPlaceholder = '';
         params.dataList = [];
         this.targetEntity = '';
-        break;
-      }
-      case SettingsCostTargetFilterType.Psp: {
-        params.title = 'List of PSP *';
-        params.inputPlaceholder = 'New PSP...';
-        params.dataList = PspFilterList;
-        this.targetEntity = 'PSP value';
         break;
       }
       case SettingsCostTargetFilterType.Country: {

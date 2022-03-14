@@ -3,29 +3,10 @@ import { getCountry, getCountryByCode3 } from './country-code.model';
 import {
     SettingsFee, PaymentInstrument, TransactionType, SettingsFeeTargetFilterType, UserType, UserMode, TransactionSource
 } from './generated-models';
-import { PaymentInstrumentList, 
-    FeeTargetFilterList, TransactionTypeList } from './payment.model';
-
-// temp
-export const WidgetIdFilterList: CommonTargetValue[] = [
-    { title: 'fb4598gbf38d73', imgClass: '', imgSource: '', id: '' },
-    { title: 'ce98g6g7fb80g4', imgClass: '', imgSource: '', id: '' },
-    { title: 'ee3f78f4358g74', imgClass: '', imgSource: '', id: '' },
-    { title: 'abab90ag59bedb', imgClass: '', imgSource: '', id: '' }
-];
-export const AccountIdFilterList: CommonTargetValue[] = [
-    { title: '37d83fbg8954bf', imgClass: '', imgSource: '', id: '' },
-    { title: '4g08bf7g6g89ec', imgClass: '', imgSource: '', id: '' },
-    { title: '47g8534f87f3ee', imgClass: '', imgSource: '', id: '' },
-    { title: 'bdeb95gaabab90', imgClass: '', imgSource: '', id: '' }
-];
-export const WidgetFilterList: CommonTargetValue[] = [
-    { title: 'Widget A', imgClass: '', imgSource: '', id: '' },
-    { title: 'Widget B', imgClass: '', imgSource: '', id: '' },
-    { title: 'Widget C', imgClass: '', imgSource: '', id: '' },
-    { title: 'Widget D', imgClass: '', imgSource: '', id: '' }
-];
-// temp
+import {
+    PaymentInstrumentList,
+    FeeTargetFilterList, TransactionTypeList
+} from './payment.model';
 
 export const AccountTypeFilterList: CommonTargetValue[] = [
     { title: 'Personal', imgClass: '', imgSource: '', id: UserType.Personal },
@@ -43,6 +24,7 @@ export class FeeScheme {
     isDefault = false;
     description!: string;
     name!: string;
+    costSchemeName = '';
     target: SettingsFeeTargetFilterType | null = null;
     targetValues: Array<string> = [];
     trxType: Array<TransactionType> = [];
@@ -101,6 +83,14 @@ export class FeeScheme {
         });
     }
 
+    setCostSchemeName(schemeName: string): void {
+        if (this.instrument.length > 0) {
+            if (this.instrument[0] === PaymentInstrument.WireTransfer) {
+                this.costSchemeName = schemeName;
+            }
+        }
+    }
+
     get targetName(): string {
         return FeeTargetFilterList.find(x => x.id === this.target)?.name as string;
     }
@@ -128,13 +118,16 @@ export class FeeScheme {
     }
 
     get providerList(): string {
-        let s = '';
-        let p = false;
-        this.provider.forEach(x => {
-            s = `${s}${p ? ', ' : ''}${x}`;
-            p = true;
-        });
-        return s;
+        let result = '';
+        if (this.instrument.length > 0) {
+            if (this.instrument[0] === PaymentInstrument.WireTransfer) {
+                result = this.costSchemeName;
+            }
+        }
+        if (result === '') {
+            result = this.provider.join(', ');
+        }
+        return result;
     }
 }
 
