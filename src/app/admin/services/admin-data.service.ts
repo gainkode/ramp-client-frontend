@@ -473,6 +473,7 @@ const GET_TRANSACTIONS = gql`
         feeMinFiat
         feePercent
         feeDetails
+        approxNetworkFeeFiat
         currencyToSpend
         amountToSpend
         currencyToReceive

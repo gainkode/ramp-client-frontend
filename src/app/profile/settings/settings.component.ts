@@ -1,5 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { UserType } from 'src/app/model/generated-models';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
     selector: 'app-profile-settings',
@@ -15,11 +17,13 @@ export class ProfileSettingsComponent {
     selectedTab = '';
 
     constructor(
+        private auth: AuthService,
         private changeDetector: ChangeDetectorRef,
         private route: ActivatedRoute,
         private router: Router) {
         const pageId = this.route.snapshot.params['page'] ?? '';
-        if (pageId === 'info' || pageId === 'verification' || pageId === 'security') {
+        const apiKeysPage = false;//(pageId === 'apikeys' && this.auth.user?.type === UserType.Merchant);
+        if (pageId === 'info' || pageId === 'verification' || pageId === 'security' || apiKeysPage) {
             this.pageSelected(pageId);
         } else {
             this.pageSelected('info');

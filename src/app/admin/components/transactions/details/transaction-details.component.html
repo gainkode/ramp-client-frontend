@@ -45,7 +45,9 @@
             <app-details-attribute *ngIf="transactionType===TRANSACTION_TYPE.Receive" label="Amount To Spend"
                 [value]="data?.amountToSpend"></app-details-attribute>
             <mat-form-field *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-element">
-                <mat-label>Amount To Spend</mat-label>
+                <mat-label>
+                    {{amountToSpendTitle}}
+                </mat-label>
                 <input matInput formControlName="amountToSpend" required />
                 <mat-error *ngIf="form.controls.amountToSpend.hasError('required')">
                     Amount is required

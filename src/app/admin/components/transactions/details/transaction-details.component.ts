@@ -28,6 +28,9 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
     this.pDefaultRate = val?.rate ?? 0;
     this.setCurrencies(this.pCurrencies);
     this.layoutService.setBackdrop(!val?.id);
+    if (val?.type === TransactionType.Withdrawal) {
+      this.amountToSpendTitle = 'Amount To Sell';
+    }
   }
   @Input() cancelable = false;
   @Input() set userStatuses(list: TransactionStatusDescriptorMap[]) {
@@ -75,6 +78,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
   showBenchmarkTransferHash = false;
   transferOrderBlockchainLink = '';
   benchmarkTransferOrderBlockchainLink = '';
+  amountToSpendTitle = 'Amount To Spend';
 
   form = this.formBuilder.group({
     address: ['', { validators: [Validators.required], updateOn: 'change' }],
