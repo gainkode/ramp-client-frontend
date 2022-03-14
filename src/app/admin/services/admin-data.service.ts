@@ -484,6 +484,7 @@ const GET_TRANSACTIONS = gql`
         initialRate
         liquidityProvider
         instrument
+        instrumentDetails
         paymentProvider
         paymentOrder {
           orderId

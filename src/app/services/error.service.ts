@@ -135,6 +135,9 @@ export class ErrorService {
             case 'core.transaction_handling_error':
                 result = 'Transaction handling error';
                 break;
+            case 'core.widget_not_supported_for_country':
+                result = 'Our services are not available in your country';
+                break;
             // Other codes
             case 'client has not been defined yet':
                 result = this.getRejectedCookieMessage();

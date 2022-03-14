@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { getCryptoSymbol, getCurrencySign, getTransactionAmountHash, getTransactionStatusHash, shortenString } from '../utils/utils';
 import { CommonTargetValue } from './common.model';
+import { WireTransferBankAccountAu, WireTransferBankAccountEu, WireTransferBankAccountUk } from './cost-scheme.model';
 import {
   AccountStatus,
   AdminTransactionStatus,
@@ -40,6 +41,7 @@ export class TransactionItemFull {
   userMode: UserMode | undefined = undefined;
   instrument: PaymentInstrument | undefined = undefined;
   instrumentDetails: CommonTargetValue | null = null;
+  instrumentDetailsData: string[] = [];
   paymentProvider = '';
   paymentProviderResponse = '';
   source: TransactionSource | undefined = undefined;
@@ -97,6 +99,9 @@ export class TransactionItemFull {
         this.userMode = transactionData.user?.mode as UserMode | undefined;
         this.benchmarkTransferOrderId = transactionData.benchmarkTransferOrder?.orderId ?? '';
         this.benchmarkTransferOrderHash = transactionData.benchmarkTransferOrder?.transferHash ?? '';
+      }
+      if (data.type === TransactionType.Withdrawal) {
+        this.instrumentDetailsData = this.getInstrumentDetails(data.instrumentDetails ?? '{}');
       }
       this.comment = transactionData.comment ?? '';
       this.transferOrderId = data.transferOrder?.orderId ?? '';
@@ -186,6 +191,44 @@ export class TransactionItemFull {
         }
       }
     }
+  }
+
+  getInstrumentDetails(data: string): string[] {
+    const result: string[] = [];
+    try {
+      const details = JSON.parse(data);
+      if (details) {
+        const accountData = JSON.parse(details.accountType);
+        if (accountData) {
+          const paymentData = JSON.parse(accountData.data);
+          if (paymentData) {
+            if (accountData.id === 'AU') {
+              result.push('Australian bank');
+              const values = paymentData as WireTransferBankAccountAu;
+              result.push(`Account name: ${values.accountName}`);
+              result.push(`Account number: ${values.accountNumber}`);
+              result.push(`BSB: ${values.bsb}`);
+            } else if (accountData.id === 'UK') {
+              const values = paymentData as WireTransferBankAccountUk;
+              result.push(`Account name: ${values.accountName}`);
+              result.push(`Account number: ${values.accountNumber}`);
+              result.push(`Sort code: ${values.sortCode}`);
+            } else if (accountData.id === 'EU') {
+              const values = paymentData as WireTransferBankAccountEu;
+              result.push(`Bank name: ${values.bankName}`);
+              result.push(`Bank address: ${values.bankAddress}`);
+              result.push(`Beneficiary name: ${values.beneficiaryName}`);
+              result.push(`Beneficiary address: ${values.beneficiaryAddress}`);
+              result.push(`IBAN: ${values.iban}`);
+              result.push(`SWIFT / BIC: ${values.swiftBic}`);
+            }
+          }
+        }
+      }
+    } catch (e) {
+
+    }
+    return result;
   }
 
   private getTransactionStatusColor(): string {
