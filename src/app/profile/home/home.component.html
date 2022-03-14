@@ -4,7 +4,7 @@
     </div>
     <!-- Balance chart -->
     <app-profile-balance-chart [selectedCurrency]="selectedFiat"
-        [currencies]="fiatCurrencies" [loading]="loading" [totalBalance]="totalFiat" [totalBalanceNum]="totalFiatValue"
+        [currencies]="fiatCurrencies" [loading]="loading" [totalBalanceNum]="totalFiatValue"
         [totalBalanceInit]="totalFiatInit" (onCurrencyChanged)="currencyChanged($event)" (onError)="handleError($event)"
         (onProgress)="chartProgressChanged($event)"></app-profile-balance-chart>
     <!-- Balance carousel -->

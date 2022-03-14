@@ -7,6 +7,7 @@ export class BalancePoint {
   dateLabel = '';
   balanceCrypto = 0;
   balanceFiat = 0;
+  currency = '';
 
   private datepipe: DatePipe = new DatePipe('en-US');
 
@@ -23,7 +24,7 @@ export class BalancePoint {
   }
 
   get balanceFiatValue(): string {
-    return `$${this.balanceFiat}`;
+    return `${getCurrencySign(getCryptoSymbol(this.currency))}${this.balanceFiat}`;
   }
 }
 

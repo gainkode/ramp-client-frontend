@@ -124,7 +124,7 @@ export class ProfileHomeComponent implements OnInit, OnDestroy {
         if (this.selectedFiat !== val) {
             this.selectedFiat = val;
             if (this.balanceListPanel) {
-                this.balanceListPanel.load(this.currencies, this.defaultFiat);
+                this.balanceListPanel.load(this.currencies, this.selectedFiat);
             }
         }
     }
