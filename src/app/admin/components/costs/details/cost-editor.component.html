@@ -35,7 +35,7 @@
     <!-- Bank accounts -->
     <mat-form-field class="form-element">
         <mat-label>Bank accounts</mat-label>
-        <mat-select formControlName="bankAccounts" multiple required>
+        <mat-select formControlName="bankAccounts" multiple>
             <mat-option *ngFor="let item of bankAccounts" [value]="item.id">
                 {{item.title}}
             </mat-option>

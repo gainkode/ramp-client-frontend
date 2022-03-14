@@ -65,7 +65,7 @@ export class CostEditorComponent implements OnInit, OnDestroy {
     id: [''],
     name: ['', { validators: [Validators.required], updateOn: 'change' }],
     description: [''],
-    bankAccounts: [[], { validators: [Validators.required], updateOn: 'change' }],
+    bankAccounts: [[]],
     isDefault: [false],
     target: ['', { validators: [Validators.required], updateOn: 'change' }],
     targetValues: [[], { validators: [Validators.required], updateOn: 'change' }],
