@@ -8,7 +8,6 @@ import { ProfileItemContainer } from 'src/app/model/profile-item.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
 import { ErrorService } from 'src/app/services/error.service';
-import { ProfileDataService } from 'src/app/services/profile.service';
 import { getCurrencySign } from 'src/app/utils/utils';
 import { ProfileTransactionListComponent } from '../transactions/data/transaction-list.component';
 import { ProfileBalanceListComponent } from './data/balance-list.component';
@@ -55,7 +54,6 @@ export class ProfileHomeComponent implements OnInit, OnDestroy {
         private changeDetector: ChangeDetectorRef,
         private auth: AuthService,
         private commonService: CommonDataService,
-        private profile: ProfileDataService,
         private errorHandler: ErrorService,
         private router: Router) { }
 
@@ -90,7 +88,7 @@ export class ProfileHomeComponent implements OnInit, OnDestroy {
                         if (currencySettings.settingsCurrency.list) {
                             currencySettings.settingsCurrency.list.forEach(x => this.currencies.push(x));
                             let validFiat = false;
-                            this.currencies.filter(x => x.fiat === true).forEach(x => {
+                            this.currencies.filter(x => x.fiat === true && x.symbol === this.defaultFiat).forEach(x => {
                                 if (x.symbol === this.selectedFiat) {
                                     validFiat = true;
                                 }
@@ -142,6 +140,9 @@ export class ProfileHomeComponent implements OnInit, OnDestroy {
     }
 
     totalBalanceUpdate(total: number): void {
+        this.totalFiatInit = false;
+        this.totalFiatValue = -1;
+        this.changeDetector.detectChanges();
         this.totalFiatInit = true;
         this.changeDetector.detectChanges();
         const c = this.currencies.find(x => x.symbol === this.defaultFiat);

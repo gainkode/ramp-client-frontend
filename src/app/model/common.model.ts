@@ -1,4 +1,5 @@
 import { EventEmitter } from '@angular/core';
+import { QueryUserByNameArgs } from './generated-models';
 
 export class TargetParams {
     title = '';

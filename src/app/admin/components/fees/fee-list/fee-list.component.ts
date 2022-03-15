@@ -6,6 +6,9 @@ import { take, takeUntil } from 'rxjs/operators';
 import { LayoutService } from '../../../services/layout.service';
 import { CostScheme } from 'src/app/model/cost-scheme.model';
 import { PaymentInstrument, SettingsCostListResult } from 'src/app/model/generated-models';
+import { ActivatedRoute } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
+import { AdminMenuItems } from 'src/app/admin/model/menu.model';
 
 @Component({
   templateUrl: 'fee-list.component.html',
@@ -13,6 +16,7 @@ import { PaymentInstrument, SettingsCostListResult } from 'src/app/model/generat
 })
 export class FeeListComponent implements OnInit, OnDestroy {
   selectedScheme: FeeScheme | null = null;
+  permission = 0;
   schemes: FeeScheme[] = [];
   costSchemes: CostScheme[] = [];
   displayedColumns: string[] = [
@@ -26,8 +30,17 @@ export class FeeListComponent implements OnInit, OnDestroy {
 
   constructor(
     private layoutService: LayoutService,
-    private adminDataService: AdminDataService
+    private auth: AuthService,
+    private adminDataService: AdminDataService,
+    private route: ActivatedRoute
   ) {
+    const path = this.route.snapshot.routeConfig?.path;
+    if (path) {
+      const currentMenuItem = AdminMenuItems.find(x => x.url === `/admin/${path}`);
+      if (currentMenuItem) {
+        this.permission = this.auth.isPermittedObjectCode(currentMenuItem.code);
+      }
+    }
   }
 
   ngOnInit(): void {
@@ -108,7 +121,7 @@ export class FeeListComponent implements OnInit, OnDestroy {
             this.loadList();
           }
         }
-      }, (error) => {})
+      }, (error) => { })
     );
   }
 

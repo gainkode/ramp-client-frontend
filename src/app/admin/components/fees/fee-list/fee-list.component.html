@@ -1,5 +1,5 @@
 <div class="action-panel">
-    <button mat-flat-button color="primary" [disabled]="selectedScheme && !selectedScheme.id"
+    <button mat-flat-button color="primary" [disabled]="(selectedScheme && !selectedScheme.id) || permission<2"
             (click)="createNewScheme()">
         ADD SCHEME
     </button>

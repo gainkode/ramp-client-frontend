@@ -51,7 +51,7 @@ export class KycPanelComponent implements OnInit, OnDestroy {
     loadSumSub(): void {
         // load sumsub widget
         this.onProgress.emit(true);
-        this.pTokenSubscription = this.auth.getKycToken().valueChanges.subscribe(({ data }) => {
+        this.pTokenSubscription = this.auth.getKycToken(this.flow ?? '').valueChanges.subscribe(({ data }) => {
             this.onProgress.emit(false);
             this.launchSumSubWidget(
                 this.url as string,
@@ -83,37 +83,74 @@ export class KycPanelComponent implements OnInit, OnDestroy {
         applicantEmail: string,
         applicantPhone: string,
         customI18nMessages: string[]): void {
-        const snsWebSdkInstance = snsWebSdk.default.Builder(apiUrl, flowName).withAccessToken(
+
+            console.log('Flow:', flowName, accessToken);
+
+        const snsWebSdkInstance = snsWebSdk.default.init(
             accessToken,
-            (newAccessTokenCallback: (newToken: string) => void) => {
-                // Access token expired
-                // get a new one and pass it to the callback to re-initiate the WebSDK
-                this.auth.getKycToken().valueChanges.subscribe(({ data }) => {
-                    newAccessTokenCallback(data.generateWebApiToken);
-                });
+            // token update callback, must return Promise
+            // Access token expired
+            // get a new one and pass it to the callback to re-initiate the WebSDK
+            () => {
+                console.log('New token');
+                // this.auth.getKycToken(flowName).valueChanges.subscribe(({ data }) => {
+                //     console.log('New token', data.generateWebApiToken);
+                //     return Promise.resolve(data.generateWebApiToken);
+                // });
             }
         ).withConf({
-            lang: 'en',
-            applicantEmail,
-            applicantPhone,
+            lang: 'en', //language of WebSDK texts and comments (ISO 639-1 format)
+            email: applicantEmail,
+            phone: applicantPhone,
             i18n: customI18nMessages,
-            onMessage: (type: any, payload: any) => {
-                if (type === 'idCheck.onApplicantSubmitted') {
-                    if (this.notifyCompleted) {
-                        this.completed.emit();
-                    } else {
-                        this.showSuccessDialog();
-                    }
-                }
-            },
             uiConf: {
-              customCss: `${environment.client_host}/assets/sumsub.css`
+                customCss: `${environment.client_host}/assets/sumsub.css`
+                // URL to css file in case you need change it dynamically from the code
+                // the similar setting at Customizations tab will rewrite customCss
+                // you may also use to pass string with plain styles `customCssStr:`
             },
-            onError: (error: any) => {
-                this.onError.emit(error.error);
-            },
+        }).withOptions({
+            addViewportTag: false,
+            adaptIframeHeight: true
+        }).on('idCheck.onApplicantSubmitted', (payload) => {
+            if (this.notifyCompleted) {
+                this.completed.emit();
+            } else {
+                this.showSuccessDialog();
+            }
+        }).on('idCheck.onError', (error) => {
+            this.onError.emit(error.error);
         }).build();
-        environment.api_server
+        // const snsWebSdkInstance = snsWebSdk.default.Builder(apiUrl, flowName).withAccessToken(
+        //     accessToken,
+        //     (newAccessTokenCallback: (newToken: string) => void) => {
+        //         // Access token expired
+        //         // get a new one and pass it to the callback to re-initiate the WebSDK
+        //         this.auth.getKycToken(flowName).valueChanges.subscribe(({ data }) => {
+        //             newAccessTokenCallback(data.generateWebApiToken);
+        //         });
+        //     }
+        // ).withConf({
+        //     lang: 'en',
+        //     applicantEmail,
+        //     applicantPhone,
+        //     i18n: customI18nMessages,
+        //     onMessage: (type: any, payload: any) => {
+        //         if (type === 'idCheck.onApplicantSubmitted') {
+        //             if (this.notifyCompleted) {
+        //                 this.completed.emit();
+        //             } else {
+        //                 this.showSuccessDialog();
+        //             }
+        //         }
+        //     },
+        //     uiConf: {
+        //       customCss: `${environment.client_host}/assets/sumsub.css`
+        //     },
+        //     onError: (error: any) => {
+        //         this.onError.emit(error.error);
+        //     },
+        // }).build();
         // you are ready to go:
         // just launch the WebSDK by providing the container element for it
         snsWebSdkInstance.launch('#sumsub-websdk-container');

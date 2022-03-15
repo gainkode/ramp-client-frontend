@@ -91,8 +91,10 @@ export function getFullName(user: User): string {
 export function getAvatarPath(avatarObject: string | undefined): string {
     let result = '';
     const avatarData = JSON.parse(avatarObject ?? '{}');
-    if (avatarData.path && avatarData.originFileName) {
-        result = `${environment.image_host}/${avatarData.path}/${avatarData.originFileName}`;
+    if (avatarData) {
+        if (avatarData.path && avatarData.originFileName) {
+            result = `${environment.image_host}/${avatarData.path}/${avatarData.originFileName}`;
+        }
     }
     return result;
 }

@@ -1635,6 +1635,11 @@ export type QueryGetWireTransferBankAccountsArgs = {
 };
 
 
+export type QueryGenerateWebApiTokenArgs = {
+  newLevel?: Maybe<Scalars['String']>;
+};
+
+
 export type QueryMyStateArgs = {
   options?: Maybe<UserStateInput>;
 };

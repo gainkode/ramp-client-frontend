@@ -44,9 +44,6 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
     }
 
     onVerify(flow: string, level: string): void {
-
-        console.log(flow, level);
-
         this.dialog.open(SumsubVerificationDialogBox, {
             width: '700px',
             height: '80%',
@@ -145,7 +142,8 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
                     passed: tierPassed,
                     subtitle: val.levelName ?? 'Identity',
                     description: val.description ?? defaultDescription,
-                    flow: val.originalFlowName ?? ''
+                    flow: val.originalLevelName ?? ''
+                    //flow: val.originalFlowName ?? ''
                 } as TierItem;
             });
         }
