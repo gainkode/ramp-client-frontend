@@ -8,7 +8,7 @@ import { take } from 'rxjs/operators';
 import { ApiSecretDialogBox } from 'src/app/components/dialogs/api-secret-box.dialog';
 import { DeleteDialogBox } from 'src/app/components/dialogs/delete-box.dialog';
 import { ApiKeyItem } from 'src/app/model/apikey.model';
-import { ApiKeyListResult } from 'src/app/model/generated-models';
+import { ApiKey, ApiKeyListResult, ApiKeySecret } from 'src/app/model/generated-models';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
@@ -90,11 +90,13 @@ export class ProfileApiKeysSettingsComponent implements OnInit, OnDestroy {
 
 
 
+        this.error.emit('');
         // const tiersData = this.dataService.getMyApiKeys(
         //     this.pageIndex,
         //     this.pageSize,
         //     this.getSortedField(),
         //     this.sortedDesc).valueChanges.pipe(take(1));
+        // this.progressChange.emit(true);
         // this.pSubscriptions.add(
         //     tiersData.subscribe(({ data }) => {
         //         this.progressChange.emit(false);
@@ -124,13 +126,26 @@ export class ProfileApiKeysSettingsComponent implements OnInit, OnDestroy {
     }
 
     createKey(): void {
-        this.dialog.open(ApiSecretDialogBox, {
-            width: '450px',
-            data: {
-                title: '',
-                message: `bvvffFD54fGIGF7BYbngfU4VF6ycx6`
-            }
-        });
+        this.error.emit('');
+        this.progressChange.emit(true);
+        const createKeyData$ = this.dataService.createMyApiKey();
+        this.pSubscriptions.add(
+            createKeyData$.subscribe(({ data }) => {
+                this.progressChange.emit(false);
+                const apiKeyData = data.createMyApiKey as ApiKeySecret;
+                this.getApiKeys();
+                this.dialog.open(ApiSecretDialogBox, {
+                    width: '500px',
+                    data: {
+                        title: 'New API key has been created',
+                        message: apiKeyData.secret
+                    }
+                });
+            }, (error) => {
+                this.progressChange.emit(false);
+                this.error.emit(this.errorHandler.getError(error.message, 'Unable to craete API key'));
+            })
+        );
     }
 
     removeApiKey(item: ApiKeyItem): void {
@@ -152,6 +167,17 @@ export class ProfileApiKeysSettingsComponent implements OnInit, OnDestroy {
     }
 
     private removeApiKeyConfirmed(apiKey: string): void {
-
+        this.error.emit('');
+        this.progressChange.emit(true);
+        const deleteKeyData$ = this.dataService.deleteMyApiKey(apiKey);
+        this.pSubscriptions.add(
+            deleteKeyData$.subscribe(({ data }) => {
+                this.progressChange.emit(false);
+                this.getApiKeys();
+            }, (error) => {
+                this.progressChange.emit(false);
+                this.error.emit(this.errorHandler.getError(error.message, 'Unable to delete API key'));
+            })
+        );
     }
 }

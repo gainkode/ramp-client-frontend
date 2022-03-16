@@ -327,6 +327,27 @@ const GET_MY_API_KEYS = gql`
   }
 `;
 
+const CREATE_MY_API_KEY = gql`
+  mutation CreateMyApiKey {
+    createMyApiKey {
+      apiKeyId
+      secret
+    }
+  }
+`;
+
+const DELETE_MY_API_KEY = gql`
+  mutation DeleteMyApiKey(
+    $apiKeyId: String!
+  ) {
+    deleteMyApiKey(
+      apiKeyId: $apiKeyId
+    ) {
+      apiKeyId
+    }
+  }
+`;
+
 const DELETE_MY_NOTIFICATIONS = gql`
   mutation DeleteMyNotifications(
     $notificationIds: [ID!]
@@ -683,6 +704,21 @@ export class ProfileDataService {
         },
         fetchPolicy: 'network-only',
       });
+  }
+
+  createMyApiKey(): Observable<any> {
+    return this.apollo.mutate({
+      mutation: CREATE_MY_API_KEY
+    });
+  }
+
+  deleteMyApiKey(apiKeyId: string): Observable<any> {
+    return this.apollo.mutate({
+      mutation: DELETE_MY_API_KEY,
+      variables: {
+        apiKeyId
+      },
+    });
   }
 
   deleteMyNotifications(idList: string[]): Observable<any> {
