@@ -60,7 +60,7 @@ export class WidgetKycComponent implements OnInit, OnDestroy {
             const settingsKyc = data.mySettingsKyc as SettingsKycShort;
             const levels = settingsKyc.levels?.map((val) => new KycLevelShort(val)) as KycLevelShort[];
             if (levels.length > 0) {
-              this.flow = levels[0].flowData.value;
+              this.flow = levels[0].levelData.value;
             }
             this.address = settingsCommon.kycBaseAddress as string;
             this.onProgress.emit(false);
@@ -117,7 +117,7 @@ export class WidgetKycComponent implements OnInit, OnDestroy {
               }
               return 0;
             });
-            this.flow = sortedTiers[0].originalFlowName ?? '';
+            this.flow = sortedTiers[0].originalLevelName ?? '';
           }
           if (this.flow === '') {
             this.getSettings();
