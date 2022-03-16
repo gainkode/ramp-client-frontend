@@ -310,6 +310,9 @@ export class WidgetService {
     private isKycRequired(kyc: User): boolean | null {
         let result = true;
         const kycStatus = kyc.kycStatus?.toLowerCase();
+
+        console.log('isKycRequired', kycStatus, kyc.kycValid, kyc.kycReviewRejectedType);
+
         if (kycStatus !== 'init' && kycStatus !== 'unknown') {
             result = false;
         } else {

@@ -95,7 +95,6 @@ export class WidgetComponent implements OnInit {
         this.widget = this.settings;
       }
       if (this.widget.embedded) {
-        //this.pager.init('sell_details', 'Initialization');
         this.pager.init('initialization', 'Initialization');
         this.loadUserWallets();
       } else {
@@ -433,6 +432,7 @@ export class WidgetComponent implements OnInit {
       this.widget.kycFirst = true;
     }
     this.requestKyc = state || this.summary.quoteLimit !== 0;
+    console.log('settingsKycState', this.requestKyc, state, this.summary.quoteLimit);
   }
 
   private settingsCommonComplete(providers: PaymentProviderInstrumentView[]): void {
