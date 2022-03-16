@@ -8,7 +8,6 @@ import { CostScheme } from 'src/app/model/cost-scheme.model';
 import { PaymentInstrument, SettingsCostListResult } from 'src/app/model/generated-models';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
-import { AdminMenuItems } from 'src/app/admin/model/menu.model';
 
 @Component({
   templateUrl: 'fee-list.component.html',
@@ -31,16 +30,9 @@ export class FeeListComponent implements OnInit, OnDestroy {
   constructor(
     private layoutService: LayoutService,
     private auth: AuthService,
-    private adminDataService: AdminDataService,
-    private route: ActivatedRoute
+    private adminDataService: AdminDataService
   ) {
-    const path = this.route.snapshot.routeConfig?.path;
-    if (path) {
-      const currentMenuItem = AdminMenuItems.find(x => x.url === `/admin/${path}`);
-      if (currentMenuItem) {
-        this.permission = this.auth.isPermittedObjectCode(currentMenuItem.code);
-      }
-    }
+    this.permission = this.auth.isPermittedObjectCode('FEES');
   }
 
   ngOnInit(): void {

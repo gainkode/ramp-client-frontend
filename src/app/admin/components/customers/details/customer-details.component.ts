@@ -21,6 +21,7 @@ import { CommonTargetValue } from 'src/app/model/common.model';
   styleUrls: ['customer-details.component.scss']
 })
 export class CustomerDetailsComponent implements OnDestroy {
+  @Input() permission = 0;
   @Input() set customer(val: UserItem | null | undefined) {
     this.setFormData(val);
     this.setCurrencies(this.pCurrencies);

@@ -29,7 +29,7 @@ import { getCheckedProviderList, getProviderList } from 'src/app/utils/utils';
   styleUrls: ['./widget-editor.component.scss']
 })
 export class WidgetEditorComponent implements OnInit, OnDestroy {
-
+  @Input() permission = 0;
   @Input()
   set widget(widget: WidgetItem) {
     this.setFormData(widget);

@@ -101,7 +101,7 @@
 </mat-paginator>
 
 <ng-template *ngIf="selectedWallet" appRightPanel (panelClosed)="handleDetailsPanelClosed()">
-    <app-wallet-details [wallet]="selectedWallet" [currencies]="currencyList" (save)="onSaveWallet($event)"
+    <app-wallet-details [permission]="permission" [wallet]="selectedWallet" [currencies]="currencyList" (save)="onSaveWallet($event)"
         (delete)="onDeleteWallet($event)" (cancel)="onCancelEdit()" (formChanged)="onEditorFormChanged($event)">
     </app-wallet-details>
 </ng-template>

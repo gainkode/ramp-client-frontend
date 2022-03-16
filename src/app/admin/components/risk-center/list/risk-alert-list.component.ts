@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { PageEvent } from '@angular/material/paginator';
 import { RiskAlertItem } from '../../../model/risk-alert.model';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   templateUrl: 'risk-alert-list.component.html',
@@ -20,6 +21,7 @@ export class RiskAlertListComponent implements OnInit, OnDestroy, AfterViewInit 
     'search'
   ];
 
+  permission = 0;
   data: RiskAlertItem[] = [];
   selectedAlert?: RiskAlertItem;
   dataCount = 0;
@@ -41,7 +43,11 @@ export class RiskAlertListComponent implements OnInit, OnDestroy, AfterViewInit 
 
   private subscriptions: Subscription = new Subscription();
 
-  constructor(private adminDataService: AdminDataService) { }
+  constructor(
+    private adminDataService: AdminDataService,
+    private auth: AuthService) {
+    this.permission = this.auth.isPermittedObjectCode('RISKS');
+  }
 
   ngOnInit(): void {
     this.loadData();

@@ -9,6 +9,7 @@ import { WalletItem } from '../../../model/wallet.model';
   styleUrls: ['wallet-details.component.scss']
 })
 export class WalletDetailsComponent {
+  @Input() permission = 0;
   @Input() set wallet(val: WalletItem | undefined) {
     this.setFormData(val);
   }

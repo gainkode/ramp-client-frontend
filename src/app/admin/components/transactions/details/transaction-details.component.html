@@ -205,10 +205,10 @@
         </section>
 
         <div class="panel-actions">
-            <button *ngIf="transactionType!==TRANSACTION_TYPE.Receive" mat-flat-button color="primary" type="submit">
+            <button *ngIf="permission>1 && transactionType!==TRANSACTION_TYPE.Receive" mat-flat-button color="primary" type="submit">
                 SAVE
             </button>
-            <button *ngIf="removable" mat-flat-button type="button" color="warn" (click)="onDelete()">
+            <button *ngIf="permission>1 && removable" mat-flat-button type="button" color="warn" (click)="onDelete()">
                 DELETE
             </button>
             <button *ngIf="cancelable" mat-flat-button (click)="onCancel()">

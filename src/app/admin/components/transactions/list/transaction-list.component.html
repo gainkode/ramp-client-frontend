@@ -1,5 +1,5 @@
 <div class="action-panel panel-actions">
-    <button mat-flat-button color="primary" type="button" (click)="unbenchmark()" [disabled]="!selectedForUnbenchmark">
+    <button *ngIf="permission>1" mat-flat-button color="primary" type="button" (click)="unbenchmark()" [disabled]="!selectedForUnbenchmark">
         SETTLE
     </button>
     <button mat-flat-button color="primary" type="button" (click)="export()">
@@ -192,7 +192,7 @@
 </mat-paginator>
 
 <ng-template *ngIf="selectedTransaction" appRightPanel (panelClosed)="handleDetailsPanelClosed()">
-    <app-transaction-details [transaction]="selectedTransaction" [currencies]="currencyOptions" [cancelable]=true
+    <app-transaction-details [permission]="permission" [transaction]="selectedTransaction" [currencies]="currencyOptions" [cancelable]=true
         [userStatuses]="userStatuses" (save)="onSaveTransaction()" (cancel)="onCancelEdit()">
     </app-transaction-details>
 </ng-template>

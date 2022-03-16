@@ -83,20 +83,17 @@ export class KycPanelComponent implements OnInit, OnDestroy {
         applicantEmail: string,
         applicantPhone: string,
         customI18nMessages: string[]): void {
-
-            console.log('Flow:', flowName, accessToken);
-
-        const snsWebSdkInstance = snsWebSdk.default.init(
+        let snsWebSdkBuilder = snsWebSdk.default.init(
             accessToken,
             // token update callback, must return Promise
             // Access token expired
             // get a new one and pass it to the callback to re-initiate the WebSDK
-            () => {
-                console.log('New token');
-                // this.auth.getKycToken(flowName).valueChanges.subscribe(({ data }) => {
-                //     console.log('New token', data.generateWebApiToken);
-                //     return Promise.resolve(data.generateWebApiToken);
-                // });
+            (newAccessTokenCallback: (newToken: string) => void) => {
+                // Access token expired
+                // get a new one and pass it to the callback to re-initiate the WebSDK
+                this.auth.getKycToken(flowName).valueChanges.subscribe(({ data }) => {
+                    newAccessTokenCallback(data.generateWebApiToken);
+                });
             }
         ).withConf({
             lang: 'en', //language of WebSDK texts and comments (ISO 639-1 format)
@@ -120,39 +117,13 @@ export class KycPanelComponent implements OnInit, OnDestroy {
             }
         }).on('idCheck.onError', (error) => {
             this.onError.emit(error.error);
-        }).build();
-        // const snsWebSdkInstance = snsWebSdk.default.Builder(apiUrl, flowName).withAccessToken(
-        //     accessToken,
-        //     (newAccessTokenCallback: (newToken: string) => void) => {
-        //         // Access token expired
-        //         // get a new one and pass it to the callback to re-initiate the WebSDK
-        //         this.auth.getKycToken(flowName).valueChanges.subscribe(({ data }) => {
-        //             newAccessTokenCallback(data.generateWebApiToken);
-        //         });
-        //     }
-        // ).withConf({
-        //     lang: 'en',
-        //     applicantEmail,
-        //     applicantPhone,
-        //     i18n: customI18nMessages,
-        //     onMessage: (type: any, payload: any) => {
-        //         if (type === 'idCheck.onApplicantSubmitted') {
-        //             if (this.notifyCompleted) {
-        //                 this.completed.emit();
-        //             } else {
-        //                 this.showSuccessDialog();
-        //             }
-        //         }
-        //     },
-        //     uiConf: {
-        //       customCss: `${environment.client_host}/assets/sumsub.css`
-        //     },
-        //     onError: (error: any) => {
-        //         this.onError.emit(error.error);
-        //     },
-        // }).build();
-        // you are ready to go:
-        // just launch the WebSDK by providing the container element for it
+        });
+
+        if (environment.test_kyc) {
+            snsWebSdkBuilder = snsWebSdkBuilder.onTestEnv();
+        }
+        const snsWebSdkInstance = snsWebSdkBuilder.build();
+
         snsWebSdkInstance.launch('#sumsub-websdk-container');
     }
 }

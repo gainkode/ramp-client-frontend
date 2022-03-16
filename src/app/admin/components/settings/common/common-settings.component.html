@@ -62,7 +62,7 @@
                 <div class="form-element">&nbsp;</div>
 
                 <div class="__common-settings-button-block">
-                    <button mat-flat-button color="primary" type="submit">
+                    <button *ngIf="permission>1" mat-flat-button color="primary" type="submit">
                         SAVE
                     </button>
                 </div>

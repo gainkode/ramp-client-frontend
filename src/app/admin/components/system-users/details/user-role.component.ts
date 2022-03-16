@@ -17,6 +17,7 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['user-role.component.scss']
 })
 export class AddSystemUserComponent implements OnInit, OnDestroy, AfterViewInit {
+  @Input() permission = 0;
   @Input() set roles(list: UserRole[]) {
     this.roleList = list.map(val => {
       this.dataForm.addControl(

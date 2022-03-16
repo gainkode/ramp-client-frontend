@@ -257,10 +257,10 @@
     <app-details-attribute label="Last updated" [value]="userData?.updated"></app-details-attribute>
 
     <div class="panel-actions">
-        <button mat-flat-button color="primary" type="submit">
+        <button *ngIf="permission>1" mat-flat-button color="primary" type="submit">
             SAVE
         </button>
-        <button *ngIf="removable" mat-flat-button color="warn" (click)="onDeleteCustomer()">
+        <button *ngIf="permission>1 && removable" mat-flat-button color="warn" (click)="onDeleteCustomer()">
             DISABLE
         </button>
         <button *ngIf="cancelable" mat-flat-button (click)="onCancel()">

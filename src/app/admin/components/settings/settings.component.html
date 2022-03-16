@@ -5,7 +5,7 @@
         <ng-template mat-tab-label>
             <app-tab-label labelText="Common"></app-tab-label>
         </ng-template>
-        <app-common-settings>
+        <app-common-settings [permission]="permission">
         </app-common-settings>
     </mat-tab>
 </mat-tab-group>

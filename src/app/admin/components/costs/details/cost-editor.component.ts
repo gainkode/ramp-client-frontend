@@ -27,6 +27,7 @@ import { getCheckedProviderList, getProviderList } from 'src/app/utils/utils';
   styleUrls: ['cost-editor.component.scss']
 })
 export class CostEditorComponent implements OnInit, OnDestroy {
+  @Input() permission = 0;
   @Input()
   set currentScheme(scheme: CostScheme | null) {
     this.forceValidate = false;

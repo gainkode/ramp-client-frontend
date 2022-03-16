@@ -222,10 +222,10 @@
     </mat-tab-group>
 
     <div class="panel-actions">
-        <button mat-flat-button color="primary" type="submit">
+        <button *ngIf="permission>1" mat-flat-button color="primary" type="submit">
             SAVE
         </button>
-        <button *ngIf="defaultSchemeFlag === '' && create==false" mat-flat-button color="warn"
+        <button *ngIf="permission>1 && (defaultSchemeFlag === '' && create==false)" mat-flat-button color="warn"
             (click)="onDeleteScheme()">
             DELETE
         </button>

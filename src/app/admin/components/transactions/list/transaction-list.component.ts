@@ -45,6 +45,7 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
     'search'
   ];
 
+  permission = 0;
   selectedTransaction?: TransactionItemFull;
   transactions: TransactionItemFull[] = [];
   transactionCount = 0;
@@ -80,6 +81,7 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
     if (id) {
       this.filter.users = [id as string];
     }
+    this.permission = this.auth.isPermittedObjectCode('TRANSACTIONS');
   }
 
   ngOnInit(): void {

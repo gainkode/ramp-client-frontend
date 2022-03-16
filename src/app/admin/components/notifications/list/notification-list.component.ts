@@ -21,6 +21,7 @@ export class NotificationListComponent implements OnInit, OnDestroy, AfterViewIn
     'search'
   ];
 
+  permission = 0;
   selectedItem?: NotificationItem;
   data: NotificationItem[] = [];
   messageCount = 0;
@@ -51,6 +52,7 @@ export class NotificationListComponent implements OnInit, OnDestroy, AfterViewIn
     private auth: AuthService,
     private adminDataService: AdminDataService
   ) {
+    this.permission = this.auth.isPermittedObjectCode('NOTIFICATIONS');
   }
 
   ngOnInit(): void {

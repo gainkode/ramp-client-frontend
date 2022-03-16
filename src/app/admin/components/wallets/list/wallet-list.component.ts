@@ -27,6 +27,7 @@ export class WalletListComponent implements OnInit, OnDestroy, AfterViewInit {
     'search'
   ];
 
+  permission = 0;
   selectedWallet?: WalletItem;
   wallets: WalletItem[] = [];
   walletCount = 0;
@@ -62,6 +63,7 @@ export class WalletListComponent implements OnInit, OnDestroy, AfterViewInit {
         const filterData = (filterVaultId as string).split('#');
         this.filter.walletIds = filterData;
       }
+      this.permission = this.auth.isPermittedObjectCode('WALLETS');
   }
 
   ngOnInit(): void {

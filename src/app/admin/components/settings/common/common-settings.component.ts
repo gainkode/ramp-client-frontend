@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, OnDestroy, ElementRef } from '@angular/core';
+import { Component, ViewChild, OnInit, OnDestroy, ElementRef, Input } from '@angular/core';
 import { AdminDataService } from '../../../services/admin-data.service';
 import { Subscription } from 'rxjs';
 import { FormBuilder, Validators } from '@angular/forms';
@@ -16,6 +16,7 @@ import { TransactionConfirmationModeList } from 'src/app/admin/model/settings.mo
   styleUrls: ['common-settings.component.scss']
 })
 export class CommonSettingsEditorComponent implements OnInit, OnDestroy {
+  @Input() permission = 0;
   @ViewChild('emailSearchInput') emailSearchInput!: ElementRef<HTMLInputElement>;
 
   kycProviderOptions = KycProviderList;

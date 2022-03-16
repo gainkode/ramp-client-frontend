@@ -1,5 +1,5 @@
 <div class="action-panel">
-    <button mat-flat-button color="primary" [disabled]="(selectedScheme && !selectedScheme.id) || permission<2"
+    <button *ngIf="permission>1" mat-flat-button color="primary" [disabled]="(selectedScheme && !selectedScheme.id) || permission<2"
             (click)="createNewScheme()">
         ADD SCHEME
     </button>
@@ -73,7 +73,7 @@
 </div>
 
 <ng-template *ngIf="selectedScheme" appRightPanel>
-        <app-fee-editor
+        <app-fee-editor [permission]="permission" 
                         [currentScheme]="selectedScheme"
                         (save)="onSaved($event)"
                         (delete)="onDeleteScheme($event)"

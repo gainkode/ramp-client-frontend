@@ -1,13 +1,15 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   templateUrl: 'settings.component.html'
 })
 export class AdminSettingsComponent {
+  permission = 0;
   selectedTab = 0;
   
-  constructor(private router: Router) {
+  constructor(private auth: AuthService) {
+    this.permission = this.auth.isPermittedObjectCode('SETTINGS');
   }
 
   setSelectedTab(index: number): void {

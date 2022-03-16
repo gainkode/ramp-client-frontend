@@ -1,8 +1,8 @@
 <div class="action-panel panel-actions">
-    <button mat-flat-button color="primary" type="button" (click)="addUser()">
+    <button *ngIf="permission>1" mat-flat-button color="primary" type="button" (click)="addUser()">
         ADD USER
     </button>
-    <button mat-flat-button color="primary" type="button" (click)="setRole()">
+    <button *ngIf="permission>1" mat-flat-button color="primary" type="button" (click)="setRole()">
         SET ROLE
     </button>
     <button mat-flat-button color="primary" type="button" (click)="sendMessage()" [disabled]="!selected">
@@ -31,7 +31,7 @@
                     </mat-icon>
                 </button>
                 <button mat-icon-button class="row-button" (click)="setUserRole(element)"
-                    [attr.aria-label]="'User transactions'" [matTooltip]="'Set roles'" matTooltipClass="info-tooltip">
+                    [attr.aria-label]="'User roles'" [matTooltip]="permission>1 ? 'Set roles' : 'Roles'" matTooltipClass="info-tooltip">
                     <mat-icon class="details-icon">
                         perm_data_setting
                     </mat-icon>
@@ -97,9 +97,9 @@
 </mat-paginator>
 
 <ng-template *ngIf="selectedUser || setRoleFlag" appRightPanel (panelClosed)="handleDetailsPanelClosed()">
-    <app-system-user-details *ngIf="selectedUser" [user]="selectedUser" [cancelable]=true
+    <app-system-user-details *ngIf="selectedUser" [permission]="permission" [user]="selectedUser" [cancelable]=true
         (save)="onSave()" (cancel)="onCancelEdit()">
     </app-system-user-details>
-    <app-user-role *ngIf="setRoleFlag" [user]="roleUser" [roles]="userRoles" (save)="onSave()" (cancel)="onCancelEdit()">
+    <app-user-role *ngIf="setRoleFlag" [permission]="permission" [user]="roleUser" [roles]="userRoles" (save)="onSave()" (cancel)="onCancelEdit()">
     </app-user-role>
 </ng-template>

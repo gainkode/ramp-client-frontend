@@ -35,10 +35,10 @@
     </section>
 
     <div class="panel-actions">
-        <button mat-flat-button color="primary" type="submit">
+        <button *ngIf="permission>1" mat-flat-button color="primary" type="submit">
             SAVE
         </button>
-        <button mat-flat-button color="warn" type="button" (click)="onDeleteWallet()">
+        <button *ngIf="permission>1" mat-flat-button color="warn" type="button" (click)="onDeleteWallet()">
             DELETE
         </button>
         <button mat-flat-button type="button" (click)="onCancel()">

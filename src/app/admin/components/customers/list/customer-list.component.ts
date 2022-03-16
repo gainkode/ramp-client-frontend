@@ -43,6 +43,7 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
     'search'
   ];
 
+  permission = 0;
   selectedCustomer: UserItem | undefined = undefined;
   roleIds: string[] = [];
   customers: UserItem[] = [];
@@ -73,6 +74,7 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
     private router: Router,
     public dialog: MatDialog
   ) {
+    this.permission = this.auth.isPermittedObjectCode('CUSTOMERS');
   }
 
   ngOnInit(): void {

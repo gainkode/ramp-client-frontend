@@ -21,6 +21,7 @@ import { getTransactionAmountHash, getTransactionStatusHash } from 'src/app/util
   styleUrls: ['transaction-details.component.scss']
 })
 export class TransactionDetailsComponent implements OnInit, OnDestroy {
+  @Input() permission = 0;
   @Input() set transaction(val: TransactionItemFull | undefined) {
     this.setFormData(val);
     this.pStatusHash = val?.statusHash ?? 0;

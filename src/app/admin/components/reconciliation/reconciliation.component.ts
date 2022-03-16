@@ -12,11 +12,13 @@ export class ReconciliationComponent {
   @Output() changeEditMode = new EventEmitter<boolean>();
   inProgress = false;
   errorMessage = '';
+  permission = 0;
 
   constructor(
     private auth: AuthService,
     private errorHandler: ErrorService,
     private adminService: AdminDataService,
     private router: Router) {
+      this.permission = this.auth.isPermittedObjectCode('RECONCILIATION');
   }
 }

@@ -15,6 +15,8 @@ import { LayoutService } from 'src/app/admin/services/layout.service';
 })
 export class CostTabListComponent implements OnInit, OnDestroy {
   @Output() changeEditMode = new EventEmitter<boolean>();
+
+  permission = 0;
   inProgress = false;
   errorMessage = '';
   schemeEditorErrorMessage = '';
@@ -40,6 +42,7 @@ export class CostTabListComponent implements OnInit, OnDestroy {
     private errorHandler: ErrorService,
     private adminService: AdminDataService,
     private router: Router) {
+      this.permission = this.auth.isPermittedObjectCode('COSTS');
   }
 
   ngOnInit(): void {

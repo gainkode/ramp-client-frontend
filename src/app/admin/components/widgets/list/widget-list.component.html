@@ -1,5 +1,5 @@
 <div class="action-panel panel-actions">
-    <button mat-flat-button color="primary" type="button" [disabled]="selectedItem && !selectedItem.id" (click)="createNewWidget()">
+    <button *ngIf="permission>1" mat-flat-button color="primary" type="button" [disabled]="selectedItem && !selectedItem.id" (click)="createNewWidget()">
         ADD WIDGET
     </button>
     <button mat-flat-button color="primary" type="button" (click)="export()">
@@ -122,6 +122,6 @@
 </mat-paginator>
 
 <ng-template *ngIf="selectedItem" appRightPanel (panelClosed)="handleDetailsPanelClosed()">
-    <app-widget-editor [widget]="selectedItem">
+    <app-widget-editor [permission]="permission" [widget]="selectedItem">
     </app-widget-editor>
 </ng-template>

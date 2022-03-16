@@ -11,6 +11,7 @@ import { WireTransferBankAccountAu, WireTransferBankAccountEu, WireTransferBankA
   styleUrls: ['bank-account-editor.component.scss']
 })
 export class BankAccountEditorComponent implements OnInit {
+  @Input() permission = 0;
   @Input()
   set currentAccount(account: WireTransferBankAccountItem | null) {
     this.setFormData(account);

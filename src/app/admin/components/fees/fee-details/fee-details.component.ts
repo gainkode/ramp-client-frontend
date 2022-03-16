@@ -29,6 +29,7 @@ import { getCheckedProviderList, getProviderList } from 'src/app/utils/utils';
   styleUrls: ['fee-details.component.scss']
 })
 export class FeeDetailsComponent implements OnInit, OnDestroy {
+  @Input() permission = 0;
   @Input()
   set currentScheme(scheme: FeeScheme | null) {
     this.forceValidate = false;

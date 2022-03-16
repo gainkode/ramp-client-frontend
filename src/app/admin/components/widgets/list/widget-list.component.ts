@@ -23,6 +23,7 @@ export class WidgetListComponent implements OnInit, OnDestroy, AfterViewInit {
     'search'
   ];
 
+  permission = 0;
   selectedItem?: WidgetItem;
   data: WidgetItem[] = [];
   widgetCount = 0;
@@ -63,6 +64,7 @@ export class WidgetListComponent implements OnInit, OnDestroy, AfterViewInit {
     private auth: AuthService,
     private adminDataService: AdminDataService) {
     this.userIdFilter = this.route.snapshot.params['userId'] ?? '';
+    this.permission = this.auth.isPermittedObjectCode('AFFILIATES');
   }
 
   ngOnInit(): void {

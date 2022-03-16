@@ -19,6 +19,7 @@ import { getFormattedUtcDate } from 'src/app/utils/utils';
   styleUrls: ['user-details.component.scss']
 })
 export class SystemUserDetailsComponent implements OnDestroy {
+  @Input() permission = 0;
   @Input() set user(val: UserItem | null | undefined) {
     this.setFormData(val);
     this.layoutService.setBackdrop(!val?.id);

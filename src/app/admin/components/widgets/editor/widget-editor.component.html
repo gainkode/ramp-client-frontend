@@ -124,10 +124,10 @@
     </mat-form-field>
 
     <div class="panel-actions">
-        <button mat-flat-button color="primary" type="submit">
+        <button *ngIf="permission>1" mat-flat-button color="primary" type="submit">
             SAVE
         </button>
-        <button *ngIf="!!this.form.value.id" mat-flat-button color="warn" type="button" (click)="onDelete()">
+        <button *ngIf="permission>1 && !!this.form.value.id" mat-flat-button color="warn" type="button" (click)="onDelete()">
             DELETE
         </button>
         <button mat-flat-button (click)="onCancel()" type="button">

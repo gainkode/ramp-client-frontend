@@ -36,6 +36,7 @@ export class SystemUserListComponent implements OnInit, OnDestroy, AfterViewInit
     'search'
   ];
 
+  permission = 0;
   selectedUser: UserItem | undefined = undefined;
   setRoleFlag = false;
   roleIds: string[] = [];
@@ -66,6 +67,7 @@ export class SystemUserListComponent implements OnInit, OnDestroy, AfterViewInit
     private router: Router,
     public dialog: MatDialog
   ) {
+    this.permission = this.auth.isPermittedObjectCode('SYSTEM_USERS');
   }
 
   ngOnInit(): void {
