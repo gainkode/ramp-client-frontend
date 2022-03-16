@@ -74,48 +74,46 @@ export class ProfileApiKeysSettingsComponent implements OnInit, OnDestroy {
 
 
 
-        this.keys.push({
-            title: 'nbvyuFVBYGBHFDgh876f7gRRGGd78hJJ0j98hh90hF',
-            created: '15 Jan 2022 15:49',
-            disabled: false
-        } as ApiKeyItem);
-        this.keys.push({
-            title: 'bb67vYX3edfvbi675Boh7g78J987g8h6fF8hj89h8F',
-            created: '29 Feb 2022 10:15',
-            disabled: true
-        } as ApiKeyItem);
-
-
-        this.keyCount = 2;
+        // this.keys.push({
+        //     title: 'nbvyuFVBYGBHFDgh876f7gRRGGd78hJJ0j98hh90hF',
+        //     created: '15 Jan 2022 15:49',
+        //     disabled: false
+        // } as ApiKeyItem);
+        // this.keys.push({
+        //     title: 'bb67vYX3edfvbi675Boh7g78J987g8h6fF8hj89h8F',
+        //     created: '29 Feb 2022 10:15',
+        //     disabled: true
+        // } as ApiKeyItem);
+        // this.keyCount = 2;
 
 
 
         this.error.emit('');
-        // const tiersData = this.dataService.getMyApiKeys(
-        //     this.pageIndex,
-        //     this.pageSize,
-        //     this.getSortedField(),
-        //     this.sortedDesc).valueChanges.pipe(take(1));
-        // this.progressChange.emit(true);
-        // this.pSubscriptions.add(
-        //     tiersData.subscribe(({ data }) => {
-        //         this.progressChange.emit(false);
-        //         const dataList = data.myApiKeys as ApiKeyListResult;
-        //         if (dataList !== null) {
-        //             this.keyCount = dataList?.count ?? 0;
-        //             if (this.keyCount > 0 && dataList?.list) {
-        //                 this.keys = dataList.list.map(val => new ApiKeyItem(val));
-        //             }
-        //         }
-        //     }, (error) => {
-        //         this.progressChange.emit(false);
-        //         if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
-        //             this.router.navigateByUrl('/');
-        //         } else {
-        //             this.error.emit(this.errorHandler.getError(error.message, 'Unable to get API keys'));
-        //         }
-        //     })
-        // );
+        const tiersData = this.dataService.getMyApiKeys(
+            this.pageIndex,
+            this.pageSize,
+            this.getSortedField(),
+            this.sortedDesc).valueChanges.pipe(take(1));
+        this.progressChange.emit(true);
+        this.pSubscriptions.add(
+            tiersData.subscribe(({ data }) => {
+                this.progressChange.emit(false);
+                const dataList = data.myApiKeys as ApiKeyListResult;
+                if (dataList !== null) {
+                    this.keyCount = dataList?.count ?? 0;
+                    if (this.keyCount > 0 && dataList?.list) {
+                        this.keys = dataList.list.map(val => new ApiKeyItem(val));
+                    }
+                }
+            }, (error) => {
+                this.progressChange.emit(false);
+                if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
+                    this.router.navigateByUrl('/');
+                } else {
+                    this.error.emit(this.errorHandler.getError(error.message, 'Unable to get API keys'));
+                }
+            })
+        );
     }
 
     handlePage(event: PageEvent): PageEvent {
