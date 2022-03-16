@@ -1,0 +1,41 @@
+@import "../../../../assets/fonts.scss";
+@import "../../../../assets/colors.scss";
+@import "../../../../assets/consts.scss";
+
+.__profile-api-keys-table-column-title {
+    flex: 0 0 30%;
+    width: 30%;
+    min-width: 300px;
+}
+
+.__profile-api-keys-table-column-created {
+    flex: 0 0 80%;
+    width: 80%;
+    min-width: 150px;
+}
+
+.__profile-api-keys-table-column-remove {
+    flex: 0 0 10%;
+    width: 10%;
+    min-width: 60px;
+}
+
+.__profile-api-keys-table-cell-plain {
+    padding: 0px 0px 0px 4px !important;
+}
+
+.__profile-api-keys-table-cell-details {
+    padding: 0px !important;
+    display: flex;
+    justify-content: flex-end;
+    align-items: stretch;
+}
+
+.__profile-api-keys-table-cell-data {
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 28px;
+    color: $color_purple_900_text;
+}

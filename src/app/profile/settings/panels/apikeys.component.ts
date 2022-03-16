@@ -1,0 +1,131 @@
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { PageEvent } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
+import { ApiKeyItem } from 'src/app/model/apikey.model';
+import { ApiKeyListResult } from 'src/app/model/generated-models';
+import { AuthService } from 'src/app/services/auth.service';
+import { ErrorService } from 'src/app/services/error.service';
+import { ProfileDataService } from 'src/app/services/profile.service';
+
+@Component({
+    selector: 'app-profile-api-keys-settings',
+    templateUrl: './apikeys.component.html',
+    styleUrls: [
+        '../../../../assets/menu.scss',
+        '../../../../assets/button.scss',
+        '../../../../assets/profile.scss',
+        './apikeys.component.scss'
+    ]
+})
+export class ProfileApiKeysSettingsComponent implements OnInit, OnDestroy {
+    @ViewChild(MatSort) sort!: MatSort;
+    @Output() error = new EventEmitter<string>();
+    @Output() progressChange = new EventEmitter<boolean>();
+
+    keys: ApiKeyItem[] = [];
+    keyCount = 0;
+    pageCounts = [25, 50, 100];
+    pageSize = 25;
+    pageIndex = 0;
+    sortedField = 'created';
+    sortedDesc = true;
+    displayedColumns: string[] = [
+        'title', 'created', 'remove'
+    ];
+
+    private pSubscriptions: Subscription = new Subscription();
+
+    constructor(
+        private auth: AuthService,
+        private errorHandler: ErrorService,
+        private dataService: ProfileDataService,
+        private router: Router,
+        public dialog: MatDialog) {
+    }
+
+    ngOnInit(): void {
+        this.getApiKeys();
+    }
+
+    ngOnDestroy(): void {
+        this.pSubscriptions.unsubscribe();
+    }
+
+    private getSortedField(): string {
+        let result = this.sortedField;
+        if (this.sortedField === 'title') {
+            result = 'apiKeyId';
+        }
+        return result;
+    }
+
+    private getApiKeys(): void {
+        this.error.emit('');
+        this.keys = [];
+
+
+
+
+
+
+        this.keys.push({
+            title: 'nbvyuFVBYGBHFDgh876f7gRRGGd78hJJ0j98hh90hF',
+            created: '15 Jan 2022 15:49',
+            disabled: false
+        } as ApiKeyItem);
+        this.keys.push({
+            title: 'bb67vYX3edfvbi675Boh7g78J987g8h6fF8hj89h8F',
+            created: '29 Feb 2022 10:15',
+            disabled: true
+        } as ApiKeyItem);
+
+
+        this.keyCount = 2;
+
+
+
+        // const tiersData = this.dataService.getMyApiKeys(
+        //     this.pageIndex,
+        //     this.pageSize,
+        //     this.getSortedField(),
+        //     this.sortedDesc).valueChanges.pipe(take(1));
+        // this.pSubscriptions.add(
+        //     tiersData.subscribe(({ data }) => {
+        //         this.progressChange.emit(false);
+        //         const dataList = data.myApiKeys as ApiKeyListResult;
+        //         if (dataList !== null) {
+        //             this.keyCount = dataList?.count ?? 0;
+        //             if (this.keyCount > 0 && dataList?.list) {
+        //                 this.keys = dataList.list.map(val => new ApiKeyItem(val));
+        //             }
+        //         }
+        //     }, (error) => {
+        //         this.progressChange.emit(false);
+        //         if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
+        //             this.router.navigateByUrl('/');
+        //         } else {
+        //             this.error.emit(this.errorHandler.getError(error.message, 'Unable to get API keys'));
+        //         }
+        //     })
+        // );
+    }
+
+    handlePage(event: PageEvent): PageEvent {
+        this.pageSize = event.pageSize;
+        this.pageIndex = event.pageIndex;
+        this.getApiKeys();
+        return event;
+    }
+
+    createKey(): void {
+
+    }
+    
+    removeApiKey(item: ApiKeyItem): void {
+        
+    }
+}

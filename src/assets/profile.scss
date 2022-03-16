@@ -681,6 +681,14 @@
     align-items: center;
 }
 
+.__profile-settings-top-button-bar-container {
+    margin: 0px 0px 12px 0px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
 .__profile-data-table {
     width: 100%;
     background-color: $color_white;

@@ -304,6 +304,29 @@ const GET_MY_CONTACTS = gql`
   }
 `;
 
+const GET_MY_API_KEYS = gql`
+  query MyApiKeys(
+    $filter: String
+    $skip: Int
+    $first: Int
+    $orderBy: [OrderBy!]
+  ) {
+    myApiKeys(
+      filter: $filter
+      skip: $skip
+      first: $first
+      orderBy: $orderBy
+    ) {
+      count
+      list {
+        apiKeyId
+        created
+        disabled
+      }
+    }
+  }
+`;
+
 const DELETE_MY_NOTIFICATIONS = gql`
   mutation DeleteMyNotifications(
     $notificationIds: [ID!]
@@ -611,18 +634,6 @@ export class ProfileDataService {
     });
   }
 
-  getMyProfit(fiatCurrency: string, selectPeriod: UserBalanceHistoryPeriod): QueryRef<any, EmptyObject> {
-    const orderFields = [{ orderBy: 'date', desc: true }];
-    return this.apollo.watchQuery<any>({
-      query: GET_MY_PROFIT,
-      variables: {
-        currencyTo: fiatCurrency,
-        period: selectPeriod
-      },
-      fetchPolicy: 'network-only',
-    });
-  }
-
   getMyNotifications(
     unreadOnlyFilter: boolean,
     search: string,
@@ -643,6 +654,35 @@ export class ProfileDataService {
       },
       fetchPolicy: 'network-only',
     });
+  }
+
+  getMyProfit(fiatCurrency: string, selectPeriod: UserBalanceHistoryPeriod): QueryRef<any, EmptyObject> {
+    const orderFields = [{ orderBy: 'date', desc: true }];
+    return this.apollo.watchQuery<any>({
+      query: GET_MY_PROFIT,
+      variables: {
+        currencyTo: fiatCurrency,
+        period: selectPeriod
+      },
+      fetchPolicy: 'network-only',
+    });
+  }
+
+  getMyApiKeys(
+    pageIndex: number,
+    takeItems: number,
+    orderField: string,
+    orderDesc: boolean): QueryRef<any, EmptyObject> {
+      const orderFields = [{ orderBy: orderField, desc: orderDesc }];
+      return this.apollo.watchQuery<any>({
+        query: GET_MY_API_KEYS,
+        variables: {
+          skip: pageIndex * takeItems,
+          first: takeItems,
+          orderBy: orderFields
+        },
+        fetchPolicy: 'network-only',
+      });
   }
 
   deleteMyNotifications(idList: string[]): Observable<any> {

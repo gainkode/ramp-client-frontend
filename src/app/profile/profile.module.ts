@@ -49,6 +49,7 @@ import { ProfileInfoTextboxComponent } from './settings/components/info-textbox.
 import { ProfileInfoDateboxComponent } from './settings/components/info-datebox.component';
 import { ProfileInfoDropboxComponent } from './settings/components/info-dropbox.component';
 import { ProfilePaymentErrorComponent } from './details/payment-error.component';
+import { ProfileApiKeysSettingsComponent } from './settings/panels/apikeys.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -88,7 +89,8 @@ export class MaterialModule { }
         ProfilePriceListComponent,
         ProfilePaymentCompleteComponent, ProfilePaymentErrorComponent,
         ProfileNotificationsComponent, ProfileNotificationListComponent,
-        ProfileSettingsComponent, ProfileInfoSettingsComponent, ProfileVerificationSettingsComponent, ProfileSecuriySettingsComponent,
+        ProfileSettingsComponent, ProfileInfoSettingsComponent, ProfileVerificationSettingsComponent,
+        ProfileSecuriySettingsComponent, ProfileApiKeysSettingsComponent,
         ProfileChangePasswordComponent, ProfileInfoTextboxComponent, ProfileInfoDateboxComponent, ProfileInfoDropboxComponent,
         SettingsMenuBarComponent
     ],
