@@ -62,6 +62,7 @@ import { SendNotificationDialogBox } from './dialogs/send-notification-box.dialo
 import { SumsubVerificationDialogBox } from './dialogs/sumsub-verification.dialog';
 import { ContactFormComponent } from './contact-form.component';
 import { YesNoDialogBox } from './dialogs/yesno-box.dialog';
+import { ApiSecretDialogBox } from './dialogs/api-secret-box.dialog';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -102,7 +103,8 @@ export class MaterialModule { }
         DropdownItemComponent, TabLabelComponent, KycPanelComponent, ContactFormComponent,
         FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent, FormSearchBoxComponent,
         FormEditBoxComponent, SettingsPasswordBoxComponent,
-        DeleteDialogBox, CommonDialogBox, TwoFaDialogBox, TwoFaDialogWizard, SendNotificationDialogBox, SumsubVerificationDialogBox, YesNoDialogBox,
+        DeleteDialogBox, CommonDialogBox, TwoFaDialogBox, TwoFaDialogWizard, SendNotificationDialogBox, SumsubVerificationDialogBox,
+        YesNoDialogBox, ApiSecretDialogBox,
         LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, RestorePanelComponent,
         NavPopupComponent, SideMenuComponent, SideExpanderComponent, RiskWarningComponent,
         LineBreakPipe, NumberFillPipe,
@@ -111,7 +113,8 @@ export class MaterialModule { }
         DropdownItemComponent, TabLabelComponent, KycPanelComponent, ContactFormComponent,
         FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent, FormSearchBoxComponent,
         FormEditBoxComponent, SettingsPasswordBoxComponent,
-        DeleteDialogBox, CommonDialogBox, TwoFaDialogBox, TwoFaDialogWizard, SendNotificationDialogBox, SumsubVerificationDialogBox, YesNoDialogBox,
+        DeleteDialogBox, CommonDialogBox, TwoFaDialogBox, TwoFaDialogWizard, SendNotificationDialogBox, SumsubVerificationDialogBox,
+        YesNoDialogBox, ApiSecretDialogBox,
         LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, RestorePanelComponent,
         NavPopupComponent, SideMenuComponent, SideExpanderComponent, RiskWarningComponent,
         LineBreakPipe, NumberFillPipe,

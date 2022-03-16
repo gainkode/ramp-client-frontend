@@ -208,3 +208,17 @@
         align-items: center;
     }
 }
+
+.__dialog-secret-content-block {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.__dialog-secret-phrase-block {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}

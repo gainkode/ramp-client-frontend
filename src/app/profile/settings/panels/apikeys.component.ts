@@ -5,6 +5,8 @@ import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { ApiSecretDialogBox } from 'src/app/components/dialogs/api-secret-box.dialog';
+import { DeleteDialogBox } from 'src/app/components/dialogs/delete-box.dialog';
 import { ApiKeyItem } from 'src/app/model/apikey.model';
 import { ApiKeyListResult } from 'src/app/model/generated-models';
 import { AuthService } from 'src/app/services/auth.service';
@@ -122,10 +124,34 @@ export class ProfileApiKeysSettingsComponent implements OnInit, OnDestroy {
     }
 
     createKey(): void {
-
+        this.dialog.open(ApiSecretDialogBox, {
+            width: '450px',
+            data: {
+                title: '',
+                message: `bvvffFD54fGIGF7BYbngfU4VF6ycx6`
+            }
+        });
     }
-    
+
     removeApiKey(item: ApiKeyItem): void {
-        
+        const dialogRef = this.dialog.open(DeleteDialogBox, {
+            width: '402px',
+            data: {
+                title: '',
+                message: `You are going to delete API key ${item.title}. Please confirm.`,
+                button: 'DELETE'
+            }
+        });
+        this.pSubscriptions.add(
+            dialogRef.afterClosed().subscribe(result => {
+                if (result === true) {
+                    this.removeApiKeyConfirmed(item.title);
+                }
+            })
+        );
+    }
+
+    private removeApiKeyConfirmed(apiKey: string): void {
+
     }
 }
