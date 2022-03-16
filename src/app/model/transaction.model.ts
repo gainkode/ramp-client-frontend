@@ -26,6 +26,7 @@ import {
   UserTypeList,
   AdminTransactionStatusList,
   TransactionStatusList,
+  UserTransactionStatusList
 } from './payment.model';
 import { UserItem } from './user.model';
 
@@ -400,7 +401,14 @@ export class TransactionItem {
   }
 
   get statusName(): string {
-    return (this.status) ? this.status.value.userStatus as string : '-';
+    let statusName = '';
+    if (this.status) {
+      const statusValue = this.status.value.userStatus;
+      if (statusValue) {
+        statusName = UserTransactionStatusList.find(x => x.id === statusValue)?.name ?? statusValue;
+      }
+    }
+    return statusName;
   }
 
   get statusLevel(): string {

@@ -3,7 +3,7 @@ import { CommonTargetValue } from './common.model';
 import {
     PaymentInstrument, PaymentProvider, TransactionType, TransactionStatus,
     SettingsFeeTargetFilterType, SettingsCostTargetFilterType, SettingsKycTargetFilterType,
-    UserType, KycProvider, UserMode, SettingsCurrency, Rate, TransactionSource, UserNotificationCodes, CustodyProvider, TransactionKycStatus, RiskLevel, PaymentProviderByInstrument, AccountStatus, KycStatus, AdminTransactionStatus
+    UserType, KycProvider, UserMode, SettingsCurrency, Rate, TransactionSource, UserNotificationCodes, CustodyProvider, TransactionKycStatus, RiskLevel, PaymentProviderByInstrument, AccountStatus, KycStatus, AdminTransactionStatus, UserTransactionStatus
 } from './generated-models';
 import { WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from './payment-base.model';
 
@@ -68,6 +68,11 @@ export class TransactionSourceView {
 
 export class TransactionStatusView {
     id!: TransactionStatus;
+    name = '';
+}
+
+export class UserTransactionStatusView {
+    id!: UserTransactionStatus;
     name = '';
 }
 
@@ -280,6 +285,17 @@ export const TransactionStatusList: Array<TransactionStatusView> = [
     { id: TransactionStatus.Canceled, name: 'Cancelled' },
     { id: TransactionStatus.Chargeback, name: 'Chargeback' }
 ];
+
+export const UserTransactionStatusList: Array<UserTransactionStatusView> = [
+    { id: UserTransactionStatus.New, name: 'New' },
+    { id: UserTransactionStatus.Processing, name: 'Processing' },
+    { id: UserTransactionStatus.Confirming, name: 'Confirming' },
+    { id: UserTransactionStatus.Completed, name: 'Completed' },
+    { id: UserTransactionStatus.Canceled, name: 'Cancelled' },
+    { id: UserTransactionStatus.UnderReview, name: 'Under Review' },
+    { id: UserTransactionStatus.Declined, name: 'Declined' },
+    { id: UserTransactionStatus.SendingError, name: 'Sending Error' }
+]
 
 export const AdminTransactionStatusList: Array<AdminTransactionStatusView> = [
     { id: AdminTransactionStatus.New, name: 'New' },

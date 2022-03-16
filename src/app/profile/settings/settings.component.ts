@@ -22,7 +22,7 @@ export class ProfileSettingsComponent {
         private route: ActivatedRoute,
         private router: Router) {
         const pageId = this.route.snapshot.params['page'] ?? '';
-        const apiKeysPage = false;//(pageId === 'apikeys' && this.auth.user?.type === UserType.Merchant);
+        const apiKeysPage = (pageId === 'apikeys' && this.auth.user?.type === UserType.Merchant);
         if (pageId === 'info' || pageId === 'verification' || pageId === 'security' || apiKeysPage) {
             this.pageSelected(pageId);
         } else {

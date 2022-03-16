@@ -30,10 +30,10 @@ export class SettingsMenuBarComponent {
 
     constructor(private router: Router, private auth: AuthService) {
         if (auth.user?.type === UserType.Merchant) {
-            // this.tabs.push({
-            //     id: 'apikeys',
-            //     name: 'API Keys'
-            // } as MenuItem);
+            this.tabs.push({
+                id: 'apikeys',
+                name: 'API Keys'
+            } as MenuItem);
         }
     }
 
