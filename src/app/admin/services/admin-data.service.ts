@@ -5,11 +5,13 @@ import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { CostScheme } from '../../model/cost-scheme.model';
 import { FeeScheme } from '../../model/fee-scheme.model';
 import {
+  ApiKeyListResult,
   AssetAddress,
   AssetAddressListResult,
   CountryCodeType,
   DashboardStats,
   KycInfo,
+  QueryGetApiKeysArgs,
   QueryGetDashboardStatsArgs,
   QueryGetNotificationsArgs, QueryGetRiskAlertsArgs,
   QueryGetSettingsFeeArgs,
@@ -54,6 +56,7 @@ import { WalletItem } from '../model/wallet.model';
 import { NotificationItem } from '../../model/notification.model';
 import { WidgetItem } from '../model/widget.model';
 import { RiskAlertItem } from '../model/risk-alert.model';
+import { ApiKeyItem } from 'src/app/model/apikey.model';
 
 /* region queries */
 
@@ -924,6 +927,29 @@ query {
   }
 `;
 
+const GET_USER_API_KEYS = gql`
+  query GetApiKeys(
+    $filter: String
+    $skip: Int
+    $first: Int
+    $orderBy: [OrderBy!]
+  ) {
+    getApiKeys(
+      filter: $filter
+      skip: $skip
+      first: $first
+      orderBy: $orderBy
+    ) {
+      count
+      list {
+        apiKeyId
+        created
+        disabled
+      }
+    }
+  }
+`;
+
 const UPDATE_SETTINGS_COMMON = gql`
   mutation UpdateSettingsCommon(
     $settingsId: ID!
@@ -1491,6 +1517,27 @@ mutation RemoveRole(
     userId
   }
 }
+`;
+
+const CREATE_USER_API_KEY = gql`
+  mutation CreateUserApiKey {
+    createUserApiKey {
+      apiKeyId
+      secret
+    }
+  }
+`;
+
+const DELETE_USER_API_KEY = gql`
+  mutation DeleteUserApiKey(
+    $apiKeyId: String!
+  ) {
+    deleteUserApiKey(
+      apiKeyId: $apiKeyId
+    ) {
+      apiKeyId
+    }
+  }
 `;
 
 const EXPORT_TRANSACTIONS = gql`
@@ -2400,6 +2447,39 @@ export class AdminDataService {
     }
   }
 
+  getApiKeys(
+    pageIndex: number,
+    takeItems: number,
+    orderField: string,
+    orderDesc: boolean
+  ): Observable<{ list: Array<ApiKeyItem>; count: number; }> {
+
+    const vars: QueryGetApiKeysArgs = {
+      skip: pageIndex * takeItems,
+      first: takeItems,
+      orderBy: [{ orderBy: orderField, desc: orderDesc }]
+    };
+
+    return this.watchQuery<{ getApiKeys: ApiKeyListResult }, QueryGetApiKeysArgs>(
+      {
+        query: GET_USER_API_KEYS,
+        variables: vars,
+        fetchPolicy: 'network-only'
+      }).pipe(map(result => {
+        if (result.data?.getApiKeys?.list && result.data?.getApiKeys?.count) {
+          return {
+            list: result.data.getApiKeys.list.map(val => new ApiKeyItem(val)),
+            count: result.data.getApiKeys.count
+          };
+        } else {
+          return {
+            list: [],
+            count: 0
+          };
+        }
+      }));
+  }
+
   updateSettingsCommon(data: SettingsCommon): Observable<any> {
     return this.mutate({
       mutation: UPDATE_SETTINGS_COMMON,
@@ -2948,6 +3028,21 @@ export class AdminDataService {
         undefined, { duration: 5000 }
       );
     }));
+  }
+
+  createApiKey(): Observable<any> {
+    return this.apollo.mutate({
+      mutation: CREATE_USER_API_KEY
+    });
+  }
+
+  deleteApiKey(apiKeyId: string): Observable<any> {
+    return this.apollo.mutate({
+      mutation: DELETE_USER_API_KEY,
+      variables: {
+        apiKeyId
+      },
+    });
   }
 
   exportUsersToCsv(
