@@ -4,6 +4,7 @@ import { ApiKey } from "./generated-models";
 export class ApiKeyItem {
   title = '';
   created = '';
+  user = 'User name should be here';
   disabled = false;
 
   private datepipe: DatePipe = new DatePipe('en-US');

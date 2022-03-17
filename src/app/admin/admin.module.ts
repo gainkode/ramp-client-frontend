@@ -87,6 +87,7 @@ import { BlackListTableComponent } from './components/identification/list/black-
 import { BlackListEditorComponent } from './components/identification/details/black-list-editor.component';
 import { AddSystemUserComponent } from './components/system-users/details/user-role.component';
 import { RiskAlertDetailsComponent } from './components/risk-center/details/risk-alert-details.component';
+import { ApiKeysComponent } from './components/settings/apikeys/apikeys.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -172,7 +173,8 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
     DetailsAttributeComponent,
     WidgetEditorComponent,
     AdminSettingsComponent,
-    CommonSettingsEditorComponent
+    CommonSettingsEditorComponent,
+    ApiKeysComponent
   ],
   providers: [
     LayoutService,

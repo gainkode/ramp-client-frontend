@@ -2143,6 +2143,7 @@ export type SettingsFee = {
   deleted?: Maybe<Scalars['DateTime']>;
   currency?: Maybe<Scalars['String']>;
   rateToEur?: Maybe<Scalars['Float']>;
+  costs?: Maybe<Array<SettingsCost>>;
 };
 
 export type SettingsFeeInput = {
@@ -2173,6 +2174,7 @@ export type SettingsFeeShort = {
   wireDetails: Scalars['String'];
   currency?: Maybe<Scalars['String']>;
   rateToEur?: Maybe<Scalars['Float']>;
+  costs?: Maybe<Array<SettingsCostShort>>;
 };
 
 export enum SettingsFeeTargetFilterType {

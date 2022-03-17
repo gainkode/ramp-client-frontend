@@ -30,8 +30,6 @@ export class WidgetPaymentComponent implements OnInit, OnDestroy {
   // private selectedProviderId = '';
   // private paymentInstrument = PaymentInstrument.CreditCard;
 
-  paymentMethods: PaymentProviderInstrumentView[] = [];
-
   // walletInit = false;
   // userWallets: CommonGroupValue[] = [];
   // userWalletsFiltered: Observable<CommonGroupValue[]> | undefined = undefined;
@@ -72,7 +70,6 @@ export class WidgetPaymentComponent implements OnInit, OnDestroy {
     private errorHandler: ErrorService) { }
 
   ngOnInit(): void {
-    this.getWireTransferSettings();
     // this.currencyToField?.setValue(this.summary?.currencyTo);
     // this.transactionField?.setValue(this.summary?.transactionType);
     // this.pSubscriptions.add(this.walletField?.valueChanges.subscribe(val => this.onWalletUpdated(val)));
@@ -88,35 +85,6 @@ export class WidgetPaymentComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.pSubscriptions.unsubscribe();
-  }
-
-  private getWireTransferSettings(): void {
-    this.errorMessage = '';
-    let showWireTransfer = false;
-    this.paymentMethods = [];
-    const settingsData$ = this.paymentService.mySettingsCost(
-      this.summary?.transactionType ?? TransactionType.Deposit,
-      PaymentInstrument.WireTransfer,
-      this.summary?.currencyTo ?? 'BTC').valueChanges.pipe(take(1));
-    this.pSubscriptions.add(
-      settingsData$.subscribe(({ data }) => {
-        const settingsResult = data.mySettingsCost as SettingsCostShort;
-        if (settingsResult.bankAccounts && (settingsResult.bankAccounts?.length ?? 0 > 0)) {
-          showWireTransfer = true;
-        }
-        this.providers.forEach(p => {
-          if (p.instrument === PaymentInstrument.WireTransfer) {
-            if (showWireTransfer) {
-              this.paymentMethods.push(p);
-            }
-          } else {
-            this.paymentMethods.push(p);
-          }
-        });
-      }, (error) => {
-        this.errorMessage = 'Unable to get wire transfer settings';
-      })
-    );
   }
 
   // selectProvider(id: string) {

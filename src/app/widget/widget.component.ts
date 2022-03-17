@@ -765,7 +765,8 @@ export class WidgetComponent implements OnInit {
         this.summary.providerView.id,
         this.summary.instrument ?? PaymentInstrument.Apm);
     } else if (this.summary.providerView?.id === 'WireTransferPayment') {
-      this.widgetService.getWireTransferSettings(this.summary);
+
+      this.widgetService.getWireTransferSettings(this.summary, this.widget);
     } else {
       this.errorMessage = 'Invalid payment provider';
     }

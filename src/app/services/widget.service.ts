@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
 import { Subscription } from "rxjs";
 import { take } from "rxjs/operators";
-import { LoginResult, PaymentInstrument, PaymentProviderByInstrument, SettingsCostShort, TransactionType, User, WireTransferBankAccountShort } from "../model/generated-models";
-import { WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from "../model/payment-base.model";
-import { CheckoutSummary, PaymentProviderInstrumentView, WireTransferPaymentCategoryList } from "../model/payment.model";
+import { LoginResult, PaymentInstrument, PaymentProviderByInstrument, SettingsCostShort, SettingsFeeShort, TransactionSource, TransactionType, User, WireTransferBankAccountShort } from "../model/generated-models";
+import { WidgetSettings, WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from "../model/payment-base.model";
+import { CheckoutSummary, PaymentProviderInstrumentView, TransactionSourceList, WireTransferPaymentCategoryList } from "../model/payment.model";
 import { AuthService } from "./auth.service";
 import { ErrorService } from "./error.service";
 import { PaymentDataService } from "./payment.service";
@@ -133,17 +133,28 @@ export class WidgetService {
         }
     }
 
-    getWireTransferSettings(summary: CheckoutSummary): void {
+    getWireTransferSettings(summary: CheckoutSummary, widget: WidgetSettings): void {
         if (this.onError) {
             this.onError('');
         }
         if (this.onProgressChanged) {
             this.onProgressChanged(true);
         }
-        const settingsData$ = this.paymentService.mySettingsCost(
+        let source = TransactionSource.Wallet;
+        if (widget.embedded === false) {
+            if (widget.widgetId === '') {
+                source = TransactionSource.QuickCheckout;
+            } else {
+                source = TransactionSource.Widget;
+            }
+        }
+        const settingsData$ = this.paymentService.mySettingsFee(
             summary.transactionType,
+            source,
             PaymentInstrument.WireTransfer,
-            summary.currencyTo).valueChanges.pipe(take(1));
+            summary.provider?.name ?? '',
+            summary.currencyTo,
+            widget.widgetId).valueChanges.pipe(take(1));
         this.pSubscriptions.add(
             settingsData$.subscribe(({ data }) => {
                 if (this.onProgressChanged) {
@@ -151,38 +162,44 @@ export class WidgetService {
                 }
                 let wireTransferList: WireTransferPaymentCategoryItem[] = [];
                 let accountData: WireTransferBankAccountShort | undefined = undefined;
-                const settingsResult = data.mySettingsCost as SettingsCostShort;
-                if (settingsResult.bankAccounts && (settingsResult.bankAccounts?.length ?? 0 > 0)) {
-                    accountData = settingsResult.bankAccounts[0];
-                    wireTransferList = WireTransferPaymentCategoryList.map(val => val);
-                    let pos = wireTransferList.findIndex(x => x.id === WireTransferPaymentCategory.AU);
-                    if (pos >= 0) {
-                        if (accountData.au === null || accountData.au === undefined || accountData.au === 'null') {
-                            wireTransferList.splice(pos, 1);
-                        } else {
-                            wireTransferList[pos].data = accountData.au;
+                const settingsResult = data.mySettingsFee as SettingsFeeShort;
+                if (settingsResult.costs) {
+                    if (settingsResult.costs.length > 0) {
+                        const costs = settingsResult.costs[0];
+                        if (costs.bankAccounts && (costs.bankAccounts?.length ?? 0 > 0)) {
+                            accountData = costs.bankAccounts[0];
+                            wireTransferList = WireTransferPaymentCategoryList.map(val => val);
+                            let pos = wireTransferList.findIndex(x => x.id === WireTransferPaymentCategory.AU);
+                            if (pos >= 0) {
+                                if (accountData.au === null || accountData.au === undefined || accountData.au === 'null') {
+                                    wireTransferList.splice(pos, 1);
+                                } else {
+                                    wireTransferList[pos].data = accountData.au;
+                                }
+                            }
+                            pos = wireTransferList.findIndex(x => x.id === WireTransferPaymentCategory.UK);
+                            if (pos >= 0) {
+                                if (accountData.uk === null || accountData.uk === undefined || accountData.uk === 'null') {
+                                    wireTransferList.splice(pos, 1);
+                                } else {
+                                    wireTransferList[pos].data = accountData.uk;
+                                }
+                            }
+                            pos = wireTransferList.findIndex(x => x.id === WireTransferPaymentCategory.EU);
+                            if (pos >= 0) {
+                                if (accountData.eu === null || accountData.eu === undefined || accountData.eu === 'null') {
+                                    wireTransferList.splice(pos, 1);
+                                } else {
+                                    wireTransferList[pos].data = accountData.eu;
+                                }
+                            }
                         }
-                    }
-                    pos = wireTransferList.findIndex(x => x.id === WireTransferPaymentCategory.UK);
-                    if (pos >= 0) {
-                        if (accountData.uk === null || accountData.uk === undefined || accountData.uk === 'null') {
-                            wireTransferList.splice(pos, 1);
-                        } else {
-                            wireTransferList[pos].data = accountData.uk;
-                        }
-                    }
-                    pos = wireTransferList.findIndex(x => x.id === WireTransferPaymentCategory.EU);
-                    if (pos >= 0) {
-                        if (accountData.eu === null || accountData.eu === undefined || accountData.eu === 'null') {
-                            wireTransferList.splice(pos, 1);
-                        } else {
-                            wireTransferList[pos].data = accountData.eu;
+                        if (this.onWireTranferListLoaded) {
+                            this.onWireTranferListLoaded(wireTransferList, accountData?.bankAccountId);
                         }
                     }
                 }
-                if (this.onWireTranferListLoaded) {
-                    this.onWireTranferListLoaded(wireTransferList, accountData?.bankAccountId);
-                }
+
             }, (error) => {
                 if (this.onProgressChanged) {
                     this.onProgressChanged(false);

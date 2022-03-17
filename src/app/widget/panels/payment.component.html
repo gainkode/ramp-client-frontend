@@ -1,6 +1,6 @@
 <div class="__widget-data-box">
     <div class="__widget-provider-list-container">
-        <button *ngFor="let item of paymentMethods" type="button" class="__widget-provider-item-button"
+        <button *ngFor="let item of providers" type="button" class="__widget-provider-item-button"
             (click)="onSelect.emit(item.id)" [disabled]="">
             <img class="__widget-provider-item-image" [src]="item.image">
             <h2 class="__widget-provider-item-title">

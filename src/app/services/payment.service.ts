@@ -85,6 +85,42 @@ query MySettingsCost(
 }
 `;
 
+const MY_SETTINGS_FEE = gql`
+query MySettingsFee(
+  $transactionType: TransactionType!
+  $transactionSource: TransactionSource!
+  $instrument: PaymentInstrument!
+  $paymentProvider: String
+  $currency: String
+  $widgetId: String
+) {
+  mySettingsFee(
+    transactionType: $transactionType
+    transactionSource: $transactionSource
+    paymentProvider: $paymentProvider
+    instrument: $instrument
+    currency: $currency
+    widgetId: $widgetId
+  ) {
+    terms
+    wireDetails
+    currency
+    rateToEur
+    costs {
+      terms
+      bankAccounts {
+        bankAccountId
+        name
+        description
+        au
+        uk
+        eu
+      }
+    }
+  }
+}
+`;
+
 const GET_SETTINGS_KYC_TIERS = gql`
 query GetSettingsKycTiers {
   getSettingsKycTiers {
@@ -481,7 +517,7 @@ export class PaymentDataService {
       }
     });
   }
-  
+
   getProviders(fiatCurrency: string, widgetId: string | undefined): QueryRef<any, EmptyObject> {
     return this.apollo.watchQuery<any>({
       query: GET_PROVIDERS,
@@ -501,6 +537,31 @@ export class PaymentDataService {
         instrument,
         currency
       },
+      fetchPolicy: 'network-only'
+    });
+  }
+
+  mySettingsFee(
+    transactionType: TransactionType,
+    source: TransactionSource,
+    instrument: PaymentInstrument,
+    paymentProvider: string,
+    currency: string,
+    widgetId: string): QueryRef<any, EmptyObject> {
+
+
+      const vars = {
+        transactionType,
+        transactionSource: source,
+        instrument,
+        paymentProvider: (paymentProvider === '') ? undefined : paymentProvider,
+        currency,
+        widgetId
+      };
+      console.log(vars);
+    return this.apollo.watchQuery<any>({
+      query: MY_SETTINGS_FEE,
+      variables: vars,
       fetchPolicy: 'network-only'
     });
   }
