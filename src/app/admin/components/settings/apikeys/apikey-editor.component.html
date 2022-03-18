@@ -1,0 +1,31 @@
+<h2>Create new API Key</h2>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <mat-form-field class="form-element">
+        <mat-label>User</mat-label>
+        <input type="text"
+               placeholder="Select user"
+               aria-label="User"
+               matInput
+               formControlName="user"
+               (input)="handleUserInputChange($event)"
+               [matAutocomplete]="autoUser">
+        <mat-autocomplete #autoUser="matAutocomplete" [displayWith]="formatUserValue">
+            <mat-option *ngFor="let option of filteredUserOptions" [value]="option">
+                {{option.fullName + (option.email ? ' ('+  option.email + ')'  : '')}}
+            </mat-option>
+        </mat-autocomplete>
+        <mat-error *ngIf="this.form.controls.user.hasError('required')">
+            Mandatory field
+        </mat-error>
+    </mat-form-field>
+
+    <div class="panel-actions">
+        <button *ngIf="permission>1" mat-flat-button color="primary" type="submit">
+            CREATE
+        </button>
+        <button mat-flat-button (click)="onCancel()" type="button">
+            CANCEL
+        </button>
+    </div>
+</form>

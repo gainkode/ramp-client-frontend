@@ -29,3 +29,8 @@
         </app-apikey-table>
     </mat-tab>
 </mat-tab-group>
+
+<ng-template *ngIf="newApiKey" appRightPanel (panelClosed)="handleDetailsPanelClosed()">
+    <app-apikey-editor *ngIf="newApiKey" [permission]="permission" (complete)="createApiKey($event)">
+    </app-apikey-editor>
+</ng-template>

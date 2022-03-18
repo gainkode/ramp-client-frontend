@@ -10,6 +10,7 @@ import { ApiKeySecret } from 'src/app/model/generated-models';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { AdminDataService } from '../../services/admin-data.service';
+import { LayoutService } from '../../services/layout.service';
 
 @Component({
   templateUrl: 'settings.component.html',
@@ -21,6 +22,7 @@ export class AdminSettingsComponent implements OnDestroy {
   apiKeys: ApiKeyItem[] = [];
   keyCount = 0;
   accountKeyErrorMessage = '';
+  newApiKey = false;
   listFilter: ListRequestFilter = {
     pageIndex: 0,
     pageSize: 25,
@@ -31,6 +33,7 @@ export class AdminSettingsComponent implements OnDestroy {
   private subscriptions: Subscription = new Subscription();
 
   constructor(
+    private layoutService: LayoutService,
     private errorHandler: ErrorService,
     private auth: AuthService,
     public dialog: MatDialog,
@@ -38,21 +41,36 @@ export class AdminSettingsComponent implements OnDestroy {
     this.permission = this.auth.isPermittedObjectCode('SETTINGS');
   }
 
+  ngOnInit(): void {
+    this.subscriptions.add(
+      this.layoutService.rightPanelCloseRequested$.subscribe(() => {
+        this.newApiKey = false;
+      })
+    );
+  }
+
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
 
   setSelectedTab(index: number): void {
+    this.newApiKey = false;
     this.selectedTab = index;
     this.loadData();
   }
 
   createKey(): void {
+    this.newApiKey = true;
+  }
+
+  createApiKey(userId: string): void {
+    this.newApiKey = false;
     this.accountKeyErrorMessage = '';
-    const createKeyData$ = this.adminService.createApiKey('');
+    const createKeyData$ = this.adminService.createApiKey(userId);
     this.subscriptions.add(
       createKeyData$.subscribe(({ data }) => {
-        const apiKeyData = data.createMyApiKey as ApiKeySecret;
+        console.log(data);
+        const apiKeyData = data.createUserApiKey as ApiKeySecret;
         this.loadData();
         this.dialog.open(ApiSecretDialogBox, {
           width: '500px',
@@ -88,6 +106,10 @@ export class AdminSettingsComponent implements OnDestroy {
   reload(data: ListRequestFilter): void {
     this.listFilter = data;
     this.loadApiKeyList();
+  }
+
+  handleDetailsPanelClosed(): void {
+    this.newApiKey = false;
   }
 
   private loadData(): void {

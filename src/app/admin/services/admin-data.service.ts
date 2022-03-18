@@ -3036,7 +3036,10 @@ export class AdminDataService {
 
   createApiKey(userId: string): Observable<any> {
     return this.apollo.mutate({
-      mutation: CREATE_USER_API_KEY
+      mutation: CREATE_USER_API_KEY,
+      variables: {
+        userId
+      }
     });
   }
 
