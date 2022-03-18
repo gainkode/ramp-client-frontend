@@ -45,7 +45,6 @@ export class NotificationListComponent implements OnInit, OnDestroy, AfterViewIn
   private destroy$ = new Subject();
   private subscriptions: Subscription = new Subscription();
 
-
   constructor(
     private layoutService: LayoutService,
     private router: Router,

@@ -201,3 +201,10 @@ export class ContactsFilter implements ProfileBaseFilter {
         return result;
     }
 }
+
+export interface ListRequestFilter {
+    pageIndex: number;
+    pageSize: number;
+    sortField: string;
+    desc: boolean;
+}

@@ -2,21 +2,36 @@ import { Component, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { ApiSecretDialogBox } from 'src/app/components/dialogs/api-secret-box.dialog';
+import { DeleteDialogBox } from 'src/app/components/dialogs/delete-box.dialog';
 import { ApiKeyItem } from 'src/app/model/apikey.model';
+import { ListRequestFilter } from 'src/app/model/filter.model';
+import { ApiKeySecret } from 'src/app/model/generated-models';
 import { AuthService } from 'src/app/services/auth.service';
+import { ErrorService } from 'src/app/services/error.service';
 import { AdminDataService } from '../../services/admin-data.service';
 
 @Component({
-  templateUrl: 'settings.component.html'
+  templateUrl: 'settings.component.html',
+  styleUrls: ['settings.component.scss']
 })
 export class AdminSettingsComponent implements OnDestroy {
   permission = 0;
   selectedTab = 0;
   apiKeys: ApiKeyItem[] = [];
-  
+  keyCount = 0;
+  accountKeyErrorMessage = '';
+  listFilter: ListRequestFilter = {
+    pageIndex: 0,
+    pageSize: 25,
+    sortField: 'created',
+    desc: true
+  };
+
   private subscriptions: Subscription = new Subscription();
 
   constructor(
+    private errorHandler: ErrorService,
     private auth: AuthService,
     public dialog: MatDialog,
     private adminService: AdminDataService) {
@@ -32,28 +47,85 @@ export class AdminSettingsComponent implements OnDestroy {
     this.loadData();
   }
 
-  loadData(): void {
+  createKey(): void {
+    this.accountKeyErrorMessage = '';
+    const createKeyData$ = this.adminService.createApiKey('');
+    this.subscriptions.add(
+      createKeyData$.subscribe(({ data }) => {
+        const apiKeyData = data.createMyApiKey as ApiKeySecret;
+        this.loadData();
+        this.dialog.open(ApiSecretDialogBox, {
+          width: '500px',
+          data: {
+            title: 'New API key has been created',
+            message: apiKeyData.secret
+          }
+        });
+      }, (error) => {
+        this.accountKeyErrorMessage = this.errorHandler.getError(error.message, 'Unable to craete API key');
+      })
+    );
+  }
+
+  deleteKey(item: ApiKeyItem): void {
+    const dialogRef = this.dialog.open(DeleteDialogBox, {
+      width: '402px',
+      data: {
+        title: '',
+        message: `You are going to delete API key ${item.title}. Please confirm.`,
+        button: 'DELETE'
+      }
+    });
+    this.subscriptions.add(
+      dialogRef.afterClosed().subscribe(result => {
+        if (result === true) {
+          this.removeApiKeyConfirmed(item.title);
+        }
+      })
+    );
+  }
+
+  reload(data: ListRequestFilter): void {
+    this.listFilter = data;
+    this.loadApiKeyList();
+  }
+
+  private loadData(): void {
     if (this.selectedTab === 1) {
       this.loadApiKeyList();
     }
   }
 
   private loadApiKeyList(): void {
-    // if (this.sortedField === 'title') {
-    //   this.sortedField = 'apiKeyId';
-    // }
+    let sortField = this.listFilter.sortField;
+    if (sortField === '') {
+      sortField = 'created';
+    } else if (sortField === 'title') {
+      sortField = 'apiKeyId';
+    }
     this.apiKeys = [];
     const listData$ = this.adminService.getApiKeys(
-      0,//this.pageIndex,
-      100,//this.pageSize,
-      'created',//this.sortedField,
-      false//this.sortedDesc
-      ).pipe(take(1));
+      this.listFilter.pageIndex,
+      this.listFilter.pageSize,
+      sortField,
+      this.listFilter.desc
+    ).pipe(take(1));
     this.subscriptions.add(
       listData$.subscribe(({ list, count }) => {
-        console.log('getApiKeys', list);
-        //this.apiKeys = list;
-        //this.keyCount = count;
+        this.apiKeys = list;
+        this.keyCount = count;
+      })
+    );
+  }
+
+  private removeApiKeyConfirmed(apiKey: string): void {
+    this.accountKeyErrorMessage = '';
+    const deleteKeyData$ = this.adminService.deleteApiKey(apiKey);
+    this.subscriptions.add(
+      deleteKeyData$.subscribe(({ data }) => {
+        this.loadApiKeyList();
+      }, (error) => {
+        this.accountKeyErrorMessage = this.errorHandler.getError(error.message, 'Unable to delete API key');
       })
     );
   }

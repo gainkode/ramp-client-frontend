@@ -13,7 +13,19 @@
         <ng-template mat-tab-label>
             <app-tab-label labelText="API Keys"></app-tab-label>
         </ng-template>
-        <app-apikey-table>
+        <div class="action-panel">
+            <div class="form-element" *ngIf="accountKeyErrorMessage!==''">
+                <div class="form-error-box">
+                    {{accountKeyErrorMessage}}
+                </div>
+            </div>
+            <button mat-flat-button color="primary" *ngIf="permission>1 && accountKeyErrorMessage===''" 
+                (click)="createKey()">
+                ADD KEY
+            </button>
+        </div>
+        <app-apikey-table [apiKeys]="apiKeys" [keyCount]="keyCount" [permission]="permission" [filter]="listFilter"
+        (onUpdate)="reload($event)" (onDelete)="deleteKey($event)">
         </app-apikey-table>
     </mat-tab>
 </mat-tab-group>

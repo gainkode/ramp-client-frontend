@@ -5,8 +5,7 @@
   background: $color-grey-0;
 }
 
-
-.mat-column-bank-account-table {
+.mat-column-apikey-table {
   word-wrap: break-word;
   white-space: unset;
   overflow-wrap: break-word;
@@ -17,28 +16,34 @@
   hyphens: auto;
 }
 
-.mat-column-cost-table-name {
+.mat-column-apikey-table-title {
+  flex: 0 0 40%;
+  width: 40%;
+  min-width: 4em;
+}
+
+.mat-column-apikey-table-user {
   flex: 0 0 30%;
   width: 30%;
-  min-width: 5em;
+  min-width: 3em;
 }
 
-.mat-column-cost-table-description {
-  flex: 0 0 30%;
-  width: 30%;
-  min-width: 5em;
+.mat-column-apikey-table-created {
+  flex: 0 0 20%;
+  width: 20%;
+  min-width: 2em;
 }
 
-.mat-column-cost-table-available {
-  flex: 0 0 12%;
-  width: 12%;
-  min-width: 5em;
+.mat-column-apikey-table-delete {
+  flex: 0 0 5%;
+  width: 5%;
+  min-width: 1em;
 }
 
-.mat-column-cost-table-details {
-  flex: 0 0 4%;
-  width: 4%;
-  min-width: 1.5em;
+.mat-column-apikey-table-lock {
+  flex: 0 0 5%;
+  width: 5%;
+  min-width: 1em;
 }
 
 .target-tab-box {

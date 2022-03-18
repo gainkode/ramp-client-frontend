@@ -1520,8 +1520,12 @@ mutation RemoveRole(
 `;
 
 const CREATE_USER_API_KEY = gql`
-  mutation CreateUserApiKey {
-    createUserApiKey {
+  mutation CreateUserApiKey(
+    $userId: String!
+  ) {
+    createUserApiKey(
+      userId: $userId
+    ) {
       apiKeyId
       secret
     }
@@ -3030,7 +3034,7 @@ export class AdminDataService {
     }));
   }
 
-  createApiKey(): Observable<any> {
+  createApiKey(userId: string): Observable<any> {
     return this.apollo.mutate({
       mutation: CREATE_USER_API_KEY
     });
