@@ -11,6 +11,7 @@ export class ApiKeyItem {
 
   constructor(data: ApiKey) {
     this.title = data.apiKeyId ?? '';
+    this.user = data.userId;
     this.created = this.datepipe.transform(data.created, 'dd MMM YYYY HH:mm:ss') ?? '';
     this.disabled = data.disabled ?? false;
   }

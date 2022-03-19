@@ -45,6 +45,7 @@ export enum AdminTransactionStatus {
 export type ApiKey = {
   __typename?: 'ApiKey';
   apiKeyId: Scalars['ID'];
+  userId: Scalars['String'];
   created: Scalars['DateTime'];
   disabled?: Maybe<Scalars['DateTime']>;
 };

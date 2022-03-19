@@ -943,6 +943,7 @@ const GET_USER_API_KEYS = gql`
       count
       list {
         apiKeyId
+        userId
         created
         disabled
       }
