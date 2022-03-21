@@ -586,6 +586,7 @@ export type Mutation = {
   assignRole?: Maybe<User>;
   removeRole?: Maybe<User>;
   deleteUser?: Maybe<User>;
+  restoreUser?: Maybe<User>;
   addMyContact?: Maybe<User>;
   updateMyContact?: Maybe<User>;
   deleteMyContact?: Maybe<User>;
@@ -874,6 +875,11 @@ export type MutationRemoveRoleArgs = {
 
 
 export type MutationDeleteUserArgs = {
+  userId: Scalars['ID'];
+};
+
+
+export type MutationRestoreUserArgs = {
   userId: Scalars['ID'];
 };
 

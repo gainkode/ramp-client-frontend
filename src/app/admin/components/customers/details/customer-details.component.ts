@@ -262,10 +262,7 @@ export class CustomerDetailsComponent implements OnDestroy {
   }
 
   private onRestore(id: string): void {
-    const requestData$ = this.adminService.saveCustomer(id, {
-      email: this.data?.email ?? '',
-      deleted: null
-    } as UserInput);
+    const requestData$ = this.adminService.restoreCustomer(id);
     this.subscriptions.add(
       requestData$.subscribe(({ data }) => {
         this.save.emit();

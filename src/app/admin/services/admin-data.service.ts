@@ -1395,6 +1395,18 @@ mutation DeleteUser(
 }
 `;
 
+const RESTORE_CUSTOMER = gql`
+mutation RestoreUser(
+  $customerId: ID!
+) {
+  restoreUser(
+    userId: $customerId
+  ) {
+    userId
+  }
+}
+`;
+
 const CANCEL_TRANSACTION = gql`
 mutation CancelTransaction(
   $transactionId: String!
@@ -2758,40 +2770,32 @@ export class AdminDataService {
         this.snackBar.open(`User was created`, undefined, { duration: 5000 });
       }));
     } else {
-      const updateVars = {
-        userId: id,
-        email: customer.email,
-        changePasswordRequired: customer.changePasswordRequired,
-        firstName: customer.firstName,
-        lastName: customer.lastName,
-        birthday: customer.birthday,
-        countryCode2: customer.countryCode2,
-        countryCode3: customer.countryCode3,
-        postCode: customer.postCode,
-        town: customer.town,
-        street: customer.street,
-        subStreet: customer.subStreet,
-        stateName: customer.stateName,
-        buildingName: customer.buildingName,
-        buildingNumber: customer.buildingNumber,
-        flatNumber: customer.flatNumber,
-        phone: customer.phone,
-        risk: customer.risk,
-        accountStatus: customer.accountStatus,
-        kycTierId: customer.kycTierId,
-        defaultFiatCurrency: customer.defaultFiatCurrency,
-        defaultCryptoCurrency: customer.defaultCryptoCurrency,
-        deleted: undefined
-      };
-      const restoreVars = {
-        userId: id,
-        email: customer.email,
-        deleted: customer.deleted
-      };
-      console.log(restoreVars);
       return this.apollo.mutate({
         mutation: UPDATE_USER,
-        variables: (customer.deleted === null) ? restoreVars : updateVars
+        variables: {
+          userId: id,
+          email: customer.email,
+          changePasswordRequired: customer.changePasswordRequired,
+          firstName: customer.firstName,
+          lastName: customer.lastName,
+          birthday: customer.birthday,
+          countryCode2: customer.countryCode2,
+          countryCode3: customer.countryCode3,
+          postCode: customer.postCode,
+          town: customer.town,
+          street: customer.street,
+          subStreet: customer.subStreet,
+          stateName: customer.stateName,
+          buildingName: customer.buildingName,
+          buildingNumber: customer.buildingNumber,
+          flatNumber: customer.flatNumber,
+          phone: customer.phone,
+          risk: customer.risk,
+          accountStatus: customer.accountStatus,
+          kycTierId: customer.kycTierId,
+          defaultFiatCurrency: customer.defaultFiatCurrency,
+          defaultCryptoCurrency: customer.defaultCryptoCurrency
+        }
       }).pipe(tap(() => {
         this.snackBar.open(`User was updated`, undefined, { duration: 5000 });
       }));
@@ -2906,6 +2910,20 @@ export class AdminDataService {
     }).pipe(tap((res) => {
       this.snackBar.open(
         `Customer was disabled`,
+        undefined, { duration: 5000 }
+      );
+    }));
+  }
+
+  restoreCustomer(customerId: string): Observable<any> {
+    return this.mutate({
+      mutation: RESTORE_CUSTOMER,
+      variables: {
+        customerId
+      }
+    }).pipe(tap((res) => {
+      this.snackBar.open(
+        `Customer was restored`,
         undefined, { duration: 5000 }
       );
     }));
