@@ -589,6 +589,7 @@ const GET_USERS = gql`
         countryCode3
         created
         updated
+        deleted
         defaultFiatCurrency
         defaultCryptoCurrency
         accountStatus
@@ -2757,32 +2758,40 @@ export class AdminDataService {
         this.snackBar.open(`User was created`, undefined, { duration: 5000 });
       }));
     } else {
+      const updateVars = {
+        userId: id,
+        email: customer.email,
+        changePasswordRequired: customer.changePasswordRequired,
+        firstName: customer.firstName,
+        lastName: customer.lastName,
+        birthday: customer.birthday,
+        countryCode2: customer.countryCode2,
+        countryCode3: customer.countryCode3,
+        postCode: customer.postCode,
+        town: customer.town,
+        street: customer.street,
+        subStreet: customer.subStreet,
+        stateName: customer.stateName,
+        buildingName: customer.buildingName,
+        buildingNumber: customer.buildingNumber,
+        flatNumber: customer.flatNumber,
+        phone: customer.phone,
+        risk: customer.risk,
+        accountStatus: customer.accountStatus,
+        kycTierId: customer.kycTierId,
+        defaultFiatCurrency: customer.defaultFiatCurrency,
+        defaultCryptoCurrency: customer.defaultCryptoCurrency,
+        deleted: undefined
+      };
+      const restoreVars = {
+        userId: id,
+        email: customer.email,
+        deleted: customer.deleted
+      };
+      console.log(restoreVars);
       return this.apollo.mutate({
         mutation: UPDATE_USER,
-        variables: {
-          userId: id,
-          email: customer.email,
-          changePasswordRequired: customer.changePasswordRequired,
-          firstName: customer.firstName,
-          lastName: customer.lastName,
-          birthday: customer.birthday,
-          countryCode2: customer.countryCode2,
-          countryCode3: customer.countryCode3,
-          postCode: customer.postCode,
-          town: customer.town,
-          street: customer.street,
-          subStreet: customer.subStreet,
-          stateName: customer.stateName,
-          buildingName: customer.buildingName,
-          buildingNumber: customer.buildingNumber,
-          flatNumber: customer.flatNumber,
-          phone: customer.phone,
-          risk: customer.risk,
-          accountStatus: customer.accountStatus,
-          kycTierId: customer.kycTierId,
-          defaultFiatCurrency: customer.defaultFiatCurrency,
-          defaultCryptoCurrency: customer.defaultCryptoCurrency
-        }
+        variables: (customer.deleted === null) ? restoreVars : updateVars
       }).pipe(tap(() => {
         this.snackBar.open(`User was updated`, undefined, { duration: 5000 });
       }));

@@ -14,6 +14,7 @@ import { getCryptoSymbol } from '../utils/utils';
 export class UserItem {
   id = '';
   referralCode = '';
+  deleted = false;
   company = '';
   firstName = '';
   lastName = '';
@@ -105,6 +106,7 @@ export class UserItem {
     if (data) {
       this.id = data.userId;
       this.referralCode = data.referralCode?.toString() ?? '';
+      this.deleted = data.deleted !== undefined && data.deleted !== null;
       this.userType = UserTypeList.find((x) => x.id === data.type) as UserTypeView;
       this.userMode = UserModeShortList.find((x) => x.id === data.mode) as UserModeView;
       this.firstName = data.firstName as string;

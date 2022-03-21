@@ -54,6 +54,7 @@ export class CustomerDetailsComponent implements OnDestroy {
   kycProviderLink = '';
   kycDocs: string[] = [];
   tiers: CommonTargetValue[] = [];
+  disableButtonTitle = 'DISABLE';
 
   dataForm = this.formBuilder.group({
     id: [''],
@@ -108,6 +109,7 @@ export class CustomerDetailsComponent implements OnDestroy {
     this.errorMessage = '';
     this.dataForm.reset();
     if (data) {
+      this.disableButtonTitle = (data.deleted) ? 'ENABLE' : 'DISABLE';
       this.loadingData = true;
       this.dataForm.get('id')?.setValue(data?.id);
       this.dataForm.get('email')?.setValue(data?.email);
@@ -259,8 +261,28 @@ export class CustomerDetailsComponent implements OnDestroy {
     );
   }
 
+  private onRestore(id: string): void {
+    const requestData$ = this.adminService.saveCustomer(id, {
+      email: this.data?.email ?? '',
+      deleted: null
+    } as UserInput);
+    this.subscriptions.add(
+      requestData$.subscribe(({ data }) => {
+        this.save.emit();
+      }, (error) => {
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
+      })
+    );
+  }
+
   onDeleteCustomer(): void {
-    this.onDelete(this.settingsId);
+    if (this.data?.deleted ?? false) {
+      this.onRestore(this.settingsId);
+    } else {
+      this.onDelete(this.settingsId);
+    }
   }
 
   onSave(id: string, customer: UserInput): void {

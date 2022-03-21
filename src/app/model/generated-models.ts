@@ -3072,6 +3072,7 @@ export type UserInput = {
   widgetId?: Maybe<Scalars['String']>;
   changePasswordRequired?: Maybe<Scalars['Boolean']>;
   kycTierId?: Maybe<Scalars['String']>;
+  deleted?: Maybe<Scalars['DateTime']>;
 };
 
 export type UserListResult = {

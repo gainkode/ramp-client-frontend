@@ -55,9 +55,11 @@
         </mat-error>
     </mat-form-field>
 
-    <button type="button" mat-flat-button (click)="onResetPassword()">
-        RESET PASSWORD
-    </button>
+    <div class="panel-actions">
+        <button *ngIf="permission>1" type="button" mat-flat-button (click)="onResetPassword()">
+            RESET PASSWORD
+        </button>
+    </div>
 
     <!-- Birthday -->
     <mat-form-field *ngIf="userType===USER_TYPE.Personal" class="form-element">
@@ -260,8 +262,8 @@
         <button *ngIf="permission>1" mat-flat-button color="primary" type="submit">
             SAVE
         </button>
-        <button *ngIf="permission>1 && removable" mat-flat-button color="warn" (click)="onDeleteCustomer()">
-            DISABLE
+        <button *ngIf="permission>1 && removable" type="button" mat-flat-button color="warn" (click)="onDeleteCustomer()">
+            {{disableButtonTitle}}
         </button>
         <button *ngIf="cancelable" mat-flat-button (click)="onCancel()">
             CANCEL
