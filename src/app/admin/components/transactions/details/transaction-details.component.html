@@ -17,9 +17,9 @@
             <app-details-attribute label="Widget ID" [value]="data?.widgetId"></app-details-attribute>
             <app-details-attribute label="Country" [value]="data?.user?.country"></app-details-attribute>
 
-            <app-details-attribute *ngIf="transactionType===TRANSACTION_TYPE.Receive" label="Wallet address"
+            <app-details-attribute *ngIf="transactionType===TRANSACTION_TYPE.Receive || editableDestination===false" label="Wallet address"
                 [value]="data?.address"></app-details-attribute>
-            <mat-form-field *ngIf="data?.address!=='' && transactionType!==TRANSACTION_TYPE.Receive"
+            <mat-form-field *ngIf="data?.address!=='' && transactionType!==TRANSACTION_TYPE.Receive && editableDestination===true"
                 class="form-element">
                 <mat-label>Wallet address</mat-label>
                 <input matInput formControlName="address" required />

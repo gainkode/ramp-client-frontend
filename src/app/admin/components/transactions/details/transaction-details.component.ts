@@ -8,7 +8,7 @@ import { AdminDataService } from 'src/app/admin/services/admin-data.service';
 import { LayoutService } from 'src/app/admin/services/layout.service';
 import { DeleteDialogBox } from 'src/app/components/dialogs/delete-box.dialog';
 import { YesNoDialogBox } from 'src/app/components/dialogs/yesno-box.dialog';
-import { AccountStatus, KycStatus, Rate, Transaction, TransactionKycStatus, TransactionStatus, TransactionStatusDescriptorMap, TransactionType } from 'src/app/model/generated-models';
+import { AccountStatus, KycStatus, Rate, SettingsCommon, Transaction, TransactionKycStatus, TransactionStatus, TransactionStatusDescriptorMap, TransactionType } from 'src/app/model/generated-models';
 import { AdminTransactionStatusList, CurrencyView, TransactionKycStatusList, TransactionStatusList, TransactionStatusView, UserStatusList } from 'src/app/model/payment.model';
 import { TransactionItemFull } from 'src/app/model/transaction.model';
 import { AuthService } from 'src/app/services/auth.service';
@@ -82,6 +82,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
   benchmarkTransferOrderBlockchainLink = '';
   amountToSpendTitle = 'Amount To Spend';
   systemFeeTitle = 'Fee, EUR';
+  editableDestination = false;
 
   form = this.formBuilder.group({
     address: ['', { validators: [Validators.required], updateOn: 'change' }],
@@ -109,6 +110,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    this.getSettingsCommon();
     this.exhangeRate.register(this.onExchangeRateUpdated.bind(this));
     this.subscriptions.add(
       this.form.get('currencyToSpend')?.valueChanges.subscribe(val => {
@@ -199,6 +201,16 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
       this.kycStatus = TransactionKycStatusList.find(x => x.id === this.data?.kycStatusValue)?.name ?? '';
       this.accountStatus = UserStatusList.find(x => x.id === this.data?.accountStatusValue)?.name ?? '';
     }
+  }
+
+  private getSettingsCommon(): void {
+    this.subscriptions.add(
+      this.adminService.getSettingsCommon()?.valueChanges.subscribe(settings => {
+        const settingsCommon: SettingsCommon = settings.data.getSettingsCommon;
+        const additionalSettings = (settingsCommon.additionalSettings) ? JSON.parse(settingsCommon.additionalSettings) : undefined;
+        this.editableDestination = additionalSettings.admin?.editTransactionDestination ?? false;
+      })
+    );
   }
 
   updateRate(): void {

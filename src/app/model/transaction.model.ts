@@ -117,7 +117,6 @@ export class TransactionItemFull {
       this.paymentProvider = data.paymentProvider ?? '';
       this.widgetId = data.widgetId ?? '';
       this.source = data.source ?? undefined;
-      this.amountToSpend = data.amountToSpend ?? 0;
       const paymentData = getPaymentData(data);
       this.currencyToSpend = paymentData.currencyToSpend;
       this.currencyToReceive = paymentData.currencyToReceive;
@@ -416,11 +415,13 @@ export class TransactionItem {
   }
 
   get networkFees(): string {
-    return `${getCurrencySign(this.currencyFiat)}${this.networkFee.toFixed(6)}`;
+    //return `${getCurrencySign(this.currencyFiat)}${this.networkFee.toFixed(2)}`;
+    return `${getCurrencySign(this.currencyFiat)}${this.networkFee.toString()}`;
   }
 
   get systemFees(): string {
-    return `${getCurrencySign(this.currencyFiat)}${this.fees.toFixed(6)}`;
+    return `${getCurrencySign(this.currencyFiat)}${this.fees.toString()}`;
+    //return `${getCurrencySign(this.currencyFiat)}${this.fees.toFixed(2)}`;
   }
 
   get amountSent(): string {
