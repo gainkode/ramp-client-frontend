@@ -26,7 +26,7 @@ export class ProfileSettingsComponent {
         if (pageId === 'info' || pageId === 'verification' || pageId === 'security' || apiKeysPage) {
             this.pageSelected(pageId);
         } else {
-            this.pageSelected('info');
+            this.router.navigateByUrl(`${this.auth.getUserAccountPage()}/settings/info/`);
         }
     }
 

@@ -115,6 +115,12 @@ export class KycPanelComponent implements OnInit, OnDestroy {
             } else {
                 this.showSuccessDialog();
             }
+        }).on('idCheck.onApplicantResubmitted', (payload) => {
+            if (this.notifyCompleted) {
+                this.completed.emit();
+            } else {
+                this.showSuccessDialog();
+            }
         }).on('idCheck.onError', (error) => {
             this.onError.emit(error.error);
         });

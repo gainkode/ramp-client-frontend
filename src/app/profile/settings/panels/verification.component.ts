@@ -127,8 +127,12 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
                 if (previousLevelPassed) {
                     if (val.settingsKycTierId === currentTierId) {
                         previousLevelPassed = false;
-                        tierPassed = this.auth.user?.kycValid ?? false;
-                        if (tierPassed === false && this.auth.user?.kycReviewRejectedType?.toLowerCase() === 'final') {
+                        if (val.originalLevelName !== null) {
+                            tierPassed = this.auth.user?.kycValid ?? false;
+                            if (tierPassed === false && this.auth.user?.kycReviewRejectedType?.toLowerCase() === 'final') {
+                                tierPassed = true;
+                            }
+                        } else {
                             tierPassed = true;
                         }
                     } else {
