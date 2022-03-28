@@ -13,7 +13,7 @@
                 <div class="__profile-details-item-value">
                     {{walletData?.nameValue}}
                 </div>
-                <div class="__inline-button-box">
+                <div *ngIf="walletData?.crypto===true" class="__inline-button-box">
                     <button type="button" class="__inline-button" (click)="editName()">
                         <mat-icon style="font-size: 20px;">edit</mat-icon>
                     </button>
@@ -47,18 +47,21 @@
                 <div class="__profile-details-item-title-box">
                     Balance:
                 </div>
-                <div class="__profile-details-item-value-box">
+                <div *ngIf="walletData?.crypto===false" class="__profile-details-item-value-box">
+                    {{walletData?.totalValue}}
+                </div>
+                <div *ngIf="walletData?.crypto===true" class="__profile-details-item-value-box">
                     {{walletData?.total}}
                 </div>
             </div>
 
             <!-- Address -->
-            <div class="__profile-details-item-title-block">
+            <div *ngIf="walletData?.crypto===true" class="__profile-details-item-title-block">
                 <div class="__profile-details-item-title">
                     Address:
                 </div>
             </div>
-            <div class="__profile-details-item-value-block">
+            <div *ngIf="walletData?.crypto===true" class="__profile-details-item-value-block">
                 <div class="__profile-details-item-value __profile-details-item-single-value">
                     {{walletData?.address}}
                 </div>
@@ -70,7 +73,7 @@
             </div>
 
             <!-- Network -->
-            <div class="__profile-details-item-grid">
+            <div *ngIf="walletData?.crypto===true" class="__profile-details-item-grid">
                 <div class="__profile-details-item-title-box">
                     Network:
                 </div>

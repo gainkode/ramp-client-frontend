@@ -10,14 +10,20 @@
             <div class="__profile-wallet-item-container">
                 <div class="__profile-wallet-item-data-container">
                     <div class="__profile-wallet-item-value-area">
-                        <div class="__profile-wallet-item-crypto">
+                        <div *ngIf="wallet.crypto===false" class="__profile-wallet-item-crypto">
+                            {{wallet.totalValue}}
+                        </div>
+                        <div *ngIf="wallet.crypto===true" class="__profile-wallet-item-crypto">
                             {{wallet.total}} {{wallet.asset}}
                         </div>
-                        <div class="__profile-wallet-item-fiat">
+                        <div *ngIf="wallet.crypto===false" class="__profile-wallet-item-fiat">
+                            &nbsp;
+                        </div>
+                        <div *ngIf="wallet.crypto===true" class="__profile-wallet-item-fiat">
                             {{wallet.totalValue}}
                         </div>
                     </div>
-                    <div class="__profile-wallet-item-icon-box">
+                    <div *ngIf="wallet.crypto===true" class="__profile-wallet-item-icon-box">
                         <img class="__profile-wallet-item-icon" [src]="wallet.icon">
                     </div>
                 </div>

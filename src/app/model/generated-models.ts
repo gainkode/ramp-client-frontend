@@ -311,6 +311,21 @@ export type FeedbackListResult = {
   list?: Maybe<Array<Feedback>>;
 };
 
+export type FiatVault = {
+  __typename?: 'FiatVault';
+  fiatVaultId?: Maybe<Scalars['ID']>;
+  userId?: Maybe<Scalars['String']>;
+  balance?: Maybe<Scalars['Float']>;
+  created?: Maybe<Scalars['DateTime']>;
+  currency?: Maybe<Scalars['String']>;
+};
+
+export type FiatVaultListResult = {
+  __typename?: 'FiatVaultListResult';
+  count?: Maybe<Scalars['Int']>;
+  list?: Maybe<Array<FiatVault>>;
+};
+
 export type File = {
   __typename?: 'File';
   path: Scalars['String'];
@@ -353,6 +368,13 @@ export enum FireblocksTransactionStatus {
   Blocked = 'BLOCKED',
   Failed = 'FAILED'
 }
+
+export type GetRates = {
+  __typename?: 'GetRates';
+  currenciesFrom?: Maybe<Array<Maybe<Scalars['String']>>>;
+  currencyTo?: Maybe<Scalars['String']>;
+  withFactor?: Maybe<Scalars['Boolean']>;
+};
 
 export type InstrumentStats = BaseStat & {
   __typename?: 'InstrumentStats';
@@ -516,7 +538,8 @@ export enum LiquidityOrderType {
 
 export enum LiquidityProvider {
   Bitstamp = 'Bitstamp',
-  Kraken = 'Kraken'
+  Kraken = 'Kraken',
+  GetCoins = 'GetCoins'
 }
 
 export type LoginResult = {
@@ -620,6 +643,7 @@ export type Mutation = {
   sendTestNotification?: Maybe<Scalars['Void']>;
   sendTestServiceNotification?: Maybe<Scalars['Void']>;
   createTransaction?: Maybe<TransactionShort>;
+  createMerchantTransaction?: Maybe<TransactionShort>;
   sendInvoice?: Maybe<Scalars['Boolean']>;
   executeTransaction?: Maybe<TransactionShort>;
   updateTransaction?: Maybe<Transaction>;
@@ -639,6 +663,8 @@ export type Mutation = {
   updateRiskAlertType?: Maybe<RiskAlertType>;
   addBlackCountry?: Maybe<BlackCountry>;
   deleteBlackCountry?: Maybe<BlackCountry>;
+  addFiatVault?: Maybe<FiatVault>;
+  deleteFiatVault?: Maybe<FiatVault>;
 };
 
 
@@ -1082,6 +1108,12 @@ export type MutationCreateTransactionArgs = {
 };
 
 
+export type MutationCreateMerchantTransactionArgs = {
+  transaction?: Maybe<TransactionMerchantInput>;
+  params?: Maybe<Scalars['String']>;
+};
+
+
 export type MutationSendInvoiceArgs = {
   transactionId?: Maybe<Scalars['String']>;
 };
@@ -1210,6 +1242,17 @@ export type MutationDeleteBlackCountryArgs = {
   countryCode2: Scalars['String'];
 };
 
+
+export type MutationAddFiatVaultArgs = {
+  userId: Scalars['String'];
+  currency?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationDeleteFiatVaultArgs = {
+  fiatVaultId?: Maybe<Scalars['String']>;
+};
+
 export type NewAddress = {
   __typename?: 'NewAddress';
   address: Scalars['String'];
@@ -1246,7 +1289,8 @@ export type PaymentCard = {
 export enum PaymentInstrument {
   CreditCard = 'CreditCard',
   WireTransfer = 'WireTransfer',
-  Apm = 'APM'
+  Apm = 'APM',
+  FiatVault = 'FiatVault'
 }
 
 export type PaymentOperation = {
@@ -1458,6 +1502,9 @@ export type Query = {
   getSellAddress?: Maybe<Scalars['String']>;
   getCountryBlackList?: Maybe<BlackCountryListResult>;
   getFakeError?: Maybe<Scalars['Void']>;
+  getFiatVaults?: Maybe<FiatVaultListResult>;
+  myFiatVaults?: Maybe<FiatVaultListResult>;
+  getSystemBalanceMany?: Maybe<Scalars['String']>;
 };
 
 
@@ -1836,7 +1883,7 @@ export type QueryGetFeedbacksArgs = {
 export type QueryGetRatesArgs = {
   currenciesFrom: Array<Scalars['String']>;
   currencyTo: Scalars['String'];
-  recaptcha: Scalars['String'];
+  recaptcha?: Maybe<Scalars['String']>;
 };
 
 
@@ -1844,6 +1891,9 @@ export type QueryGetOneToManyRatesArgs = {
   currencyFrom: Scalars['String'];
   currenciesTo: Array<Scalars['String']>;
   reverse?: Maybe<Scalars['Boolean']>;
+  currenciesFrom?: Maybe<Scalars['String']>;
+  currencyTo?: Maybe<Array<Maybe<Scalars['String']>>>;
+  withFactor?: Maybe<Scalars['Boolean']>;
 };
 
 
@@ -1968,6 +2018,24 @@ export type QueryGetSellAddressArgs = {
   amount?: Maybe<Scalars['Float']>;
 };
 
+
+export type QueryGetFiatVaultsArgs = {
+  userId?: Maybe<Scalars['String']>;
+  filter?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OrderBy>>;
+};
+
+
+export type QueryMyFiatVaultsArgs = {
+  userId?: Maybe<Scalars['String']>;
+  filter?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OrderBy>>;
+};
+
 export type Rate = {
   __typename?: 'Rate';
   currencyFrom: Scalars['String'];
@@ -2040,6 +2108,10 @@ export type SettingsCommon = {
   adminEmails?: Maybe<Array<Scalars['String']>>;
   stoppedForServicing?: Maybe<Scalars['Boolean']>;
   additionalSettings?: Maybe<Scalars['String']>;
+  proxyLiquidityProviderUrl?: Maybe<Scalars['String']>;
+  proxyLiquidityProviderApiSecret?: Maybe<Scalars['String']>;
+  proxyLiquidityProviderApiKey?: Maybe<Scalars['String']>;
+  proxyLiquidityProvider?: Maybe<Scalars['String']>;
 };
 
 export type SettingsCommonInput = {
@@ -2553,6 +2625,23 @@ export type TransactionListResult = {
   list?: Maybe<Array<Transaction>>;
 };
 
+export type TransactionMerchantInput = {
+  type: TransactionType;
+  source: TransactionSource;
+  sourceVaultId?: Maybe<Scalars['String']>;
+  destVaultId?: Maybe<Scalars['String']>;
+  destination?: Maybe<Scalars['String']>;
+  currencyToSpend?: Maybe<Scalars['String']>;
+  currencyToReceive?: Maybe<Scalars['String']>;
+  amountToSpend: Scalars['Float'];
+  instrument?: Maybe<PaymentInstrument>;
+  instrumentDetails?: Maybe<Scalars['String']>;
+  paymentProvider?: Maybe<Scalars['String']>;
+  widgetUserParamsId?: Maybe<Scalars['String']>;
+  data?: Maybe<Scalars['String']>;
+  status?: Maybe<TransactionStatus>;
+};
+
 export type TransactionShort = {
   __typename?: 'TransactionShort';
   transactionId: Scalars['ID'];
@@ -2695,7 +2784,10 @@ export enum TransactionType {
   Transfer = 'Transfer',
   Receive = 'Receive',
   Exchange = 'Exchange',
-  System = 'System'
+  System = 'System',
+  DepositFiat = 'DepositFiat',
+  WithdrawFiat = 'WithdrawFiat',
+  DepositMerchant = 'DepositMerchant'
 }
 
 export type TransactionUpdateInput = {
@@ -2876,6 +2968,7 @@ export type User = {
   manuallyEditedRisk?: Maybe<Scalars['Boolean']>;
   lastLogin?: Maybe<Scalars['DateTime']>;
   data?: Maybe<Scalars['String']>;
+  fiatvaults?: Maybe<Array<FiatVault>>;
 };
 
 export type UserAction = {
@@ -2923,7 +3016,10 @@ export enum UserActionType {
   DeleteUser = 'deleteUser',
   CreateApiKey = 'createApiKey',
   DeleteApiKey = 'deleteApiKey',
-  ChangeRiskAlertSettings = 'changeRiskAlertSettings'
+  ChangeRiskAlertSettings = 'changeRiskAlertSettings',
+  DepositFiat = 'DepositFiat',
+  WithdrawFiat = 'WithdrawFiat',
+  DepositMerchant = 'DepositMerchant'
 }
 
 export type UserAddress = {

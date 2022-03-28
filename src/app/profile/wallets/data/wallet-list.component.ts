@@ -56,18 +56,38 @@ export class ProfileWalletListComponent implements OnDestroy {
         const walletsData$ = this.profileService.getMyWallets(this.filter.currencies).valueChanges.pipe(take(1));
         this.loading = true;
         this.onProgress.emit(true);
-        const userFiat = this.auth.user?.defaultFiatCurrency ?? 'EUR';
+        const currentUser = this.auth.user;
+        const userFiat = currentUser?.defaultFiatCurrency ?? 'EUR';
         this.subscriptions.add(
             walletsData$.subscribe(({ data }) => {
+                console.log('----+++----');
                 const dataList = data.myWallets as AssetAddressShortListResult;
                 if (dataList !== null) {
-                    this.walletCount = dataList?.count as number;
-                    if (this.walletCount > 0) {
-                        this.wallets = dataList?.list?.filter(x => {
-                            return (this.filter.zeroBalance) ? true : x.total ?? 0 > 0;
-                        }).map((val) => new WalletItem(val, userFiat, this.getCurrency(val))) as WalletItem[];
-                        this.walletCount = this.wallets.length;
+                    this.wallets = [];
+                    const fiatVault = currentUser?.fiatvaults;
+                    const fiatWalletCount = fiatVault?.length ?? 0;
+                    if (fiatWalletCount > 0) {
+                        this.wallets = [
+                            ...this.wallets,
+                            ...fiatVault?.filter(x => {
+                                return (this.filter.zeroBalance) ? true : x.balance ?? 0 > 0;
+                            }).map((val) => {
+                                const wallet = new WalletItem(null, userFiat, undefined);
+                                wallet.setFiat(val, userFiat);
+                                return wallet;
+                            }) as WalletItem[]
+                        ];
                     }
+                    const cryptoWalletCount = dataList?.count ?? 0;
+                    if (cryptoWalletCount > 0) {
+                        this.wallets = [
+                            ...this.wallets,
+                            ...dataList?.list?.filter(x => {
+                                return (this.filter.zeroBalance) ? true : x.total ?? 0 > 0;
+                            }).map((val) => new WalletItem(val, userFiat, this.getCurrency(val))) as WalletItem[]
+                        ];
+                    }
+                    this.walletCount = this.wallets.length;
                 }
                 this.onProgress.emit(false);
                 this.loading = false;

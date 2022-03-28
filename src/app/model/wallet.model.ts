@@ -1,5 +1,5 @@
 import { getCryptoSymbol, getCurrencySign } from "../utils/utils";
-import { AssetAddressShort } from "./generated-models";
+import { AssetAddressShort, FiatVault } from "./generated-models";
 import { CurrencyView } from "./payment.model";
 
 export class WalletItem {
@@ -12,6 +12,7 @@ export class WalletItem {
   total = 0;
   totalFiat = 0;
   name = '';
+  crypto = true;
 
   private pIconUrl = '';
   private fiat = '';
@@ -19,6 +20,7 @@ export class WalletItem {
   private pFullName = '';
 
   constructor(data: AssetAddressShort | null, defaultFiat: string, currency: CurrencyView | undefined) {
+    this.crypto = true;
     if (data) {
       this.fiat = defaultFiat;
       this.id = data.vaultId ?? '';
@@ -65,5 +67,20 @@ export class WalletItem {
 
   setName(n: string): void {
     this.name = n;
+  }
+
+  setFiat(data: FiatVault, defaultFiat: string) {
+    this.crypto = false;
+    if (data) {
+      this.fiat = defaultFiat;
+      this.id = data.fiatVaultId ?? '';
+      this.vault = data.fiatVaultId ?? '';
+      this.asset = data.currency ?? '';
+      this.total = 0;
+      this.totalFiat = data.balance ?? 0;
+      this.name = `${this.asset} wallet`;
+      this.pCurrencyName = this.asset;
+      this.pFullName = `${this.asset} wallet`;
+    }
   }
 }
