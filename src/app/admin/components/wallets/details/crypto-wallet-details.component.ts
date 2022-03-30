@@ -4,11 +4,11 @@ import { AssetAddress } from 'src/app/model/generated-models';
 import { WalletItem } from '../../../model/wallet.model';
 
 @Component({
-  selector: 'app-wallet-details',
-  templateUrl: 'wallet-details.component.html',
-  styleUrls: ['wallet-details.component.scss']
+  selector: 'app-crypto-wallet-details',
+  templateUrl: 'crypto-wallet-details.component.html',
+  styleUrls: ['crypto-wallet-details.component.scss']
 })
-export class WalletDetailsComponent {
+export class CryptoWalletDetailsComponent {
   @Input() permission = 0;
   @Input() set wallet(val: WalletItem | undefined) {
     this.setFormData(val);

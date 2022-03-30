@@ -1,4 +1,5 @@
-import { AssetAddress } from '../../model/generated-models';
+import { DatePipe } from '@angular/common';
+import { AssetAddress, FiatVault } from '../../model/generated-models';
 
 export class WalletItem {
   address = '';
@@ -38,6 +39,25 @@ export class WalletItem {
       this.userEmail = data.userEmail as string;
       this.custodyProvider = data.custodyProvider ?? '';
       this.custodyProviderLink = data.custodyProviderLink ?? '';
+    }
+  }
+}
+
+export class FiatWalletItem {
+  id = '';
+  asset = '';
+  created = '';
+  balance = 0;
+  userId = '';
+
+  constructor(data?: FiatVault) {
+    if (data) {
+      const datepipe: DatePipe = new DatePipe('en-US');
+      this.created = datepipe.transform(data.created, 'dd-MM-YYYY HH:mm:ss') as string;
+      this.id = data.fiatVaultId ?? '';
+      this.userId = data.userId as string;
+      this.asset = data.currency ?? '';
+      this.balance = data.balance ?? 0;      
     }
   }
 }

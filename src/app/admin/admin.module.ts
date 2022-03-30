@@ -53,7 +53,6 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { FilterFieldCountryComponent } from './components/core/filter-panel/filter-fields/country/filter-field-country.component';
 import { FilterFieldWidgetComponent } from './components/core/filter-panel/filter-fields/widget/filter-field-widget.component';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { WalletListComponent } from './components/wallets/list/wallet-list.component';
 import { FeeDetailsComponent } from './components/fees/fee-details/fee-details.component';
 import { FeeListComponent } from './components/fees/fee-list/fee-list.component';
 import { DetailsAttributeComponent } from './components/core/details-attribute/details-attribute.component';
@@ -70,7 +69,7 @@ import {
 } from './components/core/filter-panel/filter-fields/user-multiple/filter-field-user-multiple.component';
 import { AdminSettingsComponent } from './components/settings/settings.component';
 import { CommonSettingsEditorComponent } from './components/settings/common/common-settings.component';
-import { WalletDetailsComponent } from './components/wallets/details/wallet-details.component';
+import { CryptoWalletDetailsComponent } from './components/wallets/details/crypto-wallet-details.component';
 import { NotificationDetailsComponent } from './components/notifications/details/notification-details.component';
 import { CustomerSingleComponent } from './components/customers/customer-single/customer-single.component';
 import { SystemUserListComponent } from './components/system-users/list/user-list.component';
@@ -89,6 +88,10 @@ import { AddSystemUserComponent } from './components/system-users/details/user-r
 import { RiskAlertDetailsComponent } from './components/risk-center/details/risk-alert-details.component';
 import { ApiKeyListComponent } from './components/settings/apikeys/api-keys.component';
 import { ApiKeyEditorComponent } from './components/settings/apikeys/apikey-editor.component';
+import { AdminWalletsComponent } from './components/wallets/wallets.component';
+import { CryptoWalletListComponent } from './components/wallets/list/crypto-wallet-list.component';
+import { FiatWalletListComponent } from './components/wallets/list/fiat-wallet-list.component';
+import { FiatWalletDetailsComponent } from './components/wallets/details/fiat-wallet-details.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -137,8 +140,10 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
     CustomerListComponent,
     CustomerSingleComponent,
     CustomerDetailsComponent,
-    WalletListComponent,
-    WalletDetailsComponent,
+    CryptoWalletListComponent,
+    FiatWalletListComponent,
+    CryptoWalletDetailsComponent,
+    FiatWalletDetailsComponent,
     FeeListComponent,
     FeeDetailsComponent,
     NotificationListComponent,
@@ -174,6 +179,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
     DetailsAttributeComponent,
     WidgetEditorComponent,
     AdminSettingsComponent,
+    AdminWalletsComponent,
     CommonSettingsEditorComponent,
     ApiKeyListComponent,
     ApiKeyEditorComponent

@@ -1,7 +1,5 @@
-<app-filter-panel [fields]="filterFields" (filter)="handleFilterApplied($event)"></app-filter-panel>
-
 <div class="data-table">
-    <mat-table matSort [matSortActive]="sortedField" matSortDirection="desc" matSortDisableClear [dataSource]="wallets">
+    <mat-table matSort [matSortActive]="listOptions.sortField" matSortDirection="desc" matSortDisableClear [dataSource]="wallets">
 
         <ng-container matColumnDef="details" sticky>
             <th mat-header-cell *matHeaderCellDef></th>
@@ -12,8 +10,8 @@
                     <mat-icon class="details-icon">{{getDetailsIcon(element.id)}}</mat-icon>
                 </button>
                 <button *ngIf="element.custodyProviderLink!==''" mat-icon-button class="row-button"
-                    (click)="showCustodyProvider(element.custodyProviderLink)" [attr.aria-label]="'Wallet details'"
-                    [matTooltip]="'Wallet details'" matTooltipClass="info-tooltip">
+                    (click)="showCustodyProvider(element.custodyProviderLink)" [attr.aria-label]="'Show custody provider'"
+                    [matTooltip]="'Show custody provider'" matTooltipClass="info-tooltip">
                     <mat-icon class="details-icon">
                         account_balance_wallet
                     </mat-icon>
@@ -96,12 +94,6 @@
     </mat-table>
 </div>
 
-<mat-paginator [length]="walletCount" [pageSize]="pageSize" [pageSizeOptions]="[25, 50, 100]" showFirstLastButtons
+<mat-paginator [length]="walletCount" [pageSize]="listOptions.pageSize" [pageSizeOptions]="[25, 50, 100]" showFirstLastButtons
     (page)="handlePage($event)">
 </mat-paginator>
-
-<ng-template *ngIf="selectedWallet" appRightPanel (panelClosed)="handleDetailsPanelClosed()">
-    <app-wallet-details [permission]="permission" [wallet]="selectedWallet" [currencies]="currencyList" (save)="onSaveWallet($event)"
-        (delete)="onDeleteWallet($event)" (cancel)="onCancelEdit()" (formChanged)="onEditorFormChanged($event)">
-    </app-wallet-details>
-</ng-template>

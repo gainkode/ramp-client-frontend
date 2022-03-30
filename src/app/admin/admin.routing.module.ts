@@ -10,7 +10,6 @@ import { ReconciliationComponent } from './components/reconciliation/reconciliat
 import { WidgetListComponent } from './components/widgets/list/widget-list.component';
 import { TransactionListComponent } from './components/transactions/list/transaction-list.component';
 import { TransactionSingleComponent } from './components/transactions/transaction-single/transaction-single.component';
-import { WalletListComponent } from './components/wallets/list/wallet-list.component';
 import { FeeListComponent } from './components/fees/fee-list/fee-list.component';
 import { RiskAlertListComponent } from './components/risk-center/list/risk-alert-list.component';
 import { AdminSettingsComponent } from './components/settings/settings.component';
@@ -18,6 +17,7 @@ import { CustomerSingleComponent } from './components/customers/customer-single/
 import { SystemUserSingleComponent } from './components/system-users/user-single/user-single.component';
 import { SystemUserListComponent } from './components/system-users/list/user-list.component';
 import { CostTabListComponent } from './components/costs/tab-list/cost-tab-list.component';
+import { AdminWalletsComponent } from './components/wallets/wallets.component';
 
 const routes: Routes = [
   {
@@ -73,18 +73,18 @@ const routes: Routes = [
         path: 'wallets',
         children: [
           {
-            path: 'users/:userid',
-            component: WalletListComponent,
+            path: 'crypto/users/:cryptouserid',
+            component: AdminWalletsComponent,
             data: { header: 'Customer wallets' }
           },
           {
-            path: 'vaults/:vaultids',
-            component: WalletListComponent,
+            path: 'crypto/vaults/:cryptovaultids',
+            component: AdminWalletsComponent,
             data: { header: 'Transaction wallets' }
           },
           {
             path: '',
-            component: WalletListComponent,
+            component: AdminWalletsComponent,
             data: { header: 'Wallets' }
           },
         ]

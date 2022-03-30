@@ -10,9 +10,11 @@ import {
   AssetAddressListResult,
   CountryCodeType,
   DashboardStats,
+  FiatVaultListResult,
   KycInfo,
   QueryGetApiKeysArgs,
   QueryGetDashboardStatsArgs,
+  QueryGetFiatVaultsArgs,
   QueryGetNotificationsArgs, QueryGetRiskAlertsArgs,
   QueryGetSettingsFeeArgs,
   QueryGetSettingsKycArgs,
@@ -52,7 +54,7 @@ import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { Filter } from '../model/filter.model';
 import { UserItem } from '../../model/user.model';
-import { WalletItem } from '../model/wallet.model';
+import { FiatWalletItem, WalletItem } from '../model/wallet.model';
 import { NotificationItem } from '../../model/notification.model';
 import { WidgetItem } from '../model/widget.model';
 import { RiskAlertItem } from '../model/risk-alert.model';
@@ -838,6 +840,33 @@ const GET_WALLETS = gql`
         userEmail
         custodyProvider
         custodyProviderLink
+      }
+    }
+  }
+`;
+
+const GET_FIAT_VAULTS = gql`
+  query GetFiatVaults(
+    $userId: String
+    $filter: String
+    $skip: Int
+    $first: Int
+    $orderBy: [OrderBy!]
+  ) {
+    getFiatVaults(
+      userId: $userId
+      filter: $filter
+      skip: $skip
+      first: $first
+      orderBy: $orderBy
+    ) {
+      count
+      list {
+        fiatVaultId
+        userId
+        balance
+        created
+        currency
       }
     }
   }
@@ -2353,12 +2382,47 @@ export class AdminDataService {
         variables: vars,
         fetchPolicy: 'network-only'
       })
+      .pipe(map(result => {
+        if (result.data?.getWallets?.list && result.data?.getWallets?.count) {
+          return {
+            list: result.data.getWallets.list.map(item => new WalletItem(item)),
+            count: result.data.getWallets.count
+          };
+        } else {
+          return {
+            list: [],
+            count: 0
+          };
+        }
+      }));
+  }
+
+  getFiatWallets(
+    pageIndex: number,
+    takeItems: number,
+    orderField: string,
+    orderDesc: boolean,
+    filter?: Filter
+  ): Observable<{ list: Array<FiatWalletItem>; count: number; }> {
+    const vars: QueryGetFiatVaultsArgs = {
+      userId: filter?.user,
+      filter: filter?.search,
+      skip: pageIndex * takeItems,
+      first: takeItems,
+      orderBy: [{ orderBy: orderField, desc: orderDesc }]
+    };
+    return this.watchQuery<{ getFiatVaults: FiatVaultListResult }, QueryGetFiatVaultsArgs>(
+      {
+        query: GET_FIAT_VAULTS,
+        variables: vars,
+        fetchPolicy: 'network-only'
+      })
       .pipe(
         map(result => {
-          if (result.data?.getWallets?.list && result.data?.getWallets?.count) {
+          if (result.data?.getFiatVaults?.list && result.data?.getFiatVaults?.count) {
             return {
-              list: result.data.getWallets.list.map(item => new WalletItem(item)),
-              count: result.data.getWallets.count
+              list: result.data.getFiatVaults.list.map(item => new FiatWalletItem(item)),
+              count: result.data.getFiatVaults.count
             };
           } else {
             return {
