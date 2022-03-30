@@ -1,7 +1,7 @@
 <div class="__widget-data-box-lg">
     <form [formGroup]="dataForm" (ngSubmit)="onSubmit()">
         <!-- Spend -->
-        <app-form-finance-combo [label]="'Amount to spend'" [placeholder]="'...'" [boxFieldName]="'amountSpend'"
+        <app-form-finance-combo [label]="'Amount to Buy'" [placeholder]="'...'" [boxFieldName]="'amountSpend'"
             [boxField]="amountSpendField" [comboField]="currencySpendField" [comboFieldName]="'currencySpend'"
             [comboList]="spendCurrencyList" [errorMessages]="amountSpendErrorMessages" [separator]="true">
         </app-form-finance-combo>

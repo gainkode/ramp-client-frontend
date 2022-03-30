@@ -39,7 +39,7 @@
             </mat-form-field>
 
             <mat-form-field *ngIf="field === 'kycStatus'">
-                <mat-label>KYC Statuses</mat-label>
+                <mat-label>DocsCheck Statuses</mat-label>
                 <mat-select formControlName="kycStatuses" multiple>
                     <mat-option *ngFor="let item of kysStatusOptions" [value]="item.id">
                         {{item.name}}

@@ -1,8 +1,8 @@
 <div class="__widget-data-box">
     <form [formGroup]="dataForm" (ngSubmit)="onSubmit()">
         <!-- Email -->
-        <app-form-textbox *ngIf="settings.email==='' && !settings.embedded" [label]="'Email'" [maxlength]="50" formControlName="email"
-            [errorMessages]="emailErrorMessages" [separator]="true">
+        <app-form-textbox *ngIf="settings.email==='' && !settings.embedded" [label]="'Email'" [maxlength]="50"
+            formControlName="email" [errorMessages]="emailErrorMessages" [separator]="true">
         </app-form-textbox>
 
         <!-- Transaction -->
@@ -28,7 +28,7 @@
         </div>
 
         <!-- Spend -->
-        <app-form-finance-combo [label]="'Amount to spend'" [placeholder]="'...'" [boxFieldName]="'amountSpend'"
+        <app-form-finance-combo [label]="'Amount to sell'" [placeholder]="'...'" [boxFieldName]="'amountSpend'"
             [boxField]="amountSpendField" [comboField]="currencySpendField" [comboFieldName]="'currencySpend'"
             [comboList]="spendCurrencyList" [errorMessages]="amountSpendErrorMessages" [separator]="false">
         </app-form-finance-combo>
@@ -74,7 +74,8 @@
                                     {{selectedWallet?.name}}
                                 </div>
                             </mat-select-trigger>
-                            <mat-option *ngFor="let item of filteredWallets" [value]="item.address" style="height: 32px;">
+                            <mat-option *ngFor="let item of filteredWallets" [value]="item.address"
+                                style="height: 32px;">
                                 <div class="__form-combo-item-block">
                                     <div class="__form-combo-item-text">
                                         {{item.name}}
@@ -128,7 +129,7 @@
                 [boxField]="amountReceiveField" [comboField]="currencyReceiveField" [comboFieldName]="'currencyReceive'"
                 [comboList]="receiveCurrencyList" [errorMessages]="amountReceiveErrorMessages" [separator]="false">
             </app-form-finance-combo>
-            
+
             <!-- Wallets -->
             <div *ngIf="filteredWallets.length>1">
                 <div class="__form-separator"></div>
@@ -143,7 +144,8 @@
                                     {{selectedWallet?.name}}
                                 </div>
                             </mat-select-trigger>
-                            <mat-option *ngFor="let item of filteredWallets" [value]="item.address" style="height: 32px;">
+                            <mat-option *ngFor="let item of filteredWallets" [value]="item.address"
+                                style="height: 32px;">
                                 <div class="__form-combo-item-block">
                                     <div class="__form-combo-item-text">
                                         {{item.name}}

@@ -172,18 +172,18 @@
             </app-details-attribute>
             <app-details-attribute label="Verification Level" [value]="data?.kycTier"></app-details-attribute>
 
-            <!-- KYC status -->
-            <app-details-attribute *ngIf="transactionType===TRANSACTION_TYPE.Receive" label="KYC Status"
+            <!-- DocsCheck -->
+            <app-details-attribute *ngIf="transactionType===TRANSACTION_TYPE.Receive" label="DocsCheck"
                 [value]="kycStatus"></app-details-attribute>
             <mat-form-field *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-element">
-                <mat-label>KYC Status</mat-label>
+                <mat-label>DocsCheck</mat-label>
                 <mat-select formControlName="kycStatus" required>
                     <mat-option *ngFor="let item of kycStatuses" [value]="item.id">
                         {{item.name}}
                     </mat-option>
                 </mat-select>
                 <mat-error *ngIf="this.form.get('kycStatus')?.hasError('required')">
-                    Please specify the KYC status
+                    Please specify the DocsCheck status
                 </mat-error>
             </mat-form-field>
 

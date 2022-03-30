@@ -106,10 +106,10 @@
                 </div>
             </div>
 
-            <!-- KYC Status -->
+            <!-- DocsCheck -->
             <div *ngIf="transaction?.kycStatus!==''" class="__profile-details-item-grid">
                 <div class="__profile-details-item-title-box">
-                    KYC Status:
+                    DocsCheck:
                 </div>
                 <div
                     [ngClass]="{'__profile-details-item-value-box': true, '__profile-details-item-error': transaction?.kycRejected === true}">

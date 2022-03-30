@@ -80,7 +80,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
   showBenchmarkTransferHash = false;
   transferOrderBlockchainLink = '';
   benchmarkTransferOrderBlockchainLink = '';
-  amountToSpendTitle = 'Amount To Spend';
+  amountToSpendTitle = 'Amount To Buy';
   systemFeeTitle = 'Fee, EUR';
   editableDestination = false;
 

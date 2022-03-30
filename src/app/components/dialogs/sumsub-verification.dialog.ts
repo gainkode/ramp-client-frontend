@@ -8,8 +8,15 @@ import { DialogData } from 'src/app/model/dialog.model';
     styleUrls: ['../../../assets/button.scss', '../../../assets/dialog.scss']
 })
 export class SumsubVerificationDialogBox {
+    complete = false;
+
     constructor(public dialogRef: MatDialogRef<SumsubVerificationDialogBox>,
         @Inject(MAT_DIALOG_DATA) public data: DialogData) { }
+
+    onComplete(): void {
+        this.complete = true;
+        this.dialogRef.close();
+    }
 
     onClose(): void {
         this.dialogRef.close();
