@@ -847,15 +847,15 @@ const GET_WALLETS = gql`
 
 const GET_FIAT_VAULTS = gql`
   query GetFiatVaults(
-    $userId: String
-    $filter: String
+    $userIdsOnly: [String]
+    $assetsOnly: [String]
     $skip: Int
     $first: Int
     $orderBy: [OrderBy!]
   ) {
     getFiatVaults(
-      userId: $userId
-      filter: $filter
+      userIdsOnly: $userIdsOnly
+      assetsOnly: $assetsOnly
       skip: $skip
       first: $first
       orderBy: $orderBy
@@ -2405,8 +2405,8 @@ export class AdminDataService {
     filter?: Filter
   ): Observable<{ list: Array<FiatWalletItem>; count: number; }> {
     const vars: QueryGetFiatVaultsArgs = {
-      userId: filter?.user,
-      filter: filter?.search,
+      userIdsOnly: filter?.users,
+      assetsOnly: filter?.assets,
       skip: pageIndex * takeItems,
       first: takeItems,
       orderBy: [{ orderBy: orderField, desc: orderDesc }]

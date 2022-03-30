@@ -2020,8 +2020,8 @@ export type QueryGetSellAddressArgs = {
 
 
 export type QueryGetFiatVaultsArgs = {
-  userId?: Maybe<Scalars['String']>;
-  filter?: Maybe<Scalars['String']>;
+  userIdsOnly?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assetsOnly?: Maybe<Array<Maybe<Scalars['String']>>>;
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
   orderBy?: Maybe<Array<OrderBy>>;
@@ -2029,8 +2029,7 @@ export type QueryGetFiatVaultsArgs = {
 
 
 export type QueryMyFiatVaultsArgs = {
-  userId?: Maybe<Scalars['String']>;
-  filter?: Maybe<Scalars['String']>;
+  assetsOnly?: Maybe<Array<Maybe<Scalars['String']>>>;
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
   orderBy?: Maybe<Array<OrderBy>>;
@@ -3353,6 +3352,7 @@ export type UserState = {
   totalAmountEur?: Maybe<Scalars['Float']>;
   transactionSummary?: Maybe<Array<UserTransactionSummary>>;
   vaults?: Maybe<Array<VaultAccountEx>>;
+  fiatvaults?: Maybe<Array<Maybe<FiatVault>>>;
   externalWallets?: Maybe<Array<ExternalWallet>>;
   notifications?: Maybe<UserNotificationListResult>;
 };

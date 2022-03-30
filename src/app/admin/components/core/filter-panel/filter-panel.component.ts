@@ -1,8 +1,8 @@
 import { Observable, Subject } from 'rxjs';
-import { KycStatusList, PaymentInstrumentList, RiskLevelViewList, TransactionSourceList, TransactionStatusList, TransactionTypeList, UserStatusList, UserTypeList } from 'src/app/model/payment.model';
+import { CurrencyView, KycStatusList, PaymentInstrumentList, RiskLevelViewList, TransactionSourceList, TransactionStatusList, TransactionTypeList, UserStatusList, UserTypeList } from 'src/app/model/payment.model';
 import { Filter } from '../../../model/filter.model';
 import { Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { EmptyObject } from 'apollo-angular/types';
 
 @Component({
@@ -13,6 +13,7 @@ import { EmptyObject } from 'apollo-angular/types';
 export class FilterPanelComponent implements OnInit, OnDestroy {
   @Input() fields: Array<string> = [];
   @Input() filterData: Filter | undefined = undefined;
+  @Input() currencies: Array<CurrencyView> = [];
 
   private filterSubject = new Subject<Filter>();
 
@@ -54,11 +55,9 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
     }
     if (this.fields.includes('users')) {
       controlsConfig.users = [[]];
-      // if (this.filterData) {
-      //   if (this.filterData.users) {
-      //     controlsConfig.users = [this.filterData.users];
-      //   }
-      // }
+    }
+    if (this.fields.includes('assets')) {
+      controlsConfig.assets = [[]];
     }
     if (this.fields.includes('createdDateStart')) {
       controlsConfig.createdDateRangeStart = [undefined];
@@ -147,6 +146,9 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
       }
       if (this.fields.includes('users')) {
         this.filterForm.controls.users.setValue([]);
+      }
+      if (this.fields.includes('assets')) {
+        this.filterForm.controls.assets.setValue([]);
       }
       if (this.fields.includes('createdDateStart')) {
         this.filterForm.controls.createdDateRangeStart.setValue(undefined);

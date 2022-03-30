@@ -56,6 +56,15 @@
                 </mat-select>
             </mat-form-field>
 
+            <mat-form-field *ngIf="field === 'assets'">
+                <mat-label>Assets</mat-label>
+                <mat-select formControlName="assets" multiple>
+                    <mat-option *ngFor="let item of currencies" [value]="item.id">
+                        {{item.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
             <mat-form-field *ngIf="field === 'transactionType'">
                 <mat-label>Transaction Types</mat-label>
                 <mat-select formControlName="transactionTypes" multiple>

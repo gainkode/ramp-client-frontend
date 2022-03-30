@@ -23,6 +23,7 @@ export class AdminWalletsComponent implements OnDestroy {
   selectedCryptoWallet: WalletItem | null = null;
   selectedFiatWallet: FiatWalletItem | null = null;
   currencyList: CurrencyView[] = [];
+  fiatCurrencyList: CurrencyView[] = [];
   cryptoWallets: WalletItem[] = [];
   fiatWallets: FiatWalletItem[] = [];
   cryptoWalletCount = 0;
@@ -46,7 +47,8 @@ export class AdminWalletsComponent implements OnDestroy {
     'search'
   ];
   fiatFilterFields = [
-    'user'
+    'users',
+    'assets'
   ];
   cryptoFilter = new Filter({});
   fiatFilter = new Filter({});
@@ -148,6 +150,7 @@ export class AdminWalletsComponent implements OnDestroy {
             if (currencySettings.settingsCurrency.count ?? 0 > 0) {
               this.currencyList = currencySettings.settingsCurrency.list?.
                 map((val) => new CurrencyView(val)) as CurrencyView[];
+              this.fiatCurrencyList = this.currencyList.filter(x => x.fiat === true);
             }
           }
           this.loadData();
@@ -166,7 +169,7 @@ export class AdminWalletsComponent implements OnDestroy {
       this.fiatListFilter.pageSize,
       this.fiatListFilter.sortField,
       this.fiatListFilter.desc,
-      undefined).pipe(take(1));
+      this.fiatFilter).pipe(take(1));
     this.subscriptions.add(
       listData$.subscribe(({ list, count }) => {
         this.fiatWallets = list;

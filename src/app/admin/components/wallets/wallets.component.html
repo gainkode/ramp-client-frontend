@@ -21,7 +21,7 @@
             <app-tab-label labelText="Fiat wallets"></app-tab-label>
         </ng-template>
         <div class="action-panel">
-            <app-filter-panel [fields]="fiatFilterFields" (filter)="handleFiatFilterApplied($event)">
+            <app-filter-panel [fields]="fiatFilterFields" [currencies]="fiatCurrencyList" (filter)="handleFiatFilterApplied($event)">
             </app-filter-panel>
         </div>
         <app-fiat-wallet-list [wallets]="fiatWallets" [walletCount]="fiatWalletCount" [listOptions]="fiatListFilter"
@@ -39,11 +39,4 @@
     <app-fiat-wallet-details *ngIf="selectedFiatWallet && selectedTab===1" [permission]="permission"
         [wallet]="selectedFiatWallet" (cancel)="onCancelEdit()">
     </app-fiat-wallet-details>
-    <!-- <app-cost-editor *ngIf="selectedCryptoWallet && selectedTab===0" [permission]="permission" [currentScheme]="selectedCryptoWallet" 
-        (save)="onSavedCryptoWallet($event)" (delete)="onDeleteCryptoWallet($event)" (cancel)="onCancelEdit()">
-    </app-cost-editor> -->
-    <!-- <app-bank-account-editor *ngIf="selectedAccount && selectedTab===1" [permission]="permission" [currentAccount]="selectedAccount"
-        [create]="createAccount" (save)="onSavedAccount($event)" (delete)="onDeleteAccount($event)"
-        (cancel)="onCancelEdit()">
-    </app-bank-account-editor> -->
 </ng-template>
