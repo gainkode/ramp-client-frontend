@@ -13,7 +13,7 @@
                         {{item.balanceFiat}}
                     </div>
                 </div>
-                <div class="__balance-item-icon-box">
+                <div *ngIf="!item.isFiat" class="__balance-item-icon-box">
                     <img class="__balance-item-icon" [src]="item.icon">
                 </div>
             </div>

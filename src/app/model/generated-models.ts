@@ -318,6 +318,7 @@ export type FiatVault = {
   balance?: Maybe<Scalars['Float']>;
   created?: Maybe<Scalars['DateTime']>;
   currency?: Maybe<Scalars['String']>;
+  generalBalance?: Maybe<Scalars['Float']>;
 };
 
 export type FiatVaultListResult = {
@@ -3352,7 +3353,7 @@ export type UserState = {
   totalAmountEur?: Maybe<Scalars['Float']>;
   transactionSummary?: Maybe<Array<UserTransactionSummary>>;
   vaults?: Maybe<Array<VaultAccountEx>>;
-  fiatvaults?: Maybe<Array<Maybe<FiatVault>>>;
+  fiatvaults?: Maybe<Array<FiatVault>>;
   externalWallets?: Maybe<Array<ExternalWallet>>;
   notifications?: Maybe<UserNotificationListResult>;
 };

@@ -38,13 +38,18 @@ export class UserBalanceItem {
   private pBalanceFiat = 0;
   private pCryptoPrecision = 0;
   private pFiatPrecision = 0;
+  private pFiat = false;
 
   get id(): string {
     return this.pId;
   }
 
+  get isFiat(): boolean {
+    return this.pFiat;
+  }
+
   get currencyName(): string {
-    return this.pCryptoCurrency;
+    return (this.pFiat) ? this.pAsset : this.pCryptoCurrency;
   }
 
   get icon(): string {
@@ -52,23 +57,33 @@ export class UserBalanceItem {
   }
 
   get balanceCrypto(): string {
-    return `${this.pBalanceCrypto.toFixed(this.pCryptoPrecision)} ${this.pId}`;
+    return (this.pFiat) ?
+      `${getCurrencySign(this.pFiatSymbol)}${this.pBalanceFiat.toFixed(this.pFiatPrecision)}` :
+      `${this.pBalanceCrypto.toFixed(this.pCryptoPrecision)} ${this.pId}`;
   }
 
   get balanceFiat(): string {
-    return `${getCurrencySign(this.pFiatSymbol)}${this.pBalanceFiat.toFixed(this.pFiatPrecision)}`;
+    return (this.pFiat) ? ' ' : `${getCurrencySign(this.pFiatSymbol)}${this.pBalanceFiat.toFixed(this.pFiatPrecision)}`;
   }
 
-  constructor(data: BalancePerAsset, cuurencyName: string, fiatSymbol: string, fiatPrecision: number, cryptoPrecision: number) {
-    this.pId = data.assetId ?? '';
-    this.pCryptoCurrency = cuurencyName;
+  constructor(data: BalancePerAsset | undefined, cuurencyName: string, fiatSymbol: string, fiatPrecision: number, cryptoPrecision: number, fiatBalance: number) {
+    if (data) {
+      this.pFiat = false;
+      this.pId = data.assetId ?? '';
+      this.pCryptoCurrency = cuurencyName;
+      this.pAsset = this.pId;
+      this.pIconUrl = `assets/svg-crypto/${getCryptoSymbol(this.pAsset).toLowerCase()}.svg`;
+      this.pCryptoPrecision = cryptoPrecision;
+      this.pBalanceCrypto = data.totalBalance ?? 0;
+      this.pBalanceFiat = data.totalBalanceFiat;
+    } else {
+      this.pFiat = true;
+      this.pBalanceFiat = fiatBalance;
+      this.pId = fiatSymbol;
+      this.pAsset = this.pId;
+    }
     this.pFiatSymbol = fiatSymbol;
-    this.pAsset = this.pId;
-    this.pIconUrl = `assets/svg-crypto/${getCryptoSymbol(this.pAsset).toLowerCase()}.svg`;
-    this.pCryptoPrecision = cryptoPrecision;
     this.pFiatPrecision = fiatPrecision;
-    this.pBalanceCrypto = data.totalBalance ?? 0;
-    this.pBalanceFiat = data.totalBalanceFiat;
   }
 
   increaseCrypto(val: number): void {

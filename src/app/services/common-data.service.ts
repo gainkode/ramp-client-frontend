@@ -57,6 +57,11 @@ query MyState {
         availableBalanceFiat
       }
     }
+    fiatvaults {
+      balance
+      generalBalance
+      currency
+    }
   }
 }
 `;

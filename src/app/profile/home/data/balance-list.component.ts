@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { UserBalanceItem } from 'src/app/model/balance.model';
-import { Rate, SettingsCurrency, UserState, VaultAccountEx } from 'src/app/model/generated-models';
+import { FiatVault, Rate, SettingsCurrency, UserState, VaultAccountEx } from 'src/app/model/generated-models';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
 import { ErrorService } from 'src/app/services/error.service';
@@ -71,7 +71,7 @@ export class ProfileBalanceListComponent implements OnInit, OnDestroy {
             balanceData$.subscribe(({ data }) => {
                 const myState = data.myState as UserState;
                 this.balances = [];
-                this.handleTransactions(myState.vaults ?? []);
+                this.handleTransactions(myState.vaults ?? [], myState.fiatvaults ?? []);
                 this.onProgress.emit(false);
             }, (error) => {
                 this.onProgress.emit(false);
@@ -84,7 +84,7 @@ export class ProfileBalanceListComponent implements OnInit, OnDestroy {
         );
     }
 
-    private handleTransactions(vaults: VaultAccountEx[]): void {
+    private handleTransactions(vaults: VaultAccountEx[], fiats: FiatVault[]): void {
         let total = 0;
         if (vaults.length > 0) {
             vaults.forEach(vault => {
@@ -102,12 +102,34 @@ export class ProfileBalanceListComponent implements OnInit, OnDestroy {
                                 currency.name,
                                 this.currentCurrency,
                                 this.fiatPrecision,
-                                currency.precision));
+                                currency.precision,
+                                0));
                         }
                     }
                 });
             });
-            this.onUpdateTotal.emit(total);
         }
+        if (fiats.length > 0) {
+            fiats.forEach(vault => {
+                total += vault.generalBalance ?? 0;
+                const balanceItem = this.balances.find(b => b.id === vault.currency);
+                if (balanceItem) {
+                    balanceItem.increaseCrypto(0);
+                    balanceItem.increaseFiat(vault.generalBalance ?? 0);
+                } else {
+                    const currency = this.currencies.find(c => c.symbol === vault.currency);
+                    if (currency) {
+                        this.balances.push(new UserBalanceItem(
+                            undefined,
+                            currency.name,
+                            vault.currency ?? 'EUR',
+                            currency.precision,
+                            0,
+                            vault.generalBalance ?? 0));
+                    }
+                }
+            });
+        }
+        this.onUpdateTotal.emit(total);
     }
 }
