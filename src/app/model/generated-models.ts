@@ -327,6 +327,18 @@ export type FiatVaultListResult = {
   list?: Maybe<Array<FiatVault>>;
 };
 
+export type FiatVaultUser = {
+  __typename?: 'FiatVaultUser';
+  vault?: Maybe<FiatVault>;
+  user?: Maybe<User>;
+};
+
+export type FiatVaultUserListResult = {
+  __typename?: 'FiatVaultUserListResult';
+  count?: Maybe<Scalars['Int']>;
+  list?: Maybe<Array<FiatVaultUser>>;
+};
+
 export type File = {
   __typename?: 'File';
   path: Scalars['String'];
@@ -1503,7 +1515,7 @@ export type Query = {
   getSellAddress?: Maybe<Scalars['String']>;
   getCountryBlackList?: Maybe<BlackCountryListResult>;
   getFakeError?: Maybe<Scalars['Void']>;
-  getFiatVaults?: Maybe<FiatVaultListResult>;
+  getFiatVaults?: Maybe<FiatVaultUserListResult>;
   myFiatVaults?: Maybe<FiatVaultListResult>;
   getSystemBalanceMany?: Maybe<Scalars['String']>;
 };

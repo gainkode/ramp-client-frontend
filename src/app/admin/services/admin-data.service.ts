@@ -11,6 +11,7 @@ import {
   CountryCodeType,
   DashboardStats,
   FiatVaultListResult,
+  FiatVaultUserListResult,
   KycInfo,
   QueryGetApiKeysArgs,
   QueryGetDashboardStatsArgs,
@@ -862,11 +863,19 @@ const GET_FIAT_VAULTS = gql`
     ) {
       count
       list {
-        fiatVaultId
-        userId
-        balance
-        created
-        currency
+        vault {
+          fiatVaultId
+          balance
+          created
+          currency
+        }
+        user {
+          userId
+          email
+          type
+          firstName
+          lastName
+        }
       }
     }
   }
@@ -2411,7 +2420,7 @@ export class AdminDataService {
       first: takeItems,
       orderBy: [{ orderBy: orderField, desc: orderDesc }]
     };
-    return this.watchQuery<{ getFiatVaults: FiatVaultListResult }, QueryGetFiatVaultsArgs>(
+    return this.watchQuery<{ getFiatVaults: FiatVaultUserListResult }, QueryGetFiatVaultsArgs>(
       {
         query: GET_FIAT_VAULTS,
         variables: vars,
