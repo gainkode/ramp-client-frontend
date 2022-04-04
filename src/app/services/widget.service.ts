@@ -197,6 +197,14 @@ export class WidgetService {
                         if (this.onWireTranferListLoaded) {
                             this.onWireTranferListLoaded(wireTransferList, accountData?.bankAccountId);
                         }
+                    } else {
+                        if (this.onWireTranferListLoaded) {
+                            this.onWireTranferListLoaded(wireTransferList, '');
+                        }
+                    }
+                } else {
+                    if (this.onWireTranferListLoaded) {
+                        this.onWireTranferListLoaded(wireTransferList, '');
                     }
                 }
 

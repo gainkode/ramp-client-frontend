@@ -88,9 +88,13 @@ export class ProfileWalletsComponent implements OnInit, OnDestroy {
                 const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
                 if (currencySettings.settingsCurrency) {
                     if (currencySettings.settingsCurrency.count ?? 0 > 0) {
-                        this.cryptoList = currencySettings.settingsCurrency.list?.
-                            filter(x => x.fiat === false).
-                            map((val) => new CurrencyView(val)) as CurrencyView[];
+                        this.cryptoList = [
+                            ...currencySettings.settingsCurrency.list?.
+                                filter(x => x.fiat === false).
+                                map((val) => new CurrencyView(val)) as CurrencyView[],
+                            ...currencySettings.settingsCurrency.list?.
+                                filter(x => x.fiat === true).
+                                map((val) => new CurrencyView(val)) as CurrencyView[]];
                     }
                 }
             }, (error) => {
