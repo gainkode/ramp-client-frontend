@@ -61,6 +61,10 @@ export class ProfileWalletListComponent implements OnDestroy {
         this.subscriptions.add(
             walletsData$.subscribe(({ data }) => {
                 const dataList = data.myWallets as AssetAddressShortListResult;
+
+                console.log(dataList);
+                console.log(currentUser?.fiatvaults);
+
                 if (dataList !== null) {
                     this.wallets = [];
                     const fiatVault = currentUser?.fiatvaults;

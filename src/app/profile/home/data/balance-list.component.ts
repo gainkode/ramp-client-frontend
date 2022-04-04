@@ -70,6 +70,9 @@ export class ProfileBalanceListComponent implements OnInit, OnDestroy {
         this.subscriptions.add(
             balanceData$.subscribe(({ data }) => {
                 const myState = data.myState as UserState;
+
+                console.log(myState);
+
                 this.balances = [];
                 this.handleTransactions(myState.vaults ?? [], myState.fiatvaults ?? []);
                 this.onProgress.emit(false);
