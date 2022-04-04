@@ -742,7 +742,6 @@ export class AuthService {
     isMerchantApproved(): boolean {
         let result = false;
         const user: User | null = this.getAuthenticatedUser();
-        console.log('isMerchantApproved:', user?.type, user?.kycValid);
         if (user !== null) {
             result = (user.type === UserType.Merchant && user.kycValid === true);
         }

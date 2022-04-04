@@ -130,11 +130,12 @@ export class WidgetSellDetailsComponent {
             };
             paymentData = JSON.stringify(data);
         } else if (this.selectedCategory === WireTransferPaymentCategory.UK && this.ukDataForm.valid) {
-            const uk: WireTransferBankAccountUk = {
+            const data: WireTransferBankAccountUk = {
                 accountName: this.ukDataForm.get('accountName')?.value,
                 accountNumber: this.ukDataForm.get('accountNumber')?.value,
                 sortCode: this.ukDataForm.get('sortCode')?.value
             };
+            paymentData = JSON.stringify(data);
         }
         if (paymentData !== '') {
             const result = {

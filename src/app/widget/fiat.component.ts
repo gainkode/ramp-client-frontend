@@ -118,6 +118,7 @@ export class FiatWidgetComponent implements OnInit {
   }
 
   sellComplete(instrumentDetails: string): void {
+    console.log('sellComplete', instrumentDetails);
     const settings = {
       accountType: instrumentDetails
     };
@@ -151,6 +152,12 @@ export class FiatWidgetComponent implements OnInit {
         message: 'Message has been sent successfully'
       }
     });
+  }
+
+  resetWizard(): void {
+    this.summary.reset();
+    this.stageId = 'order_details';
+    this.title = 'Order details';
   }
 
   private onAuthRequired(email: string): void {
@@ -230,8 +237,13 @@ export class FiatWidgetComponent implements OnInit {
           this.summary.transactionDate = new Date().toLocaleString();
           this.summary.transactionId = order.transactionId as string;
           this.initMessage = '';
-          this.stageId = 'transfer_result';
-          this.title = 'Transfer Result';
+          if (this.summary.transactionType === TransactionType.DepositFiat) {
+            this.stageId = 'transfer_result';
+            this.title = 'Transfer Result';
+          } else {
+            this.stageId = 'complete';
+            this.title = 'Complete';
+          }
         } else {
           this.errorMessage = 'Order code is invalid';
           this.onError.emit({
