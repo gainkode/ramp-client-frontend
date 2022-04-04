@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { ProfileBaseFilter, WalletsFilter } from 'src/app/model/filter.model';
-import { SettingsCurrencyWithDefaults } from 'src/app/model/generated-models';
+import { SettingsCurrencyWithDefaults, UserMode, UserType } from 'src/app/model/generated-models';
 import { CurrencyView } from 'src/app/model/payment.model';
 import { ProfileItemContainer } from 'src/app/model/profile-item.model';
 import { WalletItem } from 'src/app/model/wallet.model';
@@ -88,13 +88,16 @@ export class ProfileWalletsComponent implements OnInit, OnDestroy {
                 const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
                 if (currencySettings.settingsCurrency) {
                     if (currencySettings.settingsCurrency.count ?? 0 > 0) {
-                        this.cryptoList = [
-                            ...currencySettings.settingsCurrency.list?.
-                                filter(x => x.fiat === false).
-                                map((val) => new CurrencyView(val)) as CurrencyView[],
-                            ...currencySettings.settingsCurrency.list?.
-                                filter(x => x.fiat === true).
-                                map((val) => new CurrencyView(val)) as CurrencyView[]];
+                        this.cryptoList = currencySettings.settingsCurrency.list?.
+                            filter(x => x.fiat === false).
+                            map((val) => new CurrencyView(val)) as CurrencyView[];
+                        if (this.auth.user?.type === UserType.Merchant) {
+                            this.cryptoList = [
+                                ...this.cryptoList,
+                                ...currencySettings.settingsCurrency.list?.
+                                    filter(x => x.fiat === true).
+                                    map((val) => new CurrencyView(val)) as CurrencyView[]];
+                        }
                     }
                 }
             }, (error) => {

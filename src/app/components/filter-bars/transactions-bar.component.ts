@@ -2,8 +2,9 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { FilterChip, FilterChipType, ProfileBaseFilter, TransactionsFilter } from 'src/app/model/filter.model';
-import { TransactionSource, TransactionType } from 'src/app/model/generated-models';
-import { TransactionSourceList, UserTransactionTypeList } from 'src/app/model/payment.model';
+import { TransactionSource, TransactionType, UserType } from 'src/app/model/generated-models';
+import { MerchantTransactionTypeList, TransactionSourceList, UserTransactionTypeList } from 'src/app/model/payment.model';
+import { AuthService } from 'src/app/services/auth.service';
 import { getFormattedUtcDate } from 'src/app/utils/utils';
 
 @Component({
@@ -48,7 +49,11 @@ export class TransactionsFilterBarComponent implements OnInit, OnDestroy {
         return this.filterForm.get('sender');
     }
 
-    constructor(private formBuilder: FormBuilder) { }
+    constructor(private formBuilder: FormBuilder, private auth: AuthService) {
+        if (this.auth.user?.type === UserType.Merchant) {
+            this.transactionTypes = MerchantTransactionTypeList;
+        }
+    }
 
     ngOnInit(): void {
         if (this.data && this.data.transactionTypes.length > 0) {
@@ -145,7 +150,7 @@ export class TransactionsFilterBarComponent implements OnInit, OnDestroy {
                 selectedTransactions.forEach(t => {
                     this.chips.push({
                         filterType: chipType,
-                        name: UserTransactionTypeList.find(x => x.id === t)?.name ?? t as string,
+                        name: MerchantTransactionTypeList.find(x => x.id === t)?.name ?? t as string,
                         value: t
                     } as FilterChip);
                 });
@@ -190,12 +195,12 @@ export class TransactionsFilterBarComponent implements OnInit, OnDestroy {
         this.transactionTypesField?.setValue([]);
         this.transactionDateField?.setValue('');
         this.senderField?.setValue('');
-        this.update.emit(new TransactionsFilter());
+        this.update.emit(new TransactionsFilter(this.auth.user?.type ?? UserType.Personal));
     }
 
     onSubmit(): void {
         if (this.transactionDateField?.valid) {
-            const filter = new TransactionsFilter();
+            const filter = new TransactionsFilter(this.auth.user?.type ?? UserType.Personal);
             filter.sender = this.senderField?.value;
             filter.transactionDate = getFormattedUtcDate(this.transactionDateField?.value ?? '');
             filter.walletTypes = this.walletTypesField?.value;

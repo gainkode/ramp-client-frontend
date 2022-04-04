@@ -1,5 +1,5 @@
-import { TransactionSource, TransactionType } from "./generated-models";
-import { CurrencyView, TransactionSourceList, UserTransactionTypeList } from "./payment.model";
+import { TransactionSource, TransactionType, UserType } from "./generated-models";
+import { CurrencyView, MerchantTransactionTypeList, TransactionSourceList, UserTransactionTypeList } from "./payment.model";
 import { getFormattedUtcDate } from 'src/app/utils/utils';
 
 export interface ProfileBaseFilter {
@@ -31,6 +31,11 @@ export class TransactionsFilter implements ProfileBaseFilter {
     transactionDate: Date | undefined = undefined;
     sender: string = '';
     walletAddress = '';
+    userType: UserType = UserType.Personal;
+
+    constructor(userType: UserType) {
+        this.userType = userType;
+    }
 
     setData(data: any): void {
         this.walletTypes = [];
@@ -45,7 +50,11 @@ export class TransactionsFilter implements ProfileBaseFilter {
             const selectedTypes = data.types.split(',');
             selectedTypes.forEach(w => { this.transactionTypes.push(w as TransactionType); });
         } else {
-            UserTransactionTypeList.forEach(w => { this.transactionTypes.push(w.id); });
+            if (this.userType === UserType.Personal) {
+                UserTransactionTypeList.forEach(w => { this.transactionTypes.push(w.id); });
+            } else {
+                MerchantTransactionTypeList.forEach(w => { this.transactionTypes.push(w.id); });
+            }
         }
         this.transactionDate = getFormattedUtcDate(data.date ?? '');
         this.sender = data.sender ?? '';

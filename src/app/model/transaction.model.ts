@@ -445,7 +445,8 @@ export class TransactionItem {
   }
 
   isFiatCurrency(currency: string): boolean {
-    return (currency === 'USD' || currency === 'EUR');
+    return (currency === 'USD' || currency === 'EUR' || currency === 'GBP' || currency === 'JPY' ||
+      currency === 'CHF' || currency === 'AUD' || currency === 'CAD');
   }
 }
 
@@ -631,6 +632,80 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
     result.fees = data.feeFiat as number ?? 0;
     result.networkFee = data.approxNetworkFeeFiat ?? 0;
     result.typeIcon = 'account_balance';
+  } else if (data.type === TransactionType.DepositFiat) {
+    result.currencyFiat = result.currencyToReceive;
+    result.amountToReceive = result.amountToSpend;
+    const destVaultData = JSON.parse(data.destVault ?? '{}');
+    let recipientName = data.destination ?? '';
+    if (destVaultData && destVaultData.name) {
+      recipientName = destVaultData.name;
+    }
+    result.recipient = {
+      id: '',
+      title: recipientName,
+      imgClass: '',
+      imgSource: ''
+    };
+    result.fees = data.feeFiat as number ?? 0;
+    result.networkFee = data.approxNetworkFeeFiat ?? 0;
+    result.typeIcon = 'monetization_on';
+    let senderName = '';
+    const transferDetails = data.transferOrder?.transferDetails;
+    if (transferDetails) {
+      let transferDetailsData = JSON.parse(transferDetails);
+      // sometimes it comes as a string with escape symbols.
+      //  In this case parse returns a stringified JSON, which has to be parsed again
+      if (typeof transferDetailsData === 'string') {
+        transferDetailsData = JSON.parse(transferDetailsData);
+      }
+      if (transferDetailsData.data) {
+        let sourceData = JSON.parse(transferDetailsData.data);
+        senderName = `${sourceData?.source?.name ?? ''} ${sourceData?.sourceAddress ?? ''}`;
+      }
+    }
+    result.sender = {
+      id: '',
+      title: senderName,
+      imgSource: '',
+      imgClass: ''
+    } as CommonTargetValue;
+  } else if (data.type === TransactionType.WithdrawFiat) {
+    result.currencyFiat = result.currencyToReceive;
+    result.amountToReceive = result.amountToSpend;
+    const destVaultData = JSON.parse(data.destVault ?? '{}');
+    let recipientName = data.destination ?? '';
+    if (destVaultData && destVaultData.name) {
+      recipientName = destVaultData.name;
+    }
+    result.recipient = {
+      id: '',
+      title: recipientName,
+      imgClass: '',
+      imgSource: ''
+    };
+    result.fees = data.feeFiat as number ?? 0;
+    result.networkFee = data.approxNetworkFeeFiat ?? 0;
+    result.typeIcon = 'monetization_on';
+    let senderName = '';
+    const transferDetails = data.transferOrder?.transferDetails;
+    if (transferDetails) {
+      let transferDetailsData = JSON.parse(transferDetails);
+      // sometimes it comes as a string with escape symbols.
+      //  In this case parse returns a stringified JSON, which has to be parsed again
+      if (typeof transferDetailsData === 'string') {
+        transferDetailsData = JSON.parse(transferDetailsData);
+      }
+      if (transferDetailsData.data) {
+        let sourceData = JSON.parse(transferDetailsData.data);
+        senderName = `${sourceData?.source?.name ?? ''} ${sourceData?.sourceAddress ?? ''}`;
+      }
+    }
+    result.sender = {
+      id: '',
+      title: senderName,
+      imgSource: '',
+      imgClass: ''
+    } as CommonTargetValue;
   } else {
     result.fees = 4.2;
     result.networkFee = 0.42;

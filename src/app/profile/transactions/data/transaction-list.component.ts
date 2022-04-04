@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { TransactionsFilter } from 'src/app/model/filter.model';
-import { TransactionShortListResult, TransactionStatusDescriptorMap } from 'src/app/model/generated-models';
+import { TransactionShortListResult, TransactionStatusDescriptorMap, UserType } from 'src/app/model/generated-models';
 import { ProfileItemContainer, ProfileItemContainerType } from 'src/app/model/profile-item.model';
 import { TransactionItem } from 'src/app/model/transaction.model';
 import { AuthService } from 'src/app/services/auth.service';
@@ -33,7 +33,7 @@ export class ProfileTransactionListComponent implements OnDestroy, AfterViewInit
     private pStatusSubscription: Subscription | undefined = undefined;
     private pSortSubscription: Subscription | undefined = undefined;
     private pTransactionSubscription: Subscription | undefined = undefined;
-    filter = new TransactionsFilter();
+    filter = new TransactionsFilter(this.auth.user?.type ?? UserType.Personal);
     userStatuses: TransactionStatusDescriptorMap[] = [];
     transactions: TransactionItem[] = [];
     transactionCount = 0;

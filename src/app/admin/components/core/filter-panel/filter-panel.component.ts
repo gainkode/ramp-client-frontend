@@ -29,7 +29,6 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
   transactionTypeOptions = TransactionTypeList;
   transactionStatusOptions = TransactionStatusList;
   kysStatusOptions = KycStatusList;
-
   filterForm?: FormGroup;
 
   constructor(private formBuilder: FormBuilder) {

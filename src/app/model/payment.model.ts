@@ -240,7 +240,10 @@ export const TransactionTypeList: Array<TransactionTypeView> = [
     { id: TransactionType.System, name: 'System' },
     { id: TransactionType.Receive, name: 'Receive' },
     { id: TransactionType.Transfer, name: 'Send' },
-    { id: TransactionType.Withdrawal, name: 'Sell' }
+    { id: TransactionType.Withdrawal, name: 'Sell' },
+    { id: TransactionType.DepositFiat, name: 'Top Up' },
+    { id: TransactionType.WithdrawFiat, name: 'Cash Out' },
+    { id: TransactionType.DepositMerchant, name: 'Merchant Deposit' }
 ];
 
 export const UserTransactionTypeList: Array<TransactionTypeView> = [
@@ -249,6 +252,17 @@ export const UserTransactionTypeList: Array<TransactionTypeView> = [
     { id: TransactionType.Transfer, name: 'Send' },
     { id: TransactionType.Withdrawal, name: 'Sell' },
     { id: TransactionType.Receive, name: 'Receive' }
+];
+
+export const MerchantTransactionTypeList: Array<TransactionTypeView> = [
+    { id: TransactionType.Deposit, name: 'Buy' },
+    { id: TransactionType.Exchange, name: 'Swap' },
+    { id: TransactionType.Transfer, name: 'Send' },
+    { id: TransactionType.Withdrawal, name: 'Sell' },
+    { id: TransactionType.Receive, name: 'Receive' },
+    { id: TransactionType.DepositFiat, name: 'Top Up' },
+    { id: TransactionType.WithdrawFiat, name: 'Cash Out' },
+    { id: TransactionType.DepositMerchant, name: 'Merchant Deposit' }
 ];
 
 export const QuickCheckoutTransactionTypeList: Array<TransactionTypeView> = [

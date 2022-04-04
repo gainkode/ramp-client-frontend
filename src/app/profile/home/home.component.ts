@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { TransactionsFilter } from 'src/app/model/filter.model';
-import { SettingsCurrency, SettingsCurrencyWithDefaults, User } from 'src/app/model/generated-models';
+import { SettingsCurrency, SettingsCurrencyWithDefaults, User, UserType } from 'src/app/model/generated-models';
 import { ProfileItemContainer } from 'src/app/model/profile-item.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
@@ -25,7 +25,7 @@ export class ProfileHomeComponent implements OnInit, OnDestroy {
     @ViewChild('transactions') set recentTransactions(panel: ProfileTransactionListComponent) {
         if (panel) {
             this.transactionsPanel = panel;
-            this.transactionsPanel.load(new TransactionsFilter());
+            this.transactionsPanel.load(new TransactionsFilter(this.auth.user?.type ?? UserType.Personal));
         }
     }
     @ViewChild('balancelist') set balanceList(panel: ProfileBalanceListComponent) {
@@ -168,7 +168,7 @@ export class ProfileHomeComponent implements OnInit, OnDestroy {
     }
 
     updateTransactions(): void {
-        this.transactionsPanel.load(new TransactionsFilter());
+        this.transactionsPanel.load(new TransactionsFilter(this.auth.user?.type ?? UserType.Personal));
     }
 
     updateTransactionStatus(transactionId: string): void {
