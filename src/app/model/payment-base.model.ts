@@ -6,7 +6,9 @@ export enum PaymentWidgetType {
     Sell = 'Sell',
     Send = 'Send',
     Receive = 'Receive',
-    Transfer = 'Transfer'
+    Transfer = 'Transfer',
+    Deposit = 'Deposit',
+    Withdrawal = 'Withdrawal',
 }
 
 export enum WireTransferPaymentCategory {

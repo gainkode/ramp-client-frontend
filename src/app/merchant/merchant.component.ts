@@ -50,13 +50,15 @@ export class MerchantComponent implements OnInit, OnDestroy {
     presetContactId = '';
     presetCurrency = '';
     presetWalletId = '';
+    merchantApproved = false;
 
     private subscriptions: Subscription = new Subscription();
 
     constructor(
-        private auth: AuthService,
+        public auth: AuthService,
         private notification: NotificationService,
         public router: Router) {
+        this.merchantApproved = auth.isMerchantApproved();
         this.getSectionName();
     }
 

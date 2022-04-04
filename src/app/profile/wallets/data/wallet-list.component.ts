@@ -60,7 +60,6 @@ export class ProfileWalletListComponent implements OnDestroy {
         const userFiat = currentUser?.defaultFiatCurrency ?? 'EUR';
         this.subscriptions.add(
             walletsData$.subscribe(({ data }) => {
-                console.log('----+++----');
                 const dataList = data.myWallets as AssetAddressShortListResult;
                 if (dataList !== null) {
                     this.wallets = [];

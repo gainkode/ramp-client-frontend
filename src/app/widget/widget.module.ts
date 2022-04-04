@@ -46,6 +46,8 @@ import { WidgetWireTransferComponent } from './panels/wire-transfer.component';
 import { MatRadioModule } from '@angular/material/radio';
 import { WidgetWireTransferResultComponent } from './panels/wire-transfer-result.component';
 import { WidgetSellDetailsComponent } from './panels/sell-details.component';
+import { BuySellFiatWidgetComponent } from './buy-sell-fiat.component';
+import { WidgetDepositDetailsComponent } from './panels/deposit-details.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -77,15 +79,17 @@ export class MaterialModule { }
     imports: [
         NgxMaskModule.forRoot(), CommonModule, ClipboardModule, FormsModule, ReactiveFormsModule, RouterModule, MaterialModule, QRCodeModule],
     declarations: [
-        WidgetComponent, ReceiveWidgetComponent, SendWidgetComponent, TransferWidgetComponent, BuySellWidgetComponent, WidgetProgressComponent,
-        WidgetSummaryComponent, WidgetRateComponent, WidgetCreditCardComponent, WidgetWireTransferComponent, WidgetWireTransferResultComponent,
-        WidgetSellDetailsComponent,
+        WidgetComponent, ReceiveWidgetComponent, SendWidgetComponent, TransferWidgetComponent, BuySellFiatWidgetComponent,
+        BuySellWidgetComponent, WidgetProgressComponent,
+        WidgetSummaryComponent, WidgetRateComponent, WidgetCreditCardComponent, WidgetWireTransferComponent,
+        WidgetWireTransferResultComponent, WidgetSellDetailsComponent, WidgetDepositDetailsComponent,
         WidgetRegisterComponent, WidgetLoginAuthComponent, WidgetCodeAuthComponent,
         WidgetInitializationComponent, WidgetOrderDetailsComponent, WidgetReceiveDetailsComponent, WidgetSendDetailsComponent,
         WidgetDisclaimerComponent, WidgetKycComponent, WidgetPaymentComponent, WidgetProcessingFrameComponent,
         WidgetProcessingInstantpayComponent, WidgetCompleteComponent, PaymentIntroComponent],
     exports: [
         WidgetComponent,
+        BuySellFiatWidgetComponent,
         BuySellWidgetComponent,
         ReceiveWidgetComponent,
         SendWidgetComponent,

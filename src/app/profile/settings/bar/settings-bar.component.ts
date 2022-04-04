@@ -29,7 +29,7 @@ export class SettingsMenuBarComponent {
     ];
 
     constructor(private router: Router, private auth: AuthService) {
-        if (auth.user?.type === UserType.Merchant) {
+        if (auth.user?.type === UserType.Merchant && auth.isMerchantApproved()) {
             this.tabs.push({
                 id: 'apikeys',
                 name: 'API Keys'

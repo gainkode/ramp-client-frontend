@@ -69,7 +69,6 @@ export class AdminSettingsComponent implements OnDestroy {
     const createKeyData$ = this.adminService.createApiKey(userId);
     this.subscriptions.add(
       createKeyData$.subscribe(({ data }) => {
-        console.log(data);
         const apiKeyData = data.createUserApiKey as ApiKeySecret;
         this.loadData();
         this.dialog.open(ApiSecretDialogBox, {

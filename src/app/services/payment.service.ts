@@ -548,8 +548,6 @@ export class PaymentDataService {
     paymentProvider: string,
     currency: string,
     widgetId: string): QueryRef<any, EmptyObject> {
-
-
       const vars = {
         transactionType,
         transactionSource: source,
@@ -558,7 +556,6 @@ export class PaymentDataService {
         currency,
         widgetId
       };
-      console.log(vars);
     return this.apollo.watchQuery<any>({
       query: MY_SETTINGS_FEE,
       variables: vars,

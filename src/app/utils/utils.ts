@@ -115,6 +115,12 @@ export function getPaymentTitles(paymentId: PaymentWidgetType): PaymentTitleInfo
     } else if (paymentId === PaymentWidgetType.Transfer) {
         result.panelTitle = 'Express Transfer allowing you with a single action to Purchase & Send Crypto direclty from your Bank account to any address!\nIt only takes 2 clicks and you’re done.';
         result.riskWarning = riskWarningNatureText;
+    } else if (paymentId === PaymentWidgetType.Deposit) {
+        result.panelTitle = 'Deposit action description to be shown in this area.';
+        result.riskWarning = riskWarningNatureText;
+    } else if (paymentId === PaymentWidgetType.Withdrawal) {
+        result.panelTitle = 'Withdrawal action description to be shown in this area.';
+        result.riskWarning = riskWarningNatureText;
     }
     return result;
 }

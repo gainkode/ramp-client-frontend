@@ -87,7 +87,7 @@ export const PersonalProfilePopupMenuItems: Array<MenuItem> = [
     {
         id: 'settings',
         name: 'Settings',
-        url: '/personal/account/settings',
+        url: '/personal/account/settings/info',
         icon: 'construction',
         code: ''
     },
@@ -118,7 +118,7 @@ export const MerchantProfilePopupMenuItems: Array<MenuItem> = [
     {
         id: 'settings',
         name: 'Settings',
-        url: '/merchant/account/settings',
+        url: '/merchant/account/settings/info',
         icon: 'construction',
         code: ''
     },
