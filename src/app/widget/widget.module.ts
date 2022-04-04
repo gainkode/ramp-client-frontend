@@ -48,6 +48,7 @@ import { WidgetWireTransferResultComponent } from './panels/wire-transfer-result
 import { WidgetSellDetailsComponent } from './panels/sell-details.component';
 import { BuySellFiatWidgetComponent } from './buy-sell-fiat.component';
 import { WidgetDepositDetailsComponent } from './panels/deposit-details.component';
+import { FiatWidgetComponent } from './fiat.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -80,7 +81,7 @@ export class MaterialModule { }
         NgxMaskModule.forRoot(), CommonModule, ClipboardModule, FormsModule, ReactiveFormsModule, RouterModule, MaterialModule, QRCodeModule],
     declarations: [
         WidgetComponent, ReceiveWidgetComponent, SendWidgetComponent, TransferWidgetComponent, BuySellFiatWidgetComponent,
-        BuySellWidgetComponent, WidgetProgressComponent,
+        BuySellWidgetComponent, FiatWidgetComponent, WidgetProgressComponent,
         WidgetSummaryComponent, WidgetRateComponent, WidgetCreditCardComponent, WidgetWireTransferComponent,
         WidgetWireTransferResultComponent, WidgetSellDetailsComponent, WidgetDepositDetailsComponent,
         WidgetRegisterComponent, WidgetLoginAuthComponent, WidgetCodeAuthComponent,

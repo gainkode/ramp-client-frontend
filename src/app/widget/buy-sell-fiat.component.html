@@ -1,18 +1,31 @@
 <div class="__widget-embedded-container">
-  <div *ngIf="inProgress" class="__widget-embedded-progress-container">
-    <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
+  <div *ngIf="selectedWidgetType === WIDGET_TYPE.Deposit || selectedWidgetType === WIDGET_TYPE.Withdrawal"
+      class="__widget-embedded-tab-container">
+      <div [ngClass]="{'__widget-embedded-tab': true, '__widget-embedded-left-tab-unselected': selectedWidgetType !== WIDGET_TYPE.Deposit}"
+          (click)="selectPaymentType(WIDGET_TYPE.Deposit)">
+          <span
+              [ngClass]="{'__widget-embedded-tab-title': true, '__widget-embedded-tab-title-unselected': selectedWidgetType !== WIDGET_TYPE.Deposit}">
+              TOP UP
+          </span>
+      </div>
+      <div [ngClass]="{'__widget-embedded-tab': true, '__widget-embedded-right-tab-unselected': selectedWidgetType !== WIDGET_TYPE.Withdrawal}"
+          (click)="selectPaymentType(WIDGET_TYPE.Withdrawal)">
+          <span
+              [ngClass]="{'__widget-embedded-tab-title': true, '__widget-embedded-tab-title-unselected': selectedWidgetType !== WIDGET_TYPE.Withdrawal}">
+              CASH OUT
+          </span>
+      </div>
   </div>
-  <div class="__widget-data-container">
-    <div class="__widget-wizard-container-embedded" [ngSwitch]="stageId">
-      <!-- Initialization -->
-      <app-widget-initialization *ngSwitchCase="'initialization'" [message]="initMessage"></app-widget-initialization>
-      <!-- Order details -->
-      <app-widget-deposit-details *ngSwitchCase="'deposiit_details'" [summary]="summary" [currencies]="cryptoList"
-        (onProgress)="progressChanged($event)" [errorMessage]="errorMessage" (onComplete)="depositDetailsComplete($event)">
-      </app-widget-deposit-details>
-      <app-widget-wire-transfer *ngSwitchCase="'transfer'" [bankCategories]="wireTransferList"
-        [bankAccountId]="bankAccountId" [errorMessage]="errorMessage" (onBack)="paymentBack()"
-        (onComplete)="wireTransferPaymentComplete($event)"></app-widget-wire-transfer>
-    </div>
+
+  <div *ngIf="widgetVisible && selectedWidgetType !== WIDGET_TYPE.Deposit" class="__widget-embedded-data-container">
+      <app-fiat-widget [settings]="widgetSettings" (onComplete)="widgetComplete($event)"
+          (onError)="widgetError($event)">
+      </app-fiat-widget>
+  </div>
+
+  <div *ngIf="widgetVisible && selectedWidgetType !== WIDGET_TYPE.Withdrawal" class="__widget-embedded-data-container">
+      <app-fiat-widget [settings]="widgetSettings" (onComplete)="widgetComplete($event)"
+          (onError)="widgetError($event)">
+      </app-fiat-widget>
   </div>
 </div>

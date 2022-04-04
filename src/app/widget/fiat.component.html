@@ -1,0 +1,23 @@
+<div class="__widget-embedded-container">
+  <div *ngIf="inProgress" class="__widget-embedded-progress-container">
+    <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
+  </div>
+  <div class="__widget-data-container">
+    <div class="__widget-wizard-container-embedded" [ngSwitch]="stageId">
+      <!-- Initialization -->
+      <app-widget-initialization *ngSwitchCase="'initialization'" [message]="initMessage"></app-widget-initialization>
+      <!-- Order details -->
+      <app-widget-deposit-details *ngSwitchCase="'order_details'" [summary]="summary" [currencies]="cryptoList"
+        (onProgress)="progressChanged($event)" [errorMessage]="errorMessage"
+        (onComplete)="orderDetailsComplete($event)">
+      </app-widget-deposit-details>
+      <app-widget-wire-transfer *ngSwitchCase="'transfer'" [bankCategories]="wireTransferList"
+        [bankAccountId]="bankAccountId" [errorMessage]="errorMessage" (onBack)="paymentBack()"
+        (onComplete)="wireTransferPaymentComplete($event)"></app-widget-wire-transfer>
+      <app-widget-wire-transfer-result *ngSwitchCase="'transfer_result'" [referenceId]="summary.orderId"
+        [bankData]="selectedWireTransfer" (onComplete)="processingComplete()"
+        (onSendEmail)="sendWireTransaferMessage()">
+      </app-widget-wire-transfer-result>
+    </div>
+  </div>
+</div>

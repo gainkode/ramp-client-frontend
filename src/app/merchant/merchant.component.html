@@ -5,22 +5,26 @@
             <div
                 [ngClass]="expandedMenu ? '__top-menu-content-bar-profile-side-menu-expanded' : '__top-menu-content-bar-profile-side-menu-collapsed'">
                 <div class="__top-menu-content-box">
-                    <button *ngIf="merchantApproved" class="__top-menu-button" (click)="showPaymentPanel(WIDGET_TYPE.Deposit)">
+                    <button *ngIf="merchantApproved" class="__top-menu-button"
+                        (click)="showPaymentPanel(WIDGET_TYPE.Deposit)">
                         <mat-icon>monetization_on</mat-icon>
                         &nbsp;&nbsp;&nbsp;Top Up & Cash Out
                     </button>
                     <div *ngIf="merchantApproved" class="__top-menu-button-separator"></div>
-                    <button *ngIf="merchantApproved" class="__top-menu-button" (click)="showPaymentPanel(WIDGET_TYPE.Buy)">
+                    <button *ngIf="merchantApproved" class="__top-menu-button"
+                        (click)="showPaymentPanel(WIDGET_TYPE.Buy)">
                         <mat-icon>account_balance</mat-icon>
                         &nbsp;&nbsp;&nbsp;Buy & Sell
                     </button>
                     <div *ngIf="merchantApproved" class="__top-menu-button-separator"></div>
-                    <button *ngIf="merchantApproved" class="__top-menu-button" (click)="showPaymentPanel(WIDGET_TYPE.Receive)">
+                    <button *ngIf="merchantApproved" class="__top-menu-button"
+                        (click)="showPaymentPanel(WIDGET_TYPE.Receive)">
                         <mat-icon>file_download</mat-icon>
                         &nbsp;&nbsp;&nbsp;Receive
                     </button>
                     <div *ngIf="merchantApproved" class="__top-menu-button-separator"></div>
-                    <button *ngIf="merchantApproved" class="__top-menu-button" (click)="showPaymentPanel(WIDGET_TYPE.Send)">
+                    <button *ngIf="merchantApproved" class="__top-menu-button"
+                        (click)="showPaymentPanel(WIDGET_TYPE.Send)">
                         <mat-icon>file_upload</mat-icon>
                         &nbsp;&nbsp;&nbsp;Send
                     </button>
@@ -57,7 +61,11 @@
                 <span></span>
             </label>
             <ul class="__top-menu-hamburger-box">
-                <li>
+                <li *ngIf="merchantApproved">
+                    <a [routerLink]="" class="__top-menu-hamburger-item"
+                        (click)="showPaymentPanel(WIDGET_TYPE.Deposit)">
+                        Top Up & Cash Out
+                    </a>
                     <a [routerLink]="" class="__top-menu-hamburger-item" (click)="showPaymentPanel(WIDGET_TYPE.Buy)">
                         Buy & Sell
                     </a>
@@ -73,7 +81,7 @@
                         Express transfer
                     </a>
                 </li>
-                <div class="__top-menu-hamburger-separator"></div>
+                <div *ngIf="merchantApproved" class="__top-menu-hamburger-separator"></div>
                 <li *ngFor="let item of menuItems;let i=index;">
                     <a *ngIf="item.id!=='wallets' && item.id!=='contactlist'" [routerLink]=""
                         class="__top-menu-hamburger-item" (click)="sideMenuClick(item)">
@@ -160,6 +168,11 @@
                 </h3>
             </header>
             <div class="__profile-payment-data-area">
+                <app-buy-sell-fiat-widget
+                    *ngIf="selectedPaymentType===WIDGET_TYPE.Deposit || selectedPaymentType===WIDGET_TYPE.Withdrawal"
+                    [widgetType]="selectedPaymentType" (onComplete)="widgetComplete($event)"
+                    (onError)="widgetError($event)">
+                </app-buy-sell-fiat-widget>
                 <app-buy-sell-widget
                     *ngIf="selectedPaymentType===WIDGET_TYPE.Buy || selectedPaymentType===WIDGET_TYPE.Sell"
                     [widgetType]="selectedPaymentType" (onComplete)="widgetComplete($event)"
@@ -176,20 +189,12 @@
                     (onComplete)="widgetComplete($event)" (onError)="widgetError($event)">
                 </app-transfer-widget>
             </div>
-            <div class="__profile-payment-footer">
+            <div *ngIf="selectedPaymentType!==WIDGET_TYPE.Deposit && selectedPaymentType!==WIDGET_TYPE.Withdrawal"
+                class="__profile-payment-footer">
                 <app-risk-warning [warningText]="riskWarningText"></app-risk-warning>
             </div>
         </div>
     </div>
-
-    <!-- Warning when the screen is too small -->
-    <!-- <div class="__profile-unsupported-device">
-        <div class="__profile-unsupported-device-title">
-            The screen size of your device is not supported.
-            <br><br>
-            Please, install our application <a style="font-size: 14px;" href="#">here</a>.
-        </div>
-    </div> -->
 </div>
 
 <!-- Chat button -->

@@ -160,10 +160,6 @@
                 </h3>
             </header>
             <div class="__profile-payment-data-area">
-                <app-buy-sell-fiat-widget
-                    *ngIf="selectedPaymentType===WIDGET_TYPE.Deposit || selectedPaymentType===WIDGET_TYPE.Withdrawal"
-                    (onComplete)="widgetComplete($event)" (onError)="widgetError($event)">
-                </app-buy-sell-fiat-widget>
                 <app-buy-sell-widget
                     *ngIf="selectedPaymentType===WIDGET_TYPE.Buy || selectedPaymentType===WIDGET_TYPE.Sell"
                     [widgetType]="selectedPaymentType" (onComplete)="widgetComplete($event)"
