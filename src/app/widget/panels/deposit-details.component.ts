@@ -78,7 +78,7 @@ export class WidgetDepositDetailsComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
     const data = new CheckoutSummary();
-    data.amountTo = this.amountField?.value ?? 0;
+    data.amountTo = parseFloat(this.amountField?.value ?? '0');
     data.currencyTo = this.currencyField?.value ?? 'EUR';
     this.onComplete.emit(data);
   }

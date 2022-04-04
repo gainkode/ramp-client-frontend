@@ -18,6 +18,9 @@
         [bankData]="selectedWireTransfer" (onComplete)="processingComplete()"
         (onSendEmail)="sendWireTransaferMessage()">
       </app-widget-wire-transfer-result>
+      <app-widget-sell-details *ngSwitchCase="'sell_details'" [summary]="summary"
+        (onBack)="paymentBack()" (onComplete)="sellComplete($event)">
+      </app-widget-sell-details>
     </div>
   </div>
 </div>

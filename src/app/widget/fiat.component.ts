@@ -96,6 +96,9 @@ export class FiatWidgetComponent implements OnInit {
     this.summary.amountTo = data.amountTo;
     if (this.summary.transactionType === TransactionType.DepositFiat) {
       this.widgetService.getWireTransferSettings(this.summary, this.widgetSettings);
+    } else {
+      this.stageId = 'sell_details';
+      this.title = 'Sell Details';
     }
   }
 
@@ -112,6 +115,14 @@ export class FiatWidgetComponent implements OnInit {
     };
     const settingsData = JSON.stringify(settings);
     this.createTransaction(PaymentInstrument.WireTransfer, settingsData);
+  }
+
+  sellComplete(instrumentDetails: string): void {
+    const settings = {
+      accountType: instrumentDetails
+    };
+    const settingsData = JSON.stringify(settings);
+    this.createTransaction(undefined, settingsData);
   }
 
   processingComplete(): void {
@@ -167,8 +178,6 @@ export class FiatWidgetComponent implements OnInit {
         }
         this.stageId = 'order_details';
         this.title = 'Order details';
-
-        console.log(this.stageId);
       }, (error) => {
         this.inProgress = false;
         if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
@@ -192,7 +201,7 @@ export class FiatWidgetComponent implements OnInit {
     }
   }
 
-  private createTransaction(instrument: PaymentInstrument, instrumentDetails: string): void {
+  private createTransaction(instrument: PaymentInstrument | undefined, instrumentDetails: string): void {
     this.errorMessage = '';
     this.inProgress = true;
     this.pSubscriptions.add(

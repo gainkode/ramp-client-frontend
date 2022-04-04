@@ -705,7 +705,6 @@ export class WidgetComponent implements OnInit {
     this.inProgress = true;
     this.initMessage = 'Processing...';
     if (this.summary) {
-      let destination = this.summary.address;
       this.pSubscriptions.add(
         this.dataService.createTransaction(
           TransactionType.Withdrawal,
