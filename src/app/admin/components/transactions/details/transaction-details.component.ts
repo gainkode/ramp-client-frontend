@@ -161,7 +161,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
         if (this.data.type === TransactionType.Receive || this.data.type === TransactionType.Transfer) {
           this.currenciesToSpend = list.filter(x => x.fiat === false);
           this.currenciesToReceive = list.filter(x => x.fiat === false);
-        } else if (this.data.type === TransactionType.DepositFiat || this.data.type === TransactionType.WithdrawFiat) {
+        } else if (this.data.type === TransactionType.TopUp || this.data.type === TransactionType.CashOut) {
           this.currenciesToSpend = list.filter(x => x.fiat === true);
           this.currenciesToReceive = list.filter(x => x.fiat === true);
         } else {

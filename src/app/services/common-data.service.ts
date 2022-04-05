@@ -57,7 +57,7 @@ query MyState {
         availableBalanceFiat
       }
     }
-    fiatvaults {
+    fiatVaults {
       fiatVaultId
       balance
       generalBalance

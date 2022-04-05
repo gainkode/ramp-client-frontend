@@ -97,7 +97,7 @@ export class ProfileWalletListComponent implements OnDestroy {
             walletData$.subscribe(({ data }) => {
                 this.onProgress.emit(false);
                 const myState = data.myState as UserState;
-                const fiatVault = myState?.fiatvaults;
+                const fiatVault = myState?.fiatVaults;
                 const fiatWalletCount = fiatVault?.length ?? 0;
                 if (fiatWalletCount > 0) {
                     this.wallets = [

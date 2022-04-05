@@ -241,8 +241,8 @@ export const TransactionTypeList: Array<TransactionTypeView> = [
     { id: TransactionType.Receive, name: 'Receive' },
     { id: TransactionType.Transfer, name: 'Send' },
     { id: TransactionType.Withdrawal, name: 'Sell' },
-    { id: TransactionType.DepositFiat, name: 'Top Up' },
-    { id: TransactionType.WithdrawFiat, name: 'Cash Out' },
+    { id: TransactionType.TopUp, name: 'Top Up' },
+    { id: TransactionType.CashOut, name: 'Cash Out' },
     { id: TransactionType.DepositMerchant, name: 'Merchant Deposit' }
 ];
 
@@ -260,8 +260,8 @@ export const MerchantTransactionTypeList: Array<TransactionTypeView> = [
     { id: TransactionType.Transfer, name: 'Send' },
     { id: TransactionType.Withdrawal, name: 'Sell' },
     { id: TransactionType.Receive, name: 'Receive' },
-    { id: TransactionType.DepositFiat, name: 'Top Up' },
-    { id: TransactionType.WithdrawFiat, name: 'Cash Out' },
+    { id: TransactionType.TopUp, name: 'Top Up' },
+    { id: TransactionType.CashOut, name: 'Cash Out' },
     { id: TransactionType.DepositMerchant, name: 'Merchant Deposit' }
 ];
 

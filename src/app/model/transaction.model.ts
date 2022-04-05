@@ -632,7 +632,7 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
     result.fees = data.feeFiat as number ?? 0;
     result.networkFee = data.approxNetworkFeeFiat ?? 0;
     result.typeIcon = 'account_balance';
-  } else if (data.type === TransactionType.DepositFiat) {
+  } else if (data.type === TransactionType.TopUp) {
     result.currencyFiat = result.currencyToReceive;
     result.amountToReceive = result.amountToSpend;
     const destVaultData = JSON.parse(data.destVault ?? '{}');
@@ -669,7 +669,7 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
       imgSource: '',
       imgClass: ''
     } as CommonTargetValue;
-  } else if (data.type === TransactionType.WithdrawFiat) {
+  } else if (data.type === TransactionType.CashOut) {
     result.currencyFiat = result.currencyToReceive;
     result.amountToReceive = result.amountToSpend;
     const destVaultData = JSON.parse(data.destVault ?? '{}');

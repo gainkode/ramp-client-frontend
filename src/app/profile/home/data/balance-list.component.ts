@@ -74,7 +74,7 @@ export class ProfileBalanceListComponent implements OnInit, OnDestroy {
                 console.log(myState);
 
                 this.balances = [];
-                this.handleTransactions(myState.vaults ?? [], myState.fiatvaults ?? []);
+                this.handleTransactions(myState.vaults ?? [], myState.fiatVaults ?? []);
                 this.onProgress.emit(false);
             }, (error) => {
                 this.onProgress.emit(false);

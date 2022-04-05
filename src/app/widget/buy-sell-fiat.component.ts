@@ -35,10 +35,10 @@ export class BuySellFiatWidgetComponent {
     this.widgetSettings.email = this.auth.user?.email ?? '';
     switch (selected) {
       case PaymentWidgetType.Deposit:
-        this.widgetSettings.transaction = TransactionType.DepositFiat;
+        this.widgetSettings.transaction = TransactionType.TopUp;
         break;
       case PaymentWidgetType.Withdrawal:
-        this.widgetSettings.transaction = TransactionType.WithdrawFiat;
+        this.widgetSettings.transaction = TransactionType.CashOut;
         break;
       default:
         break;

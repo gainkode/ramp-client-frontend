@@ -2762,6 +2762,9 @@ export enum TransactionStatus {
   Sending = 'Sending',
   SendingWaiting = 'SendingWaiting',
   Sent = 'Sent',
+  Distributing = 'Distributing',
+  DistributingWaiting = 'DistributingWaiting',
+  Distributed = 'Distributed',
   Completed = 'Completed',
   Abandoned = 'Abandoned',
   Canceled = 'Canceled',
@@ -2797,8 +2800,8 @@ export enum TransactionType {
   Receive = 'Receive',
   Exchange = 'Exchange',
   System = 'System',
-  DepositFiat = 'DepositFiat',
-  WithdrawFiat = 'WithdrawFiat',
+  TopUp = 'TopUp',
+  CashOut = 'CashOut',
   DepositMerchant = 'DepositMerchant'
 }
 
@@ -2980,7 +2983,7 @@ export type User = {
   manuallyEditedRisk?: Maybe<Scalars['Boolean']>;
   lastLogin?: Maybe<Scalars['DateTime']>;
   data?: Maybe<Scalars['String']>;
-  fiatvaults?: Maybe<Array<FiatVault>>;
+  fiatVaults?: Maybe<Array<FiatVault>>;
 };
 
 export type UserAction = {
@@ -3029,8 +3032,8 @@ export enum UserActionType {
   CreateApiKey = 'createApiKey',
   DeleteApiKey = 'deleteApiKey',
   ChangeRiskAlertSettings = 'changeRiskAlertSettings',
-  DepositFiat = 'DepositFiat',
-  WithdrawFiat = 'WithdrawFiat',
+  TopUp = 'TopUp',
+  CashOut = 'CashOut',
   DepositMerchant = 'DepositMerchant'
 }
 
@@ -3365,7 +3368,7 @@ export type UserState = {
   totalAmountEur?: Maybe<Scalars['Float']>;
   transactionSummary?: Maybe<Array<UserTransactionSummary>>;
   vaults?: Maybe<Array<VaultAccountEx>>;
-  fiatvaults?: Maybe<Array<FiatVault>>;
+  fiatVaults?: Maybe<Array<FiatVault>>;
   externalWallets?: Maybe<Array<ExternalWallet>>;
   notifications?: Maybe<UserNotificationListResult>;
 };
