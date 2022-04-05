@@ -118,7 +118,6 @@ export class FiatWidgetComponent implements OnInit {
   }
 
   sellComplete(instrumentDetails: string): void {
-    console.log('sellComplete', instrumentDetails);
     const settings = {
       accountType: instrumentDetails
     };

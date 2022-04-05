@@ -379,16 +379,30 @@ export class ProfileBalanceChartComponent implements OnInit, OnDestroy {
             } else {
                 inc = max;
             }
+            // let spotBalance = 0;
+            // while (inc > 0) {
+            //     inc--;
+            //     const dataPoint = data.list[inc];
+            //     const chartPoint = chartPoints[inc];
+            //     //const chartPoint = chartPoints[max - inc - 1];
+            //     if (dataPoint) {
+            //         spotBalance += dataPoint.balanceFiat ?? 0;
+            //     }
+            //     console.log(inc, spotBalance, dataPoint?.balanceFiat);
+            //     chartPoint.balanceFiat -= spotBalance;
+            // }
+
             let spotBalance = 0;
             while (inc > 0) {
                 inc--;
-                const dataPoint = data.list[inc];
+                const dataPoint = data.list[max - inc - 1];
                 const chartPoint = chartPoints[inc];
                 //const chartPoint = chartPoints[max - inc - 1];
-                if (dataPoint) {
+                chartPoint.balanceFiat -= spotBalance;
+                if (dataPoint !== null) {
                     spotBalance += dataPoint.balanceFiat ?? 0;
                 }
-                chartPoint.balanceFiat -= spotBalance;
+                //chartPoint.balanceFiat -= spotBalance;
             }
         }
         return chartPoints;
