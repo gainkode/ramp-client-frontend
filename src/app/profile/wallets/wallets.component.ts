@@ -32,6 +32,7 @@ export class ProfileWalletsComponent implements OnInit, OnDestroy {
     inProgressFilter = false;
     errorMessage = '';
     filter = new WalletsFilter();
+    currencyList: CurrencyView[] = [];
     cryptoList: CurrencyView[] = [];
 
     private subscriptions: Subscription = new Subscription();
@@ -80,6 +81,7 @@ export class ProfileWalletsComponent implements OnInit, OnDestroy {
 
     private loadCurrencyData(): void {
         this.cryptoList = [];
+        this.currencyList = [];
         this.inProgressFilter = true;
         const currencyData = this.commonService.getSettingsCurrency().valueChanges.pipe(take(1));
         this.subscriptions.add(
@@ -91,8 +93,9 @@ export class ProfileWalletsComponent implements OnInit, OnDestroy {
                         this.cryptoList = currencySettings.settingsCurrency.list?.
                             filter(x => x.fiat === false).
                             map((val) => new CurrencyView(val)) as CurrencyView[];
+                        this.currencyList = this.cryptoList.map(val => val);
                         if (this.auth.user?.type === UserType.Merchant) {
-                            this.cryptoList = [
+                            this.currencyList = [
                                 ...this.cryptoList,
                                 ...currencySettings.settingsCurrency.list?.
                                     filter(x => x.fiat === true).

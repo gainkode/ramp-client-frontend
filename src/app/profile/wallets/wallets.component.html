@@ -1,7 +1,7 @@
-<app-wallets-filter [data]="filter" [cryptoCurrencies]="cryptoList" (update)="onFilterUpdate($event)"></app-wallets-filter>
+<app-wallets-filter [data]="filter" [cryptoCurrencies]="currencyList" (update)="onFilterUpdate($event)"></app-wallets-filter>
 
 <div class="__profile-data-container">
     <mat-progress-bar *ngIf="inProgress || inProgressFilter" color="accent" mode="indeterminate"></mat-progress-bar>
-    <app-profile-wallet-list #datalist [cryptoCurrencies]="cryptoList" (onShowDetails)="showDetails($event)" (onError)="handleError($event)"
+    <app-profile-wallet-list #datalist [cryptoCurrencies]="currencyList" (onShowDetails)="showDetails($event)" (onError)="handleError($event)"
         (onProgress)="progressChanged($event)"></app-profile-wallet-list>
 </div>

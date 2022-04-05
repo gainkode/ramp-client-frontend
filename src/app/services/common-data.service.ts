@@ -58,6 +58,7 @@ query MyState {
       }
     }
     fiatvaults {
+      fiatVaultId
       balance
       generalBalance
       currency

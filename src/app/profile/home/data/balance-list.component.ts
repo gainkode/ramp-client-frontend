@@ -106,7 +106,7 @@ export class ProfileBalanceListComponent implements OnInit, OnDestroy {
                                 this.currentCurrency,
                                 this.fiatPrecision,
                                 currency.precision,
-                                0));
+                                0, 0));
                         }
                     }
                 });
@@ -120,14 +120,16 @@ export class ProfileBalanceListComponent implements OnInit, OnDestroy {
                     balanceItem.increaseCrypto(0);
                     balanceItem.increaseFiat(vault.generalBalance ?? 0);
                 } else {
-                    const currency = this.currencies.find(c => c.symbol === vault.currency);
-                    if (currency) {
+                    const vaultCurrency = this.currencies.find(c => c.symbol === vault.currency);
+                    const userCurrency = this.currencies.find(c => c.symbol === this.auth.user?.defaultFiatCurrency ?? 'EUR');
+                    if (vaultCurrency) {
                         this.balances.push(new UserBalanceItem(
                             undefined,
-                            currency.name,
-                            vault.currency ?? 'EUR',
-                            currency.precision,
-                            0,
+                            vaultCurrency?.symbol ?? 'EUR',
+                            userCurrency?.symbol ?? 'EUR',
+                            userCurrency?.precision ?? 2,
+                            vaultCurrency?.precision ?? 2,
+                            vault.balance ?? 0,
                             vault.generalBalance ?? 0));
                     }
                 }

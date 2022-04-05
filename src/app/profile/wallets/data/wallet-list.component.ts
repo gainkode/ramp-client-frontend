@@ -3,11 +3,12 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { WalletsFilter } from 'src/app/model/filter.model';
-import { AssetAddressShort, AssetAddressShortListResult } from 'src/app/model/generated-models';
+import { AssetAddressShort, AssetAddressShortListResult, UserState } from 'src/app/model/generated-models';
 import { CurrencyView } from 'src/app/model/payment.model';
 import { ProfileItemContainer, ProfileItemContainerType } from 'src/app/model/profile-item.model';
 import { WalletItem } from 'src/app/model/wallet.model';
 import { AuthService } from 'src/app/services/auth.service';
+import { CommonDataService } from 'src/app/services/common-data.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
 
@@ -37,6 +38,7 @@ export class ProfileWalletListComponent implements OnDestroy {
     constructor(
         private auth: AuthService,
         private errorHandler: ErrorService,
+        private commonService: CommonDataService,
         private profileService: ProfileDataService,
         private router: Router) {
     }
@@ -53,6 +55,7 @@ export class ProfileWalletListComponent implements OnDestroy {
     private loadWallets(): void {
         this.onError.emit('');
         this.walletCount = 0;
+        this.wallets = [];
         const walletsData$ = this.profileService.getMyWallets(this.filter.currencies).valueChanges.pipe(take(1));
         this.loading = true;
         this.onProgress.emit(true);
@@ -61,44 +64,61 @@ export class ProfileWalletListComponent implements OnDestroy {
         this.subscriptions.add(
             walletsData$.subscribe(({ data }) => {
                 const dataList = data.myWallets as AssetAddressShortListResult;
-
-                console.log(dataList);
-                console.log(currentUser?.fiatvaults);
-
                 if (dataList !== null) {
-                    this.wallets = [];
-                    const fiatVault = currentUser?.fiatvaults;
-                    const fiatWalletCount = fiatVault?.length ?? 0;
-                    if (fiatWalletCount > 0) {
-                        this.wallets = [
-                            ...this.wallets,
-                            ...fiatVault?.filter(x => {
-                                return (this.filter.zeroBalance) ? true : x.balance ?? 0 > 0;
-                            }).map((val) => {
-                                const wallet = new WalletItem(null, userFiat, undefined);
-                                wallet.setFiat(val, userFiat);
-                                return wallet;
-                            }) as WalletItem[]
-                        ];
-                    }
                     const cryptoWalletCount = dataList?.count ?? 0;
                     if (cryptoWalletCount > 0) {
-                        this.wallets = [
-                            ...this.wallets,
-                            ...dataList?.list?.filter(x => {
-                                return (this.filter.zeroBalance) ? true : x.total ?? 0 > 0;
-                            }).map((val) => new WalletItem(val, userFiat, this.getCurrency(val))) as WalletItem[]
-                        ];
+                        this.wallets = dataList?.list?.filter(x => {
+                            return (this.filter.zeroBalance) ? true : x.total ?? 0 > 0;
+                        }).map((val) => new WalletItem(val, userFiat, this.getCurrency(val))) as WalletItem[];
                     }
                     this.walletCount = this.wallets.length;
+                    this.loadFiatWallets();
+                } else {
+                    this.onProgress.emit(false);
+                    this.loading = false;
                 }
-                this.onProgress.emit(false);
-                this.loading = false;
             }, (error) => {
                 this.onProgress.emit(false);
                 this.loading = false;
                 if (this.auth.token !== '') {
-                    this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load wallets'));
+                    this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load crypto wallets'));
+                } else {
+                    this.router.navigateByUrl('/');
+                }
+            })
+        );
+    }
+
+    private loadFiatWallets(): void {
+        this.onProgress.emit(true);
+        const userFiat = this.auth.user?.defaultFiatCurrency ?? 'EUR';
+        const walletData$ = this.commonService.getMyBalances().valueChanges.pipe(take(1));
+        this.subscriptions.add(
+            walletData$.subscribe(({ data }) => {
+                this.onProgress.emit(false);
+                const myState = data.myState as UserState;
+                const fiatVault = myState?.fiatvaults;
+                const fiatWalletCount = fiatVault?.length ?? 0;
+                if (fiatWalletCount > 0) {
+                    this.wallets = [
+                        ...fiatVault?.filter(x => {
+                            return (this.filter.zeroBalance) ? true : x.balance ?? 0 > 0;
+                        }).map((val) => {
+                            const wallet = new WalletItem(null, userFiat, undefined);
+                            wallet.setFiat(val, userFiat);
+                            return wallet;
+                        }) as WalletItem[],
+                        ...this.wallets
+                    ];
+                    this.walletCount += fiatWalletCount;
+                }
+                this.loading = false;
+                this.onProgress.emit(false);
+            }, (error) => {
+                this.loading = false;
+                this.onProgress.emit(false);
+                if (this.auth.token !== '') {
+                    this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load fiat wallets'));
                 } else {
                     this.router.navigateByUrl('/');
                 }

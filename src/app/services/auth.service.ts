@@ -56,11 +56,6 @@ const LOGIN = gql`
                   defaultFiatCurrency,
                   defaultCryptoCurrency,
                   avatar
-                  fiatvaults {
-                      fiatVaultId
-                      balance
-                      currency
-                  }
             }
             authTokenAction
         }
@@ -123,11 +118,6 @@ mutation SocialLogin(
                     defaultFiatCurrency,
                     defaultCryptoCurrency,
                     avatar
-                    fiatvaults {
-                        fiatVaultId
-                        balance
-                        currency
-                    }
                 }
                 authTokenAction
             }

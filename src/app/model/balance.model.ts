@@ -49,7 +49,7 @@ export class UserBalanceItem {
   }
 
   get currencyName(): string {
-    return (this.pFiat) ? this.pAsset : this.pCryptoCurrency;
+    return this.pCryptoCurrency;
   }
 
   get icon(): string {
@@ -58,30 +58,31 @@ export class UserBalanceItem {
 
   get balanceCrypto(): string {
     return (this.pFiat) ?
-      `${getCurrencySign(this.pFiatSymbol)}${this.pBalanceFiat.toFixed(this.pFiatPrecision)}` :
+      `${getCurrencySign(this.pCryptoCurrency)}${this.pBalanceCrypto.toFixed(this.pCryptoPrecision)}` :
       `${this.pBalanceCrypto.toFixed(this.pCryptoPrecision)} ${this.pId}`;
   }
 
   get balanceFiat(): string {
-    return (this.pFiat) ? ' ' : `${getCurrencySign(this.pFiatSymbol)}${this.pBalanceFiat.toFixed(this.pFiatPrecision)}`;
+    return `${getCurrencySign(this.pFiatSymbol)}${this.pBalanceFiat.toFixed(this.pFiatPrecision)}`;
   }
 
-  constructor(data: BalancePerAsset | undefined, cuurencyName: string, fiatSymbol: string, fiatPrecision: number, cryptoPrecision: number, fiatBalance: number) {
+  constructor(data: BalancePerAsset | undefined, cuurencyName: string, fiatSymbol: string, fiatPrecision: number, cryptoPrecision: number, cryptoBalance: number, fiatBalance: number) {
     if (data) {
       this.pFiat = false;
       this.pId = data.assetId ?? '';
-      this.pCryptoCurrency = cuurencyName;
       this.pAsset = this.pId;
       this.pIconUrl = `assets/svg-crypto/${getCryptoSymbol(this.pAsset).toLowerCase()}.svg`;
-      this.pCryptoPrecision = cryptoPrecision;
       this.pBalanceCrypto = data.totalBalance ?? 0;
       this.pBalanceFiat = data.totalBalanceFiat;
     } else {
       this.pFiat = true;
+      this.pBalanceCrypto = cryptoBalance;
       this.pBalanceFiat = fiatBalance;
-      this.pId = fiatSymbol;
+      this.pId = cuurencyName;
       this.pAsset = this.pId;
     }
+    this.pCryptoPrecision = cryptoPrecision;
+    this.pCryptoCurrency = cuurencyName;
     this.pFiatSymbol = fiatSymbol;
     this.pFiatPrecision = fiatPrecision;
   }
