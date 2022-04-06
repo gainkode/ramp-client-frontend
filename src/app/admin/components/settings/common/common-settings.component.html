@@ -67,7 +67,7 @@
                     </button>
                 </div>
             </div>
-            <div class="__common-settings-grid-column-two">
+            <mat-accordion class="__common-settings-grid-column-two">
                 <mat-expansion-panel>
                     <mat-expansion-panel-header>
                         <mat-panel-title>
@@ -75,7 +75,7 @@
                             <span class="__common-settings-slider-title">Authentication settings</span>
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-        
+
                     <div class="form-section-title-box">
                         <mat-form-field class="form-element">
                             <mat-label>Email conformation code maximal length</mat-label>
@@ -86,7 +86,24 @@
                         </mat-form-field>
                     </div>
                 </mat-expansion-panel>
-        
+
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            <mat-icon>admin_panel_settings</mat-icon>
+                            <span class="__common-settings-slider-title">Administration settings</span>
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+
+                    <div class="form-section-title-box">
+                        <div class="form-element">
+                            <mat-checkbox color="accent" formControlName="editTransactionDestination">
+                                Editable transaction destination
+                            </mat-checkbox>
+                        </div>
+                    </div>
+                </mat-expansion-panel>
+
                 <mat-expansion-panel>
                     <mat-expansion-panel-header>
                         <mat-panel-title>
@@ -94,7 +111,7 @@
                             <span class="__common-settings-slider-title">Custody Providers</span>
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-        
+
                     <mat-form-field class="form-element">
                         <mat-label>Transfer Orders Tracking Time Delta, in days</mat-label>
                         <input matInput formControlName="transferOrdersTrackingTimedeltaDays" required />
@@ -102,11 +119,11 @@
                             Mandatory field
                         </mat-error>
                     </mat-form-field>
-        
+
                     <div class="form-section-title-box">
                         <h2>Fireblocks</h2>
                     </div>
-        
+
                     <mat-form-field class="form-element">
                         <mat-label>Cached Deposit Address Lifetime, in ms</mat-label>
                         <input matInput formControlName="fireblocksCachedDepositAddressLifetime" required />
@@ -114,7 +131,7 @@
                             Mandatory field
                         </mat-error>
                     </mat-form-field>
-        
+
                     <mat-form-field class="form-element">
                         <mat-label>Cached External Wallet Lifetime, in ms</mat-label>
                         <input matInput formControlName="fireblocksCachedExternalWalletLifetime" required />
@@ -122,7 +139,7 @@
                             Mandatory field
                         </mat-error>
                     </mat-form-field>
-        
+
                     <mat-form-field class="form-element">
                         <mat-label>Cached Internal Wallet Lifetime, in ms</mat-label>
                         <input matInput formControlName="fireblocksCachedInternalWalletLifetime" required />
@@ -130,7 +147,7 @@
                             Mandatory field
                         </mat-error>
                     </mat-form-field>
-        
+
                     <mat-form-field class="form-element">
                         <mat-label>Cached Vault Account Lifetime, in ms</mat-label>
                         <input matInput formControlName="fireblocksCachedVaultAccountLifetime" required />
@@ -138,22 +155,27 @@
                             Mandatory field
                         </mat-error>
                     </mat-form-field>
-        
+
                     <mat-form-field class="form-element">
                         <mat-label>Default User Vault Name</mat-label>
                         <input matInput formControlName="fireblocksDefaultUserVaultName" />
                     </mat-form-field>
-        
+
+                    <mat-form-field class="form-element">
+                        <mat-label>Withdrawal From Custody Provider Destination Address</mat-label>
+                        <input matInput formControlName="fireblocksWithdrawalFromCustodyProviderDestinationAddress" />
+                    </mat-form-field>
+
                     <mat-form-field class="form-element">
                         <mat-label>Withdrawal From Liquidity Provider Destination Address</mat-label>
                         <input matInput formControlName="fireblocksWithdrawalFromLiquidityProviderDestinationAddress" />
                     </mat-form-field>
-        
+
                     <mat-form-field class="form-element">
                         <mat-label>Withdrawal To End User Source Vault Account Id</mat-label>
                         <input matInput formControlName="fireblocksWithdrawalToEndUserSourceVaultAccountId" />
                     </mat-form-field>
-        
+
                     <mat-form-field class="form-element">
                         <mat-label>Withdrawal To End User Speed</mat-label>
                         <input matInput formControlName="fireblocksWithdrawalToEndUserSpeed" required />
@@ -161,18 +183,24 @@
                             Mandatory field
                         </mat-error>
                     </mat-form-field>
-        
+
                     <div class="form-element">
                         <mat-checkbox color="accent" formControlName="fireblocksTrackWithdrawals">
                             Track Withdrawals
                         </mat-checkbox>
                     </div>
+
+                    <div class="form-element">
+                        <mat-checkbox color="accent" formControlName="fireblocksTrackWithdrawalsOneByOne">
+                            Track Withdrawals One By One
+                        </mat-checkbox>
+                    </div>
                     <div class="form-element">&nbsp;</div>
-        
+
                     <div class="form-section-title-box">
                         <h2>Trustology</h2>
                     </div>
-        
+
                     <mat-form-field class="form-element">
                         <mat-label>Cached Deposit Address Lifetime, in ms</mat-label>
                         <input matInput formControlName="trustologyCachedDepositAddressLifetime" required />
@@ -180,7 +208,7 @@
                             Mandatory field
                         </mat-error>
                     </mat-form-field>
-        
+
                     <mat-form-field class="form-element">
                         <mat-label>Cached External Wallet Lifetime, in ms</mat-label>
                         <input matInput formControlName="trustologyCachedExternalWalletLifetime" required />
@@ -188,7 +216,7 @@
                             Mandatory field
                         </mat-error>
                     </mat-form-field>
-        
+
                     <mat-form-field class="form-element">
                         <mat-label>Cached Internal Wallet Lifetime, in ms</mat-label>
                         <input matInput formControlName="trustologyCachedInternalWalletLifetime" required />
@@ -196,7 +224,7 @@
                             Mandatory field
                         </mat-error>
                     </mat-form-field>
-        
+
                     <mat-form-field class="form-element">
                         <mat-label>Cached Vault Account Lifetime, in ms</mat-label>
                         <input matInput formControlName="trustologyCachedVaultAccountLifetime" required />
@@ -204,37 +232,47 @@
                             Mandatory field
                         </mat-error>
                     </mat-form-field>
-        
+
+                    <mat-form-field class="form-element">
+                        <mat-label>Default User Vault Name</mat-label>
+                        <input matInput formControlName="trustologyDefaultUserVaultName" />
+                    </mat-form-field>
+
                     <mat-form-field class="form-element">
                         <mat-label>Default Host Wallet Id</mat-label>
                         <input matInput formControlName="trustologyDefaultHostWalletId" />
                     </mat-form-field>
-        
+
                     <mat-form-field class="form-element">
                         <mat-label>Network Fee Estimation Vault Account Id</mat-label>
                         <input matInput formControlName="trustologyNetworkFeeEstimationVaultAccountId" />
                     </mat-form-field>
-        
+
                     <mat-form-field class="form-element">
                         <mat-label>Network Fee Estimation Vault Account Subwallet</mat-label>
                         <input matInput formControlName="trustologyNetworkFeeEstimationVaultAccountIdSubwallet" />
                     </mat-form-field>
-        
+
+                    <mat-form-field class="form-element">
+                        <mat-label>Withdrawal From Custody Provider Destination Address</mat-label>
+                        <input matInput formControlName="trustologyWithdrawalFromCustodyProviderDestinationAddress" />
+                    </mat-form-field>
+
                     <mat-form-field class="form-element">
                         <mat-label>Withdrawal From Liquidity Provider Destination Address</mat-label>
                         <input matInput formControlName="trustologyWithdrawalFromLiquidityProviderDestinationAddress" />
                     </mat-form-field>
-        
+
                     <mat-form-field class="form-element">
                         <mat-label>Withdrawal To End User Source Vault Account Id</mat-label>
                         <input matInput formControlName="trustologyWithdrawalToEndUserSourceVaultAccountId" />
                     </mat-form-field>
-        
+
                     <mat-form-field class="form-element">
                         <mat-label>Withdrawal To End User Source Vault Account Subwallet</mat-label>
                         <input matInput formControlName="trustologyWithdrawalToEndUserSourceVaultAccountIdSubwallet" />
                     </mat-form-field>
-        
+
                     <mat-form-field class="form-element">
                         <mat-label>Withdrawal To End User Speed</mat-label>
                         <input matInput formControlName="trustologyWithdrawalToEndUserSpeed" required />
@@ -242,15 +280,21 @@
                             Mandatory field
                         </mat-error>
                     </mat-form-field>
-        
+
                     <div class="form-element">
                         <mat-checkbox color="accent" formControlName="trustologyTrackWithdrawals">
                             Track Withdrawals
                         </mat-checkbox>
                     </div>
+                    <div class="form-element">
+                        <mat-checkbox color="accent" formControlName="trustologyTrackWithdrawalsOneByOne">
+                            Track Withdrawals One By One
+                        </mat-checkbox>
+                    </div>
+
                     <div class="form-element">&nbsp;</div>
                 </mat-expansion-panel>
-        
+
                 <mat-expansion-panel>
                     <mat-expansion-panel-header>
                         <mat-panel-title>
@@ -258,7 +302,7 @@
                             <span class="__common-settings-slider-title">Liquidity Providers</span>
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-        
+
                     <mat-form-field class="form-element">
                         <mat-label>Benchmark Tracking Interval, ms</mat-label>
                         <input matInput formControlName="liquidityBenchmarkTrackingInterval" required />
@@ -266,7 +310,7 @@
                             Mandatory field
                         </mat-error>
                     </mat-form-field>
-        
+
                     <mat-form-field class="form-element">
                         <mat-label>Crypto Rate Lifetime, ms</mat-label>
                         <input matInput formControlName="liquidityCryptoRateLifetime" required />
@@ -274,7 +318,7 @@
                             Mandatory field
                         </mat-error>
                     </mat-form-field>
-        
+
                     <mat-form-field class="form-element">
                         <mat-label>Exchange Info Lifetime, ms</mat-label>
                         <input matInput formControlName="liquidityExchangeInfoLifetime" required />
@@ -282,15 +326,16 @@
                             Mandatory field
                         </mat-error>
                     </mat-form-field>
-        
+
                     <mat-form-field class="form-element">
                         <mat-label>Exchange Orders Tracking Time Delta, in days</mat-label>
                         <input matInput formControlName="liquidityExchangeOrdersTrackingTimedeltaDays" required />
-                        <mat-error *ngIf="form.controls.liquidityExchangeOrdersTrackingTimedeltaDays.hasError('required')">
+                        <mat-error
+                            *ngIf="form.controls.liquidityExchangeOrdersTrackingTimedeltaDays.hasError('required')">
                             Mandatory field
                         </mat-error>
                     </mat-form-field>
-        
+
                     <mat-form-field class="form-element">
                         <mat-label>Exchange Tracking Interval, ms</mat-label>
                         <input matInput formControlName="liquidityExchangeTrackingInterval" required />
@@ -298,7 +343,7 @@
                             Mandatory field
                         </mat-error>
                     </mat-form-field>
-        
+
                     <mat-form-field class="form-element">
                         <mat-label>Settings Currency Lifetime, ms</mat-label>
                         <input matInput formControlName="liquiditySettingsCurrencyLifetime" required />
@@ -306,19 +351,20 @@
                             Mandatory field
                         </mat-error>
                     </mat-form-field>
-        
+
                     <mat-form-field class="form-element">
                         <mat-label>Transfer Orders Tracking Time Delta, in days</mat-label>
                         <input matInput formControlName="liquidityTransferOrdersTrackingTimedeltaDays" required />
-                        <mat-error *ngIf="form.controls.liquidityTransferOrdersTrackingTimedeltaDays.hasError('required')">
+                        <mat-error
+                            *ngIf="form.controls.liquidityTransferOrdersTrackingTimedeltaDays.hasError('required')">
                             Mandatory field
                         </mat-error>
                     </mat-form-field>
-        
+
                     <div class="form-section-title-box">
                         <h2>Bitstamp</h2>
                     </div>
-        
+
                     <mat-form-field class="form-element">
                         <mat-label>Timeout, ms</mat-label>
                         <input matInput formControlName="bitstampTimeout" required />
@@ -326,7 +372,7 @@
                             Mandatory field
                         </mat-error>
                     </mat-form-field>
-        
+
                     <mat-form-field class="form-element">
                         <mat-label>Withdrawal Benchmark</mat-label>
                         <input matInput formControlName="bitstampWithdrawalBenchmark" required />
@@ -334,7 +380,7 @@
                             Mandatory field
                         </mat-error>
                     </mat-form-field>
-        
+
                     <mat-form-field class="form-element">
                         <mat-label>Withdrawal Benchmark Amount To Remain</mat-label>
                         <input matInput formControlName="bitstampWithdrawalBenchmarkAmountToRemain" required />
@@ -342,7 +388,7 @@
                             Mandatory field
                         </mat-error>
                     </mat-form-field>
-        
+
                     <div class="form-element">
                         <mat-checkbox color="accent" formControlName="bitstampRateLimit">
                             Rate Limit
@@ -359,11 +405,11 @@
                         </mat-checkbox>
                     </div>
                     <div class="form-element">&nbsp;</div>
-        
+
                     <div class="form-section-title-box">
                         <h2>Kraken</h2>
                     </div>
-        
+
                     <mat-form-field class="form-element">
                         <mat-label>Withdrawal Benchmark</mat-label>
                         <input matInput formControlName="krakenWithdrawalBenchmark" required />
@@ -371,7 +417,7 @@
                             Mandatory field
                         </mat-error>
                     </mat-form-field>
-        
+
                     <mat-form-field class="form-element">
                         <mat-label>Withdrawal Benchmark Amount To Remain</mat-label>
                         <input matInput formControlName="krakenWithdrawalBenchmarkAmountToRemain" required />
@@ -379,7 +425,7 @@
                             Mandatory field
                         </mat-error>
                     </mat-form-field>
-        
+
                     <div class="form-element">
                         <mat-checkbox color="accent" formControlName="krakenTrackOrders">
                             Track Orders
@@ -392,7 +438,7 @@
                     </div>
                     <div class="form-element">&nbsp;</div>
                 </mat-expansion-panel>
-        
+
                 <mat-expansion-panel>
                     <mat-expansion-panel-header>
                         <mat-panel-title>
@@ -400,11 +446,11 @@
                             <span class="__common-settings-slider-title">KYC Providers</span>
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-        
+
                     <div class="form-section-title-box">
                         <h2>SumSub</h2>
                     </div>
-        
+
                     <mat-form-field class="form-element">
                         <mat-label>WebApi Token Lifetime, in ms</mat-label>
                         <input matInput formControlName="kycSumSubWebApiTokenLifetime" required />
@@ -413,7 +459,7 @@
                         </mat-error>
                     </mat-form-field>
                 </mat-expansion-panel>
-        
+
                 <mat-expansion-panel>
                     <mat-expansion-panel-header>
                         <mat-panel-title>
@@ -421,7 +467,7 @@
                             <span class="__common-settings-slider-title">Risk Center</span>
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-        
+
                     <mat-form-field class="form-element">
                         <mat-label>Login Count To Compare IP address</mat-label>
                         <input matInput formControlName="riskCenterLoginCountToCompareIpAddress" required />
@@ -429,7 +475,7 @@
                             Mandatory field
                         </mat-error>
                     </mat-form-field>
-        
+
                     <mat-form-field class="form-element">
                         <mat-label>Max Failed Login Attempts</mat-label>
                         <input matInput formControlName="riskCenterMaxFailedLoginAttempts" required />
@@ -437,8 +483,25 @@
                             Mandatory field
                         </mat-error>
                     </mat-form-field>
+
+                     <mat-form-field class="form-element">
+                        <mat-label>High Risk User Age, years</mat-label>
+                        <input matInput formControlName="riskCenterHighRiskUserYears" required />
+                        <mat-error *ngIf="form.controls.riskCenterHighRiskUserYears.hasError('required')">
+                            Mandatory field
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field class="form-element">
+                        <mat-label>Deposit Percent Up</mat-label>
+                        <input matInput formControlName="riskCenterDepositPercentUp" required />
+                        <mat-error *ngIf="form.controls.riskCenterDepositPercentUp.hasError('required')">
+                            Mandatory field
+                        </mat-error>
+                    </mat-form-field>
+
                 </mat-expansion-panel>
-        
+
                 <mat-expansion-panel>
                     <mat-expansion-panel-header>
                         <mat-panel-title>
@@ -446,7 +509,7 @@
                             <span class="__common-settings-slider-title">Transactions</span>
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-        
+
                     <mat-form-field class="form-element">
                         <mat-label>Payment Code Number Length</mat-label>
                         <input matInput formControlName="transactionsPaymentCodeNumberLength" required />
@@ -454,7 +517,7 @@
                             Mandatory field
                         </mat-error>
                     </mat-form-field>
-        
+
                     <mat-form-field class="form-element">
                         <mat-label>Transaction Code Number Length</mat-label>
                         <input matInput formControlName="transactionsTransactionCodeNumberLength" required />
@@ -462,16 +525,17 @@
                             Mandatory field
                         </mat-error>
                     </mat-form-field>
-        
+
                     <mat-form-field class="form-element">
                         <mat-label>QuickCheckout Transaction Confirmation Lifetime, ms</mat-label>
-                        <input matInput formControlName="transactionsQuickCheckoutTransactionConfirmationLifetime" required />
+                        <input matInput formControlName="transactionsQuickCheckoutTransactionConfirmationLifetime"
+                            required />
                         <mat-error
                             *ngIf="form.controls.transactionsQuickCheckoutTransactionConfirmationLifetime.hasError('required')">
                             Mandatory field
                         </mat-error>
                     </mat-form-field>
-        
+
                     <mat-form-field class="form-element">
                         <mat-label>Transaction Confirmation Mode</mat-label>
                         <mat-select formControlName="transactionsTransactionConfirmationMode">
@@ -484,7 +548,7 @@
                         </mat-error>
                     </mat-form-field>
                 </mat-expansion-panel>
-            </div>
+            </mat-accordion>
         </div>
     </form>
 </div>

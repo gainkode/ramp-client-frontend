@@ -1,6 +1,5 @@
 import { Component, Output, EventEmitter, Input } from '@angular/core';
 import { WireTransferBankAccountItem } from '../../../../model/cost-scheme.model';
-import { Subscription } from 'rxjs';
 
 @Component({
   templateUrl: 'bank-accounts.component.html',

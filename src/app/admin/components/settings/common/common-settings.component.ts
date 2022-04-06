@@ -34,6 +34,8 @@ export class CommonSettingsEditorComponent implements OnInit, OnDestroy {
 
     // Auth
     emailCodeNumberLength: [0, { validators: [Validators.required], updateOn: 'change' }],
+    // Admin
+    editTransactionDestination: [false, { validators: [Validators.required], updateOn: 'change' }],
     // Custody providers
     transferOrdersTrackingTimedeltaDays: [0, { validators: [Validators.required], updateOn: 'change' }],
     // Custody providers - Fireblocks
@@ -43,6 +45,8 @@ export class CommonSettingsEditorComponent implements OnInit, OnDestroy {
     fireblocksCachedVaultAccountLifetime: [0, { validators: [Validators.required], updateOn: 'change' }],
     fireblocksDefaultUserVaultName: [''],
     fireblocksTrackWithdrawals: [false],
+    fireblocksTrackWithdrawalsOneByOne: [false],
+    fireblocksWithdrawalFromCustodyProviderDestinationAddress: [''],
     fireblocksWithdrawalFromLiquidityProviderDestinationAddress: [''],
     fireblocksWithdrawalToEndUserSourceVaultAccountId: [''],
     fireblocksWithdrawalToEndUserSpeed: ['', { validators: [Validators.required], updateOn: 'change' }],
@@ -51,10 +55,13 @@ export class CommonSettingsEditorComponent implements OnInit, OnDestroy {
     trustologyCachedExternalWalletLifetime: [0, { validators: [Validators.required], updateOn: 'change' }],
     trustologyCachedInternalWalletLifetime: [0, { validators: [Validators.required], updateOn: 'change' }],
     trustologyCachedVaultAccountLifetime: [0, { validators: [Validators.required], updateOn: 'change' }],
+    trustologyDefaultUserVaultName: [''],
     trustologyDefaultHostWalletId: [''],
     trustologyNetworkFeeEstimationVaultAccountId: [''],
     trustologyNetworkFeeEstimationVaultAccountIdSubwallet: [''],
     trustologyTrackWithdrawals: [false],
+    trustologyTrackWithdrawalsOneByOne: [false],
+    trustologyWithdrawalFromCustodyProviderDestinationAddress: [''],
     trustologyWithdrawalFromLiquidityProviderDestinationAddress: [''],
     trustologyWithdrawalToEndUserSourceVaultAccountId: [''],
     trustologyWithdrawalToEndUserSourceVaultAccountIdSubwallet: [''],
@@ -64,6 +71,9 @@ export class CommonSettingsEditorComponent implements OnInit, OnDestroy {
     // Risk Center
     riskCenterLoginCountToCompareIpAddress: [0, { validators: [Validators.required], updateOn: 'change' }],
     riskCenterMaxFailedLoginAttempts: [0, { validators: [Validators.required], updateOn: 'change' }],
+    riskCenterHighRiskUserYears: [0, { validators: [Validators.required], updateOn: 'change' }],
+    riskCenterDepositPercentUp: [0, { validators: [Validators.required], updateOn: 'change' }],
+
     // Transactions
     transactionsPaymentCodeNumberLength: [0, { validators: [Validators.required], updateOn: 'change' }],
     transactionsQuickCheckoutTransactionConfirmationLifetime: [72000000, { validators: [Validators.required], updateOn: 'change' }],
@@ -112,6 +122,11 @@ export class CommonSettingsEditorComponent implements OnInit, OnDestroy {
       this.adminService.getSettingsCommon()?.valueChanges.subscribe(settings => {
         const settingsCommon: SettingsCommon = settings.data.getSettingsCommon;
         const additionalSettings = (settingsCommon.additionalSettings) ? JSON.parse(settingsCommon.additionalSettings) : undefined;
+
+
+        console.log('loading', additionalSettings);
+
+
         // Common
         this.form.get('id')?.setValue(settingsCommon.settingsCommonId);
         this.form.get('liquidityProvider')?.setValue(settingsCommon.liquidityProvider);
@@ -121,6 +136,8 @@ export class CommonSettingsEditorComponent implements OnInit, OnDestroy {
         this.form.get('stoppedForServicing')?.setValue(settingsCommon.stoppedForServicing);
         // Auth
         this.form.get('emailCodeNumberLength')?.setValue(additionalSettings.auth.emailCodeNumberLength ?? 5);
+        // Admin
+        this.form.get('editTransactionDestination')?.setValue(additionalSettings.admin.editTransactionDestination ?? false);
         // Core
         const coreData = additionalSettings.core;
         // Core - Custody providers
@@ -132,6 +149,8 @@ export class CommonSettingsEditorComponent implements OnInit, OnDestroy {
         this.form.get('fireblocksCachedVaultAccountLifetime')?.setValue(coreData.custodyProviders.Fireblocks.cachedVaultAccountLifetime ?? 60000);
         this.form.get('fireblocksDefaultUserVaultName')?.setValue(coreData.custodyProviders.Fireblocks.defaultUserVaultName ?? '');
         this.form.get('fireblocksTrackWithdrawals')?.setValue(coreData.custodyProviders.Fireblocks.trackWithdrawals ?? false);
+        this.form.get('fireblocksTrackWithdrawalsOneByOne')?.setValue(coreData.custodyProviders.Fireblocks.trackWithdrawalsOneByOne ?? false);
+        this.form.get('fireblocksWithdrawalFromCustodyProviderDestinationAddress')?.setValue(coreData.custodyProviders.Fireblocks.withdrawalFromCustodyProviderDestinationAddress ?? 'test_withdrawal');
         this.form.get('fireblocksWithdrawalFromLiquidityProviderDestinationAddress')?.setValue(coreData.custodyProviders.Fireblocks.withdrawalFromLiquidityProviderDestinationAddress ?? 'test_withdrawal');
         this.form.get('fireblocksWithdrawalToEndUserSourceVaultAccountId')?.setValue(coreData.custodyProviders.Fireblocks.withdrawalToEndUserSourceVaultAccountId.vaultId ?? '22');
         this.form.get('fireblocksWithdrawalToEndUserSpeed')?.setValue(coreData.custodyProviders.Fireblocks.withdrawalToEndUserSpeed ?? 'MEDIUM');
@@ -140,10 +159,13 @@ export class CommonSettingsEditorComponent implements OnInit, OnDestroy {
         this.form.get('trustologyCachedExternalWalletLifetime')?.setValue(coreData.custodyProviders.Trustology.cachedExternalWalletLifetime ?? 60000);
         this.form.get('trustologyCachedInternalWalletLifetime')?.setValue(coreData.custodyProviders.Trustology.cachedInternalWalletLifetime ?? 60000);
         this.form.get('trustologyCachedVaultAccountLifetime')?.setValue(coreData.custodyProviders.Trustology.cachedVaultAccountLifetime ?? 60000);
+        this.form.get('trustologyDefaultUserVaultName')?.setValue(coreData.custodyProviders.Trustology.defaultUserVaultName ?? '');
         this.form.get('trustologyDefaultHostWalletId')?.setValue(coreData.custodyProviders.Trustology.defaultHostWalletId ?? '');
         this.form.get('trustologyNetworkFeeEstimationVaultAccountId')?.setValue(coreData.custodyProviders.Trustology.networkFeeEstimationVaultAccountId.walletId ?? '');
         this.form.get('trustologyNetworkFeeEstimationVaultAccountIdSubwallet')?.setValue(coreData.custodyProviders.Trustology.networkFeeEstimationVaultAccountId.subWalletName ?? 'Bitcoin');
         this.form.get('trustologyTrackWithdrawals')?.setValue(coreData.custodyProviders.Trustology.trackWithdrawals ?? false);
+        this.form.get('trustologyTrackWithdrawalsOneByOne')?.setValue(coreData.custodyProviders.Trustology.trackWithdrawalsOneByOne ?? false);
+        this.form.get('trustologyWithdrawalFromCustodyProviderDestinationAddress')?.setValue(coreData.custodyProviders.Trustology.withdrawalFromCustodyProviderDestinationAddress ?? 'test_withdrawal');
         this.form.get('trustologyWithdrawalFromLiquidityProviderDestinationAddress')?.setValue(coreData.custodyProviders.Trustology.withdrawalFromLiquidityProviderDestinationAddress ?? 'test_withdrawal');
         this.form.get('trustologyWithdrawalToEndUserSourceVaultAccountId')?.setValue(coreData.custodyProviders.Trustology.withdrawalToEndUserSourceVaultAccountId.walletId ?? '');
         this.form.get('trustologyWithdrawalToEndUserSourceVaultAccountIdSubwallet')?.setValue(coreData.custodyProviders.Trustology.withdrawalToEndUserSourceVaultAccountId.subWalletName ?? 'Bitcoin');
@@ -153,6 +175,8 @@ export class CommonSettingsEditorComponent implements OnInit, OnDestroy {
         // Core - Risk Center
         this.form.get('riskCenterLoginCountToCompareIpAddress')?.setValue(coreData.riskCenter.loginCountToCompareIpAddress ?? 10);
         this.form.get('riskCenterMaxFailedLoginAttempts')?.setValue(coreData.riskCenter.maxFailedLoginAttempts ?? 10);
+        this.form.get('riskCenterHighRiskUserYears')?.setValue(coreData.riskCenter.highRiskUserYears ?? 70);
+        this.form.get('riskCenterDepositPercentUp')?.setValue(coreData.riskCenter.depositPercentUp ?? 200);
         // Core - Transactions
         this.form.get('transactionsPaymentCodeNumberLength')?.setValue(coreData.transactions.paymentCodeNumberLength ?? 5);
         this.form.get('transactionsQuickCheckoutTransactionConfirmationLifetime')?.setValue(coreData.transactions.quickCheckoutTransactionConfirmationLifetime ?? 72000000);
@@ -223,7 +247,14 @@ export class CommonSettingsEditorComponent implements OnInit, OnDestroy {
     const authEmailCodeNumberLength = parseInt(this.form.get('emailCodeNumberLength')?.value ?? '5');
     const authData = {
       emailCodeNumberLength: authEmailCodeNumberLength
-    }
+    };
+
+    // Admin
+    const adminEditTransactionDestination = this.form.get('editTransactionDestination')?.value === true;
+    const adminData = {
+      editTransactionDestination: adminEditTransactionDestination
+    };
+
     // Core
     const coreTransferOrdersTrackingTimedeltaDays = parseInt(this.form.get('transferOrdersTrackingTimedeltaDays')?.value ?? '7');
     // Fireblocks
@@ -233,6 +264,8 @@ export class CommonSettingsEditorComponent implements OnInit, OnDestroy {
     const coreFireblocksCachedVaultAccountLifetime = parseInt(this.form.get('fireblocksCachedVaultAccountLifetime')?.value ?? '60000');
     const coreFireblocksDefaultUserVaultName = this.form.get('fireblocksDefaultUserVaultName')?.value ?? '';
     const coreFireblocksTrackWithdrawals = this.form.get('fireblocksTrackWithdrawals')?.value ?? false;
+    const coreFireblocksTrackWithdrawalsOneByOne = this.form.get('fireblocksTrackWithdrawalsOneByOne')?.value ?? false;
+    const coreFireblocksWithdrawalFromCustodyProviderDestinationAddress = this.form.get('fireblocksWithdrawalFromCustodyProviderDestinationAddress')?.value ?? 'test_withdrawal';
     const coreFireblocksWithdrawalFromLiquidityProviderDestinationAddress = this.form.get('fireblocksWithdrawalFromLiquidityProviderDestinationAddress')?.value ?? 'test_withdrawal';
     const coreFireblocksWithdrawalToEndUserSourceVaultAccountId = this.form.get('fireblocksWithdrawalToEndUserSourceVaultAccountId')?.value ?? '2';
     const coreFireblocksWithdrawalToEndUserSpeed = this.form.get('fireblocksWithdrawalToEndUserSpeed')?.value ?? 'MEDIUM';
@@ -241,10 +274,13 @@ export class CommonSettingsEditorComponent implements OnInit, OnDestroy {
     const coreTrustologyCachedExternalWalletLifetime = parseInt(this.form.get('trustologyCachedExternalWalletLifetime')?.value ?? '60000');
     const coreTrustologyCachedInternalWalletLifetime = parseInt(this.form.get('trustologyCachedInternalWalletLifetime')?.value ?? '60000');
     const coreTrustologyCachedVaultAccountLifetime = parseInt(this.form.get('trustologyCachedVaultAccountLifetime')?.value ?? '60000');
+    const coreTrustologyDefaultUserVaultName = this.form.get('trustologyDefaultUserVaultName')?.value ?? '';
     const coreTrustologyDefaultHostWalletId = this.form.get('trustologyDefaultHostWalletId')?.value ?? '';
     const coreTrustologyNetworkFeeEstimationVaultAccountId = this.form.get('trustologyNetworkFeeEstimationVaultAccountId')?.value ?? '';
     const coreTrustologyNetworkFeeEstimationVaultAccountIdSubwallet = this.form.get('trustologyNetworkFeeEstimationVaultAccountIdSubwallet')?.value ?? '';
     const coreTrustologyTrackWithdrawals = this.form.get('trustologyTrackWithdrawals')?.value ?? false;
+    const coreTrustologyTrackWithdrawalsOneByOne = this.form.get('trustologyTrackWithdrawalsOneByOne')?.value ?? false;
+    const coreTrustologyWithdrawalFromCustodyProviderDestinationAddress = this.form.get('trustologyWithdrawalFromCustodyProviderDestinationAddress')?.value ?? '';
     const coreTrustologyWithdrawalFromLiquidityProviderDestinationAddress = this.form.get('trustologyWithdrawalFromLiquidityProviderDestinationAddress')?.value ?? '';
     const coreTrustologyWithdrawalToEndUserSourceVaultAccountId = this.form.get('trustologyWithdrawalToEndUserSourceVaultAccountId')?.value ?? '';
     const coreTrustologyWithdrawalToEndUserSourceVaultAccountIdSubwallet = this.form.get('trustologyWithdrawalToEndUserSourceVaultAccountIdSubwallet')?.value ?? '';
@@ -254,6 +290,8 @@ export class CommonSettingsEditorComponent implements OnInit, OnDestroy {
     // Risk Center
     const coreRiskCenterLoginCountToCompareIpAddress = parseInt(this.form.get('riskCenterLoginCountToCompareIpAddress')?.value ?? '600000');
     const coreRiskCenterMaxFailedLoginAttempts = parseInt(this.form.get('riskCenterMaxFailedLoginAttempts')?.value ?? '600000');
+    const coreRiskCenterHighRiskUserYears = parseInt(this.form.get('riskCenterHighRiskUserYears')?.value ?? '70');
+    const coreRiskCenterDepositPercentUp = parseInt(this.form.get('riskCenterDepositPercentUp')?.value ?? '200');
     // Transactions
     const coreTransactionsPaymentCodeNumberLength = parseInt(this.form.get('transactionsPaymentCodeNumberLength')?.value ?? '5');
     const coreTransactionsQuickCheckoutTransactionConfirmationLifetime = parseInt(this.form.get('transactionsQuickCheckoutTransactionConfirmationLifetime')?.value ?? '72000000');
@@ -281,6 +319,7 @@ export class CommonSettingsEditorComponent implements OnInit, OnDestroy {
     const coreKrakenWithdrawalBenchmarkAmountToRemain = parseInt(this.form.get('krakenWithdrawalBenchmarkAmountToRemain')?.value ?? '0');
 
     const coreData = {
+      banks: {},
       liquidityProviders: {
         benchmarkTrackingInterval: coreLiquidityBenchmarkTrackingInterval,
         cryptoRateLifetime: coreLiquidityCryptoRateLifetime,
@@ -314,6 +353,8 @@ export class CommonSettingsEditorComponent implements OnInit, OnDestroy {
           cachedVaultAccountLifetime: coreFireblocksCachedVaultAccountLifetime,
           defaultUserVaultName: coreFireblocksDefaultUserVaultName,
           trackWithdrawals: coreFireblocksTrackWithdrawals,
+          trackWithdrawalsOneByOne: coreFireblocksTrackWithdrawalsOneByOne,
+          withdrawalFromCustodyProviderDestinationAddress: coreFireblocksWithdrawalFromCustodyProviderDestinationAddress,
           withdrawalFromLiquidityProviderDestinationAddress: coreFireblocksWithdrawalFromLiquidityProviderDestinationAddress,
           withdrawalToEndUserSourceVaultAccountId: {
             vaultId: coreFireblocksWithdrawalToEndUserSourceVaultAccountId
@@ -325,12 +366,15 @@ export class CommonSettingsEditorComponent implements OnInit, OnDestroy {
           cachedExternalWalletLifetime: coreTrustologyCachedExternalWalletLifetime,
           cachedInternalWalletLifetime: coreTrustologyCachedInternalWalletLifetime,
           cachedVaultAccountLifetime: coreTrustologyCachedVaultAccountLifetime,
+          defaultUserVaultName: coreTrustologyDefaultUserVaultName,
           defaultHostWalletId: coreTrustologyDefaultHostWalletId,
           networkFeeEstimationVaultAccountId: {
             walletId: coreTrustologyNetworkFeeEstimationVaultAccountId,
             subWalletName: coreTrustologyNetworkFeeEstimationVaultAccountIdSubwallet
           },
           trackWithdrawals: coreTrustologyTrackWithdrawals,
+          trackWithdrawalsOneByOne: coreTrustologyTrackWithdrawalsOneByOne,
+          withdrawalFromCustodyProviderDestinationAddress: coreTrustologyWithdrawalFromCustodyProviderDestinationAddress,
           withdrawalFromLiquidityProviderDestinationAddress: coreTrustologyWithdrawalFromLiquidityProviderDestinationAddress,
           withdrawalToEndUserSourceVaultAccountId: {
             walletId: coreTrustologyWithdrawalToEndUserSourceVaultAccountId,
@@ -352,14 +396,26 @@ export class CommonSettingsEditorComponent implements OnInit, OnDestroy {
       },
       riskCenter: {
         loginCountToCompareIpAddress: coreRiskCenterLoginCountToCompareIpAddress,
-        maxFailedLoginAttempts: coreRiskCenterMaxFailedLoginAttempts
+        maxFailedLoginAttempts: coreRiskCenterMaxFailedLoginAttempts,
+        highRiskUserYears: coreRiskCenterHighRiskUserYears,
+        depositPercentUp: coreRiskCenterDepositPercentUp,
+        depositAboveXinYtimeFrameMins: [//--
+          {
+            X: 100,
+            Y: 60
+          }
+        ]
       }
     };
     // Result
     const additionalSettings = {
       auth: authData,
+      admin: adminData,
       core: coreData
     }
+
+    console.log('saving', additionalSettings);
+
     return {
       settingsCommonId: this.form.get('id')?.value,
       liquidityProvider: this.form.get('liquidityProvider')?.value,
