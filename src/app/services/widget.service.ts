@@ -341,14 +341,19 @@ export class WidgetService {
         if (kycStatus !== 'init' && kycStatus !== 'unknown') {
             result = false;
         } else {
+            // if kycStatus = 'init' or 'unknown'
             if (kyc.kycValid === true) {
                 result = false;
             } else if (kyc.kycValid === false) {
                 if (kyc.kycReviewRejectedType?.toLowerCase() === 'final') {
+                    console.log('isKycRequired is null');
                     return null;
                 }
             }
         }
+
+        console.log('isKycRequired = ', result);
+
         return result;
     }
 
