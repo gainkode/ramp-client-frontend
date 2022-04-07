@@ -138,11 +138,6 @@ export class CommonSettingsEditorComponent implements OnInit, OnDestroy {
       this.adminService.getSettingsCommon()?.valueChanges.subscribe(settings => {
         const settingsCommon: SettingsCommon = settings.data.getSettingsCommon;
         const additionalSettings = (settingsCommon.additionalSettings) ? JSON.parse(settingsCommon.additionalSettings) : undefined;
-
-
-        console.log('loading', additionalSettings);
-
-
         // Common
         this.form.get('id')?.setValue(settingsCommon.settingsCommonId);
         this.form.get('liquidityProvider')?.setValue(settingsCommon.liquidityProvider);
@@ -447,9 +442,6 @@ export class CommonSettingsEditorComponent implements OnInit, OnDestroy {
       admin: adminData,
       core: coreData
     }
-
-    console.log('saving', additionalSettings);
-
     return {
       settingsCommonId: this.form.get('id')?.value,
       liquidityProvider: this.form.get('liquidityProvider')?.value,

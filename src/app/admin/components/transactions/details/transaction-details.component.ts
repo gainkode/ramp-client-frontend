@@ -204,6 +204,10 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
       this.kycStatus = TransactionKycStatusList.find(x => x.id === this.data?.kycStatusValue)?.name ?? '';
       this.accountStatus = UserStatusList.find(x => x.id === this.data?.accountStatusValue)?.name ?? '';
     }
+    if (this.transactionType === TransactionType.CashOut || this.transactionType === TransactionType.TopUp) {
+      this.form.get('address')?.setValidators([]);
+      this.form.updateValueAndValidity();
+    }
   }
 
   private getSettingsCommon(): void {
@@ -295,7 +299,9 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
+    console.log('onSubmit', this.form);
     if (this.form.valid) {
+      console.log('onSubmit valid');
       const currentRateValue = this.form.get('rate')?.value;
       let currentRate: number | undefined = undefined;
       if (currentRateValue !== undefined) {
