@@ -138,6 +138,9 @@ export class ErrorService {
             case 'core.widget_not_supported_for_country':
                 result = 'Our services are not available in your country';
                 break;
+            case 'core.no_cost_found':
+                result = 'Cost settings not found. Please, refer to support';
+                break;
             // Other codes
             case 'client has not been defined yet':
                 result = this.getRejectedCookieMessage();

@@ -10,6 +10,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { CommonDialogBox } from 'src/app/components/dialogs/common-box.dialog';
 import { TransactionConfirmationModeList } from 'src/app/admin/model/settings.model';
 
+interface FrameBlock {
+  X: number;
+  Y: number;
+}
+
 @Component({
   selector: 'app-common-settings',
   templateUrl: 'common-settings.component.html',
@@ -98,7 +103,18 @@ export class CommonSettingsEditorComponent implements OnInit, OnDestroy {
     krakenTrackOrders: [false, { validators: [Validators.required], updateOn: 'change' }],
     krakenTrackWithdrawals: [false, { validators: [Validators.required], updateOn: 'change' }],
     krakenWithdrawalBenchmark: [0, { validators: [Validators.required], updateOn: 'change' }],
-    krakenWithdrawalBenchmarkAmountToRemain: [0, { validators: [Validators.required], updateOn: 'change' }]
+    krakenWithdrawalBenchmarkAmountToRemain: [0, { validators: [Validators.required], updateOn: 'change' }],
+
+    frameX1: [undefined],
+    frameY1: [undefined],
+    frameX2: [undefined],
+    frameY2: [undefined],
+    frameX3: [undefined],
+    frameY3: [undefined],
+    frameX4: [undefined],
+    frameY4: [undefined],
+    frameX5: [undefined],
+    frameY5: [undefined]
   });
 
   private subscriptions: Subscription = new Subscription();
@@ -177,6 +193,15 @@ export class CommonSettingsEditorComponent implements OnInit, OnDestroy {
         this.form.get('riskCenterMaxFailedLoginAttempts')?.setValue(coreData.riskCenter.maxFailedLoginAttempts ?? 10);
         this.form.get('riskCenterHighRiskUserYears')?.setValue(coreData.riskCenter.highRiskUserYears ?? 70);
         this.form.get('riskCenterDepositPercentUp')?.setValue(coreData.riskCenter.depositPercentUp ?? 200);
+
+        const frames = coreData.riskCenter.depositAboveXinYtimeFrameMins as FrameBlock[];
+        let index = 0;
+        frames.forEach(f => {
+          index++;
+          this.form.get(`frameX${index}`)?.setValue(f.X);
+          this.form.get(`frameY${index}`)?.setValue(f.Y);
+        });
+
         // Core - Transactions
         this.form.get('transactionsPaymentCodeNumberLength')?.setValue(coreData.transactions.paymentCodeNumberLength ?? 5);
         this.form.get('transactionsQuickCheckoutTransactionConfirmationLifetime')?.setValue(coreData.transactions.quickCheckoutTransactionConfirmationLifetime ?? 72000000);
@@ -318,6 +343,20 @@ export class CommonSettingsEditorComponent implements OnInit, OnDestroy {
     const coreKrakenWithdrawalBenchmark = parseInt(this.form.get('krakenWithdrawalBenchmark')?.value ?? '10000');
     const coreKrakenWithdrawalBenchmarkAmountToRemain = parseInt(this.form.get('krakenWithdrawalBenchmarkAmountToRemain')?.value ?? '0');
 
+    const frames: FrameBlock[] = [];
+    for (let index = 0; index < 5; index++) {
+      const fieldX = `frameX${index + 1}`;
+      const fieldY = `frameY${index + 1}`;
+      const frameX = parseInt(this.form.get(fieldX)?.value);
+      const frameY = parseInt(this.form.get(fieldY)?.value);
+      if (frameX && frameY) {
+        frames.push({
+          X: frameX,
+          Y: frameY
+        });
+      }
+    }
+
     const coreData = {
       banks: {},
       liquidityProviders: {
@@ -399,12 +438,7 @@ export class CommonSettingsEditorComponent implements OnInit, OnDestroy {
         maxFailedLoginAttempts: coreRiskCenterMaxFailedLoginAttempts,
         highRiskUserYears: coreRiskCenterHighRiskUserYears,
         depositPercentUp: coreRiskCenterDepositPercentUp,
-        depositAboveXinYtimeFrameMins: [//--
-          {
-            X: 100,
-            Y: 60
-          }
-        ]
+        depositAboveXinYtimeFrameMins: frames
       }
     };
     // Result
