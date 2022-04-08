@@ -37,11 +37,12 @@
         [internalPayment]="internalPayment" [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage"
         [depositRate]="summary?.exchangeRate?.depositRate" (onError)="handleError($event)"
         (onProgress)="progressChanged($event)" (onDataUpdated)="orderDetailsChanged($event)"
-        (onWalletAddressUpdated)="orderWalletChanged($event)" (onComplete)="orderDetailsComplete($event)">
+        (onQuoteChanged)="orderQuoteChanged($event)" (onWalletAddressUpdated)="orderWalletChanged($event)"
+        (onComplete)="orderDetailsComplete($event)">
       </app-widget-order-details>
       <!-- Sell details -->
-      <app-widget-sell-details *ngSwitchCase="'sell_details'" [summary]="summary"
-        (onBack)="paymentBack()" (onComplete)="sellComplete($event)">
+      <app-widget-sell-details *ngSwitchCase="'sell_details'" [summary]="summary" (onBack)="paymentBack()"
+        (onComplete)="sellComplete($event)">
       </app-widget-sell-details>
       <!-- Disclaimer -->
       <app-widget-disclaimer *ngSwitchCase="'disclaimer'" [agreementChecked]="summary.agreementChecked"
@@ -79,7 +80,7 @@
         (onSendEmail)="sendWireTransaferMessage()">
       </app-widget-wire-transfer-result>
       <!-- KYC -->
-      <app-widget-kyc *ngSwitchCase="'verification'" [summary]="summary"
+      <app-widget-kyc *ngSwitchCase="'verification'" [summary]="summary" [levelName]="overLimitLevel"
         [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage" (onError)="handleError($event)"
         (onAuthError)="handleAuthError()" (onProgress)="progressChanged($event)" (onBack)="kycBack()"
         (onNext)="kycComplete()"></app-widget-kyc>

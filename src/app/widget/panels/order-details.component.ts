@@ -44,6 +44,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   @Output() onProgress = new EventEmitter<boolean>();
   @Output() onDataUpdated = new EventEmitter<CheckoutSummary>();
   @Output() onWalletAddressUpdated = new EventEmitter<CheckoutSummary>();
+  @Output() onQuoteChanged = new EventEmitter<number>();
   @Output() onComplete = new EventEmitter<string>();
 
   private pInitState = true;
@@ -327,6 +328,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
         const totalState = data.myState as UserState;
         this.transactionsTotalEur = totalState.totalAmountEur ?? 0;
         this.updateQuote();
+        this.onQuoteChanged.emit(this.quoteLimit);
         this.onProgress.emit(false);
       }, (error) => {
         this.onProgress.emit(false);
@@ -442,9 +444,9 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       if (this.walletField?.valid && this.showWallet) {
         data.address = this.walletField?.value;
       }
-      if (this.quoteExceedHidden) {
-        data.quoteLimit = this.quoteLimit;
-      }
+      //if (this.quoteExceedHidden) {
+      data.quoteLimit = this.quoteLimit;
+      //}
       this.onDataUpdated.emit(data);
     }
   }

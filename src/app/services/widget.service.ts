@@ -1,12 +1,18 @@
 import { Injectable } from "@angular/core";
 import { Subscription } from "rxjs";
 import { take } from "rxjs/operators";
-import { LoginResult, PaymentInstrument, PaymentProviderByInstrument, SettingsCostShort, SettingsFeeShort, TransactionSource, TransactionType, User, WireTransferBankAccountShort } from "../model/generated-models";
+import { LoginResult, PaymentInstrument, PaymentProviderByInstrument, SettingsCostShort, SettingsCurrencyWithDefaults, SettingsFeeShort, SettingsKycTierShortEx, SettingsKycTierShortExListResult, TransactionSource, TransactionType, User, WireTransferBankAccountShort } from "../model/generated-models";
 import { WidgetSettings, WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from "../model/payment-base.model";
 import { CheckoutSummary, PaymentProviderInstrumentView, TransactionSourceList, WireTransferPaymentCategoryList } from "../model/payment.model";
 import { AuthService } from "./auth.service";
+import { CommonDataService } from "./common-data.service";
 import { ErrorService } from "./error.service";
 import { PaymentDataService } from "./payment.service";
+
+class KycTierResultData {
+    levelName: string | null = '';
+    required = false;
+}
 
 @Injectable()
 export class WidgetService {
@@ -25,6 +31,7 @@ export class WidgetService {
 
     constructor(
         private auth: AuthService,
+        private commonService: CommonDataService,
         private paymentService: PaymentDataService,
         private errorHandler: ErrorService) { }
 
@@ -38,7 +45,7 @@ export class WidgetService {
         confirmEmailCallback: Function,
         kycStatusCallback: Function,
         paymentProvidersCallback: Function,
-        wireTranferListLoadedCallback) {
+        wireTranferListLoadedCallback: Function) {
         this.onProgressChanged = progressCallback;
         this.onError = errorCallback;
         this.onIdentificationRequired = identificationCallback;
@@ -63,7 +70,7 @@ export class WidgetService {
                 dataGetter$.subscribe(({ data }) => {
                     if (this.auth.user) {
                         this.auth.setLocalSettingsCommon(data.getSettingsCommon);
-                        this.getKycStatus(summary, widgetId);
+                        this.getTiers(summary, widgetId);
                     } else {
                         if (this.onLoginRequired) {
                             this.onLoginRequired(summary.email);
@@ -248,7 +255,93 @@ export class WidgetService {
         }
     }
 
-    private getKycStatus(summary: CheckoutSummary, widgetId: string): void {
+    private getTiers(summary: CheckoutSummary, widgetId: string): void {
+        if (this.onError) {
+            this.onError('');
+        }
+        const tiersData = this.paymentService.mySettingsKycTiers().valueChanges.pipe(take(1));
+        this.pSubscriptions.add(
+            tiersData.subscribe(({ data }) => {
+                this.loadCurrencies(summary, widgetId, data.mySettingsKycTiers as SettingsKycTierShortExListResult);
+            }, (error) => {
+                if (this.onProgressChanged) {
+                    this.onProgressChanged(false);
+                }
+                this.handleError(error, summary.email, 'Unable to get verification levels');
+            })
+        );
+    }
+
+    private loadCurrencies(summary: CheckoutSummary, widgetId: string, tiers: SettingsKycTierShortExListResult): void {
+        if (this.onError) {
+            this.onError('');
+        }
+        const currencyData = this.commonService.getSettingsCurrency();
+        this.pSubscriptions.add(
+            currencyData.valueChanges.subscribe(
+                ({ data }) => {
+                    const tierData = this.getCurrentTierLevelName(summary, tiers, data.getSettingsCurrency as SettingsCurrencyWithDefaults);
+                    this.getKycStatus(summary, widgetId, tierData);
+                },
+                (error) => {
+                    if (this.onProgressChanged) {
+                        this.onProgressChanged(false);
+                    }
+                    this.handleError(error, summary.email, 'Unable to load available list of currency types');
+                })
+        );
+    }
+
+    private tierSortHandler(a: SettingsKycTierShortEx, b: SettingsKycTierShortEx): number {
+        let aa = a.amount ?? 0;
+        let ba = b.amount ?? 0;
+        if ((a.amount === undefined || a.amount === null) && b.amount) {
+            return 1;
+        }
+        if (a.amount && (b.amount === undefined || b.amount === null)) {
+            return -1;
+        }
+        if (aa > ba) {
+            return 1;
+        }
+        if (aa < ba) {
+            return -1;
+        }
+        return 0;
+    }
+
+    private getCurrentTierLevelName(
+        summary: CheckoutSummary,
+        tiersData: SettingsKycTierShortExListResult,
+        settingsCurrency: SettingsCurrencyWithDefaults): KycTierResultData {
+        const result: KycTierResultData = {
+            levelName: null,
+            required: false
+        };
+        if ((tiersData.count ?? 0 > 0) && tiersData.list) {
+            const rawTiers = [...tiersData.list];
+            const sortedTiers = rawTiers.sort((a, b) => this.tierSortHandler(a, b));
+            const currentTierId = this.auth.user?.kycTierId;
+            const currentTier = sortedTiers.find(val => val.settingsKycTierId === currentTierId);
+            result.levelName = currentTier?.originalLevelName ?? null;
+            const currency = settingsCurrency.settingsCurrency?.list?.find(x => x.symbol === summary.currencyFrom);
+            const amount = summary.amountFrom ?? 0 * (currency?.rateFactor ?? 1);
+            const quote = summary.quoteLimit;
+            const resultAmount = quote - amount;
+            if (resultAmount <= 0) {
+                const newLimit = (-1 * resultAmount) + (currentTier?.amount ?? 0);
+                const newTierIndex = sortedTiers.findIndex(x => (x.amount ?? 0) > newLimit);
+                if (newTierIndex >= 0) {
+                    const newTier = sortedTiers[newTierIndex];
+                    result.levelName = newTier?.originalLevelName ?? null;
+                    result.required = true;
+                }
+            }
+        }
+        return result;
+    }
+
+    private getKycStatus(summary: CheckoutSummary, widgetId: string, tierData: KycTierResultData): void {
         if (this.onError) {
             this.onError('');
         }
@@ -259,17 +352,17 @@ export class WidgetService {
         this.pSubscriptions.add(
             kycStatusData$.subscribe(({ data }) => {
                 const userKyc = data.me as User;
-                const kycData = this.isKycRequired(userKyc);
+                const kycData = this.isKycRequired(userKyc, tierData);
                 if (this.onProgressChanged) {
                     this.onProgressChanged(false);
                 }
-                if (kycData === null) {
+                if (kycData[0] === null) {
                     if (this.onError) {
                         this.onError('Unable proceed your payment, because your identity is rejected');
                     }
                 } else {
                     if (this.onKycStatusUpdate) {
-                        this.onKycStatusUpdate(kycData === true);
+                        this.onKycStatusUpdate(kycData[0] === true, kycData[1]);
                     }
                     if (summary.transactionType === TransactionType.Deposit) {
                         this.loadPaymentProviders(summary, widgetId);
@@ -332,29 +425,33 @@ export class WidgetService {
             .map(val => new PaymentProviderInstrumentView(val));
     }
 
-    private isKycRequired(kyc: User): boolean | null {
+    private isKycRequired(currentUser: User, tierData: KycTierResultData): [boolean | null, string] {
         let result = true;
-        const kycStatus = kyc.kycStatus?.toLowerCase();
-
-        console.log('isKycRequired', kycStatus, kyc.kycValid, kyc.kycReviewRejectedType);
-
-        if (kycStatus !== 'init' && kycStatus !== 'unknown') {
-            result = false;
+        const kycStatus = currentUser.kycStatus?.toLowerCase();
+        let exceedTierName = '';
+        if (tierData.required === true) {
+            result = true;
+            exceedTierName = tierData.levelName ?? '';
         } else {
-            // if kycStatus = 'init' or 'unknown'
-            if (kyc.kycValid === true) {
+            if (kycStatus !== 'init' && kycStatus !== 'unknown') {
                 result = false;
-            } else if (kyc.kycValid === false) {
-                if (kyc.kycReviewRejectedType?.toLowerCase() === 'final') {
-                    console.log('isKycRequired is null');
-                    return null;
+            } else {
+                // if kycStatus = 'init' or 'unknown'
+                if (tierData.levelName !== null) {
+                    const valid = currentUser.kycValid ?? true;
+                    if (valid === true) {
+                        result = false;
+                    } else if (valid === false) {
+                        if (currentUser.kycReviewRejectedType?.toLowerCase() === 'final') {
+                            return [null, ''];
+                        }
+                    }
+                } else {
+                    result = false;
                 }
             }
         }
-
-        console.log('isKycRequired = ', result);
-
-        return result;
+        return [result, exceedTierName];
     }
 
     private handleError(error: any, email: string, defaultMessage: string): void {

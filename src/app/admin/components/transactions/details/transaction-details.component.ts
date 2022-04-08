@@ -299,9 +299,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    console.log('onSubmit', this.form);
     if (this.form.valid) {
-      console.log('onSubmit valid');
       const currentRateValue = this.form.get('rate')?.value;
       let currentRate: number | undefined = undefined;
       if (currentRateValue !== undefined) {

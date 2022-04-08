@@ -55,6 +55,7 @@ export class WidgetComponent implements OnInit {
     data: ''
   }
   requestKyc = false;
+  overLimitLevel = '';
   iframeContent = '';
   instantpayDetails = '';
   paymentComplete = false;
@@ -375,6 +376,10 @@ export class WidgetComponent implements OnInit {
     }
   }
 
+  orderQuoteChanged(quote: number): void {
+    this.summary.quoteLimit = quote;
+  }
+
   orderWalletChanged(data: CheckoutSummary): void {
     this.summary.address = data.address ?? '';
     this.summary.vaultId = data.vaultId ?? '';
@@ -427,12 +432,14 @@ export class WidgetComponent implements OnInit {
     this.nextStage('order_details', 'Order details', 1, true);
   }
 
-  private settingsKycState(state: boolean): void {
+  private settingsKycState(state: boolean, level: string): void {
     if (this.summary.quoteLimit !== 0) {
       this.widget.kycFirst = true;
     }
-    this.requestKyc = state || this.summary.quoteLimit !== 0;
-    console.log('settingsKycState', this.requestKyc, state, this.summary.quoteLimit);
+    if (level !== '') {
+      this.overLimitLevel = level;
+    }
+    this.requestKyc = state;// || this.summary.quoteLimit !== 0;
   }
 
   private settingsCommonComplete(providers: PaymentProviderInstrumentView[]): void {
