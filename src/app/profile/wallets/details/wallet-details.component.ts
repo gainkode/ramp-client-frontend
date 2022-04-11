@@ -65,14 +65,18 @@ export class ProfileWalletDetailsComponent implements OnDestroy {
         if (val) {
             this.errorMessage = '';
             this.inProgress = true;
+            console.log('data', this.walletData);
             this.subscriptions.add(
                 this.profileService.updateMyVault(this.walletData?.vault ?? '', val).subscribe(({ data }) => {
+                    console.log('updateMyVault', data);
                     if (data && data.updateMyVault) {
                         const result = data.updateMyVault as VaultAccount;
                         if (result.name) {
                             this.walletData?.setName(result.name);
                             this.editMode = false;
                         }
+                    } else {
+                        this.errorMessage = 'Unable to change the wallet name';
                     }
                     this.inProgress = false;
                 }, (error) => {

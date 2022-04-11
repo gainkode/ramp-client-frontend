@@ -345,6 +345,7 @@ export class TransactionItem {
   currencyToSpend = '';
   currencyToReceive = '';
   currencyFiat = '';
+  currencyCrypto = '';
   amountToSpend = 0;
   amountToReceive = 0;
   fees = 0;
@@ -371,6 +372,7 @@ export class TransactionItem {
       this.amountToSpend = paymentData.amountToSpend;
       this.amountToReceive = paymentData.amountToReceive;
       this.currencyFiat = paymentData.currencyFiat;
+      this.currencyCrypto = paymentData.currencyCrypto;
       this.fees = paymentData.fees;
       this.networkFee = paymentData.networkFee;
       this.typeIcon = paymentData.typeIcon;
@@ -416,7 +418,7 @@ export class TransactionItem {
 
   get networkFees(): string {
     //return `${getCurrencySign(this.currencyFiat)}${this.networkFee.toFixed(2)}`;
-    return `${getCurrencySign(this.currencyFiat)}${this.networkFee.toString()}`;
+    return `${this.networkFee.toString()} ${this.currencyCrypto}`;
   }
 
   get systemFees(): string {
@@ -454,6 +456,7 @@ class TransactionPayment {
   currencyToSpend = '';
   currencyToReceive = '';
   currencyFiat = '';
+  currencyCrypto = '';
   amountToSpend = 0;
   amountToReceive = 0;
   fees = 0;
@@ -481,6 +484,7 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
   result.amountToReceive = data.amountToReceiveWithoutFee ?? 0;
   if (data.type === TransactionType.Deposit) {
     result.currencyFiat = result.currencyToSpend;
+    result.currencyCrypto = result.currencyToReceive;
     const c = getCryptoSymbol(result.currencyToReceive);
     const cryptoImg = (c !== '') ?
       `../../../assets/svg-crypto/${c.toLowerCase()}.svg` :
@@ -529,10 +533,11 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
       }
     }
     result.fees = data.feeFiat as number ?? 0;
-    result.networkFee = data.approxNetworkFeeFiat ?? 0;
+    result.networkFee = data.approxNetworkFee ?? 0;
     result.typeIcon = 'account_balance';
   } else if (data.type === TransactionType.Transfer) {
-    result.currencyFiat = 'EUR';
+    result.currencyFiat = result.currencyToReceive;
+    result.currencyCrypto = result.currencyToSpend;
     result.recipient = {
       id: '',
       title: data.destination ?? '',
@@ -563,10 +568,11 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
       imgSource: cryptoImg
     };
     result.fees = data.feeFiat as number ?? 0;
-    result.networkFee = data.approxNetworkFeeFiat ?? 0;
+    result.networkFee = data.approxNetworkFee ?? 0;
     result.typeIcon = 'file_upload';
   } else if (data.type === TransactionType.Receive) {
-    result.currencyFiat = 'EUR';
+    result.currencyFiat = result.currencyToSpend;
+    result.currencyCrypto = result.currencyToReceive;
     const c = getCryptoSymbol(result.currencyToReceive).toLowerCase();
     const cryptoImg = (c !== '') ? `../../../assets/svg-crypto/${c}.svg` : '';
     const destVaultData = JSON.parse(data.destVault ?? '{}');
@@ -581,7 +587,7 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
       imgSource: cryptoImg
     };
     result.fees = data.feeFiat as number ?? 0;
-    result.networkFee = data.approxNetworkFeeFiat ?? 0;
+    result.networkFee = data.approxNetworkFee ?? 0;
     result.typeIcon = 'file_download';
     let senderName = 'External';
     const transferDetails = data.transferOrder?.transferDetails;
@@ -605,6 +611,7 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
     } as CommonTargetValue;
   } else if (data.type === TransactionType.Withdrawal) {
     result.currencyFiat = result.currencyToReceive;
+    result.currencyCrypto = result.currencyToSpend;
     result.recipient = {
       id: '',
       title: 'Wire transfer',
@@ -630,10 +637,11 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
       imgSource: cryptoImg
     };
     result.fees = data.feeFiat as number ?? 0;
-    result.networkFee = data.approxNetworkFeeFiat ?? 0;
+    result.networkFee = data.approxNetworkFee ?? 0;
     result.typeIcon = 'account_balance';
   } else if (data.type === TransactionType.TopUp) {
     result.currencyFiat = result.currencyToReceive;
+    result.currencyCrypto = '';
     result.amountToReceive = result.amountToSpend;
     const destVaultData = JSON.parse(data.destVault ?? '{}');
     let recipientName = data.destination ?? '';
@@ -647,7 +655,7 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
       imgSource: ''
     };
     result.fees = data.feeFiat as number ?? 0;
-    result.networkFee = data.approxNetworkFeeFiat ?? 0;
+    result.networkFee = data.approxNetworkFee ?? 0;
     result.typeIcon = 'monetization_on';
     let senderName = '';
     const transferDetails = data.transferOrder?.transferDetails;
@@ -671,6 +679,7 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
     } as CommonTargetValue;
   } else if (data.type === TransactionType.CashOut) {
     result.currencyFiat = result.currencyToReceive;
+    result.currencyCrypto = '';
     result.amountToReceive = result.amountToSpend;
     const destVaultData = JSON.parse(data.destVault ?? '{}');
     let recipientName = data.destination ?? '';
@@ -684,7 +693,7 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
       imgSource: ''
     };
     result.fees = data.feeFiat as number ?? 0;
-    result.networkFee = data.approxNetworkFeeFiat ?? 0;
+    result.networkFee = data.approxNetworkFee ?? 0;
     result.typeIcon = 'monetization_on';
     let senderName = '';
     const transferDetails = data.transferOrder?.transferDetails;
