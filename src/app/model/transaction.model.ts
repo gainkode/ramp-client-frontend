@@ -646,7 +646,7 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
     result.currencyCrypto = '';
     result.amountToReceive = result.amountToSpend;
     const destVaultData = JSON.parse(data.destVault ?? '{}');
-    let recipientName = data.destination ?? '';
+    let recipientName = data.destination ?? `${result.currencyFiat} Wallet`;
     if (destVaultData && destVaultData.name) {
       recipientName = destVaultData.name;
     }
@@ -672,6 +672,9 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
         let sourceData = JSON.parse(transferDetailsData.data);
         senderName = `${sourceData?.source?.name ?? ''} ${sourceData?.sourceAddress ?? ''}`;
       }
+    }
+    if (senderName === '') {
+      senderName = 'Wire Transfer';
     }
     result.sender = {
       id: '',
@@ -684,7 +687,7 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
     result.currencyCrypto = '';
     result.amountToReceive = result.amountToSpend;
     const destVaultData = JSON.parse(data.destVault ?? '{}');
-    let recipientName = data.destination ?? '';
+    let recipientName = data.destination ?? `${result.currencyFiat} Wallet`;
     if (destVaultData && destVaultData.name) {
       recipientName = destVaultData.name;
     }
@@ -710,6 +713,9 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
         let sourceData = JSON.parse(transferDetailsData.data);
         senderName = `${sourceData?.source?.name ?? ''} ${sourceData?.sourceAddress ?? ''}`;
       }
+    }
+    if (senderName === '') {
+      senderName = 'Wire Transfer';
     }
     result.sender = {
       id: '',
