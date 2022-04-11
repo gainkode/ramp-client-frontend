@@ -69,6 +69,8 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   currentCurrencyReceive: CurrencyView | undefined = undefined;
   currentTransaction: TransactionType = TransactionType.Deposit;
   currentTransactionName = '';
+  spendTitle = '';
+  receiveTitle = '';
   spendCurrencyList: CurrencyView[] = [];
   receiveCurrencyList: CurrencyView[] = [];
   selectedWallet: WalletItem | undefined = undefined;
@@ -198,6 +200,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       this.currentQuoteEur = 0;
     }
     this.setWalletVisible();
+    this.setAmountTitles();
     this.currentTransactionName = QuickCheckoutTransactionTypeList.find(x => x.id === this.currentTransaction)?.name ?? this.currentTransaction;
     this.loadDetailsForm(this.summary?.initialized ?? false);
     this.pSubscriptions.add(this.currencySpendField?.valueChanges.subscribe(val => this.onCurrencySpendUpdated(val)));
@@ -483,6 +486,16 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     this.amountReceiveField?.updateValueAndValidity();
   }
 
+  private setAmountTitles(): void {
+    if (this.currentTransaction === TransactionType.Deposit) {
+      this.spendTitle = 'Fiat sent';
+      this.receiveTitle = 'Crypto received';
+    } else if (this.currentTransaction === TransactionType.Withdrawal) {
+      this.spendTitle = 'Crypto sent';
+      this.receiveTitle = 'Fiat received';
+    }
+  }
+
   private onCurrencySpendUpdated(currency: string): void {
     if (!this.pTransactionChanged) {
       this.currentCurrencySpend = this.pCurrencies.find((x) => x.id === currency);
@@ -584,6 +597,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   private onTransactionUpdated(val: TransactionType): void {
     this.currentTransaction = val;
     this.currentTransactionName = QuickCheckoutTransactionTypeList.find(x => x.id === this.currentTransaction)?.name ?? this.currentTransaction;
+    this.setAmountTitles();
     this.pSpendAutoUpdated = true;
     this.pReceiveAutoUpdated = true;
     this.pTransactionChanged = true;

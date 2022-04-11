@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { TransactionType } from 'src/app/model/generated-models';
 import { CheckoutSummary, CurrencyView } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -26,6 +27,11 @@ export class WidgetDepositDetailsComponent implements OnInit, OnDestroy {
     if (val.amountTo !== undefined) {
       this.amountField?.setValue(val.amountTo);
     }
+    if (val.transactionType === TransactionType.TopUp) {
+      this.amountTitle = 'Fiat Received';
+    } else if (val.transactionType === TransactionType.CashOut) {
+      this.amountTitle = 'Fiat Sent';
+    }
   }
   @Output() onProgress = new EventEmitter<boolean>();
   @Output() onComplete = new EventEmitter<CheckoutSummary>();
@@ -36,6 +42,7 @@ export class WidgetDepositDetailsComponent implements OnInit, OnDestroy {
 
   selectedCurrency: CurrencyView | undefined = undefined;
   currencyInit = false;
+  amountTitle = '';
 
   dataForm = this.formBuilder.group({
     amount: [undefined, { validators: [], updateOn: 'change' }],

@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { VaultAccount } from 'src/app/model/generated-models';
 import { ProfileItemActionType, ProfileItemContainer, ProfileItemContainerType } from 'src/app/model/profile-item.model';
 import { WalletItem } from "src/app/model/wallet.model";
+import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
 
@@ -16,7 +17,7 @@ import { ProfileDataService } from 'src/app/services/profile.service';
 export class ProfileWalletDetailsComponent implements OnDestroy {
     @Input() set wallet(val: WalletItem | undefined) {
         this.walletData = val;
-        this.walletTransactionLink = `/personal/main/transactions/${this.walletData?.address ?? ''}`;
+        this.walletTransactionLink = `${this.auth.getUserMainPage()}/transactions/${this.walletData?.address ?? ''}`;
     }
     @Output() onComplete = new EventEmitter<ProfileItemContainer>();
 
@@ -37,6 +38,7 @@ export class ProfileWalletDetailsComponent implements OnDestroy {
         private clipboard: Clipboard,
         private formBuilder: FormBuilder,
         private errorHandler: ErrorService,
+        private auth: AuthService,
         private profileService: ProfileDataService) { }
 
     ngOnDestroy(): void {
@@ -65,10 +67,8 @@ export class ProfileWalletDetailsComponent implements OnDestroy {
         if (val) {
             this.errorMessage = '';
             this.inProgress = true;
-            console.log('data', this.walletData);
             this.subscriptions.add(
                 this.profileService.updateMyVault(this.walletData?.vault ?? '', val).subscribe(({ data }) => {
-                    console.log('updateMyVault', data);
                     if (data && data.updateMyVault) {
                         const result = data.updateMyVault as VaultAccount;
                         if (result.name) {

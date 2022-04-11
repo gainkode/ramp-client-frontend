@@ -59,7 +59,7 @@
 
                     <!-- Buttons -->
                     <div class="__profile-details-button-container">
-                        <button type="submit" class="__main-button" [disabled]="!createForm.valid">
+                        <button type="submit" class="__main-button" [disabled]="!createForm.valid || inProgress">
                             create
                         </button>
                     </div>

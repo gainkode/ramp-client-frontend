@@ -52,6 +52,10 @@ export class WalletItem {
     return `${getCurrencySign(this.fiat)}${this.totalFiat.toFixed(2)}`;
   }
 
+  get totalFullFiat(): string {
+    return `${getCurrencySign(this.fiat)}${this.total.toFixed(2)}`;
+  }
+
   get nameValue(): string {
     const limit = 15;
     return (this.name.length > limit) ? `${this.name.substr(0, limit)}...` : this.name;
@@ -76,7 +80,7 @@ export class WalletItem {
       this.id = data.fiatVaultId ?? '';
       this.vault = data.fiatVaultId ?? '';
       this.asset = data.currency ?? '';
-      this.total = 0;
+      this.total = data.generalBalance ?? 0;
       this.totalFiat = data.balance ?? 0;
       this.name = `${this.asset} wallet`;
       this.pCurrencyName = this.asset;

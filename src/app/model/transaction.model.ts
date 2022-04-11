@@ -417,13 +417,15 @@ export class TransactionItem {
   }
 
   get networkFees(): string {
-    //return `${getCurrencySign(this.currencyFiat)}${this.networkFee.toFixed(2)}`;
-    return `${this.networkFee.toString()} ${this.currencyCrypto}`;
+    if (this.type === TransactionType.TopUp || this.type === TransactionType.CashOut) {
+      return `${getCurrencySign(this.currencyFiat)}${this.networkFee}`;
+    } else {
+      return `${this.networkFee.toString()} ${this.currencyCrypto}`;
+    }
   }
 
   get systemFees(): string {
     return `${getCurrencySign(this.currencyFiat)}${this.fees.toString()}`;
-    //return `${getCurrencySign(this.currencyFiat)}${this.fees.toFixed(2)}`;
   }
 
   get amountSent(): string {
