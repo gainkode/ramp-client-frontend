@@ -25,6 +25,9 @@ const routes: Routes = [
   {
     path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)
   },
+  {
+    path: 'admin_new', loadChildren: () => import('./admin_new/admin_new.module').then(m => m.AdminNewModule)
+  },
   { path: 'terms/:id', component: TermsComponent },
   { path: 'terms', component: TermsComponent },
   { path: '', component: IntroComponent },

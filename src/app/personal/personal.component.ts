@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NavigationEnd, Router, Event as NavigationEvent } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { MenuItem } from '../model/common.model';
 import { PaymentCompleteDetails, PaymentErrorDetails, PaymentWidgetType } from '../model/payment-base.model';
 import { CurrencyView } from '../model/payment.model';
@@ -8,7 +9,8 @@ import { ProfileItemActionType, ProfileItemContainer, ProfileItemContainerType }
 import {
     PersonalProfileMenuItems,
     ProfilePopupAdministrationMenuItem,
-    PersonalProfilePopupMenuItems
+    PersonalProfilePopupMenuItems,
+    TestPopupAdministrationMenuItem
 } from '../model/profile-menu.model';
 import { ProfileContactsComponent } from '../profile/contacts/contacts.component';
 import { ProfileHomeComponent } from '../profile/home/home.component';
@@ -92,6 +94,12 @@ export class PersonalComponent implements OnInit, OnDestroy {
             const adminMenu = this.popupItems.find(x => x.id === ProfilePopupAdministrationMenuItem.id);
             if (!adminMenu) {
                 this.popupItems.splice(0, 0, ProfilePopupAdministrationMenuItem);
+            }
+        }
+        if (adminRole && !environment.production) {
+            const testAdminMenu = this.popupItems.find(x => x.id === TestPopupAdministrationMenuItem.id);
+            if (!testAdminMenu) {
+                this.popupItems.splice(0, 0, TestPopupAdministrationMenuItem);
             }
         }
         this.loadAvatar(undefined);
@@ -260,8 +268,6 @@ export class PersonalComponent implements OnInit, OnDestroy {
     popupMenuClick(item: MenuItem): void {
         if (item.id === 'logout') {
             this.logout();
-        } else if (item.id === 'administration') {
-            this.routeTo('/admin/main');
         } else {
             this.routeTo(item.url);
         }
