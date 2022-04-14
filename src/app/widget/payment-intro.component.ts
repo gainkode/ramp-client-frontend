@@ -90,7 +90,7 @@ export class PaymentIntroComponent implements OnInit, OnDestroy {
       this.exchangeRate.setCurrency(
         this.currentCurrencySpend?.id ?? '',
         this.currentCurrencyReceive?.id ?? '',
-        TransactionType.Deposit);
+        TransactionType.Buy);
       this.exchangeRate.register(this.onExchangeRateUpdated.bind(this));
     }
     this.pExchangeRateStarted = true;
@@ -235,7 +235,7 @@ export class PaymentIntroComponent implements OnInit, OnDestroy {
     this.exchangeRate.setCurrency(
       this.currentCurrencySpend?.id ?? '',
       this.currentCurrencyReceive?.id ?? '',
-      TransactionType.Deposit);
+      TransactionType.Buy);
     this.exchangeRate.update();
   }
 

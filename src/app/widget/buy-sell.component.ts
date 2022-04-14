@@ -35,10 +35,10 @@ export class BuySellWidgetComponent {
     this.widgetSettings.email = this.auth.user?.email ?? '';
     switch (selected) {
       case PaymentWidgetType.Buy:
-        this.widgetSettings.transaction = TransactionType.Deposit;
+        this.widgetSettings.transaction = TransactionType.Buy;
         break;
       case PaymentWidgetType.Sell:
-        this.widgetSettings.transaction = TransactionType.Withdrawal;
+        this.widgetSettings.transaction = TransactionType.Sell;
         break;
       case PaymentWidgetType.Transfer:
         this.widgetSettings.transaction = TransactionType.Transfer;

@@ -35,7 +35,7 @@ export class WidgetKycComponent implements OnInit, OnDestroy, AfterViewInit {
     private errorHandler: ErrorService) { }
 
   ngAfterViewInit(): void {
-    if (this.summary?.transactionType === TransactionType.Deposit && this.summary?.quoteLimit !== 0) {
+    if (this.summary?.transactionType === TransactionType.Buy && this.summary?.quoteLimit !== 0) {
       this.getTiers();
     } else {
       this.getSettings();

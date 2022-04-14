@@ -21,7 +21,7 @@ export class FiatWidgetComponent implements OnInit {
   @Input() set settings(val: WidgetSettings | undefined) {
     if (val) {
       this.widgetSettings = val;
-      this.summary.transactionType = val.transaction ?? TransactionType.TopUp;
+      this.summary.transactionType = val.transaction ?? TransactionType.Deposit;
     }
   }
   @Output() onComplete = new EventEmitter<PaymentCompleteDetails>();
@@ -94,7 +94,7 @@ export class FiatWidgetComponent implements OnInit {
   orderDetailsComplete(data: CheckoutSummary): void {
     this.summary.currencyTo = data.currencyTo;
     this.summary.amountTo = data.amountTo;
-    if (this.summary.transactionType === TransactionType.TopUp) {
+    if (this.summary.transactionType === TransactionType.Deposit) {
       this.widgetService.getWireTransferSettings(this.summary, this.widgetSettings);
     } else {
       this.stageId = 'sell_details';
@@ -127,7 +127,7 @@ export class FiatWidgetComponent implements OnInit {
 
   processingComplete(): void {
     const details = new PaymentCompleteDetails();
-    details.paymentType = (this.widgetSettings.transaction === TransactionType.TopUp) ?
+    details.paymentType = (this.widgetSettings.transaction === TransactionType.Deposit) ?
       PaymentWidgetType.Deposit :
       PaymentWidgetType.Withdrawal;
     details.amount = parseFloat(this.summary.amountTo?.toFixed(this.summary.amountToPrecision) ?? '0');
@@ -236,7 +236,7 @@ export class FiatWidgetComponent implements OnInit {
           this.summary.transactionDate = new Date().toLocaleString();
           this.summary.transactionId = order.transactionId as string;
           this.initMessage = '';
-          if (this.summary.transactionType === TransactionType.TopUp) {
+          if (this.summary.transactionType === TransactionType.Deposit) {
             this.stageId = 'transfer_result';
             this.title = 'Transfer Result';
           } else {
@@ -247,7 +247,7 @@ export class FiatWidgetComponent implements OnInit {
           this.errorMessage = 'Order code is invalid';
           this.onError.emit({
             errorMessage: this.errorMessage,
-            paymentType: (this.widgetSettings.transaction === TransactionType.TopUp) ?
+            paymentType: (this.widgetSettings.transaction === TransactionType.Deposit) ?
               PaymentWidgetType.Deposit :
               PaymentWidgetType.Withdrawal
           } as PaymentErrorDetails);
@@ -260,7 +260,7 @@ export class FiatWidgetComponent implements OnInit {
           this.errorMessage = this.errorHandler.getError(error.message, 'Unable to register a new transaction');
           this.onError.emit({
             errorMessage: this.errorMessage,
-            paymentType: (this.widgetSettings.transaction === TransactionType.TopUp) ?
+            paymentType: (this.widgetSettings.transaction === TransactionType.Deposit) ?
               PaymentWidgetType.Deposit :
               PaymentWidgetType.Withdrawal
           } as PaymentErrorDetails);

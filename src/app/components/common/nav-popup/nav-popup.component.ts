@@ -47,7 +47,6 @@ export class NavPopupComponent implements OnInit, OnDestroy {
     }
 
     private startNotifications(): void {
-        console.log('start popup user notification subscrption: ', this.auth.token);
         this.subscriptions.add(
             this.notification.subscribeToNotifications().subscribe(
                 ({ data }) => {

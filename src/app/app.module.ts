@@ -43,6 +43,7 @@ import { WidgetService } from './services/widget.service';
     DirectiveModule
   ],
   providers: [
+    Apollo,
     {
       provide: 'SocialAuthServiceConfig',
       useValue: {

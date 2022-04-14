@@ -235,39 +235,39 @@ export const QuickCheckoutPaymentInstrumentList: Array<PaymentInstrumentView> = 
 ];
 
 export const TransactionTypeList: Array<TransactionTypeView> = [
-    { id: TransactionType.Deposit, name: 'Buy' },
+    { id: TransactionType.Buy, name: 'Buy' },
     { id: TransactionType.Exchange, name: 'Swap' },
     { id: TransactionType.System, name: 'System' },
     { id: TransactionType.Receive, name: 'Receive' },
     { id: TransactionType.Transfer, name: 'Send' },
-    { id: TransactionType.Withdrawal, name: 'Sell' },
-    { id: TransactionType.TopUp, name: 'Top Up' },
-    { id: TransactionType.CashOut, name: 'Cash Out' },
+    { id: TransactionType.Sell, name: 'Sell' },
+    { id: TransactionType.Deposit, name: 'Deposit' },
+    { id: TransactionType.Withdrawal, name: 'Withdrawal' },
     { id: TransactionType.DepositMerchant, name: 'Merchant Deposit' }
 ];
 
 export const UserTransactionTypeList: Array<TransactionTypeView> = [
-    { id: TransactionType.Deposit, name: 'Buy' },
+    { id: TransactionType.Buy, name: 'Buy' },
     { id: TransactionType.Exchange, name: 'Swap' },
     { id: TransactionType.Transfer, name: 'Send' },
-    { id: TransactionType.Withdrawal, name: 'Sell' },
+    { id: TransactionType.Sell, name: 'Sell' },
     { id: TransactionType.Receive, name: 'Receive' }
 ];
 
 export const MerchantTransactionTypeList: Array<TransactionTypeView> = [
-    { id: TransactionType.Deposit, name: 'Buy' },
+    { id: TransactionType.Buy, name: 'Buy' },
     { id: TransactionType.Exchange, name: 'Swap' },
     { id: TransactionType.Transfer, name: 'Send' },
-    { id: TransactionType.Withdrawal, name: 'Sell' },
+    { id: TransactionType.Sell, name: 'Sell' },
     { id: TransactionType.Receive, name: 'Receive' },
-    { id: TransactionType.TopUp, name: 'Top Up' },
-    { id: TransactionType.CashOut, name: 'Cash Out' },
+    { id: TransactionType.Deposit, name: 'Deposit' },
+    { id: TransactionType.Withdrawal, name: 'Withdrawal' },
     { id: TransactionType.DepositMerchant, name: 'Merchant Deposit' }
 ];
 
 export const QuickCheckoutTransactionTypeList: Array<TransactionTypeView> = [
-    { id: TransactionType.Deposit, name: 'Buy' },
-    { id: TransactionType.Withdrawal, name: 'Sell' }
+    { id: TransactionType.Buy, name: 'Buy' },
+    { id: TransactionType.Sell, name: 'Sell' }
 ];
 
 export const TransactionSourceList: Array<TransactionSourceView> = [
@@ -436,7 +436,7 @@ export class CheckoutSummary {
     networkFee = 0;
     exchangeRate: Rate | undefined = undefined;
     transactionDate = '';
-    transactionType: TransactionType = TransactionType.Deposit;
+    transactionType: TransactionType = TransactionType.Buy;
     transactionId = '';
     vaultId = '';
     status: TransactionStatus = TransactionStatus.Pending;
@@ -449,7 +449,7 @@ export class CheckoutSummary {
     get isFromCrypto(): boolean {
         let result = false;
         switch (this.transactionType) {
-            case TransactionType.Withdrawal:
+            case TransactionType.Sell:
                 result = true;
         }
         return result;
@@ -458,7 +458,7 @@ export class CheckoutSummary {
     get isToCrypto(): boolean {
         let result = false;
         switch (this.transactionType) {
-            case TransactionType.Deposit:
+            case TransactionType.Buy:
                 result = true;
         }
         return result;
@@ -502,12 +502,12 @@ export class CheckoutSummary {
     get rate(): string {
         let result = '';
         switch (this.transactionType) {
-            case TransactionType.Deposit:
+            case TransactionType.Buy:
                 if (this.exchangeRate?.depositRate) {
                     result = (this.exchangeRate.depositRate > 0) ? this.exchangeRate.depositRate.toString() : '';
                 }
                 break;
-            case TransactionType.Withdrawal:
+            case TransactionType.Sell:
                 if (this.exchangeRate?.withdrawRate) {
                     result = (this.exchangeRate.withdrawRate > 0) ? this.exchangeRate.withdrawRate.toString() : '';
                 }
@@ -540,7 +540,7 @@ export class CheckoutSummary {
         this.networkFee = 0;
         this.exchangeRate = undefined;
         this.transactionDate = '';
-        this.transactionType = TransactionType.Deposit;
+        this.transactionType = TransactionType.Buy;
         this.transactionId = '';
         this.status = TransactionStatus.Pending;
         this.provider = undefined;

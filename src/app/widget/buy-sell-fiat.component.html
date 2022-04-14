@@ -5,14 +5,14 @@
           (click)="selectPaymentType(WIDGET_TYPE.Deposit)">
           <span
               [ngClass]="{'__widget-embedded-tab-title': true, '__widget-embedded-tab-title-unselected': selectedWidgetType !== WIDGET_TYPE.Deposit}">
-              TOP UP
+              DEPOSIT
           </span>
       </div>
       <div [ngClass]="{'__widget-embedded-tab': true, '__widget-embedded-right-tab-unselected': selectedWidgetType !== WIDGET_TYPE.Withdrawal}"
           (click)="selectPaymentType(WIDGET_TYPE.Withdrawal)">
           <span
               [ngClass]="{'__widget-embedded-tab-title': true, '__widget-embedded-tab-title-unselected': selectedWidgetType !== WIDGET_TYPE.Withdrawal}">
-              CASH OUT
+              WITHDRAWAL
           </span>
       </div>
   </div>

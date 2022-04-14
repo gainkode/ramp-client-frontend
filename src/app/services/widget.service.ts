@@ -364,7 +364,7 @@ export class WidgetService {
                     if (this.onKycStatusUpdate) {
                         this.onKycStatusUpdate(kycData[0] === true, kycData[1]);
                     }
-                    if (summary.transactionType === TransactionType.Deposit) {
+                    if (summary.transactionType === TransactionType.Buy) {
                         this.loadPaymentProviders(summary, widgetId);
                     } else {
                         if (this.onError) {
@@ -383,9 +383,9 @@ export class WidgetService {
 
     private loadPaymentProviders(summary: CheckoutSummary, widgetId: string): void {
         let fiatCurrency = '';
-        if (summary.transactionType === TransactionType.Deposit) {
+        if (summary.transactionType === TransactionType.Buy) {
             fiatCurrency = summary.currencyFrom;
-        } else if (summary.transactionType === TransactionType.Withdrawal) {
+        } else if (summary.transactionType === TransactionType.Sell) {
             fiatCurrency = summary.currencyTo;
         }
         const providersData$ = this.paymentService.getProviders(
@@ -415,9 +415,9 @@ export class WidgetService {
 
     private getPaymentProviderList(summary: CheckoutSummary, list: PaymentProviderByInstrument[]): PaymentProviderInstrumentView[] {
         let currency = '';
-        if (summary.transactionType === TransactionType.Deposit) {
+        if (summary.transactionType === TransactionType.Buy) {
             currency = summary.currencyFrom ?? '';
-        } else if (summary.transactionType === TransactionType.Withdrawal) {
+        } else if (summary.transactionType === TransactionType.Sell) {
             currency = summary.currencyTo ?? '';
         }
         return list

@@ -53,7 +53,7 @@ export class WalletItem {
   }
 
   get totalFullFiat(): string {
-    return `${getCurrencySign(this.fiat)}${this.total.toFixed(2)}`;
+    return `${getCurrencySign(this.asset)}${this.total.toFixed(2)}`;
   }
 
   get nameValue(): string {

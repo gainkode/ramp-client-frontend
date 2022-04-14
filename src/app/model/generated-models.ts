@@ -2794,14 +2794,14 @@ export enum TransactionStatusLevel {
 }
 
 export enum TransactionType {
-  Deposit = 'Deposit',
-  Withdrawal = 'Withdrawal',
+  Buy = 'Buy',
+  Sell = 'Sell',
   Transfer = 'Transfer',
   Receive = 'Receive',
   Exchange = 'Exchange',
   System = 'System',
-  TopUp = 'TopUp',
-  CashOut = 'CashOut',
+  Deposit = 'Deposit',
+  Withdrawal = 'Withdrawal',
   DepositMerchant = 'DepositMerchant'
 }
 
@@ -3019,8 +3019,8 @@ export enum UserActionType {
   Logout = 'logout',
   Send = 'send',
   Receive = 'receive',
-  Deposit = 'deposit',
-  Withdraw = 'withdraw',
+  Buy = 'buy',
+  Sell = 'sell',
   Transfer = 'transfer',
   Exchange = 'exchange',
   System = 'system',
@@ -3032,8 +3032,8 @@ export enum UserActionType {
   CreateApiKey = 'createApiKey',
   DeleteApiKey = 'deleteApiKey',
   ChangeRiskAlertSettings = 'changeRiskAlertSettings',
-  TopUp = 'TopUp',
-  CashOut = 'CashOut',
+  Deposit = 'Deposit',
+  Withdrawal = 'Withdrawal',
   DepositMerchant = 'DepositMerchant'
 }
 

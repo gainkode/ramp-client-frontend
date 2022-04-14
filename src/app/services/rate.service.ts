@@ -18,7 +18,7 @@ export class ExchangeRateService {
     private errorMessage = '';
     private currencyFrom = '';
     private currencyTo = '';
-    private transaction: TransactionType = TransactionType.Deposit;
+    private transaction: TransactionType = TransactionType.Buy;
 
     constructor(private dataService: PaymentDataService, private errorHandler: ErrorService) {
         this.startTimer();
@@ -81,10 +81,10 @@ export class ExchangeRateService {
         if (this.countDownInit) {
             let currencyFrom = '';
             let currencyTo = '';
-            if (this.transaction === TransactionType.Withdrawal) {
+            if (this.transaction === TransactionType.Sell) {
                 currencyTo = this.currencyTo as string;
                 currencyFrom = this.currencyFrom as string;
-            } else if (this.transaction === TransactionType.Deposit) {
+            } else if (this.transaction === TransactionType.Buy) {
                 currencyFrom = this.currencyTo as string;
                 currencyTo = this.currencyFrom as string;
             }

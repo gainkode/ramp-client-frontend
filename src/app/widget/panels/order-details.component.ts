@@ -67,7 +67,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   transactionTypeEdit = false;
   currentCurrencySpend: CurrencyView | undefined = undefined;
   currentCurrencyReceive: CurrencyView | undefined = undefined;
-  currentTransaction: TransactionType = TransactionType.Deposit;
+  currentTransaction: TransactionType = TransactionType.Buy;
   currentTransactionName = '';
   spendTitle = '';
   receiveTitle = '';
@@ -264,14 +264,14 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
         let currentCurrencyReceiveId = this.summary?.currencyTo ?? '';
         let currentAmountSpend = this.summary?.amountFrom;
         let currentAmountReceive = this.summary?.amountTo;
-        if (this.currentTransaction === TransactionType.Deposit) {
+        if (this.currentTransaction === TransactionType.Buy) {
           if (currentCurrencySpendId === '') {
             currentCurrencySpendId = defaultFiatCurrency ?? '';
           }
           if (currentCurrencyReceiveId === '') {
             currentCurrencyReceiveId = defaultCryptoCurrency ?? '';
           }
-        } else if (this.currentTransaction === TransactionType.Withdrawal) {
+        } else if (this.currentTransaction === TransactionType.Sell) {
           if (currentCurrencyReceiveId === '') {
             currentCurrencyReceiveId = defaultFiatCurrency ?? '';
           }
@@ -288,7 +288,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
           currentAmountSpend,
           currentAmountReceive);
         this.addressInit = true;
-        if (this.currentTransaction === TransactionType.Deposit && this.wallets.length > 0) {
+        if (this.currentTransaction === TransactionType.Buy && this.wallets.length > 0) {
           if (this.summary?.address !== '') {
             this.walletField?.setValue(this.summary?.address);
           }
@@ -382,10 +382,10 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   }
 
   private setCurrencyLists(): void {
-    if (this.currentTransaction === TransactionType.Deposit) {
+    if (this.currentTransaction === TransactionType.Buy) {
       this.spendCurrencyList = this.pCurrencies.filter((c) => this.filterFiat(c));
       this.receiveCurrencyList = this.pCurrencies.filter((c) => this.filterCrypto(c));
-    } else if (this.currentTransaction === TransactionType.Withdrawal) {
+    } else if (this.currentTransaction === TransactionType.Sell) {
       this.spendCurrencyList = this.pCurrencies.filter((c) => this.filterCrypto(c));
       this.receiveCurrencyList = this.pCurrencies.filter((c) => this.filterFiat(c));
     }
@@ -408,7 +408,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   }
 
   private setWalletVisible(): void {
-    if (this.currentTransaction === TransactionType.Deposit) {
+    if (this.currentTransaction === TransactionType.Buy) {
       this.showWallet = !this.settings.walletAddressPreset;
       if (this.showWallet) {
         if (this.settings.transfer) {
@@ -487,12 +487,12 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   }
 
   private setAmountTitles(): void {
-    if (this.currentTransaction === TransactionType.Deposit) {
-      this.spendTitle = 'Fiat sent';
-      this.receiveTitle = 'Crypto received';
-    } else if (this.currentTransaction === TransactionType.Withdrawal) {
-      this.spendTitle = 'Crypto sent';
-      this.receiveTitle = 'Fiat received';
+    if (this.currentTransaction === TransactionType.Buy) {
+      this.spendTitle = 'Amount to Buy';
+      this.receiveTitle = 'Amount to Receive';
+    } else if (this.currentTransaction === TransactionType.Sell) {
+      this.spendTitle = 'Amount to Sell';
+      this.receiveTitle = 'Amount to Receive';
     }
   }
 
@@ -502,7 +502,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       if (this.currentCurrencySpend && this.amountSpendField?.value) {
         this.setSpendValidators();
       }
-      if (this.summary?.transactionType === TransactionType.Withdrawal) {
+      if (this.summary?.transactionType === TransactionType.Sell) {
         if (this.wallets.length > 0) {
           if (this.addressInit) {
             this.walletField?.setValue(this.summary.address ?? '');
@@ -525,7 +525,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
           }
         }
       }
-      if (this.summary?.transactionType === TransactionType.Withdrawal) {
+      if (this.summary?.transactionType === TransactionType.Sell) {
         this.pSpendChanged = true;
       } else {
         this.pReceiveChanged = true;
@@ -540,14 +540,14 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       if (this.currentCurrencyReceive && this.amountReceiveField?.value) {
         this.setReceiveValidators();
       }
-      if (this.wallets.length > 0 && this.summary?.transactionType === TransactionType.Deposit) {
+      if (this.wallets.length > 0 && this.summary?.transactionType === TransactionType.Buy) {
         if (this.addressInit) {
           this.walletField?.setValue(this.summary.address ?? '');
           this.walletInit = false;
         }
         this.filteredWallets = this.wallets.filter(x => x.asset === currency);
       }
-      if (this.summary?.transactionType === TransactionType.Deposit && this.settings.embedded) {
+      if (this.summary?.transactionType === TransactionType.Buy && this.settings.embedded) {
         const emptyList = (this.filteredWallets.length === 0);
         this.filteredWallets.splice(0, 0, new WalletItem({
           vaultName: '...',
@@ -561,7 +561,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
           this.errorMessage = '';
         }
       }
-      if (this.summary?.transactionType === TransactionType.Withdrawal) {
+      if (this.summary?.transactionType === TransactionType.Sell) {
         this.pSpendChanged = true;
       } else {
         this.pReceiveChanged = true;
@@ -628,7 +628,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       this.selectedWallet = this.filteredWallets.find(x => x.address === val);
     }
     //    }
-    if (this.selectedWallet && this.summary?.transactionType === TransactionType.Withdrawal) {
+    if (this.selectedWallet && this.summary?.transactionType === TransactionType.Sell) {
       this.setSpendValidators(this.selectedWallet.total);
     }
     const data: CheckoutSummary = new CheckoutSummary();
@@ -669,7 +669,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
 
   private updateQuote(): void {
     this.currentQuote = '';
-    if (this.currentTransaction === TransactionType.Deposit && this.currentQuoteEur !== 0) {
+    if (this.currentTransaction === TransactionType.Buy && this.currentQuoteEur !== 0) {
       const c = this.pCurrencies.find(x => x.id === this.currentCurrencySpend?.id);
       if (c) {
         this.quoteLimit = (this.currentQuoteEur - this.transactionsTotalEur) * c.rateFactor;
@@ -683,12 +683,12 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     this.validData = false;
     let dst = 0;
     if (this.pReceiveChanged) {
-      if (this.currentTransaction === TransactionType.Deposit) {
+      if (this.currentTransaction === TransactionType.Buy) {
         if (receive && this.pDepositRate) {
           dst = receive * this.pDepositRate;
           this.validData = true;
         }
-      } else if (this.currentTransaction === TransactionType.Withdrawal) {
+      } else if (this.currentTransaction === TransactionType.Sell) {
         if (receive && this.pWithdrawalRate) {
           const rate = this.pWithdrawalRate;
           if (rate === 0) {
@@ -707,7 +707,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       }
     }
     if (this.pSpendChanged) {
-      if (this.currentTransaction === TransactionType.Deposit) {
+      if (this.currentTransaction === TransactionType.Buy) {
         if (spend && this.pDepositRate) {
           const rate = this.pDepositRate;
           if (rate === 0) {
@@ -717,7 +717,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
           }
           this.validData = true;
         }
-      } else if (this.currentTransaction === TransactionType.Withdrawal) {
+      } else if (this.currentTransaction === TransactionType.Sell) {
         if (spend && this.pWithdrawalRate) {
           dst = spend * this.pWithdrawalRate;
           this.validData = true;
@@ -731,7 +731,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       }
     }
     this.quoteExceedHidden = false;
-    if (this.currentTransaction == TransactionType.Deposit) {
+    if (this.currentTransaction == TransactionType.Buy) {
       const amount = this.amountSpendField?.value ?? 0;
       if (amount > 0 && amount > this.quoteLimit && !this.quoteUnlimit) {
         this.quoteExceedHidden = true;

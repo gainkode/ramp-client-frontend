@@ -8,7 +8,7 @@
                     <button *ngIf="merchantApproved" class="__top-menu-button"
                         (click)="showPaymentPanel(WIDGET_TYPE.Deposit)">
                         <mat-icon>monetization_on</mat-icon>
-                        &nbsp;&nbsp;&nbsp;Top Up & Cash Out
+                        &nbsp;&nbsp;&nbsp;Deposit & Withdrawal
                     </button>
                     <div *ngIf="merchantApproved" class="__top-menu-button-separator"></div>
                     <button *ngIf="merchantApproved" class="__top-menu-button"
@@ -64,7 +64,7 @@
                 <li *ngIf="merchantApproved">
                     <a [routerLink]="" class="__top-menu-hamburger-item"
                         (click)="showPaymentPanel(WIDGET_TYPE.Deposit)">
-                        Top Up & Cash Out
+                        Deposit & Withdrawal
                     </a>
                     <a [routerLink]="" class="__top-menu-hamburger-item" (click)="showPaymentPanel(WIDGET_TYPE.Buy)">
                         Buy & Sell

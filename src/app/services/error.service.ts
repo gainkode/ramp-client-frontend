@@ -150,7 +150,7 @@ export class ErrorService {
                 break;
             default:
                 if (code !== '') {
-                    result = code;
+                    result = `${result} (${code})`;
                 }
                 break;
         }

@@ -37,7 +37,7 @@
         </div>
         <div class="__form-separator"></div>
 
-        <div *ngIf="currentTransaction !== TRANSACTION_TYPE.Withdrawal">
+        <div *ngIf="currentTransaction !== TRANSACTION_TYPE.Sell">
             <!-- Verification levels -->
             <div *ngIf="currentTier!=='' && settings.embedded">
                 <div class="__widget-hint-line">
@@ -123,7 +123,7 @@
             </div>
         </div>
 
-        <div *ngIf="currentTransaction === TRANSACTION_TYPE.Withdrawal">
+        <div *ngIf="currentTransaction === TRANSACTION_TYPE.Sell">
             <!-- Receive -->
             <app-form-finance-combo [label]="receiveTitle" [placeholder]="'...'" [boxFieldName]="'amountReceive'"
                 [boxField]="amountReceiveField" [comboField]="currencyReceiveField" [comboFieldName]="'currencyReceive'"

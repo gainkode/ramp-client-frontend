@@ -103,7 +103,7 @@ export class TransferWidgetComponent implements OnInit {
       this.summary.email = this.auth?.user?.email ?? '';
       this.widget.email = this.summary.email;
     }
-    this.summary.transactionType = TransactionType.Deposit;
+    this.summary.transactionType = TransactionType.Buy;
     this.widget.embedded = true;
     this.widget.transaction = this.summary.transactionType;
     this.widget.transfer = true;

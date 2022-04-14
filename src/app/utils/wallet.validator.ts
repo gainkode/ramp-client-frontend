@@ -15,7 +15,7 @@ export class WalletValidator {
             if (!addressControl || !currencyControl || !transactionControl) {
                 return null;
             }
-            if (transactionControl.value !== TransactionType.Deposit) {
+            if (transactionControl.value !== TransactionType.Buy) {
                 return null;
             }
             if (!addressControl.value || !currencyControl.value) {

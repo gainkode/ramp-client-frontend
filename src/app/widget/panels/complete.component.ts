@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
 })
 export class WidgetCompleteComponent {
   @Input() showRestartButton = false;
-  @Input() transaction: TransactionType = TransactionType.Deposit;
+  @Input() transaction: TransactionType = TransactionType.Buy;
   @Output() onFinish = new EventEmitter();
   
   TRANSACTION_TYPE: typeof TransactionType = TransactionType;

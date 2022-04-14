@@ -159,7 +159,7 @@ export class WidgetComponent implements OnInit {
         //this.widget.kycFirst = true;
         //this.widget.email = 'tugaymv@gmail.com';
         //this.widget.disclaimer = true;
-        this.widget.transaction = TransactionType.Deposit;
+        this.widget.transaction = TransactionType.Buy;
         //temp
         this.widget.source = TransactionSource.QuickCheckout;
       }
@@ -414,7 +414,7 @@ export class WidgetComponent implements OnInit {
 
   desclaimerNext(): void {
     this.summary.agreementChecked = true;
-    if (this.summary.transactionType === TransactionType.Withdrawal) {
+    if (this.summary.transactionType === TransactionType.Sell) {
       this.nextStage('sell_details', 'Bank details', 2, true);
       //this.createWithdrawalTransaction();
     } else {
@@ -714,7 +714,7 @@ export class WidgetComponent implements OnInit {
     if (this.summary) {
       this.pSubscriptions.add(
         this.dataService.createTransaction(
-          TransactionType.Withdrawal,
+          TransactionType.Sell,
           this.widget.source,
           this.summary.vaultId,
           this.summary.currencyFrom,

@@ -29,7 +29,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
     this.pDefaultRate = val?.rate ?? 0;
     this.setCurrencies(this.pCurrencies);
     this.layoutService.setBackdrop(!val?.id);
-    if (val?.type === TransactionType.Withdrawal) {
+    if (val?.type === TransactionType.Sell) {
       this.amountToSpendTitle = 'Amount To Sell';
     }
     this.systemFeeTitle = `Fee, ${val?.currencyFiat}`;
@@ -146,9 +146,9 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
     const spend = this.form.get('currencyToSpend')?.value;
     const receive = this.form.get('currencyToReceive')?.value;
     if (spendFiat) {
-      this.exhangeRate.setCurrency(spend, receive, TransactionType.Deposit);
+      this.exhangeRate.setCurrency(spend, receive, TransactionType.Buy);
     } else {
-      this.exhangeRate.setCurrency(receive, spend, TransactionType.Deposit);
+      this.exhangeRate.setCurrency(receive, spend, TransactionType.Buy);
     }
     this.exhangeRate.update();
   }
@@ -161,7 +161,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
         if (this.data.type === TransactionType.Receive || this.data.type === TransactionType.Transfer) {
           this.currenciesToSpend = list.filter(x => x.fiat === false);
           this.currenciesToReceive = list.filter(x => x.fiat === false);
-        } else if (this.data.type === TransactionType.TopUp || this.data.type === TransactionType.CashOut) {
+        } else if (this.data.type === TransactionType.Deposit || this.data.type === TransactionType.Withdrawal) {
           this.currenciesToSpend = list.filter(x => x.fiat === true);
           this.currenciesToReceive = list.filter(x => x.fiat === true);
         } else {
@@ -204,7 +204,7 @@ export class TransactionDetailsComponent implements OnInit, OnDestroy {
       this.kycStatus = TransactionKycStatusList.find(x => x.id === this.data?.kycStatusValue)?.name ?? '';
       this.accountStatus = UserStatusList.find(x => x.id === this.data?.accountStatusValue)?.name ?? '';
     }
-    if (this.transactionType === TransactionType.CashOut || this.transactionType === TransactionType.TopUp) {
+    if (this.transactionType === TransactionType.Withdrawal || this.transactionType === TransactionType.Deposit) {
       this.form.get('address')?.setValidators([]);
       this.form.updateValueAndValidity();
     }

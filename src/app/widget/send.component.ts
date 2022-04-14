@@ -67,7 +67,7 @@ export class SendWidgetComponent implements OnInit {
   }
 
   private startExchangeRate(): void {
-    this.exhangeRate.setCurrency(this.summary.currencyFrom, this.summary.currencyTo, TransactionType.Withdrawal);
+    this.exhangeRate.setCurrency(this.summary.currencyFrom, this.summary.currencyTo, TransactionType.Sell);
     this.exhangeRate.register(this.onExchangeRateUpdated.bind(this));
   }
 
@@ -150,7 +150,7 @@ export class SendWidgetComponent implements OnInit {
     const currencyFromChanged = (this.summary.currencyFrom !== data.currencyFrom);
     this.summary.currencyFrom = data.currencyFrom;
     if (currencyFromChanged || amountChanged) {
-      this.exhangeRate.setCurrency(this.summary.currencyFrom, this.summary.currencyTo, TransactionType.Withdrawal);
+      this.exhangeRate.setCurrency(this.summary.currencyFrom, this.summary.currencyTo, TransactionType.Sell);
       this.exhangeRate.update();
     }
   }

@@ -37,7 +37,7 @@ export class ProfileContactCreateComponent implements OnInit, OnDestroy {
         ],
         currency: ['', { validators: [Validators.required], updateOn: 'change' }],
         address: ['', { validators: [Validators.required], updateOn: 'change' }],
-        transaction: [TransactionType.Deposit, { validators: [], updateOn: 'change' }],
+        transaction: [TransactionType.Buy, { validators: [], updateOn: 'change' }],
     }, {
         validators: [
             WalletValidator.addressValidator(

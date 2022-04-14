@@ -27,9 +27,9 @@ export class WidgetDepositDetailsComponent implements OnInit, OnDestroy {
     if (val.amountTo !== undefined) {
       this.amountField?.setValue(val.amountTo);
     }
-    if (val.transactionType === TransactionType.TopUp) {
+    if (val.transactionType === TransactionType.Deposit) {
       this.amountTitle = 'Fiat Received';
-    } else if (val.transactionType === TransactionType.CashOut) {
+    } else if (val.transactionType === TransactionType.Withdrawal) {
       this.amountTitle = 'Fiat Sent';
     }
   }

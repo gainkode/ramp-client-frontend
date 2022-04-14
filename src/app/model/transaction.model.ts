@@ -102,7 +102,7 @@ export class TransactionItemFull {
         this.benchmarkTransferOrderId = transactionData.benchmarkTransferOrder?.orderId ?? '';
         this.benchmarkTransferOrderHash = transactionData.benchmarkTransferOrder?.transferHash ?? '';
       }
-      if (data.type === TransactionType.Withdrawal) {
+      if (data.type === TransactionType.Sell) {
         this.instrumentDetailsData = this.getInstrumentDetails(data.instrumentDetails ?? '{}');
       }
       this.comment = transactionData.comment ?? '';
@@ -417,7 +417,7 @@ export class TransactionItem {
   }
 
   get networkFees(): string {
-    if (this.type === TransactionType.TopUp || this.type === TransactionType.CashOut) {
+    if (this.type === TransactionType.Deposit || this.type === TransactionType.Withdrawal) {
       return `${getCurrencySign(this.currencyFiat)}${this.networkFee}`;
     } else {
       return `${this.networkFee.toString()} ${this.currencyCrypto}`;
@@ -484,7 +484,7 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
   result.currencyToReceive = data.currencyToReceive ?? '';
   result.amountToSpend = data.amountToSpend ?? 0;
   result.amountToReceive = data.amountToReceiveWithoutFee ?? 0;
-  if (data.type === TransactionType.Deposit) {
+  if (data.type === TransactionType.Buy) {
     result.currencyFiat = result.currencyToSpend;
     result.currencyCrypto = result.currencyToReceive;
     const c = getCryptoSymbol(result.currencyToReceive);
@@ -611,7 +611,7 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
       imgSource: '',
       imgClass: ''
     } as CommonTargetValue;
-  } else if (data.type === TransactionType.Withdrawal) {
+  } else if (data.type === TransactionType.Sell) {
     result.currencyFiat = result.currencyToReceive;
     result.currencyCrypto = result.currencyToSpend;
     result.recipient = {
@@ -641,7 +641,7 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
     result.fees = data.feeFiat as number ?? 0;
     result.networkFee = data.approxNetworkFee ?? 0;
     result.typeIcon = 'account_balance';
-  } else if (data.type === TransactionType.TopUp) {
+  } else if (data.type === TransactionType.Deposit) {
     result.currencyFiat = result.currencyToReceive;
     result.currencyCrypto = '';
     result.amountToReceive = result.amountToSpend;
@@ -682,7 +682,7 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
       imgSource: '',
       imgClass: ''
     } as CommonTargetValue;
-  } else if (data.type === TransactionType.CashOut) {
+  } else if (data.type === TransactionType.Withdrawal) {
     result.currencyFiat = result.currencyToReceive;
     result.currencyCrypto = '';
     result.amountToReceive = result.amountToSpend;

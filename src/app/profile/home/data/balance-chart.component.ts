@@ -111,7 +111,7 @@ export class ProfileBalanceChartComponent implements OnInit, OnDestroy {
         }
     };
     xaxis: ApexXAxis = {
-        type: 'category',
+        type: 'datetime',
         tickAmount: undefined,
         min: undefined,
         max: undefined,
@@ -351,55 +351,29 @@ export class ProfileBalanceChartComponent implements OnInit, OnDestroy {
                     }
                 }
                 while (inc < max) {
-                    let emptyLabel = false;
-                    if (period === UserBalanceHistoryPeriod.LastMonth) {
-                        emptyLabel = ((inc - 1) % 2 === 0);
-                    } else if (period === UserBalanceHistoryPeriod.LastYear) {
-                        emptyLabel = ((inc - 1) % 10 !== 0);
-                    } else if (period === UserBalanceHistoryPeriod.All) {
-                        if (max < 10) {
-                            emptyLabel = false;
-                        } else {
-                            emptyLabel = ((inc - 1) % allDataStopNumber !== 0);
-                        }
-                    }
                     const val = new BalancePoint();
                     val.date = new Date(2000, 1, 1, 0, 0, 0, 0);
                     val.date.setTime(currentDate.getTime() - inc * 86400000);
                     val.balanceCrypto = 0;
                     val.balanceFiat = this.currentBalance;
                     val.currency = this.selectedFiat;
-                    val.dateLabel = (inc === 0 || inc === max - 1 || emptyLabel) ? '' : val.datePoint;
+                    val.dateLabel = val.datePointFull;
                     chartPoints.splice(0, 0, val);
                     inc++;
                 }
             } else {
                 inc = max;
             }
-            // let spotBalance = 0;
-            // while (inc > 0) {
-            //     inc--;
-            //     const dataPoint = data.list[inc];
-            //     const chartPoint = chartPoints[inc];
-            //     //const chartPoint = chartPoints[max - inc - 1];
-            //     if (dataPoint) {
-            //         spotBalance += dataPoint.balanceFiat ?? 0;
-            //     }
-            //     console.log(inc, spotBalance, dataPoint?.balanceFiat);
-            //     chartPoint.balanceFiat -= spotBalance;
-            // }
 
             let spotBalance = 0;
             while (inc > 0) {
                 inc--;
                 const dataPoint = data.list[max - inc - 1];
                 const chartPoint = chartPoints[inc];
-                //const chartPoint = chartPoints[max - inc - 1];
                 chartPoint.balanceFiat -= spotBalance;
                 if (dataPoint !== null) {
                     spotBalance += dataPoint.balanceFiat ?? 0;
                 }
-                //chartPoint.balanceFiat -= spotBalance;
             }
         }
         return chartPoints;
