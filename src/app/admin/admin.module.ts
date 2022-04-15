@@ -32,6 +32,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AdminRoutingModule } from './admin.routing.module';
 import { AdminComponent } from './admin.component';
 import { AdminGuard } from './admin.guard';
+import { HeaderComponent } from './layout/header/header.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -71,7 +72,8 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
     DirectiveModule
   ],
   declarations: [
-    AdminComponent
+    AdminComponent,
+    HeaderComponent
   ],
   providers: [
     AdminGuard,
