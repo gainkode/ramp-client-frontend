@@ -141,7 +141,7 @@ export const MerchantProfilePopupMenuItems: Array<MenuItem> = [
 export const ProfilePopupAdministrationMenuItem: MenuItem = {
     id: 'administration',
     name: 'Administration',
-    url: '/admin/main',
+    url: '/admin_old/main',
     icon: 'admin_panel_settings',
     code: ''
 };

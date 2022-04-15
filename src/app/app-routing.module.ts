@@ -23,10 +23,10 @@ const routes: Routes = [
     path: 'merchant', loadChildren: () => import('./merchant/merchant.module').then(m => m.MerchantModule)
   },
   {
-    path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)
+    path: 'admin_old', loadChildren: () => import('./admin_old/admin_old.module').then(m => m.AdminOldModule)
   },
   {
-    path: 'admin_new', loadChildren: () => import('./admin_new/admin_new.module').then(m => m.AdminNewModule)
+    path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)
   },
   { path: 'terms/:id', component: TermsComponent },
   { path: 'terms', component: TermsComponent },

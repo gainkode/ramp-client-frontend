@@ -1,0 +1,272 @@
+<form [formGroup]="dataForm" (ngSubmit)="onSubmit()">
+    <div class="form-element" *ngIf="errorMessage!==''">
+        <div class="form-error-box">
+            {{errorMessage}}
+        </div>
+        <br>
+    </div>
+
+    <section>
+        <h2>Customer info</h2>
+        <app-details-attribute *ngIf="cancelable" label="Account Id" [value]="data?.referralCode"
+            [linkUrl]="'/admin_old/customers/'+ settingsId"></app-details-attribute>
+        <app-details-attribute *ngIf="!cancelable" label="Account Id" [value]="data?.referralCode"></app-details-attribute>
+
+        <app-details-attribute label="Widget" [value]="userData?.widgetId"></app-details-attribute>
+        <app-details-attribute label="Widget Code" [value]="userData?.widgetCode"></app-details-attribute>
+
+        <app-details-attribute label="Affiliate" [value]="userData?.affiliateId"></app-details-attribute>
+        <app-details-attribute label="Affiliate Code" [value]="userData?.affiliateCode"></app-details-attribute>
+    </section>
+
+    <!-- Email -->
+    <mat-form-field class="form-element">
+        <mat-label>Email</mat-label>
+        <input type="text" matInput formControlName="email" maxlength="35" placeholder="Email" required />
+        <mat-error *ngIf="this.dataForm.get('email')?.hasError('required')">
+            Please specify the email address
+        </mat-error>
+    </mat-form-field>
+
+    <!-- Company -->
+    <mat-form-field *ngIf="userType===USER_TYPE.Merchant" class="form-element">
+        <mat-label>Company</mat-label>
+        <input type="text" matInput formControlName="firstName" maxlength="75" placeholder="Company name" required />
+        <mat-error *ngIf="this.dataForm.get('firstName')?.hasError('required')">
+            Please specify the company name
+        </mat-error>
+    </mat-form-field>
+
+    <!-- First name -->
+    <mat-form-field *ngIf="userType===USER_TYPE.Personal" class="form-element">
+        <mat-label>First Name</mat-label>
+        <input type="text" matInput formControlName="firstName" maxlength="50" placeholder="First name" required />
+        <mat-error *ngIf="this.dataForm.get('firstName')?.hasError('required')">
+            Please specify the customer name
+        </mat-error>
+    </mat-form-field>
+
+    <!-- Last name -->
+    <mat-form-field *ngIf="userType===USER_TYPE.Personal" class="form-element">
+        <mat-label>Last Name</mat-label>
+        <input type="text" matInput formControlName="lastName" maxlength="50" placeholder="Last name" />
+        <mat-error *ngIf="this.dataForm.get('lastName')?.hasError('required')">
+            Please specify the customer name
+        </mat-error>
+    </mat-form-field>
+
+    <div class="panel-actions">
+        <button *ngIf="permission>1" type="button" mat-flat-button (click)="onResetPassword()">
+            RESET PASSWORD
+        </button>
+    </div>
+
+    <!-- Birthday -->
+    <mat-form-field *ngIf="userType===USER_TYPE.Personal" class="form-element">
+        <mat-label>Birthday</mat-label>
+        <input type="text" matInput formControlName="birthday" maxlength="10" mask="d0/M0/0000" placeholder="DD/MM/YYYY"
+            [dropSpecialCharacters]="false" />
+        <mat-error *ngIf="this.dataForm.get('birthday')?.hasError('required')">
+            Please specify the birthday
+        </mat-error>
+        <mat-error *ngIf="this.dataForm.get('birthday')?.hasError('pattern')">
+            Incorrect date format
+        </mat-error>
+    </mat-form-field>
+    <app-details-attribute label="Age" [value]="userData?.age"></app-details-attribute>
+
+    <app-details-attribute label="Address" [value]="address"></app-details-attribute>
+
+    <!-- Country -->
+    <mat-form-field class="form-element">
+        <mat-label>Country</mat-label>
+        <mat-select formControlName="country" required>
+            <mat-option *ngFor="let item of countries" [value]="item.code3">
+                {{item.name}}
+            </mat-option>
+        </mat-select>
+        <mat-error *ngIf="this.dataForm.get('country')?.hasError('required')">
+            Please specify the customer country
+        </mat-error>
+    </mat-form-field>
+
+    <!-- Post Code -->
+    <mat-form-field class="form-element">
+        <mat-label>Post Code</mat-label>
+        <input type="text" matInput formControlName="postCode" maxlength="15" placeholder="Post Code" />
+    </mat-form-field>
+
+    <!-- Town -->
+    <mat-form-field class="form-element">
+        <mat-label>Town</mat-label>
+        <input type="text" matInput formControlName="town" maxlength="50" placeholder="Town" />
+    </mat-form-field>
+
+    <!-- Street (Line 1) -->
+    <mat-form-field class="form-element">
+        <mat-label>Street (Line 1)</mat-label>
+        <input type="text" matInput formControlName="street" maxlength="50" placeholder="Street" />
+    </mat-form-field>
+
+    <!-- Street (Line 2) -->
+    <mat-form-field class="form-element">
+        <mat-label>Street (Line 2)</mat-label>
+        <input type="text" matInput formControlName="subStreet" maxlength="50" placeholder="Street" />
+    </mat-form-field>
+
+    <!-- State -->
+    <mat-form-field class="form-element">
+        <mat-label>State</mat-label>
+        <input type="text" matInput formControlName="stateName" maxlength="25" placeholder="State" />
+    </mat-form-field>
+
+    <!-- Building Name -->
+    <mat-form-field class="form-element">
+        <mat-label>Building Name</mat-label>
+        <input type="text" matInput formControlName="buildingName" maxlength="25" placeholder="Building Name" />
+    </mat-form-field>
+
+    <!-- Building Number -->
+    <mat-form-field class="form-element">
+        <mat-label>Building Number</mat-label>
+        <input type="text" matInput formControlName="buildingNumber" maxlength="8" placeholder="Building Number" />
+    </mat-form-field>
+
+    <!-- Flat Number -->
+    <mat-form-field class="form-element">
+        <mat-label>Flat Number</mat-label>
+        <input type="text" matInput formControlName="flatNumber" maxlength="8" placeholder="Flat Number" />
+    </mat-form-field>
+
+    <!-- Phone -->
+    <mat-form-field class="form-element">
+        <mat-label>Phone</mat-label>
+        <input type="text" matInput formControlName="phone" maxlength="25" placeholder="Phone number" />
+        <mat-error *ngIf="this.dataForm.get('phone')?.hasError('required')">
+            Please specify the phone number
+        </mat-error>
+    </mat-form-field>
+
+    <!-- Fiat currencies -->
+    <mat-form-field class="form-element">
+        <mat-label>Default currency</mat-label>
+        <mat-select formControlName="fiat" required>
+            <mat-option *ngFor="let item of fiatCurrencies" [value]="item.id">
+                {{item.id}}
+            </mat-option>
+        </mat-select>
+        <mat-error *ngIf="this.dataForm.get('fiat')?.hasError('required')">
+            Please specify default fiat currency
+        </mat-error>
+    </mat-form-field>
+
+    <!-- Crypto currencies -->
+    <mat-form-field class="form-element">
+        <mat-label>Default crypto</mat-label>
+        <mat-select formControlName="crypto" required>
+            <mat-option *ngFor="let item of cryptoCurrencies" [value]="item.id">
+                {{item.id}}
+            </mat-option>
+        </mat-select>
+        <mat-error *ngIf="this.dataForm.get('crypto')?.hasError('required')">
+            Please specify default crypto currency
+        </mat-error>
+    </mat-form-field>
+
+    <app-details-attribute label="Widgets" [value]="'Related widgets'"
+        [linkUrl]="'/admin_old/widgets/'+ settingsId"></app-details-attribute>
+
+    <!-- Totals -->
+    <app-details-attribute label="Total Balance" [value]="totalBalance"></app-details-attribute>
+    <app-details-attribute label="Total Transaction Count" [value]="userData?.totalTransactionCount">
+    </app-details-attribute>
+    <app-details-attribute label="Avarage Transaction" [value]="userData?.avarageTransaction"></app-details-attribute>
+    <app-details-attribute label="Total Buy Completed" [value]="userData?.totalBoughtCompletedResult">
+    </app-details-attribute>
+    <app-details-attribute label="Total Buy In Process" [value]="userData?.totalBoughtInProcessResult">
+    </app-details-attribute>
+    <app-details-attribute label="Total Sell Completed" [value]="userData?.totalSoldCompletedResult">
+    </app-details-attribute>
+    <app-details-attribute label="Total Sell In Process" [value]="userData?.totalSoldInProcessResult">
+    </app-details-attribute>
+    <app-details-attribute label="Total Send Completed" [value]="userData?.totalSentCompletedResult">
+    </app-details-attribute>
+    <app-details-attribute label="Total Send In Process" [value]="userData?.totalSentInProcessResult">
+    </app-details-attribute>
+    <app-details-attribute label="Total Receive Completed" [value]="userData?.totalReceivedCompletedResult">
+    </app-details-attribute>
+    <app-details-attribute label="Total Receive In Process" [value]="userData?.totalReceivedInProcessResult">
+    </app-details-attribute>
+    <app-details-attribute label="Total Transactions" [value]="userData?.totalTransactionCount"></app-details-attribute>
+    <app-details-attribute label="Avarage Transaction" [value]="userData?.avarageTransaction"></app-details-attribute>
+
+    <!-- Account status -->
+    <mat-form-field class="form-element">
+        <mat-label>Account Status</mat-label>
+        <mat-select formControlName="accountStatus" required>
+            <mat-option *ngFor="let item of accountStatuses" [value]="item.id">
+                {{item.name}}
+            </mat-option>
+        </mat-select>
+        <mat-error *ngIf="this.dataForm.get('accountStatus')?.hasError('required')">
+            Please specify the account status
+        </mat-error>
+    </mat-form-field>
+
+    <!-- Risks -->
+    <app-details-attribute label="Risk codes" [value]="userData?.riskCodes"></app-details-attribute>
+    <mat-form-field class="form-element">
+        <mat-label>Risk Level</mat-label>
+        <mat-select formControlName="risk" required>
+            <mat-option *ngFor="let item of riskLevels" [value]="item.id">
+                {{item.name}}
+            </mat-option>
+        </mat-select>
+        <mat-error *ngIf="this.dataForm.get('risk')?.hasError('required')">
+            Please specify the risk level
+        </mat-error>
+    </mat-form-field>
+
+    <!-- Level -->
+    <mat-form-field class="form-element">
+        <mat-label>KYC Level</mat-label>
+        <mat-select formControlName="tier" required>
+            <mat-option *ngFor="let t of tiers" [value]="t.title">
+                {{t.title}}
+            </mat-option>
+        </mat-select>
+        <mat-error *ngIf="dataForm.get('tier')?.hasError('required')">
+            Please specify the user verification level
+        </mat-error>
+    </mat-form-field>
+
+    <app-details-attribute label="DocsCheck" [value]="userData?.kycStatus"></app-details-attribute>
+    <app-details-attribute label="KYC Review Date" [value]="userData?.kycReviewDate"></app-details-attribute>
+    <app-details-attribute label="Docs check Date" [value]="userData?.kycStatusDate"></app-details-attribute>
+    <app-details-attribute label="KYC Review Comment" [value]="userData?.kycReviewComment"></app-details-attribute>
+    <app-details-attribute label="KYC Private Comment" [value]="userData?.kycPrivateComment"></app-details-attribute>
+    <app-details-attribute label="KYC Review Rejected Type" [value]="userData?.kycReviewRejectedType">
+    </app-details-attribute>
+    <app-details-attribute label="KYC Review Rejected Labels" [value]="userData?.kycReviewRejectedLabels">
+    </app-details-attribute>
+    <app-details-attribute label="KYC Review Result" [value]="userData?.kycReviewResult"></app-details-attribute>
+    <app-details-attribute label="DocsCheck Update Required" [value]="userData?.kycStatusUpdateRequired">
+    </app-details-attribute>
+    <app-details-attribute label="Provided documents" [value]="kycDocs"></app-details-attribute>
+    <app-details-attribute label="KYC Details" [value]="kycProviderLink" [linkUrl]="kycProviderLink">
+    </app-details-attribute>
+
+    <app-details-attribute label="Last updated" [value]="userData?.updated"></app-details-attribute>
+
+    <div class="panel-actions">
+        <button *ngIf="permission>1" mat-flat-button color="primary" type="submit">
+            SAVE
+        </button>
+        <button *ngIf="permission>1 && removable" type="button" mat-flat-button color="warn" (click)="onDeleteCustomer()">
+            {{disableButtonTitle}}
+        </button>
+        <button *ngIf="cancelable" mat-flat-button (click)="onCancel()">
+            CANCEL
+        </button>
+    </div>
+</form>
