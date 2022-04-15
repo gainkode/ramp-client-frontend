@@ -28,6 +28,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { DirectiveModule } from '../directives/directives.module';
 import { MatRadioModule } from '@angular/material/radio';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { AdminNewRoutingModule } from './admin_new.routing.module';
 import { AdminNewComponent } from './admin_new.component';
 import { AdminNewGuard } from './admin_new.guard';
@@ -40,6 +41,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    NgbModule,
     MatCardModule,
     MatChipsModule,
     MatRadioModule,
