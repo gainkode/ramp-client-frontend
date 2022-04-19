@@ -850,6 +850,7 @@ const GET_FIAT_VAULTS = gql`
   query GetFiatVaults(
     $userIdsOnly: [String]
     $assetsOnly: [String]
+    $vaultIdsOnly: [String]
     $skip: Int
     $first: Int
     $orderBy: [OrderBy!]
@@ -857,6 +858,7 @@ const GET_FIAT_VAULTS = gql`
     getFiatVaults(
       userIdsOnly: $userIdsOnly
       assetsOnly: $assetsOnly
+      vaultIdsOnly: $vaultIdsOnly
       skip: $skip
       first: $first
       orderBy: $orderBy
@@ -2416,6 +2418,7 @@ export class AdminDataService {
     const vars: QueryGetFiatVaultsArgs = {
       userIdsOnly: filter?.users,
       assetsOnly: filter?.assets,
+      vaultIdsOnly: filter?.walletIds,
       skip: pageIndex * takeItems,
       first: takeItems,
       orderBy: [{ orderBy: orderField, desc: orderDesc }]

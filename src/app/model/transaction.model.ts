@@ -686,11 +686,7 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
     result.currencyFiat = result.currencyToReceive;
     result.currencyCrypto = '';
     result.amountToReceive = result.amountToSpend;
-    const destVaultData = JSON.parse(data.destVault ?? '{}');
-    let recipientName = data.destination ?? `${result.currencyFiat} Wallet`;
-    if (destVaultData && destVaultData.name) {
-      recipientName = destVaultData.name;
-    }
+    let recipientName = 'Wire Transfer';
     result.recipient = {
       id: '',
       title: recipientName,
@@ -715,7 +711,7 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
       }
     }
     if (senderName === '') {
-      senderName = 'Wire Transfer';
+      senderName = `${result.currencyFiat} Wallet`;
     }
     result.sender = {
       id: '',
