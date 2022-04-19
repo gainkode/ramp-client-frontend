@@ -83,6 +83,11 @@ const routes: Routes = [
             data: { header: 'Transaction wallets' }
           },
           {
+            path: 'fiat/vaults/:fiatvaultids',
+            component: AdminWalletsComponent,
+            data: { header: 'Transaction wallets' }
+          },
+          {
             path: '',
             component: AdminWalletsComponent,
             data: { header: 'Wallets' }

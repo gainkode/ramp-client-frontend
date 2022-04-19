@@ -69,13 +69,19 @@ export class AdminWalletsComponent implements OnDestroy {
     public activeRoute: ActivatedRoute,
     private router: Router) {
     const filterUserId = activeRoute.snapshot.params['cryptouserid'];
-    const filterVaultId = activeRoute.snapshot.params['cryptovaultids'];
+    const filterCryptoVaultId = activeRoute.snapshot.params['cryptovaultids'];
+    const filterFiatVaultId = activeRoute.snapshot.params['fiatvaultids'];
     if (filterUserId) {
       this.cryptoFilter.users = [filterUserId as string];
     }
-    if (filterVaultId) {
-      const filterData = (filterVaultId as string).split('#');
+    if (filterCryptoVaultId) {
+      const filterData = (filterCryptoVaultId as string).split('#');
       this.cryptoFilter.walletIds = filterData;
+    }
+    if (filterFiatVaultId) {
+      const filterData = (filterFiatVaultId as string).split('#');
+      this.fiatFilter.walletIds = filterData;
+      this.selectedTab = 1;
     }
     this.permission = this.auth.isPermittedObjectCode('WALLETS');
   }
