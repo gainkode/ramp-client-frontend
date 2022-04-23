@@ -7,11 +7,11 @@ import { NavService } from '../../services/nav.service';
 import { SwitcherService } from '../../services/switcher.service';
 
 @Component({
-  selector: 'app-header',
+  selector: 'app-admin-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent implements OnInit {
+export class AdminHeaderComponent implements OnInit {
   private body: HTMLBodyElement | any = document.querySelector('body');
   public isCollapsed = true;
   activated: boolean = false;

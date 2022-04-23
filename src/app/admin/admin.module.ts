@@ -32,7 +32,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AdminRoutingModule } from './admin.routing.module';
 import { AdminComponent } from './admin.component';
 import { AdminGuard } from './admin.guard';
-import { HeaderComponent } from './layout/header/header.component';
+import { AdminHeaderComponent } from './layout/header/header.component';
+import { AdminSidebarComponent } from './layout/sidebar/sidebar.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -73,7 +74,8 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
   ],
   declarations: [
     AdminComponent,
-    HeaderComponent
+    AdminHeaderComponent,
+    AdminSidebarComponent
   ],
   providers: [
     AdminGuard,

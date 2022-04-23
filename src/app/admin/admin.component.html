@@ -2,10 +2,18 @@
     <!-- <app-switcher></app-switcher> -->
     <div class="page">
         <div class="">
-            <!-- // header -->
-            <app-header></app-header>
-            <!-- //sidebar -->
-            <!-- <app-sidebar appHoverEffectSidebar></app-sidebar> -->
+            <!-- header -->
+            <app-admin-header></app-admin-header>
+            <!-- sidebar -->
+            <app-admin-sidebar appHoverEffectSidebar></app-admin-sidebar>
+        </div>
+        <div class="main-content app-content">
+            <div class="main-container container-fluid" (click)="toggleSwitcherBody()">
+                <!-- contetnt  -->
+                <router-outlet >
+                    <!-- <app-loader></app-loader> -->
+                </router-outlet>
+            </div>
         </div>
     </div>
 </div>

@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { Subject } from 'rxjs';
+import { SwitcherService } from './services/switcher.service';
 
 @Component({
   selector: 'app-admin-new',
@@ -16,6 +17,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private auth: AuthService,
+    public switcherService: SwitcherService,
     private activatedRoute: ActivatedRoute
   ) {
   }
@@ -25,5 +27,9 @@ export class AdminComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.destroy$.next();
+  }
+
+  toggleSwitcherBody() {
+    this.switcherService.emitChange(false);
   }
 }
