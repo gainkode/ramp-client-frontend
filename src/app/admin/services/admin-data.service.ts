@@ -2423,11 +2423,6 @@ export class AdminDataService {
       first: takeItems,
       orderBy: [{ orderBy: orderField, desc: orderDesc }]
     };
-
-
-    console.log(vars);
-
-    
     return this.watchQuery<{ getFiatVaults: FiatVaultUserListResult }, QueryGetFiatVaultsArgs>(
       {
         query: GET_FIAT_VAULTS,
