@@ -1,5 +1,7 @@
-
 @import "../../../../assets/scss/variables";
+@import "../../../../assets/fonts.scss";
+@import "../../../../assets/colors.scss";
+
 li::marker {
   color: transparent;
 }
@@ -80,4 +82,13 @@ li::marker {
       }
     }
   }
+}
+
+.__admin-top-menu-logo {
+  margin: 8px 0px 0px 8px;
+  font-family: $font_logo;
+  font-weight: 800;
+  font-size: 26px;
+  color: $color_purple_800;
+  cursor: pointer;
 }

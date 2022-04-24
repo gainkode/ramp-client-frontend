@@ -21,7 +21,7 @@ export class AdminHeaderComponent implements OnInit {
     public SwitcherService: SwitcherService,
     public navServices: NavService,
     private auth: AuthService,
-    private router: Router,
+    public router: Router,
     private modalService: NgbModal
   ) {}
 

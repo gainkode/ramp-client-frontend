@@ -3286,6 +3286,7 @@ input[type=button].btn-block {
     background-clip: border-box;
     border-radius: 5px;
     border: 0px solid transparent;
+    margin-top: 0.5rem;
     margin-bottom: 1.3rem;
     box-shadow: 1px 1px 7px rgba(154, 154, 204, 0.1);
 }
