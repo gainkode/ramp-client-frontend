@@ -2,42 +2,44 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AdminComponent } from './admin.component';
 import { AdminGuard } from './admin.guard';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { TransactionsComponent } from './components/transactions/transactions.component';
 
 const routes: Routes = [
   {
     path: '',
     component: AdminComponent,
-    // children: [
-    //   {
-    //     path: 'dashboard',
-    //     component: DashboardComponent,
-    //     data: { header: 'Dashboard' }
-    //   },
+    children: [
+      {
+        path: 'dashboard',
+        component: DashboardComponent,
+        data: { header: 'Dashboard' }
+      },
     //   {
     //     path: 'settings',
     //     component: AdminSettingsComponent,
     //     data: { header: 'Settings' }
     //   },
-    //   {
-    //     path: 'transactions',
-    //     children: [
-    //       {
-    //         path: 'users/:id',
-    //         component: TransactionListComponent,
-    //         data: { header: 'Customer transactions' }
-    //       },
-    //       {
-    //         path: ':id',
-    //         component: TransactionSingleComponent,
-    //         data: { header: 'Transaction {:id}' }
-    //       },
-    //       {
-    //         path: '',
-    //         component: TransactionListComponent,
-    //         data: { header: 'Transactions' }
-    //       }
-    //     ]
-    //   },
+      {
+        path: 'transactions',
+        children: [
+          {
+            path: 'users/:id',
+            component: TransactionsComponent,
+            data: { header: 'Customer transactions' }
+          },
+          // {
+          //   path: ':id',
+          //   component: TransactionSingleComponent,
+          //   data: { header: 'Transaction {:id}' }
+          // },
+          {
+            path: '',
+            component: TransactionsComponent,
+            data: { header: 'Transactions' }
+          }
+        ]
+      },
     //   {
     //     path: 'customers',
     //     children: [
@@ -132,7 +134,7 @@ const routes: Routes = [
     //     path: '**',
     //     redirectTo: 'dashboard'
     //   }
-    // ],
+    ],
     canActivate: [AdminGuard]
   },
   { path: '**', redirectTo: 'dashboard' }

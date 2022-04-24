@@ -29,13 +29,22 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { DirectiveModule } from '../directives/directives.module';
 import { MatRadioModule } from '@angular/material/radio';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ColorPickerModule } from 'ngx-color-picker';
+import { PerfectScrollbarModule, PERFECT_SCROLLBAR_CONFIG, PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
 import { AdminRoutingModule } from './admin.routing.module';
 import { AdminComponent } from './admin.component';
 import { AdminGuard } from './admin.guard';
 import { AdminHeaderComponent } from './layout/header/header.component';
 import { AdminSidebarComponent } from './layout/sidebar/sidebar.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { AdminSwitcherComponent } from './layout/switcher/switcher.component';
+import { TransactionsComponent } from './components/transactions/transactions.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
+
+const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
+  suppressScrollX: true
+};
 
 @NgModule({
   imports: [
@@ -67,6 +76,8 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
     DragDropModule,
     MatToolbarModule,
     MatSnackBarModule,
+    ColorPickerModule,
+    PerfectScrollbarModule,
     ComponentsModule,
     AdminRoutingModule,
     MaterialModule,
@@ -75,7 +86,10 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
   declarations: [
     AdminComponent,
     AdminHeaderComponent,
-    AdminSidebarComponent
+    AdminSidebarComponent,
+    AdminSwitcherComponent,
+    DashboardComponent,
+    TransactionsComponent
   ],
   providers: [
     AdminGuard,
@@ -84,6 +98,10 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
       useValue: {
         separatorKeyCodes: [ENTER, COMMA]
       }
+    },
+    {
+      provide: PERFECT_SCROLLBAR_CONFIG,
+      useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
     }
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
