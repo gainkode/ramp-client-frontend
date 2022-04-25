@@ -107,6 +107,10 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
     );
   }
 
+  refresh(): void {
+    this.loadList();
+  }
+
   handleFilterApplied(filter: Filter): void {
     this.filter = filter;
     this.loadList();
