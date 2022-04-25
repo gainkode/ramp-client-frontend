@@ -102,7 +102,7 @@ export class TransactionItemFull {
         this.benchmarkTransferOrderId = transactionData.benchmarkTransferOrder?.orderId ?? '';
         this.benchmarkTransferOrderHash = transactionData.benchmarkTransferOrder?.transferHash ?? '';
       }
-      if (data.type === TransactionType.Sell) {
+      if (data.type === TransactionType.Sell || data.type === TransactionType.Withdrawal) {
         this.instrumentDetailsData = this.getInstrumentDetails(data.instrumentDetails ?? '{}');
       }
       this.comment = transactionData.comment ?? '';
@@ -196,7 +196,7 @@ export class TransactionItemFull {
   }
 
   getInstrumentDetails(data: string): string[] {
-    const result: string[] = [];
+const result: string[] = [];
     try {
       const details = JSON.parse(data);
       if (details) {
@@ -725,4 +725,3 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
   }
   return result;
 }
-
