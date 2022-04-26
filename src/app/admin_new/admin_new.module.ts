@@ -38,8 +38,9 @@ import { AdminHeaderComponent } from './layout/header/header.component';
 import { AdminSidebarComponent } from './layout/sidebar/sidebar.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AdminSwitcherComponent } from './layout/switcher/switcher.component';
-import { TransactionsComponent } from './components/transactions/transactions.component';
+import { AdminTransactionsComponent } from './components/transactions/transactions.component';
 import { AdminPageHeaderComponent } from './layout/page-header/page-header.component';
+import { AdminTransactionTableComponent } from './components/transactions/transaction-table.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -91,7 +92,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AdminSidebarComponent,
     AdminSwitcherComponent,
     DashboardComponent,
-    TransactionsComponent
+    AdminTransactionsComponent,
+    AdminTransactionTableComponent
   ],
   providers: [
     AdminNewGuard,

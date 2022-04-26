@@ -23,9 +23,8 @@ export const SimpleDataTable: DataTable[] = [
   templateUrl: 'transactions.component.html',
   styleUrls: ['transactions.component.scss']
 })
-export class TransactionsComponent implements OnInit {
+export class AdminTransactionsComponent implements OnInit {
   dataTable = SimpleDataTable;
-  isFilterCollapsed: boolean = true;
 
   constructor() { }
 

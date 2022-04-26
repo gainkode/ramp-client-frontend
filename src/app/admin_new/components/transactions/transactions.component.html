@@ -1,53 +1,18 @@
 <app-admin-page-header [title]="'TRANSACTIONS'" [items]="['Home']" [active_item]="'Transactions'">
 </app-admin-page-header>
 
-<div class="card custom-card">
-  <div class="card-body">
-    <div>
-      <button type="button" class="btn btn-outline-primary mb-1" (click)="collapse.toggle()"
-        [attr.aria-expanded]="!isFilterCollapsed" aria-controls="collapseExample">
-        Filter
-      </button>
-      <div #collapse="ngbCollapse" [(ngbCollapse)]="isFilterCollapsed">
-        <div class="card">
-          <div class="card-body">
-            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim
-            keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
-            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim
-            keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!-- row opened -->
 <div class="row row-sm">
   <div class="col-xl-12">
     <div class="card">
       <div class="card-body">
         <div class="table-responsive">
-          <!-- <app-sorting-filter-pagination-table></app-sorting-filter-pagination-table> -->
+          <app-admin-transaction-table></app-admin-transaction-table>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="col-xl-12">
-    <div class="card">
-      <div class="card-header pb-0">
-        <div>
-          <h6 class="main-content-label mb-1">Table with selection</h6>
-          <p class="text-muted card-sub-title">Table with selection Angular material, as shown in this
-            example.</p>
-        </div>
-      </div>
-      <div class="card-body">
-        <div class="table-responsive">
-          <!-- <app-selection-table></app-selection-table> -->
-        </div>
-      </div>
-    </div>
-  </div>
+  <!-- <app-selection-table></app-selection-table> -->
+
 </div>

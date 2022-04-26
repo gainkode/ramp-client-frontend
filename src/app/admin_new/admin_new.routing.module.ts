@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AdminNewComponent } from './admin_new.component';
 import { AdminNewGuard } from './admin_new.guard';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { TransactionsComponent } from './components/transactions/transactions.component';
+import { AdminTransactionsComponent } from './components/transactions/transactions.component';
 
 const routes: Routes = [
   {
@@ -25,7 +25,7 @@ const routes: Routes = [
         children: [
           {
             path: 'users/:id',
-            component: TransactionsComponent,
+            component: AdminTransactionsComponent,
             data: { header: 'Customer transactions' }
           },
           // {
@@ -35,7 +35,7 @@ const routes: Routes = [
           // },
           {
             path: '',
-            component: TransactionsComponent,
+            component: AdminTransactionsComponent,
             data: { header: 'Transactions' }
           }
         ]
