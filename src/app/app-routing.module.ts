@@ -23,11 +23,7 @@ const routes: Routes = [
     path: 'merchant', loadChildren: () => import('./merchant/merchant.module').then(m => m.MerchantModule)
   },
   {
-<<<<<<< HEAD
     path: 'admin_old', loadChildren: () => import('./admin_old/admin_old.module').then(m => m.AdminOldModule)
-=======
-    path: 'admin', loadChildren: () => import('./admin_old/admin_old.module').then(m => m.AdminOldModule)
->>>>>>> admin-dev
   },
   {
     path: 'admin', loadChildren: () => import('./admin_new/admin_new.module').then(m => m.AdminNewModule)
