@@ -3,7 +3,7 @@
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
         <section>
             <app-details-attribute *ngIf="cancelable" label="Transaction Id" [value]="data?.code"
-                [linkUrl]="'/admin_old/transactions/'+ transactionId"></app-details-attribute>
+                [linkUrl]="'/admin/transactions/'+ transactionId"></app-details-attribute>
             <app-details-attribute *ngIf="!cancelable" label="Transaction Id" [value]="data?.code">
             </app-details-attribute>
 
@@ -168,7 +168,7 @@
         <section>
             <h2>AML Checks</h2>
             <app-details-attribute label="Account ID" [value]="data?.user?.id"
-                [linkUrl]="'/admin_old/customers/'+ data?.user?.id">
+                [linkUrl]="'/admin/customers/'+ data?.user?.id">
             </app-details-attribute>
             <app-details-attribute label="Verification Level" [value]="data?.kycTier"></app-details-attribute>
 
@@ -209,10 +209,10 @@
                 SAVE
             </button>
             <button *ngIf="permission>1 && removable" mat-flat-button type="button" color="warn" (click)="onDelete()">
-                DELETE
+                CANCEL
             </button>
             <button *ngIf="cancelable" mat-flat-button (click)="onCancel()">
-                CANCEL
+                CLOSE
             </button>
         </div>
     </form>

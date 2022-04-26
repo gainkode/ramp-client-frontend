@@ -8,7 +8,7 @@ import { Title } from '@angular/platform-browser';
 import { AdminDataService } from './services/admin-data.service';
 
 @Component({
-  selector: 'app-admin-old',
+  selector: 'app-admin',
   templateUrl: 'admin_old.component.html',
   styleUrls: ['admin_old.component.scss']
 })

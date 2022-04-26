@@ -613,11 +613,17 @@ export type Mutation = {
   createUser?: Maybe<User>;
   updateMe?: Maybe<User>;
   updateUser?: Maybe<User>;
+  /** This endpoint can be used to add a current user's wallet. */
   addMyVault?: Maybe<VaultAccount>;
+  /** This endpoint can be used to update the current user's wallet. */
   updateMyVault?: Maybe<VaultAccount>;
+  /** This endpoint can be used to delete the current user's wallet. */
   deleteMyVault?: Maybe<UserVaultIdObj>;
+  /** This endpoint can be used to add a user's wallet. */
   addUserVault?: Maybe<VaultAccount>;
+  /** This endpoint can be used to update the user's wallet. */
   updateUserVault?: Maybe<VaultAccount>;
+  /** This endpoint can be used to delete the user's wallet. */
   deleteUserVault?: Maybe<UserVaultIdObj>;
   assignRole?: Maybe<User>;
   removeRole?: Maybe<User>;
@@ -655,27 +661,42 @@ export type Mutation = {
   addFeedback: Feedback;
   sendTestNotification?: Maybe<Scalars['Void']>;
   sendTestServiceNotification?: Maybe<Scalars['Void']>;
+  /** This endpoint can be used to create a transaction */
   createTransaction?: Maybe<TransactionShort>;
+  /** This endpoint can be used to create a merchant transaction */
   createMerchantTransaction?: Maybe<TransactionShort>;
   sendInvoice?: Maybe<Scalars['Boolean']>;
+  /** This endpoint can be used to execute a transaction */
   executeTransaction?: Maybe<TransactionShort>;
+  /** This endpoint can be used to update a transaction */
   updateTransaction?: Maybe<Transaction>;
   exportTransactionsToCsv?: Maybe<Scalars['Boolean']>;
+  /** This endpoint can be used to cancel a transaction for the current user */
   cancelMyTransaction?: Maybe<TransactionShort>;
+  /** This endpoint can be used to cancel a transaction */
   cancelTransaction?: Maybe<Transaction>;
+  /** Unbenchmarking Transactions */
   unbenchmarkTransactions?: Maybe<Array<Transaction>>;
   repeatDeclinedTransactions?: Maybe<Array<Transaction>>;
+  /** This endpoint can be used to create a widget for the current user. */
   createMyWidget?: Maybe<Widget>;
+  /** This endpoint can be used to create a widget. */
   createWidget?: Maybe<Widget>;
+  /** This endpoint can be used to update a widget for the current user. */
   updateMyWidget?: Maybe<Widget>;
+  /** This endpoint can be used to update a widget. */
   updateWidget?: Maybe<Widget>;
+  /** This endpoint can be used to delete a widget for the current user. */
   deleteMyWidget?: Maybe<Widget>;
+  /** This endpoint can be used to delete a widget. */
   deleteWidget?: Maybe<Widget>;
+  /** This endpoint can be used to add user params. */
   addMyWidgetUserParams?: Maybe<WidgetUserParams>;
   exportWidgetsToCsv?: Maybe<Scalars['Boolean']>;
   updateRiskAlertType?: Maybe<RiskAlertType>;
   addBlackCountry?: Maybe<BlackCountry>;
   deleteBlackCountry?: Maybe<BlackCountry>;
+  /** Not used */
   addFiatVault?: Maybe<FiatVault>;
   deleteFiatVault?: Maybe<FiatVault>;
 };
@@ -1444,79 +1465,148 @@ export type PostAddress = {
 export type Query = {
   __typename?: 'Query';
   serverTime: Scalars['String'];
+  /** Get API keys for current user */
   myApiKeys?: Maybe<ApiKeyListResult>;
+  /** Get API keys */
   getApiKeys?: Maybe<ApiKeyListResult>;
+  /** Get notifications for current user */
   myNotifications?: Maybe<UserNotificationListResult>;
+  /** Get user notifications */
   getNotificationsByUser?: Maybe<UserNotificationListResult>;
+  /** Get notifications */
   getNotifications?: Maybe<UserNotificationListResult>;
+  /** Get common settings */
   getSettingsCommon?: Maybe<SettingsCommon>;
+  /** Get payment providers */
   getPaymentProviders?: Maybe<Array<PaymentProvider>>;
+  /** Get payment providers for relevant options */
   getAppropriatePaymentProviders?: Maybe<Array<PaymentProviderByInstrument>>;
+  /** Get currency settings  */
   getSettingsCurrency?: Maybe<SettingsCurrencyWithDefaults>;
   getSettingsKycLevels?: Maybe<SettingsKycLevelListResult>;
+  /** Get KYC settings  */
   getSettingsKyc?: Maybe<SettingsKycListResult>;
+  /** Get KYC settings for the current user(SettingsKycTierShort) */
   mySettingsKyc?: Maybe<SettingsKycShort>;
+  /** Get KYC settings for the current user */
   mySettingsKycFull?: Maybe<SettingsKyc>;
+  /** Get KYC settings for relevant options */
   getAppropriateSettingsKyc?: Maybe<SettingsKyc>;
+  /** Get KYC levels settings  */
   getSettingsKycTiers?: Maybe<SettingsKycTierListResult>;
+  /** Get KYC levels settings for the current user(SettingsKycTierShort) */
   mySettingsKycTier?: Maybe<SettingsKycTierShort>;
+  /** Get KYC levels settings for the current user */
   mySettingsKycTiers?: Maybe<SettingsKycTierShortExListResult>;
+  /** Get KYC levels settings for relevant options */
   getAppropriateSettingsKycTiers?: Maybe<SettingsKycTierShortExListResult>;
+  /** Get fee settings  */
   getSettingsFee?: Maybe<SettingsFeeListResult>;
+  /** Get fee settings for the current user(SettingsFeeShort) */
   mySettingsFee?: Maybe<SettingsFeeShort>;
+  /** Get fee settings for the current user */
   mySettingsFeeFull?: Maybe<SettingsFee>;
+  /** Get fee settings for the relevant parameters */
   getAppropriateSettingsFee?: Maybe<SettingsFee>;
+  /** Get cost settings  */
   getSettingsCost?: Maybe<SettingsCostListResult>;
+  /** Get cost settings for the current user */
   mySettingsCost?: Maybe<SettingsCostShort>;
+  /** Get cost settings for the relevant parameters */
   getAppropriateSettingsCostFull?: Maybe<SettingsCost>;
+  /** API token generation */
   getWireTransferBankAccounts?: Maybe<WireTransferBankAccountListResult>;
+  /** API token generation */
   generateWebApiToken: Scalars['String'];
   me: User;
+  /** Get state for the current user */
   myState: UserState;
+  /** Get state for the selected user */
   getUserState: UserState;
+  /** Transaction history for the current user */
   myProfit: UserProfit;
+  /** Transaction history for the selected user */
   userProfit: UserProfit;
   myKycStatus: Scalars['String'];
   userKycInfo: KycInfo;
+  /** User count */
   userCount?: Maybe<Scalars['Int']>;
+  /** Get user by email */
   userById: User;
+  /** Get user by name */
   userByName: User;
+  /** Get user by email */
   userByEmail: User;
+  /** Get user by OAuthAppId */
   userByOAuthAppId: User;
+  /** Get user by referral code */
   userByReferralCode: User;
+  /** Get users by parameters */
   getUsers: UserListResult;
+  /** Get contacts for current user */
   myContacts: UserContactListResult;
+  /** Get contacts for selected user */
   getUserContacts: UserContactListResult;
+  /** Get bank accounts for current user */
   myBankAccounts: UserContactListResult;
+  /** Get bank accounts for selected user */
   getUserBankAccounts: UserContactListResult;
+  /** Get actions for current user */
   myActions: UserActionListResult;
+  /** Get actions for selected user */
   getUserActions: UserActionListResult;
+  /** Get balance history for current user */
   myBalanceHistory: UserBalanceHistoryRecordListResult;
+  /** Get balance history for selected user */
   getUserBalanceHistory: UserBalanceHistoryRecordListResult;
+  /** Get KYC information for current user */
   myKycInfo?: Maybe<KycInfo>;
+  /** Get KYC information for selected user */
   getUserKycInfo?: Maybe<KycInfo>;
+  /** Get Roles */
   getRoles?: Maybe<Array<UserRole>>;
+  /** Get support tickets for current user */
   mySupportTickets?: Maybe<SupportTicketListResult>;
+  /** Get support tickets */
   getSupportTickets?: Maybe<SupportTicketListResult>;
+  /** get feedbacks */
   getFeedbacks?: Maybe<FeedbackListResult>;
+  /** Get the exchange rate of several currencies to one */
   getRates?: Maybe<Array<Rate>>;
+  /** Get the rate of one currency to many */
   getOneToManyRates?: Maybe<Array<Rate>>;
+  /** This endpoint can be used to get all transactions for current user. */
   myTransactions?: Maybe<TransactionShortListResult>;
+  /** This endpoint can be used to get all transactions with their description. */
   getTransactions?: Maybe<TransactionListResult>;
+  /** This endpoint can be used to get all wallets of the current user with their description. */
   myWallets?: Maybe<AssetAddressShortListResult>;
+  /** This endpoint can be used to get all wallets with their description. */
   getWallets?: Maybe<AssetAddressListResult>;
+  /** This endpoint can be used to get all transaction statuses with their description */
   getTransactionStatuses?: Maybe<Array<TransactionStatusDescriptorMap>>;
+  /** Get toolbar statistics */
   getDashboardStats?: Maybe<DashboardStats>;
+  /** This endpoint can be used to get all widgets for the current user. */
   myWidgets?: Maybe<WidgetListResult>;
+  /** This endpoint can be used to get all widgets for the selected user. */
   getWidgetsByUser?: Maybe<WidgetListResult>;
+  /** This endpoint can be used to get all widgets. */
   getWidgets?: Maybe<WidgetListResult>;
+  /** This endpoint can be used to get a widget by id */
   getWidget?: Maybe<WidgetShort>;
   getRiskAlerts?: Maybe<RiskAlertResultList>;
+  /** Get wallet address */
   getSellAddress?: Maybe<Scalars['String']>;
+  /** Get a black list of countries */
   getCountryBlackList?: Maybe<BlackCountryListResult>;
+  /** Get fake error */
   getFakeError?: Maybe<Scalars['Void']>;
+  /** This endpoint can be used to get all fiat wallets with their description */
   getFiatVaults?: Maybe<FiatVaultUserListResult>;
+  /** This endpoint can be used to get all fiat wallets for the current user */
   myFiatVaults?: Maybe<FiatVaultListResult>;
+  /** Get system balance */
   getSystemBalanceMany?: Maybe<Scalars['String']>;
 };
 
@@ -1974,6 +2064,7 @@ export type QueryGetWalletsArgs = {
 
 export type QueryGetDashboardStatsArgs = {
   transactionDateOnly?: Maybe<Scalars['DateTime']>;
+  createdDateInterval?: Maybe<DateTimeInterval>;
   userIdOnly?: Maybe<Array<Scalars['String']>>;
   widgetIdOnly?: Maybe<Array<Scalars['String']>>;
   sourcesOnly?: Maybe<Array<TransactionSource>>;
@@ -2035,6 +2126,7 @@ export type QueryGetSellAddressArgs = {
 export type QueryGetFiatVaultsArgs = {
   userIdsOnly?: Maybe<Array<Maybe<Scalars['String']>>>;
   assetsOnly?: Maybe<Array<Maybe<Scalars['String']>>>;
+  vaultIdsOnly?: Maybe<Array<Maybe<Scalars['String']>>>;
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
   orderBy?: Maybe<Array<OrderBy>>;

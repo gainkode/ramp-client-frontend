@@ -21,7 +21,7 @@
     </mat-form-field>
 
     <div class="panel-actions">
-        <button *ngIf="permission>1" mat-flat-button color="primary" type="submit">
+        <button *ngIf="permission>1" mat-flat-button color="primary" type="submit" [disabled]="form.value.user?.id===undefined">
             CREATE
         </button>
         <button mat-flat-button (click)="onCancel()" type="button">

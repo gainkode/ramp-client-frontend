@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { AdminMenuItemsOld } from './model/menu.model';
+import { AdminMenuItems } from './model/menu.model';
 
 @Injectable()
 export class AdminOldGuard {
@@ -14,11 +14,11 @@ export class AdminOldGuard {
       return false;
     }
 
-    const currentItem = AdminMenuItemsOld.find(x => state.url.toLowerCase().includes(x.url.toLowerCase()));
+    const currentItem = AdminMenuItems.find(x => state.url.toLowerCase().includes(x.url.toLowerCase()));
     if (currentItem) {
       const permission = this.auth.isPermittedObjectCode(currentItem.code);
       if (permission === 0) {
-        this.router.navigateByUrl('/admin_old/dashboard');
+        this.router.navigateByUrl('/admin/dashboard');
         return false;
       }
     }

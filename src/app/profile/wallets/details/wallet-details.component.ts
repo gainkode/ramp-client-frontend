@@ -17,6 +17,13 @@ import { ProfileDataService } from 'src/app/services/profile.service';
 export class ProfileWalletDetailsComponent implements OnDestroy {
     @Input() set wallet(val: WalletItem | undefined) {
         this.walletData = val;
+        if (val?.crypto === true) {
+            this.receiveButton = 'Receive';
+            this.sendButton = 'Send';
+        } else {
+            this.receiveButton = 'Deposit';
+            this.sendButton = 'Withdrawal';
+        }
         this.walletTransactionLink = `${this.auth.getUserMainPage()}/transactions/${this.walletData?.address ?? ''}`;
     }
     @Output() onComplete = new EventEmitter<ProfileItemContainer>();
@@ -25,6 +32,8 @@ export class ProfileWalletDetailsComponent implements OnDestroy {
     deleteMode = false;
     inProgress = false;
     errorMessage = '';
+    receiveButton = '';
+    sendButton = '';
     walletData: WalletItem | undefined = undefined;
     walletTransactionLink = '';
 
@@ -39,7 +48,8 @@ export class ProfileWalletDetailsComponent implements OnDestroy {
         private formBuilder: FormBuilder,
         private errorHandler: ErrorService,
         private auth: AuthService,
-        private profileService: ProfileDataService) { }
+        private profileService: ProfileDataService) {
+    }
 
     ngOnDestroy(): void {
         this.subscriptions.unsubscribe();
@@ -92,7 +102,11 @@ export class ProfileWalletDetailsComponent implements OnDestroy {
         item.container = ProfileItemContainerType.Wallet;
         item.action = ProfileItemActionType.Redirect;
         item.wallet = this.walletData;
-        item.meta = 'receive';
+        if (this.wallet?.crypto === true) {
+            item.meta = 'receive';
+        } else {
+            item.meta = 'deposit';
+        }
         this.onComplete.emit(item);
     }
 
@@ -101,7 +115,11 @@ export class ProfileWalletDetailsComponent implements OnDestroy {
         item.container = ProfileItemContainerType.Wallet;
         item.action = ProfileItemActionType.Redirect;
         item.wallet = this.walletData;
-        item.meta = 'send';
+        if (this.wallet?.crypto === true) {
+            item.meta = 'send';
+        } else {
+            item.meta = 'withdrawal';
+        }
         this.onComplete.emit(item);
     }
 

@@ -4,7 +4,7 @@
     <section>
         <h2>User info</h2>
         <app-details-attribute *ngIf="cancelable" label="Account Id" [value]="data?.referralCode"
-            [linkUrl]="'/admin_old/system-users/'+ settingsId"></app-details-attribute>
+            [linkUrl]="'/admin/system-users/'+ settingsId"></app-details-attribute>
         <app-details-attribute *ngIf="!cancelable" label="Account Id" [value]="data?.referralCode"></app-details-attribute>
     </section>
 

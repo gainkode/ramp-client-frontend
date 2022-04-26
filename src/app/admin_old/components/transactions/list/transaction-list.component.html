@@ -1,4 +1,7 @@
 <div class="action-panel panel-actions">
+    <button mat-flat-button color="accent" type="button" (click)="refresh()">
+        REFRESH
+    </button>
     <button *ngIf="permission>1" mat-flat-button color="primary" type="button" (click)="unbenchmark()" [disabled]="!selectedForUnbenchmark">
         SETTLE
     </button>

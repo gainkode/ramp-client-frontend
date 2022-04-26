@@ -222,8 +222,12 @@ export class MerchantComponent implements OnInit, OnDestroy {
                 const meta = container.meta as string;
                 if (meta === 'send') {
                     this.showPaymentPanel(PaymentWidgetType.Send);
-                } else {
+                } else if (meta === 'receive') {
                     this.showPaymentPanel(PaymentWidgetType.Receive);
+                } else if (meta === 'deposit') {
+                    this.showPaymentPanel(PaymentWidgetType.Deposit);
+                } else if (meta === 'withdrawal') {
+                    this.showPaymentPanel(PaymentWidgetType.Withdrawal);
                 }
             }
         } else if (container.container === ProfileItemContainerType.Contact) {

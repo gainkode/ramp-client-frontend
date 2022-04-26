@@ -102,7 +102,7 @@ export class TransactionItemFull {
         this.benchmarkTransferOrderId = transactionData.benchmarkTransferOrder?.orderId ?? '';
         this.benchmarkTransferOrderHash = transactionData.benchmarkTransferOrder?.transferHash ?? '';
       }
-      if (data.type === TransactionType.Sell) {
+      if (data.type === TransactionType.Sell || data.type === TransactionType.Withdrawal) {
         this.instrumentDetailsData = this.getInstrumentDetails(data.instrumentDetails ?? '{}');
       }
       this.comment = transactionData.comment ?? '';
@@ -196,7 +196,7 @@ export class TransactionItemFull {
   }
 
   getInstrumentDetails(data: string): string[] {
-    const result: string[] = [];
+const result: string[] = [];
     try {
       const details = JSON.parse(data);
       if (details) {
@@ -686,11 +686,7 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
     result.currencyFiat = result.currencyToReceive;
     result.currencyCrypto = '';
     result.amountToReceive = result.amountToSpend;
-    const destVaultData = JSON.parse(data.destVault ?? '{}');
-    let recipientName = data.destination ?? `${result.currencyFiat} Wallet`;
-    if (destVaultData && destVaultData.name) {
-      recipientName = destVaultData.name;
-    }
+    let recipientName = 'Wire Transfer';
     result.recipient = {
       id: '',
       title: recipientName,
@@ -715,7 +711,7 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
       }
     }
     if (senderName === '') {
-      senderName = 'Wire Transfer';
+      senderName = `${result.currencyFiat} Wallet`;
     }
     result.sender = {
       id: '',
@@ -729,4 +725,3 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
   }
   return result;
 }
-

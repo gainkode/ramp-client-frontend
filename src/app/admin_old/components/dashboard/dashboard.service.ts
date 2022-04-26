@@ -6,6 +6,7 @@ import { Filter } from '../../model/filter.model';
 import { take } from 'rxjs/operators';
 import { PaymentInstrumentList } from '../../../model/payment.model';
 import { getCurrencySign } from 'src/app/utils/utils';
+import { BalanceStats } from 'src/app/model/generated-models';
 
 @Injectable({
   providedIn: 'any'
@@ -379,6 +380,22 @@ export class DashboardService implements OnDestroy {
 
       // region Balances
 
+      const testBalances: BalanceStats[] = [
+        {
+          currency: 'BTC',
+          volume: {
+            count: 5,
+            volume: 15
+          }
+        },
+        {
+          currency: 'ETH',
+          volume: {
+            count: 2,
+            volume: 3.154
+          }
+        }
+      ];
       const balancesData: DashboardCardData = {
         columns: [
           {
@@ -387,7 +404,7 @@ export class DashboardService implements OnDestroy {
             type: 'text'
           },
           {
-            key: 'volume',
+            key: 'value',
             label: 'Value',
             type: 'number'
           },

@@ -107,6 +107,10 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
     );
   }
 
+  refresh(): void {
+    this.loadList();
+  }
+
   handleFilterApplied(filter: Filter): void {
     this.filter = filter;
     this.loadList();
@@ -165,9 +169,13 @@ export class TransactionListComponent implements OnInit, OnDestroy, AfterViewIni
 
   showWallets(transactionId: string): void {
     const transaction = this.transactions.find(x => x.id === transactionId);
-    this.router.navigateByUrl(`/admin_old/wallets/crypto/vaults/${transaction?.vaultIds.join('#') ?? ''}`);
+    if (transaction?.type === TransactionType.Deposit || transaction?.type === TransactionType.Withdrawal) {
+      this.router.navigateByUrl(`/admin/wallets/fiat/vaults/${transaction?.vaultIds.join('#') ?? ''}`);
+    } else {
+      this.router.navigateByUrl(`/admin/wallets/crypto/vaults/${transaction?.vaultIds.join('#') ?? ''}`);
+    }
   }
-  
+
   private executeUnbenchmark(): void {
     const requestData$ = this.adminService.unbenchmarkTransaction(
       this.transactions.filter(x => x.selected === true && x.type !== TransactionType.Receive).map(val => val.id)

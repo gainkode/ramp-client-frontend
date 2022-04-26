@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuItem } from '../../../../model/common.model';
-import { AdminMenuItemsOld } from '../../../model/menu.model';
+import { AdminMenuItems } from '../../../model/menu.model';
 import { AuthService } from '../../../../services/auth.service';
 import { Router } from '@angular/router';
 
@@ -17,7 +17,7 @@ export class MainMenuComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    AdminMenuItemsOld.forEach(item => {
+    AdminMenuItems.forEach(item => {
       const permission = this.auth.isPermittedObjectCode(item.code);
       if (permission > 0) {
         this.menuItems.push(item);

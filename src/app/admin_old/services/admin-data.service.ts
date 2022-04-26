@@ -10,7 +10,6 @@ import {
   AssetAddressListResult,
   CountryCodeType,
   DashboardStats,
-  FiatVaultListResult,
   FiatVaultUserListResult,
   KycInfo,
   QueryGetApiKeysArgs,
@@ -65,7 +64,7 @@ import { ApiKeyItem } from 'src/app/model/apikey.model';
 
 const GET_DASHBOARD_STATS = gql`
   query GetDashboardStats(
-    $transactionDateOnly: DateTime
+    $createdDateInterval: DateTimeInterval
     $userIdOnly: [String!],
     $widgetIdOnly: [String!],
     $sourcesOnly: [TransactionSource!],
@@ -74,7 +73,7 @@ const GET_DASHBOARD_STATS = gql`
     $accountTypesOnly: [UserType!]
   ) {
     getDashboardStats(
-      transactionDateOnly: $transactionDateOnly
+      createdDateInterval: $createdDateInterval
       userIdOnly: $userIdOnly
       widgetIdOnly: $widgetIdOnly
       sourcesOnly: $sourcesOnly
@@ -850,6 +849,7 @@ const GET_FIAT_VAULTS = gql`
   query GetFiatVaults(
     $userIdsOnly: [String]
     $assetsOnly: [String]
+    $vaultIdsOnly: [String]
     $skip: Int
     $first: Int
     $orderBy: [OrderBy!]
@@ -857,6 +857,7 @@ const GET_FIAT_VAULTS = gql`
     getFiatVaults(
       userIdsOnly: $userIdsOnly
       assetsOnly: $assetsOnly
+      vaultIdsOnly: $vaultIdsOnly
       skip: $skip
       first: $first
       orderBy: $orderBy
@@ -1146,8 +1147,8 @@ const ADD_KYC_LEVEL_SETTINGS = gql`
     $name: String!
     $description: String
     $userType: UserType!
-    $original_level_name: String!
-    $original_flow_name: String!
+    $originalLevelName: String!
+    $originalFlowName: String!
     $data: String!
   ) {
     addSettingsKycLevel(
@@ -1156,8 +1157,8 @@ const ADD_KYC_LEVEL_SETTINGS = gql`
         description: $description
         userType: $userType
         data: $data
-        original_level_name: $original_level_name
-        original_flow_name: $original_flow_name
+        originalLevelName: $originalLevelName
+        originalFlowName: $originalFlowName
       }
     ) {
       settingsKycLevelId
@@ -1830,8 +1831,8 @@ const UPDATE_KYC_LEVEL_SETTINGS = gql`
     $name: String!
     $description: String
     $userType: UserType!
-    $original_level_name: String!
-    $original_flow_name: String!
+    $originalLevelName: String!
+    $originalFlowName: String!
     $data: String!
   ) {
     updateSettingsKycLevel(
@@ -1841,8 +1842,8 @@ const UPDATE_KYC_LEVEL_SETTINGS = gql`
         description: $description
         userType: $userType
         data: $data
-        original_level_name: $original_level_name
-        original_flow_name: $original_flow_name
+        originalLevelName: $originalLevelName
+        originalFlowName: $originalFlowName
       }
     ) {
       settingsKycLevelId
@@ -1912,7 +1913,8 @@ export class AdminDataService {
 
   getDashboardStats(filter: Filter): Observable<DashboardStats> {
     const vars: QueryGetDashboardStatsArgs = {
-      transactionDateOnly: filter.transactionDate,
+      createdDateInterval: filter.createdDateInterval,
+      //transactionDateOnly: filter.transactionDate,
       userIdOnly: filter.users,
       widgetIdOnly: filter.widgets,
       sourcesOnly: filter.sources,
@@ -2416,6 +2418,7 @@ export class AdminDataService {
     const vars: QueryGetFiatVaultsArgs = {
       userIdsOnly: filter?.users,
       assetsOnly: filter?.assets,
+      vaultIdsOnly: filter?.walletIds,
       skip: pageIndex * takeItems,
       first: takeItems,
       orderBy: [{ orderBy: orderField, desc: orderDesc }]
@@ -2738,8 +2741,8 @@ export class AdminDataService {
           name: level.name,
           description: level.description,
           userType: level.userType,
-          original_level_name: level.levelData.value,
-          original_flow_name: level.flowData.value,
+          originalLevelName: level.levelData.value,
+          originalFlowName: level.flowData.value,
           data: level.getDataObject()
         }
       })
@@ -2750,8 +2753,8 @@ export class AdminDataService {
           name: level.name,
           description: level.description,
           userType: level.userType,
-          original_level_name: level.levelData.value,
-          original_flow_name: level.flowData.value,
+          originalLevelName: level.levelData.value,
+          originalFlowName: level.flowData.value,
           data: level.getDataObject()
         }
       });

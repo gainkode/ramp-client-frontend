@@ -159,11 +159,11 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   showTransactions(id: string): void {
-    this.router.navigateByUrl(`/admin_old/transactions/users/${id}`);
+    this.router.navigateByUrl(`/admin/transactions/users/${id}`);
   }
 
   showWallets(id: string): void {
-    this.router.navigateByUrl(`/admin_old/wallets/crypto/users/${id}`);
+    this.router.navigateByUrl(`/admin/wallets/crypto/users/${id}`);
   }
 
   sendMessage(): void {

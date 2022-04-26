@@ -9,7 +9,7 @@
     <section>
         <h2>Customer info</h2>
         <app-details-attribute *ngIf="cancelable" label="Account Id" [value]="data?.referralCode"
-            [linkUrl]="'/admin_old/customers/'+ settingsId"></app-details-attribute>
+            [linkUrl]="'/admin/customers/'+ settingsId"></app-details-attribute>
         <app-details-attribute *ngIf="!cancelable" label="Account Id" [value]="data?.referralCode"></app-details-attribute>
 
         <app-details-attribute label="Widget" [value]="userData?.widgetId"></app-details-attribute>
@@ -174,7 +174,7 @@
     </mat-form-field>
 
     <app-details-attribute label="Widgets" [value]="'Related widgets'"
-        [linkUrl]="'/admin_old/widgets/'+ settingsId"></app-details-attribute>
+        [linkUrl]="'/admin/widgets/'+ settingsId"></app-details-attribute>
 
     <!-- Totals -->
     <app-details-attribute label="Total Balance" [value]="totalBalance"></app-details-attribute>
