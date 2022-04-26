@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
-import { AdminMenuItems } from '../admin_old/model/menu.model';
 import { AuthService } from '../services/auth.service';
+import { AdminMenuItems } from './model/menu.model';
 
 @Injectable()
-export class AdminNewGuard {
+export class AdminOldGuard {
   constructor(private router: Router, private auth: AuthService) {
   }
 
@@ -18,7 +18,7 @@ export class AdminNewGuard {
     if (currentItem) {
       const permission = this.auth.isPermittedObjectCode(currentItem.code);
       if (permission === 0) {
-        this.router.navigateByUrl('/admin_new/dashboard');
+        this.router.navigateByUrl('/admin/dashboard');
         return false;
       }
     }
