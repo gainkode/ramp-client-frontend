@@ -2064,6 +2064,7 @@ export type QueryGetWalletsArgs = {
 
 export type QueryGetDashboardStatsArgs = {
   transactionDateOnly?: Maybe<Scalars['DateTime']>;
+  createdDateInterval?: Maybe<DateTimeInterval>;
   userIdOnly?: Maybe<Array<Scalars['String']>>;
   widgetIdOnly?: Maybe<Array<Scalars['String']>>;
   sourcesOnly?: Maybe<Array<TransactionSource>>;

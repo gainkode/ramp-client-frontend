@@ -10,7 +10,6 @@ import {
   AssetAddressListResult,
   CountryCodeType,
   DashboardStats,
-  FiatVaultListResult,
   FiatVaultUserListResult,
   KycInfo,
   QueryGetApiKeysArgs,
@@ -65,7 +64,7 @@ import { ApiKeyItem } from 'src/app/model/apikey.model';
 
 const GET_DASHBOARD_STATS = gql`
   query GetDashboardStats(
-    $transactionDateOnly: DateTime
+    $createdDateInterval: DateTimeInterval
     $userIdOnly: [String!],
     $widgetIdOnly: [String!],
     $sourcesOnly: [TransactionSource!],
@@ -74,7 +73,7 @@ const GET_DASHBOARD_STATS = gql`
     $accountTypesOnly: [UserType!]
   ) {
     getDashboardStats(
-      transactionDateOnly: $transactionDateOnly
+      createdDateInterval: $createdDateInterval
       userIdOnly: $userIdOnly
       widgetIdOnly: $widgetIdOnly
       sourcesOnly: $sourcesOnly
@@ -1914,7 +1913,8 @@ export class AdminDataService {
 
   getDashboardStats(filter: Filter): Observable<DashboardStats> {
     const vars: QueryGetDashboardStatsArgs = {
-      transactionDateOnly: filter.transactionDate,
+      createdDateInterval: filter.createdDateInterval,
+      //transactionDateOnly: filter.transactionDate,
       userIdOnly: filter.users,
       widgetIdOnly: filter.widgets,
       sourcesOnly: filter.sources,
