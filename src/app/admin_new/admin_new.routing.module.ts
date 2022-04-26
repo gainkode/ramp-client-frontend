@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AdminComponent } from './admin.component';
-import { AdminGuard } from './admin.guard';
+import { AdminNewComponent } from './admin_new.component';
+import { AdminNewGuard } from './admin_new.guard';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { TransactionsComponent } from './components/transactions/transactions.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: AdminComponent,
+    component: AdminNewComponent,
     children: [
       {
         path: 'dashboard',
@@ -135,7 +135,7 @@ const routes: Routes = [
     //     redirectTo: 'dashboard'
     //   }
     ],
-    canActivate: [AdminGuard]
+    canActivate: [AdminNewGuard]
   },
   { path: '**', redirectTo: 'dashboard' }
 ];
@@ -144,4 +144,4 @@ const routes: Routes = [
   imports: [ RouterModule.forChild(routes) ],
   exports: [ RouterModule ]
 })
-export class AdminRoutingModule {}
+export class AdminNewRoutingModule {}

@@ -31,9 +31,9 @@ import { MatRadioModule } from '@angular/material/radio';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { PerfectScrollbarModule, PERFECT_SCROLLBAR_CONFIG, PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
-import { AdminRoutingModule } from './admin.routing.module';
-import { AdminComponent } from './admin.component';
-import { AdminGuard } from './admin.guard';
+import { AdminNewRoutingModule } from './admin_new.routing.module';
+import { AdminNewComponent } from './admin_new.component';
+import { AdminNewGuard } from './admin_new.guard';
 import { AdminHeaderComponent } from './layout/header/header.component';
 import { AdminSidebarComponent } from './layout/sidebar/sidebar.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
@@ -80,12 +80,12 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ColorPickerModule,
     PerfectScrollbarModule,
     ComponentsModule,
-    AdminRoutingModule,
+    AdminNewRoutingModule,
     MaterialModule,
     DirectiveModule
   ],
   declarations: [
-    AdminComponent,
+    AdminNewComponent,
     AdminHeaderComponent,
     AdminPageHeaderComponent,
     AdminSidebarComponent,
@@ -94,7 +94,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     TransactionsComponent
   ],
   providers: [
-    AdminGuard,
+    AdminNewGuard,
     {
       provide: MAT_CHIPS_DEFAULT_OPTIONS,
       useValue: {
@@ -108,5 +108,5 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class AdminModule {
+export class AdminNewModule {
 }

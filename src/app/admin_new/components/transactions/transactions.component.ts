@@ -25,7 +25,7 @@ export const SimpleDataTable: DataTable[] = [
 })
 export class TransactionsComponent implements OnInit {
   dataTable = SimpleDataTable;
-  isFilterCollapsed: boolean = false;
+  isFilterCollapsed: boolean = true;
 
   constructor() { }
 

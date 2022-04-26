@@ -4,7 +4,7 @@ import { AdminMenuItems } from '../admin_old/model/menu.model';
 import { AuthService } from '../services/auth.service';
 
 @Injectable()
-export class AdminGuard {
+export class AdminNewGuard {
   constructor(private router: Router, private auth: AuthService) {
   }
 

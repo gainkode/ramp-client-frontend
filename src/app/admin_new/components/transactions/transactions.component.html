@@ -1,28 +1,26 @@
-<!-- <br><br><br> -->
-
 <app-admin-page-header [title]="'TRANSACTIONS'" [items]="['Home']" [active_item]="'Transactions'">
 </app-admin-page-header>
 
-  <div class="card custom-card">
-    <div class="card-body">
-      <div>
-        <button type="button" class="btn btn-outline-primary mb-1" (click)="collapse.toggle()"
-          [attr.aria-expanded]="!isFilterCollapsed" aria-controls="collapseExample">
-          Filter
-        </button>
-        <div #collapse="ngbCollapse" [(ngbCollapse)]="isFilterCollapsed">
-          <div class="card">
-            <div class="card-body">
-              Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim
-              keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
-              Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim
-              keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
-            </div>
+<div class="card custom-card">
+  <div class="card-body">
+    <div>
+      <button type="button" class="btn btn-outline-primary mb-1" (click)="collapse.toggle()"
+        [attr.aria-expanded]="!isFilterCollapsed" aria-controls="collapseExample">
+        Filter
+      </button>
+      <div #collapse="ngbCollapse" [(ngbCollapse)]="isFilterCollapsed">
+        <div class="card">
+          <div class="card-body">
+            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim
+            keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim
+            keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
 
 <!-- row opened -->
 <div class="row row-sm">
@@ -35,7 +33,7 @@
       </div>
     </div>
   </div>
-  
+
   <div class="col-xl-12">
     <div class="card">
       <div class="card-header pb-0">

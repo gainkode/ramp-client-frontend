@@ -6,10 +6,10 @@ import { SwitcherService } from './services/switcher.service';
 
 @Component({
   selector: 'app-admin-new',
-  templateUrl: 'admin.component.html',
-  styleUrls: ['admin.component.scss']
+  templateUrl: 'admin_new.component.html',
+  styleUrls: ['admin_new.component.scss']
 })
-export class AdminComponent implements OnInit, OnDestroy {
+export class AdminNewComponent implements OnInit, OnDestroy {
   sectionHeader = '';
 
   private destroy$ = new Subject();
