@@ -378,10 +378,12 @@ const ADD_MY_VAULT = gql`
   mutation AddMyVault(
     $vaultName: String!,
     $assetId: String!
+    $originalId: String
   ) {
     addMyVault(
       vaultName: $vaultName
       assetId: $assetId
+      originalId: $originalId
     ) {
       id
       assets {
@@ -740,12 +742,14 @@ export class ProfileDataService {
     });
   }
 
-  addMyVault(asset: string, name: String): Observable<any> {
+  addMyVault(asset: string, name: String, eth: string): Observable<any> {
+    const ethWallet = (eth === '') ? undefined : eth;
     return this.apollo.mutate({
       mutation: ADD_MY_VAULT,
       variables: {
         assetId: asset,
-        vaultName: name
+        vaultName: name,
+        $originalId: ethWallet
       },
     });
   }
