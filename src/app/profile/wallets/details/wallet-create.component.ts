@@ -71,6 +71,7 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
                 this.ethFlag = (this.selectedCurrency?.ethFlag === true);
                 this.useExistingEthWalletField?.setValue(false);
                 this.useExistingEthWalletField?.updateValueAndValidity();
+                this.ethExisting = false;
                 if (this.ethFlag) {
                     this.ethFlagDisabled = true;
                     if (!this.walletsLoaded) {
@@ -87,14 +88,20 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
                     this.ethWalletField?.setValidators([
                         Validators.required
                     ]);
+                    this.walletNameField?.setValidators([]);
+                    this.walletNameField?.setValue('');
                 } else {
                     this.ethWalletField?.setValidators([]);
+                    this.walletNameField?.setValidators([
+                        Validators.required
+                    ]);
                 }
                 this.ethWalletField?.updateValueAndValidity();
+                this.walletNameField?.updateValueAndValidity();
             }));
         this.subscriptions.add(
             this.ethWalletField?.valueChanges.subscribe(val => {
-                this.selectedEthWallet = this.ethReadyWallets.find(x => x.originalId === this.ethWalletField?.value)?.name ?? '';
+                this.selectedEthWallet = this.ethReadyWallets.find(x => x.id === this.ethWalletField?.value)?.name ?? '';
             }));
     }
 
@@ -228,7 +235,8 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
             this.walletNameField?.setValue('');
         }
         if (this.createForm.valid) {
-            this.createWallet(this.currencyField?.value, this.walletNameField?.value, this.ethWalletField?.value);
+            const ethOriginalId = this.ethReadyWallets.find(x => x.id === this.ethWalletField?.value)?.originalId ?? '';
+            this.createWallet(this.currencyField?.value, this.walletNameField?.value, ethOriginalId);
         }
     }
 

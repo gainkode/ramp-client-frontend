@@ -165,7 +165,7 @@ export class CurrencyView {
         if (data.displaySymbol) {
             this.title = data.displaySymbol;
         }
-        this.name = data.name;
+        this.name = data.name ?? '';
         this.ethFlag = data.ethFlag ?? false;
         this.precision = data.precision;
         this.minAmount = data.minAmount;

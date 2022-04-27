@@ -886,7 +886,7 @@ export type MutationUpdateUserArgs = {
 
 
 export type MutationAddMyVaultArgs = {
-  vaultName: Scalars['String'];
+  vaultName?: Maybe<Scalars['String']>;
   assetId: Scalars['String'];
   originalId?: Maybe<Scalars['String']>;
 };
@@ -2283,7 +2283,7 @@ export enum SettingsCostTargetFilterType {
 export type SettingsCurrency = {
   __typename?: 'SettingsCurrency';
   symbol: Scalars['ID'];
-  name: Scalars['String'];
+  name?: Maybe<Scalars['String']>;
   precision: Scalars['Int'];
   minAmount: Scalars['Float'];
   maxAmount: Scalars['Float'];

@@ -72,7 +72,7 @@
                                             </span>
                                         </div>
                                     </mat-select-trigger>
-                                    <mat-option *ngFor="let item of ethReadyWallets" [value]="item.originalId" style="height: 32px;">
+                                    <mat-option *ngFor="let item of ethReadyWallets" [value]="item.id" style="height: 32px;">
                                         <div class="__form-finance-combo-item">
                                             <span class="__form-finance-combo-item-text">
                                                 {{item.name}}
@@ -89,7 +89,7 @@
                     </div>
 
                     <!-- Wallet name -->
-                    <app-form-textbox [label]="'Wallet name'" [smallLabel]="true" [boxType]="'text'"
+                    <app-form-textbox *ngIf="!ethExisting" [label]="'Wallet name'" [smallLabel]="true" [boxType]="'text'"
                         [placeholder]="'Enter wallet name'" [maxlength]="50" formControlName="walletName"
                         [errorMessages]="walletNameErrorMessages" [separator]="true">
                     </app-form-textbox>
