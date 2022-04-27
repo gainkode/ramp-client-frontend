@@ -744,13 +744,15 @@ export class ProfileDataService {
 
   addMyVault(asset: string, name: String, eth: string): Observable<any> {
     const ethWallet = (eth === '') ? undefined : eth;
+    const vars = {
+      assetId: asset,
+      vaultName: name,
+      $originalId: ethWallet
+    };
+    console.log(vars);
     return this.apollo.mutate({
       mutation: ADD_MY_VAULT,
-      variables: {
-        assetId: asset,
-        vaultName: name,
-        $originalId: ethWallet
-      },
+      variables: vars
     });
   }
 

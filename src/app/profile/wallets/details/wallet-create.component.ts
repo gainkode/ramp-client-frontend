@@ -131,10 +131,11 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
 
     private filterWallets() {
         this.ethReadyWallets = [];
+        const c = this.currencyField?.value as string;
         this.wallets.forEach(val => {
             if (val.asset.startsWith('ETH')) {
-                const check = this.wallets.find(x => x.originalId !== val.originalId);
-                if (check) {
+                const check = this.wallets.find(x => x.originalId === val.originalId && val.asset === c);
+                if (!check) {
                     this.ethReadyWallets.push(val);
                 }
             }
