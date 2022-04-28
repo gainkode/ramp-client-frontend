@@ -45,8 +45,51 @@
                         <div class="__form-separator"></div>
                     </div>
 
+                    <div *ngIf="ethFlag===true && !ethFlagDisabled && ethReadyWallets.length>0">
+                        <div class="__tool-bar-double-sided-data-box-top">
+                            <div class="__tool-bar-block">
+                                <div class="__toggle-switch">
+                                    <input type="checkbox" id="toggle-button" class="__toggle-switch-slider"
+                                        formControlName="useExistingEthWallet">
+                                </div>
+                            </div>
+                            <div class="__tool-bar-block">
+                                <div class="__tool-bar-label">
+                                    &nbsp;&nbsp;&nbsp;Use existing wallet address
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ETH Wallet -->
+                        <div *ngIf="ethExisting" class="__profile-details-item-block">
+                            <div class="__form-text-border">
+                                <mat-select formControlName="ethWallet" style="margin: 8px 0px 0px 0px;"
+                                    placeholder="Select existing wallet">
+                                    <mat-select-trigger>
+                                        <div class="__form-finance-combo-item">
+                                            <span class="__form-finance-combo-item-text">
+                                                {{selectedEthWallet}}
+                                            </span>
+                                        </div>
+                                    </mat-select-trigger>
+                                    <mat-option *ngFor="let item of ethReadyWallets" [value]="item.id" style="height: 32px;">
+                                        <div class="__form-finance-combo-item">
+                                            <span class="__form-finance-combo-item-text">
+                                                {{item.name}}
+                                            </span>
+                                        </div>
+                                    </mat-option>
+                                </mat-select>
+                            </div>
+                        </div>
+
+                        <div class="__profile-details-item-block">
+                            <div class="__form-separator"></div>
+                        </div>
+                    </div>
+
                     <!-- Wallet name -->
-                    <app-form-textbox [label]="'Wallet name'" [smallLabel]="true" [boxType]="'text'"
+                    <app-form-textbox *ngIf="!ethExisting" [label]="'Wallet name'" [smallLabel]="true" [boxType]="'text'"
                         [placeholder]="'Enter wallet name'" [maxlength]="50" formControlName="walletName"
                         [errorMessages]="walletNameErrorMessages" [separator]="true">
                     </app-form-textbox>

@@ -99,7 +99,7 @@ export class ProfileBalanceListComponent implements OnInit, OnDestroy {
                         if (currency) {
                             this.balances.push(new UserBalanceItem(
                                 balance,
-                                currency.name,
+                                currency.name ?? '',
                                 this.currentCurrency,
                                 this.fiatPrecision,
                                 currency.precision,

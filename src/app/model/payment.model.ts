@@ -157,18 +157,23 @@ export class CurrencyView {
     rateFactor = 0;
     validateAsSymbol: string | null = null;
     fiat = false;
+    ethFlag = false;
 
     constructor(data: SettingsCurrency) {
         this.id = data.symbol;
         this.title = data.symbol;
-        this.name = data.name;
+        if (data.displaySymbol) {
+            this.title = data.displaySymbol;
+        }
+        this.name = data.name ?? '';
+        this.ethFlag = data.ethFlag ?? false;
         this.precision = data.precision;
         this.minAmount = data.minAmount;
         this.rateFactor = data.rateFactor;
         this.validateAsSymbol = data.validateAsSymbol as string | null;
         this.fiat = data.fiat as boolean;
         if (!this.fiat) {
-            this.img = `assets/svg-crypto/${getCryptoSymbol(data.symbol).toLowerCase()}.svg`;
+            this.img = `assets/svg-crypto/${getCryptoSymbol(this.title).toLowerCase()}.svg`;
         }
     }
 }

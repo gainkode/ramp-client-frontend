@@ -886,8 +886,9 @@ export type MutationUpdateUserArgs = {
 
 
 export type MutationAddMyVaultArgs = {
-  vaultName: Scalars['String'];
+  vaultName?: Maybe<Scalars['String']>;
   assetId: Scalars['String'];
+  originalId?: Maybe<Scalars['String']>;
 };
 
 
@@ -906,6 +907,7 @@ export type MutationAddUserVaultArgs = {
   userId: Scalars['ID'];
   vaultName: Scalars['String'];
   assetId: Scalars['String'];
+  originalId?: Maybe<Scalars['String']>;
 };
 
 
@@ -2173,7 +2175,8 @@ export enum RiskAlertCodes {
   DepositAbove_10K = 'DEPOSIT_ABOVE_10K',
   DepositAbove_50K = 'DEPOSIT_ABOVE_50K',
   DepositAboveXAmountInYTimeframe = 'DEPOSIT_ABOVE_X_AMOUNT_IN_Y_TIMEFRAME',
-  SumsubWords = 'SUMSUB_WORDS'
+  SumsubWords = 'SUMSUB_WORDS',
+  WithdrawalOwner = 'WITHDRAWAL_OWNER'
 }
 
 export type RiskAlertResultList = {
@@ -2280,7 +2283,7 @@ export enum SettingsCostTargetFilterType {
 export type SettingsCurrency = {
   __typename?: 'SettingsCurrency';
   symbol: Scalars['ID'];
-  name: Scalars['String'];
+  name?: Maybe<Scalars['String']>;
   precision: Scalars['Int'];
   minAmount: Scalars['Float'];
   maxAmount: Scalars['Float'];
@@ -2291,6 +2294,9 @@ export type SettingsCurrency = {
   defaultWireTransferProvider?: Maybe<Scalars['String']>;
   defaultCreditCardProvider?: Maybe<Scalars['String']>;
   explorerLink?: Maybe<Scalars['String']>;
+  ethFlag?: Maybe<Scalars['Boolean']>;
+  disabled?: Maybe<Scalars['String']>;
+  displaySymbol?: Maybe<Scalars['String']>;
 };
 
 export type SettingsCurrencyListResult = {
