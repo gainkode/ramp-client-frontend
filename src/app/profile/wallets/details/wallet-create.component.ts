@@ -72,6 +72,7 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
                 this.useExistingEthWalletField?.setValue(false);
                 this.useExistingEthWalletField?.updateValueAndValidity();
                 this.ethExisting = false;
+                this.ethReadyWallets = [];
                 if (this.ethFlag) {
                     this.ethFlagDisabled = true;
                     if (!this.walletsLoaded) {
@@ -141,7 +142,7 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
         const c = this.currencyField?.value as string;
         this.wallets.forEach(val => {
             if (val.asset.startsWith('ETH')) {
-                const check = this.wallets.find(x => x.vaultOriginalId === val.vaultOriginalId && val.asset === c);
+                const check = this.wallets.find(x => x.vaultOriginalId === val.vaultOriginalId && x.asset === c);
                 if (!check) {
                     this.ethReadyWallets.push(val);
                 }

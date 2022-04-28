@@ -751,7 +751,6 @@ export class ProfileDataService {
       vaultName: walletName,
       originalId: ethWallet
     };
-    console.log(vars);
     return this.apollo.mutate({
       mutation: ADD_MY_VAULT,
       variables: vars
