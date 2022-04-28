@@ -143,9 +143,6 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
         this.wallets.forEach(val => {
             if (val.asset.startsWith('ETH')) {
                 const check = this.wallets.find(x => x.vaultOriginalId === val.vaultOriginalId && x.asset === c);
-
-                console.log(val.name, val.vaultOriginalId, c, check);
-
                 if (!check) {
                     this.ethReadyWallets.push(val);
                 }
