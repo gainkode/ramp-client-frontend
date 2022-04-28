@@ -141,7 +141,7 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
         const c = this.currencyField?.value as string;
         this.wallets.forEach(val => {
             if (val.asset.startsWith('ETH')) {
-                const check = this.wallets.find(x => x.originalId === val.originalId && val.asset === c);
+                const check = this.wallets.find(x => x.vaultOriginalId === val.vaultOriginalId && val.asset === c);
                 if (!check) {
                     this.ethReadyWallets.push(val);
                 }
@@ -235,7 +235,7 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
             this.walletNameField?.setValue('');
         }
         if (this.createForm.valid) {
-            const ethOriginalId = this.ethReadyWallets.find(x => x.id === this.ethWalletField?.value)?.originalId ?? '';
+            const ethOriginalId = this.ethReadyWallets.find(x => x.id === this.ethWalletField?.value)?.vaultOriginalId ?? '';
             this.createWallet(this.currencyField?.value, this.walletNameField?.value, ethOriginalId);
         }
     }

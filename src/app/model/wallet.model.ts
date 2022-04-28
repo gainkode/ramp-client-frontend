@@ -5,6 +5,7 @@ import { CurrencyView } from "./payment.model";
 export class WalletItem {
   id = '';
   originalId = '';
+  vaultOriginalId = '';
   vault = '';
   type = '';
   address = '';
@@ -26,6 +27,7 @@ export class WalletItem {
       this.fiat = defaultFiat;
       this.id = data.vaultId ?? '';
       this.originalId = data.originalId ?? '';
+      this.vaultOriginalId = data.vaultOriginalId ?? '';
       this.vault = data.vaultId ?? '';
       this.address = data.address ?? '';
       this.addressFormat = data.addressFormat ?? '';

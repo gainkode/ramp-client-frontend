@@ -150,6 +150,7 @@ const GET_MY_WALLETS = gql`
         lockedAmount
         vaultId
         vaultName
+        vaultOriginalId
       }
     }
   }
