@@ -22,6 +22,12 @@ const ELEMENT_DATA: PeriodicElement[] = [
   { position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O' },
   { position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F' },
   { position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne' },
+  { position: 11, name: 'Boron', weight: 10.811, symbol: 'B' },
+  { position: 12, name: 'Carbon', weight: 12.0107, symbol: 'C' },
+  { position: 13, name: 'Nitrogen', weight: 14.0067, symbol: 'N' },
+  { position: 14, name: 'Oxygen', weight: 15.9994, symbol: 'O' },
+  { position: 15, name: 'Fluorine', weight: 18.9984, symbol: 'F' },
+  { position: 16, name: 'Neon', weight: 20.1797, symbol: 'Ne' },
 ];
 
 @Component({

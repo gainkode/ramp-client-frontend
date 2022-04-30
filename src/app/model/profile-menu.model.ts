@@ -149,7 +149,7 @@ export const ProfilePopupAdministrationMenuItem: MenuItem = {
 export const TestPopupAdministrationMenuItem: MenuItem = {
     id: 'administration_new',
     name: 'Administration',
-    url: '/admin_new/main',
+    url: '/admin/main',
     icon: 'tag_faces',
     code: ''
 };
