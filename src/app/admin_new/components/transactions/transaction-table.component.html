@@ -226,6 +226,7 @@
   </div>
   <div class="modal-body">
     <app-admin-transaction-details [permission]="permission" [transaction]="selectedTransaction"
-      (save)="onSaveTransaction()"></app-admin-transaction-details>
+      [currencies]="currencyOptions" [userStatuses]="userStatuses" (save)="onSaveTransaction()">
+    </app-admin-transaction-details>
   </div>
 </ng-template>
