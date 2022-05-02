@@ -1,84 +1,244 @@
-import { SelectionModel } from '@angular/cdk/collections';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
-}
-
-const ELEMENT_DATA: PeriodicElement[] = [
-  { position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
-  { position: 2, name: 'Helium', weight: 4.0026, symbol: 'He' },
-  { position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li' },
-  { position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be' },
-  { position: 5, name: 'Boron', weight: 10.811, symbol: 'B' },
-  { position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C' },
-  { position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N' },
-  { position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O' },
-  { position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F' },
-  { position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne' },
-  { position: 11, name: 'Boron', weight: 10.811, symbol: 'B' },
-  { position: 12, name: 'Carbon', weight: 12.0107, symbol: 'C' },
-  { position: 13, name: 'Nitrogen', weight: 14.0067, symbol: 'N' },
-  { position: 14, name: 'Oxygen', weight: 15.9994, symbol: 'O' },
-  { position: 15, name: 'Fluorine', weight: 18.9984, symbol: 'F' },
-  { position: 16, name: 'Neon', weight: 20.1797, symbol: 'Ne' },
-];
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
+import { Filter } from 'src/app/admin_old/model/filter.model';
+import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
+import { CommonDialogBox } from 'src/app/components/dialogs/common-box.dialog';
+import { DeleteDialogBox } from 'src/app/components/dialogs/delete-box.dialog';
+import { SettingsCurrencyWithDefaults, TransactionStatusDescriptorMap, TransactionType } from 'src/app/model/generated-models';
+import { CurrencyView } from 'src/app/model/payment.model';
+import { TransactionItemFull } from 'src/app/model/transaction.model';
+import { AuthService } from 'src/app/services/auth.service';
+import { CommonDataService } from 'src/app/services/common-data.service';
+import { ProfileDataService } from 'src/app/services/profile.service';
 
 @Component({
   selector: 'app-admin-transaction-table',
   templateUrl: './transaction-table.component.html',
   styleUrls: ['./transaction-table.component.scss']
 })
-export class AdminTransactionTableComponent implements OnInit {
-
-  displayedColumns: string[] = ['select', 'position', 'name', 'weight', 'symbol'];
-  dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
-  selection = new SelectionModel<PeriodicElement>(true, []);
-  isFilterCollapsed: boolean = true;
-
+export class AdminTransactionTableComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  /** Whether the number of selected elements matches the total number of rows. */
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
-  }
+  displayedColumns: string[] = [
+    'details', 'code', 'created', 'accountName', 'email', 'accountStatus', 'type', 'widgetName', 'from', 'to',
+    'currencyToSpend', 'amountToSpend', 'currencyToReceive', 'amountToReceive',
+    'address', 'instrument', 'paymentProvider', 'status', 'userType', 'source', 'kycStatus', 'id'
+  ];
+  isFilterCollapsed: boolean = true;
+  inProgress = false;
+  permission = 0;
+  selectedTransaction?: TransactionItemFull;
+  selectedForUnbenchmark = false;
+  transactionCount = 0;
+  transactions: TransactionItemFull[] = [];
+  userStatuses: TransactionStatusDescriptorMap[] = [];
+  currencyOptions: CurrencyView[] = [];
+  pageSize = 25;
+  pageIndex = 0;
+  sortedField = 'created';
+  sortedDesc = true;
+  filter = new Filter({});
+  
+  private subscriptions: Subscription = new Subscription();
 
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
-  masterToggle() {
-    if (this.isAllSelected()) {
-      this.selection.clear();
-      return;
-    }
-
-    this.selection.select(...this.dataSource.data);
-  }
-
-  /** The label for the checkbox on the passed row */
-  checkboxLabel(row?: PeriodicElement): string {
-    if (!row) {
-      return `${this.isAllSelected() ? 'unselect' : 'select'} all`;
-    }
-    return `${this.selection.isSelected(row) ? 'unselect' : 'select'} row ${row.position + 1}`;
-  }
+  constructor(
+    public dialog: MatDialog,
+    private auth: AuthService,
+    private commonDataService: CommonDataService,
+    private adminService: AdminDataService,
+    private profileService: ProfileDataService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
+    this.loadList();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
+
+  ngAfterViewInit() {
+    this.subscriptions.add(
+      this.sort.sortChange.subscribe(() => {
+        this.sortedDesc = (this.sort.direction === 'desc');
+        this.sortedField = this.sort.active;
+        this.loadList();
+      })
+    );
+  }
+
+  onTransactionSelected(item: TransactionItemFull): void {
+    item.selected = !item.selected;
+    this.selectedForUnbenchmark = this.transactions.some(x =>
+      x.selected === true && x.type !== TransactionType.Receive);
+  }
+
+  onSaveTransaction(): void {
+    this.selectedTransaction = undefined;
+    this.loadList();
+  }
+
+  handleFilterApplied(filter: Filter): void {
+    this.filter = filter;
+    this.loadList();
+  }
+
+  handlePage(event: PageEvent): PageEvent {
+    this.pageSize = event.pageSize;
+    this.pageIndex = event.pageIndex;
+    this.loadList();
+    return event;
+  }
+
+  toggleDetails(transaction: TransactionItemFull): void {
+    if (this.isSelectedTransaction(transaction.id)) {
+      this.selectedTransaction = undefined;
+    } else {
+      this.selectedTransaction = transaction;
+    }
+  }
+
+  private isSelectedTransaction(transactionId: string): boolean {
+    return !!this.selectedTransaction && this.selectedTransaction.id === transactionId;
+  }
+
+  private loadList(): void {
+    if (this.userStatuses.length === 0) {
+      this.loadTransactionStatuses();
+    } else {
+      this.loadTransactions();
+    }
+  }
+
+  private loadTransactions(): void {
+    this.inProgress = true;
+    const listData$ = this.adminService.getTransactions(
+      this.pageIndex,
+      this.pageSize,
+      this.sortedField,
+      this.sortedDesc,
+      this.filter).pipe(take(1));
+    this.subscriptions.add(
+      listData$.subscribe(({ list, count }) => {
+        this.transactions = list;
+        this.transactionCount = count;
+        this.transactions.forEach(val => {
+          val.statusInfo = this.userStatuses.find(x => x.key === val.status);
+        });
+        this.inProgress = false;
+      })
+    );
+  }
+
+  private loadTransactionStatuses(): void {
+    this.userStatuses = [];
+    const statusListData$ = this.profileService.getTransactionStatuses();
+    this.subscriptions.add(
+      statusListData$.valueChanges.subscribe(({ data }) => {
+        this.userStatuses = data.getTransactionStatuses as TransactionStatusDescriptorMap[];
+        this.loadCurrencies();
+      }, (error) => {
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
+      })
+    );
+  }
+
+  private loadCurrencies(): void {
+    this.currencyOptions = [];
+    this.subscriptions.add(
+      this.commonDataService.getSettingsCurrency()?.valueChanges.pipe(take(1)).subscribe(({ data }) => {
+        const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
+        if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
+          this.currencyOptions = currencySettings.settingsCurrency.list
+            ?.map((val) => new CurrencyView(val)) as CurrencyView[];
+        } else {
+          this.currencyOptions = [];
+        }
+        this.loadTransactions();
+      }, (error) => {
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
+      })
+    );
+  }
+
+  showWallets(transactionId: string): void {
+    const transaction = this.transactions.find(x => x.id === transactionId);
+    if (transaction?.type === TransactionType.Deposit || transaction?.type === TransactionType.Withdrawal) {
+      this.router.navigateByUrl(`/admin/wallets/fiat/vaults/${transaction?.vaultIds.join('#') ?? ''}`);
+    } else {
+      this.router.navigateByUrl(`/admin/wallets/crypto/vaults/${transaction?.vaultIds.join('#') ?? ''}`);
+    }
   }
 
   refresh(): void {
-  }
-
-  settle(): void {
+    this.loadList();
   }
 
   export(): void {
+    const exportData$ = this.adminService.exportTransactionsToCsv(
+      this.transactions.filter(x => x.selected === true).map(val => val.id),
+      this.sortedField,
+      this.sortedDesc,
+      this.filter
+    );
+    this.subscriptions.add(
+      exportData$.subscribe(({ data }) => {
+        this.dialog.open(CommonDialogBox, {
+          width: '400px',
+          data: {
+            title: 'Export',
+            message: 'Exported list of transactions has been sent to your email.'
+          }
+        });
+      }, (error) => {
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
+      })
+    );
+  }
+
+  unbenchmark(): void {
+    const dialogRef = this.dialog.open(DeleteDialogBox, {
+      width: '400px',
+      data: {
+        title: 'Settle transaction(s)',
+        message: `You are going to update transaction data. Confirm operation.`,
+        button: 'CONFIRM'
+      }
+    });
+    this.subscriptions.add(
+      dialogRef.afterClosed().subscribe(result => {
+        if (result === true) {
+          this.executeUnbenchmark();
+        }
+      })
+    );
+  }
+
+  private executeUnbenchmark(): void {
+    const requestData$ = this.adminService.unbenchmarkTransaction(
+      this.transactions.filter(x => x.selected === true && x.type !== TransactionType.Receive).map(val => val.id)
+    );
+    this.subscriptions.add(
+      requestData$.subscribe(({ data }) => {
+        this.transactions.forEach(x => x.selected = false);
+      }, (error) => {
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
+      })
+    );
   }
 }

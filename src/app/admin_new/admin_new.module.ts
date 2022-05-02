@@ -41,6 +41,7 @@ import { AdminSwitcherComponent } from './layout/switcher/switcher.component';
 import { AdminTransactionsComponent } from './components/transactions/transactions.component';
 import { AdminPageHeaderComponent } from './layout/page-header/page-header.component';
 import { AdminTransactionTableComponent } from './components/transactions/transaction-table.component';
+import { AdminDataService } from '../admin_old/services/admin-data.service';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -97,6 +98,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   ],
   providers: [
     AdminNewGuard,
+    AdminDataService,
     {
       provide: MAT_CHIPS_DEFAULT_OPTIONS,
       useValue: {

@@ -6,19 +6,19 @@ export function switcherArrowFn() {
   let RTLslideLeft: any = document.querySelector('.slide-leftRTL');
   let RTLslideRight: any = document.querySelector('.slide-rightRTL');
 
-  fromEvent(slideLeft, 'click').subscribe(() => {
-    slideClick();
-  });
-  fromEvent(slideRight, 'click').subscribe(() => {
-    slideClick();
-  });
+  // fromEvent(slideLeft, 'click').subscribe(() => {
+  //   slideClick();
+  // });
+  // fromEvent(slideRight, 'click').subscribe(() => {
+  //   slideClick();
+  // });
 
-  fromEvent(RTLslideLeft, 'click').subscribe(() => {
-    slideClick();
-  });
-  fromEvent(RTLslideRight, 'click').subscribe(() => {
-    slideClick();
-  });
+  // fromEvent(RTLslideLeft, 'click').subscribe(() => {
+  //   slideClick();
+  // });
+  // fromEvent(RTLslideRight, 'click').subscribe(() => {
+  //   slideClick();
+  // });
 
   // used to remove is-expanded class and remove class on clicking arrow buttons
   function slideClick() {
@@ -247,6 +247,7 @@ export function switcherArrowFn() {
     });
   });
 }
+
 export function checkHoriMenu() {
   let menuWidth: any = document.querySelector<HTMLElement>('.horizontal-main');
   let menuItems: any = document.querySelector<HTMLElement>('.side-menu');

@@ -105,7 +105,7 @@ export class AdminSidebarComponent {
     sidemenu?.addEventListener('scroll', () => { }, { passive: false });
     sidemenu?.addEventListener('wheel', () => { }, { passive: false });
 
-    switcherArrowFn();
+    //switcherArrowFn();
 
     fromEvent(window, 'resize').subscribe(() => {
       if (window.innerWidth > 772) {

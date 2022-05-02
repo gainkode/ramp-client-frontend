@@ -1,12 +1,13 @@
 <div class="table-button-container">
   <button mat-raised-button (click)="refresh()" class="demo-button btn btn-primary me-2">
-    REFRESH
+    Refresh
   </button>
-  <button mat-raised-button (click)="settle()" class="demo-button btn btn-secondary me-2">
-    SETTLE
+  <button mat-raised-button (click)="unbenchmark()" class="demo-button btn btn-secondary me-2"
+    [disabled]="!selectedForUnbenchmark">
+    Settle
   </button>
   <button mat-raised-button (click)="export()" class="demo-button btn btn-secondary">
-    EXPORT
+    Export
   </button>
 </div>
 
@@ -31,53 +32,187 @@
   </div>
 </div>
 
-<table mat-table [dataSource]="dataSource" class="mat-elevation-z8 border">
-    <!-- Checkbox Column -->
-    <ng-container matColumnDef="select">
-      <th mat-header-cell *matHeaderCellDef>
-        <mat-checkbox (change)="$event ? masterToggle() : null"
-                      [checked]="selection.hasValue() && isAllSelected()"
-                      [indeterminate]="selection.hasValue() && !isAllSelected()"
-                      [aria-label]="checkboxLabel()">
+<mat-progress-bar *ngIf="inProgress" color="accent" mode="indeterminate"></mat-progress-bar>
+
+<div class="data-table">
+  <mat-table matSort [matSortActive]="sortedField" matSortDirection="desc" matSortDisableClear
+    [dataSource]="transactions">
+    <!-- Details Column -->
+    <ng-container matColumnDef="details" sticky>
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let element" [ngClass]="element.transactionListSelectorColumnStyle">
+        <mat-checkbox color="accent" [checked]="element.selected" (change)="onTransactionSelected(element)">
         </mat-checkbox>
-      </th>
-      <td mat-cell *matCellDef="let row">
-        <mat-checkbox (click)="$event.stopPropagation()"
-                      (change)="$event ? selection.toggle(row) : null"
-                      [checked]="selection.isSelected(row)"
-                      [aria-label]="checkboxLabel(row)">
-        </mat-checkbox>
+        <button mat-icon-button class="row-button" (click)="toggleDetails(element)"
+          [attr.aria-label]="'Transaction details'" [attr.aria-pressed]="!!selectedTransaction"
+          matTooltip="Transaction details" matTooltipClass="info-tooltip">
+          <mat-icon class="details-icon">
+            open_in_new
+          </mat-icon>
+        </button>
+        <button *ngIf="element.vaultIds.length>0" mat-icon-button class="row-button" (click)="showWallets(element.id)"
+          [attr.aria-label]="'Transaction wallet'" [matTooltip]="'Transaction wallet'" matTooltipClass="info-tooltip">
+          <mat-icon class="details-icon">
+            account_balance_wallet
+          </mat-icon>
+        </button>
       </td>
     </ng-container>
-  
-    <!-- Position Column -->
-    <ng-container matColumnDef="position">
-      <th mat-header-cell *matHeaderCellDef> No. </th>
-      <td mat-cell *matCellDef="let element"> {{element.position}} </td>
-    </ng-container>
-  
-    <!-- Name Column -->
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef> Name </th>
-      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-    </ng-container>
-  
-    <!-- Weight Column -->
-    <ng-container matColumnDef="weight">
-      <th mat-header-cell *matHeaderCellDef> Weight </th>
-      <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
-    </ng-container>
-  
-    <!-- Symbol Column -->
-    <ng-container matColumnDef="symbol">
-      <th mat-header-cell *matHeaderCellDef> Symbol </th>
-      <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
-    </ng-container>
-  
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-        (click)="selection.toggle(row)">
-    </tr>
-  </table>
 
-  <mat-paginator [pageSizeOptions]="[25, 50, 100]" aria-label="Select page of transactions"></mat-paginator>
+    <!-- Transaction ID Column -->
+    <ng-container matColumnDef="code">
+      <th mat-header-cell *matHeaderCellDef>Transaction ID</th>
+      <td mat-cell *matCellDef="let element" [ngClass]="element.transactionListDataColumnStyle">
+        {{element.code}}
+      </td>
+    </ng-container>
+
+    <!-- Created Column -->
+    <ng-container matColumnDef="created">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>Created</th>
+      <td mat-cell *matCellDef="let element" [ngClass]="element.transactionListDataColumnStyle">
+        {{element.created}}
+      </td>
+    </ng-container>
+
+    <!-- Customer Name Column -->
+    <ng-container matColumnDef="accountName">
+      <th mat-header-cell *matHeaderCellDef>Customer Name</th>
+      <td mat-cell *matCellDef="let element" [ngClass]="element.transactionListDataColumnStyle">
+        {{element.accountName}} </td>
+    </ng-container>
+
+    <!-- Email Column -->
+    <ng-container matColumnDef="email">
+      <th mat-header-cell *matHeaderCellDef>Email</th>
+      <td mat-cell *matCellDef="let element" [ngClass]="element.transactionListDataColumnStyle">
+        {{element.user?.email}} </td>
+    </ng-container>
+
+    <!-- Account Status Column -->
+    <ng-container matColumnDef="accountStatus">
+      <th mat-header-cell *matHeaderCellDef>Account Status</th>
+      <td mat-cell *matCellDef="let element" [ngClass]="element.transactionListDataColumnStyle">
+        {{element.accountStatus}} </td>
+    </ng-container>
+
+    <!-- Transaction Type Column -->
+    <ng-container matColumnDef="type">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>Transaction Type</th>
+      <td mat-cell *matCellDef="let element" [ngClass]="element.transactionListDataColumnStyle">
+        {{element.transactionTypeName}} </td>
+    </ng-container>
+
+    <!-- Sender Column -->
+    <ng-container matColumnDef="widgetName">
+      <th mat-header-cell *matHeaderCellDef>Widget Name</th>
+      <td mat-cell *matCellDef="let element" [ngClass]="element.transactionListDataColumnStyle">
+        {{element.widgetName}} </td>
+    </ng-container>
+
+    <!-- Sender Column -->
+    <ng-container matColumnDef="from">
+      <th mat-header-cell *matHeaderCellDef>From</th>
+      <td mat-cell *matCellDef="let element" [ngClass]="element.transactionListDataColumnStyle">
+        {{element.sender}} </td>
+    </ng-container>
+
+    <!-- Recipient Column -->
+    <ng-container matColumnDef="to">
+      <th mat-header-cell *matHeaderCellDef>To</th>
+      <td mat-cell *matCellDef="let element" [ngClass]="element.transactionListDataColumnStyle">
+        {{element.recipient}} </td>
+    </ng-container>
+
+    <!-- Base Currency Column -->
+    <ng-container matColumnDef="currencyToSpend">
+      <th mat-header-cell *matHeaderCellDef>Base Coin</th>
+      <td mat-cell *matCellDef="let element" [ngClass]="element.transactionListDataColumnStyle">
+        {{element.currencyToSpend}} </td>
+    </ng-container>
+
+    <!-- Base Amount Column -->
+    <ng-container matColumnDef="amountToSpend">
+      <th mat-header-cell *matHeaderCellDef>Base Amount</th>
+      <td mat-cell *matCellDef="let element" [ngClass]="element.transactionListDataColumnStyle">
+        {{element.amountToSpend}} </td>
+    </ng-container>
+
+    <!-- Buy Currency Column -->
+    <ng-container matColumnDef="currencyToReceive">
+      <th mat-header-cell *matHeaderCellDef>Buy Coin</th>
+      <td mat-cell *matCellDef="let element" [ngClass]="element.transactionListDataColumnStyle">
+        {{element.currencyToReceive}} </td>
+    </ng-container>
+
+    <!-- Buy Amount Column -->
+    <ng-container matColumnDef="amountToReceive">
+      <th mat-header-cell *matHeaderCellDef>Buy Amount</th>
+      <td mat-cell *matCellDef="let element" [ngClass]="element.transactionListDataColumnStyle">
+        {{element.amountToReceive}} </td>
+    </ng-container>
+
+    <!-- Wallet Column -->
+    <ng-container matColumnDef="address">
+      <th mat-header-cell *matHeaderCellDef>Wallet</th>
+      <td mat-cell *matCellDef="let element" [ngClass]="element.transactionListDataColumnStyle">
+        {{element.address}} </td>
+    </ng-container>
+
+    <!-- Payment Method Column -->
+    <ng-container matColumnDef="instrument">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>Payment Method</th>
+      <td mat-cell *matCellDef="let element" [ngClass]="element.transactionListDataColumnStyle">
+        {{element.instrumentName}} </td>
+    </ng-container>
+
+    <!-- Payment Provider Column -->
+    <ng-container matColumnDef="paymentProvider">
+      <th mat-header-cell *matHeaderCellDef>Payment provider</th>
+      <td mat-cell *matCellDef="let element" [ngClass]="element.transactionListDataColumnStyle">
+        {{element.paymentProvider}} </td>
+    </ng-container>
+
+    <!-- Status Column -->
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef>Transaction Status</th>
+      <td mat-cell *matCellDef="let element" [ngClass]="element.transactionListDataColumnStyle">
+        {{element.transactionStatusName}} </td>
+    </ng-container>
+
+    <!-- User Type Column -->
+    <ng-container matColumnDef="userType">
+      <th mat-header-cell *matHeaderCellDef>User Type</th>
+      <td mat-cell *matCellDef="let element" [ngClass]="element.transactionListDataColumnStyle">
+        {{element.userTypeName}} </td>
+    </ng-container>
+
+    <!-- Source Column -->
+    <ng-container matColumnDef="source">
+      <th mat-header-cell *matHeaderCellDef>Initiate from</th>
+      <td mat-cell *matCellDef="let element" [ngClass]="element.transactionListDataColumnStyle">
+        {{element.transactionSourceName}} </td>
+    </ng-container>
+
+    <!-- DocsCheck Column -->
+    <ng-container matColumnDef="kycStatus">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>DocsCheck</th>
+      <td mat-cell *matCellDef="let element" [ngClass]="element.transactionListDataColumnStyle">
+        {{element.kycStatus}} </td>
+    </ng-container>
+
+    <!-- ID Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>ID</th>
+      <td mat-cell *matCellDef="let element" [ngClass]="element.transactionListDataColumnStyle"> {{element.id}}
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </mat-table>
+</div>
+
+<mat-paginator [length]="transactionCount" [pageSize]="pageSize" [pageSizeOptions]="[25, 50, 100]" showFirstLastButtons
+  (page)="handlePage($event)">
+</mat-paginator>

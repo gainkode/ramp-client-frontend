@@ -34638,9 +34638,12 @@ a.option-dots {
 .app-content {
     min-height: calc(100vh - 114px);
     margin-bottom: 0 !important;
+    margin-top: 54px !important;
     -webkit-transition: margin-left 320ms ease;
     -o-transition: margin-left 320ms ease;
     transition: margin-left 320ms ease;
+
+    background-color: #fafafa;
 }
 
 .app-content .side-app {
