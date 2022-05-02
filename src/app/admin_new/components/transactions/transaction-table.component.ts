@@ -93,6 +93,12 @@ export class AdminTransactionTableComponent implements OnInit, OnDestroy, AfterV
     }
   }
 
+  onCloseDetails(): void {
+    if (this.detailsDialog) {
+      this.detailsDialog.dismiss();
+    }
+  }
+
   handleFilterApplied(filter: Filter): void {
     this.filter = filter;
     this.loadList();

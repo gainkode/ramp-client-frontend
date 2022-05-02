@@ -50,6 +50,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     this.setCurrencies(list);
   }
   @Output() save = new EventEmitter();
+  @Output() close = new EventEmitter();
 
   private pNumberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
   private pStatusHash = 0;
@@ -382,5 +383,9 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
         })
       );
     }
+  }
+
+  onClose(): void {
+    this.close.emit();
   }
 }

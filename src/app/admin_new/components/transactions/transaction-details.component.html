@@ -143,9 +143,13 @@
         <app-admin-details-item label="Instrument details" [value]="data?.instrumentDetailsData">
         </app-admin-details-item>
 
-
         <!-- Comment -->
-
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Comment
+          </label>
+          <textarea class="form-control" style="resize: none;" placeholder="Comment" rows="3" formControlName="comment"></textarea>
+        </div>
 
         <!-- End-user transfer hash -->
         <div *ngIf="showTransferHash" class="form-group">
@@ -214,9 +218,13 @@
           class="btn btn-primary pd-x-30 me-2 mg-t-5">
           Save
         </button>
-        <button *ngIf="permission>1 && removable" class="btn btn-danger pd-x-30 mg-t-5" type="button"
+        <button *ngIf="permission>1 && removable" class="btn btn-danger pd-x-30 me-2 mg-t-5" type="button"
           (click)="onDelete()">
           Cancel
+        </button>
+        <button *ngIf="permission>1 && removable" class="btn btn-secondary pd-x-30 mg-t-5" type="button"
+          (click)="onClose()">
+          Close
         </button>
       </div>
     </form>
