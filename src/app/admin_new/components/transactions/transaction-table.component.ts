@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { Filter } from 'src/app/admin_old/model/filter.model';
@@ -46,15 +47,19 @@ export class AdminTransactionTableComponent implements OnInit, OnDestroy, AfterV
   filter = new Filter({});
   
   private subscriptions: Subscription = new Subscription();
+  private detailsDialog: NgbModalRef | undefined = undefined;;
 
   constructor(
     public dialog: MatDialog,
+    private modalService: NgbModal,
     private auth: AuthService,
     private commonDataService: CommonDataService,
     private adminService: AdminDataService,
     private profileService: ProfileDataService,
     private router: Router
-  ) {}
+  ) {
+    this.permission = this.auth.isPermittedObjectCode('TRANSACTIONS');
+  }
 
   ngOnInit(): void {
     this.loadList();
@@ -82,7 +87,10 @@ export class AdminTransactionTableComponent implements OnInit, OnDestroy, AfterV
 
   onSaveTransaction(): void {
     this.selectedTransaction = undefined;
-    this.loadList();
+    if (this.detailsDialog) {
+      this.detailsDialog.close();
+      this.loadList();
+    }
   }
 
   handleFilterApplied(filter: Filter): void {
@@ -103,6 +111,15 @@ export class AdminTransactionTableComponent implements OnInit, OnDestroy, AfterV
     } else {
       this.selectedTransaction = transaction;
     }
+  }
+
+  showDetails(transaction: TransactionItemFull, content: any) {
+    this.selectedTransaction = transaction;
+    this.detailsDialog = this.modalService.open(content, {
+      backdrop: 'static',
+      windowClass: 'modalCusSty',
+    });
+
   }
 
   private isSelectedTransaction(transactionId: string): boolean {

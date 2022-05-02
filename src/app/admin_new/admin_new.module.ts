@@ -42,6 +42,8 @@ import { AdminTransactionsComponent } from './components/transactions/transactio
 import { AdminPageHeaderComponent } from './layout/page-header/page-header.component';
 import { AdminTransactionTableComponent } from './components/transactions/transaction-table.component';
 import { AdminDataService } from '../admin_old/services/admin-data.service';
+import { AdminTransactionDetailsComponent } from './components/transactions/transaction-details.component';
+import { AdminDetailsItemComponent } from './misc/details-item/details-item.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -92,9 +94,11 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AdminPageHeaderComponent,
     AdminSidebarComponent,
     AdminSwitcherComponent,
+    AdminDetailsItemComponent,
     DashboardComponent,
     AdminTransactionsComponent,
-    AdminTransactionTableComponent
+    AdminTransactionTableComponent,
+    AdminTransactionDetailsComponent
   ],
   providers: [
     AdminNewGuard,

@@ -1,0 +1,31 @@
+<div class="form-group" *ngIf="!!valueString || !!valueImage">
+    <label class="main-content-label tx-11 tx-medium tx-gray-600">
+        {{label}}
+    </label>
+    <div *ngIf="setArray===false">
+        <p *ngIf="valueString && setLink===false" class="mg-b-20">
+            {{valueString}}
+        </p>
+        <p *ngIf="valueString && url" class="mg-b-20">
+            <a target="_blank" rel="noopener noreferrer" [href]="url">
+                {{valueString}}
+            </a>
+        </p>
+        <p *ngIf="valueString && urlPath" class="mg-b-20">
+            <a [routerLink]="urlPath">
+                {{valueString}}
+            </a>
+        </p>
+        <div *ngIf="!!valueImage" class="mg-b-20">
+            <app-dropdown-item itemValue="{{valueImage?.title}}" imageClass="{{valueImage?.imgClass}}"
+                imageSource="{{valueImage?.imgSource}}"></app-dropdown-item>
+        </div>
+    </div>
+    <div *ngIf="setArray===true" class="mg-b-20">
+        <div *ngFor="let s of valueStrings" class="value">
+            <p class="mg-b-5">
+                {{s}}
+            </p>
+        </div>
+    </div>
+</div>

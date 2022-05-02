@@ -43,7 +43,7 @@
       <td mat-cell *matCellDef="let element" [ngClass]="element.transactionListSelectorColumnStyle">
         <mat-checkbox color="accent" [checked]="element.selected" (change)="onTransactionSelected(element)">
         </mat-checkbox>
-        <button mat-icon-button class="row-button" (click)="toggleDetails(element)"
+        <button mat-icon-button class="row-button" (click)="showDetails(element, content)"
           [attr.aria-label]="'Transaction details'" [attr.aria-pressed]="!!selectedTransaction"
           matTooltip="Transaction details" matTooltipClass="info-tooltip">
           <mat-icon class="details-icon">
@@ -216,3 +216,16 @@
 <mat-paginator [length]="transactionCount" [pageSize]="pageSize" [pageSizeOptions]="[25, 50, 100]" showFirstLastButtons
   (page)="handlePage($event)">
 </mat-paginator>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h6 class="modal-title">Transaction details</h6>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <app-admin-transaction-details [permission]="permission" [transaction]="selectedTransaction"
+      (save)="onSaveTransaction()"></app-admin-transaction-details>
+  </div>
+</ng-template>

@@ -21,8 +21,7 @@ export class AdminHeaderComponent implements OnInit {
     public SwitcherService: SwitcherService,
     public navServices: NavService,
     private auth: AuthService,
-    public router: Router,
-    private modalService: NgbModal
+    public router: Router
   ) {}
 
   ngOnInit(): void {}
@@ -37,13 +36,6 @@ export class AdminHeaderComponent implements OnInit {
   signout() {
     this.auth.logout();
     this.router.navigate(['/auth/login']);
-  }
-
-  open(content: any) {
-    this.modalService.open(content, {
-      backdrop: 'static',
-      windowClass: 'modalCusSty',
-    });
   }
 
   searchToggle() {
