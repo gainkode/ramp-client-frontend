@@ -253,11 +253,6 @@
         </div>
       </div>
 
-      <!-- <div class="form-group mg-b-20">
-          <label class="ckbox"><input checked type="checkbox"><span class="tx-13">
-              Save my card for future purchases
-            </span></label>
-        </div> -->
       <div style="display: flex; justify-content: flex-end;">
         <button *ngIf="permission>1 && transactionType!==TRANSACTION_TYPE.Receive"
           class="btn btn-primary pd-x-30 me-2 mg-t-5">
@@ -269,7 +264,7 @@
           <span *ngIf="cancelInProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
           Cancel
         </button>
-        <button *ngIf="permission>1 && removable" class="btn btn-secondary pd-x-30 mg-t-5" type="button"
+        <button *ngIf="permission>1 && removable" class="btn btn-outline-primary pd-x-30 mg-t-5" type="button"
           (click)="onClose()">
           Close
         </button>
@@ -290,8 +285,8 @@
       You are going to cancel selected transaction. Confirm operation.
     </h4>
     <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
-      <button *ngIf="permission>1 && removable" class="btn btn-secondary pd-x-30 me-2 mg-t-5" type="button"
-        (click)="onReject()">
+      <button class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" type="button"
+        (click)="modal.dismiss('Reject')">
         Reject
       </button>
       <button class="btn btn-danger pd-x-30 mg-t-5" (click)="onConfirmDelete()">
@@ -313,11 +308,11 @@
       You are going to update transaction data. Confirm operation.
     </h4>
     <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
-      <button *ngIf="permission>1 && removable" class="btn btn-secondary pd-x-30 me-2 mg-t-5" type="button"
-        (click)="onReject()">
+      <button class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" type="button"
+        (click)="modal.dismiss('Reject')">
         Reject
       </button>
-      <button class="btn btn-danger pd-x-30 mg-t-5" (click)="onConfirmUpdate(status_confirm_content, amount_confirm_content)">
+      <button class="btn btn-primary pd-x-30 mg-t-5" (click)="onConfirmUpdate(status_confirm_content, amount_confirm_content)">
         Confirm
       </button>
     </div>
@@ -336,7 +331,7 @@
       You are going to change the transaction status. Should we restart the transaction handling after saving?
     </h4>
     <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
-      <button *ngIf="permission>1 && removable" class="btn btn-secondary pd-x-30 me-2 mg-t-5" type="button"
+      <button class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" type="button"
         (click)="onChangeTransactionStatusConfirm(0)">
         No
       </button>
@@ -359,7 +354,7 @@
       You are going to change the transaction amounts. Should we recalculate transaction after saving?
     </h4>
     <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
-      <button *ngIf="permission>1 && removable" class="btn btn-secondary pd-x-30 me-2 mg-t-5" type="button"
+      <button class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" type="button"
         (click)="onChangeTransactionAmountConfirm(0)">
         No
       </button>

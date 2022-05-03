@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
@@ -8,8 +7,6 @@ import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { Filter } from 'src/app/admin_old/model/filter.model';
 import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
-import { CommonDialogBox } from 'src/app/components/dialogs/common-box.dialog';
-import { DeleteDialogBox } from 'src/app/components/dialogs/delete-box.dialog';
 import { SettingsCurrencyWithDefaults, TransactionStatusDescriptorMap, TransactionType } from 'src/app/model/generated-models';
 import { CurrencyView } from 'src/app/model/payment.model';
 import { TransactionItemFull } from 'src/app/model/transaction.model';
@@ -34,6 +31,7 @@ export class AdminTransactionTableComponent implements OnInit, OnDestroy, AfterV
   isFilterCollapsed: boolean = true;
   inProgress = false;
   permission = 0;
+  unbenchmarkDialog?: NgbModalRef;
   selectedTransaction?: TransactionItemFull;
   selectedForUnbenchmark = false;
   transactionCount = 0;
@@ -50,7 +48,6 @@ export class AdminTransactionTableComponent implements OnInit, OnDestroy, AfterV
   private detailsDialog: NgbModalRef | undefined = undefined;;
 
   constructor(
-    public dialog: MatDialog,
     private modalService: NgbModal,
     private auth: AuthService,
     private commonDataService: CommonDataService,
@@ -207,7 +204,7 @@ export class AdminTransactionTableComponent implements OnInit, OnDestroy, AfterV
     this.loadList();
   }
 
-  export(): void {
+  export(content: any): void {
     const exportData$ = this.adminService.exportTransactionsToCsv(
       this.transactions.filter(x => x.selected === true).map(val => val.id),
       this.sortedField,
@@ -216,12 +213,9 @@ export class AdminTransactionTableComponent implements OnInit, OnDestroy, AfterV
     );
     this.subscriptions.add(
       exportData$.subscribe(({ data }) => {
-        this.dialog.open(CommonDialogBox, {
-          width: '400px',
-          data: {
-            title: 'Export',
-            message: 'Exported list of transactions has been sent to your email.'
-          }
+        this.modalService.open(content, {
+          backdrop: 'static',
+          windowClass: 'modalCusSty',
         });
       }, (error) => {
         if (this.auth.token === '') {
@@ -231,18 +225,15 @@ export class AdminTransactionTableComponent implements OnInit, OnDestroy, AfterV
     );
   }
 
-  unbenchmark(): void {
-    const dialogRef = this.dialog.open(DeleteDialogBox, {
-      width: '400px',
-      data: {
-        title: 'Settle transaction(s)',
-        message: `You are going to update transaction data. Confirm operation.`,
-        button: 'CONFIRM'
-      }
+  unbenchmark(content: any): void {
+
+    this.unbenchmarkDialog = this.modalService.open(content, {
+      backdrop: 'static',
+      windowClass: 'modalCusSty',
     });
     this.subscriptions.add(
-      dialogRef.afterClosed().subscribe(result => {
-        if (result === true) {
+      this.unbenchmarkDialog.closed.subscribe(result => {
+        if (result === 'Confirm') {
           this.executeUnbenchmark();
         }
       })

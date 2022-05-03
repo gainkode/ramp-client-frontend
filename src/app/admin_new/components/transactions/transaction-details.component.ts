@@ -1,13 +1,9 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
 import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
-import { DeleteDialogBox } from 'src/app/components/dialogs/delete-box.dialog';
-import { YesNoDialogBox } from 'src/app/components/dialogs/yesno-box.dialog';
 import { AccountStatus, KycStatus, Rate, SettingsCommon, Transaction, TransactionKycStatus, TransactionStatus, TransactionStatusDescriptorMap, TransactionType } from 'src/app/model/generated-models';
 import { AdminTransactionStatusList, CurrencyView, TransactionKycStatusList, TransactionStatusList, TransactionStatusView, UserStatusList } from 'src/app/model/payment.model';
 import { TransactionItemFull } from 'src/app/model/transaction.model';
@@ -117,7 +113,6 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     private router: Router,
     private auth: AuthService,
     private modalService: NgbModal,
-    public dialog: MatDialog,
     private exhangeRate: ExchangeRateService,
     private adminService: AdminDataService) { }
 
@@ -343,15 +338,6 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
 
   onClose(): void {
     this.close.emit();
-  }
-
-  onReject(): void {
-    if (this.deleteDialog) {
-      this.deleteDialog.dismiss('');
-    }
-    if (this.updateDialog) {
-      this.updateDialog.dismiss('');
-    }
   }
 
   onConfirmDelete(): void {

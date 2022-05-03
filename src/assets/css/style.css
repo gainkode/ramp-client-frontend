@@ -1288,7 +1288,7 @@ btn-outline-primary:hover .bg-primary {
     font-family: "feather" !important;
 }
 
-.btn,
+/* .btn,
 .sp-container button {
     display: inline-block;
     font-weight: 400;
@@ -1786,9 +1786,9 @@ fieldset:disabled a.btn {
 
 .show>.btn-dark.dropdown-toggle:focus {
     box-shadow: 0 0 0 0.2rem rgba(88, 99, 122, 0.5);
-}
+} */
 
-.btn-outline-white {
+/* .btn-outline-white {
     color: #fff !important;
     border-color: #fff;
 }
@@ -2148,9 +2148,9 @@ fieldset:disabled a.btn {
 
 .show>.btn-outline-dark.dropdown-toggle:focus {
     box-shadow: 0 0 0 0.2rem rgba(59, 72, 99, 0.5);
-}
+} */
 
-.btn-link {
+/* .btn-link {
     font-weight: 400;
     color: var(--primary-bg-color);
     text-decoration: none;
@@ -2351,10 +2351,10 @@ input[type=button].btn-block {
     position: absolute;
     clip: rect(0, 0, 0, 0);
     pointer-events: none;
-}
+} */
 
 /* ###### 3.3 Buttons ###### */
-.btn:active,
+/* .btn:active,
 .sp-container button:active,
 .btn:focus,
 .sp-container button:focus {
@@ -2614,10 +2614,10 @@ input[type=button].btn-block {
 .btn-outline-indigo:hover,
 .btn-outline-indigo:focus {
     background-color: #b057bf;
-}
+} */
 
 /* ###### 5.1 Buttons  ###### */
-.btn-main-primary {
+/* .btn-main-primary {
     color: #fff;
     background-color: var(--primary-bg-color);
     border-color: var(--primary-bg-color);
@@ -2828,10 +2828,10 @@ input[type=button].btn-block {
 
 .nav-link#bs-example-navbar-collapse-1 {
     padding: 0rem 0.3rem;
-}
+} */
 
 /* ###### 4.8 button-light ###### */
-.btn-warning-light {
+/* .btn-warning-light {
     color: #FDAC41;
     background-color: rgba(253, 172, 65, 0.2);
     border-color: rgba(253, 172, 65, 0.2);
@@ -3012,9 +3012,9 @@ input[type=button].btn-block {
 .btn-list>.btn,
 .btn-list>.dropdown {
     margin-bottom: 0.3rem;
-}
+} */
 
-.row>* {
+/* .row>* {
     width: auto;
 }
 
@@ -3034,7 +3034,6 @@ input[type=button].btn-block {
 }
 
 .tabs-style-1 .main-nav-line .nav-link.active {
-    /* color: #242f48; */
     border: 1px solid;
     border-color: #ededf5 #ededf5 #fff;
 }
@@ -3274,7 +3273,7 @@ input[type=button].btn-block {
     color: #fff !important;
     background-color: #dc3545;
     border-color: #dc3545;
-}
+} */
 
 .card {
     position: relative;
