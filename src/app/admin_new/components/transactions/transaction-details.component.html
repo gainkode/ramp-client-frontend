@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-md-12 col-lg-12 col-xl-12 mx-auto d-block">
-    <form [formGroup]="form" novalidate (ngSubmit)="onSubmit()">
+    <form [formGroup]="form" novalidate (ngSubmit)="onSubmit(update_confirm_content)">
       <div class="card card-body pd-20 pd-md-40 border shadow-none">
         <h5 class="card-title mg-b-20">
           Payment Data
@@ -261,10 +261,12 @@
       <div style="display: flex; justify-content: flex-end;">
         <button *ngIf="permission>1 && transactionType!==TRANSACTION_TYPE.Receive"
           class="btn btn-primary pd-x-30 me-2 mg-t-5">
+          <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
           Save
         </button>
         <button *ngIf="permission>1 && removable" class="btn btn-danger pd-x-30 me-2 mg-t-5" type="button"
-          (click)="onDelete()">
+          (click)="onDelete(delete_confirm_content)">
+          <span *ngIf="cancelInProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
           Cancel
         </button>
         <button *ngIf="permission>1 && removable" class="btn btn-secondary pd-x-30 mg-t-5" type="button"
@@ -275,3 +277,95 @@
     </form>
   </div>
 </div>
+
+<ng-template #delete_confirm_content let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Cancel transaction</h5>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <h4 style="text-align: center;">
+      You are going to cancel selected transaction. Confirm operation.
+    </h4>
+    <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
+      <button *ngIf="permission>1 && removable" class="btn btn-secondary pd-x-30 me-2 mg-t-5" type="button"
+        (click)="onReject()">
+        Reject
+      </button>
+      <button class="btn btn-danger pd-x-30 mg-t-5" (click)="onConfirmDelete()">
+        Confirm
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #update_confirm_content let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Update transaction</h5>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <h4 style="text-align: center;">
+      You are going to update transaction data. Confirm operation.
+    </h4>
+    <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
+      <button *ngIf="permission>1 && removable" class="btn btn-secondary pd-x-30 me-2 mg-t-5" type="button"
+        (click)="onReject()">
+        Reject
+      </button>
+      <button class="btn btn-danger pd-x-30 mg-t-5" (click)="onConfirmUpdate(status_confirm_content, amount_confirm_content)">
+        Confirm
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #status_confirm_content let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Update transaction</h5>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <h4 style="text-align: center;">
+      You are going to change the transaction status. Should we restart the transaction handling after saving?
+    </h4>
+    <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
+      <button *ngIf="permission>1 && removable" class="btn btn-secondary pd-x-30 me-2 mg-t-5" type="button"
+        (click)="onChangeTransactionStatusConfirm(0)">
+        No
+      </button>
+      <button class="btn btn-primary pd-x-30 mg-t-5" (click)="onChangeTransactionStatusConfirm(1)">
+        Yes
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #amount_confirm_content let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Update transaction</h5>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <h4 style="text-align: center;">
+      You are going to change the transaction amounts. Should we recalculate transaction after saving?
+    </h4>
+    <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
+      <button *ngIf="permission>1 && removable" class="btn btn-secondary pd-x-30 me-2 mg-t-5" type="button"
+        (click)="onChangeTransactionAmountConfirm(0)">
+        No
+      </button>
+      <button class="btn btn-primary pd-x-30 mg-t-5" (click)="onChangeTransactionAmountConfirm(1)">
+        Yes
+      </button>
+    </div>
+  </div>
+</ng-template>

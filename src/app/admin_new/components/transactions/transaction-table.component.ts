@@ -125,7 +125,6 @@ export class AdminTransactionTableComponent implements OnInit, OnDestroy, AfterV
       backdrop: 'static',
       windowClass: 'modalCusSty',
     });
-
   }
 
   private isSelectedTransaction(transactionId: string): boolean {

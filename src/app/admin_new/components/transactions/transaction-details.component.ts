@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
@@ -55,11 +56,23 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   private pNumberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
   private pStatusHash = 0;
   private pAmountHash = 0;
+  private statusChanged = false;
+  private amountChanged = false;
+  private restartTransaction = false;
+  private recalculateAmounts = false;
+  private transactionToUpdate: Transaction | undefined = undefined;
   private pDefaultRate = 0;
   private pCurrencies: CurrencyView[] = [];
+  private deleteDialog?: NgbModalRef;
+  private updateDialog?: NgbModalRef;
+  private statusDialog?: NgbModalRef;
+  private amountDialog?: NgbModalRef;
+  private amountDialogContent: any;
   private subscriptions: Subscription = new Subscription();
 
   submitted = false;
+  saveInProgress = false;
+  cancelInProgress = false;
   TRANSACTION_TYPE: typeof TransactionType = TransactionType;
   data: TransactionItemFull | undefined = undefined;
   accountStatuses = UserStatusList;
@@ -103,6 +116,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private router: Router,
     private auth: AuthService,
+    private modalService: NgbModal,
     public dialog: MatDialog,
     private exhangeRate: ExchangeRateService,
     private adminService: AdminDataService) { }
@@ -224,73 +238,18 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  private saveTransaction(transaction: Transaction, statusChanged: boolean, amountChanged: boolean): void {
-    const dialogRef = this.dialog.open(DeleteDialogBox, {
-      width: '400px',
-      data: {
-        title: 'Update transaction',
-        message: `You are going to update transaction data. Confirm operation.`,
-        button: 'CONFIRM'
-      }
-    });
-    this.subscriptions.add(
-      dialogRef.afterClosed().subscribe(result => {
-        if (result === true) {
-          if (statusChanged) {
-            this.requestTransactionStatusChange(transaction, amountChanged);
-          } else {
-            this.requestTransactionAmountChange(transaction, false);
-          }
-        }
-      })
-    );
-  }
-
-  private requestTransactionStatusChange(transaction: Transaction, requireAmountChangeConfirmation: boolean): void {
-    const dialogRef = this.dialog.open(YesNoDialogBox, {
-      width: '400px',
-      data: {
-        title: 'Update transaction',
-        message: `You are going to change the transaction status. Should we restart the transaction handling after saving?`
-      }
-    });
-    this.subscriptions.add(
-      dialogRef.afterClosed().pipe(take(1)).subscribe(result => {
-        if (result && result !== 0) {
-          const changeStatus = (result === 1);
-          if (requireAmountChangeConfirmation) {
-            this.requestTransactionAmountChange(transaction, changeStatus);
-          } else {
-            this.updateTransaction(transaction, changeStatus, false);
-          }
-        }
-      })
-    );
-  }
-
-  private requestTransactionAmountChange(transaction: Transaction, changeStatus: boolean): void {
-    const dialogRef = this.dialog.open(YesNoDialogBox, {
-      width: '400px',
-      data: {
-        title: 'Update transaction',
-        message: `You are going to change the transaction amounts. Should we recalculate transaction after saving?`
-      }
-    });
-    this.subscriptions.add(
-      dialogRef.afterClosed().pipe(take(1)).subscribe(result => {
-        if (result && result !== 0) {
-          this.updateTransaction(transaction, changeStatus, result === 1);
-        }
-      })
-    );
-  }
-
-  updateTransaction(transaction: Transaction, restartTransaction: boolean, recalculateAmounts: boolean): void {
-    const requestData$ = this.adminService.updateTransaction(transaction, restartTransaction, recalculateAmounts);
+  updateTransaction(): void {
+    this.saveInProgress = true;
+    const requestData$ = this.adminService.updateTransaction(
+      this.transactionToUpdate as Transaction,
+      this.restartTransaction,
+      this.recalculateAmounts);
     this.subscriptions.add(
       requestData$.subscribe(({ data }) => {
+        this.saveInProgress = false;
         this.save.emit();
       }, (error) => {
+        this.saveInProgress = false;
         if (this.auth.token === '') {
           this.router.navigateByUrl('/');
         }
@@ -298,7 +257,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     );
   }
 
-  onSubmit(): void {
+  onSubmit(content: any): void {
     this.submitted = true;
     if (this.form.valid) {
       const currentRateValue = this.form.get('rate')?.value;
@@ -309,7 +268,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
       if (currentRate === this.pDefaultRate) {
         currentRate = undefined;
       }
-      const transaction = {
+      this.transactionToUpdate = {
         transactionId: this.transactionId,
         destination: this.form.get('address')?.value,
         currencyToSpend: this.form.get('currencyToSpend')?.value,
@@ -331,23 +290,31 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
         comment: this.form.get('comment')?.value ?? ''
       } as Transaction;
       const statusHash = getTransactionStatusHash(
-        transaction.status,
-        transaction.kycStatus ?? TransactionKycStatus.KycWaiting,
-        transaction.accountStatus ?? AccountStatus.Closed);
+        this.transactionToUpdate.status,
+        this.transactionToUpdate.kycStatus ?? TransactionKycStatus.KycWaiting,
+        this.transactionToUpdate.accountStatus ?? AccountStatus.Closed);
       const amountHash = getTransactionAmountHash(
         currentRate ?? this.pDefaultRate,
-        transaction.amountToSpend ?? 0,
-        transaction.feeFiat ?? 0);
-      this.saveTransaction(transaction, this.pStatusHash !== statusHash, this.pAmountHash !== amountHash);
+        this.transactionToUpdate.amountToSpend ?? 0,
+        this.transactionToUpdate.feeFiat ?? 0);
+      this.statusChanged = this.pStatusHash !== statusHash;
+      this.amountChanged = this.pAmountHash !== amountHash;
+      this.updateDialog = this.modalService.open(content, {
+        backdrop: 'static',
+        windowClass: 'modalCusSty',
+      });
     }
   }
 
   private deleteTransaction(): void {
+    this.cancelInProgress = true;
     const requestData = this.adminService.deleteTransaction(this.transactionId);
     this.subscriptions.add(
       requestData.subscribe(({ data }) => {
+        this.cancelInProgress = false;
         this.save.emit();
       }, (error) => {
+        this.cancelInProgress = false;
         if (this.auth.token === '') {
           this.router.navigateByUrl('/');
         }
@@ -367,27 +334,75 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     return `${adminStatusName} (${statusName})`;
   }
 
-  onDelete(): void {
-    if (this.transactionId !== '' && this.removable) {
-      const dialogRef = this.dialog.open(DeleteDialogBox, {
-        width: '400px',
-        data: {
-          title: 'Delete transaction',
-          message: `You are going to delete selected transaction. Confirm operation.`,
-          button: 'DELETE'
-        }
-      });
-      this.subscriptions.add(
-        dialogRef.afterClosed().subscribe(result => {
-          if (result === true) {
-            this.deleteTransaction();
-          }
-        })
-      );
-    }
+  onDelete(content: any): void {
+    this.deleteDialog = this.modalService.open(content, {
+      backdrop: 'static',
+      windowClass: 'modalCusSty',
+    });
   }
 
   onClose(): void {
     this.close.emit();
+  }
+
+  onReject(): void {
+    if (this.deleteDialog) {
+      this.deleteDialog.dismiss('');
+    }
+    if (this.updateDialog) {
+      this.updateDialog.dismiss('');
+    }
+  }
+
+  onConfirmDelete(): void {
+    if (this.deleteDialog) {
+      this.deleteDialog.close('');
+      this.deleteTransaction();
+    }
+  }
+
+  onConfirmUpdate(statusContent: any, amountContent: any): void {
+    this.amountDialogContent = amountContent;
+    if (this.updateDialog) {
+      this.updateDialog.close('');
+      if (this.statusChanged) {
+        this.statusDialog = this.modalService.open(statusContent, {
+          backdrop: 'static',
+          windowClass: 'modalCusSty',
+        });
+      } else {
+        if (this.amountChanged) {
+          this.amountDialog = this.modalService.open(this.amountDialogContent, {
+            backdrop: 'static',
+            windowClass: 'modalCusSty',
+          });
+        } else {
+          this.updateTransaction();
+        }
+      }
+    }
+  }
+
+  onChangeTransactionStatusConfirm(restartTransaction: number): void {
+    this.restartTransaction = (restartTransaction === 1);
+    if (this.statusDialog) {
+      this.statusDialog.close('');
+    }
+    if (this.amountChanged) {
+      this.amountDialog = this.modalService.open(this.amountDialogContent, {
+        backdrop: 'static',
+        windowClass: 'modalCusSty',
+      });
+    } else {
+      this.updateTransaction();
+    }
+  }
+
+  onChangeTransactionAmountConfirm(recalcTransaction: number): void {
+    this.recalculateAmounts = (recalcTransaction === 1);
+    if (this.amountDialog) {
+      this.amountDialog.close('');
+    }
+    this.updateTransaction();
   }
 }
