@@ -17,7 +17,7 @@ import { getTransactionAmountHash, getTransactionStatusHash } from 'src/app/util
 @Component({
   selector: 'app-admin-transaction-details',
   templateUrl: 'transaction-details.component.html',
-  styleUrls: ['transaction-details.component.scss']
+  styleUrls: ['../../assets/scss/_validation.scss']
 })
 export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   @Input() permission = 0;
@@ -59,6 +59,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   private pCurrencies: CurrencyView[] = [];
   private subscriptions: Subscription = new Subscription();
 
+  submitted = false;
   TRANSACTION_TYPE: typeof TransactionType = TransactionType;
   data: TransactionItemFull | undefined = undefined;
   accountStatuses = UserStatusList;
@@ -298,6 +299,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
+    this.submitted = true;
     if (this.form.valid) {
       const currentRateValue = this.form.get('rate')?.value;
       let currentRate: number | undefined = undefined;

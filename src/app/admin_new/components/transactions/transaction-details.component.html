@@ -25,7 +25,14 @@
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             Wallet address
           </label>
-          <input class="form-control" type="text" formControlName="address" required>
+          <input class="form-control" [ngClass]="{'has-error': !form.controls.address.valid}" type="text"
+            formControlName="address" required>
+          <div *ngIf="(form.controls.address.touched || submitted) && (form.controls.address.errors?.['required'])"
+            class="tx-danger">
+            <small>
+              Address is required
+            </small>
+          </div>
         </div>
         <app-admin-details-item label="Original transfer Order Id" [value]="data?.transferOriginalOrderId">
         </app-admin-details-item>
@@ -67,8 +74,21 @@
                   <p *ngIf="transactionType===TRANSACTION_TYPE.Receive" class="pd-t-10">
                     {{data?.amountToSpend}}
                   </p>
-                  <input *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-control" type="text"
+                  <input *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-control"
+                    [ngClass]="{'has-error': !form.controls.amountToSpend.valid}" type="text"
                     formControlName="amountToSpend" required>
+                  <div
+                    *ngIf="(form.controls.amountToSpend.touched || submitted) && (form.controls.amountToSpend.errors?.['required'])"
+                    class="tx-danger">
+                    <small>
+                      {{amountToSpendTitle}} is required
+                    </small>
+                  </div>
+                  <div *ngIf="form.controls.amountToSpend.errors?.['pattern']" class="tx-danger">
+                    <small>
+                      Incorrect number value
+                    </small>
+                  </div>
                 </div>
                 <div class="col-sm-5 mg-t-10 mg-sm-t-0">
                   <select class="form-control select2-no-search" formControlName="currencyToSpend" required>
@@ -115,7 +135,19 @@
               Set current
             </a>
           </label>
-          <input class="form-control" type="text" formControlName="rate" required>
+          <input class="form-control" [ngClass]="{'has-error': !form.controls.rate.valid}" type="text"
+            formControlName="rate" required>
+          <div *ngIf="(form.controls.rate.touched || submitted) && (form.controls.rate.errors?.['required'])"
+            class="tx-danger">
+            <small>
+              Rate is required
+            </small>
+          </div>
+          <div *ngIf="form.controls.rate.errors?.['pattern']" class="tx-danger">
+            <small>
+              Incorrect number value
+            </small>
+          </div>
         </div>
         <!-- <div
           *ngIf="transactionType===TRANSACTION_TYPE.Buy || transactionType===TRANSACTION_TYPE.Sell || transactionType===TRANSACTION_TYPE.Exchange"
@@ -132,7 +164,19 @@
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             {{systemFeeTitle}}
           </label>
-          <input class="form-control" type="text" formControlName="fee" required>
+          <input class="form-control" [ngClass]="{'has-error': !form.controls.fee.valid}" type="text"
+            formControlName="fee" required>
+          <div *ngIf="(form.controls.fee.touched || submitted) && (form.controls.fee.errors?.['required'])"
+            class="tx-danger">
+            <small>
+              Fee is required
+            </small>
+          </div>
+          <div *ngIf="form.controls.fee.errors?.['pattern']" class="tx-danger">
+            <small>
+              Incorrect number value
+            </small>
+          </div>
         </div>
         <app-admin-details-item label="Blockchain fee" [value]="data?.transferFee"></app-admin-details-item>
 
@@ -148,7 +192,8 @@
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             Comment
           </label>
-          <textarea class="form-control" style="resize: none;" placeholder="Comment" rows="3" formControlName="comment"></textarea>
+          <textarea class="form-control" style="resize: none;" placeholder="Comment" rows="3"
+            formControlName="comment"></textarea>
         </div>
 
         <!-- End-user transfer hash -->
