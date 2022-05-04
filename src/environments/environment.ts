@@ -17,7 +17,9 @@ export const environment = {
   recaptchaId: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI',
   googleClientId: '683937471887-u8r2tuvcvibnsnc41grnvcer9tv5bpm6.apps.googleusercontent.com',
   facebookClientId: '522193095423714',
-  support_email: 'support@ewallet.com'
+  support_email: 'support@ewallet.com',
+  base_color: '#0081D4',
+  main_font: 'Ubuntu'
 };
 
 /*
