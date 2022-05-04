@@ -8,7 +8,7 @@
                         Account type
                     </label>
                     <ng-select [items]="userTypeOptions" bindLabel="name" bindValue="id" formControlName="accountTypes"
-                        [multiple]="true" [closeOnSelect]="false">
+                        [multiple]="true" [closeOnSelect]="false" placeholder="Select account types">
                     </ng-select>
                 </div>
                 <div *ngIf="field === 'accountStatus'" class="form-group">
@@ -16,15 +16,16 @@
                         Account status
                     </label>
                     <ng-select [items]="userStatusOptions" bindLabel="name" bindValue="id"
-                        formControlName="accountStatuses" [multiple]="true" [closeOnSelect]="false">
+                        formControlName="accountStatuses" [multiple]="true" [closeOnSelect]="false"
+                        placeholder="Select account statuses">
                     </ng-select>
                 </div>
-
                 <div *ngIf="field === 'country'" class="form-group">
                     <label class="main-content-label tx-11 tx-medium tx-gray-600">
                         Country
                     </label>
-                    <ng-select formControlName="countries" [multiple]="true" [closeOnSelect]="false">
+                    <ng-select formControlName="countries" [multiple]="true" [closeOnSelect]="false"
+                        placeholder="Select countries">
                         <ng-option *ngFor="let country of countryOptions" [value]="country.code3">
                             <app-dropdown-item itemValue="{{country.name}}" imageClass="country-flag"
                                 imageSource="assets/svg-country-flags/{{getCountryFlag(country.code2)}}">
@@ -32,13 +33,12 @@
                         </ng-option>
                     </ng-select>
                 </div>
-
                 <div *ngIf="field === 'source'" class="form-group">
                     <label class="main-content-label tx-11 tx-medium tx-gray-600">
                         Source
                     </label>
                     <ng-select [items]="sourceOptions" bindLabel="name" bindValue="id" formControlName="sources"
-                        [multiple]="true" [closeOnSelect]="false">
+                        [multiple]="true" [closeOnSelect]="false" placeholder="Select transaction sources">
                     </ng-select>
                 </div>
                 <div *ngIf="field === 'kycStatus'" class="form-group">
@@ -46,7 +46,7 @@
                         DocsCheck Statuses
                     </label>
                     <ng-select [items]="kysStatusOptions" bindLabel="name" bindValue="id" formControlName="kycStatuses"
-                        [multiple]="true" [closeOnSelect]="false">
+                        [multiple]="true" [closeOnSelect]="false" placeholder="Select user verification statuses">
                     </ng-select>
                 </div>
                 <div *ngIf="field === 'riskLevel'" class="form-group">
@@ -54,7 +54,7 @@
                         Risk Levels
                     </label>
                     <ng-select [items]="riskLevelsOptions" bindLabel="name" bindValue="id" formControlName="riskLevels"
-                        [multiple]="true" [closeOnSelect]="false">
+                        [multiple]="true" [closeOnSelect]="false" placeholder="Select risk levels">
                     </ng-select>
                 </div>
                 <div *ngIf="field === 'assets'" class="form-group">
@@ -62,7 +62,7 @@
                         Assets
                     </label>
                     <ng-select [items]="currencies" bindLabel="name" bindValue="id" formControlName="assets"
-                        [multiple]="true" [closeOnSelect]="false">
+                        [multiple]="true" [closeOnSelect]="false" placeholder="Select assets">
                     </ng-select>
                 </div>
                 <div *ngIf="field === 'transactionType'" class="form-group">
@@ -70,7 +70,8 @@
                         Transaction Types
                     </label>
                     <ng-select [items]="transactionTypeOptions" bindLabel="name" bindValue="id"
-                        formControlName="transactionTypes" [multiple]="true" [closeOnSelect]="false">
+                        formControlName="transactionTypes" [multiple]="true" [closeOnSelect]="false"
+                        placeholder="Select transaction types">
                     </ng-select>
                 </div>
 
@@ -81,14 +82,16 @@
                     <label class="main-content-label tx-11 tx-medium tx-gray-600">
                         Transaction ID
                     </label>
-                    <input class="form-control" type="text" formControlName="transactionIds">
+                    <input class="form-control" type="text" formControlName="transactionIds"
+                        placeholder="Type transaction ID">
                 </div>
                 <div *ngIf="field === 'transactionStatus'" class="form-group">
                     <label class="main-content-label tx-11 tx-medium tx-gray-600">
                         Transaction Statuses
                     </label>
                     <ng-select [items]="transactionStatusOptions" bindLabel="name" bindValue="id"
-                        formControlName="transactionStatuses" [multiple]="true" [closeOnSelect]="false">
+                        formControlName="transactionStatuses" [multiple]="true" [closeOnSelect]="false"
+                        placeholder="Select transaction statuses">
                     </ng-select>
                 </div>
                 <div *ngIf="field === 'paymentInstrument'" class="form-group">
@@ -96,7 +99,8 @@
                         Payment methods
                     </label>
                     <ng-select [items]="paymentInstrumentsOptions" bindLabel="name" bindValue="id"
-                        formControlName="paymentInstruments" [multiple]="true" [closeOnSelect]="false">
+                        formControlName="paymentInstruments" [multiple]="true" [closeOnSelect]="false"
+                        placeholder="Select payment methods">
                     </ng-select>
                 </div>
 
@@ -148,25 +152,29 @@
                     <label class="main-content-label tx-11 tx-medium tx-gray-600">
                         Wallet address
                     </label>
-                    <input class="form-control" type="text" formControlName="walletAddress">
+                    <input class="form-control" type="text" formControlName="walletAddress"
+                        placeholder="Type wallet address">
                 </div>
                 <div *ngIf="field === 'totalBuyVolume'" class="form-group">
                     <label class="main-content-label tx-11 tx-medium tx-gray-600">
                         Buy volume over
                     </label>
-                    <input class="form-control" [onlyNumber]="true" formControlName="totalBuyVolumeOver">
+                    <input class="form-control" [onlyNumber]="true" formControlName="totalBuyVolumeOver"
+                        placeholder="Specify buy volume limit">
                 </div>
                 <div *ngIf="field === 'transactionCount'" class="form-group">
                     <label class="main-content-label tx-11 tx-medium tx-gray-600">
                         Transaction count over
                     </label>
-                    <input class="form-control" [onlyNumber]="true" formControlName="transactionCountOver">
+                    <input class="form-control" [onlyNumber]="true" formControlName="transactionCountOver"
+                        placeholder="Specify transaction count limit">
                 </div>
                 <div *ngIf="field === 'search'" class="form-group">
                     <label class="main-content-label tx-11 tx-medium tx-gray-600">
                         Search
                     </label>
-                    <input class="form-control" type="text" formControlName="search">
+                    <input class="form-control" type="text" formControlName="search"
+                        placeholder="Type plain search text">
                 </div>
             </ng-container>
         </div>
