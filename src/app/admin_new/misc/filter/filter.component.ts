@@ -111,9 +111,6 @@ export class AdminFilterComponent implements OnInit {
     if (this.fields.includes('transactionCount')) {
       controlsConfig.transactionCountOver = [0];
     }
-    if (this.fields.includes('transactionDate')) {
-      controlsConfig.transactionDate = [undefined];
-    }
     if (this.fields.includes('search')) {
       controlsConfig.search = [''];
     }
@@ -197,9 +194,6 @@ export class AdminFilterComponent implements OnInit {
       }
       if (this.fields.includes('transactionCount')) {
         this.filterForm.controls.transactionCountOver.setValue(0);
-      }
-      if (this.fields.includes('transactionDate')) {
-        this.filterForm.controls.transactionDate.setValue(undefined);
       }
       if (this.fields.includes('search')) {
         this.filterForm.controls.search.setValue('');

@@ -7,21 +7,17 @@
                     <label class="main-content-label tx-11 tx-medium tx-gray-600">
                         Account type
                     </label>
-                    <select class="form-control select2-no-search" formControlName="accountTypes">
-                        <option *ngFor="let item of userTypeOptions" [value]="item.id">
-                            {{item.name}}
-                        </option>
-                    </select>
+                    <ng-select [items]="userTypeOptions" bindLabel="name" bindValue="id" formControlName="accountTypes"
+                        [multiple]="true" [closeOnSelect]="false">
+                    </ng-select>
                 </div>
                 <div *ngIf="field === 'accountStatus'" class="form-group">
                     <label class="main-content-label tx-11 tx-medium tx-gray-600">
                         Account status
                     </label>
-                    <select class="form-control select2-no-search" formControlName="accountStatuses">
-                        <option *ngFor="let item of userStatusOptions" [value]="item.id">
-                            {{item.name}}
-                        </option>
-                    </select>
+                    <ng-select [items]="userStatusOptions" bindLabel="name" bindValue="id" formControlName="accountStatuses"
+                        [multiple]="true" [closeOnSelect]="false">
+                    </ng-select>
                 </div>
 
                 <!-- <app-filter-field-country *ngIf="field === 'country'" formControlName="countries">
@@ -31,51 +27,41 @@
                     <label class="main-content-label tx-11 tx-medium tx-gray-600">
                         Source
                     </label>
-                    <select class="form-control select2-no-search" formControlName="sources">
-                        <option *ngFor="let item of sourceOptions" [value]="item.id">
-                            {{item.name}}
-                        </option>
-                    </select>
+                    <ng-select [items]="sourceOptions" bindLabel="name" bindValue="id" formControlName="sources"
+                        [multiple]="true" [closeOnSelect]="false">
+                    </ng-select>
                 </div>
                 <div *ngIf="field === 'kycStatus'" class="form-group">
                     <label class="main-content-label tx-11 tx-medium tx-gray-600">
                         DocsCheck Statuses
                     </label>
-                    <select class="form-control select2-no-search" formControlName="kycStatuses">
-                        <option *ngFor="let item of kysStatusOptions" [value]="item.id">
-                            {{item.name}}
-                        </option>
-                    </select>
+                    <ng-select [items]="kysStatusOptions" bindLabel="name" bindValue="id" formControlName="kycStatuses"
+                        [multiple]="true" [closeOnSelect]="false">
+                    </ng-select>
                 </div>
                 <div *ngIf="field === 'riskLevel'" class="form-group">
                     <label class="main-content-label tx-11 tx-medium tx-gray-600">
                         Risk Levels
                     </label>
-                    <select class="form-control select2-no-search" formControlName="riskLevels">
-                        <option *ngFor="let item of riskLevelsOptions" [value]="item.id">
-                            {{item.name}}
-                        </option>
-                    </select>
+                    <ng-select [items]="riskLevelsOptions" bindLabel="name" bindValue="id" formControlName="riskLevels"
+                        [multiple]="true" [closeOnSelect]="false">
+                    </ng-select>
                 </div>
                 <div *ngIf="field === 'assets'" class="form-group">
                     <label class="main-content-label tx-11 tx-medium tx-gray-600">
                         Assets
                     </label>
-                    <select class="form-control select2-no-search" formControlName="assets">
-                        <option *ngFor="let item of currencies" [value]="item.id">
-                            {{item.name}}
-                        </option>
-                    </select>
+                    <ng-select [items]="currencies" bindLabel="name" bindValue="id" formControlName="assets"
+                        [multiple]="true" [closeOnSelect]="false">
+                    </ng-select>
                 </div>
                 <div *ngIf="field === 'transactionType'" class="form-group">
                     <label class="main-content-label tx-11 tx-medium tx-gray-600">
                         Transaction Types
                     </label>
-                    <select class="form-control select2-no-search" formControlName="transactionTypes">
-                        <option *ngFor="let item of transactionTypeOptions" [value]="item.id">
-                            {{item.name}}
-                        </option>
-                    </select>
+                    <ng-select [items]="transactionTypeOptions" bindLabel="name" bindValue="id" formControlName="transactionTypes"
+                        [multiple]="true" [closeOnSelect]="false">
+                    </ng-select>
                 </div>
 
                 <!-- <app-filter-field-user-tier *ngIf="field === 'tier'" formControlName="tiers">
@@ -91,25 +77,21 @@
                     <label class="main-content-label tx-11 tx-medium tx-gray-600">
                         Transaction Statuses
                     </label>
-                    <select class="form-control select2-no-search" formControlName="transactionStatuses">
-                        <option *ngFor="let item of transactionStatusOptions" [value]="item.id">
-                            {{item.name}}
-                        </option>
-                    </select>
+                    <ng-select [items]="transactionStatusOptions" bindLabel="name" bindValue="id" formControlName="transactionStatuses"
+                        [multiple]="true" [closeOnSelect]="false">
+                    </ng-select>
                 </div>
                 <div *ngIf="field === 'paymentInstrument'" class="form-group">
                     <label class="main-content-label tx-11 tx-medium tx-gray-600">
                         Payment methods
                     </label>
-                    <select class="form-control select2-no-search" formControlName="paymentInstruments">
-                        <option *ngFor="let item of paymentInstrumentsOptions" [value]="item.id">
-                            {{item.name}}
-                        </option>
-                    </select>
+                    <ng-select [items]="paymentInstrumentsOptions" bindLabel="name" bindValue="id" formControlName="paymentInstruments"
+                        [multiple]="true" [closeOnSelect]="false">
+                    </ng-select>
                 </div>
 
-                
-                
+
+
 
                 <!-- <mat-form-field *ngIf="field === 'createdDateStart'">
                     <mat-label>Created transaction later</mat-label>
@@ -150,31 +132,35 @@
                 <app-filter-field-risk-alert-code *ngIf="field === 'riskAlertCode'" formControlName="riskAlertCode">
                 </app-filter-field-risk-alert-code>
     
-                <mat-form-field *ngIf="field === 'walletAddress'">
-                    <mat-label>Wallet address</mat-label>
-                    <input matInput formControlName="walletAddress" />
-                </mat-form-field>
-    
-                <mat-form-field *ngIf="field === 'totalBuyVolume'">
-                    <mat-label>Buy volume over</mat-label>
-                    <input matInput [onlyNumber]="true" maxlength="8" formControlName="totalBuyVolumeOver" />
-                </mat-form-field>
-    
-                <mat-form-field *ngIf="field === 'transactionCount'">
-                    <mat-label>Transaction count over</mat-label>
-                    <input matInput [onlyNumber]="true" maxlength="8" formControlName="transactionCountOver" />
-                </mat-form-field>
-    
-                <mat-form-field *ngIf="field === 'transactionDate'">
-                    <mat-label>Transaction date</mat-label>
-                    <input matInput formControlName="transactionDate" type="date"/>
-                </mat-form-field>
-    
-                <mat-form-field *ngIf="field === 'search'">
-                    <mat-label>Search</mat-label>
-                    <input matInput formControlName="search" />
-                </mat-form-field> -->
+                 -->
 
+                 <div *ngIf="field === 'walletAddress'" class="form-group">
+                    <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                        Wallet address
+                    </label>
+                    <input class="form-control" type="text" formControlName="walletAddress">
+                </div>
+
+                 <div *ngIf="field === 'totalBuyVolume'" class="form-group">
+                    <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                        Buy volume over
+                    </label>
+                    <input class="form-control" [onlyNumber]="true" formControlName="totalBuyVolumeOver">
+                </div>
+
+                <div *ngIf="field === 'transactionCount'" class="form-group">
+                    <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                        Transaction count over
+                    </label>
+                    <input class="form-control" [onlyNumber]="true" formControlName="transactionCountOver">
+                </div>
+
+                <div *ngIf="field === 'search'" class="form-group">
+                    <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                        Search
+                    </label>
+                    <input class="form-control" type="text" formControlName="search">
+                </div>
 
             </ng-container>
         </div>
