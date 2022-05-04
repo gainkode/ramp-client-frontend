@@ -2,6 +2,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule, IConfig } from 'ngx-mask'
+import { NgSelectModule } from '@ng-select/ng-select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MAT_CHIPS_DEFAULT_OPTIONS, MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -44,6 +45,7 @@ import { AdminTransactionTableComponent } from './components/transactions/transa
 import { AdminDataService } from '../admin_old/services/admin-data.service';
 import { AdminTransactionDetailsComponent } from './components/transactions/transaction-details.component';
 import { AdminDetailsItemComponent } from './misc/details-item/details-item.component';
+import { AdminFilterComponent } from './misc/filter/filter.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -55,6 +57,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   imports: [
     NgxMaskModule.forRoot(), 
     CommonModule,
+    NgSelectModule,
     FormsModule,
     ReactiveFormsModule,
     NgbModule,
@@ -95,6 +98,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AdminSidebarComponent,
     AdminSwitcherComponent,
     AdminDetailsItemComponent,
+    AdminFilterComponent,
     DashboardComponent,
     AdminTransactionsComponent,
     AdminTransactionTableComponent,

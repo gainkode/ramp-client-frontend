@@ -46,11 +46,9 @@
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             Transaction status
           </label>
-          <select class="form-control select2-no-search" formControlName="transactionStatus" required>
-            <option *ngFor="let item of transactionStatuses" [value]="item.id">
-              {{item.name}}
-            </option>
-          </select>
+          <ng-select [items]="transactionStatuses" bindLabel="name" bindValue="id" formControlName="transactionStatus"
+            [clearable]=false [clearOnBackspace]=false required>
+          </ng-select>
         </div>
 
         <app-admin-details-item label="Blockchain Link" [value]="transferOrderBlockchainLink"
@@ -91,11 +89,9 @@
                   </div>
                 </div>
                 <div class="col-sm-5 mg-t-10 mg-sm-t-0">
-                  <select class="form-control select2-no-search" formControlName="currencyToSpend" required>
-                    <option *ngFor="let item of currenciesToSpend" [value]="item.id">
-                      {{item.id}}
-                    </option>
-                  </select>
+                  <ng-select [items]="currenciesToSpend" [clearable]=false [clearOnBackspace]=false bindLabel="id"
+                    bindValue="id" formControlName="currencyToSpend" required>
+                  </ng-select>
                 </div>
               </div>
             </div>
@@ -114,11 +110,9 @@
                   </p>
                 </div>
                 <div class="col-sm-5 mg-t-10 mg-sm-t-0">
-                  <select class="form-control select2-no-search" formControlName="currencyToReceive" required>
-                    <option *ngFor="let item of currenciesToReceive" [value]="item.id">
-                      {{item.id}}
-                    </option>
-                  </select>
+                  <ng-select [items]="currenciesToReceive" [clearable]=false [clearOnBackspace]=false bindLabel="id"
+                    bindValue="id" formControlName="currencyToReceive" required>
+                  </ng-select>
                 </div>
               </div>
             </div>
@@ -230,11 +224,9 @@
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             Docs Check
           </label>
-          <select class="form-control select2-no-search" formControlName="kycStatus" required>
-            <option *ngFor="let item of kycStatuses" [value]="item.id">
-              {{item.name}}
-            </option>
-          </select>
+          <ng-select [items]="kycStatuses" [clearable]=false [clearOnBackspace]=false bindLabel="name" bindValue="id"
+            formControlName="kycStatus" required>
+          </ng-select>
         </div>
 
         <!-- Account status -->
@@ -245,11 +237,9 @@
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             Account Status
           </label>
-          <select class="form-control select2-no-search" formControlName="accountStatus" required>
-            <option *ngFor="let item of accountStatuses" [value]="item.id">
-              {{item.name}}
-            </option>
-          </select>
+          <ng-select [items]="accountStatuses" [clearable]=false [clearOnBackspace]=false bindLabel="name"
+            bindValue="id" formControlName="accountStatus" required>
+          </ng-select>
         </div>
       </div>
 
@@ -261,7 +251,8 @@
         </button>
         <button *ngIf="permission>1 && removable" class="btn btn-danger pd-x-30 me-2 mg-t-5" type="button"
           (click)="onDelete(delete_confirm_content)">
-          <span *ngIf="cancelInProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          <span *ngIf="cancelInProgress" class="spinner-border spinner-border-sm" role="status"
+            aria-hidden="true"></span>
           Cancel
         </button>
         <button *ngIf="permission>1 && removable" class="btn btn-outline-primary pd-x-30 mg-t-5" type="button"
@@ -285,8 +276,7 @@
       You are going to cancel selected transaction. Confirm operation.
     </h4>
     <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
-      <button class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" type="button"
-        (click)="modal.dismiss('Reject')">
+      <button class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" type="button" (click)="modal.dismiss('Reject')">
         Reject
       </button>
       <button class="btn btn-danger pd-x-30 mg-t-5" (click)="onConfirmDelete()">
@@ -308,11 +298,11 @@
       You are going to update transaction data. Confirm operation.
     </h4>
     <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
-      <button class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" type="button"
-        (click)="modal.dismiss('Reject')">
+      <button class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" type="button" (click)="modal.dismiss('Reject')">
         Reject
       </button>
-      <button class="btn btn-primary pd-x-30 mg-t-5" (click)="onConfirmUpdate(status_confirm_content, amount_confirm_content)">
+      <button class="btn btn-primary pd-x-30 mg-t-5"
+        (click)="onConfirmUpdate(status_confirm_content, amount_confirm_content)">
         Confirm
       </button>
     </div>

@@ -23,6 +23,24 @@ export class AdminTransactionTableComponent implements OnInit, OnDestroy, AfterV
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
+  filterFields = [
+    'accountType',
+    'country',
+    'source',
+    'createdDateStart',
+    'createdDateEnd',
+    'completedDateStart',
+    'completedDateEnd',
+    'paymentInstrument',
+    'transactionIds',
+    'transactionType',
+    'transactionStatus',
+    'tier',
+    'widget',
+    'walletAddress',
+    'users',
+    'search'
+  ];
   displayedColumns: string[] = [
     'details', 'code', 'created', 'accountName', 'email', 'accountStatus', 'type', 'widgetName', 'from', 'to',
     'currencyToSpend', 'amountToSpend', 'currencyToReceive', 'amountToReceive',

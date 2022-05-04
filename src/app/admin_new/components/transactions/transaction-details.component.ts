@@ -14,7 +14,7 @@ import { getTransactionAmountHash, getTransactionStatusHash } from 'src/app/util
 @Component({
   selector: 'app-admin-transaction-details',
   templateUrl: 'transaction-details.component.html',
-  styleUrls: ['../../assets/scss/_validation.scss']
+  styleUrls: ['transaction-details.component.scss', '../../assets/scss/_validation.scss']
 })
 export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   @Input() permission = 0;

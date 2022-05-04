@@ -1,0 +1,28 @@
+.__admin-filter-block-col-3 {
+    display: grid;
+    grid-template-columns: 3fr 3fr 3fr;
+    grid-template-rows: 1fr;
+    gap: 16px;
+}
+
+.__admin-filter-block-col-2 {
+    display: grid;
+    grid-template-columns: 2fr 2fr;
+    grid-template-rows: 1fr;
+    gap: 16px;
+}
+
+.__admin-filter-block-col-1 {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    gap: 16px;
+}
+
+.__admin-filter-button-bar {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 16px;
+}

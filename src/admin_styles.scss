@@ -5,7 +5,7 @@
 @import "./assets/scss/variables";
 
 /* Importing Bootstrap SCSS file. */
-// @import '~bootstrap/scss/bootstrap';
+@import '~bootstrap/scss/bootstrap';
 
 // leaflet
 //@import '~leaflet/dist/leaflet.css';
@@ -15,7 +15,9 @@
 // animate css
 //@import "~animate.css/animate.min.css";
 // ng-select
-//@import "~@ng-select/ng-select/themes/default.theme.css";
+@import "~@ng-select/ng-select/themes/default.theme.css";
+// @import "./assets/scss/ng-select/custom-theme.scss";
+// @import "~@ng-select/ng-select/themes/material.theme.css";
 
 // ngx data table
 // @import '~@swimlane/ngx-datatable/index.css';
@@ -40,9 +42,7 @@
 //@import "~ngx-owl-carousel-o/lib/styles/prebuilt-themes/owl.theme.default.min.css";
 
 // angular material
-@import "~@angular/material/prebuilt-themes/indigo-pink.css";
-
-
+//@import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
 // custom-css import
 @import './assets/css/icons.css';
@@ -85,7 +85,6 @@
 // ng select
 
 .ng-select>.ng-select-container {
-  border-color: #ededf5 !important;
   outline: none !important;
 }
 

@@ -3,8 +3,7 @@ import { CommonTargetValue } from 'src/app/model/common.model';
 
 @Component({
   selector: 'app-admin-details-item',
-  templateUrl: './details-item.component.html',
-  styleUrls: ['./details-item.component.scss']
+  templateUrl: './details-item.component.html'
 })
 export class AdminDetailsItemComponent {
 
