@@ -11,27 +11,8 @@
   </button>
 </div>
 
-<div class="card custom-card">
-  <div class="card-body">
-    <div>
-      <button type="button" class="btn btn-outline-primary mb-1" (click)="collapse.toggle()"
-        [attr.aria-expanded]="!isFilterCollapsed" aria-controls="collapseExample">
-        <i class="material-icons" style="font-size: 16px;">
-          {{isFilterCollapsed ? 'keyboard_double_arrow_down' : 'keyboard_double_arrow_up'}}
-        </i>
-        Filter
-      </button>
-      <div #collapse="ngbCollapse" [(ngbCollapse)]="isFilterCollapsed">
-        <div class="card">
-          <div class="card-body">
-            <app-admin-filter [fields]="filterFields" [filterData]="filter" (filter)="handleFilterApplied($event)">
-            </app-admin-filter>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<app-admin-filter [fields]="filterFields" [filterData]="filter" (filter)="handleFilterApplied($event)">
+</app-admin-filter>
 
 <mat-progress-bar *ngIf="inProgress" color="accent" mode="indeterminate"></mat-progress-bar>
 

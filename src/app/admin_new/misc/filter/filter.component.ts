@@ -21,6 +21,7 @@ export class AdminFilterComponent implements OnInit {
 
   private filterSubject = new Subject<Filter>();
 
+  isFilterCollapsed: boolean = true;
   sourceOptions = TransactionSourceList;
   riskLevelsOptions = RiskLevelViewList;
   paymentInstrumentsOptions = PaymentInstrumentList;

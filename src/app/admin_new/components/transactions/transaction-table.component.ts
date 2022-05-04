@@ -46,7 +46,6 @@ export class AdminTransactionTableComponent implements OnInit, OnDestroy, AfterV
     'currencyToSpend', 'amountToSpend', 'currencyToReceive', 'amountToReceive',
     'address', 'instrument', 'paymentProvider', 'status', 'userType', 'source', 'kycStatus', 'id'
   ];
-  isFilterCollapsed: boolean = true;
   inProgress = false;
   permission = 0;
   unbenchmarkDialog?: NgbModalRef;
