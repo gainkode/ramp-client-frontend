@@ -3,15 +3,15 @@
         <div>
             <div class="__admin-filter-top-bar">
                 <button type="button" class="btn btn-outline-primary me-2" (click)="collapse.toggle()"
-                [attr.aria-expanded]="!isFilterCollapsed" aria-controls="collapseExample">
-                <i class="material-icons" style="font-size: 16px;">
-                    {{isFilterCollapsed ? 'keyboard_double_arrow_down' : 'keyboard_double_arrow_up'}}
-                </i>
-                Filter
-            </button>
-            <button (click)="resetFilters()" class="btn btn-outline-secondary me-2" type="button">
-                Reset
-            </button>
+                    [attr.aria-expanded]="!isFilterCollapsed" aria-controls="collapseExample">
+                    <i class="material-icons" style="font-size: 16px;">
+                        {{isFilterCollapsed ? 'keyboard_double_arrow_down' : 'keyboard_double_arrow_up'}}
+                    </i>
+                    Filter
+                </button>
+                <button (click)="resetFilters()" class="btn btn-outline-secondary me-2" type="button">
+                    Reset
+                </button>
             </div>
             <div #collapse="ngbCollapse" [(ngbCollapse)]="isFilterCollapsed">
                 <div class="card">
