@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { EmptyObject } from 'apollo-angular/types';
 import { Observable, Subject } from 'rxjs';
 import { Filter } from 'src/app/admin_old/model/filter.model';
+import { Countries } from 'src/app/model/country-code.model';
 import { CurrencyView, KycStatusList, PaymentInstrumentList, RiskLevelViewList, TransactionSourceList, TransactionStatusList, TransactionTypeList, UserStatusList, UserTypeList } from 'src/app/model/payment.model';
 
 @Component({
@@ -28,6 +29,7 @@ export class AdminFilterComponent implements OnInit {
   transactionTypeOptions = TransactionTypeList;
   transactionStatusOptions = TransactionStatusList;
   kysStatusOptions = KycStatusList;
+  countryOptions = Countries;
   filterForm?: FormGroup;
 
   constructor(private formBuilder: FormBuilder) {
@@ -207,5 +209,9 @@ export class AdminFilterComponent implements OnInit {
     if (this.filterForm) {
       this.filterSubject.next(new Filter(this.filterForm.value));
     }
+  }
+
+  getCountryFlag(code: string): string {
+    return `${code.toLowerCase()}.svg`;
   }
 }
