@@ -65,7 +65,8 @@ export class SignUpPanelComponent implements OnInit, OnDestroy {
                 ], updateOn: 'change'
             }
         ],
-        agreement: [false]
+        agreement: [false],
+        pep: [false]
     });
 
     emailErrorMessages: { [key: string]: string; } = {
@@ -89,7 +90,8 @@ export class SignUpPanelComponent implements OnInit, OnDestroy {
         this.validData = (this.emailField?.valid ?? false) &&
             (this.signupForm.get('password1')?.valid ?? false) &&
             (this.signupForm.get('password2')?.valid ?? false) &&
-            (this.signupForm.get('agreement')?.value === true);
+            (this.signupForm.get('agreement')?.value === true) &&
+            (this.signupForm.get('pep')?.value === true);
     }
 
     constructor(
@@ -118,6 +120,11 @@ export class SignUpPanelComponent implements OnInit, OnDestroy {
         );
         this.subscriptions.add(
             this.subscriptions.add(this.signupForm.get('agreement')?.valueChanges.subscribe(val => {
+                this.validateForm();
+            }))
+        );
+        this.subscriptions.add(
+            this.subscriptions.add(this.signupForm.get('pep')?.valueChanges.subscribe(val => {
                 this.validateForm();
             }))
         );

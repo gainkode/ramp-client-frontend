@@ -1044,6 +1044,7 @@ export type MutationSignupArgs = {
   password?: Maybe<Scalars['String']>;
   recaptcha: Scalars['String'];
   termsOfUse: Scalars['Boolean'];
+  pep: Scalars['Boolean'];
 };
 
 

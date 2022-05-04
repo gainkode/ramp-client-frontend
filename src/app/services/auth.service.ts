@@ -126,14 +126,15 @@ mutation SocialLogin(
 
 const SIGNUP = gql`
   mutation Signup($recaptcha: String!, $email: String!, $password: String!, $userType: UserType!,
-    $mode: UserMode!, $termsOfUse: Boolean!) {
+    $mode: UserMode!, $termsOfUse: Boolean!, $pep: Boolean!) {
     signup(
         recaptcha: $recaptcha,
         email: $email,
         password: $password,
         type: $userType,
         mode: $mode,
-        termsOfUse: $termsOfUse
+        termsOfUse: $termsOfUse,
+        pep: $pep
     ) {
       authToken
       user {
@@ -515,7 +516,8 @@ export class AuthService {
                     password: userpassword,
                     userType: usertype,
                     mode: 'InternalWallet',
-                    termsOfUse: true
+                    termsOfUse: true,
+                    pep: true
                 }
             });
         } else {

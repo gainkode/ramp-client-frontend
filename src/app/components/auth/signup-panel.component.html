@@ -23,12 +23,17 @@
             </a>
         </mat-checkbox>
         <div class="__form-separator"></div>
+        <mat-checkbox color="accent" formControlName="pep" class="__widget-checkout">
+            I herby confirm i am not a PEP, relative of PEP, or close associate of a PEP
+        </mat-checkbox>
+        <div class="__form-separator"></div>
 
         <!-- Errors -->
         <div *ngIf="errorMessage!==''">
             <span class="__auth-error-line">
                 {{errorMessage}}
             </span>
+            <div class="__form-separator"></div>
         </div>
 
         <!-- Wizard Buttons -->
