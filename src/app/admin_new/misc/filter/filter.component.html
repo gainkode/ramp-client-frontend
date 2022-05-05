@@ -133,8 +133,6 @@
                                                 [closeOnSelect]="false" placeholder="Select payment methods">
                                             </ng-select>
                                         </div>
-
-
                                         <div *ngIf="field === 'createdDate'" class="form-group">
                                             <label class="main-content-label tx-11 tx-medium tx-gray-600">
                                                 Transactions created
@@ -144,7 +142,6 @@
                                                 [endField]="filterForm?.controls?.createdDateRangeEnd ?? null">
                                             </app-admin-date-range>
                                         </div>
-
                                         <div *ngIf="field === 'completedDate'" class="form-group">
                                             <label class="main-content-label tx-11 tx-medium tx-gray-600">
                                                 Transactions completed
@@ -154,22 +151,15 @@
                                                 [endField]="filterForm?.controls?.completedDateRangeEnd ?? null">
                                             </app-admin-date-range>
                                         </div>
-
-
-
-                                        <!-- 
-                    
-                                <mat-form-field *ngIf="field === 'registrationDateStart'">
-                                    <mat-label>Registered later</mat-label>
-                                    <input matInput formControlName="registrationDateRangeStart" type="date"/>
-                                </mat-form-field>
-                    
-                                <mat-form-field *ngIf="field === 'registrationDateEnd'">
-                                    <mat-label>Registered until</mat-label>
-                                    <input matInput formControlName="registrationDateRangeEnd" type="date"/>
-                                </mat-form-field>
-                                                     -->
-
+                                        <div *ngIf="field === 'registrationDate'" class="form-group">
+                                            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                                                Registered
+                                            </label>
+                                            <app-admin-date-range
+                                                [startField]="filterForm?.controls?.registrationDateRangeStart ?? null"
+                                                [endField]="filterForm?.controls?.registrationDateRangeEnd ?? null">
+                                            </app-admin-date-range>
+                                        </div>
                                         <div *ngIf="field === 'user'" class="form-group">
                                             <label class="main-content-label tx-11 tx-medium tx-gray-600">
                                                 User

@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { EmptyObject } from 'apollo-angular/types';
 import { concat, Observable, of, Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, switchMap, tap } from 'rxjs/operators';
@@ -10,7 +10,6 @@ import { CommonTargetValue } from 'src/app/model/common.model';
 import { Countries } from 'src/app/model/country-code.model';
 import { SettingsKycTier } from 'src/app/model/generated-models';
 import { CurrencyView, KycStatusList, PaymentInstrumentList, RiskLevelViewList, TransactionSourceList, TransactionStatusList, TransactionTypeList, UserStatusList, UserTypeList } from 'src/app/model/payment.model';
-import { UserItem } from 'src/app/model/user.model';
 
 @Component({
   selector: 'app-admin-filter',
