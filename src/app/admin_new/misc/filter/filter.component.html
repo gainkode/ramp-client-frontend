@@ -163,11 +163,20 @@
                                     <mat-label>Registered until</mat-label>
                                     <input matInput formControlName="registrationDateRangeEnd" type="date"/>
                                 </mat-form-field>
-                    
-                                <app-filter-field-user *ngIf="field === 'user'" formControlName="user"></app-filter-field-user>
-                    
-                                <app-filter-field-users *ngIf="field === 'users'" formControlName="users"></app-filter-field-users>
-                                 -->
+                                                     -->
+
+                                        <div *ngIf="field === 'user'" class="form-group">
+                                            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                                                User
+                                            </label>
+                                            <ng-select [items]="usersOptions$ | async" bindLabel="title" bindValue="id"
+                                                [minTermLength]="minUsersLengthTerm" notFoundText="No users found"
+                                                [loading]="isUsersLoading" [multiple]="false" formControlName="user"
+                                                typeToSearchText="Type email or user name"
+                                                placeholder="Start typing to search a user"
+                                                [typeahead]="usersSearchInput$">
+                                            </ng-select>
+                                        </div>
 
                                         <div *ngIf="field === 'users'" class="form-group">
                                             <label class="main-content-label tx-11 tx-medium tx-gray-600">
@@ -175,15 +184,28 @@
                                             </label>
                                             <ng-select [items]="usersOptions$ | async" bindLabel="title" bindValue="id"
                                                 [minTermLength]="minUsersLengthTerm" notFoundText="No users found"
-                                                [loading]="isUsersLoading" [multiple]="true" formControlName="users" 
+                                                [loading]="isUsersLoading" [multiple]="true" formControlName="users"
                                                 typeToSearchText="Type email or user name"
                                                 placeholder="Start typing to search users"
                                                 [typeahead]="usersSearchInput$">
                                             </ng-select>
                                         </div>
 
-                                        <!-- <app-filter-field-widget *ngIf="field === 'widget'" formControlName="widgets"></app-filter-field-widget>
-                    
+                                        <div *ngIf="field === 'widget'" class="form-group">
+                                            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                                                Widget IDs
+                                            </label>
+                                            <ng-select [items]="widgetsOptions$ | async" bindLabel="title"
+                                                bindValue="id" [minTermLength]="minWidgetsLengthTerm"
+                                                notFoundText="No widgets found" [loading]="isWidgetsLoading"
+                                                [multiple]="true" formControlName="widgets"
+                                                typeToSearchText="Type widget identifier"
+                                                placeholder="Start typing to search widgets"
+                                                [typeahead]="widgetsSearchInput$">
+                                            </ng-select>
+                                        </div>
+
+                                        <!-- 
                                 <app-filter-field-risk-alert-code *ngIf="field === 'riskAlertCode'" formControlName="riskAlertCode">
                                 </app-filter-field-risk-alert-code> -->
 

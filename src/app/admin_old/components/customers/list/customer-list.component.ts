@@ -31,7 +31,7 @@ export class CustomerListComponent implements OnInit, OnDestroy, AfterViewInit {
     'accountType',
     'accountMode',
     'accountStatus',
-    'userTierLevel',
+    'tier',
     'riskLevel',
     'country',
     'kycStatus',

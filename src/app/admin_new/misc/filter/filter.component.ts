@@ -40,11 +40,15 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
   filterForm?: FormGroup;
   isTierLoading = false;
   isUsersLoading = false;
+  isWidgetsLoading = false;
   tierSearchInput$ = new Subject<string>();
   usersSearchInput$ = new Subject<string>();
+  widgetsSearchInput$ = new Subject<string>();
   tierOptions$: Observable<CommonTargetValue[]> = of([]);
   usersOptions$: Observable<CommonTargetValue[]> = of([]);
+  widgetsOptions$: Observable<CommonTargetValue[]> = of([]);
   minUsersLengthTerm = 1;
+  minWidgetsLengthTerm = 1;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -57,8 +61,11 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
     if (this.fields.includes('tier')) {
       this.tierSearch();
     }
-    if (this.fields.includes('users')) {
+    if (this.fields.includes('user') || this.fields.includes('users')) {
       this.usersSearch();
+    }
+    if (this.fields.includes('widget')) {
+      this.widgetsSearch();
     }
   }
 
@@ -110,7 +117,6 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
           this.isUsersLoading = true;
         }),
         switchMap(searchString => {
-          console.log('searchString', searchString);
           this.isUsersLoading = false;
           return this.adminDataService.getUsers(
             [],
@@ -127,6 +133,36 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
               } as CommonTargetValue;
             });
           }));
+        })
+      ));
+  }
+
+  private widgetsSearch(): void {
+    console.log('widgetsSearch');
+    this.widgetsOptions$ = concat(
+      of([]),
+      this.widgetsSearchInput$.pipe(
+        filter(res => {
+          return res !== null && res.length >= this.minWidgetsLengthTerm
+        }),
+        debounceTime(300),
+        distinctUntilChanged(),
+        tap(() => {
+          this.isWidgetsLoading = true;
+        }),
+        switchMap(searchString => {
+          this.isWidgetsLoading = false;
+          console.log('get', searchString);
+          return this.adminDataService.getWidgetIds(searchString, 0, 100, 'widgetId', false)
+            .pipe(map(result => {
+              console.log(result.list);
+              return result.list.map(x => {
+                return {
+                  id: x,
+                  title: x
+                } as CommonTargetValue;
+              });
+            }));
         })
       ));
   }
