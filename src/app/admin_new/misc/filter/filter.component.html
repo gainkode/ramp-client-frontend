@@ -99,10 +99,15 @@
                                                 [closeOnSelect]="false" placeholder="Select transaction types">
                                             </ng-select>
                                         </div>
-
-                                        <!-- <app-filter-field-user-tier *ngIf="field === 'tier'" formControlName="tiers">
-                                </app-filter-field-user-tier> -->
-
+                                        <div *ngIf="field === 'tier'" class="form-group">
+                                            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                                                Verification Levels
+                                            </label>
+                                            <ng-select [items]="tierOptions$ | async" [loading]="isTierLoading"
+                                                [closeOnSelect]="false" [multiple]="true" bindLabel="title"
+                                                bindValue="id" formControlName="tiers" placeholder="Select levels">
+                                            </ng-select>
+                                        </div>
                                         <div *ngIf="field === 'transactionIds'" class="form-group">
                                             <label class="main-content-label tx-11 tx-medium tx-gray-600">
                                                 Transaction ID
@@ -162,12 +167,26 @@
                                 <app-filter-field-user *ngIf="field === 'user'" formControlName="user"></app-filter-field-user>
                     
                                 <app-filter-field-users *ngIf="field === 'users'" formControlName="users"></app-filter-field-users>
-                    
-                                <app-filter-field-widget *ngIf="field === 'widget'" formControlName="widgets"></app-filter-field-widget>
+                                 -->
+
+                                        <div *ngIf="field === 'users'" class="form-group">
+                                            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                                                Customer search
+                                            </label>
+                                            <ng-select [items]="usersOptions$ | async" bindLabel="title" bindValue="id"
+                                                [minTermLength]="minUsersLengthTerm" notFoundText="No users found"
+                                                [loading]="isUsersLoading" [multiple]="true" formControlName="users" 
+                                                typeToSearchText="Type email or user name"
+                                                placeholder="Start typing to search users"
+                                                [typeahead]="usersSearchInput$">
+                                            </ng-select>
+                                        </div>
+
+                                        <!-- <app-filter-field-widget *ngIf="field === 'widget'" formControlName="widgets"></app-filter-field-widget>
                     
                                 <app-filter-field-risk-alert-code *ngIf="field === 'riskAlertCode'" formControlName="riskAlertCode">
-                                </app-filter-field-risk-alert-code>
-                                 -->
+                                </app-filter-field-risk-alert-code> -->
+
 
                                         <div *ngIf="field === 'walletAddress'" class="form-group">
                                             <label class="main-content-label tx-11 tx-medium tx-gray-600">

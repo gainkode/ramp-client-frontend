@@ -43,9 +43,9 @@ export class FilterFieldUserMultipleComponent implements OnInit, OnDestroy, Cont
       debounceTime(1000),
       switchMap(searchString => this.getFilteredOptions(searchString))
     )
-        .subscribe(options => {
-          this.filteredOptions = options;
-        });
+      .subscribe(options => {
+        this.filteredOptions = options;
+      });
   }
 
   ngOnDestroy(): void {
@@ -77,14 +77,14 @@ export class FilterFieldUserMultipleComponent implements OnInit, OnDestroy, Cont
   handleSearchInputChange(event: Event): void {
     let searchString = event.target ? (event.target as HTMLInputElement).value : '';
     searchString = searchString.toLowerCase()
-                               .trim();
+      .trim();
     this.searchString$.next(searchString);
   }
 
   handleOptionAdded(event: MatChipInputEvent): void {
     const user = this.filteredOptions.find(
       c => c.email.toLowerCase() === event.value.toLowerCase()
-                                          .trim()
+        .trim()
     );
 
     if (user) {
@@ -120,12 +120,12 @@ export class FilterFieldUserMultipleComponent implements OnInit, OnDestroy, Cont
         false,
         new Filter({ search: searchString })
       )
-                 .pipe(
-                   map(result => {
-                     return result.list.filter(
-                       u => !this.selectedOptions.some(s => u.id === s.id));
-                   })
-                 );
+        .pipe(
+          map(result => {
+            return result.list.filter(
+              u => !this.selectedOptions.some(s => u.id === s.id));
+          })
+        );
     } else {
       return of([]);
     }

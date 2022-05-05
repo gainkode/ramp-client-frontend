@@ -1,17 +1,22 @@
-import { Component, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { EmptyObject } from 'apollo-angular/types';
-import { Observable, Subject } from 'rxjs';
+import { concat, Observable, of, Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map, switchMap, tap } from 'rxjs/operators';
 import { Filter } from 'src/app/admin_old/model/filter.model';
+import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
+import { CommonTargetValue } from 'src/app/model/common.model';
 import { Countries } from 'src/app/model/country-code.model';
+import { SettingsKycTier } from 'src/app/model/generated-models';
 import { CurrencyView, KycStatusList, PaymentInstrumentList, RiskLevelViewList, TransactionSourceList, TransactionStatusList, TransactionTypeList, UserStatusList, UserTypeList } from 'src/app/model/payment.model';
+import { UserItem } from 'src/app/model/user.model';
 
 @Component({
   selector: 'app-admin-filter',
   templateUrl: './filter.component.html',
   styleUrls: ['./filter.component.scss']
 })
-export class AdminFilterComponent implements OnInit {
+export class AdminFilterComponent implements OnInit, OnDestroy {
   @Input() fields: Array<string> = [];
   @Input() filterData: Filter | undefined = undefined;
   @Input() currencies: Array<CurrencyView> = [];
@@ -20,6 +25,7 @@ export class AdminFilterComponent implements OnInit {
   }
 
   private filterSubject = new Subject<Filter>();
+  private subscriptions = new Subscription();
 
   isFilterCollapsed: boolean = true;
   sourceOptions = TransactionSourceList;
@@ -32,12 +38,100 @@ export class AdminFilterComponent implements OnInit {
   kysStatusOptions = KycStatusList;
   countryOptions = Countries;
   filterForm?: FormGroup;
+  isTierLoading = false;
+  isUsersLoading = false;
+  tierSearchInput$ = new Subject<string>();
+  usersSearchInput$ = new Subject<string>();
+  tierOptions$: Observable<CommonTargetValue[]> = of([]);
+  usersOptions$: Observable<CommonTargetValue[]> = of([]);
+  minUsersLengthTerm = 1;
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private adminDataService: AdminDataService) {
 
   }
 
   ngOnInit(): void {
+    this.initForm();
+    if (this.fields.includes('tier')) {
+      this.tierSearch();
+    }
+    if (this.fields.includes('users')) {
+      this.usersSearch();
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
+
+  private tierSearch(): void {
+    this.isTierLoading = true;
+    this.tierOptions$ = this.adminDataService.getSettingsKycTiers('').pipe(
+      map(settings => {
+        this.isTierLoading = false;
+        if (settings.count > 0) {
+          const rawTiers = [...settings.list];
+          return (rawTiers
+            .sort((a, b) => this.tierSortHandler(a, b))
+            .map(tier => {
+              return {
+                id: tier.levelId,
+                title: tier.name
+              } as CommonTargetValue;
+            }))
+        } else {
+          return [];
+        }
+      })
+    );
+  }
+
+  private tierSortHandler(a: SettingsKycTier, b: SettingsKycTier): number {
+    if (a.name > b.name) {
+      return 1;
+    } else if (a.name < b.name) {
+      return -1;
+    }
+    return 0;
+  }
+
+  private usersSearch(): void {
+    this.usersOptions$ = concat(
+      of([]),
+      this.usersSearchInput$.pipe(
+        filter(res => {
+          return res !== null && res.length >= this.minUsersLengthTerm
+        }),
+        debounceTime(300),
+        distinctUntilChanged(),
+        tap(() => {
+          this.isUsersLoading = true;
+        }),
+        switchMap(searchString => {
+          console.log('searchString', searchString);
+          this.isUsersLoading = false;
+          return this.adminDataService.getUsers(
+            [],
+            0,
+            100,
+            'email',
+            false,
+            new Filter({ search: searchString })
+          ).pipe(map(result => {
+            return result.list.map(x => {
+              return {
+                id: x.id,
+                title: (x.fullName !== '') ? `${x.fullName} (${x.email})` : x.email
+              } as CommonTargetValue;
+            });
+          }));
+        })
+      ));
+  }
+
+  private initForm(): void {
     const controlsConfig: EmptyObject = {};
     if (this.fields.includes('accountType')) {
       controlsConfig.accountTypes = [[]];
@@ -117,7 +211,6 @@ export class AdminFilterComponent implements OnInit {
     if (this.fields.includes('search')) {
       controlsConfig.search = [''];
     }
-
     this.filterForm = this.formBuilder.group(controlsConfig);
   }
 
