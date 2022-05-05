@@ -1,0 +1,33 @@
+<div class="dp-hidden">
+    <input class="dp-hidden" name="datepicker" ngbDatepicker #datepicker="ngbDatepicker" [autoClose]="'outside'"
+        (dateSelect)="onDateSelection($event)" [displayMonths]="1" [dayTemplate]="day_item" outsideDays="hidden"
+        [startDate]="fromDate!" tabindex="-1" (dateSelect)="onDateChanged($event)">
+    <ng-template #day_item let-date let-focused="focused">
+        <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
+            [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
+            (mouseleave)="hoveredDate = null">
+            {{date.day}}
+        </span>
+    </ng-template>
+</div>
+<div class="__admin-date-range-container">
+    <button class="btn btn-outline-secondary me-2 __admin-date-range-button" (click)="datepicker.toggle()"
+        type="button">
+        <span style="font-size: 24px;opacity: 0.85;" class="material-icons">
+            calendar_month
+        </span>
+    </button>
+    <div class="input-group">
+        <input #dpFromDate class="form-control" placeholder="dd/mm/yyyy" name="dpFromDate"
+            [value]="formatter.format(fromDate)"
+            (input)="fromDate = validateInput(fromDate, dpFromDate.value);onDateChanged(undefined)">
+    </div>
+    <span class="main-content-label tx-11 tx-medium tx-gray-600 mx-2 me-2 mt-2">
+        -
+    </span>
+    <div class="input-group">
+        <input #dpToDate class="form-control" placeholder="dd/mm/yyyy" name="dpToDate"
+            [value]="formatter.format(toDate)"
+            (input)="toDate = validateInput(toDate, dpToDate.value);onDateChanged(undefined)">
+    </div>
+</div>

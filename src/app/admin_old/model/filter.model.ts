@@ -107,7 +107,7 @@ export class Filter {
       this.createdDateInterval = this.getDateTimeRange(filterValues.createdDateRangeStart, filterValues.createdDateRangeEnd);
     }
 
-    if (filterValues.completedDateStart || filterValues.completedDateEnd) {
+    if (filterValues.completedDateRangeStart || filterValues.completedDateRangeEnd) {
       this.completedDateInterval = this.getDateTimeRange(filterValues.completedDateRangeStart, filterValues.completedDateRangeEnd);
     }
 

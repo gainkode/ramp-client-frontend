@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AdminNewComponent } from './admin_new.component';
 import { AdminNewGuard } from './admin_new.guard';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { AdminDashboardComponent } from './components/dashboard/dashboard.component';
 import { AdminTransactionsComponent } from './components/transactions/transactions.component';
 
 const routes: Routes = [
@@ -12,7 +12,7 @@ const routes: Routes = [
     children: [
       {
         path: 'dashboard',
-        component: DashboardComponent,
+        component: AdminDashboardComponent,
         data: { header: 'Dashboard' }
       },
     //   {

@@ -134,25 +134,30 @@
                                             </ng-select>
                                         </div>
 
-                                        <!-- <mat-form-field *ngIf="field === 'createdDateStart'">
-                                    <mat-label>Created transaction later</mat-label>
-                                    <input matInput formControlName="createdDateRangeStart" type="datetime-local"/>
-                                </mat-form-field>
-                    
-                                <mat-form-field *ngIf="field === 'createdDateEnd'">
-                                    <mat-label>Created transaction until</mat-label>
-                                    <input matInput formControlName="createdDateRangeEnd" type="datetime-local"/>
-                                </mat-form-field>
-                    
-                                <mat-form-field *ngIf="field === 'completedDateStart'">
-                                    <mat-label>Completed transaction later</mat-label>
-                                    <input matInput formControlName="completedDateRangeStart" type="datetime-local"/>
-                                </mat-form-field>
-                    
-                                <mat-form-field *ngIf="field === 'completedDateEnd'">
-                                    <mat-label>Completed transaction until</mat-label>
-                                    <input matInput formControlName="completedDateRangeEnd" type="datetime-local"/>
-                                </mat-form-field>
+
+                                        <div *ngIf="field === 'createdDate'" class="form-group">
+                                            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                                                Transactions created
+                                            </label>
+                                            <app-admin-date-range
+                                                [startField]="filterForm?.controls?.createdDateRangeStart ?? null"
+                                                [endField]="filterForm?.controls?.createdDateRangeEnd ?? null">
+                                            </app-admin-date-range>
+                                        </div>
+
+                                        <div *ngIf="field === 'completedDate'" class="form-group">
+                                            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                                                Transactions completed
+                                            </label>
+                                            <app-admin-date-range
+                                                [startField]="filterForm?.controls?.completedDateRangeStart ?? null"
+                                                [endField]="filterForm?.controls?.completedDateRangeEnd ?? null">
+                                            </app-admin-date-range>
+                                        </div>
+
+
+
+                                        <!-- 
                     
                                 <mat-form-field *ngIf="field === 'registrationDateStart'">
                                     <mat-label>Registered later</mat-label>
@@ -177,7 +182,6 @@
                                                 [typeahead]="usersSearchInput$">
                                             </ng-select>
                                         </div>
-
                                         <div *ngIf="field === 'users'" class="form-group">
                                             <label class="main-content-label tx-11 tx-medium tx-gray-600">
                                                 Customer search
@@ -190,7 +194,6 @@
                                                 [typeahead]="usersSearchInput$">
                                             </ng-select>
                                         </div>
-
                                         <div *ngIf="field === 'widget'" class="form-group">
                                             <label class="main-content-label tx-11 tx-medium tx-gray-600">
                                                 Widget IDs
@@ -204,12 +207,15 @@
                                                 [typeahead]="widgetsSearchInput$">
                                             </ng-select>
                                         </div>
-
-                                        <!-- 
-                                <app-filter-field-risk-alert-code *ngIf="field === 'riskAlertCode'" formControlName="riskAlertCode">
-                                </app-filter-field-risk-alert-code> -->
-
-
+                                        <div *ngIf="field === 'riskAlertCode'" class="form-group">
+                                            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                                                Risk Alert Code
+                                            </label>
+                                            <ng-select [items]="riskAlertOptions" bindLabel="name" bindValue="id"
+                                                formControlName="riskAlertCode" [multiple]="false"
+                                                placeholder="Select alert code">
+                                            </ng-select>
+                                        </div>
                                         <div *ngIf="field === 'walletAddress'" class="form-group">
                                             <label class="main-content-label tx-11 tx-medium tx-gray-600">
                                                 Wallet address

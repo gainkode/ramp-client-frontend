@@ -1,9 +1,10 @@
 import { Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { EmptyObject } from 'apollo-angular/types';
 import { concat, Observable, of, Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, switchMap, tap } from 'rxjs/operators';
 import { Filter } from 'src/app/admin_old/model/filter.model';
+import { RiskAlertCodeList } from 'src/app/admin_old/model/lists.model';
 import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
 import { CommonTargetValue } from 'src/app/model/common.model';
 import { Countries } from 'src/app/model/country-code.model';
@@ -37,6 +38,7 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
   transactionStatusOptions = TransactionStatusList;
   kysStatusOptions = KycStatusList;
   countryOptions = Countries;
+  riskAlertOptions = RiskAlertCodeList;
   filterForm?: FormGroup;
   isTierLoading = false;
   isUsersLoading = false;
@@ -138,7 +140,6 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
   }
 
   private widgetsSearch(): void {
-    console.log('widgetsSearch');
     this.widgetsOptions$ = concat(
       of([]),
       this.widgetsSearchInput$.pipe(
@@ -152,10 +153,8 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
         }),
         switchMap(searchString => {
           this.isWidgetsLoading = false;
-          console.log('get', searchString);
           return this.adminDataService.getWidgetIds(searchString, 0, 100, 'widgetId', false)
             .pipe(map(result => {
-              console.log(result.list);
               return result.list.map(x => {
                 return {
                   id: x,
@@ -190,22 +189,16 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
     if (this.fields.includes('assets')) {
       controlsConfig.assets = [[]];
     }
-    if (this.fields.includes('createdDateStart')) {
+    if (this.fields.includes('createdDate')) {
       controlsConfig.createdDateRangeStart = [undefined];
-    }
-    if (this.fields.includes('createdDateEnd')) {
       controlsConfig.createdDateRangeEnd = [undefined];
     }
-    if (this.fields.includes('completedDateStart')) {
+    if (this.fields.includes('completedDate')) {
       controlsConfig.completedDateRangeStart = [undefined];
-    }
-    if (this.fields.includes('completedDateEnd')) {
       controlsConfig.completedDateRangeEnd = [undefined];
     }
-    if (this.fields.includes('registrationDateStart')) {
+    if (this.fields.includes('registrationDate')) {
       controlsConfig.registrationDateRangeStart = [undefined];
-    }
-    if (this.fields.includes('registrationDateEnd')) {
       controlsConfig.registrationDateRangeEnd = [undefined];
     }
     if (this.fields.includes('transactionIds')) {
@@ -273,22 +266,16 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
       if (this.fields.includes('assets')) {
         this.filterForm.controls.assets.setValue([]);
       }
-      if (this.fields.includes('createdDateStart')) {
+      if (this.fields.includes('createdDate')) {
         this.filterForm.controls.createdDateRangeStart.setValue(undefined);
-      }
-      if (this.fields.includes('createdDateEnd')) {
         this.filterForm.controls.createdDateRangeEnd.setValue(undefined);
       }
-      if (this.fields.includes('completedDateStart')) {
+      if (this.fields.includes('completedDate')) {
         this.filterForm.controls.completedDateRangeStart.setValue(undefined);
-      }
-      if (this.fields.includes('completedDateEnd')) {
         this.filterForm.controls.completedDateRangeEnd.setValue(undefined);
       }
-      if (this.fields.includes('registrationDateStart')) {
+      if (this.fields.includes('registrationDate')) {
         this.filterForm.controls.registrationDateRangeStart.setValue(undefined);
-      }
-      if (this.fields.includes('registrationDateEnd')) {
         this.filterForm.controls.registrationDateRangeEnd.setValue(undefined);
       }
       if (this.fields.includes('transactionIds')) {
@@ -331,7 +318,6 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
         this.filterForm.controls.search.setValue('');
       }
     }
-
     this.applyFilters();
   }
 

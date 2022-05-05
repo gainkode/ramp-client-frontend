@@ -27,10 +27,8 @@ export class AdminTransactionTableComponent implements OnInit, OnDestroy, AfterV
     'accountType',
     'country',
     'source',
-    'createdDateStart',
-    'createdDateEnd',
-    'completedDateStart',
-    'completedDateEnd',
+    'createdDate',
+    'completedDate',
     'paymentInstrument',
     'transactionIds',
     'transactionType',
@@ -174,6 +172,7 @@ export class AdminTransactionTableComponent implements OnInit, OnDestroy, AfterV
   }
 
   private loadTransactionStatuses(): void {
+    this.inProgress = true;
     this.userStatuses = [];
     const statusListData$ = this.profileService.getTransactionStatuses();
     this.subscriptions.add(
@@ -181,6 +180,7 @@ export class AdminTransactionTableComponent implements OnInit, OnDestroy, AfterV
         this.userStatuses = data.getTransactionStatuses as TransactionStatusDescriptorMap[];
         this.loadCurrencies();
       }, (error) => {
+        this.inProgress = false;
         if (this.auth.token === '') {
           this.router.navigateByUrl('/');
         }
@@ -189,6 +189,7 @@ export class AdminTransactionTableComponent implements OnInit, OnDestroy, AfterV
   }
 
   private loadCurrencies(): void {
+    this.inProgress = true;
     this.currencyOptions = [];
     this.subscriptions.add(
       this.commonDataService.getSettingsCurrency()?.valueChanges.pipe(take(1)).subscribe(({ data }) => {
@@ -201,6 +202,7 @@ export class AdminTransactionTableComponent implements OnInit, OnDestroy, AfterV
         }
         this.loadTransactions();
       }, (error) => {
+        this.inProgress = false;
         if (this.auth.token === '') {
           this.router.navigateByUrl('/');
         }

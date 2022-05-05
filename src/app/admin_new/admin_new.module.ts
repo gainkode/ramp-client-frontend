@@ -37,15 +37,16 @@ import { AdminNewComponent } from './admin_new.component';
 import { AdminNewGuard } from './admin_new.guard';
 import { AdminHeaderComponent } from './layout/header/header.component';
 import { AdminSidebarComponent } from './layout/sidebar/sidebar.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { AdminDashboardComponent } from './components/dashboard/dashboard.component';
 import { AdminSwitcherComponent } from './layout/switcher/switcher.component';
 import { AdminTransactionsComponent } from './components/transactions/transactions.component';
 import { AdminPageHeaderComponent } from './layout/page-header/page-header.component';
 import { AdminTransactionTableComponent } from './components/transactions/transaction-table.component';
 import { AdminDataService } from '../admin_old/services/admin-data.service';
 import { AdminTransactionDetailsComponent } from './components/transactions/transaction-details.component';
-import { AdminDetailsItemComponent } from './misc/details-item/details-item.component';
 import { AdminFilterComponent } from './misc/filter/filter.component';
+import { AdminDetailsItemComponent } from './misc/details-item/details-item.component';
+import { AdminDateRangeComponent } from './misc/date-range/date-range.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -98,8 +99,9 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AdminSidebarComponent,
     AdminSwitcherComponent,
     AdminDetailsItemComponent,
+    AdminDateRangeComponent,
     AdminFilterComponent,
-    DashboardComponent,
+    AdminDashboardComponent,
     AdminTransactionsComponent,
     AdminTransactionTableComponent,
     AdminTransactionDetailsComponent
