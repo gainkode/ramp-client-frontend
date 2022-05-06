@@ -1,0 +1,86 @@
+<app-admin-page-header [title]="'Fiat wallets'" [items]="['Home']" [active_item]="'Fiat wallets'">
+</app-admin-page-header>
+
+<div class="row row-sm">
+  <div class="col-xl-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="table-responsive">
+          <app-admin-filter [fields]="filterFields" [filterData]="filter" (filter)="handleFilterApplied($event)">
+          </app-admin-filter>
+
+          <mat-progress-bar *ngIf="inProgress" color="accent" mode="indeterminate"></mat-progress-bar>
+
+          <div class="data-table">
+            <mat-table matSort [matSortActive]="sortedField" matSortDirection="desc" matSortDisableClear
+              [dataSource]="wallets">
+              <!-- Details Column -->
+              <ng-container matColumnDef="details" sticky>
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element" class="wallet-list-selector-column">
+                  <button mat-icon-button class="row-button" (click)="showDetails(element, details_content)"
+                    [attr.aria-label]="'Wallet details'" [attr.aria-pressed]="!!selectedWallet"
+                    matTooltip="Wallet details" matTooltipClass="info-tooltip">
+                    <i class="material-icons" style="font-size: 20px;">wysiwyg</i>
+                  </button>
+                </td>
+              </ng-container>
+
+              <!-- User Column -->
+              <ng-container matColumnDef="userId">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>User</th>
+                <td mat-cell *matCellDef="let element" class="wallet-list-data-column">
+                  {{element.userId}}
+                </td>
+              </ng-container>
+
+              <!-- Balance Column -->
+              <ng-container matColumnDef="balance">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>Balance</th>
+                <td mat-cell *matCellDef="let element" class="wallet-list-data-column">
+                  {{element.balance}}
+                </td>
+              </ng-container>
+
+              <!-- Currency Column -->
+              <ng-container matColumnDef="asset">
+                <th mat-header-cell *matHeaderCellDef>Currency</th>
+                <td mat-cell *matCellDef="let element" class="wallet-list-data-column">
+                  {{element.asset}} </td>
+              </ng-container>
+
+              <!-- Created Column -->
+              <ng-container matColumnDef="created">
+                <th mat-header-cell *matHeaderCellDef>Created</th>
+                <td mat-cell *matCellDef="let element" class="wallet-list-data-column">
+                  {{element.created}} </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </mat-table>
+          </div>
+
+          <mat-paginator [length]="walletCount" [pageSize]="pageSize" [pageSizeOptions]="[25, 50, 100]"
+            showFirstLastButtons (page)="handlePage($event)">
+          </mat-paginator>
+
+          <ng-template #details_content let-modal>
+            <div class="modal-header">
+              <h5 class="modal-title">Wallet details</h5>
+              <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <!-- <app-admin-transaction-details [permission]="permission" [transaction]="selectedTransaction"
+                [currencies]="currencyOptions" [userStatuses]="userStatuses" (save)="onSaveTransaction()"
+                (close)="onCloseDetails()">
+              </app-admin-transaction-details> -->
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

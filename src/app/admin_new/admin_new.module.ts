@@ -46,6 +46,8 @@ import { AdminTransactionDetailsComponent } from './components/transactions/tran
 import { AdminFilterComponent } from './misc/filter/filter.component';
 import { AdminDetailsItemComponent } from './misc/details-item/details-item.component';
 import { AdminDateRangeComponent } from './misc/date-range/date-range.component';
+import { AdminFiatWalletDetailsComponent } from './components/wallets/fiat/fiat-wallet-details.component';
+import { AdminFiatWalletsComponent } from './components/wallets/fiat/fiat-wallets.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -102,7 +104,9 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AdminFilterComponent,
     AdminDashboardComponent,
     AdminTransactionsComponent,
-    AdminTransactionDetailsComponent
+    AdminTransactionDetailsComponent,
+    AdminFiatWalletsComponent,
+    AdminFiatWalletDetailsComponent
   ],
   providers: [
     AdminNewGuard,

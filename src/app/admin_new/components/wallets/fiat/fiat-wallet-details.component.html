@@ -1,0 +1,356 @@
+<div class="row">
+  <div class="col-md-12 col-lg-12 col-xl-12 mx-auto d-block">
+    <form [formGroup]="form" novalidate (ngSubmit)="onSubmit(update_confirm_content)">
+      <div class="card card-body pd-20 pd-md-40 border shadow-none">
+        <h5 class="card-title mg-b-20">
+          Payment Data
+        </h5>
+        <app-admin-details-item label="Transaction Id" [value]="data?.code"
+          [linkUrl]="'/admin/transactions/'+ transactionId"></app-admin-details-item>
+        <app-admin-details-item label="Transaction Created" [value]="data?.created"></app-admin-details-item>
+        <app-admin-details-item label="Transaction Completed" [value]="data?.executed"></app-admin-details-item>
+        <app-admin-details-item label="First Name" [value]="data?.user?.firstName"></app-admin-details-item>
+        <app-admin-details-item label="Last Name" [value]="data?.user?.lastName"></app-admin-details-item>
+        <app-admin-details-item label="Company" [value]="data?.user?.company"></app-admin-details-item>
+        <app-admin-details-item label="Email" [value]="data?.user?.email"></app-admin-details-item>
+        <app-admin-details-item label="Country" [value]="data?.user?.country"></app-admin-details-item>
+        <app-admin-details-item label="IP Address" [value]="data?.ip"></app-admin-details-item>
+        <app-admin-details-item label="Customer ID" [value]="data?.accountId"></app-admin-details-item>
+        <app-admin-details-item label="Widget ID" [value]="data?.widgetId"></app-admin-details-item>
+
+        <app-admin-details-item *ngIf="transactionType===TRANSACTION_TYPE.Receive || editableDestination===false"
+          label="Wallet address" [value]="data?.address"></app-admin-details-item>
+        <div *ngIf="data?.address!=='' && transactionType!==TRANSACTION_TYPE.Receive && editableDestination===true"
+          class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Wallet address
+          </label>
+          <input class="form-control" [ngClass]="{'has-error': !form.controls.address.valid}" type="text"
+            formControlName="address" required>
+          <div *ngIf="(form.controls.address.touched || submitted) && (form.controls.address.errors?.['required'])"
+            class="tx-danger">
+            <small>
+              Address is required
+            </small>
+          </div>
+        </div>
+        <app-admin-details-item label="Original transfer Order Id" [value]="data?.transferOriginalOrderId">
+        </app-admin-details-item>
+        <app-admin-details-item label="Transfer Order Id" [value]="data?.transferOrderId"></app-admin-details-item>
+        <app-admin-details-item label="Transfer Order Hash" [value]="data?.transferOrderHash"></app-admin-details-item>
+
+        <!-- Transaction status -->
+        <app-admin-details-item *ngIf="transactionType===TRANSACTION_TYPE.Receive" label="Transaction status"
+          [value]="transactionStatusName"></app-admin-details-item>
+        <div *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Transaction status
+          </label>
+          <ng-select [items]="transactionStatuses" bindLabel="name" bindValue="id" formControlName="transactionStatus"
+            [clearable]=false [clearOnBackspace]=false required>
+          </ng-select>
+        </div>
+
+        <app-admin-details-item label="Blockchain Link" [value]="transferOrderBlockchainLink"
+          [linkUrl]="transferOrderBlockchainLink"></app-admin-details-item>
+        <app-admin-details-item label="Benchmark Blockchain Link" [value]="benchmarkTransferOrderBlockchainLink"
+          [linkUrl]="benchmarkTransferOrderBlockchainLink"></app-admin-details-item>
+        <app-admin-details-item label="Transaction Type" [value]="data?.transactionTypeName"></app-admin-details-item>
+        <app-admin-details-item label="Payment Method" [value]="data?.instrumentName"></app-admin-details-item>
+        <app-admin-details-item label="Payment Provider" [value]="data?.paymentProvider"></app-admin-details-item>
+        <app-admin-details-item label="Payment Details" [value]="data?.instrumentDetails"></app-admin-details-item>
+
+        <!-- Amounts -->
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-12">
+              <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                {{amountToSpendTitle}}
+              </label>
+              <div class="row">
+                <div class="col-sm-7">
+                  <p *ngIf="transactionType===TRANSACTION_TYPE.Receive" class="pd-t-10">
+                    {{data?.amountToSpend}}
+                  </p>
+                  <input *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-control"
+                    [ngClass]="{'has-error': !form.controls.amountToSpend.valid}" type="text"
+                    formControlName="amountToSpend" required>
+                  <div
+                    *ngIf="(form.controls.amountToSpend.touched || submitted) && (form.controls.amountToSpend.errors?.['required'])"
+                    class="tx-danger">
+                    <small>
+                      {{amountToSpendTitle}} is required
+                    </small>
+                  </div>
+                  <div *ngIf="form.controls.amountToSpend.errors?.['pattern']" class="tx-danger">
+                    <small>
+                      Incorrect number value
+                    </small>
+                  </div>
+                </div>
+                <div class="col-sm-5 mg-t-10 mg-sm-t-0">
+                  <ng-select [items]="currenciesToSpend" [clearable]=false [clearOnBackspace]=false bindLabel="id"
+                    bindValue="id" formControlName="currencyToSpend" required>
+                  </ng-select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-12">
+              <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                Amount To Receive
+              </label>
+              <div class="row">
+                <div class="col-sm-7">
+                  <p class="pd-t-10">
+                    {{data?.amountToReceive}}
+                  </p>
+                </div>
+                <div class="col-sm-5 mg-t-10 mg-sm-t-0">
+                  <ng-select [items]="currenciesToReceive" [clearable]=false [clearOnBackspace]=false bindLabel="id"
+                    bindValue="id" formControlName="currencyToReceive" required>
+                  </ng-select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rate -->
+        <div
+          *ngIf="transactionType===TRANSACTION_TYPE.Buy || transactionType===TRANSACTION_TYPE.Sell || transactionType===TRANSACTION_TYPE.Exchange"
+          class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Exchange rate
+            <a [routerLink]="" (click)="updateRate()" style="font-size: 12px;margin-left: 8px;">
+              Set current
+            </a>
+          </label>
+          <input class="form-control" [ngClass]="{'has-error': !form.controls.rate.valid}" type="text"
+            formControlName="rate" required>
+          <div *ngIf="(form.controls.rate.touched || submitted) && (form.controls.rate.errors?.['required'])"
+            class="tx-danger">
+            <small>
+              Rate is required
+            </small>
+          </div>
+          <div *ngIf="form.controls.rate.errors?.['pattern']" class="tx-danger">
+            <small>
+              Incorrect number value
+            </small>
+          </div>
+        </div>
+        <!-- <div
+          *ngIf="transactionType===TRANSACTION_TYPE.Buy || transactionType===TRANSACTION_TYPE.Sell || transactionType===TRANSACTION_TYPE.Exchange"
+          class="form-group">
+          <a [routerLink]="" (click)="updateRate()">
+            Set current exchange rate
+          </a>
+        </div> -->
+
+        <!-- Fees -->
+        <app-admin-details-item *ngIf="transactionType===TRANSACTION_TYPE.Receive" [label]="systemFeeTitle"
+          [value]="data?.fees"></app-admin-details-item>
+        <div *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            {{systemFeeTitle}}
+          </label>
+          <input class="form-control" [ngClass]="{'has-error': !form.controls.fee.valid}" type="text"
+            formControlName="fee" required>
+          <div *ngIf="(form.controls.fee.touched || submitted) && (form.controls.fee.errors?.['required'])"
+            class="tx-danger">
+            <small>
+              Fee is required
+            </small>
+          </div>
+          <div *ngIf="form.controls.fee.errors?.['pattern']" class="tx-danger">
+            <small>
+              Incorrect number value
+            </small>
+          </div>
+        </div>
+        <app-admin-details-item label="Blockchain fee" [value]="data?.transferFee"></app-admin-details-item>
+
+        <app-admin-details-item label="From" [value]="data?.sender"></app-admin-details-item>
+        <app-admin-details-item label="To" [value]="data?.recipient"></app-admin-details-item>
+        <app-admin-details-item label="Initiated from" [value]="data?.transactionSourceName"></app-admin-details-item>
+        <app-admin-details-item label="Wallet type" [value]="data?.userModeName"></app-admin-details-item>
+        <app-admin-details-item label="Instrument details" [value]="data?.instrumentDetailsData">
+        </app-admin-details-item>
+
+        <!-- Comment -->
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Comment
+          </label>
+          <textarea class="form-control" style="resize: none;" placeholder="Comment" rows="3"
+            formControlName="comment"></textarea>
+        </div>
+
+        <!-- End-user transfer hash -->
+        <div *ngIf="showTransferHash" class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            End-user transfer hash
+          </label>
+          <input class="form-control" type="text" formControlName="transferHash">
+        </div>
+        <!-- Benchmark transfer hash -->
+        <div *ngIf="showBenchmarkTransferHash" class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Benchmark transfer hash
+          </label>
+          <input class="form-control" type="text" benchmarkTransferHash="transferHash">
+        </div>
+
+        <app-admin-details-item label="Last Updated" [value]="data?.updated"></app-admin-details-item>
+      </div>
+      <div class="card card-body pd-20 pd-md-40 border shadow-none">
+        <h5 class="card-title mg-b-20">
+          AML Check
+        </h5>
+        <app-admin-details-item label="Account ID" [value]="data?.user?.id"
+          [linkUrl]="'/admin/customers/'+ data?.user?.id">
+        </app-admin-details-item>
+        <app-admin-details-item label="Verification Level" [value]="data?.kycTier"></app-admin-details-item>
+
+        <!-- DocsCheck -->
+        <app-admin-details-item *ngIf="transactionType===TRANSACTION_TYPE.Receive" label="Docs Check"
+          [value]="kycStatus">
+        </app-admin-details-item>
+        <div *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Docs Check
+          </label>
+          <ng-select [items]="kycStatuses" [clearable]=false [clearOnBackspace]=false bindLabel="name" bindValue="id"
+            formControlName="kycStatus" required>
+          </ng-select>
+        </div>
+
+        <!-- Account status -->
+        <app-admin-details-item *ngIf="transactionType===TRANSACTION_TYPE.Receive" label="Account Status"
+          [value]="accountStatus">
+        </app-admin-details-item>
+        <div *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Account Status
+          </label>
+          <ng-select [items]="accountStatuses" [clearable]=false [clearOnBackspace]=false bindLabel="name"
+            bindValue="id" formControlName="accountStatus" required>
+          </ng-select>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end;">
+        <button *ngIf="permission>1 && transactionType!==TRANSACTION_TYPE.Receive"
+          class="btn btn-primary pd-x-30 me-2 mg-t-5">
+          <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          Save
+        </button>
+        <button *ngIf="permission>1 && removable" class="btn btn-danger pd-x-30 me-2 mg-t-5" type="button"
+          (click)="onDelete(delete_confirm_content)">
+          <span *ngIf="cancelInProgress" class="spinner-border spinner-border-sm" role="status"
+            aria-hidden="true"></span>
+          Cancel
+        </button>
+        <button *ngIf="permission>1 && removable" class="btn btn-outline-primary pd-x-30 mg-t-5" type="button"
+          (click)="onClose()">
+          Close
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<ng-template #delete_confirm_content let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Cancel transaction</h5>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <h4 style="text-align: center;">
+      You are going to cancel selected transaction. Confirm operation.
+    </h4>
+    <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
+      <button class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" type="button" (click)="modal.dismiss('Reject')">
+        Reject
+      </button>
+      <button class="btn btn-danger pd-x-30 mg-t-5" (click)="onConfirmDelete()">
+        Confirm
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #update_confirm_content let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Update transaction</h5>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <h4 style="text-align: center;">
+      You are going to update transaction data. Confirm operation.
+    </h4>
+    <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
+      <button class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" type="button" (click)="modal.dismiss('Reject')">
+        Reject
+      </button>
+      <button class="btn btn-primary pd-x-30 mg-t-5"
+        (click)="onConfirmUpdate(status_confirm_content, amount_confirm_content)">
+        Confirm
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #status_confirm_content let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Update transaction</h5>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <h4 style="text-align: center;">
+      You are going to change the transaction status. Should we restart the transaction handling after saving?
+    </h4>
+    <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
+      <button class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" type="button"
+        (click)="onChangeTransactionStatusConfirm(0)">
+        No
+      </button>
+      <button class="btn btn-primary pd-x-30 mg-t-5" (click)="onChangeTransactionStatusConfirm(1)">
+        Yes
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #amount_confirm_content let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Update transaction</h5>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <h4 style="text-align: center;">
+      You are going to change the transaction amounts. Should we recalculate transaction after saving?
+    </h4>
+    <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
+      <button class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" type="button"
+        (click)="onChangeTransactionAmountConfirm(0)">
+        No
+      </button>
+      <button class="btn btn-primary pd-x-30 mg-t-5" (click)="onChangeTransactionAmountConfirm(1)">
+        Yes
+      </button>
+    </div>
+  </div>
+</ng-template>

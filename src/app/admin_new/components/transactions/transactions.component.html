@@ -36,16 +36,14 @@
                   <button mat-icon-button class="row-button" (click)="showDetails(element, details_content)"
                     [attr.aria-label]="'Transaction details'" [attr.aria-pressed]="!!selectedTransaction"
                     matTooltip="Transaction details" matTooltipClass="info-tooltip">
-                    <mat-icon class="details-icon">
-                      open_in_new
-                    </mat-icon>
+                    <i class="material-icons" style="font-size: 20px;">wysiwyg</i>
                   </button>
                   <button *ngIf="element.vaultIds.length>0" mat-icon-button class="row-button"
                     (click)="showWallets(element.id)" [attr.aria-label]="'Transaction wallet'"
                     [matTooltip]="'Transaction wallet'" matTooltipClass="info-tooltip">
-                    <mat-icon class="details-icon">
+                    <i class="material-icons" style="font-size: 20px;">
                       account_balance_wallet
-                    </mat-icon>
+                    </i>
                   </button>
                 </td>
               </ng-container>

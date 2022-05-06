@@ -4,6 +4,7 @@ import { AdminNewComponent } from './admin_new.component';
 import { AdminNewGuard } from './admin_new.guard';
 import { AdminDashboardComponent } from './components/dashboard/dashboard.component';
 import { AdminTransactionsComponent } from './components/transactions/transactions.component';
+import { AdminFiatWalletsComponent } from './components/wallets/fiat/fiat-wallets.component';
 
 const routes: Routes = [
   {
@@ -55,9 +56,29 @@ const routes: Routes = [
     //       }
     //     ]
     //   },
-    //   {
-    //     path: 'wallets',
-    //     children: [
+    {
+         path: 'fiat-wallets',
+         children: [
+          {
+            path: 'crypto/users/:userid',
+            component: AdminFiatWalletsComponent,
+            data: { header: 'Customer fiat wallets' }
+          },
+          {
+            path: 'crypto/vaults/:vaultids',
+            component: AdminFiatWalletsComponent,
+            data: { header: 'Transaction fiat wallets' }
+          },
+          {
+            path: '',
+            component: AdminFiatWalletsComponent,
+            data: { header: 'Wallets' }
+          },
+         ]
+    },
+    // {
+    //      path: 'wallets',
+    //      children: [
     //       {
     //         path: 'crypto/users/:cryptouserid',
     //         component: AdminWalletsComponent,
@@ -73,8 +94,8 @@ const routes: Routes = [
     //         component: AdminWalletsComponent,
     //         data: { header: 'Wallets' }
     //       },
-    //     ]
-    //   },
+    //      ]
+    // },
     //   {
     //     path: 'fees',
     //     component: FeeListComponent,
