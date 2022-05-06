@@ -69,6 +69,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   submitted = false;
   saveInProgress = false;
   cancelInProgress = false;
+  errorMessage = '';
   TRANSACTION_TYPE: typeof TransactionType = TransactionType;
   data: TransactionItemFull | undefined = undefined;
   accountStatuses = UserStatusList;
@@ -245,6 +246,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
         this.save.emit();
       }, (error) => {
         this.saveInProgress = false;
+        this.errorMessage = error;
         if (this.auth.token === '') {
           this.router.navigateByUrl('/');
         }
@@ -309,6 +311,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
         this.cancelInProgress = false;
         this.save.emit();
       }, (error) => {
+        this.errorMessage = error;
         this.cancelInProgress = false;
         if (this.auth.token === '') {
           this.router.navigateByUrl('/');

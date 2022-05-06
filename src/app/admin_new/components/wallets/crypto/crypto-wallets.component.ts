@@ -8,11 +8,7 @@ import { take } from 'rxjs/operators';
 import { Filter } from 'src/app/admin_old/model/filter.model';
 import { WalletItem } from 'src/app/admin_old/model/wallet.model';
 import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
-import { SettingsCurrencyWithDefaults } from 'src/app/model/generated-models';
-import { CurrencyView } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
-import { CommonDataService } from 'src/app/services/common-data.service';
-import { ProfileDataService } from 'src/app/services/profile.service';
 
 @Component({
   selector: 'app-admin-crypto-wallets',
@@ -36,7 +32,6 @@ export class AdminCryptoWalletsComponent implements OnInit, OnDestroy, AfterView
   selectedWallet?: WalletItem;
   walletCount = 0;
   wallets: WalletItem[] = [];
-  currencyOptions: CurrencyView[] = [];
   pageSize = 25;
   pageIndex = 0;
   sortedField = 'address';
@@ -49,9 +44,7 @@ export class AdminCryptoWalletsComponent implements OnInit, OnDestroy, AfterView
   constructor(
     private modalService: NgbModal,
     private auth: AuthService,
-    private commonDataService: CommonDataService,
     private adminService: AdminDataService,
-    private profileService: ProfileDataService,
     public activeRoute: ActivatedRoute,
     private router: Router
   ) {
@@ -68,7 +61,7 @@ export class AdminCryptoWalletsComponent implements OnInit, OnDestroy, AfterView
   }
 
   ngOnInit(): void {
-    this.loadList();
+    this.loadWallets();
   }
 
   ngOnDestroy(): void {
@@ -80,7 +73,7 @@ export class AdminCryptoWalletsComponent implements OnInit, OnDestroy, AfterView
       this.sort.sortChange.subscribe(() => {
         this.sortedDesc = (this.sort.direction === 'desc');
         this.sortedField = this.sort.active;
-        this.loadList();
+        this.loadWallets();
       })
     );
   }
@@ -89,7 +82,7 @@ export class AdminCryptoWalletsComponent implements OnInit, OnDestroy, AfterView
     this.selectedWallet = undefined;
     if (this.detailsDialog) {
       this.detailsDialog.close();
-      this.loadList();
+      this.loadWallets();
     }
   }
 
@@ -101,13 +94,13 @@ export class AdminCryptoWalletsComponent implements OnInit, OnDestroy, AfterView
 
   handleFilterApplied(filter: Filter): void {
     this.filter = filter;
-    this.loadList();
+    this.loadWallets();
   }
 
   handlePage(event: PageEvent): PageEvent {
     this.pageSize = event.pageSize;
     this.pageIndex = event.pageIndex;
-    this.loadList();
+    this.loadWallets();
     return event;
   }
 
@@ -131,14 +124,6 @@ export class AdminCryptoWalletsComponent implements OnInit, OnDestroy, AfterView
     return !!this.selectedWallet && this.selectedWallet.address === walletAddress;
   }
 
-  private loadList(): void {
-    if (this.currencyOptions.length === 0) {
-      this.loadCurrencies();
-    } else {
-      this.loadWallets();
-    }
-  }
-
   private loadWallets(): void {
     this.inProgress = true;
     const listData$ = this.adminService.getWallets(
@@ -152,23 +137,6 @@ export class AdminCryptoWalletsComponent implements OnInit, OnDestroy, AfterView
         this.wallets = list;
         this.walletCount = count;
         this.inProgress = false;
-      })
-    );
-  }
-
-  private loadCurrencies(): void {
-    this.inProgress = true;
-    this.currencyOptions = [];
-    this.subscriptions.add(
-      this.commonDataService.getSettingsCurrency()?.valueChanges.pipe(take(1)).subscribe(({ data }) => {
-        const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
-        if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
-          this.currencyOptions = currencySettings.settingsCurrency.list
-            ?.map((val) => new CurrencyView(val)) as CurrencyView[];
-        } else {
-          this.currencyOptions = [];
-        }
-        this.loadWallets();
       }, (error) => {
         this.inProgress = false;
         if (this.auth.token === '') {
@@ -181,13 +149,4 @@ export class AdminCryptoWalletsComponent implements OnInit, OnDestroy, AfterView
   showCustodyProvider(url: string): void {
     window.open(url, '_blank');
   }
-  
-  // showWallets(transactionId: string): void {
-  //   const transaction = this.wallets.find(x => x.id === transactionId);
-  //   if (transaction?.type === TransactionType.Deposit || transaction?.type === TransactionType.Withdrawal) {
-  //     this.router.navigateByUrl(`/admin/wallets/fiat/vaults/${transaction?.vaultIds.join('#') ?? ''}`);
-  //   } else {
-  //     this.router.navigateByUrl(`/admin/wallets/crypto/vaults/${transaction?.vaultIds.join('#') ?? ''}`);
-  //   }
-  // }
 }

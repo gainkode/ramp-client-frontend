@@ -242,7 +242,11 @@
           </ng-select>
         </div>
       </div>
-
+      <div *ngIf="errorMessage!==''" class="card card-body card-danger pd-20 pd-md-40 border shadow-none">
+        <h4 class="card-title2 mg-b-20" style="color: brown;">
+          {{errorMessage}}
+        </h4>
+      </div>
       <div style="display: flex; justify-content: flex-end;">
         <button *ngIf="permission>1 && transactionType!==TRANSACTION_TYPE.Receive"
           class="btn btn-primary pd-x-30 me-2 mg-t-5">
@@ -255,7 +259,7 @@
             aria-hidden="true"></span>
           Cancel
         </button>
-        <button *ngIf="permission>1 && removable" class="btn btn-outline-primary pd-x-30 mg-t-5" type="button"
+        <button *ngIf="permission>1" class="btn btn-outline-primary pd-x-30 mg-t-5" type="button"
           (click)="onClose()">
           Close
         </button>
