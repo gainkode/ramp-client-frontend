@@ -5,8 +5,9 @@
         <h5 class="card-title mg-b-20">
           Payment Data
         </h5>
-        <app-admin-details-item label="Transaction Id" [value]="data?.code"
-          [linkUrl]="'/admin/transactions/'+ transactionId"></app-admin-details-item>
+        <app-admin-details-item label="Transaction Id" [value]="data?.code"></app-admin-details-item>
+        <!-- <app-admin-details-item label="Transaction Id" [value]="data?.code"
+          [linkUrl]="'/admin/transactions/'+ transactionId"></app-admin-details-item> -->
         <app-admin-details-item label="Transaction Created" [value]="data?.created"></app-admin-details-item>
         <app-admin-details-item label="Transaction Completed" [value]="data?.executed"></app-admin-details-item>
         <app-admin-details-item label="First Name" [value]="data?.user?.firstName"></app-admin-details-item>
@@ -259,8 +260,7 @@
             aria-hidden="true"></span>
           Cancel
         </button>
-        <button *ngIf="permission>1" class="btn btn-outline-primary pd-x-30 mg-t-5" type="button"
-          (click)="onClose()">
+        <button *ngIf="permission>1" class="btn btn-outline-primary pd-x-30 mg-t-5" type="button" (click)="onClose()">
           Close
         </button>
       </div>

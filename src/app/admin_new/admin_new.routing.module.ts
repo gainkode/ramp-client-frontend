@@ -26,15 +26,10 @@ const routes: Routes = [
         path: 'transactions',
         children: [
           {
-            path: 'users/:id',
+            path: 'users/:userid',
             component: AdminTransactionsComponent,
             data: { header: 'Customer transactions' }
           },
-          // {
-          //   path: ':id',
-          //   component: TransactionSingleComponent,
-          //   data: { header: 'Transaction {:id}' }
-          // },
           {
             path: '',
             component: AdminTransactionsComponent,
@@ -97,26 +92,6 @@ const routes: Routes = [
           },
         ]
       },
-      // {
-      //      path: 'wallets',
-      //      children: [
-      //       {
-      //         path: 'crypto/users/:cryptouserid',
-      //         component: AdminWalletsComponent,
-      //         data: { header: 'Customer wallets' }
-      //       },
-      //       {
-      //         path: 'crypto/vaults/:cryptovaultids',
-      //         component: AdminWalletsComponent,
-      //         data: { header: 'Transaction wallets' }
-      //       },
-      //       {
-      //         path: '',
-      //         component: AdminWalletsComponent,
-      //         data: { header: 'Wallets' }
-      //       },
-      //      ]
-      // },
       //   {
       //     path: 'fees',
       //     component: FeeListComponent,

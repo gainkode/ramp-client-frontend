@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -68,8 +68,13 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
     private commonDataService: CommonDataService,
     private adminService: AdminDataService,
     private profileService: ProfileDataService,
+    public activeRoute: ActivatedRoute,
     private router: Router
   ) {
+    const filterUserId = activeRoute.snapshot.params['userid'];
+    if (filterUserId) {
+      this.filter.users = [filterUserId as string];
+    }
     this.permission = this.auth.isPermittedObjectCode('TRANSACTIONS');
   }
 
@@ -213,9 +218,9 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
   showWallets(transactionId: string): void {
     const transaction = this.transactions.find(x => x.id === transactionId);
     if (transaction?.type === TransactionType.Deposit || transaction?.type === TransactionType.Withdrawal) {
-      this.router.navigateByUrl(`/admin/wallets/fiat/vaults/${transaction?.vaultIds.join('#') ?? ''}`);
+      this.router.navigateByUrl(`/admin/fiat-wallets/vaults/${transaction?.vaultIds.join('#') ?? ''}`);
     } else {
-      this.router.navigateByUrl(`/admin/wallets/crypto/vaults/${transaction?.vaultIds.join('#') ?? ''}`);
+      this.router.navigateByUrl(`/admin/crypto-wallets/vaults/${transaction?.vaultIds.join('#') ?? ''}`);
     }
   }
 
@@ -245,7 +250,6 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   unbenchmark(content: any): void {
-
     this.unbenchmarkDialog = this.modalService.open(content, {
       backdrop: 'static',
       windowClass: 'modalCusSty',
