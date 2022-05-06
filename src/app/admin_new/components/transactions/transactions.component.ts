@@ -60,7 +60,7 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
   filter = new Filter({});
   
   private subscriptions: Subscription = new Subscription();
-  private detailsDialog: NgbModalRef | undefined = undefined;;
+  private detailsDialog: NgbModalRef | undefined = undefined;
 
   constructor(
     private modalService: NgbModal,

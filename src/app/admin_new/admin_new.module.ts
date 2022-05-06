@@ -48,6 +48,8 @@ import { AdminDetailsItemComponent } from './misc/details-item/details-item.comp
 import { AdminDateRangeComponent } from './misc/date-range/date-range.component';
 import { AdminFiatWalletDetailsComponent } from './components/wallets/fiat/fiat-wallet-details.component';
 import { AdminFiatWalletsComponent } from './components/wallets/fiat/fiat-wallets.component';
+import { AdminCryptoWalletDetailsComponent } from './components/wallets/crypto/crypto-wallet-details.component';
+import { AdminCryptoWalletsComponent } from './components/wallets/crypto/crypto-wallets.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -106,7 +108,9 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AdminTransactionsComponent,
     AdminTransactionDetailsComponent,
     AdminFiatWalletsComponent,
-    AdminFiatWalletDetailsComponent
+    AdminFiatWalletDetailsComponent,
+    AdminCryptoWalletsComponent,
+    AdminCryptoWalletDetailsComponent
   ],
   providers: [
     AdminNewGuard,

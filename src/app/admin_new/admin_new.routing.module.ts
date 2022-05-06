@@ -4,6 +4,7 @@ import { AdminNewComponent } from './admin_new.component';
 import { AdminNewGuard } from './admin_new.guard';
 import { AdminDashboardComponent } from './components/dashboard/dashboard.component';
 import { AdminTransactionsComponent } from './components/transactions/transactions.component';
+import { AdminCryptoWalletsComponent } from './components/wallets/crypto/crypto-wallets.component';
 import { AdminFiatWalletsComponent } from './components/wallets/fiat/fiat-wallets.component';
 
 const routes: Routes = [
@@ -16,11 +17,11 @@ const routes: Routes = [
         component: AdminDashboardComponent,
         data: { header: 'Dashboard' }
       },
-    //   {
-    //     path: 'settings',
-    //     component: AdminSettingsComponent,
-    //     data: { header: 'Settings' }
-    //   },
+      //   {
+      //     path: 'settings',
+      //     component: AdminSettingsComponent,
+      //     data: { header: 'Settings' }
+      //   },
       {
         path: 'transactions',
         children: [
@@ -41,31 +42,51 @@ const routes: Routes = [
           }
         ]
       },
-    //   {
-    //     path: 'customers',
-    //     children: [
-    //       {
-    //         path: ':id',
-    //         component: CustomerSingleComponent,
-    //         data: { header: 'Customer {:id}' }
-    //       },
-    //       {
-    //         path: '',
-    //         component: CustomerListComponent,
-    //         data: { header: 'Customers' }
-    //       }
-    //     ]
-    //   },
-    {
-         path: 'fiat-wallets',
-         children: [
+      //   {
+      //     path: 'customers',
+      //     children: [
+      //       {
+      //         path: ':id',
+      //         component: CustomerSingleComponent,
+      //         data: { header: 'Customer {:id}' }
+      //       },
+      //       {
+      //         path: '',
+      //         component: CustomerListComponent,
+      //         data: { header: 'Customers' }
+      //       }
+      //     ]
+      //   },
+      {
+        path: 'crypto-wallets',
+        children: [
           {
-            path: 'crypto/users/:userid',
+            path: 'users/:userid',
+            component: AdminCryptoWalletsComponent,
+            data: { header: 'Customer crypto wallets' }
+          },
+          {
+            path: 'vaults/:vaultids',
+            component: AdminCryptoWalletsComponent,
+            data: { header: 'Transaction crypto wallets' }
+          },
+          {
+            path: '',
+            component: AdminCryptoWalletsComponent,
+            data: { header: 'Wallets' }
+          },
+        ]
+      },
+      {
+        path: 'fiat-wallets',
+        children: [
+          {
+            path: 'users/:userid',
             component: AdminFiatWalletsComponent,
             data: { header: 'Customer fiat wallets' }
           },
           {
-            path: 'crypto/vaults/:vaultids',
+            path: 'vaults/:vaultids',
             component: AdminFiatWalletsComponent,
             data: { header: 'Transaction fiat wallets' }
           },
@@ -74,87 +95,87 @@ const routes: Routes = [
             component: AdminFiatWalletsComponent,
             data: { header: 'Wallets' }
           },
-         ]
-    },
-    // {
-    //      path: 'wallets',
-    //      children: [
-    //       {
-    //         path: 'crypto/users/:cryptouserid',
-    //         component: AdminWalletsComponent,
-    //         data: { header: 'Customer wallets' }
-    //       },
-    //       {
-    //         path: 'crypto/vaults/:cryptovaultids',
-    //         component: AdminWalletsComponent,
-    //         data: { header: 'Transaction wallets' }
-    //       },
-    //       {
-    //         path: '',
-    //         component: AdminWalletsComponent,
-    //         data: { header: 'Wallets' }
-    //       },
-    //      ]
-    // },
-    //   {
-    //     path: 'fees',
-    //     component: FeeListComponent,
-    //     data: { header: 'Fees' }
-    //   },
-    //   {
-    //     path: 'notifications',
-    //     component: NotificationListComponent,
-    //     data: { header: 'Notifications' }
-    //   },
-    //   {
-    //     path: 'costs',
-    //     component: CostTabListComponent,
-    //     data: { header: 'Costs' }
-    //   },
-    //   {
-    //     path: 'identification',
-    //     component: IdentificationListComponent,
-    //     data: { header: 'Identification' }
-    //   },
-    //   {
-    //     path: 'reconciliation',
-    //     component: ReconciliationComponent,
-    //     data: { header: 'Reconciliation' }
-    //   },
-    //   {
-    //     path: 'system-users',
-    //     children: [
-    //       {
-    //         path: ':id',
-    //         component: SystemUserSingleComponent,
-    //         data: { header: 'User {:id}' }
-    //       },
-    //       {
-    //         path: '',
-    //         component: SystemUserListComponent,
-    //         data: { header: 'System Users' }
-    //       }
-    //     ]
-    //   },
-    //   {
-    //     path: 'risk-center',
-    //     component: RiskAlertListComponent,
-    //     data: { header: 'Risk center' }
-    //   },
-    //   {
-    //     path: 'widgets',
-    //     component: WidgetListComponent,
-    //     data: { header: 'Widgets' }
-    //   },
-    //   {
-    //     path: 'widgets/:userId',
-    //     component: WidgetListComponent,
-    //     data: { header: 'Widgets' }
-    //   },
-    //   {
-    //     path: '**',
-    //     redirectTo: 'dashboard'
-    //   }
+        ]
+      },
+      // {
+      //      path: 'wallets',
+      //      children: [
+      //       {
+      //         path: 'crypto/users/:cryptouserid',
+      //         component: AdminWalletsComponent,
+      //         data: { header: 'Customer wallets' }
+      //       },
+      //       {
+      //         path: 'crypto/vaults/:cryptovaultids',
+      //         component: AdminWalletsComponent,
+      //         data: { header: 'Transaction wallets' }
+      //       },
+      //       {
+      //         path: '',
+      //         component: AdminWalletsComponent,
+      //         data: { header: 'Wallets' }
+      //       },
+      //      ]
+      // },
+      //   {
+      //     path: 'fees',
+      //     component: FeeListComponent,
+      //     data: { header: 'Fees' }
+      //   },
+      //   {
+      //     path: 'notifications',
+      //     component: NotificationListComponent,
+      //     data: { header: 'Notifications' }
+      //   },
+      //   {
+      //     path: 'costs',
+      //     component: CostTabListComponent,
+      //     data: { header: 'Costs' }
+      //   },
+      //   {
+      //     path: 'identification',
+      //     component: IdentificationListComponent,
+      //     data: { header: 'Identification' }
+      //   },
+      //   {
+      //     path: 'reconciliation',
+      //     component: ReconciliationComponent,
+      //     data: { header: 'Reconciliation' }
+      //   },
+      //   {
+      //     path: 'system-users',
+      //     children: [
+      //       {
+      //         path: ':id',
+      //         component: SystemUserSingleComponent,
+      //         data: { header: 'User {:id}' }
+      //       },
+      //       {
+      //         path: '',
+      //         component: SystemUserListComponent,
+      //         data: { header: 'System Users' }
+      //       }
+      //     ]
+      //   },
+      //   {
+      //     path: 'risk-center',
+      //     component: RiskAlertListComponent,
+      //     data: { header: 'Risk center' }
+      //   },
+      //   {
+      //     path: 'widgets',
+      //     component: WidgetListComponent,
+      //     data: { header: 'Widgets' }
+      //   },
+      //   {
+      //     path: 'widgets/:userId',
+      //     component: WidgetListComponent,
+      //     data: { header: 'Widgets' }
+      //   },
+      //   {
+      //     path: '**',
+      //     redirectTo: 'dashboard'
+      //   }
     ],
     canActivate: [AdminNewGuard]
   },
@@ -162,7 +183,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [ RouterModule.forChild(routes) ],
-  exports: [ RouterModule ]
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
 })
-export class AdminNewRoutingModule {}
+export class AdminNewRoutingModule { }
