@@ -41,7 +41,6 @@ import { AdminDashboardComponent } from './components/dashboard/dashboard.compon
 import { AdminSwitcherComponent } from './layout/switcher/switcher.component';
 import { AdminTransactionsComponent } from './components/transactions/transactions.component';
 import { AdminPageHeaderComponent } from './layout/page-header/page-header.component';
-import { AdminTransactionTableComponent } from './components/transactions/transaction-table.component';
 import { AdminDataService } from '../admin_old/services/admin-data.service';
 import { AdminTransactionDetailsComponent } from './components/transactions/transaction-details.component';
 import { AdminFilterComponent } from './misc/filter/filter.component';
@@ -103,7 +102,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AdminFilterComponent,
     AdminDashboardComponent,
     AdminTransactionsComponent,
-    AdminTransactionTableComponent,
     AdminTransactionDetailsComponent
   ],
   providers: [

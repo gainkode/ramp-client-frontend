@@ -316,3 +316,133 @@
     }
   }
 }
+
+.data-table {
+  flex: 1 1 0;
+  overflow: auto;
+
+  .mat-table {
+    display: table;
+    min-width: 100%;
+
+    tr {
+      height: 32px;
+      line-height: 32px;
+
+      &.mat-header-row {
+        height: 40px;
+        line-height: 40px;
+      }
+    }
+
+    th.mat-header-cell {
+      padding: 0 4px 0 4px;
+      white-space: nowrap;
+      font-size: 16px;
+
+      &.action {
+        width: 24px;
+      }
+
+      &:first-of-type {
+        padding-left: 24px;
+      }
+
+      &:last-of-type {
+        padding-right: 24px;
+      }
+    }
+
+    td.mat-cell {
+      padding: 1px 4px 0 4px;
+      line-height: 29px;
+      white-space: nowrap;
+
+      &:first-of-type {
+        padding-left: 24px;
+      }
+
+      &:last-of-type {
+        padding-right: 24px;
+      }
+
+      > .mat-icon {
+        width: 16px;
+        height: 16px;
+        font-size: 16px;
+        vertical-align: middle;
+        position: relative;
+        top: -1px;
+      }
+    }
+  }
+
+  .row-button {
+    width: 24px;
+    height: 24px;
+    line-height: 0;
+    position: relative;
+    top: -1px;
+
+    .mat-icon {
+      font-size: 16px;
+      height: 16px;
+      width: 16px;
+      line-height: 16px;
+    }
+  }
+}
+
+mat-paginator {
+  flex: 0 0 auto;
+}
+
+table {
+  width: 100%;
+}
+
+.table-button-container {
+  padding-bottom: 16px;
+}
+
+.transaction-list-selector-column {
+  margin: 0px;
+  padding: 0px 8px;
+}
+
+.transaction-list-data-column {
+  margin: 0px;
+  padding: 0px;
+}
+
+.transaction-list-column-white {
+  background-color: white;
+}
+
+.transaction-list-column-grey {
+  background-color: rgb(235, 235, 235);
+}
+
+.transaction-list-column-blue {
+  background-color: rgb(191, 224, 235);
+}
+
+.transaction-list-column-orange {
+  background-color: rgb(255, 229, 206);
+}
+
+.transaction-list-column-red {
+  background-color: rgb(253, 212, 219);
+}
+
+.transaction-list-column-purple {
+  background-color: rgb(230, 185, 230);
+}
+
+.transaction-list-column-green {
+  background-color: rgb(182, 245, 182);
+}
+
+.transaction-list-column-yellow {
+  background-color: lightyellow;
+}
