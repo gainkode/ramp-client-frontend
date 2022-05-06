@@ -405,44 +405,19 @@ table {
   padding-bottom: 16px;
 }
 
-.transaction-list-selector-column {
+.wallet-list-selector-column {
   margin: 0px;
   padding: 0px 8px;
 }
 
-.transaction-list-data-column {
+.wallet-list-data-column {
   margin: 0px;
   padding: 0px;
 }
 
-.transaction-list-column-white {
-  background-color: white;
-}
-
-.transaction-list-column-grey {
-  background-color: rgb(235, 235, 235);
-}
-
-.transaction-list-column-blue {
-  background-color: rgb(191, 224, 235);
-}
-
-.transaction-list-column-orange {
-  background-color: rgb(255, 229, 206);
-}
-
-.transaction-list-column-red {
-  background-color: rgb(253, 212, 219);
-}
-
-.transaction-list-column-purple {
-  background-color: rgb(230, 185, 230);
-}
-
-.transaction-list-column-green {
-  background-color: rgb(182, 245, 182);
-}
-
-.transaction-list-column-yellow {
-  background-color: lightyellow;
+.ng-pagination-nav-icons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 12px;
 }

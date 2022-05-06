@@ -53,7 +53,7 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
   transactions: TransactionItemFull[] = [];
   userStatuses: TransactionStatusDescriptorMap[] = [];
   currencyOptions: CurrencyView[] = [];
-  pageSize = 25;
+  pageSize = 50;
   pageIndex = 0;
   sortedField = 'created';
   sortedDesc = true;
@@ -121,11 +121,9 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
     this.loadList();
   }
 
-  handlePage(event: PageEvent): PageEvent {
-    this.pageSize = event.pageSize;
-    this.pageIndex = event.pageIndex;
+  handlePage(index: number): void {
+    this.pageIndex = index - 1;
     this.loadList();
-    return event;
   }
 
   toggleDetails(transaction: TransactionItemFull): void {

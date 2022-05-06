@@ -446,3 +446,10 @@ table {
 .transaction-list-column-yellow {
   background-color: lightyellow;
 }
+
+.ng-pagination-nav-icons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 12px;
+}

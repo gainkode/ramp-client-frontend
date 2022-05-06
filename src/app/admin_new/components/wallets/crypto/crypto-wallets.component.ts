@@ -32,7 +32,7 @@ export class AdminCryptoWalletsComponent implements OnInit, OnDestroy, AfterView
   selectedWallet?: WalletItem;
   walletCount = 0;
   wallets: WalletItem[] = [];
-  pageSize = 25;
+  pageSize = 50;
   pageIndex = 0;
   sortedField = 'address';
   sortedDesc = true;
@@ -97,11 +97,9 @@ export class AdminCryptoWalletsComponent implements OnInit, OnDestroy, AfterView
     this.loadWallets();
   }
 
-  handlePage(event: PageEvent): PageEvent {
-    this.pageSize = event.pageSize;
-    this.pageIndex = event.pageIndex;
+  handlePage(index: number): void {
+    this.pageIndex = index - 1;
     this.loadWallets();
-    return event;
   }
 
   toggleDetails(wallet: WalletItem): void {

@@ -31,7 +31,7 @@ export class AdminFiatWalletsComponent implements OnInit, OnDestroy, AfterViewIn
   selectedWallet?: FiatWalletItem;
   walletCount = 0;
   wallets: FiatWalletItem[] = [];
-  pageSize = 25;
+  pageSize = 50;
   pageIndex = 0;
   sortedField = 'created';
   sortedDesc = true;
@@ -96,11 +96,9 @@ export class AdminFiatWalletsComponent implements OnInit, OnDestroy, AfterViewIn
     this.loadWallets();
   }
 
-  handlePage(event: PageEvent): PageEvent {
-    this.pageSize = event.pageSize;
-    this.pageIndex = event.pageIndex;
+  handlePage(index: number): void {
+    this.pageIndex = index - 1;
     this.loadWallets();
-    return event;
   }
 
   toggleDetails(wallet: FiatWalletItem): void {

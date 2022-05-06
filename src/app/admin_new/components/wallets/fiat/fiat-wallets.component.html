@@ -61,9 +61,32 @@
             </mat-table>
           </div>
 
-          <mat-paginator [length]="walletCount" [pageSize]="pageSize" [pageSizeOptions]="[25, 50, 100]"
-            showFirstLastButtons (page)="handlePage($event)">
-          </mat-paginator>
+          <div *ngIf="walletCount > pageSize" class="card card-body border shadow-none">
+            <ngb-pagination class="d-flex justify-content-center"
+              [collectionSize]="walletCount" [pageSize]="pageSize" [boundaryLinks]="true" [maxSize]="10"
+              aria-label="Table pagination" (pageChange)="handlePage($event)">
+              <ng-template ngbPaginationFirst>
+                <div class="ng-pagination-nav-icons">
+                  <i class="material-icons">first_page</i>
+                </div>
+              </ng-template>
+              <ng-template ngbPaginationPrevious>
+                <div class="ng-pagination-nav-icons">
+                  <i class="material-icons">keyboard_arrow_left</i>
+                </div>
+              </ng-template>
+              <ng-template ngbPaginationNext>
+                <div class="ng-pagination-nav-icons">
+                  <i class="material-icons">keyboard_arrow_right</i>
+                </div>
+              </ng-template>
+              <ng-template ngbPaginationLast>
+                <div class="ng-pagination-nav-icons">
+                  <i class="material-icons">last_page</i>
+                </div>
+              </ng-template>
+            </ngb-pagination>
+          </div>
 
           <ng-template #details_content let-modal>
             <div class="modal-header">
