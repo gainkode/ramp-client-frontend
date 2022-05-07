@@ -1,0 +1,275 @@
+<app-admin-page-header [title]="'Customers'" [items]="['Home', 'Users']" [active_item]="'Customer'">
+</app-admin-page-header>
+
+<div class="row row-sm">
+  <div class="col-xl-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="table-responsive">
+          <div class="table-button-container">
+            <button (click)="sendMessage()" class="btn btn-outline-secondary me-2" [disabled]="!selected">
+              Send message
+            </button>
+            <!-- <button (click)="export(export_content)" class="btn btn-outline-secondary">
+              Export
+            </button> -->
+          </div>
+
+          <app-admin-filter [fields]="filterFields" [filterData]="filter" (filter)="handleFilterApplied($event)">
+          </app-admin-filter>
+
+          <mat-progress-bar *ngIf="inProgress" color="accent" mode="indeterminate"></mat-progress-bar>
+
+          <div class="data-table">
+            <mat-table matSort [matSortActive]="sortedField" matSortDirection="desc" matSortDisableClear
+              [dataSource]="customers">
+              <!-- Details Column -->
+              <ng-container matColumnDef="details" sticky>
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element" [ngClass]="element.customerListSelectorColumnStyle">
+                  <input style="margin-right: 4px;" [checked]="element.selected" type="checkbox"
+                    (change)="onCustomerSelected(element)">
+                  <button mat-icon-button class="row-button" (click)="showDetails(element, details_content)"
+                    [attr.aria-label]="'Customer details'" [attr.aria-pressed]="!!selectedCustomer"
+                    matTooltip="Customer details" matTooltipClass="info-tooltip">
+                    <i class="material-icons" style="font-size: 20px;">
+                      wysiwyg
+                    </i>
+                  </button>
+                  <button mat-icon-button class="row-button" (click)="showTransactions(element.id)"
+                    [attr.aria-label]="'Customer transactions'" matTooltip="Customer\'s transactions"
+                    matTooltipClass="info-tooltip">
+                    <mat-icon class="details-icon">
+                      compare_arrows
+                    </mat-icon>
+                  </button>
+                  <button mat-icon-button class="row-button" (click)="showWallets(element.id)"
+                    [attr.aria-label]="'Customer wallets'" matTooltip="Customer\'s wallets"
+                    matTooltipClass="info-tooltip">
+                    <mat-icon class="details-icon">
+                      account_balance_wallet
+                    </mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+              <!-- ID Column -->
+              <ng-container matColumnDef="referralCode">
+                <th mat-header-cell *matHeaderCellDef>
+                  Customer ID
+                </th>
+                <td mat-cell *matCellDef="let element" [ngClass]="element.customerListDataColumnStyle">
+                  {{element.referralCode}}
+                </td>
+              </ng-container>
+
+              <!-- First Name Column -->
+              <ng-container matColumnDef="firstName">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                  First name
+                </th>
+                <td mat-cell *matCellDef="let element" [ngClass]="element.customerListDataColumnStyle">
+                  {{element.fullFirstName}}
+                </td>
+              </ng-container>
+
+              <!-- Last name Column -->
+              <ng-container matColumnDef="lastName">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                  Last name
+                </th>
+                <td mat-cell *matCellDef="let element" [ngClass]="element.customerListDataColumnStyle">
+                  {{element.lastName}}
+                </td>
+              </ng-container>
+
+              <!-- Email Column -->
+              <ng-container matColumnDef="email">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                  Email
+                </th>
+                <td mat-cell *matCellDef="let element" [ngClass]="element.customerListDataColumnStyle">
+                  {{element.email}}
+                </td>
+              </ng-container>
+
+              <!-- Status Column -->
+              <ng-container matColumnDef="accountStatus">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                  Status
+                </th>
+                <td mat-cell *matCellDef="let element" [ngClass]="element.customerListDataColumnStyle">
+                  {{element.accountStatus}}
+                </td>
+              </ng-container>
+
+              <!-- KYC Column -->
+              <ng-container matColumnDef="kycStatus">
+                <th mat-header-cell *matHeaderCellDef>
+                  DocsCheck
+                </th>
+                <td mat-cell *matCellDef="let element" [ngClass]="element.customerListDataColumnStyle">
+                  {{element.kycStatus}}
+                </td>
+              </ng-container>
+
+              <!-- widgetId Column -->
+              <ng-container matColumnDef="widgetId">
+                <th mat-header-cell *matHeaderCellDef>
+                  Widget ID
+                </th>
+                <td mat-cell *matCellDef="let element" [ngClass]="element.customerListDataColumnStyle">
+                  {{element.widgetId}}
+                </td>
+              </ng-container>
+
+              <!-- totalBought Column -->
+              <ng-container matColumnDef="totalBought">
+                <th mat-header-cell *matHeaderCellDef>
+                  Total Buy
+                </th>
+                <td mat-cell *matCellDef="let element" [ngClass]="element.customerListDataColumnStyle">
+                  {{element.totalBought}}
+                </td>
+              </ng-container>
+
+              <!-- totalSold Column -->
+              <ng-container matColumnDef="totalSold">
+                <th mat-header-cell *matHeaderCellDef>
+                  Total Sell
+                </th>
+                <td mat-cell *matCellDef="let element" [ngClass]="element.customerListDataColumnStyle">
+                  {{element.totalSold}}
+                </td>
+              </ng-container>
+
+              <!-- totalSent Column -->
+              <ng-container matColumnDef="totalSent">
+                <th mat-header-cell *matHeaderCellDef>
+                  Total Send
+                </th>
+                <td mat-cell *matCellDef="let element" [ngClass]="element.customerListDataColumnStyle">
+                  {{element.totalSent}}
+                </td>
+              </ng-container>
+
+              <!-- totalReceived Column -->
+              <ng-container matColumnDef="totalReceived">
+                <th mat-header-cell *matHeaderCellDef>
+                  Total Receive
+                </th>
+                <td mat-cell *matCellDef="let element" [ngClass]="element.customerListDataColumnStyle">
+                  {{element.totalReceived}}
+                </td>
+              </ng-container>
+
+              <!-- Registered Column -->
+              <ng-container matColumnDef="created">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                  Registered
+                </th>
+                <td mat-cell *matCellDef="let element" [ngClass]="element.customerListDataColumnStyle">
+                  {{element.created}}
+                </td>
+              </ng-container>
+
+              <!-- Country Column -->
+              <ng-container matColumnDef="country">
+                <th mat-header-cell *matHeaderCellDef>
+                  Country
+                </th>
+                <td mat-cell *matCellDef="let element" [ngClass]="element.customerListDataColumnStyle">
+                  {{element.country?.title}}
+                </td>
+              </ng-container>
+
+              <!-- Phone Column -->
+              <ng-container matColumnDef="phone">
+                <th mat-header-cell *matHeaderCellDef>
+                  Phone
+                </th>
+                <td mat-cell *matCellDef="let element" [ngClass]="element.customerListDataColumnStyle">
+                  {{element.phone}}
+                </td>
+              </ng-container>
+
+              <!-- Risk Column -->
+              <ng-container matColumnDef="risk">
+                <th mat-header-cell *matHeaderCellDef>
+                  Risk Level
+                </th>
+                <td mat-cell *matCellDef="let element" [ngClass]="element.customerListDataColumnStyle">
+                  {{element.risk}}
+                </td>
+              </ng-container>
+
+              <!-- User ID Column -->
+              <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef>ID</th>
+                <td mat-cell *matCellDef="let element" [ngClass]="element.customerListDataColumnStyle"> {{element.id}}
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </mat-table>
+          </div>
+
+          <div *ngIf="customerCount > pageSize" class="card card-body border shadow-none">
+            <ngb-pagination class="d-flex justify-content-center" [collectionSize]="customerCount" [pageSize]="pageSize"
+              [boundaryLinks]="true" [maxSize]="10" aria-label="Table pagination" (pageChange)="handlePage($event)">
+              <ng-template ngbPaginationFirst>
+                <div class="ng-pagination-nav-icons">
+                  <i class="material-icons">first_page</i>
+                </div>
+              </ng-template>
+              <ng-template ngbPaginationPrevious>
+                <div class="ng-pagination-nav-icons">
+                  <i class="material-icons">keyboard_arrow_left</i>
+                </div>
+              </ng-template>
+              <ng-template ngbPaginationNext>
+                <div class="ng-pagination-nav-icons">
+                  <i class="material-icons">keyboard_arrow_right</i>
+                </div>
+              </ng-template>
+              <ng-template ngbPaginationLast>
+                <div class="ng-pagination-nav-icons">
+                  <i class="material-icons">last_page</i>
+                </div>
+              </ng-template>
+            </ngb-pagination>
+          </div>
+
+          <ng-template #details_content let-modal>
+            <div class="modal-header">
+              <h5 class="modal-title">Customer details</h5>
+              <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <!-- <app-admin-customers-details [permission]="permission" [wallet]="selectedWallet"
+                (save)="onSaveCustomer()" (close)="modal.dismiss('Close')">
+              </app-admin-customers-details> -->
+            </div>
+          </ng-template>
+
+          <ng-template #message_content let-modal>
+            <div class="modal-header">
+              <h5 class="modal-title">Send message to selected users</h5>
+              <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <!-- <app-admin-customers-details [permission]="permission" [wallet]="selectedWallet"
+                (save)="onSaveCustomer()" (close)="modal.dismiss('Close')">
+              </app-admin-customers-details> -->
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

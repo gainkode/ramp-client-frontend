@@ -4,6 +4,7 @@ import { AdminNewComponent } from './admin_new.component';
 import { AdminNewGuard } from './admin_new.guard';
 import { AdminDashboardComponent } from './components/dashboard/dashboard.component';
 import { AdminTransactionsComponent } from './components/transactions/transactions.component';
+import { AdminCustomersComponent } from './components/users/customers/customers.component';
 import { AdminCryptoWalletsComponent } from './components/wallets/crypto/crypto-wallets.component';
 import { AdminFiatWalletsComponent } from './components/wallets/fiat/fiat-wallets.component';
 
@@ -37,21 +38,21 @@ const routes: Routes = [
           }
         ]
       },
-      //   {
-      //     path: 'customers',
-      //     children: [
-      //       {
-      //         path: ':id',
-      //         component: CustomerSingleComponent,
-      //         data: { header: 'Customer {:id}' }
-      //       },
-      //       {
-      //         path: '',
-      //         component: CustomerListComponent,
-      //         data: { header: 'Customers' }
-      //       }
-      //     ]
-      //   },
+      {
+        path: 'customers',
+        children: [
+          {
+            path: ':id',
+            component: AdminCustomersComponent,
+            data: { header: 'Customer {:id}' }
+          },
+          {
+            path: '',
+            component: AdminCustomersComponent,
+            data: { header: 'Customers' }
+          }
+        ]
+      },
       {
         path: 'crypto-wallets',
         children: [

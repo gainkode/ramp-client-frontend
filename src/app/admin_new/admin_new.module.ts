@@ -50,6 +50,8 @@ import { AdminFiatWalletDetailsComponent } from './components/wallets/fiat/fiat-
 import { AdminFiatWalletsComponent } from './components/wallets/fiat/fiat-wallets.component';
 import { AdminCryptoWalletDetailsComponent } from './components/wallets/crypto/crypto-wallet-details.component';
 import { AdminCryptoWalletsComponent } from './components/wallets/crypto/crypto-wallets.component';
+import { AdminCustomersComponent } from './components/users/customers/customers.component';
+import { AdminMessageDialogComponent } from './components/users/send-message/send-message.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -110,7 +112,9 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AdminFiatWalletsComponent,
     AdminFiatWalletDetailsComponent,
     AdminCryptoWalletsComponent,
-    AdminCryptoWalletDetailsComponent
+    AdminCryptoWalletDetailsComponent,
+    AdminCustomersComponent,
+    AdminMessageDialogComponent
   ],
   providers: [
     AdminNewGuard,
