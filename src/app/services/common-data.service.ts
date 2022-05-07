@@ -17,6 +17,7 @@ const GET_SETTINGS_CURRENCY = gql`
           validateAsSymbol
           fiat
           ethFlag
+          trxFlag
           disabled
           displaySymbol
         }

@@ -2296,6 +2296,7 @@ export type SettingsCurrency = {
   defaultCreditCardProvider?: Maybe<Scalars['String']>;
   explorerLink?: Maybe<Scalars['String']>;
   ethFlag?: Maybe<Scalars['Boolean']>;
+  trxFlag?: Maybe<Scalars['Boolean']>;
   disabled?: Maybe<Scalars['String']>;
   displaySymbol?: Maybe<Scalars['String']>;
 };

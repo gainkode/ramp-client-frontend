@@ -37,6 +37,7 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
     selectedCurrency: CurrencyView | undefined = undefined;
     currencyInit = false;
     ethFlag = false;
+    trxFlag = false;
     ethFlagDisabled = false;
     ethExisting = false;
     createForm = this.formBuilder.group({
@@ -69,11 +70,12 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
                 this.currencyInit = true;
                 this.selectedCurrency = this.cryptoList.find(x => x.id === val);
                 this.ethFlag = (this.selectedCurrency?.ethFlag === true);
+                this.trxFlag = (this.selectedCurrency?.trxFlag === true);
                 this.useExistingEthWalletField?.setValue(false);
                 this.useExistingEthWalletField?.updateValueAndValidity();
                 this.ethExisting = false;
                 this.ethReadyWallets = [];
-                if (this.ethFlag) {
+                if (this.ethFlag || this.trxFlag) {
                     this.ethFlagDisabled = true;
                     if (!this.walletsLoaded) {
                         this.loadWallets();
@@ -140,14 +142,23 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
     private filterWallets() {
         this.ethReadyWallets = [];
         const c = this.currencyField?.value as string;
+        let filterAsset = '';
+        if (this.ethFlag) {
+            filterAsset = 'ETH';
+        } else if (this.trxFlag) {
+            filterAsset = 'TRX';
+        }
         this.wallets.forEach(val => {
-            if (val.asset.startsWith('ETH')) {
+            if (val.asset.startsWith(filterAsset)) {
                 const check = this.wallets.find(x => x.vaultOriginalId === val.vaultOriginalId && x.asset === c);
                 if (!check) {
                     this.ethReadyWallets.push(val);
                 }
             }
         });
+        if (this.ethReadyWallets.length > 0) {
+            this.useExistingEthWalletField?.setValue(true);
+        }
         this.ethFlagDisabled = false;
     }
 
