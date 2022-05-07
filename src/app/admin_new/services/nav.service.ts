@@ -93,10 +93,10 @@ export class NavService implements OnDestroy {
 			path: '/admin/transactions', icon: 'compare_arrows', title: 'Transactions', type: 'link'
 		},
 		{
-			path: '/admin/customers', icon: 'shopping_bag', title: 'Customers', type: 'link'
-		},
-		{
-			path: '/admin/system-users', icon: 'account_box', title: 'System users', type: 'link'
+			title: 'Users', icon: 'account_box', type: 'sub', active: false, children: [
+				{ path: '/admin/customers', title: 'Customers', type: 'link' },
+				{ path: '/admin/system-users', title: 'System users', type: 'link' }
+			]
 		},
 		{
 			title: 'Wallets', icon: 'wallet_membership', type: 'sub', active: false, children: [
