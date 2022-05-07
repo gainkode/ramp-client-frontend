@@ -1,7 +1,14 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
 import { CommonTargetValue } from 'src/app/model/common.model';
 import { UserNotificationLevel } from 'src/app/model/generated-models';
+
+export class CustomerMessageData {
+  level: UserNotificationLevel = UserNotificationLevel.Info;
+  title = '';
+  text = '';
+}
 
 @Component({
   selector: 'app-admin-user-message-dialog',
@@ -9,12 +16,13 @@ import { UserNotificationLevel } from 'src/app/model/generated-models';
   styleUrls: ['send-message.component.scss', '../../../assets/scss/_validation.scss']
 })
 export class AdminMessageDialogComponent {
+  @Input() errorMessage = '';
+  @Input() inProgress = false;
+  @Output() send = new EventEmitter<CustomerMessageData>();
   @Output() close = new EventEmitter();
 
   submitted = false;
-  errorMessage = '';
-  inProgress = false;
-
+  
   messageForm = this.formBuilder.group({
     level: [UserNotificationLevel.Info, { validators: [Validators.required], updateOn: 'change' }],
     title: ['', { validators: [Validators.required], updateOn: 'change' }],
@@ -47,7 +55,11 @@ export class AdminMessageDialogComponent {
   onSubmit(): void {
     this.submitted = true;
     if (this.messageForm.valid) {
-      this.close.emit();
+      this.send.emit({
+        level: this.levelField?.value ?? UserNotificationLevel.Info,
+        title: this.titleField?.value ?? '',
+        text: this.textField?.value ?? ''
+      });
     }
   }
 

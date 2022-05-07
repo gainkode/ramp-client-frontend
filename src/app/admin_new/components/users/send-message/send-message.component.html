@@ -19,8 +19,9 @@
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             Message title
           </label>
-          <input class="form-control" [ngClass]="{'has-error': !titleField?.valid}" type="text" formControlName="title"
-            required>
+          <input class="form-control"
+            [ngClass]="{'has-error': (titleField?.touched || submitted) && !titleField?.valid}" type="text"
+            formControlName="title" required>
           <div *ngIf="(titleField?.touched || submitted) && (titleField?.errors?.['required'])" class="tx-danger">
             <small>
               Title is required
@@ -31,8 +32,9 @@
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             Message text
           </label>
-          <input class="form-control" [ngClass]="{'has-error': !textField?.valid}" type="text" formControlName="text"
-            required>
+          <textarea class="form-control"
+            [ngClass]="{'has-error': (textField?.touched || submitted) && !textField?.valid}" style="resize: none;"
+            rows="3" formControlName="text" required></textarea>
           <div *ngIf="(textField?.touched || submitted) && (textField?.errors?.['required'])" class="tx-danger">
             <small>
               Message text is required

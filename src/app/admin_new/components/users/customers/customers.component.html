@@ -7,7 +7,8 @@
       <div class="card-body">
         <div class="table-responsive">
           <div class="table-button-container">
-            <button (click)="sendMessage()" class="btn btn-outline-secondary me-2" [disabled]="!selected">
+            <button (click)="sendMessage(message_content)" class="btn btn-outline-secondary me-2"
+              [disabled]="!selected">
               Send message
             </button>
             <!-- <button (click)="export(export_content)" class="btn btn-outline-secondary">
@@ -263,9 +264,9 @@
               </button>
             </div>
             <div class="modal-body">
-              <!-- <app-admin-customers-details [permission]="permission" [wallet]="selectedWallet"
-                (save)="onSaveCustomer()" (close)="modal.dismiss('Close')">
-              </app-admin-customers-details> -->
+              <app-admin-user-message-dialog [errorMessage]="sendMessageError" [inProgress]="sendMessageInProgress"
+                (send)="sendMessageStart($event)" (close)="modal.dismiss('Close')">
+              </app-admin-user-message-dialog>
             </div>
           </ng-template>
         </div>

@@ -11,6 +11,7 @@ import { CurrencyView } from 'src/app/model/payment.model';
 import { UserItem } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
+import { CustomerMessageData } from '../send-message/send-message.component';
 
 @Component({
   selector: 'app-admin-customers',
@@ -53,6 +54,8 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
     'risk',
     'id'
   ];
+  sendMessageInProgress = false;
+  sendMessageError = '';
   inProgress = false;
   permission = 0;
   selectedCustomer?: UserItem;
@@ -66,9 +69,10 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
   sortedDesc = true;
   filter = new Filter({});
   roleIds: string[] = [];
-  
+
   private subscriptions: Subscription = new Subscription();
   private detailsDialog: NgbModalRef | undefined = undefined;
+  private messageDialog: NgbModalRef | undefined = undefined;
 
   constructor(
     private modalService: NgbModal,
@@ -191,8 +195,34 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
     }
   }
 
-  sendMessage(): void {
-    
+  sendMessage(content: any): void {
+    this.messageDialog = this.modalService.open(content, {
+      backdrop: 'static',
+      windowClass: 'modalCusSty',
+    });
+  }
+
+  sendMessageStart(data: CustomerMessageData): void {
+    this.sendMessageInProgress = true;
+    this.sendMessageError = '';
+    const ids = this.customers.filter(x => x.selected === true).map(val => val.id);
+    const requestData$ = this.adminService.sendAdminNotification(ids, data.level, data.title, data.text);
+    this.subscriptions.add(
+      requestData$.subscribe(({ result }) => {
+        this.sendMessageInProgress = false;
+        this.selected = false;
+        this.customers.forEach(x => x.selected = false);
+        if (this.messageDialog) {
+          this.messageDialog.close();
+        }
+      }, (error) => {
+        this.sendMessageInProgress = false;
+        this.sendMessageError = error;
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
+      })
+    );
   }
 
   handleFilterApplied(filter: Filter): void {
