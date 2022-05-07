@@ -127,7 +127,7 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
             const rawTiers = [...tiersData.list];
             const sortedTiers = rawTiers.sort((a, b) => this.tierSortHandler(a, b));
             const currentTierId = this.auth.user?.kycTierId;
-            let previousLevelPassed = true;
+            let previousLevelPassed = false;
             this.tiers = sortedTiers.map(val => {
                 const defaultDescription = 'Start verification process to increase your limit up to this level.';
                 const unlimitVal = (val.amount === undefined || val.amount === null);
