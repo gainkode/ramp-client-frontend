@@ -158,6 +158,7 @@ export class CurrencyView {
     validateAsSymbol: string | null = null;
     fiat = false;
     ethFlag = false;
+    trxFlag = false;
 
     constructor(data: SettingsCurrency) {
         this.id = data.symbol;
@@ -167,6 +168,7 @@ export class CurrencyView {
         }
         this.name = data.name ?? '';
         this.ethFlag = data.ethFlag ?? false;
+        this.trxFlag = data.trxFlag ?? false;
         this.precision = data.precision;
         this.minAmount = data.minAmount;
         this.rateFactor = data.rateFactor;
