@@ -11,9 +11,9 @@
               [disabled]="!selected">
               Send message
             </button>
-            <!-- <button (click)="export(export_content)" class="btn btn-outline-secondary">
+            <button (click)="export(export_content)" class="btn btn-outline-secondary">
               Export
-            </button> -->
+            </button>
           </div>
 
           <app-admin-filter [fields]="filterFields" [filterData]="filter" (filter)="handleFilterApplied($event)">
@@ -267,6 +267,25 @@
               <app-admin-user-message-dialog [errorMessage]="sendMessageError" [inProgress]="sendMessageInProgress"
                 (send)="sendMessageStart($event)" (close)="modal.dismiss('Close')">
               </app-admin-user-message-dialog>
+            </div>
+          </ng-template>
+
+          <ng-template #export_content let-modal>
+            <div class="modal-header">
+              <h5 class="modal-title">Export</h5>
+              <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <h4 style="text-align: center;">
+                Exported list of customers has been sent to your email.
+              </h4>
+              <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
+                <button class="btn btn-primary pd-x-50 mg-t-5" (click)="modal.dismiss('OK')">
+                  OK
+                </button>
+              </div>
             </div>
           </ng-template>
         </div>
