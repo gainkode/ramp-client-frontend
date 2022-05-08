@@ -53,14 +53,14 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
                 button: flow
             }
         });
-        this.pSubscriptions.add(
-            dialogRef.afterClosed().subscribe(result => {
-                if (dialogRef.componentInstance.complete) {
-                    this.auth.logout();
-                    this.router.navigateByUrl('/');
-                }
-            })
-        );
+        // this.pSubscriptions.add(
+        //     dialogRef.afterClosed().subscribe(result => {
+        //         if (dialogRef.componentInstance.complete) {
+        //             this.auth.logout();
+        //             this.router.navigateByUrl('/');
+        //         }
+        //     })
+        // );
     }
 
     private loadTransactionsTotal(): void {
