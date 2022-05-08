@@ -158,6 +158,7 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
         });
         if (this.ethReadyWallets.length > 0) {
             this.useExistingEthWalletField?.setValue(true);
+            this.ethWalletField?.setValue(this.ethReadyWallets[0].id);
         }
         this.ethFlagDisabled = false;
     }
