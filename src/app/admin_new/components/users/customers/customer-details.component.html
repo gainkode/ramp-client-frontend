@@ -13,6 +13,8 @@
         </app-admin-details-item>
         <app-admin-details-item label="Widget Code" [value]="userData?.widgetCode">
         </app-admin-details-item>
+        <app-admin-details-item label="Widgets" [value]="'Related widgets'" [linkUrl]="'/admin/widgets/'+ userData?.id">
+        </app-admin-details-item>
         <app-admin-details-item label="Affiliate" [value]="userData?.affiliateId">
         </app-admin-details-item>
         <app-admin-details-item label="Affiliate Code" [value]="userData?.affiliateCode">
@@ -44,7 +46,8 @@
           <input class="form-control"
             [ngClass]="{'has-error': (dataForm.controls.firstName.touched || submitted) && !dataForm.controls.firstName.valid}"
             type="text" formControlName="firstName" maxlength="75" required />
-          <div *ngIf="(dataForm.controls.firstName.touched || submitted) && (dataForm.controls.firstName.errors?.['required'])"
+          <div
+            *ngIf="(dataForm.controls.firstName.touched || submitted) && (dataForm.controls.firstName.errors?.['required'])"
             class="tx-danger">
             <small>
               Please specify the company name
@@ -59,7 +62,8 @@
           <input class="form-control"
             [ngClass]="{'has-error': (dataForm.controls.firstName.touched || submitted) && !dataForm.controls.firstName.valid}"
             type="text" formControlName="firstName" maxlength="50" required />
-          <div *ngIf="(dataForm.controls.firstName.touched || submitted) && (dataForm.controls.firstName.errors?.['required'])"
+          <div
+            *ngIf="(dataForm.controls.firstName.touched || submitted) && (dataForm.controls.firstName.errors?.['required'])"
             class="tx-danger">
             <small>
               Please specify the customer name
@@ -74,52 +78,31 @@
           <input class="form-control"
             [ngClass]="{'has-error': (dataForm.controls.lastName.touched || submitted) && !dataForm.controls.lastName.valid}"
             type="text" formControlName="lastName" maxlength="50" />
-          <div *ngIf="(dataForm.controls.lastName.touched || submitted) && (dataForm.controls.lastName.errors?.['required'])"
+          <div
+            *ngIf="(dataForm.controls.lastName.touched || submitted) && (dataForm.controls.lastName.errors?.['required'])"
             class="tx-danger">
             <small>
               Please specify the customer name
             </small>
           </div>
         </div>
-
-
-
-
-
         <!-- Birthday -->
-        <!-- <app-admin-details-item label="Age" [value]="userData?.age"></app-admin-details-item>
-        <div class="form-group" *ngIf="userType===USER_TYPE.Personal">
+        <app-admin-details-item label="Age" [value]="userData?.age"></app-admin-details-item>
+        <div class="form-group" *ngIf="userData?.userType?.id===USER_TYPE.Personal">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             Birthday
           </label>
-          <input class="form-control" placeholder="yyyy-mm-dd"
-             name="dp" ngbDatepicker #d="ngbDatepicker">
-
-
-
-
-          <input #dpToDate class="form-control" placeholder="dd/mm/yyyy" name="dpToDate"
-            [value]="formatter.format(toDate)"
-            (input)="toDate = validateInput(toDate, dpToDate.value);onDateChanged(undefined)">
-
-
-          <input type="text" matInput formControlName="birthday" maxlength="10" mask="d0/M0/0000"
-            placeholder="DD/MM/YYYY" [dropSpecialCharacters]="false" />
-
-
-
-            <div *ngIf="(form.controls.birthday.touched || submitted) && (form.controls.birthday.errors?.['required'])"
+          <input class="form-control" placeholder="dd/mm/yyyy" name="birthday_picker" [(ngModel)]="birthdayString"
+            ngbDatepicker [minDate]="minBirthdayDate" [maxDate]="maxBirthdayDate" #birthday_picker="ngbDatepicker"
+            (click)="birthday_picker.toggle()" formControlName="birthday">
+          <div
+            *ngIf="(dataForm.controls.birthday.touched || submitted) && (dataForm.controls.birthday.errors?.['required'])"
             class="tx-danger">
             <small>
               Please specify the birthday
             </small>
           </div>
         </div>
- -->
-
-
-
-
         <div style="display: flex; justify-content: flex-end;">
           <!-- <button *ngIf="permission>1" type="button" class="btn btn-outline-secondary" type="button"
             (click)="onResetPassword()">
@@ -131,66 +114,271 @@
         <h5 class="card-title mg-b-20">
           Address
         </h5>
-
-
-
-
-        <!-- Transaction status -->
-        <!-- <app-admin-details-item *ngIf="transactionType===TRANSACTION_TYPE.Receive" label="Transaction status"
-          [value]="transactionStatusName"></app-admin-details-item>
-        <div *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-group">
+        <app-admin-details-item label="Full Address" [value]="userData?.address"></app-admin-details-item>
+        <!-- Country -->
+        <div class="form-group">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            Transaction status
+            Country
           </label>
-          <ng-select [items]="transactionStatuses" bindLabel="name" bindValue="id" formControlName="transactionStatus"
+          <ng-select formControlName="country" formControlName="country" [clearable]=false [clearOnBackspace]=false
+            required>
+            <ng-option *ngFor="let country of countries" [value]="country.code3">
+              <app-dropdown-item itemValue="{{country.name}}" imageClass="country-flag-admin"
+                imageSource="assets/svg-country-flags/{{getCountryFlag(country.code2)}}">
+              </app-dropdown-item>
+            </ng-option>
+          </ng-select>
+          <div
+            *ngIf="(dataForm.controls.country.touched || submitted) && (dataForm.controls.country.errors?.['required'])"
+            class="tx-danger">
+            <small>
+              Please specify the country
+            </small>
+          </div>
+        </div>
+        <!-- Post Code -->
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Post Code
+          </label>
+          <input class="form-control" type="text" formControlName="postCode" maxlength="15" />
+        </div>
+        <!-- Town -->
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Town
+          </label>
+          <input class="form-control" type="text" formControlName="town" maxlength="50" />
+        </div>
+        <!-- Street (Line 1) -->
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Street (Line 1)
+          </label>
+          <input class="form-control" type="text" formControlName="street" maxlength="50" />
+        </div>
+        <!-- Street (Line 2) -->
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Street (Line 2)
+          </label>
+          <input class="form-control" type="text" formControlName="subStreet" maxlength="50" />
+        </div>
+        <!-- State -->
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            State
+          </label>
+          <input class="form-control" type="text" formControlName="stateName" maxlength="25" />
+        </div>
+        <!-- Building Name -->
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Building Name
+          </label>
+          <input class="form-control" type="text" formControlName="buildingName" maxlength="25" />
+        </div>
+        <!-- Building Number -->
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Building Number
+          </label>
+          <input class="form-control" type="text" formControlName="buildingNumber" maxlength="8" />
+        </div>
+        <!-- Flat Number -->
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Flat Number
+          </label>
+          <input class="form-control" type="text" formControlName="flatNumber" maxlength="8" />
+        </div>
+        <!-- Phone -->
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Phone
+          </label>
+          <input class="form-control"
+            [ngClass]="{'has-error': (dataForm.controls.phone.touched || submitted) && !dataForm.controls.phone.valid}"
+            type="text" formControlName="phone" maxlength="25" required />
+          <div *ngIf="(dataForm.controls.phone.touched || submitted) && (dataForm.controls.phone.errors?.['required'])"
+            class="tx-danger">
+            <small>
+              Please specify the phone number
+            </small>
+          </div>
+        </div>
+      </div>
+      <div class="card card-body pd-20 pd-md-40 border shadow-none">
+        <h5 class="card-title mg-b-20">
+          Payment Data
+        </h5>
+        <!-- Fiat currencies -->
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Default currency
+          </label>
+          <ng-select [items]="fiatCurrencies" bindLabel="title" bindValue="id" formControlName="fiat" [clearable]=false
+            [clearOnBackspace]=false required>
+          </ng-select>
+          <div *ngIf="(dataForm.controls.fiat.touched || submitted) && (dataForm.controls.fiat.errors?.['required'])"
+            class="tx-danger">
+            <small>
+              Please specify default fiat currency
+            </small>
+          </div>
+        </div>
+        <!-- Crypto currencies -->
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Default crypto
+          </label>
+          <ng-select [items]="cryptoCurrencies" bindLabel="title" bindValue="id" formControlName="crypto"
             [clearable]=false [clearOnBackspace]=false required>
           </ng-select>
-        </div> -->
-
+          <div
+            *ngIf="(dataForm.controls.crypto.touched || submitted) && (dataForm.controls.crypto.errors?.['required'])"
+            class="tx-danger">
+            <small>
+              Please specify default crypto currency
+            </small>
+          </div>
+        </div>
+        <!-- Totals -->
+        <app-admin-details-item label="Total Balance" [value]="totalBalance"></app-admin-details-item>
+        <app-admin-details-item label="Total Transaction Count" [value]="userData?.totalTransactionCount">
+        </app-admin-details-item>
+        <app-admin-details-item label="Avarage Transaction" [value]="userData?.avarageTransaction">
+        </app-admin-details-item>
+        <app-admin-details-item label="Total Buy Completed" [value]="userData?.totalBoughtCompletedResult">
+        </app-admin-details-item>
+        <app-admin-details-item label="Total Buy In Process" [value]="userData?.totalBoughtInProcessResult">
+        </app-admin-details-item>
+        <app-admin-details-item label="Total Sell Completed" [value]="userData?.totalSoldCompletedResult">
+        </app-admin-details-item>
+        <app-admin-details-item label="Total Sell In Process" [value]="userData?.totalSoldInProcessResult">
+        </app-admin-details-item>
+        <app-admin-details-item label="Total Send Completed" [value]="userData?.totalSentCompletedResult">
+        </app-admin-details-item>
+        <app-admin-details-item label="Total Send In Process" [value]="userData?.totalSentInProcessResult">
+        </app-admin-details-item>
+        <app-admin-details-item label="Total Receive Completed" [value]="userData?.totalReceivedCompletedResult">
+        </app-admin-details-item>
+        <app-admin-details-item label="Total Receive In Process" [value]="userData?.totalReceivedInProcessResult">
+        </app-admin-details-item>
       </div>
+      <div class="card card-body pd-20 pd-md-40 border shadow-none">
+        <h5 class="card-title mg-b-20">
+          Status
+        </h5>
+        <!-- Account status -->
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Account Status
+          </label>
+          <ng-select [items]="accountStatuses" bindLabel="name" bindValue="id" formControlName="accountStatus"
+            [clearable]=false [clearOnBackspace]=false required>
+          </ng-select>
+          <div
+            *ngIf="(dataForm.controls.accountStatus.touched || submitted) && (dataForm.controls.accountStatus.errors?.['required'])"
+            class="tx-danger">
+            <small>
+              Please specify the account status
+            </small>
+          </div>
+        </div>
+        <!-- Risks -->
+        <app-admin-details-item label="Risk codes" [value]="userData?.riskCodes"></app-admin-details-item>
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Risk Level
+          </label>
+          <ng-select [items]="riskLevels" bindLabel="name" bindValue="id" formControlName="risk" [clearable]=false
+            [clearOnBackspace]=false required>
+          </ng-select>
+          <div *ngIf="(dataForm.controls.risk.touched || submitted) && (dataForm.controls.risk.errors?.['required'])"
+            class="tx-danger">
+            <small>
+              Please specify the risk level
+            </small>
+          </div>
+        </div>
+        <!-- Level -->
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            KYC Level
+          </label>
+          <ng-select [items]="tiers" bindLabel="title" bindValue="title" formControlName="tier" [clearable]=false
+            [clearOnBackspace]=false required>
+          </ng-select>
+          <div *ngIf="(dataForm.controls.tier.touched || submitted) && (dataForm.controls.tier.errors?.['required'])"
+            class="tx-danger">
+            <small>
+              Please specify the user verification level
+            </small>
+          </div>
+        </div>
+        <app-admin-details-item label="Docs Check" [value]="userData?.kycStatus"></app-admin-details-item>
+        <app-admin-details-item label="KYC Review Date" [value]="userData?.kycReviewDate"></app-admin-details-item>
+        <app-admin-details-item label="Docs Check Date" [value]="userData?.kycStatusDate"></app-admin-details-item>
+        <app-admin-details-item label="KYC Review Comment" [value]="userData?.kycReviewComment">
+        </app-admin-details-item>
+        <app-admin-details-item label="KYC Private Comment" [value]="userData?.kycPrivateComment">
+        </app-admin-details-item>
+        <app-admin-details-item label="KYC Review Rejected Type" [value]="userData?.kycReviewRejectedType">
+        </app-admin-details-item>
+        <app-admin-details-item label="KYC Review Rejected Labels" [value]="userData?.kycReviewRejectedLabels">
+        </app-admin-details-item>
+        <app-admin-details-item label="KYC Review Result" [value]="userData?.kycReviewResult"></app-admin-details-item>
+        <app-admin-details-item label="DocsCheck Update Required" [value]="userData?.kycStatusUpdateRequired">
+        </app-admin-details-item>
+        <app-admin-details-item label="Provided documents" [value]="kycDocs"></app-admin-details-item>
+        <app-admin-details-item label="KYC Details" [value]="kycProviderLink" [linkUrl]="kycProviderLink">
+        </app-admin-details-item>
+        <app-admin-details-item label="Last updated" [value]="userData?.updated"></app-admin-details-item>
+      </div>
+
       <div *ngIf="errorMessage!==''" class="card card-body card-danger pd-20 pd-md-40 border shadow-none">
         <h4 class="card-title2 mg-b-20" style="color: brown;">
           {{errorMessage}}
         </h4>
       </div>
-      <!-- <div style="display: flex; justify-content: flex-end;">
-        <button *ngIf="permission>1 && transactionType!==TRANSACTION_TYPE.Receive"
-          class="btn btn-primary pd-x-30 me-2 mg-t-5">
+      <div style="display: flex; justify-content: flex-end;">
+        <button *ngIf="permission>1" class="btn btn-primary pd-x-30 me-2 mg-t-5">
           <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
           Save
         </button>
         <button *ngIf="permission>1 && removable" class="btn btn-danger pd-x-30 me-2 mg-t-5" type="button"
-          (click)="onDelete(delete_confirm_content)">
-          <span *ngIf="cancelInProgress" class="spinner-border spinner-border-sm" role="status"
+          (click)="onDeleteCustomer(delete_confirm_content)">
+          <span *ngIf="disableInProgress" class="spinner-border spinner-border-sm" role="status"
             aria-hidden="true"></span>
-          Cancel
+          {{disableButtonTitle}}
         </button>
-        <button *ngIf="permission>1" class="btn btn-outline-primary pd-x-30 mg-t-5" type="button" (click)="onClose()">
+        <button class="btn btn-outline-primary pd-x-30 mg-t-5" type="button" (click)="onClose()">
           Close
         </button>
-      </div> -->
+      </div>
     </form>
   </div>
 </div>
 
 <ng-template #delete_confirm_content let-modal>
   <div class="modal-header">
-    <h5 class="modal-title">Delete customer</h5>
+    <h5 class="modal-title">{{disableButtonTitle}} customer</h5>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body">
     <h4 style="text-align: center;">
-      You are going to cancel selected transaction. Confirm operation.
+      You are going to {{disableButtonTitle.toLowerCase()}} selected customer. Confirm operation.
     </h4>
-    <!-- <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
+    <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
       <button class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" type="button" (click)="modal.dismiss('Reject')">
         Reject
       </button>
-      <button class="btn btn-danger pd-x-30 mg-t-5" (click)="onConfirmDelete()">
+      <button class="btn btn-danger pd-x-30 mg-t-5" (click)="modal.close('OK')">
         Confirm
       </button>
-    </div> -->
+    </div>
   </div>
 </ng-template>

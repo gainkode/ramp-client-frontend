@@ -11,10 +11,8 @@
         <app-details-attribute *ngIf="cancelable" label="Account Id" [value]="data?.referralCode"
             [linkUrl]="'/admin/customers/'+ settingsId"></app-details-attribute>
         <app-details-attribute *ngIf="!cancelable" label="Account Id" [value]="data?.referralCode"></app-details-attribute>
-
         <app-details-attribute label="Widget" [value]="userData?.widgetId"></app-details-attribute>
         <app-details-attribute label="Widget Code" [value]="userData?.widgetCode"></app-details-attribute>
-
         <app-details-attribute label="Affiliate" [value]="userData?.affiliateId"></app-details-attribute>
         <app-details-attribute label="Affiliate Code" [value]="userData?.affiliateCode"></app-details-attribute>
     </section>

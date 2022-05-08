@@ -1,9 +1,11 @@
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDate, NgbDateAdapter, NgbDateParserFormatter, NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { DateFormatAdapter } from 'src/app/admin_new/misc/date-range/date-format.adapter';
+import { DateParserFormatter } from 'src/app/admin_new/misc/date-range/date.formatter';
 import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
 import { CommonTargetValue } from 'src/app/model/common.model';
 import { Countries, getCountryByCode3 } from 'src/app/model/country-code.model';
@@ -16,7 +18,11 @@ import { getFormattedUtcDate } from 'src/app/utils/utils';
 @Component({
   selector: 'app-admin-customer-details',
   templateUrl: 'customer-details.component.html',
-  styleUrls: ['customer-details.component.scss', '../../../assets/scss/_validation.scss']
+  styleUrls: ['customer-details.component.scss', '../../../assets/scss/_validation.scss'],
+  providers: [
+    { provide: NgbDateAdapter, useClass: DateFormatAdapter },
+    { provide: NgbDateParserFormatter, useClass: DateParserFormatter }
+  ]
 })
 export class AdminCustomerDetailsComponent implements OnDestroy {
   @Input() permission = 0;
@@ -36,6 +42,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
 
   submitted = false;
   saveInProgress = false;
+  disableInProgress = false;
   errorMessage = '';
   USER_TYPE: typeof UserType = UserType;
   userData: UserItem | null | undefined = undefined;
@@ -48,6 +55,17 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
   kycDocs: string[] = [];
   tiers: CommonTargetValue[] = [];
   totalBalance = '';
+  birthdayString = '';
+  minBirthdayDate: NgbDateStruct = {
+    year: 1900,
+    month: 1,
+    day: 1
+  };
+  maxBirthdayDate: NgbDateStruct = {
+    year: new Date().getFullYear() - 17,
+    month: 1,
+    day: 1
+  };
   disableButtonTitle = 'Disable';
   removable = false;
 
@@ -98,6 +116,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
     this.userData = data;
     this.errorMessage = '';
     this.dataForm.reset();
+    this.birthdayString = '';
     if (data) {
       this.disableButtonTitle = (data.deleted) ? 'Enable' : 'Disable';
       this.dataForm.get('id')?.setValue(data?.id);
@@ -111,11 +130,12 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
         this.dataForm.get('firstName')?.setValue(data?.firstName);
         this.dataForm.get('lastName')?.setValue(data?.lastName);
         if (data?.birthday) {
-          const d = `${data.birthday.getDate()}/${data.birthday.getMonth() + 1}/${data.birthday.getFullYear()}`;
-          this.dataForm.get('birthday')?.setValue(d);
+          this.birthdayString = `${data.birthday.getDate()}/${data.birthday.getMonth() + 1}/${data.birthday.getFullYear()}`;
+          this.dataForm.get('birthday')?.setValue(this.birthdayString);
         } else {
           this.dataForm.get('birthday')?.setValue(undefined);
         }
+        this.dataForm.get('birthday')?.setValidators([]);
       }
       this.dataForm.get('risk')?.setValue(data?.risk ?? RiskLevel.Medium);
       this.dataForm.get('accountStatus')?.setValue(data?.accountStatus ?? AccountStatus.Closed);
@@ -228,35 +248,63 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
     return data;
   }
 
+  getCountryFlag(code: string): string {
+    return `${code.toLowerCase()}.svg`;
+  }
+
   onSubmit(): void {
     this.submitted = true;
     if (this.dataForm.valid) {
-      
+
     }
   }
 
-  private deleteCustomer(): void {
-    // this.cancelInProgress = true;
-    // const requestData = this.adminService.deleteTransaction(this.transactionId);
-    // this.subscriptions.add(
-    //   requestData.subscribe(({ data }) => {
-    //     this.cancelInProgress = false;
-    //     this.save.emit();
-    //   }, (error) => {
-    //     this.errorMessage = error;
-    //     this.cancelInProgress = false;
-    //     if (this.auth.token === '') {
-    //       this.router.navigateByUrl('/');
-    //     }
-    //   })
-    // );
-  }
-
-  onDelete(content: any): void {
-    this.modalService.open(content, {
+  onDeleteCustomer(content: any): void {
+    const dialog = this.modalService.open(content, {
       backdrop: 'static',
       windowClass: 'modalCusSty',
     });
+    dialog.closed.subscribe(data => {
+      if (this.userData?.deleted ?? false) {
+        this.onRestore(this.userData?.id ?? '');
+      } else {
+        this.onDelete(this.userData?.id ?? '');
+      }
+    });
+  }
+
+  private onDelete(id: string): void {
+    this.disableInProgress = true;
+    const requestData$ = this.adminService.deleteCustomer(id);
+    this.subscriptions.add(
+      requestData$.subscribe(({ data }) => {
+        this.disableInProgress = false;
+        this.save.emit();
+      }, (error) => {
+        this.disableInProgress = false;
+        this.errorMessage = error;
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
+      })
+    );
+  }
+
+  private onRestore(id: string): void {
+    this.disableInProgress = true;
+    const requestData$ = this.adminService.restoreCustomer(id);
+    this.subscriptions.add(
+      requestData$.subscribe(({ data }) => {
+        this.disableInProgress = false;
+        this.save.emit();
+      }, (error) => {
+        this.disableInProgress = false;
+        this.errorMessage = error;
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
+      })
+    );
   }
 
   onClose(): void {

@@ -1,7 +1,7 @@
 <div class="dp-hidden">
     <input class="dp-hidden" name="datepicker" ngbDatepicker #datepicker="ngbDatepicker" [autoClose]="'outside'"
-        (dateSelect)="onDateSelection($event)" [displayMonths]="1" [dayTemplate]="day_item" outsideDays="hidden"
-        [startDate]="fromDate!" tabindex="-1" (dateSelect)="onDateChanged($event)">
+        (dateSelect)="onDateSelection($event);onDateChanged($event);" [displayMonths]="1" [dayTemplate]="day_item" outsideDays="hidden"
+        [startDate]="fromDate!" tabindex="-1">
     <ng-template #day_item let-date let-focused="focused">
         <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
             [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
