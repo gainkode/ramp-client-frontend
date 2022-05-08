@@ -130,7 +130,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
         this.dataForm.get('firstName')?.setValue(data?.firstName);
         this.dataForm.get('lastName')?.setValue(data?.lastName);
         if (data?.birthday) {
-          this.birthdayString = `${data.birthday.getDate()}/${data.birthday.getMonth() + 1}/${data.birthday.getFullYear()}`;
+          this.birthdayString = `${data.birthday.getDate()}-${data.birthday.getMonth() + 1}-${data.birthday.getFullYear()}`;
           this.dataForm.get('birthday')?.setValue(this.birthdayString);
         } else {
           this.dataForm.get('birthday')?.setValue(undefined);
@@ -227,7 +227,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
       email: this.dataForm.get('email')?.value,
       firstName: this.dataForm.get('firstName')?.value,
       lastName: this.dataForm.get('lastName')?.value,
-      birthday: getFormattedUtcDate(this.dataForm.get('birthday')?.value ?? ''),
+      birthday: getFormattedUtcDate(this.dataForm.get('birthday')?.value ?? '', '-'),
       countryCode2: code2,
       countryCode3: code3,
       postCode: this.dataForm.get('postCode')?.value,
@@ -255,8 +255,16 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
   onSubmit(): void {
     this.submitted = true;
     if (this.dataForm.valid) {
-
+      this.onSave(this.userData?.id ?? '', this.setCustomerData(), undefined);
     }
+  }
+
+  onResetPassword(content: any): void {
+    this.onSave(this.userData?.id ?? '', {
+      email: this.userData?.email ?? '',
+      changePasswordRequired: true
+    } as UserInput,
+      content);
   }
 
   onDeleteCustomer(content: any): void {
@@ -264,13 +272,45 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
       backdrop: 'static',
       windowClass: 'modalCusSty',
     });
-    dialog.closed.subscribe(data => {
-      if (this.userData?.deleted ?? false) {
-        this.onRestore(this.userData?.id ?? '');
-      } else {
-        this.onDelete(this.userData?.id ?? '');
-      }
-    });
+    this.subscriptions.add(
+      dialog.closed.subscribe(data => {
+        if (this.userData?.deleted ?? false) {
+          this.onRestore(this.userData?.id ?? '');
+        } else {
+          this.onDelete(this.userData?.id ?? '');
+        }
+      })
+    );
+  }
+
+  private onSave(id: string, customer: UserInput, content: any): void {
+    this.saveInProgress = true;
+    const requestData$ = this.adminService.saveCustomer(id, customer);
+    this.subscriptions.add(
+      requestData$.subscribe(({ data }) => {
+        this.saveInProgress = false;
+        if (customer.changePasswordRequired === true) {
+          this.modalService.open(content, {
+            backdrop: 'static',
+            windowClass: 'modalCusSty',
+          });
+        } else {
+          if (this.auth.user?.userId === id) {
+            this.auth.setUserName(customer.firstName ?? '', customer.lastName ?? '');
+            this.auth.setUserCurrencies(
+              customer.defaultCryptoCurrency ?? 'BTC',
+              customer.defaultFiatCurrency ?? 'EUR');
+          }
+        }
+        this.save.emit();
+      }, (error) => {
+        this.saveInProgress = false;
+        this.errorMessage = error;
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
+      })
+    );
   }
 
   private onDelete(id: string): void {

@@ -13,9 +13,9 @@ export function round(value: number, precision: number | undefined): number {
     return Math.round(value * multiplier) / multiplier;
 }
 
-export function getFormattedUtcDate(value: string): Date | undefined {
+export function getFormattedUtcDate(value: string, delimitter: string = '/'): Date | undefined {
     if (value !== '') {
-        const dateParts = value.split('/');
+        const dateParts = value.split(delimitter);
         const d = parseInt(dateParts[0]);
         const m = parseInt(dateParts[1]);
         let y = parseInt(dateParts[2]);
