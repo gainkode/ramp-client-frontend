@@ -1,60 +1,55 @@
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
+import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
+import { CommonTargetValue } from 'src/app/model/common.model';
 import { Countries, getCountryByCode3 } from 'src/app/model/country-code.model';
-import { AccountStatus, RiskLevel, User, UserInput, UserType } from 'src/app/model/generated-models';
+import { AccountStatus, RiskLevel, UserInput, UserType } from 'src/app/model/generated-models';
 import { CurrencyView, RiskLevelViewList, UserStatusList } from 'src/app/model/payment.model';
 import { UserItem } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
-import { Subscription } from 'rxjs';
-import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
-import { take } from 'rxjs/operators';
 import { getFormattedUtcDate } from 'src/app/utils/utils';
-import { LayoutService } from 'src/app/admin_old/services/layout.service';
-import { Router } from '@angular/router';
-import { CommonDialogBox } from 'src/app/components/dialogs/common-box.dialog';
-import { MatDialog } from '@angular/material/dialog';
-import { CommonTargetValue } from 'src/app/model/common.model';
 
 @Component({
-  selector: 'app-customer-details',
+  selector: 'app-admin-customer-details',
   templateUrl: 'customer-details.component.html',
-  styleUrls: ['customer-details.component.scss']
+  styleUrls: ['customer-details.component.scss', '../../../assets/scss/_validation.scss']
 })
-export class CustomerDetailsComponent implements OnDestroy {
+export class AdminCustomerDetailsComponent implements OnDestroy {
   @Input() permission = 0;
   @Input() set customer(val: UserItem | null | undefined) {
     this.setFormData(val);
     this.setCurrencies(this.pCurrencies);
-    this.layoutService.setBackdrop(!val?.id);
   }
   @Input() set currencies(val: CurrencyView[]) {
     this.pCurrencies = val;
     this.setCurrencies(val);
   }
-  @Input() cancelable = false;
   @Output() save = new EventEmitter();
-  @Output() cancel = new EventEmitter();
+  @Output() close = new EventEmitter();
 
-  data: UserItem | null | undefined;
-  USER_TYPE: typeof UserType = UserType;
-  settingsId = '';
-  email = '';
-  address = '';
-  userData: UserItem | null | undefined;
-  userType = UserType.Personal;
-  loadingData = false;
+  private pCurrencies: CurrencyView[] = [];
+  private subscriptions: Subscription = new Subscription();
+
+  submitted = false;
+  saveInProgress = false;
   errorMessage = '';
-  removable = false;
+  USER_TYPE: typeof UserType = UserType;
+  userData: UserItem | null | undefined = undefined;
   countries = Countries;
   fiatCurrencies: CurrencyView[] = [];
   cryptoCurrencies: CurrencyView[] = [];
   riskLevels = RiskLevelViewList;
   accountStatuses = UserStatusList;
-  totalBalance = '';
   kycProviderLink = '';
   kycDocs: string[] = [];
   tiers: CommonTargetValue[] = [];
-  disableButtonTitle = 'DISABLE';
+  totalBalance = '';
+  disableButtonTitle = 'Disable';
+  removable = false;
 
   dataForm = this.formBuilder.group({
     id: [''],
@@ -79,38 +74,32 @@ export class CustomerDetailsComponent implements OnDestroy {
     crypto: ['', { validators: [Validators.required], updateOn: 'change' }]
   });
 
-  private subscriptions: Subscription = new Subscription();
-  private pCurrencies: CurrencyView[] = [];
-
   constructor(
     private formBuilder: FormBuilder,
-    private layoutService: LayoutService,
     private router: Router,
-    public dialog: MatDialog,
     private auth: AuthService,
-    private adminService: AdminDataService) {
-  }
+    private modalService: NgbModal,
+    private adminService: AdminDataService) { }
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
 
   private setCurrencies(list: CurrencyView[]): void {
-    if (this.data) {
+    if (this.userData) {
       this.fiatCurrencies = list.filter(x => x.fiat === true);
-      this.dataForm.get('fiat')?.setValue(this.data?.fiatCurrency ?? '');
+      this.dataForm.get('fiat')?.setValue(this.userData?.fiatCurrency ?? '');
       this.cryptoCurrencies = list.filter(x => x.fiat === false);
-      this.dataForm.get('crypto')?.setValue(this.data.cryptoCurrency ?? '');
+      this.dataForm.get('crypto')?.setValue(this.userData.cryptoCurrency ?? '');
     }
   }
 
   private setFormData(data: UserItem | null | undefined): void {
-    this.data = data;
+    this.userData = data;
     this.errorMessage = '';
     this.dataForm.reset();
     if (data) {
-      this.disableButtonTitle = (data.deleted) ? 'ENABLE' : 'DISABLE';
-      this.loadingData = true;
+      this.disableButtonTitle = (data.deleted) ? 'Enable' : 'Disable';
       this.dataForm.get('id')?.setValue(data?.id);
       this.dataForm.get('email')?.setValue(data?.email);
       if (data.userType?.id === UserType.Merchant) {
@@ -125,12 +114,8 @@ export class CustomerDetailsComponent implements OnDestroy {
           const d = `${data.birthday.getDate()}/${data.birthday.getMonth() + 1}/${data.birthday.getFullYear()}`;
           this.dataForm.get('birthday')?.setValue(d);
         } else {
-          this.dataForm.get('birthday')?.setValue('');
+          this.dataForm.get('birthday')?.setValue(undefined);
         }
-        this.dataForm.get('birthday')?.setValidators([
-          Validators.required,
-          Validators.pattern('^(3[01]|[12][0-9]|0?[1-9])/(1[0-2]|0?[1-9])/(?:[0-9]{2})?[0-9]{2}$')
-        ]);
       }
       this.dataForm.get('risk')?.setValue(data?.risk ?? RiskLevel.Medium);
       this.dataForm.get('accountStatus')?.setValue(data?.accountStatus ?? AccountStatus.Closed);
@@ -147,13 +132,12 @@ export class CustomerDetailsComponent implements OnDestroy {
       this.dataForm.get('phone')?.setValue(data?.phone);
       this.dataForm.get('fiat')?.setValue(data?.fiatCurrency);
       this.dataForm.get('crypto')?.setValue(data?.cryptoCurrency);
-      this.loadingData = false;
     } else {
       this.dataForm.get('id')?.setValue('');
       this.dataForm.get('email')?.setValue('');
       this.dataForm.get('firstName')?.setValue('');
       this.dataForm.get('lastName')?.setValue('');
-      this.dataForm.get('birthday')?.setValue('');
+      this.dataForm.get('birthday')?.setValue(undefined);
       this.dataForm.get('birthday')?.setValidators([]);
       this.dataForm.get('risk')?.setValue(RiskLevel.Medium);
       this.dataForm.get('accountStatus')?.setValue(AccountStatus.Closed);
@@ -172,16 +156,12 @@ export class CustomerDetailsComponent implements OnDestroy {
       this.dataForm.get('crypto')?.setValue('');
     }
     this.dataForm.get('birthday')?.updateValueAndValidity();
-    this.settingsId = (data) ? data?.id : '';
-    this.email = (data) ? data?.email : '';
-    this.removable = (this.auth.user?.userId !== this.settingsId);
-    this.address = (data) ? data.address : '';
-    this.userType = (data) ? data.userType?.id ?? UserType.Personal : UserType.Personal;
-    this.userData = data;
+    const settingsId = data?.id ?? '';
+    this.removable = (this.auth.user?.userId !== settingsId);
     if (data) {
-      this.getUserKycInfo(this.settingsId);
-      this.getUserState(this.settingsId);
-      this.getUserKycTiers(this.settingsId);
+      this.getUserKycInfo(settingsId);
+      this.getUserState(settingsId);
+      this.getUserKycTiers(settingsId);
     }
   }
 
@@ -248,85 +228,38 @@ export class CustomerDetailsComponent implements OnDestroy {
     return data;
   }
 
-  private onDelete(id: string): void {
-    const requestData$ = this.adminService.deleteCustomer(id);
-    this.subscriptions.add(
-      requestData$.subscribe(({ data }) => {
-        this.save.emit();
-      }, (error) => {
-        if (this.auth.token === '') {
-          this.router.navigateByUrl('/');
-        }
-      })
-    );
-  }
-
-  private onRestore(id: string): void {
-    const requestData$ = this.adminService.restoreCustomer(id);
-    this.subscriptions.add(
-      requestData$.subscribe(({ data }) => {
-        this.save.emit();
-      }, (error) => {
-        if (this.auth.token === '') {
-          this.router.navigateByUrl('/');
-        }
-      })
-    );
-  }
-
-  onDeleteCustomer(): void {
-    if (this.data?.deleted ?? false) {
-      this.onRestore(this.settingsId);
-    } else {
-      this.onDelete(this.settingsId);
-    }
-  }
-
-  onSave(id: string, customer: UserInput): void {
-    const requestData$ = this.adminService.saveCustomer(id, customer);
-    this.subscriptions.add(
-      requestData$.subscribe(({ data }) => {
-        if (customer.changePasswordRequired === true) {
-          this.dialog.open(CommonDialogBox, {
-            width: '450px',
-            data: {
-              title: 'Reset password',
-              message: 'Password has been reset successfully'
-            }
-          });
-        } else {
-          if (this.auth.user?.userId === id) {
-            this.auth.setUserName(customer.firstName ?? '', customer.lastName ?? '');
-            this.auth.setUserCurrencies(
-              customer.defaultCryptoCurrency ?? 'BTC',
-              customer.defaultFiatCurrency ?? 'EUR');
-          }
-          this.save.emit();
-        }
-      }, (error) => {
-        if (this.auth.token === '') {
-          this.router.navigateByUrl('/');
-        }
-      })
-    );
-  }
-
   onSubmit(): void {
+    this.submitted = true;
     if (this.dataForm.valid) {
-      this.onSave(this.settingsId, this.setCustomerData());
-    } else {
-      this.errorMessage = 'Input data is not completely valid. Please, check all fields are valid.';
+      
     }
   }
 
-  onResetPassword(): void {
-    this.onSave(this.settingsId, {
-      email: this.email,
-      changePasswordRequired: true
-    } as UserInput);
+  private deleteCustomer(): void {
+    // this.cancelInProgress = true;
+    // const requestData = this.adminService.deleteTransaction(this.transactionId);
+    // this.subscriptions.add(
+    //   requestData.subscribe(({ data }) => {
+    //     this.cancelInProgress = false;
+    //     this.save.emit();
+    //   }, (error) => {
+    //     this.errorMessage = error;
+    //     this.cancelInProgress = false;
+    //     if (this.auth.token === '') {
+    //       this.router.navigateByUrl('/');
+    //     }
+    //   })
+    // );
   }
 
-  onCancel(): void {
-    this.cancel.emit();
+  onDelete(content: any): void {
+    this.modalService.open(content, {
+      backdrop: 'static',
+      windowClass: 'modalCusSty',
+    });
+  }
+
+  onClose(): void {
+    this.close.emit();
   }
 }

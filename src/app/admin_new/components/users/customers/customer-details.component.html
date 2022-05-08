@@ -1,0 +1,196 @@
+<div class="row">
+  <div class="col-md-12 col-lg-12 col-xl-12 mx-auto d-block">
+    <form [formGroup]="dataForm" novalidate (ngSubmit)="onSubmit()">
+      <div class="card card-body pd-20 pd-md-40 border shadow-none">
+        <h5 class="card-title mg-b-20">
+          Customer info
+        </h5>
+        <!-- <app-admin-details-item label="Account Id" [value]="userData?.referralCode"
+            [linkUrl]="'/admin/customers/'+ settingsId"></app-admin-details-item> -->
+        <app-admin-details-item label="Account Id" [value]="userData?.referralCode">
+        </app-admin-details-item>
+        <app-admin-details-item label="Widget" [value]="userData?.widgetId">
+        </app-admin-details-item>
+        <app-admin-details-item label="Widget Code" [value]="userData?.widgetCode">
+        </app-admin-details-item>
+        <app-admin-details-item label="Affiliate" [value]="userData?.affiliateId">
+        </app-admin-details-item>
+        <app-admin-details-item label="Affiliate Code" [value]="userData?.affiliateCode">
+        </app-admin-details-item>
+      </div>
+      <div class="card card-body pd-20 pd-md-40 border shadow-none">
+        <h5 class="card-title mg-b-20">
+          Personal info
+        </h5>
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Email
+          </label>
+          <input class="form-control"
+            [ngClass]="{'has-error': (dataForm.controls.email.touched || submitted) && !dataForm.controls.email.valid}"
+            type="text" formControlName="email" maxlength="35" required>
+          <div *ngIf="(dataForm.controls.email.touched || submitted) && (dataForm.controls.email.errors?.['required'])"
+            class="tx-danger">
+            <small>
+              Email is required
+            </small>
+          </div>
+        </div>
+        <!-- Company -->
+        <div class="form-group" *ngIf="userData?.userType?.id===USER_TYPE.Merchant">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Company
+          </label>
+          <input class="form-control"
+            [ngClass]="{'has-error': (dataForm.controls.firstName.touched || submitted) && !dataForm.controls.firstName.valid}"
+            type="text" formControlName="firstName" maxlength="75" required />
+          <div *ngIf="(dataForm.controls.firstName.touched || submitted) && (dataForm.controls.firstName.errors?.['required'])"
+            class="tx-danger">
+            <small>
+              Please specify the company name
+            </small>
+          </div>
+        </div>
+        <!-- First name -->
+        <div class="form-group" *ngIf="userData?.userType?.id===USER_TYPE.Personal">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            First Name
+          </label>
+          <input class="form-control"
+            [ngClass]="{'has-error': (dataForm.controls.firstName.touched || submitted) && !dataForm.controls.firstName.valid}"
+            type="text" formControlName="firstName" maxlength="50" required />
+          <div *ngIf="(dataForm.controls.firstName.touched || submitted) && (dataForm.controls.firstName.errors?.['required'])"
+            class="tx-danger">
+            <small>
+              Please specify the customer name
+            </small>
+          </div>
+        </div>
+        <!-- Last name -->
+        <div class="form-group" *ngIf="userData?.userType?.id===USER_TYPE.Personal">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Last Name
+          </label>
+          <input class="form-control"
+            [ngClass]="{'has-error': (dataForm.controls.lastName.touched || submitted) && !dataForm.controls.lastName.valid}"
+            type="text" formControlName="lastName" maxlength="50" />
+          <div *ngIf="(dataForm.controls.lastName.touched || submitted) && (dataForm.controls.lastName.errors?.['required'])"
+            class="tx-danger">
+            <small>
+              Please specify the customer name
+            </small>
+          </div>
+        </div>
+
+
+
+
+
+        <!-- Birthday -->
+        <!-- <app-admin-details-item label="Age" [value]="userData?.age"></app-admin-details-item>
+        <div class="form-group" *ngIf="userType===USER_TYPE.Personal">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Birthday
+          </label>
+          <input class="form-control" placeholder="yyyy-mm-dd"
+             name="dp" ngbDatepicker #d="ngbDatepicker">
+
+
+
+
+          <input #dpToDate class="form-control" placeholder="dd/mm/yyyy" name="dpToDate"
+            [value]="formatter.format(toDate)"
+            (input)="toDate = validateInput(toDate, dpToDate.value);onDateChanged(undefined)">
+
+
+          <input type="text" matInput formControlName="birthday" maxlength="10" mask="d0/M0/0000"
+            placeholder="DD/MM/YYYY" [dropSpecialCharacters]="false" />
+
+
+
+            <div *ngIf="(form.controls.birthday.touched || submitted) && (form.controls.birthday.errors?.['required'])"
+            class="tx-danger">
+            <small>
+              Please specify the birthday
+            </small>
+          </div>
+        </div>
+ -->
+
+
+
+
+        <div style="display: flex; justify-content: flex-end;">
+          <!-- <button *ngIf="permission>1" type="button" class="btn btn-outline-secondary" type="button"
+            (click)="onResetPassword()">
+            Reset password
+          </button> -->
+        </div>
+      </div>
+      <div class="card card-body pd-20 pd-md-40 border shadow-none">
+        <h5 class="card-title mg-b-20">
+          Address
+        </h5>
+
+
+
+
+        <!-- Transaction status -->
+        <!-- <app-admin-details-item *ngIf="transactionType===TRANSACTION_TYPE.Receive" label="Transaction status"
+          [value]="transactionStatusName"></app-admin-details-item>
+        <div *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Transaction status
+          </label>
+          <ng-select [items]="transactionStatuses" bindLabel="name" bindValue="id" formControlName="transactionStatus"
+            [clearable]=false [clearOnBackspace]=false required>
+          </ng-select>
+        </div> -->
+
+      </div>
+      <div *ngIf="errorMessage!==''" class="card card-body card-danger pd-20 pd-md-40 border shadow-none">
+        <h4 class="card-title2 mg-b-20" style="color: brown;">
+          {{errorMessage}}
+        </h4>
+      </div>
+      <!-- <div style="display: flex; justify-content: flex-end;">
+        <button *ngIf="permission>1 && transactionType!==TRANSACTION_TYPE.Receive"
+          class="btn btn-primary pd-x-30 me-2 mg-t-5">
+          <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          Save
+        </button>
+        <button *ngIf="permission>1 && removable" class="btn btn-danger pd-x-30 me-2 mg-t-5" type="button"
+          (click)="onDelete(delete_confirm_content)">
+          <span *ngIf="cancelInProgress" class="spinner-border spinner-border-sm" role="status"
+            aria-hidden="true"></span>
+          Cancel
+        </button>
+        <button *ngIf="permission>1" class="btn btn-outline-primary pd-x-30 mg-t-5" type="button" (click)="onClose()">
+          Close
+        </button>
+      </div> -->
+    </form>
+  </div>
+</div>
+
+<ng-template #delete_confirm_content let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Delete customer</h5>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <h4 style="text-align: center;">
+      You are going to cancel selected transaction. Confirm operation.
+    </h4>
+    <!-- <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
+      <button class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" type="button" (click)="modal.dismiss('Reject')">
+        Reject
+      </button>
+      <button class="btn btn-danger pd-x-30 mg-t-5" (click)="onConfirmDelete()">
+        Confirm
+      </button>
+    </div> -->
+  </div>
+</ng-template>
