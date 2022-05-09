@@ -3,7 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { AdminNewComponent } from './admin_new.component';
 import { AdminNewGuard } from './admin_new.guard';
 import { AdminDashboardComponent } from './components/dashboard/dashboard.component';
-import { AdminRisksComponent } from './components/risk/risks.component';
+import { AdminNotificationsComponent } from './components/notifications/notifications.component';
+import { AdminRisksComponent } from './components/risks/risks.component';
 import { AdminTransactionsComponent } from './components/transactions/transactions.component';
 import { AdminCustomersComponent } from './components/users/customers/customers.component';
 import { AdminSystemUsersComponent } from './components/users/system/users.component';
@@ -115,11 +116,11 @@ const routes: Routes = [
       //     component: FeeListComponent,
       //     data: { header: 'Fees' }
       //   },
-      //   {
-      //     path: 'notifications',
-      //     component: NotificationListComponent,
-      //     data: { header: 'Notifications' }
-      //   },
+      {
+        path: 'notifications',
+        component: AdminNotificationsComponent,
+        data: { header: 'Notifications' }
+      },
       //   {
       //     path: 'costs',
       //     component: CostTabListComponent,
@@ -135,11 +136,11 @@ const routes: Routes = [
       //     component: ReconciliationComponent,
       //     data: { header: 'Reconciliation' }
       //   },
-        {
-          path: 'risk-center',
-          component: AdminRisksComponent,
-          data: { header: 'Risk center' }
-        },
+      {
+        path: 'risk-center',
+        component: AdminRisksComponent,
+        data: { header: 'Risk center' }
+      },
       //   {
       //     path: 'widgets',
       //     component: WidgetListComponent,
