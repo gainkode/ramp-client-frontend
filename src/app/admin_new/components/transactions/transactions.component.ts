@@ -168,6 +168,11 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
           val.statusInfo = this.userStatuses.find(x => x.key === val.status);
         });
         this.inProgress = false;
+      }, (error) => {
+        this.inProgress = false;
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
       })
     );
   }

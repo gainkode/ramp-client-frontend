@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AdminNewComponent } from './admin_new.component';
 import { AdminNewGuard } from './admin_new.guard';
 import { AdminDashboardComponent } from './components/dashboard/dashboard.component';
+import { AdminRisksComponent } from './components/risk/risks.component';
 import { AdminTransactionsComponent } from './components/transactions/transactions.component';
 import { AdminCustomersComponent } from './components/users/customers/customers.component';
 import { AdminSystemUsersComponent } from './components/users/system/users.component';
@@ -134,26 +135,11 @@ const routes: Routes = [
       //     component: ReconciliationComponent,
       //     data: { header: 'Reconciliation' }
       //   },
-      //   {
-      //     path: 'system-users',
-      //     children: [
-      //       {
-      //         path: ':id',
-      //         component: SystemUserSingleComponent,
-      //         data: { header: 'User {:id}' }
-      //       },
-      //       {
-      //         path: '',
-      //         component: SystemUserListComponent,
-      //         data: { header: 'System Users' }
-      //       }
-      //     ]
-      //   },
-      //   {
-      //     path: 'risk-center',
-      //     component: RiskAlertListComponent,
-      //     data: { header: 'Risk center' }
-      //   },
+        {
+          path: 'risk-center',
+          component: AdminRisksComponent,
+          data: { header: 'Risk center' }
+        },
       //   {
       //     path: 'widgets',
       //     component: WidgetListComponent,

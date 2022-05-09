@@ -19,7 +19,7 @@ export interface RiskAlertCodeItem {
 }
 
 export const RiskAlertCodeList: Array<RiskAlertCodeItem> = [
-  { id: RiskAlertCodes.UserAge, name: 'Uuser age' },
+  { id: RiskAlertCodes.UserAge, name: 'User age' },
   { id: RiskAlertCodes.TooManyFailedLoginAttempts, name: 'Too many failed login attempts' },
   { id: RiskAlertCodes.UnusualUserIpAddress, name: 'Unusual user IP address' },
   { id: RiskAlertCodes.TwoOrMoreCustomersWithdrawalSameAddress, name: 'Two or more customers made withdrawal to the same address' },
