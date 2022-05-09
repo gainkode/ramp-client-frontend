@@ -10,7 +10,8 @@
             <button *ngIf="permission>1" (click)="addUser(details_content)" type="button" class="btn btn-primary me-2">
               Add user
             </button>
-            <button *ngIf="permission>1" (click)="setRole()" type="button" class="btn btn-primary me-2">
+            <button *ngIf="permission>1" (click)="setUserRole(undefined, roles_content)" type="button"
+              class="btn btn-primary me-2">
               Set role
             </button>
             <button (click)="sendMessage(message_content)" class="btn btn-outline-secondary me-2"
@@ -37,14 +38,14 @@
                   <input style="margin-right: 4px;" [checked]="element.selected" type="checkbox"
                     (change)="onUserSelected(element)">
                   <button mat-icon-button class="row-button" (click)="showDetails(element, details_content)"
-                    [attr.aria-label]="'User details'" [attr.aria-pressed]="!!selectedUser"
-                    matTooltip="User details" matTooltipClass="info-tooltip">
+                    [attr.aria-label]="'User details'" [attr.aria-pressed]="!!selectedUser" matTooltip="User details"
+                    matTooltipClass="info-tooltip">
                     <i class="material-icons" style="font-size: 20px;">
                       wysiwyg
                     </i>
                   </button>
-                  <button mat-icon-button class="row-button" (click)="setUserRole(element)"
-                    [attr.aria-label]="'User roles'" [matTooltip]="permission>1 ? 'Set roles' : 'Roles'" 
+                  <button mat-icon-button class="row-button" (click)="setUserRole(element, roles_content)"
+                    [attr.aria-label]="'User roles'" [matTooltip]="permission>1 ? 'Set roles' : 'Roles'"
                     matTooltipClass="info-tooltip">
                     <mat-icon class="details-icon">
                       perm_data_setting
@@ -191,6 +192,56 @@
               <app-admin-user-message-dialog [errorMessage]="sendMessageError" [inProgress]="sendMessageInProgress"
                 (send)="sendMessageStart($event)" (close)="modal.dismiss('Close')">
               </app-admin-user-message-dialog>
+            </div>
+          </ng-template>
+
+          <ng-template #roles_content let-modal>
+            <div class="modal-header">
+              <h5 class="modal-title">
+                Set user role
+              </h5>
+              <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form [formGroup]="roleUserForm">
+                <div class="card card-body pd-20 pd-md-40 border shadow-none">
+                  <div class="form-group" *ngIf="!roleUserSelected">
+                    <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                      Select a user
+                    </label>
+                    <ng-select [items]="usersOptions$ | async" bindLabel="extendedName" [minTermLength]="minUsersLengthTerm"
+                      notFoundText="No users found" [loading]="isUsersLoading" [multiple]="false"
+                      formControlName="user" typeToSearchText="Type email or user name"
+                      placeholder="Start typing to search a user" [typeahead]="usersSearchInput$">
+                    </ng-select>
+                  </div>
+                  <div *ngIf="roleUser" class="form-group">
+                    <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                      Roles
+                    </label>
+                    <app-admin-role-select [roleList]="userRoles" [userRoles]="roleUser?.roles ?? []"
+                      (changed)="onRolesUpdated($event)"></app-admin-role-select>
+                  </div>
+                </div>
+                <div *ngIf="errorMessage!==''" class="card card-body card-danger pd-20 pd-md-40 border shadow-none">
+                  <h4 class="card-title2 mg-b-20" style="color: brown;">
+                    {{errorMessage}}
+                  </h4>
+                </div>
+                <div style="display: flex;flex-direction: row;justify-content: flex-end;align-items: center;">
+                  <button type="button" class="btn btn-outline-secondary pd-x-50 mg-t-5 me-2"
+                    (click)="modal.dismiss('Close')">
+                    Close
+                  </button>
+                  <button type="button" class="btn btn-primary pd-x-50 mg-t-5" (click)="updateRole()"
+                    [disabled]="roleUser===undefined">
+                    <span *ngIf="roleInProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Save
+                  </button>
+                </div>
+              </form>
             </div>
           </ng-template>
 

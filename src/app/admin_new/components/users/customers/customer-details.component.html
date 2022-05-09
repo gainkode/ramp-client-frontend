@@ -120,7 +120,7 @@
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             Country
           </label>
-          <ng-select formControlName="country" formControlName="country" [clearable]=false [clearOnBackspace]=false
+          <ng-select formControlName="country" [clearable]=false [clearOnBackspace]=false
             required>
             <ng-option *ngFor="let country of countries" [value]="country.code3">
               <app-dropdown-item itemValue="{{country.name}}" imageClass="country-flag-admin"

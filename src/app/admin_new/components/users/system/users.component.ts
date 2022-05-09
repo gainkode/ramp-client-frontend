@@ -1,9 +1,10 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { concat, Observable, of, Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { Filter } from 'src/app/admin_old/model/filter.model';
 import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
 import { UserRole } from 'src/app/model/generated-models';
@@ -33,7 +34,7 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
     'referralCode',
     'firstName',
     'lastName',
-    'email', 
+    'email',
     'role',
     'accountStatus',
     'lastLogin',
@@ -42,12 +43,15 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
   sendMessageInProgress = false;
   sendMessageError = '';
   inProgress = false;
+  roleInProgress = false;
+  errorMessage = '';
   permission = 0;
-  setRoleFlag = false;
   selectedUser?: UserItem;
   userDetailsTitle = 'User Details';
   roleUser?: UserItem;
+  roleUserSelected = false;
   roleIds: string[] = [];
+  newRoleIds: string[] = [];
   userRoles: UserRole[] = [];
   selected = false;
   users: UserItem[] = [];
@@ -57,12 +61,22 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
   sortedField = 'created';
   sortedDesc = true;
   filter = new Filter({});
+  isUsersLoading = false;
+  usersSearchInput$ = new Subject<string>();
+  usersOptions$: Observable<UserItem[]> = of([]);
+  minUsersLengthTerm = 1;
+
+  roleUserForm = this.formBuilder.group({
+    user: [undefined, { validators: [Validators.required], updateOn: 'change' }]
+  });
 
   private subscriptions: Subscription = new Subscription();
   private detailsDialog: NgbModalRef | undefined = undefined;
+  private rolesDialog: NgbModalRef | undefined = undefined;
   private messageDialog: NgbModalRef | undefined = undefined;
 
   constructor(
+    private formBuilder: FormBuilder,
     private modalService: NgbModal,
     private auth: AuthService,
     private adminService: AdminDataService,
@@ -74,6 +88,12 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
 
   ngOnInit(): void {
     this.loadRoleData();
+    this.initUserSearch();
+    this.subscriptions.add(
+      this.roleUserForm.controls.user.valueChanges.subscribe(val => {
+        this.roleUser = val;
+      })
+    );
   }
 
   ngOnDestroy(): void {
@@ -105,9 +125,14 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
     this.loadUsers();
   }
 
-  setUserRole(item: UserItem): void {
+  setUserRole(item: UserItem | undefined, content: any): void {
+    this.roleUserForm.reset();
     this.roleUser = item;
-    this.setRoleFlag = true;
+    this.roleUserSelected = (item !== undefined);
+    this.rolesDialog = this.modalService.open(content, {
+      backdrop: 'static',
+      windowClass: 'modalCusSty',
+    });
   }
 
   addUser(content: any): void {
@@ -117,10 +142,6 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
       backdrop: 'static',
       windowClass: 'modalCusSty',
     });
-  }
-  
-  setRole(): void {
-    this.setRoleFlag = true;
   }
 
   private loadRoleData(): void {
@@ -163,6 +184,101 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
         this.inProgress = false;
       }, (error) => {
         this.inProgress = false;
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
+      })
+    );
+  }
+
+  private initUserSearch() {
+    this.usersOptions$ = concat(
+      of([]),
+      this.usersSearchInput$.pipe(
+        filter(res => {
+          return res !== null && res.length >= this.minUsersLengthTerm
+        }),
+        debounceTime(300),
+        distinctUntilChanged(),
+        tap(() => {
+          this.isUsersLoading = true;
+        }),
+        switchMap(searchString => {
+          this.isUsersLoading = false;
+          return this.adminService.findUsers(new Filter({ search: searchString }))
+            .pipe(map(result => result.list));
+        })
+      ));
+  }
+
+  private getAssignedRoles(current: string[], state: string[]): string[] {
+    let result: string[] = [];
+    current.forEach(x => {
+      if (!state.includes(x)) {
+        result = [...result, x];
+      }
+    });
+    return result;
+  }
+
+  private getRemovedRoles(current: string[], state: string[]): string[] {
+    let result: string[] = [];
+    state.forEach(x => {
+      if (!current.includes(x)) {
+        result = [...result, x];
+      }
+    });
+    return result;
+  }
+
+  onRolesUpdated(roles: string[]): void {
+    if (this.roleUser) {
+      this.newRoleIds = roles;
+    }
+  }
+
+  updateRole(): void {
+    if (this.roleUser) {
+      this.errorMessage = '';
+      const assigned = this.getAssignedRoles(this.newRoleIds, this.roleUser.roles);
+      const removed = this.getRemovedRoles(this.newRoleIds, this.roleUser.roles);
+      if (assigned.length > 0) {
+        this.roleInProgress = true;
+        const requestData$ = this.adminService.assignRole(this.roleUser.id, assigned);
+        this.subscriptions.add(
+          requestData$.subscribe(({ data }) => {
+            if (removed.length > 0) {
+              this.removeUserRole(this.roleUser?.id ?? '', removed);
+            } else {
+              this.roleInProgress = false;
+              this.rolesDialog?.close('OK');
+              this.loadUsers();
+            }
+          }, (error) => {
+            this.roleInProgress = false;
+            this.errorMessage = error;
+            if (this.auth.token === '') {
+              this.router.navigateByUrl('/');
+            }
+          })
+        );
+      } else {
+        this.removeUserRole(this.roleUser.id, removed);
+      }
+    }
+  }
+
+  private removeUserRole(userId: string, roles: string[]): void {
+    this.roleInProgress = true;
+    const requestData$ = this.adminService.removeRole(userId, roles);
+    this.subscriptions.add(
+      requestData$.subscribe(({ data }) => {
+        this.roleInProgress = false;
+        this.rolesDialog?.close('OK');
+        this.loadUsers();
+      }, (error) => {
+        this.roleInProgress = false;
+        this.errorMessage = error;
         if (this.auth.token === '') {
           this.router.navigateByUrl('/');
         }

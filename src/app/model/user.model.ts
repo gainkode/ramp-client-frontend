@@ -303,6 +303,14 @@ export class UserItem {
     return this.roles.join(', ');
   }
 
+  get extendedName(): string {
+    if (this.fullName === '') {
+      return this.email;
+    } else {
+      return `${this.fullName} (${this.email})`;
+    }
+  }
+
   setFullName(): void {
     if (this.userType?.id === UserType.Merchant) {
       this.company = (this.firstName) ? this.firstName : '';
