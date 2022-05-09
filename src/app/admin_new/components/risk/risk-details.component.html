@@ -1,0 +1,17 @@
+<div class="row">
+  <div class="col-md-12 col-lg-12 col-xl-12 mx-auto d-block">
+    <div class="card card-body pd-20 pd-md-40 border shadow-none">
+      <app-admin-details-item label="User" [value]="data?.user?.fullName"></app-admin-details-item>
+      <app-admin-details-item label="Email" [value]="data?.user?.email"></app-admin-details-item>
+      <app-admin-details-item label="Alert" [value]="data?.riskAlertType"></app-admin-details-item>
+      <app-admin-details-item label="Entity" [value]="data?.entity"></app-admin-details-item>
+      <app-admin-details-item label="Created" [value]="data?.created"></app-admin-details-item>
+      <app-admin-details-item label="Details" [value]="detailsInfo"></app-admin-details-item>
+    </div>
+    <div style="display: flex; justify-content: flex-end;">
+      <button *ngIf="permission>1" class="btn btn-outline-primary pd-x-30" type="button" (click)="onClose()">
+        Close
+      </button>
+    </div>
+  </div>
+</div>

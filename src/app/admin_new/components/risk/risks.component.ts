@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { Filter } from 'src/app/admin_old/model/filter.model';
@@ -43,7 +43,6 @@ export class AdminRisksComponent implements OnInit, OnDestroy, AfterViewInit {
   filter = new Filter({});
   
   private subscriptions: Subscription = new Subscription();
-  private detailsDialog: NgbModalRef | undefined = undefined;
 
   constructor(
     private modalService: NgbModal,
@@ -84,7 +83,7 @@ export class AdminRisksComponent implements OnInit, OnDestroy, AfterViewInit {
 
   showDetails(alert: RiskAlertItem, content: any) {
     this.selectedAlert = alert;
-    this.detailsDialog = this.modalService.open(content, {
+    this.modalService.open(content, {
       backdrop: 'static',
       windowClass: 'modalCusSty',
     });

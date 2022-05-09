@@ -14,7 +14,6 @@
           <div class="data-table">
             <mat-table matSort [matSortActive]="sortedField" matSortDirection="desc" matSortDisableClear
               [dataSource]="alerts">
-              <!-- Details Column -->
               <ng-container matColumnDef="details" sticky>
                 <th mat-header-cell *matHeaderCellDef></th>
                 <td mat-cell *matCellDef="let element" [ngClass]="element.transactionListSelectorColumnStyle">
@@ -71,7 +70,7 @@
               <ng-container matColumnDef="entity">
                 <th mat-header-cell *matHeaderCellDef>Entity</th>
                 <td mat-cell *matCellDef="let element" class="alert-list-data-column">
-                  {{element.entity}}
+                  {{element.entity.entityType}}
                 </td>
               </ng-container>
 
@@ -114,9 +113,9 @@
               </button>
             </div>
             <div class="modal-body">
-              <!-- <app-admin-alert-details [permission]="permission" [alert]="selectedAlert"
+              <app-admin-risk-details [permission]="permission" [alert]="selectedAlert"
                 (close)="modal.dismiss('Close')">
-              </app-admin-alert-details> -->
+              </app-admin-risk-details>
             </div>
           </ng-template>
         </div>
