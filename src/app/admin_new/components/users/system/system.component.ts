@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { Filter } from 'src/app/admin_old/model/filter.model';
 import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
-import { SettingsCurrencyWithDefaults, UserRole } from 'src/app/model/generated-models';
+import { UserRole } from 'src/app/model/generated-models';
 import { CurrencyView } from 'src/app/model/payment.model';
 import { UserItem } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
@@ -14,25 +14,19 @@ import { CommonDataService } from 'src/app/services/common-data.service';
 import { UserMessageData } from '../send-message/send-message.component';
 
 @Component({
-  selector: 'app-admin-customers',
-  templateUrl: 'customers.component.html',
-  styleUrls: ['customers.component.scss']
+  selector: 'app-admin-system-users',
+  templateUrl: 'system.component.html',
+  styleUrls: ['system.component.scss']
 })
-export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit {
+export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   filterFields = [
     'users',
     'accountType',
     'accountStatus',
-    'tier',
-    'riskLevel',
     'country',
-    'kycStatus',
     'registrationDate',
-    'widget',
-    'totalBuyVolume',
-    'transactionCount',
     'search'
   ];
   displayedColumns: string[] = [
@@ -40,35 +34,29 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
     'referralCode',
     'firstName',
     'lastName',
-    'email',
+    'email', 
+    'role',
     'accountStatus',
-    'kycStatus',
-    'widgetId',
-    'totalBought',
-    'totalSold',
-    'totalSent',
-    'totalReceived',
-    'created',
-    'country',
-    'phone',
-    'risk',
-    'id'
+    'lastLogin',
+    'created'
   ];
   sendMessageInProgress = false;
   sendMessageError = '';
   inProgress = false;
   permission = 0;
-  selectedCustomer?: UserItem;
+  setRoleFlag = false;
+  selectedUser?: UserItem;
+  roleUser?: UserItem;
+  roleIds: string[] = [];
+  userRoles: UserRole[] = [];
   selected = false;
-  customers: UserItem[] = [];
-  customerCount = 0;
-  currencyList: CurrencyView[] = [];
+  users: UserItem[] = [];
+  userCount = 0;
   pageSize = 50;
   pageIndex = 0;
   sortedField = 'created';
   sortedDesc = true;
   filter = new Filter({});
-  roleIds: string[] = [];
 
   private subscriptions: Subscription = new Subscription();
   private detailsDialog: NgbModalRef | undefined = undefined;
@@ -81,11 +69,11 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
     private commonService: CommonDataService,
     private router: Router
   ) {
-    this.permission = this.auth.isPermittedObjectCode('CUSTOMERS');
+    this.permission = this.auth.isPermittedObjectCode('SYSTEM_USERS');
   }
 
   ngOnInit(): void {
-    this.loadCurrencyData();
+    this.loadRoleData();
   }
 
   ngOnDestroy(): void {
@@ -97,14 +85,37 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
       this.sort.sortChange.subscribe(() => {
         this.sortedDesc = (this.sort.direction === 'desc');
         this.sortedField = this.sort.active;
-        this.loadCustomers();
+        this.loadUsers();
       })
     );
   }
 
-  onCustomerSelected(item: UserItem): void {
+  onUserSelected(item: UserItem): void {
     item.selected = !item.selected;
-    this.selected = this.customers.some(x => x.selected === true);
+    this.selected = this.users.some(x => x.selected === true);
+  }
+
+  handleFilterApplied(filter: Filter): void {
+    this.filter = filter;
+    this.loadUsers();
+  }
+
+  handlePage(index: number): void {
+    this.pageIndex = index - 1;
+    this.loadUsers();
+  }
+
+  setUserRole(item: UserItem): void {
+    this.roleUser = item;
+    this.setRoleFlag = true;
+  }
+
+  addUser(content: any): void {
+    
+  }
+  
+  setRole(): void {
+    this.setRoleFlag = true;
   }
 
   showTransactions(id: string): void {
@@ -115,45 +126,20 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
     this.router.navigateByUrl(`/admin/crypto-wallets/users/${id}`);
   }
 
-  private loadCurrencyData(): void {
-    this.currencyList = [];
-    this.inProgress = true;
-    const currencyData = this.commonService.getSettingsCurrency();
-    if (currencyData) {
-      this.subscriptions.add(
-        currencyData.valueChanges.subscribe(({ data }) => {
-          const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
-          if (currencySettings.settingsCurrency) {
-            if (currencySettings.settingsCurrency.count ?? 0 > 0) {
-              this.currencyList = currencySettings.settingsCurrency.list?.
-                map((val) => new CurrencyView(val)) as CurrencyView[];
-            }
-          }
-          this.loadRoleData();
-        }, (error) => {
-          this.inProgress = false;
-          if (this.auth.token === '') {
-            this.router.navigateByUrl('/');
-          }
-        })
-      );
-    }
-  }
-
   private loadRoleData(): void {
     this.roleIds = [];
     const currencyData = this.commonService.getRoles();
     if (currencyData) {
       this.subscriptions.add(
         currencyData.valueChanges.subscribe(({ data }) => {
-          const roleData = data.getRoles as UserRole[];
-          const userRole = roleData.find(x => x.code === 'USER');
-          if (userRole) {
-            this.roleIds = [userRole.userRoleId ?? ''];
+          this.userRoles = data.getRoles as UserRole[];
+          const filteredRoles = this.userRoles.filter(x => x.code !== 'USER');
+          if (filteredRoles) {
+            this.roleIds = filteredRoles.map(val => val.userRoleId ?? '');
           } else {
             this.roleIds = [];
           }
-          this.loadCustomers();
+          this.loadUsers();
         }, (error) => {
           this.inProgress = false;
           if (this.auth.token === '') {
@@ -164,9 +150,9 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
     }
   }
 
-  private loadCustomers(): void {
+  private loadUsers(): void {
     this.inProgress = true;
-    const listData$ = this.adminService.getUsers(
+    const listData$ = this.adminService.getSystemUsers(
       this.roleIds,
       this.pageIndex,
       this.pageSize,
@@ -175,8 +161,8 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
       this.filter).pipe(take(1));
     this.subscriptions.add(
       listData$.subscribe(({ list, count }) => {
-        this.customers = list;
-        this.customerCount = count;
+        this.users = list;
+        this.userCount = count;
         this.inProgress = false;
       }, (error) => {
         this.inProgress = false;
@@ -187,11 +173,11 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
     );
   }
 
-  onSaveCustomer(): void {
-    this.selectedCustomer = undefined;
+  onSaveUser(): void {
+    this.selectedUser = undefined;
     if (this.detailsDialog) {
       this.detailsDialog.close();
-      this.loadCustomers();
+      this.loadUsers();
     }
   }
 
@@ -205,13 +191,13 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
   sendMessageStart(data: UserMessageData): void {
     this.sendMessageInProgress = true;
     this.sendMessageError = '';
-    const ids = this.customers.filter(x => x.selected === true).map(val => val.id);
+    const ids = this.users.filter(x => x.selected === true).map(val => val.id);
     const requestData$ = this.adminService.sendAdminNotification(ids, data.level, data.title, data.text);
     this.subscriptions.add(
       requestData$.subscribe(({ result }) => {
         this.sendMessageInProgress = false;
         this.selected = false;
-        this.customers.forEach(x => x.selected = false);
+        this.users.forEach(x => x.selected = false);
         if (this.messageDialog) {
           this.messageDialog.close();
         }
@@ -226,7 +212,7 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   export(content: any): void {
-    const ids = this.customers.filter(x => x.selected === true).map(val => val.id);
+    const ids = this.users.filter(x => x.selected === true).map(val => val.id);
     const exportData$ = this.adminService.exportUsersToCsv(
       ids,
       this.roleIds,
@@ -247,18 +233,8 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
     );
   }
 
-  handleFilterApplied(filter: Filter): void {
-    this.filter = filter;
-    this.loadCustomers();
-  }
-
-  handlePage(index: number): void {
-    this.pageIndex = index - 1;
-    this.loadCustomers();
-  }
-
-  showDetails(customer: UserItem, content: any) {
-    this.selectedCustomer = customer;
+  showDetails(user: UserItem, content: any) {
+    this.selectedUser = user;
     this.detailsDialog = this.modalService.open(content, {
       backdrop: 'static',
       windowClass: 'modalCusSty',

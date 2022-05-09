@@ -1,10 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
 import { CommonTargetValue } from 'src/app/model/common.model';
 import { UserNotificationLevel } from 'src/app/model/generated-models';
 
-export class CustomerMessageData {
+export class UserMessageData {
   level: UserNotificationLevel = UserNotificationLevel.Info;
   title = '';
   text = '';
@@ -18,7 +17,7 @@ export class CustomerMessageData {
 export class AdminMessageDialogComponent {
   @Input() errorMessage = '';
   @Input() inProgress = false;
-  @Output() send = new EventEmitter<CustomerMessageData>();
+  @Output() send = new EventEmitter<UserMessageData>();
   @Output() close = new EventEmitter();
 
   submitted = false;

@@ -5,6 +5,7 @@ import { AdminNewGuard } from './admin_new.guard';
 import { AdminDashboardComponent } from './components/dashboard/dashboard.component';
 import { AdminTransactionsComponent } from './components/transactions/transactions.component';
 import { AdminCustomersComponent } from './components/users/customers/customers.component';
+import { AdminSystemUsersComponent } from './components/users/system/system.component';
 import { AdminCryptoWalletsComponent } from './components/wallets/crypto/crypto-wallets.component';
 import { AdminFiatWalletsComponent } from './components/wallets/fiat/fiat-wallets.component';
 
@@ -50,6 +51,21 @@ const routes: Routes = [
             path: '',
             component: AdminCustomersComponent,
             data: { header: 'Customers' }
+          }
+        ]
+      },
+      {
+        path: 'system-users',
+        children: [
+          {
+            path: ':id',
+            component: AdminSystemUsersComponent,
+            data: { header: 'System user {:id}' }
+          },
+          {
+            path: '',
+            component: AdminSystemUsersComponent,
+            data: { header: 'System users' }
           }
         ]
       },
