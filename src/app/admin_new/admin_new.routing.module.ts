@@ -5,7 +5,7 @@ import { AdminNewGuard } from './admin_new.guard';
 import { AdminDashboardComponent } from './components/dashboard/dashboard.component';
 import { AdminTransactionsComponent } from './components/transactions/transactions.component';
 import { AdminCustomersComponent } from './components/users/customers/customers.component';
-import { AdminSystemUsersComponent } from './components/users/system/system.component';
+import { AdminSystemUsersComponent } from './components/users/system/users.component';
 import { AdminCryptoWalletsComponent } from './components/wallets/crypto/crypto-wallets.component';
 import { AdminFiatWalletsComponent } from './components/wallets/fiat/fiat-wallets.component';
 

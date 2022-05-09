@@ -1,43 +1,36 @@
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbDateAdapter, NgbDateParserFormatter, NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
 import { DateFormatAdapter } from 'src/app/admin_new/misc/date-range/date-format.adapter';
 import { DateParserFormatter } from 'src/app/admin_new/misc/date-range/date.formatter';
 import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
-import { CommonTargetValue } from 'src/app/model/common.model';
 import { Countries, getCountryByCode3 } from 'src/app/model/country-code.model';
-import { AccountStatus, RiskLevel, UserInput, UserType } from 'src/app/model/generated-models';
-import { CurrencyView, RiskLevelViewList, UserStatusList } from 'src/app/model/payment.model';
+import { AccountStatus, UserInput, UserRole, UserType } from 'src/app/model/generated-models';
+import { UserStatusList, UserTypeList } from 'src/app/model/payment.model';
 import { UserItem } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { getFormattedUtcDate } from 'src/app/utils/utils';
 
 @Component({
-  selector: 'app-admin-customer-details',
-  templateUrl: 'customer-details.component.html',
-  styleUrls: ['customer-details.component.scss', '../../../assets/scss/_validation.scss'],
+  selector: 'app-admin-user-details',
+  templateUrl: 'user-details.component.html',
+  styleUrls: ['user-details.component.scss', '../../../assets/scss/_validation.scss'],
   providers: [
     { provide: NgbDateAdapter, useClass: DateFormatAdapter },
     { provide: NgbDateParserFormatter, useClass: DateParserFormatter }
   ]
 })
-export class AdminCustomerDetailsComponent implements OnDestroy {
+export class AdminUserDetailsComponent implements OnInit, OnDestroy {
   @Input() permission = 0;
-  @Input() set customer(val: UserItem | null | undefined) {
+  @Input() roles: UserRole[] = [];
+  @Input() set user(val: UserItem | null | undefined) {
     this.setFormData(val);
-    this.setCurrencies(this.pCurrencies);
-  }
-  @Input() set currencies(val: CurrencyView[]) {
-    this.pCurrencies = val;
-    this.setCurrencies(val);
   }
   @Output() save = new EventEmitter();
   @Output() close = new EventEmitter();
 
-  private pCurrencies: CurrencyView[] = [];
   private subscriptions: Subscription = new Subscription();
 
   submitted = false;
@@ -45,16 +38,11 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
   disableInProgress = false;
   errorMessage = '';
   USER_TYPE: typeof UserType = UserType;
+  userType: UserType = UserType.Personal;
   userData: UserItem | null | undefined = undefined;
   countries = Countries;
-  fiatCurrencies: CurrencyView[] = [];
-  cryptoCurrencies: CurrencyView[] = [];
-  riskLevels = RiskLevelViewList;
   accountStatuses = UserStatusList;
-  kycProviderLink = '';
-  kycDocs: string[] = [];
-  tiers: CommonTargetValue[] = [];
-  totalBalance = '';
+  accountTypes = UserTypeList;
   minBirthdayDate: NgbDateStruct = {
     year: 1900,
     month: 1,
@@ -65,8 +53,10 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
     month: 1,
     day: 1
   };
+  currentRoles: string[] = ['USER'];
   disableButtonTitle = 'Disable';
   removable = false;
+  createNew = false;
 
   dataForm = this.formBuilder.group({
     id: [''],
@@ -85,10 +75,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
     flatNumber: ['', { validators: [], updateOn: 'change' }],
     phone: ['', { validators: [], updateOn: 'change' }],
     accountStatus: [AccountStatus.Closed, { validators: [Validators.required], updateOn: 'change' }],
-    risk: [RiskLevel.Medium, { validators: [Validators.required], updateOn: 'change' }],
-    tier: ['', { validators: [Validators.required], updateOn: 'change' }],
-    fiat: ['', { validators: [Validators.required], updateOn: 'change' }],
-    crypto: ['', { validators: [Validators.required], updateOn: 'change' }]
+    accountType: [UserType.Personal, { validators: [Validators.required], updateOn: 'change' }]
   });
 
   constructor(
@@ -96,30 +83,35 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
     private router: Router,
     private auth: AuthService,
     private modalService: NgbModal,
-    private adminService: AdminDataService) { }
+    private adminService: AdminDataService) {
+      
+    }
+
+  ngOnInit(): void {
+    this.subscriptions.add(
+      this.dataForm.get('accountType')?.valueChanges.subscribe(val => {
+        this.userType = val;
+      })
+    );
+  }
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
 
-  private setCurrencies(list: CurrencyView[]): void {
-    if (this.userData) {
-      this.fiatCurrencies = list.filter(x => x.fiat === true);
-      this.dataForm.get('fiat')?.setValue(this.userData?.fiatCurrency ?? '');
-      this.cryptoCurrencies = list.filter(x => x.fiat === false);
-      this.dataForm.get('crypto')?.setValue(this.userData.cryptoCurrency ?? '');
-    }
-  }
-
   private setFormData(data: UserItem | null | undefined): void {
+    if (data?.id === undefined || data?.id === '') {
+      data = undefined;
+    }
     this.userData = data;
     this.errorMessage = '';
     this.dataForm.reset();
     if (data) {
+      this.userType = data.userType?.id ?? UserType.Personal;
       this.disableButtonTitle = (data.deleted) ? 'Enable' : 'Disable';
       this.dataForm.get('id')?.setValue(data?.id);
       this.dataForm.get('email')?.setValue(data?.email);
-      if (data.userType?.id === UserType.Merchant) {
+      if (this.userType === UserType.Merchant) {
         this.dataForm.get('firstName')?.setValue(data?.company);
         this.dataForm.get('lastName')?.setValue('');
         this.dataForm.get('birthday')?.setValue(null);
@@ -133,9 +125,8 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
           this.dataForm.get('birthday')?.setValue(null);
         }
       }
-      this.dataForm.get('risk')?.setValue(data?.risk ?? RiskLevel.Medium);
+      this.dataForm.get('accountType')?.setValue(this.userType);
       this.dataForm.get('accountStatus')?.setValue(data?.accountStatus ?? AccountStatus.Closed);
-      this.dataForm.get('tier')?.setValue(data?.kycLevel);
       this.dataForm.get('country')?.setValue(data?.country?.id);
       this.dataForm.get('postCode')?.setValue(data?.postCode);
       this.dataForm.get('town')?.setValue(data?.town);
@@ -149,14 +140,14 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
       this.dataForm.get('fiat')?.setValue(data?.fiatCurrency);
       this.dataForm.get('crypto')?.setValue(data?.cryptoCurrency);
     } else {
+      this.createNew = true;
       this.dataForm.get('id')?.setValue('');
       this.dataForm.get('email')?.setValue('');
       this.dataForm.get('firstName')?.setValue('');
       this.dataForm.get('lastName')?.setValue('');
-      this.dataForm.get('birthday')?.setValue(undefined);
-      this.dataForm.get('risk')?.setValue(RiskLevel.Medium);
-      this.dataForm.get('accountStatus')?.setValue(AccountStatus.Closed);
-      this.dataForm.get('tier')?.setValue('');
+      this.dataForm.get('birthday')?.setValue(null);
+      this.dataForm.get('accountType')?.setValue(UserType.Personal);
+      this.dataForm.get('accountStatus')?.setValue(AccountStatus.Live);
       this.dataForm.get('country')?.setValue('');
       this.dataForm.get('postCode')?.setValue('');
       this.dataForm.get('town')?.setValue('');
@@ -167,56 +158,15 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
       this.dataForm.get('buildingNumber')?.setValue('');
       this.dataForm.get('flatNumber')?.setValue('');
       this.dataForm.get('phone')?.setValue('');
-      this.dataForm.get('fiat')?.setValue('');
-      this.dataForm.get('crypto')?.setValue('');
     }
     const settingsId = data?.id ?? '';
     this.removable = (this.auth.user?.userId !== settingsId);
-    if (data) {
-      this.getUserKycInfo(settingsId);
-      this.getUserState(settingsId);
-      this.getUserKycTiers(settingsId);
-    }
-  }
-
-  private getUserKycInfo(id: string): void {
-    this.subscriptions.add(
-      this.adminService.getUserKycInfo(id).pipe(take(1)).subscribe(kyc => {
-        this.kycDocs = kyc?.appliedDocuments?.map(doc => doc.code) ?? [];
-      }));
-  }
-
-  private getUserKycTiers(id: string): void {
-    this.tiers = [];
-    this.subscriptions.add(
-      this.adminService.getSettingsKycTiers(id).pipe(take(1)).subscribe(data => {
-        this.tiers = data?.list?.map(tier => {
-          return {
-            id: tier.settingsKycTierId,
-            title: tier.name
-          } as CommonTargetValue;
-        }) ?? [];
-      }));
-  }
-
-  private getUserState(id: string): void {
-    this.subscriptions.add(
-      this.adminService.getUserState(id).pipe(take(1)).subscribe(state => {
-        this.kycProviderLink = state?.kycProviderLink ?? '';
-        let balance = 0;
-        state?.vaults?.forEach(x => {
-          balance += x.totalBalanceEur ?? 0;
-        });
-        this.totalBalance = `${balance} EUR`;
-      }));
   }
 
   private setCustomerData(): UserInput {
     const code3 = this.dataForm.get('country')?.value;
     const country = getCountryByCode3(code3);
     const code2 = (country) ? country.code2 : '';
-    const tierName = this.dataForm.get('tier')?.value;
-    const tierId = this.tiers.find(x => x.title === tierName)?.id;
     const data = {
       email: this.dataForm.get('email')?.value,
       firstName: this.dataForm.get('firstName')?.value,
@@ -233,11 +183,8 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
       buildingNumber: this.dataForm.get('buildingNumber')?.value,
       flatNumber: this.dataForm.get('flatNumber')?.value,
       phone: this.dataForm.get('phone')?.value,
-      defaultFiatCurrency: this.dataForm.get('fiat')?.value,
-      defaultCryptoCurrency: this.dataForm.get('crypto')?.value,
-      risk: this.dataForm.get('risk')?.value,
       accountStatus: this.dataForm.get('accountStatus')?.value,
-      kycTierId: tierId
+      type: this.dataForm.get('accountType')?.value
     } as UserInput;
     return data;
   }
@@ -254,10 +201,12 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
   }
 
   onResetPassword(content: any): void {
-    this.onSave(this.userData?.id ?? '', {
-      email: this.userData?.email ?? '',
-      changePasswordRequired: true
-    } as UserInput,
+    this.onSave(
+      this.userData?.id ?? '',
+      {
+        email: this.userData?.email ?? '',
+        changePasswordRequired: true
+      } as UserInput,
       content);
   }
 
@@ -279,7 +228,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
 
   private onSave(id: string, customer: UserInput, content: any): void {
     this.saveInProgress = true;
-    const requestData$ = this.adminService.saveCustomer(id, customer);
+    const requestData$ = this.adminService.saveCustomer(id, customer, this.currentRoles);
     this.subscriptions.add(
       requestData$.subscribe(({ data }) => {
         this.saveInProgress = false;
@@ -339,6 +288,10 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
         }
       })
     );
+  }
+
+  onRolesUpdated(roles: string[]): void {
+    this.currentRoles = roles.map(x => x);
   }
 
   onClose(): void {

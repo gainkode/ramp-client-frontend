@@ -53,7 +53,9 @@ import { AdminCryptoWalletsComponent } from './components/wallets/crypto/crypto-
 import { AdminCustomersComponent } from './components/users/customers/customers.component';
 import { AdminMessageDialogComponent } from './components/users/send-message/send-message.component';
 import { AdminCustomerDetailsComponent } from './components/users/customers/customer-details.component';
-import { AdminSystemUsersComponent } from './components/users/system/system.component';
+import { AdminSystemUsersComponent } from './components/users/system/users.component';
+import { AdminUserDetailsComponent } from './components/users/system/user-details.component';
+import { AdminRoleSelectComponent } from './misc/role-select/role-select.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -118,6 +120,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AdminCustomersComponent,
     AdminCustomerDetailsComponent,
     AdminSystemUsersComponent,
+    AdminUserDetailsComponent,
+    AdminRoleSelectComponent,
     AdminMessageDialogComponent
   ],
   providers: [

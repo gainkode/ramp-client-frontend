@@ -7,7 +7,6 @@ import { take } from 'rxjs/operators';
 import { Filter } from 'src/app/admin_old/model/filter.model';
 import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
 import { UserRole } from 'src/app/model/generated-models';
-import { CurrencyView } from 'src/app/model/payment.model';
 import { UserItem } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
@@ -15,8 +14,8 @@ import { UserMessageData } from '../send-message/send-message.component';
 
 @Component({
   selector: 'app-admin-system-users',
-  templateUrl: 'system.component.html',
-  styleUrls: ['system.component.scss']
+  templateUrl: 'users.component.html',
+  styleUrls: ['users.component.scss']
 })
 export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
@@ -46,6 +45,7 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
   permission = 0;
   setRoleFlag = false;
   selectedUser?: UserItem;
+  userDetailsTitle = 'User Details';
   roleUser?: UserItem;
   roleIds: string[] = [];
   userRoles: UserRole[] = [];
@@ -111,19 +111,16 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   addUser(content: any): void {
-    
+    this.userDetailsTitle = 'Create a new User';
+    this.selectedUser = undefined;
+    this.detailsDialog = this.modalService.open(content, {
+      backdrop: 'static',
+      windowClass: 'modalCusSty',
+    });
   }
   
   setRole(): void {
     this.setRoleFlag = true;
-  }
-
-  showTransactions(id: string): void {
-    this.router.navigateByUrl(`/admin/transactions/users/${id}`);
-  }
-
-  showWallets(id: string): void {
-    this.router.navigateByUrl(`/admin/crypto-wallets/users/${id}`);
   }
 
   private loadRoleData(): void {
@@ -234,6 +231,7 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   showDetails(user: UserItem, content: any) {
+    this.userDetailsTitle = 'User Details';
     this.selectedUser = user;
     this.detailsDialog = this.modalService.open(content, {
       backdrop: 'static',

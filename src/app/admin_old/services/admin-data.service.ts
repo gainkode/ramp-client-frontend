@@ -685,6 +685,7 @@ const GET_USERS_EX = gql`
         countryCode3
         created
         updated
+        deleted
         lastLogin
         accountStatus
         phone
@@ -2812,13 +2813,13 @@ export class AdminDataService {
       }));
   }
 
-  saveCustomer(id: string, customer: UserInput): Observable<any> {
+  saveCustomer(id: string, customer: UserInput, customerRoles: string[] = ['USER']): Observable<any> {
     if (id === '') {
       return this.apollo.mutate({
         mutation: CREATE_USER,
         variables: {
-          roles: ['USER'],
-          type: UserType.Personal,
+          roles: customerRoles,
+          type: customer.type,
           mode: UserMode.InternalWallet,
           email: customer.email,
           changePasswordRequired: customer.changePasswordRequired,

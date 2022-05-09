@@ -43,8 +43,8 @@
                       wysiwyg
                     </i>
                   </button>
-                  <button mat-icon-button class="row-button" (click)="showWallets(element.id)"
-                    [attr.aria-label]="'User roles'" matTooltip="User's roles"
+                  <button mat-icon-button class="row-button" (click)="setUserRole(element)"
+                    [attr.aria-label]="'User roles'" [matTooltip]="permission>1 ? 'Set roles' : 'Roles'" 
                     matTooltipClass="info-tooltip">
                     <mat-icon class="details-icon">
                       perm_data_setting
@@ -166,15 +166,17 @@
 
           <ng-template #details_content let-modal>
             <div class="modal-header">
-              <h5 class="modal-title">User details</h5>
+              <h5 class="modal-title">
+                {{userDetailsTitle}}
+              </h5>
               <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body">
-              <app-admin-customer-details [permission]="permission" [customer]="selectedUser" 
+              <app-admin-user-details [permission]="permission" [user]="selectedUser" [roles]="userRoles"
                 (save)="onSaveUser()" (close)="modal.dismiss('Close')">
-              </app-admin-customer-details>
+              </app-admin-user-details>
             </div>
           </ng-template>
 

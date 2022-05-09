@@ -3,22 +3,30 @@
     <form [formGroup]="dataForm" novalidate (ngSubmit)="onSubmit()">
       <div class="card card-body pd-20 pd-md-40 border shadow-none">
         <h5 class="card-title mg-b-20">
-          Customer info
+          User info
         </h5>
         <!-- <app-admin-details-item label="Account Id" [value]="userData?.referralCode"
             [linkUrl]="'/admin/customers/'+ settingsId"></app-admin-details-item> -->
         <app-admin-details-item label="Account Id" [value]="userData?.referralCode">
         </app-admin-details-item>
-        <app-admin-details-item label="Widget" [value]="userData?.widgetId">
+        <!-- Account type -->
+        <app-admin-details-item *ngIf="!createNew" label="Account Type" [value]="userData?.userType?.name">
         </app-admin-details-item>
-        <app-admin-details-item label="Widget Code" [value]="userData?.widgetCode">
-        </app-admin-details-item>
-        <app-admin-details-item label="Widgets" [value]="'Related widgets'" [linkUrl]="'/admin/widgets/'+ userData?.id">
-        </app-admin-details-item>
-        <app-admin-details-item label="Affiliate" [value]="userData?.affiliateId">
-        </app-admin-details-item>
-        <app-admin-details-item label="Affiliate Code" [value]="userData?.affiliateCode">
-        </app-admin-details-item>
+        <div *ngIf="createNew" class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Account Type
+          </label>
+          <ng-select [items]="accountTypes" bindLabel="name" bindValue="id" formControlName="accountType"
+            [clearable]=false [clearOnBackspace]=false required>
+          </ng-select>
+          <div
+            *ngIf="(dataForm.controls.accountType.touched || submitted) && (dataForm.controls.accountType.errors?.['required'])"
+            class="tx-danger">
+            <small>
+              Please specify the account type
+            </small>
+          </div>
+        </div>
       </div>
       <div class="card card-body pd-20 pd-md-40 border shadow-none">
         <h5 class="card-title mg-b-20">
@@ -39,7 +47,7 @@
           </div>
         </div>
         <!-- Company -->
-        <div class="form-group" *ngIf="userData?.userType?.id===USER_TYPE.Merchant">
+        <div class="form-group" *ngIf="userType===USER_TYPE.Merchant">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             Company
           </label>
@@ -55,7 +63,7 @@
           </div>
         </div>
         <!-- First name -->
-        <div class="form-group" *ngIf="userData?.userType?.id===USER_TYPE.Personal">
+        <div class="form-group" *ngIf="userType===USER_TYPE.Personal">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             First Name
           </label>
@@ -71,7 +79,7 @@
           </div>
         </div>
         <!-- Last name -->
-        <div class="form-group" *ngIf="userData?.userType?.id===USER_TYPE.Personal">
+        <div class="form-group" *ngIf="userType===USER_TYPE.Personal">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             Last Name
           </label>
@@ -88,12 +96,12 @@
         </div>
         <!-- Birthday -->
         <app-admin-details-item label="Age" [value]="userData?.age"></app-admin-details-item>
-        <div class="form-group" *ngIf="userData?.userType?.id===USER_TYPE.Personal">
+        <div class="form-group" *ngIf="userType===USER_TYPE.Personal">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             Birthday
           </label>
-          <input class="form-control" placeholder="dd/mm/yyyy" name="birthday_picker" 
-            ngbDatepicker [minDate]="minBirthdayDate" [maxDate]="maxBirthdayDate" #birthday_picker="ngbDatepicker"
+          <input class="form-control" placeholder="dd/mm/yyyy" name="birthday_picker" ngbDatepicker
+            [minDate]="minBirthdayDate" [maxDate]="maxBirthdayDate" #birthday_picker="ngbDatepicker"
             (click)="birthday_picker.toggle()" formControlName="birthday">
           <div
             *ngIf="(dataForm.controls.birthday.touched || submitted) && (dataForm.controls.birthday.errors?.['required'])"
@@ -103,7 +111,7 @@
             </small>
           </div>
         </div>
-        <div style="display: flex; justify-content: flex-end;">
+        <div *ngIf="!createNew" style="display: flex; justify-content: flex-end;">
           <button *ngIf="permission>1" type="button" class="btn btn-outline-secondary" type="button"
             (click)="onResetPassword(password_change_content)">
             Reset password
@@ -210,64 +218,6 @@
       </div>
       <div class="card card-body pd-20 pd-md-40 border shadow-none">
         <h5 class="card-title mg-b-20">
-          Payment Data
-        </h5>
-        <!-- Fiat currencies -->
-        <div class="form-group">
-          <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            Default currency
-          </label>
-          <ng-select [items]="fiatCurrencies" bindLabel="title" bindValue="id" formControlName="fiat" [clearable]=false
-            [clearOnBackspace]=false required>
-          </ng-select>
-          <div *ngIf="(dataForm.controls.fiat.touched || submitted) && (dataForm.controls.fiat.errors?.['required'])"
-            class="tx-danger">
-            <small>
-              Please specify default fiat currency
-            </small>
-          </div>
-        </div>
-        <!-- Crypto currencies -->
-        <div class="form-group">
-          <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            Default crypto
-          </label>
-          <ng-select [items]="cryptoCurrencies" bindLabel="title" bindValue="id" formControlName="crypto"
-            [clearable]=false [clearOnBackspace]=false required>
-          </ng-select>
-          <div
-            *ngIf="(dataForm.controls.crypto.touched || submitted) && (dataForm.controls.crypto.errors?.['required'])"
-            class="tx-danger">
-            <small>
-              Please specify default crypto currency
-            </small>
-          </div>
-        </div>
-        <!-- Totals -->
-        <app-admin-details-item label="Total Balance" [value]="totalBalance"></app-admin-details-item>
-        <app-admin-details-item label="Total Transaction Count" [value]="userData?.totalTransactionCount">
-        </app-admin-details-item>
-        <app-admin-details-item label="Avarage Transaction" [value]="userData?.avarageTransaction">
-        </app-admin-details-item>
-        <app-admin-details-item label="Total Buy Completed" [value]="userData?.totalBoughtCompletedResult">
-        </app-admin-details-item>
-        <app-admin-details-item label="Total Buy In Process" [value]="userData?.totalBoughtInProcessResult">
-        </app-admin-details-item>
-        <app-admin-details-item label="Total Sell Completed" [value]="userData?.totalSoldCompletedResult">
-        </app-admin-details-item>
-        <app-admin-details-item label="Total Sell In Process" [value]="userData?.totalSoldInProcessResult">
-        </app-admin-details-item>
-        <app-admin-details-item label="Total Send Completed" [value]="userData?.totalSentCompletedResult">
-        </app-admin-details-item>
-        <app-admin-details-item label="Total Send In Process" [value]="userData?.totalSentInProcessResult">
-        </app-admin-details-item>
-        <app-admin-details-item label="Total Receive Completed" [value]="userData?.totalReceivedCompletedResult">
-        </app-admin-details-item>
-        <app-admin-details-item label="Total Receive In Process" [value]="userData?.totalReceivedInProcessResult">
-        </app-admin-details-item>
-      </div>
-      <div class="card card-body pd-20 pd-md-40 border shadow-none">
-        <h5 class="card-title mg-b-20">
           Status
         </h5>
         <!-- Account status -->
@@ -286,55 +236,18 @@
             </small>
           </div>
         </div>
-        <!-- Risks -->
-        <app-admin-details-item label="Risk codes" [value]="userData?.riskCodes"></app-admin-details-item>
+        <!-- Roles -->
+        <app-admin-details-item *ngIf="!createNew" label="Roles" [value]="userData?.roles"></app-admin-details-item>
         <div class="form-group">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            Risk Level
+            Roles
           </label>
-          <ng-select [items]="riskLevels" bindLabel="name" bindValue="id" formControlName="risk" [clearable]=false
-            [clearOnBackspace]=false required>
-          </ng-select>
-          <div *ngIf="(dataForm.controls.risk.touched || submitted) && (dataForm.controls.risk.errors?.['required'])"
-            class="tx-danger">
-            <small>
-              Please specify the risk level
-            </small>
-          </div>
+          <app-admin-role-select *ngIf="createNew" [roleList]="roles" [userRoles]="userData?.roles ?? []"
+            (changed)="onRolesUpdated($event)"></app-admin-role-select>
         </div>
-        <!-- Level -->
-        <div class="form-group">
-          <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            KYC Level
-          </label>
-          <ng-select [items]="tiers" bindLabel="title" bindValue="title" formControlName="tier" [clearable]=false
-            [clearOnBackspace]=false required>
-          </ng-select>
-          <div *ngIf="(dataForm.controls.tier.touched || submitted) && (dataForm.controls.tier.errors?.['required'])"
-            class="tx-danger">
-            <small>
-              Please specify the user verification level
-            </small>
-          </div>
-        </div>
-        <app-admin-details-item label="Docs Check" [value]="userData?.kycStatus"></app-admin-details-item>
-        <app-admin-details-item label="KYC Review Date" [value]="userData?.kycReviewDate"></app-admin-details-item>
-        <app-admin-details-item label="Docs Check Date" [value]="userData?.kycStatusDate"></app-admin-details-item>
-        <app-admin-details-item label="KYC Review Comment" [value]="userData?.kycReviewComment">
-        </app-admin-details-item>
-        <app-admin-details-item label="KYC Private Comment" [value]="userData?.kycPrivateComment">
-        </app-admin-details-item>
-        <app-admin-details-item label="KYC Review Rejected Type" [value]="userData?.kycReviewRejectedType">
-        </app-admin-details-item>
-        <app-admin-details-item label="KYC Review Rejected Labels" [value]="userData?.kycReviewRejectedLabels">
-        </app-admin-details-item>
-        <app-admin-details-item label="KYC Review Result" [value]="userData?.kycReviewResult"></app-admin-details-item>
-        <app-admin-details-item label="DocsCheck Update Required" [value]="userData?.kycStatusUpdateRequired">
-        </app-admin-details-item>
-        <app-admin-details-item label="Provided documents" [value]="kycDocs"></app-admin-details-item>
-        <app-admin-details-item label="KYC Details" [value]="kycProviderLink" [linkUrl]="kycProviderLink">
-        </app-admin-details-item>
+
         <app-admin-details-item label="Last updated" [value]="userData?.updated"></app-admin-details-item>
+        <app-admin-details-item label="Last login" [value]="userData?.lastLogin"></app-admin-details-item>
       </div>
 
       <div *ngIf="errorMessage!==''" class="card card-body card-danger pd-20 pd-md-40 border shadow-none">

@@ -1,0 +1,8 @@
+<div *ngFor="let role of roleItems" class="col-lg-8 mg-y-10">
+    <label class="ckbox">
+        <input [checked]="role.selected" type="checkbox" (change)="role.selected=!role.selected;onChanged()">
+        <span>
+            {{role.name}}
+        </span>
+    </label>
+</div>
