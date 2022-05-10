@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import { MatSort } from '@angular/material/sort';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -7,8 +8,9 @@ import { take } from 'rxjs/operators';
 import { Filter } from 'src/app/admin_old/model/filter.model';
 import { WidgetItem } from 'src/app/admin_old/model/widget.model';
 import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
-import { SettingsCurrencyWithDefaults, TransactionStatusDescriptorMap, TransactionType } from 'src/app/model/generated-models';
-import { CurrencyView } from 'src/app/model/payment.model';
+import { SettingsCurrencyWithDefaults, SettingsFeeShort, TransactionStatusDescriptorMap, TransactionType, WireTransferBankAccountShort } from 'src/app/model/generated-models';
+import { WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from 'src/app/model/payment-base.model';
+import { CurrencyView, WireTransferPaymentCategoryList } from 'src/app/model/payment.model';
 import { TransactionItemFull } from 'src/app/model/transaction.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
