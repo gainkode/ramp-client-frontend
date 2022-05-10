@@ -21,8 +21,8 @@ export class AdminDetailsItemComponent {
       this.valueString = value ? value.trim() : undefined;
     } else {
       this.setArray = true;
-      this.valueString = (value) ? (value.length > 0 ? 'data' : undefined) : undefined;
-      this.valueStrings = value ?? [];
+      this.valueStrings = value?.filter(x => x !== '') ?? [];
+      this.valueString = this.valueStrings.length > 0 ? 'data' : undefined;
     }
   }
 

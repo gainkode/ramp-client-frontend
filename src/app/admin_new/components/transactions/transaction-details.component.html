@@ -25,6 +25,7 @@
           class="form-group">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             Wallet address
+            <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
           </label>
           <input class="form-control" [ngClass]="{'has-error': !form.controls.address.valid}" type="text"
             formControlName="address" required>
@@ -46,6 +47,7 @@
         <div *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-group">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             Transaction status
+            <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
           </label>
           <ng-select [items]="transactionStatuses" bindLabel="name" bindValue="id" formControlName="transactionStatus"
             [clearable]=false [clearOnBackspace]=false required>
@@ -67,6 +69,7 @@
             <div class="col-sm-12">
               <label class="main-content-label tx-11 tx-medium tx-gray-600">
                 {{amountToSpendTitle}}
+                <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
               </label>
               <div class="row">
                 <div class="col-sm-7">
@@ -103,6 +106,7 @@
             <div class="col-sm-12">
               <label class="main-content-label tx-11 tx-medium tx-gray-600">
                 Amount To Receive
+                <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
               </label>
               <div class="row">
                 <div class="col-sm-7">
@@ -126,6 +130,7 @@
           class="form-group">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             Exchange rate
+            <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
             <a [routerLink]="" (click)="updateRate()" style="font-size: 12px;margin-left: 8px;">
               Set current
             </a>
@@ -158,6 +163,7 @@
         <div *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-group">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             {{systemFeeTitle}}
+            <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
           </label>
           <input class="form-control" [ngClass]="{'has-error': !form.controls.fee.valid}" type="text"
             formControlName="fee" required>
@@ -224,6 +230,7 @@
         <div *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-group">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             Docs Check
+            <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
           </label>
           <ng-select [items]="kycStatuses" [clearable]=false [clearOnBackspace]=false bindLabel="name" bindValue="id"
             formControlName="kycStatus" required>
@@ -237,6 +244,7 @@
         <div *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-group">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             Account Status
+            <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
           </label>
           <ng-select [items]="accountStatuses" [clearable]=false [clearOnBackspace]=false bindLabel="name"
             bindValue="id" formControlName="accountStatus" required>

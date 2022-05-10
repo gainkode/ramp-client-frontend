@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
 import { MatSort } from '@angular/material/sort';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -8,13 +7,7 @@ import { take } from 'rxjs/operators';
 import { Filter } from 'src/app/admin_old/model/filter.model';
 import { WidgetItem } from 'src/app/admin_old/model/widget.model';
 import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
-import { SettingsCurrencyWithDefaults, SettingsFeeShort, TransactionStatusDescriptorMap, TransactionType, WireTransferBankAccountShort } from 'src/app/model/generated-models';
-import { WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from 'src/app/model/payment-base.model';
-import { CurrencyView, WireTransferPaymentCategoryList } from 'src/app/model/payment.model';
-import { TransactionItemFull } from 'src/app/model/transaction.model';
 import { AuthService } from 'src/app/services/auth.service';
-import { CommonDataService } from 'src/app/services/common-data.service';
-import { ProfileDataService } from 'src/app/services/profile.service';
 
 @Component({
   selector: 'app-admin-widgets',
@@ -45,8 +38,6 @@ export class AdminWidgetsComponent implements OnInit, OnDestroy, AfterViewInit {
     'liquidityProvider',
     'id'
   ];
-  // sendMessageInProgress = false;
-  // sendMessageError = '';
   inProgress = false;
   errorMessage = '';
   permission = 0;
@@ -61,10 +52,6 @@ export class AdminWidgetsComponent implements OnInit, OnDestroy, AfterViewInit {
   sortedField = 'created';
   sortedDesc = true;
   filter = new Filter({});
-  // isUsersLoading = false;
-  // usersSearchInput$ = new Subject<string>();
-  // usersOptions$: Observable<UserItem[]> = of([]);
-  // minUsersLengthTerm = 1;
 
   private subscriptions: Subscription = new Subscription();
   private detailsDialog: NgbModalRef | undefined = undefined;
@@ -149,26 +136,6 @@ export class AdminWidgetsComponent implements OnInit, OnDestroy, AfterViewInit {
     );
   }
 
-  // private initUserSearch() {
-  //   this.usersOptions$ = concat(
-  //     of([]),
-  //     this.usersSearchInput$.pipe(
-  //       filter(res => {
-  //         return res !== null && res.length >= this.minUsersLengthTerm
-  //       }),
-  //       debounceTime(300),
-  //       distinctUntilChanged(),
-  //       tap(() => {
-  //         this.isUsersLoading = true;
-  //       }),
-  //       switchMap(searchString => {
-  //         this.isUsersLoading = false;
-  //         return this.adminService.findUsers(new Filter({ search: searchString }))
-  //           .pipe(map(result => result.list));
-  //       })
-  //     ));
-  // }
-
   onSaveWidget(): void {
     this.selectedWidget = undefined;
     if (this.detailsDialog) {
@@ -176,36 +143,6 @@ export class AdminWidgetsComponent implements OnInit, OnDestroy, AfterViewInit {
       this.loadWidgets();
     }
   }
-
-  // sendMessage(content: any): void {
-  //   this.messageDialog = this.modalService.open(content, {
-  //     backdrop: 'static',
-  //     windowClass: 'modalCusSty',
-  //   });
-  // }
-
-  // sendMessageStart(data: UserMessageData): void {
-  //   this.sendMessageInProgress = true;
-  //   this.sendMessageError = '';
-  //   const ids = this.users.filter(x => x.selected === true).map(val => val.id);
-  //   const requestData$ = this.adminService.sendAdminNotification(ids, data.level, data.title, data.text);
-  //   this.subscriptions.add(
-  //     requestData$.subscribe(({ result }) => {
-  //       this.sendMessageInProgress = false;
-  //       this.selected = false;
-  //       this.users.forEach(x => x.selected = false);
-  //       if (this.messageDialog) {
-  //         this.messageDialog.close();
-  //       }
-  //     }, (error) => {
-  //       this.sendMessageInProgress = false;
-  //       this.sendMessageError = error;
-  //       if (this.auth.token === '') {
-  //         this.router.navigateByUrl('/');
-  //       }
-  //     })
-  //   );
-  // }
 
   export(content: any): void {
     const ids = this.widgets.filter(x => x.selected === true).map(val => val.id);
