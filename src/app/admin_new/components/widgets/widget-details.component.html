@@ -1,253 +1,142 @@
 <div class="row">
   <div class="col-md-12 col-lg-12 col-xl-12 mx-auto d-block">
-    <form [formGroup]="dataForm" novalidate (ngSubmit)="onSubmit()">
-      <div class="card card-body pd-20 pd-md-40 border shadow-none">
+    <form [formGroup]="form" novalidate (ngSubmit)="onSubmit()">
+      <div *ngIf="form.value.id" class="card card-body pd-20 pd-md-40 border shadow-none">
         <h5 class="card-title mg-b-20">
-          User info
+          Links
         </h5>
-        <!-- <app-admin-details-item label="Account Id" [value]="userData?.referralCode"
-            [linkUrl]="'/admin/customers/'+ settingsId"></app-admin-details-item> -->
-        <app-admin-details-item label="Account Id" [value]="userData?.referralCode">
+        <app-admin-details-item label="Widget link" [value]="widgetMaskLink">
         </app-admin-details-item>
-        <!-- Account type -->
-        <app-admin-details-item *ngIf="!createNew" label="Account Type" [value]="userData?.userType?.name">
+        <app-admin-details-item [linkUrl]="widgetLink" label="Quick Checkout link" [value]="widgetLink">
         </app-admin-details-item>
-        <div *ngIf="createNew" class="form-group">
+
+      </div>
+      <div class="card card-body pd-20 pd-md-40 border shadow-none">
+        <h5 *ngIf="form.value.id" class="card-title mg-b-20">
+          Settings
+        </h5>
+        <div class="form-group">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            Account Type
+            User
+            <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
           </label>
-          <ng-select [items]="accountTypes" bindLabel="name" bindValue="id" formControlName="accountType"
-            [clearable]=false [clearOnBackspace]=false required>
+          <ng-select [items]="usersOptions$ | async" bindLabel="extendedName" [minTermLength]="minUsersLengthTerm"
+            notFoundText="No users found" [loading]="isUsersLoading" [multiple]="false" formControlName="user"
+            typeToSearchText="Type email or user name" placeholder="Start typing to search a user"
+            [typeahead]="usersSearchInput$" required>
           </ng-select>
-          <div
-            *ngIf="(dataForm.controls.accountType.touched || submitted) && (dataForm.controls.accountType.errors?.['required'])"
+          <div *ngIf="(form.controls.user.touched || submitted) && (form.controls.user.errors?.['required'])"
             class="tx-danger">
             <small>
-              Please specify the account type
+              Please specify a user
             </small>
           </div>
         </div>
-      </div>
-      <div class="card card-body pd-20 pd-md-40 border shadow-none">
-        <h5 class="card-title mg-b-20">
-          Personal info
-        </h5>
+
         <div class="form-group">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            Email
+            Widget name
+            <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
           </label>
           <input class="form-control"
-            [ngClass]="{'has-error': (dataForm.controls.email.touched || submitted) && !dataForm.controls.email.valid}"
-            type="text" formControlName="email" maxlength="35" required>
-          <div *ngIf="(dataForm.controls.email.touched || submitted) && (dataForm.controls.email.errors?.['required'])"
+            [ngClass]="{'has-error': (form.controls.name.touched || submitted) && !form.controls.name.valid}"
+            type="text" formControlName="name" maxlength="50" required>
+          <div *ngIf="(form.controls.name.touched || submitted) && (form.controls.name.errors?.['required'])"
             class="tx-danger">
             <small>
-              Email is required
+              Widget name is required
             </small>
           </div>
         </div>
-        <!-- Company -->
-        <div class="form-group" *ngIf="userType===USER_TYPE.Merchant">
-          <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            Company
-          </label>
-          <input class="form-control"
-            [ngClass]="{'has-error': (dataForm.controls.firstName.touched || submitted) && !dataForm.controls.firstName.valid}"
-            type="text" formControlName="firstName" maxlength="75" required />
-          <div
-            *ngIf="(dataForm.controls.firstName.touched || submitted) && (dataForm.controls.firstName.errors?.['required'])"
-            class="tx-danger">
-            <small>
-              Please specify the company name
-            </small>
-          </div>
-        </div>
-        <!-- First name -->
-        <div class="form-group" *ngIf="userType===USER_TYPE.Personal">
-          <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            First Name
-          </label>
-          <input class="form-control"
-            [ngClass]="{'has-error': (dataForm.controls.firstName.touched || submitted) && !dataForm.controls.firstName.valid}"
-            type="text" formControlName="firstName" maxlength="50" required />
-          <div
-            *ngIf="(dataForm.controls.firstName.touched || submitted) && (dataForm.controls.firstName.errors?.['required'])"
-            class="tx-danger">
-            <small>
-              Please specify the customer name
-            </small>
-          </div>
-        </div>
-        <!-- Last name -->
-        <div class="form-group" *ngIf="userType===USER_TYPE.Personal">
-          <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            Last Name
-          </label>
-          <input class="form-control"
-            [ngClass]="{'has-error': (dataForm.controls.lastName.touched || submitted) && !dataForm.controls.lastName.valid}"
-            type="text" formControlName="lastName" maxlength="50" />
-          <div
-            *ngIf="(dataForm.controls.lastName.touched || submitted) && (dataForm.controls.lastName.errors?.['required'])"
-            class="tx-danger">
-            <small>
-              Please specify the customer name
-            </small>
-          </div>
-        </div>
-        <!-- Birthday -->
-        <app-admin-details-item label="Age" [value]="userData?.age"></app-admin-details-item>
-        <div class="form-group" *ngIf="userType===USER_TYPE.Personal">
-          <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            Birthday
-          </label>
-          <input class="form-control" placeholder="dd/mm/yyyy" name="birthday_picker" ngbDatepicker
-            [minDate]="minBirthdayDate" [maxDate]="maxBirthdayDate" #birthday_picker="ngbDatepicker"
-            (click)="birthday_picker.toggle()" formControlName="birthday">
-          <div
-            *ngIf="(dataForm.controls.birthday.touched || submitted) && (dataForm.controls.birthday.errors?.['required'])"
-            class="tx-danger">
-            <small>
-              Please specify the birthday
-            </small>
-          </div>
-        </div>
-        <div *ngIf="!createNew" style="display: flex; justify-content: flex-end;">
-          <button *ngIf="permission>1" type="button" class="btn btn-outline-secondary" type="button"
-            (click)="onResetPassword(password_change_content)">
-            Reset password
-          </button>
-        </div>
-      </div>
-      <div class="card card-body pd-20 pd-md-40 border shadow-none">
-        <h5 class="card-title mg-b-20">
-          Address
-        </h5>
-        <app-admin-details-item label="Full Address" [value]="userData?.address"></app-admin-details-item>
-        <!-- Country -->
+
         <div class="form-group">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            Country
+            Description
           </label>
-          <ng-select formControlName="country" formControlName="country" [clearable]=false [clearOnBackspace]=false
-            required>
-            <ng-option *ngFor="let country of countries" [value]="country.code3">
+          <input class="form-control" type="text" formControlName="description" maxlength="150">
+        </div>
+
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Countries
+          </label>
+          <ng-select formControlName="countries" [clearable]=true [clearOnBackspace]=true [multiple]="true"
+            [closeOnSelect]="false">
+            <ng-option *ngFor="let country of countryOptions" [value]="country">
               <app-dropdown-item itemValue="{{country.name}}" imageClass="country-flag-admin"
                 imageSource="assets/svg-country-flags/{{getCountryFlag(country.code2)}}">
               </app-dropdown-item>
             </ng-option>
           </ng-select>
-          <div
-            *ngIf="(dataForm.controls.country.touched || submitted) && (dataForm.controls.country.errors?.['required'])"
-            class="tx-danger">
-            <small>
-              Please specify the country
-            </small>
-          </div>
-        </div>
-        <!-- Post Code -->
-        <div class="form-group">
-          <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            Post Code
-          </label>
-          <input class="form-control" type="text" formControlName="postCode" maxlength="15" />
-        </div>
-        <!-- Town -->
-        <div class="form-group">
-          <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            Town
-          </label>
-          <input class="form-control" type="text" formControlName="town" maxlength="50" />
-        </div>
-        <!-- Street (Line 1) -->
-        <div class="form-group">
-          <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            Street (Line 1)
-          </label>
-          <input class="form-control" type="text" formControlName="street" maxlength="50" />
-        </div>
-        <!-- Street (Line 2) -->
-        <div class="form-group">
-          <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            Street (Line 2)
-          </label>
-          <input class="form-control" type="text" formControlName="subStreet" maxlength="50" />
-        </div>
-        <!-- State -->
-        <div class="form-group">
-          <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            State
-          </label>
-          <input class="form-control" type="text" formControlName="stateName" maxlength="25" />
-        </div>
-        <!-- Building Name -->
-        <div class="form-group">
-          <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            Building Name
-          </label>
-          <input class="form-control" type="text" formControlName="buildingName" maxlength="25" />
-        </div>
-        <!-- Building Number -->
-        <div class="form-group">
-          <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            Building Number
-          </label>
-          <input class="form-control" type="text" formControlName="buildingNumber" maxlength="8" />
-        </div>
-        <!-- Flat Number -->
-        <div class="form-group">
-          <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            Flat Number
-          </label>
-          <input class="form-control" type="text" formControlName="flatNumber" maxlength="8" />
-        </div>
-        <!-- Phone -->
-        <div class="form-group">
-          <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            Phone
-          </label>
-          <input class="form-control"
-            [ngClass]="{'has-error': (dataForm.controls.phone.touched || submitted) && !dataForm.controls.phone.valid}"
-            type="text" formControlName="phone" maxlength="25" required />
-          <div *ngIf="(dataForm.controls.phone.touched || submitted) && (dataForm.controls.phone.errors?.['required'])"
-            class="tx-danger">
-            <small>
-              Please specify the phone number
-            </small>
-          </div>
-        </div>
-      </div>
-      <div class="card card-body pd-20 pd-md-40 border shadow-none">
-        <h5 class="card-title mg-b-20">
-          Status
-        </h5>
-        <!-- Account status -->
-        <div class="form-group">
-          <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            Account Status
-          </label>
-          <ng-select [items]="accountStatuses" bindLabel="name" bindValue="id" formControlName="accountStatus"
-            [clearable]=false [clearOnBackspace]=false required>
-          </ng-select>
-          <div
-            *ngIf="(dataForm.controls.accountStatus.touched || submitted) && (dataForm.controls.accountStatus.errors?.['required'])"
-            class="tx-danger">
-            <small>
-              Please specify the account status
-            </small>
-          </div>
-        </div>
-        <!-- Roles -->
-        <app-admin-details-item *ngIf="!createNew" label="Roles" [value]="userData?.roles"></app-admin-details-item>
-        <div class="form-group">
-          <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            Roles
-          </label>
-          <app-admin-role-select *ngIf="createNew" [roleList]="roles" [userRoles]="userData?.roles ?? []"
-            (changed)="onRolesUpdated($event)"></app-admin-role-select>
         </div>
 
-        <app-admin-details-item label="Last updated" [value]="userData?.updated"></app-admin-details-item>
-        <app-admin-details-item label="Last login" [value]="userData?.lastLogin"></app-admin-details-item>
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Crypto Currencies
+          </label>
+          <ng-select [items]="currencyOptionsCrypto" bindLabel="name" bindValue="id" formControlName="currenciesCrypto"
+            [clearable]=true [clearOnBackspace]=true [multiple]="true" [closeOnSelect]="false">
+          </ng-select>
+        </div>
+
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Fiat Currencies
+          </label>
+          <ng-select [items]="currencyOptionsFiat" bindLabel="name" bindValue="id" formControlName="currenciesFiat"
+            [clearable]=true [clearOnBackspace]=true [multiple]="true" [closeOnSelect]="false">
+          </ng-select>
+        </div>
+
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Destination address
+          </label>
+          <input class="form-control" type="text" formControlName="destinationAddress" maxlength="75">
+        </div>
+
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Payment Methods
+          </label>
+          <ng-select [items]="instrumentOptions" bindLabel="name" bindValue="id" formControlName="instruments"
+            [clearable]=true [clearOnBackspace]=true [multiple]="true" [closeOnSelect]="false">
+          </ng-select>
+        </div>
+
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Liquidity provider
+            <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+          </label>
+          <ng-select [items]="liquidityProviderOptions" bindLabel="name" bindValue="id" formControlName="liquidityProvider"
+            [clearable]=false [clearOnBackspace]=false required>
+          </ng-select>
+          <div *ngIf="(form.controls.liquidityProvider.touched || submitted) && (form.controls.liquidityProvider.errors?.['required'])"
+            class="tx-danger">
+            <small>
+              Liquidity provider name is required
+            </small>
+          </div>
+        </div>
+
+        <div *ngIf="showPaymentProviders" class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Payment Providers
+          </label>
+          <ng-select [items]="filteredProviders" bindLabel="name" bindValue="id" formControlName="paymentProviders"
+            [clearable]=true [clearOnBackspace]=true [multiple]="true" [closeOnSelect]="false">
+          </ng-select>
+        </div>
+
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Transaction types
+          </label>
+          <ng-select [items]="transactionTypeOptions" bindLabel="name" bindValue="id" formControlName="transactionTypes"
+            [clearable]=true [clearOnBackspace]=true [multiple]="true" [closeOnSelect]="false">
+          </ng-select>
+        </div>
       </div>
 
       <div *ngIf="errorMessage!==''" class="card card-body card-danger pd-20 pd-md-40 border shadow-none">
@@ -260,13 +149,13 @@
           <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
           Save
         </button>
-        <button *ngIf="permission>1 && removable" class="btn btn-danger pd-x-30 me-2 mg-t-5" type="button"
-          (click)="onDeleteCustomer(delete_confirm_content)">
-          <span *ngIf="disableInProgress" class="spinner-border spinner-border-sm" role="status"
+        <button *ngIf="permission>1" class="btn btn-danger pd-x-30 me-2 mg-t-5" type="button"
+          (click)="onDeleteWidget(delete_confirm_content)">
+          <span *ngIf="deleteInProgress" class="spinner-border spinner-border-sm" role="status"
             aria-hidden="true"></span>
-          {{disableButtonTitle}}
+          Delete
         </button>
-        <button class="btn btn-outline-primary pd-x-30 mg-t-5" type="button" (click)="onClose()">
+        <button class="btn btn-outline-primary pd-x-30 mg-t-5" type="button" (click)="close.emit()">
           Close
         </button>
       </div>
@@ -276,42 +165,21 @@
 
 <ng-template #delete_confirm_content let-modal>
   <div class="modal-header">
-    <h5 class="modal-title">{{disableButtonTitle}} customer</h5>
+    <h5 class="modal-title">Delete widget</h5>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body">
     <h4 style="text-align: center;">
-      You are going to {{disableButtonTitle.toLowerCase()}} selected customer. Confirm operation.
+      You are going to delete selected widget. Confirm operation.
     </h4>
     <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
       <button class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" type="button" (click)="modal.dismiss('Reject')">
         Reject
       </button>
-      <button class="btn btn-danger pd-x-30 mg-t-5" (click)="modal.close('OK')">
+      <button class="btn btn-danger pd-x-30 mg-t-5" (click)="modal.close('Confirm')">
         Confirm
-      </button>
-    </div>
-  </div>
-</ng-template>
-
-<ng-template #password_change_content let-modal>
-  <div class="modal-header">
-    <h5 class="modal-title">
-      Password reset
-    </h5>
-    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <h4 style="text-align: center;">
-      Password has been reset successfully
-    </h4>
-    <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
-      <button class="btn btn-primary pd-x-30 me-2 mg-t-5" type="button" (click)="modal.dismiss('OK')">
-        OK
       </button>
     </div>
   </div>

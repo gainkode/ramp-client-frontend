@@ -210,7 +210,7 @@ export class AdminUserDetailsComponent implements OnInit, OnDestroy {
       content);
   }
 
-  onDeleteCustomer(content: any): void {
+  onDeleteUser(content: any): void {
     const dialog = this.modalService.open(content, {
       backdrop: 'static',
       windowClass: 'modalCusSty',

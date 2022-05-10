@@ -2,15 +2,19 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { concat, Observable, of, Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map, switchMap, take, tap } from 'rxjs/operators';
+import { Filter } from 'src/app/admin_old/model/filter.model';
+import { LiquidityProviderList } from 'src/app/admin_old/model/lists.model';
 import { WidgetItem } from 'src/app/admin_old/model/widget.model';
 import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
 import { Countries } from 'src/app/model/country-code.model';
-import { SettingsCurrencyWithDefaults } from 'src/app/model/generated-models';
-import { CurrencyView, UserStatusList, UserTypeList } from 'src/app/model/payment.model';
+import { PaymentInstrument, PaymentProvider, SettingsCurrencyWithDefaults } from 'src/app/model/generated-models';
+import { CurrencyView, PaymentInstrumentList, PaymentProviderView, TransactionTypeList } from 'src/app/model/payment.model';
+import { UserItem } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
+import { getCheckedProviderList, getProviderList } from 'src/app/utils/utils';
 
 @Component({
   selector: 'app-admin-widget-details',
@@ -20,10 +24,14 @@ import { CommonDataService } from 'src/app/services/common-data.service';
 export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   @Input() permission = 0;
   @Input()
-  set widget(widget: WidgetItem) {
-    this.setFormData(widget);
-    this.widgetLink = widget?.link ?? '';
-    this.widgetMaskLink = widget?.maskLink ?? '';
+  set widget(widget: WidgetItem | undefined) {
+    console.log(widget);
+    if (widget) {
+      this.setFormData(widget);
+      this.createNew = ((widget?.id ?? '') === '');
+      this.widgetLink = widget?.link ?? '';
+      this.widgetMaskLink = widget?.maskLink ?? '';
+    }
   }
   @Output() save = new EventEmitter();
   @Output() close = new EventEmitter();
@@ -31,19 +39,25 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription = new Subscription();
 
   submitted = false;
+  createNew = false;
   saveInProgress = false;
   deleteInProgress = false;
   errorMessage = '';
-  currencyOptionsCrypto: Array<CurrencyView> = [];
-  currencyOptionsFiat: Array<CurrencyView> = [];
+  currencyOptionsCrypto: CurrencyView[] = [];
+  currencyOptionsFiat: CurrencyView[] = [];
+  paymentProviderOptions: PaymentProviderView[] = [];
+  filteredProviders: PaymentProviderView[] = [];
+  showPaymentProviders = true;
+  countryOptions = Countries;
+  instrumentOptions = PaymentInstrumentList;
+  liquidityProviderOptions = LiquidityProviderList;
+  transactionTypeOptions = TransactionTypeList;
   widgetMaskLink = '';
   widgetLink = '';
-  countries = Countries;
-  accountStatuses = UserStatusList;
-  accountTypes = UserTypeList;
-  disableButtonTitle = 'Disable';
-  removable = false;
-  createNew = false;
+  isUsersLoading = false;
+  usersSearchInput$ = new Subject<string>();
+  usersOptions$: Observable<UserItem[]> = of([]);
+  minUsersLengthTerm = 1;
 
   form = this.formBuilder.group({
     id: [null],
@@ -54,9 +68,9 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
     instruments: [[]],
     liquidityProvider: ['', { validators: [Validators.required], updateOn: 'change' }],
     paymentProviders: [[]],
-    transactionTypes: [''],
-    user: ['', { validators: [Validators.required], updateOn: 'change' }],
-    name: ['', { validators: [Validators.required], updateOn: 'change' }],
+    transactionTypes: [[]],
+    user: [null, { validators: [Validators.required], updateOn: 'change' }],
+    name: [undefined, { validators: [Validators.required], updateOn: 'change' }],
     description: ['']
   });
 
@@ -71,12 +85,12 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // this.subscriptions.add(
-    //   this.form.get('instruments')?.valueChanges.subscribe(val => {
-    //     this.filterPaymentProviders(val);
-    //   })
-    // );
-
+    this.initUserSearch();
+    this.subscriptions.add(
+      this.form.get('instruments')?.valueChanges.subscribe(val => {
+        this.filterPaymentProviders(val);
+      })
+    );
     this.loadPaymentProviders();
     this.loadCurrencies();
   }
@@ -85,31 +99,53 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
+  private initUserSearch() {
+    this.usersOptions$ = concat(
+      of([]),
+      this.usersSearchInput$.pipe(
+        filter(res => {
+          return res !== null && res.length >= this.minUsersLengthTerm
+        }),
+        debounceTime(300),
+        distinctUntilChanged(),
+        tap(() => {
+          this.isUsersLoading = true;
+        }),
+        switchMap(searchString => {
+          this.isUsersLoading = false;
+          return this.adminService.findUsers(new Filter({ search: searchString }))
+            .pipe(map(result => result.list));
+        })
+      ));
+  }
+
   private setFormData(widget: WidgetItem): void {
     if (widget) {
-      // const user$ = widget.userId ?
-      //   this.getUserFilteredOptions(widget.userId).pipe(take(1), map(users => {
-      //     return users.find(u => u.id === widget.userId);
-      //   })) :
-      //   of(undefined);
-
-      this.form.setValue({
-        id: widget.id,
-        // countries: widget.countriesCode2?.map(code2 => {
-        //   return this.countryOptions.find(c => c.code2 === code2);
-        // }) ?? [],
-        currenciesCrypto: widget.currenciesCrypto ?? [],
-        currenciesFiat: widget.currenciesFiat ?? [],
-        destinationAddress: widget.destinationAddress ?? '',
-        instruments: widget.instruments ?? [],
-        liquidityProvider: widget.liquidityProvider ?? null,
-        paymentProviders: widget.paymentProviders ?? [],
-        transactionTypes: widget.transactionTypes ?? [],
-        //user: userItem ?? null,
-        name: widget.name ?? 'Widget',
-        description: widget.description
-      });
-
+      const user$ = widget.userId ?
+        this.getUserFilteredOptions(widget.userId).pipe(take(1), map(users => {
+          return users.find(u => u.id === widget.userId);
+        })) :
+        of(undefined);
+      this.subscriptions.add(
+        user$.subscribe(userItem => {
+          this.form.setValue({
+            id: widget.id,
+            countries: widget.countriesCode2?.map(code2 => {
+              return this.countryOptions.find(c => c.code2 === code2);
+            }) ?? [],
+            currenciesCrypto: widget.currenciesCrypto ?? [],
+            currenciesFiat: widget.currenciesFiat ?? [],
+            destinationAddress: widget.destinationAddress ?? '',
+            instruments: widget.instruments ?? [],
+            liquidityProvider: widget.liquidityProvider ?? null,
+            paymentProviders: widget.paymentProviders ?? [],
+            transactionTypes: widget.transactionTypes ?? [],
+            user: userItem ?? null,
+            name: widget.name ?? 'Widget',
+            description: widget.description
+          });
+        })
+      );
     }
   }
 
@@ -134,20 +170,16 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   }
 
   private loadPaymentProviders(): void {
-    // this.paymentProviderOptions = [];
-    // this.subscriptions.add(
-    //   this.adminService.getProviders()?.valueChanges.pipe(take(1)).subscribe(({ data }) => {
-    //     const providers = data.getPaymentProviders as PaymentProvider[];
-    //     this.paymentProviderOptions = providers?.map((val) => new PaymentProviderView(val)) as PaymentProviderView[];
-    //     this.filterPaymentProviders(this.form.get('instruments')?.value ?? []);
-    //   }, (error) => {
-    //     this.snackBar.open(
-    //       this.errorHandler.getError(error.message, 'Unable to load payment provider list.'),
-    //       undefined,
-    //       { duration: 5000 }
-    //     );
-    //   })
-    // );
+    this.paymentProviderOptions = [];
+    this.subscriptions.add(
+      this.adminService.getProviders()?.valueChanges.pipe(take(1)).subscribe(({ data }) => {
+        const providers = data.getPaymentProviders as PaymentProvider[];
+        this.paymentProviderOptions = providers?.map((val) => new PaymentProviderView(val)) as PaymentProviderView[];
+        this.filterPaymentProviders(this.form.get('instruments')?.value ?? []);
+      }, (error) => {
+        this.errorMessage = error;
+      })
+    );
   }
 
   private loadCurrencies(): void {
@@ -166,13 +198,29 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
           this.currencyOptionsFiat = [];
         }
       }, (error) => {
-        // this.snackBar.open(
-        //   this.errorHandler.getError(error.message, 'Unable to load currencies.'),
-        //   undefined,
-        //   { duration: 5000 }
-        // );
+        this.errorMessage = error;
       })
     );
+  }
+
+  private getUserFilteredOptions(searchString: string): Observable<UserItem[]> {
+    if (searchString) {
+      return this.adminService.findUsers(new Filter({ search: searchString })).pipe(
+        map(result => { return result.list; })
+      );
+    } else {
+      return of([]);
+    }
+  }
+
+  private filterPaymentProviders(instruments: PaymentInstrument[]): void {
+    this.filteredProviders = getProviderList(instruments, this.paymentProviderOptions);
+    this.showPaymentProviders = this.filteredProviders.length > 0;
+    if (this.paymentProviderOptions.length > 0) {
+      this.form.get('paymentProviders')?.setValue(getCheckedProviderList(
+        this.form.get('paymentProviders')?.value ?? [],
+        this.filteredProviders));
+    }
   }
 
   getCountryFlag(code: string): string {
@@ -186,20 +234,16 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  onDeleteCustomer(content: any): void {
+  onDeleteWidget(content: any): void {
     const dialog = this.modalService.open(content, {
       backdrop: 'static',
       windowClass: 'modalCusSty',
     });
-    // this.subscriptions.add(
-    //   dialog.closed.subscribe(data => {
-    //     if (this.userData?.deleted ?? false) {
-    //       this.onRestore(this.userData?.id ?? '');
-    //     } else {
-    //       this.onDelete(this.userData?.id ?? '');
-    //     }
-    //   })
-    // );
+    this.subscriptions.add(
+      dialog.closed.subscribe(data => {
+        this.deleteWidget(this.form.value.id);
+      })
+    );
   }
 
   private onSave(): void {
@@ -220,9 +264,9 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
     );
   }
 
-  private onDelete(id: string): void {
+  private deleteWidget(id: string): void {
     this.deleteInProgress = true;
-    const requestData$ = this.adminService.deleteWidget(this.form.value.id);
+    const requestData$ = this.adminService.deleteWidget(id);
     this.subscriptions.add(
       requestData$.subscribe(({ data }) => {
         this.deleteInProgress = false;
@@ -235,26 +279,5 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
         }
       })
     );
-  }
-
-  private onRestore(id: string): void {
-    this.deleteInProgress = true;
-    const requestData$ = this.adminService.restoreCustomer(id);
-    this.subscriptions.add(
-      requestData$.subscribe(({ data }) => {
-        this.deleteInProgress = false;
-        this.save.emit();
-      }, (error) => {
-        this.deleteInProgress = false;
-        this.errorMessage = error;
-        if (this.auth.token === '') {
-          this.router.navigateByUrl('/');
-        }
-      })
-    );
-  }
-
-  onClose(): void {
-    this.close.emit();
   }
 }

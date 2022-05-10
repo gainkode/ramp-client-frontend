@@ -128,7 +128,7 @@
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             Country
           </label>
-          <ng-select formControlName="country" formControlName="country" [clearable]=false [clearOnBackspace]=false
+          <ng-select formControlName="country" [clearable]=false [clearOnBackspace]=false
             required>
             <ng-option *ngFor="let country of countries" [value]="country.code3">
               <app-dropdown-item itemValue="{{country.name}}" imageClass="country-flag-admin"
@@ -261,7 +261,7 @@
           Save
         </button>
         <button *ngIf="permission>1 && removable" class="btn btn-danger pd-x-30 me-2 mg-t-5" type="button"
-          (click)="onDeleteCustomer(delete_confirm_content)">
+          (click)="onDeleteUser(delete_confirm_content)">
           <span *ngIf="disableInProgress" class="spinner-border spinner-border-sm" role="status"
             aria-hidden="true"></span>
           {{disableButtonTitle}}
@@ -276,14 +276,14 @@
 
 <ng-template #delete_confirm_content let-modal>
   <div class="modal-header">
-    <h5 class="modal-title">{{disableButtonTitle}} customer</h5>
+    <h5 class="modal-title">{{disableButtonTitle}} user</h5>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body">
     <h4 style="text-align: center;">
-      You are going to {{disableButtonTitle.toLowerCase()}} selected customer. Confirm operation.
+      You are going to {{disableButtonTitle.toLowerCase()}} selected user. Confirm operation.
     </h4>
     <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
       <button class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" type="button" (click)="modal.dismiss('Reject')">

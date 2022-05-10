@@ -239,25 +239,26 @@ export class WidgetEditorComponent implements OnInit, OnDestroy {
           return users.find(u => u.id === widget.userId);
         })) :
         of(undefined);
-
-      user$.subscribe(userItem => {
-        this.form.setValue({
-          id: widget.id,
-          countries: widget.countriesCode2?.map(code2 => {
-            return this.countryOptions.find(c => c.code2 === code2);
-          }) ?? [],
-          currenciesCrypto: widget.currenciesCrypto ?? [],
-          currenciesFiat: widget.currenciesFiat ?? [],
-          destinationAddress: widget.destinationAddress ?? '',
-          instruments: widget.instruments ?? [],
-          liquidityProvider: widget.liquidityProvider ?? null,
-          paymentProviders: widget.paymentProviders ?? [],
-          transactionTypes: widget.transactionTypes ?? [],
-          user: userItem ?? null,
-          name: widget.name ?? 'Widget',
-          description: widget.description
-        });
-      });
+      this.subscriptions.add(
+        user$.subscribe(userItem => {
+          this.form.setValue({
+            id: widget.id,
+            countries: widget.countriesCode2?.map(code2 => {
+              return this.countryOptions.find(c => c.code2 === code2);
+            }) ?? [],
+            currenciesCrypto: widget.currenciesCrypto ?? [],
+            currenciesFiat: widget.currenciesFiat ?? [],
+            destinationAddress: widget.destinationAddress ?? '',
+            instruments: widget.instruments ?? [],
+            liquidityProvider: widget.liquidityProvider ?? null,
+            paymentProviders: widget.paymentProviders ?? [],
+            transactionTypes: widget.transactionTypes ?? [],
+            user: userItem ?? null,
+            name: widget.name ?? 'Widget',
+            description: widget.description
+          });
+        })
+      );
     }
   }
 

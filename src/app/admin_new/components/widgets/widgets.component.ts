@@ -68,8 +68,6 @@ export class AdminWidgetsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private subscriptions: Subscription = new Subscription();
   private detailsDialog: NgbModalRef | undefined = undefined;
-  private rolesDialog: NgbModalRef | undefined = undefined;
-  private messageDialog: NgbModalRef | undefined = undefined;
 
   constructor(
     private modalService: NgbModal,
