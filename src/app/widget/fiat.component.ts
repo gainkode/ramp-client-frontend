@@ -198,7 +198,7 @@ export class FiatWidgetComponent implements OnInit {
   private onWireTransferListLoaded(wireTransferList: WireTransferPaymentCategoryItem[], bankAccountId: string): void {
     this.bankAccountId = bankAccountId;
     this.wireTransferList = wireTransferList;
-    if (this.wireTransferList.length > 1) {
+    if (this.wireTransferList.length > 0) {
       this.initMessage = '';
       this.stageId = 'transfer';
       this.title = 'Transfer';
