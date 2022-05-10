@@ -1,4 +1,5 @@
 @import "../../../../assets/scss/variables";
+@import "../../../../assets/colors";
 
 ::ng-deep {
   .datatable-body {
@@ -405,46 +406,15 @@ table {
   padding-bottom: 16px;
 }
 
-.transaction-list-selector-column {
+.widget-list-selector-column {
   margin: 0px;
   padding: 0px 8px;
+  background-color: $color_white;
 }
 
-.transaction-list-data-column {
+.widget-list-data-column {
   margin: 0px;
   padding: 0px;
-}
-
-.transaction-list-column-white {
-  background-color: white;
-}
-
-.transaction-list-column-grey {
-  background-color: rgb(235, 235, 235);
-}
-
-.transaction-list-column-blue {
-  background-color: rgb(212, 241, 250);
-}
-
-.transaction-list-column-orange {
-  background-color: rgb(255, 229, 206);
-}
-
-.transaction-list-column-red {
-  background-color: rgb(253, 214, 221);
-}
-
-.transaction-list-column-purple {
-  background-color: rgb(253, 216, 253);
-}
-
-.transaction-list-column-green {
-  background-color: rgb(207, 248, 207);
-}
-
-.transaction-list-column-yellow {
-  background-color: rgb(253, 253, 230);
 }
 
 .ng-pagination-nav-icons {

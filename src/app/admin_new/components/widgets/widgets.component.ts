@@ -5,6 +5,7 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { Filter } from 'src/app/admin_old/model/filter.model';
+import { WidgetItem } from 'src/app/admin_old/model/widget.model';
 import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
 import { SettingsCurrencyWithDefaults, TransactionStatusDescriptorMap, TransactionType } from 'src/app/model/generated-models';
 import { CurrencyView } from 'src/app/model/payment.model';
@@ -22,62 +23,70 @@ export class AdminWidgetsComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   filterFields = [
-    'accountType',
-    'country',
-    'source',
-    'createdDate',
-    'completedDate',
-    'paymentInstrument',
-    'transactionIds',
-    'transactionType',
-    'transactionStatus',
-    'tier',
-    'widget',
-    'walletAddress',
-    'users',
     'search'
   ];
   displayedColumns: string[] = [
-    'details', 'code', 'created', 'accountName', 'email', 'accountStatus', 'type', 'widgetName', 'from', 'to',
-    'currencyToSpend', 'amountToSpend', 'currencyToReceive', 'amountToReceive',
-    'address', 'instrument', 'paymentProvider', 'status', 'userType', 'source', 'kycStatus', 'id'
+    'details',
+    'name',
+    'code',
+    'link',
+    'created',
+    'createdBy',
+    'transactionType',
+    'currenciesCrypto',
+    'currenciesFiat',
+    'destinationAddress',
+    'userNotificationId',
+    'countries',
+    'instruments',
+    'paymentProviders',
+    'liquidityProvider',
+    'id'
   ];
+  // sendMessageInProgress = false;
+  // sendMessageError = '';
   inProgress = false;
+  errorMessage = '';
   permission = 0;
-  unbenchmarkDialog?: NgbModalRef;
-  selectedTransaction?: TransactionItemFull;
-  selectedForUnbenchmark = false;
-  transactionCount = 0;
-  transactions: TransactionItemFull[] = [];
-  userStatuses: TransactionStatusDescriptorMap[] = [];
-  currencyOptions: CurrencyView[] = [];
+  widgetDetailsTitle = 'Widget Details';
+  userIdFilter = '';
+  selected = false;
+  selectedWidget?: WidgetItem;
+  widgets: WidgetItem[] = [];
+  widgetCount = 0;
   pageSize = 50;
   pageIndex = 0;
   sortedField = 'created';
   sortedDesc = true;
   filter = new Filter({});
-  
+  // isUsersLoading = false;
+  // usersSearchInput$ = new Subject<string>();
+  // usersOptions$: Observable<UserItem[]> = of([]);
+  // minUsersLengthTerm = 1;
+
   private subscriptions: Subscription = new Subscription();
   private detailsDialog: NgbModalRef | undefined = undefined;
+  private rolesDialog: NgbModalRef | undefined = undefined;
+  private messageDialog: NgbModalRef | undefined = undefined;
 
   constructor(
     private modalService: NgbModal,
     private auth: AuthService,
-    private commonDataService: CommonDataService,
     private adminService: AdminDataService,
-    private profileService: ProfileDataService,
-    public activeRoute: ActivatedRoute,
+    private route: ActivatedRoute,
     private router: Router
   ) {
-    const filterUserId = activeRoute.snapshot.params['userid'];
-    if (filterUserId) {
-      this.filter.users = [filterUserId as string];
-    }
-    this.permission = this.auth.isPermittedObjectCode('TRANSACTIONS');
+    this.userIdFilter = this.route.snapshot.params['userId'] ?? '';
+    this.permission = this.auth.isPermittedObjectCode('AFFILIATES');
   }
 
   ngOnInit(): void {
-    this.loadList();
+    if (this.userIdFilter !== '') {
+      this.filter = new Filter({
+        users: [this.userIdFilter]
+      });
+    }
+    this.loadWidgets();
   }
 
   ngOnDestroy(): void {
@@ -89,72 +98,38 @@ export class AdminWidgetsComponent implements OnInit, OnDestroy, AfterViewInit {
       this.sort.sortChange.subscribe(() => {
         this.sortedDesc = (this.sort.direction === 'desc');
         this.sortedField = this.sort.active;
-        this.loadList();
+        this.loadWidgets();
       })
     );
   }
 
-  onTransactionSelected(item: TransactionItemFull): void {
+  onWidgetSelected(item: WidgetItem): void {
     item.selected = !item.selected;
-    this.selectedForUnbenchmark = this.transactions.some(x =>
-      x.selected === true && x.type !== TransactionType.Receive);
-  }
-
-  onSaveTransaction(): void {
-    this.selectedTransaction = undefined;
-    if (this.detailsDialog) {
-      this.detailsDialog.close();
-      this.loadList();
-    }
-  }
-
-  onCloseDetails(): void {
-    if (this.detailsDialog) {
-      this.detailsDialog.dismiss();
-    }
+    this.selected = this.widgets.some(x => x.selected === true);
   }
 
   handleFilterApplied(filter: Filter): void {
     this.filter = filter;
-    this.loadList();
+    this.loadWidgets();
   }
 
   handlePage(index: number): void {
     this.pageIndex = index - 1;
-    this.loadList();
+    this.loadWidgets();
   }
 
-  toggleDetails(transaction: TransactionItemFull): void {
-    if (this.isSelectedTransaction(transaction.id)) {
-      this.selectedTransaction = undefined;
-    } else {
-      this.selectedTransaction = transaction;
-    }
-  }
-
-  showDetails(transaction: TransactionItemFull, content: any) {
-    this.selectedTransaction = transaction;
+  addWidget(content: any): void {
+    this.widgetDetailsTitle = 'Create a new Widget';
+    this.selectedWidget = undefined;
     this.detailsDialog = this.modalService.open(content, {
       backdrop: 'static',
       windowClass: 'modalCusSty',
     });
   }
 
-  private isSelectedTransaction(transactionId: string): boolean {
-    return !!this.selectedTransaction && this.selectedTransaction.id === transactionId;
-  }
-
-  private loadList(): void {
-    if (this.userStatuses.length === 0) {
-      this.loadTransactionStatuses();
-    } else {
-      this.loadTransactions();
-    }
-  }
-
-  private loadTransactions(): void {
+  private loadWidgets(): void {
     this.inProgress = true;
-    const listData$ = this.adminService.getTransactions(
+    const listData$ = this.adminService.getWidgets(
       this.pageIndex,
       this.pageSize,
       this.sortedField,
@@ -162,11 +137,8 @@ export class AdminWidgetsComponent implements OnInit, OnDestroy, AfterViewInit {
       this.filter).pipe(take(1));
     this.subscriptions.add(
       listData$.subscribe(({ list, count }) => {
-        this.transactions = list;
-        this.transactionCount = count;
-        this.transactions.forEach(val => {
-          val.statusInfo = this.userStatuses.find(x => x.key === val.status);
-        });
+        this.widgets = list;
+        this.widgetCount = count;
         this.inProgress = false;
       }, (error) => {
         this.inProgress = false;
@@ -177,65 +149,71 @@ export class AdminWidgetsComponent implements OnInit, OnDestroy, AfterViewInit {
     );
   }
 
-  private loadTransactionStatuses(): void {
-    this.inProgress = true;
-    this.userStatuses = [];
-    const statusListData$ = this.profileService.getTransactionStatuses();
-    this.subscriptions.add(
-      statusListData$.valueChanges.subscribe(({ data }) => {
-        this.userStatuses = data.getTransactionStatuses as TransactionStatusDescriptorMap[];
-        this.loadCurrencies();
-      }, (error) => {
-        this.inProgress = false;
-        if (this.auth.token === '') {
-          this.router.navigateByUrl('/');
-        }
-      })
-    );
-  }
+  // private initUserSearch() {
+  //   this.usersOptions$ = concat(
+  //     of([]),
+  //     this.usersSearchInput$.pipe(
+  //       filter(res => {
+  //         return res !== null && res.length >= this.minUsersLengthTerm
+  //       }),
+  //       debounceTime(300),
+  //       distinctUntilChanged(),
+  //       tap(() => {
+  //         this.isUsersLoading = true;
+  //       }),
+  //       switchMap(searchString => {
+  //         this.isUsersLoading = false;
+  //         return this.adminService.findUsers(new Filter({ search: searchString }))
+  //           .pipe(map(result => result.list));
+  //       })
+  //     ));
+  // }
 
-  private loadCurrencies(): void {
-    this.inProgress = true;
-    this.currencyOptions = [];
-    this.subscriptions.add(
-      this.commonDataService.getSettingsCurrency()?.valueChanges.pipe(take(1)).subscribe(({ data }) => {
-        const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
-        if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
-          this.currencyOptions = currencySettings.settingsCurrency.list
-            ?.map((val) => new CurrencyView(val)) as CurrencyView[];
-        } else {
-          this.currencyOptions = [];
-        }
-        this.loadTransactions();
-      }, (error) => {
-        this.inProgress = false;
-        if (this.auth.token === '') {
-          this.router.navigateByUrl('/');
-        }
-      })
-    );
-  }
-
-  showWallets(transactionId: string): void {
-    const transaction = this.transactions.find(x => x.id === transactionId);
-    if (transaction?.type === TransactionType.Deposit || transaction?.type === TransactionType.Withdrawal) {
-      this.router.navigateByUrl(`/admin/fiat-wallets/vaults/${transaction?.vaultIds.join('#') ?? ''}`);
-    } else {
-      this.router.navigateByUrl(`/admin/crypto-wallets/vaults/${transaction?.vaultIds.join('#') ?? ''}`);
+  onSaveWidget(): void {
+    this.selectedWidget = undefined;
+    if (this.detailsDialog) {
+      this.detailsDialog.close();
+      this.loadWidgets();
     }
   }
 
-  refresh(): void {
-    this.loadList();
-  }
+  // sendMessage(content: any): void {
+  //   this.messageDialog = this.modalService.open(content, {
+  //     backdrop: 'static',
+  //     windowClass: 'modalCusSty',
+  //   });
+  // }
+
+  // sendMessageStart(data: UserMessageData): void {
+  //   this.sendMessageInProgress = true;
+  //   this.sendMessageError = '';
+  //   const ids = this.users.filter(x => x.selected === true).map(val => val.id);
+  //   const requestData$ = this.adminService.sendAdminNotification(ids, data.level, data.title, data.text);
+  //   this.subscriptions.add(
+  //     requestData$.subscribe(({ result }) => {
+  //       this.sendMessageInProgress = false;
+  //       this.selected = false;
+  //       this.users.forEach(x => x.selected = false);
+  //       if (this.messageDialog) {
+  //         this.messageDialog.close();
+  //       }
+  //     }, (error) => {
+  //       this.sendMessageInProgress = false;
+  //       this.sendMessageError = error;
+  //       if (this.auth.token === '') {
+  //         this.router.navigateByUrl('/');
+  //       }
+  //     })
+  //   );
+  // }
 
   export(content: any): void {
-    const exportData$ = this.adminService.exportTransactionsToCsv(
-      this.transactions.filter(x => x.selected === true).map(val => val.id),
+    const ids = this.widgets.filter(x => x.selected === true).map(val => val.id);
+    const exportData$ = this.adminService.exportWidgetsToCsv(
+      ids,
       this.sortedField,
       this.sortedDesc,
-      this.filter
-    );
+      this.filter);
     this.subscriptions.add(
       exportData$.subscribe(({ data }) => {
         this.modalService.open(content, {
@@ -250,32 +228,12 @@ export class AdminWidgetsComponent implements OnInit, OnDestroy, AfterViewInit {
     );
   }
 
-  unbenchmark(content: any): void {
-    this.unbenchmarkDialog = this.modalService.open(content, {
+  showDetails(widget: WidgetItem, content: any) {
+    this.widgetDetailsTitle = 'Widget Details';
+    this.selectedWidget = widget;
+    this.detailsDialog = this.modalService.open(content, {
       backdrop: 'static',
       windowClass: 'modalCusSty',
     });
-    this.subscriptions.add(
-      this.unbenchmarkDialog.closed.subscribe(result => {
-        if (result === 'Confirm') {
-          this.executeUnbenchmark();
-        }
-      })
-    );
-  }
-
-  private executeUnbenchmark(): void {
-    const requestData$ = this.adminService.unbenchmarkTransaction(
-      this.transactions.filter(x => x.selected === true && x.type !== TransactionType.Receive).map(val => val.id)
-    );
-    this.subscriptions.add(
-      requestData$.subscribe(({ data }) => {
-        this.transactions.forEach(x => x.selected = false);
-      }, (error) => {
-        if (this.auth.token === '') {
-          this.router.navigateByUrl('/');
-        }
-      })
-    );
   }
 }
