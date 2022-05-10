@@ -59,6 +59,7 @@ import { AdminRoleSelectComponent } from './misc/role-select/role-select.compone
 import { AdminRisksComponent } from './components/risks/risks.component';
 import { AdminRiskDetailsComponent } from './components/risks/risk-details.component';
 import { AdminNotificationsComponent } from './components/notifications/notifications.component';
+import { AdminNotificationDetailsComponent } from './components/notifications/notification-details.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -127,6 +128,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AdminRoleSelectComponent,
     AdminMessageDialogComponent,
     AdminNotificationsComponent,
+    AdminNotificationDetailsComponent,
     AdminRisksComponent,
     AdminRiskDetailsComponent
   ],

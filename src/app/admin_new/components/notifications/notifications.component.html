@@ -116,17 +116,16 @@
           <ng-template #details_content let-modal>
             <div class="modal-header">
               <h5 class="modal-title">
-                Notification details
+                Message details
               </h5>
               <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body">
-              <!-- <app-admin-transaction-details [permission]="permission" [transaction]="selectedTransaction"
-                [currencies]="currencyOptions" [userStatuses]="userStatuses" (save)="onSaveTransaction()"
-                (close)="onCloseDetails()">
-              </app-admin-transaction-details> -->
+              <app-admin-notification-details [permission]="permission" [message]="selectedMessage"
+                (close)="modal.dismiss('Close')">
+              </app-admin-notification-details>
             </div>
           </ng-template>
         </div>
