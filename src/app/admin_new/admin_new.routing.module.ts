@@ -10,6 +10,7 @@ import { AdminCustomersComponent } from './components/users/customers/customers.
 import { AdminSystemUsersComponent } from './components/users/system/users.component';
 import { AdminCryptoWalletsComponent } from './components/wallets/crypto/crypto-wallets.component';
 import { AdminFiatWalletsComponent } from './components/wallets/fiat/fiat-wallets.component';
+import { AdminWidgetsComponent } from './components/widgets/widgets.component';
 
 const routes: Routes = [
   {
@@ -141,20 +142,25 @@ const routes: Routes = [
         component: AdminRisksComponent,
         data: { header: 'Risk center' }
       },
-      //   {
-      //     path: 'widgets',
-      //     component: WidgetListComponent,
-      //     data: { header: 'Widgets' }
-      //   },
-      //   {
-      //     path: 'widgets/:userId',
-      //     component: WidgetListComponent,
-      //     data: { header: 'Widgets' }
-      //   },
-      //   {
-      //     path: '**',
-      //     redirectTo: 'dashboard'
-      //   }
+      {
+        path: 'widgets',
+        children: [
+          {
+            path: ':userId',
+            component: AdminWidgetsComponent,
+            data: { header: 'User Widgets' }
+          },
+          {
+            path: '',
+            component: AdminWidgetsComponent,
+            data: { header: 'Widgets' }
+          }
+        ]
+      },
+      {
+        path: '**',
+        redirectTo: 'dashboard'
+      }
     ],
     canActivate: [AdminNewGuard]
   },

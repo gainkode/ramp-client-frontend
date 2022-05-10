@@ -60,6 +60,7 @@ import { AdminRisksComponent } from './components/risks/risks.component';
 import { AdminRiskDetailsComponent } from './components/risks/risk-details.component';
 import { AdminNotificationsComponent } from './components/notifications/notifications.component';
 import { AdminNotificationDetailsComponent } from './components/notifications/notification-details.component';
+import { AdminWidgetsComponent } from './components/widgets/widgets.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -130,7 +131,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AdminNotificationsComponent,
     AdminNotificationDetailsComponent,
     AdminRisksComponent,
-    AdminRiskDetailsComponent
+    AdminRiskDetailsComponent,
+    AdminWidgetsComponent
   ],
   providers: [
     AdminNewGuard,
