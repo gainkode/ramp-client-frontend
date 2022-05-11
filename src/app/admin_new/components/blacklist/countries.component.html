@@ -7,7 +7,8 @@
       <div class="card-body">
         <div class="table-responsive">
           <div class="table-button-container">
-            <button *ngIf="permission>1" (click)="addCountry(create_content)" type="button" class="btn btn-primary me-2">
+            <button *ngIf="permission>1" (click)="addCountry(create_content)" type="button"
+              class="btn btn-primary me-2">
               Add country
             </button>
           </div>
@@ -67,9 +68,8 @@
               </button>
             </div>
             <div class="modal-body">
-              <!-- <app-admin-black-list-details 
-                (save)="modal.close('OK')" (close)="modal.dismiss('Close')">
-              </app-admin-black-list-details> -->
+              <app-admin-black-list-details (save)="modal.close('OK')" (close)="modal.dismiss('Close')">
+              </app-admin-black-list-details>
             </div>
           </ng-template>
 
@@ -82,7 +82,8 @@
             </div>
             <div class="modal-body">
               <h4 style="text-align: center;">
-                You are going to remove {{selectedCountry?.title ?? 'a country'}} from the black list. Confirm operation.
+                You are going to remove {{selectedCountry?.title ?? 'a country'}} from the black list. Confirm
+                operation.
               </h4>
               <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
                 <button class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" type="button"
