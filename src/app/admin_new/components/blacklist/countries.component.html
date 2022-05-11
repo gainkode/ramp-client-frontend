@@ -7,7 +7,7 @@
       <div class="card-body">
         <div class="table-responsive">
           <div class="table-button-container">
-            <button *ngIf="permission>1" (click)="addWidget(create_content)" type="button" class="btn btn-primary me-2">
+            <button *ngIf="permission>1" (click)="addCountry(create_content)" type="button" class="btn btn-primary me-2">
               Add country
             </button>
           </div>
@@ -67,9 +67,9 @@
               </button>
             </div>
             <div class="modal-body">
-              <!-- <app-admin-widget-details [permission]="permission" [widget]="selectedWidget"
-                (save)="onSaveWidget()" (close)="modal.dismiss('Close')">
-              </app-admin-widget-details> -->
+              <!-- <app-admin-black-list-details 
+                (save)="modal.close('OK')" (close)="modal.dismiss('Close')">
+              </app-admin-black-list-details> -->
             </div>
           </ng-template>
 

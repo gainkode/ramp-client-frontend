@@ -48,7 +48,7 @@ export class AdminCountryBlackListComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  addWidget(content: any): void {
+  addCountry(content: any): void {
     this.selectedCountry = undefined;
     this.createDialog = this.modalService.open(content, {
       backdrop: 'static',
