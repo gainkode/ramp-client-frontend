@@ -7,7 +7,7 @@
       <div class="card-body">
         <div class="table-responsive">
           <div class="table-button-container">
-            <button *ngIf="permission>1" (click)="addKey(details_content)" type="button" class="btn btn-primary me-2">
+            <button *ngIf="permission>1" (click)="addKey(create_content)" type="button" class="btn btn-primary me-2">
               Add key
             </button>
           </div>
@@ -102,7 +102,7 @@
             </ngb-pagination>
           </div>
 
-          <ng-template #details_content let-modal>
+          <ng-template #create_content let-modal>
             <div class="modal-header">
               <h5 class="modal-title">
                 Add a new API key
@@ -149,9 +149,30 @@
               </button>
             </div>
             <div class="modal-body">
-              <h4 style="text-align: center;">
-                New key secret {{secret}}
-              </h4>
+              <div class="card card-body pd-20 pd-md-40 border shadow-none">
+                <h4 style="text-align: center;">
+                  New key has been created
+                </h4>
+                <p class="tx-14 tx-center tx-light">
+                  New API key and secret were generated.
+                </p>
+                <p class="tx-14 tx-center tx-light">
+                  Copy the secret and store it in a safe place.
+                </p>
+                <p class="tx-16 tx-center tx-medium tx-info">
+                  It will be unable to show the secret anymore.
+                </p>
+                <div style="width: 100%;display: flex;flex-direction: row;justify-content: space-between;align-items: center;margin-top: 16px;">
+                  <span class="tx-16 tx-center tx-light">
+                    {{secret}}
+                  </span>
+                  <button class="btn btn-outline-secondary" type="button" (click)="copySecret(secret)">
+                    <i class="material-icons" style="font-size: 18px;margin-top: 4px;">
+                      content_copy
+                    </i>
+                  </button>
+                </div>
+              </div>
               <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
                 <button class="btn btn-primary pd-x-50 mg-t-5" (click)="modal.dismiss('OK')">
                   OK

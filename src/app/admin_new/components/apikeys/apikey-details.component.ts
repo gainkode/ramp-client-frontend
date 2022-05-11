@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { concat, Observable, of, Subject, Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, map, switchMap, take, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, map, switchMap, tap } from 'rxjs/operators';
 import { Filter } from 'src/app/admin_old/model/filter.model';
 import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
 import { ApiKeyItem } from 'src/app/model/apikey.model';

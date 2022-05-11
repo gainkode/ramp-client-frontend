@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { Clipboard } from '@angular/cdk/clipboard';
 import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
 import { ApiKeyItem } from 'src/app/model/apikey.model';
 import { AuthService } from 'src/app/services/auth.service';
@@ -37,12 +38,13 @@ export class AdminApiKeysComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private subscriptions: Subscription = new Subscription();
   private detailsDialog: NgbModalRef | undefined = undefined;
-  private deleteDialog: NgbModalRef | undefined = undefined;
+  private createDialog: NgbModalRef | undefined = undefined;
 
   constructor(
     private modalService: NgbModal,
     private auth: AuthService,
     private adminService: AdminDataService,
+    private clipboard: Clipboard,
     private router: Router
   ) {
     this.permission = this.auth.isPermittedObjectCode('SETTINGS');
@@ -80,12 +82,12 @@ export class AdminApiKeysComponent implements OnInit, OnDestroy, AfterViewInit {
 
   deleteKey(key: ApiKeyItem, content: any): void {
     this.selectedKey = key;
-    this.deleteDialog = this.modalService.open(content, {
+    this.createDialog = this.modalService.open(content, {
       backdrop: 'static',
       windowClass: 'modalCusSty',
     });
     this.subscriptions.add(
-      this.deleteDialog.closed.subscribe(val => {
+      this.createDialog.closed.subscribe(val => {
         this.removeApiKeyConfirmed(key.title);
       })
     );
@@ -141,5 +143,9 @@ export class AdminApiKeysComponent implements OnInit, OnDestroy, AfterViewInit {
       });
       this.loadKeys();
     }
+  }
+
+  copySecret(secret: string): void {
+    this.clipboard.copy(secret);
   }
 }
