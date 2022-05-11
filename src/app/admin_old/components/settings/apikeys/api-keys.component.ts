@@ -24,11 +24,6 @@ export class ApiKeyListComponent implements OnDestroy, AfterViewInit {
   @Output() onUpdate = new EventEmitter<ListRequestFilter>();
   @ViewChild(MatSort) sort!: MatSort;
 
-  accounts: ApiKeyItem[] = [{
-    title: 'name',
-    created: 'created'
-  } as ApiKeyItem];
-
   displayedColumns: string[] = [
     'lock', 'title', 'user', 'created', 'delete'
   ];

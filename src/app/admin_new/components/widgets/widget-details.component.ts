@@ -25,7 +25,6 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   @Input() permission = 0;
   @Input()
   set widget(widget: WidgetItem | undefined) {
-    console.log(widget);
     if (widget) {
       this.setFormData(widget);
       this.createNew = ((widget?.id ?? '') === '');

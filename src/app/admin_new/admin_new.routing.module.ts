@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AdminNewComponent } from './admin_new.component';
 import { AdminNewGuard } from './admin_new.guard';
+import { AdminApiKeysComponent } from './components/apikeys/apikeys.component';
 import { AdminDashboardComponent } from './components/dashboard/dashboard.component';
 import { AdminNotificationsComponent } from './components/notifications/notifications.component';
 import { AdminRisksComponent } from './components/risks/risks.component';
@@ -156,6 +157,11 @@ const routes: Routes = [
             data: { header: 'Widgets' }
           }
         ]
+      },
+      {
+        path: 'api-keys',
+        component: AdminApiKeysComponent,
+        data: { header: 'API keys' }
       },
       {
         path: '**',

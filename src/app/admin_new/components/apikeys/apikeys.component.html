@@ -1,0 +1,162 @@
+<app-admin-page-header [title]="'API Keys'" [items]="['Home', 'Settings']" [active_item]="'API Keys'">
+</app-admin-page-header>
+
+<div class="row row-sm">
+  <div class="col-xl-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="table-responsive">
+          <div class="table-button-container">
+            <button *ngIf="permission>1" (click)="addKey(details_content)" type="button" class="btn btn-primary me-2">
+              Add key
+            </button>
+          </div>
+
+          <mat-progress-bar *ngIf="inProgress" color="accent" mode="indeterminate"></mat-progress-bar>
+
+          <div class="data-table">
+            <mat-table matSort [matSortActive]="sortedField" matSortDirection="desc" matSortDisableClear
+              [dataSource]="apiKeys">
+              <!-- Lock Column -->
+              <ng-container matColumnDef="lock" sticky>
+                <th mat-header-cell *matHeaderCellDef class="mat-column-apikey-table mat-column-apikey-table-lock">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <i *ngIf="element.disabled" class="material-icons" style="font-size: 20px;">
+                    lock
+                  </i>
+                </td>
+              </ng-container>
+              <!-- Title Column -->
+              <ng-container matColumnDef="title">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef
+                  class="mat-column-apikey-table mat-column-apikey-table-title">
+                  Title
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{element.title}}
+                </td>
+              </ng-container>
+              <!-- User Column -->
+              <ng-container matColumnDef="user">
+                <th mat-header-cell *matHeaderCellDef class="mat-column-apikey-table mat-column-apikey-table-user">
+                  User
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{element.user}}
+                </td>
+              </ng-container>
+              <!-- Created Column -->
+              <ng-container matColumnDef="created">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef
+                  class="mat-column-apikey-table mat-column-apikey-table-created">
+                  Created
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{element.created}}
+                </td>
+              </ng-container>
+              <!-- Delete Column -->
+              <ng-container matColumnDef="delete" sticky>
+                <th mat-header-cell *matHeaderCellDef class="mat-column-apikey-table mat-column-apikey-table-delete">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <button mat-icon-button class="row-button" (click)="deleteKey(element, delete_content)"
+                    [attr.aria-label]="'Delete API Key'" [attr.aria-pressed]="!!selectedKey" matTooltip="Delete API Key"
+                    matTooltipClass="info-tooltip">
+                    <i class="material-icons" style="font-size: 20px;">
+                      delete
+                    </i>
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </mat-table>
+          </div>
+
+          <div *ngIf="keyCount > pageSize" class="card card-body border shadow-none">
+            <ngb-pagination class="d-flex justify-content-center" [collectionSize]="keyCount" [pageSize]="pageSize"
+              [boundaryLinks]="true" [maxSize]="10" aria-label="Table pagination" (pageChange)="handlePage($event)">
+              <ng-template ngbPaginationFirst>
+                <div class="ng-pagination-nav-icons">
+                  <i class="material-icons">first_page</i>
+                </div>
+              </ng-template>
+              <ng-template ngbPaginationPrevious>
+                <div class="ng-pagination-nav-icons">
+                  <i class="material-icons">keyboard_arrow_left</i>
+                </div>
+              </ng-template>
+              <ng-template ngbPaginationNext>
+                <div class="ng-pagination-nav-icons">
+                  <i class="material-icons">keyboard_arrow_right</i>
+                </div>
+              </ng-template>
+              <ng-template ngbPaginationLast>
+                <div class="ng-pagination-nav-icons">
+                  <i class="material-icons">last_page</i>
+                </div>
+              </ng-template>
+            </ngb-pagination>
+          </div>
+
+          <ng-template #details_content let-modal>
+            <div class="modal-header">
+              <h5 class="modal-title">
+                Add a new API key
+              </h5>
+              <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <app-admin-apikey-details [permission]="permission" (save)="onSaveKey($event, new_key_content)"
+                (close)="modal.dismiss('Close')">
+              </app-admin-apikey-details>
+            </div>
+          </ng-template>
+
+          <ng-template #delete_content let-modal>
+            <div class="modal-header">
+              <h5 class="modal-title">Delete API key</h5>
+              <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <h4 style="text-align: center;">
+                Here must be a template
+              </h4>
+              <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
+                <button class="btn btn-primary pd-x-50 mg-t-5" (click)="modal.dismiss('OK')">
+                  OK
+                </button>
+              </div>
+            </div>
+          </ng-template>
+
+          <ng-template #new_key_content let-modal>
+            <div class="modal-header">
+              <h5 class="modal-title">API key created</h5>
+              <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <h4 style="text-align: center;">
+                New key secret {{secret}}
+              </h4>
+              <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
+                <button class="btn btn-primary pd-x-50 mg-t-5" (click)="modal.dismiss('OK')">
+                  OK
+                </button>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
