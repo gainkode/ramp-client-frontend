@@ -18,7 +18,7 @@
                         [src]="selectedComboValue?.img">
                     <div *ngIf="selectedComboValue?.fiat" class="__form-finance-combo-item-img"></div>
                     <span class="__form-finance-combo-item-text">
-                        {{selectedComboValue?.title}}
+                        {{selectedComboValue?.id}}
                     </span>
                 </div>
             </mat-select-trigger>
@@ -26,7 +26,7 @@
                 <div class="__form-finance-combo-item">
                     <img *ngIf="!item.fiat" class="__form-finance-combo-item-img" [src]="item.img">
                     <span class="__form-finance-combo-item-text">
-                        {{item.title}}
+                        {{item.id}}
                     </span>
                 </div>
             </mat-option>

@@ -455,7 +455,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   }
 
   private setSpendValidators(maxValid: number | undefined = undefined): void {
-    this.amountSpendErrorMessages['min'] = `Min. amount ${this.currentCurrencySpend?.minAmount} ${this.currentCurrencySpend?.title}`;
+    this.amountSpendErrorMessages['min'] = `Min. amount ${this.currentCurrencySpend?.minAmount} ${this.currentCurrencySpend?.id}`;
     let validators = [
       Validators.required,
       Validators.pattern(this.pNumberPattern),
@@ -463,7 +463,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     ];
     if (maxValid !== undefined) {
       if (maxValid > 0) {
-        this.amountSpendErrorMessages['max'] = `Max. amount ${maxValid} ${this.currentCurrencySpend?.title}`;
+        this.amountSpendErrorMessages['max'] = `Max. amount ${maxValid} ${this.currentCurrencySpend?.id}`;
       } else {
         this.amountSpendErrorMessages['max'] = 'Current wallet is empty';
       }
@@ -477,7 +477,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   }
 
   private setReceiveValidators(): void {
-    this.amountReceiveErrorMessages['min'] = `Min. amount ${this.currentCurrencyReceive?.minAmount} ${this.currentCurrencyReceive?.title}`;
+    this.amountReceiveErrorMessages['min'] = `Min. amount ${this.currentCurrencyReceive?.minAmount} ${this.currentCurrencyReceive?.id}`;
     this.amountReceiveField?.setValidators([
       Validators.required,
       Validators.pattern(this.pNumberPattern),
