@@ -132,9 +132,9 @@ export class NavService implements OnDestroy {
 				{ path: '/admin/black-list', title: 'Black list', type: 'link' },
 			]
 		},
-		{
-			path: '/admin/reconciliation', icon: 'cloud_off', title: 'Reconciliation', type: 'link'
-		},
+		// {
+		// 	path: '/admin/reconciliation', icon: 'cloud_off', title: 'Reconciliation', type: 'link'
+		// },
 		{
 			title: 'Settings', icon: 'settings', type: 'sub', active: false, children: [
 				{ path: '/admin/common', title: 'Common', type: 'link' },

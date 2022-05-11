@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AdminNewComponent } from './admin_new.component';
 import { AdminNewGuard } from './admin_new.guard';
 import { AdminApiKeysComponent } from './components/apikeys/apikeys.component';
+import { AdminCountryBlackListComponent } from './components/blacklist/countries.component';
 import { AdminDashboardComponent } from './components/dashboard/dashboard.component';
 import { AdminNotificationsComponent } from './components/notifications/notifications.component';
 import { AdminRisksComponent } from './components/risks/risks.component';
@@ -133,6 +134,11 @@ const routes: Routes = [
       //     component: IdentificationListComponent,
       //     data: { header: 'Identification' }
       //   },
+      {
+        path: 'black-list',
+        component: AdminCountryBlackListComponent,
+        data: { header: 'Black list' }
+      },
       //   {
       //     path: 'reconciliation',
       //     component: ReconciliationComponent,
