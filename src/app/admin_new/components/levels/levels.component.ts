@@ -4,9 +4,8 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
-import { CommonTargetValue } from 'src/app/model/common.model';
-import { getCountryByCode2, getCountryByCode3 } from 'src/app/model/country-code.model';
-import { BlackCountryListResult } from 'src/app/model/generated-models';
+import { getCountryByCode3 } from 'src/app/model/country-code.model';
+import { KycLevel } from 'src/app/model/identification.model';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -16,15 +15,17 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class AdminLevelsComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = [
-    'id',
+    'details',
     'name',
-    'delete'
+    'flow',
+    'userType'
   ];
   inProgress = false;
   errorMessage = '';
+  detailsTitle = '';
   permission = 0;
-  selectedCountry?: CommonTargetValue;
-  countries: CommonTargetValue[] = [];
+  selectedLevel?: KycLevel;
+  levels: KycLevel[] = [];
 
   private subscriptions: Subscription = new Subscription();
   private createDialog: NgbModalRef | undefined = undefined;
@@ -40,52 +41,21 @@ export class AdminLevelsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.loadCountries();
+    this.loadLevels();
   }
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
 
-  addCountry(content: any): void {
-    this.selectedCountry = undefined;
-    this.createDialog = this.modalService.open(content, {
-      backdrop: 'static',
-      windowClass: 'modalCusSty',
-    });
-    this.subscriptions.add(
-      this.createDialog.closed.subscribe(val => {
-        if (this.createDialog) {
-          this.createDialog.close();
-          this.loadCountries();
-        }
-      })
-    );
-  }
-
-  private loadCountries(): void {
-    this.countries = [];
+  private loadLevels(): void {
+    this.levels = [];
     this.inProgress = true;
-    const listData$ = this.adminService.getCountryBlackList().valueChanges.pipe(take(1));
+    const listData$ = this.adminService.getKycLevels(null).pipe(take(1));
     this.subscriptions.add(
-      listData$.subscribe(({ data }) => {
-        const responseData = data.getCountryBlackList as BlackCountryListResult;
-        let itemCount = 0;
+      listData$.subscribe(data => {
+        this.levels = data.list;
         this.inProgress = false;
-        if (responseData !== null) {
-          itemCount = responseData?.count ?? 0;
-          if (itemCount > 0) {
-            this.countries = responseData?.list?.map((val) => {
-              const c = getCountryByCode2(val.countryCode2);
-              return {
-                id: c?.code3 ?? '',
-                title: c?.name ?? '',
-                imgClass: 'country-flag',
-                imgSource: `assets/svg-country-flags/${c?.code2.toLowerCase()}.svg`
-              }
-            }) as CommonTargetValue[];
-          }
-        }
       }, (error) => {
         this.inProgress = false;
         if (this.auth.token === '') {
@@ -95,15 +65,36 @@ export class AdminLevelsComponent implements OnInit, OnDestroy {
     );
   }
 
-  remove(country: CommonTargetValue, content: any): void {
-    this.selectedCountry = country;
+  showDetails(level: KycLevel | undefined, content: any): void {
+    this.selectedLevel = level;
+    if (level) {
+      this.detailsTitle = 'KYC level details';
+    } else {
+      this.detailsTitle = 'Add new KYC level';
+    }
+    this.createDialog = this.modalService.open(content, {
+      backdrop: 'static',
+      windowClass: 'modalCusSty',
+    });
+    this.subscriptions.add(
+      this.createDialog.closed.subscribe(val => {
+        if (this.createDialog) {
+          this.createDialog.close();
+          this.loadLevels();
+        }
+      })
+    );
+  }
+
+  remove(level: KycLevel, content: any): void {
+    this.selectedLevel = level;
     this.removeDialog = this.modalService.open(content, {
       backdrop: 'static',
       windowClass: 'modalCusSty',
     });
     this.subscriptions.add(
       this.removeDialog.closed.subscribe(val => {
-        this.removeCountryConfirmed(this.selectedCountry?.id ?? '');
+        this.removeCountryConfirmed(this.selectedLevel?.id ?? '');
       })
     );
   }
@@ -119,7 +110,7 @@ export class AdminLevelsComponent implements OnInit, OnDestroy {
           this.inProgress = false;
           if (this.removeDialog) {
             this.removeDialog.close();
-            this.loadCountries();
+            this.loadLevels();
           }
         }, (error) => {
           this.inProgress = false;
