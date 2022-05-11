@@ -4,11 +4,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { Filter } from 'src/app/admin_old/model/filter.model';
-import { WidgetItem } from 'src/app/admin_old/model/widget.model';
 import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
 import { CommonTargetValue } from 'src/app/model/common.model';
-import { getCountryByCode2 } from 'src/app/model/country-code.model';
+import { getCountryByCode2, getCountryByCode3 } from 'src/app/model/country-code.model';
 import { BlackCountryListResult } from 'src/app/model/generated-models';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -17,52 +15,29 @@ import { AuthService } from 'src/app/services/auth.service';
   templateUrl: 'countries.component.html',
   styleUrls: ['countries.component.scss']
 })
-export class AdminCountryBlackListComponent implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild(MatSort) sort!: MatSort;
-
+export class AdminCountryBlackListComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = [
-    'details',
+    'id',
     'name',
-    'code',
-    'link',
-    'created',
-    'createdBy',
-    'transactionType',
-    'currenciesCrypto',
-    'currenciesFiat',
-    'destinationAddress',
-    'userNotificationId',
-    'countries',
-    'instruments',
-    'paymentProviders',
-    'liquidityProvider',
-    'id'
+    'delete'
   ];
   inProgress = false;
   errorMessage = '';
   permission = 0;
-  widgetDetailsTitle = 'Widget Details';
-  userIdFilter = '';
   selectedCountry?: CommonTargetValue;
   countries: CommonTargetValue[] = [];
-  widgetCount = 0;
-  pageSize = 50;
-  pageIndex = 0;
-  sortedField = 'created';
-  sortedDesc = true;
 
   private subscriptions: Subscription = new Subscription();
-  private detailsDialog: NgbModalRef | undefined = undefined;
+  private createDialog: NgbModalRef | undefined = undefined;
+  private removeDialog: NgbModalRef | undefined = undefined;
 
   constructor(
     private modalService: NgbModal,
     private auth: AuthService,
     private adminService: AdminDataService,
-    private route: ActivatedRoute,
     private router: Router
   ) {
-    this.userIdFilter = this.route.snapshot.params['userId'] ?? '';
-    this.permission = this.auth.isPermittedObjectCode('AFFILIATES');
+    this.permission = this.auth.isPermittedObjectCode('KYC');
   }
 
   ngOnInit(): void {
@@ -73,32 +48,20 @@ export class AdminCountryBlackListComponent implements OnInit, OnDestroy, AfterV
     this.subscriptions.unsubscribe();
   }
 
-  ngAfterViewInit() {
-    this.subscriptions.add(
-      this.sort.sortChange.subscribe(() => {
-        this.sortedDesc = (this.sort.direction === 'desc');
-        this.sortedField = this.sort.active;
-        this.loadCountries();
-      })
-    );
-  }
-
-  handlePage(index: number): void {
-    this.pageIndex = index - 1;
-    this.loadCountries();
-  }
-
   addWidget(content: any): void {
-    this.widgetDetailsTitle = 'Create a new Widget';
     this.selectedCountry = undefined;
-    this.detailsDialog = this.modalService.open(content, {
+    this.createDialog = this.modalService.open(content, {
       backdrop: 'static',
       windowClass: 'modalCusSty',
     });
-  }
-
-  onWidgetSelected(item: CommonTargetValue): void {
-
+    this.subscriptions.add(
+      this.createDialog.closed.subscribe(val => {
+        if (this.createDialog) {
+          this.createDialog.close();
+          this.loadCountries();
+        }
+      })
+    );
   }
 
   private loadCountries(): void {
@@ -109,6 +72,7 @@ export class AdminCountryBlackListComponent implements OnInit, OnDestroy, AfterV
       listData$.subscribe(({ data }) => {
         const responseData = data.getCountryBlackList as BlackCountryListResult;
         let itemCount = 0;
+        this.inProgress = false;
         if (responseData !== null) {
           itemCount = responseData?.count ?? 0;
           if (itemCount > 0) {
@@ -132,20 +96,39 @@ export class AdminCountryBlackListComponent implements OnInit, OnDestroy, AfterV
     );
   }
 
-  onSaveWidget(): void {
-    this.selectedCountry = undefined;
-    if (this.detailsDialog) {
-      this.detailsDialog.close();
-      this.loadCountries();
-    }
-  }
-
-  showDetails(country: CommonTargetValue, content: any) {
-    this.widgetDetailsTitle = 'Widget Details';
+  remove(country: CommonTargetValue, content: any): void {
     this.selectedCountry = country;
-    this.detailsDialog = this.modalService.open(content, {
+    this.removeDialog = this.modalService.open(content, {
       backdrop: 'static',
       windowClass: 'modalCusSty',
     });
+    this.subscriptions.add(
+      this.removeDialog.closed.subscribe(val => {
+        this.removeCountryConfirmed(this.selectedCountry?.id ?? '');
+      })
+    );
+  }
+
+  private removeCountryConfirmed(id: string): void {
+    const c = getCountryByCode3(id);
+    if (c) {
+      this.errorMessage = '';
+      this.inProgress = true;
+      const requestData$ = this.adminService.deleteBlackCountry(c.code2);
+      this.subscriptions.add(
+        requestData$.subscribe(({ data }) => {
+          this.inProgress = false;
+          if (this.removeDialog) {
+            this.removeDialog.close();
+            this.loadCountries();
+          }
+        }, (error) => {
+          this.inProgress = false;
+          if (this.auth.token === '') {
+            this.router.navigateByUrl('/');
+          }
+        })
+      );
+    }
   }
 }

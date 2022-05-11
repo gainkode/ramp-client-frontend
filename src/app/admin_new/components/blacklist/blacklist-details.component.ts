@@ -17,11 +17,11 @@ import { CommonDataService } from 'src/app/services/common-data.service';
 import { getCheckedProviderList, getProviderList } from 'src/app/utils/utils';
 
 @Component({
-  selector: 'app-admin-widget-details',
-  templateUrl: 'widget-details.component.html',
-  styleUrls: ['widget-details.component.scss', '../../assets/scss/_validation.scss']
+  selector: 'app-admin-black-list-details',
+  templateUrl: 'blacklist-details.component.html',
+  styleUrls: ['blacklist-details.component.scss', '../../assets/scss/_validation.scss']
 })
-export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
+export class AdminCountryBlackListDetailsComponent implements OnInit, OnDestroy {
   @Input() permission = 0;
   @Input()
   set widget(widget: WidgetItem | undefined) {
