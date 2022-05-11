@@ -5,6 +5,7 @@ import { AdminNewGuard } from './admin_new.guard';
 import { AdminApiKeysComponent } from './components/apikeys/apikeys.component';
 import { AdminCountryBlackListComponent } from './components/blacklist/countries.component';
 import { AdminDashboardComponent } from './components/dashboard/dashboard.component';
+import { AdminLevelsComponent } from './components/levels/levels.component';
 import { AdminNotificationsComponent } from './components/notifications/notifications.component';
 import { AdminRisksComponent } from './components/risks/risks.component';
 import { AdminTransactionsComponent } from './components/transactions/transactions.component';
@@ -134,6 +135,11 @@ const routes: Routes = [
       //     component: IdentificationListComponent,
       //     data: { header: 'Identification' }
       //   },
+      {
+        path: 'levels',
+        component: AdminLevelsComponent,
+        data: { header: 'Levels' }
+      },
       {
         path: 'black-list',
         component: AdminCountryBlackListComponent,

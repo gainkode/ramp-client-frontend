@@ -66,6 +66,8 @@ import { AdminApiKeysComponent } from './components/apikeys/apikeys.component';
 import { AdminApiKeyDetailsComponent } from './components/apikeys/apikey-details.component';
 import { AdminCountryBlackListComponent } from './components/blacklist/countries.component';
 import { AdminCountryBlackListDetailsComponent } from './components/blacklist/blacklist-details.component';
+import { AdminLevelsComponent } from './components/levels/levels.component';
+import { AdminLevelDetailsComponent } from './components/levels/level-details.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -142,7 +144,9 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AdminApiKeysComponent,
     AdminApiKeyDetailsComponent,
     AdminCountryBlackListComponent,
-    AdminCountryBlackListDetailsComponent
+    AdminCountryBlackListDetailsComponent,
+    AdminLevelsComponent,
+    AdminLevelDetailsComponent
   ],
   providers: [
     AdminNewGuard,
