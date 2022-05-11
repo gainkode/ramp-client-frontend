@@ -102,7 +102,7 @@ export class ProfileWalletDetailsComponent implements OnDestroy {
         item.container = ProfileItemContainerType.Wallet;
         item.action = ProfileItemActionType.Redirect;
         item.wallet = this.walletData;
-        if (this.wallet?.crypto === true) {
+        if (this.walletData?.crypto === true) {
             item.meta = 'receive';
         } else {
             item.meta = 'deposit';
@@ -115,7 +115,8 @@ export class ProfileWalletDetailsComponent implements OnDestroy {
         item.container = ProfileItemContainerType.Wallet;
         item.action = ProfileItemActionType.Redirect;
         item.wallet = this.walletData;
-        if (this.wallet?.crypto === true) {
+        console.log(this.walletData);
+        if (this.walletData?.crypto === true) {
             item.meta = 'send';
         } else {
             item.meta = 'withdrawal';

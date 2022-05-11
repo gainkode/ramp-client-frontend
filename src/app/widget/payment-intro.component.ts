@@ -206,7 +206,7 @@ export class PaymentIntroComponent implements OnInit, OnDestroy {
   }
 
   private setSpendValidators(): void {
-    this.amountSpendErrorMessages['min'] = `Min. amount ${this.currentCurrencySpend?.minAmount} ${this.currentCurrencySpend?.title}`;
+    this.amountSpendErrorMessages['min'] = `Min. amount ${this.currentCurrencySpend?.minAmount} ${this.currentCurrencySpend?.id}`;
     this.amountSpendField?.setValidators([
       Validators.required,
       Validators.pattern(this.pNumberPattern),
@@ -216,7 +216,7 @@ export class PaymentIntroComponent implements OnInit, OnDestroy {
   }
 
   private setReceiveValidators(): void {
-    this.amountReceiveErrorMessages['min'] = `Min. amount ${this.currentCurrencyReceive?.minAmount} ${this.currentCurrencyReceive?.title}`;
+    this.amountReceiveErrorMessages['min'] = `Min. amount ${this.currentCurrencyReceive?.minAmount} ${this.currentCurrencyReceive?.id}`;
     this.amountReceiveField?.setValidators([
       Validators.required,
       Validators.pattern(this.pNumberPattern),

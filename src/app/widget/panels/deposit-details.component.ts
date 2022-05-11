@@ -96,7 +96,7 @@ export class WidgetDepositDetailsComponent implements OnInit, OnDestroy {
     if (this.amountField?.value === undefined || this.amountField?.value === null) {
       this.amountField?.setValue(this.selectedCurrency?.minAmount ?? 0);
     }
-    this.amountErrorMessages['min'] = `Min. amount ${this.selectedCurrency?.minAmount ?? 0} ${this.selectedCurrency?.title}`;
+    this.amountErrorMessages['min'] = `Min. amount ${this.selectedCurrency?.minAmount ?? 0} ${this.selectedCurrency?.id}`;
     const validators = [
       Validators.required,
       Validators.pattern(this.pNumberPattern),

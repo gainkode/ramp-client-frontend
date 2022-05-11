@@ -31,7 +31,7 @@ export class WalletItem {
       this.vault = data.vaultId ?? '';
       this.address = data.address ?? '';
       this.addressFormat = data.addressFormat ?? '';
-      this.asset = data.assetId ?? '';
+      this.asset = currency?.id ?? '';
       this.total = data.total ?? 0;
       this.totalFiat = data.totalFiat ?? 0;
       this.name = data.vaultName ?? '';
@@ -39,7 +39,7 @@ export class WalletItem {
         this.pIconUrl = `assets/svg-crypto/${getCryptoSymbol(this.asset).toLowerCase()}.svg`;
       }
       if (currency) {
-        this.pCurrencyName = `${currency.name.toUpperCase()} - ${this.asset}`;
+        this.pCurrencyName = `${this.asset} - ${currency.name.toUpperCase()}`;
         this.pFullName = currency.name;
       } else {
         this.pCurrencyName = this.asset;

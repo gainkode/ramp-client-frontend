@@ -149,7 +149,6 @@ export class KycLevelView {
 
 export class CurrencyView {
     id = '';
-    title = '';
     name = '';
     img = '';
     precision = 0;
@@ -162,9 +161,8 @@ export class CurrencyView {
 
     constructor(data: SettingsCurrency) {
         this.id = data.symbol;
-        this.title = data.symbol;
         if (data.displaySymbol) {
-            this.title = data.displaySymbol;
+            this.id = data.displaySymbol;
         }
         this.name = data.name ?? '';
         this.ethFlag = data.ethFlag ?? false;
@@ -175,7 +173,7 @@ export class CurrencyView {
         this.validateAsSymbol = data.validateAsSymbol as string | null;
         this.fiat = data.fiat as boolean;
         if (!this.fiat) {
-            this.img = `assets/svg-crypto/${getCryptoSymbol(this.title).toLowerCase()}.svg`;
+            this.img = `assets/svg-crypto/${getCryptoSymbol(this.id).toLowerCase()}.svg`;
         }
     }
 }
