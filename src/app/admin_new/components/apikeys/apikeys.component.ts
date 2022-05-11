@@ -84,6 +84,23 @@ export class AdminApiKeysComponent implements OnInit, OnDestroy, AfterViewInit {
       backdrop: 'static',
       windowClass: 'modalCusSty',
     });
+    this.subscriptions.add(
+      this.deleteDialog.closed.subscribe(val => {
+        this.removeApiKeyConfirmed(key.title);
+      })
+    );
+  }
+
+  private removeApiKeyConfirmed(apiKey: string): void {
+    this.errorMessage = '';
+    const deleteKeyData$ = this.adminService.deleteApiKey(apiKey);
+    this.subscriptions.add(
+      deleteKeyData$.subscribe(({ data }) => {
+        this.loadKeys();
+      }, (error) => {
+        this.errorMessage = error;
+      })
+    );
   }
 
   private loadKeys(): void {

@@ -127,11 +127,15 @@
             </div>
             <div class="modal-body">
               <h4 style="text-align: center;">
-                Here must be a template
+                You are going to remove the API key. Confirm operation.
               </h4>
               <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
-                <button class="btn btn-primary pd-x-50 mg-t-5" (click)="modal.dismiss('OK')">
-                  OK
+                <button class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" type="button"
+                  (click)="modal.dismiss('Reject')">
+                  Reject
+                </button>
+                <button class="btn btn-primary pd-x-30 mg-t-5" (click)="modal.close('Confirm')">
+                  Confirm
                 </button>
               </div>
             </div>
