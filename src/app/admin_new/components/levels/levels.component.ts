@@ -28,8 +28,7 @@ export class AdminLevelsComponent implements OnInit, OnDestroy {
   levels: KycLevel[] = [];
 
   private subscriptions: Subscription = new Subscription();
-  private createDialog: NgbModalRef | undefined = undefined;
-  private removeDialog: NgbModalRef | undefined = undefined;
+  private detailsDialog: NgbModalRef | undefined = undefined;
 
   constructor(
     private modalService: NgbModal,
@@ -72,53 +71,17 @@ export class AdminLevelsComponent implements OnInit, OnDestroy {
     } else {
       this.detailsTitle = 'Add new KYC level';
     }
-    this.createDialog = this.modalService.open(content, {
+    this.detailsDialog = this.modalService.open(content, {
       backdrop: 'static',
       windowClass: 'modalCusSty',
     });
     this.subscriptions.add(
-      this.createDialog.closed.subscribe(val => {
-        if (this.createDialog) {
-          this.createDialog.close();
+      this.detailsDialog.closed.subscribe(val => {
+        if (this.detailsDialog) {
+          this.detailsDialog.close();
           this.loadLevels();
         }
       })
     );
-  }
-
-  remove(level: KycLevel, content: any): void {
-    this.selectedLevel = level;
-    this.removeDialog = this.modalService.open(content, {
-      backdrop: 'static',
-      windowClass: 'modalCusSty',
-    });
-    this.subscriptions.add(
-      this.removeDialog.closed.subscribe(val => {
-        this.removeCountryConfirmed(this.selectedLevel?.id ?? '');
-      })
-    );
-  }
-
-  private removeCountryConfirmed(id: string): void {
-    const c = getCountryByCode3(id);
-    if (c) {
-      this.errorMessage = '';
-      this.inProgress = true;
-      const requestData$ = this.adminService.deleteBlackCountry(c.code2);
-      this.subscriptions.add(
-        requestData$.subscribe(({ data }) => {
-          this.inProgress = false;
-          if (this.removeDialog) {
-            this.removeDialog.close();
-            this.loadLevels();
-          }
-        }, (error) => {
-          this.inProgress = false;
-          if (this.auth.token === '') {
-            this.router.navigateByUrl('/');
-          }
-        })
-      );
-    }
   }
 }

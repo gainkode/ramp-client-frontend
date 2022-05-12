@@ -7,7 +7,8 @@
       <div class="card-body">
         <div class="table-responsive">
           <div class="table-button-container">
-            <button *ngIf="permission>1" (click)="showDetails(undefined, details_content)" type="button" class="btn btn-primary me-2">
+            <button *ngIf="permission>1" (click)="showDetails(undefined, details_content)" type="button"
+              class="btn btn-primary me-2">
               Add level
             </button>
           </div>
@@ -22,8 +23,8 @@
                 </th>
                 <td mat-cell *matCellDef="let element">
                   <button mat-icon-button class="row-button" (click)="showDetails(element, details_content)"
-                    [attr.aria-label]="'Level details'" [attr.aria-pressed]="!!selectedLevel"
-                    matTooltip="Level details" matTooltipClass="info-tooltip">
+                    [attr.aria-label]="'Level details'" [attr.aria-pressed]="!!selectedLevel" matTooltip="Level details"
+                    matTooltipClass="info-tooltip">
                     <i class="material-icons" style="font-size: 20px;">wysiwyg</i>
                   </button>
                 </td>
@@ -73,32 +74,9 @@
               </button>
             </div>
             <div class="modal-body">
-              <!-- <app-admin-black-list-details (save)="modal.close('OK')" (close)="modal.dismiss('Close')">
-              </app-admin-black-list-details> -->
-            </div>
-          </ng-template>
-
-          <ng-template #delete_content let-modal>
-            <div class="modal-header">
-              <h5 class="modal-title">Remove a country from the black list</h5>
-              <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <h4 style="text-align: center;">
-                You are going to remove {{selectedLevel?.name ?? 'a country'}} from the black list. Confirm
-                operation.
-              </h4>
-              <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
-                <button class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" type="button"
-                  (click)="modal.dismiss('Reject')">
-                  Reject
-                </button>
-                <button class="btn btn-primary pd-x-30 mg-t-5" (click)="modal.close('Confirm')">
-                  Confirm
-                </button>
-              </div>
+              <app-admin-level-details [permission]="permission" [currentLevel]="selectedLevel"
+                (save)="modal.close('OK')" (close)="modal.dismiss('Close')">
+              </app-admin-level-details>
             </div>
           </ng-template>
         </div>

@@ -4,19 +4,68 @@
       <div class="card card-body pd-20 pd-md-40 border shadow-none">
         <div class="form-group">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            Country name
+            Level name
+            <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
           </label>
-          <ng-select formControlName="country" [clearable]=false [clearOnBackspace]=false>
-            <ng-option *ngFor="let country of countryOptions" [value]="country">
-              <app-dropdown-item itemValue="{{country.name}}" imageClass="country-flag-admin"
-                imageSource="assets/svg-country-flags/{{getCountryFlag(country.code2)}}">
-              </app-dropdown-item>
-            </ng-option>
-          </ng-select>
-          <div *ngIf="(form.controls.country.touched || submitted) && (form.controls.country.errors?.['required'])"
+          <input class="form-control" [ngClass]="{'has-error': !form.controls.name.valid}" type="text"
+            formControlName="name" required>
+          <div *ngIf="(form.controls.name.touched || submitted) && (form.controls.name.errors?.['required'])"
             class="tx-danger">
             <small>
-              Select a country to add
+              Level name is required
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Description
+          </label>
+          <textarea class="form-control" style="resize: none;" rows="3" formControlName="description"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Account type
+            <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+          </label>
+          <ng-select [items]="userTypeOptions" [clearable]=false [clearOnBackspace]=false bindLabel="name"
+            bindValue="id" formControlName="userType" required>
+          </ng-select>
+          <div *ngIf="(form.controls.userType.touched || submitted) && (form.controls.userType.errors?.['required'])"
+            class="tx-danger">
+            <small>
+              Please specify a user type appropriate for the level
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Level value
+            <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+          </label>
+          <input class="form-control" [ngClass]="{'has-error': !form.controls.level.valid}" type="text"
+            formControlName="level" required>
+          <div *ngIf="(form.controls.level.touched || submitted) && (form.controls.level.errors?.['required'])"
+            class="tx-danger">
+            <small>
+              Level value is required
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Flow
+            <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+          </label>
+          <input class="form-control" [ngClass]="{'has-error': !form.controls.flow.valid}" type="text"
+            formControlName="flow" required>
+          <div *ngIf="(form.controls.flow.touched || submitted) && (form.controls.flow.errors?.['required'])"
+            class="tx-danger">
+            <small>
+              Flow is required
             </small>
           </div>
         </div>
@@ -30,7 +79,13 @@
       <div style="display: flex; justify-content: flex-end;">
         <button class="btn btn-primary pd-x-30 me-2 mg-t-5">
           <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-          Add
+          Save
+        </button>
+        <button *ngIf="permission>1 && !createNew" class="btn btn-danger pd-x-30 me-2 mg-t-5" type="button"
+          (click)="deleteLevel(delete_content)">
+          <span *ngIf="deleteInProgress" class="spinner-border spinner-border-sm" role="status"
+            aria-hidden="true"></span>
+          Delete
         </button>
         <button class="btn btn-outline-primary pd-x-30 mg-t-5" type="button" (click)="close.emit()">
           Close
@@ -39,3 +94,25 @@
     </form>
   </div>
 </div>
+
+<ng-template #delete_content let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Delete level</h5>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <h4 style="text-align: center;">
+      You are going to delete selected level. Confirm operation.
+    </h4>
+    <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
+      <button class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" type="button" (click)="modal.dismiss('Reject')">
+        Reject
+      </button>
+      <button class="btn btn-primary pd-x-30 mg-t-5" (click)="modal.close('Confirm')">
+        Confirm
+      </button>
+    </div>
+  </div>
+</ng-template>
