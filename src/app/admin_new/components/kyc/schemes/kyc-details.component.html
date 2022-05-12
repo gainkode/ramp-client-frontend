@@ -2,9 +2,9 @@
   <div class="col-md-12 col-lg-12 col-xl-12 mx-auto d-block">
     <form [formGroup]="form" novalidate (ngSubmit)="onSubmit()">
       <div class="card card-body pd-20 pd-md-40 border shadow-none">
-        <div class="form-group">
+        <div *ngIf="defaultSchemeName===''" class="form-group">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            Level name
+            Scheme name
             <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
           </label>
           <input class="form-control" [ngClass]="{'has-error': !form.controls.name.valid}" type="text"
@@ -12,16 +12,20 @@
           <div *ngIf="(form.controls.name.touched || submitted) && (form.controls.name.errors?.['required'])"
             class="tx-danger">
             <small>
-              Level name is required
+              Scheme name is required
             </small>
           </div>
+        </div>
+        <div *ngIf="defaultSchemeName!==''" class="form-group">
+          <app-admin-details-item label="Scheme name" [value]="defaultSchemeName">
+          </app-admin-details-item>
         </div>
 
         <div class="form-group">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             Description
           </label>
-          <textarea class="form-control" style="resize: none;" rows="3" formControlName="description"></textarea>
+          <input class="form-control" type="text" formControlName="description">
         </div>
 
         <div class="form-group">
@@ -35,39 +39,121 @@
           <div *ngIf="(form.controls.userType.touched || submitted) && (form.controls.userType.errors?.['required'])"
             class="tx-danger">
             <small>
-              Please specify a user type appropriate for the level
+              Please specify an account type appropriate for the scheme
             </small>
           </div>
         </div>
 
         <div class="form-group">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            Level value
+            Target
             <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
           </label>
-          <input class="form-control" [ngClass]="{'has-error': !form.controls.level.valid}" type="text"
-            formControlName="level" required>
-          <div *ngIf="(form.controls.level.touched || submitted) && (form.controls.level.errors?.['required'])"
+          <ng-select [items]="targets" [clearable]=false [clearOnBackspace]=false bindLabel="name" bindValue="id"
+            formControlName="target" required>
+          </ng-select>
+          <div *ngIf="(form.controls.target.touched || submitted) && (form.controls.target.errors?.['required'])"
             class="tx-danger">
             <small>
-              Level value is required
+              Please specify a target
+            </small>
+          </div>
+        </div>
+
+
+
+        <!-- Tag=get values -->
+
+
+
+
+
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            User modes
+            <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+          </label>
+          <ng-select [items]="userModes" bindLabel="name" bindValue="id" formControlName="userMode" [clearable]=true
+            [clearOnBackspace]=true [multiple]="true" [closeOnSelect]="false">
+          </ng-select>
+          <div *ngIf="(form.controls.userMode.touched || submitted) && (form.controls.userMode.errors?.['required'])"
+            class="tx-danger">
+            <small>
+              Please choose user modes
             </small>
           </div>
         </div>
 
         <div class="form-group">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            Flow
+            KYC providers
             <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
           </label>
-          <input class="form-control" [ngClass]="{'has-error': !form.controls.flow.valid}" type="text"
-            formControlName="flow" required>
-          <div *ngIf="(form.controls.flow.touched || submitted) && (form.controls.flow.errors?.['required'])"
+          <ng-select [items]="kycProviders" bindLabel="name" bindValue="id" formControlName="provider" [clearable]=true
+            [clearOnBackspace]=true [multiple]="true" [closeOnSelect]="false">
+          </ng-select>
+          <div *ngIf="(form.controls.provider.touched || submitted) && (form.controls.provider.errors?.['required'])"
             class="tx-danger">
             <small>
-              Flow is required
+              Please choose KYC providers
             </small>
           </div>
+        </div>
+
+
+
+
+        <!-- Levels -->
+
+
+
+
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            User requirements
+          </label>
+          <label class="ckbox">
+            <input type="checkbox" formControlName="requireUserFullName">
+            <span>
+              Require User Full Name
+            </span>
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label class="ckbox">
+            <input type="checkbox" formControlName="requireUserPhone">
+            <span>
+              Require User Phone
+            </span>
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label class="ckbox">
+            <input type="checkbox" formControlName="requireUserBirthday">
+            <span>
+              Require User Birthday
+            </span>
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label class="ckbox">
+            <input type="checkbox" formControlName="requireUserAddress">
+            <span>
+              Require User Address
+            </span>
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label class="ckbox">
+            <input type="checkbox" formControlName="requireUserFlatNumber">
+            <span>
+              Require User Flat Number
+            </span>
+          </label>
         </div>
       </div>
 
@@ -81,7 +167,7 @@
           <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
           Save
         </button>
-        <button *ngIf="permission>1 && !createNew" class="btn btn-danger pd-x-30 me-2 mg-t-5" type="button"
+        <button *ngIf="permission>1 && !createNew && defaultSchemeName===''" class="btn btn-danger pd-x-30 me-2 mg-t-5" type="button"
           (click)="deleteLevel(delete_content)">
           <span *ngIf="deleteInProgress" class="spinner-border spinner-border-sm" role="status"
             aria-hidden="true"></span>
@@ -97,14 +183,14 @@
 
 <ng-template #delete_content let-modal>
   <div class="modal-header">
-    <h5 class="modal-title">Delete level</h5>
+    <h5 class="modal-title">Delete KYC scheme</h5>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body">
     <h4 style="text-align: center;">
-      You are going to delete selected level. Confirm operation.
+      You are going to delete selected scheme. Confirm operation.
     </h4>
     <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
       <button class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" type="button" (click)="modal.dismiss('Reject')">
