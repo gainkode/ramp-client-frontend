@@ -1,11 +1,13 @@
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
-import { KycLevel } from 'src/app/model/identification.model';
-import { UserTypeList } from 'src/app/model/payment.model';
+import { WireTransferBankAccountAu, WireTransferBankAccountEu, WireTransferBankAccountItem, WireTransferBankAccountUk } from 'src/app/model/cost-scheme.model';
+import { WireTransferBankAccount } from 'src/app/model/generated-models';
+import { WireTransferPaymentCategory } from 'src/app/model/payment-base.model';
+import { WireTransferPaymentCategoryList } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -13,12 +15,12 @@ import { AuthService } from 'src/app/services/auth.service';
   templateUrl: 'account-details.component.html',
   styleUrls: ['account-details.component.scss', '../../assets/scss/_validation.scss']
 })
-export class AdminBankAccountDetailsComponent implements OnDestroy {
+export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
   @Input() permission = 0;
   @Input()
-  set currentLevel(level: KycLevel | undefined) {
-    this.setFormData(level);
-    this.settingsId = (level) ? level?.id : '';
+  set currentAccount(account: WireTransferBankAccountItem | undefined) {
+    this.setFormData(account);
+    this.settingsId = (account) ? account?.id : '';
     this.createNew = (this.settingsId === '');
   }
 
@@ -33,16 +35,30 @@ export class AdminBankAccountDetailsComponent implements OnDestroy {
   createNew = false;
   saveInProgress = false;
   deleteInProgress = false;
-  errorMessage = '';
-  userTypeOptions = UserTypeList;
+  public errorMessage = '';
+  private bankCategories = WireTransferPaymentCategoryList;
+  public auCategory: any;
+  public ukCategory: any;
+  public euCategory: any;
 
   form = this.formBuilder.group({
-    id: [''],
     name: ['', { validators: [Validators.required], updateOn: 'change' }],
     description: [''],
-    userType: ['', { validators: [Validators.required], updateOn: 'change' }],
-    level: ['', { validators: [Validators.required], updateOn: 'change' }],
-    flow: ['', { validators: [Validators.required], updateOn: 'change' }]
+    auSelected: [false],
+    ukSelected: [false],
+    euSelected: [false],
+    auAccountName: [undefined],
+    auAccountNumber: [undefined],
+    auBsb: [undefined],
+    ukAccountName: [undefined],
+    ukAccountNumber: [undefined],
+    ukSortCode: [undefined],
+    euBankAddress: [undefined],
+    euBankName: [undefined],
+    euBeneficiaryAddress: [undefined],
+    euBeneficiaryName: [undefined],
+    euIban: [undefined],
+    euSwiftBic: [undefined]
   });
 
   constructor(
@@ -54,62 +70,140 @@ export class AdminBankAccountDetailsComponent implements OnDestroy {
 
   }
 
+  ngOnInit(): void {
+    this.auCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.AU);
+    this.ukCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.UK);
+    this.euCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.EU);
+  }
+
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
 
-  setFormData(level?: KycLevel): void {
-    if (level !== null) {
-      this.form.get('id')?.setValue(level?.id);
-      this.form.get('name')?.setValue(level?.name);
-      this.form.get('description')?.setValue(level?.description);
-      this.form.get('userType')?.setValue(level?.userType);
-      this.form.get('level')?.setValue(level?.levelData.value);
-      this.form.get('flow')?.setValue(level?.flowData.value);
+  setFormData(account?: WireTransferBankAccountItem): void {
+    if (account) {
+      this.form.get('name')?.setValue(account.name);
+      this.form.get('description')?.setValue(account.description);
+      if (account.auAvailable) {
+        this.form.get('auSelected')?.setValue(true);
+        this.form.get('auAccountName')?.setValue(account.au?.accountName);
+        this.form.get('auAccountNumber')?.setValue(account.au?.accountNumber);
+        this.form.get('auBsb')?.setValue(account.au?.bsb);
+      }
+      if (account.ukAvailable) {
+        this.form.get('ukSelected')?.setValue(true);
+        this.form.get('ukAccountName')?.setValue(account.uk?.accountName);
+        this.form.get('ukAccountNumber')?.setValue(account.uk?.accountNumber);
+        this.form.get('ukSortCode')?.setValue(account.uk?.sortCode);
+      }
+      if (account.euAvailable) {
+        this.form.get('euSelected')?.setValue(true);
+        this.form.get('euBankAddress')?.setValue(account.eu?.bankAddress);
+        this.form.get('euBankName')?.setValue(account.eu?.bankName);
+        this.form.get('euBeneficiaryAddress')?.setValue(account.eu?.beneficiaryAddress);
+        this.form.get('euBeneficiaryName')?.setValue(account.eu?.beneficiaryName);
+        this.form.get('euIban')?.setValue(account.eu?.iban);
+        this.form.get('euSwiftBic')?.setValue(account.eu?.swiftBic);
+      }
     } else {
-      this.form.get('id')?.setValue('');
       this.form.get('name')?.setValue('');
       this.form.get('description')?.setValue('');
-      this.form.get('userType')?.setValue('');
-      this.form.get('level')?.setValue('');
-      this.form.get('flow')?.setValue([]);
+      this.form.get('auSelected')?.setValue(false);
+      this.form.get('ukSelected')?.setValue(false);
+      this.form.get('euSelected')?.setValue(false);
+      this.form.get('auAccountName')?.setValue(undefined);
+      this.form.get('auAccountNumber')?.setValue(undefined);
+      this.form.get('auBsb')?.setValue(undefined);
+      this.form.get('ukAccountName')?.setValue(undefined);
+      this.form.get('ukAccountNumber')?.setValue(undefined);
+      this.form.get('ukSortCode')?.setValue(undefined);
+      this.form.get('euBankAddress')?.setValue(undefined);
+      this.form.get('euBankName')?.setValue(undefined);
+      this.form.get('euBeneficiaryAddress')?.setValue(undefined);
+      this.form.get('euBeneficiaryName')?.setValue(undefined);
+      this.form.get('euIban')?.setValue(undefined);
+      this.form.get('euSwiftBic')?.setValue(undefined);
     }
   }
 
-  setLevelData(): KycLevel {
-    const data = new KycLevel(null);
+  setAccountData(): WireTransferBankAccount {
+    const data = {} as WireTransferBankAccount;
+    // common
     data.name = this.form.get('name')?.value;
     data.description = this.form.get('description')?.value;
-    data.userType = this.form.get('userType')?.value;
-    data.levelData.value = this.form.get('level')?.value;
-    data.flowData.value = this.form.get('flow')?.value;
-    data.id = this.form.get('id')?.value;
+    data.bankAccountId = this.settingsId;
+    // data
+    if (this.form.get('auSelected')?.value === true) {
+      const auAccountName = this.form.get('auAccountName')?.value;
+      const auAccountNumber = this.form.get('auAccountNumber')?.value;
+      const auBsb = this.form.get('auBsb')?.value;
+      const auData: WireTransferBankAccountAu = {
+        accountName: auAccountName,
+        accountNumber: auAccountNumber,
+        bsb: auBsb
+      };
+      data.au = JSON.stringify(auData);
+    } else {
+      data.au = null;
+    }
+    if (this.form.get('ukSelected')?.value === true) {
+      const ukAccountName = this.form.get('ukAccountName')?.value;
+      const ukAccountNumber = this.form.get('ukAccountNumber')?.value;
+      const ukSortCode = this.form.get('ukSortCode')?.value;
+      const ukData: WireTransferBankAccountUk = {
+        accountName: ukAccountName,
+        accountNumber: ukAccountNumber,
+        sortCode: ukSortCode
+      };
+      data.uk = JSON.stringify(ukData);
+    } else {
+      data.uk = null;
+    }
+    if (this.form.get('euSelected')?.value === true) {
+      const euBankAddress = this.form.get('euBankAddress')?.value;
+      const euBankName = this.form.get('euBankName')?.value;
+      const euBeneficiaryAddress = this.form.get('euBeneficiaryAddress')?.value;
+      const euBeneficiaryName = this.form.get('euBeneficiaryName')?.value;
+      const euIban = this.form.get('euIban')?.value;
+      const euSwiftBic = this.form.get('euSwiftBic')?.value;
+      const euData: WireTransferBankAccountEu = {
+        bankAddress: euBankAddress,
+        bankName: euBankName,
+        beneficiaryAddress: euBeneficiaryAddress,
+        beneficiaryName: euBeneficiaryName,
+        iban: euIban,
+        swiftBic: euSwiftBic
+      };
+      data.eu = JSON.stringify(euData);
+    } else {
+      data.eu = null;
+    }
     return data;
   }
 
   onSubmit(): void {
     this.submitted = true;
     if (this.form.valid) {
-      this.saveLevel(this.setLevelData());
+      this.saveAccount(this.setAccountData());
     }
   }
 
-  deleteLevel(content: any): void {
+  deleteAccount(content: any): void {
     this.removeDialog = this.modalService.open(content, {
       backdrop: 'static',
       windowClass: 'modalCusSty',
     });
     this.subscriptions.add(
       this.removeDialog.closed.subscribe(val => {
-        this.deleteLevelConfirmed(this.settingsId ?? '');
+        this.deleteAccountConfirmed(this.settingsId ?? '');
       })
     );
   }
 
-  private saveLevel(level: KycLevel): void {
+  private saveAccount(account: WireTransferBankAccount): void {
     this.errorMessage = '';
     this.saveInProgress = true;
-    const requestData$ = this.adminService.saveKycLevelSettings(level, this.createNew);
+    const requestData$ = this.adminService.saveBankAccountSettings(account, this.createNew);
     this.subscriptions.add(
       requestData$.subscribe(({ data }) => {
         this.saveInProgress = false;
@@ -124,10 +218,10 @@ export class AdminBankAccountDetailsComponent implements OnDestroy {
     );
   }
 
-  deleteLevelConfirmed(id: string): void {
+  deleteAccountConfirmed(id: string): void {
     this.errorMessage = '';
     this.saveInProgress = true;
-    const requestData$ = this.adminService.deleteKycLevelSettings(id);
+    const requestData$ = this.adminService.deleteBankAccountSettings(id);
     this.subscriptions.add(
       requestData$.subscribe(({ data }) => {
         this.saveInProgress = false;

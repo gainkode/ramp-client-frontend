@@ -4,7 +4,7 @@
       <div class="card card-body pd-20 pd-md-40 border shadow-none">
         <div class="form-group">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            Level name
+            Account name
             <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
           </label>
           <input class="form-control" [ngClass]="{'has-error': !form.controls.name.valid}" type="text"
@@ -12,7 +12,7 @@
           <div *ngIf="(form.controls.name.touched || submitted) && (form.controls.name.errors?.['required'])"
             class="tx-danger">
             <small>
-              Level name is required
+              Account name is required
             </small>
           </div>
         </div>
@@ -21,52 +21,115 @@
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             Description
           </label>
-          <textarea class="form-control" style="resize: none;" rows="3" formControlName="description"></textarea>
+          <input class="form-control" type="text" formControlName="description">
         </div>
 
-        <div class="form-group">
-          <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            Account type
-            <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
-          </label>
-          <ng-select [items]="userTypeOptions" [clearable]=false [clearOnBackspace]=false bindLabel="name"
-            bindValue="id" formControlName="userType" required>
-          </ng-select>
-          <div *ngIf="(form.controls.userType.touched || submitted) && (form.controls.userType.errors?.['required'])"
-            class="tx-danger">
-            <small>
-              Please specify a user type appropriate for the level
-            </small>
+      </div>
+      <div class="card card-body pd-20 pd-md-40 border shadow-none">
+        <h5 class="card-title mg-b-20 tx-11"
+          style="display: flex;flex-direction: row;justify-content: flex-start;align-items: center;">
+          <input type="checkbox" formControlName="auSelected" class="me-2">
+          {{auCategory?.title}}
+        </h5>
+        <div *ngIf="form.get('auSelected')?.value===true">
+          <div class="form-group">
+            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+              Account Name
+            </label>
+            <input class="form-control" type="text" formControlName="auAccountName" maxlength="100">
+          </div>
+
+          <div class="form-group">
+            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+              Account Number
+            </label>
+            <input class="form-control" type="text" formControlName="auAccountNumber" maxlength="100">
+          </div>
+
+          <div class="form-group">
+            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+              BSB
+            </label>
+            <input class="form-control" type="text" formControlName="auBsb" maxlength="100">
           </div>
         </div>
+      </div>
+      <div class="card card-body pd-20 pd-md-40 border shadow-none">
+        <h5 class="card-title mg-b-20 tx-11"
+          style="display: flex;flex-direction: row;justify-content: flex-start;align-items: center;">
+          <input type="checkbox" formControlName="euSelected" class="me-2">
+          {{euCategory?.title}}
+        </h5>
+        <div *ngIf="form.get('euSelected')?.value===true">
+          <div class="form-group">
+            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+              Bank Address
+            </label>
+            <input class="form-control" type="text" formControlName="euBankAddress" maxlength="100">
+          </div>
 
-        <div class="form-group">
-          <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            Level value
-            <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
-          </label>
-          <input class="form-control" [ngClass]="{'has-error': !form.controls.level.valid}" type="text"
-            formControlName="level" required>
-          <div *ngIf="(form.controls.level.touched || submitted) && (form.controls.level.errors?.['required'])"
-            class="tx-danger">
-            <small>
-              Level value is required
-            </small>
+          <div class="form-group">
+            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+              Bank Name
+            </label>
+            <input class="form-control" type="text" formControlName="euBankName" maxlength="100">
+          </div>
+
+          <div class="form-group">
+            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+              Beneficiary Address
+            </label>
+            <input class="form-control" type="text" formControlName="euBeneficiaryAddress" maxlength="100">
+          </div>
+
+          <div class="form-group">
+            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+              Beneficiary Name
+            </label>
+            <input class="form-control" type="text" formControlName="euBeneficiaryName" maxlength="100">
+          </div>
+
+          <div class="form-group">
+            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+              IBAN
+            </label>
+            <input class="form-control" type="text" formControlName="euIban" maxlength="100">
+          </div>
+
+          <div class="form-group">
+            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+              SWIFT / BIC
+            </label>
+            <input class="form-control" type="text" formControlName="euSwiftBic" maxlength="100">
           </div>
         </div>
+      </div>
+      <div class="card card-body pd-20 pd-md-40 border shadow-none">
+        <h5 class="card-title mg-b-20 tx-11"
+          style="display: flex;flex-direction: row;justify-content: flex-start;align-items: center;">
+          <input type="checkbox" formControlName="ukSelected" class="me-2">
+          {{ukCategory?.title}}
+        </h5>
+        <div *ngIf="form.get('ukSelected')?.value===true">
+          <div class="form-group">
+            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+              Account Name
+            </label>
+            <input class="form-control" type="text" formControlName="ukAccountName" maxlength="100">
+          </div>
 
-        <div class="form-group">
-          <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            Flow
-            <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
-          </label>
-          <input class="form-control" [ngClass]="{'has-error': !form.controls.flow.valid}" type="text"
-            formControlName="flow" required>
-          <div *ngIf="(form.controls.flow.touched || submitted) && (form.controls.flow.errors?.['required'])"
-            class="tx-danger">
-            <small>
-              Flow is required
-            </small>
+          <div class="form-group">
+            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+              Account Number
+            </label>
+            <input class="form-control" type="text" formControlName="ukAccountNumber" maxlength="100">
+          </div>
+
+          <div class="form-group">
+            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+              Sort Code
+            </label>
+            <input class="form-control" type="text" formControlName="ukSortCode" maxlength="100">
           </div>
         </div>
       </div>
@@ -82,7 +145,7 @@
           Save
         </button>
         <button *ngIf="permission>1 && !createNew" class="btn btn-danger pd-x-30 me-2 mg-t-5" type="button"
-          (click)="deleteLevel(delete_content)">
+          (click)="deleteAccount(delete_content)">
           <span *ngIf="deleteInProgress" class="spinner-border spinner-border-sm" role="status"
             aria-hidden="true"></span>
           Delete
@@ -97,14 +160,14 @@
 
 <ng-template #delete_content let-modal>
   <div class="modal-header">
-    <h5 class="modal-title">Delete level</h5>
+    <h5 class="modal-title">Delete bank account</h5>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body">
     <h4 style="text-align: center;">
-      You are going to delete selected level. Confirm operation.
+      You are going to delete selected bank account. Confirm operation.
     </h4>
     <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
       <button class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" type="button" (click)="modal.dismiss('Reject')">
