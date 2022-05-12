@@ -13,7 +13,7 @@ import { AuthService } from 'src/app/services/auth.service';
 @Component({
   selector: 'app-admin-bank-account-details',
   templateUrl: 'account-details.component.html',
-  styleUrls: ['account-details.component.scss', '../../assets/scss/_validation.scss']
+  styleUrls: ['account-details.component.scss', '../../../assets/scss/_validation.scss']
 })
 export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
   @Input() permission = 0;

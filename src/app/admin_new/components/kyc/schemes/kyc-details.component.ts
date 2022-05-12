@@ -11,7 +11,7 @@ import { AuthService } from 'src/app/services/auth.service';
 @Component({
   selector: 'app-admin-kyc-details',
   templateUrl: 'kyc-details.component.html',
-  styleUrls: ['kyc-details.component.scss', '../../assets/scss/_validation.scss']
+  styleUrls: ['kyc-details.component.scss', '../../../assets/scss/_validation.scss']
 })
 export class AdminKycSchemeDetailsComponent implements OnDestroy {
   @Input() permission = 0;

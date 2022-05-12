@@ -13,7 +13,7 @@ import { AuthService } from 'src/app/services/auth.service';
 @Component({
   selector: 'app-admin-apikey-details',
   templateUrl: 'apikey-details.component.html',
-  styleUrls: ['apikey-details.component.scss', '../../assets/scss/_validation.scss']
+  styleUrls: ['apikey-details.component.scss', '../../../assets/scss/_validation.scss']
 })
 export class AdminApiKeyDetailsComponent implements OnInit, OnDestroy {
   @Input() permission = 0;

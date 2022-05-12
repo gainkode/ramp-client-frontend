@@ -62,16 +62,16 @@ import { AdminNotificationsComponent } from './components/notifications/notifica
 import { AdminNotificationDetailsComponent } from './components/notifications/notification-details.component';
 import { AdminWidgetsComponent } from './components/widgets/widgets.component';
 import { AdminWidgetDetailsComponent } from './components/widgets/widget-details.component';
-import { AdminApiKeysComponent } from './components/apikeys/apikeys.component';
-import { AdminApiKeyDetailsComponent } from './components/apikeys/apikey-details.component';
-import { AdminCountryBlackListComponent } from './components/blacklist/countries.component';
-import { AdminCountryBlackListDetailsComponent } from './components/blacklist/blacklist-details.component';
-import { AdminLevelsComponent } from './components/levels/levels.component';
-import { AdminLevelDetailsComponent } from './components/levels/level-details.component';
-import { AdminBankAccountDetailsComponent } from './components/bank-accounts/account-details.component';
-import { AdminBankAccountsComponent } from './components/bank-accounts/accounts.component';
-import { AdminKycSchemesComponent } from './components/schemes/schemes.component';
-import { AdminKycSchemeDetailsComponent } from './components/schemes/kyc-details.component';
+import { AdminApiKeysComponent } from './components/settings/apikeys/apikeys.component';
+import { AdminApiKeyDetailsComponent } from './components/settings/apikeys/apikey-details.component';
+import { AdminCountryBlackListComponent } from './components/kyc/blacklist/countries.component';
+import { AdminCountryBlackListDetailsComponent } from './components/kyc/blacklist/blacklist-details.component';
+import { AdminLevelsComponent } from './components/kyc/levels/levels.component';
+import { AdminLevelDetailsComponent } from './components/kyc/levels/level-details.component';
+import { AdminBankAccountDetailsComponent } from './components/costs/bank-accounts/account-details.component';
+import { AdminBankAccountsComponent } from './components/costs/bank-accounts/accounts.component';
+import { AdminKycSchemesComponent } from './components/kyc/schemes/schemes.component';
+import { AdminKycSchemeDetailsComponent } from './components/kyc/schemes/kyc-details.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 

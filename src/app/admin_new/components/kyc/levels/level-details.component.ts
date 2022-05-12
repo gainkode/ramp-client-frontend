@@ -11,7 +11,7 @@ import { AuthService } from 'src/app/services/auth.service';
 @Component({
   selector: 'app-admin-level-details',
   templateUrl: 'level-details.component.html',
-  styleUrls: ['level-details.component.scss', '../../assets/scss/_validation.scss']
+  styleUrls: ['level-details.component.scss', '../../../assets/scss/_validation.scss']
 })
 export class AdminLevelDetailsComponent implements OnDestroy {
   @Input() permission = 0;

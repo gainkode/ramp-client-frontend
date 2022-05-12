@@ -38,7 +38,7 @@ export class AdminBankAccountsComponent implements OnInit, OnDestroy {
     private adminService: AdminDataService,
     private router: Router
   ) {
-    this.permission = this.auth.isPermittedObjectCode('KYC');
+    this.permission = this.auth.isPermittedObjectCode('COSTS');
   }
 
   ngOnInit(): void {

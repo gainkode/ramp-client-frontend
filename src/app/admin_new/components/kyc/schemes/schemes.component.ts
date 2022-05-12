@@ -4,7 +4,7 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
-import { KycLevel } from 'src/app/model/identification.model';
+import { KycScheme } from 'src/app/model/identification.model';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -15,16 +15,20 @@ import { AuthService } from 'src/app/services/auth.service';
 export class AdminKycSchemesComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = [
     'details',
+    'default',
     'name',
-    'flow',
-    'userType'
+    'target',
+    'userType',
+    'userMode',
+    'provider',
+    'level'
   ];
   inProgress = false;
   errorMessage = '';
   detailsTitle = '';
   permission = 0;
-  selectedLevel?: KycLevel;
-  levels: KycLevel[] = [];
+  selectedScheme?: KycScheme;
+  schemes: KycScheme[] = [];
 
   private subscriptions: Subscription = new Subscription();
   private detailsDialog: NgbModalRef | undefined = undefined;
@@ -39,20 +43,20 @@ export class AdminKycSchemesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.loadLevels();
+    this.loadSchemes();
   }
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
 
-  private loadLevels(): void {
-    this.levels = [];
+  private loadSchemes(): void {
+    this.schemes = [];
     this.inProgress = true;
-    const listData$ = this.adminService.getKycLevels(null).pipe(take(1));
+    const listData$ = this.adminService.getKycSettings().pipe(take(1));
     this.subscriptions.add(
       listData$.subscribe(data => {
-        this.levels = data.list;
+        this.schemes = data.list;
         this.inProgress = false;
       }, (error) => {
         this.inProgress = false;
@@ -63,12 +67,12 @@ export class AdminKycSchemesComponent implements OnInit, OnDestroy {
     );
   }
 
-  showDetails(level: KycLevel | undefined, content: any): void {
-    this.selectedLevel = level;
-    if (level) {
-      this.detailsTitle = 'KYC level details';
+  showDetails(scheme: KycScheme | undefined, content: any): void {
+    this.selectedScheme = scheme;
+    if (scheme) {
+      this.detailsTitle = 'KYC scheme details';
     } else {
-      this.detailsTitle = 'Add new KYC level';
+      this.detailsTitle = 'Add new KYC scheme';
     }
     this.detailsDialog = this.modalService.open(content, {
       backdrop: 'static',
@@ -78,7 +82,7 @@ export class AdminKycSchemesComponent implements OnInit, OnDestroy {
       this.detailsDialog.closed.subscribe(val => {
         if (this.detailsDialog) {
           this.detailsDialog.close();
-          this.loadLevels();
+          this.loadSchemes();
         }
       })
     );

@@ -9,7 +9,7 @@ import { AuthService } from 'src/app/services/auth.service';
 @Component({
   selector: 'app-admin-black-list-details',
   templateUrl: 'blacklist-details.component.html',
-  styleUrls: ['blacklist-details.component.scss', '../../assets/scss/_validation.scss']
+  styleUrls: ['blacklist-details.component.scss', '../../../assets/scss/_validation.scss']
 })
 export class AdminCountryBlackListDetailsComponent implements OnDestroy {
   @Output() save = new EventEmitter();
