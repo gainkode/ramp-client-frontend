@@ -68,6 +68,8 @@ import { AdminCountryBlackListComponent } from './components/blacklist/countries
 import { AdminCountryBlackListDetailsComponent } from './components/blacklist/blacklist-details.component';
 import { AdminLevelsComponent } from './components/levels/levels.component';
 import { AdminLevelDetailsComponent } from './components/levels/level-details.component';
+import { AdminBankAccountDetailsComponent } from './components/bank-accounts/account-details.component';
+import { AdminBankAccountsComponent } from './components/bank-accounts/accounts.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -123,30 +125,18 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AdminDateRangeComponent,
     AdminFilterComponent,
     AdminDashboardComponent,
-    AdminTransactionsComponent,
-    AdminTransactionDetailsComponent,
-    AdminFiatWalletsComponent,
-    AdminFiatWalletDetailsComponent,
-    AdminCryptoWalletsComponent,
-    AdminCryptoWalletDetailsComponent,
-    AdminCustomersComponent,
-    AdminCustomerDetailsComponent,
-    AdminSystemUsersComponent,
-    AdminUserDetailsComponent,
-    AdminRoleSelectComponent,
-    AdminMessageDialogComponent,
-    AdminNotificationsComponent,
-    AdminNotificationDetailsComponent,
-    AdminRisksComponent,
-    AdminRiskDetailsComponent,
-    AdminWidgetsComponent,
-    AdminWidgetDetailsComponent,
-    AdminApiKeysComponent,
-    AdminApiKeyDetailsComponent,
-    AdminCountryBlackListComponent,
-    AdminCountryBlackListDetailsComponent,
-    AdminLevelsComponent,
-    AdminLevelDetailsComponent
+    AdminTransactionsComponent, AdminTransactionDetailsComponent,
+    AdminFiatWalletsComponent, AdminFiatWalletDetailsComponent,
+    AdminCryptoWalletsComponent, AdminCryptoWalletDetailsComponent,
+    AdminCustomersComponent, AdminCustomerDetailsComponent,
+    AdminSystemUsersComponent, AdminUserDetailsComponent, AdminRoleSelectComponent, AdminMessageDialogComponent,
+    AdminNotificationsComponent, AdminNotificationDetailsComponent,
+    AdminRisksComponent, AdminRiskDetailsComponent,
+    AdminWidgetsComponent, AdminWidgetDetailsComponent,
+    AdminApiKeysComponent, AdminApiKeyDetailsComponent,
+    AdminCountryBlackListComponent, AdminCountryBlackListDetailsComponent,
+    AdminLevelsComponent, AdminLevelDetailsComponent,
+    AdminBankAccountsComponent, AdminBankAccountDetailsComponent
   ],
   providers: [
     AdminNewGuard,

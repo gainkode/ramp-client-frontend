@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AdminNewComponent } from './admin_new.component';
 import { AdminNewGuard } from './admin_new.guard';
 import { AdminApiKeysComponent } from './components/apikeys/apikeys.component';
+import { AdminBankAccountsComponent } from './components/bank-accounts/accounts.component';
 import { AdminCountryBlackListComponent } from './components/blacklist/countries.component';
 import { AdminDashboardComponent } from './components/dashboard/dashboard.component';
 import { AdminLevelsComponent } from './components/levels/levels.component';
@@ -135,6 +136,11 @@ const routes: Routes = [
       //     component: IdentificationListComponent,
       //     data: { header: 'Identification' }
       //   },
+      {
+        path: 'bank-accounts',
+        component: AdminBankAccountsComponent,
+        data: { header: 'Bank accounts' }
+      },
       {
         path: 'levels',
         component: AdminLevelsComponent,

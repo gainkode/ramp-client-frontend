@@ -8,11 +8,11 @@ import { KycLevel } from 'src/app/model/identification.model';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
-  selector: 'app-admin-levels',
-  templateUrl: 'levels.component.html',
-  styleUrls: ['levels.component.scss']
+  selector: 'app-admin-bank-accounts',
+  templateUrl: 'accounts.component.html',
+  styleUrls: ['accounts.component.scss']
 })
-export class AdminLevelsComponent implements OnInit, OnDestroy {
+export class AdminBankAccountsComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = [
     'details',
     'name',
