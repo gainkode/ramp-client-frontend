@@ -1,11 +1,12 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
-import { KycLevel } from 'src/app/model/identification.model';
+import { WireTransferBankAccountItem } from 'src/app/model/cost-scheme.model';
+import { WireTransferBankAccountListResult } from 'src/app/model/generated-models';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from 'src/app/services/auth.service';
+import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
 
 @Component({
   selector: 'app-admin-bank-accounts',
@@ -16,15 +17,17 @@ export class AdminBankAccountsComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = [
     'details',
     'name',
-    'flow',
-    'userType'
+    'description',
+    'auAvailable',
+    'ukAvailable',
+    'euAvailable'
   ];
   inProgress = false;
   errorMessage = '';
   detailsTitle = '';
   permission = 0;
-  selectedLevel?: KycLevel;
-  levels: KycLevel[] = [];
+  selectedAccount?:  WireTransferBankAccountItem;
+  accounts: WireTransferBankAccountItem[] = [];
 
   private subscriptions: Subscription = new Subscription();
   private detailsDialog: NgbModalRef | undefined = undefined;
@@ -39,20 +42,27 @@ export class AdminBankAccountsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.loadLevels();
+    this.loadAccounts();
   }
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
 
-  private loadLevels(): void {
-    this.levels = [];
+  private loadAccounts(): void {
+    this.accounts = [];
     this.inProgress = true;
-    const listData$ = this.adminService.getKycLevels(null).pipe(take(1));
+    const listData$ = this.adminService.getWireTransferBankAccounts().valueChanges.pipe(take(1));
     this.subscriptions.add(
-      listData$.subscribe(data => {
-        this.levels = data.list;
+      listData$.subscribe(({ data }) => {
+        const settings = data.getWireTransferBankAccounts as WireTransferBankAccountListResult;
+        let itemCount = 0;
+        if (settings !== null) {
+          itemCount = settings?.count ?? 0;
+          if (itemCount > 0) {
+            this.accounts = settings?.list?.map((val) => new WireTransferBankAccountItem(val)) as WireTransferBankAccountItem[];
+          }
+        }
         this.inProgress = false;
       }, (error) => {
         this.inProgress = false;
@@ -63,12 +73,12 @@ export class AdminBankAccountsComponent implements OnInit, OnDestroy {
     );
   }
 
-  showDetails(level: KycLevel | undefined, content: any): void {
-    this.selectedLevel = level;
-    if (level) {
-      this.detailsTitle = 'KYC level details';
+  showDetails(account:  WireTransferBankAccountItem | undefined, content: any): void {
+    this.selectedAccount = account;
+    if (account) {
+      this.detailsTitle = 'Bank account details';
     } else {
-      this.detailsTitle = 'Add new KYC level';
+      this.detailsTitle = 'Add new bank account';
     }
     this.detailsDialog = this.modalService.open(content, {
       backdrop: 'static',
@@ -78,7 +88,7 @@ export class AdminBankAccountsComponent implements OnInit, OnDestroy {
       this.detailsDialog.closed.subscribe(val => {
         if (this.detailsDialog) {
           this.detailsDialog.close();
-          this.loadLevels();
+          this.loadAccounts();
         }
       })
     );

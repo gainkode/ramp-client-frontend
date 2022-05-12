@@ -406,7 +406,7 @@ table {
   padding-bottom: 16px;
 }
 
-.mat-column-level-table {
+.mat-column-account-table {
   word-wrap: break-word;
   white-space: unset;
   overflow-wrap: break-word;
@@ -417,25 +417,25 @@ table {
   hyphens: auto;
 }
 
-.mat-column-level-table-name {
-  flex: 0 0 41%;
-  width: 41%;
+.mat-column-account-table-name {
+  flex: 0 0 30%;
+  width: 30%;
   min-width: 10em;
 }
 
-.mat-column-level-table-flow {
-  flex: 0 0 42%;
-  width: 42%;
+.mat-column-account-table-description {
+  flex: 0 0 33%;
+  width: 33%;
   min-width: 10em;
 }
 
-.mat-column-level-table-user-type {
-  flex: 0 0 15%;
-  width: 15%;
-  min-width: 10em;
+.mat-column-account-table-check {
+  flex: 0 0 10%;
+  width: 10%;
+  min-width: 8em;
 }
 
-.mat-column-level-table-details {
+.mat-column-account-table-details {
   flex: 0 0 2%;
   width: 2%;
   min-width: 1.5em;
