@@ -178,7 +178,6 @@ export enum CountryCodeType {
 }
 
 export enum CustodyProvider {
-  Trustology = 'Trustology',
   Fireblocks = 'Fireblocks'
 }
 
@@ -660,7 +659,8 @@ export type Mutation = {
   sendEmailCodePasswordChange: Scalars['Boolean'];
   addFeedback: Feedback;
   sendTestNotification?: Maybe<Scalars['Void']>;
-  sendTestServiceNotification?: Maybe<Scalars['Void']>;
+  sendTestTransactionServiceNotification?: Maybe<Scalars['Void']>;
+  sendTestKycServiceNotification?: Maybe<Scalars['Void']>;
   /** This endpoint can be used to create a transaction */
   createTransaction?: Maybe<TransactionShort>;
   /** This endpoint can be used to create a merchant transaction */
@@ -2578,6 +2578,7 @@ export type Subscription = {
   __typename?: 'Subscription';
   newNotification?: Maybe<Scalars['Void']>;
   transactionServiceNotification?: Maybe<Scalars['Void']>;
+  kycServiceNotification?: Maybe<Scalars['Void']>;
 };
 
 export type SupportTicket = {

@@ -1,13 +1,39 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { User } from './model/generated-models';
+import { AuthService } from './services/auth.service';
+import { CommonDataService } from './services/common-data.service';
+import { NotificationService } from './services/notification.service';
+import { ProfileDataService } from './services/profile.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
+  private subscriptions: Subscription = new Subscription();
+
+  constructor(
+    private commonService: CommonDataService,
+    private profileService: ProfileDataService,
+    private notification: NotificationService,
+    private auth: AuthService
+  ) {
+
+  }
   ngOnInit(): void {
+    const totalData = this.commonService.getMyTransactionsTotal();
+    this.subscriptions.add(
+      totalData.valueChanges.pipe(take(1)).subscribe(({ data }) => {
+        this.startKycNotifications();
+      }, (error) => {
+
+      })
+    );
+
     const url = window.location.href;
     const whiteList = (url.includes('/payment/widget/') || url.includes('/terms'));
     if (!whiteList) {
@@ -44,5 +70,35 @@ export class AppComponent implements OnInit {
         }
       });
     }
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
+
+  private startKycNotifications(): void {
+    this.subscriptions.add(
+      this.notification.subscribeToKycNotifications().subscribe(
+        ({ data }) => {
+          this.loadAccountData();
+        },
+        (error) => {
+          console.log('KYC notification error', error);
+        }
+      )
+    );
+  }
+
+  private loadAccountData(): void {
+    const meQuery$ = this.profileService.getProfileData().valueChanges.pipe(take(1));
+    this.subscriptions.add(
+      meQuery$.subscribe(({ data }) => {
+        if (data) {
+          this.auth.setUser(data.me as User);
+        }
+      }, (error) => {
+        
+      })
+    );
   }
 }

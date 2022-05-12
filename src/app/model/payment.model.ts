@@ -408,8 +408,7 @@ export const RiskLevelViewList: Array<RiskLevelView> = [
 ];
 
 export const CustodyProviderList: Array<CustodyProviderView> = [
-    { id: CustodyProvider.Fireblocks, name: 'Fireblocks' },
-    { id: CustodyProvider.Trustology, name: 'Trustology' }
+    { id: CustodyProvider.Fireblocks, name: 'Fireblocks' }
 ];
 
 export const UserNotificationCodeList: Array<UserNotificationCodeView> = [
