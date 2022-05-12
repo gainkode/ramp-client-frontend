@@ -40,6 +40,15 @@ export class NavPopupComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.userId = this.auth.user?.userId;
         this.loadTransactionsTotal();
+        // this.items?.push(
+        //     {
+        //         code: 'test',
+        //         id: 'test',
+        //         name: 'test',
+        //         url: '',
+        //         icon: ''
+        //     }
+        // );
     }
 
     ngOnDestroy(): void {
@@ -107,9 +116,23 @@ export class NavPopupComponent implements OnInit, OnDestroy {
     }
 
     clickItem(item: MenuItem): void {
+        // if (item.id === 'test') {
+        //     this.kycNotificationTest();
+        //     return;
+        // }
         if (this.onMenuClick) {
             this.onMenuClick.emit(item);
         }
+    }
+
+    kycNotificationTest(): void {
+        this.subscriptions.add(
+            this.notification.sendTestKycNotification().subscribe(({ data }) => {
+                // data
+            }, (error) => {
+                // error
+            })
+        );
     }
 
     onMenuOpened(): void {

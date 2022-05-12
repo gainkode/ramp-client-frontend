@@ -115,7 +115,6 @@ export class ProfileWalletDetailsComponent implements OnDestroy {
         item.container = ProfileItemContainerType.Wallet;
         item.action = ProfileItemActionType.Redirect;
         item.wallet = this.walletData;
-        console.log(this.walletData);
         if (this.walletData?.crypto === true) {
             item.meta = 'send';
         } else {

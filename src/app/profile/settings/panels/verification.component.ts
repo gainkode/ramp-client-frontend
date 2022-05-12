@@ -126,15 +126,15 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
         if ((tiersData.count ?? 0 > 0) && tiersData.list) {
             const rawTiers = [...tiersData.list];
             const sortedTiers = rawTiers.sort((a, b) => this.tierSortHandler(a, b));
-            const currentTierId = this.auth.user?.kycTierId;
-            let previousLevelPassed = false;
+            const currentTierId = 'e64c3572-92e9-46be-bd78-4beefa2e9fc0';//this.auth.user?.kycTierId;
+            let beforeCurrentTier = true;
             this.tiers = sortedTiers.map(val => {
                 const defaultDescription = 'Start verification process to increase your limit up to this level.';
                 const unlimitVal = (val.amount === undefined || val.amount === null);
                 let tierPassed = false;
-                if (previousLevelPassed) {
+                if (beforeCurrentTier) {
                     if (val.settingsKycTierId === currentTierId) {
-                        previousLevelPassed = false;
+                        beforeCurrentTier = false;
                         if (val.originalLevelName !== null) {
                             tierPassed = this.auth.user?.kycValid ?? true;
                             if (tierPassed === false && this.auth.user?.kycReviewRejectedType?.toLowerCase() === 'final') {
@@ -144,7 +144,7 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
                             tierPassed = true;
                         }
                     } else {
-                        tierPassed = true;
+                        tierPassed = false;
                     }
                 }
                 return {

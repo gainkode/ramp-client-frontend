@@ -14,9 +14,21 @@ subscription onTransactionServiceNotification {
 }
 `;
 
+const SUBSCRIBE_KYC_NOTIFICATIONS = gql`
+subscription onKycServiceNotification {
+  kycServiceNotification
+}
+`;
+
 const SEND_TEST_NOTIFICATION_POST = gql`
 mutation SendTestNotification {
   sendTestNotification
+}
+`;
+
+const SEND_TEST_KYC_NOTIFICATION_POST = gql`
+mutation SendTestKycServiceNotification {
+  sendTestKycServiceNotification
 }
 `;
 
@@ -30,6 +42,12 @@ export class NotificationService {
     });
   }
 
+  sendTestKycNotification(): Observable<any> {
+    return this.apollo.mutate({
+      mutation: SEND_TEST_KYC_NOTIFICATION_POST
+    });
+  }
+
   subscribeToTransactionNotifications(): Observable<any> {
     return this.apollo.subscribe({
       query: SUBSCRIBE_TRANSACTION_NOTIFICATIONS,
@@ -40,6 +58,13 @@ export class NotificationService {
   subscribeToNotifications(): Observable<any> {
     return this.apollo.subscribe({
       query: SUBSCRIBE_NOTIFICATIONS,
+      fetchPolicy: 'no-cache'
+    });
+  }
+
+  subscribeToKycNotifications(): Observable<any> {
+    return this.apollo.subscribe({
+      query: SUBSCRIBE_KYC_NOTIFICATIONS,
       fetchPolicy: 'no-cache'
     });
   }

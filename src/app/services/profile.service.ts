@@ -222,53 +222,46 @@ const GET_PROFILE_ME = gql`
   query MeHome {
     me {
       userId
-      defaultFiatCurrency
-      defaultCryptoCurrency
-      referralCode
-      kycProvider
-      kycValid
-      kycStatus
-      kycReviewComment
-      kycReviewRejectedType
-      kycReviewRejectedLabels
-      kycStatusUpdateRequired
-      kycTierId
-      kycTier {
-        name
-        description
-        amount
-        requireUserFullName
-        requireUserPhone
-        requireUserBirthday
-        requireUserAddress
-        requireUserFlatNumber
-      }
-      custodyProvider
       email
-      type
-      mode
-      merchantIds
-      firstName
-      lastName
+      roles {name, immutable}
+      permissions { roleName, objectCode, objectName, objectDescription, fullAccess }
+      type,
+      defaultFiatCurrency,
+      firstName,
+      lastName,
+      birthday,
+      countryCode2,
+      countryCode3,
+      phone,
+      postCode,
+      town,
+      street,
+      subStreet,
+      stateName,
+      buildingName,
+      buildingNumber,
+      flatNumber,
+      addressStartDate,
+      addressEndDate,
+      mode,
+      is2faEnabled,
+      changePasswordRequired,
+      referralCode,
+      kycProvider,
+      kycApplicantId,
+      kycValid,
+      kycStatus,
+      kycStatusUpdateRequired,
+      kycReviewRejectedType,
+      kycTierId,
+      kycTier {
+          name
+          description
+          amount
+      }
+      defaultFiatCurrency,
+      defaultCryptoCurrency,
       avatar
-      birthday
-      countryCode2
-      countryCode3
-      phone
-      postCode
-      town
-      street
-      subStreet
-      stateName
-      buildingName
-      buildingNumber
-      flatNumber
-      termsOfUse
-      created
-      updated
-      is2faEnabled
-      hasEmailAuth
-      changePasswordRequired
     }
   }
 `;
@@ -698,16 +691,16 @@ export class ProfileDataService {
     takeItems: number,
     orderField: string,
     orderDesc: boolean): QueryRef<any, EmptyObject> {
-      const orderFields = [{ orderBy: orderField, desc: orderDesc }];
-      return this.apollo.watchQuery<any>({
-        query: GET_MY_API_KEYS,
-        variables: {
-          skip: pageIndex * takeItems,
-          first: takeItems,
-          orderBy: orderFields
-        },
-        fetchPolicy: 'network-only',
-      });
+    const orderFields = [{ orderBy: orderField, desc: orderDesc }];
+    return this.apollo.watchQuery<any>({
+      query: GET_MY_API_KEYS,
+      variables: {
+        skip: pageIndex * takeItems,
+        first: takeItems,
+        orderBy: orderFields
+      },
+      fetchPolicy: 'network-only',
+    });
   }
 
   createMyApiKey(): Observable<any> {
