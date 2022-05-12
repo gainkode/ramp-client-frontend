@@ -9,6 +9,7 @@ import { AdminDashboardComponent } from './components/dashboard/dashboard.compon
 import { AdminLevelsComponent } from './components/levels/levels.component';
 import { AdminNotificationsComponent } from './components/notifications/notifications.component';
 import { AdminRisksComponent } from './components/risks/risks.component';
+import { AdminKycSchemesComponent } from './components/schemes/schemes.component';
 import { AdminTransactionsComponent } from './components/transactions/transactions.component';
 import { AdminCustomersComponent } from './components/users/customers/customers.component';
 import { AdminSystemUsersComponent } from './components/users/system/users.component';
@@ -145,6 +146,11 @@ const routes: Routes = [
         path: 'levels',
         component: AdminLevelsComponent,
         data: { header: 'Levels' }
+      },
+      {
+        path: 'kyc-schemes',
+        component: AdminKycSchemesComponent,
+        data: { header: 'KYC Schemes' }
       },
       {
         path: 'black-list',
