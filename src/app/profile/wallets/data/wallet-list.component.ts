@@ -141,8 +141,7 @@ export class ProfileWalletListComponent implements OnDestroy {
         this.showDetailsPanel(undefined);
     }
 
-    showWallet(id: string): void {
-        const item = this.wallets.find(x => x.id === id);
+    showWallet(item: WalletItem): void {
         if (item) {
             this.showDetailsPanel(item);
         }
