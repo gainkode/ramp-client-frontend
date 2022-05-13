@@ -1,11 +1,14 @@
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { Subscription } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
-import { getCountry } from 'src/app/model/country-code.model';
-import { SettingsKycTargetFilterType } from 'src/app/model/generated-models';
+import { CommonTargetValue, TargetParams } from 'src/app/model/common.model';
+import { CountryFilterList, getCountry } from 'src/app/model/country-code.model';
+import { TransactionSourceFilterList } from 'src/app/model/fee-scheme.model';
+import { SettingsKycTargetFilterType, UserType } from 'src/app/model/generated-models';
 import { KycScheme } from 'src/app/model/identification.model';
 import { KycProviderList, KycTargetFilterList, UserModeList, UserTypeList } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
@@ -15,7 +18,7 @@ import { AuthService } from 'src/app/services/auth.service';
   templateUrl: 'kyc-details.component.html',
   styleUrls: ['kyc-details.component.scss', '../../../assets/scss/_validation.scss']
 })
-export class AdminKycSchemeDetailsComponent implements OnDestroy {
+export class AdminKycSchemeDetailsComponent implements OnInit, OnDestroy {
   @Input() permission = 0;
   @Input()
   set currentScheme(scheme: KycScheme | undefined) {
@@ -37,10 +40,14 @@ export class AdminKycSchemeDetailsComponent implements OnDestroy {
   deleteInProgress = false;
   errorMessage = '';
   defaultSchemeName = '';
+  targetEntity = '';
+  targetType = SettingsKycTargetFilterType.None;
+  targetValues: CommonTargetValue[] = [];
   targets = KycTargetFilterList;
   userTypeOptions = UserTypeList;
   userModes = UserModeList;
   kycProviders = KycProviderList;
+  filteredTargetValues$: Observable<CommonTargetValue[]> | undefined;
 
   form = this.formBuilder.group({
     id: [''],
@@ -61,6 +68,49 @@ export class AdminKycSchemeDetailsComponent implements OnDestroy {
     requireUserFlatNumber: [false]
   });
 
+  get targetValueParams(): TargetParams {
+    const val = this.form.get('target')?.value;
+    const params = new TargetParams();
+    switch (val) {
+      case SettingsKycTargetFilterType.None: {
+        params.title = '';
+        params.inputPlaceholder = '';
+        params.dataList = [];
+        this.targetEntity = '';
+        break;
+      }
+      case SettingsKycTargetFilterType.Country: {
+        params.title = 'List of countries *';
+        params.inputPlaceholder = 'New country...';
+        params.dataList = CountryFilterList;
+        this.targetEntity = 'country';
+        break;
+      }
+      case SettingsKycTargetFilterType.AccountId: {
+        params.title = 'List of accounts *';
+        params.inputPlaceholder = 'Type account email...';
+        params.dataList = [];
+        this.targetEntity = 'account identifier';
+        break;
+      }
+      case SettingsKycTargetFilterType.WidgetId: {
+        params.title = 'List of widgets *';
+        params.inputPlaceholder = 'New widget (Name, code or ID)...';
+        params.dataList = [];
+        this.targetEntity = 'widget identifier';
+        break;
+      }
+      case SettingsKycTargetFilterType.InitiateFrom: {
+        params.title = 'List of sources *';
+        params.inputPlaceholder = 'New source...';
+        params.dataList = TransactionSourceFilterList;
+        this.targetEntity = 'source';
+        break;
+      }
+    }
+    return params;
+  }
+
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
@@ -70,11 +120,31 @@ export class AdminKycSchemeDetailsComponent implements OnDestroy {
 
   }
 
+  ngOnInit(): void {
+    this.subscriptions.add(
+      this.form.get('target')?.valueChanges.subscribe(val => this.updateTarget(val))
+    );
+    this.subscriptions.add(
+      this.form.get('requireUserFlatNumber')?.valueChanges.subscribe(val => {
+        if (val === true) {
+          this.form.get('requireUserAddress')?.setValue(true);
+        }
+      })
+    );
+    this.subscriptions.add(
+      this.form.get('requireUserAddress')?.valueChanges.subscribe(val => {
+        if (val === false) {
+          this.form.get('requireUserFlatNumber')?.setValue(false);
+        }
+      })
+    );
+  }
+
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
 
-  setFormData(scheme: KycScheme | undefined): void {
+  private setFormData(scheme: KycScheme | undefined): void {
     this.form.reset();
     this.defaultSchemeName = '';
     if (scheme) {
@@ -147,7 +217,7 @@ export class AdminKycSchemeDetailsComponent implements OnDestroy {
     }
   }
 
-  setSchemeData(): KycScheme {
+  private setSchemeData(): KycScheme {
     const data = new KycScheme(null);
     // common
     data.name = this.form.get('name')?.value;
@@ -184,6 +254,58 @@ export class AdminKycSchemeDetailsComponent implements OnDestroy {
       return result;
     });
   }
+
+  private updateTarget(val: any): void {
+    this.clearTargetValues();
+    this.setTargetValidator();
+    if (this.targetType === SettingsKycTargetFilterType.WidgetId ||
+      this.targetType === SettingsKycTargetFilterType.AccountId) {
+      //   this.targetSearchString$.pipe(
+      //     takeUntil(this.destroy$),
+      //     distinctUntilChanged(),
+      //     debounceTime(1000),
+      //     switchMap(searchString => this.getFilteredOptions(searchString))
+      //   ).subscribe(options => {
+      //     this.filteredTargetValues$ = of(options);
+      //   });
+    } else {
+      //   this.filteredTargetValues$ = this.schemeForm.get('targetValue')?.valueChanges.pipe(
+      //     startWith(''),
+      //     map(value => this.filterTargetValues(value))
+      //   );
+    }
+  }
+
+  private clearTargetValues(): void {
+    this.targetValues = [];
+    this.filteredTargetValues$ = of([]);
+    this.form.get('targetValues')?.setValue([]);
+  }
+
+  private setTargetValidator(): void {
+    const val = this.form.get('target')?.value;
+    this.targetType = val ?? SettingsKycTargetFilterType.None as SettingsKycTargetFilterType;
+    if (val === SettingsKycTargetFilterType.None) {
+      this.form.get('targetValues')?.clearValidators();
+    } else {
+      this.form.get('targetValues')?.setValidators([Validators.required]);
+    }
+    this.form.get('targetValues')?.updateValueAndValidity();
+  }
+
+  // private loadLevelValues(userType: UserType): void {
+  //   this.subscriptions.add(
+  //     this.adminService.getKycLevels(userType).pipe(take(1)).subscribe(data => {
+  //       this.levels = data.list.map(val => {
+  //         const c = new KycLevelView();
+  //         c.id = val.id;
+  //         c.name = val.name as string;
+  //         c.description = val.description as string;
+  //         return c;
+  //       });
+  //     })
+  //   );
+  // }
 
   onSubmit(): void {
     this.submitted = true;
