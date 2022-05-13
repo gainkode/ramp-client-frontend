@@ -93,8 +93,8 @@
                   </div>
                 </div>
                 <div class="col-sm-5 mg-t-10 mg-sm-t-0">
-                  <ng-select [items]="currenciesToSpend" [clearable]=false [clearOnBackspace]=false bindLabel="id"
-                    bindValue="id" formControlName="currencyToSpend" required>
+                  <ng-select [items]="currenciesToSpend" [clearable]=false [clearOnBackspace]=false bindLabel="display"
+                    bindValue="symbol" formControlName="currencyToSpend" required>
                   </ng-select>
                 </div>
               </div>
@@ -115,8 +115,8 @@
                   </p>
                 </div>
                 <div class="col-sm-5 mg-t-10 mg-sm-t-0">
-                  <ng-select [items]="currenciesToReceive" [clearable]=false [clearOnBackspace]=false bindLabel="id"
-                    bindValue="id" formControlName="currencyToReceive" required>
+                  <ng-select [items]="currenciesToReceive" [clearable]=false [clearOnBackspace]=false
+                    bindLabel="display" bindValue="symbol" formControlName="currencyToReceive" required>
                   </ng-select>
                 </div>
               </div>

@@ -95,8 +95,8 @@
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             Birthday
           </label>
-          <input class="form-control" placeholder="dd/mm/yyyy" name="birthday_picker" 
-            ngbDatepicker [minDate]="minBirthdayDate" [maxDate]="maxBirthdayDate" #birthday_picker="ngbDatepicker"
+          <input class="form-control" placeholder="dd/mm/yyyy" name="birthday_picker" ngbDatepicker
+            [minDate]="minBirthdayDate" [maxDate]="maxBirthdayDate" #birthday_picker="ngbDatepicker"
             (click)="birthday_picker.toggle()" formControlName="birthday">
           <div
             *ngIf="(dataForm.controls.birthday.touched || submitted) && (dataForm.controls.birthday.errors?.['required'])"
@@ -124,8 +124,7 @@
             Country
             <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
           </label>
-          <ng-select formControlName="country" [clearable]=false [clearOnBackspace]=false
-            required>
+          <ng-select formControlName="country" [clearable]=false [clearOnBackspace]=false required>
             <ng-option *ngFor="let country of countries" [value]="country.code3">
               <app-dropdown-item itemValue="{{country.name}}" imageClass="country-flag-admin"
                 imageSource="assets/svg-country-flags/{{getCountryFlag(country.code2)}}">
@@ -223,8 +222,8 @@
             Default currency
             <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
           </label>
-          <ng-select [items]="fiatCurrencies" bindLabel="title" bindValue="id" formControlName="fiat" [clearable]=false
-            [clearOnBackspace]=false required>
+          <ng-select [items]="fiatCurrencies" bindLabel="display" bindValue="symbol" formControlName="fiat"
+            [clearable]=false [clearOnBackspace]=false required>
           </ng-select>
           <div *ngIf="(dataForm.controls.fiat.touched || submitted) && (dataForm.controls.fiat.errors?.['required'])"
             class="tx-danger">
@@ -239,7 +238,7 @@
             Default crypto
             <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
           </label>
-          <ng-select [items]="cryptoCurrencies" bindLabel="title" bindValue="id" formControlName="crypto"
+          <ng-select [items]="cryptoCurrencies" bindLabel="display" bindValue="symbol" formControlName="crypto"
             [clearable]=false [clearOnBackspace]=false required>
           </ng-select>
           <div

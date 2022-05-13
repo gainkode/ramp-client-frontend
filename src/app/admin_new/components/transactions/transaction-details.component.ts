@@ -149,7 +149,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
       return;
     }
     const currencyToSpendSymbol = this.data?.currencyToSpend;
-    const currencyToSpend = this.currenciesToSpend.find(x => x.id === currencyToSpendSymbol);
+    const currencyToSpend = this.currenciesToSpend.find(x => x.symbol === currencyToSpendSymbol);
     const spendFiat = currencyToSpend?.fiat ?? false;
     const spend = this.form.get('currencyToSpend')?.value;
     const receive = this.form.get('currencyToReceive')?.value;
@@ -164,7 +164,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   private setCurrencies(list: CurrencyView[]): void {
     if (this.data) {
       const currencyToSpendSymbol = this.data?.currencyToSpend;
-      const currencyToSpend = list.find(x => x.id === currencyToSpendSymbol);
+      const currencyToSpend = list.find(x => x.symbol === currencyToSpendSymbol);
       if (currencyToSpend) {
         if (this.data.type === TransactionType.Receive || this.data.type === TransactionType.Transfer) {
           this.currenciesToSpend = list.filter(x => x.fiat === false);

@@ -42,7 +42,7 @@ export class WalletItem {
         this.pIconUrl = `assets/svg-crypto/${getCryptoSymbol(this.asset).toLowerCase()}.svg`;
       }
       if (currency) {
-        this.pCurrencyName = `${this.asset} - ${currency.name.toUpperCase()}`;
+        this.pCurrencyName = `${currency.display} - ${currency.name.toUpperCase()}`;
         this.pFullName = currency.name;
       } else {
         this.pCurrencyName = this.asset;
