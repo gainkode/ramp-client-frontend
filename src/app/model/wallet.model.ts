@@ -11,6 +11,7 @@ export class WalletItem {
   address = '';
   addressFormat = '';
   asset = '';
+  symbol = '';
   total = 0;
   totalFiat = 0;
   name = '';
@@ -42,11 +43,13 @@ export class WalletItem {
         this.pIconUrl = `assets/svg-crypto/${getCryptoSymbol(this.asset).toLowerCase()}.svg`;
       }
       if (currency) {
-        this.pCurrencyName = `${this.asset} - ${currency.name.toUpperCase()}`;
+        this.pCurrencyName = `${currency.display} - ${currency.name.toUpperCase()}`;
         this.pFullName = currency.name;
+        this.symbol = currency.display;
       } else {
         this.pCurrencyName = this.asset;
         this.pFullName = this.asset;
+        this.symbol = this.asset;
       }
     }
   }
@@ -87,6 +90,7 @@ export class WalletItem {
       this.id = data.fiatVaultId ?? '';
       this.vault = data.fiatVaultId ?? '';
       this.asset = data.currency ?? '';
+      this.symbol = data.currency ?? '';
       this.total = data.generalBalance ?? 0;
       this.totalFiat = data.balance ?? 0;
       this.name = `${this.asset} wallet`;
