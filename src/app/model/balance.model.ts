@@ -59,7 +59,7 @@ export class UserBalanceItem {
   get balanceCrypto(): string {
     return (this.pFiat) ?
       `${getCurrencySign(this.pCryptoCurrency)}${this.pBalanceCrypto.toFixed(this.pCryptoPrecision)}` :
-      `${this.pBalanceCrypto.toFixed(this.pCryptoPrecision)} ${this.pId}`;
+      `${this.pBalanceCrypto.toFixed(this.pCryptoPrecision)} ${this.pCryptoCurrency}`;
   }
 
   get balanceFiat(): string {
