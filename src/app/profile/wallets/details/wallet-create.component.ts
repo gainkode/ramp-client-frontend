@@ -68,7 +68,7 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
         this.subscriptions.add(
             this.currencyField?.valueChanges.subscribe(val => {
                 this.currencyInit = true;
-                this.selectedCurrency = this.cryptoList.find(x => x.id === val);
+                this.selectedCurrency = this.cryptoList.find(x => x.symbol === val);
                 this.ethFlag = (this.selectedCurrency?.ethFlag === true);
                 this.trxFlag = (this.selectedCurrency?.trxFlag === true);
                 this.useExistingEthWalletField?.setValue(false);
@@ -164,7 +164,7 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
     }
 
     private getCurrency(asset: AssetAddressShort): CurrencyView | undefined {
-        return this.cryptoList.find(x => x.id === asset.assetId);
+        return this.cryptoList.find(x => x.symbol === asset.assetId);
     }
 
     ngOnDestroy(): void {
@@ -221,7 +221,7 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
                         vaultId: result.id,
                         vaultName: walletName
                     } as AssetAddressShort;
-                    const currencyItem = this.cryptoList.find(x => x.id === currency);
+                    const currencyItem = this.cryptoList.find(x => x.symbol === currency);
                     this.wallet = new WalletItem(walletData, this.auth.user?.defaultFiatCurrency ?? 'EUR', currencyItem);
                     if (walletAddress != '') {
                         this.complete(ProfileItemActionType.Create);

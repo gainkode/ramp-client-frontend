@@ -63,8 +63,8 @@
             <mat-form-field *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-element">
                 <mat-label>Currency to spend</mat-label>
                 <mat-select formControlName="currencyToSpend" required>
-                    <mat-option *ngFor="let item of currenciesToSpend" [value]="item.id">
-                        {{item.id}}
+                    <mat-option *ngFor="let item of currenciesToSpend" [value]="item.symbol">
+                        {{item.display}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
@@ -78,8 +78,8 @@
             <mat-form-field *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-element">
                 <mat-label>Currency to receive</mat-label>
                 <mat-select formControlName="currencyToReceive" required>
-                    <mat-option *ngFor="let item of currenciesToReceive" [value]="item.id">
-                        {{item.id}}
+                    <mat-option *ngFor="let item of currenciesToReceive" [value]="item.symbol">
+                        {{item.display}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>

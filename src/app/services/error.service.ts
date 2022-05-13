@@ -135,6 +135,9 @@ export class ErrorService {
             case 'core.transaction_handling_error':
                 result = 'Transaction handling error';
                 break;
+            case 'core.transaction_amount_too_low':
+                result = 'Transaction amount too low';
+                break;
             case 'core.widget_not_supported_for_country':
                 result = 'Our services are not available in your country';
                 break;

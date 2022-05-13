@@ -298,17 +298,17 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   }
 
   private loadRates(): void {
-    const rateCurrencies = this.pCurrencies.filter(x => x.fiat === true && x.id !== 'EUR').map((val) => val.id);
+    const rateCurrencies = this.pCurrencies.filter(x => x.fiat === true && x.symbol !== 'EUR').map((val) => val.symbol);
     const rateData = this.paymentService.getOneToManyRates('EUR', rateCurrencies, false);
     this.pSubscriptions.add(
       rateData.valueChanges.subscribe(
         ({ data }) => {
           const rates = data.getOneToManyRates as Rate[];
           this.pCurrencies.forEach(c => {
-            if (c.id === 'EUR') {
+            if (c.symbol === 'EUR') {
               c.rateFactor = 1;
             } else {
-              const rate = rates.find(x => x.currencyTo === c.id);
+              const rate = rates.find(x => x.currencyTo === c.symbol);
               if (rate) {
                 c.rateFactor = rate.depositRate;
               }
@@ -349,11 +349,11 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     this.setCurrencyLists();
     if (this.spendCurrencyList.length > 0) {
       if (defaultSpendCurrency === '') {
-        defaultSpendCurrency = this.spendCurrencyList[0].id;
+        defaultSpendCurrency = this.spendCurrencyList[0].symbol;
       } else {
-        const presented = this.spendCurrencyList.find(x => x.id === defaultSpendCurrency);
+        const presented = this.spendCurrencyList.find(x => x.symbol === defaultSpendCurrency);
         if (!presented) {
-          defaultSpendCurrency = this.spendCurrencyList[0].id;
+          defaultSpendCurrency = this.spendCurrencyList[0].symbol;
         }
       }
       this.currencySpendField?.setValue(defaultSpendCurrency);
@@ -362,11 +362,11 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     }
     if (this.receiveCurrencyList.length > 0) {
       if (defaultReceiveCurrency === '') {
-        defaultReceiveCurrency = this.receiveCurrencyList[0].id;
+        defaultReceiveCurrency = this.receiveCurrencyList[0].symbol;
       } else {
-        const presented = this.receiveCurrencyList.find(x => x.id === defaultReceiveCurrency);
+        const presented = this.receiveCurrencyList.find(x => x.symbol === defaultReceiveCurrency);
         if (!presented) {
-          defaultReceiveCurrency = this.receiveCurrencyList[0].id;
+          defaultReceiveCurrency = this.receiveCurrencyList[0].symbol;
         }
       }
       this.currencyReceiveField?.setValue(defaultReceiveCurrency);
@@ -394,7 +394,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   private filterFiat(c: CurrencyView): boolean {
     let result = (c.fiat === true);
     if (result && this.settings.fiatList.length > 0) {
-      result = (this.settings.fiatList.find(x => x === c.id) !== undefined);
+      result = (this.settings.fiatList.find(x => x === c.symbol) !== undefined);
     }
     return result;
   }
@@ -402,7 +402,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   private filterCrypto(c: CurrencyView): boolean {
     let result = (c.fiat === false);
     if (result && this.settings.cryptoList.length > 0) {
-      result = (this.settings.cryptoList.find(x => x === c.id) !== undefined);
+      result = (this.settings.cryptoList.find(x => x === c.symbol) !== undefined);
     }
     return result;
   }
@@ -455,7 +455,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   }
 
   private setSpendValidators(maxValid: number | undefined = undefined): void {
-    this.amountSpendErrorMessages['min'] = `Min. amount ${this.currentCurrencySpend?.minAmount} ${this.currentCurrencySpend?.id}`;
+    this.amountSpendErrorMessages['min'] = `Min. amount ${this.currentCurrencySpend?.minAmount} ${this.currentCurrencySpend?.display}`;
     let validators = [
       Validators.required,
       Validators.pattern(this.pNumberPattern),
@@ -463,7 +463,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     ];
     if (maxValid !== undefined) {
       if (maxValid > 0) {
-        this.amountSpendErrorMessages['max'] = `Max. amount ${maxValid} ${this.currentCurrencySpend?.id}`;
+        this.amountSpendErrorMessages['max'] = `Max. amount ${maxValid} ${this.currentCurrencySpend?.display}`;
       } else {
         this.amountSpendErrorMessages['max'] = 'Current wallet is empty';
       }
@@ -477,7 +477,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   }
 
   private setReceiveValidators(): void {
-    this.amountReceiveErrorMessages['min'] = `Min. amount ${this.currentCurrencyReceive?.minAmount} ${this.currentCurrencyReceive?.id}`;
+    this.amountReceiveErrorMessages['min'] = `Min. amount ${this.currentCurrencyReceive?.minAmount} ${this.currentCurrencyReceive?.display}`;
     this.amountReceiveField?.setValidators([
       Validators.required,
       Validators.pattern(this.pNumberPattern),
@@ -498,7 +498,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
 
   private onCurrencySpendUpdated(currency: string): void {
     if (!this.pTransactionChanged) {
-      this.currentCurrencySpend = this.pCurrencies.find((x) => x.id === currency);
+      this.currentCurrencySpend = this.pCurrencies.find((x) => x.symbol === currency);
       if (this.currentCurrencySpend && this.amountSpendField?.value) {
         this.setSpendValidators();
       }
@@ -536,7 +536,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
 
   private onCurrencyReceiveUpdated(currency: string): void {
     if (!this.pTransactionChanged) {
-      this.currentCurrencyReceive = this.pCurrencies.find((x) => x.id === currency);
+      this.currentCurrencyReceive = this.pCurrencies.find((x) => x.symbol === currency);
       if (this.currentCurrencyReceive && this.amountReceiveField?.value) {
         this.setReceiveValidators();
       }
@@ -601,15 +601,15 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     this.pSpendAutoUpdated = true;
     this.pReceiveAutoUpdated = true;
     this.pTransactionChanged = true;
-    const currencySpend = this.currentCurrencySpend?.id;
-    const currencyReceive = this.currentCurrencyReceive?.id;
-    this.currentCurrencySpend = this.pCurrencies.find((x) => x.id === currencyReceive);
-    this.currentCurrencyReceive = this.pCurrencies.find((x) => x.id === currencySpend);
+    const currencySpend = this.currentCurrencySpend?.symbol;
+    const currencyReceive = this.currentCurrencyReceive?.symbol;
+    this.currentCurrencySpend = this.pCurrencies.find((x) => x.symbol === currencyReceive);
+    this.currentCurrencyReceive = this.pCurrencies.find((x) => x.symbol === currencySpend);
     this.setSpendValidators();
     this.setReceiveValidators();
     this.setCurrencyLists();
-    this.currencySpendField?.setValue(this.currentCurrencySpend?.id);
-    this.currencyReceiveField?.setValue(this.currentCurrencyReceive?.id);
+    this.currencySpendField?.setValue(this.currentCurrencySpend?.symbol);
+    this.currencyReceiveField?.setValue(this.currentCurrencyReceive?.symbol);
     this.amountSpendField?.setValue(this.amountReceiveField?.value);
     this.setWalletVisible();
     this.pTransactionChanged = false;
@@ -670,10 +670,10 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   private updateQuote(): void {
     this.currentQuote = '';
     if (this.currentTransaction === TransactionType.Buy && this.currentQuoteEur !== 0) {
-      const c = this.pCurrencies.find(x => x.id === this.currentCurrencySpend?.id);
+      const c = this.pCurrencies.find(x => x.symbol === this.currentCurrencySpend?.symbol);
       if (c) {
         this.quoteLimit = (this.currentQuoteEur - this.transactionsTotalEur) * c.rateFactor;
-        this.currentQuote = `${getCurrencySign(this.currentCurrencySpend?.id ?? '')}${this.quoteLimit.toFixed(2)}`;
+        this.currentQuote = `${getCurrencySign(this.currentCurrencySpend?.display ?? '')}${this.quoteLimit.toFixed(2)}`;
       }
     }
   }
