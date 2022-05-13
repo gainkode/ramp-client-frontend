@@ -32,6 +32,7 @@ export class UserBalanceItem {
   private pId = '';
   private pAsset = '';
   private pCryptoCurrency = '';
+  private pCryptoCurrencyFull = '';
   private pFiatSymbol = '';
   private pIconUrl = '';
   private pBalanceCrypto = 0;
@@ -49,7 +50,7 @@ export class UserBalanceItem {
   }
 
   get currencyName(): string {
-    return this.pCryptoCurrency;
+    return this.pCryptoCurrencyFull;
   }
 
   get icon(): string {
@@ -66,7 +67,7 @@ export class UserBalanceItem {
     return `${getCurrencySign(this.pFiatSymbol)}${this.pBalanceFiat.toFixed(this.pFiatPrecision)}`;
   }
 
-  constructor(data: BalancePerAsset | undefined, currencyName: string, fiatSymbol: string, fiatPrecision: number, cryptoPrecision: number, cryptoBalance: number, fiatBalance: number) {
+  constructor(data: BalancePerAsset | undefined, currencyName: string, currencyNameFull: string, fiatSymbol: string, fiatPrecision: number, cryptoPrecision: number, cryptoBalance: number, fiatBalance: number) {
     if (data) {
       this.pFiat = false;
       this.pId = data.assetId ?? '';
@@ -83,6 +84,7 @@ export class UserBalanceItem {
     }
     this.pCryptoPrecision = cryptoPrecision;
     this.pCryptoCurrency = currencyName;
+    this.pCryptoCurrencyFull = currencyNameFull;
     this.pFiatSymbol = fiatSymbol;
     this.pFiatPrecision = fiatPrecision;
   }

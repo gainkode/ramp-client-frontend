@@ -102,6 +102,7 @@ export class ProfileBalanceListComponent implements OnInit, OnDestroy {
                             this.balances.push(new UserBalanceItem(
                                 balance,
                                 cv.code,
+                                cv.display,
                                 this.currentCurrency,
                                 this.fiatPrecision,
                                 currency.precision,
@@ -124,6 +125,7 @@ export class ProfileBalanceListComponent implements OnInit, OnDestroy {
                     if (vaultCurrency) {
                         this.balances.push(new UserBalanceItem(
                             undefined,
+                            vaultCurrency?.symbol ?? 'EUR',
                             vaultCurrency?.symbol ?? 'EUR',
                             userCurrency?.symbol ?? 'EUR',
                             userCurrency?.precision ?? 2,
