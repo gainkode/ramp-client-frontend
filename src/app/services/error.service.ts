@@ -10,7 +10,7 @@ export class ErrorService {
                 code = sessionCode as string;
             }
         }
-        console.log('error code:', defaultMessage, '->', sessionCode, '->', code.toLowerCase());
+        console.error('error code:', defaultMessage, '->', sessionCode, '->', code.toLowerCase());
         switch (code.toLowerCase()) {
             // Common error codes (0 - 50)
             case 'success':
