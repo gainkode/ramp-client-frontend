@@ -77,7 +77,7 @@ export class UserBalanceItem {
       this.pFiat = false;
       this.pId = data.assetId ?? '';
       this.pAsset = this.pId;
-      this.pIconUrl = `assets/svg-crypto/${getCryptoSymbol(currencyName).toLowerCase()}.svg`;
+      this.pIconUrl = `assets/svg-crypto/${getCryptoSymbol(this.pCryptoCurrency).toLowerCase()}.svg`;
       this.pBalanceCrypto = data.totalBalance ?? 0;
       this.pBalanceFiat = data.totalBalanceFiat;
     } else {
