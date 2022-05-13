@@ -127,7 +127,7 @@ export class ProfileWalletListComponent implements OnDestroy {
     }
 
     private getCurrency(asset: AssetAddressShort): CurrencyView | undefined {
-        return this.cryptoCurrencies.find(x => x.id === asset.assetId);
+        return this.cryptoCurrencies.find(x => x.symbol === asset.assetId);
     }
 
     private showDetailsPanel(item: WalletItem | undefined): void {

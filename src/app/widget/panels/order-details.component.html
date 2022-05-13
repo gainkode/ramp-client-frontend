@@ -81,7 +81,7 @@
                                         {{item.name}}
                                     </div>
                                     <div *ngIf="item.name!=='...'" class="__form-combo-item-text-extra">
-                                        {{item.total}} {{currentCurrencyReceive?.id}}
+                                        {{item.total}} {{currentCurrencyReceive?.display}}
                                     </div>
                                 </div>
                             </mat-option>
@@ -151,7 +151,7 @@
                                         {{item.name}}
                                     </div>
                                     <div *ngIf="item.name!=='...'" class="__form-combo-item-text-extra">
-                                        {{item.total}} {{currentCurrencySpend?.id}}
+                                        {{item.total}} {{currentCurrencySpend?.display}}
                                     </div>
                                 </div>
                             </mat-option>

@@ -62,7 +62,7 @@ export class FormFinanceComboComponent {
     }
 
     get selectedComboValue(): CurrencyView | undefined {
-        return this.comboList.find(x => x.id === this.comboField?.value);
+        return this.comboList.find(x => x.symbol === this.comboField?.value);
     }
 
     constructor() { }

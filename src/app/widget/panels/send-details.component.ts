@@ -280,7 +280,7 @@ export class WidgetSendDetailsComponent implements OnInit, OnDestroy {
 
   private onCurrencyUpdated(currency: string): void {
     if (currency && currency !== '' && currency !== this.currentSymbol) {
-      this.currentCurrency = this.currencies.find(x => x.id === currency);
+      this.currentCurrency = this.currencies.find(x => x.symbol === currency);
       if (this.zeroAmount === false) {
         this.sendData();
       }

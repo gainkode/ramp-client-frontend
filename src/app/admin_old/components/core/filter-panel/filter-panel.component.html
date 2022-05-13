@@ -58,9 +58,9 @@
 
             <mat-form-field *ngIf="field === 'assets'">
                 <mat-label>Assets</mat-label>
-                <mat-select formControlName="assets" multiple>
-                    <mat-option *ngFor="let item of currencies" [value]="item.id">
-                        {{item.name}}
+                <mat-select formControlName="assets">
+                    <mat-option *ngFor="let item of currencies" [value]="item.symbol">
+                        {{item.display}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>

@@ -65,7 +65,7 @@ export class ContactsFilterBarComponent implements OnInit, OnDestroy {
         this.subscriptions.add(
             this.currenciesField?.valueChanges.subscribe(val => {
                 if ((val as []).length < 1) {
-                    this.currenciesField?.setValue(this.cryptoList.map(x => x.id));
+                    this.currenciesField?.setValue(this.cryptoList.map(x => x.symbol));
                 }
                 this.updateChips(FilterChipType.Currency);
             }));
@@ -113,7 +113,7 @@ export class ContactsFilterBarComponent implements OnInit, OnDestroy {
         if (this.data && this.data.currencies.length > 0) {
             this.currenciesField?.setValue(this.data.currencies.map(x => x));
         } else {
-            this.currenciesField?.setValue(this.cryptoList.map(x => x.id));
+            this.currenciesField?.setValue(this.cryptoList.map(x => x.symbol));
         }
         if (this.data && this.data.zeroBalance) {
             this.zeroBalanceField?.setValue(this.data.zeroBalance);

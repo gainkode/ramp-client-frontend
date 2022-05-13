@@ -70,7 +70,7 @@ export class ProfileContactCreateComponent implements OnInit, OnDestroy {
         this.subscriptions.add(
             this.currencyField?.valueChanges.subscribe(val => {
                 this.currencyInit = true;
-                this.selectedCurrency = this.cryptoList.find(x => x.id === val);
+                this.selectedCurrency = this.cryptoList.find(x => x.symbol === val);
             }));
     }
 
@@ -116,7 +116,7 @@ export class ProfileContactCreateComponent implements OnInit, OnDestroy {
             this.createContact(
                 this.emailField?.value,
                 this.displayNameField?.value,
-                this.selectedCurrency?.id ?? '',
+                this.selectedCurrency?.symbol ?? '',
                 this.addressField?.value);
         }
     }

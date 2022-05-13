@@ -118,7 +118,7 @@ export class WidgetReceiveDetailsComponent implements OnInit, OnDestroy {
   private onCurrencyUpdated(symbol: string): void {
     this.currencyInit = true;
     this.qrCode = '';
-    this.selectedCurrency = this.currencies.find(x => x.id === symbol);
+    this.selectedCurrency = this.currencies.find(x => x.symbol === symbol);
     if (this.selectedCurrency) {
       this.selectedWallet = undefined;
       this.walletField?.setValue('');

@@ -31,7 +31,7 @@ export class WalletItem {
       this.vault = data.vaultId ?? '';
       this.address = data.address ?? '';
       this.addressFormat = data.addressFormat ?? '';
-      this.asset = currency?.id ?? '';
+      this.asset = currency?.symbol ?? '';
       if (this.asset === '') {
         this.asset = data.assetId ?? '';
       }

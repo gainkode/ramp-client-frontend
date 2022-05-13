@@ -88,8 +88,8 @@ export class PaymentIntroComponent implements OnInit, OnDestroy {
   private startExchangeRate(): void {
     if (this.pExchangeRateStarted === false) {
       this.exchangeRate.setCurrency(
-        this.currentCurrencySpend?.id ?? '',
-        this.currentCurrencyReceive?.id ?? '',
+        this.currentCurrencySpend?.symbol ?? '',
+        this.currentCurrencyReceive?.symbol ?? '',
         TransactionType.Buy);
       this.exchangeRate.register(this.onExchangeRateUpdated.bind(this));
     }
@@ -171,11 +171,11 @@ export class PaymentIntroComponent implements OnInit, OnDestroy {
     this.setCurrencyLists();
     if (this.spendCurrencyList.length > 0) {
       if (defaultSpendCurrency === '') {
-        defaultSpendCurrency = this.spendCurrencyList[0].id;
+        defaultSpendCurrency = this.spendCurrencyList[0].symbol;
       } else {
-        const presented = this.spendCurrencyList.find(x => x.id === defaultSpendCurrency);
+        const presented = this.spendCurrencyList.find(x => x.symbol === defaultSpendCurrency);
         if (!presented) {
-          defaultSpendCurrency = this.spendCurrencyList[0].id;
+          defaultSpendCurrency = this.spendCurrencyList[0].symbol;
         }
       }
       this.currencySpendField?.setValue(defaultSpendCurrency);
@@ -184,11 +184,11 @@ export class PaymentIntroComponent implements OnInit, OnDestroy {
     }
     if (this.receiveCurrencyList.length > 0) {
       if (defaultReceiveCurrency === '') {
-        defaultReceiveCurrency = this.receiveCurrencyList[0].id;
+        defaultReceiveCurrency = this.receiveCurrencyList[0].symbol;
       } else {
-        const presented = this.receiveCurrencyList.find(x => x.id === defaultReceiveCurrency);
+        const presented = this.receiveCurrencyList.find(x => x.symbol === defaultReceiveCurrency);
         if (!presented) {
-          defaultReceiveCurrency = this.receiveCurrencyList[0].id;
+          defaultReceiveCurrency = this.receiveCurrencyList[0].symbol;
         }
       }
       this.currencyReceiveField?.setValue(defaultReceiveCurrency);
@@ -206,7 +206,7 @@ export class PaymentIntroComponent implements OnInit, OnDestroy {
   }
 
   private setSpendValidators(): void {
-    this.amountSpendErrorMessages['min'] = `Min. amount ${this.currentCurrencySpend?.minAmount} ${this.currentCurrencySpend?.id}`;
+    this.amountSpendErrorMessages['min'] = `Min. amount ${this.currentCurrencySpend?.minAmount} ${this.currentCurrencySpend?.display}`;
     this.amountSpendField?.setValidators([
       Validators.required,
       Validators.pattern(this.pNumberPattern),
@@ -216,7 +216,7 @@ export class PaymentIntroComponent implements OnInit, OnDestroy {
   }
 
   private setReceiveValidators(): void {
-    this.amountReceiveErrorMessages['min'] = `Min. amount ${this.currentCurrencyReceive?.minAmount} ${this.currentCurrencyReceive?.id}`;
+    this.amountReceiveErrorMessages['min'] = `Min. amount ${this.currentCurrencyReceive?.minAmount} ${this.currentCurrencyReceive?.display}`;
     this.amountReceiveField?.setValidators([
       Validators.required,
       Validators.pattern(this.pNumberPattern),
@@ -226,21 +226,21 @@ export class PaymentIntroComponent implements OnInit, OnDestroy {
   }
 
   private onCurrencySpendUpdated(currency: string): void {
-    this.currentCurrencySpend = this.pCurrencies.find((x) => x.id === currency);
+    this.currentCurrencySpend = this.pCurrencies.find((x) => x.symbol === currency);
     if (this.currentCurrencySpend && this.amountSpendField?.value) {
       this.setSpendValidators();
     }
     this.pReceiveChanged = true;
     this.updateCurrentAmounts();
     this.exchangeRate.setCurrency(
-      this.currentCurrencySpend?.id ?? '',
-      this.currentCurrencyReceive?.id ?? '',
+      this.currentCurrencySpend?.symbol ?? '',
+      this.currentCurrencyReceive?.symbol ?? '',
       TransactionType.Buy);
     this.exchangeRate.update();
   }
 
   private onCurrencyReceiveUpdated(currency: string): void {
-    this.currentCurrencyReceive = this.pCurrencies.find((x) => x.id === currency);
+    this.currentCurrencyReceive = this.pCurrencies.find((x) => x.symbol === currency);
     if (this.currentCurrencyReceive && this.amountReceiveField?.value) {
       this.setReceiveValidators();
     }

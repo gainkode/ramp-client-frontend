@@ -83,7 +83,7 @@ export class NavPopupComponent implements OnInit, OnDestroy {
                     }
                 },
                 (error) => {
-                    console.log('popup notification error', error);
+                    console.error('popup notification error', error);
                     // there was an error subscribing to notifications
                 }
             )

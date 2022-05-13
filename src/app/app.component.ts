@@ -83,7 +83,7 @@ export class AppComponent implements OnInit, OnDestroy {
           this.loadAccountData();
         },
         (error) => {
-          console.log('KYC notification error', error);
+          console.error('KYC notification error', error);
         }
       )
     );

@@ -64,8 +64,8 @@
     <mat-form-field class="form-element">
         <mat-label>Crypto Currencies</mat-label>
         <mat-select formControlName="currenciesCrypto" multiple>
-            <mat-option *ngFor="let item of currencyOptionsCrypto" [value]="item.id">
-                {{item.name}}
+            <mat-option *ngFor="let item of currencyOptionsCrypto" [value]="item.symbol">
+                {{item.display}}
             </mat-option>
         </mat-select>
     </mat-form-field>
@@ -73,8 +73,8 @@
     <mat-form-field class="form-element">
         <mat-label>Fiat Currencies</mat-label>
         <mat-select formControlName="currenciesFiat" multiple>
-            <mat-option *ngFor="let item of currencyOptionsFiat" [value]="item.id">
-                {{item.name}}
+            <mat-option *ngFor="let item of currencyOptionsFiat" [value]="item.symbol">
+                {{item.display}}
             </mat-option>
         </mat-select>
     </mat-form-field>

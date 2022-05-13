@@ -10,7 +10,7 @@ export class ErrorService {
                 code = sessionCode as string;
             }
         }
-        console.log('error code:', defaultMessage, '->', sessionCode, '->', code.toLowerCase());
+        console.error('error code:', defaultMessage, '->', sessionCode, '->', code.toLowerCase());
         switch (code.toLowerCase()) {
             // Common error codes (0 - 50)
             case 'success':
@@ -134,6 +134,9 @@ export class ErrorService {
                 break;
             case 'core.transaction_handling_error':
                 result = 'Transaction handling error';
+                break;
+            case 'core.transaction_amount_too_low':
+                result = 'Transaction amount too low';
                 break;
             case 'core.widget_not_supported_for_country':
                 result = 'Our services are not available in your country';

@@ -195,24 +195,21 @@ export class WidgetComponent implements OnInit {
   }
 
   private startNotificationListener(): void {
-    console.log('transaction notification start');
     this.notificationStarted = true;
     this.pNotificationsSubscription = this.notification.subscribeToTransactionNotifications().subscribe(
       ({ data }) => {
-        console.log('transaction notification', data);
         this.handleTransactionSubscription(data);
       },
       (error) => {
         this.notificationStarted = false;
         // there was an error subscribing to notifications
-        console.log('Notifications error', error);
+        console.error('Notifications error', error);
       }
     );
   }
 
   private stopNotificationListener(): void {
     if (this.pNotificationsSubscription) {
-      console.log('transaction notification stop');
       this.pNotificationsSubscription.unsubscribe();
     }
     this.pNotificationsSubscription = undefined;
@@ -224,13 +221,13 @@ export class WidgetComponent implements OnInit {
     if (data.transactionServiceNotification.type === 'PaymentStatusChanged') {
       res = true;
     } else {
-      console.log('transactionApproved: unexpected type', data.transactionServiceNotification.type);
+      console.error('transactionApproved: unexpected type', data.transactionServiceNotification.type);
     }
     if (res) {
       if (data.transactionServiceNotification.userId === this.auth.user?.userId) {
         res = true;
       } else {
-        console.log('transactionApproved: unexpected userId', data.transactionServiceNotification.userId);
+        console.error('transactionApproved: unexpected userId', data.transactionServiceNotification.userId);
       }
     }
     if (res) {
@@ -239,7 +236,7 @@ export class WidgetComponent implements OnInit {
         data.transactionServiceNotification.operationStatus === 'error') {
         res = true;
       } else {
-        console.log('transactionApproved: unexpected operationStatus', data.transactionServiceNotification.operationStatus);
+        console.error('transactionApproved: unexpected operationStatus', data.transactionServiceNotification.operationStatus);
       }
     }
     if (res) {
@@ -247,7 +244,7 @@ export class WidgetComponent implements OnInit {
         data.transactionServiceNotification.operationType === 'approved') {
         res = true;
       } else {
-        console.log('transactionApproved: unexpected operationType', data.transactionServiceNotification.operationType);
+        console.error('transactionApproved: unexpected operationType', data.transactionServiceNotification.operationType);
       }
     }
     if (res) {
