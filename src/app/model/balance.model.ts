@@ -68,6 +68,11 @@ export class UserBalanceItem {
   }
 
   constructor(data: BalancePerAsset | undefined, currencyName: string, currencyNameFull: string, fiatSymbol: string, fiatPrecision: number, cryptoPrecision: number, cryptoBalance: number, fiatBalance: number) {
+    this.pCryptoPrecision = cryptoPrecision;
+    this.pCryptoCurrency = currencyName;
+    this.pCryptoCurrencyFull = currencyNameFull;
+    this.pFiatSymbol = fiatSymbol;
+    this.pFiatPrecision = fiatPrecision;
     if (data) {
       this.pFiat = false;
       this.pId = data.assetId ?? '';
@@ -82,11 +87,6 @@ export class UserBalanceItem {
       this.pId = currencyName;
       this.pAsset = this.pId;
     }
-    this.pCryptoPrecision = cryptoPrecision;
-    this.pCryptoCurrency = currencyName;
-    this.pCryptoCurrencyFull = currencyNameFull;
-    this.pFiatSymbol = fiatSymbol;
-    this.pFiatPrecision = fiatPrecision;
   }
 
   increaseCrypto(val: number): void {
