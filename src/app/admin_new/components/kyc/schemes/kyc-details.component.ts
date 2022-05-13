@@ -8,9 +8,9 @@ import { AdminDataService } from 'src/app/admin_old/services/admin-data.service'
 import { CommonTargetValue, TargetParams } from 'src/app/model/common.model';
 import { CountryFilterList, getCountry } from 'src/app/model/country-code.model';
 import { TransactionSourceFilterList } from 'src/app/model/fee-scheme.model';
-import { SettingsKycTargetFilterType, UserType } from 'src/app/model/generated-models';
+import { KycProvider, SettingsKycTargetFilterType, UserMode, UserType } from 'src/app/model/generated-models';
 import { KycScheme } from 'src/app/model/identification.model';
-import { KycProviderList, KycTargetFilterList, UserModeList, UserTypeList } from 'src/app/model/payment.model';
+import { KycLevelView, KycProviderList, KycTargetFilterList, UserModeList, UserTypeList } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -47,6 +47,7 @@ export class AdminKycSchemeDetailsComponent implements OnInit, OnDestroy {
   userTypeOptions = UserTypeList;
   userModes = UserModeList;
   kycProviders = KycProviderList;
+  levels: KycLevelView[] = [];
   filteredTargetValues$: Observable<CommonTargetValue[]> | undefined;
 
   form = this.formBuilder.group({
@@ -125,6 +126,12 @@ export class AdminKycSchemeDetailsComponent implements OnInit, OnDestroy {
       this.form.get('target')?.valueChanges.subscribe(val => this.updateTarget(val))
     );
     this.subscriptions.add(
+      this.form.get('userType')?.valueChanges.subscribe(val => {
+        this.form.get('level')?.setValue(undefined);
+        this.loadLevelValues(val);
+      })
+    );
+    this.subscriptions.add(
       this.form.get('requireUserFlatNumber')?.valueChanges.subscribe(val => {
         if (val === true) {
           this.form.get('requireUserAddress')?.setValue(true);
@@ -154,7 +161,7 @@ export class AdminKycSchemeDetailsComponent implements OnInit, OnDestroy {
       this.form.get('name')?.setValue(scheme?.name);
       this.form.get('description')?.setValue(scheme?.description);
       this.form.get('isDefault')?.setValue(scheme?.isDefault);
-      // this.form.get('level')?.setValue(scheme?.level?.settingsKycLevelId ?? '');
+      this.form.get('level')?.setValue(scheme?.level?.settingsKycLevelId ?? undefined);
       this.form.get('target')?.setValue(scheme?.target);
       // this.targetType = scheme?.target ?? SettingsKycTargetFilterType.None;
       // if (this.targetType === SettingsKycTargetFilterType.AccountId) {
@@ -193,7 +200,7 @@ export class AdminKycSchemeDetailsComponent implements OnInit, OnDestroy {
       this.form.get('requireUserAddress')?.setValue(scheme?.requireUserAddress);
       this.form.get('requireUserFlatNumber')?.setValue(scheme?.requireUserFlatNumber);
 
-      // this.loadLevelValues(scheme?.userType);
+      this.loadLevelValues(scheme?.userType);
       // this.setTargetValidator();
       // const p = this.targetValueParams;
     } else {
@@ -201,7 +208,7 @@ export class AdminKycSchemeDetailsComponent implements OnInit, OnDestroy {
       this.form.get('name')?.setValue('');
       this.form.get('description')?.setValue('');
       this.form.get('isDefault')?.setValue('');
-      // this.form.get('level')?.setValue('');
+      this.form.get('level')?.setValue('');
       this.form.get('target')?.setValue(SettingsKycTargetFilterType.None);
 
       // this.form.get('targetValues')?.setValue([]);
@@ -219,7 +226,6 @@ export class AdminKycSchemeDetailsComponent implements OnInit, OnDestroy {
 
   private setSchemeData(): KycScheme {
     const data = new KycScheme(null);
-    // common
     data.name = this.form.get('name')?.value;
     data.description = this.form.get('description')?.value;
     data.isDefault = this.form.get('isDefault')?.value;
@@ -233,15 +239,15 @@ export class AdminKycSchemeDetailsComponent implements OnInit, OnDestroy {
     // } else {
     //   data.setTarget(this.form.get('target')?.value, this.form.get('targetValues')?.value);
     // }
-    // data.userType = this.form.get('userType')?.value;
-    // data.levelId = this.form.get('level')?.value;
-    // (this.form.get('userMode')?.value as UserMode[]).forEach(x => data.userModes.push(x));
-    // (this.form.get('provider')?.value as KycProvider[]).forEach(x => data.kycProviders.push(x));
-    // data.requireUserFullName = this.form.get('requireUserFullName')?.value;
-    // data.requireUserPhone = this.form.get('requireUserPhone')?.value;
-    // data.requireUserBirthday = this.form.get('requireUserBirthday')?.value;
-    // data.requireUserAddress = this.form.get('requireUserAddress')?.value;
-    // data.requireUserFlatNumber = this.form.get('requireUserFlatNumber')?.value;
+    data.userType = this.form.get('userType')?.value;
+    data.levelId = this.form.get('level')?.value;
+    (this.form.get('userMode')?.value as UserMode[]).forEach(x => data.userModes.push(x));
+    (this.form.get('provider')?.value as KycProvider[]).forEach(x => data.kycProviders.push(x));
+    data.requireUserFullName = this.form.get('requireUserFullName')?.value;
+    data.requireUserPhone = this.form.get('requireUserPhone')?.value;
+    data.requireUserBirthday = this.form.get('requireUserBirthday')?.value;
+    data.requireUserAddress = this.form.get('requireUserAddress')?.value;
+    data.requireUserFlatNumber = this.form.get('requireUserFlatNumber')?.value;
     return data;
   }
 
@@ -293,40 +299,40 @@ export class AdminKycSchemeDetailsComponent implements OnInit, OnDestroy {
     this.form.get('targetValues')?.updateValueAndValidity();
   }
 
-  // private loadLevelValues(userType: UserType): void {
-  //   this.subscriptions.add(
-  //     this.adminService.getKycLevels(userType).pipe(take(1)).subscribe(data => {
-  //       this.levels = data.list.map(val => {
-  //         const c = new KycLevelView();
-  //         c.id = val.id;
-  //         c.name = val.name as string;
-  //         c.description = val.description as string;
-  //         return c;
-  //       });
-  //     })
-  //   );
-  // }
+  private loadLevelValues(userType: UserType): void {
+    this.subscriptions.add(
+      this.adminService.getKycLevels(userType).pipe(take(1)).subscribe(data => {
+        this.levels = data.list.map(val => {
+          const c = new KycLevelView();
+          c.id = val.id;
+          c.name = val.name as string;
+          c.description = val.description as string;
+          return c;
+        });
+      })
+    );
+  }
 
   onSubmit(): void {
     this.submitted = true;
     if (this.form.valid) {
-      this.saveLevel(this.setSchemeData());
+      this.saveScheme(this.setSchemeData());
     }
   }
 
-  deleteLevel(content: any): void {
+  deleteScheme(content: any): void {
     this.removeDialog = this.modalService.open(content, {
       backdrop: 'static',
       windowClass: 'modalCusSty',
     });
     this.subscriptions.add(
       this.removeDialog.closed.subscribe(val => {
-        this.deleteLevelConfirmed(this.settingsId ?? '');
+        this.deleteSchemeConfirmed(this.settingsId ?? '');
       })
     );
   }
 
-  private saveLevel(scheme: KycScheme): void {
+  private saveScheme(scheme: KycScheme): void {
     this.errorMessage = '';
     this.saveInProgress = true;
     const requestData$ = this.adminService.saveKycSettings(scheme, this.createNew);
@@ -344,7 +350,7 @@ export class AdminKycSchemeDetailsComponent implements OnInit, OnDestroy {
     );
   }
 
-  deleteLevelConfirmed(id: string): void {
+  deleteSchemeConfirmed(id: string): void {
     this.errorMessage = '';
     this.saveInProgress = true;
     const requestData$ = this.adminService.deleteKycSettings(id);
