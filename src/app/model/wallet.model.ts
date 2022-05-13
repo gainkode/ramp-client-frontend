@@ -5,6 +5,7 @@ import { CurrencyView } from "./payment.model";
 export class WalletItem {
   id = '';
   originalId = '';
+  code = '';
   vaultOriginalId = '';
   vault = '';
   type = '';
@@ -39,10 +40,11 @@ export class WalletItem {
       this.total = data.total ?? 0;
       this.totalFiat = data.totalFiat ?? 0;
       this.name = data.vaultName ?? '';
-      if (this.asset !== '') {
-        this.pIconUrl = `assets/svg-crypto/${getCryptoSymbol(this.asset).toLowerCase()}.svg`;
+      if (this.asset !== '' && currency) {
+        this.pIconUrl = `assets/svg-crypto/${getCryptoSymbol(currency.code).toLowerCase()}.svg`;
       }
       if (currency) {
+        this.code = currency.code;
         this.pCurrencyName = `${currency.display} - ${currency.name.toUpperCase()}`;
         this.pFullName = currency.name;
         this.symbol = currency.display;
@@ -50,6 +52,7 @@ export class WalletItem {
         this.pCurrencyName = this.asset;
         this.pFullName = this.asset;
         this.symbol = this.asset;
+        this.code = this.asset;
       }
     }
   }

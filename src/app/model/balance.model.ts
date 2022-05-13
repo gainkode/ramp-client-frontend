@@ -66,7 +66,7 @@ export class UserBalanceItem {
     return `${getCurrencySign(this.pFiatSymbol)}${this.pBalanceFiat.toFixed(this.pFiatPrecision)}`;
   }
 
-  constructor(data: BalancePerAsset | undefined, cuurencyName: string, fiatSymbol: string, fiatPrecision: number, cryptoPrecision: number, cryptoBalance: number, fiatBalance: number) {
+  constructor(data: BalancePerAsset | undefined, currencyName: string, fiatSymbol: string, fiatPrecision: number, cryptoPrecision: number, cryptoBalance: number, fiatBalance: number) {
     if (data) {
       this.pFiat = false;
       this.pId = data.assetId ?? '';
@@ -78,11 +78,11 @@ export class UserBalanceItem {
       this.pFiat = true;
       this.pBalanceCrypto = cryptoBalance;
       this.pBalanceFiat = fiatBalance;
-      this.pId = cuurencyName;
+      this.pId = currencyName;
       this.pAsset = this.pId;
     }
     this.pCryptoPrecision = cryptoPrecision;
-    this.pCryptoCurrency = cuurencyName;
+    this.pCryptoCurrency = currencyName;
     this.pFiatSymbol = fiatSymbol;
     this.pFiatPrecision = fiatPrecision;
   }

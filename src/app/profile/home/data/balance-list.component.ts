@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { UserBalanceItem } from 'src/app/model/balance.model';
 import { FiatVault, Rate, SettingsCurrency, UserState, VaultAccountEx } from 'src/app/model/generated-models';
+import { CurrencyView } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
 import { ErrorService } from 'src/app/services/error.service';
@@ -97,9 +98,10 @@ export class ProfileBalanceListComponent implements OnInit, OnDestroy {
                     } else {
                         const currency = this.currencies.find(c => c.symbol === balance.assetId);
                         if (currency) {
+                            const cv = new CurrencyView(currency);
                             this.balances.push(new UserBalanceItem(
                                 balance,
-                                currency.name ?? '',
+                                cv.code,
                                 this.currentCurrency,
                                 this.fiatPrecision,
                                 currency.precision,

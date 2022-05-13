@@ -150,6 +150,7 @@ export class KycLevelView {
 export class CurrencyView {
     symbol = '';
     display = '';
+    code = '';
     name = '';
     img = '';
     precision = 0;
@@ -164,16 +165,16 @@ export class CurrencyView {
         this.symbol = data.symbol;
         this.ethFlag = data.ethFlag ?? false;
         this.trxFlag = data.trxFlag ?? false;
-        let code = data.symbol;
+        this.code = data.symbol;
         if (data.displaySymbol) {
-            code = data.displaySymbol;
+            this.code = data.displaySymbol;
         }
         if (this.ethFlag) {
-            this.display = `${code} (ERC20)`;
+            this.display = `${this.code} (ERC20)`;
         } else if (this.trxFlag) {
-            this.display = `${code} (TRC20)`;
+            this.display = `${this.code} (TRC20)`;
         } else {
-            this.display = code;
+            this.display = this.code;
         }
         this.name = data.name ?? '';
         this.precision = data.precision;
@@ -182,7 +183,7 @@ export class CurrencyView {
         this.validateAsSymbol = data.validateAsSymbol as string | null;
         this.fiat = data.fiat as boolean;
         if (!this.fiat) {
-            this.img = `assets/svg-crypto/${getCryptoSymbol(code).toLowerCase()}.svg`;
+            this.img = `assets/svg-crypto/${getCryptoSymbol(this.code).toLowerCase()}.svg`;
         }
     }
 }
