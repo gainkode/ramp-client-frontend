@@ -60,31 +60,33 @@
           </div>
         </div>
 
-
-
-        <!-- Tagget values -->
-        <!-- <div class="form-group">
+        <!-- Target values -->
+        <div *ngIf="targetType!==TARGET_TYPE.None" class="form-group">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            Country name
+            {{targetsTitle}}
+            <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
           </label>
-          <ng-select formControlName="country" [clearable]=false [clearOnBackspace]=false>
-            <ng-option *ngFor="let country of countryOptions" [value]="country">
-              <app-dropdown-item itemValue="{{country.name}}" imageClass="country-flag-admin"
-                imageSource="assets/svg-country-flags/{{getCountryFlag(country.code2)}}">
+          <ng-select *ngIf="targetType!==TARGET_TYPE.InitiateFrom" [minTermLength]="minTargetsLengthTerm"
+            notFoundText="No {{targetEntity[1]}} found" [loading]="isTargetsLoading" [multiple]="true"
+            formControlName="targetValues" [typeToSearchText]="targetSearchText" bindLabel="title" 
+            placeholder="Start typing to search a {{targetEntity[0]}}" [typeahead]="targetsSearchInput$" required>
+            <ng-option *ngFor="let item of targetsOptions$ | async" [value]="item">
+              <app-dropdown-item [itemValue]="item.title" [imageClass]="item.imgClass" [imageSource]="item.imgSource">
               </app-dropdown-item>
             </ng-option>
           </ng-select>
-          <div *ngIf="(form.controls.country.touched || submitted) && (form.controls.country.errors?.['required'])"
+          <ng-select *ngIf="targetType===TARGET_TYPE.InitiateFrom" [items]="sourceTargetsOptions" bindLabel="title"
+            [minTermLength]="minTargetsLengthTerm" [multiple]="true" formControlName="targetValues"
+            placeholder="Select one or more {{targetEntity[1]}}" required>
+          </ng-select>
+          <div
+            *ngIf="(form.controls.targetValues.touched || submitted) && (form.controls.targetValues.errors?.['required'])"
             class="tx-danger">
             <small>
-              Select a country to add
+              Please specify at least one {{targetEntity[0]}}
             </small>
           </div>
-        </div> -->
-
-
-
-
+        </div>
 
         <div class="form-group">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
@@ -193,8 +195,8 @@
           <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
           Save
         </button>
-        <button *ngIf="permission>1 && !createNew && defaultSchemeName===''" class="btn btn-danger pd-x-30 me-2 mg-t-5" type="button"
-          (click)="deleteScheme(delete_content)">
+        <button *ngIf="permission>1 && !createNew && defaultSchemeName===''" class="btn btn-danger pd-x-30 me-2 mg-t-5"
+          type="button" (click)="deleteScheme(delete_content)">
           <span *ngIf="deleteInProgress" class="spinner-border spinner-border-sm" role="status"
             aria-hidden="true"></span>
           Delete
@@ -216,7 +218,7 @@
   </div>
   <div class="modal-body">
     <h4 style="text-align: center;">
-      You are going to delete selected scheme. Confirm operation.
+      You are going to delete selected KYC scheme. Confirm operation.
     </h4>
     <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
       <button class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" type="button" (click)="modal.dismiss('Reject')">

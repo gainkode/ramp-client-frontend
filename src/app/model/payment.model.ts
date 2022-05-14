@@ -366,7 +366,7 @@ export const CostTargetFilterList: Array<CostTargetFilterTypeView> = [
 
 export const KycTargetFilterList: Array<KycTargetFilterTypeView> = [
     { id: SettingsKycTargetFilterType.None, name: 'Default' },
-    { id: SettingsKycTargetFilterType.WidgetId, name: 'Widget identifier' },
+    { id: SettingsKycTargetFilterType.WidgetId, name: 'Widget' },
     { id: SettingsKycTargetFilterType.Country, name: 'Country' },
     { id: SettingsKycTargetFilterType.AccountId, name: 'Account' },
     { id: SettingsKycTargetFilterType.InitiateFrom, name: 'Initiate from ...' }

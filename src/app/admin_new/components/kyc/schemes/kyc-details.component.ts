@@ -2,11 +2,12 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, of, Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { concat, Observable, of, Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map, switchMap, take, tap } from 'rxjs/operators';
+import { Filter } from 'src/app/admin_old/model/filter.model';
 import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
-import { CommonTargetValue, TargetParams } from 'src/app/model/common.model';
-import { CountryFilterList, getCountry } from 'src/app/model/country-code.model';
+import { CommonTargetValue } from 'src/app/model/common.model';
+import { CountryFilterList } from 'src/app/model/country-code.model';
 import { TransactionSourceFilterList } from 'src/app/model/fee-scheme.model';
 import { KycProvider, SettingsKycTargetFilterType, UserMode, UserType } from 'src/app/model/generated-models';
 import { KycScheme } from 'src/app/model/identification.model';
@@ -34,21 +35,27 @@ export class AdminKycSchemeDetailsComponent implements OnInit, OnDestroy {
   private removeDialog: NgbModalRef | undefined = undefined;
   private settingsId = '';
 
+  TARGET_TYPE: typeof SettingsKycTargetFilterType = SettingsKycTargetFilterType;
   submitted = false;
   createNew = false;
   saveInProgress = false;
   deleteInProgress = false;
   errorMessage = '';
   defaultSchemeName = '';
-  targetEntity = '';
-  targetType = SettingsKycTargetFilterType.None;
-  targetValues: CommonTargetValue[] = [];
-  targets = KycTargetFilterList;
   userTypeOptions = UserTypeList;
   userModes = UserModeList;
   kycProviders = KycProviderList;
   levels: KycLevelView[] = [];
-  filteredTargetValues$: Observable<CommonTargetValue[]> | undefined;
+  targetEntity = ['', ''];
+  targetSearchText = '';
+  targetsTitle = '';
+  targetType = SettingsKycTargetFilterType.None;
+  targets = KycTargetFilterList;
+  isTargetsLoading = false;
+  targetsSearchInput$ = new Subject<string>();
+  targetsOptions$: Observable<CommonTargetValue[]> = of([]);
+  sourceTargetsOptions = TransactionSourceFilterList;
+  minTargetsLengthTerm = 1;
 
   form = this.formBuilder.group({
     id: [''],
@@ -69,49 +76,6 @@ export class AdminKycSchemeDetailsComponent implements OnInit, OnDestroy {
     requireUserFlatNumber: [false]
   });
 
-  get targetValueParams(): TargetParams {
-    const val = this.form.get('target')?.value;
-    const params = new TargetParams();
-    switch (val) {
-      case SettingsKycTargetFilterType.None: {
-        params.title = '';
-        params.inputPlaceholder = '';
-        params.dataList = [];
-        this.targetEntity = '';
-        break;
-      }
-      case SettingsKycTargetFilterType.Country: {
-        params.title = 'List of countries *';
-        params.inputPlaceholder = 'New country...';
-        params.dataList = CountryFilterList;
-        this.targetEntity = 'country';
-        break;
-      }
-      case SettingsKycTargetFilterType.AccountId: {
-        params.title = 'List of accounts *';
-        params.inputPlaceholder = 'Type account email...';
-        params.dataList = [];
-        this.targetEntity = 'account identifier';
-        break;
-      }
-      case SettingsKycTargetFilterType.WidgetId: {
-        params.title = 'List of widgets *';
-        params.inputPlaceholder = 'New widget (Name, code or ID)...';
-        params.dataList = [];
-        this.targetEntity = 'widget identifier';
-        break;
-      }
-      case SettingsKycTargetFilterType.InitiateFrom: {
-        params.title = 'List of sources *';
-        params.inputPlaceholder = 'New source...';
-        params.dataList = TransactionSourceFilterList;
-        this.targetEntity = 'source';
-        break;
-      }
-    }
-    return params;
-  }
-
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
@@ -123,7 +87,7 @@ export class AdminKycSchemeDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscriptions.add(
-      this.form.get('target')?.valueChanges.subscribe(val => this.updateTarget(val))
+      this.form.get('target')?.valueChanges.subscribe(val => this.updateTarget())
     );
     this.subscriptions.add(
       this.form.get('userType')?.valueChanges.subscribe(val => {
@@ -155,7 +119,6 @@ export class AdminKycSchemeDetailsComponent implements OnInit, OnDestroy {
     this.form.reset();
     this.defaultSchemeName = '';
     if (scheme) {
-      this.removeIncorrectTargetValues(scheme);
       this.defaultSchemeName = scheme.isDefault ? scheme.name : '';
       this.form.get('id')?.setValue(scheme?.id);
       this.form.get('name')?.setValue(scheme?.name);
@@ -163,34 +126,8 @@ export class AdminKycSchemeDetailsComponent implements OnInit, OnDestroy {
       this.form.get('isDefault')?.setValue(scheme?.isDefault);
       this.form.get('level')?.setValue(scheme?.level?.settingsKycLevelId ?? undefined);
       this.form.get('target')?.setValue(scheme?.target);
-      // this.targetType = scheme?.target ?? SettingsKycTargetFilterType.None;
-      // if (this.targetType === SettingsKycTargetFilterType.AccountId) {
-      //   const filter = new Filter({
-      //     users: scheme?.targetValues
-      //   });
-      //   this.subscriptions.add(
-      //     this.getFilteredAccounts(filter).subscribe(result => {
-      //       this.targetValues = result;
-      //       this.form.get('targetValues')?.setValue(result.map(x => x.title));
-      //     })
-      //   );
-      //   this.updateTarget('');
-      // } else if (this.targetType === SettingsKycTargetFilterType.WidgetId) {
-      //   const filter = new Filter({
-      //     widgets: scheme?.targetValues
-      //   });
-      //   this.subscriptions.add(
-      //     this.getFilteredWidgets(filter).subscribe(result => {
-      //       this.targetValues = result;
-      //       this.form.get('targetValues')?.setValue(result.map(x => x.title));
-      //     })
-      //   );
-      //   this.updateTarget('');
-      // } else {
-      //   this.form.get('targetValues')?.setValue(scheme?.targetValues);
-      // }
-
-      // this.form.get('targetValues')?.setValue(scheme?.targetValues);
+      this.targetType = scheme?.target ?? SettingsKycTargetFilterType.None;
+      this.setTargetValues(scheme?.targetValues);
       this.form.get('userMode')?.setValue(scheme.userModes);
       this.form.get('userType')?.setValue(scheme?.userType);
       this.form.get('provider')?.setValue(scheme?.kycProviders);
@@ -199,10 +136,9 @@ export class AdminKycSchemeDetailsComponent implements OnInit, OnDestroy {
       this.form.get('requireUserBirthday')?.setValue(scheme?.requireUserBirthday);
       this.form.get('requireUserAddress')?.setValue(scheme?.requireUserAddress);
       this.form.get('requireUserFlatNumber')?.setValue(scheme?.requireUserFlatNumber);
-
       this.loadLevelValues(scheme?.userType);
-      // this.setTargetValidator();
-      // const p = this.targetValueParams;
+      this.setTargetValidator();
+      this.setTargetValueParams();
     } else {
       this.form.get('id')?.setValue('');
       this.form.get('name')?.setValue('');
@@ -210,8 +146,7 @@ export class AdminKycSchemeDetailsComponent implements OnInit, OnDestroy {
       this.form.get('isDefault')?.setValue('');
       this.form.get('level')?.setValue('');
       this.form.get('target')?.setValue(SettingsKycTargetFilterType.None);
-
-      // this.form.get('targetValues')?.setValue([]);
+      this.form.get('targetValues')?.setValue([]);
       this.form.get('userMode')?.setValue([]);
       this.form.get('userType')?.setValue('');
       this.form.get('provider')?.setValue([]);
@@ -220,7 +155,7 @@ export class AdminKycSchemeDetailsComponent implements OnInit, OnDestroy {
       this.form.get('requireUserBirthday')?.setValue(false);
       this.form.get('requireUserAddress')?.setValue(false);
       this.form.get('requireUserFlatNumber')?.setValue(false);
-      //this.setTargetValidator();
+      this.setTargetValidator();
     }
   }
 
@@ -230,15 +165,7 @@ export class AdminKycSchemeDetailsComponent implements OnInit, OnDestroy {
     data.description = this.form.get('description')?.value;
     data.isDefault = this.form.get('isDefault')?.value;
     data.id = this.form.get('id')?.value;
-    // target
-    // if (this.targetType === SettingsKycTargetFilterType.WidgetId ||
-    //   this.targetType === SettingsKycTargetFilterType.AccountId) {
-    //   data.setTarget(this.form.get('target')?.value, this.targetValues.map(c => {
-    //     return c.id;
-    //   }));
-    // } else {
-    //   data.setTarget(this.form.get('target')?.value, this.form.get('targetValues')?.value);
-    // }
+    data.setTarget(this.targetType, this.form.get('targetValues')?.value);
     data.userType = this.form.get('userType')?.value;
     data.levelId = this.form.get('level')?.value;
     (this.form.get('userMode')?.value as UserMode[]).forEach(x => data.userModes.push(x));
@@ -251,40 +178,163 @@ export class AdminKycSchemeDetailsComponent implements OnInit, OnDestroy {
     return data;
   }
 
-  private removeIncorrectTargetValues(scheme: KycScheme): void {
-    scheme.targetValues = scheme.targetValues.filter(val => {
-      let result = true;
-      if (scheme.target === SettingsKycTargetFilterType.Country) {
-        result = (getCountry(val) !== null);
-      }
-      return result;
-    });
-  }
-
-  private updateTarget(val: any): void {
-    this.clearTargetValues();
-    this.setTargetValidator();
-    if (this.targetType === SettingsKycTargetFilterType.WidgetId ||
-      this.targetType === SettingsKycTargetFilterType.AccountId) {
-      //   this.targetSearchString$.pipe(
-      //     takeUntil(this.destroy$),
-      //     distinctUntilChanged(),
-      //     debounceTime(1000),
-      //     switchMap(searchString => this.getFilteredOptions(searchString))
-      //   ).subscribe(options => {
-      //     this.filteredTargetValues$ = of(options);
-      //   });
-    } else {
-      //   this.filteredTargetValues$ = this.schemeForm.get('targetValue')?.valueChanges.pipe(
-      //     startWith(''),
-      //     map(value => this.filterTargetValues(value))
-      //   );
+  private setTargetValues(values: string[]): void {
+    if (this.targetType === SettingsKycTargetFilterType.AccountId) {
+      const filter = new Filter({
+        users: values
+      });
+      this.subscriptions.add(
+        this.getFilteredAccounts(filter).subscribe(result => {
+          this.targetsOptions$ = of(result);
+          this.form.get('targetValues')?.setValue(result);
+        })
+      );
+    } else if (this.targetType === SettingsKycTargetFilterType.WidgetId) {
+      const filter = new Filter({
+        widgets: values
+      });
+      this.subscriptions.add(
+        this.getFilteredWidgets(filter).subscribe(result => {
+          this.targetsOptions$ = of(result);
+          this.form.get('targetValues')?.setValue(result);
+        })
+      );
+    } else if (this.targetType === SettingsKycTargetFilterType.Country) {
+      const data = values.map(x => {
+        const c = CountryFilterList.find(c => c.id === x);
+        if (c) {
+          c.imgClass = 'country-flag-admin';
+          return c;
+        } else {
+          return new CommonTargetValue();
+        }
+      }).filter(x => x.id !== '');
+      this.targetsOptions$ = of(data);
+      this.form.get('targetValues')?.setValue(data);
+    } else if (this.targetType === SettingsKycTargetFilterType.InitiateFrom) {
+      const data = values.map(x => {
+        const c = TransactionSourceFilterList.find(c => c.id === x);
+        if (c) {
+          return c;
+        } else {
+          return new CommonTargetValue();
+        }
+      }).filter(x => x.id !== '');
+      this.targetsOptions$ = of(data);
+      this.form.get('targetValues')?.setValue(data);
     }
   }
 
+  private setTargetValueParams(): void {
+    this.targetType = this.form.get('target')?.value as SettingsKycTargetFilterType;
+    switch (this.targetType) {
+      case SettingsKycTargetFilterType.None: {
+        this.targetEntity = ['', ''];
+        this.targetSearchText = '';
+        this.targetsTitle = '';
+        break;
+      }
+      case SettingsKycTargetFilterType.Country: {
+        this.targetEntity = ['country', 'countries'];
+        this.targetSearchText = 'Type a country name';
+        this.targetsTitle = 'Countries';
+        break;
+      }
+      case SettingsKycTargetFilterType.AccountId: {
+        this.targetEntity = ['account', 'accounts'];
+        this.targetSearchText = 'Type email or user name';
+        this.targetsTitle = 'Accounts';
+        break;
+      }
+      case SettingsKycTargetFilterType.WidgetId: {
+        this.targetEntity = ['widget', 'widgets'];
+        this.targetSearchText = 'Type a widget name';
+        this.targetsTitle = 'Widgets';
+        break;
+      }
+      case SettingsKycTargetFilterType.InitiateFrom: {
+        this.targetEntity = ['source', 'sources'];
+        this.targetSearchText = '';
+        this.targetsTitle = 'Transaction sources';
+        break;
+      }
+    }
+    if (this.targetType !== SettingsKycTargetFilterType.None) {
+      this.initTargetSearch();
+    }
+  }
+
+  private initTargetSearch() {
+    this.targetsOptions$ = concat(
+      of([]),
+      this.targetsSearchInput$.pipe(
+        filter(res => {
+          return res !== null && res.length >= this.minTargetsLengthTerm
+        }),
+        debounceTime(300),
+        distinctUntilChanged(),
+        tap(() => {
+          this.isTargetsLoading = true;
+        }),
+        switchMap(searchString => {
+          this.isTargetsLoading = false;
+          return this.filterTargets(searchString);
+        })
+      ));
+  }
+
+  private filterTargets(searchString: string): Observable<CommonTargetValue[]> {
+    if (this.targetType === SettingsKycTargetFilterType.Country) {
+      return of(CountryFilterList
+        .map(x => {
+          x.imgClass = 'country-flag-admin';
+          return x;
+        })
+        .filter(x => x.title.toLowerCase().includes(searchString.toLowerCase()))
+      );
+    } else if (this.targetType === SettingsKycTargetFilterType.WidgetId) {
+      const filter = new Filter({ search: searchString });
+      return this.getFilteredWidgets(filter);
+    } else if (this.targetType === SettingsKycTargetFilterType.AccountId) {
+      const filter = new Filter({ search: searchString });
+      return this.getFilteredAccounts(filter);
+    } else if (this.targetType === SettingsKycTargetFilterType.InitiateFrom) {
+      return of(TransactionSourceFilterList);
+    } else {
+      return of([]);
+    }
+  }
+
+  private getFilteredAccounts(filter: Filter): Observable<CommonTargetValue[]> {
+    return this.adminService.findUsers(filter)
+      .pipe(map(result => result.list.map(user => {
+        return {
+          id: user.id,
+          title: user.extendedName
+        } as CommonTargetValue;
+      })));
+  }
+
+  private getFilteredWidgets(filter: Filter): Observable<CommonTargetValue[]> {
+    return this.adminService.getWidgets(0, 100, 'widgetId', false, filter)
+      .pipe(map(result => {
+        return result.list.map(widget => {
+          return {
+            id: widget.id,
+            title: widget.name
+          } as CommonTargetValue;
+        });
+      }));
+  }
+
+  private updateTarget(): void {
+    this.clearTargetValues();
+    this.setTargetValidator();
+    this.setTargetValueParams();
+  }
+
   private clearTargetValues(): void {
-    this.targetValues = [];
-    this.filteredTargetValues$ = of([]);
+    this.targetsOptions$ = of([]);
     this.form.get('targetValues')?.setValue([]);
   }
 

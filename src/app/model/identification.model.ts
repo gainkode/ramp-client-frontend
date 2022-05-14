@@ -50,7 +50,7 @@ export class KycScheme {
                 data.targetFilterValues?.forEach(x => {
                     const c = getCountryByCode3(x);
                     if (c != null) {
-                        this.targetValues.push(c.name);
+                        this.targetValues.push(c.code3);
                     }
                 });
             } else {
@@ -59,7 +59,7 @@ export class KycScheme {
         }
     }
 
-    setTarget(filter: SettingsKycTargetFilterType, values: string[]): void {
+    setTargetOld(filter: SettingsKycTargetFilterType, values: string[]): void {
         this.target = filter;
         values.forEach(x => {
             if (filter === SettingsKycTargetFilterType.Country) {
@@ -71,6 +71,11 @@ export class KycScheme {
                 this.targetValues.push(x);
             }
         });
+    }
+
+    setTarget(filter: SettingsKycTargetFilterType, values: CommonTargetValue[]): void {
+        this.target = filter;
+        this.targetValues = values.map(x => x.id);
     }
 
     get targetName(): string {
