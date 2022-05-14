@@ -5,15 +5,16 @@ import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
 import { CostScheme } from 'src/app/model/cost-scheme.model';
-import { SettingsCostListResult } from 'src/app/model/generated-models';
+import { FeeScheme } from 'src/app/model/fee-scheme.model';
+import { PaymentInstrument, SettingsCostListResult } from 'src/app/model/generated-models';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
-  selector: 'app-admin-cost-schemes',
-  templateUrl: 'schemes.component.html',
-  styleUrls: ['schemes.component.scss']
+  selector: 'app-admin-fee-schemes',
+  templateUrl: 'fees.component.html',
+  styleUrls: ['fees.component.scss']
 })
-export class AdminCostSchemesComponent implements OnInit, OnDestroy {
+export class AdminFeeSchemesComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = [
     'details',
     'default',
@@ -27,8 +28,9 @@ export class AdminCostSchemesComponent implements OnInit, OnDestroy {
   errorMessage = '';
   detailsTitle = '';
   permission = 0;
-  selectedScheme?: CostScheme;
-  schemes: CostScheme[] = [];
+  selectedScheme?: FeeScheme;
+  schemes: FeeScheme[] = [];
+  costs: CostScheme[] = [];
 
   private subscriptions: Subscription = new Subscription();
   private detailsDialog: NgbModalRef | undefined = undefined;
@@ -39,7 +41,7 @@ export class AdminCostSchemesComponent implements OnInit, OnDestroy {
     private adminService: AdminDataService,
     private router: Router
   ) {
-    this.permission = this.auth.isPermittedObjectCode('COSTS');
+    this.permission = this.auth.isPermittedObjectCode('FEES');
   }
 
   ngOnInit(): void {
@@ -51,35 +53,59 @@ export class AdminCostSchemesComponent implements OnInit, OnDestroy {
   }
 
   private loadSchemes(): void {
+    this.loadCostSchemes();
+  }
+
+  private loadCostSchemes(): void {
     this.schemes = [];
     this.inProgress = true;
     const listData$ = this.adminService.getCostSettings().valueChanges.pipe(take(1));
     this.subscriptions.add(
       listData$.subscribe(({ data }) => {
+        this.inProgress = false;
         const settings = data.getSettingsCost as SettingsCostListResult;
         let itemCount = 0;
         if (settings !== null) {
           itemCount = settings?.count ?? 0;
           if (itemCount > 0) {
-            this.schemes = settings?.list?.map((val) => new CostScheme(val)) as CostScheme[];
+            this.costs = settings?.list?.map((val) => new CostScheme(val)) as CostScheme[];
+            this.loadFeeSchemes();
           }
-        }
-        this.inProgress = false;
-      }, (error) => {
-        this.inProgress = false;
-        if (this.auth.token === '') {
-          this.router.navigateByUrl('/');
         }
       })
     );
   }
 
-  showDetails(scheme: CostScheme | undefined, content: any): void {
+  private loadFeeSchemes(): void {
+    this.schemes = [];
+    this.inProgress = true;
+    const listData$ = this.adminService.getFeeSettings().pipe(take(1));
+    this.subscriptions.add(
+      listData$.subscribe(({ list, count }) => {
+        this.inProgress = false;
+        this.schemes = list;
+        list.forEach(val => {
+          if (val.instrument.length > 0 && val.provider.length > 0) {
+            const instrumentData = val.instrument[0];
+            const providerData = val.provider[0];
+            if (instrumentData === PaymentInstrument.WireTransfer) {
+              const cost = this.costs.find(x => x.id === providerData);
+              if (cost) {
+                val.setCostSchemeName(cost.name);
+              }
+            }
+          }
+        });
+      })
+    );
+  }
+
+  showDetails(scheme: FeeScheme | undefined, content: any): void {
     this.selectedScheme = scheme;
     if (scheme) {
-      this.detailsTitle = 'Cost scheme details';
+      this.detailsTitle = 'Fee scheme details';
     } else {
-      this.detailsTitle = 'Add new cost scheme';
+      this.detailsTitle = 'Add new fee scheme';
     }
     this.detailsDialog = this.modalService.open(content, {
       backdrop: 'static',

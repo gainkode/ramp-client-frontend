@@ -74,6 +74,8 @@ import { AdminKycSchemesComponent } from './components/kyc/schemes/schemes.compo
 import { AdminKycSchemeDetailsComponent } from './components/kyc/schemes/kyc-details.component';
 import { AdminCostSchemesComponent } from './components/costs/schemes/schemes.component';
 import { AdminCostSchemeDetailsComponent } from './components/costs/schemes/cost-details.component';
+import { AdminFeeSchemesComponent } from './components/fees/fees.component';
+import { AdminFeeSchemeDetailsComponent } from './components/fees/fee-details.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -137,6 +139,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AdminNotificationsComponent, AdminNotificationDetailsComponent,
     AdminRisksComponent, AdminRiskDetailsComponent,
     AdminWidgetsComponent, AdminWidgetDetailsComponent,
+    AdminFeeSchemesComponent, AdminFeeSchemeDetailsComponent,
     AdminApiKeysComponent, AdminApiKeyDetailsComponent,
     AdminLevelsComponent, AdminLevelDetailsComponent,
     AdminKycSchemesComponent, AdminKycSchemeDetailsComponent,

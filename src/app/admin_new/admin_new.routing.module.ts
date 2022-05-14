@@ -17,6 +17,7 @@ import { AdminCryptoWalletsComponent } from './components/wallets/crypto/crypto-
 import { AdminFiatWalletsComponent } from './components/wallets/fiat/fiat-wallets.component';
 import { AdminWidgetsComponent } from './components/widgets/widgets.component';
 import { AdminCostSchemesComponent } from './components/costs/schemes/schemes.component';
+import { AdminFeeSchemesComponent } from './components/fees/fees.component';
 
 const routes: Routes = [
   {
@@ -118,11 +119,11 @@ const routes: Routes = [
           },
         ]
       },
-      //   {
-      //     path: 'fees',
-      //     component: FeeListComponent,
-      //     data: { header: 'Fees' }
-      //   },
+      {
+        path: 'fees',
+        component: AdminFeeSchemesComponent,
+        data: { header: 'Fees' }
+      },
       {
         path: 'notifications',
         component: AdminNotificationsComponent,
