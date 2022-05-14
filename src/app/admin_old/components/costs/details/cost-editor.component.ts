@@ -312,7 +312,7 @@ export class CostEditorComponent implements OnInit, OnDestroy {
     data.id = this.schemeForm.get('id')?.value;
     data.bankAccountIds = this.schemeForm.get('bankAccounts')?.value;
     // target
-    data.setTarget(this.schemeForm.get('target')?.value, this.schemeForm.get('targetValues')?.value);
+    data.setTargetOld(this.schemeForm.get('target')?.value, this.schemeForm.get('targetValues')?.value);
     const instruments = this.schemeForm.get('instrument')?.value as PaymentInstrument[];
     if (instruments) {
       instruments.forEach(x => data.instrument.push(x));

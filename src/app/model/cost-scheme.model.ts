@@ -1,3 +1,4 @@
+import { CommonTargetValue } from './common.model';
 import { getCountry, getCountryByCode3 } from './country-code.model';
 import {
     SettingsCost, PaymentInstrument, TransactionType, SettingsCostTargetFilterType, WireTransferBankAccount
@@ -47,7 +48,12 @@ export class CostScheme {
         }
     }
 
-    setTarget(filter: SettingsCostTargetFilterType, values: string[]): void {
+    setTarget(filter: SettingsCostTargetFilterType, values: CommonTargetValue[]): void {
+        this.target = filter;
+        this.targetValues = values.map(x => x.id);
+    }
+
+    setTargetOld(filter: SettingsCostTargetFilterType, values: string[]): void {
         this.target = filter;
         values.forEach(x => {
             if (filter === SettingsCostTargetFilterType.Country) {

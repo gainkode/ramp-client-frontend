@@ -87,10 +87,7 @@ export class AdminCostSchemesComponent implements OnInit, OnDestroy {
     });
     this.subscriptions.add(
       this.detailsDialog.closed.subscribe(val => {
-        if (this.detailsDialog) {
-          this.detailsDialog.close();
-          this.loadSchemes();
-        }
+        this.loadSchemes();
       })
     );
   }

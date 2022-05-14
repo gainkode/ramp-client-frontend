@@ -26,7 +26,7 @@ export class AdminBankAccountsComponent implements OnInit, OnDestroy {
   errorMessage = '';
   detailsTitle = '';
   permission = 0;
-  selectedAccount?:  WireTransferBankAccountItem;
+  selectedAccount?: WireTransferBankAccountItem;
   accounts: WireTransferBankAccountItem[] = [];
 
   private subscriptions: Subscription = new Subscription();
@@ -73,7 +73,7 @@ export class AdminBankAccountsComponent implements OnInit, OnDestroy {
     );
   }
 
-  showDetails(account:  WireTransferBankAccountItem | undefined, content: any): void {
+  showDetails(account: WireTransferBankAccountItem | undefined, content: any): void {
     this.selectedAccount = account;
     if (account) {
       this.detailsTitle = 'Bank account details';
@@ -86,10 +86,7 @@ export class AdminBankAccountsComponent implements OnInit, OnDestroy {
     });
     this.subscriptions.add(
       this.detailsDialog.closed.subscribe(val => {
-        if (this.detailsDialog) {
-          this.detailsDialog.close();
-          this.loadAccounts();
-        }
+        this.loadAccounts();
       })
     );
   }

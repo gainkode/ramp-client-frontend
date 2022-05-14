@@ -76,10 +76,7 @@ export class AdminLevelsComponent implements OnInit, OnDestroy {
     });
     this.subscriptions.add(
       this.detailsDialog.closed.subscribe(val => {
-        if (this.detailsDialog) {
-          this.detailsDialog.close();
-          this.loadLevels();
-        }
+        this.loadLevels();
       })
     );
   }

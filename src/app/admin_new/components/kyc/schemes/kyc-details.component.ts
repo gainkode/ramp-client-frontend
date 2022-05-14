@@ -222,6 +222,8 @@ export class AdminKycSchemeDetailsComponent implements OnInit, OnDestroy {
       }).filter(x => x.id !== '');
       this.targetsOptions$ = of(data);
       this.form.get('targetValues')?.setValue(data);
+    } else {
+      this.form.get('targetValues')?.setValue([]);
     }
   }
 

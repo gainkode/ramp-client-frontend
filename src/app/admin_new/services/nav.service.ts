@@ -121,7 +121,7 @@ export class NavService implements OnDestroy {
 		},
 		{
 			title: 'Costs', icon: 'attach_money', type: 'sub', active: false, children: [
-				{ path: '/admin/costs', title: 'Settings', type: 'link' },
+				{ path: '/admin/costs', title: 'Schemes', type: 'link' },
 				{ path: '/admin/bank-accounts', title: 'Bank accounts', type: 'link' },
 			]
 		},

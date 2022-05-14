@@ -68,7 +68,7 @@
           </label>
           <ng-select *ngIf="targetType!==TARGET_TYPE.InitiateFrom" [minTermLength]="minTargetsLengthTerm"
             notFoundText="No {{targetEntity[1]}} found" [loading]="isTargetsLoading" [multiple]="true"
-            formControlName="targetValues" [typeToSearchText]="targetSearchText" bindLabel="title" 
+            formControlName="targetValues" [typeToSearchText]="targetSearchText" bindLabel="title"
             placeholder="Start typing to search a {{targetEntity[0]}}" [typeahead]="targetsSearchInput$" required>
             <ng-option *ngFor="let item of targetsOptions$ | async" [value]="item">
               <app-dropdown-item [itemValue]="item.title" [imageClass]="item.imgClass" [imageSource]="item.imgSource">
@@ -76,8 +76,8 @@
             </ng-option>
           </ng-select>
           <ng-select *ngIf="targetType===TARGET_TYPE.InitiateFrom" [items]="sourceTargetsOptions" bindLabel="title"
-            [minTermLength]="minTargetsLengthTerm" [multiple]="true" formControlName="targetValues"
-            placeholder="Select one or more {{targetEntity[1]}}" required>
+            [multiple]="true" formControlName="targetValues" placeholder="Select one or more {{targetEntity[1]}}"
+            required>
           </ng-select>
           <div
             *ngIf="(form.controls.targetValues.touched || submitted) && (form.controls.targetValues.errors?.['required'])"
