@@ -16,6 +16,7 @@ import { AdminSystemUsersComponent } from './components/users/system/users.compo
 import { AdminCryptoWalletsComponent } from './components/wallets/crypto/crypto-wallets.component';
 import { AdminFiatWalletsComponent } from './components/wallets/fiat/fiat-wallets.component';
 import { AdminWidgetsComponent } from './components/widgets/widgets.component';
+import { AdminCostSchemesComponent } from './components/costs/schemes/schemes.component';
 
 const routes: Routes = [
   {
@@ -127,16 +128,11 @@ const routes: Routes = [
         component: AdminNotificationsComponent,
         data: { header: 'Notifications' }
       },
-      //   {
-      //     path: 'costs',
-      //     component: CostTabListComponent,
-      //     data: { header: 'Costs' }
-      //   },
-      //   {
-      //     path: 'identification',
-      //     component: IdentificationListComponent,
-      //     data: { header: 'Identification' }
-      //   },
+      {
+        path: 'costs',
+        component: AdminCostSchemesComponent,
+        data: { header: 'Costs' }
+      },
       {
         path: 'bank-accounts',
         component: AdminBankAccountsComponent,

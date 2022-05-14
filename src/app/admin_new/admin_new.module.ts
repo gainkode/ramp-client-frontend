@@ -72,6 +72,8 @@ import { AdminBankAccountDetailsComponent } from './components/costs/bank-accoun
 import { AdminBankAccountsComponent } from './components/costs/bank-accounts/accounts.component';
 import { AdminKycSchemesComponent } from './components/kyc/schemes/schemes.component';
 import { AdminKycSchemeDetailsComponent } from './components/kyc/schemes/kyc-details.component';
+import { AdminCostSchemesComponent } from './components/costs/schemes/schemes.component';
+import { AdminCostSchemeDetailsComponent } from './components/costs/schemes/cost-details.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -139,6 +141,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AdminLevelsComponent, AdminLevelDetailsComponent,
     AdminKycSchemesComponent, AdminKycSchemeDetailsComponent,
     AdminCountryBlackListComponent, AdminCountryBlackListDetailsComponent,
+    AdminCostSchemesComponent, AdminCostSchemeDetailsComponent,
     AdminBankAccountsComponent, AdminBankAccountDetailsComponent
   ],
   providers: [
