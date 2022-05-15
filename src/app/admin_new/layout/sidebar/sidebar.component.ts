@@ -8,6 +8,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { Menu, NavService } from '../../services/nav.service';
 import { fromEvent } from 'rxjs';
 import { switcherArrowFn } from './sidebar';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-admin-sidebar',
@@ -21,6 +22,7 @@ export class AdminSidebarComponent {
 
   constructor(
     public router: Router,
+    private auth: AuthService,
     private navServices: NavService,
     public elRef: ElementRef
   ) {
@@ -123,6 +125,11 @@ export class AdminSidebarComponent {
         });
       }
     });
+  }
+
+  goToMainPage() {
+    console.log('redirect to ', this.auth.getUserMainPage());
+    this.router.navigate([this.auth.getUserMainPage()]);
   }
 
   sidebarClose() {

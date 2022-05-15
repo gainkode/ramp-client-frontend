@@ -156,9 +156,6 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
         this.inProgress = false;
         const settingsCommon: SettingsCommon = settings.data.getSettingsCommon;
         const additionalSettings = (settingsCommon.additionalSettings) ? JSON.parse(settingsCommon.additionalSettings) : undefined;
-
-        console.log(additionalSettings);
-
         // Common
         this.form.get('id')?.setValue(settingsCommon.settingsCommonId);
         this.form.get('liquidityProvider')?.setValue(settingsCommon.liquidityProvider);
@@ -459,7 +456,6 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(content: any): void {
-    console.log(this.transactionConfirmationModeOptions);
     this.submitted = true;
     const data = this.getDataObject();
     this.saveInProgress = true;

@@ -1,12 +1,11 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NavigationEnd, Router, Event as NavigationEvent } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { MenuItem } from '../model/common.model';
 import { PaymentCompleteDetails, PaymentErrorDetails, PaymentWidgetType } from '../model/payment-base.model';
 import { CurrencyView } from '../model/payment.model';
 import { ProfileItemActionType, ProfileItemContainer, ProfileItemContainerType } from '../model/profile-item.model';
-import { MerchantProfileMenuItems, ProfilePopupAdministrationMenuItem, MerchantProfilePopupMenuItems, TestPopupAdministrationMenuItem } from '../model/profile-menu.model';
+import { MerchantProfileMenuItems, ProfilePopupAdministrationMenuItem, MerchantProfilePopupMenuItems } from '../model/profile-menu.model';
 import { ProfileContactsComponent } from '../profile/contacts/contacts.component';
 import { ProfileHomeComponent } from '../profile/home/home.component';
 import { ProfileTransactionsComponent } from '../profile/transactions/transactions.component';
@@ -83,12 +82,6 @@ export class MerchantComponent implements OnInit, OnDestroy {
             const adminMenu = this.popupItems.find(x => x.id === ProfilePopupAdministrationMenuItem.id);
             if (!adminMenu) {
                 this.popupItems.splice(0, 0, ProfilePopupAdministrationMenuItem);
-            }
-        }
-        if (adminRole && !environment.production) {
-            const testAdminMenu = this.popupItems.find(x => x.id === TestPopupAdministrationMenuItem.id);
-            if (!testAdminMenu) {
-                this.popupItems.splice(0, 0, TestPopupAdministrationMenuItem);
             }
         }
         this.loadAvatar(undefined);

@@ -9,8 +9,7 @@ import { ProfileItemActionType, ProfileItemContainer, ProfileItemContainerType }
 import {
     PersonalProfileMenuItems,
     ProfilePopupAdministrationMenuItem,
-    PersonalProfilePopupMenuItems,
-    TestPopupAdministrationMenuItem
+    PersonalProfilePopupMenuItems
 } from '../model/profile-menu.model';
 import { ProfileContactsComponent } from '../profile/contacts/contacts.component';
 import { ProfileHomeComponent } from '../profile/home/home.component';
@@ -94,12 +93,6 @@ export class PersonalComponent implements OnInit, OnDestroy {
             const adminMenu = this.popupItems.find(x => x.id === ProfilePopupAdministrationMenuItem.id);
             if (!adminMenu) {
                 this.popupItems.splice(0, 0, ProfilePopupAdministrationMenuItem);
-            }
-        }
-        if (adminRole && !environment.production) {
-            const testAdminMenu = this.popupItems.find(x => x.id === TestPopupAdministrationMenuItem.id);
-            if (!testAdminMenu) {
-                this.popupItems.splice(0, 0, TestPopupAdministrationMenuItem);
             }
         }
         this.loadAvatar(undefined);

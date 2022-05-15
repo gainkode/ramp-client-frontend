@@ -24,13 +24,21 @@ export class AdminHeaderComponent implements OnInit {
     public router: Router
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    
+  }
+
   toggleSwitcher() {
     this.SwitcherService.emitChange(true);
   }
   
   toggleSidebarNotification() {
     this.layoutService.emitSidebarNotifyChange(true);
+  }
+
+  goToMainPage() {
+    console.log('redirect to ', this.auth.getUserMainPage());
+    this.router.navigate([this.auth.getUserMainPage()]);
   }
 
   signout() {
