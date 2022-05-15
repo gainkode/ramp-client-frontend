@@ -532,7 +532,7 @@
                           *ngIf="(form.controls.liquidityBenchmarkTrackingInterval.touched || submitted) && (form.controls.liquidityBenchmarkTrackingInterval.errors?.['required'])"
                           class="tx-danger">
                           <small>
-                            Please specify lifetime value
+                            Please specify time value
                           </small>
                         </div>
                         <div
@@ -605,7 +605,7 @@
                           *ngIf="(form.controls.liquidityExchangeOrdersTrackingTimedeltaDays.touched || submitted) && (form.controls.liquidityExchangeOrdersTrackingTimedeltaDays.errors?.['required'])"
                           class="tx-danger">
                           <small>
-                            Please specify lifetime value
+                            Please specify time value
                           </small>
                         </div>
                         <div
@@ -629,7 +629,7 @@
                           *ngIf="(form.controls.liquidityExchangeTrackingInterval.touched || submitted) && (form.controls.liquidityExchangeTrackingInterval.errors?.['required'])"
                           class="tx-danger">
                           <small>
-                            Please specify lifetime value
+                            Please specify interval value
                           </small>
                         </div>
                         <div
@@ -678,7 +678,7 @@
                           *ngIf="(form.controls.liquidityTransferOrdersTrackingTimedeltaDays.touched || submitted) && (form.controls.liquidityTransferOrdersTrackingTimedeltaDays.errors?.['required'])"
                           class="tx-danger">
                           <small>
-                            Please specify lifetime value
+                            Please specify time value
                           </small>
                         </div>
                         <div
@@ -696,7 +696,7 @@
                         </h5>
                         <div class="form-group">
                           <label class="main-content-label tx-11 tx-medium tx-gray-600">
-                            Timeout, ms
+                            Time-out, ms
                             <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
                           </label>
                           <input class="form-control" [ngClass]="{'has-error': !form.controls.bitstampTimeout.valid}"
@@ -705,7 +705,7 @@
                             *ngIf="(form.controls.bitstampTimeout.touched || submitted) && (form.controls.bitstampTimeout.errors?.['required'])"
                             class="tx-danger">
                             <small>
-                              Please specify lifetime value
+                              Please specify time-out value
                             </small>
                           </div>
                           <div
@@ -729,7 +729,7 @@
                             *ngIf="(form.controls.bitstampWithdrawalBenchmark.touched || submitted) && (form.controls.bitstampWithdrawalBenchmark.errors?.['required'])"
                             class="tx-danger">
                             <small>
-                              Please specify lifetime value
+                              Please specify benchmark value
                             </small>
                           </div>
                           <div
@@ -754,7 +754,7 @@
                             *ngIf="(form.controls.bitstampWithdrawalBenchmarkAmountToRemain.touched || submitted) && (form.controls.bitstampWithdrawalBenchmarkAmountToRemain.errors?.['required'])"
                             class="tx-danger">
                             <small>
-                              Please specify lifetime value
+                              Please specify benchmark value
                             </small>
                           </div>
                           <div
@@ -810,7 +810,7 @@
                             *ngIf="(form.controls.krakenWithdrawalBenchmark.touched || submitted) && (form.controls.krakenWithdrawalBenchmark.errors?.['required'])"
                             class="tx-danger">
                             <small>
-                              Please specify lifetime value
+                              Please specify benchmark value
                             </small>
                           </div>
                           <div
@@ -835,7 +835,7 @@
                             *ngIf="(form.controls.krakenWithdrawalBenchmarkAmountToRemain.touched || submitted) && (form.controls.krakenWithdrawalBenchmarkAmountToRemain.errors?.['required'])"
                             class="tx-danger">
                             <small>
-                              Please specify lifetime value
+                              Please specify benchmark value
                             </small>
                           </div>
                           <div
@@ -925,7 +925,7 @@
                           *ngIf="(form.controls.riskCenterLoginCountToCompareIpAddress.touched || submitted) && (form.controls.riskCenterLoginCountToCompareIpAddress.errors?.['required'])"
                           class="tx-danger">
                           <small>
-                            Please specify lifetime value
+                            Please specify count value
                           </small>
                         </div>
                         <div
@@ -949,7 +949,7 @@
                           *ngIf="(form.controls.riskCenterMaxFailedLoginAttempts.touched || submitted) && (form.controls.riskCenterMaxFailedLoginAttempts.errors?.['required'])"
                           class="tx-danger">
                           <small>
-                            Please specify lifetime value
+                            Please specify attempts count
                           </small>
                         </div>
                         <div
@@ -973,7 +973,7 @@
                           *ngIf="(form.controls.riskCenterHighRiskUserYears.touched || submitted) && (form.controls.riskCenterHighRiskUserYears.errors?.['required'])"
                           class="tx-danger">
                           <small>
-                            Please specify lifetime value
+                            Please specify age value
                           </small>
                         </div>
                         <div
@@ -997,7 +997,7 @@
                           *ngIf="(form.controls.riskCenterDepositPercentUp.touched || submitted) && (form.controls.riskCenterDepositPercentUp.errors?.['required'])"
                           class="tx-danger">
                           <small>
-                            Please specify lifetime value
+                            Please specify percentage value
                           </small>
                         </div>
                         <div
@@ -1059,7 +1059,7 @@
                           *ngIf="(form.controls.transactionsPaymentCodeNumberLength.touched || submitted) && (form.controls.transactionsPaymentCodeNumberLength.errors?.['required'])"
                           class="tx-danger">
                           <small>
-                            Please specify lifetime value
+                            Please specify length value
                           </small>
                         </div>
                         <div
@@ -1083,7 +1083,7 @@
                           *ngIf="(form.controls.transactionsTransactionCodeNumberLength.touched || submitted) && (form.controls.transactionsTransactionCodeNumberLength.errors?.['required'])"
                           class="tx-danger">
                           <small>
-                            Please specify lifetime value
+                            Please specify length value
                           </small>
                         </div>
                         <div
