@@ -18,6 +18,7 @@ import { AdminFiatWalletsComponent } from './components/wallets/fiat/fiat-wallet
 import { AdminWidgetsComponent } from './components/widgets/widgets.component';
 import { AdminCostSchemesComponent } from './components/costs/schemes/schemes.component';
 import { AdminFeeSchemesComponent } from './components/fees/fees.component';
+import { AdminCommonSettingsComponent } from './components/settings/common/common.component';
 
 const routes: Routes = [
   {
@@ -29,11 +30,11 @@ const routes: Routes = [
         component: AdminDashboardComponent,
         data: { header: 'Dashboard' }
       },
-      //   {
-      //     path: 'settings',
-      //     component: AdminSettingsComponent,
-      //     data: { header: 'Settings' }
-      //   },
+      {
+        path: 'common',
+        component: AdminCommonSettingsComponent,
+        data: { header: 'Settings' }
+      },
       {
         path: 'transactions',
         children: [
@@ -156,7 +157,7 @@ const routes: Routes = [
       },
       //   {
       //     path: 'reconciliation',
-      //     component: ReconciliationComponent,
+      //     component: AdminReconciliationComponent,
       //     data: { header: 'Reconciliation' }
       //   },
       {

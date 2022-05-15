@@ -76,6 +76,7 @@ import { AdminCostSchemesComponent } from './components/costs/schemes/schemes.co
 import { AdminCostSchemeDetailsComponent } from './components/costs/schemes/cost-details.component';
 import { AdminFeeSchemesComponent } from './components/fees/fees.component';
 import { AdminFeeSchemeDetailsComponent } from './components/fees/fee-details.component';
+import { AdminCommonSettingsComponent } from './components/settings/common/common.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -140,12 +141,13 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AdminRisksComponent, AdminRiskDetailsComponent,
     AdminWidgetsComponent, AdminWidgetDetailsComponent,
     AdminFeeSchemesComponent, AdminFeeSchemeDetailsComponent,
-    AdminApiKeysComponent, AdminApiKeyDetailsComponent,
     AdminLevelsComponent, AdminLevelDetailsComponent,
     AdminKycSchemesComponent, AdminKycSchemeDetailsComponent,
     AdminCountryBlackListComponent, AdminCountryBlackListDetailsComponent,
     AdminCostSchemesComponent, AdminCostSchemeDetailsComponent,
-    AdminBankAccountsComponent, AdminBankAccountDetailsComponent
+    AdminBankAccountsComponent, AdminBankAccountDetailsComponent,
+    AdminCommonSettingsComponent,
+    AdminApiKeysComponent, AdminApiKeyDetailsComponent
   ],
   providers: [
     AdminNewGuard,
