@@ -352,9 +352,9 @@ export const TransactionKycStatusList: Array<TransactionKycStatusView> = [
 
 export const FeeTargetFilterList: Array<FeeTargetFilterTypeView> = [
     { id: SettingsFeeTargetFilterType.None, name: 'Default' },
-    { id: SettingsFeeTargetFilterType.WidgetId, name: 'Widget identifier' },
-    { id: SettingsFeeTargetFilterType.AccountId, name: 'Account' },
+    { id: SettingsFeeTargetFilterType.WidgetId, name: 'Widget' },
     { id: SettingsFeeTargetFilterType.Country, name: 'Country' },
+    { id: SettingsFeeTargetFilterType.AccountId, name: 'Account' },
     { id: SettingsFeeTargetFilterType.InitiateFrom, name: 'Initiate from ...' }
 ];
 

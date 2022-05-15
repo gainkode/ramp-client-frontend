@@ -64,7 +64,6 @@ export class AdminKycSchemeDetailsComponent implements OnInit, OnDestroy {
     isDefault: [false],
     target: ['', { validators: [Validators.required], updateOn: 'change' }],
     targetValues: [[], { validators: [Validators.required], updateOn: 'change' }],
-    targetValue: [''],
     level: ['', { validators: [Validators.required], updateOn: 'change' }],
     userMode: [[], { validators: [Validators.required], updateOn: 'change' }],
     userType: ['', { validators: [Validators.required], updateOn: 'change' }],

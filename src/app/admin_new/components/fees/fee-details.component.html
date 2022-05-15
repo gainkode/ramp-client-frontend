@@ -28,160 +28,264 @@
           <input class="form-control" type="text" formControlName="description">
         </div>
 
-        <div class="form-group">
-          <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            Account type
-            <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
-          </label>
-          <ng-select [items]="userTypeOptions" [clearable]=false [clearOnBackspace]=false bindLabel="name"
-            bindValue="id" formControlName="userType" required>
-          </ng-select>
-          <div *ngIf="(form.controls.userType.touched || submitted) && (form.controls.userType.errors?.['required'])"
-            class="tx-danger">
-            <small>
-              Please specify an account type appropriate for the scheme
-            </small>
+        <div class="card card-body pd-20 pd-md-40 border shadow-none">
+          <h5 class="card-title mg-b-20">
+            Targets
+          </h5>
+          <div class="form-group">
+            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+              Target
+              <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+            </label>
+            <ng-select [items]="targets" [clearable]=false [clearOnBackspace]=false bindLabel="name" bindValue="id"
+              formControlName="target" required>
+            </ng-select>
+            <div *ngIf="(form.controls.target.touched || submitted) && (form.controls.target.errors?.['required'])"
+              class="tx-danger">
+              <small>
+                Please specify a target
+              </small>
+            </div>
+          </div>
+
+          <!-- Target values -->
+          <div *ngIf="targetType!==TARGET_TYPE.None" class="form-group">
+            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+              {{targetsTitle}}
+              <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+            </label>
+            <ng-select *ngIf="targetType!==TARGET_TYPE.InitiateFrom" [minTermLength]="minTargetsLengthTerm"
+              notFoundText="No {{targetEntity[1]}} found" [loading]="isTargetsLoading" [multiple]="true"
+              formControlName="targetValues" [typeToSearchText]="targetSearchText" bindLabel="title"
+              placeholder="Start typing to search a {{targetEntity[0]}}" [typeahead]="targetsSearchInput$" required>
+              <ng-option *ngFor="let item of targetsOptions$ | async" [value]="item">
+                <app-dropdown-item [itemValue]="item.title" [imageClass]="item.imgClass" [imageSource]="item.imgSource">
+                </app-dropdown-item>
+              </ng-option>
+            </ng-select>
+            <ng-select *ngIf="targetType===TARGET_TYPE.InitiateFrom" [items]="sourceTargetsOptions" bindLabel="title"
+              [multiple]="true" formControlName="targetValues" placeholder="Select one or more {{targetEntity[1]}}"
+              required>
+            </ng-select>
+            <div
+              *ngIf="(form.controls.targetValues.touched || submitted) && (form.controls.targetValues.errors?.['required'])"
+              class="tx-danger">
+              <small>
+                Please specify at least one {{targetEntity[0]}}
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+              Transaction types
+            </label>
+            <ng-select [items]="transactionTypes" bindLabel="name" bindValue="id" [multiple]="true"
+              [closeOnSelect]="false" formControlName="trxType" placeholder="Select one or more types">
+            </ng-select>
+          </div>
+
+          <div class="form-group">
+            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+              Payment Methods
+            </label>
+            <ng-select [items]="instruments" bindLabel="name" bindValue="id" 
+              formControlName="instrument" placeholder="Select payment method">
+            </ng-select>
+          </div>
+
+          <div *ngIf="showPaymentProvider===true" class="form-group">
+            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+              Payment providers
+            </label>
+            <ng-select [items]="filteredProviders" bindLabel="name" bindValue="id" [multiple]="true"
+              [closeOnSelect]="false" formControlName="provider" placeholder="Select one or more providers">
+            </ng-select>
+          </div>
+
+          <div class="form-group">
+            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+              User types
+            </label>
+            <ng-select [items]="userTypeOptions" bindLabel="name" bindValue="id" formControlName="userType"
+              [clearable]=true [clearOnBackspace]=true [multiple]="true" [closeOnSelect]="false">
+            </ng-select>
+          </div>
+
+          <div class="form-group">
+            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+              User modes
+            </label>
+            <ng-select [items]="userModes" bindLabel="name" bindValue="id" formControlName="userMode" [clearable]=true
+              [clearOnBackspace]=true [multiple]="true" [closeOnSelect]="false">
+            </ng-select>
           </div>
         </div>
 
-        <div class="form-group">
-          <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            Target
-            <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
-          </label>
-          <ng-select [items]="targets" [clearable]=false [clearOnBackspace]=false bindLabel="name" bindValue="id"
-            formControlName="target" required>
-          </ng-select>
-          <div *ngIf="(form.controls.target.touched || submitted) && (form.controls.target.errors?.['required'])"
-            class="tx-danger">
-            <small>
-              Please specify a target
-            </small>
+        <div class="card card-body pd-20 pd-md-40 border shadow-none">
+          <h5 class="card-title mg-b-20">
+            Terms
+          </h5>
+          <div class="form-group">
+            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+              Transaction fees, %
+              <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+            </label>
+            <input class="form-control" [ngClass]="{'has-error': !form.controls.transactionFees.valid}" type="text"
+              formControlName="transactionFees" maxlength="7" placeholder="2%" required>
+            <div *ngIf="(form.controls.transactionFees.touched || submitted) && (form.controls.transactionFees.errors?.['required'])"
+              class="tx-danger">
+              <small>
+                Please specify transaction fee percentage
+              </small>
+            </div>
+            <div *ngIf="(form.controls.transactionFees.touched || submitted) && (form.controls.transactionFees.errors?.['pattern'])"
+              class="tx-danger">
+              <small>
+                Invalid number value
+              </small>
+            </div>
           </div>
-        </div>
-
-        <!-- Target values -->
-        <div *ngIf="targetType!==TARGET_TYPE.None" class="form-group">
-          <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            {{targetsTitle}}
-            <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
-          </label>
-          <ng-select *ngIf="targetType!==TARGET_TYPE.InitiateFrom" [minTermLength]="minTargetsLengthTerm"
-            notFoundText="No {{targetEntity[1]}} found" [loading]="isTargetsLoading" [multiple]="true"
-            formControlName="targetValues" [typeToSearchText]="targetSearchText" bindLabel="title"
-            placeholder="Start typing to search a {{targetEntity[0]}}" [typeahead]="targetsSearchInput$" required>
-            <ng-option *ngFor="let item of targetsOptions$ | async" [value]="item">
-              <app-dropdown-item [itemValue]="item.title" [imageClass]="item.imgClass" [imageSource]="item.imgSource">
-              </app-dropdown-item>
-            </ng-option>
-          </ng-select>
-          <ng-select *ngIf="targetType===TARGET_TYPE.InitiateFrom" [items]="sourceTargetsOptions" bindLabel="title"
-            [multiple]="true" formControlName="targetValues" placeholder="Select one or more {{targetEntity[1]}}"
-            required>
-          </ng-select>
-          <div
-            *ngIf="(form.controls.targetValues.touched || submitted) && (form.controls.targetValues.errors?.['required'])"
-            class="tx-danger">
-            <small>
-              Please specify at least one {{targetEntity[0]}}
-            </small>
+  
+          <div class="form-group">
+            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+              Minimal transaction fee, {{currency}}
+              <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+            </label>
+            <input class="form-control" [ngClass]="{'has-error': !form.controls.minTransactionFee.valid}" type="text"
+              formControlName="minTransactionFee" maxlength="10" placeholder="&#8364;5" required>
+            <div
+              *ngIf="(form.controls.minTransactionFee.touched || submitted) && (form.controls.minTransactionFee.errors?.['required'])"
+              class="tx-danger">
+              <small>
+                Please specify transaction fee
+              </small>
+            </div>
+            <div
+              *ngIf="(form.controls.minTransactionFee.touched || submitted) && (form.controls.minTransactionFee.errors?.['pattern'])"
+              class="tx-danger">
+              <small>
+                Invalid number value
+              </small>
+            </div>
           </div>
-        </div>
-
-        <div class="form-group">
-          <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            User modes
-            <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
-          </label>
-          <ng-select [items]="userModes" bindLabel="name" bindValue="id" formControlName="userMode" [clearable]=true
-            [clearOnBackspace]=true [multiple]="true" [closeOnSelect]="false">
-          </ng-select>
-          <div *ngIf="(form.controls.userMode.touched || submitted) && (form.controls.userMode.errors?.['required'])"
-            class="tx-danger">
-            <small>
-              Please choose user modes
-            </small>
+  
+          <div class="form-group">
+            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+              Rolling reserves, %
+              <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+            </label>
+            <input class="form-control" [ngClass]="{'has-error': !form.controls.rollingReserves.valid}" type="text"
+              formControlName="rollingReserves" maxlength="7" placeholder="5%" required>
+            <div
+              *ngIf="(form.controls.rollingReserves.touched || submitted) && (form.controls.rollingReserves.errors?.['required'])"
+              class="tx-danger">
+              <small>
+                Please specify rolling reserves value
+              </small>
+            </div>
+            <div
+              *ngIf="(form.controls.rollingReserves.touched || submitted) && (form.controls.rollingReserves.errors?.['pattern'])"
+              class="tx-danger">
+              <small>
+                Invalid number value
+              </small>
+            </div>
           </div>
-        </div>
-
-        <div class="form-group">
-          <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            KYC providers
-            <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
-          </label>
-          <ng-select [items]="kycProviders" bindLabel="name" bindValue="id" formControlName="provider" [clearable]=true
-            [clearOnBackspace]=true [multiple]="true" [closeOnSelect]="false">
-          </ng-select>
-          <div *ngIf="(form.controls.provider.touched || submitted) && (form.controls.provider.errors?.['required'])"
-            class="tx-danger">
-            <small>
-              Please choose KYC providers
-            </small>
+  
+          <div class="form-group">
+            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+              Rolling reserve days, %
+              <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+            </label>
+            <input class="form-control" [ngClass]="{'has-error': !form.controls.rollingReservesDays.valid}" type="text"
+              formControlName="rollingReservesDays" maxlength="7" placeholder="5%" required>
+            <div
+              *ngIf="(form.controls.rollingReservesDays.touched || submitted) && (form.controls.rollingReservesDays.errors?.['required'])"
+              class="tx-danger">
+              <small>
+                Please specify percentage of rolling reserve days
+              </small>
+            </div>
+            <div
+              *ngIf="(form.controls.rollingReservesDays.touched || submitted) && (form.controls.rollingReservesDays.errors?.['pattern'])"
+              class="tx-danger">
+              <small>
+                Invalid number value
+              </small>
+            </div>
           </div>
-        </div>
-
-        <div class="form-group">
-          <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            Level
-            <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
-          </label>
-          <ng-select [items]="levels" [clearable]=false [clearOnBackspace]=false bindLabel="name" bindValue="id"
-            formControlName="level" required>
-          </ng-select>
-          <div *ngIf="(form.controls.level.touched || submitted) && (form.controls.level.errors?.['required'])"
-            class="tx-danger">
-            <small>
-              Select KYC level
-            </small>
+  
+          <div class="form-group">
+            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+              Chargeback fees, %
+              <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+            </label>
+            <input class="form-control" [ngClass]="{'has-error': !form.controls.chargebackFees.valid}" type="text"
+              formControlName="chargebackFees" maxlength="10" placeholder="5%" required>
+            <div
+              *ngIf="(form.controls.chargebackFees.touched || submitted) && (form.controls.chargebackFees.errors?.['required'])"
+              class="tx-danger">
+              <small>
+                Please specify chargeback fee
+              </small>
+            </div>
+            <div
+              *ngIf="(form.controls.chargebackFees.touched || submitted) && (form.controls.chargebackFees.errors?.['pattern'])"
+              class="tx-danger">
+              <small>
+                Invalid number value
+              </small>
+            </div>
           </div>
-        </div>
-
-        <div class="form-group">
-          <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            User requirements
-          </label>
-          <label class="ckbox">
-            <input type="checkbox" formControlName="requireUserFullName">
-            <span>
-              Require User Full Name
-            </span>
-          </label>
-        </div>
-
-        <div class="form-group">
-          <label class="ckbox">
-            <input type="checkbox" formControlName="requireUserPhone">
-            <span>
-              Require User Phone
-            </span>
-          </label>
-        </div>
-
-        <div class="form-group">
-          <label class="ckbox">
-            <input type="checkbox" formControlName="requireUserBirthday">
-            <span>
-              Require User Birthday
-            </span>
-          </label>
-        </div>
-
-        <div class="form-group">
-          <label class="ckbox">
-            <input type="checkbox" formControlName="requireUserAddress">
-            <span>
-              Require User Address
-            </span>
-          </label>
-        </div>
-
-        <div class="form-group">
-          <label class="ckbox">
-            <input type="checkbox" formControlName="requireUserFlatNumber">
-            <span>
-              Require User Flat Number
-            </span>
-          </label>
+  
+          <div class="form-group">
+            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+              Monthly fees
+              <span class="main-content-label tx-11 tx-medium tx-italic mg-r-4">(only in system)</span>
+              <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+            </label>
+            <input class="form-control" [ngClass]="{'has-error': !form.controls.monthlyFees.valid}" type="text"
+              formControlName="monthlyFees" maxlength="7" placeholder="5" required>
+            <div
+              *ngIf="(form.controls.monthlyFees.touched || submitted) && (form.controls.monthlyFees.errors?.['required'])"
+              class="tx-danger">
+              <small>
+                Please specify monthly fee
+              </small>
+            </div>
+            <div
+              *ngIf="(form.controls.monthlyFees.touched || submitted) && (form.controls.monthlyFees.errors?.['pattern'])"
+              class="tx-danger">
+              <small>
+                Invalid number value
+              </small>
+            </div>
+          </div>
+  
+          <div class="form-group">
+            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+              Mininmal monthly fees
+              <span class="main-content-label tx-11 tx-medium tx-italic mg-r-4">(in system)</span>
+              <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+            </label>
+            <input class="form-control" [ngClass]="{'has-error': !form.controls.minMonthlyFees.valid}" type="text"
+              formControlName="minMonthlyFees" maxlength="7" placeholder="5" required>
+            <div
+              *ngIf="(form.controls.minMonthlyFees.touched || submitted) && (form.controls.minMonthlyFees.errors?.['required'])"
+              class="tx-danger">
+              <small>
+                Please specify minimal monthly fee
+              </small>
+            </div>
+            <div
+              *ngIf="(form.controls.minMonthlyFees.touched || submitted) && (form.controls.minMonthlyFees.errors?.['pattern'])"
+              class="tx-danger">
+              <small>
+                Invalid number value
+              </small>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -211,14 +315,14 @@
 
 <ng-template #delete_content let-modal>
   <div class="modal-header">
-    <h5 class="modal-title">Delete KYC scheme</h5>
+    <h5 class="modal-title">Delete fee scheme</h5>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body">
     <h4 style="text-align: center;">
-      You are going to delete selected KYC scheme. Confirm operation.
+      You are going to delete selected fee scheme. Confirm operation.
     </h4>
     <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
       <button class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" type="button" (click)="modal.dismiss('Reject')">

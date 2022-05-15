@@ -69,7 +69,12 @@ export class FeeScheme {
         }
     }
 
-    setTarget(filter: SettingsFeeTargetFilterType, values: string[]): void {
+    setTarget(filter: SettingsFeeTargetFilterType, values: CommonTargetValue[]): void {
+        this.target = filter;
+        this.targetValues = values.map(x => x.id);
+    }
+
+    setTargetOld(filter: SettingsFeeTargetFilterType, values: string[]): void {
         this.target = filter;
         values.forEach(x => {
             if (filter === SettingsFeeTargetFilterType.Country) {

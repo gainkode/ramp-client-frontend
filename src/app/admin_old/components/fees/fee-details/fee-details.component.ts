@@ -415,11 +415,11 @@ export class FeeDetailsComponent implements OnInit, OnDestroy {
     // target
     if (this.targetType === SettingsFeeTargetFilterType.WidgetId ||
       this.targetType === SettingsFeeTargetFilterType.AccountId) {
-      data.setTarget(this.schemeForm.get('target')?.value, this.targetValues.map(c => {
+      data.setTargetOld(this.schemeForm.get('target')?.value, this.targetValues.map(c => {
         return c.id;
       }));
     } else {
-      data.setTarget(this.schemeForm.get('target')?.value, this.schemeForm.get('targetValues')?.value);
+      data.setTargetOld(this.schemeForm.get('target')?.value, this.schemeForm.get('targetValues')?.value);
     }
     const instrument = this.schemeForm.get('instrument')?.value;
     if (instrument) {

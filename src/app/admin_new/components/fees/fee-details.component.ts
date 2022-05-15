@@ -7,12 +7,13 @@ import { debounceTime, distinctUntilChanged, filter, map, switchMap, take, tap }
 import { Filter } from 'src/app/admin_old/model/filter.model';
 import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
 import { CommonTargetValue } from 'src/app/model/common.model';
+import { CostScheme } from 'src/app/model/cost-scheme.model';
 import { CountryFilterList } from 'src/app/model/country-code.model';
-import { TransactionSourceFilterList } from 'src/app/model/fee-scheme.model';
-import { KycProvider, SettingsKycTargetFilterType, UserMode, UserType } from 'src/app/model/generated-models';
-import { KycScheme } from 'src/app/model/identification.model';
-import { KycLevelView, KycProviderList, KycTargetFilterList, UserModeList, UserTypeList } from 'src/app/model/payment.model';
+import { FeeScheme, TransactionSourceFilterList } from 'src/app/model/fee-scheme.model';
+import { PaymentInstrument, PaymentProvider, SettingsCostListResult, SettingsFeeTargetFilterType, TransactionType, UserMode, UserType } from 'src/app/model/generated-models';
+import { FeeTargetFilterList, PaymentInstrumentList, PaymentProviderView, TransactionTypeList, UserModeList, UserTypeList } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
+import { getCheckedProviderList, getProviderList } from 'src/app/utils/utils';
 
 @Component({
   selector: 'app-admin-fee-details',
@@ -22,7 +23,7 @@ import { AuthService } from 'src/app/services/auth.service';
 export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   @Input() permission = 0;
   @Input()
-  set currentScheme(scheme: KycScheme | undefined) {
+  set currentScheme(scheme: FeeScheme | undefined) {
     this.setFormData(scheme);
     this.settingsId = (scheme) ? scheme?.id : '';
     this.createNew = (this.settingsId === '');
@@ -35,7 +36,8 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   private removeDialog: NgbModalRef | undefined = undefined;
   private settingsId = '';
 
-  TARGET_TYPE: typeof SettingsKycTargetFilterType = SettingsKycTargetFilterType;
+  TARGET_TYPE: typeof SettingsFeeTargetFilterType = SettingsFeeTargetFilterType;
+  PAYMENT_INSTRUMENT: typeof PaymentInstrument = PaymentInstrument;
   submitted = false;
   createNew = false;
   saveInProgress = false;
@@ -44,13 +46,18 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   defaultSchemeName = '';
   userTypeOptions = UserTypeList;
   userModes = UserModeList;
-  kycProviders = KycProviderList;
-  levels: KycLevelView[] = [];
+  transactionTypes = TransactionTypeList;
+  instruments = PaymentInstrumentList;
+  providers: PaymentProviderView[] = [];
+  filteredProviders: PaymentProviderView[] = [];
+  showPaymentProvider = false;
+  costSchemes: CostScheme[] = [];
+  currency = '';
   targetEntity = ['', ''];
   targetSearchText = '';
   targetsTitle = '';
-  targetType = SettingsKycTargetFilterType.None;
-  targets = KycTargetFilterList;
+  targetType = SettingsFeeTargetFilterType.None;
+  targets = FeeTargetFilterList;
   isTargetsLoading = false;
   targetsSearchInput$ = new Subject<string>();
   targetsOptions$: Observable<CommonTargetValue[]> = of([]);
@@ -64,16 +71,18 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
     isDefault: [false],
     target: ['', { validators: [Validators.required], updateOn: 'change' }],
     targetValues: [[], { validators: [Validators.required], updateOn: 'change' }],
-    targetValue: [''],
-    level: ['', { validators: [Validators.required], updateOn: 'change' }],
-    userMode: [[], { validators: [Validators.required], updateOn: 'change' }],
-    userType: ['', { validators: [Validators.required], updateOn: 'change' }],
-    provider: [[], { validators: [Validators.required], updateOn: 'change' }],
-    requireUserFullName: [false],
-    requireUserPhone: [false],
-    requireUserBirthday: [false],
-    requireUserAddress: [false],
-    requireUserFlatNumber: [false]
+    instrument: [undefined],
+    userType: [[]],
+    userMode: [[]],
+    trxType: [[]],
+    provider: [[]],
+    transactionFees: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
+    minTransactionFee: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
+    rollingReserves: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
+    rollingReservesDays: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
+    chargebackFees: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
+    monthlyFees: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
+    minMonthlyFees: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }]
   });
 
   constructor(
@@ -90,53 +99,53 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
       this.form.get('target')?.valueChanges.subscribe(val => this.updateTarget())
     );
     this.subscriptions.add(
-      this.form.get('userType')?.valueChanges.subscribe(val => {
-        this.form.get('level')?.setValue(undefined);
-        this.loadLevelValues(val);
-      })
+      this.form.get('instrument')?.valueChanges.subscribe(val => this.filterPaymentProviders(val))
     );
-    this.subscriptions.add(
-      this.form.get('requireUserFlatNumber')?.valueChanges.subscribe(val => {
-        if (val === true) {
-          this.form.get('requireUserAddress')?.setValue(true);
-        }
-      })
-    );
-    this.subscriptions.add(
-      this.form.get('requireUserAddress')?.valueChanges.subscribe(val => {
-        if (val === false) {
-          this.form.get('requireUserFlatNumber')?.setValue(false);
-        }
-      })
-    );
+    this.getPaymentProviders();
+    this.loadCostSchemeList();
   }
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
 
-  private setFormData(scheme: KycScheme | undefined): void {
+  private setFormData(scheme: FeeScheme | undefined): void {
     this.form.reset();
     this.defaultSchemeName = '';
+    this.currency = scheme?.currency ?? '';
     if (scheme) {
       this.defaultSchemeName = scheme.isDefault ? scheme.name : '';
       this.form.get('id')?.setValue(scheme?.id);
       this.form.get('name')?.setValue(scheme?.name);
       this.form.get('description')?.setValue(scheme?.description);
       this.form.get('isDefault')?.setValue(scheme?.isDefault);
-      this.form.get('level')?.setValue(scheme?.level?.settingsKycLevelId ?? undefined);
+      // Targets
       this.form.get('target')?.setValue(scheme?.target);
-      this.targetType = scheme?.target ?? SettingsKycTargetFilterType.None;
+      this.targetType = scheme?.target ?? SettingsFeeTargetFilterType.None;
       this.setTargetValues(scheme?.targetValues);
-      this.form.get('userMode')?.setValue(scheme.userModes);
+      if (scheme.instrument && scheme.instrument.length > 0) {
+        const instrument = scheme.instrument[0];
+        this.form.get('instrument')?.setValue(instrument);
+        if (instrument === PaymentInstrument.WireTransfer) {
+          this.form.get('provider')?.setValue([scheme?.provider[0]]);
+        } else {
+          this.form.get('provider')?.setValue(scheme?.provider);
+        }
+      } else {
+        this.form.get('instrument')?.setValue(undefined);
+        this.form.get('provider')?.setValue([]);
+      }
+      this.form.get('userMode')?.setValue(scheme?.userMode);
       this.form.get('userType')?.setValue(scheme?.userType);
-      this.form.get('provider')?.setValue(scheme?.kycProviders);
-      this.form.get('requireUserFullName')?.setValue(scheme?.requireUserFullName);
-      this.form.get('requireUserPhone')?.setValue(scheme?.requireUserPhone);
-      this.form.get('requireUserBirthday')?.setValue(scheme?.requireUserBirthday);
-      this.form.get('requireUserAddress')?.setValue(scheme?.requireUserAddress);
-      this.form.get('requireUserFlatNumber')?.setValue(scheme?.requireUserFlatNumber);
-      this.loadLevelValues(scheme?.userType);
+      this.form.get('trxType')?.setValue(scheme?.trxType);
+      // Terms
+      this.form.get('transactionFees')?.setValue(scheme?.terms.transactionFees);
+      this.form.get('minTransactionFee')?.setValue(scheme?.terms.minTransactionFee);
+      this.form.get('rollingReserves')?.setValue(scheme?.terms.rollingReserves);
+      this.form.get('rollingReservesDays')?.setValue(scheme?.terms.rollingReservesDays);
+      this.form.get('chargebackFees')?.setValue(scheme?.terms.chargebackFees);
+      this.form.get('monthlyFees')?.setValue(scheme?.terms.monthlyFees);
+      this.form.get('minMonthlyFees')?.setValue(scheme?.terms.minMonthlyFees);
       this.setTargetValidator();
       this.setTargetValueParams();
     } else {
@@ -144,42 +153,56 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
       this.form.get('name')?.setValue('');
       this.form.get('description')?.setValue('');
       this.form.get('isDefault')?.setValue('');
-      this.form.get('level')?.setValue('');
-      this.form.get('target')?.setValue(SettingsKycTargetFilterType.None);
+      // Targets
+      this.form.get('target')?.setValue(SettingsFeeTargetFilterType.None);
       this.form.get('targetValues')?.setValue([]);
+      this.form.get('instrument')?.setValue(undefined);
       this.form.get('userMode')?.setValue([]);
       this.form.get('userType')?.setValue('');
+      this.form.get('trxType')?.setValue('');
       this.form.get('provider')?.setValue([]);
-      this.form.get('requireUserFullName')?.setValue(false);
-      this.form.get('requireUserPhone')?.setValue(false);
-      this.form.get('requireUserBirthday')?.setValue(false);
-      this.form.get('requireUserAddress')?.setValue(false);
-      this.form.get('requireUserFlatNumber')?.setValue(false);
+      // Terms
+      this.form.get('transactionFees')?.setValue(undefined);
+      this.form.get('minTransactionFee')?.setValue(undefined);
+      this.form.get('rollingReserves')?.setValue(undefined);
+      this.form.get('rollingReservesDays')?.setValue(undefined);
+      this.form.get('chargebackFees')?.setValue(undefined);
+      this.form.get('monthlyFees')?.setValue(undefined);
+      this.form.get('minMonthlyFees')?.setValue(undefined);
       this.setTargetValidator();
     }
   }
 
-  private setSchemeData(): KycScheme {
-    const data = new KycScheme(null);
+  private setSchemeData(): FeeScheme {
+    const data = new FeeScheme(null);
     data.name = this.form.get('name')?.value;
     data.description = this.form.get('description')?.value;
     data.isDefault = this.form.get('isDefault')?.value;
     data.id = this.form.get('id')?.value;
     data.setTarget(this.targetType, this.form.get('targetValues')?.value);
-    data.userType = this.form.get('userType')?.value;
-    data.levelId = this.form.get('level')?.value;
-    (this.form.get('userMode')?.value as UserMode[]).forEach(x => data.userModes.push(x));
-    (this.form.get('provider')?.value as KycProvider[]).forEach(x => data.kycProviders.push(x));
-    data.requireUserFullName = this.form.get('requireUserFullName')?.value;
-    data.requireUserPhone = this.form.get('requireUserPhone')?.value;
-    data.requireUserBirthday = this.form.get('requireUserBirthday')?.value;
-    data.requireUserAddress = this.form.get('requireUserAddress')?.value;
-    data.requireUserFlatNumber = this.form.get('requireUserFlatNumber')?.value;
+    data.userType = this.form.get('userType')?.value as UserType[];
+    data.userMode = this.form.get('userMode')?.value as UserMode[];
+    data.trxType = this.form.get('trxType')?.value as TransactionType[];
+    const instrument = this.form.get('instrument')?.value;
+    if (instrument === undefined || instrument === null) {
+      data.instrument = [];
+    } else {
+      data.instrument = [instrument];
+    }
+    data.provider = this.form.get('provider')?.value as string[];
+    // terms
+    data.terms.transactionFees = Number(this.form.get('transactionFees')?.value);
+    data.terms.minTransactionFee = Number(this.form.get('minTransactionFee')?.value);
+    data.terms.rollingReserves = Number(this.form.get('rollingReserves')?.value);
+    data.terms.rollingReservesDays = Number(this.form.get('rollingReservesDays')?.value);
+    data.terms.chargebackFees = Number(this.form.get('chargebackFees')?.value);
+    data.terms.monthlyFees = Number(this.form.get('monthlyFees')?.value);
+    data.terms.minMonthlyFees = Number(this.form.get('minMonthlyFees')?.value);
     return data;
   }
 
   private setTargetValues(values: string[]): void {
-    if (this.targetType === SettingsKycTargetFilterType.AccountId) {
+    if (this.targetType === SettingsFeeTargetFilterType.AccountId) {
       const filter = new Filter({
         users: values
       });
@@ -189,7 +212,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
           this.form.get('targetValues')?.setValue(result);
         })
       );
-    } else if (this.targetType === SettingsKycTargetFilterType.WidgetId) {
+    } else if (this.targetType === SettingsFeeTargetFilterType.WidgetId) {
       const filter = new Filter({
         widgets: values
       });
@@ -199,7 +222,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
           this.form.get('targetValues')?.setValue(result);
         })
       );
-    } else if (this.targetType === SettingsKycTargetFilterType.Country) {
+    } else if (this.targetType === SettingsFeeTargetFilterType.Country) {
       const data = values.map(x => {
         const c = CountryFilterList.find(c => c.id === x);
         if (c) {
@@ -211,7 +234,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
       }).filter(x => x.id !== '');
       this.targetsOptions$ = of(data);
       this.form.get('targetValues')?.setValue(data);
-    } else if (this.targetType === SettingsKycTargetFilterType.InitiateFrom) {
+    } else if (this.targetType === SettingsFeeTargetFilterType.InitiateFrom) {
       const data = values.map(x => {
         const c = TransactionSourceFilterList.find(c => c.id === x);
         if (c) {
@@ -228,40 +251,40 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   }
 
   private setTargetValueParams(): void {
-    this.targetType = this.form.get('target')?.value as SettingsKycTargetFilterType;
+    this.targetType = this.form.get('target')?.value as SettingsFeeTargetFilterType;
     switch (this.targetType) {
-      case SettingsKycTargetFilterType.None: {
+      case SettingsFeeTargetFilterType.None: {
         this.targetEntity = ['', ''];
         this.targetSearchText = '';
         this.targetsTitle = '';
         break;
       }
-      case SettingsKycTargetFilterType.Country: {
+      case SettingsFeeTargetFilterType.Country: {
         this.targetEntity = ['country', 'countries'];
         this.targetSearchText = 'Type a country name';
         this.targetsTitle = 'Countries';
         break;
       }
-      case SettingsKycTargetFilterType.AccountId: {
+      case SettingsFeeTargetFilterType.AccountId: {
         this.targetEntity = ['account', 'accounts'];
         this.targetSearchText = 'Type email or user name';
         this.targetsTitle = 'Accounts';
         break;
       }
-      case SettingsKycTargetFilterType.WidgetId: {
+      case SettingsFeeTargetFilterType.WidgetId: {
         this.targetEntity = ['widget', 'widgets'];
         this.targetSearchText = 'Type a widget name';
         this.targetsTitle = 'Widgets';
         break;
       }
-      case SettingsKycTargetFilterType.InitiateFrom: {
+      case SettingsFeeTargetFilterType.InitiateFrom: {
         this.targetEntity = ['source', 'sources'];
         this.targetSearchText = '';
         this.targetsTitle = 'Transaction sources';
         break;
       }
     }
-    if (this.targetType !== SettingsKycTargetFilterType.None) {
+    if (this.targetType !== SettingsFeeTargetFilterType.None) {
       this.initTargetSearch();
     }
   }
@@ -285,8 +308,29 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
       ));
   }
 
+  private filterPaymentProviders(instruments: PaymentInstrument[]): void {
+    if (instruments) {
+      if (instruments.length > 0) {
+        this.filteredProviders = getProviderList(instruments, this.providers);
+        this.showPaymentProvider = this.filteredProviders.length > 0;
+        if (this.providers.length > 0) {
+          this.form.get('provider')?.setValue(getCheckedProviderList(
+            this.form.get('provider')?.value ?? [],
+            this.filteredProviders));
+        } else {
+          this.form.get('provider')?.setValue([]);
+        }
+      } else {
+        this.form.get('instrument')?.setValue(undefined);
+        this.form.get('provider')?.setValue([]);
+      }
+    } else {
+      this.form.get('provider')?.setValue([]);
+    }
+  }
+
   private filterTargets(searchString: string): Observable<CommonTargetValue[]> {
-    if (this.targetType === SettingsKycTargetFilterType.Country) {
+    if (this.targetType === SettingsFeeTargetFilterType.Country) {
       return of(CountryFilterList
         .map(x => {
           x.imgClass = 'country-flag-admin';
@@ -294,13 +338,13 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
         })
         .filter(x => x.title.toLowerCase().includes(searchString.toLowerCase()))
       );
-    } else if (this.targetType === SettingsKycTargetFilterType.WidgetId) {
+    } else if (this.targetType === SettingsFeeTargetFilterType.WidgetId) {
       const filter = new Filter({ search: searchString });
       return this.getFilteredWidgets(filter);
-    } else if (this.targetType === SettingsKycTargetFilterType.AccountId) {
+    } else if (this.targetType === SettingsFeeTargetFilterType.AccountId) {
       const filter = new Filter({ search: searchString });
       return this.getFilteredAccounts(filter);
-    } else if (this.targetType === SettingsKycTargetFilterType.InitiateFrom) {
+    } else if (this.targetType === SettingsFeeTargetFilterType.InitiateFrom) {
       return of(TransactionSourceFilterList);
     } else {
       return of([]);
@@ -342,8 +386,8 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
 
   private setTargetValidator(): void {
     const val = this.form.get('target')?.value;
-    this.targetType = val ?? SettingsKycTargetFilterType.None as SettingsKycTargetFilterType;
-    if (val === SettingsKycTargetFilterType.None) {
+    this.targetType = val ?? SettingsFeeTargetFilterType.None as SettingsFeeTargetFilterType;
+    if (val === SettingsFeeTargetFilterType.None) {
       this.form.get('targetValues')?.clearValidators();
     } else {
       this.form.get('targetValues')?.setValidators([Validators.required]);
@@ -351,16 +395,33 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
     this.form.get('targetValues')?.updateValueAndValidity();
   }
 
-  private loadLevelValues(userType: UserType): void {
+  private getPaymentProviders(): void {
+    this.providers = [];
+    const data$ = this.adminService.getProviders()?.valueChanges;
     this.subscriptions.add(
-      this.adminService.getKycLevels(userType).pipe(take(1)).subscribe(data => {
-        this.levels = data.list.map(val => {
-          const c = new KycLevelView();
-          c.id = val.id;
-          c.name = val.name as string;
-          c.description = val.description as string;
-          return c;
-        });
+      data$.subscribe(({ data }) => {
+        const providers = data.getPaymentProviders as PaymentProvider[];
+        this.providers = providers?.map((val) => new PaymentProviderView(val));
+        const instrument = this.form.get('instrument')?.value;
+        this.filterPaymentProviders([instrument]);
+      })
+    );
+  }
+
+  private loadCostSchemeList(): void {
+    const listData$ = this.adminService.getCostSettings().valueChanges.pipe(take(1));
+    this.errorMessage = '';
+    this.costSchemes = [];
+    this.subscriptions.add(
+      listData$.subscribe(({ data }) => {
+        const settings = data.getSettingsCost as SettingsCostListResult;
+        let itemCount = 0;
+        if (settings !== null) {
+          itemCount = settings?.count ?? 0;
+          if (itemCount > 0) {
+            this.costSchemes = settings?.list?.map((val) => new CostScheme(val)) as CostScheme[];
+          }
+        }
       })
     );
   }
@@ -384,10 +445,10 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
     );
   }
 
-  private saveScheme(scheme: KycScheme): void {
+  private saveScheme(scheme: FeeScheme): void {
     this.errorMessage = '';
     this.saveInProgress = true;
-    const requestData$ = this.adminService.saveKycSettings(scheme, this.createNew);
+    const requestData$ = this.adminService.saveFeeSettings(scheme);
     this.subscriptions.add(
       requestData$.subscribe(({ data }) => {
         this.saveInProgress = false;
@@ -405,7 +466,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   deleteSchemeConfirmed(id: string): void {
     this.errorMessage = '';
     this.saveInProgress = true;
-    const requestData$ = this.adminService.deleteKycSettings(id);
+    const requestData$ = this.adminService.deleteFeeSettings(id);
     this.subscriptions.add(
       requestData$.subscribe(({ data }) => {
         this.saveInProgress = false;

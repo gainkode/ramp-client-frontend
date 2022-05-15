@@ -65,7 +65,6 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
     isDefault: [false],
     target: [undefined, { validators: [Validators.required], updateOn: 'change' }],
     targetValues: [[], { validators: [Validators.required], updateOn: 'change' }],
-    targetValue: [''],
     instrument: [[]],
     trxType: [[]],
     provider: [[]],
@@ -238,6 +237,8 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
       this.form.get('provider')?.setValue(getCheckedProviderList(
         this.form.get('provider')?.value ?? [],
         this.filteredProviders));
+    } else {
+      this.form.get('provider')?.setValue(undefined);
     }
   }
 
