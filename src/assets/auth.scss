@@ -10,8 +10,12 @@
 }
 
 .__auth-body {
-    width: $widget_max_width + px;
     background-color: $color_white;
+    width: $widget_max_width + px;
+
+    @media (max-width: $md3 + px) {
+        width: $widget_min_width + px;
+    }
 }
 
 .__auth-container {
