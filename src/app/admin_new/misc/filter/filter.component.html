@@ -18,7 +18,7 @@
                     <div class="card-body">
                         <form *ngIf="filterForm" [formGroup]="filterForm">
                             <div
-                                [ngClass]="{'__admin-filter-block-col-1': fields.length===1, '__admin-filter-block-col-2': fields.length===2, '__admin-filter-block-col-3': fields.length>2}">
+                                [ngClass]="{'__admin-filter-block-col-1': fields.length===1, '__admin-filter-block-col-2': fields.length===2, '__admin-filter-block-col-3': fields.length===3, '__admin-filter-block-col-4': fields.length>3}">
                                 <div *ngFor="let field of fields">
                                     <ng-container>
                                         <div *ngIf="field === 'accountType'" class="form-group">
