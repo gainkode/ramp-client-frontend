@@ -1,5 +1,7 @@
 @import "../../../../assets/scss/variables";
 
+$gutter: 16px;
+
 ::ng-deep {
   .datatable-body {
     height: 600px !important;
@@ -313,6 +315,30 @@
     // }
     .table-striped > tbody > tr:nth-of-type(2n + 1) > * {
       background-color: #248272 !important;
+    }
+  }
+}
+
+.__dashboard-panel-container {
+  display: flex;
+  flex-direction: row;
+  margin: -$gutter/2;
+  padding: 24px 16px;
+
+  .__dashboard-panel-column {
+    display: flex;
+    flex-direction: column;
+
+    &:nth-child(1) {
+      flex: 1 1 60%;
+    }
+
+    &:nth-child(2) {
+      flex: 1 1 40%;
+    }
+
+    app-admin-dashboard-card {
+      margin: $gutter/2;
     }
   }
 }

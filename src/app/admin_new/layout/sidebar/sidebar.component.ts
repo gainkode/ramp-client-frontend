@@ -128,7 +128,6 @@ export class AdminSidebarComponent {
   }
 
   goToMainPage() {
-    console.log('redirect to ', this.auth.getUserMainPage());
     this.router.navigate([this.auth.getUserMainPage()]);
   }
 

@@ -1,0 +1,30 @@
+.__dashboard-card-block {
+    display: flex;
+    flex-direction: row;
+
+    .__dashboard-card-column {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;
+
+        &.align-right {
+            text-align: right;
+        }
+
+        > div {
+            height: 28px;
+            line-height: 28px;
+            padding: 0 4px;
+
+            &:not(:last-child) {
+                border-bottom: 1px solid #bdc6e0;
+            }
+
+            &.__dashboard-card-header {
+                // background: #9096e7;
+                // color: white;
+                font-weight: 500;
+            }
+        }
+    }
+}

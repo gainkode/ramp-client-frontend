@@ -1,1 +1,30 @@
-<app-admin-page-header [title]="'Dashboard'" [items]="['Tables']" [active_item]="'Data Tables'"></app-admin-page-header>
+<app-admin-page-header [title]="'Dashboard'" [items]="['Home']" [active_item]="'Dashboard'"></app-admin-page-header>
+
+<div class="row row-sm">
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <app-admin-filter [fields]="filterFields" (filter)="handleFilterApplied($event)">
+                    </app-admin-filter>
+
+                    <mat-progress-bar *ngIf="dashboardService.loading===true" color="accent" mode="indeterminate"></mat-progress-bar>
+
+                    <div *ngIf="dashboardService.isLoaded | async" class="__dashboard-panel-container">
+                        <div class="__dashboard-panel-column">
+                            <app-admin-dashboard-card title="Total volume in EUR" source="total"></app-admin-dashboard-card>
+                            <app-admin-dashboard-card title="Buy" source="deposits"></app-admin-dashboard-card>
+                            <!-- <app-admin-dashboard-card title="Send" source="transfers"></app-admin-dashboard-card> -->
+                            <app-admin-dashboard-card title="Sell" source="withdrawals"></app-admin-dashboard-card>
+                            <app-admin-dashboard-card title="Receive" source="receives"></app-admin-dashboard-card>
+                        </div>
+                        <div class="__dashboard-panel-column">
+                            <app-admin-dashboard-card title="Fees collected" source="fees"></app-admin-dashboard-card>
+                            <app-admin-dashboard-card title="Balances in all wallets" source="balances"></app-admin-dashboard-card>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
