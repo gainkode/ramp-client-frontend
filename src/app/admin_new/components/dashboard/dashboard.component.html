@@ -13,9 +13,11 @@
                     <div *ngIf="dashboardService.isLoaded | async" class="__dashboard-panel-container">
                         <div class="__dashboard-panel-column">
                             <app-admin-dashboard-card title="Total volume in EUR" source="total"></app-admin-dashboard-card>
-                            <app-admin-dashboard-card title="Buy" source="deposits"></app-admin-dashboard-card>
+                            <app-admin-dashboard-card title="Deposit" source="deposits"></app-admin-dashboard-card>
+                            <app-admin-dashboard-card title="Withdrawal" source="withdrawals"></app-admin-dashboard-card>
+                            <app-admin-dashboard-card title="Buy" source="buys"></app-admin-dashboard-card>
                             <!-- <app-admin-dashboard-card title="Send" source="transfers"></app-admin-dashboard-card> -->
-                            <app-admin-dashboard-card title="Sell" source="withdrawals"></app-admin-dashboard-card>
+                            <app-admin-dashboard-card title="Sell" source="sells"></app-admin-dashboard-card>
                             <app-admin-dashboard-card title="Receive" source="receives"></app-admin-dashboard-card>
                         </div>
                         <div class="__dashboard-panel-column">

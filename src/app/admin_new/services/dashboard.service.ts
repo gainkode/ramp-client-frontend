@@ -54,6 +54,9 @@ export class DashboardService implements OnDestroy {
     this.loading = true;
     const dashboardData$ = this.adminDataService.getDashboardStats(this.filter).pipe(take(1));
     this.subscriptions.add(dashboardData$.subscribe(rawData => {
+
+      console.log(rawData);
+
       // region Total
       const totalData: DashboardCardData = {
         columns: [
@@ -85,7 +88,7 @@ export class DashboardService implements OnDestroy {
         ],
         rows: [
           {
-            type: 'Buy',
+            type: 'Deposit',
             approvedCount: rawData.deposits?.approved?.count ?? null,
             approvedVolume: rawData.deposits?.approved?.volume ?? null,
             declinedCount: rawData.deposits?.declined?.count ?? null,
@@ -95,7 +98,7 @@ export class DashboardService implements OnDestroy {
             ratio: rawData.deposits?.ratio ?? null
           },
           {
-            type: 'Sell',
+            type: 'Withdrawal',
             approvedCount: rawData.withdrawals?.approved?.count ?? null,
             approvedVolume: rawData.withdrawals?.approved?.volume ?? null,
             declinedCount: rawData.withdrawals?.declined?.count ?? null,
@@ -103,6 +106,26 @@ export class DashboardService implements OnDestroy {
             abandonedCount: rawData.withdrawals?.abandoned?.count ?? null,
             abandonedVolume: rawData.withdrawals?.abandoned?.volume ?? null,
             ratio: rawData.withdrawals?.ratio ?? null
+          },
+          {
+            type: 'Buy',
+            approvedCount: rawData.buys?.approved?.count ?? null,
+            approvedVolume: rawData.buys?.approved?.volume ?? null,
+            declinedCount: rawData.buys?.declined?.count ?? null,
+            declinedVolume: rawData.buys?.declined?.volume ?? null,
+            abandonedCount: rawData.buys?.abandoned?.count ?? null,
+            abandonedVolume: rawData.buys?.abandoned?.volume ?? null,
+            ratio: rawData.buys?.ratio ?? null
+          },
+          {
+            type: 'Sell',
+            approvedCount: rawData.sells?.approved?.count ?? null,
+            approvedVolume: rawData.sells?.approved?.volume ?? null,
+            declinedCount: rawData.sells?.declined?.count ?? null,
+            declinedVolume: rawData.sells?.declined?.volume ?? null,
+            abandonedCount: rawData.sells?.abandoned?.count ?? null,
+            abandonedVolume: rawData.sells?.abandoned?.volume ?? null,
+            ratio: rawData.sells?.ratio ?? null
           },
           {
             type: 'Send',
@@ -125,6 +148,53 @@ export class DashboardService implements OnDestroy {
             ratio: rawData.receives?.ratio ?? null
           }
         ]
+      };
+      // endregion
+
+      // region Buys
+      const buysData: DashboardCardData = {
+        columns: [
+          {
+            key: 'instrument',
+            label: 'Payment Method',
+            type: 'text'
+          },
+          {
+            key: 'approved',
+            label: 'Approved',
+            type: 'count-volume'
+          },
+          {
+            key: 'declined',
+            label: 'Declined',
+            type: 'count-volume'
+          },
+          {
+            key: 'abandoned',
+            label: 'Abandoned',
+            type: 'count-volume'
+          },
+          {
+            key: 'ratio',
+            label: 'Success Rate',
+            type: 'percent'
+          }
+        ],
+        rows: rawData.buys?.byInstruments ?
+          rawData.buys.byInstruments.map(item => {
+            const instrument = PaymentInstrumentList.find(i => i.id === item.instrument);
+            console.log(item);
+            return {
+              instrument: instrument?.name ?? '?',
+              approvedCount: item.approved?.count ?? null,
+              approvedVolume: item.approved?.volume ?? null,
+              declinedCount: item.declined?.count ?? null,
+              declinedVolume: item.declined?.volume ?? null,
+              abandonedCount: item.abandoned?.count ?? null,
+              abandonedVolume: item.abandoned?.volume ?? null,
+              ratio: item.ratio ?? null
+            };
+          }) : []
       };
       // endregion
 
@@ -172,7 +242,6 @@ export class DashboardService implements OnDestroy {
             };
           }) : []
       };
-
       // endregion
 
       // region Transfers
@@ -315,7 +384,52 @@ export class DashboardService implements OnDestroy {
         rows: rawData.withdrawals?.byInstruments ?
           rawData.withdrawals.byInstruments.map(item => {
             const instrument = PaymentInstrumentList.find(i => i.id === item.instrument);
+            return {
+              instrument: instrument?.name ?? '?',
+              approvedCount: item.approved?.count ?? null,
+              approvedVolume: item.approved?.volume ?? null,
+              declinedCount: item.declined?.count ?? null,
+              declinedVolume: item.declined?.volume ?? null,
+              abandonedCount: item.abandoned?.count ?? null,
+              abandonedVolume: item.abandoned?.volume ?? null,
+              ratio: item.ratio ?? null
+            };
+          }) : []
+      };
+      // endregion
 
+      // region Sells
+      const sellsData: DashboardCardData = {
+        columns: [
+          {
+            key: 'instrument',
+            label: 'Payment Method',
+            type: 'text'
+          },
+          {
+            key: 'approved',
+            label: 'Approved',
+            type: 'count-volume'
+          },
+          {
+            key: 'declined',
+            label: 'Declined',
+            type: 'count-volume'
+          },
+          {
+            key: 'abandoned',
+            label: 'Abandoned',
+            type: 'count-volume'
+          },
+          {
+            key: 'ratio',
+            label: 'Success Rate',
+            type: 'percent'
+          }
+        ],
+        rows: rawData.sells?.byInstruments ?
+          rawData.sells.byInstruments.map(item => {
+            const instrument = PaymentInstrumentList.find(i => i.id === item.instrument);
             return {
               instrument: instrument?.name ?? '?',
               approvedCount: item.approved?.count ?? null,
@@ -331,7 +445,6 @@ export class DashboardService implements OnDestroy {
       // endregion
 
       // region Fees
-
       const feesData: DashboardCardData = {
         columns: [
           {
@@ -357,14 +470,24 @@ export class DashboardService implements OnDestroy {
         ],
         rows: [
           {
-            source: 'Buy',
+            source: 'Deposit',
             volume: this.getFeeValue(rawData.deposits?.fee?.volume ?? null),
             count: rawData.deposits?.fee?.count ?? null
           },
           {
-            source: 'Sell',
+            source: 'Withdrawal',
             volume: this.getFeeValue(rawData.withdrawals?.fee?.volume ?? null),
             count: rawData.withdrawals?.fee?.count ?? null
+          },
+          {
+            source: 'Buy',
+            volume: this.getFeeValue(rawData.buys?.fee?.volume ?? null),
+            count: rawData.buys?.fee?.count ?? null
+          },
+          {
+            source: 'Sell',
+            volume: this.getFeeValue(rawData.sells?.fee?.volume ?? null),
+            count: rawData.sells?.fee?.count ?? null
           },
           {
             source: 'Send',
@@ -382,7 +505,6 @@ export class DashboardService implements OnDestroy {
       //  endregion
 
       // region Balances
-
       const testBalances: BalanceStats[] = [
         {
           currency: 'BTC',
@@ -436,6 +558,8 @@ export class DashboardService implements OnDestroy {
 
       const data = {
         total: totalData,
+        buys: buysData,
+        sells: sellsData,
         deposits: depositsData,
         transfers: transfersData,
         receives: receivesData,

@@ -81,6 +81,23 @@ const GET_DASHBOARD_STATS = gql`
       countryCodeType: $countryCodeType
       accountTypesOnly: $accountTypesOnly
     ) {
+      buys {
+        approved {count, volume},
+        declined {count, volume},
+        abandoned {count, volume},
+        inProcess {count, volume},
+        fee {count, volume},
+        ratio,
+        byInstruments {
+          instrument,
+          approved {count, volume},
+          declined {count, volume},
+          abandoned {count, volume},
+          inProcess {count, volume},
+          fee {count, volume},
+          ratio
+        }
+      }
       deposits {
         approved {count, volume},
         declined {count, volume},
@@ -151,6 +168,23 @@ const GET_DASHBOARD_STATS = gql`
         }
       }
       withdrawals {
+        approved {count, volume},
+        declined {count, volume},
+        abandoned {count, volume},
+        inProcess {count, volume},
+        fee {count, volume},
+        ratio,
+        byInstruments {
+          instrument,
+          ratio,
+          approved {count, volume},
+          declined {count, volume},
+          abandoned {count, volume},
+          inProcess {count, volume},
+          fee {count, volume}
+        }
+      }
+      sells {
         approved {count, volume},
         declined {count, volume},
         abandoned {count, volume},

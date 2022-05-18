@@ -171,6 +171,18 @@ export type BlackCountryListResult = {
   list?: Maybe<Array<BlackCountry>>;
 };
 
+export type BuyOrSellStats = BaseStat & {
+  __typename?: 'BuyOrSellStats';
+  ratio?: Maybe<Scalars['Float']>;
+  approved?: Maybe<TransactionStatsVolume>;
+  declined?: Maybe<TransactionStatsVolume>;
+  abandoned?: Maybe<TransactionStatsVolume>;
+  inProcess?: Maybe<TransactionStatsVolume>;
+  byStatus?: Maybe<Array<TransactionStatsByStatus>>;
+  fee?: Maybe<TransactionStatsVolume>;
+  byInstruments?: Maybe<Array<InstrumentStats>>;
+};
+
 
 export enum CountryCodeType {
   Code2 = 'code2',
@@ -183,6 +195,8 @@ export enum CustodyProvider {
 
 export type DashboardStats = {
   __typename?: 'DashboardStats';
+  buys?: Maybe<BuyOrSellStats>;
+  sells?: Maybe<BuyOrSellStats>;
   deposits?: Maybe<DepositOrWithdrawalStats>;
   withdrawals?: Maybe<DepositOrWithdrawalStats>;
   transfers?: Maybe<TransferStats>;
@@ -3063,6 +3077,14 @@ export type User = {
   widgetCode?: Maybe<Scalars['String']>;
   affiliateId?: Maybe<Scalars['String']>;
   affiliateCode?: Maybe<Scalars['String']>;
+  totalDepositCompleted?: Maybe<Scalars['Float']>;
+  totalDepositCompletedCount?: Maybe<Scalars['Int']>;
+  totalDepositInProcess?: Maybe<Scalars['Float']>;
+  totalDepositInProcessCount?: Maybe<Scalars['Int']>;
+  totalWithdrawalCompleted?: Maybe<Scalars['Float']>;
+  totalWithdrawalCompletedCount?: Maybe<Scalars['Int']>;
+  totalWithdrawalInProcess?: Maybe<Scalars['Float']>;
+  totalWithdrawalInProcessCount?: Maybe<Scalars['Int']>;
   totalBoughtCompleted?: Maybe<Scalars['Float']>;
   totalBoughtCompletedCount?: Maybe<Scalars['Int']>;
   totalBoughtInProcess?: Maybe<Scalars['Float']>;
