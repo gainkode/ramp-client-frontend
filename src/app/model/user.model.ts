@@ -67,6 +67,14 @@ export class UserItem {
   roles: string[] = [];
   totalTransactionCount = 0;
   avarageTransaction = 0;
+  totalDepositCompleted = 0;
+  totalDepositCompletedCount = 0;
+  totalDepositInProcess = 0;
+  totalDepositInProcessCount = 0;
+  totalWithdrawalCompleted = 0;
+  totalWithdrawalCompletedCount = 0;
+  totalWithdrawalInProcess = 0;
+  totalWithdrawalInProcessCount = 0;
   totalBoughtCompleted = 0;
   totalBoughtCompletedCount = 0;
   totalBoughtInProcess = 0;
@@ -83,6 +91,10 @@ export class UserItem {
   totalReceivedCompletedCount = 0;
   totalReceivedInProcess = 0;
   totalReceivedInProcessCount = 0;
+  totalDepositCompletedResult = '';
+  totalDepositInProcessResult = '';
+  totalWithdrawalCompletedResult = '';
+  totalWithdrawalInProcessResult = '';
   totalBoughtCompletedResult = '';
   totalBoughtInProcessResult = '';
   totalSoldCompletedResult = '';
@@ -91,6 +103,8 @@ export class UserItem {
   totalSentInProcessResult = '';
   totalReceivedCompletedResult = '';
   totalReceivedInProcessResult = '';
+  totalDeposit = '';
+  totalWithdrawal = '';
   totalBought = '';
   totalSold = '';
   totalSent = '';
@@ -147,6 +161,14 @@ export class UserItem {
       }) ?? [];
       this.totalTransactionCount = data.totalTransactionCount ?? 0;
       this.avarageTransaction = data.avarageTransaction ?? 0;
+      this.totalDepositCompleted = data.totalDepositCompleted ?? 0;
+      this.totalDepositCompletedCount = data.totalDepositCompletedCount ?? 0;
+      this.totalDepositInProcess = data.totalDepositInProcess ?? 0;
+      this.totalDepositInProcessCount = data.totalDepositInProcessCount ?? 0;
+      this.totalWithdrawalCompleted = data.totalWithdrawalCompleted ?? 0;
+      this.totalWithdrawalCompletedCount = data.totalWithdrawalCompletedCount ?? 0;
+      this.totalWithdrawalInProcess = data.totalWithdrawalInProcess ?? 0;
+      this.totalWithdrawalInProcessCount = data.totalWithdrawalInProcessCount ?? 0;
       this.totalBoughtCompleted = data.totalBoughtCompleted ?? 0;
       this.totalBoughtCompletedCount = data.totalBoughtCompletedCount ?? 0;
       this.totalBoughtInProcess = data.totalBoughtInProcess ?? 0;
@@ -163,6 +185,10 @@ export class UserItem {
       this.totalReceivedCompletedCount = data.totalReceivedCompletedCount ?? 0;
       this.totalReceivedInProcess = data.totalReceivedInProcess ?? 0;
       this.totalReceivedInProcessCount = data.totalReceivedInProcessCount ?? 0;
+      this.totalDepositCompletedResult = this.getTransactionResult(this.totalDepositCompleted, this.totalDepositCompletedCount);
+      this.totalDepositInProcessResult = this.getTransactionResult(this.totalDepositInProcess, this.totalDepositInProcessCount);
+      this.totalWithdrawalCompletedResult = this.getTransactionResult(this.totalWithdrawalCompleted, this.totalWithdrawalCompletedCount);
+      this.totalWithdrawalInProcessResult = this.getTransactionResult(this.totalWithdrawalInProcess, this.totalWithdrawalInProcessCount);
       this.totalBoughtCompletedResult = this.getTransactionResult(this.totalBoughtCompleted, this.totalBoughtCompletedCount);
       this.totalBoughtInProcessResult = this.getTransactionResult(this.totalBoughtInProcess, this.totalBoughtInProcessCount);
       this.totalSoldCompletedResult = this.getTransactionResult(this.totalSoldCompleted, this.totalSoldCompletedCount);
@@ -171,11 +197,12 @@ export class UserItem {
       this.totalSentInProcessResult = this.getTransactionResult(this.totalSentInProcess, this.totalSentInProcessCount);
       this.totalReceivedCompletedResult = this.getTransactionResult(this.totalReceivedCompleted, this.totalReceivedCompletedCount);
       this.totalReceivedInProcessResult = this.getTransactionResult(this.totalReceivedInProcess, this.totalReceivedInProcessCount);
+      this.totalDeposit = this.totalDepositCompleted.toFixed(2);
+      this.totalWithdrawal = this.totalWithdrawalCompleted.toFixed(2);
       this.totalBought = this.totalBoughtCompleted.toFixed(2);
       this.totalSold = this.totalSoldCompleted.toFixed(2);
       this.totalSent = this.totalSentCompleted.toFixed(2);
       this.totalReceived = this.totalReceivedCompleted.toFixed(2);
-
       this.kycStatusValue = data.kycStatus as KycStatus ?? KycStatus.Unknown;
       this.kycStatus = KycStatusList.find(x => x.id === data.kycStatus?.toLowerCase())?.name ?? '';
       const status = this.kycStatus.toLowerCase();

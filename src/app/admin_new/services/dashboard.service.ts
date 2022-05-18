@@ -54,9 +54,6 @@ export class DashboardService implements OnDestroy {
     this.loading = true;
     const dashboardData$ = this.adminDataService.getDashboardStats(this.filter).pipe(take(1));
     this.subscriptions.add(dashboardData$.subscribe(rawData => {
-
-      console.log(rawData);
-
       // region Total
       const totalData: DashboardCardData = {
         columns: [
@@ -183,7 +180,6 @@ export class DashboardService implements OnDestroy {
         rows: rawData.buys?.byInstruments ?
           rawData.buys.byInstruments.map(item => {
             const instrument = PaymentInstrumentList.find(i => i.id === item.instrument);
-            console.log(item);
             return {
               instrument: instrument?.name ?? '?',
               approvedCount: item.approved?.count ?? null,
