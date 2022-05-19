@@ -23,7 +23,7 @@ export class ProfileSettingsComponent {
         private router: Router) {
         const pageId = this.route.snapshot.params['page'] ?? '';
         const apiKeysPage = (pageId === 'apikeys' && this.auth.user?.type === UserType.Merchant);
-        if (pageId === 'info' || pageId === 'verification' || pageId === 'security' || apiKeysPage) {
+        if (pageId === 'info' || pageId === 'verification' || pageId === 'security' || pageId === 'iplist' || apiKeysPage) {
             this.pageSelected(pageId);
         } else {
             this.router.navigateByUrl(`${this.auth.getUserAccountPage()}/settings/info/`);

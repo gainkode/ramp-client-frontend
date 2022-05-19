@@ -13,5 +13,7 @@
             (progressChange)="progressChanged($event)"></app-profile-security-settings>
         <app-profile-api-keys-settings *ngSwitchCase="'apikeys'" (error)="handleError($event)"
             (progressChange)="progressChanged($event)"></app-profile-api-keys-settings>
+        <app-profile-white-ip-list *ngSwitchCase="'iplist'" (error)="handleError($event)"
+            (progressChange)="progressChanged($event)"></app-profile-white-ip-list>
     </div>
 </div>

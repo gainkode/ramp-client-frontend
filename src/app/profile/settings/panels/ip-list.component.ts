@@ -8,14 +8,17 @@ import { take } from 'rxjs/operators';
 import { ApiSecretDialogBox } from 'src/app/components/dialogs/api-secret-box.dialog';
 import { DeleteDialogBox } from 'src/app/components/dialogs/delete-box.dialog';
 import { ApiKeyItem } from 'src/app/model/apikey.model';
-import { ApiKeyListResult, ApiKeySecret } from 'src/app/model/generated-models';
+import { ApiKeyListResult, ApiKeySecret, SettingsKycTierShortEx, SettingsKycTierShortExListResult, UserState } from 'src/app/model/generated-models';
+import { TierItem } from 'src/app/model/identification.model';
 import { AuthService } from 'src/app/services/auth.service';
+import { CommonDataService } from 'src/app/services/common-data.service';
 import { ErrorService } from 'src/app/services/error.service';
+import { PaymentDataService } from 'src/app/services/payment.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
 
 @Component({
-    selector: 'app-profile-api-keys-settings',
-    templateUrl: './apikeys.component.html',
+    selector: 'app-profile-white-ip-list',
+    templateUrl: './ip-list.component.html',
     styleUrls: [
         '../../../../assets/menu.scss',
         '../../../../assets/button.scss',
@@ -23,7 +26,7 @@ import { ProfileDataService } from 'src/app/services/profile.service';
         './apikeys.component.scss'
     ]
 })
-export class ProfileApiKeysSettingsComponent implements OnInit, OnDestroy {
+export class ProfileIpListSettingsComponent implements OnInit, OnDestroy {
     @ViewChild(MatSort) sort!: MatSort;
     @Output() error = new EventEmitter<string>();
     @Output() progressChange = new EventEmitter<boolean>();
@@ -50,7 +53,7 @@ export class ProfileApiKeysSettingsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.getApiKeys();
+        this.getIpList();
     }
 
     ngOnDestroy(): void {
@@ -65,7 +68,7 @@ export class ProfileApiKeysSettingsComponent implements OnInit, OnDestroy {
         return result;
     }
 
-    private getApiKeys(): void {
+    private getIpList(): void {
         this.error.emit('');
         this.keys = [];
         this.error.emit('');
@@ -99,7 +102,7 @@ export class ProfileApiKeysSettingsComponent implements OnInit, OnDestroy {
     handlePage(event: PageEvent): PageEvent {
         this.pageSize = event.pageSize;
         this.pageIndex = event.pageIndex;
-        this.getApiKeys();
+        this.getIpList();
         return event;
     }
 
@@ -111,7 +114,7 @@ export class ProfileApiKeysSettingsComponent implements OnInit, OnDestroy {
             createKeyData$.subscribe(({ data }) => {
                 this.progressChange.emit(false);
                 const apiKeyData = data.createMyApiKey as ApiKeySecret;
-                this.getApiKeys();
+                this.getIpList();
                 this.dialog.open(ApiSecretDialogBox, {
                     width: '500px',
                     data: {
@@ -151,7 +154,7 @@ export class ProfileApiKeysSettingsComponent implements OnInit, OnDestroy {
         this.pSubscriptions.add(
             deleteKeyData$.subscribe(({ data }) => {
                 this.progressChange.emit(false);
-                this.getApiKeys();
+                this.getIpList();
             }, (error) => {
                 this.progressChange.emit(false);
                 this.error.emit(this.errorHandler.getError(error.message, 'Unable to delete API key'));
