@@ -53,14 +53,6 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
                 button: flow
             }
         });
-        // this.pSubscriptions.add(
-        //     dialogRef.afterClosed().subscribe(result => {
-        //         if (dialogRef.componentInstance.complete) {
-        //             this.auth.logout();
-        //             this.router.navigateByUrl('/');
-        //         }
-        //     })
-        // );
     }
 
     private loadTransactionsTotal(): void {
@@ -127,7 +119,7 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
             const rawTiers = [...tiersData.list];
             const sortedTiers = rawTiers.sort((a, b) => this.tierSortHandler(a, b));
             const currentTierId = this.auth.user?.kycTierId;
-            let beforeCurrentTier = true;
+            let beforeCurrentTier = (sortedTiers.find(x => x.settingsKycTierId === currentTierId) !== undefined);
             this.tiers = sortedTiers.map(val => {
                 const defaultDescription = 'Start verification process to increase your limit up to this level.';
                 const unlimitVal = (val.amount === undefined || val.amount === null);
@@ -144,7 +136,7 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
                             tierPassed = true;
                         }
                     } else {
-                        tierPassed = false;
+                        tierPassed = true;
                     }
                 }
                 return {

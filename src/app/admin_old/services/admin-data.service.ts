@@ -2262,9 +2262,6 @@ export class AdminDataService {
       .pipe(
         map(result => {
           if (result.data?.getUsers?.list && result.data?.getUsers?.count) {
-
-            console.log(result.data.getUsers.list);
-
             return {
               list: result.data.getUsers.list.map(u => new UserItem(u)),
               count: result.data.getUsers.count
