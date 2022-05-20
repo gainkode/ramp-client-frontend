@@ -367,6 +367,18 @@ const DELETE_MY_API_KEY = gql`
   }
 `;
 
+const DELETE_MY_DEVICE = gql`
+mutation DeleteMyDevice(
+  $deviceIds: [String!]
+) {
+  deleteMyDevice(
+    deviceIds: $deviceIds
+  ) {
+    count
+  }
+}
+`;
+
 const DELETE_MY_NOTIFICATIONS = gql`
   mutation DeleteMyNotifications(
     $notificationIds: [ID!]
@@ -745,6 +757,15 @@ export class ProfileDataService {
       mutation: DELETE_MY_API_KEY,
       variables: {
         apiKeyId
+      },
+    });
+  }
+
+  deleteMyDevice(deviceId: string): Observable<any> {
+    return this.apollo.mutate({
+      mutation: DELETE_MY_DEVICE,
+      variables: {
+        deviceIds: [deviceId]
       },
     });
   }

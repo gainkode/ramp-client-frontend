@@ -87,11 +87,12 @@ export class ProfileIpListSettingsComponent implements OnInit, OnDestroy {
     }
 
     removeApiKey(item: DeviceItem): void {
+        const deviceName = (item.device === '') ? 'unknown device' : item.device;
         const dialogRef = this.dialog.open(DeleteDialogBox, {
             width: '402px',
             data: {
                 title: '',
-                message: `You are going to delete device ${item.device}. Please confirm.`,
+                message: `You are going to delete confirmation for ${deviceName}. Please confirm.`,
                 button: 'DELETE'
             }
         });
@@ -107,7 +108,7 @@ export class ProfileIpListSettingsComponent implements OnInit, OnDestroy {
     private removeDeviceConfirmed(deviceId: string): void {
         this.error.emit('');
         this.progressChange.emit(true);
-        const deleteKeyData$ = this.dataService.deleteMyApiKey(deviceId);
+        const deleteKeyData$ = this.dataService.deleteMyDevice(deviceId);
         this.pSubscriptions.add(
             deleteKeyData$.subscribe(({ data }) => {
                 this.progressChange.emit(false);
