@@ -66,7 +66,6 @@ export class ProfileIpListSettingsComponent implements OnInit, OnDestroy {
                 const dataList = data.myDevices as UserDeviceListResult;
                 if (dataList !== null) {
                     this.deviceCount = dataList?.count ?? 0;
-                    console.log(dataList);
                     if (this.deviceCount > 0 && dataList?.list) {
                         this.devices = dataList.list.map(val => new DeviceItem(val));
                     }

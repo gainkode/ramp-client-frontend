@@ -334,9 +334,6 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
   }
 
   applyFilters(): void {
-
-    console.log('apply', this.filterForm);
-
     if (this.filterForm) {
       this.filterSubject.next(new Filter(this.filterForm.value));
     }
