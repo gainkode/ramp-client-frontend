@@ -2101,6 +2101,7 @@ export type QueryGetDashboardStatsArgs = {
   sourcesOnly?: Maybe<Array<TransactionSource>>;
   countriesOnly?: Maybe<Array<Scalars['String']>>;
   countryCodeType?: Maybe<CountryCodeType>;
+  completedDateInterval?: Maybe<DateTimeInterval>;
   accountTypesOnly?: Maybe<Array<UserType>>;
 };
 

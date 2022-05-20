@@ -137,7 +137,7 @@
                                             <label class="main-content-label tx-11 tx-medium tx-gray-600">
                                                 Transactions created
                                             </label>
-                                            <app-admin-date-range
+                                            <app-admin-date-range #created_filter
                                                 [startField]="filterForm?.controls?.createdDateRangeStart ?? null"
                                                 [endField]="filterForm?.controls?.createdDateRangeEnd ?? null">
                                             </app-admin-date-range>
@@ -146,7 +146,7 @@
                                             <label class="main-content-label tx-11 tx-medium tx-gray-600">
                                                 Transactions completed
                                             </label>
-                                            <app-admin-date-range
+                                            <app-admin-date-range #completed_filter
                                                 [startField]="filterForm?.controls?.completedDateRangeStart ?? null"
                                                 [endField]="filterForm?.controls?.completedDateRangeEnd ?? null">
                                             </app-admin-date-range>
@@ -155,7 +155,7 @@
                                             <label class="main-content-label tx-11 tx-medium tx-gray-600">
                                                 Registered
                                             </label>
-                                            <app-admin-date-range
+                                            <app-admin-date-range #registered_filter
                                                 [startField]="filterForm?.controls?.registrationDateRangeStart ?? null"
                                                 [endField]="filterForm?.controls?.registrationDateRangeEnd ?? null">
                                             </app-admin-date-range>

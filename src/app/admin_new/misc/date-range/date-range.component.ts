@@ -68,4 +68,9 @@ export class AdminDateRangeComponent {
     this.startField?.setValue(getFormattedUtcDate(start));
     this.endField?.setValue(getFormattedUtcDate(end));
   }
+
+  reset(): void {
+    this.fromDate = null;
+    this.toDate = null;
+  }
 }

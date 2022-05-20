@@ -65,6 +65,7 @@ import { ApiKeyItem } from 'src/app/model/apikey.model';
 const GET_DASHBOARD_STATS = gql`
   query GetDashboardStats(
     $createdDateInterval: DateTimeInterval
+    $completedDateInterval: DateTimeInterval
     $userIdOnly: [String!],
     $widgetIdOnly: [String!],
     $sourcesOnly: [TransactionSource!],
@@ -74,6 +75,7 @@ const GET_DASHBOARD_STATS = gql`
   ) {
     getDashboardStats(
       createdDateInterval: $createdDateInterval
+      completedDateInterval: $completedDateInterval
       userIdOnly: $userIdOnly
       widgetIdOnly: $widgetIdOnly
       sourcesOnly: $sourcesOnly
@@ -1957,6 +1959,7 @@ export class AdminDataService {
   getDashboardStats(filter: Filter): Observable<DashboardStats> {
     const vars: QueryGetDashboardStatsArgs = {
       createdDateInterval: filter.createdDateInterval,
+      completedDateInterval: filter.completedDateInterval,
       userIdOnly: filter.users,
       widgetIdOnly: filter.widgets,
       sourcesOnly: filter.sources,

@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { EmptyObject } from 'apollo-angular/types';
 import { concat, Observable, of, Subject, Subscription } from 'rxjs';
@@ -10,6 +10,7 @@ import { CommonTargetValue } from 'src/app/model/common.model';
 import { Countries } from 'src/app/model/country-code.model';
 import { SettingsKycTier } from 'src/app/model/generated-models';
 import { CurrencyView, KycStatusList, PaymentInstrumentList, RiskLevelViewList, TransactionSourceList, TransactionStatusList, TransactionTypeList, UserStatusList, UserTypeList } from 'src/app/model/payment.model';
+import { AdminDateRangeComponent } from '../date-range/date-range.component';
 
 @Component({
   selector: 'app-admin-filter',
@@ -23,6 +24,9 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
   @Output() get filter(): Observable<Filter> {
     return this.filterSubject.asObservable();
   }
+  @ViewChild('created_filter') createFilterPicker!: AdminDateRangeComponent;
+  @ViewChild('completed_filter') completeFilterPicker!: AdminDateRangeComponent;
+  @ViewChild('registered_filter') registerFilterPicker!: AdminDateRangeComponent;
 
   private filterSubject = new Subject<Filter>();
   private subscriptions = new Subscription();
@@ -268,14 +272,23 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
       if (this.fields.includes('createdDate')) {
         this.filterForm.controls.createdDateRangeStart.setValue(undefined);
         this.filterForm.controls.createdDateRangeEnd.setValue(undefined);
+        if (this.createFilterPicker) {
+          this.createFilterPicker.reset();
+        }
       }
       if (this.fields.includes('completedDate')) {
         this.filterForm.controls.completedDateRangeStart.setValue(undefined);
         this.filterForm.controls.completedDateRangeEnd.setValue(undefined);
+        if (this.completeFilterPicker) {
+          this.completeFilterPicker.reset();
+        }
       }
       if (this.fields.includes('registrationDate')) {
         this.filterForm.controls.registrationDateRangeStart.setValue(undefined);
         this.filterForm.controls.registrationDateRangeEnd.setValue(undefined);
+        if (this.registerFilterPicker) {
+          this.registerFilterPicker.reset();
+        }
       }
       if (this.fields.includes('transactionIds')) {
         this.filterForm.controls.transactionIds.setValue([]);
@@ -321,6 +334,9 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
   }
 
   applyFilters(): void {
+
+    console.log('apply', this.filterForm);
+
     if (this.filterForm) {
       this.filterSubject.next(new Filter(this.filterForm.value));
     }
