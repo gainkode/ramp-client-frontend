@@ -264,4 +264,8 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
       windowClass: 'modalCusSty',
     });
   }
+
+  showWhiteList(userId: string): void {
+    this.router.navigateByUrl(`/admin/white-device-list/${userId}`);
+  }
 }

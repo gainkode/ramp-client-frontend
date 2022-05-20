@@ -1,0 +1,86 @@
+<app-admin-page-header [title]="'White List'" [items]="['Home', 'Users']" [active_item]="'White List'">
+</app-admin-page-header>
+
+<div class="row row-sm">
+  <div class="col-xl-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="table-responsive">
+          <app-admin-details-item label="Account" [value]="user?.extendedName">
+          </app-admin-details-item>
+
+          <mat-progress-bar *ngIf="inProgress" color="accent" mode="indeterminate"></mat-progress-bar>
+
+          <div class="data-table">
+            <mat-table [dataSource]="devices">
+              <ng-container matColumnDef="details" sticky>
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element" class="device-list-selector-column">
+                  <button mat-icon-button class="row-button" (click)="showDetails(element, details_content)"
+                    [attr.aria-label]="'Device details'" [attr.aria-pressed]="!!selectedDevice" matTooltip="Device details"
+                    matTooltipClass="info-tooltip">
+                    <i class="material-icons" style="font-size: 20px;">
+                      wysiwyg
+                    </i>
+                  </button>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="country">
+                <th mat-header-cell *matHeaderCellDef>Country</th>
+                <td mat-cell *matCellDef="let element" class="device-list-selector-column">
+                  {{element.country?.name}}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="browser">
+                <th mat-header-cell *matHeaderCellDef>Browser</th>
+                <td mat-cell *matCellDef="let element" class="device-list-selector-column">
+                  {{element.browser}}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="device">
+                <th mat-header-cell *matHeaderCellDef>Device</th>
+                <td mat-cell *matCellDef="let element" class="device-list-data-column">
+                  {{element.device}}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="created">
+                <th mat-header-cell *matHeaderCellDef>Created</th>
+                <td mat-cell *matCellDef="let element" class="device-list-data-column">
+                  {{element.created}}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="confirmed">
+                <th mat-header-cell *matHeaderCellDef>Confirmed</th>
+                <td mat-cell *matCellDef="let element" class="device-list-data-column">
+                  {{element.deviceConfirmed}}
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </mat-table>
+          </div>
+
+          <ng-template #details_content let-modal>
+            <div class="modal-header">
+              <h5 class="modal-title">Device details</h5>
+              <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <!-- <app-admin-risk-details [permission]="permission" [device]="selectedDevice"
+                (close)="modal.dismiss('Close')">
+              </app-admin-risk-details> -->
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

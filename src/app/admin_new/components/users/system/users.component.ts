@@ -354,4 +354,8 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
       windowClass: 'modalCusSty',
     });
   }
+
+  showWhiteList(userId: string): void {
+    this.router.navigateByUrl(`/admin/white-device-list/${userId}`);
+  }
 }

@@ -78,6 +78,7 @@ import { AdminFeeSchemesComponent } from './components/fees/fees.component';
 import { AdminFeeSchemeDetailsComponent } from './components/fees/fee-details.component';
 import { AdminCommonSettingsComponent } from './components/settings/common/common.component';
 import { AdminDashboardCardComponent } from './misc/dashboard-card/dashboard-card.component';
+import { AdminUserDevicesComponent } from './components/users/devices/devices.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -139,6 +140,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AdminCryptoWalletsComponent, AdminCryptoWalletDetailsComponent,
     AdminCustomersComponent, AdminCustomerDetailsComponent,
     AdminSystemUsersComponent, AdminUserDetailsComponent, AdminRoleSelectComponent, AdminMessageDialogComponent,
+    AdminUserDevicesComponent,
     AdminNotificationsComponent, AdminNotificationDetailsComponent,
     AdminRisksComponent, AdminRiskDetailsComponent,
     AdminWidgetsComponent, AdminWidgetDetailsComponent,

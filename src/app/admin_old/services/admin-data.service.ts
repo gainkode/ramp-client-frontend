@@ -34,6 +34,7 @@ import {
   Transaction,
   TransactionListResult,
   TransactionUpdateTransferOrderChanges,
+  UserDeviceListResult,
   UserInput,
   UserListResult,
   UserMode,
@@ -53,7 +54,7 @@ import { ErrorService } from '../../services/error.service';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { Filter } from '../model/filter.model';
-import { UserItem } from '../../model/user.model';
+import { DeviceItem, UserItem } from '../../model/user.model';
 import { FiatWalletItem, WalletItem } from '../model/wallet.model';
 import { NotificationItem } from '../../model/notification.model';
 import { WidgetItem } from '../model/widget.model';
@@ -433,6 +434,30 @@ const GET_RISK_ALERTS = gql`
       }
     }
   }
+`;
+
+const GET_DEVICES = gql`
+query GetDevices {
+  getDevices {
+    count
+    list {
+      userDeviceId
+      userId
+      created
+      countryCode2
+      countryCode3
+      city
+      region
+      eu
+      metro
+      area
+      location
+      browser
+      device
+      deviceConfirmed
+    }
+  }
+}
 `;
 
 const GET_TRANSACTIONS = gql`
@@ -2149,6 +2174,28 @@ export class AdminDataService {
           return {
             list: result.data.getRiskAlerts.list.map(val => new RiskAlertItem(val)),
             count: result.data.getRiskAlerts.count
+          };
+        } else {
+          return {
+            list: [],
+            count: 0
+          };
+        }
+      }));
+  }
+
+  getDevices(userId: string): Observable<{ list: Array<DeviceItem>; count: number; }> {
+    return this.watchQuery<{ getDevices: UserDeviceListResult }, any>(
+      {
+        query: GET_DEVICES,
+        fetchPolicy: 'network-only'
+      }).pipe(map(result => {
+        if (result.data?.getDevices?.list && result.data?.getDevices?.count) {
+          return {
+            list: result.data.getDevices.list
+              .filter(x => x?.userId === userId)
+              .map(val => new DeviceItem(val)),
+            count: result.data.getDevices.count
           };
         } else {
           return {

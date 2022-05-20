@@ -18,7 +18,7 @@ export class AdminNewGuard {
     if (currentItem) {
       const permission = this.auth.isPermittedObjectCode(currentItem.code);
       if (permission === 0) {
-        this.router.navigateByUrl('/admin_new/dashboard');
+        this.router.navigateByUrl('/admin/dashboard');
         return false;
       }
     }

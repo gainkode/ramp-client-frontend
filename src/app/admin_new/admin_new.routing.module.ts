@@ -19,6 +19,7 @@ import { AdminWidgetsComponent } from './components/widgets/widgets.component';
 import { AdminCostSchemesComponent } from './components/costs/schemes/schemes.component';
 import { AdminFeeSchemesComponent } from './components/fees/fees.component';
 import { AdminCommonSettingsComponent } from './components/settings/common/common.component';
+import { AdminUserDevicesComponent } from './components/users/devices/devices.component';
 
 const routes: Routes = [
   {
@@ -79,6 +80,11 @@ const routes: Routes = [
             data: { header: 'System users' }
           }
         ]
+      },
+      {
+        path: 'white-device-list/:userid',
+        component: AdminUserDevicesComponent,
+        data: { header: 'White List' }
       },
       {
         path: 'crypto-wallets',
