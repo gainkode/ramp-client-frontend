@@ -1,0 +1,54 @@
+<div class="row">
+  <div class="col-md-12 col-lg-12 col-xl-12 mx-auto d-block">
+    <div class="card card-body pd-20 pd-md-40 border shadow-none">
+      <app-admin-details-item label="Device" [value]="deviceData?.device"></app-admin-details-item>
+      <app-admin-details-item label="Browser" [value]="deviceData?.browser"></app-admin-details-item>
+      <app-admin-details-item label="Country" [value]="country"></app-admin-details-item>
+      <app-admin-details-item label="Location" [value]="deviceData?.location"></app-admin-details-item>
+      <app-admin-details-item label="EU" [value]="deviceData?.eu"></app-admin-details-item>
+      <app-admin-details-item label="Region" [value]="deviceData?.region"></app-admin-details-item>
+      <app-admin-details-item label="City" [value]="deviceData?.city"></app-admin-details-item>
+      <app-admin-details-item label="Metro" [value]="deviceData?.metro"></app-admin-details-item>
+      <app-admin-details-item label="Area" [value]="deviceData?.area"></app-admin-details-item>
+      <app-admin-details-item label="Created" [value]="deviceData?.created"></app-admin-details-item>
+      <app-admin-details-item label="Confirmed" [value]="deviceData?.deviceConfirmed"></app-admin-details-item>
+    </div>
+    <div *ngIf="errorMessage!==''" class="card card-body card-danger pd-20 pd-md-40 border shadow-none">
+      <h4 class="card-title2 mg-b-20" style="color: brown;">
+        {{errorMessage}}
+      </h4>
+    </div>
+    <div style="display: flex; justify-content: flex-end;">
+      <button *ngIf="permission>1" class="btn btn-danger pd-x-30 me-2 mg-t-5" type="button"
+        (click)="onDelete(delete_confirm_content)">
+        <span *ngIf="deleteInProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        Delete
+      </button>
+      <button class="btn btn-outline-primary pd-x-30 mg-t-5" type="button" (click)="onClose()">
+        Close
+      </button>
+    </div>
+  </div>
+</div>
+
+<ng-template #delete_confirm_content let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Delete device confirmation</h5>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <h4 style="text-align: center;">
+      You are going to delete device confirmation. Confirm operation.
+    </h4>
+    <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
+      <button class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" type="button" (click)="modal.dismiss('Reject')">
+        Reject
+      </button>
+      <button class="btn btn-danger pd-x-30 mg-t-5" (click)="onConfirmDelete()">
+        Confirm
+      </button>
+    </div>
+  </div>
+</ng-template>

@@ -74,9 +74,9 @@
               </button>
             </div>
             <div class="modal-body">
-              <!-- <app-admin-risk-details [permission]="permission" [device]="selectedDevice"
+              <app-admin-device-details [permission]="permission" [device]="selectedDevice" (save)="loadDevices();modal.close('OK');"
                 (close)="modal.dismiss('Close')">
-              </app-admin-risk-details> -->
+              </app-admin-device-details>
             </div>
           </ng-template>
         </div>

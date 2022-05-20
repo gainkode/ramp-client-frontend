@@ -1667,6 +1667,18 @@ const DELETE_USER_API_KEY = gql`
   }
 `;
 
+const DELETE_DEVICE = gql`
+mutation DeleteDevice(
+  $deviceIds: [String]
+) {
+  deleteDevice(
+    deviceIds: $deviceIds
+  ) {
+    count
+  }
+}
+`;
+
 const EXPORT_TRANSACTIONS = gql`
 mutation ExportTransactionsToCsv(
   $transactionIdsOnly: [String!]
@@ -3248,6 +3260,15 @@ export class AdminDataService {
     });
   }
 
+  deleteDevice(deviceId: string): Observable<any> {
+    return this.apollo.mutate({
+      mutation: DELETE_DEVICE,
+      variables: {
+        deviceIds: [deviceId]
+      },
+    });
+  }
+  
   exportUsersToCsv(
     userIds: string[],
     roleIds: string[],

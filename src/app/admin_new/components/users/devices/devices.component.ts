@@ -59,7 +59,7 @@ export class AdminUserDevicesComponent implements OnInit, OnDestroy {
     });
   }
 
-  private loadDevices(): void {
+  loadDevices(): void {
     this.inProgress = true;
     const listData$ = this.adminService.getDevices(this.filterUserId).pipe(take(1));
     this.subscriptions.add(

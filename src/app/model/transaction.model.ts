@@ -196,7 +196,7 @@ export class TransactionItemFull {
   }
 
   getInstrumentDetails(data: string): string[] {
-const result: string[] = [];
+    const result: string[] = [];
     try {
       const details = JSON.parse(data);
       if (details) {
