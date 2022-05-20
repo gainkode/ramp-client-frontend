@@ -26,10 +26,10 @@ export class SettingsMenuBarComponent {
             id: 'security',
             name: 'Security'
         } as MenuItem,
-        // {
-        //     id: 'iplist',
-        //     name: 'White List'
-        // } as MenuItem
+        {
+            id: 'iplist',
+            name: 'White List'
+        } as MenuItem
     ];
 
     constructor(private router: Router, private auth: AuthService) {

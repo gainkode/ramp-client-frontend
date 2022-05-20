@@ -1957,7 +1957,6 @@ export class AdminDataService {
   getDashboardStats(filter: Filter): Observable<DashboardStats> {
     const vars: QueryGetDashboardStatsArgs = {
       createdDateInterval: filter.createdDateInterval,
-      //transactionDateOnly: filter.transactionDate,
       userIdOnly: filter.users,
       widgetIdOnly: filter.widgets,
       sourcesOnly: filter.sources,

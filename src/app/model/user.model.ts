@@ -1,4 +1,4 @@
-import { KycStatus, User, UserContact, UserRole, UserType } from './generated-models';
+import { KycStatus, User, UserContact, UserDevice, UserRole, UserType } from './generated-models';
 import {
   KycStatusList,
   UserModeShortList,
@@ -6,7 +6,7 @@ import {
   UserTypeList,
   UserTypeView
 } from './payment.model';
-import { getCountryByCode2 } from './country-code.model';
+import { Country, getCountryByCode2, getCountryByCode3 } from './country-code.model';
 import { CommonTargetValue } from './common.model';
 import { DatePipe } from '@angular/common';
 import { getCryptoSymbol } from '../utils/utils';
@@ -394,5 +394,41 @@ export class RoleItem {
     this.id = data?.userRoleId ?? '';
     this.name = data?.name ?? '';
     this.code = data?.code ?? '';
+  }
+}
+
+export class DeviceItem {
+  id = '';
+  userId = '';
+  created = '';
+  country?: Country;
+  countryImg = '';
+  city = '';
+  region = '';
+  eu = '';
+  metro = 0;
+  area = 0;
+  location = '';
+  browser = '';
+  device = '';
+  deviceConfirmed = '';
+
+  constructor(data: UserDevice | null) {
+    this.id = data?.userDeviceId ?? '';
+    const datepipe: DatePipe = new DatePipe('en-US');
+    this.created = datepipe.transform(data?.created, 'dd MMM YYYY HH:mm:ss') ?? '';
+    this.deviceConfirmed = datepipe.transform(data?.deviceConfirmed, 'dd MMM YYYY HH:mm:ss') ?? '';
+    this.country = getCountryByCode3(data?.countryCode3 ?? '') ?? undefined;
+    if (this.country) {
+      this.countryImg = `assets/svg-country-flags/${this.country?.code2.toLowerCase()}.svg`;
+    }
+    this.city = data?.city ?? '';
+    this.region = data?.region ?? '';
+    this.eu = data?.eu ?? '';
+    this.metro = data?.metro ?? 0;
+    this.area = data?.area ?? 0;
+    this.location = data?.location ?? '';
+    this.browser = data?.browser ?? '';
+    this.device = data?.device ?? '';
   }
 }

@@ -1,19 +1,13 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { PageEvent } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { ApiSecretDialogBox } from 'src/app/components/dialogs/api-secret-box.dialog';
 import { DeleteDialogBox } from 'src/app/components/dialogs/delete-box.dialog';
-import { ApiKeyItem } from 'src/app/model/apikey.model';
-import { ApiKeyListResult, ApiKeySecret, SettingsKycTierShortEx, SettingsKycTierShortExListResult, UserState } from 'src/app/model/generated-models';
-import { TierItem } from 'src/app/model/identification.model';
+import { UserDeviceListResult } from 'src/app/model/generated-models';
+import { DeviceItem } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
-import { CommonDataService } from 'src/app/services/common-data.service';
 import { ErrorService } from 'src/app/services/error.service';
-import { PaymentDataService } from 'src/app/services/payment.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
 
 @Component({
@@ -23,23 +17,23 @@ import { ProfileDataService } from 'src/app/services/profile.service';
         '../../../../assets/menu.scss',
         '../../../../assets/button.scss',
         '../../../../assets/profile.scss',
-        './apikeys.component.scss'
+        './ip-list.component.scss'
     ]
 })
 export class ProfileIpListSettingsComponent implements OnInit, OnDestroy {
-    @ViewChild(MatSort) sort!: MatSort;
     @Output() error = new EventEmitter<string>();
     @Output() progressChange = new EventEmitter<boolean>();
 
-    keys: ApiKeyItem[] = [];
-    keyCount = 0;
-    pageCounts = [25, 50, 100];
-    pageSize = 25;
-    pageIndex = 0;
-    sortedField = 'created';
-    sortedDesc = true;
+    details = false;
+    selectedDevice?: DeviceItem;
+    devices: DeviceItem[] = [];
+    deviceCount = 0;
     displayedColumns: string[] = [
-        'title', 'created', 'remove'
+        'country',
+        'browser',
+        'device',
+        'created',
+        'remove'
     ];
 
     private pSubscriptions: Subscription = new Subscription();
@@ -60,32 +54,21 @@ export class ProfileIpListSettingsComponent implements OnInit, OnDestroy {
         this.pSubscriptions.unsubscribe();
     }
 
-    private getSortedField(): string {
-        let result = this.sortedField;
-        if (this.sortedField === 'title') {
-            result = 'apiKeyId';
-        }
-        return result;
-    }
-
     private getIpList(): void {
         this.error.emit('');
-        this.keys = [];
+        this.devices = [];
         this.error.emit('');
-        const tiersData = this.dataService.getMyApiKeys(
-            this.pageIndex,
-            this.pageSize,
-            this.getSortedField(),
-            this.sortedDesc).valueChanges.pipe(take(1));
+        const tiersData = this.dataService.getMyDevices().valueChanges.pipe(take(1));
         this.progressChange.emit(true);
         this.pSubscriptions.add(
             tiersData.subscribe(({ data }) => {
                 this.progressChange.emit(false);
-                const dataList = data.myApiKeys as ApiKeyListResult;
+                const dataList = data.myDevices as UserDeviceListResult;
                 if (dataList !== null) {
-                    this.keyCount = dataList?.count ?? 0;
-                    if (this.keyCount > 0 && dataList?.list) {
-                        this.keys = dataList.list.map(val => new ApiKeyItem(val));
+                    this.deviceCount = dataList?.count ?? 0;
+                    console.log(dataList);
+                    if (this.deviceCount > 0 && dataList?.list) {
+                        this.devices = dataList.list.map(val => new DeviceItem(val));
                     }
                 }
             }, (error) => {
@@ -99,65 +82,40 @@ export class ProfileIpListSettingsComponent implements OnInit, OnDestroy {
         );
     }
 
-    handlePage(event: PageEvent): PageEvent {
-        this.pageSize = event.pageSize;
-        this.pageIndex = event.pageIndex;
-        this.getIpList();
-        return event;
+    onRowSelected(selectedItem: DeviceItem): void {
+        this.selectedDevice = selectedItem;
+        this.details = true;
     }
 
-    createKey(): void {
-        this.error.emit('');
-        this.progressChange.emit(true);
-        const createKeyData$ = this.dataService.createMyApiKey();
-        this.pSubscriptions.add(
-            createKeyData$.subscribe(({ data }) => {
-                this.progressChange.emit(false);
-                const apiKeyData = data.createMyApiKey as ApiKeySecret;
-                this.getIpList();
-                this.dialog.open(ApiSecretDialogBox, {
-                    width: '500px',
-                    data: {
-                        title: 'New API key has been created',
-                        message: apiKeyData.secret
-                    }
-                });
-            }, (error) => {
-                this.progressChange.emit(false);
-                this.error.emit(this.errorHandler.getError(error.message, 'Unable to craete API key'));
-            })
-        );
-    }
-
-    removeApiKey(item: ApiKeyItem): void {
+    removeApiKey(item: DeviceItem): void {
         const dialogRef = this.dialog.open(DeleteDialogBox, {
             width: '402px',
             data: {
                 title: '',
-                message: `You are going to delete API key ${item.title}. Please confirm.`,
+                message: `You are going to delete device ${item.device}. Please confirm.`,
                 button: 'DELETE'
             }
         });
         this.pSubscriptions.add(
             dialogRef.afterClosed().subscribe(result => {
                 if (result === true) {
-                    this.removeApiKeyConfirmed(item.title);
+                    this.removeDeviceConfirmed(item.id);
                 }
             })
         );
     }
 
-    private removeApiKeyConfirmed(apiKey: string): void {
+    private removeDeviceConfirmed(deviceId: string): void {
         this.error.emit('');
         this.progressChange.emit(true);
-        const deleteKeyData$ = this.dataService.deleteMyApiKey(apiKey);
+        const deleteKeyData$ = this.dataService.deleteMyApiKey(deviceId);
         this.pSubscriptions.add(
             deleteKeyData$.subscribe(({ data }) => {
                 this.progressChange.emit(false);
                 this.getIpList();
             }, (error) => {
                 this.progressChange.emit(false);
-                this.error.emit(this.errorHandler.getError(error.message, 'Unable to delete API key'));
+                this.error.emit(this.errorHandler.getError(error.message, 'Unable to delete device'));
             })
         );
     }

@@ -10,6 +10,7 @@ import { DashboardService } from '../../services/dashboard.service';
 export class AdminDashboardComponent implements OnInit, OnDestroy {
   filterFields = [
     'createdDate',
+    'completedDate',
     'accountType',
     'country',
     'source',

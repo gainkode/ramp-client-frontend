@@ -322,6 +322,30 @@ const GET_MY_API_KEYS = gql`
   }
 `;
 
+const GET_MY_DEVICES = gql`
+query MyDevices {
+  myDevices {
+    count
+    list {
+      userDeviceId
+      userId
+      created
+      countryCode2
+      countryCode3
+      city
+      region
+      eu
+      metro
+      area
+      location
+      browser
+      device
+      deviceConfirmed
+    }
+  }
+}
+`;
+
 const CREATE_MY_API_KEY = gql`
   mutation CreateMyApiKey {
     createMyApiKey {
@@ -699,6 +723,13 @@ export class ProfileDataService {
         first: takeItems,
         orderBy: orderFields
       },
+      fetchPolicy: 'network-only',
+    });
+  }
+
+  getMyDevices(): QueryRef<any, EmptyObject> {
+    return this.apollo.watchQuery<any>({
+      query: GET_MY_DEVICES,
       fetchPolicy: 'network-only',
     });
   }

@@ -713,6 +713,8 @@ export type Mutation = {
   /** Not used */
   addFiatVault?: Maybe<FiatVault>;
   deleteFiatVault?: Maybe<FiatVault>;
+  deleteDevice?: Maybe<UserDeviceListResult>;
+  deleteMyDevice?: Maybe<UserDeviceListResult>;
 };
 
 
@@ -1304,6 +1306,16 @@ export type MutationDeleteFiatVaultArgs = {
   fiatVaultId?: Maybe<Scalars['String']>;
 };
 
+
+export type MutationDeleteDeviceArgs = {
+  deviceIds?: Maybe<Array<Maybe<Scalars['String']>>>;
+};
+
+
+export type MutationDeleteMyDeviceArgs = {
+  deviceIds?: Maybe<Array<Maybe<Scalars['String']>>>;
+};
+
 export type NewAddress = {
   __typename?: 'NewAddress';
   address: Scalars['String'];
@@ -1625,6 +1637,8 @@ export type Query = {
   myFiatVaults?: Maybe<FiatVaultListResult>;
   /** Get system balance */
   getSystemBalanceMany?: Maybe<Scalars['String']>;
+  getDevices?: Maybe<UserDeviceListResult>;
+  myDevices?: Maybe<UserDeviceListResult>;
 };
 
 
@@ -3280,6 +3294,12 @@ export type UserDevice = {
   browser?: Maybe<Scalars['String']>;
   device?: Maybe<Scalars['String']>;
   deviceConfirmed?: Maybe<Scalars['DateTime']>;
+};
+
+export type UserDeviceListResult = {
+  __typename?: 'UserDeviceListResult';
+  count?: Maybe<Scalars['Int']>;
+  list?: Maybe<Array<Maybe<UserDevice>>>;
 };
 
 export type UserInput = {
