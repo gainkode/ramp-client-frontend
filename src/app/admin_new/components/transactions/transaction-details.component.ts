@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, ErrorHandler, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -8,6 +8,7 @@ import { AccountStatus, KycStatus, Rate, SettingsCommon, Transaction, Transactio
 import { AdminTransactionStatusList, CurrencyView, TransactionKycStatusList, TransactionStatusList, TransactionStatusView, UserStatusList } from 'src/app/model/payment.model';
 import { TransactionItemFull } from 'src/app/model/transaction.model';
 import { AuthService } from 'src/app/services/auth.service';
+import { ErrorService } from 'src/app/services/error.service';
 import { ExchangeRateService } from 'src/app/services/rate.service';
 import { getTransactionAmountHash, getTransactionStatusHash } from 'src/app/utils/utils';
 
@@ -114,6 +115,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     private router: Router,
     private auth: AuthService,
     private modalService: NgbModal,
+    private errorHandler: ErrorService,
     private exhangeRate: ExchangeRateService,
     private adminService: AdminDataService) { }
 
@@ -246,7 +248,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
         this.save.emit();
       }, (error) => {
         this.saveInProgress = false;
-        this.errorMessage = error;
+        this.errorMessage = (error === '') ? this.errorHandler.getCurrentError() : error;
         if (this.auth.token === '') {
           this.router.navigateByUrl('/');
         }

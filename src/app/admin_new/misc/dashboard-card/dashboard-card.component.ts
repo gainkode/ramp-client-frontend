@@ -22,7 +22,6 @@ export class AdminDashboardCardComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subscriptions.add(
       this.dashboardService.data.subscribe(data => {
-        console.log('item', this.source, data);
         this.data = data[this.source];
       })
     );
