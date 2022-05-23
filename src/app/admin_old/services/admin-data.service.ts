@@ -3203,7 +3203,7 @@ export class AdminDataService {
       };
     }
     const vars = {
-      transactionId: data.transactionId,
+      transactionIdq: data.transactionId,
       currencyToSpend: data.currencyToSpend,
       currencyToReceive: data.currencyToReceive,
       amountToSpend: data.amountToSpend,
@@ -3223,12 +3223,7 @@ export class AdminDataService {
     return this.mutate({
       mutation: UPDATE_TRANSACTIONS,
       variables: vars
-    }).pipe(tap((res) => {
-      this.snackBar.open(
-        `Transaction was updated`,
-        undefined, { duration: 5000 }
-      );
-    }));
+    });
   }
 
   sendAdminNotification(ids: string[], level: UserNotificationLevel, title: string, text: string): Observable<any> {

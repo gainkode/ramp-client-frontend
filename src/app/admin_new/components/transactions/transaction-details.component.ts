@@ -248,7 +248,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
         this.save.emit();
       }, (error) => {
         this.saveInProgress = false;
-        this.errorMessage = (error === '') ? this.errorHandler.getCurrentError() : error;
+        this.errorMessage = (!error || error === '') ? this.errorHandler.getCurrentError() : error;
         if (this.auth.token === '') {
           this.router.navigateByUrl('/');
         }
