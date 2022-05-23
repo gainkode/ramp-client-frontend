@@ -90,6 +90,7 @@ export class AppModule {
               return forward(operation);
             });
           }
+          console.log('error details for', operation.operationName, err);
           let codeValue = err.extensions?.code ?? 'INTERNAL_SERVER_ERROR';
           if (codeValue === 'INTERNAL_SERVER_ERROR' && err.message) {
             codeValue = err.message;
