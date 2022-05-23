@@ -659,7 +659,9 @@ export type Mutation = {
   logout: Scalars['Boolean'];
   refreshToken: Scalars['String'];
   confirmEmail: Scalars['Boolean'];
+  confirmUserEmail: Scalars['Boolean'];
   confirmDevice: Scalars['Boolean'];
+  confirmUserDevice: Scalars['Boolean'];
   setMyInfo: LoginResult;
   setUserInfo: LoginResult;
   forgotPassword: Scalars['Boolean'];
@@ -1082,9 +1084,19 @@ export type MutationConfirmEmailArgs = {
 };
 
 
+export type MutationConfirmUserEmailArgs = {
+  user_id: Scalars['String'];
+};
+
+
 export type MutationConfirmDeviceArgs = {
   token: Scalars['String'];
   recaptcha: Scalars['String'];
+};
+
+
+export type MutationConfirmUserDeviceArgs = {
+  device_id: Scalars['String'];
 };
 
 

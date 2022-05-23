@@ -643,6 +643,7 @@ const GET_USERS = gql`
       list {
         userId
         email
+        emailConfirmed
         firstName
         lastName
         type
@@ -745,6 +746,7 @@ const GET_USERS_EX = gql`
       list {
         userId
         email
+        emailConfirmed
         firstName
         lastName
         type
@@ -1513,6 +1515,26 @@ mutation RestoreUser(
   ) {
     userId
   }
+}
+`;
+
+const CONFIRM_EMAIL = gql`
+mutation ConfirmUserEmail(
+  $user_id: String!
+) {
+  confirmUserEmail(
+    user_id: $user_id
+  )
+}
+`;
+
+const CONFIRM_DEVICE = gql`
+mutation ConfirmUserDevice(
+  $device_id: String!
+) {
+  confirmUserDevice(
+    device_id: $device_id
+  )
 }
 `;
 
@@ -3107,6 +3129,34 @@ export class AdminDataService {
         `Customer was restored`,
         undefined, { duration: 5000 }
       );
+    }));
+  }
+
+  confirmEmail(userId: string): Observable<any> {
+    return this.mutate({
+      mutation: CONFIRM_EMAIL,
+      variables: {
+        user_id: userId
+      }
+    }).pipe(tap((res) => {
+      // this.snackBar.open(
+      //   `Email has been confirmed`,
+      //   undefined, { duration: 5000 }
+      // );
+    }));
+  }
+
+  confirmDevice(deviceId: string): Observable<any> {
+    return this.mutate({
+      mutation: CONFIRM_DEVICE,
+      variables: {
+        device_id: deviceId
+      }
+    }).pipe(tap((res) => {
+      // this.snackBar.open(
+      //   `Device has been confirmed`,
+      //   undefined, { duration: 5000 }
+      // );
     }));
   }
 

@@ -23,6 +23,13 @@
                       wysiwyg
                     </i>
                   </button>
+                  <button *ngIf="element.deviceConfirmed==='' && permission>1" mat-icon-button class="row-button" (click)="confirmDevice(element, confirmed_content)"
+                    [attr.aria-label]="'Confirm device'" [attr.aria-pressed]="!!selectedDevice" matTooltip="Confirm device"
+                    matTooltipClass="info-tooltip">
+                    <i class="material-icons" style="font-size: 20px;">
+                      approval
+                    </i>
+                  </button>
                 </td>
               </ng-container>
 
@@ -77,6 +84,25 @@
               <app-admin-device-details [permission]="permission" [device]="selectedDevice" (save)="loadDevices();modal.close('OK');"
                 (close)="modal.dismiss('Close')">
               </app-admin-device-details>
+            </div>
+          </ng-template>
+
+          <ng-template #confirmed_content let-modal>
+            <div class="modal-header">
+              <h5 class="modal-title">Device confirmation</h5>
+              <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <h4 style="text-align: center;">
+                Device has been confirmed successfully.
+              </h4>
+              <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
+                <button class="btn btn-primary pd-x-30 me-2 mg-t-5" type="button" (click)="modal.close('OK')">
+                  OK
+                </button>
+              </div>
             </div>
           </ng-template>
         </div>

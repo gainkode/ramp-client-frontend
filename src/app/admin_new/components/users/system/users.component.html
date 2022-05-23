@@ -57,6 +57,13 @@
                       playlist_add_check
                     </i>
                   </button>
+                  <button *ngIf="element.emailConfirmed===false && permission>1" mat-icon-button class="row-button"
+                    (click)="confirmEmail(element, confirmed_content)" [attr.aria-label]="'Confirm email'"
+                    matTooltip="Confirm email" matTooltipClass="info-tooltip">
+                    <i class="material-icons" style="font-size: 20px;">
+                      approval
+                    </i>
+                  </button>
                 </td>
               </ng-container>
 
@@ -217,9 +224,9 @@
                     <label class="main-content-label tx-11 tx-medium tx-gray-600">
                       Select a user
                     </label>
-                    <ng-select [items]="usersOptions$ | async" bindLabel="extendedName" [minTermLength]="minUsersLengthTerm"
-                      notFoundText="No users found" [loading]="isUsersLoading" [multiple]="false"
-                      formControlName="user" typeToSearchText="Type email or user name"
+                    <ng-select [items]="usersOptions$ | async" bindLabel="extendedName"
+                      [minTermLength]="minUsersLengthTerm" notFoundText="No users found" [loading]="isUsersLoading"
+                      [multiple]="false" formControlName="user" typeToSearchText="Type email or user name"
                       placeholder="Start typing to search a user" [typeahead]="usersSearchInput$">
                     </ng-select>
                   </div>
@@ -243,7 +250,8 @@
                   </button>
                   <button type="button" class="btn btn-primary pd-x-50 mg-t-5" (click)="updateRole()"
                     [disabled]="roleUser===undefined">
-                    <span *ngIf="roleInProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    <span *ngIf="roleInProgress" class="spinner-border spinner-border-sm" role="status"
+                      aria-hidden="true"></span>
                     Save
                   </button>
                 </div>
@@ -264,6 +272,25 @@
               </h4>
               <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
                 <button class="btn btn-primary pd-x-50 mg-t-5" (click)="modal.dismiss('OK')">
+                  OK
+                </button>
+              </div>
+            </div>
+          </ng-template>
+
+          <ng-template #confirmed_content let-modal>
+            <div class="modal-header">
+              <h5 class="modal-title">User email confirmation</h5>
+              <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <h4 style="text-align: center;">
+                User email has been confirmed successfully.
+              </h4>
+              <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
+                <button class="btn btn-primary pd-x-30 me-2 mg-t-5" type="button" (click)="modal.close('OK')">
                   OK
                 </button>
               </div>

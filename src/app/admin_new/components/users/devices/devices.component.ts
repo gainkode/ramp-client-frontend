@@ -51,12 +51,33 @@ export class AdminUserDevicesComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  showDetails(alert: DeviceItem, content: any) {
-    this.selectedDevice = alert;
+  showDetails(device: DeviceItem, content: any) {
+    this.selectedDevice = device;
     this.modalService.open(content, {
       backdrop: 'static',
       windowClass: 'modalCusSty',
     });
+  }
+
+  confirmDevice(device: DeviceItem, content: any) {
+    const requestData$ = this.adminService.confirmDevice(device.id);
+    this.subscriptions.add(
+      requestData$.subscribe(({ result }) => {
+        const confirmModalRef = this.modalService.open(content, {
+          backdrop: 'static',
+          windowClass: 'modalCusSty',
+        });
+        this.subscriptions.add(
+          confirmModalRef.closed.subscribe(val => {
+            this.loadDevices();
+          })
+        );
+      }, (error) => {
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
+      })
+    );
   }
 
   loadDevices(): void {

@@ -20,6 +20,7 @@ export class UserItem {
   lastName = '';
   fullName = '';
   email = '';
+  emailConfirmed = false;
   phone = '';
   country: CommonTargetValue | null = null;
   address = '';
@@ -134,6 +135,7 @@ export class UserItem {
         this.age = Math.floor((currentMonths - birthDayMonths) / 10000).toString();
       }
       this.email = data.email;
+      this.emailConfirmed = data.emailConfirmed ?? false;
       this.phone = data.phone ? (data.phone as string) : '';
       this.street = data.street ?? '';
       this.subStreet = data.subStreet ?? '';

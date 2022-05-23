@@ -355,6 +355,24 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
     });
   }
 
+  confirmEmail(user: UserItem, content: any) {
+    this.errorMessage = '';
+    const requestData$ = this.adminService.confirmEmail(user.id);
+    this.subscriptions.add(
+      requestData$.subscribe(({ result }) => {
+        this.modalService.open(content, {
+          backdrop: 'static',
+          windowClass: 'modalCusSty',
+        });
+      }, (error) => {
+        this.errorMessage = error;
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
+      })
+    );
+  }
+
   showWhiteList(userId: string): void {
     this.router.navigateByUrl(`/admin/white-device-list/${userId}`);
   }
