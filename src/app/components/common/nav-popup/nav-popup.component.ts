@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MenuItem } from '../../../model/common.model';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MenuCloseReason } from '@angular/material/menu/menu';
@@ -12,7 +12,8 @@ import { take } from 'rxjs/operators';
 @Component({
     selector: 'app-nav-popup',
     templateUrl: 'nav-popup.component.html',
-    styleUrls: ['nav-popup.component.scss', '../../../../assets/fonts.scss', '../../../../assets/colors.scss', '../../../../assets/menu.scss']
+    styleUrls: ['nav-popup.component.scss', '../../../../assets/fonts.scss', '../../../../assets/colors.scss', '../../../../assets/menu.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class NavPopupComponent implements OnInit, OnDestroy {
     @ViewChild('menuTrigger') menuTrigger!: MatMenuTrigger;
