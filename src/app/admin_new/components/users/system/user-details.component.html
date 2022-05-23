@@ -210,15 +210,7 @@
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             Phone
           </label>
-          <input class="form-control"
-            [ngClass]="{'has-error': (dataForm.controls.phone.touched || submitted) && !dataForm.controls.phone.valid}"
-            type="text" formControlName="phone" maxlength="25" />
-          <div *ngIf="(dataForm.controls.phone.touched || submitted) && (dataForm.controls.phone.errors?.['required'])"
-            class="tx-danger">
-            <small>
-              Please specify the phone number
-            </small>
-          </div>
+          <input class="form-control" type="text" formControlName="phone" maxlength="25" />
         </div>
       </div>
       <div class="card card-body pd-20 pd-md-40 border shadow-none">
