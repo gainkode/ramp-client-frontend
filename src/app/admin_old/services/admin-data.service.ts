@@ -2009,6 +2009,7 @@ export class AdminDataService {
       variables: vars,
       fetchPolicy: 'network-only'
     }).pipe(map(result => {
+      console.log(result);
       return result.data.getDashboardStats;
     }));
   }
