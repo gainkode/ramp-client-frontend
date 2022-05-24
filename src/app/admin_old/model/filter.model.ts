@@ -27,6 +27,7 @@ export class Filter {
   public totalBuyVolumeOver?: number;
   public transactionCountOver?: number;
   public search?: string;
+  public verifyWhenPaid?: boolean;
 
   constructor(filterValues: EmptyObject) {
     if (filterValues.accountTypes) {
@@ -130,6 +131,10 @@ export class Filter {
 
     if (filterValues.search) {
       this.search = filterValues.search;
+    }
+
+    if (filterValues.verifyWhenPaid) {
+      this.verifyWhenPaid = filterValues.verifyWhenPaid;
     }
   }
 

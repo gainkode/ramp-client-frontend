@@ -243,6 +243,9 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
     if (this.fields.includes('search')) {
       controlsConfig.search = [''];
     }
+    if (this.fields.includes('verifyWhenPaid')) {
+      controlsConfig.verifyWhenPaid = [false];
+    }
     this.filterForm = this.formBuilder.group(controlsConfig);
   }
 
@@ -328,6 +331,9 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
       }
       if (this.fields.includes('search')) {
         this.filterForm.controls.search.setValue('');
+      }
+      if (this.fields.includes('verifyWhenPaid')) {
+        this.filterForm.controls.verifyWhenPaid.setValue(false);
       }
     }
     this.applyFilters();

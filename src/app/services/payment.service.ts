@@ -247,6 +247,7 @@ mutation CreateTransaction(
     paymentProvider: $paymentProvider
     widgetUserParamsId: $widgetUserParamsId
     destination: $destination
+    verifyWhenPaid: TRUE
   }) {
     transactionId,
     code,
@@ -371,21 +372,17 @@ query GetWidget($id: String!, $recaptcha: String!) {
 export class PaymentDataService {
   constructor(private apollo: Apollo) { }
 
-  getRates(listCrypto: string[], fiat: string): QueryRef<any, EmptyObject> | null {
-    if (this.apollo.client !== undefined) {
-      const vars = {
-        recaptcha: environment.recaptchaId,
-        currenciesFrom: listCrypto,
-        currencyTo: fiat
-      };
-      return this.apollo.watchQuery<any>({
-        query: GET_RATES,
-        variables: vars,
-        fetchPolicy: 'network-only'
-      });
-    } else {
-      return null;
-    }
+  getRates(listCrypto: string[], fiat: string): QueryRef<any, EmptyObject> {
+    const vars = {
+      recaptcha: environment.recaptchaId,
+      currenciesFrom: listCrypto,
+      currencyTo: fiat
+    };
+    return this.apollo.watchQuery<any>({
+      query: GET_RATES,
+      variables: vars,
+      fetchPolicy: 'network-only'
+    });
   }
 
   getOneToManyRates(from: string, to: string[], reverseRate: boolean): QueryRef<any, EmptyObject> {
@@ -401,15 +398,11 @@ export class PaymentDataService {
     });
   }
 
-  getSettingsKycTiers(): QueryRef<any, EmptyObject> | null {
-    if (this.apollo.client !== undefined) {
-      return this.apollo.watchQuery<any>({
-        query: GET_SETTINGS_KYC_TIERS,
-        fetchPolicy: 'network-only'
-      });
-    } else {
-      return null;
-    }
+  getSettingsKycTiers(): QueryRef<any, EmptyObject> {
+    return this.apollo.watchQuery<any>({
+      query: GET_SETTINGS_KYC_TIERS,
+      fetchPolicy: 'network-only'
+    });
   }
 
   mySettingsKycTiers(): QueryRef<any, EmptyObject> {
@@ -548,14 +541,14 @@ export class PaymentDataService {
     paymentProvider: string,
     currency: string,
     widgetId: string): QueryRef<any, EmptyObject> {
-      const vars = {
-        transactionType,
-        transactionSource: source,
-        instrument,
-        paymentProvider: (paymentProvider === '') ? undefined : paymentProvider,
-        currency,
-        widgetId
-      };
+    const vars = {
+      transactionType,
+      transactionSource: source,
+      instrument,
+      paymentProvider: (paymentProvider === '') ? undefined : paymentProvider,
+      currency,
+      widgetId
+    };
     return this.apollo.watchQuery<any>({
       query: MY_SETTINGS_FEE,
       variables: vars,

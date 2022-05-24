@@ -90,27 +90,23 @@ export class ExchangeRateService {
             }
             if (currencyFrom && currencyTo) {
                 const ratesData = this.dataService.getRates([currencyFrom], currencyTo);
-                if (ratesData === null) {
-                    this.errorMessage = this.errorHandler.getRejectedCookieMessage();
-                } else {
-                    if (this.pRateSubscription) {
-                        this.pRateSubscription.unsubscribe();
-                        this.pRateSubscription = undefined;
-                    }
-                    this.pRateSubscription = ratesData.valueChanges.subscribe(({ data }) => {
-                        const rates = data.getRates as Rate[];
-                        if (rates.length > 0) {
-                            this.updateCountDown(rates[0]);
-                        } else {
-                            this.updateCountDown(this.defaultRate);
-                        }
-                        this.restartCountDown();
-                    }, (error) => {
-                        this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load exchange rate');
-                        this.updateCountDown(this.defaultRate);
-                        this.restartCountDown();
-                    });
+                if (this.pRateSubscription) {
+                    this.pRateSubscription.unsubscribe();
+                    this.pRateSubscription = undefined;
                 }
+                this.pRateSubscription = ratesData.valueChanges.subscribe(({ data }) => {
+                    const rates = data.getRates as Rate[];
+                    if (rates.length > 0) {
+                        this.updateCountDown(rates[0]);
+                    } else {
+                        this.updateCountDown(this.defaultRate);
+                    }
+                    this.restartCountDown();
+                }, (error) => {
+                    this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load exchange rate');
+                    this.updateCountDown(this.defaultRate);
+                    this.restartCountDown();
+                });
             } else {
                 result = false;
             }

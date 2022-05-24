@@ -118,6 +118,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     amountReceive: [undefined, { validators: [], updateOn: 'change' }],
     currencyReceive: [null, { validators: [], updateOn: 'change' }],
     transaction: [TransactionType.Deposit, { validators: [], updateOn: 'change' }],
+    verifyWhenPaid: [undefined],
     walletSelector: [undefined, { validators: [], updateOn: 'change' }],
     wallet: [undefined, { validators: [], updateOn: 'change' }]
   }, {
@@ -161,6 +162,10 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
 
   get walletField(): AbstractControl | null {
     return this.dataForm.get('wallet');
+  }
+
+  get verifyWhenPaidField(): AbstractControl | null {
+    return this.dataForm.get('verifyWhenPaid');
   }
 
   constructor(
@@ -736,6 +741,9 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       if (amount > 0 && amount > this.quoteLimit && !this.quoteUnlimit) {
         this.quoteExceedHidden = true;
       }
+    }
+    if (this.validData && !this.quoteUnlimit) {
+      this.validData = this.verifyWhenPaidField?.value === true;
     }
     this.quoteExceed = (this.settings.embedded) ? this.quoteExceedHidden : false;
     this.pSpendChanged = false;

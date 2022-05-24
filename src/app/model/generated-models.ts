@@ -1482,6 +1482,7 @@ export type PaymentProvider = {
   countries_code2?: Maybe<Array<Scalars['String']>>;
   instruments?: Maybe<Array<Scalars['String']>>;
   default?: Maybe<Scalars['Boolean']>;
+  disabled?: Maybe<Scalars['DateTime']>;
 };
 
 export type PaymentProviderByInstrument = {
