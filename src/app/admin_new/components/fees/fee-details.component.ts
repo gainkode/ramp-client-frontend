@@ -127,7 +127,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
         const instrument = scheme.instrument[0];
         this.form.get('instrument')?.setValue(instrument);
         if (instrument === PaymentInstrument.WireTransfer) {
-          this.form.get('provider')?.setValue([scheme?.provider[0]]);
+          this.form.get('provider')?.setValue(scheme?.provider[0]);
         } else {
           this.form.get('provider')?.setValue(scheme?.provider);
         }
@@ -311,14 +311,16 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   private filterPaymentProviders(instruments: PaymentInstrument[]): void {
     if (instruments) {
       if (instruments.length > 0) {
-        this.filteredProviders = getProviderList(instruments, this.providers);
-        this.showPaymentProvider = this.filteredProviders.length > 0;
-        if (this.providers.length > 0) {
-          this.form.get('provider')?.setValue(getCheckedProviderList(
-            this.form.get('provider')?.value ?? [],
-            this.filteredProviders));
-        } else {
-          this.form.get('provider')?.setValue([]);
+        if (!instruments.includes(PaymentInstrument.WireTransfer)) {
+          this.filteredProviders = getProviderList(instruments, this.providers);
+          this.showPaymentProvider = this.filteredProviders.length > 0;
+          if (this.providers.length > 0) {
+            this.form.get('provider')?.setValue(getCheckedProviderList(
+              this.form.get('provider')?.value ?? [],
+              this.filteredProviders));
+          } else {
+            this.form.get('provider')?.setValue([]);
+          }
         }
       } else {
         this.form.get('instrument')?.setValue(undefined);

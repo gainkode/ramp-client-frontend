@@ -94,12 +94,20 @@
             </ng-select>
           </div>
 
-          <div *ngIf="showPaymentProvider===true" class="form-group">
+          <div *ngIf="showPaymentProvider===true && form.controls.instrument?.value!==PAYMENT_INSTRUMENT.WireTransfer" class="form-group">
             <label class="main-content-label tx-11 tx-medium tx-gray-600">
               Payment providers
             </label>
             <ng-select [items]="filteredProviders" bindLabel="name" bindValue="id" [multiple]="true"
               [closeOnSelect]="false" formControlName="provider" placeholder="Select one or more providers">
+            </ng-select>
+          </div>
+          <div *ngIf="form.controls.instrument?.value===PAYMENT_INSTRUMENT.WireTransfer" class="form-group">
+            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+              Payment providers
+            </label>
+            <ng-select [items]="costSchemes" bindLabel="name" bindValue="id" 
+              formControlName="provider" placeholder="Select cost scheme">
             </ng-select>
           </div>
 
