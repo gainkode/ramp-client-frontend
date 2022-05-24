@@ -247,7 +247,7 @@ mutation CreateTransaction(
     paymentProvider: $paymentProvider
     widgetUserParamsId: $widgetUserParamsId
     destination: $destination
-    verifyWhenPaid: TRUE
+    verifyWhenPaid: true
   }) {
     transactionId,
     code,
