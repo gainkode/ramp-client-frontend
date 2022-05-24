@@ -477,6 +477,7 @@ const GET_TRANSACTIONS = gql`
     $createdDateInterval: DateTimeInterval
     $completedDateInterval: DateTimeInterval
     $walletAddressOnly: String
+    $verifyWhenPaid: Boolean
     $filter: String
     $skip: Int
     $first: Int
@@ -498,6 +499,7 @@ const GET_TRANSACTIONS = gql`
       createdDateInterval: $createdDateInterval
       completedDateInterval: $completedDateInterval
       walletAddressOnly: $walletAddressOnly
+      verifyWhenPaid: $verifyWhenPaid
       filter: $filter
       skip: $skip
       first: $first
@@ -614,6 +616,7 @@ const GET_USERS = gql`
     $widgetIdsOnly: [String!]
     $totalBuyVolumeOver: Int
     $transactionCountOver: Int
+    $verifyWhenPaid: Boolean
     $filter: String
     $skip: Int
     $first: Int
@@ -634,6 +637,7 @@ const GET_USERS = gql`
       widgetIdsOnly: $widgetIdsOnly
       totalBuyVolumeOver: $totalBuyVolumeOver
       transactionCountOver: $transactionCountOver
+      verifyWhenPaid: $verifyWhenPaid
       filter: $filter,
       skip: $skip,
       first: $first,
@@ -2288,6 +2292,7 @@ export class AdminDataService {
       completedDateInterval: filter?.completedDateInterval,
       walletAddressOnly: filter?.walletAddress,
       filter: filter?.search,
+      verifyWhenPaid: filter?.verifyWhenPaid,
       skip: pageIndex * takeItems,
       first: takeItems,
       orderBy: [{ orderBy: orderField, desc: orderDesc }]
@@ -2335,7 +2340,8 @@ export class AdminDataService {
       skip: pageIndex * takeItems,
       first: takeItems,
       orderBy: [{ orderBy: orderField, desc: orderDesc }],
-      filter: filter?.search
+      filter: filter?.search,
+      verifyWhenPaid: filter?.verifyWhenPaid
     };
     return this.watchQuery<{ getUsers: UserListResult }, QueryGetUsersArgs>({
       query: GET_USERS,

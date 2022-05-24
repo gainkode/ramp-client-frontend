@@ -1909,6 +1909,7 @@ export type QueryGetUsersArgs = {
   widgetIdsOnly?: Maybe<Array<Scalars['String']>>;
   totalBuyVolumeOver?: Maybe<Scalars['Int']>;
   transactionCountOver?: Maybe<Scalars['Int']>;
+  verifyWhenPaid?: Maybe<Scalars['Boolean']>;
   filter?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
@@ -2079,6 +2080,7 @@ export type QueryGetTransactionsArgs = {
   createdDateInterval?: Maybe<DateTimeInterval>;
   completedDateInterval?: Maybe<DateTimeInterval>;
   walletAddressOnly?: Maybe<Scalars['String']>;
+  verifyWhenPaid?: Maybe<Scalars['Boolean']>;
   filter?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
@@ -2744,6 +2746,7 @@ export type Transaction = {
   backups?: Maybe<Array<Scalars['String']>>;
   comment?: Maybe<Scalars['String']>;
   data?: Maybe<Scalars['String']>;
+  verifyWhenPaid?: Maybe<Scalars['Boolean']>;
 };
 
 export enum TransactionConfirmationMode {
