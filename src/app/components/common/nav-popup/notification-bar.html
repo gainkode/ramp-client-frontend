@@ -1,3 +1,14 @@
 <div class="__notification-box" (click)="dismiss()">
-  <span class="__notification-message">{{data.message}}</span>
+  <div class="__notification-title-bar">
+    <i class="material-icons" style="font-size: 20px;">
+      notifications_active
+    </i>
+    <h2 class="__notification-title">
+      New notification
+    </h2>
+  </div>
+  <div class="__notification-title-separator"></div>
+  <span class="__notification-message">
+    {{data.message}}
+  </span>
 </div>

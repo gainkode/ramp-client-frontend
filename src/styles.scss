@@ -696,7 +696,12 @@ img.payment-logo {
 }
 
 .snackbar-box {
-    background-color: #B2C2CF;
+    padding: 0px;
+    background: $color_white;
+    color: $color_purple_900_text;
+    font-size: 16px;
+    font-family: $font_main;
+    font-weight: normal;
 }
 
 
