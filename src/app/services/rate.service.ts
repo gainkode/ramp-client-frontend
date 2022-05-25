@@ -89,12 +89,12 @@ export class ExchangeRateService {
                 currencyTo = this.currencyFrom as string;
             }
             if (currencyFrom && currencyTo) {
-                const ratesData = this.dataService.getRates([currencyFrom], currencyTo);
+                const ratesData$ = this.dataService.getRates([currencyFrom], currencyTo);
                 if (this.pRateSubscription) {
                     this.pRateSubscription.unsubscribe();
                     this.pRateSubscription = undefined;
                 }
-                this.pRateSubscription = ratesData.valueChanges.subscribe(({ data }) => {
+                this.pRateSubscription = ratesData$.valueChanges.subscribe(({ data }) => {
                     const rates = data.getRates as Rate[];
                     if (rates.length > 0) {
                         this.updateCountDown(rates[0]);

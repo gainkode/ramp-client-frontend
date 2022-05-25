@@ -181,7 +181,7 @@
         <!-- Buttons -->
         <div class="__widget-buttons-area">
             <button class="__main-button" type="submit"
-                [disabled]="!initialized || !validData || !walletField?.valid || !emailField?.valid || quoteExceed">next</button>
+                [disabled]="!initialized || !validData || !walletField?.valid || !emailField?.valid || quoteExceed || (quoteUnlimit===false && this.verifyWhenPaidField?.value!==true)">next</button>
         </div>
     </form>
 

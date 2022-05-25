@@ -686,12 +686,14 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   private updateAmounts(spend: number | undefined, receive: number | undefined): void {
     this.updateQuote();
     this.validData = false;
+    let test = '';
     let dst = 0;
     if (this.pReceiveChanged) {
       if (this.currentTransaction === TransactionType.Buy) {
         if (receive && this.pDepositRate) {
           dst = receive * this.pDepositRate;
           this.validData = true;
+          test += '1';
         }
       } else if (this.currentTransaction === TransactionType.Sell) {
         if (receive && this.pWithdrawalRate) {
@@ -702,6 +704,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
             dst = receive / rate;
           }
           this.validData = true;
+          test += '2';
         }
       }
       if (this.validData === true) {
@@ -721,11 +724,13 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
             dst = spend / rate;
           }
           this.validData = true;
+          test += '3';
         }
       } else if (this.currentTransaction === TransactionType.Sell) {
         if (spend && this.pWithdrawalRate) {
           dst = spend * this.pWithdrawalRate;
           this.validData = true;
+          test += '4';
         }
       }
       if (this.validData === true) {
@@ -741,9 +746,6 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       if (amount > 0 && amount > this.quoteLimit && !this.quoteUnlimit) {
         this.quoteExceedHidden = true;
       }
-    }
-    if (this.validData && !this.quoteUnlimit) {
-      this.validData = this.verifyWhenPaidField?.value === true;
     }
     this.quoteExceed = (this.settings.embedded) ? this.quoteExceedHidden : false;
     this.pSpendChanged = false;
