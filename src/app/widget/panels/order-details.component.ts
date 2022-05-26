@@ -517,15 +517,15 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
         }
         if (this.settings.embedded) {
           const emptyList = (this.filteredWallets.length === 0);
-          this.filteredWallets.splice(0, 0, new WalletItem({
-            vaultName: '...',
-            address: '',
-            default: false
-          } as AssetAddressShort, '', undefined));
           if (emptyList) {
             this.walletField?.setValue(this.summary.address ?? '');
             this.errorMessage = 'Unable to find wallets for selected currency';
           } else {
+            this.filteredWallets.splice(0, 0, new WalletItem({
+              vaultName: '...',
+              address: '',
+              default: false
+            } as AssetAddressShort, '', undefined));
             this.errorMessage = '';
           }
         }
@@ -554,15 +554,15 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       }
       if (this.summary?.transactionType === TransactionType.Buy && this.settings.embedded) {
         const emptyList = (this.filteredWallets.length === 0);
-        this.filteredWallets.splice(0, 0, new WalletItem({
-          vaultName: '...',
-          address: '',
-          default: false
-        } as AssetAddressShort, '', undefined));
         if (emptyList) {
           this.walletField?.setValue(this.summary.address ?? '');
           this.errorMessage = 'Unable to find wallets for selected currency';
         } else {
+          this.filteredWallets.splice(0, 0, new WalletItem({
+            vaultName: '...',
+            address: '',
+            default: false
+          } as AssetAddressShort, '', undefined));
           this.errorMessage = '';
         }
       }
@@ -661,6 +661,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   }
 
   private updateCurrentAmounts(): void {
+    this.validData = false;
     let spend: number | undefined = undefined;
     let receive: number | undefined = undefined;
     if (this.amountSpendField?.value && this.amountSpendField?.valid) {
@@ -747,7 +748,9 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
         this.quoteExceedHidden = true;
       }
     }
-    this.quoteExceed = (this.settings.embedded) ? this.quoteExceedHidden : false;
+    this.quoteExceed = (this.settings.embedded) ?
+      this.quoteExceedHidden || (this.quoteLimit === 0 && !this.quoteUnlimit) :
+      false;
     this.pSpendChanged = false;
     this.pReceiveChanged = false;
     this.sendData(spend, receive);

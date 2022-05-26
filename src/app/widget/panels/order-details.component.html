@@ -182,7 +182,9 @@
         <!-- Buttons -->
         <div class="__widget-buttons-area">
             <button class="__main-button" type="submit"
-                [disabled]="!initialized || !validData || !walletField?.valid || !emailField?.valid || (quoteUnlimit===false && quoteExceed && this.verifyWhenPaidField?.value!==true)">next</button>
+                [disabled]="!initialized || !validData || !walletField?.valid || !emailField?.valid || (quoteUnlimit===false && quoteExceed && this.verifyWhenPaidField?.value!==true)">
+                next
+            </button>
         </div>
     </form>
 

@@ -259,6 +259,13 @@ export class WidgetComponent implements OnInit {
     if (rate) {
       this.summary.exchangeRate = rate;
     }
+    // this.rateErrorMessage = '';
+    // this.summary.exchangeRate = {
+    //   currencyFrom: 'EUR',
+    //   currencyTo: 'BTC',
+    //   depositRate: 1000,
+    //   withdrawRate: 1000
+    // } as Rate;
   }
 
   resetWizard(): void {
