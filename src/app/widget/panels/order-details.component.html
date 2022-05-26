@@ -112,7 +112,7 @@
                 </div>
             </div>
 
-            <mat-checkbox *ngIf="quoteUnlimit===false" color="accent" formControlName="verifyWhenPaid"
+            <mat-checkbox *ngIf="quoteUnlimit===false && settings.embedded===true" color="accent" formControlName="verifyWhenPaid"
                 class="__widget-checkout" style="margin-top: 8px;">
                 <span style="white-space: pre-line;font-size: 14px;">
                     Verify when Paid
