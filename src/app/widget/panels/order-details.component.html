@@ -32,7 +32,7 @@
             [boxField]="amountSpendField" [comboField]="currencySpendField" [comboFieldName]="'currencySpend'"
             [comboList]="spendCurrencyList" [errorMessages]="amountSpendErrorMessages" [separator]="false">
         </app-form-finance-combo>
-        <div *ngIf="quoteExceed" class="__form-assist __form-assist-error">
+        <div *ngIf="quoteExceed && this.verifyWhenPaidField?.value!==true" class="__form-assist __form-assist-error">
             Amount is exceeded
         </div>
         <div class="__form-separator"></div>
@@ -112,7 +112,8 @@
                 </div>
             </div>
 
-            <mat-checkbox *ngIf="quoteUnlimit===false" color="accent" formControlName="verifyWhenPaid" class="__widget-checkout" style="margin-top: 8px;">
+            <mat-checkbox *ngIf="quoteUnlimit===false" color="accent" formControlName="verifyWhenPaid"
+                class="__widget-checkout" style="margin-top: 8px;">
                 <span style="white-space: pre-line;font-size: 14px;">
                     Verify when Paid
                 </span>
@@ -181,7 +182,7 @@
         <!-- Buttons -->
         <div class="__widget-buttons-area">
             <button class="__main-button" type="submit"
-                [disabled]="!initialized || !validData || !walletField?.valid || !emailField?.valid || quoteExceed || (quoteUnlimit===false && this.verifyWhenPaidField?.value!==true)">next</button>
+                [disabled]="!initialized || !validData || !walletField?.valid || !emailField?.valid || (quoteUnlimit===false && quoteExceed && this.verifyWhenPaidField?.value!==true)">next</button>
         </div>
     </form>
 
