@@ -278,7 +278,8 @@ export class MerchantComponent implements OnInit, OnDestroy {
         if (urlBlocks.length > 0) {
             this.selectedMenu = urlBlocks[urlBlocks.length - 1];
         }
-        this.router.navigateByUrl(link);
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() =>
+            this.router.navigate([link]));
     }
 
     logout(): void {
