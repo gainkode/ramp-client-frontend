@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -80,8 +80,14 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
     private auth: AuthService,
     private adminService: AdminDataService,
     private commonService: CommonDataService,
+    public activeRoute: ActivatedRoute,
     private router: Router
   ) {
+    const filterUserId = activeRoute.snapshot.params['id'];
+    if (filterUserId) {
+      this.filter.users = [filterUserId as string];
+    }
+    console.log('filterUserId', filterUserId);
     this.permission = this.auth.isPermittedObjectCode('CUSTOMERS');
   }
 

@@ -166,7 +166,7 @@
 
         <section>
             <h2>AML Checks</h2>
-            <app-details-attribute label="Account ID" [value]="data?.user?.id"
+            <app-details-attribute label="Account ID" [value]="data?.user?.referralCode"
                 [linkUrl]="'/admin/customers/'+ data?.user?.id">
             </app-details-attribute>
             <app-details-attribute label="Verification Level" [value]="data?.kycTier"></app-details-attribute>

@@ -12,7 +12,10 @@
             </a>
         </p>
         <p *ngIf="valueString && urlPath" class="mg-b-20">
-            <a [routerLink]="urlPath">
+            <a *ngIf="smartLink===false" [routerLink]="urlPath">
+                {{valueString}}
+            </a>
+            <a *ngIf="smartLink===true" [routerLink]="" (click)="linkClick()">
                 {{valueString}}
             </a>
         </p>

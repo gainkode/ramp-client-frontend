@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonTargetValue } from 'src/app/model/common.model';
 
 @Component({
@@ -6,9 +6,8 @@ import { CommonTargetValue } from 'src/app/model/common.model';
   templateUrl: './details-item.component.html'
 })
 export class AdminDetailsItemComponent {
-
-  @Input()
-  label?: string;
+  @Input() label?: string;
+  @Input() smartLink = false;
 
   @Input()
   set value(value: string | string[] | number | CommonTargetValue | null | undefined) {
@@ -30,10 +29,14 @@ export class AdminDetailsItemComponent {
     this.setLink = true;
     if (val.startsWith('http')) {
       this.url = val;
+      this.smartUrl = val;
     } else {
       this.urlPath = val;
+      this.smartUrl = val;
     }
   }
+
+  @Output() click = new EventEmitter();
 
   valueString?: string;
   valueStrings?: string[];
@@ -42,6 +45,11 @@ export class AdminDetailsItemComponent {
   setArray = false;
   urlPath: string | undefined = undefined;
   url: string | undefined = undefined;
+  smartUrl: string | undefined = undefined;
 
   constructor() { }
+
+  linkClick(): void {
+    this.click.emit();
+  }
 }

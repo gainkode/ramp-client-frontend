@@ -513,6 +513,7 @@ const GET_TRANSACTIONS = gql`
         userIp
         user {
           userId
+          referralCode
           email
           firstName
           lastName

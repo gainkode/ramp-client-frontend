@@ -218,8 +218,8 @@
         <h5 class="card-title mg-b-20">
           AML Check
         </h5>
-        <app-admin-details-item label="Account ID" [value]="data?.user?.id"
-          [linkUrl]="'/admin/customers/'+ data?.user?.id">
+        <app-admin-details-item label="Account ID" [value]="data?.user?.referralCode"
+          [linkUrl]="'/admin/customers/'+ data?.user?.id" [smartLink]="true" (click)="filterByUserId()">
         </app-admin-details-item>
         <app-admin-details-item label="Verification Level" [value]="data?.kycTier"></app-admin-details-item>
 
