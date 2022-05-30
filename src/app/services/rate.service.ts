@@ -19,22 +19,26 @@ export class ExchangeRateService {
     private currencyFrom = '';
     private currencyTo = '';
     private transaction: TransactionType = TransactionType.Buy;
+    private active = false;
 
     constructor(private dataService: PaymentDataService, private errorHandler: ErrorService) {
         this.startTimer();
     }
 
     setCurrency(fromCurrency: string, toCurrency: string, transactionType: TransactionType) {
+        this.active = true;
         this.currencyFrom = fromCurrency;
         this.currencyTo = toCurrency;
         this.transaction = transactionType;
     }
 
     register(command: Function) {
+        this.active = true;
         this.updateCallback = command;
     }
 
     stop() {
+        this.active = false;
         // service shouldn't be stopped as it is a single-ton service
 
         // this.pSubscriptions.unsubscribe();
@@ -76,6 +80,9 @@ export class ExchangeRateService {
     }
 
     private loadData(): boolean {
+        if (!this.active) {
+            return true;
+        }
         let result = true;
         this.errorMessage = '';
         if (this.countDownInit) {
@@ -94,6 +101,7 @@ export class ExchangeRateService {
                     this.pRateSubscription.unsubscribe();
                     this.pRateSubscription = undefined;
                 }
+                console.log('get rate');
                 this.pRateSubscription = ratesData$.valueChanges.subscribe(({ data }) => {
                     const rates = data.getRates as Rate[];
                     if (rates.length > 0) {

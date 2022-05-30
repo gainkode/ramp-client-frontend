@@ -94,6 +94,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   currencyToSpendTitle = 'Currency To Buy';
   systemFeeTitle = 'Fee, EUR';
   editableDestination = false;
+  destroyed = false;
 
   form = this.formBuilder.group({
     address: ['', { validators: [Validators.required], updateOn: 'change' }],
@@ -116,12 +117,12 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     private auth: AuthService,
     private modalService: NgbModal,
     private errorHandler: ErrorService,
-    private exhangeRate: ExchangeRateService,
+    private exchangeRate: ExchangeRateService,
     private adminService: AdminDataService) { }
 
   ngOnInit(): void {
     this.getSettingsCommon();
-    this.exhangeRate.register(this.onExchangeRateUpdated.bind(this));
+    this.exchangeRate.register(this.onExchangeRateUpdated.bind(this));
     this.subscriptions.add(
       this.form.get('currencyToSpend')?.valueChanges.subscribe(val => {
         this.startExchangeRate();
@@ -135,7 +136,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.exhangeRate.stop();
+    this.exchangeRate.stop();
     this.subscriptions.unsubscribe();
   }
 
@@ -156,11 +157,11 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     const spend = this.form.get('currencyToSpend')?.value;
     const receive = this.form.get('currencyToReceive')?.value;
     if (spendFiat) {
-      this.exhangeRate.setCurrency(spend, receive, TransactionType.Buy);
+      this.exchangeRate.setCurrency(spend, receive, TransactionType.Buy);
     } else {
-      this.exhangeRate.setCurrency(receive, spend, TransactionType.Buy);
+      this.exchangeRate.setCurrency(receive, spend, TransactionType.Buy);
     }
-    this.exhangeRate.update();
+    this.exchangeRate.update();
   }
 
   private setCurrencies(list: CurrencyView[]): void {
