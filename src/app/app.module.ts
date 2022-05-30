@@ -53,10 +53,10 @@ import { WidgetService } from './services/widget.service';
             id: GoogleLoginProvider.PROVIDER_ID,
             provider: new GoogleLoginProvider(environment.googleClientId)
           },
-          {
-            id: FacebookLoginProvider.PROVIDER_ID,
-            provider: new FacebookLoginProvider(environment.facebookClientId)
-          }
+          // {
+          //   id: FacebookLoginProvider.PROVIDER_ID,
+          //   provider: new FacebookLoginProvider(environment.facebookClientId)
+          // }
         ]
       } as SocialAuthServiceConfig
     },

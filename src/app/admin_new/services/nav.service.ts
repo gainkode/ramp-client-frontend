@@ -140,7 +140,7 @@ export class NavService implements OnDestroy {
 				{ path: '/admin/common', title: 'Common', type: 'link' },
 				{ path: '/admin/api-keys', title: 'API keys', type: 'link' },
 			]
-		},
+		}
 	];
 
 
