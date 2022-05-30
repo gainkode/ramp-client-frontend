@@ -449,7 +449,7 @@ export class WidgetComponent implements OnInit {
   private settingsCommonComplete(providers: PaymentProviderInstrumentView[]): void {
     this.paymentProviders = providers.map(val => val);
     const nextStage = 4;
-    if (this.widget.kycFirst && this.requestKyc) {
+    if (this.widget.kycFirst && this.requestKyc && !this.widget.embedded) {
       this.nextStage('verification', 'Verification', nextStage, false);
     } else {
       if (this.paymentProviders.length < 1) {
