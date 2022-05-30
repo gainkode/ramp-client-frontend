@@ -101,7 +101,6 @@ export class ExchangeRateService {
                     this.pRateSubscription.unsubscribe();
                     this.pRateSubscription = undefined;
                 }
-                console.log('get rate');
                 this.pRateSubscription = ratesData$.valueChanges.subscribe(({ data }) => {
                     const rates = data.getRates as Rate[];
                     if (rates.length > 0) {

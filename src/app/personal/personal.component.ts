@@ -277,11 +277,18 @@ export class PersonalComponent implements OnInit, OnDestroy {
     }
 
     routeTo(link: string): void {
+        let baseLink = link;
         const urlBlocks = link.split('/');
         if (urlBlocks.length > 0) {
             this.selectedMenu = urlBlocks[urlBlocks.length - 1];
+            if (urlBlocks.length > 1) {
+                const selectedSection = urlBlocks[urlBlocks.length - 2];
+                if (selectedSection === 'settings') {
+                    baseLink = '/';
+                }
+            }
         }
-        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() =>
+        this.router.navigateByUrl(baseLink, { skipLocationChange: true }).then(() =>
             this.router.navigate([link]));
     }
 
