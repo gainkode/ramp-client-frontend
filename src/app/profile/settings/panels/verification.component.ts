@@ -9,6 +9,7 @@ import { TierItem } from 'src/app/model/identification.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
 import { ErrorService } from 'src/app/services/error.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { PaymentDataService } from 'src/app/services/payment.service';
 
 @Component({
@@ -23,6 +24,7 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
     kycUrl = '';
     total = 0;
     tiers: TierItem[] = [];
+    verifiedTierId = '';
 
     private pSubscriptions: Subscription = new Subscription();
 
@@ -31,11 +33,13 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
         private errorHandler: ErrorService,
         private dataService: PaymentDataService,
         private commonService: CommonDataService,
+        private notification: NotificationService,
         private router: Router,
         public dialog: MatDialog) {
     }
 
     ngOnInit(): void {
+        this.startKycNotifications();
         this.loadTransactionsTotal();
     }
 
@@ -139,6 +143,9 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
                         tierPassed = true;
                     }
                 }
+                if (val.settingsKycTierId === this.verifiedTierId) {
+                    tierPassed = true;
+                }
                 return {
                     limit: (unlimitVal) ?
                         'Unlimited' :
@@ -155,5 +162,20 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
                 } as TierItem;
             });
         }
+    }
+
+    private startKycNotifications(): void {
+        this.pSubscriptions.add(
+            this.notification.subscribeToKycNotifications().subscribe(
+                ({ data }) => {
+                    const subscriptionData = data.kycServiceNotification;
+                    this.verifiedTierId = subscriptionData.kycTierId;
+                    this.getTiers();
+                },
+                (error) => {
+                    console.error('KYC notification error', error);
+                }
+            )
+        );
     }
 }
