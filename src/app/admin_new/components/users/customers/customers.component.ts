@@ -87,7 +87,6 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
     if (filterUserId) {
       this.filter.users = [filterUserId as string];
     }
-    console.log('filterUserId', filterUserId);
     this.permission = this.auth.isPermittedObjectCode('CUSTOMERS');
   }
 
