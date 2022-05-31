@@ -5,7 +5,7 @@ import { NgbDateAdapter, NgbDateParserFormatter, NgbDateStruct, NgbModal } from 
 import { Subscription } from 'rxjs';
 import { DateFormatAdapter } from 'src/app/admin_new/misc/date-range/date-format.adapter';
 import { DateParserFormatter } from 'src/app/admin_new/misc/date-range/date.formatter';
-import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
+import { AdminDataService } from 'src/app/services/admin-data.service';
 import { Countries, getCountryByCode3 } from 'src/app/model/country-code.model';
 import { AccountStatus, UserInput, UserRole, UserType } from 'src/app/model/generated-models';
 import { UserStatusList, UserTypeList } from 'src/app/model/payment.model';

@@ -9,7 +9,7 @@ import { ListRequestFilter } from 'src/app/model/filter.model';
 import { ApiKeySecret } from 'src/app/model/generated-models';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
-import { AdminDataService } from '../../services/admin-data.service';
+import { AdminDataService } from '../../../services/admin-data.service';
 import { LayoutService } from '../../services/layout.service';
 
 @Component({

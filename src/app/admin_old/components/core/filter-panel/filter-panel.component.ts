@@ -1,6 +1,6 @@
 import { Observable, Subject } from 'rxjs';
 import { CurrencyView, KycStatusList, PaymentInstrumentList, RiskLevelViewList, TransactionSourceList, TransactionStatusList, TransactionTypeList, UserStatusList, UserTypeList } from 'src/app/model/payment.model';
-import { Filter } from '../../../model/filter.model';
+import { Filter } from '../../../../admin_new/model/filter.model';
 import { Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { EmptyObject } from 'apollo-angular/types';

@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit, OnDestroy, ElementRef, Input } from '@angular/core';
-import { AdminDataService } from '../../../services/admin-data.service';
+import { AdminDataService } from '../../../../services/admin-data.service';
 import { Subscription } from 'rxjs';
 import { FormBuilder, Validators } from '@angular/forms';
 import { CustodyProviderList, KycProviderList } from 'src/app/model/payment.model';

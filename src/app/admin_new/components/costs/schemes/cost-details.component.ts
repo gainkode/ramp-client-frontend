@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { concat, Observable, of, Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
-import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
+import { AdminDataService } from 'src/app/services/admin-data.service';
 import { CommonTargetValue } from 'src/app/model/common.model';
 import { CostScheme } from 'src/app/model/cost-scheme.model';
 import { CountryFilterList } from 'src/app/model/country-code.model';

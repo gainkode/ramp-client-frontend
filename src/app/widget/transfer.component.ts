@@ -443,7 +443,8 @@ export class TransferWidgetComponent implements OnInit {
           instrumentDetails,
           (instrument === PaymentInstrument.WireTransfer) ? '' : providerId,
           '',
-          destination
+          destination,
+          false
         ).subscribe(({ data }) => {
           if (!this.notificationStarted) {
             this.startNotificationListener();

@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy, Output, EventEmitter, ViewChild, AfterViewInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
-import { AdminDataService } from '../../../services/admin-data.service';
+import { AdminDataService } from '../../../../services/admin-data.service';
 import { Subject, Subscription } from 'rxjs';
 import { MatSort } from '@angular/material/sort';
 import { UserItem } from 'src/app/model/user.model';
-import { Filter } from '../../../model/filter.model';
+import { Filter } from '../../../../admin_new/model/filter.model';
 import { take, takeUntil } from 'rxjs/operators';
 import { LayoutService } from '../../../services/layout.service';
 import { ErrorService } from 'src/app/services/error.service';

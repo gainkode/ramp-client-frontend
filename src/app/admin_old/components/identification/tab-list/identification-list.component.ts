@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../services/auth.service';
-import { AdminDataService } from '../../../services/admin-data.service';
+import { AdminDataService } from '../../../../services/admin-data.service';
 import { ErrorService } from '../../../../services/error.service';
 import { Subscription } from 'rxjs';
 import { KycLevel, KycScheme } from 'src/app/model/identification.model';

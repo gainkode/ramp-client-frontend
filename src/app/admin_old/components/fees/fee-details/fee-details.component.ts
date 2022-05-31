@@ -18,8 +18,8 @@ import { CommonTargetValue, TargetParams } from 'src/app/model/common.model';
 import { CountryFilterList, getCountry } from 'src/app/model/country-code.model';
 import { ErrorService } from 'src/app/services/error.service';
 import { LayoutService } from '../../../services/layout.service';
-import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
-import { Filter } from 'src/app/admin_old/model/filter.model';
+import { AdminDataService } from 'src/app/services/admin-data.service';
+import { Filter } from 'src/app/admin_new/model/filter.model';
 import { CostScheme } from 'src/app/model/cost-scheme.model';
 import { getCheckedProviderList, getProviderList } from 'src/app/utils/utils';
 

@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { AdminDataService } from '../../../../../services/admin-data.service';
+import { AdminDataService } from '../../../../../../services/admin-data.service';
 import {
   ControlValueAccessor,
   NG_VALUE_ACCESSOR

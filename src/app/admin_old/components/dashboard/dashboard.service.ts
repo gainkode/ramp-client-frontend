@@ -1,8 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable, ReplaySubject, Subscription } from 'rxjs';
-import { AdminDataService } from '../../services/admin-data.service';
+import { AdminDataService } from '../../../services/admin-data.service';
 import { DashboardCardData, DashboardData } from '../../model/dashboard-data.model';
-import { Filter } from '../../model/filter.model';
+import { Filter } from '../../../admin_new/model/filter.model';
 import { take } from 'rxjs/operators';
 import { PaymentInstrumentList } from '../../../model/payment.model';
 import { getCurrencySign } from 'src/app/utils/utils';

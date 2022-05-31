@@ -44,6 +44,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   @Output() onProgress = new EventEmitter<boolean>();
   @Output() onDataUpdated = new EventEmitter<CheckoutSummary>();
   @Output() onWalletAddressUpdated = new EventEmitter<CheckoutSummary>();
+  @Output() onVerifyWhenPaidChanged = new EventEmitter<boolean>();
   @Output() onQuoteChanged = new EventEmitter<number>();
   @Output() onComplete = new EventEmitter<string>();
 
@@ -769,6 +770,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
           this.auth.logout();
         }
       }
+      this.onVerifyWhenPaidChanged.emit(this.verifyWhenPaidField?.value ?? false);
       this.onComplete.emit(this.emailField?.value);
     }
   }

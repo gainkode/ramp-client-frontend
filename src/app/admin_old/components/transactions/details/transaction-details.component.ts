@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
+import { AdminDataService } from 'src/app/services/admin-data.service';
 import { LayoutService } from 'src/app/admin_old/services/layout.service';
 import { DeleteDialogBox } from 'src/app/components/dialogs/delete-box.dialog';
 import { YesNoDialogBox } from 'src/app/components/dialogs/yesno-box.dialog';

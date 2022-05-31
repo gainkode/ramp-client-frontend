@@ -12,11 +12,11 @@ import {
 } from '../../../../model/payment.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommonDataService } from '../../../../services/common-data.service';
-import { AdminDataService } from '../../../services/admin-data.service';
+import { AdminDataService } from '../../../../services/admin-data.service';
 import { UserItem } from '../../../../model/user.model';
 import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, switchMap, take, takeUntil } from 'rxjs/operators';
-import { Filter } from '../../../model/filter.model';
+import { Filter } from '../../../../admin_new/model/filter.model';
 import { Countries, Country } from '../../../../model/country-code.model';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';

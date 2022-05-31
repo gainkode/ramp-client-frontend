@@ -38,7 +38,7 @@
         [depositRate]="summary?.exchangeRate?.depositRate" (onError)="handleError($event)"
         (onProgress)="progressChanged($event)" (onDataUpdated)="orderDetailsChanged($event)"
         (onQuoteChanged)="orderQuoteChanged($event)" (onWalletAddressUpdated)="orderWalletChanged($event)"
-        (onComplete)="orderDetailsComplete($event)">
+        (onVerifyWhenPaidChanged)="orderVerifyWhenPaidChanged($event)" (onComplete)="orderDetailsComplete($event)">
       </app-widget-order-details>
       <!-- Sell details -->
       <app-widget-sell-details *ngSwitchCase="'sell_details'" [summary]="summary" (onBack)="paymentBack()"

@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { LayoutService } from '../../../services/layout.service';
-import { AdminDataService } from '../../../services/admin-data.service';
+import { AdminDataService } from '../../../../services/admin-data.service';
 import { UserItem } from '../../../../model/user.model';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, switchMap, takeUntil } from 'rxjs/operators';
-import { Filter } from '../../../model/filter.model';
+import { Filter } from '../../../../admin_new/model/filter.model';
 import { UserType } from 'src/app/model/generated-models';
 
 @Component({

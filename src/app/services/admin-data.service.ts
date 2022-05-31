@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef, WatchQueryOptions } from 'apollo-angular';
 import { EmptyObject } from 'apollo-angular/types';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
-import { CostScheme } from '../../model/cost-scheme.model';
-import { FeeScheme } from '../../model/fee-scheme.model';
+import { CostScheme } from '../model/cost-scheme.model';
+import { FeeScheme } from '../model/fee-scheme.model';
 import {
   ApiKeyListResult,
   AssetAddress,
@@ -44,21 +44,21 @@ import {
   UserType,
   WidgetListResult,
   WireTransferBankAccount
-} from '../../model/generated-models';
-import { KycLevel, KycScheme } from '../../model/identification.model';
+} from '../model/generated-models';
+import { KycLevel, KycScheme } from '../model/identification.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { TransactionItemFull } from '../../model/transaction.model';
+import { TransactionItemFull } from '../model/transaction.model';
 import { catchError, finalize, map, tap } from 'rxjs/operators';
 import { ApolloQueryResult, FetchResult, MutationOptions } from '@apollo/client/core';
-import { ErrorService } from '../../services/error.service';
-import { AuthService } from '../../services/auth.service';
+import { ErrorService } from './error.service';
+import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
-import { Filter } from '../model/filter.model';
-import { DeviceItem, UserItem } from '../../model/user.model';
-import { FiatWalletItem, WalletItem } from '../model/wallet.model';
-import { NotificationItem } from '../../model/notification.model';
-import { WidgetItem } from '../model/widget.model';
-import { RiskAlertItem } from '../model/risk-alert.model';
+import { Filter } from '../admin_new/model/filter.model';
+import { DeviceItem, UserItem } from '../model/user.model';
+import { FiatWalletItem, WalletItem } from '../admin_old/model/wallet.model';
+import { NotificationItem } from '../model/notification.model';
+import { WidgetItem } from '../admin_old/model/widget.model';
+import { RiskAlertItem } from '../admin_old/model/risk-alert.model';
 import { ApiKeyItem } from 'src/app/model/apikey.model';
 
 /* region queries */
@@ -596,6 +596,7 @@ const GET_TRANSACTIONS = gql`
         widget
         widgetId
         comment
+        verifyWhenPaid
       }
     }
   }
@@ -3507,4 +3508,3 @@ export class AdminDataService {
     return throwError(null);
   }
 }
-

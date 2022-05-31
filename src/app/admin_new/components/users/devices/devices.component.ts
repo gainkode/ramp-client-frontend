@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
+import { AdminDataService } from 'src/app/services/admin-data.service';
 import { DeviceItem, UserItem } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
 

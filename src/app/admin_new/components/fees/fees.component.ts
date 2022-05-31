@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
+import { AdminDataService } from 'src/app/services/admin-data.service';
 import { CostScheme } from 'src/app/model/cost-scheme.model';
 import { FeeScheme } from 'src/app/model/fee-scheme.model';
 import { PaymentInstrument, SettingsCostListResult } from 'src/app/model/generated-models';

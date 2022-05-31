@@ -6,7 +6,7 @@ import { CurrencyView, RiskLevelViewList, UserStatusList } from 'src/app/model/p
 import { UserItem } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { Subscription } from 'rxjs';
-import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
+import { AdminDataService } from 'src/app/services/admin-data.service';
 import { take } from 'rxjs/operators';
 import { getFormattedUtcDate } from 'src/app/utils/utils';
 import { LayoutService } from 'src/app/admin_old/services/layout.service';

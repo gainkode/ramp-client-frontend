@@ -4,12 +4,12 @@ import { debounceTime, distinctUntilChanged, map, switchMap, takeUntil } from 'r
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { UserItem } from '../../../../../../model/user.model';
-import { AdminDataService } from '../../../../../services/admin-data.service';
+import { AdminDataService } from '../../../../../../services/admin-data.service';
 import {
   ControlValueAccessor,
   NG_VALUE_ACCESSOR
 } from '@angular/forms';
-import { Filter } from '../../../../../model/filter.model';
+import { Filter } from '../../../../../../admin_new/model/filter.model';
 
 @Component({
   selector: 'app-filter-field-users',

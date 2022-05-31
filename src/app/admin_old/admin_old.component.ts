@@ -5,7 +5,7 @@ import { filter, map, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { LayoutService } from './services/layout.service';
 import { Title } from '@angular/platform-browser';
-import { AdminDataService } from './services/admin-data.service';
+import { AdminDataService } from '../services/admin-data.service';
 
 @Component({
   selector: 'app-admin',

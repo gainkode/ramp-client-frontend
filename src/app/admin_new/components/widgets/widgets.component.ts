@@ -4,9 +4,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { Filter } from 'src/app/admin_old/model/filter.model';
+import { Filter } from 'src/app/admin_new/model/filter.model';
 import { WidgetItem } from 'src/app/admin_old/model/widget.model';
-import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
+import { AdminDataService } from 'src/app/services/admin-data.service';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({

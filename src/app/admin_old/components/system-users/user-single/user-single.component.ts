@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AdminDataService } from '../../../services/admin-data.service';
+import { AdminDataService } from '../../../../services/admin-data.service';
 import { take } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { UserItem } from 'src/app/model/user.model';

@@ -389,6 +389,10 @@ export class WidgetComponent implements OnInit {
     this.summary.vaultId = data.vaultId ?? '';
   }
 
+  orderVerifyWhenPaidChanged(val: boolean): void {
+    this.summary.verifyWhenPaid = val;
+  }
+
   orderDetailsComplete(email: string): void {
     if (this.summary.email === email) {
       this.desclaimerNext();
@@ -407,7 +411,7 @@ export class WidgetComponent implements OnInit {
       accountType: instrumentDetails
     };
     const settingsData = JSON.stringify(settings);
-    this.createWithdrawalTransaction(settingsData);
+    this.createSellTransaction(settingsData);
   }
   // =======================
 
@@ -473,9 +477,9 @@ export class WidgetComponent implements OnInit {
 
   selectProvider(id: string) {
     if (id === 'Fibonatix') {
-      this.createDepositTransaction(id, PaymentInstrument.CreditCard, '');
+      this.createBuyTransaction(id, PaymentInstrument.CreditCard, '');
     } else if (id === 'InstantPay') {
-      this.createDepositTransaction(id, PaymentInstrument.Apm, '');
+      this.createBuyTransaction(id, PaymentInstrument.Apm, '');
     } else if (id === 'WireTransferPayment') {
       this.summary.providerView = this.paymentProviders.find(x => x.id === id);
       this.startPayment();
@@ -502,7 +506,7 @@ export class WidgetComponent implements OnInit {
     };
 
     const settingsData = JSON.stringify(settings);
-    this.createDepositTransaction('', PaymentInstrument.WireTransfer, settingsData);
+    this.createBuyTransaction('', PaymentInstrument.WireTransfer, settingsData);
   }
 
   sendWireTransaferMessageResult(): void {
@@ -642,7 +646,7 @@ export class WidgetComponent implements OnInit {
     }
   }
 
-  private createDepositTransaction(providerId: string, instrument: PaymentInstrument, instrumentDetails: string): void {
+  private createBuyTransaction(providerId: string, instrument: PaymentInstrument, instrumentDetails: string): void {
     this.errorMessage = '';
     this.inProgress = true;
     const tempStageId = this.pager.swapStage('initialization');
@@ -661,7 +665,8 @@ export class WidgetComponent implements OnInit {
           instrumentDetails,
           (instrument === PaymentInstrument.WireTransfer) ? '' : providerId,
           this.userParamsId,
-          destination
+          destination,
+          this.summary.verifyWhenPaid
         ).subscribe(({ data }) => {
           if (!this.notificationStarted) {
             this.startNotificationListener();
@@ -711,7 +716,7 @@ export class WidgetComponent implements OnInit {
     }
   }
 
-  private createWithdrawalTransaction(instrumentDetails: string): void {
+  private createSellTransaction(instrumentDetails: string): void {
     this.errorMessage = '';
     this.inProgress = true;
     this.initMessage = 'Processing...';
@@ -728,7 +733,8 @@ export class WidgetComponent implements OnInit {
           instrumentDetails,
           '',
           this.userParamsId,
-          ''
+          '',
+          false
         ).subscribe(({ data }) => {
           const order = data.createTransaction as TransactionShort;
           this.inProgress = false;

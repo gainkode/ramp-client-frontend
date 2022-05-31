@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TransactionItemFull } from '../../../../model/transaction.model';
 import { ErrorService } from '../../../../services/error.service';
-import { AdminDataService } from '../../../services/admin-data.service';
+import { AdminDataService } from '../../../../services/admin-data.service';
 import { take } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { CurrencyView } from 'src/app/model/payment.model';

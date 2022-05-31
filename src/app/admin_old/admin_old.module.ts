@@ -46,7 +46,7 @@ import { TransactionSingleComponent } from './components/transactions/transactio
 import { TransactionListComponent } from './components/transactions/list/transaction-list.component';
 import { TransactionDetailsComponent } from './components/transactions/details/transaction-details.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { AdminDataService } from './services/admin-data.service';
+import { AdminDataService } from '../services/admin-data.service';
 import { DataCardComponent } from './components/dashboard/data-card/data-card.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';

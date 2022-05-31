@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DashboardService } from './dashboard.service';
 import { Subscription } from 'rxjs';
-import { Filter } from '../../model/filter.model';
+import { Filter } from '../../../admin_new/model/filter.model';
 
 @Component({
   templateUrl: 'dashboard.component.html',

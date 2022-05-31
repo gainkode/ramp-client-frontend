@@ -3,7 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { WalletItem } from 'src/app/admin_old/model/wallet.model';
-import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
+import { AdminDataService } from 'src/app/services/admin-data.service';
 import { AssetAddress } from 'src/app/model/generated-models';
 import { AuthService } from 'src/app/services/auth.service';
 

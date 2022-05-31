@@ -234,6 +234,7 @@ mutation CreateTransaction(
   $paymentProvider: String,
   $widgetUserParamsId: String,
   $destination: String
+  $verifyWhenPaid: Boolean
 ) {
   createTransaction(transaction: {
     type: $transactionType
@@ -247,7 +248,7 @@ mutation CreateTransaction(
     paymentProvider: $paymentProvider
     widgetUserParamsId: $widgetUserParamsId
     destination: $destination
-    verifyWhenPaid: true
+    verifyWhenPaid: $verifyWhenPaid
   }) {
     transactionId,
     code,
@@ -443,7 +444,8 @@ export class PaymentDataService {
     instrumentDetails: string,
     providerName: string,
     userParamsId: string,
-    walletAddress: string): Observable<any> {
+    walletAddress: string,
+    verifyWhenPaid: boolean): Observable<any> {
     const wallet = (walletAddress === '') ? undefined : walletAddress;
     const transactionSourceVaultId = (sourceVault === '') ? undefined : sourceVault;
     const vars = {
@@ -457,7 +459,8 @@ export class PaymentDataService {
       instrumentDetails: (instrumentDetails !== '') ? instrumentDetails : undefined,
       paymentProvider: (providerName !== '') ? providerName : undefined,
       widgetUserParamsId: (userParamsId !== '') ? userParamsId : undefined,
-      destination: wallet
+      destination: wallet,
+      verifyWhenPaid
     };
     return this.apollo.mutate({
       mutation: CREATE_TRANSACTION,

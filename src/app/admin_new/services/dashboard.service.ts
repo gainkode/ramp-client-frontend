@@ -4,8 +4,8 @@ import { take } from 'rxjs/operators';
 import { getCurrencySign } from 'src/app/utils/utils';
 import { BalanceStats } from 'src/app/model/generated-models';
 import { DashboardCardData, DashboardData } from 'src/app/admin_old/model/dashboard-data.model';
-import { AdminDataService } from 'src/app/admin_old/services/admin-data.service';
-import { Filter } from 'src/app/admin_old/model/filter.model';
+import { AdminDataService } from 'src/app/services/admin-data.service';
+import { Filter } from 'src/app/admin_new/model/filter.model';
 import { PaymentInstrumentList } from 'src/app/model/payment.model';
 
 @Injectable({

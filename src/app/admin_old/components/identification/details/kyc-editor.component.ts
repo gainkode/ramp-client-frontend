@@ -14,9 +14,9 @@ import {
 import { CommonTargetValue, TargetParams } from 'src/app/model/common.model';
 import { CountryFilterList, getCountry } from 'src/app/model/country-code.model';
 import { KycScheme } from 'src/app/model/identification.model';
-import { AdminDataService } from '../../../services/admin-data.service';
+import { AdminDataService } from '../../../../services/admin-data.service';
 import { TransactionSourceFilterList } from 'src/app/model/fee-scheme.model';
-import { Filter } from '../../../model/filter.model';
+import { Filter } from '../../../../admin_new/model/filter.model';
 import { LayoutService } from '../../../services/layout.service';
 
 @Component({

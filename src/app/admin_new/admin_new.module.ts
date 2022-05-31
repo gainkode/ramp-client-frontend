@@ -41,7 +41,7 @@ import { AdminDashboardComponent } from './components/dashboard/dashboard.compon
 import { AdminSwitcherComponent } from './layout/switcher/switcher.component';
 import { AdminTransactionsComponent } from './components/transactions/transactions.component';
 import { AdminPageHeaderComponent } from './layout/page-header/page-header.component';
-import { AdminDataService } from '../admin_old/services/admin-data.service';
+import { AdminDataService } from '../services/admin-data.service';
 import { AdminTransactionDetailsComponent } from './components/transactions/transaction-details.component';
 import { AdminFilterComponent } from './misc/filter/filter.component';
 import { AdminDetailsItemComponent } from './misc/details-item/details-item.component';
