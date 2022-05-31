@@ -160,7 +160,9 @@ export class TransactionItemFull {
           this.declineReason = `${transferOrderStatus} ${transferOrderSubStatus}`;
           break;
         case TransactionStatus.BenchmarkTransferDeclined:
-          this.declineReason = transactionData.benchmarkTransferOrder?.transferDetails ?? '';
+          const benchmarkTransferOrderStatus = transactionData.benchmarkTransferOrder?.status ?? '';
+          const benchmarkTransferOrderSubStatus = (transactionData.benchmarkTransferOrder?.subStatus ?? '') === '' ? '' : ` (${transactionData.benchmarkTransferOrder?.subStatus ?? ''})`;
+          this.declineReason = `${benchmarkTransferOrderStatus} ${benchmarkTransferOrderSubStatus}`;
           break;
         case TransactionStatus.ExchangeDeclined:
           this.declineReason = data.liquidityOrder?.statusReason ?? '';
