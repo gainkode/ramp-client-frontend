@@ -205,6 +205,9 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       this.currentTier = '';
       this.currentQuoteEur = 0;
     }
+    if (this.summary?.verifyWhenPaid) {
+      this.verifyWhenPaidField?.setValue(true);
+    }
     this.setWalletVisible();
     this.setAmountTitles();
     this.currentTransactionName = QuickCheckoutTransactionTypeList.find(x => x.id === this.currentTransaction)?.name ?? this.currentTransaction;
@@ -676,14 +679,9 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
 
   private updateQuote(): void {
     this.currentQuote = '';
-
-    console.log('-1-', this.currentTransaction, this.currentQuoteEur);
-
     if (this.currentTransaction === TransactionType.Buy && this.currentQuoteEur !== 0) {
       const c = this.pCurrencies.find(x => x.symbol === this.currentCurrencySpend?.symbol);
       if (c) {
-        console.log('-2-', c, this.currentQuoteEur, this.transactionsTotalEur, c.rateFactor);
-
         this.quoteLimit = (this.currentQuoteEur - this.transactionsTotalEur) * c.rateFactor;
         this.currentQuote = `${getCurrencySign(this.currentCurrencySpend?.display ?? '')}${this.quoteLimit.toFixed(2)}`;
       }
