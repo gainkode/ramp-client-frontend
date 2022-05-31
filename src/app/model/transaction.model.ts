@@ -79,6 +79,7 @@ export class TransactionItemFull {
   widgetName = '';
   selected = false;
   comment = '';
+  declineReason = '';
   vaultIds: string[] = [];
 
   constructor(data: Transaction | TransactionShort | null) {
@@ -143,6 +144,27 @@ export class TransactionItemFull {
       const widgetData = JSON.parse(data.widget ?? '{}');
       if (widgetData) {
         this.widgetName = widgetData.widgetName;
+      }
+
+      this.declineReason = '';
+      switch (this.status) {
+        case TransactionStatus.AddressDeclined:
+          this.declineReason = 'Invalid address';
+          break;
+        case TransactionStatus.PaymentDeclined:
+          this.declineReason = data.paymentOrder?.statusReason ?? '';
+          break;
+        case TransactionStatus.TransferDeclined:
+          const transferOrderStatus = data.transferOrder?.status ?? '';
+          const transferOrderSubStatus = (data.transferOrder?.subStatus ?? '') === '' ? '' : ` (${data.transferOrder?.subStatus ?? ''})`;
+          this.declineReason = `${transferOrderStatus} ${transferOrderSubStatus}`;
+          break;
+        case TransactionStatus.BenchmarkTransferDeclined:
+          this.declineReason = transactionData.benchmarkTransferOrder?.transferDetails ?? '';
+          break;
+        case TransactionStatus.ExchangeDeclined:
+          this.declineReason = data.liquidityOrder?.statusReason ?? '';
+          break;
       }
 
       if (data.destVaultId) {

@@ -167,7 +167,8 @@ export class ProfileHomeComponent implements OnInit, OnDestroy {
         this.onShowDetails.emit(details);
     }
 
-    updateTransactions(): void {
+    updateHomeData(): void {
+        this.loadCurrencyData(true);
         this.transactionsPanel.load(new TransactionsFilter(this.auth.user?.type ?? UserType.Personal));
     }
 

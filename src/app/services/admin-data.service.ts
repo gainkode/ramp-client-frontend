@@ -555,6 +555,7 @@ const GET_TRANSACTIONS = gql`
         liquidityProvider
         instrument
         instrumentDetails
+        liquidityOrder { statusReason }
         paymentProvider
         paymentOrder {
           orderId
@@ -576,14 +577,22 @@ const GET_TRANSACTIONS = gql`
           captureOperationSn
           refundOperationSn
           paymentInfo
+          statusReason
         }
         transferOrder {
           orderId
           originalOrderId
           transferHash
           feeCurrency
+          transferDetails
+          status
+          subStatus
         }
-        benchmarkTransferOrder { orderId transferHash }
+        benchmarkTransferOrder {
+          orderId
+          transferHash
+          transferDetails
+        }
         transferOrderBlockchainLink
         benchmarkTransferOrderBlockchainLink
         data

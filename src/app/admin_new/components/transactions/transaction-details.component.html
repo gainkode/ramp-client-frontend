@@ -54,6 +54,9 @@
           </ng-select>
         </div>
 
+        <app-admin-details-item label="Decline Reason" [value]="data?.declineReason"></app-admin-details-item>
+        <!-- declineReason -->
+
         <app-admin-details-item label="Blockchain Link" [value]="transferOrderBlockchainLink"
           [linkUrl]="transferOrderBlockchainLink"></app-admin-details-item>
         <app-admin-details-item label="Benchmark Blockchain Link" [value]="benchmarkTransferOrderBlockchainLink"

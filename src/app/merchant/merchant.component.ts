@@ -329,8 +329,8 @@ export class MerchantComponent implements OnInit, OnDestroy {
             const transactionPanel = this.dataPanel as ProfileTransactionsComponent;
             transactionPanel.update();
         } else if (this.selectedMenu === 'home') {
-            const transactionPanel = this.dataPanel as ProfileHomeComponent;
-            transactionPanel.updateTransactions();
+            const homePanel = this.dataPanel as ProfileHomeComponent;
+            homePanel.updateHomeData();
         }
     }
 
