@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { number } from 'card-validator';
 import { Subscription } from 'rxjs';
 import { AssetAddressShort, Rate, SettingsCurrencyWithDefaults, TransactionType, UserState } from 'src/app/model/generated-models';
 import { WidgetSettings } from 'src/app/model/payment-base.model';
@@ -689,16 +690,17 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   }
 
   private updateAmounts(spend: number | undefined, receive: number | undefined): void {
+
+    console.log('updateAmounts', spend, receive);
+
     this.updateQuote();
     this.validData = false;
-    let test = '';
     let dst = 0;
     if (this.pReceiveChanged) {
       if (this.currentTransaction === TransactionType.Buy) {
         if (receive && this.pDepositRate) {
           dst = receive * this.pDepositRate;
           this.validData = true;
-          test += '1';
         }
       } else if (this.currentTransaction === TransactionType.Sell) {
         if (receive && this.pWithdrawalRate) {
@@ -709,12 +711,12 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
             dst = receive / rate;
           }
           this.validData = true;
-          test += '2';
         }
       }
       if (this.validData === true) {
-        spend = dst;
         const val = dst.toFixed(this.currentCurrencySpend?.precision);
+        spend = Number.parseFloat(val);
+        console.log('receive changed', dst, spend, val);
         this.pSpendAutoUpdated = true;
         this.amountSpendField?.setValue(val);
       }
@@ -729,18 +731,17 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
             dst = spend / rate;
           }
           this.validData = true;
-          test += '3';
         }
       } else if (this.currentTransaction === TransactionType.Sell) {
         if (spend && this.pWithdrawalRate) {
           dst = spend * this.pWithdrawalRate;
           this.validData = true;
-          test += '4';
         }
       }
       if (this.validData === true) {
-        receive = dst;
         const val = dst.toFixed(this.currentCurrencyReceive?.precision);
+        receive = Number.parseFloat(val);
+        console.log('spend changed', dst, receive, val);
         this.pReceiveAutoUpdated = true;
         this.amountReceiveField?.setValue(val);
       }
@@ -757,6 +758,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       false;
     this.pSpendChanged = false;
     this.pReceiveChanged = false;
+    console.log(spend, '->', receive);
     this.sendData(spend, receive);
   }
 
