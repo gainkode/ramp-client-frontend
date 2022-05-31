@@ -516,7 +516,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
           }
           this.filteredWallets = this.wallets.filter(x => x.asset === currency);
         }
-        if (this.settings.embedded) {
+        if (this.settings.embedded && !this.settings.transfer) {
           const emptyList = (this.filteredWallets.length === 0);
           if (emptyList) {
             this.walletField?.setValue(this.summary.address ?? '');
@@ -553,7 +553,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
         }
         this.filteredWallets = this.wallets.filter(x => x.asset === currency);
       }
-      if (this.summary?.transactionType === TransactionType.Buy && this.settings.embedded) {
+      if (this.summary?.transactionType === TransactionType.Buy && this.settings.embedded && !this.settings.transfer) {
         const emptyList = (this.filteredWallets.length === 0);
         if (emptyList) {
           this.walletField?.setValue(this.summary.address ?? '');
@@ -676,9 +676,14 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
 
   private updateQuote(): void {
     this.currentQuote = '';
+
+    console.log('-1-', this.currentTransaction, this.currentQuoteEur);
+
     if (this.currentTransaction === TransactionType.Buy && this.currentQuoteEur !== 0) {
       const c = this.pCurrencies.find(x => x.symbol === this.currentCurrencySpend?.symbol);
       if (c) {
+        console.log('-2-', c, this.currentQuoteEur, this.transactionsTotalEur, c.rateFactor);
+
         this.quoteLimit = (this.currentQuoteEur - this.transactionsTotalEur) * c.rateFactor;
         this.currentQuote = `${getCurrencySign(this.currentCurrencySpend?.display ?? '')}${this.quoteLimit.toFixed(2)}`;
       }
