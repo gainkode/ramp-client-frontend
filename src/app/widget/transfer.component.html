@@ -13,7 +13,8 @@
         [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage"
         [depositRate]="summary?.exchangeRate?.depositRate" (onError)="handleError($event)"
         (onProgress)="progressChanged($event)" (onDataUpdated)="orderDetailsChanged($event)"
-        (onWalletAddressUpdated)="orderWalletChanged($event)" (onComplete)="orderDetailsComplete($event)">
+        (onWalletAddressUpdated)="orderWalletChanged($event)"
+        (onVerifyWhenPaidChanged)="orderVerifyWhenPaidChanged($event)" (onComplete)="orderDetailsComplete($event)">
       </app-widget-order-details>
       <!-- Payment -->
       <app-widget-payment *ngSwitchCase="'payment'" [providers]="paymentProviders"
@@ -28,8 +29,9 @@
       <app-widget-wire-transfer *ngSwitchCase="'wire_transfer'" [bankCategories]="wireTransferList"
         [bankAccountId]="bankAccountId" [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage"
         (onBack)="paymentBack()" (onComplete)="wireTransferPaymentComplete($event)"></app-widget-wire-transfer>
-      <app-widget-wire-transfer-result *ngSwitchCase="'wire_transfer_result'" [referenceId]="summary.orderId" [bankData]="selectedWireTransfer"
-        (onComplete)="processingComplete()" (onSendEmail)="sendWireTransaferMessage()">
+      <app-widget-wire-transfer-result *ngSwitchCase="'wire_transfer_result'" [referenceId]="summary.orderId"
+        [bankData]="selectedWireTransfer" (onComplete)="processingComplete()"
+        (onSendEmail)="sendWireTransaferMessage()">
       </app-widget-wire-transfer-result>
       <!-- KYC -->
       <app-widget-kyc *ngSwitchCase="'verification'" [summary]="summary"

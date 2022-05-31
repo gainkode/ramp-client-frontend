@@ -289,6 +289,10 @@ export class TransferWidgetComponent implements OnInit {
     this.summary.vaultId = data.vaultId ?? '';
   }
 
+  orderVerifyWhenPaidChanged(val: boolean): void {
+    this.summary.verifyWhenPaid = val;
+  }
+
   orderDetailsComplete(email: string): void {
     this.widgetService.getSettingsCommon(this.summary, this.widget.widgetId);
   }
@@ -444,7 +448,7 @@ export class TransferWidgetComponent implements OnInit {
           (instrument === PaymentInstrument.WireTransfer) ? '' : providerId,
           '',
           destination,
-          false
+          this.summary.verifyWhenPaid
         ).subscribe(({ data }) => {
           if (!this.notificationStarted) {
             this.startNotificationListener();
