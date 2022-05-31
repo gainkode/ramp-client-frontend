@@ -690,9 +690,6 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   }
 
   private updateAmounts(spend: number | undefined, receive: number | undefined): void {
-
-    console.log('updateAmounts', spend, receive);
-
     this.updateQuote();
     this.validData = false;
     let dst = 0;
@@ -716,7 +713,6 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       if (this.validData === true) {
         const val = dst.toFixed(this.currentCurrencySpend?.precision);
         spend = Number.parseFloat(val);
-        console.log('receive changed', dst, spend, val);
         this.pSpendAutoUpdated = true;
         this.amountSpendField?.setValue(val);
       }
@@ -741,7 +737,6 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       if (this.validData === true) {
         const val = dst.toFixed(this.currentCurrencyReceive?.precision);
         receive = Number.parseFloat(val);
-        console.log('spend changed', dst, receive, val);
         this.pReceiveAutoUpdated = true;
         this.amountReceiveField?.setValue(val);
       }
@@ -758,7 +753,6 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       false;
     this.pSpendChanged = false;
     this.pReceiveChanged = false;
-    console.log(spend, '->', receive);
     this.sendData(spend, receive);
   }
 
