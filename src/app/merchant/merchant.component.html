@@ -38,12 +38,7 @@
         </div>
         <!-- Top menu logo -->
         <div *ngIf="expandedMenu" class="__profile-top-menu-logo-box">
-            <span class="__profile-top-menu-logo">
-                GetCoins
-            </span>
-            <!-- <span class="__profile-top-menu-logo" (click)="router.navigateByUrl('/payment')">
-                GetCoins
-            </span> -->
+            <img class="__profile-top-menu-logo" src="../../assets/logo-light.png" alt="GetCoins" width="180">
         </div>
         <!-- Error bar -->
         <div [ngClass]="errorMessage==='' ? '__top-menu-error-bar-hidden' : '__top-menu-error-bar'">

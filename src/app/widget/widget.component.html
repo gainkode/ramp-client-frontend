@@ -1,9 +1,7 @@
 <div [ngClass]="widget.embedded ? '__widget-embedded-container' : '__widget-container'">
   <div *ngIf="!widget.embedded" class="__widget-title-container">
     <div class="__widget-title-logo-container">
-      <span class="__widget-title-logo" (click)="router.navigateByUrl('/')">
-        GetCoins
-      </span>
+      <img class="__widget-title-logo" src="../../assets/logo-color.png" alt="GetCoins" width="160" (click)="router.navigateByUrl('/')">
     </div>
     <div *ngIf="!initState" class="__widget-title-button-container">
       <button class="__menu-button" type="button" (click)="mobileSummary = !mobileSummary">
