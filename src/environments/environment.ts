@@ -21,7 +21,9 @@ export const environment = {
   facebookClientId: '522193095423714',
   support_email: 'support@ewallet.com',
   base_color: '#0081D4',
-  main_font: 'Ubuntu'
+  main_font: 'Ubuntu',
+  cookie_link: 'http://getcoins.com.au/index.php/cookies-policy/',
+  terms_link: 'http://getcoins.com.au/index.php/terms-and-conditions/'
 };
 
 /*

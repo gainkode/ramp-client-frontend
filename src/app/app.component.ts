@@ -65,7 +65,7 @@ export class AppComponent implements OnInit, OnDestroy {
           deny: 'Decline',
           allow: 'Accept',
           link: 'Cookies Policy',
-          href: '/terms/cookie',
+          href: environment.cookie_link,
           policy: 'Cookie Policy'
         },
         onStatusChange: function (status: any) {

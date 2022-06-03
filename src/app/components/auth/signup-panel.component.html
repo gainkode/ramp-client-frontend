@@ -18,7 +18,7 @@
         <!-- Agreement -->
         <mat-checkbox color="accent" formControlName="agreement" class="__widget-checkout">
             I agree to the
-            <a target="_blank" rel="noopener noreferrer" href="/terms">
+            <a target="_blank" rel="noopener noreferrer" [href]="termsLink">
                 Terms & <br *ngIf="wizardButtons">Conditions
             </a>
         </mat-checkbox>
