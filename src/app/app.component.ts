@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { User } from './model/generated-models';
+import { Title } from '@angular/platform-browser';
 import { AuthService } from './services/auth.service';
 import { CommonDataService } from './services/common-data.service';
 import { NotificationService } from './services/notification.service';
@@ -20,10 +21,12 @@ export class AppComponent implements OnInit, OnDestroy {
     private commonService: CommonDataService,
     private profileService: ProfileDataService,
     private notification: NotificationService,
-    private auth: AuthService
+    private auth: AuthService,
+    private titleService: Title
   ) {
-
+    this.titleService.setTitle(environment.product);
   }
+  
   ngOnInit(): void {
     const totalData = this.commonService.getMyTransactionsTotal();
     this.subscriptions.add(
