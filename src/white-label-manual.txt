@@ -1,0 +1,11 @@
+1. Copy all files (only files) from src/assets/themes/crunchywallet.io to src/assets
+2. Copy favicon.ico file from src/assets/themes/crunchywallet.io to src
+3. Set environment variables:
+	production: true,
+	product: 'Crunchy Wallet',
+	test_kyc: false,
+	support_email: 'support@crunchywallet.io',
+	base_color: '#1E0143',
+	main_font: 'Poppins',
+	cookie_link: 'https://crunchywallet.io/cookies-policy/',
+	terms_link: 'https://crunchywallet.io/terms-and-conditions/'
