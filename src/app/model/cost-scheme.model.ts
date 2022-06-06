@@ -36,8 +36,8 @@ export class CostScheme {
             if (this.target === SettingsCostTargetFilterType.Country) {
                 data.targetFilterValues?.forEach(x => {
                     const c = getCountryByCode3(x);
-                    if (c != null) {
-                        this.targetValues.push(c.name);
+                    if (c !== null) {
+                        this.targetValues.push(c.code3);
                     }
                 });
             } else {
