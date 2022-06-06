@@ -43,6 +43,7 @@ export class PersonalComponent implements OnInit, OnDestroy {
     showErrorRef: any;
     updateAvatarRef: any;
     showPayment = false;
+    showExpressTransfer = false;
     paymentPanelTitle = '';
     selectedPaymentType = PaymentWidgetType.None;
     riskWarningText = '';
@@ -62,6 +63,7 @@ export class PersonalComponent implements OnInit, OnDestroy {
         private auth: AuthService,
         private notification: NotificationService,
         public router: Router) {
+        this.showExpressTransfer = environment.express_transfer;
         this.getSectionName();
     }
 

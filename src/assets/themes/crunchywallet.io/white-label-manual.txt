@@ -4,6 +4,7 @@
 	production: true,
 	product: 'Crunchy Wallet',
 	test_kyc: false,
+	express_transfer: false,
 	support_email: 'support@crunchywallet.io',
 	base_color: '#1E0143',
 	main_font: 'Poppins',

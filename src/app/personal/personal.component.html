@@ -19,8 +19,8 @@
                         <mat-icon>file_upload</mat-icon>
                         &nbsp;&nbsp;&nbsp;Send
                     </button>
-                    <div class="__top-menu-button-separator"></div>
-                    <button class="__top-menu-button" (click)="showPaymentPanel(WIDGET_TYPE.Transfer)">
+                    <div *ngIf="showExpressTransfer" class="__top-menu-button-separator"></div>
+                    <button *ngIf="showExpressTransfer" class="__top-menu-button" (click)="showPaymentPanel(WIDGET_TYPE.Transfer)">
                         <img width="16" height="16" src="assets/paper-plane-solid.svg">
                         &nbsp;&nbsp;&nbsp;Express transfer
                     </button>
@@ -66,7 +66,7 @@
                     <a [routerLink]="" class="__top-menu-hamburger-item" (click)="showPaymentPanel(WIDGET_TYPE.Send)">
                         Send
                     </a>
-                    <a [routerLink]="" class="__top-menu-hamburger-item"
+                    <a *ngIf="showExpressTransfer" [routerLink]="" class="__top-menu-hamburger-item"
                         (click)="showPaymentPanel(WIDGET_TYPE.Transfer)">
                         Express transfer
                     </a>
