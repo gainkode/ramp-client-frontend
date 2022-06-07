@@ -55,11 +55,6 @@ export class DashboardService implements OnDestroy {
     const dashboardData$ = this.adminDataService.getDashboardStats(this.filter).pipe(take(1));
     this.subscriptions.add(dashboardData$.subscribe(rawData => {
       // region Total
-
-
-      console.log(rawData);
-
-
       const totalData: DashboardCardData = {
         columns: [
           {
