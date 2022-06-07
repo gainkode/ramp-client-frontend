@@ -57,7 +57,7 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
   sortedField = 'created';
   sortedDesc = true;
   filter = new Filter({});
-  
+
   private subscriptions: Subscription = new Subscription();
   private detailsDialog: NgbModalRef | undefined = undefined;
 
@@ -141,6 +141,11 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
     });
   }
 
+  selectAll(): void {
+    this.transactions.forEach(x => x.selected = true);
+    this.selectedForUnbenchmark = (this.transactions.length > 0);
+  }
+
   private isSelectedTransaction(transactionId: string): boolean {
     return !!this.selectedTransaction && this.selectedTransaction.id === transactionId;
   }
@@ -161,6 +166,7 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
       this.sortedField,
       this.sortedDesc,
       this.filter).pipe(take(1));
+    this.selectedForUnbenchmark = false;
     this.subscriptions.add(
       listData$.subscribe(({ list, count }) => {
         this.transactions = list;

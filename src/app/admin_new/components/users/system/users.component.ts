@@ -144,6 +144,11 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
     });
   }
 
+  selectAll(): void {
+    this.users.forEach(x => x.selected = true);
+    this.selected = (this.users.length > 0);
+  }
+
   private loadRoleData(): void {
     this.roleIds = [];
     const currencyData = this.commonService.getRoles();

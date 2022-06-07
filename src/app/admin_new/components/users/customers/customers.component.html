@@ -21,6 +21,17 @@
 
           <mat-progress-bar *ngIf="inProgress" color="accent" mode="indeterminate"></mat-progress-bar>
 
+          <div class="table-button-container m-2">
+            <button (click)="selectAll()" class="btn btn-secondary btn-sm mt-2">
+              <div style="display: flex; flex-direction: row;justify-content: center;align-items: center;">
+                <i class="material-icons" style="font-size: 20px;margin-right: 4px;">
+                  library_add_check
+                </i>
+                Select all on the page
+              </div>
+            </button>
+          </div>
+          
           <div class="data-table">
             <mat-table matSort [matSortActive]="sortedField" matSortDirection="desc" matSortDisableClear
               [dataSource]="customers">
