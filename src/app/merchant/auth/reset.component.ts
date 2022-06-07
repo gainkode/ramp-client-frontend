@@ -39,7 +39,7 @@ export class MerchantResetComponent implements OnDestroy {
     passwordErrorMessages: { [key: string]: string; } = {
         ['required']: 'Password is required',
         ['minlength']: 'Password must contain at least 8 symbols',
-        ['pattern']: 'Invalid password format'
+        ['pattern']: 'Please make sure your password is al least 8 symbols length and contains lower-case, upper-case, and special symbols'
     };
 
     private subscriptions: Subscription = new Subscription();

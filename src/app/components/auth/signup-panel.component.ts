@@ -78,7 +78,7 @@ export class SignUpPanelComponent implements OnInit, OnDestroy {
     password1ErrorMessages: { [key: string]: string; } = {
         ['required']: 'Please specify your password',
         ['minlength']: 'Password must contain at least 8 symbols',
-        ['pattern']: 'Invalid password format'
+        ['pattern']: 'Please make sure your password is al least 8 symbols length and contains lower-case, upper-case, and special symbols'
     };
     password2ErrorMessages: { [key: string]: string; } = {
         ['required']: 'Please specify your password',
@@ -89,6 +89,7 @@ export class SignUpPanelComponent implements OnInit, OnDestroy {
     private subscriptions: Subscription = new Subscription();
 
     private validateForm(): void {
+        this.error.emit('');
         this.validData = (this.emailField?.valid ?? false) &&
             (this.signupForm.get('password1')?.valid ?? false) &&
             (this.signupForm.get('password2')?.valid ?? false) &&
