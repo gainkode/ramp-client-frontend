@@ -203,6 +203,7 @@ export type DashboardStats = {
   receives?: Maybe<TransferStats>;
   exchanges?: Maybe<ExchangeStats>;
   balances?: Maybe<Array<BalanceStats>>;
+  krakenBalances?: Maybe<Array<Maybe<KrakenBalance>>>;
 };
 
 export type DateMap = {
@@ -2769,6 +2770,7 @@ export type TransactionInput = {
   paymentProvider?: Maybe<Scalars['String']>;
   widgetUserParamsId?: Maybe<Scalars['String']>;
   data?: Maybe<Scalars['String']>;
+  verifyWhenPaid?: Maybe<Scalars['Boolean']>;
 };
 
 export enum TransactionKycStatus {
@@ -3352,6 +3354,28 @@ export type UserInput = {
   deleted?: Maybe<Scalars['DateTime']>;
 };
 
+export type UserKycHistory = {
+  __typename?: 'UserKycHistory';
+  userKycHistoryId?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['String']>;
+  kycProvider?: Maybe<Scalars['String']>;
+  kycValidationTierId?: Maybe<Scalars['String']>;
+  kycApplicantId?: Maybe<Scalars['String']>;
+  kycValid?: Maybe<Scalars['Boolean']>;
+  kycLevelName?: Maybe<Scalars['String']>;
+  kycTierId?: Maybe<Scalars['String']>;
+  kycReviewDate?: Maybe<Scalars['DateTime']>;
+  kycStatus?: Maybe<Scalars['String']>;
+  kycStatusDate?: Maybe<Scalars['DateTime']>;
+  kycReviewComment?: Maybe<Scalars['String']>;
+  kycPrivateComment?: Maybe<Scalars['String']>;
+  kycReviewRejectedType?: Maybe<Scalars['String']>;
+  kycReviewRejectedLabels?: Maybe<Array<Scalars['String']>>;
+  kycReviewResult?: Maybe<Scalars['String']>;
+  kycStatusUpdateRequired?: Maybe<Scalars['Boolean']>;
+  kycDocs?: Maybe<Array<Scalars['String']>>;
+};
+
 export type UserListResult = {
   __typename?: 'UserListResult';
   count?: Maybe<Scalars['Int']>;
@@ -3796,4 +3820,10 @@ export type WireTransferBankAccountShort = {
   au?: Maybe<Scalars['String']>;
   uk?: Maybe<Scalars['String']>;
   eu?: Maybe<Scalars['String']>;
+};
+
+export type KrakenBalance = {
+  __typename?: 'krakenBalance';
+  currency?: Maybe<Scalars['String']>;
+  balance?: Maybe<Scalars['Float']>;
 };

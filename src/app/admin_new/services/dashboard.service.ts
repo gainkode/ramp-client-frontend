@@ -55,6 +55,11 @@ export class DashboardService implements OnDestroy {
     const dashboardData$ = this.adminDataService.getDashboardStats(this.filter).pipe(take(1));
     this.subscriptions.add(dashboardData$.subscribe(rawData => {
       // region Total
+
+
+      console.log(rawData);
+
+
       const totalData: DashboardCardData = {
         columns: [
           {
@@ -501,22 +506,6 @@ export class DashboardService implements OnDestroy {
       //  endregion
 
       // region Balances
-      const testBalances: BalanceStats[] = [
-        {
-          currency: 'BTC',
-          volume: {
-            count: 5,
-            volume: 15
-          }
-        },
-        {
-          currency: 'ETH',
-          volume: {
-            count: 2,
-            volume: 3.154
-          }
-        }
-      ];
       const balancesData: DashboardCardData = {
         columns: [
           {
@@ -552,6 +541,37 @@ export class DashboardService implements OnDestroy {
 
       //  endregion
 
+
+      const testData = [
+        { currency: 'BTC', balance: 0.0145 },
+        { currency: 'EUR', balance: 123.545 }
+      ];
+
+      // region Balances
+      const liquidityProviderBalancesData: DashboardCardData = {
+        columns: [
+          {
+            key: 'coin',
+            label: 'Currency',
+            type: 'text'
+          },
+          {
+            key: 'value',
+            label: 'Value',
+            type: 'number'
+          }
+        ],
+        rows: rawData.krakenBalances ?
+          rawData.krakenBalances.map(item => {
+            return {
+              coin: item?.currency ?? null,
+              value: item?.balance ?? null
+            };
+          }) : []
+      };
+
+      //  endregion
+
       const data = {
         total: totalData,
         buys: buysData,
@@ -561,7 +581,8 @@ export class DashboardService implements OnDestroy {
         receives: receivesData,
         withdrawals: withdrawalsData,
         fees: feesData,
-        balances: balancesData
+        balances: balancesData,
+        liquidityBalances: liquidityProviderBalancesData
       };
 
       this.dataSubject.next(data);

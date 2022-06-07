@@ -184,6 +184,7 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
       this.sortedField,
       this.sortedDesc,
       this.filter).pipe(take(1));
+    this.selected = false;
     this.subscriptions.add(
       listData$.subscribe(({ list, count }) => {
         this.customers = list;

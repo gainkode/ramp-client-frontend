@@ -208,6 +208,9 @@ const GET_DASHBOARD_STATS = gql`
         currency,
         volume {count, volume}
       }
+      krakenBalances {
+        currency, balance
+      }
     }
   }
 `;

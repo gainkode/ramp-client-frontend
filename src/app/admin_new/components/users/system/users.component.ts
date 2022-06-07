@@ -182,6 +182,7 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
       this.sortedField,
       this.sortedDesc,
       this.filter).pipe(take(1));
+    this.selected = false;
     this.subscriptions.add(
       listData$.subscribe(({ list, count }) => {
         this.users = list;
