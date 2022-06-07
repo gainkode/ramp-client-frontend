@@ -203,7 +203,7 @@ export type DashboardStats = {
   receives?: Maybe<TransferStats>;
   exchanges?: Maybe<ExchangeStats>;
   balances?: Maybe<Array<BalanceStats>>;
-  krakenBalances?: Maybe<Array<Maybe<KrakenBalance>>>;
+  liquidityProviderBalances?: Maybe<Array<Maybe<LiquidityProviderBalance>>>;
 };
 
 export type DateMap = {
@@ -3822,8 +3822,8 @@ export type WireTransferBankAccountShort = {
   eu?: Maybe<Scalars['String']>;
 };
 
-export type KrakenBalance = {
-  __typename?: 'krakenBalance';
+export type LiquidityProviderBalance = {
+  __typename?: 'liquidityProviderBalance';
   currency?: Maybe<Scalars['String']>;
   balance?: Maybe<Scalars['Float']>;
 };

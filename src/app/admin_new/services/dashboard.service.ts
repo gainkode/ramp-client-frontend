@@ -561,8 +561,8 @@ export class DashboardService implements OnDestroy {
             type: 'number'
           }
         ],
-        rows: rawData.krakenBalances ?
-          rawData.krakenBalances.map(item => {
+        rows: rawData.liquidityProviderBalances ?
+          rawData.liquidityProviderBalances.map(item => {
             return {
               coin: item?.currency ?? null,
               value: item?.balance ?? null
