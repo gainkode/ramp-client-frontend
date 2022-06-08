@@ -76,13 +76,14 @@ export function shortenString(val: string, limit: number): string {
 }
 
 export function getFullName(user: User): string {
+    
     let fullName = '';
     if (user.type === UserType.Merchant) {
         fullName = user.firstName ?? '';
     } else if (user.type === UserType.Personal) {
         fullName = `${user.firstName ?? ''} ${user.lastName ?? ''}`;
     }
-    if (fullName === ' ') {
+    if (fullName === ' ' || fullName === '') {
         fullName = user?.email ?? 'No name';
     }
     return fullName;
