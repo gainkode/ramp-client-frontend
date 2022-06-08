@@ -168,7 +168,9 @@ export class ProfileHomeComponent implements OnInit, OnDestroy {
     }
 
     updateHomeData(): void {
-        this.loadCurrencyData(true);
+        if (this.balanceListPanel) {
+            this.balanceListPanel.load(this.currencies, this.defaultFiat);
+        }
         this.transactionsPanel.load(new TransactionsFilter(this.auth.user?.type ?? UserType.Personal));
     }
 
