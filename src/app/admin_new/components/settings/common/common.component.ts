@@ -52,6 +52,8 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
     emailCodeNumberLength: [0, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
     // Admin
     editTransactionDestination: [false, { validators: [Validators.required], updateOn: 'change' }],
+    // Verify When Paid
+    verifyWhenPaid: [false],
     // Custody providers
     transferOrdersTrackingTimedeltaDays: [0, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
     // Custody providers - Fireblocks
@@ -156,6 +158,11 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
         this.inProgress = false;
         const settingsCommon: SettingsCommon = settings.data.getSettingsCommon;
         const additionalSettings = (settingsCommon.additionalSettings) ? JSON.parse(settingsCommon.additionalSettings) : undefined;
+
+
+        console.log(additionalSettings);
+
+
         // Common
         this.form.get('id')?.setValue(settingsCommon.settingsCommonId);
         this.form.get('liquidityProvider')?.setValue(settingsCommon.liquidityProvider);
@@ -169,6 +176,8 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
         this.form.get('editTransactionDestination')?.setValue(additionalSettings.admin.editTransactionDestination ?? false);
         // Core
         const coreData = additionalSettings.core;
+        // Core - Verify When Paid
+        this.form.get('verifyWhenPaid')?.setValue(coreData.verifyWhenPaid ?? true === true);
         // Core - Custody providers
         this.form.get('transferOrdersTrackingTimedeltaDays')?.setValue(coreData.custodyProviders.transferOrdersTrackingTimedeltaDays ?? 7);
         // Core - Custody providers - Fireblocks
@@ -265,6 +274,7 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
     };
 
     // Core
+    const coreVerifyWhenPaid = this.form.get('verifyWhenPaid')?.value ?? false;
     const coreTransferOrdersTrackingTimedeltaDays = parseInt(this.form.get('transferOrdersTrackingTimedeltaDays')?.value ?? '7');
     // Fireblocks
     const coreFireblocksCachedDepositAddressLifetime = parseInt(this.form.get('fireblocksCachedDepositAddressLifetime')?.value ?? '60000');
@@ -343,6 +353,7 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 
     const coreData = {
       banks: {},
+      verifyWhenPaid: coreVerifyWhenPaid,
       liquidityProviders: {
         benchmarkTrackingInterval: coreLiquidityBenchmarkTrackingInterval,
         cryptoRateLifetime: coreLiquidityCryptoRateLifetime,

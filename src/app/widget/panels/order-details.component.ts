@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { number } from 'card-validator';
 import { Subscription } from 'rxjs';
 import { AssetAddressShort, Rate, SettingsCurrencyWithDefaults, TransactionType, UserState } from 'src/app/model/generated-models';
 import { WidgetSettings } from 'src/app/model/payment-base.model';
@@ -83,6 +82,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   quoteExceedHidden = false;
   quoteUnlimit = false;
   showWallet = false;
+  showVerifyWhenPaid = false;
   currentTier = '';
   currentQuote = '';
   transactionList = QuickCheckoutTransactionTypeList;
@@ -179,6 +179,14 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
+
+    const settings = this.auth.getLocalSettingsCommon();
+    const additionalSettings = JSON.parse(settings?.additionalSettings ?? '{}');
+    this.showVerifyWhenPaid = true;
+    if (additionalSettings) {
+      this.showVerifyWhenPaid = additionalSettings.core.verifyWhenPaid ?? true;
+    }
+
     if (this.summary?.transactionType) {
       this.currentTransaction = this.summary.transactionType;
       this.transactionField?.setValue(this.currentTransaction);

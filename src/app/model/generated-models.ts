@@ -565,6 +565,7 @@ export enum LiquidityOrderType {
 
 export enum LiquidityProvider {
   Bitstamp = 'Bitstamp',
+  Binance = 'Binance',
   Kraken = 'Kraken',
   GetCoins = 'GetCoins'
 }

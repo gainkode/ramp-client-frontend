@@ -334,6 +334,7 @@ query {
         custodyProvider
         kycProvider
         kycBaseAddress
+        additionalSettings
     }
   }
 `;
