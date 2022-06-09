@@ -6,7 +6,7 @@ export const environment = {
   production: false,
   product: 'GetCoins',
   cookieDomain: 'localhost',
-  
+
   client_host: 'http://localhost:4000',
   api_server: 'http://localhost:4001',
   ws_server: 'ws://localhost:4001',
