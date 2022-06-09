@@ -6,13 +6,27 @@ export const environment = {
   production: false,
   product: 'GetCoins',
   cookieDomain: 'localhost',
+  
   client_host: 'http://localhost:4000',
   api_server: 'http://localhost:4001',
   ws_server: 'ws://localhost:4001',
   image_host: 'http://localhost',
-  // api_server: 'https://app.getcoins.com.au/gql/api',
-  // ws_server: 'ws://app.getcoins.com.au',
+
+  // client_host: 'https://app.crunchywallet.io',
+  // api_server: 'https://app.crunchywallet.io',
+  // ws_server: 'wss://app.crunchywallet.io',
+  // image_host: 'https://app.crunchywallet.io',  
+
+  // client_host: 'https://app.getcoins.com.au',
+  // api_server: 'https://app.getcoins.com.au',
+  // ws_server: 'wss://app.getcoins.com.au',
   // image_host: 'https://app.getcoins.com.au',
+
+  // client_host: 'https://app.getcoins.eu',
+  // api_server: 'https://app.getcoins.eu',
+  // ws_server: 'wss://app.getcoins.eu',
+  // image_host: 'https://app.getcoins.eu',
+
   api_timeout: 60000,
   test_wallets: true,
   test_kyc: false,

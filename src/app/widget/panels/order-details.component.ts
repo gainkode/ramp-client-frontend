@@ -179,9 +179,9 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
-
     const settings = this.auth.getLocalSettingsCommon();
-    const additionalSettings = JSON.parse(settings?.additionalSettings ?? '{}');
+    const additionalSettingsRaw = settings?.additionalSettings;
+    const additionalSettings = (additionalSettingsRaw === null) ? undefined : JSON.parse(additionalSettingsRaw ?? '{}');
     this.showVerifyWhenPaid = true;
     if (additionalSettings) {
       this.showVerifyWhenPaid = additionalSettings.core.verifyWhenPaid ?? true;
