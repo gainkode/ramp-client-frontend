@@ -25,11 +25,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   constructor(
     public dashboardService: DashboardService,
     private auth: AuthService) {
-    const commonSettings = this.auth.getLocalSettingsCommon();
-    this.liquidityProviderName = `${commonSettings?.liquidityProvider} Balances` ?? '';
-    if (this.liquidityProviderName === '') {
-      this.liquidityProviderName = 'Liquidity provider balances';
-    }
+    this.liquidityProviderName = 'Liquidity provider balances';
   }
 
   ngOnInit(): void {
