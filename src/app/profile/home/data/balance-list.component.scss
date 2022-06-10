@@ -1,6 +1,8 @@
 @import "../../../../assets/colors.scss";
 @import "../../../../assets/fonts.scss";
 
+$font_main: var(--font_main);
+
 .__balance-item-data-container {
     display: flex;
     flex-direction: row;

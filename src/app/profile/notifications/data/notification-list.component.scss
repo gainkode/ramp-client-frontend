@@ -1,6 +1,8 @@
 @import "../../../../assets/fonts.scss";
 @import "../../../../assets/colors.scss";
 
+$font_main: var(--font_main);
+
 .__profile-notifications-table-column-selected {
     flex: 0 0 4%;
     width: 4%;

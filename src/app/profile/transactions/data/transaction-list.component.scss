@@ -2,6 +2,8 @@
 @import "../../../../assets/colors.scss";
 @import "../../../../assets/consts.scss";
 
+$font_main: var(--font_main);
+
 .__profile-transactions-table-column-transaction {
     flex: 0 0 6%;
     width: 6%;

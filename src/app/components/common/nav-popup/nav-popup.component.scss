@@ -1,6 +1,8 @@
 @import "../../../../assets/fonts.scss";
 @import "../../../../assets/colors.scss";
 
+$font_main: var(--font_main);
+
 .__nav-popup-content-block {
     display: flex;
     justify-content: space-between;

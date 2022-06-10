@@ -2,6 +2,8 @@
 @import "./colors.scss";
 @import "./consts.scss";
 
+$font_main: var(--font_main);
+
 .__dialog-title {
     margin: 0px;
     padding: 0px;

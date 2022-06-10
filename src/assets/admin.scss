@@ -2,6 +2,8 @@
 @import "./colors.scss";
 @import "./consts.scss";
 
+$font_main: var(--font_main);
+
 .__admin-top-menu-logo-box {
     display: flex;
     left: 0px;

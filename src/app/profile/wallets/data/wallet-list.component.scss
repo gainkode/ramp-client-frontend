@@ -1,6 +1,8 @@
 @import "../../../../assets/fonts.scss";
 @import "../../../../assets/colors.scss";
 
+$font_main: var(--font_main);
+
 .__profile-wallet-list-container {
     margin: 24px 0px 0px 0px;
 }

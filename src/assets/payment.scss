@@ -2,6 +2,8 @@
 @import "./colors.scss";
 @import "./consts.scss";
 
+$font_main: var(--font_main);
+
 .__widget-frame-container {
     width: 100%;
     height: 100%;

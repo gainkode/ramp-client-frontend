@@ -2,6 +2,8 @@
 @import "./colors.scss";
 @import "./consts.scss";
 
+$font_main: var(--font_main);
+
 .__profile-details-container {
     display: flex;
     flex-direction: column;

@@ -1,6 +1,8 @@
 @import "../../../../assets/fonts.scss";
 @import "../../../../assets/colors.scss";
 
+$font_main: var(--font_main);
+
 .side-menu .side-menu__icon:before{
     display: none;
 }

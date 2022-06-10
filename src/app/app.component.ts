@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { User } from './model/generated-models';
@@ -8,6 +8,7 @@ import { CommonDataService } from './services/common-data.service';
 import { NotificationService } from './services/notification.service';
 import { ProfileDataService } from './services/profile.service';
 import { EnvService } from './services/env.service';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -18,6 +19,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription = new Subscription();
 
   constructor(
+    @Inject(DOCUMENT) private document: Document,
     private commonService: CommonDataService,
     private profileService: ProfileDataService,
     private notification: NotificationService,
@@ -36,7 +38,15 @@ export class AppComponent implements OnInit, OnDestroy {
 
       })
     );
+    this.loadFont();
+    this.setCookiePanel();
+  }
 
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
+
+  private setCookiePanel(): void {
     const url = window.location.href;
     const whiteList = (url.includes('/payment/widget/') || url.includes('/terms'));
     if (!whiteList) {
@@ -75,8 +85,26 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
+  private loadFont() {
+    // get head
+    const head = this.document.getElementsByTagName('head')[0];
+    let themeLink = this.document.getElementById(
+      'main-font'
+    ) as HTMLLinkElement;
+    const mainFont = EnvService.main_font;
+    const mainFontCompressed = mainFont.replace(' ', '+');
+    const href = `https://fonts.googleapis.com/css2?family=${mainFontCompressed}:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap`;
+    if (themeLink) {
+      themeLink.href = href;
+    } else {
+      // if link doesn't exist, we create link tag
+      const style = this.document.createElement('link');
+      style.id = 'main-font';
+      style.rel = 'stylesheet';
+      style.href = href;
+      head.appendChild(style);
+    }
+    this.document.documentElement.style.setProperty('--font_main', mainFont);
   }
 
   private startKycNotifications(): void {

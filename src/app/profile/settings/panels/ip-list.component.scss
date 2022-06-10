@@ -2,6 +2,8 @@
 @import "../../../../assets/colors.scss";
 @import "../../../../assets/consts.scss";
 
+$font_main: var(--font_main);
+
 .__profile-ip-list-table-column-country {
     flex: 0 0 20%;
     width: 20%;

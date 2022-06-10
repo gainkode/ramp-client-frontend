@@ -3,6 +3,8 @@
 @import "./menu.scss";
 @import "./consts.scss";
 
+$font_main: var(--font_main);
+
 .__profile-container {
     display: flex;
 }

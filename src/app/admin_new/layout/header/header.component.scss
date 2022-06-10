@@ -2,6 +2,8 @@
 @import "../../../../assets/fonts.scss";
 @import "../../../../assets/colors.scss";
 
+$font_main: var(--font_main);
+
 li::marker {
   color: transparent;
 }

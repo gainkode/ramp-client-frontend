@@ -2,6 +2,8 @@
 @import "../../../../assets/colors.scss";
 @import "../../../../assets/consts.scss";
 
+$font_main: var(--font_main);
+
 .__profile-api-keys-table-column-title {
     flex: 0 0 30%;
     width: 30%;
