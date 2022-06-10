@@ -91,9 +91,10 @@ export class AppComponent implements OnInit, OnDestroy {
     let themeLink = this.document.getElementById(
       'main-font'
     ) as HTMLLinkElement;
+    // Set the font link
     const mainFont = EnvService.main_font;
-    const mainFontCompressed = mainFont.replace(' ', '+');
-    const href = `https://fonts.googleapis.com/css2?family=${mainFontCompressed}:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap`;
+    const mainFontJoined = mainFont.replace(' ', '+');
+    const href = `https://fonts.googleapis.com/css2?family=${mainFontJoined}:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap`;
     if (themeLink) {
       themeLink.href = href;
     } else {
@@ -104,6 +105,7 @@ export class AppComponent implements OnInit, OnDestroy {
       style.href = href;
       head.appendChild(style);
     }
+    // Set the font variable
     this.document.documentElement.style.setProperty('--font_main', mainFont);
   }
 
