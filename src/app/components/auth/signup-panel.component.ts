@@ -100,9 +100,8 @@ export class SignUpPanelComponent implements OnInit, OnDestroy {
     constructor(
         private auth: AuthService,
         private errorHandler: ErrorService,
-        private env: EnvService,
         private formBuilder: FormBuilder) {
-        this.termsLink = this.env.terms_link;
+        this.termsLink = EnvService.terms_link;
     }
 
     ngOnInit(): void {

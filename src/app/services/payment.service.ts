@@ -372,11 +372,11 @@ query GetWidget($id: String!, $recaptcha: String!) {
 
 @Injectable()
 export class PaymentDataService {
-  constructor(private apollo: Apollo, private env: EnvService) { }
+  constructor(private apollo: Apollo) { }
 
   getRates(listCrypto: string[], fiat: string): QueryRef<any, EmptyObject> {
     const vars = {
-      recaptcha: this.env.recaptchaId,
+      recaptcha: EnvService.recaptchaId,
       currenciesFrom: listCrypto,
       currencyTo: fiat
     };
@@ -563,7 +563,7 @@ export class PaymentDataService {
   getWidget(paramsId: string): QueryRef<any, EmptyObject> {
     const vars = {
       id: paramsId,
-      recaptcha: this.env.recaptchaId,
+      recaptcha: EnvService.recaptchaId,
     };
     return this.apollo.watchQuery<any>({
       query: GET_WIDGET,

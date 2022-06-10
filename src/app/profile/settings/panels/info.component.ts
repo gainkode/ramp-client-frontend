@@ -9,10 +9,10 @@ import { SettingsCurrencyWithDefaults, User, UserInput, UserType } from 'src/app
 import { UserItem } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
+import { EnvService } from 'src/app/services/env.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
 import { getAvatarPath, getCryptoSymbol } from 'src/app/utils/utils';
-import { environment } from 'src/environments/environment';
 
 enum ChangedDataType {
     Unknown = 'Unknown',
@@ -190,7 +190,7 @@ export class ProfileInfoSettingsComponent implements OnInit, OnDestroy {
             const formData = new FormData();
             formData.append("docs", file);
 
-            const upload = this.http.post(`${environment.api_server}/rest/user/upload-avatar`, formData, {
+            const upload = this.http.post(`${EnvService.api_server}/rest/user/upload-avatar`, formData, {
                 headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.auth.token),
                 reportProgress: true,
                 observe: 'events'

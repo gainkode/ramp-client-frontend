@@ -13,10 +13,6 @@ export class WidgetCompleteComponent {
   @Output() onFinish = new EventEmitter();
   
   TRANSACTION_TYPE: typeof TransactionType = TransactionType;
-  supportEmail = this.env.support_email ?? 'support@test.com';
-  supportEmailLink = `mailto: ${this.env.support_email}` ?? 'mailto: support@test.com';
-
-  constructor(private env: EnvService) {
-
-  }
+  supportEmail = EnvService.support_email ?? 'support@test.com';
+  supportEmailLink = `mailto: ${EnvService.support_email}` ?? 'mailto: support@test.com';
 }

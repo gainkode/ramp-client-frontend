@@ -13,13 +13,8 @@ export class WidgetDisclaimerComponent {
 
   termsLink = '';
   
-  constructor(private env: EnvService) {
-  }
-
   checkAgreement(): void {
     this.agreementChecked = !this.agreementChecked;
-    this.termsLink = this.env.terms_link;
+    this.termsLink = EnvService.terms_link;
   }
-
-  
 }

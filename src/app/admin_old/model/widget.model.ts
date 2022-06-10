@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { getCountryByCode2 } from 'src/app/model/country-code.model';
 import { TransactionTypeList } from 'src/app/model/payment.model';
-import { environment } from 'src/environments/environment';
+import { EnvService } from 'src/app/services/env.service';
 import { Widget } from '../../model/generated-models';
 
 export class WidgetItem {
@@ -35,8 +35,8 @@ export class WidgetItem {
       const datepipe: DatePipe = new DatePipe('en-US');
       this.id = data.widgetId ?? '';
       this.code = data.code ?? '';
-      this.link = `${environment.client_host}/payment/quickcheckout/${this.id}`;
-      this.maskLink = `${environment.client_host}/payment/widget/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`;
+      this.link = `${EnvService.client_host}/payment/quickcheckout/${this.id}`;
+      this.maskLink = `${EnvService.client_host}/payment/widget/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`;
       this.name = data.name;
       this.description = data.description ?? '';
       this.additionalSettings = data.additionalSettings as string;

@@ -3,7 +3,6 @@ import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { from, Observable, of } from 'rxjs';
 import { SocialAuthService, FacebookLoginProvider, GoogleLoginProvider } from 'angularx-social-login';
 import { FeedbackInput, LoginResult, PostAddress, SettingsCommon, User, UserMode, UserType } from '../model/generated-models';
-import { environment } from 'src/environments/environment';
 import { EmptyObject } from 'apollo-angular/types';
 import { EnvService } from './env.service';
 
@@ -414,8 +413,7 @@ export class AuthService {
 
     constructor(
         private apollo: Apollo,
-        private socialAuth: SocialAuthService,
-        private env: EnvService) { }
+        private socialAuth: SocialAuthService) { }
 
     refreshToken(): Observable<any> {
         const result = this.apollo.mutate({
@@ -462,7 +460,7 @@ export class AuthService {
         const consentStatus = w.cookieconsent.utils.getCookie(this.cookieName);
         if (consentStatus || ignoreCookies) {
             const vars = {
-                recaptcha: this.env.recaptchaId,
+                recaptcha: EnvService.recaptchaId,
                 email: username,
                 password: noPassword ? undefined : userpassword,
                 widgetId
@@ -483,7 +481,7 @@ export class AuthService {
             return this.apollo.mutate({
                 mutation: SOCIAL_LOGIN,
                 variables: {
-                    recaptcha: this.env.recaptchaId,
+                    recaptcha: EnvService.recaptchaId,
                     oauthprovider: provider,
                     oauthtoken: token
                 }
@@ -516,7 +514,7 @@ export class AuthService {
             return this.apollo.mutate({
                 mutation: SIGNUP,
                 variables: {
-                    recaptcha: this.env.recaptchaId,
+                    recaptcha: EnvService.recaptchaId,
                     email: usermail,
                     password: userpassword,
                     userType: usertype,
@@ -542,7 +540,7 @@ export class AuthService {
             mutation: CONFIRM_NAME,
             variables: {
                 token: tokenId,
-                recaptcha: this.env.recaptchaId,
+                recaptcha: EnvService.recaptchaId,
                 userType: usertype,
                 mode: 'InternalWallet',
                 firstName: firstname,
@@ -558,7 +556,7 @@ export class AuthService {
         return this.apollo.mutate({
             mutation: FORGOT_PASSWORD,
             variables: {
-                recaptcha: this.env.recaptchaId,
+                recaptcha: EnvService.recaptchaId,
                 email: usermail
             }
         });
@@ -568,7 +566,7 @@ export class AuthService {
         return this.apollo.mutate({
             mutation: SET_PASSWORD,
             variables: {
-                recaptcha: this.env.recaptchaId,
+                recaptcha: EnvService.recaptchaId,
                 token: usertoken,
                 password: userpassword
             }
@@ -579,7 +577,7 @@ export class AuthService {
         return this.apollo.mutate({
             mutation: CONFIRM_EMAIL,
             variables: {
-                recaptcha: this.env.recaptchaId,
+                recaptcha: EnvService.recaptchaId,
                 token: tokenValue
             }
         });
@@ -589,7 +587,7 @@ export class AuthService {
         return this.apollo.mutate({
             mutation: CONFIRM_EMAIL,
             variables: {
-                recaptcha: this.env.recaptchaId,
+                recaptcha: EnvService.recaptchaId,
                 email: emailValue,
                 code: codeValue
             }
@@ -600,7 +598,7 @@ export class AuthService {
         return this.apollo.mutate({
             mutation: CONFIRM_DEVICE,
             variables: {
-                recaptcha: this.env.recaptchaId,
+                recaptcha: EnvService.recaptchaId,
                 token: tokenValue
             }
         });
@@ -613,7 +611,7 @@ export class AuthService {
         addressValue: PostAddress | undefined,
         birthdayValue: Date | undefined): Observable<any> {
         const vars = {
-            recaptcha: this.env.recaptchaId,
+            recaptcha: EnvService.recaptchaId,
             firstName: (firstNameValue === '') ? undefined : firstNameValue,
             lastName: (lastNameValue === '') ? undefined : lastNameValue,
             phone: (phoneValue === '') ? undefined : phoneValue,

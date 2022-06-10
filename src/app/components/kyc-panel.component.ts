@@ -1,7 +1,6 @@
 import { Component, Input, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { AuthService } from '../services/auth.service';
 import { EnvService } from '../services/env.service';
 import { ErrorService } from '../services/error.service';
@@ -26,7 +25,6 @@ export class KycPanelComponent implements OnInit, OnDestroy {
 
     constructor(
         public dialog: MatDialog,
-        private env: EnvService,
         private auth: AuthService,
         private errorHandler: ErrorService) {
 
@@ -103,7 +101,7 @@ export class KycPanelComponent implements OnInit, OnDestroy {
             phone: applicantPhone,
             i18n: customI18nMessages,
             uiConf: {
-                customCss: `${environment.client_host}/assets/sumsub.css`
+                customCss: `${EnvService.client_host}/assets/sumsub.css`
                 // URL to css file in case you need change it dynamically from the code
                 // the similar setting at Customizations tab will rewrite customCss
                 // you may also use to pass string with plain styles `customCssStr:`
@@ -127,7 +125,7 @@ export class KycPanelComponent implements OnInit, OnDestroy {
             this.onError.emit(error.error);
         });
 
-        if (this.env.test_kyc) {
+        if (EnvService.test_kyc) {
             snsWebSdkBuilder = snsWebSdkBuilder.onTestEnv();
         }
         const snsWebSdkInstance = snsWebSdkBuilder.build();

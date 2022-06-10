@@ -18,7 +18,6 @@ import {
 import { AuthService } from './services/auth.service';
 import { ErrorService } from './services/error.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { environment } from 'src/environments/environment';
 import { PaymentDataService } from './services/payment.service';
 import { NotificationService } from './services/notification.service';
 import { CommonDataService } from './services/common-data.service';
@@ -29,7 +28,8 @@ import { ProfileDataService } from './services/profile.service';
 import { ExchangeRateService } from './services/rate.service';
 import { WidgetPagerService } from './services/widget-pager.service';
 import { WidgetService } from './services/widget.service';
-import { EnvServiceProvider, EnvService } from './services/env.service';
+import { EnvServiceProvider, EnvService, EnvServiceFactory } from './services/env.service';
+import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [
@@ -57,7 +57,7 @@ import { EnvServiceProvider, EnvService } from './services/env.service';
           },
           // {
           //   id: FacebookLoginProvider.PROVIDER_ID,
-          //   provider: new FacebookLoginProvider(environment.facebookClientId)
+          //   provider: new FacebookLoginProvider(EnvService.facebookClientId)
           // }
         ]
       } as SocialAuthServiceConfig
@@ -138,17 +138,17 @@ export class AppModule {
   constructor(
     private apollo: Apollo,
     private httpLink: HttpLink,
-    private authService: AuthService,
-    private env: EnvService) {
+    private authService: AuthService) {
+    EnvServiceFactory.call(undefined);
     const http = this.httpLink.create({
-      uri: `${this.env.api_server}/gql/api`,
+      uri: `${EnvService.api_server}/gql/api`,
       withCredentials: true
     });
-    const timeoutLink = new ApolloLinkTimeout(this.env.api_timeout ?? 10000); // 10 second timeout
+    const timeoutLink = new ApolloLinkTimeout(EnvService.api_timeout ?? 10000); // 10 second timeout
     const timeoutHttp = timeoutLink.concat(http);
 
     const webSocketClient: SubscriptionClient = new SubscriptionClient(
-      `${this.env.ws_server}/subscriptions`,
+      `${EnvService.ws_server}/subscriptions`,
       {
         lazy: true,
         reconnect: true,

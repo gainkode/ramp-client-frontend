@@ -61,11 +61,10 @@ export class PersonalComponent implements OnInit, OnDestroy {
     private subscriptions: Subscription = new Subscription();
 
     constructor(
-        private env: EnvService,
         private auth: AuthService,
         private notification: NotificationService,
         public router: Router) {
-        this.showExpressTransfer = this.env.express_transfer;
+        this.showExpressTransfer = EnvService.express_transfer;
         this.getSectionName();
     }
 

@@ -190,15 +190,13 @@ const GET_USER_BY_ID = gql`
 
 @Injectable()
 export class CommonDataService {
-  constructor(
-    private apollo: Apollo,
-    private env: EnvService) { }
+  constructor(private apollo: Apollo) { }
 
   getSettingsCurrency(): QueryRef<any, EmptyObject> {
     return this.apollo.watchQuery<any>({
       query: GET_SETTINGS_CURRENCY,
       variables: {
-        recaptcha: this.env.recaptchaId
+        recaptcha: EnvService.recaptchaId
       },
       fetchPolicy: 'network-only'
     });

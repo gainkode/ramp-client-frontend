@@ -18,14 +18,13 @@ export class AppComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription = new Subscription();
 
   constructor(
-    private env: EnvService,
     private commonService: CommonDataService,
     private profileService: ProfileDataService,
     private notification: NotificationService,
     private auth: AuthService,
     private titleService: Title
   ) {
-    this.titleService.setTitle(env.product);
+    this.titleService.setTitle(EnvService.product);
   }
   
   ngOnInit(): void {
@@ -44,7 +43,7 @@ export class AppComponent implements OnInit, OnDestroy {
       const w = window as any;
       w.cookieconsent.initialise({
         cookie: {
-          domain: this.env.cookieDomain,
+          domain: EnvService.cookieDomain,
           secure: false // If secure is true, the cookies will only be allowed over https
         },
         position: 'bottom',
@@ -66,7 +65,7 @@ export class AppComponent implements OnInit, OnDestroy {
           deny: 'Decline',
           allow: 'Accept',
           link: 'Cookies Policy',
-          href: this.env.cookie_link,
+          href: EnvService.cookie_link,
           policy: 'Cookie Policy'
         },
         onStatusChange: function (status: any) {

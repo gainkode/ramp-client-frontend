@@ -2,6 +2,7 @@ import { environment } from "src/environments/environment";
 import { User, UserType } from "../model/generated-models";
 import { PaymentWidgetType } from "../model/payment-base.model";
 import { PaymentProviderView } from "../model/payment.model";
+import { EnvService } from "../services/env.service";
 
 export interface PaymentTitleInfo {
     panelTitle: string;
@@ -94,7 +95,7 @@ export function getAvatarPath(avatarObject: string | undefined): string {
     const avatarData = JSON.parse(avatarObject ?? '{}');
     if (avatarData) {
         if (avatarData.path && avatarData.originFileName) {
-            result = `${environment.image_host}/${avatarData.path}/${avatarData.originFileName}`;
+            result = `${EnvService.image_host}/${avatarData.path}/${avatarData.originFileName}`;
         }
     }
     return result;
