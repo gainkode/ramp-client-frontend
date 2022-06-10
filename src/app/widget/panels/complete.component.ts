@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TransactionType } from 'src/app/model/generated-models';
-import { environment } from 'src/environments/environment';
+import { EnvService } from 'src/app/services/env.service';
 
 @Component({
   selector: 'app-widget-complete',
@@ -13,6 +13,10 @@ export class WidgetCompleteComponent {
   @Output() onFinish = new EventEmitter();
   
   TRANSACTION_TYPE: typeof TransactionType = TransactionType;
-  supportEmail = environment.support_email ?? 'support@test.com';
-  supportEmailLink = `mailto: ${environment.support_email}` ?? 'mailto: support@test.com';
+  supportEmail = this.env.support_email ?? 'support@test.com';
+  supportEmailLink = `mailto: ${this.env.support_email}` ?? 'mailto: support@test.com';
+
+  constructor(private env: EnvService) {
+
+  }
 }

@@ -29,6 +29,7 @@ import { ProfileDataService } from './services/profile.service';
 import { ExchangeRateService } from './services/rate.service';
 import { WidgetPagerService } from './services/widget-pager.service';
 import { WidgetService } from './services/widget.service';
+import { EnvServiceProvider, EnvService } from './services/env.service';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { WidgetService } from './services/widget.service';
     DirectiveModule
   ],
   providers: [
+    EnvServiceProvider,
     Apollo,
     {
       provide: 'SocialAuthServiceConfig',
@@ -133,16 +135,20 @@ export class AppModule {
     headers.append('Feature-Policy', 'camera: \'self\'');
   });
 
-  constructor(private apollo: Apollo, private httpLink: HttpLink, private authService: AuthService) {
-    const http = httpLink.create({
-      uri: `${environment.api_server}/gql/api`,
+  constructor(
+    private apollo: Apollo,
+    private httpLink: HttpLink,
+    private authService: AuthService,
+    private env: EnvService) {
+    const http = this.httpLink.create({
+      uri: `${this.env.api_server}/gql/api`,
       withCredentials: true
     });
-    const timeoutLink = new ApolloLinkTimeout(environment.api_timeout ?? 10000); // 10 second timeout
+    const timeoutLink = new ApolloLinkTimeout(this.env.api_timeout ?? 10000); // 10 second timeout
     const timeoutHttp = timeoutLink.concat(http);
 
     const webSocketClient: SubscriptionClient = new SubscriptionClient(
-      `${environment.ws_server}/subscriptions`,
+      `${this.env.ws_server}/subscriptions`,
       {
         lazy: true,
         reconnect: true,
@@ -169,7 +175,7 @@ export class AppModule {
       transportLink
     ]);
 
-    apollo.create({
+    this.apollo.create({
       link: apolloLink,
       cache: new InMemoryCache()
     });

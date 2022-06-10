@@ -16,6 +16,7 @@ import { ProfileHomeComponent } from '../profile/home/home.component';
 import { ProfileTransactionsComponent } from '../profile/transactions/transactions.component';
 import { ProfileWalletsComponent } from '../profile/wallets/wallets.component';
 import { AuthService } from '../services/auth.service';
+import { EnvService } from '../services/env.service';
 import { NotificationService } from '../services/notification.service';
 import { getAvatarPath, getFullName, getPaymentTitles } from '../utils/utils';
 
@@ -60,10 +61,11 @@ export class PersonalComponent implements OnInit, OnDestroy {
     private subscriptions: Subscription = new Subscription();
 
     constructor(
+        private env: EnvService,
         private auth: AuthService,
         private notification: NotificationService,
         public router: Router) {
-        this.showExpressTransfer = environment.express_transfer;
+        this.showExpressTransfer = this.env.express_transfer;
         this.getSectionName();
     }
 

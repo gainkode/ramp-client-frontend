@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { KycProvider, PaymentInstrument, TransactionSource, TransactionType } from '../model/generated-models';
 import { CardView } from '../model/payment.model';
+import { EnvService } from './env.service';
 
 const GET_RATES = gql`
 query GetRates($recaptcha: String!, $currenciesFrom: [String!]!, $currencyTo: String!) {
@@ -371,11 +372,11 @@ query GetWidget($id: String!, $recaptcha: String!) {
 
 @Injectable()
 export class PaymentDataService {
-  constructor(private apollo: Apollo) { }
+  constructor(private apollo: Apollo, private env: EnvService) { }
 
   getRates(listCrypto: string[], fiat: string): QueryRef<any, EmptyObject> {
     const vars = {
-      recaptcha: environment.recaptchaId,
+      recaptcha: this.env.recaptchaId,
       currenciesFrom: listCrypto,
       currencyTo: fiat
     };
@@ -562,7 +563,7 @@ export class PaymentDataService {
   getWidget(paramsId: string): QueryRef<any, EmptyObject> {
     const vars = {
       id: paramsId,
-      recaptcha: environment.recaptchaId,
+      recaptcha: this.env.recaptchaId,
     };
     return this.apollo.watchQuery<any>({
       query: GET_WIDGET,

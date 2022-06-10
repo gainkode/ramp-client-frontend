@@ -5,6 +5,7 @@ import { SocialAuthService, FacebookLoginProvider, GoogleLoginProvider } from 'a
 import { FeedbackInput, LoginResult, PostAddress, SettingsCommon, User, UserMode, UserType } from '../model/generated-models';
 import { environment } from 'src/environments/environment';
 import { EmptyObject } from 'apollo-angular/types';
+import { EnvService } from './env.service';
 
 const LOGIN = gql`
   mutation Login($recaptcha: String!, $email: String!, $password: String, $widgetId: String) {
@@ -411,7 +412,10 @@ export class AuthService {
         return (tokenData === null) ? '' : tokenData;
     }
 
-    constructor(private apollo: Apollo, private socialAuth: SocialAuthService) { }
+    constructor(
+        private apollo: Apollo,
+        private socialAuth: SocialAuthService,
+        private env: EnvService) { }
 
     refreshToken(): Observable<any> {
         const result = this.apollo.mutate({
@@ -458,7 +462,7 @@ export class AuthService {
         const consentStatus = w.cookieconsent.utils.getCookie(this.cookieName);
         if (consentStatus || ignoreCookies) {
             const vars = {
-                recaptcha: environment.recaptchaId,
+                recaptcha: this.env.recaptchaId,
                 email: username,
                 password: noPassword ? undefined : userpassword,
                 widgetId
@@ -479,7 +483,7 @@ export class AuthService {
             return this.apollo.mutate({
                 mutation: SOCIAL_LOGIN,
                 variables: {
-                    recaptcha: environment.recaptchaId,
+                    recaptcha: this.env.recaptchaId,
                     oauthprovider: provider,
                     oauthtoken: token
                 }
@@ -512,7 +516,7 @@ export class AuthService {
             return this.apollo.mutate({
                 mutation: SIGNUP,
                 variables: {
-                    recaptcha: environment.recaptchaId,
+                    recaptcha: this.env.recaptchaId,
                     email: usermail,
                     password: userpassword,
                     userType: usertype,
@@ -538,7 +542,7 @@ export class AuthService {
             mutation: CONFIRM_NAME,
             variables: {
                 token: tokenId,
-                recaptcha: environment.recaptchaId,
+                recaptcha: this.env.recaptchaId,
                 userType: usertype,
                 mode: 'InternalWallet',
                 firstName: firstname,
@@ -554,7 +558,7 @@ export class AuthService {
         return this.apollo.mutate({
             mutation: FORGOT_PASSWORD,
             variables: {
-                recaptcha: environment.recaptchaId,
+                recaptcha: this.env.recaptchaId,
                 email: usermail
             }
         });
@@ -564,7 +568,7 @@ export class AuthService {
         return this.apollo.mutate({
             mutation: SET_PASSWORD,
             variables: {
-                recaptcha: environment.recaptchaId,
+                recaptcha: this.env.recaptchaId,
                 token: usertoken,
                 password: userpassword
             }
@@ -575,7 +579,7 @@ export class AuthService {
         return this.apollo.mutate({
             mutation: CONFIRM_EMAIL,
             variables: {
-                recaptcha: environment.recaptchaId,
+                recaptcha: this.env.recaptchaId,
                 token: tokenValue
             }
         });
@@ -585,7 +589,7 @@ export class AuthService {
         return this.apollo.mutate({
             mutation: CONFIRM_EMAIL,
             variables: {
-                recaptcha: environment.recaptchaId,
+                recaptcha: this.env.recaptchaId,
                 email: emailValue,
                 code: codeValue
             }
@@ -596,7 +600,7 @@ export class AuthService {
         return this.apollo.mutate({
             mutation: CONFIRM_DEVICE,
             variables: {
-                recaptcha: environment.recaptchaId,
+                recaptcha: this.env.recaptchaId,
                 token: tokenValue
             }
         });
@@ -609,7 +613,7 @@ export class AuthService {
         addressValue: PostAddress | undefined,
         birthdayValue: Date | undefined): Observable<any> {
         const vars = {
-            recaptcha: environment.recaptchaId,
+            recaptcha: this.env.recaptchaId,
             firstName: (firstNameValue === '') ? undefined : firstNameValue,
             lastName: (lastNameValue === '') ? undefined : lastNameValue,
             phone: (phoneValue === '') ? undefined : phoneValue,

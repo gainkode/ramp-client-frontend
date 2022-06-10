@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { EmptyObject } from 'apollo-angular/types';
 import { environment } from 'src/environments/environment';
+import { EnvService } from './env.service';
 
 const GET_SETTINGS_CURRENCY = gql`
   query GetSettingsCurrency($recaptcha: String!) {
@@ -189,13 +190,15 @@ const GET_USER_BY_ID = gql`
 
 @Injectable()
 export class CommonDataService {
-  constructor(private apollo: Apollo) { }
+  constructor(
+    private apollo: Apollo,
+    private env: EnvService) { }
 
   getSettingsCurrency(): QueryRef<any, EmptyObject> {
     return this.apollo.watchQuery<any>({
       query: GET_SETTINGS_CURRENCY,
       variables: {
-        recaptcha: environment.recaptchaId
+        recaptcha: this.env.recaptchaId
       },
       fetchPolicy: 'network-only'
     });

@@ -1,13 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
 import { User } from './model/generated-models';
 import { Title } from '@angular/platform-browser';
 import { AuthService } from './services/auth.service';
 import { CommonDataService } from './services/common-data.service';
 import { NotificationService } from './services/notification.service';
 import { ProfileDataService } from './services/profile.service';
+import { EnvService } from './services/env.service';
 
 @Component({
   selector: 'app-root',
@@ -18,13 +18,14 @@ export class AppComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription = new Subscription();
 
   constructor(
+    private env: EnvService,
     private commonService: CommonDataService,
     private profileService: ProfileDataService,
     private notification: NotificationService,
     private auth: AuthService,
     private titleService: Title
   ) {
-    this.titleService.setTitle(environment.product);
+    this.titleService.setTitle(env.product);
   }
   
   ngOnInit(): void {
@@ -43,7 +44,7 @@ export class AppComponent implements OnInit, OnDestroy {
       const w = window as any;
       w.cookieconsent.initialise({
         cookie: {
-          domain: environment.cookieDomain,
+          domain: this.env.cookieDomain,
           secure: false // If secure is true, the cookies will only be allowed over https
         },
         position: 'bottom',
@@ -65,7 +66,7 @@ export class AppComponent implements OnInit, OnDestroy {
           deny: 'Decline',
           allow: 'Accept',
           link: 'Cookies Policy',
-          href: environment.cookie_link,
+          href: this.env.cookie_link,
           policy: 'Cookie Policy'
         },
         onStatusChange: function (status: any) {

@@ -10,7 +10,7 @@ import { ProfileDataService } from 'src/app/services/profile.service';
 import { ChartComponent, ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexFill, ApexStroke, ApexMarkers, ApexXAxis, ApexYAxis, ApexGrid, ApexTooltip, ApexNoData } from 'ng-apexcharts';
 import { take } from 'rxjs/operators';
 import { getCurrencySign } from 'src/app/utils/utils';
-import { environment } from 'src/environments/environment';
+import { EnvService } from 'src/app/services/env.service';
 
 @Component({
     selector: 'app-profile-balance-chart',
@@ -64,7 +64,7 @@ export class ProfileBalanceChartComponent implements OnInit, OnDestroy {
     chartData: ApexChart = {
         type: "area",
         height: 213,
-        fontFamily: environment.main_font,
+        fontFamily: this.env.main_font,
         zoom: {
             enabled: false
         },
@@ -75,7 +75,7 @@ export class ProfileBalanceChartComponent implements OnInit, OnDestroy {
     dataLabels: ApexDataLabels = {
         enabled: false
     };
-    fillColors: string[] = [environment.base_color];
+    fillColors: string[] = [this.env.base_color];
     areaFill: ApexFill = {
         type: 'gradient',
         gradient: {
@@ -88,11 +88,11 @@ export class ProfileBalanceChartComponent implements OnInit, OnDestroy {
     };
     chartStroke: ApexStroke = {
         curve: "smooth",
-        colors: [environment.base_color],
+        colors: [this.env.base_color],
         width: 1
     };
     markers: ApexMarkers = {
-        colors: [environment.base_color],
+        colors: [this.env.base_color],
         shape: 'circle',
         radius: 4.5
     };
@@ -211,6 +211,7 @@ export class ProfileBalanceChartComponent implements OnInit, OnDestroy {
     private currentBalance = 0;
 
     constructor(
+        private env: EnvService,
         private formBuilder: FormBuilder,
         private auth: AuthService,
         private errorHandler: ErrorService,
@@ -263,10 +264,10 @@ export class ProfileBalanceChartComponent implements OnInit, OnDestroy {
         const divBlockStyle = 'display: flex;flex-direction: column;justify-content: center;align-items: flex-start;padding: 4px;background: #FFFFFF;border: 0.5px solid #ECECEC;box-sizing: border-box;box-shadow: 0px 3px 3px rgba(208, 207, 207, 0.2), 0px 3px 4px rgba(208, 207, 207, 0.14), 0px 1px 8px rgba(208, 207, 207, 0.12);border-radius: 8px;';
         const divBlockStart = '<div style="' + divBlockStyle + '">';
         const divBlockEnd = '</div>';
-        const divBalanceStyle = `font-family: ${environment.main_font};font-style: normal;font-weight: 300;font-size: 14px;line-height: 28px;color: rgba(54, 44, 54, 0.75);margin: 0px 0px;`;
+        const divBalanceStyle = `font-family: ${this.env.main_font};font-style: normal;font-weight: 300;font-size: 14px;line-height: 28px;color: rgba(54, 44, 54, 0.75);margin: 0px 0px;`;
         const divBalanceStart = '<div style="' + divBalanceStyle + '">';
         const divBalanceEnd = '</div>';
-        const divDateStyle = `font-family: ${environment.main_font};font-style: normal;font-weight: normal;font-size: 12px;line-height: 14px;color: #B4AEB2;margin: 0px 0px;`;
+        const divDateStyle = `font-family: ${this.env.main_font};font-style: normal;font-weight: normal;font-size: 12px;line-height: 14px;color: #B4AEB2;margin: 0px 0px;`;
         const divDateStart = '<div style="' + divDateStyle + '">';
         const divDateEnd = '</div>';
         const point = w.globals.initialSeries[seriesIndex].data[dataPointIndex].goals;

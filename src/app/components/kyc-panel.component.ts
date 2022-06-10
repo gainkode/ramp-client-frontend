@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { AuthService } from '../services/auth.service';
+import { EnvService } from '../services/env.service';
 import { ErrorService } from '../services/error.service';
 import { CommonDialogBox } from './dialogs/common-box.dialog';
 
@@ -25,6 +26,7 @@ export class KycPanelComponent implements OnInit, OnDestroy {
 
     constructor(
         public dialog: MatDialog,
+        private env: EnvService,
         private auth: AuthService,
         private errorHandler: ErrorService) {
 
@@ -125,7 +127,7 @@ export class KycPanelComponent implements OnInit, OnDestroy {
             this.onError.emit(error.error);
         });
 
-        if (environment.test_kyc) {
+        if (this.env.test_kyc) {
             snsWebSdkBuilder = snsWebSdkBuilder.onTestEnv();
         }
         const snsWebSdkInstance = snsWebSdkBuilder.build();

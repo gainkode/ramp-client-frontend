@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { environment } from 'src/environments/environment';
+import { EnvService } from 'src/app/services/env.service';
 
 @Component({
   selector: 'app-widget-disclaimer',
@@ -12,9 +12,14 @@ export class WidgetDisclaimerComponent {
   @Output() onNext = new EventEmitter();
 
   termsLink = '';
+  
+  constructor(private env: EnvService) {
+  }
 
   checkAgreement(): void {
     this.agreementChecked = !this.agreementChecked;
-    this.termsLink = environment.terms_link;
+    this.termsLink = this.env.terms_link;
   }
+
+  
 }
