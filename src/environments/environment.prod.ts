@@ -1,15 +1,5 @@
 export const environment = {
   production: true,
-  cookieDomain: 'localhost',
-  client_host: 'http://localhost:4000',
-  api_server: 'http://localhost:4001',
-  ws_server: 'ws://localhost:4001',
-  image_host: 'http://localhost',
-  api_timeout: 30000,
-  test_wallets: true,
-  test_kyc: false,
-  recaptchaId: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI',
   googleClientId: '683937471887-u8r2tuvcvibnsnc41grnvcer9tv5bpm6.apps.googleusercontent.com',
-  facebookClientId: '522193095423714',
-  support_email: 'support@ewallet.com'
+  facebookClientId: '522193095423714'
 };

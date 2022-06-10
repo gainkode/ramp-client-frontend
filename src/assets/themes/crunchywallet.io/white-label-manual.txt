@@ -1,6 +1,6 @@
 1. Copy all files (only files) from src/assets/themes/crunchywallet.io to src/assets
 2. Copy favicon.ico file from src/assets/themes/crunchywallet.io to src
-3. Set environment variables:
+3. Set environment variables (env.js):
 	product: 'Crunchy Wallet',
 	test_kyc: false,
 	express_transfer: false,
