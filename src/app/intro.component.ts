@@ -5,12 +5,15 @@ import { CommonDialogBox } from './components/dialogs/common-box.dialog';
 import { UserMode } from './model/generated-models';
 import { CheckoutSummary } from './model/payment.model';
 import { AuthService } from './services/auth.service';
+import { EnvService } from './services/env.service';
 
 @Component({
     templateUrl: 'intro.component.html',
     styleUrls: ['../assets/button.scss', '../assets/intro.scss']
 })
 export class IntroComponent implements OnInit {
+    logoSrc = `${EnvService.image_host}/logo-color.png`;
+
     constructor(
         private router: Router,
         public dialog: MatDialog,

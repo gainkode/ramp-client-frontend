@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { EnvService } from './services/env.service';
 
 @Component({
     templateUrl: 'terms.component.html',
@@ -8,6 +9,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class TermsComponent {
     title = '';
     id = '';
+    logoSrc = `${EnvService.image_host}/logo-color.png`;
 
     constructor(
         private router: Router,

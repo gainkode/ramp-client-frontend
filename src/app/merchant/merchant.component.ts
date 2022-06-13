@@ -11,6 +11,7 @@ import { ProfileHomeComponent } from '../profile/home/home.component';
 import { ProfileTransactionsComponent } from '../profile/transactions/transactions.component';
 import { ProfileWalletsComponent } from '../profile/wallets/wallets.component';
 import { AuthService } from '../services/auth.service';
+import { EnvService } from '../services/env.service';
 import { NotificationService } from '../services/notification.service';
 import { getAvatarPath, getFullName, getPaymentTitles } from '../utils/utils';
 
@@ -51,6 +52,7 @@ export class MerchantComponent implements OnInit, OnDestroy {
     presetCurrency = '';
     presetWalletId = '';
     merchantApproved = false;
+    logoSrc = `${EnvService.image_host}/logo-light.png`;
 
     private subscriptions: Subscription = new Subscription();
 

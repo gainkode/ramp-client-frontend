@@ -34,7 +34,7 @@
         </div>
         <!-- Top menu logo -->
         <div *ngIf="expandedMenu" class="__profile-top-menu-logo-box">
-            <img class="__profile-top-menu-logo" src="../../assets/logo-light.png" alt="GetCoins" width="180">
+            <img class="__profile-top-menu-logo" [src]="logoSrc" alt="GetCoins" width="180">
         </div>
         <!-- Error bar -->
         <div [ngClass]="errorMessage==='' ? '__top-menu-error-bar-hidden' : '__top-menu-error-bar'">

@@ -88,21 +88,32 @@ export class AppComponent implements OnInit, OnDestroy {
   private loadFont() {
     // get head
     const head = this.document.getElementsByTagName('head')[0];
-    let themeLink = this.document.getElementById(
-      'main-font'
-    ) as HTMLLinkElement;
+    const themeLink = this.document.getElementById('main-font') as HTMLLinkElement;
     // Set the font link
     const mainFont = EnvService.main_font;
     const mainFontJoined = mainFont.replace(' ', '+');
-    const href = `https://fonts.googleapis.com/css2?family=${mainFontJoined}:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap`;
+    const fontRef = `https://fonts.googleapis.com/css2?family=${mainFontJoined}:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap`;
     if (themeLink) {
-      themeLink.href = href;
+      themeLink.href = fontRef;
     } else {
       // if link doesn't exist, we create link tag
       const style = this.document.createElement('link');
       style.id = 'main-font';
       style.rel = 'stylesheet';
-      style.href = href;
+      style.href = fontRef;
+      head.appendChild(style);
+    }
+    const iconLink = this.document.getElementById('icon-ref') as HTMLLinkElement;
+    const iconRef = `${EnvService.image_host}/favicon.ico`;
+    if (iconLink) {
+      iconLink.href = iconRef;
+    } else {
+      // if link doesn't exist, we create link tag
+      const style = this.document.createElement('link');
+      style.id = 'icon-ref';
+      style.rel = 'icon';
+      style.type = 'image/x-icon';
+      style.href = iconLink;
       head.appendChild(style);
     }
     // Set the font variable

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { EnvService } from 'src/app/services/env.service';
 
 @Component({
     templateUrl: 'restore.component.html',
@@ -8,6 +9,7 @@ import { Router } from '@angular/router';
 export class MerchantRestoreComponent {
     inProgress = false;
     errorMessage = '';
+    logoSrc = `${EnvService.image_host}/logo-color.png`;
 
     constructor(public router: Router) { }
 

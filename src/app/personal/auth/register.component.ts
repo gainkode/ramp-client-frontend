@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { EnvService } from 'src/app/services/env.service';
 
 @Component({
     templateUrl: 'register.component.html',
@@ -8,6 +9,7 @@ import { Router } from '@angular/router';
 export class PersonalRegisterComponent {
     inProgress = false;
     errorMessage = '';
+    logoSrc = `${EnvService.image_host}/logo-color.png`;
 
     constructor(public router: Router) { }
 

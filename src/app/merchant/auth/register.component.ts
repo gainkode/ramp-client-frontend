@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserType } from 'src/app/model/generated-models';
+import { EnvService } from 'src/app/services/env.service';
 
 @Component({
     templateUrl: 'register.component.html',
@@ -10,6 +11,7 @@ export class MerchantRegisterComponent {
     inProgress = false;
     errorMessage = '';
     USER_TYPE: typeof UserType = UserType;
+    logoSrc = `${EnvService.image_host}/logo-color.png`;
 
     constructor(public router: Router) { }
 

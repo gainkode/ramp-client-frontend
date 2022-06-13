@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
+import { EnvService } from 'src/app/services/env.service';
 import { LayoutService } from '../../services/layout.service';
 import { NavService } from '../../services/nav.service';
 import { SwitcherService } from '../../services/switcher.service';
@@ -14,6 +15,7 @@ export class AdminHeaderComponent implements OnInit {
   private body: HTMLBodyElement | any = document.querySelector('body');
   public isCollapsed = true;
   activated: boolean = false;
+  logoSrc = `${EnvService.image_host}/logo-dark.png`;
 
   constructor(
     private layoutService: LayoutService,

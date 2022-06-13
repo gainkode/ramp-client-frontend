@@ -3,6 +3,7 @@ import { MenuItem } from '../../../../model/common.model';
 import { AdminMenuItems } from '../../../model/menu.model';
 import { AuthService } from '../../../../services/auth.service';
 import { Router } from '@angular/router';
+import { EnvService } from 'src/app/services/env.service';
 
 @Component({
   selector: 'app-main-menu',
@@ -12,6 +13,7 @@ import { Router } from '@angular/router';
 export class MainMenuComponent implements OnInit {
   menuItems: MenuItem[] = [];
   userMainPage = '';
+  logoSrc = `${EnvService.image_host}/logo-dark.png`;
 
   constructor(private auth: AuthService, private router: Router) {
   }

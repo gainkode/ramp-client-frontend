@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ErrorService } from '../../services/error.service';
 import { Subscription } from 'rxjs';
 import { CommonDialogBox } from 'src/app/components/dialogs/common-box.dialog';
+import { EnvService } from 'src/app/services/env.service';
 
 @Component({
     templateUrl: 'login.component.html',
@@ -16,6 +17,7 @@ export class MerchantLoginComponent implements OnDestroy {
     inProgress = false;
     errorMessage = '';
     showExtraOptions = true;
+    logoSrc = `${EnvService.image_host}/logo-color.png`;
 
     private subscriptions: Subscription = new Subscription();
 

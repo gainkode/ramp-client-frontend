@@ -14,6 +14,7 @@ import { CommonDialogBox } from '../components/dialogs/common-box.dialog';
 import { WireTransferUserSelection } from '../model/cost-scheme.model';
 import { PaymentCompleteDetails, PaymentErrorDetails, WidgetSettings, WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from '../model/payment-base.model';
 import { WalletItem } from '../model/wallet.model';
+import { EnvService } from '../services/env.service';
 import { ProfileDataService } from '../services/profile.service';
 import { WidgetPagerService } from '../services/widget-pager.service';
 import { WidgetService } from '../services/widget.service';
@@ -60,6 +61,7 @@ export class WidgetComponent implements OnInit {
   instantpayDetails = '';
   paymentComplete = false;
   notificationStarted = false;
+  logoSrc = `${EnvService.image_host}/logo-color.png`;
 
   private pSubscriptions: Subscription = new Subscription();
   private pNotificationsSubscription: Subscription | undefined = undefined;

@@ -9,6 +9,7 @@ import { Menu, NavService } from '../../services/nav.service';
 import { fromEvent } from 'rxjs';
 import { switcherArrowFn } from './sidebar';
 import { AuthService } from 'src/app/services/auth.service';
+import { EnvService } from 'src/app/services/env.service';
 
 @Component({
   selector: 'app-admin-sidebar',
@@ -19,6 +20,7 @@ import { AuthService } from 'src/app/services/auth.service';
 export class AdminSidebarComponent {
   public menuItems!: Menu[];
   public url: any;
+  public logoSrc = `${EnvService.image_host}/logo-dark.png`;
 
   constructor(
     public router: Router,

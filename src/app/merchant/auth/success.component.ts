@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { EnvService } from 'src/app/services/env.service';
 
 @Component({
     templateUrl: 'success.component.html',
@@ -7,6 +8,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class MerchantSuccessComponent {
     successType = '';
+    logoSrc = `${EnvService.image_host}/logo-color.png`;
 
     constructor(public router: Router, activeRoute: ActivatedRoute) {
         this.successType = activeRoute.snapshot.params['type'];

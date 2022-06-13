@@ -2,6 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
+import { EnvService } from 'src/app/services/env.service';
 import { ErrorService } from 'src/app/services/error.service';
 
 @Component({
@@ -13,6 +14,7 @@ export class MerchantConfirmDeviceComponent implements OnDestroy {
     validated = false;
     valid = false;
     errorMessage = '';
+    logoSrc = `${EnvService.image_host}/logo-color.png`;
 
     private subscriptions: Subscription = new Subscription();
 
