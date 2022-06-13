@@ -8,6 +8,7 @@ import { AssetAddressShortListResult } from 'src/app/model/generated-models';
 import { CurrencyView } from 'src/app/model/payment.model';
 import { WalletItem } from 'src/app/model/wallet.model';
 import { AuthService } from 'src/app/services/auth.service';
+import { EnvService } from 'src/app/services/env.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { ProfileDataService } from 'src/app/services/profile.service';
 
@@ -38,6 +39,8 @@ export class WidgetReceiveDetailsComponent implements OnInit, OnDestroy {
   currencyInit = false;
   walletInit = false;
   qrCode = '';
+  qrCodeBackground = EnvService.color_white;
+  qrCodeForeground = EnvService.color_purple_900;
 
   walletErrorMessages: { [key: string]: string; } = {
     ['required']: 'Wallet is required'

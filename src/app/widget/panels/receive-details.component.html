@@ -106,7 +106,8 @@
         </div>
         <!-- QR-code -->
         <div class="__profile-details-qrcode-block">
-            <qrcode [qrdata]="qrCode" [width]="150" [errorCorrectionLevel]="'M'" [allowEmptyString]="true"></qrcode>
+            <qrcode [qrdata]="qrCode" [colorLight]="qrCodeBackground" [colorDark]="qrCodeForeground" [width]="150" [errorCorrectionLevel]="'M'"
+                [allowEmptyString]="true"></qrcode>
         </div>
     </div>
 

@@ -28,7 +28,7 @@ export class AppComponent implements OnInit, OnDestroy {
   ) {
     this.titleService.setTitle(EnvService.product);
   }
-  
+
   ngOnInit(): void {
     const totalData = this.commonService.getMyTransactionsTotal();
     this.subscriptions.add(
@@ -107,6 +107,65 @@ export class AppComponent implements OnInit, OnDestroy {
     }
     // Set the font variable
     this.document.documentElement.style.setProperty('--font_main', mainFont);
+    // Set color variables (white)
+    this.document.documentElement.style.setProperty('--color_white', EnvService.color_white);
+    // Set color variables (pink)
+    this.document.documentElement.style.setProperty('--color_pink_900', EnvService.color_pink_900);
+    this.document.documentElement.style.setProperty('--color_pink_800', EnvService.color_pink_800);
+    this.document.documentElement.style.setProperty('--color_pink_700', EnvService.color_pink_700);
+    this.document.documentElement.style.setProperty('--color_pink_600', EnvService.color_pink_600);
+    this.document.documentElement.style.setProperty('--color_pink_500', EnvService.color_pink_500);
+    this.document.documentElement.style.setProperty('--color_pink_400', EnvService.color_pink_400);
+    this.document.documentElement.style.setProperty('--color_pink_300', EnvService.color_pink_300);
+    this.document.documentElement.style.setProperty('--color_pink_200', EnvService.color_pink_200);
+    this.document.documentElement.style.setProperty('--color_pink_100', EnvService.color_pink_100);
+    this.document.documentElement.style.setProperty('--color_pink_50', EnvService.color_pink_50);
+    // Set color variables (green)
+    this.document.documentElement.style.setProperty('--color_green_900', EnvService.color_green_900);
+    this.document.documentElement.style.setProperty('--color_green_800', EnvService.color_green_800);
+    this.document.documentElement.style.setProperty('--color_green_700', EnvService.color_green_700);
+    this.document.documentElement.style.setProperty('--color_green_600', EnvService.color_green_600);
+    this.document.documentElement.style.setProperty('--color_green_500', EnvService.color_green_500);
+    this.document.documentElement.style.setProperty('--color_green_400', EnvService.color_green_400);
+    this.document.documentElement.style.setProperty('--color_green_300', EnvService.color_green_300);
+    this.document.documentElement.style.setProperty('--color_green_200', EnvService.color_green_200);
+    this.document.documentElement.style.setProperty('--color_green_100', EnvService.color_green_100);
+    this.document.documentElement.style.setProperty('--color_green_50', EnvService.color_green_50);
+    // Set color variables (orange)
+    this.document.documentElement.style.setProperty('--color_orange_900', EnvService.color_orange_900);
+    this.document.documentElement.style.setProperty('--color_orange_800', EnvService.color_orange_800);
+    this.document.documentElement.style.setProperty('--color_orange_700', EnvService.color_orange_700);
+    this.document.documentElement.style.setProperty('--color_orange_600', EnvService.color_orange_600);
+    this.document.documentElement.style.setProperty('--color_orange_500', EnvService.color_orange_500);
+    this.document.documentElement.style.setProperty('--color_orange_400', EnvService.color_orange_400);
+    this.document.documentElement.style.setProperty('--color_orange_300', EnvService.color_orange_300);
+    this.document.documentElement.style.setProperty('--color_orange_200', EnvService.color_orange_200);
+    this.document.documentElement.style.setProperty('--color_orange_100', EnvService.color_orange_100);
+    this.document.documentElement.style.setProperty('--color_orange_50', EnvService.color_orange_50);
+    // Set color variables (purple)
+    this.document.documentElement.style.setProperty('--color_purple_900_text', EnvService.color_purple_900_text);
+    this.document.documentElement.style.setProperty('--color_purple_900_icons', EnvService.color_purple_900_icons);
+    this.document.documentElement.style.setProperty('--color_purple_900', EnvService.color_purple_900);
+    this.document.documentElement.style.setProperty('--color_purple_800', EnvService.color_purple_800);
+    this.document.documentElement.style.setProperty('--color_purple_700', EnvService.color_purple_700);
+    this.document.documentElement.style.setProperty('--color_purple_600', EnvService.color_purple_600);
+    this.document.documentElement.style.setProperty('--color_purple_500', EnvService.color_purple_500);
+    this.document.documentElement.style.setProperty('--color_purple_400', EnvService.color_purple_400);
+    this.document.documentElement.style.setProperty('--color_purple_300', EnvService.color_purple_300);
+    this.document.documentElement.style.setProperty('--color_purple_200', EnvService.color_purple_200);
+    this.document.documentElement.style.setProperty('--color_purple_100', EnvService.color_purple_100);
+    this.document.documentElement.style.setProperty('--color_purple_50', EnvService.color_purple_50);
+    // Set color variables (blue)
+    this.document.documentElement.style.setProperty('--color_main_blue_900', EnvService.color_main_blue_900);
+    this.document.documentElement.style.setProperty('--color_main_blue_800', EnvService.color_main_blue_800);
+    this.document.documentElement.style.setProperty('--color_main_blue_700', EnvService.color_main_blue_700);
+    this.document.documentElement.style.setProperty('--color_main_blue_600', EnvService.color_main_blue_600);
+    this.document.documentElement.style.setProperty('--color_main_blue_500', EnvService.color_main_blue_500);
+    this.document.documentElement.style.setProperty('--color_main_blue_400', EnvService.color_main_blue_400);
+    this.document.documentElement.style.setProperty('--color_main_blue_300', EnvService.color_main_blue_300);
+    this.document.documentElement.style.setProperty('--color_main_blue_200', EnvService.color_main_blue_200);
+    this.document.documentElement.style.setProperty('--color_main_blue_100', EnvService.color_main_blue_100);
+    this.document.documentElement.style.setProperty('--color_main_blue_50', EnvService.color_main_blue_50);
   }
 
   private startKycNotifications(): void {
@@ -130,7 +189,7 @@ export class AppComponent implements OnInit, OnDestroy {
           this.auth.setUser(data.me as User);
         }
       }, (error) => {
-        
+
       })
     );
   }

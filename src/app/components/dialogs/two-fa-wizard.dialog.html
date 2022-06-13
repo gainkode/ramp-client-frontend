@@ -51,7 +51,7 @@
         Scan this QR code in the Google Authenticator application
     </div>
     <div class="__dialog-wizard-qr-code-container">
-        <qrcode [margin]="qrMargin" cssClass="__dialog-wizard-qr-code" [qrdata]="data.message" [width]="110"
+        <qrcode [colorLight]="qrCodeBackground" [colorDark]="qrCodeForeground" [margin]="qrMargin" cssClass="__dialog-wizard-qr-code" [qrdata]="data.message" [width]="110"
             [errorCorrectionLevel]="'M'" [allowEmptyString]="true"></qrcode>
         <div class="__dialog-wizard-qr-code-symbols">
             <div class="__dialog-message">

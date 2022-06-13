@@ -5,9 +5,127 @@
 
 :root {
     --font_main: "Ubuntu";
+
+    --color_white: #ffffff;
+
+    --color_pink_900: '#7c1f45';
+    --color_pink_800: '#a1264d';
+    --color_pink_700: '#b62b51';
+    --color_pink_600: '#cb2f55';
+    --color_pink_500: '#db3358';
+    --color_pink_400: '#e1496e';
+    --color_pink_300: '#e86687';
+    --color_pink_200: '#ef90a8';
+    --color_pink_100: '#f5bbcb';
+    --color_pink_50: '#fbe4ea';
+    
+    --color_green_900: '#075737';
+    --color_green_800: '#147351';
+    --color_green_700: '#1c835f';
+    --color_green_600: '#22946e';
+    --color_green_500: '#26a17b';
+    --color_green_400: '#3bb08c';
+    --color_green_300: '#5bbf9f';
+    --color_green_200: '#88d1ba';
+    --color_green_100: '#b6e3d5';
+    --color_green_50: '#e1f4ee';
+    
+    --color_orange_900: '#db5113';
+    --color_orange_800: '#e66a15';
+    --color_orange_700: '#ec7916';
+    --color_orange_600: '#f38818';
+    --color_orange_500: '#f7931a';
+    --color_orange_400: '#f9a331';
+    --color_orange_300: '#fab352';
+    --color_orange_200: '#fbc983';
+    --color_orange_100: '#fddeb3';
+    --color_orange_50: '#fef2e1';
+
+    --color_purple_900_text: '#686168';
+    --color_purple_900_icons: '#868086';
+    --color_purple_900: '#362C36';  // top menu bar
+    --color_purple_800: '#463944';
+    --color_purple_700: '#564451';
+    --color_purple_600: '#665060';
+    --color_purple_500: '#72596A';
+    --color_purple_400: '#85727F';
+    --color_purple_300: '#998C95';
+    --color_purple_200: '#B4AEB2';
+    --color_purple_100: '#D0CFCF';
+    --color_purple_50: '#ECECEC';
+
+    --color_main_blue_900: '#06509e';
+    --color_main_blue_800: '#0070c0';
+    --color_main_blue_700: '#0081d4'; // main color
+    --color_main_blue_600: '#0094e9';
+    --color_main_blue_500: '#00a2f8';
+    --color_main_blue_400: '#19b0fa';
+    --color_main_blue_300: '#47befb';
+    --color_main_blue_200: '#7ed0fd';
+    --color_main_blue_100: '#b2e3fe';
+    --color_main_blue_50: '#f6fcff';
 }
 
 $font_main: var(--font_main);
+
+$color_white: var(--color_white);
+
+$color_pink_900: var(--color_pink_900);
+$color_pink_800: var(--color_pink_800);
+$color_pink_700: var(--color_pink_700);
+$color_pink_600: var(--color_pink_600);
+$color_pink_500: var(--color_pink_500);
+$color_pink_400: var(--color_pink_400);
+$color_pink_300: var(--color_pink_300);
+$color_pink_200: var(--color_pink_200);
+$color_pink_100: var(--color_pink_100);
+$color_pink_50: var(--color_pink_50);
+
+$color_green_900: var(--color_green_900);
+$color_green_800: var(--color_green_800);
+$color_green_700: var(--color_green_700);
+$color_green_600: var(--color_green_600);
+$color_green_500: var(--color_green_500);
+$color_green_400: var(--color_green_400);
+$color_green_300: var(--color_green_300);
+$color_green_200: var(--color_green_200);
+$color_green_100: var(--color_green_100);
+$color_green_50: var(--color_green_50);
+
+$color_orange_900: var(--color_orange_900);
+$color_orange_800: var(--color_orange_800);
+$color_orange_700: var(--color_orange_700);
+$color_orange_600: var(--color_orange_600);
+$color_orange_500: var(--color_orange_500);
+$color_orange_400: var(--color_orange_400);
+$color_orange_300: var(--color_orange_300);
+$color_orange_200: var(--color_orange_200);
+$color_orange_100: var(--color_orange_100);
+$color_orange_50: var(--color_orange_50);
+
+$color_purple_900_text: var(--color_purple_900_text);
+$color_purple_900_icons: var(--color_purple_900_icons);
+$color_purple_900: var(--color_purple_900);
+$color_purple_800: var(--color_purple_800);
+$color_purple_700: var(--color_purple_700);
+$color_purple_600: var(--color_purple_600);
+$color_purple_500: var(--color_purple_500);
+$color_purple_400: var(--color_purple_400);
+$color_purple_300: var(--color_purple_300);
+$color_purple_200: var(--color_purple_200);
+$color_purple_100: var(--color_purple_100);
+$color_purple_50: var(--color_purple_50);
+
+$color_main_blue_900: var(--color_main_blue_900);
+$color_main_blue_800: var(--color_main_blue_800);
+$color_main_blue_700: var(--color_main_blue_700);
+$color_main_blue_600: var(--color_main_blue_600);
+$color_main_blue_500: var(--color_main_blue_500);
+$color_main_blue_400: var(--color_main_blue_400);
+$color_main_blue_300: var(--color_main_blue_300);
+$color_main_blue_200: var(--color_main_blue_200);
+$color_main_blue_100: var(--color_main_blue_100);
+$color_main_blue_50: var(--color_main_blue_50);
 
 * {
     font-family: $font_main, sans-serif;
@@ -54,6 +172,7 @@ a:active {
 .__container {
     width: 100%;
     min-height: ($max_height - $top_menu_height_lg - 10) + px;
+    background-color: $color_white;
 
     @media (max-width: $md1 + px) {
         min-height: $min_height + px;
@@ -109,6 +228,10 @@ input:-webkit-autofill::first-line {
 
 .mat-input-element {
     background: $color_white;
+}
+
+mat-dialog-container {
+    background-color: $color_white !important;
 }
 
 .__popup-menu-panel {

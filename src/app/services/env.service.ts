@@ -16,6 +16,65 @@ export class EnvService {
     public static cookie_link = '';
     public static terms_link = '';
 
+    public static color_white = '#FF0000';
+
+    public static color_pink_900 = '#7c1f45';
+    public static color_pink_800 = '#a1264d';
+    public static color_pink_700 = '#b62b51';
+    public static color_pink_600 = '#cb2f55';
+    public static color_pink_500 = '#db3358';
+    public static color_pink_400 = '#e1496e';
+    public static color_pink_300 = '#e86687';
+    public static color_pink_200 = '#ef90a8';
+    public static color_pink_100 = '#f5bbcb';
+    public static color_pink_50 = '#fbe4ea';
+
+    public static color_green_900 = '#075737';
+    public static color_green_800 = '#147351';
+    public static color_green_700 = '#1c835f';
+    public static color_green_600 = '#22946e';
+    public static color_green_500 = '#26a17b';
+    public static color_green_400 = '#3bb08c';
+    public static color_green_300 = '#5bbf9f';
+    public static color_green_200 = '#88d1ba';
+    public static color_green_100 = '#b6e3d5';
+    public static color_green_50 = '#e1f4ee';
+
+    public static color_orange_900 = '#db5113';
+    public static color_orange_800 = '#e66a15';
+    public static color_orange_700 = '#ec7916';
+    public static color_orange_600 = '#f38818';
+    public static color_orange_500 = '#f7931a';
+    public static color_orange_400 = '#f9a331';
+    public static color_orange_300 = '#fab352';
+    public static color_orange_200 = '#fbc983';
+    public static color_orange_100 = '#fddeb3';
+    public static color_orange_50 = '#fef2e1';
+
+    public static color_purple_900_text = '#686168';
+    public static color_purple_900_icons = '#868086';
+    public static color_purple_900 = '#362C36';
+    public static color_purple_800 = '#463944';
+    public static color_purple_700 = '#564451';
+    public static color_purple_600 = '#665060';
+    public static color_purple_500 = '#72596A';
+    public static color_purple_400 = '#85727F';
+    public static color_purple_300 = '#998C95';
+    public static color_purple_200 = '#B4AEB2';
+    public static color_purple_100 = '#D0CFCF';
+    public static color_purple_50 = '#ECECEC';
+
+    public static color_main_blue_900 = '#06509e';
+    public static color_main_blue_800 = '#0070c0';
+    public static color_main_blue_700 = '#0081d4';
+    public static color_main_blue_600 = '#0094e9';
+    public static color_main_blue_500 = '#00a2f8';
+    public static color_main_blue_400 = '#19b0fa';
+    public static color_main_blue_300 = '#47befb';
+    public static color_main_blue_200 = '#7ed0fd';
+    public static color_main_blue_100 = '#b2e3fe';
+    public static color_main_blue_50 = '#f6fcff';
+
     constructor() {
     }
 }

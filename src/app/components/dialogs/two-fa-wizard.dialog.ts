@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogData } from 'src/app/model/dialog.model';
+import { EnvService } from 'src/app/services/env.service';
 
 @Component({
     selector: 'app-two-fa-dialog-wizard',
@@ -25,6 +26,8 @@ export class TwoFaDialogWizard {
     GA_APP_STORE_URL = 'https://apps.apple.com/us/app/google-authenticator/id388497605';
     GA_GOOGLE_PLAY_URL = 'https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en';
     qrMargin = 0;
+    qrCodeBackground = EnvService.color_white;
+    qrCodeForeground = EnvService.color_purple_900;
 
     constructor(
         private formBuilder: FormBuilder,
