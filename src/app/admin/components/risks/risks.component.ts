@@ -5,7 +5,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { Filter } from 'src/app/admin/model/filter.model';
-import { RiskAlertItem } from 'src/app/admin_old/model/risk-alert.model';
+import { RiskAlertItem } from 'src/app/admin/model/risk-alert.model';
 import { AdminDataService } from 'src/app/services/admin-data.service';
 import { AuthService } from 'src/app/services/auth.service';
 

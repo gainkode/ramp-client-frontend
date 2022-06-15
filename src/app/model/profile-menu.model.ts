@@ -145,11 +145,3 @@ export const ProfilePopupAdministrationMenuItem: MenuItem = {
     icon: 'admin_panel_settings',
     code: ''
 };
-
-// export const TestPopupAdministrationMenuItem: MenuItem = {
-//     id: 'administration_new',
-//     name: 'Administration',
-//     url: '/admin_old/main',
-//     icon: 'tag_faces',
-//     code: ''
-// };

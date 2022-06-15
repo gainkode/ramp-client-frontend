@@ -5,8 +5,8 @@ import { Subscription } from 'rxjs';
 import { AdminDataService } from 'src/app/services/admin-data.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { CustodyProviderList, KycProviderList } from 'src/app/model/payment.model';
-import { LiquidityProviderList } from 'src/app/admin_old/model/lists.model';
-import { TransactionConfirmationModeList } from 'src/app/admin_old/model/settings.model';
+import { LiquidityProviderList } from 'src/app/admin/model/lists.model';
+import { TransactionConfirmationModeList } from 'src/app/admin/model/settings.model';
 import { FormBuilder, Validators } from '@angular/forms';
 import { SettingsCommon, TransactionConfirmationMode } from 'src/app/model/generated-models';
 

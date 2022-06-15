@@ -1,8 +1,0 @@
-<mat-form-field>
-    <mat-label>Risk alert code</mat-label>
-    <mat-select [value]="valueInternal" (selectionChange)="handleSelectionChange($event)">
-        <mat-option *ngFor="let item of options" [value]="item.id">
-            {{item.name}}
-        </mat-option>
-    </mat-select>
-</mat-form-field>

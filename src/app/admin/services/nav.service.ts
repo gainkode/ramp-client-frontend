@@ -17,6 +17,7 @@ export interface Menu {
 	active?: boolean;
 	bookmark?: boolean;
 	children?: Menu[];
+	code?: string;
 }
 
 @Injectable({
@@ -87,56 +88,56 @@ export class NavService implements OnDestroy {
 			headTitle: 'MAIN',
 		},
 		{
-			path: '/admin/dashboard', icon: 'dashboard', title: 'Dashboard', type: 'link'
+			path: '/admin/dashboard', icon: 'dashboard', title: 'Dashboard', type: 'link', code: 'TRANSACTIONS'
 		},
 		{
-			path: '/admin/transactions', icon: 'compare_arrows', title: 'Transactions', type: 'link'
+			path: '/admin/transactions', icon: 'compare_arrows', title: 'Transactions', type: 'link', code: 'TRANSACTIONS'
 		},
 		{
 			title: 'Users', icon: 'account_box', type: 'sub', active: false, children: [
-				{ path: '/admin/customers', title: 'Customers', type: 'link' },
-				{ path: '/admin/system-users', title: 'System users', type: 'link' }
+				{ path: '/admin/customers', title: 'Customers', type: 'link', code: 'CUSTOMERS' },
+				{ path: '/admin/system-users', title: 'System users', type: 'link', code: 'SYSTEM_USERS' }
 			]
 		},
 		{
-			title: 'Wallets', icon: 'wallet_membership', type: 'sub', active: false, children: [
+			title: 'Wallets', icon: 'wallet_membership', type: 'sub', active: false, code: 'WALLETS', children: [
 				{ path: '/admin/crypto-wallets', title: 'Crypto wallets', type: 'link' },
 				{ path: '/admin/fiat-wallets', title: 'FIat wallets', type: 'link' }
 			]
 		},
 		{
-			path: '/admin/widgets', icon: 'device_hub', title: 'Widgets', type: 'link'
+			path: '/admin/widgets', icon: 'device_hub', title: 'Widgets', type: 'link', code: 'AFFILIATES'
 		},
 		{
-			path: '/admin/notifications', icon: 'notifications', title: 'Notifications', type: 'link'
+			path: '/admin/notifications', icon: 'notifications', title: 'Notifications', type: 'link', code: 'NOTIFICATIONS'
 		},
 		{
-			path: '/admin/risk-center', icon: 'bolt', title: 'Risk center', type: 'link'
+			path: '/admin/risk-center', icon: 'bolt', title: 'Risk center', type: 'link', code: 'RISKS'
 		},
 		{
 			headTitle: 'SETTINGS',
 		},
 		{
-			path: '/admin/fees', icon: 'payment', title: 'Fees', type: 'link'
+			path: '/admin/fees', icon: 'payment', title: 'Fees', type: 'link', code: 'FEES'
 		},
 		{
-			title: 'Costs', icon: 'attach_money', type: 'sub', active: false, children: [
+			title: 'Costs', icon: 'attach_money', type: 'sub', active: false, code: 'COSTS', children: [
 				{ path: '/admin/costs', title: 'Schemes', type: 'link' },
 				{ path: '/admin/bank-accounts', title: 'Bank accounts', type: 'link' },
 			]
 		},
 		{
-			title: 'KYC / KYB', icon: 'assignment_ind', type: 'sub', active: false, children: [
+			title: 'KYC / KYB', icon: 'assignment_ind', type: 'sub', active: false, code: 'KYC', children: [
 				{ path: '/admin/levels', title: 'Levels', type: 'link' },
 				{ path: '/admin/kyc-schemes', title: 'Schemes', type: 'link' },
 				{ path: '/admin/black-list', title: 'Black list', type: 'link' },
 			]
 		},
 		// {
-		// 	path: '/admin/reconciliation', icon: 'cloud_off', title: 'Reconciliation', type: 'link'
+		// 	path: '/admin/reconciliation', icon: 'cloud_off', title: 'Reconciliation', code: 'RECONCILIATION', type: 'link'
 		// },
 		{
-			title: 'Settings', icon: 'settings', type: 'sub', active: false, children: [
+			title: 'Settings', icon: 'settings', type: 'sub', active: false, code: 'SETTINGS', children: [
 				{ path: '/admin/common', title: 'Common', type: 'link' },
 				{ path: '/admin/api-keys', title: 'API keys', type: 'link' },
 			]

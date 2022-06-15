@@ -1,6 +1,5 @@
-import { RiskAlert, RiskAlertCodes } from '../../model/generated-models';
+import { RiskAlert } from '../../model/generated-models';
 import { DatePipe } from '@angular/common';
-import { RiskAlertCodeList } from './lists.model';
 import { UserItem } from 'src/app/model/user.model';
 
 export class RiskAlertItem {

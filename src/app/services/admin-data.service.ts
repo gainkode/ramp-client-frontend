@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef, WatchQueryOptions } from 'apollo-angular';
 import { EmptyObject } from 'apollo-angular/types';
-import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { CostScheme } from '../model/cost-scheme.model';
 import { FeeScheme } from '../model/fee-scheme.model';
 import {
@@ -55,10 +55,10 @@ import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
 import { Filter } from '../admin/model/filter.model';
 import { DeviceItem, UserItem } from '../model/user.model';
-import { FiatWalletItem, WalletItem } from '../admin_old/model/wallet.model';
+import { FiatWalletItem, WalletItem } from '../admin/model/wallet.model';
 import { NotificationItem } from '../model/notification.model';
-import { WidgetItem } from '../admin_old/model/widget.model';
-import { RiskAlertItem } from '../admin_old/model/risk-alert.model';
+import { WidgetItem } from '../admin/model/widget.model';
+import { RiskAlertItem } from '../admin/model/risk-alert.model';
 import { ApiKeyItem } from 'src/app/model/apikey.model';
 
 /* region queries */

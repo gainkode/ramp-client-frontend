@@ -5,7 +5,7 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { Filter } from 'src/app/admin/model/filter.model';
-import { FiatWalletItem } from 'src/app/admin_old/model/wallet.model';
+import { FiatWalletItem } from 'src/app/admin/model/wallet.model';
 import { AdminDataService } from 'src/app/services/admin-data.service';
 import { AuthService } from 'src/app/services/auth.service';
 

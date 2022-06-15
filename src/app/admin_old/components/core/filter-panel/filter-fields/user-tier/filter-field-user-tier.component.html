@@ -1,8 +1,0 @@
-<mat-form-field class="form-element">
-    <mat-label>Verification Levels</mat-label>
-    <mat-select [value]="selectedItems" multiple (selectionChange)="handleSelectionChange($event)">
-        <mat-option *ngFor="let item of filteredOptions" [value]="item.id">
-            {{item.title}}
-        </mat-option>
-    </mat-select>
-</mat-form-field>

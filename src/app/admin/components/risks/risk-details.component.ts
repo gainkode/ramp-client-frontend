@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { RiskAlertItem } from 'src/app/admin_old/model/risk-alert.model';
+import { RiskAlertItem } from 'src/app/admin/model/risk-alert.model';
 
 @Component({
   selector: 'app-admin-risk-details',
