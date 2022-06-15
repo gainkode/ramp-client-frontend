@@ -16,7 +16,7 @@ import { AdminDataService } from '../../../../services/admin-data.service';
 import { UserItem } from '../../../../model/user.model';
 import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, switchMap, take, takeUntil } from 'rxjs/operators';
-import { Filter } from '../../../../admin_new/model/filter.model';
+import { Filter } from '../../../../admin/model/filter.model';
 import { Countries, Country } from '../../../../model/country-code.model';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';

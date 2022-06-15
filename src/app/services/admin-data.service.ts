@@ -53,7 +53,7 @@ import { ApolloQueryResult, FetchResult, MutationOptions } from '@apollo/client/
 import { ErrorService } from './error.service';
 import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
-import { Filter } from '../admin_new/model/filter.model';
+import { Filter } from '../admin/model/filter.model';
 import { DeviceItem, UserItem } from '../model/user.model';
 import { FiatWalletItem, WalletItem } from '../admin_old/model/wallet.model';
 import { NotificationItem } from '../model/notification.model';

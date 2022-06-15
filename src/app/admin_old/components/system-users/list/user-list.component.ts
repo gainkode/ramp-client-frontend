@@ -4,7 +4,7 @@ import { AdminDataService } from '../../../../services/admin-data.service';
 import { Subject, Subscription } from 'rxjs';
 import { MatSort } from '@angular/material/sort';
 import { UserItem } from 'src/app/model/user.model';
-import { Filter } from '../../../../admin_new/model/filter.model';
+import { Filter } from '../../../../admin/model/filter.model';
 import { take, takeUntil } from 'rxjs/operators';
 import { LayoutService } from '../../../services/layout.service';
 import { ErrorService } from 'src/app/services/error.service';

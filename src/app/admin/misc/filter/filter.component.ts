@@ -1,26 +1,37 @@
-import { Observable, Subject } from 'rxjs';
-import { CurrencyView, KycStatusList, PaymentInstrumentList, RiskLevelViewList, TransactionSourceList, TransactionStatusList, TransactionTypeList, UserStatusList, UserTypeList } from 'src/app/model/payment.model';
-import { Filter } from '../../../../admin/model/filter.model';
-import { Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { EmptyObject } from 'apollo-angular/types';
+import { concat, Observable, of, Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map, switchMap, tap } from 'rxjs/operators';
+import { Filter } from 'src/app/admin/model/filter.model';
+import { RiskAlertCodeList } from 'src/app/admin_old/model/lists.model';
+import { AdminDataService } from 'src/app/services/admin-data.service';
+import { CommonTargetValue } from 'src/app/model/common.model';
+import { Countries } from 'src/app/model/country-code.model';
+import { SettingsKycTier } from 'src/app/model/generated-models';
+import { CurrencyView, KycStatusList, PaymentInstrumentList, RiskLevelViewList, TransactionSourceList, TransactionStatusList, TransactionTypeList, UserStatusList, UserTypeList } from 'src/app/model/payment.model';
+import { AdminDateRangeComponent } from '../date-range/date-range.component';
 
 @Component({
-  selector: 'app-filter-panel',
-  templateUrl: 'filter-panel.component.html',
-  styleUrls: ['filter-panel.scss']
+  selector: 'app-admin-filter',
+  templateUrl: './filter.component.html',
+  styleUrls: ['./filter.component.scss']
 })
-export class FilterPanelComponent implements OnInit, OnDestroy {
+export class AdminFilterComponent implements OnInit, OnDestroy {
   @Input() fields: Array<string> = [];
   @Input() filterData: Filter | undefined = undefined;
   @Input() currencies: Array<CurrencyView> = [];
-
-  private filterSubject = new Subject<Filter>();
-
   @Output() get filter(): Observable<Filter> {
     return this.filterSubject.asObservable();
   }
+  @ViewChild('created_filter') createFilterPicker!: AdminDateRangeComponent;
+  @ViewChild('completed_filter') completeFilterPicker!: AdminDateRangeComponent;
+  @ViewChild('registered_filter') registerFilterPicker!: AdminDateRangeComponent;
 
+  private filterSubject = new Subject<Filter>();
+  private subscriptions = new Subscription();
+
+  isFilterCollapsed: boolean = true;
   sourceOptions = TransactionSourceList;
   riskLevelsOptions = RiskLevelViewList;
   paymentInstrumentsOptions = PaymentInstrumentList;
@@ -29,13 +40,136 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
   transactionTypeOptions = TransactionTypeList;
   transactionStatusOptions = TransactionStatusList;
   kysStatusOptions = KycStatusList;
+  countryOptions = Countries;
+  riskAlertOptions = RiskAlertCodeList;
   filterForm?: FormGroup;
+  isTierLoading = false;
+  isUsersLoading = false;
+  isWidgetsLoading = false;
+  tierSearchInput$ = new Subject<string>();
+  usersSearchInput$ = new Subject<string>();
+  widgetsSearchInput$ = new Subject<string>();
+  tierOptions$: Observable<CommonTargetValue[]> = of([]);
+  usersOptions$: Observable<CommonTargetValue[]> = of([]);
+  widgetsOptions$: Observable<CommonTargetValue[]> = of([]);
+  minUsersLengthTerm = 1;
+  minWidgetsLengthTerm = 1;
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private adminDataService: AdminDataService) {
 
   }
 
   ngOnInit(): void {
+    this.initForm();
+    if (this.fields.includes('tier')) {
+      this.tierSearch();
+    }
+    if (this.fields.includes('user') || this.fields.includes('users')) {
+      this.usersSearch();
+    }
+    if (this.fields.includes('widget')) {
+      this.widgetsSearch();
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
+
+  private tierSearch(): void {
+    this.isTierLoading = true;
+    this.tierOptions$ = this.adminDataService.getSettingsKycTiers('').pipe(
+      map(settings => {
+        this.isTierLoading = false;
+        if (settings.count > 0) {
+          const rawTiers = [...settings.list];
+          return (rawTiers
+            .sort((a, b) => this.tierSortHandler(a, b))
+            .map(tier => {
+              return {
+                id: tier.levelId,
+                title: tier.name
+              } as CommonTargetValue;
+            }))
+        } else {
+          return [];
+        }
+      })
+    );
+  }
+
+  private tierSortHandler(a: SettingsKycTier, b: SettingsKycTier): number {
+    if (a.name > b.name) {
+      return 1;
+    } else if (a.name < b.name) {
+      return -1;
+    }
+    return 0;
+  }
+
+  private usersSearch(): void {
+    this.usersOptions$ = concat(
+      of([]),
+      this.usersSearchInput$.pipe(
+        filter(res => {
+          return res !== null && res.length >= this.minUsersLengthTerm
+        }),
+        debounceTime(300),
+        distinctUntilChanged(),
+        tap(() => {
+          this.isUsersLoading = true;
+        }),
+        switchMap(searchString => {
+          this.isUsersLoading = false;
+          return this.adminDataService.getUsers(
+            [],
+            0,
+            100,
+            'email',
+            false,
+            new Filter({ search: searchString })
+          ).pipe(map(result => {
+            return result.list.map(x => {
+              return {
+                id: x.id,
+                title: (x.fullName !== '') ? `${x.fullName} (${x.email})` : x.email
+              } as CommonTargetValue;
+            });
+          }));
+        })
+      ));
+  }
+
+  private widgetsSearch(): void {
+    this.widgetsOptions$ = concat(
+      of([]),
+      this.widgetsSearchInput$.pipe(
+        filter(res => {
+          return res !== null && res.length >= this.minWidgetsLengthTerm
+        }),
+        debounceTime(300),
+        distinctUntilChanged(),
+        tap(() => {
+          this.isWidgetsLoading = true;
+        }),
+        switchMap(searchString => {
+          this.isWidgetsLoading = false;
+          return this.adminDataService.getWidgetIds(searchString, 0, 100, 'widgetId', false)
+            .pipe(map(result => {
+              return result.list.map(x => {
+                return {
+                  id: x,
+                  title: x
+                } as CommonTargetValue;
+              });
+            }));
+        })
+      ));
+  }
+
+  private initForm(): void {
     const controlsConfig: EmptyObject = {};
     if (this.fields.includes('accountType')) {
       controlsConfig.accountTypes = [[]];
@@ -58,22 +192,16 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
     if (this.fields.includes('assets')) {
       controlsConfig.assets = [[]];
     }
-    if (this.fields.includes('createdDateStart')) {
+    if (this.fields.includes('createdDate')) {
       controlsConfig.createdDateRangeStart = [undefined];
-    }
-    if (this.fields.includes('createdDateEnd')) {
       controlsConfig.createdDateRangeEnd = [undefined];
     }
-    if (this.fields.includes('completedDateStart')) {
+    if (this.fields.includes('completedDate')) {
       controlsConfig.completedDateRangeStart = [undefined];
-    }
-    if (this.fields.includes('completedDateEnd')) {
       controlsConfig.completedDateRangeEnd = [undefined];
     }
-    if (this.fields.includes('registrationDateStart')) {
+    if (this.fields.includes('registrationDate')) {
       controlsConfig.registrationDateRangeStart = [undefined];
-    }
-    if (this.fields.includes('registrationDateEnd')) {
       controlsConfig.registrationDateRangeEnd = [undefined];
     }
     if (this.fields.includes('transactionIds')) {
@@ -112,18 +240,13 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
     if (this.fields.includes('transactionCount')) {
       controlsConfig.transactionCountOver = [0];
     }
-    if (this.fields.includes('transactionDate')) {
-      controlsConfig.transactionDate = [undefined];
-    }
     if (this.fields.includes('search')) {
       controlsConfig.search = [''];
     }
-
+    if (this.fields.includes('verifyWhenPaid')) {
+      controlsConfig.verifyWhenPaid = [false];
+    }
     this.filterForm = this.formBuilder.group(controlsConfig);
-  }
-
-  ngOnDestroy(): void {
-
   }
 
   resetFilters(): void {
@@ -149,23 +272,26 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
       if (this.fields.includes('assets')) {
         this.filterForm.controls.assets.setValue([]);
       }
-      if (this.fields.includes('createdDateStart')) {
+      if (this.fields.includes('createdDate')) {
         this.filterForm.controls.createdDateRangeStart.setValue(undefined);
-      }
-      if (this.fields.includes('createdDateEnd')) {
         this.filterForm.controls.createdDateRangeEnd.setValue(undefined);
+        if (this.createFilterPicker) {
+          this.createFilterPicker.reset();
+        }
       }
-      if (this.fields.includes('completedDateStart')) {
+      if (this.fields.includes('completedDate')) {
         this.filterForm.controls.completedDateRangeStart.setValue(undefined);
-      }
-      if (this.fields.includes('completedDateEnd')) {
         this.filterForm.controls.completedDateRangeEnd.setValue(undefined);
+        if (this.completeFilterPicker) {
+          this.completeFilterPicker.reset();
+        }
       }
-      if (this.fields.includes('registrationDateStart')) {
+      if (this.fields.includes('registrationDate')) {
         this.filterForm.controls.registrationDateRangeStart.setValue(undefined);
-      }
-      if (this.fields.includes('registrationDateEnd')) {
         this.filterForm.controls.registrationDateRangeEnd.setValue(undefined);
+        if (this.registerFilterPicker) {
+          this.registerFilterPicker.reset();
+        }
       }
       if (this.fields.includes('transactionIds')) {
         this.filterForm.controls.transactionIds.setValue([]);
@@ -203,14 +329,13 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
       if (this.fields.includes('transactionCount')) {
         this.filterForm.controls.transactionCountOver.setValue(0);
       }
-      if (this.fields.includes('transactionDate')) {
-        this.filterForm.controls.transactionDate.setValue(undefined);
-      }
       if (this.fields.includes('search')) {
         this.filterForm.controls.search.setValue('');
       }
+      if (this.fields.includes('verifyWhenPaid')) {
+        this.filterForm.controls.verifyWhenPaid.setValue(false);
+      }
     }
-
     this.applyFilters();
   }
 
@@ -219,5 +344,8 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
       this.filterSubject.next(new Filter(this.filterForm.value));
     }
   }
-}
 
+  getCountryFlag(code: string): string {
+    return `${code.toLowerCase()}.svg`;
+  }
+}

@@ -5,7 +5,7 @@ import { AdminDataService } from '../../../../services/admin-data.service';
 import { UserItem } from '../../../../model/user.model';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, switchMap, takeUntil } from 'rxjs/operators';
-import { Filter } from '../../../../admin_new/model/filter.model';
+import { Filter } from '../../../../admin/model/filter.model';
 import { UserType } from 'src/app/model/generated-models';
 
 @Component({

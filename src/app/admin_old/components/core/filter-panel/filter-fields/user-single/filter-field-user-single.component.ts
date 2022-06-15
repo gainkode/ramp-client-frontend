@@ -9,7 +9,7 @@ import {
   ControlValueAccessor,
   NG_VALUE_ACCESSOR
 } from '@angular/forms';
-import { Filter } from '../../../../../../admin_new/model/filter.model';
+import { Filter } from '../../../../../../admin/model/filter.model';
 
 @Component({
   selector: 'app-filter-field-user',

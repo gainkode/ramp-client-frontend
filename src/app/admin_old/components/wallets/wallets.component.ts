@@ -8,7 +8,7 @@ import { CurrencyView } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
 import { ErrorService } from 'src/app/services/error.service';
-import { Filter } from '../../../admin_new/model/filter.model';
+import { Filter } from '../../../admin/model/filter.model';
 import { FiatWalletItem, WalletItem } from '../../model/wallet.model';
 import { AdminDataService } from '../../../services/admin-data.service';
 import { LayoutService } from '../../services/layout.service';

@@ -7,7 +7,7 @@ import { ErrorService } from '../../../../services/error.service';
 import { TransactionItemFull } from '../../../../model/transaction.model';
 import { Subject, Subscription } from 'rxjs';
 import { MatSort } from '@angular/material/sort';
-import { Filter } from '../../../../admin_new/model/filter.model';
+import { Filter } from '../../../../admin/model/filter.model';
 import { take, takeUntil } from 'rxjs/operators';
 import { LayoutService } from '../../../services/layout.service';
 import { SettingsCurrencyWithDefaults, TransactionStatusDescriptorMap, TransactionType } from 'src/app/model/generated-models';

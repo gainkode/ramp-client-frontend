@@ -1,7 +1,7 @@
 import { Component, ViewChild, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { AdminDataService } from '../../../../services/admin-data.service';
 import { MatSort } from '@angular/material/sort';
-import { Filter } from '../../../../admin_new/model/filter.model';
+import { Filter } from '../../../../admin/model/filter.model';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { PageEvent } from '@angular/material/paginator';

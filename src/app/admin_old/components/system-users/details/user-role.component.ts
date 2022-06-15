@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, switchMap, takeUntil } from 'rxjs/operators';
-import { Filter } from 'src/app/admin_new/model/filter.model';
+import { Filter } from 'src/app/admin/model/filter.model';
 import { AdminDataService } from 'src/app/services/admin-data.service';
 import { LayoutService } from 'src/app/admin_old/services/layout.service';
 import { UserRole } from 'src/app/model/generated-models';
