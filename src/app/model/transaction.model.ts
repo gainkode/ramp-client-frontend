@@ -353,6 +353,7 @@ export class TransactionItemFull {
 
 export class TransactionItem {
   id = '';
+  code = '';
   type: TransactionType | undefined = undefined;
   sender: CommonTargetValue = {
     id: '',
@@ -388,6 +389,7 @@ export class TransactionItem {
     userStatus: TransactionStatusDescriptorMap | undefined = undefined) {
     if (data) {
       this.id = data.transactionId;
+      this.code = data.code ?? '';
       this.created = data.created;
       this.type = data.type;
       const paymentData = getPaymentData(data);
