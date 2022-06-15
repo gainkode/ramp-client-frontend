@@ -146,7 +146,6 @@ export class TransactionItemFull {
       if (widgetData) {
         this.widgetName = widgetData.widgetName;
       }
-
       this.declineReason = '';
       switch (this.status) {
         case TransactionStatus.AddressDeclined:
@@ -159,10 +158,23 @@ export class TransactionItemFull {
           const transferOrderStatus = data.transferOrder?.status ?? '';
           const transferOrderSubStatus = (data.transferOrder?.subStatus ?? '') === '' ? '' : ` (${data.transferOrder?.subStatus ?? ''})`;
           this.declineReason = `${transferOrderStatus} ${transferOrderSubStatus}`;
-          if (data.transferOrder?.executingResult && data.transferOrder?.executingResult !== null) {
+          if (data.transferOrder?.executingResult && data.transferOrder?.executingResult !== null
+            && data.transferOrder?.executingResult !== 'null') {
             this.declineReasonExtra = data.transferOrder?.executingResult ?? '';
-          } else if (data.transferOrder?.publishingResult && data.transferOrder?.publishingResult !== null) {
+          } else if (data.transferOrder?.publishingResult && data.transferOrder?.publishingResult !== null
+            && data.transferOrder?.publishingResult !== 'null') {
             this.declineReasonExtra = data.transferOrder?.publishingResult ?? '';
+          }
+          if (this.declineReasonExtra !== '') {
+            let dataExtra = JSON.parse(this.declineReasonExtra);
+            try {
+              dataExtra = JSON.parse(dataExtra);
+              const extraStatus = dataExtra?.status ?? '';
+              const extraSubStatus = (dataExtra?.subStatus ?? '') === '' ? '' : ` (${dataExtra?.subStatus ?? ''})`;
+              this.declineReasonExtra = `${extraStatus} ${extraSubStatus}`;
+            } catch (e) {
+              this.declineReasonExtra = dataExtra;
+            }
           }
           break;
         case TransactionStatus.BenchmarkTransferDeclined:
