@@ -80,6 +80,7 @@ export class TransactionItemFull {
   selected = false;
   comment = '';
   declineReason = '';
+  declineReasonExtra = '';
   vaultIds: string[] = [];
 
   constructor(data: Transaction | TransactionShort | null) {
@@ -158,6 +159,11 @@ export class TransactionItemFull {
           const transferOrderStatus = data.transferOrder?.status ?? '';
           const transferOrderSubStatus = (data.transferOrder?.subStatus ?? '') === '' ? '' : ` (${data.transferOrder?.subStatus ?? ''})`;
           this.declineReason = `${transferOrderStatus} ${transferOrderSubStatus}`;
+          if (data.transferOrder?.executingResult && data.transferOrder?.executingResult !== null) {
+            this.declineReasonExtra = data.transferOrder?.executingResult ?? '';
+          } else if (data.transferOrder?.publishingResult && data.transferOrder?.publishingResult !== null) {
+            this.declineReasonExtra = data.transferOrder?.publishingResult ?? '';
+          }
           break;
         case TransactionStatus.BenchmarkTransferDeclined:
           const benchmarkTransferOrderStatus = transactionData.benchmarkTransferOrder?.status ?? '';

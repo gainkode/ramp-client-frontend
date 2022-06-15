@@ -85,6 +85,10 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
         } else {
             this.pSubscriptions.add(
                 tiersData.subscribe(({ data }) => {
+
+                    console.log(data);
+                    console.log(settingsCommon);
+
                     this.progressChange.emit(false);
                     this.handleTiers(data.mySettingsKycTiers as SettingsKycTierShortExListResult);
                     this.kycUrl = settingsCommon.kycBaseAddress as string;

@@ -591,6 +591,8 @@ const GET_TRANSACTIONS = gql`
           transferDetails
           status
           subStatus
+          executingResult
+          publishingResult
         }
         benchmarkTransferOrder {
           orderId

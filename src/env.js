@@ -20,10 +20,10 @@
     // window.__env_data.ws_server = 'wss://app.crunchywallet.io',
     // window.__env_data.image_host = 'https://app.crunchywallet.io',
 
-    // window.__env_data.client_host: 'https://app.getcoins.com.au',
-    // window.__env_data.api_server: 'https://app.getcoins.com.au',
-    // window.__env_data.ws_server: 'wss://app.getcoins.com.au',
-    // window.__env_data.image_host: 'https://app.getcoins.com.au',
+    // window.__env_data.client_host = 'https://app.getcoins.com.au',
+    // window.__env_data.api_server = 'https://app.getcoins.com.au',
+    // window.__env_data.ws_server = 'wss://app.getcoins.com.au',
+    // window.__env_data.image_host = 'https://app.getcoins.com.au',
 
     // window.__env_data.client_host: 'https://app.getcoins.eu',
     // window.__env_data.api_server: 'https://app.getcoins.eu',

@@ -1,5 +1,5 @@
 <div class="form-group" *ngIf="!!valueString || !!valueImage">
-    <label class="main-content-label tx-11 tx-medium tx-gray-600">
+    <label *ngIf="label!==''" class="main-content-label tx-11 tx-medium tx-gray-600">
         {{label}}
     </label>
     <div *ngIf="setArray===false">
