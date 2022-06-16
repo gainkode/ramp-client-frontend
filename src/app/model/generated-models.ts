@@ -1650,6 +1650,8 @@ export type Query = {
   getFiatVaults?: Maybe<FiatVaultUserListResult>;
   /** This endpoint can be used to get all fiat wallets for the current user */
   myFiatVaults?: Maybe<FiatVaultListResult>;
+  /** Get the rate of one currency to many (using for liquidity provider functionality) */
+  getOneToManyRatesMerchant?: Maybe<Array<Maybe<Rate>>>;
   /** Get system balance */
   getSystemBalanceMany?: Maybe<Scalars['String']>;
   getDevices?: Maybe<UserDeviceListResult>;
@@ -2041,9 +2043,6 @@ export type QueryGetOneToManyRatesArgs = {
   currencyFrom: Scalars['String'];
   currenciesTo: Array<Scalars['String']>;
   reverse?: Maybe<Scalars['Boolean']>;
-  currenciesFrom?: Maybe<Scalars['String']>;
-  currencyTo?: Maybe<Array<Maybe<Scalars['String']>>>;
-  withFactor?: Maybe<Scalars['Boolean']>;
 };
 
 
@@ -2189,6 +2188,13 @@ export type QueryMyFiatVaultsArgs = {
   orderBy?: Maybe<Array<OrderBy>>;
 };
 
+
+export type QueryGetOneToManyRatesMerchantArgs = {
+  currencyFrom?: Maybe<Scalars['String']>;
+  currenciesTo?: Maybe<Array<Maybe<Scalars['String']>>>;
+  withFactor?: Maybe<Scalars['Boolean']>;
+};
+
 export type Rate = {
   __typename?: 'Rate';
   currencyFrom: Scalars['String'];
@@ -2256,6 +2262,7 @@ export type SettingsCommon = {
   __typename?: 'SettingsCommon';
   settingsCommonId?: Maybe<Scalars['String']>;
   liquidityProvider?: Maybe<Scalars['String']>;
+  mailProvider?: Maybe<Scalars['String']>;
   custodyProvider?: Maybe<Scalars['String']>;
   kycProvider?: Maybe<Scalars['String']>;
   kycBaseAddress?: Maybe<Scalars['String']>;
@@ -2266,11 +2273,13 @@ export type SettingsCommon = {
   proxyLiquidityProviderApiSecret?: Maybe<Scalars['String']>;
   proxyLiquidityProviderApiKey?: Maybe<Scalars['String']>;
   proxyLiquidityProvider?: Maybe<Scalars['String']>;
+  proxyLiquidityProviderTransactionChangedCallback?: Maybe<Scalars['String']>;
 };
 
 export type SettingsCommonInput = {
   liquidityProvider?: Maybe<Scalars['String']>;
   custodyProvider?: Maybe<Scalars['String']>;
+  mailProvider?: Maybe<Scalars['String']>;
   kycProvider?: Maybe<Scalars['String']>;
   adminEmails?: Maybe<Array<Scalars['String']>>;
   stoppedForServicing?: Maybe<Scalars['Boolean']>;
@@ -2749,6 +2758,7 @@ export type Transaction = {
   comment?: Maybe<Scalars['String']>;
   data?: Maybe<Scalars['String']>;
   verifyWhenPaid?: Maybe<Scalars['Boolean']>;
+  transactionChangedCallback?: Maybe<Scalars['String']>;
 };
 
 export enum TransactionConfirmationMode {
@@ -2772,6 +2782,7 @@ export type TransactionInput = {
   widgetUserParamsId?: Maybe<Scalars['String']>;
   data?: Maybe<Scalars['String']>;
   verifyWhenPaid?: Maybe<Scalars['Boolean']>;
+  transactionChangedCallback?: Maybe<Scalars['String']>;
 };
 
 export enum TransactionKycStatus {
@@ -2793,14 +2804,24 @@ export type TransactionMerchantInput = {
   destVaultId?: Maybe<Scalars['String']>;
   destination?: Maybe<Scalars['String']>;
   currencyToSpend?: Maybe<Scalars['String']>;
-  currencyToReceive?: Maybe<Scalars['String']>;
   amountToSpend: Scalars['Float'];
+  amountToSpendWithoutFee?: Maybe<Scalars['Float']>;
+  currencyToReceive?: Maybe<Scalars['String']>;
+  initialAmountToReceive?: Maybe<Scalars['Float']>;
+  initialAmountToReceiveWithoutFee?: Maybe<Scalars['Float']>;
+  amountToReceive?: Maybe<Scalars['Float']>;
+  amountToReceiveWithoutFee?: Maybe<Scalars['Float']>;
+  amountInEur?: Maybe<Scalars['Float']>;
+  initialRate?: Maybe<Scalars['Float']>;
+  rate?: Maybe<Scalars['Float']>;
+  rateFiatToEur?: Maybe<Scalars['Float']>;
   instrument?: Maybe<PaymentInstrument>;
   instrumentDetails?: Maybe<Scalars['String']>;
   paymentProvider?: Maybe<Scalars['String']>;
   widgetUserParamsId?: Maybe<Scalars['String']>;
   data?: Maybe<Scalars['String']>;
   status?: Maybe<TransactionStatus>;
+  transactionChangedCallback?: Maybe<Scalars['String']>;
 };
 
 export type TransactionShort = {
@@ -2929,6 +2950,7 @@ export type TransactionStatusDescriptor = {
   adminStatus: AdminTransactionStatus;
   level: TransactionStatusLevel;
   repeatFromStatus?: Maybe<TransactionStatus>;
+  updateWhenOwnLiquidityProvider?: Maybe<Scalars['Boolean']>;
 };
 
 export type TransactionStatusDescriptorMap = {
@@ -2951,7 +2973,8 @@ export enum TransactionType {
   System = 'System',
   Deposit = 'Deposit',
   Withdrawal = 'Withdrawal',
-  DepositMerchant = 'DepositMerchant'
+  MerchantBuy = 'MerchantBuy',
+  MerchantSell = 'MerchantSell'
 }
 
 export type TransactionUpdateInput = {
@@ -2972,6 +2995,7 @@ export type TransactionUpdateInput = {
   transferOrderChanges?: Maybe<TransactionUpdateTransferOrderChanges>;
   benchmarkTransferOrderChanges?: Maybe<TransactionUpdateTransferOrderChanges>;
   comment?: Maybe<Scalars['String']>;
+  transactionChangedCallback?: Maybe<Scalars['String']>;
 };
 
 export type TransactionUpdateTransferOrderChanges = {
@@ -3191,7 +3215,8 @@ export enum UserActionType {
   ChangeRiskAlertSettings = 'changeRiskAlertSettings',
   Deposit = 'Deposit',
   Withdrawal = 'Withdrawal',
-  DepositMerchant = 'DepositMerchant'
+  MerchantBuy = 'MerchantBuy',
+  MerchantSell = 'MerchantSell'
 }
 
 export type UserAddress = {
