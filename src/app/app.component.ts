@@ -104,7 +104,7 @@ export class AppComponent implements OnInit, OnDestroy {
       head.appendChild(style);
     }
     const iconLink = this.document.getElementById('icon-ref') as HTMLLinkElement;
-    const iconRef = `${EnvService.image_host}/favicon.ico`;
+    const iconRef = `${EnvService.image_host}/images/favicon.ico`;
     if (iconLink) {
       iconLink.href = iconRef;
     } else {

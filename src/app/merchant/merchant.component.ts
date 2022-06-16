@@ -52,7 +52,7 @@ export class MerchantComponent implements OnInit, OnDestroy {
     presetCurrency = '';
     presetWalletId = '';
     merchantApproved = false;
-    logoSrc = `${EnvService.image_host}/logo-light.png`;
+    logoSrc = `${EnvService.image_host}/images/logo-light.png`;
 
     private subscriptions: Subscription = new Subscription();
 

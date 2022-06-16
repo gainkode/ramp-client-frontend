@@ -12,7 +12,7 @@ import { EnvService } from './services/env.service';
     styleUrls: ['../assets/button.scss', '../assets/intro.scss']
 })
 export class IntroComponent implements OnInit {
-    logoSrc = `${EnvService.image_host}/logo-color.png`;
+    logoSrc = `${EnvService.image_host}/images/logo-color.png`;
 
     constructor(
         private router: Router,

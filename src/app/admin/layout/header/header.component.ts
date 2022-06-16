@@ -15,7 +15,7 @@ export class AdminHeaderComponent implements OnInit {
   private body: HTMLBodyElement | any = document.querySelector('body');
   public isCollapsed = true;
   activated: boolean = false;
-  logoSrc = `${EnvService.image_host}/logo-dark.png`;
+  logoSrc = `${EnvService.image_host}/images/logo-dark.png`;
 
   constructor(
     private layoutService: LayoutService,

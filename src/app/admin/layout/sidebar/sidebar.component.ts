@@ -20,7 +20,7 @@ import { EnvService } from 'src/app/services/env.service';
 export class AdminSidebarComponent {
   public menuItems!: Menu[];
   public url: any;
-  public logoSrc = `${EnvService.image_host}/logo-dark.png`;
+  public logoSrc = `${EnvService.image_host}/images/logo-dark.png`;
 
   constructor(
     public router: Router,

@@ -8,7 +8,7 @@ import { EnvService } from 'src/app/services/env.service';
 })
 export class PersonalSuccessComponent {
     successType = '';
-    logoSrc = `${EnvService.image_host}/logo-color.png`;
+    logoSrc = `${EnvService.image_host}/images/logo-color.png`;
 
     constructor(public router: Router, public activeRoute: ActivatedRoute) {
         this.successType = activeRoute.snapshot.params['type'];

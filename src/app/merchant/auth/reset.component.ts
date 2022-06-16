@@ -16,7 +16,7 @@ export class MerchantResetComponent implements OnDestroy {
     errorMessage = '';
     hidePassword1 = true;
     hidePassword2 = true;
-    logoSrc = `${EnvService.image_host}/logo-color.png`;
+    logoSrc = `${EnvService.image_host}/images/logo-color.png`;
 
     passwordForm = this.formBuilder.group({
         password1: [,

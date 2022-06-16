@@ -9,7 +9,7 @@ import { EnvService } from './services/env.service';
 export class TermsComponent {
     title = '';
     id = '';
-    logoSrc = `${EnvService.image_host}/logo-color.png`;
+    logoSrc = `${EnvService.image_host}/images/logo-color.png`;
 
     constructor(
         private router: Router,

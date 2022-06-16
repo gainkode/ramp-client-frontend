@@ -9,7 +9,7 @@ import { EnvService } from 'src/app/services/env.service';
 export class PersonalRestoreComponent {
     inProgress = false;
     errorMessage = '';
-    logoSrc = `${EnvService.image_host}/logo-color.png`;
+    logoSrc = `${EnvService.image_host}/images/logo-color.png`;
 
     constructor(public router: Router) { }
 

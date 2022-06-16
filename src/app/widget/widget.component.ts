@@ -61,7 +61,7 @@ export class WidgetComponent implements OnInit {
   instantpayDetails = '';
   paymentComplete = false;
   notificationStarted = false;
-  logoSrc = `${EnvService.image_host}/logo-color.png`;
+  logoSrc = `${EnvService.image_host}/images/logo-color.png`;
 
   private pSubscriptions: Subscription = new Subscription();
   private pNotificationsSubscription: Subscription | undefined = undefined;
