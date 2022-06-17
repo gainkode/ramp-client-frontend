@@ -5,6 +5,7 @@ import { NgxMaskModule, IConfig } from 'ngx-mask'
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatTableModule } from '@angular/material/table';
 import { MatListModule } from '@angular/material/list';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -57,6 +58,7 @@ const modules = [
     MatChipsModule,
     MatTooltipModule,
     MatTabsModule,
+    MatTableModule,
     MatListModule,
     MatButtonModule,
     MatFormFieldModule,
