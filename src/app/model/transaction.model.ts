@@ -763,6 +763,40 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
       imgSource: '',
       imgClass: ''
     } as CommonTargetValue;
+  } else if (data.type === TransactionType.MerchantBuy) {
+    result.currencyFiat = result.currencyToReceive;
+    result.currencyCrypto = '';
+    result.amountToReceive = result.amountToSpend;
+    let recipientName = 'Wire Transfer';
+    const instrumentDetails = data.instrumentDetails;
+    if (instrumentDetails) {
+      let instrumentDetailsData = JSON.parse(instrumentDetails);
+      // sometimes it comes as a string with escape symbols.
+      //  In this case parse returns a stringified JSON, which has to be parsed again
+      if (typeof instrumentDetailsData === 'string') {
+        instrumentDetailsData = JSON.parse(instrumentDetailsData);
+      }
+      const transactions: any[] = instrumentDetailsData.transactions;
+      if (transactions) {
+        const addresses = transactions.map(x => x.address as string);
+        recipientName = addresses.join(', ');
+      }
+    }
+    result.recipient = {
+      id: '',
+      title: recipientName,
+      imgClass: '',
+      imgSource: ''
+    };
+    result.fees = data.feeFiat as number ?? 0;
+    result.networkFee = data.approxNetworkFee ?? 0;
+    result.typeIcon = 'monetization_on';
+    result.sender = {
+      id: '',
+      title: `${data.sourceVaultId ?? ''}`,
+      imgSource: '',
+      imgClass: ''
+    } as CommonTargetValue;
   } else {
     result.fees = 4.2;
     result.networkFee = 0.42;
