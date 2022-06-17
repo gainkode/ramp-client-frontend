@@ -61,6 +61,7 @@ export class WidgetComponent implements OnInit {
   instantpayDetails = '';
   paymentComplete = false;
   notificationStarted = false;
+  recentTransactions = false;
   logoSrc = `${EnvService.image_host}/images/logo-color.png`;
 
   private pSubscriptions: Subscription = new Subscription();
@@ -74,7 +75,7 @@ export class WidgetComponent implements OnInit {
     private exhangeRate: ExchangeRateService,
     private widgetService: WidgetService,
     private notification: NotificationService,
-    private auth: AuthService,
+    public auth: AuthService,
     private dataService: PaymentDataService,
     private profileService: ProfileDataService,
     private errorHandler: ErrorService) { }
@@ -293,6 +294,14 @@ export class WidgetComponent implements OnInit {
   progressChanged(visible: boolean): void {
     this.inProgress = visible;
     this.changeDetector.detectChanges();
+  }
+
+  showTransactions(): void {
+    this.recentTransactions = true;
+  }
+
+  transactionsBack(): void {
+    this.recentTransactions = false;
   }
 
   private stageBack(): void {
