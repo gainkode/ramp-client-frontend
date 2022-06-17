@@ -4,7 +4,7 @@
     // Product name for titles and headers
     window.__env_data.product = 'GetCoins';
     // Coockie domain
-    window.__env_data.cookieDomain = 'https://app.getcoins.eu';
+    window.__env_data.cookieDomain = 'app.getcoins.eu';
     // Current client host address
     window.__env_data.client_host = 'https://app.getcoins.eu';
     // API server address

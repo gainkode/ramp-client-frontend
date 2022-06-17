@@ -4,7 +4,7 @@
     // Product name for titles and headers
     window.__env_data.product = 'Crunchy Wallet';
     // Coockie domain
-    window.__env_data.cookieDomain = 'https://app.crunchywallet.io';
+    window.__env_data.cookieDomain = 'app.crunchywallet.io';
     // Current client host address
     window.__env_data.client_host = 'https://app.crunchywallet.io';
     // API server address

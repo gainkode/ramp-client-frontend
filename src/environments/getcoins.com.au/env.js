@@ -4,15 +4,15 @@
     // Product name for titles and headers
     window.__env_data.product = 'GetCoins';
     // Coockie domain
-    window.__env_data.cookieDomain = 'https://app.getcoins.com.au';
+    window.__env_data.cookieDomain = 'app.getcoins.com.au';
     // Current client host address
     window.__env_data.client_host = 'https://app.getcoins.com.au';
     // API server address
-    window.__env_data.api_server = 'http://app.getcoins.com.au';
+    window.__env_data.api_server = 'https://app.getcoins.com.au';
     // API WebSocket address
-    window.__env_data.ws_server = 'ws://app.getcoins.com.au';
+    window.__env_data.ws_server = 'wss://app.getcoins.com.au';
     // Image hosting address
-    window.__env_data.image_host = 'http://app.getcoins.com.au';
+    window.__env_data.image_host = 'https://app.getcoins.com.au';
     // API time out
     window.__env_data.api_timeout = 60000;
     // Using test wallets
