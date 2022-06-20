@@ -492,6 +492,16 @@ $font_main: var(--font_main);
     color: $color_main_blue_800;
 }
 
+.__widget-data-list {
+    width: 100%;
+    //max-height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    margin: 0px;
+}
+
 .__widget-disclaimer-area {
     width: 100%;
     display: flex;

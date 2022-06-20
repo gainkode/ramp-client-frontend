@@ -11,10 +11,7 @@ import { ApolloLink, InMemoryCache, split } from '@apollo/client/core';
 import { fromPromise } from 'apollo-link';
 import ApolloLinkTimeout from 'apollo-link-timeout';
 import { setContext } from '@apollo/client/link/context';
-import {
-  SocialLoginModule, SocialAuthServiceConfig,
-  GoogleLoginProvider, FacebookLoginProvider
-} from 'angularx-social-login';
+import { SocialLoginModule, SocialAuthServiceConfig, GoogleLoginProvider } from 'angularx-social-login';
 import { AuthService } from './services/auth.service';
 import { ErrorService } from './services/error.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -29,7 +26,19 @@ import { ExchangeRateService } from './services/rate.service';
 import { WidgetPagerService } from './services/widget-pager.service';
 import { WidgetService } from './services/widget.service';
 import { EnvServiceProvider, EnvService, EnvServiceFactory } from './services/env.service';
-import { environment } from 'src/environments/environment';
+
+function socialConfigFactory() {
+  EnvServiceFactory.call(undefined);
+  return {
+      autoLogin: false,
+      providers: [
+          {
+              id: GoogleLoginProvider.PROVIDER_ID,
+              provider: new GoogleLoginProvider(EnvService.googleId)
+          },
+      ]
+  } as SocialAuthServiceConfig;
+}
 
 @NgModule({
   declarations: [
@@ -48,19 +57,7 @@ import { environment } from 'src/environments/environment';
     Apollo,
     {
       provide: 'SocialAuthServiceConfig',
-      useValue: {
-        autoLogin: false,
-        providers: [
-          {
-            id: GoogleLoginProvider.PROVIDER_ID,
-            provider: new GoogleLoginProvider(environment.googleClientId)
-          },
-          // {
-          //   id: FacebookLoginProvider.PROVIDER_ID,
-          //   provider: new FacebookLoginProvider(EnvService.facebookClientId)
-          // }
-        ]
-      } as SocialAuthServiceConfig
+      useFactory: socialConfigFactory
     },
     AuthService,
     ProfileDataService,

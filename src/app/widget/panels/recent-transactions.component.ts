@@ -26,9 +26,6 @@ export class WidgetRecentTransactionsComponent implements OnDestroy, OnInit {
   pageIndex = 0;
   sortedField = 'dt';
   sortedDesc = true;
-  displayedColumns: string[] = [
-    'status', 'payment'
-  ];
 
   private pTransactionsSubscription: Subscription | undefined = undefined;
   private pStatusSubscription: Subscription | undefined = undefined;
@@ -41,7 +38,6 @@ export class WidgetRecentTransactionsComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit(): void {
-    console.log('init');
     if (this.userStatuses.length === 0) {
       this.loadTransactionStatuses();
     } else {
@@ -61,11 +57,9 @@ export class WidgetRecentTransactionsComponent implements OnDestroy, OnInit {
   }
 
   private loadTransactionStatuses(): void {
-    console.log('status');
     const statusListData$ = this.profileService.getTransactionStatuses().valueChanges.pipe(take(1));
     this.inProgress = true;
     this.pStatusSubscription = statusListData$.subscribe(({ data }) => {
-      console.log('status complete');
       this.userStatuses = data.getTransactionStatuses as TransactionStatusDescriptorMap[];
       this.inProgress = false;
       this.loadTransactions();
@@ -80,7 +74,6 @@ export class WidgetRecentTransactionsComponent implements OnDestroy, OnInit {
   }
 
   private loadTransactions(): void {
-    console.log('transactions');
     this.transactionCount = 0;
     const transactionsData$ = this.profileService.getMyTransactions(
       this.pageIndex,
@@ -94,7 +87,6 @@ export class WidgetRecentTransactionsComponent implements OnDestroy, OnInit {
       this.sortedDesc).valueChanges.pipe(take(1));
     this.inProgress = true;
     this.pTransactionsSubscription = transactionsData$.subscribe(({ data }) => {
-      console.log('transactions complete');
       const dataList = data.myTransactions as TransactionShortListResult;
       if (dataList !== null) {
         this.transactionCount = dataList?.count as number;
@@ -115,5 +107,4 @@ export class WidgetRecentTransactionsComponent implements OnDestroy, OnInit {
       }
     });
   }
-
 }

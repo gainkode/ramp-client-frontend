@@ -23,6 +23,8 @@
     window.__env_data.express_transfer = true;
     // Recaptcha ID
     window.__env_data.recaptchaId = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
+    // Google ID
+    window.__env_data.googleId = '683937471887-u8r2tuvcvibnsnc41grnvcer9tv5bpm6.apps.googleusercontent.com';
     // Support team email address
     window.__env_data.support_email = 'support@ewallet.com';
     // Cookie agreement link

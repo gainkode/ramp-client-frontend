@@ -22,7 +22,9 @@
     // Show Express Transfer button on the top menu bar
     window.__env_data.express_transfer = true;
     // Recaptcha ID
-    window.__env_data.recaptchaId = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
+    window.__env_data.recaptchaId = '6Ldi8YUgAAAAAP7aQ0pBN9LiHS1LehoXlwYCDyct';
+    // Google ID
+    window.__env_data.googleId = '588649307348-vgo0s711n38c5p7ig83m1tpkujijgker.apps.googleusercontent.com';
     // Support team email address
     window.__env_data.support_email = 'support@getcoins.com.au';
     // Base color number

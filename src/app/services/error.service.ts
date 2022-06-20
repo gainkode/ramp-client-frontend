@@ -42,10 +42,10 @@ export class ErrorService {
                 result = 'Incorrect login or password';
                 break;
             case 'auth.unconfirmed_email':
-                result = 'User email is not confirmed';
+                result = 'User email is not confirmed. Please check your email to confirm the device.';
                 break;
             case 'auth.unconfirmed_device':
-                result = 'User device is not confirmed';
+                result = 'Device not confirmed. Please check your email to confirm the device.';
                 break;
             case 'auth.user_already_exists':
                 result = 'This user account already exists';

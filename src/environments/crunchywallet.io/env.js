@@ -23,6 +23,8 @@
     window.__env_data.express_transfer = false;
     // Recaptcha ID
     window.__env_data.recaptchaId = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
+    // Google ID
+    window.__env_data.googleId = '';
     // Support team email address
     window.__env_data.support_email = 'support@crunchywallet.io';
     // Cookie agreement link

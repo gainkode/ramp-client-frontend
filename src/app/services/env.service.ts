@@ -10,6 +10,7 @@ export class EnvService {
     public static test_kyc = true;
     public static express_transfer = true;
     public static recaptchaId = '';
+    public static googleId = '';
     public static support_email = 'support@test.com';
     public static base_color = '#0081D4';
     public static main_font = 'Ubuntu';
