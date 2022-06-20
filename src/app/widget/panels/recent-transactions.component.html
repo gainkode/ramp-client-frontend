@@ -7,9 +7,50 @@
             Recent Transactions
         </h1>
     </div>
-    <div class="__widget-data-list">
-        <div style="background-color: aqua; height: 48px;margin: 8px;" *ngFor="let item of transactions">
-            {{item.status}}
+    <mat-progress-bar *ngIf="inProgress" color="accent" mode="indeterminate"></mat-progress-bar>
+    <div *ngIf="errorMessage!==''" class="__widget-data-error">
+        {{errorMessage}}
+    </div>
+    <div *ngIf="errorMessage===''" class="__widget-data-list">
+        <div class="__widget-data-list-item" *ngFor="let item of transactions">
+            <div class="__widget-data-list-item-line">
+                <i class="material-icons __widget-data-list-item-type-icon">
+                    {{item.typeIcon}}
+                </i>
+                <span class="__widget-data-list-item-type-text">
+                    {{item.typeName}}
+                </span>
+                <span class="__widget-data-list-item-status-text">
+                    {{item.statusName}}
+                </span>
+            </div>
+            <div class="__widget-data-list-item-line">
+                <span class="__widget-data-list-item-status-text">
+                    {{item.dateLong}}
+                </span>
+            </div>
+            <div class="__widget-data-list-item-line">
+                <span class="__widget-data-list-item-type-text">
+                    {{item.amountSent}}
+                </span>
+                <span class="__widget-data-list-item-label">
+                    from
+                </span>
+                <span class="__widget-data-list-item-status-text">
+                    {{item.sender?.title}}
+                </span>
+            </div>
+            <div class="__widget-data-list-item-line">
+                <span class="__widget-data-list-item-type-text">
+                    {{item.amountReceived}}
+                </span>
+                <span class="__widget-data-list-item-label">
+                    to
+                </span>
+                <span class="__widget-data-list-item-status-text">
+                    {{item.recipient?.title}}
+                </span>
+            </div>
         </div>
     </div>
 </div>
