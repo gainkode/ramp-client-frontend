@@ -22,9 +22,9 @@
     // Show Express Transfer button on the top menu bar
     window.__env_data.express_transfer = true;
     // Recaptcha ID
-    window.__env_data.recaptchaId = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
+    window.__env_data.recaptchaId = '6LdGo4YgAAAAABxDlHdoh1DNSq_CZrGfGHksKYwj';
     // Google ID
-    window.__env_data.googleId = '588649307348-vgo0s711n38c5p7ig83m1tpkujijgker.apps.googleusercontent.com';
+    window.__env_data.googleId = '974994347571-phrnco9biqsdk4jb47pnkisir6oaqtip.apps.googleusercontent.com';
     // Support team email address
     window.__env_data.support_email = 'support@ewallet.com';
     // Base color number
