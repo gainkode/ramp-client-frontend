@@ -183,7 +183,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     const additionalSettingsRaw = settings?.additionalSettings;
     const additionalSettings = (additionalSettingsRaw === null) ? undefined : JSON.parse(additionalSettingsRaw ?? '{}');
     this.showVerifyWhenPaid = true;
-    if (additionalSettings) {
+    if (additionalSettings && additionalSettings.core) {
       this.showVerifyWhenPaid = additionalSettings.core.verifyWhenPaid ?? true;
     }
 

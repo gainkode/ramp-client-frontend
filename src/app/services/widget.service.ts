@@ -84,7 +84,8 @@ export class WidgetService {
                         this.onProgressChanged(false);
                     }
                     this.handleError(error, summary.email, 'Unable to read settings');
-                }));
+                })
+            );
         }
     }
 

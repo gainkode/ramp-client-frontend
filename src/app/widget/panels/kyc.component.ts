@@ -60,6 +60,7 @@ export class WidgetKycComponent implements OnInit, OnDestroy, AfterViewInit {
       this.address = settingsCommon.kycBaseAddress as string;
       if (this.levelName !== '') {
         this.flow = this.levelName;
+        this.showValidator = true;
       } else {
         const kycData$ = this.auth.getMyKycSettings().valueChanges.pipe(take(1));
         this.onProgress.emit(true);
