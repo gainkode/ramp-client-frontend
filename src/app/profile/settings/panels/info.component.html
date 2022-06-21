@@ -52,35 +52,35 @@
         </app-profile-info-textbox>
         <div *ngIf="userView.userType?.id===USER_TYPE.Personal">
             <app-profile-info-textbox [label]="'First Name'" [value]="userView.firstName" [required]=true
-                (onComplete)="changeFirstName($event)"></app-profile-info-textbox>
+                [editable]="kycApproved" (onComplete)="changeFirstName($event)"></app-profile-info-textbox>
             <app-profile-info-textbox [label]="'Last name'" [value]="userView.lastName" [required]=true
-                (onComplete)="changeLastName($event)"></app-profile-info-textbox>
+            [editable]="kycApproved" (onComplete)="changeLastName($event)"></app-profile-info-textbox>
+            <app-profile-info-datebox [label]="'Date of birth'" [value]="userView.birthday"
+            [editable]="kycApproved" (onComplete)="changeBirthDate($event)"></app-profile-info-datebox>
         </div>
         <div *ngIf="userView.userType?.id===USER_TYPE.Merchant">
             <app-profile-info-textbox [label]="'Company name'" [value]="userView.company" [required]=true
-                (onComplete)="changeFirstName($event)"></app-profile-info-textbox>
+            [editable]="kycApproved" (onComplete)="changeFirstName($event)"></app-profile-info-textbox>
         </div>
-        <app-profile-info-datebox *ngIf="userView.userType?.id===USER_TYPE.Personal" [label]="'Date of birth'"
-            [value]="userView.birthday" (onComplete)="changeBirthDate($event)"></app-profile-info-datebox>
-        <app-profile-info-textbox [label]="'Address 1'" [value]="userView.street" (onComplete)="changeStreet($event)">
+        <app-profile-info-textbox [label]="'Address 1'" [value]="userView.street" [editable]="kycApproved" (onComplete)="changeStreet($event)">
         </app-profile-info-textbox>
-        <app-profile-info-textbox [label]="'Address 2'" [value]="userView.subStreet"
+        <app-profile-info-textbox [label]="'Address 2'" [value]="userView.subStreet" [editable]="kycApproved"
             (onComplete)="changeSubStreet($event)"></app-profile-info-textbox>
-        <app-profile-info-textbox [label]="'Building name'" [value]="userView.buildingName"
+        <app-profile-info-textbox [label]="'Building name'" [value]="userView.buildingName" [editable]="kycApproved" 
             (onComplete)="changeBuildingName($event)"></app-profile-info-textbox>
-        <app-profile-info-textbox [label]="'Building number'" [value]="userView.buildingNumber"
+        <app-profile-info-textbox [label]="'Building number'" [value]="userView.buildingNumber" [editable]="kycApproved" 
             (onComplete)="changeBuildingNumber($event)"></app-profile-info-textbox>
-        <app-profile-info-textbox [label]="'Flat number'" [value]="userView.flatNumber"
+        <app-profile-info-textbox [label]="'Flat number'" [value]="userView.flatNumber" [editable]="kycApproved" 
             (onComplete)="changeFlatNumber($event)"></app-profile-info-textbox>
-        <app-profile-info-textbox [label]="'Town'" [value]="userView.town" (onComplete)="changeTown($event)">
+        <app-profile-info-textbox [label]="'Town'" [value]="userView.town" [editable]="kycApproved" (onComplete)="changeTown($event)">
         </app-profile-info-textbox>
-        <app-profile-info-textbox [label]="'Post code'" [value]="userView.postCode"
+        <app-profile-info-textbox [label]="'Post code'" [value]="userView.postCode" [editable]="kycApproved"
             (onComplete)="changePostCode($event)"></app-profile-info-textbox>
-        <app-profile-info-textbox [label]="'State'" [value]="userView.stateName" (onComplete)="changeState($event)">
+        <app-profile-info-textbox [label]="'State'" [value]="userView.stateName" [editable]="kycApproved" (onComplete)="changeState($event)">
         </app-profile-info-textbox>
         <app-profile-info-dropbox [label]="'Country'" [value]="userView.countryId" [dataList]="countryList"
-            [required]=true (onComplete)="changeCountry($event)"></app-profile-info-dropbox>
-        <app-profile-info-textbox [label]="'Phone'" [value]="userView.phone" (onComplete)="changePhone($event)">
+            [required]=true [editable]="kycApproved" (onComplete)="changeCountry($event)"></app-profile-info-dropbox>
+        <app-profile-info-textbox [label]="'Phone'" [value]="userView.phone" [editable]="kycApproved" (onComplete)="changePhone($event)">
         </app-profile-info-textbox>
         <app-profile-info-dropbox [label]="'Default Crypto'" [value]="userView.cryptoCurrency" [dataList]="cryptoList"
             [required]=true (onComplete)="changeCrypto($event)"></app-profile-info-dropbox>
