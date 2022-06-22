@@ -14,6 +14,7 @@
     window.__env_data.ws_server = 'ws://localhost:4001';
     // Image hosting address
     window.__env_data.image_host = 'http://localhost';
+    //window.__env_data.image_host = './assets/test',
 
     // window.__env_data.client_host = 'https://app.crunchywallet.io',
     // window.__env_data.api_server = 'https://app.crunchywallet.io',

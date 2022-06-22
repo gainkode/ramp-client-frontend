@@ -13,6 +13,7 @@
     window.__env_data.ws_server = 'ws://localhost:4001';
     // Image hosting address
     window.__env_data.image_host = 'http://localhost';
+    //window.__env_data.image_host = './assets/test',
     // API time out
     window.__env_data.api_timeout = 60000;
     // Using test wallets

@@ -6,14 +6,10 @@
     // Coockie domain
     window.__env_data.cookieDomain = 'localhost';
 
-    // Current client host address
-    window.__env_data.client_host = 'http://localhost:4000';
-    // API server address
-    window.__env_data.api_server = 'http://localhost:4001';
-    // API WebSocket address
-    window.__env_data.ws_server = 'ws://localhost:4001';
-    // Image hosting address
-    window.__env_data.image_host = 'http://localhost';
+    window.__env_data.client_host = 'https://app.genesisxchange.com',
+    window.__env_data.api_server = 'https://app.genesisxchange.com',
+    window.__env_data.ws_server = 'wss://app.genesisxchange.com',
+    window.__env_data.image_host = 'https://app.genesisxchange.com',
 
     // API time out
     window.__env_data.api_timeout = 60000;
@@ -34,9 +30,9 @@
     // Main font name
     window.__env_data.main_font = 'Lato';
     // Cookie agreement link
-    window.__env_data.cookie_link = 'http://getcoins.com.au/index.php/cookies-policy/';
+    window.__env_data.cookie_link = 'https://genesisxchange.com/cookies-policy/';
     // Terms and conditions link
-    window.__env_data.terms_link = 'http://getcoins.com.au/index.php/terms-and-conditions/';
+    window.__env_data.terms_link = 'https://genesisxchange.com/terms-and-conditiones/';
 
     //////////////////////////////////////////////////
     //                                              //

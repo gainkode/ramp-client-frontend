@@ -79,6 +79,7 @@ export class PersonalComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        console.log(this.logoSrc);
         // route change detection
         this.subscriptions.add(
             this.router.events.subscribe(
