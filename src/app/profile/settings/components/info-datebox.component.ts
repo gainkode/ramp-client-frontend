@@ -16,6 +16,7 @@ import { getFormattedUtcDate } from 'src/app/utils/utils';
 })
 export class ProfileInfoDateboxComponent {
     @ViewChild('inputbox') inputBox: ElementRef | undefined = undefined;
+    @Input() editable = true;
     @Input() label = '';
     @Input() set value(val: Date | undefined) {
         this.init(val);

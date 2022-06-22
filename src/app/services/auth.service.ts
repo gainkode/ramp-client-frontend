@@ -394,7 +394,7 @@ export class AuthService {
     cookieName = 'cookieconsent_status';
 
     get authenticated(): boolean {
-        return this.token !== '';
+        return (this.token !== '' && this.user !== undefined);
     }
 
     get user(): User | null {

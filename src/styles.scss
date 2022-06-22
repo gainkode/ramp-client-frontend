@@ -146,7 +146,7 @@ body {
 }
 
 a:link {
-    color: $color_main_blue_800;
+    color: $color_main_blue_800 !important;
     text-decoration: none;
     font-family: $font_main;
     font-style: normal;
@@ -155,17 +155,17 @@ a:link {
 }
 
 a:hover {
-    color: $color_main_blue_600;
+    color: $color_main_blue_600 !important;
     text-decoration: underline;
 }
 
 a:visited {
-    color: $color_main_blue_800;
+    color: $color_main_blue_800 !important;
     text-decoration: none;
 }
 
 a:active {
-    color: $color_main_blue_900;
+    color: $color_main_blue_900 !important;
     text-decoration: underline;
 }
 

@@ -63,6 +63,7 @@ export class WidgetComponent implements OnInit {
   notificationStarted = false;
   recentTransactions = false;
   logoSrc = `${EnvService.image_host}/images/logo-color.png`;
+  logoAlt = EnvService.product;
 
   private pSubscriptions: Subscription = new Subscription();
   private pNotificationsSubscription: Subscription | undefined = undefined;

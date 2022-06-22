@@ -33,59 +33,60 @@ const GET_MY_TRANSACTIONS = gql`
     ) {
       count
       list {
-        transactionId
+        amountToReceive
+        amountToReceiveWithoutFee
+        amountToSpend
+        amountToSpendWithoutFee
+        approxNetworkFee
+        approxNetworkFeeFiat
         code
-        userId
-        userIp
         created
+        currencyToReceive
+        currencyToSpend
+        data
+        destination
+        destVault
+        destVaultId
         executed
-        type
-        source
-        status
-        transferOrder { transferDetails }
         feeFiat
         feeMinFiat
         feePercent
         feeDetails
-        approxNetworkFee
-        approxNetworkFeeFiat
-        currencyToSpend
-        amountToSpend
-        amountToSpendWithoutFee
-        currencyToReceive
-        amountToReceive
-        amountToReceiveWithoutFee
-        rate
-        liquidityProvider
         instrument
-        paymentProvider
+        instrumentDetails
+        liquidityProvider
         paymentOrder {
-          orderId
           amount
+          captureOperationSn
           currency
           operations {
-            operationId
-            created
-            type
-            sn
-            status
-            details
             callbackDetails
+            created
+            details
             errorCode
             errorMessage
+            operationId
+            sn
+            status
+            type
           }
+          orderId
           originalOrderId
-          preauthOperationSn
-          captureOperationSn
-          refundOperationSn
           paymentInfo
+          preauthOperationSn
+          refundOperationSn
         }
-        data
-        destination
-        destVaultId
-        destVault
-        sourceVaultId
+        paymentProvider
+        rate
+        source
         sourceVault
+        sourceVaultId
+        status
+        transactionId
+        transferOrder { transferDetails }
+        type
+        userId
+        userIp
       }
     }
   }

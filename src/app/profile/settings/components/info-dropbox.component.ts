@@ -19,6 +19,7 @@ import { CommonTargetValue } from 'src/app/model/common.model';
     }]
 })
 export class ProfileInfoDropboxComponent implements OnInit, OnDestroy {
+    @Input() editable = true;
     @Input() label = '';
     @Input() required = false;
     @Input() set value(val: string | undefined) {

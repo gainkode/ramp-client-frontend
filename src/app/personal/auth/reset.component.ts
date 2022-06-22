@@ -17,6 +17,7 @@ export class PersonalResetComponent implements OnDestroy {
     hidePassword1 = true;
     hidePassword2 = true;
     logoSrc = `${EnvService.image_host}/images/logo-color.png`;
+    logoAlt = EnvService.product;
 
     passwordForm = this.formBuilder.group({
         password1: [,

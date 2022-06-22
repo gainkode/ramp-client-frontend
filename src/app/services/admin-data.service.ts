@@ -510,60 +510,43 @@ const GET_TRANSACTIONS = gql`
     ) {
       count
       list {
-        transactionId
-        code
-        userId
-        userIp
-        user {
-          userId
-          referralCode
-          email
-          firstName
-          lastName
-          postCode
-          town
-          street
-          subStreet
-          stateName
-          buildingName
-          buildingNumber
-          flatNumber
-          countryCode2
-          type
-          mode
-          kycStatus
-        }
-        userTier { name }
         accountStatus
+        amountToReceive
+        amountToReceiveWithoutFee
+        amountToSpend
+        approxNetworkFeeFiat
+        benchmarkTransferOrder {
+          orderId
+          transferDetails
+          transferHash
+        }
+        benchmarkTransferOrderBlockchainLink
+        code
+        comment
         created
+        currencyToReceive
+        currencyToSpend
+        data
+        destination
+        destVault
+        destVaultId
         executed
-        updated
-        type
-        source
-        status
+        feeDetails
         feeFiat
         feeMinFiat
         feePercent
-        feeDetails
-        approxNetworkFeeFiat
-        currencyToSpend
-        amountToSpend
-        currencyToReceive
-        amountToReceive
         initialAmountToReceive
-        amountToReceiveWithoutFee
         initialAmountToReceiveWithoutFee
-        rate
         initialRate
-        liquidityProvider
         instrument
         instrumentDetails
-        liquidityOrderId
+        kycStatus
         liquidityOrder { statusReason }
-        paymentProvider
+        liquidityOrderId
+        liquidityProvider
         paymentOrder {
-          orderId
           amount
+          captureOperationSn
           currency
           operations {
             operationId
@@ -576,42 +559,59 @@ const GET_TRANSACTIONS = gql`
             errorCode
             errorMessage
           }
+          orderId
           originalOrderId
-          preauthOperationSn
-          captureOperationSn
-          refundOperationSn
           paymentInfo
+          preauthOperationSn
+          refundOperationSn
           statusReason
         }
-        transferOrder {
-          orderId
-          originalOrderId
-          transferHash
-          feeCurrency
-          transferDetails
-          status
-          subStatus
-          executingResult
-          publishingResult
-        }
-        benchmarkTransferOrder {
-          orderId
-          transferHash
-          transferDetails
-        }
-        transferOrderBlockchainLink
-        benchmarkTransferOrderBlockchainLink
-        data
-        destination
-        destVault
-        destVaultId
+        paymentProvider
+        rate
+        source
         sourceVault
         sourceVaultId
-        kycStatus
+        status
+        updated
+        user {
+          buildingName
+          buildingNumber
+          countryCode2
+          email
+          firstName
+          flatNumber
+          kycStatus
+          mode
+          lastName
+          postCode
+          referralCode
+          stateName
+          street
+          subStreet
+          town
+          type
+          userId
+        }
+        userId
+        userIp
+        userTier { name }
+        transactionId
+        transferOrder {
+          executingResult
+          feeCurrency
+          orderId
+          originalOrderId
+          publishingResult
+          status
+          subStatus
+          transferDetails
+          transferHash
+        }
+        transferOrderBlockchainLink
+        type        
+        verifyWhenPaid        
         widget
         widgetId
-        comment
-        verifyWhenPaid
       }
     }
   }

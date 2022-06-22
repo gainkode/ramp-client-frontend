@@ -12,6 +12,7 @@ export class MerchantRegisterComponent {
     errorMessage = '';
     USER_TYPE: typeof UserType = UserType;
     logoSrc = `${EnvService.image_host}/images/logo-color.png`;
+    logoAlt = EnvService.product;
 
     constructor(public router: Router) { }
 

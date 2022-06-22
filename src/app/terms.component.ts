@@ -10,6 +10,7 @@ export class TermsComponent {
     title = '';
     id = '';
     logoSrc = `${EnvService.image_host}/images/logo-color.png`;
+    logoAlt = EnvService.product;
 
     constructor(
         private router: Router,

@@ -10,6 +10,7 @@ export class MerchantRestoreComponent {
     inProgress = false;
     errorMessage = '';
     logoSrc = `${EnvService.image_host}/images/logo-color.png`;
+    logoAlt = EnvService.product;
 
     constructor(public router: Router) { }
 

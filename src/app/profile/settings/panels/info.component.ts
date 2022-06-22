@@ -46,6 +46,7 @@ export class ProfileInfoSettingsComponent implements OnInit, OnDestroy {
     uploadProgress: number | undefined = undefined;
     avatarPath = '';
     avatarError = false;
+    kycApproved = false;
 
     private subscriptions: Subscription = new Subscription();
     private uploadSubscription: Subscription | undefined = undefined;
@@ -65,6 +66,9 @@ export class ProfileInfoSettingsComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.loadCurrencyData();
+        if (this.auth.user?.kycValid && this.auth.user?.kycValid !== null) {
+            this.kycApproved = this.auth.user?.kycValid;
+        }
     }
 
     private loadAccountData(updateLocalAvatar: boolean): void {

@@ -10,7 +10,7 @@
                 <div class="__tool-bar-block">
                     <input #inputbox
                         [ngClass]="{'__tool-bar-text-box': true, '__tool-bar-text-box-error': dataField?.errors, '__tool-bar-text-box-wide': true}"
-                        type="text" mask="d0/M0/0000" placeholder="DD/MM/YYYY" [dropSpecialCharacters]="false"
+                        type="text" mask="d0/M0/0000" placeholder="DD/MM/YYYY" [dropSpecialCharacters]="false" [readonly]="!editable"
                         formControlName="field" maxlength="10" />
                 </div>
             </div>
@@ -19,7 +19,7 @@
             </div>
         </div>
         <div class="__profile-settings-personal-info-editor-button">
-            <button [ngClass]="editMode ? '__table-button' : '__tool-button'" (click)="edit()" [disabled]="editMode && dataField?.errors">
+            <button *ngIf="editable" [ngClass]="editMode ? '__table-button' : '__tool-button'" (click)="edit()" [disabled]="editMode && dataField?.errors">
                 <mat-icon style="font-size: 20px;">
                     {{editMode ? 'check_circle_outline' : 'edit'}}
                 </mat-icon>

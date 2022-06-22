@@ -13,6 +13,7 @@ import { EnvService } from './services/env.service';
 })
 export class IntroComponent implements OnInit {
     logoSrc = `${EnvService.image_host}/images/logo-color.png`;
+    logoAlt = EnvService.product;
 
     constructor(
         private router: Router,

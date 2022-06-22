@@ -58,6 +58,7 @@ export class PersonalComponent implements OnInit, OnDestroy {
     presetCurrency = '';
     presetWalletId = '';
     logoSrc = `${EnvService.image_host}/images/logo-light.png`;
+    logoAlt = EnvService.product;
 
     private subscriptions: Subscription = new Subscription();
 

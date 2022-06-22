@@ -16,6 +16,7 @@ export class AdminHeaderComponent implements OnInit {
   public isCollapsed = true;
   activated: boolean = false;
   logoSrc = `${EnvService.image_host}/images/logo-dark.png`;
+  logoAlt = EnvService.product;
 
   constructor(
     private layoutService: LayoutService,

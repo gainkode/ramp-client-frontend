@@ -15,6 +15,7 @@ export class MerchantConfirmEmailComponent implements OnDestroy {
     valid = false;
     errorMessage = '';
     logoSrc = `${EnvService.image_host}/images/logo-color.png`;
+    logoAlt = EnvService.product;
 
     private subscriptions: Subscription = new Subscription();
 

@@ -18,6 +18,7 @@ export class MerchantLoginComponent implements OnDestroy {
     errorMessage = '';
     showExtraOptions = true;
     logoSrc = `${EnvService.image_host}/images/logo-color.png`;
+    logoAlt = EnvService.product;
 
     private subscriptions: Subscription = new Subscription();
 

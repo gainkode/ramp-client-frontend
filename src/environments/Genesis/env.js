@@ -2,39 +2,42 @@
     window.__env_data = window.__env_data || {};
 
     // Product name for titles and headers
-    window.__env_data.product = 'GetCoins';
+    window.__env_data.product = 'Genesis';
     // Coockie domain
-    window.__env_data.cookieDomain = 'app.getcoins.eu';
+    window.__env_data.cookieDomain = 'localhost';
+
     // Current client host address
-    window.__env_data.client_host = 'https://app.getcoins.eu';
+    window.__env_data.client_host = 'http://localhost:4000';
     // API server address
-    window.__env_data.api_server = 'https://app.getcoins.eu';
+    window.__env_data.api_server = 'http://localhost:4001';
     // API WebSocket address
-    window.__env_data.ws_server = 'wss://app.getcoins.eu';
+    window.__env_data.ws_server = 'ws://localhost:4001';
     // Image hosting address
-    window.__env_data.image_host = 'https://app.getcoins.eu';
+    window.__env_data.image_host = 'http://localhost';
+
     // API time out
     window.__env_data.api_timeout = 60000;
     // Using test wallets
-    window.__env_data.test_wallets = false;
+    window.__env_data.test_wallets = true;
     // Using test KYC environment
     window.__env_data.test_kyc = false;
     // Show Express Transfer button on the top menu bar
     window.__env_data.express_transfer = true;
     // Recaptcha ID
-    window.__env_data.recaptchaId = '6LdGo4YgAAAAABxDlHdoh1DNSq_CZrGfGHksKYwj';
+    window.__env_data.recaptchaId = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
     // Google ID
-    window.__env_data.googleId = '974994347571-phrnco9biqsdk4jb47pnkisir6oaqtip.apps.googleusercontent.com';
+    window.__env_data.googleId = '683937471887-u8r2tuvcvibnsnc41grnvcer9tv5bpm6.apps.googleusercontent.com';
     // Support team email address
     window.__env_data.support_email = 'support@ewallet.com';
     // Base color number
-    window.__env_data.base_color = '#0081D4';
+    window.__env_data.base_color = '#FFBD00';
     // Main font name
-    window.__env_data.main_font = 'Ubuntu';
+    window.__env_data.main_font = 'Lato';
     // Cookie agreement link
-    window.__env_data.cookie_link = 'http://getcoins.eu/index.php/cookies-policy/';
+    window.__env_data.cookie_link = 'http://getcoins.com.au/index.php/cookies-policy/';
     // Terms and conditions link
-    window.__env_data.terms_link = 'http://getcoins.eu/index.php/terms-and-conditions/';
+    window.__env_data.terms_link = 'http://getcoins.com.au/index.php/terms-and-conditions/';
+
     //////////////////////////////////////////////////
     //                                              //
     //                     COLORS                   //
@@ -76,9 +79,9 @@
     window.__env_data.color_orange_100 = '#fddeb3';
     window.__env_data.color_orange_50 = '#fef2e1';
     // Purple colors (top menu and title backgrounds, text, icons)
-    window.__env_data.color_purple_900_text = '#686168';
-    window.__env_data.color_purple_900_icons = '#868086';
-    window.__env_data.color_purple_900 = '#362C36';  // top menu bar
+    window.__env_data.color_purple_900_text = '#262626';
+    window.__env_data.color_purple_900_icons = '#242438';
+    window.__env_data.color_purple_900 = '#1E1E1E';  // top menu bar
     window.__env_data.color_purple_800 = '#463944';
     window.__env_data.color_purple_700 = '#564451';
     window.__env_data.color_purple_600 = '#665060';
@@ -89,16 +92,15 @@
     window.__env_data.color_purple_100 = '#D0CFCF';
     window.__env_data.color_purple_50 = '#ECECEC';
     // Blue colors (buttons, titles, icons)
-    window.__env_data.color_main_blue_900 = '#06509e';
-    window.__env_data.color_main_blue_800 = '#0070c0';
-    window.__env_data.color_main_blue_700 = '#0081d4'; // main color
-    window.__env_data.color_main_blue_600 = '#0094e9';
-    window.__env_data.color_main_blue_500 = '#00a2f8';
-    window.__env_data.color_main_blue_400 = '#19b0fa';
-    window.__env_data.color_main_blue_300 = '#47befb';
-    window.__env_data.color_main_blue_200 = '#7ed0fd';
-    window.__env_data.color_main_blue_100 = '#b2e3fe';
-    window.__env_data.color_main_blue_50 = '#f6fcff';
-
+    window.__env_data.color_main_blue_900 = '#ac810b';
+    window.__env_data.color_main_blue_800 = '#d69d00';
+    window.__env_data.color_main_blue_700 = '#ffbd00'; // main color
+    window.__env_data.color_main_blue_600 = '#fdbf16';
+    window.__env_data.color_main_blue_500 = '#ffca38';
+    window.__env_data.color_main_blue_400 = '#ffd86d';
+    window.__env_data.color_main_blue_300 = '#ffe08c';
+    window.__env_data.color_main_blue_200 = '#ffe8a8';
+    window.__env_data.color_main_blue_100 = '#fdedc0';
+    window.__env_data.color_main_blue_50 = '#fff8e6';
 
 }(this));
