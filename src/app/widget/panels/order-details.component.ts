@@ -335,8 +335,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
             }
           });
           this.loadTransactionsTotal();
-        },
-        (error) => {
+        }, (error) => {
           this.onProgress.emit(false);
           this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load exchange rate'));
         })
@@ -359,7 +358,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
         this.onProgress.emit(false);
       }, (error) => {
         this.onProgress.emit(false);
-        this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load exchange rate'));
+        this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load limits'));
       })
     );
   }
