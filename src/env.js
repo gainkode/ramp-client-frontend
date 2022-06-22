@@ -2,7 +2,7 @@
     window.__env_data = window.__env_data || {};
 
     // Product name for titles and headers
-    window.__env_data.product = 'Genesis';
+    window.__env_data.product = 'GetCoins';
     // Coockie domain
     window.__env_data.cookieDomain = 'localhost';
 
