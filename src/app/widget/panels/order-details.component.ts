@@ -326,9 +326,11 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
             if (c.symbol === 'EUR') {
               c.rateFactor = 1;
             } else {
-              const rate = rates.find(x => x.currencyTo === c.symbol);
-              if (rate) {
-                c.rateFactor = rate.depositRate;
+              if (rates) {
+                const rate = rates.find(x => x.currencyTo === c.symbol);
+                if (rate) {
+                  c.rateFactor = rate.depositRate;
+                }
               }
             }
           });
@@ -346,8 +348,12 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     const totalData = this.commonService.getMyTransactionsTotal();
     this.pSubscriptions.add(
       totalData.valueChanges.subscribe(({ data }) => {
-        const totalState = data.myState as UserState;
-        this.transactionsTotalEur = totalState.totalAmountEur ?? 0;
+        if (data) {
+          const totalState = data.myState as UserState;
+          this.transactionsTotalEur = totalState.totalAmountEur ?? 0;
+        } else {
+          this.transactionsTotalEur = 0;
+        }
         this.updateQuote();
         this.onQuoteChanged.emit(this.quoteLimit);
         this.onProgress.emit(false);

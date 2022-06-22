@@ -4,6 +4,8 @@
     // Product name for titles and headers
     window.__env_data.product = 'GetCoins';
     // Coockie domain
+    //window.__env_data.cookieDomain = 'https://app.getcoins.com.au';
+    //window.__env_data.cookieDomain = 'https://app.crunchywallet.io';
     window.__env_data.cookieDomain = 'localhost';
 
     // Current client host address

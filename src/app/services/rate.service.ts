@@ -110,7 +110,9 @@ export class ExchangeRateService {
                     }
                     this.restartCountDown();
                 }, (error) => {
-                    this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load exchange rate');
+                    if (!this.currentExchangeRate) {
+                        this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load exchange rate');
+                    }
                     this.updateCountDown(this.defaultRate);
                     this.restartCountDown();
                 });

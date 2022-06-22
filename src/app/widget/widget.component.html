@@ -102,7 +102,7 @@
           [countDown]="exchangeRateCountDownValue">
         </app-widget-rate>
         <app-widget-summary class="__widget-summary-data" [summary]="summary"></app-widget-summary>
-        <div *ngIf="auth.authenticated" class="__widget-summary-total">
+        <div *ngIf="showTransactionsLink" class="__widget-summary-total">
           <div class="__form-separator"></div>
           <div class="__form-separator"></div>
           <a [routerLink]="" href="#" (click)="showTransactions()">
@@ -125,7 +125,7 @@
     <div class="__widget-mobile-summary-data-box">
       <h3 class="__widget-summary-title">Order Summary</h3>
       <app-widget-summary class="__widget-summary-data" [summary]="summary"></app-widget-summary>
-      <div *ngIf="auth.authenticated" class="__widget-summary-total">
+      <div *ngIf="showTransactionsLink" class="__widget-summary-total">
         <a [routerLink]="" href="#" (click)="showTransactions()">
           Recent transactions
         </a>
