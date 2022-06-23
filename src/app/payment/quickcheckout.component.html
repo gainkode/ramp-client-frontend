@@ -1,6 +1,6 @@
 <div class="__widget-frame-container">
-  <div class="__widget-frame-background"></div>
-  <div class="__widget-frame-background-pipes"></div>
+  <div [ngClass]="{'__widget-frame-background': bg_mask, '__widget-frame-background-img': !bg_mask}"></div>
+  <div *ngIf="bg_mask" class="__widget-frame-background-pipes"></div>
   <div class="__widget-frame-box">
     <app-widget [internal]="true" [settings]="settings" [userParamsId]="userParamsId" [quickCheckout]=true></app-widget>
   </div>

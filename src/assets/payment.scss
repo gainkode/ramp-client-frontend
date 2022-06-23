@@ -17,17 +17,26 @@ $font_main: var(--font_main);
 .__widget-frame-background {
     grid-column: 1/3;
     grid-row: 1;
-    background: linear-gradient(51.56deg, #0d3d55 0%, #1a68ad 28.65%, #00a6ab 66.67%, #79cdd4 100%);
+    background: linear-gradient(51.56deg, var(--widget_background_color_1) 0%, var(--widget_background_color_2) 28.65%, var(--widget_background_color_3) 66.67%, var(--widget_background_color_4) 100%);
 }
 
 .__widget-frame-background-pipes {
     grid-column: 1;
     grid-row: 1;
-    background-color: #79cdd4;
-    mask: url("widget-bg.svg");
+    background-color: var(--widget_background_solid_color);
+    mask: var(--widget_background);
     mask-position: top;
     mask-repeat: no-repeat;
     mask-size: cover;
+}
+
+.__widget-frame-background-img {
+    grid-column: 1/3;
+    grid-row: 1;
+    background-image: var(--widget_background);
+    background-color: var(--widget_background_solid_color);
+    background-repeat: no-repeat;
+    background-size: 150%;
 }
 
 .__widget-frame-box {

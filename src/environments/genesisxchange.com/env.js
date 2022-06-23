@@ -4,7 +4,7 @@
     // Product name for titles and headers
     window.__env_data.product = 'Genesis';
     // Coockie domain
-    window.__env_data.cookieDomain = 'https://app.genesisxchange.com';
+    window.__env_data.cookieDomain = 'app.genesisxchange.com';
 
     window.__env_data.client_host = 'https://app.genesisxchange.com',
     window.__env_data.api_server = 'https://app.genesisxchange.com',
@@ -34,11 +34,16 @@
     // Terms and conditions link
     window.__env_data.terms_link = 'https://genesisxchange.com/terms-and-conditiones/';
 
+    window.__env_data.widget_bg_mask = 'false';
+    window.__env_data.widget_bg_name = 'https://app.genesisxchange.com/images/widget-bg.jpg';
+
     //////////////////////////////////////////////////
     //                                              //
     //                     COLORS                   //
     //                                              //
     //////////////////////////////////////////////////
+    // Widget colors
+    window.__env_data.widget_bg_solid_color = '#000040';
     // White color
     window.__env_data.color_white = '#FFFFFF';
     // Pink colors (error handling)

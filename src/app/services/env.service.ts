@@ -17,6 +17,14 @@ export class EnvService {
     public static cookie_link = '';
     public static terms_link = '';
 
+    public static widget_bg_mask = 'true';
+    public static widget_bg_name = 'assets/widget-bg.svg';
+    public static widget_bg_solid_color = '#79cdd4';
+    public static widget_bg_color_1 = '#0d3d55';
+    public static widget_bg_color_2 = '#1a68ad';
+    public static widget_bg_color_3 = '#00a6ab';
+    public static widget_bg_color_4 = '#79cdd4';
+
     public static color_white = '#FF0000';
 
     public static color_pink_900 = '#7c1f45';

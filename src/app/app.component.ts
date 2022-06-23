@@ -116,8 +116,18 @@ export class AppComponent implements OnInit, OnDestroy {
       style.href = iconLink;
       head.appendChild(style);
     }
+
     // Set the font variable
     this.document.documentElement.style.setProperty('--font_main', mainFont);
+
+    // Set widget parameters
+    this.document.documentElement.style.setProperty('--widget_background', `url("${EnvService.widget_bg_name}"`);
+    this.document.documentElement.style.setProperty('--widget_background_solid_color', EnvService.widget_bg_solid_color);
+    this.document.documentElement.style.setProperty('--widget_background_color_1', EnvService.widget_bg_color_1);
+    this.document.documentElement.style.setProperty('--widget_background_color_2', EnvService.widget_bg_color_2);
+    this.document.documentElement.style.setProperty('--widget_background_color_3', EnvService.widget_bg_color_3);
+    this.document.documentElement.style.setProperty('--widget_background_color_4', EnvService.widget_bg_color_4);
+
     // Set color variables (white)
     this.document.documentElement.style.setProperty('--color_white', EnvService.color_white);
     // Set color variables (pink)

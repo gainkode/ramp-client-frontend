@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { WidgetSettings } from '../model/payment-base.model';
+import { EnvService } from '../services/env.service';
 
 @Component({
   templateUrl: 'quickcheckout.component.html',
@@ -14,6 +15,7 @@ export class QuickCheckoutComponent {
   expressTo = '';
   expressValue = 0;
   settings: WidgetSettings | undefined = undefined;
+  bg_mask = (EnvService.widget_bg_mask === 'true');
 
   constructor(private route: ActivatedRoute) {
     this.userParamsId = this.route.snapshot.params['userParamsId'] ?? '';

@@ -15,7 +15,7 @@
     // API WebSocket address
     window.__env_data.ws_server = 'ws://localhost:4001';
     // Image hosting address
-    window.__env_data.image_host = 'http://localhost';
+    //window.__env_data.image_host = 'http://localhost';
 
     // window.__env_data.client_host = 'https://app.crunchywallet.io',
     // window.__env_data.api_server = 'https://app.crunchywallet.io',
@@ -26,7 +26,7 @@
     // window.__env_data.api_server = 'https://app.getcoins.com.au',
     // window.__env_data.ws_server = 'wss://app.getcoins.com.au',
     // window.__env_data.image_host = 'https://app.getcoins.com.au';
-    //window.__env_data.image_host = './assets/test',
+    window.__env_data.image_host = './assets/test',
 
     // API time out
     window.__env_data.api_timeout = 60000;
@@ -51,11 +51,20 @@
     // Terms and conditions link
     window.__env_data.terms_link = 'http://getcoins.com.au/index.php/terms-and-conditions/';
 
+    window.__env_data.widget_bg_mask = 'true';
+    window.__env_data.widget_bg_name = 'assets/widget-bg.svg';
+
     //////////////////////////////////////////////////
     //                                              //
     //                     COLORS                   //
     //                                              //
     //////////////////////////////////////////////////
+    // Widget colors
+    window.__env_data.widget_bg_solid_color = '#79cdd4';
+    window.__env_data.widget_bg_color_1 = '#0d3d55';
+    window.__env_data.widget_bg_color_2 = '#1a68ad';
+    window.__env_data.widget_bg_color_3 = '#00a6ab';
+    window.__env_data.widget_bg_color_4 = '#79cdd4';
     // White color
     window.__env_data.color_white = '#FFFFFF';
     // Pink colors (error handling)
@@ -92,9 +101,9 @@
     window.__env_data.color_orange_100 = '#fddeb3';
     window.__env_data.color_orange_50 = '#fef2e1';
     // Purple colors (top menu and title backgrounds, text, icons)
-    window.__env_data.color_purple_900_text = '#686168';
-    window.__env_data.color_purple_900_icons = '#868086';
-    window.__env_data.color_purple_900 = '#362C36';  // top menu bar
+    window.__env_data.color_purple_900_text = '#85727F';
+    window.__env_data.color_purple_900_icons = '#72596A';
+    window.__env_data.color_purple_900 = '#1E1E1E';  // top menu bar
     window.__env_data.color_purple_800 = '#463944';
     window.__env_data.color_purple_700 = '#564451';
     window.__env_data.color_purple_600 = '#665060';
@@ -105,15 +114,15 @@
     window.__env_data.color_purple_100 = '#D0CFCF';
     window.__env_data.color_purple_50 = '#ECECEC';
     // Blue colors (buttons, titles, icons)
-    window.__env_data.color_main_blue_900 = '#06509e';
-    window.__env_data.color_main_blue_800 = '#0070c0';
-    window.__env_data.color_main_blue_700 = '#0081d4'; // main color
-    window.__env_data.color_main_blue_600 = '#0094e9';
-    window.__env_data.color_main_blue_500 = '#00a2f8';
-    window.__env_data.color_main_blue_400 = '#19b0fa';
-    window.__env_data.color_main_blue_300 = '#47befb';
-    window.__env_data.color_main_blue_200 = '#7ed0fd';
-    window.__env_data.color_main_blue_100 = '#b2e3fe';
-    window.__env_data.color_main_blue_50 = '#f6fcff';
+    window.__env_data.color_main_blue_900 = '#ac810b';
+    window.__env_data.color_main_blue_800 = '#d69d00';
+    window.__env_data.color_main_blue_700 = '#ffbd00'; // main color
+    window.__env_data.color_main_blue_600 = '#fdbf16';
+    window.__env_data.color_main_blue_500 = '#ffca38';
+    window.__env_data.color_main_blue_400 = '#ffd86d';
+    window.__env_data.color_main_blue_300 = '#ffe08c';
+    window.__env_data.color_main_blue_200 = '#ffe8a8';
+    window.__env_data.color_main_blue_100 = '#fdedc0';
+    window.__env_data.color_main_blue_50 = '#fff8e6';
 
 }(this));

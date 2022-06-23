@@ -4,6 +4,14 @@
 @import "./assets/consts.scss";
 
 :root {
+    --widget_background: url("assets/widget-bg.svg");
+    --widget_background_solid_color: #79cdd4;
+
+    --widget_background_color_1: #0d3d55;
+    --widget_background_color_2: #1a68ad;
+    --widget_background_color_3: #00a6ab;
+    --widget_background_color_4: #79cdd4;
+
     --font_main: "Ubuntu";
 
     --color_white: #ffffff;
