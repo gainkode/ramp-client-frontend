@@ -127,11 +127,7 @@ export class TransactionItemFull {
       this.fees = paymentData.fees;
       this.sender = paymentData.sender.title;
       this.recipient = paymentData.recipient.title;
-      if (data.amountToReceive !== undefined && data.amountToReceive !== null) {
-        this.amountToReceive = data.amountToReceiveWithoutFee ?? 0;
-      } else {
-        this.amountToReceive = data.initialAmountToReceiveWithoutFee ?? 0;
-      }
+      this.amountToReceive = paymentData.amountToReceive;
       if (data.rate !== undefined && data.rate !== null) {
         this.rate = data.rate;
       } else {
@@ -469,7 +465,16 @@ export class TransactionItem {
   }
 
   get systemFees(): string {
-    return `${getCurrencySign(this.currencyFiat)}${this.fees.toString()}`;
+    if (this.type === TransactionType.Transfer || this.type === TransactionType.Receive) {
+      return '';
+    } else {
+      if (this.isFiatCurrency(this.currencyFiat)) {
+        return `${getCurrencySign(this.currencyFiat)}${this.fees}`;
+      } else {
+        return `${this.fees} ${this.currencyFiat}`;
+      }
+      
+    }
   }
 
   get amountSent(): string {
@@ -528,6 +533,11 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
   result.currencyToReceive = data.currencyToReceive ?? '';
   result.amountToSpend = data.amountToSpend ?? 0;
   result.amountToReceive = data.amountToReceiveWithoutFee ?? 0;
+  if (data.amountToReceive !== undefined && data.amountToReceive !== null) {
+    result.amountToReceive = data.amountToReceiveWithoutFee ?? 0;
+  } else {
+    result.amountToReceive = data.initialAmountToReceiveWithoutFee ?? 0;
+  }
   if (data.type === TransactionType.Buy) {
     result.currencyFiat = result.currencyToSpend;
     result.currencyCrypto = result.currencyToReceive;
@@ -580,6 +590,9 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
     }
     result.fees = data.feeFiat as number ?? 0;
     result.networkFee = data.approxNetworkFee ?? 0;
+    if (result.networkFee < 0) {
+      result.networkFee = 0;
+    }
     result.typeIcon = 'account_balance';
   } else if (data.type === TransactionType.Transfer) {
     result.currencyFiat = result.currencyToReceive;
