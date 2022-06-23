@@ -4,7 +4,7 @@
     // Product name for titles and headers
     window.__env_data.product = 'Genesis';
     // Coockie domain
-    window.__env_data.cookieDomain = 'localhost';
+    window.__env_data.cookieDomain = 'https://app.genesisxchange.com';
 
     window.__env_data.client_host = 'https://app.genesisxchange.com',
     window.__env_data.api_server = 'https://app.genesisxchange.com',
@@ -24,7 +24,7 @@
     // Google ID
     window.__env_data.googleId = '683937471887-u8r2tuvcvibnsnc41grnvcer9tv5bpm6.apps.googleusercontent.com';
     // Support team email address
-    window.__env_data.support_email = 'support@ewallet.com';
+    window.__env_data.support_email = 'support@genesisxchange.com';
     // Base color number
     window.__env_data.base_color = '#FFBD00';
     // Main font name
