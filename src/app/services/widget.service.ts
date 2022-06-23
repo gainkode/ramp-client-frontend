@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Subscription } from "rxjs";
 import { take } from "rxjs/operators";
-import { LoginResult, PaymentInstrument, PaymentProviderByInstrument, SettingsCostShort, SettingsCurrencyWithDefaults, SettingsFeeShort, SettingsKycTierShortEx, SettingsKycTierShortExListResult, TransactionSource, TransactionType, User, WireTransferBankAccountShort } from "../model/generated-models";
+import { LoginResult, PaymentInstrument, PaymentProviderByInstrument, SettingsCostShort, SettingsCurrencyWithDefaults, SettingsFeeShort, SettingsKycTierShortEx, SettingsKycTierShortExListResult, TransactionSource, TransactionType, User, UserMode, WireTransferBankAccountShort } from "../model/generated-models";
 import { WidgetSettings, WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from "../model/payment-base.model";
 import { CheckoutSummary, PaymentProviderInstrumentView, TransactionSourceList, WireTransferPaymentCategoryList } from "../model/payment.model";
 import { AuthService } from "./auth.service";
@@ -70,7 +70,15 @@ export class WidgetService {
                 dataGetter$.subscribe(({ data }) => {
                     if (this.auth.user) {
                         this.auth.setLocalSettingsCommon(data.getSettingsCommon);
-                        this.getTiers(summary, widgetId);
+                        if (this.auth.user?.mode === UserMode.OneTimeWallet) {
+                            const tierData = {
+                                levelName: '',
+                                required: false
+                            } as KycTierResultData;
+                            this.getKycStatus(summary, widgetId, tierData);
+                        } else {
+                            this.getTiers(summary, widgetId);
+                        }
                     } else {
                         if (this.onLoginRequired) {
                             this.onLoginRequired(summary.email);
@@ -428,7 +436,7 @@ export class WidgetService {
 
     private isKycRequired(currentUser: User, tierData: KycTierResultData): [boolean | null, string] {
         let result = true;
-        const kycStatus = currentUser.kycStatus?.toLowerCase();
+        const kycStatus = currentUser.kycStatus?.toLowerCase() ?? 'init';
         let exceedTierName = '';
         if (tierData.required === true) {
             result = true;
