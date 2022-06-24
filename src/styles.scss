@@ -12,6 +12,8 @@
     --widget_background_color_3: #00a6ab;
     --widget_background_color_4: #79cdd4;
 
+    --arrow_down: url("assets/navigation/plain_arrow_down.svg");
+
     --font_main: "Ubuntu";
 
     --color_white: #ffffff;
@@ -262,7 +264,7 @@ mat-dialog-container {
 }
 
 .mat-select-arrow-wrapper {
-    background-image: url("assets/navigation/plain_arrow_down_blue.svg");
+    background-image: var(--arrow_down);
     background-position: center;
     background-repeat: no-repeat;
     background-size: 8px;

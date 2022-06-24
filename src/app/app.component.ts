@@ -128,6 +128,8 @@ export class AppComponent implements OnInit, OnDestroy {
     this.document.documentElement.style.setProperty('--widget_background_color_3', EnvService.widget_bg_color_3);
     this.document.documentElement.style.setProperty('--widget_background_color_4', EnvService.widget_bg_color_4);
 
+    this.document.documentElement.style.setProperty('--arrow_down', `url("${EnvService.image_host}/images/plain_arrow_down.svg"`);
+
     // Set color variables (white)
     this.document.documentElement.style.setProperty('--color_white', EnvService.color_white);
     // Set color variables (pink)
