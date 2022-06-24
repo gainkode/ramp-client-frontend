@@ -8,6 +8,7 @@ import { NotificationService } from 'src/app/services/notification.service';
 import { Subscription } from 'rxjs';
 import { CommonDataService } from 'src/app/services/common-data.service';
 import { take } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 
 @Component({
     selector: 'app-nav-popup',
@@ -41,17 +42,30 @@ export class NavPopupComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.userId = this.auth.user?.userId;
         this.loadTransactionsTotal();
-        // if (!this.items?.some(x => x.id === 'test')) {
-        //     this.items?.push(
-        //         {
-        //             code: 'test',
-        //             id: 'test',
-        //             name: 'test',
-        //             url: '',
-        //             icon: ''
-        //         }
-        //     );
-        // }
+        if (!environment.production) {
+            if (!this.items?.some(x => x.id === 'test_kyc_notification')) {
+                this.items?.push(
+                    {
+                        code: '',
+                        id: 'test_kyc_notification',
+                        name: 'KYC Test Notification',
+                        url: '',
+                        icon: 'domain_verification'
+                    }
+                );
+            }
+            if (!this.items?.some(x => x.id === 'test_user_notification')) {
+                this.items?.push(
+                    {
+                        code: '',
+                        id: 'test_user_notification',
+                        name: 'KYC User Notification',
+                        url: '',
+                        icon: 'notification_important'
+                    }
+                );
+            }
+        }
     }
 
     ngOnDestroy(): void {
@@ -119,8 +133,11 @@ export class NavPopupComponent implements OnInit, OnDestroy {
     }
 
     clickItem(item: MenuItem): void {
-        if (item.id === 'test') {
+        if (item.id === 'test_kyc_notification') {
             this.kycNotificationTest();
+            return;
+        } else if (item.id === 'test_user_notification') {
+            this.userNotificationTest();
             return;
         }
         if (this.onMenuClick) {
@@ -129,13 +146,23 @@ export class NavPopupComponent implements OnInit, OnDestroy {
     }
 
     kycNotificationTest(): void {
-        // this.subscriptions.add(
-        //     this.notification.sendTestKycNotification().subscribe(({ data }) => {
-        //         // data
-        //     }, (error) => {
-        //         // error
-        //     })
-        // );
+        this.subscriptions.add(
+            this.notification.sendTestKycNotification().subscribe(({ data }) => {
+                // data
+            }, (error) => {
+                // error
+            })
+        );
+    }
+
+    userNotificationTest(): void {
+        this.subscriptions.add(
+            this.notification.sendTestNotification().subscribe(({ data }) => {
+                // data
+            }, (error) => {
+                // error
+            })
+        );
     }
 
     onMenuOpened(): void {

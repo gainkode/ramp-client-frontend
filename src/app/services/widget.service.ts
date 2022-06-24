@@ -59,6 +59,7 @@ export class WidgetService {
     }
 
     getSettingsCommon(summary: CheckoutSummary, widgetId: string): void {
+        console.log('getSettingsCommon');
         if (this.onError) {
             this.onError('');
         }
@@ -71,7 +72,7 @@ export class WidgetService {
                     if (this.auth.user) {
                         this.auth.setLocalSettingsCommon(data.getSettingsCommon);
 
-                        console.log(this.auth.user?.mode);
+                        console.log('getSettingsCommon success for ', this.auth.user?.mode);
 
                         if (this.auth.user?.mode === UserMode.OneTimeWallet) {
                             const tierData = {
@@ -268,12 +269,18 @@ export class WidgetService {
     }
 
     private getTiers(summary: CheckoutSummary, widgetId: string): void {
+
+        console.log('getTiers', widgetId);
+
         if (this.onError) {
             this.onError('');
         }
         const tiersData = this.paymentService.mySettingsKycTiers().valueChanges.pipe(take(1));
         this.pSubscriptions.add(
             tiersData.subscribe(({ data }) => {
+
+                console.log('getTiers success', widgetId);
+
                 this.loadCurrencies(summary, widgetId, data.mySettingsKycTiers as SettingsKycTierShortExListResult);
             }, (error) => {
                 if (this.onProgressChanged) {
@@ -285,6 +292,9 @@ export class WidgetService {
     }
 
     private loadCurrencies(summary: CheckoutSummary, widgetId: string, tiers: SettingsKycTierShortExListResult): void {
+
+        console.log('loadCurrencies');
+
         if (this.onError) {
             this.onError('');
         }
@@ -354,6 +364,9 @@ export class WidgetService {
     }
 
     private getKycStatus(summary: CheckoutSummary, widgetId: string, tierData: KycTierResultData): void {
+
+        console.log('getKycStatus', widgetId);
+
         if (this.onError) {
             this.onError('');
         }
