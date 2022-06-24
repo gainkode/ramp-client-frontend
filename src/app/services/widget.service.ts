@@ -70,6 +70,9 @@ export class WidgetService {
                 dataGetter$.subscribe(({ data }) => {
                     if (this.auth.user) {
                         this.auth.setLocalSettingsCommon(data.getSettingsCommon);
+
+                        console.log(this.auth.user?.mode);
+
                         if (this.auth.user?.mode === UserMode.OneTimeWallet) {
                             const tierData = {
                                 levelName: '',

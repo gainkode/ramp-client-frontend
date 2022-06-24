@@ -14,7 +14,7 @@
     // API time out
     window.__env_data.api_timeout = 60000;
     // Using test wallets
-    window.__env_data.test_wallets = true;
+    window.__env_data.test_wallets = false;
     // Using test KYC environment
     window.__env_data.test_kyc = false;
     // Show Express Transfer button on the top menu bar
