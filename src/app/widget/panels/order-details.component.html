@@ -1,7 +1,7 @@
 <div class="__widget-data-box">
     <form [formGroup]="dataForm" (ngSubmit)="onSubmit()">
         <!-- Email -->
-        <app-form-textbox *ngIf="settings.email==='' && !settings.embedded" [label]="'Email...'" [maxlength]="50"
+        <app-form-textbox *ngIf="settings.email==='' && !settings.embedded" [label]="'Email'" [maxlength]="50"
             formControlName="email" [errorMessages]="emailErrorMessages" [separator]="true">
         </app-form-textbox>
 

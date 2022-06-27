@@ -114,15 +114,15 @@
     window.__env_data.color_purple_100 = '#D0CFCF';
     window.__env_data.color_purple_50 = '#ECECEC';
     // Blue colors (buttons, titles, icons)
-    window.__env_data.color_main_blue_900 = '#ac810b';
-    window.__env_data.color_main_blue_800 = '#d69d00';
-    window.__env_data.color_main_blue_700 = '#ffbd00'; // main color
-    window.__env_data.color_main_blue_600 = '#fdbf16';
-    window.__env_data.color_main_blue_500 = '#ffca38';
-    window.__env_data.color_main_blue_400 = '#ffd86d';
-    window.__env_data.color_main_blue_300 = '#ffe08c';
-    window.__env_data.color_main_blue_200 = '#ffe8a8';
-    window.__env_data.color_main_blue_100 = '#fdedc0';
-    window.__env_data.color_main_blue_50 = '#fff8e6';
+    window.__env_data.color_main_blue_900 = '#06509e';
+    window.__env_data.color_main_blue_800 = '#0070c0';
+    window.__env_data.color_main_blue_700 = '#0081d4'; // main color
+    window.__env_data.color_main_blue_600 = '#0094e9';
+    window.__env_data.color_main_blue_500 = '#00a2f8';
+    window.__env_data.color_main_blue_400 = '#19b0fa';
+    window.__env_data.color_main_blue_300 = '#47befb';
+    window.__env_data.color_main_blue_200 = '#7ed0fd';
+    window.__env_data.color_main_blue_100 = '#b2e3fe';
+    window.__env_data.color_main_blue_50 = '#f6fcff';
 
 }(this));
