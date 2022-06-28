@@ -265,7 +265,7 @@ export class WidgetService {
         const limit = summary.quoteLimit ?? 0;
         const overLimit = amount - limit;
         const tiersData$ = this.paymentService.getAppropriateSettingsKycTiers(
-            overLimit, currency, TransactionSource.Widget, '').valueChanges.pipe(take(1));
+            overLimit, currency, TransactionSource.Widget, widgetId).valueChanges.pipe(take(1));
         this.pSubscriptions.add(
             tiersData$.subscribe(({ data }) => {
                 this.loadCurrencies(summary, widgetId, data.getAppropriateSettingsKycTiers as SettingsKycTierShortExListResult);
