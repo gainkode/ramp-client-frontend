@@ -152,8 +152,12 @@ query GetSettingsKycTiers {
 `;
 
 const MY_SETTINGS_KYC_TIERS = gql`
-query MySettingsKycTiers {
-  mySettingsKycTiers {
+query MySettingsKycTiers(
+  $widgetId: String
+) {
+  mySettingsKycTiers(
+    widgetId: $widgetId
+  ) {
     count
     list {
       settingsKycTierId
@@ -407,9 +411,13 @@ export class PaymentDataService {
     });
   }
 
-  mySettingsKycTiers(): QueryRef<any, EmptyObject> {
+  mySettingsKycTiers(widgetId: string | undefined): QueryRef<any, EmptyObject> {
+    const vars = {
+      widgetId: (widgetId === '') ? undefined : widgetId
+    };
     return this.apollo.watchQuery<any>({
       query: MY_SETTINGS_KYC_TIERS,
+      variables: vars,
       fetchPolicy: 'network-only'
     });
   }

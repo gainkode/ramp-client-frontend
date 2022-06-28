@@ -9,7 +9,7 @@ import { LiquidityProviderList } from 'src/app/admin/model/lists.model';
 import { WidgetItem } from 'src/app/admin/model/widget.model';
 import { AdminDataService } from 'src/app/services/admin-data.service';
 import { Countries } from 'src/app/model/country-code.model';
-import { PaymentInstrument, PaymentProvider, SettingsCurrencyWithDefaults } from 'src/app/model/generated-models';
+import { PaymentInstrument, PaymentProvider, SettingsCurrencyWithDefaults, UserType } from 'src/app/model/generated-models';
 import { CurrencyView, PaymentInstrumentList, PaymentProviderView, TransactionTypeList } from 'src/app/model/payment.model';
 import { UserItem } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
@@ -112,8 +112,10 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
         }),
         switchMap(searchString => {
           this.isUsersLoading = false;
-          return this.adminService.findUsers(new Filter({ search: searchString }))
-            .pipe(map(result => result.list));
+          return this.adminService.findUsers(new Filter({
+            search: searchString,
+            accountTypes: [UserType.Merchant]
+          })).pipe(map(result => result.list));
         })
       ));
   }

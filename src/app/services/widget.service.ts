@@ -59,7 +59,6 @@ export class WidgetService {
     }
 
     getSettingsCommon(summary: CheckoutSummary, widgetId: string): void {
-        console.log('getSettingsCommon');
         if (this.onError) {
             this.onError('');
         }
@@ -71,18 +70,7 @@ export class WidgetService {
                 dataGetter$.subscribe(({ data }) => {
                     if (this.auth.user) {
                         this.auth.setLocalSettingsCommon(data.getSettingsCommon);
-
-                        console.log('getSettingsCommon success for ', this.auth.user?.mode);
-
-                        // if (this.auth.user?.mode === UserMode.OneTimeWallet) {
-                        //     const tierData = {
-                        //         levelName: '',
-                        //         required: false
-                        //     } as KycTierResultData;
-                        //     this.getKycStatus(summary, widgetId, tierData);
-                        // } else {
-                            this.getTiers(summary, widgetId);
-                        //}
+                        this.getTiers(summary, widgetId);
                     } else {
                         if (this.onLoginRequired) {
                             this.onLoginRequired(summary.email);
@@ -269,19 +257,18 @@ export class WidgetService {
     }
 
     private getTiers(summary: CheckoutSummary, widgetId: string): void {
-
-        console.log('getTiers', widgetId);
-
         if (this.onError) {
             this.onError('');
         }
-        const tiersData = this.paymentService.mySettingsKycTiers().valueChanges.pipe(take(1));
+        const currency = summary.currencyFrom ?? 'EUR';
+        const amount = summary.amountFrom ?? 0;
+        const limit = summary.quoteLimit ?? 0;
+        const overLimit = amount - limit;
+        const tiersData$ = this.paymentService.getAppropriateSettingsKycTiers(
+            overLimit, currency, TransactionSource.Widget, '').valueChanges.pipe(take(1));
         this.pSubscriptions.add(
-            tiersData.subscribe(({ data }) => {
-
-                console.log('getTiers success', widgetId);
-
-                this.loadCurrencies(summary, widgetId, data.mySettingsKycTiers as SettingsKycTierShortExListResult);
+            tiersData$.subscribe(({ data }) => {
+                this.loadCurrencies(summary, widgetId, data.getAppropriateSettingsKycTiers as SettingsKycTierShortExListResult);
             }, (error) => {
                 if (this.onProgressChanged) {
                     this.onProgressChanged(false);
@@ -292,9 +279,6 @@ export class WidgetService {
     }
 
     private loadCurrencies(summary: CheckoutSummary, widgetId: string, tiers: SettingsKycTierShortExListResult): void {
-
-        console.log('loadCurrencies');
-
         if (this.onError) {
             this.onError('');
         }
@@ -303,10 +287,6 @@ export class WidgetService {
             currencyData.valueChanges.subscribe(
                 ({ data }) => {
                     const tierData = this.getCurrentTierLevelName(summary, tiers, data.getSettingsCurrency as SettingsCurrencyWithDefaults);
-
-                    console.log(tiers);
-                    console.log(tierData);
-
                     this.getKycStatus(summary, widgetId, tierData);
                 },
                 (error) => {
@@ -348,32 +328,16 @@ export class WidgetService {
             const rawTiers = [...tiersData.list];
             const sortedTiers = rawTiers.sort((a, b) => this.tierSortHandler(a, b));
             const currentTierId = this.auth.user?.kycTierId;
-
-            console.log('currentTierId', currentTierId);
-
-            const currentTier = sortedTiers.find(val => val.settingsKycTierId === currentTierId);
-            result.levelName = currentTier?.originalLevelName ?? null;
-            const currency = settingsCurrency.settingsCurrency?.list?.find(x => x.symbol === summary.currencyFrom);
-            const amount = summary.amountFrom ?? 0 * (currency?.rateFactor ?? 1);
-            const quote = summary.quoteLimit;
-            const resultAmount = quote - amount;
-            if (resultAmount <= 0) {
-                const newLimit = (-1 * resultAmount) + (currentTier?.amount ?? 0);
-                const newTierIndex = sortedTiers.findIndex(x => (x.amount ?? 0) > newLimit);
-                if (newTierIndex >= 0) {
-                    const newTier = sortedTiers[newTierIndex];
-                    result.levelName = newTier?.originalLevelName ?? null;
-                    result.required = true;
-                }
+            if (sortedTiers[0].settingsKycTierId !== currentTierId) {
+                const newTier = sortedTiers[0];
+                result.levelName = newTier?.originalLevelName ?? null;
+                result.required = (result.levelName !== null);
             }
         }
         return result;
     }
 
     private getKycStatus(summary: CheckoutSummary, widgetId: string, tierData: KycTierResultData): void {
-
-        console.log('getKycStatus', widgetId);
-
         if (this.onError) {
             this.onError('');
         }
@@ -458,41 +422,31 @@ export class WidgetService {
     }
 
     private isKycRequired(currentUser: User, tierData: KycTierResultData): [boolean | null, string] {
-        console.log('isKycRequired 1');
         let result = true;
         const kycStatus = currentUser.kycStatus?.toLowerCase() ?? 'init';
         let exceedTierName = '';
         if (tierData.required === true) {
-            console.log('isKycRequired 2');
             result = true;
             exceedTierName = tierData.levelName ?? '';
         } else {
-            console.log('isKycRequired 3');
             if (kycStatus !== 'init' && kycStatus !== 'unknown') {
-                console.log('isKycRequired 4');
                 result = false;
             } else {
-                console.log('isKycRequired 5');
                 // if kycStatus = 'init' or 'unknown'
                 if (tierData.levelName !== null) {
-                    console.log('isKycRequired 6');
                     const valid = currentUser.kycValid ?? true;
                     if (valid === true) {
-                        console.log('isKycRequired 7');
                         result = false;
                     } else if (valid === false) {
-                        console.log('isKycRequired 8');
                         if (currentUser.kycReviewRejectedType?.toLowerCase() === 'final') {
                             return [null, ''];
                         }
                     }
                 } else {
-                    console.log('isKycRequired 9');
                     result = false;
                 }
             }
         }
-        console.log('isKycRequired result:', result, exceedTierName);
         return [result, exceedTierName];
     }
 
