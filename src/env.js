@@ -4,6 +4,7 @@
     // Product name for titles and headers
     window.__env_data.product = 'GetCoins';
     // Coockie domain
+    //window.__env_data.cookieDomain = 'app.genesisxchange.com';
     //window.__env_data.cookieDomain = 'https://app.getcoins.com.au';
     //window.__env_data.cookieDomain = 'https://app.crunchywallet.io';
     window.__env_data.cookieDomain = 'localhost';
@@ -15,7 +16,7 @@
     // API WebSocket address
     window.__env_data.ws_server = 'ws://localhost:4001';
     // Image hosting address
-    //window.__env_data.image_host = 'http://localhost';
+    window.__env_data.image_host = 'http://localhost';
 
     // window.__env_data.client_host = 'https://app.crunchywallet.io',
     // window.__env_data.api_server = 'https://app.crunchywallet.io',
@@ -26,6 +27,12 @@
     // window.__env_data.api_server = 'https://app.getcoins.com.au',
     // window.__env_data.ws_server = 'wss://app.getcoins.com.au',
     // window.__env_data.image_host = 'https://app.getcoins.com.au';
+
+    // window.__env_data.client_host = 'https://app.genesisxchange.com',
+    // window.__env_data.api_server = 'https://app.genesisxchange.com',
+    // window.__env_data.ws_server = 'wss://app.genesisxchange.com',
+    // window.__env_data.image_host = 'https://app.genesisxchange.com';
+
     window.__env_data.image_host = './assets/test',
 
     // API time out

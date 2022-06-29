@@ -94,12 +94,6 @@ export class WidgetKycComponent implements OnInit, OnDestroy, AfterViewInit {
   private getTiers(): void {
     this.onError.emit('');
     this.showValidator = false;
-    const currency = this.summary?.currencyFrom ?? 'EUR';
-    const amount = this.summary?.amountFrom ?? 0;
-    const limit = this.summary?.quoteLimit ?? 0;
-    const overLimit = amount - limit;
-    const tiersData$ = this.dataService.getAppropriateSettingsKycTiers(
-      overLimit, currency, TransactionSource.Widget, '').valueChanges.pipe(take(1));
     const settingsCommon = this.auth.getLocalSettingsCommon();
     if (settingsCommon === null) {
       this.onError.emit('Unable to load common settings');
@@ -107,8 +101,15 @@ export class WidgetKycComponent implements OnInit, OnDestroy, AfterViewInit {
       this.address = settingsCommon.kycBaseAddress as string;
       if (this.levelName !== '') {
         this.flow = this.levelName;
+        this.showValidator = true;
       } else {
         this.onProgress.emit(true);
+        const currency = this.summary?.currencyFrom ?? 'EUR';
+        const amount = this.summary?.amountFrom ?? 0;
+        const limit = this.summary?.quoteLimit ?? 0;
+        const overLimit = amount - limit;
+        const tiersData$ = this.dataService.getAppropriateSettingsKycTiers(
+          overLimit, currency, TransactionSource.Widget, '').valueChanges.pipe(take(1));
         this.pSubscriptions.add(
           tiersData$.subscribe(({ data }) => {
             const tiers = data.getAppropriateSettingsKycTiers as SettingsKycTierShortExListResult;
@@ -117,6 +118,12 @@ export class WidgetKycComponent implements OnInit, OnDestroy, AfterViewInit {
               const sortedTiers = rawTiers.sort((a, b) => {
                 let aa = a.amount ?? 0;
                 let ba = b.amount ?? 0;
+                if ((a.amount === undefined || a.amount === null) && b.amount) {
+                  return 1;
+                }
+                if (a.amount && (b.amount === undefined || b.amount === null)) {
+                  return -1;
+                }
                 if (!a.amount && b.amount) {
                   return 1;
                 }

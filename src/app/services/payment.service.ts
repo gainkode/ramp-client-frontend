@@ -195,6 +195,7 @@ query GetAppropriateSettingsKycTiers(
   ) {
     count
     list {
+      settingsKycTierId
       name
       description
       amount

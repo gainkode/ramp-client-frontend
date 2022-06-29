@@ -298,24 +298,6 @@ export class WidgetService {
         );
     }
 
-    private tierSortHandler(a: SettingsKycTierShortEx, b: SettingsKycTierShortEx): number {
-        let aa = a.amount ?? 0;
-        let ba = b.amount ?? 0;
-        if ((a.amount === undefined || a.amount === null) && b.amount) {
-            return 1;
-        }
-        if (a.amount && (b.amount === undefined || b.amount === null)) {
-            return -1;
-        }
-        if (aa > ba) {
-            return 1;
-        }
-        if (aa < ba) {
-            return -1;
-        }
-        return 0;
-    }
-
     private getCurrentTierLevelName(
         summary: CheckoutSummary,
         tiersData: SettingsKycTierShortExListResult,
@@ -325,11 +307,9 @@ export class WidgetService {
             required: false
         };
         if ((tiersData.count ?? 0 > 0) && tiersData.list) {
-            const rawTiers = [...tiersData.list];
-            const sortedTiers = rawTiers.sort((a, b) => this.tierSortHandler(a, b));
             const currentTierId = this.auth.user?.kycTierId;
-            if (sortedTiers[0].settingsKycTierId !== currentTierId) {
-                const newTier = sortedTiers[0];
+            const newTier = tiersData.list[0];
+            if (newTier.settingsKycTierId !== currentTierId) {
                 result.levelName = newTier?.originalLevelName ?? null;
                 result.required = (result.levelName !== null);
             }
