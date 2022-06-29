@@ -12,6 +12,7 @@ export class WidgetDisclaimerComponent {
   @Output() onNext = new EventEmitter();
 
   termsLink = '';
+  productName = EnvService.productFull;
   
   checkAgreement(): void {
     this.agreementChecked = !this.agreementChecked;

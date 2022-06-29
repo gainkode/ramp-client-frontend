@@ -3,6 +3,7 @@
 
     // Product name for titles and headers
     window.__env_data.product = 'GetCoins';
+    window.__env_data.productFull = 'GetCoins Default';
     // Coockie domain
     window.__env_data.cookieDomain = 'localhost';
     // Current client host address

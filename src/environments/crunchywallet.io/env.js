@@ -3,6 +3,7 @@
 
     // Product name for titles and headers
     window.__env_data.product = 'Crunchy Wallet';
+    window.__env_data.productFull = 'Crunchy Wallet';
     // Coockie domain
     window.__env_data.cookieDomain = 'app.crunchywallet.io';
     // Current client host address

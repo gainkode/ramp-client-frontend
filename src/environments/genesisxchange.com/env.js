@@ -3,6 +3,7 @@
 
     // Product name for titles and headers
     window.__env_data.product = 'Genesis';
+    window.__env_data.productFull = 'Genesis Exchange';
     // Coockie domain
     window.__env_data.cookieDomain = 'app.genesisxchange.com';
 

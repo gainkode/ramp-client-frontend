@@ -15,4 +15,5 @@ export class WidgetCompleteComponent {
   TRANSACTION_TYPE: typeof TransactionType = TransactionType;
   supportEmail = EnvService.support_email ?? 'support@test.com';
   supportEmailLink = `mailto: ${EnvService.support_email}` ?? 'mailto: support@test.com';
+  productName = EnvService.productFull;
 }
