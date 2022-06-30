@@ -22,6 +22,7 @@ export class WidgetPagerService {
     private _stages: WidgetStage[] = [];
 
     init(id: string, stageTitle: string): void {
+        this._swapStage = '';
         this._title = stageTitle;
         this._stageId = id;
         this._step = 1;

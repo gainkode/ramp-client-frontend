@@ -80,6 +80,9 @@ export class SignupInfoPanelComponent implements OnDestroy {
         ['required']: 'Please specify your phone number',
         ['pattern']: 'Bad phone format'
     };
+    flatNumberErrorMessages: { [key: string]: string; } = {
+        ['required']: 'Please specify the flat number'
+    };
 
     constructor(
         private auth: AuthService,
@@ -113,7 +116,7 @@ export class SignupInfoPanelComponent implements OnDestroy {
                 this.requireUserFullName = fields.requireUserFullName as boolean;
                 this.requireUserPhone = fields.requireUserPhone as boolean;
                 this.requireUserBirthday = fields.requireUserBirthday as boolean;
-                this.requireUserAddress = fields.requireUserAddress as boolean;
+                this.requireUserAddress = true;//fields.requireUserAddress as boolean;
                 this.requireUserFlatNumber = fields.requireUserFlatNumber as boolean;
                 this.setFields();
                 this.progressChange.emit(false);

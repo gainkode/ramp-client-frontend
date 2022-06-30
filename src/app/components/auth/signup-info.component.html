@@ -37,6 +37,7 @@
         <app-form-textbox [label]="'Phone number'" [boxType]="'text'" [placeholder]="'Phone number'" [maxlength]="10"
             formControlName="phoneNumber" [errorMessages]="phoneNumberErrorMessages">
         </app-form-textbox>
+        <div class="__form-separator"></div>
     </div>
 
     <!-- Address -->
@@ -94,15 +95,12 @@
     </div>
 
     <!-- Flat Number -->
-    <mat-form-field class="form-element" *ngIf="requireUserFlatNumber || requireUserAddress">
-        <mat-label>Flat Number</mat-label>
-        <input type="text" matInput formControlName="flatNumber" maxlength="7" placeholder="Flat number"
-            [required]="requireUserFlatNumber" />
-        <mat-error *ngIf="this.infoForm.get('flatNumber')?.hasError('required')">
-            Please specify your flat number
-        </mat-error>
-    </mat-form-field>
-
+    <div *ngIf="requireUserFlatNumber || requireUserAddress">
+        <app-form-textbox [label]="'Flat Number'" [boxType]="'text'" [placeholder]="'Flat Number'" [maxlength]="7"
+            formControlName="flatNumber" [errorMessages]="flatNumberErrorMessages" [separator]="true">
+        </app-form-textbox>
+    </div>
+    
     <div class="__widget-buttons-area">
         <button class="__main-button __button-wide" type="submit">
             {{buttonTitle}}

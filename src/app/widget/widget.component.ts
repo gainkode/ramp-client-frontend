@@ -791,18 +791,17 @@ export class WidgetComponent implements OnInit {
   }
 
   private startPayment(): void {
-    if (this.summary.providerView?.id === 'Fibonatix') {
+    if (this.summary.providerView?.instrument === PaymentInstrument.CreditCard) {
       this.nextStage('credit_card', 'Payment info', this.pager.step, true);
-    } else if (this.summary.providerView?.id === 'InstantPay') {
+    } else if (this.summary.providerView?.instrument === PaymentInstrument.Apm) {
       this.completeInstantpayTransaction(
         this.summary.transactionId,
         this.summary.providerView.id,
-        this.summary.instrument ?? PaymentInstrument.Apm);
-    } else if (this.summary.providerView?.id === 'WireTransferPayment') {
-
+        PaymentInstrument.Apm);
+    } else if (this.summary.providerView?.instrument === PaymentInstrument.WireTransfer) {
       this.widgetService.getWireTransferSettings(this.summary, this.widget);
     } else {
-      this.errorMessage = 'Invalid payment provider';
+      this.errorMessage = `Invalid payment instrument ${this.summary.providerView?.instrument}`;
     }
   }
 
