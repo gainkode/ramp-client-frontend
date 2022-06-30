@@ -12,7 +12,7 @@ export class ErrorService {
             }
         }
         console.error('error code:', defaultMessage, '->', sessionCode, '->', code.toLowerCase(), '->', sessionError);
-        if (sessionError === '') {
+        //if (sessionError === '') {
             switch (code.toLowerCase()) {
                 // Common error codes (0 - 50)
                 case 'success':
@@ -159,9 +159,9 @@ export class ErrorService {
                     }
                     break;
             }
-        } else {
-            result = sessionError;
-        }
+        // } else {
+        //     result = sessionError;
+        // }
         return result;
     }
 
