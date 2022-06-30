@@ -17,6 +17,7 @@ export class FormTextBoxComponent implements ControlValueAccessor, OnInit, OnDes
     formControlDirective!: FormControlDirective;
     @Input() label = '';
     @Input() smallLabel = false;
+    @Input() asterisk = false;
     @Input() assist = '';
     @Input() boxType = '';
     @Input() placeholder = '';

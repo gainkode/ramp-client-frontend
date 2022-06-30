@@ -5,17 +5,17 @@
     <!-- Full name (Personal) -->
     <div *ngIf="requireUserFullName && !isMerchant">
         <app-form-textbox [label]="'First Name'" [boxType]="'text'" [placeholder]="'User first name'" [maxlength]="80"
-            formControlName="firstName" [errorMessages]="firstNameErrorMessages" [separator]="true">
+            formControlName="firstName" [errorMessages]="firstNameErrorMessages" [asterisk]="true" [separator]="true">
         </app-form-textbox>
         <app-form-textbox [label]="'Last Name'" [boxType]="'text'" [placeholder]="'User last name'" [maxlength]="80"
-            formControlName="lastName" [errorMessages]="lastNameErrorMessages" [separator]="true">
+            formControlName="lastName" [errorMessages]="lastNameErrorMessages" [asterisk]="true" [separator]="true">
         </app-form-textbox>
     </div>
 
     <!-- Company name (Merchant) -->
     <div *ngIf="requireUserFullName && isMerchant">
         <app-form-textbox [label]="'Company Name'" [boxType]="'text'" [placeholder]="'Company Name'" [maxlength]="80"
-            formControlName="firstName" [errorMessages]="companyNameErrorMessages" [separator]="true">
+            formControlName="firstName" [errorMessages]="companyNameErrorMessages" [asterisk]="true" [separator]="true">
         </app-form-textbox>
     </div>
 
@@ -44,10 +44,10 @@
     <!-- Phone -->
     <div class="__auth-phone-container" *ngIf="requireUserPhone">
         <app-form-textbox [label]="'Code'" [boxType]="'text'" [placeholder]="'Code'" [maxlength]="4"
-            formControlName="phoneCode" [errorMessages]="phoneCodeErrorMessages">
+            formControlName="phoneCode" [asterisk]="true" [errorMessages]="phoneCodeErrorMessages">
         </app-form-textbox>
         <app-form-textbox [label]="'Phone number'" [boxType]="'text'" [placeholder]="'Phone number'" [maxlength]="10"
-            formControlName="phoneNumber" [numberField]="true" [errorMessages]="phoneNumberErrorMessages">
+            formControlName="phoneNumber" [numberField]="true" [asterisk]="true" [errorMessages]="phoneNumberErrorMessages">
         </app-form-textbox>
         <div class="__form-separator"></div>
     </div>
@@ -55,13 +55,13 @@
     <!-- Address -->
     <div *ngIf="requireUserAddress">
         <app-form-textbox [label]="'Post Code'" [boxType]="'text'" [placeholder]="'Post Code'" [maxlength]="10"
-            formControlName="postCode" [errorMessages]="postCodeErrorMessages" [separator]="true">
+            formControlName="postCode" [errorMessages]="postCodeErrorMessages" [asterisk]="true" [separator]="true">
         </app-form-textbox>
         <app-form-textbox [label]="'City'" [boxType]="'text'" [placeholder]="'City'" [maxlength]="30"
-            formControlName="town" [errorMessages]="townErrorMessages" [separator]="true">
+            formControlName="town" [errorMessages]="townErrorMessages" [asterisk]="true" [separator]="true">
         </app-form-textbox>
         <app-form-textbox [label]="'Street'" [boxType]="'text'" [placeholder]="'Street'" [maxlength]="50"
-            formControlName="street" [errorMessages]="streetErrorMessages" [separator]="true">
+            formControlName="street" [errorMessages]="streetErrorMessages" [asterisk]="true" [separator]="true">
         </app-form-textbox>
         <app-form-textbox [label]="'Substreet'" [boxType]="'text'" [placeholder]="'Substreet'" [maxlength]="50"
             formControlName="subStreet" [separator]="true">
@@ -81,7 +81,7 @@
     <div *ngIf="requireUserFlatNumber || requireUserAddress">
         <app-form-textbox [label]="'Flat Number'" [boxType]="'text'" [placeholder]="'Flat Number'" [maxlength]="7"
             formControlName="flatNumber" [errorMessages]="flatNumberErrorMessages" [numberField]="true"
-            [separator]="true">
+            [asterisk]="true" [separator]="true">
         </app-form-textbox>
     </div>
 

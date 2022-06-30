@@ -1,7 +1,7 @@
 <div *ngIf="label!==''"
     [ngClass]="{'__form-label': true, '__form-label-small': smallLabel, '__form-label-disabled': active===false}">
     {{label}}
-    <span *ngIf="requiredFlag" class="__form-assist-error">
+    <span *ngIf="asterisk && requiredFlag" class="__form-assist-error">
         *
     </span>
 </div>
