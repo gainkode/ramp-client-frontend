@@ -30,13 +30,13 @@ import { EnvServiceProvider, EnvService, EnvServiceFactory } from './services/en
 function socialConfigFactory() {
   EnvServiceFactory.call(undefined);
   return {
-      autoLogin: false,
-      providers: [
-          {
-              id: GoogleLoginProvider.PROVIDER_ID,
-              provider: new GoogleLoginProvider(EnvService.googleId)
-          },
-      ]
+    autoLogin: false,
+    providers: [
+      {
+        id: GoogleLoginProvider.PROVIDER_ID,
+        provider: new GoogleLoginProvider(EnvService.googleId)
+      },
+    ]
   } as SocialAuthServiceConfig;
 }
 
@@ -77,7 +77,7 @@ export class AppModule {
       for (const err of graphQLErrors) {
         if (err.extensions !== null) {
 
-          console.log(err);
+          //console.log(err);
 
           const code = err.extensions?.code as string;
           if (code.toUpperCase() === 'UNAUTHENTICATED') {
@@ -97,9 +97,11 @@ export class AppModule {
             codeValue = err.message;
           }
           if (operation.operationName === 'GetRates') {
-            sessionStorage.setItem('currentRateError', codeValue);
+            sessionStorage.setItem('currentRateErrorCode', codeValue);
+            sessionStorage.setItem('currentRateError', err.message);
           } else {
-            sessionStorage.setItem('currentError', codeValue);
+            sessionStorage.setItem('currentErrorCode', codeValue);
+            sessionStorage.setItem('currentError', err.message);
           }
         }
       }
@@ -107,9 +109,11 @@ export class AppModule {
     if (networkError) {
       console.error('network error', networkError.name, networkError);
       if (operation.operationName === 'GetRates') {
-        sessionStorage.setItem('currentRateError', networkError.name);
+        sessionStorage.setItem('currentRateErrorCode', networkError.name);
+        sessionStorage.setItem('currentRateError', networkError.message);
       } else {
-        sessionStorage.setItem('currentError', networkError.name);
+        sessionStorage.setItem('currentErrorCode', networkError.name);
+        sessionStorage.setItem('currentError', networkError.message);
       }
     }
     return undefined;
@@ -117,8 +121,10 @@ export class AppModule {
 
   authLink = setContext((operation, context) => {
     if (operation.operationName === 'GetRates') {
+      sessionStorage.setItem('currentRateErrorCode', '');
       sessionStorage.setItem('currentRateError', '');
     } else {
+      sessionStorage.setItem('currentErrorCode', '');
       sessionStorage.setItem('currentError', '');
     }
     const token = localStorage.getItem('currentToken');

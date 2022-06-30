@@ -52,7 +52,7 @@ export class SignupInfoPanelComponent implements OnDestroy {
         lastName: ['', { validators: [], updateOn: 'change' }],
         phoneCode: ['', { validators: [], updateOn: 'change' }],
         phoneNumber: ['', { validators: [], updateOn: 'change' }],
-        birthday: [new Date(), { validators: [], updateOn: 'change' }],
+        birthday: [undefined, { validators: [], updateOn: 'change' }],
         postCode: ['', { validators: [], updateOn: 'change' }],
         town: ['', { validators: [], updateOn: 'change' }],
         street: ['', { validators: [], updateOn: 'change' }],
@@ -71,6 +71,9 @@ export class SignupInfoPanelComponent implements OnDestroy {
     };
     companyNameErrorMessages: { [key: string]: string; } = {
         ['required']: 'Please specify your company name'
+    };
+    birthdayErrorMessages: { [key: string]: string; } = {
+        ['required']: 'Please specify your birthday'
     };
     phoneCodeErrorMessages: { [key: string]: string; } = {
         ['required']: 'Required',

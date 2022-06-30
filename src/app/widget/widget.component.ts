@@ -853,7 +853,6 @@ export class WidgetComponent implements OnInit {
           } else {
             this.errorMessage = this.errorHandler.getError(error.message, 'Unable to confirm your order');
             if (this.widget.embedded) {
-              console.log('transaction error', this.errorMessage, JSON.stringify(error));
               this.onError.emit({
                 errorMessage: this.errorMessage
               } as PaymentErrorDetails);

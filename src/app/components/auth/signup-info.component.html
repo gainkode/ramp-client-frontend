@@ -20,22 +20,34 @@
     </div>
 
     <!-- Birthday -->
-    <mat-form-field class="form-element" *ngIf="requireUserBirthday">
-        <mat-label>Birthday</mat-label>
-        <input matInput formControlName="birthday" [matDatepicker]="picker" required />
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker startView="year" [startAt]="startBirthday"></mat-datepicker>
-        <mat-error *ngIf="birthdayControl?.hasError('required')">
+    <div *ngIf="requireUserBirthday">
+        <div class="__form-label">
+            Birthday <span class="__form-assist-error">*</span>
+        </div>
+        <div class="__form-textbox-border">
+            <input
+                [ngClass]="{'__form-text-box': infoForm.controls.birthday?.valid, '__form-text-box-error': !infoForm.controls.birthday?.valid}"
+                type="text" mask="d0/M0/0000" placeholder="DD/MM/YYYY" [dropSpecialCharacters]="false"
+                formControlName="birthday" autocomplete="false" />
+            <div *ngIf="!infoForm.controls.birthday?.valid" class="__form-input-error-icon-container">
+                <mat-icon class="__form-input-error-icon">
+                    error
+                </mat-icon>
+            </div>
+        </div>
+        <div *ngIf="!infoForm.controls.birthday?.valid" class="__form-assist __form-assist-error">
             Please specify your birthday
-        </mat-error>
-    </mat-form-field>
+        </div>
+        <div class="__form-separator"></div>
+    </div>
 
+    <!-- Phone -->
     <div class="__auth-phone-container" *ngIf="requireUserPhone">
         <app-form-textbox [label]="'Code'" [boxType]="'text'" [placeholder]="'Code'" [maxlength]="4"
             formControlName="phoneCode" [errorMessages]="phoneCodeErrorMessages">
         </app-form-textbox>
         <app-form-textbox [label]="'Phone number'" [boxType]="'text'" [placeholder]="'Phone number'" [maxlength]="10"
-            formControlName="phoneNumber" [errorMessages]="phoneNumberErrorMessages">
+            formControlName="phoneNumber" [numberField]="true" [errorMessages]="phoneNumberErrorMessages">
         </app-form-textbox>
         <div class="__form-separator"></div>
     </div>
@@ -60,20 +72,21 @@
         <app-form-textbox [label]="'Building Name'" [boxType]="'text'" [placeholder]="'Building Name'" [maxlength]="30"
             formControlName="buildingName" [separator]="true">
         </app-form-textbox>
-        <app-form-textbox [label]="'Building Number'" [boxType]="'text'" [placeholder]="'Building Number'" [maxlength]="4"
-            formControlName="buildingNumber" [separator]="true">
+        <app-form-textbox [label]="'Building Number'" [boxType]="'text'" [placeholder]="'Building Number'"
+            [maxlength]="4" formControlName="buildingNumber" [numberField]="true" [separator]="true">
         </app-form-textbox>
     </div>
 
     <!-- Flat Number -->
     <div *ngIf="requireUserFlatNumber || requireUserAddress">
         <app-form-textbox [label]="'Flat Number'" [boxType]="'text'" [placeholder]="'Flat Number'" [maxlength]="7"
-            formControlName="flatNumber" [errorMessages]="flatNumberErrorMessages" [separator]="true">
+            formControlName="flatNumber" [errorMessages]="flatNumberErrorMessages" [numberField]="true"
+            [separator]="true">
         </app-form-textbox>
     </div>
-    
+
     <div class="__auth-buttons-wizard-area">
-        <button class="__main-button __button-wide" type="submit">
+        <button class="__main-button __button-wide" type="submit" [disabled]="!infoForm.valid">
             {{buttonTitle}}
         </button>
     </div>
