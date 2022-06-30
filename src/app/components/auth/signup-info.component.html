@@ -42,56 +42,27 @@
 
     <!-- Address -->
     <div *ngIf="requireUserAddress">
-        <!-- Post code -->
-        <mat-form-field class="form-element">
-            <mat-label>Post Code</mat-label>
-            <input type="text" matInput formControlName="postCode" maxlength="10" placeholder="Post Code" required />
-            <mat-error *ngIf="this.postCodeControl?.hasError('required')">
-                Please specify your post code
-            </mat-error>
-        </mat-form-field>
-
-        <!-- City -->
-        <mat-form-field class="form-element">
-            <mat-label>City</mat-label>
-            <input type="text" matInput formControlName="town" maxlength="30" placeholder="City" required />
-            <mat-error *ngIf="this.townControl?.hasError('required')">
-                Please specify your city name
-            </mat-error>
-        </mat-form-field>
-
-        <!-- Post code -->
-        <mat-form-field class="form-element">
-            <mat-label>Street</mat-label>
-            <input type="text" matInput formControlName="street" maxlength="50" placeholder="Street" required />
-            <mat-error *ngIf="this.streetControl?.hasError('required')">
-                Please specify your street name
-            </mat-error>
-        </mat-form-field>
-
-        <!-- Substreet -->
-        <mat-form-field class="form-element">
-            <mat-label>Substreet</mat-label>
-            <input type="text" matInput formControlName="subStreet" maxlength="50" placeholder="Substreet" />
-        </mat-form-field>
-
-        <!-- State Name -->
-        <mat-form-field class="form-element">
-            <mat-label>State Name</mat-label>
-            <input type="text" matInput formControlName="stateName" maxlength="30" placeholder="State Name" />
-        </mat-form-field>
-
-        <!-- Building Name -->
-        <mat-form-field class="form-element">
-            <mat-label>Building Name</mat-label>
-            <input type="text" matInput formControlName="buildingName" maxlength="30" placeholder="Building Name" />
-        </mat-form-field>
-
-        <!-- Building Number -->
-        <mat-form-field class="form-element">
-            <mat-label>Building Number</mat-label>
-            <input type="text" matInput formControlName="buildingNumber" maxlength="4" placeholder="Building Number" />
-        </mat-form-field>
+        <app-form-textbox [label]="'Post Code'" [boxType]="'text'" [placeholder]="'Post Code'" [maxlength]="10"
+            formControlName="postCode" [errorMessages]="postCodeErrorMessages" [separator]="true">
+        </app-form-textbox>
+        <app-form-textbox [label]="'City'" [boxType]="'text'" [placeholder]="'City'" [maxlength]="30"
+            formControlName="town" [errorMessages]="townErrorMessages" [separator]="true">
+        </app-form-textbox>
+        <app-form-textbox [label]="'Street'" [boxType]="'text'" [placeholder]="'Street'" [maxlength]="50"
+            formControlName="street" [errorMessages]="streetErrorMessages" [separator]="true">
+        </app-form-textbox>
+        <app-form-textbox [label]="'Substreet'" [boxType]="'text'" [placeholder]="'Substreet'" [maxlength]="50"
+            formControlName="subStreet" [separator]="true">
+        </app-form-textbox>
+        <app-form-textbox [label]="'State Name'" [boxType]="'text'" [placeholder]="'State Name'" [maxlength]="30"
+            formControlName="stateName" [separator]="true">
+        </app-form-textbox>
+        <app-form-textbox [label]="'Building Name'" [boxType]="'text'" [placeholder]="'Building Name'" [maxlength]="30"
+            formControlName="buildingName" [separator]="true">
+        </app-form-textbox>
+        <app-form-textbox [label]="'Building Number'" [boxType]="'text'" [placeholder]="'Building Number'" [maxlength]="4"
+            formControlName="buildingNumber" [separator]="true">
+        </app-form-textbox>
     </div>
 
     <!-- Flat Number -->
@@ -101,9 +72,11 @@
         </app-form-textbox>
     </div>
     
-    <div class="__widget-buttons-area">
+    <div class="__auth-buttons-wizard-area">
         <button class="__main-button __button-wide" type="submit">
             {{buttonTitle}}
         </button>
     </div>
+
+    <div class="__form-separator"></div>
 </form>

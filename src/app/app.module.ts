@@ -76,6 +76,9 @@ export class AppModule {
     if (graphQLErrors) {
       for (const err of graphQLErrors) {
         if (err.extensions !== null) {
+
+          console.log(err);
+
           const code = err.extensions?.code as string;
           if (code.toUpperCase() === 'UNAUTHENTICATED') {
             console.error('UNAUTHENTICATED');

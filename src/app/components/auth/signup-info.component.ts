@@ -80,6 +80,15 @@ export class SignupInfoPanelComponent implements OnDestroy {
         ['required']: 'Please specify your phone number',
         ['pattern']: 'Bad phone format'
     };
+    postCodeErrorMessages: { [key: string]: string; } = {
+        ['required']: 'Please specify the post code'
+    };
+    townErrorMessages: { [key: string]: string; } = {
+        ['required']: 'Please specify the city name'
+    };
+    streetErrorMessages: { [key: string]: string; } = {
+        ['required']: 'Please specify the street'
+    };
     flatNumberErrorMessages: { [key: string]: string; } = {
         ['required']: 'Please specify the flat number'
     };
@@ -116,7 +125,7 @@ export class SignupInfoPanelComponent implements OnDestroy {
                 this.requireUserFullName = fields.requireUserFullName as boolean;
                 this.requireUserPhone = fields.requireUserPhone as boolean;
                 this.requireUserBirthday = fields.requireUserBirthday as boolean;
-                this.requireUserAddress = true;//fields.requireUserAddress as boolean;
+                this.requireUserAddress = fields.requireUserAddress as boolean;
                 this.requireUserFlatNumber = fields.requireUserFlatNumber as boolean;
                 this.setFields();
                 this.progressChange.emit(false);

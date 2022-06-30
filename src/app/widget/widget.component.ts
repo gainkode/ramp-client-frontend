@@ -273,13 +273,6 @@ export class WidgetComponent implements OnInit {
     if (rate) {
       this.summary.exchangeRate = rate;
     }
-    // this.rateErrorMessage = '';
-    // this.summary.exchangeRate = {
-    //   currencyFrom: 'EUR',
-    //   currencyTo: 'BTC',
-    //   depositRate: 1000,
-    //   withdrawRate: 1000
-    // } as Rate;
   }
 
   resetWizard(): void {
@@ -860,6 +853,7 @@ export class WidgetComponent implements OnInit {
           } else {
             this.errorMessage = this.errorHandler.getError(error.message, 'Unable to confirm your order');
             if (this.widget.embedded) {
+              console.log('transaction error', this.errorMessage, JSON.stringify(error));
               this.onError.emit({
                 errorMessage: this.errorMessage
               } as PaymentErrorDetails);
