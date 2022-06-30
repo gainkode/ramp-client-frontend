@@ -16,6 +16,7 @@ import { PaymentDataService } from 'src/app/services/payment.service';
 export class WidgetKycComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() errorMessage = '';
   @Input() levelName = '';
+  @Input() completedWhenVerified = false;
   @Input() summary: CheckoutSummary | undefined = undefined;
   @Output() onError = new EventEmitter<string>();
   @Output() onAuthError = new EventEmitter();

@@ -549,7 +549,7 @@ export class WidgetComponent implements OnInit {
       details.currency = this.summary.currencyTo;
       this.onComplete.emit(details);
     } else {
-      if (this.requestKyc) {
+      if (!this.widget.kycFirst && this.requestKyc && !this.widget.embedded) {
         this.nextStage('verification', 'Verification', 5, false);
       } else {
         this.nextStage('complete', 'Complete', 6, false);

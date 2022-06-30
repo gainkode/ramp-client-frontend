@@ -16,6 +16,7 @@ export class KycPanelComponent implements OnInit, OnDestroy {
     @Input() flow: string | null | undefined = '';
     @Input() url: string | null | undefined = '';
     @Input() notifyCompleted: boolean | undefined = false;
+    @Input() completedWhenVerified: boolean = false;
     @Output() completed = new EventEmitter();
     @Output() onError = new EventEmitter<string>();
     @Output() onAuthError = new EventEmitter();
@@ -110,16 +111,29 @@ export class KycPanelComponent implements OnInit, OnDestroy {
             addViewportTag: false,
             adaptIframeHeight: true
         }).on('idCheck.onApplicantSubmitted', (payload) => {
-            if (this.notifyCompleted) {
-                this.completed.emit();
-            } else {
-                this.showSuccessDialog();
+            if (!this.completedWhenVerified) {
+                if (this.notifyCompleted) {
+                    this.completed.emit();
+                } else {
+                    this.showSuccessDialog();
+                }
             }
         }).on('idCheck.onApplicantResubmitted', (payload) => {
-            if (this.notifyCompleted) {
-                this.completed.emit();
-            } else {
-                this.showSuccessDialog();
+            if (!this.completedWhenVerified) {
+                if (this.notifyCompleted) {
+                    this.completed.emit();
+                } else {
+                    this.showSuccessDialog();
+                }
+            }
+        }).on('idCheck.applicantStatus', (payload) => {
+            const status: string = payload?.reviewStatus ?? '';
+            if (this.completedWhenVerified && status.toLowerCase() === 'completed') {
+                if (this.notifyCompleted) {
+                    this.completed.emit();
+                } else {
+                    this.showSuccessDialog();
+                }
             }
         }).on('idCheck.onError', (error) => {
             this.onError.emit(error.error);

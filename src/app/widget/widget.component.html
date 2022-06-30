@@ -79,9 +79,9 @@
       </app-widget-wire-transfer-result>
       <!-- KYC -->
       <app-widget-kyc *ngSwitchCase="'verification'" [summary]="summary" [levelName]="overLimitLevel"
-        [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage" (onError)="handleError($event)"
-        (onAuthError)="handleAuthError()" (onProgress)="progressChanged($event)" (onBack)="kycBack()"
-        (onNext)="kycComplete()"></app-widget-kyc>
+        [completedWhenVerified]="widget.kycFirst" [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage"
+        (onError)="handleError($event)" (onAuthError)="handleAuthError()" (onProgress)="progressChanged($event)"
+        (onBack)="kycBack()" (onNext)="kycComplete()"></app-widget-kyc>
       <!-- Processing with a frame -->
       <app-widget-processing-frame *ngSwitchCase="'processing-frame'" [iframeContent]="iframeContent"
         [completed]="paymentComplete" [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage"
