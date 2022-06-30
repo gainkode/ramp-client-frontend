@@ -10,7 +10,11 @@ import { take } from 'rxjs/operators';
 @Component({
     selector: 'app-signup-info-panel',
     templateUrl: 'signup-info.component.html',
-    styleUrls: ['../../../assets/button.scss', '../../../assets/text-control.scss', '../../../assets/auth.scss']
+    styleUrls: [
+        '../../../assets/button.scss',
+        '../../../assets/text-control.scss',
+        '../../../assets/auth.scss'
+    ]
 })
 export class SignupInfoPanelComponent implements OnDestroy {
     @Input() buttonTitle = 'OK';
@@ -58,6 +62,24 @@ export class SignupInfoPanelComponent implements OnDestroy {
         buildingNumber: ['', { validators: [], updateOn: 'change' }],
         flatNumber: ['', { validators: [], updateOn: 'change' }]
     });
+
+    firstNameErrorMessages: { [key: string]: string; } = {
+        ['required']: 'Please specify your first name'
+    };
+    lastNameErrorMessages: { [key: string]: string; } = {
+        ['required']: 'Please specify your last name'
+    };
+    companyNameErrorMessages: { [key: string]: string; } = {
+        ['required']: 'Please specify your company name'
+    };
+    phoneCodeErrorMessages: { [key: string]: string; } = {
+        ['required']: 'Required',
+        ['pattern']: 'Bad code'
+    };
+    phoneNumberErrorMessages: { [key: string]: string; } = {
+        ['required']: 'Please specify your phone number',
+        ['pattern']: 'Bad phone format'
+    };
 
     constructor(
         private auth: AuthService,

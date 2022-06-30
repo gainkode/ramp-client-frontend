@@ -14,7 +14,7 @@ export class WidgetPaymentComponent implements OnInit, OnDestroy {
   @Input() summary: CheckoutSummary | undefined = undefined;
   @Input() errorMessage = '';
   @Output() onBack = new EventEmitter();
-  @Output() onSelect = new EventEmitter<string>();
+  @Output() onSelect = new EventEmitter<PaymentProviderInstrumentView>();
   
   private pSubscriptions: Subscription = new Subscription();
   

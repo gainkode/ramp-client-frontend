@@ -4,34 +4,21 @@
 <form [formGroup]="infoForm" (ngSubmit)="onSubmit()">
     <!-- Full name (Personal) -->
     <div *ngIf="requireUserFullName && !isMerchant">
-        <mat-form-field class="form-element">
-            <mat-label>First Name</mat-label>
-            <input type="text" matInput formControlName="firstName" maxlength="80" placeholder="First user name" required />
-            <mat-error *ngIf="this.infoForm.get('fullName')?.hasError('required')">
-                Please specify your first name
-            </mat-error>
-        </mat-form-field>
-
-        <mat-form-field class="form-element">
-            <mat-label>Last Name</mat-label>
-            <input type="text" matInput formControlName="lastName" maxlength="80" placeholder="Last user name" required />
-            <mat-error *ngIf="this.infoForm.get('lastName')?.hasError('required')">
-                Please specify your last name
-            </mat-error>
-        </mat-form-field>
+        <app-form-textbox [label]="'First Name'" [boxType]="'text'" [placeholder]="'User first name'" [maxlength]="80"
+            formControlName="firstName" [errorMessages]="firstNameErrorMessages" [separator]="true">
+        </app-form-textbox>
+        <app-form-textbox [label]="'Last Name'" [boxType]="'text'" [placeholder]="'User last name'" [maxlength]="80"
+            formControlName="lastName" [errorMessages]="lastNameErrorMessages" [separator]="true">
+        </app-form-textbox>
     </div>
-    
+
     <!-- Company name (Merchant) -->
     <div *ngIf="requireUserFullName && isMerchant">
-        <mat-form-field class="form-element">
-            <mat-label>Company Name</mat-label>
-            <input type="text" matInput formControlName="firstName" maxlength="80" placeholder="Company name" required />
-            <mat-error *ngIf="this.infoForm.get('fullName')?.hasError('required')">
-                Please specify your company name
-            </mat-error>
-        </mat-form-field>
+        <app-form-textbox [label]="'Company Name'" [boxType]="'text'" [placeholder]="'Company Name'" [maxlength]="80"
+            formControlName="firstName" [errorMessages]="companyNameErrorMessages" [separator]="true">
+        </app-form-textbox>
     </div>
-    
+
     <!-- Birthday -->
     <mat-form-field class="form-element" *ngIf="requireUserBirthday">
         <mat-label>Birthday</mat-label>
@@ -43,30 +30,13 @@
         </mat-error>
     </mat-form-field>
 
-    <div class="form-element phone-box-split" *ngIf="requireUserPhone">
-        <!-- Phone code -->
-        <mat-form-field class="phone-box-left-panel">
-            <mat-label>Code</mat-label>
-            <input matInput formControlName="phoneCode" maxlength="5" type="search" placeholder="Code" required>
-            <mat-error *ngIf="this.phoneCodeControl?.hasError('required')">
-                Required
-            </mat-error>
-            <mat-error *ngIf="this.phoneCodeControl?.hasError('pattern')">
-                Bad code
-            </mat-error>
-        </mat-form-field>
-
-        <!-- Phone number -->
-        <mat-form-field class="phone-box-right-panel">
-            <mat-label>Phone number</mat-label>
-            <input matInput formControlName="phoneNumber" maxlength="10" type="search" placeholder="Number" required>
-            <mat-error *ngIf="this.phoneNumberControl?.hasError('required')">
-                Please specify your phone number
-            </mat-error>
-            <mat-error *ngIf="this.phoneNumberControl?.hasError('pattern')">
-                Bad phone format
-            </mat-error>
-        </mat-form-field>
+    <div class="__auth-phone-container" *ngIf="requireUserPhone">
+        <app-form-textbox [label]="'Code'" [boxType]="'text'" [placeholder]="'Code'" [maxlength]="4"
+            formControlName="phoneCode" [errorMessages]="phoneCodeErrorMessages">
+        </app-form-textbox>
+        <app-form-textbox [label]="'Phone number'" [boxType]="'text'" [placeholder]="'Phone number'" [maxlength]="10"
+            formControlName="phoneNumber" [errorMessages]="phoneNumberErrorMessages">
+        </app-form-textbox>
     </div>
 
     <!-- Address -->
@@ -103,7 +73,7 @@
             <mat-label>Substreet</mat-label>
             <input type="text" matInput formControlName="subStreet" maxlength="50" placeholder="Substreet" />
         </mat-form-field>
-        
+
         <!-- State Name -->
         <mat-form-field class="form-element">
             <mat-label>State Name</mat-label>
@@ -126,14 +96,15 @@
     <!-- Flat Number -->
     <mat-form-field class="form-element" *ngIf="requireUserFlatNumber || requireUserAddress">
         <mat-label>Flat Number</mat-label>
-        <input type="text" matInput formControlName="flatNumber" maxlength="7" placeholder="Flat number" [required]="requireUserFlatNumber" />
+        <input type="text" matInput formControlName="flatNumber" maxlength="7" placeholder="Flat number"
+            [required]="requireUserFlatNumber" />
         <mat-error *ngIf="this.infoForm.get('flatNumber')?.hasError('required')">
             Please specify your flat number
         </mat-error>
     </mat-form-field>
 
-    <div class="form-element">
-        <button class="main-button main-button-primary" type="submit">
+    <div class="__widget-buttons-area">
+        <button class="__main-button __button-wide" type="submit">
             {{buttonTitle}}
         </button>
     </div>

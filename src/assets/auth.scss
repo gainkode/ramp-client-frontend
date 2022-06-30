@@ -61,7 +61,7 @@ $font_main: var(--font_main);
     font-size: 14px;
     line-height: 28px;
     text-align: center;
-    
+
     color: $color_purple_900_icons;
 }
 
@@ -185,6 +185,14 @@ $font_main: var(--font_main);
     font-size: 21px;
     line-height: 28px;
     color: $color_purple_900_text;
+}
+
+.__auth-phone-container {
+    width: 100%;
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: 100px auto;
+    gap: 8px;
 }
 
 .__auth-social-delimitter {

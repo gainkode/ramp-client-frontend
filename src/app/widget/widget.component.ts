@@ -486,7 +486,7 @@ export class WidgetComponent implements OnInit {
         }
         this.nextStage('payment', 'Payment info', nextStage, true);
       } else {
-        this.selectProvider(this.paymentProviders[0].id);
+        this.selectProvider(this.paymentProviders[0]);
       }
     }
   }
@@ -497,16 +497,12 @@ export class WidgetComponent implements OnInit {
     this.stageBack();
   }
 
-  selectProvider(id: string) {
-    if (id === 'Fibonatix') {
-      this.createBuyTransaction(id, PaymentInstrument.CreditCard, '');
-    } else if (id === 'InstantPay') {
-      this.createBuyTransaction(id, PaymentInstrument.Apm, '');
-    } else if (id === 'WireTransferPayment') {
-      this.summary.providerView = this.paymentProviders.find(x => x.id === id);
+  selectProvider(provider: PaymentProviderInstrumentView) {
+    if (provider.id === 'WireTransferPayment') {
+      this.summary.providerView = this.paymentProviders.find(x => x.id === provider.id);
       this.startPayment();
     } else {
-      this.errorMessage = `Payment using ${id} is currenctly not supported`;
+      this.createBuyTransaction(provider.id, provider.instrument, '');
     }
   }
   // ====================
@@ -639,7 +635,7 @@ export class WidgetComponent implements OnInit {
       } else if (this.paymentProviders.length > 1) {
         this.nextStage('payment', 'Payment info', 5, true);
       } else {
-        this.selectProvider(this.paymentProviders[0].id);
+        this.selectProvider(this.paymentProviders[0]);
       }
     } else {
       this.nextStage('complete', 'Complete', 6, false);
