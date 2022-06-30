@@ -2,7 +2,7 @@ import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/cor
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { TransactionShortListResult, TransactionStatusDescriptorMap } from 'src/app/model/generated-models';
+import { TransactionShortListResult, TransactionSource, TransactionStatusDescriptorMap } from 'src/app/model/generated-models';
 import { TransactionItem } from 'src/app/model/transaction.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
@@ -24,8 +24,6 @@ export class WidgetRecentTransactionsComponent implements OnDestroy, OnInit {
   selectedTransaction: TransactionItem | null = null;
   pageSize = 10;
   pageIndex = 0;
-  sortedField = 'dt';
-  sortedDesc = true;
 
   private pTransactionsSubscription: Subscription | undefined = undefined;
   private pStatusSubscription: Subscription | undefined = undefined;
@@ -78,13 +76,13 @@ export class WidgetRecentTransactionsComponent implements OnDestroy, OnInit {
     const transactionsData$ = this.profileService.getMyTransactions(
       this.pageIndex,
       this.pageSize,
-      [],
+      [TransactionSource.Widget],
       undefined,
       [],
       '',
       '',
-      'type',
-      this.sortedDesc).valueChanges.pipe(take(1));
+      'created',
+      true).valueChanges.pipe(take(1));
     this.inProgress = true;
     this.pTransactionsSubscription = transactionsData$.subscribe(({ data }) => {
       const dataList = data.myTransactions as TransactionShortListResult;

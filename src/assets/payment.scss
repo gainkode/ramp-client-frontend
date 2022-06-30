@@ -63,7 +63,6 @@ $font_main: var(--font_main);
     border-radius: 8px;
 
     @media (max-width: $widget_max_width + px) {
-        background: $color_white;
         box-shadow: unset;
         border-radius: 0px;
         width: $widget_min_width + px;
@@ -355,6 +354,7 @@ $font_main: var(--font_main);
 }
 
 .__widget-mobile-summary-box {
+    width: $widget_min_width + px;
     margin: 12px;
     display: grid;
     grid-template-columns: auto 44px;

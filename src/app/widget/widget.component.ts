@@ -313,6 +313,7 @@ export class WidgetComponent implements OnInit {
 
   transactionsBack(): void {
     this.recentTransactions = false;
+    this.mobileSummary = false;
   }
 
   private stageBack(): void {
