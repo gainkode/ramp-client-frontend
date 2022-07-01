@@ -448,7 +448,7 @@ export class WidgetComponent implements OnInit {
       this.nextStage('sell_details', 'Bank details', 2, true);
       //this.createWithdrawalTransaction();
     } else {
-      this.widgetService.getSettingsCommon(this.summary, this.widget.widgetId);
+      this.widgetService.getSettingsCommon(this.summary, this.widget.widgetId, false);
     }
   }
   // ================
@@ -599,7 +599,7 @@ export class WidgetComponent implements OnInit {
   }
 
   loginCodeConfirmed(): void {
-    this.widgetService.getSettingsCommon(this.summary, this.widget.widgetId);
+    this.widgetService.getSettingsCommon(this.summary, this.widget.widgetId, true);
   }
 
   loginComplete(data: LoginResult): void {
@@ -615,7 +615,7 @@ export class WidgetComponent implements OnInit {
   identificationComplete(data: LoginResult): void {
     this.auth.setLoginUser(data);
     this.summary.email = data.user?.email ?? '';
-    this.widgetService.getSettingsCommon(this.summary, this.widget.widgetId);
+    this.widgetService.getSettingsCommon(this.summary, this.widget.widgetId, false);
   }
 
   identificationBack(): void {

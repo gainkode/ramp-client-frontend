@@ -132,11 +132,11 @@ export class KycPanelComponent implements OnInit, OnDestroy {
 
                 console.log('sumsub payload', payload);
 
-                if (this.notifyCompleted) {
-                    this.completed.emit();
-                } else {
-                    this.showSuccessDialog();
-                }
+                // if (this.notifyCompleted) {
+                //     this.completed.emit();
+                // } else {
+                //     this.showSuccessDialog();
+                // }
             }
         }).on('idCheck.onError', (error) => {
             this.onError.emit(error.error);

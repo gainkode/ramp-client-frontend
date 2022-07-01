@@ -58,7 +58,7 @@ export class WidgetService {
         this.onWireTranferListLoaded = wireTranferListLoadedCallback;
     }
 
-    getSettingsCommon(summary: CheckoutSummary, widgetId: string): void {
+    getSettingsCommon(summary: CheckoutSummary, widgetId: string, updatedUserData: boolean): void {
         if (this.onError) {
             this.onError('');
         }
@@ -72,8 +72,12 @@ export class WidgetService {
                         this.auth.setLocalSettingsCommon(data.getSettingsCommon);
                         this.getTiers(summary, widgetId);
                     } else {
-                        if (this.onLoginRequired) {
-                            this.onLoginRequired(summary.email);
+                        if (updatedUserData) {
+                            this.authenticate(summary.email, widgetId);
+                        } else {
+                            if (this.onLoginRequired) {
+                                this.onLoginRequired(summary.email);
+                            }
                         }
                     }
                     if (this.onProgressChanged) {
