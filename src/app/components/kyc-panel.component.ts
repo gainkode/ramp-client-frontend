@@ -129,14 +129,20 @@ export class KycPanelComponent implements OnInit, OnDestroy {
         }).on('idCheck.applicantStatus', (payload) => {
             const status: string = payload?.reviewStatus ?? '';
             if (this.completedWhenVerified && status.toLowerCase() === 'completed') {
-
+                const reviewResult = payload?.reviewResult;
+                if (reviewResult) {
+                    const answer = reviewResult.reviewAnswer as string;
+                    if (answer) {
+                        if (answer.toLowerCase() === 'green') {
+                            if (this.notifyCompleted) {
+                                this.completed.emit();
+                            } else {
+                                this.showSuccessDialog();
+                            }
+                        }
+                    }
+                }
                 console.log('sumsub payload', payload);
-
-                // if (this.notifyCompleted) {
-                //     this.completed.emit();
-                // } else {
-                //     this.showSuccessDialog();
-                // }
             }
         }).on('idCheck.onError', (error) => {
             this.onError.emit(error.error);
