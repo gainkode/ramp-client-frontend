@@ -106,9 +106,6 @@ export class WidgetService {
             }
             this.pSubscriptions.add(
                 authenticateData$.subscribe(({ data }) => {
-
-                    console.log('----------------DATA------------------', data);
-
                     if (this.onProgressChanged) {
                         this.onProgressChanged(false);
                     }
@@ -116,9 +113,6 @@ export class WidgetService {
                         this.onLoginSuccess(data.login as LoginResult);
                     }
                 }, (error) => {
-
-                    console.log('----------------ERROR------------------', this.errorHandler.getCurrentError());
-
                     if (this.onProgressChanged) {
                         this.onProgressChanged(false);
                     }
@@ -129,10 +123,6 @@ export class WidgetService {
                             this.onLoginRequired(login);
                         }
                     } else if (this.errorHandler.getCurrentError() === 'auth.unconfirmed_email') {
-
-                        console.log('----------------CODE------------------');
-
-
                         // User has to confirm email verifying the code
                         if (this.onConfirmEmailRequired) {
                             this.onConfirmEmailRequired(login);
