@@ -142,7 +142,6 @@ export class KycPanelComponent implements OnInit, OnDestroy {
                         }
                     }
                 }
-                console.log('sumsub payload', payload);
             }
         }).on('idCheck.onError', (error) => {
             this.onError.emit(error.error);
