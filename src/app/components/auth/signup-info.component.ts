@@ -6,6 +6,7 @@ import { LoginResult, PostAddress, SettingsKyc, UserMode, UserType } from '../..
 import { Subscription } from 'rxjs';
 import { getCountryByCode3 } from '../../model/country-code.model';
 import { take } from 'rxjs/operators';
+import { getFormattedUtcDate } from 'src/app/utils/utils';
 
 @Component({
     selector: 'app-signup-info-panel',
@@ -226,7 +227,11 @@ export class SignupInfoPanelComponent implements OnDestroy {
             this.flatNumberControl?.setValidators([]);
         }
         if (this.requireUserBirthday && user) {
-            this.birthdayControl?.setValue(user.birthday ?? this.startBirthday);
+            const birthday = user.birthday as Date;
+            if (birthday && birthday !== null) {
+                const d = `${birthday.getDate()}/${birthday.getMonth() + 1}/${birthday.getFullYear()}`;
+                this.birthdayControl?.setValue(d);
+            }
             this.birthdayControl?.setValidators([Validators.required]);
         } else {
             this.birthdayControl?.setValue('');
@@ -248,21 +253,18 @@ export class SignupInfoPanelComponent implements OnDestroy {
     }
 
     onSubmit(): void {
+        console.log('onSubmit');
         this.error.emit('');
         if (this.infoForm.valid) {
+            console.log('onSubmit valid');
             this.progressChange.emit(true);
             let address: PostAddress | undefined;
             let phone = '';
             if (this.requireUserPhone) {
                 phone = `${this.phoneCodeControl?.value} ${this.phoneNumberControl?.value}`;
             }
-            const rawBirthday = (this.birthdayControl?.value) ? this.birthdayControl?.value as Date : undefined;
-            const birthday = (rawBirthday) ?
-                new Date(Date.UTC(
-                    rawBirthday.getFullYear(),
-                    rawBirthday.getMonth(),
-                    rawBirthday.getDate(),
-                    0, 0, 0, 0)) : undefined;
+
+            const birthday = getFormattedUtcDate(this.birthdayControl?.value ?? '');
             if (this.requireUserAddress || this.requireUserFlatNumber) {
                 address = {} as PostAddress;
                 if (this.requireUserAddress) {
@@ -279,6 +281,8 @@ export class SignupInfoPanelComponent implements OnDestroy {
                     address.flatNumber = this.flatNumberControl?.value;
                 }
             }
+            console.log('onSubmit phone', phone);
+            console.log('onSubmit birthday', birthday);
             this.subscriptions.add(
                 this.auth.setMyInfo(
                     this.firstNameControl?.value as string,
@@ -287,9 +291,11 @@ export class SignupInfoPanelComponent implements OnDestroy {
                     address,
                     birthday
                 ).subscribe(({ data }) => {
+                    console.log('onSubmit data', data);
                     this.progressChange.emit(false);
                     this.done.emit(data.setMyInfo as LoginResult);
                 }, (error) => {
+                    console.log('onSubmit error', error);
                     this.progressChange.emit(false);
                     this.error.emit(this.errorHandler.getError(error.message, 'Incorrect personal data'));
                 })

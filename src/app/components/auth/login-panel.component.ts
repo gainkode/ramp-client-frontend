@@ -250,6 +250,7 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
     }
 
     onSignupDone(userData: LoginResult): void {
+        console.log('onSignupDone', userData);
         if (!userData.authTokenAction ||
             userData.authTokenAction === 'Default' ||
             userData.authTokenAction === 'KycRequired') {

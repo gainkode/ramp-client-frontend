@@ -130,7 +130,12 @@ export class WidgetCodeAuthComponent implements OnInit, OnDestroy, AfterViewInit
             this.auth.confirmCode(code, this.email).subscribe(({ data }) => {
                 this.onComplete.emit();
             }, (error) => {
-                this.onError.emit(this.errorHandler.getError(error.message, 'Incorrect confirmation code'));
+                const errCode = this.errorHandler.getCurrentError();
+                if (errCode === 'auth.access_denied') {
+                    this.onError.emit('Incorrect confirmation code');
+                } else {
+                    this.onError.emit(this.errorHandler.getError(error.message, 'Incorrect confirmation code'));
+                }
             })
         );
     }
