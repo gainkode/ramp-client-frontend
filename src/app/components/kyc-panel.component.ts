@@ -129,6 +129,9 @@ export class KycPanelComponent implements OnInit, OnDestroy {
         }).on('idCheck.applicantStatus', (payload) => {
             const status: string = payload?.reviewStatus ?? '';
             if (this.completedWhenVerified && status.toLowerCase() === 'completed') {
+
+                console.log('sumsub payload', payload);
+
                 if (this.notifyCompleted) {
                     this.completed.emit();
                 } else {

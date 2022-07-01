@@ -24,6 +24,11 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
     @Input() wizardButtons: boolean = false;
     @Input() errorMessage = '';
     @Input() widgetId = '';
+    @Input() set requiredExtraData(val: boolean) {
+        if (val === true) {
+            this.showSignupPanel(undefined);
+        }
+    }
     @Output() error = new EventEmitter<string>();
     @Output() progressChange = new EventEmitter<boolean>();
     @Output() authenticated = new EventEmitter<LoginResult>();
@@ -103,8 +108,10 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
         this.socialSignIn('Facebook');
     }
 
-    showSignupPanel(userData: LoginResult): void {
-        this.auth.setLoginUser(userData);
+    showSignupPanel(userData: LoginResult | undefined): void {
+        if (userData) {
+            this.auth.setLoginUser(userData);
+        }
         const signupPanelReady = (this.signupInfoPanel) ? true : false;
         this.extraData = true;
         this.twoFa = false;
@@ -250,7 +257,6 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
     }
 
     onSignupDone(userData: LoginResult): void {
-        console.log('onSignupDone', userData);
         if (!userData.authTokenAction ||
             userData.authTokenAction === 'Default' ||
             userData.authTokenAction === 'KycRequired') {

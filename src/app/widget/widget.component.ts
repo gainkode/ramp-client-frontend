@@ -41,6 +41,7 @@ export class WidgetComponent implements OnInit {
   initState = true;
   showSummary = true;
   mobileSummary = false;
+  requiredExtraData = false;
   initMessage = 'Loading...';
   summary = new CheckoutSummary();
   widget = new WidgetSettings();
@@ -128,6 +129,7 @@ export class WidgetComponent implements OnInit {
   }
 
   private initData(data: WidgetShort | undefined): void {
+    this.requiredExtraData = false;
     this.initMessage = 'Loading...';
     if (data) {
       if (data.additionalSettings) {
@@ -274,6 +276,7 @@ export class WidgetComponent implements OnInit {
   }
 
   resetWizard(): void {
+    this.requiredExtraData = false;
     this.summary.reset();
     this.initData(undefined);
     this.pager.init('', '');
@@ -656,6 +659,10 @@ export class WidgetComponent implements OnInit {
       } else {
         this.nextStage('disclaimer', 'Disclaimer', 2, false);
       }
+    } else if (data.authTokenAction === 'UserInfoRequired') {
+      this.auth.setLoginUser(data);
+      this.requiredExtraData = true;
+      this.nextStage('login_auth', 'Authorization', 3, true);
     } else {
       this.errorMessage = `Unable to authenticate user with the action "${data.authTokenAction}"`;
     }
@@ -725,8 +732,6 @@ export class WidgetComponent implements OnInit {
                 errorMessage: this.errorMessage
               } as PaymentErrorDetails);
             }
-
-            console.log('hi', this.errorMessage);
           }
         })
       );

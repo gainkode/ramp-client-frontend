@@ -253,10 +253,8 @@ export class SignupInfoPanelComponent implements OnDestroy {
     }
 
     onSubmit(): void {
-        console.log('onSubmit');
         this.error.emit('');
         if (this.infoForm.valid) {
-            console.log('onSubmit valid');
             this.progressChange.emit(true);
             let address: PostAddress | undefined;
             let phone = '';
@@ -281,8 +279,6 @@ export class SignupInfoPanelComponent implements OnDestroy {
                     address.flatNumber = this.flatNumberControl?.value;
                 }
             }
-            console.log('onSubmit phone', phone);
-            console.log('onSubmit birthday', birthday);
             this.subscriptions.add(
                 this.auth.setMyInfo(
                     this.firstNameControl?.value as string,
@@ -291,11 +287,9 @@ export class SignupInfoPanelComponent implements OnDestroy {
                     address,
                     birthday
                 ).subscribe(({ data }) => {
-                    console.log('onSubmit data', data);
                     this.progressChange.emit(false);
                     this.done.emit(data.setMyInfo as LoginResult);
                 }, (error) => {
-                    console.log('onSubmit error', error);
                     this.progressChange.emit(false);
                     this.error.emit(this.errorHandler.getError(error.message, 'Incorrect personal data'));
                 })

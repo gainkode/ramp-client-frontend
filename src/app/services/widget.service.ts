@@ -106,12 +106,6 @@ export class WidgetService {
             }
             this.pSubscriptions.add(
                 authenticateData$.subscribe(({ data }) => {
-
-
-                    console.log('get it', data);
-
-
-
                     if (this.onProgressChanged) {
                         this.onProgressChanged(false);
                     }
@@ -119,9 +113,6 @@ export class WidgetService {
                         this.onLoginSuccess(data.login as LoginResult);
                     }
                 }, (error) => {
-
-                    console.log('get it error', error);
-
                     if (this.onProgressChanged) {
                         this.onProgressChanged(false);
                     }
