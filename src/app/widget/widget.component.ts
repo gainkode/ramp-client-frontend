@@ -71,9 +71,7 @@ export class WidgetComponent implements OnInit {
   get showTransactionsLink(): boolean {
     const user = this.auth.user;
     if (user && this.auth.authenticated) {
-      if (user.mode === UserMode.ExternalWallet || user.mode === UserMode.InternalWallet) {
-        return true;
-      }
+      return true;
     }
     return false;
   }
@@ -411,6 +409,11 @@ export class WidgetComponent implements OnInit {
 
   orderDetailsComplete(email: string): void {
     if (this.summary.email === email) {
+      // if (this.summary.agreementChecked) {
+      //   this.desclaimerNext();
+      // } else {
+      //   this.nextStage('disclaimer', 'Disclaimer', 2, false);
+      // }
       this.desclaimerNext();
     } else {
       this.summary.transactionId = '';
@@ -722,6 +725,8 @@ export class WidgetComponent implements OnInit {
                 errorMessage: this.errorMessage
               } as PaymentErrorDetails);
             }
+
+            console.log('hi', this.errorMessage);
           }
         })
       );

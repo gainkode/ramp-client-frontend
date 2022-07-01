@@ -2,6 +2,8 @@
     Please, specify your personal data
 </h2>
 <form [formGroup]="infoForm" (ngSubmit)="onSubmit()">
+    <div class="__form-separator"></div>
+    
     <!-- Full name (Personal) -->
     <div *ngIf="requireUserFullName && !isMerchant">
         <app-form-textbox [label]="'First Name'" [boxType]="'text'" [placeholder]="'User first name'" [maxlength]="80"

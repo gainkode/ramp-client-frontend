@@ -27,6 +27,7 @@ export class WidgetCodeAuthComponent implements OnInit, OnDestroy, AfterViewInit
 
     private pSubscriptions: Subscription = new Subscription();
 
+    extraData = false;
     validData = false;
     init = false;
     codeErrorMessages: { [key: string]: string; } = {
