@@ -132,3 +132,7 @@
     window.__env_data.color_main_blue_50 = '#f6fcff';
 
 }(this));
+
+// 1BMv3sM3AbT3jDEbt4v3zLv5HjRB2ucbT7
+
+// crypto-widget

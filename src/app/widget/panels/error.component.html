@@ -1,0 +1,23 @@
+<div class="__widget-data-box">
+    <h1 class="__widget-title-error">
+        {{title}}
+    </h1>
+    <div class="__widget-error-title-block">
+        <div class="__widget-error-title-image">
+            <img src="assets/widget_error.svg" alt="complete">
+        </div>
+    </div>
+    <div class="__widget-disclaimer-area">
+        <div class="__widget-disclaimer-container">
+            <span class="__widget-disclaimer-line">
+                {{errorMessage}}
+            </span>
+        </div>
+    </div>
+
+    <div class="__widget-buttons-area">
+        <button class="__outlined-button" type="button" (click)="onFinish.emit()">
+            TRY AGAIN
+        </button>
+    </div>
+</div>

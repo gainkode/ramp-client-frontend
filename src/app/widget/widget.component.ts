@@ -36,6 +36,8 @@ export class WidgetComponent implements OnInit {
 
   errorMessage = '';
   rateErrorMessage = '';
+  transactionErrorTitle = '';
+  transactionErrorMessage = '';
   inProgress = false;
   internalPayment = false;
   initState = true;
@@ -276,6 +278,7 @@ export class WidgetComponent implements OnInit {
   }
 
   resetWizard(): void {
+    this.inProgress = false;
     this.requiredExtraData = false;
     this.summary.reset();
     this.initData(undefined);
@@ -323,6 +326,7 @@ export class WidgetComponent implements OnInit {
       this.errorMessage = '';
       this.pager.nextStage(id, name, stepId, this.showSummary);
       this.showSummary = summaryVisible;
+      this.inProgress = false;
     }, 50);
   }
 
@@ -731,6 +735,8 @@ export class WidgetComponent implements OnInit {
               this.onError.emit({
                 errorMessage: this.errorMessage
               } as PaymentErrorDetails);
+            } else {
+              this.showTransactionError('Transaction handling failed', this.errorMessage);
             }
           }
         })
@@ -775,6 +781,8 @@ export class WidgetComponent implements OnInit {
               this.onError.emit({
                 errorMessage: this.errorMessage
               } as PaymentErrorDetails);
+            } else {
+              this.showTransactionError('Transaction handling failed', this.errorMessage);
             }
           }
         }, (error) => {
@@ -787,6 +795,8 @@ export class WidgetComponent implements OnInit {
               this.onError.emit({
                 errorMessage: this.errorMessage
               } as PaymentErrorDetails);
+            } else {
+              this.showTransactionError('Transaction handling failed', this.errorMessage);
             }
           }
         })
@@ -835,6 +845,8 @@ export class WidgetComponent implements OnInit {
               this.onError.emit({
                 errorMessage: this.errorMessage
               } as PaymentErrorDetails);
+            } else {
+              this.showTransactionError('Transaction handling failed', this.errorMessage);
             }
           }
         }
@@ -866,6 +878,8 @@ export class WidgetComponent implements OnInit {
               this.onError.emit({
                 errorMessage: this.errorMessage
               } as PaymentErrorDetails);
+            } else {
+              this.showTransactionError('Transaction handling failed', this.errorMessage);
             }
           }
         }
@@ -886,5 +900,11 @@ export class WidgetComponent implements OnInit {
     } else {
       this.errorMessage = 'No settings found for wire transfer';
     }
+  }
+
+  private showTransactionError(messageTitle: string, messageText: string): void {
+    this.transactionErrorMessage = messageText;
+    this.transactionErrorTitle = messageTitle;
+    this.nextStage('error', 'Error', 6, false);
   }
 }

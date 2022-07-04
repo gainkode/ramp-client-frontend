@@ -387,6 +387,25 @@ $font_main: var(--font_main);
     color: $color_main_blue_800;
 }
 
+.__widget-title-error {
+    text-align: center;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 21px;
+    line-height: 28px;
+
+    color: $color_pink_500;
+    margin: 0px 0px 24px 0px;
+}
+
+.__widget-error-title-image {
+    width: 126px;
+    height: 106px;
+    margin: 16px 0px 24px 0px;
+}
+
 .__widget-summary-close-button {
     display: flex;
     justify-content: center;
@@ -592,6 +611,15 @@ $font_main: var(--font_main);
     line-height: 28px;
 
     color: $color_purple_900_text;
+}
+
+.__widget-error-title-block {
+    margin: 48px 0px 0px 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
 }
 
 .__widget-hint-line {

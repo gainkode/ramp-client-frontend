@@ -95,6 +95,8 @@
       <!-- Complete -->
       <app-widget-complete *ngSwitchCase="'complete'" [showRestartButton]="widget.widgetId===''"
         [transaction]="summary.transactionType" (onFinish)="resetWizard()"></app-widget-complete>
+      <app-widget-error *ngSwitchCase="'error'" [title]="transactionErrorTitle"
+        [errorMessage]="transactionErrorMessage" (onFinish)="resetWizard()"></app-widget-error>
     </div>
 
     <div *ngIf="!initState && showSummary && !widget.embedded" class="__widget-summary-container">

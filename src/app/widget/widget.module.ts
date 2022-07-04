@@ -51,6 +51,7 @@ import { BuySellFiatWidgetComponent } from './buy-sell-fiat.component';
 import { WidgetDepositDetailsComponent } from './panels/deposit-details.component';
 import { FiatWidgetComponent } from './fiat.component';
 import { WidgetRecentTransactionsComponent } from './panels/recent-transactions.component';
+import { WidgetErrorComponent } from './panels/error.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -90,7 +91,7 @@ export class MaterialModule { }
         WidgetRegisterComponent, WidgetLoginAuthComponent, WidgetCodeAuthComponent,
         WidgetInitializationComponent, WidgetOrderDetailsComponent, WidgetReceiveDetailsComponent, WidgetSendDetailsComponent,
         WidgetDisclaimerComponent, WidgetKycComponent, WidgetPaymentComponent, WidgetProcessingFrameComponent,
-        WidgetProcessingInstantpayComponent, WidgetCompleteComponent, PaymentIntroComponent],
+        WidgetProcessingInstantpayComponent, WidgetCompleteComponent, WidgetErrorComponent, PaymentIntroComponent],
     exports: [
         WidgetComponent,
         BuySellFiatWidgetComponent,
