@@ -1,0 +1,25 @@
+<div class="__widget-data-box">
+    <form [formGroup]="dataForm" (ngSubmit)="onSubmit()">
+        <!-- Email -->
+        <app-form-textbox [label]="'Email'" [maxlength]="50"
+            formControlName="email" [errorMessages]="emailErrorMessages" [separator]="true">
+        </app-form-textbox>
+
+        <!-- Amount -->
+        <app-form-finance-combo [label]="'Amount'" [placeholder]="'...'" [boxFieldName]="'amount'"
+            [boxField]="amountField" [comboField]="currencyField" [comboFieldName]="'currency'" [comboList]="currencies"
+            [errorMessages]="amountErrorMessages" [separator]="true">
+        </app-form-finance-combo>
+
+        <!-- Buttons -->
+        <div class="__widget-buttons-area">
+            <button class="__main-button" type="submit" [disabled]="!validData || !emailField?.valid">
+                next
+            </button>
+        </div>
+    </form>
+
+    <div class="__widget-data-error">
+        {{errorMessage}}
+    </div>
+</div>

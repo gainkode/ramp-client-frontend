@@ -286,9 +286,9 @@ export class WidgetService {
         if (this.onError) {
             this.onError('');
         }
-        const currencyData = this.commonService.getSettingsCurrency();
+        const currencyData$ = this.commonService.getSettingsCurrency();
         this.pSubscriptions.add(
-            currencyData.valueChanges.subscribe(
+            currencyData$.valueChanges.subscribe(
                 ({ data }) => {
                     const tierData = this.getCurrentTierLevelName(summary, tiers, data.getSettingsCurrency as SettingsCurrencyWithDefaults);
                     this.getKycStatus(summary, widgetId, tierData);

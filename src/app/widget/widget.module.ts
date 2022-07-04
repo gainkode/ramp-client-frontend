@@ -52,6 +52,8 @@ import { WidgetDepositDetailsComponent } from './panels/deposit-details.componen
 import { FiatWidgetComponent } from './fiat.component';
 import { WidgetRecentTransactionsComponent } from './panels/recent-transactions.component';
 import { WidgetErrorComponent } from './panels/error.component';
+import { CryptoWidgetComponent } from './crypto.component';
+import { WidgetCryptoDetailsComponent } from './panels/crypto-details.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -85,12 +87,12 @@ export class MaterialModule { }
         NgxMaskModule.forRoot(), CommonModule, ClipboardModule, FormsModule, ReactiveFormsModule, RouterModule, MaterialModule, QRCodeModule],
     declarations: [
         WidgetComponent, ReceiveWidgetComponent, SendWidgetComponent, TransferWidgetComponent, BuySellFiatWidgetComponent,
-        BuySellWidgetComponent, FiatWidgetComponent, WidgetProgressComponent, WidgetRecentTransactionsComponent,
+        BuySellWidgetComponent, FiatWidgetComponent, CryptoWidgetComponent, WidgetProgressComponent, WidgetRecentTransactionsComponent,
         WidgetSummaryComponent, WidgetRateComponent, WidgetCreditCardComponent, WidgetWireTransferComponent,
         WidgetWireTransferResultComponent, WidgetSellDetailsComponent, WidgetDepositDetailsComponent,
         WidgetRegisterComponent, WidgetLoginAuthComponent, WidgetCodeAuthComponent,
         WidgetInitializationComponent, WidgetOrderDetailsComponent, WidgetReceiveDetailsComponent, WidgetSendDetailsComponent,
-        WidgetDisclaimerComponent, WidgetKycComponent, WidgetPaymentComponent, WidgetProcessingFrameComponent,
+        WidgetDisclaimerComponent, WidgetKycComponent, WidgetPaymentComponent, WidgetProcessingFrameComponent, WidgetCryptoDetailsComponent,
         WidgetProcessingInstantpayComponent, WidgetCompleteComponent, WidgetErrorComponent, PaymentIntroComponent],
     exports: [
         WidgetComponent,
@@ -99,7 +101,8 @@ export class MaterialModule { }
         ReceiveWidgetComponent,
         SendWidgetComponent,
         TransferWidgetComponent,
-        PaymentIntroComponent
+        PaymentIntroComponent,
+        CryptoWidgetComponent
     ],
     providers: [],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]

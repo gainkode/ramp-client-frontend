@@ -1,0 +1,26 @@
+<div class="__widget-container">
+  <div class="__widget-title-container">
+    <div class="__widget-title-logo-container">
+      <img class="__widget-title-logo" [src]="logoSrc" [alt]="logoAlt" width="160" (click)="router.navigateByUrl('/')">
+    </div>
+  </div>
+
+  <div class="__widget-progress-container">
+    <app-widget-progress [step]="pager.step" [title]="pager.title" [progress]="inProgress"></app-widget-progress>
+  </div>
+
+  <div class="__widget-data-container">
+    <div class="__widget-wizard-container __widget-wizard-container-single" [ngSwitch]="pager.stageId">
+      <!-- Initialization -->
+      <app-widget-initialization *ngSwitchCase="'initialization'" [message]="initMessage"></app-widget-initialization>
+      <!-- Order details -->
+      <app-widget-crypto-details *ngSwitchCase="'order_details'" [summary]="summary" [errorMessage]="errorMessage"
+        (onError)="handleError($event)" (onProgress)="progressChanged($event)"
+        (onComplete)="orderDetailsComplete($event)">
+      </app-widget-crypto-details>
+      <app-widget-error *ngSwitchCase="'error'" [title]="transactionErrorTitle" [errorMessage]="transactionErrorMessage"
+        (onFinish)="resetWizard()"></app-widget-error>
+    </div>
+  </div>
+
+</div>

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { EmptyObject } from 'apollo-angular/types';
-import { environment } from 'src/environments/environment';
 import { EnvService } from './env.service';
 
 const GET_SETTINGS_CURRENCY = gql`
