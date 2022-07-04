@@ -54,6 +54,7 @@ import { WidgetRecentTransactionsComponent } from './panels/recent-transactions.
 import { WidgetErrorComponent } from './panels/error.component';
 import { CryptoWidgetComponent } from './crypto.component';
 import { WidgetCryptoDetailsComponent } from './panels/crypto-details.component';
+import { WidgetCryptoCompleteComponent } from './panels/crypto-complete.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -93,7 +94,7 @@ export class MaterialModule { }
         WidgetRegisterComponent, WidgetLoginAuthComponent, WidgetCodeAuthComponent,
         WidgetInitializationComponent, WidgetOrderDetailsComponent, WidgetReceiveDetailsComponent, WidgetSendDetailsComponent,
         WidgetDisclaimerComponent, WidgetKycComponent, WidgetPaymentComponent, WidgetProcessingFrameComponent, WidgetCryptoDetailsComponent,
-        WidgetProcessingInstantpayComponent, WidgetCompleteComponent, WidgetErrorComponent, PaymentIntroComponent],
+        WidgetCryptoCompleteComponent, WidgetProcessingInstantpayComponent, WidgetCompleteComponent, WidgetErrorComponent, PaymentIntroComponent],
     exports: [
         WidgetComponent,
         BuySellFiatWidgetComponent,

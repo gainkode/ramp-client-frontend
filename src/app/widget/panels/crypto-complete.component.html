@@ -1,0 +1,22 @@
+<div class="__widget-data-box">
+    <div *ngIf="address!==''">
+        <div class="__widget-data-three-column-grid">
+            <div class="__widget-data-three-column-item-one">
+                Address:
+            </div>
+            <div class="__widget-data-three-column-item-two">
+                <input class="__text-box-noborder" type="text" readonly [value]="address" />
+            </div>
+            <div class="__widget-data-three-column-item-three">
+                <button class="__tool-button" (click)="copyAddress()">
+                    <mat-icon style="font-size: 20px;">content_copy</mat-icon>
+                </button>
+            </div>
+        </div>
+        <!-- QR-code -->
+        <div class="__profile-details-qrcode-block">
+            <qrcode [qrdata]="address" [colorLight]="qrCodeBackground" [colorDark]="qrCodeForeground" [width]="150"
+                [errorCorrectionLevel]="'M'" [allowEmptyString]="true"></qrcode>
+        </div>
+    </div>
+</div>

@@ -32,8 +32,8 @@ export class CryptoWidgetComponent implements OnInit {
   transactionErrorTitle = '';
   transactionErrorMessage = '';
   inProgress = false;
-  initState = true;
   initMessage = 'Loading...';
+  address = '';
   summary = new CheckoutSummary();
   logoSrc = `${EnvService.image_host}/images/logo-color.png`;
   logoAlt = EnvService.product;
@@ -92,6 +92,9 @@ export class CryptoWidgetComponent implements OnInit {
     const amountFromTemp = (data.amountFrom) ? data.amountFrom?.toFixed(8) : undefined;
     this.summary.amountFrom = (amountFromTemp) ? parseFloat(amountFromTemp) : undefined;
     this.summary.email = data.email;
+
+    this.address = this.userParamsId;
+    this.nextStage('order_complete', 'Complete', 6);
   }
   
   private showTransactionError(messageTitle: string, messageText: string): void {

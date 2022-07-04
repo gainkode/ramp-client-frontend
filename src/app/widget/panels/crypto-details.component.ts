@@ -1,17 +1,11 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { AssetAddressShort, Rate, SettingsCurrencyWithDefaults, TransactionType, UserState } from 'src/app/model/generated-models';
-import { WidgetSettings } from 'src/app/model/payment-base.model';
-import { CheckoutSummary, CurrencyView, QuickCheckoutTransactionTypeList } from 'src/app/model/payment.model';
-import { WalletItem } from 'src/app/model/wallet.model';
+import { SettingsCurrencyWithDefaults } from 'src/app/model/generated-models';
+import { CheckoutSummary, CurrencyView } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
 import { ErrorService } from 'src/app/services/error.service';
-import { PaymentDataService } from 'src/app/services/payment.service';
-import { getCurrencySign } from 'src/app/utils/utils';
-import { WalletValidator } from 'src/app/utils/wallet.validator';
 
 @Component({
   selector: 'app-widget-crypto-details',
@@ -136,7 +130,7 @@ export class WidgetCryptoDetailsComponent implements OnInit, OnDestroy {
     let validators = [
       Validators.required,
       Validators.pattern(this.pNumberPattern),
-      Validators.min(this.currentCurrency?.minAmount ?? 0),
+      Validators.min(this.currentCurrency?.minAmount ?? 0)
     ];
     this.amountField?.setValidators(validators);
     this.amountField?.updateValueAndValidity();

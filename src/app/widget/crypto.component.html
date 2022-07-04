@@ -18,6 +18,7 @@
         (onError)="handleError($event)" (onProgress)="progressChanged($event)"
         (onComplete)="orderDetailsComplete($event)">
       </app-widget-crypto-details>
+      <app-widget-crypto-complete *ngSwitchCase="'order_complete'" [address]="address"></app-widget-crypto-complete>
       <app-widget-error *ngSwitchCase="'error'" [title]="transactionErrorTitle" [errorMessage]="transactionErrorMessage"
         (onFinish)="resetWizard()"></app-widget-error>
     </div>
