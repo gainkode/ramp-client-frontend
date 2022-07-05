@@ -375,6 +375,34 @@ query GetWidget($id: String!, $recaptcha: String!) {
 }
 `;
 
+const CREATE_INVOICE = gql`
+mutation CreateInvoice(
+  $destination: String,
+  $vaultId: String,
+  $currencyToSend: String,
+  $widgetId: String,
+  $amountToSend: Int
+) {
+	createInvoice(
+		destination: $destination,
+    vaultId: $vaultId,
+    currencyToSend: $currencyToSend,
+    widgetId: $widgetId,
+    amountToSend: $amountToSend
+	) {
+    cryptoInvoiceId
+    name
+    destination
+    vaultId
+    userId
+    created
+    widgetId
+    currencyToSend
+    amountToSend
+	}
+}
+`;
+
 @Injectable()
 export class PaymentDataService {
   constructor(private apollo: Apollo) { }
@@ -520,6 +548,19 @@ export class PaymentDataService {
       mutation: SEND_INVOICE,
       variables: {
         transactionId
+      }
+    });
+  }
+
+  createInvoice(widgetId: string, currency: string, amount: number): Observable<any> {
+    return this.apollo.mutate({
+      mutation: CREATE_INVOICE,
+      variables: {
+        //destination: $destination,
+        //vaultId: $vaultId,
+        currencyToSend: currency,
+        widgetId: widgetId,
+        amountToSend: amount
       }
     });
   }

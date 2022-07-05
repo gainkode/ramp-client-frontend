@@ -25,7 +25,7 @@ export class WidgetCryptoDetailsComponent implements OnInit, OnDestroy {
   @Output() onComplete = new EventEmitter<CheckoutSummary>();
 
   private pSubscriptions: Subscription = new Subscription();
-  private pInit = false;
+  private pAmountInit = false;
   private pNumberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
 
   validData = false;
@@ -54,6 +54,10 @@ export class WidgetCryptoDetailsComponent implements OnInit, OnDestroy {
     amount: [undefined, { validators: [], updateOn: 'change' }],
     currency: [null, { validators: [], updateOn: 'change' }]
   });
+
+  get amountInit(): boolean {
+    return this.pAmountInit;
+  }
 
   get emailField(): AbstractControl | null {
     return this.dataForm.get('email');
@@ -123,9 +127,6 @@ export class WidgetCryptoDetailsComponent implements OnInit, OnDestroy {
   }
 
   private setValidators(): void {
-    if (!this.pInit) {
-      return;
-    }
     this.amountErrorMessages['min'] = `Min. amount ${this.currentCurrency?.minAmount} ${this.currentCurrency?.display}`;
     let validators = [
       Validators.required,
@@ -137,25 +138,39 @@ export class WidgetCryptoDetailsComponent implements OnInit, OnDestroy {
   }
 
   private onCurrencyUpdated(currency: string): void {
-    this.currentCurrency = this.currencies.find((x) => x.symbol === currency);
+    let updated = true;
     if (this.currentCurrency) {
-      this.validData = true;
-      this.setValidators();
+      if (this.currentCurrency.symbol === currency) {
+        updated = false;
+      }
+    }
+    if (updated) {
+      this.currentCurrency = this.currencies.find((x) => x.symbol === currency);
+      if (this.currentCurrency) {
+        this.validData = true;
+        const dataSet = (this.amountField?.value && this.amountField?.value !== null);
+        if (dataSet) {
+          this.setValidators();
+        }
+      }
     }
   }
 
   private onAmountUpdated(): void {
-    this.pInit = true;
-    this.setValidators();
+    const dataSet = (this.amountField?.value && this.amountField?.value !== null);
+    if (!this.pAmountInit && dataSet) {
+      this.pAmountInit = true;
+      this.setValidators();
+    }
   }
 
   onSubmit(): void {
     if (this.dataForm.valid) {
       const data = new CheckoutSummary();
       data.email = this.emailField?.value;
-      data.amountFrom = this.amountField?.value;
+      data.amountFrom = parseFloat(this.amountField?.value);
       data.currencyFrom = this.currencyField?.value;
-      this.onComplete.emit(this.emailField?.value);
+      this.onComplete.emit(data);
     }
   }
 }

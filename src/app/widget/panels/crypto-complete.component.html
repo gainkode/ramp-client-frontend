@@ -1,11 +1,37 @@
 <div class="__widget-data-box">
-    <div *ngIf="address!==''">
+    <div *ngIf="data && data?.walletAddress!==''">
+        <h3 class="__widget-summary-title">
+            Invoice Details
+        </h3>
+        <div class="__widget-summary-grid __widget-summary-grid-wide">
+            <div class="__widget-summary-item">
+                Invoice #:
+            </div>
+            <div class="__widget-summary-item">
+                <input class="__text-box-noborder" type="text" readonly [value]="data?.id" />
+            </div>
+
+            <div class="__widget-summary-item">
+                {{data?.amountCryptoTitle}}:
+            </div>
+            <div class="__widget-summary-item">
+                <input class="__text-box-noborder" type="text" readonly [value]="data?.amountCrypto" />
+            </div>
+
+            <div class="__widget-summary-item">
+                {{data?.amountFiatTitle}}:
+            </div>
+            <div class="__widget-summary-item">
+                <input class="__text-box-noborder" type="text" readonly [value]="data?.amountFiat" />
+            </div>
+        </div>
+
         <div class="__widget-data-three-column-grid">
             <div class="__widget-data-three-column-item-one">
                 Address:
             </div>
             <div class="__widget-data-three-column-item-two">
-                <input class="__text-box-noborder" type="text" readonly [value]="address" />
+                <input class="__text-box-noborder" type="text" readonly [value]="data?.walletAddress" />
             </div>
             <div class="__widget-data-three-column-item-three">
                 <button class="__tool-button" (click)="copyAddress()">
@@ -13,10 +39,11 @@
                 </button>
             </div>
         </div>
+
         <!-- QR-code -->
         <div class="__profile-details-qrcode-block">
-            <qrcode [qrdata]="address" [colorLight]="qrCodeBackground" [colorDark]="qrCodeForeground" [width]="150"
-                [errorCorrectionLevel]="'M'" [allowEmptyString]="true"></qrcode>
+            <qrcode [qrdata]="data?.walletAddress ?? ''" [colorLight]="qrCodeBackground" [colorDark]="qrCodeForeground"
+                [width]="150" [errorCorrectionLevel]="'M'" [allowEmptyString]="true"></qrcode>
         </div>
     </div>
 </div>

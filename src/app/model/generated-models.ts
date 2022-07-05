@@ -189,6 +189,25 @@ export enum CountryCodeType {
   Code3 = 'code3'
 }
 
+export type CryptoInvoice = {
+  __typename?: 'CryptoInvoice';
+  cryptoInvoiceId?: Maybe<Scalars['ID']>;
+  name?: Maybe<Scalars['String']>;
+  destination?: Maybe<Scalars['String']>;
+  vaultId?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['String']>;
+  created?: Maybe<Scalars['String']>;
+  widgetId?: Maybe<Scalars['String']>;
+  currencyToSend?: Maybe<Scalars['String']>;
+  amountToSend?: Maybe<Scalars['Int']>;
+};
+
+export type CryptoInvoiceListResult = {
+  __typename?: 'CryptoInvoiceListResult';
+  count?: Maybe<Scalars['Int']>;
+  list?: Maybe<Array<CryptoInvoice>>;
+};
+
 export enum CustodyProvider {
   Fireblocks = 'Fireblocks'
 }
@@ -714,11 +733,14 @@ export type Mutation = {
   updateRiskAlertType?: Maybe<RiskAlertType>;
   addBlackCountry?: Maybe<BlackCountry>;
   deleteBlackCountry?: Maybe<BlackCountry>;
+  /** This endpoint can be used to create a transaction */
+  createInvoice?: Maybe<CryptoInvoice>;
   /** Not used */
   addFiatVault?: Maybe<FiatVault>;
   deleteFiatVault?: Maybe<FiatVault>;
   deleteDevice?: Maybe<UserDeviceListResult>;
   deleteMyDevice?: Maybe<UserDeviceListResult>;
+  sendFakeLiquidityProviderTransactionChangedCallback?: Maybe<Scalars['Boolean']>;
 };
 
 
@@ -1307,6 +1329,15 @@ export type MutationAddBlackCountryArgs = {
 
 export type MutationDeleteBlackCountryArgs = {
   countryCode2: Scalars['String'];
+};
+
+
+export type MutationCreateInvoiceArgs = {
+  destination?: Maybe<Scalars['String']>;
+  vaultId?: Maybe<Scalars['String']>;
+  currencyToSend?: Maybe<Scalars['String']>;
+  widgetId?: Maybe<Scalars['String']>;
+  amountToSend?: Maybe<Scalars['Int']>;
 };
 
 
@@ -2758,7 +2789,8 @@ export type Transaction = {
   comment?: Maybe<Scalars['String']>;
   data?: Maybe<Scalars['String']>;
   verifyWhenPaid?: Maybe<Scalars['Boolean']>;
-  transactionChangedCallback?: Maybe<Scalars['String']>;
+  requestParams?: Maybe<Scalars['String']>;
+  invoiceName?: Maybe<Scalars['String']>;
 };
 
 export enum TransactionConfirmationMode {
@@ -2782,7 +2814,6 @@ export type TransactionInput = {
   widgetUserParamsId?: Maybe<Scalars['String']>;
   data?: Maybe<Scalars['String']>;
   verifyWhenPaid?: Maybe<Scalars['Boolean']>;
-  transactionChangedCallback?: Maybe<Scalars['String']>;
 };
 
 export enum TransactionKycStatus {
@@ -2995,7 +3026,7 @@ export type TransactionUpdateInput = {
   transferOrderChanges?: Maybe<TransactionUpdateTransferOrderChanges>;
   benchmarkTransferOrderChanges?: Maybe<TransactionUpdateTransferOrderChanges>;
   comment?: Maybe<Scalars['String']>;
-  transactionChangedCallback?: Maybe<Scalars['String']>;
+  requestParams?: Maybe<Scalars['String']>;
 };
 
 export type TransactionUpdateTransferOrderChanges = {
@@ -3034,6 +3065,7 @@ export type TransferOrder = {
   status?: Maybe<Scalars['String']>;
   subStatus?: Maybe<Scalars['String']>;
   feeCurrency?: Maybe<Scalars['Float']>;
+  invoiceName?: Maybe<Scalars['String']>;
 };
 
 export type TransferResult = {
@@ -3165,6 +3197,7 @@ export type User = {
   lastLogin?: Maybe<Scalars['DateTime']>;
   data?: Maybe<Scalars['String']>;
   fiatVaults?: Maybe<Array<FiatVault>>;
+  gender?: Maybe<Scalars['String']>;
 };
 
 export type UserAction = {

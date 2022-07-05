@@ -1,5 +1,6 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, Input } from '@angular/core';
+import { InvoiceView } from 'src/app/model/payment.model';
 import { EnvService } from 'src/app/services/env.service';
 
 @Component({
@@ -14,7 +15,7 @@ import { EnvService } from 'src/app/services/env.service';
   ]
 })
 export class WidgetCryptoCompleteComponent {
-  @Input() address = '';
+  @Input() data: InvoiceView | undefined = undefined;
 
   qrCodeBackground = EnvService.color_white;
   qrCodeForeground = EnvService.color_purple_900;
@@ -22,6 +23,6 @@ export class WidgetCryptoCompleteComponent {
   constructor(private clipboard: Clipboard) { }
 
   copyAddress(): void {
-    this.clipboard.copy(this.address);
+    this.clipboard.copy(this.data?.walletAddress ?? '');
   }
 }

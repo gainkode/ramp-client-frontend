@@ -36,16 +36,16 @@ export class WidgetService {
         private errorHandler: ErrorService) { }
 
     register(
-        progressCallback: Function,
-        errorCallback: Function,
-        identificationCallback: Function,
-        authenticationCallback: Function,
-        loginRequiredCallback: Function,
-        loginSuccessCallback: Function,
-        confirmEmailCallback: Function,
-        kycStatusCallback: Function,
-        paymentProvidersCallback: Function,
-        wireTranferListLoadedCallback: Function) {
+        progressCallback: Function | undefined,
+        errorCallback: Function | undefined,
+        identificationCallback: Function | undefined,
+        authenticationCallback: Function | undefined,
+        loginRequiredCallback: Function | undefined,
+        loginSuccessCallback: Function | undefined,
+        confirmEmailCallback: Function | undefined,
+        kycStatusCallback: Function | undefined,
+        paymentProvidersCallback: Function | undefined,
+        wireTranferListLoadedCallback: Function | undefined) {
         this.onProgressChanged = progressCallback;
         this.onError = errorCallback;
         this.onIdentificationRequired = identificationCallback;

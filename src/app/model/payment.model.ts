@@ -3,7 +3,7 @@ import { CommonTargetValue } from './common.model';
 import {
     PaymentInstrument, PaymentProvider, TransactionType, TransactionStatus,
     SettingsFeeTargetFilterType, SettingsCostTargetFilterType, SettingsKycTargetFilterType,
-    UserType, KycProvider, UserMode, SettingsCurrency, Rate, TransactionSource, UserNotificationCodes, CustodyProvider, TransactionKycStatus, RiskLevel, PaymentProviderByInstrument, AccountStatus, KycStatus, AdminTransactionStatus, UserTransactionStatus
+    UserType, KycProvider, UserMode, SettingsCurrency, Rate, TransactionSource, UserNotificationCodes, CustodyProvider, TransactionKycStatus, RiskLevel, PaymentProviderByInstrument, AccountStatus, KycStatus, AdminTransactionStatus, UserTransactionStatus, CryptoInvoice
 } from './generated-models';
 import { WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from './payment-base.model';
 
@@ -228,6 +228,32 @@ export class CardView {
 
     get secureCardNumber(): string {
         return `${this.bin.substr(0, 4)} **** **** ${this.lastDigits}`;
+    }
+}
+
+export class InvoiceView {
+    id = '';
+    walletAddress = '';
+    amountCrypto = 0;
+    amountFiat = 0;
+
+    get amountFiatTitle(): string {
+        return `Amount, ${this.fiatCurrency}`;
+    }
+
+    get amountCryptoTitle(): string {
+        return `Amount, ${this.cryptoCurrency}`;
+    }
+
+    private fiatCurrency = '';
+    private cryptoCurrency = '';
+
+    constructor(data: CryptoInvoice) {
+        this.id = data.cryptoInvoiceId ?? '';
+        this.walletAddress = data.vaultId ?? '';
+        this.amountCrypto = data.amountToSend ?? 0;
+        this.fiatCurrency = data.currencyToSend ?? 'EUR';
+        this.cryptoCurrency = data.currencyToSend ?? 'BTC';
     }
 }
 

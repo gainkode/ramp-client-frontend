@@ -18,7 +18,23 @@
         (onError)="handleError($event)" (onProgress)="progressChanged($event)"
         (onComplete)="orderDetailsComplete($event)">
       </app-widget-crypto-details>
-      <app-widget-crypto-complete *ngSwitchCase="'order_complete'" [address]="address"></app-widget-crypto-complete>
+      <!-- Register -->
+      <app-widget-register *ngSwitchCase="'register'" [email]="summary.email" (onBack)="registerBack()"
+        (onProgress)="progressChanged($event)" (onComplete)="onLoginRequired($event)">
+      </app-widget-register>
+      <!-- Login Authentication -->
+      <app-widget-login-auth *ngSwitchCase="'login_auth'" [email]="summary.email" [widgetId]="widget.widgetId"
+        [requiredExtraData]="requiredExtraData" (onBack)="loginBack()" (onProgress)="progressChanged($event)"
+        (onComplete)="loginComplete($event)">
+      </app-widget-login-auth>
+      <!-- Code Authentication -->
+      <app-widget-code-auth *ngSwitchCase="'code_auth'" [email]="summary.email" [codeLength]="5"
+        [errorMessage]="errorMessage" (onComplete)="loginCodeConfirmed()"
+        (onError)="handleError($event)" (onProgress)="progressChanged($event)" (onBack)="loginBack()"
+        (onRegister)="onRegister($event)">
+      </app-widget-code-auth>
+      <app-widget-crypto-complete *ngSwitchCase="'order_complete'" [data]="invoice">
+      </app-widget-crypto-complete>
       <app-widget-error *ngSwitchCase="'error'" [title]="transactionErrorTitle" [errorMessage]="transactionErrorMessage"
         (onFinish)="resetWizard()"></app-widget-error>
     </div>
