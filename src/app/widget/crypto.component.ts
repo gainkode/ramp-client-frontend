@@ -164,6 +164,9 @@ export class CryptoWidgetComponent implements OnInit {
     // } else {
     //   console.error('transactionApproved: unexpected operationType', data.transactionServiceNotification.operationType);
     // }
+
+    this.nextStage('payment_done', 'Complete', 6);
+
     this.paymentComplete = true;
   }
 
@@ -329,7 +332,7 @@ export class CryptoWidgetComponent implements OnInit {
     if (this.widget.kycFirst) {
 
     } else {
-      this.nextStage('complete', 'Complete', 6);
+      this.nextStage('complete', 'Complete', 5);
     }
   }
   // ====================
@@ -375,7 +378,7 @@ export class CryptoWidgetComponent implements OnInit {
 
 
           this.startNotificationListener();
-          this.nextStage('order_complete', 'Complete', 6);
+          this.nextStage('order_complete', 'Complete', 5);
         }, (error) => {
           this.inProgress = false;
           if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {

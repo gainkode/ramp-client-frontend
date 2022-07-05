@@ -35,6 +35,7 @@
       </app-widget-code-auth>
       <app-widget-crypto-complete *ngSwitchCase="'order_complete'" [data]="invoice">
       </app-widget-crypto-complete>
+      <app-widget-crypto-finish *ngSwitchCase="'payment_done'" [title]="'Complete'"></app-widget-crypto-finish>
       <app-widget-error *ngSwitchCase="'error'" [title]="transactionErrorTitle" [errorMessage]="transactionErrorMessage"
         (onFinish)="resetWizard()"></app-widget-error>
     </div>
