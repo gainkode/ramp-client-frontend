@@ -237,12 +237,12 @@ export class InvoiceView {
     amountCrypto = 0;
     amountFiat = 0;
 
-    get amountFiatTitle(): string {
-        return `Amount, ${this.fiatCurrency}`;
+    get amountFiatValue(): string {
+        return `${this.amountFiat} ${this.fiatCurrency}`;
     }
 
-    get amountCryptoTitle(): string {
-        return `Amount, ${this.cryptoCurrency}`;
+    get amountCryptoValue(): string {
+        return `${this.amountCrypto} ${this.cryptoCurrency}`;
     }
 
     private fiatCurrency = '';
