@@ -16,19 +16,24 @@
         </span>
       </div>
       <form [formGroup]="dataForm" (ngSubmit)="save()">
+        <!-- Widget ID -->
+        <app-form-textbox [label]="'Widget identifier'" [asterisk]=true [maxlength]="100" [smallLabel]=true
+          formControlName="widget" [errorMessages]="widgetErrorMessages" [separator]=true>
+        </app-form-textbox>
+
         <!-- Email -->
         <app-form-textbox [label]="'Email'" [maxlength]="50" [smallLabel]=true formControlName="email"
           [errorMessages]="emailErrorMessages" [separator]="true">
         </app-form-textbox>
 
         <!-- Amount crypto -->
-        <app-form-finance-combo [label]="'Amount'" [placeholder]="'...'" [boxFieldName]="'amount'"
+        <app-form-finance-combo [label]="'Amount'" [smallLabel]=true [placeholder]="'...'" [boxFieldName]="'amount'"
           [boxField]="amountField" [comboField]="currencyCryptoField" [comboFieldName]="'currencyCrypto'"
           [comboList]="cryptoList" [errorMessages]="amountCryptoErrorMessages" [separator]="true">
         </app-form-finance-combo>
 
         <!-- Fiat currency -->
-        <div class="__form-label">
+        <div class="__form-label __form-label-small">
           Fiat currency
         </div>
         <div class="__profile-details-item-block">

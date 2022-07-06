@@ -32,6 +32,9 @@ export class CryptoDemoWizardComponent implements OnInit {
   validData = false;
   widgetLink = '';
 
+  widgetErrorMessages: { [key: string]: string; } = {
+    ['required']: 'Widget identifier is required to identify your settings'
+  };
   emailErrorMessages: { [key: string]: string; } = {
     ['pattern']: 'Email is not valid'
   };
@@ -41,6 +44,7 @@ export class CryptoDemoWizardComponent implements OnInit {
   };
 
   dataForm = this.formBuilder.group({
+    widget: [undefined, { validators: [Validators.required], updateOn: 'change' }],
     email: [undefined,
       {
         validators: [
@@ -56,6 +60,10 @@ export class CryptoDemoWizardComponent implements OnInit {
     currencyCrypto: [undefined, { validators: [], updateOn: 'change' }],
     currencyFiat: [undefined, { validators: [], updateOn: 'change' }]
   });
+
+  get widgetField(): AbstractControl | null {
+    return this.dataForm.get('widget');
+  }
 
   get emailField(): AbstractControl | null {
     return this.dataForm.get('email');

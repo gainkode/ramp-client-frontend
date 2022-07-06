@@ -49,6 +49,10 @@ $font_main: var(--font_main);
     color: $color_pink_500;
 }
 
+.__form-assist-small {
+    font-size: 12px;
+}
+
 .__form-assist-accent {
     margin: 0px 4px;
     font-weight: 500;

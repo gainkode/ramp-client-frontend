@@ -14,6 +14,7 @@ import { CurrencyView } from 'src/app/model/payment.model';
 })
 export class FormFinanceComboComponent {
     @Input() label = '';
+    @Input() smallLabel = false;
     @Input() assist = '';
     @Input() placeholder = '';
     @Input() boxFieldName = '';

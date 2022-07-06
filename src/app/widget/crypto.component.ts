@@ -1,22 +1,16 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { AssetAddressShortListResult, CryptoInvoice, LoginResult, PaymentInstrument, PaymentPreauthResultShort, Rate, TransactionShort, TransactionSource, TransactionType, UserMode, WidgetShort } from 'src/app/model/generated-models';
-import { CardView, CheckoutSummary, InvoiceView, PaymentProviderInstrumentView } from 'src/app/model/payment.model';
+import { CryptoInvoice, LoginResult, WidgetShort } from 'src/app/model/generated-models';
+import { CheckoutSummary, InvoiceView } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { PaymentDataService } from 'src/app/services/payment.service';
-import { ExchangeRateService } from 'src/app/services/rate.service';
-import { CommonDialogBox } from '../components/dialogs/common-box.dialog';
-import { WireTransferUserSelection } from '../model/cost-scheme.model';
-import { PaymentCompleteDetails, PaymentErrorDetails, WidgetSettings, WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from '../model/payment-base.model';
-import { WalletItem } from '../model/wallet.model';
-import { CommonDataService } from '../services/common-data.service';
+import { WidgetSettings } from '../model/payment-base.model';
 import { EnvService } from '../services/env.service';
-import { ProfileDataService } from '../services/profile.service';
 import { WidgetPagerService } from '../services/widget-pager.service';
 import { WidgetService } from '../services/widget.service';
 
