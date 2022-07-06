@@ -219,7 +219,6 @@ export class CryptoWidgetComponent implements OnInit {
   }
 
   private loadUserParams(): void {
-    console.log('loadUserParams');
     this.errorMessage = '';
     const widgetData = this.dataService.getWidget(this.userParamsId).valueChanges.pipe(take(1));
     this.inProgress = true;
