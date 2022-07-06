@@ -14,8 +14,8 @@
       <!-- Initialization -->
       <app-widget-initialization *ngSwitchCase="'initialization'" [message]="initMessage"></app-widget-initialization>
       <!-- Order details -->
-      <app-widget-crypto-details *ngSwitchCase="'order_details'" [summary]="summary" [errorMessage]="errorMessage"
-        (onError)="handleError($event)" (onProgress)="progressChanged($event)"
+      <app-widget-crypto-details *ngSwitchCase="'order_details'" [summary]="summary" [widget]="widget"
+        [errorMessage]="errorMessage" (onError)="handleError($event)" (onProgress)="progressChanged($event)"
         (onComplete)="orderDetailsComplete($event)">
       </app-widget-crypto-details>
       <!-- Register -->

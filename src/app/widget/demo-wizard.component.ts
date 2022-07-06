@@ -6,7 +6,6 @@ import { take } from 'rxjs/operators';
 import { SettingsCurrencyWithDefaults, WidgetUserParams } from 'src/app/model/generated-models';
 import { CurrencyView } from 'src/app/model/payment.model';
 import { ErrorService } from 'src/app/services/error.service';
-import { PaymentDataService } from 'src/app/services/payment.service';
 import { CommonDataService } from '../services/common-data.service';
 import { EnvService } from '../services/env.service';
 
@@ -18,6 +17,7 @@ import { EnvService } from '../services/env.service';
 export class CryptoDemoWizardComponent implements OnInit {
   private pSubscriptions: Subscription = new Subscription();
   private pNumberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
+  private pGuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
   errorMessage = '';
   inProgress = false;
@@ -33,7 +33,8 @@ export class CryptoDemoWizardComponent implements OnInit {
   widgetLink = '';
 
   widgetErrorMessages: { [key: string]: string; } = {
-    ['required']: 'Widget identifier is required to identify your settings'
+    ['required']: 'Widget identifier is required to identify your settings',
+    ['pattern']: 'Identifier must be a valid UUID',
   };
   emailErrorMessages: { [key: string]: string; } = {
     ['required']: 'Email is required',
@@ -45,7 +46,10 @@ export class CryptoDemoWizardComponent implements OnInit {
   };
 
   dataForm = this.formBuilder.group({
-    widget: [undefined, { validators: [Validators.required], updateOn: 'change' }],
+    widget: [undefined, { validators: [
+      Validators.required,
+      Validators.pattern(this.pGuidPattern)
+    ], updateOn: 'change' }],
     email: [undefined,
       {
         validators: [
@@ -167,10 +171,27 @@ export class CryptoDemoWizardComponent implements OnInit {
   save(): void {
     this.handleError('');
     this.progressChanged(true);
+    let c = undefined;
+    let a: number | undefined = undefined;
+    if (this.currencyCryptoField?.value &&
+      this.currencyCryptoField?.value !== null &&
+      this.currencyCryptoField?.value !== '') {
+      c = this.currencyCryptoField?.value;
+    }
+    if (this.amountField?.value &&
+      this.amountField?.value !== null &&
+      this.amountField?.value !== '') {
+      a = parseFloat(this.amountField?.value);
+    }
+    const paramsData = {
+      fiatCurrency: (this.selectedFiat) ? this.selectedFiat.symbol : undefined,
+      cryptoCurrency: c,
+      cryptoAmount: a
+    };
     const transactionData$ = this.commonService.addMyWidgetUserParams(
       this.widgetField?.value,
       this.emailField?.value,
-      '{}');
+      JSON.stringify(paramsData));
     this.pSubscriptions.add(
       transactionData$.subscribe(
         ({ data }) => {

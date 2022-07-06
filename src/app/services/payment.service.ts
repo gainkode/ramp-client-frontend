@@ -370,6 +370,7 @@ query GetWidget($id: String!, $recaptcha: String!) {
     paymentProviders
     additionalSettings
     currentUserEmail
+    currentUserParams
   }
 }
 `;

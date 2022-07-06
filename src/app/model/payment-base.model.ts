@@ -20,6 +20,7 @@ export enum WireTransferPaymentCategory {
 export class WidgetSettings {
     embedded = false;
     email = '';
+    hideEmail = false;
     transaction: TransactionType | undefined = undefined;
     source: TransactionSource = TransactionSource.QuickCheckout;
     walletAddressPreset = false;
@@ -31,6 +32,7 @@ export class WidgetSettings {
     cryptoList: string[] = [];
     currencyFrom = '';
     currencyTo = '';
+    hideAmountFrom = false;
     amountFrom = 0;
 }
 

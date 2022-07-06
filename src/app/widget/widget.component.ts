@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { AssetAddressShortListResult, LoginResult, PaymentInstrument, PaymentPreauthResultShort, Rate, TransactionShort, TransactionSource, TransactionType, UserMode, WidgetShort } from 'src/app/model/generated-models';
+import { AssetAddressShortListResult, LoginResult, PaymentInstrument, PaymentPreauthResultShort, Rate, TransactionShort, TransactionSource, TransactionType, Widget } from 'src/app/model/generated-models';
 import { CardView, CheckoutSummary, PaymentProviderInstrumentView } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
@@ -130,7 +130,7 @@ export class WidgetComponent implements OnInit {
     this.exhangeRate.stop();
   }
 
-  private initData(data: WidgetShort | undefined): void {
+  private initData(data: Widget | undefined): void {
     this.requiredExtraData = false;
     this.initMessage = 'Loading...';
     if (data) {
@@ -341,7 +341,7 @@ export class WidgetComponent implements OnInit {
     this.pSubscriptions.add(
       widgetData.subscribe(({ data }) => {
         this.inProgress = false;
-        this.initData(data.getWidget as WidgetShort);
+        this.initData(data.getWidget as Widget);
         this.pager.init('order_details', 'Order details');
       }, (error) => {
         this.inProgress = false;

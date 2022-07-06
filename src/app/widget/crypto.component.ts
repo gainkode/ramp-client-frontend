@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { CryptoInvoiceCreationResult, LoginResult, TransactionServiceNotificationType, WidgetShort } from 'src/app/model/generated-models';
+import { CryptoInvoiceCreationResult, LoginResult, TransactionServiceNotificationType, Widget } from 'src/app/model/generated-models';
 import { CheckoutSummary, InvoiceView } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
@@ -76,7 +76,7 @@ export class CryptoWidgetComponent implements OnInit {
     this.stopNotificationListener();
   }
 
-  private initData(data: WidgetShort | undefined): void {
+  private initData(data: Widget | undefined): void {
     this.requiredExtraData = false;
     this.initMessage = 'Loading...';
     if (data) {
@@ -91,6 +91,7 @@ export class CryptoWidgetComponent implements OnInit {
       }
       this.widget.widgetId = data.widgetId;
       this.widget.email = data.currentUserEmail ?? '';
+      this.widget.hideEmail = this.widget.email !== '';
       if (data.currenciesCrypto) {
         if (data.currenciesCrypto.length > 0) {
           this.widget.cryptoList = data.currenciesCrypto.map(val => val);
@@ -99,6 +100,14 @@ export class CryptoWidgetComponent implements OnInit {
       if (data.currenciesFiat) {
         if (data.currenciesFiat.length > 0) {
           this.widget.fiatList = data.currenciesFiat.map(val => val);
+        }
+      }
+      const userParams = JSON.parse(data.currentUserParams ?? '{}');
+      if (userParams) {
+        if (userParams.params) {
+          this.widget.currencyFrom = userParams.params.cryptoCurrency ?? '';
+          this.widget.amountFrom = userParams.params.cryptoAmount ?? 0;
+          this.widget.hideAmountFrom = (this.widget.currencyFrom !== '' && this.widget.amountFrom !== 0);
         }
       }
     } else {  // Quick checkout w/o parameters
@@ -210,14 +219,25 @@ export class CryptoWidgetComponent implements OnInit {
   }
 
   private loadUserParams(): void {
+    console.log('loadUserParams');
     this.errorMessage = '';
     const widgetData = this.dataService.getWidget(this.userParamsId).valueChanges.pipe(take(1));
     this.inProgress = true;
     this.pSubscriptions.add(
       widgetData.subscribe(({ data }) => {
         this.inProgress = false;
-        this.initData(data.getWidget as WidgetShort);
-        this.pager.init('order_details', 'Order details');
+        this.initData(data.getWidget as Widget);
+        if (this.widget.hideEmail && this.widget.hideAmountFrom) {
+          const transactionData = new CheckoutSummary();
+          transactionData.initialized = true;
+          transactionData.amountFrom = this.widget.amountFrom;
+          transactionData.amountFromPrecision = 8;
+          transactionData.currencyFrom = this.widget.currencyFrom;
+          transactionData.email = this.widget.email;
+          this.orderDetailsComplete(transactionData);
+        } else {
+          this.pager.init('order_details', 'Order details');
+        }
       }, (error) => {
         this.inProgress = false;
         this.initData(undefined);
@@ -355,7 +375,7 @@ export class CryptoWidgetComponent implements OnInit {
     this.inProgress = true;
     this.paymentComplete = false;
     this.pSubscriptions.add(
-      this.dataService.createInvoice(this.widget.widgetId, this.summary.currencyFrom, this.summary.amountFrom ?? 0).subscribe(
+      this.dataService.createInvoice(this.userParamsId, this.summary.currencyFrom, this.summary.amountFrom ?? 0).subscribe(
         ({ data }) => {
           this.inProgress = false;
           this.invoice = new InvoiceView(data.createInvoice as CryptoInvoiceCreationResult);

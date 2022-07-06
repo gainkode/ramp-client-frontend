@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { SettingsCurrencyWithDefaults } from 'src/app/model/generated-models';
+import { WidgetSettings } from 'src/app/model/payment-base.model';
 import { CheckoutSummary, CurrencyView } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
@@ -20,6 +21,7 @@ import { ErrorService } from 'src/app/services/error.service';
 export class WidgetCryptoDetailsComponent implements OnInit, OnDestroy {
   @Input() errorMessage = '';
   @Input() summary: CheckoutSummary | undefined = undefined;
+  @Input() widget: WidgetSettings | undefined = undefined;
   @Output() onError = new EventEmitter<string>();
   @Output() onProgress = new EventEmitter<boolean>();
   @Output() onComplete = new EventEmitter<CheckoutSummary>();
@@ -31,6 +33,7 @@ export class WidgetCryptoDetailsComponent implements OnInit, OnDestroy {
   validData = false;
   currentCurrency: CurrencyView | undefined = undefined;
   currencies: CurrencyView[] = [];
+  hideEmail = false;
 
   emailErrorMessages: { [key: string]: string; } = {
     ['pattern']: 'Email is not valid',
@@ -81,6 +84,10 @@ export class WidgetCryptoDetailsComponent implements OnInit, OnDestroy {
     if (this.summary?.email) {
       this.emailField?.setValue(this.summary.email);
     }
+    this.hideEmail = false;
+    if (this.widget) {
+      this.hideEmail = this.widget.hideEmail;
+    }
     this.loadDetailsForm();
     this.pSubscriptions.add(this.currencyField?.valueChanges.subscribe(val => this.onCurrencyUpdated(val)));
     this.pSubscriptions.add(this.amountField?.valueChanges.subscribe(val => this.onAmountUpdated()));
@@ -115,6 +122,9 @@ export class WidgetCryptoDetailsComponent implements OnInit, OnDestroy {
       let defaultCryptoCurrency = this.auth.user?.defaultCryptoCurrency ?? '';
       if (defaultCryptoCurrency === '') {
         defaultCryptoCurrency = 'BTC';
+      }
+      if (this.widget?.currencyFrom !== '') {
+        defaultCryptoCurrency = this.widget?.currencyFrom ?? 'BTC';
       }
       itemCount = currencyList?.count as number;
       if (itemCount > 0) {

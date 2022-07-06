@@ -1692,7 +1692,7 @@ export type Query = {
   /** This endpoint can be used to get all widgets. */
   getWidgets?: Maybe<WidgetListResult>;
   /** This endpoint can be used to get a widget by id */
-  getWidget?: Maybe<WidgetShort>;
+  getWidget?: Maybe<Widget>;
   getRiskAlerts?: Maybe<RiskAlertResultList>;
   /** Get wallet address */
   getSellAddress?: Maybe<Scalars['String']>;
@@ -3805,7 +3805,9 @@ export type Widget = {
   paymentProviders?: Maybe<Array<Scalars['String']>>;
   liquidityProvider?: Maybe<LiquidityProvider>;
   additionalSettings?: Maybe<Scalars['String']>;
+  currentUserEmail?: Maybe<Scalars['String']>;
   currentUserParams?: Maybe<Scalars['String']>;
+  hasFixedAddress: Scalars['Boolean'];
 };
 
 export type WidgetInput = {
