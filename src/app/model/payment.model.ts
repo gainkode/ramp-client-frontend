@@ -249,11 +249,12 @@ export class InvoiceView {
     private cryptoCurrency = '';
 
     constructor(data: CryptoInvoice) {
-        this.id = data.cryptoInvoiceId ?? '';
-        this.walletAddress = data.vaultId ?? '';
+        this.id = data.name ?? '';
+        this.walletAddress = data.destination ?? '';
         this.amountCrypto = data.amountToSend ?? 0;
-        this.fiatCurrency = data.currencyToSend ?? 'EUR';
         this.cryptoCurrency = data.currencyToSend ?? 'BTC';
+        this.amountFiat = 0;
+        this.fiatCurrency = 'EUR';
     }
 }
 

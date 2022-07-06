@@ -359,24 +359,8 @@ export class CryptoWidgetComponent implements OnInit {
     this.pSubscriptions.add(
       this.dataService.createInvoice(this.widget.widgetId, this.summary.currencyFrom, this.summary.amountFrom ?? 0).subscribe(
         ({ data }) => {
-
-          console.log(data);
-
-
           this.inProgress = false;
-          this.invoice = new InvoiceView(data);
-
-
-          // this.invoice = new InvoiceView({
-          //   cryptoInvoiceId: 'DP-16846',
-          //   amountToSend: this.summary.amountFrom,
-          //   currencyToSend: this.summary.currencyFrom,
-          //   widgetId: this.widget.widgetId,
-          //   vaultId: 'vnsd23v34n56d8slvn9eiu9fne'
-          // } as CryptoInvoice);
-
-
-
+          this.invoice = new InvoiceView(data.createInvoice as CryptoInvoice);
           this.startNotificationListener();
           this.nextStage('order_complete', 'Complete', 5);
         }, (error) => {
