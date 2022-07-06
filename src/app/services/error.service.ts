@@ -37,6 +37,9 @@ export class ErrorService {
             case 'core.file_not_found':
                 result = 'Specified file is not found';
                 break;
+            case 'core.widget_not_found':
+                result = 'Specified widget is not found';
+                break;
             // Authentication error codes (51 - 100)
             case 'auth.recaptcha_invalid':
                 result = 'Invalid recaptcha data';

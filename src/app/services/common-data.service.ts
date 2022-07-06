@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { EmptyObject } from 'apollo-angular/types';
+import { Observable } from 'rxjs';
 import { EnvService } from './env.service';
 
 const GET_SETTINGS_CURRENCY = gql`
@@ -187,6 +188,24 @@ const GET_USER_BY_ID = gql`
     }
 `;
 
+const ADD_MY_WIDGET_PARAMS = gql`
+mutation AddMyWidgetUserParams(
+  $widgetId: String!,
+  $userEmail: String!,
+  $params: String!
+) {
+  addMyWidgetUserParams(
+    widgetUserParams: {
+      widgetId: $widgetId,
+      userEmail: $userEmail,
+      params: $params
+    }
+  ) {
+    widgetUserParamsId
+  }
+}
+`;
+
 @Injectable()
 export class CommonDataService {
   constructor(private apollo: Apollo) { }
@@ -234,6 +253,17 @@ export class CommonDataService {
       query: GET_USER_BY_ID,
       variables: { userId: id },
       fetchPolicy: 'network-only'
+    });
+  }
+
+  addMyWidgetUserParams(id: string, email: string, parameters: string): Observable<any> {
+    return this.apollo.mutate({
+      mutation: ADD_MY_WIDGET_PARAMS,
+      variables: {
+        widgetId: id,
+        userEmail: email,
+        params: parameters
+      }
     });
   }
 }

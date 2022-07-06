@@ -3,7 +3,7 @@ import { AbstractControl, FormBuilder, ValidatorFn, Validators } from '@angular/
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { SettingsCurrencyWithDefaults } from 'src/app/model/generated-models';
+import { SettingsCurrencyWithDefaults, WidgetUserParams } from 'src/app/model/generated-models';
 import { CurrencyView } from 'src/app/model/payment.model';
 import { ErrorService } from 'src/app/services/error.service';
 import { PaymentDataService } from 'src/app/services/payment.service';
@@ -86,7 +86,6 @@ export class CryptoDemoWizardComponent implements OnInit {
     private formBuilder: FormBuilder,
     private changeDetector: ChangeDetectorRef,
     private commonService: CommonDataService,
-    private dataService: PaymentDataService,
     private errorHandler: ErrorService) { }
 
   ngOnInit(): void {
@@ -166,13 +165,17 @@ export class CryptoDemoWizardComponent implements OnInit {
   save(): void {
     this.handleError('');
     this.progressChanged(true);
-    const transactionData$ = this.dataService.preAuth('', '', '');
+    const transactionData$ = this.commonService.addMyWidgetUserParams(
+      this.widgetField?.value,
+      this.emailField?.value,
+      '{}');
     this.pSubscriptions.add(
       transactionData$.subscribe(
         ({ data }) => {
           this.progressChanged(false);
+          const p = data.addMyWidgetUserParams as WidgetUserParams;
           this.done = true;
-          this.widgetLink = '';
+          this.widgetLink = `${EnvService.client_host}/payment/crypto/${p.widgetUserParamsId}`;
         }, (error) => {
           this.progressChanged(false);
           this.handleError(this.errorHandler.getError(error.message, 'Unable to save data'));

@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { EmptyObject } from 'apollo-angular/types';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { KycProvider, PaymentInstrument, TransactionSource, TransactionType } from '../model/generated-models';
 import { CardView } from '../model/payment.model';
 import { EnvService } from './env.service';
@@ -390,15 +389,16 @@ mutation CreateInvoice(
     widgetId: $widgetId,
     amountToSend: $amountToSend
 	) {
-    cryptoInvoiceId
-    name
-    destination
-    vaultId
-    userId
-    created
-    widgetId
-    currencyToSend
-    amountToSend
+    invoice {
+      cryptoInvoiceId,
+      name
+      destination
+      vaultId
+      currencyToSend
+      amountToSend
+    }
+    amountInFiat,
+    fiatCurrency
 	}
 }
 `;

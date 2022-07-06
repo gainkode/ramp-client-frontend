@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { CryptoInvoice, LoginResult, WidgetShort } from 'src/app/model/generated-models';
+import { CryptoInvoiceCreationResult, LoginResult, WidgetShort } from 'src/app/model/generated-models';
 import { CheckoutSummary, InvoiceView } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
@@ -354,7 +354,7 @@ export class CryptoWidgetComponent implements OnInit {
       this.dataService.createInvoice(this.widget.widgetId, this.summary.currencyFrom, this.summary.amountFrom ?? 0).subscribe(
         ({ data }) => {
           this.inProgress = false;
-          this.invoice = new InvoiceView(data.createInvoice as CryptoInvoice);
+          this.invoice = new InvoiceView(data.createInvoice as CryptoInvoiceCreationResult);
           this.startNotificationListener();
           this.nextStage('order_complete', 'Complete', 5);
         }, (error) => {
