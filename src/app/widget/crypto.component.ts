@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { CryptoInvoiceCreationResult, LoginResult, WidgetShort } from 'src/app/model/generated-models';
+import { CryptoInvoiceCreationResult, LoginResult, TransactionServiceNotificationType, WidgetShort } from 'src/app/model/generated-models';
 import { CheckoutSummary, InvoiceView } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
@@ -34,6 +34,7 @@ export class CryptoWidgetComponent implements OnInit {
   summary = new CheckoutSummary();
   widget = new WidgetSettings();
   paymentComplete = false;
+  paymentTitle = '';
   notificationStarted = false;
   logoSrc = `${EnvService.image_host}/images/logo-color.png`;
   logoAlt = EnvService.product;
@@ -152,16 +153,18 @@ export class CryptoWidgetComponent implements OnInit {
   }
 
   private handleTransactionSubscription(data: any): void {
-    // if (data.transactionServiceNotification.operationType === 'preauth' ||
-    //   data.transactionServiceNotification.operationType === 'approved') {
-    //   res = true;
-    // } else {
-    //   console.error('transactionApproved: unexpected operationType', data.transactionServiceNotification.operationType);
-    // }
-
-    this.nextStage('payment_done', 'Complete', 6);
-
-    this.paymentComplete = true;
+    const transaction = data.transactionServiceNotification;
+    if (transaction) {
+      if (transaction.type === TransactionServiceNotificationType.CryptoFullPaid) {
+        this.paymentComplete = true;
+        this.paymentTitle = 'Complete';
+        this.nextStage('payment_done', 'Complete', 6);
+      } else if (transaction.type === TransactionServiceNotificationType.CryptoPartPaid) {
+        this.paymentComplete = false;
+        this.paymentTitle = 'Payment in progress';
+        this.nextStage('payment_done', 'Payment in progress', 5);
+      }
+    }
   }
 
   resetWizard(): void {
@@ -326,7 +329,7 @@ export class CryptoWidgetComponent implements OnInit {
     if (this.widget.kycFirst) {
 
     } else {
-      this.nextStage('complete', 'Complete', 5);
+      this.nextStage('complete', 'Complete', 4);
     }
   }
   // ====================
@@ -350,13 +353,14 @@ export class CryptoWidgetComponent implements OnInit {
 
   private createTransaction(): void {
     this.inProgress = true;
+    this.paymentComplete = false;
     this.pSubscriptions.add(
       this.dataService.createInvoice(this.widget.widgetId, this.summary.currencyFrom, this.summary.amountFrom ?? 0).subscribe(
         ({ data }) => {
           this.inProgress = false;
           this.invoice = new InvoiceView(data.createInvoice as CryptoInvoiceCreationResult);
           this.startNotificationListener();
-          this.nextStage('order_complete', 'Complete', 5);
+          this.nextStage('order_complete', 'Complete', 4);
         }, (error) => {
           this.inProgress = false;
           if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
@@ -374,5 +378,20 @@ export class CryptoWidgetComponent implements OnInit {
     this.transactionErrorMessage = messageText;
     this.transactionErrorTitle = messageTitle;
     this.nextStage('error', 'Error', 6);
+  }
+
+  sendTestNotification(complete: boolean): void {
+    const notificationRequest$ = this.notification.sendTestTransactionNotification(
+      complete ?
+        TransactionServiceNotificationType.CryptoFullPaid :
+        TransactionServiceNotificationType.CryptoPartPaid);
+    this.pSubscriptions.add(
+      notificationRequest$.subscribe(
+        ({ data }) => {
+        }, (error) => {
+          alert(error);
+        }
+      )
+    );
   }
 }

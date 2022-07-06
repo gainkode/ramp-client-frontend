@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
 import { Observable } from 'rxjs';
+import { TransactionServiceNotificationType } from '../model/generated-models';
 
 const SUBSCRIBE_NOTIFICATIONS = gql`
 subscription onNewNotification {
@@ -32,6 +33,15 @@ mutation SendTestKycServiceNotification {
 }
 `;
 
+const SEND_TEST_TRANSACTION_NOTIFICATION_POST = gql`
+mutation SendTestTransactionServiceNotification(
+  $type: TransactionServiceNotificationType!) {
+  sendTestTransactionServiceNotification(
+    type: $type
+  )
+}
+`;
+
 @Injectable()
 export class NotificationService {
   constructor(private apollo: Apollo) { }
@@ -45,6 +55,15 @@ export class NotificationService {
   sendTestKycNotification(): Observable<any> {
     return this.apollo.mutate({
       mutation: SEND_TEST_KYC_NOTIFICATION_POST
+    });
+  }
+
+  sendTestTransactionNotification(notificationType: TransactionServiceNotificationType): Observable<any> {
+    return this.apollo.mutate({
+      mutation: SEND_TEST_TRANSACTION_NOTIFICATION_POST,
+      variables: {
+        type: notificationType
+      }
     });
   }
 

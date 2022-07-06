@@ -29,16 +29,25 @@
       </app-widget-login-auth>
       <!-- Code Authentication -->
       <app-widget-code-auth *ngSwitchCase="'code_auth'" [email]="summary.email" [codeLength]="5"
-        [errorMessage]="errorMessage" (onComplete)="loginCodeConfirmed()"
-        (onError)="handleError($event)" (onProgress)="progressChanged($event)" (onBack)="loginBack()"
-        (onRegister)="onRegister($event)">
+        [errorMessage]="errorMessage" (onComplete)="loginCodeConfirmed()" (onError)="handleError($event)"
+        (onProgress)="progressChanged($event)" (onBack)="loginBack()" (onRegister)="onRegister($event)">
       </app-widget-code-auth>
       <app-widget-crypto-complete *ngSwitchCase="'order_complete'" [data]="invoice">
       </app-widget-crypto-complete>
-      <app-widget-crypto-finish *ngSwitchCase="'payment_done'" [title]="'Complete'"></app-widget-crypto-finish>
+      <app-widget-crypto-finish *ngSwitchCase="'payment_done'" [complete]="paymentComplete" [title]="paymentTitle">
+      </app-widget-crypto-finish>
       <app-widget-error *ngSwitchCase="'error'" [title]="transactionErrorTitle" [errorMessage]="transactionErrorMessage"
         (onFinish)="resetWizard()"></app-widget-error>
     </div>
   </div>
 
+  <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;padding: 24px;">
+    <button type="button" (click)="sendTestNotification(false)">
+      Partial
+    </button>
+    <span>&nbsp;</span>
+    <button type="button" (click)="sendTestNotification(true)">
+      Complete
+    </button>
+  </div>
 </div>

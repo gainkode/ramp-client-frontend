@@ -1,6 +1,6 @@
 <div class="__widget-data-box">
     <div class="__profile-details-data-area">
-        <div class="__profile-details-payment-title-block">
+        <div *ngIf="complete" class="__profile-details-payment-title-block">
             <div class="__profile-details-payment-title-image">
                 <img src="assets/rocket.svg" alt="complete">
             </div>
@@ -9,6 +9,24 @@
             <div class="__profile-details-payment-title">
                 {{title}}
             </div>
+        </div>
+        <div *ngIf="complete" class="__widget-disclaimer-container">
+            <span class="__widget-disclaimer-line">
+                Dear Customer,
+            </span>
+            <br>
+            <span class="__widget-disclaimer-line">
+                Your payment has been successfully completed.
+            </span>
+        </div>
+        <div *ngIf="!complete" class="__widget-disclaimer-container">
+            <span class="__widget-disclaimer-line">
+                Dear Customer,
+            </span>
+            <br>
+            <span class="__widget-disclaimer-line">
+                Your payment is in progress and soon will be completed. Wait for a while...
+            </span>
         </div>
     </div>
 </div>

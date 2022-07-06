@@ -538,6 +538,10 @@ export type KycRequiredInfo = {
   fields?: Maybe<Array<KycInfoField>>;
 };
 
+export enum KycServiceNotificationType {
+  KycStatusChanged = 'KycStatusChanged'
+}
+
 export enum KycStatus {
   Unknown = 'unknown',
   NotFound = 'notFound',
@@ -1198,6 +1202,16 @@ export type MutationDisable2faArgs = {
 export type MutationAddFeedbackArgs = {
   recaptcha?: Maybe<Scalars['String']>;
   feedback: FeedbackInput;
+};
+
+
+export type MutationSendTestTransactionServiceNotificationArgs = {
+  type?: Maybe<TransactionServiceNotificationType>;
+};
+
+
+export type MutationSendTestKycServiceNotificationArgs = {
+  type?: Maybe<KycServiceNotificationType>;
 };
 
 
@@ -2863,6 +2877,12 @@ export type TransactionMerchantInput = {
   status?: Maybe<TransactionStatus>;
   transactionChangedCallback?: Maybe<Scalars['String']>;
 };
+
+export enum TransactionServiceNotificationType {
+  PaymentStatusChanged = 'PaymentStatusChanged',
+  CryptoPartPaid = 'CryptoPartPaid',
+  CryptoFullPaid = 'CryptoFullPaid'
+}
 
 export type TransactionShort = {
   __typename?: 'TransactionShort';
