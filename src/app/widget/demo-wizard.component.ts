@@ -36,6 +36,7 @@ export class CryptoDemoWizardComponent implements OnInit {
     ['required']: 'Widget identifier is required to identify your settings'
   };
   emailErrorMessages: { [key: string]: string; } = {
+    ['required']: 'Email is required',
     ['pattern']: 'Email is not valid'
   };
   amountCryptoErrorMessages: { [key: string]: string; } = {
@@ -48,6 +49,7 @@ export class CryptoDemoWizardComponent implements OnInit {
     email: [undefined,
       {
         validators: [
+          Validators.required,
           Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
         ], updateOn: 'change'
       }
