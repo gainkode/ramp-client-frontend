@@ -199,7 +199,8 @@ export type CryptoInvoice = {
   created?: Maybe<Scalars['String']>;
   widgetId?: Maybe<Scalars['String']>;
   currencyToSend?: Maybe<Scalars['String']>;
-  amountToSend?: Maybe<Scalars['Int']>;
+  amountToSend?: Maybe<Scalars['Float']>;
+  widgetUserParamsId?: Maybe<Scalars['String']>;
 };
 
 export type CryptoInvoiceListResult = {
@@ -1337,7 +1338,7 @@ export type MutationCreateInvoiceArgs = {
   vaultId?: Maybe<Scalars['String']>;
   currencyToSend?: Maybe<Scalars['String']>;
   widgetId?: Maybe<Scalars['String']>;
-  amountToSend?: Maybe<Scalars['Int']>;
+  amountToSend?: Maybe<Scalars['Float']>;
 };
 
 
@@ -2790,7 +2791,7 @@ export type Transaction = {
   data?: Maybe<Scalars['String']>;
   verifyWhenPaid?: Maybe<Scalars['Boolean']>;
   requestParams?: Maybe<Scalars['String']>;
-  invoiceName?: Maybe<Scalars['String']>;
+  cryptoInvoiceName?: Maybe<Scalars['String']>;
 };
 
 export enum TransactionConfirmationMode {
@@ -2917,6 +2918,7 @@ export type TransactionShort = {
   destinationUserId?: Maybe<Scalars['String']>;
   risk: RiskLevel;
   riskCodes?: Maybe<Array<Scalars['String']>>;
+  cryptoInvoiceName?: Maybe<Scalars['String']>;
   data?: Maybe<Scalars['String']>;
 };
 
@@ -3027,6 +3029,7 @@ export type TransactionUpdateInput = {
   benchmarkTransferOrderChanges?: Maybe<TransactionUpdateTransferOrderChanges>;
   comment?: Maybe<Scalars['String']>;
   requestParams?: Maybe<Scalars['String']>;
+  cryptoInvoiceName?: Maybe<Scalars['String']>;
 };
 
 export type TransactionUpdateTransferOrderChanges = {
@@ -3065,7 +3068,7 @@ export type TransferOrder = {
   status?: Maybe<Scalars['String']>;
   subStatus?: Maybe<Scalars['String']>;
   feeCurrency?: Maybe<Scalars['Float']>;
-  invoiceName?: Maybe<Scalars['String']>;
+  cryptoInvoiceName?: Maybe<Scalars['String']>;
 };
 
 export type TransferResult = {
