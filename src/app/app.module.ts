@@ -76,9 +76,6 @@ export class AppModule {
     if (graphQLErrors) {
       for (const err of graphQLErrors) {
         if (err.extensions !== null) {
-
-          //console.log(err);
-
           const code = err.extensions?.code as string;
           if (code.toUpperCase() === 'UNAUTHENTICATED') {
             console.error('UNAUTHENTICATED');
@@ -127,11 +124,18 @@ export class AppModule {
       sessionStorage.setItem('currentErrorCode', '');
       sessionStorage.setItem('currentError', '');
     }
-    const token = localStorage.getItem('currentToken');
-    if (token === null) {
-      return {};
+    if (operation.operationName === 'AddMyWidgetUserParams') {
+      return { headers: {
+        'x-auth-id': EnvService.widget_api_key,
+        'x-auth-key': EnvService.widget_secret
+      } };
     } else {
-      return { headers: { Authorization: `Bearer ${token}` } };
+      const token = localStorage.getItem('currentToken');
+      if (token === null) {
+        return {};
+      } else {
+        return { headers: { Authorization: `Bearer ${token}` } };
+      }
     }
   });
 

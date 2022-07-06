@@ -60,6 +60,9 @@
     window.__env_data.widget_bg_mask = 'true';
     window.__env_data.widget_bg_name = 'assets/widget-bg.svg';
 
+    window.__env_data.widget_secret = 'ba339c3f0ceb3e6adb3fa0af83c510cee31a67a6';
+    window.__env_data.widget_api_key = 'd1237f04-5f77-4ba5-92f8-91ca2c58b09d';
+
     //////////////////////////////////////////////////
     //                                              //
     //                     COLORS                   //
@@ -135,8 +138,4 @@
 
 // 1BMv3sM3AbT3jDEbt4v3zLv5HjRB2ucbT7
 
-// crypto-widget
-
-
-// apikey d1237f04-5f77-4ba5-92f8-91ca2c58b09d
-// secret ba339c3f0ceb3e6adb3fa0af83c510cee31a67a6
+// a09c222b-fa5e-4ffa-8c25-101cf309803e

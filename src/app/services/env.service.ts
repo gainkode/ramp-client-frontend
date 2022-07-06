@@ -26,6 +26,9 @@ export class EnvService {
     public static widget_bg_color_3 = '#00a6ab';
     public static widget_bg_color_4 = '#79cdd4';
 
+    public static widget_secret = '';
+    public static widget_api_key = '';
+
     public static color_white = '#FF0000';
 
     public static color_pink_900 = '#7c1f45';
