@@ -1,0 +1,75 @@
+<div class="__widget-container">
+  <div class="__widget-title-container">
+    <div class="__widget-title-logo-container">
+      <img class="__widget-title-logo" [src]="logoSrc" [alt]="logoAlt" width="160" (click)="router.navigateByUrl('/')">
+    </div>
+  </div>
+
+  <div class="__widget-data-container">
+    <div class="__widget-wizard-container __widget-wizard-container-single __widget-wizard-demo-box">
+      <h1 class="__widget-title">
+        Crypto widget wizard
+      </h1>
+      <div class="__widget-disclaimer-container">
+        <span class="__widget-disclaimer-line">
+          Fill the following fields to set up the crypto widget.
+        </span>
+      </div>
+      <form [formGroup]="dataForm" (ngSubmit)="save()">
+        <!-- Email -->
+        <app-form-textbox [label]="'Email'" [maxlength]="50" [smallLabel]=true formControlName="email"
+          [errorMessages]="emailErrorMessages" [separator]="true">
+        </app-form-textbox>
+
+        <!-- Amount crypto -->
+        <app-form-finance-combo [label]="'Amount'" [placeholder]="'...'" [boxFieldName]="'amount'"
+          [boxField]="amountField" [comboField]="currencyCryptoField" [comboFieldName]="'currencyCrypto'"
+          [comboList]="cryptoList" [errorMessages]="amountCryptoErrorMessages" [separator]="true">
+        </app-form-finance-combo>
+
+        <!-- Fiat currency -->
+        <div class="__form-label">
+          Fiat currency
+        </div>
+        <div class="__profile-details-item-block">
+          <div class="__form-text-border">
+            <mat-select formControlName="currencyFiat" style="margin: 8px 0px 0px 0px;" placeholder="...">
+              <mat-select-trigger>
+                <div class="__form-combo-item-text">
+                  {{selectedFiat?.symbol}} - {{selectedFiat?.name}}
+                </div>
+              </mat-select-trigger>
+              <mat-option *ngFor="let item of fiatList" [value]="item.symbol" style="height: 32px;">
+                <div class="__form-combo-item-block">
+                  <div class="__form-combo-item-text">
+                    {{item.symbol}} - {{item.name}}
+                  </div>
+                </div>
+              </mat-option>
+            </mat-select>
+          </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="__widget-buttons-area">
+          <button class="__main-button" type="submit" [disabled]="done || !dataForm.valid">
+            done
+          </button>
+        </div>
+
+        <!-- Completed link -->
+        <div *ngIf="done" class="__widget-disclaimer-container">
+          <span class="__widget-disclaimer-line">
+            Use this link to go to the created widget:
+          </span>
+          <br>
+          <a [href]="widgetLink" target="_blank" rel="noopener noreferrer">{{widgetLink}}</a>
+        </div>
+      </form>
+
+      <div class="__widget-data-error">
+        {{errorMessage}}
+      </div>
+    </div>
+  </div>
+</div>

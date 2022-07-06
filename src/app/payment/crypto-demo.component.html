@@ -1,0 +1,7 @@
+<div class="__widget-frame-container">
+  <div [ngClass]="{'__widget-frame-background': bg_mask, '__widget-frame-background-img': !bg_mask}"></div>
+  <div *ngIf="bg_mask" class="__widget-frame-background-pipes"></div>
+  <div class="__widget-frame-box">
+    <app-crypto-demo-wizard></app-crypto-demo-wizard>
+  </div>
+</div>

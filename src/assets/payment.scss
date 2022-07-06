@@ -78,6 +78,7 @@ $font_main: var(--font_main);
     padding: 0px;
     width: $details_pane_width + px;
     background-color: $color_white;
+    overflow: hidden;
 }
 
 .__widget-title-container {
@@ -851,12 +852,6 @@ $font_main: var(--font_main);
     margin: 4px 0px 0px 0px;
 }
 
-.__widget-embedded-container {
-    width: 100%;
-    background-color: $color_white;
-    overflow: hidden;
-}
-
 .__widget-embedded-data-container {
     width: 100%;
     background-color: $color_white;
@@ -954,4 +949,8 @@ $font_main: var(--font_main);
     font-size: 10px;
     line-height: 24px;
     color: $color_purple_900_icons;
+}
+
+.__widget-wizard-demo-box {
+    padding: 24px;
 }
