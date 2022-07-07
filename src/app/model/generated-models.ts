@@ -1356,10 +1356,8 @@ export type MutationDeleteBlackCountryArgs = {
 
 
 export type MutationCreateInvoiceArgs = {
-  destination?: Maybe<Scalars['String']>;
-  vaultId?: Maybe<Scalars['String']>;
-  currencyToSend?: Maybe<Scalars['String']>;
   widgetId?: Maybe<Scalars['String']>;
+  currencyToSend?: Maybe<Scalars['String']>;
   amountToSend?: Maybe<Scalars['Float']>;
 };
 

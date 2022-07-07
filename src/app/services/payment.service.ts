@@ -384,9 +384,7 @@ mutation CreateInvoice(
   $amountToSend: Float
 ) {
 	createInvoice(
-		destination: $destination,
-    vaultId: $vaultId,
-    currencyToSend: $currencyToSend,
+		currencyToSend: $currencyToSend,
     widgetId: $widgetId,
     amountToSend: $amountToSend
 	) {
