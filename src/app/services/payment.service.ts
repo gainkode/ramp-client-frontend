@@ -377,8 +377,6 @@ query GetWidget($id: String!, $recaptcha: String!) {
 
 const CREATE_INVOICE = gql`
 mutation CreateInvoice(
-  $destination: String,
-  $vaultId: String,
   $currencyToSend: String,
   $widgetId: String,
   $amountToSend: Float
@@ -555,8 +553,6 @@ export class PaymentDataService {
     return this.apollo.mutate({
       mutation: CREATE_INVOICE,
       variables: {
-        //destination: $destination,
-        //vaultId: $vaultId,
         currencyToSend: currency,
         widgetId: widgetId,
         amountToSend: amount
