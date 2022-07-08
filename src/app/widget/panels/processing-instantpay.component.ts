@@ -20,8 +20,13 @@ export class WidgetProcessingInstantpayComponent {
 
   copyReference() {
     if (this.data) {
-      const val = `Pay ID: ${this.data.payId}\nReference code: ${this.data.uniqueReference}`;
-      this.clipboard.copy(val);
+      this.clipboard.copy(`${this.data.uniqueReference}`);
+    }
+  }
+
+  copyPayId() {
+    if (this.data) {
+      this.clipboard.copy(this.data.payId);
     }
   }
 }
