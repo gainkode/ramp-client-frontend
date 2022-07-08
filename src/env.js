@@ -5,16 +5,16 @@
     window.__env_data.product = 'GetCoins';
     window.__env_data.productFull = 'GetCoins Default';
 
-    // Coockie domain
-    window.__env_data.cookieDomain = 'localhost';
-    // Current client host address
-    window.__env_data.client_host = 'http://localhost:4000';
-    // API server address
-    window.__env_data.api_server = 'http://localhost:4001';
-    // API WebSocket address
-    window.__env_data.ws_server = 'ws://localhost:4001';
-    // Image hosting address
-    window.__env_data.image_host = './assets/test';
+    // // Coockie domain
+    // window.__env_data.cookieDomain = 'localhost';
+    // // Current client host address
+    // window.__env_data.client_host = 'http://localhost:4000';
+    // // API server address
+    // window.__env_data.api_server = 'http://localhost:4001';
+    // // API WebSocket address
+    // window.__env_data.ws_server = 'ws://localhost:4001';
+    // // Image hosting address
+    // window.__env_data.image_host = './assets/test';
 
     // window.__env_data.cookieDomain = 'https://app.crunchywallet.io';
     // window.__env_data.client_host = 'https://app.crunchywallet.io',
@@ -22,11 +22,11 @@
     // window.__env_data.ws_server = 'wss://app.crunchywallet.io',
     // window.__env_data.image_host = 'https://app.crunchywallet.io';
     
-    // window.__env_data.cookieDomain = 'https://app.getcoins.com.au';
-    // window.__env_data.client_host = 'https://app.getcoins.com.au',
-    // window.__env_data.api_server = 'https://app.getcoins.com.au',
-    // window.__env_data.ws_server = 'wss://app.getcoins.com.au',
-    // window.__env_data.image_host = 'https://app.getcoins.com.au';
+    window.__env_data.cookieDomain = 'https://app.getcoins.com.au';
+    window.__env_data.client_host = 'https://app.getcoins.com.au',
+    window.__env_data.api_server = 'https://app.getcoins.com.au',
+    window.__env_data.ws_server = 'wss://app.getcoins.com.au',
+    window.__env_data.image_host = 'https://app.getcoins.com.au';
 
     // window.__env_data.cookieDomain = 'app.genesisxchange.com';
     // window.__env_data.client_host = 'https://app.genesisxchange.com',

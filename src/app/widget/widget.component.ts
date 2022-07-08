@@ -38,6 +38,7 @@ export class WidgetComponent implements OnInit {
   rateErrorMessage = '';
   transactionErrorTitle = '';
   transactionErrorMessage = '';
+  transactionErrorTryAgain = true;
   inProgress = false;
   internalPayment = false;
   initState = true;
@@ -162,7 +163,13 @@ export class WidgetComponent implements OnInit {
       }
       if (data.transactionTypes) {
         if (data.transactionTypes.length > 0) {
-          this.widget.transaction = data.transactionTypes[0];
+          const apropriateTransactions = data.transactionTypes.
+            filter(x => x === TransactionType.Buy || x === TransactionType.Sell);
+          if (apropriateTransactions.length > 0) {
+            this.widget.transaction = apropriateTransactions[0];
+          } else {
+            this.widget.transaction = data.transactionTypes[0];
+          }
         }
       }
       this.widget.source = (this.quickCheckout) ? TransactionSource.QuickCheckout : TransactionSource.Widget;
@@ -342,7 +349,19 @@ export class WidgetComponent implements OnInit {
       widgetData.subscribe(({ data }) => {
         this.inProgress = false;
         this.initData(data.getWidget as Widget);
+        let validTransactionType = true;
+        if (this.widget.transaction) {
+          validTransactionType = (this.widget.transaction === TransactionType.Buy || 
+            this.widget.transaction === TransactionType.Sell);
+        }
+        if (validTransactionType) {
         this.pager.init('order_details', 'Order details');
+        } else {
+          this.showTransactionError(
+            'Wrong widget settings',
+            `Incorrect transaction type: ${this.widget.transaction}`,
+            false);
+        }
       }, (error) => {
         this.inProgress = false;
         this.initData(undefined);
@@ -902,9 +921,10 @@ export class WidgetComponent implements OnInit {
     }
   }
 
-  private showTransactionError(messageTitle: string, messageText: string): void {
+  private showTransactionError(messageTitle: string, messageText: string, tryAgain: boolean = true): void {
     this.transactionErrorMessage = messageText;
     this.transactionErrorTitle = messageTitle;
+    this.transactionErrorTryAgain = tryAgain;
     this.nextStage('error', 'Error', 6, false);
   }
 }

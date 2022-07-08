@@ -15,7 +15,7 @@
         </div>
     </div>
 
-    <div class="__widget-buttons-area">
+    <div *ngIf="tryAgain" class="__widget-buttons-area">
         <button class="__outlined-button" type="button" (click)="onFinish.emit()">
             TRY AGAIN
         </button>
