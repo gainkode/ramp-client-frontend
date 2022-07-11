@@ -200,6 +200,7 @@ export type CryptoInvoice = {
   widgetId?: Maybe<Scalars['String']>;
   currencyToSend?: Maybe<Scalars['String']>;
   amountToSend?: Maybe<Scalars['Float']>;
+  currencyToReceive?: Maybe<Scalars['String']>;
   widgetUserParamsId?: Maybe<Scalars['String']>;
 };
 
@@ -207,8 +208,8 @@ export type CryptoInvoiceCreationResult = {
   __typename?: 'CryptoInvoiceCreationResult';
   invoice?: Maybe<CryptoInvoice>;
   rate?: Maybe<Scalars['Float']>;
-  amountInFiat?: Maybe<Scalars['Float']>;
-  fiatCurrency?: Maybe<Scalars['String']>;
+  convertedAmount?: Maybe<Scalars['Float']>;
+  convertedCurrency?: Maybe<Scalars['String']>;
 };
 
 export type CryptoInvoiceListResult = {
@@ -748,6 +749,8 @@ export type Mutation = {
   deleteBlackCountry?: Maybe<BlackCountry>;
   /** This endpoint can be used to create a transaction */
   createInvoice?: Maybe<CryptoInvoiceCreationResult>;
+  /** This endpoint to recalculate the invoice (with current rate) */
+  calculateInvoice?: Maybe<CryptoInvoiceCreationResult>;
   /** Not used */
   addFiatVault?: Maybe<FiatVault>;
   deleteFiatVault?: Maybe<FiatVault>;
@@ -1359,6 +1362,11 @@ export type MutationCreateInvoiceArgs = {
   widgetId?: Maybe<Scalars['String']>;
   currencyToSend?: Maybe<Scalars['String']>;
   amountToSend?: Maybe<Scalars['Float']>;
+};
+
+
+export type MutationCalculateInvoiceArgs = {
+  invoiceId?: Maybe<Scalars['String']>;
 };
 
 

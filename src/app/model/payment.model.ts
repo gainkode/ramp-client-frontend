@@ -234,27 +234,27 @@ export class CardView {
 export class InvoiceView {
     id = '';
     walletAddress = '';
-    amountCrypto = 0;
-    amountFiat = 0;
+    amountSource = 0;
+    amountConverted = 0;
 
-    get amountFiatValue(): string {
-        return `${this.amountFiat} ${this.fiatCurrency}`;
+    get amountConvertedValue(): string {
+        return `${this.amountConverted} ${this.currencyConverted}`;
     }
 
-    get amountCryptoValue(): string {
-        return `${this.amountCrypto} ${this.cryptoCurrency}`;
+    get amountSourceValue(): string {
+        return `${this.amountSource} ${this.currencySource}`;
     }
 
-    private fiatCurrency = '';
-    private cryptoCurrency = '';
+    private currencyConverted = '';
+    private currencySource = '';
 
     constructor(data: CryptoInvoiceCreationResult) {
         this.id = data.invoice?.name ?? '';
         this.walletAddress = data.invoice?.destination ?? '';
-        this.amountCrypto = data.invoice?.amountToSend ?? 0;
-        this.cryptoCurrency = data.invoice?.currencyToSend ?? 'BTC';
-        this.amountFiat = data.amountInFiat ?? 0;
-        this.fiatCurrency = data.fiatCurrency ?? 'EUR';
+        this.amountSource = data.invoice?.amountToSend ?? 0;
+        this.currencySource = data.invoice?.currencyToSend ?? '';
+        this.amountConverted = data.convertedAmount ?? 0;
+        this.currencyConverted = data.convertedCurrency ?? '';
     }
 }
 

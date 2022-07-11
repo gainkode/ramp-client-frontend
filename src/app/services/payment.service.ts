@@ -393,9 +393,10 @@ mutation CreateInvoice(
       vaultId
       currencyToSend
       amountToSend
+      currencyToReceive
     }
-    amountInFiat,
-    fiatCurrency
+    convertedAmount
+    convertedCurrency
 	}
 }
 `;
