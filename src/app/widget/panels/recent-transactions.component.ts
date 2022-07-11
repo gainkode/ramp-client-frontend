@@ -76,7 +76,7 @@ export class WidgetRecentTransactionsComponent implements OnDestroy, OnInit {
     const transactionsData$ = this.profileService.getMyTransactions(
       this.pageIndex,
       this.pageSize,
-      [TransactionSource.Widget],
+      [TransactionSource.Widget, TransactionSource.QuickCheckout],
       undefined,
       [],
       '',
