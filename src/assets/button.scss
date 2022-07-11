@@ -832,3 +832,58 @@ $font_main: var(--font_main);
 .__inline-title-button-box {
     margin: 6px 0px 0px 8px;
 }
+
+.__main-radio-button {
+    input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+        + .__main-radio-button-label {
+            &:before {
+                content: "";
+                border-radius: 100%;
+                border: 1px solid $color_purple_200;
+                display: inline-block;
+                width: 16px;
+                height: 16px;
+                position: relative;
+                top: 5px;
+                left: -8px;
+                vertical-align: top;
+                cursor: pointer;
+                text-align: center;
+                transition: all 250ms ease;
+            }
+        }
+        &:checked {
+            + .__main-radio-button-label {
+                &:before {
+                    background-color: $color_main_blue_700;
+                    box-shadow: inset 0 0 0 2px $color_white;
+                }
+            }
+        }
+        &:focus {
+            + .__main-radio-button-label {
+                &:before {
+                    outline: none;
+                    border: 1px solid $color_purple_300;
+                }
+            }
+        }
+        &:disabled {
+            + .__main-radio-button-label {
+                &:before {
+                    box-shadow: inset 0 0 0 4px $color_white;
+                    border-color: $color_purple_50;
+                }
+            }
+        }
+        + .__main-radio-button-label {
+            &:empty {
+                &:before {
+                    margin-right: 0;
+                }
+            }
+        }
+    }
+}

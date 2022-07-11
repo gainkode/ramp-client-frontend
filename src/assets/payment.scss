@@ -614,6 +614,10 @@ $font_main: var(--font_main);
     color: $color_purple_900_text;
 }
 
+.__widget-radio-line {
+    margin: 0px 0px 0px 8px;
+}
+
 .__widget-error-title-block {
     margin: 48px 0px 0px 0px;
     display: flex;

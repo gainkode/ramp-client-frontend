@@ -105,8 +105,8 @@ export class CryptoWidgetComponent implements OnInit {
       const userParams = JSON.parse(data.currentUserParams ?? '{}');
       if (userParams) {
         if (userParams.params) {
-          this.widget.currencyFrom = userParams.params.cryptoCurrency ?? '';
-          this.widget.amountFrom = userParams.params.cryptoAmount ?? 0;
+          this.widget.currencyFrom = userParams.params.currency ?? '';
+          this.widget.amountFrom = userParams.params.amount ?? 0;
           this.widget.hideAmountFrom = (this.widget.currencyFrom !== '' && this.widget.amountFrom !== 0);
         }
       }

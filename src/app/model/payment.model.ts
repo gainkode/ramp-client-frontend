@@ -1,3 +1,4 @@
+import { E } from '@angular/cdk/keycodes';
 import { getCryptoSymbol } from '../utils/utils';
 import { CommonTargetValue } from './common.model';
 import {
@@ -160,6 +161,15 @@ export class CurrencyView {
     fiat = false;
     ethFlag = false;
     trxFlag = false;
+    stable = false;
+
+    get fullName(): string {
+        if (this.stable) {
+            return this.display;
+        } else {
+            return `${this.code} - ${this.name}`;
+        }
+    }
 
     constructor(data: SettingsCurrency) {
         this.symbol = data.symbol;
@@ -170,8 +180,10 @@ export class CurrencyView {
             this.code = data.displaySymbol;
         }
         if (this.ethFlag) {
+            this.stable = true;
             this.display = `${this.code} (ERC20)`;
         } else if (this.trxFlag) {
+            this.stable = true;
             this.display = `${this.code} (TRC20)`;
         } else {
             this.display = this.code;

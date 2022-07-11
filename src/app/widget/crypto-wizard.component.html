@@ -22,32 +22,50 @@
         </app-form-textbox>
 
         <!-- Email -->
-        <app-form-textbox [label]="'Email'" [asterisk]=true [maxlength]="50" [smallLabel]=true formControlName="email"
-          [errorMessages]="emailErrorMessages" [separator]="true">
+        <app-form-textbox [label]="'User email'" [asterisk]=true [maxlength]="50" [smallLabel]=true
+          formControlName="email" [errorMessages]="emailErrorMessages" [separator]="true">
         </app-form-textbox>
+
+        <!-- Convert direction -->
+        <div class="__profile-details-item-block">
+          <div class="__main-radio-button">
+            <input type="radio" id="amountCryptoFlag" name="direction" value="crypto_amount"
+              formControlName="direction">
+            <label for="amountCryptoFlag"
+              class="__main-radio-button-label __widget-disclaimer-line __widget-radio-line">
+              Set Amount in Crypto
+            </label>
+          </div>
+          <div class="__main-radio-button">
+            <input type="radio" id="amountFiatFlag" name="direction" value="fiat_amount" formControlName="direction">
+            <label for="amountFiatFlag" class="__main-radio-button-label __widget-disclaimer-line __widget-radio-line">
+              Set Amount in Fiat
+            </label>
+          </div>
+        </div>
 
         <!-- Amount crypto -->
         <app-form-finance-combo [label]="'Amount'" [smallLabel]=true [placeholder]="'...'" [boxFieldName]="'amount'"
-          [boxField]="amountField" [comboField]="currencyCryptoField" [comboFieldName]="'currencyCrypto'"
-          [comboList]="cryptoList" [errorMessages]="amountCryptoErrorMessages" [separator]="true">
+          [boxField]="amountField" [comboField]="currencyField" [comboFieldName]="'currency'"
+          [comboList]="sourceCurrencyList" [errorMessages]="amountErrorMessages" [separator]="true">
         </app-form-finance-combo>
 
-        <!-- Fiat currency -->
+        <!-- Converted currency -->
         <div class="__form-label __form-label-small">
-          Fiat currency
+          Currency to convert
         </div>
         <div class="__profile-details-item-block">
           <div class="__form-text-border">
-            <mat-select formControlName="currencyFiat" style="margin: 8px 0px 0px 0px;" placeholder="...">
+            <mat-select formControlName="currencyConvert" style="margin: 8px 0px 0px 0px;" placeholder="...">
               <mat-select-trigger>
                 <div class="__form-combo-item-text">
-                  {{selectedFiat?.symbol}} - {{selectedFiat?.name}}
+                  {{selectedCurrencyConvert?.fullName}}
                 </div>
               </mat-select-trigger>
-              <mat-option *ngFor="let item of fiatList" [value]="item.symbol" style="height: 32px;">
+              <mat-option *ngFor="let item of currencyConvertList" [value]="item.symbol" style="height: 32px;">
                 <div class="__form-combo-item-block">
                   <div class="__form-combo-item-text">
-                    {{item.symbol}} - {{item.name}}
+                    {{item.fullName}}
                   </div>
                 </div>
               </mat-option>
