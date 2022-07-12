@@ -1541,14 +1541,16 @@ export type PaymentProvider = {
   paymentProviderId?: Maybe<Scalars['ID']>;
   name: Scalars['String'];
   currencies?: Maybe<Array<Scalars['String']>>;
-  countries_code2?: Maybe<Array<Scalars['String']>>;
+  countriesCode2?: Maybe<Array<Scalars['String']>>;
   instruments?: Maybe<Array<Scalars['String']>>;
   default?: Maybe<Scalars['Boolean']>;
   disabled?: Maybe<Scalars['DateTime']>;
+  displayName?: Maybe<Scalars['String']>;
 };
 
 export type PaymentProviderByInstrument = {
   __typename?: 'PaymentProviderByInstrument';
+  id?: Maybe<Scalars['ID']>;
   instrument?: Maybe<PaymentInstrument>;
   provider?: Maybe<PaymentProvider>;
 };

@@ -24,7 +24,7 @@ export class PaymentProviderInstrumentView {
         this.name = data.provider?.name ?? '';
         this.instrument = data.instrument ?? PaymentInstrument.CreditCard;
         if (this.instrument === PaymentInstrument.Apm) {
-            this.name = 'APM';
+            this.name = data.provider?.displayName ?? 'APM';
             this.image = './assets/svg-providers/apm.svg';
         } else if (this.instrument === PaymentInstrument.CreditCard) {
             this.name = 'CARD PAYMENT';

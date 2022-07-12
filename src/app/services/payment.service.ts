@@ -54,8 +54,9 @@ query GetAppropriatePaymentProviders(
     provider {
       paymentProviderId
       name
+      displayName
       currencies
-      countries_code2
+      countriesCode2
       instruments
       default
     }
