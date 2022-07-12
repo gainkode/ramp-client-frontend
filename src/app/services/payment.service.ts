@@ -401,6 +401,29 @@ mutation CreateInvoice(
 }
 `;
 
+const CALCULATE_INVOICE = gql`
+mutation CalculateInvoice(
+  $invoiceId: String
+) {
+	calculateInvoice(
+		invoiceId: $invoiceId
+	) {
+    invoice {
+      cryptoInvoiceId,
+      name
+      destination
+      vaultId
+      currencyToSend
+      amountToSend
+      currencyToReceive
+    }
+    convertedAmount
+    convertedCurrency
+	}
+}
+`;
+
+
 @Injectable()
 export class PaymentDataService {
   constructor(private apollo: Apollo) { }
@@ -557,6 +580,15 @@ export class PaymentDataService {
         currencyToSend: currency,
         widgetId: widgetId,
         amountToSend: amount
+      }
+    });
+  }
+
+  calculateInvoice(id: string): Observable<any> {
+    return this.apollo.mutate({
+      mutation: CALCULATE_INVOICE,
+      variables: {
+        invoiceId: id
       }
     });
   }
