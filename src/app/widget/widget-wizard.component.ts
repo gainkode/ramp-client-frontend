@@ -21,7 +21,7 @@ export class WidgetWizardComponent implements OnInit {
 
   errorMessage = '';
   inProgress = false;
-  logoSrc = `${EnvService.image_host}/images/logo-color.png`;
+  logoSrc = `${EnvService.image_host}/images/logo-widget.png`;
   logoAlt = EnvService.product;
   defaultCrypto = '';
   defaultFiat = '';

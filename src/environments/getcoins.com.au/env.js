@@ -40,11 +40,15 @@
     window.__env_data.widget_secret = '072c10b958e4e67348be4a5ab2e7def687c64a0d';
     window.__env_data.widget_api_key = '0e63b374-d1bd-4e95-b2b5-368866dd1380';
     
+    window.__env_data.widget_bg_mask = 'false';
+    window.__env_data.widget_bg_name = '';
+
     //////////////////////////////////////////////////
     //                                              //
     //                     COLORS                   //
     //                                              //
     //////////////////////////////////////////////////
+    window.__env_data.widget_bg_solid_color = '#FFFFFF';
     // White color
     window.__env_data.color_white = '#FFFFFF';
     // Pink colors (error handling)

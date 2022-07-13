@@ -36,7 +36,7 @@ export class CryptoWidgetComponent implements OnInit {
   paymentComplete = false;
   paymentTitle = '';
   notificationStarted = false;
-  logoSrc = `${EnvService.image_host}/images/logo-color.png`;
+  logoSrc = `${EnvService.image_host}/images/logo-widget.png`;
   logoAlt = EnvService.product;
 
   private pSubscriptions: Subscription = new Subscription();

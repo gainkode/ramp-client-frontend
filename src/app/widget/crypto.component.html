@@ -24,7 +24,7 @@
       </app-widget-register>
       <!-- Login Authentication -->
       <app-widget-login-auth *ngSwitchCase="'login_auth'" [email]="summary.email" [widgetId]="widget.widgetId"
-        [requiredExtraData]="requiredExtraData" (onBack)="loginBack()" (onProgress)="progressChanged($event)"
+        [requiredExtraData]="requiredExtraData" [allowCreate]=false (onBack)="loginBack()" (onProgress)="progressChanged($event)"
         (onComplete)="loginComplete($event)">
       </app-widget-login-auth>
       <!-- Code Authentication -->

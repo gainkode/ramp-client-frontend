@@ -4,7 +4,8 @@
     </div>
 
     <app-login-panel [socialButtons]="false" [wizardButtons]="true" [userName]="email" [widgetId]="widgetId"
-        [errorMessage]="errorMessage" [requiredExtraData]="requiredExtraData" (error)="loginError($event)"
-        (progressChange)="onProgress.emit($event)" (onBack)="onBack.emit()" (authenticated)="onComplete.emit($event)">
+        [errorMessage]="errorMessage" [requiredExtraData]="requiredExtraData" [allowCreate]="allowCreate"
+        (error)="loginError($event)" (progressChange)="onProgress.emit($event)" (onBack)="onBack.emit()"
+        (authenticated)="onComplete.emit($event)">
     </app-login-panel>
 </div>

@@ -22,6 +22,7 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
     @Input() userTypeSection = 'personal';
     @Input() socialButtons: boolean = false;
     @Input() wizardButtons: boolean = false;
+    @Input() allowCreate: boolean = true;
     @Input() errorMessage = '';
     @Input() widgetId = '';
     @Input() set requiredExtraData(val: boolean) {
