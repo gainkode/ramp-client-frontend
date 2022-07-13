@@ -140,6 +140,8 @@ export class WidgetComponent implements OnInit {
         const extraData = JSON.parse(data.additionalSettings);
         this.widget.disclaimer = extraData.disclaimer ?? true;
         this.widget.kycFirst = extraData.kycBeforePayment ?? false;
+        this.widget.minAmountFrom = extraData.minAmountFrom;
+        this.widget.maxAmountFrom = extraData.maxAmountFrom;
       } else {
         this.widget.disclaimer = true;
         this.widget.kycFirst = false;
