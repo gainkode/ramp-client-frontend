@@ -5,16 +5,18 @@
     window.__env_data.product = 'GetCoins';
     window.__env_data.productFull = 'GetCoins Default';
 
-    // Coockie domain
-    window.__env_data.cookieDomain = 'localhost';
-    // Current client host address
-    window.__env_data.client_host = 'http://localhost:4000';
-    // API server address
-    window.__env_data.api_server = 'http://localhost:4001';
-    // API WebSocket address
-    window.__env_data.ws_server = 'ws://localhost:4001';
-    // Image hosting address
-    window.__env_data.image_host = './assets/test';
+    // // Coockie domain
+    // window.__env_data.cookieDomain = 'localhost';
+    // // Current client host address
+    // window.__env_data.client_host = 'http://localhost:4000';
+    // // API server address
+    // window.__env_data.api_server = 'http://localhost:4001';
+    // // API WebSocket address
+    // window.__env_data.ws_server = 'ws://localhost:4001';
+    // // Image hosting address
+    // window.__env_data.image_host = './assets/test';
+    // window.__env_data.widget_secret = 'ba339c3f0ceb3e6adb3fa0af83c510cee31a67a6';
+    // window.__env_data.widget_api_key = 'd1237f04-5f77-4ba5-92f8-91ca2c58b09d';
 
     // window.__env_data.cookieDomain = 'https://app.crunchywallet.io';
     // window.__env_data.client_host = 'https://app.crunchywallet.io';
@@ -22,11 +24,13 @@
     // window.__env_data.ws_server = 'wss://app.crunchywallet.io';
     // window.__env_data.image_host = 'https://app.crunchywallet.io';
     
-    // window.__env_data.cookieDomain = 'https://app.getcoins.com.au';
-    // window.__env_data.client_host = 'https://app.getcoins.com.au';
-    // window.__env_data.api_server = 'https://app.getcoins.com.au';
-    // window.__env_data.ws_server = 'wss://app.getcoins.com.au';
-    // window.__env_data.image_host = 'https://app.getcoins.com.au';
+    window.__env_data.cookieDomain = 'https://app.getcoins.com.au';
+    window.__env_data.client_host = 'https://app.getcoins.com.au';
+    window.__env_data.api_server = 'https://app.getcoins.com.au';
+    window.__env_data.ws_server = 'wss://app.getcoins.com.au';
+    window.__env_data.image_host = 'https://app.getcoins.com.au';
+    window.__env_data.widget_secret = '072c10b958e4e67348be4a5ab2e7def687c64a0d';
+    window.__env_data.widget_api_key = '0e63b374-d1bd-4e95-b2b5-368866dd1380';
 
     // window.__env_data.cookieDomain = 'app.genesisxchange.com';
     // window.__env_data.client_host = 'https://app.genesisxchange.com';
@@ -59,9 +63,6 @@
 
     window.__env_data.widget_bg_mask = 'true';
     window.__env_data.widget_bg_name = 'assets/widget-bg.svg';
-
-    window.__env_data.widget_secret = 'ba339c3f0ceb3e6adb3fa0af83c510cee31a67a6';
-    window.__env_data.widget_api_key = 'd1237f04-5f77-4ba5-92f8-91ca2c58b09d';
 
     //////////////////////////////////////////////////
     //                                              //

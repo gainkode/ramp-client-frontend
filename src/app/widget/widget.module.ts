@@ -57,6 +57,7 @@ import { WidgetCryptoDetailsComponent } from './panels/crypto-details.component'
 import { WidgetCryptoCompleteComponent } from './panels/crypto-complete.component';
 import { WidgetCryptoFinishComponent } from './panels/crypto-finish.component';
 import { CryptoWizardComponent } from './crypto-wizard.component';
+import { WidgetWizardComponent } from './widget-wizard.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -90,7 +91,7 @@ export class MaterialModule { }
         NgxMaskModule.forRoot(), CommonModule, ClipboardModule, FormsModule, ReactiveFormsModule, RouterModule, MaterialModule, QRCodeModule],
     declarations: [
         WidgetComponent, ReceiveWidgetComponent, SendWidgetComponent, TransferWidgetComponent, BuySellFiatWidgetComponent,
-        BuySellWidgetComponent, FiatWidgetComponent, CryptoWidgetComponent, CryptoWizardComponent,
+        BuySellWidgetComponent, FiatWidgetComponent, CryptoWidgetComponent, CryptoWizardComponent, WidgetWizardComponent,
         WidgetProgressComponent, WidgetRecentTransactionsComponent,
         WidgetSummaryComponent, WidgetRateComponent, WidgetCreditCardComponent, WidgetWireTransferComponent,
         WidgetWireTransferResultComponent, WidgetSellDetailsComponent, WidgetDepositDetailsComponent,
@@ -108,7 +109,8 @@ export class MaterialModule { }
         TransferWidgetComponent,
         PaymentIntroComponent,
         CryptoWidgetComponent,
-        CryptoWizardComponent
+        CryptoWizardComponent,
+        WidgetWizardComponent
     ],
     providers: [],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]

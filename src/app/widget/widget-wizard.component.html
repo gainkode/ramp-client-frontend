@@ -1,0 +1,111 @@
+<div class="__widget-container">
+  <div class="__widget-title-container">
+    <div class="__widget-title-logo-container">
+      <img class="__widget-title-logo" [src]="logoSrc" [alt]="logoAlt" width="160" (click)="router.navigateByUrl('/')">
+    </div>
+  </div>
+
+  <div class="__widget-data-container">
+    <div class="__widget-wizard-container __widget-wizard-container-single __widget-wizard-demo-box">
+      <h1 class="__widget-title">
+        Widget wizard
+      </h1>
+      <div class="__widget-disclaimer-container">
+        <span class="__widget-disclaimer-line">
+          Fill the following fields to set up the widget.
+        </span>
+      </div>
+      <form [formGroup]="dataForm" (ngSubmit)="save()">
+        <!-- Widget ID -->
+        <app-form-textbox [label]="'Widget identifier'" [asterisk]=true [maxlength]="100" [smallLabel]=true
+          formControlName="widget" [errorMessages]="widgetErrorMessages" [separator]=true>
+        </app-form-textbox>
+
+        <!-- Email -->
+        <app-form-textbox [label]="'User email'" [asterisk]=true [maxlength]="50" [smallLabel]=true
+          formControlName="email" [errorMessages]="emailErrorMessages" [separator]="true">
+        </app-form-textbox>
+
+        <!-- Transaction type -->
+        <div class="__form-label __form-label-small">
+          Transaction type
+        </div>
+        <div class="__profile-details-item-block">
+          <div class="__form-text-border">
+            <mat-select formControlName="transactionType" style="margin: 8px 0px 0px 0px;" placeholder="...">
+              <mat-select-trigger>
+                <div class="__form-combo-item-text">
+                  {{selectedTransactionType?.name}}
+                </div>
+              </mat-select-trigger>
+              <mat-option *ngFor="let item of transactionTypes" [value]="item.id" style="height: 32px;">
+                <div class="__form-combo-item-block">
+                  <div class="__form-combo-item-text">
+                    {{item.name}}
+                  </div>
+                </div>
+              </mat-option>
+            </mat-select>
+          </div>
+        </div>
+        <div class="__form-separator"></div>
+
+        <!-- Amount Send -->
+        <app-form-finance-combo [label]="'Amount To Send'" [smallLabel]=true [placeholder]="'...'"
+          [boxFieldName]="'amountSend'" [boxField]="amountSendField" [comboField]="currencySendField"
+          [comboFieldName]="'currencySend'" [comboList]="currencySendList" [errorMessages]="amountSendErrorMessages"
+          [separator]="true">
+        </app-form-finance-combo>
+
+        <!-- Converted currency -->
+        <div class="__form-label __form-label-small">
+          Currency to Receive
+        </div>
+        <div class="__profile-details-item-block">
+          <div class="__form-text-border">
+            <mat-select formControlName="currencyReceive" style="margin: 8px 0px 0px 0px;" placeholder="...">
+              <mat-select-trigger>
+                <div class="__form-combo-item-text">
+                  {{selectedCurrencyReceive?.fullName}}
+                </div>
+              </mat-select-trigger>
+              <mat-option *ngFor="let item of currencyReceiveList" [value]="item.symbol" style="height: 32px;">
+                <div class="__form-combo-item-block">
+                  <div class="__form-combo-item-text">
+                    {{item.fullName}}
+                  </div>
+                </div>
+              </mat-option>
+            </mat-select>
+          </div>
+        </div>
+        <div class="__form-separator"></div>
+
+        <!-- Destination -->
+        <app-form-textbox [label]="'Destination'" [asterisk]=true [maxlength]="50" [smallLabel]=true
+          formControlName="destination" [errorMessages]="emailErrorMessages" [separator]="true">
+        </app-form-textbox>
+
+        <!-- Buttons -->
+        <div class="__widget-buttons-area">
+          <button class="__main-button" type="submit" [disabled]="done || !dataForm.valid">
+            done
+          </button>
+        </div>
+
+        <!-- Completed link -->
+        <div *ngIf="done" class="__widget-disclaimer-container">
+          <span class="__widget-disclaimer-line">
+            Use this link to go to the created widget:
+          </span>
+          <br>
+          <a [href]="widgetLink" target="_blank" rel="noopener noreferrer">{{widgetLink}}</a>
+        </div>
+      </form>
+
+      <div class="__widget-data-error">
+        {{errorMessage}}
+      </div>
+    </div>
+  </div>
+</div>

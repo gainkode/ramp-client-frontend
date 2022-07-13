@@ -1040,7 +1040,7 @@ query GetProviders {
     paymentProviderId
     name
     currencies
-    countries_code2
+    countriesCode2
     instruments
   }
 }
