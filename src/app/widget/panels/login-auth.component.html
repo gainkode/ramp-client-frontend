@@ -8,8 +8,4 @@
         (error)="loginError($event)" (progressChange)="onProgress.emit($event)" (onBack)="onBack.emit()"
         (authenticated)="onComplete.emit($event)">
     </app-login-panel>
-
-    <div class="__widget-data-error">
-        {{errorMessage}}
-    </div>
 </div>
