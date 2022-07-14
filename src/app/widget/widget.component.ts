@@ -146,9 +146,37 @@ export class WidgetComponent implements OnInit {
         this.widget.disclaimer = true;
         this.widget.kycFirst = false;
       }
+      let userTransaction: TransactionType | undefined = undefined;
+      let presetAddress = false;
+      if (data.currentUserParams) {
+        const userParams = JSON.parse(data.currentUserParams);
+        if (userParams.params) {
+          if (userParams.params.amount) {
+            this.widget.amountFrom = userParams.params.amount;
+            this.summary.amountFrom = this.widget.amountFrom;
+          }
+          if (userParams.params.currency) {
+            this.widget.currencyFrom = userParams.params.currency;
+            this.summary.currencyFrom = this.widget.currencyFrom;
+          }
+          if (userParams.params.convertedCurrency) {
+            this.widget.currencyTo = userParams.params.convertedCurrency;
+            this.summary.currencyTo = this.widget.currencyTo;
+          }
+          if (userParams.params.transactionType) {
+            userTransaction = userParams.params.transactionType;
+          }
+          if (userParams.params.destination) {
+            presetAddress = true;
+          }
+        }
+      }
       this.widget.widgetId = data.widgetId;
       this.widget.email = data.currentUserEmail ?? '';
       this.widget.walletAddressPreset = data.hasFixedAddress ?? false;
+      if (presetAddress) {
+        this.widget.walletAddressPreset = true;
+      }
       if (this.quickCheckout) {
         this.widget.walletAddressPreset = false;
       }
@@ -163,14 +191,18 @@ export class WidgetComponent implements OnInit {
           this.widget.fiatList = data.currenciesFiat.map(val => val);
         }
       }
-      if (data.transactionTypes) {
-        if (data.transactionTypes.length > 0) {
-          const apropriateTransactions = data.transactionTypes.
-            filter(x => x === TransactionType.Buy || x === TransactionType.Sell);
-          if (apropriateTransactions.length > 0) {
-            this.widget.transaction = apropriateTransactions[0];
-          } else {
-            this.widget.transaction = data.transactionTypes[0];
+      if (userTransaction) {
+        this.widget.transaction = userTransaction;
+      } else {
+        if (data.transactionTypes) {
+          if (data.transactionTypes.length > 0) {
+            const apropriateTransactions = data.transactionTypes.
+              filter(x => x === TransactionType.Buy || x === TransactionType.Sell);
+            if (apropriateTransactions.length > 0) {
+              this.widget.transaction = apropriateTransactions[0];
+            } else {
+              this.widget.transaction = data.transactionTypes[0];
+            }
           }
         }
       }
@@ -291,20 +323,27 @@ export class WidgetComponent implements OnInit {
     this.requiredExtraData = false;
     this.summary.reset();
     this.initData(undefined);
-    this.pager.init('', '');
-    this.nextStage('order_details', 'Order details', 1, false);
+    if (this.widget.orderDefault) {
+      this.orderDetailsComplete(this.summary.email);
+    } else {
+      this.pager.init('', '');
+      this.nextStage('order_details', 'Order details', 1, false);
+    }
   }
 
   handleError(message: string): void {
-    this.errorMessage = message;
-    this.changeDetector.detectChanges();
+    this.setError('Transaction failed', message, false);
   }
 
   handleAuthError(): void {
     if (this.widget.embedded) {
       this.router.navigateByUrl('/');
     } else {
-      this.nextStage('order_details', 'Order details', 1, false);
+      if (this.widget.orderDefault) {
+        this.nextStage('login_auth', 'Authorization', 3, true);
+      } else {
+        this.nextStage('order_details', 'Order details', 1, false);
+      }
     }
   }
 
@@ -353,11 +392,15 @@ export class WidgetComponent implements OnInit {
         this.initData(data.getWidget as Widget);
         let validTransactionType = true;
         if (this.widget.transaction) {
-          validTransactionType = (this.widget.transaction === TransactionType.Buy || 
+          validTransactionType = (this.widget.transaction === TransactionType.Buy ||
             this.widget.transaction === TransactionType.Sell);
         }
         if (validTransactionType) {
-        this.pager.init('order_details', 'Order details');
+          if (this.widget.orderDefault) {
+            this.orderDetailsComplete(this.summary.email);
+          } else {
+            this.pager.init('order_details', 'Order details');
+          }
         } else {
           this.showTransactionError(
             'Wrong widget settings',
@@ -484,7 +527,11 @@ export class WidgetComponent implements OnInit {
   }
 
   settingsIdRequired(): void {
-    this.nextStage('order_details', 'Order details', 1, true);
+    if (this.widget.orderDefault) {
+      this.orderDetailsComplete(this.summary.email);
+    } else {
+      this.nextStage('order_details', 'Order details', 1, true);
+    }
   }
 
   private settingsKycState(state: boolean, level: string): void {
@@ -504,7 +551,11 @@ export class WidgetComponent implements OnInit {
       this.nextStage('verification', 'Verification', nextStage, false);
     } else {
       if (this.paymentProviders.length < 1) {
-        this.errorMessage = `No supported payment providers found for "${this.summary.currencyFrom}"`;
+        this.setError(
+          'Payment providers not found',
+          `No supported payment providers found for "${this.summary.currencyFrom}"`,
+          false
+        );
       } else if (this.paymentProviders.length > 1) {
         if (!this.notificationStarted) {
           this.startNotificationListener();
@@ -656,7 +707,10 @@ export class WidgetComponent implements OnInit {
   kycComplete(): void {
     if (this.widget.kycFirst) {
       if (this.paymentProviders.length < 1) {
-        this.errorMessage = `No supported payment providers found for "${this.summary.currencyFrom}"`;
+        this.setError(
+          'No payment providers',
+          `No supported payment providers found for "${this.summary.currencyFrom}"`,
+          false);
       } else if (this.paymentProviders.length > 1) {
         this.nextStage('payment', 'Payment info', 5, true);
       } else {
@@ -689,7 +743,10 @@ export class WidgetComponent implements OnInit {
       this.requiredExtraData = true;
       this.nextStage('login_auth', 'Authorization', 3, true);
     } else {
-      this.errorMessage = `Unable to authenticate user with the action "${data.authTokenAction}"`;
+      this.setError(
+        'Authentication failed',
+        `Unable to authenticate user with the action "${data.authTokenAction}"`,
+        false);
     }
   }
 
@@ -742,7 +799,11 @@ export class WidgetComponent implements OnInit {
                 errorMessage: this.errorMessage
               } as PaymentErrorDetails);
             } else {
-              this.pager.swapStage(tempStageId);
+              if (this.widget.orderDefault) {
+                this.setError('Transaction failed', 'Order code is invalid', false);
+              } else {
+                this.pager.swapStage(tempStageId);
+              }
             }
           }
         }, (error) => {
@@ -757,7 +818,7 @@ export class WidgetComponent implements OnInit {
                 errorMessage: this.errorMessage
               } as PaymentErrorDetails);
             } else {
-              this.showTransactionError('Transaction handling failed', this.errorMessage);
+              this.setError('Transaction handling failed', this.errorMessage, true);
             }
           }
         })
@@ -803,7 +864,7 @@ export class WidgetComponent implements OnInit {
                 errorMessage: this.errorMessage
               } as PaymentErrorDetails);
             } else {
-              this.showTransactionError('Transaction handling failed', this.errorMessage);
+              this.setError('Transaction handling failed', this.errorMessage, true);
             }
           }
         }, (error) => {
@@ -817,7 +878,7 @@ export class WidgetComponent implements OnInit {
                 errorMessage: this.errorMessage
               } as PaymentErrorDetails);
             } else {
-              this.showTransactionError('Transaction handling failed', this.errorMessage);
+              this.setError('Transaction handling failed', this.errorMessage, true);
             }
           }
         })
@@ -836,7 +897,10 @@ export class WidgetComponent implements OnInit {
     } else if (this.summary.providerView?.instrument === PaymentInstrument.WireTransfer) {
       this.widgetService.getWireTransferSettings(this.summary, this.widget);
     } else {
-      this.errorMessage = `Invalid payment instrument ${this.summary.providerView?.instrument}`;
+      this.setError(
+        'Invalid payment instrument',
+        `Invalid payment instrument ${this.summary.providerView?.instrument}`,
+        false);
     }
   }
 
@@ -867,7 +931,7 @@ export class WidgetComponent implements OnInit {
                 errorMessage: this.errorMessage
               } as PaymentErrorDetails);
             } else {
-              this.showTransactionError('Transaction handling failed', this.errorMessage);
+              this.setError('Transaction handling failed', this.errorMessage, false);
             }
           }
         }
@@ -900,7 +964,7 @@ export class WidgetComponent implements OnInit {
                 errorMessage: this.errorMessage
               } as PaymentErrorDetails);
             } else {
-              this.showTransactionError('Transaction handling failed', this.errorMessage);
+              this.setError('Transaction handling failed', this.errorMessage, false);
             }
           }
         }
@@ -919,7 +983,15 @@ export class WidgetComponent implements OnInit {
         selected: this.wireTransferList[0]
       } as WireTransferUserSelection);
     } else {
-      this.errorMessage = 'No settings found for wire transfer';
+      this.setError('Transaction failed', 'No settings found for wire transfer', false);
+    }
+  }
+
+  private setError(title: string, message: string, tryAgain: boolean): void {
+    this.errorMessage = message;
+    this.changeDetector.detectChanges();
+    if (this.widget.orderDefault && this.errorMessage !== '') {
+      this.showTransactionError(title, message, tryAgain);
     }
   }
 

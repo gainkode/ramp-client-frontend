@@ -34,8 +34,16 @@ export class WidgetSettings {
     currencyTo = '';
     hideAmountFrom = false;
     amountFrom = 0;
-    minAmountFrom: number | undefined = undefined;;
-    maxAmountFrom: number | undefined = undefined;;
+    minAmountFrom: number | undefined = undefined;
+    maxAmountFrom: number | undefined = undefined;
+
+    get orderDefault(): boolean {
+        return (this.amountFrom !== 0 &&
+            this.currencyFrom !== '' &&
+            this.currencyTo !== '' &&
+            this.walletAddressPreset &&
+            this.transaction !== undefined);
+    }
 }
 
 export class WidgetStage {

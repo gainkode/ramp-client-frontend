@@ -9,13 +9,12 @@ import { LoginResult } from 'src/app/model/generated-models';
 export class WidgetLoginAuthComponent {
     @Input() email = '';
     @Input() widgetId = '';
+    @Input() errorMessage = '';
     @Input() requiredExtraData = false;
     @Input() allowCreate = true;
     @Output() onProgress = new EventEmitter<boolean>();
     @Output() onBack = new EventEmitter();
     @Output() onComplete = new EventEmitter<LoginResult>();
-
-    errorMessage = '';
 
     constructor() { }
 

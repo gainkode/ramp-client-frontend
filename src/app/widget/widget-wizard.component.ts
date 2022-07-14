@@ -240,7 +240,19 @@ export class WidgetWizardComponent implements OnInit {
       convertedCurrency: (this.selectedCurrencyReceive) ? this.selectedCurrencyReceive.symbol : undefined,
       currency: currencyToSend,
       amount: amountToSend,
-      destination: address
+      destination: address,
+      transactionType: this.selectedTransactionType?.id,
+      // postCode: '',
+      // town: '',
+      // street: '',
+      // subStreet: '',
+      // stateName: '',
+      // buildingName: '',
+      // buildingNumber: '',
+      // flatNumber: '',
+      // phone: '',
+      // birthday: '',
+      // sex: 'M/F'
     };
     const transactionData$ = this.commonService.addMyWidgetUserParams(
       this.widgetField?.value,
@@ -252,7 +264,7 @@ export class WidgetWizardComponent implements OnInit {
           this.progressChanged(false);
           const p = data.addMyWidgetUserParams as WidgetUserParams;
           this.done = true;
-          this.widgetLink = `${EnvService.client_host}/payment/crypto/${p.widgetUserParamsId}`;
+          this.widgetLink = `${EnvService.client_host}/payment/widget/${p.widgetUserParamsId}`;
         }, (error) => {
           this.progressChanged(false);
           this.handleError(this.errorHandler.getError(error.message, 'Unable to save data'));
