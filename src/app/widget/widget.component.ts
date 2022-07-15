@@ -107,25 +107,22 @@ export class WidgetComponent implements OnInit {
       this.onWireTransferListLoaded.bind(this)
     );
     this.initMessage = 'Loading...';
-
-    this.nextStage('disclaimer', 'Disclaimer', 2, false);
-
-    // if (this.userParamsId === '') {
-    //   if (this.settings) {
-    //     this.widget = this.settings;
-    //   }
-    //   if (this.widget.embedded) {
-    //     this.pager.init('initialization', 'Initialization');
-    //     this.loadUserWallets();
-    //   } else {
-    //     this.pager.init('order_details', 'Order details');
-    //     this.initData(undefined);
-    //   }
-    // } else {
-    //   this.pager.init('initialization', 'Initialization');
-    //   this.loadUserParams();
-    // }
-    // this.startExchangeRate();
+    if (this.userParamsId === '') {
+      if (this.settings) {
+        this.widget = this.settings;
+      }
+      if (this.widget.embedded) {
+        this.pager.init('initialization', 'Initialization');
+        this.loadUserWallets();
+      } else {
+        this.pager.init('order_details', 'Order details');
+        this.initData(undefined);
+      }
+    } else {
+      this.pager.init('initialization', 'Initialization');
+      this.loadUserParams();
+    }
+    this.startExchangeRate();
   }
 
   ngOnDestroy(): void {
