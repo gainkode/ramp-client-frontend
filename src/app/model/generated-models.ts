@@ -2336,6 +2336,7 @@ export type SettingsCommon = {
   proxyLiquidityProviderApiKey?: Maybe<Scalars['String']>;
   proxyLiquidityProvider?: Maybe<Scalars['String']>;
   proxyLiquidityProviderTransactionChangedCallback?: Maybe<Scalars['String']>;
+  textPages?: Maybe<Array<Maybe<TextPage>>>;
 };
 
 export type SettingsCommonInput = {
@@ -2720,6 +2721,12 @@ export type SupportTicketListResult = {
   __typename?: 'SupportTicketListResult';
   count?: Maybe<Scalars['Int']>;
   list?: Maybe<Array<SupportTicket>>;
+};
+
+export type TextPage = {
+  __typename?: 'TextPage';
+  page?: Maybe<Scalars['Int']>;
+  text?: Maybe<Scalars['String']>;
 };
 
 export enum TokenAction {

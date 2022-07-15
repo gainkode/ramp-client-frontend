@@ -332,7 +332,7 @@ export class WidgetComponent implements OnInit {
   }
 
   handleError(message: string): void {
-    this.setError('Transaction failed', message, false);
+    this.setError('Transaction failed', message);
   }
 
   handleAuthError(): void {
@@ -397,7 +397,10 @@ export class WidgetComponent implements OnInit {
         }
         if (validTransactionType) {
           if (this.widget.orderDefault) {
-            this.orderDetailsComplete(this.summary.email);
+            if (this.auth.user?.email !== this.widget.email) {
+              this.summary.email = '';
+            }
+            this.orderDetailsComplete(this.widget.email);
           } else {
             this.pager.init('order_details', 'Order details');
           }
@@ -516,7 +519,7 @@ export class WidgetComponent implements OnInit {
       this.nextStage('sell_details', 'Bank details', 2, true);
       //this.createWithdrawalTransaction();
     } else {
-      this.widgetService.getSettingsCommon(this.summary, this.widget.widgetId, false);
+      this.widgetService.getSettingsCommon(this.summary, this.widget.widgetId, this.widget.orderDefault);
     }
   }
   // ================
@@ -553,9 +556,7 @@ export class WidgetComponent implements OnInit {
       if (this.paymentProviders.length < 1) {
         this.setError(
           'Payment providers not found',
-          `No supported payment providers found for "${this.summary.currencyFrom}"`,
-          false
-        );
+          `No supported payment providers found for "${this.summary.currencyFrom}"`);
       } else if (this.paymentProviders.length > 1) {
         if (!this.notificationStarted) {
           this.startNotificationListener();
@@ -709,8 +710,7 @@ export class WidgetComponent implements OnInit {
       if (this.paymentProviders.length < 1) {
         this.setError(
           'No payment providers',
-          `No supported payment providers found for "${this.summary.currencyFrom}"`,
-          false);
+          `No supported payment providers found for "${this.summary.currencyFrom}"`);
       } else if (this.paymentProviders.length > 1) {
         this.nextStage('payment', 'Payment info', 5, true);
       } else {
@@ -745,8 +745,7 @@ export class WidgetComponent implements OnInit {
     } else {
       this.setError(
         'Authentication failed',
-        `Unable to authenticate user with the action "${data.authTokenAction}"`,
-        false);
+        `Unable to authenticate user with the action "${data.authTokenAction}"`);
     }
   }
 
@@ -800,7 +799,7 @@ export class WidgetComponent implements OnInit {
               } as PaymentErrorDetails);
             } else {
               if (this.widget.orderDefault) {
-                this.setError('Transaction failed', 'Order code is invalid', false);
+                this.setError('Transaction failed', 'Order code is invalid');
               } else {
                 this.pager.swapStage(tempStageId);
               }
@@ -818,7 +817,7 @@ export class WidgetComponent implements OnInit {
                 errorMessage: this.errorMessage
               } as PaymentErrorDetails);
             } else {
-              this.setError('Transaction handling failed', this.errorMessage, true);
+              this.setError('Transaction handling failed', this.errorMessage);
             }
           }
         })
@@ -864,7 +863,7 @@ export class WidgetComponent implements OnInit {
                 errorMessage: this.errorMessage
               } as PaymentErrorDetails);
             } else {
-              this.setError('Transaction handling failed', this.errorMessage, true);
+              this.setError('Transaction handling failed', this.errorMessage);
             }
           }
         }, (error) => {
@@ -878,7 +877,7 @@ export class WidgetComponent implements OnInit {
                 errorMessage: this.errorMessage
               } as PaymentErrorDetails);
             } else {
-              this.setError('Transaction handling failed', this.errorMessage, true);
+              this.setError('Transaction handling failed', this.errorMessage);
             }
           }
         })
@@ -899,8 +898,7 @@ export class WidgetComponent implements OnInit {
     } else {
       this.setError(
         'Invalid payment instrument',
-        `Invalid payment instrument ${this.summary.providerView?.instrument}`,
-        false);
+        `Invalid payment instrument ${this.summary.providerView?.instrument}`);
     }
   }
 
@@ -931,7 +929,7 @@ export class WidgetComponent implements OnInit {
                 errorMessage: this.errorMessage
               } as PaymentErrorDetails);
             } else {
-              this.setError('Transaction handling failed', this.errorMessage, false);
+              this.setError('Transaction handling failed', this.errorMessage);
             }
           }
         }
@@ -964,7 +962,7 @@ export class WidgetComponent implements OnInit {
                 errorMessage: this.errorMessage
               } as PaymentErrorDetails);
             } else {
-              this.setError('Transaction handling failed', this.errorMessage, false);
+              this.setError('Transaction handling failed', this.errorMessage);
             }
           }
         }
@@ -983,15 +981,16 @@ export class WidgetComponent implements OnInit {
         selected: this.wireTransferList[0]
       } as WireTransferUserSelection);
     } else {
-      this.setError('Transaction failed', 'No settings found for wire transfer', false);
+      this.setError('Transaction failed', 'No settings found for wire transfer');
     }
   }
 
-  private setError(title: string, message: string, tryAgain: boolean): void {
+  private setError(title: string, message: string): void {
+    console.log(title, message, this.pager.stageId);
     this.errorMessage = message;
     this.changeDetector.detectChanges();
-    if (this.widget.orderDefault && this.errorMessage !== '') {
-      this.showTransactionError(title, message, tryAgain);
+    if ((this.widget.orderDefault || this.pager.stageId === 'initialization') && this.errorMessage !== '') {
+      this.showTransactionError(title, message, !this.widget.orderDefault);
     }
   }
 

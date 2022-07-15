@@ -335,6 +335,7 @@ query {
         kycProvider
         kycBaseAddress
         additionalSettings
+        textPages { page, text }
     }
   }
 `;
