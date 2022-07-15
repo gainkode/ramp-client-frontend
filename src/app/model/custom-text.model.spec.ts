@@ -4,15 +4,15 @@ describe('CustomerText', () => {
   it('should recognize title', () => {
     const item = new CustomText('[%title%]DISCLAIMER');
     expect(item.type).toBe(CustomTextType.Title);
-    expect(item.leftBlock).toBe('DISCLAIMER');
+    expect(item.leftBlock).toBe('');
     expect(item.rightBlock).toBe('');
-    expect(item.keyBlock).toBe('');
+    expect(item.keyBlock).toBe('DISCLAIMER');
   });
 
   it('should recognize plain text with a product name', () => {
-    const item = new CustomText('Please note that you are about to transfer funds using [%product%] services');
+    const item = new CustomText('Please note that you are about to transfer funds to {%product%} using {%product%} services');
     expect(item.type).toBe(CustomTextType.Text);
-    expect(item.leftBlock).toBe('Please note that you are about to transfer funds using Horns services');
+    expect(item.leftBlock).toBe('Please note that you are about to transfer funds to Horns using Horns services');
     expect(item.rightBlock).toBe('');
     expect(item.keyBlock).toBe('');
   });
@@ -42,7 +42,7 @@ describe('CustomerText', () => {
   });
   
   it('should recognize check box', () => {
-    const item = new CustomText('[%accept%]I have read and accept the terms and conditions of [%product%], cookies policy and disclaimer');
+    const item = new CustomText('[%accept%]I have read and accept the terms and conditions of {%product%}, cookies policy and disclaimer');
     expect(item.type).toBe(CustomTextType.Accept);
     expect(item.leftBlock).toBe('');
     expect(item.rightBlock).toBe('');

@@ -32,10 +32,14 @@ export class CustomText {
     }
 
     constructor(data: string) {
-        let content = data.replace('[%product%]', EnvService.productFull);
+        let content = data;
+        while (content.includes('{%product%}')) {
+            content = content.replace('{%product%}', EnvService.productFull);
+        }
         let keyPos = content.indexOf('[%title%]');
         if (keyPos >= 0) {
-            content = content.replace('[%title%]', '');
+            this.textBlock = content.replace('[%title%]', '');
+            content = '';
             this.itemType = CustomTextType.Title;
         }
         keyPos = content.indexOf('[%paragraph%]');
@@ -61,5 +65,50 @@ export class CustomText {
             content = this.textLeft;
         }
         this.textLeft = content;
+    }
+}
+
+export class CustomTextBlock {
+    private listInternal: CustomText[] = [];
+
+    get list(): CustomText[] {
+        return this.listInternal;
+    }
+
+    add(item: CustomText): void {
+        this.listInternal.push(item);
+    }
+
+    clear(): void {
+        this.listInternal = [];
+    }
+}
+
+export class CustomTextList {
+    private blocksInternal: CustomTextBlock[] = [];
+
+    get blocks(): CustomTextBlock[] {
+        return this.blocksInternal;
+    }
+
+    constructor(data: string[]) {
+        const list = data.map(x => new CustomText(x));
+        let block: CustomTextBlock | undefined = undefined;
+        list.forEach(x => {
+            if (x.type !== CustomTextType.Paragraph) {
+                if (!block) {
+                    block = new CustomTextBlock();
+                }
+                block.add(x);
+            } else {
+                if (block) {
+                    this.blocks.push(block);
+                }
+                block = undefined;
+            }
+        });
+        if (block) {
+            this.blocks.push(block);
+        }
     }
 }

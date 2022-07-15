@@ -107,22 +107,25 @@ export class WidgetComponent implements OnInit {
       this.onWireTransferListLoaded.bind(this)
     );
     this.initMessage = 'Loading...';
-    if (this.userParamsId === '') {
-      if (this.settings) {
-        this.widget = this.settings;
-      }
-      if (this.widget.embedded) {
-        this.pager.init('initialization', 'Initialization');
-        this.loadUserWallets();
-      } else {
-        this.pager.init('order_details', 'Order details');
-        this.initData(undefined);
-      }
-    } else {
-      this.pager.init('initialization', 'Initialization');
-      this.loadUserParams();
-    }
-    this.startExchangeRate();
+
+    this.nextStage('disclaimer', 'Disclaimer', 2, false);
+
+    // if (this.userParamsId === '') {
+    //   if (this.settings) {
+    //     this.widget = this.settings;
+    //   }
+    //   if (this.widget.embedded) {
+    //     this.pager.init('initialization', 'Initialization');
+    //     this.loadUserWallets();
+    //   } else {
+    //     this.pager.init('order_details', 'Order details');
+    //     this.initData(undefined);
+    //   }
+    // } else {
+    //   this.pager.init('initialization', 'Initialization');
+    //   this.loadUserParams();
+    // }
+    // this.startExchangeRate();
   }
 
   ngOnDestroy(): void {
@@ -986,7 +989,6 @@ export class WidgetComponent implements OnInit {
   }
 
   private setError(title: string, message: string): void {
-    console.log(title, message, this.pager.stageId);
     this.errorMessage = message;
     this.changeDetector.detectChanges();
     if ((this.widget.orderDefault || this.pager.stageId === 'initialization') && this.errorMessage !== '') {

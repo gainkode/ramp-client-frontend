@@ -482,10 +482,6 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     if (this.settings.minAmountFrom) {
       minAmount = this.settings.minAmountFrom;
     }
-
-    console.log(minAmount, this.settings);
-
-
     this.amountSpendErrorMessages['min'] = `Min. amount ${minAmount} ${this.currentCurrencySpend?.display}`;
     let validators = [
       Validators.required,
