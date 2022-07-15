@@ -66,9 +66,10 @@ export class ProfileInfoSettingsComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.loadCurrencyData();
-        if (this.auth.user?.kycValid && this.auth.user?.kycValid !== null) {
-            this.kycApproved = this.auth.user?.kycValid;
-        }
+        // Bar asked to make these fields read-only always (15/07/2022)
+        // if (this.auth.user?.kycValid && this.auth.user?.kycValid !== null) {
+        //     this.kycApproved = this.auth.user?.kycValid;
+        // }
     }
 
     private loadAccountData(updateLocalAvatar: boolean): void {
