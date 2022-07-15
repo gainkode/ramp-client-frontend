@@ -1,6 +1,6 @@
 export class EnvService {
     public static product = 'GetCoins';
-    public static productFull = 'GetCoins Australia';
+    public static productFull = 'Horns';
     public static cookieDomain = 'localhost';
     public static client_host = 'http://localhost:4000';
     public static api_server = 'http://localhost:4001';

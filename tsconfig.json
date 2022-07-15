@@ -22,7 +22,8 @@
       "es2018",
       "dom",
       "esnext.asynciterable"
-    ]
+    ],
+    "esModuleInterop": true
   },
   "angularCompilerOptions": {
     "strictInjectionParameters": true,
