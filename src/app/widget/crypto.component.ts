@@ -331,7 +331,7 @@ export class CryptoWidgetComponent implements OnInit {
   identificationComplete(data: LoginResult): void {
     this.auth.setLoginUser(data);
     this.summary.email = data.user?.email ?? '';
-    this.widgetService.getSettingsCommon(this.summary, this.widget.widgetId, false);
+    this.widgetService.getSettingsCommon(this.summary, this.widget, false);
   }
 
   identificationBack(): void {

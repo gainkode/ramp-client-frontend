@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
 import { Subscription } from "rxjs";
 import { take } from "rxjs/operators";
-import { LoginResult, PaymentInstrument, PaymentProviderByInstrument, SettingsCostShort, SettingsCurrencyWithDefaults, SettingsFeeShort, SettingsKycTierShortEx, SettingsKycTierShortExListResult, TransactionSource, TransactionType, User, UserMode, WireTransferBankAccountShort } from "../model/generated-models";
+import { LoginResult, PaymentInstrument, PaymentProviderByInstrument, SettingsCurrencyWithDefaults, SettingsFeeShort, SettingsKycTierShortExListResult, TransactionSource, TransactionType, User, WireTransferBankAccountShort } from "../model/generated-models";
 import { WidgetSettings, WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from "../model/payment-base.model";
-import { CheckoutSummary, PaymentProviderInstrumentView, TransactionSourceList, WireTransferPaymentCategoryList } from "../model/payment.model";
+import { CheckoutSummary, PaymentProviderInstrumentView, WireTransferPaymentCategoryList } from "../model/payment.model";
 import { AuthService } from "./auth.service";
 import { CommonDataService } from "./common-data.service";
 import { ErrorService } from "./error.service";
@@ -58,7 +58,7 @@ export class WidgetService {
         this.onWireTranferListLoaded = wireTranferListLoadedCallback;
     }
 
-    getSettingsCommon(summary: CheckoutSummary, widgetId: string, updatedUserData: boolean): void {
+    getSettingsCommon(summary: CheckoutSummary, widget: WidgetSettings, updatedUserData: boolean): void {
         if (this.onError) {
             this.onError('');
         }
@@ -70,10 +70,10 @@ export class WidgetService {
                 dataGetter$.subscribe(({ data }) => {
                     if (this.auth.user) {
                         this.auth.setLocalSettingsCommon(data.getSettingsCommon);
-                        this.getTiers(summary, widgetId);
+                        this.getTiers(summary, widget);
                     } else {
                         if (updatedUserData) {
-                            this.authenticate(summary.email, widgetId);
+                            this.authenticate(summary.email, widget.widgetId);
                         } else {
                             if (this.onLoginRequired) {
                                 this.onLoginRequired(summary.email);
@@ -152,17 +152,9 @@ export class WidgetService {
         if (this.onProgressChanged) {
             this.onProgressChanged(true);
         }
-        let source = TransactionSource.Wallet;
-        if (widget.embedded === false) {
-            if (widget.widgetId === '') {
-                source = TransactionSource.QuickCheckout;
-            } else {
-                source = TransactionSource.Widget;
-            }
-        }
         const settingsData$ = this.paymentService.mySettingsFee(
             summary.transactionType,
-            source,
+            this.getSource(widget),
             PaymentInstrument.WireTransfer,
             summary.provider?.name ?? '',
             summary.currencyTo,
@@ -260,7 +252,7 @@ export class WidgetService {
         }
     }
 
-    private getTiers(summary: CheckoutSummary, widgetId: string): void {
+    private getTiers(summary: CheckoutSummary, widget: WidgetSettings): void {
         if (this.onError) {
             this.onError('');
         }
@@ -269,10 +261,10 @@ export class WidgetService {
         const limit = summary.quoteLimit ?? 0;
         const overLimit = amount - limit;
         const tiersData$ = this.paymentService.getAppropriateSettingsKycTiers(
-            overLimit, currency, TransactionSource.Widget, widgetId).valueChanges.pipe(take(1));
+            overLimit, currency, TransactionSource.Widget, widget.widgetId).valueChanges.pipe(take(1));
         this.pSubscriptions.add(
             tiersData$.subscribe(({ data }) => {
-                this.loadCurrencies(summary, widgetId, data.getAppropriateSettingsKycTiers as SettingsKycTierShortExListResult);
+                this.loadCurrencies(summary, widget, data.getAppropriateSettingsKycTiers as SettingsKycTierShortExListResult);
             }, (error) => {
                 if (this.onProgressChanged) {
                     this.onProgressChanged(false);
@@ -282,7 +274,7 @@ export class WidgetService {
         );
     }
 
-    private loadCurrencies(summary: CheckoutSummary, widgetId: string, tiers: SettingsKycTierShortExListResult): void {
+    private loadCurrencies(summary: CheckoutSummary, widget: WidgetSettings, tiers: SettingsKycTierShortExListResult): void {
         if (this.onError) {
             this.onError('');
         }
@@ -291,7 +283,7 @@ export class WidgetService {
             currencyData$.valueChanges.subscribe(
                 ({ data }) => {
                     const tierData = this.getCurrentTierLevelName(summary, tiers, data.getSettingsCurrency as SettingsCurrencyWithDefaults);
-                    this.getKycStatus(summary, widgetId, tierData);
+                    this.getKycStatus(summary, widget, tierData);
                 },
                 (error) => {
                     if (this.onProgressChanged) {
@@ -321,7 +313,7 @@ export class WidgetService {
         return result;
     }
 
-    private getKycStatus(summary: CheckoutSummary, widgetId: string, tierData: KycTierResultData): void {
+    private getKycStatus(summary: CheckoutSummary, widget: WidgetSettings, tierData: KycTierResultData): void {
         if (this.onError) {
             this.onError('');
         }
@@ -345,7 +337,7 @@ export class WidgetService {
                         this.onKycStatusUpdate(kycData[0] === true, kycData[1]);
                     }
                     if (summary.transactionType === TransactionType.Buy) {
-                        this.loadPaymentProviders(summary, widgetId);
+                        this.loadPaymentProviders(summary, widget);
                     } else {
                         if (this.onError) {
                             this.onError(`Transaction type "${summary.transactionType}" is currently not supported`);
@@ -361,15 +353,16 @@ export class WidgetService {
         );
     }
 
-    private loadPaymentProviders(summary: CheckoutSummary, widgetId: string): void {
+    private loadPaymentProviders(summary: CheckoutSummary, widget: WidgetSettings): void {
         let fiatCurrency = '';
         if (summary.transactionType === TransactionType.Buy) {
             fiatCurrency = summary.currencyFrom;
         } else if (summary.transactionType === TransactionType.Sell) {
             fiatCurrency = summary.currencyTo;
         }
+        const widgetId = widget.widgetId;
         const providersData$ = this.paymentService.getProviders(
-            fiatCurrency, (widgetId !== '') ? widgetId : undefined
+            fiatCurrency, (widgetId !== '') ? widgetId : undefined, this.getSource(widget)
         ).valueChanges.pipe(take(1));
         if (this.onProgressChanged) {
             this.onProgressChanged(true);
@@ -403,14 +396,14 @@ export class WidgetService {
         const dataList = list
             .filter(x => x.provider?.currencies?.includes(currency, 0) || x.instrument === PaymentInstrument.WireTransfer)
             .map(val => new PaymentProviderInstrumentView(val));
-        if (!dataList.find(x => x.instrument === PaymentInstrument.WireTransfer)) {
-            dataList.push(new PaymentProviderInstrumentView({
-                instrument: PaymentInstrument.WireTransfer,
-                provider: {
-                    name: 'WireTransferPayment'
-                }
-            }));
-        }
+        // if (!dataList.find(x => x.instrument === PaymentInstrument.WireTransfer)) {
+        //     dataList.push(new PaymentProviderInstrumentView({
+        //         instrument: PaymentInstrument.WireTransfer,
+        //         provider: {
+        //             name: 'WireTransferPayment'
+        //         }
+        //     }));
+        // }
         return dataList;
     }
 
@@ -463,5 +456,17 @@ export class WidgetService {
                 this.onIdentificationRequired();
             }
         }
+    }
+
+    private getSource(widget: WidgetSettings): TransactionSource {
+        let source = TransactionSource.Wallet;
+        if (widget.embedded === false) {
+            if (widget.widgetId === '') {
+                source = TransactionSource.QuickCheckout;
+            } else {
+                source = TransactionSource.Widget;
+            }
+        }
+        return source;
     }
 }

@@ -1583,6 +1583,8 @@ export type Query = {
   getNotifications?: Maybe<UserNotificationListResult>;
   /** Get common settings */
   getSettingsCommon?: Maybe<SettingsCommon>;
+  /** Get common settings */
+  getTextPages?: Maybe<Array<Maybe<TextPage>>>;
   /** Get payment providers */
   getPaymentProviders?: Maybe<Array<PaymentProvider>>;
   /** Get payment providers for relevant options */
@@ -1767,6 +1769,7 @@ export type QueryGetNotificationsArgs = {
 export type QueryGetAppropriatePaymentProvidersArgs = {
   fiatCurrency?: Maybe<Scalars['String']>;
   widgetId?: Maybe<Scalars['String']>;
+  source?: Maybe<TransactionSource>;
 };
 
 

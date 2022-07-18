@@ -45,10 +45,12 @@ const GET_PROVIDERS = gql`
 query GetAppropriatePaymentProviders(
   $fiatCurrency: String
   $widgetId: String
+  $source: TransactionSource
 ) {
   getAppropriatePaymentProviders(
     fiatCurrency: $fiatCurrency
     widgetId: $widgetId
+    source: $source
   ) {
     instrument
     provider {
@@ -594,12 +596,13 @@ export class PaymentDataService {
     });
   }
 
-  getProviders(fiatCurrency: string, widgetId: string | undefined): QueryRef<any, EmptyObject> {
+  getProviders(fiatCurrency: string, widgetId: string | undefined, source: TransactionSource): QueryRef<any, EmptyObject> {
     return this.apollo.watchQuery<any>({
       query: GET_PROVIDERS,
       variables: {
         fiatCurrency,
-        widgetId
+        widgetId,
+        source
       },
       fetchPolicy: 'network-only'
     });

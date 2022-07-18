@@ -294,7 +294,7 @@ export class TransferWidgetComponent implements OnInit {
   }
 
   orderDetailsComplete(email: string): void {
-    this.widgetService.getSettingsCommon(this.summary, this.widget.widgetId, false);
+    this.widgetService.getSettingsCommon(this.summary, this.widget, false);
   }
   // =======================
 
