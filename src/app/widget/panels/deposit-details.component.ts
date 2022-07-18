@@ -43,6 +43,7 @@ export class WidgetDepositDetailsComponent implements OnInit, OnDestroy {
   selectedCurrency: CurrencyView | undefined = undefined;
   currencyInit = false;
   amountTitle = '';
+  done = false;
 
   dataForm = this.formBuilder.group({
     amount: [undefined, { validators: [], updateOn: 'change' }],
@@ -84,6 +85,7 @@ export class WidgetDepositDetailsComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
+    this.done = true;
     const data = new CheckoutSummary();
     data.amountTo = parseFloat(this.amountField?.value ?? '0');
     data.currencyTo = this.currencyField?.value ?? 'EUR';

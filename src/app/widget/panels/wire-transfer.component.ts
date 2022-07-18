@@ -14,6 +14,7 @@ export class WidgetWireTransferComponent {
     @Output() onBack = new EventEmitter();
     @Output() onComplete = new EventEmitter<WireTransferUserSelection>();
 
+    done = false;
     selectedCategory: WireTransferPaymentCategory | undefined = undefined;
 
     constructor() {
@@ -22,6 +23,7 @@ export class WidgetWireTransferComponent {
     onSubmit(): void {
         if (this.selectedCategory) {
             const selected = this.bankCategories.find(x => x.id === this.selectedCategory);
+            this.done = true;
             this.onComplete.emit({
                 id: this.bankAccountId,
                 selected: selected

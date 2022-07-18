@@ -784,8 +784,10 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       if (this.auth.user) {
         if (this.auth.user.email !== this.emailField?.value) {
           this.auth.logout();
+          return;
         }
       }
+      this.initialized = false;
       this.onVerifyWhenPaidChanged.emit(this.verifyWhenPaidField?.value ?? false);
       this.onComplete.emit(this.emailField?.value);
     }

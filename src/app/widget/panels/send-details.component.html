@@ -102,7 +102,9 @@
 
         <!-- Buttons -->
         <div class="__widget-buttons-area">
-            <button class="__main-button" type="submit" [disabled]="!dataForm?.valid && !zeroAmount">send</button>
+            <button class="__main-button" type="submit" [disabled]="done || (!dataForm?.valid && !zeroAmount)">
+                send
+            </button>
         </div>
     </form>
 

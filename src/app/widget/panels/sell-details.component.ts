@@ -15,6 +15,7 @@ export class WidgetSellDetailsComponent {
     @Output() onBack = new EventEmitter();
     @Output() onComplete = new EventEmitter<string>();
 
+    done = false;
     bankCategories: WireTransferPaymentCategoryItem[] = [];
     selectedCategory: WireTransferPaymentCategory | undefined = undefined;
     PAYMENT_CATEGORY: typeof WireTransferPaymentCategory = WireTransferPaymentCategory;
@@ -143,6 +144,7 @@ export class WidgetSellDetailsComponent {
                 title: this.bankCategories.find(x => x.id === this.selectedCategory)?.title,
                 data: paymentData
             } as WireTransferPaymentCategoryItem;
+            this.done = true;
             this.onComplete.emit(JSON.stringify(result));
         }
     }

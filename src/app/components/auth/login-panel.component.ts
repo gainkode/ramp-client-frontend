@@ -47,6 +47,8 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
 
     twoFa = false;
     extraData = false;
+    done = false;
+    done2Fa = false;
     private socialLogin = false;
     private userMail = '';
     private subscriptions: Subscription = new Subscription();
@@ -125,6 +127,7 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
     socialSignIn(providerName: string): void {
         this.progressChange.emit(true);
         this.registerError('');
+        this.done = true;
         this.subscriptions.add(
             this.auth.socialSignIn(providerName).subscribe((data) => {
                 if (data.user !== undefined) {
@@ -147,23 +150,28 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
                                         this.twoFa = true;
                                         this.socialLogin = true;
                                     } else if (userData.authTokenAction === 'UserInfoRequired') {
+                                        this.done = false;
                                         this.showSignupPanel(userData);
                                     } else {
                                         this.socialAuthenticated.emit(userData);
                                     }
                                 } else {
+                                    this.done = false;
                                     this.registerError(`Unable to authorise with the login '${user.email}'. Please sign up`);
                                 }
                             }, (error) => {
+                                this.done = false;
                                 this.progressChange.emit(false);
                                 this.registerError(this.errorHandler.getError(error.message, `Invalid authentication via ${providerName}`));
                             })
                         );
                     } catch (e) {
+                        this.done = false;
                         this.progressChange.emit(false);
                         this.registerError(e as string);
                     }
                 } else {
+                    this.done = false;
                     this.progressChange.emit(false);
                 }
             }, (error) => {
@@ -175,6 +183,7 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
 
     onSubmit(): void {
         this.registerError('');
+        this.done = true;
         if (this.loginForm.valid) {
             const login = this.emailField?.value;
             try {
@@ -189,15 +198,19 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
                                 this.auth.setLoginUser(userData);
                                 this.twoFa = true;
                                 this.socialLogin = true;
+                                this.done = false;
                             } else if (userData.authTokenAction === 'UserInfoRequired') {
+                                this.done = false;
                                 this.showSignupPanel(userData);
                             } else {
                                 this.authenticated.emit(userData);
                             }
                         } else {
+                            this.done = false;
                             this.registerError(`Unable to authorise with the login '${login}'. Please sign up`);
                         }
                     }, (error) => {
+                        this.done = false;
                         this.progressChange.emit(false);
                         const errorMessage = this.errorHandler.getError(error.message, 'Incorrect login or password');
                         if (this.errorHandler.getCurrentError().toLowerCase() === 'auth.password_has_to_be_changed') {
@@ -213,6 +226,7 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
                     })
                 );
             } catch (e) {
+                this.done = false;
                 this.registerError(e as string);
             }
         }
@@ -220,6 +234,7 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
 
     onTwoFaSubmit(): void {
         if (this.twoFaForm.valid) {
+            this.done2Fa = true;
             this.progressChange.emit(true);
             this.registerError('');
             const code = this.twoFaForm.get('code')?.value;
@@ -228,20 +243,24 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
                     const userData = data.verify2faCode as LoginResult;
                     if (userData.user?.mode === UserMode.InternalWallet) {
                         if (userData.authTokenAction === 'UserInfoRequired') {
+                            this.done2Fa = false;
                             this.showSignupPanel(userData);
                         } else {
                             this.progressChange.emit(false);
                             if (this.socialLogin) {
+                                this.done2Fa = false;
                                 this.socialAuthenticated.emit(userData);
                             } else {
                                 this.authenticated.emit(userData);
                             }
                         }
                     } else {
+                        this.done2Fa = false;
                         this.progressChange.emit(false);
                         this.error.emit('Unable to authorise. Please sign up');
                     }
                 }, (error) => {
+                    this.done2Fa = false;
                     this.progressChange.emit(false);
                     this.registerError(this.errorHandler.getError(error.message, 'Incorrect login or password'));
                 })

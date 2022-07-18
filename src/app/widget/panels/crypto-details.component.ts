@@ -34,6 +34,7 @@ export class WidgetCryptoDetailsComponent implements OnInit, OnDestroy {
   currentCurrency: CurrencyView | undefined = undefined;
   currencies: CurrencyView[] = [];
   hideEmail = false;
+  done = false;
 
   emailErrorMessages: { [key: string]: string; } = {
     ['pattern']: 'Email is not valid',
@@ -176,6 +177,7 @@ export class WidgetCryptoDetailsComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
     if (this.dataForm.valid) {
+      this.done = true;
       const data = new CheckoutSummary();
       data.email = this.emailField?.value;
       data.amountFrom = parseFloat(this.amountField?.value);

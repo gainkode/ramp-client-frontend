@@ -12,6 +12,7 @@ export class WidgetDisclaimerComponent {
   @Output() onBack = new EventEmitter();
   @Output() onNext = new EventEmitter();
 
+  done = false;
   termsLink = EnvService.terms_link;
   productName = EnvService.productFull;
   textDataDefault: string[] = [

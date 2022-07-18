@@ -13,7 +13,7 @@
 
         <!-- Buttons -->
         <div class="__widget-buttons-area">
-            <button class="__main-button" type="submit" [disabled]="!validData || !emailField?.valid || !amountInit">
+            <button class="__main-button" type="submit" [disabled]="done || !validData || !emailField?.valid || !amountInit">
                 next
             </button>
         </div>

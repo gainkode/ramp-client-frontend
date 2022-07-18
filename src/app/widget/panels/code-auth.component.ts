@@ -30,6 +30,7 @@ export class WidgetCodeAuthComponent implements OnInit, OnDestroy, AfterViewInit
     extraData = false;
     validData = false;
     init = false;
+    done = false;
     codeErrorMessages: { [key: string]: string; } = {
         ['required']: 'Confirmation code is required'
     };
@@ -126,11 +127,13 @@ export class WidgetCodeAuthComponent implements OnInit, OnDestroy, AfterViewInit
     }
 
     onSubmit(): void {
+        this.done = true;
         const code = parseInt(this.codeField?.value) as number;
         this.pSubscriptions.add(
             this.auth.confirmCode(code, this.email).subscribe(({ data }) => {
                 this.onComplete.emit();
             }, (error) => {
+                this.done = false;
                 const errCode = this.errorHandler.getCurrentError();
                 if (errCode === 'auth.access_denied') {
                     this.onError.emit('Incorrect confirmation code');

@@ -44,6 +44,7 @@ export class WidgetSendDetailsComponent implements OnInit, OnDestroy {
 
   inProgress = false;
   validData = false;
+  done = false;
   currentSymbol = '';
   currentCurrency: CurrencyView | undefined = undefined;
   contacts: ContactItem[] = [];
@@ -342,6 +343,7 @@ export class WidgetSendDetailsComponent implements OnInit, OnDestroy {
       data.currencyFrom = this.currencyField?.value;
       data.address = this.addressField?.value;
       data.vaultId = this.walletField?.value;
+      this.done = true;
       this.onComplete.emit(data);
     }
   }
