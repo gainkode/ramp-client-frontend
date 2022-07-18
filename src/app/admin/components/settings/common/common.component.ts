@@ -54,6 +54,9 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
     editTransactionDestination: [false, { validators: [Validators.required], updateOn: 'change' }],
     // Verify When Paid
     verifyWhenPaid: [false],
+    // Wire Transfer
+    wireTransferWallet: [false],
+    wireTransferExchange: [false],
     // Custody providers
     transferOrdersTrackingTimedeltaDays: [0, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
     // Custody providers - Fireblocks
@@ -172,7 +175,9 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
         // Core
         const coreData = additionalSettings.core;
         // Core - Verify When Paid
-        this.form.get('verifyWhenPaid')?.setValue(coreData.verifyWhenPaid ?? true === true);
+        this.form.get('verifyWhenPaid')?.setValue((coreData.verifyWhenPaid ?? true) === true);
+        this.form.get('wireTransferWallet')?.setValue((coreData.wireTransferWallet ?? false) === true);
+        this.form.get('wireTransferExchange')?.setValue((coreData.wireTransferExchange ?? false) === true);
         // Core - Custody providers
         this.form.get('transferOrdersTrackingTimedeltaDays')?.setValue(coreData.custodyProviders.transferOrdersTrackingTimedeltaDays ?? 7);
         // Core - Custody providers - Fireblocks
@@ -270,6 +275,8 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 
     // Core
     const coreVerifyWhenPaid = this.form.get('verifyWhenPaid')?.value ?? false;
+    const coreWireTransferWallet = this.form.get('wireTransferWallet')?.value ?? false;
+    const coreWireTransferExchange = this.form.get('wireTransferExchange')?.value ?? false;
     const coreTransferOrdersTrackingTimedeltaDays = parseInt(this.form.get('transferOrdersTrackingTimedeltaDays')?.value ?? '7');
     // Fireblocks
     const coreFireblocksCachedDepositAddressLifetime = parseInt(this.form.get('fireblocksCachedDepositAddressLifetime')?.value ?? '60000');
@@ -349,6 +356,8 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
     const coreData = {
       banks: {},
       verifyWhenPaid: coreVerifyWhenPaid,
+      wireTransferWallet: coreWireTransferWallet,
+      wireTransferExchange: coreWireTransferExchange,
       liquidityProviders: {
         benchmarkTrackingInterval: coreLiquidityBenchmarkTrackingInterval,
         cryptoRateLifetime: coreLiquidityCryptoRateLifetime,
