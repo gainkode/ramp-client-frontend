@@ -400,9 +400,18 @@ export class WidgetService {
         } else if (summary.transactionType === TransactionType.Sell) {
             currency = summary.currencyTo ?? '';
         }
-        return list
+        const dataList = list
             .filter(x => x.provider?.currencies?.includes(currency, 0) || x.instrument === PaymentInstrument.WireTransfer)
             .map(val => new PaymentProviderInstrumentView(val));
+        if (!dataList.find(x => x.instrument === PaymentInstrument.WireTransfer)) {
+            dataList.push(new PaymentProviderInstrumentView({
+                instrument: PaymentInstrument.WireTransfer,
+                provider: {
+                    name: 'WireTransferPayment'
+                }
+            }));
+        }
+        return dataList;
     }
 
     private isKycRequired(currentUser: User, tierData: KycTierResultData): [boolean | null, string] {
