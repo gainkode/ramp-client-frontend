@@ -24,8 +24,12 @@
         </div>
     </div>
     <div class="__widget-buttons-area">
-        <button class="__outlined-button" type="button" (click)="onBack.emit()">BACK</button>
+        <button *ngIf="backButton" class="__outlined-button" type="button" (click)="onBack.emit()">
+            BACK
+        </button>
         <button class="__main-button __button-wide-separator" type="button" [disabled]="done || !agreementChecked"
-            (click)="done=true;onNext.emit()">next</button>
+            (click)="done=true;onNext.emit()">
+            next
+        </button>
     </div>
 </div>

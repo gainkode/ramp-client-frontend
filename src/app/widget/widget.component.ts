@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { AssetAddressShortListResult, LoginResult, PaymentInstrument, PaymentPreauthResultShort, Rate, TransactionShort, TransactionSource, TransactionType, Widget } from 'src/app/model/generated-models';
+import { AssetAddressShortListResult, LoginResult, PaymentInstrument, PaymentPreauthResultShort, Rate, TextPage, TransactionShort, TransactionSource, TransactionType, Widget } from 'src/app/model/generated-models';
 import { CardView, CheckoutSummary, PaymentProviderInstrumentView } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
@@ -14,6 +14,7 @@ import { CommonDialogBox } from '../components/dialogs/common-box.dialog';
 import { WireTransferUserSelection } from '../model/cost-scheme.model';
 import { PaymentCompleteDetails, PaymentErrorDetails, WidgetSettings, WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from '../model/payment-base.model';
 import { WalletItem } from '../model/wallet.model';
+import { CommonDataService } from '../services/common-data.service';
 import { EnvService } from '../services/env.service';
 import { ProfileDataService } from '../services/profile.service';
 import { WidgetPagerService } from '../services/widget-pager.service';
@@ -66,8 +67,10 @@ export class WidgetComponent implements OnInit {
   paymentComplete = false;
   notificationStarted = false;
   recentTransactions = false;
+  introDisclaimerBack = false;
   logoSrc = `${EnvService.image_host}/images/logo-widget.png`;
   logoAlt = EnvService.product;
+  disclaimerTextData: string[] = [];
 
   private pSubscriptions: Subscription = new Subscription();
   private pNotificationsSubscription: Subscription | undefined = undefined;
@@ -89,6 +92,7 @@ export class WidgetComponent implements OnInit {
     private widgetService: WidgetService,
     private notification: NotificationService,
     public auth: AuthService,
+    private commonService: CommonDataService,
     private dataService: PaymentDataService,
     private profileService: ProfileDataService,
     private errorHandler: ErrorService) { }
@@ -107,6 +111,11 @@ export class WidgetComponent implements OnInit {
       this.onWireTransferListLoaded.bind(this)
     );
     this.initMessage = 'Loading...';
+    this.loadCustomData();
+    this.startExchangeRate();
+  }
+
+  private initPage(): void {
     if (this.userParamsId === '') {
       if (this.settings) {
         this.widget = this.settings;
@@ -115,14 +124,17 @@ export class WidgetComponent implements OnInit {
         this.pager.init('initialization', 'Initialization');
         this.loadUserWallets();
       } else {
-        this.pager.init('order_details', 'Order details');
+        if (this.quickCheckout) {
+          this.pager.init('order_details', 'Order details');
+        } else {
+          this.pager.init('intro_disclaimer', 'Disclaimer');
+        }
         this.initData(undefined);
       }
     } else {
       this.pager.init('initialization', 'Initialization');
       this.loadUserParams();
     }
-    this.startExchangeRate();
   }
 
   ngOnDestroy(): void {
@@ -382,6 +394,25 @@ export class WidgetComponent implements OnInit {
     this.pager.removeStage(stage);
   }
 
+  private loadCustomData(): void {
+    this.errorMessage = '';
+    const widgetData = this.commonService.getCustomText().valueChanges.pipe(take(1));
+    this.inProgress = true;
+    this.pSubscriptions.add(
+      widgetData.subscribe(({ data }) => {
+        this.inProgress = false;
+        if (data.getTextPages) {
+          const pagesData = data.getTextPages as TextPage[];
+          this.disclaimerTextData = pagesData.filter(x => x.page === 1).map(x => x.text ?? '').filter(x => x !== '');
+        }
+        this.initPage();
+      }, (error) => {
+        this.inProgress = false;
+        this.initPage();
+      })
+    );
+  }
+
   private loadUserParams(): void {
     this.errorMessage = '';
     const widgetData = this.dataService.getWidget(this.userParamsId).valueChanges.pipe(take(1));
@@ -402,7 +433,11 @@ export class WidgetComponent implements OnInit {
             }
             this.orderDetailsComplete(this.widget.email);
           } else {
-            this.pager.init('order_details', 'Order details');
+            if (this.quickCheckout) {
+              this.pager.init('order_details', 'Order details');
+            } else {
+              this.pager.init('intro_disclaimer', 'Disclaimer');
+            }
           }
         } else {
           this.showTransactionError(
@@ -488,7 +523,7 @@ export class WidgetComponent implements OnInit {
       // } else {
       //   this.nextStage('disclaimer', 'Disclaimer', 2, false);
       // }
-      this.desclaimerNext();
+      this.disclaimerNext();
     } else {
       this.summary.transactionId = '';
       this.summary.fee = 0;
@@ -509,17 +544,34 @@ export class WidgetComponent implements OnInit {
   // =======================
 
   // == Disclaimer =========
-  desclaimerBack(): void {
+  disclaimerBack(): void {
     this.stageBack();
   }
 
-  desclaimerNext(): void {
+  disclaimerNext(): void {
     this.summary.agreementChecked = true;
     if (this.summary.transactionType === TransactionType.Sell) {
       this.nextStage('sell_details', 'Bank details', 2, true);
       //this.createWithdrawalTransaction();
     } else {
       this.widgetService.getSettingsCommon(this.summary, this.widget, this.widget.orderDefault);
+    }
+  }
+
+  introDisclaimerNext(): void {
+    this.summary.agreementChecked = true;
+    let validTransactionType = true;
+    if (this.widget.transaction) {
+      validTransactionType = (this.widget.transaction === TransactionType.Buy ||
+        this.widget.transaction === TransactionType.Sell);
+    }
+    if (this.widget.orderDefault && validTransactionType) {
+      if (this.auth.user?.email !== this.widget.email) {
+        this.summary.email = '';
+      }
+      this.orderDetailsComplete(this.widget.email);
+    } else {
+      this.pager.init('order_details', 'Order details');
     }
   }
   // ================
@@ -731,7 +783,7 @@ export class WidgetComponent implements OnInit {
       this.auth.setLoginUser(data);
       if (this.summary.agreementChecked) {
         if (this.summary.transactionId === '') {
-          this.desclaimerNext();
+          this.disclaimerNext();
         } else {
           this.startPayment();
         }

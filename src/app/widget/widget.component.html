@@ -43,8 +43,11 @@
         (onComplete)="sellComplete($event)">
       </app-widget-sell-details>
       <!-- Disclaimer -->
+      <app-widget-disclaimer *ngSwitchCase="'intro_disclaimer'" [agreementChecked]="summary.agreementChecked"
+        [textContent]="disclaimerTextData" [backButton]=false (onNext)="introDisclaimerNext()">
+      </app-widget-disclaimer>
       <app-widget-disclaimer *ngSwitchCase="'disclaimer'" [agreementChecked]="summary.agreementChecked"
-        (onBack)="desclaimerBack()" (onNext)="desclaimerNext()">
+        [textContent]="disclaimerTextData" (onBack)="disclaimerBack()" (onNext)="disclaimerNext()">
       </app-widget-disclaimer>
       <!-- Register -->
       <app-widget-register *ngSwitchCase="'register'" [email]="summary.email" (onBack)="registerBack()"

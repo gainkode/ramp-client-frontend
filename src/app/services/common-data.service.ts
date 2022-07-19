@@ -206,6 +206,12 @@ mutation AddMyWidgetUserParams(
 }
 `;
 
+const GET_TEXT_PAGES = gql`
+query{
+	getTextPages{page, text}
+}
+`;
+
 @Injectable()
 export class CommonDataService {
   constructor(private apollo: Apollo) { }
@@ -264,6 +270,13 @@ export class CommonDataService {
         userEmail: email,
         params: parameters
       }
+    });
+  }
+
+  getCustomText(): QueryRef<any, EmptyObject> {
+    return this.apollo.watchQuery<any>({
+      query: GET_TEXT_PAGES,
+      fetchPolicy: 'network-only'
     });
   }
 }
