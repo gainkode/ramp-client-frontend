@@ -887,3 +887,77 @@ $font_main: var(--font_main);
         }
     }
 }
+
+.__main-checkbox-container {
+    display: block;
+    position: relative;
+    padding-left: 24px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 24px;
+    color: $color_purple_900_text;
+}
+
+/* Hide the browser's default checkbox */
+.__main-checkbox-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+/* Create a custom checkbox */
+.__main-checkbox-mark {
+    position: absolute;
+    top: 4px;
+    left: 0px;
+    height: 16px;
+    width: 16px;
+    background-color: $color_white;
+    border: 1px solid $color_purple_200;
+    border-radius: 4px;
+}
+
+/* On mouse-over, add a grey background color */
+.__main-checkbox-container:hover input ~ .__main-checkbox-mark {
+    background-color: $color_purple_50;
+}
+
+/* When the checkbox is checked, add a blue background */
+.__main-checkbox-container input:checked ~ .__main-checkbox-mark {
+    background-color: $color_main_blue_700;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.__main-checkbox-mark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the checkmark when checked */
+.__main-checkbox-container input:checked ~ .__main-checkbox-mark:after {
+    display: block;
+}
+
+/* Style the checkmark/indicator */
+.__main-checkbox-container .__main-checkbox-mark:after {
+    left: 5px;
+    top: 2px;
+    width: 4px;
+    height: 8px;
+    border: solid $color_white;
+    border-width: 0 2px 2px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}

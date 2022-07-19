@@ -16,9 +16,11 @@
                     {{item.rightBlock}}
                 </span>
                 <div *ngIf="item.type===TEXT_TYPE.Accept" class="__widget-disclaimer-container">
-                    <mat-checkbox color="accent" [checked]="agreementChecked" (change)="checkAgreement()">
+                    <label class="__main-checkbox-container">
                         {{item.keyBlock}}
-                    </mat-checkbox>
+                        <input type="checkbox" [checked]="agreementChecked" (change)="checkAgreement()">
+                        <span class="__main-checkbox-mark"></span>
+                    </label>
                 </div>
             </div>
         </div>
