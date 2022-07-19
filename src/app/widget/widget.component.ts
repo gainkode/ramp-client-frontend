@@ -113,8 +113,7 @@ export class WidgetComponent implements OnInit {
       this.onWireTransferListLoaded.bind(this)
     );
     this.initMessage = 'Loading...';
-    //this.loadCustomData();
-    this.nextStage('complete', 'Complete', 6, false);
+    this.loadCustomData();
     this.startExchangeRate();
   }
 
