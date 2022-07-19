@@ -1,6 +1,14 @@
 import { CustomText, CustomTextType } from './custom-text.model';
 
 describe('CustomerText', () => {
+  it('should recognize main title', () => {
+    const item = new CustomText('[%main_title%]DISCLAIMER');
+    expect(item.type).toBe(CustomTextType.MainTitle);
+    expect(item.leftBlock).toBe('');
+    expect(item.rightBlock).toBe('');
+    expect(item.keyBlock).toBe('DISCLAIMER');
+  });
+
   it('should recognize title', () => {
     const item = new CustomText('[%title%]DISCLAIMER');
     expect(item.type).toBe(CustomTextType.Title);
@@ -47,5 +55,13 @@ describe('CustomerText', () => {
     expect(item.leftBlock).toBe('');
     expect(item.rightBlock).toBe('');
     expect(item.keyBlock).toBe('I have read and accept the terms and conditions of Horns, cookies policy and disclaimer');
+  });
+
+  it('should recognize plain text and the support link', () => {
+    const item = new CustomText('Please, use this address {%support%} to send us a letter');
+    expect(item.type).toBe(CustomTextType.Support);
+    expect(item.leftBlock).toBe('Please, use this address ');
+    expect(item.rightBlock).toBe(' to send us a letter');
+    expect(item.keyBlock).toBe('');
   });
 });

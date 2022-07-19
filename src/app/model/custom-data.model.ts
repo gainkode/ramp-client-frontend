@@ -14,3 +14,28 @@ export const disclaimerDataDefault: string[] = [
   '[%paragraph%]',
   '[%accept%]I have read and agreed to the disclaimer'
 ];
+
+export const completeDataDefault: string[] = [
+  '[%main_title%]Transaction completed',
+  'Dear Customer,',
+  'Your Order has been successfully received in {%product%}.',
+  'Our team is working to complete it as fast as possible!',
+  'Please feel free to contact us with any inquiries you may have: {%support%}.',
+  '[%paragraph%]',
+  '[%title%]What\'s next?',
+  'We are working to complete your order, once completed you will receive an email confirmation.',
+  '[%paragraph%]',
+  '[%title%]How long does it take?',
+  'Order confirmation is typically received within 60 minutes of your payment, this time may vary depending on your selected crypto-currency and network overloads.'  
+];
+
+// export const completeDataDefault: string[] = [
+//   '[%main_title%]ORDER COMPLETED',
+//   'Dear Customer,',
+//   'Thank you for choosing {%product%}.',
+//   '[%paragraph%]',
+//   'Your order has been successfully received,',
+//   'As soon as your payment arrives from your bank we will instantly transfer it to the merchant account.',
+//   '[%paragraph%]',
+//   'Should you have any further inquiries please contact us: {%support%}.'
+// ];

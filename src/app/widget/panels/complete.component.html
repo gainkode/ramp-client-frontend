@@ -1,5 +1,30 @@
 <div class="__widget-data-box">
-    <h1 *ngIf="transaction===TRANSACTION_TYPE.Buy" class="__widget-title">
+    <div class="__widget-disclaimer-area">
+        <div *ngFor="let block of textData.blocks" class="__widget-disclaimer-container">
+            <div *ngFor="let item of block.list">
+                <h1 *ngIf="item.type===TEXT_TYPE.MainTitle" class="__widget-title">
+                    {{item.keyBlock}}
+                </h1>
+                <h3 *ngIf="item.type===TEXT_TYPE.Title" class="__widget-summary-title">
+                    {{item.keyBlock}}
+                </h3>
+                <span *ngIf="item.type===TEXT_TYPE.Text" class="__widget-disclaimer-line">
+                    {{item.leftBlock}}
+                </span>
+                <span *ngIf="item.type===TEXT_TYPE.Support" class="__widget-disclaimer-line">
+                    {{item.leftBlock}}
+                    <a [href]="supportEmailLink">{{supportEmail}}</a>
+                    {{item.rightBlock}}
+                </span>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    
+    <!-- <h1 *ngIf="transaction===TRANSACTION_TYPE.Buy" class="__widget-title">
         Payment completed
     </h1>
     <h1 *ngIf="transaction===TRANSACTION_TYPE.Sell" class="__widget-title">
@@ -42,9 +67,11 @@
                 vary depending on your selected crypto-currency and network overloads.
             </span>
         </div>
-    </div>
+    </div> -->
 
     <div class="__widget-buttons-area">
-        <button *ngIf="showRestartButton" class="__main-button" type="button" (click)="onFinish.emit()">done</button>
+        <button *ngIf="showRestartButton" class="__main-button" type="button" (click)="onFinish.emit()">
+            done
+        </button>
     </div>
 </div>

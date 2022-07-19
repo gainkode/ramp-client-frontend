@@ -2,6 +2,7 @@ import { EnvService } from "../services/env.service";
 
 export enum CustomTextType {
     Text = 'Text',
+    MainTitle = 'MainTitle',
     Title = 'Title',
     Support = 'Support',
     Terms = 'Terms',
@@ -42,6 +43,12 @@ export class CustomText {
             content = '';
             this.itemType = CustomTextType.Title;
         }
+        keyPos = content.indexOf('[%main_title%]');
+        if (keyPos >= 0) {
+            this.textBlock = content.replace('[%main_title%]', '');
+            content = '';
+            this.itemType = CustomTextType.MainTitle;
+        }
         keyPos = content.indexOf('[%paragraph%]');
         if (keyPos >= 0) {
             content = '';
@@ -61,6 +68,16 @@ export class CustomText {
                 this.textBlock = content.slice(keyPos + 9, endPos);
                 this.textRight = content.slice(endPos + 10);
                 this.itemType = CustomTextType.Terms;
+            }
+            content = this.textLeft;
+        }
+        keyPos = content.indexOf('{%support%}');
+        if (keyPos >= 0) {
+            this.textLeft = content.slice(0, keyPos);
+            let endPos = content.indexOf('{%support%}');
+            if (endPos >= 0) {
+                this.textRight = content.slice(endPos + 11);
+                this.itemType = CustomTextType.Support;
             }
             content = this.textLeft;
         }

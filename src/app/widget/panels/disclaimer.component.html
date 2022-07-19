@@ -2,6 +2,9 @@
     <div class="__widget-disclaimer-area">
         <div *ngFor="let block of textData.blocks" class="__widget-disclaimer-container">
             <div *ngFor="let item of block.list">
+                <h1 *ngIf="item.type===TEXT_TYPE.MainTitle" class="__widget-title">
+                    {{item.keyBlock}}
+                </h1>
                 <h3 *ngIf="item.type===TEXT_TYPE.Title" class="__widget-summary-title">
                     {{item.keyBlock}}
                 </h3>

@@ -378,6 +378,7 @@ $font_main: var(--font_main);
 }
 
 .__widget-title {
+    width: 100%;
     text-align: center;
 
     font-family: $font_main;
@@ -601,6 +602,7 @@ $font_main: var(--font_main);
 }
 
 .__widget-disclaimer-container {
+    width: 100%;
     margin: 0px 0px 12px 0px;
 }
 

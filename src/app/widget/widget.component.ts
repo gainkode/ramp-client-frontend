@@ -12,6 +12,7 @@ import { PaymentDataService } from 'src/app/services/payment.service';
 import { ExchangeRateService } from 'src/app/services/rate.service';
 import { CommonDialogBox } from '../components/dialogs/common-box.dialog';
 import { WireTransferUserSelection } from '../model/cost-scheme.model';
+import { completeDataDefault, disclaimerDataDefault } from '../model/custom-data.model';
 import { PaymentCompleteDetails, PaymentErrorDetails, WidgetSettings, WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from '../model/payment-base.model';
 import { WalletItem } from '../model/wallet.model';
 import { CommonDataService } from '../services/common-data.service';
@@ -70,7 +71,8 @@ export class WidgetComponent implements OnInit {
   introDisclaimerBack = false;
   logoSrc = `${EnvService.image_host}/images/logo-widget.png`;
   logoAlt = EnvService.product;
-  disclaimerTextData: string[] = [];
+  disclaimerTextData = disclaimerDataDefault;
+  completeTextData = completeDataDefault;
 
   private pSubscriptions: Subscription = new Subscription();
   private pNotificationsSubscription: Subscription | undefined = undefined;
@@ -111,7 +113,8 @@ export class WidgetComponent implements OnInit {
       this.onWireTransferListLoaded.bind(this)
     );
     this.initMessage = 'Loading...';
-    this.loadCustomData();
+    //this.loadCustomData();
+    this.nextStage('complete', 'Complete', 6, false);
     this.startExchangeRate();
   }
 
@@ -404,6 +407,7 @@ export class WidgetComponent implements OnInit {
         if (data.getTextPages) {
           const pagesData = data.getTextPages as TextPage[];
           this.disclaimerTextData = pagesData.filter(x => x.page === 1).map(x => x.text ?? '').filter(x => x !== '');
+          this.completeTextData = pagesData.filter(x => x.page === 2).map(x => x.text ?? '').filter(x => x !== '');
         }
         this.initPage();
       }, (error) => {

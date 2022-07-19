@@ -98,7 +98,7 @@
       </app-widget-processing-instantpay>
       <!-- Complete -->
       <app-widget-complete *ngSwitchCase="'complete'" [showRestartButton]="widget.widgetId===''"
-        [transaction]="summary.transactionType" (onFinish)="resetWizard()"></app-widget-complete>
+        [textContent]="completeTextData" (onFinish)="resetWizard()"></app-widget-complete>
       <app-widget-error *ngSwitchCase="'error'" [title]="transactionErrorTitle" [errorMessage]="transactionErrorMessage"
         [tryAgain]="transactionErrorTryAgain" (onFinish)="resetWizard()"></app-widget-error>
     </div>
