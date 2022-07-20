@@ -42,6 +42,7 @@ export class WidgetComponent implements OnInit {
   transactionErrorMessage = '';
   transactionErrorTryAgain = true;
   inProgress = false;
+  initLoading = true;
   internalPayment = false;
   initState = true;
   showSummary = true;
@@ -113,11 +114,13 @@ export class WidgetComponent implements OnInit {
       this.onWireTransferListLoaded.bind(this)
     );
     this.initMessage = 'Loading...';
+    this.pager.init('initialization', 'Initialization');
     this.loadCustomData();
     this.startExchangeRate();
   }
 
   private initPage(): void {
+    this.initLoading = false;
     if (this.userParamsId === '') {
       if (this.settings) {
         this.widget = this.settings;

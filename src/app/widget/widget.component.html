@@ -1,5 +1,5 @@
-<div [ngClass]="widget.embedded ? '__widget-embedded-container' : '__widget-container'">
-  <div *ngIf="!widget.embedded" class="__widget-title-container">
+<div [ngClass]="widget.embedded || initLoading ? '__widget-embedded-container' : '__widget-container'">
+  <div *ngIf="!widget.embedded && !initLoading" class="__widget-title-container">
     <div class="__widget-title-logo-container">
       <img class="__widget-title-logo" [src]="logoSrc" [alt]="logoAlt" width="160" (click)="router.navigateByUrl('/')">
     </div>
@@ -10,13 +10,13 @@
     </div>
   </div>
 
-  <div *ngIf="!widget.embedded" class="__widget-mobile-rate-container">
+  <div *ngIf="!widget.embedded && !initLoading" class="__widget-mobile-rate-container">
     <app-widget-rate class="__widget-rate-container" [title]="exchangeRateCountDownTitle"
       [countDown]="exchangeRateCountDownValue" [rate]="summary?.rate">
     </app-widget-rate>
   </div>
 
-  <div *ngIf="!widget.embedded && !recentTransactions" class="__widget-progress-container">
+  <div *ngIf="!widget.embedded && !initLoading && !recentTransactions" class="__widget-progress-container">
     <app-widget-progress [step]="pager.step" [title]="pager.title" [progress]="inProgress"></app-widget-progress>
   </div>
   <div *ngIf="widget.embedded && inProgress" class="__widget-embedded-progress-container">
@@ -25,7 +25,7 @@
 
   <div *ngIf="!recentTransactions" class="__widget-data-container">
     <div
-      [ngClass]="{'__widget-wizard-container': !widget.embedded, '__widget-wizard-container-single': !widget.embedded && (initState || !showSummary), '__widget-wizard-container-embedded': widget.embedded}"
+      [ngClass]="{'__widget-wizard-container': !widget.embedded || initLoading, '__widget-wizard-container-single': !widget.embedded && (initState || !showSummary), '__widget-wizard-container-embedded': widget.embedded || initLoading}"
       [ngSwitch]="pager.stageId">
       <!-- Initialization -->
       <app-widget-initialization *ngSwitchCase="'initialization'" [message]="initMessage"></app-widget-initialization>

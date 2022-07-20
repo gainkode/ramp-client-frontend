@@ -701,7 +701,14 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       const c = this.pCurrencies.find(x => x.symbol === this.currentCurrencySpend?.symbol);
       if (c) {
         this.quoteLimit = (this.currentQuoteEur - this.transactionsTotalEur) * c.rateFactor;
-        this.currentQuote = `${getCurrencySign(this.currentCurrencySpend?.display ?? '')}${this.quoteLimit.toFixed(2)}`;
+        this.currentQuote = `${getCurrencySign(this.currentCurrencySpend?.display ?? '')}${this.quoteLimit.toFixed(c.precision)}`;
+      }
+    } else if (this.currentTransaction === TransactionType.Sell && this.currentQuoteEur !== 0) {
+      const c = this.pCurrencies.find(x => x.symbol === this.currentCurrencyReceive?.symbol);
+      if (c) {
+        const rate = (this.pWithdrawalRate ?? 1) / c.rateFactor;
+        this.quoteLimit = (this.currentQuoteEur - this.transactionsTotalEur) / rate;
+        this.currentQuote = `${getCurrencySign(this.currentCurrencySpend?.display ?? '')}${this.quoteLimit.toFixed(c.precision)}`;
       }
     }
   }
@@ -760,6 +767,11 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     }
     this.quoteExceedHidden = false;
     if (this.currentTransaction == TransactionType.Buy) {
+      const amount = this.amountSpendField?.value ?? 0;
+      if (amount > 0 && amount > this.quoteLimit && !this.quoteUnlimit) {
+        this.quoteExceedHidden = true;
+      }
+    } else if (this.currentTransaction == TransactionType.Sell) {
       const amount = this.amountSpendField?.value ?? 0;
       if (amount > 0 && amount > this.quoteLimit && !this.quoteUnlimit) {
         this.quoteExceedHidden = true;
