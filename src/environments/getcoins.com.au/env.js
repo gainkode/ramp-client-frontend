@@ -3,7 +3,7 @@
 
     // Product name for titles and headers
     window.__env_data.product = 'GetCoins';
-    window.__env_data.productFull = 'GetCoins Test';
+    window.__env_data.productFull = 'GetCoins Australia';
     // Coockie domain
     window.__env_data.cookieDomain = 'app.getcoins.com.au';
     // Current client host address
