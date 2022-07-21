@@ -1,12 +1,11 @@
 @import "../../../../../assets/scss/variables";
 @import "../../../../../assets/colors";
-@import "../../../../../assets/scss/variables";
 
-::ng-deep{
-    .accordion-button.collapsed .fa-minus-circle:before{
-        content: "\f055"!important;
+::ng-deep {
+    .accordion-button.collapsed .fa-minus-circle:before {
+        content: "\f055" !important;
     }
-    .accordion-button{
+    .accordion-button {
         outline: none !important;
     }
     .bg-gradient-primary:before {
@@ -29,138 +28,136 @@
         transition: all 0.5s;
         transform: scale(1);
     }
-    .panel-title1 a{
+    .panel-title1 a {
         padding: 0 !important;
     }
-    .acc-card.card.mb-2 .accordion-button:not(.collapsed){
+    .acc-card.card.mb-2 .accordion-button:not(.collapsed) {
         background-color: var(--primary02);
         color: #4a4a69;
         width: 100%;
         text-align: left;
         border: 1px solid #ededf5;
     }
-    .acc-card.card.mb-2 .accordion-button.collapsed{
+    .acc-card.card.mb-2 .accordion-button.collapsed {
         color: #4a4a69;
         width: 100%;
         text-align: left;
         border: 1px solid #ededf5;
     }
-    .accordion-button.collapsed:hover{
+    .accordion-button.collapsed:hover {
         background-color: var(--primary02);
     }
-    .panel-heading .accordion-button:not(.collapsed){
-        background-color: var(--primary02);
-        color: #4a4a69;
-        width: 100%;
-        text-align: left;
-        border: 1px solid #ededf5;
-    }
-    .panel-heading .accordion-button.collapsed{
+    .panel-heading .accordion-button:not(.collapsed) {
         background-color: var(--primary02);
         color: #4a4a69;
         width: 100%;
         text-align: left;
         border: 1px solid #ededf5;
     }
-    .dark-theme{
-        .accordion-button::after{
+    .panel-heading .accordion-button.collapsed {
+        background-color: var(--primary02);
+        color: #4a4a69;
+        width: 100%;
+        text-align: left;
+        border: 1px solid #ededf5;
+    }
+    .dark-theme {
+        .accordion-button::after {
             filter: invert(1);
         }
-        
-        .acc-card.mb-2 .accordion-button:not(.collapsed){
+
+        .acc-card.mb-2 .accordion-button:not(.collapsed) {
             background-color: var(--primary02);
             color: #fff;
             width: 100%;
             text-align: left;
             border: 1px solid #383d52;
         }
-        .acc-card.mb-2 .accordion-button.collapsed{
+        .acc-card.mb-2 .accordion-button.collapsed {
             color: #fff;
             width: 100%;
             text-align: left;
             border: 1px solid #383d52;
             background-color: #383d52 !important;
         }
-        .accordion-button.collapsed:hover{
+        .accordion-button.collapsed:hover {
             background-color: var(--primary02);
         }
-        .panel-heading .accordion-button:not(.collapsed){
-            background-color: var(--primary02);
-            color: #fff;
-            width: 100%;
-            text-align: left;
-            border: 1px solid #383d52;
-        }
-        .panel-heading .accordion-button.collapsed{
+        .panel-heading .accordion-button:not(.collapsed) {
             background-color: var(--primary02);
             color: #fff;
             width: 100%;
             text-align: left;
             border: 1px solid #383d52;
         }
-        .accordion-body{
+        .panel-heading .accordion-button.collapsed {
+            background-color: var(--primary02);
+            color: #fff;
+            width: 100%;
+            text-align: left;
+            border: 1px solid #383d52;
+        }
+        .accordion-body {
             background-color: $dark-theme !important;
         }
         .accordion-item {
             background-color: $dark-theme;
             border: 1px solid rgb(64 67 83);
         }
-        
     }
-    .transparent-theme{
-        .accordion-button::after{
+    .transparent-theme {
+        .accordion-button::after {
             filter: invert(1);
         }
-        
-        .acc-card.mb-2 .accordion-button:not(.collapsed){
+
+        .acc-card.mb-2 .accordion-button:not(.collapsed) {
             background-color: var(--primary02);
             color: #fff;
             width: 100%;
             text-align: left;
             border: 1px solid #4cb0a0;
         }
-        .acc-card.mb-2 .accordion-button.collapsed{
+        .acc-card.mb-2 .accordion-button.collapsed {
             color: #fff;
             width: 100%;
             text-align: left;
             border: 1px solid #4cb0a0;
             background-color: #248172 !important;
         }
-        .accordion-button.collapsed:hover{
+        .accordion-button.collapsed:hover {
             background-color: var(--primary02);
         }
-        .panel-heading .accordion-button:not(.collapsed){
-            background-color: var(--primary02);
-            color: #fff;
-            width: 100%;
-            text-align: left;
-            border: 1px solid #4cb0a0;
-        }
-        .panel-heading .accordion-button.collapsed{
+        .panel-heading .accordion-button:not(.collapsed) {
             background-color: var(--primary02);
             color: #fff;
             width: 100%;
             text-align: left;
             border: 1px solid #4cb0a0;
         }
-        .accordion-body{
+        .panel-heading .accordion-button.collapsed {
+            background-color: var(--primary02);
+            color: #fff;
+            width: 100%;
+            text-align: left;
+            border: 1px solid #4cb0a0;
+        }
+        .accordion-body {
             background-color: #2da28f !important;
         }
         .accordion-item {
             background-color: #2da28f;
             border: 1px solid #4cb0a0;
         }
-        
     }
-    .rtl{
+    .rtl {
         .acc-card.card.mb-2 .accordion-button,
-        .panel-heading .accordion-button{
+        .panel-heading .accordion-button {
             text-align: right !important;
         }
-        .accordion i{
+        .accordion i {
             float: left !important;
         }
-        .bg-gradient-primary:before{
+        .bg-gradient-primary:before {
             right: inherit !important;
             left: 10px;
         }
@@ -168,13 +165,13 @@
 }
 
 .__common-settings-board {
-  display: grid;
-  grid-template-rows: auto;
-  grid-template-columns: 35% 35% auto;
-  gap: 16px;
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: 35% 35% auto;
+    gap: 16px;
 }
 
 .__common-settings-pane {
-  min-width: 15%;
-  max-width: 100%;
+    min-width: 15%;
+    max-width: 100%;
 }

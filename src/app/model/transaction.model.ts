@@ -287,7 +287,11 @@ export class TransactionItemFull {
         color = 'blue';
         break;
       case AdminTransactionStatus.Confirming:
-        color = 'purple';
+        if (this.statusInfo?.key === TransactionStatus.TransferBlocked) {
+          color = 'yellow';
+        } else {
+          color = 'purple';
+        }
         break;
       case AdminTransactionStatus.Completed:
         color = 'green';
@@ -473,7 +477,7 @@ export class TransactionItem {
       } else {
         return `${this.fees} ${this.currencyFiat}`;
       }
-      
+
     }
   }
 

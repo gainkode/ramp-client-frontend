@@ -1,0 +1,36 @@
+<div class="ms-3 mb-1">
+  <div class="row">
+    <button *ngIf="!addingMode && currencies.length>0" type="button" class="btn btn-success btn-sm mb-1"
+      style="padding: 0px 4px;" (click)="addAddress()">
+      <i class="material-icons" style="font-size: 16px;">add</i>
+    </button>
+    <button *ngIf="addingMode" type="button" class="btn btn-danger btn-sm mb-1" style="padding: 0px 4px;"
+      (click)="cancelAddress()">
+      <i class="material-icons" style="font-size: 16px;">undo</i>
+    </button>
+  </div>
+</div>
+
+<div *ngFor="let address of addresses | keyvalue">
+  <div class="__common-settings-key-value-item">
+    <div class="__common-settings-key-value-key">
+      {{address.key}}
+    </div>
+    <input class="form-control" type="text" [value]="address.value" maxlength="200" required />
+    <button type="button" class="btn btn-warning btn-sm" style="padding: 0px;" (click)="remove(address.key)">
+      <i class="material-icons" style="font-size: 18px;">delete</i>
+    </button>
+  </div>
+</div>
+
+<form *ngIf="addingMode" [formGroup]="form" novalidate (ngSubmit)="onSubmit()">
+  <div class="__common-settings-key-value-item">
+    <ng-select [items]="currencies" [clearable]=false [clearOnBackspace]=false bindLabel="display"
+      bindValue="symbol" formControlName="id">
+    </ng-select>
+    <input class="form-control" type="text" formControlName="address" maxlength="200" required />
+    <button class="btn btn-danger btn-sm" style="padding: 0px;" [disabled]="!form.valid">
+      <i class="material-icons" style="font-size: 18px;">done</i>
+    </button>
+  </div>
+</form>

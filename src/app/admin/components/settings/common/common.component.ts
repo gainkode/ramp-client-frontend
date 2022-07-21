@@ -4,11 +4,13 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { AdminDataService } from 'src/app/services/admin-data.service';
 import { AuthService } from 'src/app/services/auth.service';
-import { CustodyProviderList, KycProviderList } from 'src/app/model/payment.model';
+import { CurrencyView, CustodyProviderList, KycProviderList } from 'src/app/model/payment.model';
 import { LiquidityProviderList } from 'src/app/admin/model/lists.model';
 import { TransactionConfirmationModeList } from 'src/app/admin/model/settings.model';
 import { FormBuilder, Validators } from '@angular/forms';
-import { SettingsCommon, TransactionConfirmationMode } from 'src/app/model/generated-models';
+import { SettingsCommon, SettingsCurrencyWithDefaults, TransactionConfirmationMode } from 'src/app/model/generated-models';
+import { CommonDataService } from 'src/app/services/common-data.service';
+import { ErrorService } from 'src/app/services/error.service';
 
 interface FrameBlock {
   X: number;
@@ -32,6 +34,9 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
   transactionConfirmationModeOptions = TransactionConfirmationModeList;
   emails: string[] = [];
   emailLoading: boolean = false;
+  defaultCustodyWithdrawalKeys: { [key: string]: string } = {};
+  defaultLiquidityWithdrawalKeys: { [key: string]: string } = {};
+  cryptoList: CurrencyView[] = [];
   riskFrames: FrameBlock[] = [
     { X: 1, Y: 1 },
     { X: 2, Y: 2 },
@@ -67,8 +72,8 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
     fireblocksDefaultUserVaultName: [''],
     fireblocksTrackWithdrawals: [false],
     fireblocksTrackWithdrawalsOneByOne: [false],
-    fireblocksWithdrawalFromCustodyProviderDestinationAddress: [''],
-    fireblocksWithdrawalFromLiquidityProviderDestinationAddress: [''],
+    fireblocksWithdrawalFromCustodyProviderDestinationAddress: [this.defaultCustodyWithdrawalKeys],
+    fireblocksWithdrawalFromLiquidityProviderDestinationAddress: [this.defaultLiquidityWithdrawalKeys],
     fireblocksWithdrawalToEndUserSourceVaultAccountId: [''],
     fireblocksWithdrawalToEndUserSpeed: ['', { validators: [Validators.required], updateOn: 'change' }],
     // Custody providers - Trustology
@@ -139,6 +144,8 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private auth: AuthService,
     private adminService: AdminDataService,
+    private commonService: CommonDataService,
+    private errorHandler: ErrorService,
     private modalService: NgbModal,
     private router: Router
   ) {
@@ -146,11 +153,40 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.loadData();
+    this.loadCurrencies();
   }
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+  }
+
+  private loadCurrencies(): void {
+    this.inProgress = true;
+    this.errorMessage = '';
+    const currencyData$ = this.commonService.getSettingsCurrency();
+    this.subscriptions.add(
+      currencyData$.valueChanges.subscribe(
+        ({ data }) => {
+          const currencyData = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
+          if (currencyData?.settingsCurrency && (currencyData.settingsCurrency.count ?? 0 > 0)) {
+            this.cryptoList = currencyData.settingsCurrency.list?.
+              filter(x => x.fiat === false).
+              map((val) => new CurrencyView(val)) as CurrencyView[];
+          } else {
+            this.cryptoList = [];
+          }
+          this.loadData();
+        },
+        (error) => {
+          this.inProgress = false;
+          if (error.message === 'Access denied' || this.errorHandler.getCurrentError() === 'auth.token_invalid') {
+            this.router.navigateByUrl('/');
+          } else {
+            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load available list of currency types');
+          }
+        }
+      )
+    );
   }
 
   private loadData(): void {
@@ -188,8 +224,24 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
         this.form.get('fireblocksDefaultUserVaultName')?.setValue(coreData.custodyProviders.Fireblocks.defaultUserVaultName ?? '');
         this.form.get('fireblocksTrackWithdrawals')?.setValue(coreData.custodyProviders.Fireblocks.trackWithdrawals ?? false);
         this.form.get('fireblocksTrackWithdrawalsOneByOne')?.setValue(coreData.custodyProviders.Fireblocks.trackWithdrawalsOneByOne ?? false);
-        this.form.get('fireblocksWithdrawalFromCustodyProviderDestinationAddress')?.setValue(coreData.custodyProviders.Fireblocks.withdrawalFromCustodyProviderDestinationAddress ?? 'test_withdrawal');
-        this.form.get('fireblocksWithdrawalFromLiquidityProviderDestinationAddress')?.setValue(coreData.custodyProviders.Fireblocks.withdrawalFromLiquidityProviderDestinationAddress ?? 'test_withdrawal');
+        let custodyAddresses = coreData.custodyProviders.Fireblocks.withdrawalFromCustodyProviderDestinationAddress;
+        let liquidityAddresses = coreData.custodyProviders.Fireblocks.withdrawalFromLiquidityProviderDestinationAddress;
+        if (custodyAddresses) {
+          if (typeof custodyAddresses === 'string') {
+            custodyAddresses = this.defaultCustodyWithdrawalKeys;
+          }
+        } else {
+          custodyAddresses = this.defaultCustodyWithdrawalKeys;
+        }
+        if (liquidityAddresses) {
+          if (typeof liquidityAddresses === 'string') {
+            liquidityAddresses = this.defaultLiquidityWithdrawalKeys;
+          }
+        } else {
+          liquidityAddresses = this.defaultLiquidityWithdrawalKeys;
+        }
+        this.form.get('fireblocksWithdrawalFromCustodyProviderDestinationAddress')?.setValue(custodyAddresses);
+        this.form.get('fireblocksWithdrawalFromLiquidityProviderDestinationAddress')?.setValue(liquidityAddresses);
         this.form.get('fireblocksWithdrawalToEndUserSourceVaultAccountId')?.setValue(coreData.custodyProviders.Fireblocks.withdrawalToEndUserSourceVaultAccountId.vaultId ?? '22');
         this.form.get('fireblocksWithdrawalToEndUserSpeed')?.setValue(coreData.custodyProviders.Fireblocks.withdrawalToEndUserSpeed ?? 'MEDIUM');
         // Core - Custody providers - Trustology
@@ -286,8 +338,8 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
     const coreFireblocksDefaultUserVaultName = this.form.get('fireblocksDefaultUserVaultName')?.value ?? '';
     const coreFireblocksTrackWithdrawals = this.form.get('fireblocksTrackWithdrawals')?.value ?? false;
     const coreFireblocksTrackWithdrawalsOneByOne = this.form.get('fireblocksTrackWithdrawalsOneByOne')?.value ?? false;
-    const coreFireblocksWithdrawalFromCustodyProviderDestinationAddress = this.form.get('fireblocksWithdrawalFromCustodyProviderDestinationAddress')?.value ?? 'test_withdrawal';
-    const coreFireblocksWithdrawalFromLiquidityProviderDestinationAddress = this.form.get('fireblocksWithdrawalFromLiquidityProviderDestinationAddress')?.value ?? 'test_withdrawal';
+    const coreFireblocksWithdrawalFromCustodyProviderDestinationAddress = this.form.get('fireblocksWithdrawalFromCustodyProviderDestinationAddress')?.value ?? this.defaultCustodyWithdrawalKeys;
+    const coreFireblocksWithdrawalFromLiquidityProviderDestinationAddress = this.form.get('fireblocksWithdrawalFromLiquidityProviderDestinationAddress')?.value ?? this.defaultLiquidityWithdrawalKeys;
     const coreFireblocksWithdrawalToEndUserSourceVaultAccountId = this.form.get('fireblocksWithdrawalToEndUserSourceVaultAccountId')?.value ?? '2';
     const coreFireblocksWithdrawalToEndUserSpeed = this.form.get('fireblocksWithdrawalToEndUserSpeed')?.value ?? 'MEDIUM';
     // Trustology
@@ -468,6 +520,34 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
         reject('Incorrect email');
       }
     })
+  }
+
+  addFireblocksCustodyProviderDestinationAddress(val: { key: string, value: string }): void {
+    const data = this.form.controls.fireblocksWithdrawalFromCustodyProviderDestinationAddress?.value;
+    if (data) {
+      data[val.key] = val.value;
+    }
+  }
+
+  addFireblocksLiquidityProviderDestinationAddress(val: { key: string, value: string }): void {
+    const data = this.form.controls.fireblocksWithdrawalFromLiquidityProviderDestinationAddress?.value;
+    if (data) {
+      data[val.key] = val.value;
+    }
+  }
+
+  removeFireblocksCustodyProviderDestinationAddress(key: string): void {
+    const data = this.form.controls.fireblocksWithdrawalFromCustodyProviderDestinationAddress?.value;
+    if (data) {
+      delete data[key];
+    }
+  }
+
+  removeFireblocksLiquidityProviderDestinationAddress(key: string): void {
+    const data = this.form.controls.fireblocksWithdrawalFromLiquidityProviderDestinationAddress?.value;
+    if (data) {
+      delete data[key];
+    }
   }
 
   onSubmit(content: any): void {

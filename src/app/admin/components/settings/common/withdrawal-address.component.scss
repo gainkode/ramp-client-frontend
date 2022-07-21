@@ -1,0 +1,17 @@
+@import "../../../../../assets/scss/variables";
+@import "../../../../../assets/colors";
+
+.__common-settings-key-value-item {
+    display: grid;
+    grid-template-columns: 120px auto 32px;
+    grid-template-rows: auto;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.__common-settings-key-value-key {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}

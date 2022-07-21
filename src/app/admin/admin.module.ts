@@ -80,6 +80,7 @@ import { AdminCommonSettingsComponent } from './components/settings/common/commo
 import { AdminDashboardCardComponent } from './misc/dashboard-card/dashboard-card.component';
 import { AdminUserDevicesComponent } from './components/users/devices/devices.component';
 import { AdminDeviceDetailsComponent } from './components/users/devices/device-details.component';
+import { AdminWithdrawalAddressComponent } from './components/settings/common/withdrawal-address.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -151,7 +152,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AdminCountryBlackListComponent, AdminCountryBlackListDetailsComponent,
     AdminCostSchemesComponent, AdminCostSchemeDetailsComponent,
     AdminBankAccountsComponent, AdminBankAccountDetailsComponent,
-    AdminCommonSettingsComponent,
+    AdminCommonSettingsComponent, AdminWithdrawalAddressComponent,
     AdminApiKeysComponent, AdminApiKeyDetailsComponent
   ],
   providers: [
