@@ -71,7 +71,8 @@ export class WidgetWizardComponent implements OnInit {
     }],
     currencySend: [undefined, { validators: [], updateOn: 'change' }],
     currencyReceive: [undefined, { validators: [], updateOn: 'change' }],
-    destination: [undefined, { validators: [], updateOn: 'change' }]
+    destination: [undefined, { validators: [], updateOn: 'change' }],
+    transactionWebHook: [undefined, { validators: [], updateOn: 'change' }]
   });
 
   get widgetField(): AbstractControl | null {
@@ -100,6 +101,10 @@ export class WidgetWizardComponent implements OnInit {
 
   get destinationField(): AbstractControl | null {
     return this.dataForm.get('destination');
+  }
+
+  get transactionWebHookField(): AbstractControl | null {
+    return this.dataForm.get('transactionWebHook');
   }
 
   constructor(
@@ -218,9 +223,15 @@ export class WidgetWizardComponent implements OnInit {
   save(): void {
     this.handleError('');
     this.progressChanged(true);
+    let wh = undefined;
     let currencyToSend = undefined;
     let amountToSend: number | undefined = undefined;
     let address = undefined;
+    if (this.transactionWebHookField?.value &&
+      this.transactionWebHookField?.value !== null &&
+      this.transactionWebHookField?.value !== '') {
+      wh = this.transactionWebHookField?.value;
+    }
     if (this.currencySendField?.value &&
       this.currencySendField?.value !== null &&
       this.currencySendField?.value !== '') {
@@ -242,6 +253,7 @@ export class WidgetWizardComponent implements OnInit {
       amount: amountToSend,
       destination: address,
       transactionType: this.selectedTransactionType?.id,
+      onTransactionStatusChanged: wh,
       // postCode: '',
       // town: '',
       // street: '',

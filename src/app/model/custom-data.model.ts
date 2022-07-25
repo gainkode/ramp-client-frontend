@@ -16,7 +16,7 @@ export const disclaimerDataDefault: string[] = [
 ];
 
 export const completeDataDefault: string[] = [
-  '[%main_title%]Transaction completed',
+  '[%main_title%]Order completed',
   'Dear Customer,',
   'Your Order has been successfully received in {%product%}.',
   'Our team is working to complete it as fast as possible!',

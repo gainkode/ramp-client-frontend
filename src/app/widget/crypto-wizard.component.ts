@@ -68,7 +68,8 @@ export class CryptoWizardComponent implements OnInit {
       ], updateOn: 'change'
     }],
     currency: [undefined, { validators: [], updateOn: 'change' }],
-    currencyConvert: [undefined, { validators: [], updateOn: 'change' }]
+    currencyConvert: [undefined, { validators: [], updateOn: 'change' }],
+    transactionWebHook: [undefined, { validators: [], updateOn: 'change' }]
   });
 
   get widgetField(): AbstractControl | null {
@@ -95,6 +96,10 @@ export class CryptoWizardComponent implements OnInit {
     return this.dataForm.get('currencyConvert');
   }
 
+  get transactionWebHookField(): AbstractControl | null {
+    return this.dataForm.get('transactionWebHook');
+  }
+  
   constructor(
     public router: Router,
     private formBuilder: FormBuilder,
@@ -197,8 +202,14 @@ export class CryptoWizardComponent implements OnInit {
   save(): void {
     this.handleError('');
     this.progressChanged(true);
+    let wh = undefined;
     let c = undefined;
     let a: number | undefined = undefined;
+    if (this.transactionWebHookField?.value &&
+      this.transactionWebHookField?.value !== null &&
+      this.transactionWebHookField?.value !== '') {
+      wh = this.transactionWebHookField?.value;
+    }
     if (this.currencyField?.value &&
       this.currencyField?.value !== null &&
       this.currencyField?.value !== '') {
@@ -212,7 +223,8 @@ export class CryptoWizardComponent implements OnInit {
     const paramsData = {
       convertedCurrency: (this.selectedCurrencyConvert) ? this.selectedCurrencyConvert.symbol : undefined,
       currency: c,
-      amount: a
+      amount: a,
+      onTransactionStatusChanged: wh
     };
     const transactionData$ = this.commonService.addMyWidgetUserParams(
       this.widgetField?.value,

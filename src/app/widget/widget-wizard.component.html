@@ -86,6 +86,11 @@
           formControlName="destination" [errorMessages]="emailErrorMessages" [separator]="true">
         </app-form-textbox>
 
+        <!-- Transaction Status Changed WebHook -->
+        <app-form-textbox [label]="'Web Hook: On Transaction Status Changed'" [asterisk]=false [maxlength]="350"
+          [smallLabel]=true formControlName="transactionWebHook" [separator]="true">
+        </app-form-textbox>
+        
         <!-- Buttons -->
         <div class="__widget-buttons-area">
           <button class="__main-button" type="submit" [disabled]="done || !dataForm.valid">
