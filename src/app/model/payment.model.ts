@@ -1,4 +1,5 @@
 import { E } from '@angular/cdk/keycodes';
+import { EnvService } from '../services/env.service';
 import { getCryptoSymbol } from '../utils/utils';
 import { CommonTargetValue } from './common.model';
 import {
@@ -25,7 +26,11 @@ export class PaymentProviderInstrumentView {
         this.instrument = data.instrument ?? PaymentInstrument.CreditCard;
         if (this.instrument === PaymentInstrument.Apm) {
             this.name = data.provider?.displayName ?? 'APM';
-            this.image = './assets/svg-providers/apm.svg';
+            if (data.provider?.logo) {
+                this.image = `${EnvService.image_host}/apm/${data.provider.logo}`;
+            } else {
+                this.image = './assets/svg-providers/apm.svg';
+            }
         } else if (this.instrument === PaymentInstrument.CreditCard) {
             this.name = 'CARD PAYMENT';
             this.image = './assets/svg-providers/credit-card.svg';
@@ -40,20 +45,12 @@ export class PaymentProviderInstrumentView {
 export class PaymentProviderView {
     id = '';
     name = '';
-    image = '';
     instruments: string[] = [];
 
     constructor(data: PaymentProvider) {
         this.id = data.name ?? '';
         this.name = data.name ?? '';
         this.instruments = data.instruments?.map(val => val) ?? [];
-        if (this.id === 'Fibonatix') {
-            this.image = './assets/svg-providers/fibonatix.svg';
-        } else if (this.id === 'InstantPay') {
-            this.image = './assets/svg-providers/instantpay.png';
-        } else if (this.id === 'Sofort') {
-            this.image = './assets/svg-providers/klarna.svg';
-        }
     }
 }
 

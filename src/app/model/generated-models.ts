@@ -1546,6 +1546,7 @@ export type PaymentProvider = {
   default?: Maybe<Scalars['Boolean']>;
   disabled?: Maybe<Scalars['DateTime']>;
   displayName?: Maybe<Scalars['String']>;
+  logo?: Maybe<Scalars['String']>;
 };
 
 export type PaymentProviderByInstrument = {
