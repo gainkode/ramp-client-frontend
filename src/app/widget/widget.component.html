@@ -54,7 +54,7 @@
         (onProgress)="progressChanged($event)" (onComplete)="onLoginRequired($event)">
       </app-widget-register>
       <!-- Login Authentication -->
-      <app-widget-login-auth *ngSwitchCase="'login_auth'" [email]="summary.email" [widgetId]="widget.widgetId"
+      <app-widget-login-auth *ngSwitchCase="'login_auth'" [email]="summary.email" [widget]="widget"
         [requiredExtraData]="requiredExtraData" [allowCreate]="quickCheckout"
         [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage" (onBack)="loginBack()"
         (onProgress)="progressChanged($event)" (onComplete)="loginComplete($event)">

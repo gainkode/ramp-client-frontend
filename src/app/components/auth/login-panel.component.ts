@@ -25,6 +25,7 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
     @Input() allowCreate: boolean = true;
     @Input() errorMessage = '';
     @Input() widgetId = '';
+    @Input() fixedLogin = false;
     @Input() set requiredExtraData(val: boolean) {
         if (val === true) {
             this.showSignupPanel(undefined);
@@ -88,6 +89,9 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.emailField?.setValue(this.userMail);
+        if (this.fixedLogin) {
+            this.emailField?.disable();
+        }
         this.loginForm.updateValueAndValidity();
     }
 

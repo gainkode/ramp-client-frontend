@@ -94,8 +94,8 @@ export class WalletItem {
       this.vault = data.fiatVaultId ?? '';
       this.asset = data.currency ?? '';
       this.symbol = data.currency ?? '';
-      this.total = data.generalBalance ?? 0;
-      this.totalFiat = data.balance ?? 0;
+      this.total = data.balance ?? 0;
+      this.totalFiat = data.generalBalance ?? 0;
       this.name = `${this.asset} wallet`;
       this.pCurrencyName = this.asset;
       this.pFullName = `${this.asset} wallet`;

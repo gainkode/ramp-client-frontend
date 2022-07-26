@@ -48,7 +48,7 @@ export function getCurrencySign(currency: string): string {
             result = 'AU$';
             break;
         case 'CHF':
-            result = 'CH\u20AC';
+            result = 'CHF';
             break;
         case 'JPY':
             result = '\u00A5';
