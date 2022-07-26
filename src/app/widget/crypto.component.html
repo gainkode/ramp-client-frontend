@@ -23,7 +23,7 @@
         (onProgress)="progressChanged($event)" (onComplete)="onLoginRequired($event)">
       </app-widget-register>
       <!-- Login Authentication -->
-      <app-widget-login-auth *ngSwitchCase="'login_auth'" [email]="summary.email" [widgetId]="widget.widgetId"
+      <app-widget-login-auth *ngSwitchCase="'login_auth'" [email]="summary.email" [widget]="widget"
         [requiredExtraData]="requiredExtraData" [allowCreate]=false (onBack)="loginBack()" (onProgress)="progressChanged($event)"
         (onComplete)="loginComplete($event)">
       </app-widget-login-auth>
@@ -41,7 +41,7 @@
     </div>
   </div>
 
-  <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;padding: 24px;">
+  <!-- <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;padding: 24px;">
     <button type="button" (click)="sendTestNotification(false)">
       Partial
     </button>
@@ -49,5 +49,5 @@
     <button type="button" (click)="sendTestNotification(true)">
       Complete
     </button>
-  </div>
+  </div> -->
 </div>
