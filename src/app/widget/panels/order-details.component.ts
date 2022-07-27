@@ -791,6 +791,10 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     });
   }
 
+  sendAll(): void {
+    this.amountSpendField?.setValue(this.selectedWallet?.total);
+  }
+
   onSubmit(): void {
     if (this.dataForm.valid) {
       if (this.auth.user) {
