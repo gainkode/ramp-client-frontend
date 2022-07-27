@@ -28,6 +28,7 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
     if (widget) {
       this.setFormData(widget);
       this.createNew = ((widget?.id ?? '') === '');
+      this.widgetId = widget?.id ?? '';
       this.widgetLink = widget?.link ?? '';
       this.widgetMaskLink = widget?.maskLink ?? '';
     }
@@ -53,6 +54,7 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   transactionTypeOptions = TransactionTypeList;
   widgetMaskLink = '';
   widgetLink = '';
+  widgetId = '';
   isUsersLoading = false;
   usersSearchInput$ = new Subject<string>();
   usersOptions$: Observable<UserItem[]> = of([]);
@@ -70,7 +72,8 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
     transactionTypes: [[]],
     user: [null, { validators: [Validators.required], updateOn: 'change' }],
     name: [undefined, { validators: [Validators.required], updateOn: 'change' }],
-    description: ['']
+    description: [''],
+    secret: ['']
   });
 
   constructor(
@@ -143,7 +146,8 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
             transactionTypes: widget.transactionTypes ?? [],
             user: userItem ?? null,
             name: widget.name ?? 'Widget',
-            description: widget.description
+            description: widget.description,
+            secret: widget.secret
           });
         })
       );
@@ -166,6 +170,7 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
     widget.liquidityProvider = formValue.liquidityProvider;
     widget.paymentProviders = formValue.paymentProviders;
     widget.transactionTypes = formValue.transactionTypes;
+    widget.secret = formValue.secret;
 
     return widget;
   }

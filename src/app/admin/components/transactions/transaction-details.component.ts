@@ -84,6 +84,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   currentRate = 0;
   transactionStatus: TransactionStatus | undefined = undefined;
   transactionStatusName = '';
+  notPaidStatus = false;
   kycStatus = '';
   accountStatus = '';
   showTransferHash = false;
@@ -209,6 +210,11 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
       this.transactionStatus = this.data.status;
       if (this.transactionStatuses.length > 0) {
         this.transactionStatusName = this.transactionStatuses.find(x => x.id === this.transactionStatus)?.name ?? '';
+      }
+      if (this.data.status === TransactionStatus.Completed || this.data.status === TransactionStatus.Paid) {
+        this.notPaidStatus = false;
+      } else {
+        this.notPaidStatus = true;
       }
       this.showTransferHash = (this.data.transferOrderId !== '');
       this.showBenchmarkTransferHash = (this.data.benchmarkTransferOrderId !== '');
@@ -343,6 +349,36 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
 
   onDelete(content: any): void {
     this.deleteDialog = this.modalService.open(content, {
+      backdrop: 'static',
+      windowClass: 'modalCusSty',
+    });
+  }
+
+  onPaid(content: any): void {
+    this.transactionToUpdate = {
+      transactionId: this.transactionId,
+      status: TransactionStatus.Paid,
+      destination: this.data?.address ?? '',
+      feeFiat: this.data?.fees ?? 0,
+      rate: undefined,
+      currencyToSpend: this.data?.currencyToSpend ?? 0,
+      currencyToReceive: this.data?.currencyToReceive ?? 0,
+      amountToSpend: this.data?.amountToSpend ?? 0,
+      kycStatus: this.data?.kycStatusValue ?? TransactionKycStatus.KycApproved,
+      accountStatus: this.data?.accountStatusValue ?? AccountStatus.Live,
+      benchmarkTransferOrder: {
+        orderId: this.data?.benchmarkTransferOrderId,
+        transferHash: this.data?.benchmarkTransferOrderHash
+      },
+      comment: this.data?.comment ?? '',
+      transferOrder: {
+        orderId: this.data?.transferOrderId,
+        transferHash: this.data?.transferOrderHash
+      },
+    } as Transaction;
+    this.amountChanged = false;
+    this.statusChanged = true;
+    this.updateDialog = this.modalService.open(content, {
       backdrop: 'static',
       windowClass: 'modalCusSty',
     });

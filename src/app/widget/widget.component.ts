@@ -658,10 +658,7 @@ export class WidgetComponent implements OnInit {
       accountType: data.selected
     };
     const settingsData = JSON.stringify(settings);
-    this.createBuyTransaction(
-      this.summary.providerView?.id ?? 'WireTransferPayment',
-      PaymentInstrument.WireTransfer,
-      settingsData);
+    this.createBuyTransaction('', PaymentInstrument.WireTransfer, settingsData);
   }
 
   sendWireTransaferMessageResult(): void {

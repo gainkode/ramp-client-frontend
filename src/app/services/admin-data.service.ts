@@ -1029,6 +1029,7 @@ const GET_WIDGETS = gql`
         instruments
         paymentProviders
         liquidityProvider
+        secret
       }
     }
   }
@@ -1284,7 +1285,8 @@ const CREATE_WIDGET = gql`
     $liquidityProvider: LiquidityProvider
     $paymentProviders: [String!]
     $transactionTypes: [TransactionType!]
-    $additionalSettings: String
+    $additionalSettings: String,
+    $secret: String
   ) {
     createWidget(
       userId: $userId
@@ -1300,6 +1302,7 @@ const CREATE_WIDGET = gql`
         instruments: $instruments
         paymentProviders: $paymentProviders
         liquidityProvider: $liquidityProvider
+        secret: $secret
       }
     ) {
       widgetId
@@ -1322,6 +1325,7 @@ const UPDATE_WIDGET = gql`
     $paymentProviders: [String!]
     $transactionTypes: [TransactionType!]
     $additionalSettings: String
+    $secret: String
   ) {
     updateWidget(
       widgetId: $widgetId,
@@ -1338,6 +1342,7 @@ const UPDATE_WIDGET = gql`
         instruments: $instruments
         paymentProviders: $paymentProviders
         liquidityProvider: $liquidityProvider
+        secret: $secret
       }
     ) {
       widgetId
@@ -2934,7 +2939,8 @@ export class AdminDataService {
           instruments: widget.instruments,
           paymentProviders: widget.paymentProviders,
           liquidityProvider: widget.liquidityProvider,
-          additionalSettings: widget.additionalSettings
+          additionalSettings: widget.additionalSettings,
+          secret: widget.secret
         }
       }).pipe(tap(() => {
         this.snackBar.open(`Widget was created`, undefined, { duration: 5000 });
@@ -2954,7 +2960,8 @@ export class AdminDataService {
           instruments: widget.instruments,
           paymentProviders: widget.paymentProviders,
           liquidityProvider: widget.liquidityProvider,
-          additionalSettings: widget.additionalSettings
+          additionalSettings: widget.additionalSettings,
+          secret: widget.secret
         }
       }).pipe(tap(() => {
         this.snackBar.open(`Widget was updated`, undefined, { duration: 5000 });
@@ -3336,7 +3343,7 @@ export class AdminDataService {
       },
     });
   }
-  
+
   exportUsersToCsv(
     userIds: string[],
     roleIds: string[],

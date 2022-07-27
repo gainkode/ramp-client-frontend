@@ -28,6 +28,7 @@ export class WidgetItem {
   liquidityProvider?: string;
   link = '';
   maskLink = '';
+  secret = '';
   selected = false;
 
   constructor(data: Widget | null) {
@@ -39,6 +40,7 @@ export class WidgetItem {
       this.maskLink = `${EnvService.client_host}/payment/widget/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`;
       this.name = data.name;
       this.description = data.description ?? '';
+      this.secret = data.secret ?? '';
       this.additionalSettings = data.additionalSettings as string;
       this.userId = data.userId as string;
       this.created = datepipe.transform(data.created, 'dd-MM-YYYY HH:mm:ss') ?? '';

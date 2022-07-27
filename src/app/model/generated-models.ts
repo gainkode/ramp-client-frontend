@@ -3827,6 +3827,7 @@ export type Widget = {
   currentUserEmail?: Maybe<Scalars['String']>;
   currentUserParams?: Maybe<Scalars['String']>;
   hasFixedAddress: Scalars['Boolean'];
+  secret?: Maybe<Scalars['String']>;
 };
 
 export type WidgetInput = {

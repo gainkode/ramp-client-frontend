@@ -259,21 +259,33 @@
           {{errorMessage}}
         </h4>
       </div>
-      <div style="display: flex; justify-content: flex-end;">
-        <button *ngIf="permission>1 && transactionType!==TRANSACTION_TYPE.Receive"
-          class="btn btn-primary pd-x-30 me-2 mg-t-5">
-          <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-          Save
-        </button>
-        <button *ngIf="permission>1 && removable" class="btn btn-danger pd-x-30 me-2 mg-t-5" type="button"
-          (click)="onDelete(delete_confirm_content)">
-          <span *ngIf="cancelInProgress" class="spinner-border spinner-border-sm" role="status"
-            aria-hidden="true"></span>
-          Cancel
-        </button>
-        <button *ngIf="permission>1" class="btn btn-outline-primary pd-x-30 mg-t-5" type="button" (click)="onClose()">
-          Close
-        </button>
+      <div style="display: flex; justify-content: space-between;">
+        <div style="display: flex; justify-content: flex-start;">
+          <button *ngIf="permission>1 && removable" class="btn btn-danger pd-x-30 me-2 mg-t-5" type="button"
+            (click)="onDelete(delete_confirm_content)">
+            <span *ngIf="cancelInProgress" class="spinner-border spinner-border-sm" role="status"
+              aria-hidden="true"></span>
+            Cancel
+          </button>
+          <button *ngIf="permission>1 && transactionType!==TRANSACTION_TYPE.Receive && notPaidStatus"
+            class="btn btn-primary pd-x-30 me-2 mg-t-5" type="button"
+            (click)="onPaid(update_confirm_content)">
+            <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
+              aria-hidden="true"></span>
+            Paid
+          </button>
+        </div>
+        <div style="display: flex; justify-content: flex-end;">
+          <button *ngIf="permission>1 && transactionType!==TRANSACTION_TYPE.Receive"
+            class="btn btn-primary pd-x-30 me-2 mg-t-5">
+            <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
+              aria-hidden="true"></span>
+            Save
+          </button>
+          <button *ngIf="permission>1" class="btn btn-outline-primary pd-x-30 mg-t-5" type="button" (click)="onClose()">
+            Close
+          </button>
+        </div>
       </div>
     </form>
   </div>
