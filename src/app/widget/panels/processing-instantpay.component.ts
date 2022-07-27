@@ -17,7 +17,7 @@ export class WidgetProcessingInstantpayComponent {
   data: InstantpayDetails | undefined = undefined;
 
   constructor(private clipboard: Clipboard) {}
-
+  
   copyReference() {
     if (this.data) {
       this.clipboard.copy(`${this.data.uniqueReference}`);

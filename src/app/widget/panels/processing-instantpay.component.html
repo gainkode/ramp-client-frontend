@@ -11,16 +11,12 @@
         </div>
     </div>
 
-    <div class="__widget-data-box-rounded-container">
+    <div *ngIf="data?.payId" class="__widget-data-box-rounded-container">
         <div class="__widget-data-box-rounded-border">
-            <div *ngIf="data?.payId">
-                <title class="__widget-data-item-title">
-                    PayID:
-                </title>
-                <div class="__widget-data-item-value">
-                    {{data?.payId}}
-                </div>
-            </div>
+            <title class="__widget-data-item-title">
+                PayID:
+            </title>
+            <input class="__text-box-noborder" type="text" readonly [value]="data?.payId" />
         </div>
         <div class="__widget-data-box-rounded-border-button-box">
             <button type="button" class="__rounded-border-button" (click)="copyPayId()">

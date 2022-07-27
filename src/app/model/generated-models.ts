@@ -3842,6 +3842,7 @@ export type WidgetInput = {
   paymentProviders?: Maybe<Array<Scalars['String']>>;
   liquidityProvider?: Maybe<LiquidityProvider>;
   additionalSettings?: Maybe<Scalars['String']>;
+  secret?: Maybe<Scalars['String']>;
 };
 
 export type WidgetListResult = {
@@ -3879,6 +3880,7 @@ export type WidgetUpdateInput = {
   paymentProviders?: Maybe<Array<Scalars['String']>>;
   liquidityProvider?: Maybe<LiquidityProvider>;
   additionalSettings?: Maybe<Scalars['String']>;
+  secret?: Maybe<Scalars['String']>;
 };
 
 export type WidgetUserParams = {
