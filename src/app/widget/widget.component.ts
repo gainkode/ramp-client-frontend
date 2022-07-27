@@ -339,12 +339,16 @@ export class WidgetComponent implements OnInit {
     this.inProgress = false;
     this.requiredExtraData = false;
     this.summary.reset();
-    this.initData(undefined);
-    if (this.widget.orderDefault) {
-      this.orderDetailsComplete(this.summary.email);
+    if (this.userParamsId === '') {
+      this.initData(undefined);
+      if (this.widget.orderDefault) {
+        this.orderDetailsComplete(this.summary.email);
+      } else {
+        this.pager.init('', '');
+        this.nextStage('order_details', 'Order details', 1, false);
+      }
     } else {
-      this.pager.init('', '');
-      this.nextStage('order_details', 'Order details', 1, false);
+      this.loadUserParams();
     }
   }
 
@@ -439,7 +443,7 @@ export class WidgetComponent implements OnInit {
             }
             this.orderDetailsComplete(this.widget.email);
           } else {
-            if (this.quickCheckout) {
+            if (this.quickCheckout || this.summary.agreementChecked) {
               this.pager.init('order_details', 'Order details');
             } else {
               this.pager.init('intro_disclaimer', 'Disclaimer');
