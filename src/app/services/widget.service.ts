@@ -264,7 +264,9 @@ export class WidgetService {
             overLimit, currency, TransactionSource.Widget, widget.widgetId).valueChanges.pipe(take(1));
         this.pSubscriptions.add(
             tiersData$.subscribe(({ data }) => {
-                this.loadCurrencies(summary, widget, data.getAppropriateSettingsKycTiers as SettingsKycTierShortExListResult);
+                const tierData = this.getCurrentTierLevelName(data.getAppropriateSettingsKycTiers as SettingsKycTierShortExListResult);
+                this.getKycStatus(summary, widget, tierData);
+
             }, (error) => {
                 if (this.onProgressChanged) {
                     this.onProgressChanged(false);
@@ -274,30 +276,7 @@ export class WidgetService {
         );
     }
 
-    private loadCurrencies(summary: CheckoutSummary, widget: WidgetSettings, tiers: SettingsKycTierShortExListResult): void {
-        if (this.onError) {
-            this.onError('');
-        }
-        const currencyData$ = this.commonService.getSettingsCurrency();
-        this.pSubscriptions.add(
-            currencyData$.valueChanges.subscribe(
-                ({ data }) => {
-                    const tierData = this.getCurrentTierLevelName(summary, tiers, data.getSettingsCurrency as SettingsCurrencyWithDefaults);
-                    this.getKycStatus(summary, widget, tierData);
-                },
-                (error) => {
-                    if (this.onProgressChanged) {
-                        this.onProgressChanged(false);
-                    }
-                    this.handleError(error, summary.email, 'Unable to load available list of currency types');
-                })
-        );
-    }
-
-    private getCurrentTierLevelName(
-        summary: CheckoutSummary,
-        tiersData: SettingsKycTierShortExListResult,
-        settingsCurrency: SettingsCurrencyWithDefaults): KycTierResultData {
+    private getCurrentTierLevelName(tiersData: SettingsKycTierShortExListResult): KycTierResultData {
         const result: KycTierResultData = {
             levelName: null,
             required: false

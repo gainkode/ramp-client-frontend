@@ -350,20 +350,22 @@
           {{errorMessage}}
         </h4>
       </div>
-      <div style="display: flex; justify-content: flex-end;">
-        <button *ngIf="permission>1" class="btn btn-primary pd-x-30 me-2 mg-t-5">
-          <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-          Save
-        </button>
+      <div style="display: flex; justify-content: space-between;">
         <button *ngIf="permission>1 && removable" class="btn btn-danger pd-x-30 me-2 mg-t-5" type="button"
           (click)="onDeleteCustomer(delete_confirm_content)">
           <span *ngIf="disableInProgress" class="spinner-border spinner-border-sm" role="status"
             aria-hidden="true"></span>
           {{disableButtonTitle}}
         </button>
-        <button class="btn btn-outline-primary pd-x-30 mg-t-5" type="button" (click)="onClose()">
-          Close
-        </button>
+        <div style="display: flex; justify-content: flex-end;">
+          <button *ngIf="permission>1" class="btn btn-primary pd-x-30 me-2 mg-t-5">
+            <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Save
+          </button>
+          <button class="btn btn-outline-primary pd-x-30 mg-t-5" type="button" (click)="onClose()">
+            Close
+          </button>
+        </div>
       </div>
     </form>
   </div>

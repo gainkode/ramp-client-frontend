@@ -133,8 +133,7 @@
             Country
             <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
           </label>
-          <ng-select formControlName="country" [clearable]=false [clearOnBackspace]=false
-            required>
+          <ng-select formControlName="country" [clearable]=false [clearOnBackspace]=false required>
             <ng-option *ngFor="let country of countries" [value]="country.code3">
               <app-dropdown-item itemValue="{{country.name}}" imageClass="country-flag-admin"
                 imageSource="assets/svg-country-flags/{{getCountryFlag(country.code2)}}">
@@ -253,20 +252,23 @@
           {{errorMessage}}
         </h4>
       </div>
-      <div style="display: flex; justify-content: flex-end;">
-        <button *ngIf="permission>1" class="btn btn-primary pd-x-30 me-2 mg-t-5">
-          <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-          Save
-        </button>
+      <div style="display: flex; justify-content: space-between;">
         <button *ngIf="permission>1 && removable" class="btn btn-danger pd-x-30 me-2 mg-t-5" type="button"
           (click)="onDeleteUser(delete_confirm_content)">
           <span *ngIf="disableInProgress" class="spinner-border spinner-border-sm" role="status"
             aria-hidden="true"></span>
           {{disableButtonTitle}}
         </button>
-        <button class="btn btn-outline-primary pd-x-30 mg-t-5" type="button" (click)="onClose()">
-          Close
-        </button>
+        <div style="display: flex; justify-content: flex-end;">
+          <button *ngIf="permission>1" class="btn btn-primary pd-x-30 me-2 mg-t-5">
+            <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
+              aria-hidden="true"></span>
+            Save
+          </button>
+          <button class="btn btn-outline-primary pd-x-30 mg-t-5" type="button" (click)="onClose()">
+            Close
+          </button>
+        </div>
       </div>
     </form>
   </div>
