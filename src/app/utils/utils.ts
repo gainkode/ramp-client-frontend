@@ -77,7 +77,7 @@ export function shortenString(val: string, limit: number): string {
 }
 
 export function getFullName(user: User): string {
-    
+
     let fullName = '';
     if (user.type === UserType.Merchant) {
         fullName = user.firstName ?? '';
@@ -160,4 +160,20 @@ export function getProviderList(instruments: string[], providers: PaymentProvide
 
 export function getCheckedProviderList(checkedproviders: string[], providerList: PaymentProviderView[]): string[] {
     return checkedproviders.filter(x => providerList.some(p => p.id === x));
+}
+
+export function isSumsubVerificationComplete(payload: any): boolean {
+    const status: string = payload?.reviewStatus ?? '';
+    if (status.toLowerCase() === 'completed') {
+        const reviewResult = payload?.reviewResult;
+        if (reviewResult) {
+            const answer = reviewResult.reviewAnswer as string;
+            if (answer) {
+                if (answer.toLowerCase() === 'green') {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
 }

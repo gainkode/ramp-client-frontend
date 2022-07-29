@@ -865,13 +865,21 @@ export class WidgetComponent implements OnInit {
               if (this.widget.orderDefault) {
                 this.setError('Transaction failed', 'Order code is invalid', 'createBuyTransaction order');
               } else {
-                this.pager.swapStage(tempStageId);
+                if (tempStageId === 'verification') {
+                  this.pager.goBack();
+                } else {
+                  this.pager.swapStage(tempStageId);
+                }
               }
             }
           }
         }, (error) => {
           this.inProgress = false;
-          this.pager.swapStage(tempStageId);
+          if (tempStageId === 'verification') {
+            this.pager.goBack();
+          } else {
+            this.pager.swapStage(tempStageId);
+          }
           if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
             this.handleAuthError();
           } else {

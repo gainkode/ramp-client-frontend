@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { SettingsKycShort, SettingsKycTierShortExListResult, TransactionSource, TransactionType } from 'src/app/model/generated-models';
@@ -31,6 +31,7 @@ export class WidgetKycComponent implements OnInit, OnDestroy, AfterViewInit {
   showValidator = false;
 
   constructor(
+    private changeDetector: ChangeDetectorRef,
     private auth: AuthService,
     private dataService: PaymentDataService,
     private errorHandler: ErrorService) { }
@@ -54,6 +55,7 @@ export class WidgetKycComponent implements OnInit, OnDestroy, AfterViewInit {
   private getSettings(): void {
     this.onError.emit('');
     this.showValidator = false;
+    this.changeDetector.detectChanges();
     const settingsCommon = this.auth.getLocalSettingsCommon();
     if (settingsCommon === null) {
       this.onError.emit('Unable to load common settings');
@@ -62,6 +64,7 @@ export class WidgetKycComponent implements OnInit, OnDestroy, AfterViewInit {
       if (this.levelName !== '') {
         this.flow = this.levelName;
         this.showValidator = true;
+        this.changeDetector.detectChanges();
       } else {
         const kycData$ = this.auth.getMyKycSettings().valueChanges.pipe(take(1));
         this.onProgress.emit(true);
@@ -75,6 +78,7 @@ export class WidgetKycComponent implements OnInit, OnDestroy, AfterViewInit {
               }
               this.onProgress.emit(false);
               this.showValidator = true;
+              this.changeDetector.detectChanges();
             },
             (error) => {
               this.onProgress.emit(false);
@@ -95,6 +99,7 @@ export class WidgetKycComponent implements OnInit, OnDestroy, AfterViewInit {
   private getTiers(): void {
     this.onError.emit('');
     this.showValidator = false;
+    this.changeDetector.detectChanges();
     const settingsCommon = this.auth.getLocalSettingsCommon();
     if (settingsCommon === null) {
       this.onError.emit('Unable to load common settings');
@@ -103,6 +108,7 @@ export class WidgetKycComponent implements OnInit, OnDestroy, AfterViewInit {
       if (this.levelName !== '') {
         this.flow = this.levelName;
         this.showValidator = true;
+        this.changeDetector.detectChanges();
       } else {
         this.onProgress.emit(true);
         const currency = this.summary?.currencyFrom ?? 'EUR';
@@ -146,6 +152,7 @@ export class WidgetKycComponent implements OnInit, OnDestroy, AfterViewInit {
             } else {
               this.onProgress.emit(false);
               this.showValidator = true;
+              this.changeDetector.detectChanges();
             }
           }, (error) => {
             this.onProgress.emit(false);

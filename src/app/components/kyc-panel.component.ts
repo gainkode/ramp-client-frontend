@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { EnvService } from '../services/env.service';
 import { ErrorService } from '../services/error.service';
+import { isSumsubVerificationComplete } from '../utils/utils';
 import { CommonDialogBox } from './dialogs/common-box.dialog';
 
 const snsWebSdk = require('@sumsub/websdk');
@@ -77,7 +78,7 @@ export class KycPanelComponent implements OnInit, OnDestroy {
     // @param applicantEmail - applicant email (not required)
     // @param applicantPhone - applicant phone, if available (not required)
     // @param customI18nMessages - customized locale messages for current session (not required)
-    launchSumSubWidget(
+    private launchSumSubWidget(
         apiUrl: string,
         flowName: string,
         accessToken: string,
@@ -111,39 +112,22 @@ export class KycPanelComponent implements OnInit, OnDestroy {
             addViewportTag: false,
             adaptIframeHeight: true
         }).on('idCheck.onApplicantSubmitted', (payload) => {
+            console.log('idCheck.onApplicantSubmitted', payload);
             if (!this.completedWhenVerified) {
-                if (this.notifyCompleted) {
-                    this.completed.emit();
-                } else {
-                    this.showSuccessDialog();
-                }
+                this.completeVerification();
             }
         }).on('idCheck.onApplicantResubmitted', (payload) => {
+            console.log('idCheck.onApplicantResubmitted', payload);
             if (!this.completedWhenVerified) {
-                if (this.notifyCompleted) {
-                    this.completed.emit();
-                } else {
-                    this.showSuccessDialog();
-                }
+                this.completeVerification();
             }
         }).on('idCheck.applicantStatus', (payload) => {
-            const status: string = payload?.reviewStatus ?? '';
-            if (this.completedWhenVerified && status.toLowerCase() === 'completed') {
-                const reviewResult = payload?.reviewResult;
-                if (reviewResult) {
-                    const answer = reviewResult.reviewAnswer as string;
-                    if (answer) {
-                        if (answer.toLowerCase() === 'green') {
-                            if (this.notifyCompleted) {
-                                this.completed.emit();
-                            } else {
-                                this.showSuccessDialog();
-                            }
-                        }
-                    }
-                }
+            console.log('idCheck.applicantStatus', payload);
+            if (this.completedWhenVerified && isSumsubVerificationComplete(payload)) {
+                this.completeVerification();
             }
         }).on('idCheck.onError', (error) => {
+            console.log('idCheck.applicantStatus');
             this.onError.emit(error.error);
         });
 
@@ -153,5 +137,36 @@ export class KycPanelComponent implements OnInit, OnDestroy {
         const snsWebSdkInstance = snsWebSdkBuilder.build();
 
         snsWebSdkInstance.launch('#sumsub-websdk-container');
+    }
+
+    // {
+    //     "reviewId": "CbJqo",
+    //     "attemptId": "hHMMr",
+    //     "attemptCnt": 7,
+    //     "elapsedSincePendingMs": 14980,
+    //     "elapsedSinceQueuedMs": 44389,
+    //     "reprocessing": true,
+    //     "levelName": "Identity-verification",
+    //     "createDate": "2022-07-29 11:45:51+0000",
+    //     "reviewDate": "2022-07-29 11:46:06+0000",
+    //     "reviewResult": {
+    //         "reviewAnswer": "GREEN"
+    //     },
+    //     "reviewStatus": "completed",
+    //     "priority": 0,
+    //     "moderatorNames": null,
+    //     "autoChecked": false
+    // }
+
+    private completeVerification(): void {
+        if (this.notifyCompleted) {
+            this.completed.emit();
+        } else {
+            this.showSuccessDialog();
+        }
+    }
+
+    testButton(): void {
+        this.completeVerification();
     }
 }
