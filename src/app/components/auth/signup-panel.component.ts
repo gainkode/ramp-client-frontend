@@ -40,6 +40,7 @@ export class SignUpPanelComponent implements OnInit, OnDestroy {
     validData = false;
     termsLink = '';
     userTypeSection = 'personal';
+    done = false;
 
     signupForm = this.formBuilder.group({
         email: ['',
@@ -161,10 +162,12 @@ export class SignUpPanelComponent implements OnInit, OnDestroy {
     }
 
     private registerAccount(email: string, password: string): void {
+        this.done = true;
         try {
             this.progressChange.emit(true);
             this.subscriptions.add(
                 this.auth.register(this.widget, email, password, this.userType).subscribe((signupData) => {
+                    this.done = false;
                     const userData = signupData.data.signup as LoginResult;
                     if (!userData.authTokenAction) {
                         this.progressChange.emit(false);
@@ -177,11 +180,13 @@ export class SignUpPanelComponent implements OnInit, OnDestroy {
                         console.error('Unable to recognize the registration action', userData.authTokenAction);
                     }
                 }, (error) => {
+                    this.done = false;
                     this.progressChange.emit(false);
                     this.registerError(this.errorHandler.getError(error.message, 'Unable to register new account'));
                 })
             );
         } catch (e) {
+            this.done = false;
             this.progressChange.emit(false);
             this.registerError(e as string);
         }
