@@ -353,7 +353,7 @@ export class WidgetComponent implements OnInit {
   }
 
   handleError(message: string): void {
-    this.setError('Transaction failed', message);
+    this.setError('Transaction failed', message, 'handleError');
   }
 
   handleAuthError(): void {
@@ -618,7 +618,8 @@ export class WidgetComponent implements OnInit {
       if (this.paymentProviders.length < 1) {
         this.setError(
           'Payment providers not found',
-          `No supported payment providers found for "${this.summary.currencyFrom}"`);
+          `No supported payment providers found for "${this.summary.currencyFrom}"`,
+          'settingsCommonComplete');
       } else if (this.paymentProviders.length > 1) {
         if (!this.notificationStarted) {
           this.startNotificationListener();
@@ -771,7 +772,8 @@ export class WidgetComponent implements OnInit {
       if (this.paymentProviders.length < 1) {
         this.setError(
           'No payment providers',
-          `No supported payment providers found for "${this.summary.currencyFrom}"`);
+          `No supported payment providers found for "${this.summary.currencyFrom}"`,
+          'kycComplete');
       } else if (this.paymentProviders.length > 1) {
         this.nextStage('payment', 'Payment info', 5, true);
       } else {
@@ -806,7 +808,8 @@ export class WidgetComponent implements OnInit {
     } else {
       this.setError(
         'Authentication failed',
-        `Unable to authenticate user with the action "${data.authTokenAction}"`);
+        `Unable to authenticate user with the action "${data.authTokenAction}"`,
+        'checkLoginResult');
     }
   }
 
@@ -860,7 +863,7 @@ export class WidgetComponent implements OnInit {
               } as PaymentErrorDetails);
             } else {
               if (this.widget.orderDefault) {
-                this.setError('Transaction failed', 'Order code is invalid');
+                this.setError('Transaction failed', 'Order code is invalid', 'createBuyTransaction order');
               } else {
                 this.pager.swapStage(tempStageId);
               }
@@ -872,13 +875,16 @@ export class WidgetComponent implements OnInit {
           if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
             this.handleAuthError();
           } else {
-            this.errorMessage = this.errorHandler.getError(error.message, 'Unable to register a new transaction');
+            const msg = this.errorHandler.getError(error.message, 'Unable to register a new transaction');
+            this.errorMessage = msg;
             if (this.widget.embedded) {
               this.onError.emit({
-                errorMessage: this.errorMessage
+                errorMessage: msg
               } as PaymentErrorDetails);
             } else {
-              this.setError('Transaction handling failed', this.errorMessage);
+              setTimeout(() => {
+                this.setError('Transaction handling failed', msg, 'createBuyTransaction');
+              }, 100);
             }
           }
         })
@@ -924,7 +930,7 @@ export class WidgetComponent implements OnInit {
                 errorMessage: this.errorMessage
               } as PaymentErrorDetails);
             } else {
-              this.setError('Transaction handling failed', this.errorMessage);
+              this.setError('Transaction handling failed', this.errorMessage, 'createSellTransaction order');
             }
           }
         }, (error) => {
@@ -938,7 +944,9 @@ export class WidgetComponent implements OnInit {
                 errorMessage: this.errorMessage
               } as PaymentErrorDetails);
             } else {
-              this.setError('Transaction handling failed', this.errorMessage);
+              setTimeout(() => {
+                this.setError('Transaction handling failed', this.errorMessage, 'createSellTransaction');
+              }, 100);
             }
           }
         })
@@ -959,7 +967,8 @@ export class WidgetComponent implements OnInit {
     } else {
       this.setError(
         'Invalid payment instrument',
-        `Invalid payment instrument ${this.summary.providerView?.instrument}`);
+        `Invalid payment instrument ${this.summary.providerView?.instrument}`,
+        'startPayment');
     }
   }
 
@@ -990,7 +999,7 @@ export class WidgetComponent implements OnInit {
                 errorMessage: this.errorMessage
               } as PaymentErrorDetails);
             } else {
-              this.setError('Transaction handling failed', this.errorMessage);
+              this.setError('Transaction handling failed', this.errorMessage, 'completeCreditCardTransaction');
             }
           }
         }
@@ -1023,7 +1032,7 @@ export class WidgetComponent implements OnInit {
                 errorMessage: this.errorMessage
               } as PaymentErrorDetails);
             } else {
-              this.setError('Transaction handling failed', this.errorMessage);
+              this.setError('Transaction handling failed', this.errorMessage, 'completeInstantpayTransaction');
             }
           }
         }
@@ -1042,11 +1051,11 @@ export class WidgetComponent implements OnInit {
         selected: this.wireTransferList[0]
       } as WireTransferUserSelection);
     } else {
-      this.setError('Transaction failed', 'No settings found for wire transfer');
+      this.setError('Transaction failed', 'No settings found for wire transfer', 'onWireTransferListLoaded');
     }
   }
 
-  private setError(title: string, message: string): void {
+  private setError(title: string, message: string, tag: string): void {
     this.errorMessage = message;
     this.changeDetector.detectChanges();
     if ((this.widget.orderDefault || this.pager.stageId === 'initialization') && this.errorMessage !== '') {
