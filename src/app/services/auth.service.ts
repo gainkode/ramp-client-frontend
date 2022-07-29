@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { from, Observable, of } from 'rxjs';
-import { SocialAuthService, FacebookLoginProvider, GoogleLoginProvider } from 'angularx-social-login';
+//import { SocialAuthService, FacebookLoginProvider, GoogleLoginProvider } from 'angularx-social-login';
 import { FeedbackInput, LoginResult, PostAddress, SettingsCommon, User, UserMode, UserType } from '../model/generated-models';
 import { EmptyObject } from 'apollo-angular/types';
 import { EnvService } from './env.service';
@@ -414,7 +414,8 @@ export class AuthService {
 
     constructor(
         private apollo: Apollo,
-        private socialAuth: SocialAuthService) { }
+        //private socialAuth: SocialAuthService
+        ) { }
 
     refreshToken(): Observable<any> {
         const result = this.apollo.mutate({
@@ -492,21 +493,21 @@ export class AuthService {
         }
     }
 
-    socialSignIn(provider: string): Observable<any> {
-        let providerId = '';
-        if (provider.toLowerCase() === 'google') {
-            providerId = GoogleLoginProvider.PROVIDER_ID;
-        } else if (provider.toLowerCase() === 'facebook') {
-            providerId = FacebookLoginProvider.PROVIDER_ID;
-        }
-        return from(
-            this.socialAuth.signIn(providerId).then(function (data) {
-                return { user: data, error: undefined };
-            }).catch(function (data) {
-                return { user: undefined, error: data };
-            })
-        );
-    }
+    // socialSignIn(provider: string): Observable<any> {
+    //     let providerId = '';
+    //     if (provider.toLowerCase() === 'google') {
+    //         providerId = GoogleLoginProvider.PROVIDER_ID;
+    //     } else if (provider.toLowerCase() === 'facebook') {
+    //         providerId = FacebookLoginProvider.PROVIDER_ID;
+    //     }
+    //     return from(
+    //         this.socialAuth.signIn(providerId).then(function (data) {
+    //             return { user: data, error: undefined };
+    //         }).catch(function (data) {
+    //             return { user: undefined, error: data };
+    //         })
+    //     );
+    // }
 
     register(ignoreCookies: boolean, usermail: string, userpassword: string, usertype: UserType): Observable<any> {
         const w = window as any;
@@ -836,9 +837,9 @@ export class AuthService {
         });
     }
 
-    socialSignOut(): void {
-        this.socialAuth.signOut().then(function (data) { }).catch(function (error) { });
-    }
+    // socialSignOut(): void {
+    //     this.socialAuth.signOut().then(function (data) { }).catch(function (error) { });
+    // }
 
     logout(): void {
         this.apollo.client.resetStore();

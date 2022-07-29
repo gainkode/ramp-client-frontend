@@ -36,7 +36,7 @@
             <a href="/{{userTypeSection}}/auth/restore">Forgot your password?</a>
         </div>
     </form>
-    <div *ngIf="socialButtons">
+    <!-- <div *ngIf="socialButtons">
         <div class="__auth-social-delimitter">
             <div class="__auth-social-delimitter-line-container">
                 <div class="__auth-social-delimitter-line"></div>
@@ -50,14 +50,14 @@
                 <div class="__google-button-icon"></div>
                 <span class="__google-button-title">Log in with Google</span>
             </button>
-        </div>
+        </div> -->
         <!-- <div class="__auth-buttons-wizard-area">
             <button class="__facebook-button" (click)="socialSignIn('Facebook')">
                 <div class="__facebook-button-icon"></div>
                 <span class="__facebook-button-title">Log in with Facebook</span>
             </button>
         </div> -->
-    </div>
+    <!-- </div> -->
 </div>
 
 <app-signup-info-panel #signupInfo *ngIf="extraData" buttonTitle="SAVE" (error)="registerError($event)"

@@ -107,13 +107,13 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
         return this.loginForm.get('password');
     }
 
-    googleSignIn(): void {
-        this.socialSignIn('Google');
-    }
+    // googleSignIn(): void {
+    //     this.socialSignIn('Google');
+    // }
 
-    facebookSignIn(): void {
-        this.socialSignIn('Facebook');
-    }
+    // facebookSignIn(): void {
+    //     this.socialSignIn('Facebook');
+    // }
 
     showSignupPanel(userData: LoginResult | undefined): void {
         if (userData) {
@@ -128,62 +128,62 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
         }
     }
 
-    socialSignIn(providerName: string): void {
-        this.progressChange.emit(true);
-        this.registerError('');
-        this.done = true;
-        this.subscriptions.add(
-            this.auth.socialSignIn(providerName).subscribe((data) => {
-                if (data.user !== undefined) {
-                    const user = data.user as SocialUser;
-                    let token = '';
-                    if (providerName === 'Google') {
-                        token = user.idToken;
-                    } else if (providerName === 'Facebook') {
-                        token = user.authToken;
-                    }
-                    this.auth.socialSignOut();
-                    try {
-                        this.subscriptions.add(
-                            this.auth.authenticateSocial(providerName.toLowerCase(), token).subscribe((loginData) => {
-                                const userData = loginData.data.login as LoginResult;
-                                this.progressChange.emit(false);
-                                if (userData.user?.mode === UserMode.InternalWallet) {
-                                    if (userData.authTokenAction === 'TwoFactorAuth') {
-                                        this.auth.setLoginUser(userData);
-                                        this.twoFa = true;
-                                        this.socialLogin = true;
-                                    } else if (userData.authTokenAction === 'UserInfoRequired') {
-                                        this.done = false;
-                                        this.showSignupPanel(userData);
-                                    } else {
-                                        this.socialAuthenticated.emit(userData);
-                                    }
-                                } else {
-                                    this.done = false;
-                                    this.registerError(`Unable to authorise with the login '${user.email}'. Please sign up`);
-                                }
-                            }, (error) => {
-                                this.done = false;
-                                this.progressChange.emit(false);
-                                this.registerError(this.errorHandler.getError(error.message, `Invalid authentication via ${providerName}`));
-                            })
-                        );
-                    } catch (e) {
-                        this.done = false;
-                        this.progressChange.emit(false);
-                        this.registerError(e as string);
-                    }
-                } else {
-                    this.done = false;
-                    this.progressChange.emit(false);
-                }
-            }, (error) => {
-                this.progressChange.emit(false);
-                this.registerError(this.errorHandler.getError(error.message, `Unable to authenticate using ${providerName}`));
-            })
-        );
-    }
+    // socialSignIn(providerName: string): void {
+    //     this.progressChange.emit(true);
+    //     this.registerError('');
+    //     this.done = true;
+    //     this.subscriptions.add(
+    //         this.auth.socialSignIn(providerName).subscribe((data) => {
+    //             if (data.user !== undefined) {
+    //                 const user = data.user as SocialUser;
+    //                 let token = '';
+    //                 if (providerName === 'Google') {
+    //                     token = user.idToken;
+    //                 } else if (providerName === 'Facebook') {
+    //                     token = user.authToken;
+    //                 }
+    //                 this.auth.socialSignOut();
+    //                 try {
+    //                     this.subscriptions.add(
+    //                         this.auth.authenticateSocial(providerName.toLowerCase(), token).subscribe((loginData) => {
+    //                             const userData = loginData.data.login as LoginResult;
+    //                             this.progressChange.emit(false);
+    //                             if (userData.user?.mode === UserMode.InternalWallet) {
+    //                                 if (userData.authTokenAction === 'TwoFactorAuth') {
+    //                                     this.auth.setLoginUser(userData);
+    //                                     this.twoFa = true;
+    //                                     this.socialLogin = true;
+    //                                 } else if (userData.authTokenAction === 'UserInfoRequired') {
+    //                                     this.done = false;
+    //                                     this.showSignupPanel(userData);
+    //                                 } else {
+    //                                     this.socialAuthenticated.emit(userData);
+    //                                 }
+    //                             } else {
+    //                                 this.done = false;
+    //                                 this.registerError(`Unable to authorise with the login '${user.email}'. Please sign up`);
+    //                             }
+    //                         }, (error) => {
+    //                             this.done = false;
+    //                             this.progressChange.emit(false);
+    //                             this.registerError(this.errorHandler.getError(error.message, `Invalid authentication via ${providerName}`));
+    //                         })
+    //                     );
+    //                 } catch (e) {
+    //                     this.done = false;
+    //                     this.progressChange.emit(false);
+    //                     this.registerError(e as string);
+    //                 }
+    //             } else {
+    //                 this.done = false;
+    //                 this.progressChange.emit(false);
+    //             }
+    //         }, (error) => {
+    //             this.progressChange.emit(false);
+    //             this.registerError(this.errorHandler.getError(error.message, `Unable to authenticate using ${providerName}`));
+    //         })
+    //     );
+    // }
 
     onSubmit(): void {
         this.registerError('');
