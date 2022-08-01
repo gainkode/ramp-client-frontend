@@ -156,12 +156,12 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
         }),
         switchMap(searchString => {
           this.isWidgetsLoading = false;
-          return this.adminDataService.getWidgetIds(searchString, 0, 100, 'widgetId', false)
+          return this.adminDataService.getWidgetIds(searchString, 0, 100, 'code', true)
             .pipe(map(result => {
               return result.list.map(x => {
                 return {
-                  id: x,
-                  title: x
+                  id: x.id,
+                  title: x.code ?? x.id
                 } as CommonTargetValue;
               });
             }));

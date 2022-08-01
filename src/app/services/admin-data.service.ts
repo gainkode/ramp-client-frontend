@@ -670,6 +670,7 @@ const GET_USERS = gql`
         type
         mode
         birthday
+        gender
         countryCode2
         countryCode3
         created
@@ -986,6 +987,7 @@ const GET_WIDGET_IDS = gql`
       count
       list {
         widgetId
+        code
       }
     }
   }
@@ -2373,6 +2375,7 @@ export class AdminDataService {
       .pipe(
         map(result => {
           if (result.data?.getUsers?.list && result.data?.getUsers?.count) {
+            console.log(result.data.getUsers.list.filter(x => x.gender !== null && x.gender !== undefined));
             return {
               list: result.data.getUsers.list.map(u => new UserItem(u)),
               count: result.data.getUsers.count
@@ -2606,7 +2609,7 @@ export class AdminDataService {
     takeItems: number,
     orderField: string,
     orderDesc: boolean
-  ): Observable<{ list: string[], count: number }> {
+  ): Observable<{ list: WidgetItem[], count: number }> {
     const orderFields = [{ orderBy: orderField, desc: orderDesc }];
     const customerFilter = userFilter === null ? '' : userFilter?.toString();
     const vars = {
@@ -2624,7 +2627,7 @@ export class AdminDataService {
         map(result => {
           if (result.data?.getWidgets?.list && result.data?.getWidgets?.count) {
             return {
-              list: result.data.getWidgets.list.map(w => w.widgetId),
+              list: result.data.getWidgets.list.map(w => new WidgetItem(w)),
               count: result.data.getWidgets.count
             };
           } else {
