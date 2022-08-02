@@ -425,6 +425,12 @@ export enum FireblocksTransactionStatus {
   Failed = 'FAILED'
 }
 
+export enum Gender {
+  O = 'O',
+  M = 'M',
+  F = 'F'
+}
+
 export type GetRates = {
   __typename?: 'GetRates';
   currenciesFrom?: Maybe<Array<Maybe<Scalars['String']>>>;
@@ -2148,6 +2154,7 @@ export type QueryGetTransactionsArgs = {
   completedDateInterval?: Maybe<DateTimeInterval>;
   walletAddressOnly?: Maybe<Scalars['String']>;
   verifyWhenPaid?: Maybe<Scalars['Boolean']>;
+  userMode?: Maybe<UserMode>;
   filter?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
@@ -2208,6 +2215,7 @@ export type QueryGetWidgetsByUserArgs = {
 export type QueryGetWidgetsArgs = {
   widgetIdsOnly?: Maybe<Array<Scalars['String']>>;
   userIdsOnly?: Maybe<Array<Scalars['String']>>;
+  name?: Maybe<Scalars['String']>;
   filter?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
@@ -3247,7 +3255,7 @@ export type User = {
   lastLogin?: Maybe<Scalars['DateTime']>;
   data?: Maybe<Scalars['String']>;
   fiatVaults?: Maybe<Array<FiatVault>>;
-  gender?: Maybe<Scalars['String']>;
+  gender?: Maybe<Gender>;
 };
 
 export type UserAction = {
@@ -3461,6 +3469,7 @@ export type UserInput = {
   changePasswordRequired?: Maybe<Scalars['Boolean']>;
   kycTierId?: Maybe<Scalars['String']>;
   deleted?: Maybe<Scalars['DateTime']>;
+  gender?: Maybe<Gender>;
 };
 
 export type UserKycHistory = {

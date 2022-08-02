@@ -1,4 +1,4 @@
-import { KycStatus, User, UserContact, UserDevice, UserRole, UserType } from './generated-models';
+import { Gender, KycStatus, User, UserContact, UserDevice, UserRole, UserType } from './generated-models';
 import {
   KycStatusList,
   UserModeShortList,
@@ -11,6 +11,17 @@ import { CommonTargetValue } from './common.model';
 import { DatePipe } from '@angular/common';
 import { getCryptoSymbol } from '../utils/utils';
 
+export class GenderView {
+  id!: Gender;
+  name = '';
+}
+
+export const GenderList: Array<GenderView> = [
+  { id: Gender.M, name: 'Male' },
+  { id: Gender.F, name: 'Female' },
+  { id: Gender.O, name: 'Other' }
+];
+
 export class UserItem {
   id = '';
   referralCode = '';
@@ -19,6 +30,7 @@ export class UserItem {
   firstName = '';
   lastName = '';
   fullName = '';
+  gender = '';
   email = '';
   emailConfirmed = false;
   phone = '';
@@ -134,6 +146,7 @@ export class UserItem {
         const birthDayMonths = this.birthday.getFullYear() * 10000 + this.birthday.getMonth() * 100 + this.birthday.getDate();
         this.age = Math.floor((currentMonths - birthDayMonths) / 10000).toString();
       }
+      this.gender = data.gender ?? '';
       this.email = data.email;
       this.emailConfirmed = data.emailConfirmed ?? false;
       this.phone = data.phone ? (data.phone as string) : '';

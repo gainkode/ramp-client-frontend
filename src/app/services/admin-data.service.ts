@@ -771,6 +771,7 @@ const GET_USERS_EX = gql`
         emailConfirmed
         firstName
         lastName
+        gender
         type
         mode
         birthday
@@ -1414,6 +1415,7 @@ mutation UpdateUser(
   $firstName: String
   $lastName: String
   $birthday: DateTime
+  $gender: Gender
   $countryCode2: String
   $countryCode3: String
   $postCode: String
@@ -1439,6 +1441,7 @@ mutation UpdateUser(
       firstName: $firstName
       lastName: $lastName
       birthday: $birthday
+      gender: $gender
       countryCode2: $countryCode2
       countryCode3: $countryCode3
       postCode: $postCode
@@ -1472,6 +1475,7 @@ mutation CreateUser(
   $firstName: String
   $lastName: String
   $birthday: DateTime
+  $gender: Gender
   $countryCode2: String
   $countryCode3: String
   $postCode: String
@@ -1498,6 +1502,7 @@ mutation CreateUser(
       firstName: $firstName
       lastName: $lastName
       birthday: $birthday
+      gender: $gender
       countryCode2: $countryCode2
       countryCode3: $countryCode3
       postCode: $postCode
@@ -2375,7 +2380,6 @@ export class AdminDataService {
       .pipe(
         map(result => {
           if (result.data?.getUsers?.list && result.data?.getUsers?.count) {
-            console.log(result.data.getUsers.list.filter(x => x.gender !== null && x.gender !== undefined));
             return {
               list: result.data.getUsers.list.map(u => new UserItem(u)),
               count: result.data.getUsers.count
@@ -2983,6 +2987,7 @@ export class AdminDataService {
           changePasswordRequired: customer.changePasswordRequired,
           firstName: customer.firstName,
           lastName: customer.lastName,
+          gender: customer.gender,
           birthday: customer.birthday,
           countryCode2: customer.countryCode2,
           countryCode3: customer.countryCode3,
@@ -3013,6 +3018,7 @@ export class AdminDataService {
           changePasswordRequired: customer.changePasswordRequired,
           firstName: customer.firstName,
           lastName: customer.lastName,
+          gender: customer.gender,
           birthday: customer.birthday,
           countryCode2: customer.countryCode2,
           countryCode3: customer.countryCode3,

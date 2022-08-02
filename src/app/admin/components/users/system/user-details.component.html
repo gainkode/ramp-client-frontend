@@ -98,6 +98,15 @@
             </small>
           </div>
         </div>
+        <!-- Gender -->
+        <div class="form-group" *ngIf="userData?.userType?.id===USER_TYPE.Personal">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Gender
+          </label>
+          <ng-select [items]="genders" bindLabel="name" bindValue="id" formControlName="gender"
+            [clearable]=false [clearOnBackspace]=false>
+          </ng-select>
+        </div>
         <!-- Birthday -->
         <app-admin-details-item label="Age" [value]="userData?.age"></app-admin-details-item>
         <div class="form-group" *ngIf="userType===USER_TYPE.Personal">

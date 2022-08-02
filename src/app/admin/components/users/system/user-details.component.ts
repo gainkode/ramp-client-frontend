@@ -9,7 +9,7 @@ import { AdminDataService } from 'src/app/services/admin-data.service';
 import { Countries, getCountryByCode3 } from 'src/app/model/country-code.model';
 import { AccountStatus, UserInput, UserRole, UserType } from 'src/app/model/generated-models';
 import { UserStatusList, UserTypeList } from 'src/app/model/payment.model';
-import { UserItem } from 'src/app/model/user.model';
+import { GenderList, UserItem } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { getFormattedUtcDate } from 'src/app/utils/utils';
 
@@ -43,6 +43,7 @@ export class AdminUserDetailsComponent implements OnInit, OnDestroy {
   countries = Countries;
   accountStatuses = UserStatusList;
   accountTypes = UserTypeList;
+  genders = GenderList;
   minBirthdayDate: NgbDateStruct = {
     year: 1900,
     month: 1,
@@ -63,6 +64,7 @@ export class AdminUserDetailsComponent implements OnInit, OnDestroy {
     email: ['', { validators: [Validators.required], updateOn: 'change' }],
     firstName: ['', { validators: [Validators.required], updateOn: 'change' }],
     lastName: ['', { validators: [], updateOn: 'change' }],
+    gender: [undefined, { validators: [], updateOn: 'change' }],
     birthday: [null, { validators: [], updateOn: 'change' }],
     country: ['', { validators: [Validators.required], updateOn: 'change' }],
     postCode: ['', { validators: [], updateOn: 'change' }],
@@ -115,9 +117,11 @@ export class AdminUserDetailsComponent implements OnInit, OnDestroy {
         this.dataForm.get('firstName')?.setValue(data?.company);
         this.dataForm.get('lastName')?.setValue('');
         this.dataForm.get('birthday')?.setValue(null);
+        this.dataForm.get('gender')?.setValue(undefined);
       } else {
         this.dataForm.get('firstName')?.setValue(data?.firstName);
         this.dataForm.get('lastName')?.setValue(data?.lastName);
+        this.dataForm.get('gender')?.setValue(data?.gender);
         if (data?.birthday) {
           const b = `${data.birthday.getDate()}-${data.birthday.getMonth() + 1}-${data.birthday.getFullYear()}`;
           this.dataForm.get('birthday')?.setValue(b);
@@ -145,6 +149,7 @@ export class AdminUserDetailsComponent implements OnInit, OnDestroy {
       this.dataForm.get('email')?.setValue('');
       this.dataForm.get('firstName')?.setValue('');
       this.dataForm.get('lastName')?.setValue('');
+      this.dataForm.get('gender')?.setValue(undefined);
       this.dataForm.get('birthday')?.setValue(null);
       this.dataForm.get('accountType')?.setValue(UserType.Personal);
       this.dataForm.get('accountStatus')?.setValue(AccountStatus.Live);
@@ -167,11 +172,13 @@ export class AdminUserDetailsComponent implements OnInit, OnDestroy {
     const code3 = this.dataForm.get('country')?.value;
     const country = getCountryByCode3(code3);
     const code2 = (country) ? country.code2 : '';
+    const genderId = this.dataForm.get('gender')?.value ?? undefined;
     const data = {
       email: this.dataForm.get('email')?.value,
       firstName: this.dataForm.get('firstName')?.value,
       lastName: this.dataForm.get('lastName')?.value,
       birthday: getFormattedUtcDate(this.dataForm.get('birthday')?.value ?? '', '-'),
+      gender: (genderId !== '') ? genderId : undefined,
       countryCode2: code2,
       countryCode3: code3,
       postCode: this.dataForm.get('postCode')?.value,

@@ -11,7 +11,7 @@ import { CommonTargetValue } from 'src/app/model/common.model';
 import { Countries, getCountryByCode3 } from 'src/app/model/country-code.model';
 import { AccountStatus, RiskLevel, UserInput, UserType } from 'src/app/model/generated-models';
 import { CurrencyView, RiskLevelViewList, UserStatusList } from 'src/app/model/payment.model';
-import { UserItem } from 'src/app/model/user.model';
+import { GenderList, UserItem } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { getFormattedUtcDate } from 'src/app/utils/utils';
 
@@ -51,6 +51,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
   cryptoCurrencies: CurrencyView[] = [];
   riskLevels = RiskLevelViewList;
   accountStatuses = UserStatusList;
+  genders = GenderList;
   kycProviderLink = '';
   kycDocs: string[] = [];
   tiers: CommonTargetValue[] = [];
@@ -74,6 +75,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
     firstName: ['', { validators: [Validators.required], updateOn: 'change' }],
     lastName: ['', { validators: [], updateOn: 'change' }],
     birthday: [null, { validators: [], updateOn: 'change' }],
+    gender: [undefined, { validators: [], updateOn: 'change' }],
     country: ['', { validators: [Validators.required], updateOn: 'change' }],
     postCode: ['', { validators: [], updateOn: 'change' }],
     town: ['', { validators: [], updateOn: 'change' }],
@@ -123,9 +125,11 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
         this.dataForm.get('firstName')?.setValue(data?.company);
         this.dataForm.get('lastName')?.setValue('');
         this.dataForm.get('birthday')?.setValue(null);
+        this.dataForm.get('gender')?.setValue(undefined);
       } else {
         this.dataForm.get('firstName')?.setValue(data?.firstName);
         this.dataForm.get('lastName')?.setValue(data?.lastName);
+        this.dataForm.get('gender')?.setValue(data?.gender);
         if (data?.birthday) {
           const b = `${data.birthday.getDate()}-${data.birthday.getMonth() + 1}-${data.birthday.getFullYear()}`;
           this.dataForm.get('birthday')?.setValue(b);
@@ -154,6 +158,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
       this.dataForm.get('firstName')?.setValue('');
       this.dataForm.get('lastName')?.setValue('');
       this.dataForm.get('birthday')?.setValue(undefined);
+      this.dataForm.get('gender')?.setValue(undefined);
       this.dataForm.get('risk')?.setValue(RiskLevel.Medium);
       this.dataForm.get('accountStatus')?.setValue(AccountStatus.Closed);
       this.dataForm.get('tier')?.setValue('');
@@ -217,11 +222,13 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
     const code2 = (country) ? country.code2 : '';
     const tierName = this.dataForm.get('tier')?.value;
     const tierId = this.tiers.find(x => x.title === tierName)?.id;
+    const genderId = this.dataForm.get('gender')?.value ?? undefined;
     const data = {
       email: this.dataForm.get('email')?.value,
       firstName: this.dataForm.get('firstName')?.value,
       lastName: this.dataForm.get('lastName')?.value,
       birthday: getFormattedUtcDate(this.dataForm.get('birthday')?.value ?? '', '-'),
+      gender: (genderId !== '') ? genderId : undefined,
       countryCode2: code2,
       countryCode3: code3,
       postCode: this.dataForm.get('postCode')?.value,
