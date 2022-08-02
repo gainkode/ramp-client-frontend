@@ -30,6 +30,15 @@
                                                 placeholder="Select account types">
                                             </ng-select>
                                         </div>
+                                        <div *ngIf="field === 'accountMode'" class="form-group">
+                                            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                                                Account mode
+                                            </label>
+                                            <ng-select [items]="userModeOptions" bindLabel="name" bindValue="id"
+                                                formControlName="accountModes" [multiple]="true" [closeOnSelect]="false"
+                                                placeholder="Select account modes">
+                                            </ng-select>
+                                        </div>
                                         <div *ngIf="field === 'accountStatus'" class="form-group">
                                             <label class="main-content-label tx-11 tx-medium tx-gray-600">
                                                 Account status

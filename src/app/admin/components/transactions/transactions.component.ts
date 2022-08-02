@@ -23,6 +23,7 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
 
   filterFields = [
     'accountType',
+    'accountMode',
     'country',
     'source',
     'createdDate',

@@ -24,6 +24,7 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
   filterFields = [
     'users',
     'accountType',
+    'accountMode',
     'accountStatus',
     'tier',
     'riskLevel',

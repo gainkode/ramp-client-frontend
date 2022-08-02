@@ -2154,7 +2154,7 @@ export type QueryGetTransactionsArgs = {
   completedDateInterval?: Maybe<DateTimeInterval>;
   walletAddressOnly?: Maybe<Scalars['String']>;
   verifyWhenPaid?: Maybe<Scalars['Boolean']>;
-  userMode?: Maybe<UserMode>;
+  accountModesOnly?: Maybe<Array<Maybe<UserMode>>>;
   filter?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;

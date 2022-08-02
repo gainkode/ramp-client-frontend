@@ -472,6 +472,7 @@ const GET_TRANSACTIONS = gql`
     $countriesOnly: [String!]
     $countryCodeType: CountryCodeType
     $accountTypesOnly: [UserType!]
+    $accountModesOnly: [UserMode]
     $transactionTypesOnly: [TransactionType!]
     $transactionStatusesOnly: [String!]
     $userTierLevelsOnly: [String!]
@@ -494,6 +495,7 @@ const GET_TRANSACTIONS = gql`
       countriesOnly: $countriesOnly
       countryCodeType: $countryCodeType
       accountTypesOnly: $accountTypesOnly
+      accountModesOnly: $accountModesOnly
       transactionTypesOnly: $transactionTypesOnly
       transactionStatusesOnly: $transactionStatusesOnly
       userTierLevelsOnly: $userTierLevelsOnly
@@ -2307,6 +2309,7 @@ export class AdminDataService {
     const vars: QueryGetTransactionsArgs = {
       transactionIdsOnly: filter?.transactionIds,
       accountTypesOnly: filter?.accountTypes,
+      accountModesOnly: filter?.accountModes,
       countriesOnly: filter?.countries,
       countryCodeType: CountryCodeType.Code3,
       sourcesOnly: filter?.sources,
@@ -2357,6 +2360,7 @@ export class AdminDataService {
       userIdsOnly: filter?.users,
       roleIdsOnly: (roleIds.length > 0) ? roleIds : undefined,
       accountTypesOnly: filter?.accountTypes,
+      accountModesOnly: filter?.accountModes,
       accountStatusesOnly: filter?.accountStatuses,
       riskLevelsOnly: filter?.riskLevels,
       countriesOnly: filter?.countries,
