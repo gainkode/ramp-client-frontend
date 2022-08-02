@@ -163,7 +163,7 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
         }),
         switchMap(searchString => {
           this.isWidgetsLoading = false;
-          return this.adminDataService.getWidgetIds(searchString, 0, 100, 'code', true)
+          return this.adminDataService.getWidgetIds(searchString, 0, 100, 'code', false)
             .pipe(map(result => {
               return result.list.map(x => {
                 return {
@@ -190,7 +190,7 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
         }),
         switchMap(searchString => {
           this.isWidgetsLoading = false;
-          return this.adminDataService.getWidgetIds(searchString, 0, 100, 'name', true)
+          return this.adminDataService.getWidgetIds(searchString, 0, 100, 'name', false)
             .pipe(map(result => {
               return result.list.map(x => {
                 return {
