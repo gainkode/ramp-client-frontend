@@ -34,6 +34,7 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
     'transactionStatus',
     'tier',
     'widget',
+    'widgetName',
     'walletAddress',
     'users',
     'search',

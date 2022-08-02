@@ -206,6 +206,19 @@
                                                 [typeahead]="widgetsSearchInput$">
                                             </ng-select>
                                         </div>
+                                        <div *ngIf="field === 'widgetName'" class="form-group">
+                                            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                                                Widget Names
+                                            </label>
+                                            <ng-select [items]="widgetNamesOptions$ | async" bindLabel="title"
+                                                bindValue="id" [minTermLength]="minWidgetNamesLengthTerm"
+                                                notFoundText="No widgets found" [loading]="isWidgetsLoading"
+                                                [multiple]="true" formControlName="widgetNames"
+                                                typeToSearchText="Type widget name"
+                                                placeholder="Start typing to search widgets"
+                                                [typeahead]="widgetNamesSearchInput$">
+                                            </ng-select>
+                                        </div>
                                         <div *ngIf="field === 'riskAlertCode'" class="form-group">
                                             <label class="main-content-label tx-11 tx-medium tx-gray-600">
                                                 Risk Alert Code

@@ -11,6 +11,7 @@ export class Filter {
   public user?: string;
   public users?: Array<string>;
   public widgets?: Array<string>;
+  public widgetNames?: Array<string>;
   public riskAlertCode?: RiskAlertCodes;
   public transactionIds?: Array<string>;
   public transactionTypes?: Array<TransactionType>;
@@ -74,6 +75,10 @@ export class Filter {
 
     if (filterValues.widgets) {
       this.widgets = filterValues.widgets;
+    }
+
+    if (filterValues.widgetNames) {
+      this.widgetNames = filterValues.widgetNames;
     }
 
     if (filterValues.riskAlertCode) {

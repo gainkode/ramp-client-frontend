@@ -991,6 +991,7 @@ const GET_WIDGET_IDS = gql`
       list {
         widgetId
         code
+        name
       }
     }
   }
@@ -2306,6 +2307,13 @@ export class AdminDataService {
     orderDesc: boolean,
     filter?: Filter
   ): Observable<{ list: Array<TransactionItemFull>; count: number; }> {
+    let widgetIds: string[] = [];
+    if (filter?.widgets) {
+      widgetIds = widgetIds.concat(filter.widgets);
+    }
+    if (filter?.widgetNames) {
+      widgetIds = widgetIds.concat(filter.widgetNames);
+    }
     const vars: QueryGetTransactionsArgs = {
       transactionIdsOnly: filter?.transactionIds,
       accountTypesOnly: filter?.accountTypes,
@@ -2314,7 +2322,7 @@ export class AdminDataService {
       countryCodeType: CountryCodeType.Code3,
       sourcesOnly: filter?.sources,
       userIdsOnly: filter?.users,
-      widgetIdsOnly: filter?.widgets,
+      widgetIdsOnly: widgetIds,
       transactionTypesOnly: filter?.transactionTypes,
       transactionStatusesOnly: filter?.transactionStatuses,
       userTierLevelsOnly: filter?.tiers,

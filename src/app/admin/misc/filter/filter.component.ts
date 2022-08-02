@@ -50,11 +50,14 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
   tierSearchInput$ = new Subject<string>();
   usersSearchInput$ = new Subject<string>();
   widgetsSearchInput$ = new Subject<string>();
+  widgetNamesSearchInput$ = new Subject<string>();
   tierOptions$: Observable<CommonTargetValue[]> = of([]);
   usersOptions$: Observable<CommonTargetValue[]> = of([]);
   widgetsOptions$: Observable<CommonTargetValue[]> = of([]);
+  widgetNamesOptions$: Observable<CommonTargetValue[]> = of([]);
   minUsersLengthTerm = 1;
   minWidgetsLengthTerm = 1;
+  minWidgetNamesLengthTerm = 1;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -72,6 +75,9 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
     }
     if (this.fields.includes('widget')) {
       this.widgetsSearch();
+    }
+    if (this.fields.includes('widgetName')) {
+      this.widgetNamesSearch();
     }
   }
 
@@ -170,6 +176,33 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
       ));
   }
 
+  private widgetNamesSearch(): void {
+    this.widgetNamesOptions$ = concat(
+      of([]),
+      this.widgetNamesSearchInput$.pipe(
+        filter(res => {
+          return res !== null && res.length >= this.minWidgetNamesLengthTerm
+        }),
+        debounceTime(300),
+        distinctUntilChanged(),
+        tap(() => {
+          this.isWidgetsLoading = true;
+        }),
+        switchMap(searchString => {
+          this.isWidgetsLoading = false;
+          return this.adminDataService.getWidgetIds(searchString, 0, 100, 'name', true)
+            .pipe(map(result => {
+              return result.list.map(x => {
+                return {
+                  id: x.id,
+                  title: x.name ?? x.id
+                } as CommonTargetValue;
+              });
+            }));
+        })
+      ));
+  }
+
   private initForm(): void {
     const controlsConfig: EmptyObject = {};
     if (this.fields.includes('accountType')) {
@@ -222,6 +255,9 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
     }
     if (this.fields.includes('widget')) {
       controlsConfig.widgets = [[]];
+    }
+    if (this.fields.includes('widgetName')) {
+      controlsConfig.widgetNames = [[]];
     }
     if (this.fields.includes('riskAlertCode')) {
       controlsConfig.riskAlertCode = [undefined];
@@ -314,6 +350,9 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
       }
       if (this.fields.includes('widget')) {
         this.filterForm.controls.widgets.setValue([]);
+      }
+      if (this.fields.includes('widgetName')) {
+        this.filterForm.controls.widgetNames.setValue([]);
       }
       if (this.fields.includes('riskAlertCode')) {
         this.filterForm.controls.riskAlertCode.setValue(undefined);
