@@ -42,7 +42,9 @@
               <ng-container matColumnDef="email">
                 <th mat-header-cell *matHeaderCellDef>Email</th>
                 <td mat-cell *matCellDef="let element" class="alert-list-data-column">
-                  {{element.user?.email}}
+                  <a [href]="'/admin/customers/'+ element.userId">
+                    {{element.user?.email}}
+                  </a>
                 </td>
               </ng-container>
 
