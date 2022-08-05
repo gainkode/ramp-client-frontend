@@ -22,6 +22,8 @@
     window.__env_data.test_kyc = false;
     // Show Express Transfer button on the top menu bar
     window.__env_data.express_transfer = true;
+    // Show Deposit % Withdrawal button on the top menu bar
+    window.__env_data.deposit_withdrawal = true;
     // Recaptcha ID
     window.__env_data.recaptchaId = '6LdGo4YgAAAAABxDlHdoh1DNSq_CZrGfGHksKYwj';
     // Google ID

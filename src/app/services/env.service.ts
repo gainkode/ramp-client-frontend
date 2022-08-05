@@ -10,6 +10,7 @@ export class EnvService {
     public static test_wallets = true;
     public static test_kyc = true;
     public static express_transfer = true;
+    public static deposit_withdrawal = true;
     public static recaptchaId = '';
     public static googleId = '';
     public static support_email = 'support@test.com';

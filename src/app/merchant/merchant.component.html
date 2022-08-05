@@ -5,7 +5,7 @@
             <div
                 [ngClass]="expandedMenu ? '__top-menu-content-bar-profile-side-menu-expanded' : '__top-menu-content-bar-profile-side-menu-collapsed'">
                 <div class="__top-menu-content-box">
-                    <button *ngIf="merchantApproved" class="__top-menu-button"
+                    <button *ngIf="merchantApproved && showDepositWithdrawal" class="__top-menu-button"
                         (click)="showPaymentPanel(WIDGET_TYPE.Deposit)">
                         <mat-icon>monetization_on</mat-icon>
                         &nbsp;&nbsp;&nbsp;Deposit & Withdrawal
@@ -59,7 +59,7 @@
                 <span></span>
             </label>
             <ul class="__top-menu-hamburger-box">
-                <li *ngIf="merchantApproved">
+                <li *ngIf="merchantApproved && showDepositWithdrawal">
                     <a [routerLink]="" class="__top-menu-hamburger-item"
                         (click)="showPaymentPanel(WIDGET_TYPE.Deposit)">
                         Deposit & Withdrawal

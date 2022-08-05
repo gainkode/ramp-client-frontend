@@ -39,6 +39,7 @@ export class MerchantComponent implements OnInit, OnDestroy {
     showErrorRef: any;
     updateAvatarRef: any;
     showPayment = false;
+    showDepositWithdrawal = false;
     paymentPanelTitle = '';
     selectedPaymentType = PaymentWidgetType.None;
     riskWarningText = '';
@@ -61,6 +62,7 @@ export class MerchantComponent implements OnInit, OnDestroy {
         public auth: AuthService,
         private notification: NotificationService,
         public router: Router) {
+        this.showDepositWithdrawal = EnvService.deposit_withdrawal;
         this.merchantApproved = auth.isMerchantApproved();
         this.getSectionName();
     }
