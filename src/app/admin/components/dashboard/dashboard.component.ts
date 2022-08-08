@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Filter } from 'src/app/admin/model/filter.model';
 import { AuthService } from 'src/app/services/auth.service';
+import { EnvService } from 'src/app/services/env.service';
 import { DashboardService } from '../../services/dashboard.service';
 
 @Component({
@@ -19,13 +20,18 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     'widget'
   ];
   liquidityProviderName = '';
+  showDeposits = false;
+  showWithdrawals = false;
 
   private subscriptions: Subscription = new Subscription();
 
   constructor(
     public dashboardService: DashboardService,
+    private env: EnvService,
     private auth: AuthService) {
     this.liquidityProviderName = 'Liquidity provider balances';
+    this.showDeposits = EnvService.deposit_withdrawal;
+    this.showWithdrawals = EnvService.deposit_withdrawal;
   }
 
   ngOnInit(): void {

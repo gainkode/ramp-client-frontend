@@ -6,6 +6,7 @@ import { DashboardCardData, DashboardData } from 'src/app/admin/model/dashboard-
 import { AdminDataService } from 'src/app/services/admin-data.service';
 import { Filter } from 'src/app/admin/model/filter.model';
 import { PaymentInstrumentList } from 'src/app/model/payment.model';
+import { EnvService } from 'src/app/services/env.service';
 
 @Injectable({
   providedIn: 'any'
@@ -145,6 +146,10 @@ export class DashboardService implements OnDestroy {
           }
         ]
       };
+      if (!EnvService.deposit_withdrawal) {
+        totalData.rows.splice(totalData.rows.findIndex(x => x.type === 'Deposit'), 1);
+        totalData.rows.splice(totalData.rows.findIndex(x => x.type === 'Withdrawal'), 1);
+      }
       // endregion
 
       // region Buys
@@ -496,7 +501,10 @@ export class DashboardService implements OnDestroy {
           }
         ]
       };
-
+      if (!EnvService.deposit_withdrawal) {
+        feesData.rows.splice(feesData.rows.findIndex(x => x.source === 'Deposit'), 1);
+        feesData.rows.splice(feesData.rows.findIndex(x => x.source === 'Withdrawal'), 1);
+      }      
       //  endregion
 
       // region Balances
