@@ -705,6 +705,7 @@ export type Mutation = {
   confirmUserDevice: Scalars['Boolean'];
   setMyInfo: LoginResult;
   setUserInfo: LoginResult;
+  generateDefaultTokenWhenKycSent: LoginResult;
   forgotPassword: Scalars['Boolean'];
   setPassword: Scalars['Boolean'];
   changePassword: Scalars['Boolean'];
@@ -1163,6 +1164,11 @@ export type MutationSetUserInfoArgs = {
   birthday?: Maybe<Scalars['DateTime']>;
   address?: Maybe<PostAddress>;
   phone?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationGenerateDefaultTokenWhenKycSentArgs = {
+  recaptcha: Scalars['String'];
 };
 
 
@@ -2841,6 +2847,7 @@ export type Transaction = {
   verifyWhenPaid?: Maybe<Scalars['Boolean']>;
   requestParams?: Maybe<Scalars['String']>;
   cryptoInvoiceName?: Maybe<Scalars['String']>;
+  sourceAddress?: Maybe<Scalars['String']>;
 };
 
 export enum TransactionConfirmationMode {
@@ -2864,6 +2871,7 @@ export type TransactionInput = {
   widgetUserParamsId?: Maybe<Scalars['String']>;
   data?: Maybe<Scalars['String']>;
   verifyWhenPaid?: Maybe<Scalars['Boolean']>;
+  sourceAddress?: Maybe<Scalars['String']>;
 };
 
 export enum TransactionKycStatus {
@@ -2903,6 +2911,7 @@ export type TransactionMerchantInput = {
   data?: Maybe<Scalars['String']>;
   status?: Maybe<TransactionStatus>;
   transactionChangedCallback?: Maybe<Scalars['String']>;
+  sourceAddress?: Maybe<Scalars['String']>;
 };
 
 export enum TransactionServiceNotificationType {
@@ -2975,6 +2984,7 @@ export type TransactionShort = {
   riskCodes?: Maybe<Array<Scalars['String']>>;
   cryptoInvoiceName?: Maybe<Scalars['String']>;
   data?: Maybe<Scalars['String']>;
+  sourceAddress?: Maybe<Scalars['String']>;
 };
 
 export type TransactionShortListResult = {

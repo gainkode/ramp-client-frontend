@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UserType } from 'src/app/model/generated-models';
+import { TokenAction, UserType } from 'src/app/model/generated-models';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -15,6 +15,7 @@ export class ProfileSettingsComponent {
     inProgress = false;
     errorMessage = '';
     selectedTab = '';
+    showTabs = false;
 
     constructor(
         private auth: AuthService,
@@ -27,6 +28,9 @@ export class ProfileSettingsComponent {
             this.pageSelected(pageId);
         } else {
             this.router.navigateByUrl(`${this.auth.getUserAccountPage()}/settings/info/`);
+        }
+        if (auth.getAuthAction() !== TokenAction.KycRequired) {
+            this.showTabs = true;
         }
     }
 

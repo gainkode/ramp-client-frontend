@@ -124,6 +124,59 @@ mutation SocialLogin(
     }
 `;
 
+const AUTHENTICATE_VERIFIED_MERCHANT = gql`
+mutation GenerateDefaultTokenWhenKycSent(
+    $recaptcha: String!) {
+        generateDefaultTokenWhenKycSent(recaptcha: $recaptcha) {
+        authToken
+        user {
+            userId,
+            email,
+            roles {name, immutable},
+            permissions { roleName, objectCode, objectName, objectDescription, fullAccess },
+            type,
+            defaultFiatCurrency,
+            firstName,
+            lastName,
+            birthday,
+            countryCode2,
+            countryCode3,
+            phone,
+            postCode,
+            town,
+            street,
+            subStreet,
+            stateName,
+            buildingName,
+            buildingNumber,
+            flatNumber,
+            addressStartDate,
+            addressEndDate,
+            mode,
+            is2faEnabled,
+            changePasswordRequired,
+            referralCode,
+            kycProvider,
+            kycApplicantId,
+            kycValid,
+            kycStatus,
+            kycStatusUpdateRequired,
+            kycReviewRejectedType,
+            kycTierId,
+            kycTier {
+              name
+              description
+              amount
+            }
+            defaultFiatCurrency,
+            defaultCryptoCurrency,
+            avatar
+        }
+        authTokenAction
+    }
+}
+`;
+
 const SIGNUP = gql`
   mutation Signup($recaptcha: String!, $email: String!, $password: String!, $userType: UserType!,
     $mode: UserMode!, $termsOfUse: Boolean!, $pep: Boolean!) {
@@ -415,7 +468,7 @@ export class AuthService {
     constructor(
         private apollo: Apollo,
         //private socialAuth: SocialAuthService
-        ) { }
+    ) { }
 
     refreshToken(): Observable<any> {
         const result = this.apollo.mutate({
@@ -491,6 +544,16 @@ export class AuthService {
         } else {
             throw 'Cookie consent is rejected. Allow cookie in order to have access';
         }
+    }
+
+    authenticateVerifiedMerchant(): Observable<any> {
+        const vars = {
+            recaptcha: EnvService.recaptchaId
+        };
+        return this.apollo.mutate({
+            mutation: AUTHENTICATE_VERIFIED_MERCHANT,
+            variables: vars
+        });
     }
 
     // socialSignIn(provider: string): Observable<any> {

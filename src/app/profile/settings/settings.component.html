@@ -1,4 +1,4 @@
-<app-settings-bar [selectedTab]="selectedTab" (select)="pageSelected($event)"></app-settings-bar>
+<app-settings-bar *ngIf="showTabs" [selectedTab]="selectedTab" (select)="pageSelected($event)"></app-settings-bar>
 <div class="__profile-settings-container">
     <div *ngIf="inProgress" class="__profile-settings-progress-bar">
         <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>

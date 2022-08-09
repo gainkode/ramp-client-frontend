@@ -284,8 +284,12 @@ export class MerchantComponent implements OnInit, OnDestroy {
         if (urlBlocks.length > 0) {
             this.selectedMenu = urlBlocks[urlBlocks.length - 1];
             if (urlBlocks.length > 1) {
-                const selectedSection = urlBlocks[urlBlocks.length - 2];
-                if (selectedSection === 'settings') {
+                const selectedSectionPaged = urlBlocks[urlBlocks.length - 2];
+                if (selectedSectionPaged === 'settings') {
+                    baseLink = '/';
+                }
+                const selectedSection = urlBlocks[urlBlocks.length - 1];
+                if (selectedSection === 'notifications') {
                     baseLink = '/';
                 }
             }
