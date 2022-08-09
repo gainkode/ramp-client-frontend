@@ -1,5 +1,6 @@
 import { Component, Inject, OnDestroy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { DialogData } from 'src/app/model/dialog.model';
 import { TokenAction } from 'src/app/model/generated-models';
@@ -16,6 +17,7 @@ export class SumsubVerificationDialogBox implements OnDestroy {
     private subscriptions: Subscription = new Subscription();
 
     constructor(
+        private router: Router,
         private auth: AuthService,
         public dialogRef: MatDialogRef<SumsubVerificationDialogBox>,
         @Inject(MAT_DIALOG_DATA) public data: DialogData) { }
@@ -31,7 +33,13 @@ export class SumsubVerificationDialogBox implements OnDestroy {
                     this.auth.setLoginUser(data.generateDefaultTokenWhenKycSent);
                     this.complete = true;
                     this.dialogRef.close();
-                }, (error) => {})
+                    this.router.navigateByUrl(this.auth.getUserMainPage()).then(() => {
+                        window.location.reload();
+                    });
+                }, (error) => {
+                    this.complete = true;
+                    this.dialogRef.close();
+                })
             );
         } else {
             this.complete = true;

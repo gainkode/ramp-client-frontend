@@ -122,7 +122,7 @@ export class KycPanelComponent implements OnInit, OnDestroy {
                 this.completeVerification();
             }
         }).on('idCheck.applicantStatus', (payload) => {
-            console.log('idCheck.applicantStatus', payload);
+            console.log('idCheck.applicantStatus', this.completedWhenVerified, payload);
             if (this.completedWhenVerified && isSumsubVerificationComplete(payload)) {
                 this.completeVerification();
             }
@@ -138,25 +138,6 @@ export class KycPanelComponent implements OnInit, OnDestroy {
 
         snsWebSdkInstance.launch('#sumsub-websdk-container');
     }
-
-    // {
-    //     "reviewId": "CbJqo",
-    //     "attemptId": "hHMMr",
-    //     "attemptCnt": 7,
-    //     "elapsedSincePendingMs": 14980,
-    //     "elapsedSinceQueuedMs": 44389,
-    //     "reprocessing": true,
-    //     "levelName": "Identity-verification",
-    //     "createDate": "2022-07-29 11:45:51+0000",
-    //     "reviewDate": "2022-07-29 11:46:06+0000",
-    //     "reviewResult": {
-    //         "reviewAnswer": "GREEN"
-    //     },
-    //     "reviewStatus": "completed",
-    //     "priority": 0,
-    //     "moderatorNames": null,
-    //     "autoChecked": false
-    // }
 
     private completeVerification(): void {
         if (this.notifyCompleted) {
