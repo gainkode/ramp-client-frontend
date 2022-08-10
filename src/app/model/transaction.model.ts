@@ -783,7 +783,6 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
   } else if (data.type === TransactionType.MerchantBuy) {
     result.currencyFiat = result.currencyToReceive;
     result.currencyCrypto = '';
-    result.amountToReceive = result.amountToSpend;
     let recipientName = 'Wire Transfer';
     const instrumentDetails = data.instrumentDetails;
     if (instrumentDetails) {
@@ -814,9 +813,6 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
       imgSource: '',
       imgClass: ''
     } as CommonTargetValue;
-  } else {
-    result.fees = 4.2;
-    result.networkFee = 0.42;
   }
   return result;
 }
