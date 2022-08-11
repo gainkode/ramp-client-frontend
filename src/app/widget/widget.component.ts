@@ -911,7 +911,7 @@ export class WidgetComponent implements OnInit {
           this.widget.source,
           this.summary.vaultId,
           this.summary.currencyFrom,
-          'EUR',
+          this.summary.currencyTo,
           this.summary.amountFrom ?? 0,
           undefined,
           instrumentDetails,
