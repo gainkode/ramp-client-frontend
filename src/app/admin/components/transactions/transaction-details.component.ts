@@ -277,9 +277,9 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
       if (currentRateValue !== undefined) {
         currentRate = parseFloat(currentRateValue);
       }
-      if (currentRate === this.pDefaultRate) {
-        currentRate = undefined;
-      }
+      // if (currentRate === this.pDefaultRate) {
+      //   currentRate = undefined;
+      // }
       this.transactionToUpdate = {
         transactionId: this.transactionId,
         destination: this.form.get('address')?.value,

@@ -1,7 +1,6 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NavigationEnd, Router, Event as NavigationEvent } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { MenuItem } from '../model/common.model';
 import { PaymentCompleteDetails, PaymentErrorDetails, PaymentWidgetType } from '../model/payment-base.model';
 import { CurrencyView } from '../model/payment.model';
