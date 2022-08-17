@@ -9,8 +9,8 @@ import { DateParserFormatter } from 'src/app/admin/misc/date-range/date.formatte
 import { AdminDataService } from 'src/app/services/admin-data.service';
 import { CommonTargetValue } from 'src/app/model/common.model';
 import { Countries, getCountryByCode3 } from 'src/app/model/country-code.model';
-import { AccountStatus, RiskLevel, UserInput, UserType } from 'src/app/model/generated-models';
-import { CurrencyView, RiskLevelViewList, UserStatusList } from 'src/app/model/payment.model';
+import { AccountStatus, KycProvider, RiskLevel, UserInput, UserType } from 'src/app/model/generated-models';
+import { CurrencyView, KycProviderList, RiskLevelViewList, UserStatusList } from 'src/app/model/payment.model';
 import { GenderList, UserItem } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { getFormattedUtcDate } from 'src/app/utils/utils';
@@ -52,6 +52,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
   riskLevels = RiskLevelViewList;
   accountStatuses = UserStatusList;
   genders = GenderList;
+  kycProviders = KycProviderList;
   kycProviderLink = '';
   kycDocs: string[] = [];
   tiers: CommonTargetValue[] = [];
@@ -88,6 +89,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
     phone: ['', { validators: [], updateOn: 'change' }],
     accountStatus: [AccountStatus.Closed, { validators: [Validators.required], updateOn: 'change' }],
     risk: [RiskLevel.Medium, { validators: [Validators.required], updateOn: 'change' }],
+    kycProvider: ['', { validators: [Validators.required], updateOn: 'change' }],
     tier: ['', { validators: [Validators.required], updateOn: 'change' }],
     fiat: ['', { validators: [Validators.required], updateOn: 'change' }],
     crypto: ['', { validators: [Validators.required], updateOn: 'change' }]
@@ -139,6 +141,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
       }
       this.dataForm.get('risk')?.setValue(data?.risk ?? RiskLevel.Medium);
       this.dataForm.get('accountStatus')?.setValue(data?.accountStatus ?? AccountStatus.Closed);
+      this.dataForm.get('kycProvider')?.setValue(data?.kycProvider ?? KycProvider.Local);
       this.dataForm.get('tier')?.setValue(data?.kycLevel);
       this.dataForm.get('country')?.setValue(data?.country?.id);
       this.dataForm.get('postCode')?.setValue(data?.postCode);
@@ -161,6 +164,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
       this.dataForm.get('gender')?.setValue(undefined);
       this.dataForm.get('risk')?.setValue(RiskLevel.Medium);
       this.dataForm.get('accountStatus')?.setValue(AccountStatus.Closed);
+      this.dataForm.get('kycProvider')?.setValue(KycProvider.Local);
       this.dataForm.get('tier')?.setValue('');
       this.dataForm.get('country')?.setValue('');
       this.dataForm.get('postCode')?.setValue('');

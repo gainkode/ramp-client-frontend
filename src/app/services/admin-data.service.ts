@@ -681,6 +681,7 @@ const GET_USERS = gql`
         defaultFiatCurrency
         defaultCryptoCurrency
         accountStatus
+        kycProvider
         kycStatus
         kycTier { name }
         kycReviewDate

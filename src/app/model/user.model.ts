@@ -1,4 +1,4 @@
-import { Gender, KycStatus, User, UserContact, UserDevice, UserRole, UserType } from './generated-models';
+import { Gender, KycProvider, KycStatus, User, UserContact, UserDevice, UserRole, UserType } from './generated-models';
 import {
   KycStatusList,
   UserModeShortList,
@@ -20,6 +20,16 @@ export const GenderList: Array<GenderView> = [
   { id: Gender.M, name: 'Male' },
   { id: Gender.F, name: 'Female' },
   { id: Gender.O, name: 'Other' }
+];
+
+export class KycProviderView {
+  id!: KycProvider;
+  name = '';
+}
+
+export const KycProviderList: Array<KycProviderView> = [
+  { id: KycProvider.Local, name: 'Local' },
+  { id: KycProvider.SumSub, name: 'Sumsub' }
 ];
 
 export class UserItem {
@@ -49,6 +59,7 @@ export class UserItem {
   widgetCode = '';
   affiliateId = '';
   affiliateCode = '';
+  kycProvider = '';
   kycStatusValue = KycStatus.Unknown;
   kycStatus = '';
   kycVerificationStatus = '';
@@ -218,6 +229,7 @@ export class UserItem {
       this.totalSold = this.totalSoldCompleted.toFixed(2);
       this.totalSent = this.totalSentCompleted.toFixed(2);
       this.totalReceived = this.totalReceivedCompleted.toFixed(2);
+      this.kycProvider = data.kycProvider ?? '';
       this.kycStatusValue = data.kycStatus as KycStatus ?? KycStatus.Unknown;
       this.kycStatus = KycStatusList.find(x => x.id === data.kycStatus?.toLowerCase())?.name ?? '';
       const status = this.kycStatus.toLowerCase();

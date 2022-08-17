@@ -318,6 +318,22 @@
             </small>
           </div>
         </div>
+        <!-- KYC Provider -->
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            KYC Provider
+            <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+          </label>
+          <ng-select [items]="kycProviders" bindLabel="name" bindValue="id" formControlName="kycProvider" [clearable]=false
+            [clearOnBackspace]=false required>
+          </ng-select>
+          <div *ngIf="(dataForm.controls.kycProvider.touched || submitted) && (dataForm.controls.kycProvider.errors?.['required'])"
+            class="tx-danger">
+            <small>
+              Please specify the user KYC provider
+            </small>
+          </div>
+        </div>
         <!-- Level -->
         <div class="form-group">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">

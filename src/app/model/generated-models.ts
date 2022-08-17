@@ -3057,6 +3057,21 @@ export type TransactionStatusDescriptorMap = {
   value: TransactionStatusDescriptor;
 };
 
+export type TransactionStatusHistory = {
+  __typename?: 'TransactionStatusHistory';
+  transactionStatusHistoryId: Scalars['ID'];
+  transactionId?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['String']>;
+  created?: Maybe<Scalars['DateTime']>;
+  oldStatus?: Maybe<Scalars['String']>;
+  newStatus?: Maybe<Scalars['String']>;
+  newStatusReason?: Maybe<Scalars['String']>;
+  initialTransactionHandlingData?: Maybe<Scalars['String']>;
+  transactionHandlingData?: Maybe<Scalars['String']>;
+  transactionDataBefore?: Maybe<Scalars['String']>;
+  transactionDataAfter?: Maybe<Scalars['String']>;
+};
+
 export enum TransactionStatusLevel {
   Info = 'info',
   Error = 'error'
