@@ -22,16 +22,6 @@ export const GenderList: Array<GenderView> = [
   { id: Gender.O, name: 'Other' }
 ];
 
-export class KycProviderView {
-  id!: KycProvider;
-  name = '';
-}
-
-export const KycProviderList: Array<KycProviderView> = [
-  { id: KycProvider.Local, name: 'Local' },
-  { id: KycProvider.SumSub, name: 'Sumsub' }
-];
-
 export class UserItem {
   id = '';
   referralCode = '';
