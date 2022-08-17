@@ -103,8 +103,8 @@
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             Gender
           </label>
-          <ng-select [items]="genders" bindLabel="name" bindValue="id" formControlName="gender"
-            [clearable]=false [clearOnBackspace]=false>
+          <ng-select [items]="genders" bindLabel="name" bindValue="id" formControlName="gender" [clearable]=false
+            [clearOnBackspace]=false>
           </ng-select>
         </div>
         <!-- Birthday -->
@@ -225,6 +225,23 @@
         <h5 class="card-title mg-b-20">
           Status
         </h5>
+        <!-- KYC Provider -->
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            KYC Provider
+            <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+          </label>
+          <ng-select [items]="kycProviders" bindLabel="name" bindValue="id" formControlName="kycProvider"
+            [clearable]=false [clearOnBackspace]=false required>
+          </ng-select>
+          <div
+            *ngIf="(dataForm.controls.kycProvider.touched || submitted) && (dataForm.controls.kycProvider.errors?.['required'])"
+            class="tx-danger">
+            <small>
+              Please specify the user KYC provider
+            </small>
+          </div>
+        </div>
         <!-- Account status -->
         <div class="form-group">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
@@ -244,11 +261,11 @@
         </div>
         <!-- Roles -->
         <app-admin-details-item *ngIf="!createNew" label="Roles" [value]="userData?.roles"></app-admin-details-item>
-        <div class="form-group">
+        <div *ngIf="createNew" class="form-group">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             Roles
           </label>
-          <app-admin-role-select *ngIf="createNew" [roleList]="roles" [userRoles]="userData?.roles ?? []"
+          <app-admin-role-select [roleList]="roles" [userRoles]="userData?.roles ?? []"
             (changed)="onRolesUpdated($event)"></app-admin-role-select>
         </div>
 

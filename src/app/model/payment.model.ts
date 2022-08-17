@@ -451,7 +451,8 @@ export const KycStatusList: Array<KycStatusView> = [
 
 export const KycProviderList: Array<KycProviderView> = [
     { id: KycProvider.Local, name: 'Local' },
-    { id: KycProvider.SumSub, name: 'SumSub' }
+    { id: KycProvider.SumSub, name: 'SumSub' },
+    { id: KycProvider.Shufti, name: 'Shufti' }
 ];
 
 export const RiskLevelViewList: Array<RiskLevelView> = [

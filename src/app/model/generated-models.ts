@@ -529,7 +529,8 @@ export type KycInfoField = {
 
 export enum KycProvider {
   Local = 'Local',
-  SumSub = 'SumSub'
+  SumSub = 'SumSub',
+  Shufti = 'Shufti'
 }
 
 export type KycRejectedLabel = {
@@ -3492,6 +3493,7 @@ export type UserInput = {
   riskCodes?: Maybe<Array<Scalars['String']>>;
   widgetId?: Maybe<Scalars['String']>;
   changePasswordRequired?: Maybe<Scalars['Boolean']>;
+  kycProvider?: Maybe<KycProvider>;
   kycTierId?: Maybe<Scalars['String']>;
   deleted?: Maybe<Scalars['DateTime']>;
   gender?: Maybe<Gender>;

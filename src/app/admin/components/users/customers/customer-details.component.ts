@@ -89,7 +89,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
     phone: ['', { validators: [], updateOn: 'change' }],
     accountStatus: [AccountStatus.Closed, { validators: [Validators.required], updateOn: 'change' }],
     risk: [RiskLevel.Medium, { validators: [Validators.required], updateOn: 'change' }],
-    kycProvider: ['', { validators: [Validators.required], updateOn: 'change' }],
+    kycProvider: [KycProvider.Local, { validators: [Validators.required], updateOn: 'change' }],
     tier: ['', { validators: [Validators.required], updateOn: 'change' }],
     fiat: ['', { validators: [Validators.required], updateOn: 'change' }],
     crypto: ['', { validators: [Validators.required], updateOn: 'change' }]
@@ -248,7 +248,8 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
       defaultCryptoCurrency: this.dataForm.get('crypto')?.value,
       risk: this.dataForm.get('risk')?.value,
       accountStatus: this.dataForm.get('accountStatus')?.value,
-      kycTierId: tierId
+      kycTierId: tierId,
+      kycProvider: this.dataForm.get('kycProvider')?.value
     } as UserInput;
     return data;
   }
