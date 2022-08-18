@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
+import { KycProvider } from '../model/generated-models';
 import { AuthService } from '../services/auth.service';
 import { EnvService } from '../services/env.service';
 import { ErrorService } from '../services/error.service';
@@ -33,7 +34,7 @@ export class KycPanelComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.loadSumSub();
+        this.loadKycWidget();
     }
 
     ngOnDestroy(): void {
@@ -50,18 +51,21 @@ export class KycPanelComponent implements OnInit, OnDestroy {
         });
     }
 
-    loadSumSub(): void {
+    loadKycWidget(): void {
         // load sumsub widget
         this.onProgress.emit(true);
         this.pTokenSubscription = this.auth.getKycToken(this.flow ?? '').valueChanges.subscribe(({ data }) => {
             this.onProgress.emit(false);
-            this.launchSumSubWidget(
-                this.url as string,
-                this.flow as string,
-                data.generateWebApiToken,
-                '',
-                '',
-                []);
+            if (this.auth.user?.kycProvider === KycProvider.SumSub) {
+                this.launchSumSubWidget(
+                    this.url as string,
+                    this.flow as string,
+                    data.generateWebApiToken,
+                    '',
+                    '',
+                    []);
+            } else if (this.auth.user?.kycProvider === KycProvider.Shufti) {
+            }
         }, (error) => {
             this.onProgress.emit(false);
             if (this.auth.token !== '') {
