@@ -273,7 +273,8 @@ export const PaymentInstrumentList: Array<PaymentInstrumentView> = [
     { id: PaymentInstrument.Apm, name: 'APM' },
     { id: PaymentInstrument.CreditCard, name: 'Credit card' },
     { id: PaymentInstrument.WireTransfer, name: 'Wire transfer' },
-    { id: PaymentInstrument.FiatVault, name: 'Fiat vault' }
+    { id: PaymentInstrument.FiatVault, name: 'Fiat vault' },
+    { id: PaymentInstrument.CryptoVault, name: 'Crypto vault' }
 ];
 
 export const WireTransferPaymentCategoryList: Array<WireTransferPaymentCategoryItem> = [
