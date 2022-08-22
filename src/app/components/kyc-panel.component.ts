@@ -5,6 +5,7 @@ import { KycProvider } from '../model/generated-models';
 import { AuthService } from '../services/auth.service';
 import { EnvService } from '../services/env.service';
 import { ErrorService } from '../services/error.service';
+import { NotificationService } from '../services/notification.service';
 import { isSumsubVerificationComplete } from '../utils/utils';
 import { CommonDialogBox } from './dialogs/common-box.dialog';
 
@@ -26,6 +27,7 @@ export class KycPanelComponent implements OnInit, OnDestroy {
     @Output() onProgress = new EventEmitter<boolean>();
 
     private pTokenSubscription: Subscription | undefined = undefined;
+    private pSubscriptions: Subscription = new Subscription();
 
     showSumsub = false;
     showShufti = false;
@@ -34,16 +36,21 @@ export class KycPanelComponent implements OnInit, OnDestroy {
     constructor(
         public dialog: MatDialog,
         private auth: AuthService,
+        private notification: NotificationService,
         private errorHandler: ErrorService) {
 
     }
 
     ngOnInit(): void {
         this.loadKycWidget();
+        if (this.auth.user?.kycProvider === KycProvider.Shufti) {
+            this.startKycNotifications();
+        }
     }
 
     ngOnDestroy(): void {
         this.pTokenSubscription?.unsubscribe();
+        this.pSubscriptions.unsubscribe();
     }
 
     showSuccessDialog(): void {
@@ -149,6 +156,24 @@ export class KycPanelComponent implements OnInit, OnDestroy {
         const snsWebSdkInstance = snsWebSdkBuilder.build();
 
         snsWebSdkInstance.launch('#sumsub-websdk-container');
+    }
+
+    private startKycNotifications(): void {
+        console.log('Shufti notifications started');
+        this.pSubscriptions.add(
+            this.notification.subscribeToKycCompleteNotifications().subscribe(
+                ({ data }) => {
+                    const subscriptionData = data.kycServiceNotification;
+                    console.log('Shufti completed', subscriptionData);
+                    if (!this.completedWhenVerified) {
+                        this.completeVerification();
+                    }
+                },
+                (error) => {
+                    console.error('KYC complete notification error', error);
+                }
+            )
+        );
     }
 
     private completeVerification(): void {
