@@ -63,6 +63,7 @@ import { SumsubVerificationDialogBox } from './dialogs/sumsub-verification.dialo
 import { ContactFormComponent } from './contact-form.component';
 import { YesNoDialogBox } from './dialogs/yesno-box.dialog';
 import { ApiSecretDialogBox } from './dialogs/api-secret-box.dialog';
+import { SafeUrlPipe } from '../utils/safe-url.pipe';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -107,7 +108,7 @@ export class MaterialModule { }
         YesNoDialogBox, ApiSecretDialogBox,
         LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, RestorePanelComponent,
         NavPopupComponent, SideMenuComponent, SideExpanderComponent, RiskWarningComponent,
-        LineBreakPipe, NumberFillPipe,
+        LineBreakPipe, NumberFillPipe, SafeUrlPipe,
         TransactionsFilterBarComponent, WalletsFilterBarComponent, ContactsFilterBarComponent, NotificationsFilterBarComponent],
     exports: [
         DropdownItemComponent, TabLabelComponent, KycPanelComponent, ContactFormComponent,
@@ -117,7 +118,7 @@ export class MaterialModule { }
         YesNoDialogBox, ApiSecretDialogBox,
         LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, RestorePanelComponent,
         NavPopupComponent, SideMenuComponent, SideExpanderComponent, RiskWarningComponent,
-        LineBreakPipe, NumberFillPipe,
+        LineBreakPipe, NumberFillPipe, SafeUrlPipe,
         TransactionsFilterBarComponent, WalletsFilterBarComponent, ContactsFilterBarComponent, NotificationsFilterBarComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

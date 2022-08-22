@@ -12,6 +12,7 @@ const snsWebSdk = require('@sumsub/websdk');
 
 @Component({
     selector: 'app-kyc-panel',
+    styleUrls: ['kyc-panel.component.scss'],
     templateUrl: 'kyc-panel.component.html'
 })
 export class KycPanelComponent implements OnInit, OnDestroy {
@@ -25,6 +26,10 @@ export class KycPanelComponent implements OnInit, OnDestroy {
     @Output() onProgress = new EventEmitter<boolean>();
 
     private pTokenSubscription: Subscription | undefined = undefined;
+
+    showSumsub = false;
+    showShufti = false;
+    frameUrl = '';
 
     constructor(
         public dialog: MatDialog,
@@ -57,6 +62,7 @@ export class KycPanelComponent implements OnInit, OnDestroy {
         this.pTokenSubscription = this.auth.getKycToken(this.flow ?? '').valueChanges.subscribe(({ data }) => {
             this.onProgress.emit(false);
             if (this.auth.user?.kycProvider === KycProvider.SumSub) {
+                this.showSumsub = true;
                 this.launchSumSubWidget(
                     this.url as string,
                     this.flow as string,
@@ -65,6 +71,8 @@ export class KycPanelComponent implements OnInit, OnDestroy {
                     '',
                     []);
             } else if (this.auth.user?.kycProvider === KycProvider.Shufti) {
+                this.showShufti = true;
+                this.frameUrl = data.generateWebApiToken;
             }
         }, (error) => {
             this.onProgress.emit(false);

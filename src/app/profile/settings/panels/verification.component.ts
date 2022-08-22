@@ -78,13 +78,13 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
     private getTiers(): void {
         this.error.emit('');
         this.tiers = [];
-        const tiersData = this.dataService.mySettingsKycTiers(undefined).valueChanges.pipe(take(1));
+        const tiersData$ = this.dataService.mySettingsKycTiers(undefined).valueChanges.pipe(take(1));
         const settingsCommon = this.auth.getLocalSettingsCommon();
         if (settingsCommon === null) {
             this.error.emit('Unable to load common settings');
         } else {
             this.pSubscriptions.add(
-                tiersData.subscribe(({ data }) => {
+                tiersData$.subscribe(({ data }) => {
                     this.progressChange.emit(false);
                     this.handleTiers(data.mySettingsKycTiers as SettingsKycTierShortExListResult);
                     this.kycUrl = settingsCommon.kycBaseAddress as string;
