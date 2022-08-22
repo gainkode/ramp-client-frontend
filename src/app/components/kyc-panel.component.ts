@@ -163,7 +163,7 @@ export class KycPanelComponent implements OnInit, OnDestroy {
         this.pSubscriptions.add(
             this.notification.subscribeToKycCompleteNotifications().subscribe(
                 ({ data }) => {
-                    const subscriptionData = data.kycServiceNotification;
+                    const subscriptionData = data.kycCompletedNotification;
                     console.log('Shufti completed', subscriptionData);
                     if (!this.completedWhenVerified) {
                         this.completeVerification();
