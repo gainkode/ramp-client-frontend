@@ -1,3 +1,4 @@
+import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { WireTransferBankAccountAu, WireTransferBankAccountEu, WireTransferBankAccountUk } from 'src/app/model/cost-scheme.model';
 import { WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from 'src/app/model/payment-base.model';
@@ -28,10 +29,40 @@ export class WidgetWireTransferResultComponent {
     field5Value = '';
     field6Value = '';
 
-    sendEmail(): void {
+    constructor(private clipboard: Clipboard) { }
 
+    sendEmail(): void {
+        this.onSendEmail.emit();
     }
 
+    copyParameter(index: number): void {
+        let dataString = '';
+        switch (index) {
+            case 0:
+                dataString = this.referenceId;
+                break;
+            case 1:
+                dataString = this.field1Value;
+                break;
+            case 2:
+                dataString = this.field2Value;
+                break;
+            case 3:
+                dataString = this.field3Value;
+                break;
+            case 4:
+                dataString = this.field4Value;
+                break;
+            case 5:
+                dataString = this.field5Value;
+                break;
+            case 6:
+                dataString = this.field6Value;
+                break;
+        }
+        this.clipboard.copy(dataString);
+    }
+    
     private loadData(val: WireTransferPaymentCategoryItem) {
         const data = JSON.parse(val.data);
         if (val.id === WireTransferPaymentCategory.AU) {

@@ -114,6 +114,25 @@ export class WidgetComponent implements OnInit {
       this.onWireTransferListLoaded.bind(this)
     );
     this.initMessage = 'Loading...';
+
+
+
+
+
+    // this.summary.orderId = 'Reference identifier';
+    // this.selectedWireTransfer.id = WireTransferPaymentCategory.EU;
+    // this.selectedWireTransfer.title = 'Title';
+    // const dataObject = {
+    //   bankAddress: 'Bank address data string value',
+    //   bankName: 'Bank name data string value',
+    //   beneficiaryAddress: 'Beneficiary address data string value',
+    //   beneficiaryName: 'Beneficiary name data string value',
+    //   iban: 'IBAN',
+    //   swiftBic: 'SWIFT0000000'
+    // };
+    // this.selectedWireTransfer.data = JSON.stringify(dataObject);
+    // this.pager.init('wire_transfer_result', 'Initialization');
+
     this.pager.init('initialization', 'Initialization');
     this.loadCustomData();
     this.startExchangeRate();
