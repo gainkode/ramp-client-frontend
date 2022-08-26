@@ -453,12 +453,18 @@ $font_main: var(--font_main);
 
 .__widget-summary-grid {
     display: grid;
-    grid-template-columns: 100px auto 24px;
+    grid-template-columns: 100px auto;
     place-items: center start;
 }
 
 .__widget-summary-grid-wide {
-    grid-template-columns: 150px auto 24px;
+    grid-template-columns: 150px auto;
+}
+
+.__widget-details-grid {
+    display: grid;
+    grid-template-columns: 150px 24px;
+    place-items: center start;
 }
 
 .__widget-summary-item {

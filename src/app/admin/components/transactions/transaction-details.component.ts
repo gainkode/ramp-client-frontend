@@ -211,7 +211,11 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
       if (this.transactionStatuses.length > 0) {
         this.transactionStatusName = this.transactionStatuses.find(x => x.id === this.transactionStatus)?.name ?? '';
       }
-      if (this.data.status === TransactionStatus.Completed || this.data.status === TransactionStatus.Paid) {
+      if (this.data.status === TransactionStatus.Completed ||
+        this.data.status === TransactionStatus.Paid ||
+        this.data.status === TransactionStatus.Exchanged ||
+        this.data.status === TransactionStatus.Exchanging ||
+        this.data.status === TransactionStatus.TransferBenchmarkWaiting) {
         this.notPaidStatus = false;
       } else {
         this.notPaidStatus = true;

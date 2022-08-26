@@ -377,8 +377,8 @@ export class TransferWidgetComponent implements OnInit {
     this.dialog.open(CommonDialogBox, {
       width: '450px',
       data: {
-        title: 'Payment',
-        message: 'Message has been sent successfully'
+        title: 'Email Sent',
+        message: 'Bank details has been sent to your Email address'
       }
     });
   }
