@@ -547,7 +547,8 @@ export type KycRequiredInfo = {
 };
 
 export enum KycServiceNotificationType {
-  KycStatusChanged = 'KycStatusChanged'
+  KycStatusChanged = 'KycStatusChanged',
+  KycCompleted = 'KycCompleted'
 }
 
 export enum KycStatus {
@@ -2597,6 +2598,13 @@ export type SettingsKycLevelShort = {
   data?: Maybe<Scalars['String']>;
 };
 
+export type SettingsKycLevelShufti = {
+  __typename?: 'SettingsKycLevelShufti';
+  settingsKycLevelShuftiId: Scalars['ID'];
+  name?: Maybe<Scalars['String']>;
+  data?: Maybe<Scalars['String']>;
+};
+
 export type SettingsKycListResult = {
   __typename?: 'SettingsKycListResult';
   count?: Maybe<Scalars['Int']>;
@@ -2717,6 +2725,7 @@ export type Subscription = {
   newNotification?: Maybe<Scalars['Void']>;
   transactionServiceNotification?: Maybe<Scalars['Void']>;
   kycServiceNotification?: Maybe<Scalars['Void']>;
+  kycCompletedNotification?: Maybe<Scalars['Void']>;
 };
 
 export type SupportTicket = {

@@ -7,8 +7,8 @@ import { DateFormatAdapter } from 'src/app/admin/misc/date-range/date-format.ada
 import { DateParserFormatter } from 'src/app/admin/misc/date-range/date.formatter';
 import { AdminDataService } from 'src/app/services/admin-data.service';
 import { Countries, getCountryByCode3 } from 'src/app/model/country-code.model';
-import { AccountStatus, UserInput, UserRole, UserType } from 'src/app/model/generated-models';
-import { UserStatusList, UserTypeList } from 'src/app/model/payment.model';
+import { AccountStatus, KycProvider, UserInput, UserRole, UserType } from 'src/app/model/generated-models';
+import { KycProviderList, UserStatusList, UserTypeList } from 'src/app/model/payment.model';
 import { GenderList, UserItem } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { getFormattedUtcDate } from 'src/app/utils/utils';
@@ -44,6 +44,7 @@ export class AdminUserDetailsComponent implements OnInit, OnDestroy {
   accountStatuses = UserStatusList;
   accountTypes = UserTypeList;
   genders = GenderList;
+  kycProviders = KycProviderList;
   minBirthdayDate: NgbDateStruct = {
     year: 1900,
     month: 1,
@@ -77,7 +78,8 @@ export class AdminUserDetailsComponent implements OnInit, OnDestroy {
     flatNumber: ['', { validators: [], updateOn: 'change' }],
     phone: ['', { validators: [], updateOn: 'change' }],
     accountStatus: [AccountStatus.Closed, { validators: [Validators.required], updateOn: 'change' }],
-    accountType: [UserType.Personal, { validators: [Validators.required], updateOn: 'change' }]
+    accountType: [UserType.Personal, { validators: [Validators.required], updateOn: 'change' }],
+    kycProvider: [KycProvider.Local, { validators: [Validators.required], updateOn: 'change' }]
   });
 
   constructor(
@@ -131,6 +133,7 @@ export class AdminUserDetailsComponent implements OnInit, OnDestroy {
       }
       this.dataForm.get('accountType')?.setValue(this.userType);
       this.dataForm.get('accountStatus')?.setValue(data?.accountStatus ?? AccountStatus.Closed);
+      this.dataForm.get('kycProvider')?.setValue(data?.kycProvider ?? KycProvider.Local);
       this.dataForm.get('country')?.setValue(data?.country?.id);
       this.dataForm.get('postCode')?.setValue(data?.postCode);
       this.dataForm.get('town')?.setValue(data?.town);
@@ -153,6 +156,7 @@ export class AdminUserDetailsComponent implements OnInit, OnDestroy {
       this.dataForm.get('birthday')?.setValue(null);
       this.dataForm.get('accountType')?.setValue(UserType.Personal);
       this.dataForm.get('accountStatus')?.setValue(AccountStatus.Live);
+      this.dataForm.get('kycProvider')?.setValue(KycProvider.Local);
       this.dataForm.get('country')?.setValue('');
       this.dataForm.get('postCode')?.setValue('');
       this.dataForm.get('town')?.setValue('');
@@ -168,7 +172,7 @@ export class AdminUserDetailsComponent implements OnInit, OnDestroy {
     this.removable = (this.auth.user?.userId !== settingsId);
   }
 
-  private setCustomerData(): UserInput {
+  private setUserData(): UserInput {
     const code3 = this.dataForm.get('country')?.value;
     const country = getCountryByCode3(code3);
     const code2 = (country) ? country.code2 : '';
@@ -191,7 +195,8 @@ export class AdminUserDetailsComponent implements OnInit, OnDestroy {
       flatNumber: this.dataForm.get('flatNumber')?.value,
       phone: this.dataForm.get('phone')?.value,
       accountStatus: this.dataForm.get('accountStatus')?.value,
-      type: this.dataForm.get('accountType')?.value
+      type: this.dataForm.get('accountType')?.value,
+      kycProvider: this.dataForm.get('kycProvider')?.value
     } as UserInput;
     return data;
   }
@@ -203,7 +208,7 @@ export class AdminUserDetailsComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     this.submitted = true;
     if (this.dataForm.valid) {
-      this.onSave(this.userData?.id ?? '', this.setCustomerData(), undefined);
+      this.onSave(this.userData?.id ?? '', this.setUserData(), undefined);
     }
   }
 

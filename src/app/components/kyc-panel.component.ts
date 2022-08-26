@@ -1,9 +1,11 @@
 import { Component, Input, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
+import { KycProvider } from '../model/generated-models';
 import { AuthService } from '../services/auth.service';
 import { EnvService } from '../services/env.service';
 import { ErrorService } from '../services/error.service';
+import { NotificationService } from '../services/notification.service';
 import { isSumsubVerificationComplete } from '../utils/utils';
 import { CommonDialogBox } from './dialogs/common-box.dialog';
 
@@ -11,6 +13,7 @@ const snsWebSdk = require('@sumsub/websdk');
 
 @Component({
     selector: 'app-kyc-panel',
+    styleUrls: ['kyc-panel.component.scss'],
     templateUrl: 'kyc-panel.component.html'
 })
 export class KycPanelComponent implements OnInit, OnDestroy {
@@ -24,20 +27,30 @@ export class KycPanelComponent implements OnInit, OnDestroy {
     @Output() onProgress = new EventEmitter<boolean>();
 
     private pTokenSubscription: Subscription | undefined = undefined;
+    private pSubscriptions: Subscription = new Subscription();
+
+    showSumsub = false;
+    showShufti = false;
+    frameUrl = '';
 
     constructor(
         public dialog: MatDialog,
         private auth: AuthService,
+        private notification: NotificationService,
         private errorHandler: ErrorService) {
 
     }
 
     ngOnInit(): void {
-        this.loadSumSub();
+        this.loadKycWidget();
+        if (this.auth.user?.kycProvider === KycProvider.Shufti) {
+            this.startKycNotifications();
+        }
     }
 
     ngOnDestroy(): void {
         this.pTokenSubscription?.unsubscribe();
+        this.pSubscriptions.unsubscribe();
     }
 
     showSuccessDialog(): void {
@@ -50,18 +63,24 @@ export class KycPanelComponent implements OnInit, OnDestroy {
         });
     }
 
-    loadSumSub(): void {
+    loadKycWidget(): void {
         // load sumsub widget
         this.onProgress.emit(true);
         this.pTokenSubscription = this.auth.getKycToken(this.flow ?? '').valueChanges.subscribe(({ data }) => {
             this.onProgress.emit(false);
-            this.launchSumSubWidget(
-                this.url as string,
-                this.flow as string,
-                data.generateWebApiToken,
-                '',
-                '',
-                []);
+            if (this.auth.user?.kycProvider === KycProvider.SumSub) {
+                this.showSumsub = true;
+                this.launchSumSubWidget(
+                    this.url as string,
+                    this.flow as string,
+                    data.generateWebApiToken,
+                    '',
+                    '',
+                    []);
+            } else if (this.auth.user?.kycProvider === KycProvider.Shufti) {
+                this.showShufti = true;
+                this.frameUrl = data.generateWebApiToken;
+            }
         }, (error) => {
             this.onProgress.emit(false);
             if (this.auth.token !== '') {
@@ -137,6 +156,24 @@ export class KycPanelComponent implements OnInit, OnDestroy {
         const snsWebSdkInstance = snsWebSdkBuilder.build();
 
         snsWebSdkInstance.launch('#sumsub-websdk-container');
+    }
+
+    private startKycNotifications(): void {
+        console.log('Shufti notifications started');
+        this.pSubscriptions.add(
+            this.notification.subscribeToKycCompleteNotifications().subscribe(
+                ({ data }) => {
+                    const subscriptionData = data.kycCompletedNotification;
+                    console.log('Shufti completed', subscriptionData);
+                    if (!this.completedWhenVerified) {
+                        this.completeVerification();
+                    }
+                },
+                (error) => {
+                    console.error('KYC complete notification error', error);
+                }
+            )
+        );
     }
 
     private completeVerification(): void {

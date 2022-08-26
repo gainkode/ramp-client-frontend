@@ -21,6 +21,12 @@ subscription onKycServiceNotification {
 }
 `;
 
+const SUBSCRIBE_KYC_COMPLETED_NOTIFICATIONS = gql`
+subscription onKycCompletedNotification {
+  kycCompletedNotification
+}
+`;
+
 const SEND_TEST_NOTIFICATION_POST = gql`
 mutation SendTestNotification {
   sendTestNotification
@@ -84,6 +90,13 @@ export class NotificationService {
   subscribeToKycNotifications(): Observable<any> {
     return this.apollo.subscribe({
       query: SUBSCRIBE_KYC_NOTIFICATIONS,
+      fetchPolicy: 'no-cache'
+    });
+  }
+
+  subscribeToKycCompleteNotifications(): Observable<any> {
+    return this.apollo.subscribe({
+      query: SUBSCRIBE_KYC_COMPLETED_NOTIFICATIONS,
       fetchPolicy: 'no-cache'
     });
   }

@@ -794,6 +794,7 @@ const GET_USERS_EX = gql`
         buildingName
         buildingNumber
         flatNumber
+        kycProvider
         referralCode
         roles {
           userRoleId
@@ -1436,6 +1437,7 @@ mutation UpdateUser(
   $kycTierId: String
   $defaultFiatCurrency: String
   $defaultCryptoCurrency: String
+  $kycProvider: KycProvider
 ) {
   updateUser(
     userId: $userId
@@ -1462,6 +1464,7 @@ mutation UpdateUser(
       kycTierId: $kycTierId
       defaultFiatCurrency: $defaultFiatCurrency
       defaultCryptoCurrency: $defaultCryptoCurrency
+      kycProvider: $kycProvider
     }
   ) {
     userId
@@ -1496,6 +1499,7 @@ mutation CreateUser(
   $kycTierId: String
   $defaultFiatCurrency: String
   $defaultCryptoCurrency: String
+  $kycProvider: KycProvider
 ) {
   createUser(
     user: {
@@ -1523,6 +1527,7 @@ mutation CreateUser(
       kycTierId: $kycTierId
       defaultFiatCurrency: $defaultFiatCurrency
       defaultCryptoCurrency: $defaultCryptoCurrency
+      kycProvider: $kycProvider
     }
     roles: $roles
   ) {
@@ -3017,7 +3022,8 @@ export class AdminDataService {
           accountStatus: customer.accountStatus,
           kycTierId: customer.kycTierId,
           defaultFiatCurrency: customer.defaultFiatCurrency,
-          defaultCryptoCurrency: customer.defaultCryptoCurrency
+          defaultCryptoCurrency: customer.defaultCryptoCurrency,
+          kycProvider: customer.kycProvider
         }
       }).pipe(tap(() => {
         this.snackBar.open(`User was created`, undefined, { duration: 5000 });
@@ -3048,7 +3054,8 @@ export class AdminDataService {
           accountStatus: customer.accountStatus,
           kycTierId: customer.kycTierId,
           defaultFiatCurrency: customer.defaultFiatCurrency,
-          defaultCryptoCurrency: customer.defaultCryptoCurrency
+          defaultCryptoCurrency: customer.defaultCryptoCurrency,
+          kycProvider: customer.kycProvider
         }
       }).pipe(tap(() => {
         this.snackBar.open(`User was updated`, undefined, { duration: 5000 });
