@@ -78,6 +78,16 @@ export class DashboardService implements OnDestroy {
             type: 'count-volume'
           },
           {
+            key: 'failed',
+            label: 'Failed',
+            type: 'count-volume'
+          },
+          {
+            key: 'chargedBack',
+            label: 'Charged back',
+            type: 'count-volume'
+          },
+          {
             key: 'ratio',
             label: 'Success Rate',
             type: 'percent'
@@ -92,6 +102,10 @@ export class DashboardService implements OnDestroy {
             declinedVolume: rawData.deposits?.declined?.volume ?? null,
             abandonedCount: rawData.deposits?.abandoned?.count ?? null,
             abandonedVolume: rawData.deposits?.abandoned?.volume ?? null,
+            failedCount: rawData.deposits?.failed?.count ?? null,
+            failedVolume: rawData.deposits?.failed?.volume ?? null,
+            chargedBackCount: rawData.deposits?.chargedBack?.count ?? null,
+            chargedBackVolume: rawData.deposits?.chargedBack?.volume ?? null,
             ratio: rawData.deposits?.ratio ?? null
           },
           {
@@ -102,6 +116,10 @@ export class DashboardService implements OnDestroy {
             declinedVolume: rawData.withdrawals?.declined?.volume ?? null,
             abandonedCount: rawData.withdrawals?.abandoned?.count ?? null,
             abandonedVolume: rawData.withdrawals?.abandoned?.volume ?? null,
+            failedCount: rawData.withdrawals?.failed?.count ?? null,
+            failedVolume: rawData.withdrawals?.failed?.volume ?? null,
+            chargedBackCount: rawData.withdrawals?.chargedBack?.count ?? null,
+            chargedBackVolume: rawData.withdrawals?.chargedBack?.volume ?? null,
             ratio: rawData.withdrawals?.ratio ?? null
           },
           {
@@ -112,6 +130,10 @@ export class DashboardService implements OnDestroy {
             declinedVolume: rawData.buys?.declined?.volume ?? null,
             abandonedCount: rawData.buys?.abandoned?.count ?? null,
             abandonedVolume: rawData.buys?.abandoned?.volume ?? null,
+            failedCount: rawData.buys?.failed?.count ?? null,
+            failedVolume: rawData.buys?.failed?.volume ?? null,
+            chargedBackCount: rawData.buys?.chargedBack?.count ?? null,
+            chargedBackVolume: rawData.buys?.chargedBack?.volume ?? null,
             ratio: rawData.buys?.ratio ?? null
           },
           {
@@ -122,6 +144,10 @@ export class DashboardService implements OnDestroy {
             declinedVolume: rawData.sells?.declined?.volume ?? null,
             abandonedCount: rawData.sells?.abandoned?.count ?? null,
             abandonedVolume: rawData.sells?.abandoned?.volume ?? null,
+            failedCount: rawData.sells?.failed?.count ?? null,
+            failedVolume: rawData.sells?.failed?.volume ?? null,
+            chargedBackCount: rawData.sells?.chargedBack?.count ?? null,
+            chargedBackVolume: rawData.sells?.chargedBack?.volume ?? null,
             ratio: rawData.sells?.ratio ?? null
           },
           {
@@ -132,6 +158,10 @@ export class DashboardService implements OnDestroy {
             declinedVolume: rawData.transfers?.declined?.volume ?? null,
             abandonedCount: rawData.transfers?.abandoned?.count ?? null,
             abandonedVolume: rawData.transfers?.abandoned?.volume ?? null,
+            failedCount: rawData.transfers?.failed?.count ?? null,
+            failedVolume: rawData.transfers?.failed?.volume ?? null,
+            chargedBackCount: rawData.transfers?.chargedBack?.count ?? null,
+            chargedBackVolume: rawData.transfers?.chargedBack?.volume ?? null,
             ratio: rawData.transfers?.ratio ?? null
           },
           {
@@ -142,6 +172,10 @@ export class DashboardService implements OnDestroy {
             declinedVolume: rawData.receives?.declined?.volume ?? null,
             abandonedCount: rawData.receives?.abandoned?.count ?? null,
             abandonedVolume: rawData.receives?.abandoned?.volume ?? null,
+            failedCount: rawData.receives?.failed?.count ?? null,
+            failedVolume: rawData.receives?.failed?.volume ?? null,
+            chargedBackCount: rawData.receives?.chargedBack?.count ?? null,
+            chargedBackVolume: rawData.receives?.chargedBack?.volume ?? null,
             ratio: rawData.receives?.ratio ?? null
           }
         ]
@@ -176,6 +210,16 @@ export class DashboardService implements OnDestroy {
             type: 'count-volume'
           },
           {
+            key: 'failed',
+            label: 'Failed',
+            type: 'count-volume'
+          },
+          {
+            key: 'chargedBack',
+            label: 'Charged back',
+            type: 'count-volume'
+          },
+          {
             key: 'ratio',
             label: 'Success Rate',
             type: 'percent'
@@ -192,6 +236,10 @@ export class DashboardService implements OnDestroy {
               declinedVolume: item.declined?.volume ?? null,
               abandonedCount: item.abandoned?.count ?? null,
               abandonedVolume: item.abandoned?.volume ?? null,
+              failedCount: item.failed?.count ?? null,
+              failedVolume: item.failed?.volume ?? null,
+              chargedBackCount: item.chargedBack?.count ?? null,
+              chargedBackVolume: item.chargedBack?.volume ?? null,
               ratio: item.ratio ?? null
             };
           }) : []
@@ -222,6 +270,16 @@ export class DashboardService implements OnDestroy {
             type: 'count-volume'
           },
           {
+            key: 'failed',
+            label: 'Failed',
+            type: 'count-volume'
+          },
+          {
+            key: 'chargedBack',
+            label: 'Charged back',
+            type: 'count-volume'
+          },
+          {
             key: 'ratio',
             label: 'Success Rate',
             type: 'percent'
@@ -238,6 +296,10 @@ export class DashboardService implements OnDestroy {
               declinedVolume: item.declined?.volume ?? null,
               abandonedCount: item.abandoned?.count ?? null,
               abandonedVolume: item.abandoned?.volume ?? null,
+              failedCount: item.failed?.count ?? null,
+              failedVolume: item.failed?.volume ?? null,
+              chargedBackCount: item.chargedBack?.count ?? null,
+              chargedBackVolume: item.chargedBack?.volume ?? null,
               ratio: item.ratio ?? null
             };
           }) : []
@@ -268,6 +330,16 @@ export class DashboardService implements OnDestroy {
             type: 'count-volume'
           },
           {
+            key: 'failed',
+            label: 'Failed',
+            type: 'count-volume'
+          },
+          {
+            key: 'chargedBack',
+            label: 'Charged back',
+            type: 'count-volume'
+          },
+          {
             key: 'ratio',
             label: 'Success Rate',
             type: 'percent'
@@ -282,6 +354,10 @@ export class DashboardService implements OnDestroy {
             declinedVolume: rawData.transfers?.toMerchant?.declined?.volume ?? null,
             abandonedCount: rawData.transfers?.toMerchant?.abandoned?.count ?? null,
             abandonedVolume: rawData.transfers?.toMerchant?.abandoned?.volume ?? null,
+            failedCount: rawData.transfers?.toMerchant?.failed?.count ?? null,
+            failedVolume: rawData.transfers?.toMerchant?.failed?.volume ?? null,
+            chargedBackCount: rawData.transfers?.toMerchant?.chargedBack?.count ?? null,
+            chargedBackVolume: rawData.transfers?.toMerchant?.chargedBack?.volume ?? null,
             ratio: rawData.transfers?.toMerchant?.ratio ?? null
           },
           {
@@ -292,6 +368,10 @@ export class DashboardService implements OnDestroy {
             declinedVolume: rawData.transfers?.toCustomer?.declined?.volume ?? null,
             abandonedCount: rawData.transfers?.toCustomer?.abandoned?.count ?? null,
             abandonedVolume: rawData.transfers?.toCustomer?.abandoned?.volume ?? null,
+            failedCount: rawData.transfers?.toMerchant?.failed?.count ?? null,
+            failedVolume: rawData.transfers?.toMerchant?.failed?.volume ?? null,
+            chargedBackCount: rawData.transfers?.toMerchant?.chargedBack?.count ?? null,
+            chargedBackVolume: rawData.transfers?.toMerchant?.chargedBack?.volume ?? null,
             ratio: rawData.transfers?.toCustomer?.ratio ?? null
           }
         ]
@@ -322,6 +402,16 @@ export class DashboardService implements OnDestroy {
             type: 'count-volume'
           },
           {
+            key: 'failed',
+            label: 'Failed',
+            type: 'count-volume'
+          },
+          {
+            key: 'chargedBack',
+            label: 'Charged back',
+            type: 'count-volume'
+          },
+          {
             key: 'ratio',
             label: 'Success Rate',
             type: 'percent'
@@ -336,6 +426,10 @@ export class DashboardService implements OnDestroy {
             declinedVolume: rawData.receives?.toMerchant?.declined?.volume ?? null,
             abandonedCount: rawData.receives?.toMerchant?.abandoned?.count ?? null,
             abandonedVolume: rawData.receives?.toMerchant?.abandoned?.volume ?? null,
+            failedCount: rawData.transfers?.toMerchant?.failed?.count ?? null,
+            failedVolume: rawData.transfers?.toMerchant?.failed?.volume ?? null,
+            chargedBackCount: rawData.transfers?.toMerchant?.chargedBack?.count ?? null,
+            chargedBackVolume: rawData.transfers?.toMerchant?.chargedBack?.volume ?? null,
             ratio: rawData.receives?.toMerchant?.ratio ?? null
           },
           {
@@ -346,6 +440,10 @@ export class DashboardService implements OnDestroy {
             declinedVolume: rawData.receives?.toCustomer?.declined?.volume ?? null,
             abandonedCount: rawData.receives?.toCustomer?.abandoned?.count ?? null,
             abandonedVolume: rawData.receives?.toCustomer?.abandoned?.volume ?? null,
+            failedCount: rawData.transfers?.toMerchant?.failed?.count ?? null,
+            failedVolume: rawData.transfers?.toMerchant?.failed?.volume ?? null,
+            chargedBackCount: rawData.transfers?.toMerchant?.chargedBack?.count ?? null,
+            chargedBackVolume: rawData.transfers?.toMerchant?.chargedBack?.volume ?? null,
             ratio: rawData.receives?.toCustomer?.ratio ?? null
           }
         ]
@@ -376,6 +474,16 @@ export class DashboardService implements OnDestroy {
             type: 'count-volume'
           },
           {
+            key: 'failed',
+            label: 'Failed',
+            type: 'count-volume'
+          },
+          {
+            key: 'chargedBack',
+            label: 'Charged back',
+            type: 'count-volume'
+          },
+          {
             key: 'ratio',
             label: 'Success Rate',
             type: 'percent'
@@ -392,6 +500,10 @@ export class DashboardService implements OnDestroy {
               declinedVolume: item.declined?.volume ?? null,
               abandonedCount: item.abandoned?.count ?? null,
               abandonedVolume: item.abandoned?.volume ?? null,
+              failedCount: item.failed?.count ?? null,
+              failedVolume: item.failed?.volume ?? null,
+              chargedBackCount: item.chargedBack?.count ?? null,
+              chargedBackVolume: item.chargedBack?.volume ?? null,
               ratio: item.ratio ?? null
             };
           }) : []
@@ -422,6 +534,16 @@ export class DashboardService implements OnDestroy {
             type: 'count-volume'
           },
           {
+            key: 'failed',
+            label: 'Failed',
+            type: 'count-volume'
+          },
+          {
+            key: 'chargedBack',
+            label: 'Charged back',
+            type: 'count-volume'
+          },
+          {
             key: 'ratio',
             label: 'Success Rate',
             type: 'percent'
@@ -438,6 +560,10 @@ export class DashboardService implements OnDestroy {
               declinedVolume: item.declined?.volume ?? null,
               abandonedCount: item.abandoned?.count ?? null,
               abandonedVolume: item.abandoned?.volume ?? null,
+              failedCount: item.failed?.count ?? null,
+              failedVolume: item.failed?.volume ?? null,
+              chargedBackCount: item.chargedBack?.count ?? null,
+              chargedBackVolume: item.chargedBack?.volume ?? null,
               ratio: item.ratio ?? null
             };
           }) : []
@@ -504,7 +630,7 @@ export class DashboardService implements OnDestroy {
       if (!EnvService.deposit_withdrawal) {
         feesData.rows.splice(feesData.rows.findIndex(x => x.source === 'Deposit'), 1);
         feesData.rows.splice(feesData.rows.findIndex(x => x.source === 'Withdrawal'), 1);
-      }      
+      }
       //  endregion
 
       // region Balances

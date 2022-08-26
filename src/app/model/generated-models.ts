@@ -149,6 +149,8 @@ export type BaseStat = {
   ratio?: Maybe<Scalars['Float']>;
   approved?: Maybe<TransactionStatsVolume>;
   declined?: Maybe<TransactionStatsVolume>;
+  failed?: Maybe<TransactionStatsVolume>;
+  chargedBack?: Maybe<TransactionStatsVolume>;
   abandoned?: Maybe<TransactionStatsVolume>;
   inProcess?: Maybe<TransactionStatsVolume>;
   byStatus?: Maybe<Array<TransactionStatsByStatus>>;
@@ -176,6 +178,8 @@ export type BuyOrSellStats = BaseStat & {
   ratio?: Maybe<Scalars['Float']>;
   approved?: Maybe<TransactionStatsVolume>;
   declined?: Maybe<TransactionStatsVolume>;
+  failed?: Maybe<TransactionStatsVolume>;
+  chargedBack?: Maybe<TransactionStatsVolume>;
   abandoned?: Maybe<TransactionStatsVolume>;
   inProcess?: Maybe<TransactionStatsVolume>;
   byStatus?: Maybe<Array<TransactionStatsByStatus>>;
@@ -272,6 +276,8 @@ export type DepositOrWithdrawalStats = BaseStat & {
   ratio?: Maybe<Scalars['Float']>;
   approved?: Maybe<TransactionStatsVolume>;
   declined?: Maybe<TransactionStatsVolume>;
+  failed?: Maybe<TransactionStatsVolume>;
+  chargedBack?: Maybe<TransactionStatsVolume>;
   abandoned?: Maybe<TransactionStatsVolume>;
   inProcess?: Maybe<TransactionStatsVolume>;
   byStatus?: Maybe<Array<TransactionStatsByStatus>>;
@@ -300,6 +306,8 @@ export type ExchangeStats = BaseStat & {
   ratio?: Maybe<Scalars['Float']>;
   approved?: Maybe<TransactionStatsVolume>;
   declined?: Maybe<TransactionStatsVolume>;
+  failed?: Maybe<TransactionStatsVolume>;
+  chargedBack?: Maybe<TransactionStatsVolume>;
   abandoned?: Maybe<TransactionStatsVolume>;
   inProcess?: Maybe<TransactionStatsVolume>;
   byStatus?: Maybe<Array<TransactionStatsByStatus>>;
@@ -444,6 +452,8 @@ export type InstrumentStats = BaseStat & {
   ratio?: Maybe<Scalars['Float']>;
   approved?: Maybe<TransactionStatsVolume>;
   declined?: Maybe<TransactionStatsVolume>;
+  failed?: Maybe<TransactionStatsVolume>;
+  chargedBack?: Maybe<TransactionStatsVolume>;
   abandoned?: Maybe<TransactionStatsVolume>;
   inProcess?: Maybe<TransactionStatsVolume>;
   byStatus?: Maybe<Array<TransactionStatsByStatus>>;
@@ -625,6 +635,8 @@ export type MerchantOrCustomerStats = BaseStat & {
   ratio?: Maybe<Scalars['Float']>;
   approved?: Maybe<TransactionStatsVolume>;
   declined?: Maybe<TransactionStatsVolume>;
+  failed?: Maybe<TransactionStatsVolume>;
+  chargedBack?: Maybe<TransactionStatsVolume>;
   abandoned?: Maybe<TransactionStatsVolume>;
   inProcess?: Maybe<TransactionStatsVolume>;
   byStatus?: Maybe<Array<TransactionStatsByStatus>>;
@@ -3174,6 +3186,8 @@ export type TransferStats = BaseStat & {
   ratio?: Maybe<Scalars['Float']>;
   approved?: Maybe<TransactionStatsVolume>;
   declined?: Maybe<TransactionStatsVolume>;
+  failed?: Maybe<TransactionStatsVolume>;
+  chargedBack?: Maybe<TransactionStatsVolume>;
   abandoned?: Maybe<TransactionStatsVolume>;
   inProcess?: Maybe<TransactionStatsVolume>;
   byStatus?: Maybe<Array<TransactionStatsByStatus>>;
@@ -3292,6 +3306,7 @@ export type User = {
   data?: Maybe<Scalars['String']>;
   fiatVaults?: Maybe<Array<FiatVault>>;
   gender?: Maybe<Gender>;
+  addressLine?: Maybe<Scalars['String']>;
 };
 
 export type UserAction = {
