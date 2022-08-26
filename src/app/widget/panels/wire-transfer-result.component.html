@@ -2,96 +2,104 @@
     <h3 class="__widget-summary-title">
         Transfer Details
     </h3>
-    <div class="__widget-details-grid">
-        <div class="__widget-summary-item">
-            Reference ID:
+    <div class="__widget-details-container">
+        <div class="__widget-details-title">
+            <div class="__widget-details-title-item">
+                Reference ID:
+            </div>
+            <button class="__tool-button" type="button" (click)="copyParameter(0)">
+                <i class="material-icons" style="font-size: 16px;margin-top: 4px;">
+                    content_copy
+                </i>
+            </button>
         </div>
-        <div class="__widget-summary-item">
-            <input class="__text-box-noborder" type="text" readonly [value]="referenceId" />
+        <div class="__widget-details-item">
+            {{referenceId}}
         </div>
-        <button class="__tool-button" type="button" (click)="copyParameter(0)">
-            <i class="material-icons" style="font-size: 16px;margin-top: 4px;">
-                content_copy
-            </i>
-        </button>
+        
+        <div *ngIf="field1Title!=='' && field1Value!==''" class="__widget-details-title">
+            <div class="__widget-details-title-item">
+                {{field1Title}}:
+            </div>
+            <button class="__tool-button" type="button" (click)="copyParameter(1)">
+                <i class="material-icons" style="font-size: 16px;margin-top: 4px;">
+                    content_copy
+                </i>
+            </button>
+        </div>
+        <div *ngIf="field1Title!=='' && field1Value!==''" class="__widget-details-item">
+            {{field1Value}}
+        </div>
 
-        <div *ngIf="field1Title!=='' && field1Value!==''" class="__widget-summary-item">
-            {{field1Title}}:
+        <div *ngIf="field2Title!=='' && field2Value!==''" class="__widget-details-title">
+            <div class="__widget-details-title-item">
+                {{field2Title}}:
+            </div>
+            <button class="__tool-button" type="button" (click)="copyParameter(2)">
+                <i class="material-icons" style="font-size: 16px;margin-top: 4px;">
+                    content_copy
+                </i>
+            </button>
         </div>
-        <div *ngIf="field1Title!=='' && field1Value!==''" class="__widget-summary-item">
-            <input class="__text-box-noborder" type="text" readonly [value]="field1Value" />
+        <div *ngIf="field2Title!=='' && field2Value!==''" class="__widget-details-item">
+            {{field2Value}}
         </div>
-        <button *ngIf="field1Title!=='' && field1Value!==''" class="__tool-button" type="button"
-            (click)="copyParameter(1)">
-            <i class="material-icons" style="font-size: 16px;margin-top: 4px;">
-                content_copy
-            </i>
-        </button>
 
-        <div *ngIf="field2Title!=='' && field2Value!==''" class="__widget-summary-item">
-            {{field2Title}}:
+        <div *ngIf="field3Title!=='' && field3Value!==''" class="__widget-details-title">
+            <div class="__widget-details-title-item">
+                {{field3Title}}:
+            </div>
+            <button class="__tool-button" type="button" (click)="copyParameter(3)">
+                <i class="material-icons" style="font-size: 16px;margin-top: 4px;">
+                    content_copy
+                </i>
+            </button>
         </div>
-        <div *ngIf="field2Title!=='' && field2Value!==''" class="__widget-summary-item">
-            <input class="__text-box-noborder" type="text" readonly [value]="field2Value" />
+        <div *ngIf="field3Title!=='' && field3Value!==''" class="__widget-details-item">
+            {{field3Value}}
         </div>
-        <button *ngIf="field2Title!=='' && field2Value!==''" class="__tool-button" type="button"
-            (click)="copyParameter(2)">
-            <i class="material-icons" style="font-size: 16px;margin-top: 4px;">
-                content_copy
-            </i>
-        </button>
+        
+        <div *ngIf="field4Title!=='' && field4Value!==''" class="__widget-details-title">
+            <div class="__widget-details-title-item">
+                {{field4Title}}:
+            </div>
+            <button class="__tool-button" type="button" (click)="copyParameter(4)">
+                <i class="material-icons" style="font-size: 16px;margin-top: 4px;">
+                    content_copy
+                </i>
+            </button>
+        </div>
+        <div *ngIf="field4Title!=='' && field4Value!==''" class="__widget-details-item">
+            {{field4Value}}
+        </div>
 
-        <div *ngIf="field3Title!=='' && field3Value!==''" class="__widget-summary-item">
-            {{field3Title}}:
+        <div *ngIf="field5Title!=='' && field5Value!==''" class="__widget-details-title">
+            <div class="__widget-details-title-item">
+                {{field5Title}}:
+            </div>
+            <button class="__tool-button" type="button" (click)="copyParameter(5)">
+                <i class="material-icons" style="font-size: 16px;margin-top: 5px;">
+                    content_copy
+                </i>
+            </button>
         </div>
-        <div *ngIf="field3Title!=='' && field3Value!==''" class="__widget-summary-item">
-            <input class="__text-box-noborder" type="text" readonly [value]="field3Value" />
+        <div *ngIf="field5Title!=='' && field5Value!==''" class="__widget-details-item">
+            {{field5Value}}
         </div>
-        <button *ngIf="field3Title!=='' && field3Value!==''" class="__tool-button" type="button"
-            (click)="copyParameter(3)">
-            <i class="material-icons" style="font-size: 16px;margin-top: 4px;">
-                content_copy
-            </i>
-        </button>
 
-        <div *ngIf="field4Title!=='' && field4Value!==''" class="__widget-summary-item">
-            {{field4Title}}:
+        <div *ngIf="field6Title!=='' && field6Value!==''" class="__widget-details-title">
+            <div class="__widget-details-title-item">
+                {{field6Title}}:
+            </div>
+            <button class="__tool-button" type="button" (click)="copyParameter(6)">
+                <i class="material-icons" style="font-size: 16px;margin-top: 6px;">
+                    content_copy
+                </i>
+            </button>
         </div>
-        <div *ngIf="field4Title!=='' && field4Value!==''" class="__widget-summary-item">
-            <input class="__text-box-noborder" type="text" readonly [value]="field4Value" />
+        <div *ngIf="field6Title!=='' && field6Value!==''" class="__widget-details-item">
+            {{field6Value}}
         </div>
-        <button *ngIf="field4Title!=='' && field4Value!==''" class="__tool-button" type="button"
-            (click)="copyParameter(4)">
-            <i class="material-icons" style="font-size: 16px;margin-top: 4px;">
-                content_copy
-            </i>
-        </button>
-
-        <div *ngIf="field5Title!=='' && field5Value!==''" class="__widget-summary-item">
-            {{field5Title}}:
-        </div>
-        <div *ngIf="field5Title!=='' && field5Value!==''" class="__widget-summary-item">
-            <input class="__text-box-noborder" type="text" readonly [value]="field5Value" />
-        </div>
-        <button *ngIf="field5Title!=='' && field5Value!==''" class="__tool-button" type="button"
-            (click)="copyParameter(5)">
-            <i class="material-icons" style="font-size: 16px;margin-top: 4px;">
-                content_copy
-            </i>
-        </button>
-
-        <div *ngIf="field6Title!=='' && field6Value!==''" class="__widget-summary-item">
-            {{field6Title}}:
-        </div>
-        <div *ngIf="field6Title!=='' && field6Value!==''" class="__widget-summary-item">
-            <input class="__text-box-noborder" type="text" readonly [value]="field6Value" />
-        </div>
-        <button *ngIf="field6Title!=='' && field6Value!==''" class="__tool-button" type="button"
-            (click)="copyParameter(6)">
-            <i class="material-icons" style="font-size: 16px;margin-top: 4px;">
-                content_copy
-            </i>
-        </button>
     </div>
 
     <!-- Buttons -->

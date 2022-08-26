@@ -115,27 +115,23 @@ export class WidgetComponent implements OnInit {
     );
     this.initMessage = 'Loading...';
 
+    // this.summary.orderId = 'ID1351816';
+    // this.selectedWireTransfer.id = WireTransferPaymentCategory.EU;
+    // this.selectedWireTransfer.title = 'Title';
+    // const dataObject = {
+    //   bankAddress: 'A5-3 Room, Floor 23, 8 Canada Square, London, England, UK, E14 5HQ',
+    //   bankName: 'HSBC',
+    //   beneficiaryAddress: 'Apartment 8, Rue Paul Janson 50, 6150 Anderlues, Belgium',
+    //   beneficiaryName: 'Mister John Doe',
+    //   iban: 'EG810025025800000258946648241',
+    //   swiftBic: 'HSBCTRI2516'
+    // };
+    // this.selectedWireTransfer.data = JSON.stringify(dataObject);
+    // this.pager.init('wire_transfer_result', 'Initialization');
 
-
-
-
-    this.summary.orderId = 'Reference identifier';
-    this.selectedWireTransfer.id = WireTransferPaymentCategory.EU;
-    this.selectedWireTransfer.title = 'Title';
-    const dataObject = {
-      bankAddress: 'Bank address data string value',
-      bankName: 'Bank name data string value',
-      beneficiaryAddress: 'Beneficiary address data string value',
-      beneficiaryName: 'Beneficiary name data string value',
-      iban: 'IBAN',
-      swiftBic: 'SWIFT0000000'
-    };
-    this.selectedWireTransfer.data = JSON.stringify(dataObject);
-    this.pager.init('wire_transfer_result', 'Initialization');
-
-    // this.pager.init('initialization', 'Initialization');
-    // this.loadCustomData();
-    // this.startExchangeRate();
+    this.pager.init('initialization', 'Initialization');
+    this.loadCustomData();
+    this.startExchangeRate();
   }
 
   private initPage(): void {
