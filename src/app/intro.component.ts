@@ -46,8 +46,9 @@ export class IntroComponent implements OnInit {
                     message: error
                 }
             });
-            setInterval(() => {
+            const intervalId = setInterval(() => {
                 dialogRef.close(undefined);
+                clearInterval(intervalId);
             }, 10000);
         }
     }

@@ -91,8 +91,9 @@ export class ProfileInfoDateboxComponent {
         this.changeDetector.detectChanges();
         if (this.editMode) {
             if (this.inputBox) {
-                setInterval(() => {
+                const intervalId = setInterval(() => {
                     this.inputBox?.nativeElement.focus();
+                    clearInterval(intervalId);
                 }, 100);
             }
         } else {
