@@ -1,0 +1,8 @@
+<app-sumsub-panel *ngIf="showSumsub" [flow]="flow" [token]="token" [completedWhenVerified]="completedWhenVerified"
+    (completed)="completeVerification()" (onError)="onError.emit($event)">
+</app-sumsub-panel>
+
+<app-shufti-panel *ngIf="showShufti" [url]="url" [completedWhenVerified]="completedWhenVerified"
+    (completed)="completeVerification()" (onError)="onError.emit($event)"></app-shufti-panel>
+
+<!-- <button type="button" (click)="testButton()">Test</button> -->

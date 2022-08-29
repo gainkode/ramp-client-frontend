@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { SumsubVerificationDialogBox } from 'src/app/components/dialogs/sumsub-verification.dialog';
+import { KycVerificationDialogBox } from 'src/app/components/dialogs/kyc-verification.dialog';
 import { SettingsKycTierShortEx, SettingsKycTierShortExListResult, UserState } from 'src/app/model/generated-models';
 import { TierItem } from 'src/app/model/identification.model';
 import { AuthService } from 'src/app/services/auth.service';
@@ -48,7 +48,7 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
     }
 
     onVerify(flow: string, level: string): void {
-        const dialogRef = this.dialog.open(SumsubVerificationDialogBox, {
+        const dialogRef = this.dialog.open(KycVerificationDialogBox, {
             width: '700px',
             height: '80%',
             data: {

@@ -33,7 +33,7 @@ import { NumberFillPipe } from '../utils/number-fill.pipe';
 
 import { DropdownItemComponent } from './common/dropdown-item.component';
 import { TabLabelComponent } from './common/tablabel.component';
-import { KycPanelComponent } from './kyc-panel.component';
+import { KycPanelComponent } from './kyc/kyc-panel.component';
 import { LoginPanelComponent } from './auth/login-panel.component';
 import { RestorePanelComponent } from './auth/restore-panel.component';
 import { NavPopupComponent } from './common/nav-popup/nav-popup.component';
@@ -59,11 +59,13 @@ import { CommonDialogBox } from './dialogs/common-box.dialog';
 import { TwoFaDialogBox } from './dialogs/two-fa-box.dialog';
 import { TwoFaDialogWizard } from './dialogs/two-fa-wizard.dialog';
 import { SendNotificationDialogBox } from './dialogs/send-notification-box.dialog';
-import { SumsubVerificationDialogBox } from './dialogs/sumsub-verification.dialog';
+import { KycVerificationDialogBox } from './dialogs/kyc-verification.dialog';
 import { ContactFormComponent } from './contact-form.component';
 import { YesNoDialogBox } from './dialogs/yesno-box.dialog';
 import { ApiSecretDialogBox } from './dialogs/api-secret-box.dialog';
 import { SafeUrlPipe } from '../utils/safe-url.pipe';
+import { SumsubPanelComponent } from './kyc/sumsub-panel.component';
+import { ShuftiPanelComponent } from './kyc/shufti-panel.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -101,20 +103,22 @@ export class MaterialModule { }
 @NgModule({
     imports: [NgxMaskModule.forRoot(), CommonModule, FormsModule, ReactiveFormsModule, MaterialModule, DirectiveModule, QRCodeModule],
     declarations: [
-        DropdownItemComponent, TabLabelComponent, KycPanelComponent, ContactFormComponent,
+        DropdownItemComponent, TabLabelComponent, ContactFormComponent,
+        KycPanelComponent, SumsubPanelComponent, ShuftiPanelComponent,
         FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent, FormSearchBoxComponent,
         FormEditBoxComponent, SettingsPasswordBoxComponent,
-        DeleteDialogBox, CommonDialogBox, TwoFaDialogBox, TwoFaDialogWizard, SendNotificationDialogBox, SumsubVerificationDialogBox,
+        DeleteDialogBox, CommonDialogBox, TwoFaDialogBox, TwoFaDialogWizard, SendNotificationDialogBox, KycVerificationDialogBox,
         YesNoDialogBox, ApiSecretDialogBox,
         LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, RestorePanelComponent,
         NavPopupComponent, SideMenuComponent, SideExpanderComponent, RiskWarningComponent,
         LineBreakPipe, NumberFillPipe, SafeUrlPipe,
         TransactionsFilterBarComponent, WalletsFilterBarComponent, ContactsFilterBarComponent, NotificationsFilterBarComponent],
     exports: [
-        DropdownItemComponent, TabLabelComponent, KycPanelComponent, ContactFormComponent,
+        DropdownItemComponent, TabLabelComponent, ContactFormComponent,
+        KycPanelComponent, SumsubPanelComponent, ShuftiPanelComponent,
         FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent, FormSearchBoxComponent,
         FormEditBoxComponent, SettingsPasswordBoxComponent,
-        DeleteDialogBox, CommonDialogBox, TwoFaDialogBox, TwoFaDialogWizard, SendNotificationDialogBox, SumsubVerificationDialogBox,
+        DeleteDialogBox, CommonDialogBox, TwoFaDialogBox, TwoFaDialogWizard, SendNotificationDialogBox, KycVerificationDialogBox,
         YesNoDialogBox, ApiSecretDialogBox,
         LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, RestorePanelComponent,
         NavPopupComponent, SideMenuComponent, SideExpanderComponent, RiskWarningComponent,

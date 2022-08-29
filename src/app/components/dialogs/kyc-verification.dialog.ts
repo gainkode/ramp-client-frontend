@@ -7,11 +7,11 @@ import { TokenAction } from 'src/app/model/generated-models';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
-    selector: 'app-sumsub-verification-dialog-box',
-    templateUrl: 'sumsub-verification.dialog.html',
+    selector: 'app-kyc-verification-dialog-box',
+    templateUrl: 'kyc-verification.dialog.html',
     styleUrls: ['../../../assets/button.scss', '../../../assets/dialog.scss']
 })
-export class SumsubVerificationDialogBox implements OnDestroy {
+export class KycVerificationDialogBox implements OnDestroy {
     complete = false;
 
     private subscriptions: Subscription = new Subscription();
@@ -19,7 +19,7 @@ export class SumsubVerificationDialogBox implements OnDestroy {
     constructor(
         private router: Router,
         private auth: AuthService,
-        public dialogRef: MatDialogRef<SumsubVerificationDialogBox>,
+        public dialogRef: MatDialogRef<KycVerificationDialogBox>,
         @Inject(MAT_DIALOG_DATA) public data: DialogData) { }
 
     ngOnDestroy(): void {
