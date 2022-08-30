@@ -81,6 +81,7 @@ import { AdminDashboardCardComponent } from './misc/dashboard-card/dashboard-car
 import { AdminUserDevicesComponent } from './components/users/devices/devices.component';
 import { AdminDeviceDetailsComponent } from './components/users/devices/device-details.component';
 import { AdminWithdrawalAddressComponent } from './components/settings/common/withdrawal-address.component';
+import { AdminKycTiersComponent } from './components/kyc/tiers/tiers.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -148,6 +149,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AdminWidgetsComponent, AdminWidgetDetailsComponent,
     AdminFeeSchemesComponent, AdminFeeSchemeDetailsComponent,
     AdminLevelsComponent, AdminLevelDetailsComponent,
+    AdminKycTiersComponent,
     AdminKycSchemesComponent, AdminKycSchemeDetailsComponent,
     AdminCountryBlackListComponent, AdminCountryBlackListDetailsComponent,
     AdminCostSchemesComponent, AdminCostSchemeDetailsComponent,

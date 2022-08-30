@@ -129,7 +129,8 @@ export class NavService implements OnDestroy {
 		{
 			title: 'KYC / KYB', icon: 'assignment_ind', type: 'sub', active: false, code: 'KYC', children: [
 				{ path: '/admin/levels', title: 'Levels', type: 'link' },
-				{ path: '/admin/kyc-schemes', title: 'Schemes', type: 'link' },
+				{ path: '/admin/tiers', title: 'Tiers', type: 'link' },
+				// { path: '/admin/kyc-schemes', title: 'Schemes', type: 'link' },
 				{ path: '/admin/black-list', title: 'Black list', type: 'link' },
 			]
 		},

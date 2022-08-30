@@ -45,7 +45,7 @@ import {
   WidgetListResult,
   WireTransferBankAccount
 } from '../model/generated-models';
-import { KycLevel, KycScheme } from '../model/identification.model';
+import { KycLevel, KycScheme, KycTier } from '../model/identification.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TransactionItemFull } from '../model/transaction.model';
 import { catchError, finalize, map, tap } from 'rxjs/operators';
@@ -317,7 +317,7 @@ query GetWireTransferBankAccounts {
 }
 `;
 
-const GET_SETTINGS_KYC_TIERS = gql`
+const GET_SETTINGS_KYC_TIERS_SHORT = gql`
 query GetSettingsKycTiers($userId: String) {
   getSettingsKycTiers(
     userId: $userId
@@ -329,6 +329,45 @@ query GetSettingsKycTiers($userId: String) {
       list {
         settingsKycTierId
         name
+      }
+    }
+  }
+`;
+
+const GET_SETTINGS_KYC_TIERS = gql`
+query GetSettingsKycTiers {
+  getSettingsKycTiers(
+    orderBy: [
+      { orderBy: "default", desc: true },
+      { orderBy: "amount", desc: false }
+    ]
+  ) {
+      count
+      list {
+        settingsKycTierId
+        name
+        description
+        amount
+        targetKycProviders
+        targetUserType
+        targetUserModes
+        targetFilterType
+        targetFilterValues
+        level {
+          settingsKycLevelId
+          name
+          data
+          description
+          order
+        }
+        requireUserFullName
+        requireUserPhone
+        requireUserBirthday
+        requireUserAddress
+        requireUserFlatNumber
+        created
+        createdBy
+        default
       }
     }
   }
@@ -2142,7 +2181,7 @@ export class AdminDataService {
 
   getSettingsKycTiers(id: string): Observable<{ list: Array<SettingsKycTier>; count: number; }> {
     return this.watchQuery<{ getSettingsKycTiers: SettingsKycTierListResult }, QueryGetSettingsKycTiersArgs>({
-      query: GET_SETTINGS_KYC_TIERS,
+      query: GET_SETTINGS_KYC_TIERS_SHORT,
       variables: { userId: (id !== '') ? id : undefined },
       fetchPolicy: 'network-only'
     }).pipe(
@@ -2150,6 +2189,27 @@ export class AdminDataService {
         if (result.data?.getSettingsKycTiers?.list && result.data?.getSettingsKycTiers?.count) {
           return {
             list: result.data.getSettingsKycTiers.list,
+            count: result.data.getSettingsKycTiers.count
+          };
+        } else {
+          return {
+            list: [],
+            count: 0
+          };
+        }
+      })
+    );
+  }
+
+  getKycTiers(): Observable<{ list: Array<KycTier>; count: number; }> {
+    return this.watchQuery<{ getSettingsKycTiers: SettingsKycTierListResult }, QueryGetSettingsKycTiersArgs>({
+      query: GET_SETTINGS_KYC_TIERS,
+      fetchPolicy: 'network-only'
+    }).pipe(
+      map(result => {
+        if (result.data?.getSettingsKycTiers?.list && result.data?.getSettingsKycTiers?.count) {
+          return {
+            list: result.data.getSettingsKycTiers.list.map(item => new KycTier(item)),
             count: result.data.getSettingsKycTiers.count
           };
         } else {

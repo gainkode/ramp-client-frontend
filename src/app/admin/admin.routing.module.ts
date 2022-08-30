@@ -20,6 +20,7 @@ import { AdminCostSchemesComponent } from './components/costs/schemes/schemes.co
 import { AdminFeeSchemesComponent } from './components/fees/fees.component';
 import { AdminCommonSettingsComponent } from './components/settings/common/common.component';
 import { AdminUserDevicesComponent } from './components/users/devices/devices.component';
+import { AdminKycTiersComponent } from './components/kyc/tiers/tiers.component';
 
 const routes: Routes = [
   {
@@ -152,10 +153,15 @@ const routes: Routes = [
         data: { header: 'Levels' }
       },
       {
-        path: 'kyc-schemes',
-        component: AdminKycSchemesComponent,
-        data: { header: 'KYC Schemes' }
+        path: 'tiers',
+        component: AdminKycTiersComponent,
+        data: { header: 'KYC Tiers' }
       },
+      // {
+      //   path: 'kyc-schemes',
+      //   component: AdminKycSchemesComponent,
+      //   data: { header: 'KYC Schemes' }
+      // },
       {
         path: 'black-list',
         component: AdminCountryBlackListComponent,
