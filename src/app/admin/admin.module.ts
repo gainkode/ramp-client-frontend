@@ -82,6 +82,7 @@ import { AdminUserDevicesComponent } from './components/users/devices/devices.co
 import { AdminDeviceDetailsComponent } from './components/users/devices/device-details.component';
 import { AdminWithdrawalAddressComponent } from './components/settings/common/withdrawal-address.component';
 import { AdminKycTiersComponent } from './components/kyc/tiers/tiers.component';
+import { AdminKycTierDetailsComponent } from './components/kyc/tiers/tier-details.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -149,7 +150,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AdminWidgetsComponent, AdminWidgetDetailsComponent,
     AdminFeeSchemesComponent, AdminFeeSchemeDetailsComponent,
     AdminLevelsComponent, AdminLevelDetailsComponent,
-    AdminKycTiersComponent,
+    AdminKycTiersComponent, AdminKycTierDetailsComponent,
     AdminKycSchemesComponent, AdminKycSchemeDetailsComponent,
     AdminCountryBlackListComponent, AdminCountryBlackListDetailsComponent,
     AdminCostSchemesComponent, AdminCostSchemeDetailsComponent,
