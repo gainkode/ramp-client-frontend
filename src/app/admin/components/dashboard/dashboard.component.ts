@@ -17,7 +17,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     'country',
     'source',
     'user',
-    'widget'
+    'widgetName'
   ];
   liquidityProviderName = '';
   showDeposits = false;

@@ -2129,7 +2129,7 @@ export class AdminDataService {
       createdDateInterval: filter.createdDateInterval,
       completedDateInterval: filter.completedDateInterval,
       userIdOnly: filter.users,
-      widgetIdOnly: filter.widgets,
+      widgetIdOnly: filter.widgetNames,
       sourcesOnly: filter.sources,
       countriesOnly: filter.countries,
       countryCodeType: CountryCodeType.Code3,
