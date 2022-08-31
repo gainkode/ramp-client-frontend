@@ -66,7 +66,7 @@ export class AdminKycTierDetailsComponent implements OnInit, OnDestroy {
     name: ['', { validators: [Validators.required], updateOn: 'change' }],
     description: [''],
     isDefault: [false],
-    amount: [0],
+    amount: [0, { validators: [Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
     amountUnlimited: [false],
     target: ['', { validators: [Validators.required], updateOn: 'change' }],
     targetValues: [[], { validators: [Validators.required], updateOn: 'change' }],
@@ -168,7 +168,7 @@ export class AdminKycTierDetailsComponent implements OnInit, OnDestroy {
       this.form.get('description')?.setValue('');
       this.form.get('amount')?.setValue(0);
       this.form.get('amountUnlimited')?.setValue(false);
-      this.form.get('isDefault')?.setValue('');
+      this.form.get('isDefault')?.setValue(false);
       this.form.get('level')?.setValue('');
       this.form.get('target')?.setValue(SettingsKycTargetFilterType.None);
       this.form.get('targetValues')?.setValue([]);
@@ -188,9 +188,10 @@ export class AdminKycTierDetailsComponent implements OnInit, OnDestroy {
     const data = new KycTier(null);
     data.name = this.form.get('name')?.value;
     data.description = this.form.get('description')?.value;
-    data.amount = this.form.get('amount')?.value;
     if (this.form.get('amountUnlimited')?.value === true) {
       data.amount = null;
+    } else {
+      data.amount = parseFloat(this.form.get('amount')?.value);
     }
     data.isDefault = this.form.get('isDefault')?.value;
     data.id = this.form.get('id')?.value;
@@ -398,6 +399,9 @@ export class AdminKycTierDetailsComponent implements OnInit, OnDestroy {
     this.submitted = true;
     if (this.form.valid) {
       const tier = this.setTierData();
+
+      console.log(tier);
+
       const showDefaultWarning = findExistingDefaultTier(this.tiers, tier);
       if (showDefaultWarning) {
         this.defaultOverwriteConfirmDialog = this.modalService.open(content, {
@@ -430,20 +434,19 @@ export class AdminKycTierDetailsComponent implements OnInit, OnDestroy {
   private saveTier(tier: KycTier): void {
     this.errorMessage = '';
     this.saveInProgress = true;
-    alert('Yahoo!');
-    // const requestData$ = this.adminService.saveKycSettings(tier, this.createNew);
-    // this.subscriptions.add(
-    //   requestData$.subscribe(({ data }) => {
-    //     this.saveInProgress = false;
-    //     this.save.emit();
-    //   }, (error) => {
-    //     this.saveInProgress = false;
-    //     this.errorMessage = error;
-    //     if (this.auth.token === '') {
-    //       this.router.navigateByUrl('/');
-    //     }
-    //   })
-    // );
+    const requestData$ = this.adminService.saveKycTierSettings(tier, this.createNew);
+    this.subscriptions.add(
+      requestData$.subscribe(({ data }) => {
+        this.saveInProgress = false;
+        this.save.emit();
+      }, (error) => {
+        this.saveInProgress = false;
+        this.errorMessage = error;
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
+      })
+    );
   }
 
   deleteTierConfirmed(id: string): void {

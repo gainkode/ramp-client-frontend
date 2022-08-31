@@ -672,7 +672,7 @@ export type Mutation = {
   addSettingsKyc: SettingsKyc;
   updateSettingsKyc: SettingsKyc;
   deleteSettingsKyc: SettingsKyc;
-  addSettingsKycTier: SettingsKycTier;
+  addSettingsKycTier: Scalars['Boolean'];
   updateSettingsKycTier: SettingsKycTier;
   deleteSettingsKycTier: SettingsKycTier;
   addWireTransferBankAccount: WireTransferBankAccount;
@@ -2670,11 +2670,11 @@ export type SettingsKycTierInput = {
   description?: Maybe<Scalars['String']>;
   amount?: Maybe<Scalars['Float']>;
   targetKycProviders?: Maybe<Array<KycProvider>>;
-  targetUserType: UserType;
+  targetUserType?: Maybe<UserType>;
   targetUserModes?: Maybe<Array<UserMode>>;
   targetFilterType?: Maybe<SettingsKycTargetFilterType>;
   targetFilterValues?: Maybe<Array<Scalars['String']>>;
-  levelId: Scalars['String'];
+  levelId?: Maybe<Scalars['String']>;
   requireUserFullName?: Maybe<Scalars['Boolean']>;
   requireUserPhone?: Maybe<Scalars['Boolean']>;
   requireUserBirthday?: Maybe<Scalars['Boolean']>;

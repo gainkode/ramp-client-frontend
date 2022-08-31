@@ -1311,6 +1311,46 @@ const ADD_SETTINGS_KYC = gql`
   }
 `;
 
+const ADD_SETTINGS_KYC_TIER = gql`
+  mutation AddSettingsKycTier(
+    $name: String!
+    $description: String
+    $amount: Float
+    $default: Boolean
+    $targetKycProviders: [KycProvider!]
+    $targetUserType: UserType!
+    $targetUserModes: [UserMode!]
+    $targetFilterType: SettingsKycTargetFilterType!
+    $targetFilterValues: [String!]
+    $levelId: String!
+    $requireUserFullName: Boolean
+    $requireUserPhone: Boolean
+    $requireUserBirthday: Boolean
+    $requireUserAddress: Boolean
+    $requireUserFlatNumber: Boolean
+  ) {
+    addSettingsKycTier(
+      settings: {
+        name: $name
+        description: $description
+        amount: $amount
+        default: $default
+        targetKycProviders: $targetKycProviders
+        targetUserType: $targetUserType
+        targetUserModes: $targetUserModes
+        targetFilterType: $targetFilterType
+        targetFilterValues: $targetFilterValues
+        requireUserFullName: $requireUserFullName
+        requireUserPhone: $requireUserPhone
+        requireUserBirthday: $requireUserBirthday
+        requireUserAddress: $requireUserAddress
+        requireUserFlatNumber: $requireUserFlatNumber
+        levelId: $levelId
+      }
+    )
+  }
+`;
+
 const ADD_KYC_LEVEL_SETTINGS = gql`
   mutation AddSettingsKycLevel(
     $name: String!
@@ -2034,6 +2074,50 @@ const UPDATE_SETTINGS_KYC = gql`
       }
     ) {
       settingsKycId
+    }
+  }
+`;
+
+const UPDATE_SETTINGS_KYC_TIER = gql`
+  mutation UpdateSettingsKycTier(
+    $settingsId: ID!
+    $name: String!
+    $description: String
+    $amount: Float
+    $default: Boolean
+    $targetKycProviders: [KycProvider!]
+    $targetUserType: UserType!
+    $targetUserModes: [UserMode!]
+    $targetFilterType: SettingsKycTargetFilterType!
+    $targetFilterValues: [String!]
+    $requireUserFullName: Boolean
+    $requireUserPhone: Boolean
+    $requireUserBirthday: Boolean
+    $requireUserAddress: Boolean
+    $requireUserFlatNumber: Boolean
+    $levelId: String
+  ) {
+    updateSettingsKycTier(
+      settingsId: $settingsId
+      settings: {
+        name: $name
+        description: $description
+        amount: $amount
+        default: $default
+        targetKycProviders: $targetKycProviders
+        targetUserType: $targetUserType
+        targetUserModes: $targetUserModes
+        targetFilterType: $targetFilterType
+        targetFilterValues: $targetFilterValues
+        requireUserFullName: $requireUserFullName
+        requireUserPhone: $requireUserPhone
+        requireUserBirthday: $requireUserBirthday
+        requireUserAddress: $requireUserAddress
+        requireUserFlatNumber: $requireUserFlatNumber
+        levelId: $levelId
+      }
+    ) {
+      name
     }
   }
 `;
@@ -3004,6 +3088,51 @@ export class AdminDataService {
           requireUserAddress: settings.requireUserAddress,
           requireUserFlatNumber: settings.requireUserFlatNumber,
           levelIds: [settings.levelId]
+        }
+      });
+  }
+
+  saveKycTierSettings(settings: KycTier, create: boolean): Observable<any> {
+    return create
+      ? this.apollo.mutate({
+        mutation: ADD_SETTINGS_KYC_TIER,
+        variables: {
+          name: settings.name,
+          description: settings.description,
+          amount: settings.amount,
+          default: settings.isDefault,
+          targetFilterType: settings.target,
+          targetFilterValues: settings.targetValues,
+          targetKycProviders: settings.kycProviders,
+          targetUserType: settings.userType,
+          targetUserModes: settings.userModes,
+          requireUserFullName: settings.requireUserFullName,
+          requireUserPhone: settings.requireUserPhone,
+          requireUserBirthday: settings.requireUserBirthday,
+          requireUserAddress: settings.requireUserAddress,
+          requireUserFlatNumber: settings.requireUserFlatNumber,
+          levelId: settings.levelId
+        }
+      })
+      : this.apollo.mutate({
+        mutation: UPDATE_SETTINGS_KYC_TIER,
+        variables: {
+          settingsId: settings.id,
+          name: settings.name,
+          description: settings.description,
+          amount: settings.amount,
+          default: settings.isDefault,
+          targetFilterType: settings.target,
+          targetFilterValues: settings.targetValues,
+          targetKycProviders: settings.kycProviders,
+          targetUserType: settings.userType,
+          targetUserModes: settings.userModes,
+          requireUserFullName: settings.requireUserFullName,
+          requireUserPhone: settings.requireUserPhone,
+          requireUserBirthday: settings.requireUserBirthday,
+          requireUserAddress: settings.requireUserAddress,
+          requireUserFlatNumber: settings.requireUserFlatNumber,
+          levelId: settings.levelId
         }
       });
   }
