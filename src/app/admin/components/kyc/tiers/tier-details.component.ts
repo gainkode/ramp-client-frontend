@@ -13,6 +13,7 @@ import { KycProvider, SettingsKycTargetFilterType, UserMode, UserType } from 'sr
 import { KycTier } from 'src/app/model/identification.model';
 import { KycLevelView, KycProviderList, KycTargetFilterList, UserModeList, UserTypeList } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
+import { findExistingDefaultTier } from 'src/app/utils/utils';
 
 @Component({
   selector: 'app-admin-tier-details',
@@ -27,12 +28,14 @@ export class AdminKycTierDetailsComponent implements OnInit, OnDestroy {
     this.settingsId = (tier) ? tier?.id : '';
     this.createNew = (this.settingsId === '');
   }
+  @Input() tiers: KycTier[] = [];
 
   @Output() save = new EventEmitter();
   @Output() close = new EventEmitter();
 
   private subscriptions: Subscription = new Subscription();
   private removeDialog: NgbModalRef | undefined = undefined;
+  private defaultOverwriteConfirmDialog: NgbModalRef | undefined = undefined;
   private settingsId = '';
 
   TARGET_TYPE: typeof SettingsKycTargetFilterType = SettingsKycTargetFilterType;
@@ -145,8 +148,8 @@ export class AdminKycTierDetailsComponent implements OnInit, OnDestroy {
       }
       this.form.get('isDefault')?.setValue(tier?.isDefault);
       this.form.get('level')?.setValue(tier?.level?.settingsKycLevelId ?? undefined);
-      this.form.get('target')?.setValue(tier?.target);
       this.targetType = tier?.target ?? SettingsKycTargetFilterType.None;
+      this.form.get('target')?.setValue(this.targetType);
       this.setTargetValues(tier?.targetValues);
       this.form.get('userMode')?.setValue(tier.userModes);
       this.form.get('userType')?.setValue(tier?.userType);
@@ -391,10 +394,24 @@ export class AdminKycTierDetailsComponent implements OnInit, OnDestroy {
     );
   }
 
-  onSubmit(): void {
+  onSubmit(content: any): void {
     this.submitted = true;
     if (this.form.valid) {
-      this.saveTier(this.setTierData());
+      const tier = this.setTierData();
+      const showDefaultWarning = findExistingDefaultTier(this.tiers, tier);
+      if (showDefaultWarning) {
+        this.defaultOverwriteConfirmDialog = this.modalService.open(content, {
+          backdrop: 'static',
+          windowClass: 'modalCusSty',
+        });
+        this.subscriptions.add(
+          this.defaultOverwriteConfirmDialog.closed.subscribe(val => {
+            this.saveTier(tier);
+          })
+        );
+      } else {
+        this.saveTier(tier);
+      }
     }
   }
 
@@ -413,6 +430,7 @@ export class AdminKycTierDetailsComponent implements OnInit, OnDestroy {
   private saveTier(tier: KycTier): void {
     this.errorMessage = '';
     this.saveInProgress = true;
+    alert('Yahoo!');
     // const requestData$ = this.adminService.saveKycSettings(tier, this.createNew);
     // this.subscriptions.add(
     //   requestData$.subscribe(({ data }) => {
@@ -431,7 +449,7 @@ export class AdminKycTierDetailsComponent implements OnInit, OnDestroy {
   deleteTierConfirmed(id: string): void {
     this.errorMessage = '';
     this.saveInProgress = true;
-    const requestData$ = this.adminService.deleteKycSettings(id);
+    const requestData$ = this.adminService.deleteKycTierSettings(id);
     this.subscriptions.add(
       requestData$.subscribe(({ data }) => {
         this.saveInProgress = false;

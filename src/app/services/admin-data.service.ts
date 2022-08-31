@@ -2096,6 +2096,14 @@ const DELETE_SETTINGS_KYC = gql`
   }
 `;
 
+const DELETE_SETTINGS_KYC_TIER = gql`
+  mutation DeleteSettingsKycTier($settingsId: ID!) {
+    deleteSettingsKyc(settingsId: $settingsId) {
+      settingsKycTierId
+    }
+  }
+`;
+
 const DELETE_KYC_LEVEL_SETTINGS = gql`
   mutation DeleteSettingsKycLevel($settingsId: ID!) {
     deleteSettingsKycLevel(settingsId: $settingsId) {
@@ -3197,6 +3205,15 @@ export class AdminDataService {
   deleteKycSettings(settingsId: string): Observable<any> {
     return this.apollo.mutate({
       mutation: DELETE_SETTINGS_KYC,
+      variables: {
+        settingsId
+      }
+    });
+  }
+
+  deleteKycTierSettings(settingsId: string): Observable<any> {
+    return this.apollo.mutate({
+      mutation: DELETE_SETTINGS_KYC_TIER,
       variables: {
         settingsId
       }

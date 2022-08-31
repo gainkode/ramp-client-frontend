@@ -1,5 +1,5 @@
-import { environment } from "src/environments/environment";
 import { User, UserType } from "../model/generated-models";
+import { KycTier } from "../model/identification.model";
 import { PaymentWidgetType } from "../model/payment-base.model";
 import { PaymentProviderView } from "../model/payment.model";
 import { EnvService } from "../services/env.service";
@@ -173,6 +173,28 @@ export function isSumsubVerificationComplete(payload: any): boolean {
                     return true;
                 }
             }
+        }
+    }
+    return false;
+}
+
+export function findExistingDefaultTier(tiers: KycTier[], tier: KycTier): boolean {
+    if (tier.isDefault) {
+        const found = tiers.find(x => {
+            const valid = x.isDefault && x.userType === tier.userType && x.id !== tier.id;
+            if (valid) {
+                let found = (tier.kycProviders.length > 0);
+                tier.kycProviders.forEach(p => {
+                    if (found && !x.kycProviders.includes(p)) {
+                        found = false;
+                    }
+                });
+                return found && tier.kycProviders.length === x.kycProviders.length;
+            }
+            return false;
+        });
+        if (found) {
+            return true;
         }
     }
     return false;

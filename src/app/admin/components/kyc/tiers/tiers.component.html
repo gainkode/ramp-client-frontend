@@ -126,7 +126,7 @@
               </button>
             </div>
             <div class="modal-body">
-              <app-admin-tier-details [permission]="permission" [currentTier]="selectedTier"
+              <app-admin-tier-details [permission]="permission" [currentTier]="selectedTier" [tiers]="tiers"
                 (save)="modal.close('OK')" (close)="modal.dismiss('Close')">
               </app-admin-tier-details>
             </div>
