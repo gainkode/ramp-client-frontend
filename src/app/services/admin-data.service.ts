@@ -2116,9 +2116,7 @@ const UPDATE_SETTINGS_KYC_TIER = gql`
         requireUserFlatNumber: $requireUserFlatNumber
         levelId: $levelId
       }
-    ) {
-      name
-    }
+    )
   }
 `;
 

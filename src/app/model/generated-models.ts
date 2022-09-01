@@ -673,7 +673,7 @@ export type Mutation = {
   updateSettingsKyc: SettingsKyc;
   deleteSettingsKyc: SettingsKyc;
   addSettingsKycTier: Scalars['Boolean'];
-  updateSettingsKycTier: SettingsKycTier;
+  updateSettingsKycTier: Scalars['Boolean'];
   deleteSettingsKycTier: SettingsKycTier;
   addWireTransferBankAccount: WireTransferBankAccount;
   updateWireTransferBankAccount: WireTransferBankAccount;
