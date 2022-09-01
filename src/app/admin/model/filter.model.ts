@@ -64,10 +64,6 @@ export class Filter {
       this.users = filterValues.users;
     }
 
-    if (filterValues.users) {
-      this.users = filterValues.users;
-    }
-
     if (filterValues.transactionDate) {
       const dtNum = Date.parse(filterValues.transactionDate);
       this.transactionDate = isNaN(dtNum) ? undefined : new Date(dtNum);

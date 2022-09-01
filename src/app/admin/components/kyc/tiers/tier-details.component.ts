@@ -399,9 +399,6 @@ export class AdminKycTierDetailsComponent implements OnInit, OnDestroy {
     this.submitted = true;
     if (this.form.valid) {
       const tier = this.setTierData();
-
-      console.log(tier);
-
       const showDefaultWarning = findExistingDefaultTier(this.tiers, tier);
       if (showDefaultWarning) {
         this.defaultOverwriteConfirmDialog = this.modalService.open(content, {

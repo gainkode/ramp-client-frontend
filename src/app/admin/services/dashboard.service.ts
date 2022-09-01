@@ -35,11 +35,7 @@ export class DashboardService implements OnDestroy {
     accountTypesOnly: []
   });
 
-  constructor(
-    private adminDataService: AdminDataService
-  ) {
-    //this.load();
-  }
+  constructor(private adminDataService: AdminDataService) { }
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();

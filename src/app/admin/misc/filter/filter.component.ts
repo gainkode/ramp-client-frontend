@@ -287,6 +287,11 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
       controlsConfig.verifyWhenPaid = [false];
     }
     this.filterForm = this.formBuilder.group(controlsConfig);
+
+    if (this.filterData?.createdDateInterval) {
+      this.filterForm.controls.createdDateRangeStart.setValue(this.filterData?.createdDateInterval.from as Date);
+      this.filterForm.controls.createdDateRangeEnd.setValue(this.filterData?.createdDateInterval.to as Date);
+    }
   }
 
   resetFilters(): void {

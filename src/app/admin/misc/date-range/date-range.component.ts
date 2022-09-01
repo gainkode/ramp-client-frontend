@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, SkipSelf } from '@angular/core';
-import { AbstractControl, ControlContainer, FormBuilder, Validators } from '@angular/forms';
+import { Component, Input, OnInit, SkipSelf } from '@angular/core';
+import { AbstractControl, ControlContainer } from '@angular/forms';
 import { NgbCalendar, NgbDate, NgbDateAdapter, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import { getFormattedUtcDate } from 'src/app/utils/utils';
 import { DateFormatAdapter } from './date-format.adapter';
@@ -19,7 +19,7 @@ import { DateParserFormatter } from './date.formatter';
     deps: [[new SkipSelf(), ControlContainer]]
   }]
 })
-export class AdminDateRangeComponent {
+export class AdminDateRangeComponent implements OnInit {
   @Input() startField: AbstractControl | null = null;
   @Input() endField: AbstractControl | null = null;
 
@@ -30,6 +30,17 @@ export class AdminDateRangeComponent {
   constructor(
     private calendar: NgbCalendar,
     public formatter: NgbDateParserFormatter) { }
+
+  ngOnInit(): void {
+    if (this.startField && this.endField) {
+      if (this.startField.value && this.endField.value) {
+        const d1: Date = this.startField.value;
+        const d2: Date = this.endField.value;
+        this.fromDate = new NgbDate(d1.getFullYear(), d1.getMonth() + 1, d1.getDate());
+        this.toDate = new NgbDate(d2.getFullYear(), d2.getMonth() + 1, d2.getDate());
+      }
+    }
+  }
 
   onDateSelection(date: NgbDate) {
     if (!this.fromDate && !this.toDate) {
