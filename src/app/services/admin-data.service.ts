@@ -2180,7 +2180,7 @@ const DELETE_SETTINGS_KYC = gql`
 
 const DELETE_SETTINGS_KYC_TIER = gql`
   mutation DeleteSettingsKycTier($settingsId: ID!) {
-    deleteSettingsKyc(settingsId: $settingsId) {
+    deleteSettingsKycTier(settingsId: $settingsId) {
       settingsKycTierId
     }
   }
