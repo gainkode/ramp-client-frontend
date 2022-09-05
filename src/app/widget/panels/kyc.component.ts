@@ -1,7 +1,7 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { SettingsKycShort, SettingsKycTierShortExListResult, TransactionSource, TransactionType } from 'src/app/model/generated-models';
+import { KycProvider, SettingsKycShort, SettingsKycTierShortExListResult, TransactionSource, TransactionType } from 'src/app/model/generated-models';
 import { KycLevelShort } from 'src/app/model/identification.model';
 import { CheckoutSummary } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
@@ -116,7 +116,11 @@ export class WidgetKycComponent implements OnInit, OnDestroy, AfterViewInit {
         const limit = this.summary?.quoteLimit ?? 0;
         const overLimit = amount - limit;
         const tiersData$ = this.dataService.getAppropriateSettingsKycTiers(
-          overLimit, currency, TransactionSource.Widget, '').valueChanges.pipe(take(1));
+          overLimit,
+          currency,
+          TransactionSource.Widget,
+          this.auth.user?.kycProvider as KycProvider ?? KycProvider.SumSub,
+          '').valueChanges.pipe(take(1));
         this.pSubscriptions.add(
           tiersData$.subscribe(({ data }) => {
             const tiers = data.getAppropriateSettingsKycTiers as SettingsKycTierShortExListResult;

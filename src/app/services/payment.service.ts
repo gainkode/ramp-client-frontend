@@ -479,12 +479,13 @@ export class PaymentDataService {
     amountVal: number,
     currencyVal: string,
     sourceVal: TransactionSource,
+    kycProvider: KycProvider,
     widgetId: string): QueryRef<any, EmptyObject> {
     const widget = (widgetId !== '') ? widgetId : undefined;
     const vars = {
       amount: amountVal,
       currency: currencyVal,
-      targetKycProvider: KycProvider.SumSub,
+      targetKycProvider: kycProvider,
       source: sourceVal,
       widgetId: widget
     };

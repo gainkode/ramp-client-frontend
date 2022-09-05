@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Subscription } from "rxjs";
 import { take } from "rxjs/operators";
-import { LoginResult, PaymentInstrument, PaymentProviderByInstrument, SettingsCurrencyWithDefaults, SettingsFeeShort, SettingsKycTierShortExListResult, TransactionSource, TransactionType, User, WireTransferBankAccountShort } from "../model/generated-models";
+import { KycProvider, LoginResult, PaymentInstrument, PaymentProviderByInstrument, SettingsCurrencyWithDefaults, SettingsFeeShort, SettingsKycTierShortExListResult, TransactionSource, TransactionType, User, WireTransferBankAccountShort } from "../model/generated-models";
 import { WidgetSettings, WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from "../model/payment-base.model";
 import { CheckoutSummary, PaymentProviderInstrumentView, WireTransferPaymentCategoryList } from "../model/payment.model";
 import { AuthService } from "./auth.service";
@@ -261,12 +261,15 @@ export class WidgetService {
         const limit = summary.quoteLimit ?? 0;
         const overLimit = amount - limit;
         const tiersData$ = this.paymentService.getAppropriateSettingsKycTiers(
-            overLimit, currency, TransactionSource.Widget, widget.widgetId).valueChanges.pipe(take(1));
+            overLimit,
+            currency,
+            TransactionSource.Widget,
+            this.auth.user?.kycProvider as KycProvider ?? KycProvider.SumSub,
+            widget.widgetId).valueChanges.pipe(take(1));
         this.pSubscriptions.add(
             tiersData$.subscribe(({ data }) => {
                 const tierData = this.getCurrentTierLevelName(data.getAppropriateSettingsKycTiers as SettingsKycTierShortExListResult);
                 this.getKycStatus(summary, widget, tierData);
-
             }, (error) => {
                 if (this.onProgressChanged) {
                     this.onProgressChanged(false);
