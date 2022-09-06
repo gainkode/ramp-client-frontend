@@ -292,6 +292,10 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
       this.filterForm.controls.createdDateRangeStart.setValue(this.filterData?.createdDateInterval.from as Date);
       this.filterForm.controls.createdDateRangeEnd.setValue(this.filterData?.createdDateInterval.to as Date);
     }
+    if (this.filterData?.completedDateInterval) {
+      this.filterForm.controls.completedDateRangeStart.setValue(this.filterData?.completedDateInterval.from as Date);
+      this.filterForm.controls.completedDateRangeEnd.setValue(this.filterData?.completedDateInterval.to as Date);
+    }
   }
 
   resetFilters(): void {

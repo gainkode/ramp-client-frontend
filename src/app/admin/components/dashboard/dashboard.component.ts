@@ -37,7 +37,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     const fromDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1, 0, 0, 0, 0);
     const toDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0, 23, 59, 59, 999);
     this.defaultFilter = {
-      createdDateInterval: {
+      completedDateInterval: {
         from: fromDate,
         to: toDate
       } as DateTimeInterval
