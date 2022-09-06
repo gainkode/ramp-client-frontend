@@ -73,7 +73,7 @@ export class AdminKycTierDetailsComponent implements OnInit, OnDestroy {
     level: ['', { validators: [Validators.required], updateOn: 'change' }],
     userMode: [[], { validators: [Validators.required], updateOn: 'change' }],
     userType: ['', { validators: [Validators.required], updateOn: 'change' }],
-    provider: [[], { validators: [Validators.required], updateOn: 'change' }],
+    provider: [undefined, { validators: [Validators.required], updateOn: 'change' }],
     requireUserFullName: [false],
     requireUserPhone: [false],
     requireUserBirthday: [false],
@@ -153,7 +153,9 @@ export class AdminKycTierDetailsComponent implements OnInit, OnDestroy {
       this.setTargetValues(tier?.targetValues);
       this.form.get('userMode')?.setValue(tier.userModes);
       this.form.get('userType')?.setValue(tier?.userType);
-      this.form.get('provider')?.setValue(tier?.kycProviders);
+      if (tier?.kycProviders.length > 0) {
+        this.form.get('provider')?.setValue(tier?.kycProviders[0]);
+      }
       this.form.get('requireUserFullName')?.setValue(tier?.requireUserFullName);
       this.form.get('requireUserPhone')?.setValue(tier?.requireUserPhone);
       this.form.get('requireUserBirthday')?.setValue(tier?.requireUserBirthday);
@@ -174,7 +176,7 @@ export class AdminKycTierDetailsComponent implements OnInit, OnDestroy {
       this.form.get('targetValues')?.setValue([]);
       this.form.get('userMode')?.setValue([]);
       this.form.get('userType')?.setValue('');
-      this.form.get('provider')?.setValue([]);
+      this.form.get('provider')?.setValue(undefined);
       this.form.get('requireUserFullName')?.setValue(false);
       this.form.get('requireUserPhone')?.setValue(false);
       this.form.get('requireUserBirthday')?.setValue(false);
@@ -199,7 +201,7 @@ export class AdminKycTierDetailsComponent implements OnInit, OnDestroy {
     data.userType = this.form.get('userType')?.value;
     data.levelId = this.form.get('level')?.value;
     (this.form.get('userMode')?.value as UserMode[]).forEach(x => data.userModes.push(x));
-    (this.form.get('provider')?.value as KycProvider[]).forEach(x => data.kycProviders.push(x));
+    data.kycProviders = [this.form.get('provider')?.value];
     data.requireUserFullName = this.form.get('requireUserFullName')?.value;
     data.requireUserPhone = this.form.get('requireUserPhone')?.value;
     data.requireUserBirthday = this.form.get('requireUserBirthday')?.value;

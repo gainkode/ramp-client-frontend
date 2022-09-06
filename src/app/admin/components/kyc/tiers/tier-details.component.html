@@ -141,8 +141,8 @@
             KYC providers
             <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
           </label>
-          <ng-select [items]="kycProviders" bindLabel="name" bindValue="id" formControlName="provider" [clearable]=true
-            [clearOnBackspace]=true [multiple]="true" [closeOnSelect]="false">
+          <ng-select [items]="kycProviders" bindLabel="name" bindValue="id" formControlName="provider" [clearable]=false
+            [clearOnBackspace]=false [multiple]=false [closeOnSelect]=false>
           </ng-select>
           <div *ngIf="(form.controls.provider.touched || submitted) && (form.controls.provider.errors?.['required'])"
             class="tx-danger">
