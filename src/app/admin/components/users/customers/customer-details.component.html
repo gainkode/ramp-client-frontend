@@ -94,8 +94,8 @@
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             Gender
           </label>
-          <ng-select [items]="genders" bindLabel="name" bindValue="id" formControlName="gender"
-            [clearable]=false [clearOnBackspace]=false>
+          <ng-select [items]="genders" bindLabel="name" bindValue="id" formControlName="gender" [clearable]=false
+            [clearOnBackspace]=false>
           </ng-select>
         </div>
         <!-- Birthday -->
@@ -324,10 +324,11 @@
             KYC Provider
             <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
           </label>
-          <ng-select [items]="kycProviders" bindLabel="name" bindValue="id" formControlName="kycProvider" [clearable]=false
-            [clearOnBackspace]=false required>
+          <ng-select [items]="kycProviders" bindLabel="name" bindValue="id" formControlName="kycProvider"
+            [clearable]=false [clearOnBackspace]=false required>
           </ng-select>
-          <div *ngIf="(dataForm.controls.kycProvider.touched || submitted) && (dataForm.controls.kycProvider.errors?.['required'])"
+          <div
+            *ngIf="(dataForm.controls.kycProvider.touched || submitted) && (dataForm.controls.kycProvider.errors?.['required'])"
             class="tx-danger">
             <small>
               Please specify the user KYC provider
@@ -365,8 +366,18 @@
         <app-admin-details-item label="DocsCheck Update Required" [value]="userData?.kycStatusUpdateRequired">
         </app-admin-details-item>
         <app-admin-details-item label="Provided documents" [value]="kycDocs"></app-admin-details-item>
-        <app-admin-details-item label="KYC Details" [value]="kycProviderLink" [linkUrl]="kycProviderLink">
+
+        <app-admin-details-item *ngIf="userData?.kycProvider!==KYC_PROVIDER.Shufti" label="KYC Details"
+          [value]="kycProviderLink" [linkUrl]="kycProviderLink">
         </app-admin-details-item>
+        <div *ngIf="userData?.kycProvider===KYC_PROVIDER.Shufti" class="form-group">
+          <button class="btn btn-primary pd-x-30 me-2 mg-t-5" type="button" (click)="onKycProviderLink()">
+            <span *ngIf="kycProviderLinkInProgress" class="spinner-border spinner-border-sm" role="status"
+              aria-hidden="true"></span>
+            KYC Verification
+          </button>
+        </div>
+
         <app-admin-details-item label="Last updated" [value]="userData?.updated"></app-admin-details-item>
       </div>
 
@@ -384,7 +395,8 @@
         </button>
         <div style="display: flex; justify-content: flex-end;">
           <button *ngIf="permission>1" class="btn btn-primary pd-x-30 me-2 mg-t-5">
-            <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
+              aria-hidden="true"></span>
             Save
           </button>
           <button class="btn btn-outline-primary pd-x-30 mg-t-5" type="button" (click)="onClose()">

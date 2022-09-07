@@ -159,7 +159,11 @@ export class UserItem {
       this.town = data.town ?? '';
       this.postCode = data.postCode ?? '';
       this.stateName = data.stateName ?? '';
-      this.address = this.getAddress(data);
+      if (data.addressLine) {
+        this.address = data.addressLine;
+      } else {
+        this.address = this.getAddress(data);
+      }
       const datepipe: DatePipe = new DatePipe('en-US');
       this.created = datepipe.transform(data.created, 'dd MMM YYYY HH:mm:ss') ?? '';
       this.updated = datepipe.transform(data.updated, 'dd MMM YYYY HH:mm:ss') ?? '';

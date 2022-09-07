@@ -1652,6 +1652,8 @@ export type Query = {
   getAppropriateSettingsCostFull?: Maybe<SettingsCost>;
   /** API token generation */
   getWireTransferBankAccounts?: Maybe<WireTransferBankAccountListResult>;
+  /** API getVerificationLink for shuftiProvider */
+  getVerificationLink: Scalars['String'];
   /** API token generation */
   generateWebApiToken: Scalars['String'];
   me: User;
@@ -1930,6 +1932,11 @@ export type QueryGetWireTransferBankAccountsArgs = {
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
   orderBy?: Maybe<Array<OrderBy>>;
+};
+
+
+export type QueryGetVerificationLinkArgs = {
+  userId?: Maybe<Scalars['String']>;
 };
 
 

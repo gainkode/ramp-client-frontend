@@ -7,7 +7,7 @@ import { NotificationService } from '../../services/notification.service';
 
 @Component({
     selector: 'app-shufti-panel',
-    styleUrls: ['shufti-panel.component.scss'],
+    styleUrls: ['kyc-panel.component.scss'],
     templateUrl: 'shufti-panel.component.html'
 })
 export class ShuftiPanelComponent implements OnInit, OnDestroy {
@@ -15,9 +15,9 @@ export class ShuftiPanelComponent implements OnInit, OnDestroy {
     @Input() completedWhenVerified: boolean = false;
     @Output() completed = new EventEmitter();
     @Output() onError = new EventEmitter<string>();
-    
+
     private pSubscriptions: Subscription = new Subscription();
-    
+
     constructor(
         public dialog: MatDialog,
         private auth: AuthService,
@@ -41,8 +41,10 @@ export class ShuftiPanelComponent implements OnInit, OnDestroy {
                 ({ data }) => {
                     const subscriptionData = data.kycCompletedNotification;
                     console.log('Shufti completed', subscriptionData);
-                    if (this.completedWhenVerified) {
-                        this.completed.emit();
+                    if (subscriptionData.kycValid === true) {
+                        if (this.completedWhenVerified) {
+                            this.completed.emit();
+                        }
                     }
                 },
                 (error) => {

@@ -768,6 +768,7 @@ const GET_USERS = gql`
         buildingName
         buildingNumber
         flatNumber
+        addressLine
         referralCode
         widgetId
         widgetCode
@@ -861,6 +862,7 @@ const GET_USERS_EX = gql`
         buildingName
         buildingNumber
         flatNumber
+        addressLine
         kycProvider
         referralCode
         roles {
@@ -966,6 +968,16 @@ const GET_USER_STATE = gql`
       }
     }
   }
+`;
+
+const GET_VERIFICATION_LINK = gql`
+query GetVerificationLink(
+  $userId: String
+) {
+  getVerificationLink(
+    userId: $userId
+  )
+}
 `;
 
 const GET_WALLETS = gql`
@@ -2726,6 +2738,16 @@ export class AdminDataService {
       }
       return undefined;
     }));
+  }
+
+  getVerificationLink(id: string): QueryRef<any, EmptyObject> {
+    return this.apollo.watchQuery<any>({
+      query: GET_VERIFICATION_LINK,
+      variables: {
+        userId: id
+      },
+      fetchPolicy: 'network-only'
+  });
   }
 
   getWallets(

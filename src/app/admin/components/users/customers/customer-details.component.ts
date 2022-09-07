@@ -14,6 +14,7 @@ import { CurrencyView, KycProviderList, RiskLevelViewList, UserStatusList } from
 import { GenderList, UserItem } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { getFormattedUtcDate } from 'src/app/utils/utils';
+import { ErrorService } from 'src/app/services/error.service';
 
 @Component({
   selector: 'app-admin-customer-details',
@@ -43,8 +44,10 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
   submitted = false;
   saveInProgress = false;
   disableInProgress = false;
+  kycProviderLinkInProgress = false;
   errorMessage = '';
   USER_TYPE: typeof UserType = UserType;
+  KYC_PROVIDER: typeof KycProvider = KycProvider;
   userData: UserItem | null | undefined = undefined;
   countries = Countries;
   fiatCurrencies: CurrencyView[] = [];
@@ -99,6 +102,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
     private formBuilder: FormBuilder,
     private router: Router,
     private auth: AuthService,
+    private errorHandler: ErrorService,
     private modalService: NgbModal,
     private adminService: AdminDataService) { }
 
@@ -256,6 +260,33 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
 
   getCountryFlag(code: string): string {
     return `${code.toLowerCase()}.svg`;
+  }
+
+  onKycProviderLink(): void {
+    this.kycProviderLinkInProgress = true;
+    this.subscriptions.add(
+      this.adminService.getVerificationLink(this.userData?.id ?? '').valueChanges.subscribe(({ data }) => {
+        this.kycProviderLinkInProgress = false;
+        console.log('provider link', data);
+        if (data) {
+          if (data.getVerificationLink) {
+            this.router.navigate([]).then((result) => {
+              window.open(data.getVerificationLink, '_blank');
+            });
+          }
+        }
+      }, (error) => {
+        this.kycProviderLinkInProgress = false;
+        if (error) {
+          this.errorMessage = error;
+        } else {
+          this.errorMessage = this.errorHandler.getCurrentErrorMessage();
+        }
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
+      })
+    );
   }
 
   onSubmit(): void {

@@ -287,10 +287,6 @@ export class WidgetService {
         if ((tiersData.count ?? 0 > 0) && tiersData.list) {
             const currentTierId = this.auth.user?.kycTierId;
             const newTier = tiersData.list[0];
-
-            console.log(tiersData);
-            console.log(newTier.settingsKycTierId, currentTierId);
-
             if (newTier.settingsKycTierId !== currentTierId) {
                 result.levelName = newTier?.originalLevelName ?? null;
                 result.required = (result.levelName !== null);
@@ -311,9 +307,6 @@ export class WidgetService {
             kycStatusData$.subscribe(({ data }) => {
                 const userKyc = data.me as User;
                 const kycData = this.isKycRequired(userKyc, tierData);
-
-                console.log('isKycRequired', kycData);
-
                 if (this.onProgressChanged) {
                     this.onProgressChanged(false);
                 }
