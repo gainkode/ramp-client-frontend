@@ -85,7 +85,7 @@ export class DashboardService implements OnDestroy {
           },
           {
             key: 'ratio',
-            label: 'Success Rate',
+            label: 'Success Rate, %',
             type: 'percent'
           }
         ],
@@ -217,7 +217,7 @@ export class DashboardService implements OnDestroy {
           },
           {
             key: 'ratio',
-            label: 'Success Rate',
+            label: 'Success Rate, %',
             type: 'percent'
           }
         ],
@@ -277,7 +277,7 @@ export class DashboardService implements OnDestroy {
           },
           {
             key: 'ratio',
-            label: 'Success Rate',
+            label: 'Success Rate, %',
             type: 'percent'
           }
         ],
@@ -337,7 +337,7 @@ export class DashboardService implements OnDestroy {
           },
           {
             key: 'ratio',
-            label: 'Success Rate',
+            label: 'Success Rate, %',
             type: 'percent'
           }
         ],
@@ -409,7 +409,7 @@ export class DashboardService implements OnDestroy {
           },
           {
             key: 'ratio',
-            label: 'Success Rate',
+            label: 'Success Rate, %',
             type: 'percent'
           }
         ],
@@ -481,7 +481,7 @@ export class DashboardService implements OnDestroy {
           },
           {
             key: 'ratio',
-            label: 'Success Rate',
+            label: 'Success Rate, %',
             type: 'percent'
           }
         ],
@@ -541,7 +541,7 @@ export class DashboardService implements OnDestroy {
           },
           {
             key: 'ratio',
-            label: 'Success Rate',
+            label: 'Success Rate, %',
             type: 'percent'
           }
         ],
