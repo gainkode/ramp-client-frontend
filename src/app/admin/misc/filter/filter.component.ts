@@ -9,7 +9,7 @@ import { AdminDataService } from 'src/app/services/admin-data.service';
 import { CommonTargetValue } from 'src/app/model/common.model';
 import { Countries } from 'src/app/model/country-code.model';
 import { SettingsKycTier } from 'src/app/model/generated-models';
-import { CurrencyView, KycStatusList, PaymentInstrumentList, RiskLevelViewList, TransactionSourceList, TransactionStatusList, TransactionTypeList, UserModeList, UserStatusList, UserTypeList } from 'src/app/model/payment.model';
+import { CurrencyView, KycStatusList, PaymentInstrumentList, RiskLevelViewList, TransactionKycStatusList, TransactionSourceList, TransactionStatusList, TransactionTypeList, UserModeList, UserStatusList, UserTypeList } from 'src/app/model/payment.model';
 import { AdminDateRangeComponent } from '../date-range/date-range.component';
 
 @Component({
@@ -41,6 +41,7 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
   transactionTypeOptions = TransactionTypeList;
   transactionStatusOptions = TransactionStatusList;
   kysStatusOptions = KycStatusList;
+  transactionKysStatusOptions = TransactionKycStatusList;
   countryOptions = Countries;
   riskAlertOptions = RiskAlertCodeList;
   filterForm?: FormGroup;
@@ -268,6 +269,9 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
     if (this.fields.includes('kycStatus')) {
       controlsConfig.kycStatuses = [[]];
     }
+    if (this.fields.includes('transactionKycStatus')) {
+      controlsConfig.transactionKycStatuses = [[]];
+    }
     if (this.fields.includes('paymentInstrument')) {
       controlsConfig.paymentInstruments = [[]];
     }
@@ -371,6 +375,9 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
       }
       if (this.fields.includes('kycStatus')) {
         this.filterForm.controls.kycStatuses.setValue([]);
+      }
+      if (this.fields.includes('transactionKycStatus')) {
+        this.filterForm.controls.transactionKycStatuses.setValue([]);
       }
       if (this.fields.includes('paymentInstrument')) {
         this.filterForm.controls.paymentInstruments.setValue([]);

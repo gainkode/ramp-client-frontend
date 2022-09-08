@@ -67,11 +67,12 @@ const GET_DASHBOARD_STATS = gql`
   query GetDashboardStats(
     $createdDateInterval: DateTimeInterval
     $completedDateInterval: DateTimeInterval
-    $userIdOnly: [String!],
-    $widgetIdOnly: [String!],
-    $sourcesOnly: [TransactionSource!],
-    $countriesOnly: [String!],
-    $countryCodeType: CountryCodeType,
+    $kycStatusChangeDateInterval: DateTimeInterval
+    $userIdOnly: [String!]
+    $widgetIdOnly: [String!]
+    $sourcesOnly: [TransactionSource!]
+    $countriesOnly: [String!]
+    $countryCodeType: CountryCodeType
     $accountTypesOnly: [UserType!]
   ) {
     getDashboardStats(
@@ -545,6 +546,7 @@ const GET_TRANSACTIONS = gql`
     $userTierLevelsOnly: [String!]
     $riskLevelsOnly: [String!]
     $paymentInstrumentsOnly: [PaymentInstrument!]
+    $kycStatusesOnly: [TransactionKycStatus!]
     $createdDateInterval: DateTimeInterval
     $completedDateInterval: DateTimeInterval
     $walletAddressOnly: String
@@ -568,6 +570,7 @@ const GET_TRANSACTIONS = gql`
       userTierLevelsOnly: $userTierLevelsOnly
       riskLevelsOnly: $riskLevelsOnly
       paymentInstrumentsOnly: $paymentInstrumentsOnly
+      kycStatusesOnly: $kycStatusesOnly
       createdDateInterval: $createdDateInterval
       completedDateInterval: $completedDateInterval
       walletAddressOnly: $walletAddressOnly
@@ -2519,6 +2522,7 @@ export class AdminDataService {
       sourcesOnly: filter?.sources,
       userIdsOnly: filter?.users,
       widgetIdsOnly: widgetIds,
+      kycStatusesOnly: filter?.transactionKycStatuses,
       transactionTypesOnly: filter?.transactionTypes,
       transactionStatusesOnly: filter?.transactionStatuses,
       userTierLevelsOnly: filter?.tiers,

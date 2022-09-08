@@ -81,6 +81,16 @@
                                                 placeholder="Select user verification statuses">
                                             </ng-select>
                                         </div>
+                                        <div *ngIf="field === 'transactionKycStatus'" class="form-group">
+                                            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                                                DocsCheck Statuses
+                                            </label>
+                                            <ng-select [items]="transactionKysStatusOptions" bindLabel="name"
+                                                bindValue="id" formControlName="transactionKycStatuses"
+                                                [multiple]="true" [closeOnSelect]="false"
+                                                placeholder="Select transaction verification statuses">
+                                            </ng-select>
+                                        </div>
                                         <div *ngIf="field === 'riskLevel'" class="form-group">
                                             <label class="main-content-label tx-11 tx-medium tx-gray-600">
                                                 Risk Levels

@@ -1653,7 +1653,7 @@ export type Query = {
   /** API token generation */
   getWireTransferBankAccounts?: Maybe<WireTransferBankAccountListResult>;
   /** API getVerificationLink for shuftiProvider */
-  getVerificationLink: Scalars['String'];
+  getVerificationLink?: Maybe<Scalars['String']>;
   /** API token generation */
   generateWebApiToken: Scalars['String'];
   me: User;
@@ -2170,6 +2170,7 @@ export type QueryGetTransactionsArgs = {
   countriesOnly?: Maybe<Array<Scalars['String']>>;
   countryCodeType?: Maybe<CountryCodeType>;
   accountTypesOnly?: Maybe<Array<UserType>>;
+  kycStatusesOnly?: Maybe<Array<TransactionKycStatus>>;
   transactionDateOnly?: Maybe<Scalars['DateTime']>;
   transactionTypesOnly?: Maybe<Array<TransactionType>>;
   sendersOrReceiversOnly?: Maybe<Array<Scalars['String']>>;
@@ -2179,6 +2180,7 @@ export type QueryGetTransactionsArgs = {
   riskLevelsOnly?: Maybe<Array<Scalars['String']>>;
   paymentInstrumentsOnly?: Maybe<Array<PaymentInstrument>>;
   createdDateInterval?: Maybe<DateTimeInterval>;
+  kycStatusChangeDateInterval?: Maybe<DateTimeInterval>;
   completedDateInterval?: Maybe<DateTimeInterval>;
   walletAddressOnly?: Maybe<Scalars['String']>;
   verifyWhenPaid?: Maybe<Scalars['Boolean']>;
@@ -2211,6 +2213,7 @@ export type QueryGetWalletsArgs = {
 
 
 export type QueryGetDashboardStatsArgs = {
+  kycStatusChangeDateInterval?: Maybe<DateTimeInterval>;
   transactionDateOnly?: Maybe<Scalars['DateTime']>;
   createdDateInterval?: Maybe<DateTimeInterval>;
   userIdOnly?: Maybe<Array<Scalars['String']>>;

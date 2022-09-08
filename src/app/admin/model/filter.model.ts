@@ -1,4 +1,4 @@
-import { AccountStatus, DateTimeInterval, KycStatus, PaymentInstrument, RiskAlertCodes, RiskLevel, TransactionSource, TransactionStatus, TransactionType, UserMode, UserType } from '../../model/generated-models';
+import { AccountStatus, DateTimeInterval, KycStatus, PaymentInstrument, RiskAlertCodes, RiskLevel, TransactionKycStatus, TransactionSource, TransactionStatus, TransactionType, UserMode, UserType } from '../../model/generated-models';
 import { EmptyObject } from 'apollo-angular/types';
 
 export class Filter {
@@ -18,6 +18,7 @@ export class Filter {
   public transactionStatuses?: Array<TransactionStatus>;
   public tiers?: Array<string>;
   public kycStatuses?: Array<KycStatus>;
+  public transactionKycStatuses?: Array<TransactionKycStatus>;
   public riskLevels?: Array<RiskLevel>;
   public paymentInstruments?: Array<PaymentInstrument>;
   public createdDateInterval?: DateTimeInterval;
@@ -83,6 +84,10 @@ export class Filter {
 
     if (filterValues.kycStatuses) {
       this.kycStatuses = filterValues.kycStatuses;
+    }
+
+    if (filterValues.transactionKycStatuses) {
+      this.transactionKycStatuses = filterValues.transactionKycStatuses;
     }
 
     if (filterValues.transactionIds) {
