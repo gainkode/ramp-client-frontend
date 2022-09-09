@@ -2180,7 +2180,7 @@ export type QueryGetTransactionsArgs = {
   riskLevelsOnly?: Maybe<Array<Scalars['String']>>;
   paymentInstrumentsOnly?: Maybe<Array<PaymentInstrument>>;
   createdDateInterval?: Maybe<DateTimeInterval>;
-  kycStatusChangeDateInterval?: Maybe<DateTimeInterval>;
+  updateDateInterval?: Maybe<DateTimeInterval>;
   completedDateInterval?: Maybe<DateTimeInterval>;
   walletAddressOnly?: Maybe<Scalars['String']>;
   verifyWhenPaid?: Maybe<Scalars['Boolean']>;
@@ -2213,7 +2213,7 @@ export type QueryGetWalletsArgs = {
 
 
 export type QueryGetDashboardStatsArgs = {
-  kycStatusChangeDateInterval?: Maybe<DateTimeInterval>;
+  updateDateInterval?: Maybe<DateTimeInterval>;
   transactionDateOnly?: Maybe<Scalars['DateTime']>;
   createdDateInterval?: Maybe<DateTimeInterval>;
   userIdOnly?: Maybe<Array<Scalars['String']>>;

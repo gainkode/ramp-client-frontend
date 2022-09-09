@@ -179,6 +179,15 @@
                                                 [endField]="filterForm?.controls?.registrationDateRangeEnd ?? null">
                                             </app-admin-date-range>
                                         </div>
+                                        <div *ngIf="field === 'updatedDate'" class="form-group">
+                                            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                                                Transactions updated
+                                            </label>
+                                            <app-admin-date-range #updated_filter
+                                                [startField]="filterForm?.controls?.updatedDateRangeStart ?? null"
+                                                [endField]="filterForm?.controls?.updatedDateRangeEnd ?? null">
+                                            </app-admin-date-range>
+                                        </div>
                                         <div *ngIf="field === 'user'" class="form-group">
                                             <label class="main-content-label tx-11 tx-medium tx-gray-600">
                                                 User

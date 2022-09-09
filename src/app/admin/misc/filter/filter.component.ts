@@ -27,6 +27,7 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
   @ViewChild('created_filter') createFilterPicker!: AdminDateRangeComponent;
   @ViewChild('completed_filter') completeFilterPicker!: AdminDateRangeComponent;
   @ViewChild('registered_filter') registerFilterPicker!: AdminDateRangeComponent;
+  @ViewChild('updated_filter') updateFilterPicker!: AdminDateRangeComponent;
 
   private filterSubject = new Subject<Filter>();
   private subscriptions = new Subscription();
@@ -242,6 +243,10 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
       controlsConfig.registrationDateRangeStart = [undefined];
       controlsConfig.registrationDateRangeEnd = [undefined];
     }
+    if (this.fields.includes('updatedDate')) {
+      controlsConfig.updatedDateRangeStart = [undefined];
+      controlsConfig.updatedDateRangeEnd = [undefined];
+    }
     if (this.fields.includes('transactionIds')) {
       controlsConfig.transactionIds = [[]];
     }
@@ -300,6 +305,10 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
       this.filterForm.controls.completedDateRangeStart.setValue(this.filterData?.completedDateInterval.from as Date);
       this.filterForm.controls.completedDateRangeEnd.setValue(this.filterData?.completedDateInterval.to as Date);
     }
+    if (this.filterData?.updatedDateInterval) {
+      this.filterForm.controls.updatedDateRangeStart.setValue(this.filterData?.updatedDateInterval.from as Date);
+      this.filterForm.controls.updatedDateRangeEnd.setValue(this.filterData?.updatedDateInterval.to as Date);
+    }
   }
 
   resetFilters(): void {
@@ -347,6 +356,13 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
         this.filterForm.controls.registrationDateRangeEnd.setValue(undefined);
         if (this.registerFilterPicker) {
           this.registerFilterPicker.reset();
+        }
+      }
+      if (this.fields.includes('updatedDate')) {
+        this.filterForm.controls.updatedDateRangeStart.setValue(undefined);
+        this.filterForm.controls.updatedDateRangeEnd.setValue(undefined);
+        if (this.updateFilterPicker) {
+          this.updateFilterPicker.reset();
         }
       }
       if (this.fields.includes('transactionIds')) {

@@ -24,6 +24,7 @@ export class Filter {
   public createdDateInterval?: DateTimeInterval;
   public completedDateInterval?: DateTimeInterval;
   public registrationDateInterval?: DateTimeInterval;
+  public updatedDateInterval?: DateTimeInterval;
   public transactionDate?: Date;
   public walletAddress?: string;
   public walletIds?: Array<string>;
@@ -124,6 +125,10 @@ export class Filter {
 
     if (filterValues.registrationDateRangeStart || filterValues.registrationDateRangeEnd) {
       this.registrationDateInterval = this.getDateTimeRange(filterValues.registrationDateRangeStart, filterValues.registrationDateRangeEnd);
+    }
+
+    if (filterValues.updatedDateRangeStart || filterValues.updatedDateRangeEnd) {
+      this.updatedDateInterval = this.getDateTimeRange(filterValues.updatedDateRangeStart, filterValues.updatedDateRangeEnd);
     }
 
     if (filterValues.walletAddress) {

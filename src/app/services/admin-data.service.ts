@@ -67,7 +67,7 @@ const GET_DASHBOARD_STATS = gql`
   query GetDashboardStats(
     $createdDateInterval: DateTimeInterval
     $completedDateInterval: DateTimeInterval
-    $kycStatusChangeDateInterval: DateTimeInterval
+    $updateDateInterval: DateTimeInterval
     $userIdOnly: [String!]
     $widgetIdOnly: [String!]
     $sourcesOnly: [TransactionSource!]
@@ -78,6 +78,7 @@ const GET_DASHBOARD_STATS = gql`
     getDashboardStats(
       createdDateInterval: $createdDateInterval
       completedDateInterval: $completedDateInterval
+      updateDateInterval: $updateDateInterval
       userIdOnly: $userIdOnly
       widgetIdOnly: $widgetIdOnly
       sourcesOnly: $sourcesOnly
@@ -2233,6 +2234,7 @@ export class AdminDataService {
     const vars: QueryGetDashboardStatsArgs = {
       createdDateInterval: filter.createdDateInterval,
       completedDateInterval: filter.completedDateInterval,
+      updateDateInterval: filter.updatedDateInterval,
       userIdOnly: filter.users,
       widgetIdOnly: filter.widgetNames,
       sourcesOnly: filter.sources,
