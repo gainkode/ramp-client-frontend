@@ -10,6 +10,7 @@
           [linkUrl]="'/admin/transactions/'+ transactionId"></app-admin-details-item> -->
         <app-admin-details-item label="Transaction Created" [value]="data?.created"></app-admin-details-item>
         <app-admin-details-item label="Transaction Completed" [value]="data?.executed"></app-admin-details-item>
+        <app-admin-details-item label="Transaction Last Updated" [value]="data?.updated"></app-admin-details-item>
         <app-admin-details-item label="First Name" [value]="data?.user?.firstName"></app-admin-details-item>
         <app-admin-details-item label="Last Name" [value]="data?.user?.lastName"></app-admin-details-item>
         <app-admin-details-item label="Company" [value]="data?.user?.company"></app-admin-details-item>
@@ -214,8 +215,6 @@
           </label>
           <input class="form-control" type="text" benchmarkTransferHash="transferHash">
         </div>
-
-        <app-admin-details-item label="Last Updated" [value]="data?.updated"></app-admin-details-item>
       </div>
       <div class="card card-body pd-20 pd-md-40 border shadow-none">
         <h5 class="card-title mg-b-20">
