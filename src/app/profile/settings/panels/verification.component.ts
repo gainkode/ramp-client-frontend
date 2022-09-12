@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { KycVerificationDialogBox } from 'src/app/components/dialogs/kyc-verification.dialog';
-import { SettingsKycTierShortEx, SettingsKycTierShortExListResult, UserState } from 'src/app/model/generated-models';
+import { KycProvider, SettingsKycTierShortEx, SettingsKycTierShortExListResult, UserState } from 'src/app/model/generated-models';
 import { TierItem } from 'src/app/model/identification.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
@@ -161,6 +161,16 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
                     flow: val.originalLevelName ?? ''
                 } as TierItem;
             });
+            // If the user's KYC provider is Shufti, set inactive all tiers but the first
+            if (this.auth.user?.kycProvider === KycProvider.Shufti) {
+                let i = 0;
+                while (i < this.tiers.length) {
+                    if (i > 0) {
+                        this.tiers[i].passed = true;
+                    }
+                    i++;
+                }
+            }
         }
     }
 

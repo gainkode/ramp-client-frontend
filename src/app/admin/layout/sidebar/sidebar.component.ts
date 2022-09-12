@@ -62,7 +62,6 @@ export class AdminSidebarComponent {
 
   // Active NavBar State
   setNavActive(item: any) {
-    console.log('setNavActive', item);
     this.menuItems.filter((menuItem) => {
       if (menuItem !== item) {
         menuItem.active = false;
@@ -86,7 +85,6 @@ export class AdminSidebarComponent {
 
   // Click Toggle menu
   toggleNavActive(item: any) {
-    console.log('toggleNavActive', item);
     if (!item.active) {
       this.menuItems.forEach((a: any) => {
         if (this.menuItems.includes(item)) {

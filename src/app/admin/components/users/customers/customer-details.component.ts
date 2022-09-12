@@ -267,7 +267,6 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
     this.subscriptions.add(
       this.adminService.getVerificationLink(this.userData?.id ?? '').valueChanges.subscribe(({ data }) => {
         this.kycProviderLinkInProgress = false;
-        console.log('provider link', data);
         if (data) {
           if (data.getVerificationLink) {
             this.router.navigate([]).then((result) => {
