@@ -20,6 +20,12 @@ export class AdminComponent implements OnInit, OnDestroy {
     public switcherService: SwitcherService,
     private activatedRoute: ActivatedRoute
   ) {
+    const body = document.querySelector('body');
+    if (!body?.classList.contains('app')) {
+      document.querySelector('body')?.classList.add('main-body');
+      document.querySelector('body')?.classList.add('app');
+      document.querySelector('body')?.classList.add('sidebar-mini');
+    }
   }
 
   ngOnInit(): void {

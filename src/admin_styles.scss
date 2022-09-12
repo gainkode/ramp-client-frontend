@@ -480,4 +480,12 @@ button:focus:not(:focus-visible) {
 
 .page{
   overflow: hidden;
+  width: 100%;
+  display: inline-block;
+  vertical-align: top;
+  background-color: #fafafa;
+}
+
+.container-top {
+  margin-top: 64px;
 }

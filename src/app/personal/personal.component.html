@@ -79,8 +79,14 @@
                     </a>
                 </li>
                 <div class="__top-menu-hamburger-separator"></div>
-                <li *ngFor="let item of popupItems;let i=index;">
+                <!-- <li *ngFor="let item of popupItems;let i=index;">
                     <a *ngIf="item.id!=='administration'" [routerLink]="" class="__top-menu-hamburger-item"
+                        (click)="popupMenuClick(item)">
+                        {{item.name}}
+                    </a>
+                </li> -->
+                <li *ngFor="let item of popupItems;let i=index;">
+                    <a [routerLink]="" class="__top-menu-hamburger-item"
                         (click)="popupMenuClick(item)">
                         {{item.name}}
                     </a>

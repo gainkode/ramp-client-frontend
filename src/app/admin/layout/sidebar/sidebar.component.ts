@@ -62,6 +62,7 @@ export class AdminSidebarComponent {
 
   // Active NavBar State
   setNavActive(item: any) {
+    console.log('setNavActive', item);
     this.menuItems.filter((menuItem) => {
       if (menuItem !== item) {
         menuItem.active = false;
@@ -85,6 +86,7 @@ export class AdminSidebarComponent {
 
   // Click Toggle menu
   toggleNavActive(item: any) {
+    console.log('toggleNavActive', item);
     if (!item.active) {
       this.menuItems.forEach((a: any) => {
         if (this.menuItems.includes(item)) {
@@ -113,9 +115,7 @@ export class AdminSidebarComponent {
 
     fromEvent(window, 'resize').subscribe(() => {
       if (window.innerWidth > 772) {
-        document
-          .querySelector('body.horizontal')
-          ?.classList.remove('sidenav-toggled');
+        document.querySelector('body.horizontal')?.classList.remove('sidenav-toggled');
       }
       if (
         document.querySelector('body')?.classList.contains('horizontal-hover') &&
