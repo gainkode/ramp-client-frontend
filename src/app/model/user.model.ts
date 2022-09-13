@@ -52,6 +52,7 @@ export class UserItem {
   kycProvider = '';
   kycStatusValue = KycStatus.Unknown;
   kycStatus = '';
+  kycValid = false;
   kycVerificationStatus = '';
   kycVerificationAvailable = true;
   kycLevel = '';
@@ -224,6 +225,7 @@ export class UserItem {
       this.totalSent = this.totalSentCompleted.toFixed(2);
       this.totalReceived = this.totalReceivedCompleted.toFixed(2);
       this.kycProvider = data.kycProvider ?? '';
+      this.kycValid = data.kycValid ?? false;
       this.kycStatusValue = data.kycStatus as KycStatus ?? KycStatus.Unknown;
       this.kycStatus = KycStatusList.find(x => x.id === data.kycStatus?.toLowerCase())?.name ?? '';
       const status = this.kycStatus.toLowerCase();
@@ -313,10 +315,16 @@ export class UserItem {
       case KycStatus.Unknown:
       case KycStatus.Init:
       case KycStatus.NotFound:
+      case KycStatus.Deleted:
+      case KycStatus.Invalid:
+      case KycStatus.Timeout:
         color = 'red';
         break;
       case KycStatus.Completed:
-        color = 'green';
+        color = (this.kycValid) ? 'green' : 'red';
+        break;
+      case KycStatus.Canceled:
+        color = 'purple';
         break;
       default:
         color = 'grey';

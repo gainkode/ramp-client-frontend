@@ -447,7 +447,11 @@ export const KycStatusList: Array<KycStatusView> = [
     { id: KycStatus.Pending, name: 'Pending' },
     { id: KycStatus.Queued, name: 'Queued' },
     { id: KycStatus.Completed, name: 'Completed' },
-    { id: KycStatus.OnHold, name: 'On Hold' }
+    { id: KycStatus.OnHold, name: 'On Hold' },
+    { id: KycStatus.Canceled, name: 'Canceled' },
+    { id: KycStatus.Timeout, name: 'Time out' },
+    { id: KycStatus.Invalid, name: 'Invalid' },
+    { id: KycStatus.Deleted, name: 'Deleted' }
 ];
 
 export const KycProviderList: Array<KycProviderView> = [

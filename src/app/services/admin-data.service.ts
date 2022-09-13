@@ -763,6 +763,7 @@ const GET_USERS = gql`
         kycReviewRejectedLabels
         kycReviewResult
         kycStatusUpdateRequired
+        kycValid
         phone
         postCode
         town

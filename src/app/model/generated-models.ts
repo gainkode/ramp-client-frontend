@@ -568,7 +568,11 @@ export enum KycStatus {
   Pending = 'pending',
   Queued = 'queued',
   Completed = 'completed',
-  OnHold = 'onHold'
+  OnHold = 'onHold',
+  Canceled = 'canceled',
+  Timeout = 'timeout',
+  Invalid = 'invalid',
+  Deleted = 'deleted'
 }
 
 export type LiquidityOrder = {
@@ -3357,9 +3361,13 @@ export enum UserActionType {
   Transfer = 'transfer',
   Exchange = 'exchange',
   System = 'system',
+  SettleTransaction = 'settleTransaction',
+  UnbenchmarkTransaction = 'unbenchmarkTransaction',
+  PaidTransaction = 'paidTransaction',
   UpdateTransaction = 'updateTransaction',
   CancelTransaction = 'cancelTransaction',
   CreateUser = 'createUser',
+  AddWidgetUserParams = 'addWidgetUserParams',
   UpdateUser = 'updateUser',
   DeleteUser = 'deleteUser',
   CreateApiKey = 'createApiKey',

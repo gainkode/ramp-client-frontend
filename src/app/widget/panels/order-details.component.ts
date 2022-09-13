@@ -26,7 +26,12 @@ import { WalletValidator } from 'src/app/utils/wallet.validator';
 export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() initialized = false;
   @Input() internalPayment = true;
-  @Input() errorMessage = '';
+  @Input() set errorMessage(val: string) {
+    if (val !== '') {
+      this.initialized = true;
+    }
+    this.errorMessageData = val;
+  }
   @Input() settings: WidgetSettings = new WidgetSettings();
   @Input() summary: CheckoutSummary | undefined = undefined;
   @Input() set withdrawalRate(val: number | undefined) {
@@ -63,9 +68,10 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   private pDepositRate: number | undefined = undefined;
   private pNumberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
 
+  errorMessageData = '';
   TRANSACTION_TYPE: typeof TransactionType = TransactionType;
   validData = false;
-  transactionTypeEdit = false;
+  transactionTypeEdit = false;  
   currentCurrencySpend: CurrencyView | undefined = undefined;
   currentCurrencyReceive: CurrencyView | undefined = undefined;
   currentTransaction: TransactionType = TransactionType.Buy;
@@ -541,14 +547,14 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
           const emptyList = (this.filteredWallets.length === 0);
           if (emptyList) {
             this.walletField?.setValue(this.summary.address ?? '');
-            this.errorMessage = 'Unable to find wallets for selected currency';
+            this.errorMessageData = 'Unable to find wallets for selected currency';
           } else {
             this.filteredWallets.splice(0, 0, new WalletItem({
               vaultName: '...',
               address: '',
               default: false
             } as AssetAddressShort, '', undefined));
-            this.errorMessage = '';
+            this.errorMessageData = '';
           }
         }
       }
@@ -578,14 +584,14 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
         const emptyList = (this.filteredWallets.length === 0);
         if (emptyList) {
           this.walletField?.setValue(this.summary.address ?? '');
-          this.errorMessage = 'Unable to find wallets for selected currency';
+          this.errorMessageData = 'Unable to find wallets for selected currency';
         } else {
           this.filteredWallets.splice(0, 0, new WalletItem({
             vaultName: '...',
             address: '',
             default: false
           } as AssetAddressShort, '', undefined));
-          this.errorMessage = '';
+          this.errorMessageData = '';
         }
       }
       if (this.summary?.transactionType === TransactionType.Sell) {
