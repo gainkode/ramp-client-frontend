@@ -253,7 +253,11 @@ export class UserItem {
       if (data.kycReviewResult) {
         const kycReviewResultData = JSON.parse(data.kycReviewResult ?? '');
         if (kycReviewResultData !== null) {
-          this.kycReviewResult = kycReviewResultData.reviewAnswer ?? '';
+          if (this.kycProvider === KycProvider.SumSub) {
+            this.kycReviewResult = kycReviewResultData.reviewAnswer ?? '';
+          } else if (this.kycProvider === KycProvider.Shufti) {
+            this.kycReviewResult = kycReviewResultData.event ?? '';
+          }
         }
       }
       this.kycStatusUpdateRequired = (data.kycStatusUpdateRequired) ? ((data.kycStatusUpdateRequired === true) ? 'Yes' : 'No') : 'No';
