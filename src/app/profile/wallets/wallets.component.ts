@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { ProfileBaseFilter, WalletsFilter } from 'src/app/model/filter.model';
-import { SettingsCurrencyWithDefaults, UserMode, UserType } from 'src/app/model/generated-models';
+import { SettingsCurrencyWithDefaults, UserType } from 'src/app/model/generated-models';
 import { CurrencyView } from 'src/app/model/payment.model';
 import { ProfileItemContainer } from 'src/app/model/profile-item.model';
 import { WalletItem } from 'src/app/model/wallet.model';
