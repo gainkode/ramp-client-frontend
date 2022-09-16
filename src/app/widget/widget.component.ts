@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { AssetAddressShortListResult, LoginResult, PaymentInstrument, PaymentPreauthResultShort, Rate, TextPage, TransactionShort, TransactionSource, TransactionType, Widget } from 'src/app/model/generated-models';
+import { AssetAddressShortListResult, LoginResult, PaymentInstrument, PaymentPreauthResultShort, PaymentProviderByInstrument, Rate, TextPage, TransactionShort, TransactionSource, TransactionType, Widget } from 'src/app/model/generated-models';
 import { CardView, CheckoutSummary, PaymentProviderInstrumentView } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
@@ -654,6 +654,7 @@ export class WidgetComponent implements OnInit {
   }
 
   selectProvider(provider: PaymentProviderInstrumentView) {
+    console.log('selectProvider', provider);
     if (provider.instrument === PaymentInstrument.WireTransfer) {
       this.summary.providerView = this.paymentProviders.find(x => x.id === provider.id);
       this.startPayment();
@@ -679,7 +680,7 @@ export class WidgetComponent implements OnInit {
       accountType: data.selected
     };
     const settingsData = JSON.stringify(settings);
-    this.createBuyTransaction('', PaymentInstrument.WireTransfer, settingsData);
+    this.createBuyTransaction(this.summary.providerView?.id ?? '', PaymentInstrument.WireTransfer, settingsData);
   }
 
   sendWireTransaferMessageResult(): void {
