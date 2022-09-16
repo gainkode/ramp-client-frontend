@@ -36,7 +36,7 @@ export class PaymentProviderInstrumentView {
             this.image = './assets/svg-providers/credit-card.svg';
         } else if (this.instrument === PaymentInstrument.WireTransfer) {
             //this.id = 'WireTransferPayment';
-            this.name = 'WIRE TRANSFER';
+            this.name = data.provider?.displayName ?? 'WIRE TRANSFER';
             this.image = './assets/svg-providers/wire-transfer.svg';
         }
     }
