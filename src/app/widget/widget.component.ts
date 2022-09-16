@@ -627,6 +627,21 @@ export class WidgetComponent implements OnInit {
 
   private settingsCommonComplete(providers: PaymentProviderInstrumentView[]): void {
     this.paymentProviders = providers.map(val => val);
+
+
+    
+
+    //test
+    // const wt = this.paymentProviders.find(x => x.instrument === PaymentInstrument.WireTransfer);
+    // if (wt) {
+    //   wt.id = 'Openpayd';
+    // }
+
+
+
+
+    console.log(this.paymentProviders);
+
     const nextStage = 4;
     if (this.widget.kycFirst && this.requestKyc && !this.widget.embedded) {
       this.nextStage('verification', 'Verification', nextStage, false);
@@ -847,7 +862,7 @@ export class WidgetComponent implements OnInit {
           this.summary.amountFrom ?? 0,
           instrument,
           instrumentDetails,
-          (instrument === PaymentInstrument.WireTransfer) ? '' : providerId,
+          providerId,
           this.userParamsId,
           destination,
           this.summary.verifyWhenPaid
@@ -980,6 +995,7 @@ export class WidgetComponent implements OnInit {
   }
 
   private startPayment(): void {
+    console.log('startPayment', this.summary.providerView);
     if (this.summary.providerView?.instrument === PaymentInstrument.CreditCard) {
       this.nextStage('credit_card', 'Payment info', this.pager.step, true);
     } else if (this.summary.providerView?.instrument === PaymentInstrument.Apm) {
@@ -1066,6 +1082,7 @@ export class WidgetComponent implements OnInit {
   }
 
   private onWireTransferListLoaded(wireTransferList: WireTransferPaymentCategoryItem[], bankAccountId: string): void {
+    console.log('onWireTransferListLoaded', bankAccountId);
     this.bankAccountId = bankAccountId;
     this.wireTransferList = wireTransferList;
     if (this.wireTransferList.length > 1) {
