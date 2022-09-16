@@ -629,18 +629,12 @@ export class WidgetComponent implements OnInit {
     this.paymentProviders = providers.map(val => val);
 
 
-    
-
     //test
     // const wt = this.paymentProviders.find(x => x.instrument === PaymentInstrument.WireTransfer);
     // if (wt) {
     //   wt.id = 'Openpayd';
     // }
 
-
-
-
-    console.log(this.paymentProviders);
 
     const nextStage = 4;
     if (this.widget.kycFirst && this.requestKyc && !this.widget.embedded) {
@@ -669,7 +663,6 @@ export class WidgetComponent implements OnInit {
   }
 
   selectProvider(provider: PaymentProviderInstrumentView) {
-    console.log('selectProvider', provider);
     if (provider.instrument === PaymentInstrument.WireTransfer) {
       this.summary.providerView = this.paymentProviders.find(x => x.id === provider.id);
       this.startPayment();
@@ -995,7 +988,6 @@ export class WidgetComponent implements OnInit {
   }
 
   private startPayment(): void {
-    console.log('startPayment', this.summary.providerView);
     if (this.summary.providerView?.instrument === PaymentInstrument.CreditCard) {
       this.nextStage('credit_card', 'Payment info', this.pager.step, true);
     } else if (this.summary.providerView?.instrument === PaymentInstrument.Apm) {
@@ -1082,7 +1074,6 @@ export class WidgetComponent implements OnInit {
   }
 
   private onWireTransferListLoaded(wireTransferList: WireTransferPaymentCategoryItem[], bankAccountId: string): void {
-    console.log('onWireTransferListLoaded', bankAccountId);
     this.bankAccountId = bankAccountId;
     this.wireTransferList = wireTransferList;
     if (this.wireTransferList.length > 1) {
