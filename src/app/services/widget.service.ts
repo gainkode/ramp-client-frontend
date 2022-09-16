@@ -179,6 +179,7 @@ export class WidgetService {
                                     wireTransferList.splice(pos, 1);
                                 } else {
                                     wireTransferList[pos].data = accountData.au;
+                                    wireTransferList[pos].bankAccountId = accountData.bankAccountId;
                                 }
                             }
                             pos = wireTransferList.findIndex(x => x.id === WireTransferPaymentCategory.UK);
@@ -187,6 +188,7 @@ export class WidgetService {
                                     wireTransferList.splice(pos, 1);
                                 } else {
                                     wireTransferList[pos].data = accountData.uk;
+                                    wireTransferList[pos].bankAccountId = accountData.bankAccountId;
                                 }
                             }
                             pos = wireTransferList.findIndex(x => x.id === WireTransferPaymentCategory.EU);
@@ -195,6 +197,7 @@ export class WidgetService {
                                     wireTransferList.splice(pos, 1);
                                 } else {
                                     wireTransferList[pos].data = accountData.eu;
+                                    wireTransferList[pos].bankAccountId = accountData.bankAccountId;
                                 }
                             }
                         }

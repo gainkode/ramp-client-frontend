@@ -59,6 +59,7 @@ export class WidgetComponent implements OnInit {
   wireTransferList: WireTransferPaymentCategoryItem[] = [];
   selectedWireTransfer: WireTransferPaymentCategoryItem = {
     id: WireTransferPaymentCategory.AU,
+    bankAccountId: '',
     title: '',
     data: ''
   }
@@ -653,6 +654,7 @@ export class WidgetComponent implements OnInit {
   }
 
   selectProvider(provider: PaymentProviderInstrumentView) {
+    console.log('selected provider', provider);
     if (provider.id === 'WireTransferPayment') {
       this.summary.providerView = this.paymentProviders.find(x => x.id === provider.id);
       this.startPayment();

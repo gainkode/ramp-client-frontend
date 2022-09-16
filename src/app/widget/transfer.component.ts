@@ -45,6 +45,7 @@ export class TransferWidgetComponent implements OnInit {
   wireTransferList: WireTransferPaymentCategoryItem[] = [];
   selectedWireTransfer: WireTransferPaymentCategoryItem = {
     id: WireTransferPaymentCategory.AU,
+    bankAccountId: '',
     title: '',
     data: ''
   }

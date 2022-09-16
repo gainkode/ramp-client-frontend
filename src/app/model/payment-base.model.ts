@@ -73,6 +73,7 @@ export class PaymentErrorDetails {
 
 export class WireTransferPaymentCategoryItem {
     id = WireTransferPaymentCategory.AU;
+    bankAccountId = '';
     title = '';
     data = '';
 }

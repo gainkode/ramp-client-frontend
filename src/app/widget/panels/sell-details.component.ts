@@ -62,16 +62,19 @@ export class WidgetSellDetailsComponent {
         const uk = new WireTransferBankAccountUk();
         this.bankCategories.push({
             id: WireTransferPaymentCategory.AU,
+            bankAccountId: '',
             title: 'Australia',
             data: JSON.stringify(au)
         });
         this.bankCategories.push({
             id: WireTransferPaymentCategory.EU,
+            bankAccountId: '',
             title: 'EU',
             data: JSON.stringify(eu)
         });
         this.bankCategories.push({
             id: WireTransferPaymentCategory.UK,
+            bankAccountId: '',
             title: 'UK',
             data: JSON.stringify(uk)
         });

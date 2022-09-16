@@ -41,6 +41,7 @@ export class FiatWidgetComponent implements OnInit {
   bankAccountId = '';
   selectedWireTransfer: WireTransferPaymentCategoryItem = {
     id: WireTransferPaymentCategory.AU,
+    bankAccountId: '',
     title: '',
     data: ''
   }

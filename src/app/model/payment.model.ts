@@ -35,7 +35,7 @@ export class PaymentProviderInstrumentView {
             this.name = 'CARD PAYMENT';
             this.image = './assets/svg-providers/credit-card.svg';
         } else if (this.instrument === PaymentInstrument.WireTransfer) {
-            this.id = 'WireTransferPayment';
+            //this.id = 'WireTransferPayment';
             this.name = 'WIRE TRANSFER';
             this.image = './assets/svg-providers/wire-transfer.svg';
         }
@@ -278,9 +278,9 @@ export const PaymentInstrumentList: Array<PaymentInstrumentView> = [
 ];
 
 export const WireTransferPaymentCategoryList: Array<WireTransferPaymentCategoryItem> = [
-    { id: WireTransferPaymentCategory.AU, title: 'Australian Bank', data: '' },
-    { id: WireTransferPaymentCategory.UK, title: 'UK Bank', data: '' },
-    { id: WireTransferPaymentCategory.EU, title: 'SEPA / SWIFT', data: '' }
+    { id: WireTransferPaymentCategory.AU, bankAccountId: '', title: 'Australian Bank', data: '' },
+    { id: WireTransferPaymentCategory.UK, bankAccountId: '', title: 'UK Bank', data: '' },
+    { id: WireTransferPaymentCategory.EU, bankAccountId: '', title: 'SEPA / SWIFT', data: '' }
 ];
 
 export const QuickCheckoutPaymentInstrumentList: Array<PaymentInstrumentView> = [
