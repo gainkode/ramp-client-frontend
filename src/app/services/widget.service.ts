@@ -152,12 +152,16 @@ export class WidgetService {
         if (this.onProgressChanged) {
             this.onProgressChanged(true);
         }
+        let currency = summary.currencyTo;
+        if ((summary.providerView?.id ?? '') === 'Openpayd') {
+            currency = summary.currencyFrom;
+        }
         const settingsData$ = this.paymentService.mySettingsFee(
             summary.transactionType,
             this.getSource(widget),
             PaymentInstrument.WireTransfer,
             summary.providerView?.id ?? '',
-            summary.currencyTo,
+            currency,
             widget.widgetId).valueChanges.pipe(take(1));
         this.pSubscriptions.add(
             settingsData$.subscribe(({ data }) => {
