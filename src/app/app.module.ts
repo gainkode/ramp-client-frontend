@@ -20,6 +20,8 @@ import { NotificationService } from './services/notification.service';
 import { CommonDataService } from './services/common-data.service';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
+import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
+import { createClient } from 'graphql-ws';
 import { DirectiveModule } from './directives/directives.module';
 import { ProfileDataService } from './services/profile.service';
 import { ExchangeRateService } from './services/rate.service';
@@ -157,18 +159,28 @@ export class AppModule {
     const timeoutLink = new ApolloLinkTimeout(EnvService.api_timeout ?? 10000); // 10 second timeout
     const timeoutHttp = timeoutLink.concat(http);
 
-    const webSocketClient: SubscriptionClient = new SubscriptionClient(
-      `${EnvService.ws_server}/subscriptions`,
-      {
-        lazy: true,
-        reconnect: true,
-        connectionParams: () => {
-          return {
-            authToken: `Bearer ${localStorage.getItem('currentToken')}`
-          };
-        }
-      });
-    const webSocketLink = new WebSocketLink(webSocketClient);
+    // Transaport subscriptions-transport-ws
+    // const webSocketClient: SubscriptionClient = new SubscriptionClient(
+    //   `${EnvService.ws_server}/subscriptions`,
+    //   {
+    //     lazy: true,
+    //     reconnect: true,
+    //     connectionParams: () => {
+    //       return {
+    //         authToken: `Bearer ${localStorage.getItem('currentToken')}`
+    //       };
+    //     }
+    //   });
+    // const webSocketLink = new WebSocketLink(webSocketClient);
+
+    // Transaport graphql-ws
+    const webSocketLink = new GraphQLWsLink(createClient({
+      url: `${EnvService.ws_server}/subscriptions`,
+      lazy: true,
+      connectionParams: {
+        authToken: `Bearer ${localStorage.getItem('currentToken')}`
+      },
+    }));
 
     const transportLink: ApolloLink = split(
       // split based on operation type
