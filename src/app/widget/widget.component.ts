@@ -10,6 +10,7 @@ import { ErrorService } from 'src/app/services/error.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { PaymentDataService } from 'src/app/services/payment.service';
 import { ExchangeRateService } from 'src/app/services/rate.service';
+import { environment } from 'src/environments/environment';
 import { CommonDialogBox } from '../components/dialogs/common-box.dialog';
 import { WireTransferUserSelection } from '../model/cost-scheme.model';
 import { completeDataDefault, disclaimerDataDefault } from '../model/custom-data.model';
@@ -293,7 +294,9 @@ export class WidgetComponent implements OnInit {
       (error) => {
         this.notificationStarted = false;
         // there was an error subscribing to notifications
-        console.error('Notifications error', error);
+        if (!environment.production) {
+          console.error('Notifications error', error);
+        }
       }
     );
   }

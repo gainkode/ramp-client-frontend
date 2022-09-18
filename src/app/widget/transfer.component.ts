@@ -8,6 +8,7 @@ import { CardView, CheckoutSummary, PaymentProviderInstrumentView } from 'src/ap
 import { ErrorService } from 'src/app/services/error.service';
 import { PaymentDataService } from 'src/app/services/payment.service';
 import { ExchangeRateService } from 'src/app/services/rate.service';
+import { environment } from 'src/environments/environment';
 import { CommonDialogBox } from '../components/dialogs/common-box.dialog';
 import { WireTransferUserSelection } from '../model/cost-scheme.model';
 import { PaymentCompleteDetails, PaymentErrorDetails, PaymentWidgetType, WidgetSettings, WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from '../model/payment-base.model';
@@ -125,7 +126,9 @@ export class TransferWidgetComponent implements OnInit {
       (error) => {
         this.notificationStarted = false;
         // there was an error subscribing to notifications
-        console.error('Notifications error', error);
+        if (!environment.production) {
+          console.error('Notifications error', error);
+        }
       }
     );
   }

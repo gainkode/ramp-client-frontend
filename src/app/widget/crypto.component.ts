@@ -9,6 +9,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { PaymentDataService } from 'src/app/services/payment.service';
+import { environment } from 'src/environments/environment';
 import { WidgetSettings } from '../model/payment-base.model';
 import { EnvService } from '../services/env.service';
 import { WidgetPagerService } from '../services/widget-pager.service';
@@ -148,7 +149,9 @@ export class CryptoWidgetComponent implements OnInit {
       (error) => {
         this.notificationStarted = false;
         // there was an error subscribing to notifications
-        console.error('Notifications error', error);
+        if (!environment.production) {
+          console.error('Notifications error', error);
+        }
       }
     );
   }
