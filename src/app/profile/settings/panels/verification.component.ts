@@ -163,10 +163,14 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
             });
             // If the user's KYC provider is Shufti, set inactive all tiers but the first
             if (this.auth.user?.kycProvider === KycProvider.Shufti) {
+                let passedFlag = false;
                 let i = 0;
                 while (i < this.tiers.length) {
-                    if (i > 0) {
+                    if (i > 0 && passedFlag) {
                         this.tiers[i].passed = true;
+                    }
+                    if (!this.tiers[i].passed) {
+                        passedFlag = true;
                     }
                     i++;
                 }
