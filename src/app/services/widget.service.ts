@@ -5,7 +5,6 @@ import { KycProvider, LoginResult, PaymentInstrument, PaymentProviderByInstrumen
 import { WidgetSettings, WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from "../model/payment-base.model";
 import { CheckoutSummary, PaymentProviderInstrumentView, WireTransferPaymentCategoryList } from "../model/payment.model";
 import { AuthService } from "./auth.service";
-import { CommonDataService } from "./common-data.service";
 import { ErrorService } from "./error.service";
 import { PaymentDataService } from "./payment.service";
 
@@ -31,7 +30,6 @@ export class WidgetService {
 
     constructor(
         private auth: AuthService,
-        private commonService: CommonDataService,
         private paymentService: PaymentDataService,
         private errorHandler: ErrorService) { }
 
