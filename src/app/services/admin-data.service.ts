@@ -21,6 +21,7 @@ import {
   QueryGetSettingsKycLevelsArgs,
   QueryGetSettingsKycTiersArgs,
   QueryGetTransactionsArgs,
+  QueryGetUserActionsArgs,
   QueryGetUserKycInfoArgs,
   QueryGetUsersArgs,
   QueryGetUserStateArgs,
@@ -34,6 +35,7 @@ import {
   Transaction,
   TransactionListResult,
   TransactionUpdateTransferOrderChanges,
+  UserActionListResult,
   UserDeviceListResult,
   UserInput,
   UserListResult,
@@ -54,7 +56,7 @@ import { ErrorService } from './error.service';
 import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
 import { Filter } from '../admin/model/filter.model';
-import { DeviceItem, UserItem } from '../model/user.model';
+import { DeviceItem, UserActionItem, UserItem } from '../model/user.model';
 import { FiatWalletItem, WalletItem } from '../admin/model/wallet.model';
 import { NotificationItem } from '../model/notification.model';
 import { WidgetItem } from '../admin/model/widget.model';
@@ -465,6 +467,39 @@ const GET_NOTIFICATIONS = gql`
       }
     }
   }
+`;
+
+const GET_USER_ACTIONS = gql`
+query GetUserActions(
+  $skip: Int
+  $first: Int
+  $orderBy: [OrderBy!]
+  $filter: String
+  $userId: String
+  $withResult: UserActionResult
+) {
+  getUserActions(
+    skip: $skip
+    first: $first
+    orderBy: $orderBy
+    filter: $filter
+    userId: $userId
+    withResult: $withResult
+  ) {
+    count
+    list {
+      userActionId
+      userId
+      objectId
+      actionType
+      linkedIds
+      info
+      result
+      status
+      date
+    }
+  }
+}
 `;
 
 const GET_COUNTRY_BLACK_LIST = gql`
@@ -2399,7 +2434,7 @@ export class AdminDataService {
       orderBy: [{ orderBy: orderField, desc: orderDesc }]
     };
 
-    return this.watchQuery<{ getNotifications: UserNotificationListResult }, QueryGetTransactionsArgs>(
+    return this.watchQuery<{ getNotifications: UserNotificationListResult }, QueryGetNotificationsArgs>(
       {
         query: GET_NOTIFICATIONS,
         variables: vars,
@@ -2409,6 +2444,43 @@ export class AdminDataService {
           return {
             list: result.data.getNotifications.list.map(val => new NotificationItem(val)),
             count: result.data.getNotifications.count
+          };
+        } else {
+          return {
+            list: [],
+            count: 0
+          };
+        }
+      }));
+  }
+
+  getUserActions(
+    pageIndex: number,
+    takeItems: number,
+    orderField: string,
+    orderDesc: boolean,
+    filter?: Filter
+  ): Observable<{ list: Array<UserActionItem>; count: number; }> {
+
+    const vars: QueryGetUserActionsArgs = {
+      filter: filter?.search,
+      skip: pageIndex * takeItems,
+      first: takeItems,
+      orderBy: [{ orderBy: orderField, desc: orderDesc }],
+      userId: filter?.user
+      // $withResult: UserActionResult
+    };
+
+    return this.watchQuery<{ getUserActions: UserActionListResult }, QueryGetUserActionsArgs>(
+      {
+        query: GET_USER_ACTIONS,
+        variables: vars,
+        fetchPolicy: 'network-only'
+      }).pipe(map(result => {
+        if (result.data?.getUserActions?.list && result.data?.getUserActions?.count) {
+          return {
+            list: result.data.getUserActions.list.map(val => new UserActionItem(val)),
+            count: result.data.getUserActions.count
           };
         } else {
           return {

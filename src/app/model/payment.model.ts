@@ -5,7 +5,7 @@ import { CommonTargetValue } from './common.model';
 import {
     PaymentInstrument, PaymentProvider, TransactionType, TransactionStatus,
     SettingsFeeTargetFilterType, SettingsCostTargetFilterType, SettingsKycTargetFilterType,
-    UserType, KycProvider, UserMode, SettingsCurrency, Rate, TransactionSource, UserNotificationCodes, CustodyProvider, TransactionKycStatus, RiskLevel, PaymentProviderByInstrument, AccountStatus, KycStatus, AdminTransactionStatus, UserTransactionStatus, CryptoInvoice, CryptoInvoiceCreationResult
+    UserType, KycProvider, UserMode, SettingsCurrency, Rate, TransactionSource, UserNotificationCodes, CustodyProvider, TransactionKycStatus, RiskLevel, PaymentProviderByInstrument, AccountStatus, KycStatus, AdminTransactionStatus, UserTransactionStatus, CryptoInvoice, CryptoInvoiceCreationResult, UserAction, UserActionType, UserActionResult
 } from './generated-models';
 import { WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from './payment-base.model';
 
@@ -91,6 +91,16 @@ export class UserTypeView {
 
 export class UserModeView {
     id!: UserMode;
+    name = '';
+}
+
+export class UserActionTypeView {
+    id!: UserActionType;
+    name = '';
+}
+
+export class UserActionResultView {
+    id!: UserActionResult;
     name = '';
 }
 
@@ -431,6 +441,43 @@ export const UserModeShortList: Array<UserModeView> = [
     { id: UserMode.InternalWallet, name: 'Internal' },
     { id: UserMode.ExternalWallet, name: 'External' },
     { id: UserMode.OneTimeWallet, name: 'One Time wallet' }
+];
+
+export const UserActionTypeList: Array<UserActionTypeView> = [
+    { id: UserActionType.Signup, name: 'Sign up' },
+    { id: UserActionType.Login, name: 'Log in' },
+    { id: UserActionType.Logout, name: 'Log out' },
+    { id: UserActionType.Send, name: 'Send transaction created' },
+    { id: UserActionType.Receive, name: 'Receive transaction created' },
+    { id: UserActionType.Buy, name: 'Buy transaction created' },
+    { id: UserActionType.Sell, name: 'Sell transaction created' },
+    { id: UserActionType.Transfer, name: 'Transfer transaction created' },
+    { id: UserActionType.Exchange, name: 'Exchange transaction created' },
+    { id: UserActionType.System, name: 'System operation' },
+    { id: UserActionType.SettleTransaction, name: 'Transaction settled' },
+    { id: UserActionType.UnbenchmarkTransaction, name: 'Transaction unbenchmark' },
+    { id: UserActionType.PaidTransaction, name: 'Transaction set Paid' },
+    { id: UserActionType.UpdateTransaction, name: 'Transaction updated' },
+    { id: UserActionType.CancelTransaction, name: 'Transaction canceled' },
+    { id: UserActionType.CreateUser, name: 'User created' },
+    { id: UserActionType.AddWidgetUserParams, name: 'Widget user params created' },
+    { id: UserActionType.UpdateUser, name: 'User updated' },
+    { id: UserActionType.DeleteUser, name: 'User deleted' },
+    { id: UserActionType.CreateApiKey, name: 'API Key created' },
+    { id: UserActionType.DeleteApiKey, name: 'API Ket deleted' },
+    { id: UserActionType.ChangeRiskAlertSettings, name: 'Risk alert settings changed' },
+    { id: UserActionType.Deposit, name: 'Deposit created' },
+    { id: UserActionType.Withdrawal, name: 'Withdrawal created' },
+    { id: UserActionType.MerchantBuy, name: 'Merchant-buy created' },
+    { id: UserActionType.MerchantSell, name: 'Merchant-sell created' }
+];
+
+export const UserActionResultList: Array<UserActionResultView> = [
+    { id: UserActionResult.Unknown, name: 'Unknown' },
+    { id: UserActionResult.Succeeded, name: 'Succeeded' },
+    { id: UserActionResult.Failed, name: 'Failed' },
+    { id: UserActionResult.Canceled, name: 'Canceled' },
+    { id: UserActionResult.Error, name: 'Error' }
 ];
 
 export const UserStatusList: Array<AccountStatusView> = [

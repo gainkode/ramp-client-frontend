@@ -1,0 +1,27 @@
+<div class="row">
+  <div class="col-md-12 col-lg-12 col-xl-12 mx-auto d-block">
+    <div class="card card-body pd-20 pd-md-40 border shadow-none">
+      <app-admin-details-item label="Recipient" [value]="message?.userEmail"></app-admin-details-item>
+      <app-admin-details-item label="Level" [value]="message?.level"></app-admin-details-item>
+      <app-admin-details-item label="Created" [value]="message?.created"></app-admin-details-item>
+      <app-admin-details-item label="Viewed" [value]="message?.viewed"></app-admin-details-item>
+      <app-admin-details-item label="Code" [value]="message?.userNotificationTypeCode"></app-admin-details-item>
+      <app-admin-details-item label="Message Title" [value]="message?.title"></app-admin-details-item>
+      <app-admin-details-item label="Message Text" [value]="message?.text"></app-admin-details-item>
+    </div>
+    <div *ngIf="errorMessage!==''" class="card card-body card-danger pd-20 pd-md-40 border shadow-none">
+      <h4 class="card-title2 mg-b-20" style="color: brown;">
+        {{errorMessage}}
+      </h4>
+    </div>
+    <div style="display: flex; justify-content: flex-end;">
+      <button class="btn btn-primary pd-x-30 me-2" type="button" (click)="resend()">
+        <span *ngIf="resendInProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        Resend
+      </button>
+      <button class="btn btn-outline-primary pd-x-30" type="button" (click)="close.emit()">
+        Close
+      </button>
+    </div>
+  </div>
+</div>

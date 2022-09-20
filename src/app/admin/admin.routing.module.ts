@@ -9,7 +9,6 @@ import { AdminDashboardComponent } from './components/dashboard/dashboard.compon
 import { AdminLevelsComponent } from './components/kyc/levels/levels.component';
 import { AdminNotificationsComponent } from './components/notifications/notifications.component';
 import { AdminRisksComponent } from './components/risks/risks.component';
-import { AdminKycSchemesComponent } from './components/kyc/schemes/schemes.component';
 import { AdminTransactionsComponent } from './components/transactions/transactions.component';
 import { AdminCustomersComponent } from './components/users/customers/customers.component';
 import { AdminSystemUsersComponent } from './components/users/system/users.component';
@@ -21,6 +20,7 @@ import { AdminFeeSchemesComponent } from './components/fees/fees.component';
 import { AdminCommonSettingsComponent } from './components/settings/common/common.component';
 import { AdminUserDevicesComponent } from './components/users/devices/devices.component';
 import { AdminKycTiersComponent } from './components/kyc/tiers/tiers.component';
+import { AdminUserActionsComponent } from './components/users/actions/actions.component';
 
 const routes: Routes = [
   {
@@ -81,6 +81,11 @@ const routes: Routes = [
             data: { header: 'System users' }
           }
         ]
+      },
+      {
+        path: 'user-actions',
+        component: AdminUserActionsComponent,
+        data: { header: 'Actions' }
       },
       {
         path: 'white-device-list/:userid',

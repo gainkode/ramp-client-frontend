@@ -96,7 +96,8 @@ export class NavService implements OnDestroy {
 		{
 			title: 'Users', icon: 'account_box', type: 'sub', active: false, children: [
 				{ path: '/admin/customers', title: 'Customers', type: 'link', code: 'CUSTOMERS' },
-				{ path: '/admin/system-users', title: 'System users', type: 'link', code: 'SYSTEM_USERS' }
+				{ path: '/admin/system-users', title: 'System users', type: 'link', code: 'SYSTEM_USERS' },
+				//{ path: '/admin/user-actions', title: 'User actions', type: 'link', code: 'SYSTEM_USERS' }
 			]
 		},
 		{

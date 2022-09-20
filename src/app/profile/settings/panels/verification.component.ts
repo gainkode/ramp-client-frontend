@@ -4,13 +4,14 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { KycVerificationDialogBox } from 'src/app/components/dialogs/kyc-verification.dialog';
-import { KycProvider, SettingsKycTierShortEx, SettingsKycTierShortExListResult, UserState } from 'src/app/model/generated-models';
+import { UserState } from 'src/app/model/generated-models';
 import { TierItem } from 'src/app/model/identification.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
 import { ErrorService } from 'src/app/services/error.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { PaymentDataService } from 'src/app/services/payment.service';
+import { getTierBlocks } from 'src/app/utils/profile.utils';
 
 @Component({
     selector: 'app-profile-verification-settings',
@@ -86,7 +87,10 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
             this.pSubscriptions.add(
                 tiersData$.subscribe(({ data }) => {
                     this.progressChange.emit(false);
-                    this.handleTiers(data.mySettingsKycTiers as SettingsKycTierShortExListResult);
+                    if (this.auth.user) {
+                        this.tiers = getTierBlocks(this.auth.user, this.verifiedTierId, data.mySettingsKycTiers);
+                        console.log(this.tiers);
+                    }
                     this.kycUrl = settingsCommon.kycBaseAddress as string;
                 }, (error) => {
                     this.progressChange.emit(false);
@@ -97,84 +101,6 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
                     }
                 })
             );
-        }
-    }
-
-    private tierSortHandler(a: SettingsKycTierShortEx, b: SettingsKycTierShortEx): number {
-        let aa = a.amount ?? 0;
-        let ba = b.amount ?? 0;
-        if ((a.amount === undefined || a.amount === null) && b.amount) {
-            return 1;
-        }
-        if (a.amount && (b.amount === undefined || b.amount === null)) {
-            return -1;
-        }
-        if (aa > ba) {
-            return 1;
-        }
-        if (aa < ba) {
-            return -1;
-        }
-        return 0;
-    }
-
-    private handleTiers(tiersData: SettingsKycTierShortExListResult): void {
-        if ((tiersData.count ?? 0 > 0) && tiersData.list) {
-            const rawTiers = [...tiersData.list];
-            const sortedTiers = rawTiers.sort((a, b) => this.tierSortHandler(a, b));
-            const currentTierId = this.auth.user?.kycTierId;
-            let beforeCurrentTier = (sortedTiers.find(x => x.settingsKycTierId === currentTierId) !== undefined);
-            this.tiers = sortedTiers.map(val => {
-                const defaultDescription = 'Start verification process to increase your limit up to this level.';
-                const unlimitVal = (val.amount === undefined || val.amount === null);
-                let tierPassed = false;
-                if (beforeCurrentTier) {
-                    if (val.settingsKycTierId === currentTierId) {
-                        beforeCurrentTier = false;
-                        if (val.originalLevelName !== null) {
-                            tierPassed = this.auth.user?.kycValid ?? true;
-                            if (tierPassed === false && this.auth.user?.kycReviewRejectedType?.toLowerCase() === 'final') {
-                                tierPassed = true;
-                            }
-                        } else {
-                            tierPassed = true;
-                        }
-                    } else {
-                        tierPassed = true;
-                    }
-                }
-                if (val.settingsKycTierId === this.verifiedTierId) {
-                    tierPassed = true;
-                }
-                return {
-                    limit: (unlimitVal) ?
-                        'Unlimited' :
-                        new Intl.NumberFormat('de-DE', {
-                            minimumFractionDigits: 0,
-                            style: 'currency',
-                            currency: 'EUR'
-                        }).format(val.amount ?? 0),
-                    name: val.name,
-                    passed: tierPassed,
-                    subtitle: val.levelName ?? 'Identity',
-                    description: val.description ?? defaultDescription,
-                    flow: val.originalLevelName ?? ''
-                } as TierItem;
-            });
-            // If the user's KYC provider is Shufti, set inactive all tiers but the first
-            if (this.auth.user?.kycProvider === KycProvider.Shufti) {
-                let passedFlag = false;
-                let i = 0;
-                while (i < this.tiers.length) {
-                    if (i > 0 && passedFlag) {
-                        this.tiers[i].passed = true;
-                    }
-                    if (!this.tiers[i].passed) {
-                        passedFlag = true;
-                    }
-                    i++;
-                }
-            }
         }
     }
 

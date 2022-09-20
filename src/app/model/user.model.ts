@@ -1,6 +1,10 @@
-import { Gender, KycProvider, KycStatus, User, UserContact, UserDevice, UserRole, UserType } from './generated-models';
+import { Gender, KycProvider, KycStatus, User, UserAction, UserContact, UserDevice, UserRole, UserType } from './generated-models';
 import {
   KycStatusList,
+  UserActionResultList,
+  UserActionResultView,
+  UserActionTypeList,
+  UserActionTypeView,
   UserModeShortList,
   UserModeView,
   UserTypeList,
@@ -466,5 +470,30 @@ export class DeviceItem {
     this.location = data?.location ?? '';
     this.browser = data?.browser ?? '';
     this.device = data?.device ?? '';
+  }
+}
+
+export class UserActionItem {
+  id = '';
+  userId = '';
+  date = '';
+  objectId = '';
+  linkedIds: string[] = [];
+  info = '';
+  status = '';
+  actionType: UserActionTypeView | null = null;
+  result: UserActionResultView | null = null;
+
+  constructor(data: UserAction | null) {
+    this.id = data?.userActionId ?? '';
+    this.userId = data?.userId ?? '';
+    const datepipe: DatePipe = new DatePipe('en-US');
+    this.date = datepipe.transform(data?.date, 'dd MMM YYYY HH:mm:ss') ?? '';
+    this.objectId = data?.objectId ?? '';
+    this.linkedIds = data?.linkedIds ?? [];
+    this.info = data?.info ?? '';
+    this.status = data?.status ?? '';
+    this.actionType = UserActionTypeList.find((x) => x.id === data?.actionType) as UserActionTypeView;
+    this.result = UserActionResultList.find((x) => x.id === data?.result) as UserActionResultView;
   }
 }
