@@ -21,6 +21,7 @@ export class AdminUserActionsComponent implements OnInit, OnDestroy, AfterViewIn
     'search'
   ];
   displayedColumns: string[] = [
+    'details',
     'date',
     'userId',
     'actionType',
@@ -47,7 +48,7 @@ export class AdminUserActionsComponent implements OnInit, OnDestroy, AfterViewIn
     private adminService: AdminDataService,
     private router: Router
   ) {
-    this.permission = this.auth.isPermittedObjectCode('NOTIFICATIONS');
+    this.permission = this.auth.isPermittedObjectCode('SYSTEM_USERS');
   }
 
   ngOnInit(): void {

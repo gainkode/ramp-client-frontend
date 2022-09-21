@@ -118,21 +118,40 @@ export class WidgetCryptoDetailsComponent implements OnInit, OnDestroy {
   private loadCurrencyList(currencySettings: SettingsCurrencyWithDefaults) {
     let itemCount = 0;
     this.currencies = [];
+    let currencyFiat = false;
     if (currencySettings !== null) {
       const currencyList = currencySettings.settingsCurrency;
-      let defaultCryptoCurrency = this.auth.user?.defaultCryptoCurrency ?? '';
-      if (defaultCryptoCurrency === '') {
-        defaultCryptoCurrency = 'BTC';
-      }
       if (this.widget?.currencyFrom !== '') {
-        defaultCryptoCurrency = this.widget?.currencyFrom ?? 'BTC';
+        const widgetCurrency = currencyList?.list?.find(x => x.symbol === this.widget?.currencyFrom);
+        if (widgetCurrency) {
+          currencyFiat = widgetCurrency.fiat === true;
+        }
+      }
+
+      let selectedCurrency = '';
+      if (currencyFiat) {
+        selectedCurrency = this.auth.user?.defaultFiatCurrency ?? '';
+        if (selectedCurrency === '') {
+          selectedCurrency = 'EUR';
+        }
+        if (this.widget?.currencyFrom !== '') {
+          selectedCurrency = this.widget?.currencyFrom ?? 'EUR';
+        }
+      } else {
+        selectedCurrency = this.auth.user?.defaultCryptoCurrency ?? '';
+        if (selectedCurrency === '') {
+          selectedCurrency = 'BTC';
+        }
+        if (this.widget?.currencyFrom !== '') {
+          selectedCurrency = this.widget?.currencyFrom ?? 'BTC';
+        }
       }
       itemCount = currencyList?.count as number;
       if (itemCount > 0) {
         this.currencies = currencyList?.list?.
           map((val) => new CurrencyView(val)).
-          filter((c) => c.fiat === false) as CurrencyView[];
-        this.currencyField?.setValue(defaultCryptoCurrency);
+          filter((c) => c.fiat === currencyFiat) as CurrencyView[];
+        this.currencyField?.setValue(selectedCurrency);
       }
     }
   }
