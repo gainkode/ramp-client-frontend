@@ -1,17 +1,13 @@
 import { Injectable } from "@angular/core";
 import { Subscription } from "rxjs";
 import { take } from "rxjs/operators";
-import { KycProvider, LoginResult, PaymentInstrument, PaymentProviderByInstrument, SettingsCurrencyWithDefaults, SettingsFeeShort, SettingsKycTierShortExListResult, TransactionSource, TransactionType, User, WireTransferBankAccountShort } from "../model/generated-models";
+import { KycProvider, LoginResult, PaymentInstrument, PaymentProviderByInstrument, SettingsCurrencyWithDefaults, SettingsFeeShort, SettingsKycTierShortEx, SettingsKycTierShortExListResult, TransactionSource, TransactionType, User, WireTransferBankAccountShort } from "../model/generated-models";
 import { WidgetSettings, WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from "../model/payment-base.model";
 import { CheckoutSummary, PaymentProviderInstrumentView, WireTransferPaymentCategoryList } from "../model/payment.model";
 import { AuthService } from "./auth.service";
 import { ErrorService } from "./error.service";
 import { PaymentDataService } from "./payment.service";
-
-class KycTierResultData {
-    levelName: string | null = '';
-    required = false;
-}
+import { getCurrentTierLevelName, isKycRequired, KycTierResultData } from "./widget.utils";
 
 @Injectable()
 export class WidgetService {
@@ -273,7 +269,9 @@ export class WidgetService {
             widget.widgetId).valueChanges.pipe(take(1));
         this.pSubscriptions.add(
             tiersData$.subscribe(({ data }) => {
-                const tierData = this.getCurrentTierLevelName(data.getAppropriateSettingsKycTiers as SettingsKycTierShortExListResult);
+                const tierData = getCurrentTierLevelName(
+                    this.auth.user?.kycTierId ?? '', 
+                    data.getAppropriateSettingsKycTiers as SettingsKycTierShortExListResult);
                 this.getKycStatus(summary, widget, tierData);
             }, (error) => {
                 if (this.onProgressChanged) {
@@ -282,22 +280,6 @@ export class WidgetService {
                 this.handleError(error, summary.email, 'Unable to get verification levels');
             })
         );
-    }
-
-    private getCurrentTierLevelName(tiersData: SettingsKycTierShortExListResult): KycTierResultData {
-        const result: KycTierResultData = {
-            levelName: null,
-            required: false
-        };
-        if ((tiersData.count ?? 0 > 0) && tiersData.list) {
-            const currentTierId = this.auth.user?.kycTierId;
-            const newTier = tiersData.list[0];
-            if (newTier.settingsKycTierId !== currentTierId) {
-                result.levelName = newTier?.originalLevelName ?? null;
-                result.required = (result.levelName !== null);
-            }
-        }
-        return result;
     }
 
     private getKycStatus(summary: CheckoutSummary, widget: WidgetSettings, tierData: KycTierResultData): void {
@@ -311,7 +293,7 @@ export class WidgetService {
         this.pSubscriptions.add(
             kycStatusData$.subscribe(({ data }) => {
                 const userKyc = data.me as User;
-                const kycData = this.isKycRequired(userKyc, tierData);
+                const kycData = isKycRequired(userKyc, tierData);
                 if (this.onProgressChanged) {
                     this.onProgressChanged(false);
                 }
@@ -392,35 +374,6 @@ export class WidgetService {
         //     }));
         // }
         return dataList;
-    }
-
-    private isKycRequired(currentUser: User, tierData: KycTierResultData): [boolean | null, string] {
-        let result = true;
-        const kycStatus = currentUser.kycStatus?.toLowerCase() ?? 'init';
-        let exceedTierName = '';
-        if (tierData.required === true) {
-            result = true;
-            exceedTierName = tierData.levelName ?? '';
-        } else {
-            if (kycStatus !== 'init' && kycStatus !== 'unknown') {
-                result = false;
-            } else {
-                // if kycStatus = 'init' or 'unknown'
-                if (tierData.levelName !== null) {
-                    const valid = currentUser.kycValid ?? true;
-                    if (valid === true) {
-                        result = false;
-                    } else if (valid === false) {
-                        if (currentUser.kycReviewRejectedType?.toLowerCase() === 'final') {
-                            return [null, ''];
-                        }
-                    }
-                } else {
-                    result = false;
-                }
-            }
-        }
-        return [result, exceedTierName];
     }
 
     private handleError(error: any, email: string, defaultMessage: string): void {

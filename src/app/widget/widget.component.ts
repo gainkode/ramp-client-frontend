@@ -173,12 +173,12 @@ export class WidgetComponent implements OnInit {
         //{"minAmountFrom":0,"maxAmountFrom":0,"fixedAmountFrom":0,"kycBeforePayment":false,"disclaimer":true}
         const extraData = JSON.parse(data.additionalSettings);
         this.widget.disclaimer = extraData.disclaimer ?? true;
-        this.widget.kycFirst = extraData.kycBeforePayment ?? false;
+        this.widget.kycFirst = true;//test extraData.kycBeforePayment ?? false;
         this.widget.minAmountFrom = extraData.minAmountFrom;
         this.widget.maxAmountFrom = extraData.maxAmountFrom;
       } else {
         this.widget.disclaimer = true;
-        this.widget.kycFirst = false;
+        this.widget.kycFirst = true;//test false;
       }
       let userTransaction: TransactionType | undefined = undefined;
       let presetAddress = false;
@@ -244,7 +244,7 @@ export class WidgetComponent implements OnInit {
     } else {  // Quick checkout w/o parameters
       if (!this.widget.embedded) {
         this.widget.disclaimer = false;
-        this.widget.kycFirst = false;
+        this.widget.kycFirst = true;//test false;
         this.widget.email = '';
         // temp
         //this.widget.kycFirst = true;
@@ -640,6 +640,9 @@ export class WidgetComponent implements OnInit {
 
 
     const nextStage = 4;
+
+    console.log(this.widget.kycFirst, this.requestKyc, this.widget.embedded);
+
     if (this.widget.kycFirst && this.requestKyc && !this.widget.embedded) {
       this.nextStage('verification', 'Verification', nextStage, false);
     } else {
