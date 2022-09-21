@@ -253,7 +253,6 @@ export class CardView {
 export class InvoiceView {
     id = '';
     invoiceId = '';
-    name = '';
     walletAddress = '';
     amountSource = 0;
     amountConverted = 0;
@@ -272,7 +271,6 @@ export class InvoiceView {
     constructor(data: CryptoInvoiceCreationResult) {
         this.id = data.invoice?.name ?? '';
         this.invoiceId = data.invoice?.cryptoInvoiceId ?? '';
-        this.name = data.invoice?.name ?? '';
         this.walletAddress = data.invoice?.destination ?? '';
         this.amountSource = data.invoice?.amountToSend ?? 0;
         this.currencySource = data.invoice?.currencyToSend ?? '';

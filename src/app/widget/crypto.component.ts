@@ -138,8 +138,6 @@ export class CryptoWidgetComponent implements OnInit {
         this.summary.email = this.auth?.user?.email ?? '';
       }
     }
-
-    console.log('Widget', this.widget);
   }
 
   private startNotificationListener(): void {
@@ -169,9 +167,7 @@ export class CryptoWidgetComponent implements OnInit {
   private handleTransactionSubscription(data: any): void {
     const transaction = data.transactionServiceNotification;
     if (transaction && this.invoice) {
-      console.log(transaction);
-      console.log(this.invoice);
-      if (this.invoice.name === transaction.invoice) {
+      if (this.invoice.id === transaction.invoice) {
         if (transaction.type === TransactionServiceNotificationType.CryptoFullPaid) {
           this.paymentComplete = true;
           this.paymentTitle = 'Complete';
@@ -266,8 +262,6 @@ export class CryptoWidgetComponent implements OnInit {
     this.summary.amountFromPrecision = data.amountFromPrecision;
     this.summary.currencyFrom = data.currencyFrom;
     this.summary.email = data.email;
-    console.log(this.auth.user?.email);
-    console.log(this.summary);
     if (this.summary.email === this.auth.user?.email) {
       this.createTransaction();
     } else {

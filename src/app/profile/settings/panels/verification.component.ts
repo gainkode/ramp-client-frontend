@@ -89,7 +89,6 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
                     this.progressChange.emit(false);
                     if (this.auth.user) {
                         this.tiers = getTierBlocks(this.auth.user, this.verifiedTierId, data.mySettingsKycTiers);
-                        console.log(this.tiers);
                     }
                     this.kycUrl = settingsCommon.kycBaseAddress as string;
                 }, (error) => {
