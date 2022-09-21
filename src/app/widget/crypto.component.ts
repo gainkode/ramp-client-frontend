@@ -168,15 +168,19 @@ export class CryptoWidgetComponent implements OnInit {
 
   private handleTransactionSubscription(data: any): void {
     const transaction = data.transactionServiceNotification;
-    if (transaction) {
-      if (transaction.type === TransactionServiceNotificationType.CryptoFullPaid) {
-        this.paymentComplete = true;
-        this.paymentTitle = 'Complete';
-        this.nextStage('payment_done', 'Complete', 6);
-      } else if (transaction.type === TransactionServiceNotificationType.CryptoPartPaid) {
-        this.paymentComplete = false;
-        this.paymentTitle = 'Payment in progress';
-        this.nextStage('payment_done', 'Payment in progress', 5);
+    if (transaction && this.invoice) {
+      console.log(transaction);
+      console.log(this.invoice);
+      if (this.invoice.name === transaction.invoice) {
+        if (transaction.type === TransactionServiceNotificationType.CryptoFullPaid) {
+          this.paymentComplete = true;
+          this.paymentTitle = 'Complete';
+          this.nextStage('payment_done', 'Complete', 6);
+        } else if (transaction.type === TransactionServiceNotificationType.CryptoPartPaid) {
+          this.paymentComplete = false;
+          this.paymentTitle = 'Payment in progress';
+          this.nextStage('payment_done', 'Payment in progress', 5);
+        }
       }
     }
   }
