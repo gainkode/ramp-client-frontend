@@ -144,6 +144,7 @@ export class CryptoWidgetComponent implements OnInit {
     this.notificationStarted = true;
     this.pNotificationsSubscription = this.notification.subscribeToTransactionNotifications().subscribe(
       ({ data }) => {
+        console.log('Transaction notification received', data);
         this.handleTransactionSubscription(data);
       },
       (error) => {
