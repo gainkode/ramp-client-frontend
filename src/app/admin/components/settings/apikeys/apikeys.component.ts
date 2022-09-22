@@ -29,6 +29,7 @@ export class AdminApiKeysComponent implements OnInit, OnDestroy, AfterViewInit {
   permission = 0;
   apiKeys: ApiKeyItem[] = [];
   selectedKey: ApiKeyItem | undefined = undefined;
+  apiKey = '';
   secret = '';
   keyCount = 0;
   pageSize = 50;
@@ -133,8 +134,10 @@ export class AdminApiKeysComponent implements OnInit, OnDestroy, AfterViewInit {
     );
   }
 
-  onSaveKey(secret: string, content: any): void {
-    this.secret = secret;
+  onSaveKey(keyData: string, content: any): void {
+    const data = keyData.split('|');
+    this.apiKey = data[0];
+    this.secret = data[1];
     if (this.detailsDialog) {
       this.detailsDialog.close();
       this.modalService.open(content, {

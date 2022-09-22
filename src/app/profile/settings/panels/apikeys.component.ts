@@ -116,7 +116,8 @@ export class ProfileApiKeysSettingsComponent implements OnInit, OnDestroy {
                     width: '500px',
                     data: {
                         title: 'New API key has been created',
-                        message: apiKeyData.secret
+                        message: apiKeyData.secret,
+                        button: apiKeyData.apiKeyId
                     }
                 });
             }, (error) => {

@@ -211,6 +211,14 @@ $font_main: var(--font_main);
     }
 }
 
+.__dialog-subtitle-block {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+}
+
 .__dialog-secret-content-block {
     display: flex;
     flex-direction: column;
@@ -223,4 +231,18 @@ $font_main: var(--font_main);
     flex-direction: row;
     justify-content: center;
     align-items: center;
+}
+
+.__dialog-block-title {
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 18px;
+    color: $color_purple_900_text;
+
+    @media (max-width: $md3 + px) {
+        font-size: 10px;
+        line-height: 16px;
+    }
 }

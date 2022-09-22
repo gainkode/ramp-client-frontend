@@ -101,7 +101,7 @@ export class AdminApiKeyDetailsComponent implements OnInit, OnDestroy {
       requestData$.subscribe(({ data }) => {
         this.saveInProgress = false;
         const apiKeyData = data.createUserApiKey as ApiKeySecret;
-        this.save.emit(apiKeyData.secret);
+        this.save.emit(`${apiKeyData.apiKeyId}|${apiKeyData.secret}`);
       }, (error) => {
         this.saveInProgress = false;
         this.errorMessage = error;

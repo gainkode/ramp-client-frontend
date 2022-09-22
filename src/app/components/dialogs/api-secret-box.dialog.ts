@@ -18,4 +18,8 @@ export class ApiSecretDialogBox {
     copySecret(): void {
         this.clipboard.copy(this.data.message ?? '');
     }
+
+    copyApiKey(): void {
+        this.clipboard.copy(this.data.button ?? '');
+    }
 }
