@@ -56,9 +56,8 @@ export class WidgetCryptoCompleteComponent implements OnInit, OnDestroy {
     this.pSubscriptions.add(
       this.dataService.calculateInvoice(this.data?.invoiceId ?? '').subscribe(
         ({ data }) => {
-          this.data = new InvoiceView(data.createInvoice as CryptoInvoiceCreationResult);
+          this.data = new InvoiceView(data.calculateInvoice as CryptoInvoiceCreationResult);
         }, (error) => {
-
         }
       )
     );
