@@ -48,7 +48,7 @@ export class NavPopupComponent implements OnInit, OnDestroy {
                     {
                         code: '',
                         id: 'test_kyc_notification',
-                        name: 'KYC Test Notification',
+                        name: 'Test KYC Notification',
                         url: '',
                         icon: 'domain_verification'
                     }
@@ -59,7 +59,7 @@ export class NavPopupComponent implements OnInit, OnDestroy {
                     {
                         code: '',
                         id: 'test_user_notification',
-                        name: 'KYC User Notification',
+                        name: 'Test User Notification',
                         url: '',
                         icon: 'notification_important'
                     }
