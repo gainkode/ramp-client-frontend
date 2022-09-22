@@ -345,7 +345,7 @@ export class CryptoWidgetComponent implements OnInit {
   }
   // ====================
 
-  // == KYC =============
+  // ======= KYC ========
   kycBack(): void {
     this.stageBack();
   }
