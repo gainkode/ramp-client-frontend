@@ -18,6 +18,8 @@ export class EnvService {
     public static main_font = 'Ubuntu';
     public static cookie_link = '';
     public static terms_link = '';
+    public static privacy_link = '';
+    public static show_privacy_link = false;
 
     public static widget_bg_mask = 'true';
     public static widget_bg_name = 'assets/widget-bg.svg';

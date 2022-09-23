@@ -965,6 +965,12 @@ $font_main: var(--font_main);
     grid-template-rows: 36px;
 }
 
+.__widget-data-three-column-grid-wide {
+    display: grid;
+    grid-template-columns: 150px auto 24px;
+    grid-template-rows: 36px;
+}
+
 .__widget-data-three-column-item-one {
     grid-row: 1;
     grid-column: 1;
@@ -992,6 +998,29 @@ $font_main: var(--font_main);
 .__widget-data-three-column-item-three {
     grid-row: 1;
     grid-column: 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.__widget-data-two-column-grid {
+    display: grid;
+    grid-template-columns: auto 24px;
+    grid-template-rows: 36px;
+}
+
+.__widget-data-two-column-item-one {
+    grid-row: 1;
+    grid-column: 1;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 0px 8px 0px 0px;
+}
+
+.__widget-data-two-column-item-two {
+    grid-row: 1;
+    grid-column: 2;
     display: flex;
     justify-content: center;
     align-items: center;

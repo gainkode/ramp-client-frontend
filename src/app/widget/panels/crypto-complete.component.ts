@@ -52,6 +52,14 @@ export class WidgetCryptoCompleteComponent implements OnInit, OnDestroy {
     this.clipboard.copy(this.data?.walletAddress ?? '');
   }
 
+  copySourceAmount(): void {
+    this.clipboard.copy(this.data?.amountSourceValue ?? '');
+  }
+
+  copyConvertedAmount(): void {
+    this.clipboard.copy(this.data?.amountConvertedValue ?? '');
+  }
+
   private reloadTransactionData(): void {
     this.pSubscriptions.add(
       this.dataService.calculateInvoice(this.data?.invoiceId ?? '').subscribe(

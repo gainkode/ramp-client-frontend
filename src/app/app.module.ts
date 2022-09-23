@@ -77,19 +77,31 @@ export class AppModule {
   errorLink = onError(({ forward, graphQLErrors, networkError, operation }) => {
     if (graphQLErrors) {
       for (const err of graphQLErrors) {
+
+        //console.log('GrapQL error occured: ', operation.operationName, err);
+
         if (err.extensions !== null) {
           const code = err.extensions?.code as string;
           if (code.toUpperCase() === 'UNAUTHENTICATED') {
-            console.error('UNAUTHENTICATED');
-            const refreshToken = this.authService.refreshToken().toPromise();
-            return fromPromise(
-              refreshToken.catch(error => {
-                this.authService.logout();
+            let forceRefreshToken = true;
+            // if (operation.operationName !== 'MyStateTest') {
+            //   console.error('UNAUTHENTICATED');
+            // }
+            if (operation.operationName === 'RefreshToken') {
+              console.error('RefreshToken failed', err);
+              return undefined;
+            }
+            if (forceRefreshToken) {
+              const refreshToken = this.authService.refreshToken().toPromise();
+              return fromPromise(
+                refreshToken.catch(error => {
+                  this.authService.logout();
+                  return forward(operation);
+                })
+              ).filter(value => Boolean(value)).flatMap(accessToken => {
                 return forward(operation);
-              })
-            ).filter(value => Boolean(value)).flatMap(accessToken => {
-              return forward(operation);
-            });
+              });
+            }
           }
           let codeValue = err.extensions?.code ?? 'INTERNAL_SERVER_ERROR';
           if (codeValue === 'INTERNAL_SERVER_ERROR' && err.message) {
@@ -106,7 +118,11 @@ export class AppModule {
       }
     }
     if (networkError) {
-      console.error('network error', networkError.name, networkError);
+      console.log('Network error occured: ', operation.operationName, networkError);
+
+      if (operation.operationName !== 'MyStateTest') {
+        console.error('network error', networkError.name, networkError);
+      }
       if (operation.operationName === 'GetRates') {
         sessionStorage.setItem('currentRateErrorCode', networkError.name);
         sessionStorage.setItem('currentRateError', networkError.message);
@@ -127,10 +143,12 @@ export class AppModule {
       sessionStorage.setItem('currentError', '');
     }
     if (operation.operationName === 'AddMyWidgetUserParams') {
-      return { headers: {
-        'x-auth-id': EnvService.widget_api_key,
-        'x-auth-key': EnvService.widget_secret
-      } };
+      return {
+        headers: {
+          'x-auth-id': EnvService.widget_api_key,
+          'x-auth-key': EnvService.widget_secret
+        }
+      };
     } else {
       const token = localStorage.getItem('currentToken');
       if (token === null) {

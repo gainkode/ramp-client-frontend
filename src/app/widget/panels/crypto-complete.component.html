@@ -10,30 +10,46 @@
             <div class="__widget-summary-item">
                 <input class="__text-box-noborder" type="text" readonly [value]="data?.id" />
             </div>
+        </div>
 
-            <div class="__widget-summary-item">
+        <div class="__widget-data-three-column-grid-wide">
+            <div class="__widget-data-three-column-item-one">
                 Source amount:
             </div>
-            <div class="__widget-summary-item">
+            <div class="__widget-data-three-column-item-two">
                 <input class="__text-box-noborder" type="text" readonly [value]="data?.amountSourceValue" />
             </div>
-
-            <div class="__widget-summary-item">
-                Converted amount:
-            </div>
-            <div class="__widget-summary-item">
-                <input class="__text-box-noborder" type="text" readonly [value]="data?.amountConvertedValue" />
+            <div class="__widget-data-three-column-item-three">
+                <button class="__tool-button" (click)="copySourceAmount()">
+                    <mat-icon style="font-size: 20px;">content_copy</mat-icon>
+                </button>
             </div>
         </div>
 
-        <div class="__widget-data-three-column-grid">
+        <div class="__widget-data-three-column-grid-wide">
+            <div class="__widget-data-three-column-item-one">
+                Converted amount:
+            </div>
+            <div class="__widget-data-three-column-item-two">
+                <input class="__text-box-noborder" type="text" readonly [value]="data?.amountConvertedValue" />
+            </div>
+            <div class="__widget-data-three-column-item-three">
+                <button class="__tool-button" (click)="copyConvertedAmount()">
+                    <mat-icon style="font-size: 20px;">content_copy</mat-icon>
+                </button>
+            </div>
+        </div>
+
+        <div class="__widget-summary-grid __widget-summary-grid-wide">
             <div class="__widget-data-three-column-item-one">
                 Address:
             </div>
-            <div class="__widget-data-three-column-item-two">
+        </div>
+        <div class="__widget-data-two-column-grid">
+            <div class="__widget-data-two-column-item-one">
                 <input class="__text-box-noborder" type="text" readonly [value]="data?.walletAddress" />
             </div>
-            <div class="__widget-data-three-column-item-three">
+            <div class="__widget-data-two-column-item-two">
                 <button class="__tool-button" (click)="copyAddress()">
                     <mat-icon style="font-size: 20px;">content_copy</mat-icon>
                 </button>

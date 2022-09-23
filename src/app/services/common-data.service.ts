@@ -41,7 +41,7 @@ query GetRoles {
 `;
 
 const MY_TRANSACTIONS_TOTAL = gql`
-query MyState {
+query MyStateTest {
   myState {
     totalAmountEur
   }
