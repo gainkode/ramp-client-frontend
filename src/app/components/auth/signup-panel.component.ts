@@ -39,6 +39,8 @@ export class SignUpPanelComponent implements OnInit, OnDestroy {
     extraData = false;
     validData = false;
     termsLink = '';
+    privacyLink = '';
+    showPrivacyLink = false;
     userTypeSection = 'personal';
     done = false;
 
@@ -103,6 +105,8 @@ export class SignUpPanelComponent implements OnInit, OnDestroy {
         private errorHandler: ErrorService,
         private formBuilder: FormBuilder) {
         this.termsLink = EnvService.terms_link;
+        this.privacyLink = EnvService.privacy_link;
+        this.showPrivacyLink = EnvService.show_privacy_link;
     }
 
     ngOnInit(): void {

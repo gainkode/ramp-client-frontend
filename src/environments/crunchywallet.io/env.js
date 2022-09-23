@@ -34,6 +34,10 @@
     window.__env_data.cookie_link = 'https://crunchywallet.io/cookies-policy/';
     // Terms and conditions link
     window.__env_data.terms_link = 'https://crunchywallet.io/terms-and-conditions/';
+    // Privacy policy link
+    window.__env_data.privacy_link = 'http://crunchywallet.io/privacy-policy/';
+    // Show privacy policy link
+    window.__env_data.show_privacy_link = false;
     // Main font name
     window.__env_data.main_font = 'Poppins';
 

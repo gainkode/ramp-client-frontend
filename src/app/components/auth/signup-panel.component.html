@@ -21,8 +21,8 @@
             <a target="_blank" rel="noopener noreferrer" [href]="termsLink">
                 Terms & <br *ngIf="wizardButtons">Conditions
             </a>
-            and
-            <a target="_blank" rel="noopener noreferrer" [href]="termsLink">
+            <span *ngIf="showPrivacyLink" class="__auth-disclaimer-line">and</span>
+            <a target="_blank" rel="noopener noreferrer" [href]="privacyLink" *ngIf="showPrivacyLink">
                 Privacy Policy
             </a>
         </mat-checkbox>

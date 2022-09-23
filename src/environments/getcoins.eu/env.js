@@ -38,6 +38,11 @@
     window.__env_data.cookie_link = 'http://getcoins.eu/index.php/cookies-policy/';
     // Terms and conditions link
     window.__env_data.terms_link = 'http://getcoins.eu/index.php/terms-and-conditions/';
+    // Privacy policy link
+    window.__env_data.privacy_link = 'http://getcoins.eu/index.php/privacy-policy/';
+    // Show privacy policy link
+    window.__env_data.show_privacy_link = false;
+
     //////////////////////////////////////////////////
     //                                              //
     //                     COLORS                   //

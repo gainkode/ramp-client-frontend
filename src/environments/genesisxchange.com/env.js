@@ -36,6 +36,10 @@
     window.__env_data.cookie_link = 'https://genesisxchange.com/cookies-policy/';
     // Terms and conditions link
     window.__env_data.terms_link = 'https://genesisxchange.com/terms-and-conditiones/';
+    // Privacy policy link
+    window.__env_data.privacy_link = 'http://genesisxchange.com/privacy-policy/';
+    // Show privacy policy link
+    window.__env_data.show_privacy_link = true;
 
     window.__env_data.widget_bg_mask = 'false';
     window.__env_data.widget_bg_name = 'https://app.genesisxchange.com/images/widget-bg.jpg';

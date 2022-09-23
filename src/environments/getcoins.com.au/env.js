@@ -38,6 +38,10 @@
     window.__env_data.cookie_link = 'http://getcoins.com.au/index.php/cookies-policy/';
     // Terms and conditions link
     window.__env_data.terms_link = 'http://getcoins.com.au/index.php/terms-and-conditions/';
+    // Privacy policy link
+    window.__env_data.privacy_link = 'http://getcoins.com.au/index.php/privacy-policy/';
+    // Show privacy policy link
+    window.__env_data.show_privacy_link = false;
 
     window.__env_data.widget_secret = '072c10b958e4e67348be4a5ab2e7def687c64a0d';
     window.__env_data.widget_api_key = '0e63b374-d1bd-4e95-b2b5-368866dd1380';
