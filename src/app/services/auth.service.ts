@@ -737,6 +737,16 @@ export class AuthService {
     }
 
     setLoginUser(login: LoginResult): void {
+
+        //test
+        // if (login.user) {
+        //     if (login.user.kycTierId === 'cdf58803-5195-4252-ab95-d65050adb397') {
+        //         login.user.kycTierId = 'c9ef76b8-9814-4a96-9bdd-985d6ef62708';
+        //     }
+        // }
+
+
+
         localStorage.setItem('currentUser', JSON.stringify(login.user));
         localStorage.setItem('currentToken', login.authToken as string);
         localStorage.setItem('currentAction', login.authTokenAction as string);

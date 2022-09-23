@@ -46,6 +46,7 @@ export type ApiKey = {
   __typename?: 'ApiKey';
   apiKeyId: Scalars['ID'];
   userId: Scalars['String'];
+  user?: Maybe<User>;
   created: Scalars['DateTime'];
   disabled?: Maybe<Scalars['DateTime']>;
 };
@@ -60,6 +61,7 @@ export type ApiKeySecret = {
   __typename?: 'ApiKeySecret';
   apiKeyId: Scalars['ID'];
   userId: Scalars['String'];
+  user?: Maybe<User>;
   secret: Scalars['String'];
   created: Scalars['DateTime'];
   disabled?: Maybe<Scalars['DateTime']>;
@@ -513,13 +515,32 @@ export type KycAppliedDocument = {
   details?: Maybe<Array<StringMap>>;
 };
 
+export type KycDocumentSubSubType = {
+  __typename?: 'KycDocumentSubSubType';
+  code?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  options?: Maybe<Array<Scalars['String']>>;
+};
+
+export type KycDocumentSubType = {
+  __typename?: 'KycDocumentSubType';
+  code?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  subTypes?: Maybe<Array<KycDocumentSubSubType>>;
+  options?: Maybe<Array<Scalars['String']>>;
+};
+
 export type KycDocumentType = {
   __typename?: 'KycDocumentType';
   code?: Maybe<Scalars['String']>;
   type?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
-  subTypes?: Maybe<Array<KycDocumentType>>;
+  subTypes?: Maybe<Array<KycDocumentSubType>>;
   options?: Maybe<Array<Scalars['String']>>;
 };
 
@@ -3347,7 +3368,8 @@ export enum UserActionResult {
   Succeeded = 'succeeded',
   Failed = 'failed',
   Canceled = 'canceled',
-  Error = 'error'
+  Error = 'error',
+  NotVerified = 'notVerified'
 }
 
 export enum UserActionType {
@@ -3376,7 +3398,9 @@ export enum UserActionType {
   Deposit = 'Deposit',
   Withdrawal = 'Withdrawal',
   MerchantBuy = 'MerchantBuy',
-  MerchantSell = 'MerchantSell'
+  MerchantSell = 'MerchantSell',
+  GenerateKycToken = 'generateKycToken',
+  KycCallback = 'kycCallback'
 }
 
 export type UserAddress = {

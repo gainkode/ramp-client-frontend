@@ -344,49 +344,49 @@ export class UserItem {
   }
 
   get customerListSelectorColumnStyle(): string[] {
-  return [
-    'customer-list-selector-column',
-    `customer-list-column-${this.getKycStatusColor()}`
-  ];
-}
+    return [
+      'customer-list-selector-column',
+      `customer-list-column-${this.getKycStatusColor()}`
+    ];
+  }
 
   get customerListDataColumnStyle(): string[] {
-  return [
-    'customer-list-data-column',
-    `customer-list-column-${this.getKycStatusColor()}`
-  ];
-}
+    return [
+      'customer-list-data-column',
+      `customer-list-column-${this.getKycStatusColor()}`
+    ];
+  }
 
   get fullFirstName(): string {
-  if (this.userType?.id === UserType.Merchant) {
-    return this.company;
-  } else if (this.userType?.id === UserType.Personal) {
-    return this.firstName;
+    if (this.userType?.id === UserType.Merchant) {
+      return this.company;
+    } else if (this.userType?.id === UserType.Personal) {
+      return this.firstName;
+    }
+    return '';
   }
-  return '';
-}
 
   get roleNames(): string {
-  return this.roles.join(', ');
-}
+    return this.roles.join(', ');
+  }
 
   get extendedName(): string {
-  if (this.fullName === '') {
-    return this.email;
-  } else {
-    return `${this.fullName} (${this.email})`;
+    if (this.fullName === '') {
+      return this.email;
+    } else {
+      return `${this.fullName} (${this.email})`;
+    }
   }
-}
 
-setFullName(): void {
-  if(this.userType?.id === UserType.Merchant) {
-  this.company = (this.firstName) ? this.firstName : '';
-  this.firstName = '';
-  this.lastName = '';
-  this.fullName = this.company;
-} else if (this.userType?.id === UserType.Personal) {
-  this.fullName = `${this.firstName ?? ''} ${this.lastName ?? ''}`.trim();
-}
+  setFullName(): void {
+    if (this.userType?.id === UserType.Merchant) {
+      this.company = (this.firstName) ? this.firstName : '';
+      this.firstName = '';
+      this.lastName = '';
+      this.fullName = this.company;
+    } else if (this.userType?.id === UserType.Personal) {
+      this.fullName = `${this.firstName ?? ''} ${this.lastName ?? ''}`.trim();
+    }
   }
 }
 

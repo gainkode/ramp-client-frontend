@@ -1204,7 +1204,13 @@ const GET_USER_API_KEYS = gql`
       count
       list {
         apiKeyId
-        userId
+        user {
+          userId
+          email
+          type
+          firstName
+          lastName
+        }
         created
         disabled
       }
