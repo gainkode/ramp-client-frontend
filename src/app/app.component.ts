@@ -33,7 +33,9 @@ export class AppComponent implements OnInit, OnDestroy {
     const totalData = this.commonService.getMyTransactionsTotal();
     this.subscriptions.add(
       totalData.valueChanges.pipe(take(1)).subscribe(({ data }) => {
-        this.startKycNotifications();
+        setTimeout(() => {
+          this.startKycNotifications();
+        }, 500);
       }, (error) => {
 
       })
@@ -192,13 +194,41 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   private startKycNotifications(): void {
+    console.log('Start KYC notifications');
     this.subscriptions.add(
       this.notification.subscribeToKycNotifications().subscribe(
         ({ data }) => {
           this.loadAccountData();
         },
         (error) => {
-          console.error('KYC notification error', error);
+          setTimeout(() => {
+            console.error('[1] KYC notification start error', error);
+            if (error.message === 'Access denied') {
+              this.subscriptions.add(
+                this.auth.refreshToken().subscribe(
+                  ({ data }) => {
+                    console.log('Token refreshed');
+                    setTimeout(() => {
+                      this.subscriptions.add(
+                        this.notification.subscribeToKycNotifications().subscribe(
+                          ({ data }) => {
+                            this.loadAccountData();
+                          },
+                          (error) => {
+                            console.error('[2] KYC notification start error', error);
+                            window.location.reload();
+                          }
+                        )
+                      );
+                    }, 500);
+                  },
+                  (error) => {
+                    console.error('Refresh token error: ', error);
+                  }
+                )
+              );
+            }
+          }, 500);
         }
       )
     );

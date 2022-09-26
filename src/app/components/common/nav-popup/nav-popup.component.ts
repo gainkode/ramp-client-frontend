@@ -72,6 +72,17 @@ export class NavPopupComponent implements OnInit, OnDestroy {
         this.stopNotifications();
     }
 
+    private showNotificationMessage(data: any): void {
+        if (this.userId) {
+            if (data.newNotification?.userNotificationTypeCode === 'TRANSACTION_STATUS_CHANGED') {
+                this.onTransactionUpdate.emit(data.newNotification?.linkedId);
+            }
+            if (this.userId === data.newNotification?.userId) {
+                this.openSnackBar(data.newNotification);
+            }
+        }
+    }
+
     private startNotifications(): void {
         this.subscriptions.add(
             this.notification.subscribeToNotifications().subscribe(
@@ -90,18 +101,38 @@ export class NavPopupComponent implements OnInit, OnDestroy {
                      * userNotificationTypeCode: "TRANSACTION_STATUS_CHANGED"
                      * viewed: null
                      */
-                    if (this.userId) {
-                        if (data.newNotification?.userNotificationTypeCode === 'TRANSACTION_STATUS_CHANGED') {
-                            this.onTransactionUpdate.emit(data.newNotification?.linkedId);
-                        }
-                        if (this.userId === data.newNotification?.userId) {
-                            this.openSnackBar(data.newNotification);
-                        }
-                    }
+                    this.showNotificationMessage(data);
                 },
                 (error) => {
-                    console.error('popup notification error', error);
                     // there was an error subscribing to notifications
+                    setTimeout(() => {
+                        console.error('[1] popup notification start error', error);
+                        if (error.message === 'Access denied') {
+                            this.subscriptions.add(
+                                this.auth.refreshToken().subscribe(
+                                    ({ data }) => {
+                                        console.log('Token refreshed');
+                                        setTimeout(() => {
+                                            this.subscriptions.add(
+                                                this.notification.subscribeToKycNotifications().subscribe(
+                                                    ({ data }) => {
+                                                        this.showNotificationMessage(data);
+                                                    },
+                                                    (error) => {
+                                                        console.error('[2] popup notification start error', error);
+                                                        window.location.reload();
+                                                    }
+                                                )
+                                            );
+                                        }, 500);
+                                    },
+                                    (error) => {
+                                        console.error('Refresh token error: ', error);
+                                    }
+                                )
+                            );
+                        }
+                    }, 500);
                 }
             )
         );

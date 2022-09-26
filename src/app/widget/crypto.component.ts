@@ -70,6 +70,7 @@ export class CryptoWidgetComponent implements OnInit {
     this.initMessage = 'Loading...';
     this.pager.init('initialization', 'Initialization');
     this.loadUserParams();
+    this.startNotificationListener();
   }
 
   ngOnDestroy(): void {
@@ -141,6 +142,7 @@ export class CryptoWidgetComponent implements OnInit {
   }
 
   private startNotificationListener(): void {
+    console.log('startNotificationListener');
     this.notificationStarted = true;
     this.pNotificationsSubscription = this.notification.subscribeToTransactionNotifications().subscribe(
       ({ data }) => {
@@ -150,14 +152,44 @@ export class CryptoWidgetComponent implements OnInit {
       (error) => {
         this.notificationStarted = false;
         // there was an error subscribing to notifications
-        if (!environment.production) {
-          console.error('Notifications error', error);
-        }
+        setTimeout(() => {
+          console.error('[1] startNotificationListener error', error);
+          if (!environment.production) {
+            console.error('Notifications error', error);
+          }
+          if (error.message === 'Access denied') {
+            this.pSubscriptions.add(
+              this.auth.refreshToken().subscribe(
+                ({ data }) => {
+                  console.log('Token refreshed');
+                  setTimeout(() => {
+                    this.pSubscriptions.add(
+                      this.notification.subscribeToTransactionNotifications().subscribe(
+                        ({ data }) => {
+                          console.log('Transaction notification received', data);
+                          this.handleTransactionSubscription(data);
+                        },
+                        (error) => {
+                          console.error('[2] startNotificationListener error', error);
+                          window.location.reload();
+                        }
+                      )
+                    );
+                  }, 500);
+                },
+                (error) => {
+                  console.error('Refresh token error: ', error);
+                }
+              )
+            );
+          }
+        }, 500);
       }
     );
   }
 
   private stopNotificationListener(): void {
+    console.log('stopNotificationListener');
     if (this.pNotificationsSubscription) {
       this.pNotificationsSubscription.unsubscribe();
     }
@@ -253,7 +285,7 @@ export class CryptoWidgetComponent implements OnInit {
 
   // == Order details page ==
   orderDetailsComplete(data: CheckoutSummary): void {
-    this.stopNotificationListener();
+    //this.stopNotificationListener();
     if (this.initState && (data.amountFrom)) {
       this.initState = false;
     }
@@ -366,6 +398,7 @@ export class CryptoWidgetComponent implements OnInit {
     }
     if (data.authTokenAction === 'Default' || data.authTokenAction === 'KycRequired') {
       this.auth.setLoginUser(data);
+      this.startNotificationListener();
       this.createTransaction();
     } else if (data.authTokenAction === 'UserInfoRequired') {
       this.auth.setLoginUser(data);
@@ -384,8 +417,10 @@ export class CryptoWidgetComponent implements OnInit {
         ({ data }) => {
           this.inProgress = false;
           this.invoice = new InvoiceView(data.createInvoice as CryptoInvoiceCreationResult);
-          this.startNotificationListener();
-          this.nextStage('order_complete', 'Complete', 4);
+          setTimeout(() => {
+            //this.startNotificationListener();
+            this.nextStage('order_complete', 'Complete', 4);
+          }, 500);
         }, (error) => {
           this.inProgress = false;
           if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
