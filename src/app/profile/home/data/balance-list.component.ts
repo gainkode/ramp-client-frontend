@@ -86,15 +86,15 @@ export class ProfileBalanceListComponent implements OnInit, OnDestroy {
     }
 
     private handleTransactions(vaults: VaultAccountEx[], fiats: FiatVault[]): void {
-        let total = 0;
+        let available = 0;
         if (vaults.length > 0) {
             vaults.forEach(vault => {
                 vault.balancesPerAsset?.forEach(balance => {
-                    total += balance.totalBalanceFiat ?? 0;
+                    available += balance.availableBalanceFiat ?? 0;
                     const balanceItem = this.balances.find(b => b.id === balance.assetId);
                     if (balanceItem) {
-                        balanceItem.increaseCrypto(balance.totalBalance);
-                        balanceItem.increaseFiat(balance.totalBalanceFiat);
+                        balanceItem.increaseCrypto(balance.availableBalance);
+                        balanceItem.increaseFiat(balance.availableBalanceFiat);
                     } else {
                         const currency = this.currencies.find(c => c.symbol === balance.assetId);
                         if (currency) {
@@ -114,7 +114,7 @@ export class ProfileBalanceListComponent implements OnInit, OnDestroy {
         }
         if (fiats.length > 0) {
             fiats.forEach(vault => {
-                total += vault.generalBalance ?? 0;
+                available += vault.generalBalance ?? 0;
                 const balanceItem = this.balances.find(b => b.id === vault.currency);
                 if (balanceItem) {
                     balanceItem.increaseCrypto(0);
@@ -136,6 +136,6 @@ export class ProfileBalanceListComponent implements OnInit, OnDestroy {
                 }
             });
         }
-        this.onUpdateTotal.emit(total);
+        this.onUpdateTotal.emit(available);
     }
 }

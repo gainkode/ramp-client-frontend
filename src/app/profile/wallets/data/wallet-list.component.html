@@ -11,13 +11,13 @@
                 <div class="__profile-wallet-item-data-container">
                     <div class="__profile-wallet-item-value-area">
                         <div *ngIf="wallet.crypto===false" class="__profile-wallet-item-crypto">
-                            {{wallet.totalFullFiat}}
+                            {{wallet.availableFullFiat}}
                         </div>
                         <div *ngIf="wallet.crypto===true" class="__profile-wallet-item-crypto">
-                            {{wallet.total}} {{wallet.code}}
+                            {{wallet.available}} {{wallet.code}}
                         </div>
                         <div class="__profile-wallet-item-fiat">
-                            {{wallet.totalValue}}
+                            {{wallet.availableValue}}
                         </div>
                     </div>
                     <div *ngIf="wallet.crypto===true" class="__profile-wallet-item-icon-box">
