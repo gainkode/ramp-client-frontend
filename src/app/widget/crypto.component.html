@@ -24,8 +24,8 @@
       </app-widget-register>
       <!-- Login Authentication -->
       <app-widget-login-auth *ngSwitchCase="'login_auth'" [email]="summary.email" [widget]="widget"
-        [requiredExtraData]="requiredExtraData" [allowCreate]=false (onBack)="loginBack()" (onProgress)="progressChanged($event)"
-        (onComplete)="loginComplete($event)">
+        [requiredExtraData]="requiredExtraData" [allowCreate]=false (onBack)="loginBack()"
+        (onProgress)="progressChanged($event)" (onComplete)="loginComplete($event)">
       </app-widget-login-auth>
       <!-- Code Authentication -->
       <app-widget-code-auth *ngSwitchCase="'code_auth'" [email]="summary.email" [codeLength]="5"
@@ -34,7 +34,8 @@
       </app-widget-code-auth>
       <app-widget-crypto-complete *ngSwitchCase="'order_complete'" [data]="invoice">
       </app-widget-crypto-complete>
-      <app-widget-crypto-finish *ngSwitchCase="'payment_done'" [complete]="paymentComplete" [title]="paymentTitle">
+      <app-widget-crypto-finish *ngSwitchCase="'payment_done'" [data]="invoice" [complete]="paymentComplete"
+        [success]="paymentSuccess" [title]="paymentTitle">
       </app-widget-crypto-finish>
       <app-widget-error *ngSwitchCase="'error'" [title]="transactionErrorTitle" [errorMessage]="transactionErrorMessage"
         (onFinish)="resetWizard()"></app-widget-error>

@@ -35,6 +35,7 @@ export class CryptoWidgetComponent implements OnInit {
   summary = new CheckoutSummary();
   widget = new WidgetSettings();
   paymentComplete = false;
+  paymentSuccess = false;
   paymentTitle = '';
   notificationStarted = false;
   logoSrc = `${EnvService.image_host}/images/logo-widget.png`;
@@ -202,12 +203,26 @@ export class CryptoWidgetComponent implements OnInit {
     if (transaction && this.invoice) {
       if (this.invoice.id === transaction.invoice) {
         if (transaction.type === TransactionServiceNotificationType.CryptoFullPaid) {
+          this.paymentSuccess = true;
           this.paymentComplete = true;
           this.paymentTitle = 'Complete';
           this.nextStage('payment_done', 'Complete', 6);
         } else if (transaction.type === TransactionServiceNotificationType.CryptoPartPaid) {
+          this.invoice.restAmount = transaction.restAmount ?? 0;
           this.paymentComplete = false;
           this.paymentTitle = 'Payment in progress';
+          this.nextStage('payment_done', 'Payment in progress', 5);
+        }
+      } else if (transaction.operationType === 'test-operation-type') {
+        if (transaction.type === TransactionServiceNotificationType.CryptoFullPaid) {
+          this.paymentSuccess = true;
+          this.paymentComplete = true;
+          this.paymentTitle = 'Complete Test';
+          this.nextStage('payment_done', 'Complete', 6);
+        } else if (transaction.type === TransactionServiceNotificationType.CryptoPartPaid) {
+          this.invoice.restAmount = transaction.restAmount ?? 0;
+          this.paymentComplete = false;
+          this.paymentTitle = 'Payment Test in progress';
           this.nextStage('payment_done', 'Payment in progress', 5);
         }
       }
@@ -217,6 +232,7 @@ export class CryptoWidgetComponent implements OnInit {
   resetWizard(): void {
     this.inProgress = false;
     this.requiredExtraData = false;
+    this.paymentSuccess = false;
     this.paymentComplete = false;
     this.summary.reset();
     this.initData(undefined);
@@ -411,6 +427,7 @@ export class CryptoWidgetComponent implements OnInit {
 
   private createTransaction(): void {
     this.inProgress = true;
+    this.paymentSuccess = false;
     this.paymentComplete = false;
     this.pSubscriptions.add(
       this.dataService.createInvoice(this.userParamsId, this.summary.currencyFrom, this.summary.amountFrom ?? 0).subscribe(
@@ -419,6 +436,7 @@ export class CryptoWidgetComponent implements OnInit {
           this.invoice = new InvoiceView(data.createInvoice as CryptoInvoiceCreationResult);
           setTimeout(() => {
             //this.startNotificationListener();
+            this.startAbandonTimer();
             this.nextStage('order_complete', 'Complete', 4);
           }, 500);
         }, (error) => {
@@ -438,6 +456,45 @@ export class CryptoWidgetComponent implements OnInit {
     this.transactionErrorMessage = messageText;
     this.transactionErrorTitle = messageTitle;
     this.nextStage('error', 'Error', 6);
+  }
+
+  private startAbandonTimer(): void {
+    let timeout = 5000;
+    this.pSubscriptions.add(
+      this.auth.getSettingsCommon().valueChanges.subscribe(
+        ({ data }) => {
+          this.inProgress = false;
+          const settingsDataString = data.getSettingsCommon.additionalSettings;
+          let settingsData = JSON.parse(settingsDataString ?? '{}');
+          if (typeof settingsData === 'string') {
+            settingsData = JSON.parse(settingsData);
+          }
+          const timeout = settingsData?.cryptoWidget?.paymentTimeout ?? 5000;
+          this.startConfirmedAbandonTimer(timeout);
+        }, (error) => {
+          this.inProgress = false;
+          this.startConfirmedAbandonTimer(timeout);
+        }
+      )
+    );
+  }
+
+  private startConfirmedAbandonTimer(interval: number): void {
+    setTimeout(() => {
+      this.pSubscriptions.add(
+        this.dataService.abandonCryptoInvoice(this.invoice?.invoiceId ?? '').subscribe(
+          ({ data }) => {
+            this.inProgress = false;
+            this.paymentSuccess = false;
+            this.paymentComplete = true;
+            this.paymentTitle = 'Time is out';
+            this.nextStage('payment_done', 'Complete', 6);
+          }, (error) => {
+            this.inProgress = false;
+          }
+        )
+      );
+    }, interval);
   }
 
   sendTestNotification(complete: boolean): void {

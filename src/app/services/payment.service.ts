@@ -426,6 +426,29 @@ mutation CalculateInvoice(
 }
 `;
 
+const ABANDON_TRANSACTION = gql`
+mutation AbandonTransaction(
+  $transactionId: String!
+) {
+  abandonTransaction(
+    transactionId: $transactionId
+  ) {
+    transactionId
+  }
+}
+`;
+
+const ABANDON_CRYPTO_INVOICE = gql`
+mutation AbandonCryptoInvoice(
+  $cryptoInvoiceId: String!
+) {
+  abandonCryptoInvoice(
+    cryptoInvoiceId: $cryptoInvoiceId
+  ) {
+    cryptoInvoiceId
+  }
+}
+`;
 
 @Injectable()
 export class PaymentDataService {
@@ -588,6 +611,7 @@ export class PaymentDataService {
     });
   }
 
+
   calculateInvoice(id: string): Observable<any> {
     return this.apollo.mutate({
       mutation: CALCULATE_INVOICE,
@@ -597,6 +621,26 @@ export class PaymentDataService {
     });
   }
 
+  abandonTransaction(id: string): Observable<any> {
+    const vars = {
+      transactionId: id
+    };
+    return this.apollo.mutate({
+      mutation: ABANDON_TRANSACTION,
+      variables: vars
+    });
+  }
+  
+  abandonCryptoInvoice(id: string): Observable<any> {
+    const vars = {
+      cryptoInvoiceId: id
+    };
+    return this.apollo.mutate({
+      mutation: ABANDON_CRYPTO_INVOICE,
+      variables: vars
+    });
+  }
+  
   getProviders(fiatCurrency: string, widgetId: string | undefined, source: TransactionSource): QueryRef<any, EmptyObject> {
     return this.apollo.watchQuery<any>({
       query: GET_PROVIDERS,

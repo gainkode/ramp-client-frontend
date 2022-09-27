@@ -771,6 +771,8 @@ export type Mutation = {
   updateTransaction?: Maybe<Transaction>;
   /** This endpoint can be used to abandon a transaction */
   abandonTransaction?: Maybe<TransactionShort>;
+  /** This endpoint can be used to abandon a crypto invoice */
+  abandonCryptoInvoice?: Maybe<CryptoInvoice>;
   exportTransactionsToCsv?: Maybe<Scalars['Boolean']>;
   /** This endpoint can be used to cancel a transaction for the current user */
   cancelMyTransaction?: Maybe<TransactionShort>;
@@ -1304,6 +1306,11 @@ export type MutationUpdateTransactionArgs = {
 
 export type MutationAbandonTransactionArgs = {
   transactionId?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationAbandonCryptoInvoiceArgs = {
+  cryptoInvoiceId?: Maybe<Scalars['String']>;
 };
 
 

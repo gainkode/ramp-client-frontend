@@ -253,6 +253,7 @@ export class CardView {
 export class InvoiceView {
     id = '';
     invoiceId = '';
+    restAmount = 0;
     walletAddress = '';
     amountSource = 0;
     amountConverted = 0;

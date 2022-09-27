@@ -1,31 +1,57 @@
 <div class="__widget-data-box">
     <div class="__profile-details-data-area">
-        <div *ngIf="complete" class="__profile-details-payment-title-block">
+        <div *ngIf="complete && success" class="__profile-details-payment-title-block">
             <div class="__profile-details-payment-title-image">
                 <img src="assets/rocket.svg" alt="complete">
             </div>
         </div>
+        <div *ngIf="complete && !success" class="__profile-details-payment-title-block">
+            <div class="__profile-details-payment-title-image">
+                <img src="assets/widget_error.svg" alt="complete">
+            </div>
+        </div>
         <div class="__profile-details-payment-title-block">
-            <div class="__profile-details-payment-title">
+            <div [ngClass]="{'__profile-details-payment-title': success, '__profile-error-payment-title': !success}">
                 {{title}}
             </div>
         </div>
-        <div *ngIf="complete" class="__widget-disclaimer-container">
+        <div class="__widget-disclaimer-container">
             <span class="__widget-disclaimer-line">
                 Dear Customer,
+                <br>
+                Thank you for choosing {{productName}}!
             </span>
-            <br>
+        </div>
+
+        <div *ngIf="!complete" class="__widget-disclaimer-container">
+            <span class="__widget-disclaimer-line">
+                The Crypto amount sent is insufficient to Complete your order.
+                <br>
+                To Complete your order, please send additional {{data?.amountSourceValue}} to the address: {{data?.walletAddress}}
+            </span>
+        </div>
+        <!-- QR-code -->
+        <div *ngIf="!complete" class="__profile-details-qrcode-block">
+            <qrcode [qrdata]="data?.walletAddress ?? ''" [colorLight]="qrCodeBackground" [colorDark]="qrCodeForeground"
+                [width]="150" [errorCorrectionLevel]="'M'" [allowEmptyString]="true"></qrcode>
+        </div>
+        <div *ngIf="!complete" class="__widget-disclaimer-container">
+            <span class="__widget-disclaimer-line">
+                Please note that the amount is not including network fees.
+            </span>
+        </div>
+
+        <div *ngIf="complete && success" class="__widget-disclaimer-container">
             <span class="__widget-disclaimer-line">
                 Your payment has been successfully completed.
             </span>
         </div>
-        <div *ngIf="!complete" class="__widget-disclaimer-container">
+
+        <div *ngIf="complete && !success" class="__widget-disclaimer-container">
             <span class="__widget-disclaimer-line">
-                Dear Customer,
-            </span>
-            <br>
-            <span class="__widget-disclaimer-line">
-                Your payment is received partially. Please wait until it is completed.
+                Please note that your order has been Canceled due to order time limit exceeded.
+                <br>
+                To refund the received crypto assets please contact us: <a [href]="supportEmailLink">{{supportEmail}}</a>.
             </span>
         </div>
     </div>
