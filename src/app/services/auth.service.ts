@@ -447,6 +447,8 @@ query {
 export class AuthService {
     cookieName = 'cookieconsent_status';
 
+    private onUserUpdated: Function | undefined = undefined;
+
     get authenticated(): boolean {
         return (this.token !== '' && this.user !== undefined);
     }
@@ -469,6 +471,16 @@ export class AuthService {
         private apollo: Apollo,
         //private socialAuth: SocialAuthService
     ) { }
+
+    registerUserUpdated(callback: Function | undefined) {
+        this.onUserUpdated = callback;
+    }
+
+    notifyUserUpdated(): void {
+        if (this.onUserUpdated) {
+            this.onUserUpdated();
+        }
+    }
 
     refreshToken(): Observable<any> {
         const result = this.apollo.mutate({

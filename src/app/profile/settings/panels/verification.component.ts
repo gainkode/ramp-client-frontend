@@ -41,6 +41,7 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.startKycNotifications();
+        this.auth.registerUserUpdated(this.updateTiers.bind(this));
         this.loadTransactionsTotal();
     }
 
@@ -116,5 +117,13 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
                 }
             )
         );
+    }
+
+    private updateTiers(): void {
+        const user = this.auth.user;
+        if (user !== null) {
+            this.verifiedTierId = user?.kycTierId ?? '';
+            this.getTiers();
+        }
     }
 }

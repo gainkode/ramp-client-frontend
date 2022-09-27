@@ -235,11 +235,14 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   private loadAccountData(): void {
+    console.log('loadAccountData');
     const meQuery$ = this.profileService.getProfileData().valueChanges.pipe(take(1));
     this.subscriptions.add(
       meQuery$.subscribe(({ data }) => {
         if (data) {
+          console.log('loadAccountData result:', data);
           this.auth.setUser(data.me as User);
+          this.auth.notifyUserUpdated();
         }
       }, (error) => {
 
