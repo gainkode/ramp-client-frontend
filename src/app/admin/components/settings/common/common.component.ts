@@ -57,6 +57,8 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
     emailCodeNumberLength: [0, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
     // Admin
     editTransactionDestination: [false, { validators: [Validators.required], updateOn: 'change' }],
+    // Crypto widget
+    cryptoWidgetPaymentTimeout: [0, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
     // Verify When Paid
     verifyWhenPaid: [false],
     // Wire Transfer
@@ -208,6 +210,12 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
         this.form.get('emailCodeNumberLength')?.setValue(additionalSettings.auth.emailCodeNumberLength ?? 5);
         // Admin
         this.form.get('editTransactionDestination')?.setValue(additionalSettings.admin.editTransactionDestination ?? false);
+        // Crypto widget
+        const paymentTimeout = additionalSettings.cryptoWidget?.paymentTimeout ?? 600000;
+        this.form.get('cryptoWidgetPaymentTimeout')?.setValue(paymentTimeout / 1000);
+
+        console.log('====>', paymentTimeout);
+
         // Core
         const coreData = additionalSettings.core;
         // Core - Verify When Paid
@@ -323,6 +331,12 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
     const adminEditTransactionDestination = this.form.get('editTransactionDestination')?.value === true;
     const adminData = {
       editTransactionDestination: adminEditTransactionDestination
+    };
+
+    // Crypto widget
+    const cryptoWidgetPaymentTimeout = parseInt(this.form.get('cryptoWidgetPaymentTimeout')?.value ?? '600000');
+    const cryptoWidgetData = {
+      paymentTimeout: cryptoWidgetPaymentTimeout * 1000
     };
 
     // Core
@@ -496,6 +510,7 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
     const additionalSettings = {
       auth: authData,
       admin: adminData,
+      cryptoWidget: cryptoWidgetData,
       core: coreData
     }
     return {
