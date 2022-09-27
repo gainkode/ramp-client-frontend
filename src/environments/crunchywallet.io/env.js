@@ -30,6 +30,8 @@
     window.__env_data.googleId = '';
     // Support team email address
     window.__env_data.support_email = 'support@crunchywallet.io';
+    // Crypto widget finish link
+    window.__env_data.crypto_widget_finish_link = '';
     // Cookie agreement link
     window.__env_data.cookie_link = 'https://crunchywallet.io/cookies-policy/';
     // Terms and conditions link

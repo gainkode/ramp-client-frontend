@@ -1,5 +1,6 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, Input } from '@angular/core';
+import { Router } from '@angular/router';
 import { InvoiceView } from 'src/app/model/payment.model';
 import { EnvService } from 'src/app/services/env.service';
 
@@ -25,11 +26,19 @@ export class WidgetCryptoFinishComponent {
   productName = EnvService.productFull;
   supportEmail = EnvService.support_email ?? 'support@test.com';
   supportEmailLink = `mailto: ${EnvService.support_email}` ?? 'mailto: support@test.com';
+  finishLink = EnvService.crypto_widget_finish_link;
 
   constructor(
+    private router: Router,
     private clipboard: Clipboard) { }
 
   copyAddress(): void {
     this.clipboard.copy(this.data?.walletAddress ?? '');
+  }
+
+  goHome(): void {
+    this.router.navigateByUrl(this.finishLink).then(() => {
+      window.location.reload();
+    });
   }
 }

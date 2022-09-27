@@ -64,5 +64,12 @@
                 To refund the received crypto assets please contact us: <a [href]="supportEmailLink">{{supportEmail}}</a>.
             </span>
         </div>
+
+        <!-- Buttons -->
+        <div *ngIf="complete && success && finishLink!==''" class="__widget-buttons-area">
+            <button class="__main-button" type="button" (click)="goHome()">
+                return
+            </button>
+        </div>        
     </div>
 </div>

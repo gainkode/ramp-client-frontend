@@ -34,6 +34,8 @@
     window.__env_data.base_color = '#0081D4';
     // Main font name
     window.__env_data.main_font = 'Nunito';
+    // Crypto widget finish link
+    window.__env_data.crypto_widget_finish_link = 'http://getcoins.com.au/merchant/';
     // Cookie agreement link
     window.__env_data.cookie_link = 'http://getcoins.com.au/index.php/cookies-policy/';
     // Terms and conditions link

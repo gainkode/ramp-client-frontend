@@ -31,6 +31,8 @@
     window.__env_data.googleId = '683937471887-u8r2tuvcvibnsnc41grnvcer9tv5bpm6.apps.googleusercontent.com';
     // Support team email address
     window.__env_data.support_email = 'support@ewallet.com';
+    // Crypto widget finish link
+    window.__env_data.crypto_widget_finish_link = '';
     // Cookie agreement link
     window.__env_data.cookie_link = 'http://getcoins.com.au/index.php/cookies-policy/';
     // Terms and conditions link

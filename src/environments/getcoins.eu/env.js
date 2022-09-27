@@ -34,6 +34,8 @@
     window.__env_data.base_color = '#0081D4';
     // Main font name
     window.__env_data.main_font = 'Ubuntu';
+    // Crypto widget finish link
+    window.__env_data.crypto_widget_finish_link = '';
     // Cookie agreement link
     window.__env_data.cookie_link = 'http://getcoins.eu/index.php/cookies-policy/';
     // Terms and conditions link

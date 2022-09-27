@@ -32,6 +32,8 @@
     window.__env_data.base_color = '#FFBD00';
     // Main font name
     window.__env_data.main_font = 'Lato';
+    // Crypto widget finish link
+    window.__env_data.crypto_widget_finish_link = '';
     // Cookie agreement link
     window.__env_data.cookie_link = 'https://genesisxchange.com/cookies-policy/';
     // Terms and conditions link
