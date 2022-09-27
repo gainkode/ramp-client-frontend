@@ -207,6 +207,8 @@ export type CryptoInvoice = {
   currencyToSend?: Maybe<Scalars['String']>;
   amountToSend?: Maybe<Scalars['Float']>;
   currencyToReceive?: Maybe<Scalars['String']>;
+  amountToReceive?: Maybe<Scalars['Float']>;
+  rate?: Maybe<Scalars['Float']>;
   widgetUserParamsId?: Maybe<Scalars['String']>;
 };
 
@@ -767,6 +769,8 @@ export type Mutation = {
   executeTransaction?: Maybe<TransactionShort>;
   /** This endpoint can be used to update a transaction */
   updateTransaction?: Maybe<Transaction>;
+  /** This endpoint can be used to abandon a transaction */
+  abandonTransaction?: Maybe<TransactionShort>;
   exportTransactionsToCsv?: Maybe<Scalars['Boolean']>;
   /** This endpoint can be used to cancel a transaction for the current user */
   cancelMyTransaction?: Maybe<TransactionShort>;
@@ -1295,6 +1299,11 @@ export type MutationUpdateTransactionArgs = {
   transactionId?: Maybe<Scalars['String']>;
   transaction?: Maybe<TransactionUpdateInput>;
   recalculate?: Maybe<Scalars['Boolean']>;
+};
+
+
+export type MutationAbandonTransactionArgs = {
+  transactionId?: Maybe<Scalars['String']>;
 };
 
 
@@ -2835,6 +2844,7 @@ export type Transaction = {
   executed?: Maybe<Scalars['DateTime']>;
   type: TransactionType;
   status: TransactionStatus;
+  subStatus?: Maybe<Scalars['String']>;
   kycStatus?: Maybe<TransactionKycStatus>;
   accountStatus?: Maybe<AccountStatus>;
   feeFiat?: Maybe<Scalars['Float']>;
@@ -2996,6 +3006,7 @@ export type TransactionShort = {
   executed?: Maybe<Scalars['DateTime']>;
   type: TransactionType;
   status: TransactionStatus;
+  subStatus?: Maybe<Scalars['String']>;
   kycStatus?: Maybe<TransactionKycStatus>;
   accountStatus?: Maybe<AccountStatus>;
   feeFiat?: Maybe<Scalars['Float']>;
@@ -3135,6 +3146,10 @@ export enum TransactionStatusLevel {
   Error = 'error'
 }
 
+export enum TransactionSubStatus {
+  PartiallyPaid = 'PartiallyPaid'
+}
+
 export enum TransactionType {
   Buy = 'Buy',
   Sell = 'Sell',
@@ -3160,6 +3175,7 @@ export type TransactionUpdateInput = {
   widgetId?: Maybe<Scalars['String']>;
   widgetUserParamsId?: Maybe<Scalars['String']>;
   status?: Maybe<TransactionStatus>;
+  subStatus?: Maybe<Scalars['String']>;
   kycStatus?: Maybe<TransactionKycStatus>;
   launchAfterUpdate?: Maybe<Scalars['Boolean']>;
   accountStatus?: Maybe<AccountStatus>;
@@ -3387,6 +3403,7 @@ export enum UserActionType {
   UnbenchmarkTransaction = 'unbenchmarkTransaction',
   PaidTransaction = 'paidTransaction',
   UpdateTransaction = 'updateTransaction',
+  AbandonTransaction = 'abandonTransaction',
   CancelTransaction = 'cancelTransaction',
   CreateUser = 'createUser',
   AddWidgetUserParams = 'addWidgetUserParams',
@@ -3400,7 +3417,10 @@ export enum UserActionType {
   MerchantBuy = 'MerchantBuy',
   MerchantSell = 'MerchantSell',
   GenerateKycToken = 'generateKycToken',
-  KycCallback = 'kycCallback'
+  KycCallback = 'kycCallback',
+  AddBlackCountry = 'addBlackCountry',
+  RemoveBlackCountry = 'removeBlackCountry',
+  CreateCryptoInvoice = 'createCryptoInvoice'
 }
 
 export type UserAddress = {

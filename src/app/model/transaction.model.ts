@@ -67,6 +67,7 @@ export class TransactionItemFull {
   fees = 0;
   rate = 0;
   status: TransactionStatus | undefined = undefined;
+  subStatus = '';
   statusInfo: TransactionStatusDescriptorMap | undefined = undefined;
   user: UserItem | undefined;
   balance = 0;
@@ -138,6 +139,7 @@ export class TransactionItemFull {
       this.kycStatusValue = (kycStatus) ? kycStatus.id : TransactionKycStatus.KycWaiting;
       this.kycTier = data.userTier?.name ?? '';
       this.status = data.status;
+      this.subStatus = data.subStatus ?? '';
       const widgetData = JSON.parse(data.widget ?? '{}');
       if (widgetData) {
         this.widgetName = widgetData.widgetName;
@@ -310,6 +312,9 @@ export class TransactionItemFull {
         break;
       default:
         color = 'white';
+    }
+    if (this.subStatus.toLowerCase() == 'partiallypaid') {
+      color = 'orange';
     }
     return color;
   }

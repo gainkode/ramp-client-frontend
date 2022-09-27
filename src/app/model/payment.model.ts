@@ -469,7 +469,11 @@ export const UserActionTypeList: Array<UserActionTypeView> = [
     { id: UserActionType.Deposit, name: 'Deposit created' },
     { id: UserActionType.Withdrawal, name: 'Withdrawal created' },
     { id: UserActionType.MerchantBuy, name: 'Merchant-buy created' },
-    { id: UserActionType.MerchantSell, name: 'Merchant-sell created' }
+    { id: UserActionType.MerchantSell, name: 'Merchant-sell created' },
+    { id: UserActionType.AbandonTransaction, name: 'Transaction abandoned' },
+    { id: UserActionType.AddBlackCountry, name: 'Country added to the black list' },
+    { id: UserActionType.RemoveBlackCountry, name: 'Country removed from the black list' },
+    { id: UserActionType.CreateCryptoInvoice, name: 'Crypto invoice created' }
 ];
 
 export const UserActionResultList: Array<UserActionResultView> = [
