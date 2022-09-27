@@ -27,8 +27,18 @@
             <span class="__widget-disclaimer-line">
                 The Crypto amount sent is insufficient to Complete your order.
                 <br>
-                To Complete your order, please send additional {{data?.amountSourceValue}} to the address: {{data?.walletAddress}}
+                Please send additional {{data?.amountSourceValue}} to the address:
             </span>
+        </div>
+        <div *ngIf="!complete" class="__widget-data-two-column-grid">
+            <div class="__widget-data-two-column-item-one">
+                <input class="__text-box-noborder" type="text" readonly [value]="data?.walletAddress" />
+            </div>
+            <div class="__widget-data-two-column-item-two">
+                <button class="__tool-button" (click)="copyAddress()">
+                    <mat-icon style="font-size: 20px;">content_copy</mat-icon>
+                </button>
+            </div>
         </div>
         <!-- QR-code -->
         <div *ngIf="!complete" class="__profile-details-qrcode-block">

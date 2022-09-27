@@ -24,6 +24,8 @@ export class CryptoWidgetComponent implements OnInit {
   @Input() userParamsId = '';
   @Input() settings: WidgetSettings | undefined = undefined;
 
+  readonly DEFAULT_TIMEOUT = 600000;
+
   errorMessage = '';
   transactionErrorTitle = '';
   transactionErrorMessage = '';
@@ -202,8 +204,8 @@ export class CryptoWidgetComponent implements OnInit {
     const transaction = data.transactionServiceNotification;
     if (transaction && this.invoice) {
       if (this.invoice.id === transaction.invoice) {
+        this.paymentSuccess = true;
         if (transaction.type === TransactionServiceNotificationType.CryptoFullPaid) {
-          this.paymentSuccess = true;
           this.paymentComplete = true;
           this.paymentTitle = 'Complete';
           this.nextStage('payment_done', 'Complete', 6);
@@ -214,8 +216,8 @@ export class CryptoWidgetComponent implements OnInit {
           this.nextStage('payment_done', 'Payment in progress', 5);
         }
       } else if (transaction.operationType === 'test-operation-type') {
+        this.paymentSuccess = true;
         if (transaction.type === TransactionServiceNotificationType.CryptoFullPaid) {
-          this.paymentSuccess = true;
           this.paymentComplete = true;
           this.paymentTitle = 'Complete Test';
           this.nextStage('payment_done', 'Complete', 6);
@@ -459,7 +461,7 @@ export class CryptoWidgetComponent implements OnInit {
   }
 
   private startAbandonTimer(): void {
-    let timeout = 5000;
+    let timeout = this.DEFAULT_TIMEOUT;
     this.pSubscriptions.add(
       this.auth.getSettingsCommon().valueChanges.subscribe(
         ({ data }) => {
@@ -469,7 +471,7 @@ export class CryptoWidgetComponent implements OnInit {
           if (typeof settingsData === 'string') {
             settingsData = JSON.parse(settingsData);
           }
-          const timeout = settingsData?.cryptoWidget?.paymentTimeout ?? 5000;
+          timeout = settingsData?.cryptoWidget?.paymentTimeout ?? this.DEFAULT_TIMEOUT;
           this.startConfirmedAbandonTimer(timeout);
         }, (error) => {
           this.inProgress = false;

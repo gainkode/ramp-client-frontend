@@ -1,3 +1,4 @@
+import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, Input } from '@angular/core';
 import { InvoiceView } from 'src/app/model/payment.model';
 import { EnvService } from 'src/app/services/env.service';
@@ -8,6 +9,7 @@ import { EnvService } from 'src/app/services/env.service';
   styleUrls: [
     '../../../assets/payment.scss',
     '../../../assets/button.scss',
+    '../../../assets/text-control.scss',
     '../../../assets/profile.scss',
     '../../../assets/details.scss'
   ]
@@ -23,4 +25,11 @@ export class WidgetCryptoFinishComponent {
   productName = EnvService.productFull;
   supportEmail = EnvService.support_email ?? 'support@test.com';
   supportEmailLink = `mailto: ${EnvService.support_email}` ?? 'mailto: support@test.com';
+
+  constructor(
+    private clipboard: Clipboard) { }
+
+  copyAddress(): void {
+    this.clipboard.copy(this.data?.walletAddress ?? '');
+  }
 }
