@@ -85,6 +85,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   transactionStatus: TransactionStatus | undefined = undefined;
   transactionStatusName = '';
   notPaidStatus = false;
+  notDeclinedStatus = false;
   kycStatus = '';
   accountStatus = '';
   showTransferHash = false;
@@ -219,6 +220,12 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
         this.notPaidStatus = false;
       } else {
         this.notPaidStatus = true;
+      }
+      if (this.data.status === TransactionStatus.Completed ||
+        this.data.status === TransactionStatus.PaymentDeclined) {
+        this.notDeclinedStatus = false;
+      } else {
+        this.notDeclinedStatus = true;
       }
       this.showTransferHash = (this.data.transferOrderId !== '');
       this.showBenchmarkTransferHash = (this.data.benchmarkTransferOrderId !== '');
@@ -359,9 +366,17 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   }
 
   onPaid(content: any): void {
+    this.fastStatusChange(TransactionStatus.Paid, content);
+  }
+
+  onDeclined(content: any): void {
+    this.fastStatusChange(TransactionStatus.PaymentDeclined, content);
+  }
+  
+  fastStatusChange(newStatus: TransactionStatus, content: any): void {
     this.transactionToUpdate = {
       transactionId: this.transactionId,
-      status: TransactionStatus.Paid,
+      status: newStatus,
       destination: this.data?.address ?? '',
       feeFiat: this.data?.fees ?? 0,
       rate: undefined,

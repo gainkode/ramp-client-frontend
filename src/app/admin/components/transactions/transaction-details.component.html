@@ -275,6 +275,13 @@
               aria-hidden="true"></span>
             Paid
           </button>
+          <button *ngIf="permission>1 && transactionType!==TRANSACTION_TYPE.Receive && notDeclinedStatus"
+            class="btn btn-dark pd-x-30 me-2 mg-t-5" type="button"
+            (click)="onDeclined(update_confirm_content)">
+            <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
+              aria-hidden="true"></span>
+            Decline Payment
+          </button>
         </div>
         <div style="display: flex; justify-content: flex-end;">
           <button *ngIf="permission>1 && transactionType!==TRANSACTION_TYPE.Receive"
