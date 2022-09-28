@@ -5,6 +5,7 @@ import { CryptoInvoiceCreationResult } from 'src/app/model/generated-models';
 import { InvoiceView } from 'src/app/model/payment.model';
 import { EnvService } from 'src/app/services/env.service';
 import { PaymentDataService } from 'src/app/services/payment.service';
+import { getMinSec } from 'src/app/utils/utils';
 
 const interval = 600000;  // 10 minutes
 
@@ -21,10 +22,13 @@ const interval = 600000;  // 10 minutes
 })
 export class WidgetCryptoCompleteComponent implements OnInit, OnDestroy {
   @Input() data: InvoiceView | undefined = undefined;
-  @Input() counter = 0;
+  @Input() set counter(val: number) {
+    this.counterTime = getMinSec(val);
+  }
 
   qrCodeBackground = EnvService.color_white;
   qrCodeForeground = EnvService.color_purple_900;
+  counterTime = '';
 
   private pSubscriptions: Subscription = new Subscription();
   private updateTimer = timer(interval, interval);

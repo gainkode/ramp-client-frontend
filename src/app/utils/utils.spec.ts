@@ -1,6 +1,6 @@
 import { KycProvider, UserType } from "../model/generated-models";
 import { KycTier } from "../model/identification.model";
-import { findExistingDefaultTier, isSumsubVerificationComplete } from "./utils";
+import { findExistingDefaultTier, getMinSec, isSumsubVerificationComplete } from "./utils";
 
 describe('isSumsubVerificationComplete', () => {
   it('should return success', () => {
@@ -160,5 +160,27 @@ describe('findExistingDefaultTier', () => {
     ];
     const result = findExistingDefaultTier(tiers, tierPersonalShufti);
     expect(result).toBeFalsy();
+  });
+});
+
+describe('getMinSec', () => {
+  it('should return 05:08 <= 308', () => {
+    expect(getMinSec(308)).toEqual('05:08');
+  });
+
+  it('should return 00:08 <= 8', () => {
+    expect(getMinSec(8)).toEqual('00:08');
+  });
+
+  it('should return 00:00 <= 0', () => {
+    expect(getMinSec(0)).toEqual('00:00');
+  });
+
+  it('should return 01:00 <= 60', () => {
+    expect(getMinSec(60)).toEqual('01:00');
+  });
+
+  it('should return 00:00 <= -60', () => {
+    expect(getMinSec(-60)).toEqual('00:00');
   });
 });

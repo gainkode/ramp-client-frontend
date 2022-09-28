@@ -199,3 +199,12 @@ export function findExistingDefaultTier(tiers: KycTier[], tier: KycTier): boolea
     }
     return false;
 }
+
+export function getMinSec(seconds: number): string {
+    const input = (seconds >= 0) ? seconds : 0;
+    const mins = Math.floor(input / 60);
+    const secs = input - mins * 60;
+    const minVal = mins.toString();
+    const secVal = secs.toString();
+    return `${(minVal.length === 1) ? '0' : ''}${minVal}:${(secVal.length === 1) ? '0' : ''}${secVal}`;
+}
