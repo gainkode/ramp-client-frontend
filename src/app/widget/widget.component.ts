@@ -244,7 +244,7 @@ export class WidgetComponent implements OnInit {
     } else {  // Quick checkout w/o parameters
       if (!this.widget.embedded) {
         this.widget.disclaimer = false;
-        this.widget.kycFirst = true;//test false;
+        this.widget.kycFirst = false;
         this.widget.email = '';
         // temp
         //this.widget.kycFirst = true;
