@@ -173,12 +173,12 @@ export class WidgetComponent implements OnInit {
         //{"minAmountFrom":0,"maxAmountFrom":0,"fixedAmountFrom":0,"kycBeforePayment":false,"disclaimer":true}
         const extraData = JSON.parse(data.additionalSettings);
         this.widget.disclaimer = extraData.disclaimer ?? true;
-        this.widget.kycFirst = true;//test extraData.kycBeforePayment ?? false;
+        this.widget.kycFirst = extraData.kycBeforePayment ?? false;
         this.widget.minAmountFrom = extraData.minAmountFrom;
         this.widget.maxAmountFrom = extraData.maxAmountFrom;
       } else {
         this.widget.disclaimer = true;
-        this.widget.kycFirst = true;//test false;
+        this.widget.kycFirst = false;
       }
       let userTransaction: TransactionType | undefined = undefined;
       let presetAddress = false;

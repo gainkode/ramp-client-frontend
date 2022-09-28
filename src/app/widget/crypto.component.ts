@@ -436,6 +436,7 @@ export class CryptoWidgetComponent implements OnInit {
         ({ data }) => {
           this.inProgress = false;
           this.invoice = new InvoiceView(data.createInvoice as CryptoInvoiceCreationResult);
+          console.log(data);
           setTimeout(() => {
             //this.startNotificationListener();
             this.startAbandonTimer();
