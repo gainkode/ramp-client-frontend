@@ -214,7 +214,7 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
         const paymentTimeout = additionalSettings.cryptoWidget?.paymentTimeout ?? 600000;
         this.form.get('cryptoWidgetPaymentTimeout')?.setValue(paymentTimeout / 1000);
 
-        console.log('====>', paymentTimeout);
+        console.log('-->', paymentTimeout);
 
         // Core
         const coreData = additionalSettings.core;
