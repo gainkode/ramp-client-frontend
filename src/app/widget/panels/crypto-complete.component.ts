@@ -21,6 +21,7 @@ const interval = 600000;  // 10 minutes
 })
 export class WidgetCryptoCompleteComponent implements OnInit, OnDestroy {
   @Input() data: InvoiceView | undefined = undefined;
+  @Input() counter = 0;
 
   qrCodeBackground = EnvService.color_white;
   qrCodeForeground = EnvService.color_purple_900;
@@ -33,6 +34,7 @@ export class WidgetCryptoCompleteComponent implements OnInit, OnDestroy {
     private dataService: PaymentDataService) { }
 
   ngOnInit(): void {
+    
     this.pSubscriptions.add(
       this.updateTimer.subscribe(val => {
         if (this.data) {

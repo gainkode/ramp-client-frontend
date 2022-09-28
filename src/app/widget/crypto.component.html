@@ -32,7 +32,7 @@
         [errorMessage]="errorMessage" (onComplete)="loginCodeConfirmed()" (onError)="handleError($event)"
         (onProgress)="progressChanged($event)" (onBack)="loginBack()" (onRegister)="onRegister($event)">
       </app-widget-code-auth>
-      <app-widget-crypto-complete *ngSwitchCase="'order_complete'" [data]="invoice">
+      <app-widget-crypto-complete *ngSwitchCase="'order_complete'" [data]="invoice" [counter]="abandonCounter">
       </app-widget-crypto-complete>
       <app-widget-crypto-finish *ngSwitchCase="'payment_done'" [data]="invoice" [complete]="paymentComplete"
         [success]="paymentSuccess" [title]="paymentTitle">
@@ -42,7 +42,7 @@
     </div>
   </div>
 
-  <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;padding: 24px;">
+  <!-- <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;padding: 24px;">
     <button type="button" (click)="sendTestNotification(false)">
       Partial
     </button>
@@ -50,5 +50,5 @@
     <button type="button" (click)="sendTestNotification(true)">
       Complete
     </button>
-  </div>
+  </div> -->
 </div>

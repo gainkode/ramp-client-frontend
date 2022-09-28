@@ -727,6 +727,10 @@ $font_main: var(--font_main);
     color: $color_purple_900_text;
 }
 
+.__widget-rate-line-left {
+    justify-content: flex-start;
+}
+
 .__widget-rate-countdown {
     display: flex;
     align-items: center;

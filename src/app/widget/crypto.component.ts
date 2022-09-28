@@ -1,8 +1,8 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { Subject, Subscription, timer } from 'rxjs';
+import { take, takeUntil } from 'rxjs/operators';
 import { CryptoInvoiceCreationResult, LoginResult, TransactionServiceNotificationType, Widget } from 'src/app/model/generated-models';
 import { CheckoutSummary, InvoiceView } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
@@ -42,9 +42,12 @@ export class CryptoWidgetComponent implements OnInit {
   notificationStarted = false;
   logoSrc = `${EnvService.image_host}/images/logo-widget.png`;
   logoAlt = EnvService.product;
+  abandonCounter = 0;
 
   private pSubscriptions: Subscription = new Subscription();
   private pNotificationsSubscription: Subscription | undefined = undefined;
+  private abandonTimer = timer(0, 1000);
+  private timerSubject = new Subject();
 
   constructor(
     private changeDetector: ChangeDetectorRef,
@@ -483,21 +486,34 @@ export class CryptoWidgetComponent implements OnInit {
   }
 
   private startConfirmedAbandonTimer(interval: number): void {
-    setTimeout(() => {
-      this.pSubscriptions.add(
-        this.dataService.abandonCryptoInvoice(this.invoice?.invoiceId ?? '').subscribe(
-          ({ data }) => {
-            this.inProgress = false;
-            this.paymentSuccess = false;
-            this.paymentComplete = true;
-            this.paymentTitle = 'Time is out';
-            this.nextStage('payment_done', 'Complete', 6);
-          }, (error) => {
-            this.inProgress = false;
-          }
-        )
-      );
-    }, interval);
+    console.log(interval);
+    this.abandonCounter = interval / 1000;
+    this.pSubscriptions.add(
+      this.abandonTimer.pipe(takeUntil(this.timerSubject)).subscribe(val => {
+        if (this.abandonCounter > 1) {
+          this.abandonCounter--;
+        } else {
+          this.abandonInvoiceTimer();
+        }
+      })
+    );
+  }
+
+  private abandonInvoiceTimer(): void {
+    this.timerSubject.next();
+    this.pSubscriptions.add(
+      this.dataService.abandonCryptoInvoice(this.invoice?.invoiceId ?? '').subscribe(
+        ({ data }) => {
+          this.inProgress = false;
+          this.paymentSuccess = false;
+          this.paymentComplete = true;
+          this.paymentTitle = 'Time is out';
+          this.nextStage('payment_done', 'Complete', 6);
+        }, (error) => {
+          this.inProgress = false;
+        }
+      )
+    );
   }
 
   sendTestNotification(complete: boolean): void {
