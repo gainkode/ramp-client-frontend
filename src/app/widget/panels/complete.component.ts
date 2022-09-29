@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { CustomTextList, CustomTextType } from 'src/app/model/custom-text.model';
 import { EnvService } from 'src/app/services/env.service';
 
@@ -21,4 +22,13 @@ export class WidgetCompleteComponent {
   productName = EnvService.productFull;
   textData = new CustomTextList([]);
   TEXT_TYPE: typeof CustomTextType = CustomTextType;
+  finishLink = EnvService.crypto_widget_finish_link;
+
+  constructor(private router: Router) { }
+
+  goHome(): void {
+    this.router.navigateByUrl(this.finishLink).then(() => {
+      window.location.reload();
+    });
+  }
 }
