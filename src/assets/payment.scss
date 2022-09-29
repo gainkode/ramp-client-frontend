@@ -4,6 +4,11 @@
 
 $font_main: var(--font_main);
 
+.__widget-wrap-container {
+    display: flex;
+    justify-content: center;
+}
+
 .__widget-frame-container {
     width: 100%;
     height: 100%;
