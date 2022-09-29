@@ -2851,7 +2851,7 @@ export type Transaction = {
   executed?: Maybe<Scalars['DateTime']>;
   type: TransactionType;
   status: TransactionStatus;
-//   subStatus?: Maybe<Scalars['String']>;
+  subStatus?: Maybe<Scalars['String']>;
   kycStatus?: Maybe<TransactionKycStatus>;
   accountStatus?: Maybe<AccountStatus>;
   feeFiat?: Maybe<Scalars['Float']>;
