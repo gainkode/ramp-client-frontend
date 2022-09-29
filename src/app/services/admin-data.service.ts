@@ -680,7 +680,6 @@ const GET_TRANSACTIONS = gql`
         sourceVault
         sourceVaultId
         status
-        subStatus
         updated
         user {
           buildingName

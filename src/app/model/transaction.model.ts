@@ -139,7 +139,7 @@ export class TransactionItemFull {
       this.kycStatusValue = (kycStatus) ? kycStatus.id : TransactionKycStatus.KycWaiting;
       this.kycTier = data.userTier?.name ?? '';
       this.status = data.status;
-      this.subStatus = data.subStatus ?? '';
+    //   this.subStatus = data.subStatus ?? '';
       const widgetData = JSON.parse(data.widget ?? '{}');
       if (widgetData) {
         this.widgetName = widgetData.widgetName;
