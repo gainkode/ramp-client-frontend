@@ -8,6 +8,7 @@ import { Filter } from 'src/app/admin/model/filter.model';
 import { AdminDataService } from 'src/app/services/admin-data.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { UserActionItem } from 'src/app/model/user.model';
+import { UserAction, UserActionResult, UserActionType } from 'src/app/model/generated-models';
 
 @Component({
   selector: 'app-admin-user-actions',
@@ -105,6 +106,35 @@ export class AdminUserActionsComponent implements OnInit, OnDestroy, AfterViewIn
         if (this.auth.token === '') {
           this.router.navigateByUrl('/');
         }
+
+        this.actions = [
+          new UserActionItem({
+            userActionId: 'user_action_id_1',
+            userId: 'user_id_1',
+            objectId: 'object_id_1',
+            actionType: UserActionType.CreateUser,
+            linkedIds: [
+              'linked_id_15', 'linked_id_23', 'linked_id_48'
+            ],
+            info: 'Action info',
+            result: UserActionResult.Succeeded,
+            status: 'User status 1',
+            date: new Date()
+          } as UserAction),
+          new UserActionItem({
+            userActionId: 'user_action_id_2',
+            userId: 'user_id_1',
+            objectId: 'object_id_2',
+            actionType: UserActionType.AddBlackCountry,
+            linkedIds: [
+              'linked_id_7', 'linked_id_86', 'linked_id_113'
+            ],
+            info: 'Action info',
+            result: UserActionResult.Failed,
+            status: 'User status 2',
+            date: new Date()
+          } as UserAction)
+        ];
       })
     );
   }
