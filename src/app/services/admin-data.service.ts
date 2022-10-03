@@ -315,7 +315,8 @@ query GetWireTransferBankAccounts {
       description
       au
       uk
-      eu
+      eu,
+      openpayd
     }
   }
 }
@@ -3141,7 +3142,8 @@ export class AdminDataService {
           description: account.description,
           au: account.au,
           uk: account.uk,
-          eu: account.eu
+          eu: account.eu,
+          openpayd: account.openpayd
         }
       })
       : this.apollo.mutate({
@@ -3152,7 +3154,8 @@ export class AdminDataService {
           description: account.description,
           au: account.au,
           uk: account.uk,
-          eu: account.eu
+          eu: account.eu,
+          openpayd: account.openpayd
         }
       });
   }

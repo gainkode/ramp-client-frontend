@@ -74,10 +74,10 @@
                     <a [routerLink]="" class="__top-menu-hamburger-item" (click)="showPaymentPanel(WIDGET_TYPE.Send)">
                         Send
                     </a>
-                    <a [routerLink]="" class="__top-menu-hamburger-item"
+                    <!-- <a [routerLink]="" class="__top-menu-hamburger-item"
                         (click)="showPaymentPanel(WIDGET_TYPE.Transfer)">
                         Express transfer
-                    </a>
+                    </a> -->
                 </li>
                 <div *ngIf="merchantApproved" class="__top-menu-hamburger-separator"></div>
                 <li *ngFor="let item of menuItems;let i=index;">

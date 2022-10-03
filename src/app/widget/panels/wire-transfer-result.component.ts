@@ -1,6 +1,6 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { WireTransferBankAccountAu, WireTransferBankAccountEu, WireTransferBankAccountUk } from 'src/app/model/cost-scheme.model';
+import { WireTransferBankAccountAu, WireTransferBankAccountEu, WireTransferBankAccountOpenpaydObject, WireTransferBankAccountUk } from 'src/app/model/cost-scheme.model';
 import { WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from 'src/app/model/payment-base.model';
 
 @Component({
@@ -95,6 +95,20 @@ export class WidgetWireTransferResultComponent {
             this.field4Value = dataEu.beneficiaryName;
             this.field5Value = dataEu.iban;
             this.field6Value = dataEu.swiftBic;
+        } else if(val.id == WireTransferPaymentCategory.OPENPAYD){
+            const dataOpenpayd = data as WireTransferBankAccountOpenpaydObject;
+            this.field1Title = 'Bank Address';
+            this.field2Title = 'Bank Name';
+            this.field3Title = 'Beneficiary Address';
+            this.field4Title = 'Beneficiary Name';
+            this.field5Title = 'IBAN';
+            this.field6Title = 'SWIFT / BIC';
+            this.field1Value = dataOpenpayd.bankAddress;
+            this.field2Value = dataOpenpayd.bankName;
+            this.field3Value = dataOpenpayd.beneficiaryAddress;
+            this.field4Value = dataOpenpayd.beneficiaryName;
+            this.field5Value = dataOpenpayd.iban;
+            this.field6Value = dataOpenpayd.swiftBic;
         }
     }
 }

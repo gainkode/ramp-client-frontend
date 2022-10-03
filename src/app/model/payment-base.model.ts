@@ -14,7 +14,8 @@ export enum PaymentWidgetType {
 export enum WireTransferPaymentCategory {
     AU = 'AU',
     UK = 'UK',
-    EU = 'EU'
+    EU = 'EU',
+    OPENPAYD = 'OPENPAYD'
 }
 
 export class WidgetSettings {

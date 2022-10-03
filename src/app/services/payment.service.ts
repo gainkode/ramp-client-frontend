@@ -118,6 +118,8 @@ query MySettingsFee(
         au
         uk
         eu
+        openpayd
+        openpaydObject
       }
     }
   }

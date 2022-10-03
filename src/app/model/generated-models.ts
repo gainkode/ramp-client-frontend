@@ -1471,6 +1471,30 @@ export enum OAuthProvider {
   Microsoft = 'microsoft'
 }
 
+export type Openpayd = {
+  __typename?: 'Openpayd';
+  paymentProviderId?: Maybe<Scalars['ID']>;
+  name: Scalars['String'];
+  currencies?: Maybe<Array<Scalars['String']>>;
+  countriesCode2?: Maybe<Array<Scalars['String']>>;
+  instruments?: Maybe<Array<Scalars['String']>>;
+  default?: Maybe<Scalars['Boolean']>;
+  disabled?: Maybe<Scalars['DateTime']>;
+  displayName?: Maybe<Scalars['String']>;
+  logo?: Maybe<Scalars['String']>;
+};
+
+export type OpenpaydObject = {
+  __typename?: 'OpenpaydObject';
+  bankAddress?: Maybe<Scalars['String']>;
+  bankName?: Maybe<Scalars['String']>;
+  iban?: Maybe<Scalars['String']>;
+  beneficiaryAddress?: Maybe<Scalars['String']>;
+  beneficiaryName?: Maybe<Scalars['String']>;
+  swiftBic?: Maybe<Scalars['String']>;
+  payInReference?: Maybe<Scalars['String']>;
+};
+
 export type OrderBy = {
   orderBy: Scalars['String'];
   desc: Scalars['Boolean'];
@@ -2375,7 +2399,8 @@ export enum RiskAlertCodes {
   DepositAbove_50K = 'DEPOSIT_ABOVE_50K',
   DepositAboveXAmountInYTimeframe = 'DEPOSIT_ABOVE_X_AMOUNT_IN_Y_TIMEFRAME',
   SumsubWords = 'SUMSUB_WORDS',
-  WithdrawalOwner = 'WITHDRAWAL_OWNER'
+  WithdrawalOwner = 'WITHDRAWAL_OWNER',
+  OpenpaydDeclined = 'OPENPAYD_DECLINED'
 }
 
 export type RiskAlertResultList = {
@@ -3365,6 +3390,8 @@ export type User = {
   fiatVaults?: Maybe<Array<FiatVault>>;
   gender?: Maybe<Gender>;
   addressLine?: Maybe<Scalars['String']>;
+  openpaydIds?: Maybe<Scalars['String']>;
+  openpaydAccountHolderId?: Maybe<Scalars['String']>;
 };
 
 export type UserAction = {
@@ -3411,6 +3438,7 @@ export enum UserActionType {
   PaidTransaction = 'paidTransaction',
   UpdateTransaction = 'updateTransaction',
   AbandonTransaction = 'abandonTransaction',
+  AbandonCryptoInvoice = 'abandonCryptoInvoice',
   CancelTransaction = 'cancelTransaction',
   CreateUser = 'createUser',
   AddWidgetUserParams = 'addWidgetUserParams',
@@ -4038,6 +4066,8 @@ export type WireTransferBankAccount = {
   au?: Maybe<Scalars['String']>;
   uk?: Maybe<Scalars['String']>;
   eu?: Maybe<Scalars['String']>;
+  openpayd?: Maybe<Scalars['Boolean']>;
+  openpaydObject?: Maybe<Scalars['String']>;
   deleted?: Maybe<Scalars['DateTime']>;
 };
 
@@ -4047,6 +4077,7 @@ export type WireTransferBankAccountInput = {
   au?: Maybe<Scalars['String']>;
   uk?: Maybe<Scalars['String']>;
   eu?: Maybe<Scalars['String']>;
+  openpayd?: Maybe<Scalars['Boolean']>;
   deleted?: Maybe<Scalars['DateTime']>;
 };
 
@@ -4064,6 +4095,8 @@ export type WireTransferBankAccountShort = {
   au?: Maybe<Scalars['String']>;
   uk?: Maybe<Scalars['String']>;
   eu?: Maybe<Scalars['String']>;
+  openpaydObject?: Maybe<Scalars['String']>;
+  openpayd?: Maybe<Scalars['Boolean']>;
 };
 
 export type LiquidityProviderBalance = {

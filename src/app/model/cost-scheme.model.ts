@@ -147,6 +147,8 @@ export class WireTransferBankAccountItem {
     au: WireTransferBankAccountAu | undefined = undefined;
     uk: WireTransferBankAccountUk | undefined = undefined;
     eu: WireTransferBankAccountEu | undefined = undefined;
+    openpayd: Boolean | undefined = undefined;
+    openpaydObject: WireTransferBankAccountOpenpaydObject | undefined = undefined;
 
     get auAvailable(): boolean {
         return (this.au !== undefined);
@@ -158,6 +160,10 @@ export class WireTransferBankAccountItem {
 
     get euAvailable(): boolean {
         return (this.eu !== undefined);
+    }
+
+    get openpaydAvailable(): boolean {
+        return (this.openpayd !== undefined);
     }
 
     get auData(): string | undefined {
@@ -186,6 +192,12 @@ export class WireTransferBankAccountItem {
             if (data.eu) {
                 this.eu = JSON.parse(data.eu) ?? undefined;
             }
+            if (data.openpayd) {
+                this.openpayd = data.openpayd ?? undefined;
+            }
+            if(data.openpaydObject){
+                this.openpaydObject = JSON.parse(data.openpaydObject) ?? undefined
+            }
         } else {
             this.id = '';
             this.name = '';
@@ -207,6 +219,15 @@ export class WireTransferBankAccountUk {
 }
 
 export class WireTransferBankAccountEu {
+    bankAddress = '';
+    bankName = '';
+    beneficiaryAddress = '';
+    beneficiaryName = '';
+    iban = '';
+    swiftBic = '';
+}
+
+export class WireTransferBankAccountOpenpaydObject {
     bankAddress = '';
     bankName = '';
     beneficiaryAddress = '';

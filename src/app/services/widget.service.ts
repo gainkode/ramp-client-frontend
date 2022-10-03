@@ -198,6 +198,15 @@ export class WidgetService {
                                     wireTransferList[pos].bankAccountId = accountData.bankAccountId;
                                 }
                             }
+                            pos = wireTransferList.findIndex(x => x.id === WireTransferPaymentCategory.OPENPAYD);
+                            if (pos >= 0) {
+                                if (accountData.openpaydObject === null || accountData.openpaydObject === undefined || accountData.openpaydObject === 'null') {
+                                    wireTransferList.splice(pos, 1);
+                                } else {
+                                    wireTransferList[pos].data = accountData.openpaydObject;
+                                    wireTransferList[pos].bankAccountId = accountData.bankAccountId;
+                                }
+                            }
                         }
                         if (this.onWireTranferListLoaded) {
                             this.onWireTranferListLoaded(wireTransferList, accountData?.bankAccountId);

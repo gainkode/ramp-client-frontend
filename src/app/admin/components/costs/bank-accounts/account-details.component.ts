@@ -40,6 +40,7 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
   public auCategory: any;
   public ukCategory: any;
   public euCategory: any;
+  public openpaydCategory: any;
 
   form = this.formBuilder.group({
     name: ['', { validators: [Validators.required], updateOn: 'change' }],
@@ -47,6 +48,7 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
     auSelected: [false],
     ukSelected: [false],
     euSelected: [false],
+    openpaydSelected: [false],
     auAccountName: [undefined],
     auAccountNumber: [undefined],
     auBsb: [undefined],
@@ -74,6 +76,7 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
     this.auCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.AU);
     this.ukCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.UK);
     this.euCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.EU);
+    this.openpaydCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.OPENPAYD);
   }
 
   ngOnDestroy(): void {
@@ -97,6 +100,7 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
         this.form.get('ukSortCode')?.setValue(account.uk?.sortCode);
       }
       if (account.euAvailable) {
+        console.log(account)
         this.form.get('euSelected')?.setValue(true);
         this.form.get('euBankAddress')?.setValue(account.eu?.bankAddress);
         this.form.get('euBankName')?.setValue(account.eu?.bankName);
@@ -105,12 +109,17 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
         this.form.get('euIban')?.setValue(account.eu?.iban);
         this.form.get('euSwiftBic')?.setValue(account.eu?.swiftBic);
       }
+      
+      if(account.openpaydAvailable){
+        this.form.get('openpaydSelected')?.setValue(true);
+      }
     } else {
       this.form.get('name')?.setValue('');
       this.form.get('description')?.setValue('');
       this.form.get('auSelected')?.setValue(false);
       this.form.get('ukSelected')?.setValue(false);
       this.form.get('euSelected')?.setValue(false);
+      this.form.get('openpaydSelected')?.setValue(false);
       this.form.get('auAccountName')?.setValue(undefined);
       this.form.get('auAccountNumber')?.setValue(undefined);
       this.form.get('auBsb')?.setValue(undefined);
@@ -177,6 +186,10 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
       data.eu = JSON.stringify(euData);
     } else {
       data.eu = null;
+    }
+
+    if(this.form.get('openpaydSelected')?.value === true){
+        data.openpayd = true;
     }
     return data;
   }

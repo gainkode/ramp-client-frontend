@@ -133,6 +133,14 @@
           </div>
         </div>
       </div>
+      
+      <div class="card card-body pd-20 pd-md-40 border shadow-none">
+        <h5 class="card-title mg-b-20 tx-11"
+          style="display: flex;flex-direction: row;justify-content: flex-start;align-items: center;">
+          <input type="checkbox" formControlName="openpaydSelected" class="me-2">
+          {{openpaydCategory?.title}}
+        </h5>
+      </div>
 
       <div *ngIf="errorMessage!==''" class="card card-body card-danger pd-20 pd-md-40 border shadow-none">
         <h4 class="card-title2 mg-b-20" style="color: brown;">
