@@ -155,7 +155,8 @@ export class WidgetService {
             this.getSource(widget),
             PaymentInstrument.WireTransfer,
             summary.providerView?.id ?? '',
-            currency,
+            summary.currencyTo,
+            summary.currencyFrom,
             widget.widgetId).valueChanges.pipe(take(1));
         this.pSubscriptions.add(
             settingsData$.subscribe(({ data }) => {

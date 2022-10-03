@@ -94,7 +94,8 @@ query MySettingsFee(
   $transactionSource: TransactionSource!
   $instrument: PaymentInstrument!
   $paymentProvider: String
-  $currency: String
+  $currencyTo: String
+  $currencyFrom: String
   $widgetId: String
 ) {
   mySettingsFee(
@@ -102,7 +103,8 @@ query MySettingsFee(
     transactionSource: $transactionSource
     paymentProvider: $paymentProvider
     instrument: $instrument
-    currency: $currency
+    currencyTo: $currencyTo
+    currencyFrom: $currencyFrom
     widgetId: $widgetId
   ) {
     terms
@@ -672,14 +674,16 @@ export class PaymentDataService {
     source: TransactionSource,
     instrument: PaymentInstrument,
     paymentProvider: string,
-    currency: string,
+    currencyTo: string,
+    currencyFrom: string,
     widgetId: string): QueryRef<any, EmptyObject> {
     const vars = {
       transactionType,
       transactionSource: source,
       instrument,
       paymentProvider: (paymentProvider === '') ? undefined : paymentProvider,
-      currency,
+      currencyTo,
+      currencyFrom,
       widgetId
     };
     return this.apollo.watchQuery<any>({

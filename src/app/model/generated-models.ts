@@ -1939,7 +1939,8 @@ export type QueryMySettingsFeeArgs = {
   transactionSource: TransactionSource;
   instrument: PaymentInstrument;
   paymentProvider?: Maybe<Scalars['String']>;
-  currency?: Maybe<Scalars['String']>;
+  currencyTo?: Maybe<Scalars['String']>;
+  currencyFrom?: Maybe<Scalars['String']>;
   widgetId?: Maybe<Scalars['String']>;
 };
 
