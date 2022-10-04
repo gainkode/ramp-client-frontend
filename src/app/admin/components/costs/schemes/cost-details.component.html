@@ -61,7 +61,6 @@
           <div *ngIf="targetType!==TARGET_TYPE.None" class="form-group">
             <label class="main-content-label tx-11 tx-medium tx-gray-600">
               {{targetsTitle}}
-              <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
             </label>
             <ng-select [minTermLength]="minTargetsLengthTerm" notFoundText="No {{targetEntity[1]}} found"
               [loading]="isTargetsLoading" [multiple]="true" formControlName="targetValues"
@@ -84,7 +83,6 @@
           <div class="form-group">
             <label class="main-content-label tx-11 tx-medium tx-gray-600">
               Transaction types
-              <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
             </label>
             <ng-select [items]="transactionTypes" bindLabel="name" bindValue="id" [multiple]="true"
               formControlName="trxType" placeholder="Select one or more types" required>
@@ -100,7 +98,6 @@
           <div class="form-group">
             <label class="main-content-label tx-11 tx-medium tx-gray-600">
               Payment Methods
-              <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
             </label>
             <ng-select [items]="instruments" bindLabel="name" bindValue="id" [multiple]="true"
               formControlName="instrument" placeholder="Select one or more methods" required>
@@ -117,7 +114,6 @@
           <div *ngIf="showPaymentProvider===true" class="form-group">
             <label class="main-content-label tx-11 tx-medium tx-gray-600">
               Payment providers
-              <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
             </label>
             <ng-select [items]="filteredProviders" bindLabel="name" bindValue="id" [multiple]="true"
               formControlName="provider" placeholder="Select one or more providers">
