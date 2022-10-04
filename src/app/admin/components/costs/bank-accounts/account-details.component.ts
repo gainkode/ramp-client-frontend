@@ -189,7 +189,9 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
     }
 
     if(this.form.get('openpaydSelected')?.value === true){
-        data.openpayd = true;
+        data.openpayd = this.form.get('openpaydSelected')?.value;
+    }else{
+        data.openpayd = false;
     }
     return data;
   }

@@ -193,7 +193,7 @@ export class WireTransferBankAccountItem {
                 this.eu = JSON.parse(data.eu) ?? undefined;
             }
             if (data.openpayd) {
-                this.openpayd = data.openpayd ?? undefined;
+                this.openpayd = data.openpayd ?? false;
             }
             if(data.openpaydObject){
                 this.openpaydObject = JSON.parse(data.openpaydObject) ?? undefined

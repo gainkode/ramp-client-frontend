@@ -2082,6 +2082,7 @@ const UPDATE_WIRE_TRANSFER_SETTINGS = gql`
     $au: String
     $uk: String
     $eu: String
+    $openpayd: Boolean
   ) {
     updateWireTransferBankAccount(
       bankAccountId: $bankAccountId
@@ -2091,6 +2092,7 @@ const UPDATE_WIRE_TRANSFER_SETTINGS = gql`
         au: $au
         uk: $uk
         eu: $eu
+        openpayd: $openpayd
       }
     ) {
       bankAccountId
