@@ -228,12 +228,16 @@ export class WireTransferBankAccountEu {
 }
 
 export class WireTransferBankAccountOpenpaydObject {
+    currency = '';
     bankAddress = '';
     bankName = '';
     beneficiaryAddress = '';
     beneficiaryName = '';
     iban = '';
     swiftBic = '';
+    sortCode = '';
+    accountNumber = '';
+    bankAccountHolderName = '';
 }
 
 export class WireTransferUserSelection {
