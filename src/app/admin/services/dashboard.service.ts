@@ -663,6 +663,33 @@ export class DashboardService implements OnDestroy {
           }) : []
       };
 
+      const openpaydBalances: DashboardCardData = {
+        columns: [
+          {
+            key: 'coin',
+            label: 'Base coin',
+            type: 'text'
+          },
+          {
+            key: 'value',
+            label: 'Value',
+            type: 'number'
+          }
+          // {
+          //   key: 'action',
+          //   label: '',
+          //   type: 'action'
+          // }
+        ],
+        rows: rawData.openpaydBalances ?
+          rawData.openpaydBalances.map(item => {
+            return {
+              coin: item.currency ?? null,
+              value: item.balance ?? null
+            };
+          }) : []
+      };
+
       //  endregion
 
 
@@ -706,6 +733,7 @@ export class DashboardService implements OnDestroy {
         withdrawals: withdrawalsData,
         fees: feesData,
         balances: balancesData,
+        openpaydBalances: openpaydBalances,
         liquidityBalances: liquidityProviderBalancesData
       };
 

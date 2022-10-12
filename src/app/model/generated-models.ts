@@ -39,7 +39,8 @@ export enum AdminTransactionStatus {
   AddressDeclined = 'AddressDeclined',
   ExchangeDeclined = 'ExchangeDeclined',
   TransferDeclined = 'TransferDeclined',
-  BenchmarkTransferDeclined = 'BenchmarkTransferDeclined'
+  BenchmarkTransferDeclined = 'BenchmarkTransferDeclined',
+  KycDeclined = 'KycDeclined'
 }
 
 export type ApiKey = {
@@ -240,6 +241,7 @@ export type DashboardStats = {
   receives?: Maybe<TransferStats>;
   exchanges?: Maybe<ExchangeStats>;
   balances?: Maybe<Array<BalanceStats>>;
+  openpaydBalances?: Maybe<Array<OpenpaydProviderBalance>>;
   liquidityProviderBalances?: Maybe<Array<Maybe<LiquidityProviderBalance>>>;
 };
 
@@ -1486,6 +1488,7 @@ export type Openpayd = {
 
 export type OpenpaydObject = {
   __typename?: 'OpenpaydObject';
+  currency?: Maybe<Scalars['String']>;
   bankAddress?: Maybe<Scalars['String']>;
   bankName?: Maybe<Scalars['String']>;
   iban?: Maybe<Scalars['String']>;
@@ -1493,6 +1496,12 @@ export type OpenpaydObject = {
   beneficiaryName?: Maybe<Scalars['String']>;
   swiftBic?: Maybe<Scalars['String']>;
   payInReference?: Maybe<Scalars['String']>;
+};
+
+export type OpenpaydProviderBalance = {
+  __typename?: 'OpenpaydProviderBalance';
+  currency?: Maybe<Scalars['String']>;
+  balance?: Maybe<Scalars['Float']>;
 };
 
 export type OrderBy = {
@@ -1754,13 +1763,13 @@ export type Query = {
   myBankAccounts: UserContactListResult;
   /** Get bank accounts for selected user */
   getUserBankAccounts: UserContactListResult;
-  /** Get actions for current user */
+  /** Get my actions with filters */
   myActions: UserActionListResult;
-  /** Get actions for selected user */
+  /** Get user actions with filters */
   getUserActions: UserActionListResult;
-  /** Get balance history for current user */
+  /** Get my balance history with filters */
   myBalanceHistory: UserBalanceHistoryRecordListResult;
-  /** Get balance history for selected user */
+  /** Get balance history with filters */
   getUserBalanceHistory: UserBalanceHistoryRecordListResult;
   /** Get KYC information for current user */
   myKycInfo?: Maybe<KycInfo>;
@@ -1782,6 +1791,8 @@ export type Query = {
   myTransactions?: Maybe<TransactionShortListResult>;
   /** This endpoint can be used to get all transactions with their description. */
   getTransactions?: Maybe<TransactionListResult>;
+  /** Get transaction history with filters */
+  getTransactionStatusHistory: TransactionStatusHistoryListResult;
   /** This endpoint can be used to get all wallets of the current user with their description. */
   myWallets?: Maybe<AssetAddressShortListResult>;
   /** This endpoint can be used to get all wallets with their description. */
@@ -2138,7 +2149,10 @@ export type QueryMyActionsArgs = {
 
 export type QueryGetUserActionsArgs = {
   userId?: Maybe<Scalars['String']>;
-  withResult?: Maybe<UserActionResult>;
+  resultsOnly?: Maybe<Array<UserActionResult>>;
+  statusesOnly?: Maybe<Array<Scalars['String']>>;
+  actionTypesOnly?: Maybe<Array<UserActionType>>;
+  createdDateInterval?: Maybe<DateTimeInterval>;
   filter?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
@@ -2251,6 +2265,18 @@ export type QueryGetTransactionsArgs = {
   walletAddressOnly?: Maybe<Scalars['String']>;
   verifyWhenPaid?: Maybe<Scalars['Boolean']>;
   accountModesOnly?: Maybe<Array<Maybe<UserMode>>>;
+  filter?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OrderBy>>;
+};
+
+
+export type QueryGetTransactionStatusHistoryArgs = {
+  transactionId?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['String']>;
+  statusesOnly?: Maybe<Array<Scalars['String']>>;
+  createdDateInterval?: Maybe<DateTimeInterval>;
   filter?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
@@ -3138,7 +3164,8 @@ export enum TransactionStatus {
   Completed = 'Completed',
   Abandoned = 'Abandoned',
   Canceled = 'Canceled',
-  Chargeback = 'Chargeback'
+  Chargeback = 'Chargeback',
+  KycDeclined = 'KycDeclined'
 }
 
 export type TransactionStatusDescriptor = {
@@ -3172,6 +3199,12 @@ export type TransactionStatusHistory = {
   transactionHandlingData?: Maybe<Scalars['String']>;
   transactionDataBefore?: Maybe<Scalars['String']>;
   transactionDataAfter?: Maybe<Scalars['String']>;
+};
+
+export type TransactionStatusHistoryListResult = {
+  __typename?: 'TransactionStatusHistoryListResult';
+  count?: Maybe<Scalars['Int']>;
+  list?: Maybe<Array<TransactionStatusHistory>>;
 };
 
 export enum TransactionStatusLevel {

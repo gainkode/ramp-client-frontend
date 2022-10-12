@@ -350,7 +350,8 @@ export class TransferWidgetComponent implements OnInit {
   }
 
   selectProvider(provider: PaymentProviderInstrumentView) {
-    if (provider.id === 'WireTransferPayment') {
+    console.log(provider)
+    if (provider.instrument === PaymentInstrument.WireTransfer) {
       this.summary.providerView = this.paymentProviders.find(x => x.id === provider.id);
       this.startPayment();
     } else {
