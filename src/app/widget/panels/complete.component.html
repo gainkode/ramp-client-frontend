@@ -1,5 +1,10 @@
 <div class="__widget-data-box">
-    <div class="__widget-disclaimer-area">
+    <div class="__widget-disclaimer-area-center">
+        <div class="__profile-details-payment-title-block">
+            <div class="__profile-details-payment-title-image">
+                <img src="assets/rocket.svg" alt="complete">
+            </div>
+        </div>
         <div *ngFor="let block of textData.blocks" class="__widget-disclaimer-container">
             <div *ngFor="let item of block.list">
                 <h1 *ngIf="item.type===TEXT_TYPE.MainTitle" class="__widget-title">

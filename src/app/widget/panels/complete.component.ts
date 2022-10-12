@@ -6,7 +6,7 @@ import { EnvService } from 'src/app/services/env.service';
 @Component({
   selector: 'app-widget-complete',
   templateUrl: 'complete.component.html',
-  styleUrls: ['../../../assets/payment.scss', '../../../assets/button.scss']
+  styleUrls: ['../../../assets/payment.scss', '../../../assets/button.scss', '../../../assets/profile.scss', '../../../assets/details.scss']
 })
 export class WidgetCompleteComponent {
   @Input() showRestartButton = false;
