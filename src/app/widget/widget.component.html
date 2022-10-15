@@ -78,6 +78,14 @@
       <app-widget-wire-transfer *ngSwitchCase="'wire_transfer'" [bankCategories]="wireTransferList"
         [bankAccountId]="bankAccountId" [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage"
         (onBack)="paymentBack()" (onComplete)="wireTransferPaymentComplete($event)"></app-widget-wire-transfer>
+
+      <app-widget-wire-transfer-info-required #signupInfo *ngSwitchCase="'wire_transfer_info_required'" buttonTitle="SAVE" (error)="handleError($event)"
+        (progressChange)="progressChanged($event)" (done)="requiredFieldsComplete()" [requiredFields] = "requiredFields"></app-widget-wire-transfer-info-required>
+
+      <!-- <app-widget-wire-transfer-info-required *ngSwitchCase="'wire_transfer_info_required'" [bankCategories]="wireTransferList"
+        [bankAccountId]="bankAccountId" [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage"
+        (onBack)="paymentBack()" (onComplete)="wireTransferPaymentComplete($event)"></app-widget-wire-transfer-info-required> -->
+
       <app-widget-wire-transfer-result *ngSwitchCase="'wire_transfer_result'" [referenceId]="summary.orderId"
         [bankData]="selectedWireTransfer" (onComplete)="processingComplete()"
         (onSendEmail)="sendWireTransaferMessage()">

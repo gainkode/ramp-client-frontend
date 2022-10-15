@@ -44,6 +44,7 @@ import { WidgetSendDetailsComponent } from './panels/send-details.component';
 import { TransferWidgetComponent } from './transfer.component';
 import { PaymentIntroComponent } from './payment-intro.component';
 import { WidgetWireTransferComponent } from './panels/wire-transfer.component';
+import { WidgetWireTransferInfoRequiredComponent } from './panels/wire-transfer-info-required.component';
 import { MatRadioModule } from '@angular/material/radio';
 import { WidgetWireTransferResultComponent } from './panels/wire-transfer-result.component';
 import { WidgetSellDetailsComponent } from './panels/sell-details.component';
@@ -93,7 +94,7 @@ export class MaterialModule { }
         WidgetComponent, ReceiveWidgetComponent, SendWidgetComponent, TransferWidgetComponent, BuySellFiatWidgetComponent,
         BuySellWidgetComponent, FiatWidgetComponent, CryptoWidgetComponent, CryptoWizardComponent, WidgetWizardComponent,
         WidgetProgressComponent, WidgetRecentTransactionsComponent,
-        WidgetSummaryComponent, WidgetRateComponent, WidgetCreditCardComponent, WidgetWireTransferComponent,
+        WidgetSummaryComponent, WidgetRateComponent, WidgetCreditCardComponent, WidgetWireTransferComponent, WidgetWireTransferInfoRequiredComponent,
         WidgetWireTransferResultComponent, WidgetSellDetailsComponent, WidgetDepositDetailsComponent,
         WidgetRegisterComponent, WidgetLoginAuthComponent, WidgetCodeAuthComponent,
         WidgetInitializationComponent, WidgetOrderDetailsComponent, WidgetReceiveDetailsComponent, WidgetSendDetailsComponent,

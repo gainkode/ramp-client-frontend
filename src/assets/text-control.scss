@@ -148,7 +148,10 @@ $font_main: var(--font_main);
     border-radius: 4px;
     background-color: transparent;
 }
-
+.widget-required-info{
+    width: 90%;
+    margin: 0 auto;
+}
 .__form-textbox-border {
     width: 100%;
     display: grid;

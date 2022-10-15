@@ -1,0 +1,58 @@
+<div class="widget-required-info">
+    <h2 class="__auth-title">
+        Please, specify your personal data
+    </h2>
+    <form [formGroup]="infoForm" (ngSubmit)="onSubmit()">
+        <div class="__form-separator"></div>
+        
+        <!-- Full name (Personal) -->
+        <div *ngIf="requireUserFirstName">
+            <app-form-textbox [label]="'First Name'" [boxType]="'text'" [placeholder]="'User first name'" [maxlength]="80"
+                formControlName="firstName" [errorMessages]="firstNameErrorMessages" [asterisk]="true" [separator]="true">
+            </app-form-textbox>
+            <app-form-textbox [label]="'Last Name'" [boxType]="'text'" [placeholder]="'User last name'" [maxlength]="80"
+                formControlName="lastName" [errorMessages]="lastNameErrorMessages" [asterisk]="true" [separator]="true">
+            </app-form-textbox>
+        </div>
+    
+        <!-- Birthday -->
+        <div *ngIf="requireUserBirthday">
+            <div class="__form-label">
+                Birthday <span class="__form-assist-error">*</span>
+            </div>
+            <div class="__form-textbox-border">
+                <input
+                    [ngClass]="{'__form-text-box': infoForm.controls.birthday?.valid, '__form-text-box-error': !infoForm.controls.birthday?.valid}"
+                    type="text" mask="d0/M0/0000" placeholder="DD/MM/YYYY" [dropSpecialCharacters]="false"
+                    formControlName="birthday" autocomplete="false" />
+                <div *ngIf="!infoForm.controls.birthday?.valid" class="__form-input-error-icon-container">
+                    <mat-icon class="__form-input-error-icon">
+                        error
+                    </mat-icon>
+                </div>
+            </div>
+            <div *ngIf="!infoForm.controls.birthday?.valid" class="__form-assist __form-assist-error">
+                Please specify your birthday
+            </div>
+            <div class="__form-separator"></div>
+        </div>
+    
+        <!-- Address -->
+        <div *ngIf="requireUserAddress">
+            <app-form-textbox [label]="'City'" [boxType]="'text'" [placeholder]="'City'" [maxlength]="30"
+                formControlName="town" [errorMessages]="townErrorMessages" [asterisk]="true" [separator]="true">
+            </app-form-textbox>
+            <app-form-textbox [label]="'Street'" [boxType]="'text'" [placeholder]="'Street'" [maxlength]="50"
+                formControlName="street" [errorMessages]="streetErrorMessages" [asterisk]="true" [separator]="true">
+            </app-form-textbox>
+        </div>
+    
+        <div class="__auth-buttons-wizard-area">
+            <button class="__main-button __button-wide" type="submit" [disabled]="!infoForm.valid">
+                {{buttonTitle}}
+            </button>
+        </div>
+    
+        <div class="__form-separator"></div>
+    </form>
+</div>

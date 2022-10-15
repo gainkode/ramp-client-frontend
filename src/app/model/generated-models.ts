@@ -2620,6 +2620,7 @@ export type SettingsFeeShort = {
   currency?: Maybe<Scalars['String']>;
   rateToEur?: Maybe<Scalars['Float']>;
   costs?: Maybe<Array<SettingsCostShort>>;
+  requiredFields?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 export enum SettingsFeeTargetFilterType {

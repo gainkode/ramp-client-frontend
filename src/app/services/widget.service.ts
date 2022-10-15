@@ -21,6 +21,7 @@ export class WidgetService {
     private onKycStatusUpdate: Function | undefined = undefined;  // (status: boolean)
     private onPaymentProvidersLoaded: Function | undefined = undefined;  // (status: boolean)
     private onWireTranferListLoaded: Function | undefined = undefined;  // (wireTransferList: WireTransferPaymentCategoryItem[], bankAccountId: string)
+    private userInfoRequired: Function | undefined = undefined;
 
     private pSubscriptions: Subscription = new Subscription();
 
@@ -39,7 +40,8 @@ export class WidgetService {
         confirmEmailCallback: Function | undefined,
         kycStatusCallback: Function | undefined,
         paymentProvidersCallback: Function | undefined,
-        wireTranferListLoadedCallback: Function | undefined) {
+        wireTranferListLoadedCallback: Function | undefined,
+        userInfoRequired?: Function | undefined) {
         this.onProgressChanged = progressCallback;
         this.onError = errorCallback;
         this.onIdentificationRequired = identificationCallback;
@@ -50,6 +52,7 @@ export class WidgetService {
         this.onKycStatusUpdate = kycStatusCallback;
         this.onPaymentProvidersLoaded = paymentProvidersCallback;
         this.onWireTranferListLoaded = wireTranferListLoadedCallback;
+        this.userInfoRequired = userInfoRequired;
     }
 
     getSettingsCommon(summary: CheckoutSummary, widget: WidgetSettings, updatedUserData: boolean): void {
@@ -150,6 +153,7 @@ export class WidgetService {
         if ((summary.providerView?.id ?? '') === 'Openpayd') {
             currency = summary.currencyFrom;
         }
+
         const settingsData$ = this.paymentService.mySettingsFee(
             summary.transactionType,
             this.getSource(widget),
@@ -166,7 +170,12 @@ export class WidgetService {
                 let wireTransferList: WireTransferPaymentCategoryItem[] = [];
                 let accountData: WireTransferBankAccountShort | undefined = undefined;
                 const settingsResult = data.mySettingsFee as SettingsFeeShort;
-                if (settingsResult.costs) {
+                if(settingsResult.requiredFields && settingsResult.requiredFields.length > 0){
+                    if(this.userInfoRequired){
+                        this.userInfoRequired(settingsResult.requiredFields)
+                    }
+                    
+                }else if (settingsResult.costs) {
                     if (settingsResult.costs.length > 0) {
                         const costs = settingsResult.costs[0];
                         if (costs.bankAccounts && (costs.bankAccounts?.length ?? 0 > 0)) {

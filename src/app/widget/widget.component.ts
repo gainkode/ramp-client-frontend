@@ -37,6 +37,7 @@ export class WidgetComponent implements OnInit {
   @Output() onComplete = new EventEmitter<PaymentCompleteDetails>();
   @Output() onError = new EventEmitter<PaymentErrorDetails>();
 
+  requiredFields: string[] = [];
   errorMessage = '';
   rateErrorMessage = '';
   transactionErrorTitle = '';
@@ -113,7 +114,8 @@ export class WidgetComponent implements OnInit {
       this.onCodeLoginRequired.bind(this),
       this.settingsKycState.bind(this),
       this.settingsCommonComplete.bind(this),
-      this.onWireTransferListLoaded.bind(this)
+      this.onWireTransferListLoaded.bind(this),
+      this.userInfoRequired.bind(this)
     );
     this.initMessage = 'Loading...';
 
@@ -718,6 +720,11 @@ export class WidgetComponent implements OnInit {
   // ====================
 
   // == Payment ===========
+  requiredFieldsComplete(): void {
+    console.log('WORK OR NOT')
+    this.widgetService.getWireTransferSettings(this.summary, this.widget);
+  }
+
   processingComplete(): void {
     if (this.widget.embedded) {
       const details = new PaymentCompleteDetails();
@@ -1092,6 +1099,11 @@ export class WidgetComponent implements OnInit {
     } else {
       this.setError('Transaction failed', 'No settings found for wire transfer', 'onWireTransferListLoaded');
     }
+  }
+
+  private userInfoRequired(requiredFields: string[]): void {
+    this.requiredFields = requiredFields;
+    this.nextStage('wire_transfer_info_required', 'Payment info', this.pager.step, true);
   }
 
   private setError(title: string, message: string, tag: string): void {

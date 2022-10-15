@@ -105,7 +105,7 @@ query MySettingsFee(
     instrument: $instrument
     currencyTo: $currencyTo
     currencyFrom: $currencyFrom
-    widgetId: $widgetId
+    widgetId: $widgetId,
   ) {
     terms
     wireDetails
@@ -123,7 +123,8 @@ query MySettingsFee(
         openpayd
         openpaydObject
       }
-    }
+    },
+    requiredFields
   }
 }
 `;
