@@ -721,7 +721,6 @@ export class WidgetComponent implements OnInit {
 
   // == Payment ===========
   requiredFieldsComplete(): void {
-    console.log('WORK OR NOT')
     this.widgetService.getWireTransferSettings(this.summary, this.widget);
   }
 

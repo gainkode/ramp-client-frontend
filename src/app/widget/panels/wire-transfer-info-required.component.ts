@@ -24,12 +24,12 @@ export class WidgetWireTransferInfoRequiredComponent implements OnDestroy{
     @Output() progressChange = new EventEmitter<boolean>();
     @Output() done = new EventEmitter<LoginResult>();
 
-    requireUserFirstName = true;
-    requireUserPhone = true;
-    requireUserBirthday = true;
-    requireUserAddress = true;
-    requireUserFlatNumber = true;
-    isMerchant = true;
+    requireUserFirstName = false;
+    requireUserPhone = false;
+    requireUserBirthday = false;
+    requireUserAddress = false;
+    requireUserFlatNumber = false;
+    isMerchant = false;
 
     startBirthday = new Date(1980, 0, 1);
 
@@ -74,16 +74,29 @@ export class WidgetWireTransferInfoRequiredComponent implements OnDestroy{
         this.birthdayControl = this.infoForm.get('birthday');
         this.townControl = this.infoForm.get('town');
         this.streetControl = this.infoForm.get('street');
-        this.init();
     }
 
     ngOnDestroy(): void {
         this.subscriptions.unsubscribe();
     }
 
-    init(): void {
+    ngOnInit(): void {
         // const fieldsData = this.auth.getSignupRequiredFields().valueChanges.pipe(take(1));
-        
+        for(let field of this.requiredFields){
+            switch(field){
+                case 'lastName':
+                case 'firstName':
+                    this.requireUserFirstName = true;
+                    break;
+                case 'birthday':
+                    this.requireUserBirthday= true;
+                    break;
+                case 'street':
+                case 'town':
+                    this.requireUserAddress = true;
+                    break; 
+            }
+        }
         this.progressChange.emit(true);
         this.setFields();
     }
