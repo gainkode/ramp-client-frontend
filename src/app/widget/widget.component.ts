@@ -171,6 +171,7 @@ export class WidgetComponent implements OnInit {
     this.requiredExtraData = false;
     this.initMessage = 'Loading...';
     if (data) {
+      let userParams: Record<string, any> = {};
       if (data.additionalSettings) {
         //{"minAmountFrom":0,"maxAmountFrom":0,"fixedAmountFrom":0,"kycBeforePayment":false,"disclaimer":true}
         const extraData = JSON.parse(data.additionalSettings);
@@ -184,8 +185,13 @@ export class WidgetComponent implements OnInit {
       }
       let userTransaction: TransactionType | undefined = undefined;
       let presetAddress = false;
+
+      this.widget.widgetId = data.widgetId;
+      this.widget.email = data.currentUserEmail ?? '';
+      this.widget.walletAddressPreset = data.hasFixedAddress ?? false;
+
       if (data.currentUserParams) {
-        const userParams = JSON.parse(data.currentUserParams);
+        userParams = JSON.parse(data.currentUserParams);
         if (userParams.params) {
           if (userParams.params.amount) {
             this.widget.amountFrom = userParams.params.amount;
@@ -207,9 +213,12 @@ export class WidgetComponent implements OnInit {
           }
         }
       }
-      this.widget.widgetId = data.widgetId;
-      this.widget.email = data.currentUserEmail ?? '';
-      this.widget.walletAddressPreset = data.hasFixedAddress ?? false;
+      
+      if(!this.widget.walletAddressPreset){
+        this.summary.address = (userParams?.params?.destination) ? userParams.params.destination : 
+        (data?.destinationAddress) ? data?.destinationAddress : '';
+      }
+      
       if (presetAddress) {
         this.widget.walletAddressPreset = true;
       }

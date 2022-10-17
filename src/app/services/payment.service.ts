@@ -374,6 +374,7 @@ query GetWidget($id: String!, $recaptcha: String!) {
     currenciesCrypto
     currenciesFiat
     hasFixedAddress
+    destinationAddress
     instruments
     paymentProviders
     additionalSettings

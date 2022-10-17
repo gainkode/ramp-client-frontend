@@ -369,7 +369,8 @@ export const TransactionStatusList: Array<TransactionStatusView> = [
     { id: TransactionStatus.Completed, name: 'Completed' },
     { id: TransactionStatus.Abandoned, name: 'Abandoned' },
     { id: TransactionStatus.Canceled, name: 'Cancelled' },
-    { id: TransactionStatus.Chargeback, name: 'Chargeback' }
+    { id: TransactionStatus.Chargeback, name: 'Chargeback' },
+    { id: TransactionStatus.KycDeclined, name: 'KycDeclined' }
 ];
 
 export const UserTransactionStatusList: Array<UserTransactionStatusView> = [
@@ -397,7 +398,8 @@ export const AdminTransactionStatusList: Array<AdminTransactionStatusView> = [
     { id: AdminTransactionStatus.AddressDeclined, name: 'Address declined' },
     { id: AdminTransactionStatus.ExchangeDeclined, name: 'Exchange declined' },
     { id: AdminTransactionStatus.TransferDeclined, name: 'Transfer declined' },
-    { id: AdminTransactionStatus.BenchmarkTransferDeclined, name: 'Benchmark transfer declined' }
+    { id: AdminTransactionStatus.BenchmarkTransferDeclined, name: 'Benchmark transfer declined' },
+    { id: AdminTransactionStatus.KycDeclined, name: 'KycDeclined' }
 ];
 
 export const TransactionKycStatusList: Array<TransactionKycStatusView> = [

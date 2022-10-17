@@ -302,6 +302,7 @@ export class TransactionItemFull {
       case AdminTransactionStatus.Canceled:
       case AdminTransactionStatus.Chargeback:
       case AdminTransactionStatus.PaymentDeclined:
+      case AdminTransactionStatus.KycDeclined:
         color = 'red';
         break;
       case AdminTransactionStatus.AddressDeclined:

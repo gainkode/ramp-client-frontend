@@ -15,8 +15,9 @@ export function getTierBlocks(user: User, verifiedTierId: string, tiersData: Set
             if (beforeCurrentTier) {
                 if (val.settingsKycTierId === currentTierId) {
                     beforeCurrentTier = false;
+                    
                     if (val.originalLevelName !== null) {
-                        tierPassed = user.kycValid ?? true;
+                        tierPassed = user.kycValid ? true : false;
                         if (tierPassed === false && user.kycReviewRejectedType?.toLowerCase() === 'final') {
                             tierPassed = true;
                         }
