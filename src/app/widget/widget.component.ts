@@ -189,7 +189,7 @@ export class WidgetComponent implements OnInit {
       this.widget.widgetId = data.widgetId;
       this.widget.email = data.currentUserEmail ?? '';
       this.widget.walletAddressPreset = data.hasFixedAddress ?? false;
-
+      
       if (data.currentUserParams) {
         userParams = JSON.parse(data.currentUserParams);
         if (userParams.params) {
@@ -222,9 +222,9 @@ export class WidgetComponent implements OnInit {
       if (presetAddress) {
         this.widget.walletAddressPreset = true;
       }
-      if (this.quickCheckout) {
-        this.widget.walletAddressPreset = false;
-      }
+      // if (this.quickCheckout) {
+      //   this.widget.walletAddressPreset = false;
+      // }
       this.widget.transaction = undefined;
       if (data.currenciesCrypto) {
         if (data.currenciesCrypto.length > 0) {
