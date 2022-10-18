@@ -17,7 +17,7 @@ export class PersonalLoginComponent implements OnDestroy {
     inProgress = false;
     errorMessage = '';
     showExtraOptions = true;
-    logoSrc = `${EnvService.image_host}/images/logo-color.png`;
+    logoSrc = `${EnvService.image_host}/images/logo-widget.png`;
     logoAlt = EnvService.product;
 
     private subscriptions: Subscription = new Subscription();
@@ -26,7 +26,8 @@ export class PersonalLoginComponent implements OnDestroy {
         private auth: AuthService,
         private errorHandler: ErrorService,
         public router: Router,
-        public dialog: MatDialog) { }
+        public dialog: MatDialog) { 
+         }
 
     ngOnDestroy(): void {
         this.subscriptions.unsubscribe();
