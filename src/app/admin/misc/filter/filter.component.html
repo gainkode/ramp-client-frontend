@@ -118,6 +118,15 @@
                                                 [closeOnSelect]="false" placeholder="Select transaction types">
                                             </ng-select>
                                         </div>
+                                        <div *ngIf="field === 'userActionType'" class="form-group">
+                                            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                                                User Actions Types
+                                            </label>
+                                            <ng-select [items]="userActionTypeOptions" bindLabel="name" bindValue="id"
+                                                formControlName="userActionTypes" [multiple]="true"
+                                                [closeOnSelect]="false" placeholder="Select user action type">
+                                            </ng-select>
+                                        </div>
                                         <div *ngIf="field === 'tier'" class="form-group">
                                             <label class="main-content-label tx-11 tx-medium tx-gray-600">
                                                 Verification Levels

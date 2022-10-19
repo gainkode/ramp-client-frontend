@@ -19,7 +19,9 @@ export class AdminUserActionsComponent implements OnInit, OnDestroy, AfterViewIn
   @ViewChild(MatSort) sort!: MatSort;
 
   filterFields = [
-    'search'
+    'createdDate',
+    'userActionType',
+    'user',
   ];
   displayedColumns: string[] = [
     'details',
@@ -99,6 +101,7 @@ export class AdminUserActionsComponent implements OnInit, OnDestroy, AfterViewIn
     this.subscriptions.add(
       listData$.subscribe(({ list, count }) => {
         this.actions = list;
+        console.log(this.actions)
         this.actionCount = count;
         this.inProgress = false;
       }, (error) => {

@@ -9,7 +9,7 @@ import { AdminDataService } from 'src/app/services/admin-data.service';
 import { CommonTargetValue } from 'src/app/model/common.model';
 import { Countries } from 'src/app/model/country-code.model';
 import { SettingsKycTier } from 'src/app/model/generated-models';
-import { CurrencyView, KycStatusList, PaymentInstrumentList, RiskLevelViewList, TransactionKycStatusList, TransactionSourceList, TransactionStatusList, TransactionTypeList, UserModeList, UserStatusList, UserTypeList } from 'src/app/model/payment.model';
+import { CurrencyView, KycStatusList, PaymentInstrumentList, RiskLevelViewList, TransactionKycStatusList, TransactionSourceList, TransactionStatusList, TransactionTypeList, UserActionTypeList, UserModeList, UserStatusList, UserTypeList } from 'src/app/model/payment.model';
 import { AdminDateRangeComponent } from '../date-range/date-range.component';
 
 @Component({
@@ -40,6 +40,7 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
   userModeOptions = UserModeList;
   userStatusOptions = UserStatusList;
   transactionTypeOptions = TransactionTypeList;
+  userActionTypeOptions = UserActionTypeList;
   transactionStatusOptions = TransactionStatusList;
   kysStatusOptions = KycStatusList;
   transactionKysStatusOptions = TransactionKycStatusList;
@@ -215,6 +216,9 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
     }
     if (this.fields.includes('accountStatus')) {
       controlsConfig.accountStatuses = [[]];
+    }
+    if (this.fields.includes('userActionType')) {
+      controlsConfig.userActionTypes = [[]];
     }
     if (this.fields.includes('country')) {
       controlsConfig.countries = [[]];

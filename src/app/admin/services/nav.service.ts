@@ -93,14 +93,19 @@ export class NavService implements OnDestroy {
 		{
 			path: '/admin/transactions', icon: 'compare_arrows', title: 'Transactions', type: 'link', code: 'TRANSACTIONS'
 		},
-		{
-			path: '/admin/transaction-status-history', icon: 'compare_arrows', title: 'Transaction history', type: 'link', code: 'TRANSACTIONS'
-		},
+		
 		{
 			title: 'Users', icon: 'account_box', type: 'sub', active: false, children: [
 				{ path: '/admin/customers', title: 'Customers', type: 'link', code: 'CUSTOMERS' },
 				{ path: '/admin/system-users', title: 'System users', type: 'link', code: 'SYSTEM_USERS' },
-				//{ path: '/admin/user-actions', title: 'User actions', type: 'link', code: 'SYSTEM_USERS' }
+			]
+		},
+		{
+			title: 'System logs', icon: 'settings', type: 'sub', active: false, children: [
+				{ path: '/admin/user-actions', title: 'User actions', type: 'link', code: 'SYSTEM_USERS' },
+				{
+					path: '/admin/transaction-status-history', icon: 'compare_arrows', title: 'Transaction history', type: 'link', code: 'TRANSACTIONS'
+				},
 			]
 		},
 		{

@@ -1,4 +1,4 @@
-import { AccountStatus, DateTimeInterval, KycStatus, PaymentInstrument, RiskAlertCodes, RiskLevel, TransactionKycStatus, TransactionSource, TransactionStatus, TransactionType, UserMode, UserType } from '../../model/generated-models';
+import { AccountStatus, DateTimeInterval, KycStatus, PaymentInstrument, RiskAlertCodes, RiskLevel, TransactionKycStatus, TransactionSource, TransactionStatus, TransactionType, UserActionResult, UserActionType, UserMode, UserType } from '../../model/generated-models';
 import { EmptyObject } from 'apollo-angular/types';
 
 export class Filter {
@@ -34,8 +34,23 @@ export class Filter {
   public verifyWhenPaid?: boolean;
   public transactionId?: string;
   public userId?: string;
+  public resultsOnly?: Array<UserActionResult>; 
+  public statusesOnly?: Array<string>;
+  public userActionTypes?: Array<UserActionType>;
 
   constructor(filterValues: EmptyObject) {
+    if(filterValues.resultsOnly){
+      this.resultsOnly = filterValues.resultsOnly;
+    }
+
+    if(filterValues.statusesOnly){
+      this.statusesOnly = filterValues.statusesOnly;
+    }
+
+    if(filterValues.userActionTypes){
+      this.userActionTypes = filterValues.userActionTypes;
+    }
+
     if (filterValues.accountTypes) {
       this.accountTypes = filterValues.accountTypes;
     }

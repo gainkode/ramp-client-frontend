@@ -483,7 +483,10 @@ query GetUserActions(
   $orderBy: [OrderBy!]
   $filter: String
   $userId: String
-  $withResult: UserActionResult
+  $resultsOnly: [UserActionResult!]
+  $statusesOnly: [String!]
+  $actionTypesOnly: [UserActionType!]
+  $createdDateInterval: DateTimeInterval
 ) {
   getUserActions(
     skip: $skip
@@ -491,7 +494,10 @@ query GetUserActions(
     orderBy: $orderBy
     filter: $filter
     userId: $userId
-    withResult: $withResult
+    resultsOnly: $resultsOnly
+    statusesOnly: $statusesOnly
+    actionTypesOnly: $actionTypesOnly
+    createdDateInterval: $createdDateInterval
   ) {
     count
     list {
@@ -2512,7 +2518,11 @@ export class AdminDataService {
       skip: pageIndex * takeItems,
       first: takeItems,
       orderBy: [{ orderBy: orderField, desc: orderDesc }],
-      userId: filter?.user
+      userId: filter?.user,
+      resultsOnly: filter?.resultsOnly,
+      statusesOnly: filter?.statusesOnly,
+      actionTypesOnly: filter?.userActionTypes,
+      createdDateInterval: filter?.createdDateInterval
       // $withResult: UserActionResult
     };
 
