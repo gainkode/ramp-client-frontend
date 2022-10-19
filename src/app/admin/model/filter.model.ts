@@ -32,6 +32,8 @@ export class Filter {
   public transactionCountOver?: number;
   public search?: string;
   public verifyWhenPaid?: boolean;
+  public transactionId?: string;
+  public userId?: string;
 
   constructor(filterValues: EmptyObject) {
     if (filterValues.accountTypes) {
@@ -151,6 +153,12 @@ export class Filter {
 
     if (filterValues.verifyWhenPaid) {
       this.verifyWhenPaid = filterValues.verifyWhenPaid;
+    }
+    if (filterValues.transactionId) {
+      this.transactionId = filterValues.transactionId;
+    }
+    if (filterValues.userId) {
+      this.userId = filterValues.userId;
     }
   }
 

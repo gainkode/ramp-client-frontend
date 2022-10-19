@@ -21,6 +21,7 @@ import { AdminCommonSettingsComponent } from './components/settings/common/commo
 import { AdminUserDevicesComponent } from './components/users/devices/devices.component';
 import { AdminKycTiersComponent } from './components/kyc/tiers/tiers.component';
 import { AdminUserActionsComponent } from './components/users/actions/actions.component';
+import { AdminTransactionStatusHistoryComponent } from './components/transactionStatusHistory/transaction-status-history.component';
 
 const routes: Routes = [
   {
@@ -49,6 +50,21 @@ const routes: Routes = [
             path: '',
             component: AdminTransactionsComponent,
             data: { header: 'Transactions' }
+          }
+        ]
+      },
+      {
+        path: 'transaction-status-history',
+        children: [
+          {
+            path: 'users/:userid',
+            component: AdminTransactionStatusHistoryComponent,
+            data: { header: 'Customer transaction status history' }
+          },
+          {
+            path: '',
+            component: AdminTransactionStatusHistoryComponent,
+            data: { header: 'Transaction history' }
           }
         ]
       },

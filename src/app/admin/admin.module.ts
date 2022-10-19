@@ -40,6 +40,7 @@ import { AdminSidebarComponent } from './layout/sidebar/sidebar.component';
 import { AdminDashboardComponent } from './components/dashboard/dashboard.component';
 import { AdminSwitcherComponent } from './layout/switcher/switcher.component';
 import { AdminTransactionsComponent } from './components/transactions/transactions.component';
+import { AdminTransactionStatusHistoryComponent } from './components/transactionStatusHistory/transaction-status-history.component';
 import { AdminPageHeaderComponent } from './layout/page-header/page-header.component';
 import { AdminDataService } from '../services/admin-data.service';
 import { AdminTransactionDetailsComponent } from './components/transactions/transaction-details.component';
@@ -141,7 +142,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AdminDateRangeComponent,
     AdminFilterComponent,
     AdminDashboardComponent,
-    AdminTransactionsComponent, AdminTransactionDetailsComponent,
+    AdminTransactionsComponent, AdminTransactionDetailsComponent, AdminTransactionStatusHistoryComponent,
     AdminFiatWalletsComponent, AdminFiatWalletDetailsComponent,
     AdminCryptoWalletsComponent, AdminCryptoWalletDetailsComponent,
     AdminCustomersComponent, AdminCustomerDetailsComponent,

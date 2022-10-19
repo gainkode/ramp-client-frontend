@@ -45,11 +45,14 @@ import {
   UserState,
   UserType,
   WidgetListResult,
-  WireTransferBankAccount
+  WireTransferBankAccount,
+  TransactionStatusHistoryListResult,
+  TransactionStatusHistory,
+  QueryGetTransactionStatusHistoryArgs
 } from '../model/generated-models';
 import { KycLevel, KycScheme, KycTier } from '../model/identification.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { TransactionItemFull } from '../model/transaction.model';
+import { TransactionItemFull, TransactionStatusHistoryItem } from '../model/transaction.model';
 import { catchError, finalize, map, tap } from 'rxjs/operators';
 import { ApolloQueryResult, FetchResult, MutationOptions } from '@apollo/client/core';
 import { ErrorService } from './error.service';
@@ -725,6 +728,35 @@ const GET_TRANSACTIONS = gql`
         verifyWhenPaid        
         widget
         widgetId
+      }
+    }
+  }
+`;
+
+const GET_TRANSACTION_STATUS_HISTORY = gql`
+  query getTransactionStatusHistory(
+    $transactionIds: [String!]
+    $userIds: [String!]
+    $statusesOnly: [String!]
+    $createdDateInterval: DateTimeInterval
+    $filter: String
+    $skip: Int
+    $first: Int
+    $orderBy: [OrderBy!]
+  ) {
+    getTransactionStatusHistory(
+      transactionIds: $transactionIds
+      userIds: $userIds
+      statusesOnly: $statusesOnly
+      createdDateInterval: $createdDateInterval
+      filter: $filter
+      skip: $skip
+      first: $first
+      orderBy: $orderBy
+    ) {
+      count
+      list {
+        transactionStatusHistoryId, transactionId, userId, created, oldStatus, newStatus, newStatusReason
       }
     }
   }
@@ -2634,6 +2666,48 @@ export class AdminDataService {
         return {
           list: result.data.getTransactions.list.map(val => new TransactionItemFull(val)),
           count: result.data.getTransactions.count
+        };
+      } else {
+        return {
+          list: [],
+          count: 0
+        };
+      }
+    }));
+  }
+
+  getTransactionStatusHistory(
+    pageIndex: number,
+    takeItems: number,
+    orderField: string,
+    orderDesc: boolean,
+    filter?: Filter
+  ): Observable<{ list: Array<TransactionStatusHistoryItem>; count: number; }> {
+    let widgetIds: string[] = [];
+    if (filter?.widgets) {
+      widgetIds = widgetIds.concat(filter.widgets);
+    }
+    if (filter?.widgetNames) {
+      widgetIds = widgetIds.concat(filter.widgetNames);
+    }
+    const vars: QueryGetTransactionStatusHistoryArgs = {
+      transactionIds: filter?.transactionIds,
+      userIds: filter?.users,
+      statusesOnly: filter?.transactionStatuses,
+      createdDateInterval: filter?.createdDateInterval,
+      skip: pageIndex * takeItems,
+      first: takeItems,
+      orderBy: [{ orderBy: orderField, desc: orderDesc }]
+    };
+    return this.watchQuery<{ getTransactionStatusHistory: TransactionStatusHistoryListResult }, QueryGetTransactionStatusHistoryArgs>({
+      query: GET_TRANSACTION_STATUS_HISTORY,
+      variables: vars,
+      fetchPolicy: 'network-only'
+    }).pipe(map(result => {
+      if (result.data?.getTransactionStatusHistory?.list && result.data?.getTransactionStatusHistory?.count) {
+        return {
+          list: result.data.getTransactionStatusHistory.list.map(val => new TransactionStatusHistoryItem(val)),
+          count: result.data.getTransactionStatusHistory.count
         };
       } else {
         return {

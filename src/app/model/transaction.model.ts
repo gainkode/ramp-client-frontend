@@ -12,6 +12,7 @@ import {
   TransactionSource,
   TransactionStatus,
   TransactionStatusDescriptorMap,
+  TransactionStatusHistory,
   TransactionType,
   User,
   UserMode
@@ -821,4 +822,28 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
     } as CommonTargetValue;
   }
   return result;
+}
+
+export class TransactionStatusHistoryItem {
+  id = '';
+  transactionId = '';
+  created = '';
+  oldStatus = '';
+  newStatus = '';
+  newStatusReason = '';
+  userId: string = '';
+  selected = false;
+
+  constructor(data: TransactionStatusHistory | null) {
+    if (data !== null) {
+      this.id = data.transactionStatusHistoryId;
+      this.transactionId = data.transactionId ? data.transactionId : '';
+      const datepipe: DatePipe = new DatePipe('en-US');
+      this.created = datepipe.transform(data.created, 'dd-MM-YYYY HH:mm:ss') as string;
+      this.oldStatus = data.oldStatus ? data.oldStatus : '';
+      this.newStatus = data.newStatus ? data.newStatus : '';
+      this.userId = data.userId ? data.userId : '';
+    }
+  }
+
 }

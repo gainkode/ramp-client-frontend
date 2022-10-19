@@ -2273,8 +2273,8 @@ export type QueryGetTransactionsArgs = {
 
 
 export type QueryGetTransactionStatusHistoryArgs = {
-  transactionId?: Maybe<Scalars['String']>;
-  userId?: Maybe<Scalars['String']>;
+  transactionIds?: Maybe<Array<Scalars['String']>>;
+  userIds?: Maybe<Array<Scalars['String']>>;
   statusesOnly?: Maybe<Array<Scalars['String']>>;
   createdDateInterval?: Maybe<DateTimeInterval>;
   filter?: Maybe<Scalars['String']>;
