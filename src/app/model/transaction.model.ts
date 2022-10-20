@@ -8,6 +8,7 @@ import {
   PaymentInstrument,
   Transaction,
   TransactionKycStatus,
+  TransactionSh,
   TransactionShort,
   TransactionSource,
   TransactionStatus,
@@ -832,6 +833,8 @@ export class TransactionStatusHistoryItem {
   newStatus = '';
   newStatusReason = '';
   userId: string = '';
+  user_email: string = '';
+  transaction: TransactionSh | null = {};
   selected = false;
 
   constructor(data: TransactionStatusHistory | null) {
@@ -843,6 +846,8 @@ export class TransactionStatusHistoryItem {
       this.oldStatus = data.oldStatus ? data.oldStatus : '';
       this.newStatus = data.newStatus ? data.newStatus : '';
       this.userId = data.userId ? data.userId : '';
+      this.transaction = data.transaction && data.transaction.length > 0 ? data.transaction[0] : null;
+      this.user_email = data.userEmail ? data.userEmail : '';
     }
   }
 

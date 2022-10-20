@@ -478,7 +478,7 @@ export class UserActionItem {
   userId = '';
   date = '';
   objectId = '';
-  linkedIds: string[] = [];
+  linkedIds: any = [];
   info = '';
   status = '';
   actionType: UserActionTypeView | null = null;

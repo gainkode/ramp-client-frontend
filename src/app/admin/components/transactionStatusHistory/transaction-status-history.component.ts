@@ -28,7 +28,7 @@ export class AdminTransactionStatusHistoryComponent implements OnInit, OnDestroy
     'users'
   ];
   displayedColumns: string[] = [
-    'details', 'transactionStatusHistoryId', 'created', 'userId', 'newStatus', 'oldStatus', 'newStatusReason', 'transactionId'
+    'transactionCode', 'created', 'userEmail', 'changedBy', 'newStatus', 'oldStatus', 'newStatusReason', 'transactionId'
   ];
   inProgress = false;
   permission = 0;
@@ -157,6 +157,7 @@ export class AdminTransactionStatusHistoryComponent implements OnInit, OnDestroy
     this.subscriptions.add(
       listData$.subscribe(({ list, count }) => {
         this.transactionStatusHistory = list;
+        console.log(this.transactionStatusHistory )
         this.transactionCount = count;
         this.inProgress = false;
       }, (error) => {

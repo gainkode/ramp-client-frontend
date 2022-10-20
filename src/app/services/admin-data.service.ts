@@ -762,7 +762,17 @@ const GET_TRANSACTION_STATUS_HISTORY = gql`
     ) {
       count
       list {
-        transactionStatusHistoryId, transactionId, userId, created, oldStatus, newStatus, newStatusReason
+        transactionStatusHistoryId, 
+        transactionId, 
+        userId, 
+        transaction{
+          code,email
+        }, 
+        userEmail, 
+        created, 
+        oldStatus, 
+        newStatus, 
+        newStatusReason
       }
     }
   }

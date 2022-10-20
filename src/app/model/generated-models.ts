@@ -3042,6 +3042,12 @@ export type TransactionMerchantInput = {
   sourceAddress?: Maybe<Scalars['String']>;
 };
 
+export type TransactionSh = {
+  __typename?: 'TransactionSH';
+  code?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
+};
+
 export enum TransactionServiceNotificationType {
   PaymentStatusChanged = 'PaymentStatusChanged',
   CryptoPartPaid = 'CryptoPartPaid',
@@ -3192,11 +3198,13 @@ export type TransactionStatusHistory = {
   transactionStatusHistoryId: Scalars['ID'];
   transactionId?: Maybe<Scalars['String']>;
   userId?: Maybe<Scalars['String']>;
+  userEmail?: Maybe<Scalars['String']>;
   created?: Maybe<Scalars['DateTime']>;
   oldStatus?: Maybe<Scalars['String']>;
   newStatus?: Maybe<Scalars['String']>;
   newStatusReason?: Maybe<Scalars['String']>;
   initialTransactionHandlingData?: Maybe<Scalars['String']>;
+  transaction?: Maybe<Array<Maybe<TransactionSh>>>;
   transactionHandlingData?: Maybe<Scalars['String']>;
   transactionDataBefore?: Maybe<Scalars['String']>;
   transactionDataAfter?: Maybe<Scalars['String']>;
@@ -3432,10 +3440,10 @@ export type User = {
 export type UserAction = {
   __typename?: 'UserAction';
   userActionId: Scalars['ID'];
-  userId: Scalars['String'];
+  userId?: Maybe<Scalars['String']>;
   objectId?: Maybe<Scalars['String']>;
   actionType?: Maybe<UserActionType>;
-  linkedIds?: Maybe<Array<Scalars['String']>>;
+  linkedIds?: Maybe<Array<Maybe<Scalars['String']>>>;
   info?: Maybe<Scalars['String']>;
   result?: Maybe<UserActionResult>;
   status?: Maybe<Scalars['String']>;
