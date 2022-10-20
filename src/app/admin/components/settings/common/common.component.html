@@ -137,7 +137,7 @@
                       </div>
                     </ng-template>
                   </ngb-panel>
-                  <ngb-panel id="static-8" cardClass="acc-card">
+                  <ngb-panel id="static-3" cardClass="acc-card">
                     <ng-template ngbPanelTitle>
                       <i class="material-icons me-2" style="position: relative; top: 4px; font-size: 20px;">
                         widgets
@@ -170,7 +170,7 @@
                       </div>
                     </ng-template>
                   </ngb-panel>
-                  <ngb-panel id="static-3" cardClass="acc-card">
+                  <ngb-panel id="static-4" cardClass="acc-card">
                     <ng-template ngbPanelTitle>
                       <i class="material-icons me-2" style="position: relative; top: 4px; font-size: 20px;">
                         settings
@@ -575,7 +575,7 @@
                       </div>
                     </ng-template>
                   </ngb-panel>
-                  <ngb-panel id="static-4" cardClass="acc-card">
+                  <ngb-panel id="static-5" cardClass="acc-card">
                     <ng-template ngbPanelTitle>
                       <i class="material-icons me-2" style="position: relative; top: 4px; font-size: 20px;">
                         settings
@@ -930,7 +930,46 @@
                       </div>
                     </ng-template>
                   </ngb-panel>
-                  <ngb-panel id="static-5" cardClass="acc-card">
+
+                  <ngb-panel id="static-6" cardClass="acc-card">
+                    <ng-template ngbPanelTitle>
+                      <i class="material-icons me-2" style="position: relative; top: 4px; font-size: 20px;">
+                        settings
+                      </i>
+                      Payment Providers
+                    </ng-template>
+                    <ng-template ngbPanelContent>
+                      <div class="card card-body pd-20 pd-md-40 border shadow-none">
+                        <h5 class="card-title mg-b-20">
+                          Openpayd
+                        </h5>
+                        <div class="form-group">
+                          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                            Withdrawal Benchmark
+                            <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+                          </label>
+                          <input class="form-control"
+                            [ngClass]="{'has-error': !form.controls.openpaydWithdrawalBenchmark.valid}" type="text"
+                            formControlName="openpaydWithdrawalBenchmark" maxlength="7" required>
+                          <div
+                            *ngIf="(form.controls.openpaydWithdrawalBenchmark.touched || submitted) && (form.controls.openpaydWithdrawalBenchmark.errors?.['required'])"
+                            class="tx-danger">
+                            <small>
+                              Please specify benchmark value
+                            </small>
+                          </div>
+                          <div
+                            *ngIf="(form.controls.openpaydWithdrawalBenchmark.touched || submitted) && (form.controls.openpaydWithdrawalBenchmark.errors?.['pattern'])"
+                            class="tx-danger">
+                            <small>
+                              Invalid number value
+                            </small>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-template>
+                  </ngb-panel>
+                  <ngb-panel id="static-7" cardClass="acc-card">
                     <ng-template ngbPanelTitle>
                       <i class="material-icons me-2" style="position: relative; top: 4px; font-size: 20px;">
                         settings
@@ -968,7 +1007,7 @@
                       </div>
                     </ng-template>
                   </ngb-panel>
-                  <ngb-panel id="static-6" cardClass="acc-card">
+                  <ngb-panel id="static-8" cardClass="acc-card">
                     <ng-template ngbPanelTitle>
                       <i class="material-icons me-2" style="position: relative; top: 4px; font-size: 20px;">
                         settings
@@ -1092,7 +1131,7 @@
                       </div>
                     </ng-template>
                   </ngb-panel>
-                  <ngb-panel id="static-7" cardClass="acc-card">
+                  <ngb-panel id="static-9" cardClass="acc-card">
                     <ng-template ngbPanelTitle>
                       <i class="material-icons me-2" style="position: relative; top: 4px; font-size: 20px;">
                         settings

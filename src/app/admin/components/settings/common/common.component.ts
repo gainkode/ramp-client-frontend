@@ -128,6 +128,8 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
     krakenWithdrawalBenchmark: [0, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
     krakenWithdrawalBenchmarkAmountToRemain: [0, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
 
+    openpaydWithdrawalBenchmark: [0, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
+
     frameX1: [undefined],
     frameY1: [undefined],
     frameX2: [undefined],
@@ -309,6 +311,8 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
         this.form.get('krakenTrackWithdrawals')?.setValue(coreData.liquidityProviders.Kraken.trackWithdrawals ?? false);
         this.form.get('krakenWithdrawalBenchmark')?.setValue(coreData.liquidityProviders.Kraken.withdrawalBenchmark ?? 10000);
         this.form.get('krakenWithdrawalBenchmarkAmountToRemain')?.setValue(coreData.liquidityProviders.Kraken.withdrawalBenchmarkAmountToRemain ?? 0);
+
+        this.form.get('openpaydWithdrawalBenchmark')?.setValue(coreData.paymentProviders.Openpayd.benchmarkAmount ?? 10000);
       }, (error) => {
         this.inProgress = false;
         this.errorMessage = error;
@@ -405,6 +409,8 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
     const coreKrakenWithdrawalBenchmark = parseInt(this.form.get('krakenWithdrawalBenchmark')?.value ?? '10000');
     const coreKrakenWithdrawalBenchmarkAmountToRemain = parseInt(this.form.get('krakenWithdrawalBenchmarkAmountToRemain')?.value ?? '0');
 
+    const coreOpenpaydWithdrawalBenchmark = parseInt(this.form.get('openpaydWithdrawalBenchmark')?.value ?? '10000');
+
     const frames: FrameBlock[] = [];
     for (let index = 0; index < 5; index++) {
       const fieldX = `frameX${index + 1}`;
@@ -446,6 +452,11 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
           trackWithdrawals: coreKrakenTrackWithdrawals,
           withdrawalBenchmark: coreKrakenWithdrawalBenchmark,
           withdrawalBenchmarkAmountToRemain: coreKrakenWithdrawalBenchmarkAmountToRemain
+        }
+      },
+      paymentProviders: {
+        Openpayd:{
+          benchmarkAmount: coreOpenpaydWithdrawalBenchmark
         }
       },
       custodyProviders: {
