@@ -93,6 +93,7 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
     trustologyWithdrawalFromLiquidityProviderDestinationAddress: [''],
     trustologyWithdrawalToEndUserSourceVaultAccountId: [''],
     trustologyWithdrawalToEndUserSourceVaultAccountIdSubwallet: [''],
+    
     trustologyWithdrawalToEndUserSpeed: ['', { validators: [Validators.required], updateOn: 'change' }],
     // KYC providers - Sumsub
     kycSumSubWebApiTokenLifetime: [0, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
@@ -129,6 +130,7 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
     krakenWithdrawalBenchmarkAmountToRemain: [0, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
 
     openpaydWithdrawalBenchmark: [0, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
+    openpaydBeneficiaryBankIds: [''],
 
     frameX1: [undefined],
     frameY1: [undefined],
@@ -220,6 +222,7 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 
         // Core
         const coreData = additionalSettings.core;
+        console.log(coreData)
         // Core - Verify When Paid
         this.form.get('verifyWhenPaid')?.setValue((coreData.verifyWhenPaid ?? true) === true);
         this.form.get('wireTransferWallet')?.setValue((coreData.wireTransferWallet ?? false) === true);
@@ -313,6 +316,8 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
         this.form.get('krakenWithdrawalBenchmarkAmountToRemain')?.setValue(coreData.liquidityProviders.Kraken.withdrawalBenchmarkAmountToRemain ?? 0);
 
         this.form.get('openpaydWithdrawalBenchmark')?.setValue(coreData.paymentProviders.Openpayd.benchmarkAmount ?? 10000);
+        this.form.get('openpaydBeneficiaryBankIds')?.setValue(coreData.paymentProviders.Openpayd.beneficiaryBankIds);
+        console.log(coreData.paymentProviders.Openpayd.beneficiaryBankIds)
       }, (error) => {
         this.inProgress = false;
         this.errorMessage = error;
@@ -330,7 +335,7 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
     const authData = {
       emailCodeNumberLength: authEmailCodeNumberLength
     };
-
+    
     // Admin
     const adminEditTransactionDestination = this.form.get('editTransactionDestination')?.value === true;
     const adminData = {
@@ -410,6 +415,7 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
     const coreKrakenWithdrawalBenchmarkAmountToRemain = parseInt(this.form.get('krakenWithdrawalBenchmarkAmountToRemain')?.value ?? '0');
 
     const coreOpenpaydWithdrawalBenchmark = parseInt(this.form.get('openpaydWithdrawalBenchmark')?.value ?? '10000');
+    const coreBeneficiaryBankIds = this.form.get('openpaydBeneficiaryBankIds')?.value;
 
     const frames: FrameBlock[] = [];
     for (let index = 0; index < 5; index++) {
@@ -456,7 +462,8 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
       },
       paymentProviders: {
         Openpayd:{
-          benchmarkAmount: coreOpenpaydWithdrawalBenchmark
+          benchmarkAmount: coreOpenpaydWithdrawalBenchmark,
+          beneficiaryBankIds: coreBeneficiaryBankIds
         }
       },
       custodyProviders: {
@@ -524,6 +531,7 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
       cryptoWidget: cryptoWidgetData,
       core: coreData
     }
+    console.log(coreData)
     return {
       settingsCommonId: this.form.get('id')?.value,
       liquidityProvider: this.form.get('liquidityProvider')?.value,
