@@ -222,7 +222,6 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 
         // Core
         const coreData = additionalSettings.core;
-        console.log(coreData)
         // Core - Verify When Paid
         this.form.get('verifyWhenPaid')?.setValue((coreData.verifyWhenPaid ?? true) === true);
         this.form.get('wireTransferWallet')?.setValue((coreData.wireTransferWallet ?? false) === true);
@@ -317,7 +316,6 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 
         this.form.get('openpaydWithdrawalBenchmark')?.setValue(coreData.paymentProviders.Openpayd.benchmarkAmount ?? 10000);
         this.form.get('openpaydBeneficiaryBankIds')?.setValue(coreData.paymentProviders.Openpayd.beneficiaryBankIds);
-        console.log(coreData.paymentProviders.Openpayd.beneficiaryBankIds)
       }, (error) => {
         this.inProgress = false;
         this.errorMessage = error;
