@@ -101,14 +101,6 @@ export class NavService implements OnDestroy {
 			]
 		},
 		{
-			title: 'System logs', icon: 'settings', type: 'sub', active: false, children: [
-				{ path: '/admin/user-actions', title: 'User actions', type: 'link', code: 'SYSTEM_USERS' },
-				{
-					path: '/admin/transaction-status-history', icon: 'compare_arrows', title: 'Transaction history', type: 'link', code: 'TRANSACTIONS'
-				},
-			]
-		},
-		{
 			title: 'Wallets', icon: 'wallet_membership', type: 'sub', active: false, code: 'WALLETS', children: [
 				{ path: '/admin/crypto-wallets', title: 'Crypto wallets', type: 'link' },
 				{ path: '/admin/fiat-wallets', title: 'FIat wallets', type: 'link' }
@@ -122,6 +114,14 @@ export class NavService implements OnDestroy {
 		},
 		{
 			path: '/admin/risk-center', icon: 'bolt', title: 'Risk center', type: 'link', code: 'RISKS'
+		},
+		{
+			title: 'System logs', icon: 'settings', type: 'sub', active: false, children: [
+				{ path: '/admin/user-actions', title: 'User actions', type: 'link', code: 'SYSTEM_USERS' },
+				{
+					path: '/admin/transaction-status-history', icon: 'compare_arrows', title: 'Transaction history', type: 'link', code: 'TRANSACTIONS'
+				},
+			]
 		},
 		{
 			headTitle: 'SETTINGS',

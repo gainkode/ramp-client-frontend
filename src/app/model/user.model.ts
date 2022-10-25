@@ -476,6 +476,8 @@ export class DeviceItem {
 export class UserActionItem {
   id = '';
   userId = '';
+  userEmail = '';
+  currentUserEmail = '';
   date = '';
   objectId = '';
   linkedIds: any = [];
@@ -487,6 +489,8 @@ export class UserActionItem {
   constructor(data: UserAction | null) {
     this.id = data?.userActionId ?? '';
     this.userId = data?.userId ?? '';
+    this.userEmail = data?.userEmail ?? '';
+    this.currentUserEmail = data?.currentUserEmail ?? '';
     const datepipe: DatePipe = new DatePipe('en-US');
     this.date = datepipe.transform(data?.date, 'dd MMM YYYY HH:mm:ss') ?? '';
     this.objectId = data?.objectId ?? '';

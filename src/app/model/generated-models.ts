@@ -2427,7 +2427,7 @@ export enum RiskAlertCodes {
   DepositAboveXAmountInYTimeframe = 'DEPOSIT_ABOVE_X_AMOUNT_IN_Y_TIMEFRAME',
   SumsubWords = 'SUMSUB_WORDS',
   WithdrawalOwner = 'WITHDRAWAL_OWNER',
-  OpenpaydDeclined = 'OPENPAYD_DECLINED'
+  OpenpaydMismatch = 'OPENPAYD_MISMATCH'
 }
 
 export type RiskAlertResultList = {
@@ -3441,6 +3441,9 @@ export type UserAction = {
   __typename?: 'UserAction';
   userActionId: Scalars['ID'];
   userId?: Maybe<Scalars['String']>;
+  userEmail?: Maybe<Scalars['String']>;
+  currentUserEmail?: Maybe<Scalars['String']>;
+  ip?: Maybe<Scalars['String']>;
   objectId?: Maybe<Scalars['String']>;
   actionType?: Maybe<UserActionType>;
   linkedIds?: Maybe<Array<Maybe<Scalars['String']>>>;
@@ -3487,6 +3490,10 @@ export enum UserActionType {
   AddWidgetUserParams = 'addWidgetUserParams',
   UpdateUser = 'updateUser',
   DeleteUser = 'deleteUser',
+  RestoreUser = 'restoreUser',
+  AssignRole = 'assignRole',
+  RemoveRole = 'removeRole',
+  ChangeUserKycTier = 'changeUserKycTier',
   CreateApiKey = 'createApiKey',
   DeleteApiKey = 'deleteApiKey',
   ChangeRiskAlertSettings = 'changeRiskAlertSettings',

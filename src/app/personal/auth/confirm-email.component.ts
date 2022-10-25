@@ -14,7 +14,7 @@ export class PersonalConfirmEmailComponent implements OnDestroy {
     validated = false;
     valid = false;
     errorMessage = '';
-    logoSrc = `${EnvService.image_host}/images/logo-color.png`;
+    logoSrc = `${EnvService.image_host}/images/logo-widget.png`;
     logoAlt = EnvService.product;
 
     private subscriptions: Subscription = new Subscription();

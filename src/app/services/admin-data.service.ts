@@ -503,6 +503,9 @@ query GetUserActions(
     list {
       userActionId
       userId
+      userEmail
+      currentUserEmail
+      ip
       objectId
       actionType
       linkedIds

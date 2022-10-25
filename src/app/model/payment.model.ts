@@ -477,7 +477,14 @@ export const UserActionTypeList: Array<UserActionTypeView> = [
     { id: UserActionType.AbandonTransaction, name: 'Transaction abandoned' },
     { id: UserActionType.AddBlackCountry, name: 'Country added to the black list' },
     { id: UserActionType.RemoveBlackCountry, name: 'Country removed from the black list' },
-    { id: UserActionType.CreateCryptoInvoice, name: 'Crypto invoice created' }
+    { id: UserActionType.CreateCryptoInvoice, name: 'Crypto invoice created' },
+    { id: UserActionType.AbandonCryptoInvoice, name: 'Crypto invoice abbadoned' },
+    { id: UserActionType.AssignRole, name: 'Assign Role' },
+    { id: UserActionType.ChangeUserKycTier, name: 'User change kyc tier' },
+    { id: UserActionType.GenerateKycToken, name: 'Generate kyc token' },
+    { id: UserActionType.KycCallback, name: 'Kyc callback' },
+    { id: UserActionType.RemoveRole, name: 'Remove role' },
+    { id: UserActionType.RestoreUser, name: 'Restore role' },
 ];
 
 export const UserActionResultList: Array<UserActionResultView> = [
