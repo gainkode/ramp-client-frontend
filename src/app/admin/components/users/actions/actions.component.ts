@@ -19,7 +19,7 @@ export class AdminUserActionsComponent implements OnInit, OnDestroy, AfterViewIn
   @ViewChild(MatSort) sort!: MatSort;
 
   filterFields = [
-    'createdDate',
+    'createdDateAction',
     'userActionType',
     'user',
   ];

@@ -239,6 +239,10 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
       controlsConfig.createdDateRangeStart = [undefined];
       controlsConfig.createdDateRangeEnd = [undefined];
     }
+    if (this.fields.includes('createdDateAction')) {
+      controlsConfig.createdDateRangeStart = [undefined];
+      controlsConfig.createdDateRangeEnd = [undefined];
+    }
     if (this.fields.includes('completedDate')) {
       controlsConfig.completedDateRangeStart = [undefined];
       controlsConfig.completedDateRangeEnd = [undefined];
@@ -342,6 +346,13 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
         this.filterForm.controls.assets.setValue([]);
       }
       if (this.fields.includes('createdDate')) {
+        this.filterForm.controls.createdDateRangeStart.setValue(undefined);
+        this.filterForm.controls.createdDateRangeEnd.setValue(undefined);
+        if (this.createFilterPicker) {
+          this.createFilterPicker.reset();
+        }
+      }
+      if (this.fields.includes('createdDateAction')) {
         this.filterForm.controls.createdDateRangeStart.setValue(undefined);
         this.filterForm.controls.createdDateRangeEnd.setValue(undefined);
         if (this.createFilterPicker) {

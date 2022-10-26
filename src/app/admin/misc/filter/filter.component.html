@@ -170,6 +170,15 @@
                                                 [endField]="filterForm?.controls?.createdDateRangeEnd ?? null">
                                             </app-admin-date-range>
                                         </div>
+                                        <div *ngIf="field === 'createdDateAction'" class="form-group">
+                                            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                                                User action created
+                                            </label>
+                                            <app-admin-date-range #created_filter
+                                                [startField]="filterForm?.controls?.createdDateRangeStart ?? null"
+                                                [endField]="filterForm?.controls?.createdDateRangeEnd ?? null">
+                                            </app-admin-date-range>
+                                        </div>
                                         <div *ngIf="field === 'completedDate'" class="form-group">
                                             <label class="main-content-label tx-11 tx-medium tx-gray-600">
                                                 Transactions completed

@@ -5,7 +5,7 @@
                 <img class="__auth-title-logo" [src]="logoSrc" [alt]="logoAlt" width="160"
                     (click)="router.navigateByUrl('/')">
             </div>
-            <div class="__auth-data-container">
+            <div class="__auth-data-container margin-class">
                 <div *ngIf="!validated">
                     <h2 class="__auth-title">Token validation</h2>
                     <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
