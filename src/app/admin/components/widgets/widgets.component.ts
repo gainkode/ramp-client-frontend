@@ -49,8 +49,8 @@ export class AdminWidgetsComponent implements OnInit, OnDestroy, AfterViewInit {
   widgetCount = 0;
   pageSize = 50;
   pageIndex = 0;
-  sortedField = 'created';
-  sortedDesc = true;
+  sortedField = 'name';
+  sortedDesc = false;
   filter = new Filter({});
 
   private subscriptions: Subscription = new Subscription();
