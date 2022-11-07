@@ -185,7 +185,7 @@ export class UserItem {
         return riskData.code ?? '';
       }) ?? [];
       this.totalTransactionCount = data.totalTransactionCount ?? 0;
-      this.avarageTransaction = data.avarageTransaction ?? 0;
+      this.avarageTransaction = data.averageTransaction ?? 0;
       this.totalDepositCompleted = data.totalDepositCompleted ?? 0;
       this.totalDepositCompletedCount = data.totalDepositCompletedCount ?? 0;
       this.totalDepositInProcess = data.totalDepositInProcess ?? 0;

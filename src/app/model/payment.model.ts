@@ -485,6 +485,23 @@ export const UserActionTypeList: Array<UserActionTypeView> = [
     { id: UserActionType.KycCallback, name: 'Kyc callback' },
     { id: UserActionType.RemoveRole, name: 'Remove role' },
     { id: UserActionType.RestoreUser, name: 'Restore role' },
+    { id: UserActionType.UpdateSettings, name: 'Update settings' },
+    { id: UserActionType.AddFeeSettings, name: 'Add fee settings' },
+    { id: UserActionType.UpdateFeeSettings, name: 'Update fee settings' },
+    { id: UserActionType.DeleteFeeSettings, name: 'Delete fee settings' },
+    { id: UserActionType.AddCostSettings, name: 'Add cost settings' },
+    { id: UserActionType.UpdateCostSettings, name: 'Update cost settings' },
+    { id: UserActionType.DeleteCostSettings, name: 'Delete cost settings' },
+    { id: UserActionType.AddKycLevelSettings, name: 'Add kyc level settings' },
+    { id: UserActionType.UpdateKycLevelSettings, name: 'Update kyc level settings' },
+    { id: UserActionType.DeleteKycLevelSettings, name: 'Delete kyc level settings' },
+    { id: UserActionType.AddKycTierSettings, name: 'Add kyc tier settings' },
+    { id: UserActionType.UpdateKycTierSettings, name: 'Update kyc tier settings' },
+    { id: UserActionType.DeleteKycTierSettings, name: 'Delete kyc tier settings' },
+    { id: UserActionType.AddWireTransferBankAccount, name: 'Add wire transfer bank account' },
+    { id: UserActionType.UpdateWireTransferBankAccount, name: 'Update wire transfer bank account' },
+    { id: UserActionType.DeleteWireTransferBankAccount, name: 'Delete wire transfer bank account' },
+
 ];
 
 export const UserActionResultList: Array<UserActionResultView> = [

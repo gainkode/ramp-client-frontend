@@ -3426,7 +3426,7 @@ export type User = {
   totalReceivedInProcess?: Maybe<Scalars['Float']>;
   totalReceivedInProcessCount?: Maybe<Scalars['Int']>;
   totalTransactionCount?: Maybe<Scalars['Int']>;
-  avarageTransaction?: Maybe<Scalars['Float']>;
+  averageTransaction?: Maybe<Scalars['Float']>;
   manuallyEditedRisk?: Maybe<Scalars['Boolean']>;
   lastLogin?: Maybe<Scalars['DateTime']>;
   data?: Maybe<Scalars['String']>;
@@ -3505,7 +3505,23 @@ export enum UserActionType {
   KycCallback = 'kycCallback',
   AddBlackCountry = 'addBlackCountry',
   RemoveBlackCountry = 'removeBlackCountry',
-  CreateCryptoInvoice = 'createCryptoInvoice'
+  CreateCryptoInvoice = 'createCryptoInvoice',
+  UpdateSettings = 'updateSettings',
+  AddFeeSettings = 'addFeeSettings',
+  UpdateFeeSettings = 'updateFeeSettings',
+  DeleteFeeSettings = 'deleteFeeSettings',
+  AddCostSettings = 'addCostSettings',
+  UpdateCostSettings = 'updateCostSettings',
+  DeleteCostSettings = 'deleteCostSettings',
+  AddKycLevelSettings = 'addKycLevelSettings',
+  UpdateKycLevelSettings = 'updateKycLevelSettings',
+  DeleteKycLevelSettings = 'deleteKycLevelSettings',
+  AddKycTierSettings = 'addKycTierSettings',
+  UpdateKycTierSettings = 'updateKycTierSettings',
+  DeleteKycTierSettings = 'deleteKycTierSettings',
+  AddWireTransferBankAccount = 'addWireTransferBankAccount',
+  UpdateWireTransferBankAccount = 'updateWireTransferBankAccount',
+  DeleteWireTransferBankAccount = 'deleteWireTransferBankAccount'
 }
 
 export type UserAddress = {
