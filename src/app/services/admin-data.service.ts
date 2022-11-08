@@ -873,7 +873,7 @@ const GET_USERS = gql`
         risk
         riskCodes
         totalTransactionCount
-        avarageTransaction
+        averageTransaction
         totalDepositCompleted
         totalDepositCompletedCount
         totalDepositInProcess
