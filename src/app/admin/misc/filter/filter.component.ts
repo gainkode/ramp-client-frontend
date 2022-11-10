@@ -15,7 +15,7 @@ import { AdminDateRangeComponent } from '../date-range/date-range.component';
 @Component({
   selector: 'app-admin-filter',
   templateUrl: './filter.component.html',
-  styleUrls: ['./filter.component.scss']
+  styleUrls: ['./filter.component.scss', '../../../../assets/button.scss']
 })
 export class AdminFilterComponent implements OnInit, OnDestroy {
   @Input() fields: Array<string> = [];
@@ -303,6 +303,9 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
     if (this.fields.includes('verifyWhenPaid')) {
       controlsConfig.verifyWhenPaid = [false];
     }
+    if (this.fields.includes('zeroBalance')) {
+      controlsConfig.zeroBalance = false;
+    }
     this.filterForm = this.formBuilder.group(controlsConfig);
 
     if (this.filterData?.createdDateInterval) {
@@ -427,6 +430,9 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
       }
       if (this.fields.includes('verifyWhenPaid')) {
         this.filterForm.controls.verifyWhenPaid.setValue(false);
+      }
+      if (this.fields.includes('zeroBalance')) {
+        this.filterForm.controls.zeroBalance.setValue(false);
       }
     }
     this.applyFilters();

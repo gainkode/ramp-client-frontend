@@ -19,7 +19,8 @@ export class AdminFiatWalletsComponent implements OnInit, OnDestroy, AfterViewIn
 
   filterFields = [
     'users',
-    'search'
+    'search',
+    'zeroBalance'
   ];
   displayedColumns: string[] = [
     'details', 'userId', 'balance', 'asset', 'created'

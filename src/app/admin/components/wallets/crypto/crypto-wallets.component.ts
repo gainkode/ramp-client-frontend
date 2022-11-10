@@ -19,7 +19,8 @@ export class AdminCryptoWalletsComponent implements OnInit, OnDestroy, AfterView
 
   filterFields = [
     'users',
-    'search'
+    'search',
+    'zeroBalance'
   ];
   displayedColumns: string[] = [
     'details', 'vaultName', 'userEmail', 'address', 'custodyProvider', 'legacyAddress', 'description', 'type',

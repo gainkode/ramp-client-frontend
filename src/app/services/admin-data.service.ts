@@ -1080,6 +1080,7 @@ const GET_WALLETS = gql`
   query GetWallets(
     $userIdsOnly: [String!]
     $assetIdsOnly: [String!]
+    $zeroBalance: Boolean
     $walletIdsOnly: [String!]
     $filter: String
     $skip: Int
@@ -1089,6 +1090,7 @@ const GET_WALLETS = gql`
     getWallets(
       userIdsOnly: $userIdsOnly
       assetIdsOnly: $assetIdsOnly
+      zeroBalance: $zeroBalance
       walletIdsOnly: $walletIdsOnly
       filter: $filter
       skip: $skip
@@ -1124,6 +1126,7 @@ const GET_FIAT_VAULTS = gql`
     $userIdsOnly: [String]
     $assetsOnly: [String]
     $vaultIdsOnly: [String]
+    $zeroBalance: Boolean
     $skip: Int
     $first: Int
     $orderBy: [OrderBy!]
@@ -1132,6 +1135,7 @@ const GET_FIAT_VAULTS = gql`
       userIdsOnly: $userIdsOnly
       assetsOnly: $assetsOnly
       vaultIdsOnly: $vaultIdsOnly
+      zeroBalance: $zeroBalance
       skip: $skip
       first: $first
       orderBy: $orderBy
@@ -2949,6 +2953,7 @@ export class AdminDataService {
     const vars: QueryGetWalletsArgs = {
       userIdsOnly: filter?.users,
       assetIdsOnly: filter?.assets,
+      zeroBalance: filter?.zeroBalance,
       walletIdsOnly: filter?.walletIds,
       filter: filter?.search,
       skip: pageIndex * takeItems,
@@ -2987,6 +2992,7 @@ export class AdminDataService {
       userIdsOnly: filter?.users,
       assetsOnly: filter?.assets,
       vaultIdsOnly: filter?.walletIds,
+      zeroBalance: filter?.zeroBalance,
       skip: pageIndex * takeItems,
       first: takeItems,
       orderBy: [{ orderBy: orderField, desc: orderDesc }]

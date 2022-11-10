@@ -2297,6 +2297,7 @@ export type QueryGetWalletsArgs = {
   walletIdsOnly?: Maybe<Array<Scalars['String']>>;
   userIdsOnly?: Maybe<Array<Scalars['String']>>;
   assetIdsOnly?: Maybe<Array<Scalars['String']>>;
+  zeroBalance?: Maybe<Scalars['Boolean']>;
   filter?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
@@ -2372,6 +2373,7 @@ export type QueryGetFiatVaultsArgs = {
   userIdsOnly?: Maybe<Array<Maybe<Scalars['String']>>>;
   assetsOnly?: Maybe<Array<Maybe<Scalars['String']>>>;
   vaultIdsOnly?: Maybe<Array<Maybe<Scalars['String']>>>;
+  zeroBalance?: Maybe<Scalars['Boolean']>;
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
   orderBy?: Maybe<Array<OrderBy>>;
@@ -3427,6 +3429,7 @@ export type User = {
   totalReceivedInProcessCount?: Maybe<Scalars['Int']>;
   totalTransactionCount?: Maybe<Scalars['Int']>;
   averageTransaction?: Maybe<Scalars['Float']>;
+  avarageTransaction?: Maybe<Scalars['Float']>;
   manuallyEditedRisk?: Maybe<Scalars['Boolean']>;
   lastLogin?: Maybe<Scalars['DateTime']>;
   data?: Maybe<Scalars['String']>;

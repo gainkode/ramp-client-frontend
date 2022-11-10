@@ -306,6 +306,19 @@
                                                 </span>
                                             </div>
                                         </div>
+                                        <div *ngIf="field === 'zeroBalance'" class="form-group __tool-bar-double-sided-data-box">
+                                            <div class="__tool-bar-block">
+                                                <div class="__tool-bar-label">
+                                                    Hide zero balance
+                                                </div>
+                                            </div>
+                                            <div class="__tool-bar-block">
+                                                <div class="__toggle-switch">
+                                                    <input type="checkbox" id="toggle-button" class="__toggle-switch-slider"
+                                                        formControlName="zeroBalance">
+                                                </div>
+                                            </div>
+                                        </div>
                                     </ng-container>
                                 </div>
                             </div>
