@@ -148,7 +148,9 @@ export class WireTransferBankAccountItem {
     uk: WireTransferBankAccountUk | undefined = undefined;
     eu: WireTransferBankAccountEu | undefined = undefined;
     openpayd: Boolean | undefined = undefined;
+    flashfx: Boolean | undefined = undefined;
     openpaydObject: WireTransferBankAccountOpenpaydObject | undefined = undefined;
+    flashfxObject: WireTransferBankAccountFlashfxObject | undefined = undefined;
 
     get auAvailable(): boolean {
         return (this.au !== undefined);
@@ -164,6 +166,10 @@ export class WireTransferBankAccountItem {
 
     get openpaydAvailable(): boolean {
         return (this.openpayd !== undefined);
+    }
+
+    get flashfxAvailable(): boolean {
+        return (this.flashfx !== undefined);
     }
 
     get auData(): string | undefined {
@@ -197,6 +203,12 @@ export class WireTransferBankAccountItem {
             }
             if(data.openpaydObject){
                 this.openpaydObject = JSON.parse(data.openpaydObject) ?? undefined
+            }
+            if (data.flashfx) {
+                this.flashfx = data.flashfx ?? false;
+            }
+            if(data.flashfxObject){
+                this.flashfxObject = JSON.parse(data.flashfxObject) ?? undefined
             }
         } else {
             this.id = '';
@@ -238,6 +250,14 @@ export class WireTransferBankAccountOpenpaydObject {
     sortCode = '';
     accountNumber = '';
     bankAccountHolderName = '';
+}
+
+export class WireTransferBankAccountFlashfxObject {
+    currency = '';
+    beneficiaryAddress = '';
+    beneficiaryName = '';
+    bsb = '';
+    accountNumber = '';
 }
 
 export class WireTransferUserSelection {

@@ -322,7 +322,8 @@ query GetWireTransferBankAccounts {
       au
       uk
       eu,
-      openpayd
+      openpayd,
+      flashfx
     }
   }
 }
@@ -1375,7 +1376,9 @@ mutation AddWireTransferBankAccount(
   $description: String
   $au: String
   $uk: String
-  $eu: String
+  $eu: String,
+  $openpayd: Boolean
+  $flashfx: Boolean
 ) {
   addWireTransferBankAccount(
     bankAccount: {
@@ -1384,6 +1387,8 @@ mutation AddWireTransferBankAccount(
       au: $au
       uk: $uk
       eu: $eu
+      openpayd: $openpayd,
+      flashfx: $flashfx
     }
   ) {
     bankAccountId
@@ -2141,6 +2146,7 @@ const UPDATE_WIRE_TRANSFER_SETTINGS = gql`
     $uk: String
     $eu: String
     $openpayd: Boolean
+    $flashfx: Boolean
   ) {
     updateWireTransferBankAccount(
       bankAccountId: $bankAccountId
@@ -2151,6 +2157,7 @@ const UPDATE_WIRE_TRANSFER_SETTINGS = gql`
         uk: $uk
         eu: $eu
         openpayd: $openpayd
+        flashfx: $flashfx
       }
     ) {
       bankAccountId
@@ -3251,7 +3258,8 @@ export class AdminDataService {
           au: account.au,
           uk: account.uk,
           eu: account.eu,
-          openpayd: account.openpayd
+          openpayd: account.openpayd,
+          flashfx: account.flashfx
         }
       })
       : this.apollo.mutate({
@@ -3263,7 +3271,8 @@ export class AdminDataService {
           au: account.au,
           uk: account.uk,
           eu: account.eu,
-          openpayd: account.openpayd
+          openpayd: account.openpayd,
+          flashfx: account.flashfx
         }
       });
   }

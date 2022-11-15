@@ -190,6 +190,7 @@ export class WidgetService {
                                     wireTransferList[pos].bankAccountId = accountData.bankAccountId;
                                 }
                             }
+
                             pos = wireTransferList.findIndex(x => x.id === WireTransferPaymentCategory.UK);
                             if (pos >= 0) {
                                 if (accountData.uk === null || accountData.uk === undefined || accountData.uk === 'null') {
@@ -199,6 +200,7 @@ export class WidgetService {
                                     wireTransferList[pos].bankAccountId = accountData.bankAccountId;
                                 }
                             }
+
                             pos = wireTransferList.findIndex(x => x.id === WireTransferPaymentCategory.EU);
                             if (pos >= 0) {
                                 if (accountData.eu === null || accountData.eu === undefined || accountData.eu === 'null') {
@@ -208,12 +210,23 @@ export class WidgetService {
                                     wireTransferList[pos].bankAccountId = accountData.bankAccountId;
                                 }
                             }
+
                             pos = wireTransferList.findIndex(x => x.id === WireTransferPaymentCategory.OPENPAYD);
                             if (pos >= 0) {
                                 if (accountData.openpaydObject === null || accountData.openpaydObject === undefined || accountData.openpaydObject === 'null') {
                                     wireTransferList.splice(pos, 1);
                                 } else {
                                     wireTransferList[pos].data = accountData.openpaydObject;
+                                    wireTransferList[pos].bankAccountId = accountData.bankAccountId;
+                                }
+                            }
+
+                            pos = wireTransferList.findIndex(x => x.id === WireTransferPaymentCategory.FLASHFX);
+                            if (pos >= 0) {
+                                if (accountData.flashfxObject === null || accountData.flashfxObject === undefined || accountData.flashfxObject === 'null') {
+                                    wireTransferList.splice(pos, 1);
+                                } else {
+                                    wireTransferList[pos].data = accountData.flashfxObject;
                                     wireTransferList[pos].bankAccountId = accountData.bankAccountId;
                                 }
                             }

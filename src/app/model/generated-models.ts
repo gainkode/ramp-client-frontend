@@ -2470,8 +2470,8 @@ export type SettingsCommon = {
   stoppedForServicing?: Maybe<Scalars['Boolean']>;
   additionalSettings?: Maybe<Scalars['String']>;
   proxyLiquidityProviderUrl?: Maybe<Scalars['String']>;
-  proxyLiquidityProviderApiSecret?: Maybe<Scalars['String']>;
   proxyLiquidityProviderApiKey?: Maybe<Scalars['String']>;
+  proxyLiquidityProviderApiSecret?: Maybe<Scalars['String']>;
   proxyLiquidityProvider?: Maybe<Scalars['String']>;
   proxyLiquidityProviderTransactionChangedCallback?: Maybe<Scalars['String']>;
   textPages?: Maybe<Array<Maybe<TextPage>>>;
@@ -3438,6 +3438,8 @@ export type User = {
   addressLine?: Maybe<Scalars['String']>;
   openpaydIds?: Maybe<Scalars['String']>;
   openpaydAccountHolderId?: Maybe<Scalars['String']>;
+  document_num?: Maybe<Scalars['String']>;
+  document_type?: Maybe<Scalars['String']>;
 };
 
 export type UserAction = {
@@ -3506,6 +3508,7 @@ export enum UserActionType {
   MerchantSell = 'MerchantSell',
   GenerateKycToken = 'generateKycToken',
   KycCallback = 'kycCallback',
+  OpenpaydCallback = 'openpaydCallback',
   AddBlackCountry = 'addBlackCountry',
   RemoveBlackCountry = 'removeBlackCountry',
   CreateCryptoInvoice = 'createCryptoInvoice',
@@ -4136,7 +4139,9 @@ export type WireTransferBankAccount = {
   uk?: Maybe<Scalars['String']>;
   eu?: Maybe<Scalars['String']>;
   openpayd?: Maybe<Scalars['Boolean']>;
+  flashfx?: Maybe<Scalars['Boolean']>;
   openpaydObject?: Maybe<Scalars['String']>;
+  flashfxObject?: Maybe<Scalars['String']>;
   deleted?: Maybe<Scalars['DateTime']>;
 };
 
@@ -4147,6 +4152,7 @@ export type WireTransferBankAccountInput = {
   uk?: Maybe<Scalars['String']>;
   eu?: Maybe<Scalars['String']>;
   openpayd?: Maybe<Scalars['Boolean']>;
+  flashfx?: Maybe<Scalars['Boolean']>;
   deleted?: Maybe<Scalars['DateTime']>;
 };
 
@@ -4166,6 +4172,8 @@ export type WireTransferBankAccountShort = {
   eu?: Maybe<Scalars['String']>;
   openpaydObject?: Maybe<Scalars['String']>;
   openpayd?: Maybe<Scalars['Boolean']>;
+  flashfxObject?: Maybe<Scalars['String']>;
+  flashfx?: Maybe<Scalars['Boolean']>;
 };
 
 export type LiquidityProviderBalance = {

@@ -122,6 +122,8 @@ query MySettingsFee(
         eu
         openpayd
         openpaydObject
+        flashfx
+        flashfxObject
       }
     },
     requiredFields
