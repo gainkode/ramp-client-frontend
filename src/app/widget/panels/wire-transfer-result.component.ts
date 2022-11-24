@@ -124,14 +124,14 @@ export class WidgetWireTransferResultComponent {
             
             this.field1Title = 'BSB';
             this.field2Title = 'Account Number';
-            this.field3Title = 'Beneficiary Name';
-            this.field4Title = 'Beneficiary Address';
-            this.field5Title = 'Currency';
+            this.field3Title = 'Account Name';
+            // this.field4Title = 'Beneficiary Address';
+            // this.field5Title = 'Currency';
             this.field1Value = dataFlashfx.bsb;
             this.field2Value = dataFlashfx.accountNumber;
             this.field3Value = dataFlashfx.beneficiaryName;
-            this.field4Value = dataFlashfx.beneficiaryAddress;
-            this.field5Value = dataFlashfx.currency;
+            // this.field4Value = dataFlashfx.beneficiaryAddress;
+            // this.field5Value = dataFlashfx.currency;
             
         }
 
