@@ -14,7 +14,7 @@
     // API WebSocket address
     window.__env_data.ws_server = 'ws://localhost:4001';
     // Image hosting address
-    window.__env_data.image_host = './assets/test';
+    window.__env_data.image_host = './assets';
     window.__env_data.widget_secret = '90a9689ad771087bff015998b1fab739c85a239b';
     window.__env_data.widget_api_key = '03922e50-2b11-4c29-b1cb-5ea4edc3c3f4';
 

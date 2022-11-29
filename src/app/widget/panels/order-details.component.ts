@@ -484,11 +484,22 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   }
 
   private setSpendValidators(maxValid: number | undefined = undefined): void {
-    let minAmount = this.currentCurrencySpend?.minAmount ?? 0;
+    let minAmount:number = 0;
+    if(!this.currentCurrencySpend?.fiat){
+      minAmount = this.currentCurrencyReceive?.minAmount ?? 0;
+      this.amountSpendErrorMessages['min'] = `Min. amount ${minAmount} ${this.currentCurrencyReceive?.display}`;
+      if(this.pDepositRate){
+        minAmount = (minAmount/this.pDepositRate)
+      }
+    }else{
+      minAmount = this.currentCurrencySpend?.minAmount ?? 0;
+      this.amountSpendErrorMessages['min'] = `Min. amount ${minAmount} ${this.currentCurrencySpend?.display}`;
+    }
+
     if (this.settings.minAmountFrom) {
       minAmount = this.settings.minAmountFrom;
     }
-    this.amountSpendErrorMessages['min'] = `Min. amount ${minAmount} ${this.currentCurrencySpend?.display}`;
+    
     let validators = [
       Validators.required,
       Validators.pattern(this.pNumberPattern),
