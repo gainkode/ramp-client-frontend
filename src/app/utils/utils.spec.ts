@@ -23,7 +23,7 @@ describe('isSumsubVerificationComplete', () => {
       autoChecked: false
     }
     const result = isSumsubVerificationComplete(payload);
-    expect(result).toBeTruthy();
+    expect(result.result).toBeTruthy();
   });
 });
 

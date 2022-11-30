@@ -73,7 +73,8 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
     user: [null, { validators: [Validators.required], updateOn: 'change' }],
     name: [undefined, { validators: [Validators.required], updateOn: 'change' }],
     description: [''],
-    secret: ['']
+    secret: [''],
+    allowToPayIfKycFailed: true
   });
 
   constructor(
@@ -147,7 +148,8 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
             user: userItem ?? null,
             name: widget.name ?? 'Widget',
             description: widget.description,
-            secret: widget.secret
+            secret: widget.secret,
+            allowToPayIfKycFailed: widget.allowToPayIfKycFailed
           });
         })
       );
@@ -171,6 +173,7 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
     widget.paymentProviders = formValue.paymentProviders;
     widget.transactionTypes = formValue.transactionTypes;
     widget.secret = formValue.secret;
+    widget.allowToPayIfKycFailed = formValue.allowToPayIfKycFailed;
 
     return widget;
   }

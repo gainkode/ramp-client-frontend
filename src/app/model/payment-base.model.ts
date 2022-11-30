@@ -38,7 +38,8 @@ export class WidgetSettings {
     amountFrom = 0;
     minAmountFrom: number | undefined = undefined;
     maxAmountFrom: number | undefined = undefined;
-
+    allowToPayIfKycFailed: boolean = false;
+    
     get orderDefault(): boolean {
         return (this.amountFrom !== 0 &&
             this.currencyFrom !== '' &&

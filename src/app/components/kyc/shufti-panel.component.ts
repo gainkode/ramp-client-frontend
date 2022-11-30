@@ -14,6 +14,7 @@ export class ShuftiPanelComponent implements OnInit, OnDestroy {
     @Input() url: string = '';
     @Input() completedWhenVerified: boolean = false;
     @Output() completed = new EventEmitter();
+    @Output() onReject = new EventEmitter();
     @Output() onError = new EventEmitter<string>();
 
     private pSubscriptions: Subscription = new Subscription();
@@ -41,11 +42,17 @@ export class ShuftiPanelComponent implements OnInit, OnDestroy {
                 ({ data }) => {
                     const subscriptionData = data.kycCompletedNotification;
                     console.log('Shufti completed', subscriptionData);
-                    if (subscriptionData.kycValid === true) {
-                        if (this.completedWhenVerified) {
-                            this.completed.emit();
+                    if(subscriptionData.kycStatus == 'completed'){
+                        if (subscriptionData.kycValid === true) {
+                            if (this.completedWhenVerified) {
+                                this.completed.emit();
+                            }
+                        }else{
+                            console.log('Shufti rejected')
+                            this.onReject.emit();
                         }
                     }
+                    
                 },
                 (error) => {
                     console.error('KYC complete notification error', error);

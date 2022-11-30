@@ -16,6 +16,7 @@ export class SumsubPanelComponent implements OnInit, OnDestroy {
     @Input() token: string = '';
     @Input() completedWhenVerified: boolean = false;
     @Output() completed = new EventEmitter();
+    @Output() onReject = new EventEmitter();
     @Output() onError = new EventEmitter<string>();
 
     private pTokenSubscription: Subscription | undefined = undefined;
@@ -82,8 +83,13 @@ export class SumsubPanelComponent implements OnInit, OnDestroy {
             }
         }).on('idCheck.applicantStatus', (payload) => {
             console.log('idCheck.applicantStatus', this.completedWhenVerified, payload);
-            if (this.completedWhenVerified && isSumsubVerificationComplete(payload)) {
+            let sumsubResult = isSumsubVerificationComplete(payload);
+            if (this.completedWhenVerified && sumsubResult.result) {
                 this.completed.emit();
+            }else{
+                if(sumsubResult.answer == 'red'){
+                    this.onReject.emit();
+                }
             }
         }).on('idCheck.onError', (error) => {
             console.log('idCheck.applicantStatus');

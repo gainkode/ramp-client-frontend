@@ -162,7 +162,7 @@ export function getCheckedProviderList(checkedproviders: string[], providerList:
     return checkedproviders.filter(x => providerList.some(p => p.id === x));
 }
 
-export function isSumsubVerificationComplete(payload: any): boolean {
+export function isSumsubVerificationComplete(payload: any): {result: boolean, answer: string | null} {
     const status: string = payload?.reviewStatus ?? '';
     if (status.toLowerCase() === 'completed') {
         const reviewResult = payload?.reviewResult;
@@ -170,12 +170,14 @@ export function isSumsubVerificationComplete(payload: any): boolean {
             const answer = reviewResult.reviewAnswer as string;
             if (answer) {
                 if (answer.toLowerCase() === 'green') {
-                    return true;
+                    return {result: true, answer: answer.toLowerCase()};
+                }else{
+                    return {result: false, answer: answer.toLowerCase()};
                 }
             }
         }
     }
-    return false;
+    return {result: false, answer: null};
 }
 
 export function findExistingDefaultTier(tiers: KycTier[], tier: KycTier): boolean {

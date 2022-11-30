@@ -153,7 +153,6 @@ export class WidgetService {
         if ((summary.providerView?.id ?? '') === 'Openpayd') {
             currency = summary.currencyFrom;
         }
-
         const settingsData$ = this.paymentService.mySettingsFee(
             summary.transactionType,
             this.getSource(widget),

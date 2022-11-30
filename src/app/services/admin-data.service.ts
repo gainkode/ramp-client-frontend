@@ -1218,6 +1218,7 @@ const GET_WIDGETS = gql`
         paymentProviders
         liquidityProvider
         secret
+        allowToPayIfKycFailed
       }
     }
   }
@@ -1524,7 +1525,8 @@ const CREATE_WIDGET = gql`
     $paymentProviders: [String!]
     $transactionTypes: [TransactionType!]
     $additionalSettings: String,
-    $secret: String
+    $secret: String, 
+    $allowToPayIfKycFailed: Boolean
   ) {
     createWidget(
       userId: $userId
@@ -1540,7 +1542,8 @@ const CREATE_WIDGET = gql`
         instruments: $instruments
         paymentProviders: $paymentProviders
         liquidityProvider: $liquidityProvider
-        secret: $secret
+        secret: $secret,
+        allowToPayIfKycFailed: $allowToPayIfKycFailed
       }
     ) {
       widgetId
@@ -1563,7 +1566,8 @@ const UPDATE_WIDGET = gql`
     $paymentProviders: [String!]
     $transactionTypes: [TransactionType!]
     $additionalSettings: String
-    $secret: String
+    $secret: String,
+    $allowToPayIfKycFailed: Boolean
   ) {
     updateWidget(
       widgetId: $widgetId,
@@ -1580,7 +1584,8 @@ const UPDATE_WIDGET = gql`
         instruments: $instruments
         paymentProviders: $paymentProviders
         liquidityProvider: $liquidityProvider
-        secret: $secret
+        secret: $secret,
+        allowToPayIfKycFailed: $allowToPayIfKycFailed
       }
     ) {
       widgetId
@@ -3416,7 +3421,8 @@ export class AdminDataService {
           paymentProviders: widget.paymentProviders,
           liquidityProvider: widget.liquidityProvider,
           additionalSettings: widget.additionalSettings,
-          secret: widget.secret
+          secret: widget.secret,
+          allowToPayIfKycFailed: widget.allowToPayIfKycFailed
         }
       }).pipe(tap(() => {
         this.snackBar.open(`Widget was created`, undefined, { duration: 5000 });
@@ -3437,7 +3443,8 @@ export class AdminDataService {
           paymentProviders: widget.paymentProviders,
           liquidityProvider: widget.liquidityProvider,
           additionalSettings: widget.additionalSettings,
-          secret: widget.secret
+          secret: widget.secret,
+          allowToPayIfKycFailed: widget.allowToPayIfKycFailed
         }
       }).pipe(tap(() => {
         this.snackBar.open(`Widget was updated`, undefined, { duration: 5000 });

@@ -382,6 +382,7 @@ query GetWidget($id: String!, $recaptcha: String!) {
     additionalSettings
     currentUserEmail
     currentUserParams
+    allowToPayIfKycFailed
   }
 }
 `;

@@ -171,6 +171,7 @@ export class WidgetComponent implements OnInit {
     this.requiredExtraData = false;
     this.initMessage = 'Loading...';
     if (data) {
+      this.widget.allowToPayIfKycFailed = data.allowToPayIfKycFailed ?? false;
       let userParams: Record<string, any> = {};
       if (data.additionalSettings) {
         //{"minAmountFrom":0,"maxAmountFrom":0,"fixedAmountFrom":0,"kycBeforePayment":false,"disclaimer":true}
@@ -385,7 +386,21 @@ export class WidgetComponent implements OnInit {
   handleError(message: string): void {
     this.setError('Transaction failed', message, 'handleError');
   }
-
+  handleReject(): void {
+    console.log(this.widget.kycFirst, this.widget.allowToPayIfKycFailed, this.paymentProviders)
+    if (this.widget.kycFirst && this.widget.allowToPayIfKycFailed) {
+      if (this.paymentProviders.length < 1) {
+        this.setError(
+          'No payment providers',
+          `No supported payment providers found for "${this.summary.currencyFrom}"`,
+          'kycComplete');
+      } else if (this.paymentProviders.length > 1) {
+        this.nextStage('payment', 'Payment info', 5, true);
+      } else {
+        this.selectProvider(this.paymentProviders[0]);
+      }
+    }
+  }
   handleAuthError(): void {
     if (this.widget.embedded) {
       this.router.navigateByUrl('/');
@@ -653,7 +668,6 @@ export class WidgetComponent implements OnInit {
     const nextStage = 4;
 
     console.log(this.widget.kycFirst, this.requestKyc, this.widget.embedded);
-
     if (this.widget.kycFirst && this.requestKyc && !this.widget.embedded) {
       this.nextStage('verification', 'Verification', nextStage, false);
     } else {

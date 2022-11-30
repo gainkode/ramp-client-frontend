@@ -17,6 +17,7 @@ export class KycPanelComponent implements OnInit, OnDestroy {
     @Input() completedWhenVerified: boolean = false;
     @Output() completed = new EventEmitter();
     @Output() onError = new EventEmitter<string>();
+    @Output() onReject = new EventEmitter();
     @Output() onAuthError = new EventEmitter();
     @Output() onProgress = new EventEmitter<boolean>();
 

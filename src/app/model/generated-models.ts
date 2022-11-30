@@ -68,6 +68,31 @@ export type ApiKeySecret = {
   disabled?: Maybe<Scalars['DateTime']>;
 };
 
+export type AppropriateRecord = {
+  __typename?: 'AppropriateRecord';
+  appropriateId?: Maybe<Scalars['ID']>;
+  appropriateType?: Maybe<AppropriateType>;
+  userId?: Maybe<Scalars['String']>;
+  requestParams?: Maybe<Scalars['String']>;
+  appropriateObjectId?: Maybe<Scalars['String']>;
+  appropriateDetails?: Maybe<Scalars['String']>;
+  created?: Maybe<Scalars['DateTime']>;
+};
+
+export type AppropriateRecordListResult = {
+  __typename?: 'AppropriateRecordListResult';
+  count?: Maybe<Scalars['Int']>;
+  list?: Maybe<Array<AppropriateRecord>>;
+};
+
+export enum AppropriateType {
+  FeeScheme = 'feeScheme',
+  CostScheme = 'costScheme',
+  KycScheme = 'kycScheme',
+  KycTier = 'kycTier',
+  PaymentProvider = 'paymentProvider'
+}
+
 export type AssetAddress = {
   __typename?: 'AssetAddress';
   address?: Maybe<Scalars['String']>;
@@ -438,6 +463,15 @@ export enum FireblocksTransactionStatus {
   Blocked = 'BLOCKED',
   Failed = 'FAILED'
 }
+
+export type FlashfxObject = {
+  __typename?: 'FlashfxObject';
+  currency?: Maybe<Scalars['String']>;
+  bsb?: Maybe<Scalars['String']>;
+  beneficiaryAddress?: Maybe<Scalars['String']>;
+  beneficiaryName?: Maybe<Scalars['String']>;
+  accountNumber?: Maybe<Scalars['String']>;
+};
 
 export enum Gender {
   O = 'O',
@@ -2429,7 +2463,8 @@ export enum RiskAlertCodes {
   DepositAboveXAmountInYTimeframe = 'DEPOSIT_ABOVE_X_AMOUNT_IN_Y_TIMEFRAME',
   SumsubWords = 'SUMSUB_WORDS',
   WithdrawalOwner = 'WITHDRAWAL_OWNER',
-  OpenpaydMismatch = 'OPENPAYD_MISMATCH'
+  OpenpaydMismatch = 'OPENPAYD_MISMATCH',
+  FlashfxMismatch = 'FLASHFX_MISMATCH'
 }
 
 export type RiskAlertResultList = {
@@ -3509,6 +3544,7 @@ export enum UserActionType {
   GenerateKycToken = 'generateKycToken',
   KycCallback = 'kycCallback',
   OpenpaydCallback = 'openpaydCallback',
+  FlashfxCallback = 'flashfxCallback',
   AddBlackCountry = 'addBlackCountry',
   RemoveBlackCountry = 'removeBlackCountry',
   CreateCryptoInvoice = 'createCryptoInvoice',
@@ -4058,6 +4094,7 @@ export type Widget = {
   currentUserParams?: Maybe<Scalars['String']>;
   hasFixedAddress: Scalars['Boolean'];
   secret?: Maybe<Scalars['String']>;
+  allowToPayIfKycFailed?: Maybe<Scalars['Boolean']>;
 };
 
 export type WidgetInput = {
@@ -4073,6 +4110,7 @@ export type WidgetInput = {
   liquidityProvider?: Maybe<LiquidityProvider>;
   additionalSettings?: Maybe<Scalars['String']>;
   secret?: Maybe<Scalars['String']>;
+  allowToPayIfKycFailed?: Maybe<Scalars['Boolean']>;
 };
 
 export type WidgetListResult = {
@@ -4095,6 +4133,7 @@ export type WidgetShort = {
   paymentProviders?: Maybe<Array<Scalars['String']>>;
   additionalSettings?: Maybe<Scalars['String']>;
   currentUserEmail?: Maybe<Scalars['String']>;
+  allowToPayIfKycFailed?: Maybe<Scalars['Boolean']>;
 };
 
 export type WidgetUpdateInput = {
@@ -4111,6 +4150,7 @@ export type WidgetUpdateInput = {
   liquidityProvider?: Maybe<LiquidityProvider>;
   additionalSettings?: Maybe<Scalars['String']>;
   secret?: Maybe<Scalars['String']>;
+  allowToPayIfKycFailed?: Maybe<Scalars['Boolean']>;
 };
 
 export type WidgetUserParams = {

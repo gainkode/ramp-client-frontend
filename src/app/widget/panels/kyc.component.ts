@@ -19,6 +19,7 @@ export class WidgetKycComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() completedWhenVerified = false;
   @Input() summary: CheckoutSummary | undefined = undefined;
   @Output() onError = new EventEmitter<string>();
+  @Output() onReject = new EventEmitter();
   @Output() onAuthError = new EventEmitter();
   @Output() onProgress = new EventEmitter<boolean>();
   @Output() onBack = new EventEmitter();
