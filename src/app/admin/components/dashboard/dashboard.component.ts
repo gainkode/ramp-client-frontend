@@ -35,8 +35,9 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     this.showDeposits = EnvService.deposit_withdrawal;
     this.showWithdrawals = EnvService.deposit_withdrawal;
     const currentDate = new Date();
-    const fromDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1, 0, 0, 0, 0);
-    const toDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0, 23, 59, 59, 999);
+    const fromDate = new Date(Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), 1, 0, 0, 0, 0));
+    const toDate = new Date(Date.UTC(currentDate.getFullYear(), currentDate.getMonth() + 1, 0, 23, 59, 59, 999));
+    console.log(fromDate.getTimezoneOffset())
     this.defaultFilter = {
       updatedDateInterval: {
         from: fromDate,

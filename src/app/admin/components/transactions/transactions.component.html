@@ -10,12 +10,12 @@
             <button (click)="refresh()" class="btn btn-primary me-2">
               Refresh
             </button>
-            <button (click)="unbenchmark(settle_content)" class="btn btn-outline-secondary me-2"
-              [disabled]="!selectedForUnbenchmark">
-              Settle
-            </button>
             <button (click)="export(export_content)" class="btn btn-outline-secondary">
               Export
+            </button>
+            <button (click)="unbenchmark(settle_content)" style="float: right;" class="btn btn-danger me-2"
+              [disabled]="!selectedForUnbenchmark">
+              Settle
             </button>
           </div>
 
