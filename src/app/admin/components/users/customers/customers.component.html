@@ -138,15 +138,16 @@
                 </td>
               </ng-container>
 
-              <!-- widgetId Column -->
-              <ng-container matColumnDef="widgetId">
+              <!-- widgetName Column-->
+              <ng-container matColumnDef="widgetName">
                 <th mat-header-cell *matHeaderCellDef>
-                  Widget ID
+                  Widget Name
                 </th>
                 <td mat-cell *matCellDef="let element" [ngClass]="element.customerListDataColumnStyle">
-                  {{element.widgetId}}
+                  {{element.widgetName}}
                 </td>
               </ng-container>
+              
 
               <!-- totalBought Column -->
               <ng-container matColumnDef="totalBought">
@@ -232,6 +233,16 @@
               <ng-container matColumnDef="id">
                 <th mat-header-cell *matHeaderCellDef>ID</th>
                 <td mat-cell *matCellDef="let element" [ngClass]="element.customerListDataColumnStyle"> {{element.id}}
+                </td>
+              </ng-container>
+
+              <!-- widgetId Column -->
+              <ng-container matColumnDef="widgetId">
+                <th mat-header-cell *matHeaderCellDef>
+                  Widget ID
+                </th>
+                <td mat-cell *matCellDef="let element" [ngClass]="element.customerListDataColumnStyle">
+                  {{element.widgetId}}
                 </td>
               </ng-container>
 

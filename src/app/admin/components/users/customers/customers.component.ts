@@ -45,7 +45,7 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
     'email',
     'accountStatus',
     'kycStatus',
-    'widgetId',
+    'widgetName',
     'totalBought',
     'totalSold',
     'totalSent',
@@ -54,7 +54,8 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
     'country',
     'phone',
     'risk',
-    'id'
+    'id',
+    'widgetId', 
   ];
   sendMessageInProgress = false;
   sendMessageError = '';

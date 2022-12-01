@@ -50,6 +50,7 @@ export class UserItem {
   stateName = '';
   accountStatus = '';
   widgetId = '';
+  widgetName = '';
   widgetCode = '';
   affiliateId = '';
   affiliateCode = '';
@@ -174,6 +175,7 @@ export class UserItem {
       this.updated = datepipe.transform(data.updated, 'dd MMM YYYY HH:mm:ss') ?? '';
       this.lastLogin = datepipe.transform(data.lastLogin, 'dd MMM YYYY HH:mm:ss') ?? '';
       this.widgetId = data.widgetId ?? '';
+      this.widgetName = data.widgetName ?? '';
       this.widgetCode = data.widgetCode ?? '';
       this.affiliateId = data.affiliateId ?? '';
       this.affiliateCode = data.affiliateCode ?? '';

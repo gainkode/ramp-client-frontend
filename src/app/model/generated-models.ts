@@ -3473,6 +3473,7 @@ export type User = {
   addressLine?: Maybe<Scalars['String']>;
   openpaydIds?: Maybe<Scalars['String']>;
   openpaydAccountHolderId?: Maybe<Scalars['String']>;
+  widgetName?: Maybe<Scalars['String']>;
   document_num?: Maybe<Scalars['String']>;
   document_type?: Maybe<Scalars['String']>;
 };

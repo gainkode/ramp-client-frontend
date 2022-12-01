@@ -868,6 +868,7 @@ const GET_USERS = gql`
         addressLine
         referralCode
         widgetId
+        widgetName
         widgetCode
         affiliateId
         affiliateCode
