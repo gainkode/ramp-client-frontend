@@ -454,6 +454,7 @@ export class DeviceItem {
   browser = '';
   device = '';
   deviceConfirmed = '';
+  ip = '';
 
   constructor(data: UserDevice | null) {
     this.id = data?.userDeviceId ?? '';
@@ -472,6 +473,7 @@ export class DeviceItem {
     this.location = data?.location ?? '';
     this.browser = data?.browser ?? '';
     this.device = data?.device ?? '';
+    this.ip = data?.ip ?? ''
   }
 }
 

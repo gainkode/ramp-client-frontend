@@ -68,6 +68,13 @@
                 </td>
               </ng-container>
 
+              <ng-container matColumnDef="ip">
+                <th mat-header-cell *matHeaderCellDef>Ip</th>
+                <td mat-cell *matCellDef="let element" class="device-list-data-column">
+                  {{element.ip}}
+                </td>
+              </ng-container>
+
               <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
               <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </mat-table>

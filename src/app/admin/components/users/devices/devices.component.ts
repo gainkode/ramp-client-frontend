@@ -19,7 +19,8 @@ export class AdminUserDevicesComponent implements OnInit, OnDestroy {
     'browser',
     'device',
     'created',
-    'confirmed'
+    'confirmed',
+    'ip'
   ];
   inProgress = false;
   permission = 0;

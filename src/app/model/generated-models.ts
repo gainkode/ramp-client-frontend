@@ -3687,6 +3687,7 @@ export type UserDevice = {
   browser?: Maybe<Scalars['String']>;
   device?: Maybe<Scalars['String']>;
   deviceConfirmed?: Maybe<Scalars['DateTime']>;
+  ip?: Maybe<Scalars['String']>;
 };
 
 export type UserDeviceListResult = {

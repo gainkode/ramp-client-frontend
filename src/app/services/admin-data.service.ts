@@ -579,6 +579,7 @@ query GetDevices {
       browser
       device
       deviceConfirmed
+      ip
     }
   }
 }
