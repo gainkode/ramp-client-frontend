@@ -1,4 +1,5 @@
 import { Clipboard } from '@angular/cdk/clipboard';
+import { E } from '@angular/cdk/keycodes';
 import { Component, EventEmitter, Input, OnDestroy, Output } from "@angular/core";
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -17,6 +18,14 @@ import { ProfileDataService } from 'src/app/services/profile.service';
 export class ProfileWalletDetailsComponent implements OnDestroy {
     @Input() set wallet(val: WalletItem | undefined) {
         this.walletData = val;
+        if(val?.address){
+            let addressLength: number = val?.address.length;
+            if(addressLength > 20){
+                this.walletAddressShow = val?.address.replace(val?.address.substring(10, addressLength - 10), '...');
+            }else{
+                this.walletAddressShow = val?.address
+            }
+        }
         if (val?.crypto === true) {
             this.receiveButton = 'Receive';
             this.sendButton = 'Send';
@@ -35,6 +44,7 @@ export class ProfileWalletDetailsComponent implements OnDestroy {
     receiveButton = '';
     sendButton = '';
     walletData: WalletItem | undefined = undefined;
+    walletAddressShow: string = '';
     walletTransactionLink = '';
 
     editForm = this.formBuilder.group({

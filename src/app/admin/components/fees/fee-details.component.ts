@@ -10,10 +10,11 @@ import { CommonTargetValue } from 'src/app/model/common.model';
 import { CostScheme } from 'src/app/model/cost-scheme.model';
 import { CountryFilterList } from 'src/app/model/country-code.model';
 import { FeeScheme, TransactionSourceFilterList } from 'src/app/model/fee-scheme.model';
-import { PaymentInstrument, PaymentProvider, SettingsCostListResult, SettingsFeeTargetFilterType, TransactionType, UserMode, UserType } from 'src/app/model/generated-models';
-import { FeeTargetFilterList, PaymentInstrumentList, PaymentProviderView, TransactionTypeList, UserModeList, UserTypeList } from 'src/app/model/payment.model';
+import { PaymentInstrument, PaymentProvider, SettingsCostListResult, SettingsCurrencyWithDefaults, SettingsFeeTargetFilterType, TransactionType, UserMode, UserType } from 'src/app/model/generated-models';
+import { CurrencyView, FeeTargetFilterList, PaymentInstrumentList, PaymentProviderView, TransactionTypeList, UserModeList, UserTypeList } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { getCheckedProviderList, getProviderList } from 'src/app/utils/utils';
+import { CommonDataService } from 'src/app/services/common-data.service';
 
 @Component({
   selector: 'app-admin-fee-details',
@@ -44,6 +45,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   deleteInProgress = false;
   errorMessage = '';
   defaultSchemeName = '';
+  currencyOptions: CurrencyView[] = [];
   userTypeOptions = UserTypeList;
   userModes = UserModeList;
   transactionTypes = TransactionTypeList;
@@ -72,6 +74,8 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
     target: ['', { validators: [Validators.required], updateOn: 'change' }],
     targetValues: [[], { validators: [Validators.required], updateOn: 'change' }],
     instrument: [undefined],
+    currenciesFrom: [],
+    currenciesTo: [],
     userType: [[]],
     userMode: [[]],
     trxType: [[]],
@@ -90,6 +94,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
     private router: Router,
     private modalService: NgbModal,
     private auth: AuthService,
+    private commonService: CommonDataService,
     private adminService: AdminDataService) {
 
   }
@@ -103,10 +108,26 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
     );
     this.getPaymentProviders();
     this.loadCostSchemeList();
+    this.loadCurrencies();
   }
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+  }
+
+  private loadCurrencies(): void {
+    this.subscriptions.add(
+      this.commonService.getSettingsCurrency()?.valueChanges.pipe(take(1)).subscribe(({ data }) => {
+        const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
+        if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
+          this.currencyOptions = currencySettings.settingsCurrency.list?. map((val) => new CurrencyView(val)) as CurrencyView[];
+        } else {
+          this.currencyOptions = [];
+        }
+      }, (error) => {
+        this.errorMessage = error;
+      })
+    );
   }
 
   private setFormData(scheme: FeeScheme | undefined): void {
@@ -119,6 +140,9 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
       this.form.get('name')?.setValue(scheme?.name);
       this.form.get('description')?.setValue(scheme?.description);
       this.form.get('isDefault')?.setValue(scheme?.isDefault);
+
+      this.form.get('currenciesFrom')?.setValue(scheme?.currenciesFrom)
+      this.form.get('currenciesTo')?.setValue(scheme?.currenciesTo)
       // Targets
       this.form.get('target')?.setValue(scheme?.target);
       this.targetType = scheme?.target ?? SettingsFeeTargetFilterType.None;
@@ -153,6 +177,9 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
       this.form.get('name')?.setValue('');
       this.form.get('description')?.setValue('');
       this.form.get('isDefault')?.setValue('');
+
+      this.form.get('currenciesFrom')?.setValue([]);
+      this.form.get('currenciesTo')?.setValue([]);
       // Targets
       this.form.get('target')?.setValue(SettingsFeeTargetFilterType.None);
       this.form.get('targetValues')?.setValue([]);
@@ -183,6 +210,9 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
     data.userType = this.form.get('userType')?.value as UserType[];
     data.userMode = this.form.get('userMode')?.value as UserMode[];
     data.trxType = this.form.get('trxType')?.value as TransactionType[];
+    data.currenciesFrom = this.form.get('currenciesFrom')?.value as Array<string>;
+    data.currenciesTo = this.form.get('currenciesTo')?.value as Array<string>;
+    
     const instrument = this.form.get('instrument')?.value;
     if (instrument === undefined || instrument === null) {
       data.instrument = [];

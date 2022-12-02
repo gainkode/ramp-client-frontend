@@ -279,6 +279,8 @@ const GET_FEE_SETTINGS = gql`
         targetFilterValues
         currency
         rateToEur
+        targetCurrenciesFrom
+        targetCurrenciesTo
       }
     }
   }
@@ -2090,6 +2092,8 @@ const UPDATE_SETTINGS_FEE = gql`
     $targetPaymentProviders: [String!]
     $terms: String!
     $wireDetails: String!
+    $targetCurrenciesFrom: [String!]
+    $targetCurrenciesTo: [String!]
   ) {
     updateSettingsFee(
       settingsId: $settingsId
@@ -2105,6 +2109,8 @@ const UPDATE_SETTINGS_FEE = gql`
         targetPaymentProviders: $targetPaymentProviders
         terms: $terms
         wireDetails: $wireDetails
+        targetCurrenciesFrom: $targetCurrenciesFrom
+        targetCurrenciesTo: $targetCurrenciesTo
       }
     ) {
       settingsFeeId
@@ -3209,7 +3215,9 @@ export class AdminDataService {
           targetTransactionTypes: feeScheme.trxType,
           targetPaymentProviders: feeScheme.provider,
           terms: feeScheme.terms.getObject(),
-          wireDetails: feeScheme.details.getObject()
+          wireDetails: feeScheme.details.getObject(),
+          targetCurrenciesFrom: feeScheme.currenciesFrom,
+          targetCurrenciesTo: feeScheme.currenciesTo
         }
       });
   }

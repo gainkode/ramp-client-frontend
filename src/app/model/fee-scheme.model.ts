@@ -29,6 +29,8 @@ export class FeeScheme {
     targetValues: Array<string> = [];
     trxType: Array<TransactionType> = [];
     instrument: Array<PaymentInstrument> = [];
+    currenciesFrom: Array<string> = [];
+    currenciesTo: Array<string> = [];
     userType: Array<UserType> = [];
     userMode: Array<UserMode> = [];
     provider: string[] = [];
@@ -46,6 +48,8 @@ export class FeeScheme {
             this.terms = new FeeShemeTerms(data.terms);
             this.details = new FeeShemeWireDetails(data.wireDetails);
             this.currency = data.currency as string ?? 'euro';
+            this.currenciesFrom = data.targetCurrenciesFrom as Array<string> ?? [];
+            this.currenciesTo = data.targetCurrenciesTo as Array<string> ?? [];
             this.rateToEur = data.rateToEur as number;
             data.targetInstruments?.forEach(x => this.instrument.push(x as PaymentInstrument));
             data.targetPaymentProviders?.forEach(x => this.provider.push(x));

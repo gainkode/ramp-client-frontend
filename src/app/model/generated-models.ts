@@ -1725,10 +1725,10 @@ export type Query = {
   getPaymentProviders?: Maybe<Array<PaymentProvider>>;
   /** Get payment providers for relevant options */
   getAppropriatePaymentProviders?: Maybe<Array<PaymentProviderByInstrument>>;
-  /** Get currency settings  */
+  /** Get currency settings */
   getSettingsCurrency?: Maybe<SettingsCurrencyWithDefaults>;
   getSettingsKycLevels?: Maybe<SettingsKycLevelListResult>;
-  /** Get KYC settings  */
+  /** Get KYC settings */
   getSettingsKyc?: Maybe<SettingsKycListResult>;
   /** Get KYC settings for the current user(SettingsKycTierShort) */
   mySettingsKyc?: Maybe<SettingsKycShort>;
@@ -1736,7 +1736,7 @@ export type Query = {
   mySettingsKycFull?: Maybe<SettingsKyc>;
   /** Get KYC settings for relevant options */
   getAppropriateSettingsKyc?: Maybe<SettingsKyc>;
-  /** Get KYC levels settings  */
+  /** Get KYC levels settings */
   getSettingsKycTiers?: Maybe<SettingsKycTierListResult>;
   /** Get KYC levels settings for the current user(SettingsKycTierShort) */
   mySettingsKycTier?: Maybe<SettingsKycTierShort>;
@@ -1744,7 +1744,7 @@ export type Query = {
   mySettingsKycTiers?: Maybe<SettingsKycTierShortExListResult>;
   /** Get KYC levels settings for relevant options */
   getAppropriateSettingsKycTiers?: Maybe<SettingsKycTierShortExListResult>;
-  /** Get fee settings  */
+  /** Get fee settings */
   getSettingsFee?: Maybe<SettingsFeeListResult>;
   /** Get fee settings for the current user(SettingsFeeShort) */
   mySettingsFee?: Maybe<SettingsFeeShort>;
@@ -1752,7 +1752,7 @@ export type Query = {
   mySettingsFeeFull?: Maybe<SettingsFee>;
   /** Get fee settings for the relevant parameters */
   getAppropriateSettingsFee?: Maybe<SettingsFee>;
-  /** Get cost settings  */
+  /** Get cost settings */
   getSettingsCost?: Maybe<SettingsCostListResult>;
   /** Get cost settings for the current user */
   mySettingsCost?: Maybe<SettingsCostShort>;
@@ -1995,7 +1995,8 @@ export type QueryMySettingsFeeFullArgs = {
   transactionSource: TransactionSource;
   instrument: PaymentInstrument;
   paymentProvider?: Maybe<Scalars['String']>;
-  currency?: Maybe<Scalars['String']>;
+  currencyTo?: Maybe<Scalars['String']>;
+  currencyFrom?: Maybe<Scalars['String']>;
   widgetId?: Maybe<Scalars['String']>;
 };
 
@@ -2006,7 +2007,8 @@ export type QueryGetAppropriateSettingsFeeArgs = {
   targetUserMode: UserMode;
   instrument: PaymentInstrument;
   paymentProvider?: Maybe<Scalars['String']>;
-  currency?: Maybe<Scalars['String']>;
+  currencyTo?: Maybe<Scalars['String']>;
+  currencyFrom?: Maybe<Scalars['String']>;
   filterType?: Maybe<SettingsFeeTargetFilterType>;
   filterValue?: Maybe<Scalars['String']>;
 };
@@ -2617,6 +2619,8 @@ export type SettingsFee = {
   targetUserModes?: Maybe<Array<UserMode>>;
   targetTransactionTypes?: Maybe<Array<Scalars['String']>>;
   targetPaymentProviders?: Maybe<Array<Scalars['String']>>;
+  targetCurrenciesFrom?: Maybe<Array<Scalars['String']>>;
+  targetCurrenciesTo?: Maybe<Array<Scalars['String']>>;
   terms: Scalars['String'];
   wireDetails: Scalars['String'];
   created: Scalars['DateTime'];
@@ -2638,6 +2642,8 @@ export type SettingsFeeInput = {
   targetUserModes?: Maybe<Array<UserMode>>;
   targetTransactionTypes?: Maybe<Array<TransactionType>>;
   targetPaymentProviders?: Maybe<Array<Scalars['String']>>;
+  targetCurrenciesFrom?: Maybe<Array<Scalars['String']>>;
+  targetCurrenciesTo?: Maybe<Array<Scalars['String']>>;
   terms?: Maybe<Scalars['String']>;
   wireDetails?: Maybe<Scalars['String']>;
   default?: Maybe<Scalars['Boolean']>;
