@@ -42,6 +42,8 @@
         <app-admin-details-item label="Transfer Order Id" [value]="data?.transferOrderId"></app-admin-details-item>
         <app-admin-details-item label="Transfer Order Hash" [value]="data?.transferOrderHash"></app-admin-details-item>
 
+        <app-admin-details-item label="BENCHMARK TRANSFER ORDER ID" [value]="data?.benchmarkTransferOrderId"></app-admin-details-item>
+        <app-admin-details-item label="ORIGINAL BENCHMARK TRANSFER ORDER ID" [value]="data?.benchmarkTransferOriginalOrderId"></app-admin-details-item>
         <!-- Transaction status -->
         <app-admin-details-item *ngIf="transactionType===TRANSACTION_TYPE.Receive" label="Transaction status"
           [value]="transactionStatusName"></app-admin-details-item>

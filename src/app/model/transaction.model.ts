@@ -58,6 +58,7 @@ export class TransactionItemFull {
   transferOrderHash = '';
   transferFee = '';
   benchmarkTransferOrderId = '';
+  benchmarkTransferOriginalOrderId = '';
   benchmarkTransferOrderHash = '';
   transferOrderBlockchainLink = '';
   benchmarkTransferOrderBlockchainLink = '';
@@ -105,6 +106,7 @@ export class TransactionItemFull {
         this.ip = transactionData.userIp as string;
         this.userMode = transactionData.user?.mode as UserMode | undefined;
         this.benchmarkTransferOrderId = transactionData.benchmarkTransferOrder?.orderId ?? '';
+        this.benchmarkTransferOriginalOrderId = transactionData.benchmarkTransferOrder?.originalOrderId ?? '';
         this.benchmarkTransferOrderHash = transactionData.benchmarkTransferOrder?.transferHash ?? '';
       }
       if (data.type === TransactionType.Sell || data.type === TransactionType.Withdrawal) {

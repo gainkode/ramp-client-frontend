@@ -647,6 +647,7 @@ const GET_TRANSACTIONS = gql`
           orderId
           transferDetails
           transferHash
+          originalOrderId
         }
         benchmarkTransferOrderBlockchainLink
         code
