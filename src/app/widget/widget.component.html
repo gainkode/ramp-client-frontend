@@ -93,6 +93,7 @@
       <!-- KYC -->
       <app-widget-kyc *ngSwitchCase="'verification'" [summary]="summary" [levelName]="overLimitLevel"
         [completedWhenVerified]="widget.kycFirst"
+        [allowToPayIfKycFailed]="widget.allowToPayIfKycFailed"
         [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage" (onError)="handleError($event)"
         (onAuthError)="handleAuthError()" (onProgress)="progressChanged($event)" (onBack)="kycBack()"
         (onNext)="kycComplete()" (onReject)="handleReject()"></app-widget-kyc>
