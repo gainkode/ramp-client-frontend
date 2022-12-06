@@ -42,20 +42,60 @@ export class ShuftiPanelComponent implements OnInit, OnDestroy {
                 ({ data }) => {
                     const subscriptionData = data.kycCompletedNotification;
                     console.log('Shufti completed', subscriptionData);
-                    if(subscriptionData.kycStatus == 'completed'){
-                        if (subscriptionData.kycValid === true) {
-                            if (this.completedWhenVerified) {
-                                this.completed.emit();
+                    if(data.level != 'Debug'){
+                        if(subscriptionData.kycStatus == 'completed'){
+                            if (subscriptionData.kycValid === true) {
+                                if (this.completedWhenVerified) {
+                                    this.completed.emit();
+                                }
+                            }else{
+                                console.log('Shufti rejected')
+                                this.onReject.emit();
                             }
-                        }else{
-                            console.log('Shufti rejected')
-                            this.onReject.emit();
                         }
                     }
                     
                 },
                 (error) => {
                     console.error('KYC complete notification error', error);
+
+                    if(error == 'Access denied'){
+                        this.auth.refreshToken().subscribe(
+                            ({ data }) => {
+                                console.log('Token refreshed');
+                                setTimeout(() => {
+                                    this.pSubscriptions.add(
+                                        this.notification.subscribeToKycCompleteNotifications().subscribe(
+                                            ({ data }) => {
+                                                const subscriptionData = data.kycCompletedNotification;
+                                                console.log('Shufti completed', subscriptionData);
+                                                if(data.level != 'Debug'){
+                                                    if(subscriptionData.kycStatus == 'completed'){
+                                                        if (subscriptionData.kycValid === true) {
+                                                            if (this.completedWhenVerified) {
+                                                                this.completed.emit();
+                                                            }
+                                                        }else{
+                                                            console.log('Shufti rejected')
+                                                            this.onReject.emit();
+                                                        }
+                                                    }
+                                                }
+                                                
+                                            },
+                                      (error) => {
+                                        console.error('[2] KYC notification start error', error);
+                                        window.location.reload();
+                                      }
+                                    )
+                                  );
+                                }, 500);
+                              },
+                              (error) => {
+                                console.error('Refresh token error: ', error);
+                              }
+                        )
+                    }
                 }
             )
         );
