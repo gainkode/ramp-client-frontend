@@ -19,7 +19,6 @@ export class WidgetKycComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() completedWhenVerified = false;
   @Input() allowToPayIfKycFailed = false;
   @Input() summary: CheckoutSummary | undefined = undefined;
-  @Input() shuftiSubscribeResult: boolean | undefined = undefined;
   @Output() onError = new EventEmitter<string>();
   @Output() onReject = new EventEmitter();
   @Output() onAuthError = new EventEmitter();
@@ -54,13 +53,7 @@ export class WidgetKycComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnDestroy(): void {
     this.pSubscriptions.unsubscribe();
   }
-  ngOnChanges(): void {
-    if(this.shuftiSubscribeResult == false){
-      this.handleReject();
-    }else if(this.shuftiSubscribeResult == true){
-      this.onNext.emit();
-    }
-  }
+
   handleReject(): void {
     this.rejectKyc = true;
   }

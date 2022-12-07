@@ -27,11 +27,37 @@ export class ShuftiPanelComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         if (this.auth.user?.kycProvider === KycProvider.Shufti) {
-            // this.startKycNotifications();
+            this.startKycNotifications();
         }
     }
 
     ngOnDestroy(): void {
         this.pSubscriptions?.unsubscribe();
+    }
+
+    private startKycNotifications(): void {
+        console.log('Shufti notifications started');
+        this.pSubscriptions.add(
+            this.notification.subscribeToKycCompleteNotifications().subscribe(
+                ({ data }) => {
+                    const subscriptionData = data.kycCompletedNotification;
+                    console.log('Shufti completed', subscriptionData);
+                    if(subscriptionData.kycStatus == 'completed'){
+                        if (subscriptionData.kycValid === true) {
+                            if (this.completedWhenVerified) {
+                                this.completed.emit();
+                            }
+                        }else{
+                            console.log('Shufti rejected')
+                            this.onReject.emit();
+                        }
+                    }
+                    
+                },
+                (error) => {
+                    console.error('KYC complete notification error', error);
+                }
+            )
+        );
     }
 }
