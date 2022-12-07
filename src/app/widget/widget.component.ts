@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { AssetAddressShortListResult, LoginResult, PaymentInstrument, PaymentPreauthResultShort, PaymentProviderByInstrument, Rate, TextPage, TransactionShort, TransactionSource, TransactionType, Widget } from 'src/app/model/generated-models';
+import { AssetAddressShortListResult, KycProvider, LoginResult, PaymentInstrument, PaymentPreauthResultShort, PaymentProviderByInstrument, Rate, TextPage, TransactionShort, TransactionSource, TransactionType, Widget } from 'src/app/model/generated-models';
 import { CardView, CheckoutSummary, PaymentProviderInstrumentView } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
@@ -31,6 +31,7 @@ export class WidgetComponent implements OnInit {
   @Input() userParamsId = '';
   @Input() quickCheckout = false;
   @Input() settings: WidgetSettings | undefined = undefined;
+  @Input() shuftiSubscribeResult: boolean | undefined = undefined;
   @Input() set internal(val: boolean) {
     this.internalPayment = val;
   }
@@ -836,7 +837,7 @@ export class WidgetComponent implements OnInit {
           'kycComplete');
       } else if (this.paymentProviders.length > 1) {
         this.nextStage('payment', 'Payment info', 5, true);
-      } else {
+      } else {  
         this.selectProvider(this.paymentProviders[0]);
       }
     } else {
