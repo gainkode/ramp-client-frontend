@@ -1,11 +1,10 @@
 <div class="__widget-data-box">
     <app-kyc-panel *ngIf="showValidator" [flow]="flow" [notifyCompleted]="true"
         [completedWhenVerified]="completedWhenVerified" (completed)="onNext.emit()" (onError)="onError.emit($event)"
-        (onAuthError)="onAuthError.emit()" (onProgress)="onProgress.emit($event)" (onReject)="handleReject()">
+        (onAuthError)="onAuthError.emit()" (onProgress)="onProgress.emit($event)" (onReject)="onReject.emit()">
     </app-kyc-panel>
     <div class="__widget-buttons-area">
-        <!-- <button class="__outlined-button" type="button" (click)="onBack.emit()">BACK</button> -->
-        <button *ngIf="allowToPayIfKycFailed && rejectKyc" class="__main-button" type="button" (click)="onReject.emit()">Verify Later</button>
+        <button class="__outlined-button" type="button" (click)="onBack.emit()">BACK</button>
     </div>
 
     <div class="__widget-data-error">

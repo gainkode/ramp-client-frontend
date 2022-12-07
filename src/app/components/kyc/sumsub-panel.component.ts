@@ -9,8 +9,7 @@ const snsWebSdk = require('@sumsub/websdk');
 
 @Component({
     selector: 'app-sumsub-panel',
-    templateUrl: 'sumsub-panel.component.html',
-    styleUrls: ['../../../assets/button.scss']
+    templateUrl: 'sumsub-panel.component.html'
 })
 export class SumsubPanelComponent implements OnInit, OnDestroy {
     @Input() flow: string = '';

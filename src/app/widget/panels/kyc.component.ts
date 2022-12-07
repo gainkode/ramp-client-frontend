@@ -17,7 +17,6 @@ export class WidgetKycComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() errorMessage = '';
   @Input() levelName = '';
   @Input() completedWhenVerified = false;
-  @Input() allowToPayIfKycFailed = false;
   @Input() summary: CheckoutSummary | undefined = undefined;
   @Output() onError = new EventEmitter<string>();
   @Output() onReject = new EventEmitter();
@@ -27,7 +26,7 @@ export class WidgetKycComponent implements OnInit, OnDestroy, AfterViewInit {
   @Output() onNext = new EventEmitter();
 
   private pSubscriptions: Subscription = new Subscription();
-  rejectKyc = false;
+
   address = '';
   flow = '';
   showValidator = false;
@@ -47,15 +46,11 @@ export class WidgetKycComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit(): void {
-    console.log(this.allowToPayIfKycFailed)
+
   }
 
   ngOnDestroy(): void {
     this.pSubscriptions.unsubscribe();
-  }
-
-  handleReject(): void {
-    this.rejectKyc = true;
   }
 
   private getSettings(): void {
