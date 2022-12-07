@@ -25,7 +25,7 @@ export class QuickCheckoutComponent {
     private route: ActivatedRoute,
     private notification: NotificationService
   ) {
-    this.startShuftiNotificationListener();
+    // this.startShuftiNotificationListener();
     this.userParamsId = this.route.snapshot.params['userParamsId'] ?? '';
     this.expressFrom = this.route.snapshot.params['from'] ?? '';
     this.expressTo = this.route.snapshot.params['to'] ?? '';
