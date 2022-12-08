@@ -30,16 +30,9 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    const totalData = this.commonService.getMyTransactionsTotal();
-    this.subscriptions.add(
-      totalData.valueChanges.pipe(take(1)).subscribe(({ data }) => {
-        setTimeout(() => {
-          this.startKycNotifications();
-        }, 500);
-      }, (error) => {
-
-      })
-    );
+    if(this.auth.user){
+      this.startKycNotifications();
+    }
     this.loadFont();
     this.setCookiePanel();
   }

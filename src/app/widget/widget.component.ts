@@ -81,6 +81,7 @@ export class WidgetComponent implements OnInit {
 
   private pSubscriptions: Subscription = new Subscription();
   private pNotificationsSubscription: Subscription | undefined = undefined;
+  private shuftiNotificationsSubscription: Subscription | undefined = undefined;
 
   get showTransactionsLink(): boolean {
     const user = this.auth.user;
@@ -323,25 +324,23 @@ export class WidgetComponent implements OnInit {
     if(this.auth.user && this.auth.user?.kycProvider == KycProvider.Shufti && this.auth.user?.kycValid != true){
       console.log('Shufti completed notifications subscribed')
       this.shuftiSubscriptionFlag = true;
-      this.pSubscriptions.add(
-          this.notification.subscribeToKycCompleteNotifications().subscribe(
-            ({ data }) => {
-                const subscriptionData = data.kycCompletedNotification;
-                console.log('Shufti completed', subscriptionData);
-                if(subscriptionData.kycStatus == 'completed'){
-                    if (subscriptionData.kycValid === true) {
-                        this.shuftiSubscribeResult = true;
-                    }else{
-                        console.log('Shufti rejected')
-                        this.shuftiSubscribeResult = false;
-                    }
+      this.shuftiNotificationsSubscription = this.notification.subscribeToKycCompleteNotifications().subscribe(
+        ({ data }) => {
+            const subscriptionData = data.kycCompletedNotification;
+            console.log('Shufti completed', subscriptionData);
+            if(subscriptionData.kycStatus == 'completed'){
+                if (subscriptionData.kycValid === true) {
+                    this.shuftiSubscribeResult = true;
+                }else{
+                    console.log('Shufti rejected')
+                    this.shuftiSubscribeResult = false;
                 }
-            },
-            (error) => {
-              this.shuftiSubscriptionFlag = false;
-              console.error('KYC complete notification error', error);
             }
-        )
+        },
+        (error) => {
+          this.shuftiSubscriptionFlag = false;
+          console.error('KYC complete notification error', error);
+        }
       )
     }
     // }
@@ -886,10 +885,11 @@ export class WidgetComponent implements OnInit {
     }
     if (data.authTokenAction === 'Default' || data.authTokenAction === 'KycRequired') {
       this.auth.setLoginUser(data);
-      
-      if(!this.shuftiSubscriptionFlag){
-        this.startShuftiNotificationListener();
+      if(this.shuftiNotificationsSubscription){
+        this.shuftiNotificationsSubscription.unsubscribe()
       }
+
+      this.startShuftiNotificationListener();
 
       if (this.summary.agreementChecked) {
         if (this.summary.transactionId === '') {

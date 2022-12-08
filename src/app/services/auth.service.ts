@@ -5,6 +5,7 @@ import { from, Observable, of } from 'rxjs';
 import { FeedbackInput, LoginResult, PostAddress, SettingsCommon, User, UserMode, UserType } from '../model/generated-models';
 import { EmptyObject } from 'apollo-angular/types';
 import { EnvService } from './env.service';
+import { NotificationService } from 'src/app/services/notification.service';
 
 const LOGIN = gql`
   mutation Login($recaptcha: String!, $email: String!, $password: String, $widgetId: String) {
@@ -469,6 +470,7 @@ export class AuthService {
 
     constructor(
         private apollo: Apollo,
+        private notification: NotificationService,
         //private socialAuth: SocialAuthService
     ) { }
 
@@ -762,6 +764,8 @@ export class AuthService {
         localStorage.setItem('currentUser', JSON.stringify(login.user));
         localStorage.setItem('currentToken', login.authToken as string);
         localStorage.setItem('currentAction', login.authTokenAction as string);
+
+        this.notification.wsClientInit()
     }
 
     setUser(user: User): void {
