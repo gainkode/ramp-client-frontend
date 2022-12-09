@@ -701,7 +701,7 @@ export class WidgetComponent implements OnInit {
     const nextStage = 4;
 
     console.log(this.widget.kycFirst, this.requestKyc, this.widget.embedded);
-    if (this.widget.kycFirst && !this.widget.embedded) {
+    if (this.widget.kycFirst && this.requestKyc && !this.widget.embedded) {
       this.nextStage('verification', 'Verification', nextStage, false);
     } else {
       if (this.paymentProviders.length < 1) {
