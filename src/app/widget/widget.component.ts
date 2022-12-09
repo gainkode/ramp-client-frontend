@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { AssetAddressShortListResult, KycProvider, LoginResult, PaymentInstrument, PaymentPreauthResultShort, PaymentProviderByInstrument, Rate, TextPage, TransactionShort, TransactionSource, TransactionType, Widget } from 'src/app/model/generated-models';
+import { AssetAddressShortListResult, KycProvider, LoginResult, PaymentInstrument, PaymentPreauthResultShort, PaymentProviderByInstrument, Rate, TextPage, TransactionShort, TransactionSource, TransactionType, User, Widget } from 'src/app/model/generated-models';
 import { CardView, CheckoutSummary, PaymentProviderInstrumentView } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
@@ -336,6 +336,7 @@ export class WidgetComponent implements OnInit {
                     this.shuftiSubscribeResult = false;
                 }
             }
+            this.loadAccountData();
         },
         (error) => {
           this.shuftiSubscriptionFlag = false;
@@ -420,7 +421,9 @@ export class WidgetComponent implements OnInit {
     this.setError('Transaction failed', message, 'handleError');
   }
   handleReject(): void {
-    console.log(this.widget.kycFirst, this.widget.allowToPayIfKycFailed, this.paymentProviders)
+    console.log(this.widget.kycFirst, this.widget.allowToPayIfKycFailed, this.paymentProviders);
+    this.loadAccountData();
+
     if (this.widget.kycFirst && this.widget.allowToPayIfKycFailed) {
       if (this.paymentProviders.length < 1) {
         this.setError(
@@ -861,6 +864,7 @@ export class WidgetComponent implements OnInit {
   }
 
   kycComplete(): void {
+    this.loadAccountData();
     if (this.widget.kycFirst) {
       if (this.paymentProviders.length < 1) {
         this.setError(
@@ -1144,6 +1148,22 @@ export class WidgetComponent implements OnInit {
           }
         }
       )
+    );
+  }
+
+  private loadAccountData(): void {
+    console.log('loadAccountData');
+    const meQuery$ = this.profileService.getProfileData().valueChanges.pipe(take(1));
+    this.pSubscriptions.add(
+      meQuery$.subscribe(({ data }) => {
+        if (data) {
+          console.log('loadAccountData result:', data);
+          this.auth.setUser(data.me as User);
+          this.auth.notifyUserUpdated();
+        }
+      }, (error) => {
+
+      })
     );
   }
 
