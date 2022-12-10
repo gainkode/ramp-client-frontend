@@ -24,10 +24,7 @@ export function isKycRequired(currentUser: User, tierData: KycTierResultData): [
     let result = true;
     const kycStatus = currentUser.kycStatus?.toLowerCase() ?? 'init';
     let exceedTierName = '';
-    if (currentUser.kycValid == true){
-        result = false;
-        exceedTierName = tierData.levelName ?? '';
-    }else if (tierData.required === true) {
+    if (tierData.required === true) {
         result = true;
         exceedTierName = tierData.levelName ?? '';
     } else {

@@ -3,11 +3,14 @@ import { AuthService } from '../../services/auth.service';
 import { ErrorService } from '../../services/error.service';
 import { Validators, FormBuilder, AbstractControl } from '@angular/forms';
 import { SocialUser } from 'angularx-social-login';
-import { LoginResult, UserMode } from '../../model/generated-models';
+import { LoginResult, User, UserMode } from '../../model/generated-models';
 import { SignupInfoPanelComponent } from './signup-info.component';
 import { Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { CommonDialogBox } from '../dialogs/common-box.dialog';
+import { NotificationService } from '../../services/notification.service';
+import { ProfileDataService } from '../../services/profile.service';
+import { take } from 'rxjs/operators';
 
 @Component({
     selector: 'app-login-panel',
@@ -85,7 +88,9 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
         public dialog: MatDialog,
         private auth: AuthService,
         private errorHandler: ErrorService,
-        private formBuilder: FormBuilder) { }
+        private formBuilder: FormBuilder,
+        private notification: NotificationService,
+        private profileService: ProfileDataService) { }
 
     ngOnInit(): void {
         this.emailField?.setValue(this.userMail);
@@ -184,7 +189,35 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
     //         })
     //     );
     // }
+    private loadAccountData(): void {
+        console.log('loadAccountData');
+        const meQuery$ = this.profileService.getProfileData().valueChanges.pipe(take(1));
+        this.subscriptions.add(
+          meQuery$.subscribe(({ data }) => {
+            if (data) {
+              console.log('loadAccountData result:', data);
+              this.auth.setUser(data.me as User);
+              this.auth.notifyUserUpdated();
+            }
+          }, (error) => {
+    
+          })
+        );
+      }
 
+    private startKycNotifications(): void {
+        console.log('Started KYC notifications [login-panel]')
+        this.subscriptions.add(
+            this.notification.subscribeToKycNotifications().subscribe(
+                ({ data }) => {
+                    this.loadAccountData();
+                },
+                (error) => {
+                    console.error('KYC notification error', error);
+                }
+            )
+        );
+    }
     onSubmit(): void {
         this.registerError('');
         this.done = true;
@@ -209,6 +242,7 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
                             } else {
                                 this.authenticated.emit(userData);
                             }
+                            this.startKycNotifications();
                         } else {
                             this.done = false;
                             this.registerError(`Unable to authorise with the login '${login}'. Please sign up`);
