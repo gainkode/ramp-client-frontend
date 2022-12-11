@@ -171,6 +171,12 @@ export class WidgetComponent implements OnInit {
   ngOnDestroy(): void {
     this.pSubscriptions.unsubscribe();
     this.stopNotificationListener();
+    
+    if(this.shuftiNotificationsSubscription){
+      this.shuftiNotificationsSubscription.unsubscribe();
+    }
+    
+    this.shuftiSubscriptionFlag = false;
     this.exhangeRate.stop();
   }
 
@@ -321,7 +327,7 @@ export class WidgetComponent implements OnInit {
   }
 
   private startShuftiNotificationListener(): void {
-    if(this.auth.user && this.auth.user?.kycProvider == KycProvider.Shufti && this.auth.user?.kycValid != true){
+    if(this.auth.user && this.auth.user?.kycProvider == KycProvider.Shufti){
       console.log('Shufti completed notifications subscribed')
       this.shuftiSubscriptionFlag = true;
       this.shuftiNotificationsSubscription = this.notification.subscribeToKycCompleteNotifications().subscribe(
@@ -705,6 +711,10 @@ export class WidgetComponent implements OnInit {
 
     console.log(this.widget.kycFirst, this.requestKyc, this.widget.embedded);
     if (this.widget.kycFirst && this.requestKyc && !this.widget.embedded) {
+      const tempStageId = this.pager.stageId
+      if (tempStageId === 'verification') {
+        this.pager.goBack();
+      }
       this.nextStage('verification', 'Verification', nextStage, false);
     } else {
       if (this.paymentProviders.length < 1) {
@@ -864,18 +874,22 @@ export class WidgetComponent implements OnInit {
   }
 
   kycComplete(): void {
-    this.loadAccountData();
     if (this.widget.kycFirst) {
-      if (this.paymentProviders.length < 1) {
-        this.setError(
-          'No payment providers',
-          `No supported payment providers found for "${this.summary.currencyFrom}"`,
-          'kycComplete');
-      } else if (this.paymentProviders.length > 1) {
-        this.nextStage('payment', 'Payment info', 5, true);
-      } else {  
-        this.selectProvider(this.paymentProviders[0]);
-      }
+      this.loadAccountData();
+      console.log('KYC COMPLETE');
+      this.widgetService.getSettingsCommon(this.summary, this.widget, this.widget.orderDefault);
+      this.shuftiSubscribeResult = undefined;
+      // if (this.paymentProviders.length < 1) {
+      //   this.setError(
+      //     'No payment providers',
+      //     `No supported payment providers found for "${this.summary.currencyFrom}"`,
+      //     'kycComplete');
+      // } else if (this.paymentProviders.length > 1) {
+      //   this.widgetService.getSettingsCommon(this.summary, this.widget, this.widget.orderDefault);
+      //   // this.nextStage('payment', 'Payment info', 5, true);
+      // } else {  
+      //   this.selectProvider(this.paymentProviders[0]);
+      // }
     } else {
       this.nextStage('complete', 'Complete', 6, false);
     }
@@ -890,7 +904,8 @@ export class WidgetComponent implements OnInit {
     if (data.authTokenAction === 'Default' || data.authTokenAction === 'KycRequired') {
       this.auth.setLoginUser(data);
       if(this.shuftiNotificationsSubscription){
-        this.shuftiNotificationsSubscription.unsubscribe()
+        this.shuftiNotificationsSubscription.unsubscribe();
+        this.shuftiSubscriptionFlag = false;
       }
 
       this.startShuftiNotificationListener();

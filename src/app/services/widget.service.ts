@@ -300,8 +300,9 @@ export class WidgetService {
             widget.widgetId).valueChanges.pipe(take(1));
         this.pSubscriptions.add(
             tiersData$.subscribe(({ data }) => {
+                const currentTierId = this.auth.user?.kycValid != true ? '-' : this.auth.user?.kycTierId ?? '';
                 const tierData = getCurrentTierLevelName(
-                    this.auth.user?.kycTierId ?? '', 
+                    currentTierId, 
                     data.getAppropriateSettingsKycTiers as SettingsKycTierShortExListResult);
                 this.getKycStatus(summary, widget, tierData);
             }, (error) => {

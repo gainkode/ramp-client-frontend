@@ -60,6 +60,7 @@ export class WidgetKycComponent implements OnInit, OnDestroy, AfterViewInit {
     }else if(this.shuftiSubscribeResult == true){
       this.onNext.emit();
     }
+    this.shuftiSubscribeResult = undefined;
   }
   handleReject(): void {
     this.rejectKyc = true;

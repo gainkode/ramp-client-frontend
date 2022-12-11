@@ -12,6 +12,7 @@ export function getCurrentTierLevelName(tierId: string, tiersData: SettingsKycTi
     };
     if ((tiersData.count ?? 0 > 0) && tiersData.list) {
         const newTier = tiersData.list[0];
+        console.log(`Current tier: ${tierId}`, `New tier${newTier.settingsKycTierId}`)
         if (newTier.settingsKycTierId !== tierId) {
             result.levelName = newTier?.originalLevelName ?? null;
             result.required = (result.levelName !== null);
