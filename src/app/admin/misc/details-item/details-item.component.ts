@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonTargetValue } from 'src/app/model/common.model';
+import { UserModeView } from 'src/app/model/payment.model';
 
 @Component({
   selector: 'app-admin-details-item',
@@ -10,7 +11,7 @@ export class AdminDetailsItemComponent {
   @Input() smartLink = false;
 
   @Input()
-  set value(value: string | string[] | number | CommonTargetValue | null | undefined) {
+  set value(value: string | string[] | number | CommonTargetValue | UserModeView | null | undefined) {
     this.setArray = false;
     if (value instanceof CommonTargetValue) {
       this.valueImage = value;
@@ -18,7 +19,9 @@ export class AdminDetailsItemComponent {
       this.valueString = value.toString();
     } else if (typeof (value) === 'string') {
       this.valueString = value ? value.trim() : undefined;
-    } else {
+    } else if(value instanceof UserModeView) {
+      this.valueString = value ? value.toString() : undefined;
+    } else{
       this.setArray = true;
       this.valueStrings = value?.filter(x => x !== '') ?? [];
       this.valueString = this.valueStrings.length > 0 ? 'data' : undefined;

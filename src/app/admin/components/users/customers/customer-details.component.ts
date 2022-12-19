@@ -10,7 +10,7 @@ import { AdminDataService } from 'src/app/services/admin-data.service';
 import { CommonTargetValue } from 'src/app/model/common.model';
 import { Countries, getCountryByCode3 } from 'src/app/model/country-code.model';
 import { AccountStatus, KycProvider, RiskLevel, UserInput, UserType } from 'src/app/model/generated-models';
-import { CurrencyView, KycProviderList, RiskLevelViewList, UserStatusList } from 'src/app/model/payment.model';
+import { CurrencyView, KycProviderList, RiskLevelViewList, UserModeView, UserStatusList } from 'src/app/model/payment.model';
 import { GenderList, UserItem } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { getFormattedUtcDate } from 'src/app/utils/utils';

@@ -142,7 +142,10 @@ export class UserItem {
       this.referralCode = data.referralCode?.toString() ?? '';
       this.deleted = data.deleted !== undefined && data.deleted !== null;
       this.userType = UserTypeList.find((x) => x.id === data.type) as UserTypeView;
-      this.userMode = UserModeShortList.find((x) => x.id === data.mode) as UserModeView;
+      let userMode = UserModeShortList.find((x) => x.id === data.mode) as UserModeView;
+      this.userMode = new UserModeView()
+      this.userMode.id = userMode.id;
+      this.userMode.name = userMode.name;
       this.firstName = data.firstName as string;
       this.lastName = data.lastName as string;
       this.setFullName();
