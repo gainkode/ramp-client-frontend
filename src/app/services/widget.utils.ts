@@ -5,14 +5,21 @@ export class KycTierResultData {
     required = false;
 }
 
-export function getCurrentTierLevelName(tierId: string, tiersData: SettingsKycTierShortExListResult): KycTierResultData {
+export function getCurrentTierLevelName(tierId: string, tiersData: SettingsKycTierShortExListResult, user: User | null = null): KycTierResultData {
     const result: KycTierResultData = {
         levelName: null,
         required: false
     };
+    const kycStatus = user?.kycStatus?.toLowerCase() ?? 'init';
+
     if ((tiersData.count ?? 0 > 0) && tiersData.list) {
         const newTier = tiersData.list[0];
         console.log(`Current tier: ${tierId}`, `New tier${newTier.settingsKycTierId}`)
+
+        if(kycStatus == 'waiting' && newTier.skipForWaiting){
+            return result;
+        }
+        
         if (newTier.settingsKycTierId !== tierId) {
             result.levelName = newTier?.originalLevelName ?? null;
             result.required = (result.levelName !== null);

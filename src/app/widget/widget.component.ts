@@ -341,6 +341,8 @@ export class WidgetComponent implements OnInit {
                     console.log('Shufti rejected')
                     this.shuftiSubscribeResult = false;
                 }
+            }else if(subscriptionData.kycStatus == 'waiting'){
+              this.kycComplete();
             }
             this.loadAccountData();
         },

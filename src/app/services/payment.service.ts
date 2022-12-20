@@ -217,6 +217,7 @@ query GetAppropriateSettingsKycTiers(
       levelDescription
       originalLevelName
       originalFlowName
+      skipForWaiting
     }
   }
 }

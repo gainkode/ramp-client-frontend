@@ -631,7 +631,8 @@ export enum KycStatus {
   Canceled = 'canceled',
   Timeout = 'timeout',
   Invalid = 'invalid',
-  Deleted = 'deleted'
+  Deleted = 'deleted',
+  Waiting = 'waiting'
 }
 
 export type LiquidityOrder = {
@@ -2810,6 +2811,7 @@ export type SettingsKycTier = {
   createdBy?: Maybe<Scalars['String']>;
   default?: Maybe<Scalars['Boolean']>;
   deleted?: Maybe<Scalars['DateTime']>;
+  skipForWaiting?: Maybe<Scalars['Boolean']>;
 };
 
 export type SettingsKycTierInput = {
@@ -2865,6 +2867,7 @@ export type SettingsKycTierShortEx = {
   levelDescription?: Maybe<Scalars['String']>;
   originalLevelName?: Maybe<Scalars['String']>;
   originalFlowName?: Maybe<Scalars['String']>;
+  skipForWaiting?: Maybe<Scalars['Boolean']>;
 };
 
 export type SettingsKycTierShortExListResult = {

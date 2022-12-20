@@ -303,7 +303,7 @@ export class WidgetService {
                 const currentTierId = this.auth.user?.kycValid != true ? '-' : this.auth.user?.kycTierId ?? '';
                 const tierData = getCurrentTierLevelName(
                     currentTierId, 
-                    data.getAppropriateSettingsKycTiers as SettingsKycTierShortExListResult);
+                    data.getAppropriateSettingsKycTiers as SettingsKycTierShortExListResult, this.auth.user);
                 this.getKycStatus(summary, widget, tierData);
             }, (error) => {
                 if (this.onProgressChanged) {
