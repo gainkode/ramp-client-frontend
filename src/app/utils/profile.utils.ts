@@ -28,9 +28,9 @@ export function getTierBlocks(user: User, verifiedTierId: string, tiersData: Set
                     tierPassed = true;
                 }
             }
-            if (val.settingsKycTierId === verifiedTierId) {
-                tierPassed = true;
-            }
+            // if (val.settingsKycTierId === verifiedTierId) {
+            //     tierPassed = true;
+            // }
             return {
                 limit: (unlimitVal) ?
                     'Unlimited' :
