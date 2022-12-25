@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { getCountryByCode2 } from 'src/app/model/country-code.model';
 import { TransactionTypeList } from 'src/app/model/payment.model';
 import { EnvService } from 'src/app/services/env.service';
-import { Widget } from '../../model/generated-models';
+import { Widget, WidgetDestination } from '../../model/generated-models';
 
 export class WidgetItem {
   id = '';
@@ -19,7 +19,7 @@ export class WidgetItem {
   transactions: string[] = [];
   currenciesCrypto: Array<string> = [];
   currenciesFiat: Array<string> = [];
-  destinationAddress = '';
+  destinationAddress: Array<WidgetDestination> = [];
   destinationAddresses: Array<string> = [];
   countriesCode2: Array<string> = [];
   countries: Array<string> = [];
@@ -73,7 +73,11 @@ export class WidgetItem {
       }) ?? [];
       this.currenciesCrypto = data.currenciesCrypto ?? [];
       this.currenciesFiat = data.currenciesFiat ?? [];
-      this.destinationAddress = data.destinationAddress as string;
+
+      if(data.destinationAddress && data.destinationAddress.length > 0){
+        this.destinationAddress = data.destinationAddress;
+      }
+      
       this.countriesCode2 = data.countriesCode2 ?? [];
       this.instruments = data.instruments ?? [];
       this.paymentProviders = data.paymentProviders ?? [];

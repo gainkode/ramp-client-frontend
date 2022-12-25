@@ -1217,7 +1217,10 @@ const GET_WIDGETS = gql`
         transactionTypes
         currenciesCrypto
         currenciesFiat
-        destinationAddress
+        destinationAddress{
+          currency
+          destination
+        }
         countriesCode2
         instruments
         paymentProviders
@@ -1524,7 +1527,7 @@ const CREATE_WIDGET = gql`
     $countriesCode2: [String!]
     $currenciesCrypto: [String!]
     $currenciesFiat: [String!]
-    $destinationAddress: String!
+    $destinationAddress: [WidgetDestinationInput]
     $instruments: [PaymentInstrument!]
     $liquidityProvider: LiquidityProvider
     $paymentProviders: [String!]
@@ -1565,7 +1568,7 @@ const UPDATE_WIDGET = gql`
     $countriesCode2: [String!]
     $currenciesCrypto: [String!]
     $currenciesFiat: [String!]
-    $destinationAddress: String!
+    $destinationAddress: [WidgetDestinationInput]
     $instruments: [PaymentInstrument!]
     $liquidityProvider: LiquidityProvider
     $paymentProviders: [String!]

@@ -4095,7 +4095,7 @@ export type Widget = {
   transactionTypes?: Maybe<Array<TransactionType>>;
   currenciesCrypto?: Maybe<Array<Scalars['String']>>;
   currenciesFiat?: Maybe<Array<Scalars['String']>>;
-  destinationAddress?: Maybe<Scalars['String']>;
+  destinationAddress?: Maybe<Array<WidgetDestination>>;
   countriesCode2?: Maybe<Array<Scalars['String']>>;
   instruments?: Maybe<Array<PaymentInstrument>>;
   paymentProviders?: Maybe<Array<Scalars['String']>>;
@@ -4108,13 +4108,24 @@ export type Widget = {
   allowToPayIfKycFailed?: Maybe<Scalars['Boolean']>;
 };
 
+export type WidgetDestination = {
+  __typename?: 'WidgetDestination';
+  currency: Scalars['String'];
+  destination: Scalars['String'];
+};
+
+export type WidgetDestinationInput = {
+  currency: Scalars['String'];
+  destination: Scalars['String'];
+};
+
 export type WidgetInput = {
   name: Scalars['String'];
   description?: Maybe<Scalars['String']>;
   transactionTypes?: Maybe<Array<TransactionType>>;
   currenciesCrypto?: Maybe<Array<Scalars['String']>>;
   currenciesFiat?: Maybe<Array<Scalars['String']>>;
-  destinationAddress: Scalars['String'];
+  destinationAddress?: Maybe<Array<Maybe<WidgetDestinationInput>>>;
   countriesCode2?: Maybe<Array<Scalars['String']>>;
   instruments?: Maybe<Array<PaymentInstrument>>;
   paymentProviders?: Maybe<Array<Scalars['String']>>;
@@ -4154,7 +4165,7 @@ export type WidgetUpdateInput = {
   transactionTypes?: Maybe<Array<TransactionType>>;
   currenciesCrypto?: Maybe<Array<Scalars['String']>>;
   currenciesFiat?: Maybe<Array<Scalars['String']>>;
-  destinationAddress: Scalars['String'];
+  destinationAddress?: Maybe<Array<Maybe<WidgetDestinationInput>>>;
   countriesCode2?: Maybe<Array<Scalars['String']>>;
   instruments?: Maybe<Array<PaymentInstrument>>;
   paymentProviders?: Maybe<Array<Scalars['String']>>;

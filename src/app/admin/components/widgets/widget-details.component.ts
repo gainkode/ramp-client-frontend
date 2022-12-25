@@ -9,12 +9,13 @@ import { LiquidityProviderList } from 'src/app/admin/model/lists.model';
 import { WidgetItem } from 'src/app/admin/model/widget.model';
 import { AdminDataService } from 'src/app/services/admin-data.service';
 import { Countries } from 'src/app/model/country-code.model';
-import { PaymentInstrument, PaymentProvider, SettingsCurrencyWithDefaults, UserType } from 'src/app/model/generated-models';
+import { PaymentInstrument, PaymentProvider, SettingsCurrencyWithDefaults, UserType, WidgetDestination } from 'src/app/model/generated-models';
 import { CurrencyView, PaymentInstrumentList, PaymentProviderView, TransactionTypeList } from 'src/app/model/payment.model';
 import { UserItem } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
 import { getCheckedProviderList, getProviderList } from 'src/app/utils/utils';
+import {MatTableDataSource} from '@angular/material/table';
 
 @Component({
   selector: 'app-admin-widget-details',
@@ -37,13 +38,19 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   @Output() close = new EventEmitter();
 
   private subscriptions: Subscription = new Subscription();
-
+  
+  displayedColumns: string[] = [
+    'details',
+    'currency',
+    'destination'
+  ];
   submitted = false;
   createNew = false;
   saveInProgress = false;
   deleteInProgress = false;
   errorMessage = '';
   currencyOptionsCrypto: CurrencyView[] = [];
+  currenciesTable: any = [];
   currencyOptionsFiat: CurrencyView[] = [];
   paymentProviderOptions: PaymentProviderView[] = [];
   filteredProviders: PaymentProviderView[] = [];
@@ -59,6 +66,8 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   usersSearchInput$ = new Subject<string>();
   usersOptions$: Observable<UserItem[]> = of([]);
   minUsersLengthTerm = 1;
+  widgetDestinationAddress: WidgetDestination[] = [];
+  selectAll: boolean = false;
 
   form = this.formBuilder.group({
     id: [null],
@@ -126,6 +135,7 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
 
   private setFormData(widget: WidgetItem): void {
     if (widget) {
+      this.widgetDestinationAddress = widget.destinationAddress;
       const user$ = widget.userId ?
         this.getUserFilteredOptions(widget.userId).pipe(take(1), map(users => {
           return users.find(u => u.id === widget.userId);
@@ -165,15 +175,31 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
     widget.description = formValue.description;
     widget.userId = formValue.user.id;
     widget.countriesCode2 = formValue.countries.map(c => c.code2);
-    widget.currenciesCrypto = formValue.currenciesCrypto;
+
+    if(this.currenciesTable._data._value && this.currenciesTable._data._value.length > 0){
+      for(let cryptoCurrency of this.currenciesTable._data._value){
+        if(cryptoCurrency.selected){
+          widget.currenciesCrypto.push(cryptoCurrency.currency);
+          widget.destinationAddress.push({
+            currency: cryptoCurrency.currency,
+            destination: cryptoCurrency.destination
+          });
+
+        }
+      }
+      console.log(widget.destinationAddress)
+      // widget.currenciesCrypto = formValue.currenciesCrypto;
+    }
+    
     widget.currenciesFiat = formValue.currenciesFiat;
-    widget.destinationAddress = formValue.destinationAddress;
+    // widget.destinationAddress = formValue.destinationAddress;
     widget.instruments = formValue.instruments;
     widget.liquidityProvider = formValue.liquidityProvider;
     widget.paymentProviders = formValue.paymentProviders;
     widget.transactionTypes = formValue.transactionTypes;
     widget.secret = formValue.secret;
     widget.allowToPayIfKycFailed = formValue.allowToPayIfKycFailed;
+    // widget.destinationAddress = this.widgetDestinationAddress;
 
     return widget;
   }
@@ -196,13 +222,57 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
       this.commonService.getSettingsCurrency()?.valueChanges.pipe(take(1)).subscribe(({ data }) => {
         const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
         if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
-          this.currencyOptionsFiat = currencySettings.settingsCurrency.list?.
-            filter(x => x.fiat === true).
-            map((val) => new CurrencyView(val)) as CurrencyView[];
-          this.currencyOptionsCrypto = currencySettings.settingsCurrency.list?.
-            filter(x => x.fiat === false).
-            map((val) => new CurrencyView(val)) as CurrencyView[];
+          // this.currencyOptionsFiat = currencySettings.settingsCurrency.list?.
+          //   filter(x => x.fiat === true).
+          //   map((val) => new CurrencyView(val)) as CurrencyView[];
+
+          if(currencySettings.settingsCurrency.list && currencySettings.settingsCurrency.list?.length != 0){
+            let currenciesCrypto: CurrencyView[] = [];
+            let currenciesFiat: CurrencyView[] = [];
+            
+            for(let currency of currencySettings.settingsCurrency.list){
+              if(currency.fiat === false){
+                let widgetDestination = this.widgetDestinationAddress.find(wallet => wallet.currency == currency.symbol)
+                // let currencyTable = this.currenciesTable.find(item => item.currency == currency.symbol);
+                
+                currenciesCrypto.push(new CurrencyView(currency));
+                
+                if(widgetDestination){
+                  this.currenciesTable.push(
+                    {currency: currency.symbol, destination: widgetDestination.destination, selected: true}
+                  )
+                  // currencyTable.currency = widgetDestination.currency;
+                  // currencyTable.selected = true;
+                }else{
+                  this.currenciesTable.push(
+                    {currency: currency.symbol, destination: '', selected: false}
+                  )
+                }
+
+                // if(!currencyTable){
+                //   this.currenciesTable.push(
+                //     {currency: currency.symbol, destination: '', selected: false}
+                //   )
+                // }
+              }else if(currency.fiat === true){
+                currenciesFiat.push(new CurrencyView(currency));
+              }
+            }
+            this.currencyOptionsCrypto = currenciesCrypto;
+            this.currencyOptionsFiat = currenciesFiat;
+            this.currenciesTable = new MatTableDataSource(this.currenciesTable)
+          }
+          // this.currencyOptionsCrypto = currencySettings.settingsCurrency.list?.
+          //   filter(x => x.fiat === false).
+          //   map((val) => new CurrencyView(val)) as CurrencyView[];
+          
+          // this.currenciesTable = currencySettings.settingsCurrency.list?.
+          //   filter(x => x.fiat === false).
+          //   map((item) => {
+          //     return {currency: item.symbol, destination: '', selected: false}
+          //   })
         } else {
+          this.currenciesTable = [];
           this.currencyOptionsCrypto = [];
           this.currencyOptionsFiat = [];
         }
@@ -230,6 +300,23 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
         this.form.get('paymentProviders')?.value ?? [],
         this.filteredProviders));
     }
+  }
+
+  selectCurrency(row): void{
+    row.selected = true;
+  } 
+
+  selectAllCurrencies(): void{
+    this.currenciesTable._data._value = this.currenciesTable._data._value.map(item => {
+      if(this.selectAll === true){
+        item.selected = false;
+      }else if(this.selectAll === false){
+        item.selected = true;
+      }
+      return item;
+    })
+
+    this.selectAll = this.selectAll === true ? false : true;
   }
 
   getCountryFlag(code: string): string {

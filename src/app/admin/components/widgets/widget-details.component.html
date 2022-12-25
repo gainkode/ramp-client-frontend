@@ -14,6 +14,87 @@
 
       </div>
       <div class="card card-body pd-20 pd-md-40 border shadow-none">
+        <h5 class="card-title mg-b-20">
+          Destination
+        </h5>
+
+        <table mat-table [dataSource]="currenciesTable">
+          <ng-container matColumnDef="details">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-checkbox
+              (change)="selectAllCurrencies()">
+              </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let element">
+              <mat-checkbox
+                (change)="selectCurrency(element)"
+                [checked]="element.selected">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+            <!-- <ng-container matColumnDef="details" sticky>
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let element" class="widget-list-selector-column">
+                <input style="margin-right: 4px;" [checked]="element.selected" type="checkbox">
+              </td>
+            </ng-container> -->
+    
+            <ng-container matColumnDef="currency">
+              <th mat-header-cell *matHeaderCellDef>
+                Currency
+              </th>
+              <td mat-cell *matCellDef="let element" class="widget-list-data-column">
+                {{element.currency}}
+              </td>
+            </ng-container>
+  
+            <ng-container matColumnDef="destination">
+              <th mat-header-cell *matHeaderCellDef>
+                Destination
+              </th>
+              <td mat-cell *matCellDef="let element" class="widget-list-data-column">
+                <input class="form-control"
+              type="text" [(ngModel)]="element.destination" maxlength="50" required [ngModelOptions]="{standalone: true}">
+              </td>
+            </ng-container>
+  
+            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+      </div>
+      
+      <!-- <div *ngIf="form.value.id" class="card card-body pd-20 pd-md-40 border shadow-none">
+        <h5 class="card-title mg-b-20">
+          Destination
+        </h5>
+        <div *ngFor="let widgetDestinationItem of widgetDestinationAddress;let index = index;" class="card card-body pd-20 pd-md-40 border shadow-none">
+          <div class="form-group">
+            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+              DESTINATION ADDRESS
+              <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+            </label>
+            <input class="form-control"
+              type="text" [(ngModel)]="widgetDestinationAddress[index].destination" maxlength="50" required [ngModelOptions]="{standalone: true}">
+          </div>
+
+          <div class="form-group">
+            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+              Crypto Currencies
+            </label>
+            <ng-select [(ngModel)]="widgetDestinationAddress[index].currency" [ngModelOptions]="{standalone: true}" [items]="currencyOptionsCrypto" bindLabel="display" bindValue="symbol" 
+              [clearable]=true [clearOnBackspace]=true [multiple]="false" [closeOnSelect]="false">
+            </ng-select>
+          </div>
+        </div>
+        <div style="display: flex; justify-content: flex-end;">
+          <button *ngIf="permission>1" class="btn btn-primary pd-x-30 me-2 mg-t-5" type="button"
+          (click)="addWidgetDestinationAddress()">
+            Add
+          </button>
+        </div>
+      </div> -->
+
+      <div class="card card-body pd-20 pd-md-40 border shadow-none">
         <h5 *ngIf="form.value.id" class="card-title mg-b-20">
           Settings
         </h5>
@@ -79,7 +160,7 @@
           </ng-select>
         </div>
 
-        <div class="form-group">
+        <!-- <div class="form-group">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             Crypto Currencies
           </label>
@@ -87,7 +168,7 @@
             formControlName="currenciesCrypto" [clearable]=true [clearOnBackspace]=true [multiple]="true"
             [closeOnSelect]="false">
           </ng-select>
-        </div>
+        </div> -->
 
         <div class="form-group">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
@@ -99,12 +180,12 @@
           </ng-select>
         </div>
 
-        <div class="form-group">
+        <!-- <div class="form-group">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             Destination address
           </label>
           <input class="form-control" type="text" formControlName="destinationAddress" maxlength="75">
-        </div>
+        </div> -->
 
         <div class="form-group">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
