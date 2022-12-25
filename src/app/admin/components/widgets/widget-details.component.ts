@@ -180,11 +180,12 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
       for(let cryptoCurrency of this.currenciesTable._data._value){
         if(cryptoCurrency.selected){
           widget.currenciesCrypto.push(cryptoCurrency.currency);
-          widget.destinationAddress.push({
-            currency: cryptoCurrency.currency,
-            destination: cryptoCurrency.destination
-          });
-
+          if(cryptoCurrency.destination && cryptoCurrency.destination != ''){
+            widget.destinationAddress.push({
+              currency: cryptoCurrency.currency,
+              destination: cryptoCurrency.destination
+            });
+          }
         }
       }
       console.log(widget.destinationAddress)
@@ -229,10 +230,12 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
           if(currencySettings.settingsCurrency.list && currencySettings.settingsCurrency.list?.length != 0){
             let currenciesCrypto: CurrencyView[] = [];
             let currenciesFiat: CurrencyView[] = [];
-            
+            const formValue = this.form.value;
+
             for(let currency of currencySettings.settingsCurrency.list){
               if(currency.fiat === false){
-                let widgetDestination = this.widgetDestinationAddress.find(wallet => wallet.currency == currency.symbol)
+                let widgetDestination = this.widgetDestinationAddress.find(wallet => wallet.currency == currency.symbol);
+                let currencySelectedWithoutDestination = formValue.currenciesCrypto.find(item=> item == currency.symbol);
                 // let currencyTable = this.currenciesTable.find(item => item.currency == currency.symbol);
                 
                 currenciesCrypto.push(new CurrencyView(currency));
@@ -243,6 +246,10 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
                   )
                   // currencyTable.currency = widgetDestination.currency;
                   // currencyTable.selected = true;
+                }else if(currencySelectedWithoutDestination){
+                  this.currenciesTable.push(
+                    {currency: currency.symbol, destination: '', selected: true}
+                  )
                 }else{
                   this.currenciesTable.push(
                     {currency: currency.symbol, destination: '', selected: false}
