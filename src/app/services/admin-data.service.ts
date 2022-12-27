@@ -680,6 +680,7 @@ const GET_TRANSACTIONS = gql`
           amount
           captureOperationSn
           currency
+          preauth
           operations {
             operationId
             created

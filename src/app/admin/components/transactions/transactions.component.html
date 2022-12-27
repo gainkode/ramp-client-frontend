@@ -62,6 +62,12 @@
                       flag
                     </i>
                   </button>
+                  <button *ngIf="element.paymentOrderPreauth == true" mat-icon-button class="row-button" [attr.aria-label]="'PreAuth'" 
+                  [matTooltip]="'PreAuth'" matTooltipClass="info-tooltip">
+                    <i class="material-icons" style="font-size: 20px;">
+                      update
+                    </i>
+                  </button>
                 </td>
               </ng-container>
 

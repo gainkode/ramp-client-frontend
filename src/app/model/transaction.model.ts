@@ -62,6 +62,7 @@ export class TransactionItemFull {
   benchmarkTransferOrderHash = '';
   transferOrderBlockchainLink = '';
   benchmarkTransferOrderBlockchainLink = '';
+  paymentOrderPreauth = false;
   address = '';
   sender = '';
   recipient = '';
@@ -203,6 +204,7 @@ export class TransactionItemFull {
       }
 
       if (data.paymentOrder) {
+        this.paymentOrderPreauth = data.paymentOrder.preauth == true;
         if (data.paymentOrder.paymentInfo) {
           let payment = JSON.parse(data.paymentOrder.paymentInfo);
           // sometimes it comes as a string with escape symbols.

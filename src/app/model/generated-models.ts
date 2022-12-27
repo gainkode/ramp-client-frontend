@@ -1628,6 +1628,7 @@ export type PaymentOrder = {
   paymentBin?: Maybe<Scalars['String']>;
   providerSpecificStates?: Maybe<Array<DateMap>>;
   providerSpecificParams?: Maybe<Array<StringMap>>;
+  preauth?: Maybe<Scalars['Boolean']>;
 };
 
 export type PaymentOrderShort = {
