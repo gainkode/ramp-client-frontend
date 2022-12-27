@@ -368,6 +368,14 @@
         </app-admin-details-item>
         <app-admin-details-item label="Provided documents" [value]="kycDocs"></app-admin-details-item>
 
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Comment
+          </label>
+          <textarea class="form-control" style="resize: none;" placeholder="Comment" rows="3"
+            formControlName="comment"></textarea>
+        </div>
+
         <app-admin-details-item *ngIf="userData?.kycProvider!==KYC_PROVIDER.Shufti" label="KYC Details"
           [value]="kycProviderLink" [linkUrl]="kycProviderLink">
         </app-admin-details-item>

@@ -86,6 +86,7 @@ export class TransactionItemFull {
   declineReason = '';
   declineReasonExtra = '';
   vaultIds: string[] = [];
+  flag: boolean = false;
 
   constructor(data: Transaction | TransactionShort | null) {
     if (data !== null) {
@@ -99,6 +100,7 @@ export class TransactionItemFull {
       this.accountId = data.userId ?? '';
       this.accountStatus = data.accountStatus ?? '';
       this.accountStatusValue = data.accountStatus ?? AccountStatus.Closed;
+      this.flag = data.flag ?? false;
       const transactionData = data as Transaction;
       if (transactionData.user) {
         this.user = new UserItem(transactionData.user as User);

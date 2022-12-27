@@ -131,6 +131,7 @@ export class UserItem {
   totalReceived = '';
 
   selected = false;
+  comment = '';
 
   get countryId(): string | undefined {
     return this.country?.id ?? undefined;
@@ -183,6 +184,7 @@ export class UserItem {
       this.affiliateId = data.affiliateId ?? '';
       this.affiliateCode = data.affiliateCode ?? '';
       this.accountStatus = data.accountStatus ?? '';
+      this.comment = data.comment ?? '';
       this.roles = data.roles?.map(val => val.code) ?? [];
       this.risk = data.risk ?? '';
       this.riskCodes = data.riskCodes?.map(code => {

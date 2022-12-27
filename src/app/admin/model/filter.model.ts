@@ -32,6 +32,7 @@ export class Filter {
   public transactionCountOver?: number;
   public search?: string;
   public verifyWhenPaid?: boolean;
+  public transactionFlag?: boolean;
   public zeroBalance?: boolean;
   public transactionId?: string;
   public userId?: string;
@@ -169,6 +170,9 @@ export class Filter {
 
     if (filterValues.verifyWhenPaid) {
       this.verifyWhenPaid = filterValues.verifyWhenPaid;
+    }
+    if (filterValues.transactionFlag) {
+      this.transactionFlag = filterValues.transactionFlag;
     }
     if(filterValues.zeroBalance){
       this.zeroBalance = filterValues.zeroBalance;

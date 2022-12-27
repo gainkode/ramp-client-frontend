@@ -97,6 +97,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   systemFeeTitle = 'Fee, EUR';
   editableDestination = false;
   destroyed = false;
+  flag = false;
 
   form = this.formBuilder.group({
     address: ['', { validators: [Validators.required], updateOn: 'change' }],
@@ -196,6 +197,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     this.benchmarkTransferOrderBlockchainLink = val?.benchmarkTransferOrderBlockchainLink ?? '';
     this.removable = true;//val?.statusInfo?.value.canBeCancelled ?? false;  // confirmed
     if (this.data) {
+      this.flag = this.data.flag == true;
       this.form.get('address')?.setValue(this.data.address);
       this.form.get('rate')?.setValue(this.data.rate);
       this.form.get('fee')?.setValue(this.data.fees);
@@ -246,6 +248,14 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
         this.editableDestination = additionalSettings.admin?.editTransactionDestination ?? false;
       })
     );
+  }
+
+  flagText(): String {
+    return this.flag == true ? 'Unflag' : 'Flag';
+  }
+
+  flagValue(): void {
+    this.flag = this.flag != true;
   }
 
   filterByUserId(): void {
@@ -310,7 +320,8 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
           orderId: this.data?.benchmarkTransferOrderId,
           transferHash: this.form.get('benchmarkTransferHash')?.value ?? ''
         },
-        comment: this.form.get('comment')?.value ?? ''
+        comment: this.form.get('comment')?.value ?? '',
+        flag: this.flag
       } as Transaction;
       const statusHash = getTransactionStatusHash(
         this.transactionToUpdate.status,

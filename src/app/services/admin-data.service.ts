@@ -611,6 +611,7 @@ const GET_TRANSACTIONS = gql`
     $skip: Int
     $first: Int
     $orderBy: [OrderBy!]
+    $flag: Boolean
   ) {
     getTransactions(
       transactionIdsOnly: $transactionIdsOnly
@@ -632,6 +633,7 @@ const GET_TRANSACTIONS = gql`
       walletAddressOnly: $walletAddressOnly
       verifyWhenPaid: $verifyWhenPaid
       filter: $filter
+      flag: $flag
       skip: $skip
       first: $first
       orderBy: $orderBy
@@ -652,6 +654,7 @@ const GET_TRANSACTIONS = gql`
         benchmarkTransferOrderBlockchainLink
         code
         comment
+        flag
         created
         currencyToReceive
         currencyToSpend
@@ -904,6 +907,7 @@ const GET_USERS = gql`
         totalReceivedCompletedCount
         totalReceivedInProcess
         totalReceivedInProcessCount
+        comment
       }
     }
   }
@@ -967,6 +971,7 @@ const GET_USERS_EX = gql`
         addressLine
         kycProvider
         referralCode
+        comment
         roles {
           userRoleId
           name
@@ -1681,6 +1686,8 @@ mutation UpdateUser(
   $defaultFiatCurrency: String
   $defaultCryptoCurrency: String
   $kycProvider: KycProvider
+  $comment: String
+  
 ) {
   updateUser(
     userId: $userId
@@ -1708,6 +1715,7 @@ mutation UpdateUser(
       defaultFiatCurrency: $defaultFiatCurrency
       defaultCryptoCurrency: $defaultCryptoCurrency
       kycProvider: $kycProvider
+      comment: $comment
     }
   ) {
     userId
@@ -1743,6 +1751,7 @@ mutation CreateUser(
   $defaultFiatCurrency: String
   $defaultCryptoCurrency: String
   $kycProvider: KycProvider
+  $comment: String
 ) {
   createUser(
     user: {
@@ -1771,6 +1780,7 @@ mutation CreateUser(
       defaultFiatCurrency: $defaultFiatCurrency
       defaultCryptoCurrency: $defaultCryptoCurrency
       kycProvider: $kycProvider
+      comment: $comment
     }
     roles: $roles
   ) {
@@ -1865,6 +1875,7 @@ mutation UpdateTransaction(
   $transferOrder: TransactionUpdateTransferOrderChanges
   $benchmarkTransferOrder: TransactionUpdateTransferOrderChanges
   $comment: String
+  $flag: Boolean
 ) {
   updateTransaction(
     transactionId: $transactionId
@@ -1884,6 +1895,7 @@ mutation UpdateTransaction(
       transferOrderChanges: $transferOrder
       benchmarkTransferOrderChanges: $benchmarkTransferOrder
       comment: $comment
+      flag: $flag
     }
   ) {
     transactionId
@@ -2693,6 +2705,7 @@ export class AdminDataService {
       sourcesOnly: filter?.sources,
       userIdsOnly: filter?.users,
       widgetIdsOnly: widgetIds,
+      flag: filter?.transactionFlag,
       kycStatusesOnly: filter?.transactionKycStatuses,
       transactionTypesOnly: filter?.transactionTypes,
       transactionStatusesOnly: filter?.transactionStatuses,
@@ -3495,7 +3508,8 @@ export class AdminDataService {
           kycTierId: customer.kycTierId,
           defaultFiatCurrency: customer.defaultFiatCurrency,
           defaultCryptoCurrency: customer.defaultCryptoCurrency,
-          kycProvider: customer.kycProvider
+          kycProvider: customer.kycProvider,
+          comment: customer.comment
         }
       }).pipe(tap(() => {
         this.snackBar.open(`User was created`, undefined, { duration: 5000 });
@@ -3527,7 +3541,8 @@ export class AdminDataService {
           kycTierId: customer.kycTierId,
           defaultFiatCurrency: customer.defaultFiatCurrency,
           defaultCryptoCurrency: customer.defaultCryptoCurrency,
-          kycProvider: customer.kycProvider
+          kycProvider: customer.kycProvider,
+          comment: customer.comment
         }
       }).pipe(tap(() => {
         this.snackBar.open(`User was updated`, undefined, { duration: 5000 });
@@ -3758,7 +3773,8 @@ export class AdminDataService {
       launchAfterUpdate: restartTransaction,
       transferOrder: transfer,
       benchmarkTransferOrder: benchmark,
-      recalculate: recalculateAmounts
+      recalculate: recalculateAmounts,
+      flag: data.flag
     };
     return this.mutate({
       mutation: UPDATE_TRANSACTIONS,

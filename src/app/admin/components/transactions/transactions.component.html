@@ -56,6 +56,12 @@
                       account_balance_wallet
                     </i>
                   </button>
+                  <button *ngIf="element.flag == true" mat-icon-button class="row-button" [attr.aria-label]="'Flaged Transaction'" 
+                  [matTooltip]="'Flaged Transaction'" matTooltipClass="info-tooltip">
+                    <i class="material-icons" style="color:#c90000; font-size: 20px;">
+                      flag
+                    </i>
+                  </button>
                 </td>
               </ng-container>
 

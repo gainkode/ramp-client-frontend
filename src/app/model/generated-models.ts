@@ -2302,6 +2302,7 @@ export type QueryGetTransactionsArgs = {
   walletAddressOnly?: Maybe<Scalars['String']>;
   verifyWhenPaid?: Maybe<Scalars['Boolean']>;
   accountModesOnly?: Maybe<Array<Maybe<UserMode>>>;
+  flag?: Maybe<Scalars['Boolean']>;
   filter?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
@@ -3022,6 +3023,7 @@ export type Transaction = {
   requestParams?: Maybe<Scalars['String']>;
   cryptoInvoiceName?: Maybe<Scalars['String']>;
   sourceAddress?: Maybe<Scalars['String']>;
+  flag?: Maybe<Scalars['Boolean']>;
 };
 
 export enum TransactionConfirmationMode {
@@ -3166,6 +3168,7 @@ export type TransactionShort = {
   cryptoInvoiceName?: Maybe<Scalars['String']>;
   data?: Maybe<Scalars['String']>;
   sourceAddress?: Maybe<Scalars['String']>;
+  flag?: Maybe<Scalars['Boolean']>;
 };
 
 export type TransactionShortListResult = {
@@ -3305,6 +3308,7 @@ export type TransactionUpdateInput = {
   comment?: Maybe<Scalars['String']>;
   requestParams?: Maybe<Scalars['String']>;
   cryptoInvoiceName?: Maybe<Scalars['String']>;
+  flag?: Maybe<Scalars['Boolean']>;
 };
 
 export type TransactionUpdateTransferOrderChanges = {
@@ -3485,6 +3489,7 @@ export type User = {
   widgetName?: Maybe<Scalars['String']>;
   document_num?: Maybe<Scalars['String']>;
   document_type?: Maybe<Scalars['String']>;
+  comment?: Maybe<Scalars['String']>;
 };
 
 export type UserAction = {
@@ -3738,6 +3743,7 @@ export type UserInput = {
   kycTierId?: Maybe<Scalars['String']>;
   deleted?: Maybe<Scalars['DateTime']>;
   gender?: Maybe<Gender>;
+  comment?: Maybe<Scalars['String']>;
 };
 
 export type UserKycHistory = {

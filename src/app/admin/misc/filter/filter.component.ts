@@ -303,6 +303,9 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
     if (this.fields.includes('verifyWhenPaid')) {
       controlsConfig.verifyWhenPaid = [false];
     }
+    if (this.fields.includes('transactionFlag')) {
+      controlsConfig.transactionFlag = [false];
+    }
     if (this.fields.includes('zeroBalance')) {
       controlsConfig.zeroBalance = false;
     }
@@ -430,6 +433,9 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
       }
       if (this.fields.includes('verifyWhenPaid')) {
         this.filterForm.controls.verifyWhenPaid.setValue(false);
+      }
+      if (this.fields.includes('transactionFlag')) {
+        this.filterForm.controls.transactionFlag.setValue(false);
       }
       if (this.fields.includes('zeroBalance')) {
         this.filterForm.controls.zeroBalance.setValue(false);

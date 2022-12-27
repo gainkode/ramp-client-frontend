@@ -95,7 +95,8 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
     kycProvider: [KycProvider.Local, { validators: [Validators.required], updateOn: 'change' }],
     tier: ['', { validators: [Validators.required], updateOn: 'change' }],
     fiat: ['', { validators: [Validators.required], updateOn: 'change' }],
-    crypto: ['', { validators: [Validators.required], updateOn: 'change' }]
+    crypto: ['', { validators: [Validators.required], updateOn: 'change' }],
+    comment: [undefined]
   });
 
   constructor(
@@ -127,6 +128,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
       this.disableButtonTitle = (data.deleted) ? 'Enable' : 'Disable';
       this.dataForm.get('id')?.setValue(data?.id);
       this.dataForm.get('email')?.setValue(data?.email);
+      this.dataForm.get('comment')?.setValue(data.comment);
       if (data.userType?.id === UserType.Merchant) {
         this.dataForm.get('firstName')?.setValue(data?.company);
         this.dataForm.get('lastName')?.setValue('');
@@ -253,7 +255,8 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
       risk: this.dataForm.get('risk')?.value,
       accountStatus: this.dataForm.get('accountStatus')?.value,
       kycTierId: tierId,
-      kycProvider: this.dataForm.get('kycProvider')?.value
+      kycProvider: this.dataForm.get('kycProvider')?.value,
+      comment: this.dataForm.get('comment')?.value
     } as UserInput;
     return data;
   }
