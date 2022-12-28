@@ -3491,6 +3491,7 @@ export type User = {
   document_num?: Maybe<Scalars['String']>;
   document_type?: Maybe<Scalars['String']>;
   comment?: Maybe<Scalars['String']>;
+  flag?: Maybe<Scalars['Boolean']>;
 };
 
 export type UserAction = {
@@ -3745,6 +3746,7 @@ export type UserInput = {
   deleted?: Maybe<Scalars['DateTime']>;
   gender?: Maybe<Gender>;
   comment?: Maybe<Scalars['String']>;
+  flag?: Maybe<Scalars['Boolean']>;
 };
 
 export type UserKycHistory = {

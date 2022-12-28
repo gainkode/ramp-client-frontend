@@ -132,6 +132,7 @@ export class UserItem {
 
   selected = false;
   comment = '';
+  flag = false;
 
   get countryId(): string | undefined {
     return this.country?.id ?? undefined;
@@ -140,6 +141,7 @@ export class UserItem {
   constructor(data: User | null) {
     if (data) {
       this.id = data.userId;
+      this.flag = data.flag ?? false;
       this.referralCode = data.referralCode?.toString() ?? '';
       this.deleted = data.deleted !== undefined && data.deleted !== null;
       this.userType = UserTypeList.find((x) => x.id === data.type) as UserTypeView;

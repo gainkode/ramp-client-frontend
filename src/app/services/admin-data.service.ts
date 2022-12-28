@@ -909,6 +909,7 @@ const GET_USERS = gql`
         totalReceivedInProcess
         totalReceivedInProcessCount
         comment
+        flag
       }
     }
   }
@@ -1688,7 +1689,7 @@ mutation UpdateUser(
   $defaultCryptoCurrency: String
   $kycProvider: KycProvider
   $comment: String
-  
+  $flag: Boolean
 ) {
   updateUser(
     userId: $userId
@@ -1717,6 +1718,7 @@ mutation UpdateUser(
       defaultCryptoCurrency: $defaultCryptoCurrency
       kycProvider: $kycProvider
       comment: $comment
+      flag: $flag
     }
   ) {
     userId
@@ -3510,7 +3512,8 @@ export class AdminDataService {
           defaultFiatCurrency: customer.defaultFiatCurrency,
           defaultCryptoCurrency: customer.defaultCryptoCurrency,
           kycProvider: customer.kycProvider,
-          comment: customer.comment
+          comment: customer.comment,
+          flag: customer.flag
         }
       }).pipe(tap(() => {
         this.snackBar.open(`User was created`, undefined, { duration: 5000 });
@@ -3543,7 +3546,8 @@ export class AdminDataService {
           defaultFiatCurrency: customer.defaultFiatCurrency,
           defaultCryptoCurrency: customer.defaultCryptoCurrency,
           kycProvider: customer.kycProvider,
-          comment: customer.comment
+          comment: customer.comment,
+          flag: customer.flag
         }
       }).pipe(tap(() => {
         this.snackBar.open(`User was updated`, undefined, { duration: 5000 });

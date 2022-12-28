@@ -60,6 +60,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
   kycDocs: string[] = [];
   tiers: CommonTargetValue[] = [];
   totalBalance = '';
+  flag = false;
   minBirthdayDate: NgbDateStruct = {
     year: 1900,
     month: 1,
@@ -125,6 +126,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
     this.errorMessage = '';
     this.dataForm.reset();
     if (data) {
+      this.flag = data.flag == true;
       this.disableButtonTitle = (data.deleted) ? 'Enable' : 'Disable';
       this.dataForm.get('id')?.setValue(data?.id);
       this.dataForm.get('email')?.setValue(data?.email);
@@ -256,9 +258,21 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
       accountStatus: this.dataForm.get('accountStatus')?.value,
       kycTierId: tierId,
       kycProvider: this.dataForm.get('kycProvider')?.value,
-      comment: this.dataForm.get('comment')?.value
+      comment: this.dataForm.get('comment')?.value,
+      flag: this.flag
     } as UserInput;
     return data;
+  }
+
+  flagText(): String {
+    return this.flag == true ? 'Unflag' : 'Flag';
+  }
+
+  flagValue(): void {
+    this.flag = this.flag != true;
+    if (this.dataForm.valid) {
+      this.onSave(this.userData?.id ?? '', this.setCustomerData(), undefined);
+    }
   }
 
   getCountryFlag(code: string): string {
