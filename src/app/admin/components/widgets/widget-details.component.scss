@@ -29,6 +29,13 @@
         }
         
     }
+    .cursor-icon{
+        border-radius: 20px;
+        cursor: pointer;
+    }
+    .cursor-icon:hover{
+        background-color: #eaebeb;
+    }
     .rtl .color-picker{
         left: initial !important;
     }

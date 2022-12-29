@@ -250,10 +250,6 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
                   this.currenciesTable.push(
                     {currency: currency.symbol, destination: '', selected: true}
                   )
-                }else{
-                  this.currenciesTable.push(
-                    {currency: currency.symbol, destination: '', selected: false}
-                  )
                 }
 
                 // if(!currencyTable){
@@ -347,6 +343,21 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
         this.deleteWidget(this.form.value.id);
       })
     );
+  }
+
+  addWidgetDestinationAddress(){
+    this.currenciesTable._data._value.push({currency: '', destination: '', selected: true});
+    this.currenciesTable = new MatTableDataSource(this.currenciesTable._data._value);
+  }
+
+  delWidgetDestinationAddress(element: any){
+    let currenciesTableDel: Record<string, any>[] = [];
+    for(let item of this.currenciesTable._data._value){
+      if(item.currency != element.currency){
+        currenciesTableDel.push(item);
+      }
+    }
+    this.currenciesTable = new MatTableDataSource(currenciesTableDel);
   }
 
   private onSave(): void {
