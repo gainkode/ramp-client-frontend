@@ -33,6 +33,7 @@ export class Filter {
   public search?: string;
   public verifyWhenPaid?: boolean;
   public transactionFlag?: boolean;
+  public preauthFlag?: boolean;
   public zeroBalance?: boolean;
   public transactionId?: string;
   public userId?: string;
@@ -173,6 +174,9 @@ export class Filter {
     }
     if (filterValues.transactionFlag) {
       this.transactionFlag = filterValues.transactionFlag;
+    }
+    if (filterValues.preauthFlag) {
+      this.preauthFlag = filterValues.preauthFlag;
     }
     if(filterValues.zeroBalance){
       this.zeroBalance = filterValues.zeroBalance;

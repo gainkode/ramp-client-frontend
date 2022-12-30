@@ -40,7 +40,8 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
     'users',
     'search',
     'verifyWhenPaid',
-    'transactionFlag'
+    'transactionFlag',
+    'preauthFlag'
   ];
   displayedColumns: string[] = [
     'details', 'code', 'created', 'accountName', 'email', 'accountStatus', 'type', 'widgetName', 'from', 'to',

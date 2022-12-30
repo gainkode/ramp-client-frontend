@@ -2304,6 +2304,7 @@ export type QueryGetTransactionsArgs = {
   verifyWhenPaid?: Maybe<Scalars['Boolean']>;
   accountModesOnly?: Maybe<Array<Maybe<UserMode>>>;
   flag?: Maybe<Scalars['Boolean']>;
+  preauth?: Maybe<Scalars['Boolean']>;
   filter?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;

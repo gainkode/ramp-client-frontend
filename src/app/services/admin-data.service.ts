@@ -612,6 +612,7 @@ const GET_TRANSACTIONS = gql`
     $first: Int
     $orderBy: [OrderBy!]
     $flag: Boolean
+    $preauth: Boolean
   ) {
     getTransactions(
       transactionIdsOnly: $transactionIdsOnly
@@ -634,6 +635,7 @@ const GET_TRANSACTIONS = gql`
       verifyWhenPaid: $verifyWhenPaid
       filter: $filter
       flag: $flag
+      preauth: $preauth
       skip: $skip
       first: $first
       orderBy: $orderBy
@@ -2709,6 +2711,7 @@ export class AdminDataService {
       userIdsOnly: filter?.users,
       widgetIdsOnly: widgetIds,
       flag: filter?.transactionFlag,
+      preauth: filter?.preauthFlag,
       kycStatusesOnly: filter?.transactionKycStatuses,
       transactionTypesOnly: filter?.transactionTypes,
       transactionStatusesOnly: filter?.transactionStatuses,
