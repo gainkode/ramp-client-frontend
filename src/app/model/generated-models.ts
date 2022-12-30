@@ -3025,6 +3025,7 @@ export type Transaction = {
   cryptoInvoiceName?: Maybe<Scalars['String']>;
   sourceAddress?: Maybe<Scalars['String']>;
   flag?: Maybe<Scalars['Boolean']>;
+  costDetails?: Maybe<Scalars['String']>;
 };
 
 export enum TransactionConfirmationMode {
@@ -3170,6 +3171,7 @@ export type TransactionShort = {
   data?: Maybe<Scalars['String']>;
   sourceAddress?: Maybe<Scalars['String']>;
   flag?: Maybe<Scalars['Boolean']>;
+  costDetails?: Maybe<Scalars['String']>;
 };
 
 export type TransactionShortListResult = {
