@@ -55,12 +55,6 @@
                       compare_arrows
                     </i>
                   </button>
-                  <button *ngIf="element.flag == true" mat-icon-button class="row-button" [attr.aria-label]="'Flaged Customer'" 
-                  [matTooltip]="'Flaged Customer'" matTooltipClass="info-tooltip">
-                    <i class="material-icons" style="color:#c90000; font-size: 20px;">
-                      flag
-                    </i>
-                  </button>
                   <button mat-icon-button class="row-button" (click)="showWallets(element.id)"
                     [attr.aria-label]="'Customer wallets'" matTooltip="Customer's wallets"
                     matTooltipClass="info-tooltip">
@@ -79,6 +73,12 @@
                     matTooltip="Confirm email" matTooltipClass="info-tooltip">
                     <i class="material-icons" style="font-size: 20px;">
                       approval
+                    </i>
+                  </button>
+                  <button *ngIf="element.flag == true" mat-icon-button class="row-button" [attr.aria-label]="'Flaged Customer'" 
+                  [matTooltip]="'Flaged Customer'" matTooltipClass="info-tooltip">
+                    <i class="material-icons" style="color:#c90000; font-size: 20px;">
+                      flag
                     </i>
                   </button>
                 </td>
