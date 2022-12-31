@@ -270,9 +270,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
 
   flagValue(): void {
     this.flag = this.flag != true;
-    if (this.dataForm.valid) {
-      this.onSave(this.userData?.id ?? '', this.setCustomerData(), undefined);
-    }
+    this.onSave(this.userData?.id ?? '', this.setCustomerData(), undefined);
   }
 
   getCountryFlag(code: string): string {

@@ -2129,6 +2129,7 @@ export type QueryGetUsersArgs = {
   totalBuyVolumeOver?: Maybe<Scalars['Int']>;
   transactionCountOver?: Maybe<Scalars['Int']>;
   verifyWhenPaid?: Maybe<Scalars['Boolean']>;
+  flag?: Maybe<Scalars['Boolean']>;
   filter?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;

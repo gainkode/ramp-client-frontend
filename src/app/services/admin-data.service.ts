@@ -809,6 +809,7 @@ const GET_USERS = gql`
     $totalBuyVolumeOver: Int
     $transactionCountOver: Int
     $verifyWhenPaid: Boolean
+    $flag: Boolean
     $filter: String
     $skip: Int
     $first: Int
@@ -830,6 +831,7 @@ const GET_USERS = gql`
       totalBuyVolumeOver: $totalBuyVolumeOver
       transactionCountOver: $transactionCountOver
       verifyWhenPaid: $verifyWhenPaid
+      flag: $flag
       filter: $filter,
       skip: $skip,
       first: $first,
@@ -2814,7 +2816,8 @@ export class AdminDataService {
       first: takeItems,
       orderBy: [{ orderBy: orderField, desc: orderDesc }],
       filter: filter?.search,
-      verifyWhenPaid: filter?.verifyWhenPaid
+      verifyWhenPaid: filter?.verifyWhenPaid,
+      flag: filter?.transactionFlag
     };
     return this.watchQuery<{ getUsers: UserListResult }, QueryGetUsersArgs>({
       query: GET_USERS,

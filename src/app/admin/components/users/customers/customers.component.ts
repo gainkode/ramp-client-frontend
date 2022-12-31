@@ -35,7 +35,8 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
     'totalBuyVolume',
     'transactionCount',
     'search',
-    'verifyWhenPaid'
+    'verifyWhenPaid',
+    'transactionFlag'
   ];
   displayedColumns: string[] = [
     'details',
