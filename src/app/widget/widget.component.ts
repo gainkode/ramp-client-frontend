@@ -1090,6 +1090,9 @@ export class WidgetComponent implements OnInit {
         this.summary.transactionId,
         this.summary.providerView.id,
         PaymentInstrument.Apm);
+    }else if(this.summary.providerView?.instrument === PaymentInstrument.FiatVault){
+      this.completeTextData = completeDataDefault;
+      this.nextStage('complete', 'Complete', 6, false);
     } else if (this.summary.providerView?.instrument === PaymentInstrument.WireTransfer) {
       this.widgetService.getWireTransferSettings(this.summary, this.widget);
     } else {

@@ -38,6 +38,10 @@ export class PaymentProviderInstrumentView {
             //this.id = 'WireTransferPayment';
             this.name = data.provider?.displayName ?? 'WIRE TRANSFER';
             this.image = './assets/svg-providers/wire-transfer.svg';
+        } else if (this.instrument === PaymentInstrument.FiatVault) {
+            //this.id = 'WireTransferPayment';
+            this.name = 'FIAT VAULT';
+            this.image = './assets/svg-providers/fiat-vault.png';
         }
     }
 }
