@@ -151,6 +151,11 @@ export class UserItem {
       this.userMode.name = userMode.name;
       this.firstName = data.firstName as string;
       this.lastName = data.lastName as string;
+
+      if (this.userType?.id === UserType.Merchant) {
+        this.company = data.companyName ? data.companyName : '';
+      }
+
       this.setFullName();
       this.birthday = (data.birthday) ? new Date(data.birthday) : undefined;
       if (this.birthday) {
@@ -389,7 +394,6 @@ export class UserItem {
 
   setFullName(): void {
     if (this.userType?.id === UserType.Merchant) {
-      this.company = (this.firstName) ? this.firstName : '';
       this.firstName = '';
       this.lastName = '';
       this.fullName = this.company;

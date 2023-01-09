@@ -3496,6 +3496,7 @@ export type User = {
   document_type?: Maybe<Scalars['String']>;
   comment?: Maybe<Scalars['String']>;
   flag?: Maybe<Scalars['Boolean']>;
+  companyName?: Maybe<Scalars['String']>;
 };
 
 export type UserAction = {

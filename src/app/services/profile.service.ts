@@ -262,7 +262,8 @@ const GET_PROFILE_ME = gql`
       }
       defaultFiatCurrency,
       defaultCryptoCurrency,
-      avatar
+      avatar,
+      companyName
     }
   }
 `;
