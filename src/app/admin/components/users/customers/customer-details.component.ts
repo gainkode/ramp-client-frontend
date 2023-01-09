@@ -97,7 +97,8 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
     tier: ['', { validators: [Validators.required], updateOn: 'change' }],
     fiat: ['', { validators: [Validators.required], updateOn: 'change' }],
     crypto: ['', { validators: [Validators.required], updateOn: 'change' }],
-    comment: [undefined]
+    comment: [undefined],
+    company: [undefined]
   });
 
   constructor(
@@ -132,6 +133,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
       this.dataForm.get('email')?.setValue(data?.email);
       this.dataForm.get('comment')?.setValue(data.comment);
       if (data.userType?.id === UserType.Merchant) {
+        this.dataForm.get('company')?.setValue(data?.company);
         this.dataForm.get('firstName')?.setValue(data?.company);
         this.dataForm.get('lastName')?.setValue('');
         this.dataForm.get('birthday')?.setValue(null);

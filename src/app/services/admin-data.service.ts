@@ -914,6 +914,7 @@ const GET_USERS = gql`
         totalReceivedInProcessCount
         comment
         flag
+        companyName
       }
     }
   }

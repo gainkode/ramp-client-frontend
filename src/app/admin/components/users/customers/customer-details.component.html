@@ -51,7 +51,7 @@
           </label>
           <input class="form-control"
             [ngClass]="{'has-error': (dataForm.controls.firstName.touched || submitted) && !dataForm.controls.firstName.valid}"
-            type="text" formControlName="firstName" maxlength="75" required />
+            type="text" formControlName="company" maxlength="75" required />
           <div
             *ngIf="(dataForm.controls.firstName.touched || submitted) && (dataForm.controls.firstName.errors?.['required'])"
             class="tx-danger">
