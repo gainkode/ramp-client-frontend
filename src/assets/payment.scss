@@ -69,8 +69,8 @@ $font_main: var(--font_main);
     width: $widget_max_width + px;
 
     background-color: $color_white;
-    box-shadow: 0px 5px 6px rgba(153, 140, 149, 0.2), 0px 9px 12px rgba(153, 140, 149, 0.14),
-        0px 3px 16px rgba(153, 140, 149, 0.12);
+    // box-shadow: 0px 5px 6px rgba(153, 140, 149, 0.2), 0px 9px 12px rgba(153, 140, 149, 0.14),
+    //     0px 3px 16px rgba(153, 140, 149, 0.12);
     border-radius: 8px;
 
     @media (max-width: $widget_max_width + px) {
@@ -122,16 +122,21 @@ $font_main: var(--font_main);
 }
 
 .__widget-title-button-container {
-    display: none;
+    display: flex;
+    grid-row: 1;
+    grid-column: 2 / 3;
+    margin: 8px 8px 0px 0px;
+    width: 48px;
+    height: 48px;
 
-    @media (max-width: $widget_max_width + px) {
-        display: flex;
-        grid-row: 1;
-        grid-column: 2 / 3;
-        margin: 8px 8px 0px 0px;
-        width: 48px;
-        height: 48px;
-    }
+    // @media (max-width: $widget_max_width + px) {
+    //     display: flex;
+    //     grid-row: 1;
+    //     grid-column: 2 / 3;
+    //     margin: 8px 8px 0px 0px;
+    //     width: 48px;
+    //     height: 48px;
+    // }
 }
 
 .__widget-progress-container {
@@ -223,16 +228,21 @@ $font_main: var(--font_main);
 }
 
 .__widget-mobile-rate-container {
-    visibility: hidden;
-    display: none;
+    display: flex;
+    visibility: visible;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    // visibility: hidden;
+    // display: none;
 
-    @media (max-width: $widget_max_width + px) {
-        display: flex;
-        visibility: visible;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-    }
+    // @media (max-width: $widget_max_width + px) {
+    //     display: flex;
+    //     visibility: visible;
+    //     flex-direction: column;
+    //     align-items: center;
+    //     justify-content: flex-start;
+    // }
 }
 
 .__widget-wizard-container {
@@ -355,7 +365,7 @@ $font_main: var(--font_main);
 
 .__widget-mobile-summary-container {
     display: block;
-    position: fixed;
+    // position: fixed;
     z-index: 300;
     left: 0px;
     top: 0px;
@@ -366,7 +376,7 @@ $font_main: var(--font_main);
 }
 
 .__widget-mobile-summary-box {
-    width: $widget_min_width + px;
+    // width: $widget_min_width + px;
     margin: 12px;
     display: grid;
     grid-template-columns: auto 44px;
