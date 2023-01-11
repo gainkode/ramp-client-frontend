@@ -78,7 +78,7 @@
         <button *ngIf="showRestartButton" class="__main-button" type="button" (click)="onFinish.emit()">
             done
         </button>
-        <button *ngIf="!showRestartButton && finishLink!==''" class="__main-button" type="button" (click)="goHome()">
+        <button *ngIf="!showRestartButton && finishLink!==''" class="__main-button" type="button" (click)="onFinish.emit()">
             return
         </button>
     </div>
