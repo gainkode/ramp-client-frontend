@@ -49,14 +49,15 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
         this.pSubscriptions.unsubscribe();
     }
 
-    onVerify(flow: string, level: string): void {
+    onVerify(tier: TierItem): void {
         const dialogRef = this.dialog.open(KycVerificationDialogBox, {
             width: '700px',
             height: '80%',
             data: {
                 title: '',
                 message: this.kycUrl,
-                button: flow
+                button: tier.flow,
+                companyLevelVerification: tier.companyLevelVerification
             }
         });
     }

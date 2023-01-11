@@ -294,4 +294,5 @@ export class TierItem {
     description = '';
     flow = '';
     passed = false;
+    companyLevelVerification = false;
 }

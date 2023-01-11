@@ -1,8 +1,10 @@
 <h1 mat-dialog-title>{{data.title}}</h1>
 
-<app-kyc-panel [url]="data.message" [flow]="data.button" [notifyCompleted]=true [completedWhenVerified]=true
+<app-kyc-panel *ngIf="!data.companyLevelVerification" [url]="data.message" [flow]="data.button" [notifyCompleted]=true [completedWhenVerified]=true
     (completed)="onComplete()">
 </app-kyc-panel>
+
+<kyc-company-level-verification [levelName]="data.button" buttonTitle="SEND" (done)="onComplete()" (error)="handleError($event)" [errorMessage]="errorMessage"></kyc-company-level-verification>
 
 <mat-dialog-actions align="center">
     <button class="__outlined-button" type="button" (click)="onClose()">

@@ -43,7 +43,8 @@ export function getTierBlocks(user: User, verifiedTierId: string, tiersData: Set
                 passed: tierPassed,
                 subtitle: val.levelName ?? 'Identity',
                 description: val.description ?? defaultDescription,
-                flow: val.originalLevelName ?? ''
+                flow: val.originalLevelName ?? '',
+                companyLevelVerification: val.showForm
             } as TierItem;
         });
         // If the user's KYC provider is Shufti, set inactive all tiers but the first

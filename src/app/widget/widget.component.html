@@ -128,6 +128,9 @@
 
       <app-widget-wire-transfer-info-required #signupInfo *ngSwitchCase="'wire_transfer_info_required'" buttonTitle="SAVE" (error)="handleError($event)"
         (progressChange)="progressChanged($event)" (done)="requiredFieldsComplete()" [requiredFields] = "requiredFields"></app-widget-wire-transfer-info-required>
+      
+      <company-level-verification #signupInfo *ngSwitchCase="'company_level_verification'"  [levelName]="overLimitLevel" buttonTitle="SEND" (error)="handleError($event)"
+        (progressChange)="progressChanged($event)" (done)="resetWizard()" [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage"></company-level-verification>
 
       <!-- <app-widget-wire-transfer-info-required *ngSwitchCase="'wire_transfer_info_required'" [bankCategories]="wireTransferList"
         [bankAccountId]="bankAccountId" [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage"

@@ -105,6 +105,7 @@ export class WidgetComponent implements OnInit {
     private profileService: ProfileDataService,
     private errorHandler: ErrorService) { }
     private shuftiSubscriptionFlag: boolean = false;
+    private companyLevelVerificationFlag: boolean = false;
 
   ngOnInit(): void {
     this.widgetService.register(
@@ -118,7 +119,8 @@ export class WidgetComponent implements OnInit {
       this.settingsKycState.bind(this),
       this.settingsCommonComplete.bind(this),
       this.onWireTransferListLoaded.bind(this),
-      this.userInfoRequired.bind(this)
+      this.userInfoRequired.bind(this),
+      this.companyLevelVerification.bind(this)
     );
     this.initMessage = 'Loading...';
 
@@ -426,6 +428,7 @@ export class WidgetComponent implements OnInit {
   }
 
   handleError(message: string): void {
+    console.log(message)
     this.setError('Transaction failed', message, 'handleError');
   }
   handleReject(): void {
@@ -713,11 +716,17 @@ export class WidgetComponent implements OnInit {
 
     console.log(this.widget.kycFirst, this.requestKyc, this.widget.embedded);
     if (this.widget.kycFirst && this.requestKyc && !this.widget.embedded) {
-      const tempStageId = this.pager.stageId
-      if (tempStageId === 'verification') {
-        this.pager.goBack();
+      if(this.companyLevelVerificationFlag){
+        console.log(this.overLimitLevel)
+        this.nextStage('company_level_verification', 'Verification', this.pager.step, true);
+      }else{
+        const tempStageId = this.pager.stageId
+        if (tempStageId === 'verification') {
+          this.pager.goBack();
+        }
+        this.nextStage('verification', 'Verification', nextStage, false);
       }
-      this.nextStage('verification', 'Verification', nextStage, false);
+      
     } else {
       if (this.paymentProviders.length < 1) {
         this.setError(
@@ -1202,6 +1211,10 @@ export class WidgetComponent implements OnInit {
   private userInfoRequired(requiredFields: string[]): void {
     this.requiredFields = requiredFields;
     this.nextStage('wire_transfer_info_required', 'Payment info', this.pager.step, true);
+  }
+
+  private companyLevelVerification(): void {
+    this.companyLevelVerificationFlag = true;
   }
 
   private setError(title: string, message: string, tag: string): void {

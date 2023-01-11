@@ -311,6 +311,8 @@ mutation SetMyInfo(
 }
 `;
 
+
+
 const GENERATE_2FA_CODE = gql`
 mutation Generate2faCode {
     generate2faCode {
@@ -403,6 +405,15 @@ query GenerateWebApiToken(
     )
 }
 `;
+
+const COMPANY_LEVEL_VERIFICATION = gql`
+mutation CompanyLevelVerification($newLevel: String, $companyName: String) {
+    companyLevelVerification(
+        newLevel: $newLevel,
+        companyName: $companyName
+        ) { userId }
+    }
+`
 
 const MY_KYC_STATUS = gql`
 query { myKycStatus }
@@ -699,6 +710,20 @@ export class AuthService {
         };
         return this.apollo.mutate({
             mutation: SET_MY_INFO,
+            variables: vars
+        });
+    }
+
+    companyLevelVerification(
+        companyNameValue: string,
+        levelName: string
+    ): Observable<any> {
+        const vars = {
+            companyNameValue: (companyNameValue === '') ? undefined : companyNameValue,
+            newLevel: levelName
+        };
+        return this.apollo.mutate({
+            mutation: COMPANY_LEVEL_VERIFICATION,
             variables: vars
         });
     }

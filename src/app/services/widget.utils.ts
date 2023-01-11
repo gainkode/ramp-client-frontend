@@ -3,6 +3,7 @@ import { SettingsKycTierShortExListResult, User } from "../model/generated-model
 export class KycTierResultData {
     levelName: string | null = '';
     required = false;
+    showForm?: boolean;
 }
 
 export function getCurrentTierLevelName(tierId: string, tiersData: SettingsKycTierShortExListResult, user: User | null = null): KycTierResultData {
@@ -15,6 +16,10 @@ export function getCurrentTierLevelName(tierId: string, tiersData: SettingsKycTi
     if ((tiersData.count ?? 0 > 0) && tiersData.list) {
         const newTier = tiersData.list[0];
         console.log(`Current tier: ${tierId}`, `New tier${newTier.settingsKycTierId}`)
+
+        if(newTier.showForm){
+            result.showForm = true;
+        }
 
         if(kycStatus == 'waiting' && newTier.skipForWaiting){
             return result;

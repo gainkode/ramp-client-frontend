@@ -727,6 +727,7 @@ export type Mutation = {
   addSettingsFee: SettingsFee;
   updateSettingsFee: SettingsFee;
   deleteSettingsFee: SettingsFee;
+  companyLevelVerification?: Maybe<User>;
   addSettingsCost: SettingsCost;
   updateSettingsCost: SettingsCost;
   deleteSettingsCost: SettingsCost;
@@ -932,6 +933,12 @@ export type MutationUpdateSettingsFeeArgs = {
 
 export type MutationDeleteSettingsFeeArgs = {
   settingsId: Scalars['ID'];
+};
+
+
+export type MutationCompanyLevelVerificationArgs = {
+  newLevel?: Maybe<Scalars['String']>;
+  companyName?: Maybe<Scalars['String']>;
 };
 
 
@@ -2816,6 +2823,7 @@ export type SettingsKycTier = {
   default?: Maybe<Scalars['Boolean']>;
   deleted?: Maybe<Scalars['DateTime']>;
   skipForWaiting?: Maybe<Scalars['Boolean']>;
+  showForm?: Maybe<Scalars['Boolean']>;
 };
 
 export type SettingsKycTierInput = {
@@ -2872,6 +2880,7 @@ export type SettingsKycTierShortEx = {
   originalLevelName?: Maybe<Scalars['String']>;
   originalFlowName?: Maybe<Scalars['String']>;
   skipForWaiting?: Maybe<Scalars['Boolean']>;
+  showForm?: Maybe<Scalars['Boolean']>;
 };
 
 export type SettingsKycTierShortExListResult = {
