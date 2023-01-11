@@ -141,7 +141,7 @@
         (onSendEmail)="sendWireTransaferMessage()">
       </app-widget-wire-transfer-result>
       <!-- KYC -->
-      <app-widget-kyc *ngSwitchCase="'verification'" [summary]="summary" [levelName]="overLimitLevel"
+      <app-widget-kyc [ngStyle]="{'min-width': '520px', 'display':'block'}" *ngSwitchCase="'verification'" [summary]="summary" [levelName]="overLimitLevel"
         [completedWhenVerified]="widget.kycFirst"
         [shuftiSubscribeResult]="shuftiSubscribeResult"
         [allowToPayIfKycFailed]="widget.allowToPayIfKycFailed"

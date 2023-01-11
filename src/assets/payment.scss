@@ -247,7 +247,6 @@ $font_main: var(--font_main);
 .__widget-wizard-container {
     min-height: 544px;
     width: 100%;
-    max-width: 264px;
     min-width: 356px;
     margin: 0px 0px 24px 24px;
 
@@ -267,7 +266,7 @@ $font_main: var(--font_main);
 }
 
 .__widget-wizard-container-single {
-    max-width: 400px;
+    max-width: 520px;
 }
 
 .__widget-wizard-container-embedded {
