@@ -29,9 +29,9 @@
     // Support team email address
     window.__env_data.support_email = 'support@genesisxchange.com';
     // Base color number
-    window.__env_data.base_color = '#FFBD00';
+    window.__env_data.base_color = '#35D0BA';
     // Main font name
-    window.__env_data.main_font = 'Lato';
+    window.__env_data.main_font = 'Space Mono';
     // Crypto widget finish link
     window.__env_data.crypto_widget_finish_link = '';
     // Cookie agreement link
@@ -89,28 +89,28 @@
     window.__env_data.color_orange_100 = '#fddeb3';
     window.__env_data.color_orange_50 = '#fef2e1';
     // Purple colors (top menu and title backgrounds, text, icons)
-    window.__env_data.color_purple_900_text = '#262626';
-    window.__env_data.color_purple_900_icons = '#242438';
-    window.__env_data.color_purple_900 = '#1E1E1E';  // top menu bar
-    window.__env_data.color_purple_800 = '#463944';
-    window.__env_data.color_purple_700 = '#564451';
-    window.__env_data.color_purple_600 = '#665060';
-    window.__env_data.color_purple_500 = '#72596A';
-    window.__env_data.color_purple_400 = '#85727F';
-    window.__env_data.color_purple_300 = '#998C95';
-    window.__env_data.color_purple_200 = '#B4AEB2';
-    window.__env_data.color_purple_100 = '#D0CFCF';
-    window.__env_data.color_purple_50 = '#ECECEC';
+    window.__env_data.color_purple_900_text = '#A4A9AC';
+    window.__env_data.color_purple_900_icons = '#adb1b4';
+    window.__env_data.color_purple_900 = '#020710';  // top menu bar
+    window.__env_data.color_purple_800 = '#1b1f27';
+    window.__env_data.color_purple_700 = '#34383f';
+    window.__env_data.color_purple_600 = '#4d5157';
+    window.__env_data.color_purple_500 = '#676a6f';
+    window.__env_data.color_purple_400 = '#808387';
+    window.__env_data.color_purple_300 = '#999b9f';
+    window.__env_data.color_purple_200 = '#b3b4b7';
+    window.__env_data.color_purple_100 = '#cccdcf';
+    window.__env_data.color_purple_50 = '#e5e6e7';
     // Blue colors (buttons, titles, icons)
-    window.__env_data.color_main_blue_900 = '#ac810b';
-    window.__env_data.color_main_blue_800 = '#d69d00';
-    window.__env_data.color_main_blue_700 = '#ffbd00'; // main color
-    window.__env_data.color_main_blue_600 = '#fdbf16';
-    window.__env_data.color_main_blue_500 = '#ffca38';
-    window.__env_data.color_main_blue_400 = '#ffd86d';
-    window.__env_data.color_main_blue_300 = '#ffe08c';
-    window.__env_data.color_main_blue_200 = '#ffe8a8';
-    window.__env_data.color_main_blue_100 = '#fdedc0';
-    window.__env_data.color_main_blue_50 = '#fff8e6';
+    window.__env_data.color_main_blue_900 = '#2aa694';
+    window.__env_data.color_main_blue_800 = '#2fbba7';
+    window.__env_data.color_main_blue_700 = '#35D0BA'; // main color
+    window.__env_data.color_main_blue_600 = '#49d4c0';
+    window.__env_data.color_main_blue_500 = '#5dd9c7';
+    window.__env_data.color_main_blue_400 = '#71dece';
+    window.__env_data.color_main_blue_300 = '#85e2d5';
+    window.__env_data.color_main_blue_200 = '#9ae7dc';
+    window.__env_data.color_main_blue_100 = '#aeece3';
+    window.__env_data.color_main_blue_50 = '#c2f0ea';
 
 }(this));

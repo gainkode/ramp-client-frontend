@@ -77,7 +77,7 @@
         <!-- Initialization -->
       <app-widget-initialization *ngSwitchCase="'initialization'" [message]="initMessage"></app-widget-initialization>
       <!-- Order details -->
-      <app-widget-order-details *ngSwitchCase="'order_details'" [initialized]="!initState" [summary]="summary"
+      <app-widget-order-details [quickCheckout]='quickCheckout' *ngSwitchCase="'order_details'" [initialized]="!initState" [summary]="summary"
         [settings]="widget" [withdrawalRate]="summary?.exchangeRate?.withdrawRate" [wallets]="userWallets"
         [internalPayment]="internalPayment" [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage"
         [depositRate]="summary?.exchangeRate?.depositRate" (onError)="handleError($event)"
