@@ -80,7 +80,7 @@ export function getFullName(user: User): string {
 
     let fullName = '';
     if (user.type === UserType.Merchant) {
-        fullName = user.firstName ?? '';
+        fullName = user.companyName ?? user.firstName ?? '';
     } else if (user.type === UserType.Personal) {
         fullName = `${user.firstName ?? ''} ${user.lastName ?? ''}`;
     }
