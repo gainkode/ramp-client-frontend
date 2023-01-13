@@ -15,8 +15,8 @@
     window.__env_data.ws_server = 'ws://localhost:4001';
     // Image hosting address
     window.__env_data.image_host = './assets';
-    window.__env_data.widget_secret = '90a9689ad771087bff015998b1fab739c85a239b';
-    window.__env_data.widget_api_key = '03922e50-2b11-4c29-b1cb-5ea4edc3c3f4';
+    window.__env_data.widget_secret = '15b78abfe32712f21f0f6eb43d1b5732691bec08';
+    window.__env_data.widget_api_key = '99b90c7a-2b56-4edd-8940-09ddceee0e69';
 
     // window.__env_data.cookieDomain = 'https://app.crunchywallet.io';
     // window.__env_data.client_host = 'https://app.crunchywallet.io';
