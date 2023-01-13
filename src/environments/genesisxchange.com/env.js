@@ -44,7 +44,7 @@
     window.__env_data.show_privacy_link = true;
 
     window.__env_data.widget_bg_mask = 'false';
-    window.__env_data.widget_bg_name = 'https://app.genesisxchange.com/images/widget-bg.jpg';
+    window.__env_data.widget_bg_name = '';
 
     //////////////////////////////////////////////////
     //                                              //
@@ -52,7 +52,7 @@
     //                                              //
     //////////////////////////////////////////////////
     // Widget colors
-    window.__env_data.widget_bg_solid_color = '#000040';
+    window.__env_data.widget_bg_solid_color = '#FFFFFF';
     // White color
     window.__env_data.color_white = '#FFFFFF';
     // Pink colors (error handling)
