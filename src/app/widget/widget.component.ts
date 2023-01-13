@@ -428,7 +428,6 @@ export class WidgetComponent implements OnInit {
   }
 
   handleError(message: string): void {
-    console.log(message)
     this.setError('Transaction failed', message, 'handleError');
   }
   handleReject(): void {
@@ -625,7 +624,15 @@ export class WidgetComponent implements OnInit {
       // } else {
       //   this.nextStage('disclaimer', 'Disclaimer', 2, false);
       // }
-      this.disclaimerNext();
+      if(this.auth.user){
+        this.disclaimerNext();
+      }else{
+        this.summary.transactionId = '';
+        this.summary.fee = 0;
+        this.summary.email = email;
+        this.widgetService.authenticate(email, this.widget.widgetId);
+      }
+      
     } else {
       this.summary.transactionId = '';
       this.summary.fee = 0;
