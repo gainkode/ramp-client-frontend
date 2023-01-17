@@ -3760,6 +3760,7 @@ export type UserInput = {
   deleted?: Maybe<Scalars['DateTime']>;
   gender?: Maybe<Gender>;
   comment?: Maybe<Scalars['String']>;
+  companyName?: Maybe<Scalars['String']>;
   flag?: Maybe<Scalars['Boolean']>;
 };
 

@@ -77,7 +77,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
   dataForm = this.formBuilder.group({
     id: [''],
     email: ['', { validators: [Validators.required], updateOn: 'change' }],
-    firstName: ['', { validators: [Validators.required], updateOn: 'change' }],
+    firstName: ['', { validators: [], updateOn: 'change' }],
     lastName: ['', { validators: [], updateOn: 'change' }],
     birthday: [null, { validators: [], updateOn: 'change' }],
     gender: [undefined, { validators: [], updateOn: 'change' }],
@@ -261,6 +261,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
       kycTierId: tierId,
       kycProvider: this.dataForm.get('kycProvider')?.value,
       comment: this.dataForm.get('comment')?.value,
+      companyName: this.dataForm.get('company')?.value,
       flag: this.flag
     } as UserInput;
     return data;
