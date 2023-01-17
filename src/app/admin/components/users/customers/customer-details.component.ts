@@ -97,8 +97,8 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
     tier: ['', { validators: [Validators.required], updateOn: 'change' }],
     fiat: ['', { validators: [Validators.required], updateOn: 'change' }],
     crypto: ['', { validators: [Validators.required], updateOn: 'change' }],
-    comment: [undefined],
-    company: [undefined]
+    comment: ['', { validators: [], updateOn: 'change' }],
+    company: ['', { validators: [], updateOn: 'change' }],
   });
 
   constructor(
