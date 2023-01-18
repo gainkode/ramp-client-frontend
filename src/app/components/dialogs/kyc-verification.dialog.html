@@ -4,7 +4,7 @@
     (completed)="onComplete()">
 </app-kyc-panel>
 
-<kyc-company-level-verification [levelName]="data.button" buttonTitle="SEND" (done)="onComplete()" (error)="handleError($event)" [errorMessage]="errorMessage"></kyc-company-level-verification>
+<kyc-company-level-verification *ngIf="data.companyLevelVerification" [levelName]="data.button" buttonTitle="SEND" (done)="onComplete()" (error)="handleError($event)" [errorMessage]="errorMessage"></kyc-company-level-verification>
 
 <mat-dialog-actions align="center">
     <button class="__outlined-button" type="button" (click)="onClose()">

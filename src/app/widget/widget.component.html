@@ -24,7 +24,7 @@
   </div> -->
 
   <div *ngIf="!recentTransactions" class="__widget-data-container">
-    <div
+    <div style="margin: 0;"
       [ngClass]="{'__widget-wizard-container': !widget.embedded || initLoading, '__widget-wizard-container-single': !widget.embedded, '__widget-wizard-container-embedded': widget.embedded || initLoading}"
       [ngSwitch]="pager.stageId">
 
