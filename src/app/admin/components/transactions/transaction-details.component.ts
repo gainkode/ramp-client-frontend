@@ -69,6 +69,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
 
   submitted = false;
   saveInProgress = false;
+  flagInProgress = false;
   cancelInProgress = false;
   errorMessage = '';
   TRANSACTION_TYPE: typeof TransactionType = TransactionType;
@@ -287,6 +288,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   }
 
   flagValue(): void {
+    this.flagInProgress = true;
     this.flag = this.flag != true;
     this.transactionToUpdate = this.getTransactionToUpdate();
     this.updateTransaction();
@@ -313,9 +315,11 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       requestData$.subscribe(({ data }) => {
         this.saveInProgress = false;
+        this.flagInProgress = false;
         this.save.emit();
       }, (error) => {
         this.saveInProgress = false;
+        this.flagInProgress = false;
         this.errorMessage = (!error || error === '') ? this.errorHandler.getCurrentError() : error;
         if (this.auth.token === '') {
           this.router.navigateByUrl('/');

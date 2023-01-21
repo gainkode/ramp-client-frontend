@@ -43,6 +43,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
 
   submitted = false;
   saveInProgress = false;
+  flagInProgress = false;
   disableInProgress = false;
   kycProviderLinkInProgress = false;
   errorMessage = '';
@@ -272,6 +273,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
   }
 
   flagValue(): void {
+    this.flagInProgress = true;
     this.flag = this.flag != true;
     this.onSave(this.userData?.id ?? '', this.setCustomerData(), undefined);
   }
@@ -343,6 +345,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
     this.subscriptions.add(
       requestData$.subscribe(({ data }) => {
         this.saveInProgress = false;
+        this.flagInProgress = false;
         if (customer.changePasswordRequired === true) {
           this.modalService.open(content, {
             backdrop: 'static',
@@ -358,6 +361,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
         }
         this.save.emit();
       }, (error) => {
+        this.flagInProgress = false;
         this.saveInProgress = false;
         this.errorMessage = error;
         if (this.auth.token === '') {
