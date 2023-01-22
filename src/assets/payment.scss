@@ -16,7 +16,8 @@ $font_main: var(--font_main);
     display: grid;
     grid-template-rows: auto;
     grid-template-columns: 50% 10% 40%;
-    background-color: $color_white;
+    // background-color: $color_white;
+    background-color: transparent;
 }
 
 .__widget-frame-background {

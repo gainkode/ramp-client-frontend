@@ -43,7 +43,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   private setCookiePanel(): void {
     const url = window.location.href;
-    const whiteList = (url.includes('/payment/widget/') || url.includes('/terms'));
+    const whiteList = (url.includes('/payment/widget/') || url.includes('/terms') || url.includes('/payment/quickcheckout'));
     if (!whiteList) {
       const w = window as any;
       w.cookieconsent.initialise({
