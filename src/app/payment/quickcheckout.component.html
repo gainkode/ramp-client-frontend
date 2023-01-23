@@ -1,6 +1,6 @@
-<div class="__widget-frame-container">
-  <!-- <div [ngClass]="{'__widget-frame-background': bg_mask, '__widget-frame-background-img': !bg_mask}"></div> -->
-  <!-- <div *ngIf="bg_mask" class="__widget-frame-background-pipes"></div> -->
+<!-- <div class="__widget-frame-container">
+  <div [ngClass]="{'__widget-frame-background': bg_mask, '__widget-frame-background-img': !bg_mask}"></div>
+  <div *ngIf="bg_mask" class="__widget-frame-background-pipes"></div>
   <div class="__widget-frame-box">
     <app-widget [ngStyle]="{'margin': '0 auto', 'letter-spacing': '.1em'}" [internal]="true" [shuftiSubscribeResult]="shuftiSubscribeResult" [settings]="settings" [userParamsId]="userParamsId" [quickCheckout]=true></app-widget>
   </div>
@@ -10,4 +10,13 @@
   <div *ngIf="!prodMode" style="grid-column: 3;grid-row: 1;padding: 12px;color: #1A68AD;height: 48px;z-index: 333;">
     mkBUjw37y46goULToq6b7y6ciJc3Qi32YM
   </div>
+</div> -->
+<div class="__widget-frame-box">
+  <app-widget [ngStyle]="{'margin': '0 auto', 'letter-spacing': '.1em'}" [internal]="true" [shuftiSubscribeResult]="shuftiSubscribeResult" [settings]="settings" [userParamsId]="userParamsId" [quickCheckout]=true></app-widget>
+</div>
+
+
+
+<div *ngIf="!prodMode" style="grid-column: 3;grid-row: 1;padding: 12px;color: #1A68AD;height: 48px;z-index: 333;">
+  mkBUjw37y46goULToq6b7y6ciJc3Qi32YM
 </div>
