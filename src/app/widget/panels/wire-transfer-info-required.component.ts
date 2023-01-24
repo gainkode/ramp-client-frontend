@@ -25,6 +25,7 @@ export class WidgetWireTransferInfoRequiredComponent implements OnDestroy{
     @Output() done = new EventEmitter<LoginResult>();
 
     requireUserFirstName = false;
+    requireUserCompanyName = false;
     requireUserPhone = false;
     requireUserBirthday = false;
     requireUserAddress = false;
@@ -38,6 +39,8 @@ export class WidgetWireTransferInfoRequiredComponent implements OnDestroy{
     birthdayControl: AbstractControl | null = null;
     townControl: AbstractControl | null = null;
     streetControl: AbstractControl | null = null;
+    companyNameControl: AbstractControl | null = null;
+    phoneControl: AbstractControl | null = null;
 
     private subscriptions: Subscription = new Subscription();
 
@@ -46,7 +49,9 @@ export class WidgetWireTransferInfoRequiredComponent implements OnDestroy{
         lastName: ['', { validators: [], updateOn: 'change' }],
         birthday: [undefined, { validators: [], updateOn: 'change' }],
         town: ['', { validators: [], updateOn: 'change' }],
-        street: ['', { validators: [], updateOn: 'change' }]
+        street: ['', { validators: [], updateOn: 'change' }],
+        companyName: ['', { validators: [], updateOn: 'change' }],
+        phone: ['', { validators: [], updateOn: 'change' }]
     });
 
     firstNameErrorMessages: { [key: string]: string; } = {
@@ -64,6 +69,12 @@ export class WidgetWireTransferInfoRequiredComponent implements OnDestroy{
     streetErrorMessages: { [key: string]: string; } = {
         ['required']: 'Please specify the street'
     };
+    companyNameErrorMessages: { [key: string]: string; } = {
+        ['required']: 'Please specify the companyName'
+    };
+    phoneErrorMessages: { [key: string]: string; } = {
+        ['required']: 'Please specify the phone'
+    };
 
     constructor(
         private auth: AuthService,
@@ -74,6 +85,8 @@ export class WidgetWireTransferInfoRequiredComponent implements OnDestroy{
         this.birthdayControl = this.infoForm.get('birthday');
         this.townControl = this.infoForm.get('town');
         this.streetControl = this.infoForm.get('street');
+        this.companyNameControl = this.infoForm.get('companyName');
+        this.phoneControl = this.infoForm.get('phone');
     }
 
     ngOnDestroy(): void {
@@ -91,6 +104,12 @@ export class WidgetWireTransferInfoRequiredComponent implements OnDestroy{
                 case 'birthday':
                     this.requireUserBirthday= true;
                     break;
+                case 'companyName':
+                    this.requireUserCompanyName = true;
+                    break;
+                case 'phone':
+                    this.requireUserPhone = true;
+                    break;
                 case 'street':
                 case 'town':
                     this.requireUserAddress = true;
@@ -104,6 +123,22 @@ export class WidgetWireTransferInfoRequiredComponent implements OnDestroy{
     private setFields(): void {
         const user = this.auth.user;
         this.isMerchant = (user?.type === UserType.Merchant);
+        if(this.requireUserCompanyName && user){
+            this.companyNameControl?.setValue(user.companyName);
+            this.companyNameControl?.setValidators([Validators.required]);
+        }else{
+            this.companyNameControl?.setValue('');
+            this.companyNameControl?.setValidators([]);
+        }
+
+        if(this.requireUserPhone && user){
+            this.phoneControl?.setValue(user.companyName);
+            this.phoneControl?.setValidators([Validators.required]);
+        }else{
+            this.phoneControl?.setValue('');
+            this.phoneControl?.setValidators([]);
+        }
+
         if (this.requireUserFirstName && user) {
             this.firstNameControl?.setValue(user.firstName);
             this.lastNameControl?.setValue(user.lastName);
@@ -154,7 +189,6 @@ export class WidgetWireTransferInfoRequiredComponent implements OnDestroy{
         if (this.infoForm.valid) {
             this.progressChange.emit(true);
             let address: PostAddress | undefined;
-            let phone = '';
 
             const birthday = getFormattedUtcDate(this.birthdayControl?.value ?? '');
             if (this.requireUserAddress || this.requireUserFlatNumber) {
@@ -168,7 +202,8 @@ export class WidgetWireTransferInfoRequiredComponent implements OnDestroy{
                 this.auth.setMyInfo(
                     this.firstNameControl?.value as string,
                     this.lastNameControl?.value as string,
-                    phone,
+                    this.companyNameControl?.value as string,
+                    this.phoneControl?.value as string,
                     address,
                     birthday
                 ).subscribe(({ data }) => {

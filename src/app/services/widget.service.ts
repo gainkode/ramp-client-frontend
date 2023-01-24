@@ -172,11 +172,8 @@ export class WidgetService {
                 let wireTransferList: WireTransferPaymentCategoryItem[] = [];
                 let accountData: WireTransferBankAccountShort | undefined = undefined;
                 const settingsResult = data.mySettingsFee as SettingsFeeShort;
-                if(settingsResult.requiredFields && settingsResult.requiredFields.length > 0){
-                    if(this.userInfoRequired){
-                        this.userInfoRequired(settingsResult.requiredFields)
-                    }
-                    
+                if(settingsResult.requiredFields && settingsResult.requiredFields.length > 0 && this.userInfoRequired){
+                    this.userInfoRequired(settingsResult.requiredFields);
                 }else if (settingsResult.costs) {
                     if (settingsResult.costs.length > 0) {
                         const costs = settingsResult.costs[0];

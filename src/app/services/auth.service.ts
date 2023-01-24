@@ -266,12 +266,13 @@ const CONFIRM_NAME = gql`
 const SET_MY_INFO = gql`
 mutation SetMyInfo(
     $recaptcha: String!,
-    $firstName: String
+    $firstName: String,
+    $companyName: String,
     $lastName: String,
     $phone: String,
     $address: PostAddress,
     $birthday: DateTime) {
-    setMyInfo(recaptcha: $recaptcha, firstName: $firstName, lastName: $lastName, phone: $phone, address: $address, birthday: $birthday) {
+    setMyInfo(recaptcha: $recaptcha, firstName: $firstName, companyName: $companyName, lastName: $lastName, phone: $phone, address: $address, birthday: $birthday) {
         authToken
         user {
             userId,
@@ -698,6 +699,7 @@ export class AuthService {
     setMyInfo(
         firstNameValue: string,
         lastNameValue: string,
+        companyNameValue: string | null = null,
         phoneValue: string,
         addressValue: PostAddress | undefined,
         birthdayValue: Date | undefined): Observable<any> {
@@ -705,6 +707,7 @@ export class AuthService {
             recaptcha: EnvService.recaptchaId,
             firstName: (firstNameValue === '') ? undefined : firstNameValue,
             lastName: (lastNameValue === '') ? undefined : lastNameValue,
+            companyName: (companyNameValue === '') ? undefined : companyNameValue,
             phone: (phoneValue === '') ? undefined : phoneValue,
             address: addressValue,
             birthday: birthdayValue

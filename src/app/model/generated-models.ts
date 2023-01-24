@@ -1238,6 +1238,7 @@ export type MutationConfirmUserDeviceArgs = {
 
 export type MutationSetMyInfoArgs = {
   firstName?: Maybe<Scalars['String']>;
+  companyName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   birthday?: Maybe<Scalars['DateTime']>;
   address?: Maybe<PostAddress>;
@@ -1538,6 +1539,9 @@ export type OpenpaydObject = {
   beneficiaryName?: Maybe<Scalars['String']>;
   swiftBic?: Maybe<Scalars['String']>;
   payInReference?: Maybe<Scalars['String']>;
+  bankAccountHolderName?: Maybe<Scalars['String']>;
+  accountNumber?: Maybe<Scalars['String']>;
+  sortCode?: Maybe<Scalars['String']>;
 };
 
 export type OpenpaydProviderBalance = {
@@ -3506,6 +3510,8 @@ export type User = {
   comment?: Maybe<Scalars['String']>;
   flag?: Maybe<Scalars['Boolean']>;
   companyName?: Maybe<Scalars['String']>;
+  companyRegisterNumber?: Maybe<Scalars['String']>;
+  companyType?: Maybe<Scalars['String']>;
 };
 
 export type UserAction = {
@@ -3761,6 +3767,8 @@ export type UserInput = {
   gender?: Maybe<Gender>;
   comment?: Maybe<Scalars['String']>;
   companyName?: Maybe<Scalars['String']>;
+  companyRegisterNumber?: Maybe<Scalars['String']>;
+  companyType?: Maybe<Scalars['String']>;
   flag?: Maybe<Scalars['Boolean']>;
 };
 

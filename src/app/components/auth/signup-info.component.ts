@@ -283,6 +283,7 @@ export class SignupInfoPanelComponent implements OnDestroy {
                 this.auth.setMyInfo(
                     this.firstNameControl?.value as string,
                     this.lastNameControl?.value as string,
+                    null,
                     phone,
                     address,
                     birthday
