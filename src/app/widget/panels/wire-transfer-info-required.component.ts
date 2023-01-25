@@ -116,7 +116,7 @@ export class WidgetWireTransferInfoRequiredComponent implements OnDestroy{
                     break; 
             }
         }
-        this.progressChange.emit(true);
+        this.progressChange.emit(false);
         this.setFields();
     }
 
