@@ -45,6 +45,7 @@ import { TransferWidgetComponent } from './transfer.component';
 import { PaymentIntroComponent } from './payment-intro.component';
 import { WidgetWireTransferComponent } from './panels/wire-transfer.component';
 import { WidgetWireTransferInfoRequiredComponent } from './panels/wire-transfer-info-required.component';
+import { CompanyLevelVerificationComponent } from './panels/company-level-verification.component';
 import { MatRadioModule } from '@angular/material/radio';
 import { WidgetWireTransferResultComponent } from './panels/wire-transfer-result.component';
 import { WidgetSellDetailsComponent } from './panels/sell-details.component';
@@ -95,7 +96,7 @@ export class MaterialModule { }
         BuySellWidgetComponent, FiatWidgetComponent, CryptoWidgetComponent, CryptoWizardComponent, WidgetWizardComponent,
         WidgetProgressComponent, WidgetRecentTransactionsComponent,
         WidgetSummaryComponent, WidgetRateComponent, WidgetCreditCardComponent, WidgetWireTransferComponent, WidgetWireTransferInfoRequiredComponent,
-        WidgetWireTransferResultComponent, WidgetSellDetailsComponent, WidgetDepositDetailsComponent,
+        WidgetWireTransferResultComponent, WidgetSellDetailsComponent, WidgetDepositDetailsComponent, CompanyLevelVerificationComponent,
         WidgetRegisterComponent, WidgetLoginAuthComponent, WidgetCodeAuthComponent,
         WidgetInitializationComponent, WidgetOrderDetailsComponent, WidgetReceiveDetailsComponent, WidgetSendDetailsComponent,
         WidgetDisclaimerComponent, WidgetKycComponent, WidgetPaymentComponent, WidgetProcessingFrameComponent, WidgetCryptoDetailsComponent,
@@ -111,7 +112,8 @@ export class MaterialModule { }
         PaymentIntroComponent,
         CryptoWidgetComponent,
         CryptoWizardComponent,
-        WidgetWizardComponent
+        WidgetWizardComponent,
+        CompanyLevelVerificationComponent
     ],
     providers: [],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]

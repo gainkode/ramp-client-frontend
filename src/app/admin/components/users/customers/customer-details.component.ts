@@ -43,6 +43,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
 
   submitted = false;
   saveInProgress = false;
+  flagInProgress = false;
   disableInProgress = false;
   kycProviderLinkInProgress = false;
   errorMessage = '';
@@ -77,7 +78,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
   dataForm = this.formBuilder.group({
     id: [''],
     email: ['', { validators: [Validators.required], updateOn: 'change' }],
-    firstName: ['', { validators: [Validators.required], updateOn: 'change' }],
+    firstName: ['', { validators: [], updateOn: 'change' }],
     lastName: ['', { validators: [], updateOn: 'change' }],
     birthday: [null, { validators: [], updateOn: 'change' }],
     gender: [undefined, { validators: [], updateOn: 'change' }],
@@ -97,8 +98,8 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
     tier: ['', { validators: [Validators.required], updateOn: 'change' }],
     fiat: ['', { validators: [Validators.required], updateOn: 'change' }],
     crypto: ['', { validators: [Validators.required], updateOn: 'change' }],
-    comment: [undefined],
-    company: [undefined]
+    comment: ['', { validators: [], updateOn: 'change' }],
+    company: ['', { validators: [], updateOn: 'change' }],
   });
 
   constructor(
@@ -261,6 +262,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
       kycTierId: tierId,
       kycProvider: this.dataForm.get('kycProvider')?.value,
       comment: this.dataForm.get('comment')?.value,
+      companyName: this.dataForm.get('company')?.value,
       flag: this.flag
     } as UserInput;
     return data;
@@ -271,6 +273,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
   }
 
   flagValue(): void {
+    this.flagInProgress = true;
     this.flag = this.flag != true;
     this.onSave(this.userData?.id ?? '', this.setCustomerData(), undefined);
   }
@@ -342,6 +345,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
     this.subscriptions.add(
       requestData$.subscribe(({ data }) => {
         this.saveInProgress = false;
+        this.flagInProgress = false;
         if (customer.changePasswordRequired === true) {
           this.modalService.open(content, {
             backdrop: 'static',
@@ -357,6 +361,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
         }
         this.save.emit();
       }, (error) => {
+        this.flagInProgress = false;
         this.saveInProgress = false;
         this.errorMessage = error;
         if (this.auth.token === '') {

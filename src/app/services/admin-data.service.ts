@@ -1695,6 +1695,7 @@ mutation UpdateUser(
   $kycProvider: KycProvider
   $comment: String
   $flag: Boolean
+  $companyName: String
 ) {
   updateUser(
     userId: $userId
@@ -1724,6 +1725,7 @@ mutation UpdateUser(
       kycProvider: $kycProvider
       comment: $comment
       flag: $flag
+      companyName: $companyName
     }
   ) {
     userId
@@ -1760,6 +1762,7 @@ mutation CreateUser(
   $defaultCryptoCurrency: String
   $kycProvider: KycProvider
   $comment: String
+  $companyName: String
 ) {
   createUser(
     user: {
@@ -1789,6 +1792,7 @@ mutation CreateUser(
       defaultCryptoCurrency: $defaultCryptoCurrency
       kycProvider: $kycProvider
       comment: $comment
+      companyName: $companyName
     }
     roles: $roles
   ) {
@@ -3520,7 +3524,8 @@ export class AdminDataService {
           defaultCryptoCurrency: customer.defaultCryptoCurrency,
           kycProvider: customer.kycProvider,
           comment: customer.comment,
-          flag: customer.flag
+          flag: customer.flag,
+          companyName: customer.companyName
         }
       }).pipe(tap(() => {
         this.snackBar.open(`User was created`, undefined, { duration: 5000 });
@@ -3554,7 +3559,8 @@ export class AdminDataService {
           defaultCryptoCurrency: customer.defaultCryptoCurrency,
           kycProvider: customer.kycProvider,
           comment: customer.comment,
-          flag: customer.flag
+          flag: customer.flag,
+          companyName: customer.companyName
         }
       }).pipe(tap(() => {
         this.snackBar.open(`User was updated`, undefined, { duration: 5000 });

@@ -727,6 +727,7 @@ export type Mutation = {
   addSettingsFee: SettingsFee;
   updateSettingsFee: SettingsFee;
   deleteSettingsFee: SettingsFee;
+  companyLevelVerification?: Maybe<User>;
   addSettingsCost: SettingsCost;
   updateSettingsCost: SettingsCost;
   deleteSettingsCost: SettingsCost;
@@ -932,6 +933,12 @@ export type MutationUpdateSettingsFeeArgs = {
 
 export type MutationDeleteSettingsFeeArgs = {
   settingsId: Scalars['ID'];
+};
+
+
+export type MutationCompanyLevelVerificationArgs = {
+  newLevel?: Maybe<Scalars['String']>;
+  companyName?: Maybe<Scalars['String']>;
 };
 
 
@@ -1231,6 +1238,7 @@ export type MutationConfirmUserDeviceArgs = {
 
 export type MutationSetMyInfoArgs = {
   firstName?: Maybe<Scalars['String']>;
+  companyName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   birthday?: Maybe<Scalars['DateTime']>;
   address?: Maybe<PostAddress>;
@@ -1531,6 +1539,9 @@ export type OpenpaydObject = {
   beneficiaryName?: Maybe<Scalars['String']>;
   swiftBic?: Maybe<Scalars['String']>;
   payInReference?: Maybe<Scalars['String']>;
+  bankAccountHolderName?: Maybe<Scalars['String']>;
+  accountNumber?: Maybe<Scalars['String']>;
+  sortCode?: Maybe<Scalars['String']>;
 };
 
 export type OpenpaydProviderBalance = {
@@ -2816,6 +2827,7 @@ export type SettingsKycTier = {
   default?: Maybe<Scalars['Boolean']>;
   deleted?: Maybe<Scalars['DateTime']>;
   skipForWaiting?: Maybe<Scalars['Boolean']>;
+  showForm?: Maybe<Scalars['Boolean']>;
 };
 
 export type SettingsKycTierInput = {
@@ -2872,6 +2884,7 @@ export type SettingsKycTierShortEx = {
   originalLevelName?: Maybe<Scalars['String']>;
   originalFlowName?: Maybe<Scalars['String']>;
   skipForWaiting?: Maybe<Scalars['Boolean']>;
+  showForm?: Maybe<Scalars['Boolean']>;
 };
 
 export type SettingsKycTierShortExListResult = {
@@ -3497,6 +3510,8 @@ export type User = {
   comment?: Maybe<Scalars['String']>;
   flag?: Maybe<Scalars['Boolean']>;
   companyName?: Maybe<Scalars['String']>;
+  companyRegisterNumber?: Maybe<Scalars['String']>;
+  companyType?: Maybe<Scalars['String']>;
 };
 
 export type UserAction = {
@@ -3751,6 +3766,9 @@ export type UserInput = {
   deleted?: Maybe<Scalars['DateTime']>;
   gender?: Maybe<Gender>;
   comment?: Maybe<Scalars['String']>;
+  companyName?: Maybe<Scalars['String']>;
+  companyRegisterNumber?: Maybe<Scalars['String']>;
+  companyType?: Maybe<Scalars['String']>;
   flag?: Maybe<Scalars['Boolean']>;
 };
 

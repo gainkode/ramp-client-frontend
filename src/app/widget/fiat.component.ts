@@ -30,6 +30,7 @@ export class FiatWidgetComponent implements OnInit {
   errorMessage = '';
   inProgress = false;
   initState = true;
+  requiredFields: string[] = [];
   stageId = 'order_details';
   title = 'Order details';
   step = 1;
@@ -73,7 +74,8 @@ export class FiatWidgetComponent implements OnInit {
       () => { },
       () => { },
       () => { },
-      this.onWireTransferListLoaded.bind(this)
+      this.onWireTransferListLoaded.bind(this),
+      this.userInfoRequired.bind(this)
     );
     this.loadCurrencyData();
   }
@@ -160,12 +162,22 @@ export class FiatWidgetComponent implements OnInit {
     this.title = 'Order details';
   }
 
+  requiredFieldsComplete(): void {
+    this.widgetService.getWireTransferSettings(this.summary, this.widgetSettings);
+  }
+
   private onAuthRequired(email: string): void {
     this.router.navigateByUrl('/');
   }
 
   private onIdRequired(): void {
     this.router.navigateByUrl('/');
+  }
+
+  private userInfoRequired(requiredFields: string[]): void {
+    this.requiredFields = requiredFields;
+    this.stageId = 'wire_transfer_info_required';
+    this.title = 'Payment info';
   }
 
   private loadCurrencyData(): void {

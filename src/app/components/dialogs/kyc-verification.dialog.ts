@@ -13,14 +13,17 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class KycVerificationDialogBox implements OnDestroy {
     complete = false;
-
+    errorMessage = '';
+    
     private subscriptions: Subscription = new Subscription();
 
     constructor(
         private router: Router,
         private auth: AuthService,
         public dialogRef: MatDialogRef<KycVerificationDialogBox>,
-        @Inject(MAT_DIALOG_DATA) public data: DialogData) { }
+        @Inject(MAT_DIALOG_DATA) public data: DialogData) {
+            console.log(data)
+        }
 
     ngOnDestroy(): void {
         this.subscriptions.unsubscribe();
@@ -45,6 +48,15 @@ export class KycVerificationDialogBox implements OnDestroy {
             this.complete = true;
             this.dialogRef.close();
         }
+    }
+
+    handleError(message: string): void {
+        console.log(message)
+        this.setError(message);
+    }
+
+    private setError(message: string): void {
+        this.errorMessage = message;
     }
 
     onClose(): void {

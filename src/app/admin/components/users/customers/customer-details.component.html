@@ -2,6 +2,8 @@
   <div class="col-md-12 col-lg-12 col-xl-12 mx-auto d-block">
     <form [formGroup]="dataForm" novalidate (ngSubmit)="onSubmit()">
       <button class="btn btn-primary pd-x-30 mg-t-5" type="button" (click)="flagValue()">
+        <span *ngIf="flagInProgress" class="spinner-border spinner-border-sm" role="status"
+              aria-hidden="true"></span>
         {{flagText()}}
       </button>
       <div class="card card-body pd-20 pd-md-40 border shadow-none">
@@ -50,10 +52,10 @@
             <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
           </label>
           <input class="form-control"
-            [ngClass]="{'has-error': (dataForm.controls.firstName.touched || submitted) && !dataForm.controls.firstName.valid}"
+            [ngClass]="{'has-error': (dataForm.controls.company.touched || submitted) && !dataForm.controls.company.valid}"
             type="text" formControlName="company" maxlength="75" required />
           <div
-            *ngIf="(dataForm.controls.firstName.touched || submitted) && (dataForm.controls.firstName.errors?.['required'])"
+            *ngIf="(dataForm.controls.company.touched || submitted) && (dataForm.controls.company.errors?.['required'])"
             class="tx-danger">
             <small>
               Please specify the company name

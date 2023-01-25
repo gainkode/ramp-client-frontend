@@ -34,6 +34,7 @@ import { NumberFillPipe } from '../utils/number-fill.pipe';
 import { DropdownItemComponent } from './common/dropdown-item.component';
 import { TabLabelComponent } from './common/tablabel.component';
 import { KycPanelComponent } from './kyc/kyc-panel.component';
+import { KycCompanyLevelVerificationComponent } from './kyc/kyc-company-level-verification.component';
 import { LoginPanelComponent } from './auth/login-panel.component';
 import { RestorePanelComponent } from './auth/restore-panel.component';
 import { NavPopupComponent } from './common/nav-popup/nav-popup.component';
@@ -104,7 +105,7 @@ export class MaterialModule { }
     imports: [NgxMaskModule.forRoot(), CommonModule, FormsModule, ReactiveFormsModule, MaterialModule, DirectiveModule, QRCodeModule],
     declarations: [
         DropdownItemComponent, TabLabelComponent, ContactFormComponent,
-        KycPanelComponent, SumsubPanelComponent, ShuftiPanelComponent,
+        KycPanelComponent, SumsubPanelComponent, ShuftiPanelComponent, KycCompanyLevelVerificationComponent,
         FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent, FormSearchBoxComponent,
         FormEditBoxComponent, SettingsPasswordBoxComponent,
         DeleteDialogBox, CommonDialogBox, TwoFaDialogBox, TwoFaDialogWizard, SendNotificationDialogBox, KycVerificationDialogBox,

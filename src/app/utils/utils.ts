@@ -3,10 +3,20 @@ import { KycTier } from "../model/identification.model";
 import { PaymentWidgetType } from "../model/payment-base.model";
 import { PaymentProviderView } from "../model/payment.model";
 import { EnvService } from "../services/env.service";
+import { SHA1, enc } from "crypto-js";
 
 export interface PaymentTitleInfo {
     panelTitle: string;
     riskWarning: string;
+}
+export function createApiHash(apiKeyId: string, apiSecret: string, timestamp?: number): string {
+
+    if(!timestamp) {
+      timestamp = new Date().getTime();
+    }
+
+    const hash = SHA1(`${apiKeyId}${apiSecret}${timestamp}`).toString(enc.Hex);
+    return hash;
 }
 
 export function round(value: number, precision: number | undefined): number {
@@ -80,7 +90,7 @@ export function getFullName(user: User): string {
 
     let fullName = '';
     if (user.type === UserType.Merchant) {
-        fullName = user.firstName ?? '';
+        fullName = user.companyName ?? user.firstName ?? '';
     } else if (user.type === UserType.Personal) {
         fullName = `${user.firstName ?? ''} ${user.lastName ?? ''}`;
     }

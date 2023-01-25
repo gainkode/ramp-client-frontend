@@ -22,6 +22,7 @@ export class WidgetService {
     private onPaymentProvidersLoaded: Function | undefined = undefined;  // (status: boolean)
     private onWireTranferListLoaded: Function | undefined = undefined;  // (wireTransferList: WireTransferPaymentCategoryItem[], bankAccountId: string)
     private userInfoRequired: Function | undefined = undefined;
+    private companyLevelVerification: Function | undefined = undefined;
 
     private pSubscriptions: Subscription = new Subscription();
 
@@ -41,7 +42,8 @@ export class WidgetService {
         kycStatusCallback: Function | undefined,
         paymentProvidersCallback: Function | undefined,
         wireTranferListLoadedCallback: Function | undefined,
-        userInfoRequired?: Function | undefined) {
+        userInfoRequired?: Function | undefined,
+        companyLevelVerificationHandler?: Function | undefined) {
         this.onProgressChanged = progressCallback;
         this.onError = errorCallback;
         this.onIdentificationRequired = identificationCallback;
@@ -53,6 +55,7 @@ export class WidgetService {
         this.onPaymentProvidersLoaded = paymentProvidersCallback;
         this.onWireTranferListLoaded = wireTranferListLoadedCallback;
         this.userInfoRequired = userInfoRequired;
+        this.companyLevelVerification = companyLevelVerificationHandler;
     }
 
     getSettingsCommon(summary: CheckoutSummary, widget: WidgetSettings, updatedUserData: boolean): void {
@@ -169,11 +172,8 @@ export class WidgetService {
                 let wireTransferList: WireTransferPaymentCategoryItem[] = [];
                 let accountData: WireTransferBankAccountShort | undefined = undefined;
                 const settingsResult = data.mySettingsFee as SettingsFeeShort;
-                if(settingsResult.requiredFields && settingsResult.requiredFields.length > 0){
-                    if(this.userInfoRequired){
-                        this.userInfoRequired(settingsResult.requiredFields)
-                    }
-                    
+                if(settingsResult.requiredFields && settingsResult.requiredFields.length > 0 && this.userInfoRequired){
+                    this.userInfoRequired(settingsResult.requiredFields);
                 }else if (settingsResult.costs) {
                     if (settingsResult.costs.length > 0) {
                         const costs = settingsResult.costs[0];
@@ -318,6 +318,7 @@ export class WidgetService {
         if (this.onError) {
             this.onError('');
         }
+        
         const kycStatusData$ = this.auth.getMyKycData().valueChanges.pipe(take(1));
         if (this.onProgressChanged) {
             this.onProgressChanged(true);
@@ -335,6 +336,11 @@ export class WidgetService {
                     }
                 } else {
                     if (this.onKycStatusUpdate) {
+                        if(tierData.showForm){
+                            if(this.companyLevelVerification){
+                                this.companyLevelVerification();
+                            }
+                        }
                         this.onKycStatusUpdate(kycData[0] === true, kycData[1]);
                     }
                     if (summary.transactionType === TransactionType.Buy) {

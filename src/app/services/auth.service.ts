@@ -56,7 +56,8 @@ const LOGIN = gql`
                   }
                   defaultFiatCurrency,
                   defaultCryptoCurrency,
-                  avatar
+                  avatar,
+                  companyName
             }
             authTokenAction
         }
@@ -265,12 +266,13 @@ const CONFIRM_NAME = gql`
 const SET_MY_INFO = gql`
 mutation SetMyInfo(
     $recaptcha: String!,
-    $firstName: String
+    $firstName: String,
+    $companyName: String,
     $lastName: String,
     $phone: String,
     $address: PostAddress,
     $birthday: DateTime) {
-    setMyInfo(recaptcha: $recaptcha, firstName: $firstName, lastName: $lastName, phone: $phone, address: $address, birthday: $birthday) {
+    setMyInfo(recaptcha: $recaptcha, firstName: $firstName, companyName: $companyName, lastName: $lastName, phone: $phone, address: $address, birthday: $birthday) {
         authToken
         user {
             userId,
@@ -310,6 +312,8 @@ mutation SetMyInfo(
     }
 }
 `;
+
+
 
 const GENERATE_2FA_CODE = gql`
 mutation Generate2faCode {
@@ -403,6 +407,15 @@ query GenerateWebApiToken(
     )
 }
 `;
+
+const COMPANY_LEVEL_VERIFICATION = gql`
+mutation CompanyLevelVerification($newLevel: String, $companyName: String) {
+    companyLevelVerification(
+        newLevel: $newLevel,
+        companyName: $companyName
+        ) { userId }
+    }
+`
 
 const MY_KYC_STATUS = gql`
 query { myKycStatus }
@@ -686,6 +699,7 @@ export class AuthService {
     setMyInfo(
         firstNameValue: string,
         lastNameValue: string,
+        companyNameValue: string | null = null,
         phoneValue: string,
         addressValue: PostAddress | undefined,
         birthdayValue: Date | undefined): Observable<any> {
@@ -693,12 +707,27 @@ export class AuthService {
             recaptcha: EnvService.recaptchaId,
             firstName: (firstNameValue === '') ? undefined : firstNameValue,
             lastName: (lastNameValue === '') ? undefined : lastNameValue,
+            companyName: (companyNameValue === '') ? undefined : companyNameValue,
             phone: (phoneValue === '') ? undefined : phoneValue,
             address: addressValue,
             birthday: birthdayValue
         };
         return this.apollo.mutate({
             mutation: SET_MY_INFO,
+            variables: vars
+        });
+    }
+
+    companyLevelVerification(
+        companyNameValue: string,
+        levelName: string
+    ): Observable<any> {
+        const vars = {
+            companyNameValue: (companyNameValue === '') ? undefined : companyNameValue,
+            newLevel: levelName
+        };
+        return this.apollo.mutate({
+            mutation: COMPANY_LEVEL_VERIFICATION,
             variables: vars
         });
     }

@@ -10,6 +10,8 @@
           {{flagText()}}
         </button> -->
         <button *ngIf="permission>1" class="btn btn-primary pd-x-30 mg-t-5" type="button" (click)="flagValue()">
+          <span *ngIf="flagInProgress" class="spinner-border spinner-border-sm" role="status"
+              aria-hidden="true"></span>
           {{flagText()}}
         </button>
       </div>

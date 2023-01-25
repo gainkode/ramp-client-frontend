@@ -1,5 +1,5 @@
-<div [ngClass]="widget.embedded || initLoading ? '__widget-embedded-container' : '__widget-container'">
-  <div *ngIf="!widget.embedded && !initLoading" class="__widget-title-container">
+<!-- <div [ngClass]="widget.embedded || initLoading ? '__widget-embedded-container' : '__widget-container'"> -->
+  <!-- <div *ngIf="!widget.embedded && !initLoading" class="__widget-title-container">
     <div class="__widget-title-logo-container">
       <img class="__widget-title-logo" [src]="logoSrc" [alt]="logoAlt" width="160" (click)="router.navigateByUrl('/')">
     </div>
@@ -21,16 +21,63 @@
   </div>
   <div *ngIf="widget.embedded && inProgress" class="__widget-embedded-progress-container">
     <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
-  </div>
+  </div> -->
 
   <div *ngIf="!recentTransactions" class="__widget-data-container">
-    <div
-      [ngClass]="{'__widget-wizard-container': !widget.embedded || initLoading, '__widget-wizard-container-single': !widget.embedded && (initState || !showSummary), '__widget-wizard-container-embedded': widget.embedded || initLoading}"
+    <div style="margin: 0;"
+      [ngClass]="{'__widget-wizard-container': !widget.embedded || initLoading, '__widget-wizard-container-single': !widget.embedded, '__widget-wizard-container-embedded': widget.embedded || initLoading}"
       [ngSwitch]="pager.stageId">
-      <!-- Initialization -->
+
+      <div *ngIf="!widget.embedded && !initLoading" class="__widget-title-container">
+        <div class="__widget-title-logo-container">
+          <img class="__widget-title-logo" [src]="logoSrc" [alt]="logoAlt" width="160" (click)="router.navigateByUrl('/')">
+        </div>
+        <div *ngIf="!initState" class="__widget-title-button-container">
+          <button class="__menu-button" type="button" (click)="mobileSummary = !mobileSummary">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+        </div>
+      </div>
+    
+      <div *ngIf="!widget.embedded && !initLoading" class="__widget-mobile-rate-container">
+        <app-widget-rate class="__widget-rate-container" [title]="exchangeRateCountDownTitle"
+          [countDown]="exchangeRateCountDownValue" [rate]="summary?.rate">
+        </app-widget-rate>
+      </div>
+    
+      <div *ngIf="!widget.embedded && !initLoading && !recentTransactions" class="__widget-progress-container">
+        <app-widget-progress [step]="pager.step" [title]="pager.title" [progress]="inProgress"></app-widget-progress>
+      </div>
+      <div *ngIf="widget.embedded && inProgress" class="__widget-embedded-progress-container">
+        <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
+      </div>
+
+      <div *ngIf="mobileSummary && !recentTransactions" class="__widget-mobile-summary-container">
+        <div class="__widget-mobile-summary-box">
+          <div class="__widget-mobile-summary-data-box">
+            <h3 class="__widget-summary-title">Order Summary</h3>
+            <app-widget-summary class="__widget-summary-data" [summary]="summary"></app-widget-summary>
+            <div *ngIf="showTransactionsLink" class="__widget-summary-total">
+              <a [routerLink]="" href="#" (click)="showTransactions()">
+                Transactions History
+              </a>
+            </div>
+          </div>
+          <div class="__widget-mobile-summary-button-box">
+            <button type="button" class="__widget-summary-close-button" (click)="mobileSummary = !mobileSummary">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div
+      [ngStyle]="{'display': (!mobileSummary || recentTransactions) ? 'block' : 'none'}"
+      >
+        <!-- Initialization -->
       <app-widget-initialization *ngSwitchCase="'initialization'" [message]="initMessage"></app-widget-initialization>
       <!-- Order details -->
-      <app-widget-order-details *ngSwitchCase="'order_details'" [initialized]="!initState" [summary]="summary"
+      <app-widget-order-details [quickCheckout]='quickCheckout' *ngSwitchCase="'order_details'" [initialized]="!initState" [summary]="summary"
         [settings]="widget" [withdrawalRate]="summary?.exchangeRate?.withdrawRate" [wallets]="userWallets"
         [internalPayment]="internalPayment" [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage"
         [depositRate]="summary?.exchangeRate?.depositRate" (onError)="handleError($event)"
@@ -81,6 +128,9 @@
 
       <app-widget-wire-transfer-info-required #signupInfo *ngSwitchCase="'wire_transfer_info_required'" buttonTitle="SAVE" (error)="handleError($event)"
         (progressChange)="progressChanged($event)" (done)="requiredFieldsComplete()" [requiredFields] = "requiredFields"></app-widget-wire-transfer-info-required>
+      
+      <company-level-verification #signupInfo *ngSwitchCase="'company_level_verification'"  [levelName]="overLimitLevel" buttonTitle="SEND" (error)="handleError($event)"
+        (progressChange)="progressChanged($event)" (done)="resetWizard()" [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage"></company-level-verification>
 
       <!-- <app-widget-wire-transfer-info-required *ngSwitchCase="'wire_transfer_info_required'" [bankCategories]="wireTransferList"
         [bankAccountId]="bankAccountId" [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage"
@@ -91,7 +141,7 @@
         (onSendEmail)="sendWireTransaferMessage()">
       </app-widget-wire-transfer-result>
       <!-- KYC -->
-      <app-widget-kyc *ngSwitchCase="'verification'" [summary]="summary" [levelName]="overLimitLevel"
+      <app-widget-kyc [ngStyle]="{'min-width': '520px', 'display':'block'}" *ngSwitchCase="'verification'" [summary]="summary" [levelName]="overLimitLevel"
         [completedWhenVerified]="widget.kycFirst"
         [shuftiSubscribeResult]="shuftiSubscribeResult"
         [allowToPayIfKycFailed]="widget.allowToPayIfKycFailed"
@@ -111,9 +161,11 @@
         [textContent]="completeTextData" (onFinish)="resetWizard()"></app-widget-complete>
       <app-widget-error *ngSwitchCase="'error'" [title]="transactionErrorTitle" [errorMessage]="transactionErrorMessage"
         [tryAgain]="transactionErrorTryAgain" (onFinish)="resetWizard()"></app-widget-error>
+      </div>
+      
     </div>
 
-    <div *ngIf="!initState && showSummary && !widget.embedded" class="__widget-summary-container">
+    <!-- <div *ngIf="!initState && showSummary && !widget.embedded" class="__widget-summary-container">
       <div class="__widget-summary-box">
         <h3 class="__widget-summary-title">Order Summary</h3>
         <app-widget-rate class="__widget-rate-container" [title]="exchangeRateCountDownTitle"
@@ -128,7 +180,7 @@
           </a>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 
   <div *ngIf="recentTransactions" class="__widget-data-container">
@@ -136,23 +188,4 @@
       <app-widget-recent-transactions (back)="transactionsBack()"></app-widget-recent-transactions>
     </div>
   </div>
-</div>
-
-<div *ngIf="mobileSummary && !recentTransactions" class="__widget-mobile-summary-container">
-  <div class="__widget-mobile-summary-box">
-    <div class="__widget-mobile-summary-data-box">
-      <h3 class="__widget-summary-title">Order Summary</h3>
-      <app-widget-summary class="__widget-summary-data" [summary]="summary"></app-widget-summary>
-      <div *ngIf="showTransactionsLink" class="__widget-summary-total">
-        <a [routerLink]="" href="#" (click)="showTransactions()">
-          Transactions History
-        </a>
-      </div>
-    </div>
-    <div class="__widget-mobile-summary-button-box">
-      <button type="button" class="__widget-summary-close-button" (click)="mobileSummary = !mobileSummary">
-        <mat-icon>close</mat-icon>
-      </button>
-    </div>
-  </div>
-</div>
+<!-- </div> -->

@@ -1,0 +1,53 @@
+<div *ngIf="!complete" class="widget-required-info">
+    <h2 class="__auth-title">
+        Please, specify your company data
+    </h2>
+    <form [formGroup]="infoForm" (ngSubmit)="onSubmit()">
+        <div class="__form-separator"></div>
+        
+        <!-- Company name (Merchant) -->
+        <div>
+            <app-form-textbox [label]="'Company Name'" [boxType]="'text'" [placeholder]="'Company Name'" [maxlength]="80"
+                formControlName="companyName" [errorMessages]="companyNameErrorMessages" [asterisk]="true" [separator]="true">
+            </app-form-textbox>
+        </div>
+    
+        <div class="__widget-buttons-area">
+            <button *ngIf="!showBack" class="__main-button __button-wide" type="submit" [disabled]="!infoForm.valid">
+                {{buttonTitle}}
+            </button>
+            <button *ngIf="showBack" class="__main-button" type="button" (click)="done.emit()">
+                back
+            </button>
+        </div>
+    
+        <div class="__form-separator"></div>
+        <div class="__widget-data-error">
+            {{errorMessage}}
+        </div>
+    </form>
+</div>
+
+<div *ngIf="complete" class="__widget-data-box">
+    <div class="__widget-disclaimer-area-center">
+        <div class="__profile-details-payment-title-block">
+            <div class="__profile-details-payment-title-image">
+                <img src="assets/rocket.svg" alt="complete">
+            </div>
+        </div>
+
+        <div class="__widget-disclaimer-container">
+            <div >
+                <h1 class="__widget-title">
+                    Your data is being verified...
+                </h1>
+            </div>
+        </div>
+
+        <div class="__widget-buttons-area">
+            <button class="__main-button" type="button" (click)="done.emit()">
+                done
+            </button>
+        </div>
+    </div>
+</div>

@@ -19,6 +19,7 @@ import { PaymentDataService } from './services/payment.service';
 import { NotificationService } from './services/notification.service';
 import { CommonDataService } from './services/common-data.service';
 import { getMainDefinition } from '@apollo/client/utilities';
+import { createApiHash } from './utils/utils';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { createClient } from 'graphql-ws';
@@ -143,10 +144,13 @@ export class AppModule {
       sessionStorage.setItem('currentError', '');
     }
     if (operation.operationName === 'AddMyWidgetUserParams') {
+      const timestamp = new Date().getTime();
+      const apiHash = createApiHash(EnvService.widget_api_key, EnvService.widget_secret, timestamp);
       return {
         headers: {
+          'x-auth-timestamp': timestamp.toString(),
           'x-auth-id': EnvService.widget_api_key,
-          'x-auth-key': EnvService.widget_secret
+          'x-auth-key': apiHash,
         }
       };
     } else {

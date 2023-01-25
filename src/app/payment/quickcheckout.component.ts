@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { WidgetSettings } from '../model/payment-base.model';
@@ -9,6 +9,7 @@ import { NotificationService } from 'src/app/services/notification.service';
 @Component({
   templateUrl: 'quickcheckout.component.html',
   styleUrls: ['../../assets/payment.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class QuickCheckoutComponent {
   prodMode = environment.production;

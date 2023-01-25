@@ -26,6 +26,7 @@ import { WalletValidator } from 'src/app/utils/wallet.validator';
 export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() initialized = false;
   @Input() internalPayment = true;
+  @Input() quickCheckout = false;
   @Input() set errorMessage(val: string) {
     if (val !== '') {
       this.initialized = true;
@@ -532,8 +533,14 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
 
   private setAmountTitles(): void {
     if (this.currentTransaction === TransactionType.Buy) {
-      this.spendTitle = 'Amount to Buy';
-      this.receiveTitle = 'Amount to Receive';
+      if(this.quickCheckout){
+        this.spendTitle = 'Pay';
+        this.receiveTitle = 'Receive';
+      }else{
+        this.spendTitle = 'Amount to Buy';
+        this.receiveTitle = 'Amount to Receive';
+      }
+      
     } else if (this.currentTransaction === TransactionType.Sell) {
       this.spendTitle = 'Amount to Sell';
       this.receiveTitle = 'Amount to Receive';

@@ -182,6 +182,7 @@ query MySettingsKycTiers(
       requireUserBirthday
       requireUserAddress
       requireUserFlatNumber
+      showForm
     }
   }
 }
@@ -218,6 +219,7 @@ query GetAppropriateSettingsKycTiers(
       originalLevelName
       originalFlowName
       skipForWaiting
+      showForm
     }
   }
 }

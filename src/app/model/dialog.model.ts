@@ -3,4 +3,5 @@ export class DialogData {
     message = '';
     button = '';
     result: any;
+    companyLevelVerification: boolean = false;
 }
