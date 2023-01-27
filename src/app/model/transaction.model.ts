@@ -682,7 +682,7 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
     }
     result.sender = {
       id: '',
-      title: senderName,
+      title: data.sourceAddress && data.sourceAddress != '' ? data.sourceAddress : 'External',
       imgSource: '',
       imgClass: ''
     } as CommonTargetValue;

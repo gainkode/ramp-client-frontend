@@ -706,6 +706,7 @@ const GET_TRANSACTIONS = gql`
         source
         sourceVault
         sourceVaultId
+        sourceAddress
         status
         subStatus
         updated

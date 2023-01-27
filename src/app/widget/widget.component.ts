@@ -549,6 +549,10 @@ export class WidgetComponent implements OnInit {
       }, (error) => {
         this.inProgress = false;
         this.initData(undefined);
+        this.showTransactionError(
+          'Wrong widget settings',
+          `Cannot load the widget`,
+        false);
         this.pager.init('order_details', 'Order details');
       })
     );
