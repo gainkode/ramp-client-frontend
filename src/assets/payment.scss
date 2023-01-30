@@ -250,6 +250,12 @@ $font_main: var(--font_main);
     // }
 }
 
+.widget-size{
+    @media (max-width: 480px) {
+        width: 100%;
+        margin: 0;
+    }
+}
 .__widget-wizard-container {
     min-height: 544px;
     width: 100%;
@@ -261,9 +267,9 @@ $font_main: var(--font_main);
         0px 3px 16px rgba(153, 140, 149, 0.12);
     border-radius: 8px;
 
-    @media (max-width: $widget_max_width + px) {
-        margin: 0px 12px;
-        max-width: 320px;
+    @media (max-width: 480px) {
+        width: 100%;
+        min-width: none;
     }
 }
 
