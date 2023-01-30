@@ -269,7 +269,7 @@ $font_main: var(--font_main);
 
     @media (max-width: 480px) {
         width: 100%;
-        min-width: none;
+        min-width: 100%;
     }
 }
 
