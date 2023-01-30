@@ -250,6 +250,13 @@ $font_main: var(--font_main);
     // }
 }
 
+.widget-kyc-size{
+    min-width: '480px';
+    display:'block';
+    @media (max-width: 480px) {
+        min-width: 100%;
+    }
+}
 .widget-size{
     @media (max-width: 480px) {
         width: 100%;
@@ -291,6 +298,9 @@ $font_main: var(--font_main);
 
 .__widget-data-box {
     margin: 24px;
+    @media (max-width: 480px) {
+        margin: 3%;
+    }
 }
 
 .__widget-data-box-lg {
