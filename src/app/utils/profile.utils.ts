@@ -37,7 +37,7 @@ export function getTierBlocks(user: User, verifiedTierId: string, tiersData: Set
                     new Intl.NumberFormat('de-DE', {
                         minimumFractionDigits: 0,
                         style: 'currency',
-                        currency: 'EUR'
+                        currency: val.currency ?? 'EUR'
                     }).format(val.amount ?? 0),
                 name: val.name,
                 passed: tierPassed,

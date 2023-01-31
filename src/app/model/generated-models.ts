@@ -2885,6 +2885,7 @@ export type SettingsKycTierShortEx = {
   originalFlowName?: Maybe<Scalars['String']>;
   skipForWaiting?: Maybe<Scalars['Boolean']>;
   showForm?: Maybe<Scalars['Boolean']>;
+  currency?: Maybe<Scalars['String']>;
 };
 
 export type SettingsKycTierShortExListResult = {
