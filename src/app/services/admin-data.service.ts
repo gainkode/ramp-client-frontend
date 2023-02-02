@@ -743,6 +743,10 @@ const GET_TRANSACTIONS = gql`
           subStatus
           transferDetails
           transferHash
+          screeningAnswer
+          screeningRiskscore
+          screeningStatus
+          screeningData
         }
         transferOrderBlockchainLink
         type        

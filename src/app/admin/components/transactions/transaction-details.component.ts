@@ -19,6 +19,7 @@ import { getTransactionAmountHash, getTransactionStatusHash } from 'src/app/util
 })
 export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   @Input() permission = 0;
+  @Input() activeTab = 'info';
   @Input() set transaction(val: TransactionItemFull | undefined) {
     this.setFormData(val);
     this.pStatusHash = val?.statusHash ?? 0;
@@ -111,6 +112,9 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     kycStatus: [KycStatus.Unknown, { validators: [Validators.required], updateOn: 'change' }],
     accountStatus: [AccountStatus.Closed, { validators: [Validators.required], updateOn: 'change' }],
     transferHash: [undefined],
+    screeningAnswer: [undefined],
+    screeningRiskscore: [undefined],
+    screeningStatus: [undefined],
     benchmarkTransferHash: [undefined],
     comment: [undefined]
   });
@@ -192,6 +196,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
 
   private setFormData(val: TransactionItemFull | undefined): void {
     this.data = val;
+    console.log(this.data?.screeningData)
     this.transactionId = val?.id ?? '';
     this.transactionType = val?.type ?? TransactionType.System;
     this.transferOrderBlockchainLink = val?.transferOrderBlockchainLink ?? '';
@@ -209,6 +214,9 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
       this.form.get('kycStatus')?.setValue(this.data.kycStatusValue);
       this.form.get('accountStatus')?.setValue(this.data.accountStatusValue);
       this.form.get('transferHash')?.setValue(this.data.transferOrderHash);
+      this.form.get('screeningAnswer')?.setValue(this.data.screeningAnswer);
+      this.form.get('screeningRiskscore')?.setValue(this.data.screeningRiskscore);
+      this.form.get('screeningStatus')?.setValue(this.data.screeningStatus);
       this.form.get('benchmarkTransferHash')?.setValue(this.data.benchmarkTransferOrderHash);
       this.form.get('comment')?.setValue(this.data.comment);
       this.transactionStatus = this.data.status;
@@ -285,6 +293,14 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
 
   flagText(): String {
     return this.flag == true ? 'Unflag' : 'Flag';
+  }
+
+  activeTabInfo(): void{
+    this.activeTab = 'info';
+  }
+
+  activeTabInfoScreening(): void{
+    this.activeTab = 'infoScreening';
   }
 
   flagValue(): void {

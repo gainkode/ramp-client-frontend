@@ -1,5 +1,16 @@
 <div class="row">
-  <div class="col-md-12 col-lg-12 col-xl-12 mx-auto d-block">
+  <div class="__info-tab-container">
+      <div [ngClass]="{'__info-tab-selected': activeTab == 'info'}" class="__info-type-tab __info-type-tab-left"
+      (click)="activeTabInfo()">
+          Transaction info
+      </div>
+      <!-- *ngIf="data?.screeningAnswer" -->
+      <div *ngIf="data?.screeningAnswer" [ngClass]="{'__info-tab-selected': activeTab == 'infoScreening'}" class="__info-type-tab __info-type-tab-right"
+      (click)="activeTabInfoScreening()">
+          Transaction screeneng info
+      </div>
+  </div>
+  <div *ngIf="activeTab == 'info'" class="col-md-12 col-lg-12 col-xl-12 mx-auto d-block">
     <form [formGroup]="form" novalidate (ngSubmit)="onSubmit(update_confirm_content)">
       <div style="display: flex; justify-content: flex-start;">
         <!-- <button *ngIf="permission>1"
@@ -225,6 +236,25 @@
           </label>
           <input class="form-control" type="text" formControlName="transferHash">
         </div>
+        <!-- <app-admin-details-item label="Answer screening" [value]="data?.screeningAnswer"></app-admin-details-item> -->
+        <div *ngIf="showTransferHash" class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Answer screening
+          </label>
+          <input class="form-control" type="text" formControlName="screeningAnswer">
+        </div>
+        <div *ngIf="showTransferHash" class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Riscscore screening
+          </label>
+          <input class="form-control" type="number" formControlName="screeningRiskscore">
+        </div>
+        <div *ngIf="showTransferHash" class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Status screening
+          </label>
+          <input class="form-control" type="text" formControlName="screeningStatus">
+        </div>
         <!-- Benchmark transfer hash -->
         <div *ngIf="showBenchmarkTransferHash" class="form-group">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
@@ -310,6 +340,33 @@
             Close
           </button>
         </div>
+      </div>
+    </form>
+  </div>
+
+  <div *ngIf="activeTab == 'infoScreening'" class="col-md-12 col-lg-12 col-xl-12 mx-auto d-block">
+    <form [formGroup]="form" novalidate (ngSubmit)="onSubmit(update_confirm_content)">
+      <div class="card card-body pd-20 pd-md-40 border shadow-none">
+        <app-admin-details-item 
+          *ngIf="data?.screeningData?.paymentChecks && data?.screeningData?.paymentChecks.length > 0" 
+          label="Answer screening" 
+          [value]="data?.screeningData?.paymentChecks[0]?.answer">
+        </app-admin-details-item>
+        <app-admin-details-item 
+          *ngIf="data?.screeningData?.paymentChecks && data?.screeningData?.paymentChecks.length > 0" 
+          label="Riscscore screening" 
+          [value]="data?.screeningData?.paymentChecks[0]?.cryptoTxnRiskScoreInfo?.riskScore">
+        </app-admin-details-item>
+        <app-admin-details-item 
+          *ngIf="data?.screeningData?.paymentChecks && data?.screeningData?.paymentChecks.length > 0" 
+          label="Status screening" 
+          [value]="data?.screeningData?.paymentChecks[0]?.cryptoTxnRiskScoreInfo?.txnMonitorData.status">
+        </app-admin-details-item>
+      </div>
+      <div *ngIf="errorMessage!==''" class="card card-body card-danger pd-20 pd-md-40 border shadow-none">
+        <h4 class="card-title2 mg-b-20" style="color: brown;">
+          {{errorMessage}}
+        </h4>
       </div>
     </form>
   </div>

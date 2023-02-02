@@ -62,6 +62,7 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
   sortedField = 'created';
   sortedDesc = true;
   filter = new Filter({});
+  activeTab = 'info';
 
   private subscriptions: Subscription = new Subscription();
   private detailsDialog: NgbModalRef | undefined = undefined;
@@ -138,8 +139,9 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
     }
   }
 
-  showDetails(transaction: TransactionItemFull, content: any) {
+  showDetails(transaction: TransactionItemFull, content: any, activeTab: string) {
     this.selectedTransaction = transaction;
+    this.activeTab = activeTab;
     this.detailsDialog = this.modalService.open(content, {
       backdrop: 'static',
       windowClass: 'modalCusSty',
