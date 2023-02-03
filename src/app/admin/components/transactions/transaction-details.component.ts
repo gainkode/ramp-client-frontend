@@ -80,6 +80,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   transactionStatuses: TransactionStatusView[] = [];
   removable = false;
   transactionId = '';
+  scriningData = '';
   transactionType: TransactionType = TransactionType.System;
   currenciesToSpend: CurrencyView[] = [];
   currenciesToReceive: CurrencyView[] = [];
@@ -196,7 +197,6 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
 
   private setFormData(val: TransactionItemFull | undefined): void {
     this.data = val;
-    console.log(this.data?.screeningData)
     this.transactionId = val?.id ?? '';
     this.transactionType = val?.type ?? TransactionType.System;
     this.transferOrderBlockchainLink = val?.transferOrderBlockchainLink ?? '';
@@ -218,6 +218,9 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
       this.form.get('screeningRiskscore')?.setValue(this.data.screeningRiskscore);
       this.form.get('screeningStatus')?.setValue(this.data.screeningStatus);
       this.form.get('benchmarkTransferHash')?.setValue(this.data.benchmarkTransferOrderHash);
+      if(this.data?.screeningData?.paymentChecks && this.data?.screeningData?.paymentChecks.length > 0){
+        this.scriningData = JSON.stringify(this.data?.screeningData?.paymentChecks[0], null, 4);
+      }
       this.form.get('comment')?.setValue(this.data.comment);
       this.transactionStatus = this.data.status;
       if (this.transactionStatuses.length > 0) {

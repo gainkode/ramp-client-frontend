@@ -347,7 +347,7 @@
   <div *ngIf="activeTab == 'infoScreening'" class="col-md-12 col-lg-12 col-xl-12 mx-auto d-block">
     <form [formGroup]="form" novalidate (ngSubmit)="onSubmit(update_confirm_content)">
       <div class="card card-body pd-20 pd-md-40 border shadow-none">
-        <app-admin-details-item 
+        <!-- <app-admin-details-item 
           *ngIf="data?.screeningData?.paymentChecks && data?.screeningData?.paymentChecks.length > 0" 
           label="Answer screening" 
           [value]="data?.screeningData?.paymentChecks[0]?.answer">
@@ -361,7 +361,11 @@
           *ngIf="data?.screeningData?.paymentChecks && data?.screeningData?.paymentChecks.length > 0" 
           label="Status screening" 
           [value]="data?.screeningData?.paymentChecks[0]?.cryptoTxnRiskScoreInfo?.txnMonitorData.status">
-        </app-admin-details-item>
+        </app-admin-details-item> -->
+        
+        <pre style="background-color: #f0f8ffb5;" *ngIf="data?.screeningData?.paymentChecks && data?.screeningData?.paymentChecks.length > 0">
+          {{scriningData}}
+        </pre>
       </div>
       <div *ngIf="errorMessage!==''" class="card card-body card-danger pd-20 pd-md-40 border shadow-none">
         <h4 class="card-title2 mg-b-20" style="color: brown;">
