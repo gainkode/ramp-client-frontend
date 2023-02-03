@@ -43,7 +43,7 @@
               <ng-container matColumnDef="delete" sticky>
                 <th mat-header-cell *matHeaderCellDef></th>
                 <td mat-cell *matCellDef="let element">
-                  <button mat-icon-button class="row-button" (click)="remove(element, delete_content)"
+                  <button mat-icon-button class="row-button" (click)="remove($event, element, delete_content)"
                     [attr.aria-label]="'Remove country'" [attr.aria-pressed]="!!selectedCountry"
                     matTooltip="Remove country" matTooltipClass="info-tooltip">
                     <i class="material-icons" style="font-size: 20px;">

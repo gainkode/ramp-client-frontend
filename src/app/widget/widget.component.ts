@@ -137,7 +137,7 @@ export class WidgetComponent implements OnInit {
     // };
     // this.selectedWireTransfer.data = JSON.stringify(dataObject);
     // this.pager.init('wire_transfer_result', 'Initialization');
-
+    this.loadAccountData()
     this.pager.init('initialization', 'Initialization');
     this.loadCustomData();
     this.startExchangeRate();
