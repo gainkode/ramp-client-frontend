@@ -2885,6 +2885,7 @@ export type SettingsKycTierShortEx = {
   originalFlowName?: Maybe<Scalars['String']>;
   skipForWaiting?: Maybe<Scalars['Boolean']>;
   showForm?: Maybe<Scalars['Boolean']>;
+  currency?: Maybe<Scalars['String']>;
 };
 
 export type SettingsKycTierShortExListResult = {
@@ -3366,6 +3367,10 @@ export type TransferOrder = {
   subStatus?: Maybe<Scalars['String']>;
   feeCurrency?: Maybe<Scalars['Float']>;
   cryptoInvoiceName?: Maybe<Scalars['String']>;
+  screeningAnswer?: Maybe<Scalars['String']>;
+  screeningRiskscore?: Maybe<Scalars['Float']>;
+  screeningStatus?: Maybe<Scalars['String']>;
+  screeningData?: Maybe<Scalars['String']>;
 };
 
 export type TransferResult = {

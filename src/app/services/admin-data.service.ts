@@ -706,6 +706,7 @@ const GET_TRANSACTIONS = gql`
         source
         sourceVault
         sourceVaultId
+        sourceAddress
         status
         subStatus
         updated
@@ -742,6 +743,10 @@ const GET_TRANSACTIONS = gql`
           subStatus
           transferDetails
           transferHash
+          screeningAnswer
+          screeningRiskscore
+          screeningStatus
+          screeningData
         }
         transferOrderBlockchainLink
         type        

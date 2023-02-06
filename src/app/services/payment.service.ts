@@ -169,6 +169,7 @@ query MySettingsKycTiers(
   ) {
     count
     list {
+      currency
       settingsKycTierId
       name
       description

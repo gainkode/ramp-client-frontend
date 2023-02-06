@@ -56,6 +56,10 @@ export class TransactionItemFull {
   transferOrderId = '';
   transferOriginalOrderId = '';
   transferOrderHash = '';
+  screeningAnswer = '';
+  screeningRiskscore = 0;
+  screeningStatus = '';
+  screeningData: Record<string, any> = {};
   transferFee = '';
   benchmarkTransferOrderId = '';
   benchmarkTransferOriginalOrderId = '';
@@ -119,6 +123,10 @@ export class TransactionItemFull {
       this.transferOrderId = data.transferOrder?.orderId ?? '';
       this.transferOriginalOrderId = data.transferOrder?.originalOrderId ?? '-';
       this.transferOrderHash = data.transferOrder?.transferHash ?? '';
+      this.screeningAnswer = data?.transferOrder?.screeningAnswer ?? '';
+      this.screeningRiskscore = data?.transferOrder?.screeningRiskscore ?? 0;
+      this.screeningStatus = data?.transferOrder?.screeningStatus ?? '';
+      this.screeningData = JSON.parse(data?.transferOrder?.screeningData ?? '{}');
       this.transferFee = data.transferOrder?.feeCurrency?.toFixed(8) ?? '';
       this.transferOrderBlockchainLink = transactionData.transferOrderBlockchainLink ?? '';
       this.benchmarkTransferOrderBlockchainLink = transactionData.benchmarkTransferOrderBlockchainLink ?? '';
@@ -682,7 +690,7 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
     }
     result.sender = {
       id: '',
-      title: senderName,
+      title: data.sourceAddress && data.sourceAddress != '' ? data.sourceAddress : 'External',
       imgSource: '',
       imgClass: ''
     } as CommonTargetValue;

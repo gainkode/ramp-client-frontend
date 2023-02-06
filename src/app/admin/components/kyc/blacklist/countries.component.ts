@@ -95,8 +95,10 @@ export class AdminCountryBlackListComponent implements OnInit, OnDestroy {
     );
   }
 
-  remove(country: CommonTargetValue, content: any): void {
+  remove(event: any, country: CommonTargetValue, content: any): void {
     this.selectedCountry = country;
+    event.target.style.color = '#ececec'
+    event.target.closest('button').disabled = true;
     this.removeDialog = this.modalService.open(content, {
       backdrop: 'static',
       windowClass: 'modalCusSty',
