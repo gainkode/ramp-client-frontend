@@ -22,19 +22,19 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
   @ViewChild(MatSort) sort!: MatSort;
 
   filterFields = [
-    'users',
     'accountType',
     'accountMode',
-    'accountStatus',
-    'tier',
-    'riskLevel',
     'country',
+    'tier',
     'kycStatus',
+    'users',
+    'widgetName',
+    'search',
+    'riskLevel',
+    'accountStatus',
     'registrationDate',
-    'widget',
     'totalBuyVolume',
     'transactionCount',
-    'search',
     'verifyWhenPaid',
     'transactionFlag'
   ];

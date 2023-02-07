@@ -2819,7 +2819,7 @@ export class AdminDataService {
       countryCodeType: CountryCodeType.Code3,
       kycStatusesOnly: filter.kycStatuses,
       registrationDateInterval: filter?.registrationDateInterval,
-      widgetIdsOnly: filter?.widgets,
+      widgetIdsOnly: filter?.widgetNames,
       totalBuyVolumeOver: filter?.totalBuyVolumeOver,
       transactionCountOver: filter?.transactionCountOver,
       skip: pageIndex * takeItems,
