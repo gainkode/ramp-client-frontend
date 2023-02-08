@@ -78,6 +78,7 @@ export class WidgetComponent implements OnInit {
   logoAlt = EnvService.product;
   disclaimerTextData = disclaimerDataDefault;
   completeTextData = completeDataDefault;
+  transactionIdConfirmationCode = '';
 
   private pSubscriptions: Subscription = new Subscription();
   private pNotificationsSubscription: Subscription | undefined = undefined;
@@ -876,6 +877,21 @@ export class WidgetComponent implements OnInit {
   loginBack(): void {
     this.stageBack();
   }
+
+  transactionConfiramtionComplete(order: TransactionShort): void {
+    this.summary.orderId = order.code as string;
+    this.summary.fee = order.feeFiat as number ?? 0;
+    this.summary.feeMinFiat = order.feeMinFiat as number ?? 0;
+    this.summary.feePercent = order.feePercent as number ?? 0;
+    this.summary.networkFee = order.approxNetworkFee ?? 0;
+    this.summary.transactionDate = new Date().toLocaleString();
+    this.summary.transactionId = order.transactionId as string;
+    if (this.summary.instrument === PaymentInstrument.WireTransfer) {
+      this.nextStage('wire_transfer_result', 'Payment', 5, false);
+    } else {
+      this.startPayment();
+    }
+  }
   // ====================
 
   // == Identification ==
@@ -1008,7 +1024,14 @@ export class WidgetComponent implements OnInit {
                 if (tempStageId === 'verification') {
                   this.pager.goBack();
                 } else {
-                  this.pager.swapStage(tempStageId);
+                  if(order.transactionId && order.transactionId != ''){
+                    this.summary.instrument = instrument;
+                    this.summary.providerView = this.paymentProviders.find(x => x.id === providerId);
+                    this.transactionIdConfirmationCode = order.transactionId;
+                    this.nextStage('code_auth', 'Authorization', 3, true);
+                  }else{
+                    this.pager.swapStage(tempStageId);
+                  }
                 }
               }
             }
@@ -1039,7 +1062,7 @@ export class WidgetComponent implements OnInit {
       );
     }
   }
-
+  
   private createSellTransaction(instrumentDetails: string): void {
     this.errorMessage = '';
     this.inProgress = true;
@@ -1078,7 +1101,12 @@ export class WidgetComponent implements OnInit {
                 errorMessage: this.errorMessage
               } as PaymentErrorDetails);
             } else {
-              this.setError('Transaction handling failed', this.errorMessage, 'createSellTransaction order');
+              if(order.transactionId && order.transactionId != ''){
+                this.transactionIdConfirmationCode = order.transactionId;
+                this.nextStage('code_auth', 'Authorization', 3, true);
+              }else{
+                this.setError('Transaction handling failed', this.errorMessage, 'createSellTransaction order');
+              }
             }
           }
         }, (error) => {

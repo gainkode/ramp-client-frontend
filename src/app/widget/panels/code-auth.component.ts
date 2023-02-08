@@ -1,8 +1,10 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { TransactionShort } from 'src/app/model/generated-models';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
+import { PaymentDataService } from 'src/app/services/payment.service';
 
 @Component({
     selector: 'app-widget-code-auth',
@@ -19,11 +21,13 @@ export class WidgetCodeAuthComponent implements OnInit, OnDestroy, AfterViewInit
     @Input() email = '';
     @Input() codeLength = 5;
     @Input() errorMessage = '';
+    @Input() transactionIdConfirmationCode = '';
     @Output() onError = new EventEmitter<string>();
     @Output() onProgress = new EventEmitter<boolean>();
     @Output() onBack = new EventEmitter();
     @Output() onRegister = new EventEmitter<string>();
     @Output() onComplete = new EventEmitter();
+    @Output() onTransactionComplete = new EventEmitter();
 
     private pSubscriptions: Subscription = new Subscription();
 
@@ -71,7 +75,8 @@ export class WidgetCodeAuthComponent implements OnInit, OnDestroy, AfterViewInit
     constructor(
         private formBuilder: FormBuilder,
         private errorHandler: ErrorService,
-        private auth: AuthService) { }
+        private auth: AuthService,
+        private dataService: PaymentDataService) { }
 
     ngOnInit(): void {
         this.pSubscriptions.add(this.dataForm.valueChanges.subscribe({ next: (result: any) => this.onFormUpdated() }));
@@ -129,19 +134,36 @@ export class WidgetCodeAuthComponent implements OnInit, OnDestroy, AfterViewInit
     onSubmit(): void {
         this.done = true;
         const code = parseInt(this.codeField?.value) as number;
-        this.pSubscriptions.add(
-            this.auth.confirmCode(code, this.email).subscribe(({ data }) => {
-                this.onComplete.emit();
-            }, (error) => {
-                this.done = false;
-                const errCode = this.errorHandler.getCurrentError();
-                if (errCode === 'auth.access_denied') {
-                    this.onError.emit('Incorrect confirmation code');
-                } else {
-                    this.onError.emit(this.errorHandler.getError(error.message, 'Incorrect confirmation code'));
-                }
-            })
-        );
+        if(this.transactionIdConfirmationCode && this.transactionIdConfirmationCode != ''){
+            this.pSubscriptions.add(
+                this.dataService.confirmQuickCheckout(this.transactionIdConfirmationCode, code).subscribe(({ data }) => {
+                    this.onTransactionComplete.emit(data.executeTransaction as TransactionShort);
+                }, (error) => {
+                    this.done = false;
+                    const errCode = this.errorHandler.getCurrentError();
+                    if (errCode === 'auth.access_denied') {
+                        this.onError.emit('Incorrect confirmation code');
+                    } else {
+                        this.onError.emit(this.errorHandler.getError(error.message, 'Incorrect confirmation code'));
+                    }
+                })
+            );
+        }else{
+            this.pSubscriptions.add(
+                this.auth.confirmCode(code, this.email).subscribe(({ data }) => {
+                    this.onComplete.emit();
+                }, (error) => {
+                    this.done = false;
+                    const errCode = this.errorHandler.getCurrentError();
+                    if (errCode === 'auth.access_denied') {
+                        this.onError.emit('Incorrect confirmation code');
+                    } else {
+                        this.onError.emit(this.errorHandler.getError(error.message, 'Incorrect confirmation code'));
+                    }
+                })
+            );
+        }
+        
     }
 
     private onFormUpdated(): void {

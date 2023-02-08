@@ -108,9 +108,9 @@
       </app-widget-login-auth>
       <!-- Code Authentication -->
       <app-widget-code-auth *ngSwitchCase="'code_auth'" [email]="summary.email" [codeLength]="5"
-        [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage" (onComplete)="loginCodeConfirmed()"
+        [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage" [transactionIdConfirmationCode]="transactionIdConfirmationCode" (onComplete)="loginCodeConfirmed()"
         (onError)="handleError($event)" (onProgress)="progressChanged($event)" (onBack)="loginBack()"
-        (onRegister)="onRegister($event)">
+        (onRegister)="onRegister($event)" (onTransactionComplete)="transactionConfiramtionComplete($event)">
       </app-widget-code-auth>
       <!-- Payment -->
       <app-widget-payment *ngSwitchCase="'payment'" [providers]="paymentProviders" [summary]="summary"

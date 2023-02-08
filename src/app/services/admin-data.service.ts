@@ -1172,6 +1172,7 @@ const GET_FIAT_VAULTS = gql`
           currency
         }
         user {
+          mode
           userId
           email
           type

@@ -228,14 +228,32 @@ query GetAppropriateSettingsKycTiers(
 
 const EXECUTE_TRANSACTION = gql`
 mutation ExecuteTransaction(
-  $transactionId: String!,
-  $code: String!
+  $transactionId: String,
+  $code: Int
 ) {
   executeTransaction(
     transactionId: $transactionId,
     code: $code
   ) {
-    transactionId
+    transactionId,
+    code,
+    feeFiat,
+    feePercent,
+    feeMinFiat,
+    approxNetworkFee,
+    data,
+    userTier {
+      name
+      amount
+      originalLevelName
+      originalFlowName
+    },
+    requiredUserTier {
+      name
+      amount
+      originalLevelName
+      originalFlowName
+    }
   }
 }
 `;
@@ -570,7 +588,7 @@ export class PaymentDataService {
     });
   }
 
-  confirmQuickCheckout(id: string, code: string): Observable<any> {
+  confirmQuickCheckout(id: string, code: number): Observable<any> {
     return this.apollo.mutate({
       mutation: EXECUTE_TRANSACTION,
       variables: {
