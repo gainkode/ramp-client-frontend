@@ -91,10 +91,10 @@
       </app-widget-sell-details>
       <!-- Disclaimer -->
       <app-widget-disclaimer *ngSwitchCase="'intro_disclaimer'" [agreementChecked]="summary.agreementChecked"
-        [textContent]="disclaimerTextData" [backButton]=false (onNext)="introDisclaimerNext()">
+        [textContent]="disclaimerTextData" [errorMessageData]="errorMessage" [backButton]=false (onNext)="introDisclaimerNext()">
       </app-widget-disclaimer>
       <app-widget-disclaimer *ngSwitchCase="'disclaimer'" [agreementChecked]="summary.agreementChecked"
-        [textContent]="disclaimerTextData" (onBack)="disclaimerBack()" (onNext)="disclaimerNext()">
+        [textContent]="disclaimerTextData" [errorMessageData]="errorMessage" (onBack)="disclaimerBack()" (onNext)="disclaimerNext()">
       </app-widget-disclaimer>
       <!-- Register -->
       <app-widget-register *ngSwitchCase="'register'" [email]="summary.email" (onBack)="registerBack()"
@@ -147,7 +147,7 @@
         [allowToPayIfKycFailed]="widget.allowToPayIfKycFailed"
         [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage" (onError)="handleError($event)"
         (onAuthError)="handleAuthError()" (onProgress)="progressChanged($event)" (onBack)="kycBack()"
-        (onNext)="kycComplete()" (onReject)="handleReject()"></app-widget-kyc>
+        (onNext)="kycComplete()"  (onReject)="handleReject()"></app-widget-kyc>
       <!-- Processing with a frame -->
       <app-widget-processing-frame *ngSwitchCase="'processing-frame'" [iframeContent]="iframeContent"
         [completed]="paymentComplete" [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage"

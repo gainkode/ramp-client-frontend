@@ -15,6 +15,7 @@ export class WidgetDisclaimerComponent {
       this.textData = new CustomTextList(data);
     }
   }
+  @Input() errorMessageData: string = ''
   @Output() onBack = new EventEmitter();
   @Output() onNext = new EventEmitter();
 
@@ -26,7 +27,6 @@ export class WidgetDisclaimerComponent {
 
   constructor() {
   }
-
   checkAgreement(): void {
     this.agreementChecked = !this.agreementChecked;
   }

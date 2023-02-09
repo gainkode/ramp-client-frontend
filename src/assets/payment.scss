@@ -257,8 +257,24 @@ $font_main: var(--font_main);
         min-width: 100%;
     }
 }
-.widget-size{
+.widget-size-widget{
+    max-width: 300px;
+    min-width: 300px;
+    margin: 0 auto;
     @media (max-width: 480px) {
+        min-width: 100%;
+        max-width: 100%;
+        width: 100%;
+        margin: 0;
+    }
+}
+.widget-size-qc{
+    max-width: 550px;
+    min-width: 550px;
+    margin: 0 auto;
+    @media (max-width: 480px) {
+        min-width: 100%;
+        max-width: 100%;
         width: 100%;
         margin: 0;
     }
@@ -266,7 +282,7 @@ $font_main: var(--font_main);
 .__widget-wizard-container {
     min-height: 544px;
     width: 100%;
-    min-width: 356px;
+    min-width: 100%;
     margin: 0px 0px 24px 24px;
 
     background-color: $color_white;

@@ -3042,6 +3042,10 @@ export type Transaction = {
   sourceAddress?: Maybe<Scalars['String']>;
   flag?: Maybe<Scalars['Boolean']>;
   costDetails?: Maybe<Scalars['String']>;
+  screeningAnswer?: Maybe<Scalars['String']>;
+  screeningRiskscore?: Maybe<Scalars['Float']>;
+  screeningStatus?: Maybe<Scalars['String']>;
+  screeningData?: Maybe<Scalars['String']>;
 };
 
 export enum TransactionConfirmationMode {
@@ -3188,6 +3192,10 @@ export type TransactionShort = {
   sourceAddress?: Maybe<Scalars['String']>;
   flag?: Maybe<Scalars['Boolean']>;
   costDetails?: Maybe<Scalars['String']>;
+  screeningAnswer?: Maybe<Scalars['String']>;
+  screeningRiskscore?: Maybe<Scalars['Float']>;
+  screeningStatus?: Maybe<Scalars['String']>;
+  screeningData?: Maybe<Scalars['String']>;
 };
 
 export type TransactionShortListResult = {

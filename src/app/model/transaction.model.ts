@@ -123,10 +123,10 @@ export class TransactionItemFull {
       this.transferOrderId = data.transferOrder?.orderId ?? '';
       this.transferOriginalOrderId = data.transferOrder?.originalOrderId ?? '-';
       this.transferOrderHash = data.transferOrder?.transferHash ?? '';
-      this.screeningAnswer = data?.transferOrder?.screeningAnswer ?? '';
-      this.screeningRiskscore = data?.transferOrder?.screeningRiskscore ?? 0;
-      this.screeningStatus = data?.transferOrder?.screeningStatus ?? '';
-      this.screeningData = JSON.parse(data?.transferOrder?.screeningData ?? '{}');
+      this.screeningAnswer = data?.screeningAnswer ?? '';
+      this.screeningRiskscore = data?.screeningRiskscore ?? 0;
+      this.screeningStatus = data?.screeningStatus ?? '';
+      this.screeningData = JSON.parse(data?.screeningData ?? '{}');
       this.transferFee = data.transferOrder?.feeCurrency?.toFixed(8) ?? '';
       this.transferOrderBlockchainLink = transactionData.transferOrderBlockchainLink ?? '';
       this.benchmarkTransferOrderBlockchainLink = transactionData.benchmarkTransferOrderBlockchainLink ?? '';

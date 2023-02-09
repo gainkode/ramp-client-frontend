@@ -753,6 +753,10 @@ const GET_TRANSACTIONS = gql`
         verifyWhenPaid        
         widget
         widgetId
+        screeningAnswer
+        screeningRiskscore
+        screeningStatus
+        screeningData
       }
     }
   }
