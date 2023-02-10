@@ -394,6 +394,7 @@ query {
         kycBaseAddress
         additionalSettings
         textPages { page, text }
+        adminAdditionalSettings
     }
   }
 `;

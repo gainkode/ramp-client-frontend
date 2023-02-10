@@ -34,6 +34,7 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
   transactionConfirmationModeOptions = TransactionConfirmationModeList;
   emails: string[] = [];
   emailLoading: boolean = false;
+  adminAdditionalSettings: Record<string, any> = {};
   defaultCustodyWithdrawalKeys: { [key: string]: string } = {};
   defaultLiquidityWithdrawalKeys: { [key: string]: string } = {};
   cryptoList: CurrencyView[] = [];
@@ -159,6 +160,7 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.loadCommonSettings();
     this.loadCurrencies();
   }
 
@@ -166,6 +168,16 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
+  private loadCommonSettings(){
+    let settingsCommon = this.auth.getLocalSettingsCommon();
+    console.log(settingsCommon)
+    if(settingsCommon){
+      this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
+      this.kycProviderOptions = this.kycProviderOptions.filter(item => this.adminAdditionalSettings.kycProviders[item.id] == true);
+      this.liquidityProviderOptions = this.liquidityProviderOptions.filter(item => this.adminAdditionalSettings.liquidityProvider[item.id] == true);
+      this.custodyProviderOptions = this.custodyProviderOptions.filter(item => this.adminAdditionalSettings.custodyProvider[item.id] == true);
+    }
+  }
   private loadCurrencies(): void {
     this.inProgress = true;
     this.errorMessage = '';

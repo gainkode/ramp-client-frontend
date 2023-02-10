@@ -1923,6 +1923,7 @@ export type QueryGetAppropriatePaymentProvidersArgs = {
   fiatCurrency?: Maybe<Scalars['String']>;
   widgetId?: Maybe<Scalars['String']>;
   source?: Maybe<TransactionSource>;
+  amount?: Maybe<Scalars['Int']>;
 };
 
 
@@ -2528,6 +2529,7 @@ export type SettingsCommon = {
   proxyLiquidityProvider?: Maybe<Scalars['String']>;
   proxyLiquidityProviderTransactionChangedCallback?: Maybe<Scalars['String']>;
   textPages?: Maybe<Array<Maybe<TextPage>>>;
+  adminAdditionalSettings?: Maybe<Scalars['String']>;
 };
 
 export type SettingsCommonInput = {
@@ -2580,6 +2582,7 @@ export type SettingsCostListResult = {
 
 export type SettingsCostShort = {
   __typename?: 'SettingsCostShort';
+  settingsCostId: Scalars['ID'];
   terms?: Maybe<Scalars['String']>;
   bankAccounts?: Maybe<Array<WireTransferBankAccountShort>>;
 };
@@ -2674,6 +2677,7 @@ export type SettingsFeeListResult = {
 
 export type SettingsFeeShort = {
   __typename?: 'SettingsFeeShort';
+  settingsFeeId: Scalars['ID'];
   terms: Scalars['String'];
   wireDetails: Scalars['String'];
   currency?: Maybe<Scalars['String']>;

@@ -17,6 +17,7 @@ export class AdminKycTiersComponent implements OnInit, OnDestroy {
     'details',
     'default',
     'name',
+    'description',
     'amount',
     'target',
     'userType',

@@ -256,35 +256,37 @@
           </div>
         </div>
         <!-- Totals -->
-        <app-admin-details-item label="Total Balance" [value]="totalBalance"></app-admin-details-item>
-        <app-admin-details-item label="Total Transaction Count" [value]="userData?.totalTransactionCount">
-        </app-admin-details-item>
-        <app-admin-details-item label="Avarage Transaction" [value]="userData?.averageTransaction">
-        </app-admin-details-item>
-        <app-admin-details-item label="Total Deposit Completed" [value]="userData?.totalDepositCompletedResult">
-        </app-admin-details-item>
-        <app-admin-details-item label="Total Deposit In Process" [value]="userData?.totalDepositInProcessResult">
-        </app-admin-details-item>
-        <app-admin-details-item label="Total Withdrawal Completed" [value]="userData?.totalWithdrawalCompletedResult">
-        </app-admin-details-item>
-        <app-admin-details-item label="Total Withdrawal In Process" [value]="userData?.totalWithdrawalInProcessResult">
-        </app-admin-details-item>
-        <app-admin-details-item label="Total Buy Completed" [value]="userData?.totalBoughtCompletedResult">
-        </app-admin-details-item>
-        <app-admin-details-item label="Total Buy In Process" [value]="userData?.totalBoughtInProcessResult">
-        </app-admin-details-item>
-        <app-admin-details-item label="Total Sell Completed" [value]="userData?.totalSoldCompletedResult">
-        </app-admin-details-item>
-        <app-admin-details-item label="Total Sell In Process" [value]="userData?.totalSoldInProcessResult">
-        </app-admin-details-item>
-        <app-admin-details-item label="Total Send Completed" [value]="userData?.totalSentCompletedResult">
-        </app-admin-details-item>
-        <app-admin-details-item label="Total Send In Process" [value]="userData?.totalSentInProcessResult">
-        </app-admin-details-item>
-        <app-admin-details-item label="Total Receive Completed" [value]="userData?.totalReceivedCompletedResult">
-        </app-admin-details-item>
-        <app-admin-details-item label="Total Receive In Process" [value]="userData?.totalReceivedInProcessResult">
-        </app-admin-details-item>
+        <div *ngIf="adminAdditionalSettings?.userDetails?.total == true">
+          <app-admin-details-item label="Total Balance" [value]="totalBalance"></app-admin-details-item>
+          <app-admin-details-item label="Total Transaction Count" [value]="userData?.totalTransactionCount">
+          </app-admin-details-item>
+          <app-admin-details-item label="Avarage Transaction" [value]="userData?.averageTransaction">
+          </app-admin-details-item>
+          <app-admin-details-item label="Total Deposit Completed" [value]="userData?.totalDepositCompletedResult">
+          </app-admin-details-item>
+          <app-admin-details-item label="Total Deposit In Process" [value]="userData?.totalDepositInProcessResult">
+          </app-admin-details-item>
+          <app-admin-details-item label="Total Withdrawal Completed" [value]="userData?.totalWithdrawalCompletedResult">
+          </app-admin-details-item>
+          <app-admin-details-item label="Total Withdrawal In Process" [value]="userData?.totalWithdrawalInProcessResult">
+          </app-admin-details-item>
+          <app-admin-details-item label="Total Buy Completed" [value]="userData?.totalBoughtCompletedResult">
+          </app-admin-details-item>
+          <app-admin-details-item label="Total Buy In Process" [value]="userData?.totalBoughtInProcessResult">
+          </app-admin-details-item>
+          <app-admin-details-item label="Total Sell Completed" [value]="userData?.totalSoldCompletedResult">
+          </app-admin-details-item>
+          <app-admin-details-item label="Total Sell In Process" [value]="userData?.totalSoldInProcessResult">
+          </app-admin-details-item>
+          <app-admin-details-item label="Total Send Completed" [value]="userData?.totalSentCompletedResult">
+          </app-admin-details-item>
+          <app-admin-details-item label="Total Send In Process" [value]="userData?.totalSentInProcessResult">
+          </app-admin-details-item>
+          <app-admin-details-item label="Total Receive Completed" [value]="userData?.totalReceivedCompletedResult">
+          </app-admin-details-item>
+          <app-admin-details-item label="Total Receive In Process" [value]="userData?.totalReceivedInProcessResult">
+          </app-admin-details-item>
+        </div>
       </div>
       <div class="card card-body pd-20 pd-md-40 border shadow-none">
         <h5 class="card-title mg-b-20">

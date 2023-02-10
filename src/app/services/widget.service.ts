@@ -362,6 +362,7 @@ export class WidgetService {
 
     private loadPaymentProviders(summary: CheckoutSummary, widget: WidgetSettings): void {
         let fiatCurrency = '';
+        let amount: number = summary.amountFrom ?? 0;
         if (summary.transactionType === TransactionType.Buy) {
             fiatCurrency = summary.currencyFrom;
         } else if (summary.transactionType === TransactionType.Sell) {
@@ -369,7 +370,7 @@ export class WidgetService {
         }
         const widgetId = widget.widgetId;
         const providersData$ = this.paymentService.getProviders(
-            fiatCurrency, (widgetId !== '') ? widgetId : undefined, this.getSource(widget)
+            fiatCurrency, (widgetId !== '') ? widgetId : undefined, this.getSource(widget), amount
         ).valueChanges.pipe(take(1));
         if (this.onProgressChanged) {
             this.onProgressChanged(true);

@@ -36,6 +36,7 @@ export class AdminTransactionStatusHistoryComponent implements OnInit, OnDestroy
   selectedTransaction?: TransactionStatusHistoryItem;
   selectedForUnbenchmark = false;
   transactionCount = 0;
+  adminAdditionalSettings: Record<string, any> = {};
   transactionStatusHistory: TransactionStatusHistoryItem[] = [];
   userStatuses: TransactionStatusDescriptorMap[] = [];
   currencyOptions: CurrencyView[] = [];
@@ -65,6 +66,7 @@ export class AdminTransactionStatusHistoryComponent implements OnInit, OnDestroy
   }
 
   ngOnInit(): void {
+    this.loadCommonSettings();
     this.loadList();
   }
 
@@ -135,6 +137,14 @@ export class AdminTransactionStatusHistoryComponent implements OnInit, OnDestroy
 
   private isSelectedTransaction(transactionId: string): boolean {
     return !!this.selectedTransaction && this.selectedTransaction.id === transactionId;
+  }
+
+  private loadCommonSettings(){
+    let settingsCommon = this.auth.getLocalSettingsCommon();
+    console.log(settingsCommon)
+    if(settingsCommon){
+      this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
+    }
   }
 
   private loadList(): void {

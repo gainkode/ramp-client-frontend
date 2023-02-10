@@ -68,6 +68,7 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   minUsersLengthTerm = 1;
   widgetDestinationAddress: WidgetDestination[] = [];
   selectAll: boolean = false;
+  adminAdditionalSettings: Record<string, any> = {};
 
   form = this.formBuilder.group({
     id: [null],
@@ -97,6 +98,7 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.loadCommonSettings();
     this.initUserSearch();
     this.subscriptions.add(
       this.form.get('instruments')?.valueChanges.subscribe(val => {
@@ -111,6 +113,12 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
+  private loadCommonSettings(){
+    let settingsCommon = this.auth.getLocalSettingsCommon();
+    if(settingsCommon){
+      this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
+    }
+  }
   private initUserSearch() {
     this.usersOptions$ = concat(
       of([]),

@@ -62,13 +62,13 @@
             </small>
           </div>
         </div>
-        <app-admin-details-item label="Original transfer Order Id" [value]="data?.transferOriginalOrderId">
+        <app-admin-details-item label="Custody Order Id" [value]="data?.transferOriginalOrderId">
         </app-admin-details-item>
-        <app-admin-details-item label="Transfer Order Id" [value]="data?.transferOrderId"></app-admin-details-item>
+        <!-- <app-admin-details-item label="Transfer Order Id" [value]="data?.transferOrderId"></app-admin-details-item> -->
         <app-admin-details-item label="Transfer Order Hash" [value]="data?.transferOrderHash"></app-admin-details-item>
 
-        <app-admin-details-item label="BENCHMARK TRANSFER ORDER ID" [value]="data?.benchmarkTransferOrderId"></app-admin-details-item>
-        <app-admin-details-item label="ORIGINAL BENCHMARK TRANSFER ORDER ID" [value]="data?.benchmarkTransferOriginalOrderId"></app-admin-details-item>
+        <!-- <app-admin-details-item label="BENCHMARK TRANSFER ORDER ID" [value]="data?.benchmarkTransferOrderId"></app-admin-details-item> -->
+        <app-admin-details-item label="LIQUIDITY BENCHMARK TRANSFER ORDER ID" [value]="data?.benchmarkTransferOriginalOrderId"></app-admin-details-item>
         <!-- Transaction status -->
         <app-admin-details-item *ngIf="transactionType===TRANSACTION_TYPE.Receive" label="Transaction status"
           [value]="transactionStatusName"></app-admin-details-item>

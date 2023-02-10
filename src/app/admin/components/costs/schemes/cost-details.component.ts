@@ -56,6 +56,7 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
   targetsSearchInput$ = new Subject<string>();
   targetsOptions$: Observable<CommonTargetValue[]> = of([]);
   minTargetsLengthTerm = 1;
+  adminAdditionalSettings: Record<string, any> = {};
 
   form = this.formBuilder.group({
     id: [undefined],
@@ -70,11 +71,11 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
     provider: [[]],
     mdr: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
     transactionCost: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
-    rollingReserves: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
-    rollingReservesDays: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
-    chargebackCost: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
-    monthlyCost: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
-    minMonthlyCost: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }]
+    // rollingReserves: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
+    // rollingReservesDays: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
+    // chargebackCost: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
+    // monthlyCost: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
+    // minMonthlyCost: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }]
   });
 
   constructor(
@@ -93,12 +94,23 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.form.get('instrument')?.valueChanges.subscribe(val => this.filterPaymentProviders(val))
     );
+    this.loadCommonSettings();
     this.getPaymentProviders();
     this.getWireTransferAccounts();
   }
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+  }
+
+  private loadCommonSettings(){
+    let settingsCommon = this.auth.getLocalSettingsCommon();
+    console.log(settingsCommon)
+    if(settingsCommon){
+      this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
+      this.transactionTypes = this.transactionTypes.filter(item => this.adminAdditionalSettings.transactionType[item.id] == true);
+      this.instruments = this.instruments.filter(item => this.adminAdditionalSettings.paymentMethods[item.id] == true)
+    }
   }
 
   private setFormData(scheme: CostScheme | undefined): void {
@@ -119,11 +131,11 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
       this.form.get('provider')?.setValue(scheme?.provider);
       this.form.get('mdr')?.setValue(scheme?.terms.mdr);
       this.form.get('transactionCost')?.setValue(scheme?.terms.transactionCost);
-      this.form.get('rollingReserves')?.setValue(scheme?.terms.rollingReserves);
-      this.form.get('rollingReservesDays')?.setValue(scheme?.terms.rollingReservesDays);
-      this.form.get('chargebackCost')?.setValue(scheme?.terms.chargebackCost);
-      this.form.get('monthlyCost')?.setValue(scheme?.terms.monthlyCost);
-      this.form.get('minMonthlyCost')?.setValue(scheme?.terms.minMonthlyCost);
+      // this.form.get('rollingReserves')?.setValue(scheme?.terms.rollingReserves);
+      // this.form.get('rollingReservesDays')?.setValue(scheme?.terms.rollingReservesDays);
+      // this.form.get('chargebackCost')?.setValue(scheme?.terms.chargebackCost);
+      // this.form.get('monthlyCost')?.setValue(scheme?.terms.monthlyCost);
+      // this.form.get('minMonthlyCost')?.setValue(scheme?.terms.minMonthlyCost);
       this.filterPaymentProviders(scheme.instrument);
       this.setTargetValidator();
       this.setTargetValueParams();
@@ -140,11 +152,11 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
       this.form.get('provider')?.setValue([]);
       this.form.get('mdr')?.setValue(undefined);
       this.form.get('transactionCost')?.setValue(undefined);
-      this.form.get('rollingReserves')?.setValue(undefined);
-      this.form.get('rollingReservesDays')?.setValue(undefined);
-      this.form.get('chargebackCost')?.setValue(undefined);
-      this.form.get('monthlyCost')?.setValue(undefined);
-      this.form.get('minMonthlyCost')?.setValue(undefined);
+      // this.form.get('rollingReserves')?.setValue(undefined);
+      // this.form.get('rollingReservesDays')?.setValue(undefined);
+      // this.form.get('chargebackCost')?.setValue(undefined);
+      // this.form.get('monthlyCost')?.setValue(undefined);
+      // this.form.get('minMonthlyCost')?.setValue(undefined);
       this.filterPaymentProviders([]);
       this.setTargetValidator();
     }
@@ -164,11 +176,11 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
     // terms
     data.terms.mdr = Number(this.form.get('mdr')?.value);
     data.terms.transactionCost = Number(this.form.get('transactionCost')?.value);
-    data.terms.rollingReserves = Number(this.form.get('rollingReserves')?.value);
-    data.terms.rollingReservesDays = Number(this.form.get('rollingReservesDays')?.value);
-    data.terms.chargebackCost = Number(this.form.get('chargebackCost')?.value);
-    data.terms.monthlyCost = Number(this.form.get('monthlyCost')?.value);
-    data.terms.minMonthlyCost = Number(this.form.get('minMonthlyCost')?.value);
+    // data.terms.rollingReserves = Number(this.form.get('rollingReserves')?.value);
+    // data.terms.rollingReservesDays = Number(this.form.get('rollingReservesDays')?.value);
+    // data.terms.chargebackCost = Number(this.form.get('chargebackCost')?.value);
+    // data.terms.monthlyCost = Number(this.form.get('monthlyCost')?.value);
+    // data.terms.minMonthlyCost = Number(this.form.get('minMonthlyCost')?.value);
     return data;
   }
 

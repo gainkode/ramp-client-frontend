@@ -74,6 +74,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
   };
   disableButtonTitle = 'Disable';
   removable = false;
+  adminAdditionalSettings: Record<string, any> = {};
 
   dataForm = this.formBuilder.group({
     id: [''],
@@ -109,7 +110,10 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
     private errorHandler: ErrorService,
     private modalService: NgbModal,
     private adminService: AdminDataService) { }
-
+  
+  ngOnInit(): void {
+    this.loadCommonSettings();
+  }
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
@@ -123,6 +127,12 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
     }
   }
 
+  private loadCommonSettings(){
+    let settingsCommon = this.auth.getLocalSettingsCommon();
+    if(settingsCommon){
+      this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
+    }
+  }
   private setFormData(data: UserItem | null | undefined): void {
     this.userData = data;
     this.errorMessage = '';

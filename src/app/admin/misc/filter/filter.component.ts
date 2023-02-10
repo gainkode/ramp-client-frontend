@@ -11,6 +11,7 @@ import { Countries } from 'src/app/model/country-code.model';
 import { SettingsKycTier } from 'src/app/model/generated-models';
 import { CurrencyView, KycStatusList, PaymentInstrumentList, RiskLevelViewList, TransactionKycStatusList, TransactionSourceList, TransactionStatusList, TransactionTypeList, UserActionTypeList, UserModeList, UserStatusList, UserTypeList } from 'src/app/model/payment.model';
 import { AdminDateRangeComponent } from '../date-range/date-range.component';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-admin-filter',
@@ -61,14 +62,17 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
   minUsersLengthTerm = 1;
   minWidgetsLengthTerm = 1;
   minWidgetNamesLengthTerm = 1;
+  adminAdditionalSettings: Record<string, any> = {};
 
   constructor(
     private formBuilder: FormBuilder,
+    private auth: AuthService,
     private adminDataService: AdminDataService) {
 
   }
 
   ngOnInit(): void {
+    this.loadCommonSettings();
     this.initForm();
     if (this.fields.includes('tier')) {
       this.tierSearch();
@@ -86,6 +90,18 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+  }
+
+  private loadCommonSettings(){
+    let settingsCommon = this.auth.getLocalSettingsCommon();
+    console.log(settingsCommon)
+    if(settingsCommon){
+      this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
+      this.userModeOptions = this.userModeOptions.filter(item => this.adminAdditionalSettings.userMode[item.id] == true);
+      this.userTypeOptions = this.userTypeOptions.filter(item => this.adminAdditionalSettings.userType[item.id] == true);
+      this.paymentInstrumentsOptions = this.paymentInstrumentsOptions.filter(item => this.adminAdditionalSettings.paymentMethods[item.id] == true);
+      this.transactionTypeOptions = this.transactionTypeOptions.filter(item => this.adminAdditionalSettings.transactionType[item.id] == true)
+    }
   }
 
   private tierSearch(): void {

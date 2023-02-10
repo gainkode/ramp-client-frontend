@@ -353,7 +353,7 @@ query GetSettingsKycTiers {
   getSettingsKycTiers(
     orderBy: [
       { orderBy: "default", desc: true },
-      { orderBy: "amount", desc: false }
+      { orderBy: "name", desc: false }
     ]
   ) {
       count
@@ -1275,7 +1275,8 @@ query {
       kycProvider,
       adminEmails,
       stoppedForServicing,
-      additionalSettings
+      additionalSettings,
+      adminAdditionalSettings
     }
   }
 `;
