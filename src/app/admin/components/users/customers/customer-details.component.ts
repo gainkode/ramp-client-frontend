@@ -131,6 +131,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
     let settingsCommon = this.auth.getLocalSettingsCommon();
     if(settingsCommon){
       this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
+      this.kycProviders = this.kycProviders.filter(item => this.adminAdditionalSettings.kycProviders[item.id] == true);
     }
   }
   private setFormData(data: UserItem | null | undefined): void {
