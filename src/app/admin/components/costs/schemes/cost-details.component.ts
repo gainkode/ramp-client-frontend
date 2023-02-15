@@ -109,7 +109,7 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
     if(settingsCommon){
       this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
       this.transactionTypes = this.transactionTypes.filter(item => this.adminAdditionalSettings.transactionType[item.id] == true);
-      this.instruments = this.instruments.filter(item => this.adminAdditionalSettings.paymentMethods[item.id] == true)
+      this.instruments = this.instruments.filter(item => this.adminAdditionalSettings.paymentMethods[item.id] == true);
     }
   }
 
