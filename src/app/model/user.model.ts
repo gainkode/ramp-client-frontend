@@ -142,16 +142,22 @@ export class UserItem {
     if (data) {
       this.id = data.userId;
       this.flag = data.flag ?? false;
-      this.referralCode = data.referralCode?.toString() ?? '';
+      this.referralCode = data?.referralCode?.toString() ?? '';
       this.deleted = data.deleted !== undefined && data.deleted !== null;
-      this.userType = UserTypeList.find((x) => x.id === data.type) as UserTypeView;
-      let userMode = UserModeShortList.find((x) => x.id === data.mode) as UserModeView;
-      this.userMode = new UserModeView()
-      this.userMode.id = userMode.id;
-      this.userMode.name = userMode.name;
+      if(data.type){
+        this.userType = UserTypeList.find((x) => x.id === data.type) as UserTypeView;
+      }
+      
+      if(data.mode){
+        let userMode = UserModeShortList.find((x) => x.id === data.mode) as UserModeView;
+        this.userMode = new UserModeView()
+        this.userMode.id = userMode.id;
+        this.userMode.name = userMode.name ?? '';
+      }
+      
       this.firstName = data.firstName as string;
       this.lastName = data.lastName as string;
-
+      console.log(data)
       if (this.userType?.id === UserType.Merchant) {
         this.company = data.companyName ? data.companyName : '';
       }
