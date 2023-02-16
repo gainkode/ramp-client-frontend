@@ -22,10 +22,12 @@ export class WidgetDepositDetailsComponent implements OnInit, OnDestroy {
   @Input() set summary(val: CheckoutSummary) {
     this.defaultSummary = val;
     if (val.currencyTo !== undefined) {
-      this.currencyField?.setValue(val.currencyTo);
+      this.currencyTo?.setValue(val.currencyTo);
+      this.currencyFrom?.setValue(val.currencyFrom);
     }
     if (val.amountTo !== undefined) {
-      this.amountField?.setValue(val.amountTo);
+      this.amountTo?.setValue(val.amountTo);
+      this.amountFrom?.setValue(val.amountFrom);
     }
     if (val.transactionType === TransactionType.Deposit) {
       this.amountTitle = 'Fiat Received';
@@ -46,8 +48,10 @@ export class WidgetDepositDetailsComponent implements OnInit, OnDestroy {
   done = false;
 
   dataForm = this.formBuilder.group({
-    amount: [undefined, { validators: [], updateOn: 'change' }],
-    currency: [undefined, { validators: [], updateOn: 'change' }],
+    amountTo: [undefined, { validators: [], updateOn: 'change' }],
+    currencyTo: [undefined, { validators: [], updateOn: 'change' }],
+    currencyFrom: [null, { validators: [], updateOn: 'change' }],
+    amountFrom: [undefined, { validators: [], updateOn: 'change' }],
   });
 
   amountErrorMessages: { [key: string]: string; } = {
@@ -56,12 +60,20 @@ export class WidgetDepositDetailsComponent implements OnInit, OnDestroy {
     ['min']: 'Minimal amount'
   };
 
-  get amountField(): AbstractControl | null {
-    return this.dataForm.get('amount');
+  get amountTo(): AbstractControl | null {
+    return this.dataForm.get('amountTo');
   }
 
-  get currencyField(): AbstractControl | null {
-    return this.dataForm.get('currency');
+  get currencyTo(): AbstractControl | null {
+    return this.dataForm.get('currencyTo');
+  }
+
+  get amountFrom(): AbstractControl | null {
+    return this.dataForm.get('amountFrom');
+  }
+
+  get currencyFrom(): AbstractControl | null {
+    return this.dataForm.get('currencyFrom');
   }
 
   constructor(
@@ -69,7 +81,7 @@ export class WidgetDepositDetailsComponent implements OnInit, OnDestroy {
     private auth: AuthService) { }
 
   ngOnInit(): void {
-    this.pSubscriptions.add(this.currencyField?.valueChanges.subscribe(val => this.onCurrencyUpdated(val)));
+    this.pSubscriptions.add(this.currencyTo?.valueChanges.subscribe(val => this.onCurrencyUpdated(val)));
     const defaultFiat = this.auth.user?.defaultFiatCurrency ?? 'EUR';
     let currency = defaultFiat;
     if (this.defaultSummary) {
@@ -77,7 +89,8 @@ export class WidgetDepositDetailsComponent implements OnInit, OnDestroy {
         currency = this.defaultSummary.currencyTo;
       }
     }
-    this.currencyField?.setValue(currency);
+    this.currencyTo?.setValue(currency);
+    this.currencyFrom?.setValue(currency);
   }
 
   ngOnDestroy(): void {
@@ -87,16 +100,22 @@ export class WidgetDepositDetailsComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     this.done = true;
     const data = new CheckoutSummary();
-    data.amountTo = parseFloat(this.amountField?.value ?? '0');
-    data.currencyTo = this.currencyField?.value ?? 'EUR';
+    data.amountTo = parseFloat(this.amountTo?.value ?? '0');
+    data.currencyTo = this.currencyTo?.value ?? 'EUR';
+    data.amountFrom = parseFloat(this.amountFrom?.value ?? '0');
+    data.currencyFrom = this.currencyFrom?.value ?? 'EUR';
     this.onComplete.emit(data);
   }
 
   private onCurrencyUpdated(symbol: string): void {
     this.currencyInit = true;
     this.selectedCurrency = this.currencies.find(x => x.symbol === symbol);
-    if (this.amountField?.value === undefined || this.amountField?.value === null) {
-      this.amountField?.setValue(this.selectedCurrency?.minAmount ?? 0);
+    if (this.amountTo?.value === undefined || this.amountTo?.value === null) {
+      this.amountTo?.setValue(this.selectedCurrency?.minAmount ?? 0);
+    }
+
+    if (this.amountFrom?.value === undefined || this.amountFrom?.value === null) {
+      this.amountFrom?.setValue(this.selectedCurrency?.minAmount ?? 0);
     }
     this.amountErrorMessages['min'] = `Min. amount ${this.selectedCurrency?.minAmount ?? 0} ${this.selectedCurrency?.display}`;
     const validators = [
@@ -104,7 +123,10 @@ export class WidgetDepositDetailsComponent implements OnInit, OnDestroy {
       Validators.pattern(this.pNumberPattern),
       Validators.min(this.selectedCurrency?.minAmount ?? 0),
     ];
-    this.amountField?.setValidators(validators);
-    this.amountField?.updateValueAndValidity();
+    this.amountTo?.setValidators(validators);
+    this.amountTo?.updateValueAndValidity();
+
+    this.amountFrom?.setValidators(validators);
+    this.amountFrom?.updateValueAndValidity();
   }
 }

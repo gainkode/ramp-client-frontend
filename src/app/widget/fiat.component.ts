@@ -97,6 +97,9 @@ export class FiatWidgetComponent implements OnInit {
   orderDetailsComplete(data: CheckoutSummary): void {
     this.summary.currencyTo = data.currencyTo;
     this.summary.amountTo = data.amountTo;
+    this.summary.currencyFrom = data.currencyFrom;
+    this.summary.amountFrom = data.amountFrom;
+    
     if (this.summary.transactionType === TransactionType.Deposit) {
       this.widgetService.getWireTransferSettings(this.summary, this.widgetSettings);
     } else {
