@@ -12,7 +12,7 @@ export class AdminGuard {
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    if (!this.auth.isAuthenticatedUserRole(['MERCHANT', 'MANAGER', 'SUPPORT', 'ADMIN'])) {
+    if (!this.auth.isAuthenticatedUserRole(['MERCHANT', 'MANAGER', 'SUPPORT', 'ADMIN', 'DEMO'])) {
       this.router.navigateByUrl('/');
       return false;
     }
@@ -38,6 +38,7 @@ export class AdminGuard {
       }
     });
     const currentItem = pathList.find(x => state.url.toLowerCase().includes(x.path.toLowerCase()));
+    console.log(currentItem)
     if (currentItem) {
       const permission = this.auth.isPermittedObjectCode(currentItem.code);
       if (permission === 0) {

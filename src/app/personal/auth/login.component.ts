@@ -56,7 +56,7 @@ export class PersonalLoginComponent implements OnDestroy {
                 const settingsCommon: SettingsCommon = settings.data.getSettingsCommon;
                 this.auth.setLocalSettingsCommon(settingsCommon);
                 this.inProgress = false;
-                const adminRole = (userData.user) ? this.auth.isUserRole(userData.user, ['MERCHANT', 'MANAGER', 'SUPPORT', 'ADMIN']) : false;
+                const adminRole = (userData.user) ? this.auth.isUserRole(userData.user, ['MERCHANT', 'MANAGER', 'SUPPORT', 'ADMIN', 'DEMO']) : false;
                 const userRole = (userData.user) ? this.auth.isUserRole(userData.user, ['USER']) : false;
                 if (adminRole && !userRole) {
                     this.router.navigateByUrl('/admin');
