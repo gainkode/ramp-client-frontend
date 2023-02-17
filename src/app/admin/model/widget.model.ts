@@ -20,6 +20,7 @@ export class WidgetItem {
   currenciesCrypto: Array<string> = [];
   currenciesFiat: Array<string> = [];
   destinationAddress: Array<WidgetDestination> = [];
+  destinationAddressList: string = '';
   destinationAddresses: Array<string> = [];
   countriesCode2: Array<string> = [];
   countries: Array<string> = [];
@@ -76,6 +77,7 @@ export class WidgetItem {
 
       if(data.destinationAddress && data.destinationAddress.length > 0){
         this.destinationAddress = data.destinationAddress;
+        this.destinationAddressList = JSON.stringify(data.destinationAddress);
       }
       
       this.countriesCode2 = data.countriesCode2 ?? [];

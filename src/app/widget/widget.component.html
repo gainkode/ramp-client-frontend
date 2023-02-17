@@ -30,7 +30,8 @@
 
       <div *ngIf="!widget.embedded && !initLoading" class="__widget-title-container">
         <div class="__widget-title-logo-container">
-          <img class="__widget-title-logo" [src]="logoSrc" [alt]="logoAlt" width="160" (click)="router.navigateByUrl('/')">
+          <!-- (click)="router.navigateByUrl('/')" -->
+          <img class="__widget-title-logo" [src]="logoSrc" [alt]="logoAlt" width="160">
         </div>
         <div *ngIf="!initState" class="__widget-title-button-container">
           <button class="__menu-button" type="button" (click)="mobileSummary = !mobileSummary">
