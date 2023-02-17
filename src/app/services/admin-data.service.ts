@@ -352,7 +352,6 @@ const GET_SETTINGS_KYC_TIERS = gql`
 query GetSettingsKycTiers {
   getSettingsKycTiers(
     orderBy: [
-      { orderBy: "default", desc: true },
       { orderBy: "name", desc: false }
     ]
   ) {
