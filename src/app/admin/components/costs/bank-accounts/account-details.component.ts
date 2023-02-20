@@ -41,6 +41,7 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
   public ukCategory: any;
   public euCategory: any;
   public openpaydCategory: any;
+  public monoovaCategory: any;
   public flashfxCategory: any;
 
   form = this.formBuilder.group({
@@ -49,6 +50,7 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
     auSelected: [false],
     ukSelected: [false],
     euSelected: [false],
+    monoovaSelected: [false],
     openpaydSelected: [false],
     flashfxSelected: [false],
     auAccountName: [undefined],
@@ -79,6 +81,7 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
     this.ukCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.UK);
     this.euCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.EU);
     this.openpaydCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.OPENPAYD);
+    this.monoovaCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.MONOOVA);
     this.flashfxCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.FLASHFX);
   }
 
@@ -116,6 +119,9 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
       if(account.openpaydAvailable){
         this.form.get('openpaydSelected')?.setValue(true);
       }
+      if(account.monoovaAvailable){
+        this.form.get('monoovaSelected')?.setValue(true);
+      }
 
       if(account.flashfxAvailable){
         this.form.get('flashfxSelected')?.setValue(true);
@@ -127,6 +133,7 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
       this.form.get('ukSelected')?.setValue(false);
       this.form.get('euSelected')?.setValue(false);
       this.form.get('openpaydSelected')?.setValue(false);
+      this.form.get('monoovaSelected')?.setValue(false);
       this.form.get('flashfxSelected')?.setValue(false);
       this.form.get('auAccountName')?.setValue(undefined);
       this.form.get('auAccountNumber')?.setValue(undefined);
@@ -200,6 +207,12 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
         data.openpayd = this.form.get('openpaydSelected')?.value;
     }else{
         data.openpayd = false;
+    }
+
+    if(this.form.get('monoovaSelected')?.value === true){
+      data.monoova = this.form.get('monoovaSelected')?.value;
+    }else{
+        data.monoova = false;
     }
 
     if(this.form.get('flashfxSelected')?.value === true){

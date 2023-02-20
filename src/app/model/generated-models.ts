@@ -707,6 +707,13 @@ export type MerchantOrCustomerStats = BaseStat & {
   fee?: Maybe<TransactionStatsVolume>;
 };
 
+export type MonoovaObject = {
+  __typename?: 'MonoovaObject';
+  bsb?: Maybe<Scalars['String']>;
+  bankAccountNumber?: Maybe<Scalars['String']>;
+  bankAccountName?: Maybe<Scalars['String']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   foo: Scalars['String'];
@@ -4251,6 +4258,8 @@ export type WireTransferBankAccount = {
   eu?: Maybe<Scalars['String']>;
   openpayd?: Maybe<Scalars['Boolean']>;
   flashfx?: Maybe<Scalars['Boolean']>;
+  monoova?: Maybe<Scalars['Boolean']>;
+  monoovaObject?: Maybe<Scalars['String']>;
   openpaydObject?: Maybe<Scalars['String']>;
   flashfxObject?: Maybe<Scalars['String']>;
   deleted?: Maybe<Scalars['DateTime']>;
@@ -4264,6 +4273,7 @@ export type WireTransferBankAccountInput = {
   eu?: Maybe<Scalars['String']>;
   openpayd?: Maybe<Scalars['Boolean']>;
   flashfx?: Maybe<Scalars['Boolean']>;
+  monoova?: Maybe<Scalars['Boolean']>;
   deleted?: Maybe<Scalars['DateTime']>;
 };
 
@@ -4285,6 +4295,8 @@ export type WireTransferBankAccountShort = {
   openpayd?: Maybe<Scalars['Boolean']>;
   flashfxObject?: Maybe<Scalars['String']>;
   flashfx?: Maybe<Scalars['Boolean']>;
+  monoovaObject?: Maybe<Scalars['String']>;
+  monoova?: Maybe<Scalars['Boolean']>;
 };
 
 export type LiquidityProviderBalance = {

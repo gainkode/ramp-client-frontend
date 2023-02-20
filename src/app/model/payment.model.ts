@@ -297,6 +297,7 @@ export const WireTransferPaymentCategoryList: Array<WireTransferPaymentCategoryI
     { id: WireTransferPaymentCategory.UK, bankAccountId: '', title: 'UK Bank', data: '' },
     { id: WireTransferPaymentCategory.EU, bankAccountId: '', title: 'SEPA / SWIFT', data: '' },
     { id: WireTransferPaymentCategory.OPENPAYD, bankAccountId: '', title: 'Openpayd', data: ''},
+    { id: WireTransferPaymentCategory.MONOOVA, bankAccountId: '', title: 'Monoova', data: ''},
     { id: WireTransferPaymentCategory.FLASHFX, bankAccountId: '', title: 'Flashfx', data: ''}
 ];
 

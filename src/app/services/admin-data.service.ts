@@ -325,7 +325,8 @@ query GetWireTransferBankAccounts {
       uk
       eu,
       openpayd,
-      flashfx
+      flashfx,
+      monoova
     }
   }
 }
@@ -1409,6 +1410,7 @@ mutation AddWireTransferBankAccount(
   $uk: String
   $eu: String,
   $openpayd: Boolean
+  $monoova: Boolean
   $flashfx: Boolean
 ) {
   addWireTransferBankAccount(
@@ -1418,7 +1420,8 @@ mutation AddWireTransferBankAccount(
       au: $au
       uk: $uk
       eu: $eu
-      openpayd: $openpayd,
+      openpayd: $openpayd
+      monoova: $monoova
       flashfx: $flashfx
     }
   ) {
@@ -2197,6 +2200,7 @@ const UPDATE_WIRE_TRANSFER_SETTINGS = gql`
     $uk: String
     $eu: String
     $openpayd: Boolean
+    $monoova: Boolean
     $flashfx: Boolean
   ) {
     updateWireTransferBankAccount(
@@ -2208,6 +2212,7 @@ const UPDATE_WIRE_TRANSFER_SETTINGS = gql`
         uk: $uk
         eu: $eu
         openpayd: $openpayd
+        monoova: $monoova
         flashfx: $flashfx
       }
     ) {
@@ -3314,6 +3319,7 @@ export class AdminDataService {
           au: account.au,
           uk: account.uk,
           eu: account.eu,
+          monoova: account.monoova,
           openpayd: account.openpayd,
           flashfx: account.flashfx
         }
@@ -3327,6 +3333,7 @@ export class AdminDataService {
           au: account.au,
           uk: account.uk,
           eu: account.eu,
+          monoova: account.monoova,
           openpayd: account.openpayd,
           flashfx: account.flashfx
         }

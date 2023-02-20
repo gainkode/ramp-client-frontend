@@ -126,6 +126,8 @@ query MySettingsFee(
         openpaydObject
         flashfx
         flashfxObject
+        monoova
+        monoovaObject
       }
     },
     requiredFields
