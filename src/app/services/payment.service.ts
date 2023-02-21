@@ -686,7 +686,7 @@ export class PaymentDataService {
         fiatCurrency,
         widgetId,
         source,
-        amount
+        amount: parseFloat(<any>amount)
       },
       fetchPolicy: 'network-only'
     });
