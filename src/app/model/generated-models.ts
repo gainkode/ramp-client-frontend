@@ -1930,7 +1930,7 @@ export type QueryGetAppropriatePaymentProvidersArgs = {
   fiatCurrency?: Maybe<Scalars['String']>;
   widgetId?: Maybe<Scalars['String']>;
   source?: Maybe<TransactionSource>;
-  amount?: Maybe<Scalars['Int']>;
+  amount?: Maybe<Scalars['Float']>;
 };
 
 
@@ -2490,7 +2490,8 @@ export enum RiskAlertCodes {
   SumsubWords = 'SUMSUB_WORDS',
   WithdrawalOwner = 'WITHDRAWAL_OWNER',
   OpenpaydMismatch = 'OPENPAYD_MISMATCH',
-  FlashfxMismatch = 'FLASHFX_MISMATCH'
+  FlashfxMismatch = 'FLASHFX_MISMATCH',
+  MonoovaMismatch = 'MONOOVA_MISMATCH'
 }
 
 export type RiskAlertResultList = {
@@ -3606,6 +3607,7 @@ export enum UserActionType {
   KycCallback = 'kycCallback',
   OpenpaydCallback = 'openpaydCallback',
   FlashfxCallback = 'flashfxCallback',
+  MonoovaCallback = 'monoovaCallback',
   AddBlackCountry = 'addBlackCountry',
   RemoveBlackCountry = 'removeBlackCountry',
   CreateCryptoInvoice = 'createCryptoInvoice',

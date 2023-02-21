@@ -46,7 +46,7 @@ query GetAppropriatePaymentProviders(
   $fiatCurrency: String
   $widgetId: String
   $source: TransactionSource
-  $amount: Int
+  $amount: Float
 ) {
   getAppropriatePaymentProviders(
     fiatCurrency: $fiatCurrency
