@@ -2824,6 +2824,7 @@ export class AdminDataService {
       accountTypesOnly: filter?.accountTypes,
       accountModesOnly: filter?.accountModes,
       accountStatusesOnly: filter?.accountStatuses,
+      userTierLevelsOnly: filter?.tiers,
       riskLevelsOnly: filter?.riskLevels,
       countriesOnly: filter?.countries,
       countryCodeType: CountryCodeType.Code3,

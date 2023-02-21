@@ -94,7 +94,6 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
 
   private loadCommonSettings(){
     let settingsCommon = this.auth.getLocalSettingsCommon();
-    console.log(settingsCommon)
     if(settingsCommon){
       this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
       this.userModeOptions = this.userModeOptions.filter(item => this.adminAdditionalSettings.userMode[item.id] == true);
@@ -115,7 +114,7 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
             .sort((a, b) => this.tierSortHandler(a, b))
             .map(tier => {
               return {
-                id: tier.levelId,
+                id: tier.settingsKycTierId,
                 title: tier.name
               } as CommonTargetValue;
             }))

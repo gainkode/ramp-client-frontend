@@ -157,7 +157,6 @@ export class UserItem {
       
       this.firstName = data.firstName as string;
       this.lastName = data.lastName as string;
-      console.log(data)
       if (this.userType?.id === UserType.Merchant) {
         this.company = data.companyName ? data.companyName : '';
       }
