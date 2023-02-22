@@ -53,6 +53,7 @@ export class WidgetComponent implements OnInit {
   requiredExtraData = false;
   initMessage = 'Loading...';
   summary = new CheckoutSummary();
+  redirectUrl = '';
   widget = new WidgetSettings();
   userWallets: WalletItem[] = [];
   exchangeRateCountDownTitle = '';
@@ -141,7 +142,6 @@ export class WidgetComponent implements OnInit {
     this.loadAccountData()
     this.pager.init('initialization', 'Initialization');
     this.loadCustomData();
-    this.startExchangeRate();
     
     if(!this.shuftiSubscriptionFlag){
       this.startShuftiNotificationListener();
@@ -208,6 +208,7 @@ export class WidgetComponent implements OnInit {
       this.widget.walletAddressPreset = data.hasFixedAddress ?? false;
       
       if (data.currentUserParams) {
+        let setCurrencyExchangeRate = false;
         userParams = JSON.parse(data.currentUserParams);
         if (userParams.params) {
           if (userParams.params.amount) {
@@ -217,10 +218,12 @@ export class WidgetComponent implements OnInit {
           if (userParams.params.currency) {
             this.widget.currencyFrom = userParams.params.currency;
             this.summary.currencyFrom = this.widget.currencyFrom;
+            setCurrencyExchangeRate = true;
           }
           if (userParams.params.convertedCurrency) {
             this.widget.currencyTo = userParams.params.convertedCurrency;
             this.summary.currencyTo = this.widget.currencyTo;
+            setCurrencyExchangeRate = true;
           }
           if (userParams.params.transactionType) {
             userTransaction = userParams.params.transactionType;
@@ -228,7 +231,16 @@ export class WidgetComponent implements OnInit {
           if (userParams.params.destination) {
             presetAddress = true;
           }
+          if(userParams.params.redirectUrl){
+            this.redirectUrl = userParams.params.redirectUrl;
+          }
         }
+
+        // if(setCurrencyExchangeRate){
+        //   this.exhangeRate.setCurrency(this.summary.currencyFrom, this.summary.currencyTo, this.summary.transactionType);
+        //   setCurrencyExchangeRate = false;
+        // }
+        // console.log(this.summary)
       }
       
       if(!this.widget.walletAddressPreset){
@@ -306,6 +318,7 @@ export class WidgetComponent implements OnInit {
     if (this.widget.transaction) {
       this.summary.transactionType = this.widget.transaction;
     }
+    this.startExchangeRate();
   }
 
   private startExchangeRate(): void {
@@ -412,20 +425,25 @@ export class WidgetComponent implements OnInit {
   }
 
   resetWizard(): void {
-    this.inProgress = false;
-    this.requiredExtraData = false;
-    this.summary.reset();
-    if (this.userParamsId === '') {
-      this.initData(undefined);
-      if (this.widget.orderDefault) {
-        this.orderDetailsComplete(this.summary.email);
+    if(this.redirectUrl != ''){
+      window.location.replace(this.redirectUrl);
+    }else{
+      this.inProgress = false;
+      this.requiredExtraData = false;
+      this.summary.reset();
+      if (this.userParamsId === '') {
+        this.initData(undefined);
+        if (this.widget.orderDefault) {
+          this.orderDetailsComplete(this.summary.email);
+        } else {
+          this.pager.init('', '');
+          this.nextStage('order_details', 'Order details', 1, false);
+        }
       } else {
-        this.pager.init('', '');
-        this.nextStage('order_details', 'Order details', 1, false);
+        this.loadUserParams();
       }
-    } else {
-      this.loadUserParams();
     }
+    
   }
 
   handleError(message: string): void {
