@@ -86,6 +86,30 @@
           formControlName="destination" [errorMessages]="emailErrorMessages" [separator]="true">
         </app-form-textbox>
 
+        <!-- User type -->
+        <div class="__form-label __form-label-small">
+          User type
+        </div>
+        <div class="__profile-details-item-block">
+          <div class="__form-text-border">
+            <mat-select formControlName="userType" style="margin: 8px 0px 0px 0px;" placeholder="...">
+              <mat-select-trigger>
+                <div class="__form-combo-item-text">
+                  {{selectedUserType?.name}}
+                </div>
+              </mat-select-trigger>
+              <mat-option *ngFor="let item of userTypes" [value]="item.id" style="height: 32px;">
+                <div class="__form-combo-item-block">
+                  <div class="__form-combo-item-text">
+                    {{item.name}}
+                  </div>
+                </div>
+              </mat-option>
+            </mat-select>
+          </div>
+        </div>
+        <div class="__form-separator"></div>
+
         <!-- Transaction Status Changed WebHook -->
         <app-form-textbox [label]="'Web Hook: On Transaction Status Changed'" [asterisk]=false [maxlength]="350"
           [smallLabel]=true formControlName="transactionWebHook" [separator]="true">

@@ -3,8 +3,8 @@ import { AbstractControl, FormBuilder, ValidatorFn, Validators } from '@angular/
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { SettingsCurrencyWithDefaults, TransactionType, WidgetUserParams } from 'src/app/model/generated-models';
-import { CurrencyView, QuickCheckoutTransactionTypeList, TransactionTypeView } from 'src/app/model/payment.model';
+import { SettingsCurrencyWithDefaults, TransactionType, UserType, WidgetUserParams } from 'src/app/model/generated-models';
+import { CurrencyView, QuickCheckoutTransactionTypeList, TransactionTypeView, UserTypeList, UserTypeView } from 'src/app/model/payment.model';
 import { ErrorService } from 'src/app/services/error.service';
 import { CommonDataService } from '../services/common-data.service';
 import { EnvService } from '../services/env.service';
@@ -29,10 +29,12 @@ export class WidgetWizardComponent implements OnInit {
   currencySendList: CurrencyView[] = [];
   currencyReceiveList: CurrencyView[] = [];
   selectedTransactionType: TransactionTypeView | undefined = undefined;
+  selectedUserType: UserTypeView | undefined = undefined;
   selectedCurrencyReceive: CurrencyView | undefined = undefined;
   done = false;
   validData = false;
   widgetLink = '';
+  userTypes = UserTypeList;
   transactionTypes = QuickCheckoutTransactionTypeList;
 
   widgetErrorMessages: { [key: string]: string; } = {
@@ -72,6 +74,7 @@ export class WidgetWizardComponent implements OnInit {
     currencySend: [undefined, { validators: [], updateOn: 'change' }],
     currencyReceive: [undefined, { validators: [], updateOn: 'change' }],
     destination: [undefined, { validators: [], updateOn: 'change' }],
+    userType: [UserType.Personal],
     transactionWebHook: [undefined, { validators: [], updateOn: 'change' }]
   });
 
@@ -85,6 +88,10 @@ export class WidgetWizardComponent implements OnInit {
 
   get transactionTypeField(): AbstractControl | null {
     return this.dataForm.get('transactionType');
+  }
+
+  get userTypeField(): AbstractControl | null {
+    return this.dataForm.get('userType');
   }
 
   get amountSendField(): AbstractControl | null {
@@ -116,9 +123,11 @@ export class WidgetWizardComponent implements OnInit {
 
   ngOnInit(): void {
     this.selectedTransactionType = this.transactionTypes.find(x => x.id === TransactionType.Buy);
+    this.selectedUserType = this.userTypes.find(x => x.id === UserType.Personal);
     this.pSubscriptions.add(this.currencyReceiveField?.valueChanges.subscribe(val => this.onCurrencyReceiveUpdated(val)));
     this.pSubscriptions.add(this.currencySendField?.valueChanges.subscribe(val => this.onCurrencySendUpdated(val)));
     this.pSubscriptions.add(this.transactionTypeField?.valueChanges.subscribe(val => this.onTransactionTypeChanged(val)));
+    this.pSubscriptions.add(this.userTypeField?.valueChanges.subscribe(val => this.onUserTypeChanged(val)));
     this.loadCurrencies();
   }
 
@@ -164,6 +173,10 @@ export class WidgetWizardComponent implements OnInit {
     this.currencyReceiveField?.setValue(undefined);
     this.selectedTransactionType = this.transactionTypes.find(x => x.id === val);
     this.loadCurrencyLists();
+  }
+
+  onUserTypeChanged(val: UserType): void {
+    this.selectedUserType = this.userTypes.find(x => x.id === val);
   }
 
   private loadCurrencyLists(): void {
@@ -254,6 +267,7 @@ export class WidgetWizardComponent implements OnInit {
       destination: address,
       transactionType: this.selectedTransactionType?.id,
       onTransactionStatusChanged: wh,
+      userType: this.selectedUserType?.id
       // postCode: '',
       // town: '',
       // street: '',
