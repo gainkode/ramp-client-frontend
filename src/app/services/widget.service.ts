@@ -20,6 +20,7 @@ export class WidgetService {
     private onConfirmEmailRequired: Function | undefined = undefined;  // (email: string)
     private onKycStatusUpdate: Function | undefined = undefined;  // (status: boolean)
     private onPaymentProvidersLoaded: Function | undefined = undefined;  // (status: boolean)
+    private onSellPaymentProvidersLoaded: Function | undefined = undefined;  // (status: boolean)
     private onWireTranferListLoaded: Function | undefined = undefined;  // (wireTransferList: WireTransferPaymentCategoryItem[], bankAccountId: string)
     private userInfoRequired: Function | undefined = undefined;
     private companyLevelVerification: Function | undefined = undefined;
@@ -43,7 +44,8 @@ export class WidgetService {
         paymentProvidersCallback: Function | undefined,
         wireTranferListLoadedCallback: Function | undefined,
         userInfoRequired?: Function | undefined,
-        companyLevelVerificationHandler?: Function | undefined) {
+        companyLevelVerificationHandler?: Function | undefined,
+        sellPaymentProvidersCallback?: Function | undefined,) {
         this.onProgressChanged = progressCallback;
         this.onError = errorCallback;
         this.onIdentificationRequired = identificationCallback;
@@ -53,6 +55,7 @@ export class WidgetService {
         this.onConfirmEmailRequired = confirmEmailCallback;
         this.onKycStatusUpdate = kycStatusCallback;
         this.onPaymentProvidersLoaded = paymentProvidersCallback;
+        this.onSellPaymentProvidersLoaded = sellPaymentProvidersCallback;
         this.onWireTranferListLoaded = wireTranferListLoadedCallback;
         this.userInfoRequired = userInfoRequired;
         this.companyLevelVerification = companyLevelVerificationHandler;
@@ -371,6 +374,12 @@ export class WidgetService {
         );
     }
 
+    getSellSettings(summary: CheckoutSummary, widget: WidgetSettings){
+        if(summary.transactionType == TransactionType.Sell){
+            this.loadPaymentProviders(summary, widget);
+        }
+    }
+
     private loadPaymentProviders(summary: CheckoutSummary, widget: WidgetSettings): void {
         let fiatCurrency = '';
         let amount: number = summary.amountFrom ?? 0;
@@ -381,7 +390,7 @@ export class WidgetService {
         }
         const widgetId = widget.widgetId;
         const providersData$ = this.paymentService.getProviders(
-            fiatCurrency, (widgetId !== '') ? widgetId : undefined, this.getSource(widget), amount
+            fiatCurrency, (widgetId !== '') ? widgetId : undefined, this.getSource(widget), summary.transactionType, amount
         ).valueChanges.pipe(take(1));
         if (this.onProgressChanged) {
             this.onProgressChanged(true);
@@ -391,8 +400,12 @@ export class WidgetService {
                 if (this.onProgressChanged) {
                     this.onProgressChanged(false);
                 }
-                if (this.onPaymentProvidersLoaded) {
+                if (this.onPaymentProvidersLoaded && summary.transactionType == TransactionType.Buy) {
                     this.onPaymentProvidersLoaded(this.getPaymentProviderList(
+                        summary,
+                        data.getAppropriatePaymentProviders as PaymentProviderByInstrument[]));
+                }else if(this.onSellPaymentProvidersLoaded && summary.transactionType == TransactionType.Sell){
+                    this.onSellPaymentProvidersLoaded(this.getPaymentProviderList(
                         summary,
                         data.getAppropriatePaymentProviders as PaymentProviderByInstrument[]));
                 }

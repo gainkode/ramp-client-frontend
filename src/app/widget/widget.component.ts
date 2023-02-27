@@ -122,7 +122,8 @@ export class WidgetComponent implements OnInit {
       this.settingsCommonComplete.bind(this),
       this.onWireTransferListLoaded.bind(this),
       this.userInfoRequired.bind(this),
-      this.companyLevelVerification.bind(this)
+      this.companyLevelVerification.bind(this),
+      this.sellSettingsCommonComplete.bind(this),
     );
     this.initMessage = 'Loading...';
 
@@ -671,7 +672,7 @@ export class WidgetComponent implements OnInit {
       accountType: instrumentDetails
     };
     const settingsData = JSON.stringify(settings);
-    this.createSellTransaction(settingsData);
+    this.createSellTransaction(settingsData, this.summary.providerView?.id ?? '', PaymentInstrument.WireTransfer);
   }
   // =======================
 
@@ -683,7 +684,8 @@ export class WidgetComponent implements OnInit {
   disclaimerNext(): void {
     this.summary.agreementChecked = true;
     if (this.summary.transactionType === TransactionType.Sell) {
-      this.nextStage('sell_details', 'Bank details', 2, true);
+      // this.nextStage('sell_details', 'Bank details', 2, true);
+      this.widgetService.getSellSettings(this.summary, this.widget)
       //this.createWithdrawalTransaction();
     } else {
       this.widgetService.getSettingsCommon(this.summary, this.widget, this.widget.orderDefault);
@@ -729,6 +731,34 @@ export class WidgetComponent implements OnInit {
       this.overLimitLevel = level;
     }
     this.requestKyc = state;// || this.summary.quoteLimit !== 0;
+  }
+
+  private sellSettingsCommonComplete(providers: PaymentProviderInstrumentView[]): void {
+    this.paymentProviders = providers.map(val => val);
+
+
+    //test
+    // const wt = this.paymentProviders.find(x => x.instrument === PaymentInstrument.WireTransfer);
+    // if (wt) {
+    //   wt.id = 'Openpayd';
+    // }
+
+
+    const nextStage = 4;
+
+    if (this.paymentProviders.length < 1) {
+      this.setError(
+        'Payment providers not found',
+        `No supported payment providers found for "${this.summary.currencyTo}"`,
+        'settingsCommonComplete');
+    } else if (this.paymentProviders.length > 1) {
+      if (!this.notificationStarted) {
+        this.startNotificationListener();
+      }
+      this.nextStage('payment', 'Payment info', nextStage, true);
+    } else {
+      this.selectProvider(this.paymentProviders[0]);
+    }
   }
 
   private settingsCommonComplete(providers: PaymentProviderInstrumentView[]): void {
@@ -781,12 +811,21 @@ export class WidgetComponent implements OnInit {
   }
 
   selectProvider(provider: PaymentProviderInstrumentView) {
-    if (provider.instrument === PaymentInstrument.WireTransfer) {
-      this.summary.providerView = this.paymentProviders.find(x => x.id === provider.id);
-      this.startPayment();
-    } else {
-      this.createBuyTransaction(provider.id, provider.instrument, '');
+    if(this.summary.transactionType == TransactionType.Buy){
+      if (provider.instrument === PaymentInstrument.WireTransfer) {
+        this.summary.providerView = this.paymentProviders.find(x => x.id === provider.id);
+        this.startPayment();
+      } else {
+        this.createBuyTransaction(provider.id, provider.instrument, '');
+      }
+    }else{
+      if (provider.instrument === PaymentInstrument.WireTransfer) {
+        this.nextStage('sell_details', 'Bank details', 2, true);
+      } else {
+        this.createSellTransaction('', provider.id, provider.instrument);
+      }
     }
+    
   }
   // ====================
 
@@ -1081,7 +1120,7 @@ export class WidgetComponent implements OnInit {
     }
   }
   
-  private createSellTransaction(instrumentDetails: string): void {
+  private createSellTransaction(instrumentDetails: string, providerId: string, instrument: PaymentInstrument): void {
     this.errorMessage = '';
     this.inProgress = true;
     this.initMessage = 'Processing...';
@@ -1094,9 +1133,9 @@ export class WidgetComponent implements OnInit {
           this.summary.currencyFrom,
           this.summary.currencyTo,
           this.summary.amountFrom ?? 0,
-          undefined,
+          instrument,
           instrumentDetails,
-          '',
+          providerId,
           this.userParamsId,
           '',
           false

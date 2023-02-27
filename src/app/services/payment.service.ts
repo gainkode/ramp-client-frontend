@@ -47,12 +47,14 @@ query GetAppropriatePaymentProviders(
   $widgetId: String
   $source: TransactionSource
   $amount: Float
+  $transactionType: TransactionType
 ) {
   getAppropriatePaymentProviders(
     fiatCurrency: $fiatCurrency
     widgetId: $widgetId
     source: $source
     amount: $amount
+    transactionType: $transactionType
   ) {
     instrument
     provider {
@@ -679,14 +681,15 @@ export class PaymentDataService {
     });
   }
   
-  getProviders(fiatCurrency: string, widgetId: string | undefined, source: TransactionSource, amount?: Number): QueryRef<any, EmptyObject> {
+  getProviders(fiatCurrency: string, widgetId: string | undefined, source: TransactionSource, transactionType: TransactionType, amount?: Number): QueryRef<any, EmptyObject> {
     return this.apollo.watchQuery<any>({
       query: GET_PROVIDERS,
       variables: {
         fiatCurrency,
         widgetId,
         source,
-        amount: parseFloat(<any>amount)
+        amount: parseFloat(<any>amount),
+        transactionType
       },
       fetchPolicy: 'network-only'
     });
