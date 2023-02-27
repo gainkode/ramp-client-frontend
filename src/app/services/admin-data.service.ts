@@ -1224,6 +1224,7 @@ const GET_WIDGETS = gql`
       orderBy: $orderBy) {
       count
       list {
+        additionalSettings
         widgetId
         userId
         code

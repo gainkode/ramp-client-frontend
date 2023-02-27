@@ -10,7 +10,7 @@ import { WidgetItem } from 'src/app/admin/model/widget.model';
 import { AdminDataService } from 'src/app/services/admin-data.service';
 import { Countries } from 'src/app/model/country-code.model';
 import { PaymentInstrument, PaymentProvider, SettingsCurrencyWithDefaults, UserType, WidgetDestination } from 'src/app/model/generated-models';
-import { CurrencyView, PaymentInstrumentList, PaymentProviderView, TransactionTypeList } from 'src/app/model/payment.model';
+import { CurrencyView, PaymentInstrumentList, PaymentProviderView, TransactionTypeList, UserTypeList } from 'src/app/model/payment.model';
 import { UserItem } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonDataService } from 'src/app/services/common-data.service';
@@ -58,6 +58,7 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   countryOptions = Countries;
   instrumentOptions = PaymentInstrumentList;
   liquidityProviderOptions = LiquidityProviderList;
+  userTypeOptions = UserTypeList;
   transactionTypeOptions = TransactionTypeList;
   widgetMaskLink = '';
   widgetLink = '';
@@ -67,6 +68,7 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   usersOptions$: Observable<UserItem[]> = of([]);
   minUsersLengthTerm = 1;
   widgetDestinationAddress: WidgetDestination[] = [];
+  widgetAdditionalSettings: Record<string, any> = {};
   selectAll: boolean = false;
   adminAdditionalSettings: Record<string, any> = {};
 
@@ -84,6 +86,7 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
     name: [undefined, { validators: [Validators.required], updateOn: 'change' }],
     description: [''],
     secret: [''],
+    userType: [UserType.Personal, { validators: [Validators.required], updateOn: 'change' }],
     allowToPayIfKycFailed: true
   });
 
@@ -120,6 +123,7 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
       this.transactionTypeOptions = this.transactionTypeOptions.filter(item => this.adminAdditionalSettings.transactionType[item.id] == true);
       this.liquidityProviderOptions = this.liquidityProviderOptions.filter(item => this.adminAdditionalSettings.liquidityProvider[item.id] == true);
       this.instrumentOptions = this.instrumentOptions.filter(item => this.adminAdditionalSettings.paymentMethods[item.id] == true);
+      this.userTypeOptions = this.userTypeOptions.filter(item => this.adminAdditionalSettings.userType[item.id] == true);
     }
   }
   private initUserSearch() {
@@ -146,7 +150,15 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
 
   private setFormData(widget: WidgetItem): void {
     if (widget) {
+      let sellecteduserType = UserType.Personal;
       this.widgetDestinationAddress = widget.destinationAddress;
+      if(widget.additionalSettings){
+        this.widgetAdditionalSettings = JSON.parse(widget.additionalSettings);
+        if(this.widgetAdditionalSettings.userType && this.userTypeOptions.some(userType => userType.id == this.widgetAdditionalSettings.userType)){
+          sellecteduserType = this.widgetAdditionalSettings.userType;
+        }
+      }
+      
       const user$ = widget.userId ?
         this.getUserFilteredOptions(widget.userId).pipe(take(1), map(users => {
           return users.find(u => u.id === widget.userId);
@@ -170,7 +182,8 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
             name: widget.name ?? 'Widget',
             description: widget.description,
             secret: widget.secret,
-            allowToPayIfKycFailed: widget.allowToPayIfKycFailed
+            allowToPayIfKycFailed: widget.allowToPayIfKycFailed,
+            userType: sellecteduserType
           });
         })
       );
@@ -186,6 +199,9 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
     widget.description = formValue.description;
     widget.userId = formValue.user.id;
     widget.countriesCode2 = formValue.countries.map(c => c.code2);
+
+    this.widgetAdditionalSettings.userType = formValue.userType;
+    widget.additionalSettings = JSON.stringify(this.widgetAdditionalSettings)
 
     if(this.currenciesTable._data._value && this.currenciesTable._data._value.length > 0){
       for(let cryptoCurrency of this.currenciesTable._data._value){
