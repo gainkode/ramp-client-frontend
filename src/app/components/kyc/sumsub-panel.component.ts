@@ -16,6 +16,7 @@ export class SumsubPanelComponent implements OnInit, OnDestroy {
     @Input() flow: string = '';
     @Input() token: string = '';
     @Input() completedWhenVerified: boolean = false;
+    @Input() widgetId: string | undefined = undefined;
     @Output() completed = new EventEmitter();
     @Output() onReject = new EventEmitter();
     @Output() onError = new EventEmitter<string>();
@@ -54,7 +55,7 @@ export class SumsubPanelComponent implements OnInit, OnDestroy {
             (newAccessTokenCallback: (newToken: string) => void) => {
                 // Access token expired
                 // get a new one and pass it to the callback to re-initiate the WebSDK
-                this.auth.getKycToken(flowName).valueChanges.subscribe(({ data }) => {
+                this.auth.getKycToken(flowName, this.widgetId).valueChanges.subscribe(({ data }) => {
                     newAccessTokenCallback(data.generateWebApiToken);
                 });
             }

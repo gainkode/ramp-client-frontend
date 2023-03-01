@@ -402,9 +402,11 @@ query {
 const GET_KYC_TOKEN = gql`
 query GenerateWebApiToken(
   $newLevel: String
+  $widgetId: String
 ) {
     generateWebApiToken(
         newLevel: $newLevel
+        widgetId: $widgetId
     )
 }
 `;
@@ -932,11 +934,12 @@ export class AuthService {
         });
     }
 
-    getKycToken(newLevel: string): QueryRef<any, EmptyObject> {
+    getKycToken(newLevel: string, widgetId?: string): QueryRef<any, EmptyObject> {
         return this.apollo.watchQuery<any>({
             query: GET_KYC_TOKEN,
             variables: {
-                newLevel
+                newLevel,
+                widgetId
             },
             fetchPolicy: 'network-only'
         });

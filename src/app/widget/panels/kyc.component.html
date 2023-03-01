@@ -1,5 +1,5 @@
 <div class="__widget-data-box">
-    <app-kyc-panel *ngIf="showValidator" [flow]="flow" [notifyCompleted]="true"
+    <app-kyc-panel *ngIf="showValidator" [flow]="flow" [notifyCompleted]="true" [widgetId]="widgetId"
         [completedWhenVerified]="completedWhenVerified" (completed)="onNext.emit()" (onError)="onError.emit($event)"
         (onAuthError)="onAuthError.emit()" (onProgress)="onProgress.emit($event)" (onReject)="handleReject()">
     </app-kyc-panel>

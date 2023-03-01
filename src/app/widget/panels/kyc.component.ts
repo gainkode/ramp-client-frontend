@@ -20,6 +20,7 @@ export class WidgetKycComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() allowToPayIfKycFailed = false;
   @Input() summary: CheckoutSummary | undefined = undefined;
   @Input() shuftiSubscribeResult: boolean | undefined = undefined;
+  @Input() widgetId: string | undefined = undefined;
   @Output() onError = new EventEmitter<string>();
   @Output() onReject = new EventEmitter();
   @Output() onAuthError = new EventEmitter();

@@ -1702,6 +1702,7 @@ export type PaymentProvider = {
   disabled?: Maybe<Scalars['DateTime']>;
   displayName?: Maybe<Scalars['String']>;
   logo?: Maybe<Scalars['String']>;
+  transactionTypes?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 export type PaymentProviderByInstrument = {
@@ -1931,6 +1932,7 @@ export type QueryGetAppropriatePaymentProvidersArgs = {
   widgetId?: Maybe<Scalars['String']>;
   source?: Maybe<TransactionSource>;
   amount?: Maybe<Scalars['Float']>;
+  transactionType?: Maybe<TransactionType>;
 };
 
 
@@ -2076,6 +2078,7 @@ export type QueryGetVerificationLinkArgs = {
 
 export type QueryGenerateWebApiTokenArgs = {
   newLevel?: Maybe<Scalars['String']>;
+  widgetId?: Maybe<Scalars['String']>;
 };
 
 
@@ -3537,6 +3540,7 @@ export type User = {
   companyName?: Maybe<Scalars['String']>;
   companyRegisterNumber?: Maybe<Scalars['String']>;
   companyType?: Maybe<Scalars['String']>;
+  payId?: Maybe<Scalars['String']>;
 };
 
 export type UserAction = {
@@ -3606,8 +3610,22 @@ export enum UserActionType {
   GenerateKycToken = 'generateKycToken',
   KycCallback = 'kycCallback',
   OpenpaydCallback = 'openpaydCallback',
+  OpenpaydApproved = 'openpaydApproved',
+  OpenpaydAutoReject = 'openpaydAutoReject',
+  OpenpaydDeclined = 'openpaydDeclined',
   FlashfxCallback = 'flashfxCallback',
+  FlashfxApproved = 'flashfxApproved',
+  FlashfxAutoReject = 'flashfxAutoReject',
+  FlashfxDeclined = 'flashfxDeclined',
   MonoovaCallback = 'monoovaCallback',
+  MonoovaApproved = 'monoovaApproved',
+  MonoovaAutoReject = 'monoovaAutoReject',
+  MonoovaDeclined = 'monoovaDeclined',
+  MonoovaGetAccount = 'monoovaGetAccount',
+  MonoovaCreateAccount = 'monoovaCreateAccount',
+  MonoovaGetPayId = 'monoovaGetPayId',
+  MonoovaRegisterPayId = 'monoovaRegisterPayId',
+  MonoovaPayout = 'monoovaPayout',
   AddBlackCountry = 'addBlackCountry',
   RemoveBlackCountry = 'removeBlackCountry',
   CreateCryptoInvoice = 'createCryptoInvoice',

@@ -1,4 +1,4 @@
-<app-sumsub-panel *ngIf="showSumsub" [flow]="flow" [token]="token" [completedWhenVerified]="completedWhenVerified"
+<app-sumsub-panel *ngIf="showSumsub" [flow]="flow" [token]="token" [completedWhenVerified]="completedWhenVerified" [widgetId]="widgetId"
     (completed)="completeVerification()" (onError)="onError.emit($event)" (onReject)="onReject.emit()">
 </app-sumsub-panel>
 

@@ -15,6 +15,7 @@ export class KycPanelComponent implements OnInit, OnDestroy {
     @Input() flow: string = '';
     @Input() notifyCompleted: boolean | undefined = false;
     @Input() completedWhenVerified: boolean = false;
+    @Input() widgetId: string | undefined = undefined;
     @Output() completed = new EventEmitter();
     @Output() onError = new EventEmitter<string>();
     @Output() onReject = new EventEmitter();
@@ -55,7 +56,7 @@ export class KycPanelComponent implements OnInit, OnDestroy {
     loadKycWidget(): void {
         // load sumsub widget
         this.onProgress.emit(true);
-        this.pTokenSubscription = this.auth.getKycToken(this.flow ?? '').valueChanges.subscribe(({ data }) => {
+        this.pTokenSubscription = this.auth.getKycToken(this.flow ?? '', this.widgetId).valueChanges.subscribe(({ data }) => {
             this.onProgress.emit(false);
             if (this.auth.user?.kycProvider === KycProvider.SumSub) {
                 this.showSumsub = true;
