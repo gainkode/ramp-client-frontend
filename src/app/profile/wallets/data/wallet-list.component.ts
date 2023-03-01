@@ -92,12 +92,11 @@ export class ProfileWalletListComponent implements OnDestroy {
     private loadFiatWallets(): void {
         this.onProgress.emit(true);
         const userFiat = this.auth.user?.defaultFiatCurrency ?? 'EUR';
-        const walletData$ = this.commonService.getMyBalances().valueChanges.pipe(take(1));
+        const walletData$ = this.commonService.myFiatVaults(this.filter.currencies).valueChanges.pipe(take(1));
         this.subscriptions.add(
             walletData$.subscribe(({ data }) => {
                 this.onProgress.emit(false);
-                const myState = data.myState as UserState;
-                const fiatVault = myState?.fiatVaults;
+                const fiatVault = data?.myFiatVaults?.list;
                 const fiatWalletCount = fiatVault?.length ?? 0;
                 if (fiatWalletCount > 0) {
                     this.wallets = [

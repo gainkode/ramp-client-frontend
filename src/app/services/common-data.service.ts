@@ -72,6 +72,21 @@ query MyState {
 }
 `;
 
+const MY_FIAT_VAULTS = gql`
+query MyFiatVaults($assetsOnly: [String]){
+  myFiatVaults(
+    assetsOnly: $assetsOnly
+  ){
+    list {
+      fiatVaultId
+      balance
+      generalBalance
+      currency
+    }
+  }
+}
+`;
+
 const GET_USERS = gql`
   query GetUsers {
     getUsers(
@@ -243,6 +258,16 @@ export class CommonDataService {
   getMyBalances(): QueryRef<any, EmptyObject> {
     return this.apollo.watchQuery<any>({
       query: MY_BALANCES,
+      fetchPolicy: 'network-only'
+    });
+  }
+
+  myFiatVaults(assetsOnly: string[]): QueryRef<any, EmptyObject> {
+    return this.apollo.watchQuery<any>({
+      query: MY_FIAT_VAULTS,
+      variables: {
+        assetsOnly: assetsOnly
+      },
       fetchPolicy: 'network-only'
     });
   }
