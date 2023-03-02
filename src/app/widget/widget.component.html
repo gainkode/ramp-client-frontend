@@ -46,7 +46,7 @@
         </app-widget-rate>
       </div>
     
-      <div *ngIf="!widget.embedded && !initLoading && !recentTransactions" class="__widget-progress-container">
+      <div *ngIf="!widget.embedded && !initLoading && !recentTransactions && pager.stageId != 'error'" class="__widget-progress-container">
         <app-widget-progress [step]="pager.step" [title]="pager.title" [progress]="inProgress"></app-widget-progress>
       </div>
       <div *ngIf="widget.embedded && inProgress" class="__widget-embedded-progress-container">

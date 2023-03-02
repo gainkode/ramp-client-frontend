@@ -1319,12 +1319,13 @@ export class WidgetComponent implements OnInit {
   private setError(title: string, message: string, tag: string): void {
     this.errorMessage = message;
     this.changeDetector.detectChanges();
-    if ((this.widget.orderDefault || this.pager.stageId === 'initialization') && this.errorMessage !== '') {
+    if (this.pager.stageId !== 'order_details') {
       this.showTransactionError(title, message, !this.widget.orderDefault);
     }
   }
 
   private showTransactionError(messageTitle: string, messageText: string, tryAgain: boolean = true): void {
+    console.log('ERRROR')
     this.transactionErrorMessage = messageText;
     this.transactionErrorTitle = messageTitle;
     this.transactionErrorTryAgain = tryAgain;
