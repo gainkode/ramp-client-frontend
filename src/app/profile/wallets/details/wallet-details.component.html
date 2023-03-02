@@ -47,10 +47,7 @@
                 <div class="__profile-details-item-title-box">
                     Balance:
                 </div>
-                <div *ngIf="walletData?.crypto===false" class="__profile-details-item-value-box">
-                    {{walletData?.totalValue}}
-                </div>
-                <div *ngIf="walletData?.crypto===true" class="__profile-details-item-value-box">
+                <div class="__profile-details-item-value-box">
                     {{walletData?.total}}
                 </div>
             </div>
