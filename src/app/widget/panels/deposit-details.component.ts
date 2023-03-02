@@ -1,9 +1,11 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { TransactionType } from 'src/app/model/generated-models';
+import { Rate, TransactionType, UserState } from 'src/app/model/generated-models';
 import { CheckoutSummary, CurrencyView } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
+import { CommonDataService } from 'src/app/services/common-data.service';
+import { PaymentDataService } from 'src/app/services/payment.service';
 
 @Component({
   selector: 'app-widget-deposit-details',
@@ -41,11 +43,14 @@ export class WidgetDepositDetailsComponent implements OnInit, OnDestroy {
   private defaultSummary: CheckoutSummary | undefined = undefined;
   private pNumberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
   private pSubscriptions: Subscription = new Subscription();
+  private transactionsTotalEur = 0;
+  private currentQuoteEur = 0;
 
   selectedCurrency: CurrencyView | undefined = undefined;
   currencyInit = false;
   amountTitle = '';
   done = false;
+  quoteExceed = false;
 
   dataForm = this.formBuilder.group({
     amountTo: [undefined, { validators: [], updateOn: 'change' }],
@@ -78,10 +83,13 @@ export class WidgetDepositDetailsComponent implements OnInit, OnDestroy {
 
   constructor(
     private formBuilder: FormBuilder,
-    private auth: AuthService) { }
+    private auth: AuthService,
+    private commonService: CommonDataService,
+    private paymentService: PaymentDataService) { }
 
   ngOnInit(): void {
     this.pSubscriptions.add(this.currencyTo?.valueChanges.subscribe(val => this.onCurrencyUpdated(val)));
+    this.pSubscriptions.add(this.amountTo?.valueChanges.subscribe(val => this.loadRates()));
     const defaultFiat = this.auth.user?.defaultFiatCurrency ?? 'EUR';
     let currency = defaultFiat;
     if (this.defaultSummary) {
@@ -91,6 +99,69 @@ export class WidgetDepositDetailsComponent implements OnInit, OnDestroy {
     }
     this.currencyTo?.setValue(currency);
     this.currencyFrom?.setValue(currency);
+    this.currentQuoteEur = this.auth?.user?.kycTier?.amount ?? 0;
+  }
+
+  private loadRates(): void {
+    const rateCurrencies = this.currencies.filter(x => x.fiat === true && x.symbol !== 'EUR').map((val) => val.symbol);
+    const rateData = this.paymentService.getOneToManyRates('EUR', rateCurrencies, false);
+    this.pSubscriptions.add(
+      rateData.valueChanges.subscribe(
+        ({ data }) => {
+          const rates = data.getOneToManyRates as Rate[];
+          this.currencies.forEach(c => {
+            if (c.symbol === 'EUR') {
+              c.rateFactor = 1;
+            } else {
+              if (rates) {
+                const rate = rates.find(x => x.currencyTo === c.symbol);
+                if (rate) {
+                  c.rateFactor = rate.depositRate;
+                }
+              }
+            }
+          });
+          this.loadTransactionsTotal();
+        }, (error) => {
+          this.onProgress.emit(false);
+        })
+    );
+  }
+
+  private loadTransactionsTotal(): void {
+    this.transactionsTotalEur = 0;
+    const totalData = this.commonService.getMyTransactionsTotal();
+    this.pSubscriptions.add(
+      totalData.valueChanges.subscribe(({ data }) => {
+        if (data) {
+          const totalState = data.myState as UserState;
+          this.transactionsTotalEur = totalState.totalAmountEur ?? 0;
+        } else {
+          this.transactionsTotalEur = 0;
+        }
+        this.updateQuote();
+        this.onProgress.emit(false);
+      }, (error) => {
+        this.onProgress.emit(false);
+      })
+    );
+  }
+
+  private updateQuote(): void {
+    if (this.currentQuoteEur !== 0) {
+      const c = this.currencies.find(x => x.symbol === this.selectedCurrency?.symbol);
+      console.log(c)
+      if (c) {
+        let quoteLimit = (this.currentQuoteEur - this.transactionsTotalEur) * c.rateFactor;
+        if(quoteLimit <= 0){
+          this.quoteExceed = true;
+        }else if(quoteLimit < this.amountTo?.value){
+          this.quoteExceed = true;
+        }else{
+          this.quoteExceed = false;
+        }
+      }
+    }
   }
 
   ngOnDestroy(): void {

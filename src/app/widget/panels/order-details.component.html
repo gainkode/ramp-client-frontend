@@ -33,7 +33,7 @@
             [comboList]="spendCurrencyList" [errorMessages]="amountSpendErrorMessages" [separator]="false">
         </app-form-finance-combo>
         <div *ngIf="quoteExceed && this.verifyWhenPaidField?.value!==true" class="__form-assist __form-assist-error">
-            Amount is exceeded
+            Account Limit exceeded
         </div>
         <div class="__form-separator"></div>
 
