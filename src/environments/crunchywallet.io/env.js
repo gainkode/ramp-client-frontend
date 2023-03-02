@@ -2,18 +2,18 @@
     window.__env_data = window.__env_data || {};
 
     // Product name for titles and headers
-    window.__env_data.product = 'Crunchy Wallet';
-    window.__env_data.productFull = 'Crunchy Wallet';
+    window.__env_data.product = 'Crypto Wallet';
+    window.__env_data.productFull = 'Crypto Wallet';
     // Coockie domain
-    window.__env_data.cookieDomain = 'app.crunchywallet.io';
+    window.__env_data.cookieDomain = 'demo.merxtech.net';
     // Current client host address
-    window.__env_data.client_host = 'https://app.crunchywallet.io';
+    window.__env_data.client_host = 'https://demo.merxtech.net';
     // API server address
-    window.__env_data.api_server = 'https://app.crunchywallet.io';
+    window.__env_data.api_server = 'https://demo.merxtech.net';
     // API WebSocket address
-    window.__env_data.ws_server = 'wss://app.crunchywallet.io';
+    window.__env_data.ws_server = 'wss://demo.merxtech.net';
     // Image hosting address
-    window.__env_data.image_host = 'https://app.crunchywallet.io';
+    window.__env_data.image_host = 'https://demo.merxtech.net';
     // API time out
     window.__env_data.api_timeout = 60000;
     // Using test wallets
@@ -29,15 +29,15 @@
     // Google ID
     window.__env_data.googleId = '';
     // Support team email address
-    window.__env_data.support_email = 'support@crunchywallet.io';
+    window.__env_data.support_email = 'support@merxtech.net';
     // Crypto widget finish link
     window.__env_data.crypto_widget_finish_link = '';
     // Cookie agreement link
-    window.__env_data.cookie_link = 'https://crunchywallet.io/cookies-policy/';
+    window.__env_data.cookie_link = 'https://merxtech.net/cookies-policy/';
     // Terms and conditions link
-    window.__env_data.terms_link = 'https://crunchywallet.io/terms-and-conditions/';
+    window.__env_data.terms_link = 'https://merxtech.net/terms-and-conditions/';
     // Privacy policy link
-    window.__env_data.privacy_link = 'http://crunchywallet.io/privacy-policy/';
+    window.__env_data.privacy_link = 'http://merxtech.net/privacy-policy/';
     // Show privacy policy link
     window.__env_data.show_privacy_link = false;
     // Main font name
