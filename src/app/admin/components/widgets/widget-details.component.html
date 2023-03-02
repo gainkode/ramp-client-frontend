@@ -67,7 +67,13 @@
               </th>
               <td *matCellDef="let element" class="widget-list-data-column">
                 <input class="form-control"
-                type="text" [(ngModel)]="element.destination" maxlength="50" required [ngModelOptions]="{standalone: true}">
+                type="text" [(ngModel)]="element.destination" maxlength="50" required [ngModelOptions]="{standalone: true}" [required]="destinationRequired">
+                <div *ngIf="destinationRequired && !element.destination"
+                  class="tx-danger">
+                  <small>
+                    Destination is required
+                  </small>
+                </div>
               </td>
             </ng-container>
   

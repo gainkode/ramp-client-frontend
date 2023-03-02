@@ -71,6 +71,7 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   widgetAdditionalSettings: Record<string, any> = {};
   selectAll: boolean = false;
   adminAdditionalSettings: Record<string, any> = {};
+  destinationRequired = false;
 
   form = this.formBuilder.group({
     id: [null],
@@ -190,9 +191,10 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  private getWidgetItem(): WidgetItem {
+  private getWidgetItem(): WidgetItem | undefined {
     const widget = new WidgetItem(null);
     const formValue = this.form.value;
+    this.destinationRequired = false;
 
     widget.id = formValue.id;
     widget.name = formValue.name;
@@ -208,14 +210,16 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
         if(cryptoCurrency.selected){
           widget.currenciesCrypto.push(cryptoCurrency.currency);
           if(cryptoCurrency.destination && cryptoCurrency.destination != ''){
+            this.destinationRequired = true;
             widget.destinationAddress.push({
               currency: cryptoCurrency.currency,
               destination: cryptoCurrency.destination
             });
+          }else if(this.destinationRequired){
+            return undefined;
           }
         }
       }
-      console.log(widget.destinationAddress)
       // widget.currenciesCrypto = formValue.currenciesCrypto;
     }
     
@@ -390,19 +394,24 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   private onSave(): void {
     this.saveInProgress = true;
     const widgetItem = this.getWidgetItem();
-    const requestData$ = this.adminService.saveWidget(widgetItem);
-    this.subscriptions.add(
-      requestData$.subscribe(({ data }) => {
-        this.saveInProgress = false;
-        this.save.emit();
-      }, (error) => {
-        this.saveInProgress = false;
-        this.errorMessage = error;
-        if (this.auth.token === '') {
-          this.router.navigateByUrl('/');
-        }
-      })
-    );
+    if(widgetItem){
+      const requestData$ = this.adminService.saveWidget(widgetItem);
+      this.subscriptions.add(
+        requestData$.subscribe(({ data }) => {
+          this.saveInProgress = false;
+          this.save.emit();
+        }, (error) => {
+          this.saveInProgress = false;
+          this.errorMessage = error;
+          if (this.auth.token === '') {
+            this.router.navigateByUrl('/');
+          }
+        })
+      );
+    }else{
+      this.saveInProgress = false;
+    }
+    
   }
 
   private deleteWidget(id: string): void {
