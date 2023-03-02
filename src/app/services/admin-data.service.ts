@@ -1350,6 +1350,8 @@ const ADD_SETTINGS_FEE = gql`
     $targetUserModes: [UserMode!]
     $targetTransactionTypes: [TransactionType!]
     $targetPaymentProviders: [String!]
+    $targetCurrenciesFrom: [String!]
+    $targetCurrenciesTo: [String!]
     $terms: String!
     $wireDetails: String!
   ) {
@@ -1364,6 +1366,8 @@ const ADD_SETTINGS_FEE = gql`
         targetUserModes: $targetUserModes
         targetTransactionTypes: $targetTransactionTypes
         targetPaymentProviders: $targetPaymentProviders
+        targetCurrenciesFrom: $targetCurrenciesFrom
+        targetCurrenciesTo: $targetCurrenciesTo
         terms: $terms
         wireDetails: $wireDetails
       }
@@ -3245,6 +3249,8 @@ export class AdminDataService {
           targetUserModes: feeScheme.userMode,
           targetTransactionTypes: feeScheme.trxType,
           targetPaymentProviders: feeScheme.provider,
+          targetCurrenciesFrom: feeScheme.currenciesFrom,
+          targetCurrenciesTo: feeScheme.currenciesTo,
           terms: feeScheme.terms.getObject(),
           wireDetails: feeScheme.details.getObject()
         }
