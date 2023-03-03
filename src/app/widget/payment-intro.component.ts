@@ -116,7 +116,6 @@ export class PaymentIntroComponent implements OnInit, OnDestroy {
   }
 
   private loadDetailsForm(): void {
-    this.onError.emit('');
     const currencyData$ = this.commonService.getSettingsCurrency().valueChanges;
     if (currencyData$ === null) {
       this.onError.emit(this.errorHandler.getRejectedCookieMessage());

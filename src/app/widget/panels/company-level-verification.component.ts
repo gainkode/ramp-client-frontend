@@ -67,7 +67,6 @@ export class CompanyLevelVerificationComponent implements OnDestroy{
     }
 
     onSubmit(): void {
-        this.error.emit('');
         if (this.infoForm.valid) {
             this.progressChange.emit(true);
 

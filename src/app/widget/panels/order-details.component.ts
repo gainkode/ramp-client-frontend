@@ -246,7 +246,6 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   }
 
   private loadDetailsForm(initState: boolean): void {
-    this.onError.emit('');
     const currencyData = this.commonService.getSettingsCurrency();
     this.onProgress.emit(true);
     this.pSubscriptions.add(

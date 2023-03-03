@@ -62,9 +62,6 @@ export class WidgetService {
     }
 
     getSettingsCommon(summary: CheckoutSummary, widget: WidgetSettings, updatedUserData: boolean): void {
-        if (this.onError) {
-            this.onError('');
-        }
         if (this.auth.token === '') {
             this.handleExpiredSession(summary.email);
         } else {
@@ -97,9 +94,6 @@ export class WidgetService {
     }
 
     authenticate(login: string, widgetId: string) {
-        if (this.onError) {
-            this.onError('');
-        }
         // Consider that the user is one-time wallet user rather than internal one
         try {
             const authenticateData$ = this.auth.authenticate(
@@ -149,9 +143,6 @@ export class WidgetService {
     }
 
     getWireTransferSettings(summary: CheckoutSummary, widget: WidgetSettings): void {
-        if (this.onError) {
-            this.onError('');
-        }
         if (this.onProgressChanged) {
             this.onProgressChanged(true);
         }
@@ -268,9 +259,6 @@ export class WidgetService {
     }
 
     sendWireTransferMessage(email: string, id: string, callback: Function): void {
-        if (this.onError) {
-            this.onError('');
-        }
         try {
             const messageData$ = this.paymentService.sendInvoice(id).pipe(take(1));
             if (this.onProgressChanged) {
@@ -299,9 +287,6 @@ export class WidgetService {
     }
 
     private getTiers(summary: CheckoutSummary, widget: WidgetSettings): void {
-        if (this.onError) {
-            this.onError('');
-        }
         const currency = summary.currencyFrom ?? 'EUR';
         const amount = summary.amountFrom ?? 0;
         const limit = summary.quoteLimit ?? 0;
@@ -329,9 +314,6 @@ export class WidgetService {
     }
 
     private getKycStatus(summary: CheckoutSummary, widget: WidgetSettings, tierData: KycTierResultData): void {
-        if (this.onError) {
-            this.onError('');
-        }
         
         const kycStatusData$ = this.auth.getMyKycData().valueChanges.pipe(take(1));
         if (this.onProgressChanged) {

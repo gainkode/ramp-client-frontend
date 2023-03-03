@@ -185,7 +185,6 @@ export class WidgetWireTransferInfoRequiredComponent implements OnDestroy{
     }
 
     onSubmit(): void {
-        this.error.emit('');
         if (this.infoForm.valid) {
             this.progressChange.emit(true);
             let address: PostAddress | undefined;

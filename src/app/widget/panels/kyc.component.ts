@@ -68,7 +68,6 @@ export class WidgetKycComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private getSettings(): void {
-    this.onError.emit('');
     this.showValidator = false;
     this.changeDetector.detectChanges();
     const settingsCommon = this.auth.getLocalSettingsCommon();
@@ -112,7 +111,6 @@ export class WidgetKycComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private getTiers(): void {
-    this.onError.emit('');
     this.showValidator = false;
     this.changeDetector.detectChanges();
     const settingsCommon = this.auth.getLocalSettingsCommon();

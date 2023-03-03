@@ -99,7 +99,6 @@ export class WidgetCryptoDetailsComponent implements OnInit, OnDestroy {
   }
 
   private loadDetailsForm(): void {
-    this.onError.emit('');
     const currencyData = this.commonService.getSettingsCurrency();
     this.onProgress.emit(true);
     this.pSubscriptions.add(
