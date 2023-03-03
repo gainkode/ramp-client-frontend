@@ -1,0 +1,11 @@
+$font_admin: var(--font_admin);
+::ng-deep{
+  a:link {
+    font-family: $font_admin, sans-serif;
+  }
+  * {
+    font-family: $font_admin, sans-serif;
+    font-size: medium;
+    -webkit-font-smoothing: antialiased;
+  }
+}

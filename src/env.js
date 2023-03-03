@@ -57,7 +57,8 @@
     // Base color number
     window.__env_data.base_color = '#0081D4';
     // Main font name
-    window.__env_data.main_font = 'Ubuntu';
+    window.__env_data.main_font = 'Space Mono';
+    window.__env_data.admin_font = 'Poppins';
     // Crypto widget finish link
     window.__env_data.crypto_widget_finish_link = 'http://getcoins.com.au/merchant/';
     // Cookie agreement link

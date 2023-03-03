@@ -42,6 +42,7 @@
     window.__env_data.show_privacy_link = false;
     // Main font name
     window.__env_data.main_font = 'Poppins';
+    window.__env_data.admin_font = 'Poppins';
 
     //////////////////////////////////////////////////
     //                                              //

@@ -15,6 +15,7 @@
     --arrow_down: url("assets/navigation/plain_arrow_down.svg");
 
     --font_main: "Ubuntu";
+    --font_admin: "Space Mono";
 
     --color_white: #ffffff;
 
@@ -77,6 +78,7 @@
 }
 
 $font_main: var(--font_main);
+$font_admin: var(--font_admin);
 
 $color_white: var(--color_white);
 

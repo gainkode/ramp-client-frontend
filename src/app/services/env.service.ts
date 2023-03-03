@@ -16,6 +16,7 @@ export class EnvService {
     public static support_email = 'support@test.com';
     public static base_color = '#0081D4';
     public static main_font = 'Ubuntu';
+    public static admin_font = 'Space Mono';
     public static crypto_widget_finish_link = '';
     public static cookie_link = '';
     public static terms_link = '';
