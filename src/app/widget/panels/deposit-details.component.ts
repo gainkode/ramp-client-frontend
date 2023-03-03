@@ -181,6 +181,7 @@ export class WidgetDepositDetailsComponent implements OnInit, OnDestroy {
   private onCurrencyUpdated(symbol: string): void {
     this.currencyInit = true;
     this.selectedCurrency = this.currencies.find(x => x.symbol === symbol);
+    this.currencyFrom?.setValue(symbol);
     if (this.amountTo?.value === undefined || this.amountTo?.value === null) {
       this.amountTo?.setValue(this.selectedCurrency?.minAmount ?? 0);
     }
