@@ -1703,6 +1703,7 @@ export type PaymentProvider = {
   displayName?: Maybe<Scalars['String']>;
   logo?: Maybe<Scalars['String']>;
   transactionTypes?: Maybe<Array<Maybe<Scalars['String']>>>;
+  userTypes?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 export type PaymentProviderByInstrument = {
