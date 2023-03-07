@@ -506,7 +506,19 @@ export const UserActionTypeList: Array<UserActionTypeView> = [
     { id: UserActionType.DeleteKycTierSettings, name: 'Delete kyc tier settings' },
     { id: UserActionType.AddWireTransferBankAccount, name: 'Add wire transfer bank account' },
     { id: UserActionType.UpdateWireTransferBankAccount, name: 'Update wire transfer bank account' },
-    { id: UserActionType.DeleteWireTransferBankAccount, name: 'Delete wire transfer bank account' },
+    { id: UserActionType.MonoovaApproved, name: 'Monoova transction approved' },
+    { id: UserActionType.MonoovaAutoReject, name: 'AutoReject by Monoova' },
+    { id: UserActionType.MonoovaCallback, name: 'Monoova callback' },
+    { id: UserActionType.MonoovaCreateAccount, name: 'Crete monoova account' },
+    { id: UserActionType.MonoovaDeclined, name: 'Monoova transction declined' },
+    { id: UserActionType.MonoovaGetAccount, name: 'Get monoova account' },
+    { id: UserActionType.MonoovaGetPayId, name: 'Get monoova PayId' },
+    { id: UserActionType.MonoovaPayout, name: 'Crete Monoova Payout' },
+    { id: UserActionType.MonoovaRegisterPayId, name: 'Register monoova payId' },
+    { id: UserActionType.OpenpaydApproved, name: 'Openpayd transction declined' },
+    { id: UserActionType.OpenpaydAutoReject, name: 'AutoReject by Openpayd' },
+    { id: UserActionType.OpenpaydCallback, name: 'Openpayd callback' },
+    { id: UserActionType.OpenpaydDeclined, name: 'Openpayd transction declined' },
 
 ];
 
