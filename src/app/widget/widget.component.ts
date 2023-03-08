@@ -544,8 +544,8 @@ export class WidgetComponent implements OnInit {
         this.initData(data.getWidget as Widget);
         let validTransactionType = true;
         if (this.widget.transaction) {
-          validTransactionType = (this.widget.transaction === TransactionType.Buy ||
-            this.widget.transaction === TransactionType.Sell);
+          let transactionType = this.widget.transaction.toLowerCase();
+          validTransactionType = (transactionType === TransactionType.Buy.toLowerCase() || transactionType === TransactionType.Sell.toLowerCase());
         }
         if (validTransactionType) {
           if (this.widget.orderDefault) {
