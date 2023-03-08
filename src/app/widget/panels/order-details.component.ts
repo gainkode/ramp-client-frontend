@@ -213,7 +213,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       this.currentTransaction = this.summary.transactionType;
       this.transactionField?.setValue(this.summary.transactionType);
     }
-    if (this.auth.user?.kycTier) {
+    if (this.auth.user?.kycTier && this.auth.user?.kycValid) {
       this.currentTier = this.auth.user?.kycTier.name;
       this.currentQuoteEur = this.auth.user?.kycTier.amount ?? 0;
       this.quoteUnlimit = (this.auth.user?.kycTier.amount === null);
