@@ -131,7 +131,11 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
     krakenWithdrawalBenchmarkAmountToRemain: [0, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
 
     openpaydWithdrawalBenchmark: [0, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
-    openpaydBeneficiaryBankIds: [''],
+    monoovaWithdrawalBenchmark: [0, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
+    flashFxWithdrawalBenchmark: [0, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
+    openpaydObject: [''],
+    monoovaObject: [''],
+    flashFxObject: [''],
 
     frameX1: [undefined],
     frameY1: [undefined],
@@ -326,8 +330,12 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
         this.form.get('krakenWithdrawalBenchmark')?.setValue(coreData.liquidityProviders.Kraken.withdrawalBenchmark ?? 10000);
         this.form.get('krakenWithdrawalBenchmarkAmountToRemain')?.setValue(coreData.liquidityProviders.Kraken.withdrawalBenchmarkAmountToRemain ?? 0);
 
-        this.form.get('openpaydWithdrawalBenchmark')?.setValue(coreData.paymentProviders.Openpayd.benchmarkAmount ?? 10000);
-        this.form.get('openpaydBeneficiaryBankIds')?.setValue(coreData.paymentProviders.Openpayd.beneficiaryBankIds);
+        this.form.get('openpaydWithdrawalBenchmark')?.setValue(coreData?.paymentProviders?.Openpayd?.benchmarkAmount ?? 10000);
+        this.form.get('monoovaWithdrawalBenchmark')?.setValue(coreData?.paymentProviders?.Monoova?.benchmarkAmount ?? 10000);
+        this.form.get('flashFxWithdrawalBenchmark')?.setValue(coreData?.paymentProviders?.FlashFx?.benchmarkAmount ?? 10000);
+        this.form.get('openpaydObject')?.setValue(coreData.paymentProviders.Openpayd);
+        this.form.get('monoovaObject')?.setValue(coreData.paymentProviders.Monoova);
+        this.form.get('flashFxObject')?.setValue(coreData.paymentProviders.FlashFx);
       }, (error) => {
         this.inProgress = false;
         this.errorMessage = error;
@@ -425,7 +433,15 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
     const coreKrakenWithdrawalBenchmarkAmountToRemain = parseInt(this.form.get('krakenWithdrawalBenchmarkAmountToRemain')?.value ?? '0');
 
     const coreOpenpaydWithdrawalBenchmark = parseInt(this.form.get('openpaydWithdrawalBenchmark')?.value ?? '10000');
-    const coreBeneficiaryBankIds = this.form.get('openpaydBeneficiaryBankIds')?.value;
+    const coreMonoovadWithdrawalBenchmark = parseInt(this.form.get('monoovaWithdrawalBenchmark')?.value ?? '10000');
+    const coreFlashFxdWithdrawalBenchmark = parseInt(this.form.get('flashFxWithdrawalBenchmark')?.value ?? '10000');
+    const coreOpenpayd = this.form.get('openpaydObject')?.value ?? {};
+    const coreMonoova = this.form.get('monoovaObject')?.value ?? {};
+    const coreFlashFx = this.form.get('flashFxObject')?.value ?? {};
+
+    coreMonoova.benchmarkAmount = coreMonoovadWithdrawalBenchmark;
+    coreOpenpayd.benchmarkAmount = coreOpenpaydWithdrawalBenchmark;
+    coreFlashFx.benchmarkAmount = coreFlashFxdWithdrawalBenchmark;
 
     const frames: FrameBlock[] = [];
     for (let index = 0; index < 5; index++) {
@@ -471,10 +487,9 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
         }
       },
       paymentProviders: {
-        Openpayd:{
-          benchmarkAmount: coreOpenpaydWithdrawalBenchmark,
-          beneficiaryBankIds: coreBeneficiaryBankIds
-        }
+        Openpayd: coreOpenpayd,
+        Monoova: coreMonoova,
+        FlashFx: coreFlashFx
       },
       custodyProviders: {
         transferOrdersTrackingTimedeltaDays: coreTransferOrdersTrackingTimedeltaDays,

@@ -967,6 +967,62 @@
                           </div>
                         </div>
                       </div>
+                      <div class="card card-body pd-20 pd-md-40 border shadow-none">
+                        <h5 class="card-title mg-b-20">
+                          Monoova
+                        </h5>
+                        <div class="form-group">
+                          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                            Withdrawal Benchmark
+                            <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+                          </label>
+                          <input class="form-control"
+                            [ngClass]="{'has-error': !form.controls.monoovaWithdrawalBenchmark.valid}" type="text"
+                            formControlName="monoovaWithdrawalBenchmark" maxlength="7" required>
+                          <div
+                            *ngIf="(form.controls.monoovaWithdrawalBenchmark.touched || submitted) && (form.controls.monoovaWithdrawalBenchmark.errors?.['required'])"
+                            class="tx-danger">
+                            <small>
+                              Please specify benchmark value
+                            </small>
+                          </div>
+                          <div
+                            *ngIf="(form.controls.monoovaWithdrawalBenchmark.touched || submitted) && (form.controls.monoovaWithdrawalBenchmark.errors?.['pattern'])"
+                            class="tx-danger">
+                            <small>
+                              Invalid number value
+                            </small>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="card card-body pd-20 pd-md-40 border shadow-none">
+                        <h5 class="card-title mg-b-20">
+                          FlashFx
+                        </h5>
+                        <div class="form-group">
+                          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                            Withdrawal Benchmark
+                            <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+                          </label>
+                          <input class="form-control"
+                            [ngClass]="{'has-error': !form.controls.flashFxWithdrawalBenchmark.valid}" type="text"
+                            formControlName="flashFxWithdrawalBenchmark" maxlength="7" required>
+                          <div
+                            *ngIf="(form.controls.flashFxWithdrawalBenchmark.touched || submitted) && (form.controls.flashFxWithdrawalBenchmark.errors?.['required'])"
+                            class="tx-danger">
+                            <small>
+                              Please specify benchmark value
+                            </small>
+                          </div>
+                          <div
+                            *ngIf="(form.controls.flashFxWithdrawalBenchmark.touched || submitted) && (form.controls.flashFxWithdrawalBenchmark.errors?.['pattern'])"
+                            class="tx-danger">
+                            <small>
+                              Invalid number value
+                            </small>
+                          </div>
+                        </div>
+                      </div>
                     </ng-template>
                   </ngb-panel>
                   <ngb-panel *ngIf="adminAdditionalSettings?.settingsCommon?.kyc" id="static-7" cardClass="acc-card">
