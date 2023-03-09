@@ -642,13 +642,17 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     if (!this.pTransactionChanged) {
       if(typeCurrency == 'Spend'){
         this.currentCurrencySpend = this.pCurrencies.find((x) => x.symbol === currency);
+        if(!this.currentCurrencySpend?.fiat){
+          this.checkWalletExisting(currency);
+        }
       }else if(typeCurrency == 'Receive'){
         this.currentCurrencyReceive = this.pCurrencies.find((x) => x.symbol === currency);
+        if(!this.currentCurrencyReceive?.fiat){
+          this.checkWalletExisting(currency);
+        }
       }
 
       this.setUpdatedDataRate();
-      
-      this.checkWalletExisting(currency);
     }
   }
   
