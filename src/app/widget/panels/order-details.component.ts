@@ -38,13 +38,13 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   @Input() set withdrawalRate(val: number | undefined) {
     this.pSpendChanged = true;
     this.pWithdrawalRate = val;
-    this.updateCurrentAmounts();
-    if (this.currentCurrencySpend) {
-      this.setSpendValidators();
-    }
-    if (this.currentCurrencyReceive) {
-      this.setReceiveValidators();
-    }
+    // this.updateCurrentAmounts();
+    // if (this.currentCurrencySpend) {
+    //   this.setSpendValidators();
+    // }
+    // if (this.currentCurrencyReceive) {
+    //   this.setReceiveValidators();
+    // }
   }
   @Input() set depositRate(val: number | undefined) {
     this.pSpendChanged = true;
@@ -67,6 +67,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   @Output() onComplete = new EventEmitter<string>();
 
   private pInitState = true;
+  private initValidators = true;
   private pSubscriptions: Subscription = new Subscription();
   private pCurrencies: CurrencyView[] = [];
   private pSpendChanged = false;
@@ -552,18 +553,23 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
         Validators.max(maxValid)
       ];
     }
-    this.amountSpendField?.setValidators(validators);
-    this.amountSpendField?.updateValueAndValidity();
+
+    if(!this.initValidators){
+      this.amountSpendField?.setValidators(validators);
+      this.amountSpendField?.updateValueAndValidity();
+    }
   }
 
   private setReceiveValidators(): void {
     this.amountReceiveErrorMessages['min'] = `Min. amount ${this.currentCurrencyReceive?.minAmount} ${this.currentCurrencyReceive?.display}`;
-    this.amountReceiveField?.setValidators([
-      Validators.required,
-      Validators.pattern(this.pNumberPattern),
-      //Validators.min(this.currentCurrencyReceive?.minAmount ?? 0),
-    ]);
-    this.amountReceiveField?.updateValueAndValidity();
+    if(!this.initValidators){
+      this.amountReceiveField?.setValidators([
+        Validators.required,
+        Validators.pattern(this.pNumberPattern),
+        //Validators.min(this.currentCurrencyReceive?.minAmount ?? 0),
+      ]);
+      this.amountReceiveField?.updateValueAndValidity();
+    }
   }
 
   private setAmountTitles(): void {
@@ -630,22 +636,24 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
       }
     }
 
-    if (this.summary?.transactionType === TransactionType.Sell) {
-      this.pSpendChanged = true;
-    } else {
-      this.pReceiveChanged = true;
-    }
-    this.updateCurrentAmounts();
+    // if (this.summary?.transactionType === TransactionType.Sell) {
+    //   this.pSpendChanged = true;
+    // } else {
+    //   this.pReceiveChanged = true;
+    // }
+    // this.updateCurrentAmounts();
   }
 
   private onCurrenciesUpdated(currency: string, typeCurrency: string): void{
     if (!this.pTransactionChanged) {
       if(typeCurrency == 'Spend'){
+        this.pSpendChanged = true;
         this.currentCurrencySpend = this.pCurrencies.find((x) => x.symbol === currency);
         if(!this.currentCurrencySpend?.fiat){
           this.checkWalletExisting(currency);
         }
       }else if(typeCurrency == 'Receive'){
+        this.pReceiveChanged = true;
         this.currentCurrencyReceive = this.pCurrencies.find((x) => x.symbol === currency);
         if(!this.currentCurrencyReceive?.fiat){
           this.checkWalletExisting(currency);
@@ -658,10 +666,17 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   
   private onAmountSpendUpdated(val: any) {
     if (val && !this.pSpendAutoUpdated) {
-      this.pSpendAutoUpdated = false;
+      if(this.initValidators){
+        this.initValidators = false;
+        if (this.currentCurrencySpend) {
+          this.setSpendValidators();
+        }
+        if (this.currentCurrencyReceive) {
+          this.setReceiveValidators();
+        }
+      }
       this.pSpendChanged = true;
 
-      this.setUpdatedDataRate();
       this.updateCurrentAmounts();
     }
     this.pSpendAutoUpdated = false;
@@ -669,10 +684,17 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
 
   private onAmountReceiveUpdated(val: any) {
     if (val && !this.pReceiveAutoUpdated) {
-      this.pReceiveAutoUpdated = false;
+      if(this.initValidators){
+        this.initValidators = false;
+        if (this.currentCurrencySpend) {
+          this.setSpendValidators();
+        }
+        if (this.currentCurrencyReceive) {
+          this.setReceiveValidators();
+        }
+      }
       this.pReceiveChanged = true;
 
-      this.setUpdatedDataRate();
       this.updateCurrentAmounts();
     }
     this.pReceiveAutoUpdated = false;
@@ -763,7 +785,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     } else if (this.currentTransaction === TransactionType.Sell && this.currentQuoteEur !== 0) {
       const c = this.pCurrencies.find(x => x.symbol === this.currentCurrencyReceive?.symbol);
       if (c) {
-        const rate = (this.pWithdrawalRate ?? 1) / c.rateFactor;
+        const rate = (this.pDepositRate ?? 1) / c.rateFactor;
         this.quoteLimit = (this.currentQuoteEur - this.transactionsTotalEur) / rate;
         this.currentQuote = `${getCurrencySign(this.currentCurrencySpend?.display ?? '')}${this.quoteLimit.toFixed(c.precision)}`;
       }
@@ -781,8 +803,8 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
           this.validData = true;
         }
       } else if (this.currentTransaction === TransactionType.Sell) {
-        if (receive && this.pWithdrawalRate) {
-          const rate = this.pWithdrawalRate;
+        if (receive && this.pDepositRate) {
+          const rate = this.pDepositRate;
           if (rate === 0) {
             dst = 0;
           } else {
@@ -791,7 +813,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
           this.validData = true;
         }
       }
-      if (this.validData === true) {
+      if (dst > 0) {
         const val = dst.toFixed(this.currentCurrencySpend?.precision);
         spend = Number.parseFloat(val);
         this.pSpendAutoUpdated = true;
@@ -810,12 +832,12 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
           this.validData = true;
         }
       } else if (this.currentTransaction === TransactionType.Sell) {
-        if (spend && this.pWithdrawalRate) {
-          dst = spend * this.pWithdrawalRate;
+        if (spend && this.pDepositRate) {
+          dst = spend * this.pDepositRate;
           this.validData = true;
         }
       }
-      if (this.validData === true) {
+      if (dst > 0) {
         const val = dst.toFixed(this.currentCurrencyReceive?.precision);
         receive = Number.parseFloat(val);
         this.pReceiveAutoUpdated = true;
