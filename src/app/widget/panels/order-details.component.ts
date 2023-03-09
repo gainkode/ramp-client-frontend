@@ -39,11 +39,23 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     this.pSpendChanged = true;
     this.pWithdrawalRate = val;
     this.updateCurrentAmounts();
+    if (this.currentCurrencySpend) {
+      this.setSpendValidators();
+    }
+    if (this.currentCurrencyReceive) {
+      this.setReceiveValidators();
+    }
   }
   @Input() set depositRate(val: number | undefined) {
     this.pSpendChanged = true;
     this.pDepositRate = val;
     this.updateCurrentAmounts();
+    if (this.currentCurrencySpend) {
+      this.setSpendValidators();
+    }
+    if (this.currentCurrencyReceive) {
+      this.setReceiveValidators();
+    }
   }
   @Input() wallets: WalletItem[] = [];
   @Output() onError = new EventEmitter<string>();
@@ -228,8 +240,8 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     this.setAmountTitles();
     this.currentTransactionName = QuickCheckoutTransactionTypeList.find(x => x.id === this.currentTransaction)?.name ?? this.currentTransaction;
     this.loadDetailsForm(this.summary?.initialized ?? false);
-    this.pSubscriptions.add(this.currencySpendField?.valueChanges.subscribe(val => this.onCurrencySpendUpdated(val)));
-    this.pSubscriptions.add(this.currencyReceiveField?.valueChanges.subscribe(val => this.onCurrencyReceiveUpdated(val)));
+    this.pSubscriptions.add(this.currencySpendField?.valueChanges.subscribe(val => this.onCurrenciesUpdated(val, 'Spend')));
+    this.pSubscriptions.add(this.currencyReceiveField?.valueChanges.subscribe(val => this.onCurrenciesUpdated(val, 'Receive')));
     this.pSubscriptions.add(this.amountSpendField?.valueChanges.subscribe(val => this.onAmountSpendUpdated(val)));
     this.pSubscriptions.add(this.amountReceiveField?.valueChanges.subscribe(val => this.onAmountReceiveUpdated(val)));
     this.pSubscriptions.add(this.transactionField?.valueChanges.subscribe(val => this.onTransactionUpdated(val)));
@@ -483,6 +495,28 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     }
   }
 
+  private setUpdatedDataRate(){
+    const data = new CheckoutSummary();
+    if (this.currencySpendField?.valid) {
+      data.currencyFrom = this.currencySpendField?.value;
+      data.amountFromPrecision = this.currentCurrencySpend?.precision ?? 2;
+    }
+    if (this.currencyReceiveField?.valid) {
+      data.currencyTo = this.currencyReceiveField?.value;
+      data.amountToPrecision = this.currentCurrencyReceive?.precision ?? 2;
+    }
+    if (this.transactionField?.valid) {
+      data.transactionType = this.transactionField?.value;
+    }
+    if (this.walletField?.valid && this.showWallet) {
+      data.address = this.walletField?.value;
+    }
+    //if (this.quoteExceedHidden) {
+    data.quoteLimit = this.quoteLimit;
+    //}
+    this.onDataUpdated.emit(data);
+  }
+
   private setSpendValidators(maxValid: number | undefined = undefined): void {
     let minAmount:number = 0;
     if(!this.currentCurrencySpend?.fiat){
@@ -546,58 +580,16 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     }
   }
 
-  private onCurrencySpendUpdated(currency: string): void {
-    if (!this.pTransactionChanged) {
-      this.currentCurrencySpend = this.pCurrencies.find((x) => x.symbol === currency);
-      if (this.currentCurrencySpend && this.amountSpendField?.value) {
-        this.setSpendValidators();
-      }
-      if (this.summary?.transactionType === TransactionType.Sell) {
-        if (this.wallets.length > 0) {
-          if (this.addressInit) {
-            this.walletField?.setValue(this.summary.address ?? '');
-            this.walletInit = false;
-          }
-          this.filteredWallets = this.wallets.filter(x => x.asset === currency);
-        }
-        if (this.settings.embedded && !this.settings.transfer) {
-          const emptyList = (this.filteredWallets.length === 0);
-          if (emptyList) {
-            this.walletField?.setValue(this.summary.address ?? '');
-            this.errorMessageData = 'Unable to find wallets for selected currency';
-          } else {
-            this.filteredWallets.splice(0, 0, new WalletItem({
-              vaultName: '...',
-              address: '',
-              default: false
-            } as AssetAddressShort, '', undefined));
-            this.errorMessageData = '';
-          }
-        }
-      }
-      if (this.summary?.transactionType === TransactionType.Sell) {
-        this.pSpendChanged = true;
-      } else {
-        this.pReceiveChanged = true;
-      }
-      this.updateCurrentAmounts();
-    }
-  }
-
-  private onCurrencyReceiveUpdated(currency: string): void {
-    if (!this.pTransactionChanged) {
-      this.currentCurrencyReceive = this.pCurrencies.find((x) => x.symbol === currency);
-      if (this.currentCurrencyReceive && this.amountReceiveField?.value) {
-        this.setReceiveValidators();
-      }
-      if (this.wallets.length > 0 && this.summary?.transactionType === TransactionType.Buy) {
+  private checkWalletExisting(currency: string){
+    if (this.summary?.transactionType === TransactionType.Sell) {
+      if (this.wallets.length > 0) {
         if (this.addressInit) {
           this.walletField?.setValue(this.summary.address ?? '');
           this.walletInit = false;
         }
         this.filteredWallets = this.wallets.filter(x => x.asset === currency);
       }
-      if (this.summary?.transactionType === TransactionType.Buy && this.settings.embedded && !this.settings.transfer) {
+      if (this.settings.embedded && !this.settings.transfer) {
         const emptyList = (this.filteredWallets.length === 0);
         if (emptyList) {
           this.walletField?.setValue(this.summary.address ?? '');
@@ -611,22 +603,59 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
           this.errorMessageData = '';
         }
       }
-      if (this.summary?.transactionType === TransactionType.Sell) {
-        this.pSpendChanged = true;
-      } else {
-        this.pReceiveChanged = true;
-      }
-      this.updateCurrentAmounts();
     }
+
+    if (this.wallets.length > 0 && this.summary?.transactionType === TransactionType.Buy) {
+      if (this.addressInit) {
+        this.walletField?.setValue(this.summary.address ?? '');
+        this.walletInit = false;
+      }
+      this.filteredWallets = this.wallets.filter(x => x.asset === currency);
+    }
+
+    if (this.summary?.transactionType === TransactionType.Buy && this.settings.embedded && !this.settings.transfer) {
+      const emptyList = (this.filteredWallets.length === 0);
+      if (emptyList) {
+        this.walletField?.setValue(this.summary.address ?? '');
+        this.errorMessageData = 'Unable to find wallets for selected currency';
+      } else {
+        this.filteredWallets.splice(0, 0, new WalletItem({
+          vaultName: '...',
+          address: '',
+          default: false
+        } as AssetAddressShort, '', undefined));
+        this.errorMessageData = '';
+      }
+    }
+
+    if (this.summary?.transactionType === TransactionType.Sell) {
+      this.pSpendChanged = true;
+    } else {
+      this.pReceiveChanged = true;
+    }
+    this.updateCurrentAmounts();
   }
 
+  private onCurrenciesUpdated(currency: string, typeCurrency: string): void{
+    if (!this.pTransactionChanged) {
+      if(typeCurrency == 'Spend'){
+        this.currentCurrencySpend = this.pCurrencies.find((x) => x.symbol === currency);
+      }else if(typeCurrency == 'Receive'){
+        this.currentCurrencyReceive = this.pCurrencies.find((x) => x.symbol === currency);
+      }
+
+      this.setUpdatedDataRate();
+      
+      this.checkWalletExisting(currency);
+    }
+  }
+  
   private onAmountSpendUpdated(val: any) {
     if (val && !this.pSpendAutoUpdated) {
       this.pSpendAutoUpdated = false;
-      if (this.hasValidators(this.amountSpendField as AbstractControl) === false && this.currentCurrencySpend) {
-        this.setSpendValidators();
-      }
       this.pSpendChanged = true;
+
+      this.setUpdatedDataRate();
       this.updateCurrentAmounts();
     }
     this.pSpendAutoUpdated = false;
@@ -635,10 +664,9 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   private onAmountReceiveUpdated(val: any) {
     if (val && !this.pReceiveAutoUpdated) {
       this.pReceiveAutoUpdated = false;
-      if (this.hasValidators(this.amountReceiveField as AbstractControl) === false && this.currentCurrencyReceive) {
-        this.setReceiveValidators();
-      }
       this.pReceiveChanged = true;
+
+      this.setUpdatedDataRate();
       this.updateCurrentAmounts();
     }
     this.pReceiveAutoUpdated = false;
