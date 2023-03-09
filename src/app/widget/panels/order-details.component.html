@@ -37,7 +37,7 @@
         </div>
         <div class="__form-separator"></div>
 
-        <div>
+        <div *ngIf="currentTransaction !== TRANSACTION_TYPE.Sell">
             <!-- Verification levels -->
             <div *ngIf="currentTier!=='' && settings.embedded">
                 <div class="__widget-hint-line">
@@ -131,6 +131,21 @@
         </div>
 
         <div *ngIf="currentTransaction === TRANSACTION_TYPE.Sell">
+            <div *ngIf="currentTier!=='' && settings.embedded">
+                <div class="__widget-hint-line">
+                    Current Verification: {{currentTier}}.
+                </div>
+                <div *ngIf="!quoteUnlimit" class="__widget-quote-block">
+                    <div class="__widget-hint-line">
+                        To increase limitations go to
+                    </div>
+                    <div class="__widget-hint-line __form-assist-link" (click)="showPersonalVerification()">
+                        Verification
+                    </div>
+                </div>
+                <div class="__form-separator-small"></div>
+            </div>
+            
             <!-- Receive -->
             <app-form-finance-combo [label]="receiveTitle" [placeholder]="'...'" [boxFieldName]="'amountReceive'"
                 [boxField]="amountReceiveField" [comboField]="currencyReceiveField" [comboFieldName]="'currencyReceive'"

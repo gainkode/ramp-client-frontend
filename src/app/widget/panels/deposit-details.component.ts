@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Rate, TransactionType, UserState } from 'src/app/model/generated-models';
 import { CheckoutSummary, CurrencyView } from 'src/app/model/payment.model';
@@ -46,11 +47,13 @@ export class WidgetDepositDetailsComponent implements OnInit, OnDestroy {
   private transactionsTotalEur = 0;
   private currentQuoteEur = 0;
 
+  currentTier = '';
   selectedCurrency: CurrencyView | undefined = undefined;
   currencyInit = false;
   amountTitle = '';
   done = false;
   quoteExceed = false;
+  quoteUnlimit = false;
 
   dataForm = this.formBuilder.group({
     amountTo: [undefined, { validators: [], updateOn: 'change' }],
@@ -82,6 +85,7 @@ export class WidgetDepositDetailsComponent implements OnInit, OnDestroy {
   }
 
   constructor(
+    private router: Router,
     private formBuilder: FormBuilder,
     private auth: AuthService,
     private commonService: CommonDataService,
@@ -95,6 +99,12 @@ export class WidgetDepositDetailsComponent implements OnInit, OnDestroy {
     if (this.defaultSummary) {
       if (this.defaultSummary.currencyTo !== '') {
         currency = this.defaultSummary.currencyTo;
+      }
+    }
+    if (this.auth.user?.kycTier) {
+      this.currentTier = this.auth.user?.kycTier.name;
+      if(this.auth.user?.kycValid){
+        this.quoteUnlimit = (this.auth.user?.kycTier.amount === null);
       }
     }
     this.currencyTo?.setValue(currency);
@@ -126,6 +136,12 @@ export class WidgetDepositDetailsComponent implements OnInit, OnDestroy {
           this.onProgress.emit(false);
         })
     );
+  }
+
+  showPersonalVerification(): void {
+    this.router.navigateByUrl(`${this.auth.getUserAccountPage()}/settings/verification`).then(() => {
+      window.location.reload();
+    });
   }
 
   private loadTransactionsTotal(): void {

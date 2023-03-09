@@ -5,6 +5,20 @@
             [boxField]="amountTo" [comboField]="currencyTo" [comboFieldName]="'currencyTo'"
             [comboList]="currencies" [errorMessages]="amountErrorMessages" [separator]="true">
         </app-form-finance-combo>
+        <div *ngIf="currentTier!==''">
+            <div class="__widget-hint-line">
+                Current Verification: {{currentTier}}.
+            </div>
+            <div *ngIf="!quoteUnlimit" class="__widget-quote-block">
+                <div class="__widget-hint-line">
+                    To increase limitations go to
+                </div>
+                <div class="__widget-hint-line __form-assist-link" (click)="showPersonalVerification()">
+                    Verification
+                </div>
+            </div>
+            <div class="__form-separator-small"></div>
+        </div>
         <div *ngIf="quoteExceed" class="__form-assist __form-assist-error">
             Account Limit exceeded
         </div>
