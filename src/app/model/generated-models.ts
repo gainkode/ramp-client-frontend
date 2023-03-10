@@ -267,6 +267,7 @@ export type DashboardStats = {
   exchanges?: Maybe<ExchangeStats>;
   balances?: Maybe<Array<BalanceStats>>;
   openpaydBalances?: Maybe<Array<OpenpaydProviderBalance>>;
+  monoovaBalances?: Maybe<Array<MonoovaProviderBalance>>;
   liquidityProviderBalances?: Maybe<Array<Maybe<LiquidityProviderBalance>>>;
 };
 
@@ -712,6 +713,12 @@ export type MonoovaObject = {
   bsb?: Maybe<Scalars['String']>;
   bankAccountNumber?: Maybe<Scalars['String']>;
   bankAccountName?: Maybe<Scalars['String']>;
+};
+
+export type MonoovaProviderBalance = {
+  __typename?: 'MonoovaProviderBalance';
+  currency?: Maybe<Scalars['String']>;
+  balance?: Maybe<Scalars['Float']>;
 };
 
 export type Mutation = {

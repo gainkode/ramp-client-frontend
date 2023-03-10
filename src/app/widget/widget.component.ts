@@ -1325,6 +1325,7 @@ export class WidgetComponent implements OnInit {
   }
 
   private showTransactionError(messageTitle: string, messageText: string, tryAgain: boolean = true): void {
+    console.log(messageText, messageTitle)
     console.log('ERRROR')
     this.transactionErrorMessage = messageText;
     this.transactionErrorTitle = messageTitle;

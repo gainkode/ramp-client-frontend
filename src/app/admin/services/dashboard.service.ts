@@ -691,6 +691,33 @@ export class DashboardService implements OnDestroy {
           }) : []
       };
 
+      const monoovaBalances: DashboardCardData = {
+        columns: [
+          {
+            key: 'coin',
+            label: 'Base coin',
+            type: 'text'
+          },
+          {
+            key: 'value',
+            label: 'Value',
+            type: 'number'
+          }
+          // {
+          //   key: 'action',
+          //   label: '',
+          //   type: 'action'
+          // }
+        ],
+        rows: rawData.monoovaBalances ?
+          rawData.monoovaBalances.map(item => {
+            return {
+              coin: item.currency ?? null,
+              value: item.balance ?? null
+            };
+          }) : []
+      };
+
       //  endregion
 
 
@@ -735,6 +762,7 @@ export class DashboardService implements OnDestroy {
         fees: feesData,
         balances: balancesData,
         openpaydBalances: openpaydBalances,
+        monoovaBalances: monoovaBalances,
         liquidityBalances: liquidityProviderBalancesData
       };
 

@@ -246,6 +246,9 @@ const GET_DASHBOARD_STATS = gql`
       openpaydBalances {
         currency, balance
       }
+      monoovaBalances {
+        currency, balance
+      }
       liquidityProviderBalances {
         currency, balance
       }
