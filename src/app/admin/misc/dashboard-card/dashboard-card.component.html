@@ -1,8 +1,8 @@
-<div class="card card-body pd-20 pd-md-40 border shadow-none">
+<div *ngIf="data" class="card card-body pd-20 pd-md-40 border shadow-none">
     <h5 class="card-title mg-b-20">
         {{title}}
     </h5>
-    <div *ngIf="data" class="__dashboard-card-block">
+    <div class="__dashboard-card-block">
         <div *ngFor="let col of data.columns" class="__dashboard-card-column"
             [ngClass]="{'__dashboard-card-column': true, 'align-right': col.type !== 'text'}">
             <div class="__dashboard-card-header">{{col.label}}</div>

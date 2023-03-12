@@ -41,6 +41,10 @@ export class AdminDashboardCardComponent implements OnInit, OnDestroy {
             }
           }
         }}
+
+        if(!this.data?.rows || this.data?.rows.length == 0){
+            this.data = undefined;
+        }
        
       })
     );
