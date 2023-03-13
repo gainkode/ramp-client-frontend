@@ -1075,22 +1075,34 @@ export class WidgetComponent implements OnInit {
                 errorMessage: this.errorMessage
               } as PaymentErrorDetails);
             } else {
-              if (this.widget.orderDefault) {
-                this.setError('Transaction failed', 'Order code is invalid', 'createBuyTransaction order');
-              } else {
-                if (tempStageId === 'verification') {
-                  this.pager.goBack();
-                } else {
-                  if(order.transactionId && order.transactionId != ''){
+            //   if (this.widget.orderDefault) {
+            //     this.setError('Transaction failed', 'Order code is invalid', 'createBuyTransaction order');
+            //   } else {
+            //     if (tempStageId === 'verification') {
+            //       this.pager.goBack();
+            //     } else {
+            //       if(order.transactionId && order.transactionId != ''){
+            //         this.summary.instrument = instrument;
+            //         this.summary.providerView = this.paymentProviders.find(x => x.id === providerId);
+            //         this.transactionIdConfirmationCode = order.transactionId;
+            //         this.nextStage('code_auth', 'Authorization', 3, true);
+            //       }else{
+            //         this.pager.swapStage(tempStageId);
+            //       }
+            //     }
+            //   }
+            if (tempStageId === 'verification') {
+                this.pager.goBack();
+            } else {
+                if(order.transactionId && order.transactionId != ''){
                     this.summary.instrument = instrument;
                     this.summary.providerView = this.paymentProviders.find(x => x.id === providerId);
                     this.transactionIdConfirmationCode = order.transactionId;
                     this.nextStage('code_auth', 'Authorization', 3, true);
-                  }else{
+                }else{
                     this.pager.swapStage(tempStageId);
-                  }
                 }
-              }
+            }
             }
           }
         }, (error) => {
