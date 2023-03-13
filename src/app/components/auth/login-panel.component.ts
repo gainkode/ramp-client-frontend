@@ -230,7 +230,7 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
                     loginData.subscribe(({ data }) => {
                         const userData = data.login as LoginResult;
                         this.progressChange.emit(false);
-                        if (userData.user?.mode === UserMode.InternalWallet) {
+                        if (userData.user?.mode) {
                             if (userData.authTokenAction === 'TwoFactorAuth') {
                                 this.auth.setLoginUser(userData);
                                 this.twoFa = true;
@@ -243,9 +243,6 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
                                 this.authenticated.emit(userData);
                             }
                             this.startKycNotifications();
-                        } else {
-                            this.done = false;
-                            this.registerError(`Unable to authorise with the login '${login}'. Please sign up`);
                         }
                     }, (error) => {
                         this.done = false;

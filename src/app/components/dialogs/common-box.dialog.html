@@ -1,5 +1,10 @@
 <h1 *ngIf="data.title!==''" class="__dialog-title" mat-dialog-title>{{data.title}}</h1>
-<div class="__dialog-message" mat-dialog-content>{{data.message}}</div>
+<div *ngIf="data.message" class="__dialog-message" mat-dialog-content>{{data.message}}</div>
+<div *ngIf="!data.message" class="__dialog-message" mat-dialog-content>
+    <p>Dear Customer,</p>
+    <p>Seems like the account you are trying to access has only been registered to Exchange Services.</p>
+    <p>You may Create a Wallet using the same email or Contact us <a href="mailto: {{supportEmail}}">{{supportEmail}}</a>.</p>
+</div>
 <mat-dialog-actions align="center">
     <button class="__main-button __button-wide" [mat-dialog-close]="true" cdkFocusInitial>
         {{buttonTitle}}

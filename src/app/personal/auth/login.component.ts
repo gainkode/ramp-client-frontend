@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { LoginResult, SettingsCommon, UserType } from '../../model/generated-models';
+import { LoginResult, SettingsCommon, UserMode, UserType } from '../../model/generated-models';
 import { MatDialog } from '@angular/material/dialog';
 import { ErrorService } from '../../services/error.service';
 import { Subscription } from 'rxjs';
@@ -48,6 +48,21 @@ export class PersonalLoginComponent implements OnDestroy {
         );
     }
 
+    private showWrongUserModeRedirectDialog(): void {
+        const dialogRef = this.dialog.open(CommonDialogBox, {
+            width: '550px',
+            data: {
+                title: 'Authentication',
+                message: undefined
+            }
+        });
+        this.subscriptions.add(
+            dialogRef.afterClosed().subscribe(result => {
+                this.router.navigateByUrl('/merchant/auth/login');
+            })
+        );
+    }
+
     private handleSuccessLogin(userData: LoginResult): void {
         this.auth.setLoginUser(userData);
         this.inProgress = true;
@@ -83,6 +98,9 @@ export class PersonalLoginComponent implements OnDestroy {
     }
 
     onAuthenticated(userData: LoginResult): void {
+        if(userData.user?.mode == UserMode.OneTimeWallet){
+            this.showWrongUserModeRedirectDialog();
+        }
         if (userData.user?.type === UserType.Personal) {
             if (userData.authTokenAction === 'Default') {
                 this.handleSuccessLogin(userData);
