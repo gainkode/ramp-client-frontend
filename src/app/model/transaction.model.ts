@@ -613,6 +613,13 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
           }
         }
       }
+    }else if (data.instrument === PaymentInstrument.FiatVault) {
+      result.sender = {
+        id: '',
+        title: `${data.currencyToSpend} Wallet`,
+        imgSource: '',
+        imgClass: ''
+      } as CommonTargetValue;
     }
     result.fees = data.feeFiat as number ?? 0;
     result.networkFee = data.approxNetworkFee ?? 0;
@@ -697,16 +704,25 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
   } else if (data.type === TransactionType.Sell) {
     result.currencyFiat = result.currencyToReceive;
     result.currencyCrypto = result.currencyToSpend;
-    result.recipient = {
-      id: '',
-      title: 'Wire transfer',
-      imgClass: '',
-      imgSource: ''
-    };
     const c = getCryptoSymbol(result.currencyToSpend);
     let cryptoImg = (c !== '') ?
       `../../../assets/svg-crypto/${c.toLowerCase()}.svg` :
       '';
+    if(data.instrument == PaymentInstrument.FiatVault){
+      result.recipient = {
+        id: '',
+        title: `${data.currencyToReceive} Wallet`,
+        imgClass: '',
+        imgSource: ''
+      };
+    }else{
+      result.recipient = {
+        id: '',
+        title: 'Wire transfer',
+        imgClass: '',
+        imgSource: ''
+      };
+    }
     const sourceVaultData = JSON.parse(data.sourceVault ?? '{}');
     let senderName = '';
     if (sourceVaultData && sourceVaultData.name) {
