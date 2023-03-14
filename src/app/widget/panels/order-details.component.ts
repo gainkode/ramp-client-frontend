@@ -475,8 +475,13 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   private sendData(spend: number | undefined, receive: number | undefined): void {
     if (this.pInitState === false) {
       const data = new CheckoutSummary();
-      data.amountFrom = spend;
-      data.amountTo = receive;
+      if (this.amountSpendField?.valid) {
+        data.amountFrom = parseFloat(this.amountSpendField?.value);
+      }
+      if (this.amountReceiveField?.valid) {
+        data.amountTo = parseFloat(this.amountReceiveField?.value);
+      }
+
       if (this.currencySpendField?.valid) {
         data.currencyFrom = this.currencySpendField?.value;
         data.amountFromPrecision = this.currentCurrencySpend?.precision ?? 2;
@@ -660,7 +665,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
         }
       }
 
-      this.setUpdatedDataRate();
+      this.sendData(undefined, undefined);
     }
   }
   
