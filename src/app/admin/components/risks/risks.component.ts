@@ -41,6 +41,7 @@ export class AdminRisksComponent implements OnInit, OnDestroy, AfterViewInit {
   sortedField = 'created';
   sortedDesc = true;
   filter = new Filter({});
+  adminAdditionalSettings: Record<string, any> = {};
   
   private subscriptions: Subscription = new Subscription();
 
@@ -54,6 +55,7 @@ export class AdminRisksComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.loadCommonSettings();
     this.loadAlerts();
   }
 
@@ -88,7 +90,15 @@ export class AdminRisksComponent implements OnInit, OnDestroy, AfterViewInit {
       windowClass: 'modalCusSty',
     });
   }
-
+  private loadCommonSettings(){
+    let settingsCommon = this.auth.getLocalSettingsCommon();
+    if(settingsCommon){
+      this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
+      if(this.adminAdditionalSettings?.tabs?.risk?.filterFields){
+        this.filterFields = this.adminAdditionalSettings.tabs.risk.filterFields;
+      }
+    }
+  }
   private loadAlerts(): void {
     this.inProgress = true;
     const listData$ = this.adminService.getRiskAlerts(

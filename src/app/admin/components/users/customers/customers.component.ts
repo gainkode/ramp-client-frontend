@@ -73,6 +73,7 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
   sortedDesc = true;
   filter = new Filter({});
   roleIds: string[] = [];
+  adminAdditionalSettings: Record<string, any> = {};
 
   private subscriptions: Subscription = new Subscription();
   private detailsDialog: NgbModalRef | undefined = undefined;
@@ -94,6 +95,7 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   ngOnInit(): void {
+    this.loadCommonSettings();
     this.loadCurrencyData();
   }
 
@@ -127,6 +129,17 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
   selectAll(): void {
     this.customers.forEach(x => x.selected = true);
     this.selected = (this.customers.length > 0);
+  }
+
+  private loadCommonSettings(){
+    let settingsCommon = this.auth.getLocalSettingsCommon();
+    if(settingsCommon){
+      this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
+      if(this.adminAdditionalSettings?.tabs?.customers?.filterFields){
+        this.filterFields = this.adminAdditionalSettings.tabs.customers.filterFields;
+      }
+      
+    }
   }
 
   private loadCurrencyData(): void {

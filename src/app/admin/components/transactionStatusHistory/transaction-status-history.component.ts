@@ -141,9 +141,11 @@ export class AdminTransactionStatusHistoryComponent implements OnInit, OnDestroy
 
   private loadCommonSettings(){
     let settingsCommon = this.auth.getLocalSettingsCommon();
-    console.log(settingsCommon)
     if(settingsCommon){
       this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
+      if(this.adminAdditionalSettings?.tabs?.transactionStatusHistory?.filterFields){
+        this.filterFields = this.adminAdditionalSettings.tabs.transactionStatusHistory.filterFields;
+      }
     }
   }
 

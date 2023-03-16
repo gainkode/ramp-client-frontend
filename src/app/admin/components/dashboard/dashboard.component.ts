@@ -24,7 +24,9 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   liquidityProviderName = '';
   showDeposits = false;
   showWithdrawals = false;
-  defaultFilter: Filter | undefined = undefined;;
+  defaultFilter: Filter | undefined = undefined;
+  adminAdditionalSettings: Record<string, any> = {};
+
 
   private subscriptions: Subscription = new Subscription();
 
@@ -37,7 +39,6 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     const currentDate = new Date();
     const fromDate = new Date(Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), 1, 0, 0, 0, 0));
     const toDate = new Date(Date.UTC(currentDate.getFullYear(), currentDate.getMonth() + 1, 0, 23, 59, 59, 999));
-    console.log(fromDate.getTimezoneOffset())
     this.defaultFilter = {
       updatedDateInterval: {
         from: fromDate,
@@ -46,7 +47,17 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     } as Filter;
   }
 
+  private loadCommonSettings(){
+    let settingsCommon = this.auth.getLocalSettingsCommon();
+    if(settingsCommon){
+      this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
+      if(this.adminAdditionalSettings?.tabs?.dashboard?.filterFields){
+        this.filterFields = this.adminAdditionalSettings.tabs.dashboard.filterFields;
+      }
+    }
+  }
   ngOnInit(): void {
+    this.loadCommonSettings();
     this.subscriptions.add(
       this.dashboardService.data.subscribe(d => {
       })

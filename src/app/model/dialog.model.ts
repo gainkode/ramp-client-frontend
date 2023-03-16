@@ -3,5 +3,6 @@ export class DialogData {
     message = '';
     button = '';
     result: any;
+    paragraphs: string[] = [];
     companyLevelVerification: boolean = false;
 }

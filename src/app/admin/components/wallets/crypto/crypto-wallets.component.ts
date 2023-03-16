@@ -36,6 +36,7 @@ export class AdminCryptoWalletsComponent implements OnInit, OnDestroy, AfterView
   sortedField = 'address';
   sortedDesc = true;
   filter = new Filter({});
+  adminAdditionalSettings: Record<string, any> = {};
   
   private subscriptions: Subscription = new Subscription();
   private detailsDialog: NgbModalRef | undefined = undefined;
@@ -60,6 +61,7 @@ export class AdminCryptoWalletsComponent implements OnInit, OnDestroy, AfterView
   }
 
   ngOnInit(): void {
+    this.loadCommonSettings();
     this.loadWallets();
   }
 
@@ -115,6 +117,16 @@ export class AdminCryptoWalletsComponent implements OnInit, OnDestroy, AfterView
       backdrop: 'static',
       windowClass: 'modalCusSty',
     });
+  }
+
+  private loadCommonSettings(){
+    let settingsCommon = this.auth.getLocalSettingsCommon();
+    if(settingsCommon){
+      this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
+      if(this.adminAdditionalSettings?.tabs?.cryptoWallet?.filterFields){
+        this.filterFields = this.adminAdditionalSettings.tabs.cryptoWallet.filterFields;
+      }
+    }
   }
 
   private isSelectedWallet(walletAddress: string): boolean {

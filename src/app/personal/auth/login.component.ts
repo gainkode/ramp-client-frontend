@@ -53,7 +53,12 @@ export class PersonalLoginComponent implements OnDestroy {
             width: '550px',
             data: {
                 title: 'Authentication',
-                message: undefined
+                message: undefined,
+                paragraphs: [
+                    'Dear Customer,', 
+                    'Seems like the account you are trying to access has only been registered to Exchange Services.', 
+                    `You may Create a Wallet using the same email or Contact us <a href="mailto: ${EnvService.support_email}">${EnvService.support_email}</a>.`
+                ]
             }
         });
         this.subscriptions.add(

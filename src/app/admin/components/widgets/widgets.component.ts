@@ -52,6 +52,7 @@ export class AdminWidgetsComponent implements OnInit, OnDestroy, AfterViewInit {
   sortedField = 'name';
   sortedDesc = false;
   filter = new Filter({});
+  adminAdditionalSettings: Record<string, any> = {};
 
   private subscriptions: Subscription = new Subscription();
   private detailsDialog: NgbModalRef | undefined = undefined;
@@ -68,6 +69,7 @@ export class AdminWidgetsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.loadCommonSettings();
     if (this.userIdFilter !== '') {
       this.filter = new Filter({
         users: [this.userIdFilter]
@@ -112,6 +114,16 @@ export class AdminWidgetsComponent implements OnInit, OnDestroy, AfterViewInit {
       backdrop: 'static',
       windowClass: 'modalCusSty',
     });
+  }
+
+  private loadCommonSettings(){
+    let settingsCommon = this.auth.getLocalSettingsCommon();
+    if(settingsCommon){
+      this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
+      if(this.adminAdditionalSettings?.tabs?.widget?.filterFields){
+        this.filterFields = this.adminAdditionalSettings.tabs.widget.filterFields;
+      }
+    }
   }
 
   private loadWidgets(): void {

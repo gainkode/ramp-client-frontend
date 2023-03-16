@@ -40,6 +40,7 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy, AfterView
   sortedField = 'created';
   sortedDesc = true;
   filter = new Filter({});
+  adminAdditionalSettings: Record<string, any> = {};
   
   private subscriptions: Subscription = new Subscription();
   private detailsDialog: NgbModalRef | undefined = undefined;
@@ -54,6 +55,7 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy, AfterView
   }
 
   ngOnInit(): void {
+    this.loadCommonSettings();
     this.loadNotifications();
   }
 
@@ -88,7 +90,15 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy, AfterView
       windowClass: 'modalCusSty',
     });
   }
-
+  private loadCommonSettings(){
+    let settingsCommon = this.auth.getLocalSettingsCommon();
+    if(settingsCommon){
+      this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
+      if(this.adminAdditionalSettings?.tabs?.notification?.filterFields){
+        this.filterFields = this.adminAdditionalSettings.tabs.notification.filterFields;
+      }
+    }
+  }
   private loadNotifications(): void {
     this.inProgress = true;
     const listData$ = this.adminService.getNotifications(

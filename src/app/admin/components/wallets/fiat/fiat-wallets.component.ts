@@ -35,6 +35,7 @@ export class AdminFiatWalletsComponent implements OnInit, OnDestroy, AfterViewIn
   sortedField = 'created';
   sortedDesc = true;
   filter = new Filter({});
+  adminAdditionalSettings: Record<string, any> = {};
   
   private subscriptions: Subscription = new Subscription();
   private detailsDialog: NgbModalRef | undefined = undefined;
@@ -59,6 +60,7 @@ export class AdminFiatWalletsComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   ngOnInit(): void {
+    this.loadCommonSettings();
     this.loadWallets();
   }
 
@@ -114,6 +116,16 @@ export class AdminFiatWalletsComponent implements OnInit, OnDestroy, AfterViewIn
       backdrop: 'static',
       windowClass: 'modalCusSty',
     });
+  }
+
+  private loadCommonSettings(){
+    let settingsCommon = this.auth.getLocalSettingsCommon();
+    if(settingsCommon){
+      this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
+      if(this.adminAdditionalSettings?.tabs?.fiatWallet?.filterFields){
+        this.filterFields = this.adminAdditionalSettings.tabs.fiatWallet.filterFields;
+      }
+    }
   }
 
   private isSelectedWallet(walletId: string): boolean {

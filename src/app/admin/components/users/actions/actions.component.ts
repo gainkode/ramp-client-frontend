@@ -42,6 +42,7 @@ export class AdminUserActionsComponent implements OnInit, OnDestroy, AfterViewIn
   sortedField = 'date';
   sortedDesc = true;
   filter = new Filter({});
+  adminAdditionalSettings: Record<string, any> = {};
 
   private subscriptions: Subscription = new Subscription();
 
@@ -55,6 +56,7 @@ export class AdminUserActionsComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   ngOnInit(): void {
+    this.loadCommonSettings();
     this.loadUserActions();
   }
 
@@ -88,6 +90,16 @@ export class AdminUserActionsComponent implements OnInit, OnDestroy, AfterViewIn
       backdrop: 'static',
       windowClass: 'modalCusSty',
     });
+  }
+
+  private loadCommonSettings(){
+    let settingsCommon = this.auth.getLocalSettingsCommon();
+    if(settingsCommon){
+      this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
+      if(this.adminAdditionalSettings?.tabs?.actions?.filterFields){
+        this.filterFields = this.adminAdditionalSettings.tabs.actions.filterFields;
+      }
+    }
   }
 
   private loadUserActions(): void {

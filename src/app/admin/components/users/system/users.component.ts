@@ -65,6 +65,7 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
   usersSearchInput$ = new Subject<string>();
   usersOptions$: Observable<UserItem[]> = of([]);
   minUsersLengthTerm = 1;
+  adminAdditionalSettings: Record<string, any> = {};
 
   roleUserForm = this.formBuilder.group({
     user: [undefined, { validators: [Validators.required], updateOn: 'change' }]
@@ -85,8 +86,8 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
   ) {
     this.permission = this.auth.isPermittedObjectCode('SYSTEM_USERS');
   }
-
   ngOnInit(): void {
+    this.loadCommonSettings();
     this.loadRoleData();
     this.initUserSearch();
     this.subscriptions.add(
@@ -148,7 +149,15 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
     this.users.forEach(x => x.selected = true);
     this.selected = (this.users.length > 0);
   }
-
+  private loadCommonSettings(){
+    let settingsCommon = this.auth.getLocalSettingsCommon();
+    if(settingsCommon){
+      this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
+      if(this.adminAdditionalSettings?.tabs?.systemCustomers?.filterFields){
+        this.filterFields = this.adminAdditionalSettings.tabs.systemCustomers.filterFields;
+      }
+    }
+  }
   private loadRoleData(): void {
     this.roleIds = [];
     const currencyData = this.commonService.getRoles();
