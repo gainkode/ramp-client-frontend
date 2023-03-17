@@ -3549,6 +3549,7 @@ export type User = {
   companyRegisterNumber?: Maybe<Scalars['String']>;
   companyType?: Maybe<Scalars['String']>;
   payId?: Maybe<Scalars['String']>;
+  widgetUserParamsId?: Maybe<Scalars['String']>;
 };
 
 export type UserAction = {

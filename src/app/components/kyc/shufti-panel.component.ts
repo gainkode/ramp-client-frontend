@@ -18,6 +18,7 @@ export class ShuftiPanelComponent implements OnInit, OnDestroy {
     @Output() onError = new EventEmitter<string>();
 
     private pSubscriptions: Subscription = new Subscription();
+    urlPolicy = ''
 
     constructor(
         public dialog: MatDialog,
@@ -26,6 +27,7 @@ export class ShuftiPanelComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.urlPolicy = `frame-src ${this.url}`;
         if (this.auth.user?.kycProvider === KycProvider.Shufti) {
             // this.startKycNotifications();
         }
