@@ -37,7 +37,7 @@ export class PersonalLoginComponent implements OnDestroy {
         const dialogRef = this.dialog.open(CommonDialogBox, {
             width: '550px',
             data: {
-                title: 'Authentication',
+                title: '',//Authentication
                 message: `You are signing in as a ${userType.toLowerCase()} in the personal section. You will be redirected to the merchant section.`
             }
         });
@@ -52,7 +52,7 @@ export class PersonalLoginComponent implements OnDestroy {
         const dialogRef = this.dialog.open(CommonDialogBox, {
             width: '550px',
             data: {
-                title: 'Authentication',
+                title: '',//Authentication
                 message: undefined,
                 paragraphs: [
                     'Dear Customer,', 
@@ -61,11 +61,6 @@ export class PersonalLoginComponent implements OnDestroy {
                 ]
             }
         });
-        this.subscriptions.add(
-            dialogRef.afterClosed().subscribe(result => {
-                this.router.navigateByUrl('/merchant/auth/login');
-            })
-        );
     }
 
     private handleSuccessLogin(userData: LoginResult): void {
@@ -105,8 +100,7 @@ export class PersonalLoginComponent implements OnDestroy {
     onAuthenticated(userData: LoginResult): void {
         if(userData.user?.mode == UserMode.OneTimeWallet){
             this.showWrongUserModeRedirectDialog();
-        }
-        if (userData.user?.type === UserType.Personal) {
+        }else if (userData.user?.type === UserType.Personal) {
             if (userData.authTokenAction === 'Default') {
                 this.handleSuccessLogin(userData);
             } else {

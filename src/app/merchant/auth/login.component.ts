@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { LoginResult, SettingsCommon, UserType } from '../../model/generated-models';
+import { LoginResult, SettingsCommon, UserMode, UserType } from '../../model/generated-models';
 import { MatDialog } from '@angular/material/dialog';
 import { ErrorService } from '../../services/error.service';
 import { Subscription } from 'rxjs';
@@ -36,7 +36,7 @@ export class MerchantLoginComponent implements OnDestroy {
         const dialogRef = this.dialog.open(CommonDialogBox, {
             width: '550px',
             data: {
-                title: 'Authentication',
+                title: '',//Authentication
                 message: `You are signing in as a ${userType.toLowerCase()} in the merchant section. You will be redirected to the personal section.`
             }
         });
@@ -45,6 +45,21 @@ export class MerchantLoginComponent implements OnDestroy {
                 this.router.navigateByUrl('/personal/auth/login');
             })
         );
+    }
+
+    private showWrongUserModeRedirectDialog(): void {
+        const dialogRef = this.dialog.open(CommonDialogBox, {
+            width: '550px',
+            data: {
+                title: '',//Authentication
+                message: undefined,
+                paragraphs: [
+                    'Dear Customer,', 
+                    'Seems like the account you are trying to access has only been registered to Exchange Services.', 
+                    `You may Create a Wallet using the same email or Contact us <a href="mailto: ${EnvService.support_email}">${EnvService.support_email}</a>.`
+                ]
+            }
+        });
     }
 
     private handleSuccessLogin(userData: LoginResult): void {
@@ -76,7 +91,9 @@ export class MerchantLoginComponent implements OnDestroy {
     }
 
     onAuthenticated(userData: LoginResult): void {
-        if (userData.user?.type === UserType.Merchant) {
+        if(userData.user?.mode == UserMode.OneTimeWallet){
+            this.showWrongUserModeRedirectDialog();
+        }else if (userData.user?.type === UserType.Merchant) {
             if (userData.authTokenAction === 'Default' || userData.authTokenAction === 'KycRequired') {
                 this.handleSuccessLogin(userData);
             } else {
