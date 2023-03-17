@@ -258,8 +258,8 @@ $font_main: var(--font_main);
     }
 }
 .widget-size-widget{
-    max-width: 300px;
-    min-width: 300px;
+    max-width: 380px;
+    min-width: 380px;
     margin: 0 auto;
     @media (max-width: 480px) {
         min-width: 100%;
