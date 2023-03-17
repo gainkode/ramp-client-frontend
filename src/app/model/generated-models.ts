@@ -216,6 +216,37 @@ export type BuyOrSellStats = BaseStat & {
 };
 
 
+export type Callback = {
+  __typename?: 'Callback';
+  callbackId?: Maybe<Scalars['ID']>;
+  url?: Maybe<Scalars['String']>;
+  payload?: Maybe<Scalars['String']>;
+  widgetUserParamsId?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['String']>;
+  response?: Maybe<Scalars['String']>;
+  params?: Maybe<Scalars['String']>;
+  status?: Maybe<CallbackStatus>;
+  type?: Maybe<CallbackType>;
+};
+
+export type CallbackResultList = {
+  __typename?: 'CallbackResultList';
+  count?: Maybe<Scalars['Int']>;
+  list?: Maybe<Array<Callback>>;
+};
+
+export enum CallbackStatus {
+  Unknown = 'unknown',
+  Pending = 'pending',
+  Failed = 'failed',
+  Completed = 'completed'
+}
+
+export enum CallbackType {
+  TransactionStatusChanged = 'transactionStatusChanged',
+  UserVerificationChanged = 'userVerificationChanged'
+}
+
 export enum CountryCodeType {
   Code2 = 'code2',
   Code3 = 'code3'
@@ -671,6 +702,15 @@ export enum LiquidityOrderState {
   Executed = 'Executed',
   Failed = 'Failed',
   Canceled = 'Canceled'
+}
+
+export enum LiquidityOrderStatus {
+  Success = 'SUCCESS',
+  Failure = 'FAILURE',
+  Partial = 'PARTIAL',
+  Pending = 'PENDING',
+  Settled = 'SETTLED',
+  Initial = 'INITIAL'
 }
 
 export enum LiquidityOrderType {
@@ -3653,7 +3693,8 @@ export enum UserActionType {
   DeleteKycTierSettings = 'deleteKycTierSettings',
   AddWireTransferBankAccount = 'addWireTransferBankAccount',
   UpdateWireTransferBankAccount = 'updateWireTransferBankAccount',
-  DeleteWireTransferBankAccount = 'deleteWireTransferBankAccount'
+  DeleteWireTransferBankAccount = 'deleteWireTransferBankAccount',
+  GenerateShareToken = 'generateShareToken'
 }
 
 export type UserAddress = {
