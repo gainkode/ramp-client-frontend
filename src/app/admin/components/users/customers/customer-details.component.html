@@ -37,7 +37,7 @@
           </label>
           <input class="form-control"
             [ngClass]="{'has-error': (dataForm.controls.email.touched || submitted) && !dataForm.controls.email.valid}"
-            type="text" formControlName="email" maxlength="35" required>
+            type="text" formControlName="email" maxlength="100" required>
           <div *ngIf="(dataForm.controls.email.touched || submitted) && (dataForm.controls.email.errors?.['required'])"
             class="tx-danger">
             <small>
