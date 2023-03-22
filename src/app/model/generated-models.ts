@@ -227,6 +227,7 @@ export type Callback = {
   params?: Maybe<Scalars['String']>;
   status?: Maybe<CallbackStatus>;
   type?: Maybe<CallbackType>;
+  created?: Maybe<Scalars['String']>;
 };
 
 export type CallbackResultList = {
