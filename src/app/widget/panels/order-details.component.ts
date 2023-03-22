@@ -34,6 +34,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     this.errorMessageData = val;
   }
   @Input() settings: WidgetSettings = new WidgetSettings();
+  @Input() defaultFee: number | undefined = undefined;
   @Input() summary: CheckoutSummary | undefined = undefined;
   @Input() set withdrawalRate(val: number | undefined) {
     this.pSpendChanged = true;
@@ -804,7 +805,8 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     if (this.pReceiveChanged) {
       if (this.currentTransaction === TransactionType.Buy) {
         if (receive && this.pDepositRate) {
-          dst = receive * this.pDepositRate;
+          let receiveWithouFee = this.defaultFee ? (receive + receive/100 * this.defaultFee) : receive;
+          dst = receiveWithouFee * this.pDepositRate;
           this.validData = true;
         }
       } else if (this.currentTransaction === TransactionType.Sell) {
@@ -813,7 +815,8 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
           if (rate === 0) {
             dst = 0;
           } else {
-            dst = receive / rate;
+            let receiveWithouFee = this.defaultFee ? (receive + receive/100 * this.defaultFee) : receive;
+            dst = receiveWithouFee / this.pDepositRate;
           }
           this.validData = true;
         }
@@ -832,13 +835,15 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
           if (rate === 0) {
             dst = 0;
           } else {
-            dst = spend / rate;
+            let spendWithouFee = this.defaultFee ? (spend - spend/100 * this.defaultFee) : spend;
+            dst = spendWithouFee / rate;
           }
           this.validData = true;
         }
       } else if (this.currentTransaction === TransactionType.Sell) {
         if (spend && this.pDepositRate) {
-          dst = spend * this.pDepositRate;
+          let spendWithouFee = this.defaultFee ? (spend - spend/100 * this.defaultFee) : spend;
+          dst = spendWithouFee * this.pDepositRate;
           this.validData = true;
         }
       }

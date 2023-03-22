@@ -38,6 +38,7 @@ export class WidgetComponent implements OnInit {
   @Output() onComplete = new EventEmitter<PaymentCompleteDetails>();
   @Output() onError = new EventEmitter<PaymentErrorDetails>();
 
+  defaultFee: number | undefined = undefined;
   requiredFields: string[] = [];
   errorMessage = '';
   rateErrorMessage = '';
@@ -157,6 +158,7 @@ export class WidgetComponent implements OnInit {
       }
       if (this.widget.embedded) {
         this.pager.init('initialization', 'Initialization');
+        this.loadDefaultFee();
         this.loadUserWallets();
       } else {
         if (this.quickCheckout) {
@@ -244,6 +246,10 @@ export class WidgetComponent implements OnInit {
         // console.log(this.summary)
       }
       
+      if(data?.fee){
+        this.defaultFee = data.fee;
+      }
+
       if(!this.widget.walletAddressPreset){
         this.summary.address = (userParams?.params?.destination) ? userParams.params.destination : 
         (data?.destinationAddress) ? data?.destinationAddress : '';
@@ -358,9 +364,10 @@ export class WidgetComponent implements OnInit {
                     console.log('Shufti rejected')
                     this.shuftiSubscribeResult = false;
                 }
-            }else if(subscriptionData.kycStatus == 'waiting'){
-              this.kycComplete();
             }
+            // else if(subscriptionData.kycStatus == 'waiting'){
+            //   this.kycComplete();
+            // }
             this.loadAccountData();
         },
         (error) => {
@@ -594,6 +601,30 @@ export class WidgetComponent implements OnInit {
         }
         this.initData(undefined);
         this.pager.init('order_details', 'Order details');
+      }, (error) => {
+        this.inProgress = false;
+        this.initData(undefined);
+        this.pager.init('order_details', 'Order details');
+      })
+    );
+  }
+
+  loadDefaultFee(): void {
+    this.errorMessage = '';
+    this.inProgress = true;
+    const defaultFeeData = this.profileService.getMyDefaultSettingsFee().valueChanges.pipe(take(1));
+    this.pSubscriptions.add(
+      defaultFeeData.subscribe(({ data }) => {
+        this.inProgress = false;
+
+        if(data.myDefaultSettingsFee.terms && data.myDefaultSettingsFee.terms != ''){
+          const defaultFeeTerms = typeof data.myDefaultSettingsFee.terms == 'string' ? JSON.parse(data.myDefaultSettingsFee.terms) : data.myDefaultSettingsFee.terms;
+          if(defaultFeeTerms.Transaction_fee){
+            this.defaultFee = defaultFeeTerms.Transaction_fee;
+          }
+          console.log(this.defaultFee)
+        }
+        
       }, (error) => {
         this.inProgress = false;
         this.initData(undefined);

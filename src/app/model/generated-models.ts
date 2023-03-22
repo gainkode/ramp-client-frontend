@@ -667,6 +667,15 @@ export enum KycStatus {
   Waiting = 'waiting'
 }
 
+export enum LiquidityDepositOrderStatus {
+  Success = 'SUCCESS',
+  Failure = 'FAILURE',
+  Partial = 'PARTIAL',
+  Pending = 'PENDING',
+  Settled = 'SETTLED',
+  Initial = 'INITIAL'
+}
+
 export type LiquidityOrder = {
   __typename?: 'LiquidityOrder';
   orderId?: Maybe<Scalars['String']>;
@@ -702,15 +711,6 @@ export enum LiquidityOrderState {
   Executed = 'Executed',
   Failed = 'Failed',
   Canceled = 'Canceled'
-}
-
-export enum LiquidityOrderStatus {
-  Success = 'SUCCESS',
-  Failure = 'FAILURE',
-  Partial = 'PARTIAL',
-  Pending = 'PENDING',
-  Settled = 'SETTLED',
-  Initial = 'INITIAL'
 }
 
 export enum LiquidityOrderType {
@@ -1817,6 +1817,7 @@ export type Query = {
   getSettingsFee?: Maybe<SettingsFeeListResult>;
   /** Get fee settings for the current user(SettingsFeeShort) */
   mySettingsFee?: Maybe<SettingsFeeShort>;
+  myDefaultSettingsFee?: Maybe<SettingsFee>;
   /** Get fee settings for the current user */
   mySettingsFeeFull?: Maybe<SettingsFee>;
   /** Get fee settings for the relevant parameters */
@@ -4232,6 +4233,7 @@ export type Widget = {
   hasFixedAddress: Scalars['Boolean'];
   secret?: Maybe<Scalars['String']>;
   allowToPayIfKycFailed?: Maybe<Scalars['Boolean']>;
+  fee?: Maybe<Scalars['Float']>;
 };
 
 export type WidgetDestination = {

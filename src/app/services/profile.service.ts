@@ -157,6 +157,14 @@ const GET_MY_WALLETS = gql`
   }
 `;
 
+const GET_MY_DEFAULT_FEE = gql`
+  query MyDefaultSettingsFee{
+    myDefaultSettingsFee{
+      terms
+    }
+  }
+`;
+
 const GET_MY_PROFIT = gql`
 query MyProfit($currencyTo: String, $period: UserBalanceHistoryPeriod!) {
   myProfit(
@@ -642,6 +650,12 @@ export class ProfileDataService {
     });
   }
 
+  getMyDefaultSettingsFee(): QueryRef<any, EmptyObject>{
+    return this.apollo.watchQuery<any>({
+      query: GET_MY_DEFAULT_FEE,
+      fetchPolicy: 'network-only',
+    });
+  }
   getMyWallets(assets: string[]): QueryRef<any, EmptyObject> {
     const orderFields = [
       { orderBy: 'default', desc: true },
