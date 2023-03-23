@@ -292,7 +292,7 @@ export class WidgetService {
         const limit = summary.quoteLimit ?? 0;
         const overLimit = amount - limit;
         const tiersData$ = this.paymentService.getAppropriateSettingsKycTiers(
-            overLimit,
+            amount,
             currency,
             TransactionSource.Widget,
             this.auth.user?.kycProvider as KycProvider ?? KycProvider.SumSub,
