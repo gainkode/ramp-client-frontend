@@ -741,6 +741,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     }
     //    }
     if (this.selectedWallet && this.summary?.transactionType === TransactionType.Sell) {
+      this.initValidators = false;
       this.setSpendValidators(this.selectedWallet.total);
     }
     const data: CheckoutSummary = new CheckoutSummary();
