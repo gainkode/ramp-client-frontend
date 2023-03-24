@@ -48,7 +48,8 @@ import {
   WireTransferBankAccount,
   TransactionStatusHistoryListResult,
   TransactionStatusHistory,
-  QueryGetTransactionStatusHistoryArgs
+  QueryGetTransactionStatusHistoryArgs,
+  PaymentProviderPayoutType
 } from '../model/generated-models';
 import { KycLevel, KycScheme, KycTier } from '../model/identification.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -1338,6 +1339,17 @@ const UPDATE_SETTINGS_COMMON = gql`
     ) {
       settingsCommonId
     }
+  }
+`;
+
+const CREATE_PAYMENT_PROVIDER_PAYOUT = gql`
+  mutation CreatePaymentProviderPayout(
+    $paymentProvider: String!, $type: PaymentProviderPayoutType
+  ) {
+    createPaymentProviderPayout(
+      paymentProvider: $paymentProvider,
+      type: $type,
+    )
   }
 `;
 
@@ -3234,6 +3246,16 @@ export class AdminDataService {
         adminEmails: data.adminEmails,
         stoppedForServicing: data.stoppedForServicing,
         additionalSettings: data.additionalSettings
+      }
+    });
+  }
+
+  createPaymentProviderPayout(paymentProvider: String, type: PaymentProviderPayoutType): Observable<any> {
+    return this.mutate({
+      mutation: CREATE_PAYMENT_PROVIDER_PAYOUT,
+      variables: {
+        paymentProvider: paymentProvider,
+        type: type
       }
     });
   }

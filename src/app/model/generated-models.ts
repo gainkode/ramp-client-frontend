@@ -228,6 +228,8 @@ export type Callback = {
   status?: Maybe<CallbackStatus>;
   type?: Maybe<CallbackType>;
   created?: Maybe<Scalars['String']>;
+  responseStatusCode?: Maybe<Scalars['String']>;
+  error?: Maybe<Scalars['String']>;
 };
 
 export type CallbackResultList = {
@@ -797,6 +799,7 @@ export type Mutation = {
   deleteSettingsKycTier: SettingsKycTier;
   addWireTransferBankAccount: WireTransferBankAccount;
   updateWireTransferBankAccount: WireTransferBankAccount;
+  createPaymentProviderPayout: Scalars['Boolean'];
   deleteWireTransferBankAccount: WireTransferBankAccount;
   createUser?: Maybe<User>;
   updateMe?: Maybe<User>;
@@ -1069,6 +1072,12 @@ export type MutationAddWireTransferBankAccountArgs = {
 export type MutationUpdateWireTransferBankAccountArgs = {
   bankAccountId: Scalars['ID'];
   bankAccount: WireTransferBankAccountInput;
+};
+
+
+export type MutationCreatePaymentProviderPayoutArgs = {
+  paymentProvider: Scalars['String'];
+  type?: Maybe<PaymentProviderPayoutType>;
 };
 
 
@@ -1760,6 +1769,11 @@ export type PaymentProviderByInstrument = {
   instrument?: Maybe<PaymentInstrument>;
   provider?: Maybe<PaymentProvider>;
 };
+
+export enum PaymentProviderPayoutType {
+  Benchmark = 'benchmark',
+  All = 'all'
+}
 
 export type PostAddress = {
   postCode?: Maybe<Scalars['String']>;

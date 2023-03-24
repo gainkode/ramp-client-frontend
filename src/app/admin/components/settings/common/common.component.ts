@@ -8,7 +8,7 @@ import { CurrencyView, CustodyProviderList, KycProviderList } from 'src/app/mode
 import { LiquidityProviderList } from 'src/app/admin/model/lists.model';
 import { TransactionConfirmationModeList } from 'src/app/admin/model/settings.model';
 import { FormBuilder, Validators } from '@angular/forms';
-import { SettingsCommon, SettingsCurrencyWithDefaults, TransactionConfirmationMode } from 'src/app/model/generated-models';
+import { PaymentProviderPayoutType, SettingsCommon, SettingsCurrencyWithDefaults, TransactionConfirmationMode } from 'src/app/model/generated-models';
 import { CommonDataService } from 'src/app/services/common-data.service';
 import { ErrorService } from 'src/app/services/error.service';
 
@@ -32,6 +32,8 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
   custodyProviderOptions = CustodyProviderList;
   liquidityProviderOptions = LiquidityProviderList;
   transactionConfirmationModeOptions = TransactionConfirmationModeList;
+  paymentProviderPayoutType = PaymentProviderPayoutType;
+  paymentProviderPayoutInProgress = false;
   emails: string[] = [];
   emailLoading: boolean = false;
   adminAdditionalSettings: Record<string, any> = {};
@@ -607,6 +609,27 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
     if (data) {
       delete data[key];
     }
+  }
+
+  paymentProviderPayout(provider: string, type:PaymentProviderPayoutType, content: any): void{
+    this.paymentProviderPayoutInProgress = true;
+    this.subscriptions.add(
+      this.adminService.createPaymentProviderPayout(provider, type).subscribe(({ data }) => {
+        if(data.createPaymentProviderPayout){
+          this.modalService.open(content, {
+            backdrop: 'static',
+            windowClass: 'modalCusSty',
+          });
+        }
+        this.paymentProviderPayoutInProgress = false;
+      }, (error) => {
+        this.paymentProviderPayoutInProgress = false;
+        this.errorMessage = error;
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
+      })
+    )
   }
 
   onSubmit(content: any): void {
