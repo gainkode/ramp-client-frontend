@@ -44,10 +44,10 @@
         <app-admin-details-item label="IP Address" [value]="data?.ip"></app-admin-details-item>
         <app-admin-details-item label="Customer ID" [value]="data?.accountId"></app-admin-details-item>
         <app-admin-details-item label="Widget ID" [value]="data?.widgetId"></app-admin-details-item>
-
-        <app-admin-details-item *ngIf="transactionType===TRANSACTION_TYPE.Receive || editableDestination===false"
+          
+        <app-admin-details-item *ngIf="(transactionType!==TRANSACTION_TYPE.Deposit && transactionType!==TRANSACTION_TYPE.Withdrawal) || editableDestination===false"
           label="Wallet address" [value]="data?.address"></app-admin-details-item>
-        <div *ngIf="data?.address!=='' && transactionType!==TRANSACTION_TYPE.Receive && editableDestination===true"
+        <div *ngIf="(transactionType!==TRANSACTION_TYPE.Deposit && transactionType!==TRANSACTION_TYPE.Withdrawal) && editableDestination===true"
           class="form-group">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             Wallet address

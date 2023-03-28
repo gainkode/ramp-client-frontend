@@ -103,7 +103,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   flag = false;
 
   form = this.formBuilder.group({
-    address: ['', { validators: [Validators.required], updateOn: 'change' }],
+    address: [undefined],
     currencyToSpend: [undefined, { validators: [Validators.required], updateOn: 'change' }],
     currencyToReceive: [undefined, { validators: [Validators.required], updateOn: 'change' }],
     amountToSpend: [undefined, { validators: [Validators.required, Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],

@@ -93,7 +93,7 @@ export class WidgetDepositDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.pSubscriptions.add(this.currencyTo?.valueChanges.subscribe(val => this.onCurrencyUpdated(val)));
-    this.pSubscriptions.add(this.amountTo?.valueChanges.subscribe(val => this.loadRates()));
+    this.pSubscriptions.add(this.amountTo?.valueChanges.subscribe(val => this.loadRates(val)));
     const defaultFiat = this.auth.user?.defaultFiatCurrency ?? 'EUR';
     let currency = defaultFiat;
     if (this.defaultSummary) {
@@ -112,7 +112,10 @@ export class WidgetDepositDetailsComponent implements OnInit, OnDestroy {
     this.currentQuoteEur = this.auth?.user?.kycTier?.amount ?? 0;
   }
 
-  private loadRates(): void {
+  private loadRates(val: number): void {
+
+    this.amountFrom?.setValue(val);
+
     const rateCurrencies = this.currencies.filter(x => x.fiat === true && x.symbol !== 'EUR').map((val) => val.symbol);
     const rateData = this.paymentService.getOneToManyRates('EUR', rateCurrencies, false);
     this.pSubscriptions.add(

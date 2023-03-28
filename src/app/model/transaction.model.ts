@@ -101,7 +101,7 @@ export class TransactionItemFull {
       this.created = datepipe.transform(data.created, 'dd-MM-YYYY HH:mm:ss') as string;
       this.executed = datepipe.transform(data.executed, 'dd-MM-YYYY HH:mm:ss') as string;
       this.updated = datepipe.transform(data.updated, 'dd-MM-YYYY HH:mm:ss') as string;
-      this.address = data.destination ?? '';
+      this.address = data.destination ?? '-';
       this.accountId = data.userId ?? '';
       this.accountStatus = data.accountStatus ?? '';
       this.accountStatusValue = data.accountStatus ?? AccountStatus.Closed;
