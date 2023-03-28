@@ -403,6 +403,9 @@ table {
 }
 
 .table-button-container {
+  display: flex;
+  flex-direction: row;
+  overflow-x: scroll;
   padding-bottom: 16px;
 }
 

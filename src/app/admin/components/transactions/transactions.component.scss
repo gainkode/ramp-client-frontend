@@ -1,5 +1,4 @@
 @import "../../../../assets/scss/variables";
-
 ::ng-deep {
   .datatable-body {
     height: 600px !important;
@@ -436,6 +435,9 @@ table {
 }
 
 .table-button-container {
+  display: flex;
+  flex-direction: row;
+  overflow-x: scroll;
   padding-bottom: 16px;
 }
 

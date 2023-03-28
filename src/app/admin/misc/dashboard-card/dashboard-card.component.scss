@@ -1,11 +1,13 @@
 .__dashboard-card-block {
     display: flex;
     flex-direction: row;
+    overflow-x: scroll;
 
     .__dashboard-card-column {
         display: flex;
         flex-direction: column;
         flex: 1 1 auto;
+        min-width: fit-content;
 
         &.align-right {
             text-align: right;

@@ -1,4 +1,4 @@
-<div *ngIf="data" class="card card-body pd-20 pd-md-40 border shadow-none">
+<div *ngIf="data" class="card card-body pd-20 pd-md-40 border shadow-none" style="overflow: hidden;">
     <h5 class="card-title mg-b-20">
         {{title}}
     </h5>
@@ -13,7 +13,7 @@
                     <span>{{row[col.key + 'Volume']}}</span>
                 </ng-container>
                 <ng-container *ngIf="col.type !== 'count-volume'">
-                    {{row[col.key]}}
+                    <p>{{row[col.key]}}</p>
                 </ng-container>
                 <button *ngIf="col.type === 'action'" mat-button>Show all</button>
             </div>

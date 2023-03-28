@@ -6,7 +6,7 @@
     <div class="card">
       <div class="card-body">
         <div class="table-responsive">
-          <div class="table-button-container">
+          <!-- <div class="table-button-container">
             <button (click)="refresh()" class="btn btn-primary me-2">
               Refresh
             </button>
@@ -17,8 +17,21 @@
               [disabled]="!selectedForUnbenchmark">
               Settle
             </button>
+          </div> -->
+          <div style="overflow: hidden;">
+            <div class="table-button-container">
+              <button (click)="refresh()" class="btn btn-primary me-2">
+                Refresh
+              </button>
+              <button (click)="export(export_content)" class="btn btn-outline-secondary me-2">
+                Export
+              </button>
+              <button (click)="unbenchmark(settle_content)" class="btn btn-danger me-2"
+                [disabled]="!selectedForUnbenchmark">
+                Settle
+              </button>
+            </div>
           </div>
-
           <app-admin-filter [fields]="filterFields" [filterData]="filter" (filter)="handleFilterApplied($event)">
           </app-admin-filter>
 

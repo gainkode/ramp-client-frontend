@@ -324,7 +324,7 @@ $gutter: 16px;
   flex-direction: row;
   margin: -$gutter/2;
   padding: 24px 16px;
-
+  
   .__dashboard-panel-column {
     display: flex;
     flex-direction: column;
@@ -341,4 +341,12 @@ $gutter: 16px;
       margin: $gutter/2;
     }
   }
+
+  @media (max-width: 1550px) {
+    flex-direction: column;
+  }
+}
+
+.full-dashboard-style {
+  margin: 0 auto;
 }

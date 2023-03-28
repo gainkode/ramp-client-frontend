@@ -169,6 +169,14 @@
     grid-template-rows: auto;
     grid-template-columns: 35% 35% auto;
     gap: 16px;
+    @media (max-width: 950px) {
+        display: flex;
+        flex-direction: column;
+    }
+
+    @media (max-width: 1450px) {
+        grid-template-columns: 50% 40% auto;
+    }
 }
 
 .__common-settings-pane {
