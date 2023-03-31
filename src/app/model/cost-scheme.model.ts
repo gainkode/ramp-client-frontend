@@ -149,10 +149,12 @@ export class WireTransferBankAccountItem {
     eu: WireTransferBankAccountEu | undefined = undefined;
     openpayd: Boolean | undefined = undefined;
     monoova: Boolean | undefined = undefined;
+    syntra: Boolean | undefined = undefined;
     flashfx: Boolean | undefined = undefined;
     openpaydObject: WireTransferBankAccountOpenpaydObject | undefined = undefined;
     flashfxObject: WireTransferBankAccountFlashfxObject | undefined = undefined;
     monoovaObject: WireTransferBankAccountMonoovaObject | undefined = undefined;
+    syntraObject: WireTransferBankAccountSyntraObject | undefined = undefined;
 
     get auAvailable(): boolean {
         return (this.au !== undefined);
@@ -172,6 +174,10 @@ export class WireTransferBankAccountItem {
 
     get monoovaAvailable(): boolean {
         return (this.monoova !== undefined);
+    }
+
+    get syntraAvailable(): boolean {
+        return (this.syntra !== undefined);
     }
 
     get flashfxAvailable(): boolean {
@@ -215,6 +221,12 @@ export class WireTransferBankAccountItem {
             }
             if(data.monoovaObject){
                 this.monoovaObject = JSON.parse(data.monoovaObject) ?? undefined
+            }
+            if(data.syntra) {
+                this.syntra = data.syntra ?? false;
+            }
+            if(data.syntraObject){
+                this.syntraObject = JSON.parse(data.syntraObject) ?? undefined
             }
             if (data.flashfx) {
                 this.flashfx = data.flashfx ?? false;
@@ -276,6 +288,16 @@ export class WireTransferBankAccountMonoovaObject {
     bankAccountName = '';
     bankAccountNumber = '';
     bsb = '';
+}
+
+export class WireTransferBankAccountSyntraObject {
+    depositoryBankName = '';
+    accountNumber = '';
+    reference = '';
+    bankAddress = '';
+    routingNumber = '';
+    creditTo = '';
+    beneficiaryAddress = '';
 }
 
 export class WireTransferUserSelection {

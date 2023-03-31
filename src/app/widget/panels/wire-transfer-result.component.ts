@@ -1,6 +1,6 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { WireTransferBankAccountAu, WireTransferBankAccountEu, WireTransferBankAccountFlashfxObject, WireTransferBankAccountMonoovaObject, WireTransferBankAccountOpenpaydObject, WireTransferBankAccountUk } from 'src/app/model/cost-scheme.model';
+import { WireTransferBankAccountAu, WireTransferBankAccountEu, WireTransferBankAccountFlashfxObject, WireTransferBankAccountMonoovaObject, WireTransferBankAccountOpenpaydObject, WireTransferBankAccountSyntraObject, WireTransferBankAccountUk } from 'src/app/model/cost-scheme.model';
 import { WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from 'src/app/model/payment-base.model';
 
 @Component({
@@ -146,6 +146,23 @@ export class WidgetWireTransferResultComponent {
             this.field3Value = dataMonoova.bankAccountName;
             // this.field4Value = dataFlashfx.beneficiaryAddress;
             // this.field5Value = dataFlashfx.currency;
+            
+        } else if(val.id == WireTransferPaymentCategory.SYNTRA){
+            const dataSyntra = data as WireTransferBankAccountSyntraObject;
+            
+            this.field1Title = 'Account Number';
+            this.field2Title = 'Bank Address';
+            this.field3Title = 'Routing Number';
+            this.field4Title = 'Credit To';
+            this.field5Title = 'Bank Name';
+            this.field6Title = 'Reference';
+
+            this.field1Value = dataSyntra.accountNumber;
+            this.field2Value = dataSyntra.bankAddress;
+            this.field3Value = dataSyntra.routingNumber;
+            this.field4Value = dataSyntra.creditTo;
+            this.field5Value = dataSyntra.depositoryBankName;
+            this.field6Value = dataSyntra.reference;
             
         }
 

@@ -255,6 +255,31 @@ export enum CountryCodeType {
   Code3 = 'code3'
 }
 
+export type CreateLiquidityExchangeOrderParams = {
+  userId?: Maybe<Scalars['String']>;
+  transactionId?: Maybe<Scalars['String']>;
+  currencyToReceive?: Maybe<Scalars['String']>;
+  currencyToSpend?: Maybe<Scalars['String']>;
+  amountToSpend?: Maybe<Scalars['Float']>;
+  amountToReceive?: Maybe<Scalars['Float']>;
+  rate?: Maybe<Scalars['Float']>;
+  side?: Maybe<LiquidityExchangeOrderSide>;
+  type?: Maybe<LiquidityExchangeOrderType>;
+};
+
+export type CreateTransferOrderParams = {
+  sourceVaultAccountId?: Maybe<SourceVaultAccountIdObject>;
+  userId?: Maybe<Scalars['String']>;
+  transactionId?: Maybe<Scalars['String']>;
+  currency?: Maybe<Scalars['String']>;
+  amount?: Maybe<Scalars['Float']>;
+  destination?: Maybe<Scalars['String']>;
+  benchmarkTransfer?: Maybe<Scalars['Boolean']>;
+  estimatingFee?: Maybe<Scalars['Float']>;
+  treatAsGrossAmount?: Maybe<Scalars['Boolean']>;
+  sourceAddress?: Maybe<Scalars['String']>;
+};
+
 export type CryptoInvoice = {
   __typename?: 'CryptoInvoice';
   cryptoInvoiceId?: Maybe<Scalars['ID']>;
@@ -287,8 +312,20 @@ export type CryptoInvoiceListResult = {
 };
 
 export enum CustodyProvider {
-  Fireblocks = 'Fireblocks'
+  Fireblocks = 'Fireblocks',
+  SyntraCustody = 'SyntraCustody'
 }
+
+export type CustodyWithdrawalOrderInfo = {
+  __typename?: 'CustodyWithdrawalOrderInfo';
+  orderId?: Maybe<Scalars['String']>;
+  originalOrderId?: Maybe<Scalars['String']>;
+  status?: Maybe<Scalars['String']>;
+  created?: Maybe<Scalars['DateTime']>;
+  transferHash?: Maybe<Scalars['String']>;
+  feeCurrency?: Maybe<Scalars['Float']>;
+  data?: Maybe<Scalars['String']>;
+};
 
 export type DashboardStats = {
   __typename?: 'DashboardStats';
@@ -679,8 +716,8 @@ export enum LiquidityDepositOrderStatus {
   Initial = 'INITIAL'
 }
 
-export type LiquidityOrder = {
-  __typename?: 'LiquidityOrder';
+export type LiquidityExchangeOrder = {
+  __typename?: 'LiquidityExchangeOrder';
   orderId?: Maybe<Scalars['String']>;
   userId?: Maybe<Scalars['String']>;
   transactionId?: Maybe<Scalars['String']>;
@@ -691,11 +728,11 @@ export type LiquidityOrder = {
   executed?: Maybe<Scalars['DateTime']>;
   executingResult?: Maybe<Scalars['String']>;
   symbol: Scalars['String'];
-  type: LiquidityOrderType;
-  side: LiquidityOrderSide;
+  type: LiquidityExchangeOrderType;
+  side: LiquidityExchangeOrderSide;
   price?: Maybe<Scalars['Float']>;
   volume: Scalars['Float'];
-  state: LiquidityOrderState;
+  state: LiquidityExchangeOrderState;
   status: Scalars['String'];
   statusReason?: Maybe<Scalars['String']>;
   originalOrderId?: Maybe<Scalars['String']>;
@@ -703,12 +740,22 @@ export type LiquidityOrder = {
   providerSpecificParams?: Maybe<Array<StringMap>>;
 };
 
-export enum LiquidityOrderSide {
+export type LiquidityExchangeOrderInfo = {
+  __typename?: 'LiquidityExchangeOrderInfo';
+  orderId?: Maybe<Scalars['String']>;
+  originalOrderId?: Maybe<Scalars['String']>;
+  status?: Maybe<Scalars['String']>;
+  created?: Maybe<Scalars['DateTime']>;
+  price?: Maybe<Scalars['Float']>;
+  data?: Maybe<Scalars['String']>;
+};
+
+export enum LiquidityExchangeOrderSide {
   Buy = 'Buy',
   Sell = 'Sell'
 }
 
-export enum LiquidityOrderState {
+export enum LiquidityExchangeOrderState {
   Created = 'Created',
   Published = 'Published',
   Executed = 'Executed',
@@ -716,7 +763,7 @@ export enum LiquidityOrderState {
   Canceled = 'Canceled'
 }
 
-export enum LiquidityOrderType {
+export enum LiquidityExchangeOrderType {
   Limit = 'Limit',
   Market = 'Market',
   Instant = 'Instant'
@@ -728,6 +775,24 @@ export enum LiquidityProvider {
   Kraken = 'Kraken',
   GetCoins = 'GetCoins'
 }
+
+export type LiquidityWithdrawalOrderInfo = {
+  __typename?: 'LiquidityWithdrawalOrderInfo';
+  orderId?: Maybe<Scalars['String']>;
+  originalOrderId?: Maybe<Scalars['String']>;
+  status?: Maybe<Scalars['String']>;
+  created?: Maybe<Scalars['DateTime']>;
+  transferHash?: Maybe<Scalars['String']>;
+  feeCurrency?: Maybe<Scalars['Float']>;
+  data?: Maybe<Scalars['String']>;
+};
+
+export type LiquidityWithdrawalPotentialFeeInfo = {
+  __typename?: 'LiquidityWithdrawalPotentialFeeInfo';
+  limit?: Maybe<Scalars['Float']>;
+  fee?: Maybe<Scalars['Float']>;
+  data?: Maybe<Scalars['String']>;
+};
 
 export type LoginResult = {
   __typename?: 'LoginResult';
@@ -820,16 +885,16 @@ export type Mutation = {
   removeRole?: Maybe<User>;
   deleteUser?: Maybe<User>;
   restoreUser?: Maybe<User>;
-  addMyContact?: Maybe<User>;
-  updateMyContact?: Maybe<User>;
-  deleteMyContact?: Maybe<User>;
-  addMyBankAccount?: Maybe<User>;
-  updateMyBankAccount?: Maybe<User>;
-  deleteMyBankAccount?: Maybe<User>;
+  addMyContact?: Maybe<UserContact>;
+  updateMyContact?: Maybe<UserContact>;
+  deleteMyContact?: Maybe<UserContact>;
+  addMyBankAccount?: Maybe<UserBankAccount>;
+  updateMyBankAccount?: Maybe<UserBankAccount>;
+  deleteMyBankAccount?: Maybe<UserBankAccount>;
   changeMyKycTier?: Maybe<User>;
-  addBankAccount?: Maybe<User>;
-  updateBankAccount?: Maybe<User>;
-  deleteBankAccount?: Maybe<User>;
+  addBankAccount?: Maybe<UserBankAccount>;
+  updateBankAccount?: Maybe<UserBankAccount>;
+  deleteBankAccount?: Maybe<UserBankAccount>;
   changeUserKycTier?: Maybe<User>;
   exportUsersToCsv?: Maybe<Scalars['Boolean']>;
   signup: LoginResult;
@@ -895,10 +960,20 @@ export type Mutation = {
   updateRiskAlertType?: Maybe<RiskAlertType>;
   addBlackCountry?: Maybe<BlackCountry>;
   deleteBlackCountry?: Maybe<BlackCountry>;
-  /** This endpoint can be used to create a transaction */
+  /** This endpoint can be used to create a crypto invoice */
   createInvoice?: Maybe<CryptoInvoiceCreationResult>;
-  /** This endpoint to recalculate the invoice (with current rate) */
+  /** This endpoint to recalculate the invoice with current rate */
   calculateInvoice?: Maybe<CryptoInvoiceCreationResult>;
+  /** This endpoint can be used to create a liquidity exchange order */
+  createLiquidityExchangeOrder?: Maybe<LiquidityExchangeOrder>;
+  /** This endpoint can be used to create an order to withdraw from liquidity provider */
+  createLiquidityWithdrawalOrder?: Maybe<TransferOrder>;
+  /** Create new vault account */
+  createVaultAccount?: Maybe<VaultAccount>;
+  /** Create new vault account */
+  updateVaultAccount?: Maybe<VaultAccount>;
+  /** This endpoint can be used to create an order to withdraw from custody provider */
+  createCustodyWithdrawalOrder?: Maybe<TransferOrder>;
   /** Not used */
   addFiatVault?: Maybe<FiatVault>;
   deleteFiatVault?: Maybe<FiatVault>;
@@ -1546,6 +1621,35 @@ export type MutationCalculateInvoiceArgs = {
 };
 
 
+export type MutationCreateLiquidityExchangeOrderArgs = {
+  params?: Maybe<CreateLiquidityExchangeOrderParams>;
+};
+
+
+export type MutationCreateLiquidityWithdrawalOrderArgs = {
+  params?: Maybe<CreateTransferOrderParams>;
+};
+
+
+export type MutationCreateVaultAccountArgs = {
+  custodyProviderName?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['String']>;
+  params?: Maybe<Array<StringMapInput>>;
+};
+
+
+export type MutationUpdateVaultAccountArgs = {
+  custodyProviderName?: Maybe<Scalars['String']>;
+  vaultId?: Maybe<Scalars['String']>;
+  params?: Maybe<Array<StringMapInput>>;
+};
+
+
+export type MutationCreateCustodyWithdrawalOrderArgs = {
+  params?: Maybe<CreateTransferOrderParams>;
+};
+
+
 export type MutationAddFiatVaultArgs = {
   userId: Scalars['String'];
   currency?: Maybe<Scalars['String']>;
@@ -1704,6 +1808,7 @@ export type PaymentOrder = {
   providerSpecificStates?: Maybe<Array<DateMap>>;
   providerSpecificParams?: Maybe<Array<StringMap>>;
   preauth?: Maybe<Scalars['Boolean']>;
+  captured?: Maybe<Scalars['Boolean']>;
 };
 
 export type PaymentOrderShort = {
@@ -1945,6 +2050,22 @@ export type Query = {
   getSystemBalanceMany?: Maybe<Scalars['String']>;
   getDevices?: Maybe<UserDeviceListResult>;
   myDevices?: Maybe<UserDeviceListResult>;
+  /** Returns true if liquidity deposit is completed and credited to the liquidity account */
+  isLiquidityDepositCompleted?: Maybe<Scalars['Boolean']>;
+  /** Get liquidity exchange order status */
+  getLiquidityExchangeOrderStatus?: Maybe<LiquidityExchangeOrderInfo>;
+  /** Get liquidity withdrawal potential fee */
+  getLiquidityWithdrawalPotentialFeeInfo?: Maybe<LiquidityWithdrawalPotentialFeeInfo>;
+  /** Get custody wallets for users */
+  getVaultAccountListForUsers?: Maybe<Array<VaultAccount>>;
+  /** Get vault account */
+  getVaultAccount?: Maybe<VaultAccount>;
+  /** Get network fee */
+  getNetworkFee?: Maybe<Scalars['Float']>;
+  /** Get custody withdrawal order status */
+  getCustodyWithdrawalOrderStatus?: Maybe<CustodyWithdrawalOrderInfo>;
+  /** Get custody withdrawal orders */
+  getCustodyWithdrawalOrders?: Maybe<Array<CustodyWithdrawalOrderInfo>>;
 };
 
 
@@ -2521,6 +2642,51 @@ export type QueryGetOneToManyRatesMerchantArgs = {
   withFactor?: Maybe<Scalars['Boolean']>;
 };
 
+
+export type QueryIsLiquidityDepositCompletedArgs = {
+  orderId: Scalars['String'];
+};
+
+
+export type QueryGetLiquidityExchangeOrderStatusArgs = {
+  orderId: Scalars['String'];
+};
+
+
+export type QueryGetLiquidityWithdrawalPotentialFeeInfoArgs = {
+  params: CreateTransferOrderParams;
+};
+
+
+export type QueryGetVaultAccountListForUsersArgs = {
+  custodyProviderName: Scalars['String'];
+  userIds?: Maybe<Array<Scalars['String']>>;
+};
+
+
+export type QueryGetVaultAccountArgs = {
+  custodyProviderName: Scalars['String'];
+  vaultId: Scalars['String'];
+};
+
+
+export type QueryGetNetworkFeeArgs = {
+  custodyProviderName: Scalars['String'];
+  params: CreateTransferOrderParams;
+};
+
+
+export type QueryGetCustodyWithdrawalOrderStatusArgs = {
+  custodyProviderName: Scalars['String'];
+  orderId: Scalars['String'];
+};
+
+
+export type QueryGetCustodyWithdrawalOrdersArgs = {
+  custodyProviderName: Scalars['String'];
+  transferOrdersTrackingTimedeltaDays: Scalars['Int'];
+};
+
 export type Rate = {
   __typename?: 'Rate';
   currencyFrom: Scalars['String'];
@@ -2531,6 +2697,7 @@ export type Rate = {
 };
 
 export type RequiredUserPermission = {
+  userRolePermissionId?: Maybe<Scalars['String']>;
   objectCode?: Maybe<Scalars['String']>;
   fullAccess?: Maybe<Scalars['Boolean']>;
 };
@@ -2586,6 +2753,11 @@ export enum RiskLevel {
   Medium = 'Medium',
   High = 'High'
 }
+
+export type RoleOptions = {
+  roles: Array<Scalars['String']>;
+  permissions?: Maybe<Array<RequiredUserPermission>>;
+};
 
 export type SettingsCommon = {
   __typename?: 'SettingsCommon';
@@ -2973,8 +3145,20 @@ export type SettingsKycTierShortExListResult = {
   list?: Maybe<Array<SettingsKycTierShortEx>>;
 };
 
+export type SourceVaultAccountIdObject = {
+  vaultId?: Maybe<Scalars['String']>;
+  walletId?: Maybe<Scalars['String']>;
+  subWalletName?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+};
+
 export type StringMap = {
   __typename?: 'StringMap';
+  key: Scalars['String'];
+  value?: Maybe<Scalars['String']>;
+};
+
+export type StringMapInput = {
   key: Scalars['String'];
   value?: Maybe<Scalars['String']>;
 };
@@ -3009,6 +3193,17 @@ export type SupportTicketListResult = {
   __typename?: 'SupportTicketListResult';
   count?: Maybe<Scalars['Int']>;
   list?: Maybe<Array<SupportTicket>>;
+};
+
+export type SyntraObject = {
+  __typename?: 'SyntraObject';
+  depositoryBankName?: Maybe<Scalars['String']>;
+  accountNumber?: Maybe<Scalars['String']>;
+  reference?: Maybe<Scalars['String']>;
+  bankAddress?: Maybe<Scalars['String']>;
+  routingNumber?: Maybe<Scalars['String']>;
+  creditTo?: Maybe<Scalars['String']>;
+  beneficiaryAddress?: Maybe<Scalars['String']>;
 };
 
 export type TextPage = {
@@ -3086,7 +3281,7 @@ export type Transaction = {
   paymentOrder?: Maybe<PaymentOrder>;
   liquidityProvider?: Maybe<LiquidityProvider>;
   liquidityOrderId?: Maybe<Scalars['String']>;
-  liquidityOrder?: Maybe<LiquidityOrder>;
+  liquidityOrder?: Maybe<LiquidityExchangeOrder>;
   transferOrderId?: Maybe<Scalars['String']>;
   transferOrder?: Maybe<TransferOrder>;
   transferOrderBlockchainLink?: Maybe<Scalars['String']>;
@@ -3256,7 +3451,7 @@ export type TransactionShort = {
   paymentProvider?: Maybe<Scalars['String']>;
   liquidityProvider?: Maybe<LiquidityProvider>;
   paymentOrder?: Maybe<PaymentOrder>;
-  liquidityOrder?: Maybe<LiquidityOrder>;
+  liquidityOrder?: Maybe<LiquidityExchangeOrder>;
   transferOrder?: Maybe<TransferOrder>;
   widgetId?: Maybe<Scalars['String']>;
   widgetCode?: Maybe<Scalars['String']>;
@@ -3606,6 +3801,7 @@ export type User = {
   companyType?: Maybe<Scalars['String']>;
   payId?: Maybe<Scalars['String']>;
   widgetUserParamsId?: Maybe<Scalars['String']>;
+  syntraAccountId?: Maybe<Scalars['String']>;
 };
 
 export type UserAction = {
@@ -3691,6 +3887,11 @@ export enum UserActionType {
   MonoovaGetPayId = 'monoovaGetPayId',
   MonoovaRegisterPayId = 'monoovaRegisterPayId',
   MonoovaPayout = 'monoovaPayout',
+  SyntraCallback = 'syntraCallback',
+  SyntraGetAccount = 'syntraGetAccount',
+  SyntraCreateAccount = 'syntraCreateAccount',
+  SyntraCreateDepositFundsViaWire = 'syntraCreateDepositFundsViaWire',
+  SyntraGetVaultAssetAccounts = 'syntraGetVaultAssetAccounts',
   AddBlackCountry = 'addBlackCountry',
   RemoveBlackCountry = 'removeBlackCountry',
   CreateCryptoInvoice = 'createCryptoInvoice',
@@ -4347,6 +4548,8 @@ export type WireTransferBankAccount = {
   flashfx?: Maybe<Scalars['Boolean']>;
   monoova?: Maybe<Scalars['Boolean']>;
   monoovaObject?: Maybe<Scalars['String']>;
+  syntra?: Maybe<Scalars['Boolean']>;
+  syntraObject?: Maybe<Scalars['String']>;
   openpaydObject?: Maybe<Scalars['String']>;
   flashfxObject?: Maybe<Scalars['String']>;
   deleted?: Maybe<Scalars['DateTime']>;
@@ -4361,6 +4564,7 @@ export type WireTransferBankAccountInput = {
   openpayd?: Maybe<Scalars['Boolean']>;
   flashfx?: Maybe<Scalars['Boolean']>;
   monoova?: Maybe<Scalars['Boolean']>;
+  syntra?: Maybe<Scalars['Boolean']>;
   deleted?: Maybe<Scalars['DateTime']>;
 };
 
@@ -4384,6 +4588,8 @@ export type WireTransferBankAccountShort = {
   flashfx?: Maybe<Scalars['Boolean']>;
   monoovaObject?: Maybe<Scalars['String']>;
   monoova?: Maybe<Scalars['Boolean']>;
+  syntra?: Maybe<Scalars['Boolean']>;
+  syntraObject?: Maybe<Scalars['String']>;
 };
 
 export type LiquidityProviderBalance = {

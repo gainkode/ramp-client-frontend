@@ -17,6 +17,7 @@ export enum WireTransferPaymentCategory {
     EU = 'EU',
     OPENPAYD = 'OPENPAYD',
     MONOOVA = 'MONOOVA',
+    SYNTRA = 'SYNTRA',
     FLASHFX = 'FLASHFX'
 }
 

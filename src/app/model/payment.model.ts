@@ -298,6 +298,7 @@ export const WireTransferPaymentCategoryList: Array<WireTransferPaymentCategoryI
     { id: WireTransferPaymentCategory.EU, bankAccountId: '', title: 'SEPA / SWIFT', data: '' },
     { id: WireTransferPaymentCategory.OPENPAYD, bankAccountId: '', title: 'Openpayd', data: ''},
     { id: WireTransferPaymentCategory.MONOOVA, bankAccountId: '', title: 'Monoova', data: ''},
+    { id: WireTransferPaymentCategory.SYNTRA, bankAccountId: '', title: 'Syntra', data: ''},
     { id: WireTransferPaymentCategory.FLASHFX, bankAccountId: '', title: 'Flashfx', data: ''}
 ];
 
@@ -564,7 +565,8 @@ export const RiskLevelViewList: Array<RiskLevelView> = [
 ];
 
 export const CustodyProviderList: Array<CustodyProviderView> = [
-    { id: CustodyProvider.Fireblocks, name: 'Fireblocks' }
+    { id: CustodyProvider.Fireblocks, name: 'Fireblocks' },
+    { id: CustodyProvider.SyntraCustody, name: 'Syntra' }
 ];
 
 export const UserNotificationCodeList: Array<UserNotificationCodeView> = [

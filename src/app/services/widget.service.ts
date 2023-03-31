@@ -234,6 +234,16 @@ export class WidgetService {
                                     wireTransferList[pos].bankAccountId = accountData.bankAccountId;
                                 }
                             }
+
+                            pos = wireTransferList.findIndex(x => x.id === WireTransferPaymentCategory.SYNTRA);
+                            if (pos >= 0) {
+                                if (accountData.syntraObject === null || accountData.syntraObject === undefined || accountData.syntraObject === 'null') {
+                                    wireTransferList.splice(pos, 1);
+                                } else {
+                                    wireTransferList[pos].data = accountData.syntraObject;
+                                    wireTransferList[pos].bankAccountId = accountData.bankAccountId;
+                                }
+                            }
                         }
                         if (this.onWireTranferListLoaded) {
                             this.onWireTranferListLoaded(wireTransferList, accountData?.bankAccountId);
