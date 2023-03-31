@@ -2,6 +2,7 @@ import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Outpu
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { AssetAddressShort, Rate, SettingsCurrencyWithDefaults, TransactionType, UserState } from 'src/app/model/generated-models';
 import { WidgetSettings } from 'src/app/model/payment-base.model';
 import { CheckoutSummary, CurrencyView, QuickCheckoutTransactionTypeList } from 'src/app/model/payment.model';
@@ -36,19 +37,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   @Input() settings: WidgetSettings = new WidgetSettings();
   @Input() defaultFee: number | undefined = undefined;
   @Input() summary: CheckoutSummary | undefined = undefined;
-  @Input() set withdrawalRate(val: number | undefined) {
-    this.pSpendChanged = true;
-    this.pWithdrawalRate = val;
-    // this.updateCurrentAmounts();
-    // if (this.currentCurrencySpend) {
-    //   this.setSpendValidators();
-    // }
-    // if (this.currentCurrencyReceive) {
-    //   this.setReceiveValidators();
-    // }
-  }
   @Input() set depositRate(val: number | undefined) {
-    this.pSpendChanged = true;
     this.pDepositRate = val;
     this.updateCurrentAmounts();
     if (this.currentCurrencySpend) {
@@ -244,13 +233,34 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     this.setAmountTitles();
     this.currentTransactionName = QuickCheckoutTransactionTypeList.find(x => x.id === this.currentTransaction)?.name ?? this.currentTransaction;
     this.loadDetailsForm(this.summary?.initialized ?? false);
-    this.pSubscriptions.add(this.currencySpendField?.valueChanges.subscribe(val => this.onCurrenciesUpdated(val, 'Spend')));
-    this.pSubscriptions.add(this.currencyReceiveField?.valueChanges.subscribe(val => this.onCurrenciesUpdated(val, 'Receive')));
-    this.pSubscriptions.add(this.amountSpendField?.valueChanges.subscribe(val => this.onAmountSpendUpdated(val)));
-    this.pSubscriptions.add(this.amountReceiveField?.valueChanges.subscribe(val => this.onAmountReceiveUpdated(val)));
-    this.pSubscriptions.add(this.transactionField?.valueChanges.subscribe(val => this.onTransactionUpdated(val)));
-    this.pSubscriptions.add(this.walletSelectorField?.valueChanges.subscribe(val => this.onWalletSelectorUpdated(val)));
-    this.pSubscriptions.add(this.walletField?.valueChanges.subscribe(val => this.onWalletUpdated(val)));
+
+    this.pSubscriptions.add(this.currencySpendField?.valueChanges
+      .pipe(distinctUntilChanged((prev, curr) => prev === curr))
+      .subscribe(val => this.onCurrenciesUpdated(val, 'Spend')));
+
+    this.pSubscriptions.add(this.currencyReceiveField?.valueChanges
+      .pipe(distinctUntilChanged((prev, curr) => prev === curr))
+      .subscribe(val => this.onCurrenciesUpdated(val, 'Receive')));
+    
+    this.pSubscriptions.add(this.amountSpendField?.valueChanges
+      .pipe(distinctUntilChanged((prev, curr) => prev === curr))
+      .subscribe(val => this.onAmountSpendUpdated(val)));
+    
+    this.pSubscriptions.add(this.amountReceiveField?.valueChanges
+      .pipe(distinctUntilChanged((prev, curr) => prev === curr))
+      .subscribe(val => this.onAmountReceiveUpdated(val)));
+    
+    this.pSubscriptions.add(this.transactionField?.valueChanges
+      .pipe(distinctUntilChanged((prev, curr) => prev === curr))
+      .subscribe(val => this.onTransactionUpdated(val)));
+
+    this.pSubscriptions.add(this.walletSelectorField?.valueChanges
+      .pipe(distinctUntilChanged((prev, curr) => prev === curr))
+      .subscribe(val => this.onWalletSelectorUpdated(val)));
+      
+    this.pSubscriptions.add(this.walletField?.valueChanges
+      .pipe(distinctUntilChanged((prev, curr) => prev === curr))
+      .subscribe(val => this.onWalletUpdated(val)));
   }
 
   ngAfterViewInit(): void {
