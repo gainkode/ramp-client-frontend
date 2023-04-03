@@ -313,7 +313,7 @@ export type CryptoInvoiceListResult = {
 
 export enum CustodyProvider {
   Fireblocks = 'Fireblocks',
-  SyntraCustody = 'SyntraCustody'
+  PrimeTrustCustody = 'PrimeTrustCustody'
 }
 
 export type CustodyWithdrawalOrderInfo = {
@@ -1893,6 +1893,17 @@ export type PostAddress = {
   addressEndDate?: Maybe<Scalars['DateTime']>;
 };
 
+export type PrimeTrustObject = {
+  __typename?: 'PrimeTrustObject';
+  depositoryBankName?: Maybe<Scalars['String']>;
+  accountNumber?: Maybe<Scalars['String']>;
+  reference?: Maybe<Scalars['String']>;
+  bankAddress?: Maybe<Scalars['String']>;
+  routingNumber?: Maybe<Scalars['String']>;
+  creditTo?: Maybe<Scalars['String']>;
+  beneficiaryAddress?: Maybe<Scalars['String']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   serverTime: Scalars['String'];
@@ -3195,17 +3206,6 @@ export type SupportTicketListResult = {
   list?: Maybe<Array<SupportTicket>>;
 };
 
-export type SyntraObject = {
-  __typename?: 'SyntraObject';
-  depositoryBankName?: Maybe<Scalars['String']>;
-  accountNumber?: Maybe<Scalars['String']>;
-  reference?: Maybe<Scalars['String']>;
-  bankAddress?: Maybe<Scalars['String']>;
-  routingNumber?: Maybe<Scalars['String']>;
-  creditTo?: Maybe<Scalars['String']>;
-  beneficiaryAddress?: Maybe<Scalars['String']>;
-};
-
 export type TextPage = {
   __typename?: 'TextPage';
   page?: Maybe<Scalars['Int']>;
@@ -3801,7 +3801,7 @@ export type User = {
   companyType?: Maybe<Scalars['String']>;
   payId?: Maybe<Scalars['String']>;
   widgetUserParamsId?: Maybe<Scalars['String']>;
-  syntraAccountId?: Maybe<Scalars['String']>;
+  primeTrustAccountId?: Maybe<Scalars['String']>;
 };
 
 export type UserAction = {
@@ -3887,11 +3887,11 @@ export enum UserActionType {
   MonoovaGetPayId = 'monoovaGetPayId',
   MonoovaRegisterPayId = 'monoovaRegisterPayId',
   MonoovaPayout = 'monoovaPayout',
-  SyntraCallback = 'syntraCallback',
-  SyntraGetAccount = 'syntraGetAccount',
-  SyntraCreateAccount = 'syntraCreateAccount',
-  SyntraCreateDepositFundsViaWire = 'syntraCreateDepositFundsViaWire',
-  SyntraGetVaultAssetAccounts = 'syntraGetVaultAssetAccounts',
+  PrimeTrustCallback = 'primeTrustCallback',
+  PrimeTrustGetAccount = 'primeTrustGetAccount',
+  PrimeTrustCreateAccount = 'primeTrustCreateAccount',
+  PrimeTrustCreateDepositFundsViaWire = 'primeTrustCreateDepositFundsViaWire',
+  PrimeTrustGetVaultAssetAccounts = 'primeTrustGetVaultAssetAccounts',
   AddBlackCountry = 'addBlackCountry',
   RemoveBlackCountry = 'removeBlackCountry',
   CreateCryptoInvoice = 'createCryptoInvoice',
@@ -4548,8 +4548,8 @@ export type WireTransferBankAccount = {
   flashfx?: Maybe<Scalars['Boolean']>;
   monoova?: Maybe<Scalars['Boolean']>;
   monoovaObject?: Maybe<Scalars['String']>;
-  syntra?: Maybe<Scalars['Boolean']>;
-  syntraObject?: Maybe<Scalars['String']>;
+  primeTrust?: Maybe<Scalars['Boolean']>;
+  primeTrustObject?: Maybe<Scalars['String']>;
   openpaydObject?: Maybe<Scalars['String']>;
   flashfxObject?: Maybe<Scalars['String']>;
   deleted?: Maybe<Scalars['DateTime']>;
@@ -4564,7 +4564,7 @@ export type WireTransferBankAccountInput = {
   openpayd?: Maybe<Scalars['Boolean']>;
   flashfx?: Maybe<Scalars['Boolean']>;
   monoova?: Maybe<Scalars['Boolean']>;
-  syntra?: Maybe<Scalars['Boolean']>;
+  primeTrust?: Maybe<Scalars['Boolean']>;
   deleted?: Maybe<Scalars['DateTime']>;
 };
 
@@ -4588,8 +4588,8 @@ export type WireTransferBankAccountShort = {
   flashfx?: Maybe<Scalars['Boolean']>;
   monoovaObject?: Maybe<Scalars['String']>;
   monoova?: Maybe<Scalars['Boolean']>;
-  syntra?: Maybe<Scalars['Boolean']>;
-  syntraObject?: Maybe<Scalars['String']>;
+  primeTrust?: Maybe<Scalars['Boolean']>;
+  primeTrustObject?: Maybe<Scalars['String']>;
 };
 
 export type LiquidityProviderBalance = {

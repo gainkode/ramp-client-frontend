@@ -42,7 +42,7 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
   public euCategory: any;
   public openpaydCategory: any;
   public monoovaCategory: any;
-  public syntraCategory: any;
+  public primeTrustCategory: any;
   public flashfxCategory: any;
 
   form = this.formBuilder.group({
@@ -52,7 +52,7 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
     ukSelected: [false],
     euSelected: [false],
     monoovaSelected: [false],
-    syntraSelected: [false],
+    primeTrustSelected: [false],
     openpaydSelected: [false],
     flashfxSelected: [false],
     auAccountName: [undefined],
@@ -84,7 +84,7 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
     this.euCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.EU);
     this.openpaydCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.OPENPAYD);
     this.monoovaCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.MONOOVA);
-    this.syntraCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.SYNTRA);
+    this.primeTrustCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.PRIMETRUST);
     this.flashfxCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.FLASHFX);
   }
 
@@ -127,8 +127,8 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
         this.form.get('monoovaSelected')?.setValue(true);
       }
 
-      if(account.syntraAvailable){
-        this.form.get('syntraSelected')?.setValue(true);
+      if(account.primeTrustAvailable){
+        this.form.get('primeTrustSelected')?.setValue(true);
       }
 
       if(account.flashfxAvailable){
@@ -142,7 +142,7 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
       this.form.get('euSelected')?.setValue(false);
       this.form.get('openpaydSelected')?.setValue(false);
       this.form.get('monoovaSelected')?.setValue(false);
-      this.form.get('syntraSelected')?.setValue(false);
+      this.form.get('primeTrustSelected')?.setValue(false);
       this.form.get('flashfxSelected')?.setValue(false);
       this.form.get('auAccountName')?.setValue(undefined);
       this.form.get('auAccountNumber')?.setValue(undefined);
@@ -224,10 +224,10 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
         data.monoova = false;
     }
 
-    if(this.form.get('syntraSelected')?.value === true){
-      data.syntra = this.form.get('syntraSelected')?.value;
+    if(this.form.get('primeTrustSelected')?.value === true){
+      data.primeTrust = this.form.get('primeTrustSelected')?.value;
     }else{
-        data.syntra = false;
+        data.primeTrust = false;
     }
 
     if(this.form.get('flashfxSelected')?.value === true){

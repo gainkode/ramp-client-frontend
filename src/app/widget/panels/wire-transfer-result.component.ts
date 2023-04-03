@@ -1,6 +1,6 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { WireTransferBankAccountAu, WireTransferBankAccountEu, WireTransferBankAccountFlashfxObject, WireTransferBankAccountMonoovaObject, WireTransferBankAccountOpenpaydObject, WireTransferBankAccountSyntraObject, WireTransferBankAccountUk } from 'src/app/model/cost-scheme.model';
+import { WireTransferBankAccountAu, WireTransferBankAccountEu, WireTransferBankAccountFlashfxObject, WireTransferBankAccountMonoovaObject, WireTransferBankAccountOpenpaydObject, WireTransferBankAccountPrimeTrustObject, WireTransferBankAccountUk } from 'src/app/model/cost-scheme.model';
 import { WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from 'src/app/model/payment-base.model';
 
 @Component({
@@ -147,8 +147,8 @@ export class WidgetWireTransferResultComponent {
             // this.field4Value = dataFlashfx.beneficiaryAddress;
             // this.field5Value = dataFlashfx.currency;
             
-        } else if(val.id == WireTransferPaymentCategory.SYNTRA){
-            const dataSyntra = data as WireTransferBankAccountSyntraObject;
+        } else if(val.id == WireTransferPaymentCategory.PRIMETRUST){
+            const dataPrimeTrust = data as WireTransferBankAccountPrimeTrustObject;
             
             this.field1Title = 'Account Number';
             this.field2Title = 'Bank Address';
@@ -157,12 +157,12 @@ export class WidgetWireTransferResultComponent {
             this.field5Title = 'Bank Name';
             this.field6Title = 'Reference';
 
-            this.field1Value = dataSyntra.accountNumber;
-            this.field2Value = dataSyntra.bankAddress;
-            this.field3Value = dataSyntra.routingNumber;
-            this.field4Value = dataSyntra.creditTo;
-            this.field5Value = dataSyntra.depositoryBankName;
-            this.field6Value = dataSyntra.reference;
+            this.field1Value = dataPrimeTrust.accountNumber;
+            this.field2Value = dataPrimeTrust.bankAddress;
+            this.field3Value = dataPrimeTrust.routingNumber;
+            this.field4Value = dataPrimeTrust.creditTo;
+            this.field5Value = dataPrimeTrust.depositoryBankName;
+            this.field6Value = dataPrimeTrust.reference;
             
         }
 

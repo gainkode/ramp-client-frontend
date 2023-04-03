@@ -149,12 +149,12 @@ export class WireTransferBankAccountItem {
     eu: WireTransferBankAccountEu | undefined = undefined;
     openpayd: Boolean | undefined = undefined;
     monoova: Boolean | undefined = undefined;
-    syntra: Boolean | undefined = undefined;
+    primeTrust: Boolean | undefined = undefined;
     flashfx: Boolean | undefined = undefined;
     openpaydObject: WireTransferBankAccountOpenpaydObject | undefined = undefined;
     flashfxObject: WireTransferBankAccountFlashfxObject | undefined = undefined;
     monoovaObject: WireTransferBankAccountMonoovaObject | undefined = undefined;
-    syntraObject: WireTransferBankAccountSyntraObject | undefined = undefined;
+    primeTrustObject: WireTransferBankAccountPrimeTrustObject | undefined = undefined;
 
     get auAvailable(): boolean {
         return (this.au !== undefined);
@@ -176,8 +176,8 @@ export class WireTransferBankAccountItem {
         return (this.monoova !== undefined);
     }
 
-    get syntraAvailable(): boolean {
-        return (this.syntra !== undefined);
+    get primeTrustAvailable(): boolean {
+        return (this.primeTrust !== undefined);
     }
 
     get flashfxAvailable(): boolean {
@@ -222,11 +222,11 @@ export class WireTransferBankAccountItem {
             if(data.monoovaObject){
                 this.monoovaObject = JSON.parse(data.monoovaObject) ?? undefined
             }
-            if(data.syntra) {
-                this.syntra = data.syntra ?? false;
+            if(data.primeTrust) {
+                this.primeTrust = data.primeTrust ?? false;
             }
-            if(data.syntraObject){
-                this.syntraObject = JSON.parse(data.syntraObject) ?? undefined
+            if(data.primeTrustObject){
+                this.primeTrustObject = JSON.parse(data.primeTrustObject) ?? undefined
             }
             if (data.flashfx) {
                 this.flashfx = data.flashfx ?? false;
@@ -290,7 +290,7 @@ export class WireTransferBankAccountMonoovaObject {
     bsb = '';
 }
 
-export class WireTransferBankAccountSyntraObject {
+export class WireTransferBankAccountPrimeTrustObject {
     depositoryBankName = '';
     accountNumber = '';
     reference = '';

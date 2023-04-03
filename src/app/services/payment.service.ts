@@ -130,8 +130,8 @@ query MySettingsFee(
         flashfxObject
         monoova
         monoovaObject
-        syntra
-        syntraObject
+        primeTrust
+        primeTrustObject
       }
     },
     requiredFields

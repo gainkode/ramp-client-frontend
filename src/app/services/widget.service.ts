@@ -235,12 +235,12 @@ export class WidgetService {
                                 }
                             }
 
-                            pos = wireTransferList.findIndex(x => x.id === WireTransferPaymentCategory.SYNTRA);
+                            pos = wireTransferList.findIndex(x => x.id === WireTransferPaymentCategory.PRIMETRUST);
                             if (pos >= 0) {
-                                if (accountData.syntraObject === null || accountData.syntraObject === undefined || accountData.syntraObject === 'null') {
+                                if (accountData.primeTrustObject === null || accountData.primeTrustObject === undefined || accountData.primeTrustObject === 'null') {
                                     wireTransferList.splice(pos, 1);
                                 } else {
-                                    wireTransferList[pos].data = accountData.syntraObject;
+                                    wireTransferList[pos].data = accountData.primeTrustObject;
                                     wireTransferList[pos].bankAccountId = accountData.bankAccountId;
                                 }
                             }
