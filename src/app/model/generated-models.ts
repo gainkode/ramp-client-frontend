@@ -192,7 +192,7 @@ export enum BitcoinAddressFormats {
 export type BlackCountry = {
   __typename?: 'BlackCountry';
   countryCode2: Scalars['ID'];
-  created: Scalars['DateTime'];
+  created?: Maybe<Scalars['DateTime']>;
 };
 
 export type BlackCountryListResult = {
@@ -970,8 +970,10 @@ export type Mutation = {
   createLiquidityWithdrawalOrder?: Maybe<TransferOrder>;
   /** Create new vault account */
   createVaultAccount?: Maybe<VaultAccount>;
-  /** Create new vault account */
+  /** Update vault account */
   updateVaultAccount?: Maybe<VaultAccount>;
+  /** Add an asset to a vault account */
+  addAssetToVaultAccount?: Maybe<VaultAccount>;
   /** This endpoint can be used to create an order to withdraw from custody provider */
   createCustodyWithdrawalOrder?: Maybe<TransferOrder>;
   /** Not used */
@@ -1633,15 +1635,22 @@ export type MutationCreateLiquidityWithdrawalOrderArgs = {
 
 export type MutationCreateVaultAccountArgs = {
   custodyProviderName?: Maybe<Scalars['String']>;
-  userId?: Maybe<Scalars['String']>;
+  userId: Scalars['String'];
   params?: Maybe<Array<StringMapInput>>;
 };
 
 
 export type MutationUpdateVaultAccountArgs = {
   custodyProviderName?: Maybe<Scalars['String']>;
-  vaultId?: Maybe<Scalars['String']>;
+  vaultId: Scalars['String'];
   params?: Maybe<Array<StringMapInput>>;
+};
+
+
+export type MutationAddAssetToVaultAccountArgs = {
+  custodyProviderName?: Maybe<Scalars['String']>;
+  vaultId: Scalars['String'];
+  assetId: Scalars['String'];
 };
 
 
@@ -2776,6 +2785,7 @@ export type SettingsCommon = {
   liquidityProvider?: Maybe<Scalars['String']>;
   mailProvider?: Maybe<Scalars['String']>;
   custodyProvider?: Maybe<Scalars['String']>;
+  custodyFiatProvider?: Maybe<Scalars['String']>;
   kycProvider?: Maybe<Scalars['String']>;
   kycBaseAddress?: Maybe<Scalars['String']>;
   adminEmails?: Maybe<Array<Scalars['String']>>;
@@ -3746,6 +3756,7 @@ export type User = {
   kycStatusUpdateRequired?: Maybe<Scalars['Boolean']>;
   kycDocs?: Maybe<Array<Scalars['String']>>;
   custodyProvider?: Maybe<Scalars['String']>;
+  custodyFiatProvider?: Maybe<Scalars['String']>;
   vaults?: Maybe<Array<UserVaultIdObj>>;
   defaultFiatCurrency?: Maybe<Scalars['String']>;
   defaultCryptoCurrency?: Maybe<Scalars['String']>;
@@ -4170,7 +4181,7 @@ export type UserNotificationListResult = {
 
 export type UserNotificationSubscription = {
   __typename?: 'UserNotificationSubscription';
-  userNotificationSubscriptionId: Scalars['ID'];
+  userNotificationSubscriptionId?: Maybe<Scalars['ID']>;
   userId?: Maybe<Scalars['String']>;
   userNotificationTypeCode: Scalars['String'];
   siteNotification?: Maybe<Scalars['Boolean']>;
@@ -4338,7 +4349,7 @@ export enum UserType {
 
 export type UserVaultIdObj = {
   __typename?: 'UserVaultIdObj';
-  userVaultId: Scalars['ID'];
+  userVaultId?: Maybe<Scalars['ID']>;
   userId?: Maybe<Scalars['String']>;
   custodyProvider?: Maybe<Scalars['String']>;
   originalId?: Maybe<Scalars['String']>;

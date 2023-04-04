@@ -96,11 +96,11 @@ export class ProfileWalletListComponent implements OnDestroy {
         this.subscriptions.add(
             walletData$.subscribe(({ data }) => {
                 this.onProgress.emit(false);
-                const fiatVault = data?.myFiatVaults?.list;
-                const fiatWalletCount = fiatVault?.length ?? 0;
+                const fiatVaults = data?.myFiatVaults?.list;
+                const fiatWalletCount = fiatVaults?.length ?? 0;
                 if (fiatWalletCount > 0) {
                     this.wallets = [
-                        ...fiatVault?.filter(x => {
+                        ...fiatVaults?.filter(x => {
                             return (this.filter.zeroBalance) ? true : x.balance ?? 0 > 0;
                         }).map((val) => {
                             const wallet = new WalletItem(null, userFiat, undefined);

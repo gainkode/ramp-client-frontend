@@ -173,7 +173,6 @@ export class WidgetService {
                         const costs = settingsResult.costs[0];
                         if (costs.bankAccounts && (costs.bankAccounts?.length ?? 0 > 0)) {
                             accountData = costs.bankAccounts[0];
-                            console.log(accountData)
                             wireTransferList = WireTransferPaymentCategoryList.map(val => val);
                             let pos = wireTransferList.findIndex(x => x.id === WireTransferPaymentCategory.AU);
                             if (pos >= 0) {
