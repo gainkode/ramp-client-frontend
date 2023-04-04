@@ -5,6 +5,12 @@
             <div
                 [ngClass]="expandedMenu ? '__top-menu-content-bar-profile-side-menu-expanded' : '__top-menu-content-bar-profile-side-menu-collapsed'">
                 <div class="__top-menu-content-box">
+                    <button class="__top-menu-button"
+                        (click)="showPaymentPanel(WIDGET_TYPE.Deposit)">
+                        <mat-icon>monetization_on</mat-icon>
+                        &nbsp;&nbsp;&nbsp;Deposit & Withdrawal
+                    </button>
+                    <div class="__top-menu-button-separator"></div>
                     <button class="__top-menu-button" (click)="showPaymentPanel(WIDGET_TYPE.Buy)">
                         <mat-icon>account_balance</mat-icon>
                         &nbsp;&nbsp;&nbsp;Buy & Sell
@@ -164,6 +170,11 @@
                 </h3>
             </header>
             <div class="__profile-payment-data-area">
+                <app-buy-sell-fiat-widget
+                    *ngIf="selectedPaymentType===WIDGET_TYPE.Deposit || selectedPaymentType===WIDGET_TYPE.Withdrawal"
+                    [widgetType]="selectedPaymentType" (onComplete)="widgetComplete($event)"
+                    (onError)="widgetError($event)">
+                </app-buy-sell-fiat-widget>
                 <app-buy-sell-widget
                     *ngIf="selectedPaymentType===WIDGET_TYPE.Buy || selectedPaymentType===WIDGET_TYPE.Sell"
                     [widgetType]="selectedPaymentType" (onComplete)="widgetComplete($event)"
