@@ -96,6 +96,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   currentTier = '';
   currentQuote = '';
   transactionList = QuickCheckoutTransactionTypeList;
+  userAdditionalSettings: Record<string, any> = {};
 
   emailErrorMessages: { [key: string]: string; } = {
     ['pattern']: 'Email is not valid',
@@ -192,6 +193,11 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     const settings = this.auth.getLocalSettingsCommon();
     const additionalSettingsRaw = settings?.additionalSettings;
     const additionalSettings = (additionalSettingsRaw === null) ? undefined : JSON.parse(additionalSettingsRaw ?? '{}');
+
+    if(settings){
+      this.userAdditionalSettings = typeof settings.userAdditionalSettings == 'string' ? JSON.parse(settings.userAdditionalSettings) : settings.userAdditionalSettings;
+    }
+    
     this.showVerifyWhenPaid = true;
     if (additionalSettings && additionalSettings.core) {
       this.showVerifyWhenPaid = additionalSettings.core.verifyWhenPaid ?? true;
@@ -475,7 +481,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     } else {
       this.showWallet = false;
     }
-    if (!this.settings.walletAddressPreset) {
+    if (!this.settings.walletAddressPreset && this.userAdditionalSettings.transactionSettings.walletsRequired !== false) {
       this.walletField?.setValidators([Validators.required]);
     } else {
       this.walletField?.setValidators([]);
@@ -605,15 +611,40 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   }
 
   private checkWalletExisting(currency: string){
-    if (this.summary?.transactionType === TransactionType.Sell) {
-      if (this.wallets.length > 0) {
+    if(this.userAdditionalSettings.transactionSettings.walletsRequired !== false){
+      if (this.summary?.transactionType === TransactionType.Sell) {
+        if (this.wallets.length > 0) {
+          if (this.addressInit) {
+            this.walletField?.setValue(this.summary.address ?? '');
+            this.walletInit = false;
+          }
+          this.filteredWallets = this.wallets.filter(x => x.asset === currency);
+        }
+        if (this.settings.embedded && !this.settings.transfer) {
+          const emptyList = (this.filteredWallets.length === 0);
+          if (emptyList) {
+            this.walletField?.setValue(this.summary.address ?? '');
+            this.errorMessageData = 'Unable to find wallets for selected currency';
+          } else {
+            this.filteredWallets.splice(0, 0, new WalletItem({
+              vaultName: '...',
+              address: '',
+              default: false
+            } as AssetAddressShort, '', undefined));
+            this.errorMessageData = '';
+          }
+        }
+      }
+  
+      if (this.wallets.length > 0 && this.summary?.transactionType === TransactionType.Buy) {
         if (this.addressInit) {
           this.walletField?.setValue(this.summary.address ?? '');
           this.walletInit = false;
         }
         this.filteredWallets = this.wallets.filter(x => x.asset === currency);
       }
-      if (this.settings.embedded && !this.settings.transfer) {
+  
+      if (this.summary?.transactionType === TransactionType.Buy && this.settings.embedded && !this.settings.transfer) {
         const emptyList = (this.filteredWallets.length === 0);
         if (emptyList) {
           this.walletField?.setValue(this.summary.address ?? '');
@@ -628,30 +659,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
         }
       }
     }
-
-    if (this.wallets.length > 0 && this.summary?.transactionType === TransactionType.Buy) {
-      if (this.addressInit) {
-        this.walletField?.setValue(this.summary.address ?? '');
-        this.walletInit = false;
-      }
-      this.filteredWallets = this.wallets.filter(x => x.asset === currency);
-    }
-
-    if (this.summary?.transactionType === TransactionType.Buy && this.settings.embedded && !this.settings.transfer) {
-      const emptyList = (this.filteredWallets.length === 0);
-      if (emptyList) {
-        this.walletField?.setValue(this.summary.address ?? '');
-        this.errorMessageData = 'Unable to find wallets for selected currency';
-      } else {
-        this.filteredWallets.splice(0, 0, new WalletItem({
-          vaultName: '...',
-          address: '',
-          default: false
-        } as AssetAddressShort, '', undefined));
-        this.errorMessageData = '';
-      }
-    }
-
+    
     // if (this.summary?.transactionType === TransactionType.Sell) {
     //   this.pSpendChanged = true;
     // } else {

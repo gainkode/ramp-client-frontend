@@ -58,6 +58,7 @@ export class PersonalComponent implements OnInit, OnDestroy {
     presetWalletId = '';
     logoSrc = `${EnvService.image_host}/images/logo-light.png`;
     logoAlt = EnvService.product;
+    userAdditionalSettings: Record<string, any> = {};
 
     private subscriptions: Subscription = new Subscription();
 
@@ -99,6 +100,7 @@ export class PersonalComponent implements OnInit, OnDestroy {
                 this.popupItems.splice(0, 0, ProfilePopupAdministrationMenuItem);
             }
         }
+        this.loadCommonSettings();
         this.loadAvatar(undefined);
     }
 
@@ -143,6 +145,15 @@ export class PersonalComponent implements OnInit, OnDestroy {
         if (this.updateAvatarRef) {
             this.updateAvatarRef.unsubscribe();
             this.updateAvatarRef = undefined;
+        }
+    }
+
+    private loadCommonSettings(){
+        let settingsCommon = this.auth.getLocalSettingsCommon();
+        console.log(settingsCommon)
+        if(settingsCommon){
+          this.userAdditionalSettings = typeof settingsCommon.userAdditionalSettings == 'string' ? JSON.parse(settingsCommon.userAdditionalSettings) : settingsCommon.userAdditionalSettings;
+          this.menuItems = this.menuItems.filter(item => this.userAdditionalSettings.tabs[item.id] !== false);
         }
     }
 

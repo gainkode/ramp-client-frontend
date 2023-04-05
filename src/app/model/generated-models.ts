@@ -2798,6 +2798,7 @@ export type SettingsCommon = {
   proxyLiquidityProviderTransactionChangedCallback?: Maybe<Scalars['String']>;
   textPages?: Maybe<Array<Maybe<TextPage>>>;
   adminAdditionalSettings?: Maybe<Scalars['String']>;
+  userAdditionalSettings?: Maybe<Scalars['String']>;
 };
 
 export type SettingsCommonInput = {

@@ -1282,7 +1282,8 @@ query {
       adminEmails,
       stoppedForServicing,
       additionalSettings,
-      adminAdditionalSettings
+      adminAdditionalSettings,
+      userAdditionalSettings
     }
   }
 `;
