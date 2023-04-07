@@ -923,6 +923,8 @@ export type Mutation = {
   sendTestKycServiceNotification?: Maybe<Scalars['Void']>;
   /** This endpoint can be used to create a transaction */
   createTransaction?: Maybe<TransactionShort>;
+  /** This endpoint can be used to create a transaction in behalf of a user */
+  createUserTransaction?: Maybe<TransactionShort>;
   /** This endpoint can be used to create a merchant transaction */
   createMerchantTransaction?: Maybe<TransactionShort>;
   sendInvoice?: Maybe<Scalars['Boolean']>;
@@ -1462,6 +1464,12 @@ export type MutationSendTestKycServiceNotificationArgs = {
 
 
 export type MutationCreateTransactionArgs = {
+  transaction?: Maybe<TransactionInput>;
+};
+
+
+export type MutationCreateUserTransactionArgs = {
+  userId?: Maybe<Scalars['String']>;
   transaction?: Maybe<TransactionInput>;
 };
 
@@ -2086,6 +2094,8 @@ export type Query = {
   getCustodyWithdrawalOrderStatus?: Maybe<CustodyWithdrawalOrderInfo>;
   /** Get custody withdrawal orders */
   getCustodyWithdrawalOrders?: Maybe<Array<CustodyWithdrawalOrderInfo>>;
+  /** Get current API module version */
+  getVersion?: Maybe<Scalars['String']>;
 };
 
 
@@ -3249,6 +3259,7 @@ export type Transaction = {
   sourceVault?: Maybe<Scalars['String']>;
   user?: Maybe<User>;
   created?: Maybe<Scalars['DateTime']>;
+  createdBy?: Maybe<Scalars['String']>;
   updated?: Maybe<Scalars['DateTime']>;
   executed?: Maybe<Scalars['DateTime']>;
   type: TransactionType;
@@ -3286,6 +3297,7 @@ export type Transaction = {
   instrument?: Maybe<PaymentInstrument>;
   instrumentDetails?: Maybe<Scalars['String']>;
   custodyProvider?: Maybe<CustodyProvider>;
+  custodyFiatProvider?: Maybe<Scalars['String']>;
   custodyDetails?: Maybe<Scalars['String']>;
   paymentProvider?: Maybe<Scalars['String']>;
   paymentOrderId?: Maybe<Scalars['String']>;
@@ -3351,6 +3363,7 @@ export type TransactionInput = {
   instrument?: Maybe<PaymentInstrument>;
   instrumentDetails?: Maybe<Scalars['String']>;
   paymentProvider?: Maybe<Scalars['String']>;
+  custodyFiatProvider?: Maybe<Scalars['String']>;
   widgetUserParamsId?: Maybe<Scalars['String']>;
   data?: Maybe<Scalars['String']>;
   verifyWhenPaid?: Maybe<Scalars['Boolean']>;
@@ -3390,6 +3403,7 @@ export type TransactionMerchantInput = {
   instrument?: Maybe<PaymentInstrument>;
   instrumentDetails?: Maybe<Scalars['String']>;
   paymentProvider?: Maybe<Scalars['String']>;
+  custodyFiatProvider?: Maybe<Scalars['String']>;
   widgetUserParamsId?: Maybe<Scalars['String']>;
   data?: Maybe<Scalars['String']>;
   status?: Maybe<TransactionStatus>;
@@ -3423,6 +3437,7 @@ export type TransactionShort = {
   requiredUserTierId?: Maybe<Scalars['String']>;
   requiredUserTier?: Maybe<SettingsKycTierShortEx>;
   created?: Maybe<Scalars['DateTime']>;
+  createdBy?: Maybe<Scalars['String']>;
   updated?: Maybe<Scalars['DateTime']>;
   executed?: Maybe<Scalars['DateTime']>;
   type: TransactionType;
@@ -3460,6 +3475,7 @@ export type TransactionShort = {
   custodyProvider?: Maybe<CustodyProvider>;
   custodyDetails?: Maybe<Scalars['String']>;
   paymentProvider?: Maybe<Scalars['String']>;
+  custodyFiatProvider?: Maybe<Scalars['String']>;
   liquidityProvider?: Maybe<LiquidityProvider>;
   paymentOrder?: Maybe<PaymentOrder>;
   liquidityOrder?: Maybe<LiquidityExchangeOrder>;
@@ -3903,7 +3919,13 @@ export enum UserActionType {
   PrimeTrustGetAccount = 'primeTrustGetAccount',
   PrimeTrustCreateAccount = 'primeTrustCreateAccount',
   PrimeTrustCreateDepositFundsViaWire = 'primeTrustCreateDepositFundsViaWire',
-  PrimeTrustGetVaultAssetAccounts = 'primeTrustGetVaultAssetAccounts',
+  PrimeTrustGetAssetTotals = 'primeTrustGetAssetTotals',
+  PrimeTrustGetAssetByCurrency = 'primeTrustGetAssetByCurrency',
+  PrimeTrustCreateAssetTransferMethod = 'primeTrustCreateAssetTransferMethod',
+  PrimeTrustCreateAssetDisbursment = 'primeTrustCreateAssetDisbursment',
+  PrimeTrustCreateAssetTransferInternal = 'primeTrustCreateAssetTransferInternal',
+  PrimeTrustCreateWithdrawalFunds = 'primeTrustCreateWithdrawalFunds',
+  PrimeTrustGetAssetTransferMethod = 'primeTrustGetAssetTransferMethod',
   AddBlackCountry = 'addBlackCountry',
   RemoveBlackCountry = 'removeBlackCountry',
   CreateCryptoInvoice = 'createCryptoInvoice',
