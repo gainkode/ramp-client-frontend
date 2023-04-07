@@ -137,6 +137,7 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
     flashFxWithdrawalBenchmark: [0, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
     openpaydObject: [''],
     monoovaObject: [''],
+    primeTrustObject: [''],
     flashFxObject: [''],
 
     frameX1: [undefined],
@@ -337,6 +338,7 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
         this.form.get('flashFxWithdrawalBenchmark')?.setValue(coreData?.paymentProviders?.FlashFx?.benchmarkAmount ?? 10000);
         this.form.get('openpaydObject')?.setValue(coreData.paymentProviders.Openpayd);
         this.form.get('monoovaObject')?.setValue(coreData.paymentProviders.Monoova);
+        this.form.get('primeTrustObject')?.setValue(coreData.paymentProviders.PrimeTrust);
         this.form.get('flashFxObject')?.setValue(coreData.paymentProviders.FlashFx);
       }, (error) => {
         this.inProgress = false;
@@ -439,6 +441,7 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
     const coreFlashFxdWithdrawalBenchmark = parseInt(this.form.get('flashFxWithdrawalBenchmark')?.value ?? '10000');
     const coreOpenpayd = this.form.get('openpaydObject')?.value ?? {};
     const coreMonoova = this.form.get('monoovaObject')?.value ?? {};
+    const corePrimeTrust = this.form.get('primeTrustObject')?.value ?? {};
     const coreFlashFx = this.form.get('flashFxObject')?.value ?? {};
 
     coreMonoova.benchmarkAmount = coreMonoovadWithdrawalBenchmark;
@@ -491,7 +494,8 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
       paymentProviders: {
         Openpayd: coreOpenpayd,
         Monoova: coreMonoova,
-        FlashFx: coreFlashFx
+        FlashFx: coreFlashFx,
+        PrimeTrust: corePrimeTrust
       },
       custodyProviders: {
         transferOrdersTrackingTimedeltaDays: coreTransferOrdersTrackingTimedeltaDays,
