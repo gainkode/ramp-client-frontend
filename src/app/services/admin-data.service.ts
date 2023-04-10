@@ -2422,7 +2422,7 @@ export class AdminDataService {
       createdDateInterval: filter.createdDateInterval,
       completedDateInterval: filter.completedDateInterval,
       updateDateInterval: filter.updatedDateInterval,
-      userIdOnly: filter.users,
+      userIdOnly: filter.user ? [filter.user] : [],
       widgetIdOnly: filter.widgetNames,
       sourcesOnly: filter.sources,
       countriesOnly: filter.countries,
