@@ -34,6 +34,8 @@ export class ProfileWalletListComponent implements OnDestroy {
     walletCount = 0;
     selectedWallet: WalletItem | null = null;
     loading = false;
+    userAdditionalSettings: Record<string, any> = {};
+    newWalletShow = true;
 
     constructor(
         private auth: AuthService,
@@ -45,6 +47,7 @@ export class ProfileWalletListComponent implements OnDestroy {
 
     load(val: WalletsFilter): void {
         this.filter = val;
+        this.loadCommonSettings();
         this.loadWallets();
     }
 
@@ -52,6 +55,13 @@ export class ProfileWalletListComponent implements OnDestroy {
         this.subscriptions.unsubscribe();
     }
 
+    private loadCommonSettings(){
+        let settingsCommon = this.auth.getLocalSettingsCommon();
+        if(settingsCommon){
+            this.userAdditionalSettings = typeof settingsCommon.userAdditionalSettings == 'string' ? JSON.parse(settingsCommon.userAdditionalSettings) : settingsCommon.userAdditionalSettings;
+            this.newWalletShow = this.userAdditionalSettings.tabs.wallets.newWallet !== false;
+        }
+    }
     private loadWallets(): void {
         this.onError.emit('');
         this.walletCount = 0;

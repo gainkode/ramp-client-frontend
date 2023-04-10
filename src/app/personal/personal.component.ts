@@ -150,10 +150,9 @@ export class PersonalComponent implements OnInit, OnDestroy {
 
     private loadCommonSettings(){
         let settingsCommon = this.auth.getLocalSettingsCommon();
-        console.log(settingsCommon)
         if(settingsCommon){
           this.userAdditionalSettings = typeof settingsCommon.userAdditionalSettings == 'string' ? JSON.parse(settingsCommon.userAdditionalSettings) : settingsCommon.userAdditionalSettings;
-          this.menuItems = this.menuItems.filter(item => this.userAdditionalSettings.tabs[item.id] !== false);
+          this.menuItems = this.menuItems.filter(item => this.userAdditionalSettings?.tabs[item.id]?.show !== false);
         }
     }
 

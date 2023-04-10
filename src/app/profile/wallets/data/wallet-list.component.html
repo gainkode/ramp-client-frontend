@@ -1,5 +1,5 @@
 <div class="__profile-wallet-list-container">
-    <div *ngIf="walletCount===0 && loading === false" class="__profile-grid-table-container-default">
+    <div *ngIf="walletCount===0 && loading === false && newWalletShow === true" class="__profile-grid-table-container-default">
         <div class="__profile-grid-table-new-item-container" type="button" (click)="newWallet()">
             <h1 class="__profile-grid-table-new-item-title">+</h1>
             <h2 class="__profile-grid-table-new-item-text">Add new wallet</h2>
@@ -41,7 +41,7 @@
                 </div>
             </div>
         </div>
-        <div class="__profile-grid-table-item __profile-grid-table-item-new" (click)="newWallet()">
+        <div *ngIf="newWalletShow === true" class="__profile-grid-table-item __profile-grid-table-item-new" (click)="newWallet()">
             <div style="height: 100%;display: flex;flex-direction: column;justify-content: center;align-items: center;">
                 <h1 class="__profile-grid-table-new-item-title __profile-grid-table-new-item-title-mini">+</h1>
                 <h2 class="__profile-grid-table-new-item-text __profile-grid-table-new-item-text-mini">Add new wallet</h2>
