@@ -74,8 +74,8 @@ const GET_DASHBOARD_STATS = gql`
     $createdDateInterval: DateTimeInterval
     $completedDateInterval: DateTimeInterval
     $updateDateInterval: DateTimeInterval
-    $userIdOnly: [String!]
-    $widgetIdOnly: [String!]
+    $userIdsOnly: [String!]
+    $widgetIdsOnly: [String!]
     $sourcesOnly: [TransactionSource!]
     $countriesOnly: [String!]
     $countryCodeType: CountryCodeType
@@ -85,8 +85,8 @@ const GET_DASHBOARD_STATS = gql`
       createdDateInterval: $createdDateInterval
       completedDateInterval: $completedDateInterval
       updateDateInterval: $updateDateInterval
-      userIdOnly: $userIdOnly
-      widgetIdOnly: $widgetIdOnly
+      userIdsOnly: $userIdsOnly
+      widgetIdsOnly: $widgetIdsOnly
       sourcesOnly: $sourcesOnly
       countriesOnly: $countriesOnly
       countryCodeType: $countryCodeType
@@ -2422,8 +2422,8 @@ export class AdminDataService {
       createdDateInterval: filter.createdDateInterval,
       completedDateInterval: filter.completedDateInterval,
       updateDateInterval: filter.updatedDateInterval,
-      userIdOnly: filter.user ? [filter.user] : [],
-      widgetIdOnly: filter.widgetNames,
+      userIdsOnly: filter.user ? [filter.user] : [],
+      widgetIdsOnly: filter.widgetNames,
       sourcesOnly: filter.sources,
       countriesOnly: filter.countries,
       countryCodeType: CountryCodeType.Code3,
