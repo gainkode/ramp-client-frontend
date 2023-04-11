@@ -2587,8 +2587,8 @@ export type QueryGetDashboardStatsArgs = {
   updateDateInterval?: Maybe<DateTimeInterval>;
   transactionDateOnly?: Maybe<Scalars['DateTime']>;
   createdDateInterval?: Maybe<DateTimeInterval>;
-  userIdOnly?: Maybe<Array<Scalars['String']>>;
-  widgetIdOnly?: Maybe<Array<Scalars['String']>>;
+  userIdsOnly?: Maybe<Array<Scalars['String']>>;
+  widgetIdsOnly?: Maybe<Array<Scalars['String']>>;
   sourcesOnly?: Maybe<Array<TransactionSource>>;
   countriesOnly?: Maybe<Array<Scalars['String']>>;
   countryCodeType?: Maybe<CountryCodeType>;
