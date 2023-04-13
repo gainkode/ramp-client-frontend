@@ -5,28 +5,28 @@
             <div
                 [ngClass]="expandedMenu ? '__top-menu-content-bar-profile-side-menu-expanded' : '__top-menu-content-bar-profile-side-menu-collapsed'">
                 <div class="__top-menu-content-box">
-                    <button class="__top-menu-button"
+                    <button *ngIf="personalApproved" class="__top-menu-button"
                         (click)="showPaymentPanel(WIDGET_TYPE.Deposit)">
                         <mat-icon>monetization_on</mat-icon>
                         &nbsp;&nbsp;&nbsp;Deposit & Withdrawal
                     </button>
-                    <div class="__top-menu-button-separator"></div>
-                    <button class="__top-menu-button" (click)="showPaymentPanel(WIDGET_TYPE.Buy)">
+                    <div *ngIf="personalApproved" class="__top-menu-button-separator"></div>
+                    <button *ngIf="personalApproved" class="__top-menu-button" (click)="showPaymentPanel(WIDGET_TYPE.Buy)">
                         <mat-icon>account_balance</mat-icon>
                         &nbsp;&nbsp;&nbsp;Buy & Sell
                     </button>
-                    <div class="__top-menu-button-separator"></div>
-                    <button class="__top-menu-button" (click)="showPaymentPanel(WIDGET_TYPE.Receive)">
+                    <div *ngIf="personalApproved" class="__top-menu-button-separator"></div>
+                    <button *ngIf="personalApproved" class="__top-menu-button" (click)="showPaymentPanel(WIDGET_TYPE.Receive)">
                         <mat-icon>file_download</mat-icon>
                         &nbsp;&nbsp;&nbsp;Receive
                     </button>
-                    <div class="__top-menu-button-separator"></div>
-                    <button class="__top-menu-button" (click)="showPaymentPanel(WIDGET_TYPE.Send)">
+                    <div *ngIf="personalApproved" class="__top-menu-button-separator"></div>
+                    <button *ngIf="personalApproved" class="__top-menu-button" (click)="showPaymentPanel(WIDGET_TYPE.Send)">
                         <mat-icon>file_upload</mat-icon>
                         &nbsp;&nbsp;&nbsp;Send
                     </button>
-                    <div *ngIf="showExpressTransfer" class="__top-menu-button-separator"></div>
-                    <button *ngIf="showExpressTransfer" class="__top-menu-button" (click)="showPaymentPanel(WIDGET_TYPE.Transfer)">
+                    <div *ngIf="showExpressTransfer && personalApproved" class="__top-menu-button-separator"></div>
+                    <button *ngIf="showExpressTransfer && personalApproved" class="__top-menu-button" (click)="showPaymentPanel(WIDGET_TYPE.Transfer)">
                         <img width="16" height="16" src="assets/paper-plane-solid.svg">
                         &nbsp;&nbsp;&nbsp;Express transfer
                     </button>
@@ -61,7 +61,7 @@
                 <span></span>
             </label>
             <ul class="__top-menu-hamburger-box">
-                <li>
+                <li *ngIf="personalApproved">
                     <a [routerLink]="" class="__top-menu-hamburger-item" (click)="showPaymentPanel(WIDGET_TYPE.Buy)">
                         Buy & Sell
                     </a>

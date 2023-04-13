@@ -101,7 +101,7 @@ export class PersonalLoginComponent implements OnDestroy {
         if(userData.user?.mode == UserMode.OneTimeWallet){
             this.showWrongUserModeRedirectDialog();
         }else if (userData.user?.type === UserType.Personal) {
-            if (userData.authTokenAction === 'Default') {
+            if (userData.authTokenAction === 'Default' || userData.authTokenAction === 'KycRequired') {
                 this.handleSuccessLogin(userData);
             } else {
                 this.auth.logout();

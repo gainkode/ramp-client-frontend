@@ -867,6 +867,15 @@ export class AuthService {
         return result;
     }
 
+    isPersonalApproved(): boolean {
+        let result = false;
+        const user: User | null = this.getAuthenticatedUser();
+        if (user !== null) {
+            result = (user.type === UserType.Personal && user.kycValid === true);
+        }
+        return result;
+    }
+
     isAuthenticatedUserType(type: UserType): boolean {
         let result = false;
         const user = this.getAuthenticatedUser();

@@ -59,6 +59,7 @@ export class PersonalComponent implements OnInit, OnDestroy {
     logoSrc = `${EnvService.image_host}/images/logo-light.png`;
     logoAlt = EnvService.product;
     userAdditionalSettings: Record<string, any> = {};
+    personalApproved = false;
 
     private subscriptions: Subscription = new Subscription();
 
@@ -68,6 +69,7 @@ export class PersonalComponent implements OnInit, OnDestroy {
         public router: Router) {
         this.showExpressTransfer = EnvService.express_transfer;
         this.getSectionName();
+        this.personalApproved = auth.isPersonalApproved();
     }
 
     get userName(): string {
