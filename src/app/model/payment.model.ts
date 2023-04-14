@@ -515,7 +515,7 @@ export const UserActionTypeList: Array<UserActionTypeView> = [
     { id: UserActionType.MonoovaGetPayId, name: 'Get monoova PayId' },
     { id: UserActionType.MonoovaPayout, name: 'Crete Monoova Payout' },
     { id: UserActionType.MonoovaRegisterPayId, name: 'Register monoova payId' },
-    { id: UserActionType.OpenpaydApproved, name: 'Openpayd transction declined' },
+    { id: UserActionType.OpenpaydApproved, name: 'Openpayd transction approved' },
     { id: UserActionType.OpenpaydAutoReject, name: 'AutoReject by Openpayd' },
     { id: UserActionType.OpenpaydCallback, name: 'Openpayd callback' },
     { id: UserActionType.OpenpaydDeclined, name: 'Openpayd transction declined' },
