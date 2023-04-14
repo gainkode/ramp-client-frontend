@@ -83,12 +83,12 @@ export class WidgetReceiveDetailsComponent implements OnInit, OnDestroy {
     this.inProgress = true;
     this.onProgress.emit(this.inProgress);
     this.wallets = [];
-    const walletData = this.profileService.getMyWallets([symbol]);
+    const walletData = this.profileService.getMyReceiveWallets(symbol);
     this.pSubscriptions.add(
       walletData.valueChanges.pipe(take(1)).subscribe(({ data }) => {
         this.inProgress = false;
         this.onProgress.emit(this.inProgress);
-        const dataList = data.myWallets as AssetAddressShortListResult;
+        const dataList = data.myReceiveWallets as AssetAddressShortListResult;
         if (dataList !== null) {
           const walletCount = dataList?.count ?? 0;
           if (walletCount > 0) {

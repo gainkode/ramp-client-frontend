@@ -157,6 +157,40 @@ const GET_MY_WALLETS = gql`
   }
 `;
 
+const GET_MY_RECEIVE_WALLETS = gql`
+  query MyReceiveWallets(
+    $orderBy: [OrderBy!],
+    $assetIdOnly: String
+  ) {
+    myReceiveWallets(
+      orderBy: $orderBy
+      assetIdOnly: $assetIdOnly
+    ) {
+      count
+      list {
+        address
+        legacyAddress
+        description
+        type
+        addressFormat
+        assetId
+        originalId
+        total
+        totalEur
+        totalFiat
+        available
+        availableEur
+        availableFiat
+        pending
+        lockedAmount
+        vaultId
+        vaultName
+        vaultOriginalId
+      }
+    }
+  }
+`;
+
 const GET_MY_DEFAULT_FEE = gql`
   query MyDefaultSettingsFee{
     myDefaultSettingsFee{
@@ -666,6 +700,22 @@ export class ProfileDataService {
       query: GET_MY_WALLETS,
       variables: {
         assetIdsOnly: assetIds,
+        orderBy: orderFields,
+      },
+      fetchPolicy: 'network-only',
+    });
+  }
+
+  getMyReceiveWallets(asset: string): QueryRef<any, EmptyObject> {
+    const orderFields = [
+      { orderBy: 'default', desc: true },
+      { orderBy: 'total', desc: true }
+    ];
+    const assetId = asset
+    return this.apollo.watchQuery<any>({
+      query: GET_MY_RECEIVE_WALLETS,
+      variables: {
+        assetIdOnly: assetId,
         orderBy: orderFields,
       },
       fetchPolicy: 'network-only',
