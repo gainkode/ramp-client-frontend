@@ -49,7 +49,8 @@ import {
   TransactionStatusHistoryListResult,
   TransactionStatusHistory,
   QueryGetTransactionStatusHistoryArgs,
-  PaymentProviderPayoutType
+  PaymentProviderPayoutType,
+  TransactionInput
 } from '../model/generated-models';
 import { KycLevel, KycScheme, KycTier } from '../model/identification.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -1879,6 +1880,54 @@ mutation ConfirmUserDevice(
   confirmUserDevice(
     device_id: $device_id
   )
+}
+`;
+
+const CREATE_USER_TRANSACTION = gql`
+mutation CreateUserTransaction(
+  $transactionType: TransactionType!,
+  $source: TransactionSource!,
+  $currencyToSpend: String!,
+  $currencyToReceive: String!,
+  $amountToSpend: Float!,
+  $instrument: PaymentInstrument,
+  $paymentProvider: String,
+  $userId: String,
+  $rate: Float
+) {
+  createUserTransaction(
+    transaction: {
+      type: $transactionType
+      source: $source
+      currencyToSpend: $currencyToSpend
+      currencyToReceive: $currencyToReceive
+      amountToSpend: $amountToSpend
+      instrument: $instrument
+      paymentProvider: $paymentProvider
+    }
+    userId: $userId
+    rate: $rate
+  ) {
+    transactionId,
+    code,
+    feeFiat,
+    feePercent,
+    feeMinFiat,
+    approxNetworkFee,
+    data,
+    userTier {
+      name
+      amount
+      originalLevelName
+      originalFlowName
+    },
+    requiredUserTier {
+      name
+      amount
+      originalLevelName
+      originalFlowName
+    }
+  }
 }
 `;
 
@@ -3799,6 +3848,28 @@ export class AdminDataService {
     }).pipe(tap((res) => {
       this.snackBar.open(
         `Transaction was cancelled`,
+        undefined, { duration: 5000 }
+      );
+    }));
+  }
+
+  createUserTransaction(transaction: TransactionInput, userId: string, rate: number): Observable<any> {
+    return this.mutate({
+      mutation: CREATE_USER_TRANSACTION,
+      variables: {
+        transactionType: transaction.type,
+        source: transaction.source,
+        currencyToSpend: transaction.currencyToSpend,
+        currencyToReceive: transaction.currencyToReceive,
+        amountToSpend: transaction.amountToSpend,
+        instrument: transaction.instrument,
+        paymentProvider: transaction.paymentProvider,
+        userId: userId,
+        rate: rate
+      }
+    }).pipe(tap((res) => {
+      this.snackBar.open(
+        `Transaction was created`,
         undefined, { duration: 5000 }
       );
     }));

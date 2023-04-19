@@ -74,6 +74,7 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
   filter = new Filter({});
   roleIds: string[] = [];
   adminAdditionalSettings: Record<string, any> = {};
+  selectedCustomers: UserItem[] = [];
 
   private subscriptions: Subscription = new Subscription();
   private detailsDialog: NgbModalRef | undefined = undefined;
@@ -116,6 +117,7 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
   onCustomerSelected(item: UserItem): void {
     item.selected = !item.selected;
     this.selected = this.customers.some(x => x.selected === true);
+    this.selectedCustomers = this.customers.filter(x => x.selected === true)
   }
 
   showTransactions(id: string): void {
@@ -131,6 +133,13 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
     this.selected = (this.customers.length > 0);
   }
 
+  createUserTransactionShow(content: any): void {
+    this.detailsDialog = this.modalService.open(content, {
+      backdrop: 'static',
+      windowClass: 'modalCusSty',
+    });
+  }
+  
   private loadCommonSettings(){
     let settingsCommon = this.auth.getLocalSettingsCommon();
     if(settingsCommon){

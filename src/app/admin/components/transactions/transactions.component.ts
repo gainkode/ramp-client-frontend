@@ -149,6 +149,13 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
     });
   }
 
+  createUserTransactionShow(content: any): void {
+    this.detailsDialog = this.modalService.open(content, {
+      backdrop: 'static',
+      windowClass: 'modalCusSty',
+    });
+  }
+
   selectAll(): void {
     this.transactions.forEach(x => x.selected = true);
     this.selectedForUnbenchmark = (this.transactions.length > 0);

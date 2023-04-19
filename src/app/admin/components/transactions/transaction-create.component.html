@@ -1,0 +1,198 @@
+<div class="row">
+  <!-- onSubmit(update_confirm_content) -->
+  <div class="col-md-12 col-lg-12 col-xl-12 mx-auto d-block">
+    <form [formGroup]="form" novalidate (ngSubmit)="onSubmit(confirm_content)"> 
+      <div class="card card-body pd-20 pd-md-40 border shadow-none">
+        <h5 class="card-title mg-b-20">
+          Payment Data
+        </h5>
+        <!-- Transaction Type -->
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Transaction type
+            <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+          </label>
+          <ng-select [items]="transactionTypes" bindLabel="name" bindValue="id" formControlName="transactionType"
+            [clearable]=false [clearOnBackspace]=false required>
+          </ng-select>
+        </div>
+
+        <!-- Customer -->
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+              Customer search
+          </label>
+          <ng-select [items]="usersOptions$ | async" bindLabel="title" bindValue="id"
+              [minTermLength]="minUsersLengthTerm" notFoundText="No users found"
+              [loading]="isUsersLoading" [multiple]="true" formControlName="users"
+              typeToSearchText="Type email or user name"
+              placeholder="Start typing to search users"
+              [typeahead]="usersSearchInput$">
+          </ng-select>
+        </div>
+
+         <!-- Amounts -->
+         <div class="form-group">
+          <div class="__tool-bar-double-sided-data-box-top">
+            <div class="__tool-bar-block">
+                <div class="__tool-bar-label">
+                  Full amount
+                </div>
+            </div>
+            <div class="__tool-bar-block">
+                <div class="__toggle-switch">
+                    <input type="checkbox" id="toggle-button" class="__toggle-switch-slider"
+                        formControlName="fullAmount">
+                </div>
+            </div>
+        </div>
+         </div>
+          
+         <div class="form-group">
+          <div class="row">
+            <div class="col-sm-12">
+              <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                {{amountToSpendTitle}}
+                <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+              </label>
+              <div class="row">
+                <div *ngIf="fullAmountField?.value !== true" class="col-sm-7">
+                  <input class="form-control"
+                    [ngClass]="{'has-error': !form.controls.amountToSpend.valid}" type="text"
+                    formControlName="amountToSpend" required>
+                  <div
+                    *ngIf="(form.controls.amountToSpend.touched || submitted) && (form.controls.amountToSpend.errors?.['required'])"
+                    class="tx-danger">
+                    <small>
+                      {{amountToSpendTitle}} is required
+                    </small>
+                  </div>
+                  <div *ngIf="form.controls.amountToSpend.errors?.['pattern']" class="tx-danger">
+                    <small>
+                      Incorrect number value
+                    </small>
+                  </div>
+                </div>
+                <div class="col-sm-5 mg-t-10 mg-sm-t-0">
+                  <ng-select [items]="currenciesToSpend" [clearable]=false [clearOnBackspace]=false bindLabel="display"
+                    bindValue="symbol" formControlName="currencyToSpend" required>
+                  </ng-select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-12">
+              <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                Amount To Receive
+                <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+              </label>
+              <div class="row">
+                <div *ngIf="fullAmountField?.value !== true" class="col-sm-7">
+                  <input class="form-control"
+                    [ngClass]="{'has-error': !form.controls.amountToReceive.valid}" type="text"
+                    formControlName="amountToReceive" required>
+                </div>
+                <div class="col-sm-5 mg-t-10 mg-sm-t-0">
+                  <ng-select [items]="currenciesToReceive" [clearable]=false [clearOnBackspace]=false
+                    bindLabel="display" bindValue="symbol" formControlName="currencyToReceive" required>
+                  </ng-select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Rate -->
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Exchange rate
+            <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+            <a [routerLink]="" (click)="updateRate()" style="font-size: 12px;margin-left: 8px;">
+              Set current
+            </a>
+          </label>
+          <input class="form-control" [ngClass]="{'has-error': !form.controls.rate.valid}" type="text"
+            formControlName="rate" required>
+          <div *ngIf="(form.controls.rate.touched || submitted) && (form.controls.rate.errors?.['required'])"
+            class="tx-danger">
+            <small>
+              Rate is required
+            </small>
+          </div>
+          <div *ngIf="form.controls.rate.errors?.['pattern']" class="tx-danger">
+            <small>
+              Incorrect number value
+            </small>
+          </div>
+        </div>
+        <!-- Payment Methods -->
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Payment Methods
+            <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+          </label>
+          <ng-select [items]="instrumentTypes" bindLabel="name" bindValue="id" formControlName="instrument"
+            [clearable]=false [clearOnBackspace]=false required>
+          </ng-select>
+        </div>
+        <!-- Payment Providers -->
+        <div *ngIf="showPaymentProvider===true && form.controls.instrument?.value!==PAYMENT_INSTRUMENT.WireTransfer" class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Payment providers
+          </label>
+          <ng-select [items]="filteredProviders" bindLabel="name" bindValue="id"
+            [closeOnSelect]="true" formControlName="provider" placeholder="Select provider">
+          </ng-select>
+        </div>
+        <div *ngIf="form.controls.instrument?.value===PAYMENT_INSTRUMENT.WireTransfer" class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Payment providers
+          </label>
+          <ng-select [items]="costSchemes" bindLabel="name" bindValue="id" 
+            formControlName="provider" placeholder="Select cost scheme">
+          </ng-select>
+        </div>
+      </div>
+      <div style="display: flex; justify-content: space-between;">
+        <div style="display: flex; justify-content: flex-end;">
+          <button
+            class="btn btn-primary pd-x-30 me-2 mg-t-5">
+            <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
+              aria-hidden="true"></span>
+            Save
+          </button>
+          <button *ngIf="permission>1" class="btn btn-outline-primary pd-x-30 mg-t-5" type="button" (click)="onClose()">
+            Close
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<ng-template #confirm_content let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Update transaction</h5>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <h4 style="text-align: center;">
+      Are you sure you want to create a transaction?
+    </h4>
+    <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
+      <button class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" type="button"
+        (click)="onCreateUserTransactionConfirm(0)">
+        No
+      </button>
+      <button class="btn btn-primary pd-x-30 mg-t-5" (click)="onCreateUserTransactionConfirm(1)">
+        Yes
+      </button>
+    </div>
+  </div>
+</ng-template>
