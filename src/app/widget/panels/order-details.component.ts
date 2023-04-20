@@ -470,7 +470,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
 
   private setWalletVisible(): void {
     if (this.currentTransaction === TransactionType.Buy) {
-      this.showWallet = !this.settings.walletAddressPreset;
+      this.showWallet = !this.settings?.walletAddressPreset;
       if (this.showWallet) {
         if (this.settings.transfer) {
           this.showWallet = true;
@@ -481,7 +481,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     } else {
       this.showWallet = false;
     }
-    if (!this.settings.walletAddressPreset && this.userAdditionalSettings.transactionSettings.walletsRequired !== false) {
+    if (!this.settings?.walletAddressPreset && this.userAdditionalSettings?.transactionSettings?.walletsRequired !== false) {
       this.walletField?.setValidators([Validators.required]);
     } else {
       this.walletField?.setValidators([]);
