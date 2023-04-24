@@ -734,6 +734,7 @@ const GET_TRANSACTIONS = gql`
           town
           type
           userId
+          companyName
         }
         userId
         userIp
