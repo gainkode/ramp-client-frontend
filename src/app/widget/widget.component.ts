@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { AssetAddressShortListResult, KycProvider, LoginResult, PaymentInstrument, PaymentPreauthResultShort, PaymentProviderByInstrument, Rate, TextPage, TransactionShort, TransactionSource, TransactionType, User, Widget } from 'src/app/model/generated-models';
+import { AssetAddressShortListResult, KycProvider, LoginResult, PaymentInstrument, PaymentPreauthResultShort, PaymentProviderByInstrument, Rate, TextPage, TransactionShort, TransactionSource, TransactionType, User, Widget, WidgetUserParams } from 'src/app/model/generated-models';
 import { CardView, CheckoutSummary, PaymentProviderInstrumentView } from 'src/app/model/payment.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { ErrorService } from 'src/app/services/error.service';
@@ -37,6 +37,7 @@ export class WidgetComponent implements OnInit {
   }
   @Output() onComplete = new EventEmitter<PaymentCompleteDetails>();
   @Output() onError = new EventEmitter<PaymentErrorDetails>();
+  @Output() onIFramePay = new EventEmitter<Boolean>();
 
   defaultFee: number | undefined = undefined;
   requiredFields: string[] = [];
@@ -56,6 +57,8 @@ export class WidgetComponent implements OnInit {
   summary = new CheckoutSummary();
   redirectUrl = '';
   widget = new WidgetSettings();
+  showWidget = true;
+  widgetLink = '';
   userWallets: WalletItem[] = [];
   exchangeRateCountDownTitle = '';
   exchangeRateCountDownValue = '';
@@ -1064,102 +1067,128 @@ export class WidgetComponent implements OnInit {
     this.initMessage = 'Processing...';
     if (this.summary) {
       let destination = this.summary.address;
-      this.pSubscriptions.add(
-        this.dataService.createTransaction(
-          this.summary.transactionType,
-          this.widget.source,
-          this.summary.vaultId,
-          this.summary.currencyFrom,
-          this.summary.currencyTo,
-          this.summary.amountFrom ?? 0,
-          instrument,
-          instrumentDetails,
-          providerId,
-          this.userParamsId,
-          destination,
-          this.summary.verifyWhenPaid
-        ).subscribe(({ data }) => {
-          if (!this.notificationStarted) {
-            this.startNotificationListener();
-          }
-          const order = data.createTransaction as TransactionShort;
-          this.inProgress = false;
-          if (order.code) {
-            this.summary.instrument = instrument;
-            this.summary.providerView = this.paymentProviders.find(x => x.id === providerId);
-            this.summary.orderId = order.code as string;
-            this.summary.fee = order.feeFiat as number ?? 0;
-            this.summary.feeMinFiat = order.feeMinFiat as number ?? 0;
-            this.summary.feePercent = order.feePercent as number ?? 0;
-            this.summary.networkFee = order.approxNetworkFee ?? 0;
-            this.summary.transactionDate = new Date().toLocaleString();
-            this.summary.transactionId = order.transactionId as string;
-            if (instrument === PaymentInstrument.WireTransfer) {
-              this.nextStage('wire_transfer_result', 'Payment', 5, false);
-            } else {
-              this.startPayment();
+      if(providerId == 'GetCoinsPayment'){
+        this.pSubscriptions.add(
+          this.dataService.createTransactionWithWidgetUserParams(
+            this.summary.transactionType,
+            this.widget.source,
+            this.summary.vaultId,
+            this.summary.currencyFrom,
+            this.summary.currencyTo,
+            this.summary.amountFrom ?? 0,
+            instrument,
+            instrumentDetails,
+            providerId,
+            this.userParamsId,
+            destination,
+            this.summary.verifyWhenPaid,
+            this.widget.widgetId
+          ).subscribe(({ data }) => {
+            this.showWidget = false;
+            this.inProgress = false;
+            this.widgetLink = data.createTransactionWithWidgetUserParams;
+            this.onIFramePay.emit(true);
+            console.log(this.widgetLink)
+          })
+        )
+      }else{  
+        this.pSubscriptions.add(
+          this.dataService.createTransaction(
+            this.summary.transactionType,
+            this.widget.source,
+            this.summary.vaultId,
+            this.summary.currencyFrom,
+            this.summary.currencyTo,
+            this.summary.amountFrom ?? 0,
+            instrument,
+            instrumentDetails,
+            providerId,
+            this.userParamsId,
+            destination,
+            this.summary.verifyWhenPaid
+          ).subscribe(({ data }) => {
+            if (!this.notificationStarted) {
+              this.startNotificationListener();
             }
-          } else {
-            this.errorMessage = 'Order code is invalid';
-            if (this.widget.embedded) {
-              this.onError.emit({
-                errorMessage: this.errorMessage
-              } as PaymentErrorDetails);
+            const order = data.createTransaction as TransactionShort;
+            this.inProgress = false;
+            if (order.code) {
+              this.summary.instrument = instrument;
+              this.summary.providerView = this.paymentProviders.find(x => x.id === providerId);
+              this.summary.orderId = order.code as string;
+              this.summary.fee = order.feeFiat as number ?? 0;
+              this.summary.feeMinFiat = order.feeMinFiat as number ?? 0;
+              this.summary.feePercent = order.feePercent as number ?? 0;
+              this.summary.networkFee = order.approxNetworkFee ?? 0;
+              this.summary.transactionDate = new Date().toLocaleString();
+              this.summary.transactionId = order.transactionId as string;
+              if (instrument === PaymentInstrument.WireTransfer) {
+                this.nextStage('wire_transfer_result', 'Payment', 5, false);
+              } else {
+                this.startPayment();
+              }
             } else {
-            //   if (this.widget.orderDefault) {
-            //     this.setError('Transaction failed', 'Order code is invalid', 'createBuyTransaction order');
-            //   } else {
-            //     if (tempStageId === 'verification') {
-            //       this.pager.goBack();
-            //     } else {
-            //       if(order.transactionId && order.transactionId != ''){
-            //         this.summary.instrument = instrument;
-            //         this.summary.providerView = this.paymentProviders.find(x => x.id === providerId);
-            //         this.transactionIdConfirmationCode = order.transactionId;
-            //         this.nextStage('code_auth', 'Authorization', 3, true);
-            //       }else{
-            //         this.pager.swapStage(tempStageId);
-            //       }
-            //     }
-            //   }
+              this.errorMessage = 'Order code is invalid';
+              if (this.widget.embedded) {
+                this.onError.emit({
+                  errorMessage: this.errorMessage
+                } as PaymentErrorDetails);
+              } else {
+              //   if (this.widget.orderDefault) {
+              //     this.setError('Transaction failed', 'Order code is invalid', 'createBuyTransaction order');
+              //   } else {
+              //     if (tempStageId === 'verification') {
+              //       this.pager.goBack();
+              //     } else {
+              //       if(order.transactionId && order.transactionId != ''){
+              //         this.summary.instrument = instrument;
+              //         this.summary.providerView = this.paymentProviders.find(x => x.id === providerId);
+              //         this.transactionIdConfirmationCode = order.transactionId;
+              //         this.nextStage('code_auth', 'Authorization', 3, true);
+              //       }else{
+              //         this.pager.swapStage(tempStageId);
+              //       }
+              //     }
+              //   }
+              if (tempStageId === 'verification') {
+                  this.pager.goBack();
+              } else {
+                  if(order.transactionId && order.transactionId != ''){
+                      this.summary.instrument = instrument;
+                      this.summary.providerView = this.paymentProviders.find(x => x.id === providerId);
+                      this.transactionIdConfirmationCode = order.transactionId;
+                      this.nextStage('code_auth', 'Authorization', 3, true);
+                  }else{
+                      this.pager.swapStage(tempStageId);
+                  }
+              }
+              }
+            }
+          }, (error) => {
+            this.inProgress = false;
             if (tempStageId === 'verification') {
-                this.pager.goBack();
+              this.pager.goBack();
             } else {
-                if(order.transactionId && order.transactionId != ''){
-                    this.summary.instrument = instrument;
-                    this.summary.providerView = this.paymentProviders.find(x => x.id === providerId);
-                    this.transactionIdConfirmationCode = order.transactionId;
-                    this.nextStage('code_auth', 'Authorization', 3, true);
-                }else{
-                    this.pager.swapStage(tempStageId);
-                }
+              this.pager.swapStage(tempStageId);
             }
-            }
-          }
-        }, (error) => {
-          this.inProgress = false;
-          if (tempStageId === 'verification') {
-            this.pager.goBack();
-          } else {
-            this.pager.swapStage(tempStageId);
-          }
-          if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
-            this.handleAuthError();
-          } else {
-            const msg = this.errorHandler.getError(error.message, 'Unable to register a new transaction');
-            this.errorMessage = msg;
-            if (this.widget.embedded) {
-              this.onError.emit({
-                errorMessage: msg
-              } as PaymentErrorDetails);
+            if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
+              this.handleAuthError();
             } else {
-              setTimeout(() => {
-                this.setError('Transaction handling failed', msg, 'createBuyTransaction');
-              }, 100);
+              const msg = this.errorHandler.getError(error.message, 'Unable to register a new transaction');
+              this.errorMessage = msg;
+              if (this.widget.embedded) {
+                this.onError.emit({
+                  errorMessage: msg
+                } as PaymentErrorDetails);
+              } else {
+                setTimeout(() => {
+                  this.setError('Transaction handling failed', msg, 'createBuyTransaction');
+                }, 100);
+              }
             }
-          }
-        })
-      );
+          })
+        );
+      }
     }
   }
   

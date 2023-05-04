@@ -7,8 +7,13 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class WidgetWrapComponent {
   userParamsId = '';
+  widgetSize = true;
 
   constructor(private route: ActivatedRoute) {
     this.userParamsId = this.route.snapshot.params['userParamsId'] ?? '';
+  }
+
+  iframePay(): void {
+    this.widgetSize = false;
   }
 }

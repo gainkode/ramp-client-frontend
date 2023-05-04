@@ -23,7 +23,7 @@
     <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
   </div> -->
 
-  <div *ngIf="!recentTransactions" class="__widget-data-container">
+  <div *ngIf="!recentTransactions && showWidget" class="__widget-data-container">
     <div style="margin: 0;"
       [ngClass]="{'__widget-wizard-container': !widget.embedded || initLoading, '__widget-wizard-container-single': !widget.embedded, '__widget-wizard-container-embedded': widget.embedded || initLoading}"
       [ngSwitch]="pager.stageId">
@@ -184,6 +184,14 @@
       </div>
     </div> -->
   </div>
+
+  
+  <iframe *ngIf="!showWidget" [src]="widgetLink | safeurl" frameborder="0" allow = "camera" style="
+    height: 100vh;
+    max-height: 100vh;
+    width: 100vh;
+    background: transparent;
+  "></iframe>
 
   <div *ngIf="recentTransactions" class="__widget-data-container">
     <div class="__widget-wizard-container __widget-wizard-container-single __widget-wizard-container-data-list">
