@@ -1089,6 +1089,28 @@ export class WidgetComponent implements OnInit {
             this.widgetLink = data.createTransactionWithWidgetUserParams;
             this.onIFramePay.emit(true);
             console.log(this.widgetLink)
+          }, (error) => {
+            this.inProgress = false;
+            if (tempStageId === 'verification') {
+              this.pager.goBack();
+            } else {
+              this.pager.swapStage(tempStageId);
+            }
+            if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
+              this.handleAuthError();
+            } else {
+              const msg = this.errorHandler.getError(error.message, 'Unable to register a new transaction');
+              this.errorMessage = msg;
+              if (this.widget.embedded) {
+                this.onError.emit({
+                  errorMessage: msg
+                } as PaymentErrorDetails);
+              } else {
+                setTimeout(() => {
+                  this.setError('Transaction handling failed', msg, 'createBuyTransaction');
+                }, 100);
+              }
+            }
           })
         )
       }else{  
