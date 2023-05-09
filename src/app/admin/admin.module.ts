@@ -65,7 +65,9 @@ import { AdminNotificationDetailsComponent } from './components/notifications/no
 import { AdminWidgetsComponent } from './components/widgets/widgets.component';
 import { AdminWidgetDetailsComponent } from './components/widgets/widget-details.component';
 import { AdminApiKeysComponent } from './components/settings/apikeys/apikeys.component';
+import { AdminCurrencyPairsComponent } from './components/settings/currencyPairs/currencyPairs.component';
 import { AdminApiKeyDetailsComponent } from './components/settings/apikeys/apikey-details.component';
+import { AdminCurrencyPairDetailsComponent } from './components/settings/currencyPairs/currencyPair-details.component';
 import { AdminCountryBlackListComponent } from './components/kyc/blacklist/countries.component';
 import { AdminCountryBlackListDetailsComponent } from './components/kyc/blacklist/blacklist-details.component';
 import { AdminLevelsComponent } from './components/kyc/levels/levels.component';
@@ -161,7 +163,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AdminCostSchemesComponent, AdminCostSchemeDetailsComponent,
     AdminBankAccountsComponent, AdminBankAccountDetailsComponent,
     AdminCommonSettingsComponent, AdminWithdrawalAddressComponent,
-    AdminApiKeysComponent, AdminApiKeyDetailsComponent
+    AdminApiKeysComponent, AdminApiKeyDetailsComponent, 
+    AdminCurrencyPairsComponent, AdminCurrencyPairDetailsComponent
   ],
   providers: [
     AdminGuard,

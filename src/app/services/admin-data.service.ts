@@ -50,7 +50,12 @@ import {
   TransactionStatusHistory,
   QueryGetTransactionStatusHistoryArgs,
   PaymentProviderPayoutType,
-  TransactionInput
+  TransactionInput,
+  CurrencyPairLiquidityProvider,
+  CurrencyPairLiquidityProvidersListResult,
+  QueryGetCurrencyPairLiquidityProviderArgs,
+  LiquidityProvider,
+  LiquidityProviderEntity
 } from '../model/generated-models';
 import { KycLevel, KycScheme, KycTier } from '../model/identification.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -67,6 +72,8 @@ import { NotificationItem } from '../model/notification.model';
 import { WidgetItem } from '../admin/model/widget.model';
 import { RiskAlertItem } from '../admin/model/risk-alert.model';
 import { ApiKeyItem } from 'src/app/model/apikey.model';
+import { CurrencyPairItem } from 'src/app/model/currencyPairs.model';
+import { LiquidityProviderEntityItem } from 'src/app/model/liquidity-provider.model';
 
 /* region queries */
 
@@ -1290,6 +1297,33 @@ query {
   }
 `;
 
+const GET_CURRENCY_PAIR_LIQUIDITY_PROVIDERS = gql`
+  query GetCurrencyPairLiquidityProviders{
+    getCurrencyPairLiquidityProviders{
+      count
+      list {
+        currencyPairLiquidityProviderId
+        fromCurrency
+        toCurrency
+        liquidityProviderId
+        liquidityProviderName
+        fixedRate
+        deleted
+      }
+    }
+  }
+`;
+
+const GET_LIQUIDITY_PROVIDERS = gql`
+  query GetLiquidityProviders{
+    getLiquidityProviders{
+      liquidityProviderId
+      name
+      order
+    }
+  }
+`;
+
 const GET_USER_API_KEYS = gql`
   query GetApiKeys(
     $filter: String
@@ -2069,6 +2103,42 @@ const CREATE_USER_API_KEY = gql`
     ) {
       apiKeyId
       secret
+    }
+  }
+`;
+
+const CREATE_CURRENCY_PAIR = gql`
+  mutation SetCurrencyPairLiquidityProvider(
+    $fromCurrency: String!,
+    $toCurrency: String!,
+    $liquidityProviderId: String!
+    $fixedRate: Float
+  ) {
+    setCurrencyPairLiquidityProvider(
+      fromCurrency: $fromCurrency
+      toCurrency: $toCurrency
+      liquidityProviderId: $liquidityProviderId
+      fixedRate: $fixedRate
+    ) {
+      currencyPairLiquidityProviderId
+      fromCurrency
+      toCurrency
+      liquidityProviderId
+      liquidityProviderName
+      fixedRate
+      deleted
+    }
+  }
+`;
+
+const DELETE_CURRENCY_PAIR = gql`
+  mutation DeleteCurrencyPair(
+    $currencyPairLiquidityProviderId: String!
+  ) {
+    delCurrencyPairLiquidityProvider(
+      currencyPairLiquidityProviderId: $currencyPairLiquidityProviderId
+    ) {
+      currencyPairLiquidityProviderId
     }
   }
 `;
@@ -3258,6 +3328,46 @@ export class AdminDataService {
     }
   }
 
+  getCurrencyPairLiquidityProviders(): Observable<{ list: Array<CurrencyPairItem>; count: number; }>{
+    return this.watchQuery<{ getCurrencyPairLiquidityProviders: CurrencyPairLiquidityProvidersListResult }, QueryGetCurrencyPairLiquidityProviderArgs>(
+      {
+        query: GET_CURRENCY_PAIR_LIQUIDITY_PROVIDERS,
+        fetchPolicy: 'network-only'
+      }).pipe(map(result => {
+        if (result.data?.getCurrencyPairLiquidityProviders?.list && result.data?.getCurrencyPairLiquidityProviders?.count) {
+          return {
+            list: result.data.getCurrencyPairLiquidityProviders.list.map(val => new CurrencyPairItem(val)),
+            count: result.data.getCurrencyPairLiquidityProviders.count
+          };
+        } else {
+          return {
+            list: [],
+            count: 0
+          };
+        }
+      }));
+  }
+
+  getLiquidityProviders(): Observable<{ list: Array<LiquidityProviderEntityItem>; count: number; }>{
+    return this.watchQuery<{ getLiquidityProviders: Array<LiquidityProviderEntity> }, null>(
+      {
+        query: GET_LIQUIDITY_PROVIDERS,
+        fetchPolicy: 'network-only'
+      }).pipe(map(result => {
+        if (result.data?.getLiquidityProviders && result.data?.getLiquidityProviders?.length != 0) {
+          return {
+            list: result.data.getLiquidityProviders.map(item => new LiquidityProviderEntityItem(item)),
+            count: result.data.getLiquidityProviders.length
+          };
+        } else {
+          return {
+            list: [],
+            count: 0
+          };
+        }
+      }));
+  }
+
   getApiKeys(
     pageIndex: number,
     takeItems: number,
@@ -3997,6 +4107,27 @@ export class AdminDataService {
       variables: {
         userId
       }
+    });
+  }
+
+  createCurrencyPair(fromCurrency: string, toCurrency: string, liquidityProviderId: string, fixedRate: number): Observable<any> {
+    return this.apollo.mutate({
+      mutation: CREATE_CURRENCY_PAIR,
+      variables: {
+        fromCurrency,
+        toCurrency,
+        liquidityProviderId,
+        fixedRate 
+      }
+    });
+  }
+  
+  deleteCurrencyPair(currencyPairLiquidityProviderId: string): Observable<any> {
+    return this.apollo.mutate({
+      mutation: DELETE_CURRENCY_PAIR,
+      variables: {
+        currencyPairLiquidityProviderId
+      },
     });
   }
 

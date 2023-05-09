@@ -1,0 +1,177 @@
+<app-admin-page-header [title]="'API Keys'" [items]="['Home', 'Settings']" [active_item]="'API Keys'">
+</app-admin-page-header>
+
+<div class="row row-sm">
+  <div class="col-xl-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="table-responsive">
+          <div class="table-button-container">
+            <button *ngIf="permission>1" (click)="addCurrencyPair(create_content)" type="button" class="btn btn-primary me-2">
+              Currency Pair
+            </button>
+          </div>
+
+          <mat-progress-bar *ngIf="inProgress" color="accent" mode="indeterminate"></mat-progress-bar>
+
+          <div class="data-table">
+            <mat-table matSort [matSortActive]="sortedField" matSortDirection="desc" matSortDisableClear
+              [dataSource]="currencyPairs">
+              <!-- Lock Column -->
+              <ng-container matColumnDef="lock" sticky>
+                <!-- <th mat-header-cell *matHeaderCellDef class="mat-column-currencypairs-table mat-column-currencypairs-table-lock">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <button mat-icon-button class="row-button" (click)="addCurrencyPair(create_content, element.currencyPairLiquidityProviderId)"
+                    matTooltip="Transaction details" matTooltipClass="info-tooltip">
+                    <i class="material-icons" style="font-size: 20px;">wysiwyg</i>
+                  </button>
+                </td> -->
+                <th mat-header-cell *matHeaderCellDef class="mat-column-apikey-table mat-column-apikey-table-lock">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <i *ngIf="element.disabled" class="material-icons" style="font-size: 20px;">
+                    lock
+                  </i>
+                </td>
+              </ng-container>
+              <!-- ID Column -->
+              <ng-container matColumnDef="id">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef
+                  class="mat-column-currencypairs-table mat-column-currencypairs-table-title">
+                  ID
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{element.currencyPairLiquidityProviderId}}
+                </td>
+              </ng-container>
+              <!-- CurrencyFrom Column -->
+              <ng-container matColumnDef="currencyFrom">
+                <th mat-header-cell *matHeaderCellDef class="mat-column-currencypairs-table mat-column-currencypairs-table-user">
+                  Currency From
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{element.fromCurrency}}
+                </td>
+              </ng-container>
+              <!-- Created Column -->
+              <ng-container matColumnDef="currencyTo">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef
+                  class="mat-column-currencypairs-table mat-column-currencypairs-table-created">
+                  Currency To
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{element.toCurrency}}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="fixedRate">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef
+                  class="mat-column-currencypairs-table mat-column-currencypairs-table-created">
+                  Rate
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{element.fixedRate}}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="liquidityProviderName">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef
+                  class="mat-column-currencypairs-table mat-column-currencypairs-table-created">
+                  Provider Name
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{element.liquidityProviderName.name}}
+                </td>
+              </ng-container>
+              <!-- Delete Column -->
+              <ng-container matColumnDef="delete" sticky>
+                <th mat-header-cell *matHeaderCellDef class="mat-column-currencypairs-table mat-column-currencypairs-table-delete">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <button mat-icon-button class="row-button" (click)="deleteCurrencyPair(element, delete_content)"
+                    [attr.aria-label]="'Delete API Key'" [attr.aria-pressed]="!!selectedPair" matTooltip="Delete API Key"
+                    matTooltipClass="info-tooltip">
+                    <i class="material-icons" style="font-size: 20px;">
+                      delete
+                    </i>
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </mat-table>
+          </div>
+
+          <div *ngIf="keyCount > pageSize" class="card card-body border shadow-none">
+            <ngb-pagination class="d-flex justify-content-center" [collectionSize]="keyCount" [pageSize]="pageSize"
+              [boundaryLinks]="true" [maxSize]="10" aria-label="Table pagination" (pageChange)="handlePage($event)">
+              <ng-template ngbPaginationFirst>
+                <div class="ng-pagination-nav-icons">
+                  <i class="material-icons">first_page</i>
+                </div>
+              </ng-template>
+              <ng-template ngbPaginationPrevious>
+                <div class="ng-pagination-nav-icons">
+                  <i class="material-icons">keyboard_arrow_left</i>
+                </div>
+              </ng-template>
+              <ng-template ngbPaginationNext>
+                <div class="ng-pagination-nav-icons">
+                  <i class="material-icons">keyboard_arrow_right</i>
+                </div>
+              </ng-template>
+              <ng-template ngbPaginationLast>
+                <div class="ng-pagination-nav-icons">
+                  <i class="material-icons">last_page</i>
+                </div>
+              </ng-template>
+            </ngb-pagination>
+          </div>
+
+          <ng-template #create_content let-modal>
+            <div class="modal-header">
+              <h5 class="modal-title">
+                Add a new Currency Pair
+              </h5>
+              <button type="button" class="close" aria-label="Close" (click)="onClose()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <app-admin-currencypairs-details [permission]="permission" (save)="onSaveKey()"
+                [pair]="selectedPair"
+                (close)="onClose()">
+              </app-admin-currencypairs-details>
+            </div>
+          </ng-template>
+
+          <ng-template #delete_content let-modal>
+            <div class="modal-header">
+              <h5 class="modal-title">Delete API key</h5>
+              <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <h4 style="text-align: center;">
+                You are going to remove the API key. Confirm operation.
+              </h4>
+              <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
+                <button class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" type="button"
+                  (click)="modal.dismiss('Reject')">
+                  Reject
+                </button>
+                <button class="btn btn-primary pd-x-30 mg-t-5" (click)="modal.close('Confirm')">
+                  Confirm
+                </button>
+              </div>
+            </div>
+          </ng-template>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

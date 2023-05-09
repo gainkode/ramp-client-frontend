@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AdminComponent } from './admin.component';
 import { AdminGuard } from './admin.guard';
 import { AdminApiKeysComponent } from './components/settings/apikeys/apikeys.component';
+import { AdminCurrencyPairsComponent } from './components/settings/currencyPairs/currencyPairs.component';
 import { AdminBankAccountsComponent } from './components/costs/bank-accounts/accounts.component';
 import { AdminCountryBlackListComponent } from './components/kyc/blacklist/countries.component';
 import { AdminDashboardComponent } from './components/dashboard/dashboard.component';
@@ -217,6 +218,11 @@ const routes: Routes = [
         path: 'api-keys',
         component: AdminApiKeysComponent,
         data: { header: 'API keys' }
+      },
+      {
+        path: 'currency-pairs',
+        component: AdminCurrencyPairsComponent,
+        data: { header: 'Currency pairs' }
       },
       {
         path: '**',

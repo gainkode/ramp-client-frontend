@@ -1,0 +1,148 @@
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { concat, Observable, of, Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map, switchMap, take, tap } from 'rxjs/operators';
+import { Filter } from 'src/app/admin/model/filter.model';
+import { AdminDataService } from 'src/app/services/admin-data.service';
+import { ApiKeyItem } from 'src/app/model/apikey.model';
+import { ApiKeySecret, SettingsCurrencyWithDefaults, UserType } from 'src/app/model/generated-models';
+import { UserItem } from 'src/app/model/user.model';
+import { AuthService } from 'src/app/services/auth.service';
+import { CurrencyView } from 'src/app/model/payment.model';
+import { CommonDataService } from 'src/app/services/common-data.service';
+import { LiquidityProviderList, LiquidityProviderItem } from 'src/app/admin/model/lists.model';
+import { LiquidityProviderEntityItem } from 'src/app/model/liquidity-provider.model';
+import { CurrencyPairItem } from 'src/app/model/currencyPairs.model';
+
+@Component({
+  selector: 'app-admin-currencypairs-details',
+  templateUrl: 'currencyPair-details.component.html',
+  styleUrls: ['currencyPair-details.component.scss', '../../../assets/scss/_validation.scss']
+})
+export class AdminCurrencyPairDetailsComponent implements OnInit, OnDestroy {
+  @Input() permission = 0;
+  @Input() pair: CurrencyPairItem | undefined = undefined;
+
+  @Output() save = new EventEmitter<string>();
+  @Output() close = new EventEmitter();
+
+  private subscriptions: Subscription = new Subscription();
+  private pNumberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
+
+  submitted = false;
+  saveInProgress = false;
+  errorMessage = '';
+  isUsersLoading = false;
+  usersSearchInput$ = new Subject<string>();
+  currencyOptions: CurrencyView[] = [];
+  liquidityProviderOptions: LiquidityProviderItem[] = LiquidityProviderList;
+  usersOptions$: Observable<UserItem[]> = of([]);
+  minUsersLengthTerm = 1;
+  liquidityProviders: LiquidityProviderEntityItem[] = [];
+
+  form = this.formBuilder.group({
+    fromCurrency: [undefined, { validators: [Validators.required], updateOn: 'change' }],
+    toCurrency: [undefined, { validators: [Validators.required], updateOn: 'change' }],
+    liquidityProvider: [undefined, { validators: [Validators.required], updateOn: 'change' }],
+    rate: [0, { validators: [Validators.required, Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
+  });
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private router: Router,
+    private auth: AuthService,
+    private commonService: CommonDataService,
+    private adminService: AdminDataService) {
+
+  }
+
+  ngOnInit(): void {
+    this.loadCurrencies();
+    this.loadData();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
+
+  private loadData(): void {
+    if(this.pair){
+      if(this.pair.fromCurrency){
+        this.form.get('fromCurrency')?.setValue(this.pair.fromCurrency);
+      }
+      if(this.pair.toCurrency){
+        this.form.get('toCurrency')?.setValue(this.pair.toCurrency);
+      }
+      
+      if(this.pair.fixedRate){
+        this.form.get('rate')?.setValue(this.pair.fixedRate);
+      }
+
+      if(this.pair.liquidityProviderName){
+        this.form.get('liquidityProvider')?.setValue(this.pair.liquidityProviderName.id);
+      }
+    }
+  }
+
+  private loadCurrencies(): void {
+    this.subscriptions.add(
+      this.commonService.getSettingsCurrency()?.valueChanges.pipe(take(1)).subscribe(({ data }) => {
+        this.commonService.getSettingsCurrency()?.valueChanges.pipe(take(1)).subscribe(({ data }) => {
+          const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
+          if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
+            this.currencyOptions = currencySettings.settingsCurrency.list?. map((val) => new CurrencyView(val)) as CurrencyView[];
+          } else {
+            this.currencyOptions = [];
+          }
+        }, (error) => {
+          this.errorMessage = error;
+        })
+      })
+    )
+  }
+
+  onSubmit(): void {
+    this.submitted = true;
+    if (this.form.valid) {
+      this.getLuqidityProviders();
+    }
+  }
+
+  private getLuqidityProviders(){
+    this.saveInProgress = true;
+    const listData$ = this.adminService.getLiquidityProviders().pipe(take(1));
+    this.subscriptions.add(
+      listData$.subscribe(({ list, count }) => {
+        this.liquidityProviders = list;
+        this.onSave();
+      }, (error) => {
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
+      })
+    );
+  }
+  private onSave(): void {
+    const liquidityProvider = this.liquidityProviders.find(item => item.name?.id == this.form.get('liquidityProvider')?.value);
+    const rate = parseFloat(this.form.get('rate')?.value);
+    const requestData$ = this.adminService.createCurrencyPair(
+      this.form.get('fromCurrency')?.value,
+      this.form.get('toCurrency')?.value,
+      liquidityProvider?.liquidityProviderId ?? '',
+      rate
+    );
+    this.subscriptions.add(
+      requestData$.subscribe(({ data }) => {
+        this.saveInProgress = false;
+        this.save.emit();
+      }, (error) => {
+        this.saveInProgress = false;
+        this.errorMessage = error;
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
+      })
+    );
+  }
+}

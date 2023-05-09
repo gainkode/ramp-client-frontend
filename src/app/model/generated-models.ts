@@ -250,6 +250,12 @@ export enum CallbackType {
   UserVerificationChanged = 'userVerificationChanged'
 }
 
+export type CheckOrCreateDestinationAddressResult = {
+  __typename?: 'CheckOrCreateDestinationAddressResult';
+  destination?: Maybe<Scalars['String']>;
+  destVaultId?: Maybe<Scalars['String']>;
+};
+
 export enum CountryCodeType {
   Code2 = 'code2',
   Code3 = 'code3'
@@ -309,6 +315,23 @@ export type CryptoInvoiceListResult = {
   __typename?: 'CryptoInvoiceListResult';
   count?: Maybe<Scalars['Int']>;
   list?: Maybe<Array<CryptoInvoice>>;
+};
+
+export type CurrencyPairLiquidityProvider = {
+  __typename?: 'CurrencyPairLiquidityProvider';
+  currencyPairLiquidityProviderId: Scalars['String'];
+  fromCurrency: Scalars['String'];
+  toCurrency: Scalars['String'];
+  liquidityProviderId: Scalars['String'];
+  liquidityProviderName: Scalars['String'];
+  fixedRate?: Maybe<Scalars['Float']>;
+  deleted?: Maybe<Scalars['String']>;
+};
+
+export type CurrencyPairLiquidityProvidersListResult = {
+  __typename?: 'CurrencyPairLiquidityProvidersListResult';
+  count: Scalars['Int'];
+  list: Array<CurrencyPairLiquidityProvider>;
 };
 
 export enum CustodyProvider {
@@ -463,6 +486,20 @@ export type FeedbackListResult = {
   __typename?: 'FeedbackListResult';
   count?: Maybe<Scalars['Int']>;
   list?: Maybe<Array<Feedback>>;
+};
+
+export type FiatProvider = {
+  __typename?: 'FiatProvider';
+  fiatProviderId?: Maybe<Scalars['ID']>;
+  name: Scalars['String'];
+  currencies?: Maybe<Array<Scalars['String']>>;
+  countriesCode2?: Maybe<Array<Scalars['String']>>;
+  instruments?: Maybe<Array<Scalars['String']>>;
+  default?: Maybe<Scalars['Boolean']>;
+  disabled?: Maybe<Scalars['DateTime']>;
+  source?: Maybe<Array<Maybe<Scalars['String']>>>;
+  transactionTypes?: Maybe<Array<Maybe<Scalars['String']>>>;
+  userTypes?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 export type FiatVault = {
@@ -773,8 +810,17 @@ export enum LiquidityProvider {
   Bitstamp = 'Bitstamp',
   Binance = 'Binance',
   Kraken = 'Kraken',
-  GetCoins = 'GetCoins'
+  GetCoins = 'GetCoins',
+  Xbo = 'Xbo',
+  PrimeTrustLiquidity = 'PrimeTrustLiquidity'
 }
+
+export type LiquidityProviderEntity = {
+  __typename?: 'LiquidityProviderEntity';
+  liquidityProviderId: Scalars['String'];
+  name: Scalars['String'];
+  order: Scalars['Int'];
+};
 
 export type LiquidityWithdrawalOrderInfo = {
   __typename?: 'LiquidityWithdrawalOrderInfo';
@@ -972,6 +1018,8 @@ export type Mutation = {
   createLiquidityWithdrawalOrder?: Maybe<TransferOrder>;
   /** Create new vault account */
   createVaultAccount?: Maybe<VaultAccount>;
+  /** Create account if not exists */
+  createAccount?: Maybe<Scalars['String']>;
   /** Update vault account */
   updateVaultAccount?: Maybe<VaultAccount>;
   /** Add an asset to a vault account */
@@ -984,6 +1032,7 @@ export type Mutation = {
   deleteDevice?: Maybe<UserDeviceListResult>;
   deleteMyDevice?: Maybe<UserDeviceListResult>;
   sendFakeLiquidityProviderTransactionChangedCallback?: Maybe<Scalars['Boolean']>;
+  setCurrencyPairLiquidityProvider: CurrencyPairLiquidityProvider;
 };
 
 
@@ -1471,6 +1520,7 @@ export type MutationCreateTransactionArgs = {
 export type MutationCreateUserTransactionArgs = {
   userId?: Maybe<Scalars['String']>;
   transaction?: Maybe<TransactionInput>;
+  rate?: Maybe<Scalars['Float']>;
 };
 
 
@@ -1648,6 +1698,12 @@ export type MutationCreateVaultAccountArgs = {
 };
 
 
+export type MutationCreateAccountArgs = {
+  userId: Scalars['String'];
+  custodyProviderName: Scalars['String'];
+};
+
+
 export type MutationUpdateVaultAccountArgs = {
   custodyProviderName?: Maybe<Scalars['String']>;
   vaultId: Scalars['String'];
@@ -1685,6 +1741,13 @@ export type MutationDeleteDeviceArgs = {
 
 export type MutationDeleteMyDeviceArgs = {
   deviceIds?: Maybe<Array<Maybe<Scalars['String']>>>;
+};
+
+
+export type MutationSetCurrencyPairLiquidityProviderArgs = {
+  fromCurrency: Scalars['String'];
+  toCurrency: Scalars['String'];
+  liquidityProviderId: Scalars['String'];
 };
 
 export type NewAddress = {
@@ -2047,6 +2110,8 @@ export type Query = {
   getTransactionStatusHistory: TransactionStatusHistoryListResult;
   /** This endpoint can be used to get all wallets of the current user with their description. */
   myWallets?: Maybe<AssetAddressShortListResult>;
+  /** This endpoint can be used to get all receive wallets of the current user with their description. */
+  myReceiveWallets?: Maybe<AssetAddressShortListResult>;
   /** This endpoint can be used to get all wallets with their description. */
   getWallets?: Maybe<AssetAddressListResult>;
   /** This endpoint can be used to get all transaction statuses with their description */
@@ -2084,8 +2149,19 @@ export type Query = {
   getLiquidityExchangeOrderStatus?: Maybe<LiquidityExchangeOrderInfo>;
   /** Get liquidity withdrawal potential fee */
   getLiquidityWithdrawalPotentialFeeInfo?: Maybe<LiquidityWithdrawalPotentialFeeInfo>;
+  getLiquidityProviders: Array<LiquidityProviderEntity>;
+  getCurrencyPairLiquidityProviders: CurrencyPairLiquidityProvidersListResult;
+  getCurrencyPairLiquidityProvider?: Maybe<CurrencyPairLiquidityProvider>;
   /** Get custody wallets for users */
   getVaultAccountListForUsers?: Maybe<Array<VaultAccount>>;
+  /** Get receive wallets for users */
+  getReceiveWallets?: Maybe<AssetAddressShortListResult>;
+  /** Check or create destination address */
+  checkOrCreateDestinationAddress?: Maybe<CheckOrCreateDestinationAddressResult>;
+  /** Check or create source vault address */
+  checkOrCreateSourceVaultAddress?: Maybe<Scalars['String']>;
+  /** Get User Vaults */
+  getUserVaults?: Maybe<Array<Maybe<VaultAccountEx>>>;
   /** Get vault account */
   getVaultAccount?: Maybe<VaultAccount>;
   /** Get network fee */
@@ -2571,6 +2647,15 @@ export type QueryMyWalletsArgs = {
 };
 
 
+export type QueryMyReceiveWalletsArgs = {
+  assetIdOnly?: Maybe<Scalars['String']>;
+  filter?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OrderBy>>;
+};
+
+
 export type QueryGetWalletsArgs = {
   walletIdsOnly?: Maybe<Array<Scalars['String']>>;
   userIdsOnly?: Maybe<Array<Scalars['String']>>;
@@ -2688,9 +2773,49 @@ export type QueryGetLiquidityWithdrawalPotentialFeeInfoArgs = {
 };
 
 
+export type QueryGetCurrencyPairLiquidityProvidersArgs = {
+  fromCurrencies?: Maybe<Array<Maybe<Scalars['String']>>>;
+  toCurrencies?: Maybe<Array<Maybe<Scalars['String']>>>;
+};
+
+
+export type QueryGetCurrencyPairLiquidityProviderArgs = {
+  fromCurrency: Scalars['String'];
+  toCurrency: Scalars['String'];
+};
+
+
 export type QueryGetVaultAccountListForUsersArgs = {
   custodyProviderName: Scalars['String'];
   userIds?: Maybe<Array<Scalars['String']>>;
+};
+
+
+export type QueryGetReceiveWalletsArgs = {
+  assetId: Scalars['String'];
+  userId: Scalars['String'];
+  custodyProviderName: Scalars['String'];
+};
+
+
+export type QueryCheckOrCreateDestinationAddressArgs = {
+  transactionInput: TransactionInput;
+  userId: Scalars['String'];
+  custodyProviderName: Scalars['String'];
+};
+
+
+export type QueryCheckOrCreateSourceVaultAddressArgs = {
+  transactionInput: TransactionInput;
+  userId: Scalars['String'];
+  custodyProviderName: Scalars['String'];
+};
+
+
+export type QueryGetUserVaultsArgs = {
+  options?: Maybe<UserStateInput>;
+  userId: Scalars['String'];
+  custodyProviderName: Scalars['String'];
 };
 
 
@@ -2755,7 +2880,8 @@ export enum RiskAlertCodes {
   WithdrawalOwner = 'WITHDRAWAL_OWNER',
   OpenpaydMismatch = 'OPENPAYD_MISMATCH',
   FlashfxMismatch = 'FLASHFX_MISMATCH',
-  MonoovaMismatch = 'MONOOVA_MISMATCH'
+  MonoovaMismatch = 'MONOOVA_MISMATCH',
+  PrimetrustMismatch = 'PRIMETRUST_MISMATCH'
 }
 
 export type RiskAlertResultList = {
@@ -3830,6 +3956,7 @@ export type User = {
   payId?: Maybe<Scalars['String']>;
   widgetUserParamsId?: Maybe<Scalars['String']>;
   primeTrustAccountId?: Maybe<Scalars['String']>;
+  primeTrustContactId?: Maybe<Scalars['String']>;
 };
 
 export type UserAction = {
@@ -3918,13 +4045,19 @@ export enum UserActionType {
   PrimeTrustCallback = 'primeTrustCallback',
   PrimeTrustGetAccount = 'primeTrustGetAccount',
   PrimeTrustCreateAccount = 'primeTrustCreateAccount',
+  PrimeTrustCreateWebhookConfig = 'PrimeTrustCreateWebhookConfig',
+  PrimeTrustGetWebhookConfig = 'PrimeTrustGetWebhookConfig',
+  PrimeTrustGetFundsTransfers = 'PrimeTrustGetFundsTransfers',
   PrimeTrustCreateDepositFundsViaWire = 'primeTrustCreateDepositFundsViaWire',
   PrimeTrustGetAssetTotals = 'primeTrustGetAssetTotals',
   PrimeTrustGetAssetByCurrency = 'primeTrustGetAssetByCurrency',
   PrimeTrustCreateAssetTransferMethod = 'primeTrustCreateAssetTransferMethod',
   PrimeTrustCreateAssetDisbursment = 'primeTrustCreateAssetDisbursment',
   PrimeTrustCreateAssetTransferInternal = 'primeTrustCreateAssetTransferInternal',
+  PrimeTrustGetAssetTransferInternal = 'primeTrustGetAssetTransferInternal',
   PrimeTrustCreateWithdrawalFunds = 'primeTrustCreateWithdrawalFunds',
+  PrimeTrustGetCashTransfers = 'PrimeTrustGetCashTransfers',
+  PrimeTrustGetAssetTransfers = 'PrimeTrustGetAssetTransfers',
   PrimeTrustGetAssetTransferMethod = 'primeTrustGetAssetTransferMethod',
   AddBlackCountry = 'addBlackCountry',
   RemoveBlackCountry = 'removeBlackCountry',
@@ -4337,6 +4470,7 @@ export type UserStateNotificationsArgs = {
 
 export type UserStateInput = {
   currencyTo?: Maybe<Scalars['String']>;
+  currencySearch?: Maybe<Scalars['String']>;
 };
 
 export type UserTransactionStats = {

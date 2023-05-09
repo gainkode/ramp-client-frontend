@@ -150,6 +150,7 @@ export class NavService implements OnDestroy {
 			title: 'Settings', icon: 'settings', type: 'sub', active: false, code: 'SETTINGS', children: [
 				{ path: '/admin/common', title: 'Common', type: 'link' },
 				{ path: '/admin/api-keys', title: 'API keys', type: 'link' },
+				{ path: '/admin/currency-pairs', title: 'Currency pairs', type: 'link' },
 			]
 		}
 	];
