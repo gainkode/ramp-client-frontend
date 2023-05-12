@@ -404,7 +404,7 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
       for(let user of users){
         const transactionToCreate = this.getTransactionToCreate();
         this.saveInProgress = true;
-        const requestData = this.adminService.createUserTransaction(transactionToCreate, user, rate);
+        const requestData = this.adminService.createUserTransaction(transactionToCreate, user, parseFloat(rate));
         this.subscriptions.add(
           requestData.subscribe(({ data }) => {
             this.saveInProgress = false;
