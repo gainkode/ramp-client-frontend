@@ -111,9 +111,9 @@
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             Exchange rate
             <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
-            <a [routerLink]="" (click)="updateRate()" style="font-size: 12px;margin-left: 8px;">
+            <!-- <a [routerLink]="" (click)="updateRate()" style="font-size: 12px;margin-left: 8px;">
               Set current
-            </a>
+            </a> -->
           </label>
           <input class="form-control" [ngClass]="{'has-error': !form.controls.rate.valid}" type="text"
             formControlName="rate" required>

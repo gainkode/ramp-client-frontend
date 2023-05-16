@@ -271,7 +271,11 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
       const amount = this.amountToSpendField?.value;
       
       if(rate && amount){
-        receiveAmount = rate * amount;
+        if(this.transactionTypeField?.value == TransactionType.Buy){
+          receiveAmount = amount / rate;
+        }else if(this.transactionTypeField?.value == TransactionType.Sell){
+          receiveAmount = amount * rate;
+        }
       }
       
       this.pReceiveAutoUpdated = true;
@@ -286,9 +290,13 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
       let receiveAmount = 0;
       const rate = this.rateField?.value;
       const amount = this.amountToReceiveField?.value;
-
+      
       if(rate && amount){
-        receiveAmount = amount / rate;
+        if(this.transactionTypeField?.value == TransactionType.Buy){
+          receiveAmount = amount * rate;
+        }else if(this.transactionTypeField?.value == TransactionType.Sell){
+          receiveAmount = amount / rate;
+        }
       }
 
       this.pSpendAutoUpdated = true;

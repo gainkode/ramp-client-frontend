@@ -17,7 +17,7 @@
     <!-- Company name (Merchant) -->
     <div *ngIf="requireUserFullName && isMerchant">
         <app-form-textbox [label]="'Company Name'" [boxType]="'text'" [placeholder]="'Company Name'" [maxlength]="80"
-            formControlName="firstName" [errorMessages]="companyNameErrorMessages" [asterisk]="true" [separator]="true">
+            formControlName="companyName" [errorMessages]="companyNameErrorMessages" [asterisk]="true" [separator]="true">
         </app-form-textbox>
     </div>
 

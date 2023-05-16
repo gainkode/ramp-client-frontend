@@ -33,6 +33,7 @@ export class SignupInfoPanelComponent implements OnDestroy {
     startBirthday = new Date(1980, 0, 1);
 
     firstNameControl: AbstractControl | null = null;
+    companyNameControl: AbstractControl | null = null;
     lastNameControl: AbstractControl | null = null;
     phoneCodeControl: AbstractControl | null = null;
     phoneNumberControl: AbstractControl | null = null;
@@ -61,7 +62,8 @@ export class SignupInfoPanelComponent implements OnDestroy {
         stateName: ['', { validators: [], updateOn: 'change' }],
         buildingName: ['', { validators: [], updateOn: 'change' }],
         buildingNumber: ['', { validators: [], updateOn: 'change' }],
-        flatNumber: ['', { validators: [], updateOn: 'change' }]
+        flatNumber: ['', { validators: [], updateOn: 'change' }],
+        companyName: ['', { validators: [], updateOn: 'change' }]
     });
 
     firstNameErrorMessages: { [key: string]: string; } = {
@@ -102,6 +104,7 @@ export class SignupInfoPanelComponent implements OnDestroy {
         private errorHandler: ErrorService,
         private formBuilder: FormBuilder) {
         this.firstNameControl = this.infoForm.get('firstName');
+        this.companyNameControl = this.infoForm.get('companyName');
         this.lastNameControl = this.infoForm.get('lastName');
         this.phoneCodeControl = this.infoForm.get('phoneCode');
         this.phoneNumberControl = this.infoForm.get('phoneNumber');
@@ -146,13 +149,19 @@ export class SignupInfoPanelComponent implements OnDestroy {
         if (this.requireUserFullName && user) {
             this.firstNameControl?.setValue(user.firstName);
             this.lastNameControl?.setValue(user.lastName);
-            this.firstNameControl?.setValidators([Validators.required]);
             if (this.isMerchant) {
+                this.companyNameControl?.setValue(user.companyName);
                 this.lastNameControl?.setValidators([]);
+                this.firstNameControl?.setValidators([]);
+                this.companyNameControl?.setValidators([Validators.required]);
             } else {
                 this.lastNameControl?.setValidators([Validators.required]);
+                this.firstNameControl?.setValidators([Validators.required]);
             }
         } else {
+            if(this.isMerchant){
+                this.companyNameControl?.setValue('');
+            }
             this.firstNameControl?.setValue('');
             this.lastNameControl?.setValue('');
             this.firstNameControl?.setValidators([]);
@@ -237,6 +246,11 @@ export class SignupInfoPanelComponent implements OnDestroy {
             this.birthdayControl?.setValue('');
             this.birthdayControl?.setValidators([]);
         }
+
+        if(this.isMerchant){
+            this.companyNameControl?.updateValueAndValidity();
+        }
+
         this.firstNameControl?.updateValueAndValidity();
         this.lastNameControl?.updateValueAndValidity();
         this.phoneCodeControl?.updateValueAndValidity();
@@ -283,7 +297,7 @@ export class SignupInfoPanelComponent implements OnDestroy {
                 this.auth.setMyInfo(
                     this.firstNameControl?.value as string,
                     this.lastNameControl?.value as string,
-                    null,
+                    this.companyNameControl?.value as string,
                     phone,
                     address,
                     birthday
