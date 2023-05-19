@@ -24,7 +24,7 @@
         </div>
         <!-- Buttons -->
         <div class="__widget-buttons-area">
-            <button class="__main-button __button-wide-separator" type="submit" [disabled]="done || !dataForm.valid">
+            <button class="__main-button __button-wide-separator" type="submit" [disabled]="done || !dataForm.valid || quoteExceed">
                 next
             </button>
         </div>
