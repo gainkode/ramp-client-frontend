@@ -20,7 +20,7 @@ import {MatTableDataSource} from '@angular/material/table';
 @Component({
   selector: 'app-admin-widget-details',
   templateUrl: 'widget-details.component.html',
-  styleUrls: ['widget-details.component.scss', '../../assets/scss/_validation.scss']
+  styleUrls: ['widget-details.component.scss', '../../assets/scss/_validation.scss', '../../../../assets/button.scss']
 })
 export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   @Input() permission = 0;
@@ -88,7 +88,8 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
     description: [''],
     secret: [''],
     userType: [UserType.Personal, { validators: [Validators.required], updateOn: 'change' }],
-    allowToPayIfKycFailed: true
+    allowToPayIfKycFailed: true,
+    newVaultPerTransaction: false,
   });
 
   constructor(
@@ -184,6 +185,7 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
             description: widget.description,
             secret: widget.secret,
             allowToPayIfKycFailed: widget.allowToPayIfKycFailed,
+            newVaultPerTransaction: widget.newVaultPerTransaction,
             userType: sellecteduserType
           });
         })
@@ -231,6 +233,7 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
     widget.transactionTypes = formValue.transactionTypes;
     widget.secret = formValue.secret;
     widget.allowToPayIfKycFailed = formValue.allowToPayIfKycFailed;
+    widget.newVaultPerTransaction = formValue.newVaultPerTransaction;
     // widget.destinationAddress = this.widgetDestinationAddress;
 
     return widget;

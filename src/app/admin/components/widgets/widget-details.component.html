@@ -17,69 +17,86 @@
         <h5 class="card-title mg-b-20">
           Destination
         </h5>
-        <table mat-table [dataSource]="currenciesTable">
-          <ng-container matColumnDef="details">
-            <th *matHeaderCellDef>
-              <!-- <button *ngIf="permission>1" class="mat-focus-indicator mat-tooltip-trigger row-button mat-icon-button mat-button-base" type="button"
-                (click)="addWidgetDestinationAddress()">
-                <i class="material-icons" style="font-size: 20px;">
+        <div class="form-group">
+          <table mat-table [dataSource]="currenciesTable">
+            <ng-container matColumnDef="details">
+              <th *matHeaderCellDef>
+                <!-- <button *ngIf="permission>1" class="mat-focus-indicator mat-tooltip-trigger row-button mat-icon-button mat-button-base" type="button"
+                  (click)="addWidgetDestinationAddress()">
+                  <i class="material-icons" style="font-size: 20px;">
+                    add_circle
+                  </i>
+                </button> -->
+                <i class="material-icons cursor-icon" style="font-size: 20px;" (click)="addWidgetDestinationAddress()">
                   add_circle
                 </i>
-              </button> -->
-              <i class="material-icons cursor-icon" style="font-size: 20px;" (click)="addWidgetDestinationAddress()">
-                add_circle
-              </i>
-            </th>
-            <td *matCellDef="let element">
-              <!-- <button *ngIf="permission>1" class="mat-focus-indicator mat-tooltip-trigger row-button mat-icon-button mat-button-base" type="button"
-                (click)="delWidgetDestinationAddress(element)">
-                <i class="material-icons" style="font-size: 20px;">
+              </th>
+              <td *matCellDef="let element">
+                <!-- <button *ngIf="permission>1" class="mat-focus-indicator mat-tooltip-trigger row-button mat-icon-button mat-button-base" type="button"
+                  (click)="delWidgetDestinationAddress(element)">
+                  <i class="material-icons" style="font-size: 20px;">
+                    cancel
+                  </i>
+                </button> -->
+                <i class="material-icons cursor-icon" style="font-size: 20px;" (click)="delWidgetDestinationAddress(element)">
                   cancel
                 </i>
-              </button> -->
-              <i class="material-icons cursor-icon" style="font-size: 20px;" (click)="delWidgetDestinationAddress(element)">
-                cancel
-              </i>
-            </td>
-          </ng-container>
-            <!-- <ng-container matColumnDef="details" sticky>
-              <th mat-header-cell *matHeaderCellDef></th>
-              <td mat-cell *matCellDef="let element" class="widget-list-selector-column">
-                <input style="margin-right: 4px;" [checked]="element.selected" type="checkbox">
               </td>
-            </ng-container> -->
+            </ng-container>
+              <!-- <ng-container matColumnDef="details" sticky>
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element" class="widget-list-selector-column">
+                  <input style="margin-right: 4px;" [checked]="element.selected" type="checkbox">
+                </td>
+              </ng-container> -->
+      
+              <ng-container matColumnDef="currency">
+                <th *matHeaderCellDef>
+                  Currency
+                </th>
+                <td *matCellDef="let element" class="widget-list-data-column">
+                  <ng-select [(ngModel)]="element.currency" [ngModelOptions]="{standalone: true}" [items]="currencyOptionsCrypto" bindLabel="display" bindValue="symbol" 
+                    [clearable]=true [clearOnBackspace]=true [multiple]="false" [closeOnSelect]="false">
+                  </ng-select>
+                  <!-- {{element.currency}} -->
+                </td>
+              </ng-container>
     
-            <ng-container matColumnDef="currency">
-              <th *matHeaderCellDef>
-                Currency
-              </th>
-              <td *matCellDef="let element" class="widget-list-data-column">
-                <ng-select [(ngModel)]="element.currency" [ngModelOptions]="{standalone: true}" [items]="currencyOptionsCrypto" bindLabel="display" bindValue="symbol" 
-                  [clearable]=true [clearOnBackspace]=true [multiple]="false" [closeOnSelect]="false">
-                </ng-select>
-                <!-- {{element.currency}} -->
-              </td>
-            </ng-container>
-  
-            <ng-container matColumnDef="destination">
-              <th *matHeaderCellDef>
-                Destination
-              </th>
-              <td *matCellDef="let element" class="widget-list-data-column">
-                <input class="form-control"
-                type="text" [(ngModel)]="element.destination" maxlength="50" required [ngModelOptions]="{standalone: true}" [required]="destinationRequired">
-                <div *ngIf="destinationRequired && !element.destination"
-                  class="tx-danger">
-                  <small>
-                    Destination is required
-                  </small>
+              <ng-container matColumnDef="destination">
+                <th *matHeaderCellDef>
+                  Destination
+                </th>
+                <td *matCellDef="let element" class="widget-list-data-column">
+                  <input class="form-control"
+                  type="text" [(ngModel)]="element.destination" maxlength="50" required [ngModelOptions]="{standalone: true}" [required]="destinationRequired">
+                  <div *ngIf="destinationRequired && !element.destination"
+                    class="tx-danger">
+                    <small>
+                      Destination is required
+                    </small>
+                  </div>
+                </td>
+              </ng-container>
+    
+              <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+        </div>
+        <div class="form-group">
+          <div class="__tool-bar-double-sided-data-box __row-per-checkbox">
+            <div class="__tool-bar-block">
+                <div class="__tool-bar-label">
+                  New Vault Per Transaction 
                 </div>
-              </td>
-            </ng-container>
-  
-            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-          </table>
+            </div>
+            <div class="__tool-bar-block" style="margin-left: 10px">
+                <div class="__toggle-switch">
+                    <input type="checkbox" id="toggle-button" class="__toggle-switch-slider"
+                        formControlName="newVaultPerTransaction">
+                </div>
+            </div>
+          </div>
+        </div>
       </div>
       
       <!-- <div *ngIf="form.value.id" class="card card-body pd-20 pd-md-40 border shadow-none">

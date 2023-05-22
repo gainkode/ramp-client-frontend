@@ -891,6 +891,7 @@ export type Mutation = {
   deleteWidget?: Maybe<Widget>;
   /** This endpoint can be used to add user params. */
   addMyWidgetUserParams?: Maybe<WidgetUserParams>;
+  createTransactionWithWidgetUserParams?: Maybe<Scalars['String']>;
   exportWidgetsToCsv?: Maybe<Scalars['Boolean']>;
   updateRiskAlertType?: Maybe<RiskAlertType>;
   addBlackCountry?: Maybe<BlackCountry>;
@@ -1505,6 +1506,12 @@ export type MutationDeleteWidgetArgs = {
 
 export type MutationAddMyWidgetUserParamsArgs = {
   widgetUserParams?: Maybe<WidgetUserParamsInput>;
+};
+
+
+export type MutationCreateTransactionWithWidgetUserParamsArgs = {
+  transactionInput?: Maybe<TransactionInput>;
+  widgetId?: Maybe<Scalars['String']>;
 };
 
 
@@ -3692,6 +3699,7 @@ export enum UserActionType {
   MonoovaGetPayId = 'monoovaGetPayId',
   MonoovaRegisterPayId = 'monoovaRegisterPayId',
   MonoovaPayout = 'monoovaPayout',
+  GetCoinsCallback = 'getCoinsCallback',
   AddBlackCountry = 'addBlackCountry',
   RemoveBlackCountry = 'removeBlackCountry',
   CreateCryptoInvoice = 'createCryptoInvoice',
@@ -3711,7 +3719,8 @@ export enum UserActionType {
   AddWireTransferBankAccount = 'addWireTransferBankAccount',
   UpdateWireTransferBankAccount = 'updateWireTransferBankAccount',
   DeleteWireTransferBankAccount = 'deleteWireTransferBankAccount',
-  GenerateShareToken = 'generateShareToken'
+  GenerateShareToken = 'generateShareToken',
+  LiquidityDeposit = 'liquidityDeposit'
 }
 
 export type UserAddress = {
@@ -4250,6 +4259,7 @@ export type Widget = {
   secret?: Maybe<Scalars['String']>;
   allowToPayIfKycFailed?: Maybe<Scalars['Boolean']>;
   fee?: Maybe<Scalars['Float']>;
+  newVaultPerTransaction?: Maybe<Scalars['Boolean']>;
 };
 
 export type WidgetDestination = {
@@ -4277,6 +4287,7 @@ export type WidgetInput = {
   additionalSettings?: Maybe<Scalars['String']>;
   secret?: Maybe<Scalars['String']>;
   allowToPayIfKycFailed?: Maybe<Scalars['Boolean']>;
+  newVaultPerTransaction?: Maybe<Scalars['Boolean']>;
 };
 
 export type WidgetListResult = {
@@ -4300,6 +4311,7 @@ export type WidgetShort = {
   additionalSettings?: Maybe<Scalars['String']>;
   currentUserEmail?: Maybe<Scalars['String']>;
   allowToPayIfKycFailed?: Maybe<Scalars['Boolean']>;
+  newVaultPerTransaction?: Maybe<Scalars['Boolean']>;
 };
 
 export type WidgetUpdateInput = {
@@ -4317,6 +4329,7 @@ export type WidgetUpdateInput = {
   additionalSettings?: Maybe<Scalars['String']>;
   secret?: Maybe<Scalars['String']>;
   allowToPayIfKycFailed?: Maybe<Scalars['Boolean']>;
+  newVaultPerTransaction?: Maybe<Scalars['Boolean']>;
 };
 
 export type WidgetUserParams = {

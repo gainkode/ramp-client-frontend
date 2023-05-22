@@ -32,6 +32,7 @@ export class WidgetItem {
   secret = '';
   selected = false;
   allowToPayIfKycFailed: boolean = false;
+  newVaultPerTransaction: boolean = false;
 
   constructor(data: Widget | null) {
     if (data) {
@@ -44,6 +45,7 @@ export class WidgetItem {
       this.description = data.description ?? '';
       this.secret = data.secret ?? '';
       this.allowToPayIfKycFailed = data.allowToPayIfKycFailed ?? false;
+      this.newVaultPerTransaction = data.newVaultPerTransaction ?? false;
       this.additionalSettings = data.additionalSettings as string;
       this.userId = data.userId as string;
       this.created = datepipe.transform(data.created, 'dd-MM-YYYY HH:mm:ss') ?? '';

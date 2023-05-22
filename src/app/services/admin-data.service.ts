@@ -1255,6 +1255,7 @@ const GET_WIDGETS = gql`
         liquidityProvider
         secret
         allowToPayIfKycFailed
+        newVaultPerTransaction
       }
     }
   }
@@ -1581,6 +1582,7 @@ const CREATE_WIDGET = gql`
     $additionalSettings: String,
     $secret: String, 
     $allowToPayIfKycFailed: Boolean
+    $newVaultPerTransaction: Boolean
   ) {
     createWidget(
       userId: $userId
@@ -1598,6 +1600,7 @@ const CREATE_WIDGET = gql`
         liquidityProvider: $liquidityProvider
         secret: $secret,
         allowToPayIfKycFailed: $allowToPayIfKycFailed
+        newVaultPerTransaction: $newVaultPerTransaction
       }
     ) {
       widgetId
@@ -1622,6 +1625,7 @@ const UPDATE_WIDGET = gql`
     $additionalSettings: String
     $secret: String,
     $allowToPayIfKycFailed: Boolean
+    $newVaultPerTransaction: Boolean
   ) {
     updateWidget(
       widgetId: $widgetId,
@@ -1640,6 +1644,7 @@ const UPDATE_WIDGET = gql`
         liquidityProvider: $liquidityProvider
         secret: $secret,
         allowToPayIfKycFailed: $allowToPayIfKycFailed
+        newVaultPerTransaction: $newVaultPerTransaction
       }
     ) {
       widgetId
@@ -3514,7 +3519,8 @@ export class AdminDataService {
           liquidityProvider: widget.liquidityProvider,
           additionalSettings: widget.additionalSettings,
           secret: widget.secret,
-          allowToPayIfKycFailed: widget.allowToPayIfKycFailed
+          allowToPayIfKycFailed: widget.allowToPayIfKycFailed,
+          newVaultPerTransaction: widget.newVaultPerTransaction
         }
       }).pipe(tap(() => {
         this.snackBar.open(`Widget was created`, undefined, { duration: 5000 });
@@ -3536,7 +3542,8 @@ export class AdminDataService {
           liquidityProvider: widget.liquidityProvider,
           additionalSettings: widget.additionalSettings,
           secret: widget.secret,
-          allowToPayIfKycFailed: widget.allowToPayIfKycFailed
+          allowToPayIfKycFailed: widget.allowToPayIfKycFailed,
+          newVaultPerTransaction: widget.newVaultPerTransaction
         }
       }).pipe(tap(() => {
         this.snackBar.open(`Widget was updated`, undefined, { duration: 5000 });
