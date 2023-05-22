@@ -101,7 +101,6 @@ export class TransactionItemFull {
       this.created = datepipe.transform(data.created, 'dd-MM-YYYY HH:mm:ss') as string;
       this.executed = datepipe.transform(data.executed, 'dd-MM-YYYY HH:mm:ss') as string;
       this.updated = datepipe.transform(data.updated, 'dd-MM-YYYY HH:mm:ss') as string;
-      this.address = data.destination ?? '-';
       this.accountId = data.userId ?? '';
       this.accountStatus = data.accountStatus ?? '';
       this.accountStatusValue = data.accountStatus ?? AccountStatus.Closed;
@@ -119,6 +118,7 @@ export class TransactionItemFull {
       if (data.type === TransactionType.Sell || data.type === TransactionType.Withdrawal) {
         this.instrumentDetailsData = this.getInstrumentDetails(data.instrumentDetails ?? '{}');
       }
+
       this.comment = transactionData.comment ?? '';
       this.transferOrderId = data.transferOrder?.orderId ?? '';
       this.transferOriginalOrderId = data.transferOrder?.originalOrderId ?? '-';
@@ -148,6 +148,13 @@ export class TransactionItemFull {
         this.rate = data.rate;
       } else {
         this.rate = data.initialRate ?? 0;
+      }
+      if(data.type == TransactionType.Deposit){
+        this.address = this.recipient ?? '-';
+      }else if(data.type == TransactionType.Withdrawal){
+        this.address = this.sender ?? '-';
+      }else{
+        this.address = data.destination ?? '-';
       }
       const kycStatus = TransactionKycStatusList.find(x => x.id === (data as Transaction).kycStatus);
       this.kycStatus = (kycStatus) ? kycStatus.name : '';
