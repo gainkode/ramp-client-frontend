@@ -37,6 +37,7 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   @Output() save = new EventEmitter();
   @Output() close = new EventEmitter();
 
+  private pNumberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
   private subscriptions: Subscription = new Subscription();
   
   displayedColumns: string[] = [
@@ -90,6 +91,11 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
     userType: [UserType.Personal, { validators: [Validators.required], updateOn: 'change' }],
     allowToPayIfKycFailed: true,
     newVaultPerTransaction: false,
+    kycBeforePayment: false,
+    disclaimer: false,
+    minAmountFrom: [0, { validators: [Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
+    maxAmountFrom: [0, { validators: [Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
+    fee: [0, { validators: [Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
   });
 
   constructor(
@@ -186,7 +192,12 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
             secret: widget.secret,
             allowToPayIfKycFailed: widget.allowToPayIfKycFailed,
             newVaultPerTransaction: widget.newVaultPerTransaction,
-            userType: sellecteduserType
+            userType: sellecteduserType,
+            kycBeforePayment: this.widgetAdditionalSettings?.kycBeforePayment ?? false,
+            disclaimer: this.widgetAdditionalSettings?.disclaimer ?? false,
+            minAmountFrom: this.widgetAdditionalSettings?.minAmountFrom ?? 0,
+            maxAmountFrom: this.widgetAdditionalSettings?.maxAmountFrom ?? 0,
+            fee: widget?.fee ?? 0
           });
         })
       );
@@ -205,6 +216,10 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
     widget.countriesCode2 = formValue.countries.map(c => c.code2);
 
     this.widgetAdditionalSettings.userType = formValue.userType;
+    this.widgetAdditionalSettings.kycBeforePayment = formValue.kycBeforePayment;
+    this.widgetAdditionalSettings.maxAmountFrom = formValue.maxAmountFrom;
+    this.widgetAdditionalSettings.minAmountFrom = formValue.minAmountFrom;
+    this.widgetAdditionalSettings.disclaimer = formValue.disclaimer;
     widget.additionalSettings = JSON.stringify(this.widgetAdditionalSettings)
 
     if(this.currenciesTable._data._value && this.currenciesTable._data._value.length > 0){
@@ -233,6 +248,7 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
     widget.transactionTypes = formValue.transactionTypes;
     widget.secret = formValue.secret;
     widget.allowToPayIfKycFailed = formValue.allowToPayIfKycFailed;
+    widget.fee = formValue.fee;
     widget.newVaultPerTransaction = formValue.newVaultPerTransaction;
     // widget.destinationAddress = this.widgetDestinationAddress;
 

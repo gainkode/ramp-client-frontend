@@ -33,6 +33,7 @@ export class WidgetItem {
   selected = false;
   allowToPayIfKycFailed: boolean = false;
   newVaultPerTransaction: boolean = false;
+  fee: number = 0;
 
   constructor(data: Widget | null) {
     if (data) {
@@ -49,6 +50,9 @@ export class WidgetItem {
       this.additionalSettings = data.additionalSettings as string;
       this.userId = data.userId as string;
       this.created = datepipe.transform(data.created, 'dd-MM-YYYY HH:mm:ss') ?? '';
+      if(data.fee){
+        this.fee = data.fee;
+      }
       if (data.createdByUser) {
         this.createdByEmail = data.createdByUser.email;
         const fn = data.createdByUser.firstName ?? '';

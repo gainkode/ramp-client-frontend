@@ -625,7 +625,6 @@ export class WidgetComponent implements OnInit {
           if(defaultFeeTerms.Transaction_fee){
             this.defaultFee = defaultFeeTerms.Transaction_fee;
           }
-          console.log(this.defaultFee)
         }
         
       }, (error) => {

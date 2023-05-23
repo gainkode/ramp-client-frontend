@@ -1256,6 +1256,7 @@ const GET_WIDGETS = gql`
         secret
         allowToPayIfKycFailed
         newVaultPerTransaction
+        fee
       }
     }
   }
@@ -1583,6 +1584,7 @@ const CREATE_WIDGET = gql`
     $secret: String, 
     $allowToPayIfKycFailed: Boolean
     $newVaultPerTransaction: Boolean
+    $fee: Float
   ) {
     createWidget(
       userId: $userId
@@ -1601,6 +1603,7 @@ const CREATE_WIDGET = gql`
         secret: $secret,
         allowToPayIfKycFailed: $allowToPayIfKycFailed
         newVaultPerTransaction: $newVaultPerTransaction
+        fee: $fee
       }
     ) {
       widgetId
@@ -1626,6 +1629,7 @@ const UPDATE_WIDGET = gql`
     $secret: String,
     $allowToPayIfKycFailed: Boolean
     $newVaultPerTransaction: Boolean
+    $fee: Float
   ) {
     updateWidget(
       widgetId: $widgetId,
@@ -1645,6 +1649,7 @@ const UPDATE_WIDGET = gql`
         secret: $secret,
         allowToPayIfKycFailed: $allowToPayIfKycFailed
         newVaultPerTransaction: $newVaultPerTransaction
+        fee: $fee
       }
     ) {
       widgetId
@@ -3520,7 +3525,8 @@ export class AdminDataService {
           additionalSettings: widget.additionalSettings,
           secret: widget.secret,
           allowToPayIfKycFailed: widget.allowToPayIfKycFailed,
-          newVaultPerTransaction: widget.newVaultPerTransaction
+          newVaultPerTransaction: widget.newVaultPerTransaction,
+          fee: widget.fee
         }
       }).pipe(tap(() => {
         this.snackBar.open(`Widget was created`, undefined, { duration: 5000 });
@@ -3543,7 +3549,8 @@ export class AdminDataService {
           additionalSettings: widget.additionalSettings,
           secret: widget.secret,
           allowToPayIfKycFailed: widget.allowToPayIfKycFailed,
-          newVaultPerTransaction: widget.newVaultPerTransaction
+          newVaultPerTransaction: widget.newVaultPerTransaction,
+          fee: widget.fee
         }
       }).pipe(tap(() => {
         this.snackBar.open(`Widget was updated`, undefined, { duration: 5000 });

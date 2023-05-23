@@ -82,21 +82,6 @@
               <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
         </div>
-        <div class="form-group">
-          <div class="__tool-bar-double-sided-data-box __row-per-checkbox">
-            <div class="__tool-bar-block">
-                <div class="__tool-bar-label">
-                  New Vault Per Transaction 
-                </div>
-            </div>
-            <div class="__tool-bar-block" style="margin-left: 10px">
-                <div class="__toggle-switch">
-                    <input type="checkbox" id="toggle-button" class="__toggle-switch-slider"
-                        formControlName="newVaultPerTransaction">
-                </div>
-            </div>
-          </div>
-        </div>
       </div>
       
       <!-- <div *ngIf="form.value.id" class="card card-body pd-20 pd-md-40 border shadow-none">
@@ -276,17 +261,93 @@
         </ng-select>
 
         <div class="form-group">
-          <h5 class="card-title mg-b-20 tx-11"
-            style="display: flex;flex-direction: row;justify-content: flex-start;align-items: center;">
-            <input type="checkbox"  formControlName="allowToPayIfKycFailed" class="me-2">
-            Allow to pay if kyc failed
-          </h5>
-          <!-- <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            No check
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Min. Amount
           </label>
-          <input type="checkbox"  formControlName="noCheck" class="me-2"> -->
+          <input class="form-control" type="number" formControlName="minAmountFrom">
         </div>
-        
+
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Max. Amount
+          </label>
+          <input class="form-control" type="number" formControlName="maxAmountFrom">
+        </div>
+
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Pre. Fee
+          </label>
+          <input class="form-control" type="number" formControlName="fee">
+        </div>
+      </div>
+
+      <div class="card card-body pd-20 pd-md-40 border shadow-none">
+        <h5 *ngIf="form.value.id" class="card-title mg-b-20">
+          Configuration
+        </h5>
+        <div class="form-group">
+          <div class="__tool-bar-double-sided-data-box __row-per-checkbox">
+            <div class="__tool-bar-block">
+                <div class="__tool-bar-label">
+                  Allow to pay if kyc failed
+                </div>
+            </div>
+            <div class="__tool-bar-block" style="margin-left: 10px">
+                <div class="__toggle-switch">
+                    <input type="checkbox" id="toggle-button" class="__toggle-switch-slider"
+                        formControlName="allowToPayIfKycFailed">
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="__tool-bar-double-sided-data-box __row-per-checkbox">
+            <div class="__tool-bar-block">
+                <div class="__tool-bar-label">
+                  New Vault Per Transaction 
+                </div>
+            </div>
+            <div class="__tool-bar-block" style="margin-left: 10px">
+                <div class="__toggle-switch">
+                    <input type="checkbox" id="toggle-button" class="__toggle-switch-slider"
+                        formControlName="newVaultPerTransaction">
+                </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="__tool-bar-double-sided-data-box __row-per-checkbox">
+            <div class="__tool-bar-block">
+                <div class="__tool-bar-label">
+                  Kyc Before Payment
+                </div>
+            </div>
+            <div class="__tool-bar-block" style="margin-left: 10px">
+                <div class="__toggle-switch">
+                    <input type="checkbox" id="toggle-button" class="__toggle-switch-slider"
+                        formControlName="kycBeforePayment">
+                </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="__tool-bar-double-sided-data-box __row-per-checkbox">
+            <div class="__tool-bar-block">
+                <div class="__tool-bar-label">
+                  Disclaimer
+                </div>
+            </div>
+            <div class="__tool-bar-block" style="margin-left: 10px">
+                <div class="__toggle-switch">
+                    <input type="checkbox" id="toggle-button" class="__toggle-switch-slider"
+                        formControlName="disclaimer">
+                </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div *ngIf="errorMessage!==''" class="card card-body card-danger pd-20 pd-md-40 border shadow-none">
