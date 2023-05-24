@@ -1264,6 +1264,8 @@ const GET_WIDGETS = gql`
         liquidityProvider
         secret
         allowToPayIfKycFailed
+        newVaultPerTransaction
+        fee
       }
     }
   }
@@ -1620,6 +1622,8 @@ const CREATE_WIDGET = gql`
     $additionalSettings: String,
     $secret: String, 
     $allowToPayIfKycFailed: Boolean
+    $newVaultPerTransaction: Boolean
+    $fee: Float
   ) {
     createWidget(
       userId: $userId
@@ -1637,6 +1641,8 @@ const CREATE_WIDGET = gql`
         liquidityProvider: $liquidityProvider
         secret: $secret,
         allowToPayIfKycFailed: $allowToPayIfKycFailed
+        newVaultPerTransaction: $newVaultPerTransaction
+        fee: $fee
       }
     ) {
       widgetId
@@ -1661,6 +1667,8 @@ const UPDATE_WIDGET = gql`
     $additionalSettings: String
     $secret: String,
     $allowToPayIfKycFailed: Boolean
+    $newVaultPerTransaction: Boolean
+    $fee: Float
   ) {
     updateWidget(
       widgetId: $widgetId,
@@ -1679,6 +1687,8 @@ const UPDATE_WIDGET = gql`
         liquidityProvider: $liquidityProvider
         secret: $secret,
         allowToPayIfKycFailed: $allowToPayIfKycFailed
+        newVaultPerTransaction: $newVaultPerTransaction
+        fee: $fee
       }
     ) {
       widgetId
@@ -3681,7 +3691,9 @@ export class AdminDataService {
           liquidityProvider: widget.liquidityProvider,
           additionalSettings: widget.additionalSettings,
           secret: widget.secret,
-          allowToPayIfKycFailed: widget.allowToPayIfKycFailed
+          allowToPayIfKycFailed: widget.allowToPayIfKycFailed,
+          newVaultPerTransaction: widget.newVaultPerTransaction,
+          fee: widget.fee
         }
       }).pipe(tap(() => {
         this.snackBar.open(`Widget was created`, undefined, { duration: 5000 });
@@ -3703,7 +3715,9 @@ export class AdminDataService {
           liquidityProvider: widget.liquidityProvider,
           additionalSettings: widget.additionalSettings,
           secret: widget.secret,
-          allowToPayIfKycFailed: widget.allowToPayIfKycFailed
+          allowToPayIfKycFailed: widget.allowToPayIfKycFailed,
+          newVaultPerTransaction: widget.newVaultPerTransaction,
+          fee: widget.fee
         }
       }).pipe(tap(() => {
         this.snackBar.open(`Widget was updated`, undefined, { duration: 5000 });
