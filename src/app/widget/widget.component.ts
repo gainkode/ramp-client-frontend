@@ -202,6 +202,7 @@ export class WidgetComponent implements OnInit {
         this.widget.kycFirst = extraData.kycBeforePayment ?? false;
         this.widget.minAmountFrom = extraData.minAmountFrom;
         this.widget.maxAmountFrom = extraData.maxAmountFrom;
+        this.widget.showRate = extraData.showRate;
       } else {
         this.widget.disclaimer = true;
         this.widget.kycFirst = false;

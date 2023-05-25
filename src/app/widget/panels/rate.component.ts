@@ -9,6 +9,7 @@ export class WidgetRateComponent {
     @Input() title = '';
     @Input() countDown = '';
     @Input() rate: string | undefined = undefined;
+    @Input() showRate: boolean | undefined = undefined;
 
     constructor() { }
 }

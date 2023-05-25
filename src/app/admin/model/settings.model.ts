@@ -1,6 +1,6 @@
 export enum TransactionConfirmationMode {
     Always = 'ALWAYS',
-    IfOneTime = 'IF_ONE_TIME',
+    PerWidget = 'PER_WIDGET',
     Never = 'NEVER'
 }
 
@@ -11,6 +11,6 @@ export class TransactionConfirmationModeView {
 
 export const TransactionConfirmationModeList: TransactionConfirmationModeView[] = [
     { id: TransactionConfirmationMode.Always, name: 'Always' },
-    { id: TransactionConfirmationMode.IfOneTime, name: 'If one time' },
+    { id: TransactionConfirmationMode.PerWidget, name: 'Per widget' },
     { id: TransactionConfirmationMode.Never, name: 'Never' }
 ];

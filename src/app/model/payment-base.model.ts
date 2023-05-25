@@ -42,6 +42,7 @@ export class WidgetSettings {
     maxAmountFrom: number | undefined = undefined;
     allowToPayIfKycFailed: boolean = false;
     fee: number | undefined = undefined;
+    showRate: boolean | undefined = undefined;
     
     get orderDefault(): boolean {
         return (this.amountFrom !== 0 &&

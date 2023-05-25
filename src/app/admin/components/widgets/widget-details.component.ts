@@ -93,6 +93,8 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
     newVaultPerTransaction: false,
     kycBeforePayment: false,
     disclaimer: false,
+    twoFA: false,
+    showRate: true,
     minAmountFrom: [0, { validators: [Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
     maxAmountFrom: [0, { validators: [Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
     fee: [0, { validators: [Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
@@ -194,6 +196,8 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
             newVaultPerTransaction: widget.newVaultPerTransaction,
             userType: sellecteduserType,
             kycBeforePayment: this.widgetAdditionalSettings?.kycBeforePayment ?? false,
+            showRate: this.widgetAdditionalSettings?.showRate ?? true,
+            twoFA: this.widgetAdditionalSettings?.twoFA ?? false,
             disclaimer: this.widgetAdditionalSettings?.disclaimer ?? false,
             minAmountFrom: this.widgetAdditionalSettings?.minAmountFrom ?? 0,
             maxAmountFrom: this.widgetAdditionalSettings?.maxAmountFrom ?? 0,
@@ -217,6 +221,8 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
 
     this.widgetAdditionalSettings.userType = formValue.userType;
     this.widgetAdditionalSettings.kycBeforePayment = formValue.kycBeforePayment;
+    this.widgetAdditionalSettings.twoFA = formValue.twoFA;
+    this.widgetAdditionalSettings.showRate = formValue.showRate;
     this.widgetAdditionalSettings.maxAmountFrom = formValue.maxAmountFrom;
     this.widgetAdditionalSettings.minAmountFrom = formValue.minAmountFrom;
     this.widgetAdditionalSettings.disclaimer = formValue.disclaimer;

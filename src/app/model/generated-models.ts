@@ -1034,6 +1034,7 @@ export type Mutation = {
   deleteMyDevice?: Maybe<UserDeviceListResult>;
   sendFakeLiquidityProviderTransactionChangedCallback?: Maybe<Scalars['Boolean']>;
   setCurrencyPairLiquidityProvider: CurrencyPairLiquidityProvider;
+  delCurrencyPairLiquidityProvider: CurrencyPairLiquidityProvider;
 };
 
 
@@ -1755,6 +1756,12 @@ export type MutationSetCurrencyPairLiquidityProviderArgs = {
   fromCurrency: Scalars['String'];
   toCurrency: Scalars['String'];
   liquidityProviderId: Scalars['String'];
+  fixedRate?: Maybe<Scalars['Float']>;
+};
+
+
+export type MutationDelCurrencyPairLiquidityProviderArgs = {
+  currencyPairLiquidityProviderId: Scalars['String'];
 };
 
 export type NewAddress = {
@@ -3480,7 +3487,7 @@ export type Transaction = {
 
 export enum TransactionConfirmationMode {
   Always = 'ALWAYS',
-  IfOneTime = 'IF_ONE_TIME',
+  PerWidget = 'PER_WIDGET',
   Never = 'NEVER'
 }
 
@@ -4059,6 +4066,8 @@ export enum UserActionType {
   PrimeTrustGetAssetTotals = 'primeTrustGetAssetTotals',
   PrimeTrustGetAssetByCurrency = 'primeTrustGetAssetByCurrency',
   PrimeTrustCreateAssetTransferMethod = 'primeTrustCreateAssetTransferMethod',
+  PrimeTrustCreateTrade = 'PrimeTrustCreateTrade',
+  PrimeTrustGetTrade = 'PrimeTrustGetTrade',
   PrimeTrustCreateAssetDisbursment = 'primeTrustCreateAssetDisbursment',
   PrimeTrustCreateAssetTransferInternal = 'primeTrustCreateAssetTransferInternal',
   PrimeTrustGetAssetTransferInternal = 'primeTrustGetAssetTransferInternal',
@@ -4656,6 +4665,7 @@ export type WidgetInput = {
   secret?: Maybe<Scalars['String']>;
   allowToPayIfKycFailed?: Maybe<Scalars['Boolean']>;
   newVaultPerTransaction?: Maybe<Scalars['Boolean']>;
+  fee?: Maybe<Scalars['Float']>;
 };
 
 export type WidgetListResult = {
@@ -4698,6 +4708,7 @@ export type WidgetUpdateInput = {
   secret?: Maybe<Scalars['String']>;
   allowToPayIfKycFailed?: Maybe<Scalars['Boolean']>;
   newVaultPerTransaction?: Maybe<Scalars['Boolean']>;
+  fee?: Maybe<Scalars['Float']>;
 };
 
 export type WidgetUserParams = {

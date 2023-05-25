@@ -1,9 +1,12 @@
-<div *ngIf="rate!==undefined" class="__widget-rate-title">
-    Exchange rate is {{rate}}
+<div *ngIf="showRate">
+    <div *ngIf="rate!==undefined" class="__widget-rate-title">
+        Exchange rate is {{rate}}
+    </div>
+    <div class="__widget-rate-line">
+        {{ title }}
+        <span class="__widget-rate-countdown">
+            {{ countDown }}
+        </span>
+    </div>
 </div>
-<div class="__widget-rate-line">
-    {{ title }}
-    <span class="__widget-rate-countdown">
-        {{ countDown }}
-    </span>
-</div>
+

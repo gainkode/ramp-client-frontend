@@ -42,7 +42,7 @@
     
       <div *ngIf="!widget.embedded && !initLoading" class="__widget-mobile-rate-container">
         <app-widget-rate class="__widget-rate-container" [title]="exchangeRateCountDownTitle"
-          [countDown]="exchangeRateCountDownValue" [rate]="summary?.rate">
+          [countDown]="exchangeRateCountDownValue" [showRate]="widget.showRate !== false" [rate]="summary?.rate">
         </app-widget-rate>
       </div>
     
