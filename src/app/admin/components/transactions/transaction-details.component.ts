@@ -308,9 +308,24 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
 
   flagValue(): void {
     this.flagInProgress = true;
+    this.saveInProgress = true;
     this.flag = this.flag != true;
-    this.transactionToUpdate = this.getTransactionToUpdate();
-    this.updateTransaction();
+    
+    const requestData$ = this.adminService.updateTransactionFlag(this.flag, this.transactionId);
+    this.subscriptions.add(
+      requestData$.subscribe(({ data }) => {
+        this.saveInProgress = false;
+        this.flagInProgress = false;
+        this.save.emit();
+      }, (error) => {
+        this.saveInProgress = false;
+        this.flagInProgress = false;
+        this.errorMessage = (!error || error === '') ? this.errorHandler.getCurrentError() : error;
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
+      })
+    );
   }
 
   filterByUserId(): void {

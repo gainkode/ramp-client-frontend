@@ -2046,6 +2046,34 @@ mutation UpdateTransaction(
 }
 `;
 
+const UPDATE_TRANSACTION_FLAG = gql`
+mutation UpdateTransactionFlag(
+  $transactionId: String!
+  $flag: Boolean!
+) {
+  updateTransactionFlag(
+    transactionId: $transactionId
+    flag: $flag
+  ) {
+    transactionId
+  }
+}
+`;
+
+const UPDATE_USER_FLAG = gql`
+mutation UpdateUserFlag(
+  $userId: ID!
+  $flag: Boolean!
+) {
+  updateUserFlag(
+    userId: $userId
+    flag: $flag
+  ) {
+    userId
+  }
+}
+`;
+
 const SEND_ADMIN_NOTIFICATION = gql`
 mutation SendAdminNotification(
   $notifiedUserIds: [String!]
@@ -3724,6 +3752,17 @@ export class AdminDataService {
       }));
   }
 
+  updateUserFlag(flag: boolean, userId: string): Observable<any> {
+    const vars = {
+      userId: userId,
+      flag: flag
+    };
+    return this.apollo.mutate({
+      mutation: UPDATE_USER_FLAG,
+      variables: vars
+    });
+  }
+
   saveCustomer(id: string, customer: UserInput, customerRoles: string[] = ['USER']): Observable<any> {
     if (id === '') {
       return this.apollo.mutate({
@@ -4050,6 +4089,17 @@ export class AdminDataService {
     };
     return this.mutate({
       mutation: UPDATE_TRANSACTIONS,
+      variables: vars
+    });
+  }
+
+  updateTransactionFlag(flag: boolean, transactionId: string): Observable<any> {
+    const vars = {
+      transactionId: transactionId,
+      flag: flag
+    };
+    return this.mutate({
+      mutation: UPDATE_TRANSACTION_FLAG,
       variables: vars
     });
   }

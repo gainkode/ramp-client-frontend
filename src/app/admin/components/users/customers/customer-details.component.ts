@@ -286,7 +286,24 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
   flagValue(): void {
     this.flagInProgress = true;
     this.flag = this.flag != true;
-    this.onSave(this.userData?.id ?? '', this.setCustomerData(), undefined);
+    this.saveInProgress = true;
+    if(this.userData?.id){
+      const requestData$ = this.adminService.updateUserFlag(this.flag, this.userData.id);
+      this.subscriptions.add(
+        requestData$.subscribe(({ data }) => {
+          this.saveInProgress = false;
+          this.flagInProgress = false;
+          this.save.emit();
+        }, (error) => {
+          this.flagInProgress = false;
+          this.saveInProgress = false;
+          this.errorMessage = error;
+          if (this.auth.token === '') {
+            this.router.navigateByUrl('/');
+          }
+        })
+      );
+    }
   }
 
   getCountryFlag(code: string): string {

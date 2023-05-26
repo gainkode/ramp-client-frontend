@@ -915,6 +915,7 @@ export type Mutation = {
   createUser?: Maybe<User>;
   updateMe?: Maybe<User>;
   updateUser?: Maybe<User>;
+  updateUserFlag?: Maybe<User>;
   /** This endpoint can be used to add a current user's wallet. */
   addMyVault?: Maybe<VaultAccount>;
   /** This endpoint can be used to update the current user's wallet. */
@@ -976,6 +977,8 @@ export type Mutation = {
   sendInvoice?: Maybe<Scalars['Boolean']>;
   /** This endpoint can be used to execute a transaction */
   executeTransaction?: Maybe<TransactionShort>;
+  /** This endpoint can be used to update transaction flag */
+  updateTransactionFlag?: Maybe<Transaction>;
   /** This endpoint can be used to update a transaction */
   updateTransaction?: Maybe<Transaction>;
   /** This endpoint can be used to abandon a transaction */
@@ -1230,6 +1233,12 @@ export type MutationUpdateMeArgs = {
 export type MutationUpdateUserArgs = {
   userId: Scalars['ID'];
   user?: Maybe<UserInput>;
+};
+
+
+export type MutationUpdateUserFlagArgs = {
+  userId: Scalars['ID'];
+  flag: Scalars['Boolean'];
 };
 
 
@@ -1540,6 +1549,12 @@ export type MutationSendInvoiceArgs = {
 export type MutationExecuteTransactionArgs = {
   transactionId?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['Int']>;
+};
+
+
+export type MutationUpdateTransactionFlagArgs = {
+  transactionId: Scalars['String'];
+  flag: Scalars['Boolean'];
 };
 
 
