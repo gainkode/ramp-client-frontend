@@ -611,7 +611,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   }
 
   private checkWalletExisting(currency: string){
-    if(this.userAdditionalSettings.transactionSettings.walletsRequired !== false){
+    if(this?.userAdditionalSettings?.transactionSettings?.walletsRequired !== false){
       if (this.summary?.transactionType === TransactionType.Sell) {
         if (this.wallets.length > 0) {
           if (this.addressInit) {
@@ -904,6 +904,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   }
 
   onSubmit(): void {
+    this.onProgress.emit(true);
     if (this.dataForm.valid) {
       if (this.auth.user) {
         if (this.auth.user.email !== this.emailField?.value) {

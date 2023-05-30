@@ -1,5 +1,5 @@
 import { Component, ErrorHandler, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { concat, Observable, of, Subject, Subscription } from 'rxjs';
@@ -50,7 +50,7 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription = new Subscription();
   private createDialog?: NgbModalRef;
 
-  transactionTypes = TransactionTypeList.filter(item => item.id == TransactionType.Buy || item.id == TransactionType.Sell);
+  transactionTypes = TransactionTypeList.filter(item => item.id == TransactionType.Buy || item.id == TransactionType.Sell || item.id == TransactionType.Deposit || item.id == TransactionType.Withdrawal);
   instrumentTypes = PaymentInstrumentList.filter(item => item.id == PaymentInstrument.FiatVault);
   PAYMENT_INSTRUMENT: typeof PaymentInstrument = PaymentInstrument;
 
@@ -84,6 +84,8 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
   showPaymentProvider = false;
 
   costSchemes: CostScheme[] = [];
+
+  showFullAmount: boolean = true;
 
   form = this.formBuilder.group({
     currencyToSpend: [null, { validators: [Validators.required], updateOn: 'change' }],
@@ -156,7 +158,7 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
 
     this.subscriptions.add(this.transactionTypeField?.valueChanges
       .pipe(distinctUntilChanged((prev, curr) => prev === curr))
-      .subscribe(val => this.onCurrenciesUpdate(val)));
+      .subscribe(val => this.onTransactionTypeUpdate(val)));
 
     this.subscriptions.add(this.amountToSpendField?.valueChanges
       .pipe(distinctUntilChanged((prev, curr) => prev === curr))
@@ -251,6 +253,17 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
     }
   }
 
+  private onTransactionTypeUpdate(val): void {
+    this.transactionType = val;
+    if(val == TransactionType.Buy || val == TransactionType.Sell){
+      this.onCurrenciesUpdate(val);
+    }else{
+      this.filteredProviders = this.filteredProviders.filter(item => item.id == 'FiatVault');
+      this.currenciesToSpend = this.currencyOptions.filter(item => item.fiat === true);
+      this.amountToSpendTitle = 'Amount';
+    }
+  }
+
   private onCurrenciesUpdate(val): void {
     if(val == TransactionType.Buy){
       this.currenciesToReceive = this.currencyOptions.filter(item => item.fiat !== true);
@@ -258,7 +271,6 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
     }else if(val == TransactionType.Sell){
       this.currenciesToReceive = this.currencyOptions.filter(item => item.fiat === true);
       this.currenciesToSpend = this.currencyOptions.filter(item => item.fiat !== true);
-      console.log(this.currenciesToSpend, this.currenciesToReceive)
     }
     this.currencyToSpendField?.setValue(this.currenciesToSpend[0].symbol);
     this.currencyToReceiveField?.setValue(this.currenciesToReceive[0].symbol);
@@ -394,9 +406,16 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
     }
   }
 
+  setParamsIfRequired(): void{
+    if(this.transactionType == TransactionType.Deposit || this.transactionType == TransactionType.Withdrawal){
+      this.form.get('currencyToReceive')?.setValue(this.currencyToSpendField?.value);
+      this.form.get('amountToReceive')?.setValue(this.amountToSpendField?.value);
+    }
+  }
 
   onSubmit(content: any): void {
     this.submitted = true;
+    this.setParamsIfRequired();
     if (this.form.valid) {
       this.createDialog = this.modalService.open(content, {
         backdrop: 'static',
@@ -408,7 +427,7 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
   private createUserTransaction(): void {
     const users = this.usersField?.value;
     const rate = this.rateField?.value;
-    if(users && users.length != 0 && rate){
+    if(users && users.length != 0){
       for(let user of users){
         const transactionToCreate = this.getTransactionToCreate();
         this.saveInProgress = true;
