@@ -59,7 +59,7 @@ export class ProfileWalletListComponent implements OnDestroy {
         let settingsCommon = this.auth.getLocalSettingsCommon();
         if(settingsCommon){
             this.userAdditionalSettings = typeof settingsCommon.userAdditionalSettings == 'string' ? JSON.parse(settingsCommon.userAdditionalSettings) : settingsCommon.userAdditionalSettings;
-            this.newWalletShow = this.userAdditionalSettings.tabs.wallets.newWallet !== false;
+            this.newWalletShow = this.userAdditionalSettings?.tabs?.wallets?.newWallet !== false;
         }
     }
     private loadWallets(): void {
