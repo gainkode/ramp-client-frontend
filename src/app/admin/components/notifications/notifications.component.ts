@@ -18,7 +18,8 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy, AfterView
   @ViewChild(MatSort) sort!: MatSort;
 
   filterFields = [
-    'search'
+    'search',
+    'notificationType'
   ];
   displayedColumns: string[] = [
     'details',

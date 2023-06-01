@@ -21,6 +21,15 @@
                                 [ngClass]="{'__admin-filter-block':true, '__admin-filter-block-col-1': fields.length===1, '__admin-filter-block-col-2': fields.length===2, '__admin-filter-block-col-3': fields.length===3, '__admin-filter-block-col-4': fields.length>3}">
                                 <div *ngFor="let field of fields">
                                     <ng-container>
+                                        <div *ngIf="field === 'notificationType'" class="form-group">
+                                            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                                                Notification type
+                                            </label>
+                                            <ng-select [items]="notificationTypeOptions" bindLabel="name" bindValue="id"
+                                                formControlName="notificationType" [closeOnSelect]="false"
+                                                placeholder="Select notification type">
+                                            </ng-select>
+                                        </div>
                                         <div *ngIf="field === 'accountType'" class="form-group">
                                             <label class="main-content-label tx-11 tx-medium tx-gray-600">
                                                 Account type

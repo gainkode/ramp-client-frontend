@@ -9,7 +9,7 @@ import { AdminDataService } from 'src/app/services/admin-data.service';
 import { CommonTargetValue } from 'src/app/model/common.model';
 import { Countries } from 'src/app/model/country-code.model';
 import { SettingsKycTier } from 'src/app/model/generated-models';
-import { CurrencyView, KycStatusList, PaymentInstrumentList, RiskLevelViewList, TransactionKycStatusList, TransactionSourceList, TransactionStatusList, TransactionTypeList, UserActionTypeList, UserModeList, UserStatusList, UserTypeList } from 'src/app/model/payment.model';
+import { CurrencyView, KycStatusList, PaymentInstrumentList, RiskLevelViewList, TransactionKycStatusList, TransactionSourceList, TransactionStatusList, TransactionTypeList, UserActionTypeList, UserModeList, UserNotificationCodeList, UserStatusList, UserTypeList } from 'src/app/model/payment.model';
 import { AdminDateRangeComponent } from '../date-range/date-range.component';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -38,6 +38,7 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
   riskLevelsOptions = RiskLevelViewList;
   paymentInstrumentsOptions = PaymentInstrumentList;
   userTypeOptions = UserTypeList;
+  notificationTypeOptions = UserNotificationCodeList;
   userModeOptions = UserModeList;
   userStatusOptions = UserStatusList;
   transactionTypeOptions = TransactionTypeList;
@@ -226,6 +227,9 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
     if (this.fields.includes('accountType')) {
       controlsConfig.accountTypes = [[]];
     }
+    if (this.fields.includes('notificationType')) {
+      controlsConfig.notificationType = [''];
+    }
     if (this.fields.includes('accountMode')) {
       controlsConfig.accountModes = [[]];
     }
@@ -347,6 +351,9 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
     if (this.filterForm) {
       if (this.fields.includes('accountType')) {
         this.filterForm.controls.accountTypes.setValue([]);
+      }
+      if (this.fields.includes('notificationType')) {
+        this.filterForm.controls.notificationType.setValue('');
       }
       if (this.fields.includes('accountMode')) {
         this.filterForm.controls.accountModes.setValue([]);

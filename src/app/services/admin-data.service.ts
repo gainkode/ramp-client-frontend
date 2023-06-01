@@ -464,12 +464,14 @@ const GET_NOTIFICATIONS = gql`
     $first: Int
     $orderBy: [OrderBy!]
     $filter: String
+    $userNotificationTypeCode: String
   ) {
     getNotifications(
       skip: $skip
       first: $first
       orderBy: $orderBy
       filter: $filter
+      userNotificationTypeCode: $userNotificationTypeCode
     ) {
       count
       list {
@@ -2760,6 +2762,7 @@ export class AdminDataService {
 
     const vars: QueryGetNotificationsArgs = {
       filter: filter?.search,
+      userNotificationTypeCode: filter?.notificationType,
       skip: pageIndex * takeItems,
       first: takeItems,
       orderBy: [{ orderBy: orderField, desc: orderDesc }]

@@ -40,7 +40,6 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
       this.form.get('users')?.setValue(val.map(x => {
         return x.id;
       }))
-      console.log(this.form.get('users')?.value)
     }
   }
   @Output() save = new EventEmitter();

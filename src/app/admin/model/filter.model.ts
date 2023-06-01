@@ -3,6 +3,7 @@ import { EmptyObject } from 'apollo-angular/types';
 
 export class Filter {
   public accountTypes?: Array<UserType>;
+  public notificationType?: string;
   public accountModes?: Array<UserMode>;
   public accountStatuses?: Array<AccountStatus>;
   public assets?: Array<string>;
@@ -52,6 +53,10 @@ export class Filter {
 
     if(filterValues.userActionTypes){
       this.userActionTypes = filterValues.userActionTypes;
+    }
+
+    if(filterValues.notificationType){
+      this.notificationType = filterValues.notificationType;
     }
 
     if (filterValues.accountTypes) {

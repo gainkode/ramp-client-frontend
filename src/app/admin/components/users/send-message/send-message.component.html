@@ -2,6 +2,18 @@
   <div class="col-md-12 col-lg-12 col-xl-12 mx-auto d-block">
     <form [formGroup]="messageForm" novalidate (ngSubmit)="onSubmit()">
       <div class="card card-body pd-20 pd-md-40 border shadow-none">
+        <!-- Customer -->
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+              Customer search
+          </label>
+          <ng-select [items]="usersOptions$ | async" bindLabel="title" bindValue="id" 
+              notFoundText="No users found" [loading]="isUsersLoading" [multiple]="true" 
+              formControlName="users" typeToSearchText="Type email or user name"
+              placeholder="Start typing to search users"
+              [typeahead]="usersSearchInput$">
+          </ng-select>
+        </div>
         <div class="form-group">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             Notification Level

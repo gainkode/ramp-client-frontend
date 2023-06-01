@@ -911,6 +911,7 @@ export type Mutation = {
   addWireTransferBankAccount: WireTransferBankAccount;
   updateWireTransferBankAccount: WireTransferBankAccount;
   createPaymentProviderPayout: Scalars['Boolean'];
+  createPaymentProviderRefund: Scalars['Boolean'];
   deleteWireTransferBankAccount: WireTransferBankAccount;
   createUser?: Maybe<User>;
   updateMe?: Maybe<User>;
@@ -1211,6 +1212,12 @@ export type MutationUpdateWireTransferBankAccountArgs = {
 export type MutationCreatePaymentProviderPayoutArgs = {
   paymentProvider: Scalars['String'];
   type?: Maybe<PaymentProviderPayoutType>;
+};
+
+
+export type MutationCreatePaymentProviderRefundArgs = {
+  paymentProvider: Scalars['String'];
+  options?: Maybe<RefundInput>;
 };
 
 
@@ -2241,6 +2248,7 @@ export type QueryGetNotificationsByUserArgs = {
 
 export type QueryGetNotificationsArgs = {
   filter?: Maybe<Scalars['String']>;
+  userNotificationTypeCode?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
   orderBy?: Maybe<Array<OrderBy>>;
@@ -2878,6 +2886,11 @@ export type Rate = {
   originalRate: Scalars['Float'];
   depositRate: Scalars['Float'];
   withdrawRate: Scalars['Float'];
+};
+
+export type RefundInput = {
+  amount?: Maybe<Scalars['Float']>;
+  transactionId?: Maybe<Scalars['String']>;
 };
 
 export type RequiredUserPermission = {

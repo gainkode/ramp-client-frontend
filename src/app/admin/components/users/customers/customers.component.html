@@ -323,7 +323,7 @@
               </button>
             </div>
             <div class="modal-body">
-              <app-admin-user-message-dialog [errorMessage]="sendMessageError" [inProgress]="sendMessageInProgress"
+              <app-admin-user-message-dialog [errorMessage]="sendMessageError" [inProgress]="sendMessageInProgress" [users]="customers"
                 (send)="sendMessageStart($event)" (close)="modal.dismiss('Close')">
               </app-admin-user-message-dialog>
             </div>
