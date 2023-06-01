@@ -34,7 +34,10 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
   transactionConfirmationModeOptions = TransactionConfirmationModeList;
   paymentProviderPayoutType = PaymentProviderPayoutType;
   paymentProviderPayoutInProgress = false;
+  paymentProviderRefundInProgress = false;
   emails: string[] = [];
+  refundAmount: number = 0;
+  refundTransactionId: string = '';
   emailLoading: boolean = false;
   adminAdditionalSettings: Record<string, any> = {};
   defaultCustodyWithdrawalKeys: { [key: string]: string } = {};
@@ -134,6 +137,8 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 
     openpaydWithdrawalBenchmark: [0, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
     monoovaWithdrawalBenchmark: [0, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
+    refundAmount: [0, {}],
+    refundTransactionId: ['', {}],
     flashFxWithdrawalBenchmark: [0, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
     openpaydObject: [''],
     monoovaObject: [''],
@@ -628,6 +633,27 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
         this.paymentProviderPayoutInProgress = false;
       }, (error) => {
         this.paymentProviderPayoutInProgress = false;
+        this.errorMessage = error;
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
+      })
+    )
+  }
+
+  paymentProviderRefund(provider: string, content: any): void{
+    this.paymentProviderRefundInProgress = true;
+    this.subscriptions.add(
+      this.adminService.createPaymentProviderRefund(provider, this.form.get('refundAmount')?.value, this.form.get('refundTransactionId')?.value).subscribe(({ data }) => {
+        if(data.createPaymentProviderPayout){
+          this.modalService.open(content, {
+            backdrop: 'static',
+            windowClass: 'modalCusSty',
+          });
+        }
+        this.paymentProviderRefundInProgress = false;
+      }, (error) => {
+        this.paymentProviderRefundInProgress = false;
         this.errorMessage = error;
         if (this.auth.token === '') {
           this.router.navigateByUrl('/');

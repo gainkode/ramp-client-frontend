@@ -1393,6 +1393,22 @@ const CREATE_PAYMENT_PROVIDER_PAYOUT = gql`
   }
 `;
 
+const CREATE_PAYMENT_PROVIDER_REFUND = gql`
+  mutation CreatePaymentProviderRefund(
+    $paymentProvider: String!, 
+    $amount: Float, 
+    $transactionId: String
+  ) {
+    createPaymentProviderRefund(
+      paymentProvider: $paymentProvider,
+      options: {
+        amount: $amount, 
+        transactionId: $transactionId
+      }
+    )
+  }
+`;
+
 
 const ADD_SETTINGS_FEE = gql`
   mutation AddSettingsFee(
@@ -3460,6 +3476,17 @@ export class AdminDataService {
       variables: {
         paymentProvider: paymentProvider,
         type: type
+      }
+    });
+  }
+
+  createPaymentProviderRefund(paymentProvider: String, amount: Number, transactionId: String): Observable<any> {
+    return this.mutate({
+      mutation: CREATE_PAYMENT_PROVIDER_REFUND,
+      variables: {
+        paymentProvider: paymentProvider,
+        amount: amount,
+        transactionId: transactionId
       }
     });
   }
