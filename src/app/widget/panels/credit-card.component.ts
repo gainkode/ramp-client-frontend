@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { CardView } from '../../model/payment.model';
@@ -76,7 +76,7 @@ export class WidgetCreditCardComponent implements OnInit, OnDestroy {
         return this.cardForm.get('code');
     }
 
-    constructor(private formBuilder: FormBuilder) {
+    constructor(private formBuilder: UntypedFormBuilder) {
     }
 
     ngOnInit(): void {

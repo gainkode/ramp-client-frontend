@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CommonTargetValue } from 'src/app/model/common.model';
 import { DialogData } from 'src/app/model/dialog.model';
@@ -42,7 +42,7 @@ export class SendNotificationDialogBox {
     ];
 
     constructor(
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         public dialogRef: MatDialogRef<SendNotificationDialogBox>,
         @Inject(MAT_DIALOG_DATA)
         public data: DialogData) { }

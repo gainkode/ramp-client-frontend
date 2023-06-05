@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Rate, SettingsCurrencyWithDefaults, TransactionType } from '../model/generated-models';
 import { CheckoutSummary, CurrencyView } from '../model/payment.model';
@@ -70,7 +70,7 @@ export class PaymentIntroComponent implements OnInit, OnDestroy {
     private commonService: CommonDataService,
     private exchangeRate: ExchangeRateService,
     private errorHandler: ErrorService,
-    private formBuilder: FormBuilder) { }
+    private formBuilder: UntypedFormBuilder) { }
 
   ngOnInit(): void {
     this.loadDetailsForm();

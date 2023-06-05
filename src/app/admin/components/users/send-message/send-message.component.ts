@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonTargetValue } from 'src/app/model/common.model';
 import { UserNotificationLevel } from 'src/app/model/generated-models';
 import { concat, Observable, of, Subject, Subscription } from 'rxjs';
@@ -73,7 +73,7 @@ export class AdminMessageDialogComponent {
   ];
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private adminService: AdminDataService) { }
   
   ngOnInit(): void {

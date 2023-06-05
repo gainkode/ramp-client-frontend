@@ -1,8 +1,8 @@
-import { FormGroup, ValidationErrors } from '@angular/forms';
+import { UntypedFormGroup, ValidationErrors } from '@angular/forms';
 
 export class PasswordValidator {
     static equalityValidator(password1Field: string, password2Field: string): ValidationErrors | null {
-        return (fg: FormGroup) => {
+        return (fg: UntypedFormGroup) => {
             const password1Control = fg.controls[password1Field];
             const password2Control = fg.controls[password2Field];
 

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormBuilder } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { NotificationsFilter, ProfileBaseFilter } from 'src/app/model/filter.model';
 
@@ -28,7 +28,7 @@ export class NotificationsFilterBarComponent implements OnInit, OnDestroy {
         return this.filterForm.get('search');
     }
 
-    constructor(private formBuilder: FormBuilder) { }
+    constructor(private formBuilder: UntypedFormBuilder) { }
 
     ngOnInit(): void {
         if (this.data && this.data.unreadOnly) {

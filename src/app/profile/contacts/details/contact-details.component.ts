@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, Output } from "@angular/core";
-import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ProfileItemActionType, ProfileItemContainer, ProfileItemContainerType } from 'src/app/model/profile-item.model';
 import { ContactItem } from 'src/app/model/user.model';
@@ -27,7 +27,7 @@ export class ProfileContactDetailsComponent implements OnDestroy {
     private subscriptions: Subscription = new Subscription();
 
     constructor(
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         private errorHandler: ErrorService,
         private profileService: ProfileDataService) { }
 

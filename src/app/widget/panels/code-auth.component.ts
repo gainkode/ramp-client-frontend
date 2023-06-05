@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { TransactionShort } from 'src/app/model/generated-models';
 import { AuthService } from 'src/app/services/auth.service';
@@ -73,7 +73,7 @@ export class WidgetCodeAuthComponent implements OnInit, OnDestroy, AfterViewInit
     }
 
     constructor(
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         private errorHandler: ErrorService,
         private auth: AuthService,
         private dataService: PaymentDataService) { }

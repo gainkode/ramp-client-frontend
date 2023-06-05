@@ -1,7 +1,7 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { E } from '@angular/cdk/keycodes';
 import { Component, EventEmitter, Input, OnDestroy, Output } from "@angular/core";
-import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { VaultAccount } from 'src/app/model/generated-models';
 import { ProfileItemActionType, ProfileItemContainer, ProfileItemContainerType } from 'src/app/model/profile-item.model';
@@ -55,7 +55,7 @@ export class ProfileWalletDetailsComponent implements OnDestroy {
 
     constructor(
         private clipboard: Clipboard,
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         private errorHandler: ErrorService,
         private auth: AuthService,
         private profileService: ProfileDataService) {

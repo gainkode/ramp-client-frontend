@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { FilterChip, FilterChipType, ProfileBaseFilter, TransactionsFilter } from 'src/app/model/filter.model';
 import { TransactionSource, TransactionType, UserType } from 'src/app/model/generated-models';
@@ -49,7 +49,7 @@ export class TransactionsFilterBarComponent implements OnInit, OnDestroy {
         return this.filterForm.get('sender');
     }
 
-    constructor(private formBuilder: FormBuilder, private auth: AuthService) {
+    constructor(private formBuilder: UntypedFormBuilder, private auth: AuthService) {
         if (this.auth.user?.type === UserType.Merchant) {
             this.transactionTypes = MerchantTransactionTypeList;
         }

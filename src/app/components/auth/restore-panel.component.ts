@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { ErrorService } from '../../services/error.service';
-import { Validators, FormBuilder, AbstractControl } from '@angular/forms';
+import { Validators, UntypedFormBuilder, AbstractControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 
@@ -37,7 +37,7 @@ export class RestorePanelComponent implements OnDestroy {
     constructor(
         private auth: AuthService,
         private errorHandler: ErrorService,
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         public router: Router) { }
 
     ngOnDestroy(): void {

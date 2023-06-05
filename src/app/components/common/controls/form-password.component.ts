@@ -1,5 +1,5 @@
 import { Component, Host, Input, OnDestroy, OnInit, Optional, SkipSelf, ViewChild } from '@angular/core';
-import { ControlContainer, ControlValueAccessor, FormControl, FormControlDirective, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlContainer, ControlValueAccessor, UntypedFormControl, FormControlDirective, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -22,7 +22,7 @@ export class FormPasswordBoxComponent implements ControlValueAccessor, OnInit, O
     @Input() errorMessages: {
         [key: string]: string;
     } = {};
-    @Input() formControl!: FormControl;
+    @Input() formControl!: UntypedFormControl;
     @Input() formControlName!: string;
     @Input() separator = false;
     @Input() smallerLabel = false;
@@ -34,7 +34,7 @@ export class FormPasswordBoxComponent implements ControlValueAccessor, OnInit, O
     boxType = 'password';
     hidePassword = true;
 
-    get control(): FormControl {
+    get control(): UntypedFormControl {
         return this.formControl || this.controlContainer.control?.get(this.formControlName);
     }
 

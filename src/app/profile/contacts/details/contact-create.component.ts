@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
-import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { TransactionType } from "src/app/model/generated-models";
 import { CurrencyView } from "src/app/model/payment.model";
@@ -62,7 +62,7 @@ export class ProfileContactCreateComponent implements OnInit, OnDestroy {
     private subscriptions: Subscription = new Subscription();
 
     constructor(
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         private errorHandler: ErrorService,
         private profileService: ProfileDataService) { }
 

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { ErrorService } from '../../services/error.service';
-import { Validators, FormBuilder, AbstractControl } from '@angular/forms';
+import { Validators, UntypedFormBuilder, AbstractControl } from '@angular/forms';
 import { SocialUser } from 'angularx-social-login';
 import { LoginResult, User, UserMode } from '../../model/generated-models';
 import { SignupInfoPanelComponent } from './signup-info.component';
@@ -88,7 +88,7 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
         public dialog: MatDialog,
         private auth: AuthService,
         private errorHandler: ErrorService,
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         private notification: NotificationService,
         private profileService: ProfileDataService) { }
 

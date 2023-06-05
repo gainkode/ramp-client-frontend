@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { ErrorService } from '../../services/error.service';
-import { Validators, FormBuilder, AbstractControl } from '@angular/forms';
+import { Validators, UntypedFormBuilder, AbstractControl } from '@angular/forms';
 import { LoginResult, PostAddress, SettingsKyc, UserType } from '../../model/generated-models';
 import { Subscription } from 'rxjs';
 import { getCountryByCode3 } from '../../model/country-code.model';
@@ -79,7 +79,7 @@ export class WidgetWireTransferInfoRequiredComponent implements OnDestroy{
     constructor(
         private auth: AuthService,
         private errorHandler: ErrorService,
-        private formBuilder: FormBuilder) {
+        private formBuilder: UntypedFormBuilder) {
         this.firstNameControl = this.infoForm.get('firstName');
         this.lastNameControl = this.infoForm.get('lastName');
         this.birthdayControl = this.infoForm.get('birthday');

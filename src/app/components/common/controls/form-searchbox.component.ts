@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Host, Input, Optional, Output, SkipSelf, ViewChild } from '@angular/core';
-import { ControlContainer, ControlValueAccessor, FormControl, FormControlDirective, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlContainer, ControlValueAccessor, UntypedFormControl, FormControlDirective, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
     selector: 'app-form-searchbox',
@@ -15,13 +15,13 @@ export class FormSearchBoxComponent implements ControlValueAccessor {
     @ViewChild(FormControlDirective, { static: true })
     formControlDirective!: FormControlDirective;
     @Input() maxlength = 0;
-    @Input() formControl!: FormControl;
+    @Input() formControl!: UntypedFormControl;
     @Input() formControlName!: string;
     @Output() onSearch = new EventEmitter();
 
     active = true;
 
-    get control(): FormControl {
+    get control(): UntypedFormControl {
         return this.formControl || this.controlContainer.control?.get(this.formControlName);
     }
 

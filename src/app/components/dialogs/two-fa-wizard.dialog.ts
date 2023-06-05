@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogData } from 'src/app/model/dialog.model';
 import { EnvService } from 'src/app/services/env.service';
@@ -30,7 +30,7 @@ export class TwoFaDialogWizard {
     qrCodeForeground = EnvService.color_purple_900;
 
     constructor(
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         public dialogRef: MatDialogRef<TwoFaDialogWizard>,
         @Inject(MAT_DIALOG_DATA)
         public data: DialogData) { }

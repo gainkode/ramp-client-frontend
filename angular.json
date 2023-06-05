@@ -171,7 +171,6 @@
       }
     }
   },
-  "defaultProject": "cm-ewallet",
   "cli": {
     "analytics": false
   }

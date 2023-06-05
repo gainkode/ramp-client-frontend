@@ -1,6 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Validators, FormBuilder } from '@angular/forms';
+import { Validators, UntypedFormBuilder } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { ErrorService } from '../../services/error.service';
 import { Subscription } from 'rxjs';
@@ -50,7 +50,7 @@ export class PersonalResetComponent implements OnDestroy {
     constructor(
         private auth: AuthService,
         private errorHandler: ErrorService,
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         public router: Router,
         public activeRoute: ActivatedRoute) {
         this.token = activeRoute.snapshot.params['token'];

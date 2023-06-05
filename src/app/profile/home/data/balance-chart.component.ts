@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { BalancePoint } from 'src/app/model/balance.model';
@@ -211,7 +211,7 @@ export class ProfileBalanceChartComponent implements OnInit, OnDestroy {
     private currentBalance = 0;
 
     constructor(
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         private auth: AuthService,
         private errorHandler: ErrorService,
         private profileService: ProfileDataService,

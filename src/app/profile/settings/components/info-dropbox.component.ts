@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, SkipSelf } from '@angular/core';
-import { AbstractControl, ControlContainer, FormBuilder } from '@angular/forms';
+import { AbstractControl, ControlContainer, UntypedFormBuilder } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { CommonTargetValue } from 'src/app/model/common.model';
 
@@ -44,7 +44,7 @@ export class ProfileInfoDropboxComponent implements OnInit, OnDestroy {
         return this.dataList.find(x => x.id === this.dataField?.value);
     }
 
-    constructor(private formBuilder: FormBuilder) { }
+    constructor(private formBuilder: UntypedFormBuilder) { }
 
     ngOnInit(): void {
         this.subscriptions.add(

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { SettingsCurrencyWithDefaults } from 'src/app/model/generated-models';
 import { WidgetSettings } from 'src/app/model/payment-base.model';
@@ -79,7 +79,7 @@ export class WidgetCryptoDetailsComponent implements OnInit, OnDestroy {
     private auth: AuthService,
     private commonService: CommonDataService,
     private errorHandler: ErrorService,
-    private formBuilder: FormBuilder) { }
+    private formBuilder: UntypedFormBuilder) { }
 
   ngOnInit(): void {
     if (this.summary?.email) {

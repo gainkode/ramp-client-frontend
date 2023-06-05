@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormBuilder } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ProfileBaseFilter, WalletsFilter, FilterChip, FilterChipType } from 'src/app/model/filter.model';
 import { CurrencyView } from 'src/app/model/payment.model';
@@ -36,7 +36,7 @@ export class WalletsFilterBarComponent implements OnInit, OnDestroy {
         return this.filterForm.get('zeroBalance');
     }
 
-    constructor(private formBuilder: FormBuilder) { }
+    constructor(private formBuilder: UntypedFormBuilder) { }
 
     ngOnInit(): void {
         this.subscriptions.add(

@@ -7,7 +7,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { CurrencyView, CustodyProviderList, KycProviderList } from 'src/app/model/payment.model';
 import { LiquidityProviderList } from 'src/app/admin/model/lists.model';
 import { TransactionConfirmationModeList } from 'src/app/admin/model/settings.model';
-import { FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { PaymentProviderPayoutType, SettingsCommon, SettingsCurrencyWithDefaults, TransactionConfirmationMode } from 'src/app/model/generated-models';
 import { CommonDataService } from 'src/app/services/common-data.service';
 import { ErrorService } from 'src/app/services/error.service';
@@ -160,7 +160,7 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription = new Subscription();
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private auth: AuthService,
     private adminService: AdminDataService,
     private commonService: CommonDataService,

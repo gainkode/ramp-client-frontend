@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { CurrencyView } from 'src/app/model/payment.model';
 
 @Component({
@@ -30,7 +30,7 @@ export class AdminWithdrawalAddressComponent {
 
   private cryptoListData: CurrencyView[] = [];
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private formBuilder: UntypedFormBuilder) { }
 
   private updateCryptoList(): void {
     this.currencies = this.cryptoListData.filter(x => this.addresses[x.symbol] === undefined);

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormBuilder } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -45,7 +45,7 @@ export class ProfileSecuriySettingsComponent implements OnInit, OnDestroy {
         private auth: AuthService,
         private errorHandler: ErrorService,
         private profileService: ProfileDataService,
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         private router: Router,
         public dialog: MatDialog) {
     }

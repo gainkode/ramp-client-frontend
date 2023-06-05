@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -187,7 +187,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
     private commonService: CommonDataService,
     private paymentService: PaymentDataService,
     private errorHandler: ErrorService,
-    private formBuilder: FormBuilder) { }
+    private formBuilder: UntypedFormBuilder) { }
 
   ngOnInit(): void {
     const settings = this.auth.getLocalSettingsCommon();

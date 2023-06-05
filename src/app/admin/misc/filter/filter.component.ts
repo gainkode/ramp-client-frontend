@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { EmptyObject } from 'apollo-angular/types';
 import { concat, Observable, of, Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, switchMap, tap } from 'rxjs/operators';
@@ -48,7 +48,7 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
   transactionKysStatusOptions = TransactionKycStatusList;
   countryOptions = Countries;
   riskAlertOptions = RiskAlertCodeList;
-  filterForm?: FormGroup;
+  filterForm?: UntypedFormGroup;
   isTierLoading = false;
   isUsersLoading = false;
   isWidgetsLoading = false;
@@ -66,7 +66,7 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
   adminAdditionalSettings: Record<string, any> = {};
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private auth: AuthService,
     private adminDataService: AdminDataService) {
 
