@@ -62,24 +62,24 @@
             </label>
             <ul class="__top-menu-hamburger-box">
                 <li *ngIf="personalApproved">
-                    <a [routerLink]="" class="__top-menu-hamburger-item" (click)="showPaymentPanel(WIDGET_TYPE.Buy)">
+                    <a [routerLink]="null" class="__top-menu-hamburger-item" (click)="showPaymentPanel(WIDGET_TYPE.Buy)">
                         Buy & Sell
                     </a>
-                    <a [routerLink]="" class="__top-menu-hamburger-item"
+                    <a [routerLink]="null" class="__top-menu-hamburger-item"
                         (click)="showPaymentPanel(WIDGET_TYPE.Receive)">
                         Receive
                     </a>
-                    <a [routerLink]="" class="__top-menu-hamburger-item" (click)="showPaymentPanel(WIDGET_TYPE.Send)">
+                    <a [routerLink]="null" class="__top-menu-hamburger-item" (click)="showPaymentPanel(WIDGET_TYPE.Send)">
                         Send
                     </a>
-                    <a *ngIf="showExpressTransfer" [routerLink]="" class="__top-menu-hamburger-item"
+                    <a *ngIf="showExpressTransfer" [routerLink]="null" class="__top-menu-hamburger-item"
                         (click)="showPaymentPanel(WIDGET_TYPE.Transfer)">
                         Express transfer
                     </a>
                 </li>
                 <div class="__top-menu-hamburger-separator"></div>
                 <li *ngFor="let item of menuItems;let i=index;">
-                    <a *ngIf="item.id!=='wallets' && item.id!=='contactlist'" [routerLink]=""
+                    <a *ngIf="item.id!=='wallets' && item.id!=='contactlist'" [routerLink]="null"
                         class="__top-menu-hamburger-item" (click)="sideMenuClick(item)">
                         {{item.name}}
                     </a>
@@ -92,7 +92,7 @@
                     </a>
                 </li> -->
                 <li *ngFor="let item of popupItems;let i=index;">
-                    <a [routerLink]="" class="__top-menu-hamburger-item"
+                    <a [routerLink]="null" class="__top-menu-hamburger-item"
                         (click)="popupMenuClick(item)">
                         {{item.name}}
                     </a>

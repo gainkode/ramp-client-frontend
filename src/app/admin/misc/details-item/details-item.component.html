@@ -15,7 +15,7 @@
             <a *ngIf="smartLink===false" [routerLink]="urlPath">
                 {{valueString}}
             </a>
-            <a *ngIf="smartLink===true" [routerLink]="" (click)="linkClick()">
+            <a *ngIf="smartLink===true" [routerLink]="null" (click)="linkClick()">
                 {{valueString}}
             </a>
         </p>

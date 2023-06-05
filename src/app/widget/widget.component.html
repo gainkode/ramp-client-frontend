@@ -59,7 +59,7 @@
             <h3 class="__widget-summary-title">Order Summary</h3>
             <app-widget-summary class="__widget-summary-data" [summary]="summary"></app-widget-summary>
             <div *ngIf="showTransactionsLink" class="__widget-summary-total">
-              <a [routerLink]="" href="#" (click)="showTransactions()">
+              <a [routerLink]="null" href="#" (click)="showTransactions()">
                 Transactions History
               </a>
             </div>

@@ -12,16 +12,16 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^12.2.16",
+    "@angular/animations": "^13.4.0",
     "@angular/cdk": "^11.2.13",
-    "@angular/common": "^12.2.16",
-    "@angular/compiler": "^12.2.16",
-    "@angular/core": "^12.2.16",
-    "@angular/forms": "^12.2.16",
+    "@angular/common": "^13.4.0",
+    "@angular/compiler": "^13.4.0",
+    "@angular/core": "^13.4.0",
+    "@angular/forms": "^13.4.0",
     "@angular/material": "^11.2.13",
-    "@angular/platform-browser": "^12.2.16",
-    "@angular/platform-browser-dynamic": "^12.2.16",
-    "@angular/router": "^12.2.16",
+    "@angular/platform-browser": "^13.4.0",
+    "@angular/platform-browser-dynamic": "^13.4.0",
+    "@angular/router": "^13.4.0",
     "@apollo/client": "^3.6.9",
     "@babel/core": "^7.17.9",
     "@ng-bootstrap/ng-bootstrap": "^10.0.0",
@@ -58,10 +58,10 @@
     "zone.js": "~0.11.3"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^12.2.17",
-    "@angular/cli": "^12.2.17",
-    "@angular/compiler-cli": "^12.2.16",
-    "@angular/localize": "^12.2.16",
+    "@angular-devkit/build-angular": "^13.3.11",
+    "@angular/cli": "^13.3.11",
+    "@angular/compiler-cli": "^13.4.0",
+    "@angular/localize": "^13.4.0",
     "@graphql-codegen/cli": "^1.20.1",
     "@graphql-codegen/typescript": "^1.21.0",
     "@sumsub/websdk": "^1.1.0",
@@ -78,7 +78,7 @@
     "protractor": "^7.0.0",
     "ts-node": "~9.1.1",
     "tslint": "~6.1.0",
-    "typescript": "^4.2.4"
+    "typescript": "^4.6.4"
   },
   "jest": {
     "preset": "jest-preset-angular",
