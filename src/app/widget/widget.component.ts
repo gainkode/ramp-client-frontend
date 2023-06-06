@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -21,13 +21,14 @@ import { EnvService } from '../services/env.service';
 import { ProfileDataService } from '../services/profile.service';
 import { WidgetPagerService } from '../services/widget-pager.service';
 import { WidgetService } from '../services/widget.service';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-widget',
   templateUrl: 'widget.component.html',
   styleUrls: ['../../assets/button.scss', '../../assets/payment.scss'],
 })
-export class WidgetComponent implements OnInit {
+export class WidgetComponent implements OnInit, AfterViewInit {
   @Input() userParamsId = '';
   @Input() quickCheckout = false;
   @Input() settings: WidgetSettings | undefined = undefined;
@@ -39,6 +40,9 @@ export class WidgetComponent implements OnInit {
   @Output() onError = new EventEmitter<PaymentErrorDetails>();
   @Output() onIFramePay = new EventEmitter<Boolean>();
 
+  @ViewChild('recaptcha') private recaptchaModalContent;
+
+  private recaptchaDialog: NgbModalRef | undefined = undefined; 
   defaultFee: number | undefined = undefined;
   requiredFields: string[] = [];
   errorMessage = '';
@@ -98,6 +102,7 @@ export class WidgetComponent implements OnInit {
   }
 
   constructor(
+    private modalService: NgbModal,
     private changeDetector: ChangeDetectorRef,
     public router: Router,
     public dialog: MatDialog,
@@ -112,6 +117,15 @@ export class WidgetComponent implements OnInit {
     private errorHandler: ErrorService) { }
     private shuftiSubscriptionFlag: boolean = false;
     private companyLevelVerificationFlag: boolean = false;
+  
+  ngAfterViewInit() {
+    if(!this.widget.embedded){
+      this.recaptchaDialog = this.modalService.open(this.recaptchaModalContent, {
+        backdrop: 'static',
+        windowClass: 'modalCusSty',
+      });
+    }
+  }
 
   ngOnInit(): void {
     this.widgetService.register(
@@ -150,7 +164,7 @@ export class WidgetComponent implements OnInit {
     
     if(!this.shuftiSubscriptionFlag){
       this.startShuftiNotificationListener();
-    }
+    } 
   }
 
   private initPage(): void {
@@ -176,7 +190,7 @@ export class WidgetComponent implements OnInit {
       this.loadUserParams();
     }
   }
-
+  
   ngOnDestroy(): void {
     this.pSubscriptions.unsubscribe();
     this.stopNotificationListener();
@@ -456,6 +470,11 @@ export class WidgetComponent implements OnInit {
       }
     }
     
+  }
+
+  capchaResult(event){
+    console.log(localStorage.getItem('recaptchaId'))
+    this.recaptchaDialog?.close();
   }
 
   handleError(message: string): void {

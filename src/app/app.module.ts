@@ -11,7 +11,7 @@ import { ApolloLink, InMemoryCache, split } from '@apollo/client/core';
 import { fromPromise } from 'apollo-link';
 import ApolloLinkTimeout from 'apollo-link-timeout';
 import { setContext } from '@apollo/client/link/context';
-//import { SocialLoginModule, SocialAuthServiceConfig, GoogleLoginProvider } from 'angularx-social-login';
+import { SocialLoginModule, SocialAuthServiceConfig, GoogleLoginProvider } from 'angularx-social-login';
 import { AuthService } from './services/auth.service';
 import { ErrorService } from './services/error.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -30,18 +30,18 @@ import { WidgetPagerService } from './services/widget-pager.service';
 import { WidgetService } from './services/widget.service';
 import { EnvServiceProvider, EnvService, EnvServiceFactory } from './services/env.service';
 
-// function socialConfigFactory() {
-//   EnvServiceFactory.call(undefined);
-//   return {
-//     autoLogin: false,
-//     providers: [
-//       {
-//         id: GoogleLoginProvider.PROVIDER_ID,
-//         provider: new GoogleLoginProvider(EnvService.googleId)
-//       },
-//     ]
-//   } as SocialAuthServiceConfig;
-// }
+function socialConfigFactory() {
+  EnvServiceFactory.call(undefined);
+  return {
+    autoLogin: false,
+    providers: [
+      {
+        id: GoogleLoginProvider.PROVIDER_ID,
+        provider: new GoogleLoginProvider(EnvService.googleId)
+      },
+    ]
+  } as SocialAuthServiceConfig;
+}
 
 @NgModule({
   declarations: [
@@ -52,16 +52,16 @@ import { EnvServiceProvider, EnvService, EnvServiceFactory } from './services/en
     AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    //SocialLoginModule,
+    SocialLoginModule,
     DirectiveModule
   ],
   providers: [
     EnvServiceProvider,
     Apollo,
-    // {
-    //   provide: 'SocialAuthServiceConfig',
-    //   useFactory: socialConfigFactory
-    // },
+    {
+      provide: 'SocialAuthServiceConfig',
+      useFactory: socialConfigFactory
+    },
     AuthService,
     ProfileDataService,
     CommonDataService,

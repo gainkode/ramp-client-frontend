@@ -9,6 +9,13 @@
         <app-form-password [label]="'Password'" [placeholder]="'Enter your password here'" [maxlength]="50"
             formControlName="password" [errorMessages]="passwordErrorMessages" [separator]="true">
         </app-form-password>
+        <div style="width: 100%; display: flex; justify-content: center;">
+            <recaptcha
+                (completed)="capchaResult($event)"
+            ></recaptcha>
+        </div>
+        
+        <!-- <re-captcha (resolved)="capchaResult($event)" siteKey="YOUR_SITE_KEY"></re-captcha> -->
         <!-- Errors -->
         <div *ngIf="errorMessage!==''">
             <span class="__auth-error-line">
@@ -21,13 +28,13 @@
             <button class="__outlined-button" type="button" (click)="onBack.emit()">
                 BACK
             </button>
-            <button class="__main-button __button-separator" type="submit" [disabled]="done || !loginForm?.valid">
+            <button class="__main-button __button-separator" type="submit" [disabled]="done || !loginForm?.valid || recaptcha == undefined">
                 login
             </button>
         </div>
         <!-- Default Buttons -->
         <div *ngIf="!wizardButtons" class="__auth-buttons-wizard-area">
-            <button class="__main-button __button-login-wide __main-button-auth" type="submit" [disabled]="done || !loginForm?.valid">
+            <button class="__main-button __button-login-wide __main-button-auth" type="submit" [disabled]="done || !loginForm?.valid || recaptcha == undefined">
                 login
             </button>
         </div>
@@ -50,14 +57,14 @@
                 <div class="__google-button-icon"></div>
                 <span class="__google-button-title">Log in with Google</span>
             </button>
-        </div> -->
-        <!-- <div class="__auth-buttons-wizard-area">
+        </div>
+        <div class="__auth-buttons-wizard-area">
             <button class="__facebook-button" (click)="socialSignIn('Facebook')">
                 <div class="__facebook-button-icon"></div>
                 <span class="__facebook-button-title">Log in with Facebook</span>
             </button>
-        </div> -->
-    <!-- </div> -->
+        </div>
+    </div> -->
 </div>
 
 <app-signup-info-panel #signupInfo *ngIf="extraData" buttonTitle="SAVE" (error)="registerError($event)"

@@ -14,7 +14,7 @@
         <app-form-password [label]="'Password confirmation'" [placeholder]="'Repeat your password here'" [maxlength]="50"
             formControlName="password2" [errorMessages]="password2ErrorMessages" [separator]="true">
         </app-form-password>
-
+        
         <!-- Agreement -->
         <mat-checkbox color="accent" formControlName="agreement" class="__widget-checkout">
             I agree to the
@@ -33,6 +33,11 @@
                     I herby confirm i am not a PEP, relative of PEP, or close associate of a PEP
                 </span>
             </mat-checkbox>
+        </div>
+        <div style="width: 100%; display: flex; justify-content: center;">
+            <recaptcha
+                (completed)="capchaResult($event)"
+            ></recaptcha>
         </div>
         <div class="__form-separator"></div>
 
@@ -55,7 +60,7 @@
         </div>
         <!-- Default Buttons -->
         <div *ngIf="!wizardButtons" class="__auth-buttons-wizard-area">
-            <button class="__main-button __button-login-wide __main-button-auth" type="submit" [disabled]="done || !validData">
+            <button class="__main-button __button-login-wide __main-button-auth" type="submit" [disabled]="done || !validData || recaptcha == undefined">
                 create account
             </button>
         </div>

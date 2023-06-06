@@ -66,7 +66,10 @@ import { YesNoDialogBox } from './dialogs/yesno-box.dialog';
 import { ApiSecretDialogBox } from './dialogs/api-secret-box.dialog';
 import { SafeUrlPipe } from '../utils/safe-url.pipe';
 import { SumsubPanelComponent } from './kyc/sumsub-panel.component';
+import { RecaptchaComponent } from './recaptcha/recaptcha.component';
 import { ShuftiPanelComponent } from './kyc/shufti-panel.component';
+import { NgxTurnstileModule } from "ngx-turnstile"
+import { RecaptchaModule } from "ng-recaptcha";
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -92,7 +95,9 @@ const materialModules = [
     MatSnackBarModule,
     MatTableModule,
     MatPaginatorModule,
-    MatSortModule
+    MatSortModule,
+    NgxTurnstileModule,
+    RecaptchaModule
 ];
 
 @NgModule({
@@ -105,7 +110,7 @@ export class MaterialModule { }
     imports: [NgxMaskModule.forRoot(), CommonModule, FormsModule, ReactiveFormsModule, MaterialModule, DirectiveModule, QRCodeModule],
     declarations: [
         DropdownItemComponent, TabLabelComponent, ContactFormComponent,
-        KycPanelComponent, SumsubPanelComponent, ShuftiPanelComponent, KycCompanyLevelVerificationComponent,
+        KycPanelComponent, SumsubPanelComponent, ShuftiPanelComponent, KycCompanyLevelVerificationComponent, RecaptchaComponent,
         FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent, FormSearchBoxComponent,
         FormEditBoxComponent, SettingsPasswordBoxComponent,
         DeleteDialogBox, CommonDialogBox, TwoFaDialogBox, TwoFaDialogWizard, SendNotificationDialogBox, KycVerificationDialogBox,
@@ -116,7 +121,7 @@ export class MaterialModule { }
         TransactionsFilterBarComponent, WalletsFilterBarComponent, ContactsFilterBarComponent, NotificationsFilterBarComponent],
     exports: [
         DropdownItemComponent, TabLabelComponent, ContactFormComponent,
-        KycPanelComponent, SumsubPanelComponent, ShuftiPanelComponent,
+        KycPanelComponent, SumsubPanelComponent, ShuftiPanelComponent, RecaptchaComponent,
         FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent, FormSearchBoxComponent,
         FormEditBoxComponent, SettingsPasswordBoxComponent,
         DeleteDialogBox, CommonDialogBox, TwoFaDialogBox, TwoFaDialogWizard, SendNotificationDialogBox, KycVerificationDialogBox,

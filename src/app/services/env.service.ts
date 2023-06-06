@@ -12,6 +12,8 @@ export class EnvService {
     public static express_transfer = true;
     public static deposit_withdrawal = true;
     public static recaptchaId = '';
+    public static recaptchaSiteKey = '';
+    public static recaptchaProvider = '';
     public static googleId = '';
     public static support_email = 'support@test.com';
     public static base_color = '#0081D4';

@@ -7,11 +7,10 @@ import { CardView } from '../model/payment.model';
 import { EnvService } from './env.service';
 
 const GET_RATES = gql`
-query GetRates($recaptcha: String!, $currenciesFrom: [String!]!, $currencyTo: String!) {
+query GetRates($currenciesFrom: [String!]!, $currencyTo: String!) {
   getRates(
     currenciesFrom: $currenciesFrom,
-    currencyTo: $currencyTo,
-    recaptcha: $recaptcha
+    currencyTo: $currencyTo
   ) {
     currencyFrom
     currencyTo
@@ -431,10 +430,9 @@ mutation SendInvoice(
 `;
 
 const GET_WIDGET = gql`
-query GetWidget($id: String!, $recaptcha: String!) {
+query GetWidget($id: String!) {
   getWidget(
     id: $id,
-    recaptcha: $recaptcha
   ) {
     widgetId
     name
@@ -535,7 +533,6 @@ export class PaymentDataService {
 
   getRates(listCrypto: string[], fiat: string): QueryRef<any, EmptyObject> {
     const vars = {
-      recaptcha: EnvService.recaptchaId,
       currenciesFrom: listCrypto,
       currencyTo: fiat
     };
@@ -810,7 +807,6 @@ export class PaymentDataService {
   getWidget(paramsId: string): QueryRef<any, EmptyObject> {
     const vars = {
       id: paramsId,
-      recaptcha: EnvService.recaptchaId,
     };
     return this.apollo.watchQuery<any>({
       query: GET_WIDGET,

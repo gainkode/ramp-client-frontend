@@ -43,6 +43,7 @@ export class SignUpPanelComponent implements OnInit, OnDestroy {
     showPrivacyLink = false;
     userTypeSection = 'personal';
     done = false;
+    recaptcha = undefined;
 
     signupForm = this.formBuilder.group({
         email: ['',
@@ -163,6 +164,11 @@ export class SignUpPanelComponent implements OnInit, OnDestroy {
             }
             this.registerAccount(this.emailField?.value, this.signupForm.get('password1')?.value);
         }
+    }
+
+    capchaResult(event){
+        this.recaptcha = event;
+        localStorage.setItem('recaptchaId', event);
     }
 
     private registerAccount(email: string, password: string): void {

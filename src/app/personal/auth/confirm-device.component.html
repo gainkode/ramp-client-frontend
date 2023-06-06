@@ -43,3 +43,16 @@
         </div>
     </div>
 </div>
+
+<ng-template #recaptcha let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Recaptcha</h5>
+    </div>
+    <div class="modal-body">
+      <div style="width: 100%; display: flex; justify-content: center;">
+        <recaptcha
+          (completed)="capchaResult($event)"
+        ></recaptcha>
+      </div>
+    </div>
+</ng-template>

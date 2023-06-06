@@ -1,5 +1,6 @@
-import { Component, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { EnvService } from 'src/app/services/env.service';
@@ -9,22 +10,29 @@ import { ErrorService } from 'src/app/services/error.service';
     templateUrl: 'confirm-email.component.html',
     styleUrls: ['../../../assets/auth.scss']
 })
-export class MerchantConfirmEmailComponent implements OnDestroy {
+export class MerchantConfirmEmailComponent implements OnDestroy, AfterViewInit {
     token = '';
     validated = false;
     valid = false;
     errorMessage = '';
     logoSrc = `${EnvService.image_host}/images/logo-color.png`;
     logoAlt = EnvService.product;
+    @ViewChild('recaptcha') private recaptchaModalContent; 
 
     private subscriptions: Subscription = new Subscription();
+    private recaptchaDialog: NgbModalRef | undefined = undefined;
 
     constructor(
+        private modalService: NgbModal,
         private auth: AuthService,
         private errorHandler: ErrorService,
         public activeRoute: ActivatedRoute,
-        public router: Router) {
-        this.token = activeRoute.snapshot.params['token'];
+        public router: Router) {}
+
+    capchaResult(event){
+        this.recaptchaDialog?.close();
+        localStorage.setItem('recaptchaId', event);
+        this.token = this.activeRoute.snapshot.params['token'];
         if (this.token !== undefined) {
             this.subscriptions.add(
                 this.auth.confirmEmail(this.token).subscribe(({ data }) => {
@@ -36,6 +44,13 @@ export class MerchantConfirmEmailComponent implements OnDestroy {
                 })
             );
         }
+    }
+
+    ngAfterViewInit() {
+        this.recaptchaDialog = this.modalService.open(this.recaptchaModalContent, {
+            backdrop: 'static',
+            windowClass: 'modalCusSty',
+        });
     }
 
     ngOnDestroy(): void {
