@@ -119,12 +119,6 @@ export class WidgetComponent implements OnInit, AfterViewInit {
     private companyLevelVerificationFlag: boolean = false;
   
   ngAfterViewInit() {
-    if(!this.widget.embedded){
-      this.recaptchaDialog = this.modalService.open(this.recaptchaModalContent, {
-        backdrop: 'static',
-        windowClass: 'modalCusSty',
-      });
-    }
   }
 
   ngOnInit(): void {
@@ -342,6 +336,13 @@ export class WidgetComponent implements OnInit, AfterViewInit {
     }
     if (this.widget.transaction) {
       this.summary.transactionType = this.widget.transaction;
+    }
+    
+    if(this.widget && !this.widget.embedded && !this.recaptchaDialog && !this.auth.user){
+      this.recaptchaDialog = this.modalService.open(this.recaptchaModalContent, {
+        backdrop: 'static',
+        windowClass: 'modalCusSty',
+      });
     }
     this.startExchangeRate();
   }
