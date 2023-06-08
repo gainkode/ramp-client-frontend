@@ -1,5 +1,7 @@
 /.angular/cache
 node_modules
+node_modules_12
+node_modules_14
 
 environment.global.ts
 .idea
