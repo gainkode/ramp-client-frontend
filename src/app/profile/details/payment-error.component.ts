@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { Router } from "@angular/router";
-import { PaymentErrorDetails, PaymentWidgetType } from "src/app/model/payment-base.model";
-import { ProfileItemContainer, ProfileItemContainerType } from "src/app/model/profile-item.model";
-import { AuthService } from "src/app/services/auth.service";
+import { PaymentErrorDetails, PaymentWidgetType } from "model/payment-base.model";
+import { ProfileItemContainer, ProfileItemContainerType } from "model/profile-item.model";
+import { AuthService } from "services/auth.service";
 
 @Component({
     selector: 'app-profile-payment-error',

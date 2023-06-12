@@ -167,6 +167,8 @@ export class AppModule {
     const headers = new Headers();
     headers.append('Accept', 'charset=utf-8');
     headers.append('Feature-Policy', 'camera: \'self\'');
+    
+    return { headers };
   });
 
   constructor(

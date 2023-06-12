@@ -1,5 +1,5 @@
 import { Component, Host, Input, OnDestroy, OnInit, Optional, SkipSelf, ViewChild } from '@angular/core';
-import { AbstractControl, ControlContainer, ControlValueAccessor, UntypedFormControl, FormControlDirective, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
+import { AbstractControl, ControlContainer, ControlValueAccessor, UntypedFormControl, FormControlDirective, NG_VALUE_ACCESSOR, Validators, FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -48,7 +48,7 @@ export class FormTextBoxComponent implements ControlValueAccessor, OnInit, OnDes
                 this.requiredFlag = true;
             }
         }
-        return c;
+        return c as FormControl;
     }
 
     constructor(

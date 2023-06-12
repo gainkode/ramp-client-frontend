@@ -63,7 +63,7 @@
             "scripts": [
               "./node_modules/cookieconsent/build/cookieconsent.min.js",
               "./node_modules/multicoin-address-validator/dist/wallet-address-validator.min.js",
-              "./node_modules/jquery/jquery.js",
+              "./node_modules/jquery/dist/jquery.min.js",
               "./node_modules/bootstrap/dist/js/bootstrap.js"
             ],
             "allowedCommonJsDependencies": [

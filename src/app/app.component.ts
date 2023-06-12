@@ -108,7 +108,7 @@ export class AppComponent implements OnInit, OnDestroy {
       style.id = 'icon-ref';
       style.rel = 'icon';
       style.type = 'image/x-icon';
-      style.href = iconLink;
+      style.href = iconRef;
       head.appendChild(style);
     }
 

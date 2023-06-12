@@ -50,10 +50,11 @@ export class AdminSidebarComponent {
                 if (subSubItems.path === event.url) {
                   this.setNavActive(subSubItems);
                 }
+                return true;
               });
-              return;
+              return true;
             });
-            return;
+            return true;
           });
         }
       });
@@ -98,7 +99,7 @@ export class AdminSidebarComponent {
             b.active = false;
           }
         });
-        return;
+        return true;
       });
     }
     item.active = !item.active;

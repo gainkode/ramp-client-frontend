@@ -1,13 +1,13 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
 import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { TransactionType } from "src/app/model/generated-models";
-import { CurrencyView } from "src/app/model/payment.model";
+import { TransactionType } from "model/generated-models";
+import { CurrencyView } from "model/payment.model";
 import { ProfileItemActionType, ProfileItemContainer, ProfileItemContainerType } from 'model/profile-item.model';
 import { ContactItem } from 'model/user.model';
 import { ErrorService } from 'services/error.service';
 import { ProfileDataService } from 'services/profile.service';
-import { WalletValidator } from "src/app/utils/wallet.validator";
+import { WalletValidator } from "utils/wallet.validator";
 
 @Component({
     selector: 'app-profile-contact-create',

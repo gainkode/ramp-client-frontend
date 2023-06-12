@@ -5,7 +5,7 @@ import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms'
 import { Subscription } from 'rxjs';
 import { VaultAccount } from 'model/generated-models';
 import { ProfileItemActionType, ProfileItemContainer, ProfileItemContainerType } from 'model/profile-item.model';
-import { WalletItem } from "src/app/model/wallet.model";
+import { WalletItem } from "model/wallet.model";
 import { AuthService } from 'services/auth.service';
 import { ErrorService } from 'services/error.service';
 import { ProfileDataService } from 'services/profile.service';

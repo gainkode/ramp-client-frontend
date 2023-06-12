@@ -7,7 +7,7 @@ import { take } from 'rxjs/operators';
 import { AssetAddressShort, AssetAddressShortListResult, VaultAccount } from 'model/generated-models';
 import { CurrencyView } from 'model/payment.model';
 import { ProfileItemActionType, ProfileItemContainer, ProfileItemContainerType } from 'model/profile-item.model';
-import { WalletItem } from "src/app/model/wallet.model";
+import { WalletItem } from "model/wallet.model";
 import { AuthService } from 'services/auth.service';
 import { ErrorService } from 'services/error.service';
 import { ProfileDataService } from 'services/profile.service';

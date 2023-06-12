@@ -47,7 +47,7 @@ export class CryptoWidgetComponent implements OnInit {
   private pSubscriptions: Subscription = new Subscription();
   private pNotificationsSubscription: Subscription | undefined = undefined;
   private abandonTimer = timer(0, 1000);
-  private timerSubject = new Subject();
+  private readonly timerSubject$ = new Subject<void>();
 
   constructor(
     private changeDetector: ChangeDetectorRef,
@@ -489,7 +489,7 @@ export class CryptoWidgetComponent implements OnInit {
     console.log(interval);
     this.abandonCounter = interval / 1000;
     this.pSubscriptions.add(
-      this.abandonTimer.pipe(takeUntil(this.timerSubject)).subscribe(val => {
+      this.abandonTimer.pipe(takeUntil(this.timerSubject$)).subscribe(val => {
         if (this.abandonCounter > 1) {
           this.abandonCounter--;
         } else {
@@ -500,7 +500,7 @@ export class CryptoWidgetComponent implements OnInit {
   }
 
   private abandonInvoiceTimer(): void {
-    this.timerSubject.next();
+    this.timerSubject$.next();
     this.pSubscriptions.add(
       this.dataService.abandonCryptoInvoice(this.invoice?.invoiceId ?? '').subscribe(
         ({ data }) => {

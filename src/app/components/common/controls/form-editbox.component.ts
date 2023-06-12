@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Host, Input, Optional, Output, SkipSelf, ViewChild } from '@angular/core';
-import { ControlContainer, ControlValueAccessor, UntypedFormControl, FormControlDirective, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlContainer, ControlValueAccessor, UntypedFormControl, FormControlDirective, NG_VALUE_ACCESSOR, FormControl } from '@angular/forms';
 
 @Component({
     selector: 'app-form-editbox',
@@ -23,7 +23,7 @@ export class FormEditBoxComponent implements ControlValueAccessor, AfterViewInit
     active = true;
 
     get control(): UntypedFormControl {
-        return this.formControl || this.controlContainer.control?.get(this.formControlName);
+        return (this.formControl || this.controlContainer.control?.get(this.formControlName)) as FormControl;
     }
 
     constructor(

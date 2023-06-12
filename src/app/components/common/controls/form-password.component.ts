@@ -1,5 +1,5 @@
 import { Component, Host, Input, OnDestroy, OnInit, Optional, SkipSelf, ViewChild } from '@angular/core';
-import { ControlContainer, ControlValueAccessor, UntypedFormControl, FormControlDirective, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlContainer, ControlValueAccessor, UntypedFormControl, FormControlDirective, NG_VALUE_ACCESSOR, FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -35,7 +35,7 @@ export class FormPasswordBoxComponent implements ControlValueAccessor, OnInit, O
     hidePassword = true;
 
     get control(): UntypedFormControl {
-        return this.formControl || this.controlContainer.control?.get(this.formControlName);
+        return (this.formControl || this.controlContainer.control?.get(this.formControlName)) as FormControl;
     }
 
     constructor(

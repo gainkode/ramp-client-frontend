@@ -1,27 +1,20 @@
-import { Component, OnDestroy, Inject, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
-import { Subject } from 'rxjs';
-import { SwitcherService } from './services/switcher.service';
 import { DOCUMENT } from '@angular/common';
+import { Component, Inject } from '@angular/core';
+import { Subject } from 'rxjs';
 import { EnvService } from '../services/env.service';
+import { SwitcherService } from './services/switcher.service';
 
 @Component({
   selector: 'app-admin-new',
   templateUrl: 'admin.component.html',
   styleUrls: ['admin.component.scss']
 })
-export class AdminComponent implements OnInit, OnDestroy {
-  sectionHeader = '';
-
+export class AdminComponent {
   private destroy$ = new Subject();
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
-    private router: Router,
-    private auth: AuthService,
     public switcherService: SwitcherService,
-    private activatedRoute: ActivatedRoute
   ) {
     this.loadFont();
     const body = document.querySelector('body');
@@ -30,13 +23,6 @@ export class AdminComponent implements OnInit, OnDestroy {
       document.querySelector('body')?.classList.add('app');
       document.querySelector('body')?.classList.add('sidebar-mini');
     }
-  }
-
-  ngOnInit(): void {
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
   }
 
   toggleSwitcherBody() {

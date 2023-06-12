@@ -1,5 +1,5 @@
 import { Component, Input } from "@angular/core";
-import { TransactionItem } from "src/app/model/transaction.model";
+import { TransactionItem } from "model/transaction.model";
 
 @Component({
     selector: 'app-profile-transaction-details',

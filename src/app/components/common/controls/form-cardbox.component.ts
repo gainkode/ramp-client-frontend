@@ -1,5 +1,5 @@
-import { Component, ElementRef, Host, Input, OnDestroy, OnInit, Optional, SkipSelf, ViewChild } from '@angular/core';
-import { ControlContainer, ControlValueAccessor, UntypedFormControl, FormControlDirective, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Component, Host, Input, OnDestroy, OnInit, Optional, SkipSelf, ViewChild } from '@angular/core';
+import { ControlContainer, ControlValueAccessor, FormControl, FormControlDirective, NG_VALUE_ACCESSOR, UntypedFormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -32,7 +32,7 @@ export class FormCardBoxComponent implements ControlValueAccessor, OnInit, OnDes
     errorMessage = '';
 
     get control(): UntypedFormControl {
-        return this.formControl || this.controlContainer.control?.get(this.formControlName);
+        return (this.formControl || this.controlContainer.control?.get(this.formControlName)) as FormControl;
     }
 
     constructor(
