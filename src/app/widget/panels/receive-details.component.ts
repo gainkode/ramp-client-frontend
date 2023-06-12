@@ -2,15 +2,15 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AssetAddressShortListResult } from 'model/generated-models';
+import { CurrencyView } from 'model/payment.model';
+import { WalletItem } from 'model/wallet.model';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { AssetAddressShortListResult } from 'src/app/model/generated-models';
-import { CurrencyView } from 'src/app/model/payment.model';
-import { WalletItem } from 'src/app/model/wallet.model';
-import { AuthService } from 'src/app/services/auth.service';
-import { EnvService } from 'src/app/services/env.service';
-import { ErrorService } from 'src/app/services/error.service';
-import { ProfileDataService } from 'src/app/services/profile.service';
+import { AuthService } from 'services/auth.service';
+import { EnvService } from 'services/env.service';
+import { ErrorService } from 'services/error.service';
+import { ProfileDataService } from 'services/profile.service';
 
 @Component({
   selector: 'app-widget-receive-details',

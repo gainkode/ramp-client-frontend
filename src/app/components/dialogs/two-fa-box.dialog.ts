@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-import { DialogData } from 'src/app/model/dialog.model';
+import { DialogData } from 'model/dialog.model';
 
 @Component({
     selector: 'app-two-fa-dialog-box',

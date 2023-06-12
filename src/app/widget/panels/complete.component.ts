@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { CustomTextList, CustomTextType } from 'src/app/model/custom-text.model';
-import { EnvService } from 'src/app/services/env.service';
+import { CustomTextList, CustomTextType } from 'model/custom-text.model';
+import { EnvService } from 'services/env.service';
 
 @Component({
   selector: 'app-widget-complete',

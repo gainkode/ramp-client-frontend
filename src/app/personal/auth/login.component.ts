@@ -5,8 +5,8 @@ import { LoginResult, SettingsCommon, UserMode, UserType } from '../../model/gen
 import { MatDialog } from '@angular/material/dialog';
 import { ErrorService } from '../../services/error.service';
 import { Subscription } from 'rxjs';
-import { CommonDialogBox } from 'src/app/components/dialogs/common-box.dialog';
-import { EnvService } from 'src/app/services/env.service';
+import { CommonDialogBox } from 'components/dialogs/common-box.dialog';
+import { EnvService } from 'services/env.service';
 
 @Component({
     templateUrl: 'login.component.html',

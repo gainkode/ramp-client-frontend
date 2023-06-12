@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
+import { SettingsCurrencyWithDefaults } from 'model/generated-models';
+import { WidgetSettings } from 'model/payment-base.model';
+import { CheckoutSummary, CurrencyView } from 'model/payment.model';
 import { Subscription } from 'rxjs';
-import { SettingsCurrencyWithDefaults } from 'src/app/model/generated-models';
-import { WidgetSettings } from 'src/app/model/payment-base.model';
-import { CheckoutSummary, CurrencyView } from 'src/app/model/payment.model';
-import { AuthService } from 'src/app/services/auth.service';
-import { CommonDataService } from 'src/app/services/common-data.service';
-import { ErrorService } from 'src/app/services/error.service';
+import { AuthService } from 'services/auth.service';
+import { CommonDataService } from 'services/common-data.service';
+import { ErrorService } from 'services/error.service';
 
 @Component({
   selector: 'app-widget-crypto-details',

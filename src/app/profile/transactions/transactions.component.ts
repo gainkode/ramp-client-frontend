@@ -1,9 +1,9 @@
 import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ProfileBaseFilter, TransactionsFilter } from 'src/app/model/filter.model';
-import { UserType } from 'src/app/model/generated-models';
-import { ProfileItemContainer } from 'src/app/model/profile-item.model';
-import { AuthService } from 'src/app/services/auth.service';
+import { ProfileBaseFilter, TransactionsFilter } from 'model/filter.model';
+import { UserType } from 'model/generated-models';
+import { ProfileItemContainer } from 'model/profile-item.model';
+import { AuthService } from 'services/auth.service';
 import { ProfileTransactionListComponent } from './data/transaction-list.component';
 
 @Component({

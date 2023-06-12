@@ -5,13 +5,13 @@ import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { ApiSecretDialogBox } from 'src/app/components/dialogs/api-secret-box.dialog';
-import { DeleteDialogBox } from 'src/app/components/dialogs/delete-box.dialog';
-import { ApiKeyItem } from 'src/app/model/apikey.model';
-import { ApiKeyListResult, ApiKeySecret } from 'src/app/model/generated-models';
-import { AuthService } from 'src/app/services/auth.service';
-import { ErrorService } from 'src/app/services/error.service';
-import { ProfileDataService } from 'src/app/services/profile.service';
+import { ApiSecretDialogBox } from 'components/dialogs/api-secret-box.dialog';
+import { DeleteDialogBox } from 'components/dialogs/delete-box.dialog';
+import { ApiKeyItem } from 'model/apikey.model';
+import { ApiKeyListResult, ApiKeySecret } from 'model/generated-models';
+import { AuthService } from 'services/auth.service';
+import { ErrorService } from 'services/error.service';
+import { ProfileDataService } from 'services/profile.service';
 
 @Component({
     selector: 'app-profile-api-keys-settings',

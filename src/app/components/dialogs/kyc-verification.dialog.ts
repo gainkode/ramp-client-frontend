@@ -2,9 +2,9 @@ import { Component, Inject, OnDestroy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { DialogData } from 'src/app/model/dialog.model';
-import { TokenAction } from 'src/app/model/generated-models';
-import { AuthService } from 'src/app/services/auth.service';
+import { DialogData } from 'model/dialog.model';
+import { TokenAction } from 'model/generated-models';
+import { AuthService } from 'services/auth.service';
 
 @Component({
     selector: 'app-kyc-verification-dialog-box',

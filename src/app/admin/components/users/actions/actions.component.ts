@@ -4,11 +4,11 @@ import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { Filter } from 'src/app/admin/model/filter.model';
-import { AdminDataService } from 'src/app/services/admin-data.service';
-import { AuthService } from 'src/app/services/auth.service';
-import { UserActionItem } from 'src/app/model/user.model';
-import { UserAction, UserActionResult, UserActionType } from 'src/app/model/generated-models';
+import { Filter } from 'admin/model/filter.model';
+import { AdminDataService } from 'services/admin-data.service';
+import { AuthService } from 'services/auth.service';
+import { UserActionItem } from 'model/user.model';
+import { UserAction, UserActionResult, UserActionType } from 'model/generated-models';
 
 @Component({
   selector: 'app-admin-user-actions',

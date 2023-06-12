@@ -3,11 +3,11 @@ import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { AdminDataService } from 'src/app/services/admin-data.service';
-import { CommonTargetValue } from 'src/app/model/common.model';
-import { getCountryByCode2, getCountryByCode3 } from 'src/app/model/country-code.model';
-import { BlackCountryListResult } from 'src/app/model/generated-models';
-import { AuthService } from 'src/app/services/auth.service';
+import { AdminDataService } from 'services/admin-data.service';
+import { CommonTargetValue } from 'model/common.model';
+import { getCountryByCode2, getCountryByCode3 } from 'model/country-code.model';
+import { BlackCountryListResult } from 'model/generated-models';
+import { AuthService } from 'services/auth.service';
 
 @Component({
   selector: 'app-admin-country-black-list',

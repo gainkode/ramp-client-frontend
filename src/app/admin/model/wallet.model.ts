@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { UserItem } from 'src/app/model/user.model';
+import { UserItem } from 'model/user.model';
 import { AssetAddress, FiatVault, FiatVaultUser } from '../../model/generated-models';
 
 export class WalletItem {

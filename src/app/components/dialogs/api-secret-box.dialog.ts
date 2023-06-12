@@ -1,7 +1,7 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DialogData } from 'src/app/model/dialog.model';
+import { DialogData } from 'model/dialog.model';
 
 @Component({
     selector: 'app-api-secret-dialog-box',

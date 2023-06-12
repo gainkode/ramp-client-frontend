@@ -2,13 +2,13 @@ import { ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output, 
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { TransactionsFilter } from 'src/app/model/filter.model';
-import { SettingsCurrency, SettingsCurrencyWithDefaults, User, UserType } from 'src/app/model/generated-models';
-import { ProfileItemContainer } from 'src/app/model/profile-item.model';
-import { AuthService } from 'src/app/services/auth.service';
-import { CommonDataService } from 'src/app/services/common-data.service';
-import { ErrorService } from 'src/app/services/error.service';
-import { getCurrencySign } from 'src/app/utils/utils';
+import { TransactionsFilter } from 'model/filter.model';
+import { SettingsCurrency, SettingsCurrencyWithDefaults, User, UserType } from 'model/generated-models';
+import { ProfileItemContainer } from 'model/profile-item.model';
+import { AuthService } from 'services/auth.service';
+import { CommonDataService } from 'services/common-data.service';
+import { ErrorService } from 'services/error.service';
+import { getCurrencySign } from 'utils/utils';
 import { ProfileTransactionListComponent } from '../transactions/data/transaction-list.component';
 import { ProfileBalanceListComponent } from './data/balance-list.component';
 

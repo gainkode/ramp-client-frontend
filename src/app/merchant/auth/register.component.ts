@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserType } from 'src/app/model/generated-models';
-import { EnvService } from 'src/app/services/env.service';
+import { UserType } from 'model/generated-models';
+import { EnvService } from 'services/env.service';
 
 @Component({
     templateUrl: 'register.component.html',

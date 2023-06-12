@@ -1,13 +1,13 @@
 import { ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ProfileBaseFilter, NotificationsFilter } from 'src/app/model/filter.model';
-import { NotificationItem } from 'src/app/model/notification.model';
-import { AuthService } from 'src/app/services/auth.service';
+import { ProfileBaseFilter, NotificationsFilter } from 'model/filter.model';
+import { NotificationItem } from 'model/notification.model';
+import { AuthService } from 'services/auth.service';
 import { ProfileNotificationListComponent } from './data/notification-list.component';
 import { Subscription } from 'rxjs';
-import { ProfileDataService } from 'src/app/services/profile.service';
-import { ErrorService } from 'src/app/services/error.service';
-import { UserNotification } from 'src/app/model/generated-models';
+import { ProfileDataService } from 'services/profile.service';
+import { ErrorService } from 'services/error.service';
+import { UserNotification } from 'model/generated-models';
 
 @Component({
     selector: 'app-profile-notifications',

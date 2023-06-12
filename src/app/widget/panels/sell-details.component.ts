@@ -1,9 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
-import { WireTransferBankAccountAu, WireTransferBankAccountEu, WireTransferBankAccountUk, WireTransferUserSelection } from 'src/app/model/cost-scheme.model';
-import { WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from 'src/app/model/payment-base.model';
-import { CheckoutSummary } from 'src/app/model/payment.model';
-import { AuthService } from 'src/app/services/auth.service';
+import { WireTransferBankAccountAu, WireTransferBankAccountEu, WireTransferBankAccountUk } from 'model/cost-scheme.model';
+import { WireTransferPaymentCategoryItem, WireTransferPaymentCategory } from 'model/payment-base.model';
+import { CheckoutSummary } from 'model/payment.model';
 
 @Component({
     selector: 'app-widget-sell-details',
@@ -55,8 +54,7 @@ export class WidgetSellDetailsComponent {
     }
 
     constructor(
-        private formBuilder: UntypedFormBuilder,
-        private auth: AuthService) {
+        private formBuilder: UntypedFormBuilder) {
         const au = new WireTransferBankAccountAu();
         const eu = new WireTransferBankAccountEu();
         const uk = new WireTransferBankAccountUk();

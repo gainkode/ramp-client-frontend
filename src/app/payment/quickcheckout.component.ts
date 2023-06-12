@@ -1,10 +1,10 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { environment } from 'src/environments/environment';
+import { environment } from '@environments/environment';
 import { WidgetSettings } from '../model/payment-base.model';
 import { EnvService } from '../services/env.service';
 import { Subscription } from 'rxjs';
-import { NotificationService } from 'src/app/services/notification.service';
+import { NotificationService } from 'services/notification.service';
 
 @Component({
   templateUrl: 'quickcheckout.component.html',

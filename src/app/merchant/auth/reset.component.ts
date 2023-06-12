@@ -4,7 +4,7 @@ import { Validators, UntypedFormBuilder } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { ErrorService } from '../../services/error.service';
 import { Subscription } from 'rxjs';
-import { EnvService } from 'src/app/services/env.service';
+import { EnvService } from 'services/env.service';
 
 @Component({
     templateUrl: 'reset.component.html',

@@ -1,6 +1,6 @@
 import { TransactionSource, TransactionType, UserType } from "./generated-models";
 import { CurrencyView, MerchantTransactionTypeList, TransactionSourceList, UserTransactionTypeList } from "./payment.model";
-import { getFormattedUtcDate } from 'src/app/utils/utils';
+import { getFormattedUtcDate } from 'utils/utils';
 
 export interface ProfileBaseFilter {
     setData(data: any): void;

@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
-import { getCountryByCode2 } from 'src/app/model/country-code.model';
-import { TransactionTypeList } from 'src/app/model/payment.model';
-import { EnvService } from 'src/app/services/env.service';
+import { getCountryByCode2 } from 'model/country-code.model';
+import { TransactionTypeList } from 'model/payment.model';
+import { EnvService } from 'services/env.service';
 import { Widget, WidgetDestination } from '../../model/generated-models';
 
 export class WidgetItem {

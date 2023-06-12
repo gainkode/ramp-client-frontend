@@ -5,12 +5,12 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { Clipboard } from '@angular/cdk/clipboard';
-import { AdminDataService } from 'src/app/services/admin-data.service';
-import { CurrencyPairItem } from 'src/app/model/currencyPairs.model';
-import { AuthService } from 'src/app/services/auth.service';
-import { CurrencyView } from 'src/app/model/payment.model';
-import { CommonDataService } from 'src/app/services/common-data.service';
-import { SettingsCurrencyWithDefaults } from 'src/app/model/generated-models';
+import { AdminDataService } from 'services/admin-data.service';
+import { CurrencyPairItem } from 'model/currencyPairs.model';
+import { AuthService } from 'services/auth.service';
+import { CurrencyView } from 'model/payment.model';
+import { CommonDataService } from 'services/common-data.service';
+import { SettingsCurrencyWithDefaults } from 'model/generated-models';
 
 @Component({
   selector: 'app-admin-currencypairs',

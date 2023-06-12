@@ -3,16 +3,16 @@ import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms'
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { AssetAddressShort, Rate, SettingsCurrencyWithDefaults, TransactionType, UserState } from 'src/app/model/generated-models';
-import { WidgetSettings } from 'src/app/model/payment-base.model';
-import { CheckoutSummary, CurrencyView, QuickCheckoutTransactionTypeList } from 'src/app/model/payment.model';
-import { WalletItem } from 'src/app/model/wallet.model';
-import { AuthService } from 'src/app/services/auth.service';
-import { CommonDataService } from 'src/app/services/common-data.service';
-import { ErrorService } from 'src/app/services/error.service';
-import { PaymentDataService } from 'src/app/services/payment.service';
-import { getCurrencySign } from 'src/app/utils/utils';
-import { WalletValidator } from 'src/app/utils/wallet.validator';
+import { AssetAddressShort, Rate, SettingsCurrencyWithDefaults, TransactionType, UserState } from 'model/generated-models';
+import { WidgetSettings } from 'model/payment-base.model';
+import { CheckoutSummary, CurrencyView, QuickCheckoutTransactionTypeList } from 'model/payment.model';
+import { WalletItem } from 'model/wallet.model';
+import { AuthService } from 'services/auth.service';
+import { CommonDataService } from 'services/common-data.service';
+import { ErrorService } from 'services/error.service';
+import { PaymentDataService } from 'services/payment.service';
+import { getCurrencySign } from 'utils/utils';
+import { WalletValidator } from 'utils/wallet.validator';
 
 @Component({
   selector: 'app-widget-order-details',

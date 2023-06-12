@@ -5,13 +5,13 @@ import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { DeleteDialogBox } from 'src/app/components/dialogs/delete-box.dialog';
-import { NotificationsFilter } from 'src/app/model/filter.model';
-import { UserNotificationListResult } from 'src/app/model/generated-models';
-import { NotificationItem } from 'src/app/model/notification.model';
-import { AuthService } from 'src/app/services/auth.service';
-import { ErrorService } from 'src/app/services/error.service';
-import { ProfileDataService } from 'src/app/services/profile.service';
+import { DeleteDialogBox } from 'components/dialogs/delete-box.dialog';
+import { NotificationsFilter } from 'model/filter.model';
+import { UserNotificationListResult } from 'model/generated-models';
+import { NotificationItem } from 'model/notification.model';
+import { AuthService } from 'services/auth.service';
+import { ErrorService } from 'services/error.service';
+import { ProfileDataService } from 'services/profile.service';
 
 @Component({
     selector: 'app-profile-notification-list',

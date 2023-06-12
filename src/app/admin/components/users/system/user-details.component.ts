@@ -3,15 +3,15 @@ import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbDateAdapter, NgbDateParserFormatter, NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
-import { DateFormatAdapter } from 'src/app/admin/misc/date-range/date-format.adapter';
-import { DateParserFormatter } from 'src/app/admin/misc/date-range/date.formatter';
-import { AdminDataService } from 'src/app/services/admin-data.service';
-import { Countries, getCountryByCode3 } from 'src/app/model/country-code.model';
-import { AccountStatus, KycProvider, UserInput, UserRole, UserType } from 'src/app/model/generated-models';
-import { KycProviderList, UserStatusList, UserTypeList } from 'src/app/model/payment.model';
-import { GenderList, UserItem } from 'src/app/model/user.model';
-import { AuthService } from 'src/app/services/auth.service';
-import { getFormattedUtcDate } from 'src/app/utils/utils';
+import { DateFormatAdapter } from 'admin/misc/date-range/date-format.adapter';
+import { DateParserFormatter } from 'admin/misc/date-range/date.formatter';
+import { AdminDataService } from 'services/admin-data.service';
+import { Countries, getCountryByCode3 } from 'model/country-code.model';
+import { AccountStatus, KycProvider, UserInput, UserRole, UserType } from 'model/generated-models';
+import { KycProviderList, UserStatusList, UserTypeList } from 'model/payment.model';
+import { GenderList, UserItem } from 'model/user.model';
+import { AuthService } from 'services/auth.service';
+import { getFormattedUtcDate } from 'utils/utils';
 
 @Component({
   selector: 'app-admin-user-details',

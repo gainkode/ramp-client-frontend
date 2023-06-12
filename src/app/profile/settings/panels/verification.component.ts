@@ -3,15 +3,15 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { KycVerificationDialogBox } from 'src/app/components/dialogs/kyc-verification.dialog';
-import { UserState } from 'src/app/model/generated-models';
-import { TierItem } from 'src/app/model/identification.model';
-import { AuthService } from 'src/app/services/auth.service';
-import { CommonDataService } from 'src/app/services/common-data.service';
-import { ErrorService } from 'src/app/services/error.service';
-import { NotificationService } from 'src/app/services/notification.service';
-import { PaymentDataService } from 'src/app/services/payment.service';
-import { getTierBlocks } from 'src/app/utils/profile.utils';
+import { KycVerificationDialogBox } from 'components/dialogs/kyc-verification.dialog';
+import { UserState } from 'model/generated-models';
+import { TierItem } from 'model/identification.model';
+import { AuthService } from 'services/auth.service';
+import { CommonDataService } from 'services/common-data.service';
+import { ErrorService } from 'services/error.service';
+import { NotificationService } from 'services/notification.service';
+import { PaymentDataService } from 'services/payment.service';
+import { getTierBlocks } from 'utils/profile.utils';
 
 @Component({
     selector: 'app-profile-verification-settings',

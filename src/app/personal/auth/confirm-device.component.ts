@@ -2,9 +2,9 @@ import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
-import { AuthService } from 'src/app/services/auth.service';
-import { EnvService } from 'src/app/services/env.service';
-import { ErrorService } from 'src/app/services/error.service';
+import { AuthService } from 'services/auth.service';
+import { EnvService } from 'services/env.service';
+import { ErrorService } from 'services/error.service';
 
 @Component({
     templateUrl: 'confirm-device.component.html',

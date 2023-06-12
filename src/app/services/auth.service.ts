@@ -5,7 +5,7 @@ import { SocialAuthService, FacebookLoginProvider, GoogleLoginProvider } from 'a
 import { FeedbackInput, LoginResult, PostAddress, SettingsCommon, User, UserMode, UserType } from '../model/generated-models';
 import { EmptyObject } from 'apollo-angular/types';
 import { EnvService } from './env.service';
-import { NotificationService } from 'src/app/services/notification.service';
+import { NotificationService } from 'services/notification.service';
 
 const LOGIN = gql`
   mutation Login($recaptcha: String!, $email: String!, $password: String, $widgetId: String) {

@@ -4,15 +4,15 @@ import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { concat, Observable, of, Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, switchMap, take, tap } from 'rxjs/operators';
-import { Filter } from 'src/app/admin/model/filter.model';
-import { AdminDataService } from 'src/app/services/admin-data.service';
-import { CommonTargetValue } from 'src/app/model/common.model';
-import { CountryFilterList } from 'src/app/model/country-code.model';
-import { TransactionSourceFilterList } from 'src/app/model/fee-scheme.model';
-import { KycProvider, SettingsKycTargetFilterType, UserMode, UserType } from 'src/app/model/generated-models';
-import { KycScheme } from 'src/app/model/identification.model';
-import { KycLevelView, KycProviderList, KycTargetFilterList, UserModeList, UserTypeList } from 'src/app/model/payment.model';
-import { AuthService } from 'src/app/services/auth.service';
+import { Filter } from 'admin/model/filter.model';
+import { AdminDataService } from 'services/admin-data.service';
+import { CommonTargetValue } from 'model/common.model';
+import { CountryFilterList } from 'model/country-code.model';
+import { TransactionSourceFilterList } from 'model/fee-scheme.model';
+import { KycProvider, SettingsKycTargetFilterType, UserMode, UserType } from 'model/generated-models';
+import { KycScheme } from 'model/identification.model';
+import { KycLevelView, KycProviderList, KycTargetFilterList, UserModeList, UserTypeList } from 'model/payment.model';
+import { AuthService } from 'services/auth.service';
 
 @Component({
   selector: 'app-admin-kyc-details',

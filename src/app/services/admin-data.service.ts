@@ -71,9 +71,9 @@ import { FiatWalletItem, WalletItem } from '../admin/model/wallet.model';
 import { NotificationItem } from '../model/notification.model';
 import { WidgetItem } from '../admin/model/widget.model';
 import { RiskAlertItem } from '../admin/model/risk-alert.model';
-import { ApiKeyItem } from 'src/app/model/apikey.model';
-import { CurrencyPairItem } from 'src/app/model/currencyPairs.model';
-import { LiquidityProviderEntityItem } from 'src/app/model/liquidity-provider.model';
+import { ApiKeyItem } from 'model/apikey.model';
+import { CurrencyPairItem } from 'model/currencyPairs.model';
+import { LiquidityProviderEntityItem } from 'model/liquidity-provider.model';
 
 /* region queries */
 

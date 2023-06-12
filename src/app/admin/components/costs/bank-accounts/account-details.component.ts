@@ -3,12 +3,12 @@ import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
-import { AdminDataService } from 'src/app/services/admin-data.service';
-import { WireTransferBankAccountAu, WireTransferBankAccountEu, WireTransferBankAccountItem, WireTransferBankAccountUk } from 'src/app/model/cost-scheme.model';
-import { WireTransferBankAccount } from 'src/app/model/generated-models';
-import { WireTransferPaymentCategory } from 'src/app/model/payment-base.model';
-import { WireTransferPaymentCategoryList } from 'src/app/model/payment.model';
-import { AuthService } from 'src/app/services/auth.service';
+import { AdminDataService } from 'services/admin-data.service';
+import { WireTransferBankAccountAu, WireTransferBankAccountEu, WireTransferBankAccountItem, WireTransferBankAccountUk } from 'model/cost-scheme.model';
+import { WireTransferBankAccount } from 'model/generated-models';
+import { WireTransferPaymentCategory } from 'model/payment-base.model';
+import { WireTransferPaymentCategoryList } from 'model/payment.model';
+import { AuthService } from 'services/auth.service';
 
 @Component({
   selector: 'app-admin-bank-account-details',

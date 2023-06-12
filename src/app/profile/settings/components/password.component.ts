@@ -3,12 +3,12 @@ import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms'
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { CommonDialogBox } from 'src/app/components/dialogs/common-box.dialog';
-import { TwoFaDialogBox } from 'src/app/components/dialogs/two-fa-box.dialog';
-import { AuthService } from 'src/app/services/auth.service';
-import { ErrorService } from 'src/app/services/error.service';
-import { ProfileDataService } from 'src/app/services/profile.service';
-import { PasswordValidator } from 'src/app/utils/password.validator';
+import { CommonDialogBox } from 'components/dialogs/common-box.dialog';
+import { TwoFaDialogBox } from 'components/dialogs/two-fa-box.dialog';
+import { AuthService } from 'services/auth.service';
+import { ErrorService } from 'services/error.service';
+import { ProfileDataService } from 'services/profile.service';
+import { PasswordValidator } from 'utils/password.validator';
 
 @Component({
     selector: 'app-profile-change-password',

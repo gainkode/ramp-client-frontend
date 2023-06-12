@@ -3,10 +3,10 @@ import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
-import { AdminDataService } from 'src/app/services/admin-data.service';
-import { KycLevel } from 'src/app/model/identification.model';
-import { UserTypeList } from 'src/app/model/payment.model';
-import { AuthService } from 'src/app/services/auth.service';
+import { AdminDataService } from 'services/admin-data.service';
+import { KycLevel } from 'model/identification.model';
+import { UserTypeList } from 'model/payment.model';
+import { AuthService } from 'services/auth.service';
 
 @Component({
   selector: 'app-admin-level-details',

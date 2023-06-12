@@ -4,13 +4,13 @@ import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms'
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { AssetAddressShort, AssetAddressShortListResult, VaultAccount } from 'src/app/model/generated-models';
-import { CurrencyView } from 'src/app/model/payment.model';
-import { ProfileItemActionType, ProfileItemContainer, ProfileItemContainerType } from 'src/app/model/profile-item.model';
+import { AssetAddressShort, AssetAddressShortListResult, VaultAccount } from 'model/generated-models';
+import { CurrencyView } from 'model/payment.model';
+import { ProfileItemActionType, ProfileItemContainer, ProfileItemContainerType } from 'model/profile-item.model';
 import { WalletItem } from "src/app/model/wallet.model";
-import { AuthService } from 'src/app/services/auth.service';
-import { ErrorService } from 'src/app/services/error.service';
-import { ProfileDataService } from 'src/app/services/profile.service';
+import { AuthService } from 'services/auth.service';
+import { ErrorService } from 'services/error.service';
+import { ProfileDataService } from 'services/profile.service';
 
 @Component({
     selector: 'app-profile-wallet-create',

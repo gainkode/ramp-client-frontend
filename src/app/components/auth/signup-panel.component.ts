@@ -5,7 +5,7 @@ import { Validators, UntypedFormBuilder, AbstractControl } from '@angular/forms'
 import { LoginResult, UserType } from '../../model/generated-models';
 import { SignupInfoPanelComponent } from './signup-info.component';
 import { Subscription } from 'rxjs';
-import { EnvService } from 'src/app/services/env.service';
+import { EnvService } from 'services/env.service';
 
 @Component({
     selector: 'app-signup-panel',

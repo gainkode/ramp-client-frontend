@@ -1,8 +1,9 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { PaymentProviderInstrumentView, CheckoutSummary } from 'model/payment.model';
 import { Subscription } from 'rxjs';
-import { CheckoutSummary, PaymentProviderInstrumentView } from 'src/app/model/payment.model';
-import { ErrorService } from 'src/app/services/error.service';
-import { PaymentDataService } from 'src/app/services/payment.service';
+import { ErrorService } from 'services/error.service';
+import { PaymentDataService } from 'services/payment.service';
+
 
 @Component({
   selector: 'app-widget-payment',

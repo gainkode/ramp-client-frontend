@@ -1,16 +1,17 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { AssetAddressShortListResult, KycProvider, LoginResult, PaymentInstrument, PaymentPreauthResultShort, Rate, TextPage, TransactionShort, TransactionSource, TransactionType, User, Widget } from 'model/generated-models';
+import { CardView, CheckoutSummary, PaymentProviderInstrumentView } from 'model/payment.model';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { AssetAddressShortListResult, KycProvider, LoginResult, PaymentInstrument, PaymentPreauthResultShort, PaymentProviderByInstrument, Rate, TextPage, TransactionShort, TransactionSource, TransactionType, User, Widget, WidgetUserParams } from 'src/app/model/generated-models';
-import { CardView, CheckoutSummary, PaymentProviderInstrumentView } from 'src/app/model/payment.model';
-import { AuthService } from 'src/app/services/auth.service';
-import { ErrorService } from 'src/app/services/error.service';
-import { NotificationService } from 'src/app/services/notification.service';
-import { PaymentDataService } from 'src/app/services/payment.service';
-import { ExchangeRateService } from 'src/app/services/rate.service';
-import { environment } from 'src/environments/environment';
+import { AuthService } from 'services/auth.service';
+import { ErrorService } from 'services/error.service';
+import { NotificationService } from 'services/notification.service';
+import { PaymentDataService } from 'services/payment.service';
+import { ExchangeRateService } from 'services/rate.service';
+import { environment } from '@environments/environment';
 import { CommonDialogBox } from '../components/dialogs/common-box.dialog';
 import { WireTransferUserSelection } from '../model/cost-scheme.model';
 import { completeDataDefault, disclaimerDataDefault } from '../model/custom-data.model';
@@ -21,7 +22,6 @@ import { EnvService } from '../services/env.service';
 import { ProfileDataService } from '../services/profile.service';
 import { WidgetPagerService } from '../services/widget-pager.service';
 import { WidgetService } from '../services/widget.service';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-widget',

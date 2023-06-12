@@ -1,17 +1,17 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { TransactionType, AssetAddressShortListResult, UserContactListResult, UserContact } from 'model/generated-models';
+import { CurrencyView, CheckoutSummary } from 'model/payment.model';
+import { ContactItem } from 'model/user.model';
+import { WalletItem } from 'model/wallet.model';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { AssetAddressShortListResult, TransactionType, UserContact, UserContactListResult } from 'src/app/model/generated-models';
-import { CheckoutSummary, CurrencyView } from 'src/app/model/payment.model';
-import { ContactItem } from 'src/app/model/user.model';
-import { WalletItem } from 'src/app/model/wallet.model';
-import { AuthService } from 'src/app/services/auth.service';
-import { ErrorService } from 'src/app/services/error.service';
-import { ProfileDataService } from 'src/app/services/profile.service';
-import { getCurrencySign } from 'src/app/utils/utils';
-import { WalletValidator } from 'src/app/utils/wallet.validator';
+import { AuthService } from 'services/auth.service';
+import { ErrorService } from 'services/error.service';
+import { ProfileDataService } from 'services/profile.service';
+import { getCurrencySign } from 'utils/utils';
+import { WalletValidator } from 'utils/wallet.validator';
 
 @Component({
   selector: 'app-widget-send-details',

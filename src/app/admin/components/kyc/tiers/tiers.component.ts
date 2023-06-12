@@ -3,9 +3,9 @@ import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { AdminDataService } from 'src/app/services/admin-data.service';
-import { KycTier } from 'src/app/model/identification.model';
-import { AuthService } from 'src/app/services/auth.service';
+import { AdminDataService } from 'services/admin-data.service';
+import { KycTier } from 'model/identification.model';
+import { AuthService } from 'services/auth.service';
 
 @Component({
   selector: 'app-admin-kyc-tiers',

@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { TransactionType, Rate, UserState } from 'model/generated-models';
+import { CurrencyView, CheckoutSummary } from 'model/payment.model';
 import { Subscription } from 'rxjs';
-import { Rate, TransactionType, UserState } from 'src/app/model/generated-models';
-import { CheckoutSummary, CurrencyView } from 'src/app/model/payment.model';
-import { AuthService } from 'src/app/services/auth.service';
-import { CommonDataService } from 'src/app/services/common-data.service';
-import { PaymentDataService } from 'src/app/services/payment.service';
+import { AuthService } from 'services/auth.service';
+import { CommonDataService } from 'services/common-data.service';
+import { PaymentDataService } from 'services/payment.service';
 
 @Component({
   selector: 'app-widget-deposit-details',

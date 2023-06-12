@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonTargetValue } from 'src/app/model/common.model';
-import { UserModeView } from 'src/app/model/payment.model';
+import { CommonTargetValue } from 'model/common.model';
+import { UserModeView } from 'model/payment.model';
 
 @Component({
   selector: 'app-admin-details-item',

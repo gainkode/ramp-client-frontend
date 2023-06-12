@@ -3,9 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { AdminDataService } from 'src/app/services/admin-data.service';
-import { DeviceItem, UserItem } from 'src/app/model/user.model';
-import { AuthService } from 'src/app/services/auth.service';
+import { AdminDataService } from 'services/admin-data.service';
+import { DeviceItem, UserItem } from 'model/user.model';
+import { AuthService } from 'services/auth.service';
 
 @Component({
   selector: 'app-admin-user-devices',

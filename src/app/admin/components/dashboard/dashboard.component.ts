@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Filter } from 'src/app/admin/model/filter.model';
-import { DateTimeInterval } from 'src/app/model/generated-models';
-import { AuthService } from 'src/app/services/auth.service';
-import { EnvService } from 'src/app/services/env.service';
+import { Filter } from 'admin/model/filter.model';
+import { DateTimeInterval } from 'model/generated-models';
+import { AuthService } from 'services/auth.service';
+import { EnvService } from 'services/env.service';
 import { DashboardService } from '../../services/dashboard.service';
 
 @Component({

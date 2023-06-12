@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { UserType } from 'src/app/model/generated-models';
+import { UserType } from 'model/generated-models';
 
 @Component({
     selector: 'app-widget-register',

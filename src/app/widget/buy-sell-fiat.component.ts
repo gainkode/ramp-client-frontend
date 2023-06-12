@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { TransactionSource, TransactionType } from 'src/app/model/generated-models';
+import { TransactionSource, TransactionType } from 'model/generated-models';
 import { PaymentCompleteDetails, PaymentErrorDetails, PaymentWidgetType, WidgetSettings } from '../model/payment-base.model';
 import { AuthService } from '../services/auth.service';
 

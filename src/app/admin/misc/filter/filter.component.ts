@@ -3,15 +3,15 @@ import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { EmptyObject } from 'apollo-angular/types';
 import { concat, Observable, of, Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, switchMap, tap } from 'rxjs/operators';
-import { Filter } from 'src/app/admin/model/filter.model';
-import { RiskAlertCodeList } from 'src/app/admin/model/lists.model';
-import { AdminDataService } from 'src/app/services/admin-data.service';
-import { CommonTargetValue } from 'src/app/model/common.model';
-import { Countries } from 'src/app/model/country-code.model';
-import { SettingsKycTier } from 'src/app/model/generated-models';
-import { CurrencyView, KycStatusList, PaymentInstrumentList, RiskLevelViewList, TransactionKycStatusList, TransactionSourceList, TransactionStatusList, TransactionTypeList, UserActionTypeList, UserModeList, UserNotificationCodeList, UserStatusList, UserTypeList } from 'src/app/model/payment.model';
+import { Filter } from 'admin/model/filter.model';
+import { RiskAlertCodeList } from 'admin/model/lists.model';
+import { AdminDataService } from 'services/admin-data.service';
+import { CommonTargetValue } from 'model/common.model';
+import { Countries } from 'model/country-code.model';
+import { SettingsKycTier } from 'model/generated-models';
+import { CurrencyView, KycStatusList, PaymentInstrumentList, RiskLevelViewList, TransactionKycStatusList, TransactionSourceList, TransactionStatusList, TransactionTypeList, UserActionTypeList, UserModeList, UserNotificationCodeList, UserStatusList, UserTypeList } from 'model/payment.model';
 import { AdminDateRangeComponent } from '../date-range/date-range.component';
-import { AuthService } from 'src/app/services/auth.service';
+import { AuthService } from 'services/auth.service';
 
 @Component({
   selector: 'app-admin-filter',

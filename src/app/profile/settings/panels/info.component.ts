@@ -3,16 +3,16 @@ import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/cor
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { finalize, take } from 'rxjs/operators';
-import { CommonTargetValue } from 'src/app/model/common.model';
-import { Countries, getCountryByCode3 } from 'src/app/model/country-code.model';
-import { SettingsCurrencyWithDefaults, User, UserInput, UserType } from 'src/app/model/generated-models';
-import { UserItem } from 'src/app/model/user.model';
-import { AuthService } from 'src/app/services/auth.service';
-import { CommonDataService } from 'src/app/services/common-data.service';
-import { EnvService } from 'src/app/services/env.service';
-import { ErrorService } from 'src/app/services/error.service';
-import { ProfileDataService } from 'src/app/services/profile.service';
-import { getAvatarPath, getCryptoSymbol } from 'src/app/utils/utils';
+import { CommonTargetValue } from 'model/common.model';
+import { Countries, getCountryByCode3 } from 'model/country-code.model';
+import { SettingsCurrencyWithDefaults, User, UserInput, UserType } from 'model/generated-models';
+import { UserItem } from 'model/user.model';
+import { AuthService } from 'services/auth.service';
+import { CommonDataService } from 'services/common-data.service';
+import { EnvService } from 'services/env.service';
+import { ErrorService } from 'services/error.service';
+import { ProfileDataService } from 'services/profile.service';
+import { getAvatarPath, getCryptoSymbol } from 'utils/utils';
 
 enum ChangedDataType {
     Unknown = 'Unknown',

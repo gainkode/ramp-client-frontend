@@ -6,7 +6,7 @@ import { LoginResult, PostAddress, SettingsKyc, UserType } from '../../model/gen
 import { Subscription } from 'rxjs';
 import { getCountryByCode3 } from '../../model/country-code.model';
 import { take } from 'rxjs/operators';
-import { getFormattedUtcDate } from 'src/app/utils/utils';
+import { getFormattedUtcDate } from 'utils/utils';
 
 @Component({
     selector: 'app-widget-wire-transfer-info-required',

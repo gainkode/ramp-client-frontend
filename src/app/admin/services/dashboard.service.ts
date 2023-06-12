@@ -1,12 +1,12 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable, ReplaySubject, Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { getCurrencySign } from 'src/app/utils/utils';
-import { DashboardCardData, DashboardData } from 'src/app/admin/model/dashboard-data.model';
-import { AdminDataService } from 'src/app/services/admin-data.service';
-import { Filter } from 'src/app/admin/model/filter.model';
-import { PaymentInstrumentList } from 'src/app/model/payment.model';
-import { EnvService } from 'src/app/services/env.service';
+import { getCurrencySign } from 'utils/utils';
+import { DashboardCardData, DashboardData } from 'admin/model/dashboard-data.model';
+import { AdminDataService } from 'services/admin-data.service';
+import { Filter } from 'admin/model/filter.model';
+import { PaymentInstrumentList } from 'model/payment.model';
+import { EnvService } from 'services/env.service';
 
 @Injectable({
   providedIn: 'any'

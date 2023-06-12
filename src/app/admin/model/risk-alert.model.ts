@@ -1,6 +1,6 @@
 import { RiskAlert } from '../../model/generated-models';
 import { DatePipe } from '@angular/common';
-import { UserItem } from 'src/app/model/user.model';
+import { UserItem } from 'model/user.model';
 
 export class RiskAlertItem {
   created = '';

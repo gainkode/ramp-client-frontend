@@ -4,13 +4,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { CommonDialogBox } from 'src/app/components/dialogs/common-box.dialog';
-import { TwoFaDialogBox } from 'src/app/components/dialogs/two-fa-box.dialog';
-import { TwoFaDialogWizard } from 'src/app/components/dialogs/two-fa-wizard.dialog';
-import { LoginResult, TwoFactorAuthenticationResult, User } from 'src/app/model/generated-models';
-import { AuthService } from 'src/app/services/auth.service';
-import { ErrorService } from 'src/app/services/error.service';
-import { ProfileDataService } from 'src/app/services/profile.service';
+import { CommonDialogBox } from 'components/dialogs/common-box.dialog';
+import { TwoFaDialogBox } from 'components/dialogs/two-fa-box.dialog';
+import { TwoFaDialogWizard } from 'components/dialogs/two-fa-wizard.dialog';
+import { LoginResult, TwoFactorAuthenticationResult, User } from 'model/generated-models';
+import { AuthService } from 'services/auth.service';
+import { ErrorService } from 'services/error.service';
+import { ProfileDataService } from 'services/profile.service';
 
 @Component({
     selector: 'app-profile-security-settings',

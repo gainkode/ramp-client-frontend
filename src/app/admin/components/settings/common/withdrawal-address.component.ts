@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
-import { CurrencyView } from 'src/app/model/payment.model';
+import { CurrencyView } from 'model/payment.model';
 
 @Component({
   selector: 'app-admin-withdrawal-address',

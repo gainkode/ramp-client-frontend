@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, SkipSelf } from '@angular/core';
 import { AbstractControl, ControlContainer } from '@angular/forms';
 import { NgbCalendar, NgbDate, NgbDateAdapter, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
-import { getFormattedUtcDate } from 'src/app/utils/utils';
+import { getFormattedUtcDate } from 'utils/utils';
 import { DateFormatAdapter } from './date-format.adapter';
 import { DateParserFormatter } from './date.formatter';
 

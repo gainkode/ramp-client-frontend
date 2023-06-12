@@ -1,8 +1,8 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { SettingsCurrencyWithDefaults } from 'model/generated-models';
 import { Subscription } from 'rxjs';
-import { SettingsCurrencyWithDefaults } from 'src/app/model/generated-models';
-import { ErrorService } from 'src/app/services/error.service';
+import { ErrorService } from 'services/error.service';
 import { CurrencyView } from '../model/payment.model';
 import { WalletItem } from '../model/wallet.model';
 import { CommonDataService } from '../services/common-data.service';

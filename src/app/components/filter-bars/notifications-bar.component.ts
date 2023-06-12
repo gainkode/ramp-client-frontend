@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { NotificationsFilter, ProfileBaseFilter } from 'src/app/model/filter.model';
+import { NotificationsFilter, ProfileBaseFilter } from 'model/filter.model';
 
 @Component({
     selector: 'app-notifications-filter',

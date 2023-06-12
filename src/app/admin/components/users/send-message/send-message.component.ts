@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CommonTargetValue } from 'src/app/model/common.model';
-import { UserNotificationLevel } from 'src/app/model/generated-models';
+import { CommonTargetValue } from 'model/common.model';
+import { UserNotificationLevel } from 'model/generated-models';
 import { concat, Observable, of, Subject, Subscription } from 'rxjs';
-import { UserItem } from 'src/app/model/user.model';
+import { UserItem } from 'model/user.model';
 import { debounceTime, distinctUntilChanged, filter, map, switchMap, take, tap } from 'rxjs/operators';
-import { AdminDataService } from 'src/app/services/admin-data.service';
-import { Filter } from 'src/app/admin/model/filter.model';
+import { AdminDataService } from 'services/admin-data.service';
+import { Filter } from 'admin/model/filter.model';
 
 export class UserMessageData {
   level: UserNotificationLevel = UserNotificationLevel.Info;

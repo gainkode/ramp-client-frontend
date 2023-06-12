@@ -3,14 +3,14 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
-import { AdminDataService } from 'src/app/services/admin-data.service';
-import { AccountStatus, KycStatus, Rate, SettingsCommon, Transaction, TransactionKycStatus, TransactionStatus, TransactionStatusDescriptorMap, TransactionType } from 'src/app/model/generated-models';
-import { AdminTransactionStatusList, CurrencyView, TransactionKycStatusList, TransactionStatusList, TransactionStatusView, UserStatusList } from 'src/app/model/payment.model';
-import { TransactionItemFull } from 'src/app/model/transaction.model';
-import { AuthService } from 'src/app/services/auth.service';
-import { ErrorService } from 'src/app/services/error.service';
-import { ExchangeRateService } from 'src/app/services/rate.service';
-import { getTransactionAmountHash, getTransactionStatusHash } from 'src/app/utils/utils';
+import { AdminDataService } from 'services/admin-data.service';
+import { AccountStatus, KycStatus, Rate, SettingsCommon, Transaction, TransactionKycStatus, TransactionStatus, TransactionStatusDescriptorMap, TransactionType } from 'model/generated-models';
+import { AdminTransactionStatusList, CurrencyView, TransactionKycStatusList, TransactionStatusList, TransactionStatusView, UserStatusList } from 'model/payment.model';
+import { TransactionItemFull } from 'model/transaction.model';
+import { AuthService } from 'services/auth.service';
+import { ErrorService } from 'services/error.service';
+import { ExchangeRateService } from 'services/rate.service';
+import { getTransactionAmountHash, getTransactionStatusHash } from 'utils/utils';
 
 @Component({
   selector: 'app-admin-transaction-details',

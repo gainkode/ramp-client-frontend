@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { EnvService } from 'src/app/services/env.service';
+import { EnvService } from 'services/env.service';
 
 @Component({
     templateUrl: 'restore.component.html',

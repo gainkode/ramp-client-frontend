@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { UserActionItem } from 'src/app/model/user.model';
+import { UserActionItem } from 'model/user.model';
 
 @Component({
   selector: 'app-admin-action-details',

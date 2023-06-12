@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { LoginResult } from 'src/app/model/generated-models';
-import { WidgetSettings } from 'src/app/model/payment-base.model';
+import { LoginResult } from 'model/generated-models';
+import { WidgetSettings } from 'model/payment-base.model';
 
 @Component({
     selector: 'app-widget-login-auth',

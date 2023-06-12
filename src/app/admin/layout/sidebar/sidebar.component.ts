@@ -7,8 +7,8 @@ import {
 import { NavigationEnd, Router } from '@angular/router';
 import { Menu, NavService } from '../../services/nav.service';
 import { fromEvent } from 'rxjs';
-import { AuthService } from 'src/app/services/auth.service';
-import { EnvService } from 'src/app/services/env.service';
+import { AuthService } from 'services/auth.service';
+import { EnvService } from 'services/env.service';
 
 @Component({
   selector: 'app-admin-sidebar',

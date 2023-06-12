@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { AdminDataService } from 'src/app/services/admin-data.service';
-import { NotificationItem } from 'src/app/model/notification.model';
-import { AuthService } from 'src/app/services/auth.service';
+import { AdminDataService } from 'services/admin-data.service';
+import { NotificationItem } from 'model/notification.model';
+import { AuthService } from 'services/auth.service';
 
 @Component({
   selector: 'app-admin-notification-details',

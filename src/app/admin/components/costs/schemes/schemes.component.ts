@@ -3,10 +3,10 @@ import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { AdminDataService } from 'src/app/services/admin-data.service';
-import { CostScheme } from 'src/app/model/cost-scheme.model';
-import { SettingsCostListResult } from 'src/app/model/generated-models';
-import { AuthService } from 'src/app/services/auth.service';
+import { AdminDataService } from 'services/admin-data.service';
+import { CostScheme } from 'model/cost-scheme.model';
+import { SettingsCostListResult } from 'model/generated-models';
+import { AuthService } from 'services/auth.service';
 
 @Component({
   selector: 'app-admin-cost-schemes',

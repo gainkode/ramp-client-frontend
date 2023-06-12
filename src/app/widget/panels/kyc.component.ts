@@ -1,12 +1,12 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { TransactionType, SettingsKycShort, TransactionSource, KycProvider, SettingsKycTierShortExListResult } from 'model/generated-models';
+import { KycLevelShort } from 'model/identification.model';
+import { CheckoutSummary } from 'model/payment.model';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { KycProvider, SettingsKycShort, SettingsKycTierShortExListResult, TransactionSource, TransactionType } from 'src/app/model/generated-models';
-import { KycLevelShort } from 'src/app/model/identification.model';
-import { CheckoutSummary } from 'src/app/model/payment.model';
-import { AuthService } from 'src/app/services/auth.service';
-import { ErrorService } from 'src/app/services/error.service';
-import { PaymentDataService } from 'src/app/services/payment.service';
+import { AuthService } from 'services/auth.service';
+import { ErrorService } from 'services/error.service';
+import { PaymentDataService } from 'services/payment.service';
 
 @Component({
   selector: 'app-widget-kyc',

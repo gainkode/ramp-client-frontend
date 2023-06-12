@@ -2,10 +2,10 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
-import { AdminDataService } from 'src/app/services/admin-data.service';
-import { CommonTargetValue } from 'src/app/model/common.model';
-import { DeviceItem } from 'src/app/model/user.model';
-import { AuthService } from 'src/app/services/auth.service';
+import { AdminDataService } from 'services/admin-data.service';
+import { CommonTargetValue } from 'model/common.model';
+import { DeviceItem } from 'model/user.model';
+import { AuthService } from 'services/auth.service';
 
 @Component({
   selector: 'app-admin-device-details',

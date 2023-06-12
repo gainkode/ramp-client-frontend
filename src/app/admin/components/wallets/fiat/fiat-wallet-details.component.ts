@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FiatWalletItem } from 'src/app/admin/model/wallet.model';
+import { FiatWalletItem } from 'admin/model/wallet.model';
 
 @Component({
   selector: 'app-admin-fiat-wallet-details',

@@ -3,12 +3,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { DeleteDialogBox } from 'src/app/components/dialogs/delete-box.dialog';
-import { UserDeviceListResult } from 'src/app/model/generated-models';
-import { DeviceItem } from 'src/app/model/user.model';
-import { AuthService } from 'src/app/services/auth.service';
-import { ErrorService } from 'src/app/services/error.service';
-import { ProfileDataService } from 'src/app/services/profile.service';
+import { DeleteDialogBox } from 'components/dialogs/delete-box.dialog';
+import { UserDeviceListResult } from 'model/generated-models';
+import { DeviceItem } from 'model/user.model';
+import { AuthService } from 'services/auth.service';
+import { ErrorService } from 'services/error.service';
+import { ProfileDataService } from 'services/profile.service';
 
 @Component({
     selector: 'app-profile-white-ip-list',

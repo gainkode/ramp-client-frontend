@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { MenuItem } from 'src/app/model/common.model';
-import { UserType } from 'src/app/model/generated-models';
-import { AuthService } from 'src/app/services/auth.service';
+import { MenuItem } from 'model/common.model';
+import { UserType } from 'model/generated-models';
+import { AuthService } from 'services/auth.service';
 
 @Component({
     selector: 'app-settings-bar',

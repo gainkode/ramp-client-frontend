@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { FilterChip, FilterChipType, ProfileBaseFilter, TransactionsFilter } from 'src/app/model/filter.model';
-import { TransactionSource, TransactionType, UserType } from 'src/app/model/generated-models';
-import { MerchantTransactionTypeList, TransactionSourceList, UserTransactionTypeList } from 'src/app/model/payment.model';
-import { AuthService } from 'src/app/services/auth.service';
-import { getFormattedUtcDate } from 'src/app/utils/utils';
+import { FilterChip, FilterChipType, ProfileBaseFilter, TransactionsFilter } from 'model/filter.model';
+import { TransactionSource, TransactionType, UserType } from 'model/generated-models';
+import { MerchantTransactionTypeList, TransactionSourceList, UserTransactionTypeList } from 'model/payment.model';
+import { AuthService } from 'services/auth.service';
+import { getFormattedUtcDate } from 'utils/utils';
 
 @Component({
     selector: 'app-transactions-filter',

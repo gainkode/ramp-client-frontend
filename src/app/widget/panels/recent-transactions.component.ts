@@ -1,12 +1,12 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
+import { TransactionStatusDescriptorMap, TransactionSource, TransactionShortListResult } from 'model/generated-models';
+import { TransactionItem } from 'model/transaction.model';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { TransactionShortListResult, TransactionSource, TransactionStatusDescriptorMap } from 'src/app/model/generated-models';
-import { TransactionItem } from 'src/app/model/transaction.model';
-import { AuthService } from 'src/app/services/auth.service';
-import { ErrorService } from 'src/app/services/error.service';
-import { ProfileDataService } from 'src/app/services/profile.service';
+import { AuthService } from 'services/auth.service';
+import { ErrorService } from 'services/error.service';
+import { ProfileDataService } from 'services/profile.service';
 
 @Component({
   selector: 'app-widget-recent-transactions',

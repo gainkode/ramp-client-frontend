@@ -2,15 +2,15 @@ import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { WalletsFilter } from 'src/app/model/filter.model';
-import { AssetAddressShort, AssetAddressShortListResult, UserState } from 'src/app/model/generated-models';
-import { CurrencyView } from 'src/app/model/payment.model';
-import { ProfileItemContainer, ProfileItemContainerType } from 'src/app/model/profile-item.model';
-import { WalletItem } from 'src/app/model/wallet.model';
-import { AuthService } from 'src/app/services/auth.service';
-import { CommonDataService } from 'src/app/services/common-data.service';
-import { ErrorService } from 'src/app/services/error.service';
-import { ProfileDataService } from 'src/app/services/profile.service';
+import { WalletsFilter } from 'model/filter.model';
+import { AssetAddressShort, AssetAddressShortListResult, UserState } from 'model/generated-models';
+import { CurrencyView } from 'model/payment.model';
+import { ProfileItemContainer, ProfileItemContainerType } from 'model/profile-item.model';
+import { WalletItem } from 'model/wallet.model';
+import { AuthService } from 'services/auth.service';
+import { CommonDataService } from 'services/common-data.service';
+import { ErrorService } from 'services/error.service';
+import { ProfileDataService } from 'services/profile.service';
 
 @Component({
     selector: 'app-profile-wallet-list',

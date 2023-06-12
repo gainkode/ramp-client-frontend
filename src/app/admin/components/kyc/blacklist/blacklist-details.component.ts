@@ -2,9 +2,9 @@ import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { AdminDataService } from 'src/app/services/admin-data.service';
-import { Countries, Country, getCountryByCode3 } from 'src/app/model/country-code.model';
-import { AuthService } from 'src/app/services/auth.service';
+import { AdminDataService } from 'services/admin-data.service';
+import { Countries, Country, getCountryByCode3 } from 'model/country-code.model';
+import { AuthService } from 'services/auth.service';
 
 @Component({
   selector: 'app-admin-black-list-details',

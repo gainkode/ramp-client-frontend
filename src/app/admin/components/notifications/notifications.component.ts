@@ -4,10 +4,10 @@ import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { Filter } from 'src/app/admin/model/filter.model';
-import { AdminDataService } from 'src/app/services/admin-data.service';
-import { NotificationItem } from 'src/app/model/notification.model';
-import { AuthService } from 'src/app/services/auth.service';
+import { Filter } from 'admin/model/filter.model';
+import { AdminDataService } from 'services/admin-data.service';
+import { NotificationItem } from 'model/notification.model';
+import { AuthService } from 'services/auth.service';
 
 @Component({
   selector: 'app-admin-notifications',

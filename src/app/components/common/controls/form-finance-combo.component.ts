@@ -1,6 +1,6 @@
 import { Component, Input, SkipSelf } from '@angular/core';
 import { AbstractControl, ControlContainer } from '@angular/forms';
-import { CurrencyView } from 'src/app/model/payment.model';
+import { CurrencyView } from 'model/payment.model';
 
 @Component({
     selector: 'app-form-finance-combo',

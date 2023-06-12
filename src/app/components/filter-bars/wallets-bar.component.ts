@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { ProfileBaseFilter, WalletsFilter, FilterChip, FilterChipType } from 'src/app/model/filter.model';
-import { CurrencyView } from 'src/app/model/payment.model';
+import { ProfileBaseFilter, WalletsFilter, FilterChip, FilterChipType } from 'model/filter.model';
+import { CurrencyView } from 'model/payment.model';
 
 @Component({
     selector: 'app-wallets-filter',

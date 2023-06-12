@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { UserRole } from 'src/app/model/generated-models';
+import { UserRole } from 'model/generated-models';
 
 export class RoleSelector {
   name = '';

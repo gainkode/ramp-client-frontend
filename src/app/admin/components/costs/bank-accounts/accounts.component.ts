@@ -2,11 +2,11 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { WireTransferBankAccountItem } from 'src/app/model/cost-scheme.model';
-import { WireTransferBankAccountListResult } from 'src/app/model/generated-models';
+import { WireTransferBankAccountItem } from 'model/cost-scheme.model';
+import { WireTransferBankAccountListResult } from 'model/generated-models';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { AuthService } from 'src/app/services/auth.service';
-import { AdminDataService } from 'src/app/services/admin-data.service';
+import { AuthService } from 'services/auth.service';
+import { AdminDataService } from 'services/admin-data.service';
 
 @Component({
   selector: 'app-admin-bank-accounts',

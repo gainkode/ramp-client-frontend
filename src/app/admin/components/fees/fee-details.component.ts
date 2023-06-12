@@ -4,17 +4,17 @@ import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { concat, Observable, of, Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, switchMap, take, tap } from 'rxjs/operators';
-import { Filter } from 'src/app/admin/model/filter.model';
-import { AdminDataService } from 'src/app/services/admin-data.service';
-import { CommonTargetValue } from 'src/app/model/common.model';
-import { CostScheme } from 'src/app/model/cost-scheme.model';
-import { CountryFilterList } from 'src/app/model/country-code.model';
-import { FeeScheme, TransactionSourceFilterList } from 'src/app/model/fee-scheme.model';
-import { PaymentInstrument, PaymentProvider, SettingsCostListResult, SettingsCurrencyWithDefaults, SettingsFeeTargetFilterType, TransactionType, UserMode, UserType } from 'src/app/model/generated-models';
-import { CurrencyView, FeeTargetFilterList, PaymentInstrumentList, PaymentProviderView, TransactionTypeList, UserModeList, UserTypeList } from 'src/app/model/payment.model';
-import { AuthService } from 'src/app/services/auth.service';
-import { getCheckedProviderList, getProviderList } from 'src/app/utils/utils';
-import { CommonDataService } from 'src/app/services/common-data.service';
+import { Filter } from 'admin/model/filter.model';
+import { AdminDataService } from 'services/admin-data.service';
+import { CommonTargetValue } from 'model/common.model';
+import { CostScheme } from 'model/cost-scheme.model';
+import { CountryFilterList } from 'model/country-code.model';
+import { FeeScheme, TransactionSourceFilterList } from 'model/fee-scheme.model';
+import { PaymentInstrument, PaymentProvider, SettingsCostListResult, SettingsCurrencyWithDefaults, SettingsFeeTargetFilterType, TransactionType, UserMode, UserType } from 'model/generated-models';
+import { CurrencyView, FeeTargetFilterList, PaymentInstrumentList, PaymentProviderView, TransactionTypeList, UserModeList, UserTypeList } from 'model/payment.model';
+import { AuthService } from 'services/auth.service';
+import { getCheckedProviderList, getProviderList } from 'utils/utils';
+import { CommonDataService } from 'services/common-data.service';
 
 @Component({
   selector: 'app-admin-fee-details',

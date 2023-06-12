@@ -1,9 +1,9 @@
 import { Component, Inject } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { CommonTargetValue } from 'src/app/model/common.model';
-import { DialogData } from 'src/app/model/dialog.model';
-import { UserNotificationLevel } from 'src/app/model/generated-models';
+import { CommonTargetValue } from 'model/common.model';
+import { DialogData } from 'model/dialog.model';
+import { UserNotificationLevel } from 'model/generated-models';
 
 @Component({
     selector: 'app-send-notification-dialog-box',

@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { getFormattedUtcDate } from 'src/app/utils/utils';
+import { getFormattedUtcDate } from 'utils/utils';
 
 @Component({
     selector: 'app-profile-info-datebox',

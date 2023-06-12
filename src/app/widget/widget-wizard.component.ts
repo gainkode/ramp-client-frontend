@@ -1,11 +1,11 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { TransactionType, UserType, SettingsCurrencyWithDefaults, WidgetUserParams } from 'model/generated-models';
+import { CurrencyView, TransactionTypeView, UserTypeView, UserTypeList, QuickCheckoutTransactionTypeList } from 'model/payment.model';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { SettingsCurrencyWithDefaults, TransactionType, UserType, WidgetUserParams } from 'src/app/model/generated-models';
-import { CurrencyView, QuickCheckoutTransactionTypeList, TransactionTypeView, UserTypeList, UserTypeView } from 'src/app/model/payment.model';
-import { ErrorService } from 'src/app/services/error.service';
+import { ErrorService } from 'services/error.service';
 import { CommonDataService } from '../services/common-data.service';
 import { EnvService } from '../services/env.service';
 

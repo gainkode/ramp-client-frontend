@@ -4,13 +4,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { Filter } from 'src/app/admin/model/filter.model';
-import { AdminDataService } from 'src/app/services/admin-data.service';
-import { SettingsCurrencyWithDefaults, UserRole } from 'src/app/model/generated-models';
-import { CurrencyView } from 'src/app/model/payment.model';
-import { UserItem } from 'src/app/model/user.model';
-import { AuthService } from 'src/app/services/auth.service';
-import { CommonDataService } from 'src/app/services/common-data.service';
+import { Filter } from 'admin/model/filter.model';
+import { AdminDataService } from 'services/admin-data.service';
+import { SettingsCurrencyWithDefaults, UserRole } from 'model/generated-models';
+import { CurrencyView } from 'model/payment.model';
+import { UserItem } from 'model/user.model';
+import { AuthService } from 'services/auth.service';
+import { CommonDataService } from 'services/common-data.service';
 import { UserMessageData } from '../send-message/send-message.component';
 
 @Component({

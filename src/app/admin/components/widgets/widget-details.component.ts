@@ -4,17 +4,17 @@ import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { concat, Observable, of, Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, switchMap, take, tap } from 'rxjs/operators';
-import { Filter } from 'src/app/admin/model/filter.model';
-import { LiquidityProviderList } from 'src/app/admin/model/lists.model';
-import { WidgetItem } from 'src/app/admin/model/widget.model';
-import { AdminDataService } from 'src/app/services/admin-data.service';
-import { Countries } from 'src/app/model/country-code.model';
-import { PaymentInstrument, PaymentProvider, SettingsCurrencyWithDefaults, UserType, WidgetDestination } from 'src/app/model/generated-models';
-import { CurrencyView, PaymentInstrumentList, PaymentProviderView, TransactionTypeList, UserTypeList } from 'src/app/model/payment.model';
-import { UserItem } from 'src/app/model/user.model';
-import { AuthService } from 'src/app/services/auth.service';
-import { CommonDataService } from 'src/app/services/common-data.service';
-import { getCheckedProviderList, getProviderList } from 'src/app/utils/utils';
+import { Filter } from 'admin/model/filter.model';
+import { LiquidityProviderList } from 'admin/model/lists.model';
+import { WidgetItem } from 'admin/model/widget.model';
+import { AdminDataService } from 'services/admin-data.service';
+import { Countries } from 'model/country-code.model';
+import { PaymentInstrument, PaymentProvider, SettingsCurrencyWithDefaults, UserType, WidgetDestination } from 'model/generated-models';
+import { CurrencyView, PaymentInstrumentList, PaymentProviderView, TransactionTypeList, UserTypeList } from 'model/payment.model';
+import { UserItem } from 'model/user.model';
+import { AuthService } from 'services/auth.service';
+import { CommonDataService } from 'services/common-data.service';
+import { getCheckedProviderList, getProviderList } from 'utils/utils';
 import {MatTableDataSource} from '@angular/material/table';
 
 @Component({

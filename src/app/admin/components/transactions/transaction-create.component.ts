@@ -3,22 +3,22 @@ import { AbstractControl, UntypedFormBuilder, FormGroup, Validators } from '@ang
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { concat, Observable, of, Subject, Subscription } from 'rxjs';
-import { AdminDataService } from 'src/app/services/admin-data.service';
-import { AccountStatus, KycStatus, PaymentInstrument, PaymentProvider, Rate, SettingsCommon, SettingsCurrencyWithDefaults, Transaction, TransactionInput, TransactionKycStatus, TransactionSource, TransactionStatus, TransactionStatusDescriptorMap, TransactionType } from 'src/app/model/generated-models';
-import { AdminTransactionStatusList, CurrencyView, TransactionKycStatusList, TransactionStatusList, TransactionStatusView, UserStatusList } from 'src/app/model/payment.model';
-import { TransactionItemFull } from 'src/app/model/transaction.model';
-import { AuthService } from 'src/app/services/auth.service';
-import { ErrorService } from 'src/app/services/error.service';
-import { ExchangeRateService } from 'src/app/services/rate.service';
-import { getTransactionAmountHash, getTransactionStatusHash } from 'src/app/utils/utils';
-import { CostTargetFilterList, PaymentInstrumentList, PaymentProviderView, TransactionTypeList } from 'src/app/model/payment.model';
+import { AdminDataService } from 'services/admin-data.service';
+import { AccountStatus, KycStatus, PaymentInstrument, PaymentProvider, Rate, SettingsCommon, SettingsCurrencyWithDefaults, Transaction, TransactionInput, TransactionKycStatus, TransactionSource, TransactionStatus, TransactionStatusDescriptorMap, TransactionType } from 'model/generated-models';
+import { AdminTransactionStatusList, CurrencyView, TransactionKycStatusList, TransactionStatusList, TransactionStatusView, UserStatusList } from 'model/payment.model';
+import { TransactionItemFull } from 'model/transaction.model';
+import { AuthService } from 'services/auth.service';
+import { ErrorService } from 'services/error.service';
+import { ExchangeRateService } from 'services/rate.service';
+import { getTransactionAmountHash, getTransactionStatusHash } from 'utils/utils';
+import { CostTargetFilterList, PaymentInstrumentList, PaymentProviderView, TransactionTypeList } from 'model/payment.model';
 import { debounceTime, distinctUntilChanged, filter, map, switchMap, take, tap } from 'rxjs/operators';
-import { CommonTargetValue } from 'src/app/model/common.model';
-import { Filter } from 'src/app/admin/model/filter.model';
-import { CommonDataService } from 'src/app/services/common-data.service';
-import { getCheckedProviderList, getProviderList } from 'src/app/utils/utils';
-import { CostScheme } from 'src/app/model/cost-scheme.model';
-import { UserItem } from 'src/app/model/user.model';
+import { CommonTargetValue } from 'model/common.model';
+import { Filter } from 'admin/model/filter.model';
+import { CommonDataService } from 'services/common-data.service';
+import { getCheckedProviderList, getProviderList } from 'utils/utils';
+import { CostScheme } from 'model/cost-scheme.model';
+import { UserItem } from 'model/user.model';
 
 @Component({
   selector: 'app-admin-transaction-create',

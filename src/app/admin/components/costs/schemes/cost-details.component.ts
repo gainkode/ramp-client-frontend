@@ -4,14 +4,14 @@ import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { concat, Observable, of, Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
-import { AdminDataService } from 'src/app/services/admin-data.service';
-import { CommonTargetValue } from 'src/app/model/common.model';
-import { CostScheme } from 'src/app/model/cost-scheme.model';
-import { CountryFilterList } from 'src/app/model/country-code.model';
-import { PaymentInstrument, PaymentProvider, SettingsCostTargetFilterType, TransactionType, WireTransferBankAccountListResult } from 'src/app/model/generated-models';
-import { CostTargetFilterList, PaymentInstrumentList, PaymentProviderView, TransactionTypeList } from 'src/app/model/payment.model';
-import { AuthService } from 'src/app/services/auth.service';
-import { getCheckedProviderList, getProviderList } from 'src/app/utils/utils';
+import { AdminDataService } from 'services/admin-data.service';
+import { CommonTargetValue } from 'model/common.model';
+import { CostScheme } from 'model/cost-scheme.model';
+import { CountryFilterList } from 'model/country-code.model';
+import { PaymentInstrument, PaymentProvider, SettingsCostTargetFilterType, TransactionType, WireTransferBankAccountListResult } from 'model/generated-models';
+import { CostTargetFilterList, PaymentInstrumentList, PaymentProviderView, TransactionTypeList } from 'model/payment.model';
+import { AuthService } from 'services/auth.service';
+import { getCheckedProviderList, getProviderList } from 'utils/utils';
 
 @Component({
   selector: 'app-admin-cost-details',

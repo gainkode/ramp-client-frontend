@@ -4,17 +4,17 @@ import { Router } from '@angular/router';
 import { NgbDateAdapter, NgbDateParserFormatter, NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { DateFormatAdapter } from 'src/app/admin/misc/date-range/date-format.adapter';
-import { DateParserFormatter } from 'src/app/admin/misc/date-range/date.formatter';
-import { AdminDataService } from 'src/app/services/admin-data.service';
-import { CommonTargetValue } from 'src/app/model/common.model';
-import { Countries, getCountryByCode3 } from 'src/app/model/country-code.model';
-import { AccountStatus, KycProvider, RiskLevel, UserInput, UserType } from 'src/app/model/generated-models';
-import { CurrencyView, KycProviderList, RiskLevelViewList, UserModeView, UserStatusList } from 'src/app/model/payment.model';
-import { GenderList, UserItem } from 'src/app/model/user.model';
-import { AuthService } from 'src/app/services/auth.service';
-import { getFormattedUtcDate } from 'src/app/utils/utils';
-import { ErrorService } from 'src/app/services/error.service';
+import { DateFormatAdapter } from 'admin/misc/date-range/date-format.adapter';
+import { DateParserFormatter } from 'admin/misc/date-range/date.formatter';
+import { AdminDataService } from 'services/admin-data.service';
+import { CommonTargetValue } from 'model/common.model';
+import { Countries, getCountryByCode3 } from 'model/country-code.model';
+import { AccountStatus, KycProvider, RiskLevel, UserInput, UserType } from 'model/generated-models';
+import { CurrencyView, KycProviderList, RiskLevelViewList, UserModeView, UserStatusList } from 'model/payment.model';
+import { GenderList, UserItem } from 'model/user.model';
+import { AuthService } from 'services/auth.service';
+import { getFormattedUtcDate } from 'utils/utils';
+import { ErrorService } from 'services/error.service';
 
 @Component({
   selector: 'app-admin-customer-details',

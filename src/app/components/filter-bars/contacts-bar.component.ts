@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { ContactsFilter, FilterChip, FilterChipType, ProfileBaseFilter, TransactionsFilter } from 'src/app/model/filter.model';
-import { CurrencyView } from 'src/app/model/payment.model';
-import { ProfileItemContainer, ProfileItemContainerType } from 'src/app/model/profile-item.model';
+import { ContactsFilter, FilterChip, FilterChipType, ProfileBaseFilter, TransactionsFilter } from 'model/filter.model';
+import { CurrencyView } from 'model/payment.model';
+import { ProfileItemContainer, ProfileItemContainerType } from 'model/profile-item.model';
 
 @Component({
     selector: 'app-contacts-filter',

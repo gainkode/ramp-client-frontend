@@ -4,13 +4,13 @@ import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { ContactsFilter } from 'src/app/model/filter.model';
-import { UserContactListResult } from 'src/app/model/generated-models';
-import { ProfileItemContainer, ProfileItemContainerType } from 'src/app/model/profile-item.model';
-import { ContactItem } from 'src/app/model/user.model';
-import { AuthService } from 'src/app/services/auth.service';
-import { ErrorService } from 'src/app/services/error.service';
-import { ProfileDataService } from 'src/app/services/profile.service';
+import { ContactsFilter } from 'model/filter.model';
+import { UserContactListResult } from 'model/generated-models';
+import { ProfileItemContainer, ProfileItemContainerType } from 'model/profile-item.model';
+import { ContactItem } from 'model/user.model';
+import { AuthService } from 'services/auth.service';
+import { ErrorService } from 'services/error.service';
+import { ProfileDataService } from 'services/profile.service';
 
 @Component({
     selector: 'app-profile-contact-list',

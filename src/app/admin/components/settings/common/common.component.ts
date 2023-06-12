@@ -2,15 +2,15 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
-import { AdminDataService } from 'src/app/services/admin-data.service';
-import { AuthService } from 'src/app/services/auth.service';
-import { CurrencyView, CustodyProviderList, KycProviderList } from 'src/app/model/payment.model';
-import { LiquidityProviderList } from 'src/app/admin/model/lists.model';
-import { TransactionConfirmationModeList } from 'src/app/admin/model/settings.model';
+import { AdminDataService } from 'services/admin-data.service';
+import { AuthService } from 'services/auth.service';
+import { CurrencyView, CustodyProviderList, KycProviderList } from 'model/payment.model';
+import { LiquidityProviderList } from 'admin/model/lists.model';
+import { TransactionConfirmationModeList } from 'admin/model/settings.model';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
-import { PaymentProviderPayoutType, SettingsCommon, SettingsCurrencyWithDefaults, TransactionConfirmationMode } from 'src/app/model/generated-models';
-import { CommonDataService } from 'src/app/services/common-data.service';
-import { ErrorService } from 'src/app/services/error.service';
+import { PaymentProviderPayoutType, SettingsCommon, SettingsCurrencyWithDefaults, TransactionConfirmationMode } from 'model/generated-models';
+import { CommonDataService } from 'services/common-data.service';
+import { ErrorService } from 'services/error.service';
 
 interface FrameBlock {
   X: number;

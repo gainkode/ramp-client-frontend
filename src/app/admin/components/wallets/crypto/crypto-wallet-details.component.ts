@@ -2,10 +2,10 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { WalletItem } from 'src/app/admin/model/wallet.model';
-import { AdminDataService } from 'src/app/services/admin-data.service';
-import { AssetAddress } from 'src/app/model/generated-models';
-import { AuthService } from 'src/app/services/auth.service';
+import { WalletItem } from 'admin/model/wallet.model';
+import { AdminDataService } from 'services/admin-data.service';
+import { AssetAddress } from 'model/generated-models';
+import { AuthService } from 'services/auth.service';
 
 @Component({
   selector: 'app-admin-crypto-wallet-details',

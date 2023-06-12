@@ -1,7 +1,7 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { WireTransferBankAccountAu, WireTransferBankAccountEu, WireTransferBankAccountFlashfxObject, WireTransferBankAccountMonoovaObject, WireTransferBankAccountOpenpaydObject, WireTransferBankAccountPrimeTrustObject, WireTransferBankAccountUk } from 'src/app/model/cost-scheme.model';
-import { WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from 'src/app/model/payment-base.model';
+import { WireTransferBankAccountAu, WireTransferBankAccountEu, WireTransferBankAccountFlashfxObject, WireTransferBankAccountMonoovaObject, WireTransferBankAccountOpenpaydObject, WireTransferBankAccountPrimeTrustObject, WireTransferBankAccountUk } from 'model/cost-scheme.model';
+import { WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from 'model/payment-base.model';
 
 @Component({
     selector: 'app-widget-wire-transfer-result',

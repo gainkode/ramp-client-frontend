@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, SkipSelf } from '@angular/core';
 import { AbstractControl, ControlContainer, UntypedFormBuilder } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { CommonTargetValue } from 'src/app/model/common.model';
+import { CommonTargetValue } from 'model/common.model';
 
 @Component({
     selector: 'app-profile-info-dropbox',

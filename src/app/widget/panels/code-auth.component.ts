@@ -1,10 +1,10 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
+import { TransactionShort } from 'model/generated-models';
 import { Subscription } from 'rxjs';
-import { TransactionShort } from 'src/app/model/generated-models';
-import { AuthService } from 'src/app/services/auth.service';
-import { ErrorService } from 'src/app/services/error.service';
-import { PaymentDataService } from 'src/app/services/payment.service';
+import { AuthService } from 'services/auth.service';
+import { ErrorService } from 'services/error.service';
+import { PaymentDataService } from 'services/payment.service';
 
 @Component({
     selector: 'app-widget-code-auth',

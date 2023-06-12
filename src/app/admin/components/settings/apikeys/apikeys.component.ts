@@ -5,9 +5,9 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { Clipboard } from '@angular/cdk/clipboard';
-import { AdminDataService } from 'src/app/services/admin-data.service';
-import { ApiKeyItem } from 'src/app/model/apikey.model';
-import { AuthService } from 'src/app/services/auth.service';
+import { AdminDataService } from 'services/admin-data.service';
+import { ApiKeyItem } from 'model/apikey.model';
+import { AuthService } from 'services/auth.service';
 
 @Component({
   selector: 'app-admin-apikeys',

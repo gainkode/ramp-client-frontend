@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TokenAction, UserType } from 'src/app/model/generated-models';
-import { AuthService } from 'src/app/services/auth.service';
+import { TokenAction, UserType } from 'model/generated-models';
+import { AuthService } from 'services/auth.service';
 
 @Component({
     selector: 'app-profile-settings',

@@ -1,5 +1,5 @@
 import { CurrencyPairLiquidityProvider } from "./generated-models";
-import { LiquidityProviderList, LiquidityProviderItem } from 'src/app/admin/model/lists.model';
+import { LiquidityProviderList, LiquidityProviderItem } from 'admin/model/lists.model';
 
 export class CurrencyPairItem {
   currencyPairLiquidityProviderId = '';

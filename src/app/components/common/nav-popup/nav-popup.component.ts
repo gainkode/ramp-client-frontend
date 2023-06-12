@@ -1,14 +1,14 @@
 import { Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MenuItem } from '../../../model/common.model';
-import { MatMenuTrigger } from '@angular/material/menu';
-import { MenuCloseReason } from '@angular/material/menu/menu';
+import { MatMenuTrigger, MenuCloseReason } from '@angular/material/menu';
 import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarRef, MatSnackBarVerticalPosition, MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
-import { AuthService } from 'src/app/services/auth.service';
-import { NotificationService } from 'src/app/services/notification.service';
+import { AuthService } from 'services/auth.service';
+import { NotificationService } from 'services/notification.service';
 import { Subscription } from 'rxjs';
-import { CommonDataService } from 'src/app/services/common-data.service';
+import { CommonDataService } from 'services/common-data.service';
 import { take } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
+import { environment } from '@environments/environment';
+
 
 @Component({
     selector: 'app-nav-popup',

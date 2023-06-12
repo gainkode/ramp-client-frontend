@@ -1,11 +1,11 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { CryptoInvoiceCreationResult } from 'model/generated-models';
+import { InvoiceView } from 'model/payment.model';
 import { Subscription, timer } from 'rxjs';
-import { CryptoInvoiceCreationResult } from 'src/app/model/generated-models';
-import { InvoiceView } from 'src/app/model/payment.model';
-import { EnvService } from 'src/app/services/env.service';
-import { PaymentDataService } from 'src/app/services/payment.service';
-import { getMinSec } from 'src/app/utils/utils';
+import { EnvService } from 'services/env.service';
+import { PaymentDataService } from 'services/payment.service';
+import { getMinSec } from 'utils/utils';
 
 const interval = 600000;  // 10 minutes
 

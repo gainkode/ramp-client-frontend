@@ -1,12 +1,13 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
+import { TransactionType, Rate, SettingsCurrencyWithDefaults, TransactionSource, TransactionShort } from 'model/generated-models';
+import { CheckoutSummary, CurrencyView } from 'model/payment.model';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { Rate, SettingsCurrencyWithDefaults, TransactionShort, TransactionSource, TransactionType } from 'src/app/model/generated-models';
-import { CheckoutSummary, CurrencyView } from 'src/app/model/payment.model';
-import { ErrorService } from 'src/app/services/error.service';
-import { PaymentDataService } from 'src/app/services/payment.service';
-import { ExchangeRateService } from 'src/app/services/rate.service';
+import { ErrorService } from 'services/error.service';
+import { PaymentDataService } from 'services/payment.service';
+import { ExchangeRateService } from 'services/rate.service';
+
 import { PaymentCompleteDetails, PaymentErrorDetails, PaymentWidgetType } from '../model/payment-base.model';
 import { AuthService } from '../services/auth.service';
 import { CommonDataService } from '../services/common-data.service';

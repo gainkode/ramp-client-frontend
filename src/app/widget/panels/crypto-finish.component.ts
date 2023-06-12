@@ -1,8 +1,8 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { InvoiceView } from 'src/app/model/payment.model';
-import { EnvService } from 'src/app/services/env.service';
+import { InvoiceView } from 'model/payment.model';
+import { EnvService } from 'services/env.service';
 
 @Component({
   selector: 'app-widget-crypto-finish',

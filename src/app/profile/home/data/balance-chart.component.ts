@@ -2,15 +2,15 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } 
 import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { BalancePoint } from 'src/app/model/balance.model';
-import { SettingsCurrency, UserBalanceHistoryPeriod, UserBalanceHistoryRecordListResult, UserProfit } from 'src/app/model/generated-models';
-import { AuthService } from 'src/app/services/auth.service';
-import { ErrorService } from 'src/app/services/error.service';
-import { ProfileDataService } from 'src/app/services/profile.service';
+import { BalancePoint } from 'model/balance.model';
+import { SettingsCurrency, UserBalanceHistoryPeriod, UserBalanceHistoryRecordListResult, UserProfit } from 'model/generated-models';
+import { AuthService } from 'services/auth.service';
+import { ErrorService } from 'services/error.service';
+import { ProfileDataService } from 'services/profile.service';
 import { ChartComponent, ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexFill, ApexStroke, ApexMarkers, ApexXAxis, ApexYAxis, ApexGrid, ApexTooltip, ApexNoData } from 'ng-apexcharts';
 import { take } from 'rxjs/operators';
-import { getCurrencySign } from 'src/app/utils/utils';
-import { EnvService } from 'src/app/services/env.service';
+import { getCurrencySign } from 'utils/utils';
+import { EnvService } from 'services/env.service';
 
 @Component({
     selector: 'app-profile-balance-chart',

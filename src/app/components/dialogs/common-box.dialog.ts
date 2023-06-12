@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DialogData } from 'src/app/model/dialog.model';
-import { EnvService } from 'src/app/services/env.service';
+import { DialogData } from 'model/dialog.model';
+import { EnvService } from 'services/env.service';
 
 @Component({
     selector: 'app-common-dialog-box',
