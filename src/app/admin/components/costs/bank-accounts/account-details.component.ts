@@ -109,7 +109,6 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
   			this.form.get('ukSortCode')?.setValue(account.uk?.sortCode);
   		}
   		if (account.euAvailable) {
-  			console.log(account);
   			this.form.get('euSelected')?.setValue(true);
   			this.form.get('euBankAddress')?.setValue(account.eu?.bankAddress);
   			this.form.get('euBankName')?.setValue(account.eu?.bankName);
