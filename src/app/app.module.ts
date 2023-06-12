@@ -5,13 +5,12 @@ import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { Apollo } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
-import { WebSocketLink } from '@apollo/client/link/ws';
 import { onError } from 'apollo-link-error';
 import { ApolloLink, InMemoryCache, split } from '@apollo/client/core';
 import { fromPromise } from 'apollo-link';
 import ApolloLinkTimeout from 'apollo-link-timeout';
 import { setContext } from '@apollo/client/link/context';
-import { SocialLoginModule, SocialAuthServiceConfig, GoogleLoginProvider } from 'angularx-social-login';
+import { SocialLoginModule, SocialAuthServiceConfig, GoogleLoginProvider } from '@abacritt/angularx-social-login';
 import { AuthService } from './services/auth.service';
 import { ErrorService } from './services/error.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -20,7 +19,6 @@ import { NotificationService } from './services/notification.service';
 import { CommonDataService } from './services/common-data.service';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { createApiHash } from './utils/utils';
-import { SubscriptionClient } from 'subscriptions-transport-ws';
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { createClient } from 'graphql-ws';
 import { DirectiveModule } from './directives/directives.module';
@@ -182,20 +180,6 @@ export class AppModule {
     });
     const timeoutLink = new ApolloLinkTimeout(EnvService.api_timeout ?? 10000); // 10 second timeout
     const timeoutHttp = timeoutLink.concat(http);
-
-    // Transaport subscriptions-transport-ws
-    // const webSocketClient: SubscriptionClient = new SubscriptionClient(
-    //   `${EnvService.ws_server}/subscriptions`,
-    //   {
-    //     lazy: true,
-    //     reconnect: true,
-    //     connectionParams: () => {
-    //       return {
-    //         authToken: `Bearer ${localStorage.getItem('currentToken')}`
-    //       };
-    //     }
-    //   });
-    // const webSocketLink = new WebSocketLink(webSocketClient);
 
     // Transaport graphql-ws
     const webSocketLink = new GraphQLWsLink(createClient({

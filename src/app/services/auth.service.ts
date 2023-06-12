@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
-import { from, Observable, of } from 'rxjs';
-import { SocialAuthService, FacebookLoginProvider, GoogleLoginProvider } from 'angularx-social-login';
+import { from, Observable } from 'rxjs';
+import { SocialAuthService, FacebookLoginProvider, GoogleLoginProvider } from '@abacritt/angularx-social-login';
 import { FeedbackInput, LoginResult, PostAddress, SettingsCommon, User, UserMode, UserType } from '../model/generated-models';
 import { EmptyObject } from 'apollo-angular/types';
 import { EnvService } from './env.service';

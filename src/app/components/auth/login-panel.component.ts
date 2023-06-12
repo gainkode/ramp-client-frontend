@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } 
 import { AuthService } from '../../services/auth.service';
 import { ErrorService } from '../../services/error.service';
 import { Validators, UntypedFormBuilder, AbstractControl } from '@angular/forms';
-import { SocialUser } from 'angularx-social-login';
+import { SocialUser } from '@abacritt/angularx-social-login';
 import { LoginResult, User, UserMode } from '../../model/generated-models';
 import { SignupInfoPanelComponent } from './signup-info.component';
 import { Subscription } from 'rxjs';
