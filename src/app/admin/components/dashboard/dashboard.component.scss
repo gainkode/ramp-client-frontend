@@ -1,7 +1,5 @@
 @import "../../../../assets/scss/variables";
 
-$gutter: 16px;
-
 ::ng-deep {
   .datatable-body {
     height: 600px !important;
@@ -322,7 +320,7 @@ $gutter: 16px;
 .__dashboard-panel-container {
   display: flex;
   flex-direction: row;
-  margin: -$gutter/2;
+  margin: calc(-16 / 2) * 1px;
   padding: 24px 16px;
   
   .__dashboard-panel-column {
@@ -338,7 +336,7 @@ $gutter: 16px;
     }
 
     app-admin-dashboard-card {
-      margin: $gutter/2;
+      margin: calc(16 / 2) * 1px;
     }
   }
 
